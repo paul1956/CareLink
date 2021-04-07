@@ -12,7 +12,7 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Resize(sender As Object, e As EventArgs) Handles Me.Resize
-        WebView21.Size = Me.ClientSize - New Size(WebView21.Location)
+        WebView21.Size = ClientSize - New Size(WebView21.Location)
     End Sub
 
     Private Async Function parseMyHtml() As Task(Of String)
@@ -50,9 +50,9 @@ Public Class Form1
 
     Private Sub WebView21_SourceChanged(sender As Object, e As CoreWebView2SourceChangedEventArgs) Handles WebView21.SourceChanged
 
-        If Not Timer1.Enabled Then
+        If Timer1.Enabled Then
             Timer1.Stop() 'Timer starts functioning
-            Timer1.Interval = 5000
+            Timer1.Interval = 10000
         End If
         Timer1.Start() 'Timer starts functioning
 
