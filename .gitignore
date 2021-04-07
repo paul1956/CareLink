@@ -3,3 +3,5 @@
 ################################################################################
 
 /.vs/CareLink
+/CareLink/obj/Debug/net5.0-windows
+/CareLink/CareLink.vbproj.user
