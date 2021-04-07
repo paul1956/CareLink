@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "x80FF0RPOggAl2jBpi4iHrfV/5hnCCFS8dH+5Nmza8CLg14dRVuulaiXpeQqGCq5vEzOqvXxH0OQUCLUpp/Qng==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\CareLink\\CareLink.vbproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\PaulM\\.nuget\\packages\\microsoft.web.webview2\\1.0.774.44\\microsoft.web.webview2.1.0.774.44.nupkg.sha512"
+  ],
+  "logs": []
+}
