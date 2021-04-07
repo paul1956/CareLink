@@ -5,3 +5,5 @@
 /.vs/CareLink
 /CareLink/obj/Debug/net5.0-windows
 /CareLink/CareLink.vbproj.user
+/CareLink/bin/Debug/net5.0-windows/CareLink.exe.WebView2/EBWebView
+/CareLink/bin/Debug/net5.0-windows
