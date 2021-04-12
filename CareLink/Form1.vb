@@ -2,10 +2,20 @@
 
 Imports Microsoft.Web.WebView2.Core
 
-Imports MSHTML
-
 Public Class Form1
     WithEvents Timer1 As New Timer
+
+    Private Shared Sub WebView21_ContentLoading(sender As Object, e As CoreWebView2ContentLoadingEventArgs) Handles WebView21.ContentLoading
+        Debug.Print($"Is Error Page = {e.IsErrorPage}")
+    End Sub
+
+    Private Shared Sub WebView21_NavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs) Handles WebView21.NavigationCompleted
+        Debug.Print($"Web Error Status = {e.WebErrorStatus}")
+    End Sub
+
+    Private Shared Sub WebView21_WebMessageReceived(sender As Object, e As CoreWebView2WebMessageReceivedEventArgs) Handles WebView21.WebMessageReceived
+        Debug.Print($"Web Message As Json = {e.WebMessageAsJson}, URL = {e.Source}")
+    End Sub
 
     Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         Await WebView21.EnsureCoreWebView2Async()
@@ -36,19 +46,12 @@ Public Class Form1
         Await parseMyHtml()
     End Sub
 
-    Private Sub WebView21_ContentLoading(sender As Object, e As CoreWebView2ContentLoadingEventArgs) Handles WebView21.ContentLoading
-        Stop
-    End Sub
-
-    Private Sub WebView21_NavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs) Handles WebView21.NavigationCompleted
-
-    End Sub
-
     Private Sub WebView21_NavigationStarting(sender As Object, e As CoreWebView2NavigationStartingEventArgs) Handles WebView21.NavigationStarting
         AddressBar.Text = e.Uri
     End Sub
 
     Private Sub WebView21_SourceChanged(sender As Object, e As CoreWebView2SourceChangedEventArgs) Handles WebView21.SourceChanged
+        Debug.Print($"Is New Document = {e.IsNewDocument}")
 
         If Timer1.Enabled Then
             Timer1.Stop() 'Timer starts functioning
@@ -56,10 +59,6 @@ Public Class Form1
         End If
         Timer1.Start() 'Timer starts functioning
 
-    End Sub
-
-    Private Sub WebView21_WebMessageReceived(sender As Object, e As CoreWebView2WebMessageReceivedEventArgs) Handles WebView21.WebMessageReceived
-        Stop
     End Sub
 
 End Class
