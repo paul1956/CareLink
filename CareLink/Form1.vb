@@ -1,9 +1,12 @@
-﻿Imports System.Text.RegularExpressions
+﻿''' Licensed to the .NET Foundation under one or more agreements.
+''' The .NET Foundation licenses this file to you under the MIT license.
+''' See the LICENSE file in the project root for more information.
 
+Imports System.Text.RegularExpressions
 Imports Microsoft.Web.WebView2.Core
 
 Public Class Form1
-    WithEvents Timer1 As New Timer
+    Private WithEvents Timer1 As New Timer
 
     Private Shared Sub WebView21_ContentLoading(sender As Object, e As CoreWebView2ContentLoadingEventArgs) Handles WebView21.ContentLoading
         Debug.Print($"Is Error Page = {e.IsErrorPage}")

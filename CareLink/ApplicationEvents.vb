@@ -1,11 +1,14 @@
-﻿Imports Microsoft.VisualBasic.ApplicationServices
+﻿''' Licensed to the .NET Foundation under one or more agreements.
+''' The .NET Foundation licenses this file to you under the MIT license.
+''' See the LICENSE file in the project root for more information.
 
+' ReSharper disable once CheckNamespace
 Namespace My
     ' The following events are available for MyApplication:
     ' Startup: Raised when the application starts, before the startup form is created.
     ' Shutdown: Raised after all application forms are closed.  This event is not raised if the application terminates abnormally.
     ' UnhandledException: Raised if the application encounters an unhandled exception.
-    ' StartupNextInstance: Raised when launching a single-instance application and the application is already active. 
+    ' StartupNextInstance: Raised when launching a single-instance application and the application is already active.
     ' NetworkAvailabilityChanged: Raised when the network connection is connected or disconnected.
 
     ' **NEW** ApplyHighDpiMode: Raised when the application queries the HighDpiMode to set it for the application.
