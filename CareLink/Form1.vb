@@ -120,14 +120,14 @@ catch(err) {
     Private Async Sub WebView21_NavigationStarting(sender As Object, e As CoreWebView2NavigationStartingEventArgs) Handles WebView21.NavigationStarting
         InitializeAsync()
         AddressBar.Text = e.Uri
-        If e.Uri.Contains("continue") Then
+        If e.Uri.Contains("https://carelink.minimed.com/patient/sso/login?country=us&lang=en") Then
             Await WebView21.ExecuteScriptAsync(continueScript)
         ElseIf e.Uri.Contains($"https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login?action=display") Then
             ' Get UserName and password from user
             ' This is only for testing
             Dim userName As String = InputBox("Enter User Name")
             Dim password As String = InputBox("Enter Password")
-            Await WebView21.ExecuteScriptAsync(loginScript.ToString().Replace("MyUserID",userName).Replace("MyPassword",password))
+            Await WebView21.ExecuteScriptAsync(loginScript.ToString().Replace("MyUserID", userName).Replace("MyPassword", password))
         Else
             Stop
         End If
@@ -142,4 +142,12 @@ catch(err) {
         AddHandler WebView21.CoreWebView2.WebMessageReceived, AddressOf UpdateAddressBar
     End Sub
 
+    Private Sub StartDisplayToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles StartDisplayToolStripMenuItem.Click
+        Timer1.Interval = 10000
+        Timer1.Enabled = True
+    End Sub
+
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        parseMySensorValue()
+    End Sub
 End Class
