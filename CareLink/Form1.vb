@@ -12,7 +12,7 @@ Public Class Form1
     '<label class="mat-checkbox-layout" for="mat-checkbox-1-input"><div class="mat-checkbox-inner-container"><input class="mat-checkbox-input cdk-visually-hidden" type="checkbox" id="mat-checkbox-1-input" tabindex="0" aria-checked="false"><div class="mat-checkbox-ripple mat-ripple" matripple=""><div class="mat-ripple-element mat-checkbox-persistent-ripple"></div></div><div class="mat-checkbox-frame"></div><div class="mat-checkbox-background"><svg xml:space="preserve" class="mat-checkbox-checkmark" focusable="false" version="1.1" viewBox="0 0 24 24"><path class="mat-checkbox-checkmark-path" d="M4.1,12.7 9,17.6 20.3,6.3" fill="none" stroke="white"></path></svg><div class="mat-checkbox-mixedmark"></div></div></div><span class="mat-checkbox-label"><span style="display:none">&nbsp;</span> Don`t ask me again </span></label>
     Private ReadOnly BrowserAcceptScript = <script>
 try {
-    document.getElementsById("mat-checkbox-1-input").checked=true;
+    document.getElementsByName("mat-checkbox-1-input").checked=true;
     }
 catch(err) {
     alert(err.message);
@@ -105,7 +105,7 @@ catch(err) {
                     Thread.Sleep(100)
                 End While
 
-                If parsedHtml.Result.Contains("mat-checkbox-1-input") Then
+                If parsedHtml?.Result?.Contains("mat-checkbox-1-input") Then
 
                 End If
                 Await WebView21.ExecuteScriptAsync(BrowserAcceptScript)
