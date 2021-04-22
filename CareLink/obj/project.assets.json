@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net5.0-windows7.0": {
-      "Microsoft.Web.WebView2/1.0.774.44": {
+      "Microsoft.Web.WebView2/1.0.818.41": {
         "type": "package",
         "compile": {
           "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.dll": {},
@@ -35,16 +35,17 @@
     }
   },
   "libraries": {
-    "Microsoft.Web.WebView2/1.0.774.44": {
-      "sha512": "B0RDeSBkOtS6Uj3ojIHBnFDGlltoklQE+mqmbSJJEubB4/o9iFTz9rGnTx3Q5syE33T2SsKK436Hfz53kL7RGw==",
+    "Microsoft.Web.WebView2/1.0.818.41": {
+      "sha512": "fOEZCzNHDtWuNGgOWaA7lD0UkiFXJGhWXEBwqsw9sMrx4QXl8SqNX7qVNYdJrbGvpf3B67CGO3WuUI2z3Yai5w==",
       "type": "package",
-      "path": "microsoft.web.webview2/1.0.774.44",
+      "path": "microsoft.web.webview2/1.0.818.41",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.txt",
         "WebView2.idl",
         "WebView2.tlb",
+        "build/Common.targets",
         "build/Microsoft.Web.WebView2.targets",
         "build/native/Microsoft.Web.WebView2.targets",
         "build/native/arm64/WebView2Loader.dll",
@@ -70,7 +71,7 @@
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.xml",
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll",
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.xml",
-        "microsoft.web.webview2.1.0.774.44.nupkg.sha512",
+        "microsoft.web.webview2.1.0.818.41.nupkg.sha512",
         "microsoft.web.webview2.nuspec",
         "runtimes/win-arm64/native/WebView2Loader.dll",
         "runtimes/win-x64/native/WebView2Loader.dll",
@@ -80,7 +81,7 @@
   },
   "projectFileDependencyGroups": {
     "net5.0-windows7.0": [
-      "Microsoft.Web.WebView2 >= 1.0.774.44"
+      "Microsoft.Web.WebView2 >= 1.0.818.41"
     ]
   },
   "packageFolders": {
@@ -135,7 +136,7 @@
         "dependencies": {
           "Microsoft.Web.WebView2": {
             "target": "Package",
-            "version": "[1.0.774.44, )"
+            "version": "[1.0.818.41, )"
           }
         },
         "imports": [

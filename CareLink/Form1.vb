@@ -3,17 +3,48 @@
 ''' See the LICENSE file in the project root for more information.
 
 Imports System.Text.RegularExpressions
+Imports System.Threading
+
 Imports Microsoft.Web.WebView2.Core
 
 Public Class Form1
-    Private WithEvents Timer1 As New Timer
+
+    '<label class="mat-checkbox-layout" for="mat-checkbox-1-input"><div class="mat-checkbox-inner-container"><input class="mat-checkbox-input cdk-visually-hidden" type="checkbox" id="mat-checkbox-1-input" tabindex="0" aria-checked="false"><div class="mat-checkbox-ripple mat-ripple" matripple=""><div class="mat-ripple-element mat-checkbox-persistent-ripple"></div></div><div class="mat-checkbox-frame"></div><div class="mat-checkbox-background"><svg xml:space="preserve" class="mat-checkbox-checkmark" focusable="false" version="1.1" viewBox="0 0 24 24"><path class="mat-checkbox-checkmark-path" d="M4.1,12.7 9,17.6 20.3,6.3" fill="none" stroke="white"></path></svg><div class="mat-checkbox-mixedmark"></div></div></div><span class="mat-checkbox-label"><span style="display:none">&nbsp;</span> Don`t ask me again </span></label>
+    Private ReadOnly BrowserAcceptScript = <script>
+try {
+    document.getElementsById("mat-checkbox-1-input").checked=true;
+    }
+catch(err) {
+    alert(err.message);
+}
+                 </script>.Value
+
+    '    <a _ngcontent-gsk-c5="" class="cl-landing-login-button" tabindex="-1" href="patient/sso/login?country=us&amp;lang=en"> Continue </a>
+    Private ReadOnly continueScript = <script>
+try {
+    document.getElementsByName("cl-landing-login-button")[0].click();
+    }
+catch(err) {
+    alert(err.message);
+}
+                 </script>.Value
+
+    Private ReadOnly loginScript = <script>
+try {
+    // set username
+    document.getElementsByName("login")[0].value = "MyUserID";
+    // set password...
+    document.getElementsByName("password")[0].value = "MyPassword";
+        // 'click' the submit button
+    document.getElementsByName("B1")[0].click();
+    }
+catch(err) {
+    alert(err.message);
+}
+                 </script>.Value
 
     Private Shared Sub WebView21_ContentLoading(sender As Object, e As CoreWebView2ContentLoadingEventArgs) Handles WebView21.ContentLoading
         Debug.Print($"Is Error Page = {e.IsErrorPage}")
-    End Sub
-
-    Private Shared Sub WebView21_NavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs) Handles WebView21.NavigationCompleted
-        Debug.Print($"Web Error Status = {e.WebErrorStatus}")
     End Sub
 
     Private Shared Sub WebView21_WebMessageReceived(sender As Object, e As CoreWebView2WebMessageReceivedEventArgs) Handles WebView21.WebMessageReceived
@@ -22,46 +53,93 @@ Public Class Form1
 
     Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         Await WebView21.EnsureCoreWebView2Async()
+        AddHandler WebView21.CoreWebView2.DOMContentLoaded, AddressOf WebView_CoreWebView2_DomContentLoaded
     End Sub
 
     Private Sub Form1_Resize(sender As Object, e As EventArgs) Handles Me.Resize
         WebView21.Size = ClientSize - New Size(WebView21.Location)
     End Sub
 
-    Private Async Function parseMyHtml() As Task(Of String)
-        Dim htmlToParse = Await WebView21.ExecuteScriptAsync("document.documentElement.outerHTML;")
+    Private Async Function GetHtmlAsync() As Task(Of String)
+        Dim htmlToParse As String = Await WebView21.ExecuteScriptAsync("document.documentElement.outerHTML;")
         htmlToParse = Regex.Unescape(htmlToParse)
         htmlToParse = htmlToParse.Remove(0, 1)
-        htmlToParse = htmlToParse.Remove(htmlToParse.Length - 1, 1)
+        Return htmlToParse.Remove(htmlToParse.Length - 1, 1)
+    End Function
 
-        Dim i As Integer = htmlToParse.IndexOf("<div class=""sensor-value""", StringComparison.InvariantCulture)
+    Private Function parseMySensorValue() As String
+        Dim parsedHtml As String = GetHtmlAsync().Result
+        Dim i As Integer = parsedHtml.IndexOf("<div class=""sensor-value""", StringComparison.InvariantCulture)
         If i >= 0 Then
-            i = htmlToParse.IndexOf(">", i + 1, StringComparison.InvariantCulture)
+            i = parsedHtml.IndexOf(">", i + 1, StringComparison.InvariantCulture)
             i += 1
-            Dim lessThanIndex As Integer = htmlToParse.IndexOf("<", i, StringComparison.InvariantCulture)
-            Return htmlToParse.Substring(i, lessThanIndex - i)
+            Dim lessThanIndex As Integer = parsedHtml.IndexOf("<", i, StringComparison.InvariantCulture)
+            Return parsedHtml.Substring(i, lessThanIndex - i)
         End If
         Return ""
     End Function
 
-    Private Async Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        Timer1.Stop()
-        Await parseMyHtml()
+    Private Sub UpdateAddressBar(sender As Object, args As CoreWebView2WebMessageReceivedEventArgs)
+        Dim uri As String = args.TryGetWebMessageAsString()
+        AddressBar.Text = uri
+        WebView21.CoreWebView2.PostWebMessageAsString(uri)
     End Sub
 
-    Private Sub WebView21_NavigationStarting(sender As Object, e As CoreWebView2NavigationStartingEventArgs) Handles WebView21.NavigationStarting
+    Private Sub WebView_CoreWebView2_DomContentLoaded(sender As Object, e As CoreWebView2DOMContentLoadedEventArgs)
+        Stop
+    End Sub
+
+    Private Sub WebView21_CoreWebView2InitializationCompleted(sender As Object, e As CoreWebView2InitializationCompletedEventArgs) Handles WebView21.CoreWebView2InitializationCompleted
+        Stop
+    End Sub
+
+    Private Async Sub WebView21_NavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs) Handles WebView21.NavigationCompleted
+        Debug.Print($"Web Error Status = {e.WebErrorStatus}")
+        If e.IsSuccess Then
+            If AddressBar.Text = $"https://carelink.minimed.com/app/login" Then
+
+                '-----> HANGS Here
+
+                Dim parsedHtml As Task(Of String) = GetHtmlAsync()
+                While Not parsedHtml.IsCompleted
+                    Thread.Sleep(100)
+                End While
+
+                If parsedHtml.Result.Contains("mat-checkbox-1-input") Then
+
+                End If
+                Await WebView21.ExecuteScriptAsync(BrowserAcceptScript)
+            End If
+            Stop
+        Else
+            Stop
+        End If
+
+    End Sub
+
+    Private Async Sub WebView21_NavigationStarting(sender As Object, e As CoreWebView2NavigationStartingEventArgs) Handles WebView21.NavigationStarting
+        InitializeAsync()
         AddressBar.Text = e.Uri
+        If e.Uri.Contains("continue") Then
+            Await WebView21.ExecuteScriptAsync(continueScript)
+        ElseIf e.Uri.Contains($"https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login?action=display") Then
+            ' Get UserName and password from user
+            ' This is only for testing
+            Dim userName As String = InputBox("Enter User Name")
+            Dim password As String = InputBox("Enter Password")
+            Await WebView21.ExecuteScriptAsync(loginScript.ToString().Replace("MyUserID",userName).Replace("MyPassword",password))
+        Else
+            Stop
+        End If
     End Sub
 
     Private Sub WebView21_SourceChanged(sender As Object, e As CoreWebView2SourceChangedEventArgs) Handles WebView21.SourceChanged
         Debug.Print($"Is New Document = {e.IsNewDocument}")
+    End Sub
 
-        If Timer1.Enabled Then
-            Timer1.Stop() 'Timer starts functioning
-            Timer1.Interval = 10000
-        End If
-        Timer1.Start() 'Timer starts functioning
-
+    Async Sub InitializeAsync()
+        Await WebView21.EnsureCoreWebView2Async(Nothing)
+        AddHandler WebView21.CoreWebView2.WebMessageReceived, AddressOf UpdateAddressBar
     End Sub
 
 End Class
