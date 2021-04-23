@@ -35,6 +35,7 @@ Partial Class Form1
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.CurrentBGToolStripTextBox = New System.Windows.Forms.ToolStripTextBox()
         CType(Me.WebView21,System.ComponentModel.ISupportInitialize).BeginInit
         Me.MenuStrip1.SuspendLayout
         Me.SuspendLayout
@@ -42,7 +43,7 @@ Partial Class Form1
         'AddressBar
         '
         Me.AddressBar.Dock = System.Windows.Forms.DockStyle.Top
-        Me.AddressBar.Location = New System.Drawing.Point(0, 24)
+        Me.AddressBar.Location = New System.Drawing.Point(0, 27)
         Me.AddressBar.Name = "AddressBar"
         Me.AddressBar.Size = New System.Drawing.Size(933, 23)
         Me.AddressBar.TabIndex = 1
@@ -60,10 +61,10 @@ Partial Class Form1
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StartDisplayToolStripMenuItem, Me.HelpToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StartDisplayToolStripMenuItem, Me.HelpToolStripMenuItem, Me.CurrentBGToolStripTextBox})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(933, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(933, 27)
         Me.MenuStrip1.TabIndex = 2
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -71,7 +72,7 @@ Partial Class Form1
         '
         Me.StartDisplayToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.TimerToolStripMenuItem, Me.ExitToolStripMenuItem})
         Me.StartDisplayToolStripMenuItem.Name = "StartDisplayToolStripMenuItem"
-        Me.StartDisplayToolStripMenuItem.Size = New System.Drawing.Size(57, 20)
+        Me.StartDisplayToolStripMenuItem.Size = New System.Drawing.Size(57, 23)
         Me.StartDisplayToolStripMenuItem.Text = "Display"
         '
         'TimerToolStripMenuItem
@@ -93,14 +94,22 @@ Partial Class Form1
         '
         Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutToolStripMenuItem})
         Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
-        Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
+        Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 23)
         Me.HelpToolStripMenuItem.Text = "&Help"
         '
         'AboutToolStripMenuItem
         '
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
-        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
+        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
         Me.AboutToolStripMenuItem.Text = "&About..."
+        '
+        'Timer1
+        '
+        '
+        'CurrentBGToolStripTextBox
+        '
+        Me.CurrentBGToolStripTextBox.Name = "CurrentBGToolStripTextBox"
+        Me.CurrentBGToolStripTextBox.Size = New System.Drawing.Size(100, 23)
         '
         'Form1
         '
@@ -132,4 +141,5 @@ End Sub
     Friend WithEvents AboutToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Timer1 As Timer
     Friend WithEvents StartDisplayToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents CurrentBGToolStripTextBox As ToolStripTextBox
 End Class

@@ -60,25 +60,6 @@ catch(err) {
         WebView21.Size = ClientSize - New Size(WebView21.Location)
     End Sub
 
-    Private Async Function GetHtmlAsync() As Task(Of String)
-        Dim htmlToParse As String = Await WebView21.ExecuteScriptAsync("document.documentElement.outerHTML;")
-        htmlToParse = Regex.Unescape(htmlToParse)
-        htmlToParse = htmlToParse.Remove(0, 1)
-        Return htmlToParse.Remove(htmlToParse.Length - 1, 1)
-    End Function
-
-    Private Function parseMySensorValue() As String
-        Dim parsedHtml As String = GetHtmlAsync().Result
-        Dim i As Integer = parsedHtml.IndexOf("<div class=""sensor-value""", StringComparison.InvariantCulture)
-        If i >= 0 Then
-            i = parsedHtml.IndexOf(">", i + 1, StringComparison.InvariantCulture)
-            i += 1
-            Dim lessThanIndex As Integer = parsedHtml.IndexOf("<", i, StringComparison.InvariantCulture)
-            Return parsedHtml.Substring(i, lessThanIndex - i)
-        End If
-        Return ""
-    End Function
-
     Private Sub UpdateAddressBar(sender As Object, args As CoreWebView2WebMessageReceivedEventArgs)
         Dim uri As String = args.TryGetWebMessageAsString()
         AddressBar.Text = uri
@@ -100,12 +81,11 @@ catch(err) {
 
                 '-----> HANGS Here
 
-                Dim parsedHtml As Task(Of String) = GetHtmlAsync()
-                While Not parsedHtml.IsCompleted
-                    Thread.Sleep(100)
-                End While
-
-                If parsedHtml?.Result?.Contains("mat-checkbox-1-input") Then
+                Dim htmlToParse As String = Await WebView21.ExecuteScriptAsync("document.documentElement.outerHTML;")
+                htmlToParse = Regex.Unescape(htmlToParse)
+                htmlToParse = htmlToParse.Remove(0, 1)
+                Dim parsedHtml As String = htmlToParse.Remove(htmlToParse.Length - 1, 1)
+                If parsedHtml.Contains("mat-checkbox-1-input") Then
 
                 End If
                 Await WebView21.ExecuteScriptAsync(BrowserAcceptScript)
@@ -147,7 +127,17 @@ catch(err) {
         Timer1.Enabled = True
     End Sub
 
-    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        parseMySensorValue()
+    Private Async Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        Dim htmlToParse As String = Await WebView21.ExecuteScriptAsync("document.documentElement.outerHTML;")
+        htmlToParse = Regex.Unescape(htmlToParse)
+        htmlToParse = htmlToParse.Remove(0, 1)
+        Dim parsedHtml As String = htmlToParse.Remove(htmlToParse.Length - 1, 1)
+        Dim i As Integer = parsedHtml.IndexOf("<div class=""sensor-value""", StringComparison.InvariantCulture)
+        If i >= 0 Then
+            i = parsedHtml.IndexOf(">", i + 1, StringComparison.InvariantCulture)
+            i += 1
+            Dim lessThanIndex As Integer = parsedHtml.IndexOf("<", i, StringComparison.InvariantCulture)
+            CurrentBGToolStripTextBox.Text = parsedHtml.Substring(i, lessThanIndex - i)
+        End If
     End Sub
 End Class
