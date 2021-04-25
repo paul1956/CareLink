@@ -7,7 +7,9 @@ Imports System.Text.RegularExpressions
 Imports Microsoft.Web.WebView2.Core
 
 Public Class Form1
+    Private initializized As Boolean = False
     Private Const carelinkServerAddress As String = "carelink.minimed.com"
+    Private ReadOnly deviceWarning As String = $"https://{carelinkServerAddress}/app/device-warning"
 
     '<label class="mat-checkbox-layout" for="mat-checkbox-1-input"><div class="mat-checkbox-inner-container"><input class="mat-checkbox-input cdk-visually-hidden" type="checkbox" id="mat-checkbox-1-input" tabindex="0" aria-checked="false"><div class="mat-checkbox-ripple mat-ripple" matripple=""><div class="mat-ripple-element mat-checkbox-persistent-ripple"></div></div><div class="mat-checkbox-frame"></div><div class="mat-checkbox-background"><svg xml:space="preserve" class="mat-checkbox-checkmark" focusable="false" version="1.1" viewBox="0 0 24 24"><path class="mat-checkbox-checkmark-path" d="M4.1,12.7 9,17.6 20.3,6.3" fill="none" stroke="white"></path></svg><div class="mat-checkbox-mixedmark"></div></div></div><span class="mat-checkbox-label"><span style="display:none">&nbsp;</span> Don`t ask me again </span></label>
     Private ReadOnly BrowserAcceptScript = <script>
@@ -90,7 +92,7 @@ catch(err) {
     End Sub
 
     Private Sub WebView21_CoreWebView2InitializationCompleted(sender As Object, e As CoreWebView2InitializationCompletedEventArgs) Handles WebView21.CoreWebView2InitializationCompleted
-        Stop
+        InitializeAsync()
     End Sub
 
     Private Async Sub WebView21_NavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs) Handles WebView21.NavigationCompleted
@@ -105,9 +107,8 @@ catch(err) {
                 htmlToParse = htmlToParse.Remove(0, 1)
                 Dim parsedHtml As String = htmlToParse.Remove(htmlToParse.Length - 1, 1)
                 If parsedHtml.Contains("mat-checkbox-1-input") Then
-
+                    Await WebView21.ExecuteScriptAsync(BrowserAcceptScript)
                 End If
-                Await WebView21.ExecuteScriptAsync(BrowserAcceptScript)
             End If
             Stop
         Else
@@ -119,7 +120,7 @@ catch(err) {
     Private Async Sub WebView21_NavigationStarting(sender As Object, e As CoreWebView2NavigationStartingEventArgs) Handles WebView21.NavigationStarting
         InitializeAsync()
         AddressBar.Text = e.Uri
-        If e.Uri.Contains("https://carelink.minimed.com/patient/sso/login?country=us&lang=en") Then
+        If e.Uri.Contains($"https://{carelinkServerAddress}/patient/sso/login?country=us&lang=en") Then
             Await WebView21.ExecuteScriptAsync(continueScript)
         ElseIf e.Uri.Contains($"https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login?action=display") Then
             ' Get UserName and password from user
@@ -138,7 +139,10 @@ catch(err) {
 
     Public Async Sub InitializeAsync()
         Await WebView21.EnsureCoreWebView2Async(Nothing)
-        AddHandler WebView21.CoreWebView2.WebMessageReceived, AddressOf UpdateAddressBar
+        If Not initializized Then
+            initializized = True
+            AddHandler WebView21.CoreWebView2.WebMessageReceived, AddressOf UpdateAddressBar
+        End If
     End Sub
 
 End Class
