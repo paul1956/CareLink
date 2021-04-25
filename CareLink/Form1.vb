@@ -3,11 +3,11 @@
 ''' See the LICENSE file in the project root for more information.
 
 Imports System.Text.RegularExpressions
-Imports System.Threading
 
 Imports Microsoft.Web.WebView2.Core
 
 Public Class Form1
+    Private Const carelinkServerAddress As String = "carelink.minimed.com"
 
     '<label class="mat-checkbox-layout" for="mat-checkbox-1-input"><div class="mat-checkbox-inner-container"><input class="mat-checkbox-input cdk-visually-hidden" type="checkbox" id="mat-checkbox-1-input" tabindex="0" aria-checked="false"><div class="mat-checkbox-ripple mat-ripple" matripple=""><div class="mat-ripple-element mat-checkbox-persistent-ripple"></div></div><div class="mat-checkbox-frame"></div><div class="mat-checkbox-background"><svg xml:space="preserve" class="mat-checkbox-checkmark" focusable="false" version="1.1" viewBox="0 0 24 24"><path class="mat-checkbox-checkmark-path" d="M4.1,12.7 9,17.6 20.3,6.3" fill="none" stroke="white"></path></svg><div class="mat-checkbox-mixedmark"></div></div></div><span class="mat-checkbox-label"><span style="display:none">&nbsp;</span> Don`t ask me again </span></label>
     Private ReadOnly BrowserAcceptScript = <script>
@@ -60,6 +60,25 @@ catch(err) {
         WebView21.Size = ClientSize - New Size(WebView21.Location)
     End Sub
 
+    Private Sub StartDisplayToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles StartDisplayToolStripMenuItem.Click
+        Timer1.Interval = 10000
+        Timer1.Enabled = True
+    End Sub
+
+    Private Async Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        Dim htmlToParse As String = Await WebView21.ExecuteScriptAsync("document.documentElement.outerHTML;")
+        htmlToParse = Regex.Unescape(htmlToParse)
+        htmlToParse = htmlToParse.Remove(0, 1)
+        Dim parsedHtml As String = htmlToParse.Remove(htmlToParse.Length - 1, 1)
+        Dim i As Integer = parsedHtml.IndexOf("<div class=""sensor-value""", StringComparison.InvariantCulture)
+        If i >= 0 Then
+            i = parsedHtml.IndexOf(">", i + 1, StringComparison.InvariantCulture)
+            i += 1
+            Dim lessThanIndex As Integer = parsedHtml.IndexOf("<", i, StringComparison.InvariantCulture)
+            CurrentBGToolStripTextBox.Text = parsedHtml.Substring(i, lessThanIndex - i)
+        End If
+    End Sub
+
     Private Sub UpdateAddressBar(sender As Object, args As CoreWebView2WebMessageReceivedEventArgs)
         Dim uri As String = args.TryGetWebMessageAsString()
         AddressBar.Text = uri
@@ -77,7 +96,7 @@ catch(err) {
     Private Async Sub WebView21_NavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs) Handles WebView21.NavigationCompleted
         Debug.Print($"Web Error Status = {e.WebErrorStatus}")
         If e.IsSuccess Then
-            If AddressBar.Text = $"https://carelink.minimed.com/app/login" Then
+            If AddressBar.Text = $"https://{carelinkServerAddress}/app/login" Then
 
                 '-----> HANGS Here
 
@@ -117,27 +136,9 @@ catch(err) {
         Debug.Print($"Is New Document = {e.IsNewDocument}")
     End Sub
 
-    Async Sub InitializeAsync()
+    Public Async Sub InitializeAsync()
         Await WebView21.EnsureCoreWebView2Async(Nothing)
         AddHandler WebView21.CoreWebView2.WebMessageReceived, AddressOf UpdateAddressBar
     End Sub
 
-    Private Sub StartDisplayToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles StartDisplayToolStripMenuItem.Click
-        Timer1.Interval = 10000
-        Timer1.Enabled = True
-    End Sub
-
-    Private Async Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        Dim htmlToParse As String = Await WebView21.ExecuteScriptAsync("document.documentElement.outerHTML;")
-        htmlToParse = Regex.Unescape(htmlToParse)
-        htmlToParse = htmlToParse.Remove(0, 1)
-        Dim parsedHtml As String = htmlToParse.Remove(htmlToParse.Length - 1, 1)
-        Dim i As Integer = parsedHtml.IndexOf("<div class=""sensor-value""", StringComparison.InvariantCulture)
-        If i >= 0 Then
-            i = parsedHtml.IndexOf(">", i + 1, StringComparison.InvariantCulture)
-            i += 1
-            Dim lessThanIndex As Integer = parsedHtml.IndexOf("<", i, StringComparison.InvariantCulture)
-            CurrentBGToolStripTextBox.Text = parsedHtml.Substring(i, lessThanIndex - i)
-        End If
-    End Sub
 End Class
