@@ -15,7 +15,7 @@ Public Class Form1
     ' This script runs but nothing happens
     Private ReadOnly BrowserAcceptScript = <script>
 try {
-    document.getElementsByClassName("cl-device-warning-continue-btn").click;
+    document.getElementsByClassName("cl-device-warning-continue-btn").click();
     }
 catch(err) {
     alert(err.message);
