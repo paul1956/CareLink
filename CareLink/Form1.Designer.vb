@@ -25,17 +25,15 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Me.AddressBar = New System.Windows.Forms.TextBox()
         Me.WebView21 = New Microsoft.Web.WebView2.WinForms.WebView2()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.StartDisplayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TimerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.CurrentBGToolStripTextBox = New System.Windows.Forms.ToolStripTextBox()
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         CType(Me.WebView21,System.ComponentModel.ISupportInitialize).BeginInit
         Me.MenuStrip1.SuspendLayout
         Me.SuspendLayout
@@ -55,7 +53,7 @@ Partial Class Form1
         Me.WebView21.Location = New System.Drawing.Point(0, 53)
         Me.WebView21.Name = "WebView21"
         Me.WebView21.Size = New System.Drawing.Size(800, 420)
-        Me.WebView21.Source = New System.Uri("https://carelink.minimed.com/app/login", System.UriKind.Absolute)
+        Me.WebView21.Source = New System.Uri("https://carelink.minimed.com/", System.UriKind.Absolute)
         Me.WebView21.TabIndex = 0
         Me.WebView21.ZoomFactor = 1R
         '
@@ -70,19 +68,10 @@ Partial Class Form1
         '
         'StartDisplayToolStripMenuItem
         '
-        Me.StartDisplayToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.TimerToolStripMenuItem, Me.ExitToolStripMenuItem})
+        Me.StartDisplayToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExitToolStripMenuItem})
         Me.StartDisplayToolStripMenuItem.Name = "StartDisplayToolStripMenuItem"
         Me.StartDisplayToolStripMenuItem.Size = New System.Drawing.Size(57, 23)
         Me.StartDisplayToolStripMenuItem.Text = "Display"
-        '
-        'TimerToolStripMenuItem
-        '
-        Me.TimerToolStripMenuItem.Image = CType(resources.GetObject("TimerToolStripMenuItem.Image"),System.Drawing.Image)
-        Me.TimerToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.TimerToolStripMenuItem.Name = "TimerToolStripMenuItem"
-        Me.TimerToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.N),System.Windows.Forms.Keys)
-        Me.TimerToolStripMenuItem.Size = New System.Drawing.Size(141, 22)
-        Me.TimerToolStripMenuItem.Text = "Start"
         '
         'ExitToolStripMenuItem
         '
@@ -103,13 +92,13 @@ Partial Class Form1
         Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
         Me.AboutToolStripMenuItem.Text = "&About..."
         '
-        'Timer1
-        '
-        '
         'CurrentBGToolStripTextBox
         '
         Me.CurrentBGToolStripTextBox.Name = "CurrentBGToolStripTextBox"
         Me.CurrentBGToolStripTextBox.Size = New System.Drawing.Size(100, 23)
+        '
+        'Timer1
+        '
         '
         'Form1
         '
@@ -135,7 +124,6 @@ End Sub
     Friend WithEvents AddressBar As TextBox
     Friend WithEvents MenuStrip1 As MenuStrip
     Friend WithEvents StarDisplayToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents TimerToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents HelpToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents AboutToolStripMenuItem As ToolStripMenuItem
