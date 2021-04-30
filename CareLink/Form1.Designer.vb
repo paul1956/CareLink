@@ -34,6 +34,7 @@ Partial Class Form1
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CurrentBGToolStripTextBox = New System.Windows.Forms.ToolStripTextBox()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.RichTextBox1 = New System.Windows.Forms.RichTextBox()
         CType(Me.WebView21,System.ComponentModel.ISupportInitialize).BeginInit
         Me.MenuStrip1.SuspendLayout
         Me.SuspendLayout
@@ -43,7 +44,7 @@ Partial Class Form1
         Me.AddressBar.Dock = System.Windows.Forms.DockStyle.Top
         Me.AddressBar.Location = New System.Drawing.Point(0, 27)
         Me.AddressBar.Name = "AddressBar"
-        Me.AddressBar.Size = New System.Drawing.Size(933, 23)
+        Me.AddressBar.Size = New System.Drawing.Size(1416, 23)
         Me.AddressBar.TabIndex = 1
         '
         'WebView21
@@ -52,7 +53,7 @@ Partial Class Form1
         Me.WebView21.DefaultBackgroundColor = System.Drawing.Color.White
         Me.WebView21.Location = New System.Drawing.Point(0, 53)
         Me.WebView21.Name = "WebView21"
-        Me.WebView21.Size = New System.Drawing.Size(800, 420)
+        Me.WebView21.Size = New System.Drawing.Size(800, 454)
         Me.WebView21.Source = New System.Uri("https://carelink.minimed.com/", System.UriKind.Absolute)
         Me.WebView21.TabIndex = 0
         Me.WebView21.ZoomFactor = 1R
@@ -62,7 +63,7 @@ Partial Class Form1
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StartDisplayToolStripMenuItem, Me.HelpToolStripMenuItem, Me.CurrentBGToolStripTextBox})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(933, 27)
+        Me.MenuStrip1.Size = New System.Drawing.Size(1416, 27)
         Me.MenuStrip1.TabIndex = 2
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -76,7 +77,7 @@ Partial Class Form1
         'ExitToolStripMenuItem
         '
         Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
-        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(141, 22)
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(93, 22)
         Me.ExitToolStripMenuItem.Text = "E&xit"
         '
         'HelpToolStripMenuItem
@@ -100,11 +101,21 @@ Partial Class Form1
         'Timer1
         '
         '
+        'RichTextBox1
+        '
+        Me.RichTextBox1.Location = New System.Drawing.Point(807, 57)
+        Me.RichTextBox1.Name = "RichTextBox1"
+        Me.RichTextBox1.Size = New System.Drawing.Size(609, 450)
+        Me.RichTextBox1.TabIndex = 3
+        Me.RichTextBox1.Text = ""
+        Me.RichTextBox1.WordWrap = false
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7!, 15!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(933, 519)
+        Me.ClientSize = New System.Drawing.Size(1416, 519)
+        Me.Controls.Add(Me.RichTextBox1)
         Me.Controls.Add(Me.AddressBar)
         Me.Controls.Add(Me.WebView21)
         Me.Controls.Add(Me.MenuStrip1)
@@ -130,4 +141,5 @@ End Sub
     Friend WithEvents Timer1 As Timer
     Friend WithEvents StartDisplayToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CurrentBGToolStripTextBox As ToolStripTextBox
+    Friend WithEvents RichTextBox1 As RichTextBox
 End Class

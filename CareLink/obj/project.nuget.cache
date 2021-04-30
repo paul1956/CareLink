@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "4MpstHSA/QFfbgjmH357Rpxa+zSd4apKIMpVUZgRb/g2A/irTlYwkSjXK2HABkitDlkEOnw8LIwDVSk2HYDtkg==",
+  "dgSpecHash": "Q01wrx0XROGMKu1Jx+riDaCEwMN0aeqHdjJbZMVY7OdiwcstGNhX2TaZRXPHxVOPh4sSCcSfgbbecwbpsOCbaw==",
   "success": true,
   "projectFilePath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\CareLink\\CareLink.vbproj",
   "expectedPackageFiles": [
+    "C:\\Users\\PaulM\\.nuget\\packages\\htmlagilitypack\\1.11.33\\htmlagilitypack.1.11.33.nupkg.sha512",
     "C:\\Users\\PaulM\\.nuget\\packages\\microsoft.web.webview2\\1.0.818.41\\microsoft.web.webview2.1.0.818.41.nupkg.sha512"
   ],
   "logs": []
