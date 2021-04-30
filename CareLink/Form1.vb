@@ -3,6 +3,7 @@
 ''' See the LICENSE file in the project root for more information.
 
 Imports System.Text.RegularExpressions
+Imports System.Threading
 
 Imports Microsoft.Web.WebView2.Core
 
@@ -54,7 +55,6 @@ catch(err) {
 }
                  </script>.Value
 
-    Private initializized As Boolean = False
     Private loginSuccessfully As Boolean = False
 
     Private Shared Sub WebView21_ContentLoading(sender As Object, e As CoreWebView2ContentLoadingEventArgs) Handles WebView21.ContentLoading
@@ -68,6 +68,7 @@ catch(err) {
     Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         Await WebView21.EnsureCoreWebView2Async()
         AddHandler WebView21.CoreWebView2.DOMContentLoaded, AddressOf WebView_CoreWebView2_DomContentLoaded
+        AddHandler WebView21.CoreWebView2.WebMessageReceived, AddressOf UpdateAddressBar
     End Sub
 
     Private Sub Form1_Resize(sender As Object, e As EventArgs) Handles Me.Resize
@@ -103,6 +104,8 @@ catch(err) {
     End Sub
 
     Private Async Sub WebView21_NavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs) Handles WebView21.NavigationCompleted
+        Thread.Sleep(2000)
+        Application.DoEvents()
         Debug.Print($"Web Error Status = {e.WebErrorStatus}")
         If e.IsSuccess Then
             If AddressBar.Text = $"https://{carelinkServerAddress}/" Then
@@ -133,11 +136,10 @@ catch(err) {
                 End If
             End If
             If AddressBar.Text.Contains($"https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login?action=display") Then
-                ' Get UserName and password from user
-                ' This is only for testing
-                Dim userName As String = InputBox("Enter User Name")
-                Dim password As String = InputBox("Enter Password")
-                Await WebView21.ExecuteScriptAsync(loginScript.ToString().Replace("MyUserID", userName).Replace("MyPassword", password))
+                Using loginDialog = New LoginForm1
+                    loginDialog.ShowDialog()
+                    Await WebView21.ExecuteScriptAsync(loginScript.ToString().Replace("MyUserID", loginDialog.UserName).Replace("MyPassword", loginDialog.Password))
+                End Using
             End If
             If AddressBar.Text = $"https://{carelinkServerAddress}/app/home" Then
                 Await WebView21.ExecuteScriptAsync(connectScript.ToString())
@@ -151,7 +153,6 @@ catch(err) {
     End Sub
 
     Private Sub WebView21_NavigationStarting(sender As Object, e As CoreWebView2NavigationStartingEventArgs) Handles WebView21.NavigationStarting
-        InitializeAsync()
         AddressBar.Text = e.Uri
         If e.Uri = "https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/consent" Then
             loginSuccessfully = True
@@ -166,10 +167,6 @@ catch(err) {
 
     Public Async Sub InitializeAsync()
         Await WebView21.EnsureCoreWebView2Async(Nothing)
-        If Not initializized Then
-            initializized = True
-            AddHandler WebView21.CoreWebView2.WebMessageReceived, AddressOf UpdateAddressBar
-        End If
     End Sub
 
 End Class
