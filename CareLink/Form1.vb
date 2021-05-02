@@ -2,11 +2,8 @@
 ''' The .NET Foundation licenses this file to you under the MIT license.
 ''' See the LICENSE file in the project root for more information.
 
-Imports System.IO
 Imports System.Text.RegularExpressions
 Imports System.Threading
-
-Imports HtmlAgilityPack
 
 Imports Microsoft.Web.WebView2.Core
 
@@ -68,6 +65,24 @@ catch(err) {
         Debug.Print($"Web Message As Json = {e.WebMessageAsJson}, URL = {e.Source}")
     End Sub
 
+    Private Sub FindNext_Click(sender As Object, e As EventArgs) Handles FindNext.Click
+        Static foundIndex As Integer = Math.Max(RichTextBox1.SelectionStart, 0)
+        If FindWhat.Text.Length > 0 Then
+            'find the text that need to be highlighted.
+            foundIndex = RichTextBox1.Find(FindWhat.Text, foundIndex + 1, -1, RichTextBoxFinds.None)
+            RichTextBox1.Focus()
+
+            If foundIndex = -1 Then
+                MessageBox.Show($"This document don't contains the text you typed, or any of the text you typed as a whole word or mach case.", $"Find Text Error", MessageBoxButtons.OK, MessageBoxIcon.Asterisk)
+            Else
+                'now the text will be highlighted.
+                RichTextBox1.SelectionBackColor = Color.Yellow
+                RichTextBox1.Focus()
+            End If
+        End If
+
+    End Sub
+
     Private Async Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         ClientSize = New Size(CInt(Screen.PrimaryScreen.WorkingArea.Width * 0.9), CType(Screen.PrimaryScreen.WorkingArea.Height * 0.9, Integer))
         Await WebView21.EnsureCoreWebView2Async()
@@ -78,8 +93,9 @@ catch(err) {
     Private Sub Form1_Resize(sender As Object, e As EventArgs) Handles Me.Resize
         Dim halfWidth As Integer = ClientSize.Width \ 2
         WebView21.Size = ClientSize - New Size(halfWidth, WebView21.Location.Y)
+        RichTextBox1.Top = WebView21.Top
         RichTextBox1.Width = halfWidth
-        RichTextBox1.Height = ClientSize.Height
+        RichTextBox1.Height = ClientSize.Height - 50
         RichTextBox1.Left = halfWidth
     End Sub
 
@@ -87,29 +103,12 @@ catch(err) {
         htmlToParse = Regex.Unescape(htmlToParse)
         htmlToParse = htmlToParse.Remove(0, 1)
         htmlToParse = htmlToParse.Remove(htmlToParse.Length - 1, 1)
-        Dim htmlDoc As New HtmlDocument With {
-            .OptionFixNestedTags = True
-        }
-        htmlDoc.LoadHtml(htmlToParse)
+        htmlToParse = htmlToParse.Replace(vbLf, vbCrLf)
+        htmlToParse = htmlToParse.Replace(">", $">{vbCrLf}")
 
-        If htmlDoc.DocumentNode.HasChildNodes Then
-            Dim wrapperNeeded As Boolean = htmlDoc.DocumentNode.ChildNodes.Cast(Of HtmlNode)().Any(Function(n) n.NodeType <> HtmlNodeType.Element)
+        htmlToParse = htmlToParse.Replace("&quot;", """")
+        RichTextBox1.Text = htmlToParse
 
-            If wrapperNeeded Then
-                Dim wrapper As HtmlNode = htmlDoc.CreateElement("div")
-                wrapper.AppendChildren(htmlDoc.DocumentNode.ChildNodes)
-                htmlDoc.DocumentNode.RemoveAllChildren()
-                htmlDoc.DocumentNode.AppendChild(wrapper)
-            End If
-        End If
-        Dim html As String
-        Using writer As New StringWriter()
-            htmlDoc.Save(writer)
-            html = writer.ToString()
-        End Using
-        html = html.Replace("&quot;", """")
-        html = html.Replace("><", $">{vbCrLf}<")
-        RichTextBox1.Text = html.Replace(vbLf, vbCrLf)
         Return htmlToParse
     End Function
 
@@ -172,7 +171,7 @@ catch(err) {
             End If
             If AddressBar.Text = $"https://{carelinkServerAddress}/app/home" Then
                 Await WebView21.ExecuteScriptAsync(connectScript)
-                Timer1.Interval = 5000
+                Timer1.Interval = 50000
                 Timer1.Enabled = True
             End If
         Else

@@ -35,6 +35,8 @@ Partial Class Form1
         Me.CurrentBGToolStripTextBox = New System.Windows.Forms.ToolStripTextBox()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.RichTextBox1 = New System.Windows.Forms.RichTextBox()
+        Me.FindWhat = New System.Windows.Forms.ToolStripTextBox()
+        Me.FindNext = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.WebView21,System.ComponentModel.ISupportInitialize).BeginInit
         Me.MenuStrip1.SuspendLayout
         Me.SuspendLayout
@@ -60,7 +62,7 @@ Partial Class Form1
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StartDisplayToolStripMenuItem, Me.HelpToolStripMenuItem, Me.CurrentBGToolStripTextBox})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StartDisplayToolStripMenuItem, Me.HelpToolStripMenuItem, Me.CurrentBGToolStripTextBox, Me.FindNext, Me.FindWhat})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1416, 27)
@@ -105,10 +107,21 @@ Partial Class Form1
         '
         Me.RichTextBox1.Location = New System.Drawing.Point(807, 57)
         Me.RichTextBox1.Name = "RichTextBox1"
-        Me.RichTextBox1.Size = New System.Drawing.Size(609, 450)
+        Me.RichTextBox1.Size = New System.Drawing.Size(609, 425)
         Me.RichTextBox1.TabIndex = 3
         Me.RichTextBox1.Text = ""
         Me.RichTextBox1.WordWrap = false
+        '
+        'FindWhat
+        '
+        Me.FindWhat.Name = "FindWhat"
+        Me.FindWhat.Size = New System.Drawing.Size(100, 23)
+        '
+        'FindNext
+        '
+        Me.FindNext.Name = "FindNext"
+        Me.FindNext.Size = New System.Drawing.Size(67, 23)
+        Me.FindNext.Text = "FindNext"
         '
         'Form1
         '
@@ -142,4 +155,6 @@ End Sub
     Friend WithEvents StartDisplayToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CurrentBGToolStripTextBox As ToolStripTextBox
     Friend WithEvents RichTextBox1 As RichTextBox
+    Friend WithEvents FindNext As ToolStripMenuItem
+    Friend WithEvents FindWhat As ToolStripTextBox
 End Class
