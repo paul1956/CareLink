@@ -2,8 +2,11 @@
 ''' The .NET Foundation licenses this file to you under the MIT license.
 ''' See the LICENSE file in the project root for more information.
 
+Imports System.Text
 Imports System.Text.RegularExpressions
 Imports System.Threading
+
+Imports HtmlAgilityPack
 
 Imports Microsoft.Web.WebView2.Core
 
@@ -104,10 +107,15 @@ catch(err) {
         htmlToParse = htmlToParse.Remove(0, 1)
         htmlToParse = htmlToParse.Remove(htmlToParse.Length - 1, 1)
         htmlToParse = htmlToParse.Replace(vbLf, vbCrLf)
-        htmlToParse = htmlToParse.Replace(">", $">{vbCrLf}")
-
         htmlToParse = htmlToParse.Replace("&quot;", """")
-        RichTextBox1.Text = htmlToParse
+        Dim htmlDoc As New HtmlDocument()
+        htmlDoc.LoadHtml(htmlToParse)
+        Dim formattedHtml As New StringBuilder
+
+        For Each node As HtmlNode In htmlDoc.DocumentNode.ChildNodes
+            WriteNode(formattedHtml, node, 0)
+        Next node
+        RichTextBox1.Text = formattedHtml.ToString()
 
         Return htmlToParse
     End Function
@@ -149,6 +157,10 @@ catch(err) {
                     AddressBar.Text = $"https://{carelinkServerAddress}/app/login"
                     Application.DoEvents()
                 End If
+                '<h2 _ngcontent-fiy-c9="" class="cl-dashboard-shared-title" id="h-welcome-title"> Welcome back, <span _ngcontent-fiy-c9="">Paul!</span></h2>
+                If parsedHtml.Contains(" Welcome back, ") Then
+                    AddressBar.Text = $"https://{carelinkServerAddress}/app/home"
+                End If
             End If
 
             If AddressBar.Text = $"https://{carelinkServerAddress}/app/login" Then
@@ -171,6 +183,14 @@ catch(err) {
             End If
             If AddressBar.Text = $"https://{carelinkServerAddress}/app/home" Then
                 Await WebView21.ExecuteScriptAsync(connectScript)
+                Dim parsedHtml As String = parseHTML(Await WebView21.ExecuteScriptAsync("document.documentElement.outerHTML;"))
+                Dim i As Integer = parsedHtml.IndexOf("<div class=""sensor-value""", StringComparison.InvariantCulture)
+                If i >= 0 Then
+                    i = parsedHtml.IndexOf(">", i + 1, StringComparison.InvariantCulture)
+                    i += 1
+                    Dim lessThanIndex As Integer = parsedHtml.IndexOf("<", i, StringComparison.InvariantCulture)
+                    CurrentBGToolStripTextBox.Text = parsedHtml.Substring(i, lessThanIndex - i)
+                End If
                 Timer1.Interval = 50000
                 Timer1.Enabled = True
             End If
@@ -191,6 +211,52 @@ catch(err) {
 
     Private Sub WebView21_SourceChanged(sender As Object, e As CoreWebView2SourceChangedEventArgs) Handles WebView21.SourceChanged
         Debug.Print($"Is New Document = {e.IsNewDocument}")
+    End Sub
+
+    Private Sub WriteNode(_file As StringBuilder, _node As HtmlNode, _indentLevel As Integer)
+        ' check parameter
+        If _file Is Nothing Then
+            Return
+        End If
+        If _node Is Nothing Then
+            Return
+        End If
+
+        ' case: no children
+
+        If _node.HasChildNodes = False Then
+            Dim outerHtml As String = _node.OuterHtml.Replace(vbCrLf, "").Trim
+            If outerHtml.Length > 0 Then
+                _file.Append(Space(_indentLevel * 4))
+                _file.Append(outerHtml)
+                _file.Append(Environment.NewLine)
+            End If
+        Else
+            If _node.Name = "style" Then
+                Exit Sub
+            End If
+            ' case: node has children
+            ' indent
+            _file.Append(Space(_indentLevel * 4))
+
+            ' open tag
+            _file.Append($"<{_node.Name} ")
+            If _node.HasAttributes Then
+                For Each attr As HtmlAttribute In _node.Attributes
+                    _file.Append($"{attr.Name}=""{attr.Value.Replace(vbCrLf, "")}"" ")
+                Next attr
+            End If
+            _file.Append($">{vbCrLf}")
+
+            ' children
+            For Each chldNode As HtmlNode In _node.ChildNodes
+                WriteNode(_file, chldNode, _indentLevel + 1)
+            Next chldNode
+
+            ' close tag
+            _file.Append(Space(_indentLevel * 4))
+            _file.Append($"</{_node.Name}>{vbCrLf}")
+        End If
     End Sub
 
     Public Async Sub InitializeAsync()
