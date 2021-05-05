@@ -68,6 +68,24 @@ catch(err) {
         Debug.Print($"Web Message As Json = {e.WebMessageAsJson}, URL = {e.Source}")
     End Sub
 
+    Private Sub CoreWebView2_DocumentTitleChanged(sender As Object, e As Object)
+        Text = WebView21.CoreWebView2.DocumentTitle
+        UpdateTitleWithEvent("DocumentTitleChanged")
+    End Sub
+
+    Private Sub CoreWebView2_HistoryChanged(sender As Object, e As Object)
+        ' No explicit check for webView2Control initialization because the events can only start
+        ' firing after the CoreWebView2 and its events exist for us to subscribe.
+        'btnBack.Enabled = webView2Control.CoreWebView2.CanGoBack
+        'btnForward.Enabled = webView2Control.CoreWebView2.CanGoForward
+        UpdateTitleWithEvent("HistoryChanged")
+    End Sub
+
+    Private Sub CoreWebView2_SourceChanged(sender As Object, e As CoreWebView2SourceChangedEventArgs)
+        AddressBar.Text = WebView21.Source.AbsoluteUri
+        UpdateTitleWithEvent("SourceChanged")
+    End Sub
+
     Private Sub FindNext_Click(sender As Object, e As EventArgs) Handles FindNext.Click
         Static foundIndex As Integer = Math.Max(RichTextBox1.SelectionStart, 0)
         If FindWhat.Text.Length > 0 Then
@@ -141,8 +159,23 @@ catch(err) {
         'Stop
     End Sub
 
+    Private Sub UpdateTitleWithEvent(message As String)
+        Dim currentDocumentTitle As String = If(WebView21?.CoreWebView2?.DocumentTitle, "Uninitialized")
+        Text = $"{currentDocumentTitle} ({message})"
+    End Sub
+
     Private Sub WebView21_CoreWebView2InitializationCompleted(sender As Object, e As CoreWebView2InitializationCompletedEventArgs) Handles WebView21.CoreWebView2InitializationCompleted
         InitializeAsync()
+        If Not e.IsSuccess Then
+            MessageBox.Show($"WebView2 creation failed with exception = {e.InitializationException}")
+            UpdateTitleWithEvent("CoreWebView2InitializationCompleted failed")
+            Return
+        End If
+
+        AddHandler WebView21.CoreWebView2.SourceChanged, AddressOf CoreWebView2_SourceChanged
+        AddHandler WebView21.CoreWebView2.HistoryChanged, AddressOf CoreWebView2_HistoryChanged
+        AddHandler WebView21.CoreWebView2.DocumentTitleChanged, AddressOf CoreWebView2_DocumentTitleChanged
+        UpdateTitleWithEvent("CoreWebView2InitializationCompleted succeeded")
     End Sub
 
     Private Async Sub WebView21_NavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs) Handles WebView21.NavigationCompleted
