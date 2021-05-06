@@ -44,6 +44,16 @@ catch(err) {
 }
                  </script>.Value
 
+    Private ReadOnly iFrameScript As String = <script>
+try {
+    var iframeDocument = document.getElementsByTagName("iframe")[0].contentDocument;
+    return iframeDocument.body;
+    }
+catch(err) {
+    alert(err.message);
+}
+                 </script>.Value
+
     Private ReadOnly loginScript As String = <script>
 try {
     // set username
@@ -139,7 +149,7 @@ catch(err) {
     End Function
 
     Private Async Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        Dim parsedHtml As String = parseHTML(Await WebView21.ExecuteScriptAsync("document.documentElement.outerHTML;"))
+        Dim parsedHtml As String = parseHTML(Await WebView21.ExecuteScriptAsync(iFrameScript))
         Dim i As Integer = parsedHtml.IndexOf("<div class=""sensor-value""", StringComparison.InvariantCulture)
         If i >= 0 Then
             i = parsedHtml.IndexOf(">", i + 1, StringComparison.InvariantCulture)
@@ -155,13 +165,16 @@ catch(err) {
         WebView21.CoreWebView2.PostWebMessageAsString(uri)
     End Sub
 
+    Private Sub UpdateTitleWithEvent(message As String)
+        Dim currentDocumentTitle As String = If(WebView21?.CoreWebView2?.DocumentTitle, "Uninitialized")
+        Text = $"{currentDocumentTitle} ({message})"
+    End Sub
+
     Private Sub WebView_CoreWebView2_DomContentLoaded(sender As Object, e As CoreWebView2DOMContentLoadedEventArgs)
         'Stop
     End Sub
 
-    Private Sub UpdateTitleWithEvent(message As String)
-        Dim currentDocumentTitle As String = If(WebView21?.CoreWebView2?.DocumentTitle, "Uninitialized")
-        Text = $"{currentDocumentTitle} ({message})"
+    Private Sub WebView2_FrameNavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs)
     End Sub
 
     Private Sub WebView21_CoreWebView2InitializationCompleted(sender As Object, e As CoreWebView2InitializationCompletedEventArgs) Handles WebView21.CoreWebView2InitializationCompleted
@@ -175,6 +188,7 @@ catch(err) {
         AddHandler WebView21.CoreWebView2.SourceChanged, AddressOf CoreWebView2_SourceChanged
         AddHandler WebView21.CoreWebView2.HistoryChanged, AddressOf CoreWebView2_HistoryChanged
         AddHandler WebView21.CoreWebView2.DocumentTitleChanged, AddressOf CoreWebView2_DocumentTitleChanged
+        AddHandler WebView21.CoreWebView2.FrameNavigationCompleted, AddressOf WebView2_FrameNavigationCompleted
         UpdateTitleWithEvent("CoreWebView2InitializationCompleted succeeded")
     End Sub
 
@@ -216,7 +230,7 @@ catch(err) {
             End If
             If AddressBar.Text = $"https://{carelinkServerAddress}/app/home" Then
                 Await WebView21.ExecuteScriptAsync(connectScript)
-                Dim parsedHtml As String = parseHTML(Await WebView21.ExecuteScriptAsync("document.documentElement.outerHTML;"))
+                Dim parsedHtml As String = parseHTML(Await WebView21.ExecuteScriptAsync(iFrameScript))
                 Dim i As Integer = parsedHtml.IndexOf("<div class=""sensor-value""", StringComparison.InvariantCulture)
                 If i >= 0 Then
                     i = parsedHtml.IndexOf(">", i + 1, StringComparison.InvariantCulture)
