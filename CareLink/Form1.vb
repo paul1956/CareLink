@@ -46,8 +46,8 @@ catch(err) {
 
     Private ReadOnly iFrameScript As String = <script>
 try {
-    var iframeDocument = document.getElementsByTagName("iframe")[0].contentDocument;
-    return iframeDocument.body;
+    var iframeDocument = document.getElementsByTagName("iframe")[0].contentWindow.document;
+    return iframeDocument.body.innerHTML;
     }
 catch(err) {
     alert(err.message);
