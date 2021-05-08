@@ -13,6 +13,48 @@ Imports Microsoft.Web.WebView2.Core
 Public Class Form1
     Private Const carelinkServerAddress As String = "carelink.minimed.com"
 
+    Private Const iFrameScript As String = "
+function getIframeWindow(iframe_object) {
+  var doc;
+
+  if (iframe_object.contentWindow) {
+    return iframe_object.contentWindow;
+  }
+
+  if (iframe_object.window) {
+    return iframe_object.window;
+  }
+
+  if (!doc && iframe_object.contentDocument) {
+    doc = iframe_object.contentDocument;
+  }
+
+  if (!doc && iframe_object.document) {
+    doc = iframe_object.document;
+  }
+
+  if (doc && doc.defaultView) {
+   return doc.defaultView;
+  }
+
+  if (doc && doc.parentWindow) {
+    return doc.parentWindow;
+  }
+
+  return undefined;
+}
+try {
+    alert(""Starting : iFrameScript"");
+    var frameObj = getIframeWindow('connect_frame');
+    alert(""Got : frameObj"");
+    var frameContent = frameObj.body.innerHTML;
+    alert(""frame content : "" + frameContent);
+    return frameContent;
+    }
+catch(err) {
+    alert(err.message);
+}"
+
     '<a _ngcontent-gdb-c3="" class="cl-device-warning-continue-btn active"> Continue </a>
     ' This script runs but nothing happens
     Private ReadOnly BrowserAcceptScript As String = <script>
@@ -38,16 +80,6 @@ catch(err) {
     Private ReadOnly continueScript As String = <script>
 try {
     document.getElementsByClassName("cl-landing-login-button")[0].click();
-    }
-catch(err) {
-    alert(err.message);
-}
-                 </script>.Value
-
-    Private ReadOnly iFrameScript As String = <script>
-try {
-    var iframeDocument = document.getElementsByTagName("iframe")[0].contentWindow.document;
-    return iframeDocument.body.innerHTML;
     }
 catch(err) {
     alert(err.message);
@@ -174,7 +206,22 @@ catch(err) {
         'Stop
     End Sub
 
-    Private Sub WebView2_FrameNavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs)
+    Private Async Sub WebView2_FrameNavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs)
+        Dim parsedHtml As String = parseHTML(Await WebView21.ExecuteScriptAsync(iFrameScript))
+        Dim i As Integer = parsedHtml.IndexOf("<div class=""sensor-value""", StringComparison.InvariantCulture)
+        If i >= 0 Then
+            i = parsedHtml.IndexOf(">", i + 1, StringComparison.InvariantCulture)
+            i += 1
+            Dim lessThanIndex As Integer = parsedHtml.IndexOf("<", i, StringComparison.InvariantCulture)
+            CurrentBGToolStripTextBox.Text = parsedHtml.Substring(i, lessThanIndex - i)
+        End If
+    End Sub
+
+    Private Sub WebView2_FrameNavigationStarting(sender As Object, e As CoreWebView2NavigationStartingEventArgs)
+        If e.Uri = $"https://{carelinkServerAddress}/assets/dummy/connect/ble/connect.html" Then
+            Timer1.Interval = 50000
+            Timer1.Enabled = True
+        End If
     End Sub
 
     Private Sub WebView21_CoreWebView2InitializationCompleted(sender As Object, e As CoreWebView2InitializationCompletedEventArgs) Handles WebView21.CoreWebView2InitializationCompleted
@@ -189,6 +236,7 @@ catch(err) {
         AddHandler WebView21.CoreWebView2.HistoryChanged, AddressOf CoreWebView2_HistoryChanged
         AddHandler WebView21.CoreWebView2.DocumentTitleChanged, AddressOf CoreWebView2_DocumentTitleChanged
         AddHandler WebView21.CoreWebView2.FrameNavigationCompleted, AddressOf WebView2_FrameNavigationCompleted
+        AddHandler WebView21.CoreWebView2.FrameNavigationStarting, AddressOf WebView2_FrameNavigationStarting
         UpdateTitleWithEvent("CoreWebView2InitializationCompleted succeeded")
     End Sub
 
@@ -238,8 +286,6 @@ catch(err) {
                     Dim lessThanIndex As Integer = parsedHtml.IndexOf("<", i, StringComparison.InvariantCulture)
                     CurrentBGToolStripTextBox.Text = parsedHtml.Substring(i, lessThanIndex - i)
                 End If
-                Timer1.Interval = 50000
-                Timer1.Enabled = True
             End If
         Else
             Stop
