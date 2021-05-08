@@ -163,6 +163,9 @@ catch(err) {
     End Sub
 
     Private Function parseHTML(htmlToParse As String) As String
+        If htmlToParse Is Nothing Then
+            Return "Document Null"
+        End If
         htmlToParse = Regex.Unescape(htmlToParse)
         htmlToParse = htmlToParse.Remove(0, 1)
         htmlToParse = htmlToParse.Remove(htmlToParse.Length - 1, 1)
