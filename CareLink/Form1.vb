@@ -5,7 +5,6 @@
 Imports System.Text
 Imports System.Text.RegularExpressions
 Imports System.Threading
-
 Imports HtmlAgilityPack
 
 Imports Microsoft.Web.WebView2.Core
@@ -44,12 +43,12 @@ function getIframeWindow(iframe_object) {
   return undefined;
 }
 try {
-    alert(""Starting : iFrameScript"");
-    var frameObj = getIframeWindow('connect_frame');
-    alert(""Got : frameObj"");
-    var frameContent = frameObj.body.innerHTML;
+    // alert(""Starting : iFrameScript"");
+    // var frameObj = getIframeWindow('connect_frame');
+    // alert(""Got : frameObj"");
+    // var frameContent = frameObj.body.innerHTML;
     alert(""frame content : "" + frameContent);
-    return frameContent;
+    return document.getElementsByTagName(""iframe"")[0].contentDocument.documentElement.outerHTML;
     }
 catch(err) {
     alert(err.message);
@@ -103,11 +102,11 @@ catch(err) {
     Private loginSuccessfully As Boolean = False
 
     Private Shared Sub WebView21_ContentLoading(sender As Object, e As CoreWebView2ContentLoadingEventArgs) Handles WebView21.ContentLoading
-        Debug.Print($"Is Error Page = {e.IsErrorPage}")
+    Diagnostics.Debug.Print($"Is Error Page = {e.IsErrorPage}")
     End Sub
 
     Private Shared Sub WebView21_WebMessageReceived(sender As Object, e As CoreWebView2WebMessageReceivedEventArgs) Handles WebView21.WebMessageReceived
-        Debug.Print($"Web Message As Json = {e.WebMessageAsJson}, URL = {e.Source}")
+        Diagnostics.Debug.Print($"Web Message As Json = {e.WebMessageAsJson}, URL = {e.Source}")
     End Sub
 
     Private Sub CoreWebView2_DocumentTitleChanged(sender As Object, e As Object)
@@ -222,8 +221,10 @@ catch(err) {
 
     Private Sub WebView2_FrameNavigationStarting(sender As Object, e As CoreWebView2NavigationStartingEventArgs)
         If e.Uri = $"https://{carelinkServerAddress}/assets/dummy/connect/ble/connect.html" Then
-            Timer1.Interval = 50000
-            Timer1.Enabled = True
+            'WebView21.Source = New Uri($"https://{carelinkServerAddress}/assets/dummy/connect/ble/connect.html?data-patient=&quot;paulmcohen&quot;,data-role=&quot;PATIENT&quot;,data-language=&quot;en&quot;")
+            'e.Cancel = True
+            'Timer1.Interval = 50000
+            'Timer1.Enabled = True
         End If
     End Sub
 
@@ -246,7 +247,7 @@ catch(err) {
     Private Async Sub WebView21_NavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs) Handles WebView21.NavigationCompleted
         Thread.Sleep(2000)
         Application.DoEvents()
-        Debug.Print($"Web Error Status = {e.WebErrorStatus}")
+        Diagnostics.Debug.Print($"Web Error Status = {e.WebErrorStatus}")
         If e.IsSuccess Then
             If AddressBar.Text = $"https://{carelinkServerAddress}/" Then
                 Dim parsedHtml As String = parseHTML(Await WebView21.ExecuteScriptAsync("document.documentElement.outerHTML;"))
@@ -306,7 +307,7 @@ catch(err) {
     End Sub
 
     Private Sub WebView21_SourceChanged(sender As Object, e As CoreWebView2SourceChangedEventArgs) Handles WebView21.SourceChanged
-        Debug.Print($"Is New Document = {e.IsNewDocument}")
+        Diagnostics.Debug.Print($"Is New Document = {e.IsNewDocument}")
     End Sub
 
     Private Sub WriteNode(_file As StringBuilder, _node As HtmlNode, _indentLevel As Integer)

@@ -22,6 +22,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="carelink_client_cli.vb" />
+  </ItemGroup>
+
+  <ItemGroup>
     <COMReference Include="MSHTML">
       <WrapperTool>tlbimp</WrapperTool>
       <VersionMinor>0</VersionMinor>
