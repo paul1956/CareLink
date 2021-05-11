@@ -26,18 +26,17 @@ Partial Class Form1
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.AddressBar = New System.Windows.Forms.TextBox()
-        Me.WebView21 = New Microsoft.Web.WebView2.WinForms.WebView2()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.StartDisplayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.LoginToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CurrentBGToolStripTextBox = New System.Windows.Forms.ToolStripTextBox()
+        Me.FindNext = New System.Windows.Forms.ToolStripMenuItem()
+        Me.FindWhat = New System.Windows.Forms.ToolStripTextBox()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.RichTextBox1 = New System.Windows.Forms.RichTextBox()
-        Me.FindWhat = New System.Windows.Forms.ToolStripTextBox()
-        Me.FindNext = New System.Windows.Forms.ToolStripMenuItem()
-        CType(Me.WebView21,System.ComponentModel.ISupportInitialize).BeginInit
         Me.MenuStrip1.SuspendLayout
         Me.SuspendLayout
         '
@@ -48,17 +47,6 @@ Partial Class Form1
         Me.AddressBar.Name = "AddressBar"
         Me.AddressBar.Size = New System.Drawing.Size(1416, 23)
         Me.AddressBar.TabIndex = 1
-        '
-        'WebView21
-        '
-        Me.WebView21.CreationProperties = Nothing
-        Me.WebView21.DefaultBackgroundColor = System.Drawing.Color.White
-        Me.WebView21.Location = New System.Drawing.Point(0, 53)
-        Me.WebView21.Name = "WebView21"
-        Me.WebView21.Size = New System.Drawing.Size(800, 454)
-        Me.WebView21.Source = New System.Uri("https://carelink.minimed.com/", System.UriKind.Absolute)
-        Me.WebView21.TabIndex = 0
-        Me.WebView21.ZoomFactor = 1R
         '
         'MenuStrip1
         '
@@ -71,15 +59,21 @@ Partial Class Form1
         '
         'StartDisplayToolStripMenuItem
         '
-        Me.StartDisplayToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExitToolStripMenuItem})
+        Me.StartDisplayToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LoginToolStripMenuItem, Me.ExitToolStripMenuItem})
         Me.StartDisplayToolStripMenuItem.Name = "StartDisplayToolStripMenuItem"
         Me.StartDisplayToolStripMenuItem.Size = New System.Drawing.Size(57, 23)
         Me.StartDisplayToolStripMenuItem.Text = "Display"
         '
+        'LoginToolStripMenuItem
+        '
+        Me.LoginToolStripMenuItem.Name = "LoginToolStripMenuItem"
+        Me.LoginToolStripMenuItem.Size = New System.Drawing.Size(104, 22)
+        Me.LoginToolStripMenuItem.Text = "Login"
+        '
         'ExitToolStripMenuItem
         '
         Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
-        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(93, 22)
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(104, 22)
         Me.ExitToolStripMenuItem.Text = "E&xit"
         '
         'HelpToolStripMenuItem
@@ -100,28 +94,29 @@ Partial Class Form1
         Me.CurrentBGToolStripTextBox.Name = "CurrentBGToolStripTextBox"
         Me.CurrentBGToolStripTextBox.Size = New System.Drawing.Size(100, 23)
         '
-        'Timer1
+        'FindNext
         '
-        '
-        'RichTextBox1
-        '
-        Me.RichTextBox1.Location = New System.Drawing.Point(807, 57)
-        Me.RichTextBox1.Name = "RichTextBox1"
-        Me.RichTextBox1.Size = New System.Drawing.Size(609, 425)
-        Me.RichTextBox1.TabIndex = 3
-        Me.RichTextBox1.Text = ""
-        Me.RichTextBox1.WordWrap = false
+        Me.FindNext.Name = "FindNext"
+        Me.FindNext.Size = New System.Drawing.Size(67, 23)
+        Me.FindNext.Text = "FindNext"
         '
         'FindWhat
         '
         Me.FindWhat.Name = "FindWhat"
         Me.FindWhat.Size = New System.Drawing.Size(100, 23)
         '
-        'FindNext
+        'Timer1
         '
-        Me.FindNext.Name = "FindNext"
-        Me.FindNext.Size = New System.Drawing.Size(67, 23)
-        Me.FindNext.Text = "FindNext"
+        '
+        'RichTextBox1
+        '
+        Me.RichTextBox1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.RichTextBox1.Location = New System.Drawing.Point(0, 50)
+        Me.RichTextBox1.Name = "RichTextBox1"
+        Me.RichTextBox1.Size = New System.Drawing.Size(1416, 469)
+        Me.RichTextBox1.TabIndex = 3
+        Me.RichTextBox1.Text = ""
+        Me.RichTextBox1.WordWrap = false
         '
         'Form1
         '
@@ -130,24 +125,19 @@ Partial Class Form1
         Me.ClientSize = New System.Drawing.Size(1416, 519)
         Me.Controls.Add(Me.RichTextBox1)
         Me.Controls.Add(Me.AddressBar)
-        Me.Controls.Add(Me.WebView21)
         Me.Controls.Add(Me.MenuStrip1)
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Name = "Form1"
         Me.Text = "Form1"
-        CType(Me.WebView21,System.ComponentModel.ISupportInitialize).EndInit
         Me.MenuStrip1.ResumeLayout(false)
         Me.MenuStrip1.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
 End Sub
-
-    Friend WithEvents WebView21 As Microsoft.Web.WebView2.WinForms.WebView2
     Friend WithEvents AddressBar As TextBox
     Friend WithEvents MenuStrip1 As MenuStrip
-    Friend WithEvents StarDisplayToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents HelpToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents AboutToolStripMenuItem As ToolStripMenuItem
@@ -157,4 +147,5 @@ End Sub
     Friend WithEvents RichTextBox1 As RichTextBox
     Friend WithEvents FindNext As ToolStripMenuItem
     Friend WithEvents FindWhat As ToolStripTextBox
+    Friend WithEvents LoginToolStripMenuItem As ToolStripMenuItem
 End Class

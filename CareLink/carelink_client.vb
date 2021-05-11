@@ -1,21 +1,25 @@
 Imports System.IO
 Imports System.Net
 Imports System.Net.Http
-Imports System.Windows.Forms.VisualStyles
-
-Imports parse_qsl = urllib.parse.parse_qsl
-Imports urlparse = urllib.parse.urlparse
+Imports System.Net.Http.Headers
+Imports System.Text
+Imports System.Text.Json
 
 Public Module carelink_client
-    Public VERSION As Object = "0.1"
-    Public CARELINK_CONNECT_SERVER_EU As String = "carelink.minimed.eu"
-    Public CARELINK_CONNECT_SERVER_US As String = "carelink.minimed.com"
-    Public CARELINK_LANGUAGE_EN As String = "en"
-    Public CARELINK_LOCALE_EN As String = "en"
-    Public CARELINK_AUTH_TOKEN_COOKIE_NAME As String = "auth_tmp_token"
-    Public CARELINK_TOKEN_VALIDTO_COOKIE_NAME As String = "c_token_valid_to"
-    Public AUTH_EXPIRE_DEADLINE_MINUTES As Integer = 1
-    Public DEBUG As Boolean = False
+    Private Const VERSION As Object = "0.1"
+    Private Const CARELINK_CONNECT_SERVER_EU As String = "carelink.minimed.eu"
+    Private Const CARELINK_CONNECT_SERVER_US As String = "carelink.minimed.com"
+    Private Const CARELINK_LANGUAGE_EN As String = "en"
+    Private Const CARELINK_LOCALE_EN As String = "en"
+    Private Const CARELINK_AUTH_TOKEN_COOKIE_NAME As String = "auth_tmp_token"
+    Private Const CARELINK_TOKEN_VALIDTO_COOKIE_NAME As String = "c_token_valid_to"
+    Private Const AUTH_EXPIRE_DEADLINE_MINUTES As Integer = 1
+
+#If DEBUG Then
+    Private ReadOnly Debug As Boolean = True
+#Else
+    Private ReadOnly Debug As Boolean = false
+#End If
 
     Public Sub printdbg(msg As Object)
 #If DEBUG Then
@@ -26,9 +30,9 @@ Public Module carelink_client
     Public Class CareLinkClient
         Inherits Object
 
-        Private __carelinkUsername As String
-        Private __carelinkPassword As String
-        Private __carelinkCountry As String
+        Private ReadOnly __carelinkUsername As String
+        Private ReadOnly __carelinkPassword As String
+        Private ReadOnly __carelinkCountry As String
         Private __sessionUser As Dictionary(Of String, String)
         Private __sessionProfile As Dictionary(Of String, String)
         Private __sessionCountrySettings As Dictionary(Of String, String)
@@ -38,8 +42,8 @@ Public Module carelink_client
         Private __lastDataSuccess As Boolean
         Private __lastResponseCode As HttpStatusCode
         Private __lastErrorMessage As String
-        Private __commonHeaders As Dictionary(Of String, String)
-        Private __httpClient As HttpClient
+        Private ReadOnly __commonHeaders As Dictionary(Of String, String)
+        Private ReadOnly __httpClient As HttpClient
 
         Public Sub New(carelinkUsername As String, carelinkPassword As String, carelinkCountry As String)
             ' User info
@@ -73,8 +77,7 @@ Public Module carelink_client
                 {
                     "Accept",
                     "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"}}
-            ' Create main http client session with CookieJar
-            Me.__httpClient = requests.Session()
+            Me.__httpClient = New HttpClient()
         End Sub
 
         Public Overridable Function getLastDataSuccess() As Object
@@ -95,7 +98,7 @@ Public Module carelink_client
         End Function
 
         Public Overridable Function __extractResponseData(responseBody As String, begstr As String, endstr As String) As String
-            Dim beg As Integer = responseBody.IndexOf(begstr, StringComparison.Ordinal) + begstr.Count
+            Dim beg As Integer = responseBody.IndexOf(begstr, StringComparison.Ordinal) + begstr.Length
             Dim [end] As Integer = responseBody.IndexOf(endstr, beg, StringComparison.Ordinal)
             Return responseBody.Substring(beg, [end] - beg).Replace("""", "")
         End Function
@@ -112,17 +115,16 @@ Public Module carelink_client
                     }
 
             Dim response As HttpResponseMessage = Nothing
+
             Try
-                Dim uri As New Uri(url)
-                Me.__httpClient.BaseAddress = uri
+                Dim httpRequest As New HttpRequestMessage(HttpMethod.Post, url)
+                httpRequest.Content = New StringContent(payload.ToString(), Encoding.UTF8, "application/json")
+                httpRequest.Headers.Authorization = New AuthenticationHeaderValue(Me.__carelinkUsername, Me.__carelinkPassword)
                 For Each header As KeyValuePair(Of String, String) In Me.__commonHeaders
                     Me.__httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
                 Next
-                For Each header As KeyValuePair(Of String, String) In payload
-                    Me.__httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
-                Next
                 Me.__httpClient.DefaultRequestHeaders.Add("Cookie", "auth=ArbitrarySessionToken")
-                response = Me.__httpClient.GetAsync(url).Result
+                response = Me.__httpClient.SendAsync(httpRequest).Result
                 If Not response.StatusCode = HttpStatusCode.OK Then
                     Throw New Exception("session response is not OK")
                 End If
@@ -134,17 +136,19 @@ Public Module carelink_client
             Return response
         End Function
 
-        Public Overridable Function __doLogin(loginSessionResponse As Object) As HttpResponseMessage
+        Public Overridable Function __doLogin(loginSessionResponse As HttpResponseMessage) As HttpResponseMessage
+#If False Then
+
             Dim queryParameters As Dictionary(Of String, String) = parse_qsl(urlparse(loginSessionResponse.url).query).ToDictionary()
             Dim url As String = "https://mdtlogin.medtronic.com" & "/mmcl/auth/oauth/v2/authorize/login"
-            Dim payload As Dictionary(Of Object, Object) = New Dictionary(Of Object, Object) From {
+            Dim payload As New Dictionary(Of String, String) From {
                 {
                     "country",
                     Me.__carelinkCountry},
                 {
                     "locale",
 CARELINK_LOCALE_EN}}
-            Dim form As Dictionary(Of Object, Object) = New Dictionary(Of Object, Object) From {
+            Dim form As New Dictionary(Of String, String) From {
                 {
                     "sessionID",
                     queryParameters("sessionID")},
@@ -178,9 +182,12 @@ CARELINK_LOCALE_EN}}
             End Try
 
             Return response
+#End If
         End Function
 
         Public Overridable Function __doConsent(doLoginResponse As Object) As HttpResponseMessage
+#If False Then
+
             ' Extract data for consent
             Dim doLoginRespBody As String = doLoginResponse.text
             Dim url As Object = Me.__extractResponseData(doLoginRespBody, "<form action=", " ")
@@ -218,11 +225,11 @@ CARELINK_LOCALE_EN}}
             End Try
 
             Return response
+#End If
         End Function
 
-        Public Overridable Function __getData(host As String, path As String, queryParams As Object, requestBody As Object) As Dictionary(Of String, String)
-            Dim response As HttpResponseMessage = Nothing
-            Dim url As Object
+        Public Overridable Async Function __getData(host As String, path As String, queryParams As Object, requestBody As Object) As Task(Of Dictionary(Of String, String))
+            Dim url As String
             printdbg("__getData()")
             Me.__lastDataSuccess = False
             If host Is Nothing Then
@@ -232,7 +239,7 @@ CARELINK_LOCALE_EN}}
             End If
             Dim payload As Object = queryParams
             Dim data As Object = requestBody
-            Dim jsondata As Object = Nothing
+            Dim jsondata As Dictionary(Of String, String) = Nothing
             ' Get auth token
             Dim authToken As String = Me.__getAuthorizationToken()
             If authToken IsNot Nothing Then
@@ -243,20 +250,41 @@ CARELINK_LOCALE_EN}}
                     If data Is Nothing Then
                         headers("Accept") = "application/json, text/plain, */*"
                         headers("Content-Type") = "application/json; charset=utf-8"
-                        response = Me.__httpClient.[get](url, headers:=headers, payload)
-                        Me.__lastResponseCode = response.status_code
+                        Dim request As New HttpRequestMessage With {
+                                .Method = HttpMethod.Get,
+                                .RequestUri = New Uri(url),
+                                .Content = New StringContent("some json", Encoding.UTF8, "Json")
+                                }
+
+                        Dim response As HttpResponseMessage = Await Me.__httpClient.SendAsync(request).ConfigureAwait(False)
+                        response.EnsureSuccessStatusCode()
+
+                        Dim responseBody As String = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
+                        'response = Me.__httpClient.GetAsync(url, headers:=headers, payload)
+                        Me.__lastResponseCode = response.StatusCode
                         If Not response.StatusCode = HttpStatusCode.OK Then
                             Throw New Exception("session get response is not OK")
                         End If
                     Else
                         headers("Accept") = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
                         headers("Content-Type") = "application/x-www-form-urlencoded"
-                        response = Me.__httpClient.post(url, headers:=headers, data:=data)
-                        Me.__lastResponseCode = response.status_code
-                        If Not response.StatusCode = HttpStatusCode.OK Then
-                            printdbg(response.StatusCode)
-                            Throw New Exception("session post response is not OK")
-                        End If
+
+                        'response = Me.__httpClient.post(url, headers:=headers, data:=data)
+                        Using request As New HttpRequestMessage(HttpMethod.Post, url)
+                            Dim jsonString As String = JsonSerializer.Serialize(data)
+                            Using stringContent As New StringContent(jsonString, Encoding.UTF8, "application/json")
+                                request.Content = stringContent
+
+                                Using response As HttpResponseMessage = Await Me.__httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, Nothing).ConfigureAwait(False)
+                                    response.EnsureSuccessStatusCode()
+                                    Me.__lastResponseCode = response.StatusCode
+                                    If Not response.StatusCode = HttpStatusCode.OK Then
+                                        printdbg(response.StatusCode)
+                                        Throw New Exception("session post response is not OK")
+                                    End If
+                                End Using
+                            End Using
+                        End Using
                     End If
                 Catch e As Exception
                     printdbg(e)
@@ -267,17 +295,19 @@ CARELINK_LOCALE_EN}}
             Return jsondata
         End Function
 
-        Public Overridable Function __getMyUser() As Object
+        Public Overridable Function __getMyUser() As Dictionary(Of String, String)
             printdbg("__getMyUser()")
-            Return Me.__getData(Me.__careLinkServer(), "patient/users/me", Nothing, Nothing)
+            Dim result As Object = Me.__getData(Me.__careLinkServer(), "patient/users/me", Nothing, Nothing)
+            Return CType(result, Dictionary(Of String, String))
         End Function
 
-        Public Overridable Function __getMyProfile() As Object
+        Public Overridable Function __getMyProfile() As Dictionary(Of String, String)
             printdbg("__getMyProfile()")
-            Return Me.__getData(Me.__careLinkServer(), "patient/users/me/profile", Nothing, Nothing)
+            Dim result As Object = Me.__getData(Me.__careLinkServer(), "patient/users/me/profile", Nothing, Nothing)
+            Return CType(result, Dictionary(Of String, String))
         End Function
 
-        Public Overridable Function __getCountrySettings(country As Object, language As Object) As Object
+        Public Overridable Function __getCountrySettings(country As Object, language As Object) As Dictionary(Of String, String)
             printdbg("__getCountrySettings()")
             Dim queryParams As Dictionary(Of Object, Object) = New Dictionary(Of Object, Object) From {
                 {
@@ -286,12 +316,14 @@ CARELINK_LOCALE_EN}}
                 {
                     "language",
                     language}}
-            Return Me.__getData(Me.__careLinkServer(), "patient/countries/settings", queryParams, Nothing)
+            Dim result As Object = Me.__getData(Me.__careLinkServer(), "patient/countries/settings", queryParams, Nothing)
+            Return CType(result, Dictionary(Of String, String))
         End Function
 
         Public Overridable Function __getMonitorData() As Dictionary(Of String, String)
             printdbg("__getMonitorData()")
-            Return Me.__getData(Me.__careLinkServer(), "patient/monitor/data", Nothing, Nothing)
+            Dim result As Object = Me.__getData(Me.__careLinkServer(), "patient/monitor/data", Nothing, Nothing)
+            Return CType(result, Dictionary(Of String, String))
         End Function
 
         ' Old last24hours webapp data
@@ -306,12 +338,15 @@ CARELINK_LOCALE_EN}}
                     "last24hours"},
                 {
                     "requestTime",
-                    Convert.ToInt32(time.time() * 1000).ToString()}}
+                    Convert.ToInt32((DateTime.UtcNow - New DateTime(1970, 1, 1)) * 1000).ToString()}
+                }
             Return Me.__getData(Me.__careLinkServer(), "patient/connect/data", queryParams, Nothing)
         End Function
 
         ' Periodic data from CareLink Cloud
         Public Overridable Function __getConnectDisplayMessage(username As Object, role As Object, endpointUrl As Object) As Object
+#If False Then
+
             printdbg("__getConnectDisplayMessage()")
             ' Build user json for request
             Dim userJson As Dictionary(Of Object, Object) = New Dictionary(Of Object, Object) From {
@@ -328,6 +363,7 @@ CARELINK_LOCALE_EN}}
             End If
 
             Return recentData
+#End If
         End Function
 
         Public Overridable Function __correctTimeInRecentData(recentData As Object) As Boolean
@@ -346,20 +382,20 @@ CARELINK_LOCALE_EN}}
                 Me.__sessionProfile = Nothing
                 Me.__sessionCountrySettings = Nothing
                 Me.__sessionMonitorData = Nothing
-                Open login(get SessionId And SessionData)
-                Dim loginSessionResponse As Object = Me.__getLoginSessionAsync()
-                Me.__lastResponseCode = loginSessionResponse.status_code
+                ' Open login(get SessionId And SessionData)
+                Dim loginSessionResponse As HttpResponseMessage = Me.__getLoginSessionAsync()
+                Me.__lastResponseCode = loginSessionResponse.StatusCode
                 ' Login
-                Dim doLoginResponse As Object = Me.__doLogin(loginSessionResponse)
-                Me.__lastResponseCode = doLoginResponse.status_code
+                Dim doLoginResponse As HttpResponseMessage = Me.__doLogin(loginSessionResponse)
+                Me.__lastResponseCode = doLoginResponse.StatusCode
                 'setLastResponseBody(loginSessionResponse)
-                loginSessionResponse.close()
+                loginSessionResponse.Dispose()
                 ' Consent
-                Dim consentResponse As Object = Me.__doConsent(doLoginResponse)
-                Me.__lastResponseCode = consentResponse.status_code
+                Dim consentResponse As HttpResponseMessage = Me.__doConsent(doLoginResponse)
+                Me.__lastResponseCode = consentResponse.StatusCode
                 'setLastResponseBody(consentResponse);
-                doLoginResponse.close()
-                consentResponse.close()
+                doLoginResponse.Dispose()
+                consentResponse.Dispose()
                 ' Get sessions infos if required
                 If Me.__sessionUser Is Nothing Then
                     Me.__sessionUser = Me.__getMyUser()
@@ -379,16 +415,43 @@ CARELINK_LOCALE_EN}}
                 End If
             Catch e As Exception
                 printdbg(e)
-                Me.__lastErrorMessage = e
+                Me.__lastErrorMessage = e.Message
             End Try
             Me.__loginInProcess = False
             Me.__loggedIn = lastLoginSuccess
             Return lastLoginSuccess
         End Function
+        Private Async Function GetCookieValue(cookieName As String) As Task(Of String)
+            Dim uri As Uri = Me.__httpClient.BaseAddress
+            If uri Is Nothing Then
+                Return Nothing
+            End If
+            Dim cookieContainer As New CookieContainer()
+            Using httpClientHandler As New HttpClientHandler With {.CookieContainer = cookieContainer}
+                Using httpClient As New HttpClient(httpClientHandler)
+                    Await httpClient.GetAsync(uri)
+                    Dim cookie As Cookie = cookieContainer.GetCookies(uri).Cast(Of Cookie)().FirstOrDefault(Function(x) x.Name = cookieName)
+                    Return cookie?.Value
+                End Using
+            End Using
+        End Function
 
+        Private Async Function GetCookies() As Task(Of CookieCollection)
+            Dim uri As Uri = Me.__httpClient.BaseAddress
+            If uri Is Nothing Then
+                Return Nothing
+            End If
+            Dim cookieContainer As New CookieContainer()
+            Using httpClientHandler As New HttpClientHandler With {.CookieContainer = cookieContainer}
+                Using httpClient As New HttpClient(httpClientHandler)
+                    Await httpClient.GetAsync(uri)
+                    Return cookieContainer.GetCookies(uri)
+                End Using
+            End Using
+        End Function
         Public Overridable Function __getAuthorizationToken() As String
-            Dim auth_token = Me.__httpClient.[get](CARELINK_AUTH_TOKEN_COOKIE_NAME)
-            Dim auth_token_validto = Me.__httpClient.cookies.[get](CARELINK_TOKEN_VALIDTO_COOKIE_NAME)
+            Dim auth_token As String = GetCookieValue(CARELINK_AUTH_TOKEN_COOKIE_NAME).Result
+            Dim auth_token_validto As String = GetCookies.Result?.Item(CARELINK_TOKEN_VALIDTO_COOKIE_NAME).Value
             ' New token is needed:
             ' a) no token or about to expire => execute authentication
             ' b) last response 401
@@ -407,10 +470,10 @@ CARELINK_LOCALE_EN}}
                     printdbg("__executeLoginProcedure failed")
                     Return Nothing
                 End If
-                printdbg("auth_token_validto = " & Me.__httpClient.cookies.[get](CARELINK_TOKEN_VALIDTO_COOKIE_NAME))
+                printdbg($"auth_token_validto = {GetCookies.Result.Item(CARELINK_TOKEN_VALIDTO_COOKIE_NAME).Value}")
             End If
             ' there can be only one
-            Return "Bearer " & Me.__httpClient.cookies.[get](CARELINK_AUTH_TOKEN_COOKIE_NAME)
+            Return $"Bearer {GetCookieValue(CARELINK_AUTH_TOKEN_COOKIE_NAME).Result}"
         End Function
 
         ' Wrapper for data retrieval methods
@@ -439,6 +502,7 @@ CARELINK_LOCALE_EN}}
 
             Return Me.__loggedIn
         End Function
+#If False Then
 
         Sub Main(args As String())
             Dim request As HttpWebRequest = TryCast(WebRequest.Create("https://api.openrouteservice.org/v2/directions/driving-car/gpx"), HttpWebRequest)
@@ -544,6 +608,7 @@ CARELINK_LOCALE_EN}}
             'You may want to read the ResponceData.
             Return response
         End Function
+#End If
 
     End Class
 
