@@ -198,7 +198,7 @@ Public Class Form1
     Private Sub LoginToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoginToolStripMenuItem.Click
         Using loginDialog As New LoginForm1
             loginDialog.ShowDialog()
-            Client = New CareLinkClient(loginDialog.UserName, loginDialog.Password, "us")
+            Client = New CareLinkClient(Me,loginDialog.UserName, loginDialog.Password, "us")
         End Using
 
         RecentData = Client.getRecentData()

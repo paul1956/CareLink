@@ -1,11 +1,12 @@
 ﻿Imports System.IO
+Imports System.Runtime.CompilerServices
 Imports System.Text
 Imports System.Text.Json
 
 Public Module JsonElementExtension
     Private ReadOnly s_indentedOptions As New JsonWriterOptions() With {.Indented = True}
 
-    <System.Runtime.CompilerServices.Extension> _
+    <Extension> _
     Public Function ToStringIndented(value As JsonElement) As String
         Using stream As New MemoryStream()
             Using writer As New Utf8JsonWriter(stream, s_indentedOptions)
@@ -17,4 +18,9 @@ Public Module JsonElementExtension
             End Using
         End Using
     End Function
+
+    Public Function dumps(value As Dictionary(Of String,String)) As String
+      Return JsonSerializer.Serialize(value)
+     End Function
+
 End Module
