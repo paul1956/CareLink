@@ -16,6 +16,7 @@ Public Class Form1
         End Using
 
         RecentData = Client.getRecentData()
+        TableLayoutPanel1.Controls.Clear()
         TableLayoutPanel1.RowCount = RecentData.Count
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In RecentData.WithIndex()
             Dim row As KeyValuePair(Of String, String) = c.Value
@@ -24,8 +25,8 @@ Public Class Form1
                                               .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                               .AutoSize = True
                                               }, 0, c.Index)
+            TableLayoutPanel1.RowStyles(c.Index).SizeType = SizeType.AutoSize
             If row.Value.StartsWith("[") Then
-                TableLayoutPanel1.RowStyles(c.Index).SizeType = SizeType.AutoSize
                 Dim innerJson As List(Of Dictionary(Of String, String)) = Json.LoadList(row.Value)
                 If innerJson.Count > 0 Then
                     Dim arrayTable As New TableLayoutPanel With {
@@ -33,13 +34,36 @@ Public Class Form1
                             .AutoSize = True,
                             .ColumnCount = 1,
                             .Dock = System.Windows.Forms.DockStyle.Fill,
-                            .Name = "FiveMinuteTable",
                             .RowCount = innerJson(0).Count
                             }
-                    For Each Dic As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
-                        arrayTable.Controls.Add(GetInnerTable(Dic.Value), 0, Dic.Index)
-                    Next
+                    If row.Key = "sgs" Then
+                        arrayTable.ColumnCount = 2
+                        Dim listTable As New List(Of KeyValuePair(Of String, String))
+                        For Each entry As Dictionary(Of String, String) In innerJson
+                            If entry("sensorState") <> "NO_ERROR_MESSAGE" Then
+                                listTable.Add(New KeyValuePair(Of String, String)(entry("datetime"), entry("sensorState")))
+                            End If
+                        Next
+                        For i As Integer = 0 To listTable.Count - 1
+                            arrayTable.RowStyles.Add(New RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+                            arrayTable.Controls.Add(New Label With {
+                                                       .Text = listTable(i).Key,
+                                                       .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                                       .AutoSize = True
+                                                       }, 0, i)
 
+                            arrayTable.Controls.Add(New TextBox With {
+                                                       .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                                       .AutoSize = True,
+                                                       .Text = listTable(i).Value}, 1, i)
+                        Next
+                        TableLayoutPanel1.Controls.Add(arrayTable)
+                    Else
+                        For Each Dic As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
+                            arrayTable.Controls.Add(GetInnerTable(Dic.Value), 0, Dic.Index)
+                        Next
+
+                    End If
                     TableLayoutPanel1.Controls.Add(arrayTable)
                 Else
                     TableLayoutPanel1.Controls.Add(New TextBox With {
@@ -50,7 +74,11 @@ Public Class Form1
                 End If
             ElseIf row.Value.StartsWith("{") Then
                 TableLayoutPanel1.RowStyles(c.Index).SizeType = SizeType.AutoSize
-                TableLayoutPanel1.Controls.Add(GetInnerTable(Json.Loads(row.Value)), 1, c.Index)
+                Dim innerJson As Dictionary(Of String, String) = Json.Loads(row.Value)
+                If row.Key = "lastSG" Then
+                    CurrentBGToolStripTextBox.Text = innerJson("sg")
+                End If
+                TableLayoutPanel1.Controls.Add(GetInnerTable(innerJson), 1, c.Index)
             Else
                 TableLayoutPanel1.Controls.Add(New TextBox With {
                                                   .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
@@ -58,6 +86,10 @@ Public Class Form1
                                                   .Text = row.Value}, 1, c.Index)
             End If
         Next
+    End Sub
+
+    Private Shared Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
+        End
     End Sub
 
     Private Shared Function GetInnerTable(innerJson As Dictionary(Of String, String)) As TableLayoutPanel

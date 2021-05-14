@@ -101,7 +101,7 @@ Public Module carelink_client
             Return cookie?.Value
         End Function
 
-        Public Shared Sub printdbg(msg As String)
+        Public Shared Sub Printdbg(msg As String)
             Console.WriteLine(msg)
             Application.DoEvents()
         End Sub
@@ -147,18 +147,18 @@ Public Module carelink_client
             Try
                 Dim response As HttpResponseMessage = __httpClient.Post(url, _headers:=consentHeaders, data:=form)
                 If response.StatusCode = HttpStatusCode.OK Then
-                    printdbg("__doConsent() success")
+                    Printdbg("__doConsent() success")
                     Return response
                 ElseIf response.StatusCode = HttpStatusCode.BadRequest Then
-                    printdbg("Login Failure")
-                    printdbg("__doConsent() failed")
+                    Printdbg("Login Failure")
+                    Printdbg("__doConsent() failed")
                     Return response
                 Else
                     Throw New Exception("session response is not OK")
                 End If
             Catch e As Exception
-                printdbg(e.Message)
-                printdbg("__doConsent() failed")
+                Printdbg(e.Message)
+                Printdbg("__doConsent() failed")
             End Try
 
             Return Nothing
@@ -202,11 +202,11 @@ Public Module carelink_client
                 If Not response.StatusCode = HttpStatusCode.OK Then
                     Throw New Exception("session response is not OK")
                 End If
-                printdbg("__doLogin() success")
+                Printdbg("__doLogin() success")
                 Return response
             Catch e As Exception
-                printdbg(e.Message)
-                printdbg("__doLogin() failed")
+                Printdbg(e.Message)
+                Printdbg("__doLogin() failed")
             End Try
             Return Nothing
         End Function
@@ -266,7 +266,7 @@ Public Module carelink_client
                     lastLoginSuccess = True
                 End If
             Catch e As Exception
-                printdbg(e.Message)
+                Printdbg(e.Message)
                 LastErrorMessage = e.Message
             Finally
                 __loginInProcess = False
@@ -296,14 +296,14 @@ Public Module carelink_client
                 ' execute new login process | null, if error OR already doing login
                 'if loginInProcess or not executeLoginProcedure():
                 If __loginInProcess Then
-                    printdbg("loginInProcess")
+                    Printdbg("loginInProcess")
                     Return Nothing
                 End If
                 If Not __executeLoginProcedure() Then
-                    printdbg("__executeLoginProcedure failed")
+                    Printdbg("__executeLoginProcedure failed")
                     Return Nothing
                 End If
-                printdbg($"auth_token_validto = {GetCookies(__careLinkServer).Item(CARELINK_TOKEN_VALIDTO_COOKIE_NAME).Value}")
+                Printdbg($"auth_token_validto = {GetCookies(__careLinkServer).Item(CARELINK_TOKEN_VALIDTO_COOKIE_NAME).Value}")
             End If
             ' there can be only one
             Return $"Bearer {GetCookieValue(__careLinkServer, CARELINK_AUTH_TOKEN_COOKIE_NAME)}"
@@ -312,7 +312,7 @@ Public Module carelink_client
         ' Periodic data from CareLink Cloud
         Public Overridable Function __getConnectDisplayMessage(username As String, role As String, endpointUrl As String) As Dictionary(Of String, String)
 
-            printdbg("__getConnectDisplayMessage()")
+            Printdbg("__getConnectDisplayMessage()")
             ' Build user json for request
             Dim userJson As New Dictionary(Of String, String) From {
                 {
@@ -330,7 +330,7 @@ Public Module carelink_client
         End Function
 
         Public Overridable Function __getCountrySettings(country As String, language As String) As Dictionary(Of String, String)
-            printdbg("__getCountrySettings()")
+            Printdbg("__getCountrySettings()")
             Dim queryParams As New Dictionary(Of String, String) From {
                 {
                     "countryCode",
@@ -343,7 +343,7 @@ Public Module carelink_client
 
         Public Overridable Function __getData(host As String, path As String, queryParams As Dictionary(Of String, String), requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
             Dim url As String
-            printdbg("__getData()")
+            Printdbg("__getData()")
             __lastDataSuccess = False
             If host Is Nothing Then
                 url = path
@@ -387,8 +387,8 @@ Public Module carelink_client
                     jsondata = Json.Loads(response.Text)
                     __lastDataSuccess = True
                 Catch e As Exception
-                    printdbg(e.Message)
-                    printdbg("__getData() failed")
+                    Printdbg(e.Message)
+                    Printdbg("__getData() failed")
                 End Try
             End If
             Return jsondata
@@ -396,7 +396,7 @@ Public Module carelink_client
 
         ' Old last24hours webapp data
         Public Overridable Function __getLast24Hours() As Dictionary(Of String, String)
-            printdbg("__getLast24Hours")
+            Printdbg("__getLast24Hours")
             Dim queryParams As New Dictionary(Of String, String) From {
                 {
                     "cpSerialNumber",
@@ -430,26 +430,26 @@ Public Module carelink_client
                     Throw New Exception($"session response is not OK, {response.ReasonPhrase}")
                 End If
             Catch e As Exception
-                printdbg(e.Message)
-                printdbg("__getLoginSession() failed")
+                Printdbg(e.Message)
+                Printdbg("__getLoginSession() failed")
             End Try
 
-            printdbg("__getLoginSession() success")
+            Printdbg("__getLoginSession() success")
             Return response
         End Function
 
         Public Overridable Function __getMonitorData() As Dictionary(Of String, String)
-            printdbg("__getMonitorData()")
+            Printdbg("__getMonitorData()")
             Return __getData(__careLinkServer(), "patient/monitor/data", Nothing, Nothing)
         End Function
 
         Public Overridable Function __getMyProfile() As Dictionary(Of String, String)
-            printdbg("__getMyProfile()")
+            Printdbg("__getMyProfile()")
             Return __getData(__careLinkServer(), "patient/users/me/profile", Nothing, Nothing)
         End Function
 
         Public Overridable Function __getMyUser() As Dictionary(Of String, String)
-            printdbg("__getMyUser()")
+            Printdbg("__getMyUser()")
             Return __getData(__careLinkServer(), "patient/users/me", Nothing, Nothing)
         End Function
 
