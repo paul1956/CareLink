@@ -29,13 +29,15 @@ Public Module Json
                             Dim zTimeString As String() = dateSplit(1).TrimEnd("Z"c).Replace("+", ".").Split(":")
                             Select Case item.Key
                                 Case "techHours"
-                                Case "lastConduitDateTime","sLastSensorTime", "lastSensorTSAsString", "loginDateUTC",
+                                Case "lastConduitDateTime", "sLastSensorTime", "lastSensorTSAsString", "loginDateUTC",
                                     "medicalDeviceTimeAsString", "sMedicalDeviceTime"
                                     itemAsString = New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Utc).ToString()
                                 Case "lastConduitDateTime"
                                     itemAsString = New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
-                                Case "datetime"
-                                         itemAsString = New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
+                                Case "datetime", "lastConduitDateTime"
+                                    itemAsString = New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
+                                Case "triggeredDateTime"
+                                    itemAsString = New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
                                 Case Else
                                     Stop
                             End Select
