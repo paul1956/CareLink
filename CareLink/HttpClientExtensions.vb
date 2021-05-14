@@ -1,34 +1,45 @@
-﻿Imports System.Net.Http
+﻿' Licensed to the .NET Foundation under one or more agreements.
+' The .NET Foundation licenses this file to you under the MIT license.
+' See the LICENSE file in the project root for more information.
+
+Imports System.Net.Http
 Imports System.Runtime.CompilerServices
-Imports System.Text
 
 Module HttpClientExtensions
 
     <Extension>
-    Public Function [Get](client As HttpClient, url As String, Optional headers As Dictionary(Of String, String) = Nothing, Optional params As Dictionary(Of String, String) = Nothing, Optional data As Dictionary(Of String, String) = Nothing) As HttpResponseMessage
-        If headers IsNot Nothing Then
+    Public Function [Get](client As HttpClient, url As String, Optional _headers As Dictionary(Of String, String) = Nothing, Optional params As Dictionary(Of String, String) = Nothing, Optional data As Dictionary(Of String, String) = Nothing) As HttpResponseMessage
+        Dim formContent As HttpContent = Nothing
+        If data IsNot Nothing Then
+            formContent = New FormUrlEncodedContent(data.ToList())
+        End If
+        If _headers IsNot Nothing Then
             client.DefaultRequestHeaders.Clear()
-            For Each header As KeyValuePair(Of String, String) In headers
-                client.DefaultRequestHeaders.Add(header.Key, header.Value)
+            For Each header As KeyValuePair(Of String, String) In _headers
+                If header.Key = "Content-Type" Then
+                    If formContent IsNot Nothing Then
+                        formContent.Headers.ContentType.MediaType = header.Value
+                    End If
+                Else
+                    client.DefaultRequestHeaders.Add(header.Key, header.Value)
+                End If
             Next
         End If
         If params IsNot Nothing Then
             url &= "?"
-            For Each header As KeyValuePair(Of String, String) In params
-                url &= $"{header.Key}={header.Value}&"
+            For Each param As KeyValuePair(Of String, String) In params
+                url &= $"{param.Key}={param.Value}&"
             Next
             url = url.TrimEnd("&"c)
         End If
         If data Is Nothing Then
             Return client.GetAsync(url).Result
         End If
-        Dim formContent As HttpContent = New FormUrlEncodedContent(params.ToList())
         Return client.PostAsync(url, formContent).Result
     End Function
 
     <Extension>
     Public Function Post(client As HttpClient, url As String, Optional _headers As Dictionary(Of String, String) = Nothing, Optional params As Dictionary(Of String, String) = Nothing, Optional data As Dictionary(Of String, String) = Nothing) As HttpResponseMessage
-        client.DefaultRequestHeaders.Clear()
         If params IsNot Nothing Then
             url &= "?"
             For Each header As KeyValuePair(Of String, String) In params
@@ -36,14 +47,17 @@ Module HttpClientExtensions
             Next
             url = url.TrimEnd("&"c)
         End If
-        Dim FormData As FormUrlEncodedContent = New FormUrlEncodedContent(data.ToList())
-        For Each header As KeyValuePair(Of String, String) In _headers
-            If header.Key = "Content-Type" Then
-                'FormData.Headers.Add(header.Key,header.Value})
-            Else
-                client.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value)
-            End If
-        Next
+        Dim FormData As New FormUrlEncodedContent(data.ToList())
+        If _headers IsNot Nothing Then
+            client.DefaultRequestHeaders.Clear()
+            For Each header As KeyValuePair(Of String, String) In _headers
+                If header.Key = "Content-Type" Then
+                    FormData.Headers.ContentType.MediaType = header.Value
+                Else
+                    client.DefaultRequestHeaders.Add(header.Key, header.Value)
+                End If
+            Next
+        End If
         Return client.PostAsync(url, FormData).Result
     End Function
 

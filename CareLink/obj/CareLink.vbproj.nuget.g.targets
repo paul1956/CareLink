@@ -3,7 +3,4 @@
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
   </PropertyGroup>
-  <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <Import Project="$(NuGetPackageRoot)microsoft.web.webview2\1.0.818.41\build\Microsoft.Web.WebView2.targets" Condition="Exists('$(NuGetPackageRoot)microsoft.web.webview2\1.0.818.41\build\Microsoft.Web.WebView2.targets')" />
-  </ImportGroup>
 </Project>

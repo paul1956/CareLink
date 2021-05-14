@@ -1,146 +1,11 @@
 {
   "version": 3,
   "targets": {
-    "net5.0-windows7.0": {
-      "HtmlAgilityPack/1.11.33": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard2.0/HtmlAgilityPack.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/HtmlAgilityPack.dll": {}
-        }
-      },
-      "Microsoft.Web.WebView2/1.0.818.41": {
-        "type": "package",
-        "compile": {
-          "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.dll": {},
-          "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.dll": {},
-          "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll": {}
-        },
-        "runtime": {
-          "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.dll": {},
-          "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.dll": {},
-          "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll": {}
-        },
-        "build": {
-          "build/Microsoft.Web.WebView2.targets": {}
-        },
-        "runtimeTargets": {
-          "runtimes/win-arm64/native/WebView2Loader.dll": {
-            "assetType": "native",
-            "rid": "win-arm64"
-          },
-          "runtimes/win-x64/native/WebView2Loader.dll": {
-            "assetType": "native",
-            "rid": "win-x64"
-          },
-          "runtimes/win-x86/native/WebView2Loader.dll": {
-            "assetType": "native",
-            "rid": "win-x86"
-          }
-        }
-      }
-    }
+    "net5.0-windows7.0": {}
   },
-  "libraries": {
-    "HtmlAgilityPack/1.11.33": {
-      "sha512": "ccsOdeRuObzQNy3FGLHd0MTmPvEu9nKUYDAqLham1XD3azbU+gcyRF6Hu87A68b7WqGpCdBZiLU7CwJVVmTb6A==",
-      "type": "package",
-      "path": "htmlagilitypack/1.11.33",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "htmlagilitypack.1.11.33.nupkg.sha512",
-        "htmlagilitypack.nuspec",
-        "lib/Net35/HtmlAgilityPack.dll",
-        "lib/Net35/HtmlAgilityPack.pdb",
-        "lib/Net35/HtmlAgilityPack.xml",
-        "lib/Net40-client/HtmlAgilityPack.dll",
-        "lib/Net40-client/HtmlAgilityPack.pdb",
-        "lib/Net40-client/HtmlAgilityPack.xml",
-        "lib/Net40/HtmlAgilityPack.XML",
-        "lib/Net40/HtmlAgilityPack.dll",
-        "lib/Net40/HtmlAgilityPack.pdb",
-        "lib/Net45/HtmlAgilityPack.XML",
-        "lib/Net45/HtmlAgilityPack.dll",
-        "lib/Net45/HtmlAgilityPack.pdb",
-        "lib/NetCore45/HtmlAgilityPack.XML",
-        "lib/NetCore45/HtmlAgilityPack.dll",
-        "lib/NetCore45/HtmlAgilityPack.pdb",
-        "lib/netstandard1.3/HtmlAgilityPack.deps.json",
-        "lib/netstandard1.3/HtmlAgilityPack.dll",
-        "lib/netstandard1.3/HtmlAgilityPack.pdb",
-        "lib/netstandard1.3/HtmlAgilityPack.xml",
-        "lib/netstandard1.6/HtmlAgilityPack.deps.json",
-        "lib/netstandard1.6/HtmlAgilityPack.dll",
-        "lib/netstandard1.6/HtmlAgilityPack.pdb",
-        "lib/netstandard1.6/HtmlAgilityPack.xml",
-        "lib/netstandard2.0/HtmlAgilityPack.deps.json",
-        "lib/netstandard2.0/HtmlAgilityPack.dll",
-        "lib/netstandard2.0/HtmlAgilityPack.pdb",
-        "lib/netstandard2.0/HtmlAgilityPack.xml",
-        "lib/portable-net45+netcore45+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.XML",
-        "lib/portable-net45+netcore45+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.dll",
-        "lib/portable-net45+netcore45+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.pdb",
-        "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.XML",
-        "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.dll",
-        "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.pdb",
-        "lib/uap10.0/HtmlAgilityPack.XML",
-        "lib/uap10.0/HtmlAgilityPack.dll",
-        "lib/uap10.0/HtmlAgilityPack.pdb",
-        "lib/uap10.0/HtmlAgilityPack.pri"
-      ]
-    },
-    "Microsoft.Web.WebView2/1.0.818.41": {
-      "sha512": "fOEZCzNHDtWuNGgOWaA7lD0UkiFXJGhWXEBwqsw9sMrx4QXl8SqNX7qVNYdJrbGvpf3B67CGO3WuUI2z3Yai5w==",
-      "type": "package",
-      "path": "microsoft.web.webview2/1.0.818.41",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.txt",
-        "WebView2.idl",
-        "WebView2.tlb",
-        "build/Common.targets",
-        "build/Microsoft.Web.WebView2.targets",
-        "build/native/Microsoft.Web.WebView2.targets",
-        "build/native/arm64/WebView2Loader.dll",
-        "build/native/arm64/WebView2Loader.dll.lib",
-        "build/native/arm64/WebView2LoaderStatic.lib",
-        "build/native/include/WebView2.h",
-        "build/native/include/WebView2EnvironmentOptions.h",
-        "build/native/x64/WebView2Loader.dll",
-        "build/native/x64/WebView2Loader.dll.lib",
-        "build/native/x64/WebView2LoaderStatic.lib",
-        "build/native/x86/WebView2Loader.dll",
-        "build/native/x86/WebView2Loader.dll.lib",
-        "build/native/x86/WebView2LoaderStatic.lib",
-        "lib/net45/Microsoft.Web.WebView2.Core.dll",
-        "lib/net45/Microsoft.Web.WebView2.Core.xml",
-        "lib/net45/Microsoft.Web.WebView2.WinForms.dll",
-        "lib/net45/Microsoft.Web.WebView2.WinForms.xml",
-        "lib/net45/Microsoft.Web.WebView2.Wpf.dll",
-        "lib/net45/Microsoft.Web.WebView2.Wpf.xml",
-        "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.dll",
-        "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.xml",
-        "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.dll",
-        "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.xml",
-        "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll",
-        "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.xml",
-        "microsoft.web.webview2.1.0.818.41.nupkg.sha512",
-        "microsoft.web.webview2.nuspec",
-        "runtimes/win-arm64/native/WebView2Loader.dll",
-        "runtimes/win-x64/native/WebView2Loader.dll",
-        "runtimes/win-x86/native/WebView2Loader.dll"
-      ]
-    }
-  },
+  "libraries": {},
   "projectFileDependencyGroups": {
-    "net5.0-windows7.0": [
-      "HtmlAgilityPack >= 1.11.33",
-      "Microsoft.Web.WebView2 >= 1.0.818.41"
-    ]
+    "net5.0-windows7.0": []
   },
   "packageFolders": {
     "C:\\Users\\PaulM\\.nuget\\packages\\": {},
@@ -186,16 +51,6 @@
     "frameworks": {
       "net5.0-windows7.0": {
         "targetAlias": "net5.0-windows",
-        "dependencies": {
-          "HtmlAgilityPack": {
-            "target": "Package",
-            "version": "[1.11.33, )"
-          },
-          "Microsoft.Web.WebView2": {
-            "target": "Package",
-            "version": "[1.0.818.41, )"
-          }
-        },
         "imports": [
           "net461",
           "net462",

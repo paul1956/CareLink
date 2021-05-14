@@ -50,6 +50,7 @@ Namespace My
 
             Return MyBase.OnInitialize(commandLineArgs)
         End Function
+
     End Class
 
     Public Class ApplyHighDpiModeEventArgs
