@@ -234,7 +234,7 @@ Public Class Form1
             Exit Sub
         End If
         UpdateAllTabPages()
-        Timer1.Interval = 300_000
+        Timer1.Interval = new TimeSpan(0,5,0).Milliseconds
         Timer1.Enabled = True
     End Sub
 
