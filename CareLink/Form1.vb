@@ -3,63 +3,177 @@
 ''' See the LICENSE file in the project root for more information.
 
 Public Class Form1
+    Private ReadOnly loginDialog As New LoginForm1
     Public Client As CareLinkClient
     Public RecentData As Dictionary(Of String, String)
 
-    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        RecentData = Client.getRecentData()
-        Timer1.Enabled = False
-
-        CurrentBGToolStripTextBox.Text = UpdateDataTableWithSG(TableLayoutPanel1, RecentData)
+    Private Shared Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
+        End
     End Sub
 
-    Private Sub LoginToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoginToolStripMenuItem.Click
-        Timer1.Enabled = False
+    Private Shared Function GetInnerTable(innerJson As Dictionary(Of String, String)) As TableLayoutPanel
+        Dim tableLevel1Blue As New TableLayoutPanel With {
+                .AutoScroll = True,
+                .AutoSize = True,
+                .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                .ColumnCount = 2,
+                .Dock = System.Windows.Forms.DockStyle.Fill,
+                .Name = "InnerTable",
+                .RowCount = innerJson.Count
+                }
+        tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
+        tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
+        ' ReSharper disable once RedundantAssignment
+        For i As Integer = 0 To innerJson.Count - 1
+            tableLevel1Blue.RowStyles.Add(New RowStyle(System.Windows.Forms.SizeType.AutoSize))
+        Next
+        For Each c As IndexClass(Of KeyValuePair(Of String, String)) In innerJson.WithIndex()
+            Dim innerRow As KeyValuePair(Of String, String) = c.Value
+            tableLevel1Blue.Controls.Add(New Label With {
+                                       .Text = innerRow.Key,
+                                       .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                       .AutoSize = True
+                                       }, 0, c.Index)
 
-        Using loginDialog As New LoginForm1
-            loginDialog.ShowDialog()
-            Client = loginDialog.Client
-        End Using
+            If innerRow.Value.StartsWith("[") Then
+                Dim innerJson1 As List(Of Dictionary(Of String, String)) = Json.LoadList(innerRow.Value)
+                If innerJson1.Count > 0 Then
+                    Dim tableLevel2Pink As New TableLayoutPanel With {
+                            .AutoScroll = True,
+                            .AutoSize = True,
+                            .BackColor = Color.DeepPink,
+                            .ColumnCount = 1,
+                            .Dock = System.Windows.Forms.DockStyle.Fill,
+                            .RowCount = innerJson1.Count
+                            }
 
-        RecentData = Client.getRecentData()
-        If RecentData Is Nothing Then
-            Exit Sub
-        End If
-        CurrentBGToolStripTextBox.Text = UpdateDataTableWithSG(TableLayoutPanel1, RecentData)
-        Timer1.Interval = 50000
-        Timer1.Enabled = True
-    End Sub
+                    For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson1.WithIndex()
+                        tableLevel2Pink.RowStyles.Add(New RowStyle(System.Windows.Forms.SizeType.AutoSize))
+                        Dim dic As Dictionary(Of String, String) = innerDictionary.Value
+                        Dim tableLevel3Orange As New TableLayoutPanel With {
+                                .AutoScroll = True,
+                                .AutoSize = True,
+                                .BackColor = Color.Orange,
+                                .ColumnCount = 2,
+                                .Dock = System.Windows.Forms.DockStyle.Fill,
+                                .RowCount = dic.Keys.Count
+                                }
+                        For Each e As IndexClass(Of KeyValuePair(Of String, String)) In dic.WithIndex()
+                            tableLevel3Orange.RowStyles.Add(New RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0))
+                            tableLevel3Orange.Controls.Add(New Label With {
+                                                       .Text = e.Value.Key,
+                                                       .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                                       .AutoSize = True
+                                                       }, 0, e.Index)
 
-    Private Shared Function UpdateDataTableWithSG(LayoutPanel1 As TableLayoutPanel, localRecentData As Dictionary(Of String, String)) As String
-        Dim returnValue As String = ""
+                            tableLevel3Orange.Controls.Add(New TextBox With {
+                                                       .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                                       .AutoSize = True,
+                                                       .Text = e.Value.Value}, 1, e.Index)
+                            Application.DoEvents()
+                        Next
+                        tableLevel2Pink.Controls.Add(tableLevel3Orange, 0, innerDictionary.Index)
+                        Application.DoEvents()
+                    Next
+                    tableLevel1Blue.Controls.Add(tableLevel2Pink, 1, c.Index)
+                    Application.DoEvents()
+                Else
+                    tableLevel1Blue.Controls.Add(New TextBox With {
+                                               .Text = "",
+                                               .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                               .AutoSize = True
+                                               }, 1, c.Index)
+
+                End If
+            Else
+                tableLevel1Blue.Controls.Add(New TextBox With {
+                                           .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                           .AutoSize = True,
+                                           .Text = innerRow.Value}, 1, c.Index)
+            End If
+        Next
+        Application.DoEvents()
+        Return tableLevel1Blue
+    End Function
+
+    Private Function UpdateDataTableWithSG(LayoutPanel1 As TableLayoutPanel, localRecentData As Dictionary(Of String, String), tabPageIndex As Integer) As String
+        Dim returnValue As String = CurrentBGToolStripTextBox.Text
+        Dim EndIndex As Integer
+        Dim StartIndex As Integer
         LayoutPanel1.Controls.Clear()
-        LayoutPanel1.RowCount = localRecentData.Count
+        LayoutPanel1.AutoSize = True
+        Select Case tabPageIndex
+            Case 1
+                EndIndex = 38
+                StartIndex = 42
+                LayoutPanel1.RowCount = localRecentData.Count - 6
+            Case 2 ' Active Insulin
+                EndIndex = 38
+                StartIndex = 38
+                LayoutPanel1.RowCount = 1
+            Case 3 ' SGS
+                EndIndex = 39
+                StartIndex = 39
+                LayoutPanel1.RowCount = 1
+            Case 4 ' Limits
+                EndIndex = 40
+                StartIndex = 40
+                LayoutPanel1.RowCount = 1
+            Case 5 ' Markers
+                EndIndex = 41
+                StartIndex = 41
+                LayoutPanel1.RowCount = 1
+            Case 6 ' Notification History
+                EndIndex = 42
+                StartIndex = 42
+                LayoutPanel1.RowCount = 1
+            Case 7 ' Basal
+                EndIndex = 45
+                StartIndex = 45
+                LayoutPanel1.RowCount = 1
+        End Select
+        Dim singleItem As Boolean = EndIndex = StartIndex
+        LayoutPanel1.ColumnCount = If(singleItem, 1, 2)
+        Dim currentRowIndex As Integer = 0
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In localRecentData.WithIndex()
+            If (Not (c.Index < EndIndex OrElse c.Index > StartIndex) OrElse c.Index = 45) OrElse singleItem Then
+                If Not (singleItem AndAlso EndIndex = c.Index) Then
+                    Continue For
+                End If
+            End If
+            LayoutPanel1.RowStyles(currentRowIndex).SizeType = SizeType.AutoSize
             Dim row As KeyValuePair(Of String, String) = c.Value
-            LayoutPanel1.Controls.Add(New Label With {
-                                              .Text = $"{c.Index} {row.Key}",
-                                              .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                              .AutoSize = True
-                                              }, 0, c.Index)
-            LayoutPanel1.RowStyles(c.Index).SizeType = SizeType.AutoSize
+            If Not singleItem Then
+                LayoutPanel1.Controls.Add(New Label With {
+                                                  .Text = $"{c.Index} {row.Key}",
+                                                  .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                                  .AutoSize = True
+                                                  }, 0, currentRowIndex)
+            End If
             If row.Value.StartsWith("[") Then
                 Dim innerJson As List(Of Dictionary(Of String, String)) = Json.LoadList(row.Value)
                 If innerJson.Count > 0 Then
                     Dim arrayTable As New TableLayoutPanel With {
                             .AutoScroll = False,
                             .AutoSize = True,
+                            .BackColor = Color.Yellow,
+                            .CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble,
                             .ColumnCount = 1,
-                            .Dock = System.Windows.Forms.DockStyle.Fill,
-                            .RowCount = innerJson(0).Count
+                            .Dock = System.Windows.Forms.DockStyle.Fill
                             }
-                    If row.Key = "sgs" Then
+                    If row.Key = "sgs" AndAlso Not singleItem Then
                         arrayTable.ColumnCount = 2
                         Dim listTable As New List(Of KeyValuePair(Of String, String))
                         For Each entry As Dictionary(Of String, String) In innerJson
-                            If entry("sensorState") <> "NO_ERROR_MESSAGE" Then
-                                listTable.Add(New KeyValuePair(Of String, String)(entry("datetime"), entry("sensorState")))
+                            Dim sensorState As String = ""
+                            If entry.TryGetValue("sensorState", sensorState) Then
+                                If sensorState <> "NO_ERROR_MESSAGE" Then
+                                    listTable.Add(New KeyValuePair(Of String, String)(entry("datetime"), sensorState))
+                                End If
+
                             End If
                         Next
+                        arrayTable.RowCount = listTable.Count - 1
                         For i As Integer = 0 To listTable.Count - 1
                             arrayTable.RowStyles.Add(New RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
                             arrayTable.Controls.Add(New Label With {
@@ -73,7 +187,7 @@ Public Class Form1
                                                        .AutoSize = True,
                                                        .Text = listTable(i).Value}, 1, i)
                         Next
-                        LayoutPanel1.Controls.Add(arrayTable)
+
                     Else
                         For Each Dic As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
                             arrayTable.Controls.Add(GetInnerTable(Dic.Value), 0, Dic.Index)
@@ -85,96 +199,74 @@ Public Class Form1
                     LayoutPanel1.Controls.Add(New TextBox With {
                                                       .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                       .AutoSize = True,
-                                                      .Text = row.Value}, 1, c.Index)
+                                                      .Text = row.Value}, If(singleItem, 0, 1), currentRowIndex)
 
                 End If
             ElseIf row.Value.StartsWith("{") Then
-                LayoutPanel1.RowStyles(c.Index).SizeType = SizeType.AutoSize
+                LayoutPanel1.RowStyles(currentRowIndex).SizeType = SizeType.AutoSize
                 Dim innerJson As Dictionary(Of String, String) = Json.Loads(row.Value)
                 If row.Key = "lastSG" Then
                     returnValue = innerJson("sg")
                 End If
-                LayoutPanel1.Controls.Add(GetInnerTable(innerJson), 1, c.Index)
+                LayoutPanel1.Controls.Add(GetInnerTable(innerJson), If(singleItem, 0, 1), currentRowIndex)
             Else
                 LayoutPanel1.Controls.Add(New TextBox With {
                                                   .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                   .AutoSize = True,
-                                                  .Text = row.Value}, 1, c.Index)
+                                                  .Text = row.Value}, If(singleItem, 0, 1), currentRowIndex)
+            End If
+            currentRowIndex += 1
+            If StartIndex = EndIndex Then
+                Exit For
             End If
         Next
         Return returnValue
     End Function
 
-    Private Shared Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
-        End
+    Private Sub LoginToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoginToolStripMenuItem.Click
+        Timer1.Enabled = False
+
+        loginDialog.ShowDialog()
+        Client = loginDialog.Client
+
+        RecentData = Client.getRecentData()
+        If RecentData Is Nothing Then
+            Exit Sub
+        End If
+        UpdateAllTabPages()
+        Timer1.Interval = 300_000
+        Timer1.Enabled = True
     End Sub
 
-    Private Shared Function GetInnerTable(innerJson As Dictionary(Of String, String)) As TableLayoutPanel
-        Dim innerTable As New TableLayoutPanel With {
-                .AutoScroll = False,
-                .AutoSize = True,
-                .ColumnCount = 2,
-                .Dock = System.Windows.Forms.DockStyle.Fill,
-                .Name = "InnerTable",
-                .RowCount = innerJson.Count
-                }
-        innerTable.AutoSize = False
-        innerTable.ColumnStyles.Add(New ColumnStyle())
-        innerTable.ColumnStyles.Add(New ColumnStyle())
-        ' ReSharper disable once RedundantAssignment
-        For i As Integer = 0 To innerJson.Count - 1
-            innerTable.RowStyles.Add(New RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+    Private Sub UpdateAllTabPages()
+        For i As Integer = 1 To 7
+            Dim tableLayout As TableLayoutPanel = CType(Me.Controls.Find($"TableLayoutPanel{i}", True).FirstOrDefault(), TableLayoutPanel)
+            CurrentBGToolStripTextBox.Text = UpdateDataTableWithSG(tableLayout, RecentData, i)
         Next
-        Dim tempSize As Size = innerTable.Size
-        innerTable.Size = New Size(tempSize.Width, (innerJson.Count * 22) + 8)
-        For Each c As IndexClass(Of KeyValuePair(Of String, String)) In innerJson.WithIndex()
-            Dim innerRow As KeyValuePair(Of String, String) = c.Value
-            innerTable.Controls.Add(New Label With {
-                                       .Text = innerRow.Key,
-                                       .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                       .AutoSize = True
-                                       }, 0, c.Index)
+    End Sub
 
-            If innerRow.Value.StartsWith("[") Then
-                Dim innerJson1 As List(Of Dictionary(Of String, String)) = Json.LoadList(innerRow.Value)
-                If innerJson1.Count > 0 Then
-                    Dim arrayTable As New TableLayoutPanel With {
-                            .AutoScroll = False,
-                            .AutoSize = True,
-                            .ColumnCount = 1,
-                            .Dock = System.Windows.Forms.DockStyle.Fill,
-                            .RowCount = innerJson1(0).Count
-                            }
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        Timer1.Enabled = False
+        RecentData = Client.getRecentData()
+        Timer1.Enabled = True
 
-                    arrayTable.ColumnCount = 2
-                    Dim listTable As New List(Of KeyValuePair(Of String, String))
-                    For Each dic As Dictionary(Of String, String) In innerJson1
-                        For Each entry As KeyValuePair(Of String, String) In dic
-                            listTable.Add(New KeyValuePair(Of String, String)(entry.Key, entry.Value))
-                        Next
-                    Next
-                    For i As Integer = 0 To listTable.Count - 1
-                        arrayTable.RowStyles.Add(New RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
-                        arrayTable.Controls.Add(New Label With {
-                                                   .Text = listTable(i).Key,
-                                                   .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                                   .AutoSize = True
-                                                   }, 0, i)
+        UpdateAllTabPages()
 
-                        arrayTable.Controls.Add(New TextBox With {
-                                                   .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                                   .AutoSize = True,
-                                                   .Text = listTable(i).Value}, 1, i)
-                    Next
-                    innerTable.Controls.Add(arrayTable, 1, c.Index)
-                End If
-            Else
-                innerTable.Controls.Add(New TextBox With {
-                                           .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                           .AutoSize = True,
-                                           .Text = innerRow.Value}, 1, c.Index)
-            End If
-        Next
-        Return innerTable
-    End Function
+        Select Case CInt(CurrentBGToolStripTextBox.Text)
+            Case < 60
+                CurrentBGToolStripTextBox.BackColor = Color.Red
+            Case < 70
+                CurrentBGToolStripTextBox.BackColor = Color.Yellow
+            Case > 180
+                CurrentBGToolStripTextBox.BackColor = Color.Red
+            Case > 150
+                CurrentBGToolStripTextBox.BackColor = Color.Yellow
+            Case Else
+                CurrentBGToolStripTextBox.BackColor = Color.White
+        End Select
+
+
+        Application.DoEvents()
+    End Sub
+
 End Class
