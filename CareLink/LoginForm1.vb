@@ -31,6 +31,8 @@ Public Class LoginForm1
                 Exit Sub
             End If
         Else
+            OK.Enabled = True
+            Cancel.Enabled = True
             Hide()
             Exit Sub
         End If
