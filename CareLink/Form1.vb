@@ -66,7 +66,7 @@ Public Class Form1
         End
     End Sub
 
-    Private Shared Sub GetInnerTable(tableLevel1Blue As TableLayoutPanel, innerJson As Dictionary(Of String,String), itemIndex As Integer)
+    Private Shared Sub GetInnerTable(tableLevel1Blue As TableLayoutPanel, innerJson As Dictionary(Of String, String), itemIndex As Integer)
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
 
@@ -140,8 +140,13 @@ Public Class Form1
                                            .AutoSize = True,
                                            .Text = innerRow.Value}})
             End If
-            Application.DoEvents()
         Next
+        If itemIndex = LastSG Then
+            tableLevel1Blue.AutoSize = False
+            tableLevel1Blue.RowCount += 2
+            tableLevel1Blue.Width=400
+        End If
+        Application.DoEvents()
         Return
     End Sub
 
