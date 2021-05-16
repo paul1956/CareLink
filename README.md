@@ -25,3 +25,4 @@ Some data was filtered out because I could not see any use for it. You can turn 
 
 Try it out and send feedback.
 I plan on doing a better UI similar to what is provided on mobile phones with added functionality
+![Same display](https://github.com/paul1956/CareLink/blob/master/Screenshot%202021-05-16%20050718.png?raw=true)
