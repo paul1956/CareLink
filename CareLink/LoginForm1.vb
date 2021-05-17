@@ -24,8 +24,11 @@ Public Class LoginForm1
             If RecentData IsNot Nothing AndAlso RecentData.Count > 0 Then
                 OK.Enabled = True
                 Cancel.Enabled = True
-                My.Settings.userName = UsernameTextBox.Text
-                My.Settings.password = PasswordTextBox.Text
+                If SaveCredentials.CheckState = CheckState.Checked Then
+                    My.Settings.username = UsernameTextBox.Text
+                    My.Settings.password = PasswordTextBox.Text
+                End If
+
                 My.Settings.Save()
                 Hide()
                 Exit Sub
@@ -37,9 +40,11 @@ Public Class LoginForm1
             Exit Sub
         End If
 
-        If MsgBox("Login Unsuccessful. try again?", Buttons:=MsgBoxStyle.YesNo, Title:="Login Failed") = MsgBoxResult.No Then
+        If MsgBox("Login Unsuccessful. try again? If no program will exit!", Buttons:=MsgBoxStyle.YesNo, Title:="Login Failed") = MsgBoxResult.No Then
+            End
         End If
         OK.Enabled = True
         Cancel.Enabled = True
     End Sub
+
 End Class

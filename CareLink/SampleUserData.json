@@ -1,0 +1,4706 @@
+{
+  "lastSensorTS": 0,
+  "medicalDeviceTimeAsString": "2021-05-16T20:28:06.153-00:00",
+  "lastSensorTSAsString": "2021-05-16T20:28:00.000Z",
+  "kind": "BLENGP",
+  "version": 2,
+  "pumpModelNumber": "MMT-1880",
+  "currentServerTime": 1621222090605,
+  "lastConduitTime": 0,
+  "lastConduitUpdateServerTime": 1621222039356,
+  "lastMedicalDeviceDataUpdateServerTime": 1621222039356,
+  "firstName": "First",
+  "lastName": "last",
+  "conduitSerialNumber": "00000000-0000-0000-0000-000000000000",
+  "conduitBatteryLevel": 87,
+  "conduitBatteryStatus": "FULL",
+  "conduitInRange": true,
+  "conduitMedicalDeviceInRange": true,
+  "conduitSensorInRange": true,
+  "medicalDeviceFamily": "NGP",
+  "sensorState": "NO_ERROR_MESSAGE",
+  "medicalDeviceSerialNumber": "NG1234567H",
+  "medicalDeviceTime": 0,
+  "sMedicalDeviceTime": "2021-05-16T20:28:06.153-00:00",
+  "reservoirLevelPercent": 28,
+  "reservoirAmount": 300,
+  "reservoirRemainingUnits": 84.45,
+  "medicalDeviceBatteryLevelPercent": 50,
+  "sensorDurationHours": 115,
+  "timeToNextCalibHours": 1,
+  "calibStatus": "LESS_THAN_THREE_HRS",
+  "bgUnits": "MGDL",
+  "timeFormat": "HR_12",
+  "lastSensorTime": 0,
+  "sLastSensorTime": "2021-05-16T20:28:00.000Z",
+  "medicalDeviceSuspended": false,
+  "lastSGTrend": "NONE",
+  "lastSG": {
+    "sg": 112,
+    "datetime": "2021-05-16T20:28:00.000Z",
+    "timeChange": false,
+    "sensorState": "NO_ERROR_MESSAGE",
+    "kind": "SG",
+    "version": 1,
+    "relativeOffset": -6
+  },
+  "lastAlarm": {
+    "code": 817,
+    "datetime": "2021-05-16T14:58:25.000Z",
+    "type": "ALERT",
+    "flash": false,
+    "instanceId": 2405,
+    "messageId": "BC_SID_SG_APPROACH_HIGH_LIMIT_CHECK_BG",
+    "pumpDeliverySuspendState": false,
+    "referenceGUID": "65090000-3103-0000-ECCC-512600000000",
+    "kind": "ALERT",
+    "version": 1
+  },
+  "activeInsulin": {
+    "amount": 0.0,
+    "datetime": "2021-05-16T20:28:06.153Z",
+    "precision": "THOUSANDS",
+    "kind": "Insulin",
+    "version": 1
+  },
+  "sgs": [
+    {
+      "sg": 126,
+      "datetime": "2021-05-15T20:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -86106
+    },
+    {
+      "sg": 128,
+      "datetime": "2021-05-15T20:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -85806
+    },
+    {
+      "sg": 131,
+      "datetime": "2021-05-15T20:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -85506
+    },
+    {
+      "sg": 134,
+      "datetime": "2021-05-15T20:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -85206
+    },
+    {
+      "sg": 135,
+      "datetime": "2021-05-15T20:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -84906
+    },
+    {
+      "sg": 138,
+      "datetime": "2021-05-15T20:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -84606
+    },
+    {
+      "sg": 140,
+      "datetime": "2021-05-15T21:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -84306
+    },
+    {
+      "sg": 140,
+      "datetime": "2021-05-15T21:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -84006
+    },
+    {
+      "sg": 139,
+      "datetime": "2021-05-15T21:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -83706
+    },
+    {
+      "sg": 138,
+      "datetime": "2021-05-15T21:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -83406
+    },
+    {
+      "sg": 138,
+      "datetime": "2021-05-15T21:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -83106
+    },
+    {
+      "sg": 137,
+      "datetime": "2021-05-15T21:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -82806
+    },
+    {
+      "sg": 135,
+      "datetime": "2021-05-15T21:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -82506
+    },
+    {
+      "sg": 133,
+      "datetime": "2021-05-15T21:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -82206
+    },
+    {
+      "sg": 130,
+      "datetime": "2021-05-15T21:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -81906
+    },
+    {
+      "sg": 129,
+      "datetime": "2021-05-15T21:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -81606
+    },
+    {
+      "sg": 128,
+      "datetime": "2021-05-15T21:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -81306
+    },
+    {
+      "sg": 131,
+      "datetime": "2021-05-15T21:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -81006
+    },
+    {
+      "sg": 136,
+      "datetime": "2021-05-15T22:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -80706
+    },
+    {
+      "sg": 148,
+      "datetime": "2021-05-15T22:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -80406
+    },
+    {
+      "sg": 168,
+      "datetime": "2021-05-15T22:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -80106
+    },
+    {
+      "sg": 181,
+      "datetime": "2021-05-15T22:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -79806
+    },
+    {
+      "sg": 182,
+      "datetime": "2021-05-15T22:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -79506
+    },
+    {
+      "sg": 185,
+      "datetime": "2021-05-15T22:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -79206
+    },
+    {
+      "sg": 183,
+      "datetime": "2021-05-15T22:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -78906
+    },
+    {
+      "sg": 177,
+      "datetime": "2021-05-15T22:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -78606
+    },
+    {
+      "sg": 174,
+      "datetime": "2021-05-15T22:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -78306
+    },
+    {
+      "sg": 171,
+      "datetime": "2021-05-15T22:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -78006
+    },
+    {
+      "sg": 167,
+      "datetime": "2021-05-15T22:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -77706
+    },
+    {
+      "sg": 162,
+      "datetime": "2021-05-15T22:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -77406
+    },
+    {
+      "sg": 159,
+      "datetime": "2021-05-15T23:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -77106
+    },
+    {
+      "sg": 155,
+      "datetime": "2021-05-15T23:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -76806
+    },
+    {
+      "sg": 150,
+      "datetime": "2021-05-15T23:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -76506
+    },
+    {
+      "sg": 143,
+      "datetime": "2021-05-15T23:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -76206
+    },
+    {
+      "sg": 138,
+      "datetime": "2021-05-15T23:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -75906
+    },
+    {
+      "sg": 137,
+      "datetime": "2021-05-15T23:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -75606
+    },
+    {
+      "sg": 138,
+      "datetime": "2021-05-15T23:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -75306
+    },
+    {
+      "sg": 138,
+      "datetime": "2021-05-15T23:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -75006
+    },
+    {
+      "sg": 138,
+      "datetime": "2021-05-15T23:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -74706
+    },
+    {
+      "sg": 141,
+      "datetime": "2021-05-15T23:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -74406
+    },
+    {
+      "sg": 144,
+      "datetime": "2021-05-15T23:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -74106
+    },
+    {
+      "sg": 148,
+      "datetime": "2021-05-15T23:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -73806
+    },
+    {
+      "sg": 148,
+      "datetime": "2021-05-16T00:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -73506
+    },
+    {
+      "sg": 145,
+      "datetime": "2021-05-16T00:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -73206
+    },
+    {
+      "sg": 141,
+      "datetime": "2021-05-16T00:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -72906
+    },
+    {
+      "sg": 139,
+      "datetime": "2021-05-16T00:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -72606
+    },
+    {
+      "sg": 138,
+      "datetime": "2021-05-16T00:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -72306
+    },
+    {
+      "sg": 139,
+      "datetime": "2021-05-16T00:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -72006
+    },
+    {
+      "sg": 141,
+      "datetime": "2021-05-16T00:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -71706
+    },
+    {
+      "sg": 144,
+      "datetime": "2021-05-16T00:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -71406
+    },
+    {
+      "sg": 146,
+      "datetime": "2021-05-16T00:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -71106
+    },
+    {
+      "sg": 147,
+      "datetime": "2021-05-16T00:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -70806
+    },
+    {
+      "sg": 147,
+      "datetime": "2021-05-16T00:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -70506
+    },
+    {
+      "sg": 147,
+      "datetime": "2021-05-16T00:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -70206
+    },
+    {
+      "sg": 148,
+      "datetime": "2021-05-16T01:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -69906
+    },
+    {
+      "sg": 148,
+      "datetime": "2021-05-16T01:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -69606
+    },
+    {
+      "sg": 152,
+      "datetime": "2021-05-16T01:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -69306
+    },
+    {
+      "sg": 134,
+      "datetime": "2021-05-16T01:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -69006
+    },
+    {
+      "sg": 133,
+      "datetime": "2021-05-16T01:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -68706
+    },
+    {
+      "sg": 134,
+      "datetime": "2021-05-16T01:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -68406
+    },
+    {
+      "sg": 135,
+      "datetime": "2021-05-16T01:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -68106
+    },
+    {
+      "sg": 136,
+      "datetime": "2021-05-16T01:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -67806
+    },
+    {
+      "sg": 138,
+      "datetime": "2021-05-16T01:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -67506
+    },
+    {
+      "sg": 134,
+      "datetime": "2021-05-16T01:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -67206
+    },
+    {
+      "sg": 124,
+      "datetime": "2021-05-16T01:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -66906
+    },
+    {
+      "sg": 111,
+      "datetime": "2021-05-16T01:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -66606
+    },
+    {
+      "sg": 105,
+      "datetime": "2021-05-16T02:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -66306
+    },
+    {
+      "sg": 103,
+      "datetime": "2021-05-16T02:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -66006
+    },
+    {
+      "sg": 105,
+      "datetime": "2021-05-16T02:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -65706
+    },
+    {
+      "sg": 108,
+      "datetime": "2021-05-16T02:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -65406
+    },
+    {
+      "sg": 109,
+      "datetime": "2021-05-16T02:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -65106
+    },
+    {
+      "sg": 110,
+      "datetime": "2021-05-16T02:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -64806
+    },
+    {
+      "sg": 111,
+      "datetime": "2021-05-16T02:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -64506
+    },
+    {
+      "sg": 111,
+      "datetime": "2021-05-16T02:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -64206
+    },
+    {
+      "sg": 111,
+      "datetime": "2021-05-16T02:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -63906
+    },
+    {
+      "sg": 110,
+      "datetime": "2021-05-16T02:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -63606
+    },
+    {
+      "sg": 109,
+      "datetime": "2021-05-16T02:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -63306
+    },
+    {
+      "sg": 107,
+      "datetime": "2021-05-16T02:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -63006
+    },
+    {
+      "sg": 106,
+      "datetime": "2021-05-16T03:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -62706
+    },
+    {
+      "sg": 105,
+      "datetime": "2021-05-16T03:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -62406
+    },
+    {
+      "sg": 101,
+      "datetime": "2021-05-16T03:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -62106
+    },
+    {
+      "sg": 100,
+      "datetime": "2021-05-16T03:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -61806
+    },
+    {
+      "sg": 100,
+      "datetime": "2021-05-16T03:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -61506
+    },
+    {
+      "sg": 102,
+      "datetime": "2021-05-16T03:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -61206
+    },
+    {
+      "sg": 105,
+      "datetime": "2021-05-16T03:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -60906
+    },
+    {
+      "sg": 107,
+      "datetime": "2021-05-16T03:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -60606
+    },
+    {
+      "sg": 111,
+      "datetime": "2021-05-16T03:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -60306
+    },
+    {
+      "sg": 113,
+      "datetime": "2021-05-16T03:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -60006
+    },
+    {
+      "sg": 114,
+      "datetime": "2021-05-16T03:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -59706
+    },
+    {
+      "sg": 114,
+      "datetime": "2021-05-16T03:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -59406
+    },
+    {
+      "sg": 115,
+      "datetime": "2021-05-16T04:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -59106
+    },
+    {
+      "sg": 117,
+      "datetime": "2021-05-16T04:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -58806
+    },
+    {
+      "sg": 117,
+      "datetime": "2021-05-16T04:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -58506
+    },
+    {
+      "sg": 117,
+      "datetime": "2021-05-16T04:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -58206
+    },
+    {
+      "sg": 116,
+      "datetime": "2021-05-16T04:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -57906
+    },
+    {
+      "sg": 114,
+      "datetime": "2021-05-16T04:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -57606
+    },
+    {
+      "sg": 113,
+      "datetime": "2021-05-16T04:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -57306
+    },
+    {
+      "sg": 112,
+      "datetime": "2021-05-16T04:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -57006
+    },
+    {
+      "sg": 112,
+      "datetime": "2021-05-16T04:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -56706
+    },
+    {
+      "sg": 113,
+      "datetime": "2021-05-16T04:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -56406
+    },
+    {
+      "sg": 113,
+      "datetime": "2021-05-16T04:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -56106
+    },
+    {
+      "sg": 114,
+      "datetime": "2021-05-16T04:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -55806
+    },
+    {
+      "sg": 113,
+      "datetime": "2021-05-16T05:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -55506
+    },
+    {
+      "sg": 111,
+      "datetime": "2021-05-16T05:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -55206
+    },
+    {
+      "sg": 110,
+      "datetime": "2021-05-16T05:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -54906
+    },
+    {
+      "sg": 110,
+      "datetime": "2021-05-16T05:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -54606
+    },
+    {
+      "sg": 111,
+      "datetime": "2021-05-16T05:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -54306
+    },
+    {
+      "sg": 111,
+      "datetime": "2021-05-16T05:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -54006
+    },
+    {
+      "sg": 111,
+      "datetime": "2021-05-16T05:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -53706
+    },
+    {
+      "sg": 113,
+      "datetime": "2021-05-16T05:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -53406
+    },
+    {
+      "sg": 117,
+      "datetime": "2021-05-16T05:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -53106
+    },
+    {
+      "sg": 123,
+      "datetime": "2021-05-16T05:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -52806
+    },
+    {
+      "sg": 126,
+      "datetime": "2021-05-16T05:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -52506
+    },
+    {
+      "sg": 129,
+      "datetime": "2021-05-16T05:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -52206
+    },
+    {
+      "sg": 131,
+      "datetime": "2021-05-16T06:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -51906
+    },
+    {
+      "sg": 132,
+      "datetime": "2021-05-16T06:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -51606
+    },
+    {
+      "sg": 133,
+      "datetime": "2021-05-16T06:13:00.000Z",
+      "timeC hange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -51306
+    },
+    {
+      "sg": 133,
+      "datetime": "2021-05-16T06:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -51006
+    },
+    {
+      "sg": 131,
+      "datetime": "2021-05-16T06:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -50706
+    },
+    {
+      "sg": 129,
+      "datetime": "2021-05-16T06:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -50406
+    },
+    {
+      "sg": 127,
+      "datetime": "2021-05-16T06:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -50106
+    },
+    {
+      "sg": 125,
+      "datetime": "2021-05-16T06:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -49806
+    },
+    {
+      "sg": 124,
+      "datetime": "2021-05-16T06:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -49506
+    },
+    {
+      "sg": 122,
+      "datetime": "2021-05-16T06:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -49206
+    },
+    {
+      "sg": 121,
+      "datetime": "2021-05-16T06:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -48906
+    },
+    {
+      "sg": 124,
+      "datetime": "2021-05-16T06:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -48606
+    },
+    {
+      "sg": 124,
+      "datetime": "2021-05-16T07:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -48306
+    },
+    {
+      "sg": 122,
+      "datetime": "2021-05-16T07:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -48006
+    },
+    {
+      "sg": 120,
+      "datetime": "2021-05-16T07:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -47706
+    },
+    {
+      "sg": 118,
+      "datetime": "2021-05-16T07:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -47406
+    },
+    {
+      "sg": 117,
+      "datetime": "2021-05-16T07:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -47106
+    },
+    {
+      "sg": 120,
+      "datetime": "2021-05-16T07:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -46806
+    },
+    {
+      "sg": 122,
+      "datetime": "2021-05-16T07:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -46506
+    },
+    {
+      "sg": 125,
+      "datetime": "2021-05-16T07:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -46206
+    },
+    {
+      "sg": 126,
+      "datetime": "2021-05-16T07:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -45906
+    },
+    {
+      "sg": 126,
+      "datetime": "2021-05-16T07:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -45606
+    },
+    {
+      "sg": 125,
+      "datetime": "2021-05-16T07:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -45306
+    },
+    {
+      "sg": 124,
+      "datetime": "2021-05-16T07:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -45006
+    },
+    {
+      "sg": 124,
+      "datetime": "2021-05-16T08:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -44706
+    },
+    {
+      "sg": 123,
+      "datetime": "2021-05-16T08:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -44406
+    },
+    {
+      "sg": 122,
+      "datetime": "2021-05-16T08:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -44106
+    },
+    {
+      "sg": 118,
+      "datetime": "2021-05-16T08:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -43806
+    },
+    {
+      "sg": 112,
+      "datetime": "2021-05-16T08:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -43506
+    },
+    {
+      "sg": 109,
+      "datetime": "2021-05-16T08:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -43206
+    },
+    {
+      "sg": 109,
+      "datetime": "2021-05-16T08:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -42906
+    },
+    {
+      "sg": 112,
+      "datetime": "2021-05-16T08:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -42606
+    },
+    {
+      "sg": 113,
+      "datetime": "2021-05-16T08:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -42306
+    },
+    {
+      "sg": 113,
+      "datetime": "2021-05-16T08:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -42006
+    },
+    {
+      "sg": 113,
+      "datetime": "2021-05-16T08:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -41706
+    },
+    {
+      "sg": 114,
+      "datetime": "2021-05-16T08:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -41406
+    },
+    {
+      "sg": 116,
+      "datetime": "2021-05-16T09:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -41106
+    },
+    {
+      "sg": 118,
+      "datetime": "2021-05-16T09:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -40806
+    },
+    {
+      "sg": 118,
+      "datetime": "2021-05-16T09:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -40506
+    },
+    {
+      "sg": 114,
+      "datetime": "2021-05-16T09:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -40206
+    },
+    {
+      "sg": 111,
+      "datetime": "2021-05-16T09:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -39906
+    },
+    {
+      "sg": 112,
+      "datetime": "2021-05-16T09:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -39606
+    },
+    {
+      "sg": 116,
+      "datetime": "2021-05-16T09:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -39306
+    },
+    {
+      "sg": 121,
+      "datetime": "2021-05-16T09:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -39006
+    },
+    {
+      "sg": 126,
+      "datetime": "2021-05-16T09:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -38706
+    },
+    {
+      "sg": 133,
+      "datetime": "2021-05-16T09:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -38406
+    },
+    {
+      "sg": 145,
+      "datetime": "2021-05-16T09:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -38106
+    },
+    {
+      "sg": 148,
+      "datetime": "2021-05-16T09:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -37806
+    },
+    {
+      "sg": 155,
+      "datetime": "2021-05-16T10:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -37506
+    },
+    {
+      "sg": 181,
+      "datetime": "2021-05-16T10:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -37206
+    },
+    {
+      "sg": 179,
+      "datetime": "2021-05-16T10:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relat iveOffset": -36906
+    },
+    {
+      "sg": 176,
+      "datetime": "2021-05-16T10:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -36606
+    },
+    {
+      "sg": 163,
+      "datetime": "2021-05-16T10:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -36306
+    },
+    {
+      "sg": 151,
+      "datetime": "2021-05-16T10:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -36006
+    },
+    {
+      "sg": 139,
+      "datetime": "2021-05-16T10:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -35706
+    },
+    {
+      "sg": 130,
+      "datetime": "2021-05-16T10:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -35406
+    },
+    {
+      "sg": 120,
+      "datetime": "2021-05-16T10:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -35106
+    },
+    {
+      "sg": 116,
+      "datetime": "2021-05-16T10:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -34806
+    },
+    {
+      "sg": 128,
+      "datetime": "2021-05-16T10:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -34506
+    },
+    {
+      "sg": 156,
+      "datetime": "2021-05-16T10:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -34206
+    },
+    {
+      "sg": 156,
+      "datetime": "2021-05-16T11:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -33906
+    },
+    {
+      "sg": 147,
+      "datetime": "2021-05-16T11:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -33606
+    },
+    {
+      "sg": 132,
+      "datetime": "2021-05-16T11:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -33306
+    },
+    {
+      "sg": 133,
+      "datetime": "2021-05-16T11:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -33006
+    },
+    {
+      "sg": 139,
+      "datetime": "2021-05-16T11:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -32706
+    },
+    {
+      "sg": 142,
+      "datetime": "2021-05-16T11:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -32406
+    },
+    {
+      "sg": 147,
+      "datetime": "2021-05-16T11:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -32106
+    },
+    {
+      "sg": 153,
+      "datetime": "2021-05-16T11:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -31806
+    },
+    {
+      "sg": 156,
+      "datetime": "2021-05-16T11:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -31506
+    },
+    {
+      "sg": 157,
+      "datetime": "2021-05-16T11:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -31206
+    },
+    {
+      "sg": 157,
+      "datetime": "2021-05-16T11:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -30906
+    },
+    {
+      "sg": 155,
+      "datetime": "2021-05-16T11:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -30606
+    },
+    {
+      "sg": 153,
+      "datetime": "2021-05-16T12:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -30306
+    },
+    {
+      "sg": 149,
+      "datetime": "2021-05-16T12:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -30006
+    },
+    {
+      "sg": 143,
+      "datetime": "2021-05-16T12:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -29706
+    },
+    {
+      "sg": 143,
+      "datetime": "2021-05-16T12:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -29406
+    },
+    {
+      "sg": 143,
+      "datetime": "2021-05-16T12:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -29106
+    },
+    {
+      "sg": 143,
+      "datetime": "2021-05-16T12:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -28806
+    },
+    {
+      "sg": 143,
+      "datetime": "2021-05-16T12:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -28506
+    },
+    {
+      "sg": 141,
+      "datetime": "2021-05-16T12:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -28206
+    },
+    {
+      "sg": 134,
+      "datetime": "2021-05-16T12:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -27906
+    },
+    {
+      "sg": 128,
+      "datetime": "2021-05-16T12:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -27606
+    },
+    {
+      "sg": 125,
+      "datetime": "2021-05-16T12:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -27306
+    },
+    {
+      "sg": 126,
+      "datetime": "2021-05-16T12:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -27006
+    },
+    {
+      "sg": 124,
+      "datetime": "2021-05-16T13:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -26706
+    },
+    {
+      "sg": 127,
+      "datetime": "2021-05-16T13:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -26406
+    },
+    {
+      "sg": 130,
+      "datetime": "2021-05-16T13:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -26106
+    },
+    {
+      "sg": 135,
+      "datetime": "2021-05-16T13:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -25806
+    },
+    {
+      "sg": 138,
+      "datetime": "2021-05-16T13:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -25506
+    },
+    {
+      "sg": 136,
+      "datetime": "2021-05-16T13:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -25206
+    },
+    {
+      "sg": 134,
+      "datetime": "2021-05-16T13:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -24906
+    },
+    {
+      "sg": 133,
+      "datetime": "2021-05-16T13:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -24606
+    },
+    {
+      "sg": 131,
+      "datetime": "2021-05-16T13:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -24306
+    },
+    {
+      "sg": 127,
+      "datetime": "2021-05-16T13:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -24006
+    },
+    {
+      "sg": 122,
+      "datetime": "2021-05-16T13:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -23706
+    },
+    {
+      "sg": 117,
+      "datetime": "2021-05-16T13:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -23406
+    },
+    {
+      "sg": 120,
+      "datetime": "2021-05-16T14:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -23106
+    },
+    {
+      "sg": 125,
+      "datetime": "2021-05-16T14:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -22806
+    },
+    {
+      "sg": 130,
+      "datetime": "2021-05-16T14:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -22506
+    },
+    {
+      "sg": 132,
+      "datetime": "2021-05-16T14:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -22206
+    },
+    {
+      "sg": 135,
+      "datetime": "2021-05-16T14:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -21906
+    },
+    {
+      "sg": 144,
+      "datetime": "2021-05-16T14:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -21606
+    },
+    {
+      "sg": 152,
+      "datetime": "2021-05-16T14:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -21306
+    },
+    {
+      "sg": 157,
+      "datetime": "2021-05-16T14:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -21006
+    },
+    {
+      "sg": 159,
+      "datetime": "2021-05-16T14:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -20706
+    },
+    {
+      "sg": 162,
+      "datetime": "2021-05-16T14:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -20406
+    },
+    {
+      "sg": 165,
+      "datetime": "2021-05-16T14:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -20106
+    },
+    {
+      "sg": 173,
+      "datetime": "2021-05-16T14:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -19806
+    },
+    {
+      "sg": 168,
+      "datetime": "2021-05-16T15:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -19506
+    },
+    {
+      "sg": 162,
+      "datetime": "2021-05-16T15:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -19206
+    },
+    {
+      "sg": 163,
+      "datetime": "2021-05-16T15:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -18906
+    },
+    {
+      "sg": 172,
+      "datetime": "2021-05-16T15:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -18606
+    },
+    {
+      "sg": 176,
+      "datetime": "2021-05-16T15:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -18306
+    },
+    {
+      "sg": 178,
+      "datetime": "2021-05-16T15:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -18006
+    },
+    {
+      "sg": 173,
+      "datetime": "2021-05-16T15:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -17706
+    },
+    {
+      "sg": 167,
+      "datetime": "2021-05-16T15:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -17406
+    },
+    {
+      "sg": 160,
+      "datetime": "2021-05-16T15:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -17106
+    },
+    {
+      "sg": 147,
+      "datetime": "2021-05-16T15:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -16806
+    },
+    {
+      "sg": 137,
+      "datetime": "2021-05-16T15:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -16506
+    },
+    {
+      "sg": 131,
+      "datetime": "2021-05-16T15:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -16206
+    },
+    {
+      "sg": 124,
+      "datetime": "2021-05-16T16:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -15906
+    },
+    {
+      "sg": 120,
+      "datetime": "2021-05-16T16:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -15606
+    },
+    {
+      "sg": 122,
+      "datetime": "2021-05-16T16:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -15306
+    },
+    {
+      "sg": 124,
+      "datetime": "2021-05-16T16:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -15006
+    },
+    {
+      "sg": 130,
+      "datetime": "2021-05-16T16:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -14706
+    },
+    {
+      "sg": 133,
+      "datetime": "2021-05-16T16:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -14406
+    },
+    {
+      "sg": 134,
+      "datetime": "2021-05-16T16:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -14106
+    },
+    {
+      "sg": 134,
+      "datetime": "2021-05-16T16:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -13806
+    },
+    {
+      "sg": 136,
+      "datetime": "2021-05-16T16:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -13506
+    },
+    {
+      "sg": 136,
+      "datetime": "2021-05-16T16:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -13206
+    },
+    {
+      "sg": 137,
+      "datetime": "2021-05-16T16:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -12906
+    },
+    {
+      "sg": 138,
+      "datetime": "2021-05-16T16:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -12606
+    },
+    {
+      "sg": 138,
+      "datetime": "2021-05-16T17:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -12306
+    },
+    {
+      "sg": 140,
+      "datetime": "2021-05-16T17:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -12006
+    },
+    {
+      "sg": 143,
+      "datetime": "2021-05-16T17:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -11706
+    },
+    {
+      "sg": 150,
+      "datetime": "2021-05-16T17:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -11406
+    },
+    {
+      "sg": 152,
+      "datetime": "2021-05-16T17:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -11106
+    },
+    {
+      "sg": 153,
+      "datetime": "2021-05-16T17:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -10806
+    },
+    {
+      "sg": 153,
+      "datetime": "2021-05-16T17:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -10506
+    },
+    {
+      "sg": 151,
+      "datetime": "2021-05-16T17:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -10206
+    },
+    {
+      "sg": 149,
+      "datetime": "2021-05-16T17:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -9906
+    },
+    {
+      "sg": 148,
+      "datetime": "2021-05-16T17:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -9606
+    },
+    {
+      "sg": 145,
+      "datetime": "2021-05-16T17:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -9306
+    },
+    {
+      "sg": 144,
+      "datetime": "2021-05-16T17:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -9006
+    },
+    {
+      "sg": 145,
+      "datetime": "2021-05-16T18:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -8706
+    },
+    {
+      "sg": 147,
+      "datetime": "2021-05-16T18:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -8406
+    },
+    {
+      "sg": 149,
+      "datetime": "2021-05-16T18:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -8106
+    },
+    {
+      "sg": 150,
+      "datetime": "2021-05-16T18:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -7806
+    },
+    {
+      "sg": 150,
+      "datetime": "2021-05-16T18:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -7506
+    },
+    {
+      "sg": 148,
+      "datetime": "2021-05-16T18:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -7206
+    },
+    {
+      "sg": 145,
+      "datetime": "2021-05-16T18:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -6906
+    },
+    {
+      "sg": 142,
+      "datetime": "2021-05-16T18:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -6606
+    },
+    {
+      "sg": 142,
+      "datetime": "2021-05-16T18:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -6306
+    },
+    {
+      "sg": 139,
+      "datetime": "2021-05-16T18:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -6006
+    },
+    {
+      "sg": 130,
+      "datetime": "2021-05-16T18:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -5706
+    },
+    {
+      "sg": 129,
+      "datetime": "2021-05-16T18:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -5406
+    },
+    {
+      "sg": 129,
+      "datetime": "2021-05-16T19:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -5106
+    },
+    {
+      "sg": 131,
+      "datetime": "2021-05-16T19:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -4806
+    },
+    {
+      "sg": 133,
+      "datetime": "2021-05-16T19:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -4506
+    },
+    {
+      "sg": 135,
+      "datetime": "2021-05-16T19:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -4206
+    },
+    {
+      "sg": 137,
+      "datetime": "2021-05-16T19:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -3906
+    },
+    {
+      "sg": 138,
+      "datetime": "2021-05-16T19:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -3606
+    },
+    {
+      "sg": 138,
+      "datetime": "2021-05-16T19:33:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -3306
+    },
+    {
+      "sg": 137,
+      "datetime": "2021-05-16T19:38:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -3006
+    },
+    {
+      "sg": 135,
+      "datetime": "2021-05-16T19:43:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -2706
+    },
+    {
+      "sg": 132,
+      "datetime": "2021-05-16T19:48:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -2406
+    },
+    {
+      "sg": 130,
+      "datetime": "2021-05-16T19:53:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -2106
+    },
+    {
+      "sg": 127,
+      "datetime": "2021-05-16T19:58:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -1806
+    },
+    {
+      "sg": 125,
+      "datetime": "2021-05-16T20:03:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -1506
+    },
+    {
+      "sg": 121,
+      "datetime": "2021-05-16T20:08:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -1206
+    },
+    {
+      "sg": 118,
+      "datetime": "2021-05-16T20:13:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -906
+    },
+    {
+      "sg": 115,
+      "datetime": "2021-05-16T20:18:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -606
+    },
+    {
+      "sg": 112,
+      "datetime": "2021-05-16T20:23:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -306
+    },
+    {
+      "sg": 112,
+      "datetime": "2021-05-16T20:28:00.000Z",
+      "timeChange": false,
+      "sensorState": "NO_ERROR_MESSAGE",
+      "kind": "SG",
+      "version": 1,
+      "relativeOffset": -6
+    }
+  ],
+  "limits": [
+    {
+      "index": 0,
+      "highLimit": 170,
+      "lowLimit": 70,
+      "kind": "Limits",
+      "version": 1
+    },
+    {
+      "index": 42,
+      "highLimit": 170,
+      "lowLimit": 70,
+      "kind": "Limits",
+      "version": 1
+    },
+    {
+      "index": 78,
+      "highLimit": 200,
+      "lowLimit": 60,
+      "kind": "Limits",
+      "version": 1
+    },
+    {
+      "index": 210,
+      "highLimit": 170,
+      "lowLimit": 70,
+      "kind": "Limits",
+      "version": 1
+    }
+  ],
+  "markers": [
+    {
+      "type": "BG_READING",
+      "index": 12,
+      "value": 110,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T21:33:00.000-00:00",
+      "relativeOffset": -82506
+    },
+    {
+      "type": "BG_READING",
+      "index": 21,
+      "value": 168,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T22:15:00.000-00:00",
+      "relativeOffset": -79986
+    },
+    {
+      "type": "BG_READING",
+      "index": 222,
+      "value": 202,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T14:59:00.000-00:00",
+      "relativeOffset": -19746
+    },
+    {
+      "type": "BG_READING",
+      "index": 252,
+      "value": 153,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T17:33:00.000-00:00",
+      "relativeOffset": -10506
+    },
+    {
+      "type": "CALIBRATION",
+      "index": 57,
+      "value": 131,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T01:14:00.000-00:00",
+      "relativeOffset": -69246,
+      "calibrationSuccess": true
+    },
+    {
+      "type": "CALIBRATION",
+      "index": 163,
+      "value": 191,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T10:04:00.000-00:00",
+      "relativeOffset": -37446,
+      "calibrationSuccess": true
+    },
+    {
+      "type": "MEAL",
+      "index": 13,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T21:37:02.000-00:00",
+      "relativeOffset": -82264,
+      "amount": 45
+    },
+    {
+      "type": "MEAL",
+      "index": 21,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T22:14:51.000-00:00",
+      "relativeOffset": -79995,
+      "amount": 30
+    },
+    {
+      "type": "MEAL",
+      "index": 57,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T011:4:16.000-00:00",
+      "relativeOffset": -69230,
+      "amount": 36
+    },
+    {
+      "type": "MEAL",
+      "index": 163,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T10:03:45.000-00:00",
+      "relativeOffset": -37461,
+      "amount": 10
+    },
+    {
+      "type": "MEAL",
+      "index": 222,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T14:59:31.000-00:00",
+      "relativeOffset": -19715,
+      "amount": 56
+    },
+    {
+      "type": "MEAL",
+      "index": 253,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T17:33:07.000-00:00",
+      "relativeOffset": -10499,
+      "amount": 15
+    },
+    {
+      "type": "INSULIN",
+      "index": 13,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T21:37:02.000-00:00",
+      "relativeOffset": -82264,
+      "programmedExtendedAmount": 0.0,
+      "activationType": "UNDETERMINED",
+      "deliveredExtendedAmount": 0.0,
+      "programmedFastAmount": 8.175,
+      "programmedDuration": 0,
+      "deliveredFastAmount": 8.175,
+      "id": 231,
+      "effectiveDuration": 0,
+      "completed": true,
+      "bolusType": "FAST"
+    },
+    {
+      "type": "INSULIN",
+      "index": 21,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T22:14:51.000-00:00",
+      "relativeOffset": -79995,
+      "programmedExtendedAmount": 0.0,
+      "activationType": "UNDETERMINED",
+      "deliveredExtendedAmount": 0.0,
+      "programmedFastAmount": 5.45,
+      "programmedDuration": 0,
+      "deliveredFastAmount": 5.45,
+      "id": 233,
+      "effectiveDuration": 0,
+      "completed": true,
+      "bolusType": "FAST"
+    },
+    {
+      "type": "INSULIN",
+      "index": 57,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T01:14:16.000-00:00",
+      "relativeOffset": -69230,
+      "programmedExtendedAmount": 0.0,
+      "activationType": "UNDETERMINED",
+      "deliveredExtendedAmount": 0.0,
+      "programmedFastAmount": 8.0,
+      "programmedDuration": 0,
+      "deliveredFastAmount": 8.0,
+      "id": 251,
+      "effectiveDuration": 0,
+      "completed": true,
+      "bolusType": "FAST"
+    },
+    {
+      "type": "INSULIN",
+      "index": 163,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T10:03:45.000-00: 00",
+      "relativeOffset": -37461,
+      "programmedExtendedAmount": 0.0,
+      "activationType": "UNDETERMINED",
+      "deliveredExtendedAmount": 0.0,
+      "programmedFastAmount": 3.25,
+      "programmedDuration": 0,
+      "deliveredFastAmount": 3.25,
+      "id": 64,
+      "effectiveDuration": 0,
+      "completed": true,
+      "bolusType": "FAST"
+    },
+    {
+      "type": "INSULIN",
+      "index": 222,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T14:59:31.000-00:00",
+      "relativeOffset": -19715,
+      "programmedExtendedAmount": 0.0,
+      "activationType": "UNDETERMINED",
+      "deliveredExtendedAmount": 0.0,
+      "programmedFastAmount": 15.325,
+      "programmedDuration": 0,
+      "deliveredFastAmount": 15.325,
+      "id": 110,
+      "effectiveDuration": 0,
+      "completed": true,
+      "bolusType": "FAST"
+    },
+    {
+      "type": "INSULIN",
+      "index": 253,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T17:33:07.000-00:00",
+      "relativeOffset": -10499,
+      "programmedExtendedAmount": 0.0,
+      "activationType": "UNDETERMINED",
+      "deliveredExtendedAmount": 0.0,
+      "programmedFastAmount": 2.725,
+      "programmedDuration": 0,
+      "deliveredFastAmount": 2.725,
+      "id": 118,
+      "effectiveDuration": 0,
+      "completed": true,
+      "bolusType": "FAST"
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 1,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T20:33:09.000-00:00",
+      "relativeOffset": -86097,
+      "id": 218,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 2,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T20:38:07.000-00:00",
+      "relativeOffset": -85799,
+      "id": 219,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 3,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T20:43:09.000-00:00",
+      "relativeOffset": -85497,
+      "id": 220,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 4,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T20:48:07.000-00:00",
+      "relativeOffset": -85199,
+      "id": 221,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 5,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T20:53:09.000-00:00",
+      "relativeOffset": -84897,
+      "id": 222,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 6,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T20:58:07.000-00:00",
+      "relativeOffset": -84599,
+      "id": 223,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 7,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T21:03:07.000-00:00",
+      "relativeOffset": -84299,
+      "id": 224,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 7,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T21:08:05.000-00:00",
+      "relativeOffset": -84001,
+      "id": 225,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 8,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T21:13:03.000-00:00",
+      "relativeOffset": -83703,
+      "id": 226,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 10,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T21:18:07.000-00:00",
+      "relativeOffset": -83399,
+      "id": 227,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 10,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T21:23:03.000-00:00",
+      "relativeOffset": -83103,
+      "id": 228,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 12,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T21:28:07.000-00:00",
+      "relativeOffset": -82799,
+      "id": 229,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 12,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T21:33:05.000-00:00",
+      "relativeOffset": -82501,
+      "id": 230,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 21,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T22:13:56.000-00:00",
+      "relativeOffset": -80050,
+      "id": 232,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 39,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T23:48:03.000-00:00",
+      "relativeOffset": -74403,
+      "id": 234,
+      "bolusAmount": 0.02500000037252903
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 41,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T23:53:07.000-00:00",
+      "relativeOffset": -74099,
+      "id": 235,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 42,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-15T23:58:07.000-00:00",
+      "relativeOffset": -73799,
+      "id": 236,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 43,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T00:03:09.000-00:00",
+      "relativeOffset": -73497,
+      "id": 237,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 44,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T00:08:07.000-00:00",
+      "relativeOffset": -73199,
+      "id": 238,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 45,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T00:18:03.000-00:00",
+      "relativeOffset": -72603,
+      "id": 239,
+      "bolusAmount": 0.02500000037252903
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 46,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T00:23:03.000-00: 00",
+      "relativeOffset": -72303,
+      "id": 240,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 48,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T00:28:07.000-00:00",
+      "relativeOffset": -71999,
+      "id": 241,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 49,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T00:33:09.000-00:00",
+      "relativeOffset": -71697,
+      "id": 242,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 50,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T00:38:09.000-00:00",
+      "relativeOffset": -71397,
+      "id": 243,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 51,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T00:43:07.000-00:00",
+      "relativeOffset": -71099,
+      "id": 244,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 52,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T00:48:07.000-00:00",
+      "relativeOffset": -70799,
+      "id": 245,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 53,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T00:53:07.000-00:00",
+      "relativeOffset": -70499,
+      "id": 246,
+      "bolusAmount": 0.15000000596046448
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 54,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T00:58:09.000-00:00",
+      "relativeOffset": -70197,
+      "id": 247,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 55,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T01:03:09.000-00:00",
+      "relativeOffset": -69897,
+      "id": 248,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 56,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T01:08:09.000-00:00",
+      "relativeOffset": -69597,
+      "id": 249,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 57,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T01:13:07.000-00:00",
+      "relativeOffset": -69299,
+      "id": 250,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 84,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T03:33:03.000-00:00",
+      "relativeOffset": -60903,
+      "id": 252,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 85,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T03:38:03.000-00:00",
+      "relativeOffset": -60603,
+      "id": 253,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 86,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T03:43:05.000-00:00",
+      "relativeOffset": -60301,
+      "id": 254,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 88,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T03:48:07.000-00:00",
+      "relativeOffset": -59999,
+      "id": 255,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 88,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T03:53:05.000-00:00",
+      "relativeOffset": -59701,
+      "id": 0,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 89,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T03:58:03.000-00:00",
+      "relativeOffset": -59403,
+      "id": 1,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 90,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T04:03:05.000-00:00",
+      "relativeOffset": -59101,
+      "id": 2,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 91,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T04:08:05.000-00:00",
+      "relativeOffset": -58801,
+      "id": 3,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 93,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T04:13:07.000-00:00",
+      "relativeOffset": -58499,
+      "id": 4,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 93,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T04:18:03.000-00:00",
+      "relativeOffset": -58203,
+      "id": 5,
+      "bolusAmount": 0.02500000037252903
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 94,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T04:23:05.000-00: 00",
+      "relativeOffset": -57901,
+      "id": 6,
+      "bolusAmount": 0.02500000037252903
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 95,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T04:28:05.000-00:00",
+      "relativeOffset": -57601,
+      "id": 7,
+      "bolusAmount": 0.02500000037252903
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 98,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T04:43:05.000-00:00",
+      "relativeOffset": -56701,
+      "id": 8,
+      "bolusAmount": 0.02500000037252903
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 99,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T04:48:05.000-00:00",
+      "relativeOffset": -56401,
+      "id": 9,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 100,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T04:53:05.000-00:00",
+      "relativeOffset": -56101,
+      "id": 10,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 102,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T04:58:07.000-00: 00",
+      "relativeOffset": -55799,
+      "id": 11,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 102,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T05:03:05.000-00:00",
+      "relativeOffset": -55501,
+      "id": 12,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 105,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T05:18:03.000-00:00",
+      "relativeOffset": -54603,
+      "id": 13,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 106,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T05:23:05.000-00:00",
+      "relativeOffset": -54301,
+      "id": 14,
+      "bolusAmount": 0.02500000037252903
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 107,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T05:28:05.000-00:00",
+      "relativeOffset": -54001,
+      "id": 15,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 108,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T05:33:05.000-00:00",
+      "relativeOffset": -53701,
+      "id": 16,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 110,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T05:38:07.000-00:00",
+      "relativeOffset": -53399,
+      "id": 17,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 111,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T05:43:07.000-00:00",
+      "relativeOffset": -53099,
+      "id": 18,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 112,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T05:48:09.000-00:00",
+      "relativeOffset": -52797,
+      "id": 19,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 113,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T05:53:09.000-00:00",
+      "relativeOffset": -52497,
+      "id": 20,
+      "bolusAmount": 0.15000000596046448
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 114,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T05:58:09.000-00:00",
+      "relativeOffset": -52197,
+      "id": 21,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 115,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T06:03:09.000-00: 00",
+      "relativeOffset": -51897,
+      "id": 22,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 116,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T06:08:11.000-00:00",
+      "relativeOffset": -51595,
+      "id": 23,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 117,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T06:13:09.000-00:00",
+      "relativeOffset": -51297,
+      "id": 24,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 118,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T06:18:09.000-00:00",
+      "relativeOffset": -50997,
+      "id": 25,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 119,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T06:23:07.000-00:00",
+      "relativeOffset": -50699,
+      "id": 26,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 119,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T06:28:05.000-00:00",
+      "relativeOffset": -50401,
+      "id": 27,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 120,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T06:33:05.000-00:00",
+      "relativeOffset": -50101,
+      "id": 28,
+      "bolusAmount": 0.02500000037252903
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 122,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T06:43:05.000-00:00",
+      "relativeOffset": -49501,
+      "id": 29,
+      "bolusAmount": 0.02500000037252903
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 123,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T06:48:05.000-00:00",
+      "relativeOffset": -49201,
+      "id": 30,
+      "bolusAmount": 0.02500000037252903
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 124,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T06:53:05.000-00:00",
+      "relativeOffset": -48901,
+      "id": 31,
+      "bolusAmount": 0.02500000037252903
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 126,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T06:58:07.000-00:00",
+      "relativeOffset": -48599,
+      "id": 32,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 127,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T07:03:07.000-00:00",
+      "relativeOffset": -48299,
+      "id": 33,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 128,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T07:08:07.000-00:00",
+      "relativeOffset": -47999,
+      "id": 34,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 130,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T07:23:05.000-00:00",
+      "relativeOffset": -47101,
+      "id": 35,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 132,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T07:28:07.000-00:00",
+      "relativeOffset": -46799,
+      "id": 36,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 133,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T07:33:09.000-00:00",
+      "relativeOffset": -46497,
+      "id": 37,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 134,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T07:38:09.000-00:00",
+      "relativeOffset": -46197,
+      "id": 38,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 135,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T07:43:09.000-00:00",
+      "relativeOffset": -45897,
+      "id": 39,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 136,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T07:48:07.000-00:00",
+      "relativeOffset": -45599,
+      "id": 40,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 137,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T07:53:07.000-00:00",
+      "relativeOffset": -45299,
+      "id": 41,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 137,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T07:58:05.000-00:00",
+      "relativeOffset": -45001,
+      "id": 42,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 139,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T08:03:07.000-00:00",
+      "relativeOffset": -44699,
+      "id": 43,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 140,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T08:08:07.000-00:00",
+      "relativeOffset": -44399,
+      "id": 44,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 140,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T08:13:05.000-00:00",
+      "relativeOffset": -44101,
+      "id": 45,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 144,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T08:33:05.000-00:00",
+      "relativeOffset": -42901,
+      "id": 46,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 145,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T08:38:05.000-00:00",
+      "relativeOffset": -42601,
+      "id": 47,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 146,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T08:43:05.000-00:00",
+      "relativeOffset": -42301,
+      "id": 48,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 147,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T08:48:05.000-00:00",
+      "relativeOffset": -42001,
+      "id": 49,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 148,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T08:53:05.000-00:00",
+      "relativeOffset": -41701,
+      "id": 50,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 149,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T08:58:05.000-00:00",
+      "relativeOffset": -41401,
+      "id": 51,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 151,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T09:03:07.000-00:00",
+      "relativeOffset": -41099,
+      "id": 52,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 152,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T09:08:09.000-00:00",
+      "relativeOffset": -40797,
+      "id": 53,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 153,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T09:13:07.000-00:00",
+      "relativeOffset": -40499,
+      "id": 54,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 153,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T09:18:03.000-00:00",
+      "relativeOffset": -40203,
+      "id": 55,
+      "bolusAmount": 0.02500000037252903
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 155,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T09:28:05.000-00:00",
+      "relativeOffset": -39601,
+      "id": 56,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 157,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T09:33:07.000-00:00",
+      "relativeOffset": -39299,
+      "id": 57,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 158,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T09:38:09.000-00:00",
+      "relativeOffset": -38997,
+      "id": 58,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 159,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T09:43:11.000-00:00",
+      "relativeOffset": -38695,
+      "id": 59,
+      "bolusAmount": 0.15000000596046448
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 160,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T09:48:11.000-00:00",
+      "relativeOffset": -38395,
+      "id": 60,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 161,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T09:53:11.000-00:00",
+      "relativeOffset": -38095,
+      "id": 61,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 162,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T09:58:11.000-00:00",
+      "relativeOffset": -37795,
+      "id": 62,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 163,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T10:03:10.000-00:00",
+      "relativeOffset": -37496,
+      "id": 63,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 164,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T10:08:07.000-00:00",
+      "relativeOffset": -37199,
+      "id": 65,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 165,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T10:13:07.000-00:00",
+      "relativeOffset": -36899,
+      "id": 66,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 165,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T10:18:05.000-00:00",
+      "relativeOffset": -36601,
+      "id": 67,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 174,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T10:58:09.000-00:00",
+      "relativeOffset": -34197,
+      "id": 68,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 175,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T11:03:09.000-00: 00",
+      "relativeOffset": -33897,
+      "id": 69,
+      "bolusAmount": 0.15000000596046448
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 176,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T11:08:07.000-00: 00",
+      "relativeOffset": -33599,
+      "id": 70,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 177,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T11:18:05.000-00:00",
+      "relativeOffset": -33001,
+      "id": 71,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 179,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T11:23:09.000-00:00",
+      "relativeOffset": -32697,
+      "id": 72,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 180,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T11:28:11.000-00:00",
+      "relativeOffset": -32395,
+      "id": 73,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 181,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T11:33:11.000-00:00",
+      "relativeOffset": -32095,
+      "id": 74,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 182,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T11:38:11.000-00:00",
+      "relativeOffset": -31795,
+      "id": 75,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 183,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T11:43:11.000-00:00",
+      "relativeOffset": -31495,
+      "id": 76,
+      "bolusAmount": 0.15000000596046448
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 184,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T11:48:09.000-00:00",
+      "relativeOffset": -31197,
+      "id": 77,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 185,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T11:53:11.000-00:00",
+      "relativeOffset": -30895,
+      "id": 78,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 186,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T11:58:11.000-00:00",
+      "relativeOffset": -30595,
+      "id": 79,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 187,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T12:03:07.000-00: 00",
+      "relativeOffset": -30299,
+      "id": 80,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 188,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T12:08:07.000-00:00",
+      "relativeOffset": -29999,
+      "id": 81,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 190,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T12:18:09.000-00:00",
+      "relativeOffset": -29397,
+      "id": 82,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 191,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T12:23:09.000-00:00",
+      "relativeOffset": -29097,
+      "id": 83,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 192,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T12:28:09.000-00:00",
+      "relativeOffset": -28797,
+      "id": 84,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 193,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T12:33:09.000-00:00",
+      "relativeOffset": -28497,
+      "id": 85,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 194,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T12:38:07.000-00:00",
+      "relativeOffset": -28199,
+      "id": 86,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 198,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T12:58:07.000-00:00",
+      "relativeOffset": -26999,
+      "id": 87,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 199,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T13:03:07.000-00:00",
+      "relativeOffset": -26699,
+      "id": 88,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 200,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T13:08:07.000-00:00",
+      "relativeOffset": -26399,
+      "id": 89,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 201,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T13:13:09.000-00:00",
+      "relativeOffset": -26097,
+      "id": 90,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 202,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T13:18:09.000-00:00",
+      "relativeOffset": -25797,
+      "id": 91,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 203,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T13:23:11.000-00:00",
+      "relativeOffset": -25495,
+      "id": 92,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 204,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T13:28:11.000-00:00",
+      "relativeOffset": -25195,
+      "id": 93,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 204,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T13:33:05.000-00:00",
+      "relativeOffset": -24901,
+      "id": 94,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 206,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T13:38:07.000-00:00",
+      "relativeOffset": -24599,
+      "id": 95,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 207,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T13:43:09.000-00:00",
+      "relativeOffset": -24297,
+      "id": 96,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 208,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T13:48:07.000-00:00",
+      "relativeOffset": -23999,
+      "id": 97,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 211,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T14:03:09.000-00:00",
+      "relativeOffset": -23097,
+      "id": 98,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 212,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T14:08:11.000-00:00",
+      "relativeOffset": -22795,
+      "id": 99,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 213,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T14:13:09.000-00:00",
+      "relativeOffset": -22497,
+      "id": 100,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 214,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T14:20:01.000-00:00",
+      "relativeOffset": -22085,
+      "id": 101,
+      "bolusAmount": 0.02500000037252903
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 215,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T14:23:08.000-00:00",
+      "relativeOffset": -21898,
+      "id": 102,
+      "bolusAmount": 0.02500000037252903
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 216,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T14:28:09.000-00:00",
+      "relativeOffset": -21597,
+      "id": 103,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 217,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T14:33:09.000-00:00",
+      "relativeOffset": -21297,
+      "id": 104,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 218,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T14:38:09.000-00:00",
+      "relativeOffset": -20997,
+      "id": 105,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 219,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T14:43:09.000-00:00",
+      "relativeOffset": -20697,
+      "id": 106,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 220,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T14:48:09.000-00:00",
+      "relativeOffset": -20397,
+      "id": 107,
+      "bolusAmount": 0.15000000596046448
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 221,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T14:53:09.000-00:00",
+      "relativeOffset": -20097,
+      "id": 108,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 222,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T14:58:09.000-00:00",
+      "relativeOffset": -19797,
+      "id": 109,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 246,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T17:03:05.000-00:00",
+      "relativeOffset": -12301,
+      "id": 111,
+      "bolusAmount": 0.02500000037252903
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 247,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T17:08:05.000-00:00",
+      "relativeOffset": -12001,
+      "id": 112,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 249,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T17:13:07.000-00:00",
+      "relativeOffset": -11699,
+      "id": 113,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 250,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T17:18:11.000-00:00",
+      "relativeOffset": -11395,
+      "id": 114,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 251,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T17:23:09.000-00:00",
+      "relativeOffset": -11097,
+      "id": 115,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 252,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T17:28:09.000-00:00",
+      "relativeOffset": -10797,
+      "id": 116,
+      "bolusAmount": 0.15000000596046448
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 259,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T18:03:07.000-00:00",
+      "relativeOffset": -8699,
+      "id": 119,
+      "bolusAmount": 0.02500000037252903
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 260,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T18:08:07.000-00:00",
+      "relativeOffset": -8399,
+      "id": 120,
+      "bolusAmount": 0.02500000037252903
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 261,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T18:13:11.000-00:00",
+      "relativeOffset": -8095,
+      "id": 121,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 262,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T18:18:07.000-00:00",
+      "relativeOffset": -7799,
+      "id": 122,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 263,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T18:23:07.000-00:00",
+      "relativeOffset": -7499,
+      "id": 123,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 264,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T18:28:07.000-00:00",
+      "relativeOffset": -7199,
+      "id": 124,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 265,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T18:33:07.000-00:00",
+      "relativeOffset": -6899,
+      "id": 125,
+      "bolusAmount": 0.02500000037252903
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 267,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T18:43:07.000-00:00",
+      "relativeOffset": -6299,
+      "id": 126,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 268,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T18:48:07.000-00:00",
+      "relativeOffset": -5999,
+      "id": 127,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 270,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T18:58:07.000-00:00",
+      "relativeOffset": -5399,
+      "id": 128,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 271,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T19:03:09.000-00:00",
+      "relativeOffset": -5097,
+      "id": 129,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 272,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T19:08:07.000-00:00",
+      "relativeOffset": -4799,
+      "id": 130,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 273,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T19:13:07.000-00:00",
+      "relativeOffset": -4499,
+      "id": 131,
+      "bolusAmount": 0.10000000149011612
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 274,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T19:18:11.000-00:00",
+      "relativeOffset": -4195,
+      "id": 132,
+      "bolusAmount": 0.15000000596046448
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 275,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T19:23:11.000-00:00",
+      "relativeOffset": -3895,
+      "id": 133,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 276,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T19:28:09.000-00:00",
+      "relativeOffset": -3597,
+      "id": 134,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 277,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T19:33:11.000-00:00",
+      "relativeOffset": -3295,
+      "id": 135,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 278,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T19:38:11.000-00:00",
+      "relativeOffset": -2995,
+      "id": 136,
+      "bolusAmount": 0.125
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 279,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T19:43:09.000-00:00",
+      "relativeOffset": -2697,
+      "id": 137,
+      "bolusAmount": 0.07500000298023224
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 280,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T19:48:07.000-00:00",
+      "relativeOffset": -2399,
+      "id": 138,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 280,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T19:53:05.000-00:00",
+      "relativeOffset": -2101,
+      "id": 139,
+      "bolusAmount": 0.05000000074505806
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 281,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T19:58:05.000-00:00",
+      "relativeOffset": -1801,
+      "id": 140,
+      "bolusAmount": 0.02500000037252903
+    },
+    {
+      "type": "AUTO_BASAL_DELIVERY",
+      "index": 282,
+      "kind": "Marker",
+      "version": 1,
+      "dateTime": "2021-05-16T20:03:05.000-00:00",
+      "relativeOffset": -1501,
+      "id": 141,
+      "bolusAmount": 0.02500000037252903
+    }
+  ],
+  "notificationHistory": {
+    "activeNotifications": [],
+    "clearedNotifications": [
+      {
+        "referenceGUID": "61090000-3103-0000-8DE1-502600000000",
+        "dateTime": "2021-05-15T22:14:12.000-00:00",
+        "type": "ALERT",
+        "faultId": 817,
+        "instanceId": 2401,
+        "messageId": "BC_SID_SG_APPROACH_HIGH_LIMIT_CHECK_BG",
+        "pumpDeliverySuspendState": false,
+        "relativeOffset": -80034,
+        "triggeredDateTime": "2021-05-15T22:13:49.000-00:00"
+      },
+      {
+        "referenceGUID": "62090000-1003-0000-8AE2-502600000000",
+        "dateTime": "2021-05-15T22:18:07.000-00:00",
+        "type": "ALERT",
+        "faultId": 784,
+        "instanceId": 2402,
+        "messageId": "BC_SID_SG_RISE_RAPID",
+        "pumpDeliverySuspendState": false,
+        "relativeOffset": -79799,
+        "triggeredDateTime": "2021-05-15T22:18:01.000-00:00"
+      },
+      {
+        "referenceGUID": "65090000-3103-0000-ECCC-512600000000",
+        "dateTime": "2021-05-16T14:58:25.000-00:00",
+        "type": "ALERT",
+        "faultId ": 817,
+        "instanceId": 2405,
+        "messageId": "BC_SID_SG_APPROACH_HIGH_LIMIT_CHECK_BG",
+        "pumpDeliverySuspendState": false,
+        "relativeOffset": -19781,
+        "triggeredDateTime": "2021-05-16T14:58:03.000-00:00"
+      }
+    ]
+  },
+  "therapyAlgorithmState": {
+    "autoModeShieldState": "AUTO_BASAL",
+    "autoModeReadinessState": "NO_ACTION_REQUIRED",
+    "plgmLgsState": "FEATURE_OFF",
+    "safeBasalDuration": 0,
+    "waitToCalibrateDuration": 0
+  },
+  "pumpBannerState": [],
+  "basal": {
+    "activeBasalPattern": "BASAL1",
+    "basalRate": 0.0
+  },
+  "systemStatusMessage": "NO_ERROR_MESSAGE",
+  "averageSG": 133,
+  "belowHypoLimit": 0,
+  "aboveHyperLimit": 2,
+  "timeInRange": 98,
+  "pumpCommunicationState": true,
+  "gstCommunicationState": true,
+  "gstBatteryLevel": 84,
+  "lastConduitDateTime": "2021-05-16T20:27:16.233-07:00",
+  "maxAutoBasalRate": 2.0,
+  "maxBolusAmount": 10.0,
+  "sensorDurationMinutes": 6949,
+  "timeToNextCalibrationMinutes": 99,
+  "clientTimeZoneName": "PacificDaylight Time",
+  "sgBelowLimit": 40,
+  "averageSGFloat": 133.86806
+}

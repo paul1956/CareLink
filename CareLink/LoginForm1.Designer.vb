@@ -38,6 +38,7 @@ Partial Class LoginForm1
         Me.PasswordTextBox = New System.Windows.Forms.TextBox()
         Me.OK = New System.Windows.Forms.Button()
         Me.Cancel = New System.Windows.Forms.Button()
+        Me.SaveCredentials = New System.Windows.Forms.CheckBox()
         CType(Me.LogoPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         Me.SuspendLayout
         '
@@ -53,7 +54,7 @@ Partial Class LoginForm1
         '
         'UsernameLabel
         '
-        Me.UsernameLabel.Location = New System.Drawing.Point(172, 24)
+        Me.UsernameLabel.Location = New System.Drawing.Point(172, 8)
         Me.UsernameLabel.Name = "UsernameLabel"
         Me.UsernameLabel.Size = New System.Drawing.Size(220, 23)
         Me.UsernameLabel.TabIndex = 0
@@ -62,7 +63,7 @@ Partial Class LoginForm1
         '
         'PasswordLabel
         '
-        Me.PasswordLabel.Location = New System.Drawing.Point(172, 81)
+        Me.PasswordLabel.Location = New System.Drawing.Point(172, 55)
         Me.PasswordLabel.Name = "PasswordLabel"
         Me.PasswordLabel.Size = New System.Drawing.Size(220, 23)
         Me.PasswordLabel.TabIndex = 2
@@ -71,14 +72,14 @@ Partial Class LoginForm1
         '
         'UsernameTextBox
         '
-        Me.UsernameTextBox.Location = New System.Drawing.Point(174, 44)
+        Me.UsernameTextBox.Location = New System.Drawing.Point(174, 30)
         Me.UsernameTextBox.Name = "UsernameTextBox"
         Me.UsernameTextBox.Size = New System.Drawing.Size(220, 23)
         Me.UsernameTextBox.TabIndex = 1
         '
         'PasswordTextBox
         '
-        Me.PasswordTextBox.Location = New System.Drawing.Point(174, 101)
+        Me.PasswordTextBox.Location = New System.Drawing.Point(174, 78)
         Me.PasswordTextBox.Name = "PasswordTextBox"
         Me.PasswordTextBox.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.PasswordTextBox.Size = New System.Drawing.Size(220, 23)
@@ -101,6 +102,16 @@ Partial Class LoginForm1
         Me.Cancel.TabIndex = 5
         Me.Cancel.Text = "&Cancel"
         '
+        'SaveCredentials
+        '
+        Me.SaveCredentials.AutoSize = true
+        Me.SaveCredentials.Location = New System.Drawing.Point(174, 126)
+        Me.SaveCredentials.Name = "SaveCredentials"
+        Me.SaveCredentials.Size = New System.Drawing.Size(187, 19)
+        Me.SaveCredentials.TabIndex = 6
+        Me.SaveCredentials.Text = "Save User Name and Password"
+        Me.SaveCredentials.UseVisualStyleBackColor = true
+        '
         'LoginForm1
         '
         Me.AcceptButton = Me.OK
@@ -108,6 +119,7 @@ Partial Class LoginForm1
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel
         Me.ClientSize = New System.Drawing.Size(401, 192)
+        Me.Controls.Add(Me.SaveCredentials)
         Me.Controls.Add(Me.Cancel)
         Me.Controls.Add(Me.OK)
         Me.Controls.Add(Me.PasswordTextBox)
@@ -128,4 +140,5 @@ Partial Class LoginForm1
 
 End Sub
 
+    Friend WithEvents SaveCredentials As CheckBox
 End Class

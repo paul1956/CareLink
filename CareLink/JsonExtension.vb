@@ -10,34 +10,56 @@ Public Module Json
 
     Private Function GetItemAsString(item As KeyValuePair(Of String, Object)) As String
         Dim itemValue As JsonElement = CType(item.Value, JsonElement)
-        Dim itemAsString As String
-        itemAsString = itemValue.ToString
+        Dim itemAsString As String = itemValue.ToString
+        Dim result As String = itemAsString
         Select Case itemValue.ValueKind
             Case JsonValueKind.False
-                itemAsString = "False"
+                result = "False"
             Case JsonValueKind.Null
-                itemAsString = ""
+                result = ""
             Case JsonValueKind.Number
             Case JsonValueKind.True
-                itemAsString = "True"
+                result = "True"
             Case JsonValueKind.String
                 Try
-                    If Char.IsDigit(itemAsString(0)) Then
+                    If Char.IsDigit(result(0)) Then
                         Dim dateSplit As String() = itemAsString.Split("T")
                         If dateSplit.Length = 2 Then
                             Dim zDateString As String() = dateSplit(0).Split("-"c)
                             Dim zTimeString As String() = dateSplit(1).TrimEnd("Z"c).Replace("+", ".").Split(":")
                             Select Case item.Key
                                 Case "techHours"
-                                Case "lastConduitDateTime", "sLastSensorTime", "lastSensorTSAsString", "loginDateUTC",
-                                    "medicalDeviceTimeAsString", "sMedicalDeviceTime"
-                                    itemAsString = New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Utc).ToString()
-                                Case "lastConduitDateTime"
-                                    itemAsString = New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
-                                Case "datetime", "lastConduitDateTime"
-                                    itemAsString = New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
-                                Case "triggeredDateTime"
-                                    itemAsString = New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
+                                Case "lastConduitDateTime",
+                                     "medicalDeviceTimeAsString"' "2021-05-17T01:02:22.307-07:00"
+                                    result =$"{ New DateTime(CInt(zDateString(0)),
+                                                             CInt(zDateString(1)),
+                                                             CInt(zDateString(2)),
+                                                             CInt(zTimeString(0)),
+                                                             CInt(zTimeString(1)),
+                                                             CInt(zTimeString(2).Substring(0, 2)),
+                                                             CInt(zTimeString(2).Substring(3, 3)), DateTimeKind.Local)}{ _
+                                            itemAsString.Substring(itemAsString.Length - 6)}"
+                                Case "lastSensorTSAsString",
+                                    "sLastSensorTime",
+                                    "sMedicalDeviceTime",
+                                    "triggeredDateTime" '2021-05-16T20:28:00.000Z
+                                    result = New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
+                                Case "loginDateUTC" ' UTC 2021-05-16T20:28:00.000Z
+                                    result = New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Utc).ToString()
+                                Case "datetime"
+                                    If item.Value.ToString().EndsWith("Z"c) Then
+                                        result = New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
+                                    Else
+                                        ' "2021-05-17T01:02:22.307-07:00"
+                                        result =$"{ New DateTime(CInt(zDateString(0)),
+                                                                 CInt(zDateString(1)),
+                                                                 CInt(zDateString(2)),
+                                                                 CInt(zTimeString(0)),
+                                                                 CInt(zTimeString(1)),
+                                                                 CInt(zTimeString(2).Substring(0, 2)),
+                                                                 CInt(zTimeString(2).Substring(3, 3)), DateTimeKind.Local)}{ _
+                                            itemAsString.Substring(itemAsString.Length - 6)}"
+                                    End If
                                 Case Else
                                     Stop
                             End Select
@@ -49,7 +71,7 @@ Public Module Json
                 End Try
             Case Else
         End Select
-        Return itemAsString
+        Return result
     End Function
 
     Public Function LoadList(value As String) As List(Of Dictionary(Of String, String))

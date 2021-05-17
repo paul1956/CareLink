@@ -12,6 +12,22 @@ Public Class Form1
     Const NotificationHistory As Integer = 42
     Const SGS As Integer = 39
 
+
+    Private Shared ReadOnly LastAlarmFilter As New List(Of String) From {
+        "code",
+        "instanceId",
+        "kind",
+        "referenceGUID",
+        "relativeOffset",
+        "version"
+        }
+
+    Private Shared ReadOnly LastSgFilter As New List(Of String) From {
+        "kind",
+        "version",
+        "relativeOffset"
+        }
+
     Private Shared ReadOnly markersFilter As New List(Of String) From {
         "id",
         "index",
@@ -20,32 +36,29 @@ Public Class Form1
         "relativeOffset"
         }
 
-    Private Shared ReadOnly LastAlarmFilter As New List(Of String) From {
-        "code",
-        "instanceID",
-        "kind",
-        "referenceGUID",
-        "relativeOffset",
-        "version"
-        }
-    Private Shared ReadOnly LastSgFilter As New List(Of String) From {
+    Private Shared ReadOnly NotificationHistoryFilter As New List(Of String) From {
+        "faultId",
+        "id",
+        "index",
+        "instanceId",
         "kind",
         "version",
+        "referenceGUID",
         "relativeOffset"
         }
-
     Private Shared ReadOnly sgsFilter As New List(Of String) From {
         "kind",
         "version",
         "relativeOffset"
         }
-    Private Shared ReadOnly FilterList As New Dictionary(Of Integer, List(Of String)) From {
+    ' do not rename or move up
+    Private Shared ReadOnly zFilterList As New Dictionary(Of Integer, List(Of String)) From {
         {LastAlarm, LastAlarmFilter},
         {LastSG, LastSgFilter},
         {Markers, markersFilter},
+        {NotificationHistory, NotificationHistoryFilter},
         {SGS, sgsFilter}
         }
-
 
     Private ReadOnly listOfSingleItems As New List(Of Integer) From {
         LastSG,
@@ -72,8 +85,8 @@ Public Class Form1
 
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In innerJson.WithIndex()
             Dim innerRow As KeyValuePair(Of String, String) = c.Value
-            If FilterList.ContainsKey(itemIndex) Then
-                If FilterList(itemIndex).Contains(innerRow.Key) Then
+            If zFilterList.ContainsKey(itemIndex) Then
+                If zFilterList(itemIndex).Contains(innerRow.Key) Then
                     Continue For
                 End If
             End If
@@ -96,23 +109,31 @@ Public Class Form1
                     Dim tableLevel2Pink As New TableLayoutPanel With {
                             .AutoScroll = True,
                             .AutoSize = True,
+                            .BorderStyle = BorderStyle.Fixed3D,
                             .ColumnCount = 1,
+                            .AutoSizeMode = AutoSizeMode.GrowOnly,
                             .Dock = System.Windows.Forms.DockStyle.Fill,
                             .RowCount = innerJson1.Count
                             }
-
+                    tableLevel2Pink.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 80.0))
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson1.WithIndex()
                         tableLevel2Pink.RowStyles.Add(New RowStyle(System.Windows.Forms.SizeType.AutoSize))
                         Dim dic As Dictionary(Of String, String) = innerDictionary.Value
                         Dim tableLevel3Orange As New TableLayoutPanel With {
                                 .AutoScroll = True,
                                 .AutoSize = True,
+                                .AutoSizeMode = AutoSizeMode.GrowOnly,
                                 .ColumnCount = 2,
                                 .Dock = System.Windows.Forms.DockStyle.Fill
                                 }
                         For Each e As IndexClass(Of KeyValuePair(Of String, String)) In dic.WithIndex()
-                            tableLevel3Orange.RowStyles.Add(New RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0))
+                            If zFilterList.ContainsKey(itemIndex) Then
+                                If zFilterList(itemIndex).Contains(e.Value.Key) Then
+                                    Continue For
+                                End If
+                            End If
                             tableLevel3Orange.RowCount += 1
+                            tableLevel3Orange.RowStyles.Add(New RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0))
                             tableLevel3Orange.Controls.AddRange({New Label With {
                                                                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                                     .Text = e.Value.Key,
@@ -123,7 +144,9 @@ Public Class Form1
                                                                      .Text = e.Value.Value}})
                             Application.DoEvents()
                         Next
+                        tableLevel3Orange.Height += 40
                         tableLevel2Pink.Controls.Add(tableLevel3Orange, 0, innerDictionary.Index)
+                        tableLevel2Pink.Height += 4
                         Application.DoEvents()
                     Next
                     tableLevel1Blue.Controls.AddRange({label, tableLevel2Pink})
@@ -143,26 +166,29 @@ Public Class Form1
         Next
         If itemIndex = LastSG Then
             tableLevel1Blue.AutoSize = False
-            tableLevel1Blue.RowCount += 2
-            tableLevel1Blue.Width=400
+            tableLevel1Blue.RowCount += 1
+            tableLevel1Blue.Width = 400
         End If
         Application.DoEvents()
-        Return
     End Sub
 
     Private Sub LoginToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoginToolStripMenuItem.Click
         Timer1.Enabled = False
-
-        loginDialog.ShowDialog()
-        Client = loginDialog.Client
-
-        RecentData = Client.getRecentData()
-        If RecentData Is Nothing Then
-            Exit Sub
+        If UseTestDataToolStripMenuItem.Checked Then
+            RecentData = Json.Loads(IO.File.ReadAllText(IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
+        Else
+            loginDialog.ShowDialog()
+            Client = loginDialog.Client
+            If Client IsNot Nothing AndAlso Client.LoggedIn Then
+                RecentData = Client.getRecentData()
+            End If
+            If RecentData Is Nothing Then
+                Exit Sub
+            End If
+            Timer1.Interval = CType(New TimeSpan(0, 5, 0).TotalMilliseconds, Integer)
+            Timer1.Enabled = True
         End If
         UpdateAllTabPages()
-        Timer1.Interval = CType(New TimeSpan(0, 5, 0).TotalMilliseconds, Integer)
-        Timer1.Enabled = True
     End Sub
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
@@ -193,6 +219,7 @@ Public Class Form1
     End Sub
 
     Private Function UpdateDataTableWithSG(localRecentData As Dictionary(Of String, String)) As String
+        Cursor = Cursors.WaitCursor
         Dim returnValue As String = CurrentBGToolStripTextBox.Text
         TableLayoutPanel1.Controls.Clear()
         TableLayoutPanel1.RowCount = localRecentData.Count - 8
@@ -254,6 +281,7 @@ Public Class Form1
                     LayoutPanel1 = TableLayoutPanel1
                     singleItem = False
             End Select
+            LayoutPanel1.Visible = False
             LayoutPanel1.AutoSize = True
 
             If listOfSingleItems.Contains(c.Index) OrElse singleItem Then
@@ -328,7 +356,9 @@ Public Class Form1
                                                   .Text = row.Value}, If(singleItem, 0, 1), tableRelitiveRow)
             End If
             Application.DoEvents()
+            LayoutPanel1.Visible = True
         Next
+        Cursor = Cursors.Default
         Return returnValue
     End Function
 
