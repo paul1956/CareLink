@@ -82,6 +82,7 @@ Public Class Form1
     Private Shared Sub GetInnerTable(tableLevel1Blue As TableLayoutPanel, innerJson As Dictionary(Of String, String), itemIndex As Integer)
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
+        tableLevel1Blue.BackColor = Color.LightBlue
 
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In innerJson.WithIndex()
             Dim innerRow As KeyValuePair(Of String, String) = c.Value
@@ -106,22 +107,24 @@ Public Class Form1
             If innerRow.Value.StartsWith("[") Then
                 Dim innerJson1 As List(Of Dictionary(Of String, String)) = Json.LoadList(innerRow.Value)
                 If innerJson1.Count > 0 Then
-                    Dim tableLevel2Pink As New TableLayoutPanel With {
+                    Dim tableLevel2Green As New TableLayoutPanel With {
                             .AutoScroll = True,
                             .AutoSize = True,
+                            .BackColor=color.LawnGreen,
                             .BorderStyle = BorderStyle.Fixed3D,
                             .ColumnCount = 1,
                             .AutoSizeMode = AutoSizeMode.GrowOnly,
                             .Dock = System.Windows.Forms.DockStyle.Fill,
                             .RowCount = innerJson1.Count
                             }
-                    tableLevel2Pink.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 80.0))
+                    tableLevel2Green.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 80.0))
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson1.WithIndex()
-                        tableLevel2Pink.RowStyles.Add(New RowStyle(System.Windows.Forms.SizeType.AutoSize))
+                        tableLevel2Green.RowStyles.Add(New RowStyle(System.Windows.Forms.SizeType.AutoSize))
                         Dim dic As Dictionary(Of String, String) = innerDictionary.Value
                         Dim tableLevel3Orange As New TableLayoutPanel With {
                                 .AutoScroll = True,
                                 .AutoSize = True,
+                                .BackColor=Color.Orange,
                                 .AutoSizeMode = AutoSizeMode.GrowOnly,
                                 .ColumnCount = 2,
                                 .Dock = System.Windows.Forms.DockStyle.Fill
@@ -145,11 +148,11 @@ Public Class Form1
                             Application.DoEvents()
                         Next
                         tableLevel3Orange.Height += 40
-                        tableLevel2Pink.Controls.Add(tableLevel3Orange, 0, innerDictionary.Index)
-                        tableLevel2Pink.Height += 4
+                        tableLevel2Green.Controls.Add(tableLevel3Orange, 0, innerDictionary.Index)
+                        tableLevel2Green.Height += 4
                         Application.DoEvents()
                     Next
-                    tableLevel1Blue.Controls.AddRange({label, tableLevel2Pink})
+                    tableLevel1Blue.Controls.AddRange({label, tableLevel2Green})
                 Else
                     tableLevel1Blue.Controls.AddRange({label, New TextBox With {
                                                .Text = "",
