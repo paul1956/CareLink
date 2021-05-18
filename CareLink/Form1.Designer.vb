@@ -28,9 +28,10 @@ Partial Class Form1
         Me.StartDisplayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoginToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OptionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.UseTestDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CurrentBGToolStripTextBox = New System.Windows.Forms.ToolStripTextBox()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.TableLayoutPanelTop1 = New System.Windows.Forms.TableLayoutPanel()
@@ -38,20 +39,25 @@ Partial Class Form1
         Me.TableLayoutPanelTop2 = New System.Windows.Forms.TableLayoutPanel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.labelSampleComment = New System.Windows.Forms.Label()
+        Me.BGImage = New System.Windows.Forms.PictureBox()
+        Me.CurrentBG = New System.Windows.Forms.Label()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
+        Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
         Me.TabPage5 = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
+        Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
         Me.TabPage6 = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
+        Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
         Me.TabPage7 = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
+        Me.TabPage8 = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
+        Me.TabPage9 = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel7 = New System.Windows.Forms.TableLayoutPanel()
-        Me.OptionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.UseTestDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout
         CType(Me.SplitContainer1,System.ComponentModel.ISupportInitialize).BeginInit
         Me.SplitContainer1.Panel1.SuspendLayout
@@ -59,20 +65,22 @@ Partial Class Form1
         Me.SplitContainer1.SuspendLayout
         Me.TabControl1.SuspendLayout
         Me.TabPage1.SuspendLayout
-        Me.TabPage2.SuspendLayout
+        CType(Me.BGImage,System.ComponentModel.ISupportInitialize).BeginInit
         Me.TabPage3.SuspendLayout
         Me.TabPage4.SuspendLayout
         Me.TabPage5.SuspendLayout
         Me.TabPage6.SuspendLayout
         Me.TabPage7.SuspendLayout
+        Me.TabPage8.SuspendLayout
+        Me.TabPage9.SuspendLayout
         Me.SuspendLayout
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StartDisplayToolStripMenuItem, Me.OptionsToolStripMenuItem, Me.HelpToolStripMenuItem, Me.CurrentBGToolStripTextBox})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StartDisplayToolStripMenuItem, Me.OptionsToolStripMenuItem, Me.HelpToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(1084, 27)
+        Me.MenuStrip1.Size = New System.Drawing.Size(1174, 24)
         Me.MenuStrip1.TabIndex = 2
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -80,7 +88,7 @@ Partial Class Form1
         '
         Me.StartDisplayToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LoginToolStripMenuItem, Me.ExitToolStripMenuItem})
         Me.StartDisplayToolStripMenuItem.Name = "StartDisplayToolStripMenuItem"
-        Me.StartDisplayToolStripMenuItem.Size = New System.Drawing.Size(57, 23)
+        Me.StartDisplayToolStripMenuItem.Size = New System.Drawing.Size(57, 20)
         Me.StartDisplayToolStripMenuItem.Text = "Display"
         '
         'LoginToolStripMenuItem
@@ -95,11 +103,25 @@ Partial Class Form1
         Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(104, 22)
         Me.ExitToolStripMenuItem.Text = "E&xit"
         '
+        'OptionsToolStripMenuItem
+        '
+        Me.OptionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UseTestDataToolStripMenuItem})
+        Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
+        Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
+        Me.OptionsToolStripMenuItem.Text = "Options"
+        '
+        'UseTestDataToolStripMenuItem
+        '
+        Me.UseTestDataToolStripMenuItem.CheckOnClick = true
+        Me.UseTestDataToolStripMenuItem.Name = "UseTestDataToolStripMenuItem"
+        Me.UseTestDataToolStripMenuItem.Size = New System.Drawing.Size(143, 22)
+        Me.UseTestDataToolStripMenuItem.Text = "Use Test Data"
+        '
         'HelpToolStripMenuItem
         '
         Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AboutToolStripMenuItem})
         Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
-        Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 23)
+        Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.HelpToolStripMenuItem.Text = "&Help"
         '
         'AboutToolStripMenuItem
@@ -107,11 +129,6 @@ Partial Class Form1
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
         Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
         Me.AboutToolStripMenuItem.Text = "&About..."
-        '
-        'CurrentBGToolStripTextBox
-        '
-        Me.CurrentBGToolStripTextBox.Name = "CurrentBGToolStripTextBox"
-        Me.CurrentBGToolStripTextBox.Size = New System.Drawing.Size(100, 23)
         '
         'Timer1
         '
@@ -184,7 +201,7 @@ Partial Class Form1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1070, 366)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1160, 695)
         Me.TableLayoutPanel1.TabIndex = 3
         '
         'TableLayoutPanelTop1
@@ -197,15 +214,15 @@ Partial Class Form1
         Me.TableLayoutPanelTop1.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanelTop1.Name = "TableLayoutPanelTop1"
         Me.TableLayoutPanelTop1.RowCount = 1
-        Me.TableLayoutPanelTop1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 123!))
-        Me.TableLayoutPanelTop1.Size = New System.Drawing.Size(6, 123)
+        Me.TableLayoutPanelTop1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 187!))
+        Me.TableLayoutPanelTop1.Size = New System.Drawing.Size(6, 115)
         Me.TableLayoutPanelTop1.TabIndex = 0
         '
         'SplitContainer1
         '
         Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.SplitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1
-        Me.SplitContainer1.Location = New System.Drawing.Point(0, 27)
+        Me.SplitContainer1.Location = New System.Drawing.Point(0, 24)
         Me.SplitContainer1.Name = "SplitContainer1"
         Me.SplitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal
         '
@@ -218,8 +235,8 @@ Partial Class Form1
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.TabControl1)
-        Me.SplitContainer1.Size = New System.Drawing.Size(1084, 525)
-        Me.SplitContainer1.SplitterDistance = 123
+        Me.SplitContainer1.Size = New System.Drawing.Size(1174, 846)
+        Me.SplitContainer1.SplitterDistance = 115
         Me.SplitContainer1.SplitterWidth = 2
         Me.SplitContainer1.TabIndex = 22
         '
@@ -229,13 +246,13 @@ Partial Class Form1
         Me.TableLayoutPanelTop2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelTop2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelTop2.ColumnCount = 1
-        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 663!))
+        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 711!))
         Me.TableLayoutPanelTop2.Dock = System.Windows.Forms.DockStyle.Right
-        Me.TableLayoutPanelTop2.Location = New System.Drawing.Point(424, 0)
+        Me.TableLayoutPanelTop2.Location = New System.Drawing.Point(514, 0)
         Me.TableLayoutPanelTop2.Name = "TableLayoutPanelTop2"
         Me.TableLayoutPanelTop2.RowCount = 1
-        Me.TableLayoutPanelTop2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 123!))
-        Me.TableLayoutPanelTop2.Size = New System.Drawing.Size(660, 123)
+        Me.TableLayoutPanelTop2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 173!))
+        Me.TableLayoutPanelTop2.Size = New System.Drawing.Size(660, 115)
         Me.TableLayoutPanelTop2.TabIndex = 1
         '
         'TabControl1
@@ -247,34 +264,113 @@ Partial Class Form1
         Me.TabControl1.Controls.Add(Me.TabPage5)
         Me.TabControl1.Controls.Add(Me.TabPage6)
         Me.TabControl1.Controls.Add(Me.TabPage7)
+        Me.TabControl1.Controls.Add(Me.TabPage8)
+        Me.TabControl1.Controls.Add(Me.TabPage9)
         Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1084, 400)
+        Me.TabControl1.Size = New System.Drawing.Size(1174, 729)
         Me.TabControl1.TabIndex = 4
         '
         'TabPage1
         '
-        Me.TabPage1.Controls.Add(Me.TableLayoutPanel1)
+        Me.TabPage1.Controls.Add(Me.Label2)
+        Me.TabPage1.Controls.Add(Me.Label3)
+        Me.TabPage1.Controls.Add(Me.labelSampleComment)
+        Me.TabPage1.Controls.Add(Me.BGImage)
+        Me.TabPage1.Controls.Add(Me.CurrentBG)
         Me.TabPage1.Location = New System.Drawing.Point(4, 24)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(1076, 372)
-        Me.TabPage1.TabIndex = 0
-        Me.TabPage1.Text = "Summary Data"
+        Me.TabPage1.Size = New System.Drawing.Size(1166, 701)
+        Me.TabPage1.TabIndex = 7
+        Me.TabPage1.Text = "Home Page"
         Me.TabPage1.UseVisualStyleBackColor = true
+        '
+        'Label2
+        '
+        Me.Label2.Font = New System.Drawing.Font("Verdana", 11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.Label2.Location = New System.Drawing.Point(652, 108)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(702, 23)
+        Me.Label2.TabIndex = 1
+        Me.Label2.Text = "Label2"
+        Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'Label3
+        '
+        Me.Label3.Font = New System.Drawing.Font("Verdana", 11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.Label3.Location = New System.Drawing.Point(652, 248)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(419, 44)
+        Me.Label3.TabIndex = 2
+        Me.Label3.Text = "To further enhance performance, disable tooltips, anti-aliasing, and border skins"& _ 
+    "."
+        Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'labelSampleComment
+        '
+        Me.labelSampleComment.Font = New System.Drawing.Font("Verdana", 11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.labelSampleComment.Location = New System.Drawing.Point(652, 319)
+        Me.labelSampleComment.Name = "labelSampleComment"
+        Me.labelSampleComment.Size = New System.Drawing.Size(419, 66)
+        Me.labelSampleComment.TabIndex = 3
+        Me.labelSampleComment.Text = "The Fast Line and Fast Point chart types significantly reduce the drawing time of"& _ 
+    " a series that has many data points."
+        Me.labelSampleComment.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'BGImage
+        '
+        Me.BGImage.Image = CType(resources.GetObject("BGImage.Image"),System.Drawing.Image)
+        Me.BGImage.Location = New System.Drawing.Point(71, 0)
+        Me.BGImage.Name = "BGImage"
+        Me.BGImage.Size = New System.Drawing.Size(100, 100)
+        Me.BGImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.BGImage.TabIndex = 4
+        Me.BGImage.TabStop = false
+        '
+        'CurrentBG
+        '
+        Me.CurrentBG.AutoSize = true
+        Me.CurrentBG.Font = New System.Drawing.Font("Arial", 18!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.CurrentBG.Location = New System.Drawing.Point(103, 20)
+        Me.CurrentBG.Name = "CurrentBG"
+        Me.CurrentBG.Size = New System.Drawing.Size(37, 29)
+        Me.CurrentBG.TabIndex = 0
+        Me.CurrentBG.Text = "---"
+        Me.CurrentBG.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'TabPage2
         '
-        Me.TabPage2.Controls.Add(Me.TableLayoutPanel2)
         Me.TabPage2.Location = New System.Drawing.Point(4, 24)
         Me.TabPage2.Name = "TabPage2"
-        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(1076, 372)
-        Me.TabPage2.TabIndex = 1
-        Me.TabPage2.Text = "Active Insulin"
+        Me.TabPage2.Size = New System.Drawing.Size(1166, 701)
+        Me.TabPage2.TabIndex = 8
+        Me.TabPage2.Text = "24Hour Summary"
         Me.TabPage2.UseVisualStyleBackColor = true
+        '
+        'TabPage3
+        '
+        Me.TabPage3.Controls.Add(Me.TableLayoutPanel1)
+        Me.TabPage3.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage3.Name = "TabPage3"
+        Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage3.Size = New System.Drawing.Size(1166, 701)
+        Me.TabPage3.TabIndex = 0
+        Me.TabPage3.Text = "Summary Data"
+        Me.TabPage3.UseVisualStyleBackColor = true
+        '
+        'TabPage4
+        '
+        Me.TabPage4.Controls.Add(Me.TableLayoutPanel2)
+        Me.TabPage4.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage4.Name = "TabPage4"
+        Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage4.Size = New System.Drawing.Size(1166, 701)
+        Me.TabPage4.TabIndex = 1
+        Me.TabPage4.Text = "Active Insulin"
+        Me.TabPage4.UseVisualStyleBackColor = true
         '
         'TableLayoutPanel2
         '
@@ -289,19 +385,19 @@ Partial Class Form1
         Me.TableLayoutPanel2.RowCount = 2
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel2.Size = New System.Drawing.Size(1070, 9)
+        Me.TableLayoutPanel2.Size = New System.Drawing.Size(1160, 9)
         Me.TableLayoutPanel2.TabIndex = 0
         '
-        'TabPage3
+        'TabPage5
         '
-        Me.TabPage3.Controls.Add(Me.TableLayoutPanel3)
-        Me.TabPage3.Location = New System.Drawing.Point(4, 24)
-        Me.TabPage3.Name = "TabPage3"
-        Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3.Size = New System.Drawing.Size(1076, 372)
-        Me.TabPage3.TabIndex = 2
-        Me.TabPage3.Text = "SGS"
-        Me.TabPage3.UseVisualStyleBackColor = true
+        Me.TabPage5.Controls.Add(Me.TableLayoutPanel3)
+        Me.TabPage5.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage5.Name = "TabPage5"
+        Me.TabPage5.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage5.Size = New System.Drawing.Size(1166, 701)
+        Me.TabPage5.TabIndex = 2
+        Me.TabPage5.Text = "SGS"
+        Me.TabPage5.UseVisualStyleBackColor = true
         '
         'TableLayoutPanel3
         '
@@ -317,19 +413,19 @@ Partial Class Form1
         Me.TableLayoutPanel3.RowCount = 2
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel3.Size = New System.Drawing.Size(1070, 366)
+        Me.TableLayoutPanel3.Size = New System.Drawing.Size(1160, 695)
         Me.TableLayoutPanel3.TabIndex = 0
         '
-        'TabPage4
+        'TabPage6
         '
-        Me.TabPage4.Controls.Add(Me.TableLayoutPanel4)
-        Me.TabPage4.Location = New System.Drawing.Point(4, 24)
-        Me.TabPage4.Name = "TabPage4"
-        Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage4.Size = New System.Drawing.Size(1076, 372)
-        Me.TabPage4.TabIndex = 3
-        Me.TabPage4.Text = "Limits"
-        Me.TabPage4.UseVisualStyleBackColor = true
+        Me.TabPage6.Controls.Add(Me.TableLayoutPanel4)
+        Me.TabPage6.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage6.Name = "TabPage6"
+        Me.TabPage6.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage6.Size = New System.Drawing.Size(1166, 701)
+        Me.TabPage6.TabIndex = 3
+        Me.TabPage6.Text = "Limits"
+        Me.TabPage6.UseVisualStyleBackColor = true
         '
         'TableLayoutPanel4
         '
@@ -345,19 +441,19 @@ Partial Class Form1
         Me.TableLayoutPanel4.RowCount = 2
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel4.Size = New System.Drawing.Size(1070, 366)
+        Me.TableLayoutPanel4.Size = New System.Drawing.Size(1160, 695)
         Me.TableLayoutPanel4.TabIndex = 0
         '
-        'TabPage5
+        'TabPage7
         '
-        Me.TabPage5.Controls.Add(Me.TableLayoutPanel5)
-        Me.TabPage5.Location = New System.Drawing.Point(4, 24)
-        Me.TabPage5.Name = "TabPage5"
-        Me.TabPage5.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage5.Size = New System.Drawing.Size(1076, 372)
-        Me.TabPage5.TabIndex = 4
-        Me.TabPage5.Text = "Markers"
-        Me.TabPage5.UseVisualStyleBackColor = true
+        Me.TabPage7.Controls.Add(Me.TableLayoutPanel5)
+        Me.TabPage7.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage7.Name = "TabPage7"
+        Me.TabPage7.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage7.Size = New System.Drawing.Size(1166, 701)
+        Me.TabPage7.TabIndex = 4
+        Me.TabPage7.Text = "Markers"
+        Me.TabPage7.UseVisualStyleBackColor = true
         '
         'TableLayoutPanel5
         '
@@ -372,19 +468,19 @@ Partial Class Form1
         Me.TableLayoutPanel5.Name = "TableLayoutPanel5"
         Me.TableLayoutPanel5.RowCount = 1
         Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel5.Size = New System.Drawing.Size(1070, 366)
+        Me.TableLayoutPanel5.Size = New System.Drawing.Size(1160, 695)
         Me.TableLayoutPanel5.TabIndex = 0
         '
-        'TabPage6
+        'TabPage8
         '
-        Me.TabPage6.Controls.Add(Me.TableLayoutPanel6)
-        Me.TabPage6.Location = New System.Drawing.Point(4, 24)
-        Me.TabPage6.Name = "TabPage6"
-        Me.TabPage6.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage6.Size = New System.Drawing.Size(1076, 372)
-        Me.TabPage6.TabIndex = 5
-        Me.TabPage6.Text = "Notification History"
-        Me.TabPage6.UseVisualStyleBackColor = true
+        Me.TabPage8.Controls.Add(Me.TableLayoutPanel6)
+        Me.TabPage8.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage8.Name = "TabPage8"
+        Me.TabPage8.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage8.Size = New System.Drawing.Size(1166, 701)
+        Me.TabPage8.TabIndex = 5
+        Me.TabPage8.Text = "Notification History"
+        Me.TabPage8.UseVisualStyleBackColor = true
         '
         'TableLayoutPanel6
         '
@@ -399,19 +495,19 @@ Partial Class Form1
         Me.TableLayoutPanel6.Name = "TableLayoutPanel6"
         Me.TableLayoutPanel6.RowCount = 1
         Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel6.Size = New System.Drawing.Size(1070, 366)
+        Me.TableLayoutPanel6.Size = New System.Drawing.Size(1160, 695)
         Me.TableLayoutPanel6.TabIndex = 0
         '
-        'TabPage7
+        'TabPage9
         '
-        Me.TabPage7.Controls.Add(Me.TableLayoutPanel7)
-        Me.TabPage7.Location = New System.Drawing.Point(4, 24)
-        Me.TabPage7.Name = "TabPage7"
-        Me.TabPage7.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage7.Size = New System.Drawing.Size(1076, 372)
-        Me.TabPage7.TabIndex = 6
-        Me.TabPage7.Text = "Basal"
-        Me.TabPage7.UseVisualStyleBackColor = true
+        Me.TabPage9.Controls.Add(Me.TableLayoutPanel7)
+        Me.TabPage9.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage9.Name = "TabPage9"
+        Me.TabPage9.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage9.Size = New System.Drawing.Size(1166, 701)
+        Me.TabPage9.TabIndex = 6
+        Me.TabPage9.Text = "Basal"
+        Me.TabPage9.UseVisualStyleBackColor = true
         '
         'TableLayoutPanel7
         '
@@ -426,28 +522,14 @@ Partial Class Form1
         Me.TableLayoutPanel7.RowCount = 2
         Me.TableLayoutPanel7.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50!))
         Me.TableLayoutPanel7.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50!))
-        Me.TableLayoutPanel7.Size = New System.Drawing.Size(1070, 379)
+        Me.TableLayoutPanel7.Size = New System.Drawing.Size(1160, 379)
         Me.TableLayoutPanel7.TabIndex = 0
-        '
-        'OptionsToolStripMenuItem
-        '
-        Me.OptionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UseTestDataToolStripMenuItem})
-        Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
-        Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(61, 23)
-        Me.OptionsToolStripMenuItem.Text = "Options"
-        '
-        'UseTestDataToolStripMenuItem
-        '
-        Me.UseTestDataToolStripMenuItem.CheckOnClick = true
-        Me.UseTestDataToolStripMenuItem.Name = "UseTestDataToolStripMenuItem"
-        Me.UseTestDataToolStripMenuItem.Size = New System.Drawing.Size(143, 22)
-        Me.UseTestDataToolStripMenuItem.Text = "Use Test Data"
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7!, 15!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1084, 552)
+        Me.ClientSize = New System.Drawing.Size(1174, 870)
         Me.Controls.Add(Me.SplitContainer1)
         Me.Controls.Add(Me.MenuStrip1)
         Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
@@ -465,8 +547,7 @@ Partial Class Form1
         Me.TabControl1.ResumeLayout(false)
         Me.TabPage1.ResumeLayout(false)
         Me.TabPage1.PerformLayout
-        Me.TabPage2.ResumeLayout(false)
-        Me.TabPage2.PerformLayout
+        CType(Me.BGImage,System.ComponentModel.ISupportInitialize).EndInit
         Me.TabPage3.ResumeLayout(false)
         Me.TabPage3.PerformLayout
         Me.TabPage4.ResumeLayout(false)
@@ -476,6 +557,10 @@ Partial Class Form1
         Me.TabPage6.ResumeLayout(false)
         Me.TabPage6.PerformLayout
         Me.TabPage7.ResumeLayout(false)
+        Me.TabPage7.PerformLayout
+        Me.TabPage8.ResumeLayout(false)
+        Me.TabPage8.PerformLayout
+        Me.TabPage9.ResumeLayout(false)
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -486,17 +571,16 @@ End Sub
     Friend WithEvents AboutToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Timer1 As Timer
     Friend WithEvents StartDisplayToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents CurrentBGToolStripTextBox As ToolStripTextBox
     Friend WithEvents LoginToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SplitContainer1 As SplitContainer
     Friend WithEvents TabControl1 As TabControl
-    Friend WithEvents TabPage1 As TabPage
-    Friend WithEvents TabPage2 As TabPage
     Friend WithEvents TabPage3 As TabPage
     Friend WithEvents TabPage4 As TabPage
     Friend WithEvents TabPage5 As TabPage
     Friend WithEvents TabPage6 As TabPage
     Friend WithEvents TabPage7 As TabPage
+    Friend WithEvents TabPage8 As TabPage
+    Friend WithEvents TabPage9 As TabPage
     Friend WithEvents TableLayoutPanelTop1 As TableLayoutPanel
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents TableLayoutPanel2 As TableLayoutPanel
@@ -509,4 +593,11 @@ End Sub
     Friend WithEvents TableLayoutPanelTop2 As TableLayoutPanel
     Friend WithEvents OptionsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents UseTestDataToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents CurrentBG As Label
+    Friend WithEvents Label2 As Label
+    Friend WithEvents Label3 As Label
+    Friend WithEvents labelSampleComment As Label
+    Friend WithEvents BGImage As PictureBox
+    Friend WithEvents TabPage1 As TabPage
+    Friend WithEvents TabPage2 As TabPage
 End Class

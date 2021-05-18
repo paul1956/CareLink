@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Screenshot 2021-05-16 050718.png = Screenshot 2021-05-16 050718.png
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChartWin", "..\winforms-datavisualization-net5\src\System.Windows.Forms.DataVisualization\ChartWin.csproj", "{ED690BF6-C4B8-40E3-B1C1-A9053F887308}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +24,10 @@ Global
 		{3DF0DB17-7515-4C29-916E-C6EF66A82672}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DF0DB17-7515-4C29-916E-C6EF66A82672}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DF0DB17-7515-4C29-916E-C6EF66A82672}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED690BF6-C4B8-40E3-B1C1-A9053F887308}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED690BF6-C4B8-40E3-B1C1-A9053F887308}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED690BF6-C4B8-40E3-B1C1-A9053F887308}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED690BF6-C4B8-40E3-B1C1-A9053F887308}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
