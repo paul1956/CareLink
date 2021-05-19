@@ -450,7 +450,7 @@ Public Class Form1
         If ReservoirAmount = 0 Then Exit Sub
         Dim insulinImage As New Bitmap(ImageList1.Images("InsulinVial.png"))
         Dim myGraphics As Graphics = Graphics.FromImage(insulinImage)
-        Dim scale As Double = 5.0
+        Dim scale As Double = 4.0
         Dim scaledInsulinLevel As Integer = CInt(ReservoirLevelPercent / scale)
         Dim myRectangle As Rectangle = New Rectangle(x:=15, y:=55 - scaledInsulinLevel, width:=33, height:=scaledInsulinLevel)
 
