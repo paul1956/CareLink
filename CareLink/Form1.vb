@@ -2,7 +2,6 @@
 ''' The .NET Foundation licenses this file to you under the MIT license.
 ''' See the LICENSE file in the project root for more information.
 
-Imports System.Globalization
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Class Form1
@@ -75,7 +74,6 @@ Public Class Form1
     Private ReadOnly loginDialog As New LoginForm1
     Private ReadOnly series1 As New Series()
     Private ReadOnly title1 As New Title()
-
     Private Client As CareLinkClient
     Public RecentData As Dictionary(Of String, String)
 
@@ -107,7 +105,7 @@ Public Class Form1
     Public ReservoirRemainingUnits As Double ' 25
     Public MedicalDeviceBatteryLevelPercent As Integer ' 26
     Public SensorDurationHours As Integer ' 27
-    Public TimeToNextCalibHours As Integer ' 28
+    Public TimeToNextCalibHours As Integer = -1 ' 28
     Public CalibStatus As String ' 29
     Public BgUnits As String ' 30
     Public TimeFormat As String ' 31
@@ -141,7 +139,6 @@ Public Class Form1
     Public ClientTimeZoneName As String ' 59
     Public SgBelowLimit As Integer ' 60
     Public AverageSGFloat As Double ' 61
-
 
     Enum ItemIndexs As Integer
         lastSensorTS = 0
@@ -208,8 +205,113 @@ Public Class Form1
         averageSGFloat = 61
     End Enum
 
+    Private Shared Sub Chart1_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles Chart1.PostPaint
+        ' Painting series object
+        Dim area As ChartArea = TryCast(sender, ChartArea)
+        If area IsNot Nothing Then
+
+            Dim format As New StringFormat With {
+                    .Alignment = StringAlignment.Center
+                    }
+
+            Dim rect As New RectangleF(area.Position.X, area.Position.Y, area.Position.Width, 6)
+
+            rect = e.ChartGraphics.GetAbsoluteRectangle(rect)
+            e.ChartGraphics.Graphics.DrawString(area.Name, New Font("Arial", 10), Brushes.Black, rect, format)
+
+        End If
+    End Sub
+
+    Private Shared Function DrawCenteredArc(backImage As Bitmap, arcPercentage As Double, Optional colorTable As Dictionary(Of String, Color) = Nothing, Optional segmentName As String = "") As Bitmap
+        If arcPercentage < Double.Epsilon Then
+            Return backImage
+        End If
+        Dim targetImage As Bitmap = backImage
+        Dim myGraphics As Graphics = Graphics.FromImage(targetImage)
+        Dim rect As New Rectangle(1, 1, backImage.Width - 2, backImage.Height - 2)
+        myGraphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+        Dim pen As Pen
+        If colorTable Is Nothing Then
+            pen = New Pen(GetColorFromPercent(CInt(arcPercentage * 100)), 3)
+        Else
+            pen = New Pen(colorTable(segmentName), 5)
+        End If
+        myGraphics.DrawArc(pen, rect, -90, CInt(360 * arcPercentage))
+        Return targetImage
+    End Function
+
     Private Shared Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
         End
+    End Sub
+
+    Private Shared Function GetColorFromPercent(percent As Integer) As Color
+        If percent > 40 Then
+            Return Color.Lime
+        ElseIf percent > 20 Then
+            Return Color.Yellow
+        Else
+            Return Color.Red
+        End If
+    End Function
+
+    Private Sub DrawCalibrationTimeRemaining()
+        If TimeToNextCalibHours = -1 Then
+            Exit Sub
+        End If
+        CalibrationDueImage.Image = DrawCenteredArc(My.Resources.Resources.CalibrationDot, TimeToNextCalibHours / 12)
+        Application.DoEvents()
+    End Sub
+
+    Private Sub DrawInsulinLevel()
+        Dim insulinImage As New Bitmap(My.Resources.Resources.InsulinVial)
+        Dim myGraphics As Graphics = Graphics.FromImage(insulinImage)
+        If ReservoirLevelPercent = 0 Then
+            InsulinLevelPictureBox.Image = insulinImage
+            Exit Sub
+        End If
+        Dim scale As Double = 4.0
+        Dim scaledInsulinLevel As Integer = CInt(ReservoirLevelPercent / scale)
+        Dim myRectangle As Rectangle = New Rectangle(x:=13, y:=61 - scaledInsulinLevel, width:=31, height:=scaledInsulinLevel)
+
+        ' draw rectangle from pen and rectangle objects
+        ' Create solid brush.
+        ' Fill rectangle to screen.
+        myGraphics.FillRectangle(New SolidBrush(GetColorFromPercent(ReservoirLevelPercent)), myRectangle)
+        InsulinLevelPictureBox.Image = insulinImage
+        Application.DoEvents()
+    End Sub
+
+    Private Sub FillChart()
+
+        ' Fill Chart1
+        Dim minDate As Date = Date.Parse(SGs.First().Item("datetime").ToString())
+        Dim maxDate As Date = Date.Parse(SGs.Last().Item("datetime").ToString())
+        Chart1.ChartAreas("Default").AxisX.Minimum = minDate.ToOADate()
+        Chart1.ChartAreas("Default").AxisX.Maximum = maxDate.ToOADate()
+        Chart1.ChartAreas("Default").AxisX.MajorGrid.Interval = 288 / 24
+        Dim previousHour As DateTime
+        For Each SGList As IndexClass(Of Dictionary(Of String, String)) In SGs.WithIndex()
+            Dim bgValue As Integer = CInt(SGList.Value("sg"))
+            If bgValue = 0 Then
+                Continue For
+            End If
+
+            Dim sgDateTime As Date = Date.Parse(SGList.Value("datetime"))
+            Dim currentHour As DateTime = New DateTime(sgDateTime.Year, sgDateTime.Month, sgDateTime.Day, sgDateTime.Hour, 0, 0)
+            If SGList.IsFirst Then
+                previousHour = sgDateTime
+                StartTimeComboBox.Items.Add($"{currentHour:hh tt}")
+            ElseIf previousHour.Hour <> currentHour.Hour Then
+                StartTimeComboBox.Items.Add($"{currentHour:hh tt}")
+                previousHour = currentHour
+            End If
+            StartTimeComboBox.SelectedIndex = 0
+            Chart1.Series("Default").Points.AddXY(sgDateTime, bgValue)
+        Next
+    End Sub
+
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
+        initializeChart()
     End Sub
 
     Private Sub GetInnerTable(tableLevel1Blue As TableLayoutPanel, innerJson As Dictionary(Of String, String), itemIndex As ItemIndexs)
@@ -308,27 +410,6 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
-    Private Shared Sub Chart1_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles Chart1.PostPaint
-        ' Painting series object
-        Dim area As ChartArea = TryCast(sender, ChartArea)
-        If area IsNot Nothing Then
-
-            Dim format As New StringFormat With {
-                    .Alignment = StringAlignment.Center
-                    }
-
-            Dim rect As New RectangleF(area.Position.X, area.Position.Y, area.Position.Width, 6)
-
-            rect = e.ChartGraphics.GetAbsoluteRectangle(rect)
-            e.ChartGraphics.Graphics.DrawString(area.Name, New Font("Arial", 10), Brushes.Black, rect, format)
-
-        End If
-    End Sub
-
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
-        initializeChart()
-    End Sub
-
     Private Sub initializeChart()
         Chart1.BackColor = System.Drawing.Color.WhiteSmoke
         Chart1.BackGradientStyle = GradientStyle.TopBottom
@@ -350,12 +431,16 @@ Public Class Form1
         chartArea1.AxisX.LabelStyle.Font = New Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold)
         chartArea1.AxisX.LineColor = System.Drawing.Color.FromArgb(64, 64, 64, 64)
         chartArea1.AxisX.MajorGrid.LineColor = System.Drawing.Color.FromArgb(64, 64, 64, 64)
+        chartArea1.AxisX.IsMarginVisible = True
         chartArea1.AxisX.ScrollBar.LineColor = System.Drawing.Color.Black
+        chartArea1.AxisY.IsInterlaced = True
+        chartArea1.AxisY.InterlacedColor = Color.FromArgb(120, Color.LightSlateGray)
         chartArea1.AxisX.ScrollBar.Size = 10
         chartArea1.AxisY.LabelStyle.Font = New Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold)
         chartArea1.AxisY.LineColor = System.Drawing.Color.FromArgb(64, 64, 64, 64)
         chartArea1.AxisY.MajorGrid.LineColor = System.Drawing.Color.FromArgb(64, 64, 64, 64)
         chartArea1.AxisY.ScrollBar.LineColor = System.Drawing.Color.Black
+        chartArea1.AxisY.IsStartedFromZero = False
         chartArea1.AxisY.ScrollBar.Size = 10
         chartArea1.BackColor = System.Drawing.Color.Gainsboro
         chartArea1.BackGradientStyle = GradientStyle.TopBottom
@@ -389,6 +474,13 @@ Public Class Form1
         Chart1.Legends.Add(legend1)
         Chart1.Series.Add(series1)
         Chart1.Titles.Add(title1)
+        Chart1.Series("Default").YAxisType = AxisType.Secondary
+        Chart1.Series("Default").XValueType = ChartValueType.DateTime
+        Chart1.ChartAreas("Default").AxisX.LabelStyle.Format = "hh tt"
+        Chart1.ChartAreas("Default").AxisY.Minimum = 50
+        Chart1.ChartAreas("Default").AxisY.Maximum = 400
+        ' Set fast line chart type
+        Chart1.Series("Default").ChartType = SeriesChartType.FastLine
         TabPage1.Controls.Add(Chart1)
         Application.DoEvents()
     End Sub
@@ -425,50 +517,16 @@ Public Class Form1
 
     Private Sub UpdateAllTabPages()
         UpdateDataTableWithSG(RecentData)
-        CurrentBG.Text = LastSG("sg")
-        RemainingInsulinUnits.Text = $"{ReservoirRemainingUnits} U"
-        ActiveInsulinValue.Text = ActiveInsulin("amount").ToString & "U"
-        Dim lastValue As Integer = 0
-        ' Fill Chart1
-        For Each SGList As IndexClass(Of Dictionary(Of String, String)) In SGs.WithIndex()
-            Dim p As Integer = CInt(SGList.Value("sg"))
-            If SGList.IsFirst Then
-                lastValue = p
-            End If
-            If p = 0 Then
-                p = lastValue
-            End If
-            Chart1.Series("Default").Points.AddY(p)
-        Next
-        ' Set fast line chart type
-        Chart1.Series("Default").ChartType = SeriesChartType.FastLine
-        DrawInsulinLevel()
-
-    End Sub
-
-    Private Sub DrawInsulinLevel()
-        If ReservoirAmount = 0 Then Exit Sub
-        Dim insulinImage As New Bitmap(ImageList1.Images("InsulinVial.png"))
-        Dim myGraphics As Graphics = Graphics.FromImage(insulinImage)
-        Dim scale As Double = 4.0
-        Dim scaledInsulinLevel As Integer = CInt(ReservoirLevelPercent / scale)
-        Dim myRectangle As Rectangle = New Rectangle(x:=15, y:=55 - scaledInsulinLevel, width:=33, height:=scaledInsulinLevel)
-
-        'draw rectangle from pen and rectangle objects
-        ' Create solid brush.
-        Dim insulinLevelBrush As SolidBrush
-        If ReservoirLevelPercent > 40 Then
-            insulinLevelBrush = New SolidBrush(Color.Green)
-        ElseIf ReservoirLevelPercent > 20 Then
-            insulinLevelBrush = New SolidBrush(Color.Yellow)
-        Else
-            insulinLevelBrush = New SolidBrush(Color.Red)
+        If RecentData.Count <> ItemIndexs.averageSGFloat + 1 Then
+            Stop
         End If
-
-        ' Fill rectangle to screen.
-        myGraphics.FillRectangle(insulinLevelBrush, myRectangle)
-        InsulinLevelPictureBox.Image = insulinImage
-        Application.DoEvents()
+        CurrentBG.Text = LastSG("sg")
+        CurrentBG.Left = (CurrentBG.Parent.Width \ 2) - (CurrentBG.Width \ 2)
+        RemainingInsulinUnits.Text = $"{ReservoirRemainingUnits:N1} U"
+        ActiveInsulinValue.Text = $"{ActiveInsulin("amount"):N3} U"
+        FillChart()
+        DrawInsulinLevel()
+        DrawCalibrationTimeRemaining()
     End Sub
 
     Private Sub UpdateDataTableWithSG(localRecentData As Dictionary(Of String, String))
