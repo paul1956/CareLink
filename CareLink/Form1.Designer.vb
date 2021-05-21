@@ -39,6 +39,7 @@ Partial Class Form1
         Me.TableLayoutPanelTop2 = New System.Windows.Forms.TableLayoutPanel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.SensorMessage = New System.Windows.Forms.Label()
         Me.StartTimeComboBox = New System.Windows.Forms.ComboBox()
         Me.RemainingInsulinUnits = New System.Windows.Forms.Label()
         Me.InsulinLevelPictureBox = New System.Windows.Forms.PictureBox()
@@ -212,7 +213,7 @@ Partial Class Form1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1160, 675)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1160, 680)
         Me.TableLayoutPanel1.TabIndex = 3
         '
         'TableLayoutPanelTop1
@@ -225,7 +226,7 @@ Partial Class Form1
         Me.TableLayoutPanelTop1.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanelTop1.Name = "TableLayoutPanelTop1"
         Me.TableLayoutPanelTop1.RowCount = 1
-        Me.TableLayoutPanelTop1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 265!))
+        Me.TableLayoutPanelTop1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 277!))
         Me.TableLayoutPanelTop1.Size = New System.Drawing.Size(6, 130)
         Me.TableLayoutPanelTop1.TabIndex = 0
         '
@@ -255,12 +256,12 @@ Partial Class Form1
         Me.TableLayoutPanelTop2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelTop2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelTop2.ColumnCount = 1
-        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 789!))
+        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 801!))
         Me.TableLayoutPanelTop2.Dock = System.Windows.Forms.DockStyle.Right
         Me.TableLayoutPanelTop2.Location = New System.Drawing.Point(514, 0)
         Me.TableLayoutPanelTop2.Name = "TableLayoutPanelTop2"
         Me.TableLayoutPanelTop2.RowCount = 1
-        Me.TableLayoutPanelTop2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 251!))
+        Me.TableLayoutPanelTop2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 263!))
         Me.TableLayoutPanelTop2.Size = New System.Drawing.Size(660, 130)
         Me.TableLayoutPanelTop2.TabIndex = 1
         '
@@ -285,6 +286,7 @@ Partial Class Form1
         'TabPage1
         '
         Me.TabPage1.BackColor = System.Drawing.Color.Black
+        Me.TabPage1.Controls.Add(Me.SensorMessage)
         Me.TabPage1.Controls.Add(Me.StartTimeComboBox)
         Me.TabPage1.Controls.Add(Me.RemainingInsulinUnits)
         Me.TabPage1.Controls.Add(Me.InsulinLevelPictureBox)
@@ -304,6 +306,19 @@ Partial Class Form1
         Me.TabPage1.Size = New System.Drawing.Size(1166, 686)
         Me.TabPage1.TabIndex = 7
         Me.TabPage1.Text = "Home Page"
+        '
+        'SensorMessage
+        '
+        Me.SensorMessage.AutoSize = true
+        Me.SensorMessage.BackColor = System.Drawing.Color.Red
+        Me.SensorMessage.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.SensorMessage.ForeColor = System.Drawing.Color.White
+        Me.SensorMessage.Location = New System.Drawing.Point(661, 30)
+        Me.SensorMessage.Name = "SensorMessage"
+        Me.SensorMessage.Size = New System.Drawing.Size(196, 25)
+        Me.SensorMessage.TabIndex = 15
+        Me.SensorMessage.Text = "Calibration Required"
+        Me.SensorMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'StartTimeComboBox
         '
@@ -458,7 +473,7 @@ Partial Class Form1
         '
         Me.TabPage2.Location = New System.Drawing.Point(4, 24)
         Me.TabPage2.Name = "TabPage2"
-        Me.TabPage2.Size = New System.Drawing.Size(1166, 681)
+        Me.TabPage2.Size = New System.Drawing.Size(1166, 686)
         Me.TabPage2.TabIndex = 8
         Me.TabPage2.Text = "24Hour Summary"
         Me.TabPage2.UseVisualStyleBackColor = true
@@ -469,7 +484,7 @@ Partial Class Form1
         Me.TabPage3.Location = New System.Drawing.Point(4, 24)
         Me.TabPage3.Name = "TabPage3"
         Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3.Size = New System.Drawing.Size(1166, 681)
+        Me.TabPage3.Size = New System.Drawing.Size(1166, 686)
         Me.TabPage3.TabIndex = 0
         Me.TabPage3.Text = "Summary Data"
         Me.TabPage3.UseVisualStyleBackColor = true
@@ -480,7 +495,7 @@ Partial Class Form1
         Me.TabPage4.Location = New System.Drawing.Point(4, 24)
         Me.TabPage4.Name = "TabPage4"
         Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage4.Size = New System.Drawing.Size(1166, 681)
+        Me.TabPage4.Size = New System.Drawing.Size(1166, 686)
         Me.TabPage4.TabIndex = 1
         Me.TabPage4.Text = "Active Insulin"
         Me.TabPage4.UseVisualStyleBackColor = true
@@ -507,7 +522,7 @@ Partial Class Form1
         Me.TabPage5.Location = New System.Drawing.Point(4, 24)
         Me.TabPage5.Name = "TabPage5"
         Me.TabPage5.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage5.Size = New System.Drawing.Size(1166, 681)
+        Me.TabPage5.Size = New System.Drawing.Size(1166, 686)
         Me.TabPage5.TabIndex = 2
         Me.TabPage5.Text = "SGS"
         Me.TabPage5.UseVisualStyleBackColor = true
@@ -526,7 +541,7 @@ Partial Class Form1
         Me.TableLayoutPanel3.RowCount = 2
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel3.Size = New System.Drawing.Size(1160, 675)
+        Me.TableLayoutPanel3.Size = New System.Drawing.Size(1160, 680)
         Me.TableLayoutPanel3.TabIndex = 0
         '
         'TabPage6
@@ -535,7 +550,7 @@ Partial Class Form1
         Me.TabPage6.Location = New System.Drawing.Point(4, 24)
         Me.TabPage6.Name = "TabPage6"
         Me.TabPage6.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage6.Size = New System.Drawing.Size(1166, 681)
+        Me.TabPage6.Size = New System.Drawing.Size(1166, 686)
         Me.TabPage6.TabIndex = 3
         Me.TabPage6.Text = "Limits"
         Me.TabPage6.UseVisualStyleBackColor = true
@@ -563,7 +578,7 @@ Partial Class Form1
         Me.TabPage7.Location = New System.Drawing.Point(4, 24)
         Me.TabPage7.Name = "TabPage7"
         Me.TabPage7.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage7.Size = New System.Drawing.Size(1166, 681)
+        Me.TabPage7.Size = New System.Drawing.Size(1166, 686)
         Me.TabPage7.TabIndex = 4
         Me.TabPage7.Text = "Markers"
         Me.TabPage7.UseVisualStyleBackColor = true
@@ -581,7 +596,7 @@ Partial Class Form1
         Me.TableLayoutPanel5.Name = "TableLayoutPanel5"
         Me.TableLayoutPanel5.RowCount = 1
         Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel5.Size = New System.Drawing.Size(1160, 675)
+        Me.TableLayoutPanel5.Size = New System.Drawing.Size(1160, 680)
         Me.TableLayoutPanel5.TabIndex = 0
         '
         'TabPage8
@@ -590,7 +605,7 @@ Partial Class Form1
         Me.TabPage8.Location = New System.Drawing.Point(4, 24)
         Me.TabPage8.Name = "TabPage8"
         Me.TabPage8.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage8.Size = New System.Drawing.Size(1166, 681)
+        Me.TabPage8.Size = New System.Drawing.Size(1166, 686)
         Me.TabPage8.TabIndex = 5
         Me.TabPage8.Text = "Notification History"
         Me.TabPage8.UseVisualStyleBackColor = true
@@ -608,7 +623,7 @@ Partial Class Form1
         Me.TableLayoutPanel6.Name = "TableLayoutPanel6"
         Me.TableLayoutPanel6.RowCount = 1
         Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel6.Size = New System.Drawing.Size(1160, 675)
+        Me.TableLayoutPanel6.Size = New System.Drawing.Size(1160, 680)
         Me.TableLayoutPanel6.TabIndex = 0
         '
         'TabPage9
@@ -617,7 +632,7 @@ Partial Class Form1
         Me.TabPage9.Location = New System.Drawing.Point(4, 24)
         Me.TabPage9.Name = "TabPage9"
         Me.TabPage9.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage9.Size = New System.Drawing.Size(1166, 681)
+        Me.TabPage9.Size = New System.Drawing.Size(1166, 686)
         Me.TabPage9.TabIndex = 6
         Me.TabPage9.Text = "Basal"
         Me.TabPage9.UseVisualStyleBackColor = true
@@ -724,4 +739,5 @@ End Sub
     Friend WithEvents InsulinLevelPictureBox As PictureBox
     Friend WithEvents RemainingInsulinUnits As Label
     Friend WithEvents StartTimeComboBox As ComboBox
+    Friend WithEvents SensorMessage As Label
 End Class

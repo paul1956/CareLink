@@ -5,7 +5,7 @@
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Class Form1
-    Private WithEvents Chart1 As Chart = New Chart()
+    Private WithEvents Chart1 As Chart
 
     Private Shared ReadOnly LastAlarmFilter As New List(Of String) From {
         "code",
@@ -56,10 +56,6 @@ Public Class Form1
         {ItemIndexs.SGs, sgsFilter}
         }
 
-    Private ReadOnly chartArea1 As New ChartArea()
-
-    Private ReadOnly legend1 As New Legend()
-
     Private ReadOnly listOfSingleItems As New List(Of Integer) From {
                 ItemIndexs.LastSG,
                 ItemIndexs.LastAlarm,
@@ -72,75 +68,98 @@ Public Class Form1
             }
 
     Private ReadOnly loginDialog As New LoginForm1
-    Private ReadOnly series1 As New Series()
-    Private ReadOnly title1 As New Title()
     Private Client As CareLinkClient
+
+#Region "Chart Objects"
+
+    Private chartArea1 As ChartArea
+    Private legend1 As Legend
+    Private series1 As Series
+    Private title1 As Title
+
+#End Region
+
+#Region "Messages"
+
+    Private ReadOnly Messages As New Dictionary(Of String, String) From {
+        {"BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR", "Calibrate sensor"},
+        {"CALIBRATING", "Calibrating..."},
+        {"CALIBRATION_REQUIRED", "Calibration required"},
+        {"NO_ERROR_MESSAGE", ""},
+        {"WAIT_TO_CALIBRATE", "Wait To Calibrate..."}
+        }
+
+#End Region
+
+#Region "Variables to hold Sensor Values"
+
+    Public AboveHyperLimit As Integer
+    Public ActiveInsulin As Dictionary(Of String, String)
+    Public AverageSG As Integer
+    Public AverageSGFloat As Double
+    Public Basal As Dictionary(Of String, String)
+    Public BelowHypoLimit As Integer
+    Public BgUnits As String
+    Public CalibStatus As String
+    Public ClientTimeZoneName As String
+    Public ConduitBatteryLevel As Integer
+    Public ConduitBatteryStatus As String
+    Public ConduitInRange As Boolean
+    Public ConduitMedicalDeviceInRange As Boolean
+    Public ConduitSensorInRange As Boolean
+    Public ConduitSerialNumber As Guid
+    Public CurrentServerTime As String
+    Public FirstName As String
+    Public GstBatteryLevel As Integer
+    Public GstCommunicationState As Boolean
+    Public Kind As String
+    Public LastAlarm As Dictionary(Of String, String)
+    Public LastConduitDateTime As String
+    Public LastConduitTime As String
+    Public LastConduitUpdateServerTime As String
+    Public LastMedicalDeviceDataUpdateServerTime As String
+    Public LastName As String
+    Public LastSensorTime As String
+    Public LastSensorTS As String
+    Public LastSensorTSAsString As String
+    Public LastSG As Dictionary(Of String, String)
+    Public LastSGTrend As String
+    Public Limits As List(Of Dictionary(Of String, String))
+    Public Markers As List(Of Dictionary(Of String, String))
+    Public MaxAutoBasalRate As Double
+    Public MaxBolusAmount As Double
+    Public MedicalDeviceBatteryLevelPercent As Integer
+    Public MedicalDeviceFamily As String
+    Public MedicalDeviceSerialNumber As String
+    Public MedicalDeviceSuspended As Boolean
+    Public MedicalDeviceTime As String
+    Public MedicalDeviceTimeAsString As String
+    Public NotificationHistory As New Dictionary(Of String, List(Of Dictionary(Of String, String)))
+    Public PumpBannerState As List(Of Dictionary(Of String, String))
+    Public PumpCommunicationState As Boolean
+    Public PumpModelNumber As String
     Public RecentData As Dictionary(Of String, String)
-
-    Public LastSensorTS As String ' 0
-    Public MedicalDeviceTimeAsString As String ' 1
-    Public LastSensorTSAsString As String ' 2
-    Public Kind As String ' 3
+    Public ReservoirAmount As Integer
+    Public ReservoirLevelPercent As Integer
+    Public ReservoirRemainingUnits As Double
+    Public SensorDurationHours As Integer
+    Public SensorDurationMinutes As Integer
+    Public SensorState As String
+    Public SgBelowLimit As Integer
+    Public SGs As New List(Of Dictionary(Of String, String))
+    Public SLastSensorTime As DateTime
+    Public SMedicalDeviceTime As DateTime
+    Public SystemStatusMessage As String
+    Public TherapyAlgorithmState As Dictionary(Of String, String)
+    Public TimeFormat As String
+    Public TimeInRange As Integer
+    Public TimeToNextCalibHours As Integer = -1
+    Public TimeToNextCalibrationMinutes As Integer
     Public Version As String ' 4
-    Public PumpModelNumber As String ' 5
-    Public CurrentServerTime As String ' 6
-    Public LastConduitTime As String ' 7
-    Public LastConduitUpdateServerTime As String ' 8
-    Public LastMedicalDeviceDataUpdateServerTime As String ' 9
-    Public FirstName As String ' 10
-    Public LastName As String ' 11
-    Public ConduitSerialNumber As Guid ' 12
-    Public ConduitBatteryLevel As Integer ' 13
-    Public ConduitBatteryStatus As String ' 14
-    Public ConduitInRange As Boolean ' 15
-    Public ConduitMedicalDeviceInRange As Boolean ' 16
-    Public ConduitSensorInRange As Boolean ' 17
-    Public MedicalDeviceFamily As String ' 18
-    Public SensorState As String ' 19
-    Public MedicalDeviceSerialNumber As String ' 20
-    Public MedicalDeviceTime As String ' 21
-    Public SMedicalDeviceTime As DateTime ' 22
-    Public ReservoirLevelPercent As Integer ' 23
-    Public ReservoirAmount As Integer ' 24
-    Public ReservoirRemainingUnits As Double ' 25
-    Public MedicalDeviceBatteryLevelPercent As Integer ' 26
-    Public SensorDurationHours As Integer ' 27
-    Public TimeToNextCalibHours As Integer = -1 ' 28
-    Public CalibStatus As String ' 29
-    Public BgUnits As String ' 30
-    Public TimeFormat As String ' 31
-    Public LastSensorTime As String ' 32
-    Public SLastSensorTime As DateTime ' 33
-    Public MedicalDeviceSuspended As Boolean ' 34
-    Public LastSGTrend As String ' 35
-    Public LastSG As Dictionary(Of String, String) ' 36
-    Public LastAlarm As Dictionary(Of String, String) ' 37
-    Public ActiveInsulin As Dictionary(Of String, String) ' 38
-    Public SGs As New List(Of Dictionary(Of String, String)) ' 39
-    Public Limits As List(Of Dictionary(Of String, String)) ' 40
-    Public Markers As List(Of Dictionary(Of String, String)) ' 41
-    Public NotificationHistory As New Dictionary(Of String, List(Of Dictionary(Of String, String))) ' 42
-    Public TherapyAlgorithmState As Dictionary(Of String, String) ' 43
-    Public PumpBannerState As List(Of Dictionary(Of String, String)) ' 44
-    Public Basal As Dictionary(Of String, String) ' 45
-    Public SystemStatusMessage As String ' 46
-    Public AverageSG As Integer ' 47
-    Public BelowHypoLimit As Integer ' 48
-    Public AboveHyperLimit As Integer ' 49
-    Public TimeInRange As Integer ' 50
-    Public PumpCommunicationState As Boolean ' 51
-    Public GstCommunicationState As Boolean ' 52
-    Public GstBatteryLevel As Integer ' 53
-    Public LastConduitDateTime As String ' 54
-    Public MaxAutoBasalRate As Double ' 55
-    Public MaxBolusAmount As Double ' 56
-    Public SensorDurationMinutes As Integer ' 57
-    Public TimeToNextCalibrationMinutes As Integer ' 58
-    Public ClientTimeZoneName As String ' 59
-    Public SgBelowLimit As Integer ' 60
-    Public AverageSGFloat As Double ' 61
 
-    Enum ItemIndexs As Integer
+#End Region
+
+    Public Enum ItemIndexs As Integer
         lastSensorTS = 0
         medicalDeviceTimeAsString = 1
         lastSensorTSAsString = 2
@@ -218,7 +237,6 @@ Public Class Form1
 
             rect = e.ChartGraphics.GetAbsoluteRectangle(rect)
             e.ChartGraphics.Graphics.DrawString(area.Name, New Font("Arial", 10), Brushes.Black, rect, format)
-
         End If
     End Sub
 
@@ -228,7 +246,7 @@ Public Class Form1
         End If
         Dim targetImage As Bitmap = backImage
         Dim myGraphics As Graphics = Graphics.FromImage(targetImage)
-        Dim rect As New Rectangle(1, 1, backImage.Width - 2, backImage.Height - 2)
+        Dim rect As New Rectangle(0, 0, backImage.Width, backImage.Height)
         myGraphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
         Dim pen As Pen
         If colorTable Is Nothing Then
@@ -253,62 +271,6 @@ Public Class Form1
             Return Color.Red
         End If
     End Function
-
-    Private Sub DrawCalibrationTimeRemaining()
-        If TimeToNextCalibHours = -1 Then
-            Exit Sub
-        End If
-        CalibrationDueImage.Image = DrawCenteredArc(My.Resources.Resources.CalibrationDot, TimeToNextCalibHours / 12)
-        Application.DoEvents()
-    End Sub
-
-    Private Sub DrawInsulinLevel()
-        Dim insulinImage As New Bitmap(My.Resources.Resources.InsulinVial)
-        Dim myGraphics As Graphics = Graphics.FromImage(insulinImage)
-        If ReservoirLevelPercent = 0 Then
-            InsulinLevelPictureBox.Image = insulinImage
-            Exit Sub
-        End If
-        Dim scale As Double = 4.0
-        Dim scaledInsulinLevel As Integer = CInt(ReservoirLevelPercent / scale)
-        Dim myRectangle As Rectangle = New Rectangle(x:=13, y:=61 - scaledInsulinLevel, width:=31, height:=scaledInsulinLevel)
-
-        ' draw rectangle from pen and rectangle objects
-        ' Create solid brush.
-        ' Fill rectangle to screen.
-        myGraphics.FillRectangle(New SolidBrush(GetColorFromPercent(ReservoirLevelPercent)), myRectangle)
-        InsulinLevelPictureBox.Image = insulinImage
-        Application.DoEvents()
-    End Sub
-
-    Private Sub FillChart()
-
-        ' Fill Chart1
-        Dim minDate As Date = Date.Parse(SGs.First().Item("datetime").ToString())
-        Dim maxDate As Date = Date.Parse(SGs.Last().Item("datetime").ToString())
-        Chart1.ChartAreas("Default").AxisX.Minimum = minDate.ToOADate()
-        Chart1.ChartAreas("Default").AxisX.Maximum = maxDate.ToOADate()
-        Chart1.ChartAreas("Default").AxisX.MajorGrid.Interval = 288 / 24
-        Dim previousHour As DateTime
-        For Each SGList As IndexClass(Of Dictionary(Of String, String)) In SGs.WithIndex()
-            Dim bgValue As Integer = CInt(SGList.Value("sg"))
-            If bgValue = 0 Then
-                Continue For
-            End If
-
-            Dim sgDateTime As Date = Date.Parse(SGList.Value("datetime"))
-            Dim currentHour As DateTime = New DateTime(sgDateTime.Year, sgDateTime.Month, sgDateTime.Day, sgDateTime.Hour, 0, 0)
-            If SGList.IsFirst Then
-                previousHour = sgDateTime
-                StartTimeComboBox.Items.Add($"{currentHour:hh tt}")
-            ElseIf previousHour.Hour <> currentHour.Hour Then
-                StartTimeComboBox.Items.Add($"{currentHour:hh tt}")
-                previousHour = currentHour
-            End If
-            StartTimeComboBox.SelectedIndex = 0
-            Chart1.Series("Default").Points.AddXY(sgDateTime, bgValue)
-        Next
-    End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         initializeChart()
@@ -411,36 +373,44 @@ Public Class Form1
     End Sub
 
     Private Sub initializeChart()
-        Chart1.BackColor = System.Drawing.Color.WhiteSmoke
-        Chart1.BackGradientStyle = GradientStyle.TopBottom
-        Chart1.BackSecondaryColor = System.Drawing.Color.White
-        Chart1.BorderlineColor = System.Drawing.Color.FromArgb(26, 59, 105)
-        Chart1.BorderlineDashStyle = ChartDashStyle.Solid
-        Chart1.BorderlineWidth = 2
+        Chart1 = New Chart With {
+            .BackColor = System.Drawing.Color.WhiteSmoke,
+            .BackGradientStyle = GradientStyle.TopBottom,
+            .BackSecondaryColor = System.Drawing.Color.White,
+            .BorderlineColor = System.Drawing.Color.FromArgb(26, 59, 105),
+            .BorderlineDashStyle = ChartDashStyle.Solid,
+            .BorderlineWidth = 2,
+            .Location = New Point(3, BGImage.Height + 3),
+            .Name = "chart1",
+            .Size = New Size(612, TabPage1.ClientSize.Height - (BGImage.Height + BGImage.Top + 6)),
+            .TabIndex = 0
+        }
         Chart1.BorderSkin.SkinStyle = BorderSkinStyle.Emboss
-        Chart1.Name = "chart1"
-        Chart1.TabIndex = 0
-        Chart1.Size = New Size(612, TabPage1.ClientSize.Height - (BGImage.Height + BGImage.Top + 6))
         BGImage.Location = New Point(Chart1.Left + (Chart1.Width \ 2) - (BGImage.Width \ 2), 3)
         CurrentBG.Parent = BGImage
         CurrentBG.BackColor = Color.Transparent
         CurrentBG.ForeColor = Color.White
         CurrentBG.Location = New Point((BGImage.Width \ 2) - (CurrentBG.Width \ 2), BGImage.Height \ 4)
-        Chart1.Location = New Point(3, BGImage.Height + 3)
+        chartArea1 = New ChartArea()
+        chartArea1.AxisX.IsInterlaced = True
+        chartArea1.AxisX.IsMarginVisible = True
         chartArea1.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.IncreaseFont Or LabelAutoFitStyles.DecreaseFont Or LabelAutoFitStyles.WordWrap
         chartArea1.AxisX.LabelStyle.Font = New Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold)
+        chartArea1.AxisX.LabelStyle.Format = "hh tt"
         chartArea1.AxisX.LineColor = System.Drawing.Color.FromArgb(64, 64, 64, 64)
         chartArea1.AxisX.MajorGrid.LineColor = System.Drawing.Color.FromArgb(64, 64, 64, 64)
-        chartArea1.AxisX.IsMarginVisible = True
         chartArea1.AxisX.ScrollBar.LineColor = System.Drawing.Color.Black
-        chartArea1.AxisY.IsInterlaced = True
-        chartArea1.AxisY.InterlacedColor = Color.FromArgb(120, Color.LightSlateGray)
         chartArea1.AxisX.ScrollBar.Size = 10
+        chartArea1.AxisY.InterlacedColor = Color.FromArgb(120, Color.LightSlateGray)
+        chartArea1.AxisY.IsInterlaced = True
+        chartArea1.AxisY.IsMarginVisible = False
+        chartArea1.AxisY.IsStartedFromZero = False
         chartArea1.AxisY.LabelStyle.Font = New Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold)
         chartArea1.AxisY.LineColor = System.Drawing.Color.FromArgb(64, 64, 64, 64)
         chartArea1.AxisY.MajorGrid.LineColor = System.Drawing.Color.FromArgb(64, 64, 64, 64)
+        chartArea1.AxisY.Maximum = 400
+        chartArea1.AxisY.Minimum = 50
         chartArea1.AxisY.ScrollBar.LineColor = System.Drawing.Color.Black
-        chartArea1.AxisY.IsStartedFromZero = False
         chartArea1.AxisY.ScrollBar.Size = 10
         chartArea1.BackColor = System.Drawing.Color.Gainsboro
         chartArea1.BackGradientStyle = GradientStyle.TopBottom
@@ -453,34 +423,34 @@ Public Class Form1
         chartArea1.CursorY.IsUserSelectionEnabled = True
         chartArea1.Name = "Default"
         chartArea1.ShadowColor = System.Drawing.Color.Transparent
-        legend1.BackColor = System.Drawing.Color.Transparent
-        legend1.Enabled = False
-        legend1.Font = New Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold)
-        legend1.IsTextAutoFit = False
-        legend1.Name = "Default"
-        series1.BorderColor = System.Drawing.Color.FromArgb(180, 26, 59, 105)
-        series1.ChartArea = "Default"
-        series1.ChartType = SeriesChartType.FastLine
-        series1.Legend = "Default"
-        series1.Name = "Default"
-        series1.ShadowColor = System.Drawing.Color.Black
-        title1.Font = New Font("Trebuchet MS", 12.0F, System.Drawing.FontStyle.Bold)
-        title1.ForeColor = System.Drawing.Color.FromArgb(26, 59, 105)
-        title1.Name = "Title1"
-        title1.ShadowColor = System.Drawing.Color.FromArgb(32, 0, 0, 0)
-        title1.ShadowOffset = 3
-        title1.Text = "Summary of last 24 hours"
+        legend1 = New Legend With {
+            .BackColor = System.Drawing.Color.Transparent,
+            .Enabled = False,
+            .Font = New Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold),
+            .IsTextAutoFit = False,
+            .Name = "Default"
+        }
+        series1 = New Series With {
+            .BorderColor = System.Drawing.Color.FromArgb(180, 26, 59, 105),
+            .ChartArea = "Default",
+            .ChartType = SeriesChartType.FastLine,
+            .Legend = "Default",
+            .Name = "Default",
+            .ShadowColor = System.Drawing.Color.Black,
+            .XValueType = ChartValueType.DateTime,
+            .YAxisType = AxisType.Secondary
+        }
+        title1 = New Title With {
+            .Font = New Font("Trebuchet MS", 12.0F, System.Drawing.FontStyle.Bold),
+            .ForeColor = System.Drawing.Color.FromArgb(26, 59, 105),
+            .Name = "Title1",
+            .ShadowColor = System.Drawing.Color.FromArgb(32, 0, 0, 0),
+            .ShadowOffset = 3
+        }
         Chart1.ChartAreas.Add(chartArea1)
         Chart1.Legends.Add(legend1)
         Chart1.Series.Add(series1)
         Chart1.Titles.Add(title1)
-        Chart1.Series("Default").YAxisType = AxisType.Secondary
-        Chart1.Series("Default").XValueType = ChartValueType.DateTime
-        Chart1.ChartAreas("Default").AxisX.LabelStyle.Format = "hh tt"
-        Chart1.ChartAreas("Default").AxisY.Minimum = 50
-        Chart1.ChartAreas("Default").AxisY.Maximum = 400
-        ' Set fast line chart type
-        Chart1.Series("Default").ChartType = SeriesChartType.FastLine
         TabPage1.Controls.Add(Chart1)
         Application.DoEvents()
     End Sub
@@ -508,6 +478,10 @@ Public Class Form1
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         Timer1.Enabled = False
         RecentData = Client.getRecentData()
+        If RecentData Is Nothing Then
+            Cursor = Cursors.Default
+            Exit Sub
+        End If
         Timer1.Enabled = True
 
         UpdateAllTabPages()
@@ -515,21 +489,82 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
+    Private Sub UpdateActiveInsulin()
+
+        ActiveInsulinValue.Text = $"{ActiveInsulin("amount"):N3} U"
+    End Sub
+
     Private Sub UpdateAllTabPages()
+        If RecentData Is Nothing Then
+            Exit Sub
+        End If
         UpdateDataTableWithSG(RecentData)
         If RecentData.Count <> ItemIndexs.averageSGFloat + 1 Then
             Stop
         End If
-        CurrentBG.Text = LastSG("sg")
-        CurrentBG.Left = (CurrentBG.Parent.Width \ 2) - (CurrentBG.Width \ 2)
-        RemainingInsulinUnits.Text = $"{ReservoirRemainingUnits:N1} U"
-        ActiveInsulinValue.Text = $"{ActiveInsulin("amount"):N3} U"
-        FillChart()
-        DrawInsulinLevel()
-        DrawCalibrationTimeRemaining()
+        UpdateReminingInsulin()
+        UpdateActiveInsulin()
+        UpdateBGChart()
+        UpdateInsulinLevel()
+        UpdateCalibrationTimeRemaining()
+        UpdateCurrentBG()
+    End Sub
+
+    Private Sub UpdateBGChart()
+        Chart1.Titles("Title1").Text = $"Summary of last {TimeScaleNumericUpDown.Value} hours"
+        Chart1.ChartAreas("Default").AxisX.Minimum = Date.Parse(SGs.First().Item("datetime").ToString()).ToOADate()
+        Chart1.ChartAreas("Default").AxisX.Maximum = Date.Parse(SGs.Last().Item("datetime").ToString()).ToOADate()
+        Dim previousHour As DateTime
+        StartTimeComboBox.Items.Clear()
+        Chart1.Series("Default").Points.Clear()
+        Chart1.ChartAreas("Default").AxisX.MajorGrid.Interval = 1/24
+        For Each SGList As IndexClass(Of Dictionary(Of String, String)) In SGs.WithIndex()
+            Dim bgValue As Integer = CInt(SGList.Value("sg"))
+            If bgValue = 0 Then
+                Continue For
+            End If
+
+            Dim sgDateTime As Date = Date.Parse(SGList.Value("datetime"))
+            Dim currentHour As Date = sgDateTime.RoundToHour()
+            If SGList.IsFirst Then
+                previousHour = sgDateTime
+                StartTimeComboBox.Items.Add($"{currentHour:hh tt}")
+            ElseIf previousHour.Hour <> currentHour.Hour Then
+                StartTimeComboBox.Items.Add($"{currentHour:hh tt}")
+                previousHour = currentHour
+            End If
+            StartTimeComboBox.SelectedIndex = 0
+            Chart1.Series("Default").Points.AddXY(sgDateTime, bgValue)
+            Application.DoEvents()
+        Next
+        Application.DoEvents()
+    End Sub
+
+    Private Sub UpdateCalibrationTimeRemaining()
+        If TimeToNextCalibHours = -1 Then
+            Exit Sub
+        End If
+        CalibrationDueImage.Image = DrawCenteredArc(My.Resources.Resources.CalibrationDot, TimeToNextCalibHours / 12)
+        Application.DoEvents()
+    End Sub
+
+    Private Sub UpdateCurrentBG()
+        If LastSG("sg") <> "0" Then
+            CurrentBG.Text = LastSG("sg")
+            CurrentBG.Left = (BGImage.Width \ 2) - (CurrentBG.Width \ 2)
+            SensorMessage.Visible = False
+        Else
+            CurrentBG.Text = $"---"
+            SensorMessage.Text = Messages(SensorState)
+            SensorMessage.Visible = True
+        End If
+        Application.DoEvents()
     End Sub
 
     Private Sub UpdateDataTableWithSG(localRecentData As Dictionary(Of String, String))
+        If localRecentData Is Nothing Then
+            Exit Sub
+        End If
         Cursor = Cursors.WaitCursor
         TableLayoutPanel1.Controls.Clear()
         TableLayoutPanel1.RowCount = localRecentData.Count - 8
@@ -802,6 +837,30 @@ Public Class Form1
             LayoutPanel1.Visible = True
         Next
         Cursor = Cursors.Default
+    End Sub
+
+    Private Sub UpdateInsulinLevel()
+        Dim insulinImage As New Bitmap(My.Resources.Resources.InsulinVial)
+        Dim myGraphics As Graphics = Graphics.FromImage(insulinImage)
+        If ReservoirLevelPercent = 0 Then
+            InsulinLevelPictureBox.Image = insulinImage
+            Exit Sub
+        End If
+        Dim scale As Double = 4.0
+        Dim scaledInsulinLevel As Integer = CInt(ReservoirLevelPercent / scale)
+        Dim myRectangle As Rectangle = New Rectangle(x:=13, y:=61 - scaledInsulinLevel, width:=31, height:=scaledInsulinLevel)
+
+        ' draw rectangle from pen and rectangle objects
+        ' Create solid brush.
+        ' Fill rectangle to screen.
+        myGraphics.FillRectangle(New SolidBrush(GetColorFromPercent(ReservoirLevelPercent)), myRectangle)
+        InsulinLevelPictureBox.Image = insulinImage
+        Application.DoEvents()
+    End Sub
+
+    Private Sub UpdateReminingInsulin()
+
+        RemainingInsulinUnits.Text = $"{ReservoirRemainingUnits:N1} U"
     End Sub
 
 End Class
