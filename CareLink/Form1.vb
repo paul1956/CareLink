@@ -5,7 +5,8 @@
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Class Form1
-    Private WithEvents Chart1 As Chart
+    Private WithEvents HomePageChart As Chart
+    Private WithEvents TimeInRangeChart As Chart
 
     Private Shared ReadOnly LastAlarmFilter As New List(Of String) From {
         "code",
@@ -72,10 +73,7 @@ Public Class Form1
 
 #Region "Chart Objects"
 
-    Private chartArea1 As ChartArea
-    Private legend1 As Legend
-    Private series1 As Series
-    Private title1 As Title
+    Private HomePageChartChartArea As ChartArea
 
 #End Region
 
@@ -224,7 +222,7 @@ Public Class Form1
         averageSGFloat = 61
     End Enum
 
-    Private Shared Sub Chart1_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles Chart1.PostPaint
+    Private Shared Sub Chart1_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomePageChart.PostPaint
         ' Painting series object
         Dim area As ChartArea = TryCast(sender, ChartArea)
         If area IsNot Nothing Then
@@ -240,21 +238,21 @@ Public Class Form1
         End If
     End Sub
 
-    Private Shared Function DrawCenteredArc(backImage As Bitmap, arcPercentage As Double, Optional colorTable As Dictionary(Of String, Color) = Nothing, Optional segmentName As String = "") As Bitmap
+    Private Function DrawCenteredArc(backImage As Bitmap, arcPercentage As Double, Optional colorTable As Dictionary(Of String, Color) = Nothing, Optional segmentName As String = "") As Bitmap
         If arcPercentage < Double.Epsilon Then
             Return backImage
         End If
         Dim targetImage As Bitmap = backImage
         Dim myGraphics As Graphics = Graphics.FromImage(targetImage)
-        Dim rect As New Rectangle(0, 0, backImage.Width, backImage.Height)
+        Dim rect As New Rectangle(1, 1, backImage.Width - 2, backImage.Height - 2)
         myGraphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
         Dim pen As Pen
         If colorTable Is Nothing Then
-            pen = New Pen(GetColorFromPercent(CInt(arcPercentage * 100)), 3)
+            pen = New Pen(GetColorFromTimeToNextCalib(), 2)
         Else
             pen = New Pen(colorTable(segmentName), 5)
         End If
-        myGraphics.DrawArc(pen, rect, -90, CInt(360 * arcPercentage))
+        myGraphics.DrawArc(pen, rect, -90, -CInt(360 * arcPercentage))
         Return targetImage
     End Function
 
@@ -262,18 +260,19 @@ Public Class Form1
         End
     End Sub
 
-    Private Shared Function GetColorFromPercent(percent As Integer) As Color
-        If percent > 40 Then
-            Return Color.Lime
-        ElseIf percent > 20 Then
+    Private Function GetColorFromTimeToNextCalib() As Color
+        If TimeToNextCalibHours <= 2 Then
+            Return Color.Red
+        ElseIf TimeToNextCalibHours < 4 Then
             Return Color.Yellow
         Else
-            Return Color.Red
+            Return Color.Lime
         End If
     End Function
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
-        initializeChart()
+        initializeHomePageChart()
+        initializeTimeInRangeChart()
     End Sub
 
     Private Sub GetInnerTable(tableLevel1Blue As TableLayoutPanel, innerJson As Dictionary(Of String, String), itemIndex As ItemIndexs)
@@ -372,8 +371,37 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
-    Private Sub initializeChart()
-        Chart1 = New Chart With {
+    Private Sub initializeTimeInRangeChart()
+        TimeInRangeChart = New Chart With {
+            .BackColor = System.Drawing.Color.WhiteSmoke,
+            .BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.TopBottom,
+            .BackSecondaryColor = System.Drawing.Color.White,
+            .BorderlineColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(105, Byte), Integer)),
+            .BorderlineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Solid,
+            .BorderlineWidth = 2,
+            .Size = New Size(380, 357)
+        }
+        TimeInRangeChart.BorderSkin.BackSecondaryColor = System.Drawing.Color.Black
+        TimeInRangeChart.BorderSkin.SkinStyle = System.Windows.Forms.DataVisualization.Charting.BorderSkinStyle.Emboss
+        TimeInRangeChart.ChartAreas.Add(New ChartArea With {.Name = "TimeInRangeChartChartArea"})
+        TimeInRangeChart.Location = New Point(74, 49)
+        TimeInRangeChart.Name = "TimeInRangeChart"
+
+        TimeInRangeChart.Series.Add(New Series With {
+            .ChartArea = "TimeInRangeChartChartArea",
+            .ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie,
+            .Name = "TimeInRangeChartSeries"})
+        TimeInRangeChart.Titles.Add(New Title With {
+                                        .Name = "TimeInRangeChartTitle",
+                                        .Text = "Time In Range Last 24 Hours"}
+                                    )
+        TabPage2.Controls.Add(TimeInRangeChart)
+        Application.DoEvents()
+
+    End Sub 'Page_Load
+
+    Private Sub initializeHomePageChart()
+        HomePageChart = New Chart With {
             .BackColor = System.Drawing.Color.WhiteSmoke,
             .BackGradientStyle = GradientStyle.TopBottom,
             .BackSecondaryColor = System.Drawing.Color.White,
@@ -382,76 +410,77 @@ Public Class Form1
             .BorderlineWidth = 2,
             .Location = New Point(3, BGImage.Height + 3),
             .Name = "chart1",
-            .Size = New Size(612, TabPage1.ClientSize.Height - (BGImage.Height + BGImage.Top + 6)),
+            .Size = New Size(TabPage1.ClientSize.Width - (TabPage1.ClientSize.Width - Label4.Left), TabPage1.ClientSize.Height - (BGImage.Height + BGImage.Top + 6)),
             .TabIndex = 0
         }
-        Chart1.BorderSkin.SkinStyle = BorderSkinStyle.Emboss
-        BGImage.Location = New Point(Chart1.Left + (Chart1.Width \ 2) - (BGImage.Width \ 2), 3)
-        CurrentBG.Parent = BGImage
-        CurrentBG.BackColor = Color.Transparent
-        CurrentBG.ForeColor = Color.White
-        CurrentBG.Location = New Point((BGImage.Width \ 2) - (CurrentBG.Width \ 2), BGImage.Height \ 4)
-        chartArea1 = New ChartArea()
-        chartArea1.AxisX.IsInterlaced = True
-        chartArea1.AxisX.IsMarginVisible = True
-        chartArea1.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.IncreaseFont Or LabelAutoFitStyles.DecreaseFont Or LabelAutoFitStyles.WordWrap
-        chartArea1.AxisX.LabelStyle.Font = New Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold)
-        chartArea1.AxisX.LabelStyle.Format = "hh tt"
-        chartArea1.AxisX.LineColor = System.Drawing.Color.FromArgb(64, 64, 64, 64)
-        chartArea1.AxisX.MajorGrid.LineColor = System.Drawing.Color.FromArgb(64, 64, 64, 64)
-        chartArea1.AxisX.ScrollBar.LineColor = System.Drawing.Color.Black
-        chartArea1.AxisX.ScrollBar.Size = 10
-        chartArea1.AxisY.InterlacedColor = Color.FromArgb(120, Color.LightSlateGray)
-        chartArea1.AxisY.IsInterlaced = True
-        chartArea1.AxisY.IsMarginVisible = False
-        chartArea1.AxisY.IsStartedFromZero = False
-        chartArea1.AxisY.LabelStyle.Font = New Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold)
-        chartArea1.AxisY.LineColor = System.Drawing.Color.FromArgb(64, 64, 64, 64)
-        chartArea1.AxisY.MajorGrid.LineColor = System.Drawing.Color.FromArgb(64, 64, 64, 64)
-        chartArea1.AxisY.Maximum = 400
-        chartArea1.AxisY.Minimum = 50
-        chartArea1.AxisY.ScrollBar.LineColor = System.Drawing.Color.Black
-        chartArea1.AxisY.ScrollBar.Size = 10
-        chartArea1.BackColor = System.Drawing.Color.Gainsboro
-        chartArea1.BackGradientStyle = GradientStyle.TopBottom
-        chartArea1.BackSecondaryColor = System.Drawing.Color.White
-        chartArea1.BorderColor = System.Drawing.Color.FromArgb(64, 64, 64, 64)
-        chartArea1.BorderDashStyle = ChartDashStyle.Solid
-        chartArea1.CursorX.IsUserEnabled = True
-        chartArea1.CursorX.IsUserSelectionEnabled = True
-        chartArea1.CursorY.IsUserEnabled = True
-        chartArea1.CursorY.IsUserSelectionEnabled = True
-        chartArea1.Name = "Default"
-        chartArea1.ShadowColor = System.Drawing.Color.Transparent
-        legend1 = New Legend With {
-            .BackColor = System.Drawing.Color.Transparent,
-            .Enabled = False,
-            .Font = New Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold),
-            .IsTextAutoFit = False,
-            .Name = "Default"
-        }
-        series1 = New Series With {
-            .BorderColor = System.Drawing.Color.FromArgb(180, 26, 59, 105),
-            .ChartArea = "Default",
-            .ChartType = SeriesChartType.FastLine,
-            .Legend = "Default",
+        HomePageChart.BorderSkin.SkinStyle = BorderSkinStyle.Emboss
+        HomePageChartChartArea = New ChartArea With {
+            .BackColor = System.Drawing.Color.Gainsboro,
+            .BackGradientStyle = GradientStyle.TopBottom,
+            .BackSecondaryColor = System.Drawing.Color.White,
+            .BorderColor = System.Drawing.Color.FromArgb(64, 64, 64, 64),
+            .BorderDashStyle = ChartDashStyle.Solid,
             .Name = "Default",
-            .ShadowColor = System.Drawing.Color.Black,
-            .XValueType = ChartValueType.DateTime,
-            .YAxisType = AxisType.Secondary
+            .ShadowColor = System.Drawing.Color.Transparent
         }
-        title1 = New Title With {
-            .Font = New Font("Trebuchet MS", 12.0F, System.Drawing.FontStyle.Bold),
-            .ForeColor = System.Drawing.Color.FromArgb(26, 59, 105),
-            .Name = "Title1",
-            .ShadowColor = System.Drawing.Color.FromArgb(32, 0, 0, 0),
-            .ShadowOffset = 3
-        }
-        Chart1.ChartAreas.Add(chartArea1)
-        Chart1.Legends.Add(legend1)
-        Chart1.Series.Add(series1)
-        Chart1.Titles.Add(title1)
-        TabPage1.Controls.Add(Chart1)
+        HomePageChartChartArea.AxisX.IsInterlaced = True
+        HomePageChartChartArea.AxisX.IsMarginVisible = True
+        HomePageChartChartArea.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.IncreaseFont Or LabelAutoFitStyles.DecreaseFont Or LabelAutoFitStyles.WordWrap
+        HomePageChartChartArea.AxisX.LabelStyle.Font = New Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold)
+        HomePageChartChartArea.AxisX.LabelStyle.Format = "hh tt"
+        HomePageChartChartArea.AxisX.LineColor = System.Drawing.Color.FromArgb(64, 64, 64, 64)
+        'HomePageChartChartArea.AxisX.MajorGrid.LineColor = System.Drawing.Color.FromArgb(255, 17, 40, 12)
+        HomePageChartChartArea.AxisX.MajorGrid.LineColor = System.Drawing.Color.FromArgb(64, 64, 64, 64)
+        HomePageChartChartArea.AxisX.ScrollBar.LineColor = System.Drawing.Color.Black
+        HomePageChartChartArea.AxisX.ScrollBar.Size = 10
+        HomePageChartChartArea.AxisY.InterlacedColor = Color.FromArgb(120, Color.LightSlateGray)
+        HomePageChartChartArea.AxisY.IsInterlaced = True
+        HomePageChartChartArea.AxisY.IsMarginVisible = False
+        HomePageChartChartArea.AxisY.IsStartedFromZero = False
+        HomePageChartChartArea.AxisY.LabelStyle.Font = New Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold)
+        HomePageChartChartArea.AxisY.LineColor = System.Drawing.Color.FromArgb(64, 64, 64, 64)
+        HomePageChartChartArea.AxisY.MajorGrid.LineColor = System.Drawing.Color.FromArgb(64, 64, 64, 64)
+        HomePageChartChartArea.AxisY.Maximum = 400
+        HomePageChartChartArea.AxisY.Minimum = 50
+        HomePageChartChartArea.AxisY.ScrollBar.LineColor = System.Drawing.Color.Black
+        HomePageChartChartArea.AxisY.ScrollBar.Size = 10
+        HomePageChartChartArea.CursorX.IsUserEnabled = True
+        HomePageChartChartArea.CursorX.IsUserSelectionEnabled = True
+        HomePageChartChartArea.CursorY.IsUserEnabled = True
+        HomePageChartChartArea.CursorY.IsUserSelectionEnabled = True
+
+        HomePageChart.ChartAreas.Add(HomePageChartChartArea)
+        HomePageChart.Legends.Add(New Legend With {
+                                     .BackColor = System.Drawing.Color.Transparent,
+                                     .Enabled = False,
+                                     .Font = New Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold),
+                                     .IsTextAutoFit = False,
+                                     .Name = "Default"
+                                     }
+                                  )
+        HomePageChart.Series.Add(New Series With {
+                                    .BorderColor = System.Drawing.Color.FromArgb(180, 26, 59, 105),
+                                    .BorderWidth = 4,
+                                    .ChartArea = "Default",
+                                    .ChartType = SeriesChartType.FastLine,
+                                    .Color = Color.White,
+                                    .Legend = "Default",
+                                    .Name = "Default",
+                                    .ShadowColor = System.Drawing.Color.Black,
+                                    .XValueType = ChartValueType.DateTime,
+                                    .YAxisType = AxisType.Secondary
+                                    })
+        HomePageChart.Series("Default").EmptyPointStyle.Color = Color.Transparent
+        HomePageChart.Series("Default").EmptyPointStyle.BorderWidth = 2
+        HomePageChart.Titles.Add(New Title With {
+                                    .Font = New Font("Trebuchet MS", 12.0F, System.Drawing.FontStyle.Bold),
+                                    .ForeColor = System.Drawing.Color.FromArgb(26, 59, 105),
+                                    .Name = "Title1",
+                                    .ShadowColor = System.Drawing.Color.FromArgb(32, 0, 0, 0),
+                                    .ShadowOffset = 3
+                                    }
+                                 )
+        TabPage1.Controls.Add(HomePageChart)
         Application.DoEvents()
     End Sub
 
@@ -505,24 +534,41 @@ Public Class Form1
         UpdateReminingInsulin()
         UpdateActiveInsulin()
         UpdateBGChart()
+        UpdateAutoModeShield()
         UpdateInsulinLevel()
         UpdateCalibrationTimeRemaining()
-        UpdateCurrentBG()
+    End Sub
+
+    Private Sub UpdateAutoModeShield()
+
+        BGImage.Location = New Point(HomePageChart.Left + (HomePageChart.Width \ 2) - (BGImage.Width \ 2), 3)
+        CurrentBG.Parent = BGImage
+        CurrentBG.BackColor = Color.Transparent
+        CurrentBG.ForeColor = Color.White
+        CurrentBG.Location = New Point((BGImage.Width \ 2) - (CurrentBG.Width \ 2), BGImage.Height \ 4)
+
+        If LastSG("sg") <> "0" Then
+            CurrentBG.Text = LastSG("sg")
+            CurrentBG.Left = (BGImage.Width \ 2) - (CurrentBG.Width \ 2)
+            SensorMessage.Visible = False
+        Else
+            CurrentBG.Text = $"---"
+            SensorMessage.Text = Messages(SensorState)
+            SensorMessage.Visible = True
+        End If
+        Application.DoEvents()
     End Sub
 
     Private Sub UpdateBGChart()
-        Chart1.Titles("Title1").Text = $"Summary of last {TimeScaleNumericUpDown.Value} hours"
-        Chart1.ChartAreas("Default").AxisX.Minimum = Date.Parse(SGs.First().Item("datetime").ToString()).ToOADate()
-        Chart1.ChartAreas("Default").AxisX.Maximum = Date.Parse(SGs.Last().Item("datetime").ToString()).ToOADate()
+        HomePageChart.Titles("Title1").Text = $"Summary of last {TimeScaleNumericUpDown.Value} hours"
+        HomePageChart.ChartAreas("Default").AxisX.Minimum = Date.Parse(SGs.First().Item("datetime").ToString()).ToOADate()
+        HomePageChart.ChartAreas("Default").AxisX.Maximum = Date.Parse(SGs.Last().Item("datetime").ToString()).ToOADate()
         Dim previousHour As DateTime
         StartTimeComboBox.Items.Clear()
-        Chart1.Series("Default").Points.Clear()
-        Chart1.ChartAreas("Default").AxisX.MajorGrid.Interval = 1/24
+        HomePageChart.Series("Default").Points.Clear()
+        HomePageChart.ChartAreas("Default").AxisX.MajorGrid.Interval = 1 / 24
         For Each SGList As IndexClass(Of Dictionary(Of String, String)) In SGs.WithIndex()
             Dim bgValue As Integer = CInt(SGList.Value("sg"))
-            If bgValue = 0 Then
-                Continue For
-            End If
 
             Dim sgDateTime As Date = Date.Parse(SGList.Value("datetime"))
             Dim currentHour As Date = sgDateTime.RoundToHour()
@@ -534,7 +580,10 @@ Public Class Form1
                 previousHour = currentHour
             End If
             StartTimeComboBox.SelectedIndex = 0
-            Chart1.Series("Default").Points.AddXY(sgDateTime, bgValue)
+            HomePageChart.Series("Default").Points.AddXY(sgDateTime, bgValue)
+            If bgValue = 0 Then
+                HomePageChart.Series("Default").Points.Last().IsEmpty = True
+            End If
             Application.DoEvents()
         Next
         Application.DoEvents()
@@ -544,19 +593,10 @@ Public Class Form1
         If TimeToNextCalibHours = -1 Then
             Exit Sub
         End If
-        CalibrationDueImage.Image = DrawCenteredArc(My.Resources.Resources.CalibrationDot, TimeToNextCalibHours / 12)
-        Application.DoEvents()
-    End Sub
-
-    Private Sub UpdateCurrentBG()
-        If LastSG("sg") <> "0" Then
-            CurrentBG.Text = LastSG("sg")
-            CurrentBG.Left = (BGImage.Width \ 2) - (CurrentBG.Width \ 2)
-            SensorMessage.Visible = False
+        If TimeToNextCalibHours <= 2 Then
+            CalibrationDueImage.Image = DrawCenteredArc(My.Resources.Resources.CalibrationDotRed, TimeToNextCalibHours / 12)
         Else
-            CurrentBG.Text = $"---"
-            SensorMessage.Text = Messages(SensorState)
-            SensorMessage.Visible = True
+            CalibrationDueImage.Image = DrawCenteredArc(My.Resources.Resources.CalibrationDot, TimeToNextCalibHours / 12)
         End If
         Application.DoEvents()
     End Sub
@@ -733,6 +773,8 @@ Public Class Form1
                     SgBelowLimit = CInt(row.Value)
                 Case ItemIndexs.averageSGFloat
                     AverageSGFloat = CDbl(row.Value)
+                Case Else
+                    Stop
             End Select
             LayoutPanel1.Visible = False
             LayoutPanel1.AutoSize = True
@@ -840,21 +882,28 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateInsulinLevel()
-        Dim insulinImage As New Bitmap(My.Resources.Resources.InsulinVial)
-        Dim myGraphics As Graphics = Graphics.FromImage(insulinImage)
         If ReservoirLevelPercent = 0 Then
-            InsulinLevelPictureBox.Image = insulinImage
+            InsulinLevelPictureBox.Image = ImageList1.Images(0)
             Exit Sub
         End If
-        Dim scale As Double = 4.0
-        Dim scaledInsulinLevel As Integer = CInt(ReservoirLevelPercent / scale)
-        Dim myRectangle As Rectangle = New Rectangle(x:=13, y:=61 - scaledInsulinLevel, width:=31, height:=scaledInsulinLevel)
-
-        ' draw rectangle from pen and rectangle objects
-        ' Create solid brush.
-        ' Fill rectangle to screen.
-        myGraphics.FillRectangle(New SolidBrush(GetColorFromPercent(ReservoirLevelPercent)), myRectangle)
-        InsulinLevelPictureBox.Image = insulinImage
+        Select Case ReservoirLevelPercent
+            Case > 85
+                InsulinLevelPictureBox.Image = ImageList1.Images(7)
+            Case > 71
+                InsulinLevelPictureBox.Image = ImageList1.Images(6)
+            Case > 57
+                InsulinLevelPictureBox.Image = ImageList1.Images(5)
+            Case > 43
+                InsulinLevelPictureBox.Image = ImageList1.Images(4)
+            Case > 29
+                InsulinLevelPictureBox.Image = ImageList1.Images(3)
+            Case > 15
+                InsulinLevelPictureBox.Image = ImageList1.Images(2)
+            Case > 1
+                InsulinLevelPictureBox.Image = ImageList1.Images(1)
+            Case Else
+                InsulinLevelPictureBox.Image = ImageList1.Images(0)
+        End Select
         Application.DoEvents()
     End Sub
 
