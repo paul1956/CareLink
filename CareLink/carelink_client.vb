@@ -231,6 +231,11 @@ Public Module carelink_client
 
                 ' Login
                 Dim doLoginResponse As HttpResponseMessage = __doLogin(loginSessionResponse)
+                If doLoginResponse Is Nothing Then
+                    LastErrorMessage = "Login Failure"
+                    Return lastLoginSuccess
+
+                End If
                 __lastResponseCode = doLoginResponse.StatusCode
 
                 'setLastResponseBody(loginSessionResponse)
@@ -484,7 +489,7 @@ Public Module carelink_client
         End Function
 
         ' Authentication methods
-        Public Overridable Function login() As Boolean
+        Public Overridable Function Login() As Boolean
             If Not LoggedIn Then
                 __executeLoginProcedure()
             End If
