@@ -50,22 +50,22 @@ Public Class Form1
 
     ' do not rename or move up
     Private Shared ReadOnly zFilterList As New Dictionary(Of Integer, List(Of String)) From {
-        {ItemIndexs.LastAlarm, LastAlarmFilter},
-        {ItemIndexs.LastSG, LastSgFilter},
-        {ItemIndexs.Markers, markersFilter},
-        {ItemIndexs.NotificationHistory, NotificationHistoryFilter},
-        {ItemIndexs.SGs, sgsFilter}
+        {ItemIndexs.lastAlarm, LastAlarmFilter},
+        {ItemIndexs.lastSG, LastSgFilter},
+        {ItemIndexs.markers, markersFilter},
+        {ItemIndexs.notificationHistory, NotificationHistoryFilter},
+        {ItemIndexs.sgs, sgsFilter}
         }
 
     Private ReadOnly listOfSingleItems As New List(Of Integer) From {
-                ItemIndexs.LastSG,
-                ItemIndexs.LastAlarm,
-                ItemIndexs.ActiveInsulin,
-                ItemIndexs.SGs,
-                ItemIndexs.Limits,
-                ItemIndexs.Markers,
-                ItemIndexs.NotificationHistory,
-                ItemIndexs.Basal
+                ItemIndexs.lastSG,
+                ItemIndexs.lastAlarm,
+                ItemIndexs.activeInsulin,
+                ItemIndexs.sgs,
+                ItemIndexs.limits,
+                ItemIndexs.markers,
+                ItemIndexs.notificationHistory,
+                ItemIndexs.basal
             }
 
     Private ReadOnly loginDialog As New LoginForm1
@@ -153,7 +153,7 @@ Public Class Form1
     Public TimeInRange As Integer
     Public TimeToNextCalibHours As Integer = -1
     Public TimeToNextCalibrationMinutes As Integer
-    Public Version As String ' 4
+    Public Version As String
 
 #End Region
 
@@ -194,16 +194,16 @@ Public Class Form1
         sLastSensorTime = 33
         medicalDeviceSuspended = 34
         lastSGTrend = 35
-        LastSG = 36
-        LastAlarm = 37
-        ActiveInsulin = 38
-        SGs = 39
-        Limits = 40
-        Markers = 41
-        NotificationHistory = 42
+        lastSG = 36
+        lastAlarm = 37
+        activeInsulin = 38
+        sgs = 39
+        limits = 40
+        markers = 41
+        notificationHistory = 42
         therapyAlgorithmState = 43
         pumpBannerState = 44
-        Basal = 45
+        basal = 45
         systemStatusMessage = 46
         averageSG = 47
         belowHypoLimit = 48
@@ -225,6 +225,15 @@ Public Class Form1
     Private Shared Sub Chart1_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomePageChart.PostPaint
         ' Painting series object
         Dim area As ChartArea = TryCast(sender, ChartArea)
+
+        Dim highAreaRectangle As Rectangle = New Rectangle(New Point(35, 74), New Size(756, 240))
+        Dim lowAreaRectangle As Rectangle = New Rectangle(New Point(35, 450), New Size(756, 61))
+        Using b As New SolidBrush(Color.FromArgb(30 * 255 \ 100, Color.Black))
+            e.ChartGraphics.Graphics.FillRectangle(b, highAreaRectangle)
+        End Using
+        Using b As New SolidBrush(Color.FromArgb(30 * 255 \ 100, Color.Black))
+            e.ChartGraphics.Graphics.FillRectangle(b, lowAreaRectangle)
+        End Using
         If area IsNot Nothing Then
 
             Dim format As New StringFormat With {
@@ -235,7 +244,12 @@ Public Class Form1
 
             rect = e.ChartGraphics.GetAbsoluteRectangle(rect)
             e.ChartGraphics.Graphics.DrawString(area.Name, New Font("Arial", 10), Brushes.Black, rect, format)
+
         End If
+    End Sub
+
+    Private Shared Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
+        End
     End Sub
 
     Private Function DrawCenteredArc(backImage As Bitmap, arcPercentage As Double, Optional colorTable As Dictionary(Of String, Color) = Nothing, Optional segmentName As String = "") As Bitmap
@@ -256,8 +270,9 @@ Public Class Form1
         Return targetImage
     End Function
 
-    Private Shared Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
-        End
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
+        InitializeHomePageChart()
+        InitializeTimeInRangeChart()
     End Sub
 
     Private Function GetColorFromTimeToNextCalib() As Color
@@ -270,16 +285,11 @@ Public Class Form1
         End If
     End Function
 
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
-        initializeHomePageChart()
-        initializeTimeInRangeChart()
-    End Sub
-
     Private Sub GetInnerTable(tableLevel1Blue As TableLayoutPanel, innerJson As Dictionary(Of String, String), itemIndex As ItemIndexs)
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
         tableLevel1Blue.BackColor = Color.LightBlue
-        If itemIndex = ItemIndexs.NotificationHistory Then
+        If itemIndex = ItemIndexs.notificationHistory Then
             NotificationHistory = New Dictionary(Of String, List(Of Dictionary(Of String, String)))
         End If
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In innerJson.WithIndex()
@@ -291,6 +301,9 @@ Public Class Form1
             End If
             tableLevel1Blue.RowCount += 1
             tableLevel1Blue.RowStyles.Add(New RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0))
+            If itemIndex = ItemIndexs.limits OrElse itemIndex = ItemIndexs.markers Then
+                tableLevel1Blue.AutoSize = True
+            End If
             Dim label As Label = New Label With {
                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                     .Text = innerRow.Key,
@@ -299,31 +312,30 @@ Public Class Form1
 
             If innerRow.Value.StartsWith("[") Then
                 Dim innerJson1 As List(Of Dictionary(Of String, String)) = Json.LoadList(innerRow.Value)
-                If itemIndex = ItemIndexs.NotificationHistory Then
+                If itemIndex = ItemIndexs.notificationHistory Then
                     NotificationHistory.Add(innerRow.Key, innerJson1)
                 End If
                 If innerJson1.Count > 0 Then
-                    Dim tableLevel2Green As New TableLayoutPanel With {
-                            .AutoScroll = True,
+                    Dim tableLevel2 As New TableLayoutPanel With {
+                            .AutoScroll = False,
                             .AutoSize = True,
-                            .BackColor = Color.LawnGreen,
                             .BorderStyle = BorderStyle.Fixed3D,
                             .ColumnCount = 1,
                             .AutoSizeMode = AutoSizeMode.GrowOnly,
                             .Dock = System.Windows.Forms.DockStyle.Fill,
                             .RowCount = innerJson1.Count
                             }
-                    tableLevel2Green.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 80.0))
+                    tableLevel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 80.0))
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson1.WithIndex()
-                        tableLevel2Green.RowStyles.Add(New RowStyle(System.Windows.Forms.SizeType.AutoSize))
                         Dim dic As Dictionary(Of String, String) = innerDictionary.Value
-                        Dim tableLevel3Orange As New TableLayoutPanel With {
-                                .AutoScroll = True,
+                        tableLevel2.RowStyles.Add(New RowStyle(System.Windows.Forms.SizeType.Absolute, 4 + dic.Keys.Count * 22))
+                        Dim tableLevel3 As New TableLayoutPanel With {
+                                .Anchor=AnchorStyles.Left Or AnchorStyles.Right,
+                                .AutoScroll = False,
                                 .AutoSize = True,
-                                .BackColor = Color.Orange,
                                 .AutoSizeMode = AutoSizeMode.GrowOnly,
                                 .ColumnCount = 2,
-                                .Dock = System.Windows.Forms.DockStyle.Fill
+                                .Dock = System.Windows.Forms.DockStyle.None
                                 }
                         For Each e As IndexClass(Of KeyValuePair(Of String, String)) In dic.WithIndex()
                             If zFilterList.ContainsKey(itemIndex) Then
@@ -331,9 +343,9 @@ Public Class Form1
                                     Continue For
                                 End If
                             End If
-                            tableLevel3Orange.RowCount += 1
-                            tableLevel3Orange.RowStyles.Add(New RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0))
-                            tableLevel3Orange.Controls.AddRange({New Label With {
+                            tableLevel3.RowCount += 1
+                            tableLevel3.RowStyles.Add(New RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0))
+                            tableLevel3.Controls.AddRange({New Label With {
                                                                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                                     .Text = e.Value.Key,
                                                                     .AutoSize = True},
@@ -343,12 +355,12 @@ Public Class Form1
                                                                      .Text = e.Value.Value}})
                             Application.DoEvents()
                         Next
-                        tableLevel3Orange.Height += 40
-                        tableLevel2Green.Controls.Add(tableLevel3Orange, 0, innerDictionary.Index)
-                        tableLevel2Green.Height += 4
+                        tableLevel3.Height += 40
+                        tableLevel2.Controls.Add(tableLevel3, 0, innerDictionary.Index)
+                        tableLevel2.Height += 4
                         Application.DoEvents()
                     Next
-                    tableLevel1Blue.Controls.AddRange({label, tableLevel2Green})
+                    tableLevel1Blue.Controls.AddRange({label, tableLevel2})
                 Else
                     tableLevel1Blue.Controls.AddRange({label, New TextBox With {
                                                .Text = "",
@@ -363,7 +375,7 @@ Public Class Form1
                                            .Text = innerRow.Value}})
             End If
         Next
-        If itemIndex = ItemIndexs.LastSG Then
+        If itemIndex = ItemIndexs.lastSG Then
             tableLevel1Blue.AutoSize = False
             tableLevel1Blue.RowCount += 1
             tableLevel1Blue.Width = 400
@@ -371,36 +383,7 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
-    Private Sub initializeTimeInRangeChart()
-        TimeInRangeChart = New Chart With {
-            .BackColor = System.Drawing.Color.WhiteSmoke,
-            .BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.TopBottom,
-            .BackSecondaryColor = System.Drawing.Color.White,
-            .BorderlineColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(105, Byte), Integer)),
-            .BorderlineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Solid,
-            .BorderlineWidth = 2,
-            .Size = New Size(380, 357)
-        }
-        TimeInRangeChart.BorderSkin.BackSecondaryColor = System.Drawing.Color.Black
-        TimeInRangeChart.BorderSkin.SkinStyle = System.Windows.Forms.DataVisualization.Charting.BorderSkinStyle.Emboss
-        TimeInRangeChart.ChartAreas.Add(New ChartArea With {.Name = "TimeInRangeChartChartArea"})
-        TimeInRangeChart.Location = New Point(74, 49)
-        TimeInRangeChart.Name = "TimeInRangeChart"
-
-        TimeInRangeChart.Series.Add(New Series With {
-            .ChartArea = "TimeInRangeChartChartArea",
-            .ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie,
-            .Name = "TimeInRangeChartSeries"})
-        TimeInRangeChart.Titles.Add(New Title With {
-                                        .Name = "TimeInRangeChartTitle",
-                                        .Text = "Time In Range Last 24 Hours"}
-                                    )
-        TabPage2.Controls.Add(TimeInRangeChart)
-        Application.DoEvents()
-
-    End Sub 'Page_Load
-
-    Private Sub initializeHomePageChart()
+    Private Sub InitializeHomePageChart()
         HomePageChart = New Chart With {
             .BackColor = System.Drawing.Color.WhiteSmoke,
             .BackGradientStyle = GradientStyle.TopBottom,
@@ -410,14 +393,14 @@ Public Class Form1
             .BorderlineWidth = 2,
             .Location = New Point(3, BGImage.Height + 3),
             .Name = "chart1",
-            .Size = New Size(TabPage1.ClientSize.Width - (TabPage1.ClientSize.Width - Label4.Left), TabPage1.ClientSize.Height - (BGImage.Height + BGImage.Top + 6)),
+            .Size = New Size(TabPage1.ClientSize.Width - (TabPage1.ClientSize.Width - DisplayStartTimeLabel.Left), TabPage1.ClientSize.Height - (BGImage.Height + BGImage.Top + 6)),
             .TabIndex = 0
         }
         HomePageChart.BorderSkin.SkinStyle = BorderSkinStyle.Emboss
         HomePageChartChartArea = New ChartArea With {
-            .BackColor = System.Drawing.Color.Gainsboro,
+            .BackColor = System.Drawing.Color.FromArgb(180, 23, 47, 19),
             .BackGradientStyle = GradientStyle.TopBottom,
-            .BackSecondaryColor = System.Drawing.Color.White,
+            .BackSecondaryColor = System.Drawing.Color.FromArgb(180, 29, 56, 26),
             .BorderColor = System.Drawing.Color.FromArgb(64, 64, 64, 64),
             .BorderDashStyle = ChartDashStyle.Solid,
             .Name = "Default",
@@ -429,7 +412,6 @@ Public Class Form1
         HomePageChartChartArea.AxisX.LabelStyle.Font = New Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold)
         HomePageChartChartArea.AxisX.LabelStyle.Format = "hh tt"
         HomePageChartChartArea.AxisX.LineColor = System.Drawing.Color.FromArgb(64, 64, 64, 64)
-        'HomePageChartChartArea.AxisX.MajorGrid.LineColor = System.Drawing.Color.FromArgb(255, 17, 40, 12)
         HomePageChartChartArea.AxisX.MajorGrid.LineColor = System.Drawing.Color.FromArgb(64, 64, 64, 64)
         HomePageChartChartArea.AxisX.ScrollBar.LineColor = System.Drawing.Color.Black
         HomePageChartChartArea.AxisX.ScrollBar.Size = 10
@@ -470,8 +452,42 @@ Public Class Form1
                                     .XValueType = ChartValueType.DateTime,
                                     .YAxisType = AxisType.Secondary
                                     })
+        HomePageChart.Series.Add(New Series With {
+                                    .BorderColor = System.Drawing.Color.FromArgb(180, 26, 59, 105),
+                                    .BorderWidth = 4,
+                                    .ChartArea = "Default",
+                                    .ChartType = SeriesChartType.FastLine,
+                                    .Color = Color.DeepPink,
+                                    .Name = "Markers",
+                                    .ShadowColor = System.Drawing.Color.Black,
+                                    .XValueType = ChartValueType.DateTime,
+                                    .YAxisType = AxisType.Secondary
+                                    })
+
+        HomePageChart.Series.Add(New Series With {
+                                    .BorderColor = System.Drawing.Color.FromArgb(180, 26, 59, 105),
+                                    .BorderWidth = 4,
+                                    .ChartArea = "Default",
+                                    .ChartType = SeriesChartType.FastLine,
+                                    .Color = Color.Orange,
+                                    .Name = "HighLimit",
+                                    .ShadowColor = System.Drawing.Color.Black,
+                                    .XValueType = ChartValueType.DateTime,
+                                    .YAxisType = AxisType.Secondary
+                                    })
+        HomePageChart.Series.Add(New Series With {
+                                    .BorderColor = System.Drawing.Color.FromArgb(180, 26, 59, 105),
+                                    .BorderWidth = 4,
+                                    .ChartArea = "Default",
+                                    .ChartType = SeriesChartType.FastLine,
+                                    .Color = Color.Red,
+                                    .Name = "LowLimit",
+                                    .ShadowColor = System.Drawing.Color.Black,
+                                    .XValueType = ChartValueType.DateTime,
+                                    .YAxisType = AxisType.Secondary
+                                    })
         HomePageChart.Series("Default").EmptyPointStyle.Color = Color.Transparent
-        HomePageChart.Series("Default").EmptyPointStyle.BorderWidth = 2
+        HomePageChart.Series("Default").EmptyPointStyle.BorderWidth = 4
         HomePageChart.Titles.Add(New Title With {
                                     .Font = New Font("Trebuchet MS", 12.0F, System.Drawing.FontStyle.Bold),
                                     .ForeColor = System.Drawing.Color.FromArgb(26, 59, 105),
@@ -484,124 +500,49 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
-    Private Sub LoginToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoginToolStripMenuItem.Click
-        Timer1.Enabled = False
-        If UseTestDataToolStripMenuItem.Checked Then
-            RecentData = Json.Loads(IO.File.ReadAllText(IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
-        Else
-            loginDialog.ShowDialog()
-            Client = loginDialog.Client
-            If Client IsNot Nothing AndAlso Client.LoggedIn Then
-                RecentData = Client.getRecentData()
-            End If
-            If RecentData Is Nothing Then
-                Exit Sub
-            End If
-            Timer1.Interval = CType(New TimeSpan(0, 5, 0).TotalMilliseconds, Integer)
-            Timer1.Enabled = True
-        End If
-        UpdateAllTabPages()
+    Private Sub InitializeTimeInRangeChart()
+        TimeInRangeChart = New Chart With {
+            .BackColor = System.Drawing.Color.Transparent,
+            .BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.None,
+            .BackSecondaryColor = System.Drawing.Color.Transparent,
+            .BorderlineColor = System.Drawing.Color.Transparent,
+            .BorderlineWidth = 0,
+            .Size = New Size(280, 357)
+        }
+        TimeInRangeChart.BorderSkin.BackSecondaryColor = System.Drawing.Color.Transparent
+        TimeInRangeChart.BorderSkin.SkinStyle = System.Windows.Forms.DataVisualization.Charting.BorderSkinStyle.None
+        TimeInRangeChart.ChartAreas.Add(New ChartArea With {.Name = "TimeInRangeChartChartArea",
+                                                            .BackColor = Color.Black})
+        TimeInRangeChart.Location = New Point((TimeInRangeLabel.Left + (TimeInRangeLabel.Width \ 2)) - (TimeInRangeChart.Width \ 2), 79)
+        TimeInRangeChart.Name = "Default"
 
-    End Sub
+        TimeInRangeChart.Series.Add(New Series With {
+            .ChartArea = "TimeInRangeChartChartArea",
+            .ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Doughnut,
+            .Name = "Default"})
+        TimeInRangeChart.Series("Default")("DoughnutRadius") = "30"
+        TimeInRangeChart.Legends.Add(New Legend With {
+                                     .BackColor = System.Drawing.Color.Transparent,
+                                     .Docking = Docking.Bottom,
+                                     .Enabled = True,
+                                     .ForeColor = Color.White,
+                                     .TableStyle = LegendTableStyle.Tall,
+                                     .Font = New Font("Trebuchet MS", 15.0!, System.Drawing.FontStyle.Regular),
+                                     .IsTextAutoFit = False,
+                                     .Name = "Default"
+                                     }
+                                  )
 
-    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        Timer1.Enabled = False
-        RecentData = Client.getRecentData()
-        If RecentData Is Nothing Then
-            Cursor = Cursors.Default
-            Exit Sub
-        End If
-        Timer1.Enabled = True
-
-        UpdateAllTabPages()
-
+        TimeInRangeChart.Titles.Add(New Title With {
+                                        .Name = "TimeInRangeChartTitle",
+                                        .Text = "Time In Range Last 24 Hours"}
+                                    )
+        TabPage1.Controls.Add(TimeInRangeChart)
         Application.DoEvents()
-    End Sub
 
-    Private Sub UpdateActiveInsulin()
+    End Sub 'Page_Load
 
-        ActiveInsulinValue.Text = $"{ActiveInsulin("amount"):N3} U"
-    End Sub
-
-    Private Sub UpdateAllTabPages()
-        If RecentData Is Nothing Then
-            Exit Sub
-        End If
-        UpdateDataTableWithSG(RecentData)
-        If RecentData.Count <> ItemIndexs.averageSGFloat + 1 Then
-            Stop
-        End If
-        UpdateReminingInsulin()
-        UpdateActiveInsulin()
-        UpdateBGChart()
-        UpdateAutoModeShield()
-        UpdateInsulinLevel()
-        UpdateCalibrationTimeRemaining()
-    End Sub
-
-    Private Sub UpdateAutoModeShield()
-
-        BGImage.Location = New Point(HomePageChart.Left + (HomePageChart.Width \ 2) - (BGImage.Width \ 2), 3)
-        CurrentBG.Parent = BGImage
-        CurrentBG.BackColor = Color.Transparent
-        CurrentBG.ForeColor = Color.White
-        CurrentBG.Location = New Point((BGImage.Width \ 2) - (CurrentBG.Width \ 2), BGImage.Height \ 4)
-
-        If LastSG("sg") <> "0" Then
-            CurrentBG.Text = LastSG("sg")
-            CurrentBG.Left = (BGImage.Width \ 2) - (CurrentBG.Width \ 2)
-            SensorMessage.Visible = False
-        Else
-            CurrentBG.Text = $"---"
-            SensorMessage.Text = Messages(SensorState)
-            SensorMessage.Visible = True
-        End If
-        Application.DoEvents()
-    End Sub
-
-    Private Sub UpdateBGChart()
-        HomePageChart.Titles("Title1").Text = $"Summary of last {TimeScaleNumericUpDown.Value} hours"
-        HomePageChart.ChartAreas("Default").AxisX.Minimum = Date.Parse(SGs.First().Item("datetime").ToString()).ToOADate()
-        HomePageChart.ChartAreas("Default").AxisX.Maximum = Date.Parse(SGs.Last().Item("datetime").ToString()).ToOADate()
-        Dim previousHour As DateTime
-        StartTimeComboBox.Items.Clear()
-        HomePageChart.Series("Default").Points.Clear()
-        HomePageChart.ChartAreas("Default").AxisX.MajorGrid.Interval = 1 / 24
-        For Each SGList As IndexClass(Of Dictionary(Of String, String)) In SGs.WithIndex()
-            Dim bgValue As Integer = CInt(SGList.Value("sg"))
-
-            Dim sgDateTime As Date = Date.Parse(SGList.Value("datetime"))
-            Dim currentHour As Date = sgDateTime.RoundToHour()
-            If SGList.IsFirst Then
-                previousHour = sgDateTime
-                StartTimeComboBox.Items.Add($"{currentHour:hh tt}")
-            ElseIf previousHour.Hour <> currentHour.Hour Then
-                StartTimeComboBox.Items.Add($"{currentHour:hh tt}")
-                previousHour = currentHour
-            End If
-            StartTimeComboBox.SelectedIndex = 0
-            HomePageChart.Series("Default").Points.AddXY(sgDateTime, bgValue)
-            If bgValue = 0 Then
-                HomePageChart.Series("Default").Points.Last().IsEmpty = True
-            End If
-            Application.DoEvents()
-        Next
-        Application.DoEvents()
-    End Sub
-
-    Private Sub UpdateCalibrationTimeRemaining()
-        If TimeToNextCalibHours = -1 Then
-            Exit Sub
-        End If
-        If TimeToNextCalibHours <= 2 Then
-            CalibrationDueImage.Image = DrawCenteredArc(My.Resources.Resources.CalibrationDotRed, TimeToNextCalibHours / 12)
-        Else
-            CalibrationDueImage.Image = DrawCenteredArc(My.Resources.Resources.CalibrationDot, TimeToNextCalibHours / 12)
-        End If
-        Application.DoEvents()
-    End Sub
-
-    Private Sub UpdateDataTableWithSG(localRecentData As Dictionary(Of String, String))
+    Private Sub LoadDataTableWithSG(localRecentData As Dictionary(Of String, String))
         If localRecentData Is Nothing Then
             Exit Sub
         End If
@@ -616,7 +557,9 @@ Public Class Form1
             LayoutPanel1 = TableLayoutPanel1
             singleItem = False
             Dim row As KeyValuePair(Of String, String) = c.Value
-            Select Case c.Index
+            Dim rowIndex As Integer = CInt([Enum].Parse(GetType(ItemIndexs), c.Value.Key))
+
+            Select Case rowIndex
                 Case ItemIndexs.lastSensorTS
                     LastSensorTS = row.Value
                 Case ItemIndexs.medicalDeviceTimeAsString
@@ -689,56 +632,58 @@ Public Class Form1
                     MedicalDeviceSuspended = CBool(row.Value)
                 Case ItemIndexs.lastSGTrend
                     LastSGTrend = row.Value
-                Case ItemIndexs.LastSG
+                Case ItemIndexs.lastSG
                     LayoutPanel1 = TableLayoutPanelTop1
                     LayoutPanel1.Controls.Clear()
-                    singleItemIndex = c.Index
+                    singleItemIndex = rowIndex
                     LayoutPanel1.RowCount = 1
                     singleItem = True
-                Case ItemIndexs.LastAlarm
+                Case ItemIndexs.lastAlarm
                     LayoutPanel1 = TableLayoutPanelTop2
                     LayoutPanel1.Controls.Clear()
-                    singleItemIndex = c.Index
+                    singleItemIndex = rowIndex
                     LayoutPanel1.RowCount = 1
                     singleItem = True
-                Case ItemIndexs.ActiveInsulin
+                Case ItemIndexs.activeInsulin
                     LayoutPanel1 = TableLayoutPanel2
                     LayoutPanel1.Controls.Clear()
-                    singleItemIndex = c.Index
+                    singleItemIndex = rowIndex
                     LayoutPanel1.RowCount = 1
                     singleItem = True
-                Case ItemIndexs.SGs
+                Case ItemIndexs.sgs
                     LayoutPanel1 = TableLayoutPanel3
                     LayoutPanel1.Controls.Clear()
-                    singleItemIndex = c.Index
+                    singleItemIndex = rowIndex
                     LayoutPanel1.RowCount = 1
                     singleItem = True
-                Case ItemIndexs.Limits
+                Case ItemIndexs.limits
                     LayoutPanel1 = TableLayoutPanel4
                     LayoutPanel1.Controls.Clear()
-                    singleItemIndex = c.Index
+                    LayoutPanel1.AutoSize = True
+                    singleItemIndex = rowIndex
                     LayoutPanel1.RowCount = 1
                     singleItem = True
-                Case ItemIndexs.Markers
+
+                Case ItemIndexs.markers
                     LayoutPanel1 = TableLayoutPanel5
                     LayoutPanel1.Controls.Clear()
-                    singleItemIndex = c.Index
+                    singleItemIndex = rowIndex
                     LayoutPanel1.RowCount = 1
                     singleItem = True
-                Case ItemIndexs.NotificationHistory
+                Case ItemIndexs.notificationHistory
                     LayoutPanel1 = TableLayoutPanel6
                     LayoutPanel1.Controls.Clear()
-                    singleItemIndex = c.Index
+                    singleItemIndex = rowIndex
                     LayoutPanel1.RowCount = 1
                     singleItem = True
                 Case ItemIndexs.therapyAlgorithmState
                     ' handled elsewhere
                 Case ItemIndexs.pumpBannerState
                     ' handled elsewhere
-                Case ItemIndexs.Basal
+                Case ItemIndexs.basal
                     LayoutPanel1 = TableLayoutPanel7
                     LayoutPanel1.Controls.Clear()
-                    singleItemIndex = c.Index
+                    singleItemIndex = rowIndex
                     LayoutPanel1.RowCount = 1
                     singleItem = True
                 Case ItemIndexs.systemStatusMessage
@@ -777,10 +722,9 @@ Public Class Form1
                     Stop
             End Select
             LayoutPanel1.Visible = False
-            LayoutPanel1.AutoSize = True
 
-            If listOfSingleItems.Contains(c.Index) OrElse singleItem Then
-                If Not (singleItem AndAlso singleItemIndex = c.Index) Then
+            If listOfSingleItems.Contains(rowIndex) OrElse singleItem Then
+                If Not (singleItem AndAlso singleItemIndex = rowIndex) Then
                     Continue For
                 End If
             End If
@@ -792,23 +736,23 @@ Public Class Form1
                 currentRowIndex += 1
             End If
             LayoutPanel1.RowStyles(tableRelitiveRow).SizeType = SizeType.AutoSize
-            If Not singleItem Then
+            If Not singleItem OrElse rowIndex = ItemIndexs.lastSG OrElse rowIndex = ItemIndexs.lastAlarm Then
                 LayoutPanel1.Controls.Add(New Label With {
-                                                  .Text = $"{c.Index} {row.Key}",
+                                                  .Text = $"{rowIndex} {row.Key}",
                                                   .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                   .AutoSize = True
                                                   }, 0, tableRelitiveRow)
             End If
             If row.Value.StartsWith("[") Then
                 Dim innerJson As List(Of Dictionary(Of String, String)) = Json.LoadList(row.Value)
-                Select Case c.Index
-                    Case ItemIndexs.SGs
+                Select Case rowIndex
+                    Case ItemIndexs.sgs
                         SGs = innerJson
-                    Case ItemIndexs.Limits
+                    Case ItemIndexs.limits
                         Limits = innerJson
-                    Case ItemIndexs.Markers
+                    Case ItemIndexs.markers
                         Markers = innerJson
-                    Case ItemIndexs.NotificationHistory
+                    Case ItemIndexs.notificationHistory
                         ' handled elsewhere
                     Case ItemIndexs.pumpBannerState
                         PumpBannerState = innerJson
@@ -820,16 +764,14 @@ Public Class Form1
                         Dim tableLevel1Blue As New TableLayoutPanel With {
                                 .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                 .AutoScroll = False,
-                                .AutoSize = True,
                                 .AutoSizeMode = AutoSizeMode.GrowAndShrink,
                                 .ColumnCount = 2,
-                                .Dock = System.Windows.Forms.DockStyle.Fill,
                                 .Margin = New Padding(0),
                                 .Name = "InnerTable",
                                 .Padding = New Padding(0)
                                 }
                         LayoutPanel1.Controls.Add(tableLevel1Blue, 1, Dic.Index)
-                        GetInnerTable(tableLevel1Blue, Dic.Value, CType(c.Index, ItemIndexs))
+                        GetInnerTable(tableLevel1Blue, Dic.Value, CType(rowIndex, ItemIndexs))
                     Next
                 Else
                     LayoutPanel1.Controls.Add(New TextBox With {
@@ -841,17 +783,17 @@ Public Class Form1
             ElseIf row.Value.StartsWith("{") Then
                 LayoutPanel1.RowStyles(tableRelitiveRow).SizeType = SizeType.AutoSize
                 Dim innerJson As Dictionary(Of String, String) = Json.Loads(row.Value)
-                Select Case c.Index
-                    Case ItemIndexs.LastSG
+                Select Case rowIndex
+                    Case ItemIndexs.lastSG
                         LastSG = innerJson
-                    Case ItemIndexs.LastAlarm
+                    Case ItemIndexs.lastAlarm
                         LastAlarm = innerJson
-                    Case ItemIndexs.ActiveInsulin
+                    Case ItemIndexs.activeInsulin
                         ActiveInsulin = innerJson
-                    Case ItemIndexs.NotificationHistory
+                    Case ItemIndexs.notificationHistory
                     Case ItemIndexs.therapyAlgorithmState
                         TherapyAlgorithmState = innerJson
-                    Case ItemIndexs.Basal
+                    Case ItemIndexs.basal
                         Basal = innerJson
                     Case Else
                         Stop
@@ -867,18 +809,143 @@ Public Class Form1
                         .Name = "InnerTable",
                         .Padding = New Padding(0)
                         }
-                LayoutPanel1.Controls.Add(tableLevel1Blue, If(singleItem, 0, 1), tableRelitiveRow)
-                GetInnerTable(tableLevel1Blue, innerJson, CType(c.Index, ItemIndexs))
+                LayoutPanel1.Controls.Add(tableLevel1Blue, If(singleItem AndAlso Not (rowIndex = ItemIndexs.lastSG OrElse rowIndex = ItemIndexs.lastAlarm), 0, 1), tableRelitiveRow)
+                GetInnerTable(tableLevel1Blue, innerJson, CType(rowIndex, ItemIndexs))
             Else
                 LayoutPanel1.Controls.Add(New TextBox With {
                                                   .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                   .AutoSize = True,
                                                   .Text = row.Value}, If(singleItem, 0, 1), tableRelitiveRow)
             End If
-            Application.DoEvents()
             LayoutPanel1.Visible = True
+            Application.DoEvents()
         Next
         Cursor = Cursors.Default
+    End Sub
+
+    Private Sub LoginToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoginToolStripMenuItem.Click
+        Timer1.Enabled = False
+        If UseTestDataToolStripMenuItem.Checked Then
+            RecentData = Json.Loads(IO.File.ReadAllText(IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
+        Else
+            loginDialog.ShowDialog()
+            Client = loginDialog.Client
+            If Client IsNot Nothing AndAlso Client.LoggedIn Then
+                RecentData = Client.getRecentData()
+            End If
+            If RecentData Is Nothing Then
+                Exit Sub
+            End If
+            Timer1.Interval = CType(New TimeSpan(0, 5, 0).TotalMilliseconds, Integer)
+            Timer1.Enabled = True
+        End If
+        UpdateAllTabPages()
+
+    End Sub
+
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        Timer1.Enabled = False
+        RecentData = Client.getRecentData()
+        If RecentData Is Nothing Then
+            Cursor = Cursors.Default
+            Exit Sub
+        End If
+        Timer1.Enabled = True
+
+        UpdateAllTabPages()
+
+        Application.DoEvents()
+    End Sub
+
+    Private Sub UpdateActiveInsulin()
+
+        ActiveInsulinValue.Text = $"{ActiveInsulin("amount"):N3} U"
+    End Sub
+
+    Private Sub UpdateAllTabPages()
+        If RecentData Is Nothing Then
+            Exit Sub
+        End If
+        LoadDataTableWithSG(RecentData)
+        If RecentData.Count > ItemIndexs.averageSGFloat + 1 Then
+            Stop
+        End If
+        UpdateReminingInsulin()
+        UpdateActiveInsulin()
+        UpdateBGChart()
+        UpdateAutoModeShield()
+        UpdateInsulinLevel()
+        UpdateCalibrationTimeRemaining()
+        UpdateTIR()
+    End Sub
+
+    Private Sub UpdateAutoModeShield()
+
+        BGImage.Location = New Point(HomePageChart.Left + (HomePageChart.Width \ 2) - (BGImage.Width \ 2), 3)
+        CurrentBG.Parent = BGImage
+        CurrentBG.BackColor = Color.Transparent
+        CurrentBG.ForeColor = Color.White
+        CurrentBG.Location = New Point((BGImage.Width \ 2) - (CurrentBG.Width \ 2), BGImage.Height \ 4)
+
+        If LastSG("sg") <> "0" Then
+            CurrentBG.Text = LastSG("sg")
+            CurrentBG.Left = (BGImage.Width \ 2) - (CurrentBG.Width \ 2)
+            SensorMessage.Visible = False
+        Else
+            CurrentBG.Text = $"---"
+            SensorMessage.Text = Messages(SensorState)
+            SensorMessage.Visible = True
+        End If
+        Application.DoEvents()
+    End Sub
+
+    Private Sub UpdateBGChart()
+        HomePageChart.Titles("Title1").Text = $"Summary of last {TimeScaleNumericUpDown.Value} hours"
+        HomePageChart.ChartAreas("Default").AxisX.Minimum = Date.Parse(SGs.First().Item("datetime").ToString()).ToOADate()
+        HomePageChart.ChartAreas("Default").AxisX.Maximum = Date.Parse(SGs.Last().Item("datetime").ToString()).ToOADate()
+        Dim previousHour As DateTime
+        StartTimeComboBox.Items.Clear()
+        HomePageChart.Series("Default").Points.Clear()
+        HomePageChart.ChartAreas("Default").AxisX.MajorGrid.Interval = 1 / 24
+        For Each SGList As IndexClass(Of Dictionary(Of String, String)) In SGs.WithIndex()
+            Dim bgValue As Integer = CInt(SGList.Value("sg"))
+
+            Dim sgDateTime As Date = Date.Parse(SGList.Value("datetime"))
+            Dim currentHour As Date = sgDateTime.RoundToHour()
+            If SGList.IsFirst Then
+                previousHour = sgDateTime
+                StartTimeComboBox.Items.Add($"{currentHour:hh tt}")
+            ElseIf previousHour.Hour <> currentHour.Hour Then
+                StartTimeComboBox.Items.Add($"{currentHour:hh tt}")
+                previousHour = currentHour
+            End If
+            StartTimeComboBox.SelectedIndex = 0
+            If bgValue = 0 Then
+                HomePageChart.Series("Default").Points.AddXY(sgDateTime, 50)
+                HomePageChart.Series("Default").Points.Last().IsEmpty = True
+            Else
+                HomePageChart.Series("Default").Points.AddXY(sgDateTime, bgValue)
+            End If
+
+            HomePageChart.Series("Markers").Points.AddXY(sgDateTime, 399)
+
+            HomePageChart.Series("HighLimit").Points.AddXY(sgDateTime, 180)
+            HomePageChart.Series("LowLimit").Points.AddXY(sgDateTime, 60)
+            Application.DoEvents()
+        Next
+        Application.DoEvents()
+    End Sub
+
+    Private Sub UpdateCalibrationTimeRemaining()
+        If TimeToNextCalibHours = -1 Then
+            Exit Sub
+        End If
+        If TimeToNextCalibHours <= 2 Then
+            CalibrationDueImage.Image = DrawCenteredArc(My.Resources.Resources.CalibrationDotRed, TimeToNextCalibHours / 12)
+        Else
+            CalibrationDueImage.Image = DrawCenteredArc(My.Resources.Resources.CalibrationDot, TimeToNextCalibHours / 12)
+        End If
+        Application.DoEvents()
     End Sub
 
     Private Sub UpdateInsulinLevel()
@@ -910,6 +977,18 @@ Public Class Form1
     Private Sub UpdateReminingInsulin()
 
         RemainingInsulinUnits.Text = $"{ReservoirRemainingUnits:N1} U"
+    End Sub
+
+    Private Sub UpdateTIR()
+        TimeInRangeChart.Series("Default").Points.Clear()
+        TimeInRangeChart.Series("Default").Points.AddXY($"{AboveHyperLimit}% Above 180 mg/dl", AboveHyperLimit / 100)
+        TimeInRangeChart.Series("Default").Points.Last().Color = Color.Orange
+        TimeInRangeChart.Series("Default").Points.AddXY($"{TimeInRange}% In Range", TimeInRange / 100)
+        TimeInRangeChart.Series("Default").Points.Last().Color = Color.LawnGreen
+        TimeInRangeChart.Series("Default").Points.AddXY($"{BelowHypoLimit}% Below 70 mg/dl", BelowHypoLimit / 100)
+        TimeInRangeChart.Series("Default")("PieLabelStyle") = "Disabled"
+        TimeInRangeChart.Series("Default").Points.Last().Color = Color.Red
+        AverageSGLabel.Text = $"{AverageSG} mg/dl"
     End Sub
 
 End Class

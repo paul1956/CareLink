@@ -489,7 +489,7 @@ Public Module carelink_client
         End Function
 
         ' Authentication methods
-        Public Overridable Function login() As Boolean
+        Public Overridable Function Login() As Boolean
             If Not LoggedIn Then
                 __executeLoginProcedure()
             End If

@@ -39,21 +39,23 @@ Partial Class Form1
         Me.TableLayoutPanelTop2 = New System.Windows.Forms.TableLayoutPanel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.AverageSGLabel = New System.Windows.Forms.Label()
+        Me.AverageSGPercentLabel = New System.Windows.Forms.Label()
+        Me.TimeInRangePercentLabel = New System.Windows.Forms.Label()
+        Me.TimeInRangeLabel = New System.Windows.Forms.Label()
         Me.SensorMessage = New System.Windows.Forms.Label()
         Me.StartTimeComboBox = New System.Windows.Forms.ComboBox()
         Me.RemainingInsulinUnits = New System.Windows.Forms.Label()
         Me.InsulinLevelPictureBox = New System.Windows.Forms.PictureBox()
         Me.TimeScaleNumericUpDown = New System.Windows.Forms.NumericUpDown()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.DisplayStartTimeLabel = New System.Windows.Forms.Label()
+        Me.TimeScaleHoursLabel = New System.Windows.Forms.Label()
         Me.ActiveInsulinValue = New System.Windows.Forms.Label()
         Me.CalibrationDueImage = New System.Windows.Forms.PictureBox()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.labelSampleComment = New System.Windows.Forms.Label()
+        Me.ActiveInsulinLabel = New System.Windows.Forms.Label()
         Me.CurrentBG = New System.Windows.Forms.Label()
         Me.BGImage = New System.Windows.Forms.PictureBox()
-        Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
@@ -219,16 +221,16 @@ Partial Class Form1
         '
         'TableLayoutPanelTop1
         '
-        Me.TableLayoutPanelTop1.AutoSize = true
+        Me.TableLayoutPanelTop1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelTop1.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelTop1.ColumnCount = 1
+        Me.TableLayoutPanelTop1.ColumnCount = 2
         Me.TableLayoutPanelTop1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
-        Me.TableLayoutPanelTop1.Dock = System.Windows.Forms.DockStyle.Left
-        Me.TableLayoutPanelTop1.Location = New System.Drawing.Point(0, 0)
+        Me.TableLayoutPanelTop1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelTop1.Location = New System.Drawing.Point(5, 0)
         Me.TableLayoutPanelTop1.Name = "TableLayoutPanelTop1"
         Me.TableLayoutPanelTop1.RowCount = 1
-        Me.TableLayoutPanelTop1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 298!))
-        Me.TableLayoutPanelTop1.Size = New System.Drawing.Size(6, 130)
+        Me.TableLayoutPanelTop1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100!))
+        Me.TableLayoutPanelTop1.Size = New System.Drawing.Size(503, 129)
         Me.TableLayoutPanelTop1.TabIndex = 0
         '
         'SplitContainer1
@@ -256,20 +258,19 @@ Partial Class Form1
         '
         Me.TableLayoutPanelTop2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelTop2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelTop2.ColumnCount = 1
-        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 822!))
-        Me.TableLayoutPanelTop2.Dock = System.Windows.Forms.DockStyle.Right
+        Me.TableLayoutPanelTop2.ColumnCount = 2
+        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 34.33836!))
+        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 65.66164!))
         Me.TableLayoutPanelTop2.Location = New System.Drawing.Point(514, 0)
         Me.TableLayoutPanelTop2.Name = "TableLayoutPanelTop2"
         Me.TableLayoutPanelTop2.RowCount = 1
-        Me.TableLayoutPanelTop2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 284!))
-        Me.TableLayoutPanelTop2.Size = New System.Drawing.Size(660, 130)
+        Me.TableLayoutPanelTop2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100!))
+        Me.TableLayoutPanelTop2.Size = New System.Drawing.Size(656, 129)
         Me.TableLayoutPanelTop2.TabIndex = 1
         '
         'TabControl1
         '
         Me.TabControl1.Controls.Add(Me.TabPage1)
-        Me.TabControl1.Controls.Add(Me.TabPage2)
         Me.TabControl1.Controls.Add(Me.TabPage3)
         Me.TabControl1.Controls.Add(Me.TabPage4)
         Me.TabControl1.Controls.Add(Me.TabPage5)
@@ -287,18 +288,21 @@ Partial Class Form1
         'TabPage1
         '
         Me.TabPage1.BackColor = System.Drawing.Color.Black
+        Me.TabPage1.Controls.Add(Me.Label1)
+        Me.TabPage1.Controls.Add(Me.AverageSGLabel)
+        Me.TabPage1.Controls.Add(Me.AverageSGPercentLabel)
+        Me.TabPage1.Controls.Add(Me.TimeInRangePercentLabel)
+        Me.TabPage1.Controls.Add(Me.TimeInRangeLabel)
         Me.TabPage1.Controls.Add(Me.SensorMessage)
         Me.TabPage1.Controls.Add(Me.StartTimeComboBox)
         Me.TabPage1.Controls.Add(Me.RemainingInsulinUnits)
         Me.TabPage1.Controls.Add(Me.InsulinLevelPictureBox)
         Me.TabPage1.Controls.Add(Me.TimeScaleNumericUpDown)
-        Me.TabPage1.Controls.Add(Me.Label4)
-        Me.TabPage1.Controls.Add(Me.Label1)
+        Me.TabPage1.Controls.Add(Me.DisplayStartTimeLabel)
+        Me.TabPage1.Controls.Add(Me.TimeScaleHoursLabel)
         Me.TabPage1.Controls.Add(Me.ActiveInsulinValue)
         Me.TabPage1.Controls.Add(Me.CalibrationDueImage)
-        Me.TabPage1.Controls.Add(Me.Label2)
-        Me.TabPage1.Controls.Add(Me.Label3)
-        Me.TabPage1.Controls.Add(Me.labelSampleComment)
+        Me.TabPage1.Controls.Add(Me.ActiveInsulinLabel)
         Me.TabPage1.Controls.Add(Me.CurrentBG)
         Me.TabPage1.Controls.Add(Me.BGImage)
         Me.TabPage1.Location = New System.Drawing.Point(4, 24)
@@ -307,6 +311,69 @@ Partial Class Form1
         Me.TabPage1.Size = New System.Drawing.Size(1166, 686)
         Me.TabPage1.TabIndex = 7
         Me.TabPage1.Text = "Home Page"
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = true
+        Me.Label1.BackColor = System.Drawing.Color.Transparent
+        Me.Label1.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.Label1.ForeColor = System.Drawing.Color.White
+        Me.Label1.Location = New System.Drawing.Point(1016, 506)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(68, 30)
+        Me.Label1.TabIndex = 16
+        Me.Label1.Text = "mg/dl"
+        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'AverageSGLabel
+        '
+        Me.AverageSGLabel.BackColor = System.Drawing.Color.Black
+        Me.AverageSGLabel.Font = New System.Drawing.Font("Segoe UI", 24!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.AverageSGLabel.ForeColor = System.Drawing.Color.White
+        Me.AverageSGLabel.Location = New System.Drawing.Point(953, 493)
+        Me.AverageSGLabel.Margin = New System.Windows.Forms.Padding(0)
+        Me.AverageSGLabel.Name = "AverageSGLabel"
+        Me.AverageSGLabel.Size = New System.Drawing.Size(74, 43)
+        Me.AverageSGLabel.TabIndex = 1
+        Me.AverageSGLabel.Text = "100"
+        Me.AverageSGLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'AverageSGPercentLabel
+        '
+        Me.AverageSGPercentLabel.AutoSize = true
+        Me.AverageSGPercentLabel.BackColor = System.Drawing.Color.Transparent
+        Me.AverageSGPercentLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.AverageSGPercentLabel.ForeColor = System.Drawing.Color.White
+        Me.AverageSGPercentLabel.Location = New System.Drawing.Point(962, 539)
+        Me.AverageSGPercentLabel.Name = "AverageSGPercentLabel"
+        Me.AverageSGPercentLabel.Size = New System.Drawing.Size(120, 30)
+        Me.AverageSGPercentLabel.TabIndex = 0
+        Me.AverageSGPercentLabel.Text = "Average SG"
+        Me.AverageSGPercentLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'TimeInRangePercentLabel
+        '
+        Me.TimeInRangePercentLabel.AutoSize = true
+        Me.TimeInRangePercentLabel.BackColor = System.Drawing.Color.Transparent
+        Me.TimeInRangePercentLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.TimeInRangePercentLabel.ForeColor = System.Drawing.Color.White
+        Me.TimeInRangePercentLabel.Location = New System.Drawing.Point(1007, 230)
+        Me.TimeInRangePercentLabel.Name = "TimeInRangePercentLabel"
+        Me.TimeInRangePercentLabel.Size = New System.Drawing.Size(30, 30)
+        Me.TimeInRangePercentLabel.TabIndex = 3
+        Me.TimeInRangePercentLabel.Text = "%"
+        '
+        'TimeInRangeLabel
+        '
+        Me.TimeInRangeLabel.AutoSize = true
+        Me.TimeInRangeLabel.BackColor = System.Drawing.Color.Black
+        Me.TimeInRangeLabel.Font = New System.Drawing.Font("Segoe UI", 24!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.TimeInRangeLabel.ForeColor = System.Drawing.Color.White
+        Me.TimeInRangeLabel.Location = New System.Drawing.Point(987, 188)
+        Me.TimeInRangeLabel.Name = "TimeInRangeLabel"
+        Me.TimeInRangeLabel.Size = New System.Drawing.Size(71, 45)
+        Me.TimeInRangeLabel.TabIndex = 2
+        Me.TimeInRangeLabel.Text = "100"
         '
         'SensorMessage
         '
@@ -368,25 +435,25 @@ Partial Class Form1
         Me.TimeScaleNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.TimeScaleNumericUpDown.Value = New Decimal(New Integer() {24, 0, 0, 0})
         '
-        'Label4
+        'DisplayStartTimeLabel
         '
-        Me.Label4.AutoSize = true
-        Me.Label4.ForeColor = System.Drawing.Color.White
-        Me.Label4.Location = New System.Drawing.Point(887, 72)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(101, 15)
-        Me.Label4.TabIndex = 10
-        Me.Label4.Text = "Display Start Time"
+        Me.DisplayStartTimeLabel.AutoSize = true
+        Me.DisplayStartTimeLabel.ForeColor = System.Drawing.Color.White
+        Me.DisplayStartTimeLabel.Location = New System.Drawing.Point(887, 72)
+        Me.DisplayStartTimeLabel.Name = "DisplayStartTimeLabel"
+        Me.DisplayStartTimeLabel.Size = New System.Drawing.Size(101, 15)
+        Me.DisplayStartTimeLabel.TabIndex = 10
+        Me.DisplayStartTimeLabel.Text = "Display Start Time"
         '
-        'Label1
+        'TimeScaleHoursLabel
         '
-        Me.Label1.AutoSize = true
-        Me.Label1.ForeColor = System.Drawing.Color.White
-        Me.Label1.Location = New System.Drawing.Point(887, 30)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(124, 15)
-        Me.Label1.TabIndex = 8
-        Me.Label1.Text = "Time Scale 1-24 Hours"
+        Me.TimeScaleHoursLabel.AutoSize = true
+        Me.TimeScaleHoursLabel.ForeColor = System.Drawing.Color.White
+        Me.TimeScaleHoursLabel.Location = New System.Drawing.Point(887, 30)
+        Me.TimeScaleHoursLabel.Name = "TimeScaleHoursLabel"
+        Me.TimeScaleHoursLabel.Size = New System.Drawing.Size(124, 15)
+        Me.TimeScaleHoursLabel.TabIndex = 8
+        Me.TimeScaleHoursLabel.Text = "Time Scale 1-24 Hours"
         '
         'ActiveInsulinValue
         '
@@ -412,41 +479,17 @@ Partial Class Form1
         Me.CalibrationDueImage.TabIndex = 5
         Me.CalibrationDueImage.TabStop = false
         '
-        'Label2
+        'ActiveInsulinLabel
         '
-        Me.Label2.AutoSize = true
-        Me.Label2.Font = New System.Drawing.Font("Verdana", 11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.Label2.ForeColor = System.Drawing.Color.White
-        Me.Label2.Location = New System.Drawing.Point(13, 55)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(104, 18)
-        Me.Label2.TabIndex = 1
-        Me.Label2.Text = "Active Insulin"
-        Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'Label3
-        '
-        Me.Label3.Font = New System.Drawing.Font("Verdana", 11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.Label3.ForeColor = System.Drawing.Color.White
-        Me.Label3.Location = New System.Drawing.Point(994, 117)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(152, 161)
-        Me.Label3.TabIndex = 2
-        Me.Label3.Text = "To further enhance performance, disable tooltips, anti-aliasing, and border skins"& _ 
-    "."
-        Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'labelSampleComment
-        '
-        Me.labelSampleComment.Font = New System.Drawing.Font("Verdana", 11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.labelSampleComment.ForeColor = System.Drawing.Color.White
-        Me.labelSampleComment.Location = New System.Drawing.Point(994, 278)
-        Me.labelSampleComment.Name = "labelSampleComment"
-        Me.labelSampleComment.Size = New System.Drawing.Size(152, 166)
-        Me.labelSampleComment.TabIndex = 3
-        Me.labelSampleComment.Text = "The Fast Line and Fast Point chart types significantly reduce the drawing time of"& _ 
-    " a series that has many data points."
-        Me.labelSampleComment.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ActiveInsulinLabel.AutoSize = true
+        Me.ActiveInsulinLabel.Font = New System.Drawing.Font("Verdana", 11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.ActiveInsulinLabel.ForeColor = System.Drawing.Color.White
+        Me.ActiveInsulinLabel.Location = New System.Drawing.Point(13, 55)
+        Me.ActiveInsulinLabel.Name = "ActiveInsulinLabel"
+        Me.ActiveInsulinLabel.Size = New System.Drawing.Size(104, 18)
+        Me.ActiveInsulinLabel.TabIndex = 1
+        Me.ActiveInsulinLabel.Text = "Active Insulin"
+        Me.ActiveInsulinLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'CurrentBG
         '
@@ -470,15 +513,6 @@ Partial Class Form1
         Me.BGImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.BGImage.TabIndex = 4
         Me.BGImage.TabStop = false
-        '
-        'TabPage2
-        '
-        Me.TabPage2.Location = New System.Drawing.Point(4, 24)
-        Me.TabPage2.Name = "TabPage2"
-        Me.TabPage2.Size = New System.Drawing.Size(1166, 686)
-        Me.TabPage2.TabIndex = 8
-        Me.TabPage2.Text = "TIR Summary"
-        Me.TabPage2.UseVisualStyleBackColor = true
         '
         'TabPage3
         '
@@ -684,7 +718,6 @@ Partial Class Form1
         Me.MenuStrip1.ResumeLayout(false)
         Me.MenuStrip1.PerformLayout
         Me.SplitContainer1.Panel1.ResumeLayout(false)
-        Me.SplitContainer1.Panel1.PerformLayout
         Me.SplitContainer1.Panel2.ResumeLayout(false)
         CType(Me.SplitContainer1,System.ComponentModel.ISupportInitialize).EndInit
         Me.SplitContainer1.ResumeLayout(false)
@@ -741,20 +774,22 @@ End Sub
     Friend WithEvents OptionsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents UseTestDataToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CurrentBG As Label
-    Friend WithEvents Label2 As Label
-    Friend WithEvents Label3 As Label
-    Friend WithEvents labelSampleComment As Label
+    Friend WithEvents ActiveInsulinLabel As Label
     Friend WithEvents BGImage As PictureBox
     Friend WithEvents TabPage1 As TabPage
-    Friend WithEvents TabPage2 As TabPage
     Friend WithEvents CalibrationDueImage As PictureBox
     Friend WithEvents ActiveInsulinValue As Label
-    Friend WithEvents Label1 As Label
-    Friend WithEvents Label4 As Label
+    Friend WithEvents TimeScaleHoursLabel As Label
+    Friend WithEvents DisplayStartTimeLabel As Label
     Friend WithEvents TimeScaleNumericUpDown As NumericUpDown
     Friend WithEvents InsulinLevelPictureBox As PictureBox
     Friend WithEvents RemainingInsulinUnits As Label
     Friend WithEvents StartTimeComboBox As ComboBox
     Friend WithEvents SensorMessage As Label
     Friend WithEvents ImageList1 As ImageList
+    Friend WithEvents AverageSGPercentLabel As Label
+    Friend WithEvents AverageSGLabel As Label
+    Friend WithEvents TimeInRangeLabel As Label
+    Friend WithEvents TimeInRangePercentLabel As Label
+    Friend WithEvents Label1 As Label
 End Class
