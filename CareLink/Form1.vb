@@ -70,6 +70,7 @@ Public Class Form1
 
     Private ReadOnly loginDialog As New LoginForm1
     Private Client As CareLinkClient
+    Private Initialized As Boolean = False
 
 #Region "Chart Objects"
 
@@ -226,8 +227,8 @@ Public Class Form1
         ' Painting series object
         Dim area As ChartArea = TryCast(sender, ChartArea)
 
-        Dim highAreaRectangle As Rectangle = New Rectangle(New Point(35, 74), New Size(756, 240))
-        Dim lowAreaRectangle As Rectangle = New Rectangle(New Point(35, 450), New Size(756, 61))
+        Dim highAreaRectangle As Rectangle = New Rectangle(New Point(52, 74), New Size(740, 240))
+        Dim lowAreaRectangle As Rectangle = New Rectangle(New Point(52, 450), New Size(740, 65))
         Using b As New SolidBrush(Color.FromArgb(30 * 255 \ 100, Color.Black))
             e.ChartGraphics.Graphics.FillRectangle(b, highAreaRectangle)
         End Using
@@ -321,21 +322,23 @@ Public Class Form1
                             .AutoSize = True,
                             .BorderStyle = BorderStyle.Fixed3D,
                             .ColumnCount = 1,
-                            .AutoSizeMode = AutoSizeMode.GrowOnly,
-                            .Dock = System.Windows.Forms.DockStyle.Fill,
+                            .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                            .Dock = System.Windows.Forms.DockStyle.Top,
                             .RowCount = innerJson1.Count
                             }
+                    tableLevel2.RowStyles.Add(New RowStyle())
                     tableLevel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 80.0))
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson1.WithIndex()
                         Dim dic As Dictionary(Of String, String) = innerDictionary.Value
                         tableLevel2.RowStyles.Add(New RowStyle(System.Windows.Forms.SizeType.Absolute, 4 + dic.Keys.Count * 22))
                         Dim tableLevel3 As New TableLayoutPanel With {
-                                .Anchor=AnchorStyles.Left Or AnchorStyles.Right,
+                                .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                 .AutoScroll = False,
                                 .AutoSize = True,
-                                .AutoSizeMode = AutoSizeMode.GrowOnly,
+                                .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                                .BorderStyle = BorderStyle.FixedSingle,
                                 .ColumnCount = 2,
-                                .Dock = System.Windows.Forms.DockStyle.None
+                                .Dock = System.Windows.Forms.DockStyle.Top
                                 }
                         For Each e As IndexClass(Of KeyValuePair(Of String, String)) In dic.WithIndex()
                             If zFilterList.ContainsKey(itemIndex) Then
@@ -375,10 +378,23 @@ Public Class Form1
                                            .Text = innerRow.Value}})
             End If
         Next
+
+        Dim tableLayoutParent As TableLayoutPanel = CType(tableLevel1Blue.Parent, TableLayoutPanel)
         If itemIndex = ItemIndexs.lastSG Then
             tableLevel1Blue.AutoSize = False
             tableLevel1Blue.RowCount += 1
             tableLevel1Blue.Width = 400
+        ElseIf itemIndex = ItemIndexs.lastAlarm Then
+            If tableLevel1Blue.RowCount > 5 Then
+                tableLayoutParent.AutoScroll = True
+                tableLayoutParent.HorizontalScroll.Visible = False
+                tableLayoutParent.Height = 22 * tableLevel1Blue.RowCount
+            Else
+                tableLevel1Blue.RowCount += 1
+            End If
+        ElseIf itemIndex = ItemIndexs.notificationHistory Then
+            tableLevel1Blue.RowStyles(1).SizeType = SizeType.AutoSize
+            'tableLevel1Blue.RowCount += 1
         End If
         Application.DoEvents()
     End Sub
@@ -456,7 +472,7 @@ Public Class Form1
                                     .BorderColor = System.Drawing.Color.FromArgb(180, 26, 59, 105),
                                     .BorderWidth = 4,
                                     .ChartArea = "Default",
-                                    .ChartType = SeriesChartType.FastLine,
+                                    .ChartType = SeriesChartType.Point,
                                     .Color = Color.DeepPink,
                                     .Name = "Markers",
                                     .ShadowColor = System.Drawing.Color.Black,
@@ -870,6 +886,8 @@ Public Class Form1
         If RecentData.Count > ItemIndexs.averageSGFloat + 1 Then
             Stop
         End If
+        InitializeStartTimeComboBox()
+        Initialized = True
         UpdateReminingInsulin()
         UpdateActiveInsulin()
         UpdateBGChart()
@@ -880,7 +898,6 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateAutoModeShield()
-
         BGImage.Location = New Point(HomePageChart.Left + (HomePageChart.Width \ 2) - (BGImage.Width \ 2), 3)
         CurrentBG.Parent = BGImage
         CurrentBG.BackColor = Color.Transparent
@@ -900,17 +917,76 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateBGChart()
-        HomePageChart.Titles("Title1").Text = $"Summary of last {TimeScaleNumericUpDown.Value} hours"
+        If Not Initialized Then
+            Exit Sub
+        End If
+        If TimeScaleNumericUpDown.Value = 24 Then
+            HomePageChart.Titles("Title1").Text = $"Summary of last 24 hours"
+        Else
+            Dim startIndex As Integer = StartTimeComboBox.SelectedIndex
+            Dim endIndex As Integer = (StartTimeComboBox.SelectedIndex + CInt(TimeScaleNumericUpDown.Value)) Mod 24
+            HomePageChart.Titles("Title1").Text = $"Summary from {StartTimeComboBox.Items(startIndex)} till {StartTimeComboBox.Items(endIndex)} hours"
+        End If
         HomePageChart.ChartAreas("Default").AxisX.Minimum = Date.Parse(SGs.First().Item("datetime").ToString()).ToOADate()
-        HomePageChart.ChartAreas("Default").AxisX.Maximum = Date.Parse(SGs.Last().Item("datetime").ToString()).ToOADate()
-        Dim previousHour As DateTime
-        StartTimeComboBox.Items.Clear()
+        HomePageChart.ChartAreas("Default").AxisX.Maximum = SafeGetSgDateTime(SGs.Last).ToOADate()
         HomePageChart.Series("Default").Points.Clear()
         HomePageChart.ChartAreas("Default").AxisX.MajorGrid.Interval = 1 / 24
+        For Each SGList As IndexClass(Of Dictionary(Of String, String)) In Markers.WithIndex()
+            Dim sgDateTime As Date = Date.Parse(SGList.Value("dateTime").Split("-")(0))
+            Select Case SGList.Value("type")
+                Case "BG_READING"
+                    Dim bgValue As Integer = CInt(SGList.Value("value"))
+                    HomePageChart.Series("Markers").Points.AddXY(sgDateTime, bgValue)
+                    HomePageChart.Series("Markers").Points.Last.Color = Color.Gray
+                Case "CALIBRATION"
+                    Dim bgValue As Integer = CInt(SGList.Value("value"))
+                    HomePageChart.Series("Markers").Points.AddXY(sgDateTime, bgValue)
+                    HomePageChart.Series("Markers").Points.Last.Color = Color.Red
+                Case "INSULIN"
+                    HomePageChart.Series("Markers").Points.AddXY(sgDateTime, 399)
+                    HomePageChart.Series("Markers").Points.Last.Color = Color.LightSkyBlue
+                    Dim programmedFastAmount As String = SGList.Value("programmedFastAmount")
+                    HomePageChart.Series("Markers").Points.Last.ToolTip = $"{programmedFastAmount} U"
+                Case "MEAL"
+                    HomePageChart.Series("Markers").Points.AddXY(sgDateTime, 399)
+                    HomePageChart.Series("Markers").Points.Last.Color = Color.Yellow
+                Case "AUTO_BASAL_DELIVERY"
+                    HomePageChart.Series("Markers").Points.AddXY(sgDateTime, 399)
+                    Dim bolusAmount As String = SGList.Value("bolusAmount")
+                    HomePageChart.Series("Markers").Points.Last.ToolTip = $"{bolusAmount} U"
+                Case Else
+                    Stop
+            End Select
+        Next
         For Each SGList As IndexClass(Of Dictionary(Of String, String)) In SGs.WithIndex()
             Dim bgValue As Integer = CInt(SGList.Value("sg"))
-
             Dim sgDateTime As Date = Date.Parse(SGList.Value("datetime"))
+            If bgValue = 0 Then
+                HomePageChart.Series("Default").Points.AddXY(sgDateTime, 50)
+                HomePageChart.Series("Default").Points.Last().IsEmpty = True
+            Else
+                HomePageChart.Series("Default").Points.AddXY(sgDateTime, bgValue)
+            End If
+
+
+            HomePageChart.Series("HighLimit").Points.AddXY(sgDateTime, 180)
+            HomePageChart.Series("LowLimit").Points.AddXY(sgDateTime, 60)
+            Application.DoEvents()
+        Next
+        Application.DoEvents()
+    End Sub
+
+    Private Sub InitializeStartTimeComboBox()
+        Dim hourFound As Boolean = False
+        Dim selectedIndex As Integer = 0
+        Dim selectedItem As String = ""
+        If StartTimeComboBox.SelectedItem IsNot Nothing Then
+            selectedItem = CStr(StartTimeComboBox.SelectedItem)
+        End If
+        Dim previousHour As DateTime
+        StartTimeComboBox.Items.Clear()
+        For Each SGList As IndexClass(Of Dictionary(Of String, String)) In SGs.WithIndex()
+            Dim sgDateTime As Date = SafeGetSgDateTime(SGList.Value)
             Dim currentHour As Date = sgDateTime.RoundToHour()
             If SGList.IsFirst Then
                 previousHour = sgDateTime
@@ -919,22 +995,22 @@ Public Class Form1
                 StartTimeComboBox.Items.Add($"{currentHour:hh tt}")
                 previousHour = currentHour
             End If
-            StartTimeComboBox.SelectedIndex = 0
-            If bgValue = 0 Then
-                HomePageChart.Series("Default").Points.AddXY(sgDateTime, 50)
-                HomePageChart.Series("Default").Points.Last().IsEmpty = True
-            Else
-                HomePageChart.Series("Default").Points.AddXY(sgDateTime, bgValue)
+            If StartTimeComboBox.Items(StartTimeComboBox.Items.Count - 1).ToString() = selectedItem AndAlso Not hourFound Then
+                selectedIndex = StartTimeComboBox.Items.Count - 1
+                hourFound = True
             End If
-
-            HomePageChart.Series("Markers").Points.AddXY(sgDateTime, 399)
-
-            HomePageChart.Series("HighLimit").Points.AddXY(sgDateTime, 180)
-            HomePageChart.Series("LowLimit").Points.AddXY(sgDateTime, 60)
-            Application.DoEvents()
         Next
-        Application.DoEvents()
+        StartTimeComboBox.SelectedIndex = selectedIndex
     End Sub
+
+    Private Shared Function SafeGetSgDateTime(SGList As Dictionary(Of String, String)) As Date
+        Dim sgDateTimeString As String = ""
+        Dim sgDateTime As Date = Now
+        If SGList.TryGetValue("datetime", sgDateTimeString) Then
+            sgDateTime = Date.Parse(sgDateTimeString)
+        End If
+        Return sgDateTime
+    End Function
 
     Private Sub UpdateCalibrationTimeRemaining()
         If TimeToNextCalibHours = -1 Then
@@ -991,4 +1067,11 @@ Public Class Form1
         AverageSGLabel.Text = $"{AverageSG} mg/dl"
     End Sub
 
+    Private Sub TimeScaleNumericUpDown_ValueChanged(sender As Object, e As EventArgs) Handles TimeScaleNumericUpDown.ValueChanged
+        UpdateBGChart()
+    End Sub
+
+    Private Sub StartTimeComboBox_SelectedValueChanged(sender As Object, e As EventArgs) Handles StartTimeComboBox.SelectedValueChanged
+        UpdateBGChart()
+    End Sub
 End Class
