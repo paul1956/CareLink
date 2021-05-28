@@ -23,6 +23,9 @@ This is a Visual Basic application that provides a UI to view Medtronic 670G and
 This shows (almost) all available data and is not in any way supported by Medtronic, it was created from publicly available data.
 Some data was filtered out because I could not see any use for it. You can turn off filters but performance will suffer.
 
+For the visualization layer I use the open source package by Angelo Cresta.
+https://github.com/AngeloCresta/winforms-datavisualization-net5
+
 Try it out and send feedback.
-This update has a simple UI
+This update has a simple UI to show all the available data and a visual version that mimics the on iPhone.
 ![Same display](https://github.com/paul1956/CareLink/blob/master/Screenshot%202021-05-16%20050718.png?raw=true)
