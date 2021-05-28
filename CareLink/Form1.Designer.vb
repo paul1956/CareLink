@@ -39,11 +39,23 @@ Partial Class Form1
         Me.TableLayoutPanelTop2 = New System.Windows.Forms.TableLayoutPanel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.AverageSGLabel = New System.Windows.Forms.Label()
-        Me.AverageSGPercentLabel = New System.Windows.Forms.Label()
-        Me.TimeInRangePercentLabel = New System.Windows.Forms.Label()
-        Me.TimeInRangeLabel = New System.Windows.Forms.Label()
+        Me.Below70UnitsLabel = New System.Windows.Forms.Label()
+        Me.Below70MeaageLabel = New System.Windows.Forms.Label()
+        Me.InRangeMessageLabel = New System.Windows.Forms.Label()
+        Me.Above180UnitsLabel = New System.Windows.Forms.Label()
+        Me.Above180MessageLabel = New System.Windows.Forms.Label()
+        Me.Below70PercentPercentCharLabel = New System.Windows.Forms.Label()
+        Me.Below70PValueLabel = New System.Windows.Forms.Label()
+        Me.TimeInRangePercentPercentChar = New System.Windows.Forms.Label()
+        Me.TimeInRangeValueLabel = New System.Windows.Forms.Label()
+        Me.Above180PercentCharLabel = New System.Windows.Forms.Label()
+        Me.Above180ValueLabel = New System.Windows.Forms.Label()
+        Me.ShieldUnitsLabel = New System.Windows.Forms.Label()
+        Me.AverageSGUnitsLabel = New System.Windows.Forms.Label()
+        Me.AverageSGValueLabel = New System.Windows.Forms.Label()
+        Me.AverageSGMessageLabel = New System.Windows.Forms.Label()
+        Me.TimeInRangeSummaryPercentCharLabel = New System.Windows.Forms.Label()
+        Me.TimeInRangeSummaryLabel = New System.Windows.Forms.Label()
         Me.SensorMessage = New System.Windows.Forms.Label()
         Me.StartTimeComboBox = New System.Windows.Forms.ComboBox()
         Me.RemainingInsulinUnits = New System.Windows.Forms.Label()
@@ -55,7 +67,7 @@ Partial Class Form1
         Me.CalibrationDueImage = New System.Windows.Forms.PictureBox()
         Me.ActiveInsulinLabel = New System.Windows.Forms.Label()
         Me.CurrentBG = New System.Windows.Forms.Label()
-        Me.BGImage = New System.Windows.Forms.PictureBox()
+        Me.ShieldPictureBox = New System.Windows.Forms.PictureBox()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
@@ -80,7 +92,7 @@ Partial Class Form1
         CType(Me.InsulinLevelPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.TimeScaleNumericUpDown,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.CalibrationDueImage,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.BGImage,System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.ShieldPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         Me.TabPage3.SuspendLayout
         Me.TabPage4.SuspendLayout
         Me.TabPage5.SuspendLayout
@@ -288,11 +300,23 @@ Partial Class Form1
         'TabPage1
         '
         Me.TabPage1.BackColor = System.Drawing.Color.Black
-        Me.TabPage1.Controls.Add(Me.Label1)
-        Me.TabPage1.Controls.Add(Me.AverageSGLabel)
-        Me.TabPage1.Controls.Add(Me.AverageSGPercentLabel)
-        Me.TabPage1.Controls.Add(Me.TimeInRangePercentLabel)
-        Me.TabPage1.Controls.Add(Me.TimeInRangeLabel)
+        Me.TabPage1.Controls.Add(Me.Below70UnitsLabel)
+        Me.TabPage1.Controls.Add(Me.Below70MeaageLabel)
+        Me.TabPage1.Controls.Add(Me.InRangeMessageLabel)
+        Me.TabPage1.Controls.Add(Me.Above180UnitsLabel)
+        Me.TabPage1.Controls.Add(Me.Above180MessageLabel)
+        Me.TabPage1.Controls.Add(Me.Below70PercentPercentCharLabel)
+        Me.TabPage1.Controls.Add(Me.Below70PValueLabel)
+        Me.TabPage1.Controls.Add(Me.TimeInRangePercentPercentChar)
+        Me.TabPage1.Controls.Add(Me.TimeInRangeValueLabel)
+        Me.TabPage1.Controls.Add(Me.Above180PercentCharLabel)
+        Me.TabPage1.Controls.Add(Me.Above180ValueLabel)
+        Me.TabPage1.Controls.Add(Me.ShieldUnitsLabel)
+        Me.TabPage1.Controls.Add(Me.AverageSGUnitsLabel)
+        Me.TabPage1.Controls.Add(Me.AverageSGValueLabel)
+        Me.TabPage1.Controls.Add(Me.AverageSGMessageLabel)
+        Me.TabPage1.Controls.Add(Me.TimeInRangeSummaryPercentCharLabel)
+        Me.TabPage1.Controls.Add(Me.TimeInRangeSummaryLabel)
         Me.TabPage1.Controls.Add(Me.SensorMessage)
         Me.TabPage1.Controls.Add(Me.StartTimeComboBox)
         Me.TabPage1.Controls.Add(Me.RemainingInsulinUnits)
@@ -304,7 +328,7 @@ Partial Class Form1
         Me.TabPage1.Controls.Add(Me.CalibrationDueImage)
         Me.TabPage1.Controls.Add(Me.ActiveInsulinLabel)
         Me.TabPage1.Controls.Add(Me.CurrentBG)
-        Me.TabPage1.Controls.Add(Me.BGImage)
+        Me.TabPage1.Controls.Add(Me.ShieldPictureBox)
         Me.TabPage1.Location = New System.Drawing.Point(4, 24)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
@@ -312,81 +336,231 @@ Partial Class Form1
         Me.TabPage1.TabIndex = 7
         Me.TabPage1.Text = "Home Page"
         '
-        'Label1
+        'Below70UnitsLabel
         '
-        Me.Label1.AutoSize = true
-        Me.Label1.BackColor = System.Drawing.Color.Transparent
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.Label1.ForeColor = System.Drawing.Color.White
-        Me.Label1.Location = New System.Drawing.Point(1016, 506)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(68, 30)
-        Me.Label1.TabIndex = 16
-        Me.Label1.Text = "mg/dl"
-        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.Below70UnitsLabel.AutoSize = true
+        Me.Below70UnitsLabel.BackColor = System.Drawing.Color.Transparent
+        Me.Below70UnitsLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.Below70UnitsLabel.ForeColor = System.Drawing.Color.Red
+        Me.Below70UnitsLabel.Location = New System.Drawing.Point(1044, 549)
+        Me.Below70UnitsLabel.Name = "Below70UnitsLabel"
+        Me.Below70UnitsLabel.Size = New System.Drawing.Size(57, 21)
+        Me.Below70UnitsLabel.TabIndex = 33
+        Me.Below70UnitsLabel.Text = "mg/dl"
+        Me.Below70UnitsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'AverageSGLabel
+        'Below70MeaageLabel
         '
-        Me.AverageSGLabel.BackColor = System.Drawing.Color.Black
-        Me.AverageSGLabel.Font = New System.Drawing.Font("Segoe UI", 24!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.AverageSGLabel.ForeColor = System.Drawing.Color.White
-        Me.AverageSGLabel.Location = New System.Drawing.Point(953, 493)
-        Me.AverageSGLabel.Margin = New System.Windows.Forms.Padding(0)
-        Me.AverageSGLabel.Name = "AverageSGLabel"
-        Me.AverageSGLabel.Size = New System.Drawing.Size(74, 43)
-        Me.AverageSGLabel.TabIndex = 1
-        Me.AverageSGLabel.Text = "100"
-        Me.AverageSGLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Below70MeaageLabel.AutoSize = true
+        Me.Below70MeaageLabel.BackColor = System.Drawing.Color.Transparent
+        Me.Below70MeaageLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.Below70MeaageLabel.ForeColor = System.Drawing.Color.Red
+        Me.Below70MeaageLabel.Location = New System.Drawing.Point(969, 549)
+        Me.Below70MeaageLabel.Name = "Below70MeaageLabel"
+        Me.Below70MeaageLabel.Size = New System.Drawing.Size(79, 21)
+        Me.Below70MeaageLabel.TabIndex = 32
+        Me.Below70MeaageLabel.Text = "Below 70"
+        Me.Below70MeaageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'AverageSGPercentLabel
+        'InRangeMessageLabel
         '
-        Me.AverageSGPercentLabel.AutoSize = true
-        Me.AverageSGPercentLabel.BackColor = System.Drawing.Color.Transparent
-        Me.AverageSGPercentLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.AverageSGPercentLabel.ForeColor = System.Drawing.Color.White
-        Me.AverageSGPercentLabel.Location = New System.Drawing.Point(962, 539)
-        Me.AverageSGPercentLabel.Name = "AverageSGPercentLabel"
-        Me.AverageSGPercentLabel.Size = New System.Drawing.Size(120, 30)
-        Me.AverageSGPercentLabel.TabIndex = 0
-        Me.AverageSGPercentLabel.Text = "Average SG"
-        Me.AverageSGPercentLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.InRangeMessageLabel.AutoSize = true
+        Me.InRangeMessageLabel.BackColor = System.Drawing.Color.Transparent
+        Me.InRangeMessageLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.InRangeMessageLabel.ForeColor = System.Drawing.Color.Lime
+        Me.InRangeMessageLabel.Location = New System.Drawing.Point(1000, 473)
+        Me.InRangeMessageLabel.Name = "InRangeMessageLabel"
+        Me.InRangeMessageLabel.Size = New System.Drawing.Size(73, 21)
+        Me.InRangeMessageLabel.TabIndex = 30
+        Me.InRangeMessageLabel.Text = "In range"
+        Me.InRangeMessageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'TimeInRangePercentLabel
+        'Above180UnitsLabel
         '
-        Me.TimeInRangePercentLabel.AutoSize = true
-        Me.TimeInRangePercentLabel.BackColor = System.Drawing.Color.Transparent
-        Me.TimeInRangePercentLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.TimeInRangePercentLabel.ForeColor = System.Drawing.Color.White
-        Me.TimeInRangePercentLabel.Location = New System.Drawing.Point(1007, 230)
-        Me.TimeInRangePercentLabel.Name = "TimeInRangePercentLabel"
-        Me.TimeInRangePercentLabel.Size = New System.Drawing.Size(30, 30)
-        Me.TimeInRangePercentLabel.TabIndex = 3
-        Me.TimeInRangePercentLabel.Text = "%"
+        Me.Above180UnitsLabel.AutoSize = true
+        Me.Above180UnitsLabel.BackColor = System.Drawing.Color.Transparent
+        Me.Above180UnitsLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.Above180UnitsLabel.ForeColor = System.Drawing.Color.Orange
+        Me.Above180UnitsLabel.Location = New System.Drawing.Point(1055, 397)
+        Me.Above180UnitsLabel.Name = "Above180UnitsLabel"
+        Me.Above180UnitsLabel.Size = New System.Drawing.Size(57, 21)
+        Me.Above180UnitsLabel.TabIndex = 29
+        Me.Above180UnitsLabel.Text = "mg/dl"
+        Me.Above180UnitsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'TimeInRangeLabel
+        'Above180MessageLabel
         '
-        Me.TimeInRangeLabel.AutoSize = true
-        Me.TimeInRangeLabel.BackColor = System.Drawing.Color.Black
-        Me.TimeInRangeLabel.Font = New System.Drawing.Font("Segoe UI", 24!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.TimeInRangeLabel.ForeColor = System.Drawing.Color.White
-        Me.TimeInRangeLabel.Location = New System.Drawing.Point(987, 188)
-        Me.TimeInRangeLabel.Name = "TimeInRangeLabel"
-        Me.TimeInRangeLabel.Size = New System.Drawing.Size(71, 45)
-        Me.TimeInRangeLabel.TabIndex = 2
-        Me.TimeInRangeLabel.Text = "100"
+        Me.Above180MessageLabel.AutoSize = true
+        Me.Above180MessageLabel.BackColor = System.Drawing.Color.Transparent
+        Me.Above180MessageLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.Above180MessageLabel.ForeColor = System.Drawing.Color.Orange
+        Me.Above180MessageLabel.Location = New System.Drawing.Point(969, 397)
+        Me.Above180MessageLabel.Name = "Above180MessageLabel"
+        Me.Above180MessageLabel.Size = New System.Drawing.Size(90, 21)
+        Me.Above180MessageLabel.TabIndex = 28
+        Me.Above180MessageLabel.Text = "Above 180"
+        Me.Above180MessageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Below70PercentPercentCharLabel
+        '
+        Me.Below70PercentPercentCharLabel.AutoSize = true
+        Me.Below70PercentPercentCharLabel.BackColor = System.Drawing.Color.Transparent
+        Me.Below70PercentPercentCharLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.Below70PercentPercentCharLabel.ForeColor = System.Drawing.Color.White
+        Me.Below70PercentPercentCharLabel.Location = New System.Drawing.Point(1051, 515)
+        Me.Below70PercentPercentCharLabel.Name = "Below70PercentPercentCharLabel"
+        Me.Below70PercentPercentCharLabel.Size = New System.Drawing.Size(31, 30)
+        Me.Below70PercentPercentCharLabel.TabIndex = 27
+        Me.Below70PercentPercentCharLabel.Text = "%"
+        Me.Below70PercentPercentCharLabel.TextAlign = System.Drawing.ContentAlignment.BottomLeft
+        '
+        'Below70PValueLabel
+        '
+        Me.Below70PValueLabel.BackColor = System.Drawing.Color.Black
+        Me.Below70PValueLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.Below70PValueLabel.ForeColor = System.Drawing.Color.White
+        Me.Below70PValueLabel.Location = New System.Drawing.Point(985, 512)
+        Me.Below70PValueLabel.Name = "Below70PValueLabel"
+        Me.Below70PValueLabel.Size = New System.Drawing.Size(66, 33)
+        Me.Below70PValueLabel.TabIndex = 26
+        Me.Below70PValueLabel.Text = "2"
+        Me.Below70PValueLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'TimeInRangePercentPercentChar
+        '
+        Me.TimeInRangePercentPercentChar.AutoSize = true
+        Me.TimeInRangePercentPercentChar.BackColor = System.Drawing.Color.Transparent
+        Me.TimeInRangePercentPercentChar.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.TimeInRangePercentPercentChar.ForeColor = System.Drawing.Color.White
+        Me.TimeInRangePercentPercentChar.Location = New System.Drawing.Point(1051, 439)
+        Me.TimeInRangePercentPercentChar.Name = "TimeInRangePercentPercentChar"
+        Me.TimeInRangePercentPercentChar.Size = New System.Drawing.Size(31, 30)
+        Me.TimeInRangePercentPercentChar.TabIndex = 25
+        Me.TimeInRangePercentPercentChar.Text = "%"
+        Me.TimeInRangePercentPercentChar.TextAlign = System.Drawing.ContentAlignment.BottomLeft
+        '
+        'TimeInRangeValueLabel
+        '
+        Me.TimeInRangeValueLabel.BackColor = System.Drawing.Color.Black
+        Me.TimeInRangeValueLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.TimeInRangeValueLabel.ForeColor = System.Drawing.Color.White
+        Me.TimeInRangeValueLabel.Location = New System.Drawing.Point(985, 436)
+        Me.TimeInRangeValueLabel.Name = "TimeInRangeValueLabel"
+        Me.TimeInRangeValueLabel.Size = New System.Drawing.Size(66, 33)
+        Me.TimeInRangeValueLabel.TabIndex = 24
+        Me.TimeInRangeValueLabel.Text = "90"
+        Me.TimeInRangeValueLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'Above180PercentCharLabel
+        '
+        Me.Above180PercentCharLabel.AutoSize = true
+        Me.Above180PercentCharLabel.BackColor = System.Drawing.Color.Transparent
+        Me.Above180PercentCharLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.Above180PercentCharLabel.ForeColor = System.Drawing.Color.White
+        Me.Above180PercentCharLabel.Location = New System.Drawing.Point(1051, 363)
+        Me.Above180PercentCharLabel.Name = "Above180PercentCharLabel"
+        Me.Above180PercentCharLabel.Size = New System.Drawing.Size(31, 30)
+        Me.Above180PercentCharLabel.TabIndex = 23
+        Me.Above180PercentCharLabel.Text = "%"
+        Me.Above180PercentCharLabel.TextAlign = System.Drawing.ContentAlignment.BottomLeft
+        '
+        'Above180ValueLabel
+        '
+        Me.Above180ValueLabel.BackColor = System.Drawing.Color.Black
+        Me.Above180ValueLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.Above180ValueLabel.ForeColor = System.Drawing.Color.White
+        Me.Above180ValueLabel.Location = New System.Drawing.Point(985, 360)
+        Me.Above180ValueLabel.Name = "Above180ValueLabel"
+        Me.Above180ValueLabel.Size = New System.Drawing.Size(66, 33)
+        Me.Above180ValueLabel.TabIndex = 22
+        Me.Above180ValueLabel.Text = "8"
+        Me.Above180ValueLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'ShieldUnitsLabel
+        '
+        Me.ShieldUnitsLabel.AutoSize = true
+        Me.ShieldUnitsLabel.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.ShieldUnitsLabel.ForeColor = System.Drawing.Color.White
+        Me.ShieldUnitsLabel.Location = New System.Drawing.Point(425, 59)
+        Me.ShieldUnitsLabel.Name = "ShieldUnitsLabel"
+        Me.ShieldUnitsLabel.Size = New System.Drawing.Size(37, 13)
+        Me.ShieldUnitsLabel.TabIndex = 17
+        Me.ShieldUnitsLabel.Text = "mg/dl"
+        '
+        'AverageSGUnitsLabel
+        '
+        Me.AverageSGUnitsLabel.AutoSize = true
+        Me.AverageSGUnitsLabel.BackColor = System.Drawing.Color.Transparent
+        Me.AverageSGUnitsLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.AverageSGUnitsLabel.ForeColor = System.Drawing.Color.White
+        Me.AverageSGUnitsLabel.Location = New System.Drawing.Point(1044, 604)
+        Me.AverageSGUnitsLabel.Name = "AverageSGUnitsLabel"
+        Me.AverageSGUnitsLabel.Size = New System.Drawing.Size(57, 21)
+        Me.AverageSGUnitsLabel.TabIndex = 16
+        Me.AverageSGUnitsLabel.Text = "mg/dl"
+        Me.AverageSGUnitsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'AverageSGValueLabel
+        '
+        Me.AverageSGValueLabel.BackColor = System.Drawing.Color.Black
+        Me.AverageSGValueLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.AverageSGValueLabel.ForeColor = System.Drawing.Color.White
+        Me.AverageSGValueLabel.Location = New System.Drawing.Point(978, 592)
+        Me.AverageSGValueLabel.Margin = New System.Windows.Forms.Padding(0)
+        Me.AverageSGValueLabel.Name = "AverageSGValueLabel"
+        Me.AverageSGValueLabel.Size = New System.Drawing.Size(66, 33)
+        Me.AverageSGValueLabel.TabIndex = 1
+        Me.AverageSGValueLabel.Text = "100"
+        Me.AverageSGValueLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'AverageSGMessageLabel
+        '
+        Me.AverageSGMessageLabel.AutoSize = true
+        Me.AverageSGMessageLabel.BackColor = System.Drawing.Color.Transparent
+        Me.AverageSGMessageLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.AverageSGMessageLabel.ForeColor = System.Drawing.Color.White
+        Me.AverageSGMessageLabel.Location = New System.Drawing.Point(1000, 625)
+        Me.AverageSGMessageLabel.Name = "AverageSGMessageLabel"
+        Me.AverageSGMessageLabel.Size = New System.Drawing.Size(97, 21)
+        Me.AverageSGMessageLabel.TabIndex = 0
+        Me.AverageSGMessageLabel.Text = "Average SG"
+        Me.AverageSGMessageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'TimeInRangeSummaryPercentCharLabel
+        '
+        Me.TimeInRangeSummaryPercentCharLabel.AutoSize = true
+        Me.TimeInRangeSummaryPercentCharLabel.BackColor = System.Drawing.Color.Transparent
+        Me.TimeInRangeSummaryPercentCharLabel.Font = New System.Drawing.Font("Segoe UI", 18!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.TimeInRangeSummaryPercentCharLabel.ForeColor = System.Drawing.Color.White
+        Me.TimeInRangeSummaryPercentCharLabel.Location = New System.Drawing.Point(1007, 211)
+        Me.TimeInRangeSummaryPercentCharLabel.Name = "TimeInRangeSummaryPercentCharLabel"
+        Me.TimeInRangeSummaryPercentCharLabel.Size = New System.Drawing.Size(34, 32)
+        Me.TimeInRangeSummaryPercentCharLabel.TabIndex = 3
+        Me.TimeInRangeSummaryPercentCharLabel.Text = "%"
+        '
+        'TimeInRangeSummaryLabel
+        '
+        Me.TimeInRangeSummaryLabel.AutoSize = true
+        Me.TimeInRangeSummaryLabel.BackColor = System.Drawing.Color.Black
+        Me.TimeInRangeSummaryLabel.Font = New System.Drawing.Font("Segoe UI", 26.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.TimeInRangeSummaryLabel.ForeColor = System.Drawing.Color.White
+        Me.TimeInRangeSummaryLabel.Location = New System.Drawing.Point(987, 169)
+        Me.TimeInRangeSummaryLabel.Name = "TimeInRangeSummaryLabel"
+        Me.TimeInRangeSummaryLabel.Size = New System.Drawing.Size(77, 47)
+        Me.TimeInRangeSummaryLabel.TabIndex = 2
+        Me.TimeInRangeSummaryLabel.Text = "100"
         '
         'SensorMessage
         '
-        Me.SensorMessage.AutoSize = true
-        Me.SensorMessage.BackColor = System.Drawing.Color.Red
-        Me.SensorMessage.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.SensorMessage.BackColor = System.Drawing.Color.Transparent
+        Me.SensorMessage.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.SensorMessage.ForeColor = System.Drawing.Color.White
-        Me.SensorMessage.Location = New System.Drawing.Point(671, 30)
+        Me.SensorMessage.Location = New System.Drawing.Point(393, 14)
         Me.SensorMessage.Name = "SensorMessage"
-        Me.SensorMessage.Size = New System.Drawing.Size(196, 25)
+        Me.SensorMessage.Size = New System.Drawing.Size(100, 66)
         Me.SensorMessage.TabIndex = 15
         Me.SensorMessage.Text = "Calibration Required"
-        Me.SensorMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.SensorMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'StartTimeComboBox
         '
@@ -497,22 +671,22 @@ Partial Class Form1
         Me.CurrentBG.BackColor = System.Drawing.Color.Transparent
         Me.CurrentBG.Font = New System.Drawing.Font("Segoe UI", 18!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.CurrentBG.ForeColor = System.Drawing.Color.White
-        Me.CurrentBG.Location = New System.Drawing.Point(152, 23)
+        Me.CurrentBG.Location = New System.Drawing.Point(422, 23)
         Me.CurrentBG.Name = "CurrentBG"
         Me.CurrentBG.Size = New System.Drawing.Size(44, 32)
         Me.CurrentBG.TabIndex = 0
         Me.CurrentBG.Text = "---"
         Me.CurrentBG.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'BGImage
+        'ShieldPictureBox
         '
-        Me.BGImage.Image = CType(resources.GetObject("BGImage.Image"),System.Drawing.Image)
-        Me.BGImage.Location = New System.Drawing.Point(123, 3)
-        Me.BGImage.Name = "BGImage"
-        Me.BGImage.Size = New System.Drawing.Size(100, 100)
-        Me.BGImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.BGImage.TabIndex = 4
-        Me.BGImage.TabStop = false
+        Me.ShieldPictureBox.Image = Global.CareLink.My.Resources.Resources.Shield
+        Me.ShieldPictureBox.Location = New System.Drawing.Point(396, 3)
+        Me.ShieldPictureBox.Name = "ShieldPictureBox"
+        Me.ShieldPictureBox.Size = New System.Drawing.Size(100, 100)
+        Me.ShieldPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.ShieldPictureBox.TabIndex = 4
+        Me.ShieldPictureBox.TabStop = false
         '
         'TabPage3
         '
@@ -605,7 +779,7 @@ Partial Class Form1
         Me.TableLayoutPanel4.RowCount = 2
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel4.Size = New System.Drawing.Size(1160, 6)
+        Me.TableLayoutPanel4.Size = New System.Drawing.Size(1160, 9)
         Me.TableLayoutPanel4.TabIndex = 0
         '
         'TabPage7
@@ -727,7 +901,7 @@ Partial Class Form1
         CType(Me.InsulinLevelPictureBox,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.TimeScaleNumericUpDown,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.CalibrationDueImage,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.BGImage,System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.ShieldPictureBox,System.ComponentModel.ISupportInitialize).EndInit
         Me.TabPage3.ResumeLayout(false)
         Me.TabPage3.PerformLayout
         Me.TabPage4.ResumeLayout(false)
@@ -775,7 +949,7 @@ End Sub
     Friend WithEvents UseTestDataToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CurrentBG As Label
     Friend WithEvents ActiveInsulinLabel As Label
-    Friend WithEvents BGImage As PictureBox
+    Friend WithEvents ShieldPictureBox As PictureBox
     Friend WithEvents TabPage1 As TabPage
     Friend WithEvents CalibrationDueImage As PictureBox
     Friend WithEvents ActiveInsulinValue As Label
@@ -787,9 +961,21 @@ End Sub
     Friend WithEvents StartTimeComboBox As ComboBox
     Friend WithEvents SensorMessage As Label
     Friend WithEvents ImageList1 As ImageList
-    Friend WithEvents AverageSGPercentLabel As Label
-    Friend WithEvents AverageSGLabel As Label
-    Friend WithEvents TimeInRangeLabel As Label
-    Friend WithEvents TimeInRangePercentLabel As Label
-    Friend WithEvents Label1 As Label
+    Friend WithEvents AverageSGMessageLabel As Label
+    Friend WithEvents AverageSGValueLabel As Label
+    Friend WithEvents TimeInRangeSummaryLabel As Label
+    Friend WithEvents TimeInRangeSummaryPercentCharLabel As Label
+    Friend WithEvents AverageSGUnitsLabel As Label
+    Friend WithEvents ShieldUnitsLabel As Label
+    Friend WithEvents Above180PercentCharLabel As Label
+    Friend WithEvents Above180ValueLabel As Label
+    Friend WithEvents Below70PercentPercentCharLabel As Label
+    Friend WithEvents Below70PValueLabel As Label
+    Friend WithEvents TimeInRangePercentPercentChar As Label
+    Friend WithEvents TimeInRangeValueLabel As Label
+    Friend WithEvents Above180MessageLabel As Label
+    Friend WithEvents Above180UnitsLabel As Label
+    Friend WithEvents Below70UnitsLabel As Label
+    Friend WithEvents Below70MeaageLabel As Label
+    Friend WithEvents InRangeMessageLabel As Label
 End Class

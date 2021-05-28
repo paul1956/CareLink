@@ -83,11 +83,11 @@ Public Module Json
         Dim deserializeList As List(Of Dictionary(Of String, Object)) = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(value, options)
         For Each deserializeItem As Dictionary(Of String, Object) In deserializeList
             Dim resultDictionary As New Dictionary(Of String, String)
-            For Each Item As KeyValuePair(Of String, Object) In deserializeItem
-                If Item.Value Is Nothing Then
-                    resultDictionary.Add(Item.Key, Nothing)
+            For Each item As KeyValuePair(Of String, Object) In deserializeItem
+                If item.Value Is Nothing Then
+                    resultDictionary.Add(item.Key, Nothing)
                 Else
-                    resultDictionary.Add(Item.Key, GetItemAsString(Item))
+                    resultDictionary.Add(item.Key, GetItemAsString(item))
                 End If
             Next
             resultDictionaryArray.Add(resultDictionary)
@@ -101,11 +101,11 @@ Public Module Json
                 .IgnoreNullValues = True,
                 .NumberHandling = JsonNumberHandling.WriteAsString}
 
-        For Each Item As KeyValuePair(Of String, Object) In JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(value, options).ToList()
-            If Item.Value Is Nothing Then
-                resultDictionary.Add(Item.Key, Nothing)
+        For Each item As KeyValuePair(Of String, Object) In JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(value, options).ToList()
+            If item.Value Is Nothing Then
+                resultDictionary.Add(item.Key, Nothing)
             Else
-                resultDictionary.Add(Item.Key, GetItemAsString(Item))
+                resultDictionary.Add(item.Key, GetItemAsString(item))
             End If
         Next
         Return resultDictionary
@@ -113,7 +113,7 @@ Public Module Json
 
     <Extension>
     Public Function UtcToLocalTime(utcTime As String) As String
-        Dim convertedDate As DateTime = DateTime.SpecifyKind(DateTime.Parse(utcTime), DateTimeKind.Utc)
+        Dim convertedDate As Date = Date.SpecifyKind(Date.Parse(utcTime), DateTimeKind.Utc)
         Return convertedDate.ToLocalTime.ToString
     End Function
 

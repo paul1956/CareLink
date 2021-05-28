@@ -7,7 +7,7 @@ Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "CareLink", "CareLink\CareLi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C157782E-77AD-4CB6-8450-BC2908317F1F}"
 	ProjectSection(SolutionItems) = preProject
-		..\CSharpToVB\.editorconfig = ..\CSharpToVB\.editorconfig
+		.editorconfig = .editorconfig
 		README.md = README.md
 		Screenshot 2021-05-16 050718.png = Screenshot 2021-05-16 050718.png
 	EndProjectSection

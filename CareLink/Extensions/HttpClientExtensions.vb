@@ -47,18 +47,18 @@ Module HttpClientExtensions
             Next
             url = url.TrimEnd("&"c)
         End If
-        Dim FormData As New FormUrlEncodedContent(data.ToList())
+        Dim formData As New FormUrlEncodedContent(data.ToList())
         If _headers IsNot Nothing Then
             client.DefaultRequestHeaders.Clear()
             For Each header As KeyValuePair(Of String, String) In _headers
                 If header.Key = "Content-Type" Then
-                    FormData.Headers.ContentType.MediaType = header.Value
+                    formData.Headers.ContentType.MediaType = header.Value
                 Else
                     client.DefaultRequestHeaders.Add(header.Key, header.Value)
                 End If
             Next
         End If
-        Return client.PostAsync(url, FormData).Result
+        Return client.PostAsync(url, formData).Result
     End Function
 
     <Extension>

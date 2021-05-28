@@ -99,5 +99,35 @@ Namespace My.Resources
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property InsulinVial_Tiny() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("InsulinVial_Tiny", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property Shield() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Shield", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property Shield_Disabled() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Shield_Disabled", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
     End Module
 End Namespace

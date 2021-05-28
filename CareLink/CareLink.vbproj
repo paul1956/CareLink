@@ -28,6 +28,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Images\FoodImageLarge.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <COMReference Include="MSHTML">
       <WrapperTool>tlbimp</WrapperTool>
       <VersionMinor>0</VersionMinor>
