@@ -1290,10 +1290,16 @@ Public Class Form1
         Me.TimeInRangeChart.Series("Default").Points.Clear()
         Me.TimeInRangeChart.Series("Default").Points.AddXY($"{AboveHyperLimit}% Above 180 {_bgUnitsString}", AboveHyperLimit / 100)
         Me.TimeInRangeChart.Series("Default").Points.Last().Color = Color.Orange
+        Me.TimeInRangeChart.Series("Default").Points.Last().BorderColor = Color.Black
+        Me.TimeInRangeChart.Series("Default").Points.Last().BorderWidth = 2
         Me.TimeInRangeChart.Series("Default").Points.AddXY($"{BelowHypoLimit}% Below 70 {_bgUnitsString}", BelowHypoLimit / 100)
         Me.TimeInRangeChart.Series("Default").Points.Last().Color = Color.Red
+        Me.TimeInRangeChart.Series("Default").Points.Last().BorderColor = Color.Black
+        Me.TimeInRangeChart.Series("Default").Points.Last().BorderWidth = 2
         Me.TimeInRangeChart.Series("Default").Points.AddXY($"{TimeInRange}% In Range", TimeInRange / 100)
         Me.TimeInRangeChart.Series("Default").Points.Last().Color = Color.LawnGreen
+        Me.TimeInRangeChart.Series("Default").Points.Last().BorderColor = Color.Black
+        Me.TimeInRangeChart.Series("Default").Points.Last().BorderWidth = 2
         Me.TimeInRangeChart.Series("Default")("PieLabelStyle") = "Disabled"
         Me.TimeInRangeChart.Series("Default")("PieStartAngle") = "270"
 
