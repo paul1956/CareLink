@@ -39,6 +39,13 @@ Partial Class Form1
         Me.TableLayoutPanelTop2 = New System.Windows.Forms.TableLayoutPanel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.MessageForCursor2Label = New System.Windows.Forms.Label()
+        Me.ValueForCursorLabel = New System.Windows.Forms.Label()
+        Me.MessagePictureBox = New System.Windows.Forms.PictureBox()
+        Me.TimeForCursorLabel = New System.Windows.Forms.Label()
+        Me.MessageForCursor1Label = New System.Windows.Forms.Label()
+        Me.MouseYLabel = New System.Windows.Forms.Label()
+        Me.MouseXLabel = New System.Windows.Forms.Label()
         Me.Below70UnitsLabel = New System.Windows.Forms.Label()
         Me.Below70MeaageLabel = New System.Windows.Forms.Label()
         Me.InRangeMessageLabel = New System.Windows.Forms.Label()
@@ -89,6 +96,7 @@ Partial Class Form1
         Me.SplitContainer1.SuspendLayout
         Me.TabControl1.SuspendLayout
         Me.TabPage1.SuspendLayout
+        CType(Me.MessagePictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.InsulinLevelPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.TimeScaleNumericUpDown,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.CalibrationDueImage,System.ComponentModel.ISupportInitialize).BeginInit
@@ -228,7 +236,7 @@ Partial Class Form1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1160, 680)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1160, 700)
         Me.TableLayoutPanel1.TabIndex = 3
         '
         'TableLayoutPanelTop1
@@ -261,23 +269,25 @@ Partial Class Form1
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.TabControl1)
-        Me.SplitContainer1.Size = New System.Drawing.Size(1174, 846)
-        Me.SplitContainer1.SplitterDistance = 130
+        Me.SplitContainer1.Size = New System.Drawing.Size(1174, 876)
+        Me.SplitContainer1.SplitterDistance = 140
         Me.SplitContainer1.SplitterWidth = 2
         Me.SplitContainer1.TabIndex = 22
         '
         'TableLayoutPanelTop2
         '
+        Me.TableLayoutPanelTop2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.TableLayoutPanelTop2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelTop2.CausesValidation = false
         Me.TableLayoutPanelTop2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelTop2.ColumnCount = 2
-        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20!))
-        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 80!))
+        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100!))
+        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 595!))
         Me.TableLayoutPanelTop2.Location = New System.Drawing.Point(514, 0)
         Me.TableLayoutPanelTop2.Name = "TableLayoutPanelTop2"
         Me.TableLayoutPanelTop2.RowCount = 1
         Me.TableLayoutPanelTop2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100!))
-        Me.TableLayoutPanelTop2.Size = New System.Drawing.Size(656, 129)
+        Me.TableLayoutPanelTop2.Size = New System.Drawing.Size(656, 136)
         Me.TableLayoutPanelTop2.TabIndex = 1
         '
         'TabControl1
@@ -294,12 +304,19 @@ Partial Class Form1
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1174, 714)
+        Me.TabControl1.Size = New System.Drawing.Size(1174, 734)
         Me.TabControl1.TabIndex = 4
         '
         'TabPage1
         '
         Me.TabPage1.BackColor = System.Drawing.Color.Black
+        Me.TabPage1.Controls.Add(Me.MessageForCursor2Label)
+        Me.TabPage1.Controls.Add(Me.ValueForCursorLabel)
+        Me.TabPage1.Controls.Add(Me.MessagePictureBox)
+        Me.TabPage1.Controls.Add(Me.TimeForCursorLabel)
+        Me.TabPage1.Controls.Add(Me.MessageForCursor1Label)
+        Me.TabPage1.Controls.Add(Me.MouseYLabel)
+        Me.TabPage1.Controls.Add(Me.MouseXLabel)
         Me.TabPage1.Controls.Add(Me.Below70UnitsLabel)
         Me.TabPage1.Controls.Add(Me.Below70MeaageLabel)
         Me.TabPage1.Controls.Add(Me.InRangeMessageLabel)
@@ -332,9 +349,85 @@ Partial Class Form1
         Me.TabPage1.Location = New System.Drawing.Point(4, 24)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(1166, 686)
+        Me.TabPage1.Size = New System.Drawing.Size(1166, 706)
         Me.TabPage1.TabIndex = 7
         Me.TabPage1.Text = "Home Page"
+        '
+        'MessageForCursor2Label
+        '
+        Me.MessageForCursor2Label.Font = New System.Drawing.Font("Segoe UI", 9!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.MessageForCursor2Label.ForeColor = System.Drawing.Color.White
+        Me.MessageForCursor2Label.Location = New System.Drawing.Point(133, 71)
+        Me.MessageForCursor2Label.Name = "MessageForCursor2Label"
+        Me.MessageForCursor2Label.Size = New System.Drawing.Size(235, 15)
+        Me.MessageForCursor2Label.TabIndex = 40
+        Me.MessageForCursor2Label.Text = "Message For Cursor 2"
+        Me.MessageForCursor2Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'ValueForCursorLabel
+        '
+        Me.ValueForCursorLabel.Font = New System.Drawing.Font("Segoe UI", 9!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.ValueForCursorLabel.ForeColor = System.Drawing.Color.White
+        Me.ValueForCursorLabel.Location = New System.Drawing.Point(188, 95)
+        Me.ValueForCursorLabel.Name = "ValueForCursorLabel"
+        Me.ValueForCursorLabel.Size = New System.Drawing.Size(125, 15)
+        Me.ValueForCursorLabel.TabIndex = 39
+        Me.ValueForCursorLabel.Text = "Value For Cursor"
+        Me.ValueForCursorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'MessagePictureBox
+        '
+        Me.MessagePictureBox.Image = Global.CareLink.My.Resources.Resources.CalibrationDotRed
+        Me.MessagePictureBox.InitialImage = Nothing
+        Me.MessagePictureBox.Location = New System.Drawing.Point(228, 6)
+        Me.MessagePictureBox.Name = "MessagePictureBox"
+        Me.MessagePictureBox.Size = New System.Drawing.Size(45, 39)
+        Me.MessagePictureBox.TabIndex = 38
+        Me.MessagePictureBox.TabStop = false
+        '
+        'TimeForCursorLabel
+        '
+        Me.TimeForCursorLabel.AutoSize = true
+        Me.TimeForCursorLabel.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.TimeForCursorLabel.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.TimeForCursorLabel.ForeColor = System.Drawing.Color.Black
+        Me.TimeForCursorLabel.Location = New System.Drawing.Point(201, 159)
+        Me.TimeForCursorLabel.Name = "TimeForCursorLabel"
+        Me.TimeForCursorLabel.Size = New System.Drawing.Size(99, 17)
+        Me.TimeForCursorLabel.TabIndex = 37
+        Me.TimeForCursorLabel.Text = "TimeForCursor"
+        Me.TimeForCursorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'MessageForCursor1Label
+        '
+        Me.MessageForCursor1Label.Font = New System.Drawing.Font("Segoe UI", 9!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.MessageForCursor1Label.ForeColor = System.Drawing.Color.White
+        Me.MessageForCursor1Label.Location = New System.Drawing.Point(188, 47)
+        Me.MessageForCursor1Label.Name = "MessageForCursor1Label"
+        Me.MessageForCursor1Label.Size = New System.Drawing.Size(125, 15)
+        Me.MessageForCursor1Label.TabIndex = 36
+        Me.MessageForCursor1Label.Text = "Message For Cursor 1"
+        Me.MessageForCursor1Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'MouseYLabel
+        '
+        Me.MouseYLabel.AutoSize = true
+        Me.MouseYLabel.ForeColor = System.Drawing.Color.White
+        Me.MouseYLabel.Location = New System.Drawing.Point(725, 69)
+        Me.MouseYLabel.Name = "MouseYLabel"
+        Me.MouseYLabel.Size = New System.Drawing.Size(53, 15)
+        Me.MouseYLabel.TabIndex = 35
+        Me.MouseYLabel.Text = "Mouse Y"
+        '
+        'MouseXLabel
+        '
+        Me.MouseXLabel.AutoSize = true
+        Me.MouseXLabel.ForeColor = System.Drawing.Color.White
+        Me.MouseXLabel.Location = New System.Drawing.Point(725, 28)
+        Me.MouseXLabel.Name = "MouseXLabel"
+        Me.MouseXLabel.Size = New System.Drawing.Size(53, 15)
+        Me.MouseXLabel.TabIndex = 34
+        Me.MouseXLabel.Text = "Mouse X"
         '
         'Below70UnitsLabel
         '
@@ -694,7 +787,7 @@ Partial Class Form1
         Me.TabPage3.Location = New System.Drawing.Point(4, 24)
         Me.TabPage3.Name = "TabPage3"
         Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3.Size = New System.Drawing.Size(1166, 686)
+        Me.TabPage3.Size = New System.Drawing.Size(1166, 706)
         Me.TabPage3.TabIndex = 0
         Me.TabPage3.Text = "Summary Data"
         Me.TabPage3.UseVisualStyleBackColor = true
@@ -705,7 +798,7 @@ Partial Class Form1
         Me.TabPage4.Location = New System.Drawing.Point(4, 24)
         Me.TabPage4.Name = "TabPage4"
         Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage4.Size = New System.Drawing.Size(1166, 686)
+        Me.TabPage4.Size = New System.Drawing.Size(1166, 706)
         Me.TabPage4.TabIndex = 1
         Me.TabPage4.Text = "Active Insulin"
         Me.TabPage4.UseVisualStyleBackColor = true
@@ -732,7 +825,7 @@ Partial Class Form1
         Me.TabPage5.Location = New System.Drawing.Point(4, 24)
         Me.TabPage5.Name = "TabPage5"
         Me.TabPage5.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage5.Size = New System.Drawing.Size(1166, 686)
+        Me.TabPage5.Size = New System.Drawing.Size(1166, 706)
         Me.TabPage5.TabIndex = 2
         Me.TabPage5.Text = "SGS"
         Me.TabPage5.UseVisualStyleBackColor = true
@@ -751,7 +844,7 @@ Partial Class Form1
         Me.TableLayoutPanel3.RowCount = 2
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel3.Size = New System.Drawing.Size(1160, 680)
+        Me.TableLayoutPanel3.Size = New System.Drawing.Size(1160, 700)
         Me.TableLayoutPanel3.TabIndex = 0
         '
         'TabPage6
@@ -760,7 +853,7 @@ Partial Class Form1
         Me.TabPage6.Location = New System.Drawing.Point(4, 24)
         Me.TabPage6.Name = "TabPage6"
         Me.TabPage6.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage6.Size = New System.Drawing.Size(1166, 686)
+        Me.TabPage6.Size = New System.Drawing.Size(1166, 706)
         Me.TabPage6.TabIndex = 3
         Me.TabPage6.Text = "Limits"
         Me.TabPage6.UseVisualStyleBackColor = true
@@ -788,7 +881,7 @@ Partial Class Form1
         Me.TabPage7.Location = New System.Drawing.Point(4, 24)
         Me.TabPage7.Name = "TabPage7"
         Me.TabPage7.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage7.Size = New System.Drawing.Size(1166, 686)
+        Me.TabPage7.Size = New System.Drawing.Size(1166, 706)
         Me.TabPage7.TabIndex = 4
         Me.TabPage7.Text = "Markers"
         Me.TabPage7.UseVisualStyleBackColor = true
@@ -806,7 +899,7 @@ Partial Class Form1
         Me.TableLayoutPanel5.Name = "TableLayoutPanel5"
         Me.TableLayoutPanel5.RowCount = 1
         Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanel5.Size = New System.Drawing.Size(1160, 680)
+        Me.TableLayoutPanel5.Size = New System.Drawing.Size(1160, 700)
         Me.TableLayoutPanel5.TabIndex = 0
         '
         'TabPage8
@@ -815,7 +908,7 @@ Partial Class Form1
         Me.TabPage8.Location = New System.Drawing.Point(4, 24)
         Me.TabPage8.Name = "TabPage8"
         Me.TabPage8.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage8.Size = New System.Drawing.Size(1166, 686)
+        Me.TabPage8.Size = New System.Drawing.Size(1166, 706)
         Me.TabPage8.TabIndex = 5
         Me.TabPage8.Text = "Notification History"
         Me.TabPage8.UseVisualStyleBackColor = true
@@ -842,7 +935,7 @@ Partial Class Form1
         Me.TabPage9.Location = New System.Drawing.Point(4, 24)
         Me.TabPage9.Name = "TabPage9"
         Me.TabPage9.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage9.Size = New System.Drawing.Size(1166, 686)
+        Me.TabPage9.Size = New System.Drawing.Size(1166, 706)
         Me.TabPage9.TabIndex = 6
         Me.TabPage9.Text = "Basal"
         Me.TabPage9.UseVisualStyleBackColor = true
@@ -881,7 +974,7 @@ Partial Class Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7!, 15!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1174, 870)
+        Me.ClientSize = New System.Drawing.Size(1174, 900)
         Me.Controls.Add(Me.SplitContainer1)
         Me.Controls.Add(Me.MenuStrip1)
         Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
@@ -898,6 +991,7 @@ Partial Class Form1
         Me.TabControl1.ResumeLayout(false)
         Me.TabPage1.ResumeLayout(false)
         Me.TabPage1.PerformLayout
+        CType(Me.MessagePictureBox,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.InsulinLevelPictureBox,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.TimeScaleNumericUpDown,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.CalibrationDueImage,System.ComponentModel.ISupportInitialize).EndInit
@@ -978,4 +1072,11 @@ End Sub
     Friend WithEvents Below70UnitsLabel As Label
     Friend WithEvents Below70MeaageLabel As Label
     Friend WithEvents InRangeMessageLabel As Label
+    Friend WithEvents MouseXLabel As Label
+    Friend WithEvents MouseYLabel As Label
+    Friend WithEvents MessageForCursor1Label As Label
+    Friend WithEvents TimeForCursorLabel As Label
+    Friend WithEvents MessagePictureBox As PictureBox
+    Friend WithEvents ValueForCursorLabel As Label
+    Friend WithEvents MessageForCursor2Label As Label
 End Class

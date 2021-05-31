@@ -2,19 +2,20 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-''' Licensed to the .NET Foundation under one or more agreements.
-''' The .NET Foundation licenses this file to you under the MIT license.
-''' See the LICENSE file in the project root for more information.
-
+Imports System.Globalization
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Class Form1
+
     ' ReSharper disable InconsistentNaming
     Public WithEvents HighLimitSeries As Series
+
     Public WithEvents HomePageChart As Chart
     Public WithEvents LowLimitSeries As Series
     Public WithEvents MarkerSeries As Series
     Public WithEvents TimeInRangeChart As Chart
+    Private Const InsulinRow As Integer = 50
+    Private Const MarkerRow As Integer = 399
     ' ReSharper restore InconsistentNaming
 
     Private Shared ReadOnly s_lastAlarmFilter As New List(Of String) From {
@@ -66,6 +67,7 @@ Public Class Form1
         {ItemIndexs.sgs, s_sgsFilter}
         }
 
+    Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
 
     Private ReadOnly _listOfSingleItems As New List(Of Integer) From {
@@ -84,7 +86,6 @@ Public Class Form1
     Private ReadOnly _mealImage As Bitmap = My.Resources.FoodImage
     Private _client As CareLinkClient
     Private _initialized As Boolean = False
-    Private ReadOnly _calibrationToolTip As New ToolTip()
     Private _updating As Boolean = False
 
 #Region "Chart Objects"
@@ -117,6 +118,7 @@ Public Class Form1
 
     ' ReSharper disable InconsistentNaming
     Public AboveHyperLimit As Integer
+
     Public ActiveInsulin As Dictionary(Of String, String)
     Public AverageSG As Integer
     Public AverageSGFloat As Double
@@ -236,7 +238,7 @@ Public Class Form1
         averageSG = 47
         belowHypoLimit = 48
         aboveHyperLimit = 49
-        timeInRange = 50
+        timeInRange = InsulinRow
         pumpCommunicationState = 51
         gstCommunicationState = 52
         gstBatteryLevel = 53
@@ -249,45 +251,178 @@ Public Class Form1
         sgBelowLimit = 60
         averageSGFloat = 61
     End Enum
+
     ' ReSharper restore InconsistentNaming
+
+#Region "Events"
 
     Private Shared Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
         End
     End Sub
 
-    Private Shared Sub PaintMarker(e As ChartPaintEventArgs, markerImage As Bitmap, marketDictionary As Dictionary(Of Double, Integer), imageYOffset As Integer)
-        ' Draw the cloned portion of the Bitmap object.
-        Dim halfHeight As Single = CSng(markerImage.Height / 2)
-        Dim halfWidth As Single = CSng(markerImage.Width / 2)
-        For Each markerKvp As KeyValuePair(Of Double, Integer) In marketDictionary
-            Dim imagePosition As RectangleF = RectangleF.Empty
-            imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, markerKvp.Key))
-            imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, markerKvp.Value))
-            imagePosition = e.ChartGraphics.GetAbsoluteRectangle(imagePosition)
-            imagePosition.Width = markerImage.Width
-            imagePosition.Height = markerImage.Height
-            imagePosition.Y -= halfHeight
-            imagePosition.X -= halfWidth
-            ' Draw image
-            e.ChartGraphics.Graphics.DrawImage(markerImage, imagePosition.X, imagePosition.Y + imageYOffset)
-        Next
+    Private Sub CalibrationDueImage_MouseHover(sender As Object, e As EventArgs) Handles CalibrationDueImage.MouseHover
+        If TimeToNextCalibrationMinutes > 0 AndAlso TimeToNextCalibrationMinutes < 1440 Then
+            _calibrationToolTip.SetToolTip(Me.CalibrationDueImage, $"Calibration Due {Now.AddMinutes(TimeToNextCalibrationMinutes).ToShortTimeString}")
+        End If
     End Sub
 
-    Private Shared Function SafeGetSgDateTime(sgList As IReadOnlyList(Of Dictionary(Of String, String)), index As Integer) As Date
-        Dim sgDateTimeString As String = ""
-        Dim sgDateTime As Date
-        If sgList(index).Count < 7 Then
-            Stop
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
+        Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
+        Me.ShieldUnitsLabel.BackColor = Color.Transparent
+        Me.InitializeHomePageChart()
+        Me.InitializeTimeInRangeChart()
+    End Sub
+
+    Private Sub HomePageChart_CursorPositionChanging(sender As Object, e As CursorEventArgs) Handles HomePageChart.CursorPositionChanging
+        If Not _initialized Then Exit Sub
+        Me.SetPosition(e.Axis, e.NewPosition)
+
+    End Sub
+
+    Private Sub HomePageChart_MouseMove(sender As Object, e As MouseEventArgs) Handles HomePageChart.MouseMove
+
+        If Not _initialized Then
+            Exit Sub
         End If
-        If sgList(index).TryGetValue("datetime", sgDateTimeString) Then
-            sgDateTime = Date.Parse(sgDateTimeString)
-        ElseIf sgList(index).TryGetValue("dateTime", sgDateTimeString) Then
-            sgDateTime = Date.Parse(sgDateTimeString.Split("-")(0))
+        Dim xInPixels As Double = Me.HomePageChart.ChartAreas("Default").AxisX.ValueToPixelPosition(e.X)
+        Dim yInPixels As Double = Me.HomePageChart.ChartAreas("Default").AxisY2.ValueToPixelPosition(e.Y)
+        Dim mousePoint As New Point(e.X, e.Y)
+        If Double.IsNaN(yInPixels) Then
+            Exit Sub
+        End If
+        Dim result As HitTestResult = Me.HomePageChart.HitTest(e.X, e.Y)
+        If result.PointIndex >= -1 Then
+            If result.Series IsNot Nothing Then
+                Me.MouseXLabel.Text = $"Pixel X Value {Date.FromOADate(Me.HomePageChart.ChartAreas("Default").AxisX.PixelPositionToValue(e.X))}"
+                Me.MouseYLabel.Text = $"Pixel Y position {yInPixels:N}"
+                Me.TimeForCursorLabel.Left = CInt(e.X) - (Me.TimeForCursorLabel.Width \ 2)
+                Select Case result.Series.Name
+                    Case NameOf(HighLimitSeries), NameOf(LowLimitSeries)
+                        ' Ignore
+                    Case NameOf(MarkerSeries)
+                        Dim marketToolTip() As String = result.Series.Points(result.PointIndex).ToolTip.Split(","c)
+                        Dim xValue As Date = Date.FromOADate(result.Series.Points(result.PointIndex).XValue)
+                        Me.TimeForCursorLabel.Text = xValue.ToString("hh:mm tt")
+                        Me.TimeForCursorLabel.Tag = xValue
+                        marketToolTip(0) = marketToolTip(0).Trim
+                        Me.ValueForCursorLabel.Visible = True
+                        Me.MessagePictureBox.SizeMode = PictureBoxSizeMode.StretchImage
+                        Select Case marketToolTip.Length
+                            Case 2
+                                Me.MessageForCursor1Label.Text = marketToolTip(0)
+                                Select Case marketToolTip(0)
+                                    Case "Basal"
+                                        Me.MessagePictureBox.Image = Nothing
+                                    Case "Bolus"
+                                        Me.MessagePictureBox.Image = Global.CareLink.My.Resources.Resources.InsulinVial
+                                    Case Else
+                                        Me.MessagePictureBox.Image = Global.CareLink.My.Resources.Resources.InsulinVial
+                                End Select
+                                Me.MessageForCursor2Label.Visible = False
+                                Me.ValueForCursorLabel.Top = Me.MessageForCursor1Label.PositionBelow
+                                Me.ValueForCursorLabel.Text = marketToolTip(1).Trim
+                            Case 3
+                                Select Case marketToolTip(1).Trim
+                                    Case "Calibration accepted", "Calibration not accepted"
+                                        Me.MessagePictureBox.Image = Global.CareLink.My.Resources.Resources.CalibrationDotRed
+                                    Case "Not used For calibration"
+                                        Me.MessagePictureBox.Image = Global.CareLink.My.Resources.Resources.CalibrationDot
+                                    Case Else
+                                        Stop
+                                End Select
+                                Me.MessageForCursor1Label.Text = marketToolTip(0)
+                                Me.MessageForCursor1Label.Top = Me.MessagePictureBox.PositionBelow
+                                Me.MessageForCursor2Label.Text = marketToolTip(1).Trim
+                                Me.MessageForCursor2Label.Top = Me.MessageForCursor1Label.PositionBelow
+                                Me.MessageForCursor2Label.Visible = True
+                                Me.ValueForCursorLabel.Text = marketToolTip(2).Trim
+                                Me.ValueForCursorLabel.Top = Me.MessageForCursor2Label.PositionBelow
+                            Case Else
+                                Stop
+                        End Select
+                    Case "Default"
+                        Me.MessagePictureBox.Image = Nothing
+                        Me.MessageForCursor2Label.Visible = False
+                        Me.ValueForCursorLabel.Visible = False
+                        Me.TimeForCursorLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString("hh:mm tt")
+                        Dim nfi As NumberFormatInfo = New CultureInfo(CultureInfo.CurrentUICulture.Name, useUserOverride:=False).NumberFormat
+                        nfi.NumberDecimalDigits = 3
+                        Me.MessageForCursor1Label.Text = $"{CInt(result.Series.Points(result.PointIndex).YValues(0).ToString(nfi))} {_bgUnitsString}"
+                End Select
+            End If
+
+        End If
+    End Sub
+
+    Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomePageChart.PostPaint
+        If Not _initialized Then Exit Sub
+        Dim imagePosition As RectangleF = RectangleF.Empty
+        imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, SGs.SafeGetSgDateTime(0).ToOADate))
+        imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, 400))
+        imagePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, 180)))) - imagePosition.Y
+        imagePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, SGs.SafeGetSgDateTime(SGs.Count - 1).ToOADate)) - imagePosition.X
+        imagePosition = e.ChartGraphics.GetAbsoluteRectangle(imagePosition)
+
+        Dim highAreaRectangle As New Rectangle(New Point(CInt(imagePosition.X), CInt(imagePosition.Y)), New Size(CInt(imagePosition.Width), 292))
+
+        Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
+            e.ChartGraphics.Graphics.FillRectangle(b, highAreaRectangle)
+        End Using
+        Dim lowAreaRectangle As New Rectangle(New Point(CInt(imagePosition.X), 504), New Size(CInt(imagePosition.Width), 25))
+        Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
+            e.ChartGraphics.Graphics.FillRectangle(b, lowAreaRectangle)
+        End Using
+        If Me.TimeForCursorLabel.Tag IsNot Nothing Then
+            Me.TimeForCursorLabel.Left = CInt(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, CDate(Me.TimeForCursorLabel.Tag).ToOADate))
+        End If
+
+        e.PaintMarker(_mealImage, _markerMealDictionary, 0)
+        e.PaintMarker(_insulinImage, _markerInsulinDictionary, -6)
+    End Sub
+
+    Private Sub LoginToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoginToolStripMenuItem.Click
+        Me.Timer1.Enabled = False
+        If Me.UseTestDataToolStripMenuItem.Checked Then
+            RecentData = Loads(IO.File.ReadAllText(IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
         Else
-            sgDateTime = Now
+            _loginDialog.ShowDialog()
+            _client = _loginDialog.Client
+            If _client IsNot Nothing AndAlso _client.LoggedIn Then
+                RecentData = _client.getRecentData()
+            End If
+            If RecentData Is Nothing Then
+                Exit Sub
+            End If
+            Me.Timer1.Interval = CType(New TimeSpan(0, 5, 0).TotalMilliseconds, Integer)
+            Me.Timer1.Enabled = True
         End If
-        Return sgDateTime
-    End Function
+        Me.UpdateAllTabPages()
+
+    End Sub
+
+    Private Sub StartTimeComboBox_SelectedValueChanged(sender As Object, e As EventArgs) Handles StartTimeComboBox.SelectedValueChanged
+        Me.UpdateBgChart()
+    End Sub
+
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        Me.Timer1.Enabled = False
+        RecentData = _client.getRecentData()
+        If RecentData Is Nothing Then
+            Me.Cursor = Cursors.Default
+            Exit Sub
+        End If
+        Me.Timer1.Enabled = True
+
+        Me.UpdateAllTabPages()
+
+        Application.DoEvents()
+    End Sub
+
+    Private Sub TimeScaleNumericUpDown_ValueChanged(sender As Object, e As EventArgs) Handles TimeScaleNumericUpDown.ValueChanged
+        Me.UpdateBgChart()
+    End Sub
+
+#End Region
 
     Private Function DrawCenteredArc(backImage As Bitmap, arcPercentage As Double, Optional colorTable As IReadOnlyDictionary(Of String, Color) = Nothing, Optional segmentName As String = "") As Bitmap
         If arcPercentage < Double.Epsilon Then
@@ -306,13 +441,6 @@ Public Class Form1
         myGraphics.DrawArc(pen, rect, -90, -CInt(360 * arcPercentage))
         Return targetImage
     End Function
-
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
-        Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
-        Me.ShieldUnitsLabel.BackColor = Color.Transparent
-        Me.InitializeHomePageChart()
-        Me.InitializeTimeInRangeChart()
-    End Sub
 
     Private Function GetColorFromTimeToNextCalib() As Color
         If TimeToNextCalibHours <= 2 Then
@@ -430,39 +558,16 @@ Public Class Form1
             Else
                 tableLevel1Blue.RowCount += 1
             End If
+            tableLevel1Blue.Dock = DockStyle.None
+            tableLevel1Blue.AutoSize = True
+            Dim tmpHeight As Integer = tableLevel1Blue.Height
+            tableLevel1Blue.AutoSize = False
+            tableLevel1Blue.Width = 530
+            tableLevel1Blue.Height = tableLayoutParent.ClientRectangle.Height - 7
         ElseIf itemIndex = ItemIndexs.notificationHistory Then
             tableLevel1Blue.RowStyles(1).SizeType = SizeType.AutoSize
         End If
         Application.DoEvents()
-    End Sub
-
-    Private Function GetMilitaryHour() As Integer
-
-        Dim splitTime As String() = Me.StartTimeComboBox.SelectedItem.ToString().Split(" ")
-        Dim hour As Integer = CInt(splitTime(0)) - 1
-        Return hour + If(splitTime(1) = "PM", 12, 0)
-    End Function
-
-    Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomePageChart.PostPaint
-        If Not _initialized Then Exit Sub
-        Dim imagePosition As RectangleF = RectangleF.Empty
-        imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, SafeGetSgDateTime(SGs, 0).ToOADate))
-        imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, 400))
-        imagePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, 180)))) - imagePosition.Y
-        imagePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, SafeGetSgDateTime(SGs, SGs.Count - 1).ToOADate)) - imagePosition.X
-        imagePosition = e.ChartGraphics.GetAbsoluteRectangle(imagePosition)
-
-        Dim highAreaRectangle As New Rectangle(New Point(CInt(imagePosition.X), CInt(imagePosition.Y)), New Size(CInt(imagePosition.Width), 292))
-
-        Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
-            e.ChartGraphics.Graphics.FillRectangle(b, highAreaRectangle)
-        End Using
-        Dim lowAreaRectangle As New Rectangle(New Point(CInt(imagePosition.X), 504), New Size(CInt(imagePosition.Width), 25))
-        Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
-            e.ChartGraphics.Graphics.FillRectangle(b, lowAreaRectangle)
-        End Using
-        PaintMarker(e, _mealImage, _markerMealDictionary, 0)
-        PaintMarker(e, _insulinImage, _markerInsulinDictionary, -6)
     End Sub
 
     Private Sub InitializeHomePageChart()
@@ -473,21 +578,21 @@ Public Class Form1
              .BorderlineColor = Color.FromArgb(26, 59, 105),
              .BorderlineDashStyle = ChartDashStyle.Solid,
              .BorderlineWidth = 2,
-             .Location = New Point(3, Me.ShieldPictureBox.Height + 3),
+             .Location = New Point(3, Me.ShieldPictureBox.Height + 23),
              .Name = "chart1",
-             .Size = New Size(Me.TabPage1.ClientSize.Width - (Me.TabPage1.ClientSize.Width - Me.DisplayStartTimeLabel.Left), Me.TabPage1.ClientSize.Height - (Me.ShieldPictureBox.Height + Me.ShieldPictureBox.Top + 6)),
+             .Size = New Size(Me.TabPage1.ClientSize.Width - (Me.TabPage1.ClientSize.Width - Me.DisplayStartTimeLabel.Left), Me.TabPage1.ClientSize.Height - (Me.ShieldPictureBox.Height + Me.ShieldPictureBox.Top + 26)),
              .TabIndex = 0
          }
-        _homePageChartChartArea = New ChartArea With {
-            .BackColor = Color.FromArgb(180, 23, 47, 19),
-            .BackGradientStyle = GradientStyle.TopBottom,
-            .BackSecondaryColor = Color.FromArgb(180, 29, 56, 26),
-            .BorderColor = Color.FromArgb(64, 64, 64, 64),
-            .BorderDashStyle = ChartDashStyle.Solid,
-            .Name = "Default",
-            .ShadowColor = Color.Transparent
-        }
 
+        _homePageChartChartArea = New ChartArea With {
+             .BackColor = Color.FromArgb(180, 23, 47, 19),
+             .BackGradientStyle = GradientStyle.TopBottom,
+             .BackSecondaryColor = Color.FromArgb(180, 29, 56, 26),
+             .BorderColor = Color.FromArgb(64, 64, 64, 64),
+             .BorderDashStyle = ChartDashStyle.Solid,
+             .Name = "Default",
+             .ShadowColor = Color.Transparent
+         }
         _homePageChartChartArea.AxisX.IsInterlaced = True
         _homePageChartChartArea.AxisX.IsMarginVisible = True
         _homePageChartChartArea.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.IncreaseFont Or LabelAutoFitStyles.DecreaseFont Or LabelAutoFitStyles.WordWrap
@@ -495,32 +600,47 @@ Public Class Form1
         _homePageChartChartArea.AxisX.LabelStyle.Format = "hh tt"
         _homePageChartChartArea.AxisX.LineColor = Color.FromArgb(64, 64, 64, 64)
         _homePageChartChartArea.AxisX.MajorGrid.LineColor = Color.FromArgb(64, 64, 64, 64)
+        _homePageChartChartArea.AxisX.ScaleView.Zoomable = False  '
         _homePageChartChartArea.AxisX.ScrollBar.LineColor = Color.Black
         _homePageChartChartArea.AxisX.ScrollBar.Size = 10
-        _homePageChartChartArea.AxisY.IsStartedFromZero = False
-        _homePageChartChartArea.AxisY.ScaleBreakStyle = New AxisScaleBreakStyle() With {
-                                                            .Enabled = True,
-                                                            .StartFromZero = StartFromZero.No,
-                                                            .BreakLineStyle = BreakLineStyle.Straight
-                                                            }
         _homePageChartChartArea.AxisY.InterlacedColor = Color.FromArgb(120, Color.LightSlateGray)
+        _homePageChartChartArea.AxisY.Interval = InsulinRow
+        _homePageChartChartArea.AxisY.IntervalAutoMode = IntervalAutoMode.FixedCount
         _homePageChartChartArea.AxisY.IsInterlaced = True
+        _homePageChartChartArea.AxisY.IsLabelAutoFit = False
         _homePageChartChartArea.AxisY.IsMarginVisible = False
         _homePageChartChartArea.AxisY.IsStartedFromZero = False
         _homePageChartChartArea.AxisY.LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
         _homePageChartChartArea.AxisY.LineColor = Color.FromArgb(64, 64, 64, 64)
         _homePageChartChartArea.AxisY.MajorGrid.LineColor = Color.FromArgb(64, 64, 64, 64)
-        _homePageChartChartArea.AxisY.IntervalAutoMode = IntervalAutoMode.FixedCount
-        _homePageChartChartArea.AxisY.Interval = 50
-        _homePageChartChartArea.AxisY.IsLabelAutoFit = False
-        _homePageChartChartArea.AxisY.MajorTickMark = New TickMark() With {
-                                                                .Interval = 50,
-                                                                .Enabled = True}
+        _homePageChartChartArea.AxisY.MajorTickMark = New TickMark() With {.Interval = InsulinRow, .Enabled = False}
+        _homePageChartChartArea.AxisY.Maximum = 400
+        _homePageChartChartArea.AxisY.Minimum = InsulinRow
         _homePageChartChartArea.AxisY.ScrollBar.LineColor = Color.Black
+        _homePageChartChartArea.AxisY.ScaleBreakStyle = New AxisScaleBreakStyle() With {
+                                                            .Enabled = True,
+                                                            .StartFromZero = StartFromZero.No,
+                                                            .BreakLineStyle = BreakLineStyle.Straight
+                                                            }
+        _homePageChartChartArea.AxisY2.Interval = InsulinRow
+        _homePageChartChartArea.AxisY2.IsMarginVisible = False
+        _homePageChartChartArea.AxisY2.IsStartedFromZero = False
+        _homePageChartChartArea.AxisY2.LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold) '
+        _homePageChartChartArea.AxisY2.LineColor = Color.FromArgb(64, 64, 64, 64) '
+        _homePageChartChartArea.AxisY2.MajorGrid = New Grid() With {.Interval = InsulinRow}
+        _homePageChartChartArea.AxisY2.MajorGrid.LineColor = Color.FromArgb(64, 64, 64, 64) '
+        _homePageChartChartArea.AxisY2.MajorTickMark = New TickMark() With {.Interval = InsulinRow, .Enabled = True} '
+        _homePageChartChartArea.AxisY2.Maximum = 400
+        _homePageChartChartArea.AxisY2.Minimum = InsulinRow
+        _homePageChartChartArea.CursorX.AxisType = AxisType.Primary
+        _homePageChartChartArea.CursorX.Interval = 0
         _homePageChartChartArea.CursorX.IsUserEnabled = True
-        _homePageChartChartArea.CursorX.IsUserSelectionEnabled = True
+        _homePageChartChartArea.CursorX.IsUserSelectionEnabled = False
+        _homePageChartChartArea.CursorY.AxisType = AxisType.Secondary
+        _homePageChartChartArea.CursorY.LineColor = Color.Transparent
+        _homePageChartChartArea.CursorY.Interval = 0
         _homePageChartChartArea.CursorY.IsUserEnabled = True
-        _homePageChartChartArea.CursorY.IsUserSelectionEnabled = True
+        _homePageChartChartArea.CursorY.IsUserSelectionEnabled = False
 
         Me.HomePageChart.ChartAreas.Add(_homePageChartChartArea)
         Me.HomePageChart.Legends.Add(New Legend With {
@@ -549,7 +669,7 @@ Public Class Form1
             .ChartArea = "Default",
             .ChartType = SeriesChartType.Point,
             .Color = Color.DeepPink,
-            .Name = "Markers",
+            .Name = NameOf(MarkerSeries),
             .ShadowColor = Color.Black,
             .XValueType = ChartValueType.DateTime,
             .YAxisType = AxisType.Secondary
@@ -563,7 +683,7 @@ Public Class Form1
                                     .ChartArea = "Default",
                                     .ChartType = SeriesChartType.FastLine,
                                     .Color = Color.Orange,
-                                    .Name = "HighLimit",
+                                    .Name = NameOf(HighLimitSeries),
                                     .ShadowColor = Color.Black,
                                     .XValueType = ChartValueType.DateTime,
                                     .YAxisType = AxisType.Secondary
@@ -575,7 +695,7 @@ Public Class Form1
                                     .ChartArea = "Default",
                                     .ChartType = SeriesChartType.Line,
                                     .Color = Color.Red,
-                                    .Name = "LowLimit",
+                                    .Name = NameOf(LowLimitSeries),
                                     .ShadowColor = Color.Black,
                                     .XValueType = ChartValueType.DateTime,
                                     .YAxisType = AxisType.Secondary
@@ -606,7 +726,7 @@ Public Class Form1
         Dim previousHour As Date
         Me.StartTimeComboBox.Items.Clear()
         For Each sgList As IndexClass(Of Dictionary(Of String, String)) In SGs.WithIndex()
-            Dim sgDateTime As Date = SafeGetSgDateTime(SGs, sgList.Index)
+            Dim sgDateTime As Date = SGs.SafeGetSgDateTime(sgList.Index)
             Dim currentHour As Date = sgDateTime.RoundToHour()
             If sgList.IsFirst Then
                 previousHour = sgDateTime
@@ -652,7 +772,7 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
-    Private Sub LoadDataTableWithSg(localRecentData As Dictionary(Of String, String))
+    Private Sub LoadDataTables(localRecentData As Dictionary(Of String, String))
         If localRecentData Is Nothing Then
             Exit Sub
         End If
@@ -855,7 +975,7 @@ Public Class Form1
                                                   .AutoSize = True
                                                   }, 0, tableRelitiveRow)
             End If
-            If row.Value.StartsWith("[") Then
+            If row.Value?.StartsWith("[") Then
                 Dim innerJson As List(Of Dictionary(Of String, String)) = LoadList(row.Value)
                 Select Case rowIndex
                     Case ItemIndexs.sgs
@@ -876,13 +996,15 @@ Public Class Form1
                         Dim tableLevel1Blue As New TableLayoutPanel With {
                                 .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                 .AutoScroll = False,
+                                .AutoSize = True,
                                 .AutoSizeMode = AutoSizeMode.GrowAndShrink,
                                 .ColumnCount = 2,
+                                .Dock = DockStyle.Fill,
                                 .Margin = New Padding(0),
                                 .Name = "InnerTable",
                                 .Padding = New Padding(0)
                                 }
-                        layoutPanel1.Controls.Add(tableLevel1Blue, 1, dic.Index)
+                        layoutPanel1.Controls.Add(tableLevel1Blue, column:=1, row:=dic.Index)
                         Me.GetInnerTable(tableLevel1Blue, dic.Value, CType(rowIndex, ItemIndexs))
                     Next
                 Else
@@ -892,7 +1014,7 @@ Public Class Form1
                                                       .Text = ""}, If(singleItem, 0, 1), tableRelitiveRow)
 
                 End If
-            ElseIf row.Value.StartsWith("{") Then
+            ElseIf row.Value?.StartsWith("{") Then
                 layoutPanel1.RowStyles(tableRelitiveRow).SizeType = SizeType.AutoSize
                 Dim innerJson As Dictionary(Of String, String) = Loads(row.Value)
                 Select Case rowIndex
@@ -935,52 +1057,15 @@ Public Class Form1
         Me.Cursor = Cursors.Default
     End Sub
 
-    Private Sub LoginToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoginToolStripMenuItem.Click
-        Me.Timer1.Enabled = False
-        If Me.UseTestDataToolStripMenuItem.Checked Then
-            RecentData = Loads(IO.File.ReadAllText(IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
-        Else
-            _loginDialog.ShowDialog()
-            _client = _loginDialog.Client
-            If _client IsNot Nothing AndAlso _client.LoggedIn Then
-                RecentData = _client.getRecentData()
-            End If
-            If RecentData Is Nothing Then
-                Exit Sub
-            End If
-            Me.Timer1.Interval = CType(New TimeSpan(0, 5, 0).TotalMilliseconds, Integer)
-            Me.Timer1.Enabled = True
+    Private Sub SetPosition(axis As Axis, position As Double)
+
+        If Double.IsNaN(position) Then Exit Sub
+
+        If axis.AxisName = AxisName.Y Then
+            Me.MessageForCursor1Label.Visible = True
+            Me.TimeForCursorLabel.Visible = True
         End If
-        Me.UpdateAllTabPages()
 
-    End Sub
-
-    Private Sub CalibrationDueImage_MouseHover(sender As Object, e As EventArgs) Handles CalibrationDueImage.MouseHover
-        If TimeToNextCalibrationMinutes > 0 AndAlso TimeToNextCalibrationMinutes < 1440 Then
-            _calibrationToolTip.SetToolTip(Me.CalibrationDueImage, $"Calibration Due {Now.AddMinutes(TimeToNextCalibrationMinutes).ToShortTimeString}")
-        End If
-    End Sub
-
-    Private Sub StartTimeComboBox_SelectedValueChanged(sender As Object, e As EventArgs) Handles StartTimeComboBox.SelectedValueChanged
-        Me.UpdateBgChart()
-    End Sub
-
-    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        Me.Timer1.Enabled = False
-        RecentData = _client.getRecentData()
-        If RecentData Is Nothing Then
-            Me.Cursor = Cursors.Default
-            Exit Sub
-        End If
-        Me.Timer1.Enabled = True
-
-        Me.UpdateAllTabPages()
-
-        Application.DoEvents()
-    End Sub
-
-    Private Sub TimeScaleNumericUpDown_ValueChanged(sender As Object, e As EventArgs) Handles TimeScaleNumericUpDown.ValueChanged
-        Me.UpdateBgChart()
     End Sub
 
     Private Sub UpdateActiveInsulin()
@@ -992,7 +1077,7 @@ Public Class Form1
             Exit Sub
         End If
         _updating = True
-        Me.LoadDataTableWithSg(RecentData)
+        Me.LoadDataTables(RecentData)
         If RecentData.Count > ItemIndexs.averageSGFloat + 1 Then
             Stop
         End If
@@ -1025,8 +1110,7 @@ Public Class Form1
             Me.CurrentBG.Visible = True
             Application.DoEvents()
         Else
-            Me.CurrentBG.Visible = False
-            Me.ShieldUnitsLabel.Visible = False
+            Me.CurrentBG.Text = "---"
             Me.ShieldPictureBox.Image = My.Resources.Shield_Disabled
             Me.SensorMessage.Visible = True
             Me.SensorMessage.Parent = Me.ShieldPictureBox
@@ -1041,7 +1125,7 @@ Public Class Form1
         If Not _initialized Then
             Exit Sub
         End If
-        Dim foundStartTime As Boolean = False
+
         If Me.TimeScaleNumericUpDown.Value = 24 Then
             Me.HomePageChart.Titles("Title1").Text = $"Summary of last 24 hours"
         Else
@@ -1049,28 +1133,22 @@ Public Class Form1
             Dim endIndex As Integer = (Me.StartTimeComboBox.SelectedIndex + CInt(Me.TimeScaleNumericUpDown.Value)) Mod Me.StartTimeComboBox.Items.Count
             Me.HomePageChart.Titles("Title1").Text = $"Summary from {Me.StartTimeComboBox.Items(startIndex)} till {Me.StartTimeComboBox.Items(endIndex)} hours"
         End If
-        Me.HomePageChart.ChartAreas("Default").AxisX.Minimum = SafeGetSgDateTime(SGs, 0).ToOADate()
-        Me.HomePageChart.ChartAreas("Default").AxisX.Maximum = SafeGetSgDateTime(SGs, SGs.Count - 1).ToOADate()
-        Me.HomePageChart.ChartAreas("Default").AxisY.Maximum = 400
-        Me.HomePageChart.ChartAreas("Default").AxisY.Minimum = 50
-        Me.HomePageChart.ChartAreas("Default").AxisX2.Minimum = SafeGetSgDateTime(SGs, 0).ToOADate()
-        Me.HomePageChart.ChartAreas("Default").AxisX2.Maximum = SafeGetSgDateTime(SGs, SGs.Count - 1).ToOADate()
-        Me.HomePageChart.ChartAreas("Default").AxisY2.Maximum = 400
-        Me.HomePageChart.ChartAreas("Default").AxisY2.Minimum = 50
-        Me.HomePageChart.ChartAreas("Default").AxisY.IsStartedFromZero = False
-        Me.HomePageChart.ChartAreas("Default").AxisY2.IsStartedFromZero = False
+        Me.HomePageChart.ChartAreas("Default").AxisX.Minimum = SGs.SafeGetSgDateTime(0).ToOADate()
+        Me.HomePageChart.ChartAreas("Default").AxisX.Maximum = SGs.SafeGetSgDateTime(SGs.Count - 1).ToOADate()
         Me.HomePageChart.Series("Default").Points.Clear()
-        Me.HomePageChart.Series("Markers").Points.Clear()
-        Me.HomePageChart.Series("HighLimit").Points.Clear()
-        Me.HomePageChart.Series("LowLimit").Points.Clear()
-        Application.DoEvents()
-        Me.HomePageChart.ChartAreas("Default").AxisX.MajorGrid.Interval = 1 / Me.StartTimeComboBox.Items.Count
+        Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Clear()
+        Me.HomePageChart.Series(NameOf(HighLimitSeries)).Points.Clear()
+        Me.HomePageChart.Series(NameOf(LowLimitSeries)).Points.Clear()
+        Me.HomePageChart.ChartAreas("Default").AxisX.MajorGrid.IntervalType = DateTimeIntervalType.Hours
+        Me.HomePageChart.ChartAreas("Default").AxisX.MajorGrid.IntervalOffsetType = DateTimeIntervalType.Hours
+        Me.HomePageChart.ChartAreas("Default").AxisX.MajorGrid.Interval = 1
         Dim bgValue As Integer
         Dim sgDateTime As Date
+        Dim foundStartTime As Boolean = False
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In SGs.WithIndex()
-            sgDateTime = SafeGetSgDateTime(SGs, sgListIndex.Index)
+            sgDateTime = SGs.SafeGetSgDateTime(sgListIndex.Index)
             If Not foundStartTime Then
-                If sgDateTime.Hour >= Me.GetMilitaryHour() Then
+                If sgDateTime.Hour >= Me.StartTimeComboBox.SelectedItem.ToString.GetMilitaryHour() Then
                     foundStartTime = True
                 Else
                     Continue For
@@ -1084,9 +1162,9 @@ Public Class Form1
         _markerMealDictionary.Clear()
         _initialized = False
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In Markers.WithIndex()
-            sgDateTime = SafeGetSgDateTime(Markers, sgListIndex.Index)
+            sgDateTime = Markers.SafeGetSgDateTime(sgListIndex.Index)
             If Not foundStartTime Then
-                If sgDateTime.Hour >= Me.GetMilitaryHour() Then
+                If sgDateTime.Hour >= Me.StartTimeComboBox.SelectedItem.ToString.GetMilitaryHour() Then
                     foundStartTime = True
                 Else
                     Continue For
@@ -1095,49 +1173,61 @@ Public Class Form1
             Dim bgValueString As String = ""
             If sgListIndex.Value.TryGetValue("value", bgValueString) Then
                 bgValue = CInt(bgValueString)
-                If bgValue < 50 Then Stop
+                If bgValue < InsulinRow Then Stop
             End If
             Select Case sgListIndex.Value("type")
                 Case "BG_READING"
                     bgValue = CInt(sgListIndex.Value("value"))
-                    Me.HomePageChart.Series("Markers").Points.AddXY(sgDateTime.ToOADate(), bgValue)
-                    Me.HomePageChart.Series("Markers").Points.Last.MarkerBorderWidth = 0
-                    Me.HomePageChart.Series("Markers").Points.Last.MarkerSize = 6
-                    Me.HomePageChart.Series("Markers").Points.Last.Color = Color.Gray
-                    Me.HomePageChart.Series("Markers").Points.Last.ToolTip = $"Blood Glucose Not used For calibration {sgListIndex.Value("value")} {_bgUnitsString}"
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.AddXY(sgDateTime.ToOADate(), bgValue)
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.MarkerBorderWidth = 0
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.MarkerSize = 6
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.Color = Color.Gray
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.ToolTip = $"Blood Glucose, Not used For calibration, {sgListIndex.Value("value")} {_bgUnitsString}"
                 Case "CALIBRATION"
-                    Me.HomePageChart.Series("Markers").Points.AddXY(sgDateTime.ToOADate(), bgValue)
-                    Me.HomePageChart.Series("Markers").Points.Last.Color = Color.Red
-                    Me.HomePageChart.Series("Markers").Points.Last.ToolTip = $"Blood Glucose Calibration {If(CBool(sgListIndex.Value("calibrationSuccess")), "Accepted", "Not Accepted")}, {sgListIndex.Value("value")} {_bgUnitsString}"
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.AddXY(sgDateTime.ToOADate(), bgValue)
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.Color = Color.Red
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.ToolTip = $"Blood Glucose, Calibration {If(CBool(sgListIndex.Value("calibrationSuccess")), "accepted", "not accepted")}, {sgListIndex.Value("value")} {_bgUnitsString}"
                 Case "INSULIN"
-                    _markerInsulinDictionary.Add(sgDateTime.ToOADate(), 399)
-                    Me.HomePageChart.Series("Markers").Points.AddXY(sgDateTime.ToOADate(), 399)
-                    Me.HomePageChart.Series("Markers").Points.Last.Color = Color.FromArgb(30, Color.LightBlue)
-                    Me.HomePageChart.Series("Markers").Points.Last.MarkerBorderWidth = 0
-                    Me.HomePageChart.Series("Markers").Points.Last.MarkerSize = 30
-                    Me.HomePageChart.Series("Markers").Points.Last.ToolTip = $"{sgListIndex.Value("programmedFastAmount")} U"
+                    _markerInsulinDictionary.Add(sgDateTime.ToOADate(), MarkerRow)
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.AddXY(sgDateTime.ToOADate(), MarkerRow)
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.Color = Color.FromArgb(30, Color.LightBlue)
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.MarkerBorderWidth = 0
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.MarkerSize = 30
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.ToolTip = $"Bolus, {sgListIndex.Value("programmedFastAmount")} U"
                 Case "MEAL"
-                    _markerMealDictionary.Add(sgDateTime.ToOADate(), 50)
-                    Me.HomePageChart.Series("Markers").Points.AddXY(sgDateTime.ToOADate(), 50)
-                    Me.HomePageChart.Series("Markers").Points.Last.Color = Color.FromArgb(30, Color.Yellow)
-                    Me.HomePageChart.Series("Markers").Points.Last.MarkerBorderWidth = 0
-                    Me.HomePageChart.Series("Markers").Points.Last.MarkerSize = 30
-                    Me.HomePageChart.Series("Markers").Points.Last.ToolTip = $"Meal {sgListIndex.Value("amount")} grams"
+                    _markerMealDictionary.Add(sgDateTime.ToOADate(), InsulinRow)
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.AddXY(sgDateTime.ToOADate(), InsulinRow)
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.Color = Color.FromArgb(30, Color.Yellow)
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.MarkerBorderWidth = 0
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.MarkerSize = 30
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.ToolTip = $"Meal, {sgListIndex.Value("amount")} grams"
                 Case "AUTO_BASAL_DELIVERY"
-                    Me.HomePageChart.Series("Markers").Points.AddXY(sgDateTime.ToOADate(), 399)
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.AddXY(sgDateTime.ToOADate(), MarkerRow)
                     Dim bolusAmount As String = sgListIndex.Value("bolusAmount")
-                    Me.HomePageChart.Series("Markers").Points.Last.ToolTip = $"{bolusAmount} U"
+                    Dim nfi As NumberFormatInfo = New CultureInfo(CultureInfo.CurrentUICulture.Name, useUserOverride:=False).NumberFormat
+                    nfi.NumberDecimalDigits = 3
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.ToolTip = $"Basal, {bolusAmount.ToString(nfi)} U"
                 Case "AUTO_MODE_STATUS"
                 Case Else
                     Stop
             End Select
         Next
         _initialized = True
+        Dim indexList(287) As Integer
+        Dim limitsIndex As Integer = 0
+        For i As Integer = 0 To indexList.GetUpperBound(0)
+            If limitsIndex + 1 < Limits.Count AndAlso CInt(Limits(limitsIndex + 1)("index")) < i Then
+                limitsIndex += 1
+            End If
+            indexList(i) = limitsIndex
+        Next
         foundStartTime = False
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In SGs.WithIndex()
-            sgDateTime = SafeGetSgDateTime(SGs, sgListIndex.Index)
+            Dim limitsLowValue As Integer = CInt(Limits(indexList(sgListIndex.Index))("highLimit"))
+            Dim limitsHighValue As Integer = CInt(Limits(indexList(sgListIndex.Index))("lowLimit"))
+            sgDateTime = SGs.SafeGetSgDateTime(sgListIndex.Index)
             If Not foundStartTime Then
-                If sgDateTime.Hour >= Me.GetMilitaryHour() Then
+                If sgDateTime.Hour >= Me.StartTimeComboBox.SelectedItem.ToString.GetMilitaryHour() Then
                     foundStartTime = True
                 Else
                     Continue For
@@ -1145,14 +1235,14 @@ Public Class Form1
             End If
             bgValue = CInt(sgListIndex.Value("sg"))
             If bgValue = 0 Then
-                Me.HomePageChart.Series("Default").Points.AddXY(sgDateTime.ToOADate(), 50)
+                Me.HomePageChart.Series("Default").Points.AddXY(sgDateTime.ToOADate(), InsulinRow)
                 Me.HomePageChart.Series("Default").Points.Last().IsEmpty = True
             Else
                 Me.HomePageChart.Series("Default").Points.AddXY(sgDateTime.ToOADate(), bgValue)
             End If
 
-            Me.HomePageChart.Series("HighLimit").Points.AddXY(sgDateTime.ToOADate(), 180)
-            Me.HomePageChart.Series("LowLimit").Points.AddXY(sgDateTime.ToOADate(), 70)
+            Me.HomePageChart.Series(NameOf(HighLimitSeries)).Points.AddXY(sgDateTime.ToOADate(), limitsHighValue)
+            Me.HomePageChart.Series(NameOf(LowLimitSeries)).Points.AddXY(sgDateTime.ToOADate(), limitsLowValue)
         Next
 
         Application.DoEvents()

@@ -12,6 +12,11 @@ Public Module ControlExtensions
     End Function
 
     <Extension>
+    Friend Function PositionBelow(controlAbove As Control) As Integer
+        Return controlAbove.Top + controlAbove.Height + 1
+    End Function
+
+    <Extension>
     Friend Function FindHorizontalMidpoint(ctrl As Control) As Integer
         Return ctrl.Left + (ctrl.Width \ 2)
     End Function
