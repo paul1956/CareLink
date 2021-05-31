@@ -351,9 +351,7 @@ Public Class Form1
                         Me.MessageForCursor2Label.Visible = False
                         Me.ValueForCursorLabel.Visible = False
                         Me.TimeForCursorLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString("hh:mm tt")
-                        Dim nfi As NumberFormatInfo = New CultureInfo(CultureInfo.CurrentUICulture.Name, useUserOverride:=False).NumberFormat
-                        nfi.NumberDecimalDigits = 3
-                        Me.MessageForCursor1Label.Text = $"{CInt(result.Series.Points(result.PointIndex).YValues(0).ToString(nfi))} {_bgUnitsString}"
+                        Me.MessageForCursor1Label.Text = $"{Math.Round(result.Series.Points(result.PointIndex).YValues(0), 3)} {_bgUnitsString}"
                 End Select
             End If
 
@@ -1202,7 +1200,7 @@ Public Class Form1
                     Dim bolusAmount As String = sgListIndex.Value("bolusAmount")
                     Dim nfi As NumberFormatInfo = New CultureInfo(CultureInfo.CurrentUICulture.Name, useUserOverride:=False).NumberFormat
                     nfi.NumberDecimalDigits = 3
-                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.ToolTip = $"Basal, {bolusAmount.ToString(nfi)} U"
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.ToolTip = $"Basal, {Math.Round(Double.Parse(bolusAmount), 3)} U"
                 Case "AUTO_MODE_STATUS"
                 Case Else
                     Stop
