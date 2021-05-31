@@ -8,10 +8,7 @@ Imports System.Windows.Forms.DataVisualization.Charting
 Public Module SupportFunctions
     <Extension>
     Friend Function GetMilitaryHour(selectedStartTime As String) As Integer
-
-        Dim splitTime As String() = selectedStartTime.Split(" ")
-        Dim hour As Integer = CInt(splitTime(0)) - 1
-        Return hour + If(splitTime(1) = "PM", 12, 0)
+        Return CInt(Format(Date.Parse(selectedStartTime), "HH"))
     End Function
 
     <Extension>

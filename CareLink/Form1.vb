@@ -9,7 +9,6 @@ Public Class Form1
 
     ' ReSharper disable InconsistentNaming
     Public WithEvents HighLimitSeries As Series
-
     Public WithEvents HomePageChart As Chart
     Public WithEvents LowLimitSeries As Series
     Public WithEvents MarkerSeries As Series
@@ -266,6 +265,12 @@ Public Class Form1
         End If
     End Sub
 
+    Private Sub CursorTimer_Tick(sender As Object, e As EventArgs) Handles CursorTimer.Tick
+        Me.CursorTimer.Enabled = False
+        _homePageChartChartArea.CursorX.Position = Double.NaN
+
+    End Sub
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
         Me.ShieldUnitsLabel.BackColor = Color.Transparent
@@ -275,8 +280,9 @@ Public Class Form1
 
     Private Sub HomePageChart_CursorPositionChanging(sender As Object, e As CursorEventArgs) Handles HomePageChart.CursorPositionChanging
         If Not _initialized Then Exit Sub
-        Me.SetPosition(e.Axis, e.NewPosition)
-
+        Me.CursorTimer.Interval = CType(New TimeSpan(0, minutes:=0, seconds:=30).TotalMilliseconds, Integer)
+        Me.CursorTimer.Enabled = True
+        Me.CursorTimer.Start()
     End Sub
 
     Private Sub HomePageChart_MouseMove(sender As Object, e As MouseEventArgs) Handles HomePageChart.MouseMove
@@ -295,7 +301,7 @@ Public Class Form1
             If result.Series IsNot Nothing Then
                 Me.MouseXLabel.Text = $"Pixel X Value {Date.FromOADate(Me.HomePageChart.ChartAreas("Default").AxisX.PixelPositionToValue(e.X))}"
                 Me.MouseYLabel.Text = $"Pixel Y position {yInPixels:N}"
-                Me.TimeForCursorLabel.Left = CInt(e.X) - (Me.TimeForCursorLabel.Width \ 2)
+                Me.TimeForCursorLabel.Left = e.X - (Me.TimeForCursorLabel.Width \ 2)
                 Select Case result.Series.Name
                     Case NameOf(HighLimitSeries), NameOf(LowLimitSeries)
                         ' Ignore
@@ -381,7 +387,7 @@ Public Class Form1
     End Sub
 
     Private Sub LoginToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoginToolStripMenuItem.Click
-        Me.Timer1.Enabled = False
+        Me.ServerUpdateTimer.Enabled = False
         If Me.UseTestDataToolStripMenuItem.Checked Then
             RecentData = Loads(IO.File.ReadAllText(IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
         Else
@@ -393,29 +399,29 @@ Public Class Form1
             If RecentData Is Nothing Then
                 Exit Sub
             End If
-            Me.Timer1.Interval = CType(New TimeSpan(0, 5, 0).TotalMilliseconds, Integer)
-            Me.Timer1.Enabled = True
+            Me.ServerUpdateTimer.Interval = CType(New TimeSpan(0, 5, 0).TotalMilliseconds, Integer)
+            Me.ServerUpdateTimer.Enabled = True
         End If
         Me.UpdateAllTabPages()
 
     End Sub
 
-    Private Sub StartTimeComboBox_SelectedValueChanged(sender As Object, e As EventArgs) Handles StartTimeComboBox.SelectedValueChanged
-        Me.UpdateBgChart()
-    End Sub
-
-    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        Me.Timer1.Enabled = False
+    Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
+        Me.ServerUpdateTimer.Enabled = False
         RecentData = _client.getRecentData()
         If RecentData Is Nothing Then
             Me.Cursor = Cursors.Default
             Exit Sub
         End If
-        Me.Timer1.Enabled = True
+        Me.ServerUpdateTimer.Enabled = True
 
         Me.UpdateAllTabPages()
 
         Application.DoEvents()
+    End Sub
+
+    Private Sub StartTimeComboBox_SelectedValueChanged(sender As Object, e As EventArgs) Handles StartTimeComboBox.SelectedValueChanged
+        Me.UpdateBgChart()
     End Sub
 
     Private Sub TimeScaleNumericUpDown_ValueChanged(sender As Object, e As EventArgs) Handles TimeScaleNumericUpDown.ValueChanged
@@ -562,8 +568,9 @@ Public Class Form1
             tableLevel1Blue.AutoSize = True
             Dim tmpHeight As Integer = tableLevel1Blue.Height
             tableLevel1Blue.AutoSize = False
-            tableLevel1Blue.Width = 530
-            tableLevel1Blue.Height = tableLayoutParent.ClientRectangle.Height - 7
+            tableLevel1Blue.Width = 450
+            tableLevel1Blue.Height = tmpHeight + 6
+            tableLayoutParent.Width = 640
         ElseIf itemIndex = ItemIndexs.notificationHistory Then
             tableLevel1Blue.RowStyles(1).SizeType = SizeType.AutoSize
         End If
@@ -1055,17 +1062,6 @@ Public Class Form1
             Application.DoEvents()
         Next
         Me.Cursor = Cursors.Default
-    End Sub
-
-    Private Sub SetPosition(axis As Axis, position As Double)
-
-        If Double.IsNaN(position) Then Exit Sub
-
-        If axis.AxisName = AxisName.Y Then
-            Me.MessageForCursor1Label.Visible = True
-            Me.TimeForCursorLabel.Visible = True
-        End If
-
     End Sub
 
     Private Sub UpdateActiveInsulin()

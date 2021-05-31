@@ -32,7 +32,7 @@ Partial Class Form1
         Me.UseTestDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.ServerUpdateTimer = New System.Windows.Forms.Timer(Me.components)
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.TableLayoutPanelTop1 = New System.Windows.Forms.TableLayoutPanel()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
@@ -89,6 +89,7 @@ Partial Class Form1
         Me.TabPage9 = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel7 = New System.Windows.Forms.TableLayoutPanel()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
+        Me.CursorTimer = New System.Windows.Forms.Timer(Me.components)
         Me.MenuStrip1.SuspendLayout
         CType(Me.SplitContainer1,System.ComponentModel.ISupportInitialize).BeginInit
         Me.SplitContainer1.Panel1.SuspendLayout
@@ -165,9 +166,9 @@ Partial Class Form1
         Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
         Me.AboutToolStripMenuItem.Text = "&About..."
         '
-        'Timer1
+        'ServerUpdateTimer
         '
-        Me.Timer1.Interval = 300000
+        Me.ServerUpdateTimer.Interval = 300000
         '
         'TableLayoutPanel1
         '
@@ -282,7 +283,7 @@ Partial Class Form1
         Me.TableLayoutPanelTop2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelTop2.ColumnCount = 2
         Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100!))
-        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 595!))
+        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 601!))
         Me.TableLayoutPanelTop2.Location = New System.Drawing.Point(514, 0)
         Me.TableLayoutPanelTop2.Name = "TableLayoutPanelTop2"
         Me.TableLayoutPanelTop2.RowCount = 1
@@ -970,6 +971,10 @@ Partial Class Form1
         Me.ImageList1.Images.SetKeyName(6, "ReservoirRemains71+.png")
         Me.ImageList1.Images.SetKeyName(7, "ReservoirRemains85+.png")
         '
+        'CursorTimer
+        '
+        Me.CursorTimer.Interval = 60000
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7!, 15!)
@@ -1017,7 +1022,7 @@ End Sub
     Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents HelpToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents AboutToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents Timer1 As Timer
+    Friend WithEvents ServerUpdateTimer As Timer
     Friend WithEvents StartDisplayToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents LoginToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SplitContainer1 As SplitContainer
@@ -1079,4 +1084,5 @@ End Sub
     Friend WithEvents MessagePictureBox As PictureBox
     Friend WithEvents ValueForCursorLabel As Label
     Friend WithEvents MessageForCursor2Label As Label
+    Friend WithEvents CursorTimer As Timer
 End Class
