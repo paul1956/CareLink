@@ -145,7 +145,7 @@ Public Module carelink_client
             consentHeaders("Content-Type") = "application/x-www-form-urlencoded"
 
             Try
-                Dim response As HttpResponseMessage = _httpClient.Post(url, _headers:=consentHeaders, data:=form)
+                Dim response As HttpResponseMessage = _httpClient.Post(url, headers:=consentHeaders, data:=form)
                 If response.StatusCode = HttpStatusCode.OK Then
                     Printdbg("__doConsent() success")
                     Return response
@@ -430,7 +430,7 @@ Public Module carelink_client
             Dim response As HttpResponseMessage = Nothing
 
             Try
-                response = _httpClient.Get(url, _headers:=_commonHeaders, params:=payload)
+                response = _httpClient.Get(url, headers:=_commonHeaders, params:=payload)
                 If Not response.StatusCode = HttpStatusCode.OK Then
                     Throw New Exception($"session response is not OK, {response.ReasonPhrase}")
                 End If

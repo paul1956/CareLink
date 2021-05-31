@@ -30,8 +30,8 @@ Public Module Json
                             Select Case item.Key
                                 Case "techHours"
                                 Case "lastConduitDateTime",
-                                     "medicalDeviceTimeAsString"' "2021-05-17T01:02:22.307-07:00"
-                                    result =$"{ New DateTime(CInt(zDateString(0)),
+                                     "medicalDeviceTimeAsString" ' "2021-05-17T01:02:22.307-07:00"
+                                    result = $"{ New DateTime(CInt(zDateString(0)),
                                                              CInt(zDateString(1)),
                                                              CInt(zDateString(2)),
                                                              CInt(zTimeString(0)),
@@ -51,7 +51,7 @@ Public Module Json
                                         result = New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
                                     Else
                                         ' "2021-05-17T01:02:22.307-07:00"
-                                        result =$"{ New DateTime(CInt(zDateString(0)),
+                                        result = $"{ New DateTime(CInt(zDateString(0)),
                                                                  CInt(zDateString(1)),
                                                                  CInt(zDateString(2)),
                                                                  CInt(zTimeString(0)),
@@ -69,7 +69,6 @@ Public Module Json
                 Catch ex As Exception
                     Stop
                 End Try
-            Case Else
         End Select
         Return result
     End Function

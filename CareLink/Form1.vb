@@ -290,17 +290,17 @@ Public Class Form1
         If Not _initialized Then
             Exit Sub
         End If
-        Dim xInPixels As Double = Me.HomePageChart.ChartAreas("Default").AxisX.ValueToPixelPosition(e.X)
+        'Dim xInPixels As Double = Me.HomePageChart.ChartAreas("Default").AxisX.ValueToPixelPosition(e.X)
         Dim yInPixels As Double = Me.HomePageChart.ChartAreas("Default").AxisY2.ValueToPixelPosition(e.Y)
-        Dim mousePoint As New Point(e.X, e.Y)
+        'Dim mousePoint As New Point(e.X, e.Y)
         If Double.IsNaN(yInPixels) Then
             Exit Sub
         End If
         Dim result As HitTestResult = Me.HomePageChart.HitTest(e.X, e.Y)
         If result.PointIndex >= -1 Then
             If result.Series IsNot Nothing Then
-                Me.MouseXLabel.Text = $"Pixel X Value {Date.FromOADate(Me.HomePageChart.ChartAreas("Default").AxisX.PixelPositionToValue(e.X))}"
-                Me.MouseYLabel.Text = $"Pixel Y position {yInPixels:N}"
+                'Me.MouseXLabel.Text = $"Pixel X Value {Date.FromOADate(Me.HomePageChart.ChartAreas("Default").AxisX.PixelPositionToValue(e.X))}"
+                'Me.MouseYLabel.Text = $"Pixel Y position {yInPixels:N}"
                 Me.TimeForCursorLabel.Left = e.X - (Me.TimeForCursorLabel.Width \ 2)
                 Select Case result.Series.Name
                     Case NameOf(HighLimitSeries), NameOf(LowLimitSeries)
@@ -1100,11 +1100,9 @@ Public Class Form1
             Me.ShieldUnitsLabel.BackColor = Color.Transparent
             Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
             Me.ShieldUnitsLabel.Left = (Me.ShieldPictureBox.Width \ 2) - (Me.ShieldUnitsLabel.Width \ 2)
-            Application.DoEvents()
             Me.CurrentBG.Visible = True
-            Application.DoEvents()
         Else
-            Me.CurrentBG.Text = "---"
+            Me.CurrentBG.Text = $"---"
             Me.ShieldPictureBox.Image = My.Resources.Shield_Disabled
             Me.SensorMessage.Visible = True
             Me.SensorMessage.Parent = Me.ShieldPictureBox

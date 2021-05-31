@@ -8,14 +8,14 @@ Imports System.Runtime.CompilerServices
 Module HttpClientExtensions
 
     <Extension>
-    Public Function [Get](client As HttpClient, url As String, Optional _headers As Dictionary(Of String, String) = Nothing, Optional params As Dictionary(Of String, String) = Nothing, Optional data As Dictionary(Of String, String) = Nothing) As HttpResponseMessage
+    Public Function [Get](client As HttpClient, url As String, Optional headers As Dictionary(Of String, String) = Nothing, Optional params As Dictionary(Of String, String) = Nothing, Optional data As Dictionary(Of String, String) = Nothing) As HttpResponseMessage
         Dim formContent As HttpContent = Nothing
         If data IsNot Nothing Then
             formContent = New FormUrlEncodedContent(data.ToList())
         End If
-        If _headers IsNot Nothing Then
+        If headers IsNot Nothing Then
             client.DefaultRequestHeaders.Clear()
-            For Each header As KeyValuePair(Of String, String) In _headers
+            For Each header As KeyValuePair(Of String, String) In headers
                 If header.Key = "Content-Type" Then
                     If formContent IsNot Nothing Then
                         formContent.Headers.ContentType.MediaType = header.Value
@@ -39,7 +39,7 @@ Module HttpClientExtensions
     End Function
 
     <Extension>
-    Public Function Post(client As HttpClient, url As String, Optional _headers As Dictionary(Of String, String) = Nothing, Optional params As Dictionary(Of String, String) = Nothing, Optional data As Dictionary(Of String, String) = Nothing) As HttpResponseMessage
+    Public Function Post(client As HttpClient, url As String, Optional headers As Dictionary(Of String, String) = Nothing, Optional params As Dictionary(Of String, String) = Nothing, Optional data As Dictionary(Of String, String) = Nothing) As HttpResponseMessage
         If params IsNot Nothing Then
             url &= "?"
             For Each header As KeyValuePair(Of String, String) In params
@@ -48,9 +48,9 @@ Module HttpClientExtensions
             url = url.TrimEnd("&"c)
         End If
         Dim formData As New FormUrlEncodedContent(data.ToList())
-        If _headers IsNot Nothing Then
+        If headers IsNot Nothing Then
             client.DefaultRequestHeaders.Clear()
-            For Each header As KeyValuePair(Of String, String) In _headers
+            For Each header As KeyValuePair(Of String, String) In headers
                 If header.Key = "Content-Type" Then
                     formData.Headers.ContentType.MediaType = header.Value
                 Else

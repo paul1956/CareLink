@@ -12,39 +12,39 @@ Public Enum UnicodeNewline
     ''' <summary>
     ''' Line Feed, U+000A
     ''' </summary>
-    LF = &HA
+    Lf = &HA
 
-    CRLF = &HD0A
+    CrLf = &HD0A
 
     ''' <summary>
     ''' Carriage Return, U+000D
     ''' </summary>
-    CR = &HD
+    Cr = &HD
 
     ''' <summary>
     ''' Next Line, U+0085
     ''' </summary>
-    NEL = &H85
+    Nel = &H85
 
     ''' <summary>
     ''' Vertical Tab, U+000B
     ''' </summary>
-    VT = &HB
+    Vt = &HB
 
     ''' <summary>
     ''' Form Feed, U+000C
     ''' </summary>
-    FF = &HC
+    Ff = &HC
 
     ''' <summary>
     ''' Line Separator, U+2028
     ''' </summary>
-    LS = &H2028
+    Ls = &H2028
 
     ''' <summary>
     ''' Paragraph Separator, U+2029
     ''' </summary>
-    PS = &H2029
+    Ps = &H2029
 
 End Enum
 
@@ -58,37 +58,37 @@ Public Module NewLine
     ''' <summary>
     ''' Carriage Return, U+000D
     ''' </summary>
-    Public Const CR As Char = ChrW(&HD)
+    Public Const Cr As Char = ChrW(&HD)
 
     ''' <summary>
     ''' Line Feed, U+000A
     ''' </summary>
-    Public Const LF As Char = ChrW(&HA)
+    Public Const Lf As Char = ChrW(&HA)
 
     ''' <summary>
     ''' Next Line, U+0085
     ''' </summary>
-    Public Const NEL As Char = ChrW(&H85)
+    Public Const Nel As Char = ChrW(&H85)
 
     ''' <summary>
     ''' Vertical Tab, U+000B
     ''' </summary>
-    Public Const VT As Char = ChrW(&HB)
+    Public Const Vt As Char = ChrW(&HB)
 
     ''' <summary>
     ''' Form Feed, U+000C
     ''' </summary>
-    Public Const FF As Char = ChrW(&HC)
+    Public Const Ff As Char = ChrW(&HC)
 
     ''' <summary>
     ''' Line Separator, U+2028
     ''' </summary>
-    Public Const LS As Char = ChrW(&H2028)
+    Public Const Ls As Char = ChrW(&H2028)
 
     ''' <summary>
     ''' Paragraph Separator, U+2029
     ''' </summary>
-    Public Const PS As Char = ChrW(&H2029)
+    Public Const Ps As Char = ChrW(&H2029)
 
     ''' <summary>
     ''' Determines if a char is a new line delimiter.
@@ -97,14 +97,14 @@ Public Module NewLine
     ''' <param name="curChar">The current character.</param>
     ''' <param name="nextChar">The next character (if != LF then length will always be 0 or 1).</param>
     Public Function GetDelimiterLength(curChar As Char, nextChar As Char) As Integer
-        If curChar = CR Then
-            If nextChar = LF Then
+        If curChar = Cr Then
+            If nextChar = Lf Then
                 Return 2
             End If
             Return 1
         End If
 
-        If curChar = LF OrElse curChar = NEL OrElse curChar = VT OrElse curChar = FF OrElse curChar = LS OrElse curChar = PS Then
+        If curChar = Lf OrElse curChar = Nel OrElse curChar = Vt OrElse curChar = Ff OrElse curChar = Ls OrElse curChar = Ps Then
             Return 1
         End If
         Return 0
@@ -119,41 +119,41 @@ Public Module NewLine
     ''' <param name = "type">The type of the delimiter</param>
     ''' <param name="nextChar">A callback getting the next character (may be null).</param>
     Friend Function TryGetDelimiterLengthAndType(curChar As Char, <Out()> ByRef length As Integer, <Out()> ByRef type As UnicodeNewline, Optional nextChar As Func(Of Char) = Nothing) As Boolean
-        If curChar = CR Then
-            If nextChar IsNot Nothing AndAlso nextChar() = LF Then
+        If curChar = Cr Then
+            If nextChar IsNot Nothing AndAlso nextChar() = Lf Then
                 length = 2
-                type = UnicodeNewline.CRLF
+                type = UnicodeNewline.CrLf
             Else
                 length = 1
-                type = UnicodeNewline.CR
+                type = UnicodeNewline.Cr
 
             End If
             Return True
         End If
 
         Select Case curChar
-            Case LF
-                type = UnicodeNewline.LF
+            Case Lf
+                type = UnicodeNewline.Lf
                 length = 1
                 Return True
-            Case NEL
-                type = UnicodeNewline.NEL
+            Case Nel
+                type = UnicodeNewline.Nel
                 length = 1
                 Return True
-            Case VT
-                type = UnicodeNewline.VT
+            Case Vt
+                type = UnicodeNewline.Vt
                 length = 1
                 Return True
-            Case FF
-                type = UnicodeNewline.FF
+            Case Ff
+                type = UnicodeNewline.Ff
                 length = 1
                 Return True
-            Case LS
-                type = UnicodeNewline.LS
+            Case Ls
+                type = UnicodeNewline.Ls
                 length = 1
                 Return True
-            Case PS
-                type = UnicodeNewline.PS
+            Case Ps
+                type = UnicodeNewline.Ps
                 length = 1
                 Return True
         End Select
@@ -177,7 +177,7 @@ Public Module NewLine
             Case 0
                 Return False
             Case 1, 2
-                Return ch = CR OrElse ch = LF OrElse ch = NEL OrElse ch = VT OrElse ch = FF OrElse ch = LS OrElse ch = PS
+                Return ch = Cr OrElse ch = Lf OrElse ch = Nel OrElse ch = Vt OrElse ch = Ff OrElse ch = Ls OrElse ch = Ps
             Case Else
                 Return False
         End Select
