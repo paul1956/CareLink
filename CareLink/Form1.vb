@@ -9,6 +9,7 @@ Public Class Form1
 
     ' ReSharper disable InconsistentNaming
     Public WithEvents HighLimitSeries As Series
+
     Public WithEvents HomePageChart As Chart
     Public WithEvents LowLimitSeries As Series
     Public WithEvents MarkerSeries As Series
@@ -83,7 +84,7 @@ Public Class Form1
     Private ReadOnly _markerInsulinDictionary As New Dictionary(Of Double, Integer)
     Private ReadOnly _markerMealDictionary As New Dictionary(Of Double, Integer)
     Private ReadOnly _mealImage As Bitmap = My.Resources.FoodImage
-    Private _client As CareLinkClient
+    Private _client As CarelinkClient.CareLinkClient
     Private _initialized As Boolean = False
     Private _updating As Boolean = False
 
@@ -100,29 +101,34 @@ Public Class Form1
         {"CALIBRATING", "Calibrating ..."},
         {"CALIBRATION_REQUIRED", "Calibration required"},
         {"NO_ERROR_MESSAGE", ""},
+        {"UNKNOWN", "Unknown"},
         {"WARM_UP", "Sensor warm up..."},
         {"WAIT_TO_CALIBRATE", "Wait To Calibrate..."}
         }
 
     ' Add additional units here, default
     Private ReadOnly _unitsStrings As New Dictionary(Of String, String) From {
-        {"MGDL", "mg/dl"}
+        {"MGDL", "mg/dl"},
+        {"MMOLL", "mmol/L"}
         }
 
     Private _bgUnitsString As String
 
 #End Region
 
+    ' ReSharper disable InconsistentNaming
+    Public HighLimit As Single
+
+    Public LowLimit As Single
+
 #Region "Variables to hold Sensor Values"
 
-    ' ReSharper disable InconsistentNaming
-    Public AboveHyperLimit As Integer
-
+    Public AboveHyperLimit As Single
     Public ActiveInsulin As Dictionary(Of String, String)
-    Public AverageSG As Integer
+    Public AverageSG As Double
     Public AverageSGFloat As Double
     Public Basal As Dictionary(Of String, String)
-    Public BelowHypoLimit As Integer
+    Public BelowHypoLimit As Single
     Public BgUnits As String
     Public CalibStatus As String
     Public ClientTimeZoneName As String
@@ -180,11 +186,9 @@ Public Class Form1
     Public TimeToNextCalibHours As Integer = -1
     Public TimeToNextCalibrationMinutes As Integer
     Public Version As String
-    ' ReSharper restore InconsistentNaming
 
 #End Region
 
-    ' ReSharper disable InconsistentNaming
     ' Do not rename these name are matched used in case sensitive matching
     Public Enum ItemIndexs As Integer
         lastSensorTS = 0
@@ -351,7 +355,7 @@ Public Class Form1
                         Me.MessageForCursor2Label.Visible = False
                         Me.ValueForCursorLabel.Visible = False
                         Me.TimeForCursorLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString("hh:mm tt")
-                        Me.MessageForCursor1Label.Text = $"{Math.Round(result.Series.Points(result.PointIndex).YValues(0), 3)} {_bgUnitsString}"
+                        Me.MessageForCursor1Label.Text = $"{result.Series.Points(result.PointIndex).YValues(0).RoundDouble(3)} {_bgUnitsString}"
                 End Select
             End If
 
@@ -363,7 +367,7 @@ Public Class Form1
         Dim imagePosition As RectangleF = RectangleF.Empty
         imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, SGs.SafeGetSgDateTime(0).ToOADate))
         imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, 400))
-        imagePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, 180)))) - imagePosition.Y
+        imagePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, HighLimit)))) - imagePosition.Y
         imagePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, SGs.SafeGetSgDateTime(SGs.Count - 1).ToOADate)) - imagePosition.X
         imagePosition = e.ChartGraphics.GetAbsoluteRectangle(imagePosition)
 
@@ -392,7 +396,7 @@ Public Class Form1
             _loginDialog.ShowDialog()
             _client = _loginDialog.Client
             If _client IsNot Nothing AndAlso _client.LoggedIn Then
-                RecentData = _client.getRecentData()
+                RecentData = _client.GetRecentData()
             End If
             If RecentData Is Nothing Then
                 Exit Sub
@@ -406,7 +410,7 @@ Public Class Form1
 
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
         Me.ServerUpdateTimer.Enabled = False
-        RecentData = _client.getRecentData()
+        RecentData = _client.GetRecentData()
         If RecentData Is Nothing Then
             Me.Cursor = Cursors.Default
             Exit Sub
@@ -416,14 +420,6 @@ Public Class Form1
         Me.UpdateAllTabPages()
 
         Application.DoEvents()
-    End Sub
-
-    Private Sub StartTimeComboBox_SelectedValueChanged(sender As Object, e As EventArgs) Handles StartTimeComboBox.SelectedValueChanged
-        Me.UpdateBgChart()
-    End Sub
-
-    Private Sub TimeScaleNumericUpDown_ValueChanged(sender As Object, e As EventArgs) Handles TimeScaleNumericUpDown.ValueChanged
-        Me.UpdateBgChart()
     End Sub
 
 #End Region
@@ -585,7 +581,7 @@ Public Class Form1
              .BorderlineWidth = 2,
              .Location = New Point(3, Me.ShieldPictureBox.Height + 23),
              .Name = "chart1",
-             .Size = New Size(Me.TabPage1.ClientSize.Width - (Me.TabPage1.ClientSize.Width - Me.DisplayStartTimeLabel.Left), Me.TabPage1.ClientSize.Height - (Me.ShieldPictureBox.Height + Me.ShieldPictureBox.Top + 26)),
+             .Size = New Size(Me.TabPage1.ClientSize.Width - 300, Me.TabPage1.ClientSize.Height - (Me.ShieldPictureBox.Height + Me.ShieldPictureBox.Top + 26)),
              .TabIndex = 0
          }
 
@@ -721,33 +717,6 @@ Public Class Form1
 
     End Sub
 
-    Private Sub InitializeStartTimeComboBox()
-        Dim hourFound As Boolean = False
-        Dim selectedIndex As Integer = 0
-        Dim selectedItem As String = ""
-        If Me.StartTimeComboBox.SelectedItem IsNot Nothing Then
-            selectedItem = CStr(Me.StartTimeComboBox.SelectedItem)
-        End If
-        Dim previousHour As Date
-        Me.StartTimeComboBox.Items.Clear()
-        For Each sgList As IndexClass(Of Dictionary(Of String, String)) In SGs.WithIndex()
-            Dim sgDateTime As Date = SGs.SafeGetSgDateTime(sgList.Index)
-            Dim currentHour As Date = sgDateTime.RoundToHour()
-            If sgList.IsFirst Then
-                previousHour = sgDateTime
-                Me.StartTimeComboBox.Items.Add($"{currentHour:hh tt}")
-            ElseIf previousHour.Hour <> currentHour.Hour Then
-                Me.StartTimeComboBox.Items.Add($"{currentHour:hh tt}")
-                previousHour = currentHour
-            End If
-            If Me.StartTimeComboBox.Items(Me.StartTimeComboBox.Items.Count - 1).ToString() = selectedItem AndAlso Not hourFound Then
-                selectedIndex = Me.StartTimeComboBox.Items.Count - 1
-                hourFound = True
-            End If
-        Next
-        Me.StartTimeComboBox.SelectedIndex = selectedIndex
-    End Sub
-
     Private Sub InitializeTimeInRangeChart()
         Me.TimeInRangeChart = New Chart With {
             .BackColor = Color.Transparent,
@@ -858,7 +827,17 @@ Public Class Form1
                 Case ItemIndexs.bgUnits
                     BgUnits = row.Value
                     _bgUnitsString = _unitsStrings(BgUnits)
+                    If _bgUnitsString = "mg/dl" Then
+                        HighLimit = 180
+                        LowLimit = 70
+                    Else
+                        HighLimit = 10.0
+                        LowLimit = (70 / 18).RoundSingle(1)
+                    End If
+                    Me.AboveHighLimitMessageLabel.Text = $"Above {HighLimit} {_bgUnitsString}"
                     Me.AverageSGUnitsLabel.Text = _bgUnitsString
+                    Me.BelowLowLimitMessageLabel.Text = $"Below {LowLimit} {_bgUnitsString}"
+                    Me.ShieldUnitsLabel.Text = _bgUnitsString
                 Case ItemIndexs.timeFormat
                     TimeFormat = row.Value
                 Case ItemIndexs.lastSensorTime
@@ -927,6 +906,11 @@ Public Class Form1
                     SystemStatusMessage = row.Value
                 Case ItemIndexs.averageSG
                     AverageSG = CInt(row.Value)
+                    If _bgUnitsString = "mg/dl" Then
+                        Me.AverageSGValueLabel.Text = AverageSG.ToString
+                    Else
+                        Me.AverageSGValueLabel.Text = AverageSG.RoundDouble(1).ToString()
+                    End If
                 Case ItemIndexs.belowHypoLimit
                     BelowHypoLimit = CInt(row.Value)
                 Case ItemIndexs.aboveHyperLimit
@@ -1075,7 +1059,6 @@ Public Class Form1
         If RecentData.Count > ItemIndexs.averageSGFloat + 1 Then
             Stop
         End If
-        Me.InitializeStartTimeComboBox()
         _initialized = True
         Me.UpdateRemainingInsulin()
         Me.UpdateActiveInsulin()
@@ -1117,14 +1100,9 @@ Public Class Form1
         If Not _initialized Then
             Exit Sub
         End If
+        _initialized = False
 
-        If Me.TimeScaleNumericUpDown.Value = 24 Then
-            Me.HomePageChart.Titles("Title1").Text = $"Summary of last 24 hours"
-        Else
-            Dim startIndex As Integer = Me.StartTimeComboBox.SelectedIndex
-            Dim endIndex As Integer = (Me.StartTimeComboBox.SelectedIndex + CInt(Me.TimeScaleNumericUpDown.Value)) Mod Me.StartTimeComboBox.Items.Count
-            Me.HomePageChart.Titles("Title1").Text = $"Summary from {Me.StartTimeComboBox.Items(startIndex)} till {Me.StartTimeComboBox.Items(endIndex)} hours"
-        End If
+        Me.HomePageChart.Titles("Title1").Text = $"Summary of last 24 hours"
         Me.HomePageChart.ChartAreas("Default").AxisX.Minimum = SGs.SafeGetSgDateTime(0).ToOADate()
         Me.HomePageChart.ChartAreas("Default").AxisX.Maximum = SGs.SafeGetSgDateTime(SGs.Count - 1).ToOADate()
         Me.HomePageChart.Series("Default").Points.Clear()
@@ -1134,34 +1112,20 @@ Public Class Form1
         Me.HomePageChart.ChartAreas("Default").AxisX.MajorGrid.IntervalType = DateTimeIntervalType.Hours
         Me.HomePageChart.ChartAreas("Default").AxisX.MajorGrid.IntervalOffsetType = DateTimeIntervalType.Hours
         Me.HomePageChart.ChartAreas("Default").AxisX.MajorGrid.Interval = 1
-        Dim bgValue As Integer
+        Dim bgValue As Single
         Dim sgDateTime As Date
-        Dim foundStartTime As Boolean = False
-        For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In SGs.WithIndex()
-            sgDateTime = SGs.SafeGetSgDateTime(sgListIndex.Index)
-            If Not foundStartTime Then
-                If sgDateTime.Hour >= Me.StartTimeComboBox.SelectedItem.ToString.GetMilitaryHour() Then
-                    foundStartTime = True
-                Else
-                    Continue For
-                End If
-            Else
-                Exit For
+        Dim limitsIndexList(SGs.Count - 1) As Integer
+        Dim limitsIndex As Integer = 0
+        For i As Integer = 0 To limitsIndexList.GetUpperBound(0)
+            If limitsIndex + 1 < Limits.Count AndAlso CInt(Limits(limitsIndex + 1)("index")) < i Then
+                limitsIndex += 1
             End If
+            limitsIndexList(i) = limitsIndex
         Next
-        foundStartTime = False
         _markerInsulinDictionary.Clear()
         _markerMealDictionary.Clear()
-        _initialized = False
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In Markers.WithIndex()
             sgDateTime = Markers.SafeGetSgDateTime(sgListIndex.Index)
-            If Not foundStartTime Then
-                If sgDateTime.Hour >= Me.StartTimeComboBox.SelectedItem.ToString.GetMilitaryHour() Then
-                    foundStartTime = True
-                Else
-                    Continue For
-                End If
-            End If
             Dim bgValueString As String = ""
             If sgListIndex.Value.TryGetValue("value", bgValueString) Then
                 bgValue = CInt(bgValueString)
@@ -1198,39 +1162,31 @@ Public Class Form1
                     Dim bolusAmount As String = sgListIndex.Value("bolusAmount")
                     Dim nfi As NumberFormatInfo = New CultureInfo(CultureInfo.CurrentUICulture.Name, useUserOverride:=False).NumberFormat
                     nfi.NumberDecimalDigits = 3
-                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.ToolTip = $"Basal, {Math.Round(Double.Parse(bolusAmount), 3)} U"
+                    Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3)} U"
                 Case "AUTO_MODE_STATUS"
                 Case Else
                     Stop
             End Select
         Next
         _initialized = True
-        Dim indexList(287) As Integer
-        Dim limitsIndex As Integer = 0
-        For i As Integer = 0 To indexList.GetUpperBound(0)
-            If limitsIndex + 1 < Limits.Count AndAlso CInt(Limits(limitsIndex + 1)("index")) < i Then
-                limitsIndex += 1
-            End If
-            indexList(i) = limitsIndex
-        Next
-        foundStartTime = False
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In SGs.WithIndex()
-            Dim limitsLowValue As Integer = CInt(Limits(indexList(sgListIndex.Index))("highLimit"))
-            Dim limitsHighValue As Integer = CInt(Limits(indexList(sgListIndex.Index))("lowLimit"))
+            Dim limitsLowValue As Integer = CInt(Limits(limitsIndexList(sgListIndex.Index))("highLimit"))
+            Dim limitsHighValue As Integer = CInt(Limits(limitsIndexList(sgListIndex.Index))("lowLimit"))
             sgDateTime = SGs.SafeGetSgDateTime(sgListIndex.Index)
-            If Not foundStartTime Then
-                If sgDateTime.Hour >= Me.StartTimeComboBox.SelectedItem.ToString.GetMilitaryHour() Then
-                    foundStartTime = True
-                Else
-                    Continue For
-                End If
-            End If
             bgValue = CInt(sgListIndex.Value("sg"))
-            If bgValue = 0 Then
+            If Math.Abs(bgValue - 0) < Single.Epsilon Then
                 Me.HomePageChart.Series("Default").Points.AddXY(sgDateTime.ToOADate(), InsulinRow)
                 Me.HomePageChart.Series("Default").Points.Last().IsEmpty = True
             Else
                 Me.HomePageChart.Series("Default").Points.AddXY(sgDateTime.ToOADate(), bgValue)
+                If bgValue > HighLimit Then
+                    Me.HomePageChart.Series("Default").Points.Last.Color = Color.Lime
+                    Me.HomePageChart.Series("Default").Points.Last.BorderColor = Color.Lime
+                ElseIf bgValue < LowLimit Then
+                    Me.HomePageChart.Series("Default").Points.Last.Color = Color.Red
+                    Me.HomePageChart.Series("Default").Points.Last.BorderColor = Color.Red
+                End If
+
             End If
 
             Me.HomePageChart.Series(NameOf(HighLimitSeries)).Points.AddXY(sgDateTime.ToOADate(), limitsHighValue)
@@ -1286,11 +1242,11 @@ Public Class Form1
 
     Private Sub UpdateTimeInRange()
         Me.TimeInRangeChart.Series("Default").Points.Clear()
-        Me.TimeInRangeChart.Series("Default").Points.AddXY($"{AboveHyperLimit}% Above 180 {_bgUnitsString}", AboveHyperLimit / 100)
+        Me.TimeInRangeChart.Series("Default").Points.AddXY($"{AboveHyperLimit}% Above {HighLimit} {_bgUnitsString}", AboveHyperLimit / 100)
         Me.TimeInRangeChart.Series("Default").Points.Last().Color = Color.Orange
         Me.TimeInRangeChart.Series("Default").Points.Last().BorderColor = Color.Black
         Me.TimeInRangeChart.Series("Default").Points.Last().BorderWidth = 2
-        Me.TimeInRangeChart.Series("Default").Points.AddXY($"{BelowHypoLimit}% Below 70 {_bgUnitsString}", BelowHypoLimit / 100)
+        Me.TimeInRangeChart.Series("Default").Points.AddXY($"{BelowHypoLimit}% Below {LowLimit} {_bgUnitsString}", BelowHypoLimit / 100)
         Me.TimeInRangeChart.Series("Default").Points.Last().Color = Color.Red
         Me.TimeInRangeChart.Series("Default").Points.Last().BorderColor = Color.Black
         Me.TimeInRangeChart.Series("Default").Points.Last().BorderWidth = 2
@@ -1301,20 +1257,12 @@ Public Class Form1
         Me.TimeInRangeChart.Series("Default")("PieLabelStyle") = "Disabled"
         Me.TimeInRangeChart.Series("Default")("PieStartAngle") = "270"
 
-        Me.Above180UnitsLabel.Text = _bgUnitsString
-        Me.Above180ValueLabel.Text = AboveHyperLimit.ToString
-
         Me.TimeInRangeValueLabel.Text = TimeInRange.ToString
 
         Me.TimeInRangeSummaryLabel.Text = TimeInRange.ToString
         Me.TimeInRangeSummaryPercentCharLabel.Left = Me.TimeInRangeChart.HorizontalCenterOn(Me.TimeInRangeSummaryPercentCharLabel)
         Me.TimeInRangeSummaryLabel.Left = Me.TimeInRangeSummaryPercentCharLabel.HorizontalCenterOn(Me.TimeInRangeSummaryLabel)
 
-        Me.Below70PValueLabel.Text = BelowHypoLimit.ToString
-        Me.Below70UnitsLabel.Text = _bgUnitsString
-
-        Me.AverageSGValueLabel.Text = AverageSG.ToString
-        Me.AverageSGUnitsLabel.Text = _bgUnitsString
     End Sub
 
 End Class

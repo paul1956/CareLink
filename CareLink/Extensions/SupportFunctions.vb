@@ -6,9 +6,47 @@ Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Module SupportFunctions
+
     <Extension>
     Friend Function GetMilitaryHour(selectedStartTime As String) As Integer
         Return CInt(Format(Date.Parse(selectedStartTime), "HH"))
+    End Function
+
+    <Extension>
+    Friend Sub PaintMarker(e As ChartPaintEventArgs, markerImage As Bitmap, marketDictionary As Dictionary(Of Double, Integer), imageYOffset As Integer)
+        ' Draw the cloned portion of the Bitmap object.
+        Dim halfHeight As Single = CSng(markerImage.Height / 2)
+        Dim halfWidth As Single = CSng(markerImage.Width / 2)
+        For Each markerKvp As KeyValuePair(Of Double, Integer) In marketDictionary
+            Dim imagePosition As RectangleF = RectangleF.Empty
+            imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, markerKvp.Key))
+            imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, markerKvp.Value))
+            imagePosition = e.ChartGraphics.GetAbsoluteRectangle(imagePosition)
+            imagePosition.Width = markerImage.Width
+            imagePosition.Height = markerImage.Height
+            imagePosition.Y -= halfHeight
+            imagePosition.X -= halfWidth
+            ' Draw image
+            e.ChartGraphics.Graphics.DrawImage(markerImage, imagePosition.X, imagePosition.Y + imageYOffset)
+        Next
+    End Sub
+
+    <Extension>
+    Friend Function RoundDouble(value As Double, decimalDigits As Integer) As Double
+
+        Return Math.Round(value, decimalDigits)
+    End Function
+
+    <Extension>
+    Friend Function RoundDouble(value As String, decimalDigits As Integer) As Double
+
+        Return Math.Round(Double.Parse(value), decimalDigits)
+    End Function
+
+    <Extension>
+    Friend Function RoundSingle(value As Double, decimalDigits As Integer) As Single
+
+        Return CType(Math.Round(value, decimalDigits), Single)
     End Function
 
     <Extension>
@@ -30,24 +68,5 @@ Public Module SupportFunctions
         End If
         Return sgDateTime
     End Function
-
-    <Extension>
-    Friend Sub PaintMarker(e As ChartPaintEventArgs, markerImage As Bitmap, marketDictionary As Dictionary(Of Double, Integer), imageYOffset As Integer)
-        ' Draw the cloned portion of the Bitmap object.
-        Dim halfHeight As Single = CSng(markerImage.Height / 2)
-        Dim halfWidth As Single = CSng(markerImage.Width / 2)
-        For Each markerKvp As KeyValuePair(Of Double, Integer) In marketDictionary
-            Dim imagePosition As RectangleF = RectangleF.Empty
-            imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, markerKvp.Key))
-            imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, markerKvp.Value))
-            imagePosition = e.ChartGraphics.GetAbsoluteRectangle(imagePosition)
-            imagePosition.Width = markerImage.Width
-            imagePosition.Height = markerImage.Height
-            imagePosition.Y -= halfHeight
-            imagePosition.X -= halfWidth
-            ' Draw image
-            e.ChartGraphics.Graphics.DrawImage(markerImage, imagePosition.X, imagePosition.Y + imageYOffset)
-        Next
-    End Sub
 
 End Module

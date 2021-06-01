@@ -5,13 +5,13 @@
 Imports System.Net
 Imports System.Net.Http
 
-Public Module carelink_client
-    Private Const CARELINK_AUTH_TOKEN_COOKIE_NAME As String = "auth_tmp_token"
-    Private Const CARELINK_CONNECT_SERVER_EU As String = "carelink.minimed.eu"
-    Private Const CARELINK_CONNECT_SERVER_US As String = "carelink.minimed.com"
-    Private Const CARELINK_LANGUAGE_EN As String = "en"
-    Private Const CARELINK_LOCALE_EN As String = "en"
-    Private Const CARELINK_TOKEN_VALIDTO_COOKIE_NAME As String = "c_token_valid_to"
+Public Module CarelinkClient
+    Private Const CarelinkAuthTokenCookieName As String = "auth_tmp_token"
+    Private Const CarelinkConnectServerEu As String = "carelink.minimed.eu"
+    Private Const CarelinkConnectServerUs As String = "carelink.minimed.com"
+    Private Const CarelinkLanguageEn As String = "en"
+    Private Const CarelinkLocaleEn As String = "en"
+    Private Const CarelinkTokenValidtoCookieName As String = "c_token_valid_to"
 
     Public Class CareLinkClient
         Inherits Object
@@ -108,7 +108,7 @@ Public Module carelink_client
 
         ' Get server URL
         Public Overridable Function __careLinkServer() As String
-            Return If(_carelinkCountry = "us", CARELINK_CONNECT_SERVER_US, CARELINK_CONNECT_SERVER_EU)
+            Return If(_carelinkCountry = "us", CarelinkConnectServerUs, CarelinkConnectServerEu)
         End Function
 
         Public Overridable Function __correctTimeInRecentData(recentData As Dictionary(Of String, String)) As Boolean
@@ -121,7 +121,7 @@ Public Module carelink_client
             ' Extract data for consent
             Dim doLoginRespBody As String = doLoginResponse.Text
             Dim url As String = Me.__extractResponseData(doLoginRespBody, "<form action=", " ")
-            Dim sessionID As String = Me.__extractResponseData(doLoginRespBody, "<input type=""hidden"" name=""sessionID"" value=", ">")
+            Dim sessionId As String = Me.__extractResponseData(doLoginRespBody, "<input type=""hidden"" name=""sessionID"" value=", ">")
             Dim sessionData As String = Me.__extractResponseData(doLoginRespBody, "<input type=""hidden"" name=""sessionData"" value=", ">")
             ' Send consent
             Dim form As New Dictionary(Of String, String) From {
@@ -130,7 +130,7 @@ Public Module carelink_client
                     "consent"},
                 {
                     "sessionID",
-                    sessionID},
+                    sessionId},
                 {
                     "sessionData",
                     sessionData},
@@ -174,7 +174,7 @@ Public Module carelink_client
                     _carelinkCountry},
                 {
                     "locale",
-                    CARELINK_LOCALE_EN}}
+                    CarelinkLocaleEn}}
             Dim form As New Dictionary(Of String, String) From {
                 {
                     "sessionID",
@@ -184,7 +184,7 @@ Public Module carelink_client
                     queryParameters("sessionData")},
                 {
                     "locale",
-                    CARELINK_LOCALE_EN},
+                    CarelinkLocaleEn},
                 {
                     "action",
                     "login"},
@@ -260,7 +260,7 @@ Public Module carelink_client
                     _sessionProfile = Me.__getMyProfile()
                 End If
                 If _sessionCountrySettings Is Nothing Then
-                    _sessionCountrySettings = Me.__getCountrySettings(_carelinkCountry, CARELINK_LANGUAGE_EN)
+                    _sessionCountrySettings = Me.__getCountrySettings(_carelinkCountry, CarelinkLanguageEn)
                 End If
                 If _sessionMonitorData Is Nothing Then
                     _sessionMonitorData = Me.__getMonitorData()
@@ -288,12 +288,12 @@ Public Module carelink_client
         End Function
 
         Public Overridable Function __getAuthorizationToken() As String
-            Dim auth_token As String = Me.GetCookieValue(Me.__careLinkServer, CARELINK_AUTH_TOKEN_COOKIE_NAME)
-            Dim auth_token_validto As String = Me.GetCookies(Me.__careLinkServer)?.Item(CARELINK_TOKEN_VALIDTO_COOKIE_NAME)?.Value
+            Dim authToken As String = Me.GetCookieValue(Me.__careLinkServer, CarelinkAuthTokenCookieName)
+            Dim authTokenValidto As String = Me.GetCookies(Me.__careLinkServer)?.Item(CarelinkTokenValidtoCookieName)?.Value
             ' New token is needed:
             ' a) no token or about to expire => execute authentication
             ' b) last response 401
-            If auth_token Is Nothing OrElse auth_token_validto Is Nothing OrElse New List(Of Object) From {
+            If authToken Is Nothing OrElse authTokenValidto Is Nothing OrElse New List(Of Object) From {
                 401,
                 403
             }.Contains(_lastResponseCode) Then
@@ -308,10 +308,10 @@ Public Module carelink_client
                     Printdbg("__executeLoginProcedure failed")
                     Return Nothing
                 End If
-                Printdbg($"auth_token_validto = {Me.GetCookies(Me.__careLinkServer).Item(CARELINK_TOKEN_VALIDTO_COOKIE_NAME).Value}")
+                Printdbg($"auth_token_validto = {Me.GetCookies(Me.__careLinkServer).Item(CarelinkTokenValidtoCookieName).Value}")
             End If
             ' there can be only one
-            Return $"Bearer {Me.GetCookieValue(Me.__careLinkServer, CARELINK_AUTH_TOKEN_COOKIE_NAME)}"
+            Return $"Bearer {Me.GetCookieValue(Me.__careLinkServer, CarelinkAuthTokenCookieName)}"
         End Function
 
         ' Periodic data from CareLink Cloud
@@ -425,7 +425,7 @@ Public Module carelink_client
                     _carelinkCountry},
                 {
                     "lang",
-                    CARELINK_LANGUAGE_EN}
+                    CarelinkLanguageEn}
                     }
             Dim response As HttpResponseMessage = Nothing
 
@@ -458,20 +458,20 @@ Public Module carelink_client
             Return Me.__getData(Me.__careLinkServer(), "patient/users/me", Nothing, Nothing)
         End Function
 
-        Public Overridable Function getLastDataSuccess() As Object
+        Public Overridable Function GetLastDataSuccess() As Object
             Return _lastDataSuccess
         End Function
 
-        Public Overridable Function getLastErrorMessage() As String
+        Public Overridable Function GetLastErrorMessage() As String
             Return Me.LastErrorMessage
         End Function
 
-        Public Overridable Function getLastResponseCode() As HttpStatusCode
+        Public Overridable Function GetLastResponseCode() As HttpStatusCode
             Return _lastResponseCode
         End Function
 
         ' Wrapper for data retrieval methods
-        Public Overridable Function getRecentData() As Dictionary(Of String, String)
+        Public Overridable Function GetRecentData() As Dictionary(Of String, String)
             ' Force login to get basic info
             If Me.__getAuthorizationToken() IsNot Nothing Then
                 If _carelinkCountry = "us" OrElse _sessionMonitorData("deviceFamily") = "BLE_X" Then
