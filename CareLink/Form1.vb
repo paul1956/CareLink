@@ -656,7 +656,7 @@ Public Class Form1
                                     .BorderColor = Color.FromArgb(180, 26, 59, 105),
                                     .BorderWidth = 4,
                                     .ChartArea = "Default",
-                                    .ChartType = SeriesChartType.FastLine,
+                                    .ChartType = SeriesChartType.Line,
                                     .Color = Color.White,
                                     .Legend = "Default",
                                     .Name = "Default",
@@ -1181,10 +1181,8 @@ Public Class Form1
                 Me.HomePageChart.Series("Default").Points.AddXY(sgDateTime.ToOADate(), bgValue)
                 If bgValue > HighLimit Then
                     Me.HomePageChart.Series("Default").Points.Last.Color = Color.Lime
-                    Me.HomePageChart.Series("Default").Points.Last.BorderColor = Color.Lime
                 ElseIf bgValue < LowLimit Then
                     Me.HomePageChart.Series("Default").Points.Last.Color = Color.Red
-                    Me.HomePageChart.Series("Default").Points.Last.BorderColor = Color.Red
                 End If
 
             End If
