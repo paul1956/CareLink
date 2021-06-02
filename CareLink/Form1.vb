@@ -16,6 +16,8 @@ Public Class Form1
     Public WithEvents TimeInRangeChart As Chart
     Private Const InsulinRow As Integer = 50
     Private Const MarkerRow As Integer = 399
+    Private Const MilitaryTimeWithMinuteFormat As String = "HH:mm"
+    Private Const TwelveHourTimeWithMinuteFormat As String = "hh:mm tt"
     ' ReSharper restore InconsistentNaming
 
     Private Shared ReadOnly s_lastAlarmFilter As New List(Of String) From {
@@ -86,6 +88,7 @@ Public Class Form1
     Private ReadOnly _mealImage As Bitmap = My.Resources.FoodImage
     Private _client As CarelinkClient.CareLinkClient
     Private _initialized As Boolean = False
+    Private _timeFormat As String
     Private _updating As Boolean = False
 
 #Region "Chart Objects"
@@ -123,12 +126,12 @@ Public Class Form1
 
 #Region "Variables to hold Sensor Values"
 
-    Public AboveHyperLimit As Single
+    Public AboveHyperLimit As Integer
     Public ActiveInsulin As Dictionary(Of String, String)
     Public AverageSG As Double
     Public AverageSGFloat As Double
     Public Basal As Dictionary(Of String, String)
-    Public BelowHypoLimit As Single
+    Public BelowHypoLimit As Integer
     Public BgUnits As String
     Public CalibStatus As String
     Public ClientTimeZoneName As String
@@ -312,7 +315,7 @@ Public Class Form1
                     Case NameOf(MarkerSeries)
                         Dim marketToolTip() As String = result.Series.Points(result.PointIndex).ToolTip.Split(","c)
                         Dim xValue As Date = Date.FromOADate(result.Series.Points(result.PointIndex).XValue)
-                        Me.TimeForCursorLabel.Text = xValue.ToString("hh:mm tt")
+                        Me.TimeForCursorLabel.Text = xValue.ToString(_timeFormat)
                         Me.TimeForCursorLabel.Tag = xValue
                         marketToolTip(0) = marketToolTip(0).Trim
                         Me.ValueForCursorLabel.Visible = True
@@ -354,7 +357,7 @@ Public Class Form1
                         Me.MessagePictureBox.Image = Nothing
                         Me.MessageForCursor2Label.Visible = False
                         Me.ValueForCursorLabel.Visible = False
-                        Me.TimeForCursorLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString("hh:mm tt")
+                        Me.TimeForCursorLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(_timeFormat)
                         Me.MessageForCursor1Label.Text = $"{result.Series.Points(result.PointIndex).YValues(0).RoundDouble(3)} {_bgUnitsString}"
                 End Select
             End If
@@ -598,7 +601,6 @@ Public Class Form1
         _homePageChartChartArea.AxisX.IsMarginVisible = True
         _homePageChartChartArea.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.IncreaseFont Or LabelAutoFitStyles.DecreaseFont Or LabelAutoFitStyles.WordWrap
         _homePageChartChartArea.AxisX.LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
-        _homePageChartChartArea.AxisX.LabelStyle.Format = "hh tt"
         _homePageChartChartArea.AxisX.LineColor = Color.FromArgb(64, 64, 64, 64)
         _homePageChartChartArea.AxisX.MajorGrid.LineColor = Color.FromArgb(64, 64, 64, 64)
         _homePageChartChartArea.AxisX.ScaleView.Zoomable = False  '
@@ -830,9 +832,13 @@ Public Class Form1
                     If _bgUnitsString = "mg/dl" Then
                         HighLimit = 180
                         LowLimit = 70
+                        _timeFormat = TwelveHourTimeWithMinuteFormat
+                        _homePageChartChartArea.AxisX.LabelStyle.Format = "hh tt"
                     Else
                         HighLimit = 10.0
                         LowLimit = (70 / 18).RoundSingle(1)
+                        _timeFormat = MilitaryTimeWithMinuteFormat
+                        _homePageChartChartArea.AxisX.LabelStyle.Format = "HH"
                     End If
                     Me.AboveHighLimitMessageLabel.Text = $"Above {HighLimit} {_bgUnitsString}"
                     Me.AverageSGUnitsLabel.Text = _bgUnitsString
@@ -906,11 +912,6 @@ Public Class Form1
                     SystemStatusMessage = row.Value
                 Case ItemIndexs.averageSG
                     AverageSG = CInt(row.Value)
-                    If _bgUnitsString = "mg/dl" Then
-                        Me.AverageSGValueLabel.Text = AverageSG.ToString
-                    Else
-                        Me.AverageSGValueLabel.Text = AverageSG.RoundDouble(1).ToString()
-                    End If
                 Case ItemIndexs.belowHypoLimit
                     BelowHypoLimit = CInt(row.Value)
                 Case ItemIndexs.aboveHyperLimit
@@ -942,7 +943,6 @@ Public Class Form1
                 Case Else
                     Stop
             End Select
-            layoutPanel1.Visible = False
 
             If _listOfSingleItems.Contains(rowIndex) OrElse singleItem Then
                 If Not (singleItem AndAlso singleItemIndex = rowIndex) Then
@@ -1040,7 +1040,6 @@ Public Class Form1
                                                   .AutoSize = True,
                                                   .Text = row.Value}, If(singleItem, 0, 1), tableRelitiveRow)
             End If
-            layoutPanel1.Visible = True
             Application.DoEvents()
         Next
         Me.Cursor = Cursors.Default
@@ -1112,6 +1111,8 @@ Public Class Form1
         Me.HomePageChart.ChartAreas("Default").AxisX.MajorGrid.IntervalType = DateTimeIntervalType.Hours
         Me.HomePageChart.ChartAreas("Default").AxisX.MajorGrid.IntervalOffsetType = DateTimeIntervalType.Hours
         Me.HomePageChart.ChartAreas("Default").AxisX.MajorGrid.Interval = 1
+        Me.HomePageChart.ChartAreas("Default").AxisX.IntervalType = DateTimeIntervalType.Hours
+        Me.HomePageChart.ChartAreas("Default").AxisX.Interval = 2
         Dim bgValue As Single
         Dim sgDateTime As Date
         Dim limitsIndexList(SGs.Count - 1) As Integer
@@ -1164,6 +1165,7 @@ Public Class Form1
                     nfi.NumberDecimalDigits = 3
                     Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3)} U"
                 Case "AUTO_MODE_STATUS"
+                    Stop
                 Case Else
                     Stop
             End Select
@@ -1183,6 +1185,8 @@ Public Class Form1
                     Me.HomePageChart.Series("Default").Points.Last.Color = Color.Lime
                 ElseIf bgValue < LowLimit Then
                     Me.HomePageChart.Series("Default").Points.Last.Color = Color.Red
+                Else
+                    Me.HomePageChart.Series("Default").Points.Last.Color = Color.White
                 End If
 
             End If
@@ -1255,11 +1259,17 @@ Public Class Form1
         Me.TimeInRangeChart.Series("Default")("PieLabelStyle") = "Disabled"
         Me.TimeInRangeChart.Series("Default")("PieStartAngle") = "270"
 
-        Me.TimeInRangeValueLabel.Text = TimeInRange.ToString
-
+        If _bgUnitsString = "mg/dl" Then
+            Me.AverageSGValueLabel.Text = AverageSG.ToString
+        Else
+            Me.AverageSGValueLabel.Text = AverageSG.RoundDouble(1).ToString()
+        End If
+        Me.AboveHighLimitValueLabel.Text = AboveHyperLimit.ToString()
+        Me.BelowLowLimitValueLabel.Text = BelowHypoLimit.ToString()
+        Me.TimeInRangeSummaryLabel.Left = Me.TimeInRangeSummaryPercentCharLabel.HorizontalCenterOn(Me.TimeInRangeSummaryLabel)
         Me.TimeInRangeSummaryLabel.Text = TimeInRange.ToString
         Me.TimeInRangeSummaryPercentCharLabel.Left = Me.TimeInRangeChart.HorizontalCenterOn(Me.TimeInRangeSummaryPercentCharLabel)
-        Me.TimeInRangeSummaryLabel.Left = Me.TimeInRangeSummaryPercentCharLabel.HorizontalCenterOn(Me.TimeInRangeSummaryLabel)
+        Me.TimeInRangeValueLabel.Text = TimeInRange.ToString
 
     End Sub
 
