@@ -274,7 +274,7 @@ Partial Class Form1
         Me.TableLayoutPanelTop2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelTop2.ColumnCount = 2
         Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100!))
-        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 616!))
+        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 622!))
         Me.TableLayoutPanelTop2.Location = New System.Drawing.Point(514, 0)
         Me.TableLayoutPanelTop2.Name = "TableLayoutPanelTop2"
         Me.TableLayoutPanelTop2.RowCount = 1
@@ -561,7 +561,7 @@ Partial Class Form1
         Me.TimeInRangeSummaryPercentCharLabel.BackColor = System.Drawing.Color.Transparent
         Me.TimeInRangeSummaryPercentCharLabel.Font = New System.Drawing.Font("Segoe UI", 18!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
         Me.TimeInRangeSummaryPercentCharLabel.ForeColor = System.Drawing.Color.White
-        Me.TimeInRangeSummaryPercentCharLabel.Location = New System.Drawing.Point(1007, 211)
+        Me.TimeInRangeSummaryPercentCharLabel.Location = New System.Drawing.Point(1031, 211)
         Me.TimeInRangeSummaryPercentCharLabel.Name = "TimeInRangeSummaryPercentCharLabel"
         Me.TimeInRangeSummaryPercentCharLabel.Size = New System.Drawing.Size(34, 32)
         Me.TimeInRangeSummaryPercentCharLabel.TabIndex = 3
@@ -569,15 +569,15 @@ Partial Class Form1
         '
         'TimeInRangeSummaryLabel
         '
-        Me.TimeInRangeSummaryLabel.AutoSize = true
         Me.TimeInRangeSummaryLabel.BackColor = System.Drawing.Color.Black
         Me.TimeInRangeSummaryLabel.Font = New System.Drawing.Font("Segoe UI", 26.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
         Me.TimeInRangeSummaryLabel.ForeColor = System.Drawing.Color.White
-        Me.TimeInRangeSummaryLabel.Location = New System.Drawing.Point(987, 169)
+        Me.TimeInRangeSummaryLabel.Location = New System.Drawing.Point(1010, 169)
         Me.TimeInRangeSummaryLabel.Name = "TimeInRangeSummaryLabel"
         Me.TimeInRangeSummaryLabel.Size = New System.Drawing.Size(77, 47)
         Me.TimeInRangeSummaryLabel.TabIndex = 2
         Me.TimeInRangeSummaryLabel.Text = "100"
+        Me.TimeInRangeSummaryLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'SensorMessage
         '

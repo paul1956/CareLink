@@ -584,7 +584,7 @@ Public Class Form1
              .BorderlineWidth = 2,
              .Location = New Point(3, Me.ShieldPictureBox.Height + 23),
              .Name = "chart1",
-             .Size = New Size(Me.TabPage1.ClientSize.Width - 300, Me.TabPage1.ClientSize.Height - (Me.ShieldPictureBox.Height + Me.ShieldPictureBox.Top + 26)),
+             .Size = New Size(Me.TabPage1.ClientSize.Width - 240, Me.TabPage1.ClientSize.Height - (Me.ShieldPictureBox.Height + Me.ShieldPictureBox.Top + 26)),
              .TabIndex = 0
          }
 
@@ -728,6 +728,8 @@ Public Class Form1
             .BorderlineWidth = 0,
             .Size = New Size(220, 220)
         }
+        Me.TimeInRangeChart.Left = Me.TimeInRangeSummaryLabel.FindHorizontalMidpoint - (Me.TimeInRangeChart.Width \ 2)
+
         Me.TimeInRangeChart.BorderSkin.BackSecondaryColor = Color.Transparent
         Me.TimeInRangeChart.BorderSkin.SkinStyle = BorderSkinStyle.None
         Me.TimeInRangeChart.ChartAreas.Add(New ChartArea With {.Name = "TimeInRangeChartChartArea",
@@ -1172,8 +1174,6 @@ Public Class Form1
         Next
         _initialized = True
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In SGs.WithIndex()
-            Dim limitsLowValue As Integer = CInt(Limits(limitsIndexList(sgListIndex.Index))("highLimit"))
-            Dim limitsHighValue As Integer = CInt(Limits(limitsIndexList(sgListIndex.Index))("lowLimit"))
             sgDateTime = SGs.SafeGetSgDateTime(sgListIndex.Index)
             bgValue = CInt(sgListIndex.Value("sg"))
             If Math.Abs(bgValue - 0) < Single.Epsilon Then
@@ -1191,6 +1191,8 @@ Public Class Form1
 
             End If
 
+            Dim limitsLowValue As Integer = CInt(Limits(limitsIndexList(sgListIndex.Index))("lowLimit"))
+            Dim limitsHighValue As Integer = CInt(Limits(limitsIndexList(sgListIndex.Index))("highLimit"))
             Me.HomePageChart.Series(NameOf(HighLimitSeries)).Points.AddXY(sgDateTime.ToOADate(), limitsHighValue)
             Me.HomePageChart.Series(NameOf(LowLimitSeries)).Points.AddXY(sgDateTime.ToOADate(), limitsLowValue)
         Next
