@@ -3,33 +3,47 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Runtime.CompilerServices
-Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Module SupportFunctions
+
+    Public Enum RoundTo
+        Second
+        Minute
+        Hour
+        Day
+    End Enum
+
+    <Extension>
+    Friend Sub Adjustlist(myList As List(Of Insulin), startIndex As Integer, count As Integer)
+        For i As Integer = startIndex To startIndex + count
+            If i >= myList.Count Then Exit Sub
+            myList(i) = myList(i).Adjust()
+        Next
+    End Sub
+
+    <Extension>
+    Friend Function ConditionalSum(myList As List(Of Insulin), start As Integer, length As Integer) As Double
+        If start + length > myList.Count Then
+            length = myList.Count - start
+        End If
+        Return myList.GetRange(start, length).Sum(Function(i As Insulin) i.CurrentInsulinLevel)
+    End Function
+
+    <Extension>
+    Friend Function GetDecimalValue(item As Dictionary(Of String, String), ParamArray values() As String) As Double
+        Dim returnValueString As String = ""
+        For Each value As String In values
+            If item.TryGetValue(value, returnValueString) Then
+                Return Double.Parse(returnValueString)
+            End If
+        Next
+        Return Double.NaN
+    End Function
 
     <Extension>
     Friend Function GetMilitaryHour(selectedStartTime As String) As Integer
         Return CInt(Format(Date.Parse(selectedStartTime), "HH"))
     End Function
-
-    <Extension>
-    Friend Sub PaintMarker(e As ChartPaintEventArgs, markerImage As Bitmap, marketDictionary As Dictionary(Of Double, Integer), imageYOffset As Integer)
-        ' Draw the cloned portion of the Bitmap object.
-        Dim halfHeight As Single = CSng(markerImage.Height / 2)
-        Dim halfWidth As Single = CSng(markerImage.Width / 2)
-        For Each markerKvp As KeyValuePair(Of Double, Integer) In marketDictionary
-            Dim imagePosition As RectangleF = RectangleF.Empty
-            imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, markerKvp.Key))
-            imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, markerKvp.Value))
-            imagePosition = e.ChartGraphics.GetAbsoluteRectangle(imagePosition)
-            imagePosition.Width = markerImage.Width
-            imagePosition.Height = markerImage.Height
-            imagePosition.Y -= halfHeight
-            imagePosition.X -= halfWidth
-            ' Draw image
-            e.ChartGraphics.Graphics.DrawImage(markerImage, imagePosition.X, imagePosition.Y + imageYOffset)
-        Next
-    End Sub
 
     <Extension>
     Friend Function RoundDouble(value As Double, decimalDigits As Integer) As Double
@@ -46,11 +60,51 @@ Public Module SupportFunctions
     <Extension>
     Friend Function RoundSingle(value As Double, decimalDigits As Integer) As Single
 
-        Return CType(Math.Round(value, decimalDigits), Single)
+        Return CSng(Math.Round(value, decimalDigits))
+    End Function
+
+    Friend Sub SetValue(myList As List(Of KeyValuePair(Of Double, Double)), ByRef value As KeyValuePair(Of Double, Double))
+        For Each v As IndexClass(Of KeyValuePair(Of Double, Double)) In myList.WithIndex()
+            If Not v.IsLast Then
+                If myList(v.Index).Key >= value.Key Then
+                    Continue For
+                End If
+            End If
+            myList(v.Index) = New KeyValuePair(Of Double, Double)(v.Value.Key, value.Value)
+            value = myList(v.Index)
+            Exit For
+        Next
+    End Sub
+
+    <Extension()>
+    Friend Function ToDisplay(d As SortedDictionary(Of Double, Double)) As Dictionary(Of String, Double)
+        Dim result As New Dictionary(Of String, Double)
+        For Each entry As KeyValuePair(Of Double, Double) In d
+            result.Add(Date.FromOADate(entry.Key).ToLongTimeString(), Math.Round(entry.Value, 3))
+        Next
+        Return result
     End Function
 
     <Extension>
-    Friend Function SafeGetSgDateTime(sgList As IReadOnlyList(Of Dictionary(Of String, String)), index As Integer) As Date
+    Public Function RoundDown(d As Date, rt As RoundTo) As DateTime
+        Dim dtRounded As New DateTime()
+
+        Select Case rt
+            Case RoundTo.Second
+                dtRounded = New DateTime(d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second)
+            Case RoundTo.Minute
+                dtRounded = New DateTime(d.Year, d.Month, d.Day, d.Hour, d.Minute, 0)
+            Case RoundTo.Hour
+                dtRounded = New DateTime(d.Year, d.Month, d.Day, d.Hour, 0, 0)
+            Case RoundTo.Day
+                dtRounded = New DateTime(d.Year, d.Month, d.Day, 0, 0, 0)
+        End Select
+
+        Return dtRounded
+    End Function
+
+    <Extension>
+    Public Function SafeGetSgDateTime(sgList As List(Of Dictionary(Of String, String)), index As Integer) As Date
         Dim sgDateTimeString As String = ""
         Dim sgDateTime As Date
         If sgList(index).Count < 7 Then

@@ -5,7 +5,6 @@
 /.vs/CareLink
 /CareLink/obj/Debug/net5.0-windows
 /CareLink/CareLink.vbproj.user
-/CareLink/bin/Debug/net5.0-windows/CareLink.exe.WebView2/EBWebView
 /CareLink/bin/Debug/net5.0-windows
 /CareLink/Images/IMG_E4006.JPG
 /CareLink/Images/IMG_4011.PNG
@@ -16,4 +15,5 @@
 /CareLink/Images/ReservoirAll.png
 /CareLink/obj/Release/net5.0-windows
 /.vs
-/CareLink/Images/IMG_E4022.JPG
+/TestProject1
+/CareLink/obj/Debug/net5.0

@@ -97,7 +97,7 @@ Public Module CarelinkClient
             If String.IsNullOrWhiteSpace(url) Then
                 Return Nothing
             End If
-            Dim cookie As Cookie = _httpClientHandler.CookieContainer.GetCookies(New Uri($"https://{url}")).Cast(Of Cookie)().FirstOrDefault(Function(x) x.Name = cookieName)
+            Dim cookie As Cookie = _httpClientHandler.CookieContainer.GetCookies(New Uri($"https://{url}")).Cast(Of Cookie)().FirstOrDefault(Function(c As Cookie) c.Name = cookieName)
             Return cookie?.Value
         End Function
 

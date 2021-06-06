@@ -8,5 +8,8 @@
     <Setting Name="password" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="AIT" Type="System.TimeSpan" Scope="User">
+      <Value Profile="(Default)">03:00:00</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
