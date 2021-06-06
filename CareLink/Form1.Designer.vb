@@ -39,6 +39,7 @@ Partial Class Form1
         Me.TableLayoutPanelTop2 = New System.Windows.Forms.TableLayoutPanel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.PumpBatteryPictureBox = New System.Windows.Forms.PictureBox()
         Me.AITLabel = New System.Windows.Forms.Label()
         Me.AITComboBox = New System.Windows.Forms.ComboBox()
         Me.MessageForCursor2Label = New System.Windows.Forms.Label()
@@ -92,6 +93,7 @@ Partial Class Form1
         Me.SplitContainer1.SuspendLayout
         Me.TabControl1.SuspendLayout
         Me.TabPage1.SuspendLayout
+        CType(Me.PumpBatteryPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.MessagePictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.InsulinLevelPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.CalibrationDueImage,System.ComponentModel.ISupportInitialize).BeginInit
@@ -277,7 +279,7 @@ Partial Class Form1
         Me.TableLayoutPanelTop2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelTop2.ColumnCount = 2
         Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100!))
-        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 652!))
+        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 658!))
         Me.TableLayoutPanelTop2.Location = New System.Drawing.Point(724, 0)
         Me.TableLayoutPanelTop2.Name = "TableLayoutPanelTop2"
         Me.TableLayoutPanelTop2.RowCount = 1
@@ -306,6 +308,7 @@ Partial Class Form1
         'TabPage1
         '
         Me.TabPage1.BackColor = System.Drawing.Color.Black
+        Me.TabPage1.Controls.Add(Me.PumpBatteryPictureBox)
         Me.TabPage1.Controls.Add(Me.AITLabel)
         Me.TabPage1.Controls.Add(Me.AITComboBox)
         Me.TabPage1.Controls.Add(Me.MessageForCursor2Label)
@@ -342,6 +345,17 @@ Partial Class Form1
         Me.TabPage1.Size = New System.Drawing.Size(1376, 706)
         Me.TabPage1.TabIndex = 7
         Me.TabPage1.Text = "Home Page"
+        '
+        'PumpBatteryPictureBox
+        '
+        Me.PumpBatteryPictureBox.ErrorImage = Nothing
+        Me.PumpBatteryPictureBox.Image = Global.CareLink.My.Resources.Resources.PumpBatteryFull
+        Me.PumpBatteryPictureBox.Location = New System.Drawing.Point(889, 14)
+        Me.PumpBatteryPictureBox.Name = "PumpBatteryPictureBox"
+        Me.PumpBatteryPictureBox.Size = New System.Drawing.Size(70, 96)
+        Me.PumpBatteryPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PumpBatteryPictureBox.TabIndex = 43
+        Me.PumpBatteryPictureBox.TabStop = false
         '
         'AITLabel
         '
@@ -941,6 +955,7 @@ Partial Class Form1
         Me.TabControl1.ResumeLayout(false)
         Me.TabPage1.ResumeLayout(false)
         Me.TabPage1.PerformLayout
+        CType(Me.PumpBatteryPictureBox,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.MessagePictureBox,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.InsulinLevelPictureBox,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.CalibrationDueImage,System.ComponentModel.ISupportInitialize).EndInit
@@ -1024,4 +1039,5 @@ End Sub
     Friend WithEvents AITComboBox As ComboBox
     Friend WithEvents AITLabel As Label
     Friend WithEvents TabPage2 As TabPage
+    Friend WithEvents PumpBatteryPictureBox As PictureBox
 End Class

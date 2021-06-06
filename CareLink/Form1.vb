@@ -1261,7 +1261,7 @@ Public Class Form1
         Me.UpdateRemainingInsulin()
         Me.UpdateActiveInsulin()
         Me.UpdateActiveInsulinChart()
-        Me.UpdateBgChart()
+        Me.UpdateHomePageChart()
         Me.UpdateAutoModeShield()
         Me.UpdateInsulinLevel()
         Me.UpdateCalibrationTimeRemaining()
@@ -1295,7 +1295,7 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
-    Private Sub UpdateBgChart()
+    Private Sub UpdateHomePageChart()
         If Not _initialized Then
             Exit Sub
         End If
@@ -1401,6 +1401,15 @@ Public Class Form1
         Next
         _homePageChartChartArea.AxisX.ScrollBar.Enabled = True
         _homePageChartChartArea.CursorX.IsUserSelectionEnabled = True
+        Select Case MedicalDeviceBatteryLevelPercent
+            Case > 66
+                Me.PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryFull
+            Case > 20
+                Me.PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryMedium
+            Case Else
+                Me.PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryLow
+        End Select
+
         Application.DoEvents()
     End Sub
 
