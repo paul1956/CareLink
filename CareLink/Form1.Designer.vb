@@ -39,6 +39,9 @@ Partial Class Form1
         Me.TableLayoutPanelTop2 = New System.Windows.Forms.TableLayoutPanel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.DaysLeftLabel = New System.Windows.Forms.Label()
+        Me.SensorAgeLeftLabel = New System.Windows.Forms.Label()
+        Me.SensorLifePictureBox = New System.Windows.Forms.PictureBox()
         Me.PumpBatteryPictureBox = New System.Windows.Forms.PictureBox()
         Me.AITLabel = New System.Windows.Forms.Label()
         Me.AITComboBox = New System.Windows.Forms.ComboBox()
@@ -86,6 +89,7 @@ Partial Class Form1
         Me.TableLayoutPanel7 = New System.Windows.Forms.TableLayoutPanel()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.CursorTimer = New System.Windows.Forms.Timer(Me.components)
+        Me.TransmitterBatterPictureBox = New System.Windows.Forms.PictureBox()
         Me.MenuStrip1.SuspendLayout
         CType(Me.SplitContainer1,System.ComponentModel.ISupportInitialize).BeginInit
         Me.SplitContainer1.Panel1.SuspendLayout
@@ -93,6 +97,7 @@ Partial Class Form1
         Me.SplitContainer1.SuspendLayout
         Me.TabControl1.SuspendLayout
         Me.TabPage1.SuspendLayout
+        CType(Me.SensorLifePictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.PumpBatteryPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.MessagePictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.InsulinLevelPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
@@ -105,6 +110,7 @@ Partial Class Form1
         Me.TabPage7.SuspendLayout
         Me.TabPage8.SuspendLayout
         Me.TabPage9.SuspendLayout
+        CType(Me.TransmitterBatterPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         Me.SuspendLayout
         '
         'MenuStrip1
@@ -279,7 +285,7 @@ Partial Class Form1
         Me.TableLayoutPanelTop2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelTop2.ColumnCount = 2
         Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100!))
-        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 658!))
+        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 679!))
         Me.TableLayoutPanelTop2.Location = New System.Drawing.Point(724, 0)
         Me.TableLayoutPanelTop2.Name = "TableLayoutPanelTop2"
         Me.TableLayoutPanelTop2.RowCount = 1
@@ -308,6 +314,10 @@ Partial Class Form1
         'TabPage1
         '
         Me.TabPage1.BackColor = System.Drawing.Color.Black
+        Me.TabPage1.Controls.Add(Me.TransmitterBatterPictureBox)
+        Me.TabPage1.Controls.Add(Me.DaysLeftLabel)
+        Me.TabPage1.Controls.Add(Me.SensorAgeLeftLabel)
+        Me.TabPage1.Controls.Add(Me.SensorLifePictureBox)
         Me.TabPage1.Controls.Add(Me.PumpBatteryPictureBox)
         Me.TabPage1.Controls.Add(Me.AITLabel)
         Me.TabPage1.Controls.Add(Me.AITComboBox)
@@ -346,13 +356,47 @@ Partial Class Form1
         Me.TabPage1.TabIndex = 7
         Me.TabPage1.Text = "Home Page"
         '
+        'DaysLeftLabel
+        '
+        Me.DaysLeftLabel.BackColor = System.Drawing.Color.Transparent
+        Me.DaysLeftLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.DaysLeftLabel.ForeColor = System.Drawing.Color.White
+        Me.DaysLeftLabel.Location = New System.Drawing.Point(804, 93)
+        Me.DaysLeftLabel.Name = "DaysLeftLabel"
+        Me.DaysLeftLabel.Size = New System.Drawing.Size(66, 21)
+        Me.DaysLeftLabel.TabIndex = 46
+        Me.DaysLeftLabel.Text = "5 Days"
+        Me.DaysLeftLabel.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'SensorAgeLeftLabel
+        '
+        Me.SensorAgeLeftLabel.BackColor = System.Drawing.Color.Transparent
+        Me.SensorAgeLeftLabel.Font = New System.Drawing.Font("Segoe UI", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.SensorAgeLeftLabel.ForeColor = System.Drawing.Color.White
+        Me.SensorAgeLeftLabel.Location = New System.Drawing.Point(819, 28)
+        Me.SensorAgeLeftLabel.Name = "SensorAgeLeftLabel"
+        Me.SensorAgeLeftLabel.Size = New System.Drawing.Size(37, 52)
+        Me.SensorAgeLeftLabel.TabIndex = 45
+        Me.SensorAgeLeftLabel.Text = "5"
+        Me.SensorAgeLeftLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'SensorLifePictureBox
+        '
+        Me.SensorLifePictureBox.ErrorImage = Nothing
+        Me.SensorLifePictureBox.Image = Global.CareLink.My.Resources.Resources.SensorLifeOK
+        Me.SensorLifePictureBox.Location = New System.Drawing.Point(787, 3)
+        Me.SensorLifePictureBox.Name = "SensorLifePictureBox"
+        Me.SensorLifePictureBox.Size = New System.Drawing.Size(100, 100)
+        Me.SensorLifePictureBox.TabIndex = 44
+        Me.SensorLifePictureBox.TabStop = false
+        '
         'PumpBatteryPictureBox
         '
         Me.PumpBatteryPictureBox.ErrorImage = Nothing
         Me.PumpBatteryPictureBox.Image = Global.CareLink.My.Resources.Resources.PumpBatteryFull
-        Me.PumpBatteryPictureBox.Location = New System.Drawing.Point(889, 14)
+        Me.PumpBatteryPictureBox.Location = New System.Drawing.Point(499, 3)
         Me.PumpBatteryPictureBox.Name = "PumpBatteryPictureBox"
-        Me.PumpBatteryPictureBox.Size = New System.Drawing.Size(70, 96)
+        Me.PumpBatteryPictureBox.Size = New System.Drawing.Size(100, 100)
         Me.PumpBatteryPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PumpBatteryPictureBox.TabIndex = 43
         Me.PumpBatteryPictureBox.TabStop = false
@@ -363,7 +407,7 @@ Partial Class Form1
         Me.AITLabel.BackColor = System.Drawing.Color.Transparent
         Me.AITLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AITLabel.ForeColor = System.Drawing.Color.White
-        Me.AITLabel.Location = New System.Drawing.Point(697, 71)
+        Me.AITLabel.Location = New System.Drawing.Point(893, 44)
         Me.AITLabel.Name = "AITLabel"
         Me.AITLabel.Size = New System.Drawing.Size(156, 21)
         Me.AITLabel.TabIndex = 42
@@ -375,7 +419,7 @@ Partial Class Form1
         Me.AITComboBox.ForeColor = System.Drawing.Color.White
         Me.AITComboBox.FormattingEnabled = true
         Me.AITComboBox.Items.AddRange(New Object() {"2:00", "2:15", "2:30", "2:45", "3:00", "3:15", "3:30", "3:45", "4:00", "4:15", "4:30", "4:45", "5:00", "5:15", "5:30", "5:45", "6:00"})
-        Me.AITComboBox.Location = New System.Drawing.Point(748, 39)
+        Me.AITComboBox.Location = New System.Drawing.Point(944, 12)
         Me.AITComboBox.Name = "AITComboBox"
         Me.AITComboBox.Size = New System.Drawing.Size(54, 23)
         Me.AITComboBox.TabIndex = 41
@@ -384,7 +428,7 @@ Partial Class Form1
         '
         Me.MessageForCursor2Label.Font = New System.Drawing.Font("Segoe UI", 9!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.MessageForCursor2Label.ForeColor = System.Drawing.Color.White
-        Me.MessageForCursor2Label.Location = New System.Drawing.Point(133, 71)
+        Me.MessageForCursor2Label.Location = New System.Drawing.Point(129, 71)
         Me.MessageForCursor2Label.Name = "MessageForCursor2Label"
         Me.MessageForCursor2Label.Size = New System.Drawing.Size(235, 15)
         Me.MessageForCursor2Label.TabIndex = 40
@@ -395,7 +439,7 @@ Partial Class Form1
         '
         Me.ValueForCursorLabel.Font = New System.Drawing.Font("Segoe UI", 9!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.ValueForCursorLabel.ForeColor = System.Drawing.Color.White
-        Me.ValueForCursorLabel.Location = New System.Drawing.Point(188, 95)
+        Me.ValueForCursorLabel.Location = New System.Drawing.Point(184, 95)
         Me.ValueForCursorLabel.Name = "ValueForCursorLabel"
         Me.ValueForCursorLabel.Size = New System.Drawing.Size(125, 15)
         Me.ValueForCursorLabel.TabIndex = 39
@@ -406,7 +450,7 @@ Partial Class Form1
         '
         Me.MessagePictureBox.Image = Global.CareLink.My.Resources.Resources.CalibrationDotRed
         Me.MessagePictureBox.InitialImage = Nothing
-        Me.MessagePictureBox.Location = New System.Drawing.Point(228, 6)
+        Me.MessagePictureBox.Location = New System.Drawing.Point(224, 6)
         Me.MessagePictureBox.Name = "MessagePictureBox"
         Me.MessagePictureBox.Size = New System.Drawing.Size(45, 39)
         Me.MessagePictureBox.TabIndex = 38
@@ -429,7 +473,7 @@ Partial Class Form1
         '
         Me.MessageForCursor1Label.Font = New System.Drawing.Font("Segoe UI", 9!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.MessageForCursor1Label.ForeColor = System.Drawing.Color.White
-        Me.MessageForCursor1Label.Location = New System.Drawing.Point(188, 47)
+        Me.MessageForCursor1Label.Location = New System.Drawing.Point(184, 47)
         Me.MessageForCursor1Label.Name = "MessageForCursor1Label"
         Me.MessageForCursor1Label.Size = New System.Drawing.Size(125, 15)
         Me.MessageForCursor1Label.TabIndex = 36
@@ -654,7 +698,7 @@ Partial Class Form1
         Me.RemainingInsulinUnits.BackColor = System.Drawing.Color.Transparent
         Me.RemainingInsulinUnits.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.RemainingInsulinUnits.ForeColor = System.Drawing.Color.White
-        Me.RemainingInsulinUnits.Location = New System.Drawing.Point(612, 78)
+        Me.RemainingInsulinUnits.Location = New System.Drawing.Point(610, 64)
         Me.RemainingInsulinUnits.Name = "RemainingInsulinUnits"
         Me.RemainingInsulinUnits.Size = New System.Drawing.Size(66, 21)
         Me.RemainingInsulinUnits.TabIndex = 13
@@ -665,7 +709,7 @@ Partial Class Form1
         '
         Me.InsulinLevelPictureBox.Image = CType(resources.GetObject("InsulinLevelPictureBox.Image"),System.Drawing.Image)
         Me.InsulinLevelPictureBox.InitialImage = Nothing
-        Me.InsulinLevelPictureBox.Location = New System.Drawing.Point(628, 28)
+        Me.InsulinLevelPictureBox.Location = New System.Drawing.Point(626, 14)
         Me.InsulinLevelPictureBox.Name = "InsulinLevelPictureBox"
         Me.InsulinLevelPictureBox.Size = New System.Drawing.Size(35, 51)
         Me.InsulinLevelPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
@@ -689,7 +733,7 @@ Partial Class Form1
         '
         Me.CalibrationDueImage.BackColor = System.Drawing.Color.Transparent
         Me.CalibrationDueImage.Image = Global.CareLink.My.Resources.Resources.CalibrationDot
-        Me.CalibrationDueImage.Location = New System.Drawing.Point(563, 28)
+        Me.CalibrationDueImage.Location = New System.Drawing.Point(129, 6)
         Me.CalibrationDueImage.Name = "CalibrationDueImage"
         Me.CalibrationDueImage.Size = New System.Drawing.Size(47, 47)
         Me.CalibrationDueImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
@@ -935,6 +979,16 @@ Partial Class Form1
         '
         Me.CursorTimer.Interval = 60000
         '
+        'TransmitterBatterPictureBox
+        '
+        Me.TransmitterBatterPictureBox.ErrorImage = Nothing
+        Me.TransmitterBatterPictureBox.Image = Global.CareLink.My.Resources.Resources.TransmitterBatteryFull
+        Me.TransmitterBatterPictureBox.Location = New System.Drawing.Point(682, 3)
+        Me.TransmitterBatterPictureBox.Name = "TransmitterBatterPictureBox"
+        Me.TransmitterBatterPictureBox.Size = New System.Drawing.Size(100, 100)
+        Me.TransmitterBatterPictureBox.TabIndex = 47
+        Me.TransmitterBatterPictureBox.TabStop = false
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7!, 15!)
@@ -955,6 +1009,7 @@ Partial Class Form1
         Me.TabControl1.ResumeLayout(false)
         Me.TabPage1.ResumeLayout(false)
         Me.TabPage1.PerformLayout
+        CType(Me.SensorLifePictureBox,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.PumpBatteryPictureBox,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.MessagePictureBox,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.InsulinLevelPictureBox,System.ComponentModel.ISupportInitialize).EndInit
@@ -973,6 +1028,7 @@ Partial Class Form1
         Me.TabPage8.ResumeLayout(false)
         Me.TabPage8.PerformLayout
         Me.TabPage9.ResumeLayout(false)
+        CType(Me.TransmitterBatterPictureBox,System.ComponentModel.ISupportInitialize).EndInit
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1040,4 +1096,8 @@ End Sub
     Friend WithEvents AITLabel As Label
     Friend WithEvents TabPage2 As TabPage
     Friend WithEvents PumpBatteryPictureBox As PictureBox
+    Friend WithEvents SensorLifePictureBox As PictureBox
+    Friend WithEvents SensorAgeLeftLabel As Label
+    Friend WithEvents DaysLeftLabel As Label
+    Friend WithEvents TransmitterBatterPictureBox As PictureBox
 End Class

@@ -86,7 +86,7 @@ Public Module SupportFunctions
     End Function
 
     <Extension>
-    Public Function RoundDown(d As Date, rt As RoundTo) As DateTime
+    Public Function RoundDown(d As Date, rt As RoundTo) As Date
         Dim dtRounded As New DateTime()
 
         Select Case rt
@@ -110,12 +110,17 @@ Public Module SupportFunctions
         If sgList(index).Count < 7 Then
             index -= 1
         End If
-        If sgList(index).TryGetValue("datetime", sgDateTimeString) Then
+        If sgList(index).TryGetValue("previousDateTime", sgDateTimeString) Then
+            sgDateTime = Date.Parse(sgDateTimeString)
+        ElseIf sgList(index).TryGetValue("datetime", sgDateTimeString) Then
             sgDateTime = Date.Parse(sgDateTimeString)
         ElseIf sgList(index).TryGetValue("dateTime", sgDateTimeString) Then
             sgDateTime = Date.Parse(sgDateTimeString.Split("-")(0))
         Else
             sgDateTime = Now
+        End If
+        If sgDateTime.Year = 2000 Then
+            sgDateTime = Date.Now - ((sgList.Count - index) * Form1._FiveMinutes)
         End If
         If sgList(index).Count < 7 Then
             sgDateTime = sgDateTime.AddMinutes(5)

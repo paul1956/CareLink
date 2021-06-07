@@ -282,6 +282,10 @@ Public Class Form1
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
         Me.ShieldUnitsLabel.BackColor = Color.Transparent
+        Me.SensorAgeLeftLabel.Parent = Me.SensorLifePictureBox
+        Me.SensorAgeLeftLabel.BackColor = Color.Transparent
+        Me.SensorAgeLeftLabel.Left = (Me.SensorLifePictureBox.Width \ 2) - (Me.SensorAgeLeftLabel.Width \ 2)
+        Me.SensorAgeLeftLabel.Top = (Me.SensorLifePictureBox.Height \ 2) - (Me.SensorAgeLeftLabel.Height \ 2)
         Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact(My.Settings.AIT.ToString("hh\:mm").Substring(1))
         _activeInsulinIncrements = CInt(TimeSpan.Parse(My.Settings.AIT.ToString("hh\:mm").Substring(1)) / _FiveMinutes)
         Me.InitializeHomePageChart()
@@ -301,9 +305,7 @@ Public Class Form1
         If Not _initialized Then
             Exit Sub
         End If
-        'Dim xInPixels As Double = Me.HomePageChart.ChartAreas("Default").AxisX.ValueToPixelPosition(e.X)
         Dim yInPixels As Double = Me.HomePageChart.ChartAreas("Default").AxisY2.ValueToPixelPosition(e.Y)
-        'Dim mousePoint As New Point(e.X, e.Y)
         If Double.IsNaN(yInPixels) Then
             Exit Sub
         End If
@@ -370,7 +372,7 @@ Public Class Form1
     Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomePageChart.PostPaint
         If Not _initialized Then Exit Sub
         If _imagePosition = Rectangle.Empty Then
-            _imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, SGs.SafeGetSgDateTime(0).ToOADate))
+             _imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, SGs.SafeGetSgDateTime(0).ToOADate))
             _imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, 400))
             _imagePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, HighLimit)))) - _imagePosition.Y
             _imagePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, SGs.SafeGetSgDateTime(SGs.Count - 1).ToOADate)) - _imagePosition.X
@@ -1197,12 +1199,17 @@ Public Class Form1
 
         ' Order all markers my time
         Dim timeOrderedMarkers As New SortedDictionary(Of Double, Double)
-        Dim getSgDateTime As Date = SGs.SafeGetSgDateTime(0)
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In Markers.WithIndex()
-            Dim sgOaDateTime As Double = Markers.SafeGetSgDateTime(sgListIndex.Index).RoundDown(RoundTo.Minute).ToOADate
+            Dim sgDateTime As Date = Markers.SafeGetSgDateTime(sgListIndex.Index)
+            Dim sgOaDateTime As Double = sgDateTime.RoundDown(RoundTo.Minute).ToOADate
             Select Case sgListIndex.Value("type")
                 Case "INSULIN"
-                    timeOrderedMarkers.Add(sgOaDateTime, sgListIndex.Value.GetDecimalValue("programmedFastAmount"))
+                    Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue("programmedFastAmount")
+                    If timeOrderedMarkers.ContainsKey(sgOaDateTime) Then
+                        timeOrderedMarkers(sgOaDateTime) += bolusAmount
+                    Else
+                        timeOrderedMarkers.Add(sgOaDateTime, bolusAmount)
+                    End If
                     Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.AddXY(sgOaDateTime, 25)
                     Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.Last.ToolTip = $"Bolus, {sgListIndex.Value("programmedFastAmount")} U"
                     Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.Last.Color = Color.LightBlue
@@ -1210,7 +1217,11 @@ Public Class Form1
                     Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.Last.MarkerStyle = MarkerStyle.Square
                 Case "AUTO_BASAL_DELIVERY"
                     Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue("bolusAmount")
-                    timeOrderedMarkers.Add(sgOaDateTime, bolusAmount)
+                    If timeOrderedMarkers.ContainsKey(sgOaDateTime) Then
+                        timeOrderedMarkers(sgOaDateTime) += bolusAmount
+                    Else
+                        timeOrderedMarkers.Add(sgOaDateTime, bolusAmount)
+                    End If
                     Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.AddXY(sgOaDateTime, 25)
                     Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3)} U"
                     Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.Last.MarkerSize = 8
@@ -1220,6 +1231,8 @@ Public Class Form1
         ' set up table that holds active insulin for every 5 minutes
         Dim remainingInsulinList As New List(Of Insulin)
         Dim currentMarker As Integer = 0
+        Dim getSgDateTime As Date = SGs.SafeGetSgDateTime(0)
+
         For i As Integer = 0 To 287
             Dim decimalValue As Double = 0
             Dim oaTime As Double = (getSgDateTime + (_FiveMinutes * i)).RoundDown(RoundTo.Minute).ToOADate()
@@ -1258,14 +1271,8 @@ Public Class Form1
             Stop
         End If
         _initialized = True
-        Me.UpdateRemainingInsulin()
-        Me.UpdateActiveInsulin()
         Me.UpdateActiveInsulinChart()
         Me.UpdateHomePageChart()
-        Me.UpdateAutoModeShield()
-        Me.UpdateInsulinLevel()
-        Me.UpdateCalibrationTimeRemaining()
-        Me.UpdateTimeInRange()
         _updating = False
     End Sub
 
@@ -1300,9 +1307,17 @@ Public Class Form1
             Exit Sub
         End If
         _initialized = False
+        Me.UpdateActiveInsulin()
+        Me.UpdateAutoModeShield()
+        Me.UpdateCalibrationTimeRemaining()
+        Me.UpdateInsulinLevel()
+        Me.UpdateRemainingInsulin()
+        Me.UpdateSensorLife()
+        Me.UpdateTimeInRange()
 
         Me.HomePageChart.Titles("Title1").Text = $"Summary of last 24 hours"
-        Me.HomePageChart.ChartAreas("Default").AxisX.Minimum = SGs.SafeGetSgDateTime(0).ToOADate()
+        Dim sgDateTime As Date = SGs.SafeGetSgDateTime(0)
+        Me.HomePageChart.ChartAreas("Default").AxisX.Minimum = sgDateTime.ToOADate()
         Me.HomePageChart.ChartAreas("Default").AxisX.Maximum = SGs.SafeGetSgDateTime(SGs.Count - 1).ToOADate()
         Me.HomePageChart.Series("Default").Points.Clear()
         Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Clear()
@@ -1326,7 +1341,8 @@ Public Class Form1
         Dim bgValue As Single
         Dim sgOaDateTime As Double
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In Markers.WithIndex()
-            sgOaDateTime = Markers.SafeGetSgDateTime(sgListIndex.Index).ToOADate()
+            sgDateTime = Markers.SafeGetSgDateTime(sgListIndex.Index)
+            sgOaDateTime = sgDateTime.ToOADate()
             Dim bgValueString As String = ""
             If sgListIndex.Value.TryGetValue("value", bgValueString) Then
                 bgValue = CInt(bgValueString)
@@ -1377,7 +1393,8 @@ Public Class Form1
         Next
         _initialized = True
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In SGs.WithIndex()
-            sgOaDateTime = SGs.SafeGetSgDateTime(sgListIndex.Index).ToOADate()
+            sgDateTime = SGs.SafeGetSgDateTime(sgListIndex.Index)
+            sgOaDateTime = sgDateTime.ToOADate()
             bgValue = CInt(sgListIndex.Value("sg"))
             If Math.Abs(bgValue - 0) < Single.Epsilon Then
                 Me.HomePageChart.Series("Default").Points.AddXY(sgOaDateTime, InsulinRow)
@@ -1409,8 +1426,20 @@ Public Class Form1
             Case Else
                 Me.PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryLow
         End Select
-
         Application.DoEvents()
+    End Sub
+
+    Private Sub UpdateSensorLife()
+        If SensorDurationHours < 24 Then
+            Me.SensorLifePictureBox.Image = My.Resources.Resources.SensorLifeNotOK
+            Me.SensorAgeLeftLabel.Text = $"1"
+            Me.SensorAgeLeftLabel.Text = $"1 Day"
+        Else
+            Me.SensorAgeLeftLabel.Text = CStr(SensorDurationHours \ 24)
+            Me.SensorLifePictureBox.Image = My.Resources.Resources.SensorLifeOK
+            Me.DaysLeftLabel.Text = $"{SensorDurationHours \ 24} Days"
+        End If
+
     End Sub
 
     Private Sub UpdateCalibrationTimeRemaining()
