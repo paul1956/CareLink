@@ -10,10 +10,10 @@ Friend Class Insulin
     Public Sub New(oaTime As Double, initialInsulinLevel As Double, activeInsulinIncrements As Integer)
         Me.OaTime = oaTime
         Me.EventDate = Date.FromOADate(oaTime)
-        _incrementUpCount = CInt(Math.Ceiling(activeInsulinIncrements * (2 / 3)))
+        _incrementUpCount = CInt(Math.Ceiling(activeInsulinIncrements * (1 / 3)))
         _incrementDownCount = activeInsulinIncrements - _incrementUpCount
         _adjustmentValue = initialInsulinLevel / activeInsulinIncrements
-        Me.CurrentInsulinLevel = _adjustmentValue * _incrementUpCount
+        Me.CurrentInsulinLevel = _adjustmentValue * _incrementDownCount
     End Sub
 
     Public Property CurrentInsulinLevel As Double

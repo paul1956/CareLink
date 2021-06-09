@@ -112,58 +112,79 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="SensorLifeOK" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\SensorLifeOK.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="CalibrationDot" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\CalibrationDot.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="PumpBatteryLow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\PumpBatteryLow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="Shield" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\Shield.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SensorCommunicationLost" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\SensorCommunicationLost.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SensorExpirationUnknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\SensorExpirationUnknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="CalibrationDotRed" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\CalibrationDotRed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="InsulinVial_Tiny" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\InsulinVial Tiny.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="PumpBatteryFull" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\PumpBatteryFull.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="PumpBatteryMedium" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\PumpBatteryMedium.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="TransmitterBatteryUnknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\TransmitterBatteryUnknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="FoodImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\FoodImage .png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="InsulinVial" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\InsulinVial.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Shield_Disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\Shield Disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="PumpBatteryCritical" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\PumpBatteryCritical.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="SensorLifeNotOK" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\SensorLifeNotOK.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="TransmitterBatteryFull" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\TransmitterBatteryFull.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="TransmitterBatteryMedium" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\TransmitterBatteryMedium.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Shield_Disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Shield Disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="InsulinVial_Tiny" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\InsulinVial Tiny.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="TransmitterBatteryLow" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\TransmitterBatteryLow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="TransmitterBatteryMedium" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\TransmitterBatteryMedium.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SensorExpired" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\SensorExpired.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CalibrationDot" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\CalibrationDot.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TransmitterBatteryFull" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\TransmitterBatteryFull.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SensorLifeOK" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\SensorLifeOK.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PumpBatteryUnknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\PumpBatteryUnknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PumpBatteryLow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\PumpBatteryLow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PumpBatteryMedium" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\PumpBatteryMedium.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="TransmitterBatteryOK" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\TransmitterBatteryOK.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="InsulinVial" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\InsulinVial.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MealImageLarge" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\MealImageLarge.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MealImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\MealImage .png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

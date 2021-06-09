@@ -6,21 +6,23 @@ Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Module ControlExtensions
+
+    <Extension>
+    Friend Function FindHorizontalMidpoint(ctrl As Control) As Integer
+        Return ctrl.Left + (ctrl.Width \ 2)
+    End Function
+
+    <Extension>
+    Friend Function FindVerticalMidpoint(ctrl As Control) As Integer
+        Return ctrl.Top + (ctrl.Height \ 2)
+    End Function
+
     <Extension>
     Friend Function HorizontalCenterOn(parentControl As Control, ParamArray childControls() As Control) As Integer
         Dim totalWidth As Integer = childControls.First.Right - childControls.Last.Left
         Return parentControl.FindHorizontalMidpoint - (totalWidth \ 2)
     End Function
 
-    <Extension>
-    Friend Function PositionBelow(controlAbove As Control) As Integer
-        Return controlAbove.Top + controlAbove.Height + 1
-    End Function
-
-    <Extension>
-    Friend Function FindHorizontalMidpoint(ctrl As Control) As Integer
-        Return ctrl.Left + (ctrl.Width \ 2)
-    End Function
     <Extension>
     Friend Sub PaintMarker(e As ChartPaintEventArgs, markerImage As Bitmap, marketDictionary As Dictionary(Of Double, Integer), imageYOffset As Integer)
         ' Draw the cloned portion of the Bitmap object.
@@ -39,5 +41,10 @@ Public Module ControlExtensions
             e.ChartGraphics.Graphics.DrawImage(markerImage, imagePosition.X, imagePosition.Y + imageYOffset)
         Next
     End Sub
+
+    <Extension>
+    Friend Function PositionBelow(controlAbove As Control) As Integer
+        Return controlAbove.Top + controlAbove.Height + 1
+    End Function
 
 End Module

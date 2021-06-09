@@ -399,23 +399,6 @@ Public Module CarelinkClient
             Return jsondata
         End Function
 
-        ' Old last24hours webapp data
-        Public Overridable Function __getLast24Hours() As Dictionary(Of String, String)
-            Printdbg("__getLast24Hours")
-            Dim queryParams As New Dictionary(Of String, String) From {
-                {
-                    "cpSerialNumber",
-                    "NONE"},
-                {
-                    "msgType",
-                    "last24hours"},
-                {
-                    "requestTime",
-                    Convert.ToInt32((Date.UtcNow - New DateTime(1970, 1, 1)) * 1000).ToString()}
-                }
-            Return Me.__getData(Me.__careLinkServer(), "patient/connect/data", queryParams, Nothing)
-        End Function
-
         Public Overridable Function __getLoginSessionAsync() As HttpResponseMessage
             ' https://carelink.minimed.com/patient/sso/login?country=us&lang=en
             Dim url As String = "https://" & Me.__careLinkServer() & "/patient/sso/login"
@@ -480,12 +463,9 @@ Public Module CarelinkClient
                         "CARE_PARTNER_OUS"
                     }.Contains(_sessionUser("role")), "carepartner", "patient")
                     Return Me.__getConnectDisplayMessage(_sessionProfile("username").ToString(), role, _sessionCountrySettings("blePereodicDataEndpoint"))
-                Else
-                    Return Me.__getLast24Hours()
                 End If
-            Else
-                Return Nothing
             End If
+            Return Nothing
         End Function
 
         ' Authentication methods

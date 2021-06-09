@@ -66,6 +66,7 @@ Public Class Form1
         }
 
     Private ReadOnly _calibrationToolTip As New ToolTip()
+    Private ReadOnly _sensorLifeToolTip As New ToolTip()
     Private ReadOnly _insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
 
     Private ReadOnly _listOfSingleItems As New List(Of Integer) From {
@@ -81,7 +82,7 @@ Public Class Form1
     Private ReadOnly _loginDialog As New LoginForm1
     Private ReadOnly _markerInsulinDictionary As New Dictionary(Of Double, Integer)
     Private ReadOnly _markerMealDictionary As New Dictionary(Of Double, Integer)
-    Private ReadOnly _mealImage As Bitmap = My.Resources.FoodImage
+    Private ReadOnly _mealImage As Bitmap = My.Resources.MealImage
     Private _activeInsulinIncrements As Integer
     Private _client As CarelinkClient.CareLinkClient
     Private _imagePosition As RectangleF = RectangleF.Empty
@@ -123,6 +124,7 @@ Public Class Form1
     Public HighLimit As Single
 
     Public LowLimit As Single
+    Public RecentData As Dictionary(Of String, String)
 
 #Region "Variables to hold Sensor Values"
 
@@ -171,7 +173,6 @@ Public Class Form1
     Public PumpBannerState As List(Of Dictionary(Of String, String))
     Public PumpCommunicationState As Boolean
     Public PumpModelNumber As String
-    Public RecentData As Dictionary(Of String, String)
     Public ReservoirAmount As Integer
     Public ReservoirLevelPercent As Integer
     Public ReservoirRemainingUnits As Double
@@ -271,6 +272,11 @@ Public Class Form1
             _calibrationToolTip.SetToolTip(Me.CalibrationDueImage, $"Calibration Due {Now.AddMinutes(TimeToNextCalibrationMinutes).ToShortTimeString}")
         End If
     End Sub
+    Private Sub SensorAgeLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles SensorAgeLeftLabel.MouseHover
+        If SensorDurationHours < 24 Then
+            _sensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {sensorDurationHours} hours")
+        End If
+    End Sub
 
     Private Sub CursorTimer_Tick(sender As Object, e As EventArgs) Handles CursorTimer.Tick
         If Not _homePageChartChartArea.AxisX.ScaleView.IsZoomed Then
@@ -312,67 +318,82 @@ Public Class Form1
         Dim result As HitTestResult = Me.HomePageChart.HitTest(e.X, e.Y)
         If result.PointIndex >= -1 Then
             If result.Series IsNot Nothing Then
-                Me.TimeForCursorLabel.Left = e.X - (Me.TimeForCursorLabel.Width \ 2)
+                Me.CursorTimeLabel.Left = e.X - (Me.CursorTimeLabel.Width \ 2)
                 Select Case result.Series.Name
                     Case NameOf(HighLimitSeries), NameOf(LowLimitSeries)
-                        ' Ignore
+                        Me.CursorMessage1Label.Visible = False
+                        Me.CursorMessage2Label.Visible = False
+                        Me.CursorPictureBox.Image = Nothing
+                        Me.CursorTimeLabel.Visible = False
+                        Me.CursorValueLabel.Visible = False
                     Case NameOf(MarkerSeries)
                         Dim marketToolTip() As String = result.Series.Points(result.PointIndex).ToolTip.Split(","c)
                         Dim xValue As Date = Date.FromOADate(result.Series.Points(result.PointIndex).XValue)
-                        Me.TimeForCursorLabel.Text = xValue.ToString(_timeFormat)
-                        Me.TimeForCursorLabel.Tag = xValue
+                        Me.CursorTimeLabel.Visible = True
+                        Me.CursorTimeLabel.Text = xValue.ToString(_timeFormat)
+                        Me.CursorTimeLabel.Tag = xValue
                         marketToolTip(0) = marketToolTip(0).Trim
-                        Me.ValueForCursorLabel.Visible = True
-                        Me.MessagePictureBox.SizeMode = PictureBoxSizeMode.StretchImage
+                        Me.CursorValueLabel.Visible = True
+                        Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
+                        Me.CursorPictureBox.Visible = True
                         Select Case marketToolTip.Length
                             Case 2
-                                Me.MessageForCursor1Label.Text = marketToolTip(0)
+                                Me.CursorMessage1Label.Text = marketToolTip(0)
                                 Select Case marketToolTip(0)
                                     Case "Basal"
-                                        Me.MessagePictureBox.Image = Nothing
+                                        Me.CursorPictureBox.Image = Global.CareLink.My.Resources.Resources.InsulinVial
                                     Case "Bolus"
-                                        Me.MessagePictureBox.Image = Global.CareLink.My.Resources.Resources.InsulinVial
+                                        Me.CursorPictureBox.Image = Global.CareLink.My.Resources.Resources.InsulinVial
+                                    Case "Meal"
+                                        Me.CursorPictureBox.Image = Global.CareLink.My.Resources.Resources.MealImageLarge
                                     Case Else
-                                        Me.MessagePictureBox.Image = Global.CareLink.My.Resources.Resources.InsulinVial
+                                        Me.CursorPictureBox.Image = Nothing
                                 End Select
-                                Me.MessageForCursor2Label.Visible = False
-                                Me.ValueForCursorLabel.Top = Me.MessageForCursor1Label.PositionBelow
-                                Me.ValueForCursorLabel.Text = marketToolTip(1).Trim
+                                Me.CursorMessage2Label.Visible = False
+                                Me.CursorValueLabel.Top = Me.CursorMessage1Label.PositionBelow
+                                Me.CursorValueLabel.Text = marketToolTip(1).Trim
                             Case 3
                                 Select Case marketToolTip(1).Trim
                                     Case "Calibration accepted", "Calibration not accepted"
-                                        Me.MessagePictureBox.Image = Global.CareLink.My.Resources.Resources.CalibrationDotRed
+                                        Me.CursorPictureBox.Image = Global.CareLink.My.Resources.Resources.CalibrationDotRed
                                     Case "Not used For calibration"
-                                        Me.MessagePictureBox.Image = Global.CareLink.My.Resources.Resources.CalibrationDot
+                                        Me.CursorPictureBox.Image = Global.CareLink.My.Resources.Resources.CalibrationDot
                                     Case Else
                                         Stop
                                 End Select
-                                Me.MessageForCursor1Label.Text = marketToolTip(0)
-                                Me.MessageForCursor1Label.Top = Me.MessagePictureBox.PositionBelow
-                                Me.MessageForCursor2Label.Text = marketToolTip(1).Trim
-                                Me.MessageForCursor2Label.Top = Me.MessageForCursor1Label.PositionBelow
-                                Me.MessageForCursor2Label.Visible = True
-                                Me.ValueForCursorLabel.Text = marketToolTip(2).Trim
-                                Me.ValueForCursorLabel.Top = Me.MessageForCursor2Label.PositionBelow
+                                Me.CursorMessage1Label.Text = marketToolTip(0)
+                                Me.CursorMessage1Label.Top = Me.CursorPictureBox.PositionBelow
+                                Me.CursorMessage2Label.Text = marketToolTip(1).Trim
+                                Me.CursorMessage2Label.Top = Me.CursorMessage1Label.PositionBelow
+                                Me.CursorMessage2Label.Visible = True
+                                Me.CursorValueLabel.Text = marketToolTip(2).Trim
+                                Me.CursorValueLabel.Top = Me.CursorMessage2Label.PositionBelow
                             Case Else
                                 Stop
                         End Select
                     Case "Default"
-                        Me.MessagePictureBox.Image = Nothing
-                        Me.MessageForCursor2Label.Visible = False
-                        Me.ValueForCursorLabel.Visible = False
-                        Me.TimeForCursorLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(_timeFormat)
-                        Me.MessageForCursor1Label.Text = $"{result.Series.Points(result.PointIndex).YValues(0).RoundDouble(3)} {_bgUnitsString}"
+                        Me.CursorPictureBox.Image = Nothing
+                        Me.CursorMessage2Label.Visible = False
+                        Me.CursorValueLabel.Visible = False
+                        Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(_timeFormat)
+                        Me.CursorTimeLabel.Visible = True
+                        Me.CursorMessage1Label.Text = $"{result.Series.Points(result.PointIndex).YValues(0).RoundDouble(3)} {_bgUnitsString}"
+                        Me.CursorMessage1Label.Visible = True
                 End Select
             End If
-
+        Else
+            Me.CursorMessage1Label.Visible = False
+            Me.CursorMessage2Label.Visible = False
+            Me.CursorPictureBox.Image = Nothing
+            Me.CursorTimeLabel.Visible = False
+            Me.CursorValueLabel.Visible = False
         End If
     End Sub
 
     Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomePageChart.PostPaint
         If Not _initialized Then Exit Sub
         If _imagePosition = Rectangle.Empty Then
-             _imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, SGs.SafeGetSgDateTime(0).ToOADate))
+            _imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, SGs.SafeGetSgDateTime(0).ToOADate))
             _imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, 400))
             _imagePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, HighLimit)))) - _imagePosition.Y
             _imagePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, SGs.SafeGetSgDateTime(SGs.Count - 1).ToOADate)) - _imagePosition.X
@@ -394,8 +415,8 @@ Public Class Form1
         Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
             e.ChartGraphics.Graphics.FillRectangle(b, lowAreaRectangle)
         End Using
-        If Me.TimeForCursorLabel.Tag IsNot Nothing Then
-            Me.TimeForCursorLabel.Left = CInt(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, CDate(Me.TimeForCursorLabel.Tag).ToOADate))
+        If Me.CursorTimeLabel.Tag IsNot Nothing Then
+            Me.CursorTimeLabel.Left = CInt(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, CDate(Me.CursorTimeLabel.Tag).ToOADate))
         End If
 
         e.PaintMarker(_mealImage, _markerMealDictionary, 0)
@@ -429,11 +450,10 @@ Public Class Form1
             Me.Cursor = Cursors.Default
             Exit Sub
         End If
-        Me.ServerUpdateTimer.Enabled = True
 
         Me.UpdateAllTabPages()
-
         Application.DoEvents()
+        Me.ServerUpdateTimer.Enabled = True
     End Sub
 
 #End Region
@@ -576,7 +596,11 @@ Public Class Form1
         ElseIf itemIndex = ItemIndexs.lastAlarm Then
             If tableLevel1Blue.RowCount > 5 Then
                 tableLayoutParent.AutoScroll = True
-                tableLayoutParent.HorizontalScroll.Visible = False
+                tableLevel1Blue.AutoSize = True
+                tableLevel1Blue.Dock = DockStyle.None
+                tableLevel1Blue.ColumnStyles(1).SizeType = SizeType.Absolute
+                tableLevel1Blue.ColumnStyles(1).Width = 250
+                tableLayoutParent.Width = 630
                 tableLayoutParent.Height = 22 * tableLevel1Blue.RowCount
             Else
                 tableLevel1Blue.RowCount += 1
@@ -592,6 +616,17 @@ Public Class Form1
             tableLevel1Blue.RowStyles(1).SizeType = SizeType.AutoSize
         End If
         Application.DoEvents()
+    End Sub
+
+    Private Sub GetLimitsList(ByRef limitsIndexList As Integer())
+
+        Dim limitsIndex As Integer = 0
+        For i As Integer = 0 To limitsIndexList.GetUpperBound(0)
+            If limitsIndex + 1 < Limits.Count AndAlso CInt(Limits(limitsIndex + 1)("index")) < i Then
+                limitsIndex += 1
+            End If
+            limitsIndexList(i) = limitsIndex
+        Next
     End Sub
 
     Private Sub InitializeActiveInsulinPageChart()
@@ -852,13 +887,13 @@ Public Class Form1
             .BorderlineWidth = 0,
             .Size = New Size(220, 220)
         }
-        Me.TimeInRangeChart.Left = Me.TimeInRangeSummaryLabel.FindHorizontalMidpoint - (Me.TimeInRangeChart.Width \ 2)
 
         Me.TimeInRangeChart.BorderSkin.BackSecondaryColor = Color.Transparent
         Me.TimeInRangeChart.BorderSkin.SkinStyle = BorderSkinStyle.None
         Me.TimeInRangeChart.ChartAreas.Add(New ChartArea With {.Name = "TimeInRangeChartChartArea",
                                                             .BackColor = Color.Black})
-        Me.TimeInRangeChart.Location = New Point(Me.TimeInRangeSummaryLabel.FindHorizontalMidpoint - (Me.TimeInRangeChart.Width \ 2), 79)
+        Me.TimeInRangeChart.Location = New Point(Me.TimeInRangeSummaryLabel.FindHorizontalMidpoint - (Me.TimeInRangeChart.Width \ 2),
+                                                 Me.TimeInRangeSummaryLabel.FindVerticalMidpoint() - (Me.TimeInRangeChart.Height \ 2))
         Me.TimeInRangeChart.Name = "Default"
 
         Me.TimeInRangeChart.Series.Add(New Series With {
@@ -1234,13 +1269,13 @@ Public Class Form1
         Dim getSgDateTime As Date = SGs.SafeGetSgDateTime(0)
 
         For i As Integer = 0 To 287
-            Dim decimalValue As Double = 0
+            Dim initialBolus As Double = 0
             Dim oaTime As Double = (getSgDateTime + (_FiveMinutes * i)).RoundDown(RoundTo.Minute).ToOADate()
             While currentMarker < timeOrderedMarkers.Count AndAlso timeOrderedMarkers.Keys(currentMarker) <= oaTime
-                decimalValue += timeOrderedMarkers.Values(currentMarker)
+                initialBolus += timeOrderedMarkers.Values(currentMarker)
                 currentMarker += 1
             End While
-            remainingInsulinList.Add(New Insulin(oaTime, decimalValue, _activeInsulinIncrements))
+            remainingInsulinList.Add(New Insulin(oaTime, initialBolus, _activeInsulinIncrements))
         Next
 
         ' walk all markers, adjust active insulin and then add new marker
@@ -1272,7 +1307,7 @@ Public Class Form1
         End If
         _initialized = True
         Me.UpdateActiveInsulinChart()
-        Me.UpdateHomePageChart()
+        Me.UpdateHomeTabPage()
         _updating = False
     End Sub
 
@@ -1302,43 +1337,28 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
-    Private Sub UpdateHomePageChart()
-        If Not _initialized Then
+    Private Sub UpdateCalibrationTimeRemaining()
+        If TimeToNextCalibHours = -1 Then
             Exit Sub
         End If
-        _initialized = False
-        Me.UpdateActiveInsulin()
-        Me.UpdateAutoModeShield()
-        Me.UpdateCalibrationTimeRemaining()
-        Me.UpdateInsulinLevel()
-        Me.UpdateRemainingInsulin()
-        Me.UpdateSensorLife()
-        Me.UpdateTimeInRange()
+        If TimeToNextCalibHours < 1 Then
+            Me.CalibrationDueImage.Image = Me.DrawCenteredArc(My.Resources.CalibrationDotRed, TimeToNextCalibHours / 12)
+        Else
+            Me.CalibrationDueImage.Image = Me.DrawCenteredArc(My.Resources.CalibrationDot, TimeToNextCalibHours / 12)
+        End If
 
-        Me.HomePageChart.Titles("Title1").Text = $"Summary of last 24 hours"
-        Dim sgDateTime As Date = SGs.SafeGetSgDateTime(0)
-        Me.HomePageChart.ChartAreas("Default").AxisX.Minimum = sgDateTime.ToOADate()
-        Me.HomePageChart.ChartAreas("Default").AxisX.Maximum = SGs.SafeGetSgDateTime(SGs.Count - 1).ToOADate()
+        Application.DoEvents()
+    End Sub
+
+    Private Sub UpdateHomePageSerieses(limitsIndexList As Integer())
         Me.HomePageChart.Series("Default").Points.Clear()
         Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Clear()
         Me.HomePageChart.Series(NameOf(HighLimitSeries)).Points.Clear()
         Me.HomePageChart.Series(NameOf(LowLimitSeries)).Points.Clear()
-        Me.HomePageChart.ChartAreas("Default").AxisX.MajorGrid.IntervalType = DateTimeIntervalType.Hours
-        Me.HomePageChart.ChartAreas("Default").AxisX.MajorGrid.IntervalOffsetType = DateTimeIntervalType.Hours
-        Me.HomePageChart.ChartAreas("Default").AxisX.MajorGrid.Interval = 1
-        Me.HomePageChart.ChartAreas("Default").AxisX.IntervalType = DateTimeIntervalType.Hours
-        Me.HomePageChart.ChartAreas("Default").AxisX.Interval = 2
-        Dim limitsIndexList(SGs.Count - 1) As Integer
-        Dim limitsIndex As Integer = 0
-        For i As Integer = 0 To limitsIndexList.GetUpperBound(0)
-            If limitsIndex + 1 < Limits.Count AndAlso CInt(Limits(limitsIndex + 1)("index")) < i Then
-                limitsIndex += 1
-            End If
-            limitsIndexList(i) = limitsIndex
-        Next
         _markerInsulinDictionary.Clear()
         _markerMealDictionary.Clear()
         Dim bgValue As Single
+        Dim sgDateTime As Date
         Dim sgOaDateTime As Double
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In Markers.WithIndex()
             sgDateTime = Markers.SafeGetSgDateTime(sgListIndex.Index)
@@ -1416,41 +1436,40 @@ Public Class Form1
             Me.HomePageChart.Series(NameOf(HighLimitSeries)).Points.AddXY(sgOaDateTime, limitsHighValue)
             Me.HomePageChart.Series(NameOf(LowLimitSeries)).Points.AddXY(sgOaDateTime, limitsLowValue)
         Next
-        _homePageChartChartArea.AxisX.ScrollBar.Enabled = True
-        _homePageChartChartArea.CursorX.IsUserSelectionEnabled = True
-        Select Case MedicalDeviceBatteryLevelPercent
-            Case > 66
-                Me.PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryFull
-            Case > 20
-                Me.PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryMedium
-            Case Else
-                Me.PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryLow
-        End Select
-        Application.DoEvents()
     End Sub
 
-    Private Sub UpdateSensorLife()
-        If SensorDurationHours < 24 Then
-            Me.SensorLifePictureBox.Image = My.Resources.Resources.SensorLifeNotOK
-            Me.SensorAgeLeftLabel.Text = $"1"
-            Me.SensorAgeLeftLabel.Text = $"1 Day"
-        Else
-            Me.SensorAgeLeftLabel.Text = CStr(SensorDurationHours \ 24)
-            Me.SensorLifePictureBox.Image = My.Resources.Resources.SensorLifeOK
-            Me.DaysLeftLabel.Text = $"{SensorDurationHours \ 24} Days"
-        End If
-
-    End Sub
-
-    Private Sub UpdateCalibrationTimeRemaining()
-        If TimeToNextCalibHours = -1 Then
+    Private Sub UpdateHomeTabPage()
+        If Not _initialized Then
             Exit Sub
         End If
-        If TimeToNextCalibHours < 1 Then
-            Me.CalibrationDueImage.Image = Me.DrawCenteredArc(My.Resources.CalibrationDotRed, TimeToNextCalibHours / 12)
-        Else
-            Me.CalibrationDueImage.Image = Me.DrawCenteredArc(My.Resources.CalibrationDot, TimeToNextCalibHours / 12)
-        End If
+        _initialized = False
+        Me.UpdateActiveInsulin()
+        Me.UpdateAutoModeShield()
+        Me.UpdateCalibrationTimeRemaining()
+        Me.UpdateInsulinLevel()
+        Me.UpdatePumpBattery()
+        Me.UpdateRemainingInsulin()
+        Me.UpdateSensorLife()
+        Me.UpdateTimeInRange()
+        Me.UpdateTransmitterBatttery()
+
+        Me.HomePageChart.Titles("Title1").Text = $"Summary of last 24 hours"
+        Dim sgDateTime As Date = SGs.SafeGetSgDateTime(0)
+        With _homePageChartChartArea.AxisX
+            .Minimum = sgDateTime.ToOADate()
+            .Maximum = SGs.SafeGetSgDateTime(SGs.Count - 1).ToOADate()
+            .MajorGrid.IntervalType = DateTimeIntervalType.Hours
+            .MajorGrid.IntervalOffsetType = DateTimeIntervalType.Hours
+            .MajorGrid.Interval = 1
+            .IntervalType = DateTimeIntervalType.Hours
+            .Interval = 2
+            .ScrollBar.Enabled = True
+        End With
+        _homePageChartChartArea.CursorX.IsUserSelectionEnabled = True
+
+        Dim limitsIndexList(SGs.Count - 1) As Integer
+        Me.GetLimitsList(limitsIndexList)
+        Me.UpdateHomePageSerieses(limitsIndexList)
 
         Application.DoEvents()
     End Sub
@@ -1481,9 +1500,37 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
-    Private Sub UpdateRemainingInsulin()
+    Private Sub UpdatePumpBattery()
 
+        Select Case MedicalDeviceBatteryLevelPercent
+            Case > 66
+                Me.PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryFull
+            Case > 30
+                Me.PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryMedium
+            Case > 10
+                Me.PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryLow
+            Case = 0
+                Me.PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryCritical
+            Case Else
+                Me.PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryUnknown
+        End Select
+    End Sub
+
+    Private Sub UpdateRemainingInsulin()
         Me.RemainingInsulinUnits.Text = $"{ReservoirRemainingUnits:N1} U"
+    End Sub
+
+    Private Sub UpdateSensorLife()
+        If SensorDurationHours < 24 Then
+            Me.SensorLifePictureBox.Image = My.Resources.Resources.SensorLifeNotOK
+            Me.SensorAgeLeftLabel.Text = $"1"
+            Me.SensorAgeLeftLabel.Text = $"1 Day"
+        Else
+            Me.SensorAgeLeftLabel.Text = CStr(Math.Ceiling(SensorDurationHours / 24))
+            Me.SensorLifePictureBox.Image = My.Resources.Resources.SensorLifeOK
+            Me.DaysLeftLabel.Text = $"{Me.SensorAgeLeftLabel.Text} Days"
+        End If
+        Me.SensorAgeLeftLabel.Visible = True
     End Sub
 
     Private Sub UpdateTimeInRange()
@@ -1514,6 +1561,24 @@ Public Class Form1
         Me.TimeInRangeSummaryLabel.Text = TimeInRange.ToString
         Me.TimeInRangeSummaryPercentCharLabel.Left = Me.TimeInRangeChart.HorizontalCenterOn(Me.TimeInRangeSummaryPercentCharLabel)
         Me.TimeInRangeValueLabel.Text = TimeInRange.ToString
+
+    End Sub
+
+    Private Sub UpdateTransmitterBatttery()
+        Me.TransmatterBatterPercentLabel.Text = $"{GstBatteryLevel}%"
+        Select Case GstBatteryLevel
+            Case 100
+                Me.TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryFull
+            Case > 60
+                Me.TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryOK
+            Case > 20
+                Me.TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryMedium
+            Case > 0
+                Me.TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryLow
+            Case Else
+                Me.TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryUnknown
+                Me.TransmatterBatterPercentLabel.Text = $"???"
+        End Select
 
     End Sub
 

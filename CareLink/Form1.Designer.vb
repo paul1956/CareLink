@@ -39,17 +39,19 @@ Partial Class Form1
         Me.TableLayoutPanelTop2 = New System.Windows.Forms.TableLayoutPanel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.TransmatterBatterPercentLabel = New System.Windows.Forms.Label()
+        Me.TransmitterBatteryPictureBox = New System.Windows.Forms.PictureBox()
         Me.DaysLeftLabel = New System.Windows.Forms.Label()
         Me.SensorAgeLeftLabel = New System.Windows.Forms.Label()
         Me.SensorLifePictureBox = New System.Windows.Forms.PictureBox()
         Me.PumpBatteryPictureBox = New System.Windows.Forms.PictureBox()
         Me.AITLabel = New System.Windows.Forms.Label()
         Me.AITComboBox = New System.Windows.Forms.ComboBox()
-        Me.MessageForCursor2Label = New System.Windows.Forms.Label()
-        Me.ValueForCursorLabel = New System.Windows.Forms.Label()
-        Me.MessagePictureBox = New System.Windows.Forms.PictureBox()
-        Me.TimeForCursorLabel = New System.Windows.Forms.Label()
-        Me.MessageForCursor1Label = New System.Windows.Forms.Label()
+        Me.CursorMessage2Label = New System.Windows.Forms.Label()
+        Me.CursorValueLabel = New System.Windows.Forms.Label()
+        Me.CursorPictureBox = New System.Windows.Forms.PictureBox()
+        Me.CursorTimeLabel = New System.Windows.Forms.Label()
+        Me.CursorMessage1Label = New System.Windows.Forms.Label()
         Me.BelowLowLimitMessageLabel = New System.Windows.Forms.Label()
         Me.InRangeMessageLabel = New System.Windows.Forms.Label()
         Me.AboveHighLimitMessageLabel = New System.Windows.Forms.Label()
@@ -89,7 +91,6 @@ Partial Class Form1
         Me.TableLayoutPanel7 = New System.Windows.Forms.TableLayoutPanel()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.CursorTimer = New System.Windows.Forms.Timer(Me.components)
-        Me.TransmitterBatterPictureBox = New System.Windows.Forms.PictureBox()
         Me.MenuStrip1.SuspendLayout
         CType(Me.SplitContainer1,System.ComponentModel.ISupportInitialize).BeginInit
         Me.SplitContainer1.Panel1.SuspendLayout
@@ -97,9 +98,10 @@ Partial Class Form1
         Me.SplitContainer1.SuspendLayout
         Me.TabControl1.SuspendLayout
         Me.TabPage1.SuspendLayout
+        CType(Me.TransmitterBatteryPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.SensorLifePictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.PumpBatteryPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.MessagePictureBox,System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.CursorPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.InsulinLevelPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.CalibrationDueImage,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.ShieldPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
@@ -110,7 +112,6 @@ Partial Class Form1
         Me.TabPage7.SuspendLayout
         Me.TabPage8.SuspendLayout
         Me.TabPage9.SuspendLayout
-        CType(Me.TransmitterBatterPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         Me.SuspendLayout
         '
         'MenuStrip1
@@ -285,7 +286,7 @@ Partial Class Form1
         Me.TableLayoutPanelTop2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelTop2.ColumnCount = 2
         Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100!))
-        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 679!))
+        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 709!))
         Me.TableLayoutPanelTop2.Location = New System.Drawing.Point(724, 0)
         Me.TableLayoutPanelTop2.Name = "TableLayoutPanelTop2"
         Me.TableLayoutPanelTop2.RowCount = 1
@@ -314,18 +315,19 @@ Partial Class Form1
         'TabPage1
         '
         Me.TabPage1.BackColor = System.Drawing.Color.Black
-        Me.TabPage1.Controls.Add(Me.TransmitterBatterPictureBox)
+        Me.TabPage1.Controls.Add(Me.TransmatterBatterPercentLabel)
+        Me.TabPage1.Controls.Add(Me.TransmitterBatteryPictureBox)
         Me.TabPage1.Controls.Add(Me.DaysLeftLabel)
         Me.TabPage1.Controls.Add(Me.SensorAgeLeftLabel)
         Me.TabPage1.Controls.Add(Me.SensorLifePictureBox)
         Me.TabPage1.Controls.Add(Me.PumpBatteryPictureBox)
         Me.TabPage1.Controls.Add(Me.AITLabel)
         Me.TabPage1.Controls.Add(Me.AITComboBox)
-        Me.TabPage1.Controls.Add(Me.MessageForCursor2Label)
-        Me.TabPage1.Controls.Add(Me.ValueForCursorLabel)
-        Me.TabPage1.Controls.Add(Me.MessagePictureBox)
-        Me.TabPage1.Controls.Add(Me.TimeForCursorLabel)
-        Me.TabPage1.Controls.Add(Me.MessageForCursor1Label)
+        Me.TabPage1.Controls.Add(Me.CursorMessage2Label)
+        Me.TabPage1.Controls.Add(Me.CursorValueLabel)
+        Me.TabPage1.Controls.Add(Me.CursorPictureBox)
+        Me.TabPage1.Controls.Add(Me.CursorTimeLabel)
+        Me.TabPage1.Controls.Add(Me.CursorMessage1Label)
         Me.TabPage1.Controls.Add(Me.BelowLowLimitMessageLabel)
         Me.TabPage1.Controls.Add(Me.InRangeMessageLabel)
         Me.TabPage1.Controls.Add(Me.AboveHighLimitMessageLabel)
@@ -356,6 +358,28 @@ Partial Class Form1
         Me.TabPage1.TabIndex = 7
         Me.TabPage1.Text = "Home Page"
         '
+        'TransmatterBatterPercentLabel
+        '
+        Me.TransmatterBatterPercentLabel.BackColor = System.Drawing.Color.Transparent
+        Me.TransmatterBatterPercentLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.TransmatterBatterPercentLabel.ForeColor = System.Drawing.Color.White
+        Me.TransmatterBatterPercentLabel.Location = New System.Drawing.Point(705, 95)
+        Me.TransmatterBatterPercentLabel.Name = "TransmatterBatterPercentLabel"
+        Me.TransmatterBatterPercentLabel.Size = New System.Drawing.Size(55, 21)
+        Me.TransmatterBatterPercentLabel.TabIndex = 48
+        Me.TransmatterBatterPercentLabel.Text = "???"
+        Me.TransmatterBatterPercentLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'TransmitterBatteryPictureBox
+        '
+        Me.TransmitterBatteryPictureBox.ErrorImage = Nothing
+        Me.TransmitterBatteryPictureBox.Image = Global.CareLink.My.Resources.Resources.TransmitterBatteryUnknown
+        Me.TransmitterBatteryPictureBox.Location = New System.Drawing.Point(682, 3)
+        Me.TransmitterBatteryPictureBox.Name = "TransmitterBatteryPictureBox"
+        Me.TransmitterBatteryPictureBox.Size = New System.Drawing.Size(100, 100)
+        Me.TransmitterBatteryPictureBox.TabIndex = 47
+        Me.TransmitterBatteryPictureBox.TabStop = false
+        '
         'DaysLeftLabel
         '
         Me.DaysLeftLabel.BackColor = System.Drawing.Color.Transparent
@@ -365,8 +389,8 @@ Partial Class Form1
         Me.DaysLeftLabel.Name = "DaysLeftLabel"
         Me.DaysLeftLabel.Size = New System.Drawing.Size(66, 21)
         Me.DaysLeftLabel.TabIndex = 46
-        Me.DaysLeftLabel.Text = "5 Days"
-        Me.DaysLeftLabel.TextAlign = System.Drawing.ContentAlignment.TopRight
+        Me.DaysLeftLabel.Text = "???"
+        Me.DaysLeftLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'SensorAgeLeftLabel
         '
@@ -379,11 +403,12 @@ Partial Class Form1
         Me.SensorAgeLeftLabel.TabIndex = 45
         Me.SensorAgeLeftLabel.Text = "5"
         Me.SensorAgeLeftLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.SensorAgeLeftLabel.Visible = false
         '
         'SensorLifePictureBox
         '
         Me.SensorLifePictureBox.ErrorImage = Nothing
-        Me.SensorLifePictureBox.Image = Global.CareLink.My.Resources.Resources.SensorLifeOK
+        Me.SensorLifePictureBox.Image = Global.CareLink.My.Resources.Resources.SensorExpirationUnknown
         Me.SensorLifePictureBox.Location = New System.Drawing.Point(787, 3)
         Me.SensorLifePictureBox.Name = "SensorLifePictureBox"
         Me.SensorLifePictureBox.Size = New System.Drawing.Size(100, 100)
@@ -393,7 +418,7 @@ Partial Class Form1
         'PumpBatteryPictureBox
         '
         Me.PumpBatteryPictureBox.ErrorImage = Nothing
-        Me.PumpBatteryPictureBox.Image = Global.CareLink.My.Resources.Resources.PumpBatteryFull
+        Me.PumpBatteryPictureBox.Image = Global.CareLink.My.Resources.Resources.PumpBatteryUnknown
         Me.PumpBatteryPictureBox.Location = New System.Drawing.Point(499, 3)
         Me.PumpBatteryPictureBox.Name = "PumpBatteryPictureBox"
         Me.PumpBatteryPictureBox.Size = New System.Drawing.Size(100, 100)
@@ -424,61 +449,66 @@ Partial Class Form1
         Me.AITComboBox.Size = New System.Drawing.Size(54, 23)
         Me.AITComboBox.TabIndex = 41
         '
-        'MessageForCursor2Label
+        'CursorMessage2Label
         '
-        Me.MessageForCursor2Label.Font = New System.Drawing.Font("Segoe UI", 9!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.MessageForCursor2Label.ForeColor = System.Drawing.Color.White
-        Me.MessageForCursor2Label.Location = New System.Drawing.Point(129, 71)
-        Me.MessageForCursor2Label.Name = "MessageForCursor2Label"
-        Me.MessageForCursor2Label.Size = New System.Drawing.Size(235, 15)
-        Me.MessageForCursor2Label.TabIndex = 40
-        Me.MessageForCursor2Label.Text = "Message For Cursor 2"
-        Me.MessageForCursor2Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.CursorMessage2Label.Font = New System.Drawing.Font("Segoe UI", 9!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.CursorMessage2Label.ForeColor = System.Drawing.Color.White
+        Me.CursorMessage2Label.Location = New System.Drawing.Point(129, 71)
+        Me.CursorMessage2Label.Name = "CursorMessage2Label"
+        Me.CursorMessage2Label.Size = New System.Drawing.Size(235, 15)
+        Me.CursorMessage2Label.TabIndex = 40
+        Me.CursorMessage2Label.Text = "Message For Cursor 2"
+        Me.CursorMessage2Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.CursorMessage2Label.Visible = false
         '
-        'ValueForCursorLabel
+        'CursorValueLabel
         '
-        Me.ValueForCursorLabel.Font = New System.Drawing.Font("Segoe UI", 9!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.ValueForCursorLabel.ForeColor = System.Drawing.Color.White
-        Me.ValueForCursorLabel.Location = New System.Drawing.Point(184, 95)
-        Me.ValueForCursorLabel.Name = "ValueForCursorLabel"
-        Me.ValueForCursorLabel.Size = New System.Drawing.Size(125, 15)
-        Me.ValueForCursorLabel.TabIndex = 39
-        Me.ValueForCursorLabel.Text = "Value For Cursor"
-        Me.ValueForCursorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.CursorValueLabel.Font = New System.Drawing.Font("Segoe UI", 9!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.CursorValueLabel.ForeColor = System.Drawing.Color.White
+        Me.CursorValueLabel.Location = New System.Drawing.Point(184, 95)
+        Me.CursorValueLabel.Name = "CursorValueLabel"
+        Me.CursorValueLabel.Size = New System.Drawing.Size(125, 15)
+        Me.CursorValueLabel.TabIndex = 39
+        Me.CursorValueLabel.Text = "Value For Cursor"
+        Me.CursorValueLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.CursorValueLabel.Visible = false
         '
-        'MessagePictureBox
+        'CursorPictureBox
         '
-        Me.MessagePictureBox.Image = Global.CareLink.My.Resources.Resources.CalibrationDotRed
-        Me.MessagePictureBox.InitialImage = Nothing
-        Me.MessagePictureBox.Location = New System.Drawing.Point(224, 6)
-        Me.MessagePictureBox.Name = "MessagePictureBox"
-        Me.MessagePictureBox.Size = New System.Drawing.Size(45, 39)
-        Me.MessagePictureBox.TabIndex = 38
-        Me.MessagePictureBox.TabStop = false
+        Me.CursorPictureBox.Image = Global.CareLink.My.Resources.Resources.MealImageLarge
+        Me.CursorPictureBox.InitialImage = Nothing
+        Me.CursorPictureBox.Location = New System.Drawing.Point(224, 6)
+        Me.CursorPictureBox.Name = "CursorPictureBox"
+        Me.CursorPictureBox.Size = New System.Drawing.Size(45, 39)
+        Me.CursorPictureBox.TabIndex = 38
+        Me.CursorPictureBox.TabStop = false
+        Me.CursorPictureBox.Visible = false
         '
-        'TimeForCursorLabel
+        'CursorTimeLabel
         '
-        Me.TimeForCursorLabel.AutoSize = true
-        Me.TimeForCursorLabel.BackColor = System.Drawing.Color.WhiteSmoke
-        Me.TimeForCursorLabel.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.TimeForCursorLabel.ForeColor = System.Drawing.Color.Black
-        Me.TimeForCursorLabel.Location = New System.Drawing.Point(201, 159)
-        Me.TimeForCursorLabel.Name = "TimeForCursorLabel"
-        Me.TimeForCursorLabel.Size = New System.Drawing.Size(99, 17)
-        Me.TimeForCursorLabel.TabIndex = 37
-        Me.TimeForCursorLabel.Text = "TimeForCursor"
-        Me.TimeForCursorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.CursorTimeLabel.AutoSize = true
+        Me.CursorTimeLabel.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.CursorTimeLabel.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.CursorTimeLabel.ForeColor = System.Drawing.Color.Black
+        Me.CursorTimeLabel.Location = New System.Drawing.Point(201, 159)
+        Me.CursorTimeLabel.Name = "CursorTimeLabel"
+        Me.CursorTimeLabel.Size = New System.Drawing.Size(99, 17)
+        Me.CursorTimeLabel.TabIndex = 37
+        Me.CursorTimeLabel.Text = "TimeForCursor"
+        Me.CursorTimeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.CursorTimeLabel.Visible = false
         '
-        'MessageForCursor1Label
+        'CursorMessage1Label
         '
-        Me.MessageForCursor1Label.Font = New System.Drawing.Font("Segoe UI", 9!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.MessageForCursor1Label.ForeColor = System.Drawing.Color.White
-        Me.MessageForCursor1Label.Location = New System.Drawing.Point(184, 47)
-        Me.MessageForCursor1Label.Name = "MessageForCursor1Label"
-        Me.MessageForCursor1Label.Size = New System.Drawing.Size(125, 15)
-        Me.MessageForCursor1Label.TabIndex = 36
-        Me.MessageForCursor1Label.Text = "Message For Cursor 1"
-        Me.MessageForCursor1Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.CursorMessage1Label.Font = New System.Drawing.Font("Segoe UI", 9!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.CursorMessage1Label.ForeColor = System.Drawing.Color.White
+        Me.CursorMessage1Label.Location = New System.Drawing.Point(184, 47)
+        Me.CursorMessage1Label.Name = "CursorMessage1Label"
+        Me.CursorMessage1Label.Size = New System.Drawing.Size(125, 15)
+        Me.CursorMessage1Label.TabIndex = 36
+        Me.CursorMessage1Label.Text = "Message For Cursor 1"
+        Me.CursorMessage1Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.CursorMessage1Label.Visible = false
         '
         'BelowLowLimitMessageLabel
         '
@@ -486,7 +516,7 @@ Partial Class Form1
         Me.BelowLowLimitMessageLabel.BackColor = System.Drawing.Color.Transparent
         Me.BelowLowLimitMessageLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.BelowLowLimitMessageLabel.ForeColor = System.Drawing.Color.Red
-        Me.BelowLowLimitMessageLabel.Location = New System.Drawing.Point(1182, 549)
+        Me.BelowLowLimitMessageLabel.Location = New System.Drawing.Point(1182, 601)
         Me.BelowLowLimitMessageLabel.Name = "BelowLowLimitMessageLabel"
         Me.BelowLowLimitMessageLabel.Size = New System.Drawing.Size(170, 21)
         Me.BelowLowLimitMessageLabel.TabIndex = 32
@@ -500,7 +530,7 @@ Partial Class Form1
         Me.InRangeMessageLabel.BackColor = System.Drawing.Color.Transparent
         Me.InRangeMessageLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.InRangeMessageLabel.ForeColor = System.Drawing.Color.Lime
-        Me.InRangeMessageLabel.Location = New System.Drawing.Point(1219, 473)
+        Me.InRangeMessageLabel.Location = New System.Drawing.Point(1219, 525)
         Me.InRangeMessageLabel.Name = "InRangeMessageLabel"
         Me.InRangeMessageLabel.Size = New System.Drawing.Size(73, 21)
         Me.InRangeMessageLabel.TabIndex = 30
@@ -513,7 +543,7 @@ Partial Class Form1
         Me.AboveHighLimitMessageLabel.BackColor = System.Drawing.Color.Transparent
         Me.AboveHighLimitMessageLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AboveHighLimitMessageLabel.ForeColor = System.Drawing.Color.Orange
-        Me.AboveHighLimitMessageLabel.Location = New System.Drawing.Point(1182, 397)
+        Me.AboveHighLimitMessageLabel.Location = New System.Drawing.Point(1182, 449)
         Me.AboveHighLimitMessageLabel.Name = "AboveHighLimitMessageLabel"
         Me.AboveHighLimitMessageLabel.Size = New System.Drawing.Size(170, 21)
         Me.AboveHighLimitMessageLabel.TabIndex = 28
@@ -527,7 +557,7 @@ Partial Class Form1
         Me.BelowLowLimitPercentPercentCharLabel.BackColor = System.Drawing.Color.Transparent
         Me.BelowLowLimitPercentPercentCharLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.BelowLowLimitPercentPercentCharLabel.ForeColor = System.Drawing.Color.White
-        Me.BelowLowLimitPercentPercentCharLabel.Location = New System.Drawing.Point(1270, 515)
+        Me.BelowLowLimitPercentPercentCharLabel.Location = New System.Drawing.Point(1270, 569)
         Me.BelowLowLimitPercentPercentCharLabel.Name = "BelowLowLimitPercentPercentCharLabel"
         Me.BelowLowLimitPercentPercentCharLabel.Size = New System.Drawing.Size(31, 30)
         Me.BelowLowLimitPercentPercentCharLabel.TabIndex = 27
@@ -540,7 +570,7 @@ Partial Class Form1
         Me.BelowLowLimitValueLabel.BackColor = System.Drawing.Color.Black
         Me.BelowLowLimitValueLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.BelowLowLimitValueLabel.ForeColor = System.Drawing.Color.White
-        Me.BelowLowLimitValueLabel.Location = New System.Drawing.Point(1204, 512)
+        Me.BelowLowLimitValueLabel.Location = New System.Drawing.Point(1204, 566)
         Me.BelowLowLimitValueLabel.Name = "BelowLowLimitValueLabel"
         Me.BelowLowLimitValueLabel.Size = New System.Drawing.Size(66, 33)
         Me.BelowLowLimitValueLabel.TabIndex = 26
@@ -554,7 +584,7 @@ Partial Class Form1
         Me.TimeInRangePercentPercentChar.BackColor = System.Drawing.Color.Transparent
         Me.TimeInRangePercentPercentChar.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.TimeInRangePercentPercentChar.ForeColor = System.Drawing.Color.White
-        Me.TimeInRangePercentPercentChar.Location = New System.Drawing.Point(1270, 439)
+        Me.TimeInRangePercentPercentChar.Location = New System.Drawing.Point(1270, 493)
         Me.TimeInRangePercentPercentChar.Name = "TimeInRangePercentPercentChar"
         Me.TimeInRangePercentPercentChar.Size = New System.Drawing.Size(31, 30)
         Me.TimeInRangePercentPercentChar.TabIndex = 25
@@ -567,7 +597,7 @@ Partial Class Form1
         Me.TimeInRangeValueLabel.BackColor = System.Drawing.Color.Black
         Me.TimeInRangeValueLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.TimeInRangeValueLabel.ForeColor = System.Drawing.Color.White
-        Me.TimeInRangeValueLabel.Location = New System.Drawing.Point(1204, 436)
+        Me.TimeInRangeValueLabel.Location = New System.Drawing.Point(1204, 490)
         Me.TimeInRangeValueLabel.Name = "TimeInRangeValueLabel"
         Me.TimeInRangeValueLabel.Size = New System.Drawing.Size(66, 33)
         Me.TimeInRangeValueLabel.TabIndex = 24
@@ -581,7 +611,7 @@ Partial Class Form1
         Me.AboveHighLimitPercentCharLabel.BackColor = System.Drawing.Color.Transparent
         Me.AboveHighLimitPercentCharLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AboveHighLimitPercentCharLabel.ForeColor = System.Drawing.Color.White
-        Me.AboveHighLimitPercentCharLabel.Location = New System.Drawing.Point(1270, 363)
+        Me.AboveHighLimitPercentCharLabel.Location = New System.Drawing.Point(1270, 417)
         Me.AboveHighLimitPercentCharLabel.Name = "AboveHighLimitPercentCharLabel"
         Me.AboveHighLimitPercentCharLabel.Size = New System.Drawing.Size(31, 30)
         Me.AboveHighLimitPercentCharLabel.TabIndex = 23
@@ -594,7 +624,7 @@ Partial Class Form1
         Me.AboveHighLimitValueLabel.BackColor = System.Drawing.Color.Black
         Me.AboveHighLimitValueLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AboveHighLimitValueLabel.ForeColor = System.Drawing.Color.White
-        Me.AboveHighLimitValueLabel.Location = New System.Drawing.Point(1204, 360)
+        Me.AboveHighLimitValueLabel.Location = New System.Drawing.Point(1204, 414)
         Me.AboveHighLimitValueLabel.Name = "AboveHighLimitValueLabel"
         Me.AboveHighLimitValueLabel.Size = New System.Drawing.Size(66, 33)
         Me.AboveHighLimitValueLabel.TabIndex = 22
@@ -619,7 +649,7 @@ Partial Class Form1
         Me.AverageSGUnitsLabel.BackColor = System.Drawing.Color.Transparent
         Me.AverageSGUnitsLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AverageSGUnitsLabel.ForeColor = System.Drawing.Color.White
-        Me.AverageSGUnitsLabel.Location = New System.Drawing.Point(1263, 604)
+        Me.AverageSGUnitsLabel.Location = New System.Drawing.Point(1263, 651)
         Me.AverageSGUnitsLabel.Name = "AverageSGUnitsLabel"
         Me.AverageSGUnitsLabel.Size = New System.Drawing.Size(57, 21)
         Me.AverageSGUnitsLabel.TabIndex = 16
@@ -632,7 +662,7 @@ Partial Class Form1
         Me.AverageSGValueLabel.BackColor = System.Drawing.Color.Black
         Me.AverageSGValueLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AverageSGValueLabel.ForeColor = System.Drawing.Color.White
-        Me.AverageSGValueLabel.Location = New System.Drawing.Point(1197, 592)
+        Me.AverageSGValueLabel.Location = New System.Drawing.Point(1197, 639)
         Me.AverageSGValueLabel.Margin = New System.Windows.Forms.Padding(0)
         Me.AverageSGValueLabel.Name = "AverageSGValueLabel"
         Me.AverageSGValueLabel.Size = New System.Drawing.Size(66, 33)
@@ -647,7 +677,7 @@ Partial Class Form1
         Me.AverageSGMessageLabel.BackColor = System.Drawing.Color.Transparent
         Me.AverageSGMessageLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AverageSGMessageLabel.ForeColor = System.Drawing.Color.White
-        Me.AverageSGMessageLabel.Location = New System.Drawing.Point(1219, 625)
+        Me.AverageSGMessageLabel.Location = New System.Drawing.Point(1219, 672)
         Me.AverageSGMessageLabel.Name = "AverageSGMessageLabel"
         Me.AverageSGMessageLabel.Size = New System.Drawing.Size(97, 21)
         Me.AverageSGMessageLabel.TabIndex = 0
@@ -661,7 +691,7 @@ Partial Class Form1
         Me.TimeInRangeSummaryPercentCharLabel.BackColor = System.Drawing.Color.Transparent
         Me.TimeInRangeSummaryPercentCharLabel.Font = New System.Drawing.Font("Segoe UI", 18!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
         Me.TimeInRangeSummaryPercentCharLabel.ForeColor = System.Drawing.Color.White
-        Me.TimeInRangeSummaryPercentCharLabel.Location = New System.Drawing.Point(1250, 211)
+        Me.TimeInRangeSummaryPercentCharLabel.Location = New System.Drawing.Point(1250, 303)
         Me.TimeInRangeSummaryPercentCharLabel.Name = "TimeInRangeSummaryPercentCharLabel"
         Me.TimeInRangeSummaryPercentCharLabel.Size = New System.Drawing.Size(34, 32)
         Me.TimeInRangeSummaryPercentCharLabel.TabIndex = 3
@@ -673,7 +703,7 @@ Partial Class Form1
         Me.TimeInRangeSummaryLabel.BackColor = System.Drawing.Color.Black
         Me.TimeInRangeSummaryLabel.Font = New System.Drawing.Font("Segoe UI", 26.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
         Me.TimeInRangeSummaryLabel.ForeColor = System.Drawing.Color.White
-        Me.TimeInRangeSummaryLabel.Location = New System.Drawing.Point(1229, 169)
+        Me.TimeInRangeSummaryLabel.Location = New System.Drawing.Point(1229, 261)
         Me.TimeInRangeSummaryLabel.Name = "TimeInRangeSummaryLabel"
         Me.TimeInRangeSummaryLabel.Size = New System.Drawing.Size(77, 47)
         Me.TimeInRangeSummaryLabel.TabIndex = 2
@@ -979,16 +1009,6 @@ Partial Class Form1
         '
         Me.CursorTimer.Interval = 60000
         '
-        'TransmitterBatterPictureBox
-        '
-        Me.TransmitterBatterPictureBox.ErrorImage = Nothing
-        Me.TransmitterBatterPictureBox.Image = Global.CareLink.My.Resources.Resources.TransmitterBatteryFull
-        Me.TransmitterBatterPictureBox.Location = New System.Drawing.Point(682, 3)
-        Me.TransmitterBatterPictureBox.Name = "TransmitterBatterPictureBox"
-        Me.TransmitterBatterPictureBox.Size = New System.Drawing.Size(100, 100)
-        Me.TransmitterBatterPictureBox.TabIndex = 47
-        Me.TransmitterBatterPictureBox.TabStop = false
-        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7!, 15!)
@@ -1009,9 +1029,10 @@ Partial Class Form1
         Me.TabControl1.ResumeLayout(false)
         Me.TabPage1.ResumeLayout(false)
         Me.TabPage1.PerformLayout
+        CType(Me.TransmitterBatteryPictureBox,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.SensorLifePictureBox,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.PumpBatteryPictureBox,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.MessagePictureBox,System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.CursorPictureBox,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.InsulinLevelPictureBox,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.CalibrationDueImage,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.ShieldPictureBox,System.ComponentModel.ISupportInitialize).EndInit
@@ -1028,7 +1049,6 @@ Partial Class Form1
         Me.TabPage8.ResumeLayout(false)
         Me.TabPage8.PerformLayout
         Me.TabPage9.ResumeLayout(false)
-        CType(Me.TransmitterBatterPictureBox,System.ComponentModel.ISupportInitialize).EndInit
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1086,11 +1106,11 @@ End Sub
     Friend WithEvents AboveHighLimitMessageLabel As Label
     Friend WithEvents BelowLowLimitMessageLabel As Label
     Friend WithEvents InRangeMessageLabel As Label
-    Friend WithEvents MessageForCursor1Label As Label
-    Friend WithEvents TimeForCursorLabel As Label
-    Friend WithEvents MessagePictureBox As PictureBox
-    Friend WithEvents ValueForCursorLabel As Label
-    Friend WithEvents MessageForCursor2Label As Label
+    Friend WithEvents CursorMessage1Label As Label
+    Friend WithEvents CursorTimeLabel As Label
+    Friend WithEvents CursorPictureBox As PictureBox
+    Friend WithEvents CursorValueLabel As Label
+    Friend WithEvents CursorMessage2Label As Label
     Friend WithEvents CursorTimer As Timer
     Friend WithEvents AITComboBox As ComboBox
     Friend WithEvents AITLabel As Label
@@ -1099,5 +1119,6 @@ End Sub
     Friend WithEvents SensorLifePictureBox As PictureBox
     Friend WithEvents SensorAgeLeftLabel As Label
     Friend WithEvents DaysLeftLabel As Label
-    Friend WithEvents TransmitterBatterPictureBox As PictureBox
+    Friend WithEvents TransmitterBatteryPictureBox As PictureBox
+    Friend WithEvents TransmatterBatterPercentLabel As Label
 End Class
