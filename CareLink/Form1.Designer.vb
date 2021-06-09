@@ -41,9 +41,9 @@ Partial Class Form1
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TransmatterBatterPercentLabel = New System.Windows.Forms.Label()
         Me.TransmitterBatteryPictureBox = New System.Windows.Forms.PictureBox()
-        Me.DaysLeftLabel = New System.Windows.Forms.Label()
-        Me.SensorAgeLeftLabel = New System.Windows.Forms.Label()
-        Me.SensorLifePictureBox = New System.Windows.Forms.PictureBox()
+        Me.SensorTimeLeftLabel = New System.Windows.Forms.Label()
+        Me.SensorDaysLeftLabel = New System.Windows.Forms.Label()
+        Me.SensorTimeLefPictureBox = New System.Windows.Forms.PictureBox()
         Me.PumpBatteryPictureBox = New System.Windows.Forms.PictureBox()
         Me.AITLabel = New System.Windows.Forms.Label()
         Me.AITComboBox = New System.Windows.Forms.ComboBox()
@@ -99,7 +99,7 @@ Partial Class Form1
         Me.TabControl1.SuspendLayout
         Me.TabPage1.SuspendLayout
         CType(Me.TransmitterBatteryPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.SensorLifePictureBox,System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.SensorTimeLefPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.PumpBatteryPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.CursorPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.InsulinLevelPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
@@ -284,14 +284,15 @@ Partial Class Form1
         Me.TableLayoutPanelTop2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelTop2.CausesValidation = false
         Me.TableLayoutPanelTop2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelTop2.ColumnCount = 2
+        Me.TableLayoutPanelTop2.ColumnCount = 3
         Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100!))
-        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 709!))
+        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 703!))
+        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanelTop2.Location = New System.Drawing.Point(724, 0)
         Me.TableLayoutPanelTop2.Name = "TableLayoutPanelTop2"
         Me.TableLayoutPanelTop2.RowCount = 1
         Me.TableLayoutPanelTop2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100!))
-        Me.TableLayoutPanelTop2.Size = New System.Drawing.Size(656, 136)
+        Me.TableLayoutPanelTop2.Size = New System.Drawing.Size(600, 136)
         Me.TableLayoutPanelTop2.TabIndex = 1
         '
         'TabControl1
@@ -317,9 +318,9 @@ Partial Class Form1
         Me.TabPage1.BackColor = System.Drawing.Color.Black
         Me.TabPage1.Controls.Add(Me.TransmatterBatterPercentLabel)
         Me.TabPage1.Controls.Add(Me.TransmitterBatteryPictureBox)
-        Me.TabPage1.Controls.Add(Me.DaysLeftLabel)
-        Me.TabPage1.Controls.Add(Me.SensorAgeLeftLabel)
-        Me.TabPage1.Controls.Add(Me.SensorLifePictureBox)
+        Me.TabPage1.Controls.Add(Me.SensorTimeLeftLabel)
+        Me.TabPage1.Controls.Add(Me.SensorDaysLeftLabel)
+        Me.TabPage1.Controls.Add(Me.SensorTimeLefPictureBox)
         Me.TabPage1.Controls.Add(Me.PumpBatteryPictureBox)
         Me.TabPage1.Controls.Add(Me.AITLabel)
         Me.TabPage1.Controls.Add(Me.AITComboBox)
@@ -380,40 +381,40 @@ Partial Class Form1
         Me.TransmitterBatteryPictureBox.TabIndex = 47
         Me.TransmitterBatteryPictureBox.TabStop = false
         '
-        'DaysLeftLabel
+        'SensorTimeLeftLabel
         '
-        Me.DaysLeftLabel.BackColor = System.Drawing.Color.Transparent
-        Me.DaysLeftLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.DaysLeftLabel.ForeColor = System.Drawing.Color.White
-        Me.DaysLeftLabel.Location = New System.Drawing.Point(804, 93)
-        Me.DaysLeftLabel.Name = "DaysLeftLabel"
-        Me.DaysLeftLabel.Size = New System.Drawing.Size(66, 21)
-        Me.DaysLeftLabel.TabIndex = 46
-        Me.DaysLeftLabel.Text = "???"
-        Me.DaysLeftLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.SensorTimeLeftLabel.BackColor = System.Drawing.Color.Transparent
+        Me.SensorTimeLeftLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.SensorTimeLeftLabel.ForeColor = System.Drawing.Color.White
+        Me.SensorTimeLeftLabel.Location = New System.Drawing.Point(787, 93)
+        Me.SensorTimeLeftLabel.Name = "SensorTimeLeftLabel"
+        Me.SensorTimeLeftLabel.Size = New System.Drawing.Size(100, 21)
+        Me.SensorTimeLeftLabel.TabIndex = 46
+        Me.SensorTimeLeftLabel.Text = "???"
+        Me.SensorTimeLeftLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'SensorAgeLeftLabel
+        'SensorDaysLeftLabel
         '
-        Me.SensorAgeLeftLabel.BackColor = System.Drawing.Color.Transparent
-        Me.SensorAgeLeftLabel.Font = New System.Drawing.Font("Segoe UI", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.SensorAgeLeftLabel.ForeColor = System.Drawing.Color.White
-        Me.SensorAgeLeftLabel.Location = New System.Drawing.Point(819, 28)
-        Me.SensorAgeLeftLabel.Name = "SensorAgeLeftLabel"
-        Me.SensorAgeLeftLabel.Size = New System.Drawing.Size(37, 52)
-        Me.SensorAgeLeftLabel.TabIndex = 45
-        Me.SensorAgeLeftLabel.Text = "5"
-        Me.SensorAgeLeftLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.SensorAgeLeftLabel.Visible = false
+        Me.SensorDaysLeftLabel.BackColor = System.Drawing.Color.Transparent
+        Me.SensorDaysLeftLabel.Font = New System.Drawing.Font("Segoe UI", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.SensorDaysLeftLabel.ForeColor = System.Drawing.Color.White
+        Me.SensorDaysLeftLabel.Location = New System.Drawing.Point(819, 28)
+        Me.SensorDaysLeftLabel.Name = "SensorDaysLeftLabel"
+        Me.SensorDaysLeftLabel.Size = New System.Drawing.Size(37, 52)
+        Me.SensorDaysLeftLabel.TabIndex = 45
+        Me.SensorDaysLeftLabel.Text = "5"
+        Me.SensorDaysLeftLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.SensorDaysLeftLabel.Visible = false
         '
-        'SensorLifePictureBox
+        'SensorTimeLefPictureBox
         '
-        Me.SensorLifePictureBox.ErrorImage = Nothing
-        Me.SensorLifePictureBox.Image = Global.CareLink.My.Resources.Resources.SensorExpirationUnknown
-        Me.SensorLifePictureBox.Location = New System.Drawing.Point(787, 3)
-        Me.SensorLifePictureBox.Name = "SensorLifePictureBox"
-        Me.SensorLifePictureBox.Size = New System.Drawing.Size(100, 100)
-        Me.SensorLifePictureBox.TabIndex = 44
-        Me.SensorLifePictureBox.TabStop = false
+        Me.SensorTimeLefPictureBox.ErrorImage = Nothing
+        Me.SensorTimeLefPictureBox.Image = Global.CareLink.My.Resources.Resources.SensorExpirationUnknown
+        Me.SensorTimeLefPictureBox.Location = New System.Drawing.Point(787, 3)
+        Me.SensorTimeLefPictureBox.Name = "SensorTimeLefPictureBox"
+        Me.SensorTimeLefPictureBox.Size = New System.Drawing.Size(100, 100)
+        Me.SensorTimeLefPictureBox.TabIndex = 44
+        Me.SensorTimeLefPictureBox.TabStop = false
         '
         'PumpBatteryPictureBox
         '
@@ -1030,7 +1031,7 @@ Partial Class Form1
         Me.TabPage1.ResumeLayout(false)
         Me.TabPage1.PerformLayout
         CType(Me.TransmitterBatteryPictureBox,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.SensorLifePictureBox,System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.SensorTimeLefPictureBox,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.PumpBatteryPictureBox,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.CursorPictureBox,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.InsulinLevelPictureBox,System.ComponentModel.ISupportInitialize).EndInit
@@ -1116,9 +1117,9 @@ End Sub
     Friend WithEvents AITLabel As Label
     Friend WithEvents TabPage2 As TabPage
     Friend WithEvents PumpBatteryPictureBox As PictureBox
-    Friend WithEvents SensorLifePictureBox As PictureBox
-    Friend WithEvents SensorAgeLeftLabel As Label
-    Friend WithEvents DaysLeftLabel As Label
+    Friend WithEvents SensorTimeLefPictureBox As PictureBox
+    Friend WithEvents SensorDaysLeftLabel As Label
+    Friend WithEvents SensorTimeLeftLabel As Label
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
     Friend WithEvents TransmatterBatterPercentLabel As Label
 End Class

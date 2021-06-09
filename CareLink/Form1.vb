@@ -272,9 +272,9 @@ Public Class Form1
             _calibrationToolTip.SetToolTip(Me.CalibrationDueImage, $"Calibration Due {Now.AddMinutes(TimeToNextCalibrationMinutes).ToShortTimeString}")
         End If
     End Sub
-    Private Sub SensorAgeLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles SensorAgeLeftLabel.MouseHover
+    Private Sub SensorAgeLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles SensorDaysLeftLabel.MouseHover
         If SensorDurationHours < 24 Then
-            _sensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {sensorDurationHours} hours")
+            _sensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {SensorDurationHours} hours")
         End If
     End Sub
 
@@ -288,10 +288,10 @@ Public Class Form1
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
         Me.ShieldUnitsLabel.BackColor = Color.Transparent
-        Me.SensorAgeLeftLabel.Parent = Me.SensorLifePictureBox
-        Me.SensorAgeLeftLabel.BackColor = Color.Transparent
-        Me.SensorAgeLeftLabel.Left = (Me.SensorLifePictureBox.Width \ 2) - (Me.SensorAgeLeftLabel.Width \ 2)
-        Me.SensorAgeLeftLabel.Top = (Me.SensorLifePictureBox.Height \ 2) - (Me.SensorAgeLeftLabel.Height \ 2)
+        Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLefPictureBox
+        Me.SensorDaysLeftLabel.BackColor = Color.Transparent
+        Me.SensorDaysLeftLabel.Left = (Me.SensorTimeLefPictureBox.Width \ 2) - (Me.SensorDaysLeftLabel.Width \ 2)
+        Me.SensorDaysLeftLabel.Top = (Me.SensorTimeLefPictureBox.Height \ 2) - (Me.SensorDaysLeftLabel.Height \ 2)
         Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact(My.Settings.AIT.ToString("hh\:mm").Substring(1))
         _activeInsulinIncrements = CInt(TimeSpan.Parse(My.Settings.AIT.ToString("hh\:mm").Substring(1)) / _FiveMinutes)
         Me.InitializeHomePageChart()
@@ -595,23 +595,32 @@ Public Class Form1
             tableLevel1Blue.Width = 400
         ElseIf itemIndex = ItemIndexs.lastAlarm Then
             If tableLevel1Blue.RowCount > 5 Then
-                tableLayoutParent.AutoScroll = True
                 tableLevel1Blue.AutoSize = True
                 tableLevel1Blue.Dock = DockStyle.None
+                Application.DoEvents()
                 tableLevel1Blue.ColumnStyles(1).SizeType = SizeType.Absolute
-                tableLevel1Blue.ColumnStyles(1).Width = 250
-                tableLayoutParent.Width = 630
+                Application.DoEvents()
+                tableLevel1Blue.ColumnStyles(1).Width = 280
+                Application.DoEvents()
+                tableLayoutParent.AutoScroll = False
+                Application.DoEvents()
                 tableLayoutParent.Height = 22 * tableLevel1Blue.RowCount
+                Application.DoEvents()
+                tableLayoutParent.HorizontalScroll.Visible = False
+                Application.DoEvents()
             Else
                 tableLevel1Blue.RowCount += 1
             End If
             tableLevel1Blue.Dock = DockStyle.None
+            Application.DoEvents()
             tableLevel1Blue.AutoSize = True
+            Application.DoEvents()
             Dim tmpHeight As Integer = tableLevel1Blue.Height
             tableLevel1Blue.AutoSize = False
             tableLevel1Blue.Width = 450
-            tableLevel1Blue.Height = tmpHeight + 6
+            tableLevel1Blue.Height = tmpHeight + 1
             tableLayoutParent.Width = 640
+            Application.DoEvents()
         ElseIf itemIndex = ItemIndexs.notificationHistory Then
             tableLevel1Blue.RowStyles(1).SizeType = SizeType.AutoSize
         End If
@@ -1521,16 +1530,35 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateSensorLife()
-        If SensorDurationHours < 24 Then
-            Me.SensorLifePictureBox.Image = My.Resources.Resources.SensorLifeNotOK
-            Me.SensorAgeLeftLabel.Text = $"1"
-            Me.SensorAgeLeftLabel.Text = $"1 Day"
-        Else
-            Me.SensorAgeLeftLabel.Text = CStr(Math.Ceiling(SensorDurationHours / 24))
-            Me.SensorLifePictureBox.Image = My.Resources.Resources.SensorLifeOK
-            Me.DaysLeftLabel.Text = $"{Me.SensorAgeLeftLabel.Text} Days"
-        End If
-        Me.SensorAgeLeftLabel.Visible = True
+        Select Case SensorState
+            Case "NO_ERROR_MESSAGE"
+                If SensorDurationHours < 24 Then
+                    If SensorDurationHours = 0 Then
+                        If SensorDurationMinutes = 0 Then
+                            Me.SensorDaysLeftLabel.Text = ""
+                            Me.SensorTimeLefPictureBox.Image = My.Resources.Resources.SensorExpired
+                            Me.SensorTimeLeftLabel.Text = $"Expired"
+                        Else
+                            Me.SensorDaysLeftLabel.Text = $"1"
+                            Me.SensorTimeLefPictureBox.Image = My.Resources.Resources.SensorLifeNotOK
+                            Me.SensorTimeLeftLabel.Text = $"{SensorDurationMinutes} Minutes"
+                        End If
+                    Else
+                        Me.SensorDaysLeftLabel.Text = $"1"
+                        Me.SensorTimeLefPictureBox.Image = My.Resources.Resources.SensorLifeNotOK
+                        Me.SensorTimeLeftLabel.Text = $"{SensorDurationHours + 1} Hours"
+                    End If
+                Else
+                    Me.SensorDaysLeftLabel.Text = CStr(Math.Ceiling(SensorDurationHours / 24))
+                    Me.SensorTimeLefPictureBox.Image = My.Resources.Resources.SensorLifeOK
+                    Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
+                End If
+            Case Else
+                Me.SensorDaysLeftLabel.Text = $"???"
+                Me.SensorTimeLefPictureBox.Image = My.Resources.Resources.SensorExpirationUnknown
+                Me.SensorTimeLeftLabel.Text = ""
+        End Select
+        Me.SensorDaysLeftLabel.Visible = True
     End Sub
 
     Private Sub UpdateTimeInRange()
@@ -1569,7 +1597,7 @@ Public Class Form1
         Select Case GstBatteryLevel
             Case 100
                 Me.TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryFull
-            Case > 60
+            Case > 50
                 Me.TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryOK
             Case > 20
                 Me.TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryMedium
