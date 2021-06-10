@@ -23,14 +23,16 @@ Friend Class Insulin
     Public Property OaTime As Double
 
     Friend Function Adjust() As Insulin
-        If _incrementUpCount > 0 Then
-            _incrementUpCount -= 1
-            Me.CurrentInsulinLevel += _adjustmentValue
-            If _incrementUpCount = 0 Then
-                _adjustmentValue = Me.CurrentInsulinLevel / _incrementDownCount
+        If Me.CurrentInsulinLevel > 0 Then
+            If _incrementUpCount > 0 Then
+                _incrementUpCount -= 1
+                Me.CurrentInsulinLevel += _adjustmentValue
+                If _incrementUpCount = 0 Then
+                    _adjustmentValue = Me.CurrentInsulinLevel / _incrementDownCount
+                End If
+            Else
+                Me.CurrentInsulinLevel -= _adjustmentValue
             End If
-        Else
-            Me.CurrentInsulinLevel -= _adjustmentValue
         End If
         Return Me
     End Function

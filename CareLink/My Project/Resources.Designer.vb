@@ -83,6 +83,26 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
+        Friend ReadOnly Property CalibrationNotReady() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("CalibrationNotReady", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property CalibrationUnavailable() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("CalibrationUnavailable", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
         Friend ReadOnly Property InsulinVial() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("InsulinVial", resourceCulture)
@@ -136,6 +156,16 @@ Namespace My.Resources
         Friend ReadOnly Property PumpBatteryFull() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("PumpBatteryFull", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property PumpBatteryHigh() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("PumpBatteryHigh", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

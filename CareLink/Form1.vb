@@ -105,6 +105,7 @@ Public Class Form1
         {"CALIBRATING", "Calibrating ..."},
         {"CALIBRATION_REQUIRED", "Calibration required"},
         {"NO_ERROR_MESSAGE", ""},
+        {"SEARCHING_FOR_SENSOR_SIGNAL", "Searching for sensor signal"},
         {"UNKNOWN", "Unknown"},
         {"WARM_UP", "Sensor warm up..."},
         {"WAIT_TO_CALIBRATE", "Wait To Calibrate..."}
@@ -187,7 +188,7 @@ Public Class Form1
     Public TherapyAlgorithmState As Dictionary(Of String, String)
     Public TimeFormat As String
     Public TimeInRange As Integer
-    Public TimeToNextCalibHours As Integer = -1
+    Public TimeToNextCalibHours As Byte = Byte.MaxValue
     Public TimeToNextCalibrationMinutes As Integer
     Public Version As String
 
@@ -661,6 +662,10 @@ Public Class Form1
              .Name = "Default",
              .ShadowColor = Color.Transparent
          }
+        _activeInsulinPageChartArea.AxisY.ScaleBreakStyle.Enabled = True
+        _activeInsulinPageChartArea.AxisY.ScaleBreakStyle.BreakLineStyle = BreakLineStyle.Wave
+
+        _activeInsulinPageChartArea.AxisY.ScaleBreakStyle.CollapsibleSpaceThreshold = 25
         _activeInsulinPageChartArea.AxisX.IsInterlaced = True
         _activeInsulinPageChartArea.AxisX.IsMarginVisible = True
         _activeInsulinPageChartArea.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.IncreaseFont Or LabelAutoFitStyles.DecreaseFont Or LabelAutoFitStyles.WordWrap
@@ -681,8 +686,17 @@ Public Class Form1
         _activeInsulinPageChartArea.AxisY.MajorTickMark = New TickMark() With {.Interval = InsulinRow, .Enabled = False}
         _activeInsulinPageChartArea.AxisY.Maximum = 25
         _activeInsulinPageChartArea.AxisY.Minimum = 0
+        ' Set the spacing gap between the lines of the scale break (as a percentage of y-axis)
+        _activeInsulinPageChartArea.AxisY.ScaleBreakStyle.Spacing = 2
+        ' Set the line width of the scale break
+        _activeInsulinPageChartArea.AxisY.ScaleBreakStyle.LineWidth = 2
+        ' Set the color of the scale break
+        _activeInsulinPageChartArea.AxisY.ScaleBreakStyle.LineColor = Color.Red
+        ' Show scale break if more than 25% of the chart is empty space
+
         _activeInsulinPageChartArea.AxisY2.Maximum = 25
         _activeInsulinPageChartArea.AxisY2.Minimum = 0
+
         Me.ActiveInsulinPageChart.ChartAreas.Add(_activeInsulinPageChartArea)
 
         Me.ActiveInsulinPageChart.Legends.Add(New Legend With {
@@ -993,7 +1007,7 @@ Public Class Form1
                 Case ItemIndexs.sensorDurationHours
                     SensorDurationHours = CInt(row.Value)
                 Case ItemIndexs.timeToNextCalibHours
-                    TimeToNextCalibHours = CInt(row.Value)
+                    TimeToNextCalibHours = CByte(row.Value)
                 Case ItemIndexs.calibStatus
                     CalibStatus = row.Value
                 Case ItemIndexs.bgUnits
@@ -1014,7 +1028,6 @@ Public Class Form1
                     Me.AboveHighLimitMessageLabel.Text = $"Above {HighLimit} {_bgUnitsString}"
                     Me.AverageSGUnitsLabel.Text = _bgUnitsString
                     Me.BelowLowLimitMessageLabel.Text = $"Below {LowLimit} {_bgUnitsString}"
-                    Me.ShieldUnitsLabel.Text = _bgUnitsString
                 Case ItemIndexs.timeFormat
                     TimeFormat = row.Value
                 Case ItemIndexs.lastSensorTime
@@ -1289,7 +1302,7 @@ Public Class Form1
 
         ' walk all markers, adjust active insulin and then add new marker
         For i As Integer = 0 To remainingInsulinList.Count - 1
-            If i <= _activeInsulinIncrements Then
+            If i < _activeInsulinIncrements Then
                 Me.ActiveInsulinPageChart.Series("Default").Points.AddXY(remainingInsulinList(i).OaTime, Double.NaN)
                 Me.ActiveInsulinPageChart.Series("Default").Points.Last.IsEmpty = True
                 If i > 0 Then
@@ -1297,9 +1310,10 @@ Public Class Form1
                 End If
                 Continue For
             End If
-            Dim sum As Double = remainingInsulinList.ConditionalSum(i - _activeInsulinIncrements, _activeInsulinIncrements)
+            Dim startIndex As Integer = i - _activeInsulinIncrements + 1
+            Dim sum As Double = remainingInsulinList.ConditionalSum(startIndex, _activeInsulinIncrements)
             Me.ActiveInsulinPageChart.Series("Default").Points.AddXY(remainingInsulinList(i).OaTime, sum)
-            remainingInsulinList.Adjustlist(i - _activeInsulinIncrements - 1, _activeInsulinIncrements)
+            remainingInsulinList.Adjustlist(startIndex, _activeInsulinIncrements)
         Next
         _initialized = True
         Application.DoEvents()
@@ -1323,35 +1337,46 @@ Public Class Form1
     Private Sub UpdateAutoModeShield()
         Me.SensorMessage.Location = New Point(Me.ShieldPictureBox.Left + (Me.ShieldPictureBox.Width \ 2) - (Me.SensorMessage.Width \ 2), Me.SensorMessage.Top)
         If LastSG("sg") <> "0" Then
+            Me.CurrentBG.Location = New Point((Me.ShieldPictureBox.Width \ 2) - (Me.CurrentBG.Width \ 2), Me.ShieldPictureBox.Height \ 4)
+            Me.CurrentBG.Parent = Me.ShieldPictureBox
+            Me.CurrentBG.Text = LastSG("sg")
+            Me.CurrentBG.Visible = True
+            Me.SensorMessage.Visible = False
             Me.SensorMessage.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield
-            Me.CurrentBG.Text = LastSG("sg")
-            Me.CurrentBG.Parent = Me.ShieldPictureBox
-            Me.CurrentBG.Visible = True
-            Me.CurrentBG.Location = New Point((Me.ShieldPictureBox.Width \ 2) - (Me.CurrentBG.Width \ 2), Me.ShieldPictureBox.Height \ 4)
             Me.ShieldUnitsLabel.Visible = True
             Me.ShieldUnitsLabel.BackColor = Color.Transparent
             Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
             Me.ShieldUnitsLabel.Left = (Me.ShieldPictureBox.Width \ 2) - (Me.ShieldUnitsLabel.Width \ 2)
-            Me.CurrentBG.Visible = True
+            Me.ShieldUnitsLabel.Text = _bgUnitsString
+            Me.ShieldUnitsLabel.Visible = True
         Else
-            Me.CurrentBG.Text = $"---"
+            Me.CurrentBG.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield_Disabled
             Me.SensorMessage.Visible = True
             Me.SensorMessage.Parent = Me.ShieldPictureBox
             Me.SensorMessage.Left = 0
             Me.SensorMessage.BackColor = Color.Transparent
-            Me.SensorMessage.Text = _messages(SensorState)
+            If SensorState = "NO_ERROR_MESSAGE" Then
+                Me.SensorMessage.Text = $"---"
+            Else
+                Me.SensorMessage.Text = _messages(SensorState)
+            End If
+            Me.ShieldUnitsLabel.Visible = False
+            Me.SensorMessage.Visible = True
         End If
         Application.DoEvents()
     End Sub
 
     Private Sub UpdateCalibrationTimeRemaining()
-        If TimeToNextCalibHours = -1 Then
-            Exit Sub
-        End If
-        If TimeToNextCalibHours < 1 Then
-            Me.CalibrationDueImage.Image = Me.DrawCenteredArc(My.Resources.CalibrationDotRed, TimeToNextCalibHours / 12)
+        If TimeToNextCalibHours = Byte.MaxValue Then
+            Me.CalibrationDueImage.Image = My.Resources.Resources.CalibrationUnavailable
+        ElseIf TimeToNextCalibHours < 1 Then
+            If SystemStatusMessage = "WAIT_TO_CALIBRATE" OrElse SensorState = "WARM_UP" Then
+                Me.CalibrationDueImage.Image = My.Resources.Resources.CalibrationNotReady
+            Else
+                Me.CalibrationDueImage.Image = Me.DrawCenteredArc(My.Resources.CalibrationDotRed, TimeToNextCalibHours / 12)
+            End If
         Else
             Me.CalibrationDueImage.Image = Me.DrawCenteredArc(My.Resources.CalibrationDot, TimeToNextCalibHours / 12)
         End If
@@ -1510,18 +1535,25 @@ Public Class Form1
     End Sub
 
     Private Sub UpdatePumpBattery()
+        If Not ConduitSensorInRange Then
+            Me.PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryUnknown
+            Me.PumpBatteryRemainingLabel.Text = $"Unknown"
+            Exit Sub
+        End If
 
         Select Case MedicalDeviceBatteryLevelPercent
             Case > 66
                 Me.PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryFull
-            Case > 30
+                Me.PumpBatteryRemainingLabel.Text = $"High"
+            Case > 50
                 Me.PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryMedium
-            Case > 10
+                Me.PumpBatteryRemainingLabel.Text = $"Medium"
+            Case > 25
                 Me.PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryLow
+                Me.PumpBatteryRemainingLabel.Text = $"Low"
             Case = 0
                 Me.PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryCritical
-            Case Else
-                Me.PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryUnknown
+                Me.PumpBatteryRemainingLabel.Text = $"Critical"
         End Select
     End Sub
 
@@ -1530,34 +1562,31 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateSensorLife()
-        Select Case SensorState
-            Case "NO_ERROR_MESSAGE"
-                If SensorDurationHours < 24 Then
-                    If SensorDurationHours = 0 Then
-                        If SensorDurationMinutes = 0 Then
-                            Me.SensorDaysLeftLabel.Text = ""
-                            Me.SensorTimeLefPictureBox.Image = My.Resources.Resources.SensorExpired
-                            Me.SensorTimeLeftLabel.Text = $"Expired"
-                        Else
-                            Me.SensorDaysLeftLabel.Text = $"1"
-                            Me.SensorTimeLefPictureBox.Image = My.Resources.Resources.SensorLifeNotOK
-                            Me.SensorTimeLeftLabel.Text = $"{SensorDurationMinutes} Minutes"
-                        End If
-                    Else
-                        Me.SensorDaysLeftLabel.Text = $"1"
-                        Me.SensorTimeLefPictureBox.Image = My.Resources.Resources.SensorLifeNotOK
-                        Me.SensorTimeLeftLabel.Text = $"{SensorDurationHours + 1} Hours"
-                    End If
+        If SensorDurationHours = 255 Then
+            Me.SensorDaysLeftLabel.Text = $"???"
+            Me.SensorTimeLefPictureBox.Image = My.Resources.Resources.SensorExpirationUnknown
+            Me.SensorTimeLeftLabel.Text = ""
+        ElseIf SensorDurationHours >= 24 Then
+            Me.SensorDaysLeftLabel.Text = CStr(Math.Ceiling(SensorDurationHours / 24))
+            Me.SensorTimeLefPictureBox.Image = My.Resources.Resources.SensorLifeOK
+            Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
+        Else
+            If SensorDurationHours = 0 Then
+                If SensorDurationMinutes = 0 Then
+                    Me.SensorDaysLeftLabel.Text = ""
+                    Me.SensorTimeLefPictureBox.Image = My.Resources.Resources.SensorExpired
+                    Me.SensorTimeLeftLabel.Text = $"Expired"
                 Else
-                    Me.SensorDaysLeftLabel.Text = CStr(Math.Ceiling(SensorDurationHours / 24))
-                    Me.SensorTimeLefPictureBox.Image = My.Resources.Resources.SensorLifeOK
-                    Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
+                    Me.SensorDaysLeftLabel.Text = $"1"
+                    Me.SensorTimeLefPictureBox.Image = My.Resources.Resources.SensorLifeNotOK
+                    Me.SensorTimeLeftLabel.Text = $"{SensorDurationMinutes} Minutes"
                 End If
-            Case Else
-                Me.SensorDaysLeftLabel.Text = $"???"
-                Me.SensorTimeLefPictureBox.Image = My.Resources.Resources.SensorExpirationUnknown
-                Me.SensorTimeLeftLabel.Text = ""
-        End Select
+            Else
+                Me.SensorDaysLeftLabel.Text = $"1"
+                Me.SensorTimeLefPictureBox.Image = My.Resources.Resources.SensorLifeNotOK
+                Me.SensorTimeLeftLabel.Text = $"{SensorDurationHours + 1} Hours"
+            End If
+        End If
         Me.SensorDaysLeftLabel.Visible = True
     End Sub
 
@@ -1594,19 +1623,21 @@ Public Class Form1
 
     Private Sub UpdateTransmitterBatttery()
         Me.TransmatterBatterPercentLabel.Text = $"{GstBatteryLevel}%"
-        Select Case GstBatteryLevel
-            Case 100
-                Me.TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryFull
-            Case > 50
-                Me.TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryOK
-            Case > 20
-                Me.TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryMedium
-            Case > 0
-                Me.TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryLow
-            Case Else
-                Me.TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryUnknown
-                Me.TransmatterBatterPercentLabel.Text = $"???"
-        End Select
+        If ConduitSensorInRange Then
+            Select Case GstBatteryLevel
+                Case 100
+                    Me.TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryFull
+                Case > 50
+                    Me.TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryOK
+                Case > 20
+                    Me.TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryMedium
+                Case > 0
+                    Me.TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryLow
+            End Select
+        Else
+            Me.TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryUnknown
+            Me.TransmatterBatterPercentLabel.Text = $"???"
+        End If
 
     End Sub
 
