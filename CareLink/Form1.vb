@@ -30,6 +30,7 @@ Public Class Form1
 
     Private Shared ReadOnly s_lastAlarmFilter As New List(Of String) From {
         "code",
+        "GUID",
         "instanceId",
         "kind",
         "referenceGUID",
@@ -502,6 +503,8 @@ Public Class Form1
         End If
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In innerJson.WithIndex()
             Dim innerRow As KeyValuePair(Of String, String) = c.Value
+            ' Comment out 4 lines below to see all data fields.
+            ' I did not see any use to display the filtered out ones
             If s_zFilterList.ContainsKey(itemIndex) Then
                 If s_zFilterList(itemIndex).Contains(innerRow.Key) Then
                     Continue For
@@ -1243,7 +1246,7 @@ Public Class Form1
         End If
         _initialized = False
 
-        Me.ActiveInsulinPageChart.Titles("Title1").Text = $"Summary of last 24 hours"
+        Me.ActiveInsulinPageChart.Titles("Title1").Text = $"Summary"
         Me.ActiveInsulinPageChart.ChartAreas("Default").AxisX.Minimum = SGs.SafeGetSgDateTime(0).ToOADate()
         Me.ActiveInsulinPageChart.ChartAreas("Default").AxisX.Maximum = SGs.SafeGetSgDateTime(SGs.Count - 1).ToOADate()
         Me.ActiveInsulinPageChart.Series("Default").Points.Clear()
