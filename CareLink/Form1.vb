@@ -106,6 +106,7 @@ Public Class Form1
         {"CALIBRATION_REQUIRED", "Calibration required"},
         {"NO_ERROR_MESSAGE", ""},
         {"SEARCHING_FOR_SENSOR_SIGNAL", "Searching for sensor signal"},
+        {"SENSOR_DISCONNECTED", "Sensor disconnected"},
         {"UNKNOWN", "Unknown"},
         {"WARM_UP", "Sensor warm up..."},
         {"WAIT_TO_CALIBRATE", "Wait To Calibrate..."}

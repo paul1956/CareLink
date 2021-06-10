@@ -468,7 +468,7 @@ Partial Class Form1
         '
         Me.CursorMessage2Label.Font = New System.Drawing.Font("Segoe UI", 9!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.CursorMessage2Label.ForeColor = System.Drawing.Color.White
-        Me.CursorMessage2Label.Location = New System.Drawing.Point(155, 71)
+        Me.CursorMessage2Label.Location = New System.Drawing.Point(155, 74)
         Me.CursorMessage2Label.Name = "CursorMessage2Label"
         Me.CursorMessage2Label.Size = New System.Drawing.Size(235, 15)
         Me.CursorMessage2Label.TabIndex = 40
@@ -480,7 +480,7 @@ Partial Class Form1
         '
         Me.CursorValueLabel.Font = New System.Drawing.Font("Segoe UI", 9!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.CursorValueLabel.ForeColor = System.Drawing.Color.White
-        Me.CursorValueLabel.Location = New System.Drawing.Point(210, 95)
+        Me.CursorValueLabel.Location = New System.Drawing.Point(210, 93)
         Me.CursorValueLabel.Name = "CursorValueLabel"
         Me.CursorValueLabel.Size = New System.Drawing.Size(125, 15)
         Me.CursorValueLabel.TabIndex = 39
@@ -494,7 +494,7 @@ Partial Class Form1
         Me.CursorPictureBox.InitialImage = Nothing
         Me.CursorPictureBox.Location = New System.Drawing.Point(250, 6)
         Me.CursorPictureBox.Name = "CursorPictureBox"
-        Me.CursorPictureBox.Size = New System.Drawing.Size(45, 39)
+        Me.CursorPictureBox.Size = New System.Drawing.Size(39, 45)
         Me.CursorPictureBox.TabIndex = 38
         Me.CursorPictureBox.TabStop = false
         Me.CursorPictureBox.Visible = false
@@ -517,7 +517,7 @@ Partial Class Form1
         '
         Me.CursorMessage1Label.Font = New System.Drawing.Font("Segoe UI", 9!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.CursorMessage1Label.ForeColor = System.Drawing.Color.White
-        Me.CursorMessage1Label.Location = New System.Drawing.Point(210, 47)
+        Me.CursorMessage1Label.Location = New System.Drawing.Point(210, 55)
         Me.CursorMessage1Label.Name = "CursorMessage1Label"
         Me.CursorMessage1Label.Size = New System.Drawing.Size(125, 15)
         Me.CursorMessage1Label.TabIndex = 36
