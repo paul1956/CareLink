@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "CareLink", "CareLink\CareLink.vbproj", "{3DF0DB17-7515-4C29-916E-C6EF66A82672}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChartWin", "src\System.Windows.Forms.DataVisualization\ChartWin.csproj", "{1944C3B0-C641-419D-AE92-A96DD39B7C4F}"
+EndProject
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "CareLink", "src\CareLink\CareLink.vbproj", "{3DF0DB17-7515-4C29-916E-C6EF66A82672}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C157782E-77AD-4CB6-8450-BC2908317F1F}"
 	ProjectSection(SolutionItems) = preProject
@@ -12,22 +14,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Screenshot 2021-05-16 050718.png = Screenshot 2021-05-16 050718.png
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChartWin", "..\winforms-datavisualization-net5\src\System.Windows.Forms.DataVisualization\ChartWin.csproj", "{DA066E4E-DB85-49DB-8481-B0D6C424DE1A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1944C3B0-C641-419D-AE92-A96DD39B7C4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1944C3B0-C641-419D-AE92-A96DD39B7C4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1944C3B0-C641-419D-AE92-A96DD39B7C4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1944C3B0-C641-419D-AE92-A96DD39B7C4F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3DF0DB17-7515-4C29-916E-C6EF66A82672}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3DF0DB17-7515-4C29-916E-C6EF66A82672}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DF0DB17-7515-4C29-916E-C6EF66A82672}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DF0DB17-7515-4C29-916E-C6EF66A82672}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DA066E4E-DB85-49DB-8481-B0D6C424DE1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DA066E4E-DB85-49DB-8481-B0D6C424DE1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DA066E4E-DB85-49DB-8481-B0D6C424DE1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DA066E4E-DB85-49DB-8481-B0D6C424DE1A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

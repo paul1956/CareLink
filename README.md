@@ -29,3 +29,31 @@ https://github.com/AngeloCresta/winforms-datavisualization-net5
 Try it out and send feedback.
 This update has a simple UI to show all the available data and a visual version that mimics the one on iPhone.
 ![Same display](https://github.com/paul1956/CareLink/blob/master/Screenshot%202021-05-16%20050718.png?raw=true)
+
+#Known Issue
+If you get a "System.Configuration.ConfigurationErrorsException: 'Configuration system failed to initialize'"
+You will need to edit CareLink\src\CareLink\bin\Debug\net5.0-windows\CareLink.dll.config and remove the following lines
+```
+    <system.diagnostics>
+        <sources>
+            <!-- This section defines the logging configuration for My.Application.Log -->
+            <source name="DefaultSource" switchName="DefaultSwitch">
+                <listeners>
+                    <add name="FileLog"/>
+                    <!-- Uncomment the below section to write to the Application Event Log -->
+                    <!--<add name="EventLog"/>-->
+                </listeners>
+            </source>
+        </sources>
+        <switches>
+            <add name="DefaultSwitch" value="Information" />
+        </switches>
+        <sharedListeners>
+            <add name="FileLog"
+                 type="Microsoft.VisualBasic.Logging.FileLogTraceListener, Microsoft.VisualBasic, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
+                 initializeData="FileLogWriter"/>
+            <!-- Uncomment the below section and replace APPLICATION_NAME with the name of your application to write to the Application Event Log -->
+            <!--<add name="EventLog" type="System.Diagnostics.EventLogTraceListener" initializeData="APPLICATION_NAME"/> -->
+        </sharedListeners>
+    </system.diagnostics>
+```

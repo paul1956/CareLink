@@ -1,0 +1,2365 @@
+.ui-mobile {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  overflow: hidden;
+  background: #323232 url(../images/connect-alarm-bg.png) repeat scroll 0 0;
+}
+
+.ui-mobile .cpm-page.ui-page {
+  width: 100%;
+  height: 100%;
+}
+
+.l-iPad-l, .l-iPad-p {
+  display: none;
+}
+
+.ui-bar-a{
+  border:1px solid #333;
+  color:#fff;font-weight:bold;text-shadow:0 -1px 1px #000;
+  background-image:-webkit-gradient(linear,left top,left bottom,from(#3c3c3c),to(#111));
+  background-image:-webkit-linear-gradient(#3c3c3c,#111);
+  background-image:-moz-linear-gradient(#3c3c3c,#111);
+  background-image:-ms-linear-gradient(#3c3c3c,#111);
+  background-image:-o-linear-gradient(#3c3c3c,#111);
+  background-image:linear-gradient(#3c3c3c,#111)
+}
+
+.cpm-page .ui-btn-text,
+.cpm-page .ui-btn-up-a, .cpm-page .ui-btn-hover-a, .cpm-page .ui-btn-down-a,
+.cpm-page .ui-bar-a, .cpm-page .ui-bar-a input, .cpm-page .ui-bar-a select, .cpm-page .ui-bar-a textarea, .cpm-page .ui-bar-a button {
+  font-family: 'Roboto',Arial, Helvetica, _sans-serif
+}
+
+.page-login .ui-content { max-width: 340px; margin-right: auto; margin-left: auto; overflow: visible; }
+.page-login .ui-content form { margin-top: 15%; }
+.page-login label.ui-input-text { padding: 0; margin-left: 3%; }
+.page-login input.ui-input-text { text-shadow: 1px 1px 0 #111; }
+.page-login input.ui-input-text,
+.page-login div.ui-btn { margin-left: 2%; width: 95%; }
+.page-login .ui-checkbox { margin: 1em 0 1.8em 0; }
+.page-login .ui-checkbox .ui-btn,
+.page-login .ui-link { font-style: italic; }
+.page-login .input-accept-terms { width: 32px; height: 32px; visibility: hidden; }
+
+@media all and (max-height: 535px) {
+  .page-login .ui-content form { margin-top: 0px; }
+}
+
+.ui-mobile-viewport { background: #3c3c3c url(../images/connect-app-bg.png) repeat scroll 0 0; }
+
+.cpm-page a { color: #0ff; }
+
+.cpm-page {
+  width: 99.9%;
+  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+  background: #3c3c3c url(../images/connect-app-bg.png) repeat scroll 0 0;
+  text-shadow: 1px 1px 0 #222;
+  color: #fff;
+}
+
+.cpm-page .ui-link { color: #fff; font-weight: normal; text-shadow: none; }
+.cpm-page .ui-link:visited { color: #fff; }
+.cpm-page .ui-link2 {font-size: 20px; margin-left: 10px;}
+
+.page-login .ui-link { color: #0ff; font-weight: normal; text-shadow: none; }
+.page-login .ui-link:visited { color: #0ff; }
+
+.ui-body-c .ui-link:hover { color: #cff; }
+
+.cpm-page .ui-content { background: transparent; }
+.cpm-page h1 { font-size: 1.2em; }
+.cpm-page h2 { font-size: 1.1em; font-weight: normal; background: none;  }
+.cpm-page .ui-header { padding: 0.6em 1.2em; background: #505050 url(../images/connect-page-header-bg.png) repeat-x scroll 0 0; }
+
+.page-splash { background: transparent url(../images/cpm-splash-screen.png) no-repeat scroll 50% 50%; }
+
+.nowrap { white-space: nowrap; }
+
+/* Fixed Footer Styles */
+.cpm-page footer { text-align: center; }
+.cpm-page footer a { color: #fff; }
+.cpm-page footer .ui-btn { background: none; border: none; -webkit-box-shadow: none; box-shadow: none; margin-top: 0; margin-bottom: 0; }
+.cpm-page footer .ui-btn-inner { border: none; padding: 1em 0.5em;}
+.cpm-page footer .ui-btn-inner span { text-shadow: -1px -1px 1px #000; font-size: 1.3em; font-weight: normal; }
+.page-status footer { padding: 5px 10px; }
+.page-status footer * { display: inline; margin: 0; padding: 0; text-decoration: none; }
+/* End Fixed Footer Styles */
+
+.page-login .ui-header { text-align: center; height: 39px; padding-top: 26px; font-weight: normal; font-size: 1.3em; }
+.page-login .ui-checkbox label { background: none; border: none; -webkit-box-shadow: none; box-shadow: none; color: #fff; margin-top: 0; left: -10px; }
+.page-login .ui-checkbox label .ui-btn-inner { border: none; text-shadow: none; font-weight: normal;  height: 60px; padding-top: 0 }
+.page-login .ui-checkbox .ui-btn-inner { padding-left: 80px; }
+.page-login .ui-checkbox .ui-btn-text { display: block; padding-top: 30px; }
+.page-login .ui-checkbox label .ui-icon { width: 55px; height: 62px; top: 20px; background-size: 55px 51px; }
+.page-login .ui-checkbox label .ui-icon-checkbox-off,
+.page-login .ui-checkbox label .ui-icon-checkbox-on {
+  background: transparent url('../images/connect-login-checkbox-bg.png') no-repeat scroll 0 0;
+  background-size: auto;
+}
+.page-login .ui-checkbox label .ui-icon-checkbox-on { background-position: 0 -201px; }
+
+.forgot-password { text-align: center; margin-right: auto; margin-left: auto; display: block; padding: 1em; }
+
+.ui-body-c .ui-btn {
+  background: rgb(178,255,255); /* Old browsers */
+  /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+  background: url(data:images/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2IyZmZmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjQ5JSIgc3RvcC1jb2xvcj0iIzk1ZDdkOCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM4YWM3YzkiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+  background-color: #a7f0f0; /* Will be seen only in IE, as soon as gradients below will override it in other browsers */
+  background: -moz-linear-gradient(top, rgba(178,255,255,1) 0%, rgba(149,215,216,1) 49%, rgba(138,199,201,1) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(178,255,255,1)), color-stop(49%,rgba(149,215,216,1)), color-stop(100%,rgba(138,199,201,1))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(178,255,255,1) 0%,rgba(149,215,216,1) 49%,rgba(138,199,201,1) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(178,255,255,1) 0%,rgba(149,215,216,1) 49%,rgba(138,199,201,1) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, rgba(178,255,255,1) 0%,rgba(149,215,216,1) 49%,rgba(138,199,201,1) 100%); /* IE10+ */
+  background: linear-gradient(to bottom, rgba(178,255,255,1) 0%,rgba(149,215,216,1) 49%,rgba(138,199,201,1) 100%); /* W3C */
+
+  border-radius: 6px;
+  border-top: 1px solid #171717;
+
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+/* .ui-body-c .ui-checkbox .ui-icon */
+.ui-body-c .ui-submit .ui-btn-inner,
+.ui-body-c .ui-input-text,
+.ui-body-c .ui-input-search {
+  padding: 0.7em;
+}
+
+.ui-body-c .ui-submit .ui-btn-inner {
+  font-size: 1.2em;
+  border-radius: 6px;
+  border-bottom: 1px solid #b2ffff;
+}
+
+input.ui-input-text, textarea.ui-input-text, .ui-input-search {
+  background: rgb(40,37,38); /* Old browsers */
+  background: url(data:images/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzI4MjUyNiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM0ODQ5NGEiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+  background: -moz-linear-gradient(top, rgba(40,37,38,1) 0%, rgba(72,73,74,1) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(40,37,38,1)), color-stop(100%,rgba(72,73,74,1))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, rgba(40,37,38,1) 0%,rgba(72,73,74,1) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, rgba(40,37,38,1) 0%,rgba(72,73,74,1) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, rgba(40,37,38,1) 0%,rgba(72,73,74,1) 100%); /* IE10+ */
+  background: linear-gradient(to bottom, rgba(40,37,38,1) 0%,rgba(72,73,74,1) 100%); /* W3C */
+  border: none;
+  border-bottom: 1px solid #d0d0d0;
+
+  -moz-box-shadow: inset 0px 0px 6px #111;
+  -webkit-box-shadow: inset 0px 0px 6px #111;
+  box-shadow: inset 0px 0px 6px #111;
+
+  color: #0ff;
+  padding-left: 0.7em;
+}
+
+.clearfix:after {
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  line-height: 0;
+  height: 0;
+}
+
+.clearfix {
+  display: inline-block;
+}
+
+.truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+html[xmlns] .clearfix {
+  display: block;
+}
+
+* html .clearfix {
+  height: 1%;
+}
+
+.pull-right { float: right; }
+.text-align-center { text-align: center; }
+.text-align-right { text-align: right; }
+
+/* top bar */
+.status .container-left-icon {
+  float: left;
+  margin-right: 10px;
+}
+.status .left-icon,
+.status .close-link-button { padding:5px; /* increased clickable area / spacing */ }
+.username {
+  float: left;
+  width: 30%;
+  width: calc(55% - (120px * 0.175) - 10px - 5px - 5px); /* subtract menu icon width, and horizontal padding/margin */
+  line-height: calc(113px * 0.175 + 5px + 5px); /* vertically center to icon height + vertical padding/margin */
+}
+.container-updatedtime {
+  float: right;
+  font-size: 0.75em;
+  width: 45%;
+  width: calc(45%);
+  text-align: right;
+  padding: 0 0;
+  padding: calc((32px - 2em) / 2) 0; /* centers vertically using status-icon height */
+}
+.container-updatedtime .status-message { display: inline-block; }
+.container-updatedtime .status-message-icon { display: inline-block; vertical-align:top; }
+
+.username {
+  display: block;
+}
+
+/* main page */
+#page-home {
+  padding: 0;
+  padding-bottom: 0 !important;
+}
+
+/* content container */
+#page-home .ui-content,
+#page-value .ui-content,
+#page-status .ui-content,
+#page-error .ui-content {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* chart area */
+#home-chart-overlay {
+  height: 16px;
+  width: 16px;
+  background: transparent url(../images/connect-time-change.png) no-repeat scroll 0 0;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: none;
+}
+
+/* Value Page */
+#page-value .trend {
+  height: auto;
+  padding-bottom: 2em;
+  background: transparent;
+}
+
+/* top status bar trend with sensor state */
+.page-value .trend .device-status .sensor-state {
+  font-size: 2.5em;
+  word-wrap: break-word;
+}
+
+/* top status bar trend with value */
+#page-value .trend.off .trend-and-value .sensor-value {
+  font-size: 8em;
+}
+
+/* top status bar trend's detail - units and timestamp */
+#page-value .value-details {
+  float: none;
+  text-align: center;
+  margin-left: 0;
+}
+
+#page-value .value-details .units-label {
+}
+
+#page-value .value-details .time-value {
+  display: inline;
+}
+
+#page-value .value-details .date-value {
+  display: inline;
+}
+
+#page-value .value-details .pump-time-label {
+  display: none;
+}
+
+/* End Value Page */
+
+/* Status Page */
+.page-status .back-link-button {
+  float: left;
+  width: 50px;
+  margin-right: 10px;
+  height: 50px;
+}
+
+/* End Status Page */
+.alarms {
+  /* width: 100%; */
+  min-height: 60px;
+  padding: 0;
+  color: #fff;
+  background: #323232 url(../images/connect-alarm-bg.png) repeat-x scroll 0 0;
+}
+
+/* bottom alarms bar */
+.page-home .alarms {
+  width: 100%;
+}
+
+/* bottom alarms bar */
+.alarms.current {
+  background: #812827 url(../images/connect-alarm-bg-current.png) repeat-x scroll 0 0;
+}
+
+/* bottom alarms bar */
+.last-alarm-link {
+  text-align: left;
+  font-weight: normal;
+  text-decoration: none;
+  color: #fff;
+  font-size: 1.4em;
+  display: block;
+  padding: 10px;
+}
+
+/* Sprite component */
+/* implementing elements should specify width and height, in addition to background source/URL */
+.c-sprite {
+  display: block;
+  background-size: 100% 100%;
+  bacground-repeat: no-repeat;
+  background-origin: content-box !important; /* resizes background to content-box */
+  background-clip: content-box !important; /* clips background to content-box */
+  /* must specify (vertical) size here. auto (and cover) will clip larger images */
+}
+
+/* MODULE: nav icons */
+.icon-nav, .icon-contextual { background: transparent url('../images/Connect-Buttone.png') no-repeat scroll; }
+.icon-nav {
+  background-size: 75px;
+  height: 50px;
+  width: 30px;
+
+  background-size: calc(150px * 0.25);
+  height: calc(100px * 0.25);
+  width: calc(60px * 0.25);
+  padding: 5px;
+}
+.left-icon {
+  background-position: 0 0;
+  background-size: 26.25px;
+  height: 19.775px;
+  width: 21px;
+
+  background-position: 0 calc(0px * 0.175);
+  background-size: calc(150px * 0.175);
+  height: calc(113px * 0.175);
+  width: calc(120px * 0.175);
+
+  padding-right: 5px; /* increased clickable area for users */
+}
+.close-link-button {
+  background-position: 0 -26.25px;
+  background-size: 26.25px;
+  height: 17.5px;
+  width: 17.5px;
+
+  background-position: 0 calc(-150px * 0.175);
+  background-size: calc(150px * 0.175);
+  height: calc(100px * 0.175);
+  width: calc(100px * 0.175);
+}
+.back-link-button {
+  background-position: 0 -225px;
+  background-position: 0 calc(-450px * 0.25);
+}
+.value-details-icon,
+.bg-right-icon {
+  background-position: 0 -150px;
+  background-position: 0 calc(-300px * 0.25);
+}
+
+.c-sprite.status-message-icon {
+  background: transparent url(../images/connect-home-status-ic-small.png) no-repeat scroll 0 0;
+  height: 50px;
+  width: 42px;
+}
+
+.c-sprite.status-message-icon.status-ok {
+  /* hide OK status as there is no icon for it anyway */
+  display: none;
+}
+
+.c-sprite.trend-icon {
+  height: 1em;
+}
+
+/* top status bar */
+.status {
+  box-sizing: border-box; /* makes height include padding and borders */
+  background: #585858 url(../images/connect-home-status-section-bg.png) repeat-x scroll 0 0; /* img height is 78px*/
+  background-size: cover;
+  padding: 5px;
+}
+
+/* top status bar trend */
+.trend {
+  display: block;
+  background: #454545 url(../images/connect-home-trend-section-bg.png) repeat-x scroll 0 0;
+  background-size: cover;
+}
+/* top status bar trend and value */
+.trend-and-value, .device-status {
+  display: block;
+}
+
+.trend.off .value-details {
+  display: none;
+}
+
+#page-home .trend.off .device-status {
+  width: 80%;
+  width: calc(100% - (60px * 0.50));
+}
+
+
+/*
+TREND ICON POSITIONING
+*/
+.trend-icon.off {
+  display: none !important;
+}
+.trend-icon {
+  background-repeat: no-repeat;
+  background-color: white;
+}
+
+.page-value .trend-icon {
+  background-position: center;
+}
+
+/* top status bar trend down image */
+.trend-icon.trend-down { background-image: url(../images/connect-SmallNB_arrowdown.png); }
+
+/* top status bar trend double down image */
+.trend-icon.trend-down-double { background-image: url(../images/connect-SmallNB_2arrowdown.png); }
+
+.trend-icon.trend-down-triple { background-image: url(../images/connect-SmallNB_3arrowdown.png); }
+
+/* top status bar trend up image */
+.trend-icon.trend-up { background-image: url(../images/connect-SmallNB_arrowup.png); }
+
+/* top status bar trend double up image */
+.trend-icon.trend-up-double { background-image: url(../images/connect-SmallNB_2arrowup.png); }
+
+/* top status bar bg value */
+.trend-icon.trend-up-triple { background-image: url(../images/connect-SmallNB_3arrowup.png); }
+/* FALLBACK SIZES FOR TREND ICONS */
+.trend-icon.trend-up,
+.trend-icon.trend-down {
+  background-size: 8.8px;
+  height: 14.0px;
+  width: 8.8px;
+
+  background-size: calc(88px * 0.10);
+  height: calc(140px * 0.10);
+  width: calc(88px * 0.10);
+}
+.trend-icon.trend-up-double,
+.trend-icon.trend-down-double {
+  background-size: 18.8px;
+  height: 14.0px;
+  width: 18.8px;
+
+  background-size: calc(188px * 0.10);
+  height: calc(140px * 0.10);
+  width: calc(188px * 0.10);
+}
+.trend-icon.trend-up-triple,
+.trend-icon.trend-down-triple {
+  background-size: 28.0px;
+  height: 14.0px;
+  width: 28.0px;
+
+  background-size: calc(280px * 0.10);
+  height: calc(140px * 0.10);
+  width: calc(280px * 0.10);
+}
+
+/* PORTRAIT VIEWS */
+@media all and (orientation:portrait) {
+  .value-details-icon,
+  .bg-right-icon  { float: right; }
+  .page-home .trend { text-align: center; }
+  .page-home .trend .trend-and-value,
+  .page-home .trend .value-details { display: inline-block; }
+  .page-home .trend .device-status .sensor-state {
+    font-size: 1.5em;
+  }
+  .page-home .trend .trend-and-value .sensor-value {
+    display: inline-block;
+    font-size: 5em;
+  }
+  .page-home .trend .trend-and-value .trend-icon { display: inline-block; }
+
+  /* value page */
+  .page-value  .trend .trend-and-value .trend-icon {
+    display: block;
+    margin: 0 auto;
+  }
+  .page-value .trend .trend-and-value .sensor-value {
+    display: inline-block;
+    font-size: 7em;
+  }
+  .page-value .trend .trend-and-value,
+  .page-value .trend .device-status,
+  .page-value .trend .device-status .sensor-state {
+    display: block;
+    text-align: center;
+  }
+  .page-value .trend .value-details { font-size: 2em; }
+}
+/* portrait phone */
+@media (max-width: 532px) and (orientation:portrait) {
+  /* home page */
+  .page-home .trend-icon.trend-up,
+  .page-home .trend-icon.trend-down {
+    background-size: 13.2px;
+    height: 21px;
+    width: 13.2px;
+
+    background-size: calc(88px * 0.15);
+    height: calc(140px * 0.15);
+    width: calc(88px * 0.15);
+  }
+  .page-home .trend-icon.trend-up-double,
+  .page-home .trend-icon.trend-down-double {
+    background-size: 28.2px;
+    height: 21px;
+    width: 28.2px;
+
+    background-size: calc(188px * 0.15);
+    height: calc(140px * 0.15);
+    width: calc(188px * 0.15);
+  }
+  .page-home .trend-icon.trend-up-triple,
+  .page-home .trend-icon.trend-down-triple {
+    background-size: 42px;
+    height: 21px;
+    width: 42px;
+
+    background-size: calc(280px * 0.15);
+    height: calc(140px * 0.15);
+    width: calc(280px * 0.15);
+  }
+
+  /* value page */
+  .page-value .trend-icon.trend-up,
+  .page-value .trend-icon.trend-down {
+    background-size: 22px;
+    height: 35px;
+    width: 22px;
+
+    background-size: calc(88px * 0.25);
+    height: calc(140px * 0.25);
+    width: calc(88px * 0.25);
+  }
+  .page-value .trend-icon.trend-up-double,
+  .page-value .trend-icon.trend-down-double {
+    background-size: 47px;
+    height: 35px;
+    width: 47px;
+
+    background-size: calc(188px * 0.25);
+    height: calc(140px * 0.25);
+    width: calc(188px * 0.25);
+  }
+  .page-value .trend-icon.trend-up-triple,
+  .page-value .trend-icon.trend-down-triple {
+    background-size: 70px;
+    height: 35px;
+    width: 70px;
+
+    background-size: calc(280px * 0.25);
+    height: calc(140px * 0.25);
+    width: calc(280px * 0.25);
+  }
+}
+/* portrait phone large */
+@media (min-width: 533px) and (orientation:portrait) {
+  /* home page */
+  .page-home .trend-icon.trend-up,
+  .page-home .trend-icon.trend-down {
+    background-size: 13.2px;
+    height: 21px;
+    width: 13.2px;
+
+    background-size: calc(88px * 0.15);
+    height: calc(140px * 0.15);
+    width: calc(88px * 0.15);
+  }
+  .page-home .trend-icon.trend-up-double,
+  .page-home .trend-icon.trend-down-double {
+    background-size: 28.2px;
+    height: 21px;
+    width: 28.2px;
+
+    background-size: calc(188px * 0.15);
+    height: calc(140px * 0.15);
+    width: calc(188px * 0.15);
+  }
+  .page-home .trend-icon.trend-up-triple,
+  .page-home .trend-icon.trend-down-triple {
+    background-size: 42px;
+    height: 21px;
+    width: 42px;
+
+    background-size: calc(280px * 0.15);
+    height: calc(140px * 0.15);
+    width: calc(280px * 0.15);
+  }
+
+  /* value page */
+  .page-value .trend-icon.trend-up,
+  .page-value .trend-icon.trend-down {
+    background-size: 22px;
+    height: 35px;
+    width: 22px;
+
+    background-size: calc(88px * 0.25);
+    height: calc(140px * 0.25);
+    width: calc(88px * 0.25);
+  }
+  .page-value .trend-icon.trend-up-double,
+  .page-value .trend-icon.trend-down-double {
+    background-size: 47px;
+    height: 35px;
+    width: 47px;
+
+    background-size: calc(188px * 0.25);
+    height: calc(140px * 0.25);
+    width: calc(188px * 0.25);
+  }
+  .page-value .trend-icon.trend-up-triple,
+  .page-value .trend-icon.trend-down-triple {
+    background-size: 70px;
+    height: 35px;
+    width: 70px;
+
+    background-size: calc(280px * 0.25);
+    height: calc(140px * 0.25);
+    width: calc(280px * 0.25);
+  }
+
+  .page-value .trend .device-status .sensor-state { font-size: 4em; }
+}
+
+
+
+/* LANDSCAPE VIEWS */
+@media all and (orientation:landscape) {
+  /* all pages */
+
+  /* home page */
+  .page-home .trend .trend-and-value,
+  .page-home .trend .device-status { text-align: center; }
+  .value-details-icon,
+  .bg-right-icon  {
+    margin-right: 0;
+    margin-left: auto;
+  }
+  .page-home .trend .value-details { text-align: center; }
+  .page-home .trend .device-status .sensor-state {
+    text-align: center;
+  }
+  .page-home .trend .trend-and-value .sensor-value {
+    display: inline-block;
+  }
+  .page-home .trend .trend-and-value .trend-icon { display: inline-block; }
+  .page-home .trend .value-details { text-align: center; }
+
+  /* value page */
+  .page-value .trend .trend-and-value,
+  .page-value .trend .device-status { text-align: center; }
+  .page-value  .trend .trend-and-value .trend-icon {
+    display: block;
+    margin: 0 auto;
+  }
+  .page-value .trend .trend-and-value .sensor-value {
+    display: inline-block;
+    font-size: 5em;
+  }
+}
+/* landscape phone*/
+@media (max-width: 532px) and (orientation:landscape) {
+  /* all pages */
+  .trend-icon.trend-up,
+  .trend-icon.trend-down {
+    background-size: 8.8px;
+    height: 14.0px;
+    width: 8.8px;
+
+    background-size: calc(88px * 0.10);
+    height: calc(140px * 0.10);
+    width: calc(88px * 0.10);
+  }
+  .trend-icon.trend-up-double,
+  .trend-icon.trend-down-double {
+    background-size: 18.8px;
+    height: 14.0px;
+    width: 18.8px;
+
+    background-size: calc(188px * 0.10);
+    height: calc(140px * 0.10);
+    width: calc(188px * 0.10);
+  }
+  .trend-icon.trend-up-triple,
+  .trend-icon.trend-down-triple {
+    background-size: 28.0px;
+    height: 14.0px;
+    width: 28.0px;
+
+    background-size: calc(280px * 0.10);
+    height: calc(140px * 0.10);
+    width: calc(280px * 0.10);
+  }
+  .page-value .trend .trend-and-value .sensor-value { font-size: 4em; }
+
+  .icon-nav {
+    background-position: 0 -112.5px;
+    background-size: 37.5px;
+    height: 25px;
+    width: 15px;
+
+    background-position: 0 calc(-450px * 0.25);
+    background-size: calc(150px * 0.25);
+    height: calc(100px * 0.25);
+    width: calc(60px * 0.25);
+  }
+
+  /* home page */
+  .value-details-icon,
+  .bg-right-icon  {
+    background-position: 0 -75px;
+    background-position: 0 calc(-300px * 0.25);
+  }
+  .page-home .trend .trend-and-value .sensor-value { font-size: 2em; }
+
+  /* value page */
+
+  /* LEGACY STYLES needed so non-ios small phones keep a layout similar to ios */
+  .nav-time-range > li > a.ui-link {
+    padding: 0;
+    font-size: 0.9em;
+    line-height: 2.6;
+  }
+
+  .page-home .trend {
+    /* Ported from iPad, but in smaller sizes */
+    float: right;
+    width: 26%;
+    background: none;
+  }
+
+  #page-value .trend {
+    padding-bottom: 0;
+    font-size: 1em;
+  }
+
+  .page-home .alarms {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 27%;
+    padding: 0.2em 0 0.5em 1em;
+    border-top: 1px solid #1e1e1e;
+    font-size: 0.9em;
+  }
+
+  .page-home .alarms.current .last-alarm-link {
+    padding-left: 0.5em;
+    line-height: 1.2;
+  }
+
+  .page-home #home-chart-wrapper {
+    height: 225px;
+    float: left;
+    width: 70%;
+    position: relative;
+    border-right: 2px groove #555;
+    z-index: 1100;
+    padding: 10px 15px 8px 0;
+  }
+
+  .page-home #bg-diagram {
+    width: 100%;
+    height: 190px;
+    opacity: 0.99;
+  }
+
+  .page-home .nav-time-range {
+    position: absolute;
+    left: 0;
+    right: 1px;
+    bottom: 0;
+    margin: 15px 0 0 0;
+  }
+
+  .page-home .last-alarm-link .alarm-value {
+    font-size: 1em;
+  }
+
+  .alarms.current .last-alarm-link {
+    float: none;
+    text-align: center;
+  }
+
+  /* Extended */
+  .alarms.extended {
+    min-height: 36px;
+  }
+
+  .extended .alarm-bolus {
+    padding-left: 5px;
+  }
+
+  .extended .last-alarm-link {
+    min-height: 26px;
+  }
+
+  .extended .alarm-suspended {
+    padding: 7px 2px 7px 2px;
+    font-size: 0.55em;
+  }
+
+  .extended .alarm-bolus {
+    font-size: 0.65em;
+    padding-top: 3px;
+  }
+
+  #page-value .extended .last-alarm-link {
+    padding-bottom: 0.5em
+  }
+
+  #page-value footer {
+    font-size: 0.9em;
+  }
+
+  #page-value .extended .alarm-suspended {
+    float: right;
+    padding: 8px 20px 10px 20px;
+    font-size: 0.9em;
+  }
+
+  #page-value .extended .alarm-bolus {
+    font-size: 0.8em;
+  }
+
+  .page-home .alarms.extended {
+    font-size: 0.9em;
+  }
+
+  .page-home .extended .last-alarm-link {
+    padding: 0.6em 0 0.3em 0.5em;
+    font-size: 0.75em;
+    font-weight: normal;
+  }
+}
+
+/* landscape phone large */
+@media (min-width: 533px) and (orientation:landscape) {
+  /* home page */
+  .icon-nav {
+    background-size: 37.5px;
+    height: 25px;
+    width: 15px;
+
+    background-size: calc(150px * 0.25);
+    height: calc(100px * 0.25);
+    width: calc(60px * 0.25);
+  }
+  .value-details-icon,
+  .bg-right-icon   {
+    background-position: 0 -75px;
+    background-position: 0 calc(-300px * 0.25);
+  }
+  .back-link-button  {
+    background-position: 0 -112.5px;
+    background-position: 0 calc(-450px * 0.25);
+  }
+  .page-home .trend .device-status .sensor-state { font-size: 1.5em; }
+  .page-home .trend .trend-and-value .sensor-value { font-size: 3em; }
+  .page-home .trend-icon.trend-up,
+  .page-home .trend-icon.trend-down {
+    background-size: 13.2px;
+    height: 21px;
+    width: 13.2px;
+
+    background-size: calc(88px * 0.15);
+    height: calc(140px * 0.15);
+    width: calc(88px * 0.15);
+  }
+  .page-home .trend-icon.trend-up-double,
+  .page-home .trend-icon.trend-down-double {
+    background-size: 28.2px;
+    height: 21px;
+    width: 28.2px;
+
+    background-size: calc(188px * 0.15);
+    height: calc(140px * 0.15);
+    width: calc(188px * 0.15);
+  }
+  .page-home .trend-icon.trend-up-triple,
+  .page-home .trend-icon.trend-down-triple {
+    background-size: 42px;
+    height: 21px;
+    width: 42px;
+
+    background-size: calc(280px * 0.15);
+    height: calc(140px * 0.15);
+    width: calc(280px * 0.15);
+  }
+
+  /* value page */
+  .page-value .trend-icon.trend-up,
+  .page-value .trend-icon.trend-down {
+    background-size: 22px;
+    height: 35px;
+    width: 22px;
+
+    background-size: calc(88px * 0.25);
+    height: calc(140px * 0.25);
+    width: calc(88px * 0.25);
+  }
+  .page-value .trend-icon.trend-up-double,
+  .page-value .trend-icon.trend-down-double {
+    background-size: 47px;
+    height: 35px;
+    width: 47px;
+
+    background-size: calc(188px * 0.25);
+    height: calc(140px * 0.25);
+    width: calc(188px * 0.25);
+  }
+  .page-value .trend-icon.trend-up-triple,
+  .page-value .trend-icon.trend-down-triple {
+    background-size: 70px;
+    height: 35px;
+    width: 70px;
+
+    background-size: calc(280px * 0.25);
+    height: calc(140px * 0.25);
+    width: calc(280px * 0.25);
+  }
+}
+
+/* landscape tablet+ */
+@media only screen
+and (min-width: 768px)
+and (orientation: landscape) {
+  /* all pages */
+
+  /* home page */
+  .icon-nav {
+    background-size: 75px;
+    height: 50px;
+    width: 30px;
+
+    background-size: calc(150px * 0.50);
+    height: calc(100px * 0.50);
+    width: calc(60px * 0.50);
+  }
+  .value-details-icon,
+  .bg-right-icon  {
+    background-position: 0 -150px;
+    background-position: 0 calc(-300px * 0.50);
+  }
+  .back-link-button  {
+    background-position: 0 -225px;
+    background-position: 0 calc(-450px * 0.50);
+  }
+  .page-home .trend .device-status .sensor-state { font-size: 1.5em; }
+  .page-home .trend .trend-and-value .sensor-value { font-size: 5em; }
+
+  /* value page */
+  .page-value .trend .trend-and-value .sensor-value { font-size: 6em; }
+}
+
+/* top status bar bg time */
+.value-details .pump-time-label {
+  margin-top: 0;
+  line-height: 1.5;
+  display: block;
+}
+
+/* home page chart area container */
+#home-chart-wrapper {
+  background: #010101 url(../images/connect-chart-bg-right.png) repeat-x scroll 100% 50%;
+  margin-right: auto;
+  margin-left: auto;
+  height: 350px;
+  padding: 15px 15px 15px 0;
+  border-top: 1px solid #353535;
+  position: relative;
+}
+
+/* home page bg chart area */
+#bg-diagram {
+  width: 100%;
+  height: 100%;
+  margin-bottom: 15px;
+  opacity: 0.99; /* Fixes the chart rendering issue on Samsung devices */
+  font-size: 16px;
+}
+
+/* home page time selection (3hr, 6hr, ...) */
+.nav-time-range { background: #000; padding: 0; margin: 0 -15px 15px -15px; display: block; }
+.nav-time-range > li { display: block; float: left; width: 25%; margin: 0; }
+.nav-time-range > li > a.ui-link {
+  padding-top: 0.45em;
+  padding-bottom: 0.3em;
+  width: 100%;
+  height: auto;
+  font: bold 1.1em/48px Helvetica, Arial, sans-serif;
+  border-bottom: none;
+  background: #000 url(../images/connect-home-time-range-button-bg.png) repeat-x scroll 0 0;
+  text-align: center;
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  font-weight: normal;
+  border-left: 1px solid #000;
+}
+
+/* home page time selection background image for selected time */
+.nav-time-range > li > a.ui-link.ui-selected {
+  background: #000 url(../images/connect-home-time-range-panel-bg.png) repeat-x scroll 0 0;
+  color: #00FBFF;
+}
+
+.nav-time-range > li > a.ui-link:visited {
+  color: #fff;
+}
+
+.cpm-page .status-message.ui-link {
+  cursor: pointer;
+  color: #fff;
+  text-decoration: none;
+}
+
+.cpm-page .status-message-icon.ui-link {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.cpm-page .status-message-icon.ui-link.status-ok {
+  background-position: 0 -150px;
+}
+
+.cpm-page .status-message-icon.ui-link.status-error-conduit {
+  background-position: 0 0;
+}
+
+.cpm-page .status-message-icon.ui-link.status-error-meddevice {
+  background-position: 0 -300px;
+}
+
+.cpm-page .status-message-icon.ui-link.status-error-sensor {
+  background-position: 0 -450px;
+}
+
+.cpm-page .status-message-icon.ui-link.status-error-app {
+  background-position: 0 -600px;
+}
+
+.cpm-page .status-message-icon.ui-link.updating {
+  background-position: 0 -300px;
+}
+
+.cpm-page .status-message-icon.ui-link.status-error-app-cgm {
+  background-position: 0 -745px;
+}
+
+#status-panel { display: none; }
+
+.status-message .text { display: block; }
+
+.bt-settings {
+  display: block;
+  width: 43px;
+  height: 43px;
+  background: transparent url(../images/connect-bt-settings.png) no-repeat scroll 100% 0; cursor: pointer;
+}
+
+/* status page container */
+#page-status { background: #1B1B1B url(../images/connect-status-section-bg.png) repeat scroll 0 0; }
+
+/* MODULE: device status table */
+.device-status-table {
+  width: 100%;
+  max-width: 532px;
+}
+.device-status-table .device-status-table-heading {
+  text-align: left;
+  font-weight: normal;
+}
+.device-status-table .status-icon-cell {
+  text-align: center;
+  height:10px;
+}
+
+/* status page each section item status icon */
+.device-status-table .icon { display: block; width: 60px; height: 61px; margin: 0 auto; }
+.device-status-table .icon {background-position: 50% 0; background-repeat: no-repeat; }
+
+/* Status Screen Icons */
+.connection-ok { width: 36px; height: 36px; background: transparent url(../images/connect-icon-connection-ok.png) no-repeat scroll 0 0; }
+.no-connection { width: 36px; height: 36px; background: transparent url(../images/connect-icon-no-connection.png) no-repeat scroll 0 0; }
+
+/* Status - Battery Levels */
+#page-status .icon.battery { background: transparent url('../images/status icons and markers.png') no-repeat scroll 0 0;background-size: 1200px 710px }
+#page-status .icon.conduitbattery { background: transparent url(../images/connect-status-ic-battery-levels-conduit.png) no-repeat scroll 50% 0; }
+#page-status .icon.sensorbattery { background: transparent url(../images/connect-status-ic-battery-levels-transmitter.png) no-repeat scroll 50% 0; }
+
+
+/* Status - Battery Levels */
+#page-status .icon.p0 { background-position: -947px -1px; }
+#page-status .icon.p25 { background-position: -947px -131px; }
+#page-status .icon.p50 { background-position: -947px -259px; }
+#page-status .icon.p75 { background-position: -947px -434px; }
+#page-status .icon.p100 { background-position: -947px -495px; }
+#page-status .icon.unknown { background-position: -947px -575px; }
+
+/* Status - Sensor */
+.sensor-days-to-change { background: transparent url('../images/status icons and markers.png') no-repeat scroll 0 0;background-size: 1200px 710px; }
+/*.hidden-sensor-days-to-change { visibility: hidden }*/
+#page-status .icon.l0 { background-position: 50% 0 }
+#page-status .icon.l1 { background-position: -828px -317px; }
+#page-status .icon.l2 { background-position: -828px -197px; }
+#page-status .icon.l3 { background-position: -828px -66px; }
+#page-status .icon.l4 { background-position: -828px -1px; }
+#page-status .icon.l5 { background-position: 50% -450px }
+#page-status .icon.l6 { background-position: -828px -648px; }
+#page-status .icon.l7 { background-position: -828px -564px; } /* unknown */
+
+/*#page-status .icon.unknown { background-position: -572px -404px }*/
+#page-status .icon.reject { background-position: 50% -900px }/* special cgm state */
+
+#page-status .icon.sensor-in-range,
+#page-status .icon.pump-in-range,
+#page-status .icon.cloudpost-in-range-signal-level {
+  background-position: 0 0;
+}
+#page-status .icon.cloudpost-GM-in-range-signal-level {
+  width: 60px;
+  height: 80px;
+  background-position: 0 0;
+}
+
+/*Calibration*/
+#page-status .sensor-calibration-due-time { width: 64px; height: 52px; background: transparent url('../images/status icons and markers.png') no-repeat scroll 0 0; background-size: 1200px 710px; }
+#page-status .icon.st0 { background-position:-765px -3px }
+#page-status .icon.stlessThan4 { background-position: -765px -201px }
+#page-status .icon.stlessThan2 { background-position: -765px -69px }
+#page-status .icon.st1 { background-position: -765px -320px }
+#page-status .icon.st2 { background-position: -765px -378px }
+#page-status .icon.st3 { background-position: -765px -441px }
+#page-status .icon.st4 { background-position: -765px -502px }
+#page-status .icon.threeDots { background-position: -765px -653px }
+#page-status .icon.questionMark { background-position: -765px -573px }
+
+.page-status .sensor-in-range { width: 64px; height: 64px; background: transparent url('../images/connect-status-ic-sensor-in-range.png') no-repeat scroll 0 0 }
+#calibrationDue {padding-top:5px;}
+#sensorDuration {pading-top:5px;}
+
+/*GST*/
+#page-status .sensor-in-range { width: 64px; height: 64px; background: transparent url('../images/status icons and markers.png') no-repeat scroll 0 0; background-size: 1200px 710px; }
+#page-status .sensor-in-range.true { background-position: -1148px -495px; }
+#page-status .sensor-in-range.unknown { background-position: -1148px -566px; }
+#page-status .sensor-in-range.gstDisconnected { background-position: -1148px 5px; }
+
+
+#page-status .guardian.sensor-in-range.true { background-position: 50% -450px; }
+#page-status .guardian.sensor-in-range.unknown { background-position: 50% -600px; }
+
+
+/* Status - Pump */
+.pump-insuline-units { background: transparent url('../images/status icons and markers.png') no-repeat scroll 0 0;background-size: 1200px 710px }
+.pump-in-range { background: transparent url('../images/status icons and markers.png') no-repeat scroll 0 0;background-size: 1200px 710px }
+#page-status .pump-in-range.true { background-position: -1097px -495px }
+#page-status .pump-in-range.false { background-position: -1097px -3px; }
+#page-status .pump-in-range.unknown { background-position: -1097px -576px; }
+
+/* Reservoir  INTDASH - 2523*/
+#page-status .icon.p85{background-position:-885px -495px;}
+#page-status .icon.p71{background-position:-885px -370px;}
+#page-status .icon.p57{background-position:-885px -313px;}
+#page-status .icon.p43{background-position:-885px -252px;}
+#page-status .icon.p29{background-position:-885px -191px;}
+#page-status .icon.p15{background-position:-885px -123px;}
+#page-status .icon.p1{background-position:-885px -61px;}
+#page-status .icon.pzero{background-position:-885px 1px;}
+#page-status .icon.resUnknown{background-position:-885px -565px;}
+
+/* Status - CloudPost */
+.page-status .cloudpost-in-range-signal-level { background: transparent url('../images/connect-status-ic-cloudpost-in-range.png') no-repeat scroll 0 0 }
+#page-status .cloudpost-in-range-signal-level.true { background-position: 0 -450px; }
+#page-status .cloudpost-in-range-signal-level.bars-1 { background-position: 0 -155px; }
+#page-status .cloudpost-in-range-signal-level.bars-2 { background-position: 11px -300px; }
+#page-status .cloudpost-in-range-signal-level.bars-3 { background-position: 0 -450px; }
+
+/* Status - CloudPost GM */
+.cloudpost-GM-in-range-signal-level { background: transparent url('../images/connect-status-cloudpost-GM-in-range.png') no-repeat scroll 0 0 }
+#page-status .cloudpost-GM-in-range-signal-level.true { background-position: 0 -450px; }
+#page-status .cloudpost-GM-in-range-signal-level.bars-1 { background-position: 0 -150px; }
+#page-status .cloudpost-GM-in-range-signal-level.bars-2 { background-position: 0 -300px; }
+#page-status .cloudpost-GM-in-range-signal-level.bars-3 { background-position: 0 -450px; }
+
+/* Flotr2 Chart Styling */
+/* FIXME Hack in order to make xaxis stay on the top */
+.flotr-grid-label-y { margin-top: 30px !important; }
+.flotr-grid-label-x { top: 0 !important; font-size: 10px; }
+.flotr-grid-label-x.first { padding-left: 3px; }
+.flotr-canvas { top: 30px !important;}
+/* END: FIXME Hack in order to make xaxis stay on the top */
+
+/* Error Display */
+.page-error .ui-header {
+  padding: 0;
+}
+.page-error .ui-header h1.ui-title {
+  font-size: 1.2em;
+  text-align: left;
+  margin-left: 1em;
+}
+.error-section {
+  padding: 1em;
+}
+
+.error-section h1 {
+  color: #f41;
+}
+
+.error-details {
+  margin: 0.5em;
+}
+
+.cpm-page .error-details .ui-collapsible-heading-toggle .ui-btn-text {
+  color: #333;
+}
+
+.cpm-page .error-details .error-text {
+  margin-top: 0;
+}
+
+
+
+/* Show JSON for Debug */
+.debug-panel {
+  display: none;
+  position: absolute;
+  top: 5.6em;
+  right: 0;
+  left: 0;
+  bottom: 3.6em;
+  background-color: #111;
+  color: #fff;
+  padding: 1em;
+  font-family: monospace;
+  white-space: pre;
+  overflow: auto;
+}
+
+/* Generic part */
+
+.last-alarm-link {
+  font-size: 1.2em;
+}
+
+
+/* Status page */
+
+/* Extended NGP display */
+.alarms.extended:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+
+.alarm-suspended {
+  display: none;
+  /* clear: both; */
+  font-weight: normal;
+}
+
+.extended-ngp {
+  background: #323232 url(../images/connect-alarm-bg.png) repeat-x scroll 0 -1px;
+  display:none;
+}
+
+.clearboth {
+  clear: both;
+}
+
+.alarm-bolus {
+  display: none;
+}
+.alarm-bolus-mobile {
+  display: none;
+}
+#pumpinfo-mobile{
+  float:right;
+}
+#currentInsulinRateType{
+  float:left;
+  padding:0px 5px 5px 5px;
+}
+@media (max-width: 532px) and (orientation:portrait) {
+  #currentInsulinRateType{
+    float:left;
+    padding:0px 10px 10px 10px;
+  }
+}
+#currentInsulinPumpInfo{
+  float:left;
+  width:100%;
+  padding-top:10px;
+  font-size:12px;
+}
+@media (max-width: 532px) and (orientation:portrait) {
+  #currentInsulinPumpInfo{
+    float:left;
+    width:100%;
+    padding-top:10px;
+    font-size:inherit;
+  }
+}
+.insulinRateType{
+  text-align:left;
+  clear:right;
+  float:left;
+}
+.insulinRateNull{
+  color:#800080;
+  font-weight:bold;
+}
+.insulinRateNotNull{
+  color:#00FF00;
+  font-weight:bold;
+}
+.insulinTypeNotNull{
+  color:#00FF00
+  font-weight:bold;
+}
+.insulinTypeNull{
+  font-weight:normal;
+  color:#800080;
+}
+.insulinTypePreset{
+  font-weight:normal;
+  color:#00FF00
+}
+.alarms.extended  {
+  pointer-events: none;
+  min-height: 60px;
+  padding: 0;
+  color: #fff;
+}
+
+.page-home .alarms.extended  {
+  padding: 0;
+}
+
+.extended .last-alarm-link {
+  font-size: 1.2em;
+  padding-bottom: 0.5em;
+  min-height: 60px;
+}
+@media (max-width: 532px) and (orientation: portrait) {
+  .extended .last-alarm-link {
+    font-size: 1em;
+    padding-bottom: 0.5em;
+    min-height: 60px;
+  }
+}
+
+#page-value .extended .last-alarm-link {
+  padding-bottom: 1.5em;
+}
+
+.extended .alarm-suspended {
+  display: block;
+  background: #462826;
+  float: right;
+  box-sizing: border-box;
+  text-align: center;
+  border-bottom: 1px solid #361816;
+  border-left: 1px solid #5f3f3f;
+  padding: 0.8em 0.6em;
+  text-transform: uppercase;
+  margin-top: -1px;
+  border-top: 1px solid #674424
+}
+
+#page-value .extended .alarm-suspended {
+  font-size: 0.9em;
+  border-bottom: 1px solid #260806;
+}
+
+.extended .alarm-suspended span {
+  vertical-align: middle;
+}
+
+.extended .alarm-bolus {
+  font-weight: normal;
+  text-align: left;
+  white-space: nowrap;
+  width: 60%;
+  display: block;
+  clear: left;
+  font-size: 0.75em;
+  line-height: 1;
+  padding-left: 10px;
+  padding-top: 8px;
+}
+
+.extended .alarm-bolus.insulin {
+  margin-top: 1px;
+  padding-bottom: 3px;
+}
+
+.extended .alarm-bolus .label {
+  float: left;
+}
+
+@media (max-width: 532px) and (orientation:portrait) {
+  .alarm-bolus-mobile {
+    font-weight: normal;
+    text-align: right;
+    white-space: nowrap;
+    display: block;
+    clear: left;
+    line-height: 1;
+    padding:10px;
+  }
+}
+
+.alarm-bolus-mobile {
+  font-weight: normal;
+  text-align: right;
+  white-space: nowrap;
+  display: block;
+  clear: left;
+  line-height: 1;
+  padding:0 10px 10px 10px;
+}
+
+.alarm-bolus-mobile.insulin-mobile {
+  margin-top: 1px;
+  padding-bottom: 3px;
+}
+
+/* End: extended NGP display */
+
+/* End: generic styles */
+
+/* Below the 320 px width */
+/* Blank out the application if screen resolution is too low, below 320 width */
+@media only screen and (max-width: 319px) {
+  .ui-mobile .cpm-page.ui-page-active {
+    display: none;
+  }
+}
+
+/* From 320px (iPhone)width. Why 320, not 640px: http://stackoverflow.com/questions/7864453/iphone-4-defaults-to-320px-resolution-for-web-apps-i-want-to-use-the-full-640p */
+@media only screen
+and (min-width: 320px)
+and (max-width: 359px) {
+
+  /* home page bg chart container */
+  #bg-diagram {
+    font-size: 14px;
+  }
+
+  /* home page bottom hour time selection */
+  .nav-time-range {
+    margin: 0 -14px 0 0px;
+  }
+
+  /* home page bottom hour time selection */
+  .nav-time-range > li > a.ui-link {
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 1em;
+    line-height: 2.5;
+  }
+
+  .alarms {
+    padding-bottom: 0;
+  }
+
+  .extended .last-alarm-link {
+    min-height: 50px;
+  }
+}
+
+/* 360px (HTC One X) */
+@media only screen
+and (min-width: 360px)
+and (max-width: 479px) {
+
+  #bg-diagram {
+    font-size: 14px;
+  }
+}
+
+@media only screen
+and (min-width: 480px)
+and (max-width: 767px) {
+
+  .page-home .alarms.current .last-alarm-link {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    float: none;
+  }
+
+  .page-home .alarms.current .last-alarm-link {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    line-height: 1.6;
+  }
+}
+
+/* For better styling of the sensor status cut-off point.
+There's a transition state before the next styles are applied
+where it goes to tablet/portrait mode */
+@media only screen
+and (min-width: 737px)
+and (max-width: 767px) {
+}
+
+/* Landscape mode.
+Galaxy S2 and S3:   533 x 320 px
+iPhone 4 and 5:     568 x 320 px */
+@media only screen
+and (min-width: 533px)
+and (max-width: 639px)
+and (orientation: landscape) {
+
+  .nav-time-range > li > a.ui-link {
+    padding: 0;
+    font-size: 0.9em;
+    line-height: 2.6;
+  }
+
+  .page-home .trend {
+    /* Ported from iPad, but in smaller sizes */
+    float: right;
+    width: 26%;
+    background: none;
+  }
+
+  .page-home .alarms {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 27%;
+    padding: 0.2em 0 0.5em 1em;
+    border-top: 1px solid #1e1e1e;
+    font-size: 0.9em;
+  }
+
+  .page-home .alarms.current .last-alarm-link {
+    padding-left: 0.5em;
+    line-height: 1.2;
+  }
+
+  .page-home #home-chart-wrapper {
+    height: 225px;
+    float: left;
+    width: 70%;
+    position: relative;
+    border-right: 2px groove #555;
+    z-index: 1100;
+    padding: 10px 15px 8px 0;
+  }
+
+  .page-home #bg-diagram {
+    width: 100%;
+    height: 190px;
+    opacity: 0.99;
+  }
+
+  .page-home .nav-time-range {
+    position: absolute;
+    left: 0;
+    right: 1px;
+    bottom: 0;
+    margin: 15px 0 0 0;
+  }
+
+  .page-home .last-alarm-link .alarm-value {
+    font-size: 1em;
+  }
+
+  .alarms.current .last-alarm-link {
+    float: none;
+    text-align: center;
+  }
+
+  /* Extended */
+  .alarms.extended {
+    min-height: 36px;
+  }
+
+  .extended .alarm-bolus {
+    padding-left: 5px;
+  }
+
+  .extended .last-alarm-link {
+    min-height: 26px;
+  }
+
+  .extended .alarm-suspended {
+    padding: 7px 2px 7px 2px;
+    font-size: 0.55em;
+  }
+
+  .extended .alarm-bolus {
+    font-size: 0.65em;
+    padding-top: 3px;
+  }
+
+  #page-value .extended .last-alarm-link {
+    padding-bottom: 0.5em
+  }
+
+  #page-value footer {
+    font-size: 0.9em;
+  }
+
+  #page-value .extended .alarm-suspended {
+    float: right;
+    padding: 8px 20px 10px 20px;
+    font-size: 0.9em;
+  }
+
+  #page-value .extended .alarm-bolus {
+    font-size: 0.8em;
+  }
+
+  .page-home .alarms.extended {
+    font-size: 0.9em;
+  }
+
+  .page-home .extended .last-alarm-link {
+    padding: 0.6em 0 0.3em 0.5em;
+    font-size: 0.75em;
+    font-weight: normal;
+  }
+}
+
+/* HTC One X and up - Landscape */
+@media only screen
+and (min-width: 640px)
+and (max-width: 767px)
+and (orientation: landscape) {
+
+  .nav-time-range > li > a.ui-link {
+    padding: 0;
+    font-size: 0.9em;
+    line-height: 2.6;
+  }
+
+  .page-home .trend {
+    /* Ported from iPad, but in smaller sizes */
+    float: right;
+    width: 27%;
+    background: none;
+  }
+  .page-home .timeInRangeTrend {
+    /* Ported from iPad, but in smaller sizes */
+    float: right;
+    width: 100%;
+    background: none;
+  }
+
+  #page-value footer {
+    font-size: 0.9em;
+  }
+
+  .page-home .alarms {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 28%;
+    padding: 0.4em 0 0.6em 1em;
+    border-top: 1px solid #1e1e1e;
+    font-size: 0.9em;
+  }
+
+  .page-home .alarms.current .last-alarm-link {
+    line-height: 1.6;
+  }
+
+  .page-home #home-chart-wrapper {
+    height: 265px;
+    float: left;
+    width: 70%;
+    position: relative;
+    border-right: 2px groove #555;
+    padding: 10px 15px 5px 0;
+    z-index: 1100;
+  }
+
+  .page-home #bg-diagram {
+    margin-bottom: 15px;
+    width: 100%;
+    height: 200px;
+    opacity: 0.99;
+  }
+
+  .page-home .nav-time-range {
+    position: absolute;
+    left: 0;
+    right: 1px;
+    bottom: 0;
+    margin: 15px 0 0 0;
+  }
+
+  .page-home .last-alarm-link {
+    padding-left: 0.6em;
+    font-size: 0.85em;
+    font-weight: normal;
+  }
+
+  .page-home .last-alarm-link .alarm-value {
+    font-size: 1em;
+  }
+
+  .alarms.current .last-alarm-link {
+    float: none;
+    text-align: center;
+  }
+
+  /* Extended */
+  .alarms.extended {
+    min-height: 36px;
+  }
+
+  .extended .alarm-bolus {
+    padding-left: 10px;
+  }
+
+  .extended .last-alarm-link {
+    min-height: 26px;
+  }
+
+  .extended .alarm-suspended {
+    font-size: 0.7em;
+  }
+
+  .extended .alarm-bolus {
+    font-size: 0.7em;
+    padding-top: 5px;
+    margin-top: 0;
+  }
+
+  #page-value .extended .last-alarm-link {
+    padding-bottom: 0.5em
+  }
+
+  #page-value footer {
+    font-size: 0.9em;
+  }
+
+  #page-value .extended .alarm-suspended {
+    float: right;
+    padding: 8px 20px 10px 20px;
+    font-size: 0.9em;
+  }
+
+  #page-value .extended .alarm-bolus {
+    font-size: 0.8em;
+  }
+
+  .page-home .alarms.extended {
+    font-size: 0.9em;
+    padding-top: 4px;
+  }
+  .page-home .extended .last-alarm-link {
+    padding: 0 0 0.4em 1em;
+    font-size: 0.75em;
+    font-weight: normal;
+  }
+}
+
+/* iPad Landscape (1024x768) */
+@media only screen
+and (min-width: 768px)
+and (orientation: landscape) {
+
+  .page-home .trend {
+    float: right;
+    width: 27%;
+    background: none;
+  }
+
+  .page-home #home-chart-wrapper {
+    height: 450px;
+    float: left;
+    width: 70%;
+    position: relative;
+    border-right: 2px groove #555;
+    z-index: 1100;
+  }
+
+  .page-home #bg-diagram {
+    height: 80%;
+    margin-top: 5px;
+  }
+
+  .page-home .nav-time-range {
+    position: absolute;
+    left: 0;
+    right: 1px;
+    bottom: 0;
+    margin: 15px 0 0 0;
+  }
+
+  .page-home .alarms {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 29%;
+    padding: 0.8em 0 0.2em 0.6em;
+    border-top: 1px solid #1e1e1e;
+  }
+
+  .page-home .last-alarm-link {
+    padding-left: 16px;
+    font-size: 1.1em;
+    font-weight: normal;
+    line-height: 1.8;
+  }
+
+  .page-home .last-alarm-link .alarm-value {
+    font-size: 1em;
+  }
+
+  #page-home .alarms.extended .last-alarm-link {
+    min-height: 4em;
+    font-size: 1.2em;
+    line-height: 1.4;
+  }
+
+  .extended .alarm-suspended {
+    float: right;
+    margin-right: 0;
+    font-size: 0.9em;
+    clear: left;
+  }
+
+  .page-home .extended .alarm-bolus {
+    text-align: left;
+    white-space: nowrap;
+    width: 72%;
+    display: block;
+    clear: left;
+    font-size: 0.75em;
+    line-height: 1.2;
+    padding-left: 16px;
+  }
+}
+
+/* @media only screen
+and (min-device-width: 320px)
+and (max-device-width: 568px)
+and (-webkit-device-pixel-ratio: 2)
+and (device-aspect-ratio: 40/71)
+and (orientation:landscape) { */
+
+/* iOS7 Landscape controlled by Javascript .landscape-ios7 Class */
+
+.landscape-ios7 .cpm-page {
+  max-height: 320px;
+  height: 320px;
+  width: 568px;
+}
+
+.landscape-ios7 .nav-time-range > li > a.ui-link {
+  padding: 0;
+  font-size: 0.9em;
+  line-height: 2.6;
+}
+
+.landscape-ios7 .page-home .trend {
+  /* Ported from iPad, but in smaller sizes */
+  float: right;
+  width: 26%;
+  background: none;
+}
+
+.landscape-ios7 .page-home .alarms {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 27%;
+  padding: 0.2em 0.1em 0em 0em;
+  border-top: 1px solid #1e1e1e;
+  font-size: 0.9em;
+}
+
+.landscape-ios7 .page-home .alarms.current .last-alarm-link {
+  padding-left: 0.5em;
+  line-height: 1.2;
+}
+
+/* Ported from iPad Landscape Mode */
+.landscape-ios7 .page-home .trend-and-value,
+.landscape-ios7 .page-home .device-status {
+  float: none;
+  display: block;
+}
+
+.landscape-ios7 #page-home .trend.off .trend-and-value,
+.landscape-ios7 #page-home .trend.off .device-status {
+  width: 95%;
+}
+
+.landscape-ios7 .page-home #home-chart-wrapper {
+  height: 225px;
+  float: left;
+  width: 70%;
+  position: relative;
+  border-right: 2px groove #555;
+  z-index: 1100;
+  padding: 10px 15px 8px 0;
+}
+
+.landscape-ios7 .page-home #bg-diagram {
+  width: 100%;
+  height: 190px;
+  opacity: 0.99;
+}
+
+.landscape-ios7 .page-home .nav-time-range {
+  position: absolute;
+  left: 0;
+  right: 1px;
+  bottom: 0;
+  margin: 15px 0 0 0;
+}
+
+.landscape-ios7 .page-home .last-alarm-link .alarm-value {
+  font-size: 1em;
+}
+
+.landscape-ios7 .alarms.current .last-alarm-link {
+  float: none;
+  text-align: center;
+}
+
+/* Extended */
+.landscape-ios7 .alarms.extended {
+  min-height: 36px;
+}
+
+.landscape-ios7 .extended .alarm-bolus {
+  padding-left: 5px;
+}
+
+.landscape-ios7 .extended .last-alarm-link {
+  min-height: 26px;
+}
+
+.landscape-ios7 .extended .alarm-suspended {
+  padding: 7px 2px 7px 2px;
+  font-size: 0.55em;
+}
+
+.landscape-ios7 .extended .alarm-bolus {
+  font-size: 0.65em;
+  padding-top: 3px;
+  margin-top: 0;
+}
+
+.landscape-ios7 #page-value .extended .last-alarm-link {
+  padding-bottom: 0.5em
+}
+
+.landscape-ios7 #page-value footer {
+  font-size: 0.9em;
+}
+
+.landscape-ios7 #page-value .extended .alarm-suspended {
+  float: right;
+  padding: 8px 20px 10px 20px;
+  font-size: 0.9em;
+}
+
+.landscape-ios7 #page-value .extended .alarm-bolus {
+  font-size: 0.8em;
+  padding-top: 0px;
+}
+
+.landscape-ios7 #page-value .extended-ngp {
+  padding: 0.3em;
+}
+
+.landscape-ios7 .page-home .alarms.extended {
+  font-size: 0.9em;
+}
+
+.landscape-ios7 .page-home .extended .last-alarm-link {
+  padding: 0.6em 0 0.3em 0.5em;
+  font-size: 0.75em;
+  font-weight: normal;
+}
+
+.right-icon {
+  display: inline-block;
+  position: relative;
+  background: transparent url(../images/connect-forward-link-button-bg.png) no-repeat scroll 0px 10px;
+  background-size: 40px 40px;
+  width: 40px;
+  height: 50px;
+}
+/* Change implemented by Zimetrics */
+/* FG20-FSG10-FR10-TR10-SS1 - CSS changes for pumpbanner, therapy icons, device status screens, SG units */
+/*Therapy Status Icons*/
+#autoModeActive {
+  /*left: 550px;*/
+  left:0px;
+  top: 115px;
+  width: 57px;
+  height: 50px;
+  background: url('../images/shield stuff.png') 0 0 no-repeat;
+  background-size: 280px 150px;
+  display: none;
+  background-position: -233px -104px;
+  /*position: absolute;*/
+  position:relative;
+  z-index: 10000;
+  overflow: hidden;
+  float: left;
+}
+@media (max-width: 532px) and (orientation:portrait) {
+  #autoModeActive {
+    left: 10px;
+    /*left:5px;*/
+    top: -13px !important;
+    width: 74px;
+    height: 107px;
+    background: url('../images/shield stuff.png') 0 0 no-repeat;
+    background-size: 403px 230px;
+    display: none;
+    background-position: 233px 104px;
+    /*position: absolute;*/
+    position:relative;
+    z-index: 10000;
+    overflow: hidden;
+    float: left;
+  }
+}
+#unitsLabelUpdated{
+  float:right;position: relative;top: 22px;z-index: 3000;right: 12%;
+}
+@media (max-width: 532px) and (orientation:portrait) {
+  #unitsLabelUpdated{
+    float:left;position: relative;top: 30px;z-index: 3000;right: -5px;
+  }
+}
+.cpm-page-pumpBanner {
+  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+  text-shadow: 0px 0px 0 #222;
+}
+#alarmHeight{
+  min-height:60px;
+}
+@media (max-width: 532px) and (orientation:portrait) {
+  #alarmHeight{
+    min-height:100px !important;
+  }
+}
+#exclaim{
+  background-image: url(../images/system-status-icon---exclamation-point.png);
+  background-size: 40px 40px;
+  width: 40px;
+  height: 40px;
+  margin:0 auto;
+}
+#circular{
+  background-image: url(../images/circular_progress_icon.gif);
+  background-size: 40px 40px;
+  width: 40px;
+  height: 40px;
+  margin:0 auto;
+}
+#notEnoughData{
+  min-height: 25px; width: 170px; background-color: silver; color: black; border-radius: 5px; position: relative; margin-left: 43%; margin-top: -3%; float: left; padding-top: 6px; text-align: center; text-shadow: none;
+}
+@media (max-width: 532px) and (orientation:portrait) {
+  #notEnoughData{
+    min-height: 25px; width: 170px; background-color: silver; color: black; border-radius: 5px; z-index: 1000; text-align: center; text-shadow: none; margin-left:100px; margin-top:-10%;
+  }
+}
+.status-message-icons-display {
+  background: transparent url('../images/status icons and markers.png') 0 0 no-repeat;
+  height: 45px;
+  width: 61px;
+  background-size: 905px 510px;
+  position:relative;
+  left: 280px;
+}
+#statusIcons{
+  display:none;
+  padding-top:5px;
+  text-align:right;
+  clear:both;
+}
+.callout {
+  position: relative;
+  display:none;
+}
+
+.bubble {
+  width: 10em;
+  border-radius: 10px;
+  padding: .5em;
+  margin: 0.4em auto;
+  box-sizing: border-box;
+  position: absolute;
+  background: #FFFFFF;
+  font: 1.5em Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+  text-align: center;
+  z-index:20000;
+  left:110px;
+}
+.triUp {
+  width: 0;
+  height: 0;
+  border-top: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid #ffffff;
+  border-left: 15px solid transparent;
+  position: absolute;
+  top: 19px;
+  left: 15px;
+  z-index: 20000;
+}
+.calloutReservoir {
+  position: relative;
+  display:none;
+}
+
+.bubbleReservoir {
+  width: 10em;
+  border-radius: 10px;
+  padding: .5em;
+  margin: 0.4em auto;
+  box-sizing: border-box;
+  position: absolute;
+  background: #FFFFFF;
+  font: 1.5em Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+  text-align: center;
+  z-index:20000;
+  left:110px;
+}
+.triUpReservoir {
+  width: 0;
+  height: 0;
+  border-top: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid #ffffff;
+  border-left: 15px solid transparent;
+  position: absolute;
+  top: 19px;
+  left: 15px;
+  z-index: 20000;
+}
+.calloutSensor {
+  position: relative;
+  display:none;
+}
+
+.bubbleSensor {
+  width: 10em;
+  border-radius: 10px;
+  padding: .5em;
+  margin: 0.4em auto;
+  box-sizing: border-box;
+  position: absolute;
+  background: #FFFFFF;
+  font: 1.5em Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+  text-align: center;
+  z-index:20000;
+  left:110px;
+}
+.triUpSensor {
+  width: 0;
+  height: 0;
+  border-top: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid #ffffff;
+  border-left: 15px solid transparent;
+  position: absolute;
+  top: 19px;
+  left: 15px;
+  z-index: 20000;
+}
+.calloutCalibration {
+  position: relative;
+  display:none;
+}
+
+.bubbleCalibration {
+  width: 10em;
+  border-radius: 10px;
+  padding: .5em;
+  margin: 0.4em auto;
+  box-sizing: border-box;
+  position: absolute;
+  background: #FFFFFF;
+  font: 1.5em Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+  text-align: center;
+  z-index:20000;
+  left:110px;
+}
+.triUpCalibration {
+  width: 0;
+  height: 0;
+  border-top: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid #ffffff;
+  border-left: 15px solid transparent;
+  position: absolute;
+  top: 19px;
+  left: 15px;
+  z-index: 20000;
+}
+.calloutPumpCommunication {
+  position: relative;
+  display:none;
+}
+
+.bubblePumpCommunication {
+  width: 10em;
+  border-radius: 10px;
+  padding: .5em;
+  margin: 0.4em auto;
+  box-sizing: border-box;
+  position: absolute;
+  background: #FFFFFF;
+  font: 1.5em Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+  text-align: center;
+  z-index:20000;
+  left:110px;
+}
+.triUpPumpCommunication {
+  width: 0;
+  height: 0;
+  border-top: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid #ffffff;
+  border-left: 15px solid transparent;
+  position: absolute;
+  top: 19px;
+  left: 15px;
+  z-index: 20000;
+}
+.calloutGstCommunication {
+  position: relative;
+  display:none;
+}
+
+.bubbleGstCommunication {
+  width: 10em;
+  border-radius: 10px;
+  padding: .5em;
+  margin: 0.4em auto;
+  box-sizing: border-box;
+  position: absolute;
+  background: #FFFFFF;
+  font: 1.5em Candara, Calibri, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+  text-align: center;
+  z-index:20000;
+  left:110px;
+}
+.triUpGstCommunication {
+  width: 0;
+  height: 0;
+  border-top: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid #ffffff;
+  border-left: 15px solid transparent;
+  position: absolute;
+  top: 19px;
+  left: 15px;
+  z-index: 20000;
+}
+/*Media conditions for Landscape orientation*/
+
+@media only screen and (max-width: 767px) and (max-height: 414px) and (orientation: landscape){
+  #unitsLabelUpdated {
+    float: right;
+    position: relative;
+    top: -51px;
+    z-index: 3000;
+    right: 5px;
+  }
+}
+
+@media only screen and (max-width: 767px) and (max-height: 414px) and (orientation: landscape){
+  .page-home #home-chart-wrapper {
+    height: 265px;
+    float: left;
+    width: 66%;
+    position: relative;
+    border-right: 2px groove #555;
+    padding: 10px 15px 5px 0;
+    z-index: 1100;
+  }
+}
+@media only screen and (max-width: 767px) and (max-height: 414px) and (orientation: landscape){
+  .page-home .trend {
+    float: right;
+    width: 30%;
+    background: none;
+  }
+}
+
+@media only screen and (max-width: 767px) and (max-height: 414px) and (orientation: landscape){
+  #unitsLabelUpdated {
+    float: right;
+    position: relative;
+    top: 5px;
+    z-index: 3000;
+    right: 5px;
+  }
+}
+
+@media only screen and (max-width: 767px) and (max-height: 414px) and (orientation: landscape){
+  .page-home #home-chart-wrapper {
+    height: 265px;
+    float: left;
+    width: 67%;
+    position: relative;
+    border-right: 2px groove #555;
+    padding: 10px 15px 5px 0;
+    z-index: 1100;
+  }
+}
+@media only screen and (max-width: 767px) and (max-height: 414px) and (orientation: landscape){
+  .time-value{
+    padding-top:50px;
+  }
+}
+.hide-scroll::-webkit-scrollbar { width: 0 !important }
+.hide-scroll { overflow: -moz-scrollbars-none; }
+.hide-scroll { -ms-overflow-style: none; }

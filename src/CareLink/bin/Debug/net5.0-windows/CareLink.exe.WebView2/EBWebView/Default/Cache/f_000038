@@ -1,0 +1,461 @@
+// HIDE BODY WHILE WORKING
+document.body.style.visibility = 'hidden';
+// SHOW BODY ON LOAD
+var onTranslationsApplied = function () {
+    document.body.style.visibility = '';
+};
+// SCRIPT HOST DISCOVERY
+var SCRIPT_URL = document.scripts[document.scripts.length - 1].src;
+var PROTOCOL_SLASHES = 2;
+var SCRIPT_HOST = SCRIPT_URL.split('/').slice(0, PROTOCOL_SLASHES + 1).join('/');
+var SCRIPT_FOLDER = SCRIPT_URL.split('/').slice(0, -1).join('/');
+var TRANSLATION_URL;
+buildTranslationUrl();
+// ADD NOTIFICATION ABOUT LOST CONNECTION
+window.addEventListener('online', function () {
+    showOflineNotification(false);
+});
+window.addEventListener('offline', function () {
+    showOflineNotification(true);
+});
+// IE FIXES / ADDITIONAL FUNCS
+function forOf(array, worker) {
+    var haveToBreak = false;
+    Object.keys(array).forEach(function (key) {
+        if (haveToBreak) {
+            return;
+        }
+        if (array.hasOwnProperty(key)) {
+            haveToBreak = worker(array[key], key);
+        }
+    });
+}
+// TODO: remove it as never used
+function repeat(str, times) {
+    var finalStr = '';
+    for (var i = 0; i < times; i++) {
+        finalStr += str;
+    }
+    return finalStr;
+}
+function findGetParameter(parameterName) {
+    var result = null, tmp = [];
+    location.search
+        .substr(1)
+        .split("&")
+        .forEach(function (item) {
+        tmp = item.split("=");
+        if (tmp[0] === parameterName)
+            result = decodeURIComponent(tmp[1] || '');
+    });
+    return result;
+}
+// ICONS
+var ICONS_SRC = 'https://fonts.googleapis.com/icon?family=Material+Icons';
+var ICONS_LINK = document.createElement('link');
+ICONS_LINK.setAttribute('rel', 'stylesheet');
+ICONS_LINK.setAttribute('href', ICONS_SRC);
+document.head.appendChild(ICONS_LINK);
+// COUNTRY I18N BUILDER
+function getCountryI18NCode(code) {
+    return 'country.' + code.toLowerCase();
+}
+// COUNTRY ON LOGIN PAGE
+var IS_LOGIN = document.body.classList.contains('login');
+var countryCode = findGetParameter('countrycode') || document.documentElement.getAttribute('country') || getCookie('countryCode');
+var languageCode = findGetParameter('locale') || document.documentElement.getAttribute('lang');
+if (IS_LOGIN) {
+    document.getElementById('logo2').setAttribute('i18n', getCountryI18NCode(countryCode));
+    var loginForm = document.querySelector('form.form-login');
+    var secondsInOneHour = 3600;
+    loginForm.onsubmit = function () {
+        setCookie('countryCode', countryCode, secondsInOneHour);
+    };
+}
+// INPUTS LOGIC
+forOf(document.querySelectorAll('[placeholder]'), function (element) {
+    element.removeAttribute('placeholder');
+});
+forOf(document.querySelectorAll('.control-group'), function (element) {
+    (function () {
+        var input = this.querySelector('input');
+        var label = this.querySelector('label');
+        setInterval(function (input) {
+            if (input.value && input.value.length) {
+                this.classList.add('has-value');
+            }
+            else {
+                this.classList.remove('has-value');
+            }
+            if (input === document.activeElement) {
+                this.classList.add('has-focus');
+            }
+            else {
+                this.classList.remove('has-focus');
+            }
+        }.bind(this, input, label), 100);
+    }).bind(element)();
+});
+// FONT REGISTRATION
+function registerFont(name, fallback) {
+    var style = '';
+    style += '@font-face {';
+    style += 'font-family: "' + name + '";';
+    style += 'font-style: normal;';
+    style += 'font-weight: 400;';
+    style += 'src: url("' + SCRIPT_HOST + '/assets/fonts/effra/TTF/' + name + '.ttf") format("truetype")';
+    if (fallback) {
+        style += ', url("' + SCRIPT_FOLDER + '/' + name + '.eot?#iefix") format("embedded-opentype");';
+    }
+    style += '}';
+    var styleElement = document.createElement('style');
+    document.head.appendChild(styleElement);
+    styleElement.appendChild(document.createTextNode(style));
+}
+registerFont('Effra_W_Rg', 'Effra_W_Rg');
+registerFont('Effra_W_MdIt');
+registerFont('Effra_W_Md', 'Effra_W_Md');
+registerFont('Effra_W_LtIt');
+registerFont('Effra_W_Lt');
+registerFont('Effra_W_It');
+registerFont('Effra_W_BdIt');
+registerFont('Effra_W_Bd');
+// PASSWORD VISIBILITY CONTROLLER
+function createEye(input) {
+    var eye = document.createElement('div');
+    eye.classList.add('material-icons');
+    eye.classList.add('input-eye');
+    eye.innerHTML = 'visibility_off';
+    eye.onclick = (function (eye, input) {
+        var visibilityIsOn = eye.innerHTML === 'visibility_off';
+        eye.innerHTML = visibilityIsOn ? 'visibility' : 'visibility_off';
+        input.type = visibilityIsOn ? 'text' : 'password';
+    }).bind(null, eye, input);
+    return eye;
+}
+var passwords = document.querySelectorAll('input[type="password"]');
+forOf(passwords, function (password) {
+    var eye = createEye(password);
+    password.parentNode.appendChild(eye);
+    password.classList.add('password-eye');
+});
+// TOAST CONTROLLER
+function Toast(element, fadeOutTime) {
+    (function (element, fadeOutTime) {
+        var fadeOutTimeout = 0;
+        this.show = function (fadeOutTimeRewrite) {
+            element.style.display = '';
+            element.style.opacity = '';
+            element.style.pointerEvents = '';
+            fadeOutTimeout = setTimeout(this.hide.bind(this), fadeOutTimeRewrite || fadeOutTime);
+        };
+        this.hide = function () {
+            clearTimeout(fadeOutTimeout);
+            if (getComputedStyle(element).transitionProperty.indexOf('opacity') !== -1) {
+                element.style.opacity = '0';
+                element.style.pointerEvents = 'none';
+            }
+            else {
+                element.style.display = 'none';
+            }
+        };
+    }).bind(this, element, fadeOutTime)();
+}
+var bodyClass = document.body.getAttribute('class');
+if (!bodyClass || !bodyClass.length) {
+    var resendLink = document.querySelector('.verification-code--resend');
+    // MFA
+    if (resendLink) {
+        document.body.classList.add('mfa');
+        var error = document.getElementById('error');
+        var verificationCodeInput = document.getElementById('verification-code');
+        var verificationLabel = document.getElementById('verification-code-label');
+        if (error && !verificationCodeInput) {
+            var title = document.getElementById('title-line2');
+            title.innerHTML = error.innerHTML;
+            title.setAttribute('i18n', error.getAttribute('i18n'));
+            error.parentNode.removeChild(error);
+            resendLink = document.querySelector('.verification-code--resend');
+            if (resendLink) {
+                resendLink.parentNode.removeChild(resendLink);
+            }
+        }
+        else {
+            //SET BORDER AND LABEL OF INPUT TO RED COLOR ACCORDING TO DESIGN
+            if (error && !!error.innerHTML) {
+                verificationCodeInput.setAttribute("style", "border: 1px solid #f41010;");
+                verificationCodeInput.focus();
+                verificationLabel.setAttribute("style", "color: rgba(244, 16, 16, 0.6);");
+            }
+            // OPEN HELP ON NEW TAB
+            var helpLink = document.getElementById('io-button-need-help');
+            if (helpLink) {
+                helpLink.setAttribute('target', '_blank');
+            }
+            var resendCode = document.getElementById('io-button-resend-code');
+            if (resendCode) {
+                var resendForm = resendCode.querySelector('form');
+                var formAction = resendForm.getAttribute('action');
+                resendForm.setAttribute('action', formAction + (formAction.indexOf('?') === -1 ? '?isResend=1' : '&isResend=1'));
+            }
+            // TOAST RESEND
+            if (findGetParameter('isResend') !== null) {
+                (new Toast(document.getElementById('toast-notification'), 5000)).show();
+                if ('history' in window) {
+                    history.replaceState(null, '', location.href.replace(/[?&]isResend=1/g, '')); // remove isResend from url
+                }
+            }
+            //TOAST CANCEL BUTTON
+            var imgClose = document.createElement('img');
+            var toastNotification = document.getElementById('toast-notification');
+            imgClose.src = SCRIPT_HOST + '/assets/img/icons/close.svg';
+            imgClose.addEventListener('click', function () {
+                (new Toast(document.getElementById('toast-notification'), 5000)).hide();
+            });
+            toastNotification.appendChild(imgClose);
+            imgClose.classList.add('icon-close');
+            // PAGE LOGIC
+            var didntGetTipBtn = document.getElementById('oi-button-1');
+            didntGetTipBtn.onclick = function () {
+                var tip = didntGetTipBtn.nextElementSibling;
+                tip.style.visibility = tip.style.visibility === 'visible' ? 'hidden' : 'visible';
+            };
+            onTranslationsApplied = function () {
+                // SHOW BODY ON LOAD
+                document.body.style.visibility = '';
+            };
+            var verificationCodeMask = '000-000';
+            var verificationCodeSubmitTimeout = 2000;
+            var verificationCodeSubmitTimeoutIndex;
+            var verificationCodeForm = document.querySelector('.form-mfa');
+            var verificationCodeInputHidden = document.createElement('input');
+            verificationCodeInputHidden.type = 'hidden';
+            verificationCodeInputHidden.name = verificationCodeInput.name;
+            verificationCodeInput.name = '';
+            verificationCodeInput.type = 'tel';
+            verificationCodeInput.setAttribute('pattern', '[0-9\\-]+'); // Pattern for mask
+            verificationCodeForm.appendChild(verificationCodeInputHidden);
+            var actionInputs = document.querySelectorAll('button[name]');
+            forOf(actionInputs, function (input) {
+                var actionInputHidden = document.createElement('input');
+                actionInputHidden.type = 'hidden';
+                actionInputHidden.name = input.name;
+                actionInputHidden.value = input.value;
+                input.name = '';
+                input.value = '';
+                input.parentElement.appendChild(actionInputHidden);
+            });
+            function setVerificationCodeSubmitTimeout() {
+                clearTimeout(verificationCodeSubmitTimeoutIndex);
+                verificationCodeSubmitTimeoutIndex = setTimeout(function () {
+                    verificationCodeForm.onsubmit();
+                    verificationCodeForm.submit();
+                }, verificationCodeSubmitTimeout);
+            }
+            var isMfaInProgress = false;
+            verificationCodeForm.onsubmit = function (event) {
+                if (verificationCodeInput.value.length !== verificationCodeMask.length || isMfaInProgress) {
+                    if (event) {
+                        event.preventDefault();
+                    }
+                    return false;
+                }
+                isMfaInProgress = true;
+                verificationCodeInputHidden.value = verificationCodeInput.value.replace(/[^\d]/g, '');
+            };
+            verificationCodeInput.setAttribute('autocomplete', 'off');
+            verificationCodeInput.addEventListener('input', function (event) {
+                var verificationCode = event.target.value;
+                var verificationCodeInitial = event.target.value;
+                var verificationCodeWorked = '';
+                var selection = event.target.selectionStart;
+                forOf(verificationCodeMask.split(''), function (symbol, index) {
+                    if (symbol === '0') {
+                        while (true) {
+                            var verificationCodeSymbol = verificationCode[0];
+                            verificationCode = verificationCode.substr(1);
+                            if (/\d/.test(verificationCodeSymbol)) {
+                                verificationCodeWorked += verificationCodeSymbol;
+                                break;
+                            }
+                            if (!verificationCode.length) {
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        if (selection >= index && symbol !== verificationCode[0]) {
+                            selection += 1;
+                        }
+                        verificationCodeWorked += symbol;
+                    }
+                    if (!verificationCode.length) {
+                        return true; // breaks
+                    }
+                });
+                if (verificationCodeInitial !== verificationCodeWorked) {
+                    event.target.value = verificationCodeWorked;
+                    event.target.setSelectionRange(selection, selection);
+                }
+                if (verificationCodeWorked.length === verificationCodeMask.length) {
+                    setVerificationCodeSubmitTimeout();
+                }
+                else {
+                    clearTimeout(verificationCodeSubmitTimeoutIndex);
+                }
+            });
+        }
+    }
+    // GENERIC ERROR
+    var errorBlock = document.getElementById('error-block');
+    if (errorBlock) {
+        document.body.classList.add('generic-error');
+    }
+}
+// GENERIC SESSION TIMEOUT
+var sessionTimeOut = document.getElementsByClassName('container-fluid-body')[0];
+var divSessionTitle = document.createElement('div');
+// after 30 minutes
+setTimeout(function () {
+    sessionTimeOut.classList.add('cl-session-timeout');
+    sessionTimeOut.appendChild(divSessionTitle).classList.add('cl-session-title');
+    var sessionTitle = document.getElementsByClassName('cl-session-title')[0];
+    sessionTitle.setAttribute('i18n', 'sso.error.session_expired');
+    var lang = findGetParameter('locale');
+    translateTo(lang || 'en', 'en');
+}, 1800000);
+// I18N
+var CACHE_TRANSLATIONS = {};
+var TRANSLATION = [];
+var TRANSLATION_FALLBACK = [];
+function buildTranslationUrl() {
+    var configuaration = SCRIPT_HOST + '/patient/configuration/system/personal.crm.settings';
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            var status = xhr.status;
+            if (status === 0 || (status >= 200 && status < 400)) {
+                var response = JSON.parse(xhr.responseText);
+                var config = JSON.parse(response.value);
+                TRANSLATION_URL = config['base.uri'] + "/" + config['product'] + "/" + config['version'] + "/i18n/ui/sso/";
+            }
+        }
+    };
+    xhr.open('GET', configuaration, false);
+    xhr.send();
+}
+function loadTranslations(lang, callback) {
+    if (lang in CACHE_TRANSLATIONS) {
+        callback(CACHE_TRANSLATIONS[lang]);
+        return;
+    }
+    var I18N_HOST = TRANSLATION_URL + lang + '.json';
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', I18N_HOST, true);
+    xhr.send();
+    xhr.onreadystatechange = function () {
+        if (this.readyState === 4) {
+            var response = this.response;
+            try {
+                var translations = JSON.parse(response);
+                CACHE_TRANSLATIONS[lang] = translations;
+                callback(translations);
+            }
+            catch (e) {
+                console.error('[i18n]: An error occured during loading translations, details:');
+                console.error(e);
+                callback({});
+            }
+            xhr.onreadystatechange = null;
+        }
+    };
+}
+function translateFetched(translatable) {
+    var key = translatable.getAttribute('i18n');
+    if (key in TRANSLATION) {
+        translatable.innerHTML = TRANSLATION[key];
+    }
+    else if (key in TRANSLATION_FALLBACK) {
+        translatable.innerHTML = TRANSLATION_FALLBACK[key];
+    }
+}
+function translateTo(lang, fallback) {
+    loadTranslations(fallback, function (translationsFallback) {
+        loadTranslations(lang, function (translations) {
+            var translatable = document.querySelectorAll('[i18n]');
+            TRANSLATION = translations;
+            TRANSLATION_FALLBACK = translationsFallback;
+            forOf(translatable, function (i18n) {
+                translateFetched(i18n);
+            });
+            var submitButton = document.getElementsByClassName('sign-in')[0];
+            if (submitButton) {
+                submitButton.value = submitButton.textContent;
+            }
+            onTranslationsApplied && onTranslationsApplied();
+        });
+    });
+}
+// forgot password URL modification
+var forgotPasswordElement = document.querySelector("a[i18n='login_page.forgot_your_password']");
+if (forgotPasswordElement) {
+    forgotPasswordElement.href = forgotPasswordElement.href + getLocaleQueryParams('toLogin=' + true);
+}
+// open contact-us
+if (document.getElementById('io-button-need-help')) {
+    document.getElementById('io-button-need-help').removeAttribute('href');
+    document.getElementById('io-button-need-help').addEventListener('click', function () {
+        var url = getContactUsUrl();
+        window.open(url, '_blank', '');
+    });
+}
+function showOflineNotification(ofline) {
+    var container = document.getElementsByClassName('container')[0];
+    var NOTIFICATION = document.createElement('div');
+    if (ofline) {
+        NOTIFICATION.classList.add('cl-offline');
+        NOTIFICATION.setAttribute('i18n', 'global.no-network-conection');
+        document.body.insertBefore(NOTIFICATION, container);
+        translateTo(languageCode || 'en', 'en');
+    }
+    else {
+        var NOTIFICATION = document.getElementsByClassName('cl-offline')[0];
+        document.body.removeChild(NOTIFICATION);
+    }
+}
+function getContactUsUrl() {
+    return SCRIPT_HOST + '/app/contact-us' + getLocaleQueryParams();
+}
+function getLocaleQueryParams(customParams) {
+    var queryPramsString = '?';
+    if (customParams) {
+        queryPramsString = queryPramsString + customParams + '&';
+    }
+    if (languageCode) {
+        queryPramsString = queryPramsString + 'language=' + languageCode + '&';
+    }
+    if (countryCode) {
+        queryPramsString = queryPramsString + 'country=' + countryCode;
+    }
+    return queryPramsString;
+}
+translateTo(languageCode || 'en', 'en');
+function setCookie(name, value, maxAge) {
+    var options = {
+        path: '/',
+        'max-age': maxAge
+    };
+    var updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+    for (var optionKey in options) {
+        updatedCookie += "; " + optionKey;
+        var optionValue = options[optionKey];
+        if (optionValue !== true) {
+            updatedCookie += "=" + optionValue;
+        }
+    }
+    document.cookie = updatedCookie;
+}
+function getCookie(name) {
+    var matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
+    return matches ? decodeURIComponent(matches[1]) : '';
+}
