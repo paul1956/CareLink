@@ -599,33 +599,20 @@ Public Class Form1
             tableLevel1Blue.RowCount += 1
             tableLevel1Blue.Width = 400
         ElseIf itemIndex = ItemIndexs.lastAlarm Then
+            tableLevel1Blue.Dock = DockStyle.None
             If tableLevel1Blue.RowCount > 5 Then
                 tableLevel1Blue.AutoSize = True
-                tableLevel1Blue.Dock = DockStyle.None
-                Application.DoEvents()
                 tableLevel1Blue.ColumnStyles(1).SizeType = SizeType.Absolute
-                Application.DoEvents()
                 tableLevel1Blue.ColumnStyles(1).Width = 280
-                Application.DoEvents()
                 tableLayoutParent.AutoScroll = False
-                Application.DoEvents()
                 tableLayoutParent.Height = 22 * tableLevel1Blue.RowCount
-                Application.DoEvents()
                 tableLayoutParent.HorizontalScroll.Visible = False
-                Application.DoEvents()
             Else
-                tableLevel1Blue.RowCount += 1
+                tableLevel1Blue.ColumnStyles(1).SizeType = SizeType.Absolute
+                tableLevel1Blue.ColumnStyles(1).Width = 200
+                tableLevel1Blue.Width = 450
+                tableLayoutParent.Width = 640
             End If
-            tableLevel1Blue.Dock = DockStyle.None
-            Application.DoEvents()
-            tableLevel1Blue.AutoSize = True
-            Application.DoEvents()
-            Dim tmpHeight As Integer = tableLevel1Blue.Height
-            tableLevel1Blue.AutoSize = False
-            tableLevel1Blue.Width = 450
-            tableLevel1Blue.Height = tmpHeight + 1
-            tableLayoutParent.Width = 640
-            Application.DoEvents()
         ElseIf itemIndex = ItemIndexs.notificationHistory Then
             tableLevel1Blue.RowStyles(1).SizeType = SizeType.AutoSize
         End If
@@ -666,10 +653,6 @@ Public Class Form1
              .Name = "Default",
              .ShadowColor = Color.Transparent
          }
-        _activeInsulinPageChartArea.AxisY.ScaleBreakStyle.Enabled = True
-        _activeInsulinPageChartArea.AxisY.ScaleBreakStyle.BreakLineStyle = BreakLineStyle.Wave
-
-        _activeInsulinPageChartArea.AxisY.ScaleBreakStyle.CollapsibleSpaceThreshold = 25
         _activeInsulinPageChartArea.AxisX.IsInterlaced = True
         _activeInsulinPageChartArea.AxisX.IsMarginVisible = True
         _activeInsulinPageChartArea.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.IncreaseFont Or LabelAutoFitStyles.DecreaseFont Or LabelAutoFitStyles.WordWrap
@@ -690,14 +673,6 @@ Public Class Form1
         _activeInsulinPageChartArea.AxisY.MajorTickMark = New TickMark() With {.Interval = InsulinRow, .Enabled = False}
         _activeInsulinPageChartArea.AxisY.Maximum = 25
         _activeInsulinPageChartArea.AxisY.Minimum = 0
-        ' Set the spacing gap between the lines of the scale break (as a percentage of y-axis)
-        _activeInsulinPageChartArea.AxisY.ScaleBreakStyle.Spacing = 2
-        ' Set the line width of the scale break
-        _activeInsulinPageChartArea.AxisY.ScaleBreakStyle.LineWidth = 2
-        ' Set the color of the scale break
-        _activeInsulinPageChartArea.AxisY.ScaleBreakStyle.LineColor = Color.Red
-        ' Show scale break if more than 25% of the chart is empty space
-
         _activeInsulinPageChartArea.AxisY2.Maximum = 25
         _activeInsulinPageChartArea.AxisY2.Minimum = 0
 
@@ -1258,8 +1233,9 @@ Public Class Form1
         Me.ActiveInsulinPageChart.ChartAreas("Default").AxisX.IntervalType = DateTimeIntervalType.Hours
         Me.ActiveInsulinPageChart.ChartAreas("Default").AxisX.Interval = 2
 
-        ' Order all markers my time
+        ' Order all markers by time
         Dim timeOrderedMarkers As New SortedDictionary(Of Double, Double)
+        Dim maxActiveInsulin As Double = 0
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In Markers.WithIndex()
             Dim sgDateTime As Date = Markers.SafeGetSgDateTime(sgListIndex.Index)
             Dim sgOaDateTime As Double = sgDateTime.RoundDown(RoundTo.Minute).ToOADate
@@ -1271,11 +1247,7 @@ Public Class Form1
                     Else
                         timeOrderedMarkers.Add(sgOaDateTime, bolusAmount)
                     End If
-                    Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.AddXY(sgOaDateTime, 25)
-                    Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.Last.ToolTip = $"Bolus, {sgListIndex.Value("programmedFastAmount")} U"
-                    Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.Last.Color = Color.LightBlue
-                    Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.Last.MarkerSize = 15
-                    Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.Last.MarkerStyle = MarkerStyle.Square
+                    maxActiveInsulin = Math.Max(timeOrderedMarkers(sgOaDateTime), maxActiveInsulin)
                 Case "AUTO_BASAL_DELIVERY"
                     Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue("bolusAmount")
                     If timeOrderedMarkers.ContainsKey(sgOaDateTime) Then
@@ -1283,7 +1255,26 @@ Public Class Form1
                     Else
                         timeOrderedMarkers.Add(sgOaDateTime, bolusAmount)
                     End If
-                    Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.AddXY(sgOaDateTime, 25)
+                    maxActiveInsulin = Math.Max(timeOrderedMarkers(sgOaDateTime), maxActiveInsulin)
+            End Select
+        Next
+        maxActiveInsulin = Math.Ceiling(maxActiveInsulin) + 1
+        _activeInsulinPageChartArea.AxisY.Maximum = maxActiveInsulin
+        _activeInsulinPageChartArea.AxisY2.Maximum = maxActiveInsulin
+
+        For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In Markers.WithIndex()
+            Dim sgDateTime As Date = Markers.SafeGetSgDateTime(sgListIndex.Index)
+            Dim sgOaDateTime As Double = sgDateTime.RoundDown(RoundTo.Minute).ToOADate
+            Select Case sgListIndex.Value("type")
+                Case "INSULIN"
+                    Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.AddXY(sgOaDateTime, maxActiveInsulin)
+                    Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.Last.ToolTip = $"Bolus, {sgListIndex.Value("programmedFastAmount")} U"
+                    Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.Last.Color = Color.LightBlue
+                    Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.Last.MarkerSize = 15
+                    Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.Last.MarkerStyle = MarkerStyle.Square
+                Case "AUTO_BASAL_DELIVERY"
+                    Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue("bolusAmount")
+                    Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.AddXY(sgOaDateTime, maxActiveInsulin)
                     Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3)} U"
                     Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.Last.MarkerSize = 8
             End Select
