@@ -24,7 +24,7 @@ This shows all available data and is not in any way supported by Medtronic, it w
 Some data was filtered out because I could not see any use for it. You can turn off filters but performance will suffer.
 
 For the visualization layer I use the open source package by Angelo Cresta.
-https://github.com/AngeloCresta/winforms-datavisualization-net5
+https://github.com/AngeloCresta/winforms-datavisualization-net5. Clone this repository also as a peer to this CareLink Repository, then "dotnet run"
 
 Try it out and send feedback.
 This update has a simple UI to show all the available data and a visual version that mimics the one on iPhone.
