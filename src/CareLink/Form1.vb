@@ -607,9 +607,9 @@ Public Class Form1
             tableLevel1Blue.Width = 400
         ElseIf itemIndex = ItemIndexs.lastAlarm Then
             tableLevel1Blue.Dock = DockStyle.None
-            tableLayoutParent.Width = 640
             tableLevel1Blue.ColumnStyles(1).SizeType = SizeType.Absolute
             tableLevel1Blue.ColumnStyles(1).Width = 350
+            tableLayoutParent.Width = 640
             If tableLevel1Blue.RowCount > 5 Then
                 tableLevel1Blue.AutoSize = True
                 tableLayoutParent.AutoScroll = False
