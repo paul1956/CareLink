@@ -129,19 +129,19 @@ Partial Class Form1
         '
         Me.StartDisplayToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LoginToolStripMenuItem, Me.ExitToolStripMenuItem})
         Me.StartDisplayToolStripMenuItem.Name = "StartDisplayToolStripMenuItem"
-        Me.StartDisplayToolStripMenuItem.Size = New System.Drawing.Size(57, 20)
-        Me.StartDisplayToolStripMenuItem.Text = "Display"
+        Me.StartDisplayToolStripMenuItem.Size = New System.Drawing.Size(71, 20)
+        Me.StartDisplayToolStripMenuItem.Text = "Start Here"
         '
         'LoginToolStripMenuItem
         '
         Me.LoginToolStripMenuItem.Name = "LoginToolStripMenuItem"
-        Me.LoginToolStripMenuItem.Size = New System.Drawing.Size(104, 22)
+        Me.LoginToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.LoginToolStripMenuItem.Text = "Login"
         '
         'ExitToolStripMenuItem
         '
         Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
-        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(104, 22)
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ExitToolStripMenuItem.Text = "E&xit"
         '
         'OptionsToolStripMenuItem
