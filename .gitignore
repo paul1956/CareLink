@@ -1,19 +1,12 @@
 ﻿################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
-
-/.vs/CareLink
-/CareLink/obj/Debug/net5.0-windows
-/CareLink/CareLink.vbproj.user
-/CareLink/bin/Debug/net5.0-windows
-/CareLink/Images/IMG_E4006.JPG
-/CareLink/Images/IMG_4011.PNG
-/CareLink/Images/IMG_4010.PNG
-/CareLink/Images/IMG_4009.PNG
-/CareLink/Images/IMG_4008.PNG
-/CareLink/Images/IMG_4007.PNG
-/CareLink/Images/ReservoirAll.png
-/CareLink/obj/Release/net5.0-windows
+*.user
+bin
+obj
 /.vs
 /TestProject1
-/CareLink/obj/Debug/net5.0
+/src/CareLink/obj/Debug/net5.0-windows
+/src/CareLink/CareLink.vbproj.user
+/src/System.Windows.Forms.DataVisualization/obj
+src/System.Windows.Forms.DataVisualization/obj
