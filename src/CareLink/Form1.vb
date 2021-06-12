@@ -270,6 +270,11 @@ Public Class Form1
     Private Shared Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
         End
     End Sub
+
+    Private Shared Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        End
+    End Sub
+
     Private Sub AITComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AITComboBox.SelectedIndexChanged
         My.Settings.AIT = TimeSpan.Parse(Me.AITComboBox.SelectedItem.ToString())
         My.Settings.Save()
@@ -291,6 +296,7 @@ Public Class Form1
     Private Sub FilterRawJSONDataToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FilterRawJSONDataToolStripMenuItem.Click
         _filterJsonData = Me.FilterRawJSONDataToolStripMenuItem.Checked
     End Sub
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
         Me.ShieldUnitsLabel.BackColor = Color.Transparent
