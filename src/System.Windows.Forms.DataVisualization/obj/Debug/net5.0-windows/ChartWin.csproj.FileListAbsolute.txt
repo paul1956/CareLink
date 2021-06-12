@@ -1,0 +1,15 @@
+C:\Users\PaulM\Source\Repos\CareLink\src\System.Windows.Forms.DataVisualization\bin\Debug\net5.0-windows\System.Windows.Forms.DataVisualization.deps.json
+C:\Users\PaulM\Source\Repos\CareLink\src\System.Windows.Forms.DataVisualization\bin\Debug\net5.0-windows\System.Windows.Forms.DataVisualization.dll
+C:\Users\PaulM\Source\Repos\CareLink\src\System.Windows.Forms.DataVisualization\bin\Debug\net5.0-windows\ref\System.Windows.Forms.DataVisualization.dll
+C:\Users\PaulM\Source\Repos\CareLink\src\System.Windows.Forms.DataVisualization\bin\Debug\net5.0-windows\System.Windows.Forms.DataVisualization.pdb
+C:\Users\PaulM\Source\Repos\CareLink\src\System.Windows.Forms.DataVisualization\obj\Debug\net5.0-windows\ChartWin.csproj.AssemblyReference.cache
+C:\Users\PaulM\Source\Repos\CareLink\src\System.Windows.Forms.DataVisualization\obj\Debug\net5.0-windows\System.Web.UI.DataVisualization.Charting.SR.resources
+C:\Users\PaulM\Source\Repos\CareLink\src\System.Windows.Forms.DataVisualization\obj\Debug\net5.0-windows\ChartWin.Resources.Design.resources
+C:\Users\PaulM\Source\Repos\CareLink\src\System.Windows.Forms.DataVisualization\obj\Debug\net5.0-windows\ChartWin.csproj.GenerateResource.cache
+C:\Users\PaulM\Source\Repos\CareLink\src\System.Windows.Forms.DataVisualization\obj\Debug\net5.0-windows\ChartWin.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\PaulM\Source\Repos\CareLink\src\System.Windows.Forms.DataVisualization\obj\Debug\net5.0-windows\ChartWin.AssemblyInfoInputs.cache
+C:\Users\PaulM\Source\Repos\CareLink\src\System.Windows.Forms.DataVisualization\obj\Debug\net5.0-windows\ChartWin.AssemblyInfo.cs
+C:\Users\PaulM\Source\Repos\CareLink\src\System.Windows.Forms.DataVisualization\obj\Debug\net5.0-windows\ChartWin.csproj.CoreCompileInputs.cache
+C:\Users\PaulM\Source\Repos\CareLink\src\System.Windows.Forms.DataVisualization\obj\Debug\net5.0-windows\System.Windows.Forms.DataVisualization.dll
+C:\Users\PaulM\Source\Repos\CareLink\src\System.Windows.Forms.DataVisualization\obj\Debug\net5.0-windows\ref\System.Windows.Forms.DataVisualization.dll
+C:\Users\PaulM\Source\Repos\CareLink\src\System.Windows.Forms.DataVisualization\obj\Debug\net5.0-windows\System.Windows.Forms.DataVisualization.pdb
