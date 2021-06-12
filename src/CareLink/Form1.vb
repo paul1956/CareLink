@@ -29,7 +29,7 @@ Public Class Form1
         }
 
     Private Shared ReadOnly s_lastAlarmFilter As New List(Of String) From {
-        "code",
+            "code",
         "GUID",
         "instanceId",
         "kind",
@@ -58,7 +58,7 @@ Public Class Form1
         }
 
     ' do not rename or move up
-    Private Shared ReadOnly s_zFilterList As New Dictionary(Of Integer, List(Of String)) From {
+    Private Shared ReadOnly s_zfilterList As New Dictionary(Of Integer, List(Of String)) From {
         {ItemIndexs.lastAlarm, s_lastAlarmFilter},
         {ItemIndexs.lastSG, s_alwaysFilter},
         {ItemIndexs.markers, s_markersFilter},
@@ -86,6 +86,7 @@ Public Class Form1
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
     Private _activeInsulinIncrements As Integer
     Private _client As CarelinkClient.CareLinkClient
+    Private _filterJsonData As Boolean = True
     Private _imagePosition As RectangleF = RectangleF.Empty
     Private _initialized As Boolean = False
     Private _timeFormat As String
@@ -269,7 +270,6 @@ Public Class Form1
     Private Shared Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
         End
     End Sub
-
     Private Sub AITComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AITComboBox.SelectedIndexChanged
         My.Settings.AIT = TimeSpan.Parse(Me.AITComboBox.SelectedItem.ToString())
         My.Settings.Save()
@@ -288,6 +288,9 @@ Public Class Form1
         End If
     End Sub
 
+    Private Sub FilterRawJSONDataToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FilterRawJSONDataToolStripMenuItem.Click
+        _filterJsonData = Me.FilterRawJSONDataToolStripMenuItem.Checked
+    End Sub
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
         Me.ShieldUnitsLabel.BackColor = Color.Transparent
@@ -509,11 +512,12 @@ Public Class Form1
             NotificationHistory = New Dictionary(Of String, List(Of Dictionary(Of String, String)))
         End If
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In innerJson.WithIndex()
+            Application.DoEvents()
             Dim innerRow As KeyValuePair(Of String, String) = c.Value
             ' Comment out 4 lines below to see all data fields.
             ' I did not see any use to display the filtered out ones
-            If s_zFilterList.ContainsKey(itemIndex) Then
-                If s_zFilterList(itemIndex).Contains(innerRow.Key) Then
+            If _filterJsonData AndAlso s_zfilterList.ContainsKey(itemIndex) Then
+                If s_zfilterList(itemIndex).Contains(innerRow.Key) Then
                     Continue For
                 End If
             End If
@@ -562,8 +566,8 @@ Public Class Form1
                                 .Dock = DockStyle.Top
                                 }
                         For Each e As IndexClass(Of KeyValuePair(Of String, String)) In dic.WithIndex()
-                            If s_zFilterList.ContainsKey(itemIndex) Then
-                                If s_zFilterList(itemIndex).Contains(e.Value.Key) Then
+                            If _filterJsonData AndAlso s_zfilterList.ContainsKey(itemIndex) Then
+                                If s_zfilterList(itemIndex).Contains(e.Value.Key) Then
                                     Continue For
                                 End If
                             End If
@@ -600,24 +604,36 @@ Public Class Form1
             End If
         Next
 
-        Dim tableLayoutParent As TableLayoutPanel = CType(tableLevel1Blue.Parent, TableLayoutPanel)
         If itemIndex = ItemIndexs.lastSG Then
             tableLevel1Blue.AutoSize = False
             tableLevel1Blue.RowCount += 1
             tableLevel1Blue.Width = 400
         ElseIf itemIndex = ItemIndexs.lastAlarm Then
+            Dim parentTableLayoutPanel As TableLayoutPanel = CType(tableLevel1Blue.Parent, TableLayoutPanel)
+            parentTableLayoutPanel.AutoSize = False
             tableLevel1Blue.Dock = DockStyle.None
+            Application.DoEvents()
+            tableLevel1Blue.AutoSize = False
+            Application.DoEvents()
             tableLevel1Blue.ColumnStyles(1).SizeType = SizeType.Absolute
-            tableLevel1Blue.ColumnStyles(1).Width = 350
-            tableLayoutParent.Width = 640
+            Application.DoEvents()
+            tableLevel1Blue.Width = 600
+
+            tableLevel1Blue.ColumnStyles(1).Width = 300
             If tableLevel1Blue.RowCount > 5 Then
-                tableLevel1Blue.AutoSize = True
-                tableLayoutParent.AutoScroll = False
-                tableLayoutParent.Height = (22 * tableLevel1Blue.RowCount) + 4
-                tableLayoutParent.HorizontalScroll.Visible = False
+                tableLevel1Blue.Height = (22 * tableLevel1Blue.RowCount) + 4
+                parentTableLayoutPanel.AutoScroll = True
+                parentTableLayoutPanel.ColumnStyles(0).SizeType = SizeType.Absolute
+                parentTableLayoutPanel.ColumnStyles(0).Width = 120
+                parentTableLayoutPanel.ColumnStyles(1).SizeType = SizeType.Absolute
+                parentTableLayoutPanel.ColumnStyles(1).Width = 500
             Else
-                tableLevel1Blue.Width = 450
+                tableLevel1Blue.RowCount += 1
+                tableLevel1Blue.Height = (22 * tableLevel1Blue.RowCount) + 4
+                tableLevel1Blue.AutoScroll = False
             End If
+
+            Application.DoEvents()
         ElseIf itemIndex = ItemIndexs.notificationHistory Then
             tableLevel1Blue.RowStyles(1).SizeType = SizeType.AutoSize
         End If
@@ -1163,6 +1179,7 @@ Public Class Form1
                                 }
                         layoutPanel1.Controls.Add(tableLevel1Blue, column:=1, row:=dic.Index)
                         Me.GetInnerTable(tableLevel1Blue, dic.Value, CType(rowIndex, ItemIndexs))
+                        Application.DoEvents()
                     Next
                 Else
                     layoutPanel1.Controls.Add(New TextBox With {

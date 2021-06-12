@@ -29,6 +29,7 @@ Partial Class Form1
         Me.LoginToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OptionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.FilterRawJSONDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.UseTestDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -145,16 +146,25 @@ Partial Class Form1
         '
         'OptionsToolStripMenuItem
         '
-        Me.OptionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UseTestDataToolStripMenuItem})
+        Me.OptionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FilterRawJSONDataToolStripMenuItem, Me.UseTestDataToolStripMenuItem})
         Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
         Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
         Me.OptionsToolStripMenuItem.Text = "Options"
+        '
+        'FilterRawJSONDataToolStripMenuItem
+        '
+        Me.FilterRawJSONDataToolStripMenuItem.Checked = true
+        Me.FilterRawJSONDataToolStripMenuItem.CheckOnClick = true
+        Me.FilterRawJSONDataToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.FilterRawJSONDataToolStripMenuItem.Name = "FilterRawJSONDataToolStripMenuItem"
+        Me.FilterRawJSONDataToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
+        Me.FilterRawJSONDataToolStripMenuItem.Text = "Filter Raw JSON Data"
         '
         'UseTestDataToolStripMenuItem
         '
         Me.UseTestDataToolStripMenuItem.CheckOnClick = true
         Me.UseTestDataToolStripMenuItem.Name = "UseTestDataToolStripMenuItem"
-        Me.UseTestDataToolStripMenuItem.Size = New System.Drawing.Size(143, 22)
+        Me.UseTestDataToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
         Me.UseTestDataToolStripMenuItem.Text = "Use Test Data"
         '
         'HelpToolStripMenuItem
@@ -285,15 +295,15 @@ Partial Class Form1
         Me.TableLayoutPanelTop2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelTop2.CausesValidation = false
         Me.TableLayoutPanelTop2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelTop2.ColumnCount = 3
-        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100!))
-        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 703!))
-        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
-        Me.TableLayoutPanelTop2.Location = New System.Drawing.Point(724, 0)
+        Me.TableLayoutPanelTop2.ColumnCount = 2
+        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10!))
+        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 90!))
+        Me.TableLayoutPanelTop2.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.TableLayoutPanelTop2.Location = New System.Drawing.Point(530, 0)
         Me.TableLayoutPanelTop2.Name = "TableLayoutPanelTop2"
         Me.TableLayoutPanelTop2.RowCount = 1
         Me.TableLayoutPanelTop2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100!))
-        Me.TableLayoutPanelTop2.Size = New System.Drawing.Size(600, 136)
+        Me.TableLayoutPanelTop2.Size = New System.Drawing.Size(826, 136)
         Me.TableLayoutPanelTop2.TabIndex = 1
         '
         'TabControl1
@@ -1137,4 +1147,5 @@ End Sub
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
     Friend WithEvents TransmatterBatterPercentLabel As Label
     Friend WithEvents PumpBatteryRemainingLabel As Label
+    Friend WithEvents FilterRawJSONDataToolStripMenuItem As ToolStripMenuItem
 End Class
