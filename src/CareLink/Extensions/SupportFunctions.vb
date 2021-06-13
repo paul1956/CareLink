@@ -136,4 +136,19 @@ Public Module SupportFunctions
         Next
         Return sGs
     End Function
+
+    <Extension()>
+    Public Function ToTitleCase(inStr As String) As String
+        Dim result As New Text.StringBuilder(Char.ToUpperInvariant(inStr(0)))
+
+        For Each c As Char In inStr.Substring(1)
+            If Char.IsLower(c) Then
+                result.Append(c)
+            Else
+                result.Append($" {Char.ToUpperInvariant(c)}")
+            End If
+        Next
+        Return result.ToString().Replace("time", " Time", False, Globalization.CultureInfo.CurrentUICulture)
+    End Function
+
 End Module

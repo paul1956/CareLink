@@ -7,7 +7,7 @@ Public Class SgRecord
     Public Property RecordNumber As Integer
     Public Property sg As Single
     Public Property [datetime] As Date
-    Public Property timeChange As Boolean
+    Public Property timeChange As String
     Public Property sensorState As String
     Public Property kind As String
     Public Property version As Integer
@@ -27,7 +27,7 @@ Public Class SgRecord
         End If
 
         If dic.TryGetValue(NameOf(timeChange), value) Then
-            Me.timeChange = Boolean.Parse(value)
+            Me.timeChange = Boolean.Parse(value).ToString()
         End If
 
         If dic.TryGetValue(NameOf(sensorState), Me.sensorState) Then
@@ -36,7 +36,7 @@ Public Class SgRecord
         If dic.TryGetValue(NameOf(kind), Me.kind) Then
         End If
         If dic.TryGetValue(NameOf(version), value) Then
-            Me.relativeOffset = Integer.Parse(value)
+            Me.version = Integer.Parse(value)
         End If
 
         If dic.TryGetValue(NameOf(relativeOffset), value) Then
@@ -45,4 +45,25 @@ Public Class SgRecord
 
     End Sub
 
+    Public Shared Function GetCellStyle(memberName As String) As DataGridViewCellStyle
+        Dim cellStyle As New DataGridViewCellStyle
+
+        Select Case memberName
+            Case NameOf(sg)
+                cellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+                cellStyle.Padding = New Padding(10, 0, 0, 0)
+            Case NameOf(RecordNumber), NameOf(version), NameOf(relativeOffset)
+                cellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+                cellStyle.Padding = New Padding(0, 0, 0, 0)
+            Case NameOf(datetime), NameOf(sensorState)
+                cellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+                cellStyle.Padding = New Padding(0, 0, 3, 0)
+            Case NameOf(timeChange), NameOf(kind)
+                cellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+                cellStyle.Padding = New Padding(0, 0, 0, 0)
+            Case Else
+                Throw New Exception("Location thought to be unreachable")
+        End Select
+        Return cellStyle
+    End Function
 End Class

@@ -308,6 +308,11 @@ Public Class Form1
         Me.InitializeHomePageChart()
         Me.InitializeActiveInsulinPageChart()
         Me.InitializeTimeInRangeChart()
+        Me.SGsDataGridView.AutoGenerateColumns = True
+        Me.SGsDataGridView.ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
+            .Alignment = DataGridViewContentAlignment.MiddleCenter
+            }
+
     End Sub
 
     Private Sub HomePageChart_CursorPositionChanging(sender As Object, e As CursorEventArgs) Handles HomePageChart.CursorPositionChanging
@@ -496,6 +501,31 @@ Public Class Form1
             End If
         End If
 
+    End Sub
+
+    Private Sub SGsDataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles SGsDataGridView.ColumnAdded
+        e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+        e.Column.ReadOnly = True
+        e.Column.Resizable = DataGridViewTriState.False
+        e.Column.HeaderText = e.Column.Name.ToTitleCase()
+        e.Column.DefaultCellStyle = SgRecord.GetCellStyle(e.Column.Name)
+        If e.Column.Name <> NameOf(SgRecord.RecordNumber) Then
+            e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
+        End If
+    End Sub
+
+    Private Sub SGsDataGridView_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles SGsDataGridView.ColumnHeaderMouseClick
+        Dim currentSortOrder As SortOrder = Me.SGsDataGridView.Columns(e.ColumnIndex).HeaderCell.SortGlyphDirection
+        If Me.SGsDataGridView.Columns(e.ColumnIndex).Name = NameOf(SgRecord.RecordNumber) Then
+            If currentSortOrder = SortOrder.None OrElse currentSortOrder = SortOrder.Ascending Then
+                Me.SGsDataGridView.DataSource = SGs.OrderByDescending(Function(x) x.RecordNumber).ToList
+                currentSortOrder = SortOrder.Descending
+            Else
+                Me.SGsDataGridView.DataSource = SGs.OrderBy(Function(x) x.RecordNumber).ToList
+                currentSortOrder = SortOrder.Ascending
+            End If
+        End If
+        Me.SGsDataGridView.Columns(e.ColumnIndex).HeaderCell.SortGlyphDirection = currentSortOrder
     End Sub
 
     Private Sub UseTestDataToolStripMenuItem_Checkchange(sender As Object, e As EventArgs) Handles UseTestDataToolStripMenuItem.CheckStateChanged
@@ -1108,10 +1138,11 @@ Public Class Form1
                     singleItem = True
                 Case ItemIndexs.sgs
                     SGs = LoadList(row.Value).ToSgList()
-                    Me.SGsDataGridView.AutoGenerateColumns = True
                     Me.SGsDataGridView.DataSource = SGs
-                    For Each columnName As String In s_alwaysFilter
-                        Me.SGsDataGridView.Columns(columnName).Visible = Not _filterJsonData
+                    For Each column As DataGridViewTextBoxColumn In Me.SGsDataGridView.Columns
+                        If _filterJsonData AndAlso s_alwaysFilter.Contains(column.Name) Then
+                            Me.SGsDataGridView.Columns(column.Name).Visible = False
+                        End If
                     Next
                     Continue For
                 Case ItemIndexs.limits
@@ -1318,6 +1349,21 @@ Public Class Form1
         _activeInsulinPageChartArea.AxisY.Maximum = maxActiveInsulin
         _activeInsulinPageChartArea.AxisY2.Maximum = maxActiveInsulin
 
+        ' set up table that holds active insulin for every 5 minutes
+        Dim remainingInsulinList As New List(Of Insulin)
+        Dim currentMarker As Integer = 0
+        Dim getSgDateTime As Date = SGs(0).datetime
+
+        For i As Integer = 0 To 287
+            Dim initialBolus As Double = 0
+            Dim oaTime As Double = (getSgDateTime + (_FiveMinutes * i)).RoundDown(RoundTo.Minute).ToOADate()
+            While currentMarker < timeOrderedMarkers.Count AndAlso timeOrderedMarkers.Keys(currentMarker) <= oaTime
+                initialBolus += timeOrderedMarkers.Values(currentMarker)
+                currentMarker += 1
+            End While
+            remainingInsulinList.Add(New Insulin(oaTime, initialBolus, _activeInsulinIncrements))
+        Next
+
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In Markers.WithIndex()
             Dim sgDateTime As Date = Markers.SafeGetSgDateTime(sgListIndex.Index)
             Dim sgOaDateTime As Double = sgDateTime.RoundDown(RoundTo.Minute).ToOADate
@@ -1334,21 +1380,6 @@ Public Class Form1
                     Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3)} U"
                     Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.Last.MarkerSize = 8
             End Select
-        Next
-
-        ' set up table that holds active insulin for every 5 minutes
-        Dim remainingInsulinList As New List(Of Insulin)
-        Dim currentMarker As Integer = 0
-        Dim getSgDateTime As Date = SGs(0).datetime
-
-        For i As Integer = 0 To 287
-            Dim initialBolus As Double = 0
-            Dim oaTime As Double = (getSgDateTime + (_FiveMinutes * i)).RoundDown(RoundTo.Minute).ToOADate()
-            While currentMarker < timeOrderedMarkers.Count AndAlso timeOrderedMarkers.Keys(currentMarker) <= oaTime
-                initialBolus += timeOrderedMarkers.Values(currentMarker)
-                currentMarker += 1
-            End While
-            remainingInsulinList.Add(New Insulin(oaTime, initialBolus, _activeInsulinIncrements))
         Next
 
         ' walk all markers, adjust active insulin and then add new marker

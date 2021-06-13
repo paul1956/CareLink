@@ -896,7 +896,7 @@ Partial Class Form1
         Me.SGsDataGridView.AllowUserToDeleteRows = false
         Me.SGsDataGridView.AllowUserToResizeRows = false
         Me.SGsDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
-        Me.SGsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.SGsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.SGsDataGridView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.SGsDataGridView.Location = New System.Drawing.Point(3, 3)
         Me.SGsDataGridView.Name = "SGsDataGridView"
