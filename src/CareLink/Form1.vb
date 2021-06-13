@@ -62,8 +62,7 @@ Public Class Form1
         {ItemIndexs.lastAlarm, s_lastAlarmFilter},
         {ItemIndexs.lastSG, s_alwaysFilter},
         {ItemIndexs.markers, s_markersFilter},
-        {ItemIndexs.notificationHistory, s_notificationHistoryFilter},
-        {ItemIndexs.sgs, s_alwaysFilter}
+        {ItemIndexs.notificationHistory, s_notificationHistoryFilter}
         }
 
     Private ReadOnly _calibrationToolTip As New ToolTip()
@@ -73,7 +72,6 @@ Public Class Form1
                     ItemIndexs.lastSG,
                     ItemIndexs.lastAlarm,
                     ItemIndexs.activeInsulin,
-                    ItemIndexs.sgs,
                     ItemIndexs.limits,
                     ItemIndexs.markers,
                     ItemIndexs.notificationHistory,
@@ -184,7 +182,7 @@ Public Class Form1
     Public SensorDurationMinutes As Integer
     Public SensorState As String
     Public SgBelowLimit As Integer
-    Public SGs As New List(Of Dictionary(Of String, String))
+    Public SGs As New List(Of SgRecord)
     Public SLastSensorTime As Date
     Public SMedicalDeviceTime As Date
     Public SystemStatusMessage As String
@@ -406,10 +404,10 @@ Public Class Form1
     Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomePageChart.PostPaint
         If Not _initialized Then Exit Sub
         If _imagePosition = Rectangle.Empty Then
-            _imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, SGs.SafeGetSgDateTime(0).ToOADate))
+            _imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, SGs(0).datetime.ToOADate))
             _imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, 400))
             _imagePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, HighLimit)))) - _imagePosition.Y
-            _imagePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, SGs.SafeGetSgDateTime(SGs.Count - 1).ToOADate)) - _imagePosition.X
+            _imagePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, SGs.Last.datetime.ToOADate)) - _imagePosition.X
             _imagePosition = e.ChartGraphics.GetAbsoluteRectangle(_imagePosition)
         End If
 
@@ -475,6 +473,31 @@ Public Class Form1
         Me.ServerUpdateTimer.Enabled = True
     End Sub
 
+    Private Sub SGsDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles SGsDataGridView.CellFormatting
+        ' Set the background to red for negative values in the Balance column.
+        If Me.SGsDataGridView.Columns(e.ColumnIndex).Name.Equals(NameOf(SensorState), StringComparison.OrdinalIgnoreCase) Then
+            If CStr(e.Value) <> "NO_ERROR_MESSAGE" Then
+                e.CellStyle.BackColor = Color.Yellow
+            End If
+        End If
+        If Me.SGsDataGridView.Columns(e.ColumnIndex).Name.Equals(NameOf(DateTime), StringComparison.OrdinalIgnoreCase) Then
+            If e.Value IsNot Nothing Then
+                Dim dateValue As Date = CDate(e.Value)
+                e.Value = $"{dateValue.ToShortDateString()} {dateValue.ToShortTimeString()}"
+            End If
+        End If
+        If Me.SGsDataGridView.Columns(e.ColumnIndex).Name.Equals(NameOf(SgRecord.sg), StringComparison.OrdinalIgnoreCase) Then
+            If e.Value IsNot Nothing AndAlso CSng(e.Value) > 0 Then
+                If CSng(e.Value) < 70 Then
+                    e.CellStyle.BackColor = Color.Red
+                ElseIf CSng(e.Value) > 180 Then
+                    e.CellStyle.BackColor = Color.Orange
+                End If
+            End If
+        End If
+
+    End Sub
+
     Private Sub UseTestDataToolStripMenuItem_Checkchange(sender As Object, e As EventArgs) Handles UseTestDataToolStripMenuItem.CheckStateChanged
         My.Settings.UseTestData = Me.UseTestDataToolStripMenuItem.Checked
         My.Settings.Save()
@@ -499,6 +522,26 @@ Public Class Form1
         myGraphics.DrawArc(pen, rect, -90, -CInt(360 * arcPercentage))
         Return targetImage
     End Function
+
+    Private Sub FillOneRowOfTableLayoutPannel(rowIndex As Integer, layoutPanel1 As TableLayoutPanel, innerJson As List(Of Dictionary(Of String, String)))
+
+        For Each dic As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
+            Dim tableLevel1Blue As New TableLayoutPanel With {
+                    .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                    .AutoScroll = False,
+                    .AutoSize = True,
+                    .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                    .ColumnCount = 2,
+                    .Dock = DockStyle.Fill,
+                    .Margin = New Padding(0),
+                    .Name = "InnerTable",
+                    .Padding = New Padding(0)
+                    }
+            layoutPanel1.Controls.Add(tableLevel1Blue, column:=1, row:=dic.Index)
+            Me.GetInnerTable(tableLevel1Blue, dic.Value, CType(rowIndex, ItemIndexs))
+            Application.DoEvents()
+        Next
+    End Sub
 
     Private Function GetColorFromTimeToNextCalib() As Color
         If TimeToNextCalibHours <= 2 Then
@@ -629,6 +672,7 @@ Public Class Form1
             If tableLevel1Blue.RowCount > 5 Then
                 tableLevel1Blue.Height = (22 * tableLevel1Blue.RowCount) + 4
                 parentTableLayoutPanel.AutoScroll = True
+                parentTableLayoutPanel.Width = 850
                 parentTableLayoutPanel.ColumnStyles(0).SizeType = SizeType.Absolute
                 parentTableLayoutPanel.ColumnStyles(0).Width = 120
                 parentTableLayoutPanel.ColumnStyles(1).SizeType = SizeType.Absolute
@@ -747,7 +791,7 @@ Public Class Form1
                                     .ShadowOffset = 3
                                     }
                                  )
-        Me.TabPage2.Controls.Add(Me.ActiveInsulinPageChart)
+        Me.TabPage2RunningActiveInsulin.Controls.Add(Me.ActiveInsulinPageChart)
         Application.DoEvents()
 
     End Sub
@@ -763,7 +807,7 @@ Public Class Form1
              .BorderlineWidth = 2,
              .Location = New Point(3, Me.ShieldPictureBox.Height + 23),
              .Name = "chart1",
-             .Size = New Size(Me.TabPage1.ClientSize.Width - 240, Me.TabPage1.ClientSize.Height - (Me.ShieldPictureBox.Height + Me.ShieldPictureBox.Top + 26)),
+             .Size = New Size(Me.TabPage1HomePage.ClientSize.Width - 240, Me.TabPage1HomePage.ClientSize.Height - (Me.ShieldPictureBox.Height + Me.ShieldPictureBox.Top + 26)),
              .TabIndex = 0
          }
 
@@ -901,7 +945,7 @@ Public Class Form1
                                     .ShadowOffset = 3
                                     }
                                  )
-        Me.TabPage1.Controls.Add(Me.HomePageChart)
+        Me.TabPage1HomePage.Controls.Add(Me.HomePageChart)
         Application.DoEvents()
 
     End Sub
@@ -934,7 +978,7 @@ Public Class Form1
                                         .Name = "TimeInRangeChartTitle",
                                         .Text = "Time In Range Last 24 Hours"}
                                     )
-        Me.TabPage1.Controls.Add(Me.TimeInRangeChart)
+        Me.TabPage1HomePage.Controls.Add(Me.TimeInRangeChart)
         Application.DoEvents()
     End Sub
 
@@ -943,14 +987,14 @@ Public Class Form1
             Exit Sub
         End If
         Me.Cursor = Cursors.WaitCursor
-        Me.TableLayoutPanel1.Controls.Clear()
-        Me.TableLayoutPanel1.RowCount = localRecentData.Count - 8
+        Me.TableLayoutPanelSummyData.Controls.Clear()
+        Me.TableLayoutPanelSummyData.RowCount = localRecentData.Count - 8
         Dim currentRowIndex As Integer = 0
         Dim singleItem As Boolean
         Dim layoutPanel1 As TableLayoutPanel
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In localRecentData.WithIndex()
             Dim singleItemIndex As Integer = 0
-            layoutPanel1 = Me.TableLayoutPanel1
+            layoutPanel1 = Me.TableLayoutPanelSummyData
             singleItem = False
             Dim row As KeyValuePair(Of String, String) = c.Value
             Dim rowIndex As Integer = CInt([Enum].Parse(GetType(ItemIndexs), c.Value.Key))
@@ -1057,33 +1101,34 @@ Public Class Form1
                     layoutPanel1.RowCount = 1
                     singleItem = True
                 Case ItemIndexs.activeInsulin
-                    layoutPanel1 = Me.TableLayoutPanel2
+                    layoutPanel1 = Me.TableLayoutPanelActiveInsulin
                     layoutPanel1.Controls.Clear()
                     singleItemIndex = rowIndex
                     layoutPanel1.RowCount = 1
                     singleItem = True
                 Case ItemIndexs.sgs
-                    layoutPanel1 = Me.TableLayoutPanel3
-                    layoutPanel1.Controls.Clear()
-                    singleItemIndex = rowIndex
-                    layoutPanel1.RowCount = 1
-                    singleItem = True
+                    SGs = LoadList(row.Value).ToSgList()
+                    Me.SGsDataGridView.AutoGenerateColumns = True
+                    Me.SGsDataGridView.DataSource = SGs
+                    For Each columnName As String In s_alwaysFilter
+                        Me.SGsDataGridView.Columns(columnName).Visible = Not _filterJsonData
+                    Next
+                    Continue For
                 Case ItemIndexs.limits
-                    layoutPanel1 = Me.TableLayoutPanel4
+                    layoutPanel1 = Me.TableLayoutPanelLimits
                     layoutPanel1.Controls.Clear()
                     layoutPanel1.AutoSize = True
                     singleItemIndex = rowIndex
                     layoutPanel1.RowCount = 1
                     singleItem = True
-
                 Case ItemIndexs.markers
-                    layoutPanel1 = Me.TableLayoutPanel5
+                    layoutPanel1 = Me.TableLayoutPanelMarkers
                     layoutPanel1.Controls.Clear()
                     singleItemIndex = rowIndex
                     layoutPanel1.RowCount = 1
                     singleItem = True
                 Case ItemIndexs.notificationHistory
-                    layoutPanel1 = Me.TableLayoutPanel6
+                    layoutPanel1 = Me.TableLayoutPanelNotificationHistory
                     layoutPanel1.Controls.Clear()
                     singleItemIndex = rowIndex
                     layoutPanel1.RowCount = 1
@@ -1093,7 +1138,7 @@ Public Class Form1
                 Case ItemIndexs.pumpBannerState
                     ' handled elsewhere
                 Case ItemIndexs.basal
-                    layoutPanel1 = Me.TableLayoutPanel7
+                    layoutPanel1 = Me.TableLayoutPanelBasal
                     layoutPanel1.Controls.Clear()
                     singleItemIndex = rowIndex
                     layoutPanel1.RowCount = 1
@@ -1157,8 +1202,6 @@ Public Class Form1
             If row.Value?.StartsWith("[") Then
                 Dim innerJson As List(Of Dictionary(Of String, String)) = LoadList(row.Value)
                 Select Case rowIndex
-                    Case ItemIndexs.sgs
-                        SGs = innerJson
                     Case ItemIndexs.limits
                         Limits = innerJson
                     Case ItemIndexs.markers
@@ -1171,22 +1214,7 @@ Public Class Form1
                         Stop
                 End Select
                 If innerJson.Count > 0 Then
-                    For Each dic As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
-                        Dim tableLevel1Blue As New TableLayoutPanel With {
-                                .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                .AutoScroll = False,
-                                .AutoSize = True,
-                                .AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                                .ColumnCount = 2,
-                                .Dock = DockStyle.Fill,
-                                .Margin = New Padding(0),
-                                .Name = "InnerTable",
-                                .Padding = New Padding(0)
-                                }
-                        layoutPanel1.Controls.Add(tableLevel1Blue, column:=1, row:=dic.Index)
-                        Me.GetInnerTable(tableLevel1Blue, dic.Value, CType(rowIndex, ItemIndexs))
-                        Application.DoEvents()
-                    Next
+                    Me.FillOneRowOfTableLayoutPannel(rowIndex, layoutPanel1, innerJson)
                 Else
                     layoutPanel1.Controls.Add(New TextBox With {
                                                       .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
@@ -1250,8 +1278,8 @@ Public Class Form1
         _initialized = False
 
         Me.ActiveInsulinPageChart.Titles("Title1").Text = $"Summary"
-        Me.ActiveInsulinPageChart.ChartAreas("Default").AxisX.Minimum = SGs.SafeGetSgDateTime(0).ToOADate()
-        Me.ActiveInsulinPageChart.ChartAreas("Default").AxisX.Maximum = SGs.SafeGetSgDateTime(SGs.Count - 1).ToOADate()
+        Me.ActiveInsulinPageChart.ChartAreas("Default").AxisX.Minimum = SGs(0).datetime.ToOADate()
+        Me.ActiveInsulinPageChart.ChartAreas("Default").AxisX.Maximum = SGs.Last.datetime.ToOADate()
         Me.ActiveInsulinPageChart.Series("Default").Points.Clear()
         Me.ActiveInsulinPageChart.Series(NameOf(MarkerSeries)).Points.Clear()
 
@@ -1311,7 +1339,7 @@ Public Class Form1
         ' set up table that holds active insulin for every 5 minutes
         Dim remainingInsulinList As New List(Of Insulin)
         Dim currentMarker As Integer = 0
-        Dim getSgDateTime As Date = SGs.SafeGetSgDateTime(0)
+        Dim getSgDateTime As Date = SGs(0).datetime
 
         For i As Integer = 0 To 287
             Dim initialBolus As Double = 0
@@ -1469,10 +1497,10 @@ Public Class Form1
             End Select
         Next
         _initialized = True
-        For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In SGs.WithIndex()
-            sgDateTime = SGs.SafeGetSgDateTime(sgListIndex.Index)
+        For Each sgListIndex As IndexClass(Of SgRecord) In SGs.WithIndex()
+            sgDateTime = sgListIndex.Value.datetime
             sgOaDateTime = sgDateTime.ToOADate()
-            bgValue = CInt(sgListIndex.Value("sg"))
+            bgValue = sgListIndex.Value.sg
             If Math.Abs(bgValue - 0) < Single.Epsilon Then
                 Me.HomePageChart.Series("Default").Points.AddXY(sgOaDateTime, InsulinRow)
                 Me.HomePageChart.Series("Default").Points.Last().IsEmpty = True
@@ -1510,11 +1538,11 @@ Public Class Form1
         Me.UpdateTimeInRange()
         Me.UpdateTransmitterBatttery()
 
-        Me.HomePageChart.Titles("Title1").Text = $"Summary of last 24 hours"
-        Dim sgDateTime As Date = SGs.SafeGetSgDateTime(0)
+        Me.HomePageChart.Titles("Title1").Text = $"Blood Glucose for Last 24 Hours"
+        Dim sgDateTime As Date = SGs(0).datetime
         With _homePageChartChartArea.AxisX
             .Minimum = sgDateTime.ToOADate()
-            .Maximum = SGs.SafeGetSgDateTime(SGs.Count - 1).ToOADate()
+            .Maximum = SGs.Last.datetime.ToOADate()
             .MajorGrid.IntervalType = DateTimeIntervalType.Hours
             .MajorGrid.IntervalOffsetType = DateTimeIntervalType.Hours
             .MajorGrid.Interval = 1
