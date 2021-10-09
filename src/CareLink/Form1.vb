@@ -1521,8 +1521,8 @@ Public Class Form1
                     Dim bolusAmount As String = sgListIndex.Value("bolusAmount")
                     Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.MarkerBorderColor = Color.Black
                     Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3)} U"
-                Case "AUTO_MODE_STATUS", "TIME_CHANGE"
-                    'Stop
+                Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED", "TIME_CHANGE"
+                    'Stop 
                 Case Else
                     Stop
             End Select
