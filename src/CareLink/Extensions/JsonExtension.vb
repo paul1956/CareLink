@@ -78,7 +78,7 @@ Public Module Json
     Public Function LoadList(value As String) As List(Of Dictionary(Of String, String))
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
         Dim options As New JsonSerializerOptions() With {
-                .IgnoreNullValues = True,
+                .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 .NumberHandling = JsonNumberHandling.WriteAsString}
 
         Dim deserializeList As List(Of Dictionary(Of String, Object)) = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(value, options)
@@ -99,7 +99,7 @@ Public Module Json
     Public Function Loads(value As String) As Dictionary(Of String, String)
         Dim resultDictionary As New Dictionary(Of String, String)
         Dim options As New JsonSerializerOptions() With {
-                .IgnoreNullValues = True,
+                .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 .NumberHandling = JsonNumberHandling.WriteAsString}
 
         For Each item As KeyValuePair(Of String, Object) In JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(value, options).ToList()

@@ -331,8 +331,13 @@ Public Class Form1
         If Double.IsNaN(yInPixels) Then
             Exit Sub
         End If
-        Dim result As HitTestResult = Me.HomePageChart.HitTest(e.X, e.Y)
-        If result.PointIndex >= -1 Then
+        Dim result As HitTestResult
+        Try
+            result = Me.HomePageChart.HitTest(e.X, e.Y)
+        Catch ex As Exception
+            result = Nothing
+        End Try
+        If result?.PointIndex >= -1 Then
             If result.Series IsNot Nothing Then
                 Me.CursorTimeLabel.Left = e.X - (Me.CursorTimeLabel.Width \ 2)
                 Select Case result.Series.Name
