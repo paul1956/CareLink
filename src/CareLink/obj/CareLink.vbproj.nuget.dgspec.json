@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\CareLink\\CareLink.vbproj": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "restore": {
         "projectUniqueName": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\CareLink\\CareLink.vbproj",
         "projectName": "CareLink",
@@ -23,7 +23,7 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net5.0-windows7.0"
+          "net6.0-windows7.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
@@ -34,15 +34,15 @@
           "https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json": {}
         },
         "frameworks": {
-          "net5.0-windows7.0": {
-            "targetAlias": "net5.0-windows",
+          "net6.0-windows7.0": {
+            "targetAlias": "net6.0-windows",
             "projectReferences": {}
           }
         }
       },
       "frameworks": {
-        "net5.0-windows7.0": {
-          "targetAlias": "net5.0-windows",
+        "net6.0-windows7.0": {
+          "targetAlias": "net6.0-windows",
           "dependencies": {
             "Maikebing.System.Windows.Forms.DataVisualization": {
               "target": "Package",
@@ -67,7 +67,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-rc.2.21505.57\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.200-preview.22055.15\\RuntimeIdentifierGraph.json"
         }
       }
     }

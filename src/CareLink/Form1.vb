@@ -1651,7 +1651,7 @@ Public Class Form1
             Case > 66
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryFull
                 Me.PumpBatteryRemainingLabel.Text = $"High"
-            Case > 50
+            Case >= 45
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryMedium
                 Me.PumpBatteryRemainingLabel.Text = $"Medium"
             Case > 25
@@ -1749,4 +1749,7 @@ Public Class Form1
 
     End Sub
 
+    Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
+        AboutBox1.Show()
+    End Sub
 End Class

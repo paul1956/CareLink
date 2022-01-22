@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <RootNamespace>CareLink</RootNamespace>
     <StartupObject>Sub Main</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>
@@ -19,6 +19,9 @@
     <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
     <RepositoryUrl>https://github.com/paul1956/CareLink</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.1.1</AssemblyVersion>
+    <FileVersion>1.0.1.1</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -14,7 +14,7 @@
 - Medtronic CareLink data display
 
 ## Updated
-- 5/21/2021
+- 1/12/2022
 
 ## Description
 
@@ -32,7 +32,7 @@ This update has a simple UI to show all the available data and a visual version 
 
 #Known Issue
 If you get a "System.Configuration.ConfigurationErrorsException: 'Configuration system failed to initialize'"
-You will need to edit CareLink\src\CareLink\bin\Debug\net5.0-windows\CareLink.dll.config and remove the following lines
+You will need to edit CareLink\src\CareLink\bin\Debug\net6.0-windows\CareLink.dll.config and remove the following lines
 ```
 <system.diagnostics>
     <sources>

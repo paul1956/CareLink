@@ -178,7 +178,7 @@ Partial Class Form1
         'AboutToolStripMenuItem
         '
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
-        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
+        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.AboutToolStripMenuItem.Text = "&About..."
         '
         'ServerUpdateTimer
@@ -377,9 +377,9 @@ Partial Class Form1
         Me.PumpBatteryRemainingLabel.BackColor = System.Drawing.Color.Transparent
         Me.PumpBatteryRemainingLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.PumpBatteryRemainingLabel.ForeColor = System.Drawing.Color.White
-        Me.PumpBatteryRemainingLabel.Location = New System.Drawing.Point(526, 95)
+        Me.PumpBatteryRemainingLabel.Location = New System.Drawing.Point(507, 95)
         Me.PumpBatteryRemainingLabel.Name = "PumpBatteryRemainingLabel"
-        Me.PumpBatteryRemainingLabel.Size = New System.Drawing.Size(55, 21)
+        Me.PumpBatteryRemainingLabel.Size = New System.Drawing.Size(80, 21)
         Me.PumpBatteryRemainingLabel.TabIndex = 49
         Me.PumpBatteryRemainingLabel.Text = "???"
         Me.PumpBatteryRemainingLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -389,7 +389,7 @@ Partial Class Form1
         Me.TransmatterBatterPercentLabel.BackColor = System.Drawing.Color.Transparent
         Me.TransmatterBatterPercentLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.TransmatterBatterPercentLabel.ForeColor = System.Drawing.Color.White
-        Me.TransmatterBatterPercentLabel.Location = New System.Drawing.Point(677, 95)
+        Me.TransmatterBatterPercentLabel.Location = New System.Drawing.Point(683, 95)
         Me.TransmatterBatterPercentLabel.Name = "TransmatterBatterPercentLabel"
         Me.TransmatterBatterPercentLabel.Size = New System.Drawing.Size(55, 21)
         Me.TransmatterBatterPercentLabel.TabIndex = 48
@@ -400,7 +400,7 @@ Partial Class Form1
         '
         Me.TransmitterBatteryPictureBox.ErrorImage = Nothing
         Me.TransmitterBatteryPictureBox.Image = Global.CareLink.My.Resources.Resources.TransmitterBatteryUnknown
-        Me.TransmitterBatteryPictureBox.Location = New System.Drawing.Point(670, 14)
+        Me.TransmitterBatteryPictureBox.Location = New System.Drawing.Point(676, 14)
         Me.TransmitterBatteryPictureBox.Name = "TransmitterBatteryPictureBox"
         Me.TransmitterBatteryPictureBox.Size = New System.Drawing.Size(68, 78)
         Me.TransmitterBatteryPictureBox.TabIndex = 47
@@ -411,7 +411,7 @@ Partial Class Form1
         Me.SensorTimeLeftLabel.BackColor = System.Drawing.Color.Transparent
         Me.SensorTimeLeftLabel.Font = New System.Drawing.Font("Segoe UI", 12!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.SensorTimeLeftLabel.ForeColor = System.Drawing.Color.White
-        Me.SensorTimeLeftLabel.Location = New System.Drawing.Point(747, 95)
+        Me.SensorTimeLeftLabel.Location = New System.Drawing.Point(759, 95)
         Me.SensorTimeLeftLabel.Name = "SensorTimeLeftLabel"
         Me.SensorTimeLeftLabel.Size = New System.Drawing.Size(100, 21)
         Me.SensorTimeLeftLabel.TabIndex = 46
@@ -423,7 +423,7 @@ Partial Class Form1
         Me.SensorDaysLeftLabel.BackColor = System.Drawing.Color.Transparent
         Me.SensorDaysLeftLabel.Font = New System.Drawing.Font("Segoe UI", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.SensorDaysLeftLabel.ForeColor = System.Drawing.Color.White
-        Me.SensorDaysLeftLabel.Location = New System.Drawing.Point(777, 23)
+        Me.SensorDaysLeftLabel.Location = New System.Drawing.Point(789, 27)
         Me.SensorDaysLeftLabel.Name = "SensorDaysLeftLabel"
         Me.SensorDaysLeftLabel.Size = New System.Drawing.Size(37, 52)
         Me.SensorDaysLeftLabel.TabIndex = 45
@@ -435,7 +435,7 @@ Partial Class Form1
         '
         Me.SensorTimeLefPictureBox.ErrorImage = Nothing
         Me.SensorTimeLefPictureBox.Image = Global.CareLink.My.Resources.Resources.SensorExpirationUnknown
-        Me.SensorTimeLefPictureBox.Location = New System.Drawing.Point(763, 6)
+        Me.SensorTimeLefPictureBox.Location = New System.Drawing.Point(775, 14)
         Me.SensorTimeLefPictureBox.Name = "SensorTimeLefPictureBox"
         Me.SensorTimeLefPictureBox.Size = New System.Drawing.Size(68, 78)
         Me.SensorTimeLefPictureBox.TabIndex = 44
@@ -445,7 +445,7 @@ Partial Class Form1
         '
         Me.PumpBatteryPictureBox.ErrorImage = Nothing
         Me.PumpBatteryPictureBox.Image = Global.CareLink.My.Resources.Resources.PumpBatteryFull
-        Me.PumpBatteryPictureBox.Location = New System.Drawing.Point(521, 16)
+        Me.PumpBatteryPictureBox.Location = New System.Drawing.Point(515, 16)
         Me.PumpBatteryPictureBox.Name = "PumpBatteryPictureBox"
         Me.PumpBatteryPictureBox.Size = New System.Drawing.Size(64, 74)
         Me.PumpBatteryPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
