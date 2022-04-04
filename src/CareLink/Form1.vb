@@ -900,8 +900,10 @@ Public Class Form1
             .AxisY2.IsStartedFromZero = False
             .AxisY2.LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
             .AxisY2.LineColor = Color.FromArgb(64, 64, 64, 64)
-            .AxisY2.MajorGrid = New Grid() With {.Interval = InsulinRow}
-            .AxisY2.MajorGrid.LineColor = Color.FromArgb(64, 64, 64, 64)
+            .AxisY2.MajorGrid = New Grid With {
+                .Interval = InsulinRow,
+                .LineColor = Color.FromArgb(64, 64, 64, 64)
+            }
             .AxisY2.MajorTickMark = New TickMark() With {.Interval = InsulinRow, .Enabled = True}
             .AxisY2.Maximum = 400
             .AxisY2.Minimum = InsulinRow
