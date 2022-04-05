@@ -93,6 +93,7 @@ Partial Class Form1
         Me.TableLayoutPanelBasal = New System.Windows.Forms.TableLayoutPanel()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.CursorTimer = New System.Windows.Forms.Timer(Me.components)
+        Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
         Me.MenuStrip1.SuspendLayout
         CType(Me.SplitContainer1,System.ComponentModel.ISupportInitialize).BeginInit
         Me.SplitContainer1.Panel1.SuspendLayout
@@ -178,7 +179,7 @@ Partial Class Form1
         'AboutToolStripMenuItem
         '
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
-        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
         Me.AboutToolStripMenuItem.Text = "&About..."
         '
         'ServerUpdateTimer
@@ -1032,6 +1033,12 @@ Partial Class Form1
         '
         Me.CursorTimer.Interval = 60000
         '
+        'NotifyIcon1
+        '
+        Me.NotifyIcon1.Icon = CType(resources.GetObject("NotifyIcon1.Icon"),System.Drawing.Icon)
+        Me.NotifyIcon1.Text = "NotifyIcon1"
+        Me.NotifyIcon1.Visible = true
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7!, 15!)
@@ -1146,4 +1153,5 @@ End Sub
     Friend WithEvents PumpBatteryRemainingLabel As Label
     Friend WithEvents FilterRawJSONDataToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SGsDataGridView As DataGridView
+    Friend WithEvents NotifyIcon1 As NotifyIcon
 End Class

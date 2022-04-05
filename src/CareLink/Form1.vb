@@ -1443,8 +1443,8 @@ Public Class Form1
             Me.CurrentBG.Location = New Point((Me.ShieldPictureBox.Width \ 2) - (Me.CurrentBG.Width \ 2), Me.ShieldPictureBox.Height \ 4)
             Me.CurrentBG.Parent = Me.ShieldPictureBox
             Me.CurrentBG.Text = LastSG("sg")
+            Me.NotifyIcon1.Text = $"{LastSG("sg")} {_bgUnitsString}"
             Me.CurrentBG.Visible = True
-            Me.SensorMessage.Visible = False
             Me.SensorMessage.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield
             Me.ShieldUnitsLabel.Visible = True
