@@ -5,9 +5,6 @@
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Class Form1
-
-    ' ReSharper disable InconsistentNaming
-
     Public WithEvents ActiveInsulinPageChart As Chart
     Public WithEvents HighLimitSeries As Series
     Public WithEvents HomePageChart As Chart
@@ -16,7 +13,6 @@ Public Class Form1
     Public WithEvents TimeInRangeChart As Chart
     Private Const InsulinRow As Integer = 50
 
-    ' ReSharper restore InconsistentNaming
     Private Const MarkerRow As Integer = 400
 
     Private Const MilitaryTimeWithMinuteFormat As String = "HH:mm"
@@ -120,7 +116,6 @@ Public Class Form1
 
 #End Region
 
-    ' ReSharper disable InconsistentNaming
     Public HighLimit As Single
 
     Public LowLimit As Single
@@ -261,8 +256,6 @@ Public Class Form1
         sgBelowLimit = 60
         averageSGFloat = 61
     End Enum
-
-    ' ReSharper restore InconsistentNaming
 
 #Region "Events"
 
@@ -633,7 +626,7 @@ Public Class Form1
                             .Dock = DockStyle.Top,
                             .RowCount = innerJson1.Count
                             }
-                    ' ReSharper disable once RedundantAssignment
+
                     For i As Integer = 0 To innerJson1.Count - 1
                         tableLevel2.RowStyles.Add(New RowStyle() With {.SizeType = SizeType.AutoSize})
                     Next

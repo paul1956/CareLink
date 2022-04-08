@@ -3,7 +3,6 @@
 ' See the LICENSE file in the project root for more information.
 
 Public Class SgRecord
-    ' ReSharper disable InconsistentNaming
     Public Property RecordNumber As Integer
     Public Property sg As Single
     Public Property [datetime] As Date
@@ -12,7 +11,6 @@ Public Class SgRecord
     Public Property kind As String
     Public Property version As Integer
     Public Property relativeOffset As Integer
-    ' ReSharper restore InconsistentNaming
 
     Sub New(allSgs As List(Of Dictionary(Of String, String)), index As Integer)
         Dim dic As Dictionary(Of String, String) = allSgs(index)

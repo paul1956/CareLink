@@ -1,4 +1,8 @@
-﻿Option Strict On
+﻿' Licensed to the .NET Foundation under one or more agreements.
+' The .NET Foundation licenses this file to you under the MIT license.
+' See the LICENSE file in the project root for more information.
+
+Option Strict On
 Option Explicit On
 
 'This constant indicates whether the Application Framework is in use.
