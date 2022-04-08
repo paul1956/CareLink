@@ -445,7 +445,9 @@ Public Class Form1
 
         If Me.UseTestDataToolStripMenuItem.Checked Then
             RecentData = Loads(IO.File.ReadAllText(IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
+            Me.ViewToolStripMenuItem.Visible = False
         Else
+            Me.ViewToolStripMenuItem.Visible=True
             Me.DoLogin()
         End If
         Me.UpdateAllTabPages()
@@ -1768,4 +1770,5 @@ Public Class Form1
     Private Sub WatchdogTimer_Tick(sender As Object, e As EventArgs) Handles WatchdogTimer.Tick
         MsgBox("Watchdog Timed Out", MsgBoxStyle.Critical, "Critical Error")
     End Sub
-End Class
+
+ End Class
