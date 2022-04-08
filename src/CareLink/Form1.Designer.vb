@@ -31,6 +31,8 @@ Partial Class Form1
         Me.OptionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.FilterRawJSONDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.UseTestDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ShowMiniDisplayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ServerUpdateTimer = New System.Windows.Forms.Timer(Me.components)
@@ -94,6 +96,7 @@ Partial Class Form1
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.CursorTimer = New System.Windows.Forms.Timer(Me.components)
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
+        Me.WatchdogTimer = New System.Windows.Forms.Timer(Me.components)
         Me.MenuStrip1.SuspendLayout
         CType(Me.SplitContainer1,System.ComponentModel.ISupportInitialize).BeginInit
         Me.SplitContainer1.Panel1.SuspendLayout
@@ -120,7 +123,7 @@ Partial Class Form1
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StartDisplayToolStripMenuItem, Me.OptionsToolStripMenuItem, Me.HelpToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StartDisplayToolStripMenuItem, Me.OptionsToolStripMenuItem, Me.ViewToolStripMenuItem, Me.HelpToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1384, 24)
@@ -168,6 +171,21 @@ Partial Class Form1
         Me.UseTestDataToolStripMenuItem.Name = "UseTestDataToolStripMenuItem"
         Me.UseTestDataToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
         Me.UseTestDataToolStripMenuItem.Text = "Use Test Data"
+        '
+        'ViewToolStripMenuItem
+        '
+        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ShowMiniDisplayToolStripMenuItem})
+        Me.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem"
+        Me.ViewToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
+        Me.ViewToolStripMenuItem.Text = "View"
+        '
+        'ShowMiniDisplayToolStripMenuItem
+        '
+        Me.ShowMiniDisplayToolStripMenuItem.Name = "ShowMiniDisplayToolStripMenuItem"
+        Me.ShowMiniDisplayToolStripMenuItem.ShortcutKeys = CType(((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Shift)  _
+            Or System.Windows.Forms.Keys.D1),System.Windows.Forms.Keys)
+        Me.ShowMiniDisplayToolStripMenuItem.Size = New System.Drawing.Size(243, 22)
+        Me.ShowMiniDisplayToolStripMenuItem.Text = "Show Mini Display"
         '
         'HelpToolStripMenuItem
         '
@@ -1039,6 +1057,11 @@ Partial Class Form1
         Me.NotifyIcon1.Text = "NotifyIcon1"
         Me.NotifyIcon1.Visible = true
         '
+        'WatchdogTimer
+        '
+        Me.WatchdogTimer.Enabled = true
+        Me.WatchdogTimer.Interval = 360000
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7!, 15!)
@@ -1050,6 +1073,7 @@ Partial Class Form1
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Name = "Form1"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.MenuStrip1.ResumeLayout(false)
         Me.MenuStrip1.PerformLayout
         Me.SplitContainer1.Panel1.ResumeLayout(false)
@@ -1154,4 +1178,7 @@ End Sub
     Friend WithEvents FilterRawJSONDataToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SGsDataGridView As DataGridView
     Friend WithEvents NotifyIcon1 As NotifyIcon
+    Friend WithEvents ViewToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ShowMiniDisplayToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents WatchdogTimer As Timer
 End Class

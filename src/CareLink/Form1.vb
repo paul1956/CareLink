@@ -118,14 +118,13 @@ Public Class Form1
         {"MMOLL", "mmol/L"}
         }
 
-    Private _bgUnitsString As String
-
 #End Region
 
     ' ReSharper disable InconsistentNaming
     Public HighLimit As Single
 
     Public LowLimit As Single
+    Public LastRecentData As Dictionary(Of String, String)
     Public RecentData As Dictionary(Of String, String)
 
 #Region "Variables to hold Sensor Values"
@@ -192,6 +191,8 @@ Public Class Form1
     Public TimeToNextCalibHours As Byte = Byte.MaxValue
     Public TimeToNextCalibrationMinutes As Integer
     Public Version As String
+
+    Public Property BgUnitsString As String
 
 #End Region
 
@@ -312,13 +313,13 @@ Public Class Form1
         Me.SGsDataGridView.ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
             .Alignment = DataGridViewContentAlignment.MiddleCenter
             }
-
+        Me.DoLogin()
+        Me.UpdateAllTabPages()
     End Sub
 
     Private Sub HomePageChart_CursorPositionChanging(sender As Object, e As CursorEventArgs) Handles HomePageChart.CursorPositionChanging
         If Not _initialized Then Exit Sub
-        Me.CursorTimer.Interval = CType(New TimeSpan(0, minutes:=0, seconds:=30).TotalMilliseconds, Integer)
-        Me.CursorTimer.Enabled = True
+        Me.CursorTimer.Interval = CType(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds, Integer)
         Me.CursorTimer.Start()
     End Sub
 
@@ -398,7 +399,7 @@ Public Class Form1
                         Me.CursorValueLabel.Visible = False
                         Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(_timeFormat)
                         Me.CursorTimeLabel.Visible = True
-                        Me.CursorMessage1Label.Text = $"{result.Series.Points(result.PointIndex).YValues(0).RoundDouble(3)} {_bgUnitsString}"
+                        Me.CursorMessage1Label.Text = $"{result.Series.Points(result.PointIndex).YValues(0).RoundDouble(3)} {Me.BgUnitsString}"
                         Me.CursorMessage1Label.Visible = True
                 End Select
             End If
@@ -426,12 +427,7 @@ Public Class Form1
         Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
             e.ChartGraphics.Graphics.FillRectangle(b, highAreaRectangle)
         End Using
-        Dim lowHeight As Integer
-        If _homePageChartChartArea.AxisX.ScrollBar.IsVisible Then
-            lowHeight = CInt(25 - _homePageChartChartArea.AxisX.ScrollBar.Size)
-        Else
-            lowHeight = 25
-        End If
+        Dim lowHeight As Integer = If(_homePageChartChartArea.AxisX.ScrollBar.IsVisible, CInt(25 - _homePageChartChartArea.AxisX.ScrollBar.Size), 25)
         Dim lowAreaRectangle As New Rectangle(New Point(CInt(_imagePosition.X), 504), New Size(CInt(_imagePosition.Width), lowHeight))
         Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
             e.ChartGraphics.Graphics.FillRectangle(b, lowAreaRectangle)
@@ -445,23 +441,26 @@ Public Class Form1
     End Sub
 
     Private Sub LoginToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoginToolStripMenuItem.Click
-        Me.ServerUpdateTimer.Enabled = False
+        Me.ServerUpdateTimer.Stop()
+
         If Me.UseTestDataToolStripMenuItem.Checked Then
             RecentData = Loads(IO.File.ReadAllText(IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
         Else
-            _loginDialog.ShowDialog()
-            _client = _loginDialog.Client
-            If _client IsNot Nothing AndAlso _client.LoggedIn Then
-                RecentData = _client.GetRecentData()
-            End If
-            If RecentData Is Nothing Then
-                Exit Sub
-            End If
-            Me.ServerUpdateTimer.Interval = CType(New TimeSpan(0, 5, 0).TotalMilliseconds, Integer)
-            Me.ServerUpdateTimer.Enabled = True
+            Me.DoLogin()
         End If
         Me.UpdateAllTabPages()
+    End Sub
 
+    Private Sub DoLogin()
+        _loginDialog.ShowDialog()
+        _client = _loginDialog.Client
+        If _client IsNot Nothing AndAlso _client.LoggedIn Then
+            RecentData = _client.GetRecentData()
+            Me.WatchdogTimer.Interval = CType(New TimeSpan(0, 6, 0).TotalMilliseconds, Integer)
+            Me.WatchdogTimer.Start()
+            Me.ServerUpdateTimer.Interval = CType(New TimeSpan(0, 1, 0).TotalMilliseconds, Integer)
+            Me.ServerUpdateTimer.Start()
+        End If
     End Sub
 
     Private Sub SensorAgeLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles SensorDaysLeftLabel.MouseHover
@@ -471,16 +470,19 @@ Public Class Form1
     End Sub
 
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
-        Me.ServerUpdateTimer.Enabled = False
+        Me.ServerUpdateTimer.Stop()
+        Me.WatchdogTimer.Stop()
+        Me.WatchdogTimer.Interval = CType(New TimeSpan(0, minutes:=6, 0).TotalMilliseconds, Integer)
+        Me.WatchdogTimer.Start()
         RecentData = _client.GetRecentData()
-        If RecentData Is Nothing Then
-            Me.Cursor = Cursors.Default
-            Exit Sub
+        If RecentData IsNot Nothing Then
+            If LastRecentData Is Nothing OrElse Me.RecentDataNotEqualLastRecentData Then
+                Me.UpdateAllTabPages()
+            End If
         End If
-
-        Me.UpdateAllTabPages()
         Application.DoEvents()
-        Me.ServerUpdateTimer.Enabled = True
+        Me.ServerUpdateTimer.Start()
+        Me.Cursor = Cursors.Default
     End Sub
 
     Private Sub SGsDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles SGsDataGridView.CellFormatting
@@ -548,15 +550,10 @@ Public Class Form1
         End If
         Dim targetImage As Bitmap = backImage
         Dim myGraphics As Graphics = Graphics.FromImage(targetImage)
-        Dim rect As New Rectangle(1, 1, backImage.Width - 2, backImage.Height - 2)
         myGraphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-        Dim pen As Pen
-        If colorTable Is Nothing Then
-            pen = New Pen(Me.GetColorFromTimeToNextCalib(), 2)
-        Else
-            pen = New Pen(colorTable(segmentName), 5)
-        End If
-        myGraphics.DrawArc(pen, rect, -90, -CInt(360 * arcPercentage))
+        Dim newPen As Pen = If(colorTable Is Nothing, New Pen(Me.GetColorFromTimeToNextCalib(), 2), New Pen(colorTable(segmentName), 5))
+        Dim rect As New Rectangle(1, 1, backImage.Width - 2, backImage.Height - 2)
+        myGraphics.DrawArc(newPen, rect, -90, -CInt(360 * arcPercentage))
         Return targetImage
     End Function
 
@@ -666,7 +663,7 @@ Public Class Form1
                                                                  New TextBox With {
                                                                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                                     .AutoSize = True,
-                                                                     .Text = e.Value.Value}})
+                                                                    .Text = e.Value.Value}})
                             Application.DoEvents()
                         Next
                         tableLevel3.Height += 40
@@ -1110,8 +1107,8 @@ Public Class Form1
                     CalibStatus = row.Value
                 Case ItemIndexs.bgUnits
                     BgUnits = row.Value
-                    _bgUnitsString = _unitsStrings(BgUnits)
-                    If _bgUnitsString = "mg/dl" Then
+                    Me.BgUnitsString = _unitsStrings(BgUnits)
+                    If Me.BgUnitsString = "mg/dl" Then
                         HighLimit = 180
                         LowLimit = 70
                         _timeFormat = TwelveHourTimeWithMinuteFormat
@@ -1123,9 +1120,9 @@ Public Class Form1
                         _timeFormat = MilitaryTimeWithMinuteFormat
                         _activeInsulinPageChartArea.AxisX.LabelStyle.Format = "HH"
                     End If
-                    Me.AboveHighLimitMessageLabel.Text = $"Above {HighLimit} {_bgUnitsString}"
-                    Me.AverageSGUnitsLabel.Text = _bgUnitsString
-                    Me.BelowLowLimitMessageLabel.Text = $"Below {LowLimit} {_bgUnitsString}"
+                    Me.AboveHighLimitMessageLabel.Text = $"Above {HighLimit} {Me.BgUnitsString}"
+                    Me.AverageSGUnitsLabel.Text = Me.BgUnitsString
+                    Me.BelowLowLimitMessageLabel.Text = $"Below {LowLimit} {Me.BgUnitsString}"
                 Case ItemIndexs.timeFormat
                     TimeFormat = row.Value
                 Case ItemIndexs.lastSensorTime
@@ -1316,6 +1313,15 @@ Public Class Form1
         Me.Cursor = Cursors.Default
     End Sub
 
+    Private Function RecentDataNotEqualLastRecentData() As Boolean
+        For i As Integer = 0 To RecentData.Keys.Count
+            If LastRecentData.Keys(i) <> "currentServerTime" AndAlso LastRecentData.Values(i) <> RecentData.Values(i) Then
+                Return True
+            End If
+        Next
+        Return False
+    End Function
+
     Private Sub UpdateActiveInsulin()
         Me.ActiveInsulinValue.Text = $"{ActiveInsulin("amount"):N3} U"
     End Sub
@@ -1434,6 +1440,7 @@ Public Class Form1
         _initialized = True
         Me.UpdateActiveInsulinChart()
         Me.UpdateHomeTabPage()
+        LastRecentData = RecentData
         _updating = False
     End Sub
 
@@ -1443,7 +1450,8 @@ Public Class Form1
             Me.CurrentBG.Location = New Point((Me.ShieldPictureBox.Width \ 2) - (Me.CurrentBG.Width \ 2), Me.ShieldPictureBox.Height \ 4)
             Me.CurrentBG.Parent = Me.ShieldPictureBox
             Me.CurrentBG.Text = LastSG("sg")
-            Me.NotifyIcon1.Text = $"{LastSG("sg")} {_bgUnitsString}"
+            Me.NotifyIcon1.Text = $"{LastSG("sg")} {Me.BgUnitsString}"
+            BGMiniWindow.BGTextBox.Text = LastSG("sg")
             Me.CurrentBG.Visible = True
             Me.SensorMessage.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield
@@ -1451,22 +1459,22 @@ Public Class Form1
             Me.ShieldUnitsLabel.BackColor = Color.Transparent
             Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
             Me.ShieldUnitsLabel.Left = (Me.ShieldPictureBox.Width \ 2) - (Me.ShieldUnitsLabel.Width \ 2)
-            Me.ShieldUnitsLabel.Text = _bgUnitsString
+            Me.ShieldUnitsLabel.Text = Me.BgUnitsString
             Me.ShieldUnitsLabel.Visible = True
         Else
+            BGMiniWindow.BGTextBox.Text = "---"
             Me.CurrentBG.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield_Disabled
             Me.SensorMessage.Visible = True
             Me.SensorMessage.Parent = Me.ShieldPictureBox
             Me.SensorMessage.Left = 0
             Me.SensorMessage.BackColor = Color.Transparent
-            If SensorState = "NO_ERROR_MESSAGE" Then
-                Me.SensorMessage.Text = $"---"
-            Else
-                Me.SensorMessage.Text = _messages(SensorState)
-            End If
+            Me.SensorMessage.Text = If(SensorState = "NO_ERROR_MESSAGE", "---", _messages(SensorState))
             Me.ShieldUnitsLabel.Visible = False
             Me.SensorMessage.Visible = True
+        End If
+        If BGMiniWindow.Visible Then
+            BGMiniWindow.BGTextBox.SelectionLength = 0
         End If
         Application.DoEvents()
     End Sub
@@ -1514,14 +1522,14 @@ Public Class Form1
                         .Points.Last.Color = Color.Transparent
                         .Points.Last.MarkerBorderWidth = 2
                         .Points.Last.MarkerSize = 10
-                        .Points.Last.ToolTip = $"Blood Glucose, Not used For calibration, {sgListIndex.Value("value")} {_bgUnitsString}"
+                        .Points.Last.ToolTip = $"Blood Glucose, Not used For calibration, {sgListIndex.Value("value")} {Me.BgUnitsString}"
                     Case "CALIBRATION"
                         .Points.AddXY(sgOaDateTime, bgValue)
                         .Points.Last.BorderColor = Color.Red
                         .Points.Last.Color = Color.Transparent
                         .Points.Last.MarkerBorderWidth = 2
                         .Points.Last.MarkerSize = 8
-                        .Points.Last.ToolTip = $"Blood Glucose, Calibration {If(CBool(sgListIndex.Value("calibrationSuccess")), "accepted", "not accepted")}, {sgListIndex.Value("value")} {_bgUnitsString}"
+                        .Points.Last.ToolTip = $"Blood Glucose, Calibration {If(CBool(sgListIndex.Value("calibrationSuccess")), "accepted", "not accepted")}, {sgListIndex.Value("value")} {Me.BgUnitsString}"
                     Case "INSULIN"
                         _markerInsulinDictionary.Add(sgOaDateTime, MarkerRow)
                         .Points.AddXY(sgOaDateTime, MarkerRow)
@@ -1701,11 +1709,11 @@ Public Class Form1
     Private Sub UpdateTimeInRange()
         With Me.TimeInRangeChart
             .Series("Default").Points.Clear()
-            .Series("Default").Points.AddXY($"{AboveHyperLimit}% Above {HighLimit} {_bgUnitsString}", AboveHyperLimit / 100)
+            .Series("Default").Points.AddXY($"{AboveHyperLimit}% Above {HighLimit} {Me.BgUnitsString}", AboveHyperLimit / 100)
             .Series("Default").Points.Last().Color = Color.Orange
             .Series("Default").Points.Last().BorderColor = Color.Black
             .Series("Default").Points.Last().BorderWidth = 2
-            .Series("Default").Points.AddXY($"{BelowHypoLimit}% Below {LowLimit} {_bgUnitsString}", BelowHypoLimit / 100)
+            .Series("Default").Points.AddXY($"{BelowHypoLimit}% Below {LowLimit} {Me.BgUnitsString}", BelowHypoLimit / 100)
             .Series("Default").Points.Last().Color = Color.Red
             .Series("Default").Points.Last().BorderColor = Color.Black
             .Series("Default").Points.Last().BorderWidth = 2
@@ -1717,11 +1725,7 @@ Public Class Form1
             .Series("Default")("PieStartAngle") = "270"
         End With
 
-        If _bgUnitsString = "mg/dl" Then
-            Me.AverageSGValueLabel.Text = AverageSG.ToString
-        Else
-            Me.AverageSGValueLabel.Text = AverageSG.RoundDouble(1).ToString()
-        End If
+        Me.AverageSGValueLabel.Text = If(Me.BgUnitsString = "mg/dl", AverageSG.ToString, AverageSG.RoundDouble(1).ToString())
         Me.AboveHighLimitValueLabel.Text = AboveHyperLimit.ToString()
         Me.BelowLowLimitValueLabel.Text = BelowHypoLimit.ToString()
         Me.TimeInRangeSummaryLabel.Left = Me.TimeInRangeSummaryPercentCharLabel.HorizontalCenterOn(Me.TimeInRangeSummaryLabel)
@@ -1753,5 +1757,15 @@ Public Class Form1
 
     Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
         AboutBox1.Show()
+    End Sub
+
+    Private Sub ShowMiniDisplayToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowMiniDisplayToolStripMenuItem.Click
+        Me.Hide()
+        BGMiniWindow.ShowDialog()
+        Me.Show()
+    End Sub
+
+    Private Sub WatchdogTimer_Tick(sender As Object, e As EventArgs) Handles WatchdogTimer.Tick
+        MsgBox("Watchdog Timed Out", MsgBoxStyle.Critical, "Critical Error")
     End Sub
 End Class
