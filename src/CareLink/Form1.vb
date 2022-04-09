@@ -101,6 +101,7 @@ Public Class Form1
         {"BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR", "Calibrate sensor"},
         {"CALIBRATING", "Calibrating ..."},
         {"CALIBRATION_REQUIRED", "Calibration required"},
+        {"NO_DATE_FROM_PUMP", "No data from pump"},
         {"NO_ERROR_MESSAGE", ""},
         {"SEARCHING_FOR_SENSOR_SIGNAL", "Searching for sensor signal"},
         {"SENSOR_DISCONNECTED", "Sensor disconnected"},
