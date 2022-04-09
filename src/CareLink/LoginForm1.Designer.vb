@@ -44,6 +44,7 @@ Partial Class LoginForm1
         '
         'LogoPictureBox
         '
+        Me.LogoPictureBox.BackColor = System.Drawing.Color.FromArgb(CType(CType(12,Byte),Integer), CType(CType(36,Byte),Integer), CType(CType(82,Byte),Integer))
         Me.LogoPictureBox.Image = CType(resources.GetObject("LogoPictureBox.Image"),System.Drawing.Image)
         Me.LogoPictureBox.Location = New System.Drawing.Point(0, 0)
         Me.LogoPictureBox.Name = "LogoPictureBox"

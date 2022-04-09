@@ -11,7 +11,7 @@
     <OptionStrict>On</OptionStrict>
     <OptionCompare>Text</OptionCompare>
     <OptionInfer>Off</OptionInfer>
-    <ApplicationIcon>img_e3917_4nK_icon.ico</ApplicationIcon>
+    <ApplicationIcon>ICON.ico</ApplicationIcon>
     <Authors>Paul Cohen</Authors>
     <Company>Travel By Paul</Company>
     <Product>CareLink Data Viewer</Product>
