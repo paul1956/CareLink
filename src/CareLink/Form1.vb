@@ -1766,7 +1766,9 @@ Public Class Form1
     End Sub
 
     Private Sub WatchdogTimer_Tick(sender As Object, e As EventArgs) Handles WatchdogTimer.Tick
+        Me.WatchdogTimer.Stop
         MsgBox("Watchdog Timed Out", MsgBoxStyle.Critical, "Critical Error")
+        Me.WatchdogTimer.start
     End Sub
 
     Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
