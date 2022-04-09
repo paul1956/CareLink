@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.ComponentModel
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Class Form1
@@ -1767,4 +1768,12 @@ Public Class Form1
         MsgBox("Watchdog Timed Out", MsgBoxStyle.Critical, "Critical Error")
     End Sub
 
+    Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        Me.NotifyIcon1.Visible = False
+        Me.NotifyIcon1.Icon.Dispose()
+        Me.NotifyIcon1.Icon = Nothing
+        Me.NotifyIcon1.Visible = False
+        Me.NotifyIcon1.Dispose()
+        Application.DoEvents()
+    End Sub
 End Class
