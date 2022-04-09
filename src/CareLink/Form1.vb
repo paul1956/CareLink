@@ -268,8 +268,11 @@ Public Class Form1
     End Sub
 
     Private Sub AITComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AITComboBox.SelectedIndexChanged
-        My.Settings.AIT = TimeSpan.Parse(Me.AITComboBox.SelectedItem.ToString())
+        Dim aitTimeSpan As TimeSpan = TimeSpan.Parse(Me.AITComboBox.SelectedItem.ToString())
+        My.Settings.AIT = aitTimeSpan
         My.Settings.Save()
+        _activeInsulinIncrements = CInt(TimeSpan.Parse(aitTimeSpan.ToString("hh\:mm").Substring(1)) / _FiveMinutes)
+        Me.UpdateActiveInsulinChart()
     End Sub
 
     Private Sub CalibrationDueImage_MouseHover(sender As Object, e As EventArgs) Handles CalibrationDueImage.MouseHover
@@ -440,7 +443,7 @@ Public Class Form1
             RecentData = Loads(IO.File.ReadAllText(IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
             Me.ViewToolStripMenuItem.Visible = False
         Else
-            Me.ViewToolStripMenuItem.Visible=True
+            Me.ViewToolStripMenuItem.Visible = True
             Me.DoLogin()
         End If
         Me.UpdateAllTabPages()
@@ -1764,4 +1767,4 @@ Public Class Form1
         MsgBox("Watchdog Timed Out", MsgBoxStyle.Critical, "Critical Error")
     End Sub
 
- End Class
+End Class
