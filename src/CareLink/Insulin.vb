@@ -40,4 +40,5 @@ Friend Class Insulin
     Public Overrides Function ToString() As String
         Return $"{Me.EventDate.ToShortTimeString()} {Me.CurrentInsulinLevel.RoundDouble(3)}"
     End Function
+
 End Class

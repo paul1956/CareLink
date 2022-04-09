@@ -64,4 +64,5 @@ Public Class SgRecord
         End Select
         Return cellStyle
     End Function
+
 End Class

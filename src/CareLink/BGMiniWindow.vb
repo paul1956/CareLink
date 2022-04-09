@@ -2,9 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Windows.Forms
-
 Public Class BGMiniWindow
+
     Private Sub BGMiniWindow_GotFocus(sender As Object, e As EventArgs) Handles Me.GotFocus
         Me.BGTextBox.SelectionStart = 0
         Me.BGTextBox.SelectionLength = 0
@@ -21,13 +20,13 @@ Public Class BGMiniWindow
         End If
         Select Case currentBG
             Case <= 70
-                Me.BGTextBox.ForeColor=Color.Orange
-                Beep
+                Me.BGTextBox.ForeColor = Color.Orange
+                Beep()
             Case <= 180
-                 Me.BGTextBox.ForeColor=Color.Green
-           Case Else
-                Me.BGTextBox.ForeColor=Color.Red
-                Beep
+                Me.BGTextBox.ForeColor = Color.Green
+            Case Else
+                Me.BGTextBox.ForeColor = Color.Red
+                Beep()
         End Select
     End Sub
 
