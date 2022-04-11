@@ -11,14 +11,15 @@ Public Class BGMiniWindow
     End Sub
 
     Private Sub BGTextBox_TextChanged(sender As Object, e As EventArgs) Handles BGTextBox.TextChanged
+        Me.Text = $"Glusose at {Now}"
         If Me.BGTextBox.Text.Length = 0 OrElse Me.BGTextBox.Text = "---" OrElse Me.BGTextBox.Text = "999" Then
             Exit Sub
         End If
-        Dim currentBG As Double = Double.Parse(Me.BGTextBox.Text)
+        Dim normalizedBG As Double = Double.Parse(Me.BGTextBox.Text)
         If Form1.BgUnitsString <> "mg/dl" Then
-            currentBG *= 18
+            normalizedBG *= 18
         End If
-        Select Case currentBG
+        Select Case normalizedBG
             Case <= 70
                 Me.BGTextBox.ForeColor = Color.Orange
                 Beep()

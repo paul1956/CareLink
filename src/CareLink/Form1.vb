@@ -311,7 +311,7 @@ Public Class Form1
         Me.SGsDataGridView.ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
             .Alignment = DataGridViewContentAlignment.MiddleCenter
             }
-        Me.DoLogin()
+        Me.DoLoginAndUpdateTimers()
         Me.UpdateAllTabPages()
     End Sub
 
@@ -439,27 +439,29 @@ Public Class Form1
     End Sub
 
     Private Sub LoginToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoginToolStripMenuItem.Click
-        Me.ServerUpdateTimer.Stop()
-
         If Me.UseTestDataToolStripMenuItem.Checked Then
             RecentData = Loads(IO.File.ReadAllText(IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
             Me.ViewToolStripMenuItem.Visible = False
         Else
             Me.ViewToolStripMenuItem.Visible = True
-            Me.DoLogin()
+            Me.DoLoginAndUpdateTimers()
         End If
         Me.UpdateAllTabPages()
     End Sub
 
-    Private Sub DoLogin()
+    Private Sub DoLoginAndUpdateTimers()
+        Me.ServerUpdateTimer.Stop()
+        Debug.Print($"Me.ServerUpdateTimer stopped at {Now}")
         _loginDialog.ShowDialog()
         _client = _loginDialog.Client
         If _client IsNot Nothing AndAlso _client.LoggedIn Then
             RecentData = _client.GetRecentData()
-            Me.WatchdogTimer.Interval = CType(New TimeSpan(0, 6, 0).TotalMilliseconds, Integer)
+            Me.WatchdogTimer.Interval = CType(New TimeSpan(0, minutes:=6, 0).TotalMilliseconds, Integer)
             Me.WatchdogTimer.Start()
-            Me.ServerUpdateTimer.Interval = CType(New TimeSpan(0, 1, 0).TotalMilliseconds, Integer)
+            Debug.Print($"Me.WatchdogTimer Started at {Now.ToLongDateString}")
+            Me.ServerUpdateTimer.Interval = CType(New TimeSpan(0, minutes:=1, 0).TotalMilliseconds, Integer)
             Me.ServerUpdateTimer.Start()
+            Debug.Print($"Me.ServerUpdateTimer Started at {Now.ToLongDateString}")
         End If
     End Sub
 
@@ -474,6 +476,7 @@ Public Class Form1
         Me.WatchdogTimer.Stop()
         Me.WatchdogTimer.Interval = CType(New TimeSpan(0, minutes:=6, 0).TotalMilliseconds, Integer)
         Me.WatchdogTimer.Start()
+        Debug.Print($"WatchdogTimer Started at {Now.ToLongDateString}")
         RecentData = _client.GetRecentData()
         If RecentData IsNot Nothing Then
             If LastRecentData Is Nothing OrElse Me.RecentDataNotEqualLastRecentData Then
@@ -482,6 +485,7 @@ Public Class Form1
         End If
         Application.DoEvents()
         Me.ServerUpdateTimer.Start()
+        Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
         Me.Cursor = Cursors.Default
     End Sub
 
@@ -1768,7 +1772,6 @@ Public Class Form1
     Private Sub WatchdogTimer_Tick(sender As Object, e As EventArgs) Handles WatchdogTimer.Tick
         Me.WatchdogTimer.Stop()
         MsgBox("Watchdog Timed Out", MsgBoxStyle.Critical, "Critical Error")
-        Me.WatchdogTimer.Start()
     End Sub
 
     Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
