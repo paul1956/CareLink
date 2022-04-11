@@ -2,7 +2,13 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.ComponentModel
+
 Public Class BGMiniWindow
+
+    Private Sub BGMiniWindow_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        Form1.Visible = True
+    End Sub
 
     Private Sub BGMiniWindow_GotFocus(sender As Object, e As EventArgs) Handles Me.GotFocus
         Me.BGTextBox.SelectionStart = 0
@@ -30,5 +36,6 @@ Public Class BGMiniWindow
                 Beep()
         End Select
     End Sub
+
 
 End Class

@@ -1766,8 +1766,7 @@ Public Class Form1
 
     Private Sub ShowMiniDisplayToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowMiniDisplayToolStripMenuItem.Click
         Me.Hide()
-        BGMiniWindow.ShowDialog()
-        Me.Show()
+        BGMiniWindow.Show()
     End Sub
 
     Private Sub WatchdogTimer_Tick(sender As Object, e As EventArgs) Handles WatchdogTimer.Tick
