@@ -64,7 +64,6 @@ Public Class Form1
 
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
-
     Private ReadOnly _listOfSingleItems As New List(Of Integer) From {
                     ItemIndexs.lastSG,
                     ItemIndexs.lastAlarm,
@@ -73,19 +72,25 @@ Public Class Form1
                     ItemIndexs.markers,
                     ItemIndexs.notificationHistory,
                     ItemIndexs.basal}
-
     Private ReadOnly _loginDialog As New LoginForm1
     Private ReadOnly _markerInsulinDictionary As New Dictionary(Of Double, Integer)
     Private ReadOnly _markerMealDictionary As New Dictionary(Of Double, Integer)
     Private ReadOnly _mealImage As Bitmap = My.Resources.MealImage
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
+
     Private _activeInsulinIncrements As Integer
     Private _client As CarelinkClient.CareLinkClient
     Private _filterJsonData As Boolean = True
     Private _imagePosition As RectangleF = RectangleF.Empty
     Private _initialized As Boolean = False
+    Private _limithigh As Single
+    Private _limitLow As Single
+    Private _recentData As Dictionary(Of String, String)
+    Private _recentDataSameCount As Integer
+    Private _recentDatalast As Dictionary(Of String, String)
     Private _timeFormat As String
     Private _updating As Boolean = False
+
     Public ReadOnly _FiveMinutes As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
 
 #Region "Chart Objects"
@@ -118,11 +123,6 @@ Public Class Form1
 
 #End Region
 
-    Public HighLimit As Single
-
-    Public LowLimit As Single
-    Public LastRecentData As Dictionary(Of String, String)
-    Public RecentData As Dictionary(Of String, String)
 
 #Region "Variables to hold Sensor Values"
 
@@ -415,7 +415,7 @@ Public Class Form1
         If _imagePosition = Rectangle.Empty Then
             _imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, SGs(0).datetime.ToOADate))
             _imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, 400))
-            _imagePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, HighLimit)))) - _imagePosition.Y
+            _imagePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, _limithigh)))) - _imagePosition.Y
             _imagePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, SGs.Last.datetime.ToOADate)) - _imagePosition.X
             _imagePosition = e.ChartGraphics.GetAbsoluteRectangle(_imagePosition)
         End If
@@ -440,7 +440,7 @@ Public Class Form1
 
     Private Sub LoginToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoginToolStripMenuItem.Click
         If Me.UseTestDataToolStripMenuItem.Checked Then
-            RecentData = Loads(IO.File.ReadAllText(IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
+            _recentData = Loads(IO.File.ReadAllText(IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
             Me.ViewToolStripMenuItem.Visible = False
         Else
             Me.ViewToolStripMenuItem.Visible = True
@@ -455,7 +455,7 @@ Public Class Form1
         _loginDialog.ShowDialog()
         _client = _loginDialog.Client
         If _client IsNot Nothing AndAlso _client.LoggedIn Then
-            RecentData = _client.GetRecentData()
+            _recentData = _client.GetRecentData()
             Me.WatchdogTimer.Interval = CType(New TimeSpan(0, minutes:=6, 0).TotalMilliseconds, Integer)
             Me.WatchdogTimer.Start()
             Debug.Print($"Me.WatchdogTimer Started at {Now.ToLongDateString}")
@@ -478,9 +478,9 @@ Public Class Form1
         Me.WatchdogTimer.Interval = CType(New TimeSpan(0, minutes:=6, 0).TotalMilliseconds, Integer)
         Me.WatchdogTimer.Start()
         Debug.Print($"WatchdogTimer Started at {Now.ToLongDateString}")
-        RecentData = _client.GetRecentData()
-        If RecentData IsNot Nothing Then
-            If LastRecentData Is Nothing OrElse Me.RecentDataNotEqualLastRecentData Then
+        _recentData = _client.GetRecentData()
+        If _recentData IsNot Nothing Then
+            If _recentDatalast Is Nothing OrElse Me.RecentDataUpdated Then
                 Me.UpdateAllTabPages()
             End If
         End If
@@ -1114,20 +1114,20 @@ Public Class Form1
                     BgUnits = row.Value
                     Me.BgUnitsString = _unitsStrings(BgUnits)
                     If Me.BgUnitsString = "mg/dl" Then
-                        HighLimit = 180
-                        LowLimit = 70
+                        _limithigh = 180
+                        _limitLow = 70
                         _timeFormat = TwelveHourTimeWithMinuteFormat
                         _homePageChartChartArea.AxisX.LabelStyle.Format = "hh tt"
                         _activeInsulinPageChartArea.AxisX.LabelStyle.Format = "hh tt"
                     Else
-                        HighLimit = 10.0
-                        LowLimit = (70 / 18).RoundSingle(1)
+                        _limithigh = 10.0
+                        _limitLow = (70 / 18).RoundSingle(1)
                         _timeFormat = MilitaryTimeWithMinuteFormat
                         _activeInsulinPageChartArea.AxisX.LabelStyle.Format = "HH"
                     End If
-                    Me.AboveHighLimitMessageLabel.Text = $"Above {HighLimit} {Me.BgUnitsString}"
+                    Me.AboveHighLimitMessageLabel.Text = $"Above {_limithigh} {Me.BgUnitsString}"
                     Me.AverageSGUnitsLabel.Text = Me.BgUnitsString
-                    Me.BelowLowLimitMessageLabel.Text = $"Below {LowLimit} {Me.BgUnitsString}"
+                    Me.BelowLowLimitMessageLabel.Text = $"Below {_limitLow} {Me.BgUnitsString}"
                 Case ItemIndexs.timeFormat
                     TimeFormat = row.Value
                 Case ItemIndexs.lastSensorTime
@@ -1318,13 +1318,19 @@ Public Class Form1
         Me.Cursor = Cursors.Default
     End Sub
 
-    Private Function RecentDataNotEqualLastRecentData() As Boolean
-        For i As Integer = 0 To RecentData.Keys.Count
-            If LastRecentData.Keys(i) <> "currentServerTime" AndAlso LastRecentData.Values(i) <> RecentData.Values(i) Then
-                Return True
-            End If
-        Next
-        Return False
+    Private Function RecentDataUpdated() As Boolean
+        If _recentDataSameCount < 5 Then
+            _recentDataSameCount += 1
+            For i As Integer = 0 To _recentData.Keys.Count
+                If _recentDatalast.Keys(i) <> "currentServerTime" AndAlso _recentDatalast.Values(i) <> _recentData.Values(i) Then
+                    _recentDataSameCount = 0
+                    Return True
+                End If
+            Next
+            Return False
+        End If
+        _recentDataSameCount = 0
+        Return True
     End Function
 
     Private Sub UpdateActiveInsulin()
@@ -1434,18 +1440,18 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateAllTabPages()
-        If RecentData Is Nothing OrElse _updating Then
+        If _recentData Is Nothing OrElse _updating Then
             Exit Sub
         End If
         _updating = True
-        Me.LoadDataTables(RecentData)
-        If RecentData.Count > ItemIndexs.averageSGFloat + 1 Then
+        Me.LoadDataTables(_recentData)
+        If _recentData.Count > ItemIndexs.averageSGFloat + 1 Then
             Stop
         End If
         _initialized = True
         Me.UpdateActiveInsulinChart()
         Me.UpdateHomeTabPage()
-        LastRecentData = RecentData
+        _recentDatalast = _recentData
         _updating = False
     End Sub
 
@@ -1575,9 +1581,9 @@ Public Class Form1
                     .Points.Last().IsEmpty = True
                 Else
                     .Points.AddXY(sgOaDateTime, bgValue)
-                    If bgValue > HighLimit Then
+                    If bgValue > _limithigh Then
                         .Points.Last.Color = Color.Lime
-                    ElseIf bgValue < LowLimit Then
+                    ElseIf bgValue < _limitLow Then
                         .Points.Last.Color = Color.Red
                     Else
                         .Points.Last.Color = Color.White
@@ -1714,11 +1720,11 @@ Public Class Form1
     Private Sub UpdateTimeInRange()
         With Me.TimeInRangeChart
             .Series("Default").Points.Clear()
-            .Series("Default").Points.AddXY($"{AboveHyperLimit}% Above {HighLimit} {Me.BgUnitsString}", AboveHyperLimit / 100)
+            .Series("Default").Points.AddXY($"{AboveHyperLimit}% Above {_limithigh} {Me.BgUnitsString}", AboveHyperLimit / 100)
             .Series("Default").Points.Last().Color = Color.Orange
             .Series("Default").Points.Last().BorderColor = Color.Black
             .Series("Default").Points.Last().BorderWidth = 2
-            .Series("Default").Points.AddXY($"{BelowHypoLimit}% Below {LowLimit} {Me.BgUnitsString}", BelowHypoLimit / 100)
+            .Series("Default").Points.AddXY($"{BelowHypoLimit}% Below {_limitLow} {Me.BgUnitsString}", BelowHypoLimit / 100)
             .Series("Default").Points.Last().Color = Color.Red
             .Series("Default").Points.Last().BorderColor = Color.Black
             .Series("Default").Points.Last().BorderWidth = 2
