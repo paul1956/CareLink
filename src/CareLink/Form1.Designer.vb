@@ -178,6 +178,7 @@ Partial Class Form1
         Me.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem"
         Me.ViewToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.ViewToolStripMenuItem.Text = "View"
+        Me.ViewToolStripMenuItem.Visible = false
         '
         'ShowMiniDisplayToolStripMenuItem
         '
@@ -1059,7 +1060,6 @@ Partial Class Form1
         '
         'WatchdogTimer
         '
-        Me.WatchdogTimer.Enabled = true
         Me.WatchdogTimer.Interval = 360000
         '
         'Form1

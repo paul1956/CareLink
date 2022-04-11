@@ -462,6 +462,7 @@ Public Class Form1
             Me.ServerUpdateTimer.Interval = CType(New TimeSpan(0, minutes:=1, 0).TotalMilliseconds, Integer)
             Me.ServerUpdateTimer.Start()
             Debug.Print($"Me.ServerUpdateTimer Started at {Now.ToLongDateString}")
+            Me.ViewToolStripMenuItem.Visible = True
         End If
     End Sub
 
