@@ -5,16 +5,15 @@
 Imports System.Net
 Imports System.Net.Http
 
-Public Module CarelinkClient
-    Private Const CarelinkAuthTokenCookieName As String = "auth_tmp_token"
-    Private Const CarelinkConnectServerEu As String = "carelink.minimed.eu"
-    Private Const CarelinkConnectServerUs As String = "carelink.minimed.com"
-    Private Const CarelinkLanguageEn As String = "en"
-    Private Const CarelinkLocaleEn As String = "en"
-    Private Const CarelinkTokenValidtoCookieName As String = "c_token_valid_to"
-
     Public Class CareLinkClient
         Inherits Object
+
+        Private Const CarelinkAuthTokenCookieName As String = "auth_tmp_token"
+        Private Const CarelinkConnectServerEu As String = "carelink.minimed.eu"
+        Private Const CarelinkConnectServerUs As String = "carelink.minimed.com"
+        Private Const CarelinkLanguageEn As String = "en"
+        Private Const CarelinkLocaleEn As String = "en"
+        Private Const CarelinkTokenValidtoCookieName As String = "c_token_valid_to"
 
         Private ReadOnly _carelinkCountry As String
         Private ReadOnly _carelinkPassword As String
@@ -101,8 +100,8 @@ Public Module CarelinkClient
             Return cookie?.Value
         End Function
 
-        Public Shared Sub Printdbg(msg As String)
-            Console.WriteLine(msg)
+        Public Shared Sub PrintDbg(msg As String)
+            Debug.Print(msg)
             Application.DoEvents()
         End Sub
 
@@ -147,18 +146,18 @@ Public Module CarelinkClient
             Try
                 Dim response As HttpResponseMessage = _httpClient.Post(url, headers:=consentHeaders, data:=form)
                 If response.StatusCode = HttpStatusCode.OK Then
-                    Printdbg("__doConsent() success")
+                    PrintDbg("__doConsent() success")
                     Return response
                 ElseIf response.StatusCode = HttpStatusCode.BadRequest Then
-                    Printdbg("Login Failure")
-                    Printdbg("__doConsent() failed")
+                    PrintDbg("Login Failure")
+                    PrintDbg("__doConsent() failed")
                     Return response
                 Else
                     Throw New Exception("session response is not OK")
                 End If
             Catch e As Exception
-                Printdbg(e.Message)
-                Printdbg("__doConsent() failed")
+                PrintDbg(e.Message)
+                PrintDbg("__doConsent() failed")
             End Try
 
             Return Nothing
@@ -202,11 +201,11 @@ Public Module CarelinkClient
                 If Not response.StatusCode = HttpStatusCode.OK Then
                     Throw New Exception("session response is not OK")
                 End If
-                Printdbg("__doLogin() success")
+                PrintDbg("__doLogin() success")
                 Return response
             Catch e As Exception
-                Printdbg(e.Message)
-                Printdbg("__doLogin() failed")
+                PrintDbg(e.Message)
+                PrintDbg("__doLogin() failed")
             End Try
             Return Nothing
         End Function
@@ -271,7 +270,7 @@ Public Module CarelinkClient
                     lastLoginSuccess = True
                 End If
             Catch e As Exception
-                Printdbg(e.Message)
+                PrintDbg(e.Message)
                 Me.LastErrorMessage = e.Message
             Finally
                 _loginInProcess = False
@@ -301,14 +300,14 @@ Public Module CarelinkClient
                 ' execute new login process | null, if error OR already doing login
                 'if loginInProcess or not executeLoginProcedure():
                 If _loginInProcess Then
-                    Printdbg("loginInProcess")
+                    PrintDbg("loginInProcess")
                     Return Nothing
                 End If
                 If Not Me.__executeLoginProcedure() Then
-                    Printdbg("__executeLoginProcedure failed")
+                    PrintDbg("__executeLoginProcedure failed")
                     Return Nothing
                 End If
-                Printdbg($"auth_token_validto = {Me.GetCookies(Me.__careLinkServer).Item(CarelinkTokenValidtoCookieName).Value}")
+                PrintDbg($"auth_token_validto = {Me.GetCookies(Me.__careLinkServer).Item(CarelinkTokenValidtoCookieName).Value}")
             End If
             ' there can be only one
             Return $"Bearer {Me.GetCookieValue(Me.__careLinkServer, CarelinkAuthTokenCookieName)}"
@@ -317,7 +316,7 @@ Public Module CarelinkClient
         ' Periodic data from CareLink Cloud
         Public Overridable Function __getConnectDisplayMessage(username As String, role As String, endpointUrl As String) As Dictionary(Of String, String)
 
-            Printdbg("__getConnectDisplayMessage()")
+            PrintDbg("__getConnectDisplayMessage()")
             ' Build user json for request
             Dim userJson As New Dictionary(Of String, String) From {
                 {
@@ -335,7 +334,7 @@ Public Module CarelinkClient
         End Function
 
         Public Overridable Function __getCountrySettings(country As String, language As String) As Dictionary(Of String, String)
-            Printdbg("__getCountrySettings()")
+            PrintDbg("__getCountrySettings()")
             Dim queryParams As New Dictionary(Of String, String) From {
                 {
                     "countryCode",
@@ -348,7 +347,7 @@ Public Module CarelinkClient
 
         Public Overridable Function __getData(host As String, path As String, queryParams As Dictionary(Of String, String), requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
             Dim url As String
-            Printdbg("__getData()")
+            PrintDbg("__getData()")
             _lastDataSuccess = False
             If host Is Nothing Then
                 url = path
@@ -386,14 +385,14 @@ Public Module CarelinkClient
                         Dim postRequest As New HttpRequestMessage(HttpMethod.Post, New Uri(url)) With {.Content = Http.Json.JsonContent.Create(requestBody)}
                         response = _httpClient.SendAsync(postRequest).Result ' Post(url, headers, data:=requestBody)
                         If Not response.StatusCode = HttpStatusCode.OK Then
-                            Throw New Exception("session get response is not OK")
+                            Throw New Exception($"session get response {response.StatusCode} is not OK")
                         End If
                     End If
                     jsondata = Loads(response.Text)
                     _lastDataSuccess = True
                 Catch e As Exception
-                    Printdbg(e.Message)
-                    Printdbg("__getData() failed")
+                    PrintDbg(e.Message)
+                    PrintDbg("__getData() failed")
                 End Try
             End If
             Return jsondata
@@ -418,26 +417,26 @@ Public Module CarelinkClient
                     Throw New Exception($"session response is not OK, {response.ReasonPhrase}")
                 End If
             Catch e As Exception
-                Printdbg(e.Message)
-                Printdbg("__getLoginSession() failed")
+                PrintDbg(e.Message)
+                PrintDbg("__getLoginSession() failed")
             End Try
 
-            Printdbg("__getLoginSession() success")
+            PrintDbg("__getLoginSession() success")
             Return response
         End Function
 
         Public Overridable Function __getMonitorData() As Dictionary(Of String, String)
-            Printdbg("__getMonitorData()")
+            PrintDbg("__getMonitorData()")
             Return Me.__getData(Me.__careLinkServer(), "patient/monitor/data", Nothing, Nothing)
         End Function
 
         Public Overridable Function __getMyProfile() As Dictionary(Of String, String)
-            Printdbg("__getMyProfile()")
+            PrintDbg("__getMyProfile()")
             Return Me.__getData(Me.__careLinkServer(), "patient/users/me/profile", Nothing, Nothing)
         End Function
 
         Public Overridable Function __getMyUser() As Dictionary(Of String, String)
-            Printdbg("__getMyUser()")
+            PrintDbg("__getMyUser()")
             Return Me.__getData(Me.__careLinkServer(), "patient/users/me", Nothing, Nothing)
         End Function
 
@@ -478,5 +477,3 @@ Public Module CarelinkClient
         End Function
 
     End Class
-
-End Module

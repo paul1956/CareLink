@@ -79,7 +79,7 @@ Public Class Form1
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
 
     Private _activeInsulinIncrements As Integer
-    Private _client As CarelinkClient.CareLinkClient
+    Private _client As CareLinkClient
     Private _filterJsonData As Boolean = True
     Private _imagePosition As RectangleF = RectangleF.Empty
     Private _initialized As Boolean = False
@@ -477,12 +477,15 @@ Public Class Form1
         Me.WatchdogTimer.Stop()
         Me.WatchdogTimer.Interval = CType(New TimeSpan(0, minutes:=6, 0).TotalMilliseconds, Integer)
         Me.WatchdogTimer.Start()
-        Debug.Print($"WatchdogTimer Started at {Now.ToLongDateString}")
+        CareLinkClient.Printdbg($"WatchdogTimer Started at {Now.ToLongDateString}")
         _recentData = _client.GetRecentData()
         If _recentData IsNot Nothing Then
             If _recentDatalast Is Nothing OrElse Me.RecentDataUpdated Then
                 Me.UpdateAllTabPages()
             End If
+        Else
+            Me.DoLoginAndUpdateTimers()
+            _recentData = _client.GetRecentData()
         End If
         Application.DoEvents()
         Me.ServerUpdateTimer.Start()

@@ -3,7 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Public Class LoginForm1
-    Public Property Client As CarelinkClient.CareLinkClient
+    Public Property Client As CareLinkClient
 
     Private Sub Cancel_Click(sender As Object, e As EventArgs) Handles Cancel.Click
         Me.Close()
@@ -18,7 +18,7 @@ Public Class LoginForm1
         Me.OK.Enabled = False
         Me.Cancel.Enabled = False
         If Me.Client Is Nothing Then
-            Me.Client = New CarelinkClient.CareLinkClient(Me.UsernameTextBox.Text, Me.PasswordTextBox.Text, "us")
+            Me.Client = New CareLinkClient(Me.UsernameTextBox.Text, Me.PasswordTextBox.Text, "us")
         End If
         If Not Me.Client.LoggedIn Then
             Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData()
