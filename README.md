@@ -1,7 +1,7 @@
 # CareLink
 ## Requires
-- Visual Studio 2019 Version 16.9
-- .NET Core 5.0
+- Visual Studio 2022
+- .NET Core 6.0
 
 ## License
 - MIT
@@ -14,7 +14,7 @@
 - Medtronic CareLink data display
 
 ## Updated
-- 1/12/2022
+- 4/12/2022
 
 ## Description
 
@@ -23,8 +23,9 @@ This is a Visual Basic application that provides a UI to view Medtronic 670G and
 This shows all available data and is not in any way supported by Medtronic, it was created from publicly available data.
 Some data was filtered out because I could not see any use for it. You can turn off filters but performance will suffer.
 
-For the visualization layer I use the open source package by Angelo Cresta.
-https://github.com/AngeloCresta/winforms-datavisualization-net5
+For the visualization layer I use the open source NuGet package.
+Maikebing.System.Windows.Forms.DataVisualization
+https://www.nuget.org/packages/Maikebing.System.Windows.Forms.DataVisualization/5.0.1?_src=template
 
 Try it out and send feedback.
 This update has a simple UI to show all the available data and a visual version that mimics the one on iPhone.

@@ -477,15 +477,18 @@ Public Class Form1
         Me.WatchdogTimer.Stop()
         Me.WatchdogTimer.Interval = CType(New TimeSpan(0, minutes:=6, 0).TotalMilliseconds, Integer)
         Me.WatchdogTimer.Start()
-        CareLinkClient.Printdbg($"WatchdogTimer Started at {Now.ToLongDateString}")
+        CareLinkClient.PrintDbg($"WatchdogTimer Started at {Now.ToLongDateString}")
         _recentData = _client.GetRecentData()
         If _recentData IsNot Nothing Then
             If _recentDatalast Is Nothing OrElse Me.RecentDataUpdated Then
                 Me.UpdateAllTabPages()
             End If
         Else
-            Me.DoLoginAndUpdateTimers()
+            _loginDialog.Client = New CareLinkClient(My.Settings.username, My.Settings.password, My.Settings.CountryCode)
             _recentData = _client.GetRecentData()
+            If _recentDatalast Is Nothing OrElse Me.RecentDataUpdated Then
+                Me.UpdateAllTabPages()
+            End If
         End If
         Application.DoEvents()
         Me.ServerUpdateTimer.Start()

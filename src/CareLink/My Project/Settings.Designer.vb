@@ -77,7 +77,19 @@ Namespace My
                 Me("password") = value
             End Set
         End Property
-        
+
+         <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property CountryCode() As String
+            Get
+                Return CType(Me("CountryCode"),String)
+            End Get
+            Set
+                Me("CountryCode") = value
+            End Set
+        End Property
+      
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("03:00:00")>  _

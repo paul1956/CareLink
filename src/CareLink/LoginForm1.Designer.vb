@@ -39,6 +39,7 @@ Partial Class LoginForm1
         Me.OK = New System.Windows.Forms.Button()
         Me.Cancel = New System.Windows.Forms.Button()
         Me.SaveCredentials = New System.Windows.Forms.CheckBox()
+        Me.CountryComboBox = New System.Windows.Forms.ComboBox()
         CType(Me.LogoPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
         Me.SuspendLayout
         '
@@ -48,7 +49,7 @@ Partial Class LoginForm1
         Me.LogoPictureBox.Image = CType(resources.GetObject("LogoPictureBox.Image"),System.Drawing.Image)
         Me.LogoPictureBox.Location = New System.Drawing.Point(0, 0)
         Me.LogoPictureBox.Name = "LogoPictureBox"
-        Me.LogoPictureBox.Size = New System.Drawing.Size(165, 193)
+        Me.LogoPictureBox.Size = New System.Drawing.Size(165, 217)
         Me.LogoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.LogoPictureBox.TabIndex = 0
         Me.LogoPictureBox.TabStop = false
@@ -88,7 +89,7 @@ Partial Class LoginForm1
         '
         'OK
         '
-        Me.OK.Location = New System.Drawing.Point(197, 161)
+        Me.OK.Location = New System.Drawing.Point(197, 194)
         Me.OK.Name = "OK"
         Me.OK.Size = New System.Drawing.Size(94, 23)
         Me.OK.TabIndex = 4
@@ -97,7 +98,7 @@ Partial Class LoginForm1
         'Cancel
         '
         Me.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.Cancel.Location = New System.Drawing.Point(300, 161)
+        Me.Cancel.Location = New System.Drawing.Point(300, 194)
         Me.Cancel.Name = "Cancel"
         Me.Cancel.Size = New System.Drawing.Size(94, 23)
         Me.Cancel.TabIndex = 5
@@ -106,12 +107,20 @@ Partial Class LoginForm1
         'SaveCredentials
         '
         Me.SaveCredentials.AutoSize = true
-        Me.SaveCredentials.Location = New System.Drawing.Point(174, 126)
+        Me.SaveCredentials.Location = New System.Drawing.Point(174, 159)
         Me.SaveCredentials.Name = "SaveCredentials"
         Me.SaveCredentials.Size = New System.Drawing.Size(187, 19)
         Me.SaveCredentials.TabIndex = 6
         Me.SaveCredentials.Text = "Save User Name and Password"
         Me.SaveCredentials.UseVisualStyleBackColor = true
+        '
+        'CountryComboBox
+        '
+        Me.CountryComboBox.FormattingEnabled = true
+        Me.CountryComboBox.Location = New System.Drawing.Point(172, 116)
+        Me.CountryComboBox.Name = "CountryComboBox"
+        Me.CountryComboBox.Size = New System.Drawing.Size(220, 23)
+        Me.CountryComboBox.TabIndex = 7
         '
         'LoginForm1
         '
@@ -119,7 +128,8 @@ Partial Class LoginForm1
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7!, 15!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel
-        Me.ClientSize = New System.Drawing.Size(401, 192)
+        Me.ClientSize = New System.Drawing.Size(404, 230)
+        Me.Controls.Add(Me.CountryComboBox)
         Me.Controls.Add(Me.SaveCredentials)
         Me.Controls.Add(Me.Cancel)
         Me.Controls.Add(Me.OK)
@@ -142,4 +152,5 @@ Partial Class LoginForm1
 End Sub
 
     Friend WithEvents SaveCredentials As CheckBox
+    Friend WithEvents CountryComboBox As ComboBox
 End Class
