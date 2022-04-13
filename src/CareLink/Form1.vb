@@ -1043,14 +1043,14 @@ Public Class Form1
             Exit Sub
         End If
         Me.Cursor = Cursors.WaitCursor
-        Me.TableLayoutPanelSummyData.Controls.Clear()
-        Me.TableLayoutPanelSummyData.RowCount = localRecentData.Count - 8
+        Me.TableLayoutPanelSummaryData.Controls.Clear()
+        Me.TableLayoutPanelSummaryData.RowCount = localRecentData.Count - 9
         Dim currentRowIndex As Integer = 0
         Dim singleItem As Boolean
         Dim layoutPanel1 As TableLayoutPanel
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In localRecentData.WithIndex()
             Dim singleItemIndex As Integer = 0
-            layoutPanel1 = Me.TableLayoutPanelSummyData
+            layoutPanel1 = Me.TableLayoutPanelSummaryData
             singleItem = False
             Dim row As KeyValuePair(Of String, String) = c.Value
             Dim rowIndex As Integer = CInt([Enum].Parse(GetType(ItemIndexs), c.Value.Key))
