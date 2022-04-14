@@ -481,7 +481,7 @@ Public Class Form1
         _recentData = _client.GetRecentData()
         If Me.RecentDataUpdated Then
             Me.UpdateAllTabPages()
-        Else
+        Elseif _recentData Is Nothing Then
             _loginDialog.Client = New CareLinkClient(My.Settings.username, My.Settings.password, My.Settings.CountryCode)
             _recentData = _client.GetRecentData()
             If Me.RecentDataUpdated Then
