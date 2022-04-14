@@ -101,11 +101,6 @@ Public Class CareLinkClient
         Return cookie?.Value
     End Function
 
-    Public Shared Sub PrintDbg(msg As String)
-        Debug.Print(msg)
-        Application.DoEvents()
-    End Sub
-
     ' Get server URL
     Public Overridable Function __careLinkServer() As String
         Select Case _carelinkCountry.ToUpperInvariant
@@ -154,17 +149,17 @@ Public Class CareLinkClient
         Try
             Dim response As HttpResponseMessage = _httpClient.Post(url, headers:=consentHeaders, data:=form)
             If response.StatusCode = HttpStatusCode.OK Then
-                PrintDbg("__doConsent() success")
+                Debug.Print("__doConsent() success")
                 Return response
             ElseIf response.StatusCode = HttpStatusCode.BadRequest Then
-                PrintDbg("Login Failure __doConsent() failed with HttpStatusCode.BadRequest")
+                Debug.Print("Login Failure __doConsent() failed with HttpStatusCode.BadRequest")
                 Return response
             Else
-                PrintDbg($"session response is {response.StatusCode}")
+                Debug.Print($"session response is {response.StatusCode}")
                 Throw New Exception("session response is not OK")
             End If
         Catch e As Exception
-            PrintDbg($"__doConsent() failed with {e.Message}")
+            Debug.Print($"__doConsent() failed with {e.Message}")
         End Try
 
         Return Nothing
@@ -208,10 +203,10 @@ Public Class CareLinkClient
             If Not response.StatusCode = HttpStatusCode.OK Then
                 Throw New Exception("session response is not OK")
             End If
-            PrintDbg("__doLogin() success")
+            Debug.Print("__doLogin() success")
             Return response
         Catch e As Exception
-            PrintDbg($"__doLogin() failed with {e.Message}")
+            Debug.Print($"__doLogin() failed with {e.Message}")
         End Try
         Return Nothing
     End Function
@@ -276,7 +271,7 @@ Public Class CareLinkClient
                 lastLoginSuccess = True
             End If
         Catch e As Exception
-            PrintDbg($"__executeLoginProcedure failed with {e.Message}")
+            Debug.Print($"__executeLoginProcedure failed with {e.Message}")
             Me.LastErrorMessage = e.Message
         Finally
             _loginInProcess = False
@@ -306,14 +301,14 @@ Public Class CareLinkClient
             ' execute new login process | null, if error OR already doing login
             'if loginInProcess or not executeLoginProcedure():
             If _loginInProcess Then
-                PrintDbg("loginInProcess")
+                Debug.Print("loginInProcess")
                 Return Nothing
             End If
             If Not Me.__executeLoginProcedure() Then
-                PrintDbg("__executeLoginProcedure failed")
+                Debug.Print("__executeLoginProcedure failed")
                 Return Nothing
             End If
-            PrintDbg($"auth_token_validto = {Me.GetCookies(Me.__careLinkServer).Item(CarelinkTokenValidtoCookieName).Value}")
+            Debug.Print($"auth_token_validto = {Me.GetCookies(Me.__careLinkServer).Item(CarelinkTokenValidtoCookieName).Value}")
         End If
         ' there can be only one
         Return $"Bearer {Me.GetCookieValue(Me.__careLinkServer, CarelinkAuthTokenCookieName)}"
@@ -322,7 +317,7 @@ Public Class CareLinkClient
     ' Periodic data from CareLink Cloud
     Public Overridable Function __getConnectDisplayMessage(username As String, role As String, endpointUrl As String) As Dictionary(Of String, String)
 
-        PrintDbg("__getConnectDisplayMessage()")
+        Debug.Print("__getConnectDisplayMessage()")
         ' Build user json for request
         Dim userJson As New Dictionary(Of String, String) From {
             {
@@ -340,7 +335,7 @@ Public Class CareLinkClient
     End Function
 
     Public Overridable Function __getCountrySettings(country As String, language As String) As Dictionary(Of String, String)
-        PrintDbg("__getCountrySettings()")
+        Debug.Print("__getCountrySettings()")
         Dim queryParams As New Dictionary(Of String, String) From {
             {
                 "countryCode",
@@ -353,7 +348,7 @@ Public Class CareLinkClient
 
     Public Overridable Function __getData(host As String, path As String, queryParams As Dictionary(Of String, String), requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
         Dim url As String
-        PrintDbg("__getData()")
+        Debug.Print("__getData()")
         _lastDataSuccess = False
         If host Is Nothing Then
             url = path
@@ -397,7 +392,7 @@ Public Class CareLinkClient
                 jsondata = Loads(response.Text)
                 _lastDataSuccess = True
             Catch e As Exception
-                PrintDbg($"__getData() failed {e.Message}")
+                Debug.Print($"__getData() failed {e.Message}")
             End Try
         End If
         Return jsondata
@@ -422,25 +417,25 @@ Public Class CareLinkClient
                 Throw New Exception($"session response is not OK, {response.ReasonPhrase}")
             End If
         Catch e As Exception
-            PrintDbg($"__getLoginSession() failed {e.Message}")
+            Debug.Print($"__getLoginSession() failed {e.Message}")
         End Try
 
-        PrintDbg("__getLoginSession() success")
+        Debug.Print("__getLoginSession() success")
         Return response
     End Function
 
     Public Overridable Function __getMonitorData() As Dictionary(Of String, String)
-        PrintDbg("__getMonitorData()")
+        Debug.Print("__getMonitorData()")
         Return Me.__getData(Me.__careLinkServer(), "patient/monitor/data", Nothing, Nothing)
     End Function
 
     Public Overridable Function __getMyProfile() As Dictionary(Of String, String)
-        PrintDbg("__getMyProfile()")
+        Debug.Print("__getMyProfile()")
         Return Me.__getData(Me.__careLinkServer(), "patient/users/me/profile", Nothing, Nothing)
     End Function
 
     Public Overridable Function __getMyUser() As Dictionary(Of String, String)
-        PrintDbg("__getMyUser()")
+        Debug.Print("__getMyUser()")
         Return Me.__getData(Me.__careLinkServer(), "patient/users/me", Nothing, Nothing)
     End Function
 

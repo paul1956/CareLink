@@ -458,10 +458,10 @@ Public Class Form1
             _recentData = _client.GetRecentData()
             Me.WatchdogTimer.Interval = CType(New TimeSpan(0, minutes:=6, 0).TotalMilliseconds, Integer)
             Me.WatchdogTimer.Start()
-            Debug.Print($"Me.WatchdogTimer Started at {Now.ToLongDateString}")
+            Debug.Print($"Me.WatchdogTimer Started at {Now}")
             Me.ServerUpdateTimer.Interval = CType(New TimeSpan(0, minutes:=1, 0).TotalMilliseconds, Integer)
             Me.ServerUpdateTimer.Start()
-            Debug.Print($"Me.ServerUpdateTimer Started at {Now.ToLongDateString}")
+            Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
             Me.ViewToolStripMenuItem.Visible = True
         End If
     End Sub
@@ -477,7 +477,7 @@ Public Class Form1
         Me.WatchdogTimer.Stop()
         Me.WatchdogTimer.Interval = CType(New TimeSpan(0, minutes:=6, 0).TotalMilliseconds, Integer)
         Me.WatchdogTimer.Start()
-        CareLinkClient.PrintDbg($"WatchdogTimer Started at {Now.ToLongDateString}")
+        Debug.Print($"WatchdogTimer Started at {Now}")
         _recentData = _client.GetRecentData()
         If Me.RecentDataUpdated Then
             Me.UpdateAllTabPages()

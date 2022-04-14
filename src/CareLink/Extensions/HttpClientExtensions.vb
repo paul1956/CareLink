@@ -63,7 +63,8 @@ Module HttpClientExtensions
 
     <Extension>
     Public Function Text(client As HttpResponseMessage) As String
-        Return client.Content.ReadAsStringAsync().Result
+        Dim result As String = client.Content.ReadAsStringAsync().Result
+        Return result
     End Function
 
 End Module
