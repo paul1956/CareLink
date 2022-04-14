@@ -157,15 +157,14 @@ Public Class CareLinkClient
                 PrintDbg("__doConsent() success")
                 Return response
             ElseIf response.StatusCode = HttpStatusCode.BadRequest Then
-                PrintDbg("Login Failure")
-                PrintDbg("__doConsent() failed")
+                PrintDbg("Login Failure __doConsent() failed with HttpStatusCode.BadRequest")
                 Return response
             Else
+                PrintDbg($"session response is {response.StatusCode}")
                 Throw New Exception("session response is not OK")
             End If
         Catch e As Exception
-            PrintDbg(e.Message)
-            PrintDbg("__doConsent() failed")
+            PrintDbg($"__doConsent() failed with {e.Message}")
         End Try
 
         Return Nothing
@@ -212,8 +211,7 @@ Public Class CareLinkClient
             PrintDbg("__doLogin() success")
             Return response
         Catch e As Exception
-            PrintDbg(e.Message)
-            PrintDbg("__doLogin() failed")
+            PrintDbg($"__doLogin() failed with {e.Message}")
         End Try
         Return Nothing
     End Function
@@ -278,7 +276,7 @@ Public Class CareLinkClient
                 lastLoginSuccess = True
             End If
         Catch e As Exception
-            PrintDbg(e.Message)
+            PrintDbg($"__executeLoginProcedure failed with {e.Message}")
             Me.LastErrorMessage = e.Message
         Finally
             _loginInProcess = False
@@ -399,8 +397,7 @@ Public Class CareLinkClient
                 jsondata = Loads(response.Text)
                 _lastDataSuccess = True
             Catch e As Exception
-                PrintDbg(e.Message)
-                PrintDbg("__getData() failed")
+                PrintDbg($"__getData() failed {e.Message}")
             End Try
         End If
         Return jsondata
@@ -425,8 +422,7 @@ Public Class CareLinkClient
                 Throw New Exception($"session response is not OK, {response.ReasonPhrase}")
             End If
         Catch e As Exception
-            PrintDbg(e.Message)
-            PrintDbg("__getLoginSession() failed")
+            PrintDbg($"__getLoginSession() failed {e.Message}")
         End Try
 
         PrintDbg("__getLoginSession() success")

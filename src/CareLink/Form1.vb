@@ -479,14 +479,12 @@ Public Class Form1
         Me.WatchdogTimer.Start()
         CareLinkClient.PrintDbg($"WatchdogTimer Started at {Now.ToLongDateString}")
         _recentData = _client.GetRecentData()
-        If _recentData IsNot Nothing Then
-            If _recentDatalast Is Nothing OrElse Me.RecentDataUpdated Then
-                Me.UpdateAllTabPages()
-            End If
+        If Me.RecentDataUpdated Then
+            Me.UpdateAllTabPages()
         Else
             _loginDialog.Client = New CareLinkClient(My.Settings.username, My.Settings.password, My.Settings.CountryCode)
             _recentData = _client.GetRecentData()
-            If _recentDatalast Is Nothing OrElse Me.RecentDataUpdated Then
+            If Me.RecentDataUpdated Then
                 Me.UpdateAllTabPages()
             End If
         End If
@@ -1325,6 +1323,9 @@ Public Class Form1
     End Sub
 
     Private Function RecentDataUpdated() As Boolean
+        If _recentDatalast Is Nothing OrElse _recentData Is Nothing Then
+            Return False
+        End If
         If _recentDataSameCount < 5 Then
             _recentDataSameCount += 1
             For i As Integer = 0 To _recentData.Keys.Count
