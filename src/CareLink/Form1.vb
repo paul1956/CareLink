@@ -481,7 +481,7 @@ Public Class Form1
         _recentData = _client.GetRecentData()
         If Me.RecentDataUpdated Then
             Me.UpdateAllTabPages()
-        Elseif _recentData Is Nothing Then
+        ElseIf _recentData Is Nothing Then
             _loginDialog.Client = New CareLinkClient(My.Settings.username, My.Settings.password, My.Settings.CountryCode)
             _recentData = _client.GetRecentData()
             If Me.RecentDataUpdated Then
@@ -489,6 +489,7 @@ Public Class Form1
             End If
         End If
         Application.DoEvents()
+        Me.ServerUpdateTimer.Interval = CType(New TimeSpan(0, minutes:=1, 0).TotalMilliseconds, Integer)
         Me.ServerUpdateTimer.Start()
         Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
         Me.Cursor = Cursors.Default
