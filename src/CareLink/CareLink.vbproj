@@ -11,7 +11,7 @@
     <OptionStrict>On</OptionStrict>
     <OptionCompare>Text</OptionCompare>
     <OptionInfer>Off</OptionInfer>
-    <ApplicationIcon>ICON.ico</ApplicationIcon>
+    <ApplicationIcon>Images\IconImage.ico</ApplicationIcon>
     <Authors>Paul Cohen</Authors>
     <Company>Travel By Paul</Company>
     <Product>CareLink Data Viewer</Product>
@@ -22,7 +22,7 @@
     <Version>2.0.2</Version>
     <AssemblyVersion>2.0.0.2</AssemblyVersion>
     <FileVersion>2.0.0.2</FileVersion>
-    <PackageIcon>LoginImage.jpg</PackageIcon>
+    <PackageIcon>IconImage.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/paul1956/CareLink</PackageProjectUrl>
     <PackageTags>CareLink Medtronic Insulin Pump</PackageTags>
@@ -91,7 +91,7 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-    <None Include="Images\LoginImage.jpg">
+    <None Include="Images\IconImage.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
