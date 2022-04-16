@@ -1353,7 +1353,7 @@ Public Class Form1
         _initialized = False
 
         With Me.ActiveInsulinPageChart
-            .Titles("Title1").Text = $"Summary"
+            .Titles("Title1").Text = $"Running Active Insulin"
             .ChartAreas("Default").AxisX.Minimum = SGs(0).datetime.ToOADate()
             .ChartAreas("Default").AxisX.Maximum = SGs.Last.datetime.ToOADate()
             .Series("Default").Points.Clear()
