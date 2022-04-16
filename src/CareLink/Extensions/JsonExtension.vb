@@ -7,23 +7,23 @@ Imports System.Text.Json
 Imports System.Text.Json.Serialization
 
 Public Module Json
-
-    Private Function GetItemAsString(item As KeyValuePair(Of String, Object)) As String
+    <Extension>
+    Private Function ItemAsString(item As KeyValuePair(Of String, Object)) As String
         Dim itemValue As JsonElement = CType(item.Value, JsonElement)
-        Dim itemAsString As String = itemValue.ToString
-        Dim result As String = itemAsString
+        Dim valueAsString As String = itemValue.ToString
         Select Case itemValue.ValueKind
             Case JsonValueKind.False
-                result = "False"
+                Return "False"
             Case JsonValueKind.Null
-                result = ""
+                Return ""
             Case JsonValueKind.Number
+                Return valueAsString
             Case JsonValueKind.True
-                result = "True"
+                Return "True"
             Case JsonValueKind.String
                 Try
-                    If Char.IsDigit(result(0)) Then
-                        Dim dateSplit As String() = itemAsString.Split("T")
+                    If Char.IsDigit(valueAsString(0)) Then
+                        Dim dateSplit As String() = valueAsString.Split("T")
                         If dateSplit.Length = 2 Then
                             Dim zDateString As String() = dateSplit(0).Split("-"c)
                             Dim zTimeString As String() = dateSplit(1).TrimEnd("Z"c).Replace("+", ".").Split(":")
@@ -32,35 +32,34 @@ Public Module Json
                                 Case "lastConduitDateTime",
                                      "medicalDeviceTimeAsString",
                                      "previousDateTime" ' "2021-05-17T01:02:22.307-07:00"
-                                    result = $"{ New DateTime(CInt(zDateString(0)),
+                                    Return $"{ New DateTime(CInt(zDateString(0)),
                                                              CInt(zDateString(1)),
                                                              CInt(zDateString(2)),
                                                              CInt(zTimeString(0)),
                                                              CInt(zTimeString(1)),
                                                              CInt(zTimeString(2).Substring(0, 2)),
                                                              CInt(zTimeString(2).Substring(3, 3)), DateTimeKind.Local)}{ _
-                                            itemAsString.Substring(itemAsString.Length - 6)}"
+                                                    valueAsString.Substring(valueAsString.Length - 6)}"
                                 Case "lastSensorTSAsString",
                                     "sLastSensorTime",
                                     "sMedicalDeviceTime",
                                     "triggeredDateTime" '2021-05-16T20:28:00.000Z
-                                    result = New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
+                                    Return New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
                                 Case "loginDateUTC" ' UTC 2021-05-16T20:28:00.000Z
-                                    result = New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Utc).ToString()
+                                    Return New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Utc).ToString()
                                 Case "datetime"
                                     If item.Value.ToString().EndsWith("Z"c) Then
-                                        result = New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
-                                    Else
-                                        ' "2021-05-17T01:02:22.307-07:00"
-                                        result = $"{ New DateTime(CInt(zDateString(0)),
-                                                                 CInt(zDateString(1)),
-                                                                 CInt(zDateString(2)),
-                                                                 CInt(zTimeString(0)),
-                                                                 CInt(zTimeString(1)),
-                                                                 CInt(zTimeString(2).Substring(0, 2)),
-                                                                 CInt(zTimeString(2).Substring(3, 3)), DateTimeKind.Local)}{ _
-                                            itemAsString.Substring(itemAsString.Length - 6)}"
+                                        Return New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
                                     End If
+                                    ' "2021-05-17T01:02:22.307-07:00"
+                                    Return $"{ New DateTime(CInt(zDateString(0)),
+                                                             CInt(zDateString(1)),
+                                                             CInt(zDateString(2)),
+                                                             CInt(zTimeString(0)),
+                                                             CInt(zTimeString(1)),
+                                                             CInt(zTimeString(2).Substring(0, 2)),
+                                                             CInt(zTimeString(2).Substring(3, 3)), DateTimeKind.Local)}{ _
+                                                    valueAsString.Substring(valueAsString.Length - 6)}"
 
                                 Case Else
                                     Stop
@@ -72,7 +71,7 @@ Public Module Json
                     Stop
                 End Try
         End Select
-        Return result
+        Return valueAsString
     End Function
 
     Public Function LoadList(value As String) As List(Of Dictionary(Of String, String))
@@ -88,7 +87,7 @@ Public Module Json
                 If item.Value Is Nothing Then
                     resultDictionary.Add(item.Key, Nothing)
                 Else
-                    resultDictionary.Add(item.Key, GetItemAsString(item))
+                    resultDictionary.Add(item.Key, item.ItemAsString)
                 End If
             Next
             resultDictionaryArray.Add(resultDictionary)
@@ -106,7 +105,7 @@ Public Module Json
             If item.Value Is Nothing Then
                 resultDictionary.Add(item.Key, Nothing)
             Else
-                resultDictionary.Add(item.Key, GetItemAsString(item))
+                resultDictionary.Add(item.Key, item.ItemAsString)
             End If
         Next
         Return resultDictionary
