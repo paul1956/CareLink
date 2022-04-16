@@ -3,8 +3,11 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.ComponentModel
+Imports System.Media
 
 Public Class BGMiniWindow
+    Private _alarmPlayedHigh As Boolean
+    Private _alarmPlayedLow As Boolean
 
     Private Sub BGMiniWindow_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
         Form1.Visible = True
@@ -28,14 +31,29 @@ Public Class BGMiniWindow
         Select Case normalizedBG
             Case <= 70
                 Me.BGTextBox.ForeColor = Color.Orange
-                Beep()
+                If Not _alarmPlayedLow Then
+                    Me.playSoundFromResource("Low Alarm")
+                    _alarmPlayedLow = True
+                    _alarmPlayedHigh = False
+                End If
             Case <= 180
                 Me.BGTextBox.ForeColor = Color.Green
+                _alarmPlayedLow = False
+                _alarmPlayedHigh = False
             Case Else
                 Me.BGTextBox.ForeColor = Color.Red
-                Beep()
+                If Not _alarmPlayedHigh Then
+                    Me.playSoundFromResource("High Alarm")
+                    _alarmPlayedLow = False
+                    _alarmPlayedHigh = True
+                End If
         End Select
     End Sub
 
+    Private Sub playSoundFromResource(SoundName As String)
+        Using player As New SoundPlayer(My.Resources.ResourceManager.GetStream(SoundName, Globalization.CultureInfo.CurrentUICulture))
+            player.Play()
+        End Using
+    End Sub
 
 End Class
