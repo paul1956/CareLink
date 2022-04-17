@@ -8,6 +8,23 @@ Imports System.Media
 Public Class BGMiniWindow
     Private _alarmPlayedHigh As Boolean
     Private _alarmPlayedLow As Boolean
+    Private _currentBGValue As Double = Double.NaN
+    Private _lastBGValue As Double
+    Private _normalizedBG As Double
+
+    Public WriteOnly Property CurrentBGString As String
+        Set
+            _lastBGValue = _currentBGValue
+            _currentBGValue = Double.NaN
+            If Double.TryParse(Value, _currentBGValue) Then
+                _normalizedBG = _currentBGValue
+                If Form1.BgUnitsString <> "mg/dl" Then
+                    _normalizedBG *= 18
+                End If
+            End If
+            Me.BGTextBox.Text = Value
+        End Set
+    End Property
 
     Private Sub ActiveInsulinTextBox_GotFocus(sender As Object, e As EventArgs) Handles ActiveInsulinTextBox.GotFocus
         Me.HiddenTextBox.Focus()
@@ -28,32 +45,45 @@ Public Class BGMiniWindow
     Private Sub BGTextBox_TextChanged(sender As Object, e As EventArgs) Handles BGTextBox.TextChanged
         Me.Text = $"Glusose at {Now}"
         If Me.BGTextBox.Text.Length = 0 OrElse Me.BGTextBox.Text = "---" OrElse Me.BGTextBox.Text = "999" Then
-            Exit Sub
-        End If
-        Dim normalizedBG As Double = Double.Parse(Me.BGTextBox.Text)
-        If Form1.BgUnitsString <> "mg/dl" Then
-            normalizedBG *= 18
-        End If
-        Select Case normalizedBG
-            Case <= 70
-                Me.BGTextBox.ForeColor = Color.Orange
-                If Not _alarmPlayedLow Then
-                    Me.playSoundFromResource("Low Alarm")
-                    _alarmPlayedLow = True
-                    _alarmPlayedHigh = False
-                End If
-            Case <= 180
-                Me.BGTextBox.ForeColor = Color.Green
-                _alarmPlayedLow = False
-                _alarmPlayedHigh = False
-            Case Else
-                Me.BGTextBox.ForeColor = Color.Red
-                If Not _alarmPlayedHigh Then
-                    Me.playSoundFromResource("High Alarm")
+            _currentBGValue = Double.NaN
+            Me.DeltaTextBox.Text = ""
+        Else
+            If Double.IsNaN(_currentBGValue) OrElse Double.IsNaN(_lastBGValue) Then
+                Me.DeltaTextBox.Text = ""
+            Else
+                Dim delta As Double = _currentBGValue - _lastBGValue
+                Me.DeltaTextBox.Text = delta.ToString("+0;-#")
+                Select Case delta
+                    Case Is = 0
+                        Me.DeltaTextBox.Text = ""
+                    Case Is > 0
+                        Me.DeltaTextBox.ForeColor = Color.Blue
+                    Case Is < 0
+                        Me.DeltaTextBox.ForeColor = Color.Orange
+                End Select
+            End If
+            Select Case _normalizedBG
+                Case <= 70
+                    Me.BGTextBox.ForeColor = Color.Orange
+                    If Not _alarmPlayedLow Then
+                        Me.playSoundFromResource("Low Alarm")
+                        _alarmPlayedLow = True
+                        _alarmPlayedHigh = False
+                    End If
+                Case <= 180
+                    Me.BGTextBox.ForeColor = Color.Green
                     _alarmPlayedLow = False
-                    _alarmPlayedHigh = True
-                End If
-        End Select
+                    _alarmPlayedHigh = False
+                Case Else
+                    Me.BGTextBox.ForeColor = Color.Red
+                    If Not _alarmPlayedHigh Then
+                        Me.playSoundFromResource("High Alarm")
+                        _alarmPlayedLow = False
+                        _alarmPlayedHigh = True
+                    End If
+            End Select
+        End If
+
     End Sub
 
     Private Sub playSoundFromResource(SoundName As String)

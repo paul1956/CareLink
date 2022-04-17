@@ -1473,7 +1473,7 @@ Public Class Form1
             Me.CurrentBG.Parent = Me.ShieldPictureBox
             Me.CurrentBG.Text = LastSG("sg")
             Me.NotifyIcon1.Text = $"{LastSG("sg")} {Me.BgUnitsString}"
-            BGMiniWindow.BGTextBox.Text = LastSG("sg")
+            My.Forms.BGMiniWindow.CurrentBGString = LastSG("sg")
             Me.CurrentBG.Visible = True
             Me.SensorMessage.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield
@@ -1484,7 +1484,7 @@ Public Class Form1
             Me.ShieldUnitsLabel.Text = Me.BgUnitsString
             Me.ShieldUnitsLabel.Visible = True
         Else
-            BGMiniWindow.BGTextBox.Text = "---"
+            My.Forms.BGMiniWindow.CurrentBGString = "---"
             Me.CurrentBG.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield_Disabled
             Me.SensorMessage.Visible = True

@@ -29,17 +29,17 @@ Partial Class BGMiniWindow
         Me.BGTextBox = New System.Windows.Forms.TextBox()
         Me.ActiveInsulinTextBox = New System.Windows.Forms.TextBox()
         Me.HiddenTextBox = New System.Windows.Forms.TextBox()
+        Me.DeltaTextBox = New System.Windows.Forms.TextBox()
         Me.SuspendLayout
         '
         'BGTextBox
         '
         Me.BGTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.BGTextBox.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.BGTextBox.Font = New System.Drawing.Font("Segoe UI", 48!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.BGTextBox.Location = New System.Drawing.Point(0, 29)
+        Me.BGTextBox.Location = New System.Drawing.Point(4, 29)
         Me.BGTextBox.Margin = New System.Windows.Forms.Padding(0)
         Me.BGTextBox.Name = "BGTextBox"
-        Me.BGTextBox.Size = New System.Drawing.Size(230, 86)
+        Me.BGTextBox.Size = New System.Drawing.Size(129, 86)
         Me.BGTextBox.TabIndex = 0
         Me.BGTextBox.Text = "999"
         Me.BGTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
@@ -63,11 +63,24 @@ Partial Class BGMiniWindow
         Me.HiddenTextBox.Size = New System.Drawing.Size(100, 23)
         Me.HiddenTextBox.TabIndex = 2
         '
+        'DeltaTextBox
+        '
+        Me.DeltaTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.DeltaTextBox.Font = New System.Drawing.Font("Segoe UI", 36!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.DeltaTextBox.Location = New System.Drawing.Point(132, 40)
+        Me.DeltaTextBox.Margin = New System.Windows.Forms.Padding(0)
+        Me.DeltaTextBox.Name = "DeltaTextBox"
+        Me.DeltaTextBox.Size = New System.Drawing.Size(98, 64)
+        Me.DeltaTextBox.TabIndex = 3
+        Me.DeltaTextBox.Text = "+10"
+        '
         'BGMiniWindow
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7!, 15!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.BackColor = System.Drawing.SystemColors.Window
         Me.ClientSize = New System.Drawing.Size(230, 115)
+        Me.Controls.Add(Me.DeltaTextBox)
         Me.Controls.Add(Me.ActiveInsulinTextBox)
         Me.Controls.Add(Me.BGTextBox)
         Me.Controls.Add(Me.HiddenTextBox)
@@ -87,4 +100,5 @@ End Sub
     Friend WithEvents BGTextBox As TextBox
     Friend WithEvents ActiveInsulinTextBox As TextBox
     Friend WithEvents HiddenTextBox As TextBox
+    Friend WithEvents DeltaTextBox As TextBox
 End Class
