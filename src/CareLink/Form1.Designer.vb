@@ -799,7 +799,7 @@ Partial Class Form1
         Me.ActiveInsulinValue.BackColor = System.Drawing.Color.Transparent
         Me.ActiveInsulinValue.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.ActiveInsulinValue.ForeColor = System.Drawing.Color.White
-        Me.ActiveInsulinValue.Location = New System.Drawing.Point(13, 30)
+        Me.ActiveInsulinValue.Location = New System.Drawing.Point(37, 30)
         Me.ActiveInsulinValue.Name = "ActiveInsulinValue"
         Me.ActiveInsulinValue.Size = New System.Drawing.Size(80, 25)
         Me.ActiveInsulinValue.TabIndex = 6

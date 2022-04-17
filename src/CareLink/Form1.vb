@@ -1343,7 +1343,9 @@ Public Class Form1
     End Function
 
     Private Sub UpdateActiveInsulin()
-        Me.ActiveInsulinValue.Text = $"{ActiveInsulin("amount"):N3} U"
+        Dim activeInsulinStr As String = $"{ActiveInsulin("amount"):N3}"
+        Me.ActiveInsulinValue.Text = $"{activeInsulinStr} U"
+        BGMiniWindow.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
     End Sub
 
     Private Sub UpdateActiveInsulinChart()

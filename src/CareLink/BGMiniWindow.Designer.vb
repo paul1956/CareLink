@@ -27,26 +27,50 @@ Partial Class BGMiniWindow
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.BGTextBox = New System.Windows.Forms.TextBox()
+        Me.ActiveInsulinTextBox = New System.Windows.Forms.TextBox()
+        Me.HiddenTextBox = New System.Windows.Forms.TextBox()
         Me.SuspendLayout
         '
         'BGTextBox
         '
-        Me.BGTextBox.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BGTextBox.Font = New System.Drawing.Font("Segoe UI", 72!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.BGTextBox.Location = New System.Drawing.Point(0, 0)
-        Me.BGTextBox.Multiline = true
+        Me.BGTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.BGTextBox.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.BGTextBox.Font = New System.Drawing.Font("Segoe UI", 48!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.BGTextBox.Location = New System.Drawing.Point(0, 29)
+        Me.BGTextBox.Margin = New System.Windows.Forms.Padding(0)
         Me.BGTextBox.Name = "BGTextBox"
-        Me.BGTextBox.Size = New System.Drawing.Size(224, 123)
+        Me.BGTextBox.Size = New System.Drawing.Size(230, 86)
         Me.BGTextBox.TabIndex = 0
         Me.BGTextBox.Text = "999"
         Me.BGTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'ActiveInsulinTextBox
+        '
+        Me.ActiveInsulinTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.ActiveInsulinTextBox.Dock = System.Windows.Forms.DockStyle.Top
+        Me.ActiveInsulinTextBox.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.ActiveInsulinTextBox.Location = New System.Drawing.Point(0, 0)
+        Me.ActiveInsulinTextBox.Name = "ActiveInsulinTextBox"
+        Me.ActiveInsulinTextBox.Size = New System.Drawing.Size(230, 26)
+        Me.ActiveInsulinTextBox.TabIndex = 1
+        Me.ActiveInsulinTextBox.Text = "Active Insulin: ???"
+        Me.ActiveInsulinTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'HiddenTextBox
+        '
+        Me.HiddenTextBox.Location = New System.Drawing.Point(0, -1)
+        Me.HiddenTextBox.Name = "HiddenTextBox"
+        Me.HiddenTextBox.Size = New System.Drawing.Size(100, 23)
+        Me.HiddenTextBox.TabIndex = 2
         '
         'BGMiniWindow
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7!, 15!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(224, 123)
+        Me.ClientSize = New System.Drawing.Size(230, 115)
+        Me.Controls.Add(Me.ActiveInsulinTextBox)
         Me.Controls.Add(Me.BGTextBox)
+        Me.Controls.Add(Me.HiddenTextBox)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.MaximizeBox = false
@@ -61,4 +85,6 @@ Partial Class BGMiniWindow
 End Sub
 
     Friend WithEvents BGTextBox As TextBox
+    Friend WithEvents ActiveInsulinTextBox As TextBox
+    Friend WithEvents HiddenTextBox As TextBox
 End Class

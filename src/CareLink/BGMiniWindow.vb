@@ -9,14 +9,20 @@ Public Class BGMiniWindow
     Private _alarmPlayedHigh As Boolean
     Private _alarmPlayedLow As Boolean
 
+    Private Sub ActiveInsulinTextBox_GotFocus(sender As Object, e As EventArgs) Handles ActiveInsulinTextBox.GotFocus
+        Me.HiddenTextBox.Focus()
+    End Sub
+
     Private Sub BGMiniWindow_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
         Form1.Visible = True
     End Sub
 
     Private Sub BGMiniWindow_GotFocus(sender As Object, e As EventArgs) Handles Me.GotFocus
-        Me.BGTextBox.SelectionStart = 0
-        Me.BGTextBox.SelectionLength = 0
-        Me.BGTextBox.HideSelection = True
+        Me.HiddenTextBox.Focus()
+    End Sub
+
+    Private Sub BGTextBox_GotFocus(sender As Object, e As EventArgs) Handles BGTextBox.GotFocus
+        Me.HiddenTextBox.Focus()
     End Sub
 
     Private Sub BGTextBox_TextChanged(sender As Object, e As EventArgs) Handles BGTextBox.TextChanged
