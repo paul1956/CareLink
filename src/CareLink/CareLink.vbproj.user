@@ -4,21 +4,21 @@
     <ShowAllFiles>true</ShowAllFiles>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Update="AboutBox1.vb">
+    <Compile Update="Forms\AboutBox1.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="BGMiniWindow.vb">
+    <Compile Update="Forms\BGMiniWindow.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Form1.vb">
+    <Compile Update="Forms\Form1.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="LoginForm1.vb">
+    <Compile Update="Forms\LoginForm1.vb">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Form1.resx">
+    <EmbeddedResource Update="Forms\Form1.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Update="My Project\Resources.resx">
