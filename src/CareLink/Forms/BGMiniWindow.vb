@@ -92,4 +92,8 @@ Public Class BGMiniWindow
         End Using
     End Sub
 
+    Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
+        My.Forms.Form1.Visible = True
+        Me.Hide
+    End Sub
 End Class

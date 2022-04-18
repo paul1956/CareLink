@@ -73,6 +73,7 @@ Public Class Form1
                     ItemIndexs.notificationHistory,
                     ItemIndexs.basal}
     Private ReadOnly _loginDialog As New LoginForm1
+    Private ReadOnly _bgMiniDisplay As New BGMiniWindow
     Private ReadOnly _markerInsulinDictionary As New Dictionary(Of Double, Integer)
     Private ReadOnly _markerMealDictionary As New Dictionary(Of Double, Integer)
     Private ReadOnly _mealImage As Bitmap = My.Resources.MealImage
@@ -1345,7 +1346,7 @@ Public Class Form1
     Private Sub UpdateActiveInsulin()
         Dim activeInsulinStr As String = $"{ActiveInsulin("amount"):N3}"
         Me.ActiveInsulinValue.Text = $"{activeInsulinStr} U"
-        BGMiniWindow.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
+        _bgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
     End Sub
 
     Private Sub UpdateActiveInsulinChart()
@@ -1473,7 +1474,7 @@ Public Class Form1
             Me.CurrentBG.Parent = Me.ShieldPictureBox
             Me.CurrentBG.Text = LastSG("sg")
             Me.NotifyIcon1.Text = $"{LastSG("sg")} {Me.BgUnitsString}"
-            My.Forms.BGMiniWindow.CurrentBGString = LastSG("sg")
+            _bgMiniDisplay.CurrentBGString = LastSG("sg")
             Me.CurrentBG.Visible = True
             Me.SensorMessage.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield
@@ -1484,7 +1485,7 @@ Public Class Form1
             Me.ShieldUnitsLabel.Text = Me.BgUnitsString
             Me.ShieldUnitsLabel.Visible = True
         Else
-            My.Forms.BGMiniWindow.CurrentBGString = "---"
+            _bgMiniDisplay.CurrentBGString = "---"
             Me.CurrentBG.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield_Disabled
             Me.SensorMessage.Visible = True
@@ -1495,8 +1496,8 @@ Public Class Form1
             Me.ShieldUnitsLabel.Visible = False
             Me.SensorMessage.Visible = True
         End If
-        If BGMiniWindow.Visible Then
-            BGMiniWindow.BGTextBox.SelectionLength = 0
+        If _bgMiniDisplay.Visible Then
+            _bgMiniDisplay.BGTextBox.SelectionLength = 0
         End If
         Application.DoEvents()
     End Sub
@@ -1783,7 +1784,7 @@ Public Class Form1
 
     Private Sub ShowMiniDisplayToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowMiniDisplayToolStripMenuItem.Click
         Me.Hide()
-        BGMiniWindow.Show()
+        _bgMiniDisplay.Show()
     End Sub
 
     Private Sub WatchdogTimer_Tick(sender As Object, e As EventArgs) Handles WatchdogTimer.Tick

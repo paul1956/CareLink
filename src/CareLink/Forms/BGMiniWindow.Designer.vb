@@ -30,6 +30,7 @@ Partial Class BGMiniWindow
         Me.ActiveInsulinTextBox = New System.Windows.Forms.TextBox()
         Me.HiddenTextBox = New System.Windows.Forms.TextBox()
         Me.DeltaTextBox = New System.Windows.Forms.TextBox()
+        Me.CloseButton = New System.Windows.Forms.Button()
         Me.SuspendLayout
         '
         'BGTextBox
@@ -74,12 +75,23 @@ Partial Class BGMiniWindow
         Me.DeltaTextBox.TabIndex = 3
         Me.DeltaTextBox.Text = "+10"
         '
+        'CloseButton
+        '
+        Me.CloseButton.Location = New System.Drawing.Point(133, 99)
+        Me.CloseButton.Name = "CloseButton"
+        Me.CloseButton.Size = New System.Drawing.Size(97, 23)
+        Me.CloseButton.TabIndex = 4
+        Me.CloseButton.Text = "Hide"
+        Me.CloseButton.UseVisualStyleBackColor = true
+        '
         'BGMiniWindow
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7!, 15!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.Window
-        Me.ClientSize = New System.Drawing.Size(230, 115)
+        Me.ClientSize = New System.Drawing.Size(230, 123)
+        Me.ControlBox = false
+        Me.Controls.Add(Me.CloseButton)
         Me.Controls.Add(Me.DeltaTextBox)
         Me.Controls.Add(Me.ActiveInsulinTextBox)
         Me.Controls.Add(Me.BGTextBox)
@@ -101,4 +113,5 @@ End Sub
     Friend WithEvents ActiveInsulinTextBox As TextBox
     Friend WithEvents HiddenTextBox As TextBox
     Friend WithEvents DeltaTextBox As TextBox
+    Friend WithEvents CloseButton As Button
 End Class
