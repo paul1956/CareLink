@@ -15,11 +15,33 @@ Public Class CareLinkClient
     Private Const CarelinkLanguageEn As String = "en"
     Private Const CarelinkLocaleEn As String = "en"
     Private Const CarelinkTokenValidtoCookieName As String = "c_token_valid_to"
-
     Private ReadOnly _carelinkCountry As String
+
+    Private ReadOnly _carelinkPartnerType As New List(Of String) From {
+                        "CARE_PARTNER",
+                        "CARE_PARTNER_OUS"}
+
     Private ReadOnly _carelinkPassword As String
+
     Private ReadOnly _carelinkUsername As String
-    Private ReadOnly _commonHeaders As Dictionary(Of String, String)
+
+    Private ReadOnly _commonHeaders As New Dictionary(Of String, String) From {
+                        {
+                            "Accept-Language",
+                            "en;q=0.9, *;q=0.8"},
+                        {
+                            "Connection",
+                            "keep-alive"},
+                        {
+                            "sec-ch-ua",
+                            """Google Chrome"";deviceFamily=""87"", "" Not;A Brand"";deviceFamily=""99"", ""Chromium"";deviceFamily=""87"""},
+                        {
+                            "User-Agent",
+                            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"},
+                        {
+                            "Accept",
+                            "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;deviceFamily=b3;q=0.9"}}
+
     Private ReadOnly _httpClient As HttpClient
     Private ReadOnly _httpClientHandler As HttpClientHandler
     Private _lastDataSuccess As Boolean
@@ -46,22 +68,6 @@ Public Class CareLinkClient
         _lastDataSuccess = False
         _lastResponseCode = Nothing
         Me.LastErrorMessage = Nothing
-        _commonHeaders = New Dictionary(Of String, String) From {
-            {
-                "Accept-Language",
-                "en;q=0.9, *;q=0.8"},
-            {
-                "Connection",
-                "keep-alive"},
-            {
-                "sec-ch-ua",
-                """Google Chrome"";v=""87"", "" Not;A Brand"";v=""99"", ""Chromium"";v=""87"""},
-            {
-                "User-Agent",
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"},
-            {
-                "Accept",
-                "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"}}
 
         Dim cookieContainer As New CookieContainer()
         _httpClientHandler = New HttpClientHandler With {.CookieContainer = cookieContainer}
@@ -107,7 +113,7 @@ Public Class CareLinkClient
             Case "US"
                 Return CarelinkConnectServerUs
             Case "AU"
-                Return CarelinkConnectServerUs
+                Return CarelinkConnectServerAu
             Case Else
                 Return CarelinkConnectServerEu
         End Select
@@ -176,7 +182,7 @@ Public Class CareLinkClient
             {
                 "locale",
                 CarelinkLocaleEn}}
-        Dim form As New Dictionary(Of String, String) From {
+        Dim webForm As New Dictionary(Of String, String) From {
             {
                 "sessionID",
                 queryParameters("sessionID")},
@@ -199,7 +205,7 @@ Public Class CareLinkClient
                 "actionButton",
                 "Log in"}}
         Try
-            Dim response As HttpResponseMessage = _httpClient.Post(url, _commonHeaders, params:=payload, data:=form)
+            Dim response As HttpResponseMessage = _httpClient.Post(url, _commonHeaders, params:=payload, data:=webForm)
             If Not response.StatusCode = HttpStatusCode.OK Then
                 Throw New Exception("session response is not OK")
             End If
@@ -375,7 +381,7 @@ Public Class CareLinkClient
                         Throw New Exception("session get response is not OK")
                     End If
                 Else
-                    headers("Accept") = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+                    headers("Accept") = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;deviceFamily=b3;q=0.9"
                     'headers("Content-Type") = "application/x-www-form-urlencoded"
                     _httpClient.DefaultRequestHeaders.Clear()
                     For Each header As KeyValuePair(Of String, String) In headers
@@ -455,11 +461,10 @@ Public Class CareLinkClient
     Public Overridable Function GetRecentData() As Dictionary(Of String, String)
         ' Force login to get basic info
         If Me.__getAuthorizationToken() IsNot Nothing Then
-            If _carelinkCountry = My.Settings.CountryCode OrElse _sessionMonitorData("deviceFamily") = "BLE_X" Then
-                Dim role As String = If(New List(Of Object) From {
-                    "CARE_PARTNER",
-                    "CARE_PARTNER_OUS"
-                }.Contains(_sessionUser("role")), "carepartner", "patient")
+            Dim deviceFamily As String = Nothing
+            _sessionMonitorData.TryGetValue("deviceFamily", deviceFamily)
+            If _carelinkCountry = My.Settings.CountryCode OrElse deviceFamily?.Equals("BLE_X") Then
+                Dim role As String = If(_carelinkPartnerType.Contains(_sessionUser("role")), "carepartner", "patient")
                 Return Me.__getConnectDisplayMessage(_sessionProfile("username").ToString(), role, _sessionCountrySettings("blePereodicDataEndpoint"))
             End If
         End If

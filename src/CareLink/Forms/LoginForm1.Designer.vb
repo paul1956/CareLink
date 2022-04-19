@@ -92,7 +92,7 @@ Partial Class LoginForm1
         Me.OK.Location = New System.Drawing.Point(197, 194)
         Me.OK.Name = "OK"
         Me.OK.Size = New System.Drawing.Size(94, 23)
-        Me.OK.TabIndex = 4
+        Me.OK.TabIndex = 6
         Me.OK.Text = "&OK"
         '
         'Cancel
@@ -101,26 +101,26 @@ Partial Class LoginForm1
         Me.Cancel.Location = New System.Drawing.Point(300, 194)
         Me.Cancel.Name = "Cancel"
         Me.Cancel.Size = New System.Drawing.Size(94, 23)
-        Me.Cancel.TabIndex = 5
+        Me.Cancel.TabIndex = 7
         Me.Cancel.Text = "&Cancel"
         '
         'SaveCredentials
         '
-        Me.SaveCredentials.AutoSize = true
+        Me.SaveCredentials.AutoSize = True
         Me.SaveCredentials.Location = New System.Drawing.Point(174, 159)
         Me.SaveCredentials.Name = "SaveCredentials"
         Me.SaveCredentials.Size = New System.Drawing.Size(187, 19)
-        Me.SaveCredentials.TabIndex = 6
+        Me.SaveCredentials.TabIndex = 5
         Me.SaveCredentials.Text = "Save User Name and Password"
-        Me.SaveCredentials.UseVisualStyleBackColor = true
+        Me.SaveCredentials.UseVisualStyleBackColor = True
         '
         'CountryComboBox
         '
-        Me.CountryComboBox.FormattingEnabled = true
+        Me.CountryComboBox.FormattingEnabled = True
         Me.CountryComboBox.Location = New System.Drawing.Point(172, 116)
         Me.CountryComboBox.Name = "CountryComboBox"
         Me.CountryComboBox.Size = New System.Drawing.Size(220, 23)
-        Me.CountryComboBox.TabIndex = 7
+        Me.CountryComboBox.TabIndex = 4
         '
         'LoginForm1
         '

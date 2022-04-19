@@ -62,8 +62,10 @@ Public Class Form1
         {ItemIndexs.notificationHistory, s_notificationHistoryFilter}
         }
 
+    Private ReadOnly _bgMiniDisplay As New BGMiniWindow
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
+
     Private ReadOnly _listOfSingleItems As New List(Of Integer) From {
                     ItemIndexs.lastSG,
                     ItemIndexs.lastAlarm,
@@ -72,8 +74,8 @@ Public Class Form1
                     ItemIndexs.markers,
                     ItemIndexs.notificationHistory,
                     ItemIndexs.basal}
+
     Private ReadOnly _loginDialog As New LoginForm1
-    Private ReadOnly _bgMiniDisplay As New BGMiniWindow
     Private ReadOnly _markerInsulinDictionary As New Dictionary(Of Double, Integer)
     Private ReadOnly _markerMealDictionary As New Dictionary(Of Double, Integer)
     Private ReadOnly _mealImage As Bitmap = My.Resources.MealImage
@@ -87,8 +89,8 @@ Public Class Form1
     Private _limithigh As Single
     Private _limitLow As Single
     Private _recentData As Dictionary(Of String, String)
-    Private _recentDataSameCount As Integer
     Private _recentDatalast As Dictionary(Of String, String)
+    Private _recentDataSameCount As Integer
     Private _timeFormat As String
     Private _updating As Boolean = False
 
@@ -123,7 +125,6 @@ Public Class Form1
         }
 
 #End Region
-
 
 #Region "Variables to hold Sensor Values"
 
@@ -270,6 +271,23 @@ Public Class Form1
         End
     End Sub
 
+    Private Shared Sub SGsDataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles SGsDataGridView.ColumnAdded
+        With e.Column
+            .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            .ReadOnly = True
+            .Resizable = DataGridViewTriState.False
+            .HeaderText = .Name.ToTitleCase()
+            .DefaultCellStyle = SgRecord.GetCellStyle(.Name)
+            If .Name <> NameOf(SgRecord.RecordNumber) Then
+                .SortMode = DataGridViewColumnSortMode.NotSortable
+            End If
+        End With
+    End Sub
+
+    Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
+        AboutBox1.Show()
+    End Sub
+
     Private Sub AITComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AITComboBox.SelectedIndexChanged
         Dim aitTimeSpan As TimeSpan = TimeSpan.Parse(Me.AITComboBox.SelectedItem.ToString())
         My.Settings.AIT = aitTimeSpan
@@ -293,6 +311,15 @@ Public Class Form1
 
     Private Sub FilterRawJSONDataToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FilterRawJSONDataToolStripMenuItem.Click
         _filterJsonData = Me.FilterRawJSONDataToolStripMenuItem.Checked
+    End Sub
+
+    Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        Me.NotifyIcon1.Visible = False
+        Me.NotifyIcon1.Icon.Dispose()
+        Me.NotifyIcon1.Icon = Nothing
+        Me.NotifyIcon1.Visible = False
+        Me.NotifyIcon1.Dispose()
+        Application.DoEvents()
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -450,23 +477,6 @@ Public Class Form1
         Me.UpdateAllTabPages()
     End Sub
 
-    Private Sub DoLoginAndUpdateTimers()
-        Me.ServerUpdateTimer.Stop()
-        Debug.Print($"Me.ServerUpdateTimer stopped at {Now}")
-        _loginDialog.ShowDialog()
-        _client = _loginDialog.Client
-        If _client IsNot Nothing AndAlso _client.LoggedIn Then
-            _recentData = _client.GetRecentData()
-            Me.WatchdogTimer.Interval = CType(New TimeSpan(0, minutes:=6, 0).TotalMilliseconds, Integer)
-            Me.WatchdogTimer.Start()
-            Debug.Print($"Me.WatchdogTimer Started at {Now}")
-            Me.ServerUpdateTimer.Interval = CType(New TimeSpan(0, minutes:=1, 0).TotalMilliseconds, Integer)
-            Me.ServerUpdateTimer.Start()
-            Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
-            Me.ViewToolStripMenuItem.Visible = True
-        End If
-    End Sub
-
     Private Sub SensorAgeLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles SensorDaysLeftLabel.MouseHover
         If SensorDurationHours < 24 Then
             _sensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {SensorDurationHours} hours")
@@ -522,19 +532,6 @@ Public Class Form1
 
     End Sub
 
-    Private Shared Sub SGsDataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles SGsDataGridView.ColumnAdded
-        With e.Column
-            .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-            .ReadOnly = True
-            .Resizable = DataGridViewTriState.False
-            .HeaderText = .Name.ToTitleCase()
-            .DefaultCellStyle = SgRecord.GetCellStyle(.Name)
-            If .Name <> NameOf(SgRecord.RecordNumber) Then
-                .SortMode = DataGridViewColumnSortMode.NotSortable
-            End If
-        End With
-    End Sub
-
     Private Sub SGsDataGridView_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles SGsDataGridView.ColumnHeaderMouseClick
         Dim currentSortOrder As SortOrder = Me.SGsDataGridView.Columns(e.ColumnIndex).HeaderCell.SortGlyphDirection
         If Me.SGsDataGridView.Columns(e.ColumnIndex).Name = NameOf(SgRecord.RecordNumber) Then
@@ -549,12 +546,39 @@ Public Class Form1
         Me.SGsDataGridView.Columns(e.ColumnIndex).HeaderCell.SortGlyphDirection = currentSortOrder
     End Sub
 
+    Private Sub ShowMiniDisplayToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowMiniDisplayToolStripMenuItem.Click
+        Me.Hide()
+        _bgMiniDisplay.Show()
+    End Sub
+
     Private Sub UseTestDataToolStripMenuItem_Checkchange(sender As Object, e As EventArgs) Handles UseTestDataToolStripMenuItem.CheckStateChanged
         My.Settings.UseTestData = Me.UseTestDataToolStripMenuItem.Checked
         My.Settings.Save()
     End Sub
 
+    Private Sub WatchdogTimer_Tick(sender As Object, e As EventArgs) Handles WatchdogTimer.Tick
+        Me.WatchdogTimer.Stop()
+        MsgBox("Watchdog Timed Out", MsgBoxStyle.Critical, "Critical Error")
+    End Sub
+
 #End Region
+
+    Private Sub DoLoginAndUpdateTimers()
+        Me.ServerUpdateTimer.Stop()
+        Debug.Print($"Me.ServerUpdateTimer stopped at {Now}")
+        _loginDialog.ShowDialog()
+        _client = _loginDialog.Client
+        If _client IsNot Nothing AndAlso _client.LoggedIn Then
+            _recentData = _client.GetRecentData()
+            Me.WatchdogTimer.Interval = CType(New TimeSpan(0, minutes:=6, 0).TotalMilliseconds, Integer)
+            Me.WatchdogTimer.Start()
+            Debug.Print($"Me.WatchdogTimer Started at {Now}")
+            Me.ServerUpdateTimer.Interval = CType(New TimeSpan(0, minutes:=1, 0).TotalMilliseconds, Integer)
+            Me.ServerUpdateTimer.Start()
+            Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
+            Me.ViewToolStripMenuItem.Visible = True
+        End If
+    End Sub
 
     Private Function DrawCenteredArc(backImage As Bitmap, arcPercentage As Double, Optional colorTable As IReadOnlyDictionary(Of String, Color) = Nothing, Optional segmentName As String = "") As Bitmap
         If arcPercentage < Double.Epsilon Then
@@ -675,6 +699,7 @@ Public Class Form1
                                                                  New TextBox With {
                                                                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                                     .AutoSize = True,
+                                                                    .[ReadOnly] = True,
                                                                     .Text = e.Value.Value}})
                             Application.DoEvents()
                         Next
@@ -688,14 +713,17 @@ Public Class Form1
                     tableLevel1Blue.Controls.AddRange({label1, New TextBox With {
                                                .Text = "",
                                                .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                               .AutoSize = True
+                                               .AutoSize = True,
+                                               .[ReadOnly] = True
                                                }})
                 End If
             Else
                 tableLevel1Blue.Controls.AddRange({label1, New TextBox With {
                                            .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                            .AutoSize = True,
-                                           .Text = innerRow.Value}})
+                                           .Text = innerRow.Value,
+                                           .[ReadOnly] = True
+                                           }})
             End If
         Next
 
@@ -1277,6 +1305,7 @@ Public Class Form1
                     layoutPanel1.Controls.Add(New TextBox With {
                                                       .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                       .AutoSize = True,
+                                                      .[ReadOnly] = True,
                                                       .Text = ""}, If(singleItem, 0, 1), tableRelitiveRow)
 
                 End If
@@ -1318,6 +1347,7 @@ Public Class Form1
                 layoutPanel1.Controls.Add(New TextBox With {
                                                   .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                   .AutoSize = True,
+                                                  .[ReadOnly] = True,
                                                   .Text = row.Value}, If(singleItem, 0, 1), tableRelitiveRow)
             End If
             Application.DoEvents()
@@ -1776,29 +1806,6 @@ Public Class Form1
             Me.TransmatterBatterPercentLabel.Text = $"???"
         End If
 
-    End Sub
-
-    Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
-        AboutBox1.Show()
-    End Sub
-
-    Private Sub ShowMiniDisplayToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowMiniDisplayToolStripMenuItem.Click
-        Me.Hide()
-        _bgMiniDisplay.Show()
-    End Sub
-
-    Private Sub WatchdogTimer_Tick(sender As Object, e As EventArgs) Handles WatchdogTimer.Tick
-        Me.WatchdogTimer.Stop()
-        MsgBox("Watchdog Timed Out", MsgBoxStyle.Critical, "Critical Error")
-    End Sub
-
-    Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        Me.NotifyIcon1.Visible = False
-        Me.NotifyIcon1.Icon.Dispose()
-        Me.NotifyIcon1.Icon = Nothing
-        Me.NotifyIcon1.Visible = False
-        Me.NotifyIcon1.Dispose()
-        Application.DoEvents()
     End Sub
 
 End Class
