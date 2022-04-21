@@ -48,7 +48,7 @@ Public Class BGMiniWindow
             _currentBGValue = Double.NaN
             Me.DeltaTextBox.Text = ""
         Else
-            If Double.IsNaN(_currentBGValue) OrElse Double.IsNaN(_lastBGValue) Then
+            If Double.IsNaN(_currentBGValue) OrElse _currentBGValue = 0 OrElse Double.IsNaN(_lastBGValue) OrElse _lastBGValue = 0 Then
                 Me.DeltaTextBox.Text = ""
             Else
                 Dim delta As Double = _currentBGValue - _lastBGValue
@@ -94,6 +94,6 @@ Public Class BGMiniWindow
 
     Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
         My.Forms.Form1.Visible = True
-        Me.Hide
+        Me.Hide()
     End Sub
 End Class
