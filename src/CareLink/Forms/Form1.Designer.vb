@@ -97,29 +97,30 @@ Partial Class Form1
         Me.CursorTimer = New System.Windows.Forms.Timer(Me.components)
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
         Me.WatchdogTimer = New System.Windows.Forms.Timer(Me.components)
-        Me.MenuStrip1.SuspendLayout
-        CType(Me.SplitContainer1,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.SplitContainer1.Panel1.SuspendLayout
-        Me.SplitContainer1.Panel2.SuspendLayout
-        Me.SplitContainer1.SuspendLayout
-        Me.TabControl1.SuspendLayout
-        Me.TabPage1HomePage.SuspendLayout
-        CType(Me.TransmitterBatteryPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.SensorTimeLefPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.PumpBatteryPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.CursorPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.InsulinLevelPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.CalibrationDueImage,System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.ShieldPictureBox,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.TabPage3SummaryData.SuspendLayout
-        Me.TabPage4ActiveInsulin.SuspendLayout
-        Me.TabPage5SGS.SuspendLayout
-        CType(Me.SGsDataGridView,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.TabPage6Limits.SuspendLayout
-        Me.TabPage7Markers.SuspendLayout
-        Me.TabPage8NotificationHistory.SuspendLayout
-        Me.TabPage9Basal.SuspendLayout
-        Me.SuspendLayout
+        Me.SetupEmailServerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuStrip1.SuspendLayout()
+        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SplitContainer1.Panel1.SuspendLayout()
+        Me.SplitContainer1.Panel2.SuspendLayout()
+        Me.SplitContainer1.SuspendLayout()
+        Me.TabControl1.SuspendLayout()
+        Me.TabPage1HomePage.SuspendLayout()
+        CType(Me.TransmitterBatteryPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.SensorTimeLefPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PumpBatteryPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.CursorPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.InsulinLevelPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.CalibrationDueImage, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ShieldPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage3SummaryData.SuspendLayout()
+        Me.TabPage4ActiveInsulin.SuspendLayout()
+        Me.TabPage5SGS.SuspendLayout()
+        CType(Me.SGsDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage6Limits.SuspendLayout()
+        Me.TabPage7Markers.SuspendLayout()
+        Me.TabPage8NotificationHistory.SuspendLayout()
+        Me.TabPage9Basal.SuspendLayout()
+        Me.SuspendLayout()
         '
         'MenuStrip1
         '
@@ -151,15 +152,15 @@ Partial Class Form1
         '
         'OptionsToolStripMenuItem
         '
-        Me.OptionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FilterRawJSONDataToolStripMenuItem, Me.UseTestDataToolStripMenuItem})
+        Me.OptionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FilterRawJSONDataToolStripMenuItem, Me.SetupEmailServerToolStripMenuItem, Me.UseTestDataToolStripMenuItem})
         Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
         Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
         Me.OptionsToolStripMenuItem.Text = "Options"
         '
         'FilterRawJSONDataToolStripMenuItem
         '
-        Me.FilterRawJSONDataToolStripMenuItem.Checked = true
-        Me.FilterRawJSONDataToolStripMenuItem.CheckOnClick = true
+        Me.FilterRawJSONDataToolStripMenuItem.Checked = True
+        Me.FilterRawJSONDataToolStripMenuItem.CheckOnClick = True
         Me.FilterRawJSONDataToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked
         Me.FilterRawJSONDataToolStripMenuItem.Name = "FilterRawJSONDataToolStripMenuItem"
         Me.FilterRawJSONDataToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
@@ -167,7 +168,7 @@ Partial Class Form1
         '
         'UseTestDataToolStripMenuItem
         '
-        Me.UseTestDataToolStripMenuItem.CheckOnClick = true
+        Me.UseTestDataToolStripMenuItem.CheckOnClick = True
         Me.UseTestDataToolStripMenuItem.Name = "UseTestDataToolStripMenuItem"
         Me.UseTestDataToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
         Me.UseTestDataToolStripMenuItem.Text = "Use Test Data"
@@ -178,13 +179,13 @@ Partial Class Form1
         Me.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem"
         Me.ViewToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.ViewToolStripMenuItem.Text = "View"
-        Me.ViewToolStripMenuItem.Visible = false
+        Me.ViewToolStripMenuItem.Visible = False
         '
         'ShowMiniDisplayToolStripMenuItem
         '
         Me.ShowMiniDisplayToolStripMenuItem.Name = "ShowMiniDisplayToolStripMenuItem"
-        Me.ShowMiniDisplayToolStripMenuItem.ShortcutKeys = CType(((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Shift)  _
-            Or System.Windows.Forms.Keys.D1),System.Windows.Forms.Keys)
+        Me.ShowMiniDisplayToolStripMenuItem.ShortcutKeys = CType(((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Shift) _
+            Or System.Windows.Forms.Keys.D1), System.Windows.Forms.Keys)
         Me.ShowMiniDisplayToolStripMenuItem.Size = New System.Drawing.Size(243, 22)
         Me.ShowMiniDisplayToolStripMenuItem.Text = "Show Mini Display"
         '
@@ -207,8 +208,8 @@ Partial Class Form1
         '
         'TableLayoutPanelSummaryData
         '
-        Me.TableLayoutPanelSummaryData.AutoScroll = true
-        Me.TableLayoutPanelSummaryData.AutoSize = true
+        Me.TableLayoutPanelSummaryData.AutoScroll = True
+        Me.TableLayoutPanelSummaryData.AutoSize = True
         Me.TableLayoutPanelSummaryData.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelSummaryData.ColumnCount = 2
         Me.TableLayoutPanelSummaryData.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 31.47268!))
@@ -218,60 +219,60 @@ Partial Class Form1
         Me.TableLayoutPanelSummaryData.Name = "TableLayoutPanelSummaryData"
         Me.TableLayoutPanelSummaryData.Padding = New System.Windows.Forms.Padding(5)
         Me.TableLayoutPanelSummaryData.RowCount = 53
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22!))
-        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
         Me.TableLayoutPanelSummaryData.Size = New System.Drawing.Size(1370, 700)
         Me.TableLayoutPanelSummaryData.TabIndex = 3
         '
@@ -280,12 +281,12 @@ Partial Class Form1
         Me.TableLayoutPanelTop1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelTop1.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelTop1.ColumnCount = 2
-        Me.TableLayoutPanelTop1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25!))
-        Me.TableLayoutPanelTop1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75!))
+        Me.TableLayoutPanelTop1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.TableLayoutPanelTop1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75.0!))
         Me.TableLayoutPanelTop1.Location = New System.Drawing.Point(5, 0)
         Me.TableLayoutPanelTop1.Name = "TableLayoutPanelTop1"
         Me.TableLayoutPanelTop1.RowCount = 1
-        Me.TableLayoutPanelTop1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100!))
+        Me.TableLayoutPanelTop1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelTop1.Size = New System.Drawing.Size(503, 129)
         Me.TableLayoutPanelTop1.TabIndex = 0
         '
@@ -312,19 +313,19 @@ Partial Class Form1
         '
         'TableLayoutPanelTop2
         '
-        Me.TableLayoutPanelTop2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.TableLayoutPanelTop2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TableLayoutPanelTop2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelTop2.CausesValidation = false
+        Me.TableLayoutPanelTop2.CausesValidation = False
         Me.TableLayoutPanelTop2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelTop2.ColumnCount = 2
-        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10!))
-        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 90!))
+        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.0!))
+        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 90.0!))
         Me.TableLayoutPanelTop2.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.TableLayoutPanelTop2.Location = New System.Drawing.Point(530, 0)
         Me.TableLayoutPanelTop2.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanelTop2.Name = "TableLayoutPanelTop2"
         Me.TableLayoutPanelTop2.RowCount = 1
-        Me.TableLayoutPanelTop2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100!))
+        Me.TableLayoutPanelTop2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelTop2.Size = New System.Drawing.Size(826, 142)
         Me.TableLayoutPanelTop2.TabIndex = 1
         '
@@ -850,7 +851,7 @@ Partial Class Form1
         Me.ShieldPictureBox.Size = New System.Drawing.Size(100, 100)
         Me.ShieldPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.ShieldPictureBox.TabIndex = 4
-        Me.ShieldPictureBox.TabStop = false
+        Me.ShieldPictureBox.TabStop = False
         '
         'TabPage2RunningActiveInsulin
         '
@@ -860,7 +861,7 @@ Partial Class Form1
         Me.TabPage2RunningActiveInsulin.Size = New System.Drawing.Size(1376, 706)
         Me.TabPage2RunningActiveInsulin.TabIndex = 8
         Me.TabPage2RunningActiveInsulin.Text = "Running Active Insulin"
-        Me.TabPage2RunningActiveInsulin.UseVisualStyleBackColor = true
+        Me.TabPage2RunningActiveInsulin.UseVisualStyleBackColor = True
         '
         'TabPage3SummaryData
         '
@@ -871,7 +872,7 @@ Partial Class Form1
         Me.TabPage3SummaryData.Size = New System.Drawing.Size(1376, 706)
         Me.TabPage3SummaryData.TabIndex = 0
         Me.TabPage3SummaryData.Text = "Summary Data"
-        Me.TabPage3SummaryData.UseVisualStyleBackColor = true
+        Me.TabPage3SummaryData.UseVisualStyleBackColor = True
         '
         'TabPage4ActiveInsulin
         '
@@ -882,20 +883,20 @@ Partial Class Form1
         Me.TabPage4ActiveInsulin.Size = New System.Drawing.Size(1376, 706)
         Me.TabPage4ActiveInsulin.TabIndex = 1
         Me.TabPage4ActiveInsulin.Text = "Active Insulin"
-        Me.TabPage4ActiveInsulin.UseVisualStyleBackColor = true
+        Me.TabPage4ActiveInsulin.UseVisualStyleBackColor = True
         '
         'TableLayoutPanelActiveInsulin
         '
-        Me.TableLayoutPanelActiveInsulin.AutoScroll = true
-        Me.TableLayoutPanelActiveInsulin.AutoSize = true
+        Me.TableLayoutPanelActiveInsulin.AutoScroll = True
+        Me.TableLayoutPanelActiveInsulin.AutoSize = True
         Me.TableLayoutPanelActiveInsulin.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelActiveInsulin.ColumnCount = 1
-        Me.TableLayoutPanelActiveInsulin.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100!))
+        Me.TableLayoutPanelActiveInsulin.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelActiveInsulin.Dock = System.Windows.Forms.DockStyle.Top
         Me.TableLayoutPanelActiveInsulin.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelActiveInsulin.Name = "TableLayoutPanelActiveInsulin"
         Me.TableLayoutPanelActiveInsulin.RowCount = 2
-        Me.TableLayoutPanelActiveInsulin.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100!))
+        Me.TableLayoutPanelActiveInsulin.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelActiveInsulin.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelActiveInsulin.Size = New System.Drawing.Size(1370, 9)
         Me.TableLayoutPanelActiveInsulin.TabIndex = 0
@@ -909,13 +910,13 @@ Partial Class Form1
         Me.TabPage5SGS.Size = New System.Drawing.Size(1376, 706)
         Me.TabPage5SGS.TabIndex = 2
         Me.TabPage5SGS.Text = "SGS"
-        Me.TabPage5SGS.UseVisualStyleBackColor = true
+        Me.TabPage5SGS.UseVisualStyleBackColor = True
         '
         'SGsDataGridView
         '
-        Me.SGsDataGridView.AllowUserToAddRows = false
-        Me.SGsDataGridView.AllowUserToDeleteRows = false
-        Me.SGsDataGridView.AllowUserToResizeRows = false
+        Me.SGsDataGridView.AllowUserToAddRows = False
+        Me.SGsDataGridView.AllowUserToDeleteRows = False
+        Me.SGsDataGridView.AllowUserToResizeRows = False
         Me.SGsDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         Me.SGsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.SGsDataGridView.Dock = System.Windows.Forms.DockStyle.Fill
@@ -934,16 +935,16 @@ Partial Class Form1
         Me.TabPage6Limits.Size = New System.Drawing.Size(1376, 706)
         Me.TabPage6Limits.TabIndex = 3
         Me.TabPage6Limits.Text = "Limits"
-        Me.TabPage6Limits.UseVisualStyleBackColor = true
+        Me.TabPage6Limits.UseVisualStyleBackColor = True
         '
         'TableLayoutPanelLimits
         '
-        Me.TableLayoutPanelLimits.AutoScroll = true
-        Me.TableLayoutPanelLimits.AutoSize = true
+        Me.TableLayoutPanelLimits.AutoScroll = True
+        Me.TableLayoutPanelLimits.AutoSize = True
         Me.TableLayoutPanelLimits.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelLimits.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelLimits.ColumnCount = 1
-        Me.TableLayoutPanelLimits.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100!))
+        Me.TableLayoutPanelLimits.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelLimits.Dock = System.Windows.Forms.DockStyle.Top
         Me.TableLayoutPanelLimits.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelLimits.Name = "TableLayoutPanelLimits"
@@ -962,16 +963,16 @@ Partial Class Form1
         Me.TabPage7Markers.Size = New System.Drawing.Size(1376, 706)
         Me.TabPage7Markers.TabIndex = 4
         Me.TabPage7Markers.Text = "Markers"
-        Me.TabPage7Markers.UseVisualStyleBackColor = true
+        Me.TabPage7Markers.UseVisualStyleBackColor = True
         '
         'TableLayoutPanelMarkers
         '
-        Me.TableLayoutPanelMarkers.AutoScroll = true
-        Me.TableLayoutPanelMarkers.AutoSize = true
+        Me.TableLayoutPanelMarkers.AutoScroll = True
+        Me.TableLayoutPanelMarkers.AutoSize = True
         Me.TableLayoutPanelMarkers.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelMarkers.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelMarkers.ColumnCount = 1
-        Me.TableLayoutPanelMarkers.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100!))
+        Me.TableLayoutPanelMarkers.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelMarkers.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelMarkers.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelMarkers.Name = "TableLayoutPanelMarkers"
@@ -989,16 +990,16 @@ Partial Class Form1
         Me.TabPage8NotificationHistory.Size = New System.Drawing.Size(1376, 706)
         Me.TabPage8NotificationHistory.TabIndex = 5
         Me.TabPage8NotificationHistory.Text = "Notification History"
-        Me.TabPage8NotificationHistory.UseVisualStyleBackColor = true
+        Me.TabPage8NotificationHistory.UseVisualStyleBackColor = True
         '
         'TableLayoutPanelNotificationHistory
         '
-        Me.TableLayoutPanelNotificationHistory.AutoScroll = true
-        Me.TableLayoutPanelNotificationHistory.AutoSize = true
+        Me.TableLayoutPanelNotificationHistory.AutoScroll = True
+        Me.TableLayoutPanelNotificationHistory.AutoSize = True
         Me.TableLayoutPanelNotificationHistory.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelNotificationHistory.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelNotificationHistory.ColumnCount = 1
-        Me.TableLayoutPanelNotificationHistory.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100!))
+        Me.TableLayoutPanelNotificationHistory.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelNotificationHistory.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelNotificationHistory.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelNotificationHistory.Name = "TableLayoutPanelNotificationHistory"
@@ -1017,28 +1018,28 @@ Partial Class Form1
         Me.TabPage9Basal.Size = New System.Drawing.Size(1376, 706)
         Me.TabPage9Basal.TabIndex = 6
         Me.TabPage9Basal.Text = "Basal"
-        Me.TabPage9Basal.UseVisualStyleBackColor = true
+        Me.TabPage9Basal.UseVisualStyleBackColor = True
         '
         'TableLayoutPanelBasal
         '
-        Me.TableLayoutPanelBasal.AutoScroll = true
+        Me.TableLayoutPanelBasal.AutoScroll = True
         Me.TableLayoutPanelBasal.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelBasal.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelBasal.ColumnCount = 1
-        Me.TableLayoutPanelBasal.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100!))
+        Me.TableLayoutPanelBasal.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelBasal.Dock = System.Windows.Forms.DockStyle.Top
         Me.TableLayoutPanelBasal.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelBasal.Name = "TableLayoutPanelBasal"
         Me.TableLayoutPanelBasal.RowCount = 2
-        Me.TableLayoutPanelBasal.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50!))
-        Me.TableLayoutPanelBasal.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50!))
+        Me.TableLayoutPanelBasal.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanelBasal.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanelBasal.Size = New System.Drawing.Size(1370, 379)
         Me.TableLayoutPanelBasal.TabIndex = 0
         '
         'ImageList1
         '
         Me.ImageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit
-        Me.ImageList1.ImageStream = CType(resources.GetObject("ImageList1.ImageStream"),System.Windows.Forms.ImageListStreamer)
+        Me.ImageList1.ImageStream = CType(resources.GetObject("ImageList1.ImageStream"), System.Windows.Forms.ImageListStreamer)
         Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
         Me.ImageList1.Images.SetKeyName(0, "ReservoirRemains0.png")
         Me.ImageList1.Images.SetKeyName(1, "ReservoirRemains1+.png")
@@ -1055,13 +1056,19 @@ Partial Class Form1
         '
         'NotifyIcon1
         '
-        Me.NotifyIcon1.Icon = CType(resources.GetObject("NotifyIcon1.Icon"),System.Drawing.Icon)
+        Me.NotifyIcon1.Icon = CType(resources.GetObject("NotifyIcon1.Icon"), System.Drawing.Icon)
         Me.NotifyIcon1.Text = "CareLink Display"
-        Me.NotifyIcon1.Visible = true
+        Me.NotifyIcon1.Visible = True
         '
         'WatchdogTimer
         '
         Me.WatchdogTimer.Interval = 360000
+        '
+        'SetupEmailServerToolStripMenuItem
+        '
+        Me.SetupEmailServerToolStripMenuItem.Name = "SetupEmailServerToolStripMenuItem"
+        Me.SetupEmailServerToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
+        Me.SetupEmailServerToolStripMenuItem.Text = "Setup Email Server"
         '
         'Form1
         '
@@ -1182,4 +1189,5 @@ End Sub
     Friend WithEvents ViewToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ShowMiniDisplayToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents WatchdogTimer As Timer
+    Friend WithEvents SetupEmailServerToolStripMenuItem As ToolStripMenuItem
 End Class

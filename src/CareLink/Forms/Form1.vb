@@ -493,7 +493,7 @@ Public Class Form1
         If Me.RecentDataUpdated Then
             Me.UpdateAllTabPages()
         ElseIf _recentData Is Nothing Then
-            _client = New CareLinkClient(My.Settings.username, My.Settings.password, My.Settings.CountryCode)
+            _client = New CareLinkClient(My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
             _loginDialog.Client = _client
             _recentData = _client.GetRecentData()
             If Me.RecentDataUpdated Then
@@ -505,6 +505,10 @@ Public Class Form1
         Me.ServerUpdateTimer.Start()
         Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
         Me.Cursor = Cursors.Default
+    End Sub
+
+    Private Sub SetupEmailServerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SetupEmailServerToolStripMenuItem.Click
+        MailSetupDialog.ShowDialog()
     End Sub
 
     Private Sub SGsDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles SGsDataGridView.CellFormatting

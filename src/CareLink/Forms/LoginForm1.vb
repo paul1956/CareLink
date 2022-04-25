@@ -10,8 +10,8 @@ Public Class LoginForm1
     End Sub
 
     Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles Me.Load
-        Me.UsernameTextBox.Text = My.Settings.username
-        Me.PasswordTextBox.Text = My.Settings.password
+        Me.UsernameTextBox.Text = My.Settings.CareLinkUserName
+        Me.PasswordTextBox.Text = My.Settings.CareLinkPassword
 
         Me.CountryComboBox.DataSource = New BindingSource(s_countryCodeList, Nothing)
         Me.CountryComboBox.DisplayMember = "Key"
@@ -30,8 +30,8 @@ Public Class LoginForm1
                 Me.OK.Enabled = True
                 Me.Cancel.Enabled = True
                 If Me.SaveCredentials.CheckState = CheckState.Checked Then
-                    My.Settings.username = Me.UsernameTextBox.Text
-                    My.Settings.password = Me.PasswordTextBox.Text
+                    My.Settings.CareLinkUserName = Me.UsernameTextBox.Text
+                    My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
                 End If
 
                 My.Settings.Save()
