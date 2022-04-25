@@ -68,15 +68,8 @@ Public Class SendMail
         End If
 
         'Set up message settings
-        Dim msg As New MailMessage With {
-            .Subject = subject,
-            .Body = body,
-            .From = New MailAddress(sendFrom)
-        }
-        msg.To.Add(New MailAddress(sendTo))
-
         ' Enviar E-mail
-        client.Send(msg)
+        client.Send(New MailMessage(sendFrom, sendTo, subject, body))
     End Sub
 
     Public Sub Send(sendTo As String, subject As String, body As String)

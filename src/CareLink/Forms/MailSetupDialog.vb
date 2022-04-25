@@ -193,11 +193,11 @@ Public Class MailSetupDialog
                 If _useExchange Then
                     Me.Cursor = Cursors.WaitCursor
                     Dim mailTestClient As New SendMail(UseExchange:=True,
-                                            userEmailAddress:=Me.MailServerUserEmailTextBox.Text,
-                                            userPassword:=Me.MailServerPasswordTextBox.Text)
+                                                       Me.MailServerUserEmailTextBox.Text,
+                                                       Me.MailServerPasswordTextBox.Text)
                     mailTestClient.Send($"{Me.AlertPhoneNumberMaskedTextBox.Text}@txt.att.net",
                                         "Test",
-                                        "")
+                                        "This is a test!")
                     Me.Cursor = Cursors.Default
                 Else
                     Dim port As Integer
@@ -207,10 +207,11 @@ Public Class MailSetupDialog
                             userPassword:=Me.MailServerPasswordTextBox.Text,
                             Host:=Me.OutGoingMailServerComboBox.SelectedValue?.ToString(),
                             Port:=port)
-                        mailTestClient.Send($"{Me.AlertPhoneNumberMaskedTextBox.Text}@txt.att.net",
+                        Dim sendTo As String = $"{Me.AlertPhoneNumberMaskedTextBox.Text}@txt.att.net"
+                        mailTestClient.Send(sendTo,
                                             Me.MailServerUserEmailTextBox.Text,
                                             "Test",
-                                            "")
+                                            "This is a test!")
                         My.Settings.MailServerPort = port
                     Else
                         Me.DialogResult = System.Windows.Forms.DialogResult.Cancel
