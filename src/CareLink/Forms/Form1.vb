@@ -1421,12 +1421,9 @@ Public Class Form1
 
         ' Order all markers by time
         Dim timeOrderedMarkers As New SortedDictionary(Of Double, Double)
-        Dim maxActiveInsulin As Double = 0
-        Dim sgDateTime As Date
         Dim sgOaDateTime As Double
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In Markers.WithIndex()
-            sgDateTime = Markers.SafeGetSgDateTime(sgListIndex.Index)
-            sgOaDateTime = sgDateTime.RoundDown(RoundTo.Minute).ToOADate
+            sgOaDateTime = Markers.SafeGetSgDateTime(sgListIndex.Index).RoundDown(RoundTo.Minute).ToOADate
             Select Case sgListIndex.Value("type")
                 Case "INSULIN"
                     Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue("programmedFastAmount")
@@ -1435,7 +1432,6 @@ Public Class Form1
                     Else
                         timeOrderedMarkers.Add(sgOaDateTime, bolusAmount)
                     End If
-                    maxActiveInsulin = Math.Max(timeOrderedMarkers(sgOaDateTime), maxActiveInsulin)
                 Case "AUTO_BASAL_DELIVERY"
                     Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue("bolusAmount")
                     If timeOrderedMarkers.ContainsKey(sgOaDateTime) Then
@@ -1443,12 +1439,8 @@ Public Class Form1
                     Else
                         timeOrderedMarkers.Add(sgOaDateTime, bolusAmount)
                     End If
-                    maxActiveInsulin = Math.Max(timeOrderedMarkers(sgOaDateTime), maxActiveInsulin)
             End Select
         Next
-        maxActiveInsulin = Math.Ceiling(maxActiveInsulin) + 1
-        _activeInsulinTabChartArea.AxisY.Maximum = maxActiveInsulin
-        _activeInsulinTabChartArea.AxisY2.Maximum = 400
 
         ' set up table that holds active insulin for every 5 minutes
         Dim remainingInsulinList As New List(Of Insulin)
@@ -1465,11 +1457,30 @@ Public Class Form1
             remainingInsulinList.Add(New Insulin(oaTime, initialBolus, _activeInsulinIncrements))
         Next
 
-        Dim bgValue As Single
+        _activeInsulinTabChartArea.AxisY2.Maximum = 400
+
+        ' walk all markers, adjust active insulin and then add new marker
+        Dim maxActiveInsulin As Double = 0
+        For i As Integer = 0 To remainingInsulinList.Count - 1
+            If i < _activeInsulinIncrements Then
+                Me.ActiveInsulinTabChart.Series("Default").Points.AddXY(remainingInsulinList(i).OaTime, Double.NaN)
+                Me.ActiveInsulinTabChart.Series("Default").Points.Last.IsEmpty = True
+                If i > 0 Then
+                    remainingInsulinList.Adjustlist(0, i)
+                End If
+                Continue For
+            End If
+            Dim startIndex As Integer = i - _activeInsulinIncrements + 1
+            Dim sum As Double = remainingInsulinList.ConditionalSum(startIndex, _activeInsulinIncrements)
+            maxActiveInsulin = Math.Max(sum, maxActiveInsulin)
+            Me.ActiveInsulinTabChart.Series("Default").Points.AddXY(remainingInsulinList(i).OaTime, sum)
+            remainingInsulinList.Adjustlist(startIndex, _activeInsulinIncrements)
+        Next
+        _activeInsulinTabChartArea.AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1
+        maxActiveInsulin = _activeInsulinTabChartArea.AxisY.Maximum
 
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In Markers.WithIndex()
-            sgDateTime = Markers.SafeGetSgDateTime(sgListIndex.Index)
-            sgOaDateTime = sgDateTime.RoundDown(RoundTo.Minute).ToOADate
+            sgOaDateTime = Markers.SafeGetSgDateTime(sgListIndex.Index).RoundDown(RoundTo.Minute).ToOADate
             With Me.ActiveInsulinTabChart
                 Select Case sgListIndex.Value("type")
                     Case "INSULIN"
@@ -1486,48 +1497,34 @@ Public Class Form1
                 End Select
             End With
         Next
-
-        ' walk all markers, adjust active insulin and then add new marker
-        For i As Integer = 0 To remainingInsulinList.Count - 1
-            If i < _activeInsulinIncrements Then
-                Me.ActiveInsulinTabChart.Series("Default").Points.AddXY(remainingInsulinList(i).OaTime, Double.NaN)
-                Me.ActiveInsulinTabChart.Series("Default").Points.Last.IsEmpty = True
-                If i > 0 Then
-                    remainingInsulinList.Adjustlist(0, i)
-                End If
-                Continue For
-            End If
-            Dim startIndex As Integer = i - _activeInsulinIncrements + 1
-            Dim sum As Double = remainingInsulinList.ConditionalSum(startIndex, _activeInsulinIncrements)
-            Me.ActiveInsulinTabChart.Series("Default").Points.AddXY(remainingInsulinList(i).OaTime, sum)
-            remainingInsulinList.Adjustlist(startIndex, _activeInsulinIncrements)
-        Next
-
         For Each sgListIndex As IndexClass(Of SgRecord) In SGs.WithIndex()
-            sgDateTime = sgListIndex.Value.datetime
-            sgOaDateTime = sgDateTime.ToOADate()
-            bgValue = sgListIndex.Value.sg
-            With Me.ActiveInsulinTabChart.Series(NameOf(CurrentBGSeries))
+            Dim bgValue As Single = sgListIndex.Value.sg
 
-                If Math.Abs(bgValue - 0) < Single.Epsilon Then
-                    .Points.AddXY(sgOaDateTime, InsulinRow)
-                    .Points.Last().IsEmpty = True
-                Else
-                    .Points.AddXY(sgOaDateTime, bgValue)
-                    If bgValue > _limithigh Then
-                        .Points.Last.Color = Color.Lime
-                    ElseIf bgValue < _limitLow Then
-                        .Points.Last.Color = Color.Red
-                    Else
-                        .Points.Last.Color = Color.Black
-                    End If
-
-                End If
-            End With
-
+            Me.PlotOnePoint(Me.ActiveInsulinTabChart.Series(NameOf(CurrentBGSeries)), sgListIndex.Value.datetime.ToOADate(), sgListIndex.Value.sg, Color.Black)
         Next
         _initialized = True
         Application.DoEvents()
+    End Sub
+
+    Private Sub PlotOnePoint(plotSeries As Series, sgOaDateTime As Double, bgValue As Single, mainLineColor As Color)
+        With plotSeries
+
+            If Math.Abs(bgValue - 0) < Single.Epsilon Then
+                .Points.AddXY(sgOaDateTime, InsulinRow)
+                .Points.Last().IsEmpty = True
+            Else
+                .Points.AddXY(sgOaDateTime, bgValue)
+                If bgValue > _limithigh Then
+                    .Points.Last.Color = Color.Lime
+                ElseIf bgValue < _limitLow Then
+                    .Points.Last.Color = Color.Red
+                Else
+                    .Points.Last.Color = mainLineColor
+                End If
+
+            End If
+        End With
+
     End Sub
 
     Private Sub UpdateAllTabPages()
@@ -1604,13 +1601,11 @@ Public Class Form1
         Me.HomePageChart.Series(NameOf(LowLimitSeries)).Points.Clear()
         _markerInsulinDictionary.Clear()
         _markerMealDictionary.Clear()
-        Dim bgValue As Single
-        Dim sgDateTime As Date
-        Dim sgOaDateTime As Double
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In Markers.WithIndex()
-            sgDateTime = Markers.SafeGetSgDateTime(sgListIndex.Index)
-            sgOaDateTime = sgDateTime.ToOADate()
+            Dim sgDateTime As Date = Markers.SafeGetSgDateTime(sgListIndex.Index)
+            Dim sgOaDateTime As Double = sgDateTime.ToOADate()
             Dim bgValueString As String = ""
+            Dim bgValue As Single
             If sgListIndex.Value.TryGetValue("value", bgValueString) Then
                 bgValue = CInt(bgValueString)
                 If bgValue < InsulinRow Then Stop
@@ -1661,30 +1656,11 @@ Public Class Form1
             End With
         Next
         _initialized = True
+        Dim limitsIndexList(SGs.Count - 1) As Integer
+        Me.GetLimitsList(limitsIndexList)
         For Each sgListIndex As IndexClass(Of SgRecord) In SGs.WithIndex()
-            sgDateTime = sgListIndex.Value.datetime
-            sgOaDateTime = sgDateTime.ToOADate()
-            bgValue = sgListIndex.Value.sg
-            With Me.HomePageChart.Series("Default")
-
-                If Math.Abs(bgValue - 0) < Single.Epsilon Then
-                    .Points.AddXY(sgOaDateTime, InsulinRow)
-                    .Points.Last().IsEmpty = True
-                Else
-                    .Points.AddXY(sgOaDateTime, bgValue)
-                    If bgValue > _limithigh Then
-                        .Points.Last.Color = Color.Lime
-                    ElseIf bgValue < _limitLow Then
-                        .Points.Last.Color = Color.Red
-                    Else
-                        .Points.Last.Color = Color.White
-                    End If
-
-                End If
-            End With
-
-            Dim limitsIndexList(SGs.Count - 1) As Integer
-            Me.GetLimitsList(limitsIndexList)
+            Dim sgOaDateTime As Double = sgListIndex.Value.datetime.ToOADate()
+            Me.PlotOnePoint(Me.HomePageChart.Series("Default"), sgOaDateTime, sgListIndex.Value.sg, Color.White)
             Dim limitsLowValue As Integer = CInt(Limits(limitsIndexList(sgListIndex.Index))("lowLimit"))
             Dim limitsHighValue As Integer = CInt(Limits(limitsIndexList(sgListIndex.Index))("highLimit"))
             Me.HomePageChart.Series(NameOf(HighLimitSeries)).Points.AddXY(sgOaDateTime, limitsHighValue)
