@@ -144,7 +144,7 @@ Partial Class MailSetupDialog
         Me.SendTestMessageCheckBox.Name = "SendTestMessageCheckBox"
         Me.SendTestMessageCheckBox.Size = New System.Drawing.Size(124, 19)
         Me.SendTestMessageCheckBox.TabIndex = 11
-        Me.SendTestMessageCheckBox.Text = "SendUsingExchange Test Message"
+        Me.SendTestMessageCheckBox.Text = "Send Test Message"
         Me.SendTestMessageCheckBox.UseVisualStyleBackColor = True
         '
         'ErrorProvider1
