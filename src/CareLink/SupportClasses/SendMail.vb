@@ -37,7 +37,7 @@ Public Class SendMail
             client.Port = Port
             client.UseDefaultCredentials = False
             client.DeliveryMethod = SmtpDeliveryMethod.Network
-            client.Credentials = New Net.NetworkCredential(userEmailAddress, userPassword)
+            client.Credentials = New NetworkCredential(userEmailAddress, userPassword)
             client.TargetName = $"STARTTLS/{Host}"
             client.EnableSsl = True
 
@@ -50,7 +50,7 @@ Public Class SendMail
         Return url.ToLower().StartsWith("https://")
     End Function
 
-    Public Sub Send(sendTo As String, sendFrom As String, subject As String, body As String)
+    Public Sub Send(sendTo As String, sendFrom As String, subject As String, Optional body As String = "")
         If String.IsNullOrWhiteSpace(sendTo) Then
             Throw New ArgumentException($"'{NameOf(sendTo)}' cannot be null or empty.", NameOf(sendTo))
         End If
@@ -69,10 +69,10 @@ Public Class SendMail
 
         'Set up message settings
         ' Enviar E-mail
-        client.Send(New MailMessage(sendFrom, sendTo, subject, body))
+        client.Send(sendFrom, sendTo, subject, body)
     End Sub
 
-    Public Sub Send(sendTo As String, subject As String, body As String)
+    Public Sub SendUsingExchange(sendTo As String, subject As String, Optional body As String = "")
         If String.IsNullOrWhiteSpace(sendTo) Then
             Throw New ArgumentException($"'{NameOf(sendTo)}' cannot be null or empty.", NameOf(sendTo))
         End If
