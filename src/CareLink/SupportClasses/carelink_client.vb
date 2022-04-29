@@ -377,9 +377,6 @@ Public Class CareLinkClient
                     headers("Content-Type") = "application/json; charset=utf-8"
                     response = _httpClient.Get(url, headers, params:=payload)
                     _lastResponseCode = response.StatusCode
-                    If Not response.StatusCode = HttpStatusCode.OK Then
-                        Throw New Exception("session get response is not OK")
-                    End If
                 Else
                     headers("Accept") = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;deviceFamily=b3;q=0.9"
                     'headers("Content-Type") = "application/x-www-form-urlencoded"
@@ -391,12 +388,15 @@ Public Class CareLinkClient
                     Next
                     Dim postRequest As New HttpRequestMessage(HttpMethod.Post, New Uri(url)) With {.Content = Http.Json.JsonContent.Create(requestBody)}
                     response = _httpClient.SendAsync(postRequest).Result ' Post(url, headers, data:=requestBody)
-                    If Not response.StatusCode = HttpStatusCode.OK Then
-                        Throw New Exception($"session get response {response.StatusCode} is not OK")
-                    End If
                 End If
-                jsondata = Loads(response.Text)
-                _lastDataSuccess = True
+                If response.StatusCode = HttpStatusCode.OK Then
+                    jsondata = Loads(response.Text)
+                    _lastDataSuccess = True
+                ElseIf response.StatusCode = HttpStatusCode.Unauthorized Then
+                    ' Ignore handled elsewhere
+                Else
+                    Throw New Exception("session get response is not OK")
+                End If
             Catch e As Exception
                 Debug.Print($"__getData() failed {e.Message}")
             End Try
