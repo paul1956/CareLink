@@ -41,7 +41,7 @@ Partial Class BGMiniWindow
         Me.BGTextBox.Margin = New System.Windows.Forms.Padding(0)
         Me.BGTextBox.Name = "BGTextBox"
         Me.BGTextBox.Size = New System.Drawing.Size(129, 86)
-        Me.BGTextBox.TabIndex = 0
+        Me.BGTextBox.TabIndex = 1
         Me.BGTextBox.Text = "999"
         Me.BGTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -53,7 +53,7 @@ Partial Class BGMiniWindow
         Me.ActiveInsulinTextBox.Location = New System.Drawing.Point(0, 0)
         Me.ActiveInsulinTextBox.Name = "ActiveInsulinTextBox"
         Me.ActiveInsulinTextBox.Size = New System.Drawing.Size(230, 26)
-        Me.ActiveInsulinTextBox.TabIndex = 1
+        Me.ActiveInsulinTextBox.TabIndex = 0
         Me.ActiveInsulinTextBox.Text = "Active Insulin: ???"
         Me.ActiveInsulinTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -67,12 +67,12 @@ Partial Class BGMiniWindow
         'DeltaTextBox
         '
         Me.DeltaTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.DeltaTextBox.Font = New System.Drawing.Font("Segoe UI", 36!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.DeltaTextBox.Font = New System.Drawing.Font("Segoe UI", 36.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
         Me.DeltaTextBox.Location = New System.Drawing.Point(132, 40)
         Me.DeltaTextBox.Margin = New System.Windows.Forms.Padding(0)
         Me.DeltaTextBox.Name = "DeltaTextBox"
         Me.DeltaTextBox.Size = New System.Drawing.Size(98, 64)
-        Me.DeltaTextBox.TabIndex = 3
+        Me.DeltaTextBox.TabIndex = 2
         Me.DeltaTextBox.Text = "+10"
         '
         'CloseButton
@@ -80,7 +80,7 @@ Partial Class BGMiniWindow
         Me.CloseButton.Location = New System.Drawing.Point(133, 99)
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(97, 23)
-        Me.CloseButton.TabIndex = 4
+        Me.CloseButton.TabIndex = 3
         Me.CloseButton.Text = "Hide"
         Me.CloseButton.UseVisualStyleBackColor = true
         '

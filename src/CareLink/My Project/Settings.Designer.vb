@@ -15,7 +15,7 @@ Option Explicit On
 Namespace My
     
     <Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(),  _
-     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.2.0.0"),  _
+     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.3.0.0"),  _
      Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)>  _
     Partial Friend NotInheritable Class MySettings
         Inherits Global.System.Configuration.ApplicationSettingsBase
@@ -77,112 +77,136 @@ Namespace My
                 Me("CareLinkPassword") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("False")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
         Public Property UseTestData() As Boolean
             Get
-                Return CType(Me("UseTestData"), Boolean)
+                Return CType(Me("UseTestData"),Boolean)
             End Get
             Set
-                Me("UseTestData") = Value
+                Me("UseTestData") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
         Public Property OutGoingMailServer() As String
             Get
-                Return CType(Me("OutGoingMailServer"), String)
+                Return CType(Me("OutGoingMailServer"),String)
             End Get
             Set
-                Me("OutGoingMailServer") = Value
+                Me("OutGoingMailServer") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("0")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
         Public Property MailServerPort() As Integer
             Get
-                Return CType(Me("MailServerPort"), Integer)
+                Return CType(Me("MailServerPort"),Integer)
             End Get
             Set
-                Me("MailServerPort") = Value
+                Me("MailServerPort") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
         Public Property NotificationPhoneNumber() As String
             Get
-                Return CType(Me("NotificationPhoneNumber"), String)
+                Return CType(Me("NotificationPhoneNumber"),String)
             End Get
             Set
-                Me("NotificationPhoneNumber") = Value
+                Me("NotificationPhoneNumber") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
         Public Property CountryCode() As String
             Get
-                Return CType(Me("CountryCode"), String)
+                Return CType(Me("CountryCode"),String)
             End Get
             Set
-                Me("CountryCode") = Value
+                Me("CountryCode") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
         Public Property MailServerUserName() As String
             Get
-                Return CType(Me("MailServerUserName"), String)
+                Return CType(Me("MailServerUserName"),String)
             End Get
             Set
-                Me("MailServerUserName") = Value
+                Me("MailServerUserName") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
         Public Property MailServerPassword() As String
             Get
-                Return CType(Me("MailServerPassword"), String)
+                Return CType(Me("MailServerPassword"),String)
             End Get
             Set
-                Me("MailServerPassword") = Value
+                Me("MailServerPassword") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
         Public Property AlertPhoneNumber() As String
             Get
-                Return CType(Me("AlertPhoneNumber"), String)
+                Return CType(Me("AlertPhoneNumber"),String)
             End Get
             Set
-                Me("AlertPhoneNumber") = Value
+                Me("AlertPhoneNumber") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("02:15:00")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("02:15:00")>  _
         Public Property AIT() As Global.System.TimeSpan
             Get
-                Return CType(Me("AIT"), Global.System.TimeSpan)
+                Return CType(Me("AIT"),Global.System.TimeSpan)
             End Get
             Set
-                Me("AIT") = Value
+                Me("AIT") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property UpgradeRequired() As Boolean
+            Get
+                Return CType(Me("UpgradeRequired"),Boolean)
+            End Get
+            Set
+                Me("UpgradeRequired") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("txt.att.net")>  _
+        Public Property CarrierTextingDomain() As String
+            Get
+                Return CType(Me("CarrierTextingDomain"),String)
+            End Get
+            Set
+                Me("CarrierTextingDomain") = value
             End Set
         End Property
     End Class

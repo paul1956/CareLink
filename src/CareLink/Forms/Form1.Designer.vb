@@ -30,6 +30,7 @@ Partial Class Form1
         Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OptionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.FilterRawJSONDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SetupEmailServerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.UseTestDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowMiniDisplayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -97,7 +98,6 @@ Partial Class Form1
         Me.CursorTimer = New System.Windows.Forms.Timer(Me.components)
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
         Me.WatchdogTimer = New System.Windows.Forms.Timer(Me.components)
-        Me.SetupEmailServerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -165,6 +165,12 @@ Partial Class Form1
         Me.FilterRawJSONDataToolStripMenuItem.Name = "FilterRawJSONDataToolStripMenuItem"
         Me.FilterRawJSONDataToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
         Me.FilterRawJSONDataToolStripMenuItem.Text = "Filter Raw JSON Data"
+        '
+        'SetupEmailServerToolStripMenuItem
+        '
+        Me.SetupEmailServerToolStripMenuItem.Name = "SetupEmailServerToolStripMenuItem"
+        Me.SetupEmailServerToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
+        Me.SetupEmailServerToolStripMenuItem.Text = "Setup Email Server"
         '
         'UseTestDataToolStripMenuItem
         '
@@ -1063,12 +1069,6 @@ Partial Class Form1
         'WatchdogTimer
         '
         Me.WatchdogTimer.Interval = 360000
-        '
-        'SetupEmailServerToolStripMenuItem
-        '
-        Me.SetupEmailServerToolStripMenuItem.Name = "SetupEmailServerToolStripMenuItem"
-        Me.SetupEmailServerToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
-        Me.SetupEmailServerToolStripMenuItem.Text = "Setup Email Server"
         '
         'Form1
         '

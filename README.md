@@ -14,7 +14,7 @@
 - Medtronic CareLink data display
 
 ## Updated
-- 4/12/2022
+- 5/23/2022
 
 ## Description
 

@@ -8,7 +8,7 @@ Imports Microsoft.Exchange.WebServices.Data
 
 Public Class SendMail
 
-    Public client As New SmtpClient()
+    Public client As SmtpClient
 
     Public service As New ExchangeService()
 
@@ -33,13 +33,15 @@ Public Class SendMail
                 Throw New ArgumentException($"'{NameOf(Port)}' cannot be 0.", NameOf(Port))
             End If
             'setup SMTP Host Here
-            client.Host = Host
-            client.Port = Port
-            client.UseDefaultCredentials = False
-            client.DeliveryMethod = SmtpDeliveryMethod.Network
-            client.Credentials = New NetworkCredential(userEmailAddress, userPassword)
-            client.TargetName = $"STARTTLS/{Host}"
-            client.EnableSsl = True
+            client = New SmtpClient With {
+                .DeliveryMethod = SmtpDeliveryMethod.Network,
+                .UseDefaultCredentials = False,
+                .EnableSsl = True,
+                .Host = Host,
+                .Port = Port,
+                .Credentials = New NetworkCredential(userEmailAddress, userPassword)
+                                                                                    _ ' , .TargetName = $"STARTTLS/{Host}"
+            }
 
         End If
 
@@ -68,7 +70,6 @@ Public Class SendMail
         End If
 
         'Set up message settings
-        ' Enviar E-mail
         client.Send(sendFrom, sendTo, subject, body)
     End Sub
 
