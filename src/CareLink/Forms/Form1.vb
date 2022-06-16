@@ -27,7 +27,7 @@ Public Class Form1
         }
 
     Private Shared ReadOnly s_lastAlarmFilter As New List(Of String) From {
-            "code",
+        "code",
         "GUID",
         "instanceId",
         "kind",
@@ -107,11 +107,17 @@ Public Class Form1
 #Region "Messages"
 
     Private ReadOnly _messages As New Dictionary(Of String, String) From {
-        {"BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR", "Calibrate sensor"},
+        {"BC_MESSAGE_BASAL_STARTED", "Automode exit, manual basal started"},
+        {"BC_MESSAGE_SG_UNDER_50_MG_DL", "BG under..."}, ' The actual message is generated at runtime
+        {"BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR", "Check BG and calibrate sensor"},
+        {"BC_SID_IF_NEW_SENSR_SELCT_START_NEW_ELSE_REWIND", "If new sensor select start new else rewind"},
+        {"BC_SID_LOW_SD_CHECK_BG", "Low sensor reading check BG"},
+        {"BC_SID_MOVE_PUMP_CLOSER_TO_MINILINK", "Move pump closer to transmitter"},
+        {"BC_SID_SG_APPROACH_HIGH_LIMIT_CHECK_BG", "BG approaching high limit"},
         {"CALIBRATING", "Calibrating ..."},
         {"CALIBRATION_REQUIRED", "Calibration required"},
         {"NO_DATE_FROM_PUMP", "No data from pump"},
-        {"NO_ERROR_MESSAGE", ""},
+        {"NO_ERROR_MESSAGE", "---"},
         {"SEARCHING_FOR_SENSOR_SIGNAL", "Searching for sensor signal"},
         {"SENSOR_DISCONNECTED", "Sensor disconnected"},
         {"UNKNOWN", "Unknown"},
@@ -170,7 +176,6 @@ Public Class Form1
     Public MedicalDeviceSuspended As Boolean
     Public MedicalDeviceTime As String
     Public MedicalDeviceTimeAsString As String
-    Public NotificationHistory As New Dictionary(Of String, List(Of Dictionary(Of String, String)))
     Public PumpBannerState As List(Of Dictionary(Of String, String))
     Public PumpCommunicationState As Boolean
     Public PumpModelNumber As String
@@ -639,9 +644,6 @@ Public Class Form1
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
         tableLevel1Blue.BackColor = Color.LightBlue
-        If itemIndex = ItemIndexs.notificationHistory Then
-            NotificationHistory = New Dictionary(Of String, List(Of Dictionary(Of String, String)))
-        End If
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In innerJson.WithIndex()
             Application.DoEvents()
             Dim innerRow As KeyValuePair(Of String, String) = c.Value
@@ -665,9 +667,6 @@ Public Class Form1
 
             If innerRow.Value.StartsWith("[") Then
                 Dim innerJson1 As List(Of Dictionary(Of String, String)) = LoadList(innerRow.Value)
-                If itemIndex = ItemIndexs.notificationHistory Then
-                    NotificationHistory.Add(innerRow.Key, innerJson1)
-                End If
                 If innerJson1.Count > 0 Then
                     Dim tableLevel2 As New TableLayoutPanel With {
                             .AutoScroll = False,
@@ -704,6 +703,12 @@ Public Class Form1
                             End If
                             tableLevel3.RowCount += 1
                             tableLevel3.RowStyles.Add(New RowStyle(SizeType.Absolute, 22.0))
+                            Dim messageValue As String = ""
+                            If _messages.TryGetValue(e.Value.Value, messageValue) Then
+                                messageValue = $"{e.Value.Value} = {_messages(e.Value.Value)}"
+                            Else
+                                messageValue = e.Value.Value
+                            End If
                             tableLevel3.Controls.AddRange({New Label With {
                                                                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                                     .Text = e.Value.Key,
@@ -712,7 +717,7 @@ Public Class Form1
                                                                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                                     .AutoSize = True,
                                                                     .[ReadOnly] = True,
-                                                                    .Text = e.Value.Value}})
+                                                                    .Text = messageValue}})
                             Application.DoEvents()
                         Next
                         tableLevel3.Height += 40
@@ -1181,11 +1186,13 @@ Public Class Form1
                         _timeFormat = TwelveHourTimeWithMinuteFormat
                         _homePageChartChartArea.AxisX.LabelStyle.Format = "hh tt"
                         _activeInsulinTabChartArea.AxisX.LabelStyle.Format = "hh tt"
+                        _messages("BC_MESSAGE_SG_UNDER_50_MG_DL") = $"BG under 50 {Me.BgUnitsString}"
                     Else
                         _limithigh = 10.0
                         _limitLow = (70 / 18).RoundSingle(1)
                         _timeFormat = MilitaryTimeWithMinuteFormat
                         _activeInsulinTabChartArea.AxisX.LabelStyle.Format = "HH"
+                        _messages("BC_MESSAGE_SG_UNDER_50_MG_DL") = $"BG under 2.7 {Me.BgUnitsString}"
                     End If
                     Me.AboveHighLimitMessageLabel.Text = $"Above {_limithigh} {Me.BgUnitsString}"
                     Me.AverageSGUnitsLabel.Text = Me.BgUnitsString
@@ -1575,7 +1582,13 @@ Public Class Form1
             Me.SensorMessage.Parent = Me.ShieldPictureBox
             Me.SensorMessage.Left = 0
             Me.SensorMessage.BackColor = Color.Transparent
-            Me.SensorMessage.Text = If(SensorState = "NO_ERROR_MESSAGE", "---", _messages(SensorState))
+            Dim message As String = ""
+            If _messages.TryGetValue(SensorState, message) Then
+                message = SensorState.Replace("_", " ")
+            Else
+                MsgBox($"{SensorState} is unknown sensor message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
+            End If
+            Me.SensorMessage.Text = message
             Me.ShieldUnitsLabel.Visible = False
             Me.SensorMessage.Visible = True
         End If
