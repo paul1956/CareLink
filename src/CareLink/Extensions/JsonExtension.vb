@@ -7,6 +7,7 @@ Imports System.Text.Json
 Imports System.Text.Json.Serialization
 
 Public Module Json
+
     <Extension>
     Private Function ItemAsString(item As KeyValuePair(Of String, Object)) As String
         Dim itemValue As JsonElement = CType(item.Value, JsonElement)

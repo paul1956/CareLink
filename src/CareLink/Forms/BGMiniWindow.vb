@@ -96,4 +96,5 @@ Public Class BGMiniWindow
         My.Forms.Form1.Visible = True
         Me.Hide()
     End Sub
+
 End Class
