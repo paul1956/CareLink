@@ -114,6 +114,7 @@ Public Class Form1
         {"BC_SID_LOW_SD_CHECK_BG", "Low sensor reading check BG"},
         {"BC_SID_MOVE_PUMP_CLOSER_TO_MINILINK", "Move pump closer to transmitter"},
         {"BC_SID_SG_APPROACH_HIGH_LIMIT_CHECK_BG", "BG approaching high limit"},
+        {"BC_SID_SG_RISE_RAPID", "BG rapidly raising"},
         {"CALIBRATING", "Calibrating ..."},
         {"CALIBRATION_REQUIRED", "Calibration required"},
         {"NO_DATE_FROM_PUMP", "No data from pump"},
