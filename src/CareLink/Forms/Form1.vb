@@ -705,10 +705,17 @@ Public Class Form1
                             tableLevel3.RowCount += 1
                             tableLevel3.RowStyles.Add(New RowStyle(SizeType.Absolute, 22.0))
                             Dim messageValue As String = ""
-                            If _messages.TryGetValue(e.Value.Value, messageValue) Then
-                                messageValue = $"{e.Value.Value} = {_messages(e.Value.Value)}"
-                            Else
+                            If e.Value.Key <> "messageid" Then
                                 messageValue = e.Value.Value
+                            Else
+                                If _messages.TryGetValue(e.Value.Value, messageValue) Then
+                                    messageValue = $"{e.Value.Value} = {_messages(e.Value.Value)}"
+                                Else
+                                    If Debugger.IsAttached Then
+                                        MsgBox($"Unknown sensor message '{e.Value.Value}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Unknown Sensor Message")
+                                    End If
+                                    messageValue = e.Value.Value
+                                End If
                             End If
                             tableLevel3.Controls.AddRange({New Label With {
                                                                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
