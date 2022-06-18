@@ -117,7 +117,7 @@ Public Class Form1
         {"BC_SID_SG_RISE_RAPID", "BG rapidly raising"},
         {"CALIBRATING", "Calibrating ..."},
         {"CALIBRATION_REQUIRED", "Calibration required"},
-        {"NO_DATE_FROM_PUMP", "No data from pump"},
+        {"NO_DATA_FROM_PUMP", "No data from pump"},
         {"NO_ERROR_MESSAGE", "---"},
         {"SEARCHING_FOR_SENSOR_SIGNAL", "Searching for sensor signal"},
         {"SENSOR_DISCONNECTED", "Sensor disconnected"},
@@ -125,11 +125,15 @@ Public Class Form1
         {"WARM_UP", "Sensor warm up..."},
         {"WAIT_TO_CALIBRATE", "Wait To Calibrate..."}
         }
+    Private ReadOnly _messagesSpecialHandling As New Dictionary(Of String, String) From {
+        {"BC_MESSAGE_TIME_REMAINING_CHANGE_RESERVOIR", "(0) units remaining, change reservoir:unitsRemaining"},
+        {"BC_SID_THREE_DAYS_SINCE_LAST_SET_CHANGE", "(0) days since last set change:lastSetChange"}
+        }
 
     ' Add additional units here, default
     Private ReadOnly _unitsStrings As New Dictionary(Of String, String) From {
-        {"MGDL", "mg/dl"},
-        {"MMOLL", "mmol/L"}
+            {"MGDL", "mg/dl"},
+            {"MMOLL", "mmol/L"}
         }
 
 #End Region
@@ -704,28 +708,14 @@ Public Class Form1
                             End If
                             tableLevel3.RowCount += 1
                             tableLevel3.RowStyles.Add(New RowStyle(SizeType.Absolute, 22.0))
-                            Dim messageValue As String = ""
-                            If e.Value.Key <> "messageid" Then
-                                messageValue = e.Value.Value
-                            Else
-                                If _messages.TryGetValue(e.Value.Value, messageValue) Then
-                                    messageValue = $"{e.Value.Value} = {_messages(e.Value.Value)}"
-                                Else
-                                    If Debugger.IsAttached Then
-                                        MsgBox($"Unknown sensor message '{e.Value.Value}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Unknown Sensor Message")
-                                    End If
-                                    messageValue = e.Value.Value
-                                End If
-                            End If
-                            tableLevel3.Controls.AddRange({New Label With {
-                                                                    .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                                                    .Text = e.Value.Key,
-                                                                    .AutoSize = True},
-                                                                 New TextBox With {
-                                                                    .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                                                    .AutoSize = True,
-                                                                    .[ReadOnly] = True,
-                                                                    .Text = messageValue}})
+                            tableLevel3.Controls.AddRange({New Label With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                                                                   .Text = e.Value.Key,
+                                                                                   .AutoSize = True},
+                                                                                   New TextBox With {
+                                                                                        .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                                                                        .AutoSize = True,
+                                                                                        .[ReadOnly] = True,
+                                                                                        .Text = Me.GetTranslatedMessageIdOrValue(dic, e.Value)}})
                             Application.DoEvents()
                         Next
                         tableLevel3.Height += 40
@@ -735,20 +725,25 @@ Public Class Form1
                     Next
                     tableLevel1Blue.Controls.AddRange({label1, tableLevel2})
                 Else
-                    tableLevel1Blue.Controls.AddRange({label1, New TextBox With {
-                                               .Text = "",
-                                               .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                               .AutoSize = True,
-                                               .[ReadOnly] = True
-                                               }})
+                    tableLevel1Blue.Controls.AddRange({label1,
+                                                               New TextBox With {
+                                                                   .Text = "",
+                                                                   .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                                                   .AutoSize = True,
+                                                                   .[ReadOnly] = True
+                                                                   }
+                                                               })
                 End If
             Else
-                tableLevel1Blue.Controls.AddRange({label1, New TextBox With {
-                                           .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                           .AutoSize = True,
-                                           .Text = innerRow.Value,
-                                           .[ReadOnly] = True
-                                           }})
+                Dim messageValue As String = innerRow.Value
+                tableLevel1Blue.Controls.AddRange({label1,
+                                                           New TextBox With {
+                                                               .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                                               .AutoSize = True,
+                                                               .Text = Me.GetTranslatedMessageIdOrValue(innerJson, innerRow),
+                                                               .[ReadOnly] = True
+                                                               }
+                                                           })
             End If
         Next
 
@@ -802,6 +797,25 @@ Public Class Form1
         Next
     End Sub
 
+    Private Function GetTranslatedMessageIdOrValue(dic As Dictionary(Of String, String), entry As KeyValuePair(Of String, String)) As String
+        If entry.Key <> "messageid" Then
+            Return entry.Value
+        End If
+        Dim messageValue As String = ""
+        If _messages.TryGetValue(entry.Value, messageValue) Then
+            Return $"{entry.Value} = {messageValue}"
+        End If
+        If _messagesSpecialHandling.TryGetValue(entry.Value, messageValue) Then
+            Dim splitMessageValue As String() = messageValue.Split(":")
+            Return $"{entry.Value} = {splitMessageValue(0).Replace("(0)", dic(splitMessageValue(1)))}"
+        End If
+
+        If Debugger.IsAttached Then
+            MsgBox($"Unknown sensor message '{entry.Value}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Unknown Sensor Message")
+        End If
+
+        Return entry.Value.Replace("_", " ")
+    End Function
     Private Sub InitializeActiveInsulinTabChart()
         Me.ActiveInsulinTabChart = New Chart With {
              .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
@@ -1397,6 +1411,27 @@ Public Class Form1
         Me.Cursor = Cursors.Default
     End Sub
 
+    Private Sub PlotOnePoint(plotSeries As Series, sgOaDateTime As Double, bgValue As Single, mainLineColor As Color)
+        With plotSeries
+
+            If Math.Abs(bgValue - 0) < Single.Epsilon Then
+                .Points.AddXY(sgOaDateTime, InsulinRow)
+                .Points.Last().IsEmpty = True
+            Else
+                .Points.AddXY(sgOaDateTime, bgValue)
+                If bgValue > _limithigh Then
+                    .Points.Last.Color = Color.Lime
+                ElseIf bgValue < _limitLow Then
+                    .Points.Last.Color = Color.Red
+                Else
+                    .Points.Last.Color = mainLineColor
+                End If
+
+            End If
+        End With
+
+    End Sub
+
     Private Function RecentDataUpdated() As Boolean
         If _recentDatalast Is Nothing OrElse _recentData Is Nothing Then
             Return False
@@ -1527,28 +1562,6 @@ Public Class Form1
         _initialized = True
         Application.DoEvents()
     End Sub
-
-    Private Sub PlotOnePoint(plotSeries As Series, sgOaDateTime As Double, bgValue As Single, mainLineColor As Color)
-        With plotSeries
-
-            If Math.Abs(bgValue - 0) < Single.Epsilon Then
-                .Points.AddXY(sgOaDateTime, InsulinRow)
-                .Points.Last().IsEmpty = True
-            Else
-                .Points.AddXY(sgOaDateTime, bgValue)
-                If bgValue > _limithigh Then
-                    .Points.Last.Color = Color.Lime
-                ElseIf bgValue < _limitLow Then
-                    .Points.Last.Color = Color.Red
-                Else
-                    .Points.Last.Color = mainLineColor
-                End If
-
-            End If
-        End With
-
-    End Sub
-
     Private Sub UpdateAllTabPages()
         If _recentData Is Nothing OrElse _updating Then
             Exit Sub
@@ -1618,6 +1631,26 @@ Public Class Form1
         Else
             Me.CalibrationDueImage.Image = Me.DrawCenteredArc(My.Resources.CalibrationDot, TimeToNextCalibHours / 12)
         End If
+
+        Application.DoEvents()
+    End Sub
+
+    Private Sub UpdateHomeTabPage()
+        If Not _initialized Then
+            Exit Sub
+        End If
+        _initialized = False
+        Me.UpdateActiveInsulin()
+        Me.UpdateAutoModeShield()
+        Me.UpdateCalibrationTimeRemaining()
+        Me.UpdateInsulinLevel()
+        Me.UpdatePumpBattery()
+        Me.UpdateRemainingInsulin()
+        Me.UpdateSensorLife()
+        Me.UpdateTimeInRange()
+        Me.UpdateTransmitterBatttery()
+
+        Me.UpdateHomeTabSerieses()
 
         Application.DoEvents()
     End Sub
@@ -1695,27 +1728,6 @@ Public Class Form1
             Me.HomePageChart.Series(NameOf(LowLimitSeries)).Points.AddXY(sgOaDateTime, limitsLowValue)
         Next
     End Sub
-
-    Private Sub UpdateHomeTabPage()
-        If Not _initialized Then
-            Exit Sub
-        End If
-        _initialized = False
-        Me.UpdateActiveInsulin()
-        Me.UpdateAutoModeShield()
-        Me.UpdateCalibrationTimeRemaining()
-        Me.UpdateInsulinLevel()
-        Me.UpdatePumpBattery()
-        Me.UpdateRemainingInsulin()
-        Me.UpdateSensorLife()
-        Me.UpdateTimeInRange()
-        Me.UpdateTransmitterBatttery()
-
-        Me.UpdateHomeTabSerieses()
-
-        Application.DoEvents()
-    End Sub
-
     Private Sub UpdateInsulinLevel()
         If ReservoirLevelPercent = 0 Then
             Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(0)
