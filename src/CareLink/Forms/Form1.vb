@@ -18,7 +18,7 @@ Public Class Form1
     Private Const MarkerRow As Integer = 400
 
     Private Const MilitaryTimeWithMinuteFormat As String = "HH:mm"
-    Private Const TwelveHourTimeWithMinuteFormat As String = "hh:mm tt"
+    Private Const TwelveHourTimeWithMinuteFormat As String = "h:mm tt"
 
     Private Shared ReadOnly s_alwaysFilter As New List(Of String) From {
         "kind",
@@ -56,7 +56,7 @@ Public Class Form1
         }
 
     ' do not rename or move up
-    Private Shared ReadOnly s_zfilterList As New Dictionary(Of Integer, List(Of String)) From {
+    Private Shared ReadOnly s_zFilterList As New Dictionary(Of Integer, List(Of String)) From {
         {ItemIndexs.lastAlarm, s_lastAlarmFilter},
         {ItemIndexs.lastSG, s_alwaysFilter},
         {ItemIndexs.markers, s_markersFilter},
@@ -113,7 +113,7 @@ Public Class Form1
         {"BC_SID_IF_NEW_SENSR_SELCT_START_NEW_ELSE_REWIND", "If new sensor select start new else rewind"},
         {"BC_SID_LOW_SD_CHECK_BG", "Low sensor reading check BG"},
         {"BC_SID_MOVE_PUMP_CLOSER_TO_MINILINK", "Move pump closer to transmitter"},
-        {"BC_SID_SG_APPROACH_HIGH_LIMIT_CHECK_BG", "BG approaching high limit"},
+        {"BC_SID_SG_APPROACH_HIGH_LIMIT_CHECK_BG", "Sensor glucose approaching high limit. Check BG."},
         {"BC_SID_SG_RISE_RAPID", "BG rapidly raising"},
         {"CALIBRATING", "Calibrating ..."},
         {"CALIBRATION_REQUIRED", "Calibration required"},
@@ -126,7 +126,8 @@ Public Class Form1
         {"WAIT_TO_CALIBRATE", "Wait To Calibrate..."}
         }
     Private ReadOnly _messagesSpecialHandling As New Dictionary(Of String, String) From {
-        {"BC_MESSAGE_TIME_REMAINING_CHANGE_RESERVOIR", "(0) units remaining, change reservoir:unitsRemaining"},
+        {"BC_MESSAGE_TIME_REMAINING_CHANGE_RESERVOIR", "(0) units remaining. Change reservoir.:unitsRemaining"},
+        {"BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR_TO_RECEIVE", "Check BG by (0) and calibrate to continuing receiving sensor information:secondaryTime"},
         {"BC_SID_THREE_DAYS_SINCE_LAST_SET_CHANGE", "(0) days since last set change:lastSetChange"}
         }
 
@@ -654,8 +655,8 @@ Public Class Form1
             Dim innerRow As KeyValuePair(Of String, String) = c.Value
             ' Comment out 4 lines below to see all data fields.
             ' I did not see any use to display the filtered out ones
-            If _filterJsonData AndAlso s_zfilterList.ContainsKey(itemIndex) Then
-                If s_zfilterList(itemIndex).Contains(innerRow.Key) Then
+            If _filterJsonData AndAlso s_zFilterList.ContainsKey(itemIndex) Then
+                If s_zFilterList(itemIndex).Contains(innerRow.Key) Then
                     Continue For
                 End If
             End If
@@ -664,11 +665,10 @@ Public Class Form1
             If itemIndex = ItemIndexs.limits OrElse itemIndex = ItemIndexs.markers Then
                 tableLevel1Blue.AutoSize = True
             End If
-            Dim label1 As New Label With {
-                    .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                    .Text = innerRow.Key,
-                    .AutoSize = True
-                    }
+            Dim keyLabel As New Label With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                            .Text = innerRow.Key,
+                                            .AutoSize = True
+                                           }
 
             If innerRow.Value.StartsWith("[") Then
                 Dim innerJson1 As List(Of Dictionary(Of String, String)) = LoadList(innerRow.Value)
@@ -701,8 +701,8 @@ Public Class Form1
                                 .Dock = DockStyle.Top
                                 }
                         For Each e As IndexClass(Of KeyValuePair(Of String, String)) In dic.WithIndex()
-                            If _filterJsonData AndAlso s_zfilterList.ContainsKey(itemIndex) Then
-                                If s_zfilterList(itemIndex).Contains(e.Value.Key) Then
+                            If _filterJsonData AndAlso s_zFilterList.ContainsKey(itemIndex) Then
+                                If s_zFilterList(itemIndex).Contains(e.Value.Key) Then
                                     Continue For
                                 End If
                             End If
@@ -723,9 +723,9 @@ Public Class Form1
                         tableLevel2.Height += 4
                         Application.DoEvents()
                     Next
-                    tableLevel1Blue.Controls.AddRange({label1, tableLevel2})
+                    tableLevel1Blue.Controls.AddRange({keyLabel, tableLevel2})
                 Else
-                    tableLevel1Blue.Controls.AddRange({label1,
+                    tableLevel1Blue.Controls.AddRange({keyLabel,
                                                                New TextBox With {
                                                                    .Text = "",
                                                                    .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
@@ -735,14 +735,13 @@ Public Class Form1
                                                                })
                 End If
             Else
-                Dim messageValue As String = innerRow.Value
-                tableLevel1Blue.Controls.AddRange({label1,
-                                                           New TextBox With {
-                                                               .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                                               .AutoSize = True,
-                                                               .Text = Me.GetTranslatedMessageIdOrValue(innerJson, innerRow),
-                                                               .[ReadOnly] = True
-                                                               }
+                Dim textBox As New TextBox With {.[ReadOnly] = True,
+                                                 .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                                 .AutoSize = True,
+                                                 .Text = Me.GetTranslatedMessageIdOrValue(innerJson, innerRow)
+                                                }
+                tableLevel1Blue.Controls.AddRange({keyLabel,
+                                                           textBox
                                                            })
             End If
         Next
@@ -760,9 +759,9 @@ Public Class Form1
             Application.DoEvents()
             tableLevel1Blue.ColumnStyles(1).SizeType = SizeType.Absolute
             Application.DoEvents()
-            tableLevel1Blue.Width = 600
+            tableLevel1Blue.Width = 1000
 
-            tableLevel1Blue.ColumnStyles(1).Width = 300
+            tableLevel1Blue.ColumnStyles(1).Width = 400
             If tableLevel1Blue.RowCount > 5 Then
                 tableLevel1Blue.Height = (22 * tableLevel1Blue.RowCount) + 4
                 With parentTableLayoutPanel
@@ -771,9 +770,10 @@ Public Class Form1
                     .ColumnStyles(0).SizeType = SizeType.Absolute
                     .ColumnStyles(0).Width = 120
                     .ColumnStyles(1).SizeType = SizeType.Absolute
-                    .ColumnStyles(1).Width = 500
+                    .ColumnStyles(1).Width = 600
                 End With
             Else
+                parentTableLayoutPanel.Width = 870
                 tableLevel1Blue.RowCount += 1
                 tableLevel1Blue.Height = (22 * tableLevel1Blue.RowCount) + 4
                 tableLevel1Blue.AutoScroll = False
@@ -807,7 +807,15 @@ Public Class Form1
         End If
         If _messagesSpecialHandling.TryGetValue(entry.Value, messageValue) Then
             Dim splitMessageValue As String() = messageValue.Split(":")
-            Return $"{entry.Value} = {splitMessageValue(0).Replace("(0)", dic(splitMessageValue(1)))}"
+            Dim key As String = splitMessageValue(1)
+            Dim replacementValue As String
+            If key = "secondaryTime" Then
+                replacementValue = FormatTimeOnly(dic(key), _timeFormat)
+            Else
+                replacementValue = dic(key)
+            End If
+
+            Return $"{entry.Value} = {splitMessageValue(0).Replace("(0)", replacementValue)}"
         End If
 
         If Debugger.IsAttached Then
@@ -816,6 +824,11 @@ Public Class Form1
 
         Return entry.Value.Replace("_", " ")
     End Function
+
+    Private Shared Function FormatTimeOnly(rawTime As String, format As String) As String
+        Return New TimeOnly(CInt(rawTime.Substring(0, 2)), CInt(rawTime.Substring(3, 2))).ToString(format)
+    End Function
+
     Private Sub InitializeActiveInsulinTabChart()
         Me.ActiveInsulinTabChart = New Chart With {
              .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
@@ -1205,14 +1218,12 @@ Public Class Form1
                     If Me.BgUnitsString = "mg/dl" Then
                         _limithigh = 180
                         _limitLow = 70
-                        _timeFormat = TwelveHourTimeWithMinuteFormat
                         _homePageChartChartArea.AxisX.LabelStyle.Format = "hh tt"
                         _activeInsulinTabChartArea.AxisX.LabelStyle.Format = "hh tt"
                         _messages("BC_MESSAGE_SG_UNDER_50_MG_DL") = $"BG under 50 {Me.BgUnitsString}"
                     Else
                         _limithigh = 10.0
                         _limitLow = (70 / 18).RoundSingle(1)
-                        _timeFormat = MilitaryTimeWithMinuteFormat
                         _activeInsulinTabChartArea.AxisX.LabelStyle.Format = "HH"
                         _messages("BC_MESSAGE_SG_UNDER_50_MG_DL") = $"BG under 2.7 {Me.BgUnitsString}"
                     End If
@@ -1221,6 +1232,11 @@ Public Class Form1
                     Me.BelowLowLimitMessageLabel.Text = $"Below {_limitLow} {Me.BgUnitsString}"
                 Case ItemIndexs.timeFormat
                     TimeFormat = row.Value
+                    If TimeFormat = "HR_12" Then
+                        _timeFormat = TwelveHourTimeWithMinuteFormat
+                    Else
+                        _timeFormat = MilitaryTimeWithMinuteFormat
+                    End If
                 Case ItemIndexs.lastSensorTime
                     LastSensorTime = row.Value
                 Case ItemIndexs.sLastSensorTime

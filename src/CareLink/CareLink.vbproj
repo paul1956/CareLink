@@ -19,9 +19,9 @@
     <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
     <RepositoryUrl>https://github.com/paul1956/CareLink</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>2.0.3.3</Version>
-    <AssemblyVersion>2.0.3.3</AssemblyVersion>
-    <FileVersion>2.0.3.3</FileVersion>
+    <Version>2.0.3.4</Version>
+    <AssemblyVersion>2.0.3.4</AssemblyVersion>
+    <FileVersion>2.0.3.4</FileVersion>
     <PackageIcon>IconImage.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/paul1956/CareLink</PackageProjectUrl>
