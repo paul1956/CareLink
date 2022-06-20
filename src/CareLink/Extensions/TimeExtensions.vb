@@ -33,7 +33,7 @@ Module TimeExtensions
             sgDateTime = Now
         End If
         If sgDateTime.Year = 2000 Then
-            sgDateTime = Date.Now - ((sgList.Count - index) * Form1._FiveMinutes)
+            sgDateTime = Date.Now - ((sgList.Count - index) * Form1._FiveMinuteSpan)
         End If
         If sgList(index).Count < 7 Then
             sgDateTime = sgDateTime.AddMinutes(5)

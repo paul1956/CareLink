@@ -111,8 +111,8 @@ Public Class Form1
         {ItemIndexs.markers, s_markersFilter},
         {ItemIndexs.notificationHistory, s_notificationHistoryFilter}
         }
-
-    Public ReadOnly _FiveMinutes As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
+    Public ReadOnly _FiveMinuteSpan As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
+    Public ReadOnly _ThirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
 
 #Region "Chart Objects"
 
@@ -286,7 +286,7 @@ Public Class Form1
         Dim aitTimeSpan As TimeSpan = TimeSpan.Parse(Me.AITComboBox.SelectedItem.ToString())
         My.Settings.AIT = aitTimeSpan
         My.Settings.Save()
-        _activeInsulinIncrements = CInt(TimeSpan.Parse(aitTimeSpan.ToString("hh\:mm").Substring(1)) / _FiveMinutes)
+        _activeInsulinIncrements = CInt(TimeSpan.Parse(aitTimeSpan.ToString("hh\:mm").Substring(1)) / _FiveMinuteSpan)
         Me.UpdateActiveInsulinChart()
     End Sub
 
@@ -331,7 +331,7 @@ Public Class Form1
         Me.SensorDaysLeftLabel.Left = (Me.SensorTimeLefPictureBox.Width \ 2) - (Me.SensorDaysLeftLabel.Width \ 2)
         Me.SensorDaysLeftLabel.Top = (Me.SensorTimeLefPictureBox.Height \ 2) - (Me.SensorDaysLeftLabel.Height \ 2)
         Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact(My.Settings.AIT.ToString("hh\:mm").Substring(1))
-        _activeInsulinIncrements = CInt(TimeSpan.Parse(My.Settings.AIT.ToString("hh\:mm").Substring(1)) / _FiveMinutes)
+        _activeInsulinIncrements = CInt(TimeSpan.Parse(My.Settings.AIT.ToString("hh\:mm").Substring(1)) / _FiveMinuteSpan)
         Me.UseTestDataToolStripMenuItem.Checked = My.Settings.UseTestData
         Me.InitializeHomePageChart()
         Me.InitializeActiveInsulinTabChart()
@@ -346,7 +346,7 @@ Public Class Form1
 
     Private Sub HomePageChart_CursorPositionChanging(sender As Object, e As CursorEventArgs) Handles HomePageChart.CursorPositionChanging
         If Not _initialized Then Exit Sub
-        Me.CursorTimer.Interval = CType(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds, Integer)
+        Me.CursorTimer.Interval = _ThirtySecondInMilliseconds
         Me.CursorTimer.Start()
     End Sub
 
@@ -1000,7 +1000,7 @@ Public Class Form1
 
         For i As Integer = 0 To 287
             Dim initialBolus As Double = 0
-            Dim oaTime As Double = (getSgDateTime + (_FiveMinutes * i)).RoundDown(RoundTo.Minute).ToOADate()
+            Dim oaTime As Double = (getSgDateTime + (_FiveMinuteSpan * i)).RoundDown(RoundTo.Minute).ToOADate()
             While currentMarker < timeOrderedMarkers.Count AndAlso timeOrderedMarkers.Keys(currentMarker) <= oaTime
                 initialBolus += timeOrderedMarkers.Values(currentMarker)
                 currentMarker += 1
