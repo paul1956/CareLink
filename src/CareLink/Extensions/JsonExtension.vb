@@ -5,8 +5,176 @@
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 Imports System.Text.Json.Serialization
+Imports CareLink.Form1
 
-Public Module Json
+Public Module JsonExtensions
+    Friend Function GetTranslatedMessageIdOrValue(dic As Dictionary(Of String, String), entry As KeyValuePair(Of String, String), TimeFormat As String) As String
+        If entry.Key <> "messageid" Then
+            Return entry.Value
+        End If
+        Dim messageValue As String = ""
+        If _messages.TryGetValue(entry.Value, messageValue) Then
+            Return $"{entry.Value} = {messageValue}"
+        End If
+        If _messagesSpecialHandling.TryGetValue(entry.Value, messageValue) Then
+            Dim splitMessageValue As String() = messageValue.Split(":")
+            Dim key As String = splitMessageValue(1)
+            Dim replacementValue As String
+            If key = "secondaryTime" Then
+                replacementValue = dic(key).FormatTimeOnly(TimeFormat)
+            Else
+                replacementValue = dic(key)
+            End If
+
+            Return $"{entry.Value} = {splitMessageValue(0).Replace("(0)", replacementValue)}"
+        End If
+
+        If Debugger.IsAttached Then
+            MsgBox($"Unknown sensor message '{entry.Value}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Unknown Sensor Message")
+        End If
+
+        Return entry.Value.Replace("_", " ")
+    End Function
+
+    Friend Sub GetInnerTable(innerJson As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String)
+        tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
+        tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
+        tableLevel1Blue.BackColor = Color.LightBlue
+        For Each c As IndexClass(Of KeyValuePair(Of String, String)) In innerJson.WithIndex()
+            Application.DoEvents()
+            Dim innerRow As KeyValuePair(Of String, String) = c.Value
+            ' Comment out 4 lines below to see all data fields.
+            ' I did not see any use to display the filtered out ones
+            If filterJsonData AndAlso s_zFilterList.ContainsKey(itemIndex) Then
+                If s_zFilterList(itemIndex).Contains(innerRow.Key) Then
+                    Continue For
+                End If
+            End If
+            tableLevel1Blue.RowCount += 1
+            tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22.0))
+            If itemIndex = ItemIndexs.limits OrElse itemIndex = ItemIndexs.markers Then
+                tableLevel1Blue.AutoSize = True
+            End If
+            Dim keyLabel As New Label With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                            .Text = innerRow.Key,
+                                            .AutoSize = True
+                                           }
+
+            If innerRow.Value.StartsWith("[") Then
+                Dim innerJson1 As List(Of Dictionary(Of String, String)) = LoadList(innerRow.Value)
+                If innerJson1.Count > 0 Then
+                    Dim tableLevel2 As New TableLayoutPanel With {
+                            .AutoScroll = False,
+                            .AutoSize = True,
+                            .BorderStyle = BorderStyle.Fixed3D,
+                            .BackColor = Color.Aqua,
+                            .ColumnCount = 1,
+                            .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                            .Dock = DockStyle.Top,
+                            .RowCount = innerJson1.Count
+                            }
+
+                    For i As Integer = 0 To innerJson1.Count - 1
+                        tableLevel2.RowStyles.Add(New RowStyle() With {.SizeType = SizeType.AutoSize})
+                    Next
+                    tableLevel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 80.0))
+                    For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson1.WithIndex()
+                        Dim dic As Dictionary(Of String, String) = innerDictionary.Value
+                        tableLevel2.RowStyles.Add(New RowStyle(SizeType.Absolute, 4 + (dic.Keys.Count * 22)))
+                        Dim tableLevel3 As New TableLayoutPanel With {
+                                .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                .AutoScroll = False,
+                                .AutoSize = True,
+                                .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                                .BorderStyle = BorderStyle.FixedSingle,
+                                .ColumnCount = 2,
+                                .Dock = DockStyle.Top
+                                }
+                        For Each e As IndexClass(Of KeyValuePair(Of String, String)) In dic.WithIndex()
+                            If filterJsonData AndAlso s_zFilterList.ContainsKey(itemIndex) Then
+                                If s_zFilterList(itemIndex).Contains(e.Value.Key) Then
+                                    Continue For
+                                End If
+                            End If
+                            tableLevel3.RowCount += 1
+                            tableLevel3.RowStyles.Add(New RowStyle(SizeType.Absolute, 22.0))
+                            tableLevel3.Controls.AddRange({New Label With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                                                                   .Text = e.Value.Key,
+                                                                                   .AutoSize = True},
+                                                                                   New TextBox With {
+                                                                                        .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                                                                        .AutoSize = True,
+                                                                                        .[ReadOnly] = True,
+                                                                                        .Text = GetTranslatedMessageIdOrValue(dic, e.Value, timeFormat)}})
+                            Application.DoEvents()
+                        Next
+                        tableLevel3.Height += 40
+                        tableLevel2.Controls.Add(tableLevel3, 0, innerDictionary.Index)
+                        tableLevel2.Height += 4
+                        Application.DoEvents()
+                    Next
+                    tableLevel1Blue.Controls.AddRange({keyLabel, tableLevel2})
+                Else
+                    tableLevel1Blue.Controls.AddRange({keyLabel,
+                                                               New TextBox With {
+                                                                   .Text = "",
+                                                                   .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                                                   .AutoSize = True,
+                                                                   .[ReadOnly] = True
+                                                                   }
+                                                               })
+                End If
+            Else
+                Dim textBox As New TextBox With {.[ReadOnly] = True,
+                                                 .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                                 .AutoSize = True,
+                                                 .Text = GetTranslatedMessageIdOrValue(innerJson, innerRow, timeFormat)
+                                                }
+                tableLevel1Blue.Controls.AddRange({keyLabel,
+                                                           textBox
+                                                           })
+            End If
+        Next
+
+        If itemIndex = ItemIndexs.lastSG Then
+            tableLevel1Blue.AutoSize = False
+            tableLevel1Blue.RowCount += 1
+            tableLevel1Blue.Width = 400
+        ElseIf itemIndex = ItemIndexs.lastAlarm Then
+            Dim parentTableLayoutPanel As TableLayoutPanel = CType(tableLevel1Blue.Parent, TableLayoutPanel)
+            parentTableLayoutPanel.AutoSize = False
+            tableLevel1Blue.Dock = DockStyle.None
+            Application.DoEvents()
+            tableLevel1Blue.AutoSize = False
+            Application.DoEvents()
+            tableLevel1Blue.ColumnStyles(1).SizeType = SizeType.Absolute
+            Application.DoEvents()
+            tableLevel1Blue.Width = 1000
+
+            tableLevel1Blue.ColumnStyles(1).Width = 400
+            If tableLevel1Blue.RowCount > 5 Then
+                tableLevel1Blue.Height = (22 * tableLevel1Blue.RowCount) + 4
+                With parentTableLayoutPanel
+                    .AutoScroll = True
+                    .Width = 850
+                    .ColumnStyles(0).SizeType = SizeType.Absolute
+                    .ColumnStyles(0).Width = 120
+                    .ColumnStyles(1).SizeType = SizeType.Absolute
+                    .ColumnStyles(1).Width = 600
+                End With
+            Else
+                parentTableLayoutPanel.Width = 870
+                tableLevel1Blue.RowCount += 1
+                tableLevel1Blue.Height = (22 * tableLevel1Blue.RowCount) + 4
+                tableLevel1Blue.AutoScroll = False
+            End If
+
+            Application.DoEvents()
+        ElseIf itemIndex = ItemIndexs.notificationHistory Then
+            tableLevel1Blue.RowStyles(1).SizeType = SizeType.AutoSize
+        End If
+        Application.DoEvents()
+    End Sub
 
     <Extension>
     Private Function ItemAsString(item As KeyValuePair(Of String, Object)) As String
