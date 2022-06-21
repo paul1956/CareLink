@@ -793,7 +793,7 @@ Public Class Form1
             .CursorX.AxisType = AxisType.Primary
             .CursorX.Interval = 0
             .CursorX.IsUserEnabled = True
-            .CursorX.IsUserSelectionEnabled = False
+            .CursorX.IsUserSelectionEnabled = True
             .CursorY.AutoScroll = False
             .CursorY.AxisType = AxisType.Secondary
             .CursorY.LineColor = Color.Transparent
