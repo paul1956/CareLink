@@ -46,6 +46,7 @@ Public Class Form1
 
     Private Shared ReadOnly s_notificationHistoryFilter As New List(Of String) From {
         "faultId",
+        "GUID",
         "id",
         "index",
         "instanceId",
@@ -332,7 +333,6 @@ Public Class Form1
         Me.SensorDaysLeftLabel.Top = (Me.SensorTimeLefPictureBox.Height \ 2) - (Me.SensorDaysLeftLabel.Height \ 2)
         Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact(My.Settings.AIT.ToString("hh\:mm").Substring(1))
         _activeInsulinIncrements = CInt(TimeSpan.Parse(My.Settings.AIT.ToString("hh\:mm").Substring(1)) / _FiveMinuteSpan)
-        Me.UseTestDataToolStripMenuItem.Checked = My.Settings.UseTestData
         Me.InitializeHomePageChart()
         Me.InitializeActiveInsulinTabChart()
         Me.InitializeTimeInRangeChart()
@@ -340,8 +340,7 @@ Public Class Form1
         Me.SGsDataGridView.ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
             .Alignment = DataGridViewContentAlignment.MiddleCenter
             }
-        Me.DoLoginAndUpdateTimers()
-        Me.UpdateAllTabPages()
+        Me.UseTestDataToolStripMenuItem.Checked = My.Settings.UseTestData
     End Sub
 
     Private Sub HomePageChart_CursorPositionChanging(sender As Object, e As CursorEventArgs) Handles HomePageChart.CursorPositionChanging
@@ -468,14 +467,7 @@ Public Class Form1
     End Sub
 
     Private Sub LoginToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoginToolStripMenuItem.Click
-        If Me.UseTestDataToolStripMenuItem.Checked Then
-            _recentData = Loads(IO.File.ReadAllText(IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
-            Me.ViewToolStripMenuItem.Visible = False
-        Else
-            Me.ViewToolStripMenuItem.Visible = True
-            Me.DoLoginAndUpdateTimers()
-        End If
-        Me.UpdateAllTabPages()
+        Me.DoOptionalLoginAndUpdateData()
     End Sub
 
     Private Sub SensorAgeLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles SensorDaysLeftLabel.MouseHover
@@ -559,6 +551,7 @@ Public Class Form1
     Private Sub UseTestDataToolStripMenuItem_Checkchange(sender As Object, e As EventArgs) Handles UseTestDataToolStripMenuItem.CheckStateChanged
         My.Settings.UseTestData = Me.UseTestDataToolStripMenuItem.Checked
         My.Settings.Save()
+        Me.DoOptionalLoginAndUpdateData()
     End Sub
 
     Private Sub WatchdogTimer_Tick(sender As Object, e As EventArgs) Handles WatchdogTimer.Tick
@@ -568,7 +561,7 @@ Public Class Form1
 
 #End Region
 
-    Private Shared Sub FillOneRowOfTableLayoutPannel(layoutPanel As TableLayoutPanel, innerJson As List(Of Dictionary(Of String, String)), rowIndex As Integer, filterJsonData As Boolean, timeFormat As String)
+    Private Shared Sub FillOneRowOfTableLayoutPannel(layoutPanel As TableLayoutPanel, innerJson As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String)
         For Each jsonEntry As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
             Dim tableLevel1Blue As New TableLayoutPanel With {
                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
@@ -587,12 +580,21 @@ Public Class Form1
         Next
     End Sub
 
-    Private Sub DoLoginAndUpdateTimers()
+    Private Sub DoOptionalLoginAndUpdateData()
         Me.ServerUpdateTimer.Stop()
         Debug.Print($"Me.ServerUpdateTimer stopped at {Now}")
-        _loginDialog.ShowDialog()
-        _client = _loginDialog.Client
-        If _client IsNot Nothing AndAlso _client.LoggedIn Then
+        If Me.UseTestDataToolStripMenuItem.Checked Then
+            Me.ViewToolStripMenuItem.Visible = False
+            Me.Text &= " Using Test Data"
+            _recentData = Loads(IO.File.ReadAllText(IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
+        Else
+            Me.ViewToolStripMenuItem.Visible = True
+            Me.Text = Me.Text.Replace(" Using Test Data", "")
+            _loginDialog.ShowDialog()
+            _client = _loginDialog.Client
+            If _client Is Nothing OrElse Not _client.LoggedIn Then
+                Exit Sub
+            End If
             _recentData = _client.GetRecentData()
             Me.WatchdogTimer.Interval = CType(New TimeSpan(0, minutes:=6, 0).TotalMilliseconds, Integer)
             Me.WatchdogTimer.Start()
@@ -600,8 +602,8 @@ Public Class Form1
             Me.ServerUpdateTimer.Interval = CType(New TimeSpan(0, minutes:=1, 0).TotalMilliseconds, Integer)
             Me.ServerUpdateTimer.Start()
             Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
-            Me.ViewToolStripMenuItem.Visible = True
         End If
+        Me.UpdateAllTabPages()
     End Sub
 
 #Region "Initialize Charts"
@@ -1145,7 +1147,7 @@ Public Class Form1
             layoutPanel1 = Me.TableLayoutPanelSummaryData
             singleItem = False
             Dim row As KeyValuePair(Of String, String) = c.Value
-            Dim rowIndex As Integer = CInt([Enum].Parse(GetType(ItemIndexs), c.Value.Key))
+            Dim rowIndex As ItemIndexs = CType([Enum].Parse(GetType(ItemIndexs), c.Value.Key), ItemIndexs)
 
             Select Case rowIndex
                 Case ItemIndexs.lastSensorTS
@@ -1348,7 +1350,7 @@ Public Class Form1
             layoutPanel1.RowStyles(tableRelitiveRow).SizeType = SizeType.AutoSize
             If Not singleItem OrElse rowIndex = ItemIndexs.lastSG OrElse rowIndex = ItemIndexs.lastAlarm Then
                 layoutPanel1.Controls.Add(New Label With {
-                                                  .Text = $"{rowIndex} {row.Key}",
+                                                  .Text = $"{CInt(rowIndex)} {row.Key}",
                                                   .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                   .AutoSize = True
                                                   }, 0, tableRelitiveRow)
@@ -1400,6 +1402,7 @@ Public Class Form1
                     Case ItemIndexs.activeInsulin
                         ActiveInsulin = innerJson
                     Case ItemIndexs.notificationHistory
+                        ' handled elsewhere
                     Case ItemIndexs.therapyAlgorithmState
                         TherapyAlgorithmState = innerJson
                     Case ItemIndexs.basal
@@ -1424,7 +1427,7 @@ Public Class Form1
                 If rowIndex = ItemIndexs.notificationHistory Then
                     tableLevel1Blue.AutoScroll = False
                 End If
-                GetInnerTable(innerJson, tableLevel1Blue, CType(rowIndex, ItemIndexs), _filterJsonData, _timeFormat)
+                GetInnerTable(innerJson, tableLevel1Blue, rowIndex, _filterJsonData, _timeFormat)
             Else
                 Dim rowTextBox As New TextBox With {
                                         .Anchor = AnchorStyles.Left Or AnchorStyles.Right,

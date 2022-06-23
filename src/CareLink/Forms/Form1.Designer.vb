@@ -279,7 +279,7 @@ Partial Class Form1
         Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
         Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
         Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanelSummaryData.Size = New System.Drawing.Size(1370, 700)
+        Me.TableLayoutPanelSummaryData.Size = New System.Drawing.Size(1370, 706)
         Me.TableLayoutPanelSummaryData.TabIndex = 3
         '
         'TableLayoutPanelTop1
@@ -293,7 +293,7 @@ Partial Class Form1
         Me.TableLayoutPanelTop1.Name = "TableLayoutPanelTop1"
         Me.TableLayoutPanelTop1.RowCount = 1
         Me.TableLayoutPanelTop1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelTop1.Size = New System.Drawing.Size(503, 129)
+        Me.TableLayoutPanelTop1.Size = New System.Drawing.Size(503, 151)
         Me.TableLayoutPanelTop1.TabIndex = 0
         '
         'SplitContainer1
@@ -312,8 +312,8 @@ Partial Class Form1
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.TabControl1)
-        Me.SplitContainer1.Size = New System.Drawing.Size(1384, 876)
-        Me.SplitContainer1.SplitterDistance = 140
+        Me.SplitContainer1.Size = New System.Drawing.Size(1384, 897)
+        Me.SplitContainer1.SplitterDistance = 155
         Me.SplitContainer1.SplitterWidth = 2
         Me.SplitContainer1.TabIndex = 22
         '
@@ -332,7 +332,7 @@ Partial Class Form1
         Me.TableLayoutPanelTop2.Name = "TableLayoutPanelTop2"
         Me.TableLayoutPanelTop2.RowCount = 1
         Me.TableLayoutPanelTop2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelTop2.Size = New System.Drawing.Size(869, 142)
+        Me.TableLayoutPanelTop2.Size = New System.Drawing.Size(869, 154)
         Me.TableLayoutPanelTop2.TabIndex = 1
         '
         'TabControl1
@@ -350,7 +350,7 @@ Partial Class Form1
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1384, 734)
+        Me.TabControl1.Size = New System.Drawing.Size(1384, 740)
         Me.TabControl1.TabIndex = 0
         '
         'TabPage1HomePage
@@ -396,7 +396,7 @@ Partial Class Form1
         Me.TabPage1HomePage.Location = New System.Drawing.Point(4, 24)
         Me.TabPage1HomePage.Name = "TabPage1HomePage"
         Me.TabPage1HomePage.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1HomePage.Size = New System.Drawing.Size(1376, 706)
+        Me.TabPage1HomePage.Size = New System.Drawing.Size(1376, 712)
         Me.TabPage1HomePage.TabIndex = 7
         Me.TabPage1HomePage.Text = "Home Page"
         '
@@ -864,7 +864,7 @@ Partial Class Form1
         Me.TabPage2RunningActiveInsulin.Location = New System.Drawing.Point(4, 24)
         Me.TabPage2RunningActiveInsulin.Name = "TabPage2RunningActiveInsulin"
         Me.TabPage2RunningActiveInsulin.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2RunningActiveInsulin.Size = New System.Drawing.Size(1376, 706)
+        Me.TabPage2RunningActiveInsulin.Size = New System.Drawing.Size(1376, 712)
         Me.TabPage2RunningActiveInsulin.TabIndex = 8
         Me.TabPage2RunningActiveInsulin.Text = "Running Active Insulin"
         Me.TabPage2RunningActiveInsulin.UseVisualStyleBackColor = True
@@ -875,7 +875,7 @@ Partial Class Form1
         Me.TabPage3SummaryData.Location = New System.Drawing.Point(4, 24)
         Me.TabPage3SummaryData.Name = "TabPage3SummaryData"
         Me.TabPage3SummaryData.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3SummaryData.Size = New System.Drawing.Size(1376, 706)
+        Me.TabPage3SummaryData.Size = New System.Drawing.Size(1376, 712)
         Me.TabPage3SummaryData.TabIndex = 0
         Me.TabPage3SummaryData.Text = "Summary Data"
         Me.TabPage3SummaryData.UseVisualStyleBackColor = True
@@ -886,7 +886,7 @@ Partial Class Form1
         Me.TabPage4ActiveInsulin.Location = New System.Drawing.Point(4, 24)
         Me.TabPage4ActiveInsulin.Name = "TabPage4ActiveInsulin"
         Me.TabPage4ActiveInsulin.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage4ActiveInsulin.Size = New System.Drawing.Size(1376, 706)
+        Me.TabPage4ActiveInsulin.Size = New System.Drawing.Size(1376, 712)
         Me.TabPage4ActiveInsulin.TabIndex = 1
         Me.TabPage4ActiveInsulin.Text = "Active Insulin"
         Me.TabPage4ActiveInsulin.UseVisualStyleBackColor = True
@@ -913,7 +913,7 @@ Partial Class Form1
         Me.TabPage5SGS.Location = New System.Drawing.Point(4, 24)
         Me.TabPage5SGS.Name = "TabPage5SGS"
         Me.TabPage5SGS.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage5SGS.Size = New System.Drawing.Size(1376, 706)
+        Me.TabPage5SGS.Size = New System.Drawing.Size(1376, 712)
         Me.TabPage5SGS.TabIndex = 2
         Me.TabPage5SGS.Text = "SGS"
         Me.TabPage5SGS.UseVisualStyleBackColor = True
@@ -929,7 +929,7 @@ Partial Class Form1
         Me.SGsDataGridView.Location = New System.Drawing.Point(3, 3)
         Me.SGsDataGridView.Name = "SGsDataGridView"
         Me.SGsDataGridView.RowTemplate.Height = 25
-        Me.SGsDataGridView.Size = New System.Drawing.Size(1370, 700)
+        Me.SGsDataGridView.Size = New System.Drawing.Size(1370, 706)
         Me.SGsDataGridView.TabIndex = 1
         '
         'TabPage6Limits
@@ -938,7 +938,7 @@ Partial Class Form1
         Me.TabPage6Limits.Location = New System.Drawing.Point(4, 24)
         Me.TabPage6Limits.Name = "TabPage6Limits"
         Me.TabPage6Limits.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage6Limits.Size = New System.Drawing.Size(1376, 706)
+        Me.TabPage6Limits.Size = New System.Drawing.Size(1376, 712)
         Me.TabPage6Limits.TabIndex = 3
         Me.TabPage6Limits.Text = "Limits"
         Me.TabPage6Limits.UseVisualStyleBackColor = True
@@ -966,7 +966,7 @@ Partial Class Form1
         Me.TabPage7Markers.Location = New System.Drawing.Point(4, 24)
         Me.TabPage7Markers.Name = "TabPage7Markers"
         Me.TabPage7Markers.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage7Markers.Size = New System.Drawing.Size(1376, 706)
+        Me.TabPage7Markers.Size = New System.Drawing.Size(1376, 712)
         Me.TabPage7Markers.TabIndex = 4
         Me.TabPage7Markers.Text = "Markers"
         Me.TabPage7Markers.UseVisualStyleBackColor = True
@@ -984,7 +984,7 @@ Partial Class Form1
         Me.TableLayoutPanelMarkers.Name = "TableLayoutPanelMarkers"
         Me.TableLayoutPanelMarkers.RowCount = 1
         Me.TableLayoutPanelMarkers.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelMarkers.Size = New System.Drawing.Size(1370, 700)
+        Me.TableLayoutPanelMarkers.Size = New System.Drawing.Size(1370, 706)
         Me.TableLayoutPanelMarkers.TabIndex = 0
         '
         'TabPage8NotificationHistory
@@ -993,7 +993,7 @@ Partial Class Form1
         Me.TabPage8NotificationHistory.Location = New System.Drawing.Point(4, 24)
         Me.TabPage8NotificationHistory.Name = "TabPage8NotificationHistory"
         Me.TabPage8NotificationHistory.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage8NotificationHistory.Size = New System.Drawing.Size(1376, 706)
+        Me.TabPage8NotificationHistory.Size = New System.Drawing.Size(1376, 712)
         Me.TabPage8NotificationHistory.TabIndex = 5
         Me.TabPage8NotificationHistory.Text = "Notification History"
         Me.TabPage8NotificationHistory.UseVisualStyleBackColor = True
@@ -1012,7 +1012,7 @@ Partial Class Form1
         Me.TableLayoutPanelNotificationHistory.RowCount = 2
         Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelNotificationHistory.Size = New System.Drawing.Size(1370, 700)
+        Me.TableLayoutPanelNotificationHistory.Size = New System.Drawing.Size(1370, 706)
         Me.TableLayoutPanelNotificationHistory.TabIndex = 0
         '
         'TabPage9Basal
@@ -1021,7 +1021,7 @@ Partial Class Form1
         Me.TabPage9Basal.Location = New System.Drawing.Point(4, 24)
         Me.TabPage9Basal.Name = "TabPage9Basal"
         Me.TabPage9Basal.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage9Basal.Size = New System.Drawing.Size(1376, 706)
+        Me.TabPage9Basal.Size = New System.Drawing.Size(1376, 712)
         Me.TabPage9Basal.TabIndex = 6
         Me.TabPage9Basal.Text = "Basal"
         Me.TabPage9Basal.UseVisualStyleBackColor = True
@@ -1072,9 +1072,9 @@ Partial Class Form1
         '
         'Form1
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(7!, 15!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1384, 900)
+        Me.ClientSize = New System.Drawing.Size(1384, 921)
         Me.Controls.Add(Me.SplitContainer1)
         Me.Controls.Add(Me.MenuStrip1)
         Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)

@@ -50,9 +50,13 @@ Public Module JsonExtensions
                     Continue For
                 End If
             End If
+            If innerRow.Key <> "activeNotifications" Then
+                tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22))
+            Else
+                tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize))
+            End If
             tableLevel1Blue.RowCount += 1
-            tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22.0))
-            If itemIndex = ItemIndexs.limits OrElse itemIndex = ItemIndexs.markers Then
+            If itemIndex = ItemIndexs.limits OrElse itemIndex = ItemIndexs.markers OrElse (itemIndex = ItemIndexs.notificationHistory AndAlso c.Value.Key = "activeNotifications") Then
                 tableLevel1Blue.AutoSize = True
             End If
             Dim keyLabel As New Label With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
