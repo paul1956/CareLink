@@ -98,6 +98,8 @@ Partial Class Form1
         Me.CursorTimer = New System.Windows.Forms.Timer(Me.components)
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
         Me.WatchdogTimer = New System.Windows.Forms.Timer(Me.components)
+        Me.LoginStatusLabel = New System.Windows.Forms.Label()
+        Me.LoginStatus = New System.Windows.Forms.Label()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -1070,60 +1072,132 @@ Partial Class Form1
         '
         Me.WatchdogTimer.Interval = 360000
         '
+        'LoginStatusLabel
+        '
+        Me.LoginStatusLabel.AutoSize = True
+        Me.LoginStatusLabel.Location = New System.Drawing.Point(600, 3)
+        Me.LoginStatusLabel.Name = "LoginStatusLabel"
+        Me.LoginStatusLabel.Size = New System.Drawing.Size(75, 15)
+        Me.LoginStatusLabel.TabIndex = 23
+        Me.LoginStatusLabel.Text = "Login Status:"
+        '
+        'LoginStatus
+        '
+        Me.LoginStatus.AutoSize = True
+        Me.LoginStatus.Location = New System.Drawing.Point(675, 3)
+        Me.LoginStatus.Name = "LoginStatus"
+        Me.LoginStatus.Size = New System.Drawing.Size(58, 15)
+        Me.LoginStatus.TabIndex = 24
+        Me.LoginStatus.Text = "Unknown"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1384, 921)
+        Me.Controls.Add(Me.LoginStatusLabel)
+        Me.Controls.Add(Me.LoginStatus)
         Me.Controls.Add(Me.SplitContainer1)
         Me.Controls.Add(Me.MenuStrip1)
-        Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
         Me.Name = "Form1"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.MenuStrip1.ResumeLayout(false)
-        Me.MenuStrip1.PerformLayout
-        Me.SplitContainer1.Panel1.ResumeLayout(false)
-        Me.SplitContainer1.Panel2.ResumeLayout(false)
-        CType(Me.SplitContainer1,System.ComponentModel.ISupportInitialize).EndInit
-        Me.SplitContainer1.ResumeLayout(false)
-        Me.TabControl1.ResumeLayout(false)
-        Me.TabPage1HomePage.ResumeLayout(false)
-        Me.TabPage1HomePage.PerformLayout
-        CType(Me.TransmitterBatteryPictureBox,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.SensorTimeLefPictureBox,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.PumpBatteryPictureBox,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.CursorPictureBox,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.InsulinLevelPictureBox,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.CalibrationDueImage,System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.ShieldPictureBox,System.ComponentModel.ISupportInitialize).EndInit
-        Me.TabPage3SummaryData.ResumeLayout(false)
-        Me.TabPage3SummaryData.PerformLayout
-        Me.TabPage4ActiveInsulin.ResumeLayout(false)
-        Me.TabPage4ActiveInsulin.PerformLayout
-        Me.TabPage5SGS.ResumeLayout(false)
-        CType(Me.SGsDataGridView,System.ComponentModel.ISupportInitialize).EndInit
-        Me.TabPage6Limits.ResumeLayout(false)
-        Me.TabPage6Limits.PerformLayout
-        Me.TabPage7Markers.ResumeLayout(false)
-        Me.TabPage7Markers.PerformLayout
-        Me.TabPage8NotificationHistory.ResumeLayout(false)
-        Me.TabPage8NotificationHistory.PerformLayout
-        Me.TabPage9Basal.ResumeLayout(false)
-        Me.ResumeLayout(false)
-        Me.PerformLayout
+        Me.MenuStrip1.ResumeLayout(False)
+        Me.MenuStrip1.PerformLayout()
+        Me.SplitContainer1.Panel1.ResumeLayout(False)
+        Me.SplitContainer1.Panel2.ResumeLayout(False)
+        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitContainer1.ResumeLayout(False)
+        Me.TabControl1.ResumeLayout(False)
+        Me.TabPage1HomePage.ResumeLayout(False)
+        Me.TabPage1HomePage.PerformLayout()
+        CType(Me.TransmitterBatteryPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.SensorTimeLefPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PumpBatteryPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.CursorPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.InsulinLevelPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.CalibrationDueImage, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ShieldPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage3SummaryData.ResumeLayout(False)
+        Me.TabPage3SummaryData.PerformLayout()
+        Me.TabPage4ActiveInsulin.ResumeLayout(False)
+        Me.TabPage4ActiveInsulin.PerformLayout()
+        Me.TabPage5SGS.ResumeLayout(False)
+        CType(Me.SGsDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage6Limits.ResumeLayout(False)
+        Me.TabPage6Limits.PerformLayout()
+        Me.TabPage7Markers.ResumeLayout(False)
+        Me.TabPage7Markers.PerformLayout()
+        Me.TabPage8NotificationHistory.ResumeLayout(False)
+        Me.TabPage8NotificationHistory.PerformLayout()
+        Me.TabPage9Basal.ResumeLayout(False)
+        Me.ResumeLayout(False)
+        Me.PerformLayout()
 
-End Sub
-    Friend WithEvents MenuStrip1 As MenuStrip
-    Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents HelpToolStripMenuItem As ToolStripMenuItem
+    End Sub
     Friend WithEvents AboutToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents ServerUpdateTimer As Timer
-    Friend WithEvents StartDisplayToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents AboveHighLimitMessageLabel As Label
+    Friend WithEvents AboveHighLimitPercentCharLabel As Label
+    Friend WithEvents AboveHighLimitValueLabel As Label
+    Friend WithEvents ActiveInsulinLabel As Label
+    Friend WithEvents ActiveInsulinValue As Label
+    Friend WithEvents AITComboBox As ComboBox
+    Friend WithEvents AITLabel As Label
+    Friend WithEvents AverageSGMessageLabel As Label
+    Friend WithEvents AverageSGUnitsLabel As Label
+    Friend WithEvents AverageSGValueLabel As Label
+    Friend WithEvents BelowLowLimitMessageLabel As Label
+    Friend WithEvents BelowLowLimitPercentPercentCharLabel As Label
+    Friend WithEvents BelowLowLimitValueLabel As Label
+    Friend WithEvents CalibrationDueImage As PictureBox
+    Friend WithEvents CurrentBG As Label
+    Friend WithEvents CursorMessage1Label As Label
+    Friend WithEvents CursorMessage2Label As Label
+    Friend WithEvents CursorPictureBox As PictureBox
+    Friend WithEvents CursorTimeLabel As Label
+    Friend WithEvents CursorTimer As Timer
+    Friend WithEvents CursorValueLabel As Label
+    Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents FilterRawJSONDataToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents HelpToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ImageList1 As ImageList
+    Friend WithEvents InRangeMessageLabel As Label
+    Friend WithEvents InsulinLevelPictureBox As PictureBox
+    Friend WithEvents ListView1 As ListView
     Friend WithEvents LoginToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents MenuStrip1 As MenuStrip
+    Friend WithEvents NotifyIcon1 As NotifyIcon
+    Friend WithEvents OptionsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents PumpBatteryPictureBox As PictureBox
+    Friend WithEvents PumpBatteryRemainingLabel As Label
+    Friend WithEvents RemainingInsulinUnits As Label
+    Friend WithEvents SensorDaysLeftLabel As Label
+    Friend WithEvents SensorMessage As Label
+    Friend WithEvents SensorTimeLefPictureBox As PictureBox
+    Friend WithEvents SensorTimeLeftLabel As Label
+    Friend WithEvents LoginStatus As Label
+    Friend WithEvents LoginStatusLabel As Label
+    Friend WithEvents ServerUpdateTimer As Timer
+    Friend WithEvents SetupEmailServerToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SGsDataGridView As DataGridView
+    Friend WithEvents ShieldPictureBox As PictureBox
+    Friend WithEvents ShieldUnitsLabel As Label
+    Friend WithEvents ShowMiniDisplayToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SplitContainer1 As SplitContainer
+    Friend WithEvents StartDisplayToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents TabControl1 As TabControl
+    Friend WithEvents TableLayoutPanelActiveInsulin As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelBasal As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelLimits As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelMarkers As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelNotificationHistory As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelSummaryData As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelTop1 As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelTop2 As TableLayoutPanel
+    Friend WithEvents TabPage1HomePage As TabPage
+    Friend WithEvents TabPage2RunningActiveInsulin As TabPage
     Friend WithEvents TabPage3SummaryData As TabPage
     Friend WithEvents TabPage4ActiveInsulin As TabPage
     Friend WithEvents TabPage5SGS As TabPage
@@ -1131,63 +1205,13 @@ End Sub
     Friend WithEvents TabPage7Markers As TabPage
     Friend WithEvents TabPage8NotificationHistory As TabPage
     Friend WithEvents TabPage9Basal As TabPage
-    Friend WithEvents TableLayoutPanelTop1 As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelSummaryData As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelActiveInsulin As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelLimits As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelMarkers As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelNotificationHistory As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelBasal As TableLayoutPanel
-    Friend WithEvents ListView1 As ListView
-    Friend WithEvents TableLayoutPanelTop2 As TableLayoutPanel
-    Friend WithEvents OptionsToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents UseTestDataToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents CurrentBG As Label
-    Friend WithEvents ActiveInsulinLabel As Label
-    Friend WithEvents ShieldPictureBox As PictureBox
-    Friend WithEvents TabPage1HomePage As TabPage
-    Friend WithEvents CalibrationDueImage As PictureBox
-    Friend WithEvents ActiveInsulinValue As Label
-    Friend WithEvents InsulinLevelPictureBox As PictureBox
-    Friend WithEvents RemainingInsulinUnits As Label
-    Friend WithEvents SensorMessage As Label
-    Friend WithEvents ImageList1 As ImageList
-    Friend WithEvents AverageSGMessageLabel As Label
-    Friend WithEvents AverageSGValueLabel As Label
+    Friend WithEvents TimeInRangePercentPercentChar As Label
     Friend WithEvents TimeInRangeSummaryLabel As Label
     Friend WithEvents TimeInRangeSummaryPercentCharLabel As Label
-    Friend WithEvents AverageSGUnitsLabel As Label
-    Friend WithEvents ShieldUnitsLabel As Label
-    Friend WithEvents AboveHighLimitPercentCharLabel As Label
-    Friend WithEvents AboveHighLimitValueLabel As Label
-    Friend WithEvents BelowLowLimitPercentPercentCharLabel As Label
-    Friend WithEvents BelowLowLimitValueLabel As Label
-    Friend WithEvents TimeInRangePercentPercentChar As Label
     Friend WithEvents TimeInRangeValueLabel As Label
-    Friend WithEvents AboveHighLimitMessageLabel As Label
-    Friend WithEvents BelowLowLimitMessageLabel As Label
-    Friend WithEvents InRangeMessageLabel As Label
-    Friend WithEvents CursorMessage1Label As Label
-    Friend WithEvents CursorTimeLabel As Label
-    Friend WithEvents CursorPictureBox As PictureBox
-    Friend WithEvents CursorValueLabel As Label
-    Friend WithEvents CursorMessage2Label As Label
-    Friend WithEvents CursorTimer As Timer
-    Friend WithEvents AITComboBox As ComboBox
-    Friend WithEvents AITLabel As Label
-    Friend WithEvents TabPage2RunningActiveInsulin As TabPage
-    Friend WithEvents PumpBatteryPictureBox As PictureBox
-    Friend WithEvents SensorTimeLefPictureBox As PictureBox
-    Friend WithEvents SensorDaysLeftLabel As Label
-    Friend WithEvents SensorTimeLeftLabel As Label
-    Friend WithEvents TransmitterBatteryPictureBox As PictureBox
     Friend WithEvents TransmatterBatterPercentLabel As Label
-    Friend WithEvents PumpBatteryRemainingLabel As Label
-    Friend WithEvents FilterRawJSONDataToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents SGsDataGridView As DataGridView
-    Friend WithEvents NotifyIcon1 As NotifyIcon
+    Friend WithEvents TransmitterBatteryPictureBox As PictureBox
+    Friend WithEvents UseTestDataToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ViewToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents ShowMiniDisplayToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents WatchdogTimer As Timer
-    Friend WithEvents SetupEmailServerToolStripMenuItem As ToolStripMenuItem
 End Class

@@ -340,7 +340,11 @@ Public Class Form1
         Me.SGsDataGridView.ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
             .Alignment = DataGridViewContentAlignment.MiddleCenter
             }
-        Me.UseTestDataToolStripMenuItem.Checked = My.Settings.UseTestData
+        If My.Settings.UseTestData Then
+            Me.UseTestDataToolStripMenuItem.Checked = True
+        Else
+            Me.DoOptionalLoginAndUpdateData()
+        End If
     End Sub
 
     Private Sub HomePageChart_CursorPositionChanging(sender As Object, e As CursorEventArgs) Handles HomePageChart.CursorPositionChanging
@@ -486,7 +490,7 @@ Public Class Form1
         If Me.IsRecentDataUpdated Then
             Me.UpdateAllTabPages()
         ElseIf _recentData Is Nothing Then
-            _client = New CareLinkClient(My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
+            _client = New CareLinkClient(Me.LoginStatus, My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
             _loginDialog.Client = _client
             _recentData = _client.GetRecentData()
             If Me.IsRecentDataUpdated Then
@@ -588,7 +592,6 @@ Public Class Form1
             Me.Text &= " Using Test Data"
             _recentData = Loads(IO.File.ReadAllText(IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
         Else
-            Me.ViewToolStripMenuItem.Visible = True
             Me.Text = Me.Text.Replace(" Using Test Data", "")
             _loginDialog.ShowDialog()
             _client = _loginDialog.Client
@@ -596,12 +599,14 @@ Public Class Form1
                 Exit Sub
             End If
             _recentData = _client.GetRecentData()
+            Me.ViewToolStripMenuItem.Visible = True
             Me.WatchdogTimer.Interval = CType(New TimeSpan(0, minutes:=6, 0).TotalMilliseconds, Integer)
             Me.WatchdogTimer.Start()
             Debug.Print($"Me.WatchdogTimer Started at {Now}")
             Me.ServerUpdateTimer.Interval = CType(New TimeSpan(0, minutes:=1, 0).TotalMilliseconds, Integer)
             Me.ServerUpdateTimer.Start()
             Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
+            Me.LoginStatus.Text = "OK"
         End If
         Me.UpdateAllTabPages()
     End Sub

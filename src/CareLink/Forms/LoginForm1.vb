@@ -23,7 +23,7 @@ Public Class LoginForm1
         Me.OK.Enabled = False
         Me.Cancel.Enabled = False
         My.Settings.CountryCode = Me.CountryComboBox.SelectedValue.ToString
-        Me.Client = New CareLinkClient(Me.UsernameTextBox.Text, Me.PasswordTextBox.Text, Me.CountryComboBox.SelectedValue.ToString)
+        Me.Client = New CareLinkClient(Me.LoginStatus, Me.UsernameTextBox.Text, Me.PasswordTextBox.Text, Me.CountryComboBox.SelectedValue.ToString)
         If Not Me.Client.LoggedIn Then
             Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData()
             If recentData IsNot Nothing AndAlso recentData.Count > 0 Then
