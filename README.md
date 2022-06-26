@@ -14,7 +14,7 @@
 - Medtronic CareLink data display
 
 ## Updated
-- 6/15/2022
+- 6/25/2022
 
 ## Description
 
@@ -28,7 +28,7 @@ Maikebing.System.Windows.Forms.DataVisualization
 https://www.nuget.org/packages/Maikebing.System.Windows.Forms.DataVisualization/5.0.1?_src=template
 
 Try it out and send feedback.
-This update has a simple UI to show all the available data and a visual version that mimics the one on iPhone.
+This update has a UI to show all the available data and a visual version that mimics the one on iPhone.
 ![Same display](https://github.com/paul1956/CareLink/blob/master/Screenshot%202021-05-16%20050718.png?raw=true)
 
 #Known Issue

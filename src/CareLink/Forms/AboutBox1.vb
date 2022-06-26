@@ -10,7 +10,7 @@ Public NotInheritable Class AboutBox1
         If My.Application.Info.Title <> "" Then
             applicationTitle = My.Application.Info.Title
         Else
-            applicationTitle = System.IO.Path.GetFileNameWithoutExtension(My.Application.Info.AssemblyName)
+            applicationTitle = IO.Path.GetFileNameWithoutExtension(My.Application.Info.AssemblyName)
         End If
         Me.Text = String.Format("About {0}", applicationTitle)
         ' Initialize all of the text displayed on the About Box.

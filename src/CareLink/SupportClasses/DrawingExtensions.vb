@@ -50,5 +50,4 @@ Module DrawingExtensions
 
     End Sub
 
-
 End Module

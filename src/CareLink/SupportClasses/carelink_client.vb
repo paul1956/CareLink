@@ -2,9 +2,11 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.IO
 Imports System.Net
 Imports System.Net.Http
 Imports System.Runtime.CompilerServices
+Imports System.Text.Json
 
 Public Class CareLinkClient
     Inherits Object
@@ -54,6 +56,8 @@ Public Class CareLinkClient
     Private _sessionMonitorData As Dictionary(Of String, String)
     Private _sessionProfile As Dictionary(Of String, String)
     Private _sessionUser As Dictionary(Of String, String)
+    Public Shared ReadOnly JsonFormattingOptions As New JsonSerializerOptions With {.WriteIndented = True}
+    Public Shared ReadOnly CareLinkLastDownloadDocPath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CareLinkLastDownload.json")
 
     Public Sub New(LoginStatus As Label, carelinkUsername As String, carelinkPassword As String, carelinkCountry As String)
         _loginStatus = LoginStatus
@@ -368,18 +372,18 @@ Public Class CareLinkClient
         Return Me.GetData(Me.CareLinkServer(), "patient/countries/settings", queryParams, Nothing)
     End Function
 
-    Public Overridable Function GetData(host As String, path As String, queryParams As Dictionary(Of String, String), requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
+    Public Overridable Function GetData(host As String, endPointPath As String, queryParams As Dictionary(Of String, String), requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
         Dim url As String
         Debug.Print("__getData()")
         _lastDataSuccess = False
         If host Is Nothing Then
-            url = path
+            url = endPointPath
         Else
-            url = $"https://{host}/{path}"
+            url = $"https://{host}/{endPointPath}"
         End If
         Dim payload As Dictionary(Of String, String) = queryParams
 
-        Dim jsondata As Dictionary(Of String, String) = Nothing
+        Dim jsonData As Dictionary(Of String, String) = Nothing
         ' Get auth token
         Dim authToken As String = Me.GetAuthorizationToken()
         If authToken IsNot Nothing Then
@@ -402,11 +406,19 @@ Public Class CareLinkClient
                             _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
                         End If
                     Next
-                    Dim postRequest As New HttpRequestMessage(HttpMethod.Post, New Uri(url)) With {.Content = Http.Json.JsonContent.Create(requestBody)}
+                    Dim postRequest As New HttpRequestMessage(HttpMethod.Post, New Uri(url)) With {.Content = Json.JsonContent.Create(requestBody)}
                     response = _httpClient.SendAsync(postRequest).Result ' Post(url, headers, data:=requestBody)
                 End If
                 If response.StatusCode = HttpStatusCode.OK Then
-                    jsondata = Loads(response.Text)
+                    jsonData = Loads(response.Text)
+                    If jsonData.Count > 61 Then
+
+                        Dim contents As String = JsonSerializer.Serialize(jsonData, New JsonSerializerOptions)
+                        Dim options As New JsonDocumentOptions
+                        Using jDocument As JsonDocument = JsonDocument.Parse(contents, options)
+                            File.WriteAllText(CareLinkLastDownloadDocPath, JsonSerializer.Serialize(jDocument, JsonFormattingOptions))
+                        End Using
+                    End If
                     _lastDataSuccess = True
                 ElseIf response.StatusCode = HttpStatusCode.Unauthorized Then
                     ' Ignore handled elsewhere
@@ -417,7 +429,7 @@ Public Class CareLinkClient
                 Debug.Print($"__getData() failed {e.Message}")
             End Try
         End If
-        Return jsondata
+        Return jsonData
     End Function
 
     Public Overridable Function GetLastDataSuccess() As Object

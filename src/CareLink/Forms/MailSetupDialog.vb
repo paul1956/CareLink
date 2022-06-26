@@ -254,7 +254,7 @@ Public Class MailSetupDialog
                                             $"{Form1.LastSG("sg")} {Form1.BgUnitsString}")
                         My.Settings.MailServerPort = port
                     Else
-                        Me.DialogResult = System.Windows.Forms.DialogResult.Cancel
+                        Me.DialogResult = DialogResult.Cancel
                         Exit Sub
                     End If
                 End If

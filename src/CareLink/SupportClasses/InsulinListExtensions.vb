@@ -5,6 +5,7 @@
 Imports System.Runtime.CompilerServices
 
 Module InsulinListExtensions
+
     <Extension>
     Friend Sub Adjustlist(myList As List(Of Insulin), startIndex As Integer, count As Integer)
         For i As Integer = startIndex To startIndex + count

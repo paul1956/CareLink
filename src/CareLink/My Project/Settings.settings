@@ -41,5 +41,8 @@
     <Setting Name="CarrierTextingDomain" Type="System.String" Scope="User">
       <Value Profile="(Default)">txt.att.net</Value>
     </Setting>
+    <Setting Name="UseLastSavedData" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

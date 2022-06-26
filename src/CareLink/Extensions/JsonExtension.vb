@@ -8,6 +8,7 @@ Imports System.Text.Json.Serialization
 Imports CareLink.Form1
 
 Public Module JsonExtensions
+
     Friend Function GetTranslatedMessageIdOrValue(dic As Dictionary(Of String, String), entry As KeyValuePair(Of String, String), TimeFormat As String) As String
         If entry.Key <> "messageid" Then
             Return entry.Value
@@ -147,32 +148,22 @@ Public Module JsonExtensions
         ElseIf itemIndex = ItemIndexs.lastAlarm Then
             Dim parentTableLayoutPanel As TableLayoutPanel = CType(tableLevel1Blue.Parent, TableLayoutPanel)
             parentTableLayoutPanel.AutoSize = False
-            tableLevel1Blue.Dock = DockStyle.None
-            Application.DoEvents()
-            tableLevel1Blue.AutoSize = False
+            tableLevel1Blue.Dock = DockStyle.Top
             Application.DoEvents()
             tableLevel1Blue.ColumnStyles(1).SizeType = SizeType.Absolute
-            Application.DoEvents()
-            tableLevel1Blue.Width = 1000
 
-            tableLevel1Blue.ColumnStyles(1).Width = 400
             If tableLevel1Blue.RowCount > 5 Then
-                tableLevel1Blue.Height = (22 * tableLevel1Blue.RowCount) + 4
                 With parentTableLayoutPanel
                     .AutoScroll = True
                     .Width = 850
-                    .ColumnStyles(0).SizeType = SizeType.Absolute
-                    .ColumnStyles(0).Width = 120
-                    .ColumnStyles(1).SizeType = SizeType.Absolute
-                    .ColumnStyles(1).Width = 600
                 End With
             Else
                 parentTableLayoutPanel.Width = 870
-                tableLevel1Blue.RowCount += 1
-                tableLevel1Blue.Height = (22 * tableLevel1Blue.RowCount) + 4
                 tableLevel1Blue.AutoScroll = False
             End If
-
+            tableLevel1Blue.AutoSize = False
+            tableLevel1Blue.RowCount += 1
+            tableLevel1Blue.Height = (22 * tableLevel1Blue.RowCount) + 4
             Application.DoEvents()
         ElseIf itemIndex = ItemIndexs.notificationHistory Then
             tableLevel1Blue.RowStyles(1).SizeType = SizeType.AutoSize

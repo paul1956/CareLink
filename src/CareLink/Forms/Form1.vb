@@ -3,6 +3,8 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.ComponentModel
+Imports System.IO
+Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Class Form1
@@ -60,6 +62,8 @@ Public Class Form1
 
     Private ReadOnly _calibrationToolTip As New ToolTip()
 
+    Private ReadOnly _careLinkSnapshotDocPath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CareLinkSnapshot.json")
+
     Private ReadOnly _insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
 
     Private ReadOnly _listOfSingleItems As New List(Of Integer) From {
@@ -72,15 +76,11 @@ Public Class Form1
                         ItemIndexs.basal}
 
     Private ReadOnly _loginDialog As New LoginForm1
-
     Private ReadOnly _markerInsulinDictionary As New Dictionary(Of Double, Integer)
-
     Private ReadOnly _markerMealDictionary As New Dictionary(Of Double, Integer)
-
     Private ReadOnly _mealImage As Bitmap = My.Resources.MealImage
-
+    Private ReadOnly _savedTitle As String = Me.Text
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
-
     Private _activeInsulinIncrements As Integer
 
     Private _client As CareLinkClient
@@ -100,7 +100,6 @@ Public Class Form1
     Private _recentDatalast As Dictionary(Of String, String)
 
     Private _recentDataSameCount As Integer
-
     Private _timeFormat As String
 
     Private _updating As Boolean = False
@@ -112,6 +111,7 @@ Public Class Form1
         {ItemIndexs.markers, s_markersFilter},
         {ItemIndexs.notificationHistory, s_notificationHistoryFilter}
         }
+
     Public ReadOnly _FiveMinuteSpan As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
     Public ReadOnly _ThirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
 
@@ -122,7 +122,7 @@ Public Class Form1
 
 #End Region
 
-#Region "Variables to hold Sensor Values"
+#Region "Variables to hold Pump Values"
 
     Public AboveHyperLimit As Integer
     Public ActiveInsulin As Dictionary(Of String, String)
@@ -185,7 +185,6 @@ Public Class Form1
     Public TimeToNextCalibHours As Byte = Byte.MaxValue
     Public TimeToNextCalibrationMinutes As Integer
     Public Version As String
-
     Public Property BgUnitsString As String
 
 #End Region
@@ -324,7 +323,6 @@ Public Class Form1
             My.Settings.UpgradeRequired = False
             My.Settings.Save()
         End If
-
         Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
         Me.ShieldUnitsLabel.BackColor = Color.Transparent
         Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLefPictureBox
@@ -340,8 +338,15 @@ Public Class Form1
         Me.SGsDataGridView.ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
             .Alignment = DataGridViewContentAlignment.MiddleCenter
             }
+
+        Me.SnapshotLoadToolStripMenuItem.Enabled = File.Exists(_careLinkSnapshotDocPath)
+
         If My.Settings.UseTestData Then
+            Me.UseLastSavedDataToolStripMenuItem.Checked = False
             Me.UseTestDataToolStripMenuItem.Checked = True
+        ElseIf My.Settings.UseLastSavedData AndAlso Me.SnapshotLoadToolStripMenuItem.Enabled Then
+            Me.UseLastSavedDataToolStripMenuItem.Checked = True
+            Me.UseTestDataToolStripMenuItem.Checked = False
         Else
             Me.DoOptionalLoginAndUpdateData()
         End If
@@ -552,10 +557,54 @@ Public Class Form1
         _bgMiniDisplay.Show()
     End Sub
 
-    Private Sub UseTestDataToolStripMenuItem_Checkchange(sender As Object, e As EventArgs) Handles UseTestDataToolStripMenuItem.CheckStateChanged
-        My.Settings.UseTestData = Me.UseTestDataToolStripMenuItem.Checked
+    Private Sub SnapshotLoadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SnapshotLoadToolStripMenuItem.Click
+        If File.Exists(_careLinkSnapshotDocPath) Then
+            Me.ServerUpdateTimer.Stop()
+            _recentData = Loads(File.ReadAllText(_careLinkSnapshotDocPath))
+            Me.Text &= $"{_savedTitle} Using Last CareLink Snapshot"
+            Me.UpdateAllTabPages()
+        End If
+    End Sub
+
+    Private Sub SnapshotSaveToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SnapshotSaveToolStripMenuItem.Click
+        Dim contents As String = JsonSerializer.Serialize(_recentData, New JsonSerializerOptions)
+        Dim options As New JsonDocumentOptions
+        Using jd As JsonDocument = JsonDocument.Parse(contents, options)
+            File.WriteAllText(_careLinkSnapshotDocPath, JsonSerializer.Serialize(jd, CareLinkClient.JsonFormattingOptions))
+        End Using
+        Me.SnapshotLoadToolStripMenuItem.Enabled = True
+    End Sub
+
+    Private Sub UseLastSavedDataToolStripMenuItem_CheckStateChanged(sender As Object, e As EventArgs) Handles UseLastSavedDataToolStripMenuItem.CheckStateChanged
+        If Me.UseLastSavedDataToolStripMenuItem.Checked Then
+            Me.UseTestDataToolStripMenuItem.Checked = False
+            My.Settings.UseLastSavedData = True
+            My.Settings.UseTestData = False
+            Me.DoOptionalLoginAndUpdateData()
+        Else
+            My.Settings.UseLastSavedData = False
+        End If
+        Me.SnapshotSaveToolStripMenuItem.Enabled = Me.UseLastSavedDataToolStripMenuItem.Checked
+
         My.Settings.Save()
-        Me.DoOptionalLoginAndUpdateData()
+        If _initialized AndAlso Not (Me.UseTestDataToolStripMenuItem.Checked OrElse Me.UseLastSavedDataToolStripMenuItem.Checked) Then
+            Me.DoOptionalLoginAndUpdateData()
+        End If
+    End Sub
+
+    Private Sub UseTestDataToolStripMenuItem_Checkchange(sender As Object, e As EventArgs) Handles UseTestDataToolStripMenuItem.CheckStateChanged
+        If Me.UseTestDataToolStripMenuItem.Checked Then
+            Me.UseLastSavedDataToolStripMenuItem.Checked = False
+            My.Settings.UseLastSavedData = False
+            My.Settings.UseTestData = True
+            Me.DoOptionalLoginAndUpdateData()
+        Else
+            My.Settings.UseTestData = False
+        End If
+        My.Settings.Save()
+        If _initialized AndAlso Not (Me.UseTestDataToolStripMenuItem.Checked OrElse Me.UseLastSavedDataToolStripMenuItem.Checked) Then
+            Me.DoOptionalLoginAndUpdateData()
+        End If
     End Sub
 
     Private Sub WatchdogTimer_Tick(sender As Object, e As EventArgs) Handles WatchdogTimer.Tick
@@ -589,10 +638,14 @@ Public Class Form1
         Debug.Print($"Me.ServerUpdateTimer stopped at {Now}")
         If Me.UseTestDataToolStripMenuItem.Checked Then
             Me.ViewToolStripMenuItem.Visible = False
-            Me.Text &= " Using Test Data"
-            _recentData = Loads(IO.File.ReadAllText(IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
+            Me.Text = $"{_savedTitle} Using Test Data"
+            _recentData = Loads(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
+        ElseIf Me.UseLastSavedDataToolStripMenuItem.Checked Then
+            Me.ViewToolStripMenuItem.Visible = False
+            Me.Text &= $"{_savedTitle} Using Last Saved Data"
+            _recentData = Loads(File.ReadAllText(CareLinkClient.CareLinkLastDownloadDocPath))
         Else
-            Me.Text = Me.Text.Replace(" Using Test Data", "")
+            Me.Text = _savedTitle
             _loginDialog.ShowDialog()
             _client = _loginDialog.Client
             If _client Is Nothing OrElse Not _client.LoggedIn Then
@@ -939,7 +992,7 @@ Public Class Form1
         End If
         If _recentDataSameCount < 5 Then
             _recentDataSameCount += 1
-            For i As Integer = 0 To _recentData.Keys.Count
+            For i As Integer = 0 To _recentData.Keys.Count - 1
                 If _recentDatalast.Keys(i) <> "currentServerTime" AndAlso _recentDatalast.Values(i) <> _recentData.Values(i) Then
                     _recentDataSameCount = 0
                     Return True
@@ -1148,11 +1201,11 @@ Public Class Form1
         Dim singleItem As Boolean
         Dim layoutPanel1 As TableLayoutPanel
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In localRecentData.WithIndex()
-            Dim singleItemIndex As Integer = 0
             layoutPanel1 = Me.TableLayoutPanelSummaryData
             singleItem = False
             Dim row As KeyValuePair(Of String, String) = c.Value
             Dim rowIndex As ItemIndexs = CType([Enum].Parse(GetType(ItemIndexs), c.Value.Key), ItemIndexs)
+            Dim singleItemIndex As ItemIndexs
 
             Select Case rowIndex
                 Case ItemIndexs.lastSensorTS
@@ -1251,19 +1304,19 @@ Public Class Form1
                 Case ItemIndexs.lastSG
                     layoutPanel1 = Me.TableLayoutPanelTop1
                     layoutPanel1.Controls.Clear()
-                    singleItemIndex = rowIndex
+                    singleItemIndex = ItemIndexs.lastSG
                     layoutPanel1.RowCount = 1
                     singleItem = True
                 Case ItemIndexs.lastAlarm
                     layoutPanel1 = Me.TableLayoutPanelTop2
                     layoutPanel1.Controls.Clear()
-                    singleItemIndex = rowIndex
+                    singleItemIndex = ItemIndexs.lastAlarm
                     layoutPanel1.RowCount = 1
                     singleItem = True
                 Case ItemIndexs.activeInsulin
                     layoutPanel1 = Me.TableLayoutPanelActiveInsulin
                     layoutPanel1.Controls.Clear()
-                    singleItemIndex = rowIndex
+                    singleItemIndex = ItemIndexs.activeInsulin
                     layoutPanel1.RowCount = 1
                     singleItem = True
                 Case ItemIndexs.sgs
@@ -1279,19 +1332,19 @@ Public Class Form1
                     layoutPanel1 = Me.TableLayoutPanelLimits
                     layoutPanel1.Controls.Clear()
                     layoutPanel1.AutoSize = True
-                    singleItemIndex = rowIndex
+                    singleItemIndex = ItemIndexs.limits
                     layoutPanel1.RowCount = 1
                     singleItem = True
                 Case ItemIndexs.markers
                     layoutPanel1 = Me.TableLayoutPanelMarkers
                     layoutPanel1.Controls.Clear()
-                    singleItemIndex = rowIndex
+                    singleItemIndex = ItemIndexs.markers
                     layoutPanel1.RowCount = 1
                     singleItem = True
                 Case ItemIndexs.notificationHistory
                     layoutPanel1 = Me.TableLayoutPanelNotificationHistory
                     layoutPanel1.Controls.Clear()
-                    singleItemIndex = rowIndex
+                    singleItemIndex = ItemIndexs.notificationHistory
                     layoutPanel1.RowCount = 1
                     singleItem = True
                 Case ItemIndexs.therapyAlgorithmState
@@ -1301,7 +1354,7 @@ Public Class Form1
                 Case ItemIndexs.basal
                     layoutPanel1 = Me.TableLayoutPanelBasal
                     layoutPanel1.Controls.Clear()
-                    singleItemIndex = rowIndex
+                    singleItemIndex = ItemIndexs.basal
                     layoutPanel1.RowCount = 1
                     singleItem = True
                 Case ItemIndexs.systemStatusMessage
@@ -1670,6 +1723,10 @@ Public Class Form1
             Me.TransmitterBatteryPictureBox.Image = My.Resources.TransmitterBatteryUnknown
             Me.TransmatterBatterPercentLabel.Text = $"???"
         End If
+
+    End Sub
+
+    Private Sub UseLastSavedDataToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UseLastSavedDataToolStripMenuItem.Click
 
     End Sub
 
