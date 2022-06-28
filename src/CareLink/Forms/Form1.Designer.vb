@@ -28,9 +28,10 @@ Partial Class Form1
         Me.StartDisplayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoginToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SnapshotLoadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SnapshotSaveToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OptionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.FilterRawJSONDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SetupEmailServerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -104,7 +105,7 @@ Partial Class Form1
         Me.WatchdogTimer = New System.Windows.Forms.Timer(Me.components)
         Me.LoginStatusLabel = New System.Windows.Forms.Label()
         Me.LoginStatus = New System.Windows.Forms.Label()
-        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -156,13 +157,6 @@ Partial Class Form1
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
         Me.ToolStripSeparator1.Size = New System.Drawing.Size(187, 6)
         '
-        'ExitToolStripMenuItem
-        '
-        Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
-        Me.ExitToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.X), System.Windows.Forms.Keys)
-        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(190, 22)
-        Me.ExitToolStripMenuItem.Text = "E&xit"
-        '
         'SnapshotLoadToolStripMenuItem
         '
         Me.SnapshotLoadToolStripMenuItem.Name = "SnapshotLoadToolStripMenuItem"
@@ -175,6 +169,18 @@ Partial Class Form1
         Me.SnapshotSaveToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
         Me.SnapshotSaveToolStripMenuItem.Size = New System.Drawing.Size(190, 22)
         Me.SnapshotSaveToolStripMenuItem.Text = "Snapshot &Save"
+        '
+        'ToolStripSeparator2
+        '
+        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(187, 6)
+        '
+        'ExitToolStripMenuItem
+        '
+        Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
+        Me.ExitToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.X), System.Windows.Forms.Keys)
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(190, 22)
+        Me.ExitToolStripMenuItem.Text = "E&xit"
         '
         'OptionsToolStripMenuItem
         '
@@ -1121,11 +1127,6 @@ Partial Class Form1
         Me.LoginStatus.TabIndex = 24
         Me.LoginStatus.Text = "Unknown"
         '
-        'ToolStripSeparator2
-        '
-        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(187, 6)
-        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
@@ -1255,4 +1256,5 @@ Partial Class Form1
     Friend WithEvents SnapshotLoadToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SnapshotSaveToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
+    Friend WithEvents ToolTip1 As ToolTip
 End Class

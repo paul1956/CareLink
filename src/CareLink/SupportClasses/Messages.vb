@@ -6,16 +6,17 @@ Module Messages
 
     Friend ReadOnly _messages As New Dictionary(Of String, String) From {
                 {"BC_MESSAGE_BASAL_STARTED", "Automode exit, manual basal started"},
-                {"BC_MESSAGE_SG_UNDER_50_MG_DL", "BG under..."}, ' The actual message is generated at runtime
-                {"BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR", "Check BG and calibrate sensor"},
-                {"BC_SID_ENSURE_CONNECTION_SECURE", "Check connection. Ensure transmitter and sensor is secure, then select OK"},
-                {"BC_SID_IF_NEW_SENSR_SELCT_START_NEW_ELSE_REWIND", "If new sensor select start new else rewind"},
-                {"BC_SID_LOW_SD_CHECK_BG", "Low sensor reading check BG"},
+                {"BC_MESSAGE_SG_UNDER_50_MG_DL", "Sensor Glucose under..."}, ' The actual message is generated at runtime
+                {"BC_SID_BOLUS_ENTRY_TIMED_OUT", "Bolus not delivered. Bolus entry timed out before delivery. If bolus was intended, enter values again."},
+                {"BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR", "Calibrate now. Check BG and calibrate sensor."},
+                {"BC_SID_ENSURE_CONNECTION_SECURE", "Check connection. Ensure transmitter and sensor is secure, then select OK."},
+                {"BC_SID_IF_NEW_SENSR_SELCT_START_NEW_ELSE_REWIND", "If new sensor select start new else rewind."},
+                {"BC_SID_LOW_SD_CHECK_BG", "Alert on low. Low sensor glucose. Check BG."},
                 {"BC_SID_MOVE_AWAY_FROM_ELECTR_DEVICES", "Possible signal interface. Move away from electronic devices."},
-                {"BC_SID_MOVE_PUMP_CLOSER_TO_MINILINK", "Move pump closer to transmitter"},
-                {"BC_SID_SG_APPROACH_HIGH_LIMIT_CHECK_BG", "Sensor glucose approaching high limit. Check BG."},
-                {"BC_SID_SG_RISE_RAPID", "BG rapidly raising"},
-                {"BC_SID_WAIT_AT_LEAST_15_MINUTES", "Wait at least 15 mintues,"},
+                {"BC_SID_MOVE_PUMP_CLOSER_TO_MINILINK", "Move pump closer to transmitter."},
+                {"BC_SID_SG_APPROACH_HIGH_LIMIT_CHECK_BG", "Alert before high. Sensor glucose approaching high limit. Check BG."},
+                {"BC_SID_SG_RISE_RAPID", "Raise Alert. Sensor glusose raising rapidly."},
+                {"BC_SID_WAIT_AT_LEAST_15_MINUTES", "Calibration not accepted. Wait at least 15 mintues. Wash hands, test BGagain and calibrate."},
                 {"CALIBRATING", "Calibrating ..."},
                 {"CALIBRATION_REQUIRED", "Calibration required"},
                 {"NO_DATA_FROM_PUMP", "No data from pump"},

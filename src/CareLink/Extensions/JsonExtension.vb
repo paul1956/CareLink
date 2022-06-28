@@ -9,35 +9,78 @@ Imports CareLink.Form1
 
 Public Module JsonExtensions
 
-    Friend Function GetTranslatedMessageIdOrValue(dic As Dictionary(Of String, String), entry As KeyValuePair(Of String, String), TimeFormat As String) As String
-        If entry.Key <> "messageid" Then
-            Return entry.Value
-        End If
-        Dim messageValue As String = ""
-        If _messages.TryGetValue(entry.Value, messageValue) Then
-            Return $"{entry.Value} = {messageValue}"
-        End If
-        If _messagesSpecialHandling.TryGetValue(entry.Value, messageValue) Then
-            Dim splitMessageValue As String() = messageValue.Split(":")
-            Dim key As String = splitMessageValue(1)
-            Dim replacementValue As String
-            If key = "secondaryTime" Then
-                replacementValue = dic(key).FormatTimeOnly(TimeFormat)
-            Else
-                replacementValue = dic(key)
-            End If
+    <Extension>
+    Private Function ItemAsString(item As KeyValuePair(Of String, Object)) As String
+        Dim itemValue As JsonElement = CType(item.Value, JsonElement)
+        Dim valueAsString As String = itemValue.ToString
+        Select Case itemValue.ValueKind
+            Case JsonValueKind.False
+                Return "False"
+            Case JsonValueKind.Null
+                Return ""
+            Case JsonValueKind.Number
+                Return valueAsString
+            Case JsonValueKind.True
+                Return "True"
+            Case JsonValueKind.String
+                Try
+                    If Char.IsDigit(valueAsString(0)) Then
+                        Dim dateSplit As String() = valueAsString.Split("T")
+                        If dateSplit.Length = 2 Then
+                            Dim zDateString As String() = dateSplit(0).Split("-"c)
+                            Dim zTimeString As String() = dateSplit(1).TrimEnd("Z"c).Replace("+", ".").Split(":")
+                            Select Case item.Key
+                                Case "techHours"
+                                Case "lastConduitDateTime",
+                                     "medicalDeviceTimeAsString",
+                                     "previousDateTime" ' "2021-05-17T01:02:22.307-07:00"
+                                    Return $"{ New DateTime(CInt(zDateString(0)),
+                                                             CInt(zDateString(1)),
+                                                             CInt(zDateString(2)),
+                                                             CInt(zTimeString(0)),
+                                                             CInt(zTimeString(1)),
+                                                             CInt(zTimeString(2).Substring(0, 2)),
+                                                             CInt(zTimeString(2).Substring(3, 3)), DateTimeKind.Local)}{ _
+                                                    valueAsString.Substring(valueAsString.Length - 6)}"
+                                Case "lastSensorTSAsString",
+                                    "sLastSensorTime",
+                                    "sMedicalDeviceTime",
+                                    "triggeredDateTime" '2021-05-16T20:28:00.000Z
+                                    Return New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
+                                Case "loginDateUTC" ' UTC 2021-05-16T20:28:00.000Z
+                                    Return New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Utc).ToString()
+                                Case "datetime"
+                                    If item.Value.ToString().EndsWith("Z"c) Then
+                                        Return New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
+                                    End If
+                                    ' "2021-05-17T01:02:22.307-07:00"
+                                    Return $"{ New DateTime(CInt(zDateString(0)),
+                                                             CInt(zDateString(1)),
+                                                             CInt(zDateString(2)),
+                                                             CInt(zTimeString(0)),
+                                                             CInt(zTimeString(1)),
+                                                             CInt(zTimeString(2).Substring(0, 2)),
+                                                             CInt(zTimeString(2).Substring(3, 3)), DateTimeKind.Local)}{ _
+                                                    valueAsString.Substring(valueAsString.Length - 6)}"
 
-            Return $"{entry.Value} = {splitMessageValue(0).Replace("(0)", replacementValue)}"
-        End If
+                                Case Else
+                                    Stop
+                            End Select
 
-        If Debugger.IsAttached Then
-            MsgBox($"Unknown sensor message '{entry.Value}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Unknown Sensor Message")
-        End If
-
-        Return entry.Value.Replace("_", " ")
+                        End If
+                    End If
+                Catch ex As Exception
+                    Stop
+                End Try
+        End Select
+        Return valueAsString
     End Function
 
-    Friend Sub GetInnerTable(innerJson As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String)
+    'Private Sub textbox1_MouseClick(sender As Object, e As MouseEventArgs)
+    '    ' Throw New NotImplementedException()
+    'End Sub
+
+    Friend Sub GetInnerTable(mainForm As Form1, innerJson As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String)
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
         tableLevel1Blue.BackColor = Color.LightBlue
@@ -130,13 +173,20 @@ Public Module JsonExtensions
                                                                })
                 End If
             Else
-                Dim textBox As New TextBox With {.[ReadOnly] = True,
+                Dim message As String = GetTranslatedMessageIdOrValue(innerJson, innerRow, timeFormat)
+                Dim textBox1 As New TextBox With {.[ReadOnly] = True,
                                                  .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                                 .AutoSize = True,
-                                                 .Text = GetTranslatedMessageIdOrValue(innerJson, innerRow, timeFormat)
+                                                  .AutoSize = True,
+                                                 .Text = message
                                                 }
+                If innerRow.Key = "messageId" AndAlso message.Length > 100 Then
+                    Form1.ToolTip1.SetToolTip(textBox1, message)
+                    'AddHandler textBox1.MouseClick, AddressOf textbox1_MouseClick
+                Else
+                    Form1.ToolTip1.SetToolTip(textBox1, Nothing)
+                End If
                 tableLevel1Blue.Controls.AddRange({keyLabel,
-                                                           textBox
+                                                           textBox1
                                                            })
             End If
         Next
@@ -171,71 +221,32 @@ Public Module JsonExtensions
         Application.DoEvents()
     End Sub
 
-    <Extension>
-    Private Function ItemAsString(item As KeyValuePair(Of String, Object)) As String
-        Dim itemValue As JsonElement = CType(item.Value, JsonElement)
-        Dim valueAsString As String = itemValue.ToString
-        Select Case itemValue.ValueKind
-            Case JsonValueKind.False
-                Return "False"
-            Case JsonValueKind.Null
-                Return ""
-            Case JsonValueKind.Number
-                Return valueAsString
-            Case JsonValueKind.True
-                Return "True"
-            Case JsonValueKind.String
-                Try
-                    If Char.IsDigit(valueAsString(0)) Then
-                        Dim dateSplit As String() = valueAsString.Split("T")
-                        If dateSplit.Length = 2 Then
-                            Dim zDateString As String() = dateSplit(0).Split("-"c)
-                            Dim zTimeString As String() = dateSplit(1).TrimEnd("Z"c).Replace("+", ".").Split(":")
-                            Select Case item.Key
-                                Case "techHours"
-                                Case "lastConduitDateTime",
-                                     "medicalDeviceTimeAsString",
-                                     "previousDateTime" ' "2021-05-17T01:02:22.307-07:00"
-                                    Return $"{ New DateTime(CInt(zDateString(0)),
-                                                             CInt(zDateString(1)),
-                                                             CInt(zDateString(2)),
-                                                             CInt(zTimeString(0)),
-                                                             CInt(zTimeString(1)),
-                                                             CInt(zTimeString(2).Substring(0, 2)),
-                                                             CInt(zTimeString(2).Substring(3, 3)), DateTimeKind.Local)}{ _
-                                                    valueAsString.Substring(valueAsString.Length - 6)}"
-                                Case "lastSensorTSAsString",
-                                    "sLastSensorTime",
-                                    "sMedicalDeviceTime",
-                                    "triggeredDateTime" '2021-05-16T20:28:00.000Z
-                                    Return New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
-                                Case "loginDateUTC" ' UTC 2021-05-16T20:28:00.000Z
-                                    Return New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Utc).ToString()
-                                Case "datetime"
-                                    If item.Value.ToString().EndsWith("Z"c) Then
-                                        Return New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
-                                    End If
-                                    ' "2021-05-17T01:02:22.307-07:00"
-                                    Return $"{ New DateTime(CInt(zDateString(0)),
-                                                             CInt(zDateString(1)),
-                                                             CInt(zDateString(2)),
-                                                             CInt(zTimeString(0)),
-                                                             CInt(zTimeString(1)),
-                                                             CInt(zTimeString(2).Substring(0, 2)),
-                                                             CInt(zTimeString(2).Substring(3, 3)), DateTimeKind.Local)}{ _
-                                                    valueAsString.Substring(valueAsString.Length - 6)}"
+    Friend Function GetTranslatedMessageIdOrValue(dic As Dictionary(Of String, String), entry As KeyValuePair(Of String, String), TimeFormat As String) As String
+        If entry.Key <> "messageid" Then
+            Return entry.Value
+        End If
+        Dim messageValue As String = ""
+        If _messages.TryGetValue(entry.Value, messageValue) Then
+            Return $"{entry.Value} = {messageValue}"
+        End If
+        If _messagesSpecialHandling.TryGetValue(entry.Value, messageValue) Then
+            Dim splitMessageValue As String() = messageValue.Split(":")
+            Dim key As String = splitMessageValue(1)
+            Dim replacementValue As String
+            If key = "secondaryTime" Then
+                replacementValue = dic(key).FormatTimeOnly(TimeFormat)
+            Else
+                replacementValue = dic(key)
+            End If
 
-                                Case Else
-                                    Stop
-                            End Select
+            Return $"{entry.Value} = {splitMessageValue(0).Replace("(0)", replacementValue)}"
+        End If
 
-                        End If
-                    End If
-                Catch ex As Exception
-                    Stop
-                End Try
-        End Select
-        Return valueAsString
+        If Debugger.IsAttached Then
+            MsgBox($"Unknown sensor message '{entry.Value}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Unknown Sensor Message")
+        End If
+
+        Return entry.Value.Replace("_", " ")
     End Function
 
     Public Function LoadList(value As String) As List(Of Dictionary(Of String, String))

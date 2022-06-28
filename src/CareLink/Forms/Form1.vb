@@ -614,25 +614,6 @@ Public Class Form1
 
 #End Region
 
-    Private Shared Sub FillOneRowOfTableLayoutPannel(layoutPanel As TableLayoutPanel, innerJson As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String)
-        For Each jsonEntry As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
-            Dim tableLevel1Blue As New TableLayoutPanel With {
-                    .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                    .AutoScroll = False,
-                    .AutoSize = True,
-                    .AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                    .ColumnCount = 2,
-                    .Dock = DockStyle.Fill,
-                    .Margin = New Padding(0),
-                    .Name = "InnerTable",
-                    .Padding = New Padding(0)
-                    }
-            layoutPanel.Controls.Add(tableLevel1Blue, column:=1, row:=jsonEntry.Index)
-            GetInnerTable(jsonEntry.Value, tableLevel1Blue, CType(rowIndex, ItemIndexs), filterJsonData, timeFormat)
-            Application.DoEvents()
-        Next
-    End Sub
-
     Private Sub DoOptionalLoginAndUpdateData()
         Me.ServerUpdateTimer.Stop()
         Debug.Print($"Me.ServerUpdateTimer stopped at {Now}")
@@ -662,6 +643,25 @@ Public Class Form1
             Me.LoginStatus.Text = "OK"
         End If
         Me.UpdateAllTabPages()
+    End Sub
+
+    Private Sub FillOneRowOfTableLayoutPannel(layoutPanel As TableLayoutPanel, innerJson As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String)
+        For Each jsonEntry As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
+            Dim tableLevel1Blue As New TableLayoutPanel With {
+                    .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                    .AutoScroll = False,
+                    .AutoSize = True,
+                    .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                    .ColumnCount = 2,
+                    .Dock = DockStyle.Fill,
+                    .Margin = New Padding(0),
+                    .Name = "InnerTable",
+                    .Padding = New Padding(0)
+                }
+            layoutPanel.Controls.Add(tableLevel1Blue, column:=1, row:=jsonEntry.Index)
+            GetInnerTable(Me, jsonEntry.Value, tableLevel1Blue, CType(rowIndex, ItemIndexs), filterJsonData, timeFormat)
+            Application.DoEvents()
+        Next
     End Sub
 
 #Region "Initialize Charts"
@@ -1004,12 +1004,6 @@ Public Class Form1
         Return True
     End Function
 
-    Private Sub UpdateActiveInsulin()
-        Dim activeInsulinStr As String = $"{ActiveInsulin("amount"):N3}"
-        Me.ActiveInsulinValue.Text = $"{activeInsulinStr} U"
-        _bgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
-    End Sub
-
     Private Sub UpdateActiveInsulinChart()
         If Not _initialized Then
             Exit Sub
@@ -1128,66 +1122,26 @@ Public Class Form1
         End If
         _initialized = True
         Me.UpdateActiveInsulinChart()
-        Me.UpdateHomeTabPage()
+        If Not _initialized Then
+            Exit Sub
+        End If
+        _initialized = False
+        Me.UpdateActiveInsulin()
+        Me.UpdateAutoModeShield()
+        Me.UpdateCalibrationTimeRemaining()
+        Me.UpdateInsulinLevel()
+        Me.UpdatePumpBattery()
+        Me.UpdateRemainingInsulin()
+        Me.UpdateSensorLife()
+        Me.UpdateTimeInRange()
+        Me.UpdateTransmitterBatttery()
+
+        Me.UpdateZHomeTabSerieses()
+
+        Application.DoEvents()
         _recentDatalast = _recentData
+        _initialized = True
         _updating = False
-    End Sub
-
-    Private Sub UpdateAutoModeShield()
-        Me.SensorMessage.Location = New Point(Me.ShieldPictureBox.Left + (Me.ShieldPictureBox.Width \ 2) - (Me.SensorMessage.Width \ 2), Me.SensorMessage.Top)
-        If LastSG("sg") <> "0" Then
-            Me.CurrentBG.Location = New Point((Me.ShieldPictureBox.Width \ 2) - (Me.CurrentBG.Width \ 2), Me.ShieldPictureBox.Height \ 4)
-            Me.CurrentBG.Parent = Me.ShieldPictureBox
-            Me.CurrentBG.Text = LastSG("sg")
-            Me.NotifyIcon1.Text = $"{LastSG("sg")} {Me.BgUnitsString}"
-            _bgMiniDisplay.CurrentBGString = LastSG("sg")
-            Me.CurrentBG.Visible = True
-            Me.SensorMessage.Visible = False
-            Me.ShieldPictureBox.Image = My.Resources.Shield
-            Me.ShieldUnitsLabel.Visible = True
-            Me.ShieldUnitsLabel.BackColor = Color.Transparent
-            Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
-            Me.ShieldUnitsLabel.Left = (Me.ShieldPictureBox.Width \ 2) - (Me.ShieldUnitsLabel.Width \ 2)
-            Me.ShieldUnitsLabel.Text = Me.BgUnitsString
-            Me.ShieldUnitsLabel.Visible = True
-        Else
-            _bgMiniDisplay.CurrentBGString = "---"
-            Me.CurrentBG.Visible = False
-            Me.ShieldPictureBox.Image = My.Resources.Shield_Disabled
-            Me.SensorMessage.Visible = True
-            Me.SensorMessage.Parent = Me.ShieldPictureBox
-            Me.SensorMessage.Left = 0
-            Me.SensorMessage.BackColor = Color.Transparent
-            Dim message As String = ""
-            If _messages.TryGetValue(SensorState, message) Then
-                message = SensorState.Replace("_", " ")
-            Else
-                MsgBox($"{SensorState} is unknown sensor message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
-            End If
-            Me.SensorMessage.Text = message
-            Me.ShieldUnitsLabel.Visible = False
-            Me.SensorMessage.Visible = True
-        End If
-        If _bgMiniDisplay.Visible Then
-            _bgMiniDisplay.BGTextBox.SelectionLength = 0
-        End If
-        Application.DoEvents()
-    End Sub
-
-    Private Sub UpdateCalibrationTimeRemaining()
-        If TimeToNextCalibHours = Byte.MaxValue Then
-            Me.CalibrationDueImage.Image = My.Resources.CalibrationUnavailable
-        ElseIf TimeToNextCalibHours < 1 Then
-            If SystemStatusMessage = "WAIT_TO_CALIBRATE" OrElse SensorState = "WARM_UP" Then
-                Me.CalibrationDueImage.Image = My.Resources.CalibrationNotReady
-            Else
-                Me.CalibrationDueImage.Image = DrawCenteredArc(My.Resources.CalibrationDotRed, TimeToNextCalibHours, TimeToNextCalibHours / 12)
-            End If
-        Else
-            Me.CalibrationDueImage.Image = DrawCenteredArc(My.Resources.CalibrationDot, TimeToNextCalibHours, TimeToNextCalibHours / 12)
-        End If
-
-        Application.DoEvents()
     End Sub
 
     Private Sub UpdateDataTables(localRecentData As Dictionary(Of String, String))
@@ -1195,6 +1149,7 @@ Public Class Form1
             Exit Sub
         End If
         Me.Cursor = Cursors.WaitCursor
+        Application.DoEvents()
         Me.TableLayoutPanelSummaryData.Controls.Clear()
         Me.TableLayoutPanelSummaryData.RowCount = localRecentData.Count - 9
         Dim currentRowIndex As Integer = 0
@@ -1276,12 +1231,12 @@ Public Class Form1
                         _limitLow = 70
                         _homePageChartChartArea.AxisX.LabelStyle.Format = "hh tt"
                         _activeInsulinTabChartArea.AxisX.LabelStyle.Format = "hh tt"
-                        _messages("BC_MESSAGE_SG_UNDER_50_MG_DL") = $"BG under 50 {Me.BgUnitsString}"
+                        _messages("BC_MESSAGE_SG_UNDER_50_MG_DL") = $"Sensor Glucose under 50 {Me.BgUnitsString}"
                     Else
                         _limithigh = 10.0
                         _limitLow = (70 / 18).RoundSingle(1)
                         _activeInsulinTabChartArea.AxisX.LabelStyle.Format = "HH"
-                        _messages("BC_MESSAGE_SG_UNDER_50_MG_DL") = $"BG under 2.7 {Me.BgUnitsString}"
+                        _messages("BC_MESSAGE_SG_UNDER_50_MG_DL") = $"Sensor Glucose under 2.7 {Me.BgUnitsString}"
                     End If
                     Me.AboveHighLimitMessageLabel.Text = $"Above {_limithigh} {Me.BgUnitsString}"
                     Me.AverageSGUnitsLabel.Text = Me.BgUnitsString
@@ -1430,14 +1385,17 @@ Public Class Form1
                 If innerJson.Count > 0 Then
                     layoutPanel1.Parent.Parent.UseWaitCursor = True
                     Application.DoEvents()
-                    FillOneRowOfTableLayoutPannel(layoutPanel1,
-                                                  innerJson,
-                                                  rowIndex,
-                                                  _filterJsonData,
-                                                  _timeFormat)
-                    layoutPanel1.Parent.Parent.UseWaitCursor = False
+                    layoutPanel1.Invoke(Sub()
+                                            FillOneRowOfTableLayoutPannel(layoutPanel1,
+                                                                          innerJson,
+                                                                          rowIndex,
+                                                                          _filterJsonData,
+                                                                          _timeFormat)
+                                        End Sub)
                     Application.DoEvents()
 
+                    layoutPanel1.Parent.Parent.UseWaitCursor = False
+                    Application.DoEvents()
                 Else
                     Dim rowTextBox As New TextBox With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                         .AutoSize = True,
@@ -1485,7 +1443,7 @@ Public Class Form1
                 If rowIndex = ItemIndexs.notificationHistory Then
                     tableLevel1Blue.AutoScroll = False
                 End If
-                GetInnerTable(innerJson, tableLevel1Blue, rowIndex, _filterJsonData, _timeFormat)
+                GetInnerTable(Me, innerJson, tableLevel1Blue, rowIndex, _filterJsonData, _timeFormat)
             Else
                 Dim rowTextBox As New TextBox With {
                                         .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
@@ -1501,98 +1459,69 @@ Public Class Form1
         Me.Cursor = Cursors.Default
     End Sub
 
-    Private Sub UpdateHomeTabPage()
-        If Not _initialized Then
-            Exit Sub
+#Region "Home Page Update Utilities"
+
+    Private Sub UpdateActiveInsulin()
+        Dim activeInsulinStr As String = $"{ActiveInsulin("amount"):N3}"
+        Me.ActiveInsulinValue.Text = $"{activeInsulinStr} U"
+        _bgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
+    End Sub
+
+    Private Sub UpdateAutoModeShield()
+        Me.SensorMessage.Location = New Point(Me.ShieldPictureBox.Left + (Me.ShieldPictureBox.Width \ 2) - (Me.SensorMessage.Width \ 2), Me.SensorMessage.Top)
+        If LastSG("sg") <> "0" Then
+            Me.CurrentBG.Location = New Point((Me.ShieldPictureBox.Width \ 2) - (Me.CurrentBG.Width \ 2), Me.ShieldPictureBox.Height \ 4)
+            Me.CurrentBG.Parent = Me.ShieldPictureBox
+            Me.CurrentBG.Text = LastSG("sg")
+            Me.NotifyIcon1.Text = $"{LastSG("sg")} {Me.BgUnitsString}"
+            _bgMiniDisplay.CurrentBGString = LastSG("sg")
+            Me.CurrentBG.Visible = True
+            Me.SensorMessage.Visible = False
+            Me.ShieldPictureBox.Image = My.Resources.Shield
+            Me.ShieldUnitsLabel.Visible = True
+            Me.ShieldUnitsLabel.BackColor = Color.Transparent
+            Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
+            Me.ShieldUnitsLabel.Left = (Me.ShieldPictureBox.Width \ 2) - (Me.ShieldUnitsLabel.Width \ 2)
+            Me.ShieldUnitsLabel.Text = Me.BgUnitsString
+            Me.ShieldUnitsLabel.Visible = True
+        Else
+            _bgMiniDisplay.CurrentBGString = "---"
+            Me.CurrentBG.Visible = False
+            Me.ShieldPictureBox.Image = My.Resources.Shield_Disabled
+            Me.SensorMessage.Visible = True
+            Me.SensorMessage.Parent = Me.ShieldPictureBox
+            Me.SensorMessage.Left = 0
+            Me.SensorMessage.BackColor = Color.Transparent
+            Dim message As String = ""
+            If _messages.TryGetValue(SensorState, message) Then
+                message = SensorState.Replace("_", " ")
+            Else
+                MsgBox($"{SensorState} is unknown sensor message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
+            End If
+            Me.SensorMessage.Text = message
+            Me.ShieldUnitsLabel.Visible = False
+            Me.SensorMessage.Visible = True
         End If
-        _initialized = False
-        Me.UpdateActiveInsulin()
-        Me.UpdateAutoModeShield()
-        Me.UpdateCalibrationTimeRemaining()
-        Me.UpdateInsulinLevel()
-        Me.UpdatePumpBattery()
-        Me.UpdateRemainingInsulin()
-        Me.UpdateSensorLife()
-        Me.UpdateTimeInRange()
-        Me.UpdateTransmitterBatttery()
-
-        Me.UpdateHomeTabSerieses()
-
+        If _bgMiniDisplay.Visible Then
+            _bgMiniDisplay.BGTextBox.SelectionLength = 0
+        End If
         Application.DoEvents()
     End Sub
 
-    Private Sub UpdateHomeTabSerieses()
-        Me.HomePageChart.Series("Default").Points.Clear()
-        Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Clear()
-        Me.HomePageChart.Series(NameOf(HighLimitSeries)).Points.Clear()
-        Me.HomePageChart.Series(NameOf(LowLimitSeries)).Points.Clear()
-        _markerInsulinDictionary.Clear()
-        _markerMealDictionary.Clear()
-        For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In Markers.WithIndex()
-            Dim sgDateTime As Date = Markers.SafeGetSgDateTime(sgListIndex.Index)
-            Dim sgOaDateTime As Double = sgDateTime.ToOADate()
-            Dim bgValueString As String = ""
-            Dim bgValue As Single
-            If sgListIndex.Value.TryGetValue("value", bgValueString) Then
-                bgValue = CInt(bgValueString)
-                If bgValue < InsulinRow Then Stop
+    Private Sub UpdateCalibrationTimeRemaining()
+        If TimeToNextCalibHours = Byte.MaxValue Then
+            Me.CalibrationDueImage.Image = My.Resources.CalibrationUnavailable
+        ElseIf TimeToNextCalibHours < 1 Then
+            If SystemStatusMessage = "WAIT_TO_CALIBRATE" OrElse SensorState = "WARM_UP" Then
+                Me.CalibrationDueImage.Image = My.Resources.CalibrationNotReady
+            Else
+                Me.CalibrationDueImage.Image = DrawCenteredArc(My.Resources.CalibrationDotRed, TimeToNextCalibHours, TimeToNextCalibHours / 12)
             End If
-            With Me.HomePageChart.Series(NameOf(MarkerSeries))
-                Select Case sgListIndex.Value("type")
-                    Case "BG_READING"
-                        bgValue = CInt(sgListIndex.Value("value"))
-                        .Points.AddXY(sgOaDateTime, bgValue)
-                        .Points.Last.BorderColor = Color.Gainsboro
-                        .Points.Last.Color = Color.Transparent
-                        .Points.Last.MarkerBorderWidth = 2
-                        .Points.Last.MarkerSize = 10
-                        .Points.Last.ToolTip = $"Blood Glucose, Not used For calibration, {sgListIndex.Value("value")} {Me.BgUnitsString}"
-                    Case "CALIBRATION"
-                        .Points.AddXY(sgOaDateTime, bgValue)
-                        .Points.Last.BorderColor = Color.Red
-                        .Points.Last.Color = Color.Transparent
-                        .Points.Last.MarkerBorderWidth = 2
-                        .Points.Last.MarkerSize = 8
-                        .Points.Last.ToolTip = $"Blood Glucose, Calibration {If(CBool(sgListIndex.Value("calibrationSuccess")), "accepted", "not accepted")}, {sgListIndex.Value("value")} {Me.BgUnitsString}"
-                    Case "INSULIN"
-                        _markerInsulinDictionary.Add(sgOaDateTime, MarkerRow)
-                        .Points.AddXY(sgOaDateTime, MarkerRow)
-                        .Points.Last.Color = Color.FromArgb(30, Color.LightBlue)
-                        .Points.Last.MarkerBorderWidth = 0
-                        .Points.Last.MarkerSize = 30
-                        .Points.Last.MarkerStyle = MarkerStyle.Square
-                        .Points.Last.ToolTip = $"Bolus, {sgListIndex.Value("programmedFastAmount")} U"
-                    Case "MEAL"
-                        _markerMealDictionary.Add(sgOaDateTime, InsulinRow)
-                        .Points.AddXY(sgOaDateTime, InsulinRow)
-                        .Points.Last.Color = Color.FromArgb(30, Color.Yellow)
-                        .Points.Last.MarkerBorderWidth = 0
-                        .Points.Last.MarkerSize = 30
-                        .Points.Last.MarkerStyle = MarkerStyle.Square
-                        .Points.Last.ToolTip = $"Meal, {sgListIndex.Value("amount")} grams"
-                    Case "AUTO_BASAL_DELIVERY"
-                        .Points.AddXY(sgOaDateTime, MarkerRow)
-                        Dim bolusAmount As String = sgListIndex.Value("bolusAmount")
-                        .Points.Last.MarkerBorderColor = Color.Black
-                        .Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3)} U"
-                    Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED", "TIME_CHANGE"
-                        'Stop
-                    Case Else
-                        Stop
-                End Select
-            End With
-        Next
-        _initialized = True
-        Dim limitsIndexList(SGs.Count - 1) As Integer
-        Me.GetLimitsList(limitsIndexList)
-        For Each sgListIndex As IndexClass(Of SgRecord) In SGs.WithIndex()
-            Dim sgOaDateTime As Double = sgListIndex.Value.datetime.ToOADate()
-            PlotOnePoint(Me.HomePageChart.Series("Default"), sgOaDateTime, sgListIndex.Value.sg, Color.White, InsulinRow, _limithigh, _limitLow)
-            Dim limitsLowValue As Integer = CInt(Limits(limitsIndexList(sgListIndex.Index))("lowLimit"))
-            Dim limitsHighValue As Integer = CInt(Limits(limitsIndexList(sgListIndex.Index))("highLimit"))
-            Me.HomePageChart.Series(NameOf(HighLimitSeries)).Points.AddXY(sgOaDateTime, limitsHighValue)
-            Me.HomePageChart.Series(NameOf(LowLimitSeries)).Points.AddXY(sgOaDateTime, limitsLowValue)
-        Next
+        Else
+            Me.CalibrationDueImage.Image = DrawCenteredArc(My.Resources.CalibrationDot, TimeToNextCalibHours, TimeToNextCalibHours / 12)
+        End If
+
+        Application.DoEvents()
     End Sub
 
     Private Sub UpdateInsulinLevel()
@@ -1726,9 +1655,80 @@ Public Class Form1
 
     End Sub
 
-    Private Sub UseLastSavedDataToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UseLastSavedDataToolStripMenuItem.Click
-
+    Private Sub UpdateZHomeTabSerieses()
+        Me.HomePageChart.Series("Default").Points.Clear()
+        Me.HomePageChart.Series(NameOf(MarkerSeries)).Points.Clear()
+        Me.HomePageChart.Series(NameOf(HighLimitSeries)).Points.Clear()
+        Me.HomePageChart.Series(NameOf(LowLimitSeries)).Points.Clear()
+        _markerInsulinDictionary.Clear()
+        _markerMealDictionary.Clear()
+        For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In Markers.WithIndex()
+            Dim sgDateTime As Date = Markers.SafeGetSgDateTime(sgListIndex.Index)
+            Dim sgOaDateTime As Double = sgDateTime.ToOADate()
+            Dim bgValueString As String = ""
+            Dim bgValue As Single
+            If sgListIndex.Value.TryGetValue("value", bgValueString) Then
+                bgValue = CInt(bgValueString)
+                If bgValue < InsulinRow Then Stop
+            End If
+            With Me.HomePageChart.Series(NameOf(MarkerSeries))
+                Select Case sgListIndex.Value("type")
+                    Case "BG_READING"
+                        bgValue = CInt(sgListIndex.Value("value"))
+                        .Points.AddXY(sgOaDateTime, bgValue)
+                        .Points.Last.BorderColor = Color.Gainsboro
+                        .Points.Last.Color = Color.Transparent
+                        .Points.Last.MarkerBorderWidth = 2
+                        .Points.Last.MarkerSize = 10
+                        .Points.Last.ToolTip = $"Blood Glucose, Not used For calibration, {sgListIndex.Value("value")} {Me.BgUnitsString}"
+                    Case "CALIBRATION"
+                        .Points.AddXY(sgOaDateTime, bgValue)
+                        .Points.Last.BorderColor = Color.Red
+                        .Points.Last.Color = Color.Transparent
+                        .Points.Last.MarkerBorderWidth = 2
+                        .Points.Last.MarkerSize = 8
+                        .Points.Last.ToolTip = $"Blood Glucose, Calibration {If(CBool(sgListIndex.Value("calibrationSuccess")), "accepted", "not accepted")}, {sgListIndex.Value("value")} {Me.BgUnitsString}"
+                    Case "INSULIN"
+                        _markerInsulinDictionary.Add(sgOaDateTime, MarkerRow)
+                        .Points.AddXY(sgOaDateTime, MarkerRow)
+                        .Points.Last.Color = Color.FromArgb(30, Color.LightBlue)
+                        .Points.Last.MarkerBorderWidth = 0
+                        .Points.Last.MarkerSize = 30
+                        .Points.Last.MarkerStyle = MarkerStyle.Square
+                        .Points.Last.ToolTip = $"Bolus, {sgListIndex.Value("programmedFastAmount")} U"
+                    Case "MEAL"
+                        _markerMealDictionary.Add(sgOaDateTime, InsulinRow)
+                        .Points.AddXY(sgOaDateTime, InsulinRow)
+                        .Points.Last.Color = Color.FromArgb(30, Color.Yellow)
+                        .Points.Last.MarkerBorderWidth = 0
+                        .Points.Last.MarkerSize = 30
+                        .Points.Last.MarkerStyle = MarkerStyle.Square
+                        .Points.Last.ToolTip = $"Meal, {sgListIndex.Value("amount")} grams"
+                    Case "AUTO_BASAL_DELIVERY"
+                        .Points.AddXY(sgOaDateTime, MarkerRow)
+                        Dim bolusAmount As String = sgListIndex.Value("bolusAmount")
+                        .Points.Last.MarkerBorderColor = Color.Black
+                        .Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3)} U"
+                    Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED", "TIME_CHANGE"
+                        'Stop
+                    Case Else
+                        Stop
+                End Select
+            End With
+        Next
+        Dim limitsIndexList(SGs.Count - 1) As Integer
+        Me.GetLimitsList(limitsIndexList)
+        For Each sgListIndex As IndexClass(Of SgRecord) In SGs.WithIndex()
+            Dim sgOaDateTime As Double = sgListIndex.Value.datetime.ToOADate()
+            PlotOnePoint(Me.HomePageChart.Series("Default"), sgOaDateTime, sgListIndex.Value.sg, Color.White, InsulinRow, _limithigh, _limitLow)
+            Dim limitsLowValue As Integer = CInt(Limits(limitsIndexList(sgListIndex.Index))("lowLimit"))
+            Dim limitsHighValue As Integer = CInt(Limits(limitsIndexList(sgListIndex.Index))("highLimit"))
+            Me.HomePageChart.Series(NameOf(HighLimitSeries)).Points.AddXY(sgOaDateTime, limitsHighValue)
+            Me.HomePageChart.Series(NameOf(LowLimitSeries)).Points.AddXY(sgOaDateTime, limitsLowValue)
+        Next
     End Sub
+
+#End Region
 
 #End Region
 
