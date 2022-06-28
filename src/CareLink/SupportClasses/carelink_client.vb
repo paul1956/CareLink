@@ -135,14 +135,14 @@ Public Class CareLinkClient
 
     ' Get server URL
     Public Overridable Function CareLinkServer() As String
-        Select Case _carelinkCountry.ToUpperInvariant
-            Case "US"
-                Return CarelinkConnectServerUs
-            Case "AU"
-                Return CarelinkConnectServerAu
-            Case Else
-                Return CarelinkConnectServerEu
-        End Select
+        'Select Case _carelinkCountry.ToUpperInvariant
+        '    Case "US"
+        Return CarelinkConnectServerUs
+        '    Case "AU"
+        '        Return CarelinkConnectServerAu
+        '    Case Else
+        '        Return CarelinkConnectServerEu
+        'End Select
     End Function
 
     Public Overridable Function CorrectTimeInRecentData(recentData As Dictionary(Of String, String)) As Boolean
