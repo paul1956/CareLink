@@ -1,4 +1,9 @@
 # CareLink
+
+## Download Latest Release
+https://github.com/paul1956/CareLink/releases/download/2.0.5.0/CareLinkx64.zip
+
+
 ## Requires
 - Visual Studio 2022
 - .NET Core 6.0
