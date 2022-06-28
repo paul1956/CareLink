@@ -1,8 +1,11 @@
 # Getting started
 
+# Download Latest Release
+https://github.com/paul1956/CareLink/releases/download/2.0.5.0/CareLinkx64.zip
+
 ## Requires
 
-- Visual Studio 2019 Version 16.9, the community version  can be download for free from Microsoft at
+- Visual Studio 2019 Version 17.3, the community version  can be download for free from Microsoft at
 https://visualstudio.microsoft.com/vs/community
 
 ## Installation of Visual Studio
