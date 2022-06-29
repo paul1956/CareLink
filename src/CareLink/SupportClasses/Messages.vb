@@ -5,10 +5,12 @@
 Module Messages
 
     Friend ReadOnly _messages As New Dictionary(Of String, String) From {
-                {"BC_MESSAGE_BASAL_STARTED", "Automode exit, manual basal started"},
+                {"BC_MESSAGE_BASAL_STARTED", "Auto Mode exit. Basal 1 started. Would you like to review Auto Mode Readiness Screen?"},
                 {"BC_MESSAGE_SG_UNDER_50_MG_DL", "Sensor Glucose under..."}, ' The actual message is generated at runtime
+                {"BC_SID_SG_APPROACH_LOW_LIMIT_CHECK_BG", "Placeholder SG_APPROACH_LOW_LIMIT_CHECK_BG"},
                 {"BC_SID_BOLUS_ENTRY_TIMED_OUT", "Bolus not delivered. Bolus entry timed out before delivery. If bolus was intended, enter values again."},
                 {"BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR", "Calibrate now. Check BG and calibrate sensor."},
+                {"BC_SID_DO_NOT_CALIBRATE_UNLESS_NOTIFIED", "Sensor updating, Do not calibrate unless notified. This could take up to 3 hours"},
                 {"BC_SID_ENSURE_CONNECTION_SECURE", "Check connection. Ensure transmitter and sensor is secure, then select OK."},
                 {"BC_SID_IF_NEW_SENSR_SELCT_START_NEW_ELSE_REWIND", "If new sensor select start new else rewind."},
                 {"BC_SID_LOW_SD_CHECK_BG", "Alert on low. Low sensor glucose. Check BG."},

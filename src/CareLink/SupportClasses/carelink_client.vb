@@ -13,9 +13,10 @@ Public Class CareLinkClient
 
     Private Const BadRequestMessage As String = "Login Failure __doConsent() failed with HttpStatusCode.BadRequest"
     Private Const CarelinkAuthTokenCookieName As String = "auth_tmp_token"
-    Private Const CarelinkConnectServerAu As String = "carelink.minimed.au"
     Private Const CarelinkConnectServerEu As String = "carelink.minimed.eu"
+    Private Const CarelinkConnectServerOther As String = "mdtlogin.medtronic.com"
     Private Const CarelinkConnectServerUs As String = "carelink.minimed.com"
+
     Private Const CarelinkLanguageEn As String = "en"
     Private Const CarelinkLocaleEn As String = "en"
     Private Const CarelinkTokenValidtoCookieName As String = "c_token_valid_to"
@@ -135,14 +136,14 @@ Public Class CareLinkClient
 
     ' Get server URL
     Public Overridable Function CareLinkServer() As String
-        'Select Case _carelinkCountry.ToUpperInvariant
-        '    Case "US"
-        Return CarelinkConnectServerUs
-        '    Case "AU"
-        '        Return CarelinkConnectServerAu
-        '    Case Else
-        '        Return CarelinkConnectServerEu
-        'End Select
+        Select Case _carelinkCountry.GetRegionFromCode
+            Case "North America"
+                Return CarelinkConnectServerUs
+            Case "Europe"
+                Return CarelinkConnectServerEu
+            Case Else
+                Return CarelinkConnectServerOther
+        End Select
     End Function
 
     Public Overridable Function CorrectTimeInRecentData(recentData As Dictionary(Of String, String)) As Boolean
@@ -286,6 +287,7 @@ Public Class CareLinkClient
             End If
             If _sessionCountrySettings Is Nothing Then
                 _sessionCountrySettings = Me.GetCountrySettings(_carelinkCountry, CarelinkLanguageEn)
+
             End If
             If _sessionMonitorData Is Nothing Then
                 _sessionMonitorData = Me.GetMonitorData()

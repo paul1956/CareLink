@@ -182,7 +182,7 @@ Public Class Form1
     Public TherapyAlgorithmState As Dictionary(Of String, String)
     Public TimeFormat As String
     Public TimeInRange As Integer
-    Public TimeToNextCalibHours As Byte = Byte.MaxValue
+    Public TimeToNextCalibHours As UShort = UShort.MaxValue
     Public TimeToNextCalibrationMinutes As Integer
     Public Version As String
     Public Property BgUnitsString As String
@@ -1220,7 +1220,7 @@ Public Class Form1
                 Case ItemIndexs.sensorDurationHours
                     SensorDurationHours = CInt(row.Value)
                 Case ItemIndexs.timeToNextCalibHours
-                    TimeToNextCalibHours = CByte(row.Value)
+                    TimeToNextCalibHours = CUShort(row.Value)
                 Case ItemIndexs.calibStatus
                     CalibStatus = row.Value
                 Case ItemIndexs.bgUnits
@@ -1386,7 +1386,7 @@ Public Class Form1
                     layoutPanel1.Parent.Parent.UseWaitCursor = True
                     Application.DoEvents()
                     layoutPanel1.Invoke(Sub()
-                                            FillOneRowOfTableLayoutPannel(layoutPanel1,
+                                            Me.FillOneRowOfTableLayoutPannel(layoutPanel1,
                                                                           innerJson,
                                                                           rowIndex,
                                                                           _filterJsonData,
