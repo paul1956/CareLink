@@ -20,10 +20,11 @@ Public Class LoginForm1
         Me.RegionComboBox.DisplayMember = "Key"
         Me.RegionComboBox.ValueMember = "Value"
 
-        If Not String.IsNullOrEmpty(My.Settings.CountryCode) Then
-            Me.RegionComboBox.SelectedValue = My.Settings.CountryCode.GetRegionFromCode
-            Me.CountryComboBox.Text = My.Settings.CountryCode.GetCountryFromCode
+        If String.IsNullOrEmpty(My.Settings.CountryCode) Then
+            My.Settings.CountryCode = "US"
         End If
+        Me.RegionComboBox.SelectedValue = My.Settings.CountryCode.GetRegionFromCode
+        Me.CountryComboBox.Text = My.Settings.CountryCode.GetCountryFromCode
     End Sub
 
     Private Sub OK_Click(sender As Object, e As EventArgs) Handles OK.Click
