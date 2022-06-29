@@ -168,7 +168,7 @@ Public Class Form1
     Public PumpBannerState As List(Of Dictionary(Of String, String))
     Public PumpCommunicationState As Boolean
     Public PumpModelNumber As String
-    Public ReservoirAmount As Integer
+    Public ReservoirAmount As Double
     Public ReservoirLevelPercent As Integer
     Public ReservoirRemainingUnits As Double
     Public SensorDurationHours As Integer
@@ -185,6 +185,9 @@ Public Class Form1
     Public TimeToNextCalibHours As UShort = UShort.MaxValue
     Public TimeToNextCalibrationMinutes As Integer
     Public Version As String
+    Public timeToNextCalibrationRecommendedMinutes As UShort
+    Public calFreeSensor As Boolean
+    Public finalCalibration As Boolean
     Public Property BgUnitsString As String
 
 #End Region
@@ -241,7 +244,7 @@ Public Class Form1
         averageSG = 47
         belowHypoLimit = 48
         aboveHyperLimit = 49
-        timeInRange = InsulinRow
+        timeInRange = 50
         pumpCommunicationState = 51
         gstCommunicationState = 52
         gstBatteryLevel = 53
@@ -253,6 +256,9 @@ Public Class Form1
         clientTimeZoneName = 59
         sgBelowLimit = 60
         averageSGFloat = 61
+        timeToNextCalibrationRecommendedMinutes = 62
+        calFreeSensor = 63
+        finalCalibration = 65
     End Enum
 
 #Region "Events"
@@ -1117,7 +1123,7 @@ Public Class Form1
         End If
         _updating = True
         Me.UpdateDataTables(_recentData)
-        If _recentData.Count > ItemIndexs.averageSGFloat + 1 Then
+        If _recentData.Count > ItemIndexs.finalCalibration + 1 Then
             Stop
         End If
         _initialized = True
@@ -1151,7 +1157,15 @@ Public Class Form1
         Me.Cursor = Cursors.WaitCursor
         Application.DoEvents()
         Me.TableLayoutPanelSummaryData.Controls.Clear()
-        Me.TableLayoutPanelSummaryData.RowCount = localRecentData.Count - 9
+        Dim rowCount As Integer = Me.TableLayoutPanelSummaryData.RowCount
+        Dim newRowCount As Integer = localRecentData.Count - 9
+        If rowCount < newRowCount Then
+            Me.TableLayoutPanelSummaryData.RowCount = newRowCount
+            For i As Integer = rowCount To newRowCount
+                Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+            Next
+        End If
+
         Dim currentRowIndex As Integer = 0
         Dim singleItem As Boolean
         Dim layoutPanel1 As TableLayoutPanel
@@ -1212,7 +1226,7 @@ Public Class Form1
                 Case ItemIndexs.reservoirLevelPercent
                     ReservoirLevelPercent = CInt(row.Value)
                 Case ItemIndexs.reservoirAmount
-                    ReservoirAmount = CInt(CDbl(row.Value))
+                    ReservoirAmount = CDbl(row.Value)
                 Case ItemIndexs.reservoirRemainingUnits
                     ReservoirRemainingUnits = CType(row.Value, Double)
                 Case ItemIndexs.medicalDeviceBatteryLevelPercent
@@ -1344,6 +1358,12 @@ Public Class Form1
                     SgBelowLimit = CInt(row.Value)
                 Case ItemIndexs.averageSGFloat
                     AverageSGFloat = CDbl(row.Value)
+                Case ItemIndexs.timeToNextCalibrationRecommendedMinutes
+                    timeToNextCalibrationRecommendedMinutes = CUShort(row.Value)
+                Case ItemIndexs.calFreeSensor
+                    calFreeSensor = CBool(row.Value)
+                Case ItemIndexs.finalCalibration
+                    finalCalibration = CBool(row.Value)
                 Case Else
                     Stop
             End Select

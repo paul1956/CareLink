@@ -49,7 +49,7 @@ Public Class CareLinkClient
 
     Private ReadOnly _httpClient As HttpClient
     Private ReadOnly _httpClientHandler As HttpClientHandler
-    Private ReadOnly _loginStatus As Label
+    Private ReadOnly _loginStatus As Control
     Private _lastDataSuccess As Boolean
     Private _lastResponseCode As HttpStatusCode
     Private _loginInProcess As Boolean
@@ -59,6 +59,29 @@ Public Class CareLinkClient
     Private _sessionUser As Dictionary(Of String, String)
     Public Shared ReadOnly JsonFormattingOptions As New JsonSerializerOptions With {.WriteIndented = True}
     Public Shared ReadOnly CareLinkLastDownloadDocPath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CareLinkLastDownload.json")
+
+    Public Sub New(LoginStatus As TextBox, carelinkUsername As String, carelinkPassword As String, carelinkCountry As String)
+        _loginStatus = LoginStatus
+        ' User info
+        _carelinkUsername = carelinkUsername
+        _carelinkPassword = carelinkPassword
+        _carelinkCountry = carelinkCountry
+        ' Session info
+        _sessionUser = Nothing
+        _sessionProfile = Nothing
+        _sessionCountrySettings = Nothing
+        _sessionMonitorData = Nothing
+        ' State info
+        _loginInProcess = False
+        Me.LoggedIn = False
+        _lastDataSuccess = False
+        _lastResponseCode = Nothing
+        Me.LastErrorMessage = Nothing
+
+        Dim cookieContainer As New CookieContainer()
+        _httpClientHandler = New HttpClientHandler With {.CookieContainer = cookieContainer}
+        _httpClient = New HttpClient(_httpClientHandler)
+    End Sub
 
     Public Sub New(LoginStatus As Label, carelinkUsername As String, carelinkPassword As String, carelinkCountry As String)
         _loginStatus = LoginStatus
@@ -83,6 +106,7 @@ Public Class CareLinkClient
         _httpClient = New HttpClient(_httpClientHandler)
     End Sub
 
+
     Public Property LastErrorMessage As String
     Public Property LoggedIn As Boolean
 
@@ -103,21 +127,29 @@ Public Class CareLinkClient
 
     Private Function DecodeResponse(response As HttpResponseMessage, <CallerMemberName> Optional memberName As String = Nothing) As HttpResponseMessage
         Dim message As String
-        If response.StatusCode = HttpStatusCode.OK Then
-            _loginStatus.Text = "OK"
+        If response.StatusCode = Global.System.Net.HttpStatusCode.OK Then
+            Me.FormatStatusMessage("OK")
             Debug.Print($"{memberName} success")
             Return response
         ElseIf response.StatusCode = HttpStatusCode.BadRequest Then
-            _loginStatus.Text = BadRequestMessage
+            Me.FormatStatusMessage(BadRequestMessage)
             Debug.Print($"{memberName} BadRequestMessage")
             Return response
         Else
             message = $"session response is {response.StatusCode}"
-            _loginStatus.Text = message
+            Me.FormatStatusMessage(message)
             Debug.Print(message)
             Throw New Exception(message)
         End If
     End Function
+
+    Private Sub FormatStatusMessage(msg As String)
+        If TypeOf _loginStatus Is TextBox Then
+            _loginStatus.Text = $"Login Status: {msg}"
+        Else
+            _loginStatus.Text = msg
+        End If
+    End Sub
 
     Private Function GetCookies(url As String) As CookieCollection
         If String.IsNullOrWhiteSpace(url) Then

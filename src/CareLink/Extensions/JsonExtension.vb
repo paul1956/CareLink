@@ -205,7 +205,6 @@ Public Module JsonExtensions
             If tableLevel1Blue.RowCount > 5 Then
                 With parentTableLayoutPanel
                     .AutoScroll = True
-                    .Width = 850
                 End With
             Else
                 parentTableLayoutPanel.Width = 870

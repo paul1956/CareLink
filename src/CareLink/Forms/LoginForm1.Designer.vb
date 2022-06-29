@@ -40,12 +40,11 @@ Partial Class LoginForm1
         Me.Cancel = New System.Windows.Forms.Button()
         Me.SaveCredentials = New System.Windows.Forms.CheckBox()
         Me.CountryComboBox = New System.Windows.Forms.ComboBox()
-        Me.LoginStatusLabel = New System.Windows.Forms.Label()
-        Me.LoginStatus = New System.Windows.Forms.Label()
         Me.RegionComboBox = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.ShowPasswordCheckBox = New System.Windows.Forms.CheckBox()
+        Me.LoginStatus = New System.Windows.Forms.TextBox()
         CType(Me.LogoPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -55,7 +54,7 @@ Partial Class LoginForm1
         Me.LogoPictureBox.Image = CType(resources.GetObject("LogoPictureBox.Image"), System.Drawing.Image)
         Me.LogoPictureBox.Location = New System.Drawing.Point(0, 0)
         Me.LogoPictureBox.Name = "LogoPictureBox"
-        Me.LogoPictureBox.Size = New System.Drawing.Size(185, 261)
+        Me.LogoPictureBox.Size = New System.Drawing.Size(195, 224)
         Me.LogoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.LogoPictureBox.TabIndex = 0
         Me.LogoPictureBox.TabStop = False
@@ -120,7 +119,7 @@ Partial Class LoginForm1
         '
         Me.SaveCredentials.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.SaveCredentials.AutoSize = True
-        Me.SaveCredentials.Location = New System.Drawing.Point(201, 234)
+        Me.SaveCredentials.Location = New System.Drawing.Point(234, 232)
         Me.SaveCredentials.Name = "SaveCredentials"
         Me.SaveCredentials.Size = New System.Drawing.Size(187, 19)
         Me.SaveCredentials.TabIndex = 8
@@ -136,26 +135,6 @@ Partial Class LoginForm1
         Me.CountryComboBox.Name = "CountryComboBox"
         Me.CountryComboBox.Size = New System.Drawing.Size(220, 23)
         Me.CountryComboBox.TabIndex = 7
-        '
-        'LoginStatusLabel
-        '
-        Me.LoginStatusLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LoginStatusLabel.AutoSize = True
-        Me.LoginStatusLabel.Location = New System.Drawing.Point(33, 281)
-        Me.LoginStatusLabel.Name = "LoginStatusLabel"
-        Me.LoginStatusLabel.Size = New System.Drawing.Size(75, 15)
-        Me.LoginStatusLabel.TabIndex = 9
-        Me.LoginStatusLabel.Text = "Login Status:"
-        '
-        'LoginStatus
-        '
-        Me.LoginStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LoginStatus.AutoSize = True
-        Me.LoginStatus.Location = New System.Drawing.Point(108, 279)
-        Me.LoginStatus.Name = "LoginStatus"
-        Me.LoginStatus.Size = New System.Drawing.Size(58, 15)
-        Me.LoginStatus.TabIndex = 10
-        Me.LoginStatus.Text = "Unknown"
         '
         'RegionComboBox
         '
@@ -196,6 +175,16 @@ Partial Class LoginForm1
         Me.ShowPasswordCheckBox.Text = "Show"
         Me.ShowPasswordCheckBox.UseVisualStyleBackColor = True
         '
+        'LoginStatus
+        '
+        Me.LoginStatus.BackColor = System.Drawing.SystemColors.Control
+        Me.LoginStatus.Location = New System.Drawing.Point(4, 230)
+        Me.LoginStatus.Multiline = True
+        Me.LoginStatus.Name = "LoginStatus"
+        Me.LoginStatus.Size = New System.Drawing.Size(224, 80)
+        Me.LoginStatus.TabIndex = 14
+        Me.LoginStatus.Text = "Login Status: Unknown"
+        '
         'LoginForm1
         '
         Me.AcceptButton = Me.OK
@@ -203,12 +192,11 @@ Partial Class LoginForm1
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel
         Me.ClientSize = New System.Drawing.Size(442, 313)
+        Me.Controls.Add(Me.LoginStatus)
         Me.Controls.Add(Me.ShowPasswordCheckBox)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.RegionComboBox)
-        Me.Controls.Add(Me.LoginStatus)
-        Me.Controls.Add(Me.LoginStatusLabel)
         Me.Controls.Add(Me.CountryComboBox)
         Me.Controls.Add(Me.SaveCredentials)
         Me.Controls.Add(Me.Cancel)
@@ -233,10 +221,9 @@ Partial Class LoginForm1
 
     Friend WithEvents SaveCredentials As CheckBox
     Friend WithEvents CountryComboBox As ComboBox
-    Friend WithEvents LoginStatusLabel As Label
-    Friend WithEvents LoginStatus As Label
     Friend WithEvents RegionComboBox As ComboBox
     Friend WithEvents Label1 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents ShowPasswordCheckBox As CheckBox
+    Friend WithEvents LoginStatus As TextBox
 End Class
