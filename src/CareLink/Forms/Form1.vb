@@ -138,7 +138,7 @@ Public Class Form1
     Public ConduitInRange As Boolean
     Public ConduitMedicalDeviceInRange As Boolean
     Public ConduitSensorInRange As Boolean
-    Public ConduitSerialNumber As Guid
+    Public ConduitSerialNumber As String
     Public CurrentServerTime As String
     Public FirstName As String
     Public GstBatteryLevel As Integer
@@ -1202,7 +1202,7 @@ Public Class Form1
                 Case ItemIndexs.lastName
                     LastName = row.Value
                 Case ItemIndexs.conduitSerialNumber
-                    ConduitSerialNumber = New Guid(row.Value)
+                    ConduitSerialNumber = row.Value
                 Case ItemIndexs.conduitBatteryLevel
                     ConduitBatteryLevel = CInt(row.Value)
                 Case ItemIndexs.conduitBatteryStatus
