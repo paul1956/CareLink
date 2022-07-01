@@ -1,11 +1,16 @@
 # CareLink
 
-## Download Latest Release
-https://github.com/paul1956/CareLink/releases/download/3.0.0.2/CareLinkx64V3.0.0.2.zip
+## Download Latest Release from
+https://github.com/paul1956/CareLink/releases/
+# Requires for running
+- .NET Core 6.0.6 or later
+- Windows 10 or later
 
-## Requires
-- Visual Studio 2022
-- .NET Core 6.0
+
+## Requires for development
+- Visual Studio 2022 Version 17.3.0 Preview 2.0 or later
+- .NET Core 6.0.6 or later
+- Windows 10 or later
 
 ## License
 - MIT
@@ -18,7 +23,7 @@ https://github.com/paul1956/CareLink/releases/download/3.0.0.2/CareLinkx64V3.0.0
 - Medtronic CareLink data display
 
 ## Updated
-- 6/29/2022
+- 6/30/2022
 
 ## Description
 
