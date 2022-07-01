@@ -19,9 +19,9 @@
     <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
     <RepositoryUrl>https://github.com/paul1956/CareLink</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>3.0.1.1</Version>
-    <AssemblyVersion>3.0.1.1</AssemblyVersion>
-    <FileVersion>3.0.1.1</FileVersion>
+    <Version>3.0.1.2</Version>
+    <AssemblyVersion>3.0.1.2</AssemblyVersion>
+    <FileVersion>3.0.1.2</FileVersion>
     <PackageIcon>IconImage.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/paul1956/CareLink</PackageProjectUrl>
@@ -87,10 +87,6 @@
     </None>
     <None Update="SampleUserData.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\License.txt">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
     </None>
     <None Include="Images\IconImage.png">
       <Pack>True</Pack>
