@@ -30,6 +30,7 @@ Public Class LoginForm1
     Private Sub OK_Click(sender As Object, e As EventArgs) Handles OK.Click
         Me.OK.Enabled = False
         Me.Cancel.Enabled = False
+        My.Settings.CountryCode = Me.CountryComboBox.SelectedValue.ToString
         Me.Client = New CareLinkClient(Me.LoginStatus, Me.UsernameTextBox.Text, Me.PasswordTextBox.Text, Me.CountryComboBox.SelectedValue.ToString)
         If Not Me.Client.LoggedIn Then
             Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData()
@@ -39,7 +40,6 @@ Public Class LoginForm1
                 If Me.SaveCredentials.CheckState = CheckState.Checked Then
                     My.Settings.CareLinkUserName = Me.UsernameTextBox.Text
                     My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
-                    My.Settings.CountryCode = Me.CountryComboBox.SelectedValue.ToString
                 End If
 
                 My.Settings.Save()

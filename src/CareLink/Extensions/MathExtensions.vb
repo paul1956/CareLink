@@ -4,7 +4,7 @@
 
 Imports System.Runtime.CompilerServices
 
-Module MathExtensions
+Friend Module MathExtensions
 
     Public Enum RoundTo
         Second

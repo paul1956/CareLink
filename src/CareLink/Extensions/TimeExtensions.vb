@@ -4,7 +4,7 @@
 
 Imports System.Runtime.CompilerServices
 
-Module TimeExtensions
+Friend Module TimeExtensions
 
     <Extension>
     Friend Function FormatTimeOnly(rawTime As String, format As String) As String

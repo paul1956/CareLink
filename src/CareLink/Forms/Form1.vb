@@ -703,7 +703,13 @@ Public Class Form1
             .AxisX.LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
             .AxisX.LineColor = Color.FromArgb(64, 64, 64, 64)
             .AxisX.MajorGrid.LineColor = Color.FromArgb(64, 64, 64, 64)
-            .AxisX.ScaleView.Zoomable = False
+            .AxisX.ScaleView.Zoomable = True
+            .AxisX.ScrollBar.BackColor = Color.White
+            .AxisX.ScrollBar.ButtonColor = Color.Lime
+            .AxisX.ScrollBar.IsPositionedInside = True
+            .AxisX.ScrollBar.LineColor = Color.Yellow
+            .AxisX.ScrollBar.LineColor = Color.Black
+            .AxisX.ScrollBar.Size = 15
             .AxisY.InterlacedColor = Color.FromArgb(120, Color.LightSlateGray)
             .AxisY.Interval = 2
             .AxisY.IntervalAutoMode = IntervalAutoMode.FixedCount
@@ -717,11 +723,23 @@ Public Class Form1
             .AxisY.MajorTickMark = New TickMark() With {.Interval = InsulinRow, .Enabled = False}
             .AxisY.Maximum = 25
             .AxisY.Minimum = 0
+            .AxisY.ScaleView.Zoomable = False
             .AxisY.Title = "Active Insulin"
             .AxisY.TitleForeColor = Color.HotPink
             .AxisY2.Maximum = 400
             .AxisY2.Minimum = 0
             .AxisY2.Title = "BG Value"
+            .CursorX.AutoScroll = True
+            .CursorX.AxisType = AxisType.Primary
+            .CursorX.Interval = 0
+            .CursorX.IsUserEnabled = True
+            .CursorX.IsUserSelectionEnabled = True
+            .CursorY.AutoScroll = False
+            .CursorY.AxisType = AxisType.Secondary
+            .CursorY.Interval = 0
+            .CursorY.IsUserEnabled = False
+            .CursorY.IsUserSelectionEnabled = False
+            .CursorY.LineColor = Color.Transparent
         End With
 
         Me.ActiveInsulinTabChart.ChartAreas.Add(_activeInsulinTabChartArea)
@@ -862,10 +880,10 @@ Public Class Form1
             .CursorX.IsUserSelectionEnabled = True
             .CursorY.AutoScroll = False
             .CursorY.AxisType = AxisType.Secondary
-            .CursorY.LineColor = Color.Transparent
             .CursorY.Interval = 0
             .CursorY.IsUserEnabled = False
             .CursorY.IsUserSelectionEnabled = False
+            .CursorY.LineColor = Color.Transparent
         End With
 
         Me.HomePageChart.ChartAreas.Add(_homePageChartChartArea)
@@ -1092,19 +1110,28 @@ Public Class Form1
 
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In Markers.WithIndex()
             sgOaDateTime = Markers.SafeGetSgDateTime(sgListIndex.Index).RoundDown(RoundTo.Minute).ToOADate
-            With Me.ActiveInsulinTabChart
+            With Me.ActiveInsulinTabChart.Series(NameOf(MarkerSeries))
                 Select Case sgListIndex.Value("type")
                     Case "INSULIN"
-                        .Series(NameOf(MarkerSeries)).Points.AddXY(sgOaDateTime, maxActiveInsulin)
-                        .Series(NameOf(MarkerSeries)).Points.Last.ToolTip = $"Bolus, {sgListIndex.Value("programmedFastAmount")} U"
-                        .Series(NameOf(MarkerSeries)).Points.Last.Color = Color.LightBlue
-                        .Series(NameOf(MarkerSeries)).Points.Last.MarkerSize = 15
-                        .Series(NameOf(MarkerSeries)).Points.Last.MarkerStyle = MarkerStyle.Square
+                        .Points.AddXY(sgOaDateTime, maxActiveInsulin)
+                        Select Case sgListIndex.Value("activationType")
+                            Case "AUTOCORRECTION"
+                                .Points.Last.ToolTip = $"Auto Correction, {sgListIndex.Value("programmedFastAmount")} U"
+                                .Points.Last.Color = Color.MediumPurple
+                            Case "RECOMMENDED", "UNDETERMINED"
+                                .Points.Last.ToolTip = $"Bolus, {sgListIndex.Value("programmedFastAmount")} U"
+                                .Points.Last.Color = Color.LightBlue
+                            Case Else
+                                Stop
+                        End Select
+                        .Points.Last.MarkerSize = 15
+                        .Points.Last.MarkerStyle = MarkerStyle.Square
+
                     Case "AUTO_BASAL_DELIVERY"
                         Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue("bolusAmount")
-                        .Series(NameOf(MarkerSeries)).Points.AddXY(sgOaDateTime, maxActiveInsulin)
-                        .Series(NameOf(MarkerSeries)).Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3)} U"
-                        .Series(NameOf(MarkerSeries)).Points.Last.MarkerSize = 8
+                        .Points.AddXY(sgOaDateTime, maxActiveInsulin)
+                        .Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3)} U"
+                        .Points.Last.MarkerSize = 8
                 End Select
             End With
         Next
@@ -1711,11 +1738,19 @@ Public Class Form1
                     Case "INSULIN"
                         _markerInsulinDictionary.Add(sgOaDateTime, MarkerRow)
                         .Points.AddXY(sgOaDateTime, MarkerRow)
-                        .Points.Last.Color = Color.FromArgb(30, Color.LightBlue)
+                        Select Case sgListIndex.Value("activationType")
+                            Case "AUTOCORRECTION"
+                                .Points.Last.Color = Color.FromArgb(60, Color.MediumPurple)
+                                .Points.Last.ToolTip = $"Auto Correction, {sgListIndex.Value("programmedFastAmount")} U"
+                            Case "RECOMMENDED", "UNDETERMINED"
+                                .Points.Last.Color = Color.FromArgb(30, Color.LightBlue)
+                                .Points.Last.ToolTip = $"Bolus, {sgListIndex.Value("programmedFastAmount")} U"
+                            Case Else
+                                Stop
+                        End Select
                         .Points.Last.MarkerBorderWidth = 0
                         .Points.Last.MarkerSize = 30
                         .Points.Last.MarkerStyle = MarkerStyle.Square
-                        .Points.Last.ToolTip = $"Bolus, {sgListIndex.Value("programmedFastAmount")} U"
                     Case "MEAL"
                         _markerMealDictionary.Add(sgOaDateTime, InsulinRow)
                         .Points.AddXY(sgOaDateTime, InsulinRow)

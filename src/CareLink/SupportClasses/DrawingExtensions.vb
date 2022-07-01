@@ -4,7 +4,7 @@
 
 Imports System.Windows.Forms.DataVisualization.Charting
 
-Module DrawingExtensions
+Friend Module DrawingExtensions
 
     Private Function GetColorFromTimeToNextCalib(timeToNextCalibHours As UShort) As Color
         If timeToNextCalibHours <= 2 Then

@@ -5,7 +5,7 @@
 Imports System.Net.Http
 Imports System.Runtime.CompilerServices
 
-Module HttpClientExtensions
+Friend Module HttpClientExtensions
 
     <Extension>
     Public Function [Get](client As HttpClient, url As String, Optional headers As Dictionary(Of String, String) = Nothing, Optional params As Dictionary(Of String, String) = Nothing, Optional data As Dictionary(Of String, String) = Nothing) As HttpResponseMessage

@@ -12,7 +12,7 @@ Public Class SgRecord
     Public Property version As Integer
     Public Property relativeOffset As Integer
 
-    Sub New(allSgs As List(Of Dictionary(Of String, String)), index As Integer)
+    Public Sub New(allSgs As List(Of Dictionary(Of String, String)), index As Integer)
         Dim dic As Dictionary(Of String, String) = allSgs(index)
         Me.RecordNumber = index + 1
         If dic.Count > 7 Then Stop

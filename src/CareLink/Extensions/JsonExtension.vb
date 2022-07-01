@@ -9,6 +9,22 @@ Imports CareLink.Form1
 
 Public Module JsonExtensions
 
+    Private Function CreateValueTextBox(dic As Dictionary(Of String, String), eValue As KeyValuePair(Of String, String), timeFormat As String) As TextBox
+        Dim valueTextBox As New TextBox With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                              .AutoSize = True,
+                                              .ReadOnly = True
+                                             }
+
+        If eValue.Key <> "messageid" Then
+            valueTextBox.Text = eValue.Value
+        Else
+            valueTextBox.Text = TranslateMessageId(dic, eValue.Value, timeFormat)
+            AddHandler valueTextBox.Click, AddressOf MessageIdTextBox_Click
+        End If
+
+        Return valueTextBox
+    End Function
+
     <Extension>
     Private Function ItemAsString(item As KeyValuePair(Of String, Object)) As String
         Dim itemValue As JsonElement = CType(item.Value, JsonElement)
@@ -76,9 +92,16 @@ Public Module JsonExtensions
         Return valueAsString
     End Function
 
-    'Private Sub textbox1_MouseClick(sender As Object, e As MouseEventArgs)
-    '    ' Throw New NotImplementedException()
-    'End Sub
+    Private Sub MessageIdTextBox_Click(sender As Object, e As EventArgs)
+        Dim textBox1 As TextBox = CType(sender, TextBox)
+        Dim selectionStart As Integer = textBox1.SelectionStart
+        Dim openParen As Integer = textBox1.Text.IndexOf("(")
+        If selectionStart < openParen Then
+            textBox1.Select(0, openParen)
+        ElseIf selectionStart > openParen Then
+            textBox1.Select(openParen + 1, textBox1.TextLength - (openParen + 2))
+        End If
+    End Sub
 
     Friend Sub GetInnerTable(mainForm As Form1, innerJson As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String)
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
@@ -139,21 +162,20 @@ Public Module JsonExtensions
                                 .Dock = DockStyle.Top
                                 }
                         For Each e As IndexClass(Of KeyValuePair(Of String, String)) In dic.WithIndex()
+                            Dim eValue As KeyValuePair(Of String, String) = e.Value
+
                             If filterJsonData AndAlso s_zFilterList.ContainsKey(itemIndex) Then
-                                If s_zFilterList(itemIndex).Contains(e.Value.Key) Then
+                                If s_zFilterList(itemIndex).Contains(eValue.Key) Then
                                     Continue For
                                 End If
                             End If
                             tableLevel3.RowCount += 1
                             tableLevel3.RowStyles.Add(New RowStyle(SizeType.Absolute, 22.0))
-                            tableLevel3.Controls.AddRange({New Label With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                                                                   .Text = e.Value.Key,
-                                                                                   .AutoSize = True},
-                                                                                   New TextBox With {
-                                                                                        .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                                                                        .AutoSize = True,
-                                                                                        .[ReadOnly] = True,
-                                                                                        .Text = GetTranslatedMessageIdOrValue(dic, e.Value, timeFormat)}})
+
+                            Dim valueLabel As New Label With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                                              .Text = eValue.Key,
+                                                              .AutoSize = True}
+                            tableLevel3.Controls.AddRange({valueLabel, CreateValueTextBox(dic, eValue, timeFormat)})
                             Application.DoEvents()
                         Next
                         tableLevel3.Height += 40
@@ -173,15 +195,10 @@ Public Module JsonExtensions
                                                                })
                 End If
             Else
-                Dim message As String = GetTranslatedMessageIdOrValue(innerJson, innerRow, timeFormat)
-                Dim textBox1 As New TextBox With {.[ReadOnly] = True,
-                                                 .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                                  .AutoSize = True,
-                                                 .Text = message
-                                                }
-                If innerRow.Key = "messageId" AndAlso message.Length > 100 Then
-                    Form1.ToolTip1.SetToolTip(textBox1, message)
-                    'AddHandler textBox1.MouseClick, AddressOf textbox1_MouseClick
+                Dim textBox1 As TextBox = CreateValueTextBox(innerJson, innerRow, timeFormat)
+
+                If innerRow.Key = "messageId" AndAlso textBox1.Text.Length > 100 Then
+                    Form1.ToolTip1.SetToolTip(textBox1, textBox1.Text)
                 Else
                     Form1.ToolTip1.SetToolTip(textBox1, Nothing)
                 End If
@@ -220,32 +237,25 @@ Public Module JsonExtensions
         Application.DoEvents()
     End Sub
 
-    Friend Function GetTranslatedMessageIdOrValue(dic As Dictionary(Of String, String), entry As KeyValuePair(Of String, String), TimeFormat As String) As String
-        If entry.Key <> "messageid" Then
-            Return entry.Value
-        End If
-        Dim messageValue As String = ""
-        If _messages.TryGetValue(entry.Value, messageValue) Then
-            Return $"{entry.Value} = {messageValue}"
-        End If
-        If _messagesSpecialHandling.TryGetValue(entry.Value, messageValue) Then
-            Dim splitMessageValue As String() = messageValue.Split(":")
-            Dim key As String = splitMessageValue(1)
-            Dim replacementValue As String
-            If key = "secondaryTime" Then
-                replacementValue = dic(key).FormatTimeOnly(TimeFormat)
+    Friend Function TranslateMessageId(dic As Dictionary(Of String, String), entryValue As String, TimeFormat As String) As String
+        Dim formattedMessage As String = ""
+        If _messages.TryGetValue(entryValue, formattedMessage) Then
+        Else
+            If _messagesSpecialHandling.TryGetValue(entryValue, formattedMessage) Then
+                Dim splitMessageValue As String() = formattedMessage.Split(":")
+                Dim key As String = splitMessageValue(1)
+                Dim replacementValue As String = If(key = "secondaryTime", dic(key).FormatTimeOnly(TimeFormat), dic(key))
+
+                formattedMessage = splitMessageValue(0).Replace("(0)", replacementValue)
             Else
-                replacementValue = dic(key)
+                If Debugger.IsAttached Then
+                    MsgBox($"Unknown sensor message '{entryValue}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Unknown Sensor Message")
+                End If
+
+                formattedMessage = entryValue.Replace("_", " ")
             End If
-
-            Return $"{entry.Value} = {splitMessageValue(0).Replace("(0)", replacementValue)}"
         End If
-
-        If Debugger.IsAttached Then
-            MsgBox($"Unknown sensor message '{entry.Value}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Unknown Sensor Message")
-        End If
-
-        Return entry.Value.Replace("_", " ")
+        Return $"{entryValue}({formattedMessage})"
     End Function
 
     Public Function LoadList(value As String) As List(Of Dictionary(Of String, String))
