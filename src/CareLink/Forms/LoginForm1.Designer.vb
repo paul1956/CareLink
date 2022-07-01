@@ -129,6 +129,7 @@ Partial Class LoginForm1
         'CountryComboBox
         '
         Me.CountryComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left
+        Me.CountryComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.CountryComboBox.Enabled = False
         Me.CountryComboBox.FormattingEnabled = True
         Me.CountryComboBox.Location = New System.Drawing.Point(201, 201)
@@ -139,6 +140,7 @@ Partial Class LoginForm1
         'RegionComboBox
         '
         Me.RegionComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left
+        Me.RegionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.RegionComboBox.FormattingEnabled = True
         Me.RegionComboBox.Location = New System.Drawing.Point(201, 147)
         Me.RegionComboBox.Name = "RegionComboBox"
