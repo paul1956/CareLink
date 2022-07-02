@@ -2,8 +2,26 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Module PumpVariables
+Friend Module PumpVariables
+
+    Friend ReadOnly _listOfSingleItems As New List(Of Integer) From {
+                        ItemIndexs.lastSG,
+                        ItemIndexs.lastAlarm,
+                        ItemIndexs.activeInsulin,
+                        ItemIndexs.limits,
+                        ItemIndexs.markers,
+                        ItemIndexs.notificationHistory,
+                        ItemIndexs.basal}
+
+    ' Manually computed
+    Friend s_totalAutoCorrection As Single
+    Friend s_totalBasal As Single
+    Friend s_totalDailyDose As Single
+    Friend s_totalManualBolus As Single
+
+    ' From Pump
     Public s_aboveHyperLimit As Integer
+
     Public s_activeInsulin As Dictionary(Of String, String)
     Public s_averageSG As Double
     Public s_averageSGFloat As Double

@@ -43,7 +43,13 @@ Friend Module MathExtensions
     End Function
 
     <Extension>
-    Public Function RoundDown(d As Date, rt As RoundTo) As Date
+    Friend Function RoundSingle(value As Single, decimalDigits As Integer) As Single
+
+        Return CSng(Math.Round(value, decimalDigits))
+    End Function
+
+    <Extension>
+    Public Function RoundTimeDown(d As Date, rt As RoundTo) As Date
         Dim dtRounded As New DateTime()
 
         Select Case rt

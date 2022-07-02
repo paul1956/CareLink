@@ -18,59 +18,10 @@ Public Class Form1
 
     Private Const InsulinRow As Integer = 50
     Private Const MarkerRow As Integer = 400
-
-    Private Const MilitaryTimeWithMinuteFormat As String = "HH:mm"
-    Private Const TwelveHourTimeWithMinuteFormat As String = "h:mm tt"
-
-    Private Shared ReadOnly s_alwaysFilter As New List(Of String) From {
-        "kind",
-        "relativeOffset",
-        "version"
-        }
-
-    Private Shared ReadOnly s_lastAlarmFilter As New List(Of String) From {
-        "code",
-        "GUID",
-        "instanceId",
-        "kind",
-        "referenceGUID",
-        "relativeOffset",
-        "version"
-        }
-
-    Private Shared ReadOnly s_markersFilter As New List(Of String) From {
-        "id",
-        "index",
-        "kind",
-        "relativeOffset",
-        "version"
-        }
-
-    Private Shared ReadOnly s_notificationHistoryFilter As New List(Of String) From {
-        "faultId",
-        "GUID",
-        "id",
-        "index",
-        "instanceId",
-        "kind",
-        "referenceGUID",
-        "relativeOffset",
-        "version"
-        }
-
     Private ReadOnly _bgMiniDisplay As New BGMiniWindow
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _careLinkSnapshotDocPath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CareLinkSnapshot.json")
     Private ReadOnly _insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
-
-    Private ReadOnly _listOfSingleItems As New List(Of Integer) From {
-                        ItemIndexs.lastSG,
-                        ItemIndexs.lastAlarm,
-                        ItemIndexs.activeInsulin,
-                        ItemIndexs.limits,
-                        ItemIndexs.markers,
-                        ItemIndexs.notificationHistory,
-                        ItemIndexs.basal}
 
     Private ReadOnly _loginDialog As New LoginForm1
     Private ReadOnly _markerInsulinDictionary As New Dictionary(Of Double, Integer)
@@ -78,7 +29,6 @@ Public Class Form1
     Private ReadOnly _mealImage As Bitmap = My.Resources.MealImage
     Private ReadOnly _savedTitle As String = Me.Text
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
-
     Private _activeInsulinIncrements As Integer
     Private _autoScaledFormSize As SizeF
     Private _client As CareLinkClient
@@ -94,14 +44,6 @@ Public Class Form1
     Private _updating As Boolean = False
     Private _xScale As Single
     Private _yScale As Single
-
-    ' do not rename or move up
-    Friend Shared ReadOnly s_zFilterList As New Dictionary(Of Integer, List(Of String)) From {
-        {ItemIndexs.lastAlarm, s_lastAlarmFilter},
-        {ItemIndexs.lastSG, s_alwaysFilter},
-        {ItemIndexs.markers, s_markersFilter},
-        {ItemIndexs.notificationHistory, s_notificationHistoryFilter}
-        }
 
     Public ReadOnly _FiveMinuteSpan As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
     Public ReadOnly _ThirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
@@ -844,6 +786,17 @@ Public Class Form1
 
 #Region "Update Data/Tables"
 
+    Private Shared Sub GetLimitsList(ByRef limitsIndexList As Integer())
+
+        Dim limitsIndex As Integer = 0
+        For i As Integer = 0 To limitsIndexList.GetUpperBound(0)
+            If limitsIndex + 1 < s_limits.Count AndAlso CInt(s_limits(limitsIndex + 1)("index")) < i Then
+                limitsIndex += 1
+            End If
+            limitsIndexList(i) = limitsIndex
+        Next
+    End Sub
+
     Private Sub FillOneRowOfTableLayoutPannel(layoutPanel As TableLayoutPanel, innerJson As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String)
         For Each jsonEntry As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
             Dim tableLevel1Blue As New TableLayoutPanel With {
@@ -860,17 +813,6 @@ Public Class Form1
             layoutPanel.Controls.Add(tableLevel1Blue, column:=1, row:=jsonEntry.Index)
             GetInnerTable(Me, jsonEntry.Value, tableLevel1Blue, rowIndex, filterJsonData, timeFormat)
             Application.DoEvents()
-        Next
-    End Sub
-
-    Private Shared Sub GetLimitsList(ByRef limitsIndexList As Integer())
-
-        Dim limitsIndex As Integer = 0
-        For i As Integer = 0 To limitsIndexList.GetUpperBound(0)
-            If limitsIndex + 1 < s_limits.Count AndAlso CInt(s_limits(limitsIndex + 1)("index")) < i Then
-                limitsIndex += 1
-            End If
-            limitsIndexList(i) = limitsIndex
         Next
     End Sub
 
@@ -915,8 +857,9 @@ Public Class Form1
         ' Order all markers by time
         Dim timeOrderedMarkers As New SortedDictionary(Of Double, Double)
         Dim sgOaDateTime As Double
+
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
-            sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index).RoundDown(RoundTo.Minute).ToOADate
+            sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index).RoundTimeDown(RoundTo.Minute).ToOADate
             Select Case sgListIndex.Value("type")
                 Case "INSULIN"
                     Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue("programmedFastAmount")
@@ -942,7 +885,7 @@ Public Class Form1
 
         For i As Integer = 0 To 287
             Dim initialBolus As Double = 0
-            Dim oaTime As Double = (getSgDateTime + (_FiveMinuteSpan * i)).RoundDown(RoundTo.Minute).ToOADate()
+            Dim oaTime As Double = (getSgDateTime + (_FiveMinuteSpan * i)).RoundTimeDown(RoundTo.Minute).ToOADate()
             While currentMarker < timeOrderedMarkers.Count AndAlso timeOrderedMarkers.Keys(currentMarker) <= oaTime
                 initialBolus += timeOrderedMarkers.Values(currentMarker)
                 currentMarker += 1
@@ -972,19 +915,28 @@ Public Class Form1
         _activeInsulinTabChartArea.AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1
         maxActiveInsulin = _activeInsulinTabChartArea.AxisY.Maximum
 
+        s_totalAutoCorrection = 0
+        s_totalBasal = 0
+        s_totalDailyDose = 0
+        s_totalManualBolus = 0
+
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
-            sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index).RoundDown(RoundTo.Minute).ToOADate
+            sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index).RoundTimeDown(RoundTo.Minute).ToOADate
             With Me.ActiveInsulinTabChart.Series(NameOf(MarkerSeries))
                 Select Case sgListIndex.Value("type")
                     Case "INSULIN"
                         .Points.AddXY(sgOaDateTime, maxActiveInsulin)
+                        Dim deliveredAmount As Single = CSng(sgListIndex.Value("deliveredFastAmount"))
+                        s_totalDailyDose += deliveredAmount
                         Select Case sgListIndex.Value("activationType")
                             Case "AUTOCORRECTION"
-                                .Points.Last.ToolTip = $"Auto Correction, {sgListIndex.Value("programmedFastAmount")} U"
+                                .Points.Last.ToolTip = $"Auto Correction, {deliveredAmount} U"
                                 .Points.Last.Color = Color.MediumPurple
+                                s_totalAutoCorrection += deliveredAmount
                             Case "RECOMMENDED", "UNDETERMINED"
-                                .Points.Last.ToolTip = $"Bolus, {sgListIndex.Value("programmedFastAmount")} U"
+                                .Points.Last.ToolTip = $"Bolus, {deliveredAmount} U"
                                 .Points.Last.Color = Color.LightBlue
+                                s_totalManualBolus += deliveredAmount
                             Case Else
                                 Stop
                         End Select
@@ -996,6 +948,8 @@ Public Class Form1
                         .Points.AddXY(sgOaDateTime, maxActiveInsulin)
                         .Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3)} U"
                         .Points.Last.MarkerSize = 8
+                        s_totalBasal += CSng(bolusAmount)
+                        s_totalDailyDose += CSng(bolusAmount)
                 End Select
             End With
         Next
@@ -1034,11 +988,25 @@ Public Class Form1
         Me.UpdateTransmitterBatttery()
 
         Me.UpdateZHomeTabSerieses()
-
+        Me.UpdateDosing()
         Application.DoEvents()
         _recentDatalast = _recentData
         _initialized = True
         _updating = False
+    End Sub
+
+    Private Sub UpdateDosing()
+        Me.TotalBasalLabel.Text = $"Total Basal {s_totalBasal.RoundSingle(1)} U | {CInt(s_totalBasal / s_totalDailyDose * 100)}%"
+        Me.TotalDailyDoseLabel.Text = $"TDD {s_totalDailyDose.RoundSingle(1)} U"
+        If s_totalAutoCorrection > 0 Then
+            Me.TotalAutoCorrectionLabel.Text = $"Total Autocorrection {s_totalAutoCorrection.RoundSingle(1)} U | {CInt(s_totalAutoCorrection / s_totalDailyDose * 100)}%"
+            Me.TotalAutoCorrectionLabel.Visible = True
+            Dim totalBolus As Single = s_totalManualBolus + s_totalAutoCorrection
+            Me.TotalManualBolusLabel.Text = $"Total Manual Bolus {totalBolus.RoundSingle(1)} U | {CInt(s_totalManualBolus / s_totalDailyDose * 100)}%"
+        Else
+            Me.TotalAutoCorrectionLabel.Visible = False
+            Me.TotalManualBolusLabel.Text = $"Total Bolus {s_totalManualBolus.RoundSingle(1)} U | {CInt(s_totalManualBolus / s_totalDailyDose * 100)}%"
+        End If
     End Sub
 
     Private Sub UpdateDataTables(localRecentData As Dictionary(Of String, String))
