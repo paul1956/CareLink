@@ -57,7 +57,7 @@ Partial Class Form1
         Me.TransmitterBatteryPictureBox = New System.Windows.Forms.PictureBox()
         Me.SensorTimeLeftLabel = New System.Windows.Forms.Label()
         Me.SensorDaysLeftLabel = New System.Windows.Forms.Label()
-        Me.SensorTimeLefPictureBox = New System.Windows.Forms.PictureBox()
+        Me.SensorTimeLeftPictureBox = New System.Windows.Forms.PictureBox()
         Me.PumpBatteryPictureBox = New System.Windows.Forms.PictureBox()
         Me.AITLabel = New System.Windows.Forms.Label()
         Me.AITComboBox = New System.Windows.Forms.ComboBox()
@@ -118,7 +118,7 @@ Partial Class Form1
         Me.TabControl1.SuspendLayout()
         Me.TabPage1HomePage.SuspendLayout()
         CType(Me.TransmitterBatteryPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.SensorTimeLefPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.SensorTimeLeftPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PumpBatteryPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.CursorPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.InsulinLevelPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -408,7 +408,7 @@ Partial Class Form1
         Me.TabPage1HomePage.Controls.Add(Me.TransmitterBatteryPictureBox)
         Me.TabPage1HomePage.Controls.Add(Me.SensorTimeLeftLabel)
         Me.TabPage1HomePage.Controls.Add(Me.SensorDaysLeftLabel)
-        Me.TabPage1HomePage.Controls.Add(Me.SensorTimeLefPictureBox)
+        Me.TabPage1HomePage.Controls.Add(Me.SensorTimeLeftPictureBox)
         Me.TabPage1HomePage.Controls.Add(Me.PumpBatteryPictureBox)
         Me.TabPage1HomePage.Controls.Add(Me.AITLabel)
         Me.TabPage1HomePage.Controls.Add(Me.AITComboBox)
@@ -550,15 +550,15 @@ Partial Class Form1
         Me.SensorDaysLeftLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.SensorDaysLeftLabel.Visible = False
         '
-        'SensorTimeLefPictureBox
+        'SensorTimeLeftPictureBox
         '
-        Me.SensorTimeLefPictureBox.ErrorImage = Nothing
-        Me.SensorTimeLefPictureBox.Image = Global.CareLink.My.Resources.Resources.SensorExpirationUnknown
-        Me.SensorTimeLefPictureBox.Location = New System.Drawing.Point(773, 6)
-        Me.SensorTimeLefPictureBox.Name = "SensorTimeLefPictureBox"
-        Me.SensorTimeLefPictureBox.Size = New System.Drawing.Size(68, 78)
-        Me.SensorTimeLefPictureBox.TabIndex = 44
-        Me.SensorTimeLefPictureBox.TabStop = False
+        Me.SensorTimeLeftPictureBox.ErrorImage = Nothing
+        Me.SensorTimeLeftPictureBox.Image = Global.CareLink.My.Resources.Resources.SensorExpirationUnknown
+        Me.SensorTimeLeftPictureBox.Location = New System.Drawing.Point(773, 6)
+        Me.SensorTimeLeftPictureBox.Name = "SensorTimeLeftPictureBox"
+        Me.SensorTimeLeftPictureBox.Size = New System.Drawing.Size(68, 78)
+        Me.SensorTimeLeftPictureBox.TabIndex = 44
+        Me.SensorTimeLeftPictureBox.TabStop = False
         '
         'PumpBatteryPictureBox
         '
@@ -1205,7 +1205,7 @@ Partial Class Form1
         Me.TabPage1HomePage.ResumeLayout(False)
         Me.TabPage1HomePage.PerformLayout()
         CType(Me.TransmitterBatteryPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.SensorTimeLefPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.SensorTimeLeftPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PumpBatteryPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.CursorPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.InsulinLevelPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1266,7 +1266,7 @@ Partial Class Form1
     Friend WithEvents RemainingInsulinUnits As Label
     Friend WithEvents SensorDaysLeftLabel As Label
     Friend WithEvents SensorMessage As Label
-    Friend WithEvents SensorTimeLefPictureBox As PictureBox
+    Friend WithEvents SensorTimeLeftPictureBox As PictureBox
     Friend WithEvents SensorTimeLeftLabel As Label
     Friend WithEvents LoginStatus As Label
     Friend WithEvents LoginStatusLabel As Label

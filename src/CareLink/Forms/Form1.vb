@@ -100,10 +100,10 @@ Public Class Form1
         End If
         Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
         Me.ShieldUnitsLabel.BackColor = Color.Transparent
-        Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLefPictureBox
+        Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLeftPictureBox
         Me.SensorDaysLeftLabel.BackColor = Color.Transparent
-        Me.SensorDaysLeftLabel.Left = (Me.SensorTimeLefPictureBox.Width \ 2) - (Me.SensorDaysLeftLabel.Width \ 2)
-        Me.SensorDaysLeftLabel.Top = (Me.SensorTimeLefPictureBox.Height \ 2) - (Me.SensorDaysLeftLabel.Height \ 2)
+        Me.SensorDaysLeftLabel.Left = (Me.SensorTimeLeftPictureBox.Width \ 2) - (Me.SensorDaysLeftLabel.Width \ 2)
+        Me.SensorDaysLeftLabel.Top = (Me.SensorTimeLeftPictureBox.Height \ 2) - (Me.SensorDaysLeftLabel.Height \ 2)
         Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact(My.Settings.AIT.ToString("hh\:mm").Substring(1))
         _activeInsulinIncrements = CInt(TimeSpan.Parse(My.Settings.AIT.ToString("hh\:mm").Substring(1)) / _FiveMinuteSpan)
         Me.InitializeHomePageChart()
@@ -1453,26 +1453,26 @@ Public Class Form1
     Private Sub UpdateSensorLife()
         If s_sensorDurationHours = 255 Then
             Me.SensorDaysLeftLabel.Text = $"???"
-            Me.SensorTimeLefPictureBox.Image = My.Resources.SensorExpirationUnknown
+            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
             Me.SensorTimeLeftLabel.Text = ""
         ElseIf s_sensorDurationHours >= 24 Then
             Me.SensorDaysLeftLabel.Text = CStr(Math.Ceiling(s_sensorDurationHours / 24))
-            Me.SensorTimeLefPictureBox.Image = My.Resources.SensorLifeOK
+            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
             Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
         Else
             If s_sensorDurationHours = 0 Then
                 If s_sensorDurationMinutes = 0 Then
                     Me.SensorDaysLeftLabel.Text = ""
-                    Me.SensorTimeLefPictureBox.Image = My.Resources.SensorExpired
+                    Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpired
                     Me.SensorTimeLeftLabel.Text = $"Expired"
                 Else
                     Me.SensorDaysLeftLabel.Text = $"1"
-                    Me.SensorTimeLefPictureBox.Image = My.Resources.SensorLifeNotOK
+                    Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
                     Me.SensorTimeLeftLabel.Text = $"{s_sensorDurationMinutes} Minutes"
                 End If
             Else
                 Me.SensorDaysLeftLabel.Text = $"1"
-                Me.SensorTimeLefPictureBox.Image = My.Resources.SensorLifeNotOK
+                Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
                 Me.SensorTimeLeftLabel.Text = $"{s_sensorDurationHours + 1} Hours"
             End If
         End If
