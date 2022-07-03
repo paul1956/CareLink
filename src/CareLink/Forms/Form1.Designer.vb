@@ -45,6 +45,7 @@ Partial Class Form1
         Me.TableLayoutPanelSummaryData = New System.Windows.Forms.TableLayoutPanel()
         Me.TableLayoutPanelTop1 = New System.Windows.Forms.TableLayoutPanel()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.SplitContainer4 = New System.Windows.Forms.SplitContainer()
         Me.TableLayoutPanelTop2 = New System.Windows.Forms.TableLayoutPanel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1HomePage = New System.Windows.Forms.TabPage()
@@ -116,6 +117,10 @@ Partial Class Form1
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
+        CType(Me.SplitContainer4, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SplitContainer4.Panel1.SuspendLayout()
+        Me.SplitContainer4.Panel2.SuspendLayout()
+        Me.SplitContainer4.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1HomePage.SuspendLayout()
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -339,26 +344,27 @@ Partial Class Form1
         Me.TableLayoutPanelTop1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelTop1.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelTop1.ColumnCount = 2
-        Me.TableLayoutPanelTop1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.0!))
-        Me.TableLayoutPanelTop1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 90.0!))
-        Me.TableLayoutPanelTop1.Location = New System.Drawing.Point(5, 0)
+        Me.TableLayoutPanelTop1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.0!))
+        Me.TableLayoutPanelTop1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85.0!))
+        Me.TableLayoutPanelTop1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanelTop1.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanelTop1.Name = "TableLayoutPanelTop1"
         Me.TableLayoutPanelTop1.RowCount = 1
         Me.TableLayoutPanelTop1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelTop1.Size = New System.Drawing.Size(503, 151)
+        Me.TableLayoutPanelTop1.Size = New System.Drawing.Size(423, 155)
         Me.TableLayoutPanelTop1.TabIndex = 0
         '
         'SplitContainer1
         '
         Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.SplitContainer1.IsSplitterFixed = True
         Me.SplitContainer1.Location = New System.Drawing.Point(0, 24)
         Me.SplitContainer1.Name = "SplitContainer1"
         Me.SplitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal
         '
         'SplitContainer1.Panel1
         '
-        Me.SplitContainer1.Panel1.Controls.Add(Me.TableLayoutPanelTop2)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.TableLayoutPanelTop1)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.SplitContainer4)
         '
         'SplitContainer1.Panel2
         '
@@ -368,9 +374,26 @@ Partial Class Form1
         Me.SplitContainer1.SplitterWidth = 2
         Me.SplitContainer1.TabIndex = 22
         '
+        'SplitContainer4
+        '
+        Me.SplitContainer4.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SplitContainer4.IsSplitterFixed = True
+        Me.SplitContainer4.Location = New System.Drawing.Point(0, 0)
+        Me.SplitContainer4.Name = "SplitContainer4"
+        '
+        'SplitContainer4.Panel1
+        '
+        Me.SplitContainer4.Panel1.Controls.Add(Me.TableLayoutPanelTop1)
+        '
+        'SplitContainer4.Panel2
+        '
+        Me.SplitContainer4.Panel2.Controls.Add(Me.TableLayoutPanelTop2)
+        Me.SplitContainer4.Size = New System.Drawing.Size(1384, 155)
+        Me.SplitContainer4.SplitterDistance = 423
+        Me.SplitContainer4.TabIndex = 0
+        '
         'TableLayoutPanelTop2
         '
-        Me.TableLayoutPanelTop2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TableLayoutPanelTop2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelTop2.CausesValidation = False
         Me.TableLayoutPanelTop2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
@@ -378,12 +401,13 @@ Partial Class Form1
         Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.0!))
         Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 92.0!))
         Me.TableLayoutPanelTop2.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.TableLayoutPanelTop2.Location = New System.Drawing.Point(511, 0)
+        Me.TableLayoutPanelTop2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanelTop2.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanelTop2.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanelTop2.Name = "TableLayoutPanelTop2"
         Me.TableLayoutPanelTop2.RowCount = 1
         Me.TableLayoutPanelTop2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelTop2.Size = New System.Drawing.Size(869, 154)
+        Me.TableLayoutPanelTop2.Size = New System.Drawing.Size(957, 155)
         Me.TableLayoutPanelTop2.TabIndex = 1
         '
         'TabControl1
@@ -418,6 +442,7 @@ Partial Class Form1
         'SplitContainer2
         '
         Me.SplitContainer2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SplitContainer2.IsSplitterFixed = True
         Me.SplitContainer2.Location = New System.Drawing.Point(3, 3)
         Me.SplitContainer2.Name = "SplitContainer2"
         Me.SplitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal
@@ -762,6 +787,7 @@ Partial Class Form1
         'SplitContainer3
         '
         Me.SplitContainer3.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SplitContainer3.IsSplitterFixed = True
         Me.SplitContainer3.Location = New System.Drawing.Point(0, 0)
         Me.SplitContainer3.Name = "SplitContainer3"
         '
@@ -834,11 +860,11 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TimeInRangeSummaryPercentCharLabel.AutoSize = True
         Me.TimeInRangeSummaryPercentCharLabel.BackColor = System.Drawing.Color.Transparent
-        Me.TimeInRangeSummaryPercentCharLabel.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.TimeInRangeSummaryPercentCharLabel.Font = New System.Drawing.Font("Segoe UI", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.TimeInRangeSummaryPercentCharLabel.ForeColor = System.Drawing.Color.White
         Me.TimeInRangeSummaryPercentCharLabel.Location = New System.Drawing.Point(98, 182)
         Me.TimeInRangeSummaryPercentCharLabel.Name = "TimeInRangeSummaryPercentCharLabel"
-        Me.TimeInRangeSummaryPercentCharLabel.Size = New System.Drawing.Size(34, 32)
+        Me.TimeInRangeSummaryPercentCharLabel.Size = New System.Drawing.Size(42, 40)
         Me.TimeInRangeSummaryPercentCharLabel.TabIndex = 3
         Me.TimeInRangeSummaryPercentCharLabel.Text = "%"
         '
@@ -847,7 +873,7 @@ Partial Class Form1
         Me.TimeInRangeSummaryLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TimeInRangeSummaryLabel.BackColor = System.Drawing.Color.Black
-        Me.TimeInRangeSummaryLabel.Font = New System.Drawing.Font("Segoe UI", 26.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.TimeInRangeSummaryLabel.Font = New System.Drawing.Font("Segoe UI", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.TimeInRangeSummaryLabel.ForeColor = System.Drawing.Color.White
         Me.TimeInRangeSummaryLabel.Location = New System.Drawing.Point(77, 135)
         Me.TimeInRangeSummaryLabel.Name = "TimeInRangeSummaryLabel"
@@ -1234,6 +1260,10 @@ Partial Class Form1
         Me.SplitContainer1.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer1.ResumeLayout(False)
+        Me.SplitContainer4.Panel1.ResumeLayout(False)
+        Me.SplitContainer4.Panel2.ResumeLayout(False)
+        CType(Me.SplitContainer4, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitContainer4.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage1HomePage.ResumeLayout(False)
         Me.SplitContainer2.Panel1.ResumeLayout(False)
@@ -1359,4 +1389,5 @@ Partial Class Form1
     Friend WithEvents SplitContainer3 As SplitContainer
     Friend WithEvents Last24HoursLabel As Label
     Friend WithEvents TimeInRangeLabel As Label
+    Friend WithEvents SplitContainer4 As SplitContainer
 End Class

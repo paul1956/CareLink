@@ -215,7 +215,7 @@ Public Module JsonExtensions
         ElseIf itemIndex = ItemIndexs.lastAlarm Then
             Dim parentTableLayoutPanel As TableLayoutPanel = CType(tableLevel1Blue.Parent, TableLayoutPanel)
             parentTableLayoutPanel.AutoSize = False
-            tableLevel1Blue.Dock = DockStyle.Top
+            tableLevel1Blue.Dock = DockStyle.Fill
             Application.DoEvents()
             tableLevel1Blue.ColumnStyles(1).SizeType = SizeType.Absolute
 

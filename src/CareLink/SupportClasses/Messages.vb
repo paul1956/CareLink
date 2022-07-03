@@ -11,6 +11,7 @@ Friend Module Messages
                         {"BC_SID_BG_REQUIRED_CONTENT", "BG required Content."},
                         {"BC_SID_BOLUS_ENTRY_TIMED_OUT", "Bolus not delivered. Bolus entry timed out before delivery. If bolus was intended, enter values again."},
                         {"BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR", "Calibrate now. Check BG and calibrate sensor."},
+                        {"BC_SID_DELIVERY_STOPPED_INSERT_NEW_BATTERY", "nsert battery. Delivery stopped. Insert a new batterynow."},
                         {"BC_SID_DO_NOT_CALIBRATE_UNLESS_NOTIFIED", "Sensor updating, Do not calibrate unless notified. This could take up to 3 hours"},
                         {"BC_SID_ENSURE_CONNECTION_SECURE", "Check connection. Ensure transmitter and sensor is secure, then select OK."},
                         {"BC_SID_ENTER_BG_TO_CONTINUE_IN_SMART_GUARD", "Enter BG to continue in SmartGuard."},

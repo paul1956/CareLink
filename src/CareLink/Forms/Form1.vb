@@ -364,33 +364,35 @@ Public Class Form1
             _homePageChartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, s_sGs.Last.datetime.ToOADate)) - _homePageChartRelitivePosition.X
             _homePageChartRelitivePosition = e.ChartGraphics.GetAbsoluteRectangle(_homePageChartRelitivePosition)
         End If
+        If Me.XScale = 1 Then
 
-        Dim homePageChartX As Integer = CInt(_homePageChartRelitivePosition.X)
-        Dim homePageChartY As Integer = CInt(_homePageChartRelitivePosition.Y)
-        Dim homePagelocation As New Point(homePageChartX, homePageChartY)
-        Dim homePageChartWidth As Integer = CInt(_homePageChartRelitivePosition.Width)
-        Dim lowHeight As Integer = If(_homePageChartChartArea.AxisX.ScrollBar.IsVisible,
-                                      CInt(25 - _homePageChartChartArea.AxisX.ScrollBar.Size),
-                                      25
-                                     )
-        Dim highHeight As Integer = 288
-        Dim highAreaRectangle As New Rectangle(homePagelocation,
-                                               New Size(homePageChartWidth, highHeight))
+            Dim homePageChartX As Integer = CInt(_homePageChartRelitivePosition.X)
+            Dim homePageChartY As Integer = CInt(_homePageChartRelitivePosition.Y)
+            Dim homePagelocation As New Point(homePageChartX, homePageChartY)
+            Dim homePageChartWidth As Integer = CInt(_homePageChartRelitivePosition.Width)
+            Dim lowHeight As Integer = If(_homePageChartChartArea.AxisX.ScrollBar.IsVisible,
+                                          CInt(25 - _homePageChartChartArea.AxisX.ScrollBar.Size),
+                                          25
+                                         )
+            Dim highHeight As Integer = 288
+            Dim highAreaRectangle As New Rectangle(homePagelocation,
+                                                   New Size(homePageChartWidth, highHeight))
 
-        Dim lowOffset As Integer = 482
-        Dim lowStartLocation As New Point(homePageChartX, lowOffset)
-        Dim lowAreaRectangle As New Rectangle(LowStartLocation,
-                                              New Size(homePageChartWidth, lowHeight))
+            Dim lowOffset As Integer = 482
+            Dim lowStartLocation As New Point(homePageChartX, lowOffset)
+            Dim lowAreaRectangle As New Rectangle(lowStartLocation,
+                                                  New Size(homePageChartWidth, lowHeight))
 
-        Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
-            e.ChartGraphics.Graphics.FillRectangle(b, highAreaRectangle)
-        End Using
+            Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
+                e.ChartGraphics.Graphics.FillRectangle(b, highAreaRectangle)
+            End Using
 
-        Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
-            e.ChartGraphics.Graphics.FillRectangle(b, lowAreaRectangle)
-        End Using
-        If Me.CursorTimeLabel.Tag IsNot Nothing Then
-            Me.CursorTimeLabel.Left = CInt(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, CDate(Me.CursorTimeLabel.Tag).ToOADate))
+            Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
+                e.ChartGraphics.Graphics.FillRectangle(b, lowAreaRectangle)
+            End Using
+            If Me.CursorTimeLabel.Tag IsNot Nothing Then
+                Me.CursorTimeLabel.Left = CInt(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, CDate(Me.CursorTimeLabel.Tag).ToOADate))
+            End If
         End If
 
         e.PaintMarker(_mealImage, _markerMealDictionary, 0)
