@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module DrawingExtensions
@@ -16,6 +17,7 @@ Friend Module DrawingExtensions
         End If
     End Function
 
+    <Extension>
     Friend Function DrawCenteredArc(backImage As Bitmap, TimeToNextCalibration As UShort, arcPercentage As Double, Optional colorTable As IReadOnlyDictionary(Of String, Color) = Nothing, Optional segmentName As String = "") As Bitmap
         If arcPercentage < Double.Epsilon Then
             Return backImage
@@ -29,6 +31,7 @@ Friend Module DrawingExtensions
         Return targetImage
     End Function
 
+    <Extension>
     Friend Sub PlotOnePoint(plotSeries As Series, sgOaDateTime As Double, bgValue As Single, mainLineColor As Color, insulinRow As Double, limithigh As Single, limitLow As Single)
         With plotSeries
 

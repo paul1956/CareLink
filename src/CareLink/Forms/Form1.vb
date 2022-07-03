@@ -1033,7 +1033,14 @@ Public Class Form1
         For Each sgListIndex As IndexClass(Of SgRecord) In s_sGs.WithIndex()
             Dim bgValue As Single = sgListIndex.Value.sg
 
-            PlotOnePoint(Me.ActiveInsulinTabChart.Series(NameOf(CurrentBGSeries)), sgListIndex.Value.datetime.ToOADate(), sgListIndex.Value.sg, Color.Black, Me.InsulinRow, _limitHigh, _limitLow)
+            Me.ActiveInsulinTabChart.Series(NameOf(CurrentBGSeries)).PlotOnePoint(
+                                                            sgListIndex.Value.datetime.ToOADate(),
+                                                            sgListIndex.Value.sg,
+                                                            Color.Black,
+                                                            Me.InsulinRow,
+                                                            _limitHigh,
+                                                            _limitLow
+                                            )
         Next
         _initialized = True
         Application.DoEvents()
@@ -1505,10 +1512,10 @@ Public Class Form1
             Me.CalibrationDueImage.Image = My.Resources.CalibrationUnavailable
         ElseIf s_timeToNextCalibHours < 1 Then
             Me.CalibrationDueImage.Image = If(s_systemStatusMessage = "WAIT_TO_CALIBRATE" OrElse s_sensorState = "WARM_UP",
-                My.Resources.CalibrationNotReady,
-                DrawCenteredArc(My.Resources.CalibrationDotRed, s_timeToNextCalibHours, s_timeToNextCalibHours / 12))
+            My.Resources.CalibrationNotReady,
+            My.Resources.CalibrationDotRed.DrawCenteredArc(s_timeToNextCalibHours, s_timeToNextCalibHours / 12))
         Else
-            Me.CalibrationDueImage.Image = DrawCenteredArc(My.Resources.CalibrationDot, s_timeToNextCalibHours, s_timeToNextCalibHours / 12)
+            Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(s_timeToNextCalibHours, s_timeToNextCalibHours / 12)
         End If
 
         Application.DoEvents()

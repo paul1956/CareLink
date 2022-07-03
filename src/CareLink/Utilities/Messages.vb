@@ -22,6 +22,7 @@ Friend Module Messages
                         {"BC_SID_SG_APPROACH_HIGH_LIMIT_CHECK_BG", "Alert before high. Sensor glucose approaching high limit. Check BG."},
                         {"BC_SID_SG_APPROACH_LOW_LIMIT_CHECK_BG", "Alert before low. Sensor Glucose approaching low limit. Check BG."},
                         {"BC_SID_SG_RISE_RAPID", "Raise Alert. Sensor glusose raising rapidly."},
+                        {"BC_SID_SMART_GUARD_MINIMUM_DELIVERY", "SmartGuard minimum delevery."},
                         {"BC_SID_START_NEW_SENSOR", "Start new sensor."},
                         {"BC_SID_UPDATING_CAN_TAKE_UP_TO_THREE_HOURS", "Sensor updating, it can take up to 3 hours."},
                         {"BC_SID_WAIT_AT_LEAST_15_MINUTES", "Calibration not accepted. Wait at least 15 mintues. Wash hands, test BGagain and calibrate."},
