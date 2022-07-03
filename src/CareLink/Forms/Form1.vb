@@ -4,6 +4,7 @@
 
 Imports System.ComponentModel
 Imports System.IO
+Imports System.Net.Http
 Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
 
@@ -39,6 +40,10 @@ Public Class Form1
     Private _recentDataSameCount As Integer
     Private _timeFormat As String
     Private _updating As Boolean = False
+
+    Friend ReadOnly _httpClient As New HttpClient()
+
+    Public Const GitHubCareLinkUrl As String = "https://github.com/paul1956/CareLink/"
 
     Public ReadOnly _FiveMinuteSpan As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
     Public ReadOnly _ThirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
@@ -109,6 +114,24 @@ Public Class Form1
         End
     End Sub
 
+    Private Sub FinishInitialization()
+        If _initialized Then
+            Exit Sub
+        End If
+        Me.UpdateRegionalData(_recentData)
+
+        Me.InitializeHomePageChart()
+        Me.InitializeActiveInsulinTabChart()
+        Me.InitializeTimeInRangeChart()
+        Me.SGsDataGridView.AutoGenerateColumns = True
+        Me.SGsDataGridView.ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
+            .Alignment = DataGridViewContentAlignment.MiddleCenter
+            }
+
+        Me.UpdateAllTabPages()
+        _initialized = True
+    End Sub
+
     Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
         Me.CleanUpNotificationIcon()
     End Sub
@@ -138,8 +161,15 @@ Public Class Form1
             Me.SplitContainer2.SplitterDistance = CInt(Me.SplitContainer2.SplitterDistance * Me.YScale)
             Me.SplitContainer3.SplitterDistance = CInt(Me.SplitContainer3.SplitterDistance * Me.XScale)
         End If
-        Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=False)
-        Me.UpdateRegionalData(_recentData)
+        If My.Settings.UseTestData Then
+            Me.OptionsUseLastSavedDataToolStripMenuItem.Checked = False
+            Me.OptionsUseTestDataToolStripMenuItem.Checked = True
+        ElseIf My.Settings.UseLastSavedData AndAlso Me.StartHereSnapshotLoadToolStripMenuItem.Enabled Then
+            Me.OptionsUseLastSavedDataToolStripMenuItem.Checked = True
+            Me.OptionsUseTestDataToolStripMenuItem.Checked = False
+        End If
+
+        Me.StartHereSnapshotLoadToolStripMenuItem.Enabled = File.Exists(_careLinkSnapshotDocPath)
 
         Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
         Me.ShieldUnitsLabel.BackColor = Color.Transparent
@@ -149,24 +179,20 @@ Public Class Form1
         Me.SensorDaysLeftLabel.Top = (Me.SensorTimeLeftPictureBox.Height \ 2) - (Me.SensorDaysLeftLabel.Height \ 2)
         Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact(My.Settings.AIT.ToString("hh\:mm").Substring(1))
         _activeInsulinIncrements = CInt(TimeSpan.Parse(My.Settings.AIT.ToString("hh\:mm").Substring(1)) / _FiveMinuteSpan)
-        Me.InitializeHomePageChart()
-        Me.InitializeActiveInsulinTabChart()
-        Me.InitializeTimeInRangeChart()
-        Me.SGsDataGridView.AutoGenerateColumns = True
-        Me.SGsDataGridView.ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
-            .Alignment = DataGridViewContentAlignment.MiddleCenter
-            }
 
-        Me.StartHereSnapshotLoadToolStripMenuItem.Enabled = File.Exists(_careLinkSnapshotDocPath)
-
-        If My.Settings.UseTestData Then
-            Me.OptionsUseLastSavedDataToolStripMenuItem.Checked = False
-            Me.OptionsUseTestDataToolStripMenuItem.Checked = True
-        ElseIf My.Settings.UseLastSavedData AndAlso Me.StartHereSnapshotLoadToolStripMenuItem.Enabled Then
-            Me.OptionsUseLastSavedDataToolStripMenuItem.Checked = True
-            Me.OptionsUseTestDataToolStripMenuItem.Checked = False
+        If Not Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=False) Then
+            Exit Sub
         End If
-        Me.UpdateAllTabPages()
+
+        Me.FinishInitialization()
+    End Sub
+
+    Private Sub MenuHelpCheckForUpdatesMenuItem_Click(sender As Object, e As EventArgs) Handles MenuHelpCheckForUpdatesMenuItem.Click
+        CheckForUpdatesAsync(Me, reportResults:=True)
+    End Sub
+
+    Private Sub MenuHelpReportIssueMenuItem_Click(sender As Object, e As EventArgs) Handles MenuHelpReportIssueMenuItem.Click
+        OpenUrlInBrowser($"{GitHubCareLinkUrl}issues")
     End Sub
 
 #Region "Form Menu Events"
@@ -356,7 +382,9 @@ Public Class Form1
     End Sub
 
     Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomePageChart.PostPaint
-        If Not _initialized Then Exit Sub
+        If Not _initialized Then
+            Exit Sub
+        End If
         If _homePageChartRelitivePosition.IsEmpty Then
             _homePageChartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, s_sGs(0).datetime.ToOADate))
             _homePageChartRelitivePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, _markerRow))
@@ -888,7 +916,6 @@ Public Class Form1
         If Not _initialized Then
             Exit Sub
         End If
-        _initialized = False
 
         With Me.ActiveInsulinTabChart
             .Titles("Title1").Text = $"Running Active Insulin in Pink"
@@ -1016,12 +1043,13 @@ Public Class Form1
         If _recentData Is Nothing OrElse _updating Then
             Exit Sub
         End If
+        _updating = True
         Me.UpdateDataTables(_recentData)
         Me.UpdateActiveInsulinChart()
         If Not _initialized Then
+            _updating = False
             Exit Sub
         End If
-        _initialized = False
         Me.UpdateActiveInsulin()
         Me.UpdateAutoModeShield()
         Me.UpdateCalibrationTimeRemaining()
@@ -1041,10 +1069,10 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateDataTables(localRecentData As Dictionary(Of String, String))
-        _updating = True
         If localRecentData Is Nothing Then
             Exit Sub
         End If
+        _updating = True
         Me.Cursor = Cursors.WaitCursor
         Application.DoEvents()
         Me.TableLayoutPanelSummaryData.Controls.Clear()
@@ -1370,7 +1398,7 @@ Public Class Form1
             Stop
         End If
         _initialized = True
-
+        _updating = False
         Me.Cursor = Cursors.Default
     End Sub
 
@@ -1590,7 +1618,7 @@ Public Class Form1
         Me.AverageSGValueLabel.Text = If(Me.BgUnitsString = "mg/dl", s_averageSG.ToString, s_averageSG.RoundDouble(1).ToString())
         Me.AboveHighLimitValueLabel.Text = $"{s_aboveHyperLimit} %"
         Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
-        Me.TimeInRangeSummaryLabel.Text = $"{s_timeInRange} %"
+        Me.TimeInRangeSummaryLabel.Text = $"{s_timeInRange}"
         Me.TimeInRangeValueLabel.Text = s_timeInRange.ToString
 
     End Sub
@@ -1700,7 +1728,7 @@ Public Class Form1
 
 #End Region
 
-    Private Sub DoOptionalLoginAndUpdateData(UpdateAllTabs As Boolean)
+    Private Function DoOptionalLoginAndUpdateData(UpdateAllTabs As Boolean) As Boolean
         Me.ServerUpdateTimer.Stop()
         Debug.Print($"Me.ServerUpdateTimer stopped at {Now}")
         If Me.OptionsUseTestDataToolStripMenuItem.Checked Then
@@ -1716,7 +1744,7 @@ Public Class Form1
             _loginDialog.ShowDialog()
             _client = _loginDialog.Client
             If _client Is Nothing OrElse Not _client.LoggedIn Then
-                Exit Sub
+                Return False
             End If
             _recentData = _client.GetRecentData()
             Me.ViewToolStripMenuItem.Visible = True
@@ -1728,9 +1756,13 @@ Public Class Form1
             Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
             Me.LoginStatus.Text = "OK"
         End If
+        If Not _initialized Then
+            Me.FinishInitialization()
+        End If
         If UpdateAllTabs Then
             Me.UpdateAllTabPages()
         End If
-    End Sub
+        Return True
+    End Function
 
 End Class

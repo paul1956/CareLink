@@ -6,7 +6,6 @@ https://github.com/paul1956/CareLink/releases/
 - .NET Core 6.0.6 or later
 - Windows 10 or later
 
-
 ## Requires for development
 - Visual Studio 2022 Version 17.3.0 Preview 2.0 or later
 - .NET Core 6.0.6 or later
@@ -23,7 +22,13 @@ https://github.com/paul1956/CareLink/releases/
 - Medtronic CareLink data display
 
 ## Updated
-- 6/30/2022
+- 7/3/2022
+
+## What's New in this release
+  New in 3.2.0.0
+  First public release supporting 770G and 780 in North America and Europe
+  Scale displays have limited support the app works best at 100%
+  Issue reporting and check for new realese have been added to Help menu.
 
 ## Description
 

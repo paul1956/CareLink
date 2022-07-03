@@ -41,6 +41,8 @@ Partial Class Form1
         Me.ViewShowMiniDisplayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpAboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuHelpReportIssueMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuHelpCheckForUpdatesMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ServerUpdateTimer = New System.Windows.Forms.Timer(Me.components)
         Me.TableLayoutPanelSummaryData = New System.Windows.Forms.TableLayoutPanel()
         Me.TableLayoutPanelTop1 = New System.Windows.Forms.TableLayoutPanel()
@@ -195,6 +197,7 @@ Partial Class Form1
         '
         'StartHereExitToolStripMenuItem
         '
+        Me.StartHereExitToolStripMenuItem.Image = Global.CareLink.My.Resources.Resources.AboutBox
         Me.StartHereExitToolStripMenuItem.Name = "StartHereExitToolStripMenuItem"
         Me.StartHereExitToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.X), System.Windows.Forms.Keys)
         Me.StartHereExitToolStripMenuItem.Size = New System.Drawing.Size(190, 22)
@@ -254,16 +257,32 @@ Partial Class Form1
         '
         'HelpToolStripMenuItem
         '
-        Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.HelpAboutToolStripMenuItem})
+        Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuHelpReportIssueMenuItem, Me.MenuHelpCheckForUpdatesMenuItem, Me.HelpAboutToolStripMenuItem})
         Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
+        Me.HelpToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.H), System.Windows.Forms.Keys)
         Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.HelpToolStripMenuItem.Text = "&Help"
         '
         'HelpAboutToolStripMenuItem
         '
+        Me.HelpAboutToolStripMenuItem.Image = Global.CareLink.My.Resources.Resources.AboutBox
         Me.HelpAboutToolStripMenuItem.Name = "HelpAboutToolStripMenuItem"
-        Me.HelpAboutToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
+        Me.HelpAboutToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.HelpAboutToolStripMenuItem.Text = "&About..."
+        '
+        'MenuHelpReportIssueMenuItem
+        '
+        Me.MenuHelpReportIssueMenuItem.Image = Global.CareLink.My.Resources.Resources.FeedbackSmile_16x
+        Me.MenuHelpReportIssueMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.MenuHelpReportIssueMenuItem.Name = "MenuHelpReportIssueMenuItem"
+        Me.MenuHelpReportIssueMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.MenuHelpReportIssueMenuItem.Text = "Report A Problem..."
+        '
+        'MenuHelpCheckForUpdatesMenuItem
+        '
+        Me.MenuHelpCheckForUpdatesMenuItem.Name = "MenuHelpCheckForUpdatesMenuItem"
+        Me.MenuHelpCheckForUpdatesMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.MenuHelpCheckForUpdatesMenuItem.Text = "Check For Updates"
         '
         'ServerUpdateTimer
         '
@@ -1324,6 +1343,8 @@ Partial Class Form1
     Friend WithEvents StartHereExitToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents OptionsFilterRawJSONDataToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents HelpToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents MenuHelpCheckForUpdatesMenuItem As ToolStripMenuItem
+    Friend WithEvents MenuHelpReportIssueMenuItem As ToolStripMenuItem
     Friend WithEvents ImageList1 As ImageList
     Friend WithEvents InRangeMessageLabel As Label
     Friend WithEvents InsulinLevelPictureBox As PictureBox
