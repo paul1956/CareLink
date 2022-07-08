@@ -255,6 +255,10 @@ Public Class CareLinkClient
 
             ' Open login(get SessionId And SessionData)
             Dim loginSessionResponse As HttpResponseMessage = Me.GetLoginSessionAsync()
+            If loginSessionResponse Is Nothing Then
+                Me.LastErrorMessage = "Login Failure"
+                Return lastLoginSuccess
+            End If
             _lastResponseCode = loginSessionResponse.StatusCode
 
             ' Login
@@ -262,7 +266,6 @@ Public Class CareLinkClient
             If doLoginResponse Is Nothing Then
                 Me.LastErrorMessage = "Login Failure"
                 Return lastLoginSuccess
-
             End If
             _lastResponseCode = doLoginResponse.StatusCode
 
@@ -468,6 +471,7 @@ Public Class CareLinkClient
             End If
         Catch e As Exception
             Debug.Print($"__getLoginSession() failed {e.Message}")
+            Return response
         End Try
 
         Debug.Print("__getLoginSession() success")

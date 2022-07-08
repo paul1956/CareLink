@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.ComponentModel
+Imports System.Globalization
 Imports System.IO
 Imports System.Net.Http
 Imports System.Text.Json
@@ -21,13 +22,13 @@ Public Class Form1
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _careLinkSnapshotDocPath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CareLinkSnapshot.json")
     Private ReadOnly _insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
-
     Private ReadOnly _loginDialog As New LoginForm1
     Private ReadOnly _markerInsulinDictionary As New Dictionary(Of Double, Single)
     Private ReadOnly _markerMealDictionary As New Dictionary(Of Double, Single)
     Private ReadOnly _mealImage As Bitmap = My.Resources.MealImage
     Private ReadOnly _savedTitle As String = Me.Text
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
+
     Private _activeInsulinIncrements As Integer
     Private _autoScaledFormSize As SizeF
     Private _client As CareLinkClient
@@ -41,12 +42,24 @@ Public Class Form1
     Private _timeFormat As String
     Private _updating As Boolean = False
 
+    Friend Const MilitaryTimeWithMinuteFormat As String = "HH:mm"
+    Friend Const TwelveHourTimeWithMinuteFormat As String = "h:mm tt"
+
     Friend ReadOnly _httpClient As New HttpClient()
 
     Public Const GitHubCareLinkUrl As String = "https://github.com/paul1956/CareLink/"
 
     Public ReadOnly _FiveMinuteSpan As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
     Public ReadOnly _ThirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
+
+    Private Property XScale As Single = 1
+    Private Property YScale As Single = 1
+
+    Friend Property BgUnitsString As String
+
+    Friend Property CurrentDataCulture As CultureInfo = New CultureInfo("en-US")
+
+    Friend Property CurrentUICulture As CultureInfo = CultureInfo.CurrentCulture
 
 #Region "Chart Objects"
 
@@ -80,15 +93,6 @@ Public Class Form1
             _markerRow = Value
         End Set
     End Property
-
-    Public Property XScale As Single
-    Public Property YScale As Single
-
-#End Region
-
-#Region "Variables to hold Pump Values"
-
-    Public Property BgUnitsString As String
 
 #End Region
 
@@ -141,12 +145,13 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
-        ' Load all settings
         If My.Settings.UpgradeRequired Then
             My.Settings.Upgrade()
             My.Settings.UpgradeRequired = False
             My.Settings.Save()
         End If
+
+        ' Load all settings
 
         Dim g As Graphics = Me.CreateGraphics()
         Try
@@ -169,8 +174,6 @@ Public Class Form1
             Me.OptionsUseTestDataToolStripMenuItem.Checked = False
         End If
 
-        Me.StartHereSnapshotLoadToolStripMenuItem.Enabled = File.Exists(_careLinkSnapshotDocPath)
-
         Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
         Me.ShieldUnitsLabel.BackColor = Color.Transparent
         Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLeftPictureBox
@@ -179,13 +182,14 @@ Public Class Form1
         Me.SensorDaysLeftLabel.Top = (Me.SensorTimeLeftPictureBox.Height \ 2) - (Me.SensorDaysLeftLabel.Height \ 2)
         Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact(My.Settings.AIT.ToString("hh\:mm").Substring(1))
         _activeInsulinIncrements = CInt(TimeSpan.Parse(My.Settings.AIT.ToString("hh\:mm").Substring(1)) / _FiveMinuteSpan)
-
         If Not Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=False) Then
             Exit Sub
         End If
 
         Me.FinishInitialization()
     End Sub
+
+#Region "Form Menu Events"
 
     Private Sub MenuHelpCheckForUpdatesMenuItem_Click(sender As Object, e As EventArgs) Handles MenuHelpCheckForUpdatesMenuItem.Click
         CheckForUpdatesAsync(Me, reportResults:=True)
@@ -194,8 +198,6 @@ Public Class Form1
     Private Sub MenuHelpReportIssueMenuItem_Click(sender As Object, e As EventArgs) Handles MenuHelpReportIssueMenuItem.Click
         OpenUrlInBrowser($"{GitHubCareLinkUrl}issues")
     End Sub
-
-#Region "Form Menu Events"
 
     Private Sub OptionsFilterRawJSONDataToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OptionsFilterRawJSONDataToolStripMenuItem.Click
         _filterJsonData = Me.OptionsFilterRawJSONDataToolStripMenuItem.Checked
@@ -246,21 +248,50 @@ Public Class Form1
     End Sub
 
     Private Sub StartHereSnapshotLoadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles StartHereSnapshotLoadToolStripMenuItem.Click
-        If File.Exists(_careLinkSnapshotDocPath) Then
-            Me.ServerUpdateTimer.Stop()
-            _recentData = Loads(File.ReadAllText(_careLinkSnapshotDocPath))
-            Me.Text &= $"{_savedTitle} Using Last CareLink Snapshot"
-            Me.UpdateAllTabPages()
+        Dim openFileDialog1 As New OpenFileDialog With {
+            .CheckFileExists = True,
+            .CheckPathExists = True,
+            .Filter = "json files (*.json)|CareLink*.json",
+            .InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            .Multiselect = False,
+            .ReadOnlyChecked = True,
+            .RestoreDirectory = False,
+            .SupportMultiDottedExtensions = False,
+            .Title = "Select CareLink saved snapshot to load",
+            .ValidateNames = True
+        }
+
+        If openFileDialog1.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+            Try
+                If File.Exists(openFileDialog1.FileName) Then
+                    Me.ServerUpdateTimer.Stop()
+                    _recentData = Loads(File.ReadAllText(openFileDialog1.FileName))
+                    Me.FinishInitialization()
+                    Me.Text &= $"{_savedTitle} Using CareLink Snapshot"
+                    Me.UpdateAllTabPages()
+                End If
+            Catch ex As Exception
+                MessageBox.Show($"Cannot read file from disk. Original error: {ex.Message}")
+            End Try
         End If
     End Sub
 
     Private Sub StartHereSnapshotSaveToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles StartHereSnapshotSaveToolStripMenuItem.Click
-        Dim contents As String = JsonSerializer.Serialize(_recentData, New JsonSerializerOptions)
+        Dim cleanRecentData As Dictionary(Of String, String) = _recentData
+        cleanRecentData("firstName") = "First"
+        cleanRecentData("lastName") = "Last"
+        cleanRecentData("medicalDeviceSerialNumber") = "NG1111111H"
+        Dim contents As String = JsonSerializer.Serialize(cleanRecentData, New JsonSerializerOptions)
         Dim options As New JsonDocumentOptions
         Using jd As JsonDocument = JsonDocument.Parse(contents, options)
             File.WriteAllText(_careLinkSnapshotDocPath, JsonSerializer.Serialize(jd, CareLinkClient.JsonFormattingOptions))
         End Using
-        Me.StartHereSnapshotLoadToolStripMenuItem.Enabled = True
+    End Sub
+
+    Private Sub StartHereToolStripMenuItem_DropDownOpened(sender As Object, e As EventArgs) Handles StartHereToolStripMenuItem.DropDownOpened
+        Me.StartHereSnapshotLoadToolStripMenuItem.Enabled = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CareLink*.json").Length > 0
+        Me.StartHereSnapshotSaveToolStripMenuItem.Enabled = _recentData IsNot Nothing
+
     End Sub
 
     Private Sub ViewShowMiniDisplayToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ViewShowMiniDisplayToolStripMenuItem.Click
@@ -692,6 +723,7 @@ Public Class Form1
              .ShadowColor = Color.Transparent
          }
         With _homePageChartChartArea
+            .AxisX.IntervalType = DateTimeIntervalType.Hours
             .AxisX.IsInterlaced = True
             .AxisX.IsMarginVisible = True
             .AxisX.LabelAutoFitStyle = LabelAutoFitStyles.IncreaseFont Or LabelAutoFitStyles.DecreaseFont Or LabelAutoFitStyles.WordWrap
@@ -702,7 +734,6 @@ Public Class Form1
             .AxisX.ScrollBar.BackColor = Color.White
             .AxisX.ScrollBar.ButtonColor = Color.Lime
             .AxisX.ScrollBar.IsPositionedInside = True
-            .AxisX.ScrollBar.LineColor = Color.Yellow
             .AxisX.ScrollBar.LineColor = Color.Black
             .AxisX.ScrollBar.Size = 15
             .AxisY.InterlacedColor = Color.FromArgb(120, Color.LightSlateGray)
@@ -875,7 +906,7 @@ Public Class Form1
         Next
     End Sub
 
-    Private Sub FillOneRowOfTableLayoutPannel(layoutPanel As TableLayoutPanel, innerJson As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String)
+    Private Sub FillOneRowOfTableLayoutPanel(layoutPanel As TableLayoutPanel, innerJson As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String)
         For Each jsonEntry As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
             Dim tableLevel1Blue As New TableLayoutPanel With {
                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
@@ -1003,7 +1034,7 @@ Public Class Form1
                 Select Case sgListIndex.Value("type")
                     Case "INSULIN"
                         .Points.AddXY(sgOaDateTime, maxActiveInsulin)
-                        Dim deliveredAmount As Single = CSng(sgListIndex.Value("deliveredFastAmount"))
+                        Dim deliveredAmount As Single = Single.Parse(sgListIndex.Value("deliveredFastAmount"), Me.CurrentDataCulture)
                         s_totalDailyDose += deliveredAmount
                         Select Case sgListIndex.Value("activationType")
                             Case "AUTOCORRECTION"
@@ -1115,6 +1146,7 @@ Public Class Form1
                     s_version = row.Value
                 Case ItemIndexs.pumpModelNumber
                     s_pumpModelNumber = row.Value
+                    Me.ModelLabel.Text = s_pumpModelNumber
                 Case ItemIndexs.currentServerTime
                     s_currentServerTime = row.Value
                 Case ItemIndexs.lastConduitTime
@@ -1127,6 +1159,7 @@ Public Class Form1
                     s_firstName = row.Value
                 Case ItemIndexs.lastName
                     s_lastName = row.Value
+                    Me.FullNameLabel.Text = $"{s_firstName} {s_lastName}"
                 Case ItemIndexs.conduitSerialNumber
                     s_conduitSerialNumber = row.Value
                 Case ItemIndexs.conduitBatteryLevel
@@ -1145,6 +1178,7 @@ Public Class Form1
                     s_sensorState = row.Value
                 Case ItemIndexs.medicalDeviceSerialNumber
                     s_medicalDeviceSerialNumber = row.Value
+                    Me.SerialNumberLabel.Text = s_medicalDeviceSerialNumber
                 Case ItemIndexs.medicalDeviceTime
                     s_medicalDeviceTime = row.Value
                 Case ItemIndexs.sMedicalDeviceTime
@@ -1152,9 +1186,9 @@ Public Class Form1
                 Case ItemIndexs.reservoirLevelPercent
                     s_reservoirLevelPercent = CInt(row.Value)
                 Case ItemIndexs.reservoirAmount
-                    s_reservoirAmount = CDbl(row.Value)
+                    s_reservoirAmount = Double.Parse(row.Value, Me.CurrentDataCulture)
                 Case ItemIndexs.reservoirRemainingUnits
-                    s_reservoirRemainingUnits = CType(row.Value, Double)
+                    s_reservoirRemainingUnits = Double.Parse(row.Value, Me.CurrentDataCulture)
                 Case ItemIndexs.medicalDeviceBatteryLevelPercent
                     s_medicalDeviceBatteryLevelPercent = CInt(row.Value)
                 Case ItemIndexs.sensorDurationHours
@@ -1165,7 +1199,8 @@ Public Class Form1
                     s_calibStatus = row.Value
                 Case ItemIndexs.bgUnits
                     s_bgUnits = row.Value
-                    Me.BgUnitsString = _unitsStrings(s_bgUnits)
+                    Me.BgUnitsString = GetLocalizedUnits(s_bgUnits)
+
                     If Me.BgUnitsString = "mg/dl" Then
                         _limitHigh = 180
                         _limitLow = 70
@@ -1222,6 +1257,7 @@ Public Class Form1
                         End If
                     Next
                     Continue For
+                    Me.ReadingsLabel.Text = $"{s_sGs.Count}/288"
                 Case ItemIndexs.limits
                     layoutPanel1 = Me.TableLayoutPanelLimits
                     layoutPanel1.Controls.Clear()
@@ -1270,9 +1306,9 @@ Public Class Form1
                 Case ItemIndexs.lastConduitDateTime
                     s_lastConduitDateTime = row.Value
                 Case ItemIndexs.maxAutoBasalRate
-                    s_maxAutoBasalRate = CDbl(row.Value)
+                    s_maxAutoBasalRate = Double.Parse(row.Value, Me.CurrentDataCulture)
                 Case ItemIndexs.maxBolusAmount
-                    s_maxBolusAmount = CDbl(row.Value)
+                    s_maxBolusAmount = Double.Parse(row.Value, Me.CurrentDataCulture)
                 Case ItemIndexs.sensorDurationMinutes
                     s_sensorDurationMinutes = CInt(row.Value)
                 Case ItemIndexs.timeToNextCalibrationMinutes
@@ -1282,7 +1318,7 @@ Public Class Form1
                 Case ItemIndexs.sgBelowLimit
                     s_sgBelowLimit = CInt(row.Value)
                 Case ItemIndexs.averageSGFloat
-                    s_averageSGFloat = CDbl(row.Value)
+                    s_averageSGFloat = Double.Parse(row.Value, Me.CurrentDataCulture)
                 Case ItemIndexs.timeToNextCalibrationRecommendedMinutes
                     s_timeToNextCalibrationRecommendedMinutes = CUShort(row.Value)
                 Case ItemIndexs.calFreeSensor
@@ -1331,7 +1367,7 @@ Public Class Form1
                     layoutPanel1.Parent.Parent.UseWaitCursor = True
                     Application.DoEvents()
                     layoutPanel1.Invoke(Sub()
-                                            Me.FillOneRowOfTableLayoutPannel(layoutPanel1,
+                                            Me.FillOneRowOfTableLayoutPanel(layoutPanel1,
                                                                           innerJson,
                                                                           rowIndex,
                                                                           _filterJsonData,
@@ -1410,16 +1446,16 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateDosing()
-        Me.TotalBasalLabel.Text = $"Total Basal {s_totalBasal.RoundSingle(1)} U | {CInt(s_totalBasal / s_totalDailyDose * 100)}%"
-        Me.TotalDailyDoseLabel.Text = $"TDD {s_totalDailyDose.RoundSingle(1)} U"
+        Me.BasalLabel.Text = $"Basal {s_totalBasal.RoundSingle(1)} U | {CInt(s_totalBasal / s_totalDailyDose * 100)}%"
+        Me.DailyDoseLabel.Text = $"Daily Dose {s_totalDailyDose.RoundSingle(1)} U"
         If s_totalAutoCorrection > 0 Then
-            Me.TotalAutoCorrectionLabel.Text = $"Total Autocorrection {s_totalAutoCorrection.RoundSingle(1)} U | {CInt(s_totalAutoCorrection / s_totalDailyDose * 100)}%"
-            Me.TotalAutoCorrectionLabel.Visible = True
+            Me.AutoCorrectionLabel.Text = $"Auto Correction {s_totalAutoCorrection.RoundSingle(1)} U | {CInt(s_totalAutoCorrection / s_totalDailyDose * 100)}%"
+            Me.AutoCorrectionLabel.Visible = True
             Dim totalBolus As Single = s_totalManualBolus + s_totalAutoCorrection
-            Me.TotalManualBolusLabel.Text = $"Total Manual Bolus {totalBolus.RoundSingle(1)} U | {CInt(s_totalManualBolus / s_totalDailyDose * 100)}%"
+            Me.ManualBolusLabel.Text = $"Manual Bolus {totalBolus.RoundSingle(1)} U | {CInt(s_totalManualBolus / s_totalDailyDose * 100)}%"
         Else
-            Me.TotalAutoCorrectionLabel.Visible = False
-            Me.TotalManualBolusLabel.Text = $"Total Bolus {s_totalManualBolus.RoundSingle(1)} U | {CInt(s_totalManualBolus / s_totalDailyDose * 100)}%"
+            Me.AutoCorrectionLabel.Visible = False
+            Me.ManualBolusLabel.Text = $"Bolus {s_totalManualBolus.RoundSingle(1)} U | {CInt(s_totalManualBolus / s_totalDailyDose * 100)}%"
         End If
     End Sub
 
@@ -1436,7 +1472,7 @@ Public Class Form1
             Select Case CType([Enum].Parse(GetType(ItemIndexs), c.Value.Key), ItemIndexs)
                 Case ItemIndexs.bgUnits
                     s_bgUnits = row.Value
-                    Me.BgUnitsString = _unitsStrings(s_bgUnits)
+                    Me.BgUnitsString = GetLocalizedUnits(s_bgUnits)
                     If Me.BgUnitsString = "mg/dl" Then
                         _markerRow = 400
                         _limitHigh = 180
@@ -1473,7 +1509,7 @@ Public Class Form1
             Me.CurrentBG.Parent = Me.ShieldPictureBox
             Me.CurrentBG.Text = s_lastSG("sg")
             Me.NotifyIcon1.Text = $"{s_lastSG("sg")} {Me.BgUnitsString}"
-            _bgMiniDisplay.CurrentBGString = s_lastSG("sg")
+            _bgMiniDisplay.SetCurrentBGString(s_lastSG("sg"))
             Me.CurrentBG.Visible = True
             Me.SensorMessage.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield
@@ -1484,7 +1520,7 @@ Public Class Form1
             Me.ShieldUnitsLabel.Text = Me.BgUnitsString
             Me.ShieldUnitsLabel.Visible = True
         Else
-            _bgMiniDisplay.CurrentBGString = "---"
+            _bgMiniDisplay.SetCurrentBGString("---")
             Me.CurrentBG.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield_Disabled
             Me.SensorMessage.Visible = True
@@ -1622,8 +1658,8 @@ Public Class Form1
             .Series("Default")("PieStartAngle") = "270"
         End With
 
-        Me.AverageSGValueLabel.Text = If(Me.BgUnitsString = "mg/dl", s_averageSG.ToString, s_averageSG.RoundDouble(1).ToString())
-        Me.AboveHighLimitValueLabel.Text = $"{s_aboveHyperLimit} %"
+        Me.AverageSGValueLabel.Text = If(Me.BgUnitsString = "mg/dl", s_averageSG.ToString(Me.CurrentUICulture), s_averageSG.RoundDouble(1).ToString(Me.CurrentUICulture))
+        Me.AboveHighLimitValueLabel.Text = $"{s_aboveHyperLimit.ToString(Me.CurrentUICulture)} %"
         Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
         Me.TimeInRangeSummaryLabel.Text = $"{s_timeInRange}"
         Me.TimeInRangeValueLabel.Text = s_timeInRange.ToString

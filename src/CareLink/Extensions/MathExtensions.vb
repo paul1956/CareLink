@@ -18,16 +18,16 @@ Friend Module MathExtensions
         Dim returnValueString As String = ""
         For Each value As String In values
             If item.TryGetValue(value, returnValueString) Then
-                Return Double.Parse(returnValueString)
+                Return Double.Parse(returnValueString, Globalization.CultureInfo.CurrentCulture)
             End If
         Next
         Return Double.NaN
     End Function
 
     <Extension>
-    Friend Function RoundDouble(value As Double, decimalDigits As Integer) As Double
+    Friend Function RoundDouble(doubleValue As Double, decimalDigits As Integer) As Double
 
-        Return Math.Round(value, decimalDigits)
+        Return Math.Round(doubleValue, decimalDigits)
     End Function
 
     <Extension>
@@ -37,15 +37,15 @@ Friend Module MathExtensions
     End Function
 
     <Extension>
-    Friend Function RoundSingle(value As Double, decimalDigits As Integer) As Single
+    Friend Function RoundSingle(doubleValue As Double, decimalDigits As Integer) As Single
 
-        Return CSng(Math.Round(value, decimalDigits))
+        Return CSng(Math.Round(doubleValue, decimalDigits))
     End Function
 
     <Extension>
-    Friend Function RoundSingle(value As Single, decimalDigits As Integer) As Single
+    Friend Function RoundSingle(singleValue As Single, decimalDigits As Integer) As Single
 
-        Return CSng(Math.Round(value, decimalDigits))
+        Return CSng(Math.Round(singleValue, decimalDigits))
     End Function
 
     <Extension>

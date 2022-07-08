@@ -237,27 +237,6 @@ Public Module JsonExtensions
         Application.DoEvents()
     End Sub
 
-    Friend Function TranslateMessageId(dic As Dictionary(Of String, String), entryValue As String, TimeFormat As String) As String
-        Dim formattedMessage As String = ""
-        If _messages.TryGetValue(entryValue, formattedMessage) Then
-        Else
-            If _messagesSpecialHandling.TryGetValue(entryValue, formattedMessage) Then
-                Dim splitMessageValue As String() = formattedMessage.Split(":")
-                Dim key As String = splitMessageValue(1)
-                Dim replacementValue As String = If(key = "secondaryTime", dic(key).FormatTimeOnly(TimeFormat), dic(key))
-
-                formattedMessage = splitMessageValue(0).Replace("(0)", replacementValue)
-            Else
-                If Debugger.IsAttached Then
-                    MsgBox($"Unknown sensor message '{entryValue}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Unknown Sensor Message")
-                End If
-
-                formattedMessage = entryValue.Replace("_", " ")
-            End If
-        End If
-        Return $"{entryValue}({formattedMessage})"
-    End Function
-
     Public Function LoadList(value As String) As List(Of Dictionary(Of String, String))
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
         Dim options As New JsonSerializerOptions() With {

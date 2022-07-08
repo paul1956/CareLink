@@ -15,13 +15,14 @@ Friend Module PumpVariables
 
     ' Manually computed
     Friend s_totalAutoCorrection As Single
+
     Friend s_totalBasal As Single
     Friend s_totalDailyDose As Single
     Friend s_totalManualBolus As Single
 
-    ' From Pump
-    Public s_aboveHyperLimit As Integer
+#Region "Variables to hold Pump Values"
 
+    Public s_aboveHyperLimit As Integer
     Public s_activeInsulin As Dictionary(Of String, String)
     Public s_averageSG As Double
     Public s_averageSGFloat As Double
@@ -85,6 +86,8 @@ Friend Module PumpVariables
     Public s_timeToNextCalibrationMinutes As Integer
     Public s_timeToNextCalibrationRecommendedMinutes As UShort
     Public s_version As String
+
+#End Region
 
     ' Do not rename these name are matched used in case sensitive matching
     Public Enum ItemIndexs As Integer

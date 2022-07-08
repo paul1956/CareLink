@@ -25,39 +25,39 @@ Friend Module BrowserUtilities
         Return False
     End Function
 
-    Private Sub LaunchBrowser(url As String)
+    Private Function LaunchBrowser(url As String) As Boolean
         Using userChoiceKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice")
             If userChoiceKey Is Nothing Then
-                Exit Sub
+                Return False
             End If
             Dim progIdObject As Object = userChoiceKey.GetValue("Progid")
             If progIdObject Is Nothing Then
-                Exit Sub
+                Return False
             End If
             Dim progIdValue As String = CStr(progIdObject)
             If progIdValue Is Nothing Then
-                Exit Sub
+                Return False
             End If
-            Dim msgResult As MsgBoxResult = MsgBoxResult.Ok
-            Dim browserPath As String = "%ProgramFiles(x86)%\Internet Explorer\iExplore.exe"
+            Dim browserPath As String = Nothing
             If progIdValue.Contains("chrome", StringComparison.OrdinalIgnoreCase) Then
                 browserPath = "%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe"
             ElseIf progIdValue.Contains("Firefox", StringComparison.OrdinalIgnoreCase) Then
                 browserPath = "C:\Program Files\Mozilla Firefox\Firefox.exe"
             ElseIf progIdValue.Contains("msEdgeHtm", StringComparison.OrdinalIgnoreCase) Then
                 browserPath = "%ProgramFiles(x86)%\Microsoft\Edge\Application\msEdge.exe"
-                'ElseIf progIdValue.Contains("opera", StringComparison.OrdinalIgnoreCase) Then
-                '    browserPath = "opera.exe"
-            Else
-                msgResult = MsgBox($"Your default browser {progIdValue} is not supported, iExplorer will be used if you select OK!, please enter an issue with browser 'ProgId' and full path",
-                                   MsgBoxStyle.OkCancel Or MsgBoxStyle.Exclamation Or MsgBoxStyle.MsgBoxSetForeground)
             End If
-            If msgResult = MsgBoxResult.Ok Then
+            If Not String.IsNullOrWhiteSpace(browserPath) Then
                 Dim info As New ProcessStartInfo(Environment.ExpandEnvironmentVariables(browserPath), url)
                 Process.Start(info)
+            Else
+                Dim msgResult As MsgBoxResult = MsgBox($"Your default browser can't be found!, Please use any browser and navigate to {url}.",
+                                   MsgBoxStyle.OkCancel Or MsgBoxStyle.Exclamation Or MsgBoxStyle.MsgBoxSetForeground)
+
+
             End If
         End Using
-    End Sub
+        Return True
+    End Function
 
     Friend Async Sub CheckForUpdatesAsync(mainForm As Form1, reportResults As Boolean)
         Try
@@ -100,21 +100,21 @@ Friend Module BrowserUtilities
             End If
         Catch ex As Exception
             If reportResults Then
-                MsgBox("Failed while checking for new  version: " + ex.Message, MsgBoxStyle.Information, "Version Check Failed")
+                MsgBox("Connection failed while checking for new  version: " + ex.Message, MsgBoxStyle.Information, "Version Check Failed")
             End If
         End Try
     End Sub
 
     Friend Sub OpenUrlInBrowser(webAddress As String)
         Try
-            'Devices.Mouse.OverrideCursor = Cursors.AppStarting
             Form1.Cursor = Cursors.AppStarting
+            Application.DoEvents()
             LaunchBrowser(webAddress)
         Catch ex As Exception
             Throw
         Finally
             Form1.Cursor = Cursors.AppStarting
-            'Devices.Mouse.OverrideCursor = Nothing
+            Application.DoEvents()
         End Try
     End Sub
 

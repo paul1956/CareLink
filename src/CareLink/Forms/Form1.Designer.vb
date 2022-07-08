@@ -40,9 +40,9 @@ Partial Class Form1
         Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ViewShowMiniDisplayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.HelpAboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelpReportIssueMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelpCheckForUpdatesMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.HelpAboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ServerUpdateTimer = New System.Windows.Forms.Timer(Me.components)
         Me.TableLayoutPanelSummaryData = New System.Windows.Forms.TableLayoutPanel()
         Me.TableLayoutPanelTop1 = New System.Windows.Forms.TableLayoutPanel()
@@ -52,10 +52,16 @@ Partial Class Form1
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1HomePage = New System.Windows.Forms.TabPage()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
-        Me.TotalAutoCorrectionLabel = New System.Windows.Forms.Label()
-        Me.TotalManualBolusLabel = New System.Windows.Forms.Label()
-        Me.TotalBasalLabel = New System.Windows.Forms.Label()
-        Me.TotalDailyDoseLabel = New System.Windows.Forms.Label()
+        Me.ModelLabel = New System.Windows.Forms.Label()
+        Me.SerialNumberLabel = New System.Windows.Forms.Label()
+        Me.FullNameLabel = New System.Windows.Forms.Label()
+        Me.ReadingIntervalLabel = New System.Windows.Forms.Label()
+        Me.ReadingsLabel = New System.Windows.Forms.Label()
+        Me.TotalsLabel = New System.Windows.Forms.Label()
+        Me.AutoCorrectionLabel = New System.Windows.Forms.Label()
+        Me.ManualBolusLabel = New System.Windows.Forms.Label()
+        Me.BasalLabel = New System.Windows.Forms.Label()
+        Me.DailyDoseLabel = New System.Windows.Forms.Label()
         Me.PumpBatteryRemainingLabel = New System.Windows.Forms.Label()
         Me.TransmatterBatterPercentLabel = New System.Windows.Forms.Label()
         Me.TransmitterBatteryPictureBox = New System.Windows.Forms.PictureBox()
@@ -263,26 +269,26 @@ Partial Class Form1
         Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.HelpToolStripMenuItem.Text = "&Help"
         '
-        'HelpAboutToolStripMenuItem
-        '
-        Me.HelpAboutToolStripMenuItem.Image = Global.CareLink.My.Resources.Resources.AboutBox
-        Me.HelpAboutToolStripMenuItem.Name = "HelpAboutToolStripMenuItem"
-        Me.HelpAboutToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.HelpAboutToolStripMenuItem.Text = "&About..."
-        '
         'MenuHelpReportIssueMenuItem
         '
         Me.MenuHelpReportIssueMenuItem.Image = Global.CareLink.My.Resources.Resources.FeedbackSmile_16x
         Me.MenuHelpReportIssueMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.MenuHelpReportIssueMenuItem.Name = "MenuHelpReportIssueMenuItem"
-        Me.MenuHelpReportIssueMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.MenuHelpReportIssueMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.MenuHelpReportIssueMenuItem.Text = "Report A Problem..."
         '
         'MenuHelpCheckForUpdatesMenuItem
         '
         Me.MenuHelpCheckForUpdatesMenuItem.Name = "MenuHelpCheckForUpdatesMenuItem"
-        Me.MenuHelpCheckForUpdatesMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.MenuHelpCheckForUpdatesMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.MenuHelpCheckForUpdatesMenuItem.Text = "Check For Updates"
+        '
+        'HelpAboutToolStripMenuItem
+        '
+        Me.HelpAboutToolStripMenuItem.Image = Global.CareLink.My.Resources.Resources.AboutBox
+        Me.HelpAboutToolStripMenuItem.Name = "HelpAboutToolStripMenuItem"
+        Me.HelpAboutToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
+        Me.HelpAboutToolStripMenuItem.Text = "&About..."
         '
         'ServerUpdateTimer
         '
@@ -468,10 +474,16 @@ Partial Class Form1
         '
         'SplitContainer2.Panel1
         '
-        Me.SplitContainer2.Panel1.Controls.Add(Me.TotalAutoCorrectionLabel)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.TotalManualBolusLabel)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.TotalBasalLabel)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.TotalDailyDoseLabel)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.ModelLabel)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.SerialNumberLabel)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.FullNameLabel)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.ReadingIntervalLabel)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.ReadingsLabel)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.TotalsLabel)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.AutoCorrectionLabel)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.ManualBolusLabel)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.BasalLabel)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.DailyDoseLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.PumpBatteryRemainingLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.TransmatterBatterPercentLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.TransmitterBatteryPictureBox)
@@ -502,49 +514,111 @@ Partial Class Form1
         Me.SplitContainer2.SplitterDistance = 140
         Me.SplitContainer2.TabIndex = 52
         '
-        'TotalAutoCorrectionLabel
+        'ModelLabel
         '
-        Me.TotalAutoCorrectionLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.TotalAutoCorrectionLabel.ForeColor = System.Drawing.Color.White
-        Me.TotalAutoCorrectionLabel.Location = New System.Drawing.Point(1057, 94)
-        Me.TotalAutoCorrectionLabel.Name = "TotalAutoCorrectionLabel"
-        Me.TotalAutoCorrectionLabel.Size = New System.Drawing.Size(287, 21)
-        Me.TotalAutoCorrectionLabel.TabIndex = 51
-        Me.TotalAutoCorrectionLabel.Text = "Total Autocorrection 20 U | 50%"
-        Me.TotalAutoCorrectionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ModelLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.ModelLabel.ForeColor = System.Drawing.Color.White
+        Me.ModelLabel.Location = New System.Drawing.Point(1192, 26)
+        Me.ModelLabel.Name = "ModelLabel"
+        Me.ModelLabel.Size = New System.Drawing.Size(182, 23)
+        Me.ModelLabel.TabIndex = 57
+        Me.ModelLabel.Text = "Model"
         '
-        'TotalManualBolusLabel
+        'SerialNumberLabel
         '
-        Me.TotalManualBolusLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.TotalManualBolusLabel.ForeColor = System.Drawing.Color.White
-        Me.TotalManualBolusLabel.Location = New System.Drawing.Point(1057, 64)
-        Me.TotalManualBolusLabel.Name = "TotalManualBolusLabel"
-        Me.TotalManualBolusLabel.Size = New System.Drawing.Size(287, 21)
-        Me.TotalManualBolusLabel.TabIndex = 50
-        Me.TotalManualBolusLabel.Text = "Total Manual Bolus 30 U | 30%"
-        Me.TotalManualBolusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.SerialNumberLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.SerialNumberLabel.ForeColor = System.Drawing.Color.White
+        Me.SerialNumberLabel.Location = New System.Drawing.Point(1192, 53)
+        Me.SerialNumberLabel.Name = "SerialNumberLabel"
+        Me.SerialNumberLabel.Size = New System.Drawing.Size(182, 23)
+        Me.SerialNumberLabel.TabIndex = 56
+        Me.SerialNumberLabel.Text = "Serial Number"
         '
-        'TotalBasalLabel
+        'FullNameLabel
         '
-        Me.TotalBasalLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.TotalBasalLabel.ForeColor = System.Drawing.Color.White
-        Me.TotalBasalLabel.Location = New System.Drawing.Point(1057, 34)
-        Me.TotalBasalLabel.Name = "TotalBasalLabel"
-        Me.TotalBasalLabel.Size = New System.Drawing.Size(287, 21)
-        Me.TotalBasalLabel.TabIndex = 49
-        Me.TotalBasalLabel.Text = "Total Basal 50 U | 50%"
-        Me.TotalBasalLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.FullNameLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.FullNameLabel.ForeColor = System.Drawing.Color.White
+        Me.FullNameLabel.Location = New System.Drawing.Point(1192, 0)
+        Me.FullNameLabel.Name = "FullNameLabel"
+        Me.FullNameLabel.Size = New System.Drawing.Size(182, 23)
+        Me.FullNameLabel.TabIndex = 55
+        Me.FullNameLabel.Text = "Full Name"
         '
-        'TotalDailyDoseLabel
+        'ReadingIntervalLabel
         '
-        Me.TotalDailyDoseLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.TotalDailyDoseLabel.ForeColor = System.Drawing.Color.White
-        Me.TotalDailyDoseLabel.Location = New System.Drawing.Point(1057, 4)
-        Me.TotalDailyDoseLabel.Name = "TotalDailyDoseLabel"
-        Me.TotalDailyDoseLabel.Size = New System.Drawing.Size(287, 21)
-        Me.TotalDailyDoseLabel.TabIndex = 48
-        Me.TotalDailyDoseLabel.Text = "TDD 100 U"
-        Me.TotalDailyDoseLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.ReadingIntervalLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.ReadingIntervalLabel.ForeColor = System.Drawing.Color.White
+        Me.ReadingIntervalLabel.Location = New System.Drawing.Point(844, 107)
+        Me.ReadingIntervalLabel.Name = "ReadingIntervalLabel"
+        Me.ReadingIntervalLabel.Size = New System.Drawing.Size(162, 23)
+        Me.ReadingIntervalLabel.TabIndex = 54
+        Me.ReadingIntervalLabel.Text = "5 minute readings"
+        '
+        'ReadingsLabel
+        '
+        Me.ReadingsLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.ReadingsLabel.ForeColor = System.Drawing.Color.White
+        Me.ReadingsLabel.Location = New System.Drawing.Point(844, 81)
+        Me.ReadingsLabel.Name = "ReadingsLabel"
+        Me.ReadingsLabel.Size = New System.Drawing.Size(162, 21)
+        Me.ReadingsLabel.TabIndex = 53
+        Me.ReadingsLabel.Text = "280/288"
+        Me.ReadingsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'TotalsLabel
+        '
+        Me.TotalsLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.TotalsLabel.ForeColor = System.Drawing.Color.White
+        Me.TotalsLabel.Location = New System.Drawing.Point(1008, 0)
+        Me.TotalsLabel.Name = "TotalsLabel"
+        Me.TotalsLabel.Size = New System.Drawing.Size(222, 21)
+        Me.TotalsLabel.TabIndex = 52
+        Me.TotalsLabel.Text = "Totals"
+        Me.TotalsLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter
+        '
+        'AutoCorrectionLabel
+        '
+        Me.AutoCorrectionLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.AutoCorrectionLabel.ForeColor = System.Drawing.Color.White
+        Me.AutoCorrectionLabel.Location = New System.Drawing.Point(1008, 108)
+        Me.AutoCorrectionLabel.Name = "AutoCorrectionLabel"
+        Me.AutoCorrectionLabel.Size = New System.Drawing.Size(222, 21)
+        Me.AutoCorrectionLabel.TabIndex = 51
+        Me.AutoCorrectionLabel.Text = "Auto Correction 20 U | 50%"
+        Me.AutoCorrectionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'ManualBolusLabel
+        '
+        Me.ManualBolusLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.ManualBolusLabel.ForeColor = System.Drawing.Color.White
+        Me.ManualBolusLabel.Location = New System.Drawing.Point(1008, 81)
+        Me.ManualBolusLabel.Name = "ManualBolusLabel"
+        Me.ManualBolusLabel.Size = New System.Drawing.Size(222, 21)
+        Me.ManualBolusLabel.TabIndex = 50
+        Me.ManualBolusLabel.Text = "Manual Bolus 30 U | 30%"
+        Me.ManualBolusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'BasalLabel
+        '
+        Me.BasalLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.BasalLabel.ForeColor = System.Drawing.Color.White
+        Me.BasalLabel.Location = New System.Drawing.Point(1008, 54)
+        Me.BasalLabel.Name = "BasalLabel"
+        Me.BasalLabel.Size = New System.Drawing.Size(167, 21)
+        Me.BasalLabel.TabIndex = 49
+        Me.BasalLabel.Text = "Basal 50 U | 50%"
+        Me.BasalLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'DailyDoseLabel
+        '
+        Me.DailyDoseLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.DailyDoseLabel.ForeColor = System.Drawing.Color.White
+        Me.DailyDoseLabel.Location = New System.Drawing.Point(1008, 27)
+        Me.DailyDoseLabel.Name = "DailyDoseLabel"
+        Me.DailyDoseLabel.Size = New System.Drawing.Size(167, 21)
+        Me.DailyDoseLabel.TabIndex = 48
+        Me.DailyDoseLabel.Text = "Daily Dose 100 U"
+        Me.DailyDoseLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'PumpBatteryRemainingLabel
         '
@@ -628,13 +702,12 @@ Partial Class Form1
         '
         'AITLabel
         '
-        Me.AITLabel.AutoSize = True
         Me.AITLabel.BackColor = System.Drawing.Color.Transparent
         Me.AITLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AITLabel.ForeColor = System.Drawing.Color.White
-        Me.AITLabel.Location = New System.Drawing.Point(863, 44)
+        Me.AITLabel.Location = New System.Drawing.Point(847, 0)
         Me.AITLabel.Name = "AITLabel"
-        Me.AITLabel.Size = New System.Drawing.Size(156, 21)
+        Me.AITLabel.Size = New System.Drawing.Size(162, 21)
         Me.AITLabel.TabIndex = 8
         Me.AITLabel.Text = "Active Insulin TIme"
         '
@@ -645,9 +718,9 @@ Partial Class Form1
         Me.AITComboBox.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AITComboBox.ForeColor = System.Drawing.Color.White
         Me.AITComboBox.Items.AddRange(New Object() {"2:00", "2:15", "2:30", "2:45", "3:00", "3:15", "3:30", "3:45", "4:00", "4:15", "4:30", "4:45", "5:00", "5:15", "5:30", "5:45", "6:00"})
-        Me.AITComboBox.Location = New System.Drawing.Point(907, 6)
+        Me.AITComboBox.Location = New System.Drawing.Point(889, 26)
         Me.AITComboBox.Name = "AITComboBox"
-        Me.AITComboBox.Size = New System.Drawing.Size(68, 23)
+        Me.AITComboBox.Size = New System.Drawing.Size(78, 23)
         Me.AITComboBox.TabIndex = 0
         '
         'CursorMessage2Label
@@ -849,12 +922,11 @@ Partial Class Form1
         '
         'Last24HoursLabel
         '
-        Me.Last24HoursLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Last24HoursLabel.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.Last24HoursLabel.AutoSize = True
         Me.Last24HoursLabel.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.Last24HoursLabel.ForeColor = System.Drawing.Color.White
-        Me.Last24HoursLabel.Location = New System.Drawing.Point(75, 37)
+        Me.Last24HoursLabel.Location = New System.Drawing.Point(70, 37)
         Me.Last24HoursLabel.Name = "Last24HoursLabel"
         Me.Last24HoursLabel.Size = New System.Drawing.Size(90, 17)
         Me.Last24HoursLabel.TabIndex = 34
@@ -862,12 +934,11 @@ Partial Class Form1
         '
         'TimeInRangeLabel
         '
-        Me.TimeInRangeLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TimeInRangeLabel.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.TimeInRangeLabel.AutoSize = True
         Me.TimeInRangeLabel.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.TimeInRangeLabel.ForeColor = System.Drawing.Color.White
-        Me.TimeInRangeLabel.Location = New System.Drawing.Point(76, 15)
+        Me.TimeInRangeLabel.Location = New System.Drawing.Point(74, 15)
         Me.TimeInRangeLabel.Name = "TimeInRangeLabel"
         Me.TimeInRangeLabel.Size = New System.Drawing.Size(83, 15)
         Me.TimeInRangeLabel.TabIndex = 33
@@ -875,13 +946,12 @@ Partial Class Form1
         '
         'TimeInRangeSummaryPercentCharLabel
         '
-        Me.TimeInRangeSummaryPercentCharLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TimeInRangeSummaryPercentCharLabel.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.TimeInRangeSummaryPercentCharLabel.AutoSize = True
         Me.TimeInRangeSummaryPercentCharLabel.BackColor = System.Drawing.Color.Transparent
         Me.TimeInRangeSummaryPercentCharLabel.Font = New System.Drawing.Font("Segoe UI", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.TimeInRangeSummaryPercentCharLabel.ForeColor = System.Drawing.Color.White
-        Me.TimeInRangeSummaryPercentCharLabel.Location = New System.Drawing.Point(98, 182)
+        Me.TimeInRangeSummaryPercentCharLabel.Location = New System.Drawing.Point(94, 153)
         Me.TimeInRangeSummaryPercentCharLabel.Name = "TimeInRangeSummaryPercentCharLabel"
         Me.TimeInRangeSummaryPercentCharLabel.Size = New System.Drawing.Size(42, 40)
         Me.TimeInRangeSummaryPercentCharLabel.TabIndex = 3
@@ -889,26 +959,25 @@ Partial Class Form1
         '
         'TimeInRangeSummaryLabel
         '
-        Me.TimeInRangeSummaryLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TimeInRangeSummaryLabel.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.TimeInRangeSummaryLabel.BackColor = System.Drawing.Color.Black
         Me.TimeInRangeSummaryLabel.Font = New System.Drawing.Font("Segoe UI", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.TimeInRangeSummaryLabel.ForeColor = System.Drawing.Color.White
-        Me.TimeInRangeSummaryLabel.Location = New System.Drawing.Point(77, 135)
+        Me.TimeInRangeSummaryLabel.Location = New System.Drawing.Point(65, 114)
         Me.TimeInRangeSummaryLabel.Name = "TimeInRangeSummaryLabel"
-        Me.TimeInRangeSummaryLabel.Size = New System.Drawing.Size(77, 47)
+        Me.TimeInRangeSummaryLabel.Size = New System.Drawing.Size(100, 47)
         Me.TimeInRangeSummaryLabel.TabIndex = 2
         Me.TimeInRangeSummaryLabel.Text = "100"
         Me.TimeInRangeSummaryLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'InRangeMessageLabel
         '
-        Me.InRangeMessageLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.InRangeMessageLabel.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.InRangeMessageLabel.AutoSize = True
         Me.InRangeMessageLabel.BackColor = System.Drawing.Color.Transparent
         Me.InRangeMessageLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.InRangeMessageLabel.ForeColor = System.Drawing.Color.Lime
-        Me.InRangeMessageLabel.Location = New System.Drawing.Point(79, 370)
+        Me.InRangeMessageLabel.Location = New System.Drawing.Point(81, 370)
         Me.InRangeMessageLabel.Name = "InRangeMessageLabel"
         Me.InRangeMessageLabel.Size = New System.Drawing.Size(73, 21)
         Me.InRangeMessageLabel.TabIndex = 30
@@ -917,7 +986,7 @@ Partial Class Form1
         '
         'AboveHighLimitMessageLabel
         '
-        Me.AboveHighLimitMessageLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.AboveHighLimitMessageLabel.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.AboveHighLimitMessageLabel.BackColor = System.Drawing.Color.Transparent
         Me.AboveHighLimitMessageLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AboveHighLimitMessageLabel.ForeColor = System.Drawing.Color.Orange
@@ -930,50 +999,46 @@ Partial Class Form1
         '
         'BelowLowLimitValueLabel
         '
-        Me.BelowLowLimitValueLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.BelowLowLimitValueLabel.AutoSize = True
+        Me.BelowLowLimitValueLabel.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.BelowLowLimitValueLabel.BackColor = System.Drawing.Color.Black
         Me.BelowLowLimitValueLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.BelowLowLimitValueLabel.ForeColor = System.Drawing.Color.White
-        Me.BelowLowLimitValueLabel.Location = New System.Drawing.Point(81, 411)
+        Me.BelowLowLimitValueLabel.Location = New System.Drawing.Point(55, 411)
         Me.BelowLowLimitValueLabel.Name = "BelowLowLimitValueLabel"
-        Me.BelowLowLimitValueLabel.Size = New System.Drawing.Size(68, 33)
+        Me.BelowLowLimitValueLabel.Size = New System.Drawing.Size(120, 33)
         Me.BelowLowLimitValueLabel.TabIndex = 26
         Me.BelowLowLimitValueLabel.Text = "2 %"
         Me.BelowLowLimitValueLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'TimeInRangeValueLabel
         '
-        Me.TimeInRangeValueLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TimeInRangeValueLabel.AutoSize = True
+        Me.TimeInRangeValueLabel.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.TimeInRangeValueLabel.BackColor = System.Drawing.Color.Black
         Me.TimeInRangeValueLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.TimeInRangeValueLabel.ForeColor = System.Drawing.Color.White
-        Me.TimeInRangeValueLabel.Location = New System.Drawing.Point(73, 339)
+        Me.TimeInRangeValueLabel.Location = New System.Drawing.Point(55, 339)
         Me.TimeInRangeValueLabel.Name = "TimeInRangeValueLabel"
-        Me.TimeInRangeValueLabel.Size = New System.Drawing.Size(85, 33)
+        Me.TimeInRangeValueLabel.Size = New System.Drawing.Size(120, 33)
         Me.TimeInRangeValueLabel.TabIndex = 24
         Me.TimeInRangeValueLabel.Text = "90 %"
         Me.TimeInRangeValueLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'AboveHighLimitValueLabel
         '
-        Me.AboveHighLimitValueLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.AboveHighLimitValueLabel.AutoSize = True
+        Me.AboveHighLimitValueLabel.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.AboveHighLimitValueLabel.BackColor = System.Drawing.Color.Black
         Me.AboveHighLimitValueLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AboveHighLimitValueLabel.ForeColor = System.Drawing.Color.White
-        Me.AboveHighLimitValueLabel.Location = New System.Drawing.Point(81, 266)
+        Me.AboveHighLimitValueLabel.Location = New System.Drawing.Point(55, 266)
         Me.AboveHighLimitValueLabel.Name = "AboveHighLimitValueLabel"
-        Me.AboveHighLimitValueLabel.Size = New System.Drawing.Size(68, 33)
+        Me.AboveHighLimitValueLabel.Size = New System.Drawing.Size(120, 33)
         Me.AboveHighLimitValueLabel.TabIndex = 22
         Me.AboveHighLimitValueLabel.Text = "8 %"
         Me.AboveHighLimitValueLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'BelowLowLimitMessageLabel
         '
-        Me.BelowLowLimitMessageLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.BelowLowLimitMessageLabel.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.BelowLowLimitMessageLabel.BackColor = System.Drawing.Color.Transparent
         Me.BelowLowLimitMessageLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.BelowLowLimitMessageLabel.ForeColor = System.Drawing.Color.Red
@@ -986,13 +1051,12 @@ Partial Class Form1
         '
         'AverageSGUnitsLabel
         '
-        Me.AverageSGUnitsLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.AverageSGUnitsLabel.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.AverageSGUnitsLabel.AutoSize = True
         Me.AverageSGUnitsLabel.BackColor = System.Drawing.Color.Transparent
         Me.AverageSGUnitsLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AverageSGUnitsLabel.ForeColor = System.Drawing.Color.White
-        Me.AverageSGUnitsLabel.Location = New System.Drawing.Point(87, 514)
+        Me.AverageSGUnitsLabel.Location = New System.Drawing.Point(89, 514)
         Me.AverageSGUnitsLabel.Name = "AverageSGUnitsLabel"
         Me.AverageSGUnitsLabel.Size = New System.Drawing.Size(57, 21)
         Me.AverageSGUnitsLabel.TabIndex = 16
@@ -1001,28 +1065,26 @@ Partial Class Form1
         '
         'AverageSGValueLabel
         '
-        Me.AverageSGValueLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.AverageSGValueLabel.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.AverageSGValueLabel.BackColor = System.Drawing.Color.Black
         Me.AverageSGValueLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AverageSGValueLabel.ForeColor = System.Drawing.Color.White
-        Me.AverageSGValueLabel.Location = New System.Drawing.Point(75, 477)
+        Me.AverageSGValueLabel.Location = New System.Drawing.Point(55, 477)
         Me.AverageSGValueLabel.Margin = New System.Windows.Forms.Padding(0)
         Me.AverageSGValueLabel.Name = "AverageSGValueLabel"
-        Me.AverageSGValueLabel.Size = New System.Drawing.Size(81, 33)
+        Me.AverageSGValueLabel.Size = New System.Drawing.Size(120, 33)
         Me.AverageSGValueLabel.TabIndex = 1
         Me.AverageSGValueLabel.Text = "100 %"
         Me.AverageSGValueLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'AverageSGMessageLabel
         '
-        Me.AverageSGMessageLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.AverageSGMessageLabel.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.AverageSGMessageLabel.AutoSize = True
         Me.AverageSGMessageLabel.BackColor = System.Drawing.Color.Transparent
         Me.AverageSGMessageLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AverageSGMessageLabel.ForeColor = System.Drawing.Color.White
-        Me.AverageSGMessageLabel.Location = New System.Drawing.Point(67, 535)
+        Me.AverageSGMessageLabel.Location = New System.Drawing.Point(69, 535)
         Me.AverageSGMessageLabel.Name = "AverageSGMessageLabel"
         Me.AverageSGMessageLabel.Size = New System.Drawing.Size(97, 21)
         Me.AverageSGMessageLabel.TabIndex = 0
@@ -1270,6 +1332,7 @@ Partial Class Form1
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
+        Me.MaximumSize = New System.Drawing.Size(1400, 960)
         Me.Name = "Form1"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
@@ -1402,13 +1465,19 @@ Partial Class Form1
     Friend WithEvents StartHereSnapshotSaveToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
     Friend WithEvents ToolTip1 As ToolTip
-    Friend WithEvents TotalAutoCorrectionLabel As Label
-    Friend WithEvents TotalManualBolusLabel As Label
-    Friend WithEvents TotalBasalLabel As Label
-    Friend WithEvents TotalDailyDoseLabel As Label
+    Friend WithEvents AutoCorrectionLabel As Label
+    Friend WithEvents ManualBolusLabel As Label
+    Friend WithEvents BasalLabel As Label
+    Friend WithEvents DailyDoseLabel As Label
     Friend WithEvents SplitContainer2 As SplitContainer
     Friend WithEvents SplitContainer3 As SplitContainer
     Friend WithEvents Last24HoursLabel As Label
     Friend WithEvents TimeInRangeLabel As Label
     Friend WithEvents SplitContainer4 As SplitContainer
+    Friend WithEvents TotalsLabel As Label
+    Friend WithEvents ReadingIntervalLabel As Label
+    Friend WithEvents ReadingsLabel As Label
+    Friend WithEvents ModelLabel As Label
+    Friend WithEvents SerialNumberLabel As Label
+    Friend WithEvents FullNameLabel As Label
 End Class

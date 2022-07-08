@@ -2,10 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Public Module Form1Helpers
-
-    Friend Const MilitaryTimeWithMinuteFormat As String = "HH:mm"
-    Friend Const TwelveHourTimeWithMinuteFormat As String = "h:mm tt"
+Public Module CareLinkFilters
 
     Friend ReadOnly s_alwaysFilter As New List(Of String) From {
             "kind",
