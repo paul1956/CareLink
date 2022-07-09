@@ -391,7 +391,7 @@ Public Class CareLinkClient
         Dim payload As Dictionary(Of String, String) = queryParams
 
         Dim jsonData As Dictionary(Of String, String) = Nothing
-        ' Get auth token
+        ' Get authorization token
         Dim authToken As String = Me.GetAuthorizationToken()
         If authToken IsNot Nothing Then
             Try

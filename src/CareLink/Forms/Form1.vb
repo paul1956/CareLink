@@ -280,7 +280,7 @@ Public Class Form1
         Dim cleanRecentData As Dictionary(Of String, String) = _recentData
         cleanRecentData("firstName") = "First"
         cleanRecentData("lastName") = "Last"
-        cleanRecentData("medicalDeviceSerialNumber") = "NG1111111H"
+        cleanRecentData("medicalDeviceSerialNumber") = "NG1234567H"
         Dim contents As String = JsonSerializer.Serialize(cleanRecentData, New JsonSerializerOptions)
         Dim options As New JsonDocumentOptions
         Using jd As JsonDocument = JsonDocument.Parse(contents, options)
@@ -876,8 +876,8 @@ Public Class Form1
                 .BackColor = Color.Black
                 }
             .ChartAreas.Add(timeInRangeChartChartArea)
-            .Location = New Point(Me.TimeInRangeSummaryLabel.FindHorizontalMidpoint - (.Width \ 2),
-                                  CInt(Me.TimeInRangeSummaryLabel.FindVerticalMidpoint() - Math.Round(.Height / 2.5)))
+            .Location = New Point(Me.TimeInRangeChartLabel.FindHorizontalMidpoint - (.Width \ 2),
+                                  CInt(Me.TimeInRangeChartLabel.FindVerticalMidpoint() - Math.Round(.Height / 2.5)))
             .Name = "Default"
             .Series.Add(New Series With {.ChartArea = "TimeInRangeChartChartArea",
                                               .ChartType = SeriesChartType.Doughnut,
@@ -1216,7 +1216,6 @@ Public Class Form1
                         _messages("BC_MESSAGE_SG_UNDER_50_MG_DL") = $"Sensor Glucose under 2.7 {Me.BgUnitsString}"
                     End If
                     Me.AboveHighLimitMessageLabel.Text = $"Above {_limitHigh} {Me.BgUnitsString}"
-                    Me.AverageSGUnitsLabel.Text = Me.BgUnitsString
                     Me.BelowLowLimitMessageLabel.Text = $"Below {_limitLow} {Me.BgUnitsString}"
 
                 Case ItemIndexs.timeFormat
@@ -1658,11 +1657,12 @@ Public Class Form1
             .Series("Default")("PieStartAngle") = "270"
         End With
 
-        Me.AverageSGValueLabel.Text = If(Me.BgUnitsString = "mg/dl", s_averageSG.ToString, s_averageSG.RoundDouble(1).ToString())
+        Me.TimeInRangeChartLabel.Text = s_timeInRange.ToString
+        Me.TimeInRangeValueLabel.Text = $"{s_timeInRange} %"
         Me.AboveHighLimitValueLabel.Text = $"{s_aboveHyperLimit} %"
         Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
-        Me.TimeInRangeSummaryLabel.Text = $"{s_timeInRange}"
-        Me.TimeInRangeValueLabel.Text = s_timeInRange.ToString
+        Me.AverageSGMessageLabel.Text = $"Average SG in {Me.BgUnitsString}"
+        Me.AverageSGValueLabel.Text = If(Me.BgUnitsString = "mg/dl", s_averageSG.ToString, s_averageSG.RoundDouble(1).ToString())
 
     End Sub
 

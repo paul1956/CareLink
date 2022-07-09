@@ -19,10 +19,7 @@ Friend Module BrowserUtilities
         If gitHubVersions Is Nothing OrElse String.IsNullOrWhiteSpace(gitHubVersions) Then
             Return False
         End If
-        If Version.Parse(gitHubVersions) <> Version.Parse(appVersion.ToString) Then
-            Return True
-        End If
-        Return False
+        Return Version.Parse(gitHubVersions) <> Version.Parse(appVersion.ToString)
     End Function
 
     Private Function LaunchBrowser(url As String) As Boolean

@@ -17,7 +17,7 @@ Friend Module UserMessageHandler
                             {"BC_SID_BG_REQUIRED_CONTENT", "BG required Content."},
                             {"BC_SID_BOLUS_ENTRY_TIMED_OUT", "Bolus not delivered. Bolus entry timed out before delivery. If bolus was intended, enter values again."},
                             {"BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR", "Calibrate now. Check BG and calibrate sensor."},
-                            {"BC_SID_DELIVERY_STOPPED_INSERT_NEW_BATTERY", "nsert battery. Delivery stopped. Insert a new batterynow."},
+                            {"BC_SID_DELIVERY_STOPPED_INSERT_NEW_BATTERY", "Insert battery. Delivery stopped. Insert a new battery now."},
                             {"BC_SID_DO_NOT_CALIBRATE_UNLESS_NOTIFIED", "Sensor updating, Do not calibrate unless notified. This could take up to 3 hours"},
                             {"BC_SID_ENSURE_CONNECTION_SECURE", "Check connection. Ensure transmitter and sensor is secure, then select OK."},
                             {"BC_SID_ENTER_BG_TO_CONTINUE_IN_SMART_GUARD", "Enter BG to continue in SmartGuard."},
@@ -27,11 +27,11 @@ Friend Module UserMessageHandler
                             {"BC_SID_MOVE_PUMP_CLOSER_TO_MINILINK", "Move pump closer to transmitter."},
                             {"BC_SID_SG_APPROACH_HIGH_LIMIT_CHECK_BG", "Alert before high. Sensor glucose approaching high limit. Check BG."},
                             {"BC_SID_SG_APPROACH_LOW_LIMIT_CHECK_BG", "Alert before low. Sensor Glucose approaching low limit. Check BG."},
-                            {"BC_SID_SG_RISE_RAPID", "Raise Alert. Sensor glusose raising rapidly."},
-                            {"BC_SID_SMART_GUARD_MINIMUM_DELIVERY", "SmartGuard minimum delevery."},
+                            {"BC_SID_SG_RISE_RAPID", "Raise Alert. Sensor glucose raising rapidly."},
+                            {"BC_SID_SMART_GUARD_MINIMUM_DELIVERY", "SmartGuard minimum delivery."},
                             {"BC_SID_START_NEW_SENSOR", "Start new sensor."},
                             {"BC_SID_UPDATING_CAN_TAKE_UP_TO_THREE_HOURS", "Sensor updating, it can take up to 3 hours."},
-                            {"BC_SID_WAIT_AT_LEAST_15_MINUTES", "Calibration not accepted. Wait at least 15 mintues. Wash hands, test BGagain and calibrate."},
+                            {"BC_SID_WAIT_AT_LEAST_15_MINUTES", "Calibration not accepted. Wait at least 15 minutes. Wash hands, test BGagain and calibrate."},
                             {"CALIBRATING", "Calibrating ..."},
                             {"CALIBRATION_REQUIRED", "Calibration required"},
                             {"DO_NOT_CALIBRATE", "Do not calibrate."},
@@ -46,13 +46,13 @@ Friend Module UserMessageHandler
                         }
 
     ' These message have parameters
-    ' The string is split by : charater which is not allowed in the message.
+    ' The string is split by : character which is not allowed in the message.
     ' Everything before the : is the message, the text after the : is the key in the dictionary that
     ' will replace (0). (units) will be replace by localized units.
     '
     Friend ReadOnly _messagesSpecialHandling As New Dictionary(Of String, String) From {
                             {"BC_MESSAGE_BASAL_STARTED", "Auto Mode exit. (0) started. Would you like to review Auto Mode Readiness Screen?:basalName"},
-                            {"BC_MESSAGE_CORRECTION_BOLUS_RECOMMENDATION", $"Blood Glucore (0) (units). Correction bolus reccomended.:bgValue"},
+                            {"BC_MESSAGE_CORRECTION_BOLUS_RECOMMENDATION", $"Blood Glucose (0) (units). Correction bolus recommended.:bgValue"},
                             {"BC_MESSAGE_TIME_REMAINING_CHANGE_RESERVOIR", "Low Reservoir (0) units remaining. Change reservoir.:unitsRemaining"},
                             {"BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR_TO_RECEIVE", "Check BG by (0) and calibrate to continuing receiving sensor information:secondaryTime"},
                             {"BC_SID_LOW_SD_CHECK_BG", $"Alert on low (0) (units). Low sensor glucose. Check BG.:sg"},

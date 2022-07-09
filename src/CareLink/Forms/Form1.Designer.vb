@@ -89,14 +89,13 @@ Partial Class Form1
         Me.Last24HoursLabel = New System.Windows.Forms.Label()
         Me.TimeInRangeLabel = New System.Windows.Forms.Label()
         Me.TimeInRangeSummaryPercentCharLabel = New System.Windows.Forms.Label()
-        Me.TimeInRangeSummaryLabel = New System.Windows.Forms.Label()
+        Me.TimeInRangeChartLabel = New System.Windows.Forms.Label()
         Me.InRangeMessageLabel = New System.Windows.Forms.Label()
         Me.AboveHighLimitMessageLabel = New System.Windows.Forms.Label()
         Me.BelowLowLimitValueLabel = New System.Windows.Forms.Label()
         Me.TimeInRangeValueLabel = New System.Windows.Forms.Label()
         Me.AboveHighLimitValueLabel = New System.Windows.Forms.Label()
         Me.BelowLowLimitMessageLabel = New System.Windows.Forms.Label()
-        Me.AverageSGUnitsLabel = New System.Windows.Forms.Label()
         Me.AverageSGValueLabel = New System.Windows.Forms.Label()
         Me.AverageSGMessageLabel = New System.Windows.Forms.Label()
         Me.TabPage2RunningActiveInsulin = New System.Windows.Forms.TabPage()
@@ -571,7 +570,7 @@ Partial Class Form1
         Me.TotalsLabel.ForeColor = System.Drawing.Color.White
         Me.TotalsLabel.Location = New System.Drawing.Point(1008, 0)
         Me.TotalsLabel.Name = "TotalsLabel"
-        Me.TotalsLabel.Size = New System.Drawing.Size(222, 21)
+        Me.TotalsLabel.Size = New System.Drawing.Size(167, 21)
         Me.TotalsLabel.TabIndex = 52
         Me.TotalsLabel.Text = "Totals"
         Me.TotalsLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter
@@ -892,14 +891,13 @@ Partial Class Form1
         Me.SplitContainer3.Panel2.Controls.Add(Me.Last24HoursLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.TimeInRangeLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.TimeInRangeSummaryPercentCharLabel)
-        Me.SplitContainer3.Panel2.Controls.Add(Me.TimeInRangeSummaryLabel)
+        Me.SplitContainer3.Panel2.Controls.Add(Me.TimeInRangeChartLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.InRangeMessageLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.AboveHighLimitMessageLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.BelowLowLimitValueLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.TimeInRangeValueLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.AboveHighLimitValueLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.BelowLowLimitMessageLabel)
-        Me.SplitContainer3.Panel2.Controls.Add(Me.AverageSGUnitsLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.AverageSGValueLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.AverageSGMessageLabel)
         Me.SplitContainer3.Size = New System.Drawing.Size(1370, 562)
@@ -957,18 +955,18 @@ Partial Class Form1
         Me.TimeInRangeSummaryPercentCharLabel.TabIndex = 3
         Me.TimeInRangeSummaryPercentCharLabel.Text = "%"
         '
-        'TimeInRangeSummaryLabel
+        'TimeInRangeChartLabel
         '
-        Me.TimeInRangeSummaryLabel.Anchor = System.Windows.Forms.AnchorStyles.Top
-        Me.TimeInRangeSummaryLabel.BackColor = System.Drawing.Color.Black
-        Me.TimeInRangeSummaryLabel.Font = New System.Drawing.Font("Segoe UI", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.TimeInRangeSummaryLabel.ForeColor = System.Drawing.Color.White
-        Me.TimeInRangeSummaryLabel.Location = New System.Drawing.Point(65, 114)
-        Me.TimeInRangeSummaryLabel.Name = "TimeInRangeSummaryLabel"
-        Me.TimeInRangeSummaryLabel.Size = New System.Drawing.Size(100, 47)
-        Me.TimeInRangeSummaryLabel.TabIndex = 2
-        Me.TimeInRangeSummaryLabel.Text = "100"
-        Me.TimeInRangeSummaryLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.TimeInRangeChartLabel.Anchor = System.Windows.Forms.AnchorStyles.Top
+        Me.TimeInRangeChartLabel.BackColor = System.Drawing.Color.Black
+        Me.TimeInRangeChartLabel.Font = New System.Drawing.Font("Segoe UI", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.TimeInRangeChartLabel.ForeColor = System.Drawing.Color.White
+        Me.TimeInRangeChartLabel.Location = New System.Drawing.Point(65, 114)
+        Me.TimeInRangeChartLabel.Name = "TimeInRangeChartLabel"
+        Me.TimeInRangeChartLabel.Size = New System.Drawing.Size(100, 47)
+        Me.TimeInRangeChartLabel.TabIndex = 2
+        Me.TimeInRangeChartLabel.Text = "100"
+        Me.TimeInRangeChartLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'InRangeMessageLabel
         '
@@ -1049,20 +1047,6 @@ Partial Class Form1
         Me.BelowLowLimitMessageLabel.Text = "Below XXX XX/XX"
         Me.BelowLowLimitMessageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'AverageSGUnitsLabel
-        '
-        Me.AverageSGUnitsLabel.Anchor = System.Windows.Forms.AnchorStyles.Top
-        Me.AverageSGUnitsLabel.AutoSize = True
-        Me.AverageSGUnitsLabel.BackColor = System.Drawing.Color.Transparent
-        Me.AverageSGUnitsLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.AverageSGUnitsLabel.ForeColor = System.Drawing.Color.White
-        Me.AverageSGUnitsLabel.Location = New System.Drawing.Point(89, 514)
-        Me.AverageSGUnitsLabel.Name = "AverageSGUnitsLabel"
-        Me.AverageSGUnitsLabel.Size = New System.Drawing.Size(57, 21)
-        Me.AverageSGUnitsLabel.TabIndex = 16
-        Me.AverageSGUnitsLabel.Text = "XX/XX"
-        Me.AverageSGUnitsLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
         'AverageSGValueLabel
         '
         Me.AverageSGValueLabel.Anchor = System.Windows.Forms.AnchorStyles.Top
@@ -1080,15 +1064,14 @@ Partial Class Form1
         'AverageSGMessageLabel
         '
         Me.AverageSGMessageLabel.Anchor = System.Windows.Forms.AnchorStyles.Top
-        Me.AverageSGMessageLabel.AutoSize = True
         Me.AverageSGMessageLabel.BackColor = System.Drawing.Color.Transparent
         Me.AverageSGMessageLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AverageSGMessageLabel.ForeColor = System.Drawing.Color.White
-        Me.AverageSGMessageLabel.Location = New System.Drawing.Point(69, 535)
+        Me.AverageSGMessageLabel.Location = New System.Drawing.Point(3, 518)
         Me.AverageSGMessageLabel.Name = "AverageSGMessageLabel"
-        Me.AverageSGMessageLabel.Size = New System.Drawing.Size(97, 21)
+        Me.AverageSGMessageLabel.Size = New System.Drawing.Size(224, 21)
         Me.AverageSGMessageLabel.TabIndex = 0
-        Me.AverageSGMessageLabel.Text = "Average SG"
+        Me.AverageSGMessageLabel.Text = "Average SG in XX/XX"
         Me.AverageSGMessageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'TabPage2RunningActiveInsulin
@@ -1390,10 +1373,7 @@ Partial Class Form1
     Friend WithEvents ActiveInsulinValue As Label
     Friend WithEvents AITComboBox As ComboBox
     Friend WithEvents AITLabel As Label
-    Friend WithEvents AverageSGMessageLabel As Label
-    Friend WithEvents AverageSGUnitsLabel As Label
     Friend WithEvents AverageSGValueLabel As Label
-    Friend WithEvents BelowLowLimitMessageLabel As Label
     Friend WithEvents BelowLowLimitValueLabel As Label
     Friend WithEvents CalibrationDueImage As PictureBox
     Friend WithEvents CurrentBG As Label
@@ -1451,7 +1431,7 @@ Partial Class Form1
     Friend WithEvents TabPage7Markers As TabPage
     Friend WithEvents TabPage8NotificationHistory As TabPage
     Friend WithEvents TabPage9Basal As TabPage
-    Friend WithEvents TimeInRangeSummaryLabel As Label
+    Friend WithEvents TimeInRangeChartLabel As Label
     Friend WithEvents TimeInRangeSummaryPercentCharLabel As Label
     Friend WithEvents TimeInRangeValueLabel As Label
     Friend WithEvents TransmatterBatterPercentLabel As Label
@@ -1480,4 +1460,6 @@ Partial Class Form1
     Friend WithEvents ModelLabel As Label
     Friend WithEvents SerialNumberLabel As Label
     Friend WithEvents FullNameLabel As Label
+    Friend WithEvents BelowLowLimitMessageLabel As Label
+    Friend WithEvents AverageSGMessageLabel As Label
 End Class

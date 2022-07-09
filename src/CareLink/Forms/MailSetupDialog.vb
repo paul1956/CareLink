@@ -112,7 +112,7 @@ Public Class MailSetupDialog
     End Sub
 
     Private Sub MailServerPasswordTextBox_TextChanged(sender As Object, e As EventArgs) Handles MailServerPasswordTextBox.TextChanged
-        ' We remove whitespaces from text inserted
+        ' We remove white spaces from text inserted
         TryCast(sender, TextBox).Text = Regex.Replace(TryCast(sender, TextBox).Text, "\s+", "")
 
     End Sub
