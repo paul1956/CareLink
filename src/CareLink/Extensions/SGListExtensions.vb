@@ -6,14 +6,15 @@ Imports System.Runtime.CompilerServices
 
 Public Module SGListExtensions
     <Extension()>
-    Friend Function ToSgList(innerJson As List(Of Dictionary(Of String, String))) As List(Of SgRecord)
+    Friend Function ToSgList(innerJson As List(Of Dictionary(Of String, String)), ignoreZero As Boolean) As List(Of SgRecord)
         Dim sGs As New List(Of SgRecord)
         For i As Integer = 0 To innerJson.Count - 1
 
             Dim sgItem As New SgRecord(innerJson, i)
-            If sgItem.sg <> 0 Then
-                sGs.Add(sgItem)
+            If ignoreZero AndAlso sgItem.sg = 0 Then
+                Continue For
             End If
+            sGs.Add(sgItem)
         Next
         Return sGs
     End Function

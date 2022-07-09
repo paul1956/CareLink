@@ -15,8 +15,8 @@ Friend Module PumpVariables
 
     ' Manually computed
     Friend s_totalAutoCorrection As Single
-
     Friend s_totalBasal As Single
+    Friend s_totalCarbs As Double
     Friend s_totalDailyDose As Single
     Friend s_totalManualBolus As Single
 
@@ -76,6 +76,7 @@ Friend Module PumpVariables
     Public s_sensorState As String
     Public s_sgBelowLimit As Integer
     Public s_sGs As New List(Of SgRecord)
+    Public s_sGsAll As New List(Of SgRecord)
     Public s_sLastSensorTime As Date
     Public s_sMedicalDeviceTime As Date
     Public s_systemStatusMessage As String

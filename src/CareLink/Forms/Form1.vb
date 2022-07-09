@@ -30,7 +30,6 @@ Public Class Form1
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
 
     Private _activeInsulinIncrements As Integer
-    Private _autoScaledFormSize As SizeF
     Private _client As CareLinkClient
     Private _filterJsonData As Boolean = True
     Private _initialized As Boolean = False
@@ -39,6 +38,7 @@ Public Class Form1
     Private _recentData As Dictionary(Of String, String)
     Private _recentDatalast As Dictionary(Of String, String)
     Private _recentDataSameCount As Integer
+    Private _scale As New SizeF(1.0F, 1.0F)
     Private _timeFormat As String
     Private _updating As Boolean = False
 
@@ -51,9 +51,6 @@ Public Class Form1
 
     Public ReadOnly _FiveMinuteSpan As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
     Public ReadOnly _ThirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
-
-    Private Property XScale As Single = 1
-    Private Property YScale As Single = 1
 
     Friend Property BgUnitsString As String
 
@@ -126,7 +123,7 @@ Public Class Form1
 
         Me.InitializeHomePageChart()
         Me.InitializeActiveInsulinTabChart()
-        Me.InitializeTimeInRangeChart()
+        Me.InitializeTimeInRangeArea()
         Me.SGsDataGridView.AutoGenerateColumns = True
         Me.SGsDataGridView.ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
             .Alignment = DataGridViewContentAlignment.MiddleCenter
@@ -134,6 +131,32 @@ Public Class Form1
 
         Me.UpdateAllTabPages()
         _initialized = True
+    End Sub
+
+    ' Recursively search for SplitContainer controls
+    Private Sub Fix(c As Control)
+        For Each child As Control In c.Controls
+            If TypeOf child Is SplitContainer Then
+                Dim sp As SplitContainer = CType(child, SplitContainer)
+                Me.Fix(sp)
+                Me.Fix(sp.Panel1)
+                Me.Fix(sp.Panel2)
+            Else
+                Me.Fix(child)
+            End If
+        Next child
+    End Sub
+
+    Private Sub Fix(sp As SplitContainer)
+        ' Scale factor depends on orientation
+        Dim sc As Single = If(sp.Orientation = Orientation.Vertical, _scale.Width, _scale.Height)
+        If sp.FixedPanel = FixedPanel.Panel1 Then
+            sp.SplitterDistance = CInt(Math.Truncate(Math.Round(CSng(sp.SplitterDistance) * sc)))
+        ElseIf sp.FixedPanel = FixedPanel.Panel2 Then
+            Dim cs As Integer = If(sp.Orientation = Orientation.Vertical, sp.Panel2.ClientSize.Width, sp.Panel2.ClientSize.Height)
+            Dim newcs As Integer = CInt(Math.Truncate(CSng(cs) * sc))
+            sp.SplitterDistance -= newcs - cs
+        End If
     End Sub
 
     Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
@@ -153,19 +176,6 @@ Public Class Form1
 
         ' Load all settings
 
-        Dim g As Graphics = Me.CreateGraphics()
-        Try
-            Me.XScale = g.DpiX / 96
-            Me.YScale = g.DpiY / 96
-        Finally
-            g.Dispose()
-        End Try
-
-        If Me.XScale <> 1 Then
-            Me.SplitContainer1.SplitterDistance = CInt(Me.SplitContainer1.SplitterDistance * Me.XScale)
-            Me.SplitContainer2.SplitterDistance = CInt(Me.SplitContainer2.SplitterDistance * Me.YScale)
-            Me.SplitContainer3.SplitterDistance = CInt(Me.SplitContainer3.SplitterDistance * Me.XScale)
-        End If
         If My.Settings.UseTestData Then
             Me.OptionsUseLastSavedDataToolStripMenuItem.Checked = False
             Me.OptionsUseTestDataToolStripMenuItem.Checked = True
@@ -174,19 +184,35 @@ Public Class Form1
             Me.OptionsUseTestDataToolStripMenuItem.Checked = False
         End If
 
+        Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact(My.Settings.AIT.ToString("hh\:mm").Substring(1))
+        _activeInsulinIncrements = CInt(TimeSpan.Parse(My.Settings.AIT.ToString("hh\:mm").Substring(1)) / _FiveMinuteSpan)
+
+    End Sub
+
+    Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        Me.Fix(Me)
+
         Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
         Me.ShieldUnitsLabel.BackColor = Color.Transparent
         Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLeftPictureBox
         Me.SensorDaysLeftLabel.BackColor = Color.Transparent
         Me.SensorDaysLeftLabel.Left = (Me.SensorTimeLeftPictureBox.Width \ 2) - (Me.SensorDaysLeftLabel.Width \ 2)
         Me.SensorDaysLeftLabel.Top = (Me.SensorTimeLeftPictureBox.Height \ 2) - (Me.SensorDaysLeftLabel.Height \ 2)
-        Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact(My.Settings.AIT.ToString("hh\:mm").Substring(1))
-        _activeInsulinIncrements = CInt(TimeSpan.Parse(My.Settings.AIT.ToString("hh\:mm").Substring(1)) / _FiveMinuteSpan)
         If Not Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=False) Then
             Exit Sub
         End If
-
+        If _scale.Height > 1 Then
+            Me.SplitContainer1.SplitterDistance = 0
+        End If
         Me.FinishInitialization()
+
+    End Sub
+
+    ' Save the current scale value
+    ' ScaleControl() is called during the Form's constructor
+    Protected Overrides Sub ScaleControl(factor As SizeF, specified As BoundsSpecified)
+        _scale = New SizeF(_scale.Width * factor.Width, _scale.Height * factor.Height)
+        MyBase.ScaleControl(factor, specified)
     End Sub
 
 #Region "Form Menu Events"
@@ -413,7 +439,7 @@ Public Class Form1
     End Sub
 
     Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomePageChart.PostPaint
-        If Not _initialized Then
+        If Not _initialized OrElse _updating Then
             Exit Sub
         End If
         If _homePageChartRelitivePosition.IsEmpty Then
@@ -423,35 +449,33 @@ Public Class Form1
             _homePageChartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, s_sGs.Last.datetime.ToOADate)) - _homePageChartRelitivePosition.X
             _homePageChartRelitivePosition = e.ChartGraphics.GetAbsoluteRectangle(_homePageChartRelitivePosition)
         End If
-        If Me.XScale = 1 Then
 
-            Dim homePageChartX As Integer = CInt(_homePageChartRelitivePosition.X)
-            Dim homePageChartY As Integer = CInt(_homePageChartRelitivePosition.Y)
-            Dim homePagelocation As New Point(homePageChartX, homePageChartY)
-            Dim homePageChartWidth As Integer = CInt(_homePageChartRelitivePosition.Width)
-            Dim lowHeight As Integer = If(_homePageChartChartArea.AxisX.ScrollBar.IsVisible,
-                                          CInt(25 - _homePageChartChartArea.AxisX.ScrollBar.Size),
-                                          25
-                                         )
-            Dim highHeight As Integer = 288
-            Dim highAreaRectangle As New Rectangle(homePagelocation,
-                                                   New Size(homePageChartWidth, highHeight))
+        Dim homePageChartX As Integer = CInt(_homePageChartRelitivePosition.X)
+        Dim homePageChartY As Integer = CInt(_homePageChartRelitivePosition.Y)
+        Dim homePagelocation As New Point(homePageChartX, homePageChartY)
+        Dim homePageChartWidth As Integer = CInt(_homePageChartRelitivePosition.Width)
+        Dim lowHeight As Integer = If(_homePageChartChartArea.AxisX.ScrollBar.IsVisible,
+                                      CInt(25 - _homePageChartChartArea.AxisX.ScrollBar.Size),
+                                      25
+                                     )
+        Dim highHeight As Integer = CInt(288 * _scale.Height)
+        Dim highAreaRectangle As New Rectangle(homePagelocation,
+                                               New Size(homePageChartWidth, highHeight))
 
-            Dim lowOffset As Integer = 482
-            Dim lowStartLocation As New Point(homePageChartX, lowOffset)
-            Dim lowAreaRectangle As New Rectangle(lowStartLocation,
-                                                  New Size(homePageChartWidth, lowHeight))
+        Dim lowOffset As Integer = CInt(482 * _scale.Height)
+        Dim lowStartLocation As New Point(homePageChartX, lowOffset)
+        Dim lowAreaRectangle As New Rectangle(lowStartLocation,
+                                              New Size(homePageChartWidth, lowHeight))
 
-            Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
-                e.ChartGraphics.Graphics.FillRectangle(b, highAreaRectangle)
-            End Using
+        Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
+            e.ChartGraphics.Graphics.FillRectangle(b, highAreaRectangle)
+        End Using
 
-            Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
-                e.ChartGraphics.Graphics.FillRectangle(b, lowAreaRectangle)
-            End Using
-            If Me.CursorTimeLabel.Tag IsNot Nothing Then
-                Me.CursorTimeLabel.Left = CInt(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, CDate(Me.CursorTimeLabel.Tag).ToOADate))
-            End If
+        Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
+            e.ChartGraphics.Graphics.FillRectangle(b, lowAreaRectangle)
+        End Using
+        If Me.CursorTimeLabel.Tag IsNot Nothing Then
+            Me.CursorTimeLabel.Left = CInt(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, CDate(Me.CursorTimeLabel.Tag).ToOADate))
         End If
 
         e.PaintMarker(_mealImage, _markerMealDictionary, 0)
@@ -510,10 +534,10 @@ Public Class Form1
         Dim currentSortOrder As SortOrder = Me.SGsDataGridView.Columns(e.ColumnIndex).HeaderCell.SortGlyphDirection
         If Me.SGsDataGridView.Columns(e.ColumnIndex).Name = NameOf(SgRecord.RecordNumber) Then
             If currentSortOrder = SortOrder.None OrElse currentSortOrder = SortOrder.Ascending Then
-                Me.SGsDataGridView.DataSource = s_sGs.OrderByDescending(Function(x) x.RecordNumber).ToList
+                Me.SGsDataGridView.DataSource = s_sGsAll.OrderByDescending(Function(x) x.RecordNumber).ToList
                 currentSortOrder = SortOrder.Descending
             Else
-                Me.SGsDataGridView.DataSource = s_sGs.OrderBy(Function(x) x.RecordNumber).ToList
+                Me.SGsDataGridView.DataSource = s_sGsAll.OrderBy(Function(x) x.RecordNumber).ToList
                 currentSortOrder = SortOrder.Ascending
             End If
         End If
@@ -856,8 +880,12 @@ Public Class Form1
 
     End Sub
 
-    Private Sub InitializeTimeInRangeChart()
-        Dim width1 As Integer = CInt(Me.SplitContainer3.Panel2.Width - (65 * (1 / Me.XScale)))
+    Private Sub InitializeTimeInRangeArea()
+        Dim width1 As Integer = Me.SplitContainer3.Panel2.Width - 65
+        Dim splitPanelMidpoint As Integer = Me.SplitContainer3.Panel2.Width \ 2
+        For Each control1 As Control In Me.SplitContainer3.Panel2.Controls
+            control1.Left = splitPanelMidpoint - (control1.Width \ 2)
+        Next
         Me.TimeInRangeChart = New Chart With {
             .Anchor = AnchorStyles.Top,
             .BackColor = Color.Transparent,
@@ -931,7 +959,8 @@ Public Class Form1
         End If
         If _recentDataSameCount < 5 Then
             _recentDataSameCount += 1
-            For i As Integer = 0 To _recentData.Keys.Count - 1
+            Dim i As Integer
+            For i = 0 To _recentData.Keys.Count - 1
                 If _recentDatalast.Keys(i) <> "currentServerTime" AndAlso _recentDatalast.Values(i) <> _recentData.Values(i) Then
                     _recentDataSameCount = 0
                     Return True
@@ -1025,8 +1054,10 @@ Public Class Form1
 
         s_totalAutoCorrection = 0
         s_totalBasal = 0
+        s_totalCarbs = 0
         s_totalDailyDose = 0
         s_totalManualBolus = 0
+
 
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index).RoundTimeDown(RoundTo.Minute).ToOADate
@@ -1058,6 +1089,8 @@ Public Class Form1
                         .Points.Last.MarkerSize = 8
                         s_totalBasal += CSng(bolusAmount)
                         s_totalDailyDose += CSng(bolusAmount)
+                    Case "MEAL"
+                        s_totalCarbs += sgListIndex.Value.GetDecimalValue(Me.CurrentDataCulture, "amount")
                 End Select
             End With
         Next
@@ -1084,10 +1117,6 @@ Public Class Form1
         _updating = True
         Me.UpdateDataTables(_recentData)
         Me.UpdateActiveInsulinChart()
-        If Not _initialized Then
-            _updating = False
-            Exit Sub
-        End If
         Me.UpdateActiveInsulin()
         Me.UpdateAutoModeShield()
         Me.UpdateCalibrationTimeRemaining()
@@ -1099,7 +1128,7 @@ Public Class Form1
         Me.UpdateTransmitterBatttery()
 
         Me.UpdateZHomeTabSerieses()
-        Me.UpdateDosing()
+        Me.UpdateDosingAndCarbs()
         Application.DoEvents()
         _recentDatalast = _recentData
         _initialized = True
@@ -1248,15 +1277,16 @@ Public Class Form1
                     layoutPanel1.RowCount = 1
                     singleItem = True
                 Case ItemIndexs.sgs
-                    s_sGs = LoadList(row.Value).ToSgList()
-                    Me.SGsDataGridView.DataSource = s_sGs
+                    s_sGs = LoadList(row.Value).ToSgList(True)
+                    s_sGsAll = LoadList(row.Value).ToSgList(False)
+                    Me.SGsDataGridView.DataSource = s_sGsAll
                     For Each column As DataGridViewTextBoxColumn In Me.SGsDataGridView.Columns
                         If _filterJsonData AndAlso s_alwaysFilter.Contains(column.Name) Then
                             Me.SGsDataGridView.Columns(column.Name).Visible = False
                         End If
                     Next
-                    Continue For
                     Me.ReadingsLabel.Text = $"{s_sGs.Count}/288"
+                    Continue For
                 Case ItemIndexs.limits
                     layoutPanel1 = Me.TableLayoutPanelLimits
                     layoutPanel1.Controls.Clear()
@@ -1444,7 +1474,7 @@ Public Class Form1
         Me.Cursor = Cursors.Default
     End Sub
 
-    Private Sub UpdateDosing()
+    Private Sub UpdateDosingAndCarbs()
         Me.BasalLabel.Text = $"Basal {s_totalBasal.RoundSingle(1)} U | {CInt(s_totalBasal / s_totalDailyDose * 100)}%"
         Me.DailyDoseLabel.Text = $"Daily Dose {s_totalDailyDose.RoundSingle(1)} U"
         If s_totalAutoCorrection > 0 Then
@@ -1456,6 +1486,7 @@ Public Class Form1
             Me.AutoCorrectionLabel.Visible = False
             Me.ManualBolusLabel.Text = $"Bolus {s_totalManualBolus.RoundSingle(1)} U | {CInt(s_totalManualBolus / s_totalDailyDose * 100)}%"
         End If
+        Me.Last24CarbsValueLabel.Text = s_totalCarbs.ToString
     End Sub
 
     Private Sub UpdateRegionalData(localRecentData As Dictionary(Of String, String))
