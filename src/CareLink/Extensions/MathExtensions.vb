@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
 Imports System.Runtime.CompilerServices
 
 Friend Module MathExtensions
@@ -14,11 +15,11 @@ Friend Module MathExtensions
     End Enum
 
     <Extension>
-    Friend Function GetDecimalValue(item As Dictionary(Of String, String), ParamArray values() As String) As Double
+    Friend Function GetDecimalValue(item As Dictionary(Of String, String), culture As CultureInfo, ParamArray values() As String) As Double
         Dim returnValueString As String = ""
         For Each value As String In values
             If item.TryGetValue(value, returnValueString) Then
-                Return Double.Parse(returnValueString, Globalization.CultureInfo.CurrentCulture)
+                Return Double.Parse(returnValueString, culture)
             End If
         Next
         Return Double.NaN
@@ -31,9 +32,9 @@ Friend Module MathExtensions
     End Function
 
     <Extension>
-    Friend Function RoundDouble(value As String, decimalDigits As Integer) As Double
+    Friend Function RoundDouble(value As String, decimalDigits As Integer, culture As CultureInfo) As Double
 
-        Return Math.Round(Double.Parse(value), decimalDigits)
+        Return Math.Round(Double.Parse(value, culture), decimalDigits)
     End Function
 
     <Extension>

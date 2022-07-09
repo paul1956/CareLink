@@ -970,14 +970,14 @@ Public Class Form1
             sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index).RoundTimeDown(RoundTo.Minute).ToOADate
             Select Case sgListIndex.Value("type")
                 Case "INSULIN"
-                    Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue("programmedFastAmount")
+                    Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue(Me.CurrentDataCulture, "programmedFastAmount")
                     If timeOrderedMarkers.ContainsKey(sgOaDateTime) Then
                         timeOrderedMarkers(sgOaDateTime) += bolusAmount
                     Else
                         timeOrderedMarkers.Add(sgOaDateTime, bolusAmount)
                     End If
                 Case "AUTO_BASAL_DELIVERY"
-                    Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue("bolusAmount")
+                    Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue(Me.CurrentDataCulture, "bolusAmount")
                     If timeOrderedMarkers.ContainsKey(sgOaDateTime) Then
                         timeOrderedMarkers(sgOaDateTime) += bolusAmount
                     Else
@@ -1052,7 +1052,7 @@ Public Class Form1
                         .Points.Last.MarkerStyle = MarkerStyle.Square
 
                     Case "AUTO_BASAL_DELIVERY"
-                        Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue("bolusAmount")
+                        Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue(Me.CurrentDataCulture, "bolusAmount")
                         .Points.AddXY(sgOaDateTime, maxActiveInsulin)
                         .Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3)} U"
                         .Points.Last.MarkerSize = 8
@@ -1658,8 +1658,8 @@ Public Class Form1
             .Series("Default")("PieStartAngle") = "270"
         End With
 
-        Me.AverageSGValueLabel.Text = If(Me.BgUnitsString = "mg/dl", s_averageSG.ToString(Me.CurrentUICulture), s_averageSG.RoundDouble(1).ToString(Me.CurrentUICulture))
-        Me.AboveHighLimitValueLabel.Text = $"{s_aboveHyperLimit.ToString(Me.CurrentUICulture)} %"
+        Me.AverageSGValueLabel.Text = If(Me.BgUnitsString = "mg/dl", s_averageSG.ToString, s_averageSG.RoundDouble(1).ToString())
+        Me.AboveHighLimitValueLabel.Text = $"{s_aboveHyperLimit} %"
         Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
         Me.TimeInRangeSummaryLabel.Text = $"{s_timeInRange}"
         Me.TimeInRangeValueLabel.Text = s_timeInRange.ToString
@@ -1747,7 +1747,7 @@ Public Class Form1
                         .Points.AddXY(sgOaDateTime, Me.MarkerRow)
                         Dim bolusAmount As String = sgListIndex.Value("bolusAmount")
                         .Points.Last.MarkerBorderColor = Color.Black
-                        .Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3)} U"
+                        .Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3, Me.CurrentUICulture)} U"
                     Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED", "TIME_CHANGE"
                         'Stop
                     Case Else
