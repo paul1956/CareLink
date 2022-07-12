@@ -37,6 +37,7 @@ Partial Class Form1
         Me.OptionsSetupEmailServerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OptionsUseTestDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OptionsUseLastSavedDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OptionsUseAdvangedAITDecayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ViewShowMiniDisplayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -213,7 +214,7 @@ Partial Class Form1
         '
         'OptionsToolStripMenuItem
         '
-        Me.OptionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OptionsFilterRawJSONDataToolStripMenuItem, Me.OptionsSetupEmailServerToolStripMenuItem, Me.OptionsUseTestDataToolStripMenuItem, Me.OptionsUseLastSavedDataToolStripMenuItem})
+        Me.OptionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OptionsFilterRawJSONDataToolStripMenuItem, Me.OptionsSetupEmailServerToolStripMenuItem, Me.OptionsUseTestDataToolStripMenuItem, Me.OptionsUseLastSavedDataToolStripMenuItem, Me.OptionsUseAdvangedAITDecayToolStripMenuItem})
         Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
         Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
         Me.OptionsToolStripMenuItem.Text = "Options"
@@ -224,28 +225,37 @@ Partial Class Form1
         Me.OptionsFilterRawJSONDataToolStripMenuItem.CheckOnClick = True
         Me.OptionsFilterRawJSONDataToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked
         Me.OptionsFilterRawJSONDataToolStripMenuItem.Name = "OptionsFilterRawJSONDataToolStripMenuItem"
-        Me.OptionsFilterRawJSONDataToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
+        Me.OptionsFilterRawJSONDataToolStripMenuItem.Size = New System.Drawing.Size(205, 22)
         Me.OptionsFilterRawJSONDataToolStripMenuItem.Text = "Filter Raw JSON Data"
         '
         'OptionsSetupEmailServerToolStripMenuItem
         '
         Me.OptionsSetupEmailServerToolStripMenuItem.Name = "OptionsSetupEmailServerToolStripMenuItem"
-        Me.OptionsSetupEmailServerToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
+        Me.OptionsSetupEmailServerToolStripMenuItem.Size = New System.Drawing.Size(205, 22)
         Me.OptionsSetupEmailServerToolStripMenuItem.Text = "Setup Email Server"
         '
         'OptionsUseTestDataToolStripMenuItem
         '
         Me.OptionsUseTestDataToolStripMenuItem.CheckOnClick = True
         Me.OptionsUseTestDataToolStripMenuItem.Name = "OptionsUseTestDataToolStripMenuItem"
-        Me.OptionsUseTestDataToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
+        Me.OptionsUseTestDataToolStripMenuItem.Size = New System.Drawing.Size(205, 22)
         Me.OptionsUseTestDataToolStripMenuItem.Text = "Use Test Data"
         '
         'OptionsUseLastSavedDataToolStripMenuItem
         '
         Me.OptionsUseLastSavedDataToolStripMenuItem.CheckOnClick = True
         Me.OptionsUseLastSavedDataToolStripMenuItem.Name = "OptionsUseLastSavedDataToolStripMenuItem"
-        Me.OptionsUseLastSavedDataToolStripMenuItem.Size = New System.Drawing.Size(183, 22)
+        Me.OptionsUseLastSavedDataToolStripMenuItem.Size = New System.Drawing.Size(205, 22)
         Me.OptionsUseLastSavedDataToolStripMenuItem.Text = "Use Last Saved Data"
+        '
+        'OptionsUseAdvangedAITDecayToolStripMenuItem
+        '
+        Me.OptionsUseAdvangedAITDecayToolStripMenuItem.Checked = True
+        Me.OptionsUseAdvangedAITDecayToolStripMenuItem.CheckOnClick = True
+        Me.OptionsUseAdvangedAITDecayToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Indeterminate
+        Me.OptionsUseAdvangedAITDecayToolStripMenuItem.Name = "OptionsUseAdvangedAITDecayToolStripMenuItem"
+        Me.OptionsUseAdvangedAITDecayToolStripMenuItem.Size = New System.Drawing.Size(205, 22)
+        Me.OptionsUseAdvangedAITDecayToolStripMenuItem.Text = "Use Advanged AIT Decay"
         '
         'ViewToolStripMenuItem
         '
@@ -1502,4 +1512,5 @@ Partial Class Form1
     Friend WithEvents Last24CarbsValueLabel As Label
     Friend WithEvents TotalCarbs24MessageLabel As Label
     Friend WithEvents TotalCarbsMessageLabel As Label
+    Friend WithEvents OptionsUseAdvangedAITDecayToolStripMenuItem As ToolStripMenuItem
 End Class

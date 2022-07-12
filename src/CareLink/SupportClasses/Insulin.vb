@@ -7,10 +7,14 @@ Friend Class Insulin
     Private _adjustmentValue As Double
     Private _incrementUpCount As Integer
 
-    Public Sub New(oaTime As Double, initialInsulinLevel As Double, activeInsulinIncrements As Integer)
+    Public Sub New(oaTime As Double, initialInsulinLevel As Double, activeInsulinIncrements As Integer, useAdvancedAITDecay As Boolean)
         Me.OaTime = oaTime
         Me.EventDate = Date.FromOADate(oaTime)
-        _incrementUpCount = CInt(Math.Ceiling(activeInsulinIncrements * (1 / 3)))
+        If useAdvancedAITDecay Then
+            _incrementUpCount = CInt(Math.Ceiling(activeInsulinIncrements * (1 / 3.5)))
+        Else
+            _incrementUpCount = CInt(Math.Ceiling(activeInsulinIncrements * (1 / 3)))
+        End If
         _incrementDownCount = activeInsulinIncrements - _incrementUpCount
         _adjustmentValue = initialInsulinLevel / activeInsulinIncrements
         Me.CurrentInsulinLevel = _adjustmentValue * _incrementDownCount

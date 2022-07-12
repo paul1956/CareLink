@@ -182,7 +182,7 @@ Public Class Form1
         End If
 
         Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact(My.Settings.AIT.ToString("hh\:mm").Substring(1))
-        _activeInsulinIncrements = CInt(TimeSpan.Parse(My.Settings.AIT.ToString("hh\:mm").Substring(1)) / s_fiveMinuteSpan)
+        Me.OptionsUseAdvangedAITDecayToolStripMenuItem.CheckState = If(My.Settings.UseAdvangedAITDecay, CheckState.Checked, CheckState.Unchecked)
 
     End Sub
 
@@ -228,6 +228,20 @@ Public Class Form1
 
     Private Sub OptionsSetupEmailServerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OptionsSetupEmailServerToolStripMenuItem.Click
         MailSetupDialog.ShowDialog()
+    End Sub
+
+    Private Sub OptionsUseAdvangedAITDecayToolStripMenuItem_CheckStateChanged(sender As Object, e As EventArgs) Handles OptionsUseAdvangedAITDecayToolStripMenuItem.CheckStateChanged
+        Dim increments As Double = TimeSpan.Parse(My.Settings.AIT.ToString("hh\:mm").Substring(1)) / s_fiveMinuteSpan
+        If Me.OptionsUseAdvangedAITDecayToolStripMenuItem.Checked Then
+            _activeInsulinIncrements = CInt(increments * 1.4)
+            My.Settings.UseAdvangedAITDecay = True
+        Else
+            _activeInsulinIncrements = CInt(increments)
+            My.Settings.UseAdvangedAITDecay = False
+        End If
+        My.Settings.Save()
+        Me.UpdateActiveInsulinChart()
+
     End Sub
 
     Private Sub OptionsUseLastSavedDataToolStripMenuItem_CheckStateChanged(sender As Object, e As EventArgs) Handles OptionsUseLastSavedDataToolStripMenuItem.CheckStateChanged
@@ -1042,7 +1056,7 @@ Public Class Form1
                 initialBolus += timeOrderedMarkers.Values(currentMarker)
                 currentMarker += 1
             End While
-            remainingInsulinList.Add(New Insulin(oaTime, initialBolus, _activeInsulinIncrements))
+            remainingInsulinList.Add(New Insulin(oaTime, initialBolus, _activeInsulinIncrements, Me.OptionsUseAdvangedAITDecayToolStripMenuItem.Checked))
         Next
 
         _activeInsulinTabChartArea.AxisY2.Maximum = Me.MarkerRow
