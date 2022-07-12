@@ -132,7 +132,7 @@ Public Module JsonExtensions
                                            }
 
             If innerRow.Value.StartsWith("[") Then
-                Dim innerJson1 As List(Of Dictionary(Of String, String)) = LoadList(innerRow.Value)
+                Dim innerJson1 As List(Of Dictionary(Of String, String)) = LoadList(innerRow.Value, False)
                 If innerJson1.Count > 0 Then
                     Dim tableLevel2 As New TableLayoutPanel With {
                             .AutoScroll = False,
@@ -229,7 +229,7 @@ Public Module JsonExtensions
             End If
             tableLevel1Blue.AutoSize = False
             tableLevel1Blue.RowCount += 1
-            tableLevel1Blue.Height = (22 * tableLevel1Blue.RowCount) + 4
+            tableLevel1Blue.Height = 22 * (tableLevel1Blue.RowCount - 1)
             Application.DoEvents()
         ElseIf itemIndex = ItemIndexs.notificationHistory Then
             tableLevel1Blue.RowStyles(1).SizeType = SizeType.AutoSize
@@ -237,22 +237,23 @@ Public Module JsonExtensions
         Application.DoEvents()
     End Sub
 
-    Public Function LoadList(value As String) As List(Of Dictionary(Of String, String))
+    Public Function LoadList(value As String, isSG As Boolean) As List(Of Dictionary(Of String, String))
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
         Dim options As New JsonSerializerOptions() With {
                 .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 .NumberHandling = JsonNumberHandling.WriteAsString}
 
-        Dim deserializeList As List(Of Dictionary(Of String, Object)) = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(value, options)
-        For Each deserializeItem As Dictionary(Of String, Object) In deserializeList
+        For Each e As IndexClass(Of Dictionary(Of String, Object)) In JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(value, options).WithIndex
             Dim resultDictionary As New Dictionary(Of String, String)
-            For Each item As KeyValuePair(Of String, Object) In deserializeItem
+            For Each item As KeyValuePair(Of String, Object) In e.Value
                 If item.Value Is Nothing Then
                     resultDictionary.Add(item.Key, Nothing)
                 Else
                     resultDictionary.Add(item.Key, item.ItemAsString)
                 End If
+                If Not isSG Then Continue For
             Next
+
             resultDictionaryArray.Add(resultDictionary)
         Next
         Return resultDictionaryArray
@@ -272,12 +273,6 @@ Public Module JsonExtensions
             End If
         Next
         Return resultDictionary
-    End Function
-
-    <Extension>
-    Public Function UtcToLocalTime(utcTime As String) As String
-        Dim convertedDate As Date = Date.SpecifyKind(Date.Parse(utcTime), DateTimeKind.Utc)
-        Return convertedDate.ToLocalTime.ToString
     End Function
 
 End Module

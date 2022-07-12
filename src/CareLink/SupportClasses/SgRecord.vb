@@ -2,17 +2,11 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Public Class SgRecord
-    Public Property RecordNumber As Integer
-    Public Property sg As Single
-    Public Property [datetime] As Date
-    Public Property timeChange As String
-    Public Property sensorState As String
-    Public Property kind As String
-    Public Property version As Integer
-    Public Property relativeOffset As Integer
+Imports System.Globalization
 
-    Public Sub New(allSgs As List(Of Dictionary(Of String, String)), index As Integer)
+Public Class SgRecord
+
+    Public Sub New(allSgs As List(Of Dictionary(Of String, String)), index As Integer, ByRef lastValidTime As Date, currentDataCulture As CultureInfo)
         Dim dic As Dictionary(Of String, String) = allSgs(index)
         Me.RecordNumber = index + 1
         If dic.Count > 7 Then Stop
@@ -21,7 +15,11 @@ Public Class SgRecord
             Me.sg = Single.Parse(value)
         End If
         If dic.TryGetValue(NameOf(datetime), value) Then
-            Me.datetime = allSgs.SafeGetSgDateTime(index)
+            Me.datetime = allSgs.SafeGetSgDateTime(index, currentDataCulture)
+            lastValidTime = Me.datetime + s_fiveMinuteSpan
+        Else
+            Me.datetime = lastValidTime
+            lastValidTime += s_fiveMinuteSpan
         End If
 
         If dic.TryGetValue(NameOf(timeChange), value) Then
@@ -42,6 +40,15 @@ Public Class SgRecord
         End If
 
     End Sub
+
+    Public Property [datetime] As Date
+    Public Property kind As String
+    Public Property RecordNumber As Integer
+    Public Property relativeOffset As Integer
+    Public Property sensorState As String
+    Public Property sg As Single
+    Public Property timeChange As String
+    Public Property version As Integer
 
     Public Shared Function GetCellStyle(memberName As String) As DataGridViewCellStyle
         Dim cellStyle As New DataGridViewCellStyle

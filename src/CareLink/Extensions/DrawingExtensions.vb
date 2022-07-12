@@ -32,10 +32,9 @@ Friend Module DrawingExtensions
     End Function
 
     <Extension>
-    Friend Sub PlotOnePoint(plotSeries As Series, sgOaDateTime As Double, bgValue As Single, mainLineColor As Color, insulinRow As Double, limithigh As Single, limitLow As Single)
+    Friend Sub PlotOnePoint(plotSeries As Series, sgOaDateTime As Double, bgValue As Single, mainLineColor As Color, insulinRow As Single, limithigh As Single, limitLow As Single)
         With plotSeries
-
-            If Math.Abs(bgValue - 0) < Single.Epsilon Then
+            If Single.IsNaN(bgValue) OrElse Math.Abs(bgValue - 0) < Single.Epsilon Then
                 .Points.AddXY(sgOaDateTime, insulinRow)
                 .Points.Last().IsEmpty = True
             Else

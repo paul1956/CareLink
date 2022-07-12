@@ -76,7 +76,6 @@ Friend Module PumpVariables
     Public s_sensorState As String
     Public s_sgBelowLimit As Integer
     Public s_sGs As New List(Of SgRecord)
-    Public s_sGsAll As New List(Of SgRecord)
     Public s_sLastSensorTime As Date
     Public s_sMedicalDeviceTime As Date
     Public s_systemStatusMessage As String
