@@ -37,7 +37,7 @@ Partial Class Form1
         Me.OptionsSetupEmailServerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OptionsUseTestDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OptionsUseLastSavedDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.OptionsUseAdvangedAITDecayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OptionsUseAdvancedAITDecayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ViewShowMiniDisplayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -214,7 +214,7 @@ Partial Class Form1
         '
         'OptionsToolStripMenuItem
         '
-        Me.OptionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OptionsFilterRawJSONDataToolStripMenuItem, Me.OptionsSetupEmailServerToolStripMenuItem, Me.OptionsUseTestDataToolStripMenuItem, Me.OptionsUseLastSavedDataToolStripMenuItem, Me.OptionsUseAdvangedAITDecayToolStripMenuItem})
+        Me.OptionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OptionsFilterRawJSONDataToolStripMenuItem, Me.OptionsSetupEmailServerToolStripMenuItem, Me.OptionsUseTestDataToolStripMenuItem, Me.OptionsUseLastSavedDataToolStripMenuItem, Me.OptionsUseAdvancedAITDecayToolStripMenuItem})
         Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
         Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
         Me.OptionsToolStripMenuItem.Text = "Options"
@@ -225,37 +225,37 @@ Partial Class Form1
         Me.OptionsFilterRawJSONDataToolStripMenuItem.CheckOnClick = True
         Me.OptionsFilterRawJSONDataToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked
         Me.OptionsFilterRawJSONDataToolStripMenuItem.Name = "OptionsFilterRawJSONDataToolStripMenuItem"
-        Me.OptionsFilterRawJSONDataToolStripMenuItem.Size = New System.Drawing.Size(205, 22)
+        Me.OptionsFilterRawJSONDataToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
         Me.OptionsFilterRawJSONDataToolStripMenuItem.Text = "Filter Raw JSON Data"
         '
         'OptionsSetupEmailServerToolStripMenuItem
         '
         Me.OptionsSetupEmailServerToolStripMenuItem.Name = "OptionsSetupEmailServerToolStripMenuItem"
-        Me.OptionsSetupEmailServerToolStripMenuItem.Size = New System.Drawing.Size(205, 22)
+        Me.OptionsSetupEmailServerToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
         Me.OptionsSetupEmailServerToolStripMenuItem.Text = "Setup Email Server"
         '
         'OptionsUseTestDataToolStripMenuItem
         '
         Me.OptionsUseTestDataToolStripMenuItem.CheckOnClick = True
         Me.OptionsUseTestDataToolStripMenuItem.Name = "OptionsUseTestDataToolStripMenuItem"
-        Me.OptionsUseTestDataToolStripMenuItem.Size = New System.Drawing.Size(205, 22)
+        Me.OptionsUseTestDataToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
         Me.OptionsUseTestDataToolStripMenuItem.Text = "Use Test Data"
         '
         'OptionsUseLastSavedDataToolStripMenuItem
         '
         Me.OptionsUseLastSavedDataToolStripMenuItem.CheckOnClick = True
         Me.OptionsUseLastSavedDataToolStripMenuItem.Name = "OptionsUseLastSavedDataToolStripMenuItem"
-        Me.OptionsUseLastSavedDataToolStripMenuItem.Size = New System.Drawing.Size(205, 22)
+        Me.OptionsUseLastSavedDataToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
         Me.OptionsUseLastSavedDataToolStripMenuItem.Text = "Use Last Saved Data"
         '
-        'OptionsUseAdvangedAITDecayToolStripMenuItem
+        'OptionsUseAdvancedAITDecayToolStripMenuItem
         '
-        Me.OptionsUseAdvangedAITDecayToolStripMenuItem.Checked = True
-        Me.OptionsUseAdvangedAITDecayToolStripMenuItem.CheckOnClick = True
-        Me.OptionsUseAdvangedAITDecayToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Indeterminate
-        Me.OptionsUseAdvangedAITDecayToolStripMenuItem.Name = "OptionsUseAdvangedAITDecayToolStripMenuItem"
-        Me.OptionsUseAdvangedAITDecayToolStripMenuItem.Size = New System.Drawing.Size(205, 22)
-        Me.OptionsUseAdvangedAITDecayToolStripMenuItem.Text = "Use Advanged AIT Decay"
+        Me.OptionsUseAdvancedAITDecayToolStripMenuItem.Checked = True
+        Me.OptionsUseAdvancedAITDecayToolStripMenuItem.CheckOnClick = True
+        Me.OptionsUseAdvancedAITDecayToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Indeterminate
+        Me.OptionsUseAdvancedAITDecayToolStripMenuItem.Name = "OptionsUseAdvancedAITDecayToolStripMenuItem"
+        Me.OptionsUseAdvancedAITDecayToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
+        Me.OptionsUseAdvancedAITDecayToolStripMenuItem.Text = "Use Advanced AIT Decay"
         '
         'ViewToolStripMenuItem
         '
@@ -753,11 +753,12 @@ Partial Class Form1
         Me.AITLabel.BackColor = System.Drawing.Color.Transparent
         Me.AITLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AITLabel.ForeColor = System.Drawing.Color.White
-        Me.AITLabel.Location = New System.Drawing.Point(842, 0)
+        Me.AITLabel.Location = New System.Drawing.Point(826, 0)
         Me.AITLabel.Name = "AITLabel"
-        Me.AITLabel.Size = New System.Drawing.Size(162, 21)
+        Me.AITLabel.Size = New System.Drawing.Size(189, 21)
         Me.AITLabel.TabIndex = 8
         Me.AITLabel.Text = "Active Insulin TIme"
+        Me.AITLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'AITComboBox
         '
@@ -766,7 +767,7 @@ Partial Class Form1
         Me.AITComboBox.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AITComboBox.ForeColor = System.Drawing.Color.White
         Me.AITComboBox.Items.AddRange(New Object() {"2:00", "2:15", "2:30", "2:45", "3:00", "3:15", "3:30", "3:45", "4:00", "4:15", "4:30", "4:45", "5:00", "5:15", "5:30", "5:45", "6:00"})
-        Me.AITComboBox.Location = New System.Drawing.Point(884, 26)
+        Me.AITComboBox.Location = New System.Drawing.Point(881, 26)
         Me.AITComboBox.Name = "AITComboBox"
         Me.AITComboBox.Size = New System.Drawing.Size(78, 23)
         Me.AITComboBox.TabIndex = 0
@@ -1512,5 +1513,5 @@ Partial Class Form1
     Friend WithEvents Last24CarbsValueLabel As Label
     Friend WithEvents TotalCarbs24MessageLabel As Label
     Friend WithEvents TotalCarbsMessageLabel As Label
-    Friend WithEvents OptionsUseAdvangedAITDecayToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents OptionsUseAdvancedAITDecayToolStripMenuItem As ToolStripMenuItem
 End Class

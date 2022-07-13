@@ -178,7 +178,7 @@ Public Class Form1
         End If
 
         Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact(My.Settings.AIT.ToString("hh\:mm").Substring(1))
-        Me.OptionsUseAdvangedAITDecayToolStripMenuItem.CheckState = If(My.Settings.UseAdvangedAITDecay, CheckState.Checked, CheckState.Unchecked)
+        Me.OptionsUseAdvancedAITDecayToolStripMenuItem.CheckState = If(My.Settings.UseAdvancedAITDecay, CheckState.Checked, CheckState.Unchecked)
 
     End Sub
 
@@ -226,14 +226,16 @@ Public Class Form1
         MailSetupDialog.ShowDialog()
     End Sub
 
-    Private Sub OptionsUseAdvangedAITDecayToolStripMenuItem_CheckStateChanged(sender As Object, e As EventArgs) Handles OptionsUseAdvangedAITDecayToolStripMenuItem.CheckStateChanged
+    Private Sub OptionsUseAdvancedAITDecayToolStripMenuItem_CheckStateChanged(sender As Object, e As EventArgs) Handles OptionsUseAdvancedAITDecayToolStripMenuItem.CheckStateChanged
         Dim increments As Double = TimeSpan.Parse(My.Settings.AIT.ToString("hh\:mm").Substring(1)) / s_fiveMinuteSpan
-        If Me.OptionsUseAdvangedAITDecayToolStripMenuItem.Checked Then
+        If Me.OptionsUseAdvancedAITDecayToolStripMenuItem.Checked Then
             _activeInsulinIncrements = CInt(increments * 1.4)
-            My.Settings.UseAdvangedAITDecay = True
+            My.Settings.UseAdvancedAITDecay = True
+            Me.AITLabel.Text = "Advanced AIT Decay"
         Else
             _activeInsulinIncrements = CInt(increments)
-            My.Settings.UseAdvangedAITDecay = False
+            My.Settings.UseAdvancedAITDecay = False
+            Me.AITLabel.Text = "Active Insulin Time"
         End If
         My.Settings.Save()
         Me.UpdateActiveInsulinChart()
@@ -1055,7 +1057,7 @@ Public Class Form1
                 initialBolus += timeOrderedMarkers.Values(currentMarker)
                 currentMarker += 1
             End While
-            remainingInsulinList.Add(New Insulin(oaTime, initialBolus, _activeInsulinIncrements, Me.OptionsUseAdvangedAITDecayToolStripMenuItem.Checked))
+            remainingInsulinList.Add(New Insulin(oaTime, initialBolus, _activeInsulinIncrements, Me.OptionsUseAdvancedAITDecayToolStripMenuItem.Checked))
         Next
 
         _activeInsulinTabChartArea.AxisY2.Maximum = Me.MarkerRow

@@ -221,16 +221,16 @@ Namespace My
                 Me("UseLastSavedData") = value
             End Set
         End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
-        Public Property UseAdvangedAITDecay() As Boolean
+
+        <Global.System.Configuration.UserScopedSettingAttribute(),
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>
+        Public Property UseAdvancedAITDecay() As Boolean
             Get
-                Return CType(Me("UseAdvangedAITDecay"),Boolean)
+                Return CType(Me("UseAdvancedAITDecay"), Boolean)
             End Get
             Set
-                Me("UseAdvangedAITDecay") = value
+                Me("UseAdvancedAITDecay") = Value
             End Set
         End Property
     End Class
