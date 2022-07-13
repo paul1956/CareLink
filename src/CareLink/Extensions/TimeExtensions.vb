@@ -15,18 +15,18 @@ Friend Module TimeExtensions
     End Function
 
     <Extension>
-    Friend Function SafeGetSgDateTime(sgList As List(Of Dictionary(Of String, String)), index As Integer, currentDataCulture As Globalization.CultureInfo) As Date
+    Friend Function SafeGetSgDateTime(sgList As List(Of Dictionary(Of String, String)), index As Integer) As Date
         Dim sgDateTimeString As String = ""
         Dim sgDateTime As Date
         If sgList(index).Count < 7 Then
             index -= 1
         End If
         If sgList(index).TryGetValue("previousDateTime", sgDateTimeString) Then
-            sgDateTime = Date.Parse(sgDateTimeString, currentDataCulture)
+            sgDateTime = Date.Parse(sgDateTimeString, CurrentDataCulture)
         ElseIf sgList(index).TryGetValue("datetime", sgDateTimeString) Then
-            sgDateTime = Date.Parse(sgDateTimeString, currentDataCulture)
+            sgDateTime = Date.Parse(sgDateTimeString, CurrentDataCulture)
         ElseIf sgList(index).TryGetValue("dateTime", sgDateTimeString) Then
-            sgDateTime = Date.Parse(sgDateTimeString.Split("-")(0), currentDataCulture)
+            sgDateTime = Date.Parse(sgDateTimeString.Split("-")(0), CurrentDataCulture)
         Else
             sgDateTime = Now
         End If

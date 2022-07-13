@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 Imports System.Text.Json.Serialization
@@ -16,7 +17,12 @@ Public Module JsonExtensions
                                              }
 
         If eValue.Key <> "messageid" Then
-            valueTextBox.Text = eValue.Value
+            Dim result As Single = Nothing
+            If Single.TryParse(eValue.Value, NumberStyles.Number, CurrentDataCulture, result) Then
+                valueTextBox.Text = result.ToString(CurrentUICulture)
+            Else
+                valueTextBox.Text = eValue.Value.ToString(CurrentUICulture)
+            End If
         Else
             valueTextBox.Text = TranslateMessageId(dic, eValue.Value, timeFormat)
             AddHandler valueTextBox.Click, AddressOf MessageIdTextBox_Click

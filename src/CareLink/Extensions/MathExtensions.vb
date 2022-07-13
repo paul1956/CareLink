@@ -19,7 +19,7 @@ Friend Module MathExtensions
         Dim returnValueString As String = ""
         For Each value As String In values
             If item.TryGetValue(value, returnValueString) Then
-                Return Double.Parse(returnValueString, culture)
+                Return Double.Parse(returnValueString, NumberStyles.Number, culture)
             End If
         Next
         Return Double.NaN

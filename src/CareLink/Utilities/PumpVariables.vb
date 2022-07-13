@@ -2,7 +2,12 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
+
 Friend Module PumpVariables
+    Friend Property CurrentDataCulture As CultureInfo = New CultureInfo("en-US")
+
+    Friend Property CurrentUICulture As CultureInfo = CultureInfo.CurrentCulture
 
     Friend ReadOnly _listOfSingleItems As New List(Of Integer) From {
                         ItemIndexs.lastSG,

@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.ComponentModel
+Imports System.Globalization
 Imports System.Media
 
 Public Class BGMiniWindow
@@ -15,7 +16,7 @@ Public Class BGMiniWindow
     Public Sub SetCurrentBGString(Value As String)
         _lastBGValue = _currentBGValue
         _currentBGValue = Double.NaN
-        If Double.TryParse(Value, _currentBGValue) Then
+        If Double.TryParse(Value, NumberStyles.Number, currentdataculture, _currentBGValue) Then
             _normalizedBG = _currentBGValue
             If Form1.BgUnitsString <> "mg/dl" Then
                 _normalizedBG *= 18

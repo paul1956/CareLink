@@ -50,10 +50,6 @@ Public Class Form1
 
     Friend Property BgUnitsString As String
 
-    Friend Property CurrentDataCulture As CultureInfo = New CultureInfo("en-US")
-
-    Friend Property CurrentUICulture As CultureInfo = CultureInfo.CurrentCulture
-
 #Region "Chart Objects"
 
     Private _activeInsulinTabChartArea As ChartArea
@@ -385,19 +381,19 @@ Public Class Form1
                             Me.CursorTimeLabel.Visible = False
                             Me.CursorValueLabel.Visible = False
                         Case NameOf(MarkerSeries)
-                            Dim marketToolTip() As String = result.Series.Points(result.PointIndex).ToolTip.Split(","c)
+                            Dim markerToolTip() As String = result.Series.Points(result.PointIndex).ToolTip.Split(","c)
                             Dim xValue As Date = Date.FromOADate(result.Series.Points(result.PointIndex).XValue)
                             Me.CursorTimeLabel.Visible = True
                             Me.CursorTimeLabel.Text = xValue.ToString(_timeFormat)
                             Me.CursorTimeLabel.Tag = xValue
-                            marketToolTip(0) = marketToolTip(0).Trim
+                            markerToolTip(0) = markerToolTip(0).Trim
                             Me.CursorValueLabel.Visible = True
                             Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
                             Me.CursorPictureBox.Visible = True
-                            Select Case marketToolTip.Length
+                            Select Case markerToolTip.Length
                                 Case 2
-                                    Me.CursorMessage1Label.Text = marketToolTip(0)
-                                    Select Case marketToolTip(0)
+                                    Me.CursorMessage1Label.Text = markerToolTip(0)
+                                    Select Case markerToolTip(0)
                                         Case "Basal"
                                             Me.CursorPictureBox.Image = My.Resources.InsulinVial
                                         Case "Bolus"
@@ -409,9 +405,9 @@ Public Class Form1
                                     End Select
                                     Me.CursorMessage2Label.Visible = False
                                     Me.CursorValueLabel.Top = Me.CursorMessage1Label.PositionBelow
-                                    Me.CursorValueLabel.Text = marketToolTip(1).Trim
+                                    Me.CursorValueLabel.Text = markerToolTip(1).Trim
                                 Case 3
-                                    Select Case marketToolTip(1).Trim
+                                    Select Case markerToolTip(1).Trim
                                         Case "Calibration accepted", "Calibration not accepted"
                                             Me.CursorPictureBox.Image = My.Resources.CalibrationDotRed
                                         Case "Not used For calibration"
@@ -419,12 +415,12 @@ Public Class Form1
                                         Case Else
                                             Stop
                                     End Select
-                                    Me.CursorMessage1Label.Text = marketToolTip(0)
+                                    Me.CursorMessage1Label.Text = markerToolTip(0)
                                     Me.CursorMessage1Label.Top = Me.CursorPictureBox.PositionBelow
-                                    Me.CursorMessage2Label.Text = marketToolTip(1).Trim
+                                    Me.CursorMessage2Label.Text = markerToolTip(1).Trim
                                     Me.CursorMessage2Label.Top = Me.CursorMessage1Label.PositionBelow
                                     Me.CursorMessage2Label.Visible = True
-                                    Me.CursorValueLabel.Text = marketToolTip(2).Trim
+                                    Me.CursorValueLabel.Text = markerToolTip(2).Trim
                                     Me.CursorValueLabel.Top = Me.CursorMessage2Label.PositionBelow
                                 Case Else
                                     Stop
@@ -458,10 +454,10 @@ Public Class Form1
             Exit Sub
         End If
         If _homePageChartRelitivePosition.IsEmpty Then
-            _homePageChartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, s_sGs(0).datetime.ToOADate))
+            _homePageChartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, s_sGs(0).OADate))
             _homePageChartRelitivePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, _markerRow))
             _homePageChartRelitivePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, _limitHigh)))) - _homePageChartRelitivePosition.Y
-            _homePageChartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, s_sGs.Last.datetime.ToOADate)) - _homePageChartRelitivePosition.X
+            _homePageChartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, s_sGs.Last.OADate)) - _homePageChartRelitivePosition.X
             _homePageChartRelitivePosition = e.ChartGraphics.GetAbsoluteRectangle(_homePageChartRelitivePosition)
         End If
 
@@ -541,6 +537,10 @@ Public Class Form1
 
     Private Sub SGsDataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles SGsDataGridView.ColumnAdded
         With e.Column
+            If .Name = NameOf(SgRecord.OADate) Then
+                .Visible = False
+                Exit Sub
+            End If
             .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             .ReadOnly = True
             .Resizable = DataGridViewTriState.False
@@ -1008,8 +1008,8 @@ Public Class Form1
 
         With Me.ActiveInsulinTabChart
             .Titles("Title1").Text = $"Running Active Insulin in Pink"
-            .ChartAreas("Default").AxisX.Minimum = s_sGs(0).datetime.ToOADate()
-            .ChartAreas("Default").AxisX.Maximum = s_sGs.Last.datetime.ToOADate()
+            .ChartAreas("Default").AxisX.Minimum = s_sGs(0).OADate()
+            .ChartAreas("Default").AxisX.Maximum = s_sGs.Last.OADate()
             .Series("Default").Points.Clear()
             .Series(NameOf(CurrentBGSeries)).Points.Clear()
             .Series(NameOf(MarkerSeries)).Points.Clear()
@@ -1025,17 +1025,17 @@ Public Class Form1
         Dim sgOaDateTime As Double
 
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
-            sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index, Me.CurrentDataCulture).RoundTimeDown(RoundTo.Minute).ToOADate
+            sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index).RoundTimeDown(RoundTo.Minute).ToOADate
             Select Case sgListIndex.Value("type")
                 Case "INSULIN"
-                    Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue(Me.CurrentDataCulture, "programmedFastAmount")
+                    Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue(CurrentDataCulture, "deliveredFastAmount")
                     If timeOrderedMarkers.ContainsKey(sgOaDateTime) Then
                         timeOrderedMarkers(sgOaDateTime) += bolusAmount
                     Else
                         timeOrderedMarkers.Add(sgOaDateTime, bolusAmount)
                     End If
                 Case "AUTO_BASAL_DELIVERY"
-                    Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue(Me.CurrentDataCulture, "bolusAmount")
+                    Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue(CurrentDataCulture, "bolusAmount")
                     If timeOrderedMarkers.ContainsKey(sgOaDateTime) Then
                         timeOrderedMarkers(sgOaDateTime) += bolusAmount
                     Else
@@ -1047,11 +1047,10 @@ Public Class Form1
         ' set up table that holds active insulin for every 5 minutes
         Dim remainingInsulinList As New List(Of Insulin)
         Dim currentMarker As Integer = 0
-        Dim getSgDateTime As Date = s_sGs(0).datetime
 
         For i As Integer = 0 To 287
             Dim initialBolus As Double = 0
-            Dim oaTime As Double = (getSgDateTime + (s_fiveMinuteSpan * i)).RoundTimeDown(RoundTo.Minute).ToOADate()
+            Dim oaTime As Double = (s_sGs(0).datetime + (s_fiveMinuteSpan * i)).RoundTimeDown(RoundTo.Minute).ToOADate()
             While currentMarker < timeOrderedMarkers.Count AndAlso timeOrderedMarkers.Keys(currentMarker) <= oaTime
                 initialBolus += timeOrderedMarkers.Values(currentMarker)
                 currentMarker += 1
@@ -1089,20 +1088,20 @@ Public Class Form1
         s_totalManualBolus = 0
 
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
-            sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index, Me.CurrentDataCulture).RoundTimeDown(RoundTo.Minute).ToOADate
+            sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index).RoundTimeDown(RoundTo.Minute).ToOADate
             With Me.ActiveInsulinTabChart.Series(NameOf(MarkerSeries))
                 Select Case sgListIndex.Value("type")
                     Case "INSULIN"
                         .Points.AddXY(sgOaDateTime, maxActiveInsulin)
-                        Dim deliveredAmount As Single = Single.Parse(sgListIndex.Value("deliveredFastAmount"), Me.CurrentDataCulture)
+                        Dim deliveredAmount As Single = Single.Parse(sgListIndex.Value("deliveredFastAmount"), CurrentDataCulture)
                         s_totalDailyDose += deliveredAmount
                         Select Case sgListIndex.Value("activationType")
                             Case "AUTOCORRECTION"
-                                .Points.Last.ToolTip = $"Auto Correction, {deliveredAmount} U"
+                                .Points.Last.ToolTip = $"Auto Correction, {deliveredAmount.ToString(CurrentUICulture)} U"
                                 .Points.Last.Color = Color.MediumPurple
                                 s_totalAutoCorrection += deliveredAmount
                             Case "RECOMMENDED", "UNDETERMINED"
-                                .Points.Last.ToolTip = $"Bolus, {deliveredAmount} U"
+                                .Points.Last.ToolTip = $"Bolus, {deliveredAmount.ToString(CurrentUICulture)} U"
                                 .Points.Last.Color = Color.LightBlue
                                 s_totalManualBolus += deliveredAmount
                             Case Else
@@ -1112,14 +1111,14 @@ Public Class Form1
                         .Points.Last.MarkerStyle = MarkerStyle.Square
 
                     Case "AUTO_BASAL_DELIVERY"
-                        Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue(Me.CurrentDataCulture, "bolusAmount")
+                        Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue(CurrentDataCulture, "bolusAmount")
                         .Points.AddXY(sgOaDateTime, maxActiveInsulin)
-                        .Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3)} U"
+                        .Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3).ToString(CurrentUICulture)} U"
                         .Points.Last.MarkerSize = 8
                         s_totalBasal += CSng(bolusAmount)
                         s_totalDailyDose += CSng(bolusAmount)
                     Case "MEAL"
-                        s_totalCarbs += sgListIndex.Value.GetDecimalValue(Me.CurrentDataCulture, "amount")
+                        s_totalCarbs += sgListIndex.Value.GetDecimalValue(CurrentDataCulture, "amount")
                 End Select
             End With
         Next
@@ -1127,7 +1126,7 @@ Public Class Form1
             Dim bgValue As Single = sgListIndex.Value.sg
 
             Me.ActiveInsulinTabChart.Series(NameOf(CurrentBGSeries)).PlotOnePoint(
-                                                            sgListIndex.Value.datetime.ToOADate(),
+                                                            sgListIndex.Value.OADate(),
                                                             sgListIndex.Value.sg,
                                                             Color.Black,
                                                             Me.InsulinRow,
@@ -1244,9 +1243,9 @@ Public Class Form1
                 Case ItemIndexs.reservoirLevelPercent
                     s_reservoirLevelPercent = CInt(row.Value)
                 Case ItemIndexs.reservoirAmount
-                    s_reservoirAmount = Double.Parse(row.Value, Me.CurrentDataCulture)
+                    s_reservoirAmount = Double.Parse(row.Value, CurrentDataCulture)
                 Case ItemIndexs.reservoirRemainingUnits
-                    s_reservoirRemainingUnits = Double.Parse(row.Value, Me.CurrentDataCulture)
+                    s_reservoirRemainingUnits = Double.Parse(row.Value, CurrentDataCulture)
                 Case ItemIndexs.medicalDeviceBatteryLevelPercent
                     s_medicalDeviceBatteryLevelPercent = CInt(row.Value)
                 Case ItemIndexs.sensorDurationHours
@@ -1306,7 +1305,7 @@ Public Class Form1
                     layoutPanel1.RowCount = 1
                     singleItem = True
                 Case ItemIndexs.sgs
-                    s_sGs = LoadList(row.Value, True).ToSgList(Me.CurrentDataCulture)
+                    s_sGs = LoadList(row.Value, True).ToSgList()
                     Me.SGsDataGridView.DataSource = s_sGs
                     For Each column As DataGridViewTextBoxColumn In Me.SGsDataGridView.Columns
                         If _filterJsonData AndAlso s_alwaysFilter.Contains(column.Name) Then
@@ -1363,9 +1362,9 @@ Public Class Form1
                 Case ItemIndexs.lastConduitDateTime
                     s_lastConduitDateTime = row.Value
                 Case ItemIndexs.maxAutoBasalRate
-                    s_maxAutoBasalRate = Double.Parse(row.Value, Me.CurrentDataCulture)
+                    s_maxAutoBasalRate = Double.Parse(row.Value, CurrentDataCulture)
                 Case ItemIndexs.maxBolusAmount
-                    s_maxBolusAmount = Double.Parse(row.Value, Me.CurrentDataCulture)
+                    s_maxBolusAmount = Double.Parse(row.Value, CurrentDataCulture)
                 Case ItemIndexs.sensorDurationMinutes
                     s_sensorDurationMinutes = CInt(row.Value)
                 Case ItemIndexs.timeToNextCalibrationMinutes
@@ -1375,7 +1374,7 @@ Public Class Form1
                 Case ItemIndexs.sgBelowLimit
                     s_sgBelowLimit = CInt(row.Value)
                 Case ItemIndexs.averageSGFloat
-                    s_averageSGFloat = Double.Parse(row.Value, Me.CurrentDataCulture)
+                    s_averageSGFloat = Double.Parse(row.Value, CurrentDataCulture)
                 Case ItemIndexs.timeToNextCalibrationRecommendedMinutes
                     s_timeToNextCalibrationRecommendedMinutes = CUShort(row.Value)
                 Case ItemIndexs.calFreeSensor
@@ -1466,15 +1465,16 @@ Public Class Form1
                         Stop
                 End Select
                 Dim tableLevel1Blue As New TableLayoutPanel With {
-                        .AutoScroll = True,
-                        .AutoSize = True,
-                        .AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                        .ColumnCount = 2,
-                        .Dock = DockStyle.Fill,
-                        .Margin = New Padding(0),
-                        .Name = "InnerTable",
-                        .Padding = New Padding(0)
-                        }
+                    .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                    .AutoScroll = True,
+                    .AutoSize = True,
+                    .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                    .ColumnCount = 2,
+                    .Dock = DockStyle.Fill,
+                    .Margin = New Padding(0),
+                    .Name = "InnerTable",
+                    .Padding = New Padding(0)
+                    }
                 layoutPanel1.Controls.Add(tableLevel1Blue,
                                           If(singleItem AndAlso Not (rowIndex = ItemIndexs.lastSG OrElse rowIndex = ItemIndexs.lastAlarm), 0, 1),
                                           tableRelitiveRow)
@@ -1752,24 +1752,23 @@ Public Class Form1
         _markerInsulinDictionary.Clear()
         _markerMealDictionary.Clear()
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
-            Dim sgDateTime As Date = s_markers.SafeGetSgDateTime(sgListIndex.Index, Me.CurrentDataCulture)
-            Dim sgOaDateTime As Double = sgDateTime.ToOADate()
+            Dim sgOaDateTime As Double = s_markers.SafeGetSgDateTime(sgListIndex.Index).ToOADate()
             Dim bgValueString As String = ""
             Dim bgValue As Single
             If sgListIndex.Value.TryGetValue("value", bgValueString) Then
-                bgValue = CInt(bgValueString)
+                Single.TryParse(bgValueString, NumberStyles.Number, CurrentDataCulture, bgValue)
                 If bgValue < Me.InsulinRow Then Stop
             End If
             With Me.HomePageChart.Series(NameOf(MarkerSeries))
                 Select Case sgListIndex.Value("type")
                     Case "BG_READING"
-                        bgValue = CInt(sgListIndex.Value("value"))
+                        Single.TryParse(sgListIndex.Value("value"), NumberStyles.Number, CurrentDataCulture, bgValue)
                         .Points.AddXY(sgOaDateTime, bgValue)
                         .Points.Last.BorderColor = Color.Gainsboro
                         .Points.Last.Color = Color.Transparent
                         .Points.Last.MarkerBorderWidth = 2
                         .Points.Last.MarkerSize = 10
-                        .Points.Last.ToolTip = $"Blood Glucose, Not used For calibration, {sgListIndex.Value("value")} {Me.BgUnitsString}"
+                        .Points.Last.ToolTip = $"Blood Glucose, Not used For calibration, {bgValue.ToString(CurrentUICulture)} {Me.BgUnitsString}"
                     Case "CALIBRATION"
                         .Points.AddXY(sgOaDateTime, bgValue)
                         .Points.Last.BorderColor = Color.Red
@@ -1780,13 +1779,15 @@ Public Class Form1
                     Case "INSULIN"
                         _markerInsulinDictionary.Add(sgOaDateTime, CInt(Me.MarkerRow))
                         .Points.AddXY(sgOaDateTime, Me.MarkerRow)
+                        Dim result As Single
+                        Single.TryParse(sgListIndex.Value("deliveredFastAmount"), NumberStyles.Number, CurrentDataCulture, result)
                         Select Case sgListIndex.Value("activationType")
                             Case "AUTOCORRECTION"
                                 .Points.Last.Color = Color.FromArgb(60, Color.MediumPurple)
-                                .Points.Last.ToolTip = $"Auto Correction, {sgListIndex.Value("programmedFastAmount")} U"
+                                .Points.Last.ToolTip = $"Auto Correction, {result.ToString(CurrentUICulture)} U"
                             Case "RECOMMENDED", "UNDETERMINED"
                                 .Points.Last.Color = Color.FromArgb(30, Color.LightBlue)
-                                .Points.Last.ToolTip = $"Bolus, {sgListIndex.Value("programmedFastAmount")} U"
+                                .Points.Last.ToolTip = $"Bolus, {result.ToString(CurrentUICulture)} U"
                             Case Else
                                 Stop
                         End Select
@@ -1800,13 +1801,17 @@ Public Class Form1
                         .Points.Last.MarkerBorderWidth = 0
                         .Points.Last.MarkerSize = 30
                         .Points.Last.MarkerStyle = MarkerStyle.Square
-                        .Points.Last.ToolTip = $"Meal, {sgListIndex.Value("amount")} grams"
+                        Dim result As Single
+                        Single.TryParse(sgListIndex.Value("amount"), NumberStyles.Number, CurrentDataCulture, result)
+                        .Points.Last.ToolTip = $"Meal, {result.ToString(CurrentUICulture)} grams"
                     Case "AUTO_BASAL_DELIVERY"
                         .Points.AddXY(sgOaDateTime, Me.MarkerRow)
                         Dim bolusAmount As String = sgListIndex.Value("bolusAmount")
                         .Points.Last.MarkerBorderColor = Color.Black
-                        .Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3, Me.CurrentUICulture)} U"
-                    Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED", "TIME_CHANGE"
+                        .Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3, CurrentDataCulture).ToString(CurrentUICulture)} U"
+                    Case "TIME_CHANGE"
+                        ' need to handle
+                    Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED"
                         'Stop
                     Case Else
                         Stop
@@ -1816,7 +1821,7 @@ Public Class Form1
         Dim limitsIndexList(s_sGs.Count - 1) As Integer
         GetLimitsList(limitsIndexList)
         For Each sgListIndex As IndexClass(Of SgRecord) In s_sGs.WithIndex()
-            Dim sgOaDateTime As Double = sgListIndex.Value.datetime.ToOADate()
+            Dim sgOaDateTime As Double = sgListIndex.Value.OADate()
             PlotOnePoint(Me.HomePageChart.Series(NameOf(CurrentBGSeries)), sgOaDateTime, sgListIndex.Value.sg, Color.White, Me.InsulinRow, _limitHigh, _limitLow)
             Dim limitsLowValue As Integer = CInt(s_limits(limitsIndexList(sgListIndex.Index))("lowLimit"))
             Dim limitsHighValue As Integer = CInt(s_limits(limitsIndexList(sgListIndex.Index))("highLimit"))
