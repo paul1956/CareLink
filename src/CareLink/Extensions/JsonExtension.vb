@@ -23,8 +23,12 @@ Public Module JsonExtensions
             Else
                 valueTextBox.Text = eValue.Value.ToString(CurrentUICulture)
             End If
+            If eValue.Key = "sg" AndAlso formScale.Height <> 1 Then
+                Dim timeOfLastSG As Date = dic("datetime").DateParse
+                valueTextBox.Text &= $"     @ {timeOfLastSG.ToString(CurrentUICulture)}"
+            End If
         Else
-            valueTextBox.Text = TranslateMessageId(dic, eValue.Value, timeFormat)
+            valueTextBox.Text = TranslateMessageId(dic, eValue.Value, timeFormat, CurrentUICulture)
             AddHandler valueTextBox.Click, AddressOf MessageIdTextBox_Click
         End If
 
@@ -113,6 +117,27 @@ Public Module JsonExtensions
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
         tableLevel1Blue.BackColor = Color.LightBlue
+        If itemIndex = ItemIndexs.lastAlarm Then
+            tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22))
+            Dim keyLabel As New Label With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                            .Text = "messageId",
+                                            .AutoSize = True
+                                           }
+
+            tableLevel1Blue.RowCount += 1
+            Dim textBox1 As TextBox = CreateValueTextBox(innerJson, innerJson.Where(Function(kvp As KeyValuePair(Of String, String)) kvp.Key = "messageId").FirstOrDefault, timeFormat)
+
+            If textBox1.Text.Length > 100 Then
+                Form1.ToolTip1.SetToolTip(textBox1, textBox1.Text)
+            Else
+                Form1.ToolTip1.SetToolTip(textBox1, Nothing)
+            End If
+            tableLevel1Blue.Controls.AddRange({keyLabel,
+                                                       textBox1
+                                                      }
+                                             )
+        End If
+
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In innerJson.WithIndex()
             Application.DoEvents()
             Dim innerRow As KeyValuePair(Of String, String) = c.Value
@@ -201,16 +226,11 @@ Public Module JsonExtensions
                                                                })
                 End If
             Else
-                Dim textBox1 As TextBox = CreateValueTextBox(innerJson, innerRow, timeFormat)
-
-                If innerRow.Key = "messageId" AndAlso textBox1.Text.Length > 100 Then
+                If innerRow.Key <> "messageId" Then
+                    Dim textBox1 As TextBox = CreateValueTextBox(innerJson, innerRow, timeFormat)
                     Form1.ToolTip1.SetToolTip(textBox1, textBox1.Text)
-                Else
-                    Form1.ToolTip1.SetToolTip(textBox1, Nothing)
+                    tableLevel1Blue.Controls.AddRange({keyLabel, textBox1})
                 End If
-                tableLevel1Blue.Controls.AddRange({keyLabel,
-                                                           textBox1
-                                                           })
             End If
         Next
 
@@ -224,18 +244,23 @@ Public Module JsonExtensions
             tableLevel1Blue.Dock = DockStyle.Fill
             Application.DoEvents()
             tableLevel1Blue.ColumnStyles(1).SizeType = SizeType.Absolute
-
             If tableLevel1Blue.RowCount > 5 Then
                 With parentTableLayoutPanel
                     .AutoScroll = True
+                    tableLevel1Blue.Dock = DockStyle.None
+                    Application.DoEvents()
+                    tableLevel1Blue.Dock = DockStyle.Fill
+                    Application.DoEvents()
                 End With
             Else
                 parentTableLayoutPanel.Width = 870
                 tableLevel1Blue.AutoScroll = False
             End If
+            Dim tableLevel1BlueWidth As Integer = tableLevel1Blue.Width
             tableLevel1Blue.AutoSize = False
             tableLevel1Blue.RowCount += 1
             tableLevel1Blue.Height = 22 * (tableLevel1Blue.RowCount - 1)
+            tableLevel1Blue.Width = tableLevel1BlueWidth - 30
             Application.DoEvents()
         ElseIf itemIndex = ItemIndexs.notificationHistory Then
             tableLevel1Blue.RowStyles(1).SizeType = SizeType.AutoSize

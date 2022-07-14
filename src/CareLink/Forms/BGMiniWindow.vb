@@ -13,7 +13,7 @@ Public Class BGMiniWindow
     Private _lastBGValue As Double
     Private _normalizedBG As Double
 
-    Public Sub SetCurrentBGString(Value As String)
+    Public Sub SetCurrentBGString(Value As String, currentdataculture As IFormatProvider)
         _lastBGValue = _currentBGValue
         _currentBGValue = Double.NaN
         If Double.TryParse(Value, NumberStyles.Number, currentdataculture, _currentBGValue) Then

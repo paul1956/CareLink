@@ -39,16 +39,17 @@ Public Class Form1
     Private _recentData As Dictionary(Of String, String)
     Private _recentDatalast As Dictionary(Of String, String)
     Private _recentDataSameCount As Integer
-    Private _scale As New SizeF(1.0F, 1.0F)
     Private _timeFormat As String
     Private _updating As Boolean = False
-
     Friend Const MilitaryTimeWithMinuteFormat As String = "HH:mm"
     Friend Const TwelveHourTimeWithMinuteFormat As String = "h:mm tt"
     Friend ReadOnly _httpClient As New HttpClient()
     Public Const GitHubCareLinkUrl As String = "https://github.com/paul1956/CareLink/"
-
     Friend Property BgUnitsString As String
+
+    Public Shared Property CurrentDataCulture As CultureInfo = New CultureInfo("en-US")
+    Public Shared Property CurrentUICulture As CultureInfo = CultureInfo.CurrentCulture
+    Public Shared Property formScale As New SizeF(1.0F, 1.0F)
 
 #Region "Chart Objects"
 
@@ -97,6 +98,18 @@ Public Class Form1
 
 #Region "Form Events"
 
+    Private Shared Sub Fix(sp As SplitContainer)
+        ' Scale factor depends on orientation
+        Dim sc As Single = If(sp.Orientation = Orientation.Vertical, formScale.Width, formScale.Height)
+        If sp.FixedPanel = FixedPanel.Panel1 Then
+            sp.SplitterDistance = CInt(Math.Truncate(Math.Round(CSng(sp.SplitterDistance) * sc)))
+        ElseIf sp.FixedPanel = FixedPanel.Panel2 Then
+            Dim cs As Integer = If(sp.Orientation = Orientation.Vertical, sp.Panel2.ClientSize.Width, sp.Panel2.ClientSize.Height)
+            Dim newcs As Integer = CInt(Math.Truncate(CSng(cs) * sc))
+            sp.SplitterDistance -= newcs - cs
+        End If
+    End Sub
+
     Private Sub CleanUpNotificationIcon()
         Me.NotifyIcon1.Visible = False
         Me.NotifyIcon1.Icon.Dispose()
@@ -131,25 +144,13 @@ Public Class Form1
         For Each child As Control In c.Controls
             If TypeOf child Is SplitContainer Then
                 Dim sp As SplitContainer = CType(child, SplitContainer)
-                Me.Fix(sp)
+                Fix(sp)
                 Me.Fix(sp.Panel1)
                 Me.Fix(sp.Panel2)
             Else
                 Me.Fix(child)
             End If
         Next child
-    End Sub
-
-    Private Sub Fix(sp As SplitContainer)
-        ' Scale factor depends on orientation
-        Dim sc As Single = If(sp.Orientation = Orientation.Vertical, _scale.Width, _scale.Height)
-        If sp.FixedPanel = FixedPanel.Panel1 Then
-            sp.SplitterDistance = CInt(Math.Truncate(Math.Round(CSng(sp.SplitterDistance) * sc)))
-        ElseIf sp.FixedPanel = FixedPanel.Panel2 Then
-            Dim cs As Integer = If(sp.Orientation = Orientation.Vertical, sp.Panel2.ClientSize.Width, sp.Panel2.ClientSize.Height)
-            Dim newcs As Integer = CInt(Math.Truncate(CSng(cs) * sc))
-            sp.SplitterDistance -= newcs - cs
-        End If
     End Sub
 
     Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
@@ -194,7 +195,7 @@ Public Class Form1
         If Not Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=False) Then
             Exit Sub
         End If
-        If _scale.Height > 1 Then
+        If formScale.Height > 1 Then
             Me.SplitContainer1.SplitterDistance = 0
         End If
         Me.FinishInitialization()
@@ -204,7 +205,7 @@ Public Class Form1
     ' Save the current scale value
     ' ScaleControl() is called during the Form's constructor
     Protected Overrides Sub ScaleControl(factor As SizeF, specified As BoundsSpecified)
-        _scale = New SizeF(_scale.Width * factor.Width, _scale.Height * factor.Height)
+        formScale = New SizeF(formScale.Width * factor.Width, formScale.Height * factor.Height)
         MyBase.ScaleControl(factor, specified)
     End Sub
 
@@ -283,15 +284,22 @@ Public Class Form1
     End Sub
 
     Private Sub StartHereSnapshotLoadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles StartHereSnapshotLoadToolStripMenuItem.Click
+        Dim fileList As String() = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CareLink*.json")
+        Dim defaultFile As String
+        If fileList.Length > 0 Then
+            defaultFile = Path.GetFileName(fileList(0))
+        Else
+            defaultFile = "CareLink"
+        End If
         Dim openFileDialog1 As New OpenFileDialog With {
             .CheckFileExists = True,
             .CheckPathExists = True,
-            .FileName = "CareLink",
+            .FileName = defaultFile,
             .Filter = "json files (*.json)|CareLink*.json",
             .InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
             .Multiselect = False,
             .ReadOnlyChecked = True,
-            .RestoreDirectory = False,
+            .RestoreDirectory = True,
             .SupportMultiDottedExtensions = False,
             .Title = "Select CareLink saved snapshot to load",
             .ValidateNames = True
@@ -383,7 +391,7 @@ Public Class Form1
                             Me.CursorTimeLabel.Visible = False
                             Me.CursorValueLabel.Visible = False
                         Case NameOf(MarkerSeries)
-                            Dim markerToolTip() As String = result.Series.Points(result.PointIndex).ToolTip.Split(","c)
+                            Dim markerToolTip() As String = result.Series.Points(result.PointIndex).ToolTip.Split(":"c)
                             Dim xValue As Date = Date.FromOADate(result.Series.Points(result.PointIndex).XValue)
                             Me.CursorTimeLabel.Visible = True
                             Me.CursorTimeLabel.Text = xValue.ToString(_timeFormat)
@@ -396,14 +404,16 @@ Public Class Form1
                                 Case 2
                                     Me.CursorMessage1Label.Text = markerToolTip(0)
                                     Select Case markerToolTip(0)
-                                        Case "Basal"
+                                        Case "Auto Correction", "Basal", "Bolus"
                                             Me.CursorPictureBox.Image = My.Resources.InsulinVial
-                                        Case "Bolus"
-                                            Me.CursorPictureBox.Image = My.Resources.InsulinVial
+                                            Me.CursorMessage1Label.Visible = True
                                         Case "Meal"
                                             Me.CursorPictureBox.Image = My.Resources.MealImageLarge
+                                            Me.CursorMessage1Label.Visible = True
                                         Case Else
                                             Me.CursorPictureBox.Image = Nothing
+                                            Me.CursorMessage1Label.Visible = False
+
                                     End Select
                                     Me.CursorMessage2Label.Visible = False
                                     Me.CursorValueLabel.Top = Me.CursorMessage1Label.PositionBelow
@@ -419,6 +429,7 @@ Public Class Form1
                                     End Select
                                     Me.CursorMessage1Label.Text = markerToolTip(0)
                                     Me.CursorMessage1Label.Top = Me.CursorPictureBox.PositionBelow
+                                    Me.CursorMessage1Label.Visible = True
                                     Me.CursorMessage2Label.Text = markerToolTip(1).Trim
                                     Me.CursorMessage2Label.Top = Me.CursorMessage1Label.PositionBelow
                                     Me.CursorMessage2Label.Visible = True
@@ -429,6 +440,7 @@ Public Class Form1
                             End Select
                         Case "Default"
                             Me.CursorPictureBox.Image = Nothing
+                            Me.CursorMessage1Label.Visible = False
                             Me.CursorMessage2Label.Visible = False
                             Me.CursorValueLabel.Visible = False
                             Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(_timeFormat)
@@ -469,16 +481,16 @@ Public Class Form1
         Dim highLimitY As Double = e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, _limitHigh)
         Dim lowLimitY As Double = e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, _limitLow)
 
-        Dim lowRawHeight As Integer = CInt((lowLimitY - homePageChartY) * _scale.Height)
+        Dim lowRawHeight As Integer = CInt((lowLimitY - homePageChartY) * formScale.Height)
         Dim lowHeight As Integer = If(_homePageChartChartArea.AxisX.ScrollBar.IsVisible,
                                       CInt(lowRawHeight - _homePageChartChartArea.AxisX.ScrollBar.Size),
                                       lowRawHeight
                                      )
-        Dim highHeight As Integer = CInt(275 * _scale.Height)
+        Dim highHeight As Integer = CInt(275 * formScale.Height)
         Dim highAreaRectangle As New Rectangle(homePagelocation,
                                                New Size(homePageChartWidth, highHeight))
 
-        Dim lowOffset As Integer = CInt((_homePageChartRelitivePosition.Height + _homePageChartRelitivePosition.Y + 1) * _scale.Height)
+        Dim lowOffset As Integer = CInt((_homePageChartRelitivePosition.Height + _homePageChartRelitivePosition.Y + 1) * formScale.Height)
         Dim lowStartLocation As New Point(CInt(_homePageChartRelitivePosition.X), lowOffset)
 
         Dim lowAreaRectangle As New Rectangle(lowStartLocation,
@@ -1099,11 +1111,11 @@ Public Class Form1
                         s_totalDailyDose += deliveredAmount
                         Select Case sgListIndex.Value("activationType")
                             Case "AUTOCORRECTION"
-                                .Points.Last.ToolTip = $"Auto Correction, {deliveredAmount.ToString(CurrentUICulture)} U"
+                                .Points.Last.ToolTip = $"Auto Correction:{deliveredAmount.ToString(CurrentUICulture)} U"
                                 .Points.Last.Color = Color.MediumPurple
                                 s_totalAutoCorrection += deliveredAmount
                             Case "RECOMMENDED", "UNDETERMINED"
-                                .Points.Last.ToolTip = $"Bolus, {deliveredAmount.ToString(CurrentUICulture)} U"
+                                .Points.Last.ToolTip = $"Bolus:{deliveredAmount.ToString(CurrentUICulture)} U"
                                 .Points.Last.Color = Color.LightBlue
                                 s_totalManualBolus += deliveredAmount
                             Case Else
@@ -1115,7 +1127,7 @@ Public Class Form1
                     Case "AUTO_BASAL_DELIVERY"
                         Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue(CurrentDataCulture, "bolusAmount")
                         .Points.AddXY(sgOaDateTime, maxActiveInsulin)
-                        .Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3).ToString(CurrentUICulture)} U"
+                        .Points.Last.ToolTip = $"Basal:{bolusAmount.RoundDouble(3).ToString(CurrentUICulture)} U"
                         .Points.Last.MarkerSize = 8
                         s_totalBasal += CSng(bolusAmount)
                         s_totalDailyDose += CSng(bolusAmount)
@@ -1261,18 +1273,18 @@ Public Class Form1
                     Me.BgUnitsString = GetLocalizedUnits(s_bgUnits)
 
                     If Me.BgUnitsString = "mg/dl" Then
+                        S_criticalLow = 50
                         _limitHigh = 180
                         _limitLow = 70
                         _markerRow = 400
                         _homePageChartChartArea.AxisX.LabelStyle.Format = "hh tt"
                         _activeInsulinTabChartArea.AxisX.LabelStyle.Format = "hh tt"
-                        _messages("BC_MESSAGE_SG_UNDER_50_MG_DL") = $"Sensor Glucose under 50 {Me.BgUnitsString}"
                     Else
+                        S_criticalLow = 2.7
                         _limitHigh = 10.0
                         _limitLow = (70 / 18).RoundSingle(1)
                         _markerRow = (400 / 18).RoundSingle(1)
                         _activeInsulinTabChartArea.AxisX.LabelStyle.Format = "HH"
-                        _messages("BC_MESSAGE_SG_UNDER_50_MG_DL") = $"Sensor Glucose under 2.7 {Me.BgUnitsString}"
                     End If
                     Me.AboveHighLimitMessageLabel.Text = $"Above {_limitHigh} {Me.BgUnitsString}"
                     Me.BelowLowLimitMessageLabel.Text = $"Below {_limitLow} {Me.BgUnitsString}"
@@ -1307,7 +1319,7 @@ Public Class Form1
                     layoutPanel1.RowCount = 1
                     singleItem = True
                 Case ItemIndexs.sgs
-                    s_sGs = LoadList(row.Value, True).ToSgList()
+                    s_sGs = LoadList(row.Value, True).ToSgList(CurrentDataCulture)
                     Me.SGsDataGridView.DataSource = s_sGs
                     For Each column As DataGridViewTextBoxColumn In Me.SGsDataGridView.Columns
                         If _filterJsonData AndAlso s_alwaysFilter.Contains(column.Name) Then
@@ -1568,7 +1580,7 @@ Public Class Form1
             Me.CurrentBG.Parent = Me.ShieldPictureBox
             Me.CurrentBG.Text = s_lastSG("sg")
             Me.NotifyIcon1.Text = $"{s_lastSG("sg")} {Me.BgUnitsString}"
-            _bgMiniDisplay.SetCurrentBGString(s_lastSG("sg"))
+            _bgMiniDisplay.SetCurrentBGString(s_lastSG("sg"), CurrentDataCulture)
             Me.CurrentBG.Visible = True
             Me.SensorMessage.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield
@@ -1579,7 +1591,7 @@ Public Class Form1
             Me.ShieldUnitsLabel.Text = Me.BgUnitsString
             Me.ShieldUnitsLabel.Visible = True
         Else
-            _bgMiniDisplay.SetCurrentBGString("---")
+            _bgMiniDisplay.SetCurrentBGString("---", CurrentDataCulture)
             Me.CurrentBG.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield_Disabled
             Me.SensorMessage.Visible = True
@@ -1759,7 +1771,6 @@ Public Class Form1
             Dim bgValue As Single
             If sgListIndex.Value.TryGetValue("value", bgValueString) Then
                 Single.TryParse(bgValueString, NumberStyles.Number, CurrentDataCulture, bgValue)
-                If bgValue < Me.InsulinRow Then Stop
             End If
             With Me.HomePageChart.Series(NameOf(MarkerSeries))
                 Select Case sgListIndex.Value("type")
@@ -1770,14 +1781,14 @@ Public Class Form1
                         .Points.Last.Color = Color.Transparent
                         .Points.Last.MarkerBorderWidth = 2
                         .Points.Last.MarkerSize = 10
-                        .Points.Last.ToolTip = $"Blood Glucose, Not used For calibration, {bgValue.ToString(CurrentUICulture)} {Me.BgUnitsString}"
+                        .Points.Last.ToolTip = $"Blood Glucose: Not used For calibration: {bgValue.ToString(CurrentUICulture)} {Me.BgUnitsString}"
                     Case "CALIBRATION"
                         .Points.AddXY(sgOaDateTime, bgValue)
                         .Points.Last.BorderColor = Color.Red
                         .Points.Last.Color = Color.Transparent
                         .Points.Last.MarkerBorderWidth = 2
                         .Points.Last.MarkerSize = 8
-                        .Points.Last.ToolTip = $"Blood Glucose, Calibration {If(CBool(sgListIndex.Value("calibrationSuccess")), "accepted", "not accepted")}, {sgListIndex.Value("value")} {Me.BgUnitsString}"
+                        .Points.Last.ToolTip = $"Blood Glucose: Calibration {If(CBool(sgListIndex.Value("calibrationSuccess")), "accepted", "not accepted")}: {sgListIndex.Value("value")} {Me.BgUnitsString}"
                     Case "INSULIN"
                         _markerInsulinDictionary.Add(sgOaDateTime, CInt(Me.MarkerRow))
                         .Points.AddXY(sgOaDateTime, Me.MarkerRow)
@@ -1786,10 +1797,10 @@ Public Class Form1
                         Select Case sgListIndex.Value("activationType")
                             Case "AUTOCORRECTION"
                                 .Points.Last.Color = Color.FromArgb(60, Color.MediumPurple)
-                                .Points.Last.ToolTip = $"Auto Correction, {result.ToString(CurrentUICulture)} U"
+                                .Points.Last.ToolTip = $"Auto Correction: {result.ToString(CurrentUICulture)} U"
                             Case "RECOMMENDED", "UNDETERMINED"
                                 .Points.Last.Color = Color.FromArgb(30, Color.LightBlue)
-                                .Points.Last.ToolTip = $"Bolus, {result.ToString(CurrentUICulture)} U"
+                                .Points.Last.ToolTip = $"Bolus: {result.ToString(CurrentUICulture)} U"
                             Case Else
                                 Stop
                         End Select
@@ -1805,12 +1816,12 @@ Public Class Form1
                         .Points.Last.MarkerStyle = MarkerStyle.Square
                         Dim result As Single
                         Single.TryParse(sgListIndex.Value("amount"), NumberStyles.Number, CurrentDataCulture, result)
-                        .Points.Last.ToolTip = $"Meal, {result.ToString(CurrentUICulture)} grams"
+                        .Points.Last.ToolTip = $"Meal:{result.ToString(CurrentUICulture)} grams"
                     Case "AUTO_BASAL_DELIVERY"
                         .Points.AddXY(sgOaDateTime, Me.MarkerRow)
                         Dim bolusAmount As String = sgListIndex.Value("bolusAmount")
                         .Points.Last.MarkerBorderColor = Color.Black
-                        .Points.Last.ToolTip = $"Basal, {bolusAmount.RoundDouble(3, CurrentDataCulture).ToString(CurrentUICulture)} U"
+                        .Points.Last.ToolTip = $"Basal:{bolusAmount.RoundDouble(3, CurrentDataCulture).ToString(CurrentUICulture)} U"
                     Case "TIME_CHANGE"
                         ' need to handle
                     Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED"

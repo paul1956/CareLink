@@ -22,13 +22,17 @@ https://github.com/paul1956/CareLink/releases/
 - Medtronic CareLink data display
 
 ## Updated
-- 7/3/2022
+- 7/13/2022
 
 ## What's New in this release
+  New in 3.4.0.3
+  Fixes to date conversion for better international support
+  Added new method to do AIT decay, you can select new method under options
+
   New in 3.2.0.0
   First public release supporting 770G and 780 in North America and Europe
   Scale displays have limited support the app works best at 100%
-  Issue reporting and check for new realese have been added to Help menu.
+  Issue reporting and check for new release have been added to Help menu.
 
 ## Description
 

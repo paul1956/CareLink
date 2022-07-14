@@ -2,6 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Runtime.CompilerServices
+
 Friend Module UserMessageHandler
 
     ' Add additional units here
@@ -12,7 +14,6 @@ Friend Module UserMessageHandler
 
     Friend ReadOnly _messages As New Dictionary(Of String, String) From {
                             {"BC_MESSAGE_CONFIRM_SENSOR_SIGNAL_CHECK_BG", "No calibration occured.Confirm sensor signal. Check BG again to calibrate sensor."},
-                            {"BC_MESSAGE_SG_UNDER_50_MG_DL", "Sensor Glucose under..."}, ' The actual message is generated at runtime
                             {"BC_SID_BASAL_STARTED_SMART_GUARD", "Basal started SmartGuard."},
                             {"BC_SID_BG_REQUIRED_CONTENT", "BG required Content."},
                             {"BC_SID_BOLUS_ENTRY_TIMED_OUT", "Bolus not delivered. Bolus entry timed out before delivery. If bolus was intended, enter values again."},
@@ -50,7 +51,8 @@ Friend Module UserMessageHandler
     ' Everything before the : is the message, the text after the : is the key in the dictionary that
     ' will replace (0). (units) will be replace by localized units.
     '
-    Friend ReadOnly _messagesSpecialHandling As New Dictionary(Of String, String) From {
+    Friend ReadOnly s_messagesSpecialHandling As New Dictionary(Of String, String) From {
+                            {"BC_MESSAGE_SG_UNDER_50_MG_DL", "Low SG. Sensor Glucose is under (CriticalLow) (units). Check and treat.:sg"},
                             {"BC_MESSAGE_BASAL_STARTED", "Auto Mode exit. (0) started. Would you like to review Auto Mode Readiness Screen?:basalName"},
                             {"BC_MESSAGE_CORRECTION_BOLUS_RECOMMENDATION", $"Blood Glucose (0) (units). Correction bolus recommended.:bgValue"},
                             {"BC_MESSAGE_TIME_REMAINING_CHANGE_RESERVOIR", "Low Reservoir (0) units remaining. Change reservoir.:unitsRemaining"},
@@ -58,21 +60,27 @@ Friend Module UserMessageHandler
                             {"BC_SID_LOW_SD_CHECK_BG", $"Alert on low (0) (units). Low sensor glucose. Check BG.:sg"},
                             {"BC_SID_THREE_DAYS_SINCE_LAST_SET_CHANGE", "(0) days since last set change:lastSetChange"}
                         }
+    <Extension>
+    Private Function FormatTimeOnly(rawTime As String, format As String) As String
+        Return New TimeOnly(CInt(rawTime.Substring(0, 2)), CInt(rawTime.Substring(3, 2))).ToString(format)
+    End Function
 
     Friend Function GetLocalizedUnits(unitName As String) As String
         Return _unitsStrings(unitName)
     End Function
-
-    Friend Function TranslateMessageId(dic As Dictionary(Of String, String), entryValue As String, TimeFormat As String) As String
+    Friend Function TranslateMessageId(dic As Dictionary(Of String, String), entryValue As String, TimeFormat As String, CurrentUICulture As IFormatProvider) As String
         Dim formattedMessage As String = ""
         If _messages.TryGetValue(entryValue, formattedMessage) Then
         Else
-            If _messagesSpecialHandling.TryGetValue(entryValue, formattedMessage) Then
+            If s_messagesSpecialHandling.TryGetValue(entryValue, formattedMessage) Then
                 Dim splitMessageValue As String() = formattedMessage.Split(":")
                 Dim key As String = splitMessageValue(1)
                 Dim replacementValue As String = If(key = "secondaryTime", dic(key).FormatTimeOnly(TimeFormat), dic(key))
-                formattedMessage = splitMessageValue(0).Replace("(0)", replacementValue).Replace("(units)", GetLocalizedUnits(s_bgUnits))
+                formattedMessage = splitMessageValue(0).Replace("(0)", replacementValue) _
+                                                       .Replace("(CriticalLow)", S_criticalLow.ToString(CurrentUICulture)) _
+                                                       .Replace("(units)", GetLocalizedUnits(s_bgUnits))
             Else
+
                 If Debugger.IsAttached Then
                     MsgBox($"Unknown sensor message '{entryValue}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Unknown Sensor Message")
                 End If

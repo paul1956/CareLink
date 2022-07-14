@@ -5,9 +5,6 @@
 Imports System.Globalization
 
 Friend Module PumpVariables
-    Friend Property CurrentDataCulture As CultureInfo = New CultureInfo("en-US")
-
-    Friend Property CurrentUICulture As CultureInfo = CultureInfo.CurrentCulture
 
     Friend ReadOnly _listOfSingleItems As New List(Of Integer) From {
                         ItemIndexs.lastSG,
@@ -43,6 +40,7 @@ Friend Module PumpVariables
     Public s_conduitMedicalDeviceInRange As Boolean
     Public s_conduitSensorInRange As Boolean
     Public s_conduitSerialNumber As String
+    Public S_criticalLow As Single
     Public s_currentServerTime As String
     Public s_finalCalibration As Boolean
     Public s_firstName As String

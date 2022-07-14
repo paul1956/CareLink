@@ -10,8 +10,16 @@ Friend Module TimeExtensions
     Public ReadOnly s_thirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
 
     <Extension>
-    Friend Function FormatTimeOnly(rawTime As String, format As String) As String
-        Return New TimeOnly(CInt(rawTime.Substring(0, 2)), CInt(rawTime.Substring(3, 2))).ToString(format)
+    Public Function DateParse(dateAsString As String) As Date
+        Dim resultDate As Date
+        If Date.TryParse(dateAsString, Form1.CurrentDataCulture, Globalization.DateTimeStyles.None, resultDate) Then
+            Return resultDate
+        End If
+        If Date.TryParse(dateAsString, Form1.CurrentUICulture, Globalization.DateTimeStyles.None, resultDate) Then
+            Return resultDate
+        End If
+        MsgBox($"System.FormatException: String '{dateAsString}' was not recognized as a valid DateTime", MsgBoxStyle.ApplicationModal)
+        End
     End Function
 
     <Extension>
@@ -22,11 +30,11 @@ Friend Module TimeExtensions
             index -= 1
         End If
         If sgList(index).TryGetValue("previousDateTime", sgDateTimeString) Then
-            sgDateTime = Date.Parse(sgDateTimeString, CurrentDataCulture)
+            sgDateTime = sgDateTimeString.DateParse
         ElseIf sgList(index).TryGetValue("datetime", sgDateTimeString) Then
-            sgDateTime = Date.Parse(sgDateTimeString, CurrentDataCulture)
+            sgDateTime = sgDateTimeString.DateParse
         ElseIf sgList(index).TryGetValue("dateTime", sgDateTimeString) Then
-            sgDateTime = Date.Parse(sgDateTimeString.Split("-")(0), CurrentDataCulture)
+            sgDateTime = sgDateTimeString.Split("-")(0).DateParse
         Else
             sgDateTime = Now
         End If

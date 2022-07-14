@@ -7,20 +7,20 @@ Imports System.Runtime.CompilerServices
 
 Public Module SGListExtensions
     <Extension()>
-    Friend Function ToSgList(innerJson As List(Of Dictionary(Of String, String))) As List(Of SgRecord)
+    Friend Function ToSgList(innerJson As List(Of Dictionary(Of String, String)), currentDataCulture As IFormatProvider) As List(Of SgRecord)
         Dim sGs As New List(Of SgRecord)
         Dim lastValidTime As Date
         Dim firstValidTime As Integer
         For firstValidTime = 0 To innerJson.Count - 1
             Dim dateTimeString As String = Nothing
             If innerJson(firstValidTime).TryGetValue("datetime", dateTimeString) Then
-                lastValidTime = Date.Parse(dateTimeString, CurrentDataCulture) - (firstValidTime * s_fiveMinuteSpan)
+                lastValidTime = dateTimeString.DateParse - (firstValidTime * s_fiveMinuteSpan)
                 Exit For
             End If
         Next
         For i As Integer = 0 To innerJson.Count - 1
 
-            Dim sgItem As New SgRecord(innerJson, i, lastValidTime)
+            Dim sgItem As New SgRecord(innerJson, i, lastValidTime, currentDataCulture)
             If sgItem.sg = 0 Then
                 sgItem.sg = Single.NaN
             End If
