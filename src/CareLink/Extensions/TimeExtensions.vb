@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
 Imports System.Runtime.CompilerServices
 
 Friend Module TimeExtensions
@@ -10,31 +11,31 @@ Friend Module TimeExtensions
     Public ReadOnly s_thirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
 
     <Extension>
-    Public Function DateParse(dateAsString As String) As Date
+    Public Function DateParse(dateAsString As String, currentDataCulture As IFormatProvider, CurrentUICulture As IFormatProvider) As Date
         Dim resultDate As Date
-        If Date.TryParse(dateAsString, Form1.CurrentDataCulture, Globalization.DateTimeStyles.None, resultDate) Then
+        If Date.TryParse(dateAsString, currentDataCulture, DateTimeStyles.None, resultDate) Then
             Return resultDate
         End If
-        If Date.TryParse(dateAsString, Form1.CurrentUICulture, Globalization.DateTimeStyles.None, resultDate) Then
+        If Date.TryParse(dateAsString, CurrentUICulture, DateTimeStyles.None, resultDate) Then
             Return resultDate
         End If
-        MsgBox($"System.FormatException: String '{dateAsString}' was not recognized as a valid DateTime", MsgBoxStyle.ApplicationModal)
+        MsgBox($"System.FormatException: String '{dateAsString}' was not recognized as a valid DateTime", MsgBoxStyle.ApplicationModal Or MsgBoxStyle.Critical)
         End
     End Function
 
     <Extension>
-    Friend Function SafeGetSgDateTime(sgList As List(Of Dictionary(Of String, String)), index As Integer) As Date
+    Friend Function SafeGetSgDateTime(sgList As List(Of Dictionary(Of String, String)), index As Integer, currentDataCulture As CultureInfo, currentUICulture As CultureInfo) As Date
         Dim sgDateTimeString As String = ""
         Dim sgDateTime As Date
         If sgList(index).Count < 7 Then
             index -= 1
         End If
         If sgList(index).TryGetValue("previousDateTime", sgDateTimeString) Then
-            sgDateTime = sgDateTimeString.DateParse
+            sgDateTime = sgDateTimeString.DateParse(currentDataCulture, currentUICulture)
         ElseIf sgList(index).TryGetValue("datetime", sgDateTimeString) Then
-            sgDateTime = sgDateTimeString.DateParse
+            sgDateTime = sgDateTimeString.DateParse(currentDataCulture, currentUICulture)
         ElseIf sgList(index).TryGetValue("dateTime", sgDateTimeString) Then
-            sgDateTime = sgDateTimeString.Split("-")(0).DateParse
+            sgDateTime = sgDateTimeString.Split("-")(0).DateParse(currentDataCulture, currentUICulture)
         Else
             sgDateTime = Now
         End If

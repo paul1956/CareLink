@@ -86,7 +86,7 @@ Public Class BGMiniWindow
     End Sub
 
     Private Sub playSoundFromResource(SoundName As String)
-        Using player As New SoundPlayer(My.Resources.ResourceManager.GetStream(SoundName, Globalization.CultureInfo.CurrentUICulture))
+        Using player As New SoundPlayer(My.Resources.ResourceManager.GetStream(SoundName, CultureInfo.CurrentUICulture))
             player.Play()
         End Using
     End Sub

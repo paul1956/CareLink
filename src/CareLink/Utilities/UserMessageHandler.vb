@@ -26,6 +26,7 @@ Friend Module UserMessageHandler
                             {"BC_SID_INSERT_NEW_SENSOR", "Sensor expired, Insert new sensor."},
                             {"BC_SID_MOVE_AWAY_FROM_ELECTR_DEVICES", "Possible signal interface. Move away from electronic devices.May take 15 minutes to find signal."},
                             {"BC_SID_MOVE_PUMP_CLOSER_TO_MINILINK", "Move pump closer to transmitter."},
+                            {"BC_SID_REPLACE_BATTERY_SOON", "Battery low. Replace battery soon."},
                             {"BC_SID_SG_APPROACH_HIGH_LIMIT_CHECK_BG", "Alert before high. Sensor glucose approaching high limit. Check BG."},
                             {"BC_SID_SG_APPROACH_LOW_LIMIT_CHECK_BG", "Alert before low. Sensor Glucose approaching low limit. Check BG."},
                             {"BC_SID_SG_RISE_RAPID", "Raise Alert. Sensor glucose raising rapidly."},

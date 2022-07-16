@@ -25,25 +25,25 @@ Partial Class Form1
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
-        Me.StartHereToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.StartHereLoginToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuStartHere = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuStartHereLogin = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.StartHereSnapshotLoadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.StartHereSnapshotSaveToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuStartHereSnapshotLoad = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuStartHereSnapshotSave = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.StartHereExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.OptionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.OptionsFilterRawJSONDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.OptionsSetupEmailServerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.OptionsUseTestDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.OptionsUseLastSavedDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.OptionsUseAdvancedAITDecayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ViewShowMiniDisplayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MenuHelpReportIssueMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.StartHereExit = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuOptions = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuOptionsFilterRawJSONData = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuOptionsSetupEmailServer = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuOptionsUseTestData = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuOptionsUseLastSavedData = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuOptionsUseAdvancedAITDecay = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuView = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuViewShowMiniDisplay = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuHelp = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuHelpReportAProblem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelpCheckForUpdatesMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.HelpAboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuHelpAbout = New System.Windows.Forms.ToolStripMenuItem()
         Me.ServerUpdateTimer = New System.Windows.Forms.Timer(Me.components)
         Me.TableLayoutPanelSummaryData = New System.Windows.Forms.TableLayoutPanel()
         Me.TableLayoutPanelTop1 = New System.Windows.Forms.TableLayoutPanel()
@@ -161,133 +161,133 @@ Partial Class Form1
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StartHereToolStripMenuItem, Me.OptionsToolStripMenuItem, Me.ViewToolStripMenuItem, Me.HelpToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStartHere, Me.MenuOptions, Me.MenuView, Me.MenuHelp})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1384, 24)
         Me.MenuStrip1.TabIndex = 0
         Me.MenuStrip1.Text = "MenuStrip1"
         '
-        'StartHereToolStripMenuItem
+        'MenuStartHere
         '
-        Me.StartHereToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StartHereLoginToolStripMenuItem, Me.ToolStripSeparator1, Me.StartHereSnapshotLoadToolStripMenuItem, Me.StartHereSnapshotSaveToolStripMenuItem, Me.ToolStripSeparator2, Me.StartHereExitToolStripMenuItem})
-        Me.StartHereToolStripMenuItem.Name = "StartHereToolStripMenuItem"
-        Me.StartHereToolStripMenuItem.Size = New System.Drawing.Size(71, 20)
-        Me.StartHereToolStripMenuItem.Text = "Start Here"
+        Me.MenuStartHere.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStartHereLogin, Me.ToolStripSeparator1, Me.MenuStartHereSnapshotLoad, Me.MenuStartHereSnapshotSave, Me.ToolStripSeparator2, Me.StartHereExit})
+        Me.MenuStartHere.Name = "MenuStartHere"
+        Me.MenuStartHere.Size = New System.Drawing.Size(71, 20)
+        Me.MenuStartHere.Text = "Start Here"
         '
-        'StartHereLoginToolStripMenuItem
+        'MenuStartHereLogin
         '
-        Me.StartHereLoginToolStripMenuItem.Name = "StartHereLoginToolStripMenuItem"
-        Me.StartHereLoginToolStripMenuItem.Size = New System.Drawing.Size(190, 22)
-        Me.StartHereLoginToolStripMenuItem.Text = "Login"
+        Me.MenuStartHereLogin.Name = "MenuStartHereLogin"
+        Me.MenuStartHereLogin.Size = New System.Drawing.Size(190, 22)
+        Me.MenuStartHereLogin.Text = "Login"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
         Me.ToolStripSeparator1.Size = New System.Drawing.Size(187, 6)
         '
-        'StartHereSnapshotLoadToolStripMenuItem
+        'MenuStartHereSnapshotLoad
         '
-        Me.StartHereSnapshotLoadToolStripMenuItem.Name = "StartHereSnapshotLoadToolStripMenuItem"
-        Me.StartHereSnapshotLoadToolStripMenuItem.Size = New System.Drawing.Size(190, 22)
-        Me.StartHereSnapshotLoadToolStripMenuItem.Text = "Snapshot Load"
+        Me.MenuStartHereSnapshotLoad.Name = "MenuStartHereSnapshotLoad"
+        Me.MenuStartHereSnapshotLoad.Size = New System.Drawing.Size(190, 22)
+        Me.MenuStartHereSnapshotLoad.Text = "Snapshot Load"
         '
-        'StartHereSnapshotSaveToolStripMenuItem
+        'MenuStartHereSnapshotSave
         '
-        Me.StartHereSnapshotSaveToolStripMenuItem.Name = "StartHereSnapshotSaveToolStripMenuItem"
-        Me.StartHereSnapshotSaveToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
-        Me.StartHereSnapshotSaveToolStripMenuItem.Size = New System.Drawing.Size(190, 22)
-        Me.StartHereSnapshotSaveToolStripMenuItem.Text = "Snapshot &Save"
+        Me.MenuStartHereSnapshotSave.Name = "MenuStartHereSnapshotSave"
+        Me.MenuStartHereSnapshotSave.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
+        Me.MenuStartHereSnapshotSave.Size = New System.Drawing.Size(190, 22)
+        Me.MenuStartHereSnapshotSave.Text = "Snapshot &Save"
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
         Me.ToolStripSeparator2.Size = New System.Drawing.Size(187, 6)
         '
-        'StartHereExitToolStripMenuItem
+        'StartHereExit
         '
-        Me.StartHereExitToolStripMenuItem.Image = Global.CareLink.My.Resources.Resources.AboutBox
-        Me.StartHereExitToolStripMenuItem.Name = "StartHereExitToolStripMenuItem"
-        Me.StartHereExitToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.X), System.Windows.Forms.Keys)
-        Me.StartHereExitToolStripMenuItem.Size = New System.Drawing.Size(190, 22)
-        Me.StartHereExitToolStripMenuItem.Text = "E&xit"
+        Me.StartHereExit.Image = Global.CareLink.My.Resources.Resources.AboutBox
+        Me.StartHereExit.Name = "StartHereExit"
+        Me.StartHereExit.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.X), System.Windows.Forms.Keys)
+        Me.StartHereExit.Size = New System.Drawing.Size(190, 22)
+        Me.StartHereExit.Text = "E&xit"
         '
-        'OptionsToolStripMenuItem
+        'MenuOptions
         '
-        Me.OptionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OptionsFilterRawJSONDataToolStripMenuItem, Me.OptionsSetupEmailServerToolStripMenuItem, Me.OptionsUseTestDataToolStripMenuItem, Me.OptionsUseLastSavedDataToolStripMenuItem, Me.OptionsUseAdvancedAITDecayToolStripMenuItem})
-        Me.OptionsToolStripMenuItem.Name = "OptionsToolStripMenuItem"
-        Me.OptionsToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
-        Me.OptionsToolStripMenuItem.Text = "Options"
+        Me.MenuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsSetupEmailServer, Me.MenuOptionsUseTestData, Me.MenuOptionsUseLastSavedData, Me.MenuOptionsUseAdvancedAITDecay})
+        Me.MenuOptions.Name = "MenuOptions"
+        Me.MenuOptions.Size = New System.Drawing.Size(61, 20)
+        Me.MenuOptions.Text = "Options"
         '
-        'OptionsFilterRawJSONDataToolStripMenuItem
+        'MenuOptionsFilterRawJSONData
         '
-        Me.OptionsFilterRawJSONDataToolStripMenuItem.Checked = True
-        Me.OptionsFilterRawJSONDataToolStripMenuItem.CheckOnClick = True
-        Me.OptionsFilterRawJSONDataToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.OptionsFilterRawJSONDataToolStripMenuItem.Name = "OptionsFilterRawJSONDataToolStripMenuItem"
-        Me.OptionsFilterRawJSONDataToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
-        Me.OptionsFilterRawJSONDataToolStripMenuItem.Text = "Filter Raw JSON Data"
+        Me.MenuOptionsFilterRawJSONData.Checked = True
+        Me.MenuOptionsFilterRawJSONData.CheckOnClick = True
+        Me.MenuOptionsFilterRawJSONData.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.MenuOptionsFilterRawJSONData.Name = "MenuOptionsFilterRawJSONData"
+        Me.MenuOptionsFilterRawJSONData.Size = New System.Drawing.Size(204, 22)
+        Me.MenuOptionsFilterRawJSONData.Text = "Filter Raw JSON Data"
         '
-        'OptionsSetupEmailServerToolStripMenuItem
+        'MenuOptionsSetupEmailServer
         '
-        Me.OptionsSetupEmailServerToolStripMenuItem.Name = "OptionsSetupEmailServerToolStripMenuItem"
-        Me.OptionsSetupEmailServerToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
-        Me.OptionsSetupEmailServerToolStripMenuItem.Text = "Setup Email Server"
+        Me.MenuOptionsSetupEmailServer.Name = "MenuOptionsSetupEmailServer"
+        Me.MenuOptionsSetupEmailServer.Size = New System.Drawing.Size(204, 22)
+        Me.MenuOptionsSetupEmailServer.Text = "Setup Email Server"
         '
-        'OptionsUseTestDataToolStripMenuItem
+        'MenuOptionsUseTestData
         '
-        Me.OptionsUseTestDataToolStripMenuItem.CheckOnClick = True
-        Me.OptionsUseTestDataToolStripMenuItem.Name = "OptionsUseTestDataToolStripMenuItem"
-        Me.OptionsUseTestDataToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
-        Me.OptionsUseTestDataToolStripMenuItem.Text = "Use Test Data"
+        Me.MenuOptionsUseTestData.CheckOnClick = True
+        Me.MenuOptionsUseTestData.Name = "MenuOptionsUseTestData"
+        Me.MenuOptionsUseTestData.Size = New System.Drawing.Size(204, 22)
+        Me.MenuOptionsUseTestData.Text = "Use Test Data"
         '
-        'OptionsUseLastSavedDataToolStripMenuItem
+        'MenuOptionsUseLastSavedData
         '
-        Me.OptionsUseLastSavedDataToolStripMenuItem.CheckOnClick = True
-        Me.OptionsUseLastSavedDataToolStripMenuItem.Name = "OptionsUseLastSavedDataToolStripMenuItem"
-        Me.OptionsUseLastSavedDataToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
-        Me.OptionsUseLastSavedDataToolStripMenuItem.Text = "Use Last Saved Data"
+        Me.MenuOptionsUseLastSavedData.CheckOnClick = True
+        Me.MenuOptionsUseLastSavedData.Name = "MenuOptionsUseLastSavedData"
+        Me.MenuOptionsUseLastSavedData.Size = New System.Drawing.Size(204, 22)
+        Me.MenuOptionsUseLastSavedData.Text = "Use Last Saved Data"
         '
-        'OptionsUseAdvancedAITDecayToolStripMenuItem
+        'MenuOptionsUseAdvancedAITDecay
         '
-        Me.OptionsUseAdvancedAITDecayToolStripMenuItem.Checked = True
-        Me.OptionsUseAdvancedAITDecayToolStripMenuItem.CheckOnClick = True
-        Me.OptionsUseAdvancedAITDecayToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Indeterminate
-        Me.OptionsUseAdvancedAITDecayToolStripMenuItem.Name = "OptionsUseAdvancedAITDecayToolStripMenuItem"
-        Me.OptionsUseAdvancedAITDecayToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
-        Me.OptionsUseAdvancedAITDecayToolStripMenuItem.Text = "Use Advanced AIT Decay"
+        Me.MenuOptionsUseAdvancedAITDecay.Checked = True
+        Me.MenuOptionsUseAdvancedAITDecay.CheckOnClick = True
+        Me.MenuOptionsUseAdvancedAITDecay.CheckState = System.Windows.Forms.CheckState.Indeterminate
+        Me.MenuOptionsUseAdvancedAITDecay.Name = "MenuOptionsUseAdvancedAITDecay"
+        Me.MenuOptionsUseAdvancedAITDecay.Size = New System.Drawing.Size(204, 22)
+        Me.MenuOptionsUseAdvancedAITDecay.Text = "Use Advanced AIT Decay"
         '
-        'ViewToolStripMenuItem
+        'MenuView
         '
-        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ViewShowMiniDisplayToolStripMenuItem})
-        Me.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem"
-        Me.ViewToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
-        Me.ViewToolStripMenuItem.Text = "View"
-        Me.ViewToolStripMenuItem.Visible = False
+        Me.MenuView.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuViewShowMiniDisplay})
+        Me.MenuView.Name = "MenuView"
+        Me.MenuView.Size = New System.Drawing.Size(44, 20)
+        Me.MenuView.Text = "View"
+        Me.MenuView.Visible = False
         '
-        'ViewShowMiniDisplayToolStripMenuItem
+        'MenuViewShowMiniDisplay
         '
-        Me.ViewShowMiniDisplayToolStripMenuItem.Name = "ViewShowMiniDisplayToolStripMenuItem"
-        Me.ViewShowMiniDisplayToolStripMenuItem.ShortcutKeys = CType(((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Shift) _
+        Me.MenuViewShowMiniDisplay.Name = "MenuViewShowMiniDisplay"
+        Me.MenuViewShowMiniDisplay.ShortcutKeys = CType(((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Shift) _
             Or System.Windows.Forms.Keys.D1), System.Windows.Forms.Keys)
-        Me.ViewShowMiniDisplayToolStripMenuItem.Size = New System.Drawing.Size(243, 22)
-        Me.ViewShowMiniDisplayToolStripMenuItem.Text = "Show Mini Display"
+        Me.MenuViewShowMiniDisplay.Size = New System.Drawing.Size(243, 22)
+        Me.MenuViewShowMiniDisplay.Text = "Show Mini Display"
         '
-        'HelpToolStripMenuItem
+        'MenuHelp
         '
-        Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuHelpReportIssueMenuItem, Me.MenuHelpCheckForUpdatesMenuItem, Me.HelpAboutToolStripMenuItem})
-        Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
-        Me.HelpToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.H), System.Windows.Forms.Keys)
-        Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
-        Me.HelpToolStripMenuItem.Text = "&Help"
+        Me.MenuHelp.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuHelpReportAProblem, Me.MenuHelpCheckForUpdatesMenuItem, Me.MenuHelpAbout})
+        Me.MenuHelp.Name = "MenuHelp"
+        Me.MenuHelp.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.H), System.Windows.Forms.Keys)
+        Me.MenuHelp.Size = New System.Drawing.Size(44, 20)
+        Me.MenuHelp.Text = "&Help"
         '
-        'MenuHelpReportIssueMenuItem
+        'MenuHelpReportAProblem
         '
-        Me.MenuHelpReportIssueMenuItem.Image = Global.CareLink.My.Resources.Resources.FeedbackSmile_16x
-        Me.MenuHelpReportIssueMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.MenuHelpReportIssueMenuItem.Name = "MenuHelpReportIssueMenuItem"
-        Me.MenuHelpReportIssueMenuItem.Size = New System.Drawing.Size(177, 22)
-        Me.MenuHelpReportIssueMenuItem.Text = "Report A Problem..."
+        Me.MenuHelpReportAProblem.Image = Global.CareLink.My.Resources.Resources.FeedbackSmile_16x
+        Me.MenuHelpReportAProblem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.MenuHelpReportAProblem.Name = "MenuHelpReportAProblem"
+        Me.MenuHelpReportAProblem.Size = New System.Drawing.Size(177, 22)
+        Me.MenuHelpReportAProblem.Text = "Report A Problem..."
         '
         'MenuHelpCheckForUpdatesMenuItem
         '
@@ -295,12 +295,12 @@ Partial Class Form1
         Me.MenuHelpCheckForUpdatesMenuItem.Size = New System.Drawing.Size(177, 22)
         Me.MenuHelpCheckForUpdatesMenuItem.Text = "Check For Updates"
         '
-        'HelpAboutToolStripMenuItem
+        'MenuHelpAbout
         '
-        Me.HelpAboutToolStripMenuItem.Image = Global.CareLink.My.Resources.Resources.AboutBox
-        Me.HelpAboutToolStripMenuItem.Name = "HelpAboutToolStripMenuItem"
-        Me.HelpAboutToolStripMenuItem.Size = New System.Drawing.Size(177, 22)
-        Me.HelpAboutToolStripMenuItem.Text = "&About..."
+        Me.MenuHelpAbout.Image = Global.CareLink.My.Resources.Resources.AboutBox
+        Me.MenuHelpAbout.Name = "MenuHelpAbout"
+        Me.MenuHelpAbout.Size = New System.Drawing.Size(177, 22)
+        Me.MenuHelpAbout.Text = "&About..."
         '
         'ServerUpdateTimer
         '
@@ -1414,7 +1414,7 @@ Partial Class Form1
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents HelpAboutToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents MenuHelpAbout As ToolStripMenuItem
     Friend WithEvents AboveHighLimitMessageLabel As Label
     Friend WithEvents AboveHighLimitValueLabel As Label
     Friend WithEvents ActiveInsulinLabel As Label
@@ -1431,19 +1431,19 @@ Partial Class Form1
     Friend WithEvents CursorTimeLabel As Label
     Friend WithEvents CursorTimer As Timer
     Friend WithEvents CursorValueLabel As Label
-    Friend WithEvents StartHereExitToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents OptionsFilterRawJSONDataToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents HelpToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents StartHereExit As ToolStripMenuItem
+    Friend WithEvents MenuOptionsFilterRawJSONData As ToolStripMenuItem
+    Friend WithEvents MenuHelp As ToolStripMenuItem
     Friend WithEvents MenuHelpCheckForUpdatesMenuItem As ToolStripMenuItem
-    Friend WithEvents MenuHelpReportIssueMenuItem As ToolStripMenuItem
+    Friend WithEvents MenuHelpReportAProblem As ToolStripMenuItem
     Friend WithEvents ImageList1 As ImageList
     Friend WithEvents InRangeMessageLabel As Label
     Friend WithEvents InsulinLevelPictureBox As PictureBox
     Friend WithEvents ListView1 As ListView
-    Friend WithEvents StartHereLoginToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents MenuStartHereLogin As ToolStripMenuItem
     Friend WithEvents MenuStrip1 As MenuStrip
     Friend WithEvents NotifyIcon1 As NotifyIcon
-    Friend WithEvents OptionsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents MenuOptions As ToolStripMenuItem
     Friend WithEvents PumpBatteryPictureBox As PictureBox
     Friend WithEvents PumpBatteryRemainingLabel As Label
     Friend WithEvents RemainingInsulinUnits As Label
@@ -1454,13 +1454,13 @@ Partial Class Form1
     Friend WithEvents LoginStatus As Label
     Friend WithEvents LoginStatusLabel As Label
     Friend WithEvents ServerUpdateTimer As Timer
-    Friend WithEvents OptionsSetupEmailServerToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents MenuOptionsSetupEmailServer As ToolStripMenuItem
     Friend WithEvents SGsDataGridView As DataGridView
     Friend WithEvents ShieldPictureBox As PictureBox
     Friend WithEvents ShieldUnitsLabel As Label
-    Friend WithEvents ViewShowMiniDisplayToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents MenuViewShowMiniDisplay As ToolStripMenuItem
     Friend WithEvents SplitContainer1 As SplitContainer
-    Friend WithEvents StartHereToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents MenuStartHere As ToolStripMenuItem
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents TableLayoutPanelActiveInsulin As TableLayoutPanel
     Friend WithEvents TableLayoutPanelBasal As TableLayoutPanel
@@ -1484,13 +1484,13 @@ Partial Class Form1
     Friend WithEvents TimeInRangeValueLabel As Label
     Friend WithEvents TransmatterBatterPercentLabel As Label
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
-    Friend WithEvents OptionsUseTestDataToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents ViewToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents MenuOptionsUseTestData As ToolStripMenuItem
+    Friend WithEvents MenuView As ToolStripMenuItem
     Friend WithEvents WatchdogTimer As Timer
-    Friend WithEvents OptionsUseLastSavedDataToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents MenuOptionsUseLastSavedData As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
-    Friend WithEvents StartHereSnapshotLoadToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents StartHereSnapshotSaveToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents MenuStartHereSnapshotLoad As ToolStripMenuItem
+    Friend WithEvents MenuStartHereSnapshotSave As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
     Friend WithEvents ToolTip1 As ToolTip
     Friend WithEvents AutoCorrectionLabel As Label
@@ -1513,5 +1513,5 @@ Partial Class Form1
     Friend WithEvents Last24CarbsValueLabel As Label
     Friend WithEvents TotalCarbs24MessageLabel As Label
     Friend WithEvents TotalCarbsMessageLabel As Label
-    Friend WithEvents OptionsUseAdvancedAITDecayToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents MenuOptionsUseAdvancedAITDecay As ToolStripMenuItem
 End Class

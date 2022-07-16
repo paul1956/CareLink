@@ -10,7 +10,7 @@ Imports CareLink.Form1
 
 Public Module JsonExtensions
 
-    Private Function CreateValueTextBox(dic As Dictionary(Of String, String), eValue As KeyValuePair(Of String, String), timeFormat As String) As TextBox
+    Private Function CreateValueTextBox(dic As Dictionary(Of String, String), eValue As KeyValuePair(Of String, String), timeFormat As String, isScaledForm As Boolean) As TextBox
         Dim valueTextBox As New TextBox With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                               .AutoSize = True,
                                               .ReadOnly = True
@@ -23,8 +23,14 @@ Public Module JsonExtensions
             Else
                 valueTextBox.Text = eValue.Value.ToString(CurrentUICulture)
             End If
-            If eValue.Key = "sg" AndAlso formScale.Height <> 1 Then
-                Dim timeOfLastSG As Date = dic("datetime").DateParse
+
+            If eValue.Key = "sg" AndAlso isScaledForm Then
+                Dim timeOfLastSGString As String = Now.ToString
+                If dic.TryGetValue("datetime", timeOfLastSGString) Then
+                ElseIf dic.TryGetValue("dateTime", timeOfLastSGString) Then
+
+                End If
+                Dim timeOfLastSG As Date = timeOfLastSGString.DateParse(CurrentDataCulture, CurrentUICulture)
                 valueTextBox.Text &= $"     @ {timeOfLastSG.ToString(CurrentUICulture)}"
             End If
         Else
@@ -113,7 +119,7 @@ Public Module JsonExtensions
         End If
     End Sub
 
-    Friend Sub GetInnerTable(mainForm As Form1, innerJson As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String)
+    Friend Sub GetInnerTable(innerJson As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String, isScaledForm As Boolean)
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
         tableLevel1Blue.BackColor = Color.LightBlue
@@ -125,7 +131,7 @@ Public Module JsonExtensions
                                            }
 
             tableLevel1Blue.RowCount += 1
-            Dim textBox1 As TextBox = CreateValueTextBox(innerJson, innerJson.Where(Function(kvp As KeyValuePair(Of String, String)) kvp.Key = "messageId").FirstOrDefault, timeFormat)
+            Dim textBox1 As TextBox = CreateValueTextBox(innerJson, innerJson.Where(Function(kvp As KeyValuePair(Of String, String)) kvp.Key = "messageId").FirstOrDefault, timeFormat, isScaledForm)
 
             If textBox1.Text.Length > 100 Then
                 Form1.ToolTip1.SetToolTip(textBox1, textBox1.Text)
@@ -206,7 +212,7 @@ Public Module JsonExtensions
                             Dim valueLabel As New Label With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                               .Text = eValue.Key,
                                                               .AutoSize = True}
-                            tableLevel3.Controls.AddRange({valueLabel, CreateValueTextBox(dic, eValue, timeFormat)})
+                            tableLevel3.Controls.AddRange({valueLabel, CreateValueTextBox(dic, eValue, timeFormat, isScaledForm)})
                             Application.DoEvents()
                         Next
                         tableLevel3.Height += 40
@@ -227,7 +233,7 @@ Public Module JsonExtensions
                 End If
             Else
                 If innerRow.Key <> "messageId" Then
-                    Dim textBox1 As TextBox = CreateValueTextBox(innerJson, innerRow, timeFormat)
+                    Dim textBox1 As TextBox = CreateValueTextBox(innerJson, innerRow, timeFormat, isScaledForm)
                     Form1.ToolTip1.SetToolTip(textBox1, textBox1.Text)
                     tableLevel1Blue.Controls.AddRange({keyLabel, textBox1})
                 End If

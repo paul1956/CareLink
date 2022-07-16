@@ -2,10 +2,13 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports Microsoft.VisualBasic.ApplicationServices
+Imports System.Net.Http
 Imports Microsoft.Win32
 
 Friend Module BrowserUtilities
+
+    Private ReadOnly _httpClient As New HttpClient()
+    Friend Const GitHubCareLinkUrl As String = "https://github.com/paul1956/CareLink/"
 
     ''' <summary>
     ''' Compare version of executable with ReadMe.MkDir from GitHub
@@ -50,7 +53,6 @@ Friend Module BrowserUtilities
                 Dim msgResult As MsgBoxResult = MsgBox($"Your default browser can't be found!, Please use any browser and navigate to {url}.",
                                    MsgBoxStyle.OkCancel Or MsgBoxStyle.Exclamation Or MsgBoxStyle.MsgBoxSetForeground)
 
-
             End If
         End Using
         Return True
@@ -58,14 +60,14 @@ Friend Module BrowserUtilities
 
     Friend Async Sub CheckForUpdatesAsync(mainForm As Form1, reportResults As Boolean)
         Try
-            Dim responseBody As String = Await mainForm._httpClient.GetStringAsync($"{Form1.GitHubCareLinkUrl}blob/master/README.md")
+            Dim responseBody As String = Await _httpClient.GetStringAsync($"{GitHubCareLinkUrl}blob/master/README.md")
             Dim index As Integer
             Dim versionStr As String = "0.0.0.0"
             For Each e As IndexClass(Of String) In responseBody.SplitLines().ToList().WithIndex()
                 Dim line As String = e.Value
                 If line.Contains("What's New in this release", StringComparison.Ordinal) Then
                     If e.IsLast Then
-                        MsgBox($"Failed while checking for new version: File '{Form1.GitHubCareLinkUrl}blob/master/ReadMe.MD' is corrupt", MsgBoxStyle.Information, "Version Check Failed")
+                        MsgBox($"Failed while checking for new version: File '{GitHubCareLinkUrl}blob/master/ReadMe.MD' is corrupt", MsgBoxStyle.Information, "Version Check Failed")
                         Exit Sub
                     End If
                     e.MoveNext()
@@ -87,7 +89,7 @@ Friend Module BrowserUtilities
             If IsNewerVersion(gitHubVersion, My.Application.Info.Version) Then
                 If reportResults Then
                     If MsgBox("There is a newer version available, do you want to install now?", MsgBoxStyle.YesNo, "Updates Available") = MsgBoxResult.Yes Then
-                        OpenUrlInBrowser($"{Form1.GitHubCareLinkUrl}releases/")
+                        OpenUrlInBrowser($"{GitHubCareLinkUrl}releases/")
                     End If
                 End If
             Else

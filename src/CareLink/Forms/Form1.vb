@@ -5,19 +5,13 @@
 Imports System.ComponentModel
 Imports System.Globalization
 Imports System.IO
-Imports System.Net.Http
 Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Class Form1
-    Public WithEvents ActiveInsulinTabChart As Chart
-    Public WithEvents CurrentBGSeries As Series
-    Public WithEvents HighLimitSeries As Series
-    Public WithEvents HomePageChart As Chart
-    Public WithEvents LowLimitSeries As Series
-    Public WithEvents MarkerSeries As Series
-    Public WithEvents TimeInRangeChart As Chart
 
+    Private Const MilitaryTimeWithMinuteFormat As String = "HH:mm"
+    Private Const TwelveHourTimeWithMinuteFormat As String = "h:mm tt"
     Private ReadOnly _bgMiniDisplay As New BGMiniWindow
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _careLinkSnapshotDocPath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CareLinkSnapshot.json")
@@ -41,22 +35,28 @@ Public Class Form1
     Private _recentDataSameCount As Integer
     Private _timeFormat As String
     Private _updating As Boolean = False
-    Friend Const MilitaryTimeWithMinuteFormat As String = "HH:mm"
-    Friend Const TwelveHourTimeWithMinuteFormat As String = "h:mm tt"
-    Friend ReadOnly _httpClient As New HttpClient()
-    Public Const GitHubCareLinkUrl As String = "https://github.com/paul1956/CareLink/"
+
+    Private Property formScale As New SizeF(1.0F, 1.0F)
     Friend Property BgUnitsString As String
 
-    Public Shared Property CurrentDataCulture As CultureInfo = New CultureInfo("en-US")
-    Public Shared Property CurrentUICulture As CultureInfo = CultureInfo.CurrentCulture
-    Public Shared Property formScale As New SizeF(1.0F, 1.0F)
+    Friend Shared Property CurrentDataCulture As CultureInfo = New CultureInfo("en-US")
+    Friend Shared Property CurrentUICulture As CultureInfo = CultureInfo.CurrentCulture
 
 #Region "Chart Objects"
+
+    Public WithEvents ActiveInsulinTabChart As Chart
+    Public WithEvents CurrentBGSeries As Series
+    Public WithEvents HighLimitSeries As Series
+    Public WithEvents HomePageChart As Chart
+    Public WithEvents LowLimitSeries As Series
+    Public WithEvents MarkerSeries As Series
+    Public WithEvents TimeInRangeChart As Chart
 
     Private _activeInsulinTabChartArea As ChartArea
     Private _homePageAbsoluteRectangle As RectangleF
     Private _homePageChartChartArea As ChartArea
     Private _homePageChartRelitivePosition As RectangleF = RectangleF.Empty
+    Private _inMenuOptions As Boolean
     Private _insulinRow As Single
     Private _markerRow As Single
 
@@ -88,70 +88,7 @@ Public Class Form1
 
 #Region "Events"
 
-#Region "About Form Events"
-
-    Private Sub HelpAboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles HelpAboutToolStripMenuItem.Click
-        AboutBox1.Show()
-    End Sub
-
-#End Region
-
 #Region "Form Events"
-
-    Private Shared Sub Fix(sp As SplitContainer)
-        ' Scale factor depends on orientation
-        Dim sc As Single = If(sp.Orientation = Orientation.Vertical, formScale.Width, formScale.Height)
-        If sp.FixedPanel = FixedPanel.Panel1 Then
-            sp.SplitterDistance = CInt(Math.Truncate(Math.Round(CSng(sp.SplitterDistance) * sc)))
-        ElseIf sp.FixedPanel = FixedPanel.Panel2 Then
-            Dim cs As Integer = If(sp.Orientation = Orientation.Vertical, sp.Panel2.ClientSize.Width, sp.Panel2.ClientSize.Height)
-            Dim newcs As Integer = CInt(Math.Truncate(CSng(cs) * sc))
-            sp.SplitterDistance -= newcs - cs
-        End If
-    End Sub
-
-    Private Sub CleanUpNotificationIcon()
-        Me.NotifyIcon1.Visible = False
-        Me.NotifyIcon1.Icon.Dispose()
-        Me.NotifyIcon1.Icon = Nothing
-        Me.NotifyIcon1.Visible = False
-        Me.NotifyIcon1.Dispose()
-        Application.DoEvents()
-        End
-    End Sub
-
-    Private Sub FinishInitialization()
-        If _initialized Then
-            Exit Sub
-        End If
-        _homePageChartRelitivePosition = RectangleF.Empty
-        Me.UpdateRegionalData(_recentData)
-
-        Me.InitializeHomePageChart()
-        Me.InitializeActiveInsulinTabChart()
-        Me.InitializeTimeInRangeArea()
-        Me.SGsDataGridView.AutoGenerateColumns = True
-        Me.SGsDataGridView.ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
-            .Alignment = DataGridViewContentAlignment.MiddleCenter
-            }
-
-        Me.UpdateAllTabPages()
-        _initialized = True
-    End Sub
-
-    ' Recursively search for SplitContainer controls
-    Private Sub Fix(c As Control)
-        For Each child As Control In c.Controls
-            If TypeOf child Is SplitContainer Then
-                Dim sp As SplitContainer = CType(child, SplitContainer)
-                Fix(sp)
-                Me.Fix(sp.Panel1)
-                Me.Fix(sp.Panel2)
-            Else
-                Me.Fix(child)
-            End If
-        Next child
-    End Sub
 
     Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
         Me.CleanUpNotificationIcon()
@@ -171,15 +108,15 @@ Public Class Form1
         ' Load all settings
 
         If My.Settings.UseTestData Then
-            Me.OptionsUseLastSavedDataToolStripMenuItem.Checked = False
-            Me.OptionsUseTestDataToolStripMenuItem.Checked = True
-        ElseIf My.Settings.UseLastSavedData AndAlso Me.StartHereSnapshotLoadToolStripMenuItem.Enabled Then
-            Me.OptionsUseLastSavedDataToolStripMenuItem.Checked = True
-            Me.OptionsUseTestDataToolStripMenuItem.Checked = False
+            Me.MenuOptionsUseLastSavedData.Checked = False
+            Me.MenuOptionsUseTestData.Checked = True
+        ElseIf My.Settings.UseLastSavedData AndAlso Me.MenuStartHereSnapshotLoad.Enabled Then
+            Me.MenuOptionsUseLastSavedData.Checked = True
+            Me.MenuOptionsUseTestData.Checked = False
         End If
 
         Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact(My.Settings.AIT.ToString("hh\:mm").Substring(1))
-        Me.OptionsUseAdvancedAITDecayToolStripMenuItem.CheckState = If(My.Settings.UseAdvancedAITDecay, CheckState.Checked, CheckState.Unchecked)
+        Me.MenuOptionsUseAdvancedAITDecay.CheckState = If(My.Settings.UseAdvancedAITDecay, CheckState.Checked, CheckState.Unchecked)
 
     End Sub
 
@@ -192,98 +129,45 @@ Public Class Form1
         Me.SensorDaysLeftLabel.BackColor = Color.Transparent
         Me.SensorDaysLeftLabel.Left = (Me.SensorTimeLeftPictureBox.Width \ 2) - (Me.SensorDaysLeftLabel.Width \ 2)
         Me.SensorDaysLeftLabel.Top = (Me.SensorTimeLeftPictureBox.Height \ 2) - (Me.SensorDaysLeftLabel.Height \ 2)
-        If Not Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=False) Then
-            Exit Sub
-        End If
-        If formScale.Height > 1 Then
+        If Me.formScale.Height > 1 Then
             Me.SplitContainer1.SplitterDistance = 0
         End If
-        Me.FinishInitialization()
-
+        If Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=False) Then
+            Me.FinishInitialization()
+            Me.UpdateAllTabPages()
+        End If
     End Sub
 
     ' Save the current scale value
     ' ScaleControl() is called during the Form's constructor
     Protected Overrides Sub ScaleControl(factor As SizeF, specified As BoundsSpecified)
-        formScale = New SizeF(formScale.Width * factor.Width, formScale.Height * factor.Height)
+        Me.formScale = New SizeF(Me.formScale.Width * factor.Width, Me.formScale.Height * factor.Height)
         MyBase.ScaleControl(factor, specified)
     End Sub
 
+#End Region
+
 #Region "Form Menu Events"
 
-    Private Sub MenuHelpCheckForUpdatesMenuItem_Click(sender As Object, e As EventArgs) Handles MenuHelpCheckForUpdatesMenuItem.Click
-        CheckForUpdatesAsync(Me, reportResults:=True)
-    End Sub
+#Region "Start Here Menus"
 
-    Private Sub MenuHelpReportIssueMenuItem_Click(sender As Object, e As EventArgs) Handles MenuHelpReportIssueMenuItem.Click
-        OpenUrlInBrowser($"{GitHubCareLinkUrl}issues")
-    End Sub
-
-    Private Sub OptionsFilterRawJSONDataToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OptionsFilterRawJSONDataToolStripMenuItem.Click
-        _filterJsonData = Me.OptionsFilterRawJSONDataToolStripMenuItem.Checked
-    End Sub
-
-    Private Sub OptionsSetupEmailServerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OptionsSetupEmailServerToolStripMenuItem.Click
-        MailSetupDialog.ShowDialog()
-    End Sub
-
-    Private Sub OptionsUseAdvancedAITDecayToolStripMenuItem_CheckStateChanged(sender As Object, e As EventArgs) Handles OptionsUseAdvancedAITDecayToolStripMenuItem.CheckStateChanged
-        Dim increments As Double = TimeSpan.Parse(My.Settings.AIT.ToString("hh\:mm").Substring(1)) / s_fiveMinuteSpan
-        If Me.OptionsUseAdvancedAITDecayToolStripMenuItem.Checked Then
-            _activeInsulinIncrements = CInt(increments * 1.4)
-            My.Settings.UseAdvancedAITDecay = True
-            Me.AITLabel.Text = "Advanced AIT Decay"
-        Else
-            _activeInsulinIncrements = CInt(increments)
-            My.Settings.UseAdvancedAITDecay = False
-            Me.AITLabel.Text = "Active Insulin Time"
-        End If
-        My.Settings.Save()
-        Me.UpdateActiveInsulinChart()
+    Private Sub MenuStartHere_DropDownOpened(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpened
+        Me.MenuStartHereSnapshotLoad.Enabled = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CareLink*.json").Length > 0
+        Me.MenuStartHereSnapshotSave.Enabled = _recentData IsNot Nothing
 
     End Sub
 
-    Private Sub OptionsUseLastSavedDataToolStripMenuItem_CheckStateChanged(sender As Object, e As EventArgs) Handles OptionsUseLastSavedDataToolStripMenuItem.CheckStateChanged
-        If Me.OptionsUseLastSavedDataToolStripMenuItem.Checked Then
-            Me.OptionsUseTestDataToolStripMenuItem.Checked = False
-            My.Settings.UseLastSavedData = True
-            My.Settings.UseTestData = False
-            Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True)
-        Else
-            My.Settings.UseLastSavedData = False
-        End If
-        Me.StartHereSnapshotSaveToolStripMenuItem.Enabled = Me.OptionsUseLastSavedDataToolStripMenuItem.Checked
-
-        My.Settings.Save()
-        If _initialized AndAlso Not (Me.OptionsUseTestDataToolStripMenuItem.Checked OrElse Me.OptionsUseLastSavedDataToolStripMenuItem.Checked) Then
-            Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True)
-        End If
-    End Sub
-
-    Private Sub OptionsUseTestDataToolStripMenuItem_Checkchange(sender As Object, e As EventArgs) Handles OptionsUseTestDataToolStripMenuItem.CheckStateChanged
-        If Me.OptionsUseTestDataToolStripMenuItem.Checked Then
-            Me.OptionsUseLastSavedDataToolStripMenuItem.Checked = False
-            My.Settings.UseLastSavedData = False
-            My.Settings.UseTestData = True
-            Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True)
-        Else
-            My.Settings.UseTestData = False
-        End If
-        My.Settings.Save()
-        If _initialized AndAlso Not (Me.OptionsUseTestDataToolStripMenuItem.Checked OrElse Me.OptionsUseLastSavedDataToolStripMenuItem.Checked) Then
-            Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True)
-        End If
-    End Sub
-
-    Private Sub StartHereExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles StartHereExitToolStripMenuItem.Click
+    Private Sub MenuStartHereExit_Click(sender As Object, e As EventArgs) Handles StartHereExit.Click
         Me.CleanUpNotificationIcon()
     End Sub
 
-    Private Sub StartHereLoginToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles StartHereLoginToolStripMenuItem.Click
+    Private Sub MenuStartHereLogin_Click(sender As Object, e As EventArgs) Handles MenuStartHereLogin.Click
+        Me.MenuOptionsUseTestData.CheckState = CheckState.Indeterminate
+        Me.MenuOptionsUseLastSavedData.CheckState = CheckState.Indeterminate
         Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True)
     End Sub
 
-    Private Sub StartHereSnapshotLoadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles StartHereSnapshotLoadToolStripMenuItem.Click
+    Private Sub MenuStartHereSnapshotLoad_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotLoad.Click
         Dim fileList As String() = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CareLink*.json")
         Dim defaultFile As String
         If fileList.Length > 0 Then
@@ -309,6 +193,8 @@ Public Class Form1
             Try
                 If File.Exists(openFileDialog1.FileName) Then
                     Me.ServerUpdateTimer.Stop()
+                    Me.MenuOptionsUseLastSavedData.CheckState = CheckState.Indeterminate
+                    Me.MenuOptionsUseTestData.CheckState = CheckState.Indeterminate
                     _recentData = Loads(File.ReadAllText(openFileDialog1.FileName))
                     Me.FinishInitialization()
                     Me.Text = $"{_savedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
@@ -320,7 +206,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub StartHereSnapshotSaveToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles StartHereSnapshotSaveToolStripMenuItem.Click
+    Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotSave.Click
         Dim cleanRecentData As Dictionary(Of String, String) = _recentData
         cleanRecentData("firstName") = "First"
         cleanRecentData("lastName") = "Last"
@@ -332,15 +218,103 @@ Public Class Form1
         End Using
     End Sub
 
-    Private Sub StartHereToolStripMenuItem_DropDownOpened(sender As Object, e As EventArgs) Handles StartHereToolStripMenuItem.DropDownOpened
-        Me.StartHereSnapshotLoadToolStripMenuItem.Enabled = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CareLink*.json").Length > 0
-        Me.StartHereSnapshotSaveToolStripMenuItem.Enabled = _recentData IsNot Nothing
+#End Region
+
+#Region "Option Menus"
+
+    Private Sub MenuOptionsFilterRawJSONData_Click(sender As Object, e As EventArgs) Handles MenuOptionsFilterRawJSONData.Click
+        _filterJsonData = Me.MenuOptionsFilterRawJSONData.Checked
+    End Sub
+
+    Private Sub MenuOptionsSetupEmailServer_Click(sender As Object, e As EventArgs) Handles MenuOptionsSetupEmailServer.Click
+        MailSetupDialog.ShowDialog()
+    End Sub
+
+    Private Sub MenuOptionsUseAdvancedAITDecay_CheckStateChanged(sender As Object, e As EventArgs) Handles MenuOptionsUseAdvancedAITDecay.CheckStateChanged
+        Dim increments As Double = TimeSpan.Parse(My.Settings.AIT.ToString("hh\:mm").Substring(1)) / s_fiveMinuteSpan
+        If Me.MenuOptionsUseAdvancedAITDecay.Checked Then
+            _activeInsulinIncrements = CInt(increments * 1.4)
+            My.Settings.UseAdvancedAITDecay = True
+            Me.AITLabel.Text = "Advanced AIT Decay"
+        Else
+            _activeInsulinIncrements = CInt(increments)
+            My.Settings.UseAdvancedAITDecay = False
+            Me.AITLabel.Text = "Active Insulin Time"
+        End If
+        My.Settings.Save()
+        Me.UpdateActiveInsulinChart()
 
     End Sub
 
-    Private Sub ViewShowMiniDisplayToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ViewShowMiniDisplayToolStripMenuItem.Click
+    Private Sub MenuOptionsUseLastSavedData_CheckStateChanged(sender As Object, e As EventArgs) Handles MenuOptionsUseLastSavedData.CheckStateChanged
+        If _inMenuOptions Then Exit Sub
+        Select Case Me.MenuOptionsUseLastSavedData.CheckState
+            Case CheckState.Checked
+                Me.MenuOptionsUseTestData.CheckState = CheckState.Indeterminate
+                My.Settings.UseLastSavedData = True
+                My.Settings.UseTestData = False
+                Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True)
+            Case CheckState.Unchecked
+                My.Settings.UseLastSavedData = False
+                If _initialized AndAlso Not (Me.MenuOptionsUseTestData.Checked OrElse Me.MenuOptionsUseLastSavedData.Checked) Then
+                    Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True)
+                End If
+            Case CheckState.Indeterminate
+                _inMenuOptions = True
+                My.Settings.UseLastSavedData = False
+                Me.MenuOptionsUseLastSavedData.Checked = False
+                _inMenuOptions = False
+        End Select
+        Me.MenuStartHereSnapshotSave.Enabled = Me.MenuOptionsUseLastSavedData.Checked
+
+        My.Settings.Save()
+    End Sub
+
+    Private Sub MenuOptionsUseTestData_Checkchange(sender As Object, e As EventArgs) Handles MenuOptionsUseTestData.CheckStateChanged
+        If _inMenuOptions Then Exit Sub
+        Select Case Me.MenuOptionsUseTestData.CheckState
+            Case CheckState.Checked
+                Me.MenuOptionsUseLastSavedData.CheckState = CheckState.Indeterminate
+                My.Settings.UseLastSavedData = False
+                My.Settings.UseTestData = True
+                Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True)
+            Case CheckState.Unchecked
+                My.Settings.UseTestData = False
+                If _initialized AndAlso Not Me.MenuOptionsUseLastSavedData.Checked Then
+                    Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True)
+                End If
+            Case CheckState.Indeterminate
+                _inMenuOptions = True
+                My.Settings.UseTestData = False
+                Me.MenuOptionsUseTestData.Checked = False
+                _inMenuOptions = False
+        End Select
+        My.Settings.Save()
+    End Sub
+
+#End Region
+
+#Region "View Menus"
+
+    Private Sub MenuViewShowMiniDisplay_Click(sender As Object, e As EventArgs) Handles MenuViewShowMiniDisplay.Click
         Me.Hide()
         _bgMiniDisplay.Show()
+    End Sub
+
+#End Region
+
+#Region "Help Menus"
+
+    Private Sub MenuHelpAbout_Click(sender As Object, e As EventArgs) Handles MenuHelpAbout.Click
+        AboutBox1.Show()
+    End Sub
+
+    Private Sub MenuHelpCheckForUpdates_Click(sender As Object, e As EventArgs) Handles MenuHelpCheckForUpdatesMenuItem.Click
+        CheckForUpdatesAsync(Me, reportResults:=True)
+    End Sub
+
+    Private Sub MenuHelpReportIssueMenuItem_Click(sender As Object, e As EventArgs) Handles MenuHelpReportAProblem.Click
+        OpenUrlInBrowser($"{GitHubCareLinkUrl}issues")
     End Sub
 
 #End Region
@@ -360,6 +334,8 @@ Public Class Form1
             _calibrationToolTip.SetToolTip(Me.CalibrationDueImage, $"Calibration Due {Now.AddMinutes(s_timeToNextCalibrationMinutes).ToShortTimeString}")
         End If
     End Sub
+
+#Region "Home Page Chart Events"
 
     Private Sub HomePageChart_CursorPositionChanging(sender As Object, e As CursorEventArgs) Handles HomePageChart.CursorPositionChanging
         If Not _initialized Then Exit Sub
@@ -481,16 +457,16 @@ Public Class Form1
         Dim highLimitY As Double = e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, _limitHigh)
         Dim lowLimitY As Double = e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, _limitLow)
 
-        Dim lowRawHeight As Integer = CInt((lowLimitY - homePageChartY) * formScale.Height)
+        Dim lowRawHeight As Integer = CInt((lowLimitY - homePageChartY) * Me.formScale.Height)
         Dim lowHeight As Integer = If(_homePageChartChartArea.AxisX.ScrollBar.IsVisible,
                                       CInt(lowRawHeight - _homePageChartChartArea.AxisX.ScrollBar.Size),
                                       lowRawHeight
                                      )
-        Dim highHeight As Integer = CInt(275 * formScale.Height)
+        Dim highHeight As Integer = CInt(275 * Me.formScale.Height)
         Dim highAreaRectangle As New Rectangle(homePagelocation,
                                                New Size(homePageChartWidth, highHeight))
 
-        Dim lowOffset As Integer = CInt((_homePageChartRelitivePosition.Height + _homePageChartRelitivePosition.Y + 1) * formScale.Height)
+        Dim lowOffset As Integer = CInt((_homePageChartRelitivePosition.Height + _homePageChartRelitivePosition.Y + 1) * Me.formScale.Height)
         Dim lowStartLocation As New Point(CInt(_homePageChartRelitivePosition.X), lowOffset)
 
         Dim lowAreaRectangle As New Rectangle(lowStartLocation,
@@ -516,6 +492,8 @@ Public Class Form1
             _sensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {s_sensorDurationHours} hours")
         End If
     End Sub
+
+#End Region
 
 #End Region
 
@@ -991,7 +969,7 @@ Public Class Form1
                     .Padding = New Padding(0)
                 }
             layoutPanel.Controls.Add(tableLevel1Blue, column:=1, row:=jsonEntry.Index)
-            GetInnerTable(Me, jsonEntry.Value, tableLevel1Blue, rowIndex, filterJsonData, timeFormat)
+            GetInnerTable(jsonEntry.Value, tableLevel1Blue, rowIndex, filterJsonData, timeFormat, Me.formScale.Height <> 1)
             Application.DoEvents()
         Next
     End Sub
@@ -1039,7 +1017,7 @@ Public Class Form1
         Dim sgOaDateTime As Double
 
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
-            sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index).RoundTimeDown(RoundTo.Minute).ToOADate
+            sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index, CurrentDataCulture, CurrentUICulture).RoundTimeDown(RoundTo.Minute).ToOADate
             Select Case sgListIndex.Value("type")
                 Case "INSULIN"
                     Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue(CurrentDataCulture, "deliveredFastAmount")
@@ -1069,7 +1047,7 @@ Public Class Form1
                 initialBolus += timeOrderedMarkers.Values(currentMarker)
                 currentMarker += 1
             End While
-            remainingInsulinList.Add(New Insulin(oaTime, initialBolus, _activeInsulinIncrements, Me.OptionsUseAdvancedAITDecayToolStripMenuItem.Checked))
+            remainingInsulinList.Add(New Insulin(oaTime, initialBolus, _activeInsulinIncrements, Me.MenuOptionsUseAdvancedAITDecay.Checked))
         Next
 
         _activeInsulinTabChartArea.AxisY2.Maximum = Me.MarkerRow
@@ -1102,7 +1080,7 @@ Public Class Form1
         s_totalManualBolus = 0
 
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
-            sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index).RoundTimeDown(RoundTo.Minute).ToOADate
+            sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index, CurrentDataCulture, CurrentUICulture).RoundTimeDown(RoundTo.Minute).ToOADate
             With Me.ActiveInsulinTabChart.Series(NameOf(MarkerSeries))
                 Select Case sgListIndex.Value("type")
                     Case "INSULIN"
@@ -1111,11 +1089,11 @@ Public Class Form1
                         s_totalDailyDose += deliveredAmount
                         Select Case sgListIndex.Value("activationType")
                             Case "AUTOCORRECTION"
-                                .Points.Last.ToolTip = $"Auto Correction:{deliveredAmount.ToString(CurrentUICulture)} U"
+                                .Points.Last.ToolTip = $"Auto Correction: {deliveredAmount.ToString(CurrentUICulture)} U"
                                 .Points.Last.Color = Color.MediumPurple
                                 s_totalAutoCorrection += deliveredAmount
                             Case "RECOMMENDED", "UNDETERMINED"
-                                .Points.Last.ToolTip = $"Bolus:{deliveredAmount.ToString(CurrentUICulture)} U"
+                                .Points.Last.ToolTip = $"Bolus: {deliveredAmount.ToString(CurrentUICulture)} U"
                                 .Points.Last.Color = Color.LightBlue
                                 s_totalManualBolus += deliveredAmount
                             Case Else
@@ -1127,7 +1105,7 @@ Public Class Form1
                     Case "AUTO_BASAL_DELIVERY"
                         Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue(CurrentDataCulture, "bolusAmount")
                         .Points.AddXY(sgOaDateTime, maxActiveInsulin)
-                        .Points.Last.ToolTip = $"Basal:{bolusAmount.RoundDouble(3).ToString(CurrentUICulture)} U"
+                        .Points.Last.ToolTip = $"Basal: {bolusAmount.RoundDouble(3).ToString(CurrentUICulture)} U"
                         .Points.Last.MarkerSize = 8
                         s_totalBasal += CSng(bolusAmount)
                         s_totalDailyDose += CSng(bolusAmount)
@@ -1157,7 +1135,9 @@ Public Class Form1
             Exit Sub
         End If
         _updating = True
-        Me.UpdateDataTables(_recentData)
+        Me.UpdateDataTables(_recentData,
+                            Me.formScale.Height <> 1 _
+                            OrElse Me.formScale.Width <> 1)
         Me.UpdateActiveInsulinChart()
         Me.UpdateActiveInsulin()
         Me.UpdateAutoModeShield()
@@ -1177,7 +1157,7 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
-    Private Sub UpdateDataTables(localRecentData As Dictionary(Of String, String))
+    Private Sub UpdateDataTables(localRecentData As Dictionary(Of String, String), isScaledForm As Boolean)
         If localRecentData Is Nothing Then
             Exit Sub
         End If
@@ -1190,7 +1170,7 @@ Public Class Form1
         If rowCount < newRowCount Then
             Me.TableLayoutPanelSummaryData.RowCount = newRowCount
             For i As Integer = rowCount To newRowCount
-                Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+                Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(SizeType.Absolute, 22.0!))
             Next
         End If
 
@@ -1319,7 +1299,7 @@ Public Class Form1
                     layoutPanel1.RowCount = 1
                     singleItem = True
                 Case ItemIndexs.sgs
-                    s_sGs = LoadList(row.Value, True).ToSgList(CurrentDataCulture)
+                    s_sGs = LoadList(row.Value, True).ToSgList(CurrentDataCulture, CurrentUICulture)
                     Me.SGsDataGridView.DataSource = s_sGs
                     For Each column As DataGridViewTextBoxColumn In Me.SGsDataGridView.Columns
                         If _filterJsonData AndAlso s_alwaysFilter.Contains(column.Name) Then
@@ -1495,7 +1475,7 @@ Public Class Form1
                 If rowIndex = ItemIndexs.notificationHistory Then
                     tableLevel1Blue.AutoScroll = False
                 End If
-                GetInnerTable(Me, innerJson, tableLevel1Blue, rowIndex, _filterJsonData, _timeFormat)
+                GetInnerTable(innerJson, tableLevel1Blue, rowIndex, _filterJsonData, _timeFormat, isScaledForm)
             Else
                 Dim rowTextBox As New TextBox With {
                                         .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
@@ -1766,7 +1746,7 @@ Public Class Form1
         _markerInsulinDictionary.Clear()
         _markerMealDictionary.Clear()
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
-            Dim sgOaDateTime As Double = s_markers.SafeGetSgDateTime(sgListIndex.Index).ToOADate()
+            Dim sgOaDateTime As Double = s_markers.SafeGetSgDateTime(sgListIndex.Index, CurrentDataCulture, CurrentUICulture).ToOADate()
             Dim bgValueString As String = ""
             Dim bgValue As Single
             If sgListIndex.Value.TryGetValue("value", bgValueString) Then
@@ -1847,15 +1827,25 @@ Public Class Form1
 
 #End Region
 
+    Private Sub CleanUpNotificationIcon()
+        Me.NotifyIcon1.Visible = False
+        Me.NotifyIcon1.Icon.Dispose()
+        Me.NotifyIcon1.Icon = Nothing
+        Me.NotifyIcon1.Visible = False
+        Me.NotifyIcon1.Dispose()
+        Application.DoEvents()
+        End
+    End Sub
+
     Private Function DoOptionalLoginAndUpdateData(UpdateAllTabs As Boolean) As Boolean
         Me.ServerUpdateTimer.Stop()
         Debug.Print($"Me.ServerUpdateTimer stopped at {Now}")
-        If Me.OptionsUseTestDataToolStripMenuItem.Checked Then
-            Me.ViewToolStripMenuItem.Visible = False
+        If Me.MenuOptionsUseTestData.Checked Then
+            Me.MenuView.Visible = False
             Me.Text = $"{_savedTitle} Using Test Data"
             _recentData = Loads(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
-        ElseIf Me.OptionsUseLastSavedDataToolStripMenuItem.Checked Then
-            Me.ViewToolStripMenuItem.Visible = False
+        ElseIf Me.MenuOptionsUseLastSavedData.Checked Then
+            Me.MenuView.Visible = False
             Me.Text = $"{_savedTitle} Using Last Saved Data"
             _recentData = Loads(File.ReadAllText(CareLinkClient.CareLinkLastDownloadDocPath))
         Else
@@ -1866,7 +1856,7 @@ Public Class Form1
                 Return False
             End If
             _recentData = _client.GetRecentData()
-            Me.ViewToolStripMenuItem.Visible = True
+            Me.MenuView.Visible = True
             Me.WatchdogTimer.Interval = CType(New TimeSpan(0, minutes:=6, 0).TotalMilliseconds, Integer)
             Me.WatchdogTimer.Start()
             Debug.Print($"Me.WatchdogTimer Started at {Now}")
@@ -1883,5 +1873,49 @@ Public Class Form1
         End If
         Return True
     End Function
+
+    Private Sub FinishInitialization()
+        If _initialized Then
+            Exit Sub
+        End If
+        _homePageChartRelitivePosition = RectangleF.Empty
+        Me.UpdateRegionalData(_recentData)
+
+        Me.InitializeHomePageChart()
+        Me.InitializeActiveInsulinTabChart()
+        Me.InitializeTimeInRangeArea()
+        Me.SGsDataGridView.AutoGenerateColumns = True
+        Me.SGsDataGridView.ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
+            .Alignment = DataGridViewContentAlignment.MiddleCenter
+            }
+
+        _initialized = True
+    End Sub
+
+    Private Sub Fix(sp As SplitContainer)
+        ' Scale factor depends on orientation
+        Dim sc As Single = If(sp.Orientation = Orientation.Vertical, Me.formScale.Width, Me.formScale.Height)
+        If sp.FixedPanel = FixedPanel.Panel1 Then
+            sp.SplitterDistance = CInt(Math.Truncate(Math.Round(CSng(sp.SplitterDistance) * sc)))
+        ElseIf sp.FixedPanel = FixedPanel.Panel2 Then
+            Dim cs As Integer = If(sp.Orientation = Orientation.Vertical, sp.Panel2.ClientSize.Width, sp.Panel2.ClientSize.Height)
+            Dim newcs As Integer = CInt(Math.Truncate(CSng(cs) * sc))
+            sp.SplitterDistance -= newcs - cs
+        End If
+    End Sub
+
+    ' Recursively search for SplitContainer controls
+    Private Sub Fix(c As Control)
+        For Each child As Control In c.Controls
+            If TypeOf child Is SplitContainer Then
+                Dim sp As SplitContainer = CType(child, SplitContainer)
+                Me.Fix(sp)
+                Me.Fix(sp.Panel1)
+                Me.Fix(sp.Panel2)
+            Else
+                Me.Fix(child)
+            End If
+        Next child
+    End Sub
 
 End Class
