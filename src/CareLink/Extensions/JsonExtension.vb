@@ -253,10 +253,6 @@ Public Module JsonExtensions
             If tableLevel1Blue.RowCount > 5 Then
                 With parentTableLayoutPanel
                     .AutoScroll = True
-                    tableLevel1Blue.Dock = DockStyle.None
-                    Application.DoEvents()
-                    tableLevel1Blue.Dock = DockStyle.Fill
-                    Application.DoEvents()
                 End With
             Else
                 parentTableLayoutPanel.Width = 870
@@ -266,7 +262,11 @@ Public Module JsonExtensions
             tableLevel1Blue.AutoSize = False
             tableLevel1Blue.RowCount += 1
             tableLevel1Blue.Height = 22 * (tableLevel1Blue.RowCount - 1)
+            tableLevel1Blue.Dock = DockStyle.None
+            Application.DoEvents()
             tableLevel1Blue.Width = tableLevel1BlueWidth - 30
+            Application.DoEvents()
+            tableLevel1Blue.Dock = DockStyle.Fill
             Application.DoEvents()
         ElseIf itemIndex = ItemIndexs.notificationHistory Then
             tableLevel1Blue.RowStyles(1).SizeType = SizeType.AutoSize
