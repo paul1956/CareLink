@@ -7,6 +7,7 @@ Imports Microsoft.Win32
 
 Friend Module BrowserUtilities
 
+    Private Const VersionSearchKey As String = "<a href=""/paul1956/CareLink/releases/tag/v"
     Private ReadOnly _httpClient As New HttpClient()
     Friend Const GitHubCareLinkUrl As String = "https://github.com/paul1956/CareLink/"
 
@@ -58,33 +59,32 @@ Friend Module BrowserUtilities
         Return True
     End Function
 
+    ''' <summary>
+    ''' Find version string in HTML page
+    ''' https://github.com/paul1956/CareLink/releases
+    ''' Then look for version
+    ''' <a href="/paul1956/CareLink/releases/tag/v3.4.0.3" data-view-component="true" class="Link--primary">CareLink Display 3.4.0.3 x64</a>
+    ''' </summary>
+    ''' <param name="mainForm"></param>
+    ''' <param name="reportResults"></param>
     Friend Async Sub CheckForUpdatesAsync(mainForm As Form1, reportResults As Boolean)
         Try
-            Dim responseBody As String = Await _httpClient.GetStringAsync($"{GitHubCareLinkUrl}blob/master/README.md")
+            Dim responseBody As String = Await _httpClient.GetStringAsync($"{GitHubCareLinkUrl}releases")
             Dim index As Integer
             Dim versionStr As String = "0.0.0.0"
             For Each e As IndexClass(Of String) In responseBody.SplitLines().ToList().WithIndex()
                 Dim line As String = e.Value
-                If line.Contains("What's New in this release", StringComparison.Ordinal) Then
-                    If e.IsLast Then
-                        MsgBox($"Failed while checking for new version: File '{GitHubCareLinkUrl}blob/master/ReadMe.MD' is corrupt", MsgBoxStyle.Information, "Version Check Failed")
-                        Exit Sub
-                    End If
-                    e.MoveNext()
-                    line = e.Value
-                    index = line.IndexOf("New in ", StringComparison.OrdinalIgnoreCase)
+                If line.Contains(VersionSearchKey, StringComparison.Ordinal) Then
+                    index = line.IndexOf(VersionSearchKey, StringComparison.OrdinalIgnoreCase) + VersionSearchKey.Length
                     If index < 0 Then
                         Exit Sub
                     End If
-                    versionStr = line.Substring(index + "New In ".Length)
+                    Dim versionLength As Integer = line.IndexOf("""", index) - index
+                    versionStr = line.Substring(index, versionLength)
                     Exit For
                 End If
             Next
 
-            index = versionStr.IndexOf("<"c)
-            If index > 0 Then
-                versionStr = versionStr.Substring(0, index)
-            End If
             Dim gitHubVersion As String = versionStr
             If IsNewerVersion(gitHubVersion, My.Application.Info.Version) Then
                 If reportResults Then
