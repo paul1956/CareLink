@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Globalization
+Imports System.IO
 Imports System.Runtime.CompilerServices
 
 Friend Module TimeExtensions
@@ -11,7 +12,9 @@ Friend Module TimeExtensions
     Public ReadOnly s_thirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
 
     <Extension>
-    Public Function DateParse(dateAsString As String, currentDataCulture As IFormatProvider, CurrentUICulture As IFormatProvider) As Date
+    Public Function DateParse(dateAsString As String, currentDataCulture As IFormatProvider, CurrentUICulture As IFormatProvider,
+                              <CallerMemberName> Optional memberName As String = Nothing,
+                              <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Date
         Dim resultDate As Date
         If Date.TryParse(dateAsString, currentDataCulture, DateTimeStyles.None, resultDate) Then
             Return resultDate
@@ -19,7 +22,7 @@ Friend Module TimeExtensions
         If Date.TryParse(dateAsString, CurrentUICulture, DateTimeStyles.None, resultDate) Then
             Return resultDate
         End If
-        MsgBox($"System.FormatException: String '{dateAsString}' was not recognized as a valid DateTime", MsgBoxStyle.ApplicationModal Or MsgBoxStyle.Critical)
+        MsgBox($"System.FormatException: String '{dateAsString}' in {memberName} line {sourceLineNumber} was not recognized as a valid DateTime", MsgBoxStyle.ApplicationModal Or MsgBoxStyle.Critical)
         End
     End Function
 
