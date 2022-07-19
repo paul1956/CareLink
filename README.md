@@ -22,9 +22,13 @@ https://github.com/paul1956/CareLink/releases/
 - Medtronic CareLink data display
 
 ## Updated
-- 7/16/2022
+- 7/21/2022
 
 ## What's New in this release
+  New in 3.4.0.6
+  Improve crash reporting
+  Better support for new pumps and manual mode
+
   New in 3.4.0.5
   More scaling and internationalization improvements
 

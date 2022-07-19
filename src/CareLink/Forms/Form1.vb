@@ -1496,16 +1496,33 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateDosingAndCarbs()
-        Me.BasalLabel.Text = $"Basal {s_totalBasal.RoundSingle(1)} U | {CInt(s_totalBasal / s_totalDailyDose * 100)}%"
+        Dim totalPercent As String
+        If s_totalDailyDose = 0 Then
+            totalPercent = "???"
+        Else
+            totalPercent = $"{CInt(s_totalBasal / s_totalDailyDose * 100)}"
+        End If
+        Me.BasalLabel.Text = $"Basal {s_totalBasal.RoundSingle(1)} U | {totalPercent}"
+
         Me.DailyDoseLabel.Text = $"Daily Dose {s_totalDailyDose.RoundSingle(1)} U"
+
         If s_totalAutoCorrection > 0 Then
-            Me.AutoCorrectionLabel.Text = $"Auto Correction {s_totalAutoCorrection.RoundSingle(1)} U | {CInt(s_totalAutoCorrection / s_totalDailyDose * 100)}%"
+            If s_totalDailyDose > 0 Then
+                totalPercent = CInt(s_totalAutoCorrection / s_totalDailyDose * 100).ToString
+            End If
+            Me.AutoCorrectionLabel.Text = $"Auto Correction {s_totalAutoCorrection.RoundSingle(1)} U | {totalPercent}%"
             Me.AutoCorrectionLabel.Visible = True
             Dim totalBolus As Single = s_totalManualBolus + s_totalAutoCorrection
-            Me.ManualBolusLabel.Text = $"Manual Bolus {totalBolus.RoundSingle(1)} U | {CInt(s_totalManualBolus / s_totalDailyDose * 100)}%"
+            If s_totalDailyDose > 0 Then
+                totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
+            End If
+            Me.ManualBolusLabel.Text = $"Manual Bolus {totalBolus.RoundSingle(1)} U | {totalPercent}%"
         Else
             Me.AutoCorrectionLabel.Visible = False
-            Me.ManualBolusLabel.Text = $"Bolus {s_totalManualBolus.RoundSingle(1)} U | {CInt(s_totalManualBolus / s_totalDailyDose * 100)}%"
+            If s_totalDailyDose > 0 Then
+                totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
+            End If
+            Me.ManualBolusLabel.Text = $"Bolus {s_totalManualBolus.RoundSingle(1)} U | {totalPercent}%"
         End If
         Me.Last24CarbsValueLabel.Text = s_totalCarbs.ToString
     End Sub

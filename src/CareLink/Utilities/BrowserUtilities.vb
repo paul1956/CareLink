@@ -8,8 +8,8 @@ Imports Microsoft.Win32
 Friend Module BrowserUtilities
 
     Private Const VersionSearchKey As String = "<a href=""/paul1956/CareLink/releases/tag/v"
-    Private ReadOnly _httpClient As New HttpClient()
     Friend Const GitHubCareLinkUrl As String = "https://github.com/paul1956/CareLink/"
+    Public ReadOnly _httpClient As New HttpClient()
 
     ''' <summary>
     ''' Compare version of executable with ReadMe.MkDir from GitHub
