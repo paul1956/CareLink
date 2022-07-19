@@ -13,9 +13,10 @@ Friend Module UserMessageHandler
                         }
 
     Friend ReadOnly _messages As New Dictionary(Of String, String) From {
+                            {"BC_SID_UMAX_ALERT_INFO", "Auto Mode max delivery. Auto Mode has been at maximum delivery for 4 hours. Enter BG to continue in Auto Mode."},
                             {"BC_MESSAGE_CONFIRM_SENSOR_SIGNAL_CHECK_BG", "No calibration occured.Confirm sensor signal. Check BG again to calibrate sensor."},
                             {"BC_SID_BASAL_STARTED_SMART_GUARD", "Basal started SmartGuard."},
-                            {"BC_SID_BG_REQUIRED_CONTENT", "BG required Content."},
+                            {"BC_SID_BG_REQUIRED_CONTENT", "BG required. Enter a new BG for Auto Mode."},
                             {"BC_SID_BOLUS_ENTRY_TIMED_OUT", "Bolus not delivered. Bolus entry timed out before delivery. If bolus was intended, enter values again."},
                             {"BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR", "Calibrate now. Check BG and calibrate sensor."},
                             {"BC_SID_CHECK_BG_CONSIDER_TESTING_KETONES_CHANGE_RESERVOIR", "Check BG and consider testing ketones and changing reservoir."},
