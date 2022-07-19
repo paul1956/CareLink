@@ -41,6 +41,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Utilities\RestClient.vb" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Import Include="System.Data" />
     <Import Include="System.Drawing" />
     <Import Include="System.Windows.Forms" />
@@ -49,6 +53,7 @@
   <ItemGroup>
     <PackageReference Include="Maikebing.System.Windows.Forms.DataVisualization" Version="5.0.1" />
     <PackageReference Include="Microsoft.Exchange.WebServices.NETStandard" Version="1.1.3" />
+    <PackageReference Include="Octokit" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

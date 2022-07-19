@@ -1,6 +1,7 @@
-﻿Imports System.IO
-Imports System.Net
-Imports System.Text
+﻿' Licensed to the .NET Foundation under one or more agreements.
+' The .NET Foundation licenses this file to you under the MIT license.
+' See the LICENSE file in the project root for more information.
+
 Imports Microsoft.VisualBasic.ApplicationServices
 Imports Microsoft.VisualBasic.Devices
 
@@ -20,17 +21,9 @@ Namespace My
 
         End Sub
 
-        'Private Sub MyApplication_UnhandledException(sender As Object, e As UnhandledExceptionEventArgs) Handles Me.UnhandledException
-        '    Dim request As System.Net.WebRequest = System.Net.WebRequest.Create("https://api.github.com/repos/organization/repo/issues")
-        '    request.Method = "POST"
-        '    Dim postData As String = "{'title':'testing', 'body':'testing testing'}"
-        '    Dim byteArray() As Byte = Encoding.UTF8.GetBytes(postData)
-        '    request.ContentLength = byteArray.Length
-        '    Dim dataStream As System.IO.Stream = request.GetRequestStream()
-        '    dataStream.Write(byteArray, 0, byteArray.Length)
-        '    dataStream.Close()
-        '    Dim response As System.Net.WebResponse = request.GetResponse()
-        '    Console.WriteLine(response.Headers.Get("url"))
-        'End Sub
+        Private Sub MyApplication_UnhandledException(sender As Object, e As UnhandledExceptionEventArgs) Handles Me.UnhandledException
+            ExceptionHandlerForm.UnhandledException = e
+            ExceptionHandlerForm.ShowDialog()
+        End Sub
     End Class
 End Namespace

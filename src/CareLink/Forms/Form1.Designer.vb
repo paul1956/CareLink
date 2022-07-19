@@ -119,7 +119,6 @@ Partial Class Form1
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.CursorTimer = New System.Windows.Forms.Timer(Me.components)
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
-        Me.WatchdogTimer = New System.Windows.Forms.Timer(Me.components)
         Me.LoginStatusLabel = New System.Windows.Forms.Label()
         Me.LoginStatus = New System.Windows.Forms.Label()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
@@ -1329,10 +1328,6 @@ Partial Class Form1
         Me.NotifyIcon1.Text = "CareLink Display"
         Me.NotifyIcon1.Visible = True
         '
-        'WatchdogTimer
-        '
-        Me.WatchdogTimer.Interval = 360000
-        '
         'LoginStatusLabel
         '
         Me.LoginStatusLabel.AutoSize = True
@@ -1486,7 +1481,6 @@ Partial Class Form1
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
     Friend WithEvents MenuOptionsUseTestData As ToolStripMenuItem
     Friend WithEvents MenuView As ToolStripMenuItem
-    Friend WithEvents WatchdogTimer As Timer
     Friend WithEvents MenuOptionsUseLastSavedData As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
     Friend WithEvents MenuStartHereSnapshotLoad As ToolStripMenuItem
