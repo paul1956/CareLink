@@ -573,9 +573,6 @@ Public Class Form1
 
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
         Me.ServerUpdateTimer.Stop()
-        Me.WatchdogTimer.Stop()
-        Me.WatchdogTimer.Interval = CType(New TimeSpan(0, minutes:=6, 0).TotalMilliseconds, Integer)
-        Me.WatchdogTimer.Start()
         Debug.Print($"WatchdogTimer Started at {Now}")
         _recentData = _client.GetRecentData()
         If Me.IsRecentDataUpdated Then
@@ -593,11 +590,6 @@ Public Class Form1
         Me.ServerUpdateTimer.Start()
         Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
         Me.Cursor = Cursors.Default
-    End Sub
-
-    Private Sub WatchdogTimer_Tick(sender As Object, e As EventArgs) Handles WatchdogTimer.Tick
-        Me.WatchdogTimer.Stop()
-        MsgBox("Watchdog Timed Out", MsgBoxStyle.Critical, "Critical Error")
     End Sub
 
 #End Region ' Timer
@@ -1874,8 +1866,6 @@ Public Class Form1
             End If
             _recentData = _client.GetRecentData()
             Me.MenuView.Visible = True
-            Me.WatchdogTimer.Interval = CType(New TimeSpan(0, minutes:=6, 0).TotalMilliseconds, Integer)
-            Me.WatchdogTimer.Start()
             Debug.Print($"Me.WatchdogTimer Started at {Now}")
             Me.ServerUpdateTimer.Interval = CType(New TimeSpan(0, minutes:=1, 0).TotalMilliseconds, Integer)
             Me.ServerUpdateTimer.Start()

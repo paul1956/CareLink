@@ -28,6 +28,7 @@ https://github.com/paul1956/CareLink/releases/
   New in 3.4.0.6
   Improve crash reporting
   Better support for new pumps and manual mode
+  Remove Watchdog timer
 
   New in 3.4.0.5
   More scaling and internationalization improvements
