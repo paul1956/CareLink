@@ -13,7 +13,6 @@ Friend Module UserMessageHandler
                         }
 
     Friend ReadOnly _messages As New Dictionary(Of String, String) From {
-                            {"BC_SID_UMAX_ALERT_INFO", "Auto Mode max delivery. Auto Mode has been at maximum delivery for 4 hours. Enter BG to continue in Auto Mode."},
                             {"BC_MESSAGE_CONFIRM_SENSOR_SIGNAL_CHECK_BG", "No calibration occured.Confirm sensor signal. Check BG again to calibrate sensor."},
                             {"BC_SID_BASAL_STARTED_SMART_GUARD", "Basal started SmartGuard."},
                             {"BC_SID_BG_REQUIRED_CONTENT", "BG required. Enter a new BG for Auto Mode."},
@@ -36,6 +35,8 @@ Friend Module UserMessageHandler
                             {"BC_SID_SG_RISE_RAPID", "Raise Alert. Sensor glucose raising rapidly."},
                             {"BC_SID_SMART_GUARD_MINIMUM_DELIVERY", "SmartGuard minimum delivery."},
                             {"BC_SID_START_NEW_SENSOR", "Start new sensor."},
+                            {"BC_SID_UMAX_ALERT_INFO", "Auto Mode max delivery. Auto Mode has been at maximum delivery for 4 hours. Enter BG to continue in Auto Mode."},
+                            {"BC_SID_UMIN_ALERT_INFO", "Auto Mode max delivery. Auto Mode has been at minimum delivery for 2 hours. Enter BG to continue in Auto Mode."},
                             {"BC_SID_UPDATING_CAN_TAKE_UP_TO_THREE_HOURS", "Sensor updating, it can take up to 3 hours."},
                             {"BC_SID_WAIT_AT_LEAST_15_MINUTES", "Calibration not accepted. Wait at least 15 minutes. Wash hands, test BGagain and calibrate."},
                             {"CALIBRATING", "Calibrating ..."},
