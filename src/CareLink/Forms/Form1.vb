@@ -39,8 +39,8 @@ Public Class Form1
     Private Property formScale As New SizeF(1.0F, 1.0F)
     Friend Property BgUnitsString As String
 
-    Friend Shared Property CurrentDataCulture As CultureInfo = New CultureInfo("en-US")
-    Friend Shared Property CurrentUICulture As CultureInfo = CultureInfo.CurrentCulture
+    Public Shared Property CurrentDataCulture As CultureInfo = New CultureInfo("en-US")
+    Public Shared Property CurrentUICulture As CultureInfo = CultureInfo.CurrentCulture
 
 #Region "Chart Objects"
 
@@ -1012,14 +1012,14 @@ Public Class Form1
             sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index, CurrentDataCulture, CurrentUICulture).RoundTimeDown(RoundTo.Minute).ToOADate
             Select Case sgListIndex.Value("type")
                 Case "INSULIN"
-                    Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue(CurrentDataCulture, "deliveredFastAmount")
+                    Dim bolusAmount As Double = sgListIndex.Value.GetDoubleValue("deliveredFastAmount")
                     If timeOrderedMarkers.ContainsKey(sgOaDateTime) Then
                         timeOrderedMarkers(sgOaDateTime) += bolusAmount
                     Else
                         timeOrderedMarkers.Add(sgOaDateTime, bolusAmount)
                     End If
                 Case "AUTO_BASAL_DELIVERY"
-                    Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue(CurrentDataCulture, "bolusAmount")
+                    Dim bolusAmount As Double = sgListIndex.Value.GetDoubleValue("bolusAmount")
                     If timeOrderedMarkers.ContainsKey(sgOaDateTime) Then
                         timeOrderedMarkers(sgOaDateTime) += bolusAmount
                     Else
@@ -1077,7 +1077,7 @@ Public Class Form1
                 Select Case sgListIndex.Value("type")
                     Case "INSULIN"
                         .Points.AddXY(sgOaDateTime, maxActiveInsulin)
-                        Dim deliveredAmount As Single = Single.Parse(sgListIndex.Value("deliveredFastAmount"), CurrentDataCulture)
+                        Dim deliveredAmount As Single = sgListIndex.Value("deliveredFastAmount").ParseSingle
                         s_totalDailyDose += deliveredAmount
                         Select Case sgListIndex.Value("activationType")
                             Case "AUTOCORRECTION"
@@ -1095,14 +1095,14 @@ Public Class Form1
                         .Points.Last.MarkerStyle = MarkerStyle.Square
 
                     Case "AUTO_BASAL_DELIVERY"
-                        Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue(CurrentDataCulture, "bolusAmount")
+                        Dim bolusAmount As Double = sgListIndex.Value.GetDoubleValue("bolusAmount")
                         .Points.AddXY(sgOaDateTime, maxActiveInsulin)
                         .Points.Last.ToolTip = $"Basal: {bolusAmount.RoundDouble(3).ToString(CurrentUICulture)} U"
                         .Points.Last.MarkerSize = 8
                         s_totalBasal += CSng(bolusAmount)
                         s_totalDailyDose += CSng(bolusAmount)
                     Case "MEAL"
-                        s_totalCarbs += sgListIndex.Value.GetDecimalValue(CurrentDataCulture, "amount")
+                        s_totalCarbs += sgListIndex.Value.GetDoubleValue("amount")
                 End Select
             End With
         Next
@@ -1229,9 +1229,9 @@ Public Class Form1
                 Case ItemIndexs.reservoirLevelPercent
                     s_reservoirLevelPercent = CInt(row.Value)
                 Case ItemIndexs.reservoirAmount
-                    s_reservoirAmount = Double.Parse(row.Value, CurrentDataCulture)
+                    s_reservoirAmount = row.Value.ParseDouble
                 Case ItemIndexs.reservoirRemainingUnits
-                    s_reservoirRemainingUnits = Double.Parse(row.Value, CurrentDataCulture)
+                    s_reservoirRemainingUnits = row.Value.ParseDouble
                 Case ItemIndexs.medicalDeviceBatteryLevelPercent
                     s_medicalDeviceBatteryLevelPercent = CInt(row.Value)
                 Case ItemIndexs.sensorDurationHours
@@ -1348,9 +1348,9 @@ Public Class Form1
                 Case ItemIndexs.lastConduitDateTime
                     s_lastConduitDateTime = row.Value
                 Case ItemIndexs.maxAutoBasalRate
-                    s_maxAutoBasalRate = Double.Parse(row.Value, CurrentDataCulture)
+                    s_maxAutoBasalRate = row.Value.ParseDouble
                 Case ItemIndexs.maxBolusAmount
-                    s_maxBolusAmount = Double.Parse(row.Value, CurrentDataCulture)
+                    s_maxBolusAmount = row.Value.ParseDouble
                 Case ItemIndexs.sensorDurationMinutes
                     s_sensorDurationMinutes = CInt(row.Value)
                 Case ItemIndexs.timeToNextCalibrationMinutes
@@ -1360,7 +1360,7 @@ Public Class Form1
                 Case ItemIndexs.sgBelowLimit
                     s_sgBelowLimit = CInt(row.Value)
                 Case ItemIndexs.averageSGFloat
-                    s_averageSGFloat = Double.Parse(row.Value, CurrentDataCulture)
+                    s_averageSGFloat = row.Value.ParseDouble
                 Case ItemIndexs.timeToNextCalibrationRecommendedMinutes
                     s_timeToNextCalibrationRecommendedMinutes = CUShort(row.Value)
                 Case ItemIndexs.calFreeSensor
@@ -1569,7 +1569,7 @@ Public Class Form1
             Me.CurrentBG.Parent = Me.ShieldPictureBox
             Me.CurrentBG.Text = s_lastSG("sg")
             Me.NotifyIcon1.Text = $"{s_lastSG("sg")} {Me.BgUnitsString}"
-            _bgMiniDisplay.SetCurrentBGString(s_lastSG("sg"), CurrentDataCulture)
+            _bgMiniDisplay.SetCurrentBGString(s_lastSG("sg"))
             Me.CurrentBG.Visible = True
             Me.SensorMessage.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield
@@ -1580,7 +1580,7 @@ Public Class Form1
             Me.ShieldUnitsLabel.Text = Me.BgUnitsString
             Me.ShieldUnitsLabel.Visible = True
         Else
-            _bgMiniDisplay.SetCurrentBGString("---", CurrentDataCulture)
+            _bgMiniDisplay.SetCurrentBGString("---")
             Me.CurrentBG.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield_Disabled
             Me.SensorMessage.Visible = True
@@ -1810,7 +1810,7 @@ Public Class Form1
                         .Points.AddXY(sgOaDateTime, Me.MarkerRow)
                         Dim bolusAmount As String = sgListIndex.Value("bolusAmount")
                         .Points.Last.MarkerBorderColor = Color.Black
-                        .Points.Last.ToolTip = $"Basal:{bolusAmount.RoundDouble(3, CurrentDataCulture).ToString(CurrentUICulture)} U"
+                        .Points.Last.ToolTip = $"Basal:{bolusAmount.RoundDouble(3).ToString(CurrentUICulture)} U"
                     Case "TIME_CHANGE"
                         ' need to handle
                     Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED"

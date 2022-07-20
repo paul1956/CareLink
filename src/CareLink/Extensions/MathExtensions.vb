@@ -15,13 +15,11 @@ Friend Module MathExtensions
     End Enum
 
     <Extension>
-    Friend Function GetDecimalValue(item As Dictionary(Of String, String), culture As CultureInfo, ParamArray values() As String) As Double
+    Friend Function GetDoubleValue(item As Dictionary(Of String, String), value As String) As Double
         Dim returnValueString As String = ""
-        For Each value As String In values
-            If item.TryGetValue(value, returnValueString) Then
-                Return Double.Parse(returnValueString, NumberStyles.Number, culture)
-            End If
-        Next
+        If item.TryGetValue(value, returnValueString) Then
+            Return returnValueString.ParseDouble
+        End If
         Return Double.NaN
     End Function
 
@@ -32,9 +30,9 @@ Friend Module MathExtensions
     End Function
 
     <Extension>
-    Friend Function RoundDouble(value As String, decimalDigits As Integer, culture As CultureInfo) As Double
+    Friend Function RoundDouble(value As String, decimalDigits As Integer) As Double
 
-        Return Math.Round(Double.Parse(value, culture), decimalDigits)
+        Return Math.Round(value.ParseDouble, decimalDigits)
     End Function
 
     <Extension>
@@ -47,6 +45,30 @@ Friend Module MathExtensions
     Friend Function RoundSingle(singleValue As Single, decimalDigits As Integer) As Single
 
         Return CSng(Math.Round(singleValue, decimalDigits))
+    End Function
+
+    <Extension>
+    Public Function ParseDouble(valueString As String) As Double
+        Dim returnDouble As Double
+        If Double.TryParse(valueString, NumberStyles.Number, Form1.CurrentDataCulture, returnDouble) Then
+            Return returnDouble
+        End If
+        If Double.TryParse(valueString, NumberStyles.Number, Form1.CurrentUICulture, returnDouble) Then
+            Return returnDouble
+        End If
+        Return Double.NaN
+    End Function
+
+    <Extension>
+    Public Function ParseSingle(valueString As String) As Single
+        Dim returnSingle As Single
+        If Single.TryParse(valueString, NumberStyles.Number, Form1.CurrentDataCulture, returnSingle) Then
+            Return returnSingle
+        End If
+        If Single.TryParse(valueString, NumberStyles.Number, Form1.CurrentUICulture, returnSingle) Then
+            Return returnSingle
+        End If
+        Return Single.NaN
     End Function
 
     <Extension>
