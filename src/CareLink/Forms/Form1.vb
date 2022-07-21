@@ -452,31 +452,29 @@ Public Class Form1
         End If
 
         Dim homePageChartY As Integer = CInt(_homePageChartRelitivePosition.Y)
-        Dim homePagelocation As New Point(CInt(_homePageChartRelitivePosition.X), homePageChartY)
         Dim homePageChartWidth As Integer = CInt(_homePageChartRelitivePosition.Width)
         Dim highLimitY As Double = e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, _limitHigh)
         Dim lowLimitY As Double = e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, _limitLow)
 
-        Dim lowRawHeight As Integer = CInt((lowLimitY - homePageChartY) * Me.formScale.Height)
-        Dim lowHeight As Integer = If(_homePageChartChartArea.AxisX.ScrollBar.IsVisible,
-                                      CInt(lowRawHeight - _homePageChartChartArea.AxisX.ScrollBar.Size),
-                                      lowRawHeight
-                                     )
-        Dim highHeight As Integer = CInt(275 * Me.formScale.Height)
-        Dim highAreaRectangle As New Rectangle(homePagelocation,
-                                               New Size(homePageChartWidth, highHeight))
-
-        Dim lowOffset As Integer = CInt((_homePageChartRelitivePosition.Height + _homePageChartRelitivePosition.Y + 1) * Me.formScale.Height)
-        Dim lowStartLocation As New Point(CInt(_homePageChartRelitivePosition.X), lowOffset)
-
-        Dim lowAreaRectangle As New Rectangle(lowStartLocation,
-                                              New Size(homePageChartWidth, lowHeight))
-
         Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
+            Dim highHeight As Integer = CInt(255 * Me.formScale.Height)
+            Dim homePagelocation As New Point(CInt(_homePageChartRelitivePosition.X), homePageChartY)
+            Dim highAreaRectangle As New Rectangle(homePagelocation,
+                                                   New Size(homePageChartWidth, highHeight))
             e.ChartGraphics.Graphics.FillRectangle(b, highAreaRectangle)
         End Using
 
         Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
+            Dim lowOffset As Integer = CInt((10 + _homePageChartRelitivePosition.Height) * Me.formScale.Height)
+            Dim lowStartLocation As New Point(CInt(_homePageChartRelitivePosition.X), lowOffset)
+
+            Dim lowRawHeight As Integer = CInt((50 - homePageChartY) * Me.formScale.Height)
+            Dim lowHeight As Integer = If(_homePageChartChartArea.AxisX.ScrollBar.IsVisible,
+                                          CInt(lowRawHeight - _homePageChartChartArea.AxisX.ScrollBar.Size),
+                                          lowRawHeight
+                                         )
+            Dim lowAreaRectangle As New Rectangle(lowStartLocation,
+                                                  New Size(homePageChartWidth, lowHeight))
             e.ChartGraphics.Graphics.FillRectangle(b, lowAreaRectangle)
         End Using
         If Me.CursorTimeLabel.Tag IsNot Nothing Then
@@ -874,22 +872,16 @@ Public Class Form1
                 .XValueType = ChartValueType.DateTime,
                 .YAxisType = AxisType.Secondary
             }
-        Dim defaultTitle As New Title With {
-                .Font = New Font("Trebuchet MS", 12.0F, FontStyle.Bold),
-                .ForeColor = Color.FromArgb(26, 59, 105),
-                .Name = "Title1",
-                .ShadowColor = Color.FromArgb(32, 0, 0, 0),
-                .ShadowOffset = 3
-            }
+
+        Me.SplitContainer3.Panel1.Controls.Add(Me.HomePageChart)
+        Application.DoEvents()
         Me.HomePageChart.Series.Add(Me.CurrentBGSeries)
         Me.HomePageChart.Series.Add(Me.MarkerSeries)
         Me.HomePageChart.Series.Add(Me.HighLimitSeries)
         Me.HomePageChart.Series.Add(Me.LowLimitSeries)
         Me.HomePageChart.Legends.Add(defaultLegend)
-        Me.HomePageChart.Titles.Add(defaultTitle)
         Me.HomePageChart.Series(NameOf(CurrentBGSeries)).EmptyPointStyle.BorderWidth = 4
         Me.HomePageChart.Series(NameOf(CurrentBGSeries)).EmptyPointStyle.Color = Color.Transparent
-        Me.SplitContainer3.Panel1.Controls.Add(Me.HomePageChart)
         Application.DoEvents()
     End Sub
 

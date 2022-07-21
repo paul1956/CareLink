@@ -372,7 +372,7 @@ Partial Class Form1
         Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
         Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
         Me.TableLayoutPanelSummaryData.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanelSummaryData.Size = New System.Drawing.Size(1370, 706)
+        Me.TableLayoutPanelSummaryData.Size = New System.Drawing.Size(1370, 611)
         Me.TableLayoutPanelSummaryData.TabIndex = 3
         '
         'TableLayoutPanelTop1
@@ -457,11 +457,10 @@ Partial Class Form1
         Me.TabControl1.Controls.Add(Me.TabPage7Markers)
         Me.TabControl1.Controls.Add(Me.TabPage8NotificationHistory)
         Me.TabControl1.Controls.Add(Me.TabPage9Basal)
-        Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1384, 740)
+        Me.TabControl1.Size = New System.Drawing.Size(1384, 645)
         Me.TabControl1.TabIndex = 0
         '
         'TabPage1HomePage
@@ -471,7 +470,7 @@ Partial Class Form1
         Me.TabPage1HomePage.Location = New System.Drawing.Point(4, 24)
         Me.TabPage1HomePage.Name = "TabPage1HomePage"
         Me.TabPage1HomePage.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1HomePage.Size = New System.Drawing.Size(1376, 712)
+        Me.TabPage1HomePage.Size = New System.Drawing.Size(1376, 617)
         Me.TabPage1HomePage.TabIndex = 7
         Me.TabPage1HomePage.Text = "Home Page"
         '
@@ -524,8 +523,8 @@ Partial Class Form1
         'SplitContainer2.Panel2
         '
         Me.SplitContainer2.Panel2.Controls.Add(Me.SplitContainer3)
-        Me.SplitContainer2.Size = New System.Drawing.Size(1370, 706)
-        Me.SplitContainer2.SplitterDistance = 140
+        Me.SplitContainer2.Size = New System.Drawing.Size(1370, 611)
+        Me.SplitContainer2.SplitterDistance = 132
         Me.SplitContainer2.TabIndex = 52
         '
         'Last24CarbsValueLabel
@@ -924,13 +923,13 @@ Partial Class Form1
         '
         'SplitContainer3
         '
-        Me.SplitContainer3.Dock = System.Windows.Forms.DockStyle.Top
         Me.SplitContainer3.IsSplitterFixed = True
         Me.SplitContainer3.Location = New System.Drawing.Point(0, 0)
         Me.SplitContainer3.Name = "SplitContainer3"
         '
         'SplitContainer3.Panel1
         '
+        Me.SplitContainer3.Panel1.BackColor = System.Drawing.Color.Black
         Me.SplitContainer3.Panel1.Controls.Add(Me.CursorTimeLabel)
         '
         'SplitContainer3.Panel2
@@ -947,7 +946,7 @@ Partial Class Form1
         Me.SplitContainer3.Panel2.Controls.Add(Me.BelowLowLimitMessageLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.AverageSGValueLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.AverageSGMessageLabel)
-        Me.SplitContainer3.Size = New System.Drawing.Size(1370, 562)
+        Me.SplitContainer3.Size = New System.Drawing.Size(1370, 471)
         Me.SplitContainer3.SplitterDistance = 1136
         Me.SplitContainer3.TabIndex = 0
         '
@@ -1022,7 +1021,7 @@ Partial Class Form1
         Me.InRangeMessageLabel.BackColor = System.Drawing.Color.Transparent
         Me.InRangeMessageLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.InRangeMessageLabel.ForeColor = System.Drawing.Color.Lime
-        Me.InRangeMessageLabel.Location = New System.Drawing.Point(81, 370)
+        Me.InRangeMessageLabel.Location = New System.Drawing.Point(81, 328)
         Me.InRangeMessageLabel.Name = "InRangeMessageLabel"
         Me.InRangeMessageLabel.Size = New System.Drawing.Size(73, 21)
         Me.InRangeMessageLabel.TabIndex = 30
@@ -1035,7 +1034,7 @@ Partial Class Form1
         Me.AboveHighLimitMessageLabel.BackColor = System.Drawing.Color.Transparent
         Me.AboveHighLimitMessageLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AboveHighLimitMessageLabel.ForeColor = System.Drawing.Color.Orange
-        Me.AboveHighLimitMessageLabel.Location = New System.Drawing.Point(30, 298)
+        Me.AboveHighLimitMessageLabel.Location = New System.Drawing.Point(30, 274)
         Me.AboveHighLimitMessageLabel.Name = "AboveHighLimitMessageLabel"
         Me.AboveHighLimitMessageLabel.Size = New System.Drawing.Size(170, 21)
         Me.AboveHighLimitMessageLabel.TabIndex = 28
@@ -1048,7 +1047,7 @@ Partial Class Form1
         Me.BelowLowLimitValueLabel.BackColor = System.Drawing.Color.Black
         Me.BelowLowLimitValueLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.BelowLowLimitValueLabel.ForeColor = System.Drawing.Color.White
-        Me.BelowLowLimitValueLabel.Location = New System.Drawing.Point(55, 411)
+        Me.BelowLowLimitValueLabel.Location = New System.Drawing.Point(55, 349)
         Me.BelowLowLimitValueLabel.Name = "BelowLowLimitValueLabel"
         Me.BelowLowLimitValueLabel.Size = New System.Drawing.Size(120, 33)
         Me.BelowLowLimitValueLabel.TabIndex = 26
@@ -1061,7 +1060,7 @@ Partial Class Form1
         Me.TimeInRangeValueLabel.BackColor = System.Drawing.Color.Black
         Me.TimeInRangeValueLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.TimeInRangeValueLabel.ForeColor = System.Drawing.Color.White
-        Me.TimeInRangeValueLabel.Location = New System.Drawing.Point(55, 339)
+        Me.TimeInRangeValueLabel.Location = New System.Drawing.Point(55, 295)
         Me.TimeInRangeValueLabel.Name = "TimeInRangeValueLabel"
         Me.TimeInRangeValueLabel.Size = New System.Drawing.Size(120, 33)
         Me.TimeInRangeValueLabel.TabIndex = 24
@@ -1074,7 +1073,7 @@ Partial Class Form1
         Me.AboveHighLimitValueLabel.BackColor = System.Drawing.Color.Black
         Me.AboveHighLimitValueLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AboveHighLimitValueLabel.ForeColor = System.Drawing.Color.White
-        Me.AboveHighLimitValueLabel.Location = New System.Drawing.Point(55, 266)
+        Me.AboveHighLimitValueLabel.Location = New System.Drawing.Point(55, 241)
         Me.AboveHighLimitValueLabel.Name = "AboveHighLimitValueLabel"
         Me.AboveHighLimitValueLabel.Size = New System.Drawing.Size(120, 33)
         Me.AboveHighLimitValueLabel.TabIndex = 22
@@ -1087,7 +1086,7 @@ Partial Class Form1
         Me.BelowLowLimitMessageLabel.BackColor = System.Drawing.Color.Transparent
         Me.BelowLowLimitMessageLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.BelowLowLimitMessageLabel.ForeColor = System.Drawing.Color.Red
-        Me.BelowLowLimitMessageLabel.Location = New System.Drawing.Point(30, 442)
+        Me.BelowLowLimitMessageLabel.Location = New System.Drawing.Point(30, 382)
         Me.BelowLowLimitMessageLabel.Name = "BelowLowLimitMessageLabel"
         Me.BelowLowLimitMessageLabel.Size = New System.Drawing.Size(170, 21)
         Me.BelowLowLimitMessageLabel.TabIndex = 32
@@ -1100,7 +1099,7 @@ Partial Class Form1
         Me.AverageSGValueLabel.BackColor = System.Drawing.Color.Black
         Me.AverageSGValueLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AverageSGValueLabel.ForeColor = System.Drawing.Color.White
-        Me.AverageSGValueLabel.Location = New System.Drawing.Point(55, 477)
+        Me.AverageSGValueLabel.Location = New System.Drawing.Point(55, 403)
         Me.AverageSGValueLabel.Margin = New System.Windows.Forms.Padding(0)
         Me.AverageSGValueLabel.Name = "AverageSGValueLabel"
         Me.AverageSGValueLabel.Size = New System.Drawing.Size(120, 33)
@@ -1114,7 +1113,7 @@ Partial Class Form1
         Me.AverageSGMessageLabel.BackColor = System.Drawing.Color.Transparent
         Me.AverageSGMessageLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.AverageSGMessageLabel.ForeColor = System.Drawing.Color.White
-        Me.AverageSGMessageLabel.Location = New System.Drawing.Point(3, 518)
+        Me.AverageSGMessageLabel.Location = New System.Drawing.Point(3, 436)
         Me.AverageSGMessageLabel.Name = "AverageSGMessageLabel"
         Me.AverageSGMessageLabel.Size = New System.Drawing.Size(224, 21)
         Me.AverageSGMessageLabel.TabIndex = 0
@@ -1126,7 +1125,7 @@ Partial Class Form1
         Me.TabPage2RunningActiveInsulin.Location = New System.Drawing.Point(4, 24)
         Me.TabPage2RunningActiveInsulin.Name = "TabPage2RunningActiveInsulin"
         Me.TabPage2RunningActiveInsulin.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2RunningActiveInsulin.Size = New System.Drawing.Size(1376, 712)
+        Me.TabPage2RunningActiveInsulin.Size = New System.Drawing.Size(1376, 617)
         Me.TabPage2RunningActiveInsulin.TabIndex = 8
         Me.TabPage2RunningActiveInsulin.Text = "Running Active Insulin"
         Me.TabPage2RunningActiveInsulin.UseVisualStyleBackColor = True
@@ -1137,7 +1136,7 @@ Partial Class Form1
         Me.TabPage3SummaryData.Location = New System.Drawing.Point(4, 24)
         Me.TabPage3SummaryData.Name = "TabPage3SummaryData"
         Me.TabPage3SummaryData.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3SummaryData.Size = New System.Drawing.Size(1376, 712)
+        Me.TabPage3SummaryData.Size = New System.Drawing.Size(1376, 617)
         Me.TabPage3SummaryData.TabIndex = 0
         Me.TabPage3SummaryData.Text = "Summary Data"
         Me.TabPage3SummaryData.UseVisualStyleBackColor = True
@@ -1148,7 +1147,7 @@ Partial Class Form1
         Me.TabPage4ActiveInsulin.Location = New System.Drawing.Point(4, 24)
         Me.TabPage4ActiveInsulin.Name = "TabPage4ActiveInsulin"
         Me.TabPage4ActiveInsulin.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage4ActiveInsulin.Size = New System.Drawing.Size(1376, 712)
+        Me.TabPage4ActiveInsulin.Size = New System.Drawing.Size(1376, 617)
         Me.TabPage4ActiveInsulin.TabIndex = 1
         Me.TabPage4ActiveInsulin.Text = "Active Insulin"
         Me.TabPage4ActiveInsulin.UseVisualStyleBackColor = True
@@ -1175,7 +1174,7 @@ Partial Class Form1
         Me.TabPage5SensorGlucose.Location = New System.Drawing.Point(4, 24)
         Me.TabPage5SensorGlucose.Name = "TabPage5SensorGlucose"
         Me.TabPage5SensorGlucose.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage5SensorGlucose.Size = New System.Drawing.Size(1376, 712)
+        Me.TabPage5SensorGlucose.Size = New System.Drawing.Size(1376, 617)
         Me.TabPage5SensorGlucose.TabIndex = 2
         Me.TabPage5SensorGlucose.Text = "Sensor Glucose"
         Me.TabPage5SensorGlucose.UseVisualStyleBackColor = True
@@ -1191,7 +1190,7 @@ Partial Class Form1
         Me.SGsDataGridView.Location = New System.Drawing.Point(3, 3)
         Me.SGsDataGridView.Name = "SGsDataGridView"
         Me.SGsDataGridView.RowTemplate.Height = 25
-        Me.SGsDataGridView.Size = New System.Drawing.Size(1370, 706)
+        Me.SGsDataGridView.Size = New System.Drawing.Size(1370, 611)
         Me.SGsDataGridView.TabIndex = 1
         '
         'TabPage6Limits
@@ -1200,7 +1199,7 @@ Partial Class Form1
         Me.TabPage6Limits.Location = New System.Drawing.Point(4, 24)
         Me.TabPage6Limits.Name = "TabPage6Limits"
         Me.TabPage6Limits.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage6Limits.Size = New System.Drawing.Size(1376, 712)
+        Me.TabPage6Limits.Size = New System.Drawing.Size(1376, 617)
         Me.TabPage6Limits.TabIndex = 3
         Me.TabPage6Limits.Text = "Limits"
         Me.TabPage6Limits.UseVisualStyleBackColor = True
@@ -1228,7 +1227,7 @@ Partial Class Form1
         Me.TabPage7Markers.Location = New System.Drawing.Point(4, 24)
         Me.TabPage7Markers.Name = "TabPage7Markers"
         Me.TabPage7Markers.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage7Markers.Size = New System.Drawing.Size(1376, 712)
+        Me.TabPage7Markers.Size = New System.Drawing.Size(1376, 617)
         Me.TabPage7Markers.TabIndex = 4
         Me.TabPage7Markers.Text = "Markers"
         Me.TabPage7Markers.UseVisualStyleBackColor = True
@@ -1246,7 +1245,7 @@ Partial Class Form1
         Me.TableLayoutPanelMarkers.Name = "TableLayoutPanelMarkers"
         Me.TableLayoutPanelMarkers.RowCount = 1
         Me.TableLayoutPanelMarkers.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelMarkers.Size = New System.Drawing.Size(1370, 706)
+        Me.TableLayoutPanelMarkers.Size = New System.Drawing.Size(1370, 611)
         Me.TableLayoutPanelMarkers.TabIndex = 0
         '
         'TabPage8NotificationHistory
@@ -1255,7 +1254,7 @@ Partial Class Form1
         Me.TabPage8NotificationHistory.Location = New System.Drawing.Point(4, 24)
         Me.TabPage8NotificationHistory.Name = "TabPage8NotificationHistory"
         Me.TabPage8NotificationHistory.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage8NotificationHistory.Size = New System.Drawing.Size(1376, 712)
+        Me.TabPage8NotificationHistory.Size = New System.Drawing.Size(1376, 617)
         Me.TabPage8NotificationHistory.TabIndex = 5
         Me.TabPage8NotificationHistory.Text = "Notification History"
         Me.TabPage8NotificationHistory.UseVisualStyleBackColor = True
@@ -1274,7 +1273,7 @@ Partial Class Form1
         Me.TableLayoutPanelNotificationHistory.RowCount = 2
         Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelNotificationHistory.Size = New System.Drawing.Size(1370, 706)
+        Me.TableLayoutPanelNotificationHistory.Size = New System.Drawing.Size(1370, 611)
         Me.TableLayoutPanelNotificationHistory.TabIndex = 0
         '
         'TabPage9Basal
@@ -1283,7 +1282,7 @@ Partial Class Form1
         Me.TabPage9Basal.Location = New System.Drawing.Point(4, 24)
         Me.TabPage9Basal.Name = "TabPage9Basal"
         Me.TabPage9Basal.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage9Basal.Size = New System.Drawing.Size(1376, 712)
+        Me.TabPage9Basal.Size = New System.Drawing.Size(1376, 617)
         Me.TabPage9Basal.TabIndex = 6
         Me.TabPage9Basal.Text = "Basal"
         Me.TabPage9Basal.UseVisualStyleBackColor = True
@@ -1350,7 +1349,7 @@ Partial Class Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
-        Me.ClientSize = New System.Drawing.Size(1384, 921)
+        Me.ClientSize = New System.Drawing.Size(1384, 826)
         Me.Controls.Add(Me.LoginStatusLabel)
         Me.Controls.Add(Me.LoginStatus)
         Me.Controls.Add(Me.SplitContainer1)
