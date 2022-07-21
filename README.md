@@ -25,9 +25,15 @@ https://github.com/paul1956/CareLink/releases/
 - 7/21/2022
 
 ## What's New in this release
+  New in 3.4.0.7
+  Add additional messages
+  Improve app on scaled displays
+  Improve crash resilience
+
   New in 3.4.0.6
   Improve crash reporting
   Better support for new pumps and manual mode
+  Remove Watchdog timer
 
   New in 3.4.0.5
   More scaling and internationalization improvements

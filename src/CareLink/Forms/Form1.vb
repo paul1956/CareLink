@@ -39,8 +39,8 @@ Public Class Form1
     Private Property formScale As New SizeF(1.0F, 1.0F)
     Friend Property BgUnitsString As String
 
-    Friend Shared Property CurrentDataCulture As CultureInfo = New CultureInfo("en-US")
-    Friend Shared Property CurrentUICulture As CultureInfo = CultureInfo.CurrentCulture
+    Public Shared Property CurrentDataCulture As CultureInfo = New CultureInfo("en-US")
+    Public Shared Property CurrentUICulture As CultureInfo = CultureInfo.CurrentCulture
 
 #Region "Chart Objects"
 
@@ -452,31 +452,29 @@ Public Class Form1
         End If
 
         Dim homePageChartY As Integer = CInt(_homePageChartRelitivePosition.Y)
-        Dim homePagelocation As New Point(CInt(_homePageChartRelitivePosition.X), homePageChartY)
         Dim homePageChartWidth As Integer = CInt(_homePageChartRelitivePosition.Width)
         Dim highLimitY As Double = e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, _limitHigh)
         Dim lowLimitY As Double = e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, _limitLow)
 
-        Dim lowRawHeight As Integer = CInt((lowLimitY - homePageChartY) * Me.formScale.Height)
-        Dim lowHeight As Integer = If(_homePageChartChartArea.AxisX.ScrollBar.IsVisible,
-                                      CInt(lowRawHeight - _homePageChartChartArea.AxisX.ScrollBar.Size),
-                                      lowRawHeight
-                                     )
-        Dim highHeight As Integer = CInt(275 * Me.formScale.Height)
-        Dim highAreaRectangle As New Rectangle(homePagelocation,
-                                               New Size(homePageChartWidth, highHeight))
-
-        Dim lowOffset As Integer = CInt((_homePageChartRelitivePosition.Height + _homePageChartRelitivePosition.Y + 1) * Me.formScale.Height)
-        Dim lowStartLocation As New Point(CInt(_homePageChartRelitivePosition.X), lowOffset)
-
-        Dim lowAreaRectangle As New Rectangle(lowStartLocation,
-                                              New Size(homePageChartWidth, lowHeight))
-
         Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
+            Dim highHeight As Integer = CInt(255 * Me.formScale.Height)
+            Dim homePagelocation As New Point(CInt(_homePageChartRelitivePosition.X), homePageChartY)
+            Dim highAreaRectangle As New Rectangle(homePagelocation,
+                                                   New Size(homePageChartWidth, highHeight))
             e.ChartGraphics.Graphics.FillRectangle(b, highAreaRectangle)
         End Using
 
         Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
+            Dim lowOffset As Integer = CInt((10 + _homePageChartRelitivePosition.Height) * Me.formScale.Height)
+            Dim lowStartLocation As New Point(CInt(_homePageChartRelitivePosition.X), lowOffset)
+
+            Dim lowRawHeight As Integer = CInt((50 - homePageChartY) * Me.formScale.Height)
+            Dim lowHeight As Integer = If(_homePageChartChartArea.AxisX.ScrollBar.IsVisible,
+                                          CInt(lowRawHeight - _homePageChartChartArea.AxisX.ScrollBar.Size),
+                                          lowRawHeight
+                                         )
+            Dim lowAreaRectangle As New Rectangle(lowStartLocation,
+                                                  New Size(homePageChartWidth, lowHeight))
             e.ChartGraphics.Graphics.FillRectangle(b, lowAreaRectangle)
         End Using
         If Me.CursorTimeLabel.Tag IsNot Nothing Then
@@ -573,6 +571,7 @@ Public Class Form1
 
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
         Me.ServerUpdateTimer.Stop()
+        Debug.Print($"WatchdogTimer Started at {Now}")
         _recentData = _client.GetRecentData()
         If Me.IsRecentDataUpdated Then
             Me.UpdateAllTabPages()
@@ -873,22 +872,16 @@ Public Class Form1
                 .XValueType = ChartValueType.DateTime,
                 .YAxisType = AxisType.Secondary
             }
-        Dim defaultTitle As New Title With {
-                .Font = New Font("Trebuchet MS", 12.0F, FontStyle.Bold),
-                .ForeColor = Color.FromArgb(26, 59, 105),
-                .Name = "Title1",
-                .ShadowColor = Color.FromArgb(32, 0, 0, 0),
-                .ShadowOffset = 3
-            }
+
+        Me.SplitContainer3.Panel1.Controls.Add(Me.HomePageChart)
+        Application.DoEvents()
         Me.HomePageChart.Series.Add(Me.CurrentBGSeries)
         Me.HomePageChart.Series.Add(Me.MarkerSeries)
         Me.HomePageChart.Series.Add(Me.HighLimitSeries)
         Me.HomePageChart.Series.Add(Me.LowLimitSeries)
         Me.HomePageChart.Legends.Add(defaultLegend)
-        Me.HomePageChart.Titles.Add(defaultTitle)
         Me.HomePageChart.Series(NameOf(CurrentBGSeries)).EmptyPointStyle.BorderWidth = 4
         Me.HomePageChart.Series(NameOf(CurrentBGSeries)).EmptyPointStyle.Color = Color.Transparent
-        Me.SplitContainer3.Panel1.Controls.Add(Me.HomePageChart)
         Application.DoEvents()
     End Sub
 
@@ -1011,14 +1004,14 @@ Public Class Form1
             sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index, CurrentDataCulture, CurrentUICulture).RoundTimeDown(RoundTo.Minute).ToOADate
             Select Case sgListIndex.Value("type")
                 Case "INSULIN"
-                    Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue(CurrentDataCulture, "deliveredFastAmount")
+                    Dim bolusAmount As Double = sgListIndex.Value.GetDoubleValue("deliveredFastAmount")
                     If timeOrderedMarkers.ContainsKey(sgOaDateTime) Then
                         timeOrderedMarkers(sgOaDateTime) += bolusAmount
                     Else
                         timeOrderedMarkers.Add(sgOaDateTime, bolusAmount)
                     End If
                 Case "AUTO_BASAL_DELIVERY"
-                    Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue(CurrentDataCulture, "bolusAmount")
+                    Dim bolusAmount As Double = sgListIndex.Value.GetDoubleValue("bolusAmount")
                     If timeOrderedMarkers.ContainsKey(sgOaDateTime) Then
                         timeOrderedMarkers(sgOaDateTime) += bolusAmount
                     Else
@@ -1076,7 +1069,7 @@ Public Class Form1
                 Select Case sgListIndex.Value("type")
                     Case "INSULIN"
                         .Points.AddXY(sgOaDateTime, maxActiveInsulin)
-                        Dim deliveredAmount As Single = Single.Parse(sgListIndex.Value("deliveredFastAmount"), CurrentDataCulture)
+                        Dim deliveredAmount As Single = sgListIndex.Value("deliveredFastAmount").ParseSingle
                         s_totalDailyDose += deliveredAmount
                         Select Case sgListIndex.Value("activationType")
                             Case "AUTOCORRECTION"
@@ -1094,14 +1087,14 @@ Public Class Form1
                         .Points.Last.MarkerStyle = MarkerStyle.Square
 
                     Case "AUTO_BASAL_DELIVERY"
-                        Dim bolusAmount As Double = sgListIndex.Value.GetDecimalValue(CurrentDataCulture, "bolusAmount")
+                        Dim bolusAmount As Double = sgListIndex.Value.GetDoubleValue("bolusAmount")
                         .Points.AddXY(sgOaDateTime, maxActiveInsulin)
                         .Points.Last.ToolTip = $"Basal: {bolusAmount.RoundDouble(3).ToString(CurrentUICulture)} U"
                         .Points.Last.MarkerSize = 8
                         s_totalBasal += CSng(bolusAmount)
                         s_totalDailyDose += CSng(bolusAmount)
                     Case "MEAL"
-                        s_totalCarbs += sgListIndex.Value.GetDecimalValue(CurrentDataCulture, "amount")
+                        s_totalCarbs += sgListIndex.Value.GetDoubleValue("amount")
                 End Select
             End With
         Next
@@ -1228,9 +1221,9 @@ Public Class Form1
                 Case ItemIndexs.reservoirLevelPercent
                     s_reservoirLevelPercent = CInt(row.Value)
                 Case ItemIndexs.reservoirAmount
-                    s_reservoirAmount = Double.Parse(row.Value, CurrentDataCulture)
+                    s_reservoirAmount = row.Value.ParseDouble
                 Case ItemIndexs.reservoirRemainingUnits
-                    s_reservoirRemainingUnits = Double.Parse(row.Value, CurrentDataCulture)
+                    s_reservoirRemainingUnits = row.Value.ParseDouble
                 Case ItemIndexs.medicalDeviceBatteryLevelPercent
                     s_medicalDeviceBatteryLevelPercent = CInt(row.Value)
                 Case ItemIndexs.sensorDurationHours
@@ -1347,9 +1340,9 @@ Public Class Form1
                 Case ItemIndexs.lastConduitDateTime
                     s_lastConduitDateTime = row.Value
                 Case ItemIndexs.maxAutoBasalRate
-                    s_maxAutoBasalRate = Double.Parse(row.Value, CurrentDataCulture)
+                    s_maxAutoBasalRate = row.Value.ParseDouble
                 Case ItemIndexs.maxBolusAmount
-                    s_maxBolusAmount = Double.Parse(row.Value, CurrentDataCulture)
+                    s_maxBolusAmount = row.Value.ParseDouble
                 Case ItemIndexs.sensorDurationMinutes
                     s_sensorDurationMinutes = CInt(row.Value)
                 Case ItemIndexs.timeToNextCalibrationMinutes
@@ -1359,7 +1352,7 @@ Public Class Form1
                 Case ItemIndexs.sgBelowLimit
                     s_sgBelowLimit = CInt(row.Value)
                 Case ItemIndexs.averageSGFloat
-                    s_averageSGFloat = Double.Parse(row.Value, CurrentDataCulture)
+                    s_averageSGFloat = row.Value.ParseDouble
                 Case ItemIndexs.timeToNextCalibrationRecommendedMinutes
                     s_timeToNextCalibrationRecommendedMinutes = CUShort(row.Value)
                 Case ItemIndexs.calFreeSensor
@@ -1493,7 +1486,7 @@ Public Class Form1
         Else
             totalPercent = $"{CInt(s_totalBasal / s_totalDailyDose * 100)}"
         End If
-        Me.BasalLabel.Text = $"Basal {s_totalBasal.RoundSingle(1)} U | {totalPercent}"
+        Me.BasalLabel.Text = $"Basal {s_totalBasal.RoundSingle(1)} U | {totalPercent}%"
 
         Me.DailyDoseLabel.Text = $"Daily Dose {s_totalDailyDose.RoundSingle(1)} U"
 
@@ -1568,7 +1561,7 @@ Public Class Form1
             Me.CurrentBG.Parent = Me.ShieldPictureBox
             Me.CurrentBG.Text = s_lastSG("sg")
             Me.NotifyIcon1.Text = $"{s_lastSG("sg")} {Me.BgUnitsString}"
-            _bgMiniDisplay.SetCurrentBGString(s_lastSG("sg"), CurrentDataCulture)
+            _bgMiniDisplay.SetCurrentBGString(s_lastSG("sg"))
             Me.CurrentBG.Visible = True
             Me.SensorMessage.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield
@@ -1579,7 +1572,7 @@ Public Class Form1
             Me.ShieldUnitsLabel.Text = Me.BgUnitsString
             Me.ShieldUnitsLabel.Visible = True
         Else
-            _bgMiniDisplay.SetCurrentBGString("---", CurrentDataCulture)
+            _bgMiniDisplay.SetCurrentBGString("---")
             Me.CurrentBG.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield_Disabled
             Me.SensorMessage.Visible = True
@@ -1809,7 +1802,7 @@ Public Class Form1
                         .Points.AddXY(sgOaDateTime, Me.MarkerRow)
                         Dim bolusAmount As String = sgListIndex.Value("bolusAmount")
                         .Points.Last.MarkerBorderColor = Color.Black
-                        .Points.Last.ToolTip = $"Basal:{bolusAmount.RoundDouble(3, CurrentDataCulture).ToString(CurrentUICulture)} U"
+                        .Points.Last.ToolTip = $"Basal:{bolusAmount.RoundDouble(3).ToString(CurrentUICulture)} U"
                     Case "TIME_CHANGE"
                         ' need to handle
                     Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED"

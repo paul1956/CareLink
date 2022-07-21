@@ -4,6 +4,7 @@
 
 Imports System.Globalization
 Imports System.Runtime.CompilerServices
+Imports System.Text
 Imports System.Text.Json
 Imports System.Text.Json.Serialization
 Imports CareLink.Form1
@@ -25,10 +26,16 @@ Public Module JsonExtensions
             End If
 
             If eValue.Key = "sg" AndAlso isScaledForm Then
-                Dim timeOfLastSGString As String = Now.ToString
+                Dim timeOfLastSGString As String = ""
                 If dic.TryGetValue("datetime", timeOfLastSGString) Then
                 ElseIf dic.TryGetValue("dateTime", timeOfLastSGString) Then
-
+                Else
+                    Dim sb As New StringBuilder
+                    For Each item As KeyValuePair(Of String, String) In dic
+                        sb.AppendLine($"{item.Key} = {item.Value}")
+                    Next
+                    MsgBox("Could not find datetime or dateTime in dictionary" & vbCrLf & sb.ToString)
+                    timeOfLastSGString = Now.ToString
                 End If
                 Dim timeOfLastSG As Date = timeOfLastSGString.DateParse(CurrentDataCulture, CurrentUICulture)
                 valueTextBox.Text &= $"     @ {timeOfLastSG.ToString(CurrentUICulture)}"
@@ -250,10 +257,8 @@ Public Module JsonExtensions
             tableLevel1Blue.Dock = DockStyle.Fill
             Application.DoEvents()
             tableLevel1Blue.ColumnStyles(1).SizeType = SizeType.Absolute
-            If tableLevel1Blue.RowCount > 5 Then
-                With parentTableLayoutPanel
-                    .AutoScroll = True
-                End With
+            If tableLevel1Blue.RowCount > 7 Then
+                parentTableLayoutPanel.AutoScroll = True
             Else
                 parentTableLayoutPanel.Width = 870
                 tableLevel1Blue.AutoScroll = False
