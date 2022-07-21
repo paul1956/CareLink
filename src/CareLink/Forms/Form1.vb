@@ -1486,7 +1486,7 @@ Public Class Form1
         Else
             totalPercent = $"{CInt(s_totalBasal / s_totalDailyDose * 100)}"
         End If
-        Me.BasalLabel.Text = $"Basal {s_totalBasal.RoundSingle(1)} U | {totalPercent}"
+        Me.BasalLabel.Text = $"Basal {s_totalBasal.RoundSingle(1)} U | {totalPercent}%"
 
         Me.DailyDoseLabel.Text = $"Daily Dose {s_totalDailyDose.RoundSingle(1)} U"
 
