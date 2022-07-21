@@ -1857,7 +1857,6 @@ Public Class Form1
             End If
             _recentData = _client.GetRecentData()
             Me.MenuView.Visible = True
-            Debug.Print($"Me.WatchdogTimer Started at {Now}")
             Me.ServerUpdateTimer.Interval = CType(New TimeSpan(0, minutes:=1, 0).TotalMilliseconds, Integer)
             Me.ServerUpdateTimer.Start()
             Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
