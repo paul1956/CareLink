@@ -257,10 +257,8 @@ Public Module JsonExtensions
             tableLevel1Blue.Dock = DockStyle.Fill
             Application.DoEvents()
             tableLevel1Blue.ColumnStyles(1).SizeType = SizeType.Absolute
-            If tableLevel1Blue.RowCount > 5 Then
-                With parentTableLayoutPanel
-                    .AutoScroll = True
-                End With
+            If tableLevel1Blue.RowCount > 7 Then
+                parentTableLayoutPanel.AutoScroll = True
             Else
                 parentTableLayoutPanel.Width = 870
                 tableLevel1Blue.AutoScroll = False
