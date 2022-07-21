@@ -15,6 +15,7 @@ Friend Module UserMessageHandler
     Friend ReadOnly _messages As New Dictionary(Of String, String) From {
                             {"BC_MESSAGE_CONFIRM_SENSOR_SIGNAL_CHECK_BG", "No calibration occured.Confirm sensor signal. Check BG again to calibrate sensor."},
                             {"BC_MESSAGE_DELIVERY_STOPPED_SG_APPROACHILG_LOW_LIMIT_CHECK_BG", "Suspend before low. Delivery stopped. Sensor glucose approaching Low Limit. Check BG."},
+                            {"BC_MESSAGE_SMART_GUARD_SETTINGS_TURNED_OFF", "Auto mode started. The following SmartGuard settings are turned off Suspend before low and Suspend on low. "},
                             {"BC_SID_BASAL_STARTED_SMART_GUARD", "Basal started SmartGuard."},
                             {"BC_SID_BG_REQUIRED_CONTENT", "BG required. Enter a new BG for Auto Mode."},
                             {"BC_SID_BOLUS_ENTRY_TIMED_OUT", "Bolus not delivered. Bolus entry timed out before delivery. If bolus was intended, enter values again."},
