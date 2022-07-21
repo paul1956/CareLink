@@ -571,7 +571,6 @@ Public Class Form1
 
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
         Me.ServerUpdateTimer.Stop()
-        Debug.Print($"WatchdogTimer Started at {Now}")
         _recentData = _client.GetRecentData()
         If Me.IsRecentDataUpdated Then
             Me.UpdateAllTabPages()
