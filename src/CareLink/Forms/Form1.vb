@@ -14,7 +14,7 @@ Public Class Form1
     Private Const TwelveHourTimeWithMinuteFormat As String = "h:mm tt"
     Private ReadOnly _bgMiniDisplay As New BGMiniWindow
     Private ReadOnly _calibrationToolTip As New ToolTip()
-    Private ReadOnly _careLinkSnapshotDocPath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CareLinkSnapshot.json")
+    Private ReadOnly _careLinkSnapshotDocPath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"CareLink({CultureInfo.CurrentUICulture.Name})Snapshot.json")
     Private ReadOnly _insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
     Private ReadOnly _loginDialog As New LoginForm1
     Private ReadOnly _markerInsulinDictionary As New Dictionary(Of Double, Single)
@@ -104,8 +104,6 @@ Public Class Form1
             My.Settings.UpgradeRequired = False
             My.Settings.Save()
         End If
-
-        ' Load all settings
 
         If My.Settings.UseTestData Then
             Me.MenuOptionsUseLastSavedData.Checked = False
@@ -214,7 +212,7 @@ Public Class Form1
         Dim contents As String = JsonSerializer.Serialize(cleanRecentData, New JsonSerializerOptions)
         Dim options As New JsonDocumentOptions
         Using jd As JsonDocument = JsonDocument.Parse(contents, options)
-            File.WriteAllText(_careLinkSnapshotDocPath, JsonSerializer.Serialize(jd, CareLinkClient.JsonFormattingOptions))
+            File.WriteAllText(_careLinkSnapshotDocPath, JsonSerializer.Serialize(jd, CareLinkClient.s_jsonFormattingOptions))
         End Using
     End Sub
 
@@ -1847,7 +1845,7 @@ Public Class Form1
         ElseIf Me.MenuOptionsUseLastSavedData.Checked Then
             Me.MenuView.Visible = False
             Me.Text = $"{_savedTitle} Using Last Saved Data"
-            _recentData = Loads(File.ReadAllText(CareLinkClient.CareLinkLastDownloadDocPath))
+            _recentData = Loads(File.ReadAllText(CareLinkClient.s_careLinkLastDownloadDocPath))
         Else
             Me.Text = _savedTitle
             _loginDialog.ShowDialog()

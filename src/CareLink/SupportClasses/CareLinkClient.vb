@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
 Imports System.IO
 Imports System.Net
 Imports System.Net.Http
@@ -27,8 +28,9 @@ Public Class CareLinkClient
     Private _sessionMonitorData As Dictionary(Of String, String)
     Private _sessionProfile As Dictionary(Of String, String)
     Private _sessionUser As Dictionary(Of String, String)
-    Public Shared ReadOnly CareLinkLastDownloadDocPath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CareLinkLastDownload.json")
-    Public Shared ReadOnly JsonFormattingOptions As New JsonSerializerOptions With {.WriteIndented = True}
+    Public Shared ReadOnly s_careLinkLastDownloadDocPath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"CareLink{CultureInfo.CurrentUICulture}LastDownload.json")
+    Public Shared ReadOnly s_jsonFormattingOptions As New JsonSerializerOptions With {.WriteIndented = True}
+
     Public Sub New(LoginStatus As TextBox, carelinkUsername As String, carelinkPassword As String, carelinkCountry As String)
         _loginStatus = LoginStatus
         ' User info
@@ -74,7 +76,6 @@ Public Class CareLinkClient
         _httpClientHandler = New HttpClientHandler With {.CookieContainer = cookieContainer}
         _httpClient = New HttpClient(_httpClientHandler)
     End Sub
-
 
     Public Property LastErrorMessage As String
     Public Property LoggedIn As Boolean
@@ -422,7 +423,7 @@ Public Class CareLinkClient
                         Dim contents As String = JsonSerializer.Serialize(jsonData, New JsonSerializerOptions)
                         Dim options As New JsonDocumentOptions
                         Using jDocument As JsonDocument = JsonDocument.Parse(contents, options)
-                            File.WriteAllText(CareLinkLastDownloadDocPath, JsonSerializer.Serialize(jDocument, JsonFormattingOptions))
+                            File.WriteAllText(s_careLinkLastDownloadDocPath, JsonSerializer.Serialize(jDocument, s_jsonFormattingOptions))
                         End Using
                     End If
                     _lastDataSuccess = True
