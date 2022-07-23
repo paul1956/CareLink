@@ -40,7 +40,7 @@ Public Class Form1
     Friend Property BgUnitsString As String
 
     Public Shared Property CurrentDataCulture As CultureInfo = New CultureInfo("en-US")
-    Public Shared Property CurrentUICulture As CultureInfo = CultureInfo.CurrentCulture
+    Public Shared Property CurrentUICulture As CultureInfo = CultureInfo.CurrentUICulture
 
 #Region "Chart Objects"
 
