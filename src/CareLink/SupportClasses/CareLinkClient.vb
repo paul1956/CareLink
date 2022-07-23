@@ -28,7 +28,7 @@ Public Class CareLinkClient
     Private _sessionMonitorData As Dictionary(Of String, String)
     Private _sessionProfile As Dictionary(Of String, String)
     Private _sessionUser As Dictionary(Of String, String)
-    Public Shared ReadOnly s_careLinkLastDownloadDocPath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"CareLink{CultureInfo.CurrentUICulture}LastDownload.json")
+    Public Shared ReadOnly s_careLinkLastDownloadDocPath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"CareLink({CultureInfo.CurrentUICulture.Name})LastDownload.json")
     Public Shared ReadOnly s_jsonFormattingOptions As New JsonSerializerOptions With {.WriteIndented = True}
 
     Public Sub New(LoginStatus As TextBox, carelinkUsername As String, carelinkPassword As String, carelinkCountry As String)

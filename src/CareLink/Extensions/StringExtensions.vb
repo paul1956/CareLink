@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
 Imports System.Runtime.CompilerServices
 
 Public Module StringExtensions
@@ -17,7 +18,7 @@ Public Module StringExtensions
                 result.Append($" {Char.ToUpperInvariant(c)}")
             End If
         Next
-        Return result.ToString().Replace("time", " Time", False, Globalization.CultureInfo.CurrentUICulture)
+        Return result.ToString().Replace("time", " Time", False, CultureInfo.CurrentUICulture)
     End Function
 
 End Module
