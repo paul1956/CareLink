@@ -18,10 +18,6 @@ Partial Class ExceptionHandlerForm
             MyBase.Dispose(disposing)
         End Try
     End Sub
-    Friend WithEvents UsernameLabel As System.Windows.Forms.Label
-    Friend WithEvents PasswordLabel As System.Windows.Forms.Label
-    Friend WithEvents UsernameTextBox As System.Windows.Forms.TextBox
-    Friend WithEvents PasswordTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Cancel As System.Windows.Forms.Button
     Friend WithEvents OK As System.Windows.Forms.Button
 
@@ -33,11 +29,6 @@ Partial Class ExceptionHandlerForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container()
-        Me.UsernameLabel = New System.Windows.Forms.Label()
-        Me.PasswordLabel = New System.Windows.Forms.Label()
-        Me.UsernameTextBox = New System.Windows.Forms.TextBox()
-        Me.PasswordTextBox = New System.Windows.Forms.TextBox()
         Me.OK = New System.Windows.Forms.Button()
         Me.Cancel = New System.Windows.Forms.Button()
         Me.StackTraceTextBox = New System.Windows.Forms.TextBox()
@@ -45,47 +36,7 @@ Partial Class ExceptionHandlerForm
         Me.ExceptionTextBox = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.InstructionsRichTextBox = New System.Windows.Forms.RichTextBox()
-        Me.ErrorProvider1 = New System.Windows.Forms.ErrorProvider(Me.components)
-        Me.ShowPasswordCheckBox = New System.Windows.Forms.CheckBox()
-        CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
-        '
-        'UsernameLabel
-        '
-        Me.UsernameLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.UsernameLabel.Location = New System.Drawing.Point(828, 243)
-        Me.UsernameLabel.Name = "UsernameLabel"
-        Me.UsernameLabel.Size = New System.Drawing.Size(261, 23)
-        Me.UsernameLabel.TabIndex = 0
-        Me.UsernameLabel.Text = "GitHub &Username"
-        Me.UsernameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'PasswordLabel
-        '
-        Me.PasswordLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.PasswordLabel.Location = New System.Drawing.Point(828, 292)
-        Me.PasswordLabel.Name = "PasswordLabel"
-        Me.PasswordLabel.Size = New System.Drawing.Size(261, 23)
-        Me.PasswordLabel.TabIndex = 2
-        Me.PasswordLabel.Text = "GitHub &Password"
-        Me.PasswordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'UsernameTextBox
-        '
-        Me.UsernameTextBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.UsernameTextBox.Location = New System.Drawing.Point(828, 263)
-        Me.UsernameTextBox.Name = "UsernameTextBox"
-        Me.UsernameTextBox.Size = New System.Drawing.Size(261, 23)
-        Me.UsernameTextBox.TabIndex = 1
-        '
-        'PasswordTextBox
-        '
-        Me.PasswordTextBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.PasswordTextBox.Location = New System.Drawing.Point(828, 312)
-        Me.PasswordTextBox.Name = "PasswordTextBox"
-        Me.PasswordTextBox.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
-        Me.PasswordTextBox.Size = New System.Drawing.Size(164, 23)
-        Me.PasswordTextBox.TabIndex = 3
         '
         'OK
         '
@@ -145,23 +96,9 @@ Partial Class ExceptionHandlerForm
         Me.InstructionsRichTextBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.InstructionsRichTextBox.Location = New System.Drawing.Point(828, 60)
         Me.InstructionsRichTextBox.Name = "InstructionsRichTextBox"
-        Me.InstructionsRichTextBox.Size = New System.Drawing.Size(261, 180)
+        Me.InstructionsRichTextBox.Size = New System.Drawing.Size(261, 282)
         Me.InstructionsRichTextBox.TabIndex = 10
         Me.InstructionsRichTextBox.Text = ""
-        '
-        'ErrorProvider1
-        '
-        Me.ErrorProvider1.ContainerControl = Me
-        '
-        'ShowPasswordCheckBox
-        '
-        Me.ShowPasswordCheckBox.AutoSize = True
-        Me.ShowPasswordCheckBox.Location = New System.Drawing.Point(1002, 314)
-        Me.ShowPasswordCheckBox.Name = "ShowPasswordCheckBox"
-        Me.ShowPasswordCheckBox.Size = New System.Drawing.Size(55, 19)
-        Me.ShowPasswordCheckBox.TabIndex = 11
-        Me.ShowPasswordCheckBox.Text = "Show"
-        Me.ShowPasswordCheckBox.UseVisualStyleBackColor = True
         '
         'ExceptionHandlerForm
         '
@@ -169,7 +106,6 @@ Partial Class ExceptionHandlerForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1098, 383)
-        Me.Controls.Add(Me.ShowPasswordCheckBox)
         Me.Controls.Add(Me.InstructionsRichTextBox)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.ExceptionTextBox)
@@ -177,10 +113,6 @@ Partial Class ExceptionHandlerForm
         Me.Controls.Add(Me.StackTraceTextBox)
         Me.Controls.Add(Me.OK)
         Me.Controls.Add(Me.Cancel)
-        Me.Controls.Add(Me.PasswordTextBox)
-        Me.Controls.Add(Me.UsernameTextBox)
-        Me.Controls.Add(Me.PasswordLabel)
-        Me.Controls.Add(Me.UsernameLabel)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.MaximizeBox = False
         Me.MinimizeBox = False
@@ -188,7 +120,6 @@ Partial Class ExceptionHandlerForm
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Unhandled Exception"
-        CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -199,6 +130,4 @@ Partial Class ExceptionHandlerForm
     Friend WithEvents ExceptionTextBox As TextBox
     Friend WithEvents Label2 As Label
     Friend WithEvents InstructionsRichTextBox As RichTextBox
-    Friend WithEvents ErrorProvider1 As ErrorProvider
-    Friend WithEvents ShowPasswordCheckBox As CheckBox
 End Class
