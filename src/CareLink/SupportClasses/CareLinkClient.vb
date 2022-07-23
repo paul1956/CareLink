@@ -27,9 +27,8 @@ Public Class CareLinkClient
     Private _sessionMonitorData As Dictionary(Of String, String)
     Private _sessionProfile As Dictionary(Of String, String)
     Private _sessionUser As Dictionary(Of String, String)
-    Public Shared ReadOnly JsonFormattingOptions As New JsonSerializerOptions With {.WriteIndented = True}
     Public Shared ReadOnly CareLinkLastDownloadDocPath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CareLinkLastDownload.json")
-
+    Public Shared ReadOnly JsonFormattingOptions As New JsonSerializerOptions With {.WriteIndented = True}
     Public Sub New(LoginStatus As TextBox, carelinkUsername As String, carelinkPassword As String, carelinkCountry As String)
         _loginStatus = LoginStatus
         ' User info
@@ -496,14 +495,18 @@ Public Class CareLinkClient
     ' Wrapper for data retrieval methods
     Public Overridable Function GetRecentData() As Dictionary(Of String, String)
         ' Force login to get basic info
-        If Me.GetAuthorizationToken() IsNot Nothing Then
-            Dim deviceFamily As String = Nothing
-            _sessionMonitorData.TryGetValue("deviceFamily", deviceFamily)
-            If _carelinkCountry = My.Settings.CountryCode OrElse deviceFamily?.Equals("BLE_X") Then
-                Dim role As String = If(_carelinkPartnerType.Contains(_sessionUser("role")), "carepartner", "patient")
-                Return Me.GetConnectDisplayMessage(_sessionProfile("username").ToString(), role, _sessionCountrySettings("blePereodicDataEndpoint"))
+        Try
+            If Me.GetAuthorizationToken() IsNot Nothing Then
+                Dim deviceFamily As String = Nothing
+                _sessionMonitorData.TryGetValue("deviceFamily", deviceFamily)
+                If _carelinkCountry = My.Settings.CountryCode OrElse deviceFamily?.Equals("BLE_X") Then
+                    Dim role As String = If(_carelinkPartnerType.Contains(_sessionUser("role")), "carepartner", "patient")
+                    Return Me.GetConnectDisplayMessage(_sessionProfile("username").ToString(), role, _sessionCountrySettings("blePereodicDataEndpoint"))
+                End If
             End If
-        End If
+        Catch ex As Exception
+
+        End Try
         Return Nothing
     End Function
 
