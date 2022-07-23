@@ -21,8 +21,10 @@ Public Module JsonExtensions
             Dim result As Single = Nothing
             If Single.TryParse(eValue.Value, NumberStyles.Number, CurrentDataCulture, result) Then
                 valueTextBox.Text = result.ToString(CurrentUICulture)
-            Else
+            ElseIf eValue.Value IsNot Nothing Then
                 valueTextBox.Text = eValue.Value.ToString(CurrentUICulture)
+            Else
+                valueTextBox.Text = ""
             End If
 
             If eValue.Key = "sg" AndAlso isScaledForm Then
