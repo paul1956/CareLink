@@ -2,11 +2,9 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Globalization
-
 Friend Module PumpVariables
 
-    Friend ReadOnly _listOfSingleItems As New List(Of Integer) From {
+    Friend ReadOnly s_listOfSingleItems As New List(Of Integer) From {
                         ItemIndexs.lastSG,
                         ItemIndexs.lastAlarm,
                         ItemIndexs.activeInsulin,
@@ -17,6 +15,7 @@ Friend Module PumpVariables
 
     ' Manually computed
     Friend s_totalAutoCorrection As Single
+
     Friend s_totalBasal As Single
     Friend s_totalCarbs As Double
     Friend s_totalDailyDose As Single

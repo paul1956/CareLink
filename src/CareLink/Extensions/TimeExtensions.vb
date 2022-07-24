@@ -3,13 +3,11 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Globalization
-Imports System.IO
 Imports System.Runtime.CompilerServices
 
 Friend Module TimeExtensions
 
     Public ReadOnly s_fiveMinuteSpan As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
-    Public ReadOnly s_thirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
 
     <Extension>
     Public Function DateParse(dateAsString As String, currentDataCulture As IFormatProvider, CurrentUICulture As IFormatProvider,

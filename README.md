@@ -22,11 +22,11 @@ https://github.com/paul1956/CareLink/releases/
 - Medtronic CareLink data display
 
 ## Updated
-- 7/21/2022
+- 7/28/2022
 
 ## What's New in this release
-  New in 3.4.1.0
-  Add support for automatic GitHub issue reporting
+  New in 3.4.2.0
+  Add support for creating human readable Error File for reporting issue on GitHub
 
   New in 3.4.0.7
   Add additional messages

@@ -15,7 +15,7 @@ Friend Module UniqueFilename
     ''' A unique indexed version of the filename from the input parameter "sFilename".
     ''' Returns an empty file name on error.
     ''' </returns>
-    Function GetUniqueFileName(sFileName As String) As String
+    Public Function GetUniqueFileNameWithPath(sFileName As String) As String
         If String.IsNullOrEmpty(sFileName) Then
             Throw New ArgumentException($"'{NameOf(sFileName)}' cannot be null or empty.", NameOf(sFileName))
         End If
@@ -23,8 +23,8 @@ Friend Module UniqueFilename
         Try
             Dim sFileNoExtension As String = Path.GetFileNameWithoutExtension(sFileName)
             Dim sExtension As String = Path.GetExtension(sFileName)
-            If Not File.Exists($"{sFileNoExtension}.{sExtension}") Then
-                Return $"{sFileNoExtension}.{sExtension}"
+            If Not File.Exists(Path.Combine(MyDocumentsPath, $"{sFileNoExtension}.{sExtension}")) Then
+                Return sFileName
             End If
 
             'Get unique file name
@@ -32,7 +32,7 @@ Friend Module UniqueFilename
             Do
                 lCount += 1
             Loop While File.Exists($"{sFileNoExtension}{lCount}.{sExtension}")
-            Return $"{sFileNoExtension}{lCount}.{sExtension}"
+            Return Path.Combine(MyDocumentsPath, $"{sFileNoExtension}{lCount}.{sExtension}")
         Catch ex As Exception
         End Try
         Return ""

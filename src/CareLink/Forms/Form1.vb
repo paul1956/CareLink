@@ -14,7 +14,6 @@ Public Class Form1
     Private Const TwelveHourTimeWithMinuteFormat As String = "h:mm tt"
     Private ReadOnly _bgMiniDisplay As New BGMiniWindow
     Private ReadOnly _calibrationToolTip As New ToolTip()
-    Private ReadOnly _careLinkSnapshotDocPath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"CareLink({CultureInfo.CurrentUICulture.Name})Snapshot.json")
     Private ReadOnly _insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
     Private ReadOnly _loginDialog As New LoginForm1
     Private ReadOnly _markerInsulinDictionary As New Dictionary(Of Double, Single)
@@ -22,7 +21,7 @@ Public Class Form1
     Private ReadOnly _mealImage As Bitmap = My.Resources.MealImage
     Private ReadOnly _savedTitle As String = Me.Text
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
-
+    Private ReadOnly _thirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
     Private _activeInsulinIncrements As Integer
     Private _client As CareLinkClient
     Private _filterJsonData As Boolean = True
@@ -30,17 +29,13 @@ Public Class Form1
     Private _inMouseMove As Boolean = False
     Private _limitHigh As Single
     Private _limitLow As Single
-    Private _recentData As Dictionary(Of String, String)
     Private _recentDatalast As Dictionary(Of String, String)
     Private _recentDataSameCount As Integer
     Private _timeFormat As String
     Private _updating As Boolean = False
-
     Private Property formScale As New SizeF(1.0F, 1.0F)
     Friend Property BgUnitsString As String
-
-    Public Shared Property CurrentDataCulture As CultureInfo = New CultureInfo("en-US")
-    Public Shared Property CurrentUICulture As CultureInfo = CultureInfo.CurrentUICulture
+    Public ReadOnly Property RecentData As Dictionary(Of String, String)
 
 #Region "Chart Objects"
 
@@ -148,13 +143,51 @@ Public Class Form1
 #Region "Form Menu Events"
 
 #Region "Start Here Menus"
-
     Private Sub MenuStartHere_DropDownOpened(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpened
-        Me.MenuStartHereSnapshotLoad.Enabled = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CareLink*.json").Length > 0
-        Me.MenuStartHereSnapshotSave.Enabled = _recentData IsNot Nothing
-
+        Me.MenuStartHereSnapshotLoad.Enabled = Directory.GetFiles(MyDocumentsPath, $"{RepoName}*.json").Length > 0
+        Me.MenuStartHereSnapshotSave.Enabled = _RecentData IsNot Nothing
+        Me.MenuStartHereExceptionReportLoadToolStripMenuItem.Visible = Path.Combine(MyDocumentsPath, $"{ErrorReportName}*.txt").Length > 0
     End Sub
 
+    Private Sub MenuStartHereExceptionReportLoadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MenuStartHereExceptionReportLoadToolStripMenuItem.Click
+        Dim fileList As String() = Directory.GetFiles(MyDocumentsPath, $"{ErrorReportName}*.txt")
+        Dim openFileDialog1 As New OpenFileDialog With {
+            .CheckFileExists = True,
+            .CheckPathExists = True,
+            .FileName = If(fileList.Length > 0, Path.GetFileName(fileList(0)), RepoName),
+            .Filter = $"Error files (*.txt)|{ErrorReportName}*.txt",
+            .InitialDirectory = MyDocumentsPath,
+            .Multiselect = False,
+            .ReadOnlyChecked = True,
+            .RestoreDirectory = True,
+            .SupportMultiDottedExtensions = False,
+            .Title = "Select CareLink saved snapshot to load",
+            .ValidateNames = True
+        }
+
+        If openFileDialog1.ShowDialog() = DialogResult.OK Then
+            Try
+                Dim fileNameWithPath As String = openFileDialog1.FileName
+                If File.Exists(fileNameWithPath) Then
+                    Me.ServerUpdateTimer.Stop()
+                    Me.MenuOptionsUseLastSavedData.CheckState = CheckState.Indeterminate
+                    Me.MenuOptionsUseTestData.CheckState = CheckState.Indeterminate
+                    Dim partialFileNameWithoutPath As String = Path.GetFileNameWithoutExtension(fileNameWithPath).Replace($"{ErrorReportName}(", "")
+                    Dim indexOfClosedParen As Integer = partialFileNameWithoutPath.IndexOf(")"c)
+                    CurrentUICulture = CultureInfo.GetCultureInfo(partialFileNameWithoutPath.Substring(0, indexOfClosedParen))
+                    Dim errorFileData As String = File.ReadAllText(fileNameWithPath)
+                    Dim indexOfStackTraceTerminatingString As Integer = errorFileData.IndexOf(StackTraceTerminatingString) + StackTraceTerminatingString.Length
+                    _RecentData = Loads(errorFileData.Substring(indexOfStackTraceTerminatingString))
+                    Me.FinishInitialization()
+                    Me.Text = $"{_savedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
+                    Me.UpdateAllTabPages()
+                End If
+            Catch ex As Exception
+                MessageBox.Show($"Cannot read file from disk. Original error: {ex.Message}")
+            End Try
+        End If
+
+    End Sub
     Private Sub MenuStartHereExit_Click(sender As Object, e As EventArgs) Handles StartHereExit.Click
         Me.CleanUpNotificationIcon()
     End Sub
@@ -166,19 +199,13 @@ Public Class Form1
     End Sub
 
     Private Sub MenuStartHereSnapshotLoad_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotLoad.Click
-        Dim fileList As String() = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CareLink*.json")
-        Dim defaultFile As String
-        If fileList.Length > 0 Then
-            defaultFile = Path.GetFileName(fileList(0))
-        Else
-            defaultFile = "CareLink"
-        End If
+        Dim fileList As String() = Directory.GetFiles(MyDocumentsPath, $"{RepoName}*.json")
         Dim openFileDialog1 As New OpenFileDialog With {
             .CheckFileExists = True,
             .CheckPathExists = True,
-            .FileName = defaultFile,
+            .FileName = If(fileList.Length > 0, Path.GetFileName(fileList(0)), RepoName),
             .Filter = "json files (*.json)|CareLink*.json",
-            .InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            .InitialDirectory = MyDocumentsPath,
             .Multiselect = False,
             .ReadOnlyChecked = True,
             .RestoreDirectory = True,
@@ -187,13 +214,13 @@ Public Class Form1
             .ValidateNames = True
         }
 
-        If openFileDialog1.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+        If openFileDialog1.ShowDialog() = Global.System.Windows.Forms.DialogResult.OK Then
             Try
                 If File.Exists(openFileDialog1.FileName) Then
                     Me.ServerUpdateTimer.Stop()
                     Me.MenuOptionsUseLastSavedData.CheckState = CheckState.Indeterminate
                     Me.MenuOptionsUseTestData.CheckState = CheckState.Indeterminate
-                    _recentData = Loads(File.ReadAllText(openFileDialog1.FileName))
+                    _RecentData = Loads(File.ReadAllText(openFileDialog1.FileName))
                     Me.FinishInitialization()
                     Me.Text = $"{_savedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
                     Me.UpdateAllTabPages()
@@ -205,14 +232,8 @@ Public Class Form1
     End Sub
 
     Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotSave.Click
-        Dim cleanRecentData As Dictionary(Of String, String) = _recentData
-        cleanRecentData("firstName") = "First"
-        cleanRecentData("lastName") = "Last"
-        cleanRecentData("medicalDeviceSerialNumber") = "NG1234567H"
-        Dim contents As String = JsonSerializer.Serialize(cleanRecentData, New JsonSerializerOptions)
-        Dim options As New JsonDocumentOptions
-        Using jd As JsonDocument = JsonDocument.Parse(contents, options)
-            File.WriteAllText(_careLinkSnapshotDocPath, JsonSerializer.Serialize(jd, CareLinkClient.s_jsonFormattingOptions))
+        Using jd As JsonDocument = JsonDocument.Parse(_RecentData.CleanUserData(), New JsonDocumentOptions)
+            File.WriteAllText(MyDocumentsCareLinkSnapshotDocPath, JsonSerializer.Serialize(jd, JsonFormattingOptions))
         End Using
     End Sub
 
@@ -337,7 +358,8 @@ Public Class Form1
 
     Private Sub HomePageChart_CursorPositionChanging(sender As Object, e As CursorEventArgs) Handles HomePageChart.CursorPositionChanging
         If Not _initialized Then Exit Sub
-        Me.CursorTimer.Interval = s_thirtySecondInMilliseconds
+
+        Me.CursorTimer.Interval = _thirtySecondInMilliseconds
         Me.CursorTimer.Start()
     End Sub
 
@@ -569,13 +591,13 @@ Public Class Form1
 
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
         Me.ServerUpdateTimer.Stop()
-        _recentData = _client.GetRecentData()
+        _RecentData = _client.GetRecentData()
         If Me.IsRecentDataUpdated Then
             Me.UpdateAllTabPages()
-        ElseIf _recentData Is Nothing Then
+        ElseIf _RecentData Is Nothing Then
             _client = New CareLinkClient(Me.LoginStatus, My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
             _loginDialog.Client = _client
-            _recentData = _client.GetRecentData()
+            _RecentData = _client.GetRecentData()
             If Me.IsRecentDataUpdated Then
                 Me.UpdateAllTabPages()
             End If
@@ -956,14 +978,14 @@ Public Class Form1
     End Sub
 
     Private Function IsRecentDataUpdated() As Boolean
-        If _recentDatalast Is Nothing OrElse _recentData Is Nothing Then
+        If _recentDatalast Is Nothing OrElse _RecentData Is Nothing Then
             Return False
         End If
         If _recentDataSameCount < 5 Then
             _recentDataSameCount += 1
             Dim i As Integer
-            For i = 0 To _recentData.Keys.Count - 1
-                If _recentDatalast.Keys(i) <> "currentServerTime" AndAlso _recentDatalast.Values(i) <> _recentData.Values(i) Then
+            For i = 0 To _RecentData.Keys.Count - 1
+                If _recentDatalast.Keys(i) <> "currentServerTime" AndAlso _recentDatalast.Values(i) <> _RecentData.Values(i) Then
                     _recentDataSameCount = 0
                     Return True
                 End If
@@ -1112,11 +1134,11 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateAllTabPages()
-        If _recentData Is Nothing OrElse _updating Then
+        If _RecentData Is Nothing OrElse _updating Then
             Exit Sub
         End If
         _updating = True
-        Me.UpdateDataTables(_recentData,
+        Me.UpdateDataTables(_RecentData,
                             Me.formScale.Height <> 1 _
                             OrElse Me.formScale.Width <> 1)
         Me.UpdateActiveInsulinChart()
@@ -1132,7 +1154,7 @@ Public Class Form1
 
         Me.UpdateZHomeTabSerieses()
         Me.UpdateDosingAndCarbs()
-        _recentDatalast = _recentData
+        _recentDatalast = _RecentData
         _initialized = True
         _updating = False
         Application.DoEvents()
@@ -1360,7 +1382,7 @@ Public Class Form1
                     Stop
             End Select
 
-            If _listOfSingleItems.Contains(rowIndex) OrElse singleItem Then
+            If s_listOfSingleItems.Contains(rowIndex) OrElse singleItem Then
                 If Not (singleItem AndAlso singleItemIndex = rowIndex) Then
                     Continue For
                 End If
@@ -1412,7 +1434,7 @@ Public Class Form1
                 Else
                     Dim rowTextBox As New TextBox With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                         .AutoSize = True,
-                                                        .[ReadOnly] = True,
+                                                        .ReadOnly = True,
                                                         .Text = ""
                                                         }
                     layoutPanel1.Controls.Add(rowTextBox,
@@ -1461,14 +1483,14 @@ Public Class Form1
                 Dim rowTextBox As New TextBox With {
                                         .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                         .AutoSize = True,
-                                        .[ReadOnly] = True,
+                                        .ReadOnly = True,
                                         .Text = row.Value}
                 layoutPanel1.Controls.Add(rowTextBox,
                                           If(singleItem, 0, 1),
                                           tableRelitiveRow)
             End If
         Next
-        If _recentData.Count > ItemIndexs.finalCalibration + 1 Then
+        If _RecentData.Count > ItemIndexs.finalCalibration + 1 Then
             Stop
         End If
         _initialized = True
@@ -1841,11 +1863,11 @@ Public Class Form1
         If Me.MenuOptionsUseTestData.Checked Then
             Me.MenuView.Visible = False
             Me.Text = $"{_savedTitle} Using Test Data"
-            _recentData = Loads(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
+            _RecentData = Loads(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
         ElseIf Me.MenuOptionsUseLastSavedData.Checked Then
             Me.MenuView.Visible = False
             Me.Text = $"{_savedTitle} Using Last Saved Data"
-            _recentData = Loads(File.ReadAllText(CareLinkClient.s_careLinkLastDownloadDocPath))
+            _RecentData = Loads(File.ReadAllText(CareLinkLastDownloadDocPath))
         Else
             Me.Text = _savedTitle
             _loginDialog.ShowDialog()
@@ -1853,7 +1875,7 @@ Public Class Form1
             If _client Is Nothing OrElse Not _client.LoggedIn Then
                 Return False
             End If
-            _recentData = _client.GetRecentData()
+            _RecentData = _client.GetRecentData()
             Me.MenuView.Visible = True
             Me.ServerUpdateTimer.Interval = CType(New TimeSpan(0, minutes:=1, 0).TotalMilliseconds, Integer)
             Me.ServerUpdateTimer.Start()
@@ -1874,7 +1896,7 @@ Public Class Form1
             Exit Sub
         End If
         _homePageChartRelitivePosition = RectangleF.Empty
-        Me.UpdateRegionalData(_recentData)
+        Me.UpdateRegionalData(_RecentData)
 
         Me.InitializeHomePageChart()
         Me.InitializeActiveInsulinTabChart()
@@ -1891,10 +1913,10 @@ Public Class Form1
         ' Scale factor depends on orientation
         Dim sc As Single = If(sp.Orientation = Orientation.Vertical, Me.formScale.Width, Me.formScale.Height)
         If sp.FixedPanel = FixedPanel.Panel1 Then
-            sp.SplitterDistance = CInt(Math.Truncate(Math.Round(CSng(sp.SplitterDistance) * sc)))
-        ElseIf sp.FixedPanel = FixedPanel.Panel2 Then
+            sp.SplitterDistance = CInt(Math.Truncate(Math.Round(sp.SplitterDistance * sc)))
+        ElseIf sp.FixedPanel = Global.System.Windows.Forms.FixedPanel.Panel2 Then
             Dim cs As Integer = If(sp.Orientation = Orientation.Vertical, sp.Panel2.ClientSize.Width, sp.Panel2.ClientSize.Height)
-            Dim newcs As Integer = CInt(Math.Truncate(CSng(cs) * sc))
+            Dim newcs As Integer = CInt(Math.Truncate(cs * sc))
             sp.SplitterDistance -= newcs - cs
         End If
     End Sub

@@ -29,6 +29,7 @@ Partial Class Form1
         Me.MenuStartHereLogin = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.MenuStartHereSnapshotLoad = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuStartHereExceptionReportLoadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStartHereSnapshotSave = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.StartHereExit = New System.Windows.Forms.ToolStripMenuItem()
@@ -169,7 +170,7 @@ Partial Class Form1
         '
         'MenuStartHere
         '
-        Me.MenuStartHere.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStartHereLogin, Me.ToolStripSeparator1, Me.MenuStartHereSnapshotLoad, Me.MenuStartHereSnapshotSave, Me.ToolStripSeparator2, Me.StartHereExit})
+        Me.MenuStartHere.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStartHereLogin, Me.ToolStripSeparator1, Me.MenuStartHereSnapshotLoad, Me.MenuStartHereExceptionReportLoadToolStripMenuItem, Me.MenuStartHereSnapshotSave, Me.ToolStripSeparator2, Me.StartHereExit})
         Me.MenuStartHere.Name = "MenuStartHere"
         Me.MenuStartHere.Size = New System.Drawing.Size(71, 20)
         Me.MenuStartHere.Text = "Start Here"
@@ -177,38 +178,44 @@ Partial Class Form1
         'MenuStartHereLogin
         '
         Me.MenuStartHereLogin.Name = "MenuStartHereLogin"
-        Me.MenuStartHereLogin.Size = New System.Drawing.Size(190, 22)
+        Me.MenuStartHereLogin.Size = New System.Drawing.Size(193, 22)
         Me.MenuStartHereLogin.Text = "Login"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(187, 6)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(190, 6)
         '
         'MenuStartHereSnapshotLoad
         '
         Me.MenuStartHereSnapshotLoad.Name = "MenuStartHereSnapshotLoad"
-        Me.MenuStartHereSnapshotLoad.Size = New System.Drawing.Size(190, 22)
+        Me.MenuStartHereSnapshotLoad.Size = New System.Drawing.Size(193, 22)
         Me.MenuStartHereSnapshotLoad.Text = "Snapshot Load"
+        '
+        'MenuStartHereExceptionReportLoadToolStripMenuItem
+        '
+        Me.MenuStartHereExceptionReportLoadToolStripMenuItem.Name = "MenuStartHereExceptionReportLoadToolStripMenuItem"
+        Me.MenuStartHereExceptionReportLoadToolStripMenuItem.Size = New System.Drawing.Size(193, 22)
+        Me.MenuStartHereExceptionReportLoadToolStripMenuItem.Text = "Exception Report Load"
         '
         'MenuStartHereSnapshotSave
         '
         Me.MenuStartHereSnapshotSave.Name = "MenuStartHereSnapshotSave"
         Me.MenuStartHereSnapshotSave.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
-        Me.MenuStartHereSnapshotSave.Size = New System.Drawing.Size(190, 22)
+        Me.MenuStartHereSnapshotSave.Size = New System.Drawing.Size(193, 22)
         Me.MenuStartHereSnapshotSave.Text = "Snapshot &Save"
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(187, 6)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(190, 6)
         '
         'StartHereExit
         '
         Me.StartHereExit.Image = Global.CareLink.My.Resources.Resources.AboutBox
         Me.StartHereExit.Name = "StartHereExit"
         Me.StartHereExit.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.X), System.Windows.Forms.Keys)
-        Me.StartHereExit.Size = New System.Drawing.Size(190, 22)
+        Me.StartHereExit.Size = New System.Drawing.Size(193, 22)
         Me.StartHereExit.Text = "E&xit"
         '
         'MenuOptions
@@ -1507,4 +1514,5 @@ Partial Class Form1
     Friend WithEvents TotalCarbs24MessageLabel As Label
     Friend WithEvents TotalCarbsMessageLabel As Label
     Friend WithEvents MenuOptionsUseAdvancedAITDecay As ToolStripMenuItem
+    Friend WithEvents MenuStartHereExceptionReportLoadToolStripMenuItem As ToolStripMenuItem
 End Class

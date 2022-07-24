@@ -21,8 +21,10 @@ Public Module JsonExtensions
             Dim result As Single = Nothing
             If Single.TryParse(eValue.Value, NumberStyles.Number, CurrentDataCulture, result) Then
                 valueTextBox.Text = result.ToString(CurrentUICulture)
-            Else
+            ElseIf eValue.Value IsNot Nothing Then
                 valueTextBox.Text = eValue.Value.ToString(CurrentUICulture)
+            Else
+                valueTextBox.Text = ""
             End If
 
             If eValue.Key = "sg" AndAlso isScaledForm Then
@@ -34,7 +36,7 @@ Public Module JsonExtensions
                     For Each item As KeyValuePair(Of String, String) In dic
                         sb.AppendLine($"{item.Key} = {item.Value}")
                     Next
-                    MsgBox("Could not find datetime or dateTime in dictionary" & vbCrLf & sb.ToString)
+                    MsgBox($"Could not find datetime or dateTime in dictionary{Environment.NewLine}{sb}")
                     timeOfLastSGString = Now.ToString
                 End If
                 Dim timeOfLastSG As Date = timeOfLastSGString.DateParse(CurrentDataCulture, CurrentUICulture)
@@ -234,7 +236,7 @@ Public Module JsonExtensions
                                                                    .Text = "",
                                                                    .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                                    .AutoSize = True,
-                                                                   .[ReadOnly] = True
+                                                                   .ReadOnly = True
                                                                    }
                                                                })
                 End If
@@ -278,6 +280,14 @@ Public Module JsonExtensions
         End If
         Application.DoEvents()
     End Sub
+
+    <Extension>
+    Public Function CleanUserData(cleanRecentData As Dictionary(Of String, String)) As String
+        cleanRecentData("firstName") = "First"
+        cleanRecentData("lastName") = "Last"
+        cleanRecentData("medicalDeviceSerialNumber") = "NG1234567H"
+        Return JsonSerializer.Serialize(cleanRecentData, New JsonSerializerOptions)
+    End Function
 
     Public Function LoadList(value As String, isSG As Boolean) As List(Of Dictionary(Of String, String))
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
