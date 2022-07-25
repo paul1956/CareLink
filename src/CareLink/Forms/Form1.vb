@@ -1020,7 +1020,7 @@ Public Class Form1
         Dim sgOaDateTime As Double
 
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
-            sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index, CurrentDataCulture, CurrentUICulture).RoundTimeDown(RoundTo.Minute).ToOADate
+            sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index).RoundTimeDown(RoundTo.Minute).ToOADate
             Select Case sgListIndex.Value("type")
                 Case "INSULIN"
                     Dim bolusAmount As Double = sgListIndex.Value.GetDoubleValue("deliveredFastAmount")
@@ -1083,7 +1083,7 @@ Public Class Form1
         s_totalManualBolus = 0
 
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
-            sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index, CurrentDataCulture, CurrentUICulture).RoundTimeDown(RoundTo.Minute).ToOADate
+            sgOaDateTime = s_markers.SafeGetSgDateTime(sgListIndex.Index).RoundTimeDown(RoundTo.Minute).ToOADate
             With Me.ActiveInsulinTabChart.Series(NameOf(MarkerSeries))
                 Select Case sgListIndex.Value("type")
                     Case "INSULIN"
@@ -1271,7 +1271,6 @@ Public Class Form1
                     End If
                     Me.AboveHighLimitMessageLabel.Text = $"Above {_limitHigh} {Me.BgUnitsString}"
                     Me.BelowLowLimitMessageLabel.Text = $"Below {_limitLow} {Me.BgUnitsString}"
-
                 Case ItemIndexs.timeFormat
                     s_timeFormat = row.Value
                     _timeFormat = If(s_timeFormat = "HR_12", TwelveHourTimeWithMinuteFormat, MilitaryTimeWithMinuteFormat)
@@ -1302,7 +1301,7 @@ Public Class Form1
                     layoutPanel1.RowCount = 1
                     singleItem = True
                 Case ItemIndexs.sgs
-                    s_sGs = LoadList(row.Value, True).ToSgList(CurrentDataCulture, CurrentUICulture)
+                    s_sGs = LoadList(row.Value, True).ToSgList()
                     Me.SGsDataGridView.DataSource = s_sGs
                     For Each column As DataGridViewTextBoxColumn In Me.SGsDataGridView.Columns
                         If _filterJsonData AndAlso s_alwaysFilter.Contains(column.Name) Then
@@ -1537,29 +1536,24 @@ Public Class Form1
         End If
         Me.Cursor = Cursors.WaitCursor
         Application.DoEvents()
-
-        For Each c As IndexClass(Of KeyValuePair(Of String, String)) In localRecentData.WithIndex()
-            Dim row As KeyValuePair(Of String, String) = c.Value
-            Select Case CType([Enum].Parse(GetType(ItemIndexs), c.Value.Key), ItemIndexs)
-                Case ItemIndexs.bgUnits
-                    s_bgUnits = row.Value
-                    Me.BgUnitsString = GetLocalizedUnits(s_bgUnits)
-                    If Me.BgUnitsString = "mg/dl" Then
-                        _markerRow = 400
-                        _limitHigh = 180
-                        _limitLow = 70
-                        _insulinRow = 50
-                    Else
-                        _markerRow = (400 / 18).RoundSingle(1)
-                        _limitHigh = (180 / 18).RoundSingle(1)
-                        _limitLow = (70 / 18).RoundSingle(1)
-                        _insulinRow = (50 / 18).RoundSingle(1)
-                    End If
-                Case ItemIndexs.timeFormat
-                    s_timeFormat = row.Value
-                    _timeFormat = If(s_timeFormat = "HR_12", TwelveHourTimeWithMinuteFormat, MilitaryTimeWithMinuteFormat)
-            End Select
-        Next
+        If localRecentData.TryGetValue(ItemIndexs.bgUnits.ToString, s_bgUnits) Then
+            Me.BgUnitsString = GetLocalizedUnits(s_bgUnits)
+            If Me.BgUnitsString = "mg/dl" Then
+                _markerRow = 400
+                _limitHigh = 180
+                _limitLow = 70
+                _insulinRow = 50
+            Else
+                _markerRow = (400 / 18).RoundSingle(1)
+                _limitHigh = (180 / 18).RoundSingle(1)
+                _limitLow = (70 / 18).RoundSingle(1)
+                _insulinRow = (50 / 18).RoundSingle(1)
+            End If
+        End If
+        Dim internaltimeFormat As String = Nothing
+        If localRecentData.TryGetValue(ItemIndexs.timeFormat.ToString, internaltimeFormat) Then
+            _timeFormat = If(internaltimeFormat = "HR_12", TwelveHourTimeWithMinuteFormat, MilitaryTimeWithMinuteFormat)
+        End If
         _updating = False
         Me.Cursor = Cursors.Default
         Application.DoEvents()
@@ -1576,12 +1570,12 @@ Public Class Form1
     Private Sub UpdateAutoModeShield()
         Me.SensorMessage.Location = New Point(Me.ShieldPictureBox.Left + (Me.ShieldPictureBox.Width \ 2) - (Me.SensorMessage.Width \ 2), Me.SensorMessage.Top)
         If s_lastSG("sg") <> "0" Then
+            Me.CurrentBG.Visible = True
             Me.CurrentBG.Location = New Point((Me.ShieldPictureBox.Width \ 2) - (Me.CurrentBG.Width \ 2), Me.ShieldPictureBox.Height \ 4)
             Me.CurrentBG.Parent = Me.ShieldPictureBox
             Me.CurrentBG.Text = s_lastSG("sg")
             Me.NotifyIcon1.Text = $"{s_lastSG("sg")} {Me.BgUnitsString}"
             _bgMiniDisplay.SetCurrentBGString(s_lastSG("sg"))
-            Me.CurrentBG.Visible = True
             Me.SensorMessage.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield
             Me.ShieldUnitsLabel.Visible = True
@@ -1766,7 +1760,7 @@ Public Class Form1
         _markerInsulinDictionary.Clear()
         _markerMealDictionary.Clear()
         For Each sgListIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
-            Dim sgOaDateTime As Double = s_markers.SafeGetSgDateTime(sgListIndex.Index, CurrentDataCulture, CurrentUICulture).ToOADate()
+            Dim sgOaDateTime As Double = s_markers.SafeGetSgDateTime(sgListIndex.Index).ToOADate()
             Dim bgValueString As String = ""
             Dim bgValue As Single
             If sgListIndex.Value.TryGetValue("value", bgValueString) Then

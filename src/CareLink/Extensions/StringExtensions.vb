@@ -18,7 +18,7 @@ Public Module StringExtensions
                 result.Append($" {Char.ToUpperInvariant(c)}")
             End If
         Next
-        Return result.ToString().Replace("time", " Time", False, CultureInfo.CurrentUICulture)
+        Return result.ToString().Replace("time", " Time", False, CurrentUICulture)
     End Function
 
 End Module

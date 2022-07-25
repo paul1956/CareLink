@@ -6,16 +6,16 @@ Imports System.Globalization
 
 Public Class SgRecord
 
-    Public Sub New(allSgs As List(Of Dictionary(Of String, String)), index As Integer, ByRef lastValidTime As Date, currentDataCulture As CultureInfo, currentUICulture As CultureInfo)
+    Public Sub New(allSgs As List(Of Dictionary(Of String, String)), index As Integer, ByRef lastValidTime As Date)
         Dim dic As Dictionary(Of String, String) = allSgs(index)
         Me.RecordNumber = index + 1
         If dic.Count > 7 Then Stop
         Dim value As String = ""
         If dic.TryGetValue(NameOf(sg), value) Then
-            Single.TryParse(value, NumberStyles.Number, currentDataCulture, Me.sg)
+            Single.TryParse(value, NumberStyles.Number, CurrentDataCulture, Me.sg)
         End If
         If dic.TryGetValue(NameOf(datetime), value) Then
-            Me.datetime = allSgs.SafeGetSgDateTime(index, currentDataCulture, currentUICulture)
+            Me.datetime = allSgs.SafeGetSgDateTime(index)
             lastValidTime = Me.datetime + s_fiveMinuteSpan
         Else
             Me.datetime = lastValidTime

@@ -72,6 +72,7 @@ Friend Module UserMessageHandler
                             {"BC_SID_LOW_SG_INSULIN_DELIVERY_SUSPENDED_SINCE_X_CHECK_BG", "Alert on low (0) (units). Insulin delivery suspended since (secondaryTime). Check BG.:sg"},
                             {"BC_SID_THREE_DAYS_SINCE_LAST_SET_CHANGE", "(0) days since last set change:lastSetChange"}
                         }
+
     <Extension>
     Private Function FormatTimeOnly(rawTime As String, format As String) As String
         Return New TimeOnly(CInt(rawTime.Substring(0, 2)), CInt(rawTime.Substring(3, 2))).ToString(format)
@@ -80,7 +81,8 @@ Friend Module UserMessageHandler
     Friend Function GetLocalizedUnits(unitName As String) As String
         Return _unitsStrings(unitName)
     End Function
-    Friend Function TranslateMessageId(dic As Dictionary(Of String, String), entryValue As String, TimeFormat As String, CurrentUICulture As IFormatProvider) As String
+
+    Friend Function TranslateMessageId(dic As Dictionary(Of String, String), entryValue As String, TimeFormat As String) As String
         Dim formattedMessage As String = ""
         If _messages.TryGetValue(entryValue, formattedMessage) Then
         Else

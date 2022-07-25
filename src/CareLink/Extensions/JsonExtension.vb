@@ -39,11 +39,11 @@ Public Module JsonExtensions
                     MsgBox($"Could not find datetime or dateTime in dictionary{Environment.NewLine}{sb}")
                     timeOfLastSGString = Now.ToString
                 End If
-                Dim timeOfLastSG As Date = timeOfLastSGString.DateParse(CurrentDataCulture, CurrentUICulture)
+                Dim timeOfLastSG As Date = timeOfLastSGString.DateParse()
                 valueTextBox.Text &= $"     @ {timeOfLastSG.ToString(CurrentUICulture)}"
             End If
         Else
-            valueTextBox.Text = TranslateMessageId(dic, eValue.Value, timeFormat, CurrentUICulture)
+            valueTextBox.Text = TranslateMessageId(dic, eValue.Value, timeFormat)
             AddHandler valueTextBox.Click, AddressOf MessageIdTextBox_Click
         End If
 
