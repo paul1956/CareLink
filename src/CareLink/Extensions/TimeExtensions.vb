@@ -14,21 +14,17 @@ Friend Module TimeExtensions
     Public Function DateParse(dateAsString As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Date
         If s_dateTimeFormatUniqueCultures.Count = 0 Then
             s_dateTimeFormatUniqueCultures.Add(CurrentDataCulture)
-            Dim dateFormats As New List(Of String) From {
-            CurrentDataCulture.DateTimeFormat.LongDatePattern
-        }
-            Dim timeFormats As New List(Of String) From {
-            CurrentDataCulture.DateTimeFormat.LongTimePattern
+            Dim fullDateTimeFormats As New List(Of String) From {
+            CurrentDataCulture.DateTimeFormat.FullDateTimePattern
         }
             For Each oneCulture As CultureInfo In CultureInfo.GetCultures(CultureTypes.AllCultures).ToList()
-                If timeFormats.Contains(oneCulture.DateTimeFormat.LongTimePattern) OrElse
-                    dateFormats.Contains(oneCulture.DateTimeFormat.LongDatePattern) OrElse
-                    String.IsNullOrWhiteSpace(oneCulture.Name) Then
+                If fullDateTimeFormats.Contains(oneCulture.DateTimeFormat.FullDateTimePattern) OrElse
+                                String.IsNullOrWhiteSpace(oneCulture.Name) OrElse
+                                Not oneCulture.Name.StartsWith("en") Then
                     Continue For
                 End If
                 s_dateTimeFormatUniqueCultures.Add(oneCulture)
-                timeFormats.Add(oneCulture.DateTimeFormat.LongTimePattern)
-                dateFormats.Add(oneCulture.DateTimeFormat.LongDatePattern)
+                fullDateTimeFormats.Add(oneCulture.DateTimeFormat.FullDateTimePattern)
             Next
         End If
         s_dateTimeFormatUniqueCultures.RemoveAt(0)
@@ -47,7 +43,7 @@ Friend Module TimeExtensions
         Next
 
         MsgBox($"System.FormatException: String '{dateAsString}' in {memberName} line {sourceLineNumber} was not recognized as a valid DateTime in any supported culture.", MsgBoxStyle.ApplicationModal Or MsgBoxStyle.Critical)
-        End
+        Throw New System.FormatException($"String '{dateAsString}' in {memberName} line {sourceLineNumber} was not recognized as a valid DateTime in any supported culture.")
     End Function
 
     <Extension>

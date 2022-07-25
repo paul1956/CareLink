@@ -25,8 +25,9 @@ https://github.com/paul1956/CareLink/releases/
 - 7/28/2022
 
 ## What's New in this release
-  New in 3.4.2.0
+  New in 3.4.2.1
   Add support for creating human readable Error File for reporting issue on GitHub
+  Modify DateParse to try many cultures to convert dates.
 
   New in 3.4.0.7
   Add additional messages

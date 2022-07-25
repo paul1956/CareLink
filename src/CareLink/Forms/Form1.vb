@@ -1138,9 +1138,7 @@ Public Class Form1
             Exit Sub
         End If
         _updating = True
-        Me.UpdateDataTables(_RecentData,
-                            Me.formScale.Height <> 1 _
-                            OrElse Me.formScale.Width <> 1)
+        Me.UpdateDataTables(Me.formScale.Height <> 1 OrElse Me.formScale.Width <> 1)
         Me.UpdateActiveInsulinChart()
         Me.UpdateActiveInsulin()
         Me.UpdateAutoModeShield()
@@ -1160,8 +1158,8 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
-    Private Sub UpdateDataTables(localRecentData As Dictionary(Of String, String), isScaledForm As Boolean)
-        If localRecentData Is Nothing Then
+    Private Sub UpdateDataTables(isScaledForm As Boolean)
+        If _RecentData Is Nothing Then
             Exit Sub
         End If
         _updating = True
@@ -1169,7 +1167,7 @@ Public Class Form1
         Application.DoEvents()
         Me.TableLayoutPanelSummaryData.Controls.Clear()
         Dim rowCount As Integer = Me.TableLayoutPanelSummaryData.RowCount
-        Dim newRowCount As Integer = localRecentData.Count - 9
+        Dim newRowCount As Integer = _RecentData.Count - 9
         If rowCount < newRowCount Then
             Me.TableLayoutPanelSummaryData.RowCount = newRowCount
             For i As Integer = rowCount To newRowCount
@@ -1180,7 +1178,7 @@ Public Class Form1
         Dim currentRowIndex As Integer = 0
         Dim singleItem As Boolean
         Dim layoutPanel1 As TableLayoutPanel
-        For Each c As IndexClass(Of KeyValuePair(Of String, String)) In localRecentData.WithIndex()
+        For Each c As IndexClass(Of KeyValuePair(Of String, String)) In _RecentData.WithIndex()
             layoutPanel1 = Me.TableLayoutPanelSummaryData
             singleItem = False
             Dim row As KeyValuePair(Of String, String) = c.Value
