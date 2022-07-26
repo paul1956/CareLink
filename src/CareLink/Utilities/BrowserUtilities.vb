@@ -7,9 +7,7 @@ Imports Microsoft.Win32
 
 Friend Module BrowserUtilities
 
-    Private Const VersionSearchKey As String = "<a href=""/paul1956/CareLink/releases/tag/v"
-    Friend Const GitHubCareLinkUrl As String = "https://github.com/paul1956/CareLink/"
-    Public ReadOnly _httpClient As New HttpClient()
+    Private ReadOnly s_httpClient As New HttpClient()
 
     ''' <summary>
     ''' Compare version of executable with ReadMe.MkDir from GitHub
@@ -47,12 +45,13 @@ Friend Module BrowserUtilities
             ElseIf progIdValue.Contains("msEdgeHtm", StringComparison.OrdinalIgnoreCase) Then
                 browserPath = "%ProgramFiles(x86)%\Microsoft\Edge\Application\msEdge.exe"
             End If
+
             If Not String.IsNullOrWhiteSpace(browserPath) Then
                 Dim info As New ProcessStartInfo(Environment.ExpandEnvironmentVariables(browserPath), url)
                 Process.Start(info)
             Else
                 Dim msgResult As MsgBoxResult = MsgBox($"Your default browser can't be found!, Please use any browser and navigate to {url}.",
-                                   MsgBoxStyle.OkCancel Or MsgBoxStyle.Exclamation Or MsgBoxStyle.MsgBoxSetForeground)
+                                   MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation Or MsgBoxStyle.MsgBoxSetForeground)
 
             End If
         End Using
@@ -69,7 +68,7 @@ Friend Module BrowserUtilities
     ''' <param name="reportResults"></param>
     Friend Async Sub CheckForUpdatesAsync(mainForm As Form1, reportResults As Boolean)
         Try
-            Dim responseBody As String = Await _httpClient.GetStringAsync($"{GitHubCareLinkUrl}releases")
+            Dim responseBody As String = Await s_httpClient.GetStringAsync($"{GitHubCareLinkUrl}releases")
             Dim index As Integer
             Dim versionStr As String = "0.0.0.0"
             For Each e As IndexClass(Of String) In responseBody.SplitLines().ToList().WithIndex()

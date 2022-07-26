@@ -36,14 +36,14 @@ Public Module JsonExtensions
                     For Each item As KeyValuePair(Of String, String) In dic
                         sb.AppendLine($"{item.Key} = {item.Value}")
                     Next
-                    MsgBox("Could not find datetime or dateTime in dictionary" & vbCrLf & sb.ToString)
+                    MsgBox($"Could not find datetime or dateTime in dictionary{Environment.NewLine}{sb}")
                     timeOfLastSGString = Now.ToString
                 End If
-                Dim timeOfLastSG As Date = timeOfLastSGString.DateParse(CurrentDataCulture, CurrentUICulture)
+                Dim timeOfLastSG As Date = timeOfLastSGString.DateParse()
                 valueTextBox.Text &= $"     @ {timeOfLastSG.ToString(CurrentUICulture)}"
             End If
         Else
-            valueTextBox.Text = TranslateMessageId(dic, eValue.Value, timeFormat, CurrentUICulture)
+            valueTextBox.Text = TranslateMessageId(dic, eValue.Value, timeFormat)
             AddHandler valueTextBox.Click, AddressOf MessageIdTextBox_Click
         End If
 
@@ -132,7 +132,8 @@ Public Module JsonExtensions
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
         tableLevel1Blue.BackColor = Color.LightBlue
-        If itemIndex = ItemIndexs.lastAlarm Then
+        Dim messageOrDefault As KeyValuePair(Of String, String) = innerJson.Where(Function(kvp As KeyValuePair(Of String, String)) kvp.Key = "messageId").FirstOrDefault
+        If itemIndex = ItemIndexs.lastAlarm AndAlso messageOrDefault.Key IsNot Nothing Then
             tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22))
             Dim keyLabel As New Label With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                             .Text = "messageId",
@@ -140,7 +141,7 @@ Public Module JsonExtensions
                                            }
 
             tableLevel1Blue.RowCount += 1
-            Dim textBox1 As TextBox = CreateValueTextBox(innerJson, innerJson.Where(Function(kvp As KeyValuePair(Of String, String)) kvp.Key = "messageId").FirstOrDefault, timeFormat, isScaledForm)
+            Dim textBox1 As TextBox = CreateValueTextBox(innerJson, messageOrDefault, timeFormat, isScaledForm)
 
             If textBox1.Text.Length > 100 Then
                 Form1.ToolTip1.SetToolTip(textBox1, textBox1.Text)
@@ -236,7 +237,7 @@ Public Module JsonExtensions
                                                                    .Text = "",
                                                                    .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                                    .AutoSize = True,
-                                                                   .[ReadOnly] = True
+                                                                   .ReadOnly = True
                                                                    }
                                                                })
                 End If
@@ -280,6 +281,14 @@ Public Module JsonExtensions
         End If
         Application.DoEvents()
     End Sub
+
+    <Extension>
+    Public Function CleanUserData(cleanRecentData As Dictionary(Of String, String)) As String
+        cleanRecentData("firstName") = "First"
+        cleanRecentData("lastName") = "Last"
+        cleanRecentData("medicalDeviceSerialNumber") = "NG1234567H"
+        Return JsonSerializer.Serialize(cleanRecentData, New JsonSerializerOptions)
+    End Function
 
     Public Function LoadList(value As String, isSG As Boolean) As List(Of Dictionary(Of String, String))
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))

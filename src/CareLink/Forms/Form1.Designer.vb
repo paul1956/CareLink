@@ -29,6 +29,7 @@ Partial Class Form1
         Me.MenuStartHereLogin = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.MenuStartHereSnapshotLoad = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuStartHereExceptionReportLoadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStartHereSnapshotSave = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.StartHereExit = New System.Windows.Forms.ToolStripMenuItem()
@@ -53,6 +54,7 @@ Partial Class Form1
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1HomePage = New System.Windows.Forms.TabPage()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
+        Me.CurrentBG = New System.Windows.Forms.Label()
         Me.Last24CarbsValueLabel = New System.Windows.Forms.Label()
         Me.TotalCarbs24MessageLabel = New System.Windows.Forms.Label()
         Me.TotalCarbsMessageLabel = New System.Windows.Forms.Label()
@@ -86,7 +88,6 @@ Partial Class Form1
         Me.ActiveInsulinValue = New System.Windows.Forms.Label()
         Me.CalibrationDueImage = New System.Windows.Forms.PictureBox()
         Me.ActiveInsulinLabel = New System.Windows.Forms.Label()
-        Me.CurrentBG = New System.Windows.Forms.Label()
         Me.ShieldPictureBox = New System.Windows.Forms.PictureBox()
         Me.SplitContainer3 = New System.Windows.Forms.SplitContainer()
         Me.CursorTimeLabel = New System.Windows.Forms.Label()
@@ -169,7 +170,7 @@ Partial Class Form1
         '
         'MenuStartHere
         '
-        Me.MenuStartHere.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStartHereLogin, Me.ToolStripSeparator1, Me.MenuStartHereSnapshotLoad, Me.MenuStartHereSnapshotSave, Me.ToolStripSeparator2, Me.StartHereExit})
+        Me.MenuStartHere.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStartHereLogin, Me.ToolStripSeparator1, Me.MenuStartHereSnapshotLoad, Me.MenuStartHereExceptionReportLoadToolStripMenuItem, Me.MenuStartHereSnapshotSave, Me.ToolStripSeparator2, Me.StartHereExit})
         Me.MenuStartHere.Name = "MenuStartHere"
         Me.MenuStartHere.Size = New System.Drawing.Size(71, 20)
         Me.MenuStartHere.Text = "Start Here"
@@ -177,38 +178,44 @@ Partial Class Form1
         'MenuStartHereLogin
         '
         Me.MenuStartHereLogin.Name = "MenuStartHereLogin"
-        Me.MenuStartHereLogin.Size = New System.Drawing.Size(190, 22)
+        Me.MenuStartHereLogin.Size = New System.Drawing.Size(193, 22)
         Me.MenuStartHereLogin.Text = "Login"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(187, 6)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(190, 6)
         '
         'MenuStartHereSnapshotLoad
         '
         Me.MenuStartHereSnapshotLoad.Name = "MenuStartHereSnapshotLoad"
-        Me.MenuStartHereSnapshotLoad.Size = New System.Drawing.Size(190, 22)
+        Me.MenuStartHereSnapshotLoad.Size = New System.Drawing.Size(193, 22)
         Me.MenuStartHereSnapshotLoad.Text = "Snapshot Load"
+        '
+        'MenuStartHereExceptionReportLoadToolStripMenuItem
+        '
+        Me.MenuStartHereExceptionReportLoadToolStripMenuItem.Name = "MenuStartHereExceptionReportLoadToolStripMenuItem"
+        Me.MenuStartHereExceptionReportLoadToolStripMenuItem.Size = New System.Drawing.Size(193, 22)
+        Me.MenuStartHereExceptionReportLoadToolStripMenuItem.Text = "Exception Report Load"
         '
         'MenuStartHereSnapshotSave
         '
         Me.MenuStartHereSnapshotSave.Name = "MenuStartHereSnapshotSave"
         Me.MenuStartHereSnapshotSave.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
-        Me.MenuStartHereSnapshotSave.Size = New System.Drawing.Size(190, 22)
+        Me.MenuStartHereSnapshotSave.Size = New System.Drawing.Size(193, 22)
         Me.MenuStartHereSnapshotSave.Text = "Snapshot &Save"
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(187, 6)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(190, 6)
         '
         'StartHereExit
         '
         Me.StartHereExit.Image = Global.CareLink.My.Resources.Resources.AboutBox
         Me.StartHereExit.Name = "StartHereExit"
         Me.StartHereExit.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.X), System.Windows.Forms.Keys)
-        Me.StartHereExit.Size = New System.Drawing.Size(190, 22)
+        Me.StartHereExit.Size = New System.Drawing.Size(193, 22)
         Me.StartHereExit.Text = "E&xit"
         '
         'MenuOptions
@@ -484,6 +491,9 @@ Partial Class Form1
         '
         'SplitContainer2.Panel1
         '
+        Me.SplitContainer2.Panel1.Controls.Add(Me.ShieldUnitsLabel)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.SensorMessage)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.CurrentBG)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Last24CarbsValueLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.TotalCarbs24MessageLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.TotalCarbsMessageLabel)
@@ -510,14 +520,11 @@ Partial Class Form1
         Me.SplitContainer2.Panel1.Controls.Add(Me.CursorValueLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.CursorPictureBox)
         Me.SplitContainer2.Panel1.Controls.Add(Me.CursorMessage1Label)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.ShieldUnitsLabel)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.SensorMessage)
         Me.SplitContainer2.Panel1.Controls.Add(Me.RemainingInsulinUnits)
         Me.SplitContainer2.Panel1.Controls.Add(Me.InsulinLevelPictureBox)
         Me.SplitContainer2.Panel1.Controls.Add(Me.ActiveInsulinValue)
         Me.SplitContainer2.Panel1.Controls.Add(Me.CalibrationDueImage)
         Me.SplitContainer2.Panel1.Controls.Add(Me.ActiveInsulinLabel)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.CurrentBG)
         Me.SplitContainer2.Panel1.Controls.Add(Me.ShieldPictureBox)
         '
         'SplitContainer2.Panel2
@@ -526,6 +533,18 @@ Partial Class Form1
         Me.SplitContainer2.Size = New System.Drawing.Size(1370, 611)
         Me.SplitContainer2.SplitterDistance = 132
         Me.SplitContainer2.TabIndex = 52
+        '
+        'CurrentBG
+        '
+        Me.CurrentBG.BackColor = System.Drawing.Color.Transparent
+        Me.CurrentBG.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.CurrentBG.ForeColor = System.Drawing.Color.White
+        Me.CurrentBG.Location = New System.Drawing.Point(403, 23)
+        Me.CurrentBG.Name = "CurrentBG"
+        Me.CurrentBG.Size = New System.Drawing.Size(72, 32)
+        Me.CurrentBG.TabIndex = 3
+        Me.CurrentBG.Text = "---"
+        Me.CurrentBG.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Last24CarbsValueLabel
         '
@@ -897,19 +916,6 @@ Partial Class Form1
         Me.ActiveInsulinLabel.TabIndex = 5
         Me.ActiveInsulinLabel.Text = "Active Insulin"
         Me.ActiveInsulinLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter
-        '
-        'CurrentBG
-        '
-        Me.CurrentBG.AutoSize = True
-        Me.CurrentBG.BackColor = System.Drawing.Color.Transparent
-        Me.CurrentBG.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.CurrentBG.ForeColor = System.Drawing.Color.White
-        Me.CurrentBG.Location = New System.Drawing.Point(417, 23)
-        Me.CurrentBG.Name = "CurrentBG"
-        Me.CurrentBG.Size = New System.Drawing.Size(44, 32)
-        Me.CurrentBG.TabIndex = 3
-        Me.CurrentBG.Text = "---"
-        Me.CurrentBG.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'ShieldPictureBox
         '
@@ -1507,4 +1513,5 @@ Partial Class Form1
     Friend WithEvents TotalCarbs24MessageLabel As Label
     Friend WithEvents TotalCarbsMessageLabel As Label
     Friend WithEvents MenuOptionsUseAdvancedAITDecay As ToolStripMenuItem
+    Friend WithEvents MenuStartHereExceptionReportLoadToolStripMenuItem As ToolStripMenuItem
 End Class

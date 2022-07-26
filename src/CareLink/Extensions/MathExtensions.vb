@@ -50,10 +50,10 @@ Friend Module MathExtensions
     <Extension>
     Public Function ParseDouble(valueString As String) As Double
         Dim returnDouble As Double
-        If Double.TryParse(valueString, NumberStyles.Number, Form1.CurrentDataCulture, returnDouble) Then
+        If Double.TryParse(valueString, NumberStyles.Number, CurrentDataCulture, returnDouble) Then
             Return returnDouble
         End If
-        If Double.TryParse(valueString, NumberStyles.Number, Form1.CurrentUICulture, returnDouble) Then
+        If Double.TryParse(valueString, NumberStyles.Number, CurrentUICulture, returnDouble) Then
             Return returnDouble
         End If
         Return Double.NaN
@@ -62,10 +62,10 @@ Friend Module MathExtensions
     <Extension>
     Public Function ParseSingle(valueString As String) As Single
         Dim returnSingle As Single
-        If Single.TryParse(valueString, NumberStyles.Number, Form1.CurrentDataCulture, returnSingle) Then
+        If Single.TryParse(valueString, NumberStyles.Number, CurrentDataCulture, returnSingle) Then
             Return returnSingle
         End If
-        If Single.TryParse(valueString, NumberStyles.Number, Form1.CurrentUICulture, returnSingle) Then
+        If Single.TryParse(valueString, NumberStyles.Number, CurrentUICulture, returnSingle) Then
             Return returnSingle
         End If
         Return Single.NaN
