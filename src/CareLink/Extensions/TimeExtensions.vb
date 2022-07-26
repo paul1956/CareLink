@@ -20,7 +20,7 @@ Friend Module TimeExtensions
             For Each oneCulture As CultureInfo In CultureInfo.GetCultures(CultureTypes.AllCultures).ToList()
                 If fullDateTimeFormats.Contains(oneCulture.DateTimeFormat.FullDateTimePattern) OrElse
                                 String.IsNullOrWhiteSpace(oneCulture.Name) OrElse
-                                Not oneCulture.Name.StartsWith("en") Then
+                                Not oneCulture.Name.Contains("-"c) Then
                     Continue For
                 End If
                 s_dateTimeFormatUniqueCultures.Add(oneCulture)

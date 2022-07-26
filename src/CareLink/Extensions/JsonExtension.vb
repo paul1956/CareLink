@@ -132,7 +132,8 @@ Public Module JsonExtensions
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
         tableLevel1Blue.BackColor = Color.LightBlue
-        If itemIndex = ItemIndexs.lastAlarm Then
+        Dim messageOrDefault As KeyValuePair(Of String, String) = innerJson.Where(Function(kvp As KeyValuePair(Of String, String)) kvp.Key = "messageId").FirstOrDefault
+        If itemIndex = ItemIndexs.lastAlarm AndAlso messageOrDefault.Key IsNot Nothing Then
             tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22))
             Dim keyLabel As New Label With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                             .Text = "messageId",
@@ -140,7 +141,7 @@ Public Module JsonExtensions
                                            }
 
             tableLevel1Blue.RowCount += 1
-            Dim textBox1 As TextBox = CreateValueTextBox(innerJson, innerJson.Where(Function(kvp As KeyValuePair(Of String, String)) kvp.Key = "messageId").FirstOrDefault, timeFormat, isScaledForm)
+            Dim textBox1 As TextBox = CreateValueTextBox(innerJson, messageOrDefault, timeFormat, isScaledForm)
 
             If textBox1.Text.Length > 100 Then
                 Form1.ToolTip1.SetToolTip(textBox1, textBox1.Text)
