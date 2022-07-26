@@ -498,7 +498,7 @@ Public Class Form1
             e.ChartGraphics.Graphics.FillRectangle(b, lowAreaRectangle)
         End Using
         If Me.CursorTimeLabel.Tag IsNot Nothing Then
-            Me.CursorTimeLabel.Left = CInt(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, CDate(Me.CursorTimeLabel.Tag).ToOADate))
+            Me.CursorTimeLabel.Left = CInt(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, Me.CursorTimeLabel.Tag.ToString.DateParse.ToOADate))
         End If
 
         e.PaintMarker(_mealImage, _markerMealDictionary, 0)
@@ -526,7 +526,7 @@ Public Class Form1
         End If
         If Me.SGsDataGridView.Columns(e.ColumnIndex).Name.Equals(NameOf(DateTime), StringComparison.OrdinalIgnoreCase) Then
             If e.Value IsNot Nothing Then
-                Dim dateValue As Date = CDate(e.Value)
+                Dim dateValue As Date = e.Value.ToString.DateParse
                 e.Value = $"{dateValue.ToShortDateString()} {dateValue.ToShortTimeString()}"
             End If
         End If
@@ -1234,7 +1234,7 @@ Public Class Form1
                 Case ItemIndexs.medicalDeviceTime
                     s_medicalDeviceTime = row.Value
                 Case ItemIndexs.sMedicalDeviceTime
-                    s_sMedicalDeviceTime = CDate(row.Value)
+                    s_sMedicalDeviceTime = row.Value.DateParse
                 Case ItemIndexs.reservoirLevelPercent
                     s_reservoirLevelPercent = CInt(row.Value)
                 Case ItemIndexs.reservoirAmount
@@ -1275,7 +1275,7 @@ Public Class Form1
                 Case ItemIndexs.lastSensorTime
                     s_lastSensorTime = row.Value
                 Case ItemIndexs.sLastSensorTime
-                    s_sLastSensorTime = CDate(row.Value)
+                    s_sLastSensorTime = row.Value.DateParse
                 Case ItemIndexs.medicalDeviceSuspended
                     s_medicalDeviceSuspended = CBool(row.Value)
                 Case ItemIndexs.lastSGTrend
