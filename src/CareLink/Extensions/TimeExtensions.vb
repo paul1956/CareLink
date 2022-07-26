@@ -26,8 +26,8 @@ Friend Module TimeExtensions
                 s_dateTimeFormatUniqueCultures.Add(oneCulture)
                 fullDateTimeFormats.Add(oneCulture.DateTimeFormat.FullDateTimePattern)
             Next
+            s_dateTimeFormatUniqueCultures.RemoveAt(0)
         End If
-        s_dateTimeFormatUniqueCultures.RemoveAt(0)
         Dim resultDate As Date
         If Date.TryParse(dateAsString, CurrentDataCulture, DateTimeStyles.None, resultDate) Then
             Return resultDate

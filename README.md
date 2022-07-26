@@ -25,6 +25,9 @@ https://github.com/paul1956/CareLink/releases/
 - 7/28/2022
 
 ## What's New in this release
+  New in 3.4.2.4
+  Fix removal of 1 culture every time ParseDate is called
+
   New in 3.4.2.3
   Handle multiple pump formats for mmol/L and more languages.
 
