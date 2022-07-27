@@ -31,12 +31,13 @@ Partial Class BGMiniWindow
         Me.HiddenTextBox = New System.Windows.Forms.TextBox()
         Me.DeltaTextBox = New System.Windows.Forms.TextBox()
         Me.CloseButton = New System.Windows.Forms.Button()
-        Me.SuspendLayout
+        Me.chkTopMost = New System.Windows.Forms.CheckBox()
+        Me.SuspendLayout()
         '
         'BGTextBox
         '
         Me.BGTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.BGTextBox.Font = New System.Drawing.Font("Segoe UI", 48!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.BGTextBox.Font = New System.Drawing.Font("Segoe UI", 48.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
         Me.BGTextBox.Location = New System.Drawing.Point(4, 29)
         Me.BGTextBox.Margin = New System.Windows.Forms.Padding(0)
         Me.BGTextBox.Name = "BGTextBox"
@@ -82,15 +83,28 @@ Partial Class BGMiniWindow
         Me.CloseButton.Size = New System.Drawing.Size(97, 23)
         Me.CloseButton.TabIndex = 3
         Me.CloseButton.Text = "Hide"
-        Me.CloseButton.UseVisualStyleBackColor = true
+        Me.CloseButton.UseVisualStyleBackColor = True
+        '
+        'chkTopMost
+        '
+        Me.chkTopMost.AutoSize = True
+        Me.chkTopMost.Checked = True
+        Me.chkTopMost.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkTopMost.Location = New System.Drawing.Point(4, 103)
+        Me.chkTopMost.Name = "chkTopMost"
+        Me.chkTopMost.Size = New System.Drawing.Size(72, 19)
+        Me.chkTopMost.TabIndex = 4
+        Me.chkTopMost.Text = "Topmost"
+        Me.chkTopMost.UseVisualStyleBackColor = True
         '
         'BGMiniWindow
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(7!, 15!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.Window
         Me.ClientSize = New System.Drawing.Size(230, 123)
-        Me.ControlBox = false
+        Me.ControlBox = False
+        Me.Controls.Add(Me.chkTopMost)
         Me.Controls.Add(Me.CloseButton)
         Me.Controls.Add(Me.DeltaTextBox)
         Me.Controls.Add(Me.ActiveInsulinTextBox)
@@ -98,20 +112,21 @@ Partial Class BGMiniWindow
         Me.Controls.Add(Me.HiddenTextBox)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
-        Me.MaximizeBox = false
-        Me.MinimizeBox = false
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "BGMiniWindow"
-        Me.ShowInTaskbar = false
+        Me.ShowInTaskbar = False
         Me.Text = "Current Glucose Value"
-        Me.TopMost = true
-        Me.ResumeLayout(false)
-        Me.PerformLayout
+        Me.TopMost = True
+        Me.ResumeLayout(False)
+        Me.PerformLayout()
 
-End Sub
+    End Sub
 
     Friend WithEvents BGTextBox As TextBox
     Friend WithEvents ActiveInsulinTextBox As TextBox
     Friend WithEvents HiddenTextBox As TextBox
     Friend WithEvents DeltaTextBox As TextBox
     Friend WithEvents CloseButton As Button
+    Friend WithEvents chkTopMost As CheckBox
 End Class
