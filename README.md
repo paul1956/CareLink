@@ -25,6 +25,9 @@ https://github.com/paul1956/CareLink/releases/
 - 7/28/2022
 
 ## What's New in this release
+  New in 3.4.2.5
+  Support loading of error reports, displaying the exceptions and rerunning them
+
   New in 3.4.2.4
   Fix removal of 1 culture every time ParseDate is called
 

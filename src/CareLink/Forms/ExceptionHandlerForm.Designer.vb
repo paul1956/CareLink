@@ -42,7 +42,7 @@ Partial Class ExceptionHandlerForm
         '
         Me.OK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.OK.DialogResult = System.Windows.Forms.DialogResult.OK
-        Me.OK.Location = New System.Drawing.Point(871, 348)
+        Me.OK.Location = New System.Drawing.Point(1190, 348)
         Me.OK.Name = "OK"
         Me.OK.Size = New System.Drawing.Size(94, 23)
         Me.OK.TabIndex = 4
@@ -52,7 +52,7 @@ Partial Class ExceptionHandlerForm
         '
         Me.Cancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.Cancel.Location = New System.Drawing.Point(992, 348)
+        Me.Cancel.Location = New System.Drawing.Point(1311, 348)
         Me.Cancel.Name = "Cancel"
         Me.Cancel.Size = New System.Drawing.Size(94, 23)
         Me.Cancel.TabIndex = 4
@@ -63,7 +63,7 @@ Partial Class ExceptionHandlerForm
         Me.StackTraceTextBox.Location = New System.Drawing.Point(5, 63)
         Me.StackTraceTextBox.Multiline = True
         Me.StackTraceTextBox.Name = "StackTraceTextBox"
-        Me.StackTraceTextBox.Size = New System.Drawing.Size(817, 308)
+        Me.StackTraceTextBox.Size = New System.Drawing.Size(1136, 308)
         Me.StackTraceTextBox.TabIndex = 6
         '
         'Label1
@@ -79,7 +79,7 @@ Partial Class ExceptionHandlerForm
         '
         Me.ExceptionTextBox.Location = New System.Drawing.Point(75, 2)
         Me.ExceptionTextBox.Name = "ExceptionTextBox"
-        Me.ExceptionTextBox.Size = New System.Drawing.Size(1011, 23)
+        Me.ExceptionTextBox.Size = New System.Drawing.Size(1330, 23)
         Me.ExceptionTextBox.TabIndex = 8
         '
         'Label2
@@ -94,7 +94,7 @@ Partial Class ExceptionHandlerForm
         'InstructionsRichTextBox
         '
         Me.InstructionsRichTextBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.InstructionsRichTextBox.Location = New System.Drawing.Point(828, 60)
+        Me.InstructionsRichTextBox.Location = New System.Drawing.Point(1147, 60)
         Me.InstructionsRichTextBox.Name = "InstructionsRichTextBox"
         Me.InstructionsRichTextBox.Size = New System.Drawing.Size(261, 282)
         Me.InstructionsRichTextBox.TabIndex = 10
@@ -105,7 +105,7 @@ Partial Class ExceptionHandlerForm
         Me.AcceptButton = Me.OK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1098, 383)
+        Me.ClientSize = New System.Drawing.Size(1417, 383)
         Me.Controls.Add(Me.InstructionsRichTextBox)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.ExceptionTextBox)

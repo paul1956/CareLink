@@ -19,8 +19,6 @@ Public Class Form1
     Private ReadOnly _markerInsulinDictionary As New Dictionary(Of Double, Single)
     Private ReadOnly _markerMealDictionary As New Dictionary(Of Double, Single)
     Private ReadOnly _mealImage As Bitmap = My.Resources.MealImage
-    Private ReadOnly _savedTitle As String = Me.Text
-    Private ReadOnly _sensorLifeToolTip As New ToolTip()
     Private ReadOnly _thirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
     Private _activeInsulinIncrements As Integer
     Private _client As CareLinkClient
@@ -33,9 +31,10 @@ Public Class Form1
     Private _recentDataSameCount As Integer
     Private _timeFormat As String
     Private _updating As Boolean = False
+    Private ReadOnly Property _sensorLifeToolTip As New ToolTip()
     Private Property formScale As New SizeF(1.0F, 1.0F)
     Friend Property BgUnitsString As String
-    Public ReadOnly Property RecentData As Dictionary(Of String, String)
+    Public Property RecentData As Dictionary(Of String, String)
 
 #Region "Chart Objects"
 
@@ -143,6 +142,7 @@ Public Class Form1
 #Region "Form Menu Events"
 
 #Region "Start Here Menus"
+
     Private Sub MenuStartHere_DropDownOpened(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpened
         Me.MenuStartHereSnapshotLoad.Enabled = Directory.GetFiles(MyDocumentsPath, $"{RepoName}*.json").Length > 0
         Me.MenuStartHereSnapshotSave.Enabled = _RecentData IsNot Nothing
@@ -168,19 +168,18 @@ Public Class Form1
         If openFileDialog1.ShowDialog() = DialogResult.OK Then
             Try
                 Dim fileNameWithPath As String = openFileDialog1.FileName
+                Me.ServerUpdateTimer.Stop()
                 If File.Exists(fileNameWithPath) Then
-                    Me.ServerUpdateTimer.Stop()
                     Me.MenuOptionsUseLastSavedData.CheckState = CheckState.Indeterminate
                     Me.MenuOptionsUseTestData.CheckState = CheckState.Indeterminate
-                    Dim partialFileNameWithoutPath As String = Path.GetFileNameWithoutExtension(fileNameWithPath).Replace($"{ErrorReportName}(", "")
-                    Dim indexOfClosedParen As Integer = partialFileNameWithoutPath.IndexOf(")"c)
-                    CurrentUICulture = CultureInfo.GetCultureInfo(partialFileNameWithoutPath.Substring(0, indexOfClosedParen))
-                    Dim errorFileData As String = File.ReadAllText(fileNameWithPath)
-                    Dim indexOfStackTraceTerminatingString As Integer = errorFileData.IndexOf(StackTraceTerminatingString) + StackTraceTerminatingString.Length
-                    _RecentData = Loads(errorFileData.Substring(indexOfStackTraceTerminatingString))
-                    Me.FinishInitialization()
-                    Me.Text = $"{_savedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
-                    Me.UpdateAllTabPages()
+                    ExceptionHandlerForm.ReportFileNameWithPath = fileNameWithPath
+                    If ExceptionHandlerForm.ShowDialog() = DialogResult.OK Then
+                        ExceptionHandlerForm.ReportFileNameWithPath = ""
+                        Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
+                        Me.RecentData = Loads(ExceptionHandlerForm.LocalRawData)
+                        Me.FinishInitialization()
+                        Me.UpdateAllTabPages()
+                    End If
                 End If
             Catch ex As Exception
                 MessageBox.Show($"Cannot read file from disk. Original error: {ex.Message}")
@@ -188,6 +187,7 @@ Public Class Form1
         End If
 
     End Sub
+
     Private Sub MenuStartHereExit_Click(sender As Object, e As EventArgs) Handles StartHereExit.Click
         Me.CleanUpNotificationIcon()
     End Sub
@@ -222,7 +222,7 @@ Public Class Form1
                     Me.MenuOptionsUseTestData.CheckState = CheckState.Indeterminate
                     _RecentData = Loads(File.ReadAllText(openFileDialog1.FileName))
                     Me.FinishInitialization()
-                    Me.Text = $"{_savedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
+                    Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
                     Me.UpdateAllTabPages()
                 End If
             Catch ex As Exception
@@ -233,7 +233,7 @@ Public Class Form1
 
     Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotSave.Click
         Using jd As JsonDocument = JsonDocument.Parse(_RecentData.CleanUserData(), New JsonDocumentOptions)
-            File.WriteAllText(MyDocumentsCareLinkSnapshotDocPath, JsonSerializer.Serialize(jd, JsonFormattingOptions))
+            File.WriteAllText(Path.Combine(MyDocumentsPath, $"{RepoName}Snapshot({CurrentUICulture.Name}).json"), JsonSerializer.Serialize(jd, JsonFormattingOptions))
         End Using
     End Sub
 
@@ -459,6 +459,7 @@ Public Class Form1
         End Try
     End Sub
 
+    <System.Diagnostics.DebuggerNonUserCode()>
     Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomePageChart.PostPaint
         If Not _initialized OrElse _updating OrElse _inMouseMove Then
             Exit Sub
@@ -507,7 +508,7 @@ Public Class Form1
 
     Private Sub SensorAgeLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles SensorDaysLeftLabel.MouseHover
         If s_sensorDurationHours < 24 Then
-            _sensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {s_sensorDurationHours} hours")
+            Me._sensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {s_sensorDurationHours} hours")
         End If
     End Sub
 
@@ -1133,31 +1134,6 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
-    Private Sub UpdateAllTabPages()
-        If _RecentData Is Nothing OrElse _updating Then
-            Exit Sub
-        End If
-        _updating = True
-        Me.UpdateDataTables(Me.formScale.Height <> 1 OrElse Me.formScale.Width <> 1)
-        Me.UpdateActiveInsulinChart()
-        Me.UpdateActiveInsulin()
-        Me.UpdateAutoModeShield()
-        Me.UpdateCalibrationTimeRemaining()
-        Me.UpdateInsulinLevel()
-        Me.UpdatePumpBattery()
-        Me.UpdateRemainingInsulin()
-        Me.UpdateSensorLife()
-        Me.UpdateTimeInRange()
-        Me.UpdateTransmitterBatttery()
-
-        Me.UpdateZHomeTabSerieses()
-        Me.UpdateDosingAndCarbs()
-        _recentDatalast = _RecentData
-        _initialized = True
-        _updating = False
-        Application.DoEvents()
-    End Sub
-
     Private Sub UpdateDataTables(isScaledForm As Boolean)
         If _RecentData Is Nothing Then
             Exit Sub
@@ -1557,6 +1533,31 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
+    Friend Sub UpdateAllTabPages()
+        If _RecentData Is Nothing OrElse _updating Then
+            Exit Sub
+        End If
+        _updating = True
+        Me.UpdateDataTables(Me.formScale.Height <> 1 OrElse Me.formScale.Width <> 1)
+        Me.UpdateActiveInsulinChart()
+        Me.UpdateActiveInsulin()
+        Me.UpdateAutoModeShield()
+        Me.UpdateCalibrationTimeRemaining()
+        Me.UpdateInsulinLevel()
+        Me.UpdatePumpBattery()
+        Me.UpdateRemainingInsulin()
+        Me.UpdateSensorLife()
+        Me.UpdateTimeInRange()
+        Me.UpdateTransmitterBatttery()
+
+        Me.UpdateZHomeTabSerieses()
+        Me.UpdateDosingAndCarbs()
+        _recentDatalast = _RecentData
+        _initialized = True
+        _updating = False
+        Application.DoEvents()
+    End Sub
+
 #Region "Home Page Update Utilities"
 
     Private Sub UpdateActiveInsulin()
@@ -1572,7 +1573,7 @@ Public Class Form1
             Me.CurrentBG.Location = New Point((Me.ShieldPictureBox.Width \ 2) - (Me.CurrentBG.Width \ 2), Me.ShieldPictureBox.Height \ 4)
             Me.CurrentBG.Parent = Me.ShieldPictureBox
             Me.CurrentBG.Text = s_lastSG("sg")
-            Me.NotifyIcon1.Text = $"{s_lastSG("sg")} {Me.BgUnitsString}"
+            Me.NotifyIcon1.Text = $"Last SG {s_lastSG("sg")} {Me.BgUnitsString}"
             _bgMiniDisplay.SetCurrentBGString(s_lastSG("sg"))
             Me.SensorMessage.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield
@@ -1854,14 +1855,14 @@ Public Class Form1
         Debug.Print($"Me.ServerUpdateTimer stopped at {Now}")
         If Me.MenuOptionsUseTestData.Checked Then
             Me.MenuView.Visible = False
-            Me.Text = $"{_savedTitle} Using Test Data"
+            Me.Text = $"{SavedTitle} Using Test Data"
             _RecentData = Loads(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
         ElseIf Me.MenuOptionsUseLastSavedData.Checked Then
             Me.MenuView.Visible = False
-            Me.Text = $"{_savedTitle} Using Last Saved Data"
+            Me.Text = $"{SavedTitle} Using Last Saved Data"
             _RecentData = Loads(File.ReadAllText(CareLinkLastDownloadDocPath))
         Else
-            Me.Text = _savedTitle
+            Me.Text = SavedTitle
             _loginDialog.ShowDialog()
             _client = _loginDialog.Client
             If _client Is Nothing OrElse Not _client.LoggedIn Then
@@ -1882,24 +1883,6 @@ Public Class Form1
         End If
         Return True
     End Function
-
-    Private Sub FinishInitialization()
-        If _initialized Then
-            Exit Sub
-        End If
-        _homePageChartRelitivePosition = RectangleF.Empty
-        Me.UpdateRegionalData(_RecentData)
-
-        Me.InitializeHomePageChart()
-        Me.InitializeActiveInsulinTabChart()
-        Me.InitializeTimeInRangeArea()
-        Me.SGsDataGridView.AutoGenerateColumns = True
-        Me.SGsDataGridView.ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
-            .Alignment = DataGridViewContentAlignment.MiddleCenter
-            }
-
-        _initialized = True
-    End Sub
 
     Private Sub Fix(sp As SplitContainer)
         ' Scale factor depends on orientation
@@ -1925,6 +1908,24 @@ Public Class Form1
                 Me.Fix(child)
             End If
         Next child
+    End Sub
+
+    Friend Sub FinishInitialization()
+        If _initialized Then
+            Exit Sub
+        End If
+        _homePageChartRelitivePosition = RectangleF.Empty
+        Me.UpdateRegionalData(_RecentData)
+
+        Me.InitializeHomePageChart()
+        Me.InitializeActiveInsulinTabChart()
+        Me.InitializeTimeInRangeArea()
+        Me.SGsDataGridView.AutoGenerateColumns = True
+        Me.SGsDataGridView.ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
+            .Alignment = DataGridViewContentAlignment.MiddleCenter
+            }
+
+        _initialized = True
     End Sub
 
 End Class

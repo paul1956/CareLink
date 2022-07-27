@@ -54,6 +54,8 @@ Partial Class Form1
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1HomePage = New System.Windows.Forms.TabPage()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
+        Me.ShieldUnitsLabel = New System.Windows.Forms.Label()
+        Me.SensorMessage = New System.Windows.Forms.Label()
         Me.CurrentBG = New System.Windows.Forms.Label()
         Me.Last24CarbsValueLabel = New System.Windows.Forms.Label()
         Me.TotalCarbs24MessageLabel = New System.Windows.Forms.Label()
@@ -81,8 +83,6 @@ Partial Class Form1
         Me.CursorValueLabel = New System.Windows.Forms.Label()
         Me.CursorPictureBox = New System.Windows.Forms.PictureBox()
         Me.CursorMessage1Label = New System.Windows.Forms.Label()
-        Me.ShieldUnitsLabel = New System.Windows.Forms.Label()
-        Me.SensorMessage = New System.Windows.Forms.Label()
         Me.RemainingInsulinUnits = New System.Windows.Forms.Label()
         Me.InsulinLevelPictureBox = New System.Windows.Forms.PictureBox()
         Me.ActiveInsulinValue = New System.Windows.Forms.Label()
@@ -534,6 +534,29 @@ Partial Class Form1
         Me.SplitContainer2.SplitterDistance = 132
         Me.SplitContainer2.TabIndex = 52
         '
+        'ShieldUnitsLabel
+        '
+        Me.ShieldUnitsLabel.AutoSize = True
+        Me.ShieldUnitsLabel.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        Me.ShieldUnitsLabel.ForeColor = System.Drawing.Color.White
+        Me.ShieldUnitsLabel.Location = New System.Drawing.Point(422, 59)
+        Me.ShieldUnitsLabel.Name = "ShieldUnitsLabel"
+        Me.ShieldUnitsLabel.Size = New System.Drawing.Size(35, 13)
+        Me.ShieldUnitsLabel.TabIndex = 7
+        Me.ShieldUnitsLabel.Text = "XX/XX"
+        '
+        'SensorMessage
+        '
+        Me.SensorMessage.BackColor = System.Drawing.Color.Transparent
+        Me.SensorMessage.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.SensorMessage.ForeColor = System.Drawing.Color.White
+        Me.SensorMessage.Location = New System.Drawing.Point(389, 14)
+        Me.SensorMessage.Name = "SensorMessage"
+        Me.SensorMessage.Size = New System.Drawing.Size(100, 66)
+        Me.SensorMessage.TabIndex = 1
+        Me.SensorMessage.Text = "Calibration Required"
+        Me.SensorMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'CurrentBG
         '
         Me.CurrentBG.BackColor = System.Drawing.Color.Transparent
@@ -835,29 +858,6 @@ Partial Class Form1
         Me.CursorMessage1Label.Text = "Message For Cursor 1"
         Me.CursorMessage1Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.CursorMessage1Label.Visible = False
-        '
-        'ShieldUnitsLabel
-        '
-        Me.ShieldUnitsLabel.AutoSize = True
-        Me.ShieldUnitsLabel.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.ShieldUnitsLabel.ForeColor = System.Drawing.Color.White
-        Me.ShieldUnitsLabel.Location = New System.Drawing.Point(422, 59)
-        Me.ShieldUnitsLabel.Name = "ShieldUnitsLabel"
-        Me.ShieldUnitsLabel.Size = New System.Drawing.Size(35, 13)
-        Me.ShieldUnitsLabel.TabIndex = 7
-        Me.ShieldUnitsLabel.Text = "XX/XX"
-        '
-        'SensorMessage
-        '
-        Me.SensorMessage.BackColor = System.Drawing.Color.Transparent
-        Me.SensorMessage.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.SensorMessage.ForeColor = System.Drawing.Color.White
-        Me.SensorMessage.Location = New System.Drawing.Point(389, 14)
-        Me.SensorMessage.Name = "SensorMessage"
-        Me.SensorMessage.Size = New System.Drawing.Size(100, 66)
-        Me.SensorMessage.TabIndex = 1
-        Me.SensorMessage.Text = "Calibration Required"
-        Me.SensorMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'RemainingInsulinUnits
         '
@@ -1330,7 +1330,7 @@ Partial Class Form1
         'NotifyIcon1
         '
         Me.NotifyIcon1.Icon = CType(resources.GetObject("NotifyIcon1.Icon"), System.Drawing.Icon)
-        Me.NotifyIcon1.Text = "CareLink Display"
+        Me.NotifyIcon1.Text = "CareLink For Windows"
         Me.NotifyIcon1.Visible = True
         '
         'LoginStatusLabel
@@ -1367,6 +1367,7 @@ Partial Class Form1
         Me.Name = "Form1"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.Text = "CareLink For Windows"
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
         Me.SplitContainer1.Panel1.ResumeLayout(False)

@@ -18,14 +18,15 @@ Public Module SystemConstants
 
 #End Region
 
-    Public ReadOnly VersionSearchKey As String = $"<a href=""/{OwnerName}/{RepoName}/releases/tag/v"
+    Public ReadOnly s_versionSearchKey As String = $"<a href=""/{OwnerName}/{RepoName}/releases/tag/v"
+    Public ReadOnly Property SavedTitle As String = $"{RepoName} For Windows"
+
     Public ReadOnly Property CareLinkLastDownloadDocPath As String = Path.Combine(MyDocumentsPath, $"{RepoName}LastDownload({CurrentUICulture.Name}).json")
     Public ReadOnly Property ErrorReportName As String = $"{RepoName}ErrorReport"
     Public ReadOnly Property ExceptionStartingString As String = "--- Start of Exception ---"
     Public ReadOnly Property ExceptionTerminatingString As String = "--- End of Exception ---"
     Public Property GitHubCareLinkUrl As String = $"https://github.com/{OwnerName}/{RepoName}/"
     Public ReadOnly Property JsonFormattingOptions As New JsonSerializerOptions With {.WriteIndented = True}
-    Public ReadOnly Property MyDocumentsCareLinkSnapshotDocPath As String = Path.Combine(MyDocumentsPath, $"{RepoName}Snapshot({CurrentUICulture.Name}).json")
     Public ReadOnly Property StackTraceStartingString As String = "--- Start of stack trace ---"
     Public ReadOnly Property StackTraceTerminatingString As String = "--- End of stack trace from previous location ---"
 End Module

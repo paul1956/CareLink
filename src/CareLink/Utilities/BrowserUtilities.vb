@@ -73,8 +73,8 @@ Friend Module BrowserUtilities
             Dim versionStr As String = "0.0.0.0"
             For Each e As IndexClass(Of String) In responseBody.SplitLines().ToList().WithIndex()
                 Dim line As String = e.Value
-                If line.Contains(VersionSearchKey, StringComparison.Ordinal) Then
-                    index = line.IndexOf(VersionSearchKey, StringComparison.OrdinalIgnoreCase) + VersionSearchKey.Length
+                If line.Contains(s_versionSearchKey, StringComparison.Ordinal) Then
+                    index = line.IndexOf(s_versionSearchKey, StringComparison.OrdinalIgnoreCase) + s_versionSearchKey.Length
                     If index < 0 Then
                         Exit Sub
                     End If
