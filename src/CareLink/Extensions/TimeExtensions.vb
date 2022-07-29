@@ -7,16 +7,41 @@ Imports System.Runtime.CompilerServices
 
 Friend Module TimeExtensions
 
-    Public ReadOnly s_fiveMinuteSpan As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
     Private ReadOnly s_dateTimeFormatUniqueCultures As New List(Of CultureInfo)
+    Public ReadOnly s_fiveMinuteSpan As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
+
+    <Extension>
+    Friend Function SafeGetSgDateTime(sgList As List(Of Dictionary(Of String, String)), index As Integer) As Date
+        Dim sgDateTimeString As String = ""
+        Dim sgDateTime As Date
+        If sgList(index).Count < 7 Then
+            index -= 1
+        End If
+        If sgList(index).TryGetValue("previousDateTime", sgDateTimeString) Then
+            sgDateTime = sgDateTimeString.DateParse()
+        ElseIf sgList(index).TryGetValue("datetime", sgDateTimeString) Then
+            sgDateTime = sgDateTimeString.DateParse()
+        ElseIf sgList(index).TryGetValue("dateTime", sgDateTimeString) Then
+            sgDateTime = sgDateTimeString.Split("-")(0).DateParse()
+        Else
+            sgDateTime = Now
+        End If
+        If sgDateTime.Year = 2000 Then
+            sgDateTime = Date.Now - ((sgList.Count - index) * s_fiveMinuteSpan)
+        End If
+        If sgList(index).Count < 7 Then
+            sgDateTime = sgDateTime.AddMinutes(5)
+        End If
+        Return sgDateTime
+    End Function
 
     <Extension>
     Public Function DateParse(dateAsString As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Date
         If s_dateTimeFormatUniqueCultures.Count = 0 Then
             s_dateTimeFormatUniqueCultures.Add(CurrentDataCulture)
             Dim fullDateTimeFormats As New List(Of String) From {
-            CurrentDataCulture.DateTimeFormat.FullDateTimePattern
-        }
+                CurrentDataCulture.DateTimeFormat.FullDateTimePattern
+            }
             For Each oneCulture As CultureInfo In CultureInfo.GetCultures(CultureTypes.AllCultures).ToList()
                 If fullDateTimeFormats.Contains(oneCulture.DateTimeFormat.FullDateTimePattern) OrElse
                                 String.IsNullOrWhiteSpace(oneCulture.Name) OrElse
@@ -44,31 +69,6 @@ Friend Module TimeExtensions
 
         MsgBox($"System.FormatException: String '{dateAsString}' in {memberName} line {sourceLineNumber} was not recognized as a valid DateTime in any supported culture.", MsgBoxStyle.ApplicationModal Or MsgBoxStyle.Critical)
         Throw New System.FormatException($"String '{dateAsString}' in {memberName} line {sourceLineNumber} was not recognized as a valid DateTime in any supported culture.")
-    End Function
-
-    <Extension>
-    Friend Function SafeGetSgDateTime(sgList As List(Of Dictionary(Of String, String)), index As Integer) As Date
-        Dim sgDateTimeString As String = ""
-        Dim sgDateTime As Date
-        If sgList(index).Count < 7 Then
-            index -= 1
-        End If
-        If sgList(index).TryGetValue("previousDateTime", sgDateTimeString) Then
-            sgDateTime = sgDateTimeString.DateParse()
-        ElseIf sgList(index).TryGetValue("datetime", sgDateTimeString) Then
-            sgDateTime = sgDateTimeString.DateParse()
-        ElseIf sgList(index).TryGetValue("dateTime", sgDateTimeString) Then
-            sgDateTime = sgDateTimeString.Split("-")(0).DateParse()
-        Else
-            sgDateTime = Now
-        End If
-        If sgDateTime.Year = 2000 Then
-            sgDateTime = Date.Now - ((sgList.Count - index) * s_fiveMinuteSpan)
-        End If
-        If sgList(index).Count < 7 Then
-            sgDateTime = sgDateTime.AddMinutes(5)
-        End If
-        Return sgDateTime
     End Function
 
 End Module
