@@ -61,7 +61,7 @@ Friend Module UserMessageHandler
     ' will replace (0). (units) will be replace by localized units.
     '
     Friend ReadOnly s_messagesSpecialHandling As New Dictionary(Of String, String) From {
-                            {"BC_MESSAGE_BASAL_STARTED", "Auto Mode exit. (0) started. Would you Like to review Auto Mode Readiness Screen?: basalName"},
+                            {"BC_MESSAGE_BASAL_STARTED", "Auto Mode exit. (0) started. Would you Like to review Auto Mode Readiness Screen?:basalName"},
                             {"BC_MESSAGE_CORRECTION_BOLUS_RECOMMENDATION", $"Blood Glucose (0) (units). Correction bolus recommended.:bgValue"},
                             {"BC_MESSAGE_DELIVERY_STOPPED_SG_X_CHECK_BG", "Suspend on low. Delivery stopped. Sensor glucose (0) (units). Check BG.:sg"},
                             {"BC_MESSAGE_SG_UNDER_50_MG_DL", "Low SG. Sensor Glucose is under (CriticalLow) (units). Check BG and treat.:sg"},
@@ -97,7 +97,6 @@ Friend Module UserMessageHandler
                                                        .Replace("(units)", GetLocalizedUnits(s_bgUnits)) _
                                                        .Replace("(secondaryTime)", secondaryTime)
             Else
-
                 If Debugger.IsAttached Then
                     MsgBox($"Unknown sensor message '{entryValue}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Unknown Sensor Message")
                 End If

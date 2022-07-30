@@ -17,7 +17,10 @@ Public Module JsonExtensions
                                               .ReadOnly = True
                                              }
 
-        If eValue.Key <> "messageid" Then
+        If eValue.Key = "messageid" Then
+            valueTextBox.Text = TranslateMessageId(dic, eValue.Value, timeFormat)
+            AddHandler valueTextBox.Click, AddressOf MessageIdTextBox_Click
+        Else
             Dim result As Single = Nothing
             If Single.TryParse(eValue.Value, NumberStyles.Number, CurrentDataCulture, result) Then
                 valueTextBox.Text = result.ToString(CurrentUICulture)
@@ -37,14 +40,10 @@ Public Module JsonExtensions
                         sb.AppendLine($"{item.Key} = {item.Value}")
                     Next
                     MsgBox($"Could not find datetime or dateTime in dictionary{Environment.NewLine}{sb}")
-                    timeOfLastSGString = Now.ToString
+                    timeOfLastSGString = Now.ToString(CurrentDateCulture)
                 End If
-                Dim timeOfLastSG As Date = timeOfLastSGString.DateParse()
-                valueTextBox.Text &= $"     @ {timeOfLastSG.ToString(CurrentUICulture)}"
+                valueTextBox.Text &= $"     @ {timeOfLastSGString.DateParse().ToString(CurrentDateCulture)}"
             End If
-        Else
-            valueTextBox.Text = TranslateMessageId(dic, eValue.Value, timeFormat)
-            AddHandler valueTextBox.Click, AddressOf MessageIdTextBox_Click
         End If
 
         Return valueTextBox

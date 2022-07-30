@@ -2,6 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
+Imports System.IO
 Imports System.Runtime.CompilerServices
 
 Public Module RegionCountryLists
@@ -256,6 +258,52 @@ Public Module RegionCountryLists
                     {"Oceania", "Oceania"},
                     {"South America", "South America"}
                 }
+
+    <Extension>
+    Public Function ExtractCultureFromFileName(ReportFileNameWithPath As String, FixedPart As String, Optional fuzzy As Boolean = False) As CultureInfo
+        Dim filenameWithoutExtension As String = Path.GetFileNameWithoutExtension(ReportFileNameWithPath)
+
+        If filenameWithoutExtension.Count("("c) <> 1 Then
+            MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{Environment.NewLine}it must contain exactly one '('.", MsgBoxStyle.OkOnly, "Malformed Error Report Filename")
+            Return Nothing
+        End If
+
+        If filenameWithoutExtension.Count(")"c) <> 1 Then
+            MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{Environment.NewLine}it must contain exactly one ')'.", MsgBoxStyle.OkOnly, "Malformed Error Report Filename")
+            Return Nothing
+        End If
+
+        If Not filenameWithoutExtension.StartsWith(FixedPart) Then
+            MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{Environment.NewLine}it must start with '{FixedPart}'.", MsgBoxStyle.OkOnly, "Malformed Error Report Filename")
+            Return Nothing
+        End If
+
+        Dim indexOfOpenParen As Integer = filenameWithoutExtension.IndexOf("("c)
+        If fuzzy Then
+            If indexOfOpenParen < FixedPart.Length Then
+                MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{Environment.NewLine}it must contain '(' after '{FixedPart}.", MsgBoxStyle.OkOnly, "Malformed Error Report Filename")
+                Return Nothing
+            End If
+        Else
+            If indexOfOpenParen <> FixedPart.Length Then
+                MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{Environment.NewLine}it must contain '(' immediately after '{FixedPart}.", MsgBoxStyle.OkOnly, "Malformed Error Report Filename")
+                Return Nothing
+            End If
+        End If
+
+        Dim indexOfClosedParen As Integer = filenameWithoutExtension.IndexOf(")"c)
+        If indexOfClosedParen < 0 Then
+            MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{Environment.NewLine}it must contain ')'.", MsgBoxStyle.OkOnly, "Malformed Error Report Filename")
+            Return Nothing
+        End If
+
+        Dim cultureName As String = filenameWithoutExtension.Substring(indexOfOpenParen + 1, indexOfClosedParen - indexOfOpenParen - 1)
+        If Not s_cultureInfos.Where(Function(c As CultureInfo) c.Name = cultureName).Any Then
+            MsgBox($"Culture name '{cultureName}' is not a valid culture name.", MsgBoxStyle.OkOnly, "Invalid Culture Name")
+            Return Nothing
+        End If
+        Return CultureInfo.GetCultureInfo(cultureName)
+    End Function
 
     <Extension>
     Public Function GetCountryFromCode(countryCode As String) As String

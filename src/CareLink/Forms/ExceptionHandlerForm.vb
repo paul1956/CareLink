@@ -2,7 +2,6 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Globalization
 Imports System.IO
 Imports System.Text
 Imports System.Text.Json
@@ -29,7 +28,6 @@ Public Class ExceptionHandlerForm
         Form1.ServerUpdateTimer.Stop()
         Dim fontBold As New Font(Me.InstructionsRichTextBox.Font, FontStyle.Bold)
         Dim fontNormal As Font = Me.InstructionsRichTextBox.Font
-        Dim reportFileNameWithoutPath As String
         _gitClient = New GitHubClient(New ProductHeaderValue($"{RepoName}.Issues"), New Uri(GitHubCareLinkUrl))
         If String.IsNullOrWhiteSpace(Me.ReportFileNameWithPath) Then
             ' Create error report and issue
@@ -37,8 +35,8 @@ Public Class ExceptionHandlerForm
             Me.StackTraceTextBox.Text = Me.TrimedStackTrace()
 
             Me.InstructionsRichTextBox.Text = $"By clicking OK, the Stack Trace, Exception and the CareLink data that caused the error will be package as a text file called" & Environment.NewLine
-            reportFileNameWithoutPath = Path.GetFileName(GetUniqueFileNameWithPath(Path.Combine(MyDocumentsPath, $"{ErrorReportName}({CurrentUICulture.Name}).txt")))
-            Dim fileLink As String = $"{reportFileNameWithoutPath}: file://{Path.Combine(MyDocumentsPath, reportFileNameWithoutPath)}"
+            Dim getUniqueFileNameResult As (withPath As String, withoutPath As String) = GetDataFileName(RepoErrorReportName, CurrentDateCulture.Name, "txt", True)
+            Dim fileLink As String = $"{getUniqueFileNameResult.withoutPath}: file://{getUniqueFileNameResult.withPath}"
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, fileLink, fontBold)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "and stored in", fontNormal)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, MyDocumentsPath, fontBold)
@@ -47,12 +45,13 @@ Public Class ExceptionHandlerForm
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "This will help me isolate issues quickly.", fontNormal)
             Me.CreateReportFile()
         Else
-            Dim partialFileNameWithoutPath As String = Path.GetFileNameWithoutExtension(Me.ReportFileNameWithPath).Replace($"{ErrorReportName}(", "")
-            Dim indexOfClosedParen As Integer = partialFileNameWithoutPath.IndexOf(")"c)
-            CurrentUICulture = CultureInfo.GetCultureInfo(partialFileNameWithoutPath.Substring(0, indexOfClosedParen))
+            CurrentDateCulture = Me.ReportFileNameWithPath.ExtractCultureFromFileName(RepoErrorReportName)
+            If CurrentDateCulture Is Nothing Then
+                Me.Close()
+                Exit Sub
+            End If
             Me.InstructionsRichTextBox.Text = $"Clicking OK will rerun the data file that caused the error" & Environment.NewLine
-            reportFileNameWithoutPath = Path.GetFileName(Me.ReportFileNameWithPath)
-            Dim fileLink As String = $"{reportFileNameWithoutPath}: file://{Path.Combine(MyDocumentsPath, reportFileNameWithoutPath)}"
+            Dim fileLink As String = $"{Path.GetFileName(Me.ReportFileNameWithPath)}: file://{Me.ReportFileNameWithPath}"
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, fileLink, fontBold)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "and stored in", fontNormal)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, MyDocumentsPath, fontBold)

@@ -420,7 +420,7 @@ Public Class CareLinkClient
                         Dim contents As String = JsonSerializer.Serialize(jsonData, New JsonSerializerOptions)
                         Dim options As New JsonDocumentOptions
                         Using jDocument As JsonDocument = JsonDocument.Parse(contents, options)
-                            File.WriteAllText(CareLinkLastDownloadDocPath, JsonSerializer.Serialize(jDocument, JsonFormattingOptions))
+                            File.WriteAllText(LastDownloadWithPath, JsonSerializer.Serialize(jDocument, JsonFormattingOptions))
                         End Using
                     End If
                     _lastDataSuccess = True

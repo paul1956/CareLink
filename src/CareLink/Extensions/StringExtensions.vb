@@ -7,6 +7,11 @@ Imports System.Runtime.CompilerServices
 Public Module StringExtensions
 
     <Extension()>
+    Friend Function Count(s As String, c As Char) As Integer
+        Return s.Count(Function(c1 As Char) c1 = c)
+    End Function
+
+    <Extension()>
     Friend Function ToTitleCase(inStr As String) As String
         Dim result As New Text.StringBuilder(Char.ToUpperInvariant(inStr(0)))
 

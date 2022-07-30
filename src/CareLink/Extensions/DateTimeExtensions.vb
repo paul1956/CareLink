@@ -5,10 +5,21 @@
 Imports System.Globalization
 Imports System.Runtime.CompilerServices
 
-Friend Module TimeExtensions
+Friend Module DateTimeExtensions
 
     Private ReadOnly s_dateTimeFormatUniqueCultures As New List(Of CultureInfo)
     Public ReadOnly s_fiveMinuteSpan As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
+
+    <Extension>
+    Friend Function GetCurrentDateCulture(countryCode As String) As CultureInfo
+        Dim localDateCulture As List(Of CultureInfo) = s_cultureInfos.Where(Function(c As CultureInfo)
+                                                                                Return c.Name = $"en-{countryCode}"
+                                                                            End Function)?.ToList
+        If localDateCulture Is Nothing OrElse localDateCulture.Count = 0 Then
+            Return New CultureInfo("en-US")
+        End If
+        Return localDateCulture(0)
+    End Function
 
     <Extension>
     Friend Function SafeGetSgDateTime(sgList As List(Of Dictionary(Of String, String)), index As Integer) As Date
@@ -38,11 +49,11 @@ Friend Module TimeExtensions
     <Extension>
     Public Function DateParse(dateAsString As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Date
         If s_dateTimeFormatUniqueCultures.Count = 0 Then
-            s_dateTimeFormatUniqueCultures.Add(CurrentDataCulture)
+            s_dateTimeFormatUniqueCultures.Add(CurrentDateCulture)
             Dim fullDateTimeFormats As New List(Of String) From {
-                CurrentDataCulture.DateTimeFormat.FullDateTimePattern
+                CurrentDateCulture.DateTimeFormat.FullDateTimePattern
             }
-            For Each oneCulture As CultureInfo In CultureInfo.GetCultures(CultureTypes.AllCultures).ToList()
+            For Each oneCulture As CultureInfo In s_cultureInfos.ToList()
                 If fullDateTimeFormats.Contains(oneCulture.DateTimeFormat.FullDateTimePattern) OrElse
                                 String.IsNullOrWhiteSpace(oneCulture.Name) OrElse
                                 Not oneCulture.Name.Contains("-"c) Then
@@ -51,14 +62,16 @@ Friend Module TimeExtensions
                 s_dateTimeFormatUniqueCultures.Add(oneCulture)
                 fullDateTimeFormats.Add(oneCulture.DateTimeFormat.FullDateTimePattern)
             Next
-            s_dateTimeFormatUniqueCultures.RemoveAt(0)
         End If
         Dim resultDate As Date
-        If Date.TryParse(dateAsString, CurrentDataCulture, DateTimeStyles.None, resultDate) Then
+        If Date.TryParse(dateAsString, CurrentDateCulture, DateTimeStyles.None, resultDate) Then
             Return resultDate
         End If
-        If CurrentDataCulture.Name <> CurrentUICulture.Name AndAlso
+        If CurrentDateCulture.Name <> CurrentUICulture.Name AndAlso
             Date.TryParse(dateAsString, CurrentUICulture, DateTimeStyles.None, resultDate) Then
+            Return resultDate
+        End If
+        If Date.TryParse(dateAsString, CurrentDataCulture, DateTimeStyles.None, resultDate) Then
             Return resultDate
         End If
         For Each c As CultureInfo In s_dateTimeFormatUniqueCultures

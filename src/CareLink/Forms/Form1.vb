@@ -102,7 +102,7 @@ Public Class Form1
         If My.Settings.UseTestData Then
             Me.MenuOptionsUseLastSavedData.Checked = False
             Me.MenuOptionsUseTestData.Checked = True
-        ElseIf My.Settings.UseLastSavedData AndAlso Me.MenuStartHereSnapshotLoad.Enabled Then
+        ElseIf My.Settings.UseLastSavedData AndAlso Me.MenuStartHereLoadSavedDataFile.Enabled Then
             Me.MenuOptionsUseLastSavedData.Checked = True
             Me.MenuOptionsUseTestData.Checked = False
         End If
@@ -144,18 +144,18 @@ Public Class Form1
 #Region "Start Here Menus"
 
     Private Sub MenuStartHere_DropDownOpened(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpened
-        Me.MenuStartHereSnapshotLoad.Enabled = Directory.GetFiles(MyDocumentsPath, $"{RepoName}*.json").Length > 0
+        Me.MenuStartHereLoadSavedDataFile.Enabled = Directory.GetFiles(MyDocumentsPath, $"{RepoName}*.json").Length > 0
         Me.MenuStartHereSnapshotSave.Enabled = _RecentData IsNot Nothing
-        Me.MenuStartHereExceptionReportLoadToolStripMenuItem.Visible = Path.Combine(MyDocumentsPath, $"{ErrorReportName}*.txt").Length > 0
+        Me.MenuStartHereExceptionReportLoadToolStripMenuItem.Visible = Path.Combine(MyDocumentsPath, $"{RepoErrorReportName}*.txt").Length > 0
     End Sub
 
     Private Sub MenuStartHereExceptionReportLoadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MenuStartHereExceptionReportLoadToolStripMenuItem.Click
-        Dim fileList As String() = Directory.GetFiles(MyDocumentsPath, $"{ErrorReportName}*.txt")
+        Dim fileList As String() = Directory.GetFiles(MyDocumentsPath, $"{RepoErrorReportName}*.txt")
         Dim openFileDialog1 As New OpenFileDialog With {
             .CheckFileExists = True,
             .CheckPathExists = True,
             .FileName = If(fileList.Length > 0, Path.GetFileName(fileList(0)), RepoName),
-            .Filter = $"Error files (*.txt)|{ErrorReportName}*.txt",
+            .Filter = $"Error files (*.txt)|{RepoErrorReportName}*.txt",
             .InitialDirectory = MyDocumentsPath,
             .Multiselect = False,
             .ReadOnlyChecked = True,
@@ -192,19 +192,17 @@ Public Class Form1
         Me.CleanUpNotificationIcon()
     End Sub
 
-    Private Sub MenuStartHereLogin_Click(sender As Object, e As EventArgs) Handles MenuStartHereLogin.Click
-        Me.MenuOptionsUseTestData.CheckState = CheckState.Indeterminate
-        Me.MenuOptionsUseLastSavedData.CheckState = CheckState.Indeterminate
-        Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True)
-    End Sub
-
-    Private Sub MenuStartHereSnapshotLoad_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotLoad.Click
-        Dim fileList As String() = Directory.GetFiles(MyDocumentsPath, $"{RepoName}*.json")
+    Private Sub MenuStartHereLoadSavedDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereLoadSavedDataFile.Click
+        Dim di As New DirectoryInfo(MyDocumentsPath)
+        Dim fileList As String() = New DirectoryInfo(MyDocumentsPath).
+                                        EnumerateFiles($"{RepoName}*.json").
+                                        OrderBy(Function(f As FileInfo) f.LastWriteTime).
+                                        Select(Function(f As FileInfo) f.Name).ToArray
         Dim openFileDialog1 As New OpenFileDialog With {
             .CheckFileExists = True,
             .CheckPathExists = True,
-            .FileName = If(fileList.Length > 0, Path.GetFileName(fileList(0)), RepoName),
-            .Filter = "json files (*.json)|CareLink*.json",
+            .FileName = If(fileList.Length > 0, fileList.Last, RepoName),
+            .Filter = $"json files (*.json)|{RepoName}*.json",
             .InitialDirectory = MyDocumentsPath,
             .Multiselect = False,
             .ReadOnlyChecked = True,
@@ -220,6 +218,8 @@ Public Class Form1
                     Me.ServerUpdateTimer.Stop()
                     Me.MenuOptionsUseLastSavedData.CheckState = CheckState.Indeterminate
                     Me.MenuOptionsUseTestData.CheckState = CheckState.Indeterminate
+                    CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{RepoName}", True)
+
                     _RecentData = Loads(File.ReadAllText(openFileDialog1.FileName))
                     Me.FinishInitialization()
                     Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
@@ -231,9 +231,15 @@ Public Class Form1
         End If
     End Sub
 
+    Private Sub MenuStartHereLogin_Click(sender As Object, e As EventArgs) Handles MenuStartHereLogin.Click
+        Me.MenuOptionsUseTestData.CheckState = CheckState.Indeterminate
+        Me.MenuOptionsUseLastSavedData.CheckState = CheckState.Indeterminate
+        Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True)
+    End Sub
+
     Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotSave.Click
         Using jd As JsonDocument = JsonDocument.Parse(_RecentData.CleanUserData(), New JsonDocumentOptions)
-            File.WriteAllText(Path.Combine(MyDocumentsPath, $"{RepoName}Snapshot({CurrentUICulture.Name}).json"), JsonSerializer.Serialize(jd, JsonFormattingOptions))
+            File.WriteAllText(GetDataFileName(RepoSnapshotName, CurrentDateCulture.Name, "json", True).withPath, JsonSerializer.Serialize(jd, JsonFormattingOptions))
         End Using
     End Sub
 
@@ -1154,6 +1160,7 @@ Public Class Form1
         Dim currentRowIndex As Integer = 0
         Dim singleItem As Boolean
         Dim layoutPanel1 As TableLayoutPanel
+
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In _RecentData.WithIndex()
             layoutPanel1 = Me.TableLayoutPanelSummaryData
             singleItem = False
@@ -1353,115 +1360,121 @@ Public Class Form1
                     s_finalCalibration = CBool(row.Value)
                 Case Else
                     Stop
+                    Exit Select
             End Select
 
-            If s_listOfSingleItems.Contains(rowIndex) OrElse singleItem Then
-                If Not (singleItem AndAlso singleItemIndex = rowIndex) Then
-                    Continue For
+            Try
+                If s_listOfSingleItems.Contains(rowIndex) OrElse singleItem Then
+                    If Not (singleItem AndAlso singleItemIndex = rowIndex) Then
+                        Continue For
+                    End If
                 End If
-            End If
-            Dim tableRelitiveRow As Integer
-            If singleItem Then
-                tableRelitiveRow = 0
-            Else
-                tableRelitiveRow = currentRowIndex
-                currentRowIndex += 1
-            End If
-            layoutPanel1.RowStyles(tableRelitiveRow).SizeType = SizeType.AutoSize
-            If Not singleItem OrElse rowIndex = ItemIndexs.lastSG OrElse rowIndex = ItemIndexs.lastAlarm Then
-                Dim columnHeaderLabel As New Label With {
-                        .Text = $"{CInt(rowIndex)} {row.Key}",
-                        .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                        .AutoSize = True
-                    }
-                layoutPanel1.Controls.Add(columnHeaderLabel, 0, tableRelitiveRow)
-            End If
-            If row.Value?.StartsWith("[") Then
-                Dim innerJson As List(Of Dictionary(Of String, String)) = LoadList(row.Value, False)
-                Select Case rowIndex
-                    Case ItemIndexs.limits
-                        s_limits = innerJson
-                    Case ItemIndexs.markers
-                        s_markers = innerJson
-                    Case ItemIndexs.notificationHistory
-                        ' handled elsewhere
-                    Case ItemIndexs.pumpBannerState
-                        s_pumpBannerState = innerJson
-                    Case Else
-                        Stop
-                End Select
-                If innerJson.Count > 0 Then
-                    layoutPanel1.Parent.Parent.UseWaitCursor = True
-                    Application.DoEvents()
-                    layoutPanel1.Invoke(Sub()
-                                            Me.FillOneRowOfTableLayoutPanel(layoutPanel1,
-                                                                          innerJson,
-                                                                          rowIndex,
-                                                                          _filterJsonData,
-                                                                          _timeFormat)
-                                        End Sub)
-                    Application.DoEvents()
-
-                    layoutPanel1.Parent.Parent.UseWaitCursor = False
-                    Application.DoEvents()
+                Dim tableRelitiveRow As Integer
+                If singleItem Then
+                    tableRelitiveRow = 0
                 Else
-                    Dim rowTextBox As New TextBox With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                                        .AutoSize = True,
-                                                        .ReadOnly = True,
-                                                        .Text = ""
-                                                        }
+                    tableRelitiveRow = currentRowIndex
+                    currentRowIndex += 1
+                End If
+                layoutPanel1.RowStyles(tableRelitiveRow).SizeType = SizeType.AutoSize
+                If Not singleItem OrElse rowIndex = ItemIndexs.lastSG OrElse rowIndex = ItemIndexs.lastAlarm Then
+                    Dim columnHeaderLabel As New Label With {
+                            .Text = $"{CInt(rowIndex)} {row.Key}",
+                            .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                            .AutoSize = True
+                        }
+                    layoutPanel1.Controls.Add(columnHeaderLabel, 0, tableRelitiveRow)
+                End If
+                If row.Value?.StartsWith("[") Then
+                    Dim innerJson As List(Of Dictionary(Of String, String)) = LoadList(row.Value, False)
+                    Select Case rowIndex
+                        Case ItemIndexs.limits
+                            s_limits = innerJson
+                        Case ItemIndexs.markers
+                            s_markers = innerJson
+                        Case ItemIndexs.notificationHistory
+                        ' handled elsewhere
+                        Case ItemIndexs.pumpBannerState
+                            s_pumpBannerState = innerJson
+                        Case Else
+                            Stop
+                    End Select
+                    If innerJson.Count > 0 Then
+                        layoutPanel1.Parent.Parent.UseWaitCursor = True
+                        Application.DoEvents()
+                        layoutPanel1.Invoke(Sub()
+                                                Me.FillOneRowOfTableLayoutPanel(layoutPanel1,
+                                                                              innerJson,
+                                                                              rowIndex,
+                                                                              _filterJsonData,
+                                                                              _timeFormat)
+                                            End Sub)
+                        Application.DoEvents()
+
+                        layoutPanel1.Parent.Parent.UseWaitCursor = False
+                        Application.DoEvents()
+                    Else
+                        Dim rowTextBox As New TextBox With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                                            .AutoSize = True,
+                                                            .ReadOnly = True,
+                                                            .Text = ""
+                                                            }
+                        layoutPanel1.Controls.Add(rowTextBox,
+                                                  If(singleItem, 0, 1),
+                                                  tableRelitiveRow)
+
+                    End If
+                ElseIf row.Value?.StartsWith("{") Then
+                    layoutPanel1.RowStyles(tableRelitiveRow).SizeType = SizeType.AutoSize
+                    Dim innerJson As Dictionary(Of String, String) = Loads(row.Value)
+                    Select Case rowIndex
+                        Case ItemIndexs.lastSG
+                            s_lastSG = innerJson
+                        Case ItemIndexs.lastAlarm
+                            s_lastAlarm = innerJson
+                        Case ItemIndexs.activeInsulin
+                            s_activeInsulin = innerJson
+                        Case ItemIndexs.notificationHistory
+                        ' handled elsewhere
+                        Case ItemIndexs.therapyAlgorithmState
+                            s_therapyAlgorithmState = innerJson
+                        Case ItemIndexs.basal
+                            s_basal = innerJson
+                        Case Else
+                            Stop
+                    End Select
+                    Dim tableLevel1Blue As New TableLayoutPanel With {
+                        .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                        .AutoScroll = True,
+                        .AutoSize = True,
+                        .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                        .ColumnCount = 2,
+                        .Dock = DockStyle.Fill,
+                        .Margin = New Padding(0),
+                        .Name = "InnerTable",
+                        .Padding = New Padding(0)
+                        }
+                    layoutPanel1.Controls.Add(tableLevel1Blue,
+                                              If(singleItem AndAlso Not (rowIndex = ItemIndexs.lastSG OrElse rowIndex = ItemIndexs.lastAlarm), 0, 1),
+                                              tableRelitiveRow)
+                    If rowIndex = ItemIndexs.notificationHistory Then
+                        tableLevel1Blue.AutoScroll = False
+                    End If
+                    GetInnerTable(innerJson, tableLevel1Blue, rowIndex, _filterJsonData, _timeFormat, isScaledForm)
+                Else
+                    Dim rowTextBox As New TextBox With {
+                                            .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                            .AutoSize = True,
+                                            .ReadOnly = True,
+                                            .Text = row.Value}
                     layoutPanel1.Controls.Add(rowTextBox,
                                               If(singleItem, 0, 1),
                                               tableRelitiveRow)
-
                 End If
-            ElseIf row.Value?.StartsWith("{") Then
-                layoutPanel1.RowStyles(tableRelitiveRow).SizeType = SizeType.AutoSize
-                Dim innerJson As Dictionary(Of String, String) = Loads(row.Value)
-                Select Case rowIndex
-                    Case ItemIndexs.lastSG
-                        s_lastSG = innerJson
-                    Case ItemIndexs.lastAlarm
-                        s_lastAlarm = innerJson
-                    Case ItemIndexs.activeInsulin
-                        s_activeInsulin = innerJson
-                    Case ItemIndexs.notificationHistory
-                        ' handled elsewhere
-                    Case ItemIndexs.therapyAlgorithmState
-                        s_therapyAlgorithmState = innerJson
-                    Case ItemIndexs.basal
-                        s_basal = innerJson
-                    Case Else
-                        Stop
-                End Select
-                Dim tableLevel1Blue As New TableLayoutPanel With {
-                    .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                    .AutoScroll = True,
-                    .AutoSize = True,
-                    .AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                    .ColumnCount = 2,
-                    .Dock = DockStyle.Fill,
-                    .Margin = New Padding(0),
-                    .Name = "InnerTable",
-                    .Padding = New Padding(0)
-                    }
-                layoutPanel1.Controls.Add(tableLevel1Blue,
-                                          If(singleItem AndAlso Not (rowIndex = ItemIndexs.lastSG OrElse rowIndex = ItemIndexs.lastAlarm), 0, 1),
-                                          tableRelitiveRow)
-                If rowIndex = ItemIndexs.notificationHistory Then
-                    tableLevel1Blue.AutoScroll = False
-                End If
-                GetInnerTable(innerJson, tableLevel1Blue, rowIndex, _filterJsonData, _timeFormat, isScaledForm)
-            Else
-                Dim rowTextBox As New TextBox With {
-                                        .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                        .AutoSize = True,
-                                        .ReadOnly = True,
-                                        .Text = row.Value}
-                layoutPanel1.Controls.Add(rowTextBox,
-                                          If(singleItem, 0, 1),
-                                          tableRelitiveRow)
-            End If
+            Catch ex As Exception
+                Stop
+                'Throw
+            End Try
         Next
         If _RecentData.Count > ItemIndexs.finalCalibration + 1 Then
             Stop
@@ -1856,11 +1869,13 @@ Public Class Form1
         If Me.MenuOptionsUseTestData.Checked Then
             Me.MenuView.Visible = False
             Me.Text = $"{SavedTitle} Using Test Data"
+            CurrentDateCulture = New CultureInfo("en-US")
             _RecentData = Loads(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
         ElseIf Me.MenuOptionsUseLastSavedData.Checked Then
             Me.MenuView.Visible = False
             Me.Text = $"{SavedTitle} Using Last Saved Data"
-            _RecentData = Loads(File.ReadAllText(CareLinkLastDownloadDocPath))
+            CurrentDateCulture = LastDownloadWithPath.ExtractCultureFromFileName(RepoDownloadName)
+            _RecentData = Loads(File.ReadAllText(LastDownloadWithPath))
         Else
             Me.Text = SavedTitle
             _loginDialog.ShowDialog()
