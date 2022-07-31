@@ -11,6 +11,38 @@ Public Module StringExtensions
         Return s.Count(Function(c1 As Char) c1 = c)
     End Function
 
+    ''' <summary>
+    ''' Converts a string of words separated by a space or underscore
+    ''' to a Title where the first letter of every word capitalized and the rest are not
+    ''' </summary>
+    ''' <param name="inStr">A string like THIS_IS A TITLE</param>
+    ''' <returns>This Is A Title</returns>
+    <Extension()>
+    Friend Function ToTitle(inStr As String) As String
+        Dim result As New Text.StringBuilder(Char.ToUpperInvariant(inStr(0)))
+        Dim firstLetterOfWord As Boolean = False
+        For Each c As Char In inStr.Substring(1)
+            If c = " "c Or c = "_"c Then
+                firstLetterOfWord = True
+                result.Append(" "c)
+            ElseIf firstLetterOfWord Then
+                result.Append(Char.ToUpperInvariant(c))
+                firstLetterOfWord = False
+            Else
+                result.Append(Char.ToLowerInvariant(c))
+            End If
+        Next
+        Return result.ToString()
+    End Function
+
+    ''' <summary>
+    ''' Converts a single string of characters that contains words that
+    ''' start with an uppercase character without spaces
+    ''' to a Title where the first letter of every word capitalized and
+    ''' words are separated by spaces
+    ''' </summary>
+    ''' <param name="inStr">A string like ThisIsATitle</param>
+    ''' <returns>This Is A Title</returns>
     <Extension()>
     Friend Function ToTitleCase(inStr As String) As String
         Dim result As New Text.StringBuilder(Char.ToUpperInvariant(inStr(0)))

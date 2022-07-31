@@ -548,11 +548,11 @@ Partial Class Form1
         'SensorMessage
         '
         Me.SensorMessage.BackColor = System.Drawing.Color.Transparent
-        Me.SensorMessage.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.SensorMessage.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.SensorMessage.ForeColor = System.Drawing.Color.White
-        Me.SensorMessage.Location = New System.Drawing.Point(389, 14)
+        Me.SensorMessage.Location = New System.Drawing.Point(389, 19)
         Me.SensorMessage.Name = "SensorMessage"
-        Me.SensorMessage.Size = New System.Drawing.Size(100, 66)
+        Me.SensorMessage.Size = New System.Drawing.Size(100, 57)
         Me.SensorMessage.TabIndex = 1
         Me.SensorMessage.Text = "Calibration Required"
         Me.SensorMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter

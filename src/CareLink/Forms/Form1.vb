@@ -1655,7 +1655,7 @@ Public Class Form1
             Me.SensorMessage.BackColor = Color.Transparent
             Dim message As String = ""
             If s_messages.TryGetValue(s_sensorState, message) Then
-                message = s_sensorState.Replace("_", " ")
+                message = s_sensorState.ToTitle
             Else
                 MsgBox($"{s_sensorState} is unknown sensor message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
             End If
