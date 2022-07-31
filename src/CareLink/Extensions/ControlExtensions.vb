@@ -30,8 +30,9 @@ Public Module ControlExtensions
         Dim halfWidth As Single = CSng(markerImage.Width / 2)
         For Each markerKvp As KeyValuePair(Of Double, Single) In marketDictionary
             Dim imagePosition As RectangleF = RectangleF.Empty
-            imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.X, markerKvp.Key))
-            imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis("Default", AxisName.Y, markerKvp.Value))
+            Dim chartAreaName As String = e.Chart.ChartAreas(0).Name
+            imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(chartAreaName, AxisName.X, markerKvp.Key))
+            imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(chartAreaName, AxisName.Y, markerKvp.Value))
             imagePosition = e.ChartGraphics.GetAbsoluteRectangle(imagePosition)
             imagePosition.Width = markerImage.Width
             imagePosition.Height = markerImage.Height

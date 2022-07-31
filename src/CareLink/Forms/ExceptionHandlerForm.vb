@@ -35,15 +35,15 @@ Public Class ExceptionHandlerForm
             Me.StackTraceTextBox.Text = Me.TrimedStackTrace()
 
             Me.InstructionsRichTextBox.Text = $"By clicking OK, the Stack Trace, Exception and the CareLink data that caused the error will be package as a text file called" & Environment.NewLine
-            Dim getUniqueFileNameResult As (withPath As String, withoutPath As String) = GetDataFileName(RepoErrorReportName, CurrentDateCulture.Name, "txt", True)
-            Dim fileLink As String = $"{getUniqueFileNameResult.withoutPath}: file://{getUniqueFileNameResult.withPath}"
+            Dim uniqueFileNameResult As (withPath As String, withoutPath As String) = GetDataFileName(RepoErrorReportName, CurrentDateCulture.Name, "txt", True)
+            Dim fileLink As String = $"{uniqueFileNameResult.withoutPath}: file://{uniqueFileNameResult.withPath}"
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, fileLink, fontBold)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "and stored in", fontNormal)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, MyDocumentsPath, fontBold)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "You can review what is being stored and then attach it to a new issue at", fontNormal)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, $"{_gitClient.Repository.Get(OwnerName, RepoName).Result.HtmlUrl}/issues.", fontNormal)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "This will help me isolate issues quickly.", fontNormal)
-            Me.CreateReportFile()
+            Me.CreateReportFile(uniqueFileNameResult.withPath)
         Else
             CurrentDateCulture = Me.ReportFileNameWithPath.ExtractCultureFromFileName(RepoErrorReportName)
             If CurrentDateCulture Is Nothing Then
@@ -87,8 +87,8 @@ Public Class ExceptionHandlerForm
 
 #End Region
 
-    Private Sub CreateReportFile()
-        Using stream As StreamWriter = File.CreateText(Me.ReportFileNameWithPath)
+    Private Sub CreateReportFile(UniqueFileNameWithPath As String)
+        Using stream As StreamWriter = File.CreateText(UniqueFileNameWithPath)
             ' write exception header
             stream.WriteLine(ExceptionStartingString)
             ' write exception

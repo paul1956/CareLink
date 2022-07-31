@@ -42,6 +42,7 @@ Friend Module DataFileNameManagement
                 Do
                     lCount += 1
                     filenameWithPath = Path.Combine(MyDocumentsPath, $"{baseFileNameWithCulture}{lCount}.{extension}")
+                    fileNameWithCultureAndExtension = Path.GetFileName(filenameWithPath)
                 Loop While File.Exists(filenameWithPath)
             End If
 
