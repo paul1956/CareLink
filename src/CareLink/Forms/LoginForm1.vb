@@ -2,11 +2,21 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
+
 Public Class LoginForm1
     Public Property Client As CareLinkClient
 
     Private Sub Cancel_Click(sender As Object, e As EventArgs) Handles Cancel.Click
         Me.Close()
+    End Sub
+
+    Private Sub CountryComboBox_SelectedValueChanged(sender As Object, e As EventArgs) Handles CountryComboBox.SelectedValueChanged
+        If TypeOf Me.CountryComboBox.SelectedValue Is String Then
+            CurrentDateCulture = Me.CountryComboBox.SelectedValue.ToString.GetCurrentDateCulture
+        Else
+            CurrentDateCulture = CType(Me.CountryComboBox.SelectedValue, KeyValuePair(Of String, String)).Value.GetCurrentDateCulture
+        End If
     End Sub
 
     Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles Me.Load

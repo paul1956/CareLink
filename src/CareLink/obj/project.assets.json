@@ -562,7 +562,7 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "3.4.2.5",
+    "version": "3.4.2.6",
     "restore": {
       "projectUniqueName": "C:\\Users\\chris\\Documents\\repos\\CareLink\\src\\CareLink\\CareLink.vbproj",
       "projectName": "CareLink",

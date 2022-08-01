@@ -2,7 +2,6 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Globalization
 Imports System.IO
 Imports System.Text
 Imports System.Text.Json
@@ -10,19 +9,86 @@ Imports Microsoft.VisualBasic.ApplicationServices
 Imports Octokit
 
 Public Class ExceptionHandlerForm
+    Private _gitClient As GitHubClient
     Public Property LocalRawData As String
     Public Property ReportFileNameWithPath As String
     Public Property UnhandledException As UnhandledExceptionEventArgs
+
+#Region "Form Events"
 
     Private Sub Cancel_Click(sender As Object, e As EventArgs) Handles Cancel.Click
         If String.IsNullOrWhiteSpace(Me.ReportFileNameWithPath) Then
             File.Delete(Me.ReportFileNameWithPath)
         End If
+        Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub
 
-    Private Sub CreateReportFile()
-        Using stream As StreamWriter = File.CreateText(Me.ReportFileNameWithPath)
+    Private Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) Handles Me.Load
+        Form1.ServerUpdateTimer.Stop()
+        Dim fontBold As New Font(Me.InstructionsRichTextBox.Font, FontStyle.Bold)
+        Dim fontNormal As Font = Me.InstructionsRichTextBox.Font
+        _gitClient = New GitHubClient(New ProductHeaderValue($"{RepoName}.Issues"), New Uri(GitHubCareLinkUrl))
+        If String.IsNullOrWhiteSpace(Me.ReportFileNameWithPath) Then
+            ' Create error report and issue
+            Me.ExceptionTextBox.Text = Me.UnhandledException.Exception.Message
+            Me.StackTraceTextBox.Text = Me.TrimedStackTrace()
+
+            Me.InstructionsRichTextBox.Text = $"By clicking OK, the Stack Trace, Exception and the CareLink data that caused the error will be package as a text file called" & Environment.NewLine
+            Dim uniqueFileNameResult As (withPath As String, withoutPath As String) = GetDataFileName(RepoErrorReportName, CurrentDateCulture.Name, "txt", True)
+            Dim fileLink As String = $"{uniqueFileNameResult.withoutPath}: file://{uniqueFileNameResult.withPath}"
+            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, fileLink, fontBold)
+            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "and stored in", fontNormal)
+            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, MyDocumentsPath, fontBold)
+            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "You can review what is being stored and then attach it to a new issue at", fontNormal)
+            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, $"{_gitClient.Repository.Get(OwnerName, RepoName).Result.HtmlUrl}/issues.", fontNormal)
+            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "This will help me isolate issues quickly.", fontNormal)
+            Me.CreateReportFile(uniqueFileNameResult.withPath)
+        Else
+            CurrentDateCulture = Me.ReportFileNameWithPath.ExtractCultureFromFileName(RepoErrorReportName)
+            If CurrentDateCulture Is Nothing Then
+                Me.Close()
+                Exit Sub
+            End If
+            Me.InstructionsRichTextBox.Text = $"Clicking OK will rerun the data file that caused the error" & Environment.NewLine
+            Dim fileLink As String = $"{Path.GetFileName(Me.ReportFileNameWithPath)}: file://{Me.ReportFileNameWithPath}"
+            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, fileLink, fontBold)
+            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "and stored in", fontNormal)
+            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, MyDocumentsPath, fontBold)
+            Me.LocalRawData = Me.DecomposeReportFile()
+        End If
+    End Sub
+
+    Private Sub InstructionsRichTextBox_LinkClicked(sender As Object, e As LinkClickedEventArgs) Handles InstructionsRichTextBox.LinkClicked
+        If e.LinkText.StartsWith("file://") Then
+            Process.Start("Explorer.exe", e.LinkText.Substring(7))
+        Else
+            OpenUrlInBrowser(e.LinkText)
+        End If
+    End Sub
+
+    Private Sub OK_Click(sender As Object, e As EventArgs) Handles OK.Click
+        Me.OK.Enabled = False
+        Me.Cancel.Enabled = False
+        If String.IsNullOrWhiteSpace(Me.ReportFileNameWithPath) Then
+            ' This branch creates a new report and will exit
+            ' program upon return
+
+            Me.DialogResult = DialogResult.Cancel
+        Else
+            ' This branch displays an existing Error Report
+            ' and re-reruns it.
+            Me.DialogResult = DialogResult.OK
+        End If
+        Me.OK.Enabled = True
+        Me.Cancel.Enabled = True
+        Me.Close()
+    End Sub
+
+#End Region
+
+    Private Sub CreateReportFile(UniqueFileNameWithPath As String)
+        Using stream As StreamWriter = File.CreateText(UniqueFileNameWithPath)
             ' write exception header
             stream.WriteLine(ExceptionStartingString)
             ' write exception
@@ -42,7 +108,7 @@ Public Class ExceptionHandlerForm
         End Using
     End Sub
 
-    Private Function DecompaseReportFile() As String
+    Private Function DecomposeReportFile() As String
 
         Using stream As StreamReader = File.OpenText(Me.ReportFileNameWithPath)
             ' read exception header
@@ -84,53 +150,6 @@ Public Class ExceptionHandlerForm
             Return stream.ReadToEnd
         End Using
     End Function
-
-    Private Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) Handles Me.Load
-        Form1.ServerUpdateTimer.Stop()
-        Dim fontBold As New Font(Me.InstructionsRichTextBox.Font, FontStyle.Bold)
-        Dim fontNormal As Font = Me.InstructionsRichTextBox.Font
-        Dim reportFileNameWithoutPath As String
-        If String.IsNullOrWhiteSpace(Me.ReportFileNameWithPath) Then
-            Me.ExceptionTextBox.Text = Me.UnhandledException.Exception.Message
-            Me.StackTraceTextBox.Text = Me.TrimedStackTrace()
-            Dim client As New GitHubClient(New ProductHeaderValue($"{RepoName}.Issues"), New Uri(GitHubCareLinkUrl))
-
-            Me.InstructionsRichTextBox.Text = $"By clicking OK, the Stack Trace, Exception and the CareLink data that caused the error will be package as a text file called" & Environment.NewLine
-            reportFileNameWithoutPath = Path.GetFileName(GetUniqueFileNameWithPath(Path.Combine(MyDocumentsPath, $"{ErrorReportName}({CurrentUICulture.Name}).txt")))
-            Dim fileLink As String = $"{reportFileNameWithoutPath}: file://{Path.Combine(MyDocumentsPath, reportFileNameWithoutPath)}"
-            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, fileLink, fontBold)
-            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "and stored in", fontNormal)
-            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, MyDocumentsPath, fontBold)
-            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "You can review what is being stored and then attach it to a new issue at", fontNormal)
-            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, $"{client.Repository.Get(OwnerName, RepoName).Result.HtmlUrl}/issues.", fontNormal)
-            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "This will help me isolate issues quickly.", fontNormal)
-            Me.CreateReportFile()
-        Else
-            Dim partialFileNameWithoutPath As String = Path.GetFileNameWithoutExtension(Me.ReportFileNameWithPath).Replace($"{ErrorReportName}(", "")
-            Dim indexOfClosedParen As Integer = partialFileNameWithoutPath.IndexOf(")"c)
-            CurrentUICulture = CultureInfo.GetCultureInfo(partialFileNameWithoutPath.Substring(0, indexOfClosedParen))
-            Me.InstructionsRichTextBox.Text = $"Clicking OK will rerun the data file that caused the error" & Environment.NewLine
-            reportFileNameWithoutPath = Path.GetFileName(Me.ReportFileNameWithPath)
-            Dim fileLink As String = $"{reportFileNameWithoutPath}: file://{Path.Combine(MyDocumentsPath, reportFileNameWithoutPath)}"
-            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, fileLink, fontBold)
-            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "and stored in", fontNormal)
-            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, MyDocumentsPath, fontBold)
-            Me.LocalRawData = Me.DecompaseReportFile()
-        End If
-    End Sub
-
-    Private Sub InstructionsRichTextBox_LinkClicked(sender As Object, e As LinkClickedEventArgs) Handles InstructionsRichTextBox.LinkClicked
-        If e.LinkText.StartsWith("file://") Then
-            Process.Start("Explorer.exe", e.LinkText.Substring(7))
-        Else
-            OpenUrlInBrowser(e.LinkText)
-        End If
-    End Sub
-
-    Private Sub OK_Click(sender As Object, e As EventArgs) Handles OK.Click
-        Me.DialogResult = If(Not String.IsNullOrWhiteSpace(Me.ReportFileNameWithPath), DialogResult.OK, DialogResult.Cancel)
-        Me.Close()
-    End Sub
 
     Private Sub ReportInvalidErrorFile(currentLine As String, expectedLine As String)
         Throw New NotImplementedException()

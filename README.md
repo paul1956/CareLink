@@ -22,9 +22,13 @@ https://github.com/paul1956/CareLink/releases/
 - Medtronic CareLink data display
 
 ## Updated
-- 7/28/2022
+- 7/30/2022
 
 ## What's New in this release
+  New in 3.4.2.6
+  Use NameOf in Charts to prevent errors on renaming
+  Improve Error Report naming to prevent overwriting reports.
+
   New in 3.4.2.5
   Support loading of error reports, displaying the exceptions and rerunning them
 

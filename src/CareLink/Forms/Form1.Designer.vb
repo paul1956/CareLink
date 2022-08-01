@@ -28,7 +28,7 @@ Partial Class Form1
         Me.MenuStartHere = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStartHereLogin = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.MenuStartHereSnapshotLoad = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuStartHereLoadSavedDataFile = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStartHereExceptionReportLoadToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStartHereSnapshotSave = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
@@ -170,7 +170,7 @@ Partial Class Form1
         '
         'MenuStartHere
         '
-        Me.MenuStartHere.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStartHereLogin, Me.ToolStripSeparator1, Me.MenuStartHereSnapshotLoad, Me.MenuStartHereExceptionReportLoadToolStripMenuItem, Me.MenuStartHereSnapshotSave, Me.ToolStripSeparator2, Me.StartHereExit})
+        Me.MenuStartHere.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStartHereLogin, Me.ToolStripSeparator1, Me.MenuStartHereLoadSavedDataFile, Me.MenuStartHereExceptionReportLoadToolStripMenuItem, Me.MenuStartHereSnapshotSave, Me.ToolStripSeparator2, Me.StartHereExit})
         Me.MenuStartHere.Name = "MenuStartHere"
         Me.MenuStartHere.Size = New System.Drawing.Size(71, 20)
         Me.MenuStartHere.Text = "Start Here"
@@ -186,11 +186,11 @@ Partial Class Form1
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
         Me.ToolStripSeparator1.Size = New System.Drawing.Size(190, 6)
         '
-        'MenuStartHereSnapshotLoad
+        'MenuStartHereLoadSavedDataFile
         '
-        Me.MenuStartHereSnapshotLoad.Name = "MenuStartHereSnapshotLoad"
-        Me.MenuStartHereSnapshotLoad.Size = New System.Drawing.Size(193, 22)
-        Me.MenuStartHereSnapshotLoad.Text = "Snapshot Load"
+        Me.MenuStartHereLoadSavedDataFile.Name = "MenuStartHereLoadSavedDataFile"
+        Me.MenuStartHereLoadSavedDataFile.Size = New System.Drawing.Size(193, 22)
+        Me.MenuStartHereLoadSavedDataFile.Text = "Load Saved Data File"
         '
         'MenuStartHereExceptionReportLoadToolStripMenuItem
         '
@@ -548,11 +548,11 @@ Partial Class Form1
         'SensorMessage
         '
         Me.SensorMessage.BackColor = System.Drawing.Color.Transparent
-        Me.SensorMessage.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.SensorMessage.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.SensorMessage.ForeColor = System.Drawing.Color.White
-        Me.SensorMessage.Location = New System.Drawing.Point(389, 14)
+        Me.SensorMessage.Location = New System.Drawing.Point(389, 19)
         Me.SensorMessage.Name = "SensorMessage"
-        Me.SensorMessage.Size = New System.Drawing.Size(100, 66)
+        Me.SensorMessage.Size = New System.Drawing.Size(100, 57)
         Me.SensorMessage.TabIndex = 1
         Me.SensorMessage.Text = "Calibration Required"
         Me.SensorMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1489,7 +1489,7 @@ Partial Class Form1
     Friend WithEvents MenuView As ToolStripMenuItem
     Friend WithEvents MenuOptionsUseLastSavedData As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
-    Friend WithEvents MenuStartHereSnapshotLoad As ToolStripMenuItem
+    Friend WithEvents MenuStartHereLoadSavedDataFile As ToolStripMenuItem
     Friend WithEvents MenuStartHereSnapshotSave As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
     Friend WithEvents ToolTip1 As ToolTip

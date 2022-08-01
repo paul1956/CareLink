@@ -8,25 +8,48 @@ Imports System.Text.Json
 
 Public Module SystemConstants
 
-#Region "Must Be On Top"
+    Public Const ExceptionStartingString As String = "--- Start of Exception ---"
+    Public Const ExceptionTerminatingString As String = "--- End of Exception ---"
+    Public Const OwnerName As String = "paul1956"
+    Public Const RepoName As String = "CareLink"
+    Public Const RepoErrorReportName As String = "CareLinkErrorReport"
+    Public Const RepoSnapshotName As String = "CareLinkSnapshot"
+    Public Const RepoDownloadName As String = "CareLinkLastDownload"
+    Public Const SavedTitle As String = "CareLink For Windows"
+    Public Const StackTraceStartingString As String = "--- Start of stack trace ---"
+    Public Const StackTraceTerminatingString As String = "--- End of stack trace from previous location ---"
+
+    Public Property GitHubCareLinkUrl As String = $"https://github.com/{OwnerName}/{RepoName}/"
+    Public ReadOnly Property JsonFormattingOptions As New JsonSerializerOptions With {.WriteIndented = True}
+    Public ReadOnly Property MyDocumentsPath As String = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+
+#Region "All Culture Info"
+
+    Private _CurrentDateCulture As CultureInfo
+    Public ReadOnly s_cultureInfos As CultureInfo() = CultureInfo.GetCultures(CultureTypes.AllCultures)
+
+    Public ReadOnly Property LastDownloadWithPath As String
+        Get
+            Return GetDataFileName(RepoDownloadName, CurrentDateCulture.Name, "json", False).withPath
+        End Get
+    End Property
+
+    Public Property CurrentDateCulture As CultureInfo
+        Get
+            If _CurrentDateCulture Is Nothing Then
+                Throw New ArgumentNullException(NameOf(_CurrentDateCulture))
+
+            End If
+            Return _CurrentDateCulture
+        End Get
+        Set
+            _CurrentDateCulture = Value
+        End Set
+    End Property
 
     Public ReadOnly Property CurrentDataCulture As CultureInfo = New CultureInfo("en-US")
     Public Property CurrentUICulture As CultureInfo = CultureInfo.CurrentUICulture
-    Public ReadOnly Property MyDocumentsPath As String = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-    Public ReadOnly Property OwnerName As String = "paul1956"
-    Public ReadOnly Property RepoName As String = "CareLink"
 
 #End Region
 
-    Public ReadOnly s_versionSearchKey As String = $"<a href=""/{OwnerName}/{RepoName}/releases/tag/v"
-    Public ReadOnly Property SavedTitle As String = $"{RepoName} For Windows"
-
-    Public ReadOnly Property CareLinkLastDownloadDocPath As String = Path.Combine(MyDocumentsPath, $"{RepoName}LastDownload({CurrentUICulture.Name}).json")
-    Public ReadOnly Property ErrorReportName As String = $"{RepoName}ErrorReport"
-    Public ReadOnly Property ExceptionStartingString As String = "--- Start of Exception ---"
-    Public ReadOnly Property ExceptionTerminatingString As String = "--- End of Exception ---"
-    Public Property GitHubCareLinkUrl As String = $"https://github.com/{OwnerName}/{RepoName}/"
-    Public ReadOnly Property JsonFormattingOptions As New JsonSerializerOptions With {.WriteIndented = True}
-    Public ReadOnly Property StackTraceStartingString As String = "--- Start of stack trace ---"
-    Public ReadOnly Property StackTraceTerminatingString As String = "--- End of stack trace from previous location ---"
 End Module
