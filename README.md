@@ -26,8 +26,8 @@ https://github.com/paul1956/CareLink/releases/
 
 ## What's New in this release
   New in 3.4.2.7
-  Merger Changes from Krikke99 for option to make mini-window not topmost
-
+  Fix from Krikke99 to allow Mini Display to be not topmost
+  
   New in 3.4.2.6
   Use NameOf in Charts to prevent errors on renaming
   Improve Error Report naming to prevent overwriting reports.
