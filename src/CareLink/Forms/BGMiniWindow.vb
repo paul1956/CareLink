@@ -95,4 +95,11 @@ Public Class BGMiniWindow
         Me.Hide()
     End Sub
 
+    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles chkTopMost.CheckedChanged
+        If Me.chkTopMost.Checked Then
+            Me.TopMost = True
+        ElseIf Not Me.chkTopMost.Checked Then
+            Me.TopMost = False
+        End If
+    End Sub
 End Class
