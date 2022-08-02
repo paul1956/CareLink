@@ -22,9 +22,12 @@ https://github.com/paul1956/CareLink/releases/
 - Medtronic CareLink data display
 
 ## Updated
-- 7/30/2022
+- 8/06/2022
 
 ## What's New in this release
+  New in 3.4.3.0
+  Complete rewrite of date handling
+  
   New in 3.4.2.7
   Fix from Krikke99 to allow Mini Display to be not topmost
   

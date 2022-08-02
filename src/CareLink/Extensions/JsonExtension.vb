@@ -32,9 +32,8 @@ Public Module JsonExtensions
 
             If eValue.Key = "sg" AndAlso isScaledForm Then
                 Dim timeOfLastSGString As String = ""
-                If dic.TryGetValue("datetime", timeOfLastSGString) Then
-                ElseIf dic.TryGetValue("dateTime", timeOfLastSGString) Then
-                Else
+                If Not (dic.TryGetValue("datetime", timeOfLastSGString) OrElse
+                        dic.TryGetValue("dateTime", timeOfLastSGString)) Then
                     Dim sb As New StringBuilder
                     For Each item As KeyValuePair(Of String, String) In dic
                         sb.AppendLine($"{item.Key} = {item.Value}")
@@ -42,7 +41,7 @@ Public Module JsonExtensions
                     MsgBox($"Could not find datetime or dateTime in dictionary{Environment.NewLine}{sb}")
                     timeOfLastSGString = Now.ToString(CurrentDateCulture)
                 End If
-                valueTextBox.Text &= $"     @ {timeOfLastSGString.DateParse().ToString(CurrentDateCulture)}"
+                valueTextBox.Text &= $"     @ {timeOfLastSGString}"
             End If
         End If
 
@@ -63,55 +62,6 @@ Public Module JsonExtensions
             Case JsonValueKind.True
                 Return "True"
             Case JsonValueKind.String
-                Try
-                    If Char.IsDigit(valueAsString(0)) Then
-                        Dim dateSplit As String() = valueAsString.Split("T")
-                        If dateSplit.Length = 2 Then
-                            Dim zDateString As String() = dateSplit(0).Split("-"c)
-                            Dim zTimeString As String() = dateSplit(1).TrimEnd("Z"c).Replace("+", ".").Split(":")
-                            Select Case item.Key
-                                Case "techHours"
-                                Case "lastConduitDateTime",
-                                     "medicalDeviceTimeAsString",
-                                     "previousDateTime" ' "2021-05-17T01:02:22.307-07:00"
-                                    Return $"{ New DateTime(CInt(zDateString(0)),
-                                                             CInt(zDateString(1)),
-                                                             CInt(zDateString(2)),
-                                                             CInt(zTimeString(0)),
-                                                             CInt(zTimeString(1)),
-                                                             CInt(zTimeString(2).Substring(0, 2)),
-                                                             CInt(zTimeString(2).Substring(3, 3)), DateTimeKind.Local)}{ _
-                                                    valueAsString.Substring(valueAsString.Length - 6)}"
-                                Case "lastSensorTSAsString",
-                                    "sLastSensorTime",
-                                    "sMedicalDeviceTime",
-                                    "triggeredDateTime" '2021-05-16T20:28:00.000Z
-                                    Return New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
-                                Case "loginDateUTC" ' UTC 2021-05-16T20:28:00.000Z
-                                    Return New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Utc).ToString()
-                                Case "datetime"
-                                    If item.Value.ToString().EndsWith("Z"c) Then
-                                        Return New DateTime(CInt(zDateString(0)), CInt(zDateString(1)), CInt(zDateString(2)), CInt(zTimeString(0)), CInt(zTimeString(1)), CInt(zTimeString(2).Substring(0, 2)), DateTimeKind.Local).ToString()
-                                    End If
-                                    ' "2021-05-17T01:02:22.307-07:00"
-                                    Return $"{ New DateTime(CInt(zDateString(0)),
-                                                             CInt(zDateString(1)),
-                                                             CInt(zDateString(2)),
-                                                             CInt(zTimeString(0)),
-                                                             CInt(zTimeString(1)),
-                                                             CInt(zTimeString(2).Substring(0, 2)),
-                                                             CInt(zTimeString(2).Substring(3, 3)), DateTimeKind.Local)}{ _
-                                                    valueAsString.Substring(valueAsString.Length - 6)}"
-
-                                Case Else
-                                    Stop
-                            End Select
-
-                        End If
-                    End If
-                Catch ex As Exception
-                    Stop
-                End Try
         End Select
         Return valueAsString
     End Function
@@ -158,7 +108,7 @@ Public Module JsonExtensions
             Dim innerRow As KeyValuePair(Of String, String) = c.Value
             ' Comment out 4 lines below to see all data fields.
             ' I did not see any use to display the filtered out ones
-            If filterJsonData AndAlso s_zFilterList.ContainsKey(itemIndex) Then
+            If filterJsonData AndAlso s_zFilterList.ContainsKey(itemIndex) AndAlso innerJson.Count > 4 Then
                 If s_zFilterList(itemIndex).Contains(innerRow.Key) Then
                     Continue For
                 End If

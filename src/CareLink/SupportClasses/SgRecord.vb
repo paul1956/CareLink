@@ -9,7 +9,7 @@ Public Class SgRecord
     Public Sub New(allSgs As List(Of Dictionary(Of String, String)), index As Integer, ByRef lastValidTime As Date)
         Dim dic As Dictionary(Of String, String) = allSgs(index)
         Me.RecordNumber = index + 1
-        If dic.Count > 7 Then Stop
+        If dic.Count <> 7 Then Stop
         Dim value As String = ""
         If dic.TryGetValue(NameOf(sg), value) Then
             Single.TryParse(value, NumberStyles.Number, CurrentDataCulture, Me.sg)
@@ -21,6 +21,7 @@ Public Class SgRecord
             Me.datetime = lastValidTime
             lastValidTime += s_fiveMinuteSpan
         End If
+        Me.dateTimeAsString = value
         Me.OADate = _datetime.ToOADate
 
         If dic.TryGetValue(NameOf(timeChange), value) Then
@@ -44,8 +45,9 @@ Public Class SgRecord
     End Sub
 
     Public Property [datetime] As Date
-    Public Property OADate As Double
+    Public Property dateTimeAsString As String
     Public Property kind As String
+    Public Property OADate As Double
     Public Property RecordNumber As Integer
     Public Property relativeOffset As Integer
     Public Property sensorState As String
@@ -63,7 +65,7 @@ Public Class SgRecord
             Case NameOf(RecordNumber), NameOf(version), NameOf(relativeOffset)
                 cellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
                 cellStyle.Padding = New Padding(0, 0, 0, 0)
-            Case NameOf(datetime), NameOf(sensorState)
+            Case NameOf(datetime), NameOf(dateTimeAsString), NameOf(sensorState)
                 cellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
                 cellStyle.Padding = New Padding(0, 0, 3, 0)
             Case NameOf(timeChange), NameOf(kind)
