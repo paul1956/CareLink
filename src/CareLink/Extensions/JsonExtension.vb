@@ -17,7 +17,7 @@ Public Module JsonExtensions
                                               .ReadOnly = True
                                              }
 
-        If eValue.Key = "messageid" Then
+        If eValue.Key.Equals("messageId", StringComparison.OrdinalIgnoreCase) Then
             valueTextBox.Text = TranslateMessageId(dic, eValue.Value, timeFormat)
             AddHandler valueTextBox.Click, AddressOf MessageIdTextBox_Click
         Else

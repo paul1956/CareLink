@@ -49,11 +49,9 @@ Friend Module DateTimeExtensions
 
     <Extension>
     Private Function GmtToLocalTime(gmtDate As Date) As Date
-        Dim dt As Date
-        Dim dtUtc As Date
-        dt = Date.Now
-        dtUtc = Date.UtcNow
-        Dim ts As TimeSpan = dtUtc.Subtract(dt)
+        Dim clientTimeNow As Date = TimeZoneInfo.ConvertTime(Now, TimeZoneInfo.Local, s_clientTimeZone)
+        Dim dtUtc As Date = Date.UtcNow
+        Dim ts As TimeSpan = dtUtc.Subtract(clientTimeNow)
         Return gmtDate.Add(ts)
     End Function
 

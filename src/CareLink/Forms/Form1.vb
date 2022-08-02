@@ -10,8 +10,24 @@ Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Class Form1
 
+#Region "Local variables to hold pump values"
+
+    Private _medicalDeviceBatteryLevelPercent As Integer
+    Private _reservoirLevelPercent As Integer
+    Private _reservoirRemainingUnits As Double
+    Private _sensorDurationHours As Integer
+    Private _sensorDurationMinutes As Integer
+    Private _sGs As New List(Of SgRecord)
+    Private _timeInRange As Integer
+    Private _timeToNextCalibHours As UShort = UShort.MaxValue
+    Private _timeToNextCalibrationMinutes As Integer
+
+#End Region
+
     Private Const MilitaryTimeWithMinuteFormat As String = "HH:mm"
+    Private Const MilitaryTimeWithoutMinuteFormat As String = "HH:mm"
     Private Const TwelveHourTimeWithMinuteFormat As String = "h:mm tt"
+    Private Const TwelveHourTimeWithoutMinuteFormat As String = "h:mm tt"
     Private ReadOnly _bgMiniDisplay As New BGMiniWindow
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
@@ -30,11 +46,12 @@ Public Class Form1
     Private _limitLow As Single
     Private _recentDatalast As Dictionary(Of String, String)
     Private _recentDataSameCount As Integer
-    Private _timeFormat As String
+    Private _timeWithMinuteFormat As String
+    Private _timeWithoutMinuteFormat As String
     Private _updating As Boolean = False
     Private Property FormScale As New SizeF(1.0F, 1.0F)
     Private ReadOnly Property SensorLifeToolTip As New ToolTip()
-    Friend Property BgUnitsString As String
+    Public Property BgUnitsString As String
     Public Property RecentData As Dictionary(Of String, String)
 
 #Region "Chart Objects"
@@ -138,6 +155,7 @@ Public Class Form1
             Me.MenuOptionsUseLastSavedData.Checked = True
             Me.MenuOptionsUseTestData.Checked = False
         End If
+        s_timeZoneList = TimeZoneInfo.GetSystemTimeZones.ToList
 
         Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact(My.Settings.AIT.ToString("hh\:mm").Substring(1))
         Me.MenuOptionsUseAdvancedAITDecay.CheckState = If(My.Settings.UseAdvancedAITDecay, CheckState.Checked, CheckState.Unchecked)
@@ -387,8 +405,8 @@ Public Class Form1
     End Sub
 
     Private Sub CalibrationDueImage_MouseHover(sender As Object, e As EventArgs) Handles CalibrationDueImage.MouseHover
-        If s_timeToNextCalibrationMinutes > 0 AndAlso s_timeToNextCalibrationMinutes < 1440 Then
-            _calibrationToolTip.SetToolTip(Me.CalibrationDueImage, $"Calibration Due {Now.AddMinutes(s_timeToNextCalibrationMinutes).ToShortTimeString}")
+        If _timeToNextCalibrationMinutes > 0 AndAlso _timeToNextCalibrationMinutes < 1440 Then
+            _calibrationToolTip.SetToolTip(Me.CalibrationDueImage, $"Calibration Due {Now.AddMinutes(_timeToNextCalibrationMinutes).ToShortTimeString}")
         End If
     End Sub
 
@@ -428,7 +446,7 @@ Public Class Form1
                             Dim markerToolTip() As String = result.Series.Points(result.PointIndex).ToolTip.Split(":"c)
                             Dim xValue As Date = Date.FromOADate(result.Series.Points(result.PointIndex).XValue)
                             Me.CursorTimeLabel.Visible = True
-                            Me.CursorTimeLabel.Text = xValue.ToString(_timeFormat)
+                            Me.CursorTimeLabel.Text = xValue.ToString(_timeWithMinuteFormat)
                             Me.CursorTimeLabel.Tag = xValue
                             markerToolTip(0) = markerToolTip(0).Trim
                             Me.CursorValueLabel.Visible = True
@@ -477,7 +495,7 @@ Public Class Form1
                             Me.CursorMessage1Label.Visible = False
                             Me.CursorMessage2Label.Visible = False
                             Me.CursorValueLabel.Visible = False
-                            Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(_timeFormat)
+                            Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(_timeWithMinuteFormat)
                             Me.CursorTimeLabel.Visible = True
                             Me.CursorMessage1Label.Text = $"{result.Series.Points(result.PointIndex).YValues(0).RoundDouble(3)} {Me.BgUnitsString}"
                             Me.CursorMessage1Label.Visible = True
@@ -503,10 +521,10 @@ Public Class Form1
             Exit Sub
         End If
         If _homePageChartRelitivePosition.IsEmpty Then
-            _homePageChartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.X, s_sGs(0).OADate))
+            _homePageChartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.X, _sGs(0).OADate))
             _homePageChartRelitivePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.Y, _markerRow))
             _homePageChartRelitivePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.Y, CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.Y, _limitHigh)))) - _homePageChartRelitivePosition.Y
-            _homePageChartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.X, s_sGs.Last.OADate)) - _homePageChartRelitivePosition.X
+            _homePageChartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.X, _sGs.Last.OADate)) - _homePageChartRelitivePosition.X
             _homePageChartRelitivePosition = e.ChartGraphics.GetAbsoluteRectangle(_homePageChartRelitivePosition)
         End If
 
@@ -545,8 +563,8 @@ Public Class Form1
     End Sub
 
     Private Sub SensorAgeLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles SensorDaysLeftLabel.MouseHover
-        If s_sensorDurationHours < 24 Then
-            Me.SensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {s_sensorDurationHours} hours")
+        If _sensorDurationHours < 24 Then
+            Me.SensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {_sensorDurationHours} hours")
         End If
     End Sub
 
@@ -605,10 +623,10 @@ Public Class Form1
         Dim currentSortOrder As SortOrder = Me.SGsDataGridView.Columns(e.ColumnIndex).HeaderCell.SortGlyphDirection
         If Me.SGsDataGridView.Columns(e.ColumnIndex).Name = NameOf(SgRecord.RecordNumber) Then
             If currentSortOrder = SortOrder.None OrElse currentSortOrder = SortOrder.Ascending Then
-                Me.SGsDataGridView.DataSource = s_sGs.OrderByDescending(Function(x) x.RecordNumber).ToList
+                Me.SGsDataGridView.DataSource = _sGs.OrderByDescending(Function(x) x.RecordNumber).ToList
                 currentSortOrder = SortOrder.Descending
             Else
-                Me.SGsDataGridView.DataSource = s_sGs.OrderBy(Function(x) x.RecordNumber).ToList
+                Me.SGsDataGridView.DataSource = _sGs.OrderBy(Function(x) x.RecordNumber).ToList
                 currentSortOrder = SortOrder.Ascending
             End If
         End If
@@ -685,7 +703,10 @@ Public Class Form1
                 .IsInterlaced = True
                 .IsMarginVisible = True
                 .LabelAutoFitStyle = LabelAutoFitStyles.IncreaseFont Or LabelAutoFitStyles.DecreaseFont Or LabelAutoFitStyles.WordWrap
-                .LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
+                With .LabelStyle
+                    .Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
+                    .Format = _timeWithoutMinuteFormat
+                End With
                 .LineColor = Color.FromArgb(64, 64, 64, 64)
                 .MajorGrid.LineColor = Color.FromArgb(64, 64, 64, 64)
                 .ScaleView.Zoomable = True
@@ -829,63 +850,79 @@ Public Class Form1
              .ShadowColor = Color.Transparent
          }
         With Me.HomeTabChartArea
-            .AxisX.Interval = 2
-            .AxisX.IntervalType = DateTimeIntervalType.Hours
-            .AxisX.IsInterlaced = True
-            .AxisX.IsMarginVisible = True
-            .AxisX.LabelAutoFitStyle = LabelAutoFitStyles.IncreaseFont Or LabelAutoFitStyles.DecreaseFont Or LabelAutoFitStyles.WordWrap
-            .AxisX.LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
-            .AxisX.LineColor = Color.FromArgb(64, 64, 64, 64)
-            .AxisX.MajorGrid.LineColor = Color.FromArgb(64, 64, 64, 64)
-            .AxisX.ScaleView.Zoomable = True
-            .AxisX.ScrollBar.BackColor = Color.White
-            .AxisX.ScrollBar.ButtonColor = Color.Lime
-            .AxisX.ScrollBar.IsPositionedInside = True
-            .AxisX.ScrollBar.LineColor = Color.Black
-            .AxisX.ScrollBar.Size = 15
-            .AxisY.InterlacedColor = Color.FromArgb(120, Color.LightSlateGray)
-            .AxisY.Interval = Me.InsulinRow
-            .AxisY.IntervalAutoMode = IntervalAutoMode.FixedCount
-            .AxisY.IsInterlaced = True
-            .AxisY.IsLabelAutoFit = False
-            .AxisY.IsMarginVisible = False
-            .AxisY.IsStartedFromZero = False
-            .AxisY.LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
-            .AxisY.LineColor = Color.FromArgb(64, 64, 64, 64)
-            .AxisY.MajorGrid.LineColor = Color.FromArgb(64, 64, 64, 64)
-            .AxisY.MajorTickMark = New TickMark() With {.Interval = Me.InsulinRow, .Enabled = False}
-            .AxisY.Maximum = Me.MarkerRow
-            .AxisY.Minimum = Me.InsulinRow
-            .AxisY.ScaleBreakStyle = New AxisScaleBreakStyle() With {
-                .Enabled = True,
-                .StartFromZero = StartFromZero.No,
-                .BreakLineStyle = BreakLineStyle.Straight
-                }
-            .AxisY.ScaleView.Zoomable = False
-            .AxisY2.Interval = Me.InsulinRow
-            .AxisY2.IsMarginVisible = False
-            .AxisY2.IsStartedFromZero = False
-            .AxisY2.LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
-            .AxisY2.LineColor = Color.FromArgb(64, 64, 64, 64)
-            .AxisY2.MajorGrid = New Grid With {
-                .Interval = Me.InsulinRow,
+            With .AxisX
+                .Interval = 2
+                .IntervalType = DateTimeIntervalType.Hours
+                .IsInterlaced = True
+                .IsMarginVisible = True
+                .LabelAutoFitStyle = LabelAutoFitStyles.IncreaseFont Or LabelAutoFitStyles.DecreaseFont Or LabelAutoFitStyles.WordWrap
+                With .LabelStyle
+                    .Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
+                    .Format = _timeWithoutMinuteFormat
+                End With
                 .LineColor = Color.FromArgb(64, 64, 64, 64)
-            }
-            .AxisY2.MajorTickMark = New TickMark() With {.Interval = Me.InsulinRow, .Enabled = True}
-            .AxisY2.Maximum = Me.MarkerRow
-            .AxisY2.Minimum = Me.InsulinRow
-            .AxisY2.ScaleView.Zoomable = False
-            .CursorX.AutoScroll = True
-            .CursorX.AxisType = AxisType.Primary
-            .CursorX.Interval = 0
-            .CursorX.IsUserEnabled = True
-            .CursorX.IsUserSelectionEnabled = True
-            .CursorY.AutoScroll = False
-            .CursorY.AxisType = AxisType.Secondary
-            .CursorY.Interval = 0
-            .CursorY.IsUserEnabled = False
-            .CursorY.IsUserSelectionEnabled = False
-            .CursorY.LineColor = Color.Transparent
+                .MajorGrid.LineColor = Color.FromArgb(64, 64, 64, 64)
+                .ScaleView.Zoomable = True
+                With .ScrollBar
+                    .BackColor = Color.White
+                    .ButtonColor = Color.Lime
+                    .IsPositionedInside = True
+                    .LineColor = Color.Black
+                    .Size = 15
+                End With
+            End With
+            With .AxisY
+                .InterlacedColor = Color.FromArgb(120, Color.LightSlateGray)
+                .Interval = Me.InsulinRow
+                .IntervalAutoMode = IntervalAutoMode.FixedCount
+                .IsInterlaced = True
+                .IsLabelAutoFit = False
+                .IsMarginVisible = False
+                .IsStartedFromZero = False
+                .LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
+                .LineColor = Color.FromArgb(64, 64, 64, 64)
+                .MajorGrid.LineColor = Color.FromArgb(64, 64, 64, 64)
+                .MajorTickMark = New TickMark() With {.Interval = Me.InsulinRow, .Enabled = False}
+                .Maximum = Me.MarkerRow
+                .Minimum = Me.InsulinRow
+                .ScaleBreakStyle = New AxisScaleBreakStyle() With {
+                        .Enabled = True,
+                        .StartFromZero = StartFromZero.No,
+                        .BreakLineStyle = BreakLineStyle.Straight
+                    }
+                .ScaleView.Zoomable = False
+            End With
+            With .AxisY2
+                .Interval = Me.InsulinRow
+                .IsMarginVisible = False
+                .IsStartedFromZero = False
+                .LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
+                .LineColor = Color.FromArgb(64, 64, 64, 64)
+                .MajorGrid = New Grid With {
+                        .Interval = Me.InsulinRow,
+                        .LineColor = Color.FromArgb(64, 64, 64, 64)
+                    }
+                .MajorTickMark = New TickMark() With {.Interval = Me.InsulinRow, .Enabled = True}
+                .Maximum = Me.MarkerRow
+                .Minimum = Me.InsulinRow
+                .ScaleView.Zoomable = False
+            End With
+            With .CursorX
+                .AutoScroll = True
+                .AxisType = AxisType.Primary
+                .Interval = 0
+                .IsUserEnabled = True
+                .IsUserSelectionEnabled = True
+            End With
+            With .CursorY
+                .AutoScroll = False
+                .AxisType = AxisType.Secondary
+                .Interval = 0
+                .IsUserEnabled = False
+                .IsUserSelectionEnabled = False
+                .LineColor = Color.Transparent
+            End With
+
         End With
 
         Me.HomeTabChart.ChartAreas.Add(Me.HomeTabChartArea)
@@ -1057,8 +1094,8 @@ Public Class Form1
 
         With Me.ActiveInsulinChart
             .Titles(NameOf(ActiveInsulinChartTitle)).Text = $"Running Active Insulin in Pink"
-            .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.Minimum = s_sGs(0).OADate()
-            .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.Maximum = s_sGs.Last.OADate()
+            .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.Minimum = _sGs(0).OADate()
+            .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.Maximum = _sGs.Last.OADate()
             .Series(NameOf(ActiveInsulinSeries)).Points.Clear()
             .Series(NameOf(ActiveInsulinCurrentBGSeries)).Points.Clear()
             .Series(NameOf(ActiveInsulinMarkerSeries)).Points.Clear()
@@ -1106,7 +1143,7 @@ Public Class Form1
 
         For i As Integer = 0 To 287
             Dim initialBolus As Double = 0
-            Dim oaTime As Double = (s_sGs(0).datetime + (s_fiveMinuteSpan * i)).RoundTimeDown(RoundTo.Minute).ToOADate()
+            Dim oaTime As Double = (_sGs(0).datetime + (s_fiveMinuteSpan * i)).RoundTimeDown(RoundTo.Minute).ToOADate()
             While currentMarker < timeOrderedMarkers.Count AndAlso timeOrderedMarkers.Keys(currentMarker) <= oaTime
                 initialBolus += timeOrderedMarkers.Values(currentMarker)
                 currentMarker += 1
@@ -1184,7 +1221,7 @@ Public Class Form1
                 End Select
             End With
         Next
-        For Each sgListIndex As IndexClass(Of SgRecord) In s_sGs.WithIndex()
+        For Each sgListIndex As IndexClass(Of SgRecord) In _sGs.WithIndex()
             Dim bgValue As Single = sgListIndex.Value.sg
 
             Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinCurrentBGSeries)).PlotOnePoint(
@@ -1221,6 +1258,7 @@ Public Class Form1
         Dim singleItem As Boolean
         Dim layoutPanel1 As TableLayoutPanel
 
+        Dim firstName As String = ""
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In _RecentData.WithIndex()
             layoutPanel1 = Me.TableLayoutPanelSummaryData
             singleItem = False
@@ -1229,100 +1267,115 @@ Public Class Form1
             Dim singleItemIndex As ItemIndexs
 
             Select Case rowIndex
-                Case ItemIndexs.lastSensorTS
-                    s_lastSensorTS = rowIndex.ToString
-                Case ItemIndexs.medicalDeviceTimeAsString
-                    s_medicalDeviceTimeAsString = row.Value
-                Case ItemIndexs.lastSensorTSAsString
-                    s_lastSensorTSAsString = row.Value
-                Case ItemIndexs.kind
-                    s_kind = row.Value
-                Case ItemIndexs.version
-                    s_version = row.Value
+                Case ItemIndexs.medicalDeviceTimeAsString,
+                     ItemIndexs.lastSensorTSAsString,
+                     ItemIndexs.kind,
+                     ItemIndexs.version,
+                     ItemIndexs.lastConduitUpdateServerTime,
+                     ItemIndexs.conduitSerialNumber,
+                     ItemIndexs.conduitBatteryLevel,
+                     ItemIndexs.conduitBatteryStatus,
+                     ItemIndexs.conduitInRange,
+                     ItemIndexs.conduitMedicalDeviceInRange,
+                     ItemIndexs.conduitSensorInRange,
+                     ItemIndexs.medicalDeviceFamily,
+                     ItemIndexs.reservoirAmount,
+                     ItemIndexs.calibStatus,
+                     ItemIndexs.lastSensorTime,
+                     ItemIndexs.sLastSensorTime,
+                     ItemIndexs.pumpCommunicationState,
+                     ItemIndexs.calFreeSensor,
+                     ItemIndexs.conduitInRange,
+                     ItemIndexs.medicalDeviceSuspended,
+                     ItemIndexs.lastSGTrend,
+                     ItemIndexs.pumpBannerState,
+                     ItemIndexs.gstCommunicationState,
+                     ItemIndexs.lastConduitDateTime,
+                     ItemIndexs.maxAutoBasalRate,
+                     ItemIndexs.maxBolusAmount,
+                     ItemIndexs.sgBelowLimit,
+                     ItemIndexs.averageSGFloat,
+                     ItemIndexs.timeToNextCalibrationRecommendedMinutes,
+                     ItemIndexs.finalCalibration
+                     ' String Handler
+
+
                 Case ItemIndexs.pumpModelNumber
-                    s_pumpModelNumber = row.Value
-                    Me.ModelLabel.Text = s_pumpModelNumber
-                Case ItemIndexs.currentServerTime
-                    s_currentServerTime = row.Value
-                Case ItemIndexs.lastConduitTime
-                    s_lastConduitTime = row.Value
-                Case ItemIndexs.lastConduitUpdateServerTime
-                    s_lastConduitUpdateServerTime = row.Value
-                Case ItemIndexs.lastMedicalDeviceDataUpdateServerTime
-                    s_lastMedicalDeviceDataUpdateServerTime = row.Value
+                    Me.ModelLabel.Text = row.Value
+                     ' String Handler
                 Case ItemIndexs.firstName
-                    s_firstName = row.Value
+                    firstName = row.Value
+                     ' String Handler
                 Case ItemIndexs.lastName
-                    s_lastName = row.Value
-                    Me.FullNameLabel.Text = $"{s_firstName} {s_lastName}"
-                Case ItemIndexs.conduitSerialNumber
-                    s_conduitSerialNumber = row.Value
-                Case ItemIndexs.conduitBatteryLevel
-                    s_conduitBatteryLevel = CInt(row.Value)
-                Case ItemIndexs.conduitBatteryStatus
-                    s_conduitBatteryStatus = row.Value
+                    Me.FullNameLabel.Text = $"{firstName} {row.Value}"
+                     ' String Handler
                 Case ItemIndexs.conduitInRange
-                    s_conduitInRange = CBool(row.Value)
-                Case ItemIndexs.conduitMedicalDeviceInRange
-                    s_conduitMedicalDeviceInRange = CBool(row.Value)
-                Case ItemIndexs.conduitSensorInRange
                     s_conduitSensorInRange = CBool(row.Value)
-                Case ItemIndexs.medicalDeviceFamily
-                    s_medicalDeviceFamily = row.Value
+                    ' String Handler
                 Case ItemIndexs.sensorState
                     s_sensorState = row.Value
+                    ' String Handler
                 Case ItemIndexs.medicalDeviceSerialNumber
-                    s_medicalDeviceSerialNumber = row.Value
-                    Me.SerialNumberLabel.Text = s_medicalDeviceSerialNumber
-                Case ItemIndexs.medicalDeviceTime
-                    s_medicalDeviceTime = row.Value
-                Case ItemIndexs.sMedicalDeviceTime
-                    s_sMedicalDeviceTime = row.Value.ParseDate(ItemIndexs.sMedicalDeviceTime.ToString)
+                    Me.SerialNumberLabel.Text = row.Value
+                     ' String Handler
                 Case ItemIndexs.reservoirLevelPercent
-                    s_reservoirLevelPercent = CInt(row.Value)
-                Case ItemIndexs.reservoirAmount
-                    s_reservoirAmount = row.Value.ParseDouble
+                    _reservoirLevelPercent = CInt(row.Value)
+                     ' String Handler
                 Case ItemIndexs.reservoirRemainingUnits
-                    s_reservoirRemainingUnits = row.Value.ParseDouble
+                    _reservoirRemainingUnits = row.Value.ParseDouble
+                     ' String Handler
                 Case ItemIndexs.medicalDeviceBatteryLevelPercent
-                    s_medicalDeviceBatteryLevelPercent = CInt(row.Value)
+                    _medicalDeviceBatteryLevelPercent = CInt(row.Value)
+                     ' String Handler
                 Case ItemIndexs.sensorDurationHours
-                    s_sensorDurationHours = CInt(row.Value)
+                    _sensorDurationHours = CInt(row.Value)
+                     ' String Handler
                 Case ItemIndexs.timeToNextCalibHours
-                    s_timeToNextCalibHours = CUShort(row.Value)
-                Case ItemIndexs.calibStatus
-                    s_calibStatus = row.Value
-                Case ItemIndexs.bgUnits
-                    s_bgUnits = row.Value
-                    Me.BgUnitsString = GetLocalizedUnits(s_bgUnits)
-
-                    If Me.BgUnitsString = "mg/dl" Then
-                        S_criticalLow = 50
-                        _limitHigh = 180
-                        _limitLow = 70
-                        _markerRow = 400
-                        Me.HomeTabChartArea.AxisX.LabelStyle.Format = "hh tt"
-                        Me.ActiveInsulinChartArea.AxisX.LabelStyle.Format = "hh tt"
-                    Else
-                        S_criticalLow = 2.7
-                        _limitHigh = 10.0
-                        _limitLow = (70 / 18).RoundSingle(1)
-                        _markerRow = (400 / 18).RoundSingle(1)
-                        Me.ActiveInsulinChartArea.AxisX.LabelStyle.Format = "HH"
-                    End If
-                    Me.AboveHighLimitMessageLabel.Text = $"Above {_limitHigh} {Me.BgUnitsString}"
-                    Me.BelowLowLimitMessageLabel.Text = $"Below {_limitLow} {Me.BgUnitsString}"
+                    _timeToNextCalibHours = CUShort(row.Value)
+                     ' String Handler
                 Case ItemIndexs.timeFormat
-                    s_timeFormat = row.Value
-                    _timeFormat = If(s_timeFormat = "HR_12", TwelveHourTimeWithMinuteFormat, MilitaryTimeWithMinuteFormat)
-                Case ItemIndexs.lastSensorTime
-                    s_lastSensorTime = row.Value
-                Case ItemIndexs.sLastSensorTime
-                    s_sLastSensorTime = row.Value.ParseDate(ItemIndexs.sLastSensorTime.ToString)
-                Case ItemIndexs.medicalDeviceSuspended
-                    s_medicalDeviceSuspended = CBool(row.Value)
-                Case ItemIndexs.lastSGTrend
-                    s_lastSGTrend = row.Value
+                    _timeWithMinuteFormat = If(row.Value = "HR_12", TwelveHourTimeWithMinuteFormat, MilitaryTimeWithMinuteFormat)
+                    _timeWithoutMinuteFormat = If(row.Value = "HR_12", TwelveHourTimeWithoutMinuteFormat, MilitaryTimeWithoutMinuteFormat)
+                     ' String Handler
+                Case ItemIndexs.systemStatusMessage
+                    s_systemStatusMessage = row.Value
+                     ' String Handler
+                Case ItemIndexs.averageSG
+                    s_averageSG = CInt(row.Value)
+                     ' String Handler
+                Case ItemIndexs.belowHypoLimit
+                    s_belowHypoLimit = CInt(row.Value)
+                     ' String Handler
+                Case ItemIndexs.aboveHyperLimit
+                    s_aboveHyperLimit = CInt(row.Value)
+                     ' String Handler
+                Case ItemIndexs.timeInRange
+                    _timeInRange = CInt(row.Value)
+                     ' String Handler
+                Case ItemIndexs.gstBatteryLevel
+                    s_gstBatteryLevel = CInt(row.Value)
+                     ' String Handler
+                Case ItemIndexs.sensorDurationMinutes
+                    _sensorDurationMinutes = CInt(row.Value)
+                    ' String Handler
+                Case ItemIndexs.timeToNextCalibrationMinutes
+                    _timeToNextCalibrationMinutes = CInt(row.Value)
+                    ' String Handler
+                Case ItemIndexs.clientTimeZoneName
+                    s_clientTimeZoneName = row.Value
+                     ' String Handler
+
+                Case ItemIndexs.lastSensorTS,
+                     ItemIndexs.currentServerTime,
+                     ItemIndexs.lastConduitTime,
+                     ItemIndexs.lastMedicalDeviceDataUpdateServerTime,
+                     ItemIndexs.medicalDeviceTime,
+                     ItemIndexs.sMedicalDeviceTime
+                    ' Time Handler
+
+                Case ItemIndexs.bgUnits
+                    Me.UpdateRegionalData(_RecentData)
+
                 Case ItemIndexs.lastSG
                     layoutPanel1 = Me.TableLayoutPanelTop1
                     layoutPanel1.Controls.Clear()
@@ -1342,14 +1395,14 @@ Public Class Form1
                     layoutPanel1.RowCount = 1
                     singleItem = True
                 Case ItemIndexs.sgs
-                    s_sGs = LoadList(row.Value, True).ToSgList()
-                    Me.SGsDataGridView.DataSource = s_sGs
+                    _sGs = LoadList(row.Value, True).ToSgList()
+                    Me.SGsDataGridView.DataSource = _sGs
                     For Each column As DataGridViewTextBoxColumn In Me.SGsDataGridView.Columns
                         If _filterJsonData AndAlso s_alwaysFilter.Contains(column.Name) Then
                             Me.SGsDataGridView.Columns(column.Name).Visible = False
                         End If
                     Next
-                    Me.ReadingsLabel.Text = $"{s_sGs.Where(Function(entry As SgRecord) Not Double.IsNaN(entry.sg)).Count}/288"
+                    Me.ReadingsLabel.Text = $"{_sGs.Where(Function(entry As SgRecord) Not Double.IsNaN(entry.sg)).Count}/288"
                     Continue For
                 Case ItemIndexs.limits
                     layoutPanel1 = Me.TableLayoutPanelLimits
@@ -1380,44 +1433,6 @@ Public Class Form1
                     singleItemIndex = ItemIndexs.basal
                     layoutPanel1.RowCount = 1
                     singleItem = True
-                Case ItemIndexs.systemStatusMessage
-                    s_systemStatusMessage = row.Value
-                Case ItemIndexs.averageSG
-                    s_averageSG = CInt(row.Value)
-                Case ItemIndexs.belowHypoLimit
-                    s_belowHypoLimit = CInt(row.Value)
-                Case ItemIndexs.aboveHyperLimit
-                    s_aboveHyperLimit = CInt(row.Value)
-                Case ItemIndexs.timeInRange
-                    s_timeInRange = CInt(row.Value)
-                Case ItemIndexs.pumpCommunicationState
-                    s_pumpCommunicationState = CBool(row.Value)
-                Case ItemIndexs.gstCommunicationState
-                    s_gstCommunicationState = CBool(row.Value)
-                Case ItemIndexs.gstBatteryLevel
-                    s_gstBatteryLevel = CInt(row.Value)
-                Case ItemIndexs.lastConduitDateTime
-                    s_lastConduitDateTime = row.Value
-                Case ItemIndexs.maxAutoBasalRate
-                    s_maxAutoBasalRate = row.Value.ParseDouble
-                Case ItemIndexs.maxBolusAmount
-                    s_maxBolusAmount = row.Value.ParseDouble
-                Case ItemIndexs.sensorDurationMinutes
-                    s_sensorDurationMinutes = CInt(row.Value)
-                Case ItemIndexs.timeToNextCalibrationMinutes
-                    s_timeToNextCalibrationMinutes = CInt(row.Value)
-                Case ItemIndexs.clientTimeZoneName
-                    s_clientTimeZoneName = row.Value
-                Case ItemIndexs.sgBelowLimit
-                    s_sgBelowLimit = CInt(row.Value)
-                Case ItemIndexs.averageSGFloat
-                    s_averageSGFloat = row.Value.ParseDouble
-                Case ItemIndexs.timeToNextCalibrationRecommendedMinutes
-                    s_timeToNextCalibrationRecommendedMinutes = CUShort(row.Value)
-                Case ItemIndexs.calFreeSensor
-                    s_calFreeSensor = CBool(row.Value)
-                Case ItemIndexs.finalCalibration
-                    s_finalCalibration = CBool(row.Value)
                 Case Else
                     Stop
                     Exit Select
@@ -1452,10 +1467,9 @@ Public Class Form1
                             s_limits = innerJson
                         Case ItemIndexs.markers
                             s_markers = innerJson
-                        Case ItemIndexs.notificationHistory
-                        ' handled elsewhere
-                        Case ItemIndexs.pumpBannerState
-                            s_pumpBannerState = innerJson
+                        Case ItemIndexs.notificationHistory,
+                             ItemIndexs.pumpBannerState
+                            ' handled elsewhere
                         Case Else
                             Stop
                     End Select
@@ -1467,7 +1481,7 @@ Public Class Form1
                                                                               innerJson,
                                                                               rowIndex,
                                                                               _filterJsonData,
-                                                                              _timeFormat)
+                                                                              _timeWithMinuteFormat)
                                             End Sub)
                         Application.DoEvents()
 
@@ -1491,16 +1505,13 @@ Public Class Form1
                     Select Case rowIndex
                         Case ItemIndexs.lastSG
                             s_lastSG = innerJson
-                        Case ItemIndexs.lastAlarm
-                            s_lastAlarm = innerJson
                         Case ItemIndexs.activeInsulin
                             s_activeInsulin = innerJson
-                        Case ItemIndexs.notificationHistory
-                        ' handled elsewhere
-                        Case ItemIndexs.therapyAlgorithmState
-                            s_therapyAlgorithmState = innerJson
-                        Case ItemIndexs.basal
-                            s_basal = innerJson
+                        Case ItemIndexs.lastAlarm,
+                             ItemIndexs.notificationHistory,
+                             ItemIndexs.therapyAlgorithmState,
+                             ItemIndexs.basal
+                            ' handled elsewhere
                         Case Else
                             Stop
                     End Select
@@ -1521,7 +1532,7 @@ Public Class Form1
                     If rowIndex = ItemIndexs.notificationHistory Then
                         innerTableBlue.AutoScroll = False
                     End If
-                    GetInnerTable(innerJson, innerTableBlue, rowIndex, _filterJsonData, _timeFormat, isScaledForm)
+                    GetInnerTable(innerJson, innerTableBlue, rowIndex, _filterJsonData, _timeWithMinuteFormat, isScaledForm)
                 Else
                     Dim rowTextBox As New TextBox With {
                         .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
@@ -1579,14 +1590,9 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateRegionalData(localRecentData As Dictionary(Of String, String))
-        _updating = True
-        If localRecentData Is Nothing Then
-            Exit Sub
-        End If
-        Me.Cursor = Cursors.WaitCursor
-        Application.DoEvents()
-        If localRecentData.TryGetValue(ItemIndexs.bgUnits.ToString, s_bgUnits) Then
-            Me.BgUnitsString = GetLocalizedUnits(s_bgUnits)
+        Dim bgUnits As String = ""
+        If localRecentData.TryGetValue(ItemIndexs.bgUnits.ToString, bgUnits) Then
+            Me.BgUnitsString = GetLocalizedUnits(bgUnits)
             If Me.BgUnitsString = "mg/dl" Then
                 _markerRow = 400
                 _limitHigh = 180
@@ -1599,13 +1605,20 @@ Public Class Form1
                 _insulinRow = (50 / 18).RoundSingle(1)
             End If
         End If
+
+        If localRecentData.TryGetValue(ItemIndexs.clientTimeZoneName.ToString, s_clientTimeZoneName) Then
+            s_clientTimeZone = s_timeZoneList.Where(Function(t As TimeZoneInfo)
+                                                        Return t.Id = s_clientTimeZoneName.Replace("Daylight", "Standard")
+                                                    End Function).FirstOrDefault
+        End If
         Dim internaltimeFormat As String = Nothing
         If localRecentData.TryGetValue(ItemIndexs.timeFormat.ToString, internaltimeFormat) Then
-            _timeFormat = If(internaltimeFormat = "HR_12", TwelveHourTimeWithMinuteFormat, MilitaryTimeWithMinuteFormat)
+            _timeWithMinuteFormat = If(internaltimeFormat = "HR_12", TwelveHourTimeWithMinuteFormat, MilitaryTimeWithMinuteFormat)
+            _timeWithoutMinuteFormat = If(internaltimeFormat = "HR_12", TwelveHourTimeWithoutMinuteFormat, MilitaryTimeWithoutMinuteFormat)
         End If
-        _updating = False
-        Me.Cursor = Cursors.Default
-        Application.DoEvents()
+        Me.AboveHighLimitMessageLabel.Text = $"Above {_limitHigh} {Me.BgUnitsString}"
+        Me.BelowLowLimitMessageLabel.Text = $"Below {_limitLow} {Me.BgUnitsString}"
+
     End Sub
 
     Friend Sub UpdateAllTabPages()
@@ -1683,25 +1696,21 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateCalibrationTimeRemaining()
-        If s_timeToNextCalibHours = Byte.MaxValue Then
+        If _timeToNextCalibHours = Byte.MaxValue Then
             Me.CalibrationDueImage.Image = My.Resources.CalibrationUnavailable
-        ElseIf s_timeToNextCalibHours < 1 Then
+        ElseIf _timeToNextCalibHours < 1 Then
             Me.CalibrationDueImage.Image = If(s_systemStatusMessage = "WAIT_TO_CALIBRATE" OrElse s_sensorState = "WARM_UP",
             My.Resources.CalibrationNotReady,
-            My.Resources.CalibrationDotRed.DrawCenteredArc(s_timeToNextCalibHours, s_timeToNextCalibHours / 12))
+            My.Resources.CalibrationDotRed.DrawCenteredArc(_timeToNextCalibHours, _timeToNextCalibHours / 12))
         Else
-            Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(s_timeToNextCalibHours, s_timeToNextCalibHours / 12)
+            Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(_timeToNextCalibHours, _timeToNextCalibHours / 12)
         End If
 
         Application.DoEvents()
     End Sub
 
     Private Sub UpdateInsulinLevel()
-        If s_reservoirLevelPercent = 0 Then
-            Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(0)
-            Exit Sub
-        End If
-        Select Case s_reservoirLevelPercent
+        Select Case _reservoirLevelPercent
             Case > 85
                 Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(7)
             Case > 71
@@ -1729,7 +1738,7 @@ Public Class Form1
             Exit Sub
         End If
 
-        Select Case s_medicalDeviceBatteryLevelPercent
+        Select Case _medicalDeviceBatteryLevelPercent
             Case > 66
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryFull
                 Me.PumpBatteryRemainingLabel.Text = $"High"
@@ -1746,33 +1755,33 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateRemainingInsulin()
-        Me.RemainingInsulinUnits.Text = $"{s_reservoirRemainingUnits:N1} U"
+        Me.RemainingInsulinUnits.Text = $"{_reservoirRemainingUnits:N1} U"
     End Sub
 
     Private Sub UpdateSensorLife()
-        If s_sensorDurationHours = 255 Then
+        If _sensorDurationHours = 255 Then
             Me.SensorDaysLeftLabel.Text = $"???"
             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
             Me.SensorTimeLeftLabel.Text = ""
-        ElseIf s_sensorDurationHours >= 24 Then
-            Me.SensorDaysLeftLabel.Text = CStr(Math.Ceiling(s_sensorDurationHours / 24))
+        ElseIf _sensorDurationHours >= 24 Then
+            Me.SensorDaysLeftLabel.Text = CStr(Math.Ceiling(_sensorDurationHours / 24))
             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
             Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
         Else
-            If s_sensorDurationHours = 0 Then
-                If s_sensorDurationMinutes = 0 Then
+            If _sensorDurationHours = 0 Then
+                If _sensorDurationMinutes = 0 Then
                     Me.SensorDaysLeftLabel.Text = ""
                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpired
                     Me.SensorTimeLeftLabel.Text = $"Expired"
                 Else
                     Me.SensorDaysLeftLabel.Text = $"1"
                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
-                    Me.SensorTimeLeftLabel.Text = $"{s_sensorDurationMinutes} Minutes"
+                    Me.SensorTimeLeftLabel.Text = $"{_sensorDurationMinutes} Minutes"
                 End If
             Else
                 Me.SensorDaysLeftLabel.Text = $"1"
                 Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
-                Me.SensorTimeLeftLabel.Text = $"{s_sensorDurationHours + 1} Hours"
+                Me.SensorTimeLeftLabel.Text = $"{_sensorDurationHours + 1} Hours"
             End If
         End If
         Me.SensorDaysLeftLabel.Visible = True
@@ -1790,7 +1799,7 @@ Public Class Form1
                 .Last().Color = Color.Red
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
-                .AddXY($"{s_timeInRange}% In Range", s_timeInRange / 100)
+                .AddXY($"{_timeInRange}% In Range", _timeInRange / 100)
                 .Last().Color = Color.LawnGreen
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
@@ -1799,8 +1808,8 @@ Public Class Form1
             .Series(NameOf(HomeTabTimeInRangeSeries))("PieStartAngle") = "270"
         End With
 
-        Me.TimeInRangeChartLabel.Text = s_timeInRange.ToString
-        Me.TimeInRangeValueLabel.Text = $"{s_timeInRange} %"
+        Me.TimeInRangeChartLabel.Text = _timeInRange.ToString
+        Me.TimeInRangeValueLabel.Text = $"{_timeInRange} %"
         Me.AboveHighLimitValueLabel.Text = $"{s_aboveHyperLimit} %"
         Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
         Me.AverageSGMessageLabel.Text = $"Average SG in {Me.BgUnitsString}"
@@ -1902,9 +1911,9 @@ Public Class Form1
                 End Select
             End With
         Next
-        Dim limitsIndexList(s_sGs.Count - 1) As Integer
+        Dim limitsIndexList(_sGs.Count - 1) As Integer
         GetLimitsList(limitsIndexList)
-        For Each sgListIndex As IndexClass(Of SgRecord) In s_sGs.WithIndex()
+        For Each sgListIndex As IndexClass(Of SgRecord) In _sGs.WithIndex()
             Dim sgOaDateTime As Double = sgListIndex.Value.OADate()
             PlotOnePoint(Me.HomeTabChart.Series(NameOf(HomeTabCurrentBGSeries)), sgOaDateTime, sgListIndex.Value.sg, Color.White, Me.InsulinRow, _limitHigh, _limitLow)
             Dim limitsLowValue As Integer = CInt(s_limits(limitsIndexList(sgListIndex.Index))("lowLimit"))
@@ -1999,7 +2008,13 @@ Public Class Form1
             Exit Sub
         End If
         _homePageChartRelitivePosition = RectangleF.Empty
+        _updating = True
+        Me.Cursor = Cursors.WaitCursor
+        Application.DoEvents()
         Me.UpdateRegionalData(_RecentData)
+        _updating = False
+        Me.Cursor = Cursors.Default
+        Application.DoEvents()
 
         Me.InitializeHomePageChart()
         Me.InitializeActiveInsulinTabChart()

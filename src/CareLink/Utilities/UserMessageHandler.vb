@@ -95,7 +95,7 @@ Friend Module UserMessageHandler
                 Dim secondaryTime As String = If(dic.ContainsKey("secondaryTime"), dic("secondaryTime").FormatTimeOnly(TimeFormat), "")
                 formattedMessage = splitMessageValue(0).Replace("(0)", replacementValue) _
                                                        .Replace("(CriticalLow)", S_criticalLow.ToString(CurrentUICulture)) _
-                                                       .Replace("(units)", GetLocalizedUnits(s_bgUnits)) _
+                                                       .Replace("(units)", Form1.BgUnitsString) _
                                                        .Replace("(secondaryTime)", secondaryTime)
             Else
                 If Debugger.IsAttached Then

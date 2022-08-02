@@ -21,75 +21,26 @@ Friend Module PumpVariables
     Friend s_totalDailyDose As Single
     Friend s_totalManualBolus As Single
 
-#Region "Variables to hold Pump Values"
+#Region "Global variables to hold pump values"
 
     Public s_aboveHyperLimit As Integer
     Public s_activeInsulin As Dictionary(Of String, String)
     Public s_averageSG As Double
-    Public s_averageSGFloat As Double
-    Public s_basal As Dictionary(Of String, String)
     Public s_belowHypoLimit As Integer
-    Public s_bgUnits As String
-    Public s_calFreeSensor As Boolean
-    Public s_calibStatus As String
+    Public s_clientTimeZone As TimeZoneInfo
     Public s_clientTimeZoneName As String
-    Public s_conduitBatteryLevel As Integer
-    Public s_conduitBatteryStatus As String
-    Public s_conduitInRange As Boolean
-    Public s_conduitMedicalDeviceInRange As Boolean
     Public s_conduitSensorInRange As Boolean
-    Public s_conduitSerialNumber As String
     Public S_criticalLow As Single
-    Public s_currentServerTime As String
-    Public s_finalCalibration As Boolean
-    Public s_firstName As String
     Public s_gstBatteryLevel As Integer
-    Public s_gstCommunicationState As Boolean
-    Public s_kind As String
-    Public s_lastAlarm As Dictionary(Of String, String)
-    Public s_lastConduitDateTime As String
-    Public s_lastConduitTime As String
-    Public s_lastConduitUpdateServerTime As String
-    Public s_lastMedicalDeviceDataUpdateServerTime As String
-    Public s_lastName As String
-    Public s_lastSensorTime As String
-    Public s_lastSensorTS As String
-    Public s_lastSensorTSAsString As String
     Public s_lastSG As Dictionary(Of String, String)
-    Public s_lastSGTrend As String
     Public s_limits As List(Of Dictionary(Of String, String))
     Public s_markers As List(Of Dictionary(Of String, String))
-    Public s_maxAutoBasalRate As Double
-    Public s_maxBolusAmount As Double
-    Public s_medicalDeviceBatteryLevelPercent As Integer
-    Public s_medicalDeviceFamily As String
-    Public s_medicalDeviceSerialNumber As String
-    Public s_medicalDeviceSuspended As Boolean
-    Public s_medicalDeviceTime As String
-    Public s_medicalDeviceTimeAsString As String
-    Public s_pumpBannerState As List(Of Dictionary(Of String, String))
-    Public s_pumpCommunicationState As Boolean
-    Public s_pumpModelNumber As String
-    Public s_reservoirAmount As Double
-    Public s_reservoirLevelPercent As Integer
-    Public s_reservoirRemainingUnits As Double
-    Public s_sensorDurationHours As Integer
-    Public s_sensorDurationMinutes As Integer
     Public s_sensorState As String
-    Public s_sgBelowLimit As Integer
-    Public s_sGs As New List(Of SgRecord)
-    Public s_sLastSensorTime As Date
-    Public s_sMedicalDeviceTime As Date
     Public s_systemStatusMessage As String
-    Public s_therapyAlgorithmState As Dictionary(Of String, String)
-    Public s_timeFormat As String
-    Public s_timeInRange As Integer
-    Public s_timeToNextCalibHours As UShort = UShort.MaxValue
-    Public s_timeToNextCalibrationMinutes As Integer
-    Public s_timeToNextCalibrationRecommendedMinutes As UShort
-    Public s_version As String
 
 #End Region
+
+    Public s_timeZoneList As List(Of TimeZoneInfo)
 
     ' Do not rename these name are matched used in case sensitive matching
     Public Enum ItemIndexs As Integer
