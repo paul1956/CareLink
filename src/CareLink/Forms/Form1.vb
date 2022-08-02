@@ -33,7 +33,7 @@ Public Class Form1
     Private _recentDataSameCount As Integer
     Private _timeFormat As String
     Private _updating As Boolean = False
-    Private _showBaloonTip As Boolean = False
+    Private _showBaloonTip As Boolean = True
     Private _lastBGValue As Double = 0
 
     Private Property FormScale As New SizeF(1.0F, 1.0F)
