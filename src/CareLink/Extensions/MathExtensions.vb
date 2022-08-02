@@ -16,9 +16,9 @@ Friend Module MathExtensions
 
     <Extension>
     Friend Function GetDoubleValue(item As Dictionary(Of String, String), value As String) As Double
-        Dim returnValueString As String = ""
-        If item.TryGetValue(value, returnValueString) Then
-            Return returnValueString.ParseDouble
+        Dim returnString As String = ""
+        If item.TryGetValue(value, returnString) Then
+            Return returnString.ParseDouble
         End If
         Return Double.NaN
     End Function

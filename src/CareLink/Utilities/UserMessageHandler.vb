@@ -66,11 +66,12 @@ Friend Module UserMessageHandler
                             {"BC_MESSAGE_DELIVERY_STOPPED_SG_X_CHECK_BG", "Suspend on low. Delivery stopped. Sensor glucose (0) (units). Check BG.:sg"},
                             {"BC_MESSAGE_SG_UNDER_50_MG_DL", "Low SG. Sensor Glucose is under (CriticalLow) (units). Check BG and treat.:sg"},
                             {"BC_MESSAGE_TIME_REMAINING_CHANGE_RESERVOIR", "Low Reservoir (0) units remaining. Change reservoir.:unitsRemaining"},
+                            {"BC_REMINDER_TIME", "Reminder time to take (0).:reminderName"},
                             {"BC_SID_BASAL_DELIVERY_RESUMED_AT_X_AFTER_LOW_SUSPEND", "Basal delivery resumed at (0) after suspend by sensor, Check BG.:secondaryTime"},
                             {"BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR_TO_RECEIVE", "Calibrate by (0). Check BG and calibrate to continuing receiving sensor information.:secondaryTime"},
                             {"BC_SID_HIGH_SG_CHECK_BG", "$Alert on high (0) (units). High sensor glucose. Check BG.:sg"},
                             {"BC_SID_LOW_SD_CHECK_BG", $"Alert on low (0) (units). Low sensor glucose. Check BG.:sg"},
-                            {"BC_SID_LOW_SG_INSULIN_DELIVERY_SUSPENDED_SINCE_X_CHECK_BG", "Alert on low (0) (units). Insulin delivery suspended since (secondaryTime). Check BG.:sg"},
+                            {"BC_SID_LOW_SG_INSULIN_DELIVERY_SUSPENDED_SINCE_X_CHECK_BG", "Alert on low (0) (units). Insulin delivery suspended since (secondaryTime). Check BG.sg"},
                             {"BC_SID_THREE_DAYS_SINCE_LAST_SET_CHANGE", "(0) days since last set change:lastSetChange"}
                         }
 
@@ -103,7 +104,7 @@ Friend Module UserMessageHandler
                 formattedMessage = entryValue.Replace("_", " ")
             End If
         End If
-        Return $"{entryValue}({formattedMessage})"
+        Return $"{entryValue} ({formattedMessage})"
     End Function
 
 End Module
