@@ -1663,8 +1663,12 @@ Public Class Form1
         Dim brushToUse As Brush = New SolidBrush(color)
         g.Clear(bgColor)
         g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit
-        g.DrawString(str, fontToUse, brushToUse, -2, 0)
-        Dim hIcon As IntPtr = (bitmapText.GetHicon())
+        If Math.Floor(Math.Log10(sg) + 1) = 3 Then
+            g.DrawString(str, fontToUse, brushToUse, -2, 0)
+        Else
+            g.DrawString(str, fontToUse, brushToUse, 1.5, 0)
+        End If
+        Dim hIcon As IntPtr = bitmapText.GetHicon()
         Me.NotifyIcon1.Icon = System.Drawing.Icon.FromHandle(hIcon)
         notStr.Append(Date.Now().ToString)
         notStr.Append(Environment.NewLine)
