@@ -26,6 +26,25 @@ https://github.com/paul1956/CareLink/releases/
 
 ## What's New in this release
   New in 3.4.3.0
+  Another contribution from Chris Deprez https://github.com/Krikke99
+  - shows SG on Sysem Tray with dynamic background color:
+    - Green normal
+    - Orange low
+    - Red high
+  
+![image](https://user-images.githubusercontent.com/4416348/182358729-dfcf680b-4127-4505-9e59-be7250b25383.png)
+
+- on hover info:
+    - Time last update
+    - Last SG
+    - SG Trend
+    - Active insulin
+    
+![image](https://user-images.githubusercontent.com/4416348/182360137-ff7b0075-eb88-4a6b-bb92-18d4d4117e16.png)
+
+- Notification when SG is out of range.
+
+![image](https://user-images.githubusercontent.com/4416348/182361568-2a3d91c2-94a7-4275-911c-187150f5319d.png)
   Complete rewrite of date handling
   
   New in 3.4.2.7
