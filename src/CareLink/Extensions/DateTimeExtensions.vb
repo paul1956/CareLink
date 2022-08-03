@@ -107,7 +107,7 @@ Friend Module DateTimeExtensions
         Dim success As Boolean
         Select Case key
             Case ""
-                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeLocal)
+                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
             Case "previousDateTime"
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeLocal)
             Case "sMedicalDeviceTime"

@@ -13,6 +13,15 @@ Friend Module PumpVariables
                         ItemIndexs.notificationHistory,
                         ItemIndexs.basal}
 
+    Friend ReadOnly s_ListOfTimeItems As New List(Of Integer) From {
+                        ItemIndexs.lastSensorTS,
+                        ItemIndexs.lastConduitTime,
+                        ItemIndexs.medicalDeviceTime,
+                        ItemIndexs.sMedicalDeviceTime,
+                        ItemIndexs.lastSensorTime,
+                        ItemIndexs.sLastSensorTime,
+                        ItemIndexs.lastConduitDateTime}
+
     ' Manually computed
     Friend s_totalAutoCorrection As Single
 

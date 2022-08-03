@@ -227,6 +227,7 @@ Public Class Form1
                         ExceptionHandlerForm.ReportFileNameWithPath = ""
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                         Me.RecentData = Loads(ExceptionHandlerForm.LocalRawData)
+                        _initialized = False
                         Me.FinishInitialization()
                         Me.UpdateAllTabPages()
                     End If
@@ -271,6 +272,7 @@ Public Class Form1
                     CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{RepoName}", True)
 
                     _RecentData = Loads(File.ReadAllText(openFileDialog1.FileName))
+                    _initialized = False
                     Me.FinishInitialization()
                     Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
                     Me.UpdateAllTabPages()
@@ -1049,6 +1051,15 @@ Public Class Form1
         Next
     End Sub
 
+    Private Shared Sub InitializeWorkingPanel(ByRef layoutPanel1 As TableLayoutPanel, realPanel As TableLayoutPanel, Optional autoSize? As Boolean = Nothing)
+        layoutPanel1 = realPanel
+        layoutPanel1.Controls.Clear()
+        layoutPanel1.RowCount = 1
+        If autoSize IsNot Nothing Then
+            layoutPanel1.AutoSize = CBool(autoSize)
+        End If
+    End Sub
+
     Private Sub FillOneRowOfTableLayoutPanel(layoutPanel As TableLayoutPanel, innerJson As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String)
         For Each jsonEntry As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
             Dim innerTableBlue As New TableLayoutPanel With {
@@ -1085,6 +1096,21 @@ Public Class Form1
         End If
         _recentDataSameCount = 0
         Return True
+    End Function
+
+    Private Function ProcessInnerListDictionary(layoutPanel1 As TableLayoutPanel, rowIndex As ItemIndexs, innerListDictionary As List(Of Dictionary(Of String, String))) As TableLayoutPanel
+        layoutPanel1.Parent.Parent.UseWaitCursor = True
+        Application.DoEvents()
+        layoutPanel1.Invoke(Sub()
+                                Me.FillOneRowOfTableLayoutPanel(layoutPanel1,
+                                                              innerListDictionary,
+                                                              rowIndex,
+                                                              _filterJsonData,
+                                                              _timeWithMinuteFormat)
+                            End Sub)
+        layoutPanel1.Parent.Parent.UseWaitCursor = False
+        Application.DoEvents()
+        Return layoutPanel1
     End Function
 
     Private Sub UpdateActiveInsulinChart()
@@ -1255,23 +1281,22 @@ Public Class Form1
         End If
 
         Dim currentRowIndex As Integer = 0
-        Dim singleItem As Boolean
         Dim layoutPanel1 As TableLayoutPanel
 
         Dim firstName As String = ""
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In _RecentData.WithIndex()
             layoutPanel1 = Me.TableLayoutPanelSummaryData
-            singleItem = False
             Dim row As KeyValuePair(Of String, String) = c.Value
             Dim rowIndex As ItemIndexs = CType([Enum].Parse(GetType(ItemIndexs), c.Value.Key), ItemIndexs)
-            Dim singleItemIndex As ItemIndexs
 
             Select Case rowIndex
                 Case ItemIndexs.medicalDeviceTimeAsString,
                      ItemIndexs.lastSensorTSAsString,
                      ItemIndexs.kind,
                      ItemIndexs.version,
+                     ItemIndexs.currentServerTime,
                      ItemIndexs.lastConduitUpdateServerTime,
+                     ItemIndexs.lastMedicalDeviceDataUpdateServerTime,
                      ItemIndexs.conduitSerialNumber,
                      ItemIndexs.conduitBatteryLevel,
                      ItemIndexs.conduitBatteryStatus,
@@ -1281,16 +1306,12 @@ Public Class Form1
                      ItemIndexs.medicalDeviceFamily,
                      ItemIndexs.reservoirAmount,
                      ItemIndexs.calibStatus,
-                     ItemIndexs.lastSensorTime,
-                     ItemIndexs.sLastSensorTime,
                      ItemIndexs.pumpCommunicationState,
                      ItemIndexs.calFreeSensor,
                      ItemIndexs.conduitInRange,
                      ItemIndexs.medicalDeviceSuspended,
                      ItemIndexs.lastSGTrend,
-                     ItemIndexs.pumpBannerState,
                      ItemIndexs.gstCommunicationState,
-                     ItemIndexs.lastConduitDateTime,
                      ItemIndexs.maxAutoBasalRate,
                      ItemIndexs.maxBolusAmount,
                      ItemIndexs.sgBelowLimit,
@@ -1298,7 +1319,6 @@ Public Class Form1
                      ItemIndexs.timeToNextCalibrationRecommendedMinutes,
                      ItemIndexs.finalCalibration
                      ' String Handler
-
 
                 Case ItemIndexs.pumpModelNumber
                     Me.ModelLabel.Text = row.Value
@@ -1333,6 +1353,9 @@ Public Class Form1
                 Case ItemIndexs.timeToNextCalibHours
                     _timeToNextCalibHours = CUShort(row.Value)
                      ' String Handler
+                Case ItemIndexs.bgUnits
+                    Me.UpdateRegionalData(_RecentData)
+                     ' String Handler
                 Case ItemIndexs.timeFormat
                     _timeWithMinuteFormat = If(row.Value = "HR_12", TwelveHourTimeWithMinuteFormat, MilitaryTimeWithMinuteFormat)
                     _timeWithoutMinuteFormat = If(row.Value = "HR_12", TwelveHourTimeWithoutMinuteFormat, MilitaryTimeWithoutMinuteFormat)
@@ -1366,34 +1389,14 @@ Public Class Form1
                      ' String Handler
 
                 Case ItemIndexs.lastSensorTS,
-                     ItemIndexs.currentServerTime,
                      ItemIndexs.lastConduitTime,
-                     ItemIndexs.lastMedicalDeviceDataUpdateServerTime,
                      ItemIndexs.medicalDeviceTime,
-                     ItemIndexs.sMedicalDeviceTime
+                     ItemIndexs.sMedicalDeviceTime,
+                     ItemIndexs.lastSensorTime,
+                     ItemIndexs.sLastSensorTime,
+                     ItemIndexs.lastConduitDateTime
                     ' Time Handler
 
-                Case ItemIndexs.bgUnits
-                    Me.UpdateRegionalData(_RecentData)
-
-                Case ItemIndexs.lastSG
-                    layoutPanel1 = Me.TableLayoutPanelTop1
-                    layoutPanel1.Controls.Clear()
-                    singleItemIndex = ItemIndexs.lastSG
-                    layoutPanel1.RowCount = 1
-                    singleItem = True
-                Case ItemIndexs.lastAlarm
-                    layoutPanel1 = Me.TableLayoutPanelTop2
-                    layoutPanel1.Controls.Clear()
-                    singleItemIndex = ItemIndexs.lastAlarm
-                    layoutPanel1.RowCount = 1
-                    singleItem = True
-                Case ItemIndexs.activeInsulin
-                    layoutPanel1 = Me.TableLayoutPanelActiveInsulin
-                    layoutPanel1.Controls.Clear()
-                    singleItemIndex = ItemIndexs.activeInsulin
-                    layoutPanel1.RowCount = 1
-                    singleItem = True
                 Case ItemIndexs.sgs
                     _sGs = LoadList(row.Value, True).ToSgList()
                     Me.SGsDataGridView.DataSource = _sGs
@@ -1404,50 +1407,38 @@ Public Class Form1
                     Next
                     Me.ReadingsLabel.Text = $"{_sGs.Where(Function(entry As SgRecord) Not Double.IsNaN(entry.sg)).Count}/288"
                     Continue For
+
+                Case ItemIndexs.lastSG
+                    InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelTop1)
+                Case ItemIndexs.lastAlarm
+                    InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelTop2)
+                Case ItemIndexs.activeInsulin
+                    InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelActiveInsulin)
                 Case ItemIndexs.limits
-                    layoutPanel1 = Me.TableLayoutPanelLimits
-                    layoutPanel1.Controls.Clear()
-                    layoutPanel1.AutoSize = True
-                    singleItemIndex = ItemIndexs.limits
-                    layoutPanel1.RowCount = 1
-                    singleItem = True
+                    InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelLimits, True)
                 Case ItemIndexs.markers
-                    layoutPanel1 = Me.TableLayoutPanelMarkers
-                    layoutPanel1.Controls.Clear()
-                    singleItemIndex = ItemIndexs.markers
-                    layoutPanel1.RowCount = 1
-                    singleItem = True
+                    InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelMarkers)
                 Case ItemIndexs.notificationHistory
-                    layoutPanel1 = Me.TableLayoutPanelNotificationHistory
-                    layoutPanel1.Controls.Clear()
-                    singleItemIndex = ItemIndexs.notificationHistory
-                    layoutPanel1.RowCount = 1
-                    singleItem = True
+                    InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelNotificationHistory)
+                Case ItemIndexs.basal
+                    InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelBasal)
                 Case ItemIndexs.therapyAlgorithmState
                     ' handled elsewhere
                 Case ItemIndexs.pumpBannerState
                     ' handled elsewhere
-                Case ItemIndexs.basal
-                    layoutPanel1 = Me.TableLayoutPanelBasal
-                    layoutPanel1.Controls.Clear()
-                    singleItemIndex = ItemIndexs.basal
-                    layoutPanel1.RowCount = 1
-                    singleItem = True
                 Case Else
                     Stop
                     Exit Select
             End Select
 
             Try
-                If s_listOfSingleItems.Contains(rowIndex) OrElse singleItem Then
-                    If Not (singleItem AndAlso singleItemIndex = rowIndex) Then
-                        Continue For
-                    End If
-                End If
+                Dim singleItem As Boolean
                 Dim tableRelitiveRow As Integer
-                If singleItem Then
+                If s_listOfSingleItems.Contains(rowIndex) Then
+                    singleItem = True
                     tableRelitiveRow = 0
                 Else
+                    singleItem = False
                     tableRelitiveRow = currentRowIndex
                     currentRowIndex += 1
                 End If
@@ -1461,33 +1452,19 @@ Public Class Form1
                     layoutPanel1.Controls.Add(columnHeaderLabel, 0, tableRelitiveRow)
                 End If
                 If row.Value?.StartsWith("[") Then
-                    Dim innerJson As List(Of Dictionary(Of String, String)) = LoadList(row.Value, False)
+                    Dim innerListDictionary As List(Of Dictionary(Of String, String)) = LoadList(row.Value, False)
                     Select Case rowIndex
                         Case ItemIndexs.limits
-                            s_limits = innerJson
+                            s_limits = innerListDictionary
                         Case ItemIndexs.markers
-                            s_markers = innerJson
+                            s_markers = innerListDictionary
                         Case ItemIndexs.notificationHistory,
                              ItemIndexs.pumpBannerState
                             ' handled elsewhere
                         Case Else
                             Stop
                     End Select
-                    If innerJson.Count > 0 Then
-                        layoutPanel1.Parent.Parent.UseWaitCursor = True
-                        Application.DoEvents()
-                        layoutPanel1.Invoke(Sub()
-                                                Me.FillOneRowOfTableLayoutPanel(layoutPanel1,
-                                                                              innerJson,
-                                                                              rowIndex,
-                                                                              _filterJsonData,
-                                                                              _timeWithMinuteFormat)
-                                            End Sub)
-                        Application.DoEvents()
-
-                        layoutPanel1.Parent.Parent.UseWaitCursor = False
-                        Application.DoEvents()
-                    Else
+                    If innerListDictionary.Count = 0 Then
                         Dim rowTextBox As New TextBox With {
                                 .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                 .AutoSize = True,
@@ -1497,16 +1474,19 @@ Public Class Form1
                         layoutPanel1.Controls.Add(rowTextBox,
                                                   If(singleItem, 0, 1),
                                                   tableRelitiveRow)
-
+                        Continue For
                     End If
-                ElseIf row.Value?.StartsWith("{") Then
+                    Me.ProcessInnerListDictionary(layoutPanel1, rowIndex, innerListDictionary)
+                    Continue For
+                End If
+                If row.Value?.StartsWith("{") Then
                     layoutPanel1.RowStyles(tableRelitiveRow).SizeType = SizeType.AutoSize
-                    Dim innerJson As Dictionary(Of String, String) = Loads(row.Value)
+                    Dim innerJsonDictionary As Dictionary(Of String, String) = Loads(row.Value)
                     Select Case rowIndex
                         Case ItemIndexs.lastSG
-                            s_lastSG = innerJson
+                            s_lastSG = innerJsonDictionary
                         Case ItemIndexs.activeInsulin
-                            s_activeInsulin = innerJson
+                            s_activeInsulin = innerJsonDictionary
                         Case ItemIndexs.lastAlarm,
                              ItemIndexs.notificationHistory,
                              ItemIndexs.therapyAlgorithmState,
@@ -1532,13 +1512,20 @@ Public Class Form1
                     If rowIndex = ItemIndexs.notificationHistory Then
                         innerTableBlue.AutoScroll = False
                     End If
-                    GetInnerTable(innerJson, innerTableBlue, rowIndex, _filterJsonData, _timeWithMinuteFormat, isScaledForm)
+                    GetInnerTable(innerJsonDictionary, innerTableBlue, rowIndex, _filterJsonData, _timeWithMinuteFormat, isScaledForm)
                 Else
+                    Dim resultDate As Date
+                    Dim value As String = row.Value
+                    If s_ListOfTimeItems.Contains(rowIndex) Then
+                        If row.Value.TryParseDate(resultDate, "") Then
+                            value = $"{value}   {resultDate.ToLongDateString} {resultDate.ToLongTimeString}"
+                        End If
+                    End If
                     Dim rowTextBox As New TextBox With {
                         .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                         .AutoSize = True,
-                        .ReadOnly = True,
-                        .Text = row.Value
+                        .[ReadOnly] = True,
+                        .Text = value
                     }
                     layoutPanel1.Controls.Add(rowTextBox,
                                               If(singleItem, 0, 1),
@@ -1607,9 +1594,19 @@ Public Class Form1
         End If
 
         If localRecentData.TryGetValue(ItemIndexs.clientTimeZoneName.ToString, s_clientTimeZoneName) Then
+            Dim cleanTimeZoneName As String = s_clientTimeZoneName.
+                                                    Replace("Daylight", "Standard").
+                                                    Replace("Summer", "Standard")
             s_clientTimeZone = s_timeZoneList.Where(Function(t As TimeZoneInfo)
-                                                        Return t.Id = s_clientTimeZoneName.Replace("Daylight", "Standard")
+                                                        Return t.Id = cleanTimeZoneName
                                                     End Function).FirstOrDefault
+            If s_clientTimeZone Is Nothing Then
+                If MsgBox($"Your pump timezone '{s_clientTimeZoneName}' is not recognized. If you continue '{TimeZoneInfo.Local.Id}' will be issue. Cancel will exit program. Please open an issue and provide the name '{s_clientTimeZoneName}'.", MsgBoxStyle.OkCancel) = MsgBoxResult.Yes Then
+                    s_clientTimeZone = TimeZoneInfo.Local
+                Else
+                    End
+                End If
+            End If
         End If
         Dim internaltimeFormat As String = Nothing
         If localRecentData.TryGetValue(ItemIndexs.timeFormat.ToString, internaltimeFormat) Then
