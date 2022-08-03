@@ -5,6 +5,7 @@
 Imports System.ComponentModel
 Imports System.Globalization
 Imports System.IO
+Imports System.Text
 Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
 
@@ -49,6 +50,9 @@ Public Class Form1
     Private _timeWithMinuteFormat As String
     Private _timeWithoutMinuteFormat As String
     Private _updating As Boolean = False
+    Private _showBaloonTip As Boolean = True
+    Private _lastBGValue As Double = 0
+
     Private Property FormScale As New SizeF(1.0F, 1.0F)
     Private ReadOnly Property SensorLifeToolTip As New ToolTip()
     Public Property BgUnitsString As String
@@ -1654,6 +1658,63 @@ Public Class Form1
         _bgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
     End Sub
 
+    Private Sub UpdateNotifyIcon()
+        Dim str As String = s_lastSG("sg")
+        Dim fontToUse As Font = New Font("Trebuchet MS", 10, FontStyle.Regular, GraphicsUnit.Pixel)
+        Dim color As Color = Color.White
+        Dim bgColor As Color
+        Dim sg As Double = str.ParseDouble
+        Dim bitmapText As New Bitmap(16, 16)
+        Dim g As Graphics = System.Drawing.Graphics.FromImage(bitmapText)
+        Dim notStr As New StringBuilder
+        Dim diffsg As Double
+
+        Select Case sg
+            Case <= _limitLow
+                bgColor = Color.Orange
+                If _showBaloonTip Then
+                    Me.NotifyIcon1.ShowBalloonTip(10000, "Carelink Alert", "SG below " + _limitLow.ToString + " " + Me.BgUnitsString, Me.ToolTip1.ToolTipIcon)
+                End If
+                _showBaloonTip = False
+            Case <= _limitHigh
+                bgColor = Color.Green
+                _showBaloonTip = True
+            Case Else
+                bgColor = Color.Red
+                If _showBaloonTip Then
+                    Me.NotifyIcon1.ShowBalloonTip(10000, "Carelink Alert", "SG above " + _limitHigh.ToString + " " + Me.BgUnitsString, Me.ToolTip1.ToolTipIcon)
+                End If
+                _showBaloonTip = False
+        End Select
+        Dim brushToUse As Brush = New SolidBrush(color)
+        g.Clear(bgColor)
+        g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit
+        If Math.Floor(Math.Log10(sg) + 1) = 3 Then
+            g.DrawString(str, fontToUse, brushToUse, -2, 0)
+        Else
+            g.DrawString(str, fontToUse, brushToUse, 1.5, 0)
+        End If
+        Dim hIcon As IntPtr = bitmapText.GetHicon()
+        Me.NotifyIcon1.Icon = System.Drawing.Icon.FromHandle(hIcon)
+        notStr.Append(Date.Now().ToString)
+        notStr.Append(Environment.NewLine)
+        notStr.Append("Last SG " + str + " " + Me.BgUnitsString)
+        If Not _lastBGValue = 0 Then
+            notStr.Append(Environment.NewLine)
+            diffsg = sg - _lastBGValue
+            notStr.Append("SG Trend ")
+            notStr.Append(diffsg.ToString("+0;-#"))
+        End If
+        notStr.Append(Environment.NewLine)
+        notStr.Append("Active ins. ")
+        notStr.Append(s_activeInsulin("amount"))
+        notStr.Append("U")
+        Me.NotifyIcon1.Text = notStr.ToString
+        _lastBGValue = sg
+        bitmapText.Dispose()
+        g.Dispose()
+    End Sub
+
     Private Sub UpdateAutoModeShield()
         Me.SensorMessage.Location = New Point(Me.ShieldPictureBox.Left + (Me.ShieldPictureBox.Width \ 2) - (Me.SensorMessage.Width \ 2), Me.SensorMessage.Top)
         If s_lastSG("sg") <> "0" Then
@@ -1661,7 +1722,7 @@ Public Class Form1
             Me.CurrentBG.Location = New Point((Me.ShieldPictureBox.Width \ 2) - (Me.CurrentBG.Width \ 2), Me.ShieldPictureBox.Height \ 4)
             Me.CurrentBG.Parent = Me.ShieldPictureBox
             Me.CurrentBG.Text = s_lastSG("sg")
-            Me.NotifyIcon1.Text = $"Last SG {s_lastSG("sg")} {Me.BgUnitsString}"
+            Me.UpdateNotifyIcon()
             _bgMiniDisplay.SetCurrentBGString(s_lastSG("sg"))
             Me.SensorMessage.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield
