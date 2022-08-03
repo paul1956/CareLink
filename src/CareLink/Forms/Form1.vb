@@ -1074,6 +1074,7 @@ Public Class Form1
                     .Padding = New Padding(0)
                 }
             layoutPanel.Controls.Add(innerTableBlue, column:=1, row:=jsonEntry.Index)
+            Application.DoEvents()
             GetInnerTable(jsonEntry.Value, innerTableBlue, rowIndex, filterJsonData, timeFormat, Me.FormScale.Height <> 1)
             Application.DoEvents()
         Next
@@ -1096,21 +1097,6 @@ Public Class Form1
         End If
         _recentDataSameCount = 0
         Return True
-    End Function
-
-    Private Function ProcessInnerListDictionary(layoutPanel1 As TableLayoutPanel, rowIndex As ItemIndexs, innerListDictionary As List(Of Dictionary(Of String, String))) As TableLayoutPanel
-        layoutPanel1.Parent.Parent.UseWaitCursor = True
-        Application.DoEvents()
-        layoutPanel1.Invoke(Sub()
-                                Me.FillOneRowOfTableLayoutPanel(layoutPanel1,
-                                                              innerListDictionary,
-                                                              rowIndex,
-                                                              _filterJsonData,
-                                                              _timeWithMinuteFormat)
-                            End Sub)
-        layoutPanel1.Parent.Parent.UseWaitCursor = False
-        Application.DoEvents()
-        Return layoutPanel1
     End Function
 
     Private Sub UpdateActiveInsulinChart()
@@ -1423,9 +1409,9 @@ Public Class Form1
                 Case ItemIndexs.basal
                     InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelBasal)
                 Case ItemIndexs.therapyAlgorithmState
-                    ' handled elsewhere
+                    InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelTherapyAlgorthm, True)
                 Case ItemIndexs.pumpBannerState
-                    ' handled elsewhere
+                    InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelBannerState, True)
                 Case Else
                     Stop
                     Exit Select
@@ -1443,13 +1429,17 @@ Public Class Form1
                     currentRowIndex += 1
                 End If
                 layoutPanel1.RowStyles(tableRelitiveRow).SizeType = SizeType.AutoSize
-                If Not singleItem OrElse rowIndex = ItemIndexs.lastSG OrElse rowIndex = ItemIndexs.lastAlarm Then
+                If (Not singleItem) OrElse
+                    rowIndex = ItemIndexs.lastSG OrElse
+                    rowIndex = ItemIndexs.lastAlarm OrElse
+                    rowIndex = ItemIndexs.pumpBannerState Then
                     Dim columnHeaderLabel As New Label With {
                             .Text = $"{CInt(rowIndex)} {row.Key}",
                             .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                             .AutoSize = True
                         }
                     layoutPanel1.Controls.Add(columnHeaderLabel, 0, tableRelitiveRow)
+                    Application.DoEvents()
                 End If
                 If row.Value?.StartsWith("[") Then
                     Dim innerListDictionary As List(Of Dictionary(Of String, String)) = LoadList(row.Value, False)
@@ -1468,52 +1458,28 @@ Public Class Form1
                         Dim rowTextBox As New TextBox With {
                                 .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                 .AutoSize = True,
+                                .BackColor = Color.LightGray,
+                                .BorderStyle = BorderStyle.FixedSingle,
                                 .ReadOnly = True,
                                 .Text = ""
                             }
-                        layoutPanel1.Controls.Add(rowTextBox,
-                                                  If(singleItem, 0, 1),
-                                                  tableRelitiveRow)
+                        layoutPanel1.Controls.Add(rowTextBox, 1, tableRelitiveRow)
                         Continue For
                     End If
-                    Me.ProcessInnerListDictionary(layoutPanel1, rowIndex, innerListDictionary)
+                    layoutPanel1.Parent.Parent.UseWaitCursor = True
+                    Application.DoEvents()
+                    layoutPanel1.Invoke(Sub()
+                                            Me.FillOneRowOfTableLayoutPanel(layoutPanel1,
+                                                              innerListDictionary,
+                                                              rowIndex,
+                                                              _filterJsonData,
+                                                              _timeWithMinuteFormat)
+                                        End Sub)
+                    layoutPanel1.Parent.Parent.UseWaitCursor = False
+                    Application.DoEvents()
                     Continue For
                 End If
-                If row.Value?.StartsWith("{") Then
-                    layoutPanel1.RowStyles(tableRelitiveRow).SizeType = SizeType.AutoSize
-                    Dim innerJsonDictionary As Dictionary(Of String, String) = Loads(row.Value)
-                    Select Case rowIndex
-                        Case ItemIndexs.lastSG
-                            s_lastSG = innerJsonDictionary
-                        Case ItemIndexs.activeInsulin
-                            s_activeInsulin = innerJsonDictionary
-                        Case ItemIndexs.lastAlarm,
-                             ItemIndexs.notificationHistory,
-                             ItemIndexs.therapyAlgorithmState,
-                             ItemIndexs.basal
-                            ' handled elsewhere
-                        Case Else
-                            Stop
-                    End Select
-                    Dim innerTableBlue As New TableLayoutPanel With {
-                            .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                            .AutoScroll = True,
-                            .AutoSize = True,
-                            .AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                            .ColumnCount = 2,
-                            .Dock = DockStyle.Fill,
-                            .Margin = New Padding(0),
-                            .Name = NameOf(innerTableBlue),
-                            .Padding = New Padding(0)
-                        }
-                    layoutPanel1.Controls.Add(innerTableBlue,
-                                              If(singleItem AndAlso Not (rowIndex = ItemIndexs.lastSG OrElse rowIndex = ItemIndexs.lastAlarm), 0, 1),
-                                              tableRelitiveRow)
-                    If rowIndex = ItemIndexs.notificationHistory Then
-                        innerTableBlue.AutoScroll = False
-                    End If
-                    GetInnerTable(innerJsonDictionary, innerTableBlue, rowIndex, _filterJsonData, _timeWithMinuteFormat, isScaledForm)
-                Else
+                If Not (row.Value?.StartsWith("{")) Then
                     Dim resultDate As Date
                     Dim value As String = row.Value
                     If s_ListOfTimeItems.Contains(rowIndex) Then
@@ -1530,7 +1496,44 @@ Public Class Form1
                     layoutPanel1.Controls.Add(rowTextBox,
                                               If(singleItem, 0, 1),
                                               tableRelitiveRow)
+
+                    Continue For
                 End If
+                layoutPanel1.RowStyles(tableRelitiveRow).SizeType = SizeType.AutoSize
+                Dim innerJsonDictionary As Dictionary(Of String, String) = Loads(row.Value)
+                Dim docStyle As DockStyle = DockStyle.Fill
+                Select Case rowIndex
+                    Case ItemIndexs.lastSG
+                        s_lastSG = innerJsonDictionary
+                    Case ItemIndexs.activeInsulin
+                        s_activeInsulin = innerJsonDictionary
+                    Case ItemIndexs.therapyAlgorithmState,
+                         ItemIndexs.basal
+                        docStyle = DockStyle.Top
+                    Case ItemIndexs.lastAlarm,
+                         ItemIndexs.notificationHistory
+                        ' handled elsewhere
+                    Case Else
+                        Stop
+                End Select
+                Dim innerTableBlue As New TableLayoutPanel With {
+                        .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                        .AutoScroll = True,
+                        .AutoSize = True,
+                        .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                        .ColumnCount = 2,
+                        .Dock = docStyle,
+                        .Margin = New Padding(0),
+                        .Name = NameOf(innerTableBlue),
+                        .Padding = New Padding(0)
+                    }
+                layoutPanel1.Controls.Add(innerTableBlue,
+                                          If(singleItem AndAlso Not (rowIndex = ItemIndexs.lastSG OrElse rowIndex = ItemIndexs.lastAlarm), 0, 1),
+                                          tableRelitiveRow)
+                If rowIndex = ItemIndexs.notificationHistory Then
+                    innerTableBlue.AutoScroll = False
+                End If
+                GetInnerTable(innerJsonDictionary, innerTableBlue, rowIndex, _filterJsonData, _timeWithMinuteFormat, isScaledForm)
             Catch ex As Exception
                 Stop
                 'Throw

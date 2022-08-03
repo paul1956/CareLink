@@ -117,6 +117,10 @@ Partial Class Form1
         Me.TableLayoutPanelNotificationHistory = New System.Windows.Forms.TableLayoutPanel()
         Me.TabPage9Basal = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelBasal = New System.Windows.Forms.TableLayoutPanel()
+        Me.TabPage10TherapyAlgorithm = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanelTherapyAlgorthm = New System.Windows.Forms.TableLayoutPanel()
+        Me.TabPage11BannerState = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanelBannerState = New System.Windows.Forms.TableLayoutPanel()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.CursorTimer = New System.Windows.Forms.Timer(Me.components)
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
@@ -157,6 +161,8 @@ Partial Class Form1
         Me.TabPage7Markers.SuspendLayout()
         Me.TabPage8NotificationHistory.SuspendLayout()
         Me.TabPage9Basal.SuspendLayout()
+        Me.TabPage10TherapyAlgorithm.SuspendLayout()
+        Me.TabPage11BannerState.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
@@ -464,6 +470,8 @@ Partial Class Form1
         Me.TabControl1.Controls.Add(Me.TabPage7Markers)
         Me.TabControl1.Controls.Add(Me.TabPage8NotificationHistory)
         Me.TabControl1.Controls.Add(Me.TabPage9Basal)
+        Me.TabControl1.Controls.Add(Me.TabPage10TherapyAlgorithm)
+        Me.TabControl1.Controls.Add(Me.TabPage11BannerState)
         Me.TabControl1.Location = New System.Drawing.Point(0, 0)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
@@ -1309,6 +1317,54 @@ Partial Class Form1
         Me.TableLayoutPanelBasal.Size = New System.Drawing.Size(1370, 379)
         Me.TableLayoutPanelBasal.TabIndex = 0
         '
+        'TabPage10TherapyAlgorithm
+        '
+        Me.TabPage10TherapyAlgorithm.Controls.Add(Me.TableLayoutPanelTherapyAlgorthm)
+        Me.TabPage10TherapyAlgorithm.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage10TherapyAlgorithm.Name = "TabPage10TherapyAlgorithm"
+        Me.TabPage10TherapyAlgorithm.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage10TherapyAlgorithm.Size = New System.Drawing.Size(1376, 617)
+        Me.TabPage10TherapyAlgorithm.TabIndex = 9
+        Me.TabPage10TherapyAlgorithm.Text = "Therapy Algorithm"
+        Me.TabPage10TherapyAlgorithm.UseVisualStyleBackColor = True
+        '
+        'TableLayoutPanelTherapyAlgorthm
+        '
+        Me.TableLayoutPanelTherapyAlgorthm.ColumnCount = 1
+        Me.TableLayoutPanelTherapyAlgorthm.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelTherapyAlgorthm.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanelTherapyAlgorthm.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelTherapyAlgorthm.Name = "TableLayoutPanelTherapyAlgorthm"
+        Me.TableLayoutPanelTherapyAlgorthm.RowCount = 1
+        Me.TableLayoutPanelTherapyAlgorthm.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelTherapyAlgorthm.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.TableLayoutPanelTherapyAlgorthm.Size = New System.Drawing.Size(1370, 611)
+        Me.TableLayoutPanelTherapyAlgorthm.TabIndex = 0
+        '
+        'TabPage11BannerState
+        '
+        Me.TabPage11BannerState.Controls.Add(Me.TableLayoutPanelBannerState)
+        Me.TabPage11BannerState.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage11BannerState.Name = "TabPage11BannerState"
+        Me.TabPage11BannerState.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage11BannerState.Size = New System.Drawing.Size(1376, 617)
+        Me.TabPage11BannerState.TabIndex = 10
+        Me.TabPage11BannerState.Text = "Banner State"
+        Me.TabPage11BannerState.UseVisualStyleBackColor = True
+        '
+        'TableLayoutPanelBannerState
+        '
+        Me.TableLayoutPanelBannerState.ColumnCount = 2
+        Me.TableLayoutPanelBannerState.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.45985!))
+        Me.TableLayoutPanelBannerState.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 88.54015!))
+        Me.TableLayoutPanelBannerState.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TableLayoutPanelBannerState.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelBannerState.Name = "TableLayoutPanelBannerState"
+        Me.TableLayoutPanelBannerState.RowCount = 1
+        Me.TableLayoutPanelBannerState.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelBannerState.Size = New System.Drawing.Size(1370, 611)
+        Me.TableLayoutPanelBannerState.TabIndex = 0
+        '
         'ImageList1
         '
         Me.ImageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit
@@ -1411,6 +1467,8 @@ Partial Class Form1
         Me.TabPage8NotificationHistory.ResumeLayout(False)
         Me.TabPage8NotificationHistory.PerformLayout()
         Me.TabPage9Basal.ResumeLayout(False)
+        Me.TabPage10TherapyAlgorithm.ResumeLayout(False)
+        Me.TabPage11BannerState.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1515,4 +1573,8 @@ Partial Class Form1
     Friend WithEvents TotalCarbsMessageLabel As Label
     Friend WithEvents MenuOptionsUseAdvancedAITDecay As ToolStripMenuItem
     Friend WithEvents MenuStartHereExceptionReportLoadToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents TabPage10TherapyAlgorithm As TabPage
+    Friend WithEvents TabPage11BannerState As TabPage
+    Friend WithEvents TableLayoutPanelTherapyAlgorthm As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelBannerState As TableLayoutPanel
 End Class

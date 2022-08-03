@@ -11,6 +11,8 @@ Friend Module PumpVariables
                         ItemIndexs.limits,
                         ItemIndexs.markers,
                         ItemIndexs.notificationHistory,
+                        ItemIndexs.therapyAlgorithmState,
+                        ItemIndexs.pumpBannerState,
                         ItemIndexs.basal}
 
     Friend ReadOnly s_ListOfTimeItems As New List(Of Integer) From {

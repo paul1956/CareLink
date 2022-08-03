@@ -65,7 +65,7 @@ Partial Class LoginForm1
         Me.UsernameLabel.Location = New System.Drawing.Point(201, 6)
         Me.UsernameLabel.Name = "UsernameLabel"
         Me.UsernameLabel.Size = New System.Drawing.Size(220, 23)
-        Me.UsernameLabel.TabIndex = 0
+        Me.UsernameLabel.TabIndex = 2
         Me.UsernameLabel.Text = "&User name"
         Me.UsernameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
@@ -75,7 +75,7 @@ Partial Class LoginForm1
         Me.PasswordLabel.Location = New System.Drawing.Point(201, 57)
         Me.PasswordLabel.Name = "PasswordLabel"
         Me.PasswordLabel.Size = New System.Drawing.Size(220, 23)
-        Me.PasswordLabel.TabIndex = 2
+        Me.PasswordLabel.TabIndex = 4
         Me.PasswordLabel.Text = "&Password"
         Me.PasswordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
@@ -85,7 +85,7 @@ Partial Class LoginForm1
         Me.UsernameTextBox.Location = New System.Drawing.Point(201, 30)
         Me.UsernameTextBox.Name = "UsernameTextBox"
         Me.UsernameTextBox.Size = New System.Drawing.Size(220, 23)
-        Me.UsernameTextBox.TabIndex = 1
+        Me.UsernameTextBox.TabIndex = 3
         '
         'PasswordTextBox
         '
@@ -94,15 +94,16 @@ Partial Class LoginForm1
         Me.PasswordTextBox.Name = "PasswordTextBox"
         Me.PasswordTextBox.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.PasswordTextBox.Size = New System.Drawing.Size(159, 23)
-        Me.PasswordTextBox.TabIndex = 3
+        Me.PasswordTextBox.TabIndex = 5
         '
         'OK
         '
         Me.OK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.OK.Location = New System.Drawing.Point(235, 273)
+        Me.OK.DialogResult = System.Windows.Forms.DialogResult.OK
+        Me.OK.Location = New System.Drawing.Point(235, 277)
         Me.OK.Name = "OK"
         Me.OK.Size = New System.Drawing.Size(94, 23)
-        Me.OK.TabIndex = 11
+        Me.OK.TabIndex = 0
         Me.OK.Text = "&OK"
         '
         'Cancel
@@ -112,7 +113,7 @@ Partial Class LoginForm1
         Me.Cancel.Location = New System.Drawing.Point(338, 277)
         Me.Cancel.Name = "Cancel"
         Me.Cancel.Size = New System.Drawing.Size(94, 23)
-        Me.Cancel.TabIndex = 12
+        Me.Cancel.TabIndex = 1
         Me.Cancel.Text = "&Cancel"
         '
         'SaveCredentials
@@ -122,7 +123,7 @@ Partial Class LoginForm1
         Me.SaveCredentials.Location = New System.Drawing.Point(204, 207)
         Me.SaveCredentials.Name = "SaveCredentials"
         Me.SaveCredentials.Size = New System.Drawing.Size(187, 19)
-        Me.SaveCredentials.TabIndex = 8
+        Me.SaveCredentials.TabIndex = 11
         Me.SaveCredentials.Text = "Save User Name and Password"
         Me.SaveCredentials.UseVisualStyleBackColor = True
         '
@@ -135,7 +136,7 @@ Partial Class LoginForm1
         Me.CountryComboBox.Location = New System.Drawing.Point(201, 177)
         Me.CountryComboBox.Name = "CountryComboBox"
         Me.CountryComboBox.Size = New System.Drawing.Size(220, 23)
-        Me.CountryComboBox.TabIndex = 7
+        Me.CountryComboBox.TabIndex = 10
         '
         'RegionComboBox
         '
@@ -145,7 +146,7 @@ Partial Class LoginForm1
         Me.RegionComboBox.Location = New System.Drawing.Point(201, 128)
         Me.RegionComboBox.Name = "RegionComboBox"
         Me.RegionComboBox.Size = New System.Drawing.Size(220, 23)
-        Me.RegionComboBox.TabIndex = 5
+        Me.RegionComboBox.TabIndex = 8
         '
         'SelectRegionLabel
         '
@@ -154,7 +155,7 @@ Partial Class LoginForm1
         Me.SelectRegionLabel.Location = New System.Drawing.Point(201, 110)
         Me.SelectRegionLabel.Name = "SelectRegionLabel"
         Me.SelectRegionLabel.Size = New System.Drawing.Size(78, 15)
-        Me.SelectRegionLabel.TabIndex = 4
+        Me.SelectRegionLabel.TabIndex = 7
         Me.SelectRegionLabel.Text = "Select Region"
         '
         'SelectCountryLabel
@@ -164,7 +165,7 @@ Partial Class LoginForm1
         Me.SelectCountryLabel.Location = New System.Drawing.Point(201, 160)
         Me.SelectCountryLabel.Name = "SelectCountryLabel"
         Me.SelectCountryLabel.Size = New System.Drawing.Size(84, 15)
-        Me.SelectCountryLabel.TabIndex = 6
+        Me.SelectCountryLabel.TabIndex = 9
         Me.SelectCountryLabel.Text = "Select Country"
         '
         'ShowPasswordCheckBox
@@ -173,7 +174,7 @@ Partial Class LoginForm1
         Me.ShowPasswordCheckBox.Location = New System.Drawing.Point(366, 81)
         Me.ShowPasswordCheckBox.Name = "ShowPasswordCheckBox"
         Me.ShowPasswordCheckBox.Size = New System.Drawing.Size(55, 19)
-        Me.ShowPasswordCheckBox.TabIndex = 13
+        Me.ShowPasswordCheckBox.TabIndex = 6
         Me.ShowPasswordCheckBox.Text = "Show"
         Me.ShowPasswordCheckBox.UseVisualStyleBackColor = True
         '
@@ -184,7 +185,7 @@ Partial Class LoginForm1
         Me.LoginStatus.Multiline = True
         Me.LoginStatus.Name = "LoginStatus"
         Me.LoginStatus.Size = New System.Drawing.Size(191, 80)
-        Me.LoginStatus.TabIndex = 14
+        Me.LoginStatus.TabIndex = 12
         Me.LoginStatus.Text = "Login Status: Unknown"
         '
         'LoginForm1
