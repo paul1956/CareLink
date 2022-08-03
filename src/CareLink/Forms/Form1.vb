@@ -43,16 +43,15 @@ Public Class Form1
     Private _filterJsonData As Boolean = True
     Private _initialized As Boolean = False
     Private _inMouseMove As Boolean = False
+    Private _lastBGValue As Double = 0
     Private _limitHigh As Single
     Private _limitLow As Single
     Private _recentDatalast As Dictionary(Of String, String)
     Private _recentDataSameCount As Integer
+    Private _showBaloonTip As Boolean = True
     Private _timeWithMinuteFormat As String
     Private _timeWithoutMinuteFormat As String
     Private _updating As Boolean = False
-    Private _showBaloonTip As Boolean = True
-    Private _lastBGValue As Double = 0
-
     Private Property FormScale As New SizeF(1.0F, 1.0F)
     Private ReadOnly Property SensorLifeToolTip As New ToolTip()
     Public Property BgUnitsString As String
@@ -1280,103 +1279,100 @@ Public Class Form1
             Dim rowIndex As ItemIndexs = CType([Enum].Parse(GetType(ItemIndexs), c.Value.Key), ItemIndexs)
 
             Select Case rowIndex
-                Case ItemIndexs.medicalDeviceTimeAsString,
-                     ItemIndexs.lastSensorTSAsString,
-                     ItemIndexs.kind,
-                     ItemIndexs.version,
-                     ItemIndexs.currentServerTime,
-                     ItemIndexs.lastConduitUpdateServerTime,
-                     ItemIndexs.lastMedicalDeviceDataUpdateServerTime,
-                     ItemIndexs.conduitSerialNumber,
-                     ItemIndexs.conduitBatteryLevel,
-                     ItemIndexs.conduitBatteryStatus,
-                     ItemIndexs.conduitInRange,
-                     ItemIndexs.conduitMedicalDeviceInRange,
-                     ItemIndexs.conduitSensorInRange,
-                     ItemIndexs.medicalDeviceFamily,
-                     ItemIndexs.reservoirAmount,
-                     ItemIndexs.calibStatus,
-                     ItemIndexs.pumpCommunicationState,
-                     ItemIndexs.calFreeSensor,
-                     ItemIndexs.conduitInRange,
-                     ItemIndexs.medicalDeviceSuspended,
-                     ItemIndexs.lastSGTrend,
-                     ItemIndexs.gstCommunicationState,
-                     ItemIndexs.maxAutoBasalRate,
-                     ItemIndexs.maxBolusAmount,
-                     ItemIndexs.sgBelowLimit,
-                     ItemIndexs.averageSGFloat,
-                     ItemIndexs.timeToNextCalibrationRecommendedMinutes,
-                     ItemIndexs.finalCalibration
-                     ' String Handler
+                Case ItemIndexs.medicalDeviceTimeAsString
+                Case ItemIndexs.lastSensorTSAsString
+                Case ItemIndexs.kind
+                Case ItemIndexs.version
+                Case ItemIndexs.currentServerTime
+                Case ItemIndexs.lastConduitUpdateServerTime
+                Case ItemIndexs.lastMedicalDeviceDataUpdateServerTime
+                Case ItemIndexs.conduitSerialNumber
+                Case ItemIndexs.conduitBatteryLevel
+                Case ItemIndexs.conduitBatteryStatus
+                Case ItemIndexs.conduitMedicalDeviceInRange
+                Case ItemIndexs.conduitSensorInRange
+                Case ItemIndexs.medicalDeviceFamily
+                Case ItemIndexs.reservoirAmount
+                Case ItemIndexs.calibStatus
+                Case ItemIndexs.medicalDeviceSuspended
+                Case ItemIndexs.lastSGTrend
+                Case ItemIndexs.pumpCommunicationState
+                Case ItemIndexs.gstCommunicationState
+                Case ItemIndexs.maxAutoBasalRate
+                Case ItemIndexs.maxBolusAmount
+                Case ItemIndexs.sgBelowLimit
+                Case ItemIndexs.averageSGFloat
+                Case ItemIndexs.timeToNextCalibrationRecommendedMinutes
+                Case ItemIndexs.calFreeSensor
+                Case ItemIndexs.finalCalibration
+
 
                 Case ItemIndexs.pumpModelNumber
                     Me.ModelLabel.Text = row.Value
-                     ' String Handler
+
                 Case ItemIndexs.firstName
                     firstName = row.Value
-                     ' String Handler
+
                 Case ItemIndexs.lastName
                     Me.FullNameLabel.Text = $"{firstName} {row.Value}"
-                     ' String Handler
+
                 Case ItemIndexs.conduitInRange
                     s_conduitSensorInRange = CBool(row.Value)
-                    ' String Handler
+
                 Case ItemIndexs.sensorState
                     s_sensorState = row.Value
-                    ' String Handler
+
                 Case ItemIndexs.medicalDeviceSerialNumber
                     Me.SerialNumberLabel.Text = row.Value
-                     ' String Handler
+
                 Case ItemIndexs.reservoirLevelPercent
                     _reservoirLevelPercent = CInt(row.Value)
-                     ' String Handler
+
                 Case ItemIndexs.reservoirRemainingUnits
                     _reservoirRemainingUnits = row.Value.ParseDouble
-                     ' String Handler
+
                 Case ItemIndexs.medicalDeviceBatteryLevelPercent
                     _medicalDeviceBatteryLevelPercent = CInt(row.Value)
-                     ' String Handler
+
                 Case ItemIndexs.sensorDurationHours
                     _sensorDurationHours = CInt(row.Value)
-                     ' String Handler
+
                 Case ItemIndexs.timeToNextCalibHours
                     _timeToNextCalibHours = CUShort(row.Value)
-                     ' String Handler
+
                 Case ItemIndexs.bgUnits
                     Me.UpdateRegionalData(_RecentData)
-                     ' String Handler
+
                 Case ItemIndexs.timeFormat
                     _timeWithMinuteFormat = If(row.Value = "HR_12", TwelveHourTimeWithMinuteFormat, MilitaryTimeWithMinuteFormat)
                     _timeWithoutMinuteFormat = If(row.Value = "HR_12", TwelveHourTimeWithoutMinuteFormat, MilitaryTimeWithoutMinuteFormat)
-                     ' String Handler
+
                 Case ItemIndexs.systemStatusMessage
                     s_systemStatusMessage = row.Value
-                     ' String Handler
+
                 Case ItemIndexs.averageSG
                     s_averageSG = CInt(row.Value)
-                     ' String Handler
+
                 Case ItemIndexs.belowHypoLimit
                     s_belowHypoLimit = CInt(row.Value)
-                     ' String Handler
+
                 Case ItemIndexs.aboveHyperLimit
                     s_aboveHyperLimit = CInt(row.Value)
-                     ' String Handler
+
                 Case ItemIndexs.timeInRange
                     _timeInRange = CInt(row.Value)
-                     ' String Handler
+
                 Case ItemIndexs.gstBatteryLevel
                     s_gstBatteryLevel = CInt(row.Value)
-                     ' String Handler
+
                 Case ItemIndexs.sensorDurationMinutes
                     _sensorDurationMinutes = CInt(row.Value)
-                    ' String Handler
+
                 Case ItemIndexs.timeToNextCalibrationMinutes
                     _timeToNextCalibrationMinutes = CInt(row.Value)
-                    ' String Handler
+
                 Case ItemIndexs.clientTimeZoneName
                     s_clientTimeZoneName = row.Value
-                     ' String Handler
 
                 Case ItemIndexs.lastSensorTS,
                      ItemIndexs.lastConduitTime,
@@ -1658,63 +1654,6 @@ Public Class Form1
         _bgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
     End Sub
 
-    Private Sub UpdateNotifyIcon()
-        Dim str As String = s_lastSG("sg")
-        Dim fontToUse As New Font("Trebuchet MS", 10, FontStyle.Regular, GraphicsUnit.Pixel)
-        Dim color As Color = Color.White
-        Dim bgColor As Color
-        Dim sg As Double = str.ParseDouble
-        Dim bitmapText As New Bitmap(16, 16)
-        Dim g As Graphics = System.Drawing.Graphics.FromImage(bitmapText)
-        Dim notStr As New StringBuilder
-        Dim diffsg As Double
-
-        Select Case sg
-            Case <= _limitLow
-                bgColor = Color.Orange
-                If _showBaloonTip Then
-                    Me.NotifyIcon1.ShowBalloonTip(10000, "Carelink Alert", "SG below " + _limitLow.ToString + " " + Me.BgUnitsString, Me.ToolTip1.ToolTipIcon)
-                End If
-                _showBaloonTip = False
-            Case <= _limitHigh
-                bgColor = Color.Green
-                _showBaloonTip = True
-            Case Else
-                bgColor = Color.Red
-                If _showBaloonTip Then
-                    Me.NotifyIcon1.ShowBalloonTip(10000, "Carelink Alert", "SG above " + _limitHigh.ToString + " " + Me.BgUnitsString, Me.ToolTip1.ToolTipIcon)
-                End If
-                _showBaloonTip = False
-        End Select
-        Dim brushToUse As Brush = New SolidBrush(color)
-        g.Clear(bgColor)
-        g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit
-        If Math.Floor(Math.Log10(sg) + 1) = 3 Then
-            g.DrawString(str, fontToUse, brushToUse, -2, 0)
-        Else
-            g.DrawString(str, fontToUse, brushToUse, 1.5, 0)
-        End If
-        Dim hIcon As IntPtr = bitmapText.GetHicon()
-        Me.NotifyIcon1.Icon = System.Drawing.Icon.FromHandle(hIcon)
-        notStr.Append(Date.Now().ToString)
-        notStr.Append(Environment.NewLine)
-        notStr.Append("Last SG " + str + " " + Me.BgUnitsString)
-        If Not _lastBGValue = 0 Then
-            notStr.Append(Environment.NewLine)
-            diffsg = sg - _lastBGValue
-            notStr.Append("SG Trend ")
-            notStr.Append(diffsg.ToString("+0;-#"))
-        End If
-        notStr.Append(Environment.NewLine)
-        notStr.Append("Active ins. ")
-        notStr.Append(s_activeInsulin("amount"))
-        notStr.Append("U"c)
-        Me.NotifyIcon1.Text = notStr.ToString
-        _lastBGValue = sg
-        bitmapText.Dispose()
-        g.Dispose()
-    End Sub
-
     Private Sub UpdateAutoModeShield()
         Me.SensorMessage.Location = New Point(Me.ShieldPictureBox.Left + (Me.ShieldPictureBox.Width \ 2) - (Me.SensorMessage.Width \ 2), Me.SensorMessage.Top)
         If s_lastSG("sg") <> "0" Then
@@ -1790,6 +1729,63 @@ Public Class Form1
                 Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(0)
         End Select
         Application.DoEvents()
+    End Sub
+
+    Private Sub UpdateNotifyIcon()
+        Dim str As String = s_lastSG("sg")
+        Dim fontToUse As New Font("Trebuchet MS", 10, FontStyle.Regular, GraphicsUnit.Pixel)
+        Dim color As Color = Color.White
+        Dim bgColor As Color
+        Dim sg As Double = str.ParseDouble
+        Dim bitmapText As New Bitmap(16, 16)
+        Dim g As Graphics = System.Drawing.Graphics.FromImage(bitmapText)
+        Dim notStr As New StringBuilder
+        Dim diffsg As Double
+
+        Select Case sg
+            Case <= _limitLow
+                bgColor = Color.Orange
+                If _showBaloonTip Then
+                    Me.NotifyIcon1.ShowBalloonTip(10000, "Carelink Alert", "SG below " + _limitLow.ToString + " " + Me.BgUnitsString, Me.ToolTip1.ToolTipIcon)
+                End If
+                _showBaloonTip = False
+            Case <= _limitHigh
+                bgColor = Color.Green
+                _showBaloonTip = True
+            Case Else
+                bgColor = Color.Red
+                If _showBaloonTip Then
+                    Me.NotifyIcon1.ShowBalloonTip(10000, "Carelink Alert", "SG above " + _limitHigh.ToString + " " + Me.BgUnitsString, Me.ToolTip1.ToolTipIcon)
+                End If
+                _showBaloonTip = False
+        End Select
+        Dim brushToUse As Brush = New SolidBrush(color)
+        g.Clear(bgColor)
+        g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit
+        If Math.Floor(Math.Log10(sg) + 1) = 3 Then
+            g.DrawString(str, fontToUse, brushToUse, -2, 0)
+        Else
+            g.DrawString(str, fontToUse, brushToUse, 1.5, 0)
+        End If
+        Dim hIcon As IntPtr = bitmapText.GetHicon()
+        Me.NotifyIcon1.Icon = System.Drawing.Icon.FromHandle(hIcon)
+        notStr.Append(Date.Now().ToString)
+        notStr.Append(Environment.NewLine)
+        notStr.Append("Last SG " + str + " " + Me.BgUnitsString)
+        If Not _lastBGValue = 0 Then
+            notStr.Append(Environment.NewLine)
+            diffsg = sg - _lastBGValue
+            notStr.Append("SG Trend ")
+            notStr.Append(diffsg.ToString("+0;-#"))
+        End If
+        notStr.Append(Environment.NewLine)
+        notStr.Append("Active ins. ")
+        notStr.Append(s_activeInsulin("amount"))
+        notStr.Append("U"c)
+        Me.NotifyIcon1.Text = notStr.ToString
+        _lastBGValue = sg
+        bitmapText.Dispose()
+        g.Dispose()
     End Sub
 
     Private Sub UpdatePumpBattery()
