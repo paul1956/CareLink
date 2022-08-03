@@ -1660,7 +1660,7 @@ Public Class Form1
 
     Private Sub UpdateNotifyIcon()
         Dim str As String = s_lastSG("sg")
-        Dim fontToUse As Font = New Font("Trebuchet MS", 10, FontStyle.Regular, GraphicsUnit.Pixel)
+        Dim fontToUse As New Font("Trebuchet MS", 10, FontStyle.Regular, GraphicsUnit.Pixel)
         Dim color As Color = Color.White
         Dim bgColor As Color
         Dim sg As Double = str.ParseDouble
@@ -1708,7 +1708,7 @@ Public Class Form1
         notStr.Append(Environment.NewLine)
         notStr.Append("Active ins. ")
         notStr.Append(s_activeInsulin("amount"))
-        notStr.Append("U")
+        notStr.Append("U"c)
         Me.NotifyIcon1.Text = notStr.ToString
         _lastBGValue = sg
         bitmapText.Dispose()
