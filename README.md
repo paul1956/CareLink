@@ -45,6 +45,7 @@ https://github.com/paul1956/CareLink/releases/
 - Notification when SG is out of range.
 
 ![image](https://user-images.githubusercontent.com/4416348/182361568-2a3d91c2-94a7-4275-911c-187150f5319d.png)
+
   Complete rewrite of date handling
   
   New in 3.4.2.7
