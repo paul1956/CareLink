@@ -27,7 +27,7 @@ https://github.com/paul1956/CareLink/releases/
 ## What's New in this release
   New in 3.4.3.0
   Another contribution from Chris Deprez https://github.com/Krikke99
-  - shows SG on Sysem Tray with dynamic background color:
+  - shows SG on System Tray with dynamic background color:
     - Green normal
     - Orange low
     - Red high
