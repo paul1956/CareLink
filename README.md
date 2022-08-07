@@ -25,6 +25,10 @@ https://github.com/paul1956/CareLink/releases/
 - 8/07/2022
 
 ## What's New in this release
+  New in 35.0.1
+  Add back pump model number
+  Update version
+
   New in 3.5.0.0
   Complete rewrite of time handling
   Improved support for mmol/L with all values scaled

@@ -147,7 +147,8 @@ Public Class Form1
             Me.SplitContainer1.SplitterDistance = 0
         End If
         Me.MenuOptionsUseLocalTimeZone.Checked = My.Settings.UseLocalTimeZone
-        If Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=False) Then
+        CheckForUpdatesAsync(Me, False)
+        If Me.DoOptionalLoginAndUpdateData(False) Then
             Me.FinishInitialization()
             Me.UpdateAllTabPages()
         End If
@@ -1336,9 +1337,14 @@ Public Class Form1
                 _summaryBindingSource.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.kind,
-               ItemIndexs.version,
-               ItemIndexs.pumpModelNumber,
-               ItemIndexs.currentServerTime,
+                 ItemIndexs.version
+                _summaryBindingSource.Add(New SummaryRecord(rowIndex, row))
+
+            Case ItemIndexs.pumpModelNumber
+                Me.ModelLabel.Text = row.Value
+                _summaryBindingSource.Add(New SummaryRecord(rowIndex, row))
+
+            Case ItemIndexs.currentServerTime,
                ItemIndexs.lastConduitTime,
                ItemIndexs.lastConduitUpdateServerTime,
                ItemIndexs.lastMedicalDeviceDataUpdateServerTime
