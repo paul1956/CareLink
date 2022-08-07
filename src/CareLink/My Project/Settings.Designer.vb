@@ -173,19 +173,19 @@ Namespace My
                 Me("AlertPhoneNumber") = value
             End Set
         End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("02:15:00")>  _
+
+        <Global.System.Configuration.UserScopedSettingAttribute(),
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
+         Global.System.Configuration.DefaultSettingValueAttribute("02:15:00")>
         Public Property AIT() As Global.System.TimeSpan
             Get
-                Return CType(Me("AIT"),Global.System.TimeSpan)
+                Return CType(Me("AIT"), Global.System.TimeSpan)
             End Get
             Set
-                Me("AIT") = value
+                Me("AIT") = Value
             End Set
         End Property
-        
+
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
@@ -231,6 +231,18 @@ Namespace My
             End Get
             Set
                 Me("UseAdvancedAITDecay") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property UseLocalTimeZone() As Boolean
+            Get
+                Return CType(Me("UseLocalTimeZone"),Boolean)
+            End Get
+            Set
+                Me("UseLocalTimeZone") = value
             End Set
         End Property
     End Class

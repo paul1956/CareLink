@@ -9,6 +9,8 @@ Friend Module DateTimeExtensions
 
     Private ReadOnly s_dateTimeFormatUniqueCultures As New List(Of CultureInfo)
     Public ReadOnly s_fiveMinuteSpan As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
+    Public ReadOnly s_minuteInMilliseconds As Integer = CType(New TimeSpan(0, minutes:=1, 0).TotalMilliseconds, Integer)
+    Public ReadOnly s_thirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
 
     Private Function DoCultureSpecificParse(dateAsString As String, ByRef success As Boolean, defaultCulture As CultureInfo, styles As DateTimeStyles) As Date
         If s_dateTimeFormatUniqueCultures.Count = 0 Then
@@ -48,14 +50,6 @@ Friend Module DateTimeExtensions
     End Function
 
     <Extension>
-    Private Function GmtToLocalTime(gmtDate As Date) As Date
-        Dim clientTimeNow As Date = TimeZoneInfo.ConvertTime(Now, TimeZoneInfo.Local, s_clientTimeZone)
-        Dim dtUtc As Date = Date.UtcNow
-        Dim ts As TimeSpan = dtUtc.Subtract(clientTimeNow)
-        Return gmtDate.Add(ts)
-    End Function
-
-    <Extension>
     Friend Function GetCurrentDateCulture(countryCode As String) As CultureInfo
         Dim localDateCulture As List(Of CultureInfo) = s_cultureInfos.Where(Function(c As CultureInfo)
                                                                                 Return c.Name = $"en-{countryCode}"
@@ -92,6 +86,15 @@ Friend Module DateTimeExtensions
     End Function
 
     <Extension>
+    Public Function CDateOrDefault(dateAsString As String, key As String, provider As IFormatProvider) As String
+        Dim resultDate As Date
+        If TryParseDate(dateAsString, resultDate, key) Then
+            Return resultDate.ToString(provider)
+        End If
+        Return dateAsString
+    End Function
+
+    <Extension>
     Public Function ParseDate(dateAsString As String, key As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Date
         Dim resultDate As Date
         If dateAsString.TryParseDate(resultDate, key) Then
@@ -107,28 +110,28 @@ Friend Module DateTimeExtensions
         Dim success As Boolean
         Select Case key
             Case ""
-                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
-            Case "previousDateTime"
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeLocal)
-            Case "sMedicalDeviceTime"
-                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal).GmtToLocalTime
-            Case "sLastSensorTime"
-                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal).GmtToLocalTime
-            Case "triggeredDateTime"
+            Case NameOf(ItemIndexs.lastConduitDateTime)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeLocal)
+            Case NameOf(ItemIndexs.medicalDeviceTime)
+                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal).GmtToLocalTime
+            Case NameOf(ItemIndexs.lastSensorTS)
+                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal).GmtToLocalTime
             Case "loginDateUTC"
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal)
-            Case "datetime"
+            Case "datetime", "dateTime"
                 If key = "datetime" Then
-                    ' "2022-07-31T22:56:00.000Z"
                     resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal).GmtToLocalTime
                 Else
-                    resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeLocal)
+                    resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal).GmtToLocalTime
                 End If
+            Case "previousDateTime"
+                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeLocal)
             Case "secondaryTime"
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeLocal)
+            Case "triggeredDateTime"
+                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal).GmtToLocalTime
             Case Else
-                Stop
         End Select
 
         Return success

@@ -22,10 +22,13 @@ https://github.com/paul1956/CareLink/releases/
 - Medtronic CareLink data display
 
 ## Updated
-- 8/06/2022
+- 8/07/2022
 
 ## What's New in this release
-  New in 3.4.3.0
+  New in 3.5.0.0
+  Complete rewrite of time handling
+  Improved support for mmol/L with all values scaled
+  Added better TimeZone support
 
   Another contribution from Chris Deprez https://github.com/Krikke99
   - shows SG on System Tray with dynamic background color:

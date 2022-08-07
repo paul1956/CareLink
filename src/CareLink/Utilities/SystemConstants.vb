@@ -3,22 +3,39 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Globalization
-Imports System.IO
 Imports System.Text.Json
 
 Public Module SystemConstants
 
     Public Const ExceptionStartingString As String = "--- Start of Exception ---"
     Public Const ExceptionTerminatingString As String = "--- End of Exception ---"
+    Public Const MilitaryTimeWithMinuteFormat As String = "HH:mm"
+    Public Const MilitaryTimeWithoutMinuteFormat As String = "HH:mm"
     Public Const OwnerName As String = "paul1956"
-    Public Const RepoName As String = "CareLink"
-    Public Const RepoErrorReportName As String = "CareLinkErrorReport"
-    Public Const RepoSnapshotName As String = "CareLinkSnapshot"
     Public Const RepoDownloadName As String = "CareLinkLastDownload"
+    Public Const RepoErrorReportName As String = "CareLinkErrorReport"
+    Public Const RepoName As String = "CareLink"
+    Public Const RepoSnapshotName As String = "CareLinkSnapshot"
     Public Const SavedTitle As String = "CareLink For Windows"
     Public Const StackTraceStartingString As String = "--- Start of stack trace ---"
     Public Const StackTraceTerminatingString As String = "--- End of stack trace from previous location ---"
 
+    Public Const TwelveHourTimeWithMinuteFormat As String = "h:mm tt"
+
+    Public Const TwelveHourTimeWithoutMinuteFormat As String = "h:mm tt"
+
+    Public ReadOnly s_oneToNineteen As New List(Of String) From {
+                "zero", "one", "two", "three", "four", "five",
+                "six", "seven", "eight", "nine", "ten", "eleven",
+                "twelve", "thirteen", "fourteen", "fifteen",
+                "sixteen", "seventeen", "eighteen", "nineteen"}
+
+    Public ReadOnly s_unitsStrings As New Dictionary(Of String, String) From {
+                {"MG_DL", "mg/dl"},
+                {"MGDL", "mg/dl"},
+                {"MMOL_L", "mmol/L"},
+                {"MMOLL", "mmol/L"}
+            }
     Public Property GitHubCareLinkUrl As String = $"https://github.com/{OwnerName}/{RepoName}/"
     Public ReadOnly Property JsonFormattingOptions As New JsonSerializerOptions With {.WriteIndented = True}
     Public ReadOnly Property MyDocumentsPath As String = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
@@ -27,12 +44,6 @@ Public Module SystemConstants
 
     Private _CurrentDateCulture As CultureInfo
     Public ReadOnly s_cultureInfos As CultureInfo() = CultureInfo.GetCultures(CultureTypes.AllCultures)
-
-    Public ReadOnly Property LastDownloadWithPath As String
-        Get
-            Return GetDataFileName(RepoDownloadName, CurrentDateCulture.Name, "json", False).withPath
-        End Get
-    End Property
 
     Public Property CurrentDateCulture As CultureInfo
         Get
@@ -47,7 +58,13 @@ Public Module SystemConstants
         End Set
     End Property
 
-    Public ReadOnly Property CurrentDataCulture As CultureInfo = New CultureInfo("en-US")
+    Public ReadOnly Property LastDownloadWithPath As String
+        Get
+            Return GetDataFileName(RepoDownloadName, CultureInfo.CurrentUICulture.Name, "json", False).withPath
+        End Get
+    End Property
+
+    Public ReadOnly Property CurrentDataCulture As New CultureInfo("en-US")
     Public Property CurrentUICulture As CultureInfo = CultureInfo.CurrentUICulture
 
 #End Region

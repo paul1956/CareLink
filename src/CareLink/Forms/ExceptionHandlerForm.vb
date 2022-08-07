@@ -10,6 +10,7 @@ Imports Octokit
 
 Public Class ExceptionHandlerForm
     Private _gitClient As GitHubClient
+    Private _uniqueFileNameResult As (withPath As String, withoutPath As String) = Nothing
     Public Property LocalRawData As String
     Public Property ReportFileNameWithPath As String
     Public Property UnhandledException As UnhandledExceptionEventArgs
@@ -17,15 +18,15 @@ Public Class ExceptionHandlerForm
 #Region "Form Events"
 
     Private Sub Cancel_Click(sender As Object, e As EventArgs) Handles Cancel.Click
-        If String.IsNullOrWhiteSpace(Me.ReportFileNameWithPath) Then
-            File.Delete(Me.ReportFileNameWithPath)
+        If Not String.IsNullOrWhiteSpace(_uniqueFileNameResult.withPath) Then
+            File.Delete(_uniqueFileNameResult.withPath)
         End If
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub
 
     Private Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) Handles Me.Load
-        Form1.ServerUpdateTimer.Stop()
+        My.Forms.Form1.ServerUpdateTimer.Stop()
         Dim fontBold As New Font(Me.InstructionsRichTextBox.Font, FontStyle.Bold)
         Dim fontNormal As Font = Me.InstructionsRichTextBox.Font
         _gitClient = New GitHubClient(New ProductHeaderValue($"{RepoName}.Issues"), New Uri(GitHubCareLinkUrl))
@@ -102,7 +103,7 @@ Public Class ExceptionHandlerForm
             ' write stack trace trailer
             stream.WriteLine(StackTraceTerminatingString)
             ' write out data file
-            Using jd As JsonDocument = JsonDocument.Parse(Form1.RecentData.CleanUserData(), New JsonDocumentOptions)
+            Using jd As JsonDocument = JsonDocument.Parse(RecentData.CleanUserData(), New JsonDocumentOptions)
                 stream.Write(JsonSerializer.Serialize(jd, JsonFormattingOptions))
             End Using
         End Using

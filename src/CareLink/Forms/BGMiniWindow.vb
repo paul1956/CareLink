@@ -17,7 +17,7 @@ Public Class BGMiniWindow
         _currentBGValue = Value.ParseDouble()
         If Not Double.IsNaN(_currentBGValue) Then
             _normalizedBG = _currentBGValue
-            If Form1.BgUnitsString <> "mg/dl" Then
+            If BgUnitsString <> "mg/dl" Then
                 _normalizedBG *= 18
             End If
         End If
@@ -29,7 +29,7 @@ Public Class BGMiniWindow
     End Sub
 
     Private Sub BGMiniWindow_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        Form1.Visible = True
+        My.Forms.Form1.Visible = True
     End Sub
 
     Private Sub BGMiniWindow_GotFocus(sender As Object, e As EventArgs) Handles Me.GotFocus

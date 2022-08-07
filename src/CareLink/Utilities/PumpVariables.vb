@@ -2,27 +2,15 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Friend Module PumpVariables
-
-    Friend ReadOnly s_listOfSingleItems As New List(Of Integer) From {
-                        ItemIndexs.lastSG,
-                        ItemIndexs.lastAlarm,
-                        ItemIndexs.activeInsulin,
-                        ItemIndexs.limits,
-                        ItemIndexs.markers,
-                        ItemIndexs.notificationHistory,
-                        ItemIndexs.therapyAlgorithmState,
-                        ItemIndexs.pumpBannerState,
-                        ItemIndexs.basal}
+Public Module PumpVariables
 
     Friend ReadOnly s_ListOfTimeItems As New List(Of Integer) From {
                         ItemIndexs.lastSensorTS,
                         ItemIndexs.lastConduitTime,
                         ItemIndexs.medicalDeviceTime,
-                        ItemIndexs.sMedicalDeviceTime,
-                        ItemIndexs.lastSensorTime,
-                        ItemIndexs.sLastSensorTime,
-                        ItemIndexs.lastConduitDateTime}
+                        ItemIndexs.lastSensorTime}
+
+    Friend s_timeZoneList As List(Of TimeZoneInfo)
 
     ' Manually computed
     Friend s_totalAutoCorrection As Single
@@ -34,24 +22,69 @@ Friend Module PumpVariables
 
 #Region "Global variables to hold pump values"
 
-    Public s_aboveHyperLimit As Integer
-    Public s_activeInsulin As Dictionary(Of String, String)
-    Public s_averageSG As Double
-    Public s_belowHypoLimit As Integer
-    Public s_clientTimeZone As TimeZoneInfo
-    Public s_clientTimeZoneName As String
-    Public s_conduitSensorInRange As Boolean
-    Public S_criticalLow As Single
-    Public s_gstBatteryLevel As Integer
-    Public s_lastSG As Dictionary(Of String, String)
-    Public s_limits As List(Of Dictionary(Of String, String))
-    Public s_markers As List(Of Dictionary(Of String, String))
-    Public s_sensorState As String
-    Public s_systemStatusMessage As String
+    Private _scaleUnitsDivisor As Double
+    Friend s_aboveHyperLimit As Integer
+    Friend s_activeInsulin As Dictionary(Of String, String)
+    Friend s_averageSG As Double
+    Friend s_belowHypoLimit As Integer
+    Friend s_clientTimeZone As TimeZoneInfo
+    Friend s_clientTimeZoneName As String
+    Friend s_conduitSensorInRange As Boolean
+    Friend s_criticalLow As Single
+    Friend s_gstBatteryLevel As Integer
+    Friend s_insulinRow As Single
+    Friend s_lastSG As Dictionary(Of String, String)
+    Friend s_limitHigh As Single
+    Friend s_limitLow As Single
+    Friend s_limits As New List(Of Dictionary(Of String, String))
+    Friend s_markerRow As Single
+    Friend s_markers As New List(Of Dictionary(Of String, String))
+    Friend s_sensorState As String
+    Friend s_systemStatusMessage As String
+    Friend s_timeWithMinuteFormat As String
+    Friend s_timeWithoutMinuteFormat As String
+
+    Friend Property InsulinRow As Single
+        Get
+            If s_insulinRow = 0 Then
+                Throw New ArgumentNullException(NameOf(s_insulinRow))
+            End If
+            Return s_insulinRow
+        End Get
+        Set
+            s_insulinRow = Value
+        End Set
+    End Property
+
+    Friend Property MarkerRow As Single
+        Get
+            If s_markerRow = 0 Then
+                Throw New ArgumentNullException(NameOf(s_markerRow))
+            End If
+            Return s_markerRow
+        End Get
+        Set
+            s_markerRow = Value
+        End Set
+    End Property
+
+    Friend Property scaleUnitsDivisor As Double
+        Get
+            If _scaleUnitsDivisor = 0 Then
+                Stop
+            End If
+            Return _scaleUnitsDivisor
+        End Get
+        Set
+            _scaleUnitsDivisor = Value
+        End Set
+    End Property
+
+    Friend Property RecentData As New Dictionary(Of String, String)
+
+    Public Property BgUnitsString As String
 
 #End Region
-
-    Public s_timeZoneList As List(Of TimeZoneInfo)
 
     ' Do not rename these name are matched used in case sensitive matching
     Public Enum ItemIndexs As Integer
@@ -119,7 +152,7 @@ Friend Module PumpVariables
         averageSGFloat = 61
         timeToNextCalibrationRecommendedMinutes = 62
         calFreeSensor = 63
-        finalCalibration = 65
+        finalCalibration = 64
     End Enum
 
 End Module
