@@ -10,7 +10,7 @@ Public Class SummaryRecord
     Protected Friend Sub New(index As ItemIndexs, entry As KeyValuePair(Of String, String))
         Me.RecordNumber = index
         Me.Key = entry.Key
-        Me.Value = entry.Value.ToString(CurrentUICulture)
+        Me.Value = entry.Value?.ToString(CurrentUICulture)
         _isDate = s_ListOfTimeItems.Contains(index)
     End Sub
 

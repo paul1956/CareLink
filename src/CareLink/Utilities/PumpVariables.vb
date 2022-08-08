@@ -2,6 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.ComponentModel
+
 Public Module PumpVariables
 
     Friend ReadOnly s_ListOfTimeItems As New List(Of Integer) From {
@@ -9,8 +11,6 @@ Public Module PumpVariables
                         ItemIndexs.lastConduitTime,
                         ItemIndexs.medicalDeviceTime,
                         ItemIndexs.lastSensorTime}
-
-    Friend s_timeZoneList As List(Of TimeZoneInfo)
 
     ' Manually computed
     Friend s_totalAutoCorrection As Single
@@ -22,25 +22,44 @@ Public Module PumpVariables
 
 #Region "Global variables to hold pump values"
 
-    Private _scaleUnitsDivisor As Double
+    Private s_scaleUnitsDivisor As Double
+    Friend ReadOnly s_markerInsulinDictionary As New Dictionary(Of Double, Single)
+    Friend ReadOnly s_markerMealDictionary As New Dictionary(Of Double, Single)
+    Friend ReadOnly s_markerTimeChange As New List(Of Double)
+    Friend ReadOnly s_mealImage As Bitmap = My.Resources.MealImage
+    Friend ReadOnly s_sGsBindingSource As New BindingSource
+    Friend ReadOnly s_summaryBindingSource As New BindingList(Of SummaryRecord)
     Friend s_aboveHyperLimit As Integer
     Friend s_activeInsulin As Dictionary(Of String, String)
+    Friend s_activeInsulinIncrements As Integer
     Friend s_averageSG As Double
     Friend s_belowHypoLimit As Integer
     Friend s_clientTimeZone As TimeZoneInfo
     Friend s_clientTimeZoneName As String
     Friend s_conduitSensorInRange As Boolean
     Friend s_criticalLow As Single
+    Friend s_filterJsonData As Boolean = True
     Friend s_gstBatteryLevel As Integer
     Friend s_insulinRow As Single
+    Friend s_lastBGValue As Double = 0
     Friend s_lastSG As Dictionary(Of String, String)
     Friend s_limitHigh As Single
     Friend s_limitLow As Single
     Friend s_limits As New List(Of Dictionary(Of String, String))
     Friend s_markerRow As Single
     Friend s_markers As New List(Of Dictionary(Of String, String))
+    Friend s_medicalDeviceBatteryLevelPercent As Integer
+    Friend s_recentDatalast As Dictionary(Of String, String)
+    Friend s_reservoirLevelPercent As Integer
+    Friend s_reservoirRemainingUnits As Double
+    Friend s_sensorDurationHours As Integer
+    Friend s_sensorDurationMinutes As Integer
     Friend s_sensorState As String
+    Friend s_sGs As New List(Of SgRecord)
     Friend s_systemStatusMessage As String
+    Friend s_timeInRange As Integer
+    Friend s_timeToNextCalibHours As UShort = UShort.MaxValue
+    Friend s_timeToNextCalibrationMinutes As Integer
     Friend s_timeWithMinuteFormat As String
     Friend s_timeWithoutMinuteFormat As String
 
@@ -70,18 +89,17 @@ Public Module PumpVariables
 
     Friend Property scaleUnitsDivisor As Double
         Get
-            If _scaleUnitsDivisor = 0 Then
+            If s_scaleUnitsDivisor = 0 Then
                 Stop
             End If
-            Return _scaleUnitsDivisor
+            Return s_scaleUnitsDivisor
         End Get
         Set
-            _scaleUnitsDivisor = Value
+            s_scaleUnitsDivisor = Value
         End Set
     End Property
 
     Friend Property RecentData As New Dictionary(Of String, String)
-
     Public Property BgUnitsString As String
 
 #End Region

@@ -109,4 +109,10 @@ Module ChartSupport
         Return tmpChartArea
     End Function
 
+    Friend Function CreateTimeChangeSeries(seriesName As String) As Series
+        Return New Series(seriesName) With {
+            .ChartType = SeriesChartType.FastLine
+        }
+    End Function
+
 End Module

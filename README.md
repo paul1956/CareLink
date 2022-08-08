@@ -22,13 +22,16 @@ https://github.com/paul1956/CareLink/releases/
 - Medtronic CareLink data display
 
 ## Updated
-- 8/07/2022
+- 8/08/2022
 
 ## What's New in this release
-  New in 35.0.2
+  New in 3.5.0.3
+  Fix crash when pump is disconnected from phone
+
+  New in 3.5.0.2
   Update pump battery images and text
 
-  New in 35.0.1
+  New in 3.5.0.1
   Add back pump model number
   Update version
 

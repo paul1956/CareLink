@@ -19,9 +19,11 @@ Friend Module TimeZoneExtensions
         If My.Settings.UseLocalTimeZone Then
             Return TimeZoneInfo.Local
         End If
+        If s_clientTimeZoneName = "NaN" Then
+            Return Nothing
+        End If
         Dim clientTimeZone As TimeZoneInfo
         Dim id As String = ""
-
         If Not s_specialKnownTimeZones.TryGetValue(s_clientTimeZoneName, id) Then
             id = s_clientTimeZoneName
         End If
