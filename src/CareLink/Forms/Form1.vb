@@ -8,7 +8,6 @@ Imports System.IO
 Imports System.Text
 Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
-Imports ABI.System.Collections.Generic.IList_Delegates
 
 Public Class Form1
 
@@ -36,9 +35,8 @@ Public Class Form1
     Private ReadOnly _markerMealDictionary As New Dictionary(Of Double, Single)
     Private ReadOnly _markerTimeChange As New List(Of Double)
     Private ReadOnly _mealImage As Bitmap = My.Resources.MealImage
-    Private ReadOnly _thirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
     Private ReadOnly _minuteInMilliseconds As Integer = CType(New TimeSpan(0, minutes:=1, 0).TotalMilliseconds, Integer)
-
+    Private ReadOnly _thirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
     Private _activeInsulinIncrements As Integer
     Private _client As CareLinkClient
     Private _filterJsonData As Boolean = True
@@ -673,100 +671,28 @@ Public Class Form1
 
     Private Sub InitializeActiveInsulinTabChart()
         Me.TabPage2RunningActiveInsulin.Controls.Clear()
-        Me.ActiveInsulinChart = New Chart With {
-            .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-            .BackColor = Color.WhiteSmoke,
-            .BackGradientStyle = GradientStyle.TopBottom,
-            .BackSecondaryColor = Color.White,
-            .BorderlineColor = Color.FromArgb(26, 59, 105),
-            .BorderlineDashStyle = ChartDashStyle.Solid,
-            .BorderlineWidth = 2,
-            .Dock = DockStyle.Fill,
-            .Name = NameOf(ActiveInsulinChart),
-            .TabIndex = 0
-        }
 
-        Me.ActiveInsulinChartArea = New ChartArea With {
-            .BackColor = Color.FromArgb(180, 23, 47, 19),
-            .BackGradientStyle = GradientStyle.TopBottom,
-            .BackSecondaryColor = Color.FromArgb(180, 29, 56, 26),
-            .BorderColor = Color.FromArgb(64, 64, 64, 64),
-            .BorderDashStyle = ChartDashStyle.Solid,
-            .Name = NameOf(ActiveInsulinChartArea),
-            .ShadowColor = Color.Transparent
-        }
-
+        Me.ActiveInsulinChart = CreateNewChart(NameOf(HomeTabChart))
+        Me.ActiveInsulinChartArea = CreateNewChartArea(NameOf(ActiveInsulinChartArea))
         With Me.ActiveInsulinChartArea
-            With .AxisX
-                .Interval = 2
-                .IntervalType = DateTimeIntervalType.Hours
-                .IsInterlaced = True
-                .IsMarginVisible = True
-                .LabelAutoFitStyle = LabelAutoFitStyles.IncreaseFont Or LabelAutoFitStyles.DecreaseFont Or LabelAutoFitStyles.WordWrap
-                With .LabelStyle
-                    .Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
-                    .Format = s_timeWithoutMinuteFormat
-                End With
-                .LineColor = Color.FromArgb(64, 64, 64, 64)
-                .MajorGrid.LineColor = Color.FromArgb(64, 64, 64, 64)
-                .ScaleView.Zoomable = True
-                With .ScrollBar
-                    .BackColor = Color.White
-                    .ButtonColor = Color.Lime
-                    .IsPositionedInside = True
-                    .LineColor = Color.Black
-                    .Size = 15
-                End With
-            End With
             With .AxisY
-                .InterlacedColor = Color.FromArgb(120, Color.LightSlateGray)
-                .Interval = 2
-                .IntervalAutoMode = IntervalAutoMode.FixedCount
-                .IsInterlaced = True
-                .IsLabelAutoFit = False
-                .IsMarginVisible = False
-                .IsStartedFromZero = True
-                .LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
-                .LineColor = Color.FromArgb(64, 64, 64, 64)
-                .MajorGrid.LineColor = Color.FromArgb(64, 64, 64, 64)
                 .MajorTickMark = New TickMark() With {.Interval = InsulinRow, .Enabled = False}
                 .Maximum = 25
                 .Minimum = 0
-                .ScaleView.Zoomable = False
+                .Interval = 4
                 .Title = "Active Insulin"
                 .TitleForeColor = Color.HotPink
             End With
             With .AxisY2
+                .Interval = InsulinRow
                 .Maximum = MarkerRow
-                .Minimum = 0
+                .Minimum = InsulinRow
                 .Title = "BG Value"
             End With
-            With .CursorX
-                .AutoScroll = True
-                .AxisType = AxisType.Primary
-                .Interval = 0
-                .IsUserEnabled = True
-                .IsUserSelectionEnabled = True
-            End With
-            With .CursorY
-                .AutoScroll = False
-                .AxisType = AxisType.Secondary
-                .Interval = 0
-                .IsUserEnabled = False
-                .IsUserSelectionEnabled = False
-                .LineColor = Color.Transparent
-            End With
         End With
-
         Me.ActiveInsulinChart.ChartAreas.Add(Me.ActiveInsulinChartArea)
 
-        Me.ActiveInsulinChartLegend = New Legend With {
-            .BackColor = Color.Transparent,
-            .Enabled = False,
-            .Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold),
-            .IsTextAutoFit = False,
-            .Name = NameOf(ActiveInsulinChartLegend)
-        }
+        Me.ActiveInsulinChartLegend = CreateDefaultLegend(NameOf(ActiveInsulinChartLegend))
         Me.ActiveInsulinChart.Legends.Add(Me.ActiveInsulinChartLegend)
         Me.ActiveInsulinSeries = New Series With {
             .BorderColor = Color.FromArgb(180, 26, 59, 105),
@@ -780,18 +706,7 @@ Public Class Form1
             .XValueType = ChartValueType.DateTime,
             .YAxisType = AxisType.Primary
         }
-        Me.ActiveInsulinCurrentBGSeries = New Series With {
-            .BorderColor = Color.FromArgb(180, 26, 59, 105),
-            .BorderWidth = 4,
-            .ChartArea = NameOf(ActiveInsulinChartArea),
-            .ChartType = SeriesChartType.Line,
-            .Color = Color.Blue,
-            .Legend = NameOf(ActiveInsulinChartLegend),
-            .Name = NameOf(ActiveInsulinCurrentBGSeries),
-            .ShadowColor = Color.Black,
-            .XValueType = ChartValueType.DateTime,
-            .YAxisType = AxisType.Secondary
-        }
+        Me.ActiveInsulinCurrentBGSeries = CreateBgSeries(NameOf(ActiveInsulinCurrentBGSeries), NameOf(ActiveInsulinChartArea), NameOf(ActiveInsulinChartLegend))
         Me.ActiveInsulinMarkerSeries = New Series With {
             .BorderColor = Color.Transparent,
             .BorderWidth = 1,
@@ -828,70 +743,14 @@ Public Class Form1
 
     Private Sub InitializeHomePageChart()
         Me.SplitContainer3.Panel1.Controls.Clear()
-        Me.HomeTabChart = New Chart With {
-             .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-             .BackColor = Color.WhiteSmoke,
-             .BackGradientStyle = GradientStyle.TopBottom,
-             .BackSecondaryColor = Color.White,
-             .BorderlineColor = Color.FromArgb(26, 59, 105),
-             .BorderlineDashStyle = ChartDashStyle.Solid,
-             .BorderlineWidth = 2,
-             .Dock = DockStyle.Fill,
-             .Name = NameOf(HomeTabChart),
-             .TabIndex = 0
-         }
+        Me.HomeTabChart = CreateNewChart(NameOf(ActiveInsulinChart))
 
-        Me.HomeTabChartArea = New ChartArea With {
-             .BackColor = Color.FromArgb(180, 23, 47, 19),
-             .BackGradientStyle = GradientStyle.TopBottom,
-             .BackSecondaryColor = Color.FromArgb(180, 29, 56, 26),
-             .BorderColor = Color.FromArgb(64, 64, 64, 64),
-             .BorderDashStyle = ChartDashStyle.Solid,
-             .Name = NameOf(HomeTabChartArea),
-             .ShadowColor = Color.Transparent
-         }
+        Me.HomeTabChartArea = CreateNewChartArea(NameOf(HomeTabChartArea))
         With Me.HomeTabChartArea
-            With .AxisX
-                .Interval = 2
-                .IntervalType = DateTimeIntervalType.Hours
-                .IsInterlaced = True
-                .IsMarginVisible = True
-                .LabelAutoFitStyle = LabelAutoFitStyles.IncreaseFont Or LabelAutoFitStyles.DecreaseFont Or LabelAutoFitStyles.WordWrap
-                With .LabelStyle
-                    .Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
-                    .Format = s_timeWithoutMinuteFormat
-                End With
-                .LineColor = Color.FromArgb(64, 64, 64, 64)
-                .MajorGrid.LineColor = Color.FromArgb(64, 64, 64, 64)
-                .ScaleView.Zoomable = True
-                With .ScrollBar
-                    .BackColor = Color.White
-                    .ButtonColor = Color.Lime
-                    .IsPositionedInside = True
-                    .LineColor = Color.Black
-                    .Size = 15
-                End With
-            End With
             With .AxisY
-                .InterlacedColor = Color.FromArgb(120, Color.LightSlateGray)
-                .Interval = InsulinRow
-                .IntervalAutoMode = IntervalAutoMode.FixedCount
-                .IsInterlaced = True
-                .IsLabelAutoFit = False
-                .IsMarginVisible = False
-                .IsStartedFromZero = False
-                .LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
-                .LineColor = Color.FromArgb(64, 64, 64, 64)
-                .MajorGrid.LineColor = Color.FromArgb(64, 64, 64, 64)
                 .MajorTickMark = New TickMark() With {.Interval = InsulinRow, .Enabled = False}
                 .Maximum = MarkerRow
                 .Minimum = InsulinRow
-                .ScaleBreakStyle = New AxisScaleBreakStyle() With {
-                        .Enabled = True,
-                        .StartFromZero = StartFromZero.No,
-                        .BreakLineStyle = BreakLineStyle.Straight
-                    }
-                .ScaleView.Zoomable = False
             End With
             With .AxisY2
                 .Interval = InsulinRow
@@ -906,47 +765,12 @@ Public Class Form1
                 .MajorTickMark = New TickMark() With {.Interval = InsulinRow, .Enabled = True}
                 .Maximum = MarkerRow
                 .Minimum = InsulinRow
-                .ScaleView.Zoomable = False
             End With
-            With .CursorX
-                .AutoScroll = True
-                .AxisType = AxisType.Primary
-                .Interval = 0
-                .IsUserEnabled = True
-                .IsUserSelectionEnabled = True
-            End With
-            With .CursorY
-                .AutoScroll = False
-                .AxisType = AxisType.Secondary
-                .Interval = 0
-                .IsUserEnabled = False
-                .IsUserSelectionEnabled = False
-                .LineColor = Color.Transparent
-            End With
-
         End With
-
         Me.HomeTabChart.ChartAreas.Add(Me.HomeTabChartArea)
 
-        Dim defaultLegend As New Legend With {
-                .BackColor = Color.Transparent,
-                .Enabled = False,
-                .Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold),
-                .IsTextAutoFit = False,
-                .Name = NameOf(defaultLegend)
-            }
-        Me.HomeTabCurrentBGSeries = New Series With {
-                .BorderColor = Color.FromArgb(180, 26, 59, 105),
-                .BorderWidth = 4,
-                .ChartArea = NameOf(HomeTabChartArea),
-                .ChartType = SeriesChartType.Line,
-                .Color = Color.White,
-                .Legend = NameOf(defaultLegend),
-                .Name = NameOf(HomeTabCurrentBGSeries),
-                .ShadowColor = Color.Black,
-                .XValueType = ChartValueType.DateTime,
-                .YAxisType = AxisType.Secondary
-            }
+        Dim defaultLegend As Legend = CreateDefaultLegend(NameOf(defaultLegend))
+        Me.HomeTabCurrentBGSeries = CreateBgSeries(NameOf(HomeTabCurrentBGSeries), NameOf(HomeTabChartArea), NameOf(defaultLegend))
         Me.HomeTabMarkerSeries = New Series With {
                 .BorderColor = Color.Transparent,
                 .BorderWidth = 1,
@@ -1080,8 +904,8 @@ Public Class Form1
         Return valueTextBox
     End Function
 
-    Private Shared Sub GetLimitsList(ByRef limitsIndexList As Integer())
-
+    Private Shared Function GetLimitsList(count As Integer) As Integer()
+        Dim limitsIndexList(count) As Integer
         Dim limitsIndex As Integer = 0
         For i As Integer = 0 To limitsIndexList.GetUpperBound(0)
             If limitsIndex + 1 < s_limits.Count AndAlso CInt(s_limits(limitsIndex + 1)("index")) < i Then
@@ -1089,7 +913,8 @@ Public Class Form1
             End If
             limitsIndexList(i) = limitsIndex
         Next
-    End Sub
+        Return limitsIndexList
+    End Function
 
     Private Shared Sub InitializeColumnLabel(layoutPanel1 As TableLayoutPanel, rowIndex As ItemIndexs)
         layoutPanel1.Controls.Add(CreateBasicLabel($"{CInt(rowIndex)}{Environment.NewLine}{rowIndex}"), 0, 0)
@@ -2038,16 +1863,19 @@ Public Class Form1
         End If
 
         Select Case _medicalDeviceBatteryLevelPercent
-            Case > 66
+            Case > 90
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryFull
+                Me.PumpBatteryRemainingLabel.Text = $"Full"
+            Case > 50
+                Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryHigh
                 Me.PumpBatteryRemainingLabel.Text = $"High"
-            Case >= 45
+            Case >= 25
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryMedium
                 Me.PumpBatteryRemainingLabel.Text = $"Medium"
-            Case > 25
+            Case > 10
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryLow
                 Me.PumpBatteryRemainingLabel.Text = $"Low"
-            Case = 0
+            Case Else
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryCritical
                 Me.PumpBatteryRemainingLabel.Text = $"Critical"
         End Select
@@ -2208,8 +2036,7 @@ Public Class Form1
                 End Select
             End With
         Next
-        Dim limitsIndexList(_sGs.Count - 1) As Integer
-        GetLimitsList(limitsIndexList)
+        Dim limitsIndexList() As Integer = GetLimitsList(_sGs.Count - 1)
         For Each sgListIndex As IndexClass(Of SgRecord) In _sGs.WithIndex()
             Dim sgOaDateTime As Double = sgListIndex.Value.OADate()
             Me.HomeTabChart.Series(NameOf(HomeTabCurrentBGSeries)).PlotOnePoint(sgOaDateTime, sgListIndex.Value.sg, Color.White)
