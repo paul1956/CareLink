@@ -22,9 +22,12 @@ https://github.com/paul1956/CareLink/releases/
 - Medtronic CareLink data display
 
 ## Updated
-- 8/08/2022
+- 8/09/2022
 
 ## What's New in this release
+  New in 3.5.0.5
+  Fix broken update feature
+
   New in 3.5.0.4
   Improve date handling
   Add current update time to UI

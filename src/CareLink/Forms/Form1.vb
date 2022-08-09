@@ -1045,11 +1045,11 @@ Public Class Form1
             If Not entry2.TryGetValue("datetime", v2) Then
                 Return True
             End If
-            If v1 = v2 Then
-                Return False
+            If v1 <> v2 Then
+                _recentDataSameCount = 0
+                Return True
             End If
-            _recentDataSameCount = 0
-            Return True
+            Return False
         End If
     End Function
 
