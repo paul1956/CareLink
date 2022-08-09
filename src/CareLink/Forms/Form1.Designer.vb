@@ -127,6 +127,8 @@ Partial Class Form1
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
         Me.LoginStatusLabel = New System.Windows.Forms.Label()
         Me.LoginStatus = New System.Windows.Forms.Label()
+        Me.LastUpdateTimeLabel = New System.Windows.Forms.Label()
+        Me.LastUpdateTime = New System.Windows.Forms.Label()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.BindingSource1 = New System.Windows.Forms.BindingSource(Me.components)
         Me.MenuStrip1.SuspendLayout()
@@ -1362,11 +1364,29 @@ Partial Class Form1
         'LoginStatus
         '
         Me.LoginStatus.AutoSize = True
-        Me.LoginStatus.Location = New System.Drawing.Point(700, 3)
+        Me.LoginStatus.Location = New System.Drawing.Point(684, 3)
         Me.LoginStatus.Name = "LoginStatus"
         Me.LoginStatus.Size = New System.Drawing.Size(58, 15)
         Me.LoginStatus.TabIndex = 24
         Me.LoginStatus.Text = "Unknown"
+        '
+        'LastUpdateTimeLabel
+        '
+        Me.LastUpdateTimeLabel.AutoSize = True
+        Me.LastUpdateTimeLabel.Location = New System.Drawing.Point(885, 3)
+        Me.LastUpdateTimeLabel.Name = "LastUpdateTimeLabel"
+        Me.LastUpdateTimeLabel.Size = New System.Drawing.Size(101, 15)
+        Me.LastUpdateTimeLabel.TabIndex = 23
+        Me.LastUpdateTimeLabel.Text = "Last Update Time:"
+        '
+        'LastUpdateTime
+        '
+        Me.LastUpdateTime.AutoSize = True
+        Me.LastUpdateTime.Location = New System.Drawing.Point(998, 3)
+        Me.LastUpdateTime.Name = "LastUpdateTime"
+        Me.LastUpdateTime.Size = New System.Drawing.Size(58, 15)
+        Me.LastUpdateTime.TabIndex = 24
+        Me.LastUpdateTime.Text = "Unknown"
         '
         'Form1
         '
@@ -1375,6 +1395,8 @@ Partial Class Form1
         Me.ClientSize = New System.Drawing.Size(1384, 826)
         Me.Controls.Add(Me.LoginStatusLabel)
         Me.Controls.Add(Me.LoginStatus)
+        Me.Controls.Add(Me.LastUpdateTime)
+        Me.Controls.Add(Me.LastUpdateTimeLabel)
         Me.Controls.Add(Me.SplitContainer1)
         Me.Controls.Add(Me.MenuStrip1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -1474,6 +1496,8 @@ Partial Class Form1
     Friend WithEvents SensorTimeLeftLabel As Label
     Friend WithEvents LoginStatus As Label
     Friend WithEvents LoginStatusLabel As Label
+    Friend WithEvents LastUpdateTimeLabel As Label
+    Friend WithEvents LastUpdateTime As Label
     Friend WithEvents ServerUpdateTimer As Timer
     Friend WithEvents MenuOptionsSetupEmailServer As ToolStripMenuItem
     Friend WithEvents SGsDataGridView As DataGridView

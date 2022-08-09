@@ -25,6 +25,10 @@ https://github.com/paul1956/CareLink/releases/
 - 8/08/2022
 
 ## What's New in this release
+  New in 3.5.0.4
+  Improve date handling
+  Add current update time to UI
+
   New in 3.5.0.3
   Fix crash when pump is disconnected from phone
 

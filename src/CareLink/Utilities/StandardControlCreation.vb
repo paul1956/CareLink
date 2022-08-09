@@ -56,7 +56,11 @@ Public Module StandardControlCreation
             ElseIf eValue.Value IsNot Nothing Then
                 Dim resultDate As Date = Nothing
                 If eValue.Value.TryParseDate(resultDate, eValue.Key) Then
-                    valueTextBox = CreateBasicTextBox(resultDate.ToString(CurrentUICulture))
+                    If resultDate.Date = Date.MinValue Then
+                        valueTextBox = CreateBasicTextBox(TimeOnly.FromDateTime(resultDate).ToString(CurrentUICulture))
+                    Else
+                        valueTextBox = CreateBasicTextBox(resultDate.ToString(CurrentUICulture))
+                    End If
                 Else
                     valueTextBox = CreateBasicTextBox(eValue.Value.ToString(CurrentUICulture))
                 End If

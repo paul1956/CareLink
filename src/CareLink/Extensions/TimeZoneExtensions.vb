@@ -10,11 +10,6 @@ Friend Module TimeZoneExtensions
             {"Eastern European Summer Time", "E. Europe Daylight Time"}
        }
 
-    <Extension>
-    Friend Function GmtToLocalTime(gmtDate As Date) As Date
-        Return gmtDate.Add(Date.UtcNow.Subtract(TimeZoneInfo.ConvertTime(Now, TimeZoneInfo.Local, s_clientTimeZone)))
-    End Function
-
     Friend Function CalculateTimeZone() As TimeZoneInfo
         If My.Settings.UseLocalTimeZone Then
             Return TimeZoneInfo.Local

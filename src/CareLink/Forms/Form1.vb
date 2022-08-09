@@ -357,7 +357,7 @@ Public Class Form1
 #Region "Help Menus"
 
     Private Sub MenuHelpAbout_Click(sender As Object, e As EventArgs) Handles MenuHelpAbout.Click
-        AboutBox1.Show()
+        AboutBox1.ShowDialog()
     End Sub
 
     Private Sub MenuHelpCheckForUpdates_Click(sender As Object, e As EventArgs) Handles MenuHelpCheckForUpdates.Click
@@ -650,10 +650,8 @@ Public Class Form1
             End If
         End If
         Application.DoEvents()
-        If Not Debugger.IsAttached Then
-            Me.ServerUpdateTimer.Interval = s_minuteInMilliseconds
-            Me.ServerUpdateTimer.Start()
-        End If
+        Me.ServerUpdateTimer.Interval = s_minuteInMilliseconds
+        Me.ServerUpdateTimer.Start()
         Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
         Me.Cursor = Cursors.Default
     End Sub
@@ -925,10 +923,10 @@ Public Class Form1
                     Continue For
                 End If
             End If
-            If innerRow.Key <> "activeNotifications" Then
-                tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22))
-            Else
+            If innerRow.Key = "activeNotifications" Then
                 tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize))
+            Else
+                tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22))
             End If
             tableLevel1Blue.RowCount += 1
             If itemIndex = ItemIndexs.limits OrElse itemIndex = ItemIndexs.markers OrElse (itemIndex = ItemIndexs.notificationHistory AndAlso c.Value.Key = "activeNotifications") Then
@@ -938,7 +936,7 @@ Public Class Form1
             If innerRow.Value.StartsWith("[") Then
                 Dim innerJson1 As List(Of Dictionary(Of String, String)) = LoadList(innerRow.Value)
                 If innerJson1.Count > 0 Then
-                    Dim tableLevel2 As TableLayoutPanel = CreateTableLayoutPanel(NameOf(tableLevel2), innerJson1.Count, Color.Aqua)
+                    Dim tableLevel2 As TableLayoutPanel = CreateTableLayoutPanel(NameOf(tableLevel2), innerJson1.Count, Color.LightBlue)
 
                     For i As Integer = 0 To innerJson1.Count - 1
                         tableLevel2.RowStyles.Add(New RowStyle() With {.SizeType = SizeType.AutoSize})
@@ -947,7 +945,7 @@ Public Class Form1
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson1.WithIndex()
                         Dim dic As Dictionary(Of String, String) = innerDictionary.Value
                         tableLevel2.RowStyles.Add(New RowStyle(SizeType.Absolute, 4 + (dic.Keys.Count * 22)))
-                        Dim tableLevel3 As TableLayoutPanel = CreateTableLayoutPanel(NameOf(tableLevel3), 0, SystemColors.Control)
+                        Dim tableLevel3 As TableLayoutPanel = CreateTableLayoutPanel(NameOf(tableLevel3), 0, Color.Aqua)
                         For Each e As IndexClass(Of KeyValuePair(Of String, String)) In dic.WithIndex()
                             Dim eValue As KeyValuePair(Of String, String) = e.Value
 
@@ -1045,11 +1043,11 @@ Public Class Form1
             If Not entry2.TryGetValue("datetime", v2) Then
                 Return True
             End If
-            If v1 = v2 Then
-                Return False
+            If v1 <> v2 Then
+                Return True
             End If
             _recentDataSameCount = 0
-            Return True
+            Return False
         End If
     End Function
 
@@ -1403,7 +1401,7 @@ Public Class Form1
                 Dim rowHeader As Label = InitializeColumnLabel(layoutPanel1, rowIndex)
                 layoutPanel1.RowStyles(0).SizeType = SizeType.AutoSize
                 Dim innerJsonDictionary As Dictionary(Of String, String) = Loads(row.Value)
-                Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, SystemColors.Control)
+                Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, Color.Aqua)
                 innerTableBlue.AutoScroll = rowIndex <> ItemIndexs.notificationHistory
                 layoutPanel1.Controls.Add(innerTableBlue,
                                           1,
@@ -1433,11 +1431,6 @@ Public Class Form1
             .Series(NameOf(ActiveInsulinSeries)).Points.Clear()
             .Series(NameOf(ActiveInsulinCurrentBGSeries)).Points.Clear()
             .Series(NameOf(ActiveInsulinMarkerSeries)).Points.Clear()
-            .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.MajorGrid.IntervalType = DateTimeIntervalType.Hours
-            .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.MajorGrid.IntervalOffsetType = DateTimeIntervalType.Hours
-            .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.MajorGrid.Interval = 1
-            .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.IntervalType = DateTimeIntervalType.Hours
-            .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.Interval = 2
         End With
 
         ' Order all markers by time
@@ -1612,7 +1605,7 @@ Public Class Form1
         If RecentData.Count > ItemIndexs.finalCalibration + 1 Then
             Stop
         End If
-
+        Me.LastUpdateTime.Text = Now.ToShortTimeString
         ResetAllVariables()
         Me.SummaryDataGridView.DataSource = s_summaryBindingSource
 
@@ -1944,10 +1937,8 @@ Public Class Form1
             End If
             RecentData = _client.GetRecentData()
             Me.MenuView.Visible = True
-            If Not Debugger.IsAttached Then
-                Me.ServerUpdateTimer.Interval = s_minuteInMilliseconds
-                Me.ServerUpdateTimer.Start()
-            End If
+            Me.ServerUpdateTimer.Interval = s_minuteInMilliseconds
+            Me.ServerUpdateTimer.Start()
             Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
             Me.LoginStatus.Text = "OK"
         End If
