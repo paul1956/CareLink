@@ -36,9 +36,9 @@ Public Module StandardControlCreation
                 .BorderStyle = BorderStyle.Fixed3D,
                 .ColumnCount = 2,
                 .Dock = DockStyle.Top,
-                .Margin = New Padding(0),
+                .Margin = New Padding(3),
                 .Name = tableName,
-                .Padding = New Padding(0),
+                .Padding = New Padding(3),
                 .RowCount = rowCount
             }
 

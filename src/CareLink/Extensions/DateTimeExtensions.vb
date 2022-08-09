@@ -67,12 +67,12 @@ Friend Module DateTimeExtensions
         If sgList(index).Count < 7 Then
             index -= 1
         End If
-        If sgList(index).TryGetValue("previousDateTime", sgDateTimeString) Then
-            sgDateTime = sgDateTimeString.ParseDate("previousDateTime")
-        ElseIf sgList(index).TryGetValue("datetime", sgDateTimeString) Then
+        If sgList(index).TryGetValue("datetime", sgDateTimeString) Then
             sgDateTime = sgDateTimeString.ParseDate("datetime")
         ElseIf sgList(index).TryGetValue("dateTime", sgDateTimeString) Then
             sgDateTime = sgDateTimeString.ParseDate("dateTime")
+        ElseIf sgList(index).TryGetValue("previousDateTime", sgDateTimeString) Then
+            sgDateTime = sgDateTimeString.ParseDate("previousDateTime")
         Else
             sgDateTime = Now
         End If

@@ -1186,13 +1186,13 @@ Partial Class Form1
         Me.TableLayoutPanelLimits.ColumnCount = 2
         Me.TableLayoutPanelLimits.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.0!))
         Me.TableLayoutPanelLimits.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85.0!))
-        Me.TableLayoutPanelLimits.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TableLayoutPanelLimits.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelLimits.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelLimits.Name = "TableLayoutPanelLimits"
         Me.TableLayoutPanelLimits.RowCount = 2
         Me.TableLayoutPanelLimits.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelLimits.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelLimits.Size = New System.Drawing.Size(1370, 9)
+        Me.TableLayoutPanelLimits.Size = New System.Drawing.Size(1370, 611)
         Me.TableLayoutPanelLimits.TabIndex = 0
         '
         'TabPage7Markers
@@ -1277,7 +1277,7 @@ Partial Class Form1
         Me.TableLayoutPanelBasal.RowCount = 2
         Me.TableLayoutPanelBasal.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanelBasal.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanelBasal.Size = New System.Drawing.Size(1370, 379)
+        Me.TableLayoutPanelBasal.Size = New System.Drawing.Size(1370, 611)
         Me.TableLayoutPanelBasal.TabIndex = 0
         '
         'TabPage10TherapyAlgorithm
@@ -1293,6 +1293,8 @@ Partial Class Form1
         '
         'TableLayoutPanelTherapyAlgorthm
         '
+        Me.TableLayoutPanelTherapyAlgorthm.AutoSize = True
+        Me.TableLayoutPanelTherapyAlgorthm.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelTherapyAlgorthm.ColumnCount = 2
         Me.TableLayoutPanelTherapyAlgorthm.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 18.34862!))
         Me.TableLayoutPanelTherapyAlgorthm.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 81.65137!))
@@ -1301,7 +1303,7 @@ Partial Class Form1
         Me.TableLayoutPanelTherapyAlgorthm.Name = "TableLayoutPanelTherapyAlgorthm"
         Me.TableLayoutPanelTherapyAlgorthm.RowCount = 1
         Me.TableLayoutPanelTherapyAlgorthm.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelTherapyAlgorthm.Size = New System.Drawing.Size(1370, 611)
+        Me.TableLayoutPanelTherapyAlgorthm.Size = New System.Drawing.Size(1370, 0)
         Me.TableLayoutPanelTherapyAlgorthm.TabIndex = 0
         '
         'TabPage11BannerState
@@ -1317,6 +1319,7 @@ Partial Class Form1
         '
         'TableLayoutPanelBannerState
         '
+        Me.TableLayoutPanelBannerState.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelBannerState.ColumnCount = 2
         Me.TableLayoutPanelBannerState.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.45985!))
         Me.TableLayoutPanelBannerState.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 88.54015!))
@@ -1451,6 +1454,7 @@ Partial Class Form1
         Me.TabPage8NotificationHistory.PerformLayout()
         Me.TabPage9Basal.ResumeLayout(False)
         Me.TabPage10TherapyAlgorithm.ResumeLayout(False)
+        Me.TabPage10TherapyAlgorithm.PerformLayout()
         Me.TabPage11BannerState.ResumeLayout(False)
         CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)

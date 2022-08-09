@@ -475,6 +475,14 @@ Public Class Form1
                             Me.CursorTimeLabel.Visible = True
                             Me.CursorMessage1Label.Text = $"{result.Series.Points(result.PointIndex).YValues(0).RoundDouble(3)} {BgUnitsString}"
                             Me.CursorMessage1Label.Visible = True
+                        Case NameOf(Me.HomeTabTimeChangeSeries)
+                            Me.CursorPictureBox.Image = Nothing
+                            Me.CursorMessage1Label.Visible = False
+                            Me.CursorMessage2Label.Visible = False
+                            Me.CursorValueLabel.Visible = False
+                            Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(s_timeWithMinuteFormat)
+                            Me.CursorTimeLabel.Visible = True
+                            Me.CursorMessage1Label.Visible = False
                     End Select
                 End If
             Else
@@ -866,10 +874,20 @@ Public Class Form1
     End Function
 
     Private Sub FillOneRowOfTableLayoutPanel(layoutPanel As TableLayoutPanel, innerJson As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String)
+        Dim outerLayoutPanel As New TableLayoutPanel With {
+            .AutoSize = False,
+            .AutoScroll = True,
+            .BackColor = Color.LightBlue,
+            .Dock = DockStyle.Fill,
+            .ColumnCount = 1,
+            .Padding = New Padding(3),
+            .RowCount = innerJson.Count
+        }
+        layoutPanel.Controls.Add(outerLayoutPanel, 1, 0)
         For Each jsonEntry As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
-            Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, SystemColors.Control)
-            layoutPanel.Controls.Add(innerTableBlue, 1, jsonEntry.Index)
-            Application.DoEvents()
+            outerLayoutPanel.RowStyles.Add(New RowStyle(SizeType.AutoSize))
+            Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, Color.Orange)
+            outerLayoutPanel.Controls.Add(innerTableBlue, 0, 0)
             Me.GetInnerTable(jsonEntry.Value, innerTableBlue, rowIndex, filterJsonData, timeFormat, Me.FormScale.Height <> 1)
             Application.DoEvents()
         Next
@@ -1038,6 +1056,7 @@ Public Class Form1
     Private Sub ProcesListOfDictionary(layoutPanel1 As TableLayoutPanel, innerListDictionary As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs)
         Dim rowHeader As Label = InitializeColumnLabel(layoutPanel1, rowIndex)
         layoutPanel1.Parent.Parent.UseWaitCursor = True
+        layoutPanel1.AutoScroll = True
         Application.DoEvents()
         layoutPanel1.Invoke(Sub()
                                 Me.FillOneRowOfTableLayoutPanel(
@@ -1258,10 +1277,20 @@ Public Class Form1
         Application.DoEvents()
 
         Dim firstName As String = ""
+        Dim markerRowString As String = ""
+        If RecentData.TryGetValue(ItemIndexs.markers.ToString, markerRowString) Then
+            CollectMarkers(markerRowString)
+        End If
+
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In RecentData.WithIndex()
             Dim layoutPanel1 As TableLayoutPanel = Nothing
             Dim row As KeyValuePair(Of String, String) = c.Value
             Dim rowIndex As ItemIndexs = CType([Enum].Parse(GetType(ItemIndexs), c.Value.Key), ItemIndexs)
+
+            If rowIndex <= ItemIndexs.lastSGTrend OrElse rowIndex >= ItemIndexs.systemStatusMessage Then
+                Me.ProcessAllSingleEntries(row, rowIndex, firstName)
+                Continue For
+            End If
 
             If rowIndex = ItemIndexs.sgs Then
                 s_sGs = LoadList(row.Value).ToSgList()
@@ -1273,11 +1302,6 @@ Public Class Form1
                     End If
                 Next
                 Me.ReadingsLabel.Text = $"{s_sGs.Where(Function(entry As SgRecord) Not Double.IsNaN(entry.sg)).Count}/288"
-                Continue For
-            End If
-
-            If rowIndex <= ItemIndexs.lastSGTrend OrElse rowIndex >= ItemIndexs.systemStatusMessage Then
-                Me.ProcessAllSingleEntries(row, rowIndex, firstName)
                 Continue For
             End If
 
@@ -1304,31 +1328,6 @@ Public Class Form1
                         innerListDictionary = s_limits
                     Case ItemIndexs.markers
                         InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelMarkers)
-                        For Each innerdic As Dictionary(Of String, String) In LoadList(row.Value)
-                            Dim newMarker As New Dictionary(Of String, String)
-                            Select Case innerdic("type")
-                                Case "AUTO_BASAL_DELIVERY",
-                                     "AUTO_MODE_STATUS",
-                                     "INSULIN",
-                                     "LOW_GLUCOSE_SUSPENDED",
-                                     "MEAL",
-                                     "TIME_CHANGE"
-                                    newMarker = innerdic
-                                Case "BG_READING", "CALIBRATION"
-                                    For Each kvp As KeyValuePair(Of String, String) In innerdic
-                                        Select Case kvp.Key
-                                            Case "value"
-                                                newMarker.Add(kvp.Key, CStr((CDbl(kvp.Value) / scaleUnitsDivisor).RoundDouble(1)))
-                                            Case Else
-                                                newMarker.Add(kvp.Key, kvp.Value)
-                                        End Select
-                                    Next
-
-                                Case Else
-                                    Stop
-                            End Select
-                            s_markers.Add(newMarker)
-                        Next
                         innerListDictionary = s_markers
                     Case ItemIndexs.pumpBannerState
                         InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelBannerState, True)
@@ -1343,61 +1342,87 @@ Public Class Form1
                     Dim rowHeader As Label = InitializeColumnLabel(layoutPanel1, rowIndex)
                     Dim rowTextBox As TextBox = CreateBasicTextBox("")
                     rowTextBox.BackColor = Color.LightGray
-
+                    layoutPanel1.RowStyles(0).SizeType = SizeType.AutoSize
                     layoutPanel1.Controls.Add(rowTextBox, 1, 0)
                 Else
                     Me.ProcesListOfDictionary(layoutPanel1, innerListDictionary, rowIndex)
                 End If
-                Continue For
-            End If
+            Else
+                Dim docStyle As DockStyle = DockStyle.Fill
+                Select Case rowIndex
+                    Case ItemIndexs.lastSG
+                        InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelTop1)
+                        s_lastSG = Loads(row.Value)
 
-            Dim docStyle As DockStyle = DockStyle.Fill
-            Select Case rowIndex
-                Case ItemIndexs.lastSG
-                    InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelTop1)
-                    s_lastSG = Loads(row.Value)
+                    Case ItemIndexs.lastAlarm
+                        InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelTop2)
 
-                Case ItemIndexs.lastAlarm
-                    InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelTop2)
+                    Case ItemIndexs.activeInsulin
+                        InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelActiveInsulin)
+                        s_activeInsulin = Loads(row.Value)
 
-                Case ItemIndexs.activeInsulin
-                    InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelActiveInsulin)
-                    s_activeInsulin = Loads(row.Value)
+                    Case ItemIndexs.notificationHistory
+                        InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelNotificationHistory)
 
-                Case ItemIndexs.notificationHistory
-                    InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelNotificationHistory)
+                    Case ItemIndexs.therapyAlgorithmState
+                        InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelTherapyAlgorthm, True)
+                        docStyle = DockStyle.Top
 
-                Case ItemIndexs.therapyAlgorithmState
-                    InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelTherapyAlgorthm, True)
-                    docStyle = DockStyle.Top
+                    Case ItemIndexs.basal
+                        InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelBasal)
+                        docStyle = DockStyle.Top
 
-                Case ItemIndexs.basal
-                    InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelBasal)
-                    docStyle = DockStyle.Top
+                    Case Else
+                        Stop
+                        Exit Select
+                End Select
 
-                Case Else
-                    Stop
-                    Exit Select
-            End Select
-
-            Try
-                Dim rowHeader As Label = InitializeColumnLabel(layoutPanel1, rowIndex)
-                layoutPanel1.RowStyles(0).SizeType = SizeType.AutoSize
-                Dim innerJsonDictionary As Dictionary(Of String, String) = Loads(row.Value)
-                Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, Color.Aqua)
-                innerTableBlue.AutoScroll = rowIndex <> ItemIndexs.notificationHistory
-                layoutPanel1.Controls.Add(innerTableBlue,
+                Try
+                    Dim rowHeader As Label = InitializeColumnLabel(layoutPanel1, rowIndex)
+                    layoutPanel1.RowStyles(0).SizeType = SizeType.AutoSize
+                    Dim innerJsonDictionary As Dictionary(Of String, String) = Loads(row.Value)
+                    Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, Color.Aqua)
+                    innerTableBlue.AutoScroll = rowIndex <> ItemIndexs.notificationHistory
+                    layoutPanel1.Controls.Add(innerTableBlue,
                                           1,
                                           0)
-                Me.GetInnerTable(innerJsonDictionary, innerTableBlue, rowIndex, s_filterJsonData, s_timeWithMinuteFormat, isScaledForm)
-            Catch ex As Exception
-                Stop
-                Throw
-            End Try
+                    Me.GetInnerTable(innerJsonDictionary, innerTableBlue, rowIndex, s_filterJsonData, s_timeWithMinuteFormat, isScaledForm)
+                Catch ex As Exception
+                    Stop
+                    Throw
+                End Try
+            End If
         Next
         _initialized = True
         _updating = False
         Me.Cursor = Cursors.Default
+    End Sub
+
+    Private Shared Sub CollectMarkers(row As String)
+        For Each innerdic As Dictionary(Of String, String) In LoadList(row)
+            Dim newMarker As New Dictionary(Of String, String)
+            Select Case innerdic("type")
+                Case "AUTO_BASAL_DELIVERY",
+                     "AUTO_MODE_STATUS",
+                     "INSULIN",
+                     "LOW_GLUCOSE_SUSPENDED",
+                     "MEAL",
+                     "TIME_CHANGE"
+                    newMarker = innerdic
+                Case "BG_READING", "CALIBRATION"
+                    For Each kvp As KeyValuePair(Of String, String) In innerdic
+                        Select Case kvp.Key
+                            Case "value"
+                                newMarker.Add(kvp.Key, CStr((CDbl(kvp.Value) / scaleUnitsDivisor).RoundDouble(1)))
+                            Case Else
+                                newMarker.Add(kvp.Key, kvp.Value)
+                        End Select
+                    Next
+                Case Else
+                    Stop
+            End Select
+            s_markers.Add(newMarker)
+        Next
     End Sub
 
 #End Region
