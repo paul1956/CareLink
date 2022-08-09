@@ -2008,7 +2008,7 @@ Public Class Form1
     Private Sub UpdateNotifyIcon()
         Dim str As String = s_lastSG("sg")
         Dim fontToUse As New Font("Trebuchet MS", 10, FontStyle.Regular, GraphicsUnit.Pixel)
-        Dim color As Color = Color.White
+        Dim color As Color = color.White
         Dim bgColor As Color
         Dim sg As Double = str.ParseDouble
         Dim bitmapText As New Bitmap(16, 16)
@@ -2018,16 +2018,16 @@ Public Class Form1
 
         Select Case sg
             Case <= s_limitLow
-                bgColor = Color.Orange
+                bgColor = color.Orange
                 If _showBaloonTip Then
                     Me.NotifyIcon1.ShowBalloonTip(10000, "CareLink Alert", $"SG below {s_limitLow} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                 End If
                 _showBaloonTip = False
             Case <= s_limitHigh
-                bgColor = Color.Green
+                bgColor = color.Green
                 _showBaloonTip = True
             Case Else
-                bgColor = Color.Red
+                bgColor = color.Red
                 If _showBaloonTip Then
                     Me.NotifyIcon1.ShowBalloonTip(10000, "CareLink Alert", $"SG above {s_limitHigh} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                 End If
