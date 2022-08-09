@@ -1043,11 +1043,11 @@ Public Class Form1
             If Not entry2.TryGetValue("datetime", v2) Then
                 Return True
             End If
-            If v1 <> v2 Then
-                _recentDataSameCount = 0
-                Return True
+            If v1 = v2 Then
+                Return False
             End If
-            Return False
+            _recentDataSameCount = 0
+            Return True
         End If
     End Function
 
@@ -1427,9 +1427,14 @@ Public Class Form1
             .Titles(NameOf(ActiveInsulinChartTitle)).Text = $"Running Active Insulin in Pink"
             .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.Minimum = s_sGs(0).OADate()
             .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.Maximum = s_sGs.Last.OADate()
-            For Each s As Series In .Series
-                s.Points.Clear()
-            Next
+            .Series(NameOf(ActiveInsulinSeries)).Points.Clear()
+            .Series(NameOf(ActiveInsulinCurrentBGSeries)).Points.Clear()
+            .Series(NameOf(ActiveInsulinMarkerSeries)).Points.Clear()
+            .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.MajorGrid.IntervalType = DateTimeIntervalType.Hours
+            .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.MajorGrid.IntervalOffsetType = DateTimeIntervalType.Hours
+            .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.MajorGrid.Interval = 1
+            .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.IntervalType = DateTimeIntervalType.Hours
+            .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.Interval = 2
         End With
 
         ' Order all markers by time
