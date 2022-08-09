@@ -1043,11 +1043,11 @@ Public Class Form1
             If Not entry2.TryGetValue("datetime", v2) Then
                 Return True
             End If
-            If v1 <> v2 Then
-                _recentDataSameCount = 0
-                Return True
+            If v1 = v2 Then
+                Return False
             End If
-            Return False
+            _recentDataSameCount = 0
+            Return True
         End If
     End Function
 
@@ -1427,9 +1427,14 @@ Public Class Form1
             .Titles(NameOf(ActiveInsulinChartTitle)).Text = $"Running Active Insulin in Pink"
             .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.Minimum = s_sGs(0).OADate()
             .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.Maximum = s_sGs.Last.OADate()
-            For Each s As Series In .Series
-                s.Points.Clear()
-            Next
+            .Series(NameOf(ActiveInsulinSeries)).Points.Clear()
+            .Series(NameOf(ActiveInsulinCurrentBGSeries)).Points.Clear()
+            .Series(NameOf(ActiveInsulinMarkerSeries)).Points.Clear()
+            .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.MajorGrid.IntervalType = DateTimeIntervalType.Hours
+            .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.MajorGrid.IntervalOffsetType = DateTimeIntervalType.Hours
+            .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.MajorGrid.Interval = 1
+            .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.IntervalType = DateTimeIntervalType.Hours
+            .ChartAreas(NameOf(ActiveInsulinChartArea)).AxisX.Interval = 2
         End With
 
         ' Order all markers by time
@@ -2003,7 +2008,7 @@ Public Class Form1
     Private Sub UpdateNotifyIcon()
         Dim str As String = s_lastSG("sg")
         Dim fontToUse As New Font("Trebuchet MS", 10, FontStyle.Regular, GraphicsUnit.Pixel)
-        Dim color As Color = Color.White
+        Dim color As Color = color.White
         Dim bgColor As Color
         Dim sg As Double = str.ParseDouble
         Dim bitmapText As New Bitmap(16, 16)
@@ -2013,16 +2018,16 @@ Public Class Form1
 
         Select Case sg
             Case <= s_limitLow
-                bgColor = Color.Orange
+                bgColor = color.Orange
                 If _showBaloonTip Then
                     Me.NotifyIcon1.ShowBalloonTip(10000, "CareLink Alert", $"SG below {s_limitLow} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                 End If
                 _showBaloonTip = False
             Case <= s_limitHigh
-                bgColor = Color.Green
+                bgColor = color.Green
                 _showBaloonTip = True
             Case Else
-                bgColor = Color.Red
+                bgColor = color.Red
                 If _showBaloonTip Then
                     Me.NotifyIcon1.ShowBalloonTip(10000, "CareLink Alert", $"SG above {s_limitHigh} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                 End If
