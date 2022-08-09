@@ -61,6 +61,9 @@ Module ChartSupport
                 .IsInterlaced = True
                 .IsMarginVisible = True
                 .LabelAutoFitStyle = LabelAutoFitStyles.IncreaseFont Or LabelAutoFitStyles.DecreaseFont Or LabelAutoFitStyles.WordWrap
+                .MajorGrid.Interval = 1
+                .MajorGrid.IntervalOffsetType = DateTimeIntervalType.Hours
+                .MajorGrid.IntervalType = DateTimeIntervalType.Hours
                 With .LabelStyle
                     .Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
                     .Format = s_timeWithoutMinuteFormat

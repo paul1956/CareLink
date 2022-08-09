@@ -25,7 +25,6 @@ Public Module PumpVariables
     Private s_scaleUnitsDivisor As Double
     Friend ReadOnly s_markerInsulinDictionary As New Dictionary(Of Double, Single)
     Friend ReadOnly s_markerMealDictionary As New Dictionary(Of Double, Single)
-    Friend ReadOnly s_markerTimeChange As New List(Of Double)
     Friend ReadOnly s_mealImage As Bitmap = My.Resources.MealImage
     Friend ReadOnly s_sGsBindingSource As New BindingSource
     Friend ReadOnly s_summaryBindingSource As New BindingList(Of SummaryRecord)
