@@ -6,31 +6,7 @@ Imports System.Windows.Forms.DataVisualization.Charting
 
 Module ChartSupport
 
-    Friend Function CreateBgSeries(seriesName As String, chartAreaName As String, legendName As String) As Series
-        Return New Series With {
-                     .BorderColor = Color.FromArgb(180, 26, 59, 105),
-                     .BorderWidth = 4,
-                     .ChartArea = chartAreaName,
-                     .ChartType = SeriesChartType.Line,
-                     .Color = Color.White,
-                     .Legend = legendName,
-                     .Name = seriesName,
-                     .ShadowColor = Color.Black,
-                     .XValueType = ChartValueType.DateTime,
-                     .YAxisType = AxisType.Secondary
-                 }
-    End Function
-
-    Friend Function CreateDefaultLegend(legendName As String) As Legend
-        Return New Legend(legendName) With {
-                        .BackColor = Color.Transparent,
-                        .Enabled = False,
-                        .Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold),
-                        .IsTextAutoFit = False
-                    }
-    End Function
-
-    Friend Function CreateNewChart(chartName As String) As Chart
+    Friend Function CreateChart(chartName As String) As Chart
         Return New Chart With {
                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                     .BackColor = Color.WhiteSmoke,
@@ -45,8 +21,8 @@ Module ChartSupport
                 }
     End Function
 
-    Friend Function CreateNewChartArea(areaName As String) As ChartArea
-        Dim tmpChartArea As New ChartArea(areaName) With {
+    Friend Function CreateChartArea(chartAreaName As String) As ChartArea
+        Dim tmpChartArea As New ChartArea(chartAreaName) With {
                      .BackColor = Color.FromArgb(180, 23, 47, 19),
                      .BackGradientStyle = GradientStyle.TopBottom,
                      .BackSecondaryColor = Color.FromArgb(180, 29, 56, 26),
@@ -112,10 +88,57 @@ Module ChartSupport
         Return tmpChartArea
     End Function
 
-    Friend Function CreateTimeChangeSeries(seriesName As String) As Series
+    Friend Function CreateLegend(legendName As String) As Legend
+        Return New Legend(legendName) With {
+                        .BackColor = Color.Transparent,
+                        .Enabled = False,
+                        .Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold),
+                        .IsTextAutoFit = False
+                    }
+    End Function
+
+    Friend Function CreateSeriesBg(seriesName As String, chartAreaName As String, legendName As String) As Series
+        Return New Series With {
+                     .BorderColor = Color.FromArgb(180, 26, 59, 105),
+                     .BorderWidth = 4,
+                     .ChartArea = chartAreaName,
+                     .ChartType = SeriesChartType.Line,
+                     .Color = Color.White,
+                     .Legend = legendName,
+                     .Name = seriesName,
+                     .ShadowColor = Color.Black,
+                     .XValueType = ChartValueType.DateTime,
+                     .YAxisType = AxisType.Secondary
+                 }
+    End Function
+
+    Friend Function CreateSeriesLimits(seriesName As String, chartAreaName As String, lineColor As Color) As Series
+        Dim tmpSeries As New Series(seriesName) With {
+                            .BorderColor = Color.FromArgb(180, lineColor),
+                            .BorderWidth = 2,
+                            .ChartArea = chartAreaName,
+                            .ChartType = SeriesChartType.Line,
+                            .Color = lineColor,
+                            .ShadowColor = Color.Black,
+                            .XValueType = ChartValueType.DateTime,
+                            .YAxisType = AxisType.Secondary
+                        }
+        tmpSeries.EmptyPointStyle.Color = Color.Transparent
+        Return tmpSeries
+    End Function
+
+    Friend Function CreateSeriesTimeChange(seriesName As String, areaName As String) As Series
         Return New Series(seriesName) With {
-            .ChartType = SeriesChartType.FastLine
-        }
+            .ChartType = SeriesChartType.FastLine,
+                        .BorderColor = Color.Transparent,
+                        .BorderWidth = 1,
+                        .ChartArea = areaName,
+                        .Color = Color.White,
+                        .Name = seriesName,
+                        .ShadowColor = Color.Transparent,
+                        .XValueType = ChartValueType.DateTime,
+                        .YAxisType = AxisType.Primary
+                    }
     End Function
 
 End Module

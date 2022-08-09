@@ -128,7 +128,6 @@ Friend Module DateTimeExtensions
                 End If
             Case "previousDateTime"
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal)
-                Stop
             Case "secondaryTime"
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.NoCurrentDateDefault)
             Case "triggeredDateTime"

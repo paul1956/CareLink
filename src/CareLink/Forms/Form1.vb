@@ -666,9 +666,10 @@ Public Class Form1
 
     Private Sub InitializeHomePageChart()
         Me.SplitContainer3.Panel1.Controls.Clear()
-        Me.HomeTabChart = CreateNewChart(NameOf(ActiveInsulinChart))
+        Me.SplitContainer3.Panel1.Controls.Add(Me.CursorTimeLabel)
+        Me.HomeTabChart = CreateChart(NameOf(ActiveInsulinChart))
 
-        Me.HomeTabChartArea = CreateNewChartArea(NameOf(HomeTabChartArea))
+        Me.HomeTabChartArea = CreateChartArea(NameOf(HomeTabChartArea))
         With Me.HomeTabChartArea
             With .AxisY
                 .MajorTickMark = New TickMark() With {.Interval = InsulinRow, .Enabled = False}
@@ -692,8 +693,8 @@ Public Class Form1
         End With
         Me.HomeTabChart.ChartAreas.Add(Me.HomeTabChartArea)
 
-        Dim defaultLegend As Legend = CreateDefaultLegend(NameOf(defaultLegend))
-        Me.HomeTabCurrentBGSeries = CreateBgSeries(NameOf(HomeTabCurrentBGSeries), NameOf(HomeTabChartArea), NameOf(defaultLegend))
+        Dim defaultLegend As Legend = CreateLegend(NameOf(defaultLegend))
+        Me.HomeTabCurrentBGSeries = CreateSeriesBg(NameOf(HomeTabCurrentBGSeries), NameOf(HomeTabChartArea), NameOf(defaultLegend))
         Me.HomeTabMarkerSeries = New Series With {
                 .BorderColor = Color.Transparent,
                 .BorderWidth = 1,
@@ -707,40 +708,23 @@ Public Class Form1
                 .YAxisType = AxisType.Secondary
             }
 
-        Me.HomeTabHighLimitSeries = New Series With {
-                .BorderColor = Color.FromArgb(180, Color.Orange),
-                .BorderWidth = 2,
-                .ChartArea = NameOf(HomeTabChartArea),
-                .ChartType = SeriesChartType.StepLine,
-                .Color = Color.Orange,
-                .Name = NameOf(HomeTabHighLimitSeries),
-                .ShadowColor = Color.Black,
-                .XValueType = ChartValueType.DateTime,
-                .YAxisType = AxisType.Secondary
-            }
-        Me.HomeTabLowLimitSeries = New Series With {
-                .BorderColor = Color.FromArgb(180, Color.Red),
-                .BorderWidth = 2,
-                .ChartArea = NameOf(HomeTabChartArea),
-                .ChartType = SeriesChartType.StepLine,
-                .Color = Color.Red,
-                .Name = NameOf(HomeTabLowLimitSeries),
-                .ShadowColor = Color.Black,
-                .XValueType = ChartValueType.DateTime,
-                .YAxisType = AxisType.Secondary
-            }
-        Me.HomeTabTimeChangeSeries = CreateTimeChangeSeries(NameOf(HomeTabTimeChangeSeries))
-
+        Me.HomeTabHighLimitSeries = CreateSeriesLimits(NameOf(HomeTabHighLimitSeries), NameOf(HomeTabChartArea), Color.Orange)
+        Me.HomeTabLowLimitSeries = CreateSeriesLimits(NameOf(HomeTabLowLimitSeries), NameOf(HomeTabChartArea), Color.Red)
+        Me.HomeTabTimeChangeSeries = CreateSeriesTimeChange(NameOf(HomeTabTimeChangeSeries), NameOf(HomeTabChartArea))
         Me.SplitContainer3.Panel1.Controls.Add(Me.HomeTabChart)
         Application.DoEvents()
-        Me.HomeTabChart.Legends.Add(defaultLegend)
-        Me.HomeTabChart.Series.Add(Me.HomeTabCurrentBGSeries)
-        Me.HomeTabChart.Series.Add(Me.HomeTabMarkerSeries)
-        Me.HomeTabChart.Series.Add(Me.HomeTabHighLimitSeries)
-        Me.HomeTabChart.Series.Add(Me.HomeTabLowLimitSeries)
-        Me.HomeTabChart.Series.Add(Me.HomeTabTimeChangeSeries)
-        Me.HomeTabChart.Series(NameOf(HomeTabCurrentBGSeries)).EmptyPointStyle.BorderWidth = 4
-        Me.HomeTabChart.Series(NameOf(HomeTabCurrentBGSeries)).EmptyPointStyle.Color = Color.Transparent
+        With Me.HomeTabChart
+            With .Series
+                .Add(Me.HomeTabCurrentBGSeries)
+                .Add(Me.HomeTabMarkerSeries)
+                .Add(Me.HomeTabHighLimitSeries)
+                .Add(Me.HomeTabLowLimitSeries)
+                .Add(Me.HomeTabTimeChangeSeries)
+            End With
+            .Legends.Add(defaultLegend)
+            .Series(NameOf(HomeTabCurrentBGSeries)).EmptyPointStyle.BorderWidth = 4
+            .Series(NameOf(HomeTabCurrentBGSeries)).EmptyPointStyle.Color = Color.Transparent
+        End With
         Application.DoEvents()
     End Sub
 
@@ -794,8 +778,8 @@ Public Class Form1
     Private Sub InitializeActiveInsulinTabChart()
         Me.TabPage2RunningActiveInsulin.Controls.Clear()
 
-        Me.ActiveInsulinChart = CreateNewChart(NameOf(HomeTabChart))
-        Me.ActiveInsulinChartArea = CreateNewChartArea(NameOf(ActiveInsulinChartArea))
+        Me.ActiveInsulinChart = CreateChart(NameOf(HomeTabChart))
+        Me.ActiveInsulinChartArea = CreateChartArea(NameOf(ActiveInsulinChartArea))
         With Me.ActiveInsulinChartArea
             With .AxisY
                 .MajorTickMark = New TickMark() With {.Interval = InsulinRow, .Enabled = False}
@@ -814,7 +798,7 @@ Public Class Form1
         End With
         Me.ActiveInsulinChart.ChartAreas.Add(Me.ActiveInsulinChartArea)
 
-        Me.ActiveInsulinChartLegend = CreateDefaultLegend(NameOf(ActiveInsulinChartLegend))
+        Me.ActiveInsulinChartLegend = CreateLegend(NameOf(ActiveInsulinChartLegend))
         Me.ActiveInsulinChart.Legends.Add(Me.ActiveInsulinChartLegend)
         Me.ActiveInsulinSeries = New Series With {
             .BorderColor = Color.FromArgb(180, 26, 59, 105),
@@ -828,7 +812,7 @@ Public Class Form1
             .XValueType = ChartValueType.DateTime,
             .YAxisType = AxisType.Primary
         }
-        Me.ActiveInsulinCurrentBGSeries = CreateBgSeries(NameOf(ActiveInsulinCurrentBGSeries), NameOf(ActiveInsulinChartArea), NameOf(ActiveInsulinChartLegend))
+        Me.ActiveInsulinCurrentBGSeries = CreateSeriesBg(NameOf(ActiveInsulinCurrentBGSeries), NameOf(ActiveInsulinChartArea), NameOf(ActiveInsulinChartLegend))
         Me.ActiveInsulinMarkerSeries = New Series With {
             .BorderColor = Color.Transparent,
             .BorderWidth = 1,
@@ -1609,6 +1593,7 @@ Public Class Form1
         If RecentData.Count > ItemIndexs.finalCalibration + 1 Then
             Stop
         End If
+        Me.MenuStartHere.Enabled = False
         Me.LastUpdateTime.Text = Now.ToShortTimeString
         ResetAllVariables()
         Me.SummaryDataGridView.DataSource = s_summaryBindingSource
@@ -1631,6 +1616,7 @@ Public Class Form1
         s_recentDatalast = RecentData
         _initialized = True
         _updating = False
+        Me.MenuStartHere.Enabled = True
         Application.DoEvents()
     End Sub
 
@@ -1895,7 +1881,11 @@ Public Class Form1
                     Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED"
                     Case "TIME_CHANGE"
                         timeChangeMarkers.Add(markerWithIndex.Value)
-
+                        With Me.HomeTabChart.Series(NameOf(HomeTabTimeChangeSeries)).Points
+                            .AddXY(markerOaDateTime, 0)
+                            .AddXY(markerOaDateTime, MarkerRow)
+                            .AddXY(markerOaDateTime, Double.NaN)
+                        End With
                     Case Else
                         Stop
                 End Select
