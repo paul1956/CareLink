@@ -28,16 +28,17 @@ Partial Class Form1
         Me.MenuStartHere = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStartHereLogin = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.MenuStartHereUseLastSavedFile = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStartHereLoadSavedDataFile = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStartHereExceptionReportLoad = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MenuStartHereSnapshotSave = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuStartHereUseTestData = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
+        Me.MenuStartHereSnapshotSave = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.StartHereExit = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptions = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsFilterRawJSONData = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsSetupEmailServer = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MenuOptionsUseTestData = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MenuOptionsUseLastSavedData = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsUseAdvancedAITDecay = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsUseLocalTimeZone = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuView = New System.Windows.Forms.ToolStripMenuItem()
@@ -182,7 +183,7 @@ Partial Class Form1
         '
         'MenuStartHere
         '
-        Me.MenuStartHere.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStartHereLogin, Me.ToolStripSeparator1, Me.MenuStartHereLoadSavedDataFile, Me.MenuStartHereExceptionReportLoad, Me.MenuStartHereSnapshotSave, Me.ToolStripSeparator2, Me.StartHereExit})
+        Me.MenuStartHere.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStartHereLogin, Me.ToolStripSeparator1, Me.MenuStartHereUseLastSavedFile, Me.MenuStartHereLoadSavedDataFile, Me.MenuStartHereExceptionReportLoad, Me.MenuStartHereUseTestData, Me.ToolStripSeparator2, Me.MenuStartHereSnapshotSave, Me.ToolStripSeparator3, Me.StartHereExit})
         Me.MenuStartHere.Name = "MenuStartHere"
         Me.MenuStartHere.Size = New System.Drawing.Size(71, 20)
         Me.MenuStartHere.Text = "Start Here"
@@ -190,49 +191,66 @@ Partial Class Form1
         'MenuStartHereLogin
         '
         Me.MenuStartHereLogin.Name = "MenuStartHereLogin"
-        Me.MenuStartHereLogin.Size = New System.Drawing.Size(193, 22)
+        Me.MenuStartHereLogin.Size = New System.Drawing.Size(214, 22)
         Me.MenuStartHereLogin.Text = "Login"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(190, 6)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(211, 6)
+        '
+        'MenuStartHereUseLastSavedFile
+        '
+        Me.MenuStartHereUseLastSavedFile.Name = "MenuStartHereUseLastSavedFile"
+        Me.MenuStartHereUseLastSavedFile.Size = New System.Drawing.Size(214, 22)
+        Me.MenuStartHereUseLastSavedFile.Text = "Use Last Data File"
         '
         'MenuStartHereLoadSavedDataFile
         '
         Me.MenuStartHereLoadSavedDataFile.Name = "MenuStartHereLoadSavedDataFile"
-        Me.MenuStartHereLoadSavedDataFile.Size = New System.Drawing.Size(193, 22)
+        Me.MenuStartHereLoadSavedDataFile.Size = New System.Drawing.Size(214, 22)
         Me.MenuStartHereLoadSavedDataFile.Text = "Load Saved Data File"
         '
         'MenuStartHereExceptionReportLoad
         '
         Me.MenuStartHereExceptionReportLoad.Name = "MenuStartHereExceptionReportLoad"
-        Me.MenuStartHereExceptionReportLoad.Size = New System.Drawing.Size(193, 22)
-        Me.MenuStartHereExceptionReportLoad.Text = "Exception Report Load"
+        Me.MenuStartHereExceptionReportLoad.Size = New System.Drawing.Size(214, 22)
+        Me.MenuStartHereExceptionReportLoad.Text = "Load An Exception Repord"
+        '
+        'MenuStartHereUseTestData
+        '
+        Me.MenuStartHereUseTestData.Name = "MenuStartHereUseTestData"
+        Me.MenuStartHereUseTestData.Size = New System.Drawing.Size(214, 22)
+        Me.MenuStartHereUseTestData.Text = "Use Test Data"
+        '
+        'ToolStripSeparator2
+        '
+        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(211, 6)
         '
         'MenuStartHereSnapshotSave
         '
         Me.MenuStartHereSnapshotSave.Name = "MenuStartHereSnapshotSave"
         Me.MenuStartHereSnapshotSave.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
-        Me.MenuStartHereSnapshotSave.Size = New System.Drawing.Size(193, 22)
+        Me.MenuStartHereSnapshotSave.Size = New System.Drawing.Size(214, 22)
         Me.MenuStartHereSnapshotSave.Text = "Snapshot &Save"
         '
-        'ToolStripSeparator2
+        'ToolStripSeparator3
         '
-        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(190, 6)
+        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(211, 6)
         '
         'StartHereExit
         '
         Me.StartHereExit.Image = Global.CareLink.My.Resources.Resources.AboutBox
         Me.StartHereExit.Name = "StartHereExit"
         Me.StartHereExit.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.X), System.Windows.Forms.Keys)
-        Me.StartHereExit.Size = New System.Drawing.Size(193, 22)
+        Me.StartHereExit.Size = New System.Drawing.Size(214, 22)
         Me.StartHereExit.Text = "E&xit"
         '
         'MenuOptions
         '
-        Me.MenuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsSetupEmailServer, Me.MenuOptionsUseTestData, Me.MenuOptionsUseLastSavedData, Me.MenuOptionsUseAdvancedAITDecay, Me.MenuOptionsUseLocalTimeZone})
+        Me.MenuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsSetupEmailServer, Me.MenuOptionsUseAdvancedAITDecay, Me.MenuOptionsUseLocalTimeZone})
         Me.MenuOptions.Name = "MenuOptions"
         Me.MenuOptions.Size = New System.Drawing.Size(61, 20)
         Me.MenuOptions.Text = "Options"
@@ -251,20 +269,6 @@ Partial Class Form1
         Me.MenuOptionsSetupEmailServer.Name = "MenuOptionsSetupEmailServer"
         Me.MenuOptionsSetupEmailServer.Size = New System.Drawing.Size(204, 22)
         Me.MenuOptionsSetupEmailServer.Text = "Setup Email Server"
-        '
-        'MenuOptionsUseTestData
-        '
-        Me.MenuOptionsUseTestData.CheckOnClick = True
-        Me.MenuOptionsUseTestData.Name = "MenuOptionsUseTestData"
-        Me.MenuOptionsUseTestData.Size = New System.Drawing.Size(204, 22)
-        Me.MenuOptionsUseTestData.Text = "Use Test Data"
-        '
-        'MenuOptionsUseLastSavedData
-        '
-        Me.MenuOptionsUseLastSavedData.CheckOnClick = True
-        Me.MenuOptionsUseLastSavedData.Name = "MenuOptionsUseLastSavedData"
-        Me.MenuOptionsUseLastSavedData.Size = New System.Drawing.Size(204, 22)
-        Me.MenuOptionsUseLastSavedData.Text = "Use Last Saved Data"
         '
         'MenuOptionsUseAdvancedAITDecay
         '
@@ -1183,9 +1187,8 @@ Partial Class Form1
         Me.TableLayoutPanelLimits.AutoSize = True
         Me.TableLayoutPanelLimits.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelLimits.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelLimits.ColumnCount = 2
-        Me.TableLayoutPanelLimits.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.0!))
-        Me.TableLayoutPanelLimits.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85.0!))
+        Me.TableLayoutPanelLimits.ColumnCount = 1
+        Me.TableLayoutPanelLimits.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelLimits.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelLimits.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelLimits.Name = "TableLayoutPanelLimits"
@@ -1212,13 +1215,13 @@ Partial Class Form1
         Me.TableLayoutPanelMarkers.AutoSize = True
         Me.TableLayoutPanelMarkers.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelMarkers.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelMarkers.ColumnCount = 2
-        Me.TableLayoutPanelMarkers.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.0!))
-        Me.TableLayoutPanelMarkers.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85.0!))
+        Me.TableLayoutPanelMarkers.ColumnCount = 1
+        Me.TableLayoutPanelMarkers.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelMarkers.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelMarkers.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelMarkers.Name = "TableLayoutPanelMarkers"
-        Me.TableLayoutPanelMarkers.RowCount = 1
+        Me.TableLayoutPanelMarkers.RowCount = 2
+        Me.TableLayoutPanelMarkers.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
         Me.TableLayoutPanelMarkers.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelMarkers.Size = New System.Drawing.Size(1370, 611)
         Me.TableLayoutPanelMarkers.TabIndex = 0
@@ -1246,7 +1249,7 @@ Partial Class Form1
         Me.TableLayoutPanelNotificationHistory.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelNotificationHistory.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelNotificationHistory.Name = "TableLayoutPanelNotificationHistory"
-        Me.TableLayoutPanelNotificationHistory.RowCount = 2
+        Me.TableLayoutPanelNotificationHistory.RowCount = 1
         Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelNotificationHistory.Size = New System.Drawing.Size(1370, 611)
@@ -1320,15 +1323,16 @@ Partial Class Form1
         'TableLayoutPanelBannerState
         '
         Me.TableLayoutPanelBannerState.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelBannerState.ColumnCount = 2
-        Me.TableLayoutPanelBannerState.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.45985!))
-        Me.TableLayoutPanelBannerState.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 88.54015!))
+        Me.TableLayoutPanelBannerState.ColumnCount = 1
+        Me.TableLayoutPanelBannerState.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelBannerState.Dock = System.Windows.Forms.DockStyle.Top
         Me.TableLayoutPanelBannerState.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelBannerState.Name = "TableLayoutPanelBannerState"
-        Me.TableLayoutPanelBannerState.RowCount = 1
-        Me.TableLayoutPanelBannerState.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelBannerState.Size = New System.Drawing.Size(1370, 611)
+        Me.TableLayoutPanelBannerState.RowCount = 3
+        Me.TableLayoutPanelBannerState.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelBannerState.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelBannerState.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelBannerState.Size = New System.Drawing.Size(1370, 54)
         Me.TableLayoutPanelBannerState.TabIndex = 0
         '
         'ImageList1
@@ -1532,9 +1536,9 @@ Partial Class Form1
     Friend WithEvents TimeInRangeValueLabel As Label
     Friend WithEvents TransmatterBatterPercentLabel As Label
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
-    Friend WithEvents MenuOptionsUseTestData As ToolStripMenuItem
+    Friend WithEvents MenuStartHereUseTestData As ToolStripMenuItem
     Friend WithEvents MenuView As ToolStripMenuItem
-    Friend WithEvents MenuOptionsUseLastSavedData As ToolStripMenuItem
+    Friend WithEvents MenuStartHereUseLastSavedFile As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
     Friend WithEvents MenuStartHereLoadSavedDataFile As ToolStripMenuItem
     Friend WithEvents MenuStartHereSnapshotSave As ToolStripMenuItem
@@ -1569,4 +1573,5 @@ Partial Class Form1
     Friend WithEvents MenuOptionsUseLocalTimeZone As ToolStripMenuItem
     Friend WithEvents SummaryDataGridView As DataGridView
     Friend WithEvents BindingSource1 As BindingSource
+    Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
 End Class

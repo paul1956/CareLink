@@ -33,7 +33,7 @@ Public Module StandardControlCreation
                 .AutoSize = True,
                 .AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 .BackColor = backColor,
-                .BorderStyle = BorderStyle.Fixed3D,
+                .BorderStyle = BorderStyle.FixedSingle,
                 .ColumnCount = 2,
                 .Dock = DockStyle.Top,
                 .Margin = New Padding(3),
@@ -86,20 +86,23 @@ Public Module StandardControlCreation
         Return valueTextBox
     End Function
 
-    Friend Function InitializeColumnLabel(layoutPanel1 As TableLayoutPanel, rowIndex As ItemIndexs) As Label
-        Dim labelControl As Label = CreateBasicLabel($"{CInt(rowIndex)}{Environment.NewLine}{rowIndex}")
+    Friend Function InitializeColumnLabel(layoutPanel1 As TableLayoutPanel, rowIndex As ItemIndexs, Optional isColumnHeader As Boolean = False) As Label
+        Dim labelControl As Label
+        If isColumnHeader Then
+            labelControl = CreateBasicLabel($"{CInt(rowIndex)} {rowIndex}", True)
+        Else
+            labelControl = CreateBasicLabel($"{CInt(rowIndex)}{Environment.NewLine}{rowIndex}")
+        End If
         layoutPanel1.Controls.Add(labelControl, 0, 0)
         Application.DoEvents()
         Return labelControl
     End Function
 
-    Friend Sub InitializeWorkingPanel(ByRef layoutPanel1 As TableLayoutPanel, realPanel As TableLayoutPanel, Optional autoSize? As Boolean = Nothing)
+    Friend Sub InitializeWorkingPanel(ByRef layoutPanel1 As TableLayoutPanel, realPanel As TableLayoutPanel, Optional HeaderOnTop? As Boolean = Nothing)
         layoutPanel1 = realPanel
         layoutPanel1.Controls.Clear()
-        layoutPanel1.RowCount = 1
-        layoutPanel1.RowStyles(0).SizeType = SizeType.AutoSize
-        If autoSize IsNot Nothing Then
-            layoutPanel1.AutoSize = CBool(autoSize)
+        If HeaderOnTop Is Nothing Then
+            layoutPanel1.RowStyles(0).SizeType = SizeType.AutoSize
         End If
     End Sub
 
@@ -110,9 +113,11 @@ Public Module StandardControlCreation
     ''' </summary>
     ''' <param name="text"></param>
     ''' <returns>New Label</returns>
-    Public Function CreateBasicLabel(text As String) As Label
+    ''' <param name="centerText"></param>
+    Public Function CreateBasicLabel(text As String, Optional centerText As Boolean = False) As Label
         Return New Label With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                .AutoSize = True,
+                               .TextAlign = If(centerText, ContentAlignment.MiddleCenter, ContentAlignment.MiddleLeft),
                                .Text = text}
     End Function
 

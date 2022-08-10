@@ -129,14 +129,14 @@ Public Module JsonExtensions
                             s_timeWithMinuteFormat = If(internaltimeFormat = "HR_12", TwelveHourTimeWithMinuteFormat, MilitaryTimeWithMinuteFormat)
                             s_timeWithoutMinuteFormat = If(internaltimeFormat = "HR_12", TwelveHourTimeWithoutMinuteFormat, MilitaryTimeWithoutMinuteFormat)
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
-                        Case "Sg", "sg", NameOf(ItemIndexs.averageSGFloat), NameOf(ItemIndexs.sgBelowLimit)
+                        Case "Sg", "sg", NameOf(ItemIndexs.averageSGFloat), NameOf(ItemIndexs.averageSG), NameOf(ItemIndexs.sgBelowLimit)
                             resultDictionary.Add(item.Key, CStr((item.jsonItemAsString.ParseDouble / scaleUnitsDivisor).RoundDouble(2)))
                         Case Else
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
                     End Select
                 Catch ex As Exception
                     Stop
-                    Throw
+                    'Throw
                 End Try
             Next
         End If

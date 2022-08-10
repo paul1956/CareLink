@@ -106,6 +106,11 @@ Friend Module DateTimeExtensions
     End Function
 
     <Extension>
+    Public Function ToShortDateTimeString(dateValue As Date) As String
+        Return $"{dateValue.ToShortDateString()} {dateValue.ToShortTimeString()}"
+    End Function
+
+    <Extension>
     Public Function TryParseDate(dateAsString As String, ByRef resultDate As Date, key As String) As Boolean
         Dim success As Boolean
         Select Case key

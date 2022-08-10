@@ -10,16 +10,22 @@ Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Class Form1
-
     Private ReadOnly _bgMiniDisplay As New BGMiniWindow
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
     Private ReadOnly _loginDialog As New LoginForm1
+    Private ReadOnly _markerAutoBasalDelivery As New List(Of Dictionary(Of String, String))
+    Private ReadOnly _markerAutoModeStatus As New List(Of Dictionary(Of String, String))
+    Private ReadOnly _markerBgReading As New List(Of Dictionary(Of String, String))
+    Private ReadOnly _markerCalibration As New List(Of Dictionary(Of String, String))
+    Private ReadOnly _markerInsulin As New List(Of Dictionary(Of String, String))
+    Private ReadOnly _markerLowGlusoseSuspended As New List(Of Dictionary(Of String, String))
+    Private ReadOnly _markerMeal As New List(Of Dictionary(Of String, String))
+    Private ReadOnly _markerTimeChange As New List(Of Dictionary(Of String, String))
     Private _client As CareLinkClient
     Private _homePageAbsoluteRectangle As RectangleF
     Private _homePageChartRelitivePosition As RectangleF = RectangleF.Empty
     Private _initialized As Boolean = False
-    Private _inMenuOptions As Boolean
     Private _inMouseMove As Boolean = False
     Private _recentDataSameCount As Integer
     Private _showBaloonTip As Boolean = True
@@ -78,57 +84,7 @@ Public Class Form1
 
 #Region "Form Events"
 
-    Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        Me.CleanUpNotificationIcon()
-    End Sub
-
-    Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-        Me.CleanUpNotificationIcon()
-    End Sub
-
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
-        If My.Settings.UpgradeRequired Then
-            My.Settings.Upgrade()
-            My.Settings.UpgradeRequired = False
-            My.Settings.Save()
-        End If
-
-        If My.Settings.UseTestData Then
-            Me.MenuOptionsUseLastSavedData.Checked = False
-            Me.MenuOptionsUseTestData.Checked = True
-        ElseIf My.Settings.UseLastSavedData AndAlso Me.MenuStartHereLoadSavedDataFile.Enabled Then
-            Me.MenuOptionsUseLastSavedData.Checked = True
-            Me.MenuOptionsUseTestData.Checked = False
-        End If
-        s_timeZoneList = TimeZoneInfo.GetSystemTimeZones.ToList
-
-        Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact(My.Settings.AIT.ToString("hh\:mm").Substring(1))
-        Me.MenuOptionsUseAdvancedAITDecay.CheckState = If(My.Settings.UseAdvancedAITDecay, CheckState.Checked, CheckState.Unchecked)
-
-    End Sub
-
-    Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-        Me.Fix(Me)
-
-        Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
-        Me.ShieldUnitsLabel.BackColor = Color.Transparent
-        Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLeftPictureBox
-        Me.SensorDaysLeftLabel.BackColor = Color.Transparent
-        Me.SensorDaysLeftLabel.Left = (Me.SensorTimeLeftPictureBox.Width \ 2) - (Me.SensorDaysLeftLabel.Width \ 2)
-        Me.SensorDaysLeftLabel.Top = (Me.SensorTimeLeftPictureBox.Height \ 2) - (Me.SensorDaysLeftLabel.Height \ 2)
-        If Me.FormScale.Height > 1 Then
-            Me.SplitContainer1.SplitterDistance = 0
-        End If
-        s_useLocalTimeZone = My.Settings.UseLocalTimeZone
-        Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
-        CheckForUpdatesAsync(Me, False)
-        If Me.DoOptionalLoginAndUpdateData(False) Then
-            Me.FinishInitialization()
-            Me.UpdateAllTabPages()
-        End If
-    End Sub
-
-    Friend Sub FinishInitialization()
+    Private Sub FinishInitialization()
         If _initialized Then
             Exit Sub
         End If
@@ -152,6 +108,48 @@ Public Class Form1
             }
 
         _initialized = True
+    End Sub
+
+    Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        Me.CleanUpNotificationIcon()
+    End Sub
+
+    Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        Me.CleanUpNotificationIcon()
+    End Sub
+
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
+        If My.Settings.UpgradeRequired Then
+            My.Settings.Upgrade()
+            My.Settings.UpgradeRequired = False
+            My.Settings.Save()
+        End If
+
+        s_timeZoneList = TimeZoneInfo.GetSystemTimeZones.ToList
+        Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact(My.Settings.AIT.ToString("hh\:mm").Substring(1))
+        Me.MenuOptionsUseAdvancedAITDecay.CheckState = If(My.Settings.UseAdvancedAITDecay, CheckState.Checked, CheckState.Unchecked)
+
+    End Sub
+
+    Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        Me.Fix(Me)
+
+        Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
+        Me.ShieldUnitsLabel.BackColor = Color.Transparent
+        Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLeftPictureBox
+        Me.SensorDaysLeftLabel.BackColor = Color.Transparent
+        Me.SensorDaysLeftLabel.Left = (Me.SensorTimeLeftPictureBox.Width \ 2) - (Me.SensorDaysLeftLabel.Width \ 2)
+        Me.SensorDaysLeftLabel.Top = (Me.SensorTimeLeftPictureBox.Height \ 2) - (Me.SensorDaysLeftLabel.Height \ 2)
+        If Me.FormScale.Height > 1 Then
+            Me.SplitContainer1.SplitterDistance = 0
+        End If
+        s_useLocalTimeZone = My.Settings.UseLocalTimeZone
+        Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
+        CheckForUpdatesAsync(Me, False)
+        If Me.DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
+            Me.FinishInitialization()
+            Me.UpdateAllTabPages()
+        End If
     End Sub
 
 #End Region
@@ -188,13 +186,12 @@ Public Class Form1
                 Me.ServerUpdateTimer.Stop()
                 If File.Exists(fileNameWithPath) Then
                     RecentData.Clear()
-                    Me.MenuOptionsUseLastSavedData.CheckState = CheckState.Indeterminate
-                    Me.MenuOptionsUseTestData.CheckState = CheckState.Indeterminate
                     ExceptionHandlerForm.ReportFileNameWithPath = fileNameWithPath
                     If ExceptionHandlerForm.ShowDialog() = DialogResult.OK Then
                         ExceptionHandlerForm.ReportFileNameWithPath = ""
-                        Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                         RecentData = Loads(ExceptionHandlerForm.LocalRawData)
+                        Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
+                        Me.LastUpdateTime.Text = File.GetLastWriteTime(fileNameWithPath).ToShortDateTimeString
                         _initialized = False
                         Me.FinishInitialization()
                         Me.UpdateAllTabPages()
@@ -235,14 +232,13 @@ Public Class Form1
             Try
                 If File.Exists(openFileDialog1.FileName) Then
                     Me.ServerUpdateTimer.Stop()
-                    Me.MenuOptionsUseLastSavedData.CheckState = CheckState.Indeterminate
-                    Me.MenuOptionsUseTestData.CheckState = CheckState.Indeterminate
                     CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{RepoName}", True)
 
                     RecentData = Loads(File.ReadAllText(openFileDialog1.FileName))
+                    Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
+                    Me.LastUpdateTime.Text = File.GetLastWriteTime(openFileDialog1.FileName).ToShortDateTimeString
                     _initialized = False
                     Me.FinishInitialization()
-                    Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
                     Me.UpdateAllTabPages()
                 End If
             Catch ex As Exception
@@ -250,11 +246,17 @@ Public Class Form1
             End Try
         End If
     End Sub
+    Private Sub MenuStartHereUseTestData_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseTestData.Click
+        Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True, FileToLoadOptions.TestData)
+        Me.MenuStartHereSnapshotSave.Enabled = False
+    End Sub
+    Private Sub MenuStartHereUseLastSavedFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseLastSavedFile.Click
+        Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True, FileToLoadOptions.LastSaved)
+        Me.MenuStartHereSnapshotSave.Enabled = False
+    End Sub
 
     Private Sub MenuStartHereLogin_Click(sender As Object, e As EventArgs) Handles MenuStartHereLogin.Click
-        Me.MenuOptionsUseTestData.CheckState = CheckState.Indeterminate
-        Me.MenuOptionsUseLastSavedData.CheckState = CheckState.Indeterminate
-        Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True)
+        Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True, FileToLoadOptions.Login)
     End Sub
 
     Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotSave.Click
@@ -291,29 +293,6 @@ Public Class Form1
 
     End Sub
 
-    Private Sub MenuOptionsUseLastSavedData_CheckStateChanged(sender As Object, e As EventArgs) Handles MenuOptionsUseLastSavedData.CheckStateChanged
-        If _inMenuOptions Then Exit Sub
-        Select Case Me.MenuOptionsUseLastSavedData.CheckState
-            Case CheckState.Checked
-                Me.MenuOptionsUseTestData.CheckState = CheckState.Indeterminate
-                My.Settings.UseLastSavedData = True
-                My.Settings.UseTestData = False
-                Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True)
-            Case CheckState.Unchecked
-                My.Settings.UseLastSavedData = False
-                If _initialized AndAlso Not (Me.MenuOptionsUseTestData.Checked OrElse Me.MenuOptionsUseLastSavedData.Checked) Then
-                    Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True)
-                End If
-            Case CheckState.Indeterminate
-                _inMenuOptions = True
-                My.Settings.UseLastSavedData = False
-                Me.MenuOptionsUseLastSavedData.Checked = False
-                _inMenuOptions = False
-        End Select
-        Me.MenuStartHereSnapshotSave.Enabled = Me.MenuOptionsUseLastSavedData.Checked
-
-        My.Settings.Save()
-    End Sub
 
     Private Sub MenuOptionsUseLocalTimeZone_Click(sender As Object, e As EventArgs) Handles MenuOptionsUseLocalTimeZone.Click
         My.Settings.UseLocalTimeZone = Me.MenuOptionsUseLocalTimeZone.Checked
@@ -321,27 +300,6 @@ Public Class Form1
         s_clientTimeZone = CalculateTimeZone()
     End Sub
 
-    Private Sub MenuOptionsUseTestData_Checkchange(sender As Object, e As EventArgs) Handles MenuOptionsUseTestData.CheckStateChanged
-        If _inMenuOptions Then Exit Sub
-        Select Case Me.MenuOptionsUseTestData.CheckState
-            Case CheckState.Checked
-                Me.MenuOptionsUseLastSavedData.CheckState = CheckState.Indeterminate
-                My.Settings.UseLastSavedData = False
-                My.Settings.UseTestData = True
-                Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True)
-            Case CheckState.Unchecked
-                My.Settings.UseTestData = False
-                If _initialized AndAlso Not Me.MenuOptionsUseLastSavedData.Checked Then
-                    Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True)
-                End If
-            Case CheckState.Indeterminate
-                _inMenuOptions = True
-                My.Settings.UseTestData = False
-                Me.MenuOptionsUseTestData.Checked = False
-                _inMenuOptions = False
-        End Select
-        My.Settings.Save()
-    End Sub
 
 #End Region
 
@@ -384,6 +342,10 @@ Public Class Form1
         If s_timeToNextCalibrationMinutes > 0 AndAlso s_timeToNextCalibrationMinutes < 1440 Then
             _calibrationToolTip.SetToolTip(Me.CalibrationDueImage, $"Calibration Due {Now.AddMinutes(s_timeToNextCalibrationMinutes).ToShortTimeString}")
         End If
+    End Sub
+
+    Private Sub TabControl1_Selected(sender As Object, e As TabControlEventArgs) Handles TabControl1.Selected
+        Application.DoEvents()
     End Sub
 
 #Region "Home Page Chart Events"
@@ -566,7 +528,7 @@ Public Class Form1
         If Me.SGsDataGridView.Columns(e.ColumnIndex).Name.Equals(NameOf(DateTime), StringComparison.OrdinalIgnoreCase) Then
             If e.Value IsNot Nothing Then
                 Dim dateValue As Date = e.Value.ToString.ParseDate("")
-                e.Value = $"{dateValue.ToShortDateString()} {dateValue.ToShortTimeString()}"
+                e.Value = dateValue.ToShortTimeString
             End If
         End If
         If Me.SGsDataGridView.Columns(e.ColumnIndex).Name.Equals(NameOf(SgRecord.sg), StringComparison.OrdinalIgnoreCase) Then
@@ -648,12 +610,14 @@ Public Class Form1
         Me.ServerUpdateTimer.Stop()
         RecentData = _client.GetRecentData()
         If Me.IsRecentDataUpdated Then
+            Me.LastUpdateTime.Text = Now.ToShortDateTimeString
             Me.UpdateAllTabPages()
         ElseIf RecentData Is Nothing Then
             _client = New CareLinkClient(Me.LoginStatus, My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
             _loginDialog.Client = _client
             RecentData = _client.GetRecentData()
-            If Me.IsRecentDataUpdated Then
+            If RecentData IsNot Nothing Then
+                Me.LastUpdateTime.Text = Now.ToShortDateTimeString
                 Me.UpdateAllTabPages()
             End If
         End If
@@ -874,20 +838,12 @@ Public Class Form1
     End Function
 
     Private Sub FillOneRowOfTableLayoutPanel(layoutPanel As TableLayoutPanel, innerJson As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String)
-        Dim outerLayoutPanel As New TableLayoutPanel With {
-            .AutoSize = False,
-            .AutoScroll = True,
-            .BackColor = Color.LightBlue,
-            .Dock = DockStyle.Fill,
-            .ColumnCount = 1,
-            .Padding = New Padding(3),
-            .RowCount = innerJson.Count
-        }
-        layoutPanel.Controls.Add(outerLayoutPanel, 1, 0)
+        For i As Integer = 1 To innerJson.Count - 1
+            layoutPanel.RowStyles.Add(New RowStyle(SizeType.AutoSize))
+        Next
         For Each jsonEntry As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
-            outerLayoutPanel.RowStyles.Add(New RowStyle(SizeType.AutoSize))
-            Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, Color.Orange)
-            outerLayoutPanel.Controls.Add(innerTableBlue, 0, 0)
+            Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, Color.Black)
+            layoutPanel.Controls.Add(innerTableBlue, 0, layoutPanel.RowCount)
             Me.GetInnerTable(jsonEntry.Value, innerTableBlue, rowIndex, filterJsonData, timeFormat, Me.FormScale.Height <> 1)
             Application.DoEvents()
         Next
@@ -931,7 +887,7 @@ Public Class Form1
                 tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22))
             End If
             tableLevel1Blue.RowCount += 1
-            If itemIndex = ItemIndexs.limits OrElse itemIndex = ItemIndexs.markers OrElse (itemIndex = ItemIndexs.notificationHistory AndAlso c.Value.Key = "activeNotifications") Then
+            If itemIndex = ItemIndexs.notificationHistory AndAlso c.Value.Key = "activeNotifications" Then
                 tableLevel1Blue.AutoSize = True
             End If
 
@@ -941,7 +897,7 @@ Public Class Form1
                     Dim tableLevel2 As TableLayoutPanel = CreateTableLayoutPanel(NameOf(tableLevel2), innerJson1.Count, Color.LightBlue)
 
                     For i As Integer = 0 To innerJson1.Count - 1
-                        tableLevel2.RowStyles.Add(New RowStyle() With {.SizeType = SizeType.AutoSize})
+                        tableLevel2.RowStyles.Add(New RowStyle(SizeType.AutoSize))
                     Next
                     tableLevel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 80.0))
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson1.WithIndex()
@@ -990,6 +946,7 @@ Public Class Form1
             tableLevel1Blue.AutoSize = False
             tableLevel1Blue.RowCount += 1
             tableLevel1Blue.Width = 400
+            tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize))
         ElseIf itemIndex = ItemIndexs.lastAlarm Then
             Dim parentTableLayoutPanel As TableLayoutPanel = CType(tableLevel1Blue.Parent, TableLayoutPanel)
             parentTableLayoutPanel.AutoSize = False
@@ -1054,19 +1011,20 @@ Public Class Form1
     End Function
 
     Private Sub ProcesListOfDictionary(layoutPanel1 As TableLayoutPanel, innerListDictionary As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs)
-        Dim rowHeader As Label = InitializeColumnLabel(layoutPanel1, rowIndex)
-        layoutPanel1.Parent.Parent.UseWaitCursor = True
-        layoutPanel1.AutoScroll = True
+        layoutPanel1.Hide()
         Application.DoEvents()
-        layoutPanel1.Invoke(Sub()
-                                Me.FillOneRowOfTableLayoutPanel(
-                                            layoutPanel1,
-                                            innerListDictionary,
-                                            rowIndex,
-                                            s_filterJsonData,
-                                            s_timeWithMinuteFormat)
-                            End Sub)
+        Dim rowHeader As Label = InitializeColumnLabel(layoutPanel1, rowIndex, True)
+        layoutPanel1.AutoScroll = True
+        layoutPanel1.BackColor = Color.LightBlue
+        layoutPanel1.Parent.Parent.UseWaitCursor = True
+        Me.FillOneRowOfTableLayoutPanel(
+            layoutPanel1,
+            innerListDictionary,
+            rowIndex,
+            s_filterJsonData,
+            s_timeWithMinuteFormat)
         layoutPanel1.Parent.Parent.UseWaitCursor = False
+        layoutPanel1.Show()
         Application.DoEvents()
     End Sub
 
@@ -1080,6 +1038,72 @@ Public Class Form1
         s_sGs.Clear()
         s_sGsBindingSource.Clear()
         s_summaryBindingSource.Clear()
+    End Sub
+
+    Private Shared Function ScaleOneMarker(innerdic As Dictionary(Of String, String)) As Dictionary(Of String, String)
+        Dim newMarker As New Dictionary(Of String, String)
+        For Each kvp As KeyValuePair(Of String, String) In innerdic
+            Select Case kvp.Key
+                Case "value"
+                    newMarker.Add(kvp.Key, CStr((CDbl(kvp.Value) / scaleUnitsDivisor).RoundDouble(1)))
+                Case Else
+                    newMarker.Add(kvp.Key, kvp.Value)
+            End Select
+        Next
+        Return newMarker
+    End Function
+
+    Private Sub CollectMarkers(row As String)
+        s_markers.Clear()
+        _markerAutoBasalDelivery.Clear()
+        _markerAutoModeStatus.Clear()
+        _markerBgReading.Clear()
+        _markerCalibration.Clear()
+        _markerInsulin.Clear()
+        _markerLowGlusoseSuspended.Clear()
+        _markerMeal.Clear()
+        _markerTimeChange.Clear()
+
+        Dim newMarker As Dictionary(Of String, String)
+        For Each innerdic As Dictionary(Of String, String) In LoadList(row)
+            Select Case innerdic("type")
+                Case "AUTO_BASAL_DELIVERY"
+                    newMarker = innerdic
+                    _markerAutoBasalDelivery.Add(newMarker)
+                Case "AUTO_MODE_STATUS"
+                    newMarker = innerdic
+                    _markerAutoModeStatus.Add(newMarker)
+                Case "BG_READING"
+                    newMarker = ScaleOneMarker(innerdic)
+                    _markerBgReading.Add(newMarker)
+                Case "CALIBRATION"
+                    newMarker = ScaleOneMarker(innerdic)
+                    _markerCalibration.Add(newMarker)
+                Case "INSULIN"
+                    newMarker = innerdic
+                    _markerInsulin.Add(newMarker)
+                Case "LOW_GLUCOSE_SUSPENDED"
+                    newMarker = innerdic
+                    _markerLowGlusoseSuspended.Add(newMarker)
+                Case "MEAL"
+                    newMarker = innerdic
+                    _markerMeal.Add(newMarker)
+                Case "TIME_CHANGE"
+                    newMarker = innerdic
+                    _markerTimeChange.Add(newMarker)
+                Case Else
+                    Stop
+                    Throw UnreachableException("type")
+            End Select
+        Next
+        s_markers.AddRange(_markerAutoBasalDelivery)
+        s_markers.AddRange(_markerAutoModeStatus)
+        s_markers.AddRange(_markerBgReading)
+        s_markers.AddRange(_markerCalibration)
+        s_markers.AddRange(_markerInsulin)
+        s_markers.AddRange(_markerLowGlusoseSuspended)
+        s_markers.AddRange(_markerMeal)
+        s_markers.AddRange(_markerTimeChange)
     End Sub
 
     Private Sub ProcessAllSingleEntries(row As KeyValuePair(Of String, String), rowIndex As ItemIndexs, ByRef firstName As String)
@@ -1215,7 +1239,7 @@ Public Class Form1
                 s_summaryBindingSource.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.averageSG
-                s_averageSG = CInt(row.Value)
+                s_averageSG = row.Value.RoundDouble(1)
                 s_summaryBindingSource.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.belowHypoLimit
@@ -1279,7 +1303,7 @@ Public Class Form1
         Dim firstName As String = ""
         Dim markerRowString As String = ""
         If RecentData.TryGetValue(ItemIndexs.markers.ToString, markerRowString) Then
-            CollectMarkers(markerRowString)
+            Me.CollectMarkers(markerRowString)
         End If
 
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In RecentData.WithIndex()
@@ -1339,11 +1363,11 @@ Public Class Form1
                 End Select
 
                 If innerListDictionary.Count = 0 Then
-                    Dim rowHeader As Label = InitializeColumnLabel(layoutPanel1, rowIndex)
+                    Dim rowHeader As Label = InitializeColumnLabel(layoutPanel1, rowIndex, True)
                     Dim rowTextBox As TextBox = CreateBasicTextBox("")
                     rowTextBox.BackColor = Color.LightGray
-                    layoutPanel1.RowStyles(0).SizeType = SizeType.AutoSize
-                    layoutPanel1.Controls.Add(rowTextBox, 1, 0)
+
+                    layoutPanel1.Controls.Add(rowTextBox)
                 Else
                     Me.ProcesListOfDictionary(layoutPanel1, innerListDictionary, rowIndex)
                 End If
@@ -1370,7 +1394,7 @@ Public Class Form1
 
                     Case ItemIndexs.basal
                         InitializeWorkingPanel(layoutPanel1, Me.TableLayoutPanelBasal)
-                        docStyle = DockStyle.Top
+                        docStyle = DockStyle.Fill
 
                     Case Else
                         Stop
@@ -1396,33 +1420,6 @@ Public Class Form1
         _initialized = True
         _updating = False
         Me.Cursor = Cursors.Default
-    End Sub
-
-    Private Shared Sub CollectMarkers(row As String)
-        For Each innerdic As Dictionary(Of String, String) In LoadList(row)
-            Dim newMarker As New Dictionary(Of String, String)
-            Select Case innerdic("type")
-                Case "AUTO_BASAL_DELIVERY",
-                     "AUTO_MODE_STATUS",
-                     "INSULIN",
-                     "LOW_GLUCOSE_SUSPENDED",
-                     "MEAL",
-                     "TIME_CHANGE"
-                    newMarker = innerdic
-                Case "BG_READING", "CALIBRATION"
-                    For Each kvp As KeyValuePair(Of String, String) In innerdic
-                        Select Case kvp.Key
-                            Case "value"
-                                newMarker.Add(kvp.Key, CStr((CDbl(kvp.Value) / scaleUnitsDivisor).RoundDouble(1)))
-                            Case Else
-                                newMarker.Add(kvp.Key, kvp.Value)
-                        End Select
-                    Next
-                Case Else
-                    Stop
-            End Select
-            s_markers.Add(newMarker)
-        Next
     End Sub
 
 #End Region
@@ -1619,7 +1616,6 @@ Public Class Form1
             Stop
         End If
         Me.MenuStartHere.Enabled = False
-        Me.LastUpdateTime.Text = Now.ToShortTimeString
         ResetAllVariables()
         Me.SummaryDataGridView.DataSource = s_summaryBindingSource
 
@@ -1840,7 +1836,6 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateZHomeTabSerieses()
-        Dim timeChangeMarkers As New List(Of Dictionary(Of String, String))
         For Each s As Series In Me.HomeTabChart.Series
             s.Points.Clear()
         Next
@@ -1856,13 +1851,14 @@ Public Class Form1
             With Me.HomeTabChart.Series(NameOf(HomeTabMarkerSeries)).Points
                 Select Case markerWithIndex.Value("type")
                     Case "BG_READING"
-                        Single.TryParse(markerWithIndex.Value("value"), NumberStyles.Number, CurrentDataCulture, bgValue)
-                        .AddXY(markerOaDateTime, bgValue)
-                        .Last.BorderColor = Color.Gainsboro
-                        .Last.Color = Color.Transparent
-                        .Last.MarkerBorderWidth = 2
-                        .Last.MarkerSize = 10
-                        .Last.ToolTip = $"Blood Glucose: Not used For calibration: {bgValue.ToString(CurrentUICulture)} {BgUnitsString}"
+                        If Single.TryParse(markerWithIndex.Value("value"), NumberStyles.Number, CurrentDataCulture, bgValue) Then
+                            .AddXY(markerOaDateTime, bgValue)
+                            .Last.BorderColor = Color.Gainsboro
+                            .Last.Color = Color.Transparent
+                            .Last.MarkerBorderWidth = 2
+                            .Last.MarkerSize = 10
+                            .Last.ToolTip = $"Blood Glucose: Not used For calibration: {bgValue.ToString(CurrentUICulture)} {BgUnitsString}"
+                        End If
                     Case "CALIBRATION"
                         .AddXY(markerOaDateTime, bgValue)
                         .Last.BorderColor = Color.Red
@@ -1871,8 +1867,9 @@ Public Class Form1
                         .Last.MarkerSize = 8
                         .Last.ToolTip = $"Blood Glucose: Calibration {If(CBool(markerWithIndex.Value("calibrationSuccess")), "accepted", "not accepted")}: {markerWithIndex.Value("value")} {BgUnitsString}"
                     Case "INSULIN"
-                        s_markerInsulinDictionary.Add(markerOaDateTime, CInt(MarkerRow))
-                        .AddXY(markerOaDateTime, MarkerRow)
+                        If s_markerInsulinDictionary.TryAdd(markerOaDateTime, CInt(MarkerRow)) Then
+                            .AddXY(markerOaDateTime, MarkerRow)
+                        End If
                         Dim result As Single
                         Single.TryParse(markerWithIndex.Value("deliveredFastAmount"), NumberStyles.Number, CurrentDataCulture, result)
                         Select Case markerWithIndex.Value("activationType")
@@ -1889,15 +1886,16 @@ Public Class Form1
                         .Last.MarkerSize = 30
                         .Last.MarkerStyle = MarkerStyle.Square
                     Case "MEAL"
-                        s_markerMealDictionary.Add(markerOaDateTime, InsulinRow)
-                        .AddXY(markerOaDateTime, InsulinRow)
-                        .Last.Color = Color.FromArgb(30, Color.Yellow)
-                        .Last.MarkerBorderWidth = 0
-                        .Last.MarkerSize = 30
-                        .Last.MarkerStyle = MarkerStyle.Square
-                        Dim result As Single
-                        Single.TryParse(markerWithIndex.Value("amount"), NumberStyles.Number, CurrentDataCulture, result)
-                        .Last.ToolTip = $"Meal:{result.ToString(CurrentUICulture)} grams"
+                        If s_markerMealDictionary.TryAdd(markerOaDateTime, InsulinRow) Then
+                            .AddXY(markerOaDateTime, InsulinRow)
+                            .Last.Color = Color.FromArgb(30, Color.Yellow)
+                            .Last.MarkerBorderWidth = 0
+                            .Last.MarkerSize = 30
+                            .Last.MarkerStyle = MarkerStyle.Square
+                            Dim result As Single
+                            Single.TryParse(markerWithIndex.Value("amount"), NumberStyles.Number, CurrentDataCulture, result)
+                            .Last.ToolTip = $"Meal:{result.ToString(CurrentUICulture)} grams"
+                        End If
                     Case "AUTO_BASAL_DELIVERY"
                         .AddXY(markerOaDateTime, MarkerRow)
                         Dim bolusAmount As String = markerWithIndex.Value("bolusAmount")
@@ -1905,7 +1903,6 @@ Public Class Form1
                         .Last.ToolTip = $"Basal:{bolusAmount.RoundDouble(3).ToString(CurrentUICulture)} U"
                     Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED"
                     Case "TIME_CHANGE"
-                        timeChangeMarkers.Add(markerWithIndex.Value)
                         With Me.HomeTabChart.Series(NameOf(HomeTabTimeChangeSeries)).Points
                             .AddXY(markerOaDateTime, 0)
                             .AddXY(markerOaDateTime, MarkerRow)
@@ -1935,33 +1932,38 @@ Public Class Form1
 
 #End Region
 
-    Private Function DoOptionalLoginAndUpdateData(UpdateAllTabs As Boolean) As Boolean
+    Private Function DoOptionalLoginAndUpdateData(UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
         Me.ServerUpdateTimer.Stop()
         Debug.Print($"Me.ServerUpdateTimer stopped at {Now}")
-        If Me.MenuOptionsUseTestData.Checked Then
-            Me.MenuView.Visible = False
-            Me.Text = $"{SavedTitle} Using Test Data"
-            CurrentDateCulture = New CultureInfo("en-US")
-            RecentData = Loads(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
-        ElseIf Me.MenuOptionsUseLastSavedData.Checked Then
-            Me.MenuView.Visible = False
-            Me.Text = $"{SavedTitle} Using Last Saved Data"
-            CurrentDateCulture = LastDownloadWithPath.ExtractCultureFromFileName(RepoDownloadName)
-            RecentData = Loads(File.ReadAllText(LastDownloadWithPath))
-        Else
-            Me.Text = SavedTitle
-            _loginDialog.ShowDialog()
-            _client = _loginDialog.Client
-            If _client Is Nothing OrElse Not _client.LoggedIn Then
-                Return False
-            End If
-            RecentData = _client.GetRecentData()
-            Me.MenuView.Visible = True
-            Me.ServerUpdateTimer.Interval = s_minuteInMilliseconds
-            Me.ServerUpdateTimer.Start()
-            Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
-            Me.LoginStatus.Text = "OK"
-        End If
+        Select Case fileToLoad
+            Case FileToLoadOptions.LastSaved
+                Me.MenuView.Visible = False
+                Me.Text = $"{SavedTitle} Using Last Saved Data"
+                CurrentDateCulture = LastDownloadWithPath.ExtractCultureFromFileName(RepoDownloadName)
+                RecentData = Loads(File.ReadAllText(LastDownloadWithPath))
+                Me.LastUpdateTime.Text = File.GetLastWriteTime(LastDownloadWithPath).ToShortDateTimeString
+            Case FileToLoadOptions.TestData
+                Me.MenuView.Visible = False
+                Me.Text = $"{SavedTitle} Using Test Data"
+                CurrentDateCulture = New CultureInfo("en-US")
+                RecentData = Loads(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
+                Me.LastUpdateTime.Text = "Using Test Data"
+            Case FileToLoadOptions.Login
+                Me.Text = SavedTitle
+                _loginDialog.ShowDialog()
+                _client = _loginDialog.Client
+                If _client Is Nothing OrElse Not _client.LoggedIn Then
+                    Me.LastUpdateTime.Text = "Unknown"
+                    Return False
+                End If
+                RecentData = _client.GetRecentData()
+                Me.LastUpdateTime.Text = Now.ToShortDateTimeString
+                Me.MenuView.Visible = True
+                Me.ServerUpdateTimer.Interval = s_minuteInMilliseconds
+                Me.ServerUpdateTimer.Start()
+                Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
+                Me.LoginStatus.Text = "OK"
+        End Select
         If Not _initialized Then
             Me.FinishInitialization()
         End If
@@ -2027,7 +2029,7 @@ Public Class Form1
         Dim bgColor As Color
         Dim sg As Double = str.ParseDouble
         Dim bitmapText As New Bitmap(16, 16)
-        Dim g As Graphics = System.Drawing.Graphics.FromImage(bitmapText)
+        Dim g As Graphics = Graphics.FromImage(bitmapText)
         Dim notStr As New StringBuilder
         Dim diffsg As Double
 
@@ -2050,7 +2052,7 @@ Public Class Form1
         End Select
         Dim brushToUse As New SolidBrush(color)
         g.Clear(bgColor)
-        g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit
+        g.TextRenderingHint = Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit
         If Math.Floor(Math.Log10(sg) + 1) = 3 Then
             g.DrawString(str, fontToUse, brushToUse, -2, 0)
         Else

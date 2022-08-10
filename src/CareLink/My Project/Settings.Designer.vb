@@ -15,7 +15,7 @@ Option Explicit On
 Namespace My
     
     <Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(),  _
-     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.3.0.0"),  _
+     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.4.0.0"),  _
      Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)>  _
     Partial Friend NotInheritable Class MySettings
         Inherits Global.System.Configuration.ApplicationSettingsBase
@@ -75,18 +75,6 @@ Namespace My
             End Get
             Set
                 Me("CareLinkPassword") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
-        Public Property UseTestData() As Boolean
-            Get
-                Return CType(Me("UseTestData"),Boolean)
-            End Get
-            Set
-                Me("UseTestData") = value
             End Set
         End Property
         
@@ -173,19 +161,19 @@ Namespace My
                 Me("AlertPhoneNumber") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("02:15:00")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("02:15:00")>  _
         Public Property AIT() As Global.System.TimeSpan
             Get
-                Return CType(Me("AIT"), Global.System.TimeSpan)
+                Return CType(Me("AIT"),Global.System.TimeSpan)
             End Get
             Set
-                Me("AIT") = Value
+                Me("AIT") = value
             End Set
         End Property
-
+        
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
@@ -207,18 +195,6 @@ Namespace My
             End Get
             Set
                 Me("CarrierTextingDomain") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
-        Public Property UseLastSavedData() As Boolean
-            Get
-                Return CType(Me("UseLastSavedData"),Boolean)
-            End Get
-            Set
-                Me("UseLastSavedData") = value
             End Set
         End Property
         

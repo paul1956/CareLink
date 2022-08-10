@@ -102,7 +102,11 @@ Public Module PumpVariables
     Public Property BgUnitsString As String
 
 #End Region
-
+    Public Enum FileToLoadOptions As Integer
+        LastSaved = 0
+        TestData = 1
+        Login = 2
+    End Enum
     ' Do not rename these name are matched used in case sensitive matching
     Public Enum ItemIndexs As Integer
         lastSensorTS = 0
