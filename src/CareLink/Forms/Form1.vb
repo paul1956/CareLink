@@ -1184,12 +1184,69 @@ Public Class Form1
         End If
         InitializeColumnLabel(realPanel, rowIndex, True)
         If innerListDictionary.Count = 0 Then
-                Dim rowTextBox As TextBox = CreateBasicTextBox("")
+            Dim rowTextBox As TextBox = CreateBasicTextBox("")
             rowTextBox.BackColor = Color.LightGray
             realPanel.Controls.Add(rowTextBox)
-                Exit Sub
+            Exit Sub
+        End If
+        realPanel.Hide()
+        Application.DoEvents()
+        realPanel.AutoScroll = True
+        realPanel.Parent.Parent.UseWaitCursor = True
+        FillOneRowOfTableLayoutPanel(
+            realPanel,
+            innerListDictionary,
+            rowIndex,
+            s_filterJsonData,
+            s_timeWithMinuteFormat,
+            isScaledForm)
+        realPanel.Parent.Parent.UseWaitCursor = False
+        realPanel.Show()
+        Application.DoEvents()
+    End Sub
+
+    Private Shared Function GetLimitsList(count As Integer) As Integer()
+        Dim limitsIndexList(count) As Integer
+        Dim limitsIndex As Integer = 0
+        For i As Integer = 0 To limitsIndexList.GetUpperBound(0)
+            If limitsIndex + 1 < s_limits.Count AndAlso CInt(s_limits(limitsIndex + 1)("index")) < i Then
+                limitsIndex += 1
             End If
-            realPanel.Hide()
+            limitsIndexList(i) = limitsIndex
+        Next
+        Return limitsIndexList
+    End Function
+
+    Private Shared Sub ProcesListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of SgRecord), rowIndex As ItemIndexs)
+        InitializeColumnLabel(realPanel, rowIndex, True)
+        dGridView.DataSource = recordData
+        dGridView.RowHeadersVisible = False
+    End Sub
+
+    Private Shared Sub ProcesListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of InsulinRecord), rowIndex As ItemIndexs)
+        InitializeColumnLabel(realPanel, rowIndex, True)
+        dGridView.DataSource = recordData
+        dGridView.RowHeadersVisible = False
+    End Sub
+
+    Private Shared Sub ProcesListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of AutoBasalDeliveryRecord), rowIndex As ItemIndexs)
+        InitializeColumnLabel(realPanel, rowIndex, True)
+        dGridView.DataSource = recordData
+        dGridView.RowHeadersVisible = False
+    End Sub
+
+    Private Shared Sub ProcesListOfDictionary(realPanel As TableLayoutPanel, innerListDictionary As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, isScaledForm As Boolean)
+        If innerListDictionary.Count = 0 Then
+            realPanel.Controls.Clear()
+        End If
+        InitializeColumnLabel(realPanel, rowIndex, True)
+        If innerListDictionary.Count = 0 Then
+            Dim rowTextBox As TextBox = CreateBasicTextBox("")
+            rowTextBox.BackColor = Color.LightGray
+            realPanel.Controls.Add(rowTextBox)
+            Exit Sub
+        End If
+        realPanel.Hide()
         Application.DoEvents()
         realPanel.AutoScroll = True
         realPanel.Parent.Parent.UseWaitCursor = True
@@ -2210,7 +2267,7 @@ Public Class Form1
     Private Sub UpdateNotifyIcon()
         Dim str As String = s_lastSG("sg")
         Dim fontToUse As New Font("Trebuchet MS", 10, FontStyle.Regular, GraphicsUnit.Pixel)
-        Dim color As Color = Color.White
+        Dim color As Color = color.White
         Dim bgColor As Color
         Dim sg As Double = str.ParseDouble
         Dim bitmapText As New Bitmap(16, 16)
@@ -2220,16 +2277,16 @@ Public Class Form1
 
         Select Case sg
             Case <= s_limitLow
-                bgColor = Color.Orange
+                bgColor = color.Orange
                 If _showBaloonTip Then
                     Me.NotifyIcon1.ShowBalloonTip(10000, "CareLink Alert", $"SG below {s_limitLow} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                 End If
                 _showBaloonTip = False
             Case <= s_limitHigh
-                bgColor = Color.Green
+                bgColor = color.Green
                 _showBaloonTip = True
             Case Else
-                bgColor = Color.Red
+                bgColor = color.Red
                 If _showBaloonTip Then
                     Me.NotifyIcon1.ShowBalloonTip(10000, "CareLink Alert", $"SG above {s_limitHigh} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                 End If
