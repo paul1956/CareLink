@@ -67,7 +67,8 @@ Public Module JsonExtensions
         Dim item As KeyValuePair(Of String, Object)
         If value IsNot Nothing Then
 
-            For Each item In JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(value, options).ToList()
+            Dim rawJsonData As List(Of KeyValuePair(Of String, Object)) = JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(value, options).ToList()
+            For Each item In rawJsonData
                 If item.Value Is Nothing Then
                     resultDictionary.Add(item.Key, Nothing)
                     Continue For
@@ -75,8 +76,16 @@ Public Module JsonExtensions
                 Try
                     Select Case item.Key
                         Case NameOf(ItemIndexs.bgUnits)
-                            If Not s_unitsStrings.TryGetValue(item.Value.ToString, BgUnitsString) Then
-                                BgUnitsString = "mg/dl"
+                            BgUnits = item.Value.ToString()
+                            If Not s_unitsStrings.TryGetValue(BgUnits, BgUnitsString) Then
+                                Dim averageSGFloatAsString As String = rawJsonData(ItemIndexs.averageSGFloat).jsonItemAsString
+                                If averageSGFloatAsString.ParseSingle() > 40 Then
+                                    BgUnitsString = "mg/dl"
+                                    BgUnits = "MG_DL"
+                                Else
+                                    BgUnitsString = "mmol/L"
+                                    BgUnits = "MMOL_L"
+                                End If
                             End If
                             If BgUnitsString = "mg/dl" Then
                                 scaleUnitsDivisor = 1
@@ -93,7 +102,7 @@ Public Module JsonExtensions
                                 s_insulinRow = CSng(Math.Round(50 / scaleUnitsDivisor, 0, MidpointRounding.ToZero))
                                 s_criticalLow = s_insulinRow
                             End If
-                            resultDictionary.Add(item.Key, CStr((item.jsonItemAsString.ParseDouble / scaleUnitsDivisor).RoundDouble(2)))
+                            resultDictionary.Add(item.Key, item.jsonItemAsString)
                         Case NameOf(ItemIndexs.clientTimeZoneName)
                             If s_useLocalTimeZone Then
                                 s_clientTimeZone = TimeZoneInfo.Local

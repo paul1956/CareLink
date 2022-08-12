@@ -66,11 +66,11 @@ Partial Class ExceptionHandlerForm
         Me.StackTraceTextBox.Size = New System.Drawing.Size(1136, 308)
         Me.StackTraceTextBox.TabIndex = 6
         '
-        'Label1
+        'LabelAutoModeStatus
         '
         Me.Label1.AutoSize = True
         Me.Label1.Location = New System.Drawing.Point(7, 6)
-        Me.Label1.Name = "Label1"
+        Me.Label1.Name = "LabelAutoModeStatus"
         Me.Label1.Size = New System.Drawing.Size(62, 15)
         Me.Label1.TabIndex = 7
         Me.Label1.Text = "Exception:"
@@ -82,11 +82,11 @@ Partial Class ExceptionHandlerForm
         Me.ExceptionTextBox.Size = New System.Drawing.Size(1330, 23)
         Me.ExceptionTextBox.TabIndex = 8
         '
-        'Label2
+        'LabelBgReading
         '
         Me.Label2.AutoSize = True
         Me.Label2.Location = New System.Drawing.Point(11, 39)
-        Me.Label2.Name = "Label2"
+        Me.Label2.Name = "LabelBgReading"
         Me.Label2.Size = New System.Drawing.Size(68, 15)
         Me.Label2.TabIndex = 9
         Me.Label2.Text = "Stack Trace:"

@@ -2,7 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Friend Class Insulin
+Friend Class ActiveInsulinRecord
     Private ReadOnly _incrementDownCount As Integer
     Private _adjustmentValue As Double
     Private _incrementUpCount As Integer
@@ -26,7 +26,7 @@ Friend Class Insulin
 
     Public Property OaTime As Double
 
-    Friend Function Adjust() As Insulin
+    Friend Function Adjust() As ActiveInsulinRecord
         If Me.CurrentInsulinLevel > 0 Then
             If _incrementUpCount > 0 Then
                 _incrementUpCount -= 1

@@ -6,12 +6,6 @@ Imports System.ComponentModel
 
 Public Module PumpVariables
 
-    Friend ReadOnly s_ListOfTimeItems As New List(Of Integer) From {
-                        ItemIndexs.lastSensorTS,
-                        ItemIndexs.lastConduitTime,
-                        ItemIndexs.medicalDeviceTime,
-                        ItemIndexs.lastSensorTime}
-
     ' Manually computed
     Friend s_totalAutoCorrection As Single
 
@@ -23,16 +17,18 @@ Public Module PumpVariables
 #Region "Global variables to hold pump values"
 
     Private s_scaleUnitsDivisor As Double
+    Friend ReadOnly s_bindingSourceMarkersAutoBasalDelivery As New BindingList(Of AutoBasalDeliveryRecord)
+    Friend ReadOnly s_bindingSourceMarkersInsulin As New BindingList(Of InsulinRecord)
+    Friend ReadOnly s_bindingSourceSummary As New BindingList(Of SummaryRecord)
     Friend ReadOnly s_markerInsulinDictionary As New Dictionary(Of Double, Single)
     Friend ReadOnly s_markerMealDictionary As New Dictionary(Of Double, Single)
     Friend ReadOnly s_mealImage As Bitmap = My.Resources.MealImage
-    Friend ReadOnly s_sGsBindingSource As New BindingSource
-    Friend ReadOnly s_summaryBindingSource As New BindingList(Of SummaryRecord)
     Friend s_aboveHyperLimit As Integer
     Friend s_activeInsulin As Dictionary(Of String, String)
     Friend s_activeInsulinIncrements As Integer
     Friend s_averageSG As Double
     Friend s_belowHypoLimit As Integer
+    Friend s_bindingSourceSGs As New BindingList(Of SgRecord)
     Friend s_clientTimeZone As TimeZoneInfo
     Friend s_clientTimeZoneName As String
     Friend s_conduitSensorInRange As Boolean
@@ -54,7 +50,6 @@ Public Module PumpVariables
     Friend s_sensorDurationHours As Integer
     Friend s_sensorDurationMinutes As Integer
     Friend s_sensorState As String
-    Friend s_sGs As New List(Of SgRecord)
     Friend s_systemStatusMessage As String
     Friend s_timeInRange As Integer
     Friend s_timeToNextCalibHours As UShort = UShort.MaxValue
@@ -99,14 +94,11 @@ Public Module PumpVariables
     End Property
 
     Friend Property RecentData As New Dictionary(Of String, String)
+    Public Property BgUnits As String
     Public Property BgUnitsString As String
 
 #End Region
-    Public Enum FileToLoadOptions As Integer
-        LastSaved = 0
-        TestData = 1
-        Login = 2
-    End Enum
+
     ' Do not rename these name are matched used in case sensitive matching
     Public Enum ItemIndexs As Integer
         lastSensorTS = 0

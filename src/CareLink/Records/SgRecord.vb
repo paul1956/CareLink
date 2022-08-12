@@ -6,6 +6,12 @@ Imports System.Globalization
 Imports System.Runtime.CompilerServices
 
 Public Class SgRecord
+    Private Shared ReadOnly s_columnsToHide As New List(Of String) From {
+                        NameOf(SgRecord.OADate),
+                        NameOf(SgRecord.kind),
+                        NameOf(SgRecord.relativeOffset),
+                        NameOf(SgRecord.version)
+                    }
 
     Public Sub New(allSgs As List(Of Dictionary(Of String, String)), index As Integer, ByRef lastValidTime As Date)
         Dim dic As Dictionary(Of String, String) = allSgs(index)
@@ -13,7 +19,7 @@ Public Class SgRecord
         For Each kvp As KeyValuePair(Of String, String) In allSgs(index)
             Select Case kvp.Key
                 Case NameOf(sg)
-                    Single.TryParse(kvp.Value, NumberStyles.Number, CurrentDataCulture, Me.sg)
+                    Me.sg = CSng(kvp.Value.ParseDouble)
                 Case NameOf(datetime)
                     ' Handled below
                 Case NameOf(timeChange)
@@ -53,23 +59,27 @@ Public Class SgRecord
     Public Property sensorState As String
     Public Property timeChange As String
     Public Property version As Integer
+    Friend Shared Function HideColumn(columnName As String) As Boolean
+        Return s_filterJsonData AndAlso s_columnsToHide.Contains(columnName)
+    End Function
 
     Public Shared Function GetCellStyle(memberName As String, <CallerMemberName> Optional functionName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As DataGridViewCellStyle
         Dim cellStyle As New DataGridViewCellStyle
 
         Select Case memberName
-            Case NameOf(sg)
-                cellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-                cellStyle.Padding = New Padding(10, 0, 0, 0)
-            Case NameOf(RecordNumber), NameOf(version), NameOf(relativeOffset)
-                cellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-                cellStyle.Padding = New Padding(0, 0, 0, 0)
-            Case NameOf(datetime), NameOf(dateTimeAsString), NameOf(sensorState)
-                cellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-                cellStyle.Padding = New Padding(0, 0, 3, 0)
-            Case NameOf(timeChange), NameOf(kind)
-                cellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-                cellStyle.Padding = New Padding(0, 0, 0, 0)
+            Case NameOf(sg),
+                 NameOf(relativeOffset)
+                cellStyle = cellStyle.CellStyleMiddleRight(10)
+            Case NameOf(RecordNumber),
+                 NameOf(version)
+                cellStyle = cellStyle.CellStyleMiddleCenter()
+            Case NameOf(datetime),
+                 NameOf(dateTimeAsString),
+                 NameOf(sensorState)
+                cellStyle = cellStyle.CellStyleMiddleLeft
+            Case NameOf(timeChange),
+                 NameOf(kind)
+                cellStyle = cellStyle.CellStyleMiddleCenter
             Case Else
                 Throw New Exception($"Line {sourceLineNumber} in {functionName} thought to be unreachable for '{memberName}'")
         End Select

@@ -8,7 +8,7 @@ Friend Module UserMessageHandler
 
     Friend ReadOnly s_sensorMessages As New Dictionary(Of String, String) From {
                             {"CALIBRATING", "Calibrating ..."},
-                            {"CALIBRATION_REQUIRED", "Calibration required"},
+                            {"CALIBRATION_REQUIRED", "TabPageCalibration required"},
                             {"DO_NOT_CALIBRATE", "Do Not calibrate."},
                             {"LOAD_RESERVOIR", "Load Reservoir"},
                             {"NO_DATA_FROM_PUMP", "No data from pump"},
@@ -55,7 +55,7 @@ Friend Module UserMessageHandler
                             {"BC_SID_IF_NEW_SENSR_SELCT_START_NEW_ELSE_REWIND", "Sensor connected. If New sensor, select Start New. If Not, select Reconnect."},
                             {"BC_SID_INSERT_NEW_SENSOR", "Sensor expired(triggeredDateTime). Insert New sensor."},
                             {"BC_SID_LOW_SD_CHECK_BG", "Alert on low (0) (units)(triggeredDateTime). Low sensor glucose. Check BG.:sg"},
-                            {"BC_SID_LOW_SG_INSULIN_DELIVERY_SUSPENDED_SINCE_X_CHECK_BG", "Alert on low (0) (units)(triggeredDateTime). Insulin delivery suspended since (secondaryTime). Check BG.:sg"},
+                            {"BC_SID_LOW_SG_INSULIN_DELIVERY_SUSPENDED_SINCE_X_CHECK_BG", "Alert on low (0) (units)(triggeredDateTime). TabPageInsulin delivery suspended since (secondaryTime). Check BG.:sg"},
                             {"BC_SID_MOVE_AWAY_FROM_ELECTR_DEVICES", "Possible signal interface(triggeredDateTime). Move away from electronic devices. May take 15 minutes to find signal."},
                             {"BC_SID_MOVE_PUMP_CLOSER_TO_MINILINK", "Lost sensor signal(triggeredDateTime). Move pump closer to transmitter. May take 15 minutes to find signal."},
                             {"BC_SID_REPLACE_BATTERY_SOON", "Battery low(triggeredDateTime). Replace battery soon."},
@@ -68,7 +68,7 @@ Friend Module UserMessageHandler
                             {"BC_SID_UMAX_ALERT_INFO", "Auto Mode max delivery. Auto Mode has been at maximum delivery for 4 hours. Enter BG to continue in Auto Mode."},
                             {"BC_SID_UMIN_ALERT_INFO", "Auto Mode min delivery. Auto Mode has been at minimum delivery for 2 hours. Enter BG to continue in Auto Mode."},
                             {"BC_SID_UPDATING_CAN_TAKE_UP_TO_THREE_HOURS", "Sensor updating, it can take up to 3 hours."},
-                            {"BC_SID_WAIT_AT_LEAST_15_MINUTES", "Calibration Not accepted.Wait at least 15 minutes. Wash hands, test BGagain And calibrate."}
+                            {"BC_SID_WAIT_AT_LEAST_15_MINUTES", "TabPageCalibration Not accepted.Wait at least 15 minutes. Wash hands, test BGagain And calibrate."}
                         }
 
     <Extension>
