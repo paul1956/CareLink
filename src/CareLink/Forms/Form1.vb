@@ -648,10 +648,6 @@ Public Class Form1
 
 #Region "Summary Tab DataGridView Events"
 
-    Private Sub SummaryDataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles SummaryDataGridView.DataError
-        Stop
-    End Sub
-
     Private Sub SummaryDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles SummaryDataGridView.CellFormatting
         If e.Value Is Nothing OrElse e.ColumnIndex <> 2 Then
             Return
@@ -780,6 +776,9 @@ Public Class Form1
         DgvColumnAdded(e, cellStyle)
     End Sub
 
+    Private Sub SummaryDataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles SummaryDataGridView.DataError
+        Stop
+    End Sub
 #End Region
 
 #Region "Timer Events"
@@ -1160,7 +1159,7 @@ Public Class Form1
         Return limitsIndexList
     End Function
 
-    Private Shared Sub ProcesListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of SgRecord), rowIndex As ItemIndexs)
+    Private Shared Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of SgRecord), rowIndex As ItemIndexs)
         InitializeColumnLabel(realPanel, rowIndex, True)
         dGridView.DataSource = recordData
         dGridView.RowHeadersVisible = False
@@ -1172,70 +1171,13 @@ Public Class Form1
         dGridView.RowHeadersVisible = False
     End Sub
 
-    Private Shared Sub ProcesListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of AutoBasalDeliveryRecord), rowIndex As ItemIndexs)
+    Private Shared Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of AutoBasalDeliveryRecord), rowIndex As ItemIndexs)
         InitializeColumnLabel(realPanel, rowIndex, True)
         dGridView.DataSource = recordData
         dGridView.RowHeadersVisible = False
     End Sub
 
-    Private Shared Sub ProcesListOfDictionary(realPanel As TableLayoutPanel, innerListDictionary As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, isScaledForm As Boolean)
-        If innerListDictionary.Count = 0 Then
-            realPanel.Controls.Clear()
-        End If
-        InitializeColumnLabel(realPanel, rowIndex, True)
-        If innerListDictionary.Count = 0 Then
-            Dim rowTextBox As TextBox = CreateBasicTextBox("")
-            rowTextBox.BackColor = Color.LightGray
-            realPanel.Controls.Add(rowTextBox)
-            Exit Sub
-        End If
-        realPanel.Hide()
-        Application.DoEvents()
-        realPanel.AutoScroll = True
-        realPanel.Parent.Parent.UseWaitCursor = True
-        FillOneRowOfTableLayoutPanel(
-            realPanel,
-            innerListDictionary,
-            rowIndex,
-            s_filterJsonData,
-            s_timeWithMinuteFormat,
-            isScaledForm)
-        realPanel.Parent.Parent.UseWaitCursor = False
-        realPanel.Show()
-        Application.DoEvents()
-    End Sub
-
-    Private Shared Function GetLimitsList(count As Integer) As Integer()
-        Dim limitsIndexList(count) As Integer
-        Dim limitsIndex As Integer = 0
-        For i As Integer = 0 To limitsIndexList.GetUpperBound(0)
-            If limitsIndex + 1 < s_limits.Count AndAlso CInt(s_limits(limitsIndex + 1)("index")) < i Then
-                limitsIndex += 1
-            End If
-            limitsIndexList(i) = limitsIndex
-        Next
-        Return limitsIndexList
-    End Function
-
-    Private Shared Sub ProcesListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of SgRecord), rowIndex As ItemIndexs)
-        InitializeColumnLabel(realPanel, rowIndex, True)
-        dGridView.DataSource = recordData
-        dGridView.RowHeadersVisible = False
-    End Sub
-
-    Private Shared Sub ProcesListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of InsulinRecord), rowIndex As ItemIndexs)
-        InitializeColumnLabel(realPanel, rowIndex, True)
-        dGridView.DataSource = recordData
-        dGridView.RowHeadersVisible = False
-    End Sub
-
-    Private Shared Sub ProcesListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of AutoBasalDeliveryRecord), rowIndex As ItemIndexs)
-        InitializeColumnLabel(realPanel, rowIndex, True)
-        dGridView.DataSource = recordData
-        dGridView.RowHeadersVisible = False
-    End Sub
-
-    Private Shared Sub ProcesListOfDictionary(realPanel As TableLayoutPanel, innerListDictionary As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, isScaledForm As Boolean)
+    Private Shared Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, innerListDictionary As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, isScaledForm As Boolean)
         If innerListDictionary.Count = 0 Then
             realPanel.Controls.Clear()
         End If
@@ -1593,7 +1535,7 @@ Public Class Form1
 
             If rowIndex = ItemIndexs.sgs Then
                 s_bindingSourceSGs = New BindingList(Of SgRecord)(LoadList(row.Value).ToSgList())
-                ProcesListOfDictionary(Me.TableLayoutPanelSgs, Me.SGsDataGridView, s_bindingSourceSGs, rowIndex)
+                ProcessListOfDictionary(Me.TableLayoutPanelSgs, Me.SGsDataGridView, s_bindingSourceSGs, rowIndex)
                 Me.ReadingsLabel.Text = $"{s_bindingSourceSGs.Where(Function(entry As SgRecord) Not Double.IsNaN(entry.sg)).Count}/288"
                 Continue For
             End If
@@ -1616,21 +1558,21 @@ Public Class Form1
                             Next
                             s_limits.Add(newLimit)
                         Next
-                        ProcesListOfDictionary(Me.TableLayoutPanelLimits, s_limits, rowIndex, Me.FormScale.Height <> 1)
+                        ProcessListOfDictionary(Me.TableLayoutPanelLimits, s_limits, rowIndex, Me.FormScale.Height <> 1)
                     Case ItemIndexs.markers
-                        ProcesListOfDictionary(Me.TableLayoutPanelAutoBasalDelivery, Me.DataGridViewAutoBasalDelivery, s_bindingSourceMarkersAutoBasalDelivery, rowIndex)
-                        ProcesListOfDictionary(Me.TableLayoutPanelAutoModeStatus, _markersAutoModeStatus, rowIndex, Me.FormScale.Height <> 1)
-                        ProcesListOfDictionary(Me.TableLayoutPanelBgReading, _markersBgReading, rowIndex, Me.FormScale.Height <> 1)
-                        ProcesListOfDictionary(Me.TableLayoutPanelCalibration, _markerCalibration, rowIndex, Me.FormScale.Height <> 1)
+                        ProcessListOfDictionary(Me.TableLayoutPanelAutoBasalDelivery, Me.DataGridViewAutoBasalDelivery, s_bindingSourceMarkersAutoBasalDelivery, rowIndex)
+                        ProcessListOfDictionary(Me.TableLayoutPanelAutoModeStatus, _markersAutoModeStatus, rowIndex, Me.FormScale.Height <> 1)
+                        ProcessListOfDictionary(Me.TableLayoutPanelBgReading, _markersBgReading, rowIndex, Me.FormScale.Height <> 1)
+                        ProcessListOfDictionary(Me.TableLayoutPanelCalibration, _markerCalibration, rowIndex, Me.FormScale.Height <> 1)
                         ProcesListOfDictionary(Me.TableLayoutPanelInsulin, Me.DataGridViewInsulin, s_bindingSourceMarkersInsulin, rowIndex)
-                        ProcesListOfDictionary(Me.TableLayoutPanelLowGlusoseSuspended, _markersLowGlusoseSuspended, rowIndex, Me.FormScale.Height <> 1)
-                        ProcesListOfDictionary(Me.TableLayoutPanelMeal, _markersMeal, rowIndex, Me.FormScale.Height <> 1)
-                        ProcesListOfDictionary(Me.TableLayoutPanelTimeChange, _markersTimeChange, rowIndex, Me.FormScale.Height <> 1)
+                        ProcessListOfDictionary(Me.TableLayoutPanelLowGlusoseSuspended, _markersLowGlusoseSuspended, rowIndex, Me.FormScale.Height <> 1)
+                        ProcessListOfDictionary(Me.TableLayoutPanelMeal, _markersMeal, rowIndex, Me.FormScale.Height <> 1)
+                        ProcessListOfDictionary(Me.TableLayoutPanelTimeChange, _markersTimeChange, rowIndex, Me.FormScale.Height <> 1)
                     Case ItemIndexs.pumpBannerState
                         If row.Value Is Nothing Then
-                            ProcesListOfDictionary(Me.TableLayoutPanelBannerState, New List(Of Dictionary(Of String, String)), rowIndex, Me.FormScale.Height <> 1)
+                            ProcessListOfDictionary(Me.TableLayoutPanelBannerState, New List(Of Dictionary(Of String, String)), rowIndex, Me.FormScale.Height <> 1)
                         Else
-                            ProcesListOfDictionary(Me.TableLayoutPanelBannerState, LoadList(row.Value), rowIndex, Me.FormScale.Height <> 1)
+                            ProcessListOfDictionary(Me.TableLayoutPanelBannerState, LoadList(row.Value), rowIndex, Me.FormScale.Height <> 1)
                         End If
                 End Select
                 Continue For
