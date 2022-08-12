@@ -64,7 +64,7 @@ Public Module SystemConstants
         End Get
     End Property
 
-    Public ReadOnly Property CurrentDataCulture As New CultureInfo("en-US")
+    Public Property CurrentDataCulture As New CultureInfo("en-US")
     Public Property CurrentUICulture As CultureInfo = CultureInfo.CurrentUICulture
 
 #End Region

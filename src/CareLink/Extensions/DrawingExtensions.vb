@@ -7,8 +7,8 @@ Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module DrawingExtensions
 
-    Private Function GetColorFromTimeToNextCalib(timeToNextCalibHours As UShort) As Color
-        If timeToNextCalibHours <= 2 Then
+    Private Function GetColorFromTimeToNextCalib(timeToNextCalibHours As Double) As Color
+        If timeToNextCalibHours <= 1.9 Then
             Return Color.Red
         ElseIf timeToNextCalibHours < 4 Then
             Return Color.Yellow
@@ -18,7 +18,7 @@ Friend Module DrawingExtensions
     End Function
 
     <Extension>
-    Friend Function DrawCenteredArc(backImage As Bitmap, TimeToNextCalibration As UShort, arcPercentage As Double, Optional colorTable As IReadOnlyDictionary(Of String, Color) = Nothing, Optional segmentName As String = "") As Bitmap
+    Friend Function DrawCenteredArc(backImage As Bitmap, TimeToNextCalibration As Double, arcPercentage As Double, Optional colorTable As IReadOnlyDictionary(Of String, Color) = Nothing, Optional segmentName As String = "") As Bitmap
         If arcPercentage < Double.Epsilon Then
             Return backImage
         End If

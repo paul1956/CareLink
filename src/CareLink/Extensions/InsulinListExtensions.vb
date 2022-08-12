@@ -7,7 +7,7 @@ Imports System.Runtime.CompilerServices
 Friend Module InsulinListExtensions
 
     <Extension>
-    Friend Sub Adjustlist(myList As List(Of Insulin), startIndex As Integer, count As Integer)
+    Friend Sub Adjustlist(myList As List(Of ActiveInsulinRecord), startIndex As Integer, count As Integer)
         For i As Integer = startIndex To startIndex + count
             If i >= myList.Count Then Exit Sub
             myList(i) = myList(i).Adjust()
@@ -15,11 +15,11 @@ Friend Module InsulinListExtensions
     End Sub
 
     <Extension>
-    Friend Function ConditionalSum(myList As List(Of Insulin), start As Integer, length As Integer) As Double
+    Friend Function ConditionalSum(myList As List(Of ActiveInsulinRecord), start As Integer, length As Integer) As Double
         If start + length > myList.Count Then
             length = myList.Count - start
         End If
-        Return myList.GetRange(start, length).Sum(Function(i As Insulin) i.CurrentInsulinLevel)
+        Return myList.GetRange(start, length).Sum(Function(i As ActiveInsulinRecord) i.CurrentInsulinLevel)
     End Function
 
 End Module

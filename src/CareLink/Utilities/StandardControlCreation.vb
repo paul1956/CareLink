@@ -86,25 +86,30 @@ Public Module StandardControlCreation
         Return valueTextBox
     End Function
 
-    Friend Function InitializeColumnLabel(layoutPanel1 As TableLayoutPanel, rowIndex As ItemIndexs, Optional isColumnHeader As Boolean = False) As Label
-        Dim labelControl As Label
+    Friend Sub InitializeColumnLabel(layoutPanel1 As TableLayoutPanel, rowIndex As ItemIndexs, isColumnHeader As Boolean)
+        Dim headerText As String
         If isColumnHeader Then
-            labelControl = CreateBasicLabel($"{CInt(rowIndex)} {rowIndex}", True)
+            headerText = $"{CInt(rowIndex)} {rowIndex}"
+            If layoutPanel1.Controls.Count > 0 Then
+                layoutPanel1.Controls(0).Text = headerText
+            Else
+                layoutPanel1.Controls.Add(My.Forms.Form1.LabelTimeChange, 0, 0)
+            End If
+            layoutPanel1.Controls(0).Text = headerText
         Else
-            labelControl = CreateBasicLabel($"{CInt(rowIndex)}{Environment.NewLine}{rowIndex}")
+            Dim labelControl As Label = CreateBasicLabel($"{CInt(rowIndex)}{Environment.NewLine}{rowIndex}")
+            layoutPanel1.Controls.Add(labelControl, 0, 0)
         End If
-        layoutPanel1.Controls.Add(labelControl, 0, 0)
         Application.DoEvents()
-        Return labelControl
-    End Function
-
-    Friend Sub InitializeWorkingPanel(ByRef layoutPanel1 As TableLayoutPanel, realPanel As TableLayoutPanel, Optional HeaderOnTop? As Boolean = Nothing)
-        layoutPanel1 = realPanel
-        layoutPanel1.Controls.Clear()
-        If HeaderOnTop Is Nothing Then
-            layoutPanel1.RowStyles(0).SizeType = SizeType.AutoSize
-        End If
     End Sub
+
+    Friend Function InitializeWorkingPanel(realPanel As TableLayoutPanel, Optional HeaderOnTop? As Boolean = Nothing) As TableLayoutPanel
+        If Not HeaderOnTop Then
+            realPanel.Controls.Clear()
+            realPanel.RowStyles(0).SizeType = SizeType.AutoSize
+        End If
+        Return realPanel
+    End Function
 
     ''' <summary>
     ''' Create a Label

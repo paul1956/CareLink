@@ -158,11 +158,11 @@ Partial Class MailSetupDialog
         '
         Me.ErrorProvider1.ContainerControl = Me
         '
-        'Label5
+        'LabelLowGlusoseSuspended
         '
         Me.Label5.AutoSize = True
         Me.Label5.Location = New System.Drawing.Point(18, 202)
-        Me.Label5.Name = "Label5"
+        Me.Label5.Name = "LabelLowGlusoseSuspended"
         Me.Label5.Size = New System.Drawing.Size(105, 15)
         Me.Label5.TabIndex = 11
         Me.Label5.Text = "Alert Phone Digits:"
@@ -203,11 +203,11 @@ Partial Class MailSetupDialog
         Me.SMTPServerURLTextBox.Size = New System.Drawing.Size(193, 23)
         Me.SMTPServerURLTextBox.TabIndex = 3
         '
-        'Label1
+        'LabelAutoModeStatus
         '
         Me.Label1.AutoSize = True
         Me.Label1.Location = New System.Drawing.Point(229, 202)
-        Me.Label1.Name = "Label1"
+        Me.Label1.Name = "LabelAutoModeStatus"
         Me.Label1.Size = New System.Drawing.Size(18, 15)
         Me.Label1.TabIndex = 16
         Me.Label1.Text = "@"

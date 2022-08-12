@@ -47,6 +47,7 @@ Public Class ExceptionHandlerForm
             Me.CreateReportFile(uniqueFileNameResult.withPath)
         Else
             CurrentDateCulture = Me.ReportFileNameWithPath.ExtractCultureFromFileName(RepoErrorReportName)
+            CurrentDataCulture = CurrentDateCulture
             If CurrentDateCulture Is Nothing Then
                 Me.Close()
                 Exit Sub

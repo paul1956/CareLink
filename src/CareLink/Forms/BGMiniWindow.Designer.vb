@@ -41,7 +41,7 @@ Partial Class BGMiniWindow
         Me.BGTextBox.Location = New System.Drawing.Point(4, 29)
         Me.BGTextBox.Margin = New System.Windows.Forms.Padding(0)
         Me.BGTextBox.Name = "BGTextBox"
-        Me.BGTextBox.Size = New System.Drawing.Size(129, 86)
+        Me.BGTextBox.Size = New System.Drawing.Size(160, 86)
         Me.BGTextBox.TabIndex = 1
         Me.BGTextBox.Text = "999"
         Me.BGTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
@@ -53,7 +53,7 @@ Partial Class BGMiniWindow
         Me.ActiveInsulinTextBox.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
         Me.ActiveInsulinTextBox.Location = New System.Drawing.Point(0, 0)
         Me.ActiveInsulinTextBox.Name = "ActiveInsulinTextBox"
-        Me.ActiveInsulinTextBox.Size = New System.Drawing.Size(230, 26)
+        Me.ActiveInsulinTextBox.Size = New System.Drawing.Size(264, 26)
         Me.ActiveInsulinTextBox.TabIndex = 0
         Me.ActiveInsulinTextBox.Text = "Active Insulin: ???"
         Me.ActiveInsulinTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
@@ -67,9 +67,10 @@ Partial Class BGMiniWindow
         '
         'DeltaTextBox
         '
+        Me.DeltaTextBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.DeltaTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.DeltaTextBox.Font = New System.Drawing.Font("Segoe UI", 36.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.DeltaTextBox.Location = New System.Drawing.Point(132, 40)
+        Me.DeltaTextBox.Location = New System.Drawing.Point(166, 40)
         Me.DeltaTextBox.Margin = New System.Windows.Forms.Padding(0)
         Me.DeltaTextBox.Name = "DeltaTextBox"
         Me.DeltaTextBox.Size = New System.Drawing.Size(98, 64)
@@ -78,7 +79,8 @@ Partial Class BGMiniWindow
         '
         'CloseButton
         '
-        Me.CloseButton.Location = New System.Drawing.Point(133, 99)
+        Me.CloseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CloseButton.Location = New System.Drawing.Point(167, 99)
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(97, 23)
         Me.CloseButton.TabIndex = 3
@@ -102,7 +104,7 @@ Partial Class BGMiniWindow
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.Window
-        Me.ClientSize = New System.Drawing.Size(230, 123)
+        Me.ClientSize = New System.Drawing.Size(264, 123)
         Me.ControlBox = False
         Me.Controls.Add(Me.chkTopMost)
         Me.Controls.Add(Me.CloseButton)

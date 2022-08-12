@@ -25,6 +25,10 @@ https://github.com/paul1956/CareLink/releases/
 - 8/10/2022
 
 ## What's New in this release
+  New in 3.5.1.0
+  Complete rewrite of the display code it is much faster
+  Make code more resilient to data errors
+
   New in 3.5.0.6
   Minor clean up
   Fix up AverageSG display

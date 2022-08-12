@@ -7,11 +7,17 @@ Imports System.Runtime.CompilerServices
 Public Class SummaryRecord
     Private ReadOnly _isDate As Boolean
 
+    Private ReadOnly _listOfTimeItems As New List(Of Integer) From {
+                        ItemIndexs.lastSensorTS,
+                        ItemIndexs.lastConduitTime,
+                        ItemIndexs.medicalDeviceTime,
+                        ItemIndexs.lastSensorTime}
+
     Protected Friend Sub New(index As ItemIndexs, entry As KeyValuePair(Of String, String))
         Me.RecordNumber = index
         Me.Key = entry.Key
         Me.Value = entry.Value?.ToString(CurrentUICulture)
-        _isDate = s_ListOfTimeItems.Contains(index)
+        _isDate = _listOfTimeItems.Contains(index)
     End Sub
 
     Public Property RecordNumber As Integer
@@ -23,14 +29,11 @@ Public Class SummaryRecord
 
         Select Case memberName
             Case NameOf(RecordNumber)
-                cellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-                cellStyle.Padding = New Padding(0, 0, 0, 0)
+                cellStyle = cellStyle.CellStyleMiddleCenter
             Case NameOf(Key)
-                cellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-                cellStyle.Padding = New Padding(10, 0, 0, 0)
+                cellStyle = cellStyle.CellStyleMiddleLeft
             Case NameOf(Value)
-                cellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-                cellStyle.Padding = New Padding(0, 0, 3, 0)
+                cellStyle = cellStyle.CellStyleMiddleLeft
             Case Else
                 Throw New Exception($"Line {sourceLineNumber} in {functionName} thought to be unreachable for '{memberName}'")
         End Select
