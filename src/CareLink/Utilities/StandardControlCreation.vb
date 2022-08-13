@@ -99,11 +99,7 @@ Public Module StandardControlCreation
     End Sub
 
     Friend Sub initializeTableLayoutPanel(realPanel As TableLayoutPanel, rowIndex As ItemIndexs)
-        For i As Integer = 1 To realPanel.Controls.Count - 1
-            If TypeOf realPanel.Controls(1) IsNot DataGridView Then
-                realPanel.Controls.RemoveAt(1)
-            End If
-        Next
+        realPanel.RowCount = 1
         InitializeColumnLabel(realPanel, rowIndex, True)
     End Sub
 
@@ -112,11 +108,9 @@ Public Module StandardControlCreation
             realPanel.Controls.Clear()
             realPanel.RowStyles(0).SizeType = SizeType.AutoSize
         Else
-            For i As Integer = 1 To realPanel.Controls.Count - 1
-                If TypeOf realPanel.Controls(1) IsNot DataGridView Then
-                    realPanel.Controls.RemoveAt(1)
-                End If
-            Next
+            If realPanel.Controls.Count > 1 AndAlso TypeOf realPanel.Controls(1) IsNot DataGridView Then
+                realPanel.RowCount = 1
+            End If
         End If
         Return realPanel
     End Function
