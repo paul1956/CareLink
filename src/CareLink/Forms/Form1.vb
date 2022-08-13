@@ -625,9 +625,9 @@ Public Class Form1
             Dim sendorValue As Single = CSng(e.Value)
             If Single.IsNaN(sendorValue) Then
                 e.CellStyle.BackColor = Color.Gray
-            ElseIf sendorValue < 70 Then
+            ElseIf sendorValue < 70 / scaleUnitsDivisor Then
                 e.CellStyle.BackColor = Color.Red
-            ElseIf sendorValue > 180 Then
+            ElseIf sendorValue > 180 / scaleUnitsDivisor Then
                 e.CellStyle.BackColor = Color.Orange
             End If
         End If

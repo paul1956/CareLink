@@ -423,12 +423,11 @@ Partial Class Form1
         Me.TableLayoutPanelTop1.Name = "TableLayoutPanelTop1"
         Me.TableLayoutPanelTop1.RowCount = 1
         Me.TableLayoutPanelTop1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelTop1.Size = New System.Drawing.Size(423, 155)
+        Me.TableLayoutPanelTop1.Size = New System.Drawing.Size(423, 157)
         Me.TableLayoutPanelTop1.TabIndex = 0
         '
         'SplitContainer1
         '
-        Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Top
         Me.SplitContainer1.IsSplitterFixed = True
         Me.SplitContainer1.Location = New System.Drawing.Point(0, 24)
         Me.SplitContainer1.Name = "SplitContainer1"
@@ -441,8 +440,8 @@ Partial Class Form1
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.TabControlHomePage)
-        Me.SplitContainer1.Size = New System.Drawing.Size(1384, 897)
-        Me.SplitContainer1.SplitterDistance = 155
+        Me.SplitContainer1.Size = New System.Drawing.Size(1384, 817)
+        Me.SplitContainer1.SplitterDistance = 157
         Me.SplitContainer1.SplitterWidth = 2
         Me.SplitContainer1.TabIndex = 22
         '
@@ -460,7 +459,7 @@ Partial Class Form1
         'SplitContainer4.Panel2
         '
         Me.SplitContainer4.Panel2.Controls.Add(Me.TableLayoutPanelTop2)
-        Me.SplitContainer4.Size = New System.Drawing.Size(1384, 155)
+        Me.SplitContainer4.Size = New System.Drawing.Size(1384, 157)
         Me.SplitContainer4.SplitterDistance = 423
         Me.SplitContainer4.TabIndex = 0
         '
@@ -479,7 +478,7 @@ Partial Class Form1
         Me.TableLayoutPanelTop2.Name = "TableLayoutPanelTop2"
         Me.TableLayoutPanelTop2.RowCount = 1
         Me.TableLayoutPanelTop2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelTop2.Size = New System.Drawing.Size(957, 155)
+        Me.TableLayoutPanelTop2.Size = New System.Drawing.Size(957, 157)
         Me.TableLayoutPanelTop2.TabIndex = 1
         '
         'TabControlHomePage
@@ -983,7 +982,7 @@ Partial Class Form1
         Me.SplitContainer3.Panel2.Controls.Add(Me.BelowLowLimitMessageLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.AverageSGValueLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.AverageSGMessageLabel)
-        Me.SplitContainer3.Size = New System.Drawing.Size(1370, 471)
+        Me.SplitContainer3.Size = New System.Drawing.Size(1370, 486)
         Me.SplitContainer3.SplitterDistance = 1136
         Me.SplitContainer3.TabIndex = 0
         '
@@ -1959,12 +1958,12 @@ Partial Class Form1
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.ClientSize = New System.Drawing.Size(1384, 844)
+        Me.Controls.Add(Me.MenuStrip1)
         Me.Controls.Add(Me.LoginStatusLabel)
         Me.Controls.Add(Me.LoginStatus)
         Me.Controls.Add(Me.LastUpdateTime)
         Me.Controls.Add(Me.LastUpdateTimeLabel)
         Me.Controls.Add(Me.SplitContainer1)
-        Me.Controls.Add(Me.MenuStrip1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Margin = New System.Windows.Forms.Padding(4, 3, 4, 3)
