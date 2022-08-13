@@ -1958,11 +1958,11 @@ Partial Class Form1
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.ClientSize = New System.Drawing.Size(1384, 844)
-        Me.Controls.Add(Me.MenuStrip1)
         Me.Controls.Add(Me.LoginStatusLabel)
         Me.Controls.Add(Me.LoginStatus)
         Me.Controls.Add(Me.LastUpdateTime)
         Me.Controls.Add(Me.LastUpdateTimeLabel)
+        Me.Controls.Add(Me.MenuStrip1)
         Me.Controls.Add(Me.SplitContainer1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MainMenuStrip = Me.MenuStrip1
