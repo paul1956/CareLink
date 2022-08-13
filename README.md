@@ -25,6 +25,9 @@ https://github.com/paul1956/CareLink/releases/
 - 8/12/2022
 
 ## What's New in this release
+  New in 3.5.1.2
+  Memory Leak Fix
+
   New in 3.5.1.1
   Fix SG display highlighting for mmol/L
   Minor formatting fix
