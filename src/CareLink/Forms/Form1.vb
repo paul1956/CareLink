@@ -779,6 +779,7 @@ Public Class Form1
     Private Sub SummaryDataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles SummaryDataGridView.DataError
         Stop
     End Sub
+
 #End Region
 
 #Region "Timer Events"
@@ -1159,34 +1160,33 @@ Public Class Form1
         Return limitsIndexList
     End Function
 
-    Private Shared Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of SgRecord), rowIndex As ItemIndexs)
-        InitializeColumnLabel(realPanel, rowIndex, True)
+    Private Shared Sub ProcesListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of InsulinRecord), rowIndex As ItemIndexs)
+        initializeTableLayoutPanel(realPanel, rowIndex)
         dGridView.DataSource = recordData
         dGridView.RowHeadersVisible = False
     End Sub
 
-    Private Shared Sub ProcesListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of InsulinRecord), rowIndex As ItemIndexs)
-        InitializeColumnLabel(realPanel, rowIndex, True)
+    Private Shared Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of SgRecord), rowIndex As ItemIndexs)
+        initializeTableLayoutPanel(realPanel, rowIndex)
         dGridView.DataSource = recordData
         dGridView.RowHeadersVisible = False
     End Sub
 
     Private Shared Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of AutoBasalDeliveryRecord), rowIndex As ItemIndexs)
-        InitializeColumnLabel(realPanel, rowIndex, True)
+        initializeTableLayoutPanel(realPanel, rowIndex)
         dGridView.DataSource = recordData
         dGridView.RowHeadersVisible = False
     End Sub
 
     Private Shared Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, innerListDictionary As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, isScaledForm As Boolean)
-        If innerListDictionary.Count = 0 Then
-            realPanel.Controls.Clear()
-        End If
-        InitializeColumnLabel(realPanel, rowIndex, True)
+
         If innerListDictionary.Count = 0 Then
             Dim rowTextBox As TextBox = CreateBasicTextBox("")
             rowTextBox.BackColor = Color.LightGray
             realPanel.Controls.Add(rowTextBox)
             Exit Sub
+        Else
+            initializeTableLayoutPanel(realPanel, rowIndex)
         End If
         realPanel.Hide()
         Application.DoEvents()
@@ -2209,7 +2209,7 @@ Public Class Form1
     Private Sub UpdateNotifyIcon()
         Dim str As String = s_lastSG("sg")
         Dim fontToUse As New Font("Trebuchet MS", 10, FontStyle.Regular, GraphicsUnit.Pixel)
-        Dim color As Color = color.White
+        Dim color As Color = Color.White
         Dim bgColor As Color
         Dim sg As Double = str.ParseDouble
         Dim bitmapText As New Bitmap(16, 16)
@@ -2219,16 +2219,16 @@ Public Class Form1
 
         Select Case sg
             Case <= s_limitLow
-                bgColor = color.Orange
+                bgColor = Color.Orange
                 If _showBaloonTip Then
                     Me.NotifyIcon1.ShowBalloonTip(10000, "CareLink Alert", $"SG below {s_limitLow} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                 End If
                 _showBaloonTip = False
             Case <= s_limitHigh
-                bgColor = color.Green
+                bgColor = Color.Green
                 _showBaloonTip = True
             Case Else
-                bgColor = color.Red
+                bgColor = Color.Red
                 If _showBaloonTip Then
                     Me.NotifyIcon1.ShowBalloonTip(10000, "CareLink Alert", $"SG above {s_limitHigh} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                 End If

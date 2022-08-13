@@ -90,11 +90,6 @@ Public Module StandardControlCreation
         Dim headerText As String
         If isColumnHeader Then
             headerText = $"{CInt(rowIndex)} {rowIndex}"
-            If layoutPanel1.Controls.Count > 0 Then
-                layoutPanel1.Controls(0).Text = headerText
-            Else
-                layoutPanel1.Controls.Add(My.Forms.Form1.LabelTimeChange, 0, 0)
-            End If
             layoutPanel1.Controls(0).Text = headerText
         Else
             Dim labelControl As Label = CreateBasicLabel($"{CInt(rowIndex)}{Environment.NewLine}{rowIndex}")
@@ -103,10 +98,25 @@ Public Module StandardControlCreation
         Application.DoEvents()
     End Sub
 
+    Friend Sub initializeTableLayoutPanel(realPanel As TableLayoutPanel, rowIndex As ItemIndexs)
+        For i As Integer = 1 To realPanel.Controls.Count - 1
+            If TypeOf realPanel.Controls(1) IsNot DataGridView Then
+                realPanel.Controls.RemoveAt(1)
+            End If
+        Next
+        InitializeColumnLabel(realPanel, rowIndex, True)
+    End Sub
+
     Friend Function InitializeWorkingPanel(realPanel As TableLayoutPanel, Optional HeaderOnTop? As Boolean = Nothing) As TableLayoutPanel
         If Not HeaderOnTop Then
             realPanel.Controls.Clear()
             realPanel.RowStyles(0).SizeType = SizeType.AutoSize
+        Else
+            For i As Integer = 1 To realPanel.Controls.Count - 1
+                If TypeOf realPanel.Controls(1) IsNot DataGridView Then
+                    realPanel.Controls.RemoveAt(1)
+                End If
+            Next
         End If
         Return realPanel
     End Function
