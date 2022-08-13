@@ -122,6 +122,7 @@ Public Class Form1
                 Me.ServerUpdateTimer.Start()
                 Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
                 Me.LoginStatus.Text = "OK"
+                _initialized = False
         End Select
         If Not _initialized Then
             Me.FinishInitialization()
