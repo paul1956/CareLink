@@ -22,9 +22,12 @@ https://github.com/paul1956/CareLink/releases/
 - Medtronic CareLink data display
 
 ## Updated
-- 8/12/2022
+- 8/19/2022
 
 ## What's New in this release
+  New in 3.5.1.3
+  Another memory leak fix
+
   New in 3.5.1.2
   Memory Leak Fix
 

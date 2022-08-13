@@ -1182,9 +1182,12 @@ Public Class Form1
     Private Shared Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, innerListDictionary As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, isScaledForm As Boolean)
 
         If innerListDictionary.Count = 0 Then
-            Dim rowTextBox As TextBox = CreateBasicTextBox("")
-            rowTextBox.BackColor = Color.LightGray
-            realPanel.Controls.Add(rowTextBox)
+            If realPanel.Controls.Count = 1 Then
+                Dim rowTextBox As TextBox = CreateBasicTextBox("")
+                rowTextBox.BackColor = Color.LightGray
+                realPanel.Controls.Add(rowTextBox)
+            End If
+            realPanel.Controls(1).Text = ""
             Exit Sub
         Else
             initializeTableLayoutPanel(realPanel, rowIndex)

@@ -1496,8 +1496,9 @@ Partial Class Form1
         Me.TableLayoutPanelBgReading.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelBgReading.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelBgReading.Name = "TableLayoutPanelBgReading"
-        Me.TableLayoutPanelBgReading.RowCount = 2
+        Me.TableLayoutPanelBgReading.RowCount = 3
         Me.TableLayoutPanelBgReading.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanelBgReading.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelBgReading.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelBgReading.Size = New System.Drawing.Size(1356, 591)
         Me.TableLayoutPanelBgReading.TabIndex = 1
@@ -1931,9 +1932,9 @@ Partial Class Form1
         Me.LoginStatus.AutoSize = True
         Me.LoginStatus.Location = New System.Drawing.Point(684, 3)
         Me.LoginStatus.Name = "LoginStatus"
-        Me.LoginStatus.Size = New System.Drawing.Size(64, 15)
+        Me.LoginStatus.Size = New System.Drawing.Size(58, 15)
         Me.LoginStatus.TabIndex = 24
-        Me.LoginStatus.Text = "Unknown1"
+        Me.LoginStatus.Text = "Unknown"
         '
         'LastUpdateTimeLabel
         '
