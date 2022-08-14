@@ -30,6 +30,10 @@ https://github.com/paul1956/CareLink/releases/
   Update data more frequently
   Improve display for 780G when no data is available
 
+  New in 3.5.1.6
+  Pump message Clean up
+  Lock tables while updating to prevent crash
+
   New in 3.5.1.3
   Another memory leak fix
 

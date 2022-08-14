@@ -23,13 +23,14 @@ Public Class Form1
     Private ReadOnly _markersMeal As New List(Of Dictionary(Of String, String))
     Private ReadOnly _markersTimeChange As New List(Of Dictionary(Of String, String))
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
+    Private ReadOnly _updatingLock As New Object
     Private _client As CareLinkClient
     Private _homePageAbsoluteRectangle As RectangleF
     Private _homePageChartRelitivePosition As RectangleF = RectangleF.Empty
     Private _initialized As Boolean = False
     Private _inMouseMove As Boolean = False
     Private _showBaloonTip As Boolean = True
-    Private _updating As Boolean = False
+    Private _updating As Boolean ' prevent paint on changing data
 
     Private Enum FileToLoadOptions As Integer
         LastSaved = 0
@@ -99,13 +100,15 @@ Public Class Form1
                 CurrentDataCulture = CurrentDateCulture
                 RecentData = Loads(File.ReadAllText(LastDownloadWithPath))
                 Me.MenuView.Visible = Debugger.IsAttached
-                Me.LastUpdateTime.Text = File.GetLastWriteTime(LastDownloadWithPath).ToShortDateTimeString
+                Me.LastUpdateTime.Text = $"{File.GetLastWriteTime(LastDownloadWithPath).ToShortDateTimeString} from file"
             Case FileToLoadOptions.TestData
-                Me.Text = $"{SavedTitle} Using Test Data"
+                Me.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
-                RecentData = Loads(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")))
+                CurrentDataCulture = CurrentDateCulture
+                Dim testDataWithPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")
+                RecentData = Loads(File.ReadAllText(testDataWithPath))
                 Me.MenuView.Visible = Debugger.IsAttached
-                Me.LastUpdateTime.Text = "Using Test Data"
+                Me.LastUpdateTime.Text = $"{File.GetLastWriteTime(testDataWithPath).ToShortDateTimeString} from file"
             Case FileToLoadOptions.Login
                 Me.Text = SavedTitle
                 _loginDialog.ShowDialog()
@@ -136,9 +139,6 @@ Public Class Form1
             Exit Sub
         End If
         _homePageChartRelitivePosition = RectangleF.Empty
-        _updating = True
-        Me.Cursor = Cursors.WaitCursor
-        _updating = False
         Me.Cursor = Cursors.Default
         Application.DoEvents()
 
@@ -185,11 +185,12 @@ Public Class Form1
         s_useLocalTimeZone = My.Settings.UseLocalTimeZone
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
         CheckForUpdatesAsync(Me, False)
+        Me.SummaryDataGridView.DataSource = s_bindingSourceSummary
+        Me.SummaryDataGridView.RowHeadersVisible = False
         If Me.DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
             Me.FinishInitialization()
             Me.UpdateAllTabPages()
         End If
-        Me.SummaryDataGridView.RowHeadersVisible = False
     End Sub
 
 #End Region
@@ -232,7 +233,7 @@ Public Class Form1
                         RecentData = Loads(ExceptionHandlerForm.LocalRawData)
                         Me.MenuView.Visible = Debugger.IsAttached
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
-                        Me.LastUpdateTime.Text = File.GetLastWriteTime(fileNameWithPath).ToShortDateTimeString
+                        Me.LastUpdateTime.Text = $"{File.GetLastWriteTime(fileNameWithPath).ToShortDateTimeString} from file"
                         _initialized = False
                         Me.FinishInitialization()
                         Me.UpdateAllTabPages()
@@ -507,47 +508,50 @@ Public Class Form1
 
     <DebuggerNonUserCode()>
     Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomeTabChart.PostPaint
-        If Not _initialized OrElse _updating OrElse _inMouseMove Then
-            Exit Sub
-        End If
-        If _homePageChartRelitivePosition.IsEmpty Then
-            _homePageChartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.X, s_bindingSourceSGs(0).OADate))
-            _homePageChartRelitivePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.Y, s_markerRow))
-            _homePageChartRelitivePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.Y, CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.Y, s_limitHigh)))) - _homePageChartRelitivePosition.Y
-            _homePageChartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.X, s_bindingSourceSGs.Last.OADate)) - _homePageChartRelitivePosition.X
-            _homePageChartRelitivePosition = e.ChartGraphics.GetAbsoluteRectangle(_homePageChartRelitivePosition)
-        End If
+        SyncLock _updatingLock
 
-        Dim homePageChartY As Integer = CInt(_homePageChartRelitivePosition.Y)
-        Dim homePageChartWidth As Integer = CInt(_homePageChartRelitivePosition.Width)
-        Dim highLimitY As Double = e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.Y, s_limitHigh)
-        Dim lowLimitY As Double = e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.Y, s_limitLow)
+            If Not _initialized OrElse _updating OrElse _inMouseMove Then
+                Exit Sub
+            End If
+            If _homePageChartRelitivePosition.IsEmpty Then
+                _homePageChartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.X, s_bindingSourceSGs(0).OADate))
+                _homePageChartRelitivePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.Y, s_markerRow))
+                _homePageChartRelitivePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.Y, CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.Y, s_limitHigh)))) - _homePageChartRelitivePosition.Y
+                _homePageChartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.X, s_bindingSourceSGs.Last.OADate)) - _homePageChartRelitivePosition.X
+                _homePageChartRelitivePosition = e.ChartGraphics.GetAbsoluteRectangle(_homePageChartRelitivePosition)
+            End If
 
-        Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
-            Dim highHeight As Integer = CInt(255 * Me.FormScale.Height)
-            Dim homePagelocation As New Point(CInt(_homePageChartRelitivePosition.X), homePageChartY)
-            Dim highAreaRectangle As New Rectangle(homePagelocation,
+            Dim homePageChartY As Integer = CInt(_homePageChartRelitivePosition.Y)
+            Dim homePageChartWidth As Integer = CInt(_homePageChartRelitivePosition.Width)
+            Dim highLimitY As Double = e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.Y, s_limitHigh)
+            Dim lowLimitY As Double = e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.Y, s_limitLow)
+
+            Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
+                Dim highHeight As Integer = CInt(255 * Me.FormScale.Height)
+                Dim homePagelocation As New Point(CInt(_homePageChartRelitivePosition.X), homePageChartY)
+                Dim highAreaRectangle As New Rectangle(homePagelocation,
                                                    New Size(homePageChartWidth, highHeight))
-            e.ChartGraphics.Graphics.FillRectangle(b, highAreaRectangle)
+                e.ChartGraphics.Graphics.FillRectangle(b, highAreaRectangle)
 
-            Dim lowOffset As Integer = CInt((10 + _homePageChartRelitivePosition.Height) * Me.FormScale.Height)
-            Dim lowStartLocation As New Point(CInt(_homePageChartRelitivePosition.X), lowOffset)
+                Dim lowOffset As Integer = CInt((10 + _homePageChartRelitivePosition.Height) * Me.FormScale.Height)
+                Dim lowStartLocation As New Point(CInt(_homePageChartRelitivePosition.X), lowOffset)
 
-            Dim lowRawHeight As Integer = CInt((50 - homePageChartY) * Me.FormScale.Height)
-            Dim lowHeight As Integer = If(Me.HomeTabChartArea.AxisX.ScrollBar.IsVisible,
+                Dim lowRawHeight As Integer = CInt((50 - homePageChartY) * Me.FormScale.Height)
+                Dim lowHeight As Integer = If(Me.HomeTabChartArea.AxisX.ScrollBar.IsVisible,
                                           CInt(lowRawHeight - Me.HomeTabChartArea.AxisX.ScrollBar.Size),
                                           lowRawHeight
                                          )
-            Dim lowAreaRectangle As New Rectangle(lowStartLocation,
+                Dim lowAreaRectangle As New Rectangle(lowStartLocation,
                                                   New Size(homePageChartWidth, lowHeight))
-            e.ChartGraphics.Graphics.FillRectangle(b, lowAreaRectangle)
-            If Me.CursorTimeLabel.Tag IsNot Nothing Then
-                Me.CursorTimeLabel.Left = CInt(e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.X, Me.CursorTimeLabel.Tag.ToString.ParseDate("").ToOADate))
-            End If
-        End Using
+                e.ChartGraphics.Graphics.FillRectangle(b, lowAreaRectangle)
+                If Me.CursorTimeLabel.Tag IsNot Nothing Then
+                    Me.CursorTimeLabel.Left = CInt(e.ChartGraphics.GetPositionFromAxis(NameOf(HomeTabChartArea), AxisName.X, Me.CursorTimeLabel.Tag.ToString.ParseDate("").ToOADate))
+                End If
+            End Using
 
-        e.PaintMarker(s_mealImage, s_markerMealDictionary, 0)
-        e.PaintMarker(_insulinImage, s_markerInsulinDictionary, -6)
+            e.PaintMarker(s_mealImage, s_markerMealDictionary, 0)
+            e.PaintMarker(_insulinImage, s_markerInsulinDictionary, -6)
+        End SyncLock
     End Sub
 
     Private Sub SensorAgeLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles SensorDaysLeftLabel.MouseHover
@@ -795,7 +799,6 @@ Public Class Form1
         RecentData = _client.GetRecentData()
         If RecentData IsNot Nothing Then
             Me.LastUpdateTime.Text = "Unknown"
-            Me.UpdateAllTabPages()
         Else
             _client = New CareLinkClient(Me.LoginStatus, My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
             _loginDialog.Client = _client
@@ -804,9 +807,9 @@ Public Class Form1
                 Me.LastUpdateTime.Text = "Unknown due to Login failure, try logging in again!"
             Else
                 Me.LastUpdateTime.Text = Now.ToShortDateTimeString
-                Me.UpdateAllTabPages()
             End If
         End If
+        Me.UpdateAllTabPages()
         Application.DoEvents()
         Me.ServerUpdateTimer.Interval = s_minuteInMilliseconds
         Me.ServerUpdateTimer.Start()
@@ -1091,7 +1094,7 @@ Public Class Form1
 
                             Dim valueLabel As Label = CreateBasicLabel(eValue.Key)
                             If eValue.Key.Equals("messageid", StringComparison.OrdinalIgnoreCase) Then
-                                tableLevel3.Controls.AddRange({valueLabel, CreateBasicTextBox("")})
+                                tableLevel3.Controls.AddRange({valueLabel, CreateBasicTextBox(eValue.Value)})
                                 valueLabel = CreateBasicLabel("Message")
                             End If
                             tableLevel3.Controls.AddRange({valueLabel, CreateValueTextBox(dic, eValue, timeFormat, isScaledForm)})
@@ -1490,7 +1493,6 @@ Public Class Form1
         If RecentData Is Nothing Then
             Exit Sub
         End If
-        _updating = True
         Me.Cursor = Cursors.WaitCursor
         Application.DoEvents()
 
@@ -1612,7 +1614,6 @@ Public Class Form1
             End Try
         Next
         _initialized = True
-        _updating = False
         Me.Cursor = Cursors.Default
     End Sub
 
@@ -1719,9 +1720,9 @@ Public Class Form1
             With Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinMarkerSeries))
                 Select Case marker.Value("type")
                     Case "INSULIN"
-                        .Points.AddXY(sgOaDateTime, maxActiveInsulin)
                         Dim deliveredAmount As Single = marker.Value("deliveredFastAmount").ParseSingle
                         s_totalDailyDose += deliveredAmount
+                        .Points.AddXY(sgOaDateTime, maxActiveInsulin)
                         Select Case marker.Value("activationType")
                             Case "AUTOCORRECTION"
                                 .Points.Last.ToolTip = $"Auto Correction: {deliveredAmount.ToString(CurrentUICulture)} U"
@@ -1739,11 +1740,11 @@ Public Class Form1
 
                     Case "AUTO_BASAL_DELIVERY"
                         Dim bolusAmount As Single = marker.Value.GetSingleValue("bolusAmount")
+                        s_totalBasal += CSng(bolusAmount)
+                        s_totalDailyDose += CSng(bolusAmount)
                         .Points.AddXY(sgOaDateTime, maxActiveInsulin)
                         .Points.Last.ToolTip = $"Basal: {bolusAmount.RoundSingle(3).ToString(CurrentUICulture)} U"
                         .Points.Last.MarkerSize = 8
-                        s_totalBasal += CSng(bolusAmount)
-                        s_totalDailyDose += CSng(bolusAmount)
                     Case "MEAL"
                         s_totalCarbs += marker.Value.GetSingleValue("amount")
                     Case "AUTO_MODE_STATUS"
@@ -1805,38 +1806,37 @@ Public Class Form1
 #End Region
 
     Friend Sub UpdateAllTabPages()
-        If RecentData Is Nothing OrElse _updating Then
+        If RecentData Is Nothing Then
             Exit Sub
         End If
         If RecentData.Count > ItemIndexs.finalCalibration + 1 Then
             Stop
         End If
-        Me.MenuStartHere.Enabled = False
-        If Me.LastUpdateTime.Text = "Unknown" Then
-            Me.LastUpdateTime.Text = Now.ToShortDateTimeString
-        End If
-        ResetAllVariables()
-        Me.SummaryDataGridView.DataSource = s_bindingSourceSummary
-
-        _updating = True
-        Me.UpdateDataTables(Me.FormScale.Height <> 1 OrElse Me.FormScale.Width <> 1)
-        Me.UpdateActiveInsulinChart()
-        Me.UpdateActiveInsulin()
-        Me.UpdateAutoModeShield()
-        Me.UpdateCalibrationTimeRemaining()
-        Me.UpdateInsulinLevel()
-        Me.UpdatePumpBattery()
-        Me.UpdateRemainingInsulin()
-        Me.UpdateSensorLife()
-        Me.UpdateTimeInRange()
-        Me.UpdateTransmitterBatttery()
-
-        Me.UpdateZHomeTabSerieses()
-        Me.UpdateDosingAndCarbs()
-        s_recentDatalast = RecentData
-        _initialized = True
-        _updating = False
-        Me.MenuStartHere.Enabled = True
+        SyncLock _updatingLock
+            _updating = True ' prevent paint
+            Me.MenuStartHere.Enabled = False
+            If Not Me.LastUpdateTime.Text.Contains("from file") Then
+                Me.LastUpdateTime.Text = Now.ToShortDateTimeString
+            End If
+            ResetAllVariables()
+            Me.UpdateDataTables(Me.FormScale.Height <> 1 OrElse Me.FormScale.Width <> 1)
+            Me.UpdateActiveInsulinChart()
+            Me.UpdateActiveInsulin()
+            Me.UpdateAutoModeShield()
+            Me.UpdateCalibrationTimeRemaining()
+            Me.UpdateInsulinLevel()
+            Me.UpdatePumpBattery()
+            Me.UpdateRemainingInsulin()
+            Me.UpdateSensorLife()
+            Me.UpdateTimeInRange()
+            Me.UpdateTransmitterBatttery()
+            Me.UpdateZHomeTabSerieses()
+            Me.UpdateDosingAndCarbs()
+            s_recentDatalast = RecentData
+            _initialized = True
+            Me.MenuStartHere.Enabled = True
+            _updating = False
+        End SyncLock
         Application.DoEvents()
     End Sub
 

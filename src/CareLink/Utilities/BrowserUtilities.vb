@@ -81,6 +81,9 @@ Friend Module BrowserUtilities
                     End If
                     Dim versionLength As Integer = line.IndexOf("""", index) - index
                     versionStr = line.Substring(index, versionLength)
+                    If versionStr.Contains("-"c) Then
+                        Continue For
+                    End If
                     Exit For
                 End If
             Next
