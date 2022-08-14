@@ -49,12 +49,12 @@ Public Module SystemConstants
             }
 
     Public ReadOnly Trends As New Dictionary(Of String, String) From {
-                {"SingleDown", "↓"},
-                {"DoubleDown", "↓↓"},
-                {"TripleUP", "↓↓↓"},
-                {"SingleUp", "↑"},
-                {"DoubleUp", "↑↑"},
-                {"TripleUp", "↑↑↑"},
+                {"DOWN", "↓"},
+                {"DOUBLEDOWN", "↓↓"},
+                {"TRIPLEDOWN", "↓↓↓"},
+                {"UP", "↑"},
+                {"DOUBLEUP", "↑↑"},
+                {"TRIPLEUp", "↑↑↑"},
                 {"NONE", "↔"}
             }
 

@@ -28,6 +28,7 @@ https://github.com/paul1956/CareLink/releases/
   New in 3.5.2.0-beta1
   Add support for SG Trend Arrows
   Update data more frequently
+  Improve display for 780G when no data is available
 
   New in 3.5.1.3
   Another memory leak fix

@@ -1591,8 +1591,13 @@ Public Class Form1
             End Select
 
             Try
+                layoutPanel1.SuspendLayout()
                 InitializeColumnLabel(layoutPanel1, rowIndex, isColumnHeader)
-                layoutPanel1.RowStyles(0).SizeType = SizeType.AutoSize
+                If layoutPanel1.RowStyles.Count = 1 Then
+                    layoutPanel1.RowStyles(0).SizeType = SizeType.AutoSize
+                Else
+                    layoutPanel1.RowStyles(1).SizeType = SizeType.AutoSize
+                End If
                 Dim innerJsonDictionary As Dictionary(Of String, String) = Loads(row.Value)
                 Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, Color.Aqua)
                 innerTableBlue.AutoScroll = True
@@ -1600,6 +1605,7 @@ Public Class Form1
                                       1,
                                       0)
                 GetInnerTable(innerJsonDictionary, innerTableBlue, rowIndex, s_filterJsonData, s_timeWithMinuteFormat, isScaledForm)
+                layoutPanel1.ResumeLayout()
             Catch ex As Exception
                 Stop
                 Throw

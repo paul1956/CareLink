@@ -166,4 +166,9 @@ Public Class ExceptionHandlerForm
         Return stackTrace.Substring(0, index - 1)
     End Function
 
+    Private Sub ExceptionHandlerForm_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        My.Forms.BGMiniWindow.Hide()
+        My.Forms.Form1.Show()
+        Me.TopMost = True
+    End Sub
 End Class
