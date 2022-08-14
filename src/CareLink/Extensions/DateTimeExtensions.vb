@@ -12,6 +12,13 @@ Friend Module DateTimeExtensions
     Public ReadOnly s_minuteInMilliseconds As Integer = CType(New TimeSpan(0, minutes:=1, 0).TotalMilliseconds, Integer)
     Public ReadOnly s_thirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
 
+    Public Enum RoundTo
+        Second
+        Minute
+        Hour
+        Day
+    End Enum
+
     Private Function DoCultureSpecificParse(dateAsString As String, ByRef success As Boolean, defaultCulture As CultureInfo, styles As DateTimeStyles) As Date
         If s_dateTimeFormatUniqueCultures.Count = 0 Then
             s_dateTimeFormatUniqueCultures.Add(CurrentDateCulture)
@@ -103,6 +110,24 @@ Friend Module DateTimeExtensions
 
         MsgBox($"System.FormatException: String '{dateAsString}' in {memberName} line {sourceLineNumber} was not recognized as a valid DateTime in any supported culture.", MsgBoxStyle.ApplicationModal Or MsgBoxStyle.Critical)
         Throw New System.FormatException($"String '{dateAsString}' in {memberName} line {sourceLineNumber} was not recognized as a valid DateTime in any supported culture.")
+    End Function
+
+    <Extension>
+    Public Function RoundTimeDown(d As Date, rt As RoundTo) As Date
+        Dim dtRounded As New DateTime()
+
+        Select Case rt
+            Case RoundTo.Second
+                dtRounded = New DateTime(d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second)
+            Case RoundTo.Minute
+                dtRounded = New DateTime(d.Year, d.Month, d.Day, d.Hour, d.Minute, 0)
+            Case RoundTo.Hour
+                dtRounded = New DateTime(d.Year, d.Month, d.Day, d.Hour, 0, 0)
+            Case RoundTo.Day
+                dtRounded = New DateTime(d.Year, d.Month, d.Day, 0, 0, 0)
+        End Select
+
+        Return dtRounded
     End Function
 
     <Extension>

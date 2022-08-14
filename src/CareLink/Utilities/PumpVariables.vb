@@ -16,18 +16,18 @@ Public Module PumpVariables
 
 #Region "Global variables to hold pump values"
 
-    Private s_scaleUnitsDivisor As Double
+    Friend Const MmolLUnitsDivisor As Single = 18
     Friend ReadOnly s_bindingSourceMarkersAutoBasalDelivery As New BindingList(Of AutoBasalDeliveryRecord)
     Friend ReadOnly s_bindingSourceMarkersInsulin As New BindingList(Of InsulinRecord)
     Friend ReadOnly s_bindingSourceSummary As New BindingList(Of SummaryRecord)
     Friend ReadOnly s_markerInsulinDictionary As New Dictionary(Of Double, Single)
     Friend ReadOnly s_markerMealDictionary As New Dictionary(Of Double, Single)
     Friend ReadOnly s_mealImage As Bitmap = My.Resources.MealImage
-    Friend s_aboveHyperLimit As Integer
+    Friend s_aboveHyperLimit As Double
     Friend s_activeInsulin As Dictionary(Of String, String)
     Friend s_activeInsulinIncrements As Integer
-    Friend s_averageSG As Double
-    Friend s_belowHypoLimit As Integer
+    Friend s_averageSG As Single
+    Friend s_belowHypoLimit As Single
     Friend s_bindingSourceSGs As New BindingList(Of SgRecord)
     Friend s_clientTimeZone As TimeZoneInfo
     Friend s_clientTimeZoneName As String
@@ -36,7 +36,7 @@ Public Module PumpVariables
     Friend s_filterJsonData As Boolean = True
     Friend s_gstBatteryLevel As Integer
     Friend s_insulinRow As Single
-    Friend s_lastBGValue As Double = 0
+    Friend s_lastBGValue As Single = 0
     Friend s_lastSG As Dictionary(Of String, String)
     Friend s_limitHigh As Single
     Friend s_limitLow As Single
@@ -81,19 +81,8 @@ Public Module PumpVariables
         End Set
     End Property
 
-    Friend Property scaleUnitsDivisor As Double
-        Get
-            If s_scaleUnitsDivisor = 0 Then
-                Stop
-            End If
-            Return s_scaleUnitsDivisor
-        End Get
-        Set
-            s_scaleUnitsDivisor = Value
-        End Set
-    End Property
-
     Friend Property RecentData As New Dictionary(Of String, String)
+    Friend Property scalingNeeded As Boolean = Nothing
     Public Property BgUnits As String
     Public Property BgUnitsString As String
 

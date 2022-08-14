@@ -7,36 +7,17 @@ Imports System.Runtime.CompilerServices
 
 Friend Module MathExtensions
 
-    Public Enum RoundTo
-        Second
-        Minute
-        Hour
-        Day
-    End Enum
-
     <Extension>
-    Friend Function GetDoubleValue(item As Dictionary(Of String, String), value As String) As Double
+    Friend Function GetSingleValue(item As Dictionary(Of String, String), value As String) As Single
         Dim returnString As String = ""
         If item.TryGetValue(value, returnString) Then
-            Return returnString.ParseDouble
+            Return returnString.ParseSingle
         End If
-        Return Double.NaN
+        Return Single.NaN
     End Function
 
     <Extension>
-    Friend Function RoundDouble(doubleValue As Double, decimalDigits As Integer) As Double
-
-        Return Math.Round(doubleValue, decimalDigits)
-    End Function
-
-    <Extension>
-    Friend Function RoundDouble(value As String, decimalDigits As Integer) As Double
-
-        Return Math.Round(value.ParseDouble, decimalDigits)
-    End Function
-
-    <Extension>
-    Friend Function RoundSingle(doubleValue As Double, decimalDigits As Integer) As Single
+    Friend Function RoundToSingle(doubleValue As Double, decimalDigits As Integer) As Single
 
         Return CSng(Math.Round(doubleValue, decimalDigits))
     End Function
@@ -48,45 +29,15 @@ Friend Module MathExtensions
     End Function
 
     <Extension>
-    Public Function ParseDouble(valueString As String) As Double
-        Dim returnDouble As Double
-        If Double.TryParse(valueString, NumberStyles.Number, CurrentDataCulture, returnDouble) Then
-            Return returnDouble
-        End If
-        If Double.TryParse(valueString, NumberStyles.Number, CurrentUICulture, returnDouble) Then
-            Return returnDouble
-        End If
-        Return Double.NaN
-    End Function
-
-    <Extension>
-    Public Function ParseSingle(valueString As String) As Single
+    Public Function ParseSingle(valueString As String, Optional decimalDigits As Integer = 10) As Single
         Dim returnSingle As Single
         If Single.TryParse(valueString, NumberStyles.Number, CurrentDataCulture, returnSingle) Then
-            Return returnSingle
+            Return returnSingle.RoundSingle(decimalDigits)
         End If
         If Single.TryParse(valueString, NumberStyles.Number, CurrentUICulture, returnSingle) Then
-            Return returnSingle
+            Return returnSingle.RoundSingle(decimalDigits)
         End If
         Return Single.NaN
-    End Function
-
-    <Extension>
-    Public Function RoundTimeDown(d As Date, rt As RoundTo) As Date
-        Dim dtRounded As New DateTime()
-
-        Select Case rt
-            Case RoundTo.Second
-                dtRounded = New DateTime(d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second)
-            Case RoundTo.Minute
-                dtRounded = New DateTime(d.Year, d.Month, d.Day, d.Hour, d.Minute, 0)
-            Case RoundTo.Hour
-                dtRounded = New DateTime(d.Year, d.Month, d.Day, d.Hour, 0, 0)
-            Case RoundTo.Day
-                dtRounded = New DateTime(d.Year, d.Month, d.Day, 0, 0, 0)
-        End Select
-
-        Return dtRounded
     End Function
 
 End Module

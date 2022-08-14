@@ -175,6 +175,8 @@ Partial Class Form1
         Me.LastUpdateTime = New System.Windows.Forms.Label()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.BindingSource1 = New System.Windows.Forms.BindingSource(Me.components)
+        Me.LabelSgTrend = New System.Windows.Forms.Label()
+        Me.LabelTrendValue = New System.Windows.Forms.Label()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -521,6 +523,8 @@ Partial Class Form1
         '
         'SplitContainer2.Panel1
         '
+        Me.SplitContainer2.Panel1.Controls.Add(Me.LabelTrendValue)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.LabelSgTrend)
         Me.SplitContainer2.Panel1.Controls.Add(Me.ShieldUnitsLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.SensorMessage)
         Me.SplitContainer2.Panel1.Controls.Add(Me.CurrentBG)
@@ -1954,6 +1958,28 @@ Partial Class Form1
         Me.LastUpdateTime.TabIndex = 24
         Me.LastUpdateTime.Text = "Unknown"
         '
+        'LabelSgTrend
+        '
+        Me.LabelSgTrend.BackColor = System.Drawing.Color.Black
+        Me.LabelSgTrend.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.LabelSgTrend.ForeColor = System.Drawing.Color.White
+        Me.LabelSgTrend.Location = New System.Drawing.Point(1256, 86)
+        Me.LabelSgTrend.Name = "LabelSgTrend"
+        Me.LabelSgTrend.Size = New System.Drawing.Size(84, 23)
+        Me.LabelSgTrend.TabIndex = 61
+        Me.LabelSgTrend.Text = "SG Trend"
+        '
+        'LabelTrendValue
+        '
+        Me.LabelTrendValue.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.LabelTrendValue.ForeColor = System.Drawing.Color.White
+        Me.LabelTrendValue.Location = New System.Drawing.Point(1256, 108)
+        Me.LabelTrendValue.Name = "LabelTrendValue"
+        Me.LabelTrendValue.Size = New System.Drawing.Size(84, 23)
+        Me.LabelTrendValue.TabIndex = 62
+        Me.LabelTrendValue.Text = "↑↔↓"
+        Me.LabelTrendValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -2214,4 +2240,6 @@ Partial Class Form1
     Friend WithEvents LabelTherapyAlgorthm As Label
     Friend WithEvents LabelBannerState As Label
     Friend WithEvents Label1 As Label
+    Friend WithEvents LabelTrendValue As Label
+    Friend WithEvents LabelSgTrend As Label
 End Class

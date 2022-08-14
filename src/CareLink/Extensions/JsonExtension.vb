@@ -29,6 +29,19 @@ Public Module JsonExtensions
     End Function
 
     <Extension>
+    Private Function jsonToSingle(item As KeyValuePair(Of String, Object)) As Single
+        Return item.jsonItemAsString.ParseSingle
+    End Function
+
+    <Extension>
+    Private Function scaleToString(valueAsSingle As Single, decimalDigits As Integer) As String
+        If scalingNeeded AndAlso valueAsSingle > 49 Then
+            Return (valueAsSingle / MmolLUnitsDivisor).RoundSingle(decimalDigits).ToString(CurrentDataCulture)
+        End If
+        Return valueAsSingle.ToString(CurrentDataCulture)
+    End Function
+
+    <Extension>
     Public Function CleanUserData(cleanRecentData As Dictionary(Of String, String)) As String
         cleanRecentData("firstName") = "First"
         cleanRecentData("lastName") = "Last"
@@ -48,7 +61,7 @@ Public Module JsonExtensions
                 If item.Value Is Nothing Then
                     resultDictionary.Add(item.Key, Nothing)
                 ElseIf item.Key = "sg" Then
-                    resultDictionary.Add(item.Key, CStr((item.jsonItemAsString.ParseDouble / scaleUnitsDivisor).RoundDouble(2)))
+                    resultDictionary.Add(item.Key, item.scaleJsonValue)
                 Else
                     resultDictionary.Add(item.Key, item.jsonItemAsString)
                 End If
@@ -88,18 +101,18 @@ Public Module JsonExtensions
                                 End If
                             End If
                             If BgUnitsString = "mg/dl" Then
-                                scaleUnitsDivisor = 1
+                                scalingNeeded = False
                                 s_markerRow = 400
                                 s_limitHigh = 180
                                 s_limitLow = 70
                                 s_insulinRow = 50
                                 s_criticalLow = 50
                             Else
-                                scaleUnitsDivisor = 18
-                                s_markerRow = CSng(Math.Round(400 / 18, 0, MidpointRounding.AwayFromZero))
-                                s_limitHigh = (180 / scaleUnitsDivisor).RoundSingle(1)
-                                s_limitLow = (70 / scaleUnitsDivisor).RoundSingle(1)
-                                s_insulinRow = CSng(Math.Round(50 / scaleUnitsDivisor, 0, MidpointRounding.ToZero))
+                                scalingNeeded = True
+                                s_markerRow = CSng(Math.Round(400 / MmolLUnitsDivisor, 0, MidpointRounding.AwayFromZero))
+                                s_limitHigh = (180 / MmolLUnitsDivisor).RoundSingle(1)
+                                s_limitLow = (70 / MmolLUnitsDivisor).RoundSingle(1)
+                                s_insulinRow = CSng(Math.Round(50 / MmolLUnitsDivisor, 0, MidpointRounding.ToZero))
                                 s_criticalLow = s_insulinRow
                             End If
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
@@ -139,7 +152,7 @@ Public Module JsonExtensions
                             s_timeWithoutMinuteFormat = If(internaltimeFormat = "HR_12", TwelveHourTimeWithoutMinuteFormat, MilitaryTimeWithoutMinuteFormat)
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
                         Case "Sg", "sg", NameOf(ItemIndexs.averageSGFloat), NameOf(ItemIndexs.averageSG), NameOf(ItemIndexs.sgBelowLimit)
-                            resultDictionary.Add(item.Key, CStr((item.jsonItemAsString.ParseDouble / scaleUnitsDivisor).RoundDouble(2)))
+                            resultDictionary.Add(item.Key, item.scaleJsonValue())
                         Case Else
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
                     End Select
@@ -149,7 +162,19 @@ Public Module JsonExtensions
                 End Try
             Next
         End If
-            Return resultDictionary
+        Return resultDictionary
+    End Function
+
+    <Extension>
+    Public Function scaleJsonValue(item As KeyValuePair(Of String, Object)) As String
+        Dim valueAsSingle As Single = item.jsonToSingle()
+        Return valueAsSingle.scaleToString(2)
+    End Function
+
+    <Extension>
+    Public Function scaleValue(item As KeyValuePair(Of String, String), decimalDigits As Integer) As String
+        Dim valueAsSingle As Single = item.Value.ParseSingle
+        Return valueAsSingle.scaleToString(decimalDigits)
     End Function
 
 End Module

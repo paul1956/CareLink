@@ -22,9 +22,13 @@ https://github.com/paul1956/CareLink/releases/
 - Medtronic CareLink data display
 
 ## Updated
-- 8/13/2022
+- 8/20/2022
 
 ## What's New in this release
+  New in 3.5.2.0-beta1
+  Add support for SG Trend Arrows
+  Update data more frequently
+
   New in 3.5.1.3
   Another memory leak fix
 

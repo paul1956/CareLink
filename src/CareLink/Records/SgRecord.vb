@@ -18,7 +18,7 @@ Public Class SgRecord
         For Each kvp As KeyValuePair(Of String, String) In allSgs(index)
             Select Case kvp.Key
                 Case NameOf(sg)
-                    Me.sg = CSng(kvp.Value.ParseDouble)
+                    Me.sg = kvp.Value.ParseSingle
                 Case NameOf(datetime)
                     ' Handled below
                 Case NameOf(timeChange)
@@ -28,7 +28,7 @@ Public Class SgRecord
                 Case NameOf(kind)
                     Me.kind = kvp.Value
                 Case NameOf(version)
-                    Me.version = Integer.Parse(kvp.Value)
+                    Me.version = CInt(kvp.Value)
                 Case NameOf(relativeOffset)
                     Me.relativeOffset = CInt(kvp.Value)
                 Case Else

@@ -4,10 +4,10 @@
 
 Friend Class ActiveInsulinRecord
     Private ReadOnly _incrementDownCount As Integer
-    Private _adjustmentValue As Double
+    Private _adjustmentValue As Single
     Private _incrementUpCount As Integer
 
-    Public Sub New(oaTime As Double, initialInsulinLevel As Double, activeInsulinIncrements As Integer, useAdvancedAITDecay As Boolean)
+    Public Sub New(oaTime As Double, initialInsulinLevel As Single, activeInsulinIncrements As Integer, useAdvancedAITDecay As Boolean)
         Me.OaTime = oaTime
         Me.EventDate = Date.FromOADate(oaTime)
         If useAdvancedAITDecay Then
@@ -20,7 +20,7 @@ Friend Class ActiveInsulinRecord
         Me.CurrentInsulinLevel = _adjustmentValue * _incrementDownCount
     End Sub
 
-    Public Property CurrentInsulinLevel As Double
+    Public Property CurrentInsulinLevel As Single
 
     Public Property EventDate As Date
 
@@ -42,7 +42,7 @@ Friend Class ActiveInsulinRecord
     End Function
 
     Public Overrides Function ToString() As String
-        Return $"{Me.EventDate.ToShortTimeString()} {Me.CurrentInsulinLevel.RoundDouble(3)}"
+        Return $"{Me.EventDate.ToShortTimeString()} {Me.CurrentInsulinLevel.RoundSingle(3)}"
     End Function
 
 End Class

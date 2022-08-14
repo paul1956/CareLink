@@ -8,7 +8,7 @@ Imports Microsoft.Win32
 Friend Module BrowserUtilities
 
     Private ReadOnly s_httpClient As New HttpClient()
-    Private ReadOnly s_versionSearchKey As String = $"<a href=""/{OwnerName}/{RepoName}/releases/tag/v"
+    Private ReadOnly s_versionSearchKey As String = $"<a href=""/{OwnerName}/{RepoName}/releases/tag/"
 
     ''' <summary>
     ''' Compare version of executable with ReadMe.MkDir from GitHub
@@ -34,7 +34,7 @@ Friend Module BrowserUtilities
             If progIdObject Is Nothing Then
                 Return False
             End If
-            Dim progIdValue As String = CStr(progIdObject)
+            Dim progIdValue As String = progIdObject.ToString
             If progIdValue Is Nothing Then
                 Return False
             End If
@@ -63,7 +63,7 @@ Friend Module BrowserUtilities
     ''' Find version string in HTML page
     ''' https://github.com/paul1956/CareLink/releases
     ''' Then look for version
-    ''' <a href="/paul1956/CareLink/releases/tag/v3.4.0.3" data-view-component="true" class="Link--primary">CareLink Display 3.4.0.3 x64</a>
+    ''' <a href="/paul1956/CareLink/releases/tag/3.4.0.3" data-view-component="true" class="Link--primary">CareLink Display 3.4.0.3 x64</a>
     ''' </summary>
     ''' <param name="mainForm"></param>
     ''' <param name="reportResults"></param>

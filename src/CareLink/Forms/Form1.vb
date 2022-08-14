@@ -28,7 +28,6 @@ Public Class Form1
     Private _homePageChartRelitivePosition As RectangleF = RectangleF.Empty
     Private _initialized As Boolean = False
     Private _inMouseMove As Boolean = False
-    Private _recentDataSameCount As Integer
     Private _showBaloonTip As Boolean = True
     Private _updating As Boolean = False
 
@@ -116,7 +115,6 @@ Public Class Form1
                     Return False
                 End If
                 RecentData = _client.GetRecentData()
-                Me.LastUpdateTime.Text = Now.ToShortDateTimeString
                 Me.MenuView.Visible = True
                 Me.ServerUpdateTimer.Interval = s_minuteInMilliseconds
                 Me.ServerUpdateTimer.Start()
@@ -481,7 +479,7 @@ Public Class Form1
                             Me.CursorValueLabel.Visible = False
                             Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(s_timeWithMinuteFormat)
                             Me.CursorTimeLabel.Visible = True
-                            Me.CursorMessage1Label.Text = $"{result.Series.Points(result.PointIndex).YValues(0).RoundDouble(3)} {BgUnitsString}"
+                            Me.CursorMessage1Label.Text = $"{result.Series.Points(result.PointIndex).YValues(0).RoundToSingle(3)} {BgUnitsString}"
                             Me.CursorMessage1Label.Visible = True
                         Case NameOf(Me.HomeTabTimeChangeSeries)
                             Me.CursorPictureBox.Image = Nothing
@@ -617,7 +615,7 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         ' Set the background to red for negative values in the Balance column.
         If Me.SGsDataGridView.Columns(e.ColumnIndex).Name.Equals(NameOf(s_sensorState), StringComparison.OrdinalIgnoreCase) Then
-            If CStr(e.Value) <> "NO_ERROR_MESSAGE" Then
+            If e.Value.ToString <> "NO_ERROR_MESSAGE" Then
                 e.CellStyle.BackColor = Color.Yellow
             End If
         End If
@@ -626,9 +624,9 @@ Public Class Form1
             Dim sendorValue As Single = CSng(e.Value)
             If Single.IsNaN(sendorValue) Then
                 e.CellStyle.BackColor = Color.Gray
-            ElseIf sendorValue < 70 / scaleUnitsDivisor Then
+            ElseIf sendorValue < s_limitLow Then
                 e.CellStyle.BackColor = Color.Red
-            ElseIf sendorValue > 180 / scaleUnitsDivisor Then
+            ElseIf sendorValue > s_limitHigh Then
                 e.CellStyle.BackColor = Color.Orange
             End If
         End If
@@ -795,14 +793,16 @@ Public Class Form1
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
         Me.ServerUpdateTimer.Stop()
         RecentData = _client.GetRecentData()
-        If Me.IsRecentDataUpdated Then
-            Me.LastUpdateTime.Text = Now.ToShortDateTimeString
+        If RecentData IsNot Nothing Then
+            Me.LastUpdateTime.Text = "Unknown"
             Me.UpdateAllTabPages()
-        ElseIf RecentData Is Nothing Then
+        Else
             _client = New CareLinkClient(Me.LoginStatus, My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
             _loginDialog.Client = _client
             RecentData = _client.GetRecentData()
-            If RecentData IsNot Nothing Then
+            If RecentData Is Nothing Then
+                Me.LastUpdateTime.Text = "Unknown due to Login failure, try logging in again!"
+            Else
                 Me.LastUpdateTime.Text = Now.ToShortDateTimeString
                 Me.UpdateAllTabPages()
             End If
@@ -1208,41 +1208,6 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
-    Private Function IsRecentDataUpdated() As Boolean
-        If _recentDataSameCount >= 4 Then
-            _recentDataSameCount = 0
-            Return True
-        Else
-            _recentDataSameCount += 1
-            If s_recentDatalast Is Nothing OrElse RecentData Is Nothing Then
-                Return True
-            End If
-
-            Dim v1 As String = Nothing
-            Dim v2 As String = Nothing
-
-            If Not RecentData.TryGetValue(NameOf(ItemIndexs.lastSG), v1) Then
-                Return True
-            End If
-            If Not s_recentDatalast.TryGetValue(NameOf(ItemIndexs.lastSG), v2) Then
-                Return True
-            End If
-            Dim entry1 As Dictionary(Of String, String) = Loads(v1)
-            Dim entry2 As Dictionary(Of String, String) = Loads(v1)
-            If Not entry1.TryGetValue("datetime", v1) Then
-                Return True
-            End If
-            If Not entry2.TryGetValue("datetime", v2) Then
-                Return True
-            End If
-            If v1 <> v2 Then
-                _recentDataSameCount = 0
-                Return True
-            End If
-            Return False
-        End If
-    End Function
-
 #Region "Update Data and Tables"
 
     Private Shared Sub ResetAllVariables()
@@ -1260,7 +1225,7 @@ Public Class Form1
         For Each kvp As KeyValuePair(Of String, String) In innerdic
             Select Case kvp.Key
                 Case "value"
-                    newMarker.Add(kvp.Key, CStr((CDbl(kvp.Value) / scaleUnitsDivisor).RoundDouble(1)))
+                    newMarker.Add(kvp.Key, kvp.scaleValue(2))
                 Case Else
                     newMarker.Add(kvp.Key, kvp.Value)
             End Select
@@ -1410,7 +1375,7 @@ Public Class Form1
                 s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.reservoirRemainingUnits
-                s_reservoirRemainingUnits = row.Value.ParseDouble
+                s_reservoirRemainingUnits = row.Value.ParseSingle(0)
                 s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.medicalDeviceBatteryLevelPercent
@@ -1451,8 +1416,16 @@ Public Class Form1
                 End If
                 s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
 
-            Case ItemIndexs.medicalDeviceSuspended,
-             ItemIndexs.lastSGTrend
+            Case ItemIndexs.medicalDeviceSuspended
+                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+
+            Case ItemIndexs.lastSGTrend
+                Dim arrows As String = Nothing
+                If Trends.TryGetValue(row.Value, arrows) Then
+                    Me.LabelTrendValue.Text = Trends(row.Value)
+                Else
+                    Me.LabelTrendValue.Text = $"{row.Value}"
+                End If
                 s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.systemStatusMessage
@@ -1460,15 +1433,15 @@ Public Class Form1
                 s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.averageSG
-                s_averageSG = row.Value.RoundDouble(1)
+                s_averageSG = row.Value.ParseSingle(1)
                 s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.belowHypoLimit
-                s_belowHypoLimit = CInt(row.Value)
+                s_belowHypoLimit = row.Value.ParseSingle(1)
                 s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.aboveHyperLimit
-                s_aboveHyperLimit = CInt(row.Value)
+                s_aboveHyperLimit = row.Value.ParseSingle(1)
                 s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.timeInRange
@@ -1555,7 +1528,7 @@ Public Class Form1
                             For Each kvp As KeyValuePair(Of String, String) In innerdic
                                 Select Case kvp.Key
                                     Case "lowLimit", "highLimit"
-                                        newLimit.Add(kvp.Key, CStr((CDbl(kvp.Value) / scaleUnitsDivisor).RoundDouble(1)))
+                                        newLimit.Add(kvp.Key, kvp.scaleValue(1))
                                     Case Else
                                         newLimit.Add(kvp.Key, kvp.Value)
                                 End Select
@@ -1661,14 +1634,14 @@ Public Class Form1
         End With
 
         ' Order all markers by time
-        Dim timeOrderedMarkers As New SortedDictionary(Of Double, Double)
+        Dim timeOrderedMarkers As New SortedDictionary(Of Double, Single)
         Dim sgOaDateTime As Double
 
         For Each marker As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             sgOaDateTime = s_markers.SafeGetSgDateTime(marker.Index).RoundTimeDown(RoundTo.Minute).ToOADate
             Select Case marker.Value("type").ToString
                 Case "AUTO_BASAL_DELIVERY"
-                    Dim bolusAmount As Double = marker.Value.GetDoubleValue("bolusAmount")
+                    Dim bolusAmount As Single = marker.Value.GetSingleValue("bolusAmount")
                     If timeOrderedMarkers.ContainsKey(sgOaDateTime) Then
                         timeOrderedMarkers(sgOaDateTime) += bolusAmount
                     Else
@@ -1678,7 +1651,7 @@ Public Class Form1
                 Case "BG_READING"
                 Case "CALIBRATION"
                 Case "INSULIN"
-                    Dim bolusAmount As Double = marker.Value.GetDoubleValue("deliveredFastAmount")
+                    Dim bolusAmount As Single = marker.Value.GetSingleValue("deliveredFastAmount")
                     If timeOrderedMarkers.ContainsKey(sgOaDateTime) Then
                         timeOrderedMarkers(sgOaDateTime) += bolusAmount
                     Else
@@ -1697,7 +1670,7 @@ Public Class Form1
         Dim currentMarker As Integer = 0
 
         For i As Integer = 0 To 287
-            Dim initialBolus As Double = 0
+            Dim initialBolus As Single = 0
             Dim oaTime As Double = (s_bindingSourceSGs(0).datetime + (s_fiveMinuteSpan * i)).RoundTimeDown(RoundTo.Minute).ToOADate()
             While currentMarker < timeOrderedMarkers.Count AndAlso timeOrderedMarkers.Keys(currentMarker) <= oaTime
                 initialBolus += timeOrderedMarkers.Values(currentMarker)
@@ -1759,14 +1732,14 @@ Public Class Form1
                         .Points.Last.MarkerStyle = MarkerStyle.Square
 
                     Case "AUTO_BASAL_DELIVERY"
-                        Dim bolusAmount As Double = marker.Value.GetDoubleValue("bolusAmount")
+                        Dim bolusAmount As Single = marker.Value.GetSingleValue("bolusAmount")
                         .Points.AddXY(sgOaDateTime, maxActiveInsulin)
-                        .Points.Last.ToolTip = $"Basal: {bolusAmount.RoundDouble(3).ToString(CurrentUICulture)} U"
+                        .Points.Last.ToolTip = $"Basal: {bolusAmount.RoundSingle(3).ToString(CurrentUICulture)} U"
                         .Points.Last.MarkerSize = 8
                         s_totalBasal += CSng(bolusAmount)
                         s_totalDailyDose += CSng(bolusAmount)
                     Case "MEAL"
-                        s_totalCarbs += marker.Value.GetDoubleValue("amount")
+                        s_totalCarbs += marker.Value.GetSingleValue("amount")
                     Case "AUTO_MODE_STATUS"
                     Case "BG_READING"
                     Case "CALIBRATION"
@@ -1833,6 +1806,9 @@ Public Class Form1
             Stop
         End If
         Me.MenuStartHere.Enabled = False
+        If Me.LastUpdateTime.Text = "Unknown" Then
+            Me.LastUpdateTime.Text = Now.ToShortDateTimeString
+        End If
         ResetAllVariables()
         Me.SummaryDataGridView.DataSource = s_bindingSourceSummary
 
@@ -1979,7 +1955,7 @@ Public Class Form1
             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
             Me.SensorTimeLeftLabel.Text = ""
         ElseIf s_sensorDurationHours >= 24 Then
-            Me.SensorDaysLeftLabel.Text = CStr(Math.Ceiling(s_sensorDurationHours / 24))
+            Me.SensorDaysLeftLabel.Text = Math.Ceiling(s_sensorDurationHours / 24).ToString(CurrentUICulture)
             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
             Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
         Else
@@ -2028,7 +2004,7 @@ Public Class Form1
         Me.AboveHighLimitValueLabel.Text = $"{s_aboveHyperLimit} %"
         Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
         Me.AverageSGMessageLabel.Text = $"Average SG in {BgUnitsString}"
-        Me.AverageSGValueLabel.Text = If(BgUnitsString = "mg/dl", s_averageSG.ToString, s_averageSG.RoundDouble(1).ToString())
+        Me.AverageSGValueLabel.Text = If(BgUnitsString = "mg/dl", s_averageSG.ToString, s_averageSG.RoundSingle(1).ToString())
 
     End Sub
 
@@ -2129,7 +2105,7 @@ Public Class Form1
                         .AddXY(markerOaDateTime, MarkerRow)
                         Dim bolusAmount As String = markerWithIndex.Value("bolusAmount")
                         .Last.MarkerBorderColor = Color.Black
-                        .Last.ToolTip = $"Basal:{bolusAmount.RoundDouble(3).ToString(CurrentUICulture)} U"
+                        .Last.ToolTip = $"Basal:{bolusAmount.ParseSingle(3).ToString(CurrentUICulture)} U"
                     Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED"
                     Case "TIME_CHANGE"
                         With Me.HomeTabChart.Series(NameOf(HomeTabTimeChangeSeries)).Points
@@ -2215,7 +2191,7 @@ Public Class Form1
         Dim fontToUse As New Font("Trebuchet MS", 10, FontStyle.Regular, GraphicsUnit.Pixel)
         Dim color As Color = Color.White
         Dim bgColor As Color
-        Dim sg As Double = str.ParseDouble
+        Dim sg As Single = str.ParseSingle
         Dim bitmapText As New Bitmap(16, 16)
         Dim g As Graphics = Graphics.FromImage(bitmapText)
         Dim notStr As New StringBuilder
@@ -2248,7 +2224,7 @@ Public Class Form1
         End If
         Dim hIcon As IntPtr = bitmapText.GetHicon()
         Me.NotifyIcon1.Icon = Icon.FromHandle(hIcon)
-        notStr.Append(Date.Now().ToString)
+        notStr.Append(Date.Now().ToString(CurrentUICulture))
         notStr.Append(Environment.NewLine)
         notStr.Append($"Last SG {str} {BgUnitsString}")
         If Not s_lastBGValue = 0 Then

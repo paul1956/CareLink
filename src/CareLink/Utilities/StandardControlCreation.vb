@@ -77,7 +77,7 @@ Public Module StandardControlCreation
                         sb.AppendLine($"{item.Key} = {item.Value}")
                     Next
                     MsgBox($"Could not find datetime or dateTime in dictionary{Environment.NewLine}{sb}")
-                    timeOfLastSGString = Now.ToString(CurrentDateCulture)
+                    timeOfLastSGString = Now.ToString(CurrentDataCulture)
                 End If
                 valueTextBox.Text = timeOfLastSGString
             End If
@@ -100,6 +100,11 @@ Public Module StandardControlCreation
 
     Friend Sub initializeTableLayoutPanel(realPanel As TableLayoutPanel, rowIndex As ItemIndexs)
         realPanel.RowCount = 1
+        If realPanel.Controls.Count > 1 AndAlso TypeOf realPanel.Controls(1) IsNot DataGridView Then
+            For i As Integer = 1 To realPanel.Controls.Count - 1
+                realPanel.Controls.RemoveAt(1)
+            Next
+        End If
         InitializeColumnLabel(realPanel, rowIndex, True)
     End Sub
 
@@ -110,6 +115,9 @@ Public Module StandardControlCreation
         Else
             If realPanel.Controls.Count > 1 AndAlso TypeOf realPanel.Controls(1) IsNot DataGridView Then
                 realPanel.RowCount = 1
+                For i As Integer = 1 To realPanel.Controls.Count - 1
+                    realPanel.Controls.RemoveAt(1)
+                Next
             End If
         End If
         Return realPanel

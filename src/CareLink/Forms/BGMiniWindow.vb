@@ -8,13 +8,13 @@ Imports System.Media
 Public Class BGMiniWindow
     Private _alarmPlayedHigh As Boolean
     Private _alarmPlayedLow As Boolean
-    Private _currentBGValue As Double = Double.NaN
-    Private _lastBGValue As Double
-    Private _normalizedBG As Double
+    Private _currentBGValue As Single = Double.NaN
+    Private _lastBGValue As Single
+    Private _normalizedBG As Single
 
     Public Sub SetCurrentBGString(Value As String)
         _lastBGValue = _currentBGValue
-        _currentBGValue = Value.ParseDouble()
+        _currentBGValue = Value.ParseSingle(2)
         If Not Double.IsNaN(_currentBGValue) Then
             _normalizedBG = _currentBGValue
             If BgUnitsString <> "mg/dl" Then
