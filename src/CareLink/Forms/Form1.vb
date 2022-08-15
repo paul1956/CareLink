@@ -795,26 +795,30 @@ Public Class Form1
     End Sub
 
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
-        Me.ServerUpdateTimer.Stop()
-        RecentData = _client.GetRecentData()
-        If RecentData IsNot Nothing Then
-            Me.LastUpdateTime.Text = "Unknown"
-        Else
-            _client = New CareLinkClient(Me.LoginStatus, My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
-            _loginDialog.Client = _client
+        If Not _updating Then
+            Me.ServerUpdateTimer.Stop()
             RecentData = _client.GetRecentData()
-            If RecentData Is Nothing Then
-                Me.LastUpdateTime.Text = "Unknown due to Login failure, try logging in again!"
+            If RecentData IsNot Nothing Then
+                Me.LastUpdateTime.Text = "Unknown"
             Else
-                Me.LastUpdateTime.Text = Now.ToShortDateTimeString
+                _client = New CareLinkClient(Me.LoginStatus, My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
+                _loginDialog.Client = _client
+                RecentData = _client.GetRecentData()
+                If RecentData Is Nothing Then
+                    Me.LastUpdateTime.Text = "Unknown due to Login failure, try logging in again!"
+                Else
+                    Me.LastUpdateTime.Text = Now.ToShortDateTimeString
+                End If
             End If
+            Me.UpdateAllTabPages()
+            Me.Cursor = Cursors.Default
+            Application.DoEvents()
+        Else
+            Stop
         End If
-        Me.UpdateAllTabPages()
-        Application.DoEvents()
         Me.ServerUpdateTimer.Interval = s_minuteInMilliseconds
         Me.ServerUpdateTimer.Start()
         Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
-        Me.Cursor = Cursors.Default
     End Sub
 
 #End Region ' Timer
@@ -1016,7 +1020,7 @@ Public Class Form1
 
     Private Shared Sub FillOneRowOfTableLayoutPanel(layoutPanel As TableLayoutPanel, innerJson As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String, isScaledForm As Boolean)
         For i As Integer = 1 To innerJson.Count - 1
-            layoutPanel.RowStyles.Add(New RowStyle(SizeType.AutoSize))
+            layoutPanel.RowStyles.Add(New RowStyle(SizeType.AutoSize, 0))
         Next
         For Each jsonEntry As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
             Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, Color.Black)
@@ -1058,8 +1062,8 @@ Public Class Form1
                     Continue For
                 End If
             End If
-            If innerRow.Key = "activeNotifications" Then
-                tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize))
+            If innerRow.Key = "clearedNotifications" Then
+                tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize, 0))
             Else
                 tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22))
             End If
@@ -1070,11 +1074,14 @@ Public Class Form1
 
             If innerRow.Value.StartsWith("[") Then
                 Dim innerJson1 As List(Of Dictionary(Of String, String)) = LoadList(innerRow.Value)
+                If innerRow.Key = "clearedNotifications" Then
+                    innerJson1.Reverse()
+                End If
                 If innerJson1.Count > 0 Then
                     Dim tableLevel2 As TableLayoutPanel = CreateTableLayoutPanel(NameOf(tableLevel2), innerJson1.Count, Color.LightBlue)
 
                     For i As Integer = 0 To innerJson1.Count - 1
-                        tableLevel2.RowStyles.Add(New RowStyle(SizeType.AutoSize))
+                        tableLevel2.RowStyles.Add(New RowStyle(SizeType.AutoSize, 0))
                     Next
                     tableLevel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 80.0))
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson1.WithIndex()
@@ -1123,7 +1130,7 @@ Public Class Form1
             tableLevel1Blue.AutoSize = False
             tableLevel1Blue.RowCount += 1
             tableLevel1Blue.Width = 400
-            tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize))
+            tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize, 0))
         ElseIf itemIndex = ItemIndexs.lastAlarm Then
             Dim parentTableLayoutPanel As TableLayoutPanel = CType(tableLevel1Blue.Parent, TableLayoutPanel)
             parentTableLayoutPanel.AutoSize = False
@@ -1147,7 +1154,7 @@ Public Class Form1
             tableLevel1Blue.Dock = DockStyle.Fill
             Application.DoEvents()
         ElseIf itemIndex = ItemIndexs.notificationHistory Then
-            tableLevel1Blue.RowStyles(1).SizeType = SizeType.AutoSize
+            tableLevel1Blue.RowStyles(1) = New RowStyle(SizeType.AutoSize, 0)
         End If
         Application.DoEvents()
     End Sub
@@ -1596,9 +1603,9 @@ Public Class Form1
                 layoutPanel1.SuspendLayout()
                 InitializeColumnLabel(layoutPanel1, rowIndex, isColumnHeader)
                 If layoutPanel1.RowStyles.Count = 1 Then
-                    layoutPanel1.RowStyles(0).SizeType = SizeType.AutoSize
+                    layoutPanel1.RowStyles(0) = New RowStyle(SizeType.AutoSize, 0)
                 Else
-                    layoutPanel1.RowStyles(1).SizeType = SizeType.AutoSize
+                    layoutPanel1.RowStyles(1) = New RowStyle(SizeType.AutoSize, 0)
                 End If
                 Dim innerJsonDictionary As Dictionary(Of String, String) = Loads(row.Value)
                 Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, Color.Aqua)

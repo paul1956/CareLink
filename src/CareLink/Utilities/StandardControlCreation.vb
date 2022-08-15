@@ -98,27 +98,29 @@ Public Module StandardControlCreation
         Application.DoEvents()
     End Sub
 
-    Friend Sub initializeTableLayoutPanel(realPanel As TableLayoutPanel, rowIndex As ItemIndexs)
+    Friend Sub initializeTableLayoutPanel(realPanel As TableLayoutPanel, rowIndex As ItemIndexs, Optional initializeColumnHeader As Boolean = True)
         realPanel.RowCount = 1
         If realPanel.Controls.Count > 1 AndAlso TypeOf realPanel.Controls(1) IsNot DataGridView Then
             For i As Integer = 1 To realPanel.Controls.Count - 1
                 realPanel.Controls.RemoveAt(1)
             Next
+            For i As Integer = 1 To realPanel.RowStyles.Count - 1
+                realPanel.RowStyles.RemoveAt(1)
+            Next
+
         End If
-        InitializeColumnLabel(realPanel, rowIndex, True)
+        If initializeColumnHeader Then
+            InitializeColumnLabel(realPanel, rowIndex, True)
+        End If
     End Sub
 
     Friend Function InitializeWorkingPanel(realPanel As TableLayoutPanel, Optional HeaderOnTop? As Boolean = Nothing) As TableLayoutPanel
         If Not HeaderOnTop Then
             realPanel.Controls.Clear()
-            realPanel.RowStyles(0).SizeType = SizeType.AutoSize
+            realPanel.RowStyles.Clear()
+            realPanel.RowStyles.Add(New RowStyle(SizeType.AutoSize, 0))
         Else
-            If realPanel.Controls.Count > 1 AndAlso TypeOf realPanel.Controls(1) IsNot DataGridView Then
-                realPanel.RowCount = 1
-                For i As Integer = 1 To realPanel.Controls.Count - 1
-                    realPanel.Controls.RemoveAt(1)
-                Next
-            End If
+            initializeTableLayoutPanel(realPanel, 0, False)
         End If
         Return realPanel
     End Function
