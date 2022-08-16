@@ -22,7 +22,7 @@ Friend Module BrowserUtilities
         If gitHubVersions Is Nothing OrElse String.IsNullOrWhiteSpace(gitHubVersions) Then
             Return False
         End If
-        Return Version.Parse(gitHubVersions) > Version.Parse(appVersion.ToString)
+        Return System.Version.Parse(gitHubVersions) > System.Version.Parse(appVersion.ToString)
     End Function
 
     Private Function LaunchBrowser(url As String) As Boolean

@@ -27,10 +27,11 @@ Public Class Form1
     Private _client As CareLinkClient
     Private _homePageAbsoluteRectangle As RectangleF
     Private _homePageChartRelitivePosition As RectangleF = RectangleF.Empty
-    Private _initialized As Boolean = False
     Private _inMouseMove As Boolean = False
+
     Private _showBaloonTip As Boolean = True
-    Private _updating As Boolean ' prevent paint on changing data
+
+    Private _updating As Boolean
 
     Private Enum FileToLoadOptions As Integer
         LastSaved = 0
@@ -38,6 +39,16 @@ Public Class Form1
         Login = 2
     End Enum
 
+    Private Property Initialized As Boolean
+        Get
+            Return _initialized
+        End Get
+        Set
+            _initialized = Value
+        End Set
+    End Property
+
+    ' prevent paint on changing data
     Private Property FormScale As New SizeF(1.0F, 1.0F)
 
 #Region "Chart Objects"
@@ -81,6 +92,7 @@ Public Class Form1
 #Region "Titles"
 
     Private WithEvents ActiveInsulinChartTitle As Title
+    Private _initialized As Boolean = False
 
 #End Region
 
@@ -123,11 +135,8 @@ Public Class Form1
                 Me.ServerUpdateTimer.Start()
                 Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
                 Me.LoginStatus.Text = "OK"
-                _initialized = False
         End Select
-        If Not _initialized Then
-            Me.FinishInitialization()
-        End If
+        Me.FinishInitialization()
         If UpdateAllTabs Then
             Me.UpdateAllTabPages()
         End If
@@ -135,9 +144,6 @@ Public Class Form1
     End Function
 
     Private Sub FinishInitialization()
-        If _initialized Then
-            Exit Sub
-        End If
         _homePageChartRelitivePosition = RectangleF.Empty
         Me.Cursor = Cursors.Default
         Application.DoEvents()
@@ -146,7 +152,7 @@ Public Class Form1
         Me.InitializeActiveInsulinTabChart()
         Me.InitializeTimeInRangeArea()
 
-        _initialized = True
+        Me.Initialized = True
     End Sub
 
     Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
@@ -165,9 +171,21 @@ Public Class Form1
         End If
 
         s_timeZoneList = TimeZoneInfo.GetSystemTimeZones.ToList
-        Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact(My.Settings.AIT.ToString("hh\:mm").Substring(1))
+        Me.AITComboBox.DataSource = New BindingSource(New Dictionary(Of String, String) From {
+                {"AIT 2:00", "2:00"}, {"AIT 2:15", "2:15"},
+                {"AIT 2:30", "2:30"}, {"AIT 2:45", "2:45"},
+                {"AIT 3:00", "3:00"}, {"AIT 3:15", "3:15"},
+                {"AIT 3:30", "3:30"}, {"AIT 3:45", "3:45"},
+                {"AIT 4:00", "4:00"}, {"AIT 4:15", "4:15"},
+                {"AIT 4:30", "4:30"}, {"AIT 4:45", "4:45"},
+                {"AIT 5:00", "5:00"}, {"AIT 5:15", "5:15"},
+                {"AIT 5:30", "5:30"}, {"AIT 5:45", "5:45"},
+                {"AIT 6:00", "6:00"}
+            }, Nothing)
+        Me.AITComboBox.DisplayMember = "Key"
+        Me.AITComboBox.ValueMember = "Value"
+        Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact($"AIT {My.Settings.AIT.ToString("hh\:mm").Substring(1)}")
         Me.MenuOptionsUseAdvancedAITDecay.CheckState = If(My.Settings.UseAdvancedAITDecay, CheckState.Checked, CheckState.Unchecked)
-
     End Sub
 
     Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
@@ -188,7 +206,6 @@ Public Class Form1
         Me.SummaryDataGridView.DataSource = s_bindingSourceSummary
         Me.SummaryDataGridView.RowHeadersVisible = False
         If Me.DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
-            Me.FinishInitialization()
             Me.UpdateAllTabPages()
         End If
     End Sub
@@ -234,7 +251,6 @@ Public Class Form1
                         Me.MenuView.Visible = Debugger.IsAttached
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                         Me.LastUpdateTime.Text = $"{File.GetLastWriteTime(fileNameWithPath).ToShortDateTimeString} from file"
-                        _initialized = False
                         Me.FinishInitialization()
                         Me.UpdateAllTabPages()
                     End If
@@ -280,7 +296,6 @@ Public Class Form1
                     Me.MenuView.Visible = Debugger.IsAttached
                     Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
                     Me.LastUpdateTime.Text = File.GetLastWriteTime(openFileDialog1.FileName).ToShortDateTimeString
-                    _initialized = False
                     Me.FinishInitialization()
                     Me.UpdateAllTabPages()
                 End If
@@ -376,11 +391,16 @@ Public Class Form1
 #Region "HomePage Tab Events"
 
     Private Sub AITComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AITComboBox.SelectedIndexChanged
-        Dim aitTimeSpan As TimeSpan = TimeSpan.Parse(Me.AITComboBox.SelectedItem.ToString())
-        My.Settings.AIT = aitTimeSpan
-        My.Settings.Save()
-        s_activeInsulinIncrements = CInt(TimeSpan.Parse(aitTimeSpan.ToString("hh\:mm").Substring(1)) / s_fiveMinuteSpan)
-        Me.UpdateActiveInsulinChart()
+        If Me.AITComboBox.SelectedIndex < 1 Then
+            Exit Sub
+        End If
+        Dim aitTimeSpan As TimeSpan = TimeSpan.Parse(Me.AITComboBox.SelectedValue.ToString)
+        If My.Settings.AIT <> aitTimeSpan Then
+            My.Settings.AIT = aitTimeSpan
+            My.Settings.Save()
+            s_activeInsulinIncrements = CInt(TimeSpan.Parse(aitTimeSpan.ToString("hh\:mm").Substring(1)) / s_fiveMinuteSpan)
+            Me.UpdateActiveInsulinChart()
+        End If
     End Sub
 
     Private Sub CalibrationDueImage_MouseHover(sender As Object, e As EventArgs) Handles CalibrationDueImage.MouseHover
@@ -396,7 +416,7 @@ Public Class Form1
 #Region "Home Page Chart Events"
 
     Private Sub HomePageChart_CursorPositionChanging(sender As Object, e As CursorEventArgs) Handles HomeTabChart.CursorPositionChanging
-        If Not _initialized Then Exit Sub
+        If Not Me.Initialized Then Exit Sub
 
         Me.CursorTimer.Interval = s_thirtySecondInMilliseconds
         Me.CursorTimer.Start()
@@ -404,7 +424,7 @@ Public Class Form1
 
     Private Sub HomePageChart_MouseMove(sender As Object, e As MouseEventArgs) Handles HomeTabChart.MouseMove
 
-        If Not _initialized Then
+        If Not Me.Initialized Then
             Exit Sub
         End If
         _inMouseMove = True
@@ -510,7 +530,7 @@ Public Class Form1
     Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomeTabChart.PostPaint
         SyncLock _updatingLock
 
-            If Not _initialized OrElse _updating OrElse _inMouseMove Then
+            If Not Me.Initialized OrElse _updating OrElse _inMouseMove Then
                 Exit Sub
             End If
             If _homePageChartRelitivePosition.IsEmpty Then
@@ -1620,14 +1640,13 @@ Public Class Form1
                 Throw
             End Try
         Next
-        _initialized = True
         Me.Cursor = Cursors.Default
     End Sub
 
 #End Region
 
     Private Sub UpdateActiveInsulinChart()
-        If Not _initialized Then
+        If Not Me.Initialized Then
             Exit Sub
         End If
 
@@ -1772,7 +1791,6 @@ Public Class Form1
                 sgListIndex.Value.sg,
                 Color.Black)
         Next
-        _initialized = True
         Application.DoEvents()
     End Sub
 
@@ -1840,7 +1858,6 @@ Public Class Form1
             Me.UpdateZHomeTabSerieses()
             Me.UpdateDosingAndCarbs()
             s_recentDatalast = RecentData
-            _initialized = True
             Me.MenuStartHere.Enabled = True
             _updating = False
         End SyncLock
@@ -2179,7 +2196,7 @@ Public Class Form1
     End Sub
 
     ' Save the current scale value
-    ' ScaleControl() is called during the Form's constructor
+    ' ScaleControl() is called during the Form'AiTimeInterval constructor
     Protected Overrides Sub ScaleControl(factor As SizeF, specified As BoundsSpecified)
         Me.FormScale = New SizeF(Me.FormScale.Width * factor.Width, Me.FormScale.Height * factor.Height)
         MyBase.ScaleControl(factor, specified)

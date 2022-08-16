@@ -71,7 +71,7 @@
           }
         }
       },
-      "Octokit/1.0.1": {
+      "Octokit/2.0.1": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/Octokit.dll": {
@@ -180,6 +180,25 @@
             "rid": "win"
           }
         }
+      },
+      "ToolStripComboBoxEx/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0-windows10.0.17763/ToolStripComboBoxEx.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0-windows10.0.17763/ToolStripComboBoxEx.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App.WindowsForms"
+        ],
+        "contentFiles": {
+          "contentFiles/any/net6.0-windows10.0.17763/ComboBox.ico": {
+            "buildAction": "Content",
+            "codeLanguage": "any",
+            "copyToOutput": false
+          }
+        }
       }
     }
   },
@@ -269,18 +288,16 @@
         "version.txt"
       ]
     },
-    "Octokit/1.0.1": {
-      "sha512": "PMrnFN80ia5CfmZAqENmxFPkVKxg9aKm+KvzWwXk+eUoCLmkNReiHj841hAs01mQDdjI18UQ+75412xeTjUQvw==",
+    "Octokit/2.0.1": {
+      "sha512": "JVlfUY+sfItl6RSyVKDJTutuy28cDydUwKKfzcelwNMor2Sa18pYVKna6phO8lug1b+ep+pcuFh/FPayuImsQw==",
       "type": "package",
-      "path": "octokit/1.0.1",
+      "path": "octokit/2.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "lib/net46/Octokit.dll",
-        "lib/net46/Octokit.xml",
         "lib/netstandard2.0/Octokit.dll",
         "lib/netstandard2.0/Octokit.xml",
-        "octokit.1.0.1.nupkg.sha512",
+        "octokit.2.0.1.nupkg.sha512",
         "octokit.nuspec",
         "octokit.png"
       ]
@@ -570,13 +587,28 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
+    },
+    "ToolStripComboBoxEx/1.0.0": {
+      "sha512": "4yBAhlzTuNc4M7y25XPzREg06h1eCmPBRvnOwfHJQVpqsduUGCapjr4vO3Qm/YQnIQP5oq2EyElZ2HOUneopZA==",
+      "type": "package",
+      "path": "toolstripcomboboxex/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        "ComboBox.png",
+        "content/ComboBox.ico",
+        "contentFiles/any/net6.0-windows10.0.17763/ComboBox.ico",
+        "lib/net6.0-windows10.0.17763/ToolStripComboBoxEx.dll",
+        "toolstripcomboboxex.1.0.0.nupkg.sha512",
+        "toolstripcomboboxex.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
     "net6.0-windows10.0.17763": [
       "Maikebing.System.Windows.Forms.DataVisualization >= 5.0.1",
       "Microsoft.Exchange.WebServices.NETStandard >= 1.1.3",
-      "Octokit >= 1.0.1"
+      "Octokit >= 2.0.1",
+      "ToolStripComboBoxEx >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -604,6 +636,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\bin\\Debug": {},
         "https://api.nuget.org/v3/index.json": {},
         "https://dotnet.myget.org/F/roslyn-analyzers/api/v3/index.json": {},
         "https://dotnet.myget.org/F/roslyn/api/v3/index.json": {},
@@ -631,7 +664,11 @@
           },
           "Octokit": {
             "target": "Package",
-            "version": "[1.0.1, )"
+            "version": "[2.0.1, )"
+          },
+          "ToolStripComboBoxEx": {
+            "target": "Package",
+            "version": "[1.0.0, )"
           }
         },
         "imports": [

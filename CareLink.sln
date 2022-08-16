@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Screenshot 2021-05-16 050718.png = Screenshot 2021-05-16 050718.png
 	EndProjectSection
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ToolStripComboBoxEx", "src\ToolStripComboBoxEx\ToolStripComboBoxEx.vbproj", "{B904933D-D1F2-485D-A16E-8D98D812F379}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,12 +26,13 @@ Global
 		{3DF0DB17-7515-4C29-916E-C6EF66A82672}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DF0DB17-7515-4C29-916E-C6EF66A82672}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DF0DB17-7515-4C29-916E-C6EF66A82672}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B904933D-D1F2-485D-A16E-8D98D812F379}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B904933D-D1F2-485D-A16E-8D98D812F379}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B904933D-D1F2-485D-A16E-8D98D812F379}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B904933D-D1F2-485D-A16E-8D98D812F379}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{38328AF4-DB8C-4702-86B2-817F19C86D9B} = {C157782E-77AD-4CB6-8450-BC2908317F1F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {13BF20DF-74A1-41DF-8198-566771A9AF00}

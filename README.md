@@ -30,15 +30,13 @@ https://github.com/paul1956/CareLink/releases/
   Update data more frequently
   Improve display for 780G when no data is available
 
+  New in 3.5.1.7
+  Move AIT to Main Menu
+  Update Check for New Versions to ignore Beta versions
+
   New in 3.5.1.6
   Pump message Clean up
   Lock tables while updating to prevent crash
-
-  New in 3.5.1.3
-  Another memory leak fix
-
-  New in 3.5.1.2
-  Memory Leak Fix
 
   New in 3.5.1.1
   Fix SG display highlighting for mmol/L
@@ -49,11 +47,9 @@ https://github.com/paul1956/CareLink/releases/
   Make code more resilient to data errors
 
   New in 3.5.0.6
-  Minor clean up
   Fix up AverageSG display
 
   New in 3.5.0.4
-  Improve date handling
   Add current update time to UI
 
   New in 3.5.0.3

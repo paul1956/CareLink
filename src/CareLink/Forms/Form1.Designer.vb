@@ -56,6 +56,7 @@ Partial Class Form1
         Me.MenuHelpReportAnIssue = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelpCheckForUpdates = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelpAbout = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AITComboBox = New ToolStripComboBoxEx()
         Me.ServerUpdateTimer = New System.Windows.Forms.Timer(Me.components)
         Me.TableLayoutPanelTop1 = New System.Windows.Forms.TableLayoutPanel()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
@@ -64,6 +65,8 @@ Partial Class Form1
         Me.TabControlHomePage = New System.Windows.Forms.TabControl()
         Me.TabPage01HomePage = New System.Windows.Forms.TabPage()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
+        Me.LabelTrendValue = New System.Windows.Forms.Label()
+        Me.LabelSgTrend = New System.Windows.Forms.Label()
         Me.ShieldUnitsLabel = New System.Windows.Forms.Label()
         Me.SensorMessage = New System.Windows.Forms.Label()
         Me.CurrentBG = New System.Windows.Forms.Label()
@@ -88,7 +91,6 @@ Partial Class Form1
         Me.SensorTimeLeftPictureBox = New System.Windows.Forms.PictureBox()
         Me.PumpBatteryPictureBox = New System.Windows.Forms.PictureBox()
         Me.AITLabel = New System.Windows.Forms.Label()
-        Me.AITComboBox = New System.Windows.Forms.ComboBox()
         Me.CursorMessage2Label = New System.Windows.Forms.Label()
         Me.CursorValueLabel = New System.Windows.Forms.Label()
         Me.CursorPictureBox = New System.Windows.Forms.PictureBox()
@@ -175,8 +177,6 @@ Partial Class Form1
         Me.LastUpdateTime = New System.Windows.Forms.Label()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.BindingSource1 = New System.Windows.Forms.BindingSource(Me.components)
-        Me.LabelSgTrend = New System.Windows.Forms.Label()
-        Me.LabelTrendValue = New System.Windows.Forms.Label()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -245,10 +245,10 @@ Partial Class Form1
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStartHere, Me.MenuOptions, Me.MenuView, Me.MenuHelp})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStartHere, Me.MenuOptions, Me.MenuView, Me.MenuHelp, Me.AITComboBox})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(1384, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(1384, 30)
         Me.MenuStrip1.TabIndex = 0
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -256,7 +256,7 @@ Partial Class Form1
         '
         Me.MenuStartHere.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStartHereLogin, Me.ToolStripSeparator1, Me.MenuStartHereLoadSavedDataFile, Me.MenuStartHereExceptionReportLoad, Me.ToolStripSeparator4, Me.MenuStartHereUseLastSavedFile, Me.MenuStartHereUseTestData, Me.ToolStripSeparator2, Me.MenuStartHereSnapshotSave, Me.ToolStripSeparator3, Me.StartHereExit})
         Me.MenuStartHere.Name = "MenuStartHere"
-        Me.MenuStartHere.Size = New System.Drawing.Size(71, 20)
+        Me.MenuStartHere.Size = New System.Drawing.Size(71, 26)
         Me.MenuStartHere.Text = "Start Here"
         '
         'MenuStartHereLogin
@@ -328,7 +328,7 @@ Partial Class Form1
         '
         Me.MenuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsSetupEmailServer, Me.MenuOptionsUseAdvancedAITDecay, Me.MenuOptionsUseLocalTimeZone})
         Me.MenuOptions.Name = "MenuOptions"
-        Me.MenuOptions.Size = New System.Drawing.Size(61, 20)
+        Me.MenuOptions.Size = New System.Drawing.Size(61, 26)
         Me.MenuOptions.Text = "Options"
         '
         'MenuOptionsFilterRawJSONData
@@ -368,7 +368,7 @@ Partial Class Form1
         '
         Me.MenuView.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuViewShowMiniDisplay})
         Me.MenuView.Name = "MenuView"
-        Me.MenuView.Size = New System.Drawing.Size(44, 20)
+        Me.MenuView.Size = New System.Drawing.Size(44, 26)
         Me.MenuView.Text = "View"
         Me.MenuView.Visible = False
         '
@@ -385,7 +385,7 @@ Partial Class Form1
         Me.MenuHelp.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuHelpReportAnIssue, Me.MenuHelpCheckForUpdates, Me.MenuHelpAbout})
         Me.MenuHelp.Name = "MenuHelp"
         Me.MenuHelp.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.H), System.Windows.Forms.Keys)
-        Me.MenuHelp.Size = New System.Drawing.Size(44, 20)
+        Me.MenuHelp.Size = New System.Drawing.Size(44, 26)
         Me.MenuHelp.Text = "&Help"
         '
         'MenuHelpReportAnIssue
@@ -408,6 +408,20 @@ Partial Class Form1
         Me.MenuHelpAbout.Name = "MenuHelpAbout"
         Me.MenuHelpAbout.Size = New System.Drawing.Size(177, 22)
         Me.MenuHelpAbout.Text = "&About..."
+        '
+        'AITComboBox
+        '
+        Me.AITComboBox.BackColor = System.Drawing.Color.Black
+        Me.AITComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.AITComboBox.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.AITComboBox.ForeColor = System.Drawing.Color.White
+        Me.AITComboBox.FormattingEnabled = True
+        Me.AITComboBox.Location = New System.Drawing.Point(226, 3)
+        Me.AITComboBox.Name = "AITComboBox"
+        Me.AITComboBox.SelectedIndex = -1
+        Me.AITComboBox.SelectedItem = Nothing
+        Me.AITComboBox.Size = New System.Drawing.Size(78, 23)
+        Me.AITComboBox.TabIndex = 0
         '
         'ServerUpdateTimer
         '
@@ -549,7 +563,6 @@ Partial Class Form1
         Me.SplitContainer2.Panel1.Controls.Add(Me.SensorTimeLeftPictureBox)
         Me.SplitContainer2.Panel1.Controls.Add(Me.PumpBatteryPictureBox)
         Me.SplitContainer2.Panel1.Controls.Add(Me.AITLabel)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.AITComboBox)
         Me.SplitContainer2.Panel1.Controls.Add(Me.CursorMessage2Label)
         Me.SplitContainer2.Panel1.Controls.Add(Me.CursorValueLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.CursorPictureBox)
@@ -567,6 +580,28 @@ Partial Class Form1
         Me.SplitContainer2.Size = New System.Drawing.Size(1370, 628)
         Me.SplitContainer2.SplitterDistance = 135
         Me.SplitContainer2.TabIndex = 52
+        '
+        'LabelTrendValue
+        '
+        Me.LabelTrendValue.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.LabelTrendValue.ForeColor = System.Drawing.Color.White
+        Me.LabelTrendValue.Location = New System.Drawing.Point(1256, 108)
+        Me.LabelTrendValue.Name = "LabelTrendValue"
+        Me.LabelTrendValue.Size = New System.Drawing.Size(84, 23)
+        Me.LabelTrendValue.TabIndex = 62
+        Me.LabelTrendValue.Text = "↑↔↓"
+        Me.LabelTrendValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'LabelSgTrend
+        '
+        Me.LabelSgTrend.BackColor = System.Drawing.Color.Black
+        Me.LabelSgTrend.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.LabelSgTrend.ForeColor = System.Drawing.Color.White
+        Me.LabelSgTrend.Location = New System.Drawing.Point(1256, 86)
+        Me.LabelSgTrend.Name = "LabelSgTrend"
+        Me.LabelSgTrend.Size = New System.Drawing.Size(84, 23)
+        Me.LabelSgTrend.TabIndex = 61
+        Me.LabelSgTrend.Text = "SG Trend"
         '
         'ShieldUnitsLabel
         '
@@ -833,18 +868,6 @@ Partial Class Form1
         Me.AITLabel.TabIndex = 8
         Me.AITLabel.Text = "Active Insulin TIme"
         Me.AITLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter
-        '
-        'AITComboBox
-        '
-        Me.AITComboBox.BackColor = System.Drawing.Color.Black
-        Me.AITComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.AITComboBox.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.AITComboBox.ForeColor = System.Drawing.Color.White
-        Me.AITComboBox.Items.AddRange(New Object() {"2:00", "2:15", "2:30", "2:45", "3:00", "3:15", "3:30", "3:45", "4:00", "4:15", "4:30", "4:45", "5:00", "5:15", "5:30", "5:45", "6:00"})
-        Me.AITComboBox.Location = New System.Drawing.Point(881, 26)
-        Me.AITComboBox.Name = "AITComboBox"
-        Me.AITComboBox.Size = New System.Drawing.Size(78, 23)
-        Me.AITComboBox.TabIndex = 0
         '
         'CursorMessage2Label
         '
@@ -1958,28 +1981,6 @@ Partial Class Form1
         Me.LastUpdateTime.TabIndex = 24
         Me.LastUpdateTime.Text = "Unknown"
         '
-        'LabelSgTrend
-        '
-        Me.LabelSgTrend.BackColor = System.Drawing.Color.Black
-        Me.LabelSgTrend.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.LabelSgTrend.ForeColor = System.Drawing.Color.White
-        Me.LabelSgTrend.Location = New System.Drawing.Point(1256, 86)
-        Me.LabelSgTrend.Name = "LabelSgTrend"
-        Me.LabelSgTrend.Size = New System.Drawing.Size(84, 23)
-        Me.LabelSgTrend.TabIndex = 61
-        Me.LabelSgTrend.Text = "SG Trend"
-        '
-        'LabelTrendValue
-        '
-        Me.LabelTrendValue.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.LabelTrendValue.ForeColor = System.Drawing.Color.White
-        Me.LabelTrendValue.Location = New System.Drawing.Point(1256, 108)
-        Me.LabelTrendValue.Name = "LabelTrendValue"
-        Me.LabelTrendValue.Size = New System.Drawing.Size(84, 23)
-        Me.LabelTrendValue.TabIndex = 62
-        Me.LabelTrendValue.Text = "↑↔↓"
-        Me.LabelTrendValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -2101,7 +2102,7 @@ Partial Class Form1
     Friend WithEvents AboveHighLimitValueLabel As Label
     Friend WithEvents ActiveInsulinLabel As Label
     Friend WithEvents ActiveInsulinValue As Label
-    Friend WithEvents AITComboBox As ComboBox
+    Friend WithEvents AITComboBox As ToolStripComboBoxEx
     Friend WithEvents AITLabel As Label
     Friend WithEvents AverageSGValueLabel As Label
     Friend WithEvents BelowLowLimitValueLabel As Label
