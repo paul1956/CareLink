@@ -13,14 +13,4 @@
     <SourceRoot Include="C:\Users\PaulM\.nuget\packages\" />
     <SourceRoot Include="C:\Program Files\dotnet\sdk\NuGetFallbackFolder\" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <Content Include="$(NuGetPackageRoot)toolstripcomboboxex\1.0.0\contentFiles\any\net6.0-windows10.0.17763\ComboBox.ico" Condition="Exists('$(NuGetPackageRoot)toolstripcomboboxex\1.0.0\contentFiles\any\net6.0-windows10.0.17763\ComboBox.ico')">
-      <NuGetPackageId>ToolStripComboBoxEx</NuGetPackageId>
-      <NuGetPackageVersion>1.0.0</NuGetPackageVersion>
-      <NuGetItemType>Content</NuGetItemType>
-      <Pack>false</Pack>
-      <Private>False</Private>
-      <Link>ComboBox.ico</Link>
-    </Content>
-  </ItemGroup>
 </Project>

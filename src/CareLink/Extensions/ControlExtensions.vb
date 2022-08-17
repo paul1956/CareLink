@@ -18,12 +18,6 @@ Public Module ControlExtensions
     End Function
 
     <Extension>
-    Friend Function HorizontalCenterOn(parentControl As Control, ParamArray childControls() As Control) As Integer
-        Dim totalWidth As Integer = childControls.First.Right - childControls.Last.Left
-        Return parentControl.FindHorizontalMidpoint - (totalWidth \ 2)
-    End Function
-
-    <Extension>
     Friend Sub PaintMarker(e As ChartPaintEventArgs, markerImage As Bitmap, markerDictionary As Dictionary(Of Double, Single), imageYOffset As Integer)
         ' Draw the cloned portion of the Bitmap object.
         Dim halfHeight As Single = CSng(markerImage.Height / 2)
@@ -42,10 +36,5 @@ Public Module ControlExtensions
             e.ChartGraphics.Graphics.DrawImage(markerImage, imagePosition.X, imagePosition.Y + imageYOffset)
         Next
     End Sub
-
-    <Extension>
-    Friend Function PositionBelow(controlAbove As Control) As Integer
-        Return controlAbove.Top + controlAbove.Height + 1
-    End Function
 
 End Module

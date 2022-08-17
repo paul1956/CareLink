@@ -88,7 +88,11 @@ https://github.com/paul1956/CareLink/releases/
 ![image](https://user-images.githubusercontent.com/4416348/182361568-2a3d91c2-94a7-4275-911c-187150f5319d.png)
 
   Complete rewrite of date handling
-  
+  New in 3.5.1.8
+  Many UI improvements
+  More fixes for comma as a decimal separator
+  Reorganize controls for better scaling and display  
+
   New in 3.4.2.7
   Fix from Krikke99 to allow Mini Display to be not topmost
   

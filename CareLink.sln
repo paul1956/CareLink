@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Screenshot 2021-05-16 050718.png = Screenshot 2021-05-16 050718.png
 	EndProjectSection
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ToolStripComboBoxEx", "src\ToolStripComboBoxEx\ToolStripComboBoxEx.vbproj", "{B904933D-D1F2-485D-A16E-8D98D812F379}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "ToolStripComboBoxEx", "src\ToolStripComboBoxEx\ToolStripComboBoxEx.vbproj", "{9817A57E-7375-4F00-9B87-0F1A82ADCAB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,10 +26,10 @@ Global
 		{3DF0DB17-7515-4C29-916E-C6EF66A82672}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DF0DB17-7515-4C29-916E-C6EF66A82672}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DF0DB17-7515-4C29-916E-C6EF66A82672}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B904933D-D1F2-485D-A16E-8D98D812F379}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B904933D-D1F2-485D-A16E-8D98D812F379}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B904933D-D1F2-485D-A16E-8D98D812F379}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B904933D-D1F2-485D-A16E-8D98D812F379}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9817A57E-7375-4F00-9B87-0F1A82ADCAB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9817A57E-7375-4F00-9B87-0F1A82ADCAB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9817A57E-7375-4F00-9B87-0F1A82ADCAB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9817A57E-7375-4F00-9B87-0F1A82ADCAB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

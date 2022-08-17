@@ -77,7 +77,7 @@ Public Class CareLinkClient
     Public Property LastErrorMessage As String
     Public Property LoggedIn As Boolean
 
-    Private Shared Function Parse_qsl(loginSessionResponse As HttpResponseMessage) As Dictionary(Of String, String)
+    Private Shared Function ParseQsl(loginSessionResponse As HttpResponseMessage) As Dictionary(Of String, String)
         Dim result As New Dictionary(Of String, String)
         Dim absoluteUri As String = loginSessionResponse.RequestMessage.RequestUri.AbsoluteUri
         Dim splitAbsoluteUri() As String = absoluteUri.Split("&")
@@ -192,7 +192,7 @@ Public Class CareLinkClient
 
     Public Overridable Function DoLogin(loginSessionResponse As HttpResponseMessage) As HttpResponseMessage
 
-        Dim queryParameters As Dictionary(Of String, String) = Parse_qsl(loginSessionResponse)
+        Dim queryParameters As Dictionary(Of String, String) = ParseQsl(loginSessionResponse)
         Const url As String = "https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login"
         Dim payload As New Dictionary(Of String, String) From {
             {

@@ -30,8 +30,11 @@ Friend Module MathExtensions
 
     <Extension>
     Public Function ParseSingle(valueString As String, Optional decimalDigits As Integer = 10) As Single
+        If valueString.Contains(","c) AndAlso valueString.Contains("."c) Then
+            Stop
+        End If
         Dim returnSingle As Single
-        If Single.TryParse(valueString, NumberStyles.Number, CurrentDataCulture, returnSingle) Then
+        If Single.TryParse(valueString.Replace(",", "."), NumberStyles.Number, CurrentDataCulture, returnSingle) Then
             Return returnSingle.RoundSingle(decimalDigits)
         End If
         If Single.TryParse(valueString, NumberStyles.Number, CurrentUICulture, returnSingle) Then

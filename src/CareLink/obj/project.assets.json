@@ -182,23 +182,17 @@
         }
       },
       "ToolStripComboBoxEx/1.0.0": {
-        "type": "package",
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
         "compile": {
-          "lib/net6.0-windows10.0.17763/ToolStripComboBoxEx.dll": {}
+          "bin/placeholder/ToolStripComboBoxEx.dll": {}
         },
         "runtime": {
-          "lib/net6.0-windows10.0.17763/ToolStripComboBoxEx.dll": {}
+          "bin/placeholder/ToolStripComboBoxEx.dll": {}
         },
         "frameworkReferences": [
           "Microsoft.WindowsDesktop.App.WindowsForms"
-        ],
-        "contentFiles": {
-          "contentFiles/any/net6.0-windows10.0.17763/ComboBox.ico": {
-            "buildAction": "Content",
-            "codeLanguage": "any",
-            "copyToOutput": false
-          }
-        }
+        ]
       }
     }
   },
@@ -589,18 +583,9 @@
       ]
     },
     "ToolStripComboBoxEx/1.0.0": {
-      "sha512": "4yBAhlzTuNc4M7y25XPzREg06h1eCmPBRvnOwfHJQVpqsduUGCapjr4vO3Qm/YQnIQP5oq2EyElZ2HOUneopZA==",
-      "type": "package",
-      "path": "toolstripcomboboxex/1.0.0",
-      "files": [
-        ".nupkg.metadata",
-        "ComboBox.png",
-        "content/ComboBox.ico",
-        "contentFiles/any/net6.0-windows10.0.17763/ComboBox.ico",
-        "lib/net6.0-windows10.0.17763/ToolStripComboBoxEx.dll",
-        "toolstripcomboboxex.1.0.0.nupkg.sha512",
-        "toolstripcomboboxex.nuspec"
-      ]
+      "type": "project",
+      "path": "../ToolStripComboBoxEx/ToolStripComboBoxEx.vbproj",
+      "msbuildProject": "../ToolStripComboBoxEx/ToolStripComboBoxEx.vbproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -646,7 +631,11 @@
       "frameworks": {
         "net6.0-windows10.0.17763": {
           "targetAlias": "net6.0-windows10.0.17763.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\ToolStripComboBoxEx.vbproj": {
+              "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\ToolStripComboBoxEx.vbproj"
+            }
+          }
         }
       }
     },

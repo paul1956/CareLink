@@ -8,8 +8,10 @@ Imports System.IO
 Imports System.Text
 Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
+Imports ToolStripControls
 
 Public Class Form1
+    Private WithEvents AITComboBox As ToolStripComboBoxEx
     Private ReadOnly _bgMiniDisplay As New BGMiniWindow
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
@@ -39,6 +41,9 @@ Public Class Form1
         Login = 2
     End Enum
 
+    ' prevent paint on changing data
+    Private Property FormScale As New SizeF(1.0F, 1.0F)
+
     Private Property Initialized As Boolean
         Get
             Return _initialized
@@ -47,9 +52,6 @@ Public Class Form1
             _initialized = Value
         End Set
     End Property
-
-    ' prevent paint on changing data
-    Private Property FormScale As New SizeF(1.0F, 1.0F)
 
 #Region "Chart Objects"
 
@@ -109,14 +111,12 @@ Public Class Form1
             Case FileToLoadOptions.LastSaved
                 Me.Text = $"{SavedTitle} Using Last Saved Data"
                 CurrentDateCulture = LastDownloadWithPath.ExtractCultureFromFileName(RepoDownloadName)
-                CurrentDataCulture = CurrentDateCulture
                 RecentData = Loads(File.ReadAllText(LastDownloadWithPath))
                 Me.MenuView.Visible = Debugger.IsAttached
                 Me.LastUpdateTime.Text = $"{File.GetLastWriteTime(LastDownloadWithPath).ToShortDateTimeString} from file"
             Case FileToLoadOptions.TestData
                 Me.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
-                CurrentDataCulture = CurrentDateCulture
                 Dim testDataWithPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")
                 RecentData = Loads(File.ReadAllText(testDataWithPath))
                 Me.MenuView.Visible = Debugger.IsAttached
@@ -171,7 +171,9 @@ Public Class Form1
         End If
 
         s_timeZoneList = TimeZoneInfo.GetSystemTimeZones.ToList
-        Me.AITComboBox.DataSource = New BindingSource(New Dictionary(Of String, String) From {
+        Me.AITComboBox = New ToolStripComboBoxEx With {
+            .BackColor = Color.Black,
+            .DataSource = New BindingSource(New Dictionary(Of String, String) From {
                 {"AIT 2:00", "2:00"}, {"AIT 2:15", "2:15"},
                 {"AIT 2:30", "2:30"}, {"AIT 2:45", "2:45"},
                 {"AIT 3:00", "3:00"}, {"AIT 3:15", "3:15"},
@@ -181,9 +183,21 @@ Public Class Form1
                 {"AIT 5:00", "5:00"}, {"AIT 5:15", "5:15"},
                 {"AIT 5:30", "5:30"}, {"AIT 5:45", "5:45"},
                 {"AIT 6:00", "6:00"}
-            }, Nothing)
-        Me.AITComboBox.DisplayMember = "Key"
-        Me.AITComboBox.ValueMember = "Value"
+            }, Nothing),
+            .DropDownStyle = ComboBoxStyle.DropDownList,
+            .Font = New Font("Segoe UI", 9.0!, FontStyle.Bold, GraphicsUnit.Point),
+            .ForeColor = Color.White,
+            .FormattingEnabled = True,
+            .Location = New Point(226, 3),
+            .Name = "AITComboBox",
+            .SelectedIndex = -1,
+            .SelectedItem = Nothing,
+            .Size = New Size(78, 23),
+            .TabIndex = 0,
+            .DisplayMember = "Key",
+            .ValueMember = "Value"
+        }
+        Me.MenuStrip1.Items.Insert(3, Me.AITComboBox)
         Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact($"AIT {My.Settings.AIT.ToString("hh\:mm").Substring(1)}")
         Me.MenuOptionsUseAdvancedAITDecay.CheckState = If(My.Settings.UseAdvancedAITDecay, CheckState.Checked, CheckState.Unchecked)
     End Sub
@@ -191,12 +205,12 @@ Public Class Form1
     Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         Me.Fix(Me)
 
+        Me.CurrentBG.Parent = Me.ShieldPictureBox
         Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
-        Me.ShieldUnitsLabel.BackColor = Color.Transparent
         Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLeftPictureBox
+        Me.SensorMessage.Parent = Me.ShieldPictureBox
         Me.SensorDaysLeftLabel.BackColor = Color.Transparent
-        Me.SensorDaysLeftLabel.Left = (Me.SensorTimeLeftPictureBox.Width \ 2) - (Me.SensorDaysLeftLabel.Width \ 2)
-        Me.SensorDaysLeftLabel.Top = (Me.SensorTimeLeftPictureBox.Height \ 2) - (Me.SensorDaysLeftLabel.Height \ 2)
+        Me.ShieldUnitsLabel.BackColor = Color.Transparent
         If Me.FormScale.Height > 1 Then
             Me.SplitContainer1.SplitterDistance = 0
         End If
@@ -291,7 +305,6 @@ Public Class Form1
                 If File.Exists(openFileDialog1.FileName) Then
                     Me.ServerUpdateTimer.Stop()
                     CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{RepoName}", True)
-                    CurrentDataCulture = CurrentDateCulture
                     RecentData = Loads(File.ReadAllText(openFileDialog1.FileName))
                     Me.MenuView.Visible = Debugger.IsAttached
                     Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
@@ -343,10 +356,12 @@ Public Class Form1
             s_activeInsulinIncrements = CInt(increments * 1.4)
             My.Settings.UseAdvancedAITDecay = True
             Me.AITLabel.Text = "Advanced AIT Decay"
+            Me.AITLabel.ForeColor = Color.Green
         Else
             s_activeInsulinIncrements = CInt(increments)
             My.Settings.UseAdvancedAITDecay = False
             Me.AITLabel.Text = "Active Insulin Time"
+            Me.AITLabel.ForeColor = Color.Yellow
         End If
         My.Settings.Save()
         Me.UpdateActiveInsulinChart()
@@ -439,7 +454,8 @@ Public Class Form1
                 If result.Series IsNot Nothing Then
                     Me.CursorTimeLabel.Left = e.X - (Me.CursorTimeLabel.Width \ 2)
                     Select Case result.Series.Name
-                        Case NameOf(HomeTabHighLimitSeries), NameOf(HomeTabLowLimitSeries)
+                        Case NameOf(HomeTabHighLimitSeries),
+                             NameOf(HomeTabLowLimitSeries)
                             Me.CursorMessage1Label.Visible = False
                             Me.CursorMessage2Label.Visible = False
                             Me.CursorPictureBox.Image = Nothing
@@ -448,34 +464,35 @@ Public Class Form1
                         Case NameOf(HomeTabMarkerSeries)
                             Dim markerToolTip() As String = result.Series.Points(result.PointIndex).ToolTip.Split(":"c)
                             Dim xValue As Date = Date.FromOADate(result.Series.Points(result.PointIndex).XValue)
-                            Me.CursorTimeLabel.Visible = True
                             Me.CursorTimeLabel.Text = xValue.ToString(s_timeWithMinuteFormat)
                             Me.CursorTimeLabel.Tag = xValue
                             markerToolTip(0) = markerToolTip(0).Trim
-                            Me.CursorValueLabel.Visible = True
                             Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
                             Me.CursorPictureBox.Visible = True
+                            Me.CursorTimeLabel.Visible = True
                             Select Case markerToolTip.Length
                                 Case 2
                                     Me.CursorMessage1Label.Text = markerToolTip(0)
+                                    Me.CursorMessage1Label.Visible = True
+                                    Me.CursorMessage2Label.Text = markerToolTip(1).Trim
+                                    Me.CursorMessage2Label.Visible = True
+                                    Me.CursorValueLabel.Visible = False
                                     Select Case markerToolTip(0)
-                                        Case "Auto Correction", "Basal", "Bolus"
+                                        Case "Auto Correction",
+                                             "Basal",
+                                             "Bolus"
                                             Me.CursorPictureBox.Image = My.Resources.InsulinVial
-                                            Me.CursorMessage1Label.Visible = True
                                         Case "Meal"
                                             Me.CursorPictureBox.Image = My.Resources.MealImageLarge
-                                            Me.CursorMessage1Label.Visible = True
                                         Case Else
-                                            Me.CursorPictureBox.Image = Nothing
                                             Me.CursorMessage1Label.Visible = False
-
+                                            Me.CursorMessage2Label.Visible = False
+                                            Me.CursorPictureBox.Image = Nothing
                                     End Select
-                                    Me.CursorMessage2Label.Visible = False
-                                    Me.CursorValueLabel.Top = Me.CursorMessage1Label.PositionBelow
-                                    Me.CursorValueLabel.Text = markerToolTip(1).Trim
                                 Case 3
                                     Select Case markerToolTip(1).Trim
-                                        Case "Calibration accepted", "Calibration not accepted"
+                                        Case "Calibration accepted",
+                                             "Calibration not accepted"
                                             Me.CursorPictureBox.Image = My.Resources.CalibrationDotRed
                                         Case "Not used For calibration"
                                             Me.CursorPictureBox.Image = My.Resources.CalibrationDot
@@ -483,33 +500,30 @@ Public Class Form1
                                             Stop
                                     End Select
                                     Me.CursorMessage1Label.Text = markerToolTip(0)
-                                    Me.CursorMessage1Label.Top = Me.CursorPictureBox.PositionBelow
                                     Me.CursorMessage1Label.Visible = True
                                     Me.CursorMessage2Label.Text = markerToolTip(1).Trim
-                                    Me.CursorMessage2Label.Top = Me.CursorMessage1Label.PositionBelow
                                     Me.CursorMessage2Label.Visible = True
                                     Me.CursorValueLabel.Text = markerToolTip(2).Trim
-                                    Me.CursorValueLabel.Top = Me.CursorMessage2Label.PositionBelow
+                                    Me.CursorValueLabel.Visible = True
                                 Case Else
                                     Stop
                             End Select
                         Case NameOf(HomeTabCurrentBGSeries)
-                            Me.CursorPictureBox.Image = Nothing
-                            Me.CursorMessage1Label.Visible = False
-                            Me.CursorMessage2Label.Visible = False
-                            Me.CursorValueLabel.Visible = False
-                            Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(s_timeWithMinuteFormat)
-                            Me.CursorTimeLabel.Visible = True
                             Me.CursorMessage1Label.Text = $"{result.Series.Points(result.PointIndex).YValues(0).RoundToSingle(3)} {BgUnitsString}"
                             Me.CursorMessage1Label.Visible = True
-                        Case NameOf(Me.HomeTabTimeChangeSeries)
-                            Me.CursorPictureBox.Image = Nothing
-                            Me.CursorMessage1Label.Visible = False
                             Me.CursorMessage2Label.Visible = False
-                            Me.CursorValueLabel.Visible = False
+                            Me.CursorPictureBox.Image = Nothing
                             Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(s_timeWithMinuteFormat)
                             Me.CursorTimeLabel.Visible = True
+                            Me.CursorValueLabel.Visible = False
+                        Case NameOf(Me.HomeTabTimeChangeSeries)
                             Me.CursorMessage1Label.Visible = False
+                            Me.CursorMessage1Label.Visible = False
+                            Me.CursorMessage2Label.Visible = False
+                            Me.CursorPictureBox.Image = Nothing
+                            Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(s_timeWithMinuteFormat)
+                            Me.CursorTimeLabel.Visible = True
+                            Me.CursorValueLabel.Visible = False
                     End Select
                 End If
             Else
@@ -1212,12 +1226,10 @@ Public Class Form1
     Private Shared Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, innerListDictionary As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, isScaledForm As Boolean)
 
         If innerListDictionary.Count = 0 Then
-            If realPanel.Controls.Count = 1 Then
-                Dim rowTextBox As TextBox = CreateBasicTextBox("")
-                rowTextBox.BackColor = Color.LightGray
-                realPanel.Controls.Add(rowTextBox)
-            End If
-            realPanel.Controls(1).Text = ""
+            initializeTableLayoutPanel(realPanel, rowIndex, )
+            Dim rowTextBox As TextBox = CreateBasicTextBox("")
+            rowTextBox.BackColor = Color.LightGray
+            realPanel.Controls.Add(rowTextBox)
             Exit Sub
         Else
             initializeTableLayoutPanel(realPanel, rowIndex)
@@ -1825,7 +1837,7 @@ Public Class Form1
             End If
             Me.ManualBolusLabel.Text = $"Bolus {s_totalManualBolus.RoundSingle(1)} U | {totalPercent}%"
         End If
-        Me.Last24CarbsValueLabel.Text = s_totalCarbs.ToString
+        Me.Last24CarbsValueTextBox.Text = $"Total Carbs{Environment.NewLine}Last 24 Hours{Environment.NewLine}{s_totalCarbs}"
     End Sub
 
 #End Region
@@ -1868,16 +1880,13 @@ Public Class Form1
 
     Private Sub UpdateActiveInsulin()
         Dim activeInsulinStr As String = $"{s_activeInsulin("amount"):N3}"
-        Me.ActiveInsulinValue.Text = $"{activeInsulinStr} U"
+        Me.ActiveInsulinValue.Text = $"Active Insulin{Environment.NewLine}{activeInsulinStr} U"
         _bgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
     End Sub
 
     Private Sub UpdateAutoModeShield()
-        Me.SensorMessage.Location = New Point(Me.ShieldPictureBox.Left + (Me.ShieldPictureBox.Width \ 2) - (Me.SensorMessage.Width \ 2), Me.SensorMessage.Top)
         If s_lastSG("sg") <> "0" Then
             Me.CurrentBG.Visible = True
-            Me.CurrentBG.Location = New Point((Me.ShieldPictureBox.Width \ 2) - (Me.CurrentBG.Width \ 2), Me.ShieldPictureBox.Height \ 4)
-            Me.CurrentBG.Parent = Me.ShieldPictureBox
             Me.CurrentBG.Text = s_lastSG("sg")
             Me.UpdateNotifyIcon()
             _bgMiniDisplay.SetCurrentBGString(s_lastSG("sg"))
@@ -1885,16 +1894,13 @@ Public Class Form1
             Me.ShieldPictureBox.Image = My.Resources.Shield
             Me.ShieldUnitsLabel.Visible = True
             Me.ShieldUnitsLabel.BackColor = Color.Transparent
-            Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
-            Me.ShieldUnitsLabel.Left = (Me.ShieldPictureBox.Width \ 2) - (Me.ShieldUnitsLabel.Width \ 2)
             Me.ShieldUnitsLabel.Text = BgUnitsString
-            Me.ShieldUnitsLabel.Visible = True
         Else
             _bgMiniDisplay.SetCurrentBGString("---")
             Me.CurrentBG.Visible = False
             Me.ShieldPictureBox.Image = My.Resources.Shield_Disabled
+            Me.ShieldUnitsLabel.Text = BgUnitsString
             Me.SensorMessage.Visible = True
-            Me.SensorMessage.Parent = Me.ShieldPictureBox
             Me.SensorMessage.Left = 0
             Me.SensorMessage.BackColor = Color.Transparent
             Dim message As String = ""
