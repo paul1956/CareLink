@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Runtime.CompilerServices
+Imports System.Text
 
 Public Module DataGridViewExtensions
 
@@ -39,11 +40,25 @@ Public Module DataGridViewExtensions
         End If
     End Sub
 
-    Public Sub DgvColumnAdded(ByRef e As DataGridViewColumnEventArgs, cellStyle As DataGridViewCellStyle)
+    Public Sub DgvColumnAdded(ByRef e As DataGridViewColumnEventArgs, cellStyle As DataGridViewCellStyle, wrapHeader As Boolean)
         e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
         e.Column.ReadOnly = True
         e.Column.Resizable = DataGridViewTriState.False
-        e.Column.HeaderText = e.Column.Name.ToTitleCase()
+        Dim title As New StringBuilder
+        Dim titleInTitleCase As String = e.Column.Name.ToTitleCase()
+        If wrapHeader Then
+            Dim titleSplit As String() = titleInTitleCase.Split(" "c)
+            For Each s As String In titleSplit
+                If s.Length < 5 Then
+                    title.Append(s)
+                Else
+                    title.AppendLine(s)
+                End If
+            Next
+        Else
+            title.Append(titleInTitleCase)
+        End If
+        e.Column.HeaderText = title.ToString.TrimEnd(Environment.NewLine)
         e.Column.DefaultCellStyle = cellStyle
         e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
     End Sub

@@ -56,5 +56,11 @@ Public Module StringExtensions
         Next
         Return result.ToString().Replace("time", " Time", False, CurrentUICulture)
     End Function
-
+    <Extension>
+    Public Function TrimEnd(source As String, trimString As String) As String
+        If Not source.EndsWith(trimString) Then
+            Return source
+        End If
+        Return source.Substring(0, source.Length - trimString.Length)
+    End Function
 End Module

@@ -205,10 +205,10 @@ Public Class Form1
     Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         Me.Fix(Me)
 
-        Me.CurrentBG.Parent = Me.ShieldPictureBox
-        Me.ShieldUnitsLabel.Parent = Me.ShieldPictureBox
+        Me.CurrentBG.Parent = Me.CalibrationShieldPictureBox
+        Me.ShieldUnitsLabel.Parent = Me.CalibrationShieldPictureBox
         Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLeftPictureBox
-        Me.SensorMessage.Parent = Me.ShieldPictureBox
+        Me.SensorMessage.Parent = Me.CalibrationShieldPictureBox
         Me.SensorDaysLeftLabel.BackColor = Color.Transparent
         Me.ShieldUnitsLabel.BackColor = Color.Transparent
         If Me.FormScale.Height > 1 Then
@@ -355,13 +355,13 @@ Public Class Form1
         If Me.MenuOptionsUseAdvancedAITDecay.Checked Then
             s_activeInsulinIncrements = CInt(increments * 1.4)
             My.Settings.UseAdvancedAITDecay = True
-            Me.AITLabel.Text = "Advanced AIT Decay"
-            Me.AITLabel.ForeColor = Color.Green
+            Me.AITAlgorithmLabel.Text = "Advanced AIT Decay"
+            Me.AITAlgorithmLabel.ForeColor = Color.Yellow
         Else
             s_activeInsulinIncrements = CInt(increments)
             My.Settings.UseAdvancedAITDecay = False
-            Me.AITLabel.Text = "Active Insulin Time"
-            Me.AITLabel.ForeColor = Color.Yellow
+            Me.AITAlgorithmLabel.Text = "Active Insulin Time"
+            Me.AITAlgorithmLabel.ForeColor = Color.Yellow
         End If
         My.Settings.Save()
         Me.UpdateActiveInsulinChart()
@@ -456,11 +456,7 @@ Public Class Form1
                     Select Case result.Series.Name
                         Case NameOf(HomeTabHighLimitSeries),
                              NameOf(HomeTabLowLimitSeries)
-                            Me.CursorMessage1Label.Visible = False
-                            Me.CursorMessage2Label.Visible = False
-                            Me.CursorPictureBox.Image = Nothing
-                            Me.CursorTimeLabel.Visible = False
-                            Me.CursorValueLabel.Visible = False
+                            Me.CursorPanel.Visible = False
                         Case NameOf(HomeTabMarkerSeries)
                             Dim markerToolTip() As String = result.Series.Points(result.PointIndex).ToolTip.Split(":"c)
                             Dim xValue As Date = Date.FromOADate(result.Series.Points(result.PointIndex).XValue)
@@ -508,6 +504,7 @@ Public Class Form1
                                 Case Else
                                     Stop
                             End Select
+                            Me.CursorPanel.Visible = True
                         Case NameOf(HomeTabCurrentBGSeries)
                             Me.CursorMessage1Label.Text = $"{result.Series.Points(result.PointIndex).YValues(0).RoundToSingle(3)} {BgUnitsString}"
                             Me.CursorMessage1Label.Visible = True
@@ -526,12 +523,9 @@ Public Class Form1
                             Me.CursorValueLabel.Visible = False
                     End Select
                 End If
+                Me.CursorPanel.Visible = True
             Else
-                Me.CursorMessage1Label.Visible = False
-                Me.CursorMessage2Label.Visible = False
-                Me.CursorPictureBox.Image = Nothing
-                Me.CursorTimeLabel.Visible = False
-                Me.CursorValueLabel.Visible = False
+                Me.CursorPanel.Visible = False
             End If
         Catch ex As Exception
             result = Nothing
@@ -588,7 +582,7 @@ Public Class Form1
         End SyncLock
     End Sub
 
-    Private Sub SensorAgeLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles SensorDaysLeftLabel.MouseHover
+    Private Sub SensorAgeLeftLabel_MouseHover(sender As Object, e As EventArgs)
         If s_sensorDurationHours < 24 Then
             _sensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {s_sensorDurationHours} hours")
         End If
@@ -612,7 +606,7 @@ Public Class Form1
             Exit Sub
         End If
         Dim cellStyle As DataGridViewCellStyle = AutoBasalDeliveryRecord.GetCellStyle(e.Column.Name)
-        DgvColumnAdded(e, cellStyle)
+        DgvColumnAdded(e, cellStyle, wrapHeader:=False)
     End Sub
 
 #End Region
@@ -631,7 +625,11 @@ Public Class Form1
             Exit Sub
         End If
         Dim cellStyle As DataGridViewCellStyle = InsulinRecord.GetCellStyle(e.Column.Name)
-        DgvColumnAdded(e, cellStyle)
+        DgvColumnAdded(e, cellStyle, wrapHeader:=True)
+    End Sub
+
+    Private Sub DataGridViewInsulin_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewInsulin.ColumnHeaderCellChanged
+        Stop
     End Sub
 
     Private Sub DataGridViewInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewInsulin.DataError
@@ -678,7 +676,7 @@ Public Class Form1
             Exit Sub
         End If
         Dim cellStyle As DataGridViewCellStyle = SgRecord.GetCellStyle(e.Column.Name)
-        DgvColumnAdded(e, cellStyle)
+        DgvColumnAdded(e, cellStyle, wrapHeader:=False)
     End Sub
 
 #End Region
@@ -810,7 +808,7 @@ Public Class Form1
 
     Private Sub SummaryDataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles SummaryDataGridView.ColumnAdded
         Dim cellStyle As DataGridViewCellStyle = SummaryRecord.GetCellStyle(e.Column.Name)
-        DgvColumnAdded(e, cellStyle)
+        DgvColumnAdded(e, cellStyle, wrapHeader:=False)
     End Sub
 
     Private Sub SummaryDataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles SummaryDataGridView.DataError
@@ -1835,9 +1833,9 @@ Public Class Form1
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.ManualBolusLabel.Text = $"Bolus {s_totalManualBolus.RoundSingle(1)} U | {totalPercent}%"
+            Me.ManualBolusLabel.Text = $"Manual Bolus {s_totalManualBolus.RoundSingle(1)} U | {totalPercent}%"
         End If
-        Me.Last24CarbsValueTextBox.Text = $"Total Carbs{Environment.NewLine}Last 24 Hours{Environment.NewLine}{s_totalCarbs}"
+        Me.Last24CarbsValueLabel.Text = $"Carbs - {s_totalCarbs} Grams"
     End Sub
 
 #End Region
@@ -1855,6 +1853,7 @@ Public Class Form1
             If Not Me.LastUpdateTime.Text.Contains("from file") Then
                 Me.LastUpdateTime.Text = Now.ToShortDateTimeString
             End If
+            Me.CursorPanel.Visible = False
             ResetAllVariables()
             Me.UpdateDataTables(Me.FormScale.Height <> 1 OrElse Me.FormScale.Width <> 1)
             Me.UpdateActiveInsulinChart()
@@ -1891,14 +1890,14 @@ Public Class Form1
             Me.UpdateNotifyIcon()
             _bgMiniDisplay.SetCurrentBGString(s_lastSG("sg"))
             Me.SensorMessage.Visible = False
-            Me.ShieldPictureBox.Image = My.Resources.Shield
+            Me.CalibrationShieldPictureBox.Image = My.Resources.Shield
             Me.ShieldUnitsLabel.Visible = True
             Me.ShieldUnitsLabel.BackColor = Color.Transparent
             Me.ShieldUnitsLabel.Text = BgUnitsString
         Else
             _bgMiniDisplay.SetCurrentBGString("---")
             Me.CurrentBG.Visible = False
-            Me.ShieldPictureBox.Image = My.Resources.Shield_Disabled
+            Me.CalibrationShieldPictureBox.Image = My.Resources.Shield_Disabled
             Me.ShieldUnitsLabel.Text = BgUnitsString
             Me.SensorMessage.Visible = True
             Me.SensorMessage.Left = 0

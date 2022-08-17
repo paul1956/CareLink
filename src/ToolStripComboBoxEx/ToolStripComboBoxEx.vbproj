@@ -26,6 +26,10 @@
     <PackageTags>VB Visual Basic ComboBox ToolStrip</PackageTags>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
   <ItemGroup>
     <Content Include="ComboBox.ico" />
   </ItemGroup>
