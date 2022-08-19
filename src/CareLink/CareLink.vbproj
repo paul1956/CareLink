@@ -36,13 +36,24 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
     <PlatformTarget>x64</PlatformTarget>
+    <DefineConstants>SupportMailServer="False"</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
     <Optimize>True</Optimize>
     <PlatformTarget>x64</PlatformTarget>
+    <DefineConstants>SupportMailServer="False"</DefineConstants>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Forms\MailSetupDialog.Designer.vb" />
+    <Compile Remove="Forms\MailSetupDialog.vb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Forms\MailSetupDialog.resx" />
+  </ItemGroup>
 
   <ItemGroup>
     <Import Include="System.Data" />

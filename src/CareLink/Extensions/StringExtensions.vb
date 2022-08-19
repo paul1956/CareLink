@@ -56,6 +56,21 @@ Public Module StringExtensions
         Next
         Return result.ToString().Replace("time", " Time", False, CurrentUICulture)
     End Function
+
+    ''' <summary>
+    ''' Escape characters not allowed in CSV data
+    ''' </summary>
+    ''' <param name="value"></param>
+    ''' <returns>Translates String</returns>
+    <Extension>
+    Public Function CleanCsvString(value As String) As String
+        Return $"{value?.ToString _
+                                  .Replace("""", """""") _
+                                  .Replace(",", "\,") _
+                                  .Replace(Environment.NewLine, $"\{Environment.NewLine}") _
+                                  .Replace("\", "\\")},"
+    End Function
+
     <Extension>
     Public Function TrimEnd(source As String, trimString As String) As String
         If Not source.EndsWith(trimString) Then
@@ -63,4 +78,5 @@ Public Module StringExtensions
         End If
         Return source.Substring(0, source.Length - trimString.Length)
     End Function
+
 End Module
