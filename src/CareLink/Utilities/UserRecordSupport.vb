@@ -12,26 +12,28 @@ Friend Module UserRecordsSupport
 
     Public Sub LoadAllUserData()
         Dim userRecords As New List(Of UserDataRecord)
-        Using myReader As New FileIO.TextFieldParser(s_settingsCsvFile)
-            myReader.TextFieldType = FileIO.FieldType.Delimited
-            myReader.Delimiters = New String() {","}
-            Dim currentRow As String()
-            'Loop through all of the fields in the file.
-            'If any lines are corrupt, report an error and continue parsing.
-            Dim rowIndex As Integer = 0
-            While Not myReader.EndOfData
-                Try
-                    currentRow = myReader.ReadFields()
-                    ' Include code here to handle the row.
-                    If rowIndex <> 0 Then
-                        s_allUserSettingsData.Add(currentRow(0), New UserDataRecord(currentRow))
-                    End If
-                    rowIndex += 1
-                Catch ex As FileIO.MalformedLineException
-                    MsgBox($"Line {ex.Message} is invalid.  Skipping")
-                End Try
-            End While
-        End Using
+        If File.Exists(s_settingsCsvFile) Then
+            Using myReader As New FileIO.TextFieldParser(s_settingsCsvFile)
+                myReader.TextFieldType = FileIO.FieldType.Delimited
+                myReader.Delimiters = New String() {","}
+                Dim currentRow As String()
+                'Loop through all of the fields in the file.
+                'If any lines are corrupt, report an error and continue parsing.
+                Dim rowIndex As Integer = 0
+                While Not myReader.EndOfData
+                    Try
+                        currentRow = myReader.ReadFields()
+                        ' Include code here to handle the row.
+                        If rowIndex <> 0 Then
+                            s_allUserSettingsData.Add(currentRow(0), New UserDataRecord(currentRow))
+                        End If
+                        rowIndex += 1
+                    Catch ex As FileIO.MalformedLineException
+                        MsgBox($"Line {ex.Message} is invalid.  Skipping")
+                    End Try
+                End While
+            End Using
+        End If
     End Sub
 
     Public Sub SaveAllUserData(Key As String, Value As String)
