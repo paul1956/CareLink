@@ -82,6 +82,8 @@ Partial Class LoginForm1
         'UsernameTextBox
         '
         Me.UsernameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left
+        Me.UsernameTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
+        Me.UsernameTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.RecentlyUsedList
         Me.UsernameTextBox.Location = New System.Drawing.Point(201, 30)
         Me.UsernameTextBox.Name = "UsernameTextBox"
         Me.UsernameTextBox.Size = New System.Drawing.Size(220, 23)

@@ -169,7 +169,9 @@ Public Class Form1
             My.Settings.UpgradeRequired = False
             My.Settings.Save()
         End If
-
+#If SupportMailServer <> "True" Then
+        Me.MenuOptionsSetupEmailServer.Visible = False
+#End If
         s_timeZoneList = TimeZoneInfo.GetSystemTimeZones.ToList
         Me.AITComboBox = New ToolStripComboBoxEx With {
             .BackColor = Color.Black,
@@ -217,8 +219,6 @@ Public Class Form1
         s_useLocalTimeZone = My.Settings.UseLocalTimeZone
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
         CheckForUpdatesAsync(Me, False)
-        Me.SummaryDataGridView.DataSource = s_bindingSourceSummary
-        Me.SummaryDataGridView.RowHeadersVisible = False
         If Me.DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
             Me.UpdateAllTabPages()
         End If
@@ -346,9 +346,11 @@ Public Class Form1
         s_filterJsonData = Me.MenuOptionsFilterRawJSONData.Checked
     End Sub
 
+#If SupportMailServer = "True" Then
     Private Sub MenuOptionsSetupEmailServer_Click(sender As Object, e As EventArgs) Handles MenuOptionsSetupEmailServer.Click
         MailSetupDialog.ShowDialog()
     End Sub
+#End If
 
     Private Sub MenuOptionsUseAdvancedAITDecay_CheckStateChanged(sender As Object, e As EventArgs) Handles MenuOptionsUseAdvancedAITDecay.CheckStateChanged
         Dim increments As Double = TimeSpan.Parse(My.Settings.AIT.ToString("hh\:mm").Substring(1)) / s_fiveMinuteSpan
@@ -1841,6 +1843,8 @@ Public Class Form1
 #End Region
 
     Friend Sub UpdateAllTabPages()
+        Me.SummaryDataGridView.DataSource = s_bindingSourceSummary
+        Me.SummaryDataGridView.RowHeadersVisible = False
         If RecentData Is Nothing Then
             Exit Sub
         End If

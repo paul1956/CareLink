@@ -59,6 +59,7 @@ Friend Module UserMessageHandler
                             {"BC_SID_MOVE_AWAY_FROM_ELECTR_DEVICES", "Possible signal interface(triggeredDateTime). Move away from electronic devices. May take 15 minutes to find signal."},
                             {"BC_SID_MOVE_PUMP_CLOSER_TO_MINILINK", "Lost sensor signal(triggeredDateTime). Move pump closer to transmitter. May take 15 minutes to find signal."},
                             {"BC_SID_REPLACE_BATTERY_SOON", "Battery low(triggeredDateTime). Replace battery soon."},
+                            {"BC_SID_SENSOR_INFO_UNAVAILABLE_FOR_UP_TO_TWO_HOURS", "Sensor info unavailable for up to two hours(triggeredDateTime)."},
                             {"BC_SID_SENSOR_RELATED_ISSUE_INSERT_NEW", "Sensor failure at(triggeredDateTime), Insert new sensor."},
                             {"BC_SID_SG_APPROACH_HIGH_LIMIT_CHECK_BG", "Alert before high(triggeredDateTime). Sensor glucose approaching High Limit. Check BG."},
                             {"BC_SID_SG_APPROACH_LOW_LIMIT_CHECK_BG", "Alert before low(triggeredDateTime). Sensor glucose approaching Low Limit. Check BG."},

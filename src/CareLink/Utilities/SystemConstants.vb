@@ -25,6 +25,7 @@ Public Module SystemConstants
 
     Public Const RepoSnapshotName As String = "CareLinkSnapshot"
 
+    Public Const SavedCsvFileName As String = "CareLink.Csv"
     Public Const SavedTitle As String = "CareLink For Windows"
 
     Public Const StackTraceStartingString As String = "--- Start of stack trace ---"
@@ -36,7 +37,7 @@ Public Module SystemConstants
     Public Const TwelveHourTimeWithoutMinuteFormat As String = "h:mm tt"
 
     Public ReadOnly s_oneToNineteen As New List(Of String) From {
-                "zero", "one", "two", "three", "four", "five",
+                    "zero", "one", "two", "three", "four", "five",
                 "six", "seven", "eight", "nine", "ten", "eleven",
                 "twelve", "thirteen", "fourteen", "fifteen",
                 "sixteen", "seventeen", "eighteen", "nineteen"}
@@ -50,11 +51,11 @@ Public Module SystemConstants
 
     Public ReadOnly Trends As New Dictionary(Of String, String) From {
                 {"DOWN", "↓"},
-                {"DOUBLEDOWN", "↓↓"},
-                {"TRIPLEDOWN", "↓↓↓"},
+                {"DOWN_DOUBLE", "↓↓"},
+                {"DOWN_TRIPLE", "↓↓↓"},
                 {"UP", "↑"},
-                {"DOUBLEUP", "↑↑"},
-                {"TRIPLEUp", "↑↑↑"},
+                {"UP_DOUBLE", "↑↑"},
+                {"UP_TRIPLE", "↑↑↑"},
                 {"NONE", "↔"}
             }
 

@@ -2,9 +2,10 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Globalization
+Imports System.IO
 
 Public Class LoginForm1
+    Private ReadOnly _mySource As New AutoCompleteStringCollection()
     Public Property Client As CareLinkClient
 
     Private Sub Cancel_Click(sender As Object, e As EventArgs) Handles Cancel.Click
@@ -22,6 +23,28 @@ Public Class LoginForm1
     Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles Me.Load
         Me.UsernameTextBox.Text = My.Settings.CareLinkUserName
         Me.PasswordTextBox.Text = My.Settings.CareLinkPassword
+        Dim wasEncrypted As Boolean = True
+        If File.Exists(s_settingsCsvFile) Then
+            Try
+                File.Decrypt(s_settingsCsvFile)
+            Catch ex As Exception
+                wasEncrypted = False
+            End Try
+            _mySource.AddRange(s_allUserSettingsData.Keys.ToArray)
+            If wasEncrypted Then
+                'File.Encrypt(_settingsCsvFile)
+            End If
+        ElseIf Not String.IsNullOrWhiteSpace(My.Settings.CareLinkUserName) Then
+            _mySource.Add(My.Settings.CareLinkUserName)
+        Else
+            _mySource.Clear()
+        End If
+
+        With Me.UsernameTextBox
+            .AutoCompleteCustomSource = _mySource
+            .AutoCompleteMode = AutoCompleteMode.Suggest
+            .AutoCompleteSource = AutoCompleteSource.CustomSource
+        End With
         Me.RegionComboBox.DataSource = New BindingSource(s_regionList, Nothing)
         Me.RegionComboBox.DisplayMember = "Key"
         Me.RegionComboBox.ValueMember = "Value"
@@ -90,6 +113,17 @@ Public Class LoginForm1
             Me.PasswordTextBox.PasswordChar = Nothing
         Else
             Me.PasswordTextBox.PasswordChar = "*"c
+        End If
+    End Sub
+
+    Private Sub UsernameTextBox_Leave(sender As Object, e As EventArgs) Handles UsernameTextBox.Leave
+        Dim userSettings As UserDataRecord = Nothing
+        If Not s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, userSettings) Then
+            My.Settings.CareLinkUserName = Me.UsernameTextBox.Text
+        Else
+            Me.PasswordTextBox.Text = userSettings.CareLinkPassword
+            Me.RegionComboBox.SelectedValue = userSettings.CountryCode.GetRegionFromCode
+            Me.CountryComboBox.Text = userSettings.CountryCode.GetCountryFromCode
         End If
     End Sub
 
