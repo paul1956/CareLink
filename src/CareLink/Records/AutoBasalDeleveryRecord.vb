@@ -48,7 +48,7 @@ Public Class AutoBasalDeliveryRecord
                     Me.id = Integer.Parse(kvp.Value)
 
                 Case NameOf(bolusAmount)
-                    Me.bolusAmount = Single.Parse(kvp.Value)
+                    Me.bolusAmount = kvp.Value.ParseSingle
 
                 Case Else
                     Stop

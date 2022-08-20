@@ -44,22 +44,22 @@ Public Class InsulinRecord
                     Me.relativeOffset = Integer.Parse(kvp.Value)
 
                 Case NameOf(Me.programmedExtendedAmount)
-                    Me.programmedExtendedAmount = Single.Parse(kvp.Value)
+                    Me.programmedExtendedAmount = kvp.Value.ParseSingle
 
                 Case NameOf(Me.activationType)
                     Me.activationType = kvp.Value
 
                 Case NameOf(Me.deliveredExtendedAmount)
-                    Me.deliveredExtendedAmount = Single.Parse(kvp.Value)
+                    Me.deliveredExtendedAmount = kvp.Value.ParseSingle
 
                 Case NameOf(Me.programmedFastAmount)
-                    Me.programmedFastAmount = Single.Parse(kvp.Value)
+                    Me.programmedFastAmount = kvp.Value.ParseSingle
 
                 Case NameOf(Me.programmedDuration)
                     Me.programmedDuration = Integer.Parse(kvp.Value)
 
                 Case NameOf(Me.deliveredFastAmount)
-                    Me.deliveredFastAmount = Single.Parse(kvp.Value)
+                    Me.deliveredFastAmount = kvp.Value.ParseSingle
 
                 Case NameOf(Me.id)
                     Me.id = Integer.Parse(kvp.Value)
