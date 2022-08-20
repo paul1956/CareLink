@@ -46,11 +46,11 @@ Partial Class Form1
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.StartHereExit = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptions = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuOptionsAutoLogin = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsFilterRawJSONData = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsSetupEmailServer = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsUseAdvancedAITDecay = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsUseLocalTimeZone = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MenuOptionsAutoLogin = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuView = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuViewShowMiniDisplay = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelp = New System.Windows.Forms.ToolStripMenuItem()
@@ -336,6 +336,13 @@ Partial Class Form1
         Me.MenuOptions.Size = New System.Drawing.Size(61, 20)
         Me.MenuOptions.Text = "Options"
         '
+        'MenuOptionsAutoLogin
+        '
+        Me.MenuOptionsAutoLogin.CheckOnClick = True
+        Me.MenuOptionsAutoLogin.Name = "MenuOptionsAutoLogin"
+        Me.MenuOptionsAutoLogin.Size = New System.Drawing.Size(204, 22)
+        Me.MenuOptionsAutoLogin.Text = "Auto Login"
+        '
         'MenuOptionsFilterRawJSONData
         '
         Me.MenuOptionsFilterRawJSONData.Checked = True
@@ -369,13 +376,6 @@ Partial Class Form1
         Me.MenuOptionsUseLocalTimeZone.Name = "MenuOptionsUseLocalTimeZone"
         Me.MenuOptionsUseLocalTimeZone.Size = New System.Drawing.Size(204, 22)
         Me.MenuOptionsUseLocalTimeZone.Text = "Use Local TImeZone"
-        '
-        'MenuOptionsAutoLogin
-        '
-        Me.MenuOptionsAutoLogin.CheckOnClick = True
-        Me.MenuOptionsAutoLogin.Name = "MenuOptionsAutoLogin"
-        Me.MenuOptionsAutoLogin.Size = New System.Drawing.Size(204, 22)
-        Me.MenuOptionsAutoLogin.Text = "Auto Login"
         '
         'MenuView
         '
