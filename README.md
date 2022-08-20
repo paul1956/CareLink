@@ -30,6 +30,7 @@ https://github.com/paul1956/CareLink/releases/
   Update data more frequently
   Improve display for 780G when no data is available
 
+    Example: CareLink UserName=name
    New in 3.5.1.8
    Add support for multiple users and multiple profiles
    When user changes all properties are copied
