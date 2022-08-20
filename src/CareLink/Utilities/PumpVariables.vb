@@ -34,6 +34,7 @@ Public Module PumpVariables
     Friend s_conduitSensorInRange As Boolean
     Friend s_criticalLow As Single
     Friend s_filterJsonData As Boolean = True
+    Friend s_firstName As String = ""
     Friend s_gstBatteryLevel As Integer
     Friend s_insulinRow As Single
     Friend s_lastBGValue As Single = 0

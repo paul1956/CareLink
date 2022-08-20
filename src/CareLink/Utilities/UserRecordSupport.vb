@@ -7,7 +7,7 @@ Imports System.Text
 Imports Microsoft.VisualBasic.Devices
 
 Friend Module UserRecordsSupport
-    Public ReadOnly s_allUserSettingsData As New Dictionary(Of String, UserDataRecord)
+    Public ReadOnly s_allUserSettingsData As New Dictionary(Of String, UserDataRecord)(StringComparer.OrdinalIgnoreCase)
     Public ReadOnly s_settingsCsvFile As String = Path.Combine(MyDocumentsPath, SavedCsvFileName)
 
     Public Sub LoadAllUserData()

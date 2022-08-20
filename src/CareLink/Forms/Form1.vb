@@ -1547,7 +1547,6 @@ Public Class Form1
         Me.Cursor = Cursors.WaitCursor
         Application.DoEvents()
 
-        Dim firstName As String = ""
         Dim markerRowString As String = ""
         If RecentData.TryGetValue(ItemIndexs.markers.ToString, markerRowString) Then
             Me.CollectMarkers(markerRowString)
@@ -1559,7 +1558,7 @@ Public Class Form1
             Dim rowIndex As ItemIndexs = CType([Enum].Parse(GetType(ItemIndexs), c.Value.Key), ItemIndexs)
 
             If rowIndex <= ItemIndexs.lastSGTrend OrElse rowIndex >= ItemIndexs.systemStatusMessage Then
-                Me.ProcessAllSingleEntries(row, rowIndex, firstName)
+                Me.ProcessAllSingleEntries(row, rowIndex, s_firstName)
                 Continue For
             End If
 
