@@ -30,6 +30,11 @@ https://github.com/paul1956/CareLink/releases/
   Update data more frequently
   Improve display for 780G when no data is available
 
+   New in 3.5.1.9
+   Add support for auto login
+   Command line arguments
+    Example: CareLink UserName=JaneSmith
+
    New in 3.5.1.8
    Add support for multiple users and multiple profiles
    When user changes all properties are copied

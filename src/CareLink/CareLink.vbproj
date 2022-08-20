@@ -20,8 +20,8 @@
     <RepositoryUrl>https://github.com/paul1956/CareLink</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Version>3.5.2.0-beta1</Version>
-    <AssemblyVersion>3.5.1.8</AssemblyVersion>
-    <FileVersion>3.5.1.8</FileVersion>
+    <AssemblyVersion>3.5.1.9</AssemblyVersion>
+    <FileVersion>3.5.1.9</FileVersion>
     <PackageIcon>IconImage.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/paul1956/CareLink</PackageProjectUrl>

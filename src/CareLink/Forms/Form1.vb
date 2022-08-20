@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.ComponentModel
+Imports System.Configuration
 Imports System.Globalization
 Imports System.IO
 Imports System.Text
@@ -169,6 +170,13 @@ Public Class Form1
             My.Settings.UpgradeRequired = False
             My.Settings.Save()
         End If
+
+        If s_allUserSettingsData.Keys.Count = 0 Then
+            LoadAllUserData()
+        End If
+
+        AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
+
 #If SupportMailServer <> "True" Then
         Me.MenuOptionsSetupEmailServer.Visible = False
 #End If
@@ -341,6 +349,10 @@ Public Class Form1
 #End Region
 
 #Region "Option Menus"
+
+    Private Sub MenuOptionsAutoLogin_CheckChanger(sender As Object, e As EventArgs) Handles MenuOptionsAutoLogin.CheckedChanged
+        My.Settings.AutoLogin = Me.MenuOptionsAutoLogin.Checked
+    End Sub
 
     Private Sub MenuOptionsFilterRawJSONData_Click(sender As Object, e As EventArgs) Handles MenuOptionsFilterRawJSONData.Click
         s_filterJsonData = Me.MenuOptionsFilterRawJSONData.Checked
@@ -2280,6 +2292,18 @@ Public Class Form1
         s_lastBGValue = sg
         bitmapText.Dispose()
         g.Dispose()
+    End Sub
+
+#End Region
+
+#Region "Settings Events"
+
+    Private Sub MySettings_SettingChanging(sender As Object, e As SettingChangingEventArgs)
+        Dim newValue As String = If(IsNothing(e.NewValue), "", e.NewValue.ToString)
+        If My.Settings(e.SettingName).ToString.ToUpperInvariant.Equals(newValue.ToString.ToUpperInvariant, StringComparison.Ordinal) Then
+            Exit Sub
+        End If
+        SaveAllUserData(e.SettingName, e.NewValue.ToString)
     End Sub
 
 #End Region

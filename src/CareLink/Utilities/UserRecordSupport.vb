@@ -12,6 +12,8 @@ Friend Module UserRecordsSupport
 
     Public Sub LoadAllUserData()
         Dim userRecords As New List(Of UserDataRecord)
+        s_allUserSettingsData.Clear()
+
         If File.Exists(s_settingsCsvFile) Then
             Using myReader As New FileIO.TextFieldParser(s_settingsCsvFile)
                 myReader.TextFieldType = FileIO.FieldType.Delimited
@@ -38,10 +40,17 @@ Friend Module UserRecordsSupport
 
     Public Sub SaveAllUserData(Key As String, Value As String)
         Dim currentSettings As New UserDataRecord
-        currentSettings.Update(Key, Value)
-        If Not s_allUserSettingsData.TryAdd(currentSettings.CareLinkUserName, currentSettings) Then
-            s_allUserSettingsData(currentSettings.CareLinkUserName) = currentSettings
+        If Not Key.Equals(NameOf(My.Settings.CareLinkUserName).ToString, StringComparison.OrdinalIgnoreCase) Then
+            currentSettings.Update(Key, Value)
+        Else
+            currentSettings.Update(Key, Value)
+            If Not s_allUserSettingsData.TryAdd(Value, currentSettings) Then
+                currentSettings = s_allUserSettingsData(Value)
+                currentSettings.Update(Key, Value)
+                s_allUserSettingsData(currentSettings.CareLinkUserName) = currentSettings
+            End If
         End If
+
         Dim sb As New StringBuilder
         sb.AppendLine(String.Join(",", UserDataRecord._headerColumns))
         For Each r As UserDataRecord In s_allUserSettingsData.Values

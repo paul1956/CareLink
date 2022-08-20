@@ -21,9 +21,21 @@ Public Class LoginForm1
     End Sub
 
     Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles Me.Load
+        Dim commandLineArgs As String() = Environment.GetCommandLineArgs()
+
+        If commandLineArgs.Length > 1 Then
+            Dim arg As String() = commandLineArgs(1).Split("=")
+            If arg.Length = 2 Then
+                Dim userRecord As UserDataRecord = Nothing
+                If s_allUserSettingsData.TryGetValue(arg(1), userRecord) Then
+                    If userRecord.AutoLogin Then
+                        userRecord.UpdateSettings()
+                    End If
+                End If
+            End If
+        End If
         Me.UsernameTextBox.Text = My.Settings.CareLinkUserName
         Me.PasswordTextBox.Text = My.Settings.CareLinkPassword
-        Dim wasEncrypted As Boolean = True
         If File.Exists(s_settingsCsvFile) Then
             _mySource.AddRange(s_allUserSettingsData.Keys.ToArray)
         ElseIf Not String.IsNullOrWhiteSpace(My.Settings.CareLinkUserName) Then
@@ -31,21 +43,24 @@ Public Class LoginForm1
         Else
             _mySource.Clear()
         End If
-
         With Me.UsernameTextBox
             .AutoCompleteCustomSource = _mySource
-            .AutoCompleteMode = AutoCompleteMode.Suggest
+            .AutoCompleteMode = AutoCompleteMode.SuggestAppend
             .AutoCompleteSource = AutoCompleteSource.CustomSource
         End With
         Me.RegionComboBox.DataSource = New BindingSource(s_regionList, Nothing)
         Me.RegionComboBox.DisplayMember = "Key"
         Me.RegionComboBox.ValueMember = "Value"
-
         If String.IsNullOrEmpty(My.Settings.CountryCode) Then
             My.Settings.CountryCode = "US"
         End If
         Me.RegionComboBox.SelectedValue = My.Settings.CountryCode.GetRegionFromCode
         Me.CountryComboBox.Text = My.Settings.CountryCode.GetCountryFromCode
+    End Sub
+    Private Sub LoginForm1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        If My.Settings.AutoLogin Then
+            Me.OK_Click(Me.OK, Nothing)
+        End If
     End Sub
 
     Private Sub OK_Click(sender As Object, e As EventArgs) Handles OK.Click
@@ -110,9 +125,8 @@ Public Class LoginForm1
 
     Private Sub UsernameTextBox_Leave(sender As Object, e As EventArgs) Handles UsernameTextBox.Leave
         Dim userSettings As UserDataRecord = Nothing
-        If Not s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, userSettings) Then
-            My.Settings.CareLinkUserName = Me.UsernameTextBox.Text
-        Else
+        My.Settings.CareLinkUserName = Me.UsernameTextBox.Text
+        If s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, userSettings) Then
             Me.PasswordTextBox.Text = userSettings.CareLinkPassword
             Me.RegionComboBox.SelectedValue = userSettings.CountryCode.GetRegionFromCode
             Me.CountryComboBox.Text = userSettings.CountryCode.GetCountryFromCode

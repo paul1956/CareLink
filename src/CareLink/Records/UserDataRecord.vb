@@ -2,13 +2,10 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Text
-Imports Microsoft.VisualBasic.Devices
-
 Public Class UserDataRecord
 
     Public Shared ReadOnly _headerColumns As New List(Of String) From
-        {
+            {
             NameOf(My.Settings.CareLinkUserName),
             NameOf(My.Settings.CareLinkPassword),
             NameOf(My.Settings.AIT),
@@ -20,8 +17,9 @@ Public Class UserDataRecord
             NameOf(My.Settings.MailServerUserName),
             NameOf(My.Settings.NotificationPhoneNumber), NameOf(My.Settings.OutGoingMailServer),
             NameOf(My.Settings.UseAdvancedAITDecay),
-            NameOf(My.Settings.UseLocalTimeZone)
-        }
+            NameOf(My.Settings.UseLocalTimeZone),
+            NameOf(My.Settings.AutoLogin)
+         }
 
     Public CareLinkUserName As String
     Public CareLinkPassword As String
@@ -36,6 +34,7 @@ Public Class UserDataRecord
     Public OutGoingMailServer As String
     Public UseAdvancedAITDecay As Boolean
     Public UseLocalTimeZone As Boolean
+    Public AutoLogin As Boolean
 
     Public Sub New()
         CareLinkUserName = My.Settings.CareLinkUserName
@@ -51,6 +50,7 @@ Public Class UserDataRecord
         OutGoingMailServer = My.Settings.OutGoingMailServer
         UseAdvancedAITDecay = My.Settings.UseAdvancedAITDecay
         UseLocalTimeZone = My.Settings.UseLocalTimeZone
+        AutoLogin = My.Settings.AutoLogin
     End Sub
 
     Public Sub New(currentRow As String())
@@ -95,9 +95,31 @@ Public Class UserDataRecord
                 Return UseAdvancedAITDecay.ToString
             Case NameOf(My.Settings.UseLocalTimeZone)
                 Return UseLocalTimeZone.ToString
+            Case NameOf(My.Settings.AutoLogin)
+                Return AutoLogin.ToString
         End Select
         Throw UnreachableException
     End Function
+
+    ''' <summary>
+    ''' Update all settings from current record
+    ''' </summary>
+    Friend Sub RefreshSettings()
+        My.Settings.CareLinkUserName = CareLinkUserName
+        My.Settings.CareLinkPassword = CareLinkPassword
+        My.Settings.AIT = AIT
+        My.Settings.AlertPhoneNumber = AlertPhoneNumber
+        My.Settings.CarrierTextingDomain = CarrierTextingDomain
+        My.Settings.CountryCode = CountryCode
+        My.Settings.MailServerPassword = MailserverPassword
+        My.Settings.MailServerPort = MailServerPort
+        My.Settings.MailServerUserName = MailserverUserName
+        My.Settings.NotificationPhoneNumber = NotificationPhoneNumber
+        My.Settings.OutGoingMailServer = OutGoingMailServer
+        My.Settings.UseAdvancedAITDecay = UseAdvancedAITDecay
+        My.Settings.UseLocalTimeZone = UseLocalTimeZone
+        My.Settings.AutoLogin = AutoLogin
+    End Sub
 
     Friend Function ToCsvString() As String
         Return $"{CareLinkUserName},{CareLinkPassword}," &
@@ -105,7 +127,8 @@ Public Class UserDataRecord
                 $"{CountryCode},{MailserverPassword}," &
                 $"{MailServerPort},{MailserverUserName}," &
                 $"{NotificationPhoneNumber}," & $"{OutGoingMailServer}," &
-                $"{UseAdvancedAITDecay}," & $"{UseLocalTimeZone}"
+                $"{UseAdvancedAITDecay}," & $"{UseLocalTimeZone}," &
+                $"{AutoLogin}"
     End Function
 
     ''' <summary>
@@ -141,6 +164,8 @@ Public Class UserDataRecord
                 UseAdvancedAITDecay = CBool(value)
             Case NameOf(UseLocalTimeZone)
                 UseLocalTimeZone = CBool(value)
+            Case NameOf(AutoLogin)
+                AutoLogin = CBool(value)
             Case Else
         End Select
     End Sub

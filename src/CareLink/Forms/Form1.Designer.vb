@@ -50,6 +50,7 @@ Partial Class Form1
         Me.MenuOptionsSetupEmailServer = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsUseAdvancedAITDecay = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsUseLocalTimeZone = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuOptionsAutoLogin = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuView = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuViewShowMiniDisplay = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelp = New System.Windows.Forms.ToolStripMenuItem()
@@ -330,7 +331,7 @@ Partial Class Form1
         '
         'MenuOptions
         '
-        Me.MenuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsSetupEmailServer, Me.MenuOptionsUseAdvancedAITDecay, Me.MenuOptionsUseLocalTimeZone})
+        Me.MenuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuOptionsAutoLogin, Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsSetupEmailServer, Me.MenuOptionsUseAdvancedAITDecay, Me.MenuOptionsUseLocalTimeZone})
         Me.MenuOptions.Name = "MenuOptions"
         Me.MenuOptions.Size = New System.Drawing.Size(61, 20)
         Me.MenuOptions.Text = "Options"
@@ -349,6 +350,7 @@ Partial Class Form1
         Me.MenuOptionsSetupEmailServer.Name = "MenuOptionsSetupEmailServer"
         Me.MenuOptionsSetupEmailServer.Size = New System.Drawing.Size(204, 22)
         Me.MenuOptionsSetupEmailServer.Text = "Setup Email Server"
+        Me.MenuOptionsSetupEmailServer.Visible = False
         '
         'MenuOptionsUseAdvancedAITDecay
         '
@@ -367,6 +369,13 @@ Partial Class Form1
         Me.MenuOptionsUseLocalTimeZone.Name = "MenuOptionsUseLocalTimeZone"
         Me.MenuOptionsUseLocalTimeZone.Size = New System.Drawing.Size(204, 22)
         Me.MenuOptionsUseLocalTimeZone.Text = "Use Local TImeZone"
+        '
+        'MenuOptionsAutoLogin
+        '
+        Me.MenuOptionsAutoLogin.CheckOnClick = True
+        Me.MenuOptionsAutoLogin.Name = "MenuOptionsAutoLogin"
+        Me.MenuOptionsAutoLogin.Size = New System.Drawing.Size(204, 22)
+        Me.MenuOptionsAutoLogin.Text = "Auto Login"
         '
         'MenuView
         '
@@ -1614,7 +1623,7 @@ Partial Class Form1
         Me.LabelInsulin.Dock = System.Windows.Forms.DockStyle.Fill
         Me.LabelInsulin.Location = New System.Drawing.Point(6, 3)
         Me.LabelInsulin.Name = "LabelInsulin"
-        Me.LabelInsulin.Size = New System.Drawing.Size(1329, 30)
+        Me.LabelInsulin.Size = New System.Drawing.Size(1338, 30)
         Me.LabelInsulin.TabIndex = 1
         Me.LabelInsulin.Text = "Insulin"
         Me.LabelInsulin.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1642,7 +1651,7 @@ Partial Class Form1
         Me.DataGridViewInsulin.ReadOnly = True
         Me.DataGridViewInsulin.RowTemplate.Height = 25
         Me.DataGridViewInsulin.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.DataGridViewInsulin.Size = New System.Drawing.Size(1329, 624)
+        Me.DataGridViewInsulin.Size = New System.Drawing.Size(1338, 624)
         Me.DataGridViewInsulin.TabIndex = 0
         '
         'TabPageLowGlusoseSuspended
@@ -2246,4 +2255,5 @@ Partial Class Form1
     Friend WithEvents ManualBolusLabel As Label
     Friend WithEvents BasalLabel As Label
     Friend WithEvents DailyDoseLabel As Label
+    Friend WithEvents MenuOptionsAutoLogin As ToolStripMenuItem
 End Class

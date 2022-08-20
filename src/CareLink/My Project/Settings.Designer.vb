@@ -221,6 +221,18 @@ Namespace My
                 Me("UseLocalTimeZone") = Value
             End Set
         End Property
+
+        <Global.System.Configuration.UserScopedSettingAttribute(),
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>
+        Public Property AutoLogin() As Boolean
+            Get
+                Return CType(Me("AutoLogin"), Boolean)
+            End Get
+            Set
+                Me("AutoLogin") = Value
+            End Set
+        End Property
     End Class
 End Namespace
 
