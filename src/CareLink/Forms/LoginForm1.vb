@@ -7,6 +7,7 @@ Imports System.IO
 Public Class LoginForm1
     Private ReadOnly _mySource As New AutoCompleteStringCollection()
     Public Property Client As CareLinkClient
+    Public Property LoggedOnUser As New UserDataRecord
 
     Private Sub Cancel_Click(sender As Object, e As EventArgs) Handles Cancel.Click
         Me.Close()
@@ -57,6 +58,7 @@ Public Class LoginForm1
         Me.RegionComboBox.SelectedValue = My.Settings.CountryCode.GetRegionFromCode
         Me.CountryComboBox.Text = My.Settings.CountryCode.GetCountryFromCode
     End Sub
+
     Private Sub LoginForm1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         If My.Settings.AutoLogin Then
             Me.OK_Click(Me.OK, Nothing)
@@ -66,11 +68,13 @@ Public Class LoginForm1
     Private Sub OK_Click(sender As Object, e As EventArgs) Handles OK.Click
         Me.OK.Enabled = False
         Me.Cancel.Enabled = False
-        My.Settings.CountryCode = Me.CountryComboBox.SelectedValue.ToString
-        Me.Client = New CareLinkClient(Me.LoginStatus, Me.UsernameTextBox.Text, Me.PasswordTextBox.Text, Me.CountryComboBox.SelectedValue.ToString)
+        Dim countryCode As String = Me.CountryComboBox.SelectedValue.ToString
+        My.Settings.CountryCode = countryCode
+        Me.Client = New CareLinkClient(Me.LoginStatus, Me.UsernameTextBox.Text, Me.PasswordTextBox.Text, countryCode)
         If Not Me.Client.LoggedIn Then
-            Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData()
+            Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData(countryCode)
             If recentData IsNot Nothing AndAlso recentData.Count > 0 Then
+                Me.LoggedOnUser = New UserDataRecord
                 Me.OK.Enabled = True
                 Me.Cancel.Enabled = True
                 If Me.SaveCredentials.CheckState = CheckState.Checked Then
@@ -125,8 +129,12 @@ Public Class LoginForm1
 
     Private Sub UsernameTextBox_Leave(sender As Object, e As EventArgs) Handles UsernameTextBox.Leave
         Dim userSettings As UserDataRecord = Nothing
-        My.Settings.CareLinkUserName = Me.UsernameTextBox.Text
         If s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, userSettings) Then
+            If userSettings.CareLinkUserName.Equals(Me.UsernameTextBox.Text, StringComparison.OrdinalIgnoreCase) Then
+                Me.UsernameTextBox.Text = My.Settings.CareLinkUserName
+            End If
+
+            My.Settings.CareLinkUserName = Me.UsernameTextBox.Text
             Me.PasswordTextBox.Text = userSettings.CareLinkPassword
             Me.RegionComboBox.SelectedValue = userSettings.CountryCode.GetRegionFromCode
             Me.CountryComboBox.Text = userSettings.CountryCode.GetCountryFromCode

@@ -491,13 +491,13 @@ Public Class CareLinkClient
     End Function
 
     ' Wrapper for data retrieval methods
-    Public Overridable Function GetRecentData() As Dictionary(Of String, String)
+    Public Overridable Function GetRecentData(countryCode As String) As Dictionary(Of String, String)
         ' Force login to get basic info
         Try
             If Me.GetAuthorizationToken() IsNot Nothing Then
                 Dim deviceFamily As String = Nothing
                 _sessionMonitorData.TryGetValue("deviceFamily", deviceFamily)
-                If _carelinkCountry = My.Settings.CountryCode OrElse deviceFamily?.Equals("BLE_X") Then
+                If _carelinkCountry = countryCode OrElse deviceFamily?.Equals("BLE_X") Then
                     Dim role As String = If(_carelinkPartnerType.Contains(_sessionUser("role")), "carepartner", "patient")
                     Return Me.GetConnectDisplayMessage(_sessionProfile("username").ToString(), role, _sessionCountrySettings("blePereodicDataEndpoint"))
                 End If

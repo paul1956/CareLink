@@ -104,10 +104,10 @@ Public Class InsulinRecord
         Return s_filterJsonData AndAlso columnsToHide.Contains(columnName)
     End Function
 
-    Public Shared Function GetCellStyle(memberName As String, <CallerMemberName> Optional functionName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As DataGridViewCellStyle
+    Public Shared Function GetCellStyle(columnName As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As DataGridViewCellStyle
         Dim cellStyle As New DataGridViewCellStyle
 
-        Select Case memberName
+        Select Case columnName
             Case NameOf([dateTime]),
                  NameOf(dateTimeAsString),
                  NameOf(type),
@@ -131,7 +131,7 @@ Public Class InsulinRecord
                 cellStyle = cellStyle.CellStyleMiddleRight(0)
             Case Else
                 Stop
-                Throw New Exception($"Line {sourceLineNumber} in {functionName} thought to be unreachable for '{memberName}'")
+                Throw New Exception($"Line {sourceLineNumber} in {memberName} thought to be unreachable for column '{columnName}'")
         End Select
         Return cellStyle
     End Function

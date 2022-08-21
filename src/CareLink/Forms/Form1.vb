@@ -16,7 +16,6 @@ Public Class Form1
     Private ReadOnly _bgMiniDisplay As New BGMiniWindow
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
-    Private ReadOnly _loginDialog As New LoginForm1
     Private ReadOnly _markerCalibration As New List(Of Dictionary(Of String, String))
     Private ReadOnly _markersAutoBasalDelivery As New List(Of Dictionary(Of String, String))
     Private ReadOnly _markersAutoModeStatus As New List(Of Dictionary(Of String, String))
@@ -53,6 +52,8 @@ Public Class Form1
             _initialized = Value
         End Set
     End Property
+
+    Friend ReadOnly _loginDialog As New LoginForm1
 
 #Region "Chart Objects"
 
@@ -130,7 +131,7 @@ Public Class Form1
                     Me.LastUpdateTime.Text = "Unknown"
                     Return False
                 End If
-                RecentData = _client.GetRecentData()
+                RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
                 Me.MenuView.Visible = True
                 Me.ServerUpdateTimer.Interval = s_minuteInMilliseconds
                 Me.ServerUpdateTimer.Start()
@@ -208,8 +209,8 @@ Public Class Form1
             .ValueMember = "Value"
         }
         Me.MenuStrip1.Items.Insert(3, Me.AITComboBox)
-        Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact($"AIT {My.Settings.AIT.ToString("hh\:mm").Substring(1)}")
-        Me.MenuOptionsUseAdvancedAITDecay.CheckState = If(My.Settings.UseAdvancedAITDecay, CheckState.Checked, CheckState.Unchecked)
+        Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact($"AIT {_loginDialog.LoggedOnUser.AIT.ToString("hh\:mm").Substring(1)}")
+        Me.MenuOptionsUseAdvancedAITDecay.CheckState = If(_loginDialog.LoggedOnUser.UseAdvancedAITDecay, CheckState.Checked, CheckState.Unchecked)
     End Sub
 
     Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
@@ -365,7 +366,7 @@ Public Class Form1
 #End If
 
     Private Sub MenuOptionsUseAdvancedAITDecay_CheckStateChanged(sender As Object, e As EventArgs) Handles MenuOptionsUseAdvancedAITDecay.CheckStateChanged
-        Dim increments As Double = TimeSpan.Parse(My.Settings.AIT.ToString("hh\:mm").Substring(1)) / s_fiveMinuteSpan
+        Dim increments As Double = TimeSpan.Parse(_loginDialog.LoggedOnUser.AIT.ToString("hh\:mm").Substring(1)) / s_fiveMinuteSpan
         If Me.MenuOptionsUseAdvancedAITDecay.Checked Then
             s_activeInsulinIncrements = CInt(increments * 1.4)
             My.Settings.UseAdvancedAITDecay = True
@@ -383,7 +384,8 @@ Public Class Form1
     End Sub
 
     Private Sub MenuOptionsUseLocalTimeZone_Click(sender As Object, e As EventArgs) Handles MenuOptionsUseLocalTimeZone.Click
-        My.Settings.UseLocalTimeZone = Me.MenuOptionsUseLocalTimeZone.Checked
+        Dim useLocalTimeZoneChecked As Boolean = Me.MenuOptionsUseLocalTimeZone.Checked
+        My.Settings.UseLocalTimeZone = useLocalTimeZoneChecked
         My.Settings.Save()
         s_clientTimeZone = CalculateTimeZone()
     End Sub
@@ -843,13 +845,13 @@ Public Class Form1
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
         If Not _updating Then
             Me.ServerUpdateTimer.Stop()
-            RecentData = _client.GetRecentData()
+            RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
             If RecentData IsNot Nothing Then
                 Me.LastUpdateTime.Text = "Unknown"
             Else
                 _client = New CareLinkClient(Me.LoginStatus, My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
                 _loginDialog.Client = _client
-                RecentData = _client.GetRecentData()
+                RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
                 If RecentData Is Nothing Then
                     Me.LastUpdateTime.Text = "Unknown due to Login failure, try logging in again!"
                 Else
@@ -2101,18 +2103,18 @@ Public Class Form1
             Dim bgValueString As String = ""
             Dim bgValue As Single
             If markerWithIndex.Value.TryGetValue("value", bgValueString) Then
-                Single.TryParse(bgValueString, NumberStyles.Number, CurrentDataCulture, bgValue)
+                bgValueString.TryParseSingle(bgValue)
             End If
             With Me.HomeTabChart.Series(NameOf(HomeTabMarkerSeries)).Points
                 Select Case markerWithIndex.Value("type")
                     Case "BG_READING"
-                        If Single.TryParse(markerWithIndex.Value("value"), NumberStyles.Number, CurrentDataCulture, bgValue) Then
+                        If String.IsNullOrWhiteSpace(bgValueString) Then
                             .AddXY(markerOaDateTime, bgValue)
                             .Last.BorderColor = Color.Gainsboro
                             .Last.Color = Color.Transparent
                             .Last.MarkerBorderWidth = 2
                             .Last.MarkerSize = 10
-                            .Last.ToolTip = $"Blood Glucose: Not used For calibration: {bgValue.ToString(CurrentUICulture)} {BgUnitsString}"
+                            .Last.ToolTip = $"Blood Glucose: Not used For calibration: {bgValueString} {BgUnitsString}"
                         End If
                     Case "CALIBRATION"
                         .AddXY(markerOaDateTime, bgValue)
@@ -2125,15 +2127,13 @@ Public Class Form1
                         If s_markerInsulinDictionary.TryAdd(markerOaDateTime, CInt(MarkerRow)) Then
                             .AddXY(markerOaDateTime, MarkerRow)
                         End If
-                        Dim result As Single
-                        Single.TryParse(markerWithIndex.Value("deliveredFastAmount"), NumberStyles.Number, CurrentDataCulture, result)
                         Select Case markerWithIndex.Value("activationType")
                             Case "AUTOCORRECTION"
                                 .Last.Color = Color.FromArgb(60, Color.MediumPurple)
-                                .Last.ToolTip = $"Auto Correction: {result.ToString(CurrentUICulture)} U"
+                                .Last.ToolTip = $"Auto Correction: {markerWithIndex.Value("deliveredFastAmount")} U"
                             Case "RECOMMENDED", "UNDETERMINED"
                                 .Last.Color = Color.FromArgb(30, Color.LightBlue)
-                                .Last.ToolTip = $"Bolus: {result.ToString(CurrentUICulture)} U"
+                                .Last.ToolTip = $"Bolus: {markerWithIndex.Value("deliveredFastAmount")} U"
                             Case Else
                                 Stop
                         End Select
@@ -2147,15 +2147,12 @@ Public Class Form1
                             .Last.MarkerBorderWidth = 0
                             .Last.MarkerSize = 30
                             .Last.MarkerStyle = MarkerStyle.Square
-                            Dim result As Single
-                            Single.TryParse(markerWithIndex.Value("amount"), NumberStyles.Number, CurrentDataCulture, result)
-                            .Last.ToolTip = $"Meal:{result.ToString(CurrentUICulture)} grams"
+                            .Last.ToolTip = $"Meal:{markerWithIndex.Value("amount")} grams"
                         End If
                     Case "AUTO_BASAL_DELIVERY"
                         .AddXY(markerOaDateTime, MarkerRow)
-                        Dim bolusAmount As String = markerWithIndex.Value("bolusAmount")
                         .Last.MarkerBorderColor = Color.Black
-                        .Last.ToolTip = $"Basal:{bolusAmount.ParseSingle(3).ToString(CurrentUICulture)} U"
+                        .Last.ToolTip = $"Basal:{markerWithIndex.Value("bolusAmount")} U"
                     Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED"
                     Case "TIME_CHANGE"
                         With Me.HomeTabChart.Series(NameOf(HomeTabTimeChangeSeries)).Points
@@ -2302,6 +2299,7 @@ Public Class Form1
         If My.Settings(e.SettingName).ToString.ToUpperInvariant.Equals(newValue.ToString.ToUpperInvariant, StringComparison.Ordinal) Then
             Exit Sub
         End If
+        _loginDialog.LoggedOnUser.Update(e.SettingName, newValue)
         SaveAllUserData(e.SettingName, e.NewValue.ToString)
     End Sub
 

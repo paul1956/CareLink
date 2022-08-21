@@ -101,26 +101,6 @@ Public Class UserDataRecord
         Throw UnreachableException
     End Function
 
-    ''' <summary>
-    ''' Update all settings from current record
-    ''' </summary>
-    Friend Sub RefreshSettings()
-        My.Settings.CareLinkUserName = CareLinkUserName
-        My.Settings.CareLinkPassword = CareLinkPassword
-        My.Settings.AIT = AIT
-        My.Settings.AlertPhoneNumber = AlertPhoneNumber
-        My.Settings.CarrierTextingDomain = CarrierTextingDomain
-        My.Settings.CountryCode = CountryCode
-        My.Settings.MailServerPassword = MailserverPassword
-        My.Settings.MailServerPort = MailServerPort
-        My.Settings.MailServerUserName = MailserverUserName
-        My.Settings.NotificationPhoneNumber = NotificationPhoneNumber
-        My.Settings.OutGoingMailServer = OutGoingMailServer
-        My.Settings.UseAdvancedAITDecay = UseAdvancedAITDecay
-        My.Settings.UseLocalTimeZone = UseLocalTimeZone
-        My.Settings.AutoLogin = AutoLogin
-    End Sub
-
     Friend Function ToCsvString() As String
         Return $"{CareLinkUserName},{CareLinkPassword}," &
                 $"{AIT},{AlertPhoneNumber},{CarrierTextingDomain}," &
@@ -184,6 +164,6 @@ Public Class UserDataRecord
         My.Settings.OutGoingMailServer = OutGoingMailServer
         My.Settings.UseAdvancedAITDecay = UseAdvancedAITDecay
         My.Settings.UseLocalTimeZone = UseLocalTimeZone
-
+        My.Settings.AutoLogin = AutoLogin
     End Sub
 End Class
