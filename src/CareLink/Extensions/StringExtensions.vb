@@ -72,6 +72,16 @@ Public Module StringExtensions
     End Function
 
     <Extension>
+    Public Function TruncateSingleString(s As String, decimalDigits As Integer) As String
+        Dim i As Integer = s.IndexOfAny({"."c, ","c})
+        If i < 0 Then
+            Return s
+        End If
+        s &= "000"
+        Return s.Substring(0, i + decimalDigits + 1)
+    End Function
+
+    <Extension>
     Public Function TrimEnd(source As String, trimString As String) As String
         If Not source.EndsWith(trimString) Then
             Return source

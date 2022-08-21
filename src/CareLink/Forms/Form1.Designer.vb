@@ -774,7 +774,7 @@ Partial Class Form1
         Me.PumpBatteryRemainingLabel.BackColor = System.Drawing.Color.Transparent
         Me.PumpBatteryRemainingLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.PumpBatteryRemainingLabel.ForeColor = System.Drawing.Color.White
-        Me.PumpBatteryRemainingLabel.Location = New System.Drawing.Point(181, 95)
+        Me.PumpBatteryRemainingLabel.Location = New System.Drawing.Point(181, 86)
         Me.PumpBatteryRemainingLabel.Name = "PumpBatteryRemainingLabel"
         Me.PumpBatteryRemainingLabel.Size = New System.Drawing.Size(80, 21)
         Me.PumpBatteryRemainingLabel.TabIndex = 11
@@ -831,7 +831,7 @@ Partial Class Form1
         Me.RemainingInsulinUnits.BackColor = System.Drawing.Color.Transparent
         Me.RemainingInsulinUnits.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.RemainingInsulinUnits.ForeColor = System.Drawing.Color.White
-        Me.RemainingInsulinUnits.Location = New System.Drawing.Point(255, 95)
+        Me.RemainingInsulinUnits.Location = New System.Drawing.Point(255, 86)
         Me.RemainingInsulinUnits.Name = "RemainingInsulinUnits"
         Me.RemainingInsulinUnits.Size = New System.Drawing.Size(80, 21)
         Me.RemainingInsulinUnits.TabIndex = 12
@@ -891,19 +891,19 @@ Partial Class Form1
         Me.CursorMessage2Label.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CursorMessage2Label.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.CursorMessage2Label.ForeColor = System.Drawing.Color.White
-        Me.CursorMessage2Label.Location = New System.Drawing.Point(5, 81)
+        Me.CursorMessage2Label.Location = New System.Drawing.Point(0, 86)
         Me.CursorMessage2Label.Name = "CursorMessage2Label"
-        Me.CursorMessage2Label.Size = New System.Drawing.Size(181, 21)
+        Me.CursorMessage2Label.Size = New System.Drawing.Size(184, 21)
         Me.CursorMessage2Label.TabIndex = 40
         Me.CursorMessage2Label.Text = "Calibration Accepted"
         Me.CursorMessage2Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'CursorValueLabel
         '
-        Me.CursorValueLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CursorValueLabel.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.CursorValueLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.CursorValueLabel.ForeColor = System.Drawing.Color.White
-        Me.CursorValueLabel.Location = New System.Drawing.Point(0, 111)
+        Me.CursorValueLabel.Location = New System.Drawing.Point(0, 114)
         Me.CursorValueLabel.Name = "CursorValueLabel"
         Me.CursorValueLabel.Size = New System.Drawing.Size(184, 21)
         Me.CursorValueLabel.TabIndex = 41
@@ -915,9 +915,9 @@ Partial Class Form1
         Me.CursorPictureBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CursorPictureBox.Image = CType(resources.GetObject("CursorPictureBox.Image"), System.Drawing.Image)
         Me.CursorPictureBox.InitialImage = Nothing
-        Me.CursorPictureBox.Location = New System.Drawing.Point(84, 6)
+        Me.CursorPictureBox.Location = New System.Drawing.Point(68, 6)
         Me.CursorPictureBox.Name = "CursorPictureBox"
-        Me.CursorPictureBox.Size = New System.Drawing.Size(24, 45)
+        Me.CursorPictureBox.Size = New System.Drawing.Size(48, 56)
         Me.CursorPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
         Me.CursorPictureBox.TabIndex = 42
         Me.CursorPictureBox.TabStop = False
@@ -927,9 +927,9 @@ Partial Class Form1
         Me.CursorMessage1Label.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CursorMessage1Label.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.CursorMessage1Label.ForeColor = System.Drawing.Color.White
-        Me.CursorMessage1Label.Location = New System.Drawing.Point(5, 54)
+        Me.CursorMessage1Label.Location = New System.Drawing.Point(0, 65)
         Me.CursorMessage1Label.Name = "CursorMessage1Label"
-        Me.CursorMessage1Label.Size = New System.Drawing.Size(181, 21)
+        Me.CursorMessage1Label.Size = New System.Drawing.Size(184, 21)
         Me.CursorMessage1Label.TabIndex = 39
         Me.CursorMessage1Label.Text = "Blood Glucose"
         Me.CursorMessage1Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter

@@ -131,7 +131,7 @@ Public Class LoginForm1
         Dim userSettings As UserDataRecord = Nothing
         If s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, userSettings) Then
             If userSettings.CareLinkUserName.Equals(Me.UsernameTextBox.Text, StringComparison.OrdinalIgnoreCase) Then
-                Me.UsernameTextBox.Text = My.Settings.CareLinkUserName
+                Me.UsernameTextBox.Text = userSettings.CareLinkUserName
             End If
 
             My.Settings.CareLinkUserName = Me.UsernameTextBox.Text

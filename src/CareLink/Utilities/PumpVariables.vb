@@ -26,7 +26,7 @@ Public Module PumpVariables
     Friend s_aboveHyperLimit As Double
     Friend s_activeInsulin As Dictionary(Of String, String)
     Friend s_activeInsulinIncrements As Integer
-    Friend s_averageSG As Single
+    Friend s_averageSG As String
     Friend s_belowHypoLimit As Single
     Friend s_bindingSourceSGs As New BindingList(Of SgRecord)
     Friend s_clientTimeZone As TimeZoneInfo

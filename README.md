@@ -30,6 +30,9 @@ https://github.com/paul1956/CareLink/releases/
   Update data more frequently
   Improve display for 780G when no data is available
 
+  New in 3.5.1.11
+  Improve number display
+
   New in 3.5.1.10
   Fixes for multiuser
   Fixed crash with international units

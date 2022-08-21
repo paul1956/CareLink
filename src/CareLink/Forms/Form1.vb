@@ -861,8 +861,6 @@ Public Class Form1
             Me.UpdateAllTabPages()
             Me.Cursor = Cursors.Default
             Application.DoEvents()
-        Else
-            Stop
         End If
         Me.ServerUpdateTimer.Interval = s_minuteInMilliseconds
         Me.ServerUpdateTimer.Start()
@@ -1489,7 +1487,7 @@ Public Class Form1
                 s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.averageSG
-                s_averageSG = row.Value.ParseSingle(1)
+                s_averageSG = row.Value
                 s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.belowHypoLimit
@@ -1769,20 +1767,23 @@ Public Class Form1
         For Each marker As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             sgOaDateTime = s_markers.SafeGetSgDateTime(marker.Index).RoundTimeDown(RoundTo.Minute).ToOADate
             With Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinMarkerSeries))
+                Dim amountString As String
+                Dim amountDelivered As Single
                 Select Case marker.Value("type")
                     Case "INSULIN"
-                        Dim deliveredAmount As Single = marker.Value("deliveredFastAmount").ParseSingle
-                        s_totalDailyDose += deliveredAmount
+                        amountString = marker.Value("deliveredFastAmount").TruncateSingleString(3)
+                        amountDelivered = amountString.ParseSingle
+                        s_totalDailyDose += amountDelivered
                         .Points.AddXY(sgOaDateTime, maxActiveInsulin)
                         Select Case marker.Value("activationType")
                             Case "AUTOCORRECTION"
-                                .Points.Last.ToolTip = $"Auto Correction: {deliveredAmount.ToString(CurrentUICulture)} U"
+                                .Points.Last.ToolTip = $"Auto Correction: {amountString} U"
                                 .Points.Last.Color = Color.MediumPurple
-                                s_totalAutoCorrection += deliveredAmount
+                                s_totalAutoCorrection += amountDelivered
                             Case "RECOMMENDED", "UNDETERMINED"
-                                .Points.Last.ToolTip = $"Bolus: {deliveredAmount.ToString(CurrentUICulture)} U"
+                                .Points.Last.ToolTip = $"Bolus: {amountString} U"
                                 .Points.Last.Color = Color.LightBlue
-                                s_totalManualBolus += deliveredAmount
+                                s_totalManualBolus += amountDelivered
                             Case Else
                                 Stop
                         End Select
@@ -1790,14 +1791,15 @@ Public Class Form1
                         .Points.Last.MarkerStyle = MarkerStyle.Square
 
                     Case "AUTO_BASAL_DELIVERY"
-                        Dim bolusAmount As Single = marker.Value.GetSingleValue("bolusAmount")
-                        s_totalBasal += CSng(bolusAmount)
-                        s_totalDailyDose += CSng(bolusAmount)
+                        amountString = marker.Value("bolusAmount").TruncateSingleString(3)
+                        Dim bolusAmount As Single = amountString.ParseSingle
+                        s_totalBasal += bolusAmount
+                        s_totalDailyDose += bolusAmount
                         .Points.AddXY(sgOaDateTime, maxActiveInsulin)
-                        .Points.Last.ToolTip = $"Basal: {bolusAmount.RoundSingle(3).ToString(CurrentUICulture)} U"
+                        .Points.Last.ToolTip = $"Basal: {amountString} U"
                         .Points.Last.MarkerSize = 8
                     Case "MEAL"
-                        s_totalCarbs += marker.Value.GetSingleValue("amount")
+                        s_totalCarbs += marker.Value("amount").ParseSingle
                     Case "AUTO_MODE_STATUS"
                     Case "BG_READING"
                     Case "CALIBRATION"
@@ -1917,17 +1919,17 @@ Public Class Form1
             Me.CalibrationShieldPictureBox.Image = My.Resources.Shield_Disabled
             Me.ShieldUnitsLabel.Text = BgUnitsString
             Me.SensorMessage.Visible = True
-            Me.SensorMessage.Left = 0
             Me.SensorMessage.BackColor = Color.Transparent
             Dim message As String = ""
             If s_sensorMessages.TryGetValue(s_sensorState, message) Then
-                message = s_sensorState.ToTitle
+                message = message.ToTitle
             Else
                 MsgBox($"{s_sensorState} is unknown sensor message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
             End If
             Me.SensorMessage.Text = message
             Me.ShieldUnitsLabel.Visible = False
             Me.SensorMessage.Visible = True
+            Application.DoEvents()
         End If
         If _bgMiniDisplay.Visible Then
             _bgMiniDisplay.BGTextBox.SelectionLength = 0
@@ -2056,7 +2058,7 @@ Public Class Form1
         Me.AboveHighLimitValueLabel.Text = $"{s_aboveHyperLimit} %"
         Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
         Me.AverageSGMessageLabel.Text = $"Average SG in {BgUnitsString}"
-        Me.AverageSGValueLabel.Text = If(BgUnitsString = "mg/dl", s_averageSG.ToString, s_averageSG.RoundSingle(1).ToString())
+        Me.AverageSGValueLabel.Text = If(BgUnitsString = "mg/dl", s_averageSG, s_averageSG.TruncateSingleString(2))
 
     End Sub
 
@@ -2152,7 +2154,7 @@ Public Class Form1
                     Case "AUTO_BASAL_DELIVERY"
                         .AddXY(markerOaDateTime, MarkerRow)
                         .Last.MarkerBorderColor = Color.Black
-                        .Last.ToolTip = $"Basal:{markerWithIndex.Value("bolusAmount")} U"
+                        .Last.ToolTip = $"Basal:{markerWithIndex.Value("bolusAmount").TruncateSingleString(3)} U"
                     Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED"
                     Case "TIME_CHANGE"
                         With Me.HomeTabChart.Series(NameOf(HomeTabTimeChangeSeries)).Points
