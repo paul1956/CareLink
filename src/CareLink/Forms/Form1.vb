@@ -461,88 +461,87 @@ Public Class Form1
         _inMouseMove = True
         Dim yInPixels As Double = Me.HomeTabChart.ChartAreas(NameOf(HomeTabChartArea)).AxisY2.ValueToPixelPosition(e.Y)
         If Double.IsNaN(yInPixels) Then
+            _inMouseMove = False
             Exit Sub
         End If
         Dim result As HitTestResult
         Try
             result = Me.HomeTabChart.HitTest(e.X, e.Y)
-            If result?.PointIndex >= -1 Then
-                If result.Series IsNot Nothing Then
-                    Me.CursorTimeLabel.Left = e.X - (Me.CursorTimeLabel.Width \ 2)
-                    Select Case result.Series.Name
-                        Case NameOf(HomeTabHighLimitSeries),
+            If result.Series Is Nothing OrElse result.PointIndex = -1 Then
+                Me.CursorPanel.Visible = False
+                Exit Sub
+            End If
+            Me.CursorTimeLabel.Left = e.X - (Me.CursorTimeLabel.Width \ 2)
+            Select Case result.Series.Name
+                    Case NameOf(HomeTabHighLimitSeries),
                              NameOf(HomeTabLowLimitSeries)
-                            Me.CursorPanel.Visible = False
-                        Case NameOf(HomeTabMarkerSeries)
-                            Dim markerToolTip() As String = result.Series.Points(result.PointIndex).ToolTip.Split(":"c)
-                            Dim xValue As Date = Date.FromOADate(result.Series.Points(result.PointIndex).XValue)
-                            Me.CursorTimeLabel.Text = xValue.ToString(s_timeWithMinuteFormat)
-                            Me.CursorTimeLabel.Tag = xValue
-                            markerToolTip(0) = markerToolTip(0).Trim
-                            Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
-                            Me.CursorPictureBox.Visible = True
-                            Me.CursorTimeLabel.Visible = True
-                            Select Case markerToolTip.Length
-                                Case 2
-                                    Me.CursorMessage1Label.Text = markerToolTip(0)
-                                    Me.CursorMessage1Label.Visible = True
-                                    Me.CursorMessage2Label.Text = markerToolTip(1).Trim
-                                    Me.CursorMessage2Label.Visible = True
-                                    Me.CursorValueLabel.Visible = False
-                                    Select Case markerToolTip(0)
-                                        Case "Auto Correction",
+                        Me.CursorPanel.Visible = False
+                    Case NameOf(HomeTabMarkerSeries)
+                        Dim markerToolTip() As String = result.Series.Points(result.PointIndex).ToolTip.Split(":"c)
+                        Dim xValue As Date = Date.FromOADate(result.Series.Points(result.PointIndex).XValue)
+                        Me.CursorTimeLabel.Text = xValue.ToString(s_timeWithMinuteFormat)
+                        Me.CursorTimeLabel.Tag = xValue
+                        markerToolTip(0) = markerToolTip(0).Trim
+                        Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
+                        Me.CursorPictureBox.Visible = True
+                        Me.CursorTimeLabel.Visible = True
+                        Select Case markerToolTip.Length
+                            Case 2
+                                Me.CursorMessage1Label.Text = markerToolTip(0)
+                                Me.CursorMessage1Label.Visible = True
+                                Me.CursorMessage2Label.Text = markerToolTip(1).Trim
+                                Me.CursorMessage2Label.Visible = True
+                                Me.CursorValueLabel.Visible = False
+                                Select Case markerToolTip(0)
+                                    Case "Auto Correction",
                                              "Basal",
                                              "Bolus"
-                                            Me.CursorPictureBox.Image = My.Resources.InsulinVial
-                                        Case "Meal"
-                                            Me.CursorPictureBox.Image = My.Resources.MealImageLarge
-                                        Case Else
-                                            Me.CursorMessage1Label.Visible = False
-                                            Me.CursorMessage2Label.Visible = False
-                                            Me.CursorPictureBox.Image = Nothing
-                                    End Select
-                                Case 3
-                                    Select Case markerToolTip(1).Trim
-                                        Case "Calibration accepted",
+                                        Me.CursorPictureBox.Image = My.Resources.InsulinVial
+                                    Case "Meal"
+                                        Me.CursorPictureBox.Image = My.Resources.MealImageLarge
+                                    Case Else
+                                        Me.CursorMessage1Label.Visible = False
+                                        Me.CursorMessage2Label.Visible = False
+                                        Me.CursorPictureBox.Image = Nothing
+                                End Select
+                            Case 3
+                                Select Case markerToolTip(1).Trim
+                                    Case "Calibration accepted",
                                              "Calibration not accepted"
-                                            Me.CursorPictureBox.Image = My.Resources.CalibrationDotRed
-                                        Case "Not used For calibration"
-                                            Me.CursorPictureBox.Image = My.Resources.CalibrationDot
-                                        Case Else
-                                            Stop
-                                    End Select
-                                    Me.CursorMessage1Label.Text = markerToolTip(0)
-                                    Me.CursorMessage1Label.Visible = True
-                                    Me.CursorMessage2Label.Text = markerToolTip(1).Trim
-                                    Me.CursorMessage2Label.Visible = True
-                                    Me.CursorValueLabel.Text = markerToolTip(2).Trim
-                                    Me.CursorValueLabel.Visible = True
-                                Case Else
-                                    Stop
-                            End Select
-                            Me.CursorPanel.Visible = True
-                        Case NameOf(HomeTabCurrentBGSeries)
-                            Me.CursorMessage1Label.Text = $"{result.Series.Points(result.PointIndex).YValues(0).RoundToSingle(3)} {BgUnitsString}"
-                            Me.CursorMessage1Label.Visible = True
-                            Me.CursorMessage2Label.Visible = False
-                            Me.CursorPictureBox.Image = Nothing
-                            Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(s_timeWithMinuteFormat)
-                            Me.CursorTimeLabel.Visible = True
-                            Me.CursorValueLabel.Visible = False
-                        Case NameOf(Me.HomeTabTimeChangeSeries)
-                            Me.CursorMessage1Label.Visible = False
-                            Me.CursorMessage1Label.Visible = False
-                            Me.CursorMessage2Label.Visible = False
-                            Me.CursorPictureBox.Image = Nothing
-                            Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(s_timeWithMinuteFormat)
-                            Me.CursorTimeLabel.Visible = True
-                            Me.CursorValueLabel.Visible = False
-                    End Select
-                End If
+                                        Me.CursorPictureBox.Image = My.Resources.CalibrationDotRed
+                                    Case "Not used For calibration"
+                                        Me.CursorPictureBox.Image = My.Resources.CalibrationDot
+                                    Case Else
+                                        Stop
+                                End Select
+                                Me.CursorMessage1Label.Text = markerToolTip(0)
+                                Me.CursorMessage1Label.Visible = True
+                                Me.CursorMessage2Label.Text = markerToolTip(1).Trim
+                                Me.CursorMessage2Label.Visible = True
+                                Me.CursorValueLabel.Text = markerToolTip(2).Trim
+                                Me.CursorValueLabel.Visible = True
+                            Case Else
+                                Stop
+                        End Select
+                        Me.CursorPanel.Visible = True
+                    Case NameOf(HomeTabCurrentBGSeries)
+                        Me.CursorMessage1Label.Text = $"{result.Series.Points(result.PointIndex).YValues(0).RoundToSingle(3)} {BgUnitsString}"
+                        Me.CursorMessage1Label.Visible = True
+                        Me.CursorMessage2Label.Visible = False
+                        Me.CursorPictureBox.Image = Nothing
+                        Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(s_timeWithMinuteFormat)
+                        Me.CursorTimeLabel.Visible = True
+                        Me.CursorValueLabel.Visible = False
+                    Case NameOf(Me.HomeTabTimeChangeSeries)
+                        Me.CursorMessage1Label.Visible = False
+                        Me.CursorMessage1Label.Visible = False
+                        Me.CursorMessage2Label.Visible = False
+                        Me.CursorPictureBox.Image = Nothing
+                        Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(s_timeWithMinuteFormat)
+                        Me.CursorTimeLabel.Visible = True
+                        Me.CursorValueLabel.Visible = False
+                End Select
                 Me.CursorPanel.Visible = True
-            Else
-                Me.CursorPanel.Visible = False
-            End If
         Catch ex As Exception
             result = Nothing
         Finally
