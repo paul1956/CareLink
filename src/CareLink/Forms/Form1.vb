@@ -16,7 +16,7 @@ Public Class Form1
     Private ReadOnly _bgMiniDisplay As New BGMiniWindow
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
-    Private ReadOnly _markerCalibration As New List(Of Dictionary(Of String, String))
+    Private ReadOnly _markersCalibration As New List(Of Dictionary(Of String, String))
     Private ReadOnly _markersAutoBasalDelivery As New List(Of Dictionary(Of String, String))
     Private ReadOnly _markersAutoModeStatus As New List(Of Dictionary(Of String, String))
     Private ReadOnly _markersBgReading As New List(Of Dictionary(Of String, String))
@@ -473,75 +473,75 @@ Public Class Form1
             End If
             Me.CursorTimeLabel.Left = e.X - (Me.CursorTimeLabel.Width \ 2)
             Select Case result.Series.Name
-                    Case NameOf(HomeTabHighLimitSeries),
+                Case NameOf(HomeTabHighLimitSeries),
                              NameOf(HomeTabLowLimitSeries)
-                        Me.CursorPanel.Visible = False
-                    Case NameOf(HomeTabMarkerSeries)
-                        Dim markerToolTip() As String = result.Series.Points(result.PointIndex).ToolTip.Split(":"c)
-                        Dim xValue As Date = Date.FromOADate(result.Series.Points(result.PointIndex).XValue)
-                        Me.CursorTimeLabel.Text = xValue.ToString(s_timeWithMinuteFormat)
-                        Me.CursorTimeLabel.Tag = xValue
-                        markerToolTip(0) = markerToolTip(0).Trim
-                        Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
-                        Me.CursorPictureBox.Visible = True
-                        Me.CursorTimeLabel.Visible = True
-                        Select Case markerToolTip.Length
-                            Case 2
-                                Me.CursorMessage1Label.Text = markerToolTip(0)
-                                Me.CursorMessage1Label.Visible = True
-                                Me.CursorMessage2Label.Text = markerToolTip(1).Trim
-                                Me.CursorMessage2Label.Visible = True
-                                Me.CursorValueLabel.Visible = False
-                                Select Case markerToolTip(0)
-                                    Case "Auto Correction",
+                    Me.CursorPanel.Visible = False
+                Case NameOf(HomeTabMarkerSeries)
+                    Dim markerToolTip() As String = result.Series.Points(result.PointIndex).ToolTip.Split(":"c)
+                    Dim xValue As Date = Date.FromOADate(result.Series.Points(result.PointIndex).XValue)
+                    Me.CursorTimeLabel.Text = xValue.ToString(s_timeWithMinuteFormat)
+                    Me.CursorTimeLabel.Tag = xValue
+                    markerToolTip(0) = markerToolTip(0).Trim
+                    Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
+                    Me.CursorPictureBox.Visible = True
+                    Me.CursorTimeLabel.Visible = True
+                    Select Case markerToolTip.Length
+                        Case 2
+                            Me.CursorMessage1Label.Text = markerToolTip(0)
+                            Me.CursorMessage1Label.Visible = True
+                            Me.CursorMessage2Label.Text = markerToolTip(1).Trim
+                            Me.CursorMessage2Label.Visible = True
+                            Me.CursorValueLabel.Visible = False
+                            Select Case markerToolTip(0)
+                                Case "Auto Correction",
                                              "Basal",
                                              "Bolus"
-                                        Me.CursorPictureBox.Image = My.Resources.InsulinVial
-                                    Case "Meal"
-                                        Me.CursorPictureBox.Image = My.Resources.MealImageLarge
-                                    Case Else
-                                        Me.CursorMessage1Label.Visible = False
-                                        Me.CursorMessage2Label.Visible = False
-                                        Me.CursorPictureBox.Image = Nothing
-                                End Select
-                            Case 3
-                                Select Case markerToolTip(1).Trim
-                                    Case "Calibration accepted",
+                                    Me.CursorPictureBox.Image = My.Resources.InsulinVial
+                                Case "Meal"
+                                    Me.CursorPictureBox.Image = My.Resources.MealImageLarge
+                                Case Else
+                                    Me.CursorMessage1Label.Visible = False
+                                    Me.CursorMessage2Label.Visible = False
+                                    Me.CursorPictureBox.Image = Nothing
+                            End Select
+                        Case 3
+                            Select Case markerToolTip(1).Trim
+                                Case "Calibration accepted",
                                              "Calibration not accepted"
-                                        Me.CursorPictureBox.Image = My.Resources.CalibrationDotRed
-                                    Case "Not used For calibration"
-                                        Me.CursorPictureBox.Image = My.Resources.CalibrationDot
-                                    Case Else
-                                        Stop
-                                End Select
-                                Me.CursorMessage1Label.Text = markerToolTip(0)
-                                Me.CursorMessage1Label.Visible = True
-                                Me.CursorMessage2Label.Text = markerToolTip(1).Trim
-                                Me.CursorMessage2Label.Visible = True
-                                Me.CursorValueLabel.Text = markerToolTip(2).Trim
-                                Me.CursorValueLabel.Visible = True
-                            Case Else
-                                Stop
-                        End Select
-                        Me.CursorPanel.Visible = True
-                    Case NameOf(HomeTabCurrentBGSeries)
-                        Me.CursorMessage1Label.Text = $"{result.Series.Points(result.PointIndex).YValues(0).RoundToSingle(3)} {BgUnitsString}"
-                        Me.CursorMessage1Label.Visible = True
-                        Me.CursorMessage2Label.Visible = False
-                        Me.CursorPictureBox.Image = Nothing
-                        Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(s_timeWithMinuteFormat)
-                        Me.CursorTimeLabel.Visible = True
-                        Me.CursorValueLabel.Visible = False
-                    Case NameOf(Me.HomeTabTimeChangeSeries)
-                        Me.CursorMessage1Label.Visible = False
-                        Me.CursorMessage1Label.Visible = False
-                        Me.CursorMessage2Label.Visible = False
-                        Me.CursorPictureBox.Image = Nothing
-                        Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(s_timeWithMinuteFormat)
-                        Me.CursorTimeLabel.Visible = True
-                        Me.CursorValueLabel.Visible = False
-                End Select
-                Me.CursorPanel.Visible = True
+                                    Me.CursorPictureBox.Image = My.Resources.CalibrationDotRed
+                                Case "Not used For calibration"
+                                    Me.CursorPictureBox.Image = My.Resources.CalibrationDot
+                                Case Else
+                                    Stop
+                            End Select
+                            Me.CursorMessage1Label.Text = markerToolTip(0)
+                            Me.CursorMessage1Label.Visible = True
+                            Me.CursorMessage2Label.Text = markerToolTip(1).Trim
+                            Me.CursorMessage2Label.Visible = True
+                            Me.CursorValueLabel.Text = markerToolTip(2).Trim
+                            Me.CursorValueLabel.Visible = True
+                        Case Else
+                            Stop
+                    End Select
+                    Me.CursorPanel.Visible = True
+                Case NameOf(HomeTabCurrentBGSeries)
+                    Me.CursorMessage1Label.Text = $"{result.Series.Points(result.PointIndex).YValues(0).RoundToSingle(3)} {BgUnitsString}"
+                    Me.CursorMessage1Label.Visible = True
+                    Me.CursorMessage2Label.Visible = False
+                    Me.CursorPictureBox.Image = Nothing
+                    Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(s_timeWithMinuteFormat)
+                    Me.CursorTimeLabel.Visible = True
+                    Me.CursorValueLabel.Visible = False
+                Case NameOf(Me.HomeTabTimeChangeSeries)
+                    Me.CursorMessage1Label.Visible = False
+                    Me.CursorMessage1Label.Visible = False
+                    Me.CursorMessage2Label.Visible = False
+                    Me.CursorPictureBox.Image = Nothing
+                    Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(s_timeWithMinuteFormat)
+                    Me.CursorTimeLabel.Visible = True
+                    Me.CursorValueLabel.Visible = False
+            End Select
+            Me.CursorPanel.Visible = True
         Catch ex As Exception
             result = Nothing
         Finally
@@ -1264,12 +1264,12 @@ Public Class Form1
 #Region "Update Data and Tables"
 
     Private Shared Sub ResetAllVariables()
+        s_bindingSourceSGs.Clear()
+        s_bindingSourceSummary.Clear()
         s_limits.Clear()
         s_markerInsulinDictionary.Clear()
         s_markerMealDictionary.Clear()
         s_markers.Clear()
-        s_bindingSourceSGs.Clear()
-        s_bindingSourceSummary.Clear()
 
     End Sub
 
@@ -1290,9 +1290,10 @@ Public Class Form1
         s_markers.Clear()
         s_bindingSourceMarkersAutoBasalDelivery.Clear()
         s_bindingSourceMarkersInsulin.Clear()
+        _markersAutoBasalDelivery.Clear()
         _markersAutoModeStatus.Clear()
         _markersBgReading.Clear()
-        _markerCalibration.Clear()
+        _markersCalibration.Clear()
         _markersInsulin.Clear()
         _markersLowGlusoseSuspended.Clear()
         _markersMeal.Clear()
@@ -1315,7 +1316,7 @@ Public Class Form1
                     _markersBgReading.Add(newMarker)
                 Case "CALIBRATION"
                     newMarker = ScaleOneMarker(innerdic)
-                    _markerCalibration.Add(newMarker)
+                    _markersCalibration.Add(newMarker)
                 Case "INSULIN"
                     newMarker = innerdic
                     _markersInsulin.Add(newMarker)
@@ -1338,7 +1339,7 @@ Public Class Form1
         s_markers.AddRange(_markersAutoBasalDelivery)
         s_markers.AddRange(_markersAutoModeStatus)
         s_markers.AddRange(_markersBgReading)
-        s_markers.AddRange(_markerCalibration)
+        s_markers.AddRange(_markersCalibration)
         s_markers.AddRange(_markersInsulin)
         s_markers.AddRange(_markersLowGlusoseSuspended)
         s_markers.AddRange(_markersMeal)
@@ -1591,7 +1592,7 @@ Public Class Form1
                         ProcessListOfDictionary(Me.TableLayoutPanelAutoBasalDelivery, Me.DataGridViewAutoBasalDelivery, s_bindingSourceMarkersAutoBasalDelivery, rowIndex)
                         ProcessListOfDictionary(Me.TableLayoutPanelAutoModeStatus, _markersAutoModeStatus, rowIndex, Me.FormScale.Height <> 1)
                         ProcessListOfDictionary(Me.TableLayoutPanelBgReading, _markersBgReading, rowIndex, Me.FormScale.Height <> 1)
-                        ProcessListOfDictionary(Me.TableLayoutPanelCalibration, _markerCalibration, rowIndex, Me.FormScale.Height <> 1)
+                        ProcessListOfDictionary(Me.TableLayoutPanelCalibration, _markersCalibration, rowIndex, Me.FormScale.Height <> 1)
                         ProcesListOfDictionary(Me.TableLayoutPanelInsulin, Me.DataGridViewInsulin, s_bindingSourceMarkersInsulin, rowIndex)
                         ProcessListOfDictionary(Me.TableLayoutPanelLowGlusoseSuspended, _markersLowGlusoseSuspended, rowIndex, Me.FormScale.Height <> 1)
                         ProcessListOfDictionary(Me.TableLayoutPanelMeal, _markersMeal, rowIndex, Me.FormScale.Height <> 1)
@@ -1766,23 +1767,20 @@ Public Class Form1
         For Each marker As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             sgOaDateTime = s_markers.SafeGetSgDateTime(marker.Index).RoundTimeDown(RoundTo.Minute).ToOADate
             With Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinMarkerSeries))
-                Dim amountString As String
-                Dim amountDelivered As Single
                 Select Case marker.Value("type")
                     Case "INSULIN"
-                        amountString = marker.Value("deliveredFastAmount").TruncateSingleString(3)
-                        amountDelivered = amountString.ParseSingle
-                        s_totalDailyDose += amountDelivered
-                        .Points.AddXY(sgOaDateTime, maxActiveInsulin)
+                        Dim amountString As String = marker.Value("deliveredFastAmount").TruncateSingleString(3)
+                        s_totalDailyDose += amountString.ParseSingle()
+                        Call .Points.AddXY(sgOaDateTime, maxActiveInsulin)
                         Select Case marker.Value("activationType")
                             Case "AUTOCORRECTION"
                                 .Points.Last.ToolTip = $"Auto Correction: {amountString} U"
                                 .Points.Last.Color = Color.MediumPurple
-                                s_totalAutoCorrection += amountDelivered
+                                s_totalAutoCorrection += amountString.ParseSingle()
                             Case "RECOMMENDED", "UNDETERMINED"
                                 .Points.Last.ToolTip = $"Bolus: {amountString} U"
                                 .Points.Last.Color = Color.LightBlue
-                                s_totalManualBolus += amountDelivered
+                                s_totalManualBolus += amountString.ParseSingle()
                             Case Else
                                 Stop
                         End Select
@@ -1790,10 +1788,10 @@ Public Class Form1
                         .Points.Last.MarkerStyle = MarkerStyle.Square
 
                     Case "AUTO_BASAL_DELIVERY"
-                        amountString = marker.Value("bolusAmount").TruncateSingleString(3)
-                        Dim bolusAmount As Single = amountString.ParseSingle
-                        s_totalBasal += bolusAmount
-                        s_totalDailyDose += bolusAmount
+                        Dim amountString As String = marker.Value("bolusAmount").TruncateSingleString(3)
+                        Dim basalAmount As Single = amountString.ParseSingle
+                        s_totalBasal += basalAmount
+                        s_totalDailyDose += basalAmount
                         .Points.AddXY(sgOaDateTime, maxActiveInsulin)
                         .Points.Last.ToolTip = $"Basal: {amountString} U"
                         .Points.Last.MarkerSize = 8

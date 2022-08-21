@@ -10,7 +10,7 @@ Public Module PumpVariables
     Friend s_totalAutoCorrection As Single
 
     Friend s_totalBasal As Single
-    Friend s_totalCarbs As Double
+    Friend s_totalCarbs As Single
     Friend s_totalDailyDose As Single
     Friend s_totalManualBolus As Single
 
