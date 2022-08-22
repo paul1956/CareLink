@@ -24,9 +24,9 @@ Public Class CareLinkClient
     Private _lastResponseCode As HttpStatusCode
     Private _loginInProcess As Boolean
     Private _sessionCountrySettings As Dictionary(Of String, String)
-    Private _sessionMonitorData As Dictionary(Of String, String)
-    Private _sessionProfile As Dictionary(Of String, String)
-    Private _sessionUser As Dictionary(Of String, String)
+    Private _sessionMonitorData As PumpData
+    Private _sessionProfile As PumpData
+    Private _sessionUser As PumpData
 
     Public Sub New(LoginStatus As TextBox, carelinkUsername As String, carelinkPassword As String, carelinkCountry As String)
         _loginStatus = LoginStatus
@@ -145,7 +145,7 @@ Public Class CareLinkClient
         End Select
     End Function
 
-    Public Overridable Function CorrectTimeInRecentData(recentData As Dictionary(Of String, String)) As Boolean
+    Public Overridable Function CorrectTimeInRecentData(recentData As PumpData) As Boolean
         ' TODO
         Return True
     End Function
@@ -345,7 +345,7 @@ Public Class CareLinkClient
     End Function
 
     ' Periodic data from CareLink Cloud
-    Public Overridable Function GetConnectDisplayMessage(username As String, role As String, endpointUrl As String) As Dictionary(Of String, String)
+    Public Overridable Function GetConnectDisplayMessage(username As String, role As String, endpointUrl As String) As PumpData
 
         Debug.Print("__getConnectDisplayMessage()")
         ' Build user json for request
@@ -356,7 +356,7 @@ Public Class CareLinkClient
             {
                 "role",
                 role}}
-        Dim recentData As Dictionary(Of String, String) = Me.GetData(Nothing, endpointUrl, Nothing, userJson)
+        Dim recentData As PumpData = Me.GetData(Nothing, endpointUrl, Nothing, userJson)
         If recentData IsNot Nothing Then
             Me.CorrectTimeInRecentData(recentData)
         End If
@@ -373,10 +373,10 @@ Public Class CareLinkClient
             {
                 "language",
                 language}}
-        Return Me.GetData(Me.CareLinkServer(), "patient/countries/settings", queryParams, Nothing)
+        Return Me.GetData(Me.CareLinkServer(), "patient/countries/settings", queryParams, Nothing).JsonData
     End Function
 
-    Public Overridable Function GetData(host As String, endPointPath As String, queryParams As Dictionary(Of String, String), requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
+    Public Overridable Function GetData(host As String, endPointPath As String, queryParams As Dictionary(Of String, String), requestBody As Dictionary(Of String, String)) As PumpData
         Dim url As String
         Debug.Print("__getData()")
         _lastDataSuccess = False
@@ -387,6 +387,9 @@ Public Class CareLinkClient
         End If
         Dim payload As Dictionary(Of String, String) = queryParams
 
+        Dim bolusRow As Single = Nothing
+        Dim insulinRow As Single = Nothing
+        Dim mealRow As Single = Nothing
         Dim jsonData As Dictionary(Of String, String) = Nothing
         ' Get authorization token
         Dim authToken As String = Me.GetAuthorizationToken()
@@ -414,7 +417,7 @@ Public Class CareLinkClient
                     response = _httpClient.SendAsync(postRequest).Result ' Post(url, headers, data:=requestBody)
                 End If
                 If response.StatusCode = HttpStatusCode.OK Then
-                    jsonData = Loads(response.Text)
+                    jsonData = Loads(response.Text, bolusRow, insulinRow, mealRow)
                     If jsonData.Count > 61 Then
 
                         Dim contents As String = JsonSerializer.Serialize(jsonData, New JsonSerializerOptions)
@@ -433,7 +436,7 @@ Public Class CareLinkClient
                 Debug.Print($"__getData() failed {e.Message}")
             End Try
         End If
-        Return jsonData
+        Return New PumpData(bolusRow, insulinRow, mealRow, jsonData)
     End Function
 
     Public Overridable Function GetLastDataSuccess() As Object
@@ -475,46 +478,37 @@ Public Class CareLinkClient
         Return response
     End Function
 
-    Public Overridable Function GetMonitorData() As Dictionary(Of String, String)
+    Public Overridable Function GetMonitorData() As PumpData
         Debug.Print("__getMonitorData()")
         Return Me.GetData(Me.CareLinkServer(), "patient/monitor/data", Nothing, Nothing)
     End Function
 
-    Public Overridable Function GetMyProfile() As Dictionary(Of String, String)
+    Public Overridable Function GetMyProfile() As PumpData
         Debug.Print("__getMyProfile()")
         Return Me.GetData(Me.CareLinkServer(), "patient/users/me/profile", Nothing, Nothing)
     End Function
 
-    Public Overridable Function GetMyUser() As Dictionary(Of String, String)
+    Public Overridable Function GetMyUser() As PumpData
         Debug.Print("__getMyUser()")
         Return Me.GetData(Me.CareLinkServer(), "patient/users/me", Nothing, Nothing)
     End Function
 
     ' Wrapper for data retrieval methods
-    Public Overridable Function GetRecentData(countryCode As String) As Dictionary(Of String, String)
+    Public Overridable Function GetRecentData(countryCode As String) As PumpData
         ' Force login to get basic info
         Try
             If Me.GetAuthorizationToken() IsNot Nothing Then
                 Dim deviceFamily As String = Nothing
-                _sessionMonitorData.TryGetValue("deviceFamily", deviceFamily)
+                _sessionMonitorData.JsonData.TryGetValue("deviceFamily", deviceFamily)
                 If _carelinkCountry = countryCode OrElse deviceFamily?.Equals("BLE_X") Then
-                    Dim role As String = If(_carelinkPartnerType.Contains(_sessionUser("role")), "carepartner", "patient")
-                    Return Me.GetConnectDisplayMessage(_sessionProfile("username").ToString(), role, _sessionCountrySettings("blePereodicDataEndpoint"))
+                    Dim role As String = If(_carelinkPartnerType.Contains(_sessionUser.JsonData("role")), "carepartner", "patient")
+                    Return Me.GetConnectDisplayMessage(_sessionProfile.JsonData("username").ToString(), role, _sessionCountrySettings("blePereodicDataEndpoint"))
                 End If
             End If
         Catch ex As Exception
 
         End Try
         Return Nothing
-    End Function
-
-    ' Authentication methods
-    Public Overridable Function Login() As Boolean
-        If Not Me.LoggedIn Then
-            Me.ExecuteLoginProcedure()
-        End If
-
-        Return Me.LoggedIn
     End Function
 
 End Class

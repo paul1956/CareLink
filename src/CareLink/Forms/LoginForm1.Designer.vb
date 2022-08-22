@@ -19,8 +19,8 @@ Partial Class LoginForm1
     Friend WithEvents PasswordLabel As System.Windows.Forms.Label
     Friend WithEvents UsernameTextBox As System.Windows.Forms.TextBox
     Friend WithEvents PasswordTextBox As System.Windows.Forms.TextBox
-    Friend WithEvents OK As System.Windows.Forms.Button
-    Friend WithEvents Cancel As System.Windows.Forms.Button
+    Friend WithEvents Ok_Button As System.Windows.Forms.Button
+    Friend WithEvents Cancel_Button As System.Windows.Forms.Button
 
     'Required by the Windows Form Designer
     Private components As System.ComponentModel.IContainer
@@ -36,8 +36,8 @@ Partial Class LoginForm1
         Me.PasswordLabel = New System.Windows.Forms.Label()
         Me.UsernameTextBox = New System.Windows.Forms.TextBox()
         Me.PasswordTextBox = New System.Windows.Forms.TextBox()
-        Me.OK = New System.Windows.Forms.Button()
-        Me.Cancel = New System.Windows.Forms.Button()
+        Me.Ok_Button = New System.Windows.Forms.Button()
+        Me.Cancel_Button = New System.Windows.Forms.Button()
         Me.SaveCredentials = New System.Windows.Forms.CheckBox()
         Me.CountryComboBox = New System.Windows.Forms.ComboBox()
         Me.RegionComboBox = New System.Windows.Forms.ComboBox()
@@ -98,25 +98,25 @@ Partial Class LoginForm1
         Me.PasswordTextBox.Size = New System.Drawing.Size(159, 23)
         Me.PasswordTextBox.TabIndex = 5
         '
-        'OK
+        'Ok_Button
         '
-        Me.OK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.OK.DialogResult = System.Windows.Forms.DialogResult.OK
-        Me.OK.Location = New System.Drawing.Point(235, 277)
-        Me.OK.Name = "OK"
-        Me.OK.Size = New System.Drawing.Size(94, 23)
-        Me.OK.TabIndex = 0
-        Me.OK.Text = "&OK"
+        Me.Ok_Button.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Ok_Button.DialogResult = System.Windows.Forms.DialogResult.OK
+        Me.Ok_Button.Location = New System.Drawing.Point(235, 277)
+        Me.Ok_Button.Name = "Ok_Button"
+        Me.Ok_Button.Size = New System.Drawing.Size(94, 23)
+        Me.Ok_Button.TabIndex = 0
+        Me.Ok_Button.Text = "&OK"
         '
-        'Cancel
+        'Cancel_Button
         '
-        Me.Cancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.Cancel.Location = New System.Drawing.Point(338, 277)
-        Me.Cancel.Name = "Cancel"
-        Me.Cancel.Size = New System.Drawing.Size(94, 23)
-        Me.Cancel.TabIndex = 1
-        Me.Cancel.Text = "&Cancel"
+        Me.Cancel_Button.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Cancel_Button.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.Cancel_Button.Location = New System.Drawing.Point(338, 277)
+        Me.Cancel_Button.Name = "Cancel_Button"
+        Me.Cancel_Button.Size = New System.Drawing.Size(94, 23)
+        Me.Cancel_Button.TabIndex = 1
+        Me.Cancel_Button.Text = "&Cancel"
         '
         'SaveCredentials
         '
@@ -192,10 +192,10 @@ Partial Class LoginForm1
         '
         'LoginForm1
         '
-        Me.AcceptButton = Me.OK
+        Me.AcceptButton = Me.Ok_Button
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.CancelButton = Me.Cancel
+        Me.CancelButton = Me.Cancel_Button
         Me.ClientSize = New System.Drawing.Size(442, 313)
         Me.Controls.Add(Me.LoginStatus)
         Me.Controls.Add(Me.ShowPasswordCheckBox)
@@ -204,8 +204,8 @@ Partial Class LoginForm1
         Me.Controls.Add(Me.RegionComboBox)
         Me.Controls.Add(Me.CountryComboBox)
         Me.Controls.Add(Me.SaveCredentials)
-        Me.Controls.Add(Me.Cancel)
-        Me.Controls.Add(Me.OK)
+        Me.Controls.Add(Me.Cancel_Button)
+        Me.Controls.Add(Me.Ok_Button)
         Me.Controls.Add(Me.PasswordTextBox)
         Me.Controls.Add(Me.UsernameTextBox)
         Me.Controls.Add(Me.PasswordLabel)

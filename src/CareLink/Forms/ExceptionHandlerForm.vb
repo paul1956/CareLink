@@ -44,7 +44,7 @@ Public Class ExceptionHandlerForm
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "You can review what is being stored and then attach it to a new issue at", fontNormal)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, $"{_gitClient.Repository.Get(OwnerName, RepoName).Result.HtmlUrl}/issues.", fontNormal)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "This will help me isolate issues quickly.", fontNormal)
-            Me.CreateReportFile(uniqueFileNameResult.withPath)
+            Me.CreateReportFile(uniqueFileNameResult.withPath, My.Forms.Form1.RecentData)
         Else
             CurrentDateCulture = Me.ReportFileNameWithPath.ExtractCultureFromFileName(RepoErrorReportName)
             If CurrentDateCulture Is Nothing Then
@@ -88,7 +88,7 @@ Public Class ExceptionHandlerForm
 
 #End Region
 
-    Private Sub CreateReportFile(UniqueFileNameWithPath As String)
+    Private Sub CreateReportFile(UniqueFileNameWithPath As String, jsonData As Dictionary(Of String, String))
         Using stream As StreamWriter = File.CreateText(UniqueFileNameWithPath)
             ' write exception header
             stream.WriteLine(ExceptionStartingString)
@@ -103,7 +103,7 @@ Public Class ExceptionHandlerForm
             ' write stack trace trailer
             stream.WriteLine(StackTraceTerminatingString)
             ' write out data file
-            Using jd As JsonDocument = JsonDocument.Parse(RecentData.CleanUserData(), New JsonDocumentOptions)
+            Using jd As JsonDocument = JsonDocument.Parse(jsonData.CleanUserData(), New JsonDocumentOptions)
                 stream.Write(JsonSerializer.Serialize(jd, JsonFormattingOptions))
             End Using
         End Using

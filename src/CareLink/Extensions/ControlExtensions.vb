@@ -18,7 +18,7 @@ Public Module ControlExtensions
     End Function
 
     <Extension>
-    Friend Sub PaintMarker(e As ChartPaintEventArgs, markerImage As Bitmap, markerDictionary As Dictionary(Of Double, Single), imageYOffset As Integer)
+    Friend Sub PaintMarker(e As ChartPaintEventArgs, markerImage As Bitmap, markerDictionary As Dictionary(Of Double, Single), useYAxis As Boolean)
         ' Draw the cloned portion of the Bitmap object.
         Dim halfHeight As Single = CSng(markerImage.Height / 2)
         Dim halfWidth As Single = CSng(markerImage.Width / 2)
@@ -26,14 +26,18 @@ Public Module ControlExtensions
             Dim imagePosition As RectangleF = RectangleF.Empty
             Dim chartAreaName As String = e.Chart.ChartAreas(0).Name
             imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(chartAreaName, AxisName.X, markerKvp.Key))
-            imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(chartAreaName, AxisName.Y, markerKvp.Value))
+            If useYAxis Then
+                imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(chartAreaName, AxisName.Y, markerKvp.Value))
+            Else
+                imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(chartAreaName, AxisName.Y2, markerKvp.Value))
+            End If
             imagePosition = e.ChartGraphics.GetAbsoluteRectangle(imagePosition)
             imagePosition.Width = markerImage.Width
             imagePosition.Height = markerImage.Height
             imagePosition.Y -= halfHeight
             imagePosition.X -= halfWidth
             ' Draw image
-            e.ChartGraphics.Graphics.DrawImage(markerImage, imagePosition.X, imagePosition.Y + imageYOffset)
+            e.ChartGraphics.Graphics.DrawImage(markerImage, imagePosition.X, imagePosition.Y)
         Next
     End Sub
 

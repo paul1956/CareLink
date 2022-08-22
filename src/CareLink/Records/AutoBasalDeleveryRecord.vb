@@ -78,18 +78,19 @@ Public Class AutoBasalDeliveryRecord
 
         Select Case columnName
             Case NameOf([dateTime]),
-                 NameOf(dateTimeAsString),
-                 NameOf(type)
+                    NameOf(dateTimeAsString),
+                    NameOf(type)
                 cellStyle.CellStyleMiddleLeft
             Case NameOf(RecordNumber),
-                 NameOf(kind),
-                 NameOf(index),
-                 NameOf(id)
+                    NameOf(kind),
+                    NameOf(index),
+                    NameOf(id)
                 cellStyle = cellStyle.CellStyleMiddleCenter
                 cellStyle.Padding = New Padding(0, 0, 0, 0)
             Case NameOf(bolusAmount),
-                 NameOf(version),
-                 NameOf(relativeOffset)
+                    NameOf(version),
+                    NameOf(OADate),
+                    NameOf(relativeOffset)
                 cellStyle = cellStyle.CellStyleMiddleRight(0)
             Case Else
                 Stop

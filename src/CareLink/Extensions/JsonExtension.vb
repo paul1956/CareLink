@@ -72,7 +72,7 @@ Public Module JsonExtensions
         Return resultDictionaryArray
     End Function
 
-    Public Function Loads(value As String) As Dictionary(Of String, String)
+    Public Function Loads(value As String, ByRef bolusRow As Single, ByRef insulinRow As Single, ByRef mealRow As Single) As Dictionary(Of String, String)
         Dim resultDictionary As New Dictionary(Of String, String)
         Dim options As New JsonSerializerOptions() With {
                 .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
@@ -102,18 +102,20 @@ Public Module JsonExtensions
                             End If
                             If BgUnitsString = "mg/dl" Then
                                 scalingNeeded = False
-                                s_markerRow = 400
+                                bolusRow = 400
+                                insulinRow = 378
+                                mealRow = 50
+                                s_criticalLow = 50
                                 s_limitHigh = 180
                                 s_limitLow = 70
-                                s_insulinRow = 50
-                                s_criticalLow = 50
                             Else
                                 scalingNeeded = True
-                                s_markerRow = CSng(Math.Round(400 / MmolLUnitsDivisor, 0, MidpointRounding.AwayFromZero))
-                                s_limitHigh = (180 / MmolLUnitsDivisor).RoundSingle(1)
-                                s_limitLow = (70 / MmolLUnitsDivisor).RoundSingle(1)
-                                s_insulinRow = CSng(Math.Round(50 / MmolLUnitsDivisor, 0, MidpointRounding.ToZero))
-                                s_criticalLow = s_insulinRow
+                                bolusRow = 22
+                                insulinRow = 19
+                                mealRow = CSng(Math.Round(50 / MmolLUnitsDivisor, 0, MidpointRounding.ToZero))
+                                s_criticalLow = mealRow
+                                s_limitHigh = 10
+                                s_limitLow = 3.9
                             End If
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
                         Case NameOf(ItemIndexs.clientTimeZoneName)

@@ -31,25 +31,5 @@ Friend Module DrawingExtensions
         Return targetImage
     End Function
 
-    <Extension>
-    Friend Sub PlotOnePoint(plotSeries As Series, sgOaDateTime As Double, bgValue As Single, mainLineColor As Color)
-        With plotSeries
-            If Single.IsNaN(bgValue) OrElse Math.Abs(bgValue - 0) < Single.Epsilon Then
-                .Points.AddXY(sgOaDateTime, InsulinRow)
-                .Points.Last().IsEmpty = True
-            Else
-                .Points.AddXY(sgOaDateTime, bgValue)
-                If bgValue > s_limitHigh Then
-                    .Points.Last.Color = Color.Lime
-                ElseIf bgValue < s_limitLow Then
-                    .Points.Last.Color = Color.Red
-                Else
-                    .Points.Last.Color = mainLineColor
-                End If
-
-            End If
-        End With
-
-    End Sub
 
 End Module

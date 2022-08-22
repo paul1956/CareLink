@@ -20,9 +20,13 @@ Public Module PumpVariables
     Friend ReadOnly s_bindingSourceMarkersAutoBasalDelivery As New BindingList(Of AutoBasalDeliveryRecord)
     Friend ReadOnly s_bindingSourceMarkersInsulin As New BindingList(Of InsulinRecord)
     Friend ReadOnly s_bindingSourceSummary As New BindingList(Of SummaryRecord)
-    Friend ReadOnly s_markerInsulinDictionary As New Dictionary(Of Double, Single)
-    Friend ReadOnly s_markerMealDictionary As New Dictionary(Of Double, Single)
+    Friend ReadOnly s_insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
+    Friend ReadOnly s_activeInsulinMarkerInsulinDictionary As New Dictionary(Of Double, Single)
+    Friend ReadOnly s_activeInsulinMarkerMealDictionary As New Dictionary(Of Double, Single)
+    Friend ReadOnly s_homeTabMarkerInsulinDictionary As New Dictionary(Of Double, Single)
+    Friend ReadOnly s_homeTabMarkerMealDictionary As New Dictionary(Of Double, Single)
     Friend ReadOnly s_mealImage As Bitmap = My.Resources.MealImage
+
     Friend s_aboveHyperLimit As Double
     Friend s_activeInsulin As Dictionary(Of String, String)
     Friend s_activeInsulinIncrements As Integer
@@ -36,13 +40,11 @@ Public Module PumpVariables
     Friend s_filterJsonData As Boolean = True
     Friend s_firstName As String = ""
     Friend s_gstBatteryLevel As Integer
-    Friend s_insulinRow As Single
     Friend s_lastBGValue As Single = 0
     Friend s_lastSG As Dictionary(Of String, String)
     Friend s_limitHigh As Single
     Friend s_limitLow As Single
     Friend s_limits As New List(Of Dictionary(Of String, String))
-    Friend s_markerRow As Single
     Friend s_markers As New List(Of Dictionary(Of String, String))
     Friend s_medicalDeviceBatteryLevelPercent As Integer
     Friend s_recentDatalast As Dictionary(Of String, String)
@@ -58,31 +60,6 @@ Public Module PumpVariables
     Friend s_timeWithMinuteFormat As String
     Friend s_timeWithoutMinuteFormat As String
 
-    Friend Property InsulinRow As Single
-        Get
-            If s_insulinRow = 0 Then
-                Throw New ArgumentNullException(NameOf(s_insulinRow))
-            End If
-            Return s_insulinRow
-        End Get
-        Set
-            s_insulinRow = Value
-        End Set
-    End Property
-
-    Friend Property MarkerRow As Single
-        Get
-            If s_markerRow = 0 Then
-                Throw New ArgumentNullException(NameOf(s_markerRow))
-            End If
-            Return s_markerRow
-        End Get
-        Set
-            s_markerRow = Value
-        End Set
-    End Property
-
-    Friend Property RecentData As New Dictionary(Of String, String)
     Friend Property scalingNeeded As Boolean = Nothing
     Public Property BgUnits As String
     Public Property BgUnitsString As String

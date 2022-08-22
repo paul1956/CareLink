@@ -67,17 +67,18 @@ Public Class SgRecord
 
         Select Case columnName
             Case NameOf(sg),
-                 NameOf(relativeOffset)
+                    NameOf(relativeOffset),
+                    NameOf(OADate)
                 cellStyle = cellStyle.CellStyleMiddleRight(10)
             Case NameOf(RecordNumber),
-                 NameOf(version)
+                    NameOf(version)
                 cellStyle = cellStyle.CellStyleMiddleCenter()
             Case NameOf(datetime),
-                 NameOf(dateTimeAsString),
-                 NameOf(sensorState)
+                    NameOf(dateTimeAsString),
+                    NameOf(sensorState)
                 cellStyle = cellStyle.CellStyleMiddleLeft
             Case NameOf(timeChange),
-                 NameOf(kind)
+                    NameOf(kind)
                 cellStyle = cellStyle.CellStyleMiddleCenter
             Case Else
                 Throw New Exception($"Line {sourceLineNumber} in {memberName} thought to be unreachable for column '{columnName}'")

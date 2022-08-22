@@ -25,10 +25,20 @@ https://github.com/paul1956/CareLink/releases/
 - 8/20/2022
 
 ## What's New in this release
-  New in 3.5.2.0-beta1
+  New in 3.5.2.0
   Add support for SG Trend Arrows
   Update data more frequently
   Improve display for 780G when no data is available
+  ActiveInsulin Page now has many of the features of Home Page
+  Bolus's are now show on a separate row to make them easier to see
+  There is full support for multiple copies of the application
+    running at the same time each with their own CareLink
+    login and password. The application will remember them,
+    the user name is in clear text but the password is
+    encrypted locally.
+
+  New in 3.5.1.12
+  Guard against unexpected crashes
 
   New in 3.5.1.11
   Improve number display

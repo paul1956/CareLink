@@ -9,7 +9,8 @@ Public Class LoginForm1
     Public Property Client As CareLinkClient
     Public Property LoggedOnUser As New UserDataRecord
 
-    Private Sub Cancel_Click(sender As Object, e As EventArgs) Handles Cancel.Click
+    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
+        Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub
 
@@ -35,8 +36,6 @@ Public Class LoginForm1
                 End If
             End If
         End If
-        Me.UsernameTextBox.Text = My.Settings.CareLinkUserName
-        Me.PasswordTextBox.Text = My.Settings.CareLinkPassword
         If File.Exists(s_settingsCsvFile) Then
             _mySource.AddRange(s_allUserSettingsData.Keys.ToArray)
         ElseIf Not String.IsNullOrWhiteSpace(My.Settings.CareLinkUserName) Then
@@ -48,7 +47,14 @@ Public Class LoginForm1
             .AutoCompleteCustomSource = _mySource
             .AutoCompleteMode = AutoCompleteMode.SuggestAppend
             .AutoCompleteSource = AutoCompleteSource.CustomSource
+            .Text = My.Settings.CareLinkUserName
         End With
+        If s_allUserSettingsData.ContainsKey(My.Settings.CareLinkUserName) Then
+            Me.PasswordTextBox.Text = s_allUserSettingsData(My.Settings.CareLinkUserName).CareLinkPassword
+        Else
+            Me.PasswordTextBox.Text = My.Settings.CareLinkPassword
+
+        End If
         Me.RegionComboBox.DataSource = New BindingSource(s_regionList, Nothing)
         Me.RegionComboBox.DisplayMember = "Key"
         Me.RegionComboBox.ValueMember = "Value"
@@ -61,34 +67,36 @@ Public Class LoginForm1
 
     Private Sub LoginForm1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         If My.Settings.AutoLogin Then
-            Me.OK_Click(Me.OK, Nothing)
+            Me.OK_Button_Click(Me.Ok_Button, Nothing)
         End If
     End Sub
-
-    Private Sub OK_Click(sender As Object, e As EventArgs) Handles OK.Click
-        Me.OK.Enabled = False
-        Me.Cancel.Enabled = False
+    'End Sub
+    Private Sub OK_Button_Click(sender As Object, e As System.EventArgs) Handles Ok_Button.Click
+        Me.Ok_Button.Enabled = False
+        Me.Cancel_Button.Enabled = False
         Dim countryCode As String = Me.CountryComboBox.SelectedValue.ToString
         My.Settings.CountryCode = countryCode
         Me.Client = New CareLinkClient(Me.LoginStatus, Me.UsernameTextBox.Text, Me.PasswordTextBox.Text, countryCode)
         If Not Me.Client.LoggedIn Then
-            Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData(countryCode)
+            Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData(countryCode)?.JsonData
             If recentData IsNot Nothing AndAlso recentData.Count > 0 Then
                 Me.LoggedOnUser = New UserDataRecord
-                Me.OK.Enabled = True
-                Me.Cancel.Enabled = True
+                Me.Ok_Button.Enabled = True
+                Me.Cancel_Button.Enabled = True
                 If Me.SaveCredentials.CheckState = CheckState.Checked Then
                     My.Settings.CareLinkUserName = Me.UsernameTextBox.Text
                     My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
                 End If
 
                 My.Settings.Save()
+                Me.DialogResult = DialogResult.OK
                 Me.Hide()
                 Exit Sub
             End If
         Else
-            Me.OK.Enabled = True
-            Me.Cancel.Enabled = True
+            Me.Ok_Button.Enabled = True
+            Me.Cancel_Button.Enabled = True
+            Me.DialogResult = DialogResult.OK
             Me.Hide()
             Exit Sub
         End If
@@ -96,8 +104,9 @@ Public Class LoginForm1
         If MsgBox("Login Unsuccessful. try again? If no program will exit!", Buttons:=MsgBoxStyle.YesNo, Title:="Login Failed") = MsgBoxResult.No Then
             End
         End If
-        Me.OK.Enabled = True
-        Me.Cancel.Enabled = True
+        Me.Ok_Button.Enabled = True
+        Me.Cancel_Button.Enabled = True
+        Me.DialogResult = DialogResult.Retry
     End Sub
 
     Private Sub RegionComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles RegionComboBox.SelectedIndexChanged
