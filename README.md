@@ -34,8 +34,7 @@ https://github.com/paul1956/CareLink/releases/
   There is full support for multiple copies of the application
     running at the same time each with their own CareLink
     login and password. The application will remember them,
-    the user name is in clear text but the password is
-    encrypted locally.
+    the user name is in clear text.
 
   New in 3.5.1.12
   Guard against unexpected crashes
