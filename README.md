@@ -25,7 +25,7 @@ https://github.com/paul1956/CareLink/releases/
 - 8/20/2022
 
 ## What's New in this release
-  New in 3.5.2.0
+  New in 3.5.2.2
   Add support for SG Trend Arrows
   Update data more frequently
   Improve display for 780G when no data is available
