@@ -10,14 +10,14 @@ Friend Module DataFileNameManagement
     ''' Returns a unique file name in MyDocuments of the form baseName(CultureCode).Extension
     ''' given an filename and culture as a seed
     ''' </summary>
-    ''' <param name="baseName">The first part of the file name</param>
-    ''' <param name="cultureName">A valid Culture Name in the form of language-CountryCode</param>
-    ''' <param name="extension">The extension for the file</param>
+    ''' <param BgSeriesName="baseName">The first part of the file name</param>
+    ''' <param BgSeriesName="cultureName">A valid Culture BgSeriesName in the form of language-CountryCode</param>
+    ''' <param BgSeriesName="extension">The extension for the file</param>
     ''' <returns>
     ''' A unique file name valid in MyDocuments folder or
     ''' An empty file name on error.
     ''' </returns>
-    ''' <param name="MustBeUnique"></param>
+    ''' <param BgSeriesName="MustBeUnique"></param>
     Public Function GetDataFileName(baseName As String, cultureName As String, extension As String, MustBeUnique As Boolean) As (withPath As String, withoutPath As String)
         If String.IsNullOrWhiteSpace(baseName) Then
             Throw New ArgumentException($"'{NameOf(baseName)}' cannot be null or whitespace.", NameOf(baseName))

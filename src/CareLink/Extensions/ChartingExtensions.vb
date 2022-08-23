@@ -7,6 +7,85 @@ Imports System.Windows.Forms.DataVisualization.Charting
 
 Module ChartingExtensions
 
+    Friend Sub PlotMarkers(chart As Chart, bolusRow As Double, insulinRow As Double, mealRow As Single, markerInsulinDictionary As Dictionary(Of Double, Single), markerMealDictionary As Dictionary(Of Double, Single))
+        For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
+            Dim markerSeriesPoints As DataPointCollection = chart.Series(MarkerSeriesName).Points
+            Dim markerBasalPoints As DataPointCollection = chart.Series(BasalSeriesName).Points
+            Dim markerDateTime As Date = s_markers.SafeGetSgDateTime(markerWithIndex.Index)
+            Dim markerOaDateTime As Double = markerDateTime.ToOADate()
+            Dim bgValueString As String = ""
+            Dim bgValue As Single
+            If markerWithIndex.Value.TryGetValue("value", bgValueString) Then
+                bgValueString.TryParseSingle(bgValue)
+            End If
+            Select Case markerWithIndex.Value("type")
+                Case "BG_READING"
+                    If String.IsNullOrWhiteSpace(bgValueString) Then
+                        markerSeriesPoints.AddXY(markerOaDateTime, bgValue)
+                        markerSeriesPoints.Last.BorderColor = Color.Gainsboro
+                        markerSeriesPoints.Last.Color = Color.Transparent
+                        markerSeriesPoints.Last.MarkerBorderWidth = 2
+                        markerSeriesPoints.Last.MarkerSize = 10
+                        markerSeriesPoints.Last.ToolTip = $"Blood Glucose: Not used For calibration: {bgValueString} {BgUnitsString}"
+                    End If
+                Case "CALIBRATION"
+                    markerSeriesPoints.AddXY(markerOaDateTime, bgValue)
+                    markerSeriesPoints.Last.BorderColor = Color.Red
+                    markerSeriesPoints.Last.Color = Color.Transparent
+                    markerSeriesPoints.Last.MarkerBorderWidth = 2
+                    markerSeriesPoints.Last.MarkerSize = 8
+                    markerSeriesPoints.Last.ToolTip = $"Blood Glucose: Calibration {If(CBool(markerWithIndex.Value("calibrationSuccess")), "accepted", "not accepted")}: {markerWithIndex.Value("value")} {BgUnitsString}"
+                Case "INSULIN"
+                    Select Case markerWithIndex.Value("activationType")
+                        Case "AUTOCORRECTION"
+                            If markerInsulinDictionary.TryAdd(markerOaDateTime, CInt(bolusRow)) Then
+                                markerSeriesPoints.AddXY(markerOaDateTime, bolusRow)
+                                markerSeriesPoints.Last.Color = Color.FromArgb(60, Color.MediumPurple)
+                                markerSeriesPoints.Last.ToolTip = $"Auto Correction: {markerWithIndex.Value("deliveredFastAmount")} U"
+                            Else
+                                Stop
+                            End If
+                        Case "RECOMMENDED", "UNDETERMINED"
+                            If markerInsulinDictionary.TryAdd(markerOaDateTime, CInt(insulinRow)) Then
+                                markerSeriesPoints.AddXY(markerOaDateTime, insulinRow)
+                                markerSeriesPoints.Last.Color = Color.FromArgb(30, Color.LightBlue)
+                                markerSeriesPoints.Last.ToolTip = $"Bolus: {markerWithIndex.Value("deliveredFastAmount")} U"
+                            Else
+                                Stop
+                            End If
+                        Case Else
+                            Stop
+                    End Select
+                    markerSeriesPoints.Last.MarkerBorderWidth = 0
+                    markerSeriesPoints.Last.MarkerSize = 15
+                    markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
+                Case "MEAL"
+                    If markerMealDictionary.TryAdd(markerOaDateTime, mealRow) Then
+                        markerSeriesPoints.AddXY(markerOaDateTime, mealRow)
+                        markerSeriesPoints.Last.Color = Color.FromArgb(30, Color.Yellow)
+                        markerSeriesPoints.Last.MarkerBorderWidth = 0
+                        markerSeriesPoints.Last.MarkerSize = 30
+                        markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
+                        markerSeriesPoints.Last.ToolTip = $"Meal:{markerWithIndex.Value("amount")} grams"
+                    End If
+                Case "AUTO_BASAL_DELIVERY"
+                    markerSeriesPoints.AddXY(markerOaDateTime, bolusRow)
+                    markerSeriesPoints.Last.MarkerBorderColor = Color.Black
+                    markerSeriesPoints.Last.ToolTip = $"Auto Basal:{markerWithIndex.Value("bolusAmount").TruncateSingleString(3)} U"
+                Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED"
+                Case "TIME_CHANGE"
+                    With chart.Series("TimeChangeSeries").Points
+                        .AddXY(markerOaDateTime, 0)
+                        .AddXY(markerOaDateTime, bolusRow)
+                        .AddXY(markerOaDateTime, Double.NaN)
+                    End With
+                Case Else
+                    Stop
+            End Select
+        Next
+
+    End Sub
+
     <Extension>
     Friend Sub PlotOnePoint(plotSeries As Series, sgOaDateTime As Double, bgValue As Single, mainLineColor As Color, MealRow As Double, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
         Try
@@ -33,19 +112,6 @@ Module ChartingExtensions
     End Sub
 
     <Extension>
-    Friend Sub InitializeChartArea(c As ChartArea)
-        With c
-            .AxisX.Minimum = s_bindingSourceSGs(0).OADate()
-            .AxisX.Maximum = s_bindingSourceSGs.Last.OADate()
-            .AxisX.MajorGrid.IntervalType = DateTimeIntervalType.Hours
-            .AxisX.MajorGrid.IntervalOffsetType = DateTimeIntervalType.Hours
-            .AxisX.MajorGrid.Interval = 1
-            .AxisX.IntervalType = DateTimeIntervalType.Hours
-            .AxisX.Interval = 2
-        End With
-    End Sub
-
-    <Extension>
     Friend Sub PlotSgSeries(chartSeries As Series, MealRow As Double)
         For Each sgListIndex As IndexClass(Of SgRecord) In s_bindingSourceSGs.WithIndex()
             chartSeries.PlotOnePoint(sgListIndex.Value.OADate(),
@@ -56,59 +122,32 @@ Module ChartingExtensions
     End Sub
 
     <Extension>
-    Friend Sub PostPaintSupport(ByRef chartRelitivePosition As RectangleF, e As ChartPaintEventArgs, scaleHeight As Single, BolusRow As Single, insulinDictionary As Dictionary(Of Double, Single), mealDictionary As Dictionary(Of Double, Single), Optional homePageCursorTimeLabel As Label = Nothing)
+    Friend Sub PostPaintSupport(ByRef chartRelitivePosition As RectangleF, e As ChartPaintEventArgs, BolusRow As Single, insulinDictionary As Dictionary(Of Double, Single), mealDictionary As Dictionary(Of Double, Single), Optional homePageCursorTimeLabel As Label = Nothing)
         Debug.Print("At SyncLock")
-        Dim useYAxis As Boolean = homePageCursorTimeLabel IsNot Nothing
-        Dim highLimitY As Double
-        Dim lowLimitY As Double
-        Dim chartAreaName As String = e.Chart.ChartAreas(0).Name
+
         If chartRelitivePosition.IsEmpty Then
-            chartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(chartAreaName, AxisName.X, s_bindingSourceSGs(0).OADate))
-            If useYAxis Then
-                chartRelitivePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(chartAreaName, AxisName.Y, BolusRow))
-                chartRelitivePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis(chartAreaName, AxisName.Y, CSng(e.ChartGraphics.GetPositionFromAxis(chartAreaName, AxisName.Y, s_limitHigh)))) - chartRelitivePosition.Y
-                highLimitY = e.ChartGraphics.GetPositionFromAxis(chartAreaName, AxisName.Y, s_limitHigh)
-                lowLimitY = e.ChartGraphics.GetPositionFromAxis(chartAreaName, AxisName.Y, s_limitLow)
-            Else
-                chartRelitivePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(chartAreaName, AxisName.Y2, BolusRow))
-                chartRelitivePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis(chartAreaName, AxisName.Y2, CSng(e.ChartGraphics.GetPositionFromAxis(chartAreaName, AxisName.Y, s_limitHigh)))) - chartRelitivePosition.Y
-                highLimitY = e.ChartGraphics.GetPositionFromAxis(chartAreaName, AxisName.Y2, s_limitHigh)
-                lowLimitY = e.ChartGraphics.GetPositionFromAxis(chartAreaName, AxisName.Y2, s_limitLow)
-            End If
-            chartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(chartAreaName, AxisName.X, s_bindingSourceSGs.Last.OADate)) - chartRelitivePosition.X
-            chartRelitivePosition = e.ChartGraphics.GetAbsoluteRectangle(chartRelitivePosition)
+            chartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.X, s_bindingSourceSGs(0).OADate))
+            chartRelitivePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, BolusRow))
+            chartRelitivePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_limitHigh)))) - chartRelitivePosition.Y
+            chartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.X, s_bindingSourceSGs.Last.OADate)) - chartRelitivePosition.X
         End If
-        If useYAxis Then
+        Dim highLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_limitHigh))
+        Dim lowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_limitLow))
+        Dim criticalLowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_criticalLow))
+        Dim chartAbsoluteHighRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelitivePosition.X, chartRelitivePosition.Y, chartRelitivePosition.Width, highLimitY - chartRelitivePosition.Y))
+        Dim chartAbsoluteLowRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelitivePosition.X, lowLimitY, chartRelitivePosition.Width, criticalLowLimitY - lowLimitY))
 
-            Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
-                Dim highHeight As Integer = CInt(255 * scaleHeight)
+        Using b As New SolidBrush(Color.FromArgb(30, Color.Black))
+            e.ChartGraphics.Graphics.FillRectangle(b, chartAbsoluteHighRectangle)
+            e.ChartGraphics.Graphics.FillRectangle(b, chartAbsoluteLowRectangle)
+        End Using
 
-                Dim chartY As Integer = CInt(chartRelitivePosition.Y)
-                Dim homePagelocation As New Point(CInt(chartRelitivePosition.X), chartY)
-                Dim homePageChartWidth As Integer = CInt(chartRelitivePosition.Width)
-                Dim highAreaRectangle As New Rectangle(homePagelocation,
-                                                       New Size(homePageChartWidth, highHeight))
-                e.ChartGraphics.Graphics.FillRectangle(b, highAreaRectangle)
-
-                Dim lowOffset As Integer = CInt((10 + chartRelitivePosition.Height) * scaleHeight)
-                Dim lowStartLocation As New Point(CInt(chartRelitivePosition.X), lowOffset)
-
-                Dim lowRawHeight As Integer = CInt((50 - chartY) * scaleHeight)
-                Dim lowHeight As Integer = If(e.Chart.ChartAreas(0).AxisX.ScrollBar.IsVisible,
-                                              CInt(lowRawHeight - e.Chart.ChartAreas(0).AxisX.ScrollBar.Size),
-                                              lowRawHeight
-                                             )
-                Dim lowAreaRectangle As New Rectangle(lowStartLocation,
-                                                      New Size(homePageChartWidth, lowHeight))
-                e.ChartGraphics.Graphics.FillRectangle(b, lowAreaRectangle)
-                If homePageCursorTimeLabel?.Tag IsNot Nothing Then
-                    homePageCursorTimeLabel.Left = CInt(e.ChartGraphics.GetPositionFromAxis(chartAreaName, AxisName.X, homePageCursorTimeLabel.Tag.ToString.ParseDate("").ToOADate))
-                End If
-            End Using
-
+        If homePageCursorTimeLabel?.Tag IsNot Nothing Then
+            homePageCursorTimeLabel.Left = CInt(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.X, homePageCursorTimeLabel.Tag.ToString.ParseDate("").ToOADate))
         End If
-        e.PaintMarker(s_mealImage, mealDictionary, useYAxis)
-        e.PaintMarker(s_insulinImage, insulinDictionary, useYAxis)
+
+        e.PaintMarker(s_mealImage, mealDictionary)
+        e.PaintMarker(s_insulinImage, insulinDictionary)
     End Sub
 
 End Module

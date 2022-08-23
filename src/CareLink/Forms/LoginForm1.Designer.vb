@@ -126,7 +126,7 @@ Partial Class LoginForm1
         Me.SaveCredentials.Name = "SaveCredentials"
         Me.SaveCredentials.Size = New System.Drawing.Size(187, 19)
         Me.SaveCredentials.TabIndex = 11
-        Me.SaveCredentials.Text = "Save User Name and Password"
+        Me.SaveCredentials.Text = "Save User BgSeriesName and Password"
         Me.SaveCredentials.UseVisualStyleBackColor = True
         '
         'CountryComboBox

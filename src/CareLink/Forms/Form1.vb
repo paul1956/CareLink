@@ -83,15 +83,24 @@ Public Class Form1
 
 #Region "Series"
 
-    Private WithEvents ActiveInsulinCurrentBGSeries As Series
+#Region "Common Series"
+
+    Private WithEvents ActiveInsulinBasalSeries As Series
+    Private WithEvents ActiveInsulinBGSeries As Series
     Private WithEvents ActiveInsulinMarkerSeries As Series
-    Private WithEvents ActiveInsulinSeries As Series
     Private WithEvents ActiveInsulinTimeChangeSeries As Series
-    Private WithEvents HomeTabCurrentBGSeries As Series
-    Private WithEvents HomeTabHighLimitSeries As Series
-    Private WithEvents HomeTabLowLimitSeries As Series
+
+    Private WithEvents HomeTabBasalSeries As Series
+    Private WithEvents HomeTabBGSeries As Series
     Private WithEvents HomeTabMarkerSeries As Series
     Private WithEvents HomeTabTimeChangeSeries As Series
+
+#End Region
+
+    Private WithEvents ActiveInsulinSeries As Series
+
+    Private WithEvents HomeTabHighLimitSeries As Series
+    Private WithEvents HomeTabLowLimitSeries As Series
     Private WithEvents HomeTabTimeInRangeSeries As New Series
 
 #End Region
@@ -143,7 +152,7 @@ Public Class Form1
         End Select
         Me.FinishInitialization()
         If UpdateAllTabs Then
-            Me.UpdateAllTabPages()
+            Me.AllTabPagesUpdate()
         End If
         Return True
     End Function
@@ -231,7 +240,7 @@ Public Class Form1
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
         CheckForUpdatesAsync(Me, False)
         If Me.DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
-            Me.UpdateAllTabPages()
+            Me.AllTabPagesUpdate()
         End If
     End Sub
 
@@ -277,7 +286,7 @@ Public Class Form1
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                         Me.LastUpdateTime.Text = $"{File.GetLastWriteTime(fileNameWithPath).ToShortDateTimeString} from file"
                         Me.FinishInitialization()
-                        Me.UpdateAllTabPages()
+                        Me.AllTabPagesUpdate()
                     End If
                 End If
             Catch ex As Exception
@@ -321,7 +330,7 @@ Public Class Form1
                     Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
                     Me.LastUpdateTime.Text = File.GetLastWriteTime(openFileDialog1.FileName).ToShortDateTimeString
                     Me.FinishInitialization()
-                    Me.UpdateAllTabPages()
+                    Me.AllTabPagesUpdate()
                 End If
             Catch ex As Exception
                 MessageBox.Show($"Cannot read file from disk. Original error: {ex.Message}")
@@ -420,10 +429,6 @@ Public Class Form1
 
 #End Region
 
-#End Region
-
-#Region "HomePage Tab Events"
-
     Private Sub AITComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AITComboBox.SelectedIndexChanged
         If Me.AITComboBox.SelectedIndex < 1 Then
             Exit Sub
@@ -437,17 +442,21 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub CalibrationDueImage_MouseHover(sender As Object, e As EventArgs) Handles CalibrationDueImage.MouseHover
-        If s_timeToNextCalibrationMinutes > 0 AndAlso s_timeToNextCalibrationMinutes < 1440 Then
-            _calibrationToolTip.SetToolTip(Me.CalibrationDueImage, $"Calibration Due {Now.AddMinutes(s_timeToNextCalibrationMinutes).ToShortTimeString}")
-        End If
-    End Sub
+#End Region
+
+#Region "HomePage Tab Events"
 
     Private Sub TabControlHomePage_Selected(sender As Object, e As TabControlEventArgs) Handles TabControlHomePage.Selected
         Application.DoEvents()
     End Sub
 
 #Region "Home Page Chart Events"
+
+    Private Sub CalibrationDueImage_MouseHover(sender As Object, e As EventArgs) Handles CalibrationDueImage.MouseHover
+        If s_timeToNextCalibrationMinutes > 0 AndAlso s_timeToNextCalibrationMinutes < 1440 Then
+            _calibrationToolTip.SetToolTip(Me.CalibrationDueImage, $"Calibration Due {Now.AddMinutes(s_timeToNextCalibrationMinutes).ToShortTimeString}")
+        End If
+    End Sub
 
     Private Sub HomePageChart_CursorPositionChanging(sender As Object, e As CursorEventArgs) Handles HomeTabChart.CursorPositionChanging
         If Not Me.Initialized Then Exit Sub
@@ -464,7 +473,7 @@ Public Class Form1
         _inMouseMove = True
         Dim yInPixels As Double
         Try
-            yInPixels = Me.HomeTabChart.ChartAreas("ChartArea").AxisY2.ValueToPixelPosition(e.Y)
+            yInPixels = Me.HomeTabChart.ChartAreas(ChartAreaName).AxisY2.ValueToPixelPosition(e.Y)
         Catch ex As Exception
             yInPixels = Double.NaN
         End Try
@@ -481,10 +490,10 @@ Public Class Form1
             End If
             Me.CursorTimeLabel.Left = e.X - (Me.CursorTimeLabel.Width \ 2)
             Select Case result.Series.Name
-                Case "HighLimitSeries",
-                     "LowLimitSeries"
+                Case HighLimitSeriesName,
+                     LowLimitSeriesName
                     Me.CursorPanel.Visible = False
-                Case "MarkerSeries"
+                Case MarkerSeriesName
                     Dim markerToolTip() As String = result.Series.Points(result.PointIndex).ToolTip.Split(":"c)
                     Dim xValue As Date = Date.FromOADate(result.Series.Points(result.PointIndex).XValue)
                     Me.CursorTimeLabel.Text = xValue.ToString(s_timeWithMinuteFormat)
@@ -536,7 +545,7 @@ Public Class Form1
                             Stop
                             Me.CursorPanel.Visible = False
                     End Select
-                Case "BGSeries"
+                Case BgSeriesName
                     Me.CursorMessage1Label.Text = $"{result.Series.Points(result.PointIndex).YValues(0).RoundToSingle(3)} {BgUnitsString}"
                     Me.CursorMessage1Label.Visible = True
                     Me.CursorMessage2Label.Visible = False
@@ -562,17 +571,6 @@ Public Class Form1
         Finally
             _inMouseMove = False
         End Try
-    End Sub
-
-    <DebuggerNonUserCode()>
-    Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomeTabChart.PostPaint
-
-        If Not Me.Initialized OrElse _updating OrElse _inMouseMove Then
-            Exit Sub
-        End If
-        SyncLock _updatingLock
-            PostPaintSupport(_homePageAbsoluteRectangle, e, Me.FormScale.Height, Me.BolusRow, s_homeTabMarkerInsulinDictionary, s_homeTabMarkerMealDictionary, Me.CursorTimeLabel)
-        End SyncLock
     End Sub
 
     Private Sub SensorAgeLeftLabel_MouseHover(sender As Object, e As EventArgs)
@@ -835,7 +833,7 @@ Public Class Form1
                     Me.LastUpdateTime.Text = Now.ToShortDateTimeString
                 End If
             End If
-            Me.UpdateAllTabPages()
+            Me.AllTabPagesUpdate()
             Me.Cursor = Cursors.Default
             Application.DoEvents()
         End If
@@ -844,7 +842,33 @@ Public Class Form1
         Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
     End Sub
 
-#End Region ' Timer
+#End Region ' Timer Events
+
+#Region "Post Paint Events"
+
+    <DebuggerNonUserCode()>
+    Private Sub ActiveInsulitChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles ActiveInsulinChart.PostPaint
+
+        If Not Me.Initialized OrElse _updating OrElse _inMouseMove Then
+            Exit Sub
+        End If
+        SyncLock _updatingLock
+            PostPaintSupport(_activeInsulinAbsoluteRectangle, e, Me.BolusRow, s_activeInsulinMarkerInsulinDictionary, s_activeInsulinMarkerMealDictionary)
+        End SyncLock
+    End Sub
+
+    <DebuggerNonUserCode()>
+    Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomeTabChart.PostPaint
+
+        If Not Me.Initialized OrElse _updating OrElse _inMouseMove Then
+            Exit Sub
+        End If
+        SyncLock _updatingLock
+            PostPaintSupport(_homePageAbsoluteRectangle, e, Me.BolusRow, s_homeTabMarkerInsulinDictionary, s_homeTabMarkerMealDictionary, Me.CursorTimeLabel)
+        End SyncLock
+    End Sub
+
+#End Region ' Post Paint Events
 
 #End Region ' Events
 
@@ -856,14 +880,8 @@ Public Class Form1
         Me.SplitContainer3.Panel1.Controls.Clear()
         Me.SplitContainer3.Panel1.Controls.Add(Me.CursorTimeLabel)
         Me.HomeTabChart = CreateChart(NameOf(ActiveInsulinChart))
-
-        Me.HomeTabChartArea = CreateChartArea("ChartArea")
+        Me.HomeTabChartArea = CreateChartArea()
         With Me.HomeTabChartArea
-            With .AxisY
-                .MajorTickMark = New TickMark() With {.Interval = Me.MealRow, .Enabled = False}
-                .Maximum = Me.BolusRow
-                .Minimum = Me.MealRow
-            End With
             With .AxisY2
                 .Interval = Me.MealRow
                 .IsMarginVisible = False
@@ -877,41 +895,34 @@ Public Class Form1
                 .MajorTickMark = New TickMark() With {.Interval = Me.MealRow, .Enabled = True}
                 .Maximum = Me.BolusRow
                 .Minimum = Me.MealRow
+                .Title = "BG Value"
             End With
         End With
         Me.HomeTabChart.ChartAreas.Add(Me.HomeTabChartArea)
 
-        Dim defaultLegend As Legend = CreateLegend(NameOf(defaultLegend))
-        Me.HomeTabCurrentBGSeries = CreateSeriesBg("BGSeries", "ChartArea", NameOf(defaultLegend))
-        Me.HomeTabMarkerSeries = New Series With {
-                .BorderColor = Color.Transparent,
-                .BorderWidth = 1,
-                .ChartArea = "ChartArea",
-                .ChartType = SeriesChartType.Point,
-                .Color = Color.HotPink,
-                .Name = "MarkerSeries",
-                .MarkerSize = 12,
-                .MarkerStyle = MarkerStyle.Circle,
-                .XValueType = ChartValueType.DateTime,
-                .YAxisType = AxisType.Secondary
-            }
+        Dim defaultLegend As Legend = CreateChartLegend(NameOf(defaultLegend))
 
-        Me.HomeTabHighLimitSeries = CreateSeriesLimits("HighLimitSeries", "ChartArea", Color.Orange)
-        Me.HomeTabLowLimitSeries = CreateSeriesLimits("LowLimitSeries", "ChartArea", Color.Red)
-        Me.HomeTabTimeChangeSeries = CreateSeriesTimeChange("TimeChangeSeries", "ChartArea")
+        Me.HomeTabBasalSeries = CreateBasalSeries()
+        Me.HomeTabBGSeries = CreateSeriesBg(NameOf(defaultLegend))
+        Me.HomeTabMarkerSeries = CreateMarkerSeries()
+
+        Me.HomeTabHighLimitSeries = CreateSeriesLimits(HighLimitSeriesName, ChartAreaName, Color.Orange)
+        Me.HomeTabLowLimitSeries = CreateSeriesLimits(LowLimitSeriesName, ChartAreaName, Color.Red)
+        Me.HomeTabTimeChangeSeries = CreateTimeChangeSeries()
         Me.SplitContainer3.Panel1.Controls.Add(Me.HomeTabChart)
         Application.DoEvents()
         With Me.HomeTabChart
             With .Series
-                .Add(Me.HomeTabCurrentBGSeries)
+                .Add(Me.HomeTabBGSeries)
+                .Add(Me.HomeTabBasalSeries)
                 .Add(Me.HomeTabMarkerSeries)
                 .Add(Me.HomeTabHighLimitSeries)
                 .Add(Me.HomeTabLowLimitSeries)
                 .Add(Me.HomeTabTimeChangeSeries)
             End With
             .Legends.Add(defaultLegend)
-            .Series("BGSeries").EmptyPointStyle.BorderWidth = 4
-            .Series("BGSeries").EmptyPointStyle.Color = Color.Transparent
+            .Series(BgSeriesName).EmptyPointStyle.BorderWidth = 4
+            .Series(BgSeriesName).EmptyPointStyle.Color = Color.Transparent
         End With
         Application.DoEvents()
     End Sub
@@ -959,26 +970,15 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
-#End Region
+#End Region ' Initialize Home Tab Charts
 
 #Region "Initialize Active Insulin Tab Charts"
-
-    <DebuggerNonUserCode()>
-    Private Sub ActiveInsulitChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles ActiveInsulinChart.PostPaint
-
-        If Not Me.Initialized OrElse _updating OrElse _inMouseMove Then
-            Exit Sub
-        End If
-        SyncLock _updatingLock
-            PostPaintSupport(_activeInsulinAbsoluteRectangle, e, Me.FormScale.Height, Me.BolusRow, s_activeInsulinMarkerInsulinDictionary, s_activeInsulinMarkerMealDictionary)
-        End SyncLock
-    End Sub
 
     Private Sub InitializeActiveInsulinTabChart()
         Me.TabPage02RunningActiveInsulin.Controls.Clear()
 
         Me.ActiveInsulinChart = CreateChart(NameOf(ActiveInsulinChart))
-        Me.ActiveInsulinChartArea = CreateChartArea("ChartArea")
+        Me.ActiveInsulinChartArea = CreateChartArea()
         With Me.ActiveInsulinChartArea
             With .AxisY
                 .MajorTickMark = New TickMark() With {.Interval = Me.MealRow, .Enabled = False}
@@ -990,6 +990,14 @@ Public Class Form1
             End With
             With .AxisY2
                 .Interval = Me.MealRow
+                .IsMarginVisible = False
+                .IsStartedFromZero = False
+                .LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
+                .LineColor = Color.FromArgb(64, 64, 64, 64)
+                .MajorGrid = New Grid With {
+                        .Interval = Me.MealRow,
+                        .LineColor = Color.FromArgb(64, 64, 64, 64)
+                    }
                 .Maximum = Me.BolusRow
                 .Minimum = Me.MealRow
                 .Title = "BG Value"
@@ -997,12 +1005,12 @@ Public Class Form1
         End With
         Me.ActiveInsulinChart.ChartAreas.Add(Me.ActiveInsulinChartArea)
 
-        Me.ActiveInsulinChartLegend = CreateLegend(NameOf(ActiveInsulinChartLegend))
+        Me.ActiveInsulinChartLegend = CreateChartLegend(NameOf(ActiveInsulinChartLegend))
         Me.ActiveInsulinChart.Legends.Add(Me.ActiveInsulinChartLegend)
         Me.ActiveInsulinSeries = New Series With {
             .BorderColor = Color.FromArgb(180, 26, 59, 105),
             .BorderWidth = 4,
-            .ChartArea = "ChartArea",
+            .ChartArea = ChartAreaName,
             .ChartType = SeriesChartType.Line,
             .Color = Color.HotPink,
             .Legend = NameOf(ActiveInsulinChartLegend),
@@ -1011,28 +1019,21 @@ Public Class Form1
             .XValueType = ChartValueType.DateTime,
             .YAxisType = AxisType.Primary
         }
-        Me.ActiveInsulinCurrentBGSeries = CreateSeriesBg("BGSeries", "ChartArea", NameOf(ActiveInsulinChartLegend))
-        Me.ActiveInsulinMarkerSeries = New Series With {
-            .BorderColor = Color.Transparent,
-            .BorderWidth = 1,
-            .ChartArea = "ChartArea",
-            .ChartType = SeriesChartType.Point,
-            .Color = Color.HotPink,
-            .Name = "MarkerSeries",
-            .MarkerSize = 8,
-            .MarkerStyle = MarkerStyle.Circle,
-            .XValueType = ChartValueType.DateTime,
-            .YAxisType = AxisType.Secondary
-        }
         Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinSeries)
-        Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinCurrentBGSeries)
+
+        Me.ActiveInsulinBasalSeries = CreateBasalSeries()
+        Me.ActiveInsulinBGSeries = CreateSeriesBg(NameOf(ActiveInsulinChartLegend))
+        Me.ActiveInsulinMarkerSeries = CreateMarkerSeries()
+        Me.ActiveInsulinTimeChangeSeries = CreateTimeChangeSeries()
+        Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinBasalSeries)
+        Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinBGSeries)
         Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinMarkerSeries)
-        Me.ActiveInsulinChart.Series.Add(CreateSeriesTimeChange("TimeChangeSeries", "ChartArea"))
+        Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinTimeChangeSeries())
 
         Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinSeries)).EmptyPointStyle.Color = Color.Transparent
         Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinSeries)).EmptyPointStyle.BorderWidth = 4
-        Me.ActiveInsulinChart.Series("BGSeries").EmptyPointStyle.Color = Color.Transparent
-        Me.ActiveInsulinChart.Series("BGSeries").EmptyPointStyle.BorderWidth = 4
+        Me.ActiveInsulinChart.Series(BgSeriesName).EmptyPointStyle.Color = Color.Transparent
+        Me.ActiveInsulinChart.Series(BgSeriesName).EmptyPointStyle.BorderWidth = 4
         Me.ActiveInsulinChartTitle = New Title With {
                 .Font = New Font("Trebuchet MS", 12.0F, FontStyle.Bold),
                 .ForeColor = Color.FromArgb(26, 59, 105),
@@ -1048,150 +1049,9 @@ Public Class Form1
 
 #End Region
 
-#End Region
+#End Region ' Initialize Charts
 
 #Region "Update Data/Tables"
-
-    Private Shared Sub FillOneRowOfTableLayoutPanel(layoutPanel As TableLayoutPanel, innerJson As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String, isScaledForm As Boolean)
-        For i As Integer = 1 To innerJson.Count - 1
-            layoutPanel.RowStyles.Add(New RowStyle(SizeType.AutoSize, 0))
-        Next
-        For Each jsonEntry As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
-            Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, Color.Black)
-            layoutPanel.Controls.Add(innerTableBlue, 0, layoutPanel.RowCount)
-            GetInnerTable(jsonEntry.Value, innerTableBlue, rowIndex, filterJsonData, timeFormat, isScaledForm)
-            Application.DoEvents()
-        Next
-    End Sub
-
-    Private Shared Sub GetInnerTable(innerJson As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String, isScaledForm As Boolean)
-        tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
-        tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
-        tableLevel1Blue.BackColor = Color.LightBlue
-        Dim messageOrDefault As KeyValuePair(Of String, String) = innerJson.Where(Function(kvp As KeyValuePair(Of String, String)) kvp.Key = "messageId").FirstOrDefault
-        If itemIndex = ItemIndexs.lastAlarm AndAlso messageOrDefault.Key IsNot Nothing Then
-            tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22))
-            Dim keyLabel As Label = CreateBasicLabel("messageId")
-            tableLevel1Blue.RowCount += 1
-            Dim textBox1 As TextBox = CreateValueTextBox(innerJson, messageOrDefault, timeFormat, isScaledForm)
-
-            If textBox1.Text.Length > 100 Then
-                My.Forms.Form1.ToolTip1.SetToolTip(textBox1, textBox1.Text)
-            Else
-                My.Forms.Form1.ToolTip1.SetToolTip(textBox1, Nothing)
-            End If
-            tableLevel1Blue.Controls.AddRange({keyLabel,
-                                                       textBox1
-                                                      }
-                                             )
-        End If
-
-        For Each c As IndexClass(Of KeyValuePair(Of String, String)) In innerJson.WithIndex()
-            Application.DoEvents()
-            Dim innerRow As KeyValuePair(Of String, String) = c.Value
-            ' Comment out 4 lines below to see all data fields.
-            ' I did not see any use to display the filtered out ones
-            If filterJsonData AndAlso s_zFilterList.ContainsKey(itemIndex) AndAlso innerJson.Count > 4 Then
-                If s_zFilterList(itemIndex).Contains(innerRow.Key) Then
-                    Continue For
-                End If
-            End If
-            If innerRow.Key = "clearedNotifications" Then
-                tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize, 0))
-            Else
-                tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22))
-            End If
-            tableLevel1Blue.RowCount += 1
-            If itemIndex = ItemIndexs.notificationHistory AndAlso c.Value.Key = "activeNotifications" Then
-                tableLevel1Blue.AutoSize = True
-            End If
-
-            If innerRow.Value.StartsWith("[") Then
-                Dim innerJson1 As List(Of Dictionary(Of String, String)) = LoadList(innerRow.Value)
-                If innerRow.Key = "clearedNotifications" Then
-                    innerJson1.Reverse()
-                End If
-                If innerJson1.Count > 0 Then
-                    Dim tableLevel2 As TableLayoutPanel = CreateTableLayoutPanel(NameOf(tableLevel2), innerJson1.Count, Color.LightBlue)
-
-                    For i As Integer = 0 To innerJson1.Count - 1
-                        tableLevel2.RowStyles.Add(New RowStyle(SizeType.AutoSize, 0))
-                    Next
-                    tableLevel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 80.0))
-                    For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson1.WithIndex()
-                        Dim dic As Dictionary(Of String, String) = innerDictionary.Value
-                        tableLevel2.RowStyles.Add(New RowStyle(SizeType.Absolute, 4 + (dic.Keys.Count * 22)))
-                        Dim tableLevel3 As TableLayoutPanel = CreateTableLayoutPanel(NameOf(tableLevel3), 0, Color.Aqua)
-                        For Each e As IndexClass(Of KeyValuePair(Of String, String)) In dic.WithIndex()
-                            Dim eValue As KeyValuePair(Of String, String) = e.Value
-
-                            If filterJsonData AndAlso s_zFilterList.ContainsKey(itemIndex) Then
-                                If s_zFilterList(itemIndex).Contains(eValue.Key) Then
-                                    Continue For
-                                End If
-                            End If
-                            tableLevel3.RowCount += 1
-                            tableLevel3.RowStyles.Add(New RowStyle(SizeType.Absolute, 22.0))
-
-                            Dim valueLabel As Label = CreateBasicLabel(eValue.Key)
-                            If eValue.Key.Equals("messageid", StringComparison.OrdinalIgnoreCase) Then
-                                tableLevel3.Controls.AddRange({valueLabel, CreateBasicTextBox(eValue.Value)})
-                                valueLabel = CreateBasicLabel("Message")
-                            End If
-                            tableLevel3.Controls.AddRange({valueLabel, CreateValueTextBox(dic, eValue, timeFormat, isScaledForm)})
-                            Application.DoEvents()
-                        Next
-                        tableLevel3.Height += 40
-                        tableLevel2.Controls.Add(tableLevel3, 0, innerDictionary.Index)
-                        tableLevel2.Height += 4
-                        Application.DoEvents()
-                    Next
-                    tableLevel1Blue.Controls.AddRange({CreateBasicLabel(innerRow.Key), tableLevel2})
-                Else
-                    tableLevel1Blue.Controls.AddRange({CreateBasicLabel(innerRow.Key), CreateBasicTextBox("")})
-                End If
-            Else
-                ' This is ItemIndexs.lastAlarm and its already been done
-                If innerRow.Key <> "messageId" Then
-                    Dim textBox1 As TextBox = CreateValueTextBox(innerJson, innerRow, timeFormat, isScaledForm)
-                    My.Forms.Form1.ToolTip1.SetToolTip(textBox1, textBox1.Text)
-                    tableLevel1Blue.Controls.AddRange({CreateBasicLabel(innerRow.Key), textBox1})
-                End If
-            End If
-        Next
-
-        If itemIndex = ItemIndexs.lastSG Then
-            tableLevel1Blue.AutoSize = False
-            tableLevel1Blue.RowCount += 1
-            tableLevel1Blue.Width = 400
-            tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize, 0))
-        ElseIf itemIndex = ItemIndexs.lastAlarm Then
-            Dim parentTableLayoutPanel As TableLayoutPanel = CType(tableLevel1Blue.Parent, TableLayoutPanel)
-            parentTableLayoutPanel.AutoSize = False
-            tableLevel1Blue.Dock = DockStyle.Fill
-            Application.DoEvents()
-            tableLevel1Blue.ColumnStyles(1).SizeType = SizeType.Absolute
-            If tableLevel1Blue.RowCount > 7 Then
-                parentTableLayoutPanel.AutoScroll = True
-            Else
-                parentTableLayoutPanel.Width = 870
-                tableLevel1Blue.AutoScroll = False
-            End If
-            Dim tableLevel1BlueWidth As Integer = tableLevel1Blue.Width
-            tableLevel1Blue.AutoSize = False
-            tableLevel1Blue.RowCount += 1
-            tableLevel1Blue.Height = 22 * (tableLevel1Blue.RowCount - 1)
-            tableLevel1Blue.Dock = DockStyle.None
-            Application.DoEvents()
-            tableLevel1Blue.Width = tableLevel1BlueWidth - 30
-            Application.DoEvents()
-            tableLevel1Blue.Dock = DockStyle.Fill
-            Application.DoEvents()
-        ElseIf itemIndex = ItemIndexs.notificationHistory Then
-            tableLevel1Blue.RowStyles(1) = New RowStyle(SizeType.AutoSize, 0)
-        End If
-        Application.DoEvents()
-    End Sub
 
     Private Shared Function GetLimitsList(count As Integer) As Integer()
         Dim limitsIndexList(count) As Integer
@@ -1204,51 +1064,6 @@ Public Class Form1
         Next
         Return limitsIndexList
     End Function
-
-    Private Shared Sub ProcesListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of InsulinRecord), rowIndex As ItemIndexs)
-        initializeTableLayoutPanel(realPanel, rowIndex)
-        dGridView.DataSource = recordData
-        dGridView.RowHeadersVisible = False
-    End Sub
-
-    Private Shared Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of SgRecord), rowIndex As ItemIndexs)
-        initializeTableLayoutPanel(realPanel, rowIndex)
-        dGridView.DataSource = recordData
-        dGridView.RowHeadersVisible = False
-    End Sub
-
-    Private Shared Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of AutoBasalDeliveryRecord), rowIndex As ItemIndexs)
-        initializeTableLayoutPanel(realPanel, rowIndex)
-        dGridView.DataSource = recordData
-        dGridView.RowHeadersVisible = False
-    End Sub
-
-    Private Shared Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, innerListDictionary As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, isScaledForm As Boolean)
-
-        If innerListDictionary.Count = 0 Then
-            initializeTableLayoutPanel(realPanel, rowIndex, )
-            Dim rowTextBox As TextBox = CreateBasicTextBox("")
-            rowTextBox.BackColor = Color.LightGray
-            realPanel.Controls.Add(rowTextBox)
-            Exit Sub
-        Else
-            initializeTableLayoutPanel(realPanel, rowIndex)
-        End If
-        realPanel.Hide()
-        Application.DoEvents()
-        realPanel.AutoScroll = True
-        realPanel.Parent.Parent.UseWaitCursor = True
-        FillOneRowOfTableLayoutPanel(
-            realPanel,
-            innerListDictionary,
-            rowIndex,
-            s_filterJsonData,
-            s_timeWithMinuteFormat,
-            isScaledForm)
-        realPanel.Parent.Parent.UseWaitCursor = False
-        realPanel.Show()
-        Application.DoEvents()
-    End Sub
 
 #Region "Update Data and Tables"
 
@@ -1653,7 +1468,57 @@ Public Class Form1
         Me.Cursor = Cursors.Default
     End Sub
 
-#End Region
+#End Region ' Update Data and Tables
+
+#End Region ' Update Data/Tables
+
+#Region "Update Home Tab"
+
+    Friend Sub AllTabPagesUpdate()
+        Me.SummaryDataGridView.DataSource = s_bindingSourceSummary
+        Me.SummaryDataGridView.RowHeadersVisible = False
+        If Me.RecentData Is Nothing Then
+            Exit Sub
+        End If
+        If Me.RecentData.Count > ItemIndexs.finalCalibration + 1 Then
+            Stop
+        End If
+        SyncLock _updatingLock
+            _updating = True ' prevent paint
+            Me.MenuStartHere.Enabled = False
+            If Not Me.LastUpdateTime.Text.Contains("from file") Then
+                Me.LastUpdateTime.Text = Now.ToShortDateTimeString
+            End If
+            Me.CursorPanel.Visible = False
+            Me.UpdateDataTables(Me.FormScale.Height <> 1 OrElse Me.FormScale.Width <> 1)
+            Me.UpdateActiveInsulinChart()
+            Me.UpdateActiveInsulin()
+            Me.UpdateAutoModeShield()
+            Me.UpdateCalibrationTimeRemaining()
+            Me.UpdateInsulinLevel()
+            Me.UpdatePumpBattery()
+            Me.UpdateRemainingInsulin()
+            Me.UpdateSensorLife()
+            Me.UpdateTimeInRange()
+            Me.UpdateTransmitterBatttery()
+            Me.UpdateHomeTabSerieses()
+            Me.UpdateDosingAndCarbs()
+            s_recentDatalast = Me.RecentData
+            Me.MenuStartHere.Enabled = True
+            _updating = False
+        End SyncLock
+        Application.DoEvents()
+    End Sub
+
+    Private Sub UpdateActiveInsulin(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+        Try
+            Dim activeInsulinStr As String = $"{s_activeInsulin("amount"):N3}"
+            Me.ActiveInsulinValue.Text = $"Active Insulin{Environment.NewLine}{activeInsulinStr} U"
+            _bgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
+        Catch ex As Exception
+            Throw New ArithmeticException($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
+        End Try
+    End Sub
 
     Private Sub UpdateActiveInsulinChart(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
         If Not Me.Initialized Then
@@ -1667,7 +1532,7 @@ Public Class Form1
                 Next
 
                 .Titles(NameOf(ActiveInsulinChartTitle)).Text = $"Running Active Insulin in Pink"
-                InitializeChartArea(.ChartAreas("ChartArea"))
+                InitializeChartArea(.ChartAreas(ChartAreaName))
             End With
 
             ' Order all markers by time
@@ -1740,14 +1605,69 @@ Public Class Form1
             maxActiveInsulin = Me.ActiveInsulinChartArea.AxisY.Maximum
 
             PlotMarkers(Me.ActiveInsulinChart, Me.BolusRow, Me.InsulinRow, Me.MealRow, s_activeInsulinMarkerInsulinDictionary, s_activeInsulinMarkerMealDictionary)
-            PlotSgSeries(Me.ActiveInsulinChart.Series("BGSeries"), Me.MealRow)
+            PlotSgSeries(Me.ActiveInsulinChart.Series(BgSeriesName), Me.MealRow)
         Catch ex As Exception
             Throw New ArithmeticException($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
         End Try
         Application.DoEvents()
     End Sub
 
-#Region "All Home Tab Charts"
+    Private Sub UpdateAutoModeShield(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+        Try
+            If s_lastSG("sg") <> "0" Then
+                Me.CurrentBG.Visible = True
+                Me.CurrentBG.Text = s_lastSG("sg")
+                Me.UpdateNotifyIcon()
+                _bgMiniDisplay.SetCurrentBGString(s_lastSG("sg"))
+                Me.SensorMessage.Visible = False
+                Me.CalibrationShieldPictureBox.Image = My.Resources.Shield
+                Me.ShieldUnitsLabel.Visible = True
+                Me.ShieldUnitsLabel.BackColor = Color.Transparent
+                Me.ShieldUnitsLabel.Text = BgUnitsString
+            Else
+                _bgMiniDisplay.SetCurrentBGString("---")
+                Me.CurrentBG.Visible = False
+                Me.CalibrationShieldPictureBox.Image = My.Resources.Shield_Disabled
+                Me.ShieldUnitsLabel.Text = BgUnitsString
+                Me.SensorMessage.Visible = True
+                Me.SensorMessage.BackColor = Color.Transparent
+                Dim message As String = ""
+                If s_sensorMessages.TryGetValue(s_sensorState, message) Then
+                    message = message.ToTitle
+                Else
+                    MsgBox($"{s_sensorState} is unknown sensor message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
+                End If
+                Me.SensorMessage.Text = message
+                Me.ShieldUnitsLabel.Visible = False
+                Me.SensorMessage.Visible = True
+                Application.DoEvents()
+            End If
+            If _bgMiniDisplay.Visible Then
+                _bgMiniDisplay.BGTextBox.SelectionLength = 0
+            End If
+        Catch ex As Exception
+            Throw New ArithmeticException($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
+        End Try
+        Application.DoEvents()
+    End Sub
+
+    Private Sub UpdateCalibrationTimeRemaining(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+        Try
+            If s_timeToNextCalibHours = Byte.MaxValue Then
+                Me.CalibrationDueImage.Image = My.Resources.CalibrationUnavailable
+            ElseIf s_timeToNextCalibHours < 1 Then
+                Me.CalibrationDueImage.Image = If(s_systemStatusMessage = "WAIT_TO_CALIBRATE" OrElse s_sensorState = "WARM_UP",
+                My.Resources.CalibrationNotReady,
+                My.Resources.CalibrationDotRed.DrawCenteredArc(s_timeToNextCalibHours, s_timeToNextCalibrationMinutes / 60))
+            Else
+                Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(s_timeToNextCalibrationMinutes / 60, s_timeToNextCalibrationMinutes / 60 / 12)
+            End If
+        Catch ex As Exception
+            Throw New ArithmeticException($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
+        End Try
+
+        Application.DoEvents()
+    End Sub
 
     Private Sub UpdateDosingAndCarbs()
         s_totalAutoCorrection = 0
@@ -1809,190 +1729,44 @@ Public Class Form1
         Me.Last24CarbsValueLabel.Text = $"Carbs - {s_totalCarbs} Grams"
     End Sub
 
-#End Region
-
-    Friend Sub UpdateAllTabPages()
-        Me.SummaryDataGridView.DataSource = s_bindingSourceSummary
-        Me.SummaryDataGridView.RowHeadersVisible = False
-        If Me.RecentData Is Nothing Then
-            Exit Sub
-        End If
-        If Me.RecentData.Count > ItemIndexs.finalCalibration + 1 Then
-            Stop
-        End If
-        SyncLock _updatingLock
-            _updating = True ' prevent paint
-            Me.MenuStartHere.Enabled = False
-            If Not Me.LastUpdateTime.Text.Contains("from file") Then
-                Me.LastUpdateTime.Text = Now.ToShortDateTimeString
-            End If
-            Me.CursorPanel.Visible = False
-            Me.UpdateDataTables(Me.FormScale.Height <> 1 OrElse Me.FormScale.Width <> 1)
-            Me.UpdateActiveInsulinChart()
-            Me.UpdateActiveInsulin()
-            Me.UpdateAutoModeShield()
-            Me.UpdateCalibrationTimeRemaining()
-            Me.UpdateInsulinLevel()
-            Me.UpdatePumpBattery()
-            Me.UpdateRemainingInsulin()
-            Me.UpdateSensorLife()
-            Me.UpdateTimeInRange()
-            Me.UpdateTransmitterBatttery()
-            Me.UpdateZHomeTabSerieses()
-            Me.UpdateDosingAndCarbs()
-            s_recentDatalast = Me.RecentData
-            Me.MenuStartHere.Enabled = True
-            _updating = False
-        End SyncLock
-        Application.DoEvents()
-    End Sub
-
-#Region "Utilities"
-
-    Private Shared Sub PlotMarkers(chart As Chart, bolusRow As Double, insulinRow As Double, mealRow As Single, markerInsulinDictionary As Dictionary(Of Double, Single), markerMealDictionary As Dictionary(Of Double, Single))
-        For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
-            With chart.Series("MarkerSeries").Points
-                Dim markerDateTime As Date = s_markers.SafeGetSgDateTime(markerWithIndex.Index)
-                Dim markerOaDateTime As Double = markerDateTime.ToOADate()
-                Dim bgValueString As String = ""
-                Dim bgValue As Single
-                If markerWithIndex.Value.TryGetValue("value", bgValueString) Then
-                    bgValueString.TryParseSingle(bgValue)
-                End If
-                Select Case markerWithIndex.Value("type")
-                    Case "BG_READING"
-                        If String.IsNullOrWhiteSpace(bgValueString) Then
-                            .AddXY(markerOaDateTime, bgValue)
-                            .Last.BorderColor = Color.Gainsboro
-                            .Last.Color = Color.Transparent
-                            .Last.MarkerBorderWidth = 2
-                            .Last.MarkerSize = 10
-                            .Last.ToolTip = $"Blood Glucose: Not used For calibration: {bgValueString} {BgUnitsString}"
-                        End If
-                    Case "CALIBRATION"
-                        .AddXY(markerOaDateTime, bgValue)
-                        .Last.BorderColor = Color.Red
-                        .Last.Color = Color.Transparent
-                        .Last.MarkerBorderWidth = 2
-                        .Last.MarkerSize = 8
-                        .Last.ToolTip = $"Blood Glucose: Calibration {If(CBool(markerWithIndex.Value("calibrationSuccess")), "accepted", "not accepted")}: {markerWithIndex.Value("value")} {BgUnitsString}"
-                    Case "INSULIN"
-                        Select Case markerWithIndex.Value("activationType")
-                            Case "AUTOCORRECTION"
-                                If markerInsulinDictionary.TryAdd(markerOaDateTime, CInt(bolusRow)) Then
-                                    .AddXY(markerOaDateTime, bolusRow)
-                                    .Last.Color = Color.FromArgb(60, Color.MediumPurple)
-                                    .Last.ToolTip = $"Auto Correction: {markerWithIndex.Value("deliveredFastAmount")} U"
-                                Else
-                                    Stop
-                                End If
-                            Case "RECOMMENDED", "UNDETERMINED"
-                                If markerInsulinDictionary.TryAdd(markerOaDateTime, CInt(insulinRow)) Then
-                                    .AddXY(markerOaDateTime, insulinRow)
-                                    .Last.Color = Color.FromArgb(30, Color.LightBlue)
-                                    .Last.ToolTip = $"Bolus: {markerWithIndex.Value("deliveredFastAmount")} U"
-                                Else
-                                    Stop
-                                End If
-                            Case Else
-                                Stop
-                        End Select
-                        .Last.MarkerBorderWidth = 0
-                        .Last.MarkerSize = 15
-                        .Last.MarkerStyle = MarkerStyle.Square
-                    Case "MEAL"
-                        If markerMealDictionary.TryAdd(markerOaDateTime, mealRow) Then
-                            .AddXY(markerOaDateTime, mealRow)
-                            .Last.Color = Color.FromArgb(30, Color.Yellow)
-                            .Last.MarkerBorderWidth = 0
-                            .Last.MarkerSize = 30
-                            .Last.MarkerStyle = MarkerStyle.Square
-                            .Last.ToolTip = $"Meal:{markerWithIndex.Value("amount")} grams"
-                        End If
-                    Case "AUTO_BASAL_DELIVERY"
-                        .AddXY(markerOaDateTime, bolusRow)
-                        .Last.MarkerBorderColor = Color.Black
-                        .Last.ToolTip = $"Auto Basal:{markerWithIndex.Value("bolusAmount").TruncateSingleString(3)} U"
-                    Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED"
-                    Case "TIME_CHANGE"
-                        With chart.Series("TimeChangeSeries").Points
-                            .AddXY(markerOaDateTime, 0)
-                            .AddXY(markerOaDateTime, bolusRow)
-                            .AddXY(markerOaDateTime, Double.NaN)
-                        End With
-                    Case Else
-                        Stop
-                End Select
+    Private Sub UpdateHomeTabSerieses(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+        Try
+            With Me.HomeTabChart
+                For Each s As Series In .Series
+                    s.Points.Clear()
+                Next
+                InitializeChartArea(.ChartAreas(ChartAreaName))
+                PlotMarkers(Me.HomeTabChart, Me.BolusRow, Me.InsulinRow, Me.MealRow, s_homeTabMarkerInsulinDictionary, s_homeTabMarkerMealDictionary)
             End With
-        Next
-
-    End Sub
-
-    Private Sub UpdateActiveInsulin(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
-        Try
-            Dim activeInsulinStr As String = $"{s_activeInsulin("amount"):N3}"
-            Me.ActiveInsulinValue.Text = $"Active Insulin{Environment.NewLine}{activeInsulinStr} U"
-            _bgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
         Catch ex As Exception
-            Throw New ArithmeticException($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
+            Throw New Exception($"{ex.Message} exception while plotting Markers in {memberName} at {sourceLineNumber}")
         End Try
-    End Sub
 
-    Private Sub UpdateAutoModeShield(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
-        Try
-            If s_lastSG("sg") <> "0" Then
-                Me.CurrentBG.Visible = True
-                Me.CurrentBG.Text = s_lastSG("sg")
-                Me.UpdateNotifyIcon()
-                _bgMiniDisplay.SetCurrentBGString(s_lastSG("sg"))
-                Me.SensorMessage.Visible = False
-                Me.CalibrationShieldPictureBox.Image = My.Resources.Shield
-                Me.ShieldUnitsLabel.Visible = True
-                Me.ShieldUnitsLabel.BackColor = Color.Transparent
-                Me.ShieldUnitsLabel.Text = BgUnitsString
-            Else
-                _bgMiniDisplay.SetCurrentBGString("---")
-                Me.CurrentBG.Visible = False
-                Me.CalibrationShieldPictureBox.Image = My.Resources.Shield_Disabled
-                Me.ShieldUnitsLabel.Text = BgUnitsString
-                Me.SensorMessage.Visible = True
-                Me.SensorMessage.BackColor = Color.Transparent
-                Dim message As String = ""
-                If s_sensorMessages.TryGetValue(s_sensorState, message) Then
-                    message = message.ToTitle
-                Else
-                    MsgBox($"{s_sensorState} is unknown sensor message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
+        Dim limitsIndexList() As Integer = GetLimitsList(s_bindingSourceSGs.Count - 1)
+        For Each sgListIndex As IndexClass(Of SgRecord) In s_bindingSourceSGs.WithIndex()
+            Dim sgOaDateTime As Double = sgListIndex.Value.OADate()
+            Try
+                Me.HomeTabChart.Series(BgSeriesName).PlotOnePoint(
+                                    sgOaDateTime,
+                                    sgListIndex.Value.sg,
+                                    Color.White,
+                                    Me.MealRow)
+            Catch ex As Exception
+                Throw New Exception($"{ex.Message} exception while SG Values in {memberName} at {sourceLineNumber}")
+            End Try
+            Try
+                Dim limitsLowValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("lowLimit").ParseSingle
+                Dim limitsHighValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("highLimit").ParseSingle
+                If limitsHighValue <> 0 Then
+                    Me.HomeTabChart.Series(HighLimitSeriesName).Points.AddXY(sgOaDateTime, limitsHighValue)
                 End If
-                Me.SensorMessage.Text = message
-                Me.ShieldUnitsLabel.Visible = False
-                Me.SensorMessage.Visible = True
-                Application.DoEvents()
-            End If
-            If _bgMiniDisplay.Visible Then
-                _bgMiniDisplay.BGTextBox.SelectionLength = 0
-            End If
-        Catch ex As Exception
-            Throw New ArithmeticException($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
-        End Try
-        Application.DoEvents()
-    End Sub
-
-    Private Sub UpdateCalibrationTimeRemaining(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
-        Try
-            If s_timeToNextCalibHours = Byte.MaxValue Then
-                Me.CalibrationDueImage.Image = My.Resources.CalibrationUnavailable
-            ElseIf s_timeToNextCalibHours < 1 Then
-                Me.CalibrationDueImage.Image = If(s_systemStatusMessage = "WAIT_TO_CALIBRATE" OrElse s_sensorState = "WARM_UP",
-                My.Resources.CalibrationNotReady,
-                My.Resources.CalibrationDotRed.DrawCenteredArc(s_timeToNextCalibHours, s_timeToNextCalibrationMinutes / 60))
-            Else
-                Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(s_timeToNextCalibrationMinutes / 60, s_timeToNextCalibrationMinutes / 60 / 12)
-            End If
-        Catch ex As Exception
-            Throw New ArithmeticException($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
-        End Try
-
-        Application.DoEvents()
+                If limitsLowValue <> 0 Then
+                    Me.HomeTabChart.Series(LowLimitSeriesName).Points.AddXY(sgOaDateTime, limitsLowValue)
+                End If
+            Catch ex As Exception
+                Throw New Exception($"{ex.Message} exception while plotting Limits in {memberName} at {sourceLineNumber}")
+            End Try
+        Next
     End Sub
 
     Private Sub UpdateInsulinLevel()
@@ -2130,50 +1904,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub UpdateZHomeTabSerieses(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
-        Try
-            With Me.HomeTabChart
-                For Each s As Series In .Series
-                    s.Points.Clear()
-                Next
-                InitializeChartArea(.ChartAreas("ChartArea"))
-                PlotMarkers(Me.HomeTabChart, Me.BolusRow, Me.InsulinRow, Me.MealRow, s_homeTabMarkerInsulinDictionary, s_homeTabMarkerMealDictionary)
-            End With
-
-        Catch ex As Exception
-            Throw New Exception($"{ex.Message} exception while plotting Markers in {memberName} at {sourceLineNumber}")
-        End Try
-
-        Dim limitsIndexList() As Integer = GetLimitsList(s_bindingSourceSGs.Count - 1)
-        For Each sgListIndex As IndexClass(Of SgRecord) In s_bindingSourceSGs.WithIndex()
-            Dim sgOaDateTime As Double = sgListIndex.Value.OADate()
-            Try
-                Me.HomeTabChart.Series("BGSeries").PlotOnePoint(
-                                    sgOaDateTime,
-                                    sgListIndex.Value.sg,
-                                    Color.White,
-                                    Me.MealRow)
-            Catch ex As Exception
-                Throw New Exception($"{ex.Message} exception while SG Values in {memberName} at {sourceLineNumber}")
-            End Try
-            Try
-                Dim limitsLowValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("lowLimit").ParseSingle
-                Dim limitsHighValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("highLimit").ParseSingle
-                If limitsHighValue <> 0 Then
-                    Me.HomeTabChart.Series("HighLimitSeries").Points.AddXY(sgOaDateTime, limitsHighValue)
-                End If
-                If limitsLowValue <> 0 Then
-                    Me.HomeTabChart.Series("LowLimitSeries").Points.AddXY(sgOaDateTime, limitsLowValue)
-                End If
-            Catch ex As Exception
-                Throw New Exception($"{ex.Message} exception while plotting Limits in {memberName} at {sourceLineNumber}")
-            End Try
-        Next
-    End Sub
-
-#End Region
-
-#End Region
+#End Region ' Update Home Tab
 
 #Region "Scale Split Containers"
 
@@ -2210,7 +1941,7 @@ Public Class Form1
         MyBase.ScaleControl(factor, specified)
     End Sub
 
-#End Region
+#End Region ' Scale Split Containers
 
 #Region "NotifyIcon Support"
 
@@ -2282,7 +2013,7 @@ Public Class Form1
         End Using
     End Sub
 
-#End Region
+#End Region 'NotifyIcon Support
 
 #Region "Settings Events"
 

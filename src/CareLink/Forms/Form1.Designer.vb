@@ -745,7 +745,7 @@ Partial Class Form1
         Me.FullNameLabel.Name = "FullNameLabel"
         Me.FullNameLabel.Size = New System.Drawing.Size(195, 23)
         Me.FullNameLabel.TabIndex = 55
-        Me.FullNameLabel.Text = "Full Name"
+        Me.FullNameLabel.Text = "Full BgSeriesName"
         '
         'ReadingIntervalLabel
         '
