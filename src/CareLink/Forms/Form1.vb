@@ -493,7 +493,7 @@ Public Class Form1
                 Case HighLimitSeriesName,
                      LowLimitSeriesName
                     Me.CursorPanel.Visible = False
-                Case MarkerSeriesName
+                Case MarkerSeriesName, BasalSeriesName
                     Dim markerToolTip() As String = result.Series.Points(result.PointIndex).ToolTip.Split(":"c)
                     Dim xValue As Date = Date.FromOADate(result.Series.Points(result.PointIndex).XValue)
                     Me.CursorTimeLabel.Text = xValue.ToString(s_timeWithMinuteFormat)
@@ -512,8 +512,9 @@ Public Class Form1
                             Select Case markerToolTip(0)
                                 Case "Auto Correction",
                                      "Auto Basal",
-                                     "Basal",
-                                     "Bolus"
+                                     "Basal"
+                                    Me.CursorPictureBox.Image = My.Resources.InsulinVial
+                                Case "Bolus"
                                     Me.CursorPictureBox.Image = My.Resources.InsulinVial
                                 Case "Meal"
                                     Me.CursorPictureBox.Image = My.Resources.MealImageLarge
@@ -554,7 +555,7 @@ Public Class Form1
                     Me.CursorTimeLabel.Visible = True
                     Me.CursorValueLabel.Visible = False
                     Me.CursorPanel.Visible = True
-                Case "TimeChangeSeries"
+                Case TimeChangeSeriesName
                     Me.CursorMessage1Label.Visible = False
                     Me.CursorMessage1Label.Visible = False
                     Me.CursorMessage2Label.Visible = False
@@ -853,7 +854,7 @@ Public Class Form1
             Exit Sub
         End If
         SyncLock _updatingLock
-            PostPaintSupport(_activeInsulinAbsoluteRectangle, e, Me.BolusRow, s_activeInsulinMarkerInsulinDictionary, s_activeInsulinMarkerMealDictionary)
+            PostPaintSupport(_activeInsulinAbsoluteRectangle, e, Me.InsulinRow, s_activeInsulinMarkerInsulinDictionary, s_activeInsulinMarkerMealDictionary)
         End SyncLock
     End Sub
 
@@ -864,7 +865,7 @@ Public Class Form1
             Exit Sub
         End If
         SyncLock _updatingLock
-            PostPaintSupport(_homePageAbsoluteRectangle, e, Me.BolusRow, s_homeTabMarkerInsulinDictionary, s_homeTabMarkerMealDictionary, Me.CursorTimeLabel)
+            PostPaintSupport(_homePageAbsoluteRectangle, e, Me.InsulinRow, s_homeTabMarkerInsulinDictionary, s_homeTabMarkerMealDictionary, Me.CursorTimeLabel)
         End SyncLock
     End Sub
 
@@ -1084,13 +1085,18 @@ Public Class Form1
         Dim recordNumberAutoBasalDelivery As Integer = 0
         Dim recordNumberInsulin As Integer = 0
         Dim newMarker As Dictionary(Of String, String)
+        Dim basalDictionary As New Dictionary(Of Double, Single)
+        s_maxBasalPerHour = 0
+        s_maxBasalPerDose = 0
         For Each innerdic As Dictionary(Of String, String) In LoadList(row)
             Select Case innerdic("type")
                 Case "AUTO_BASAL_DELIVERY"
                     newMarker = innerdic
                     _markersAutoBasalDelivery.Add(newMarker)
                     recordNumberAutoBasalDelivery += 1
-                    s_bindingSourceMarkersAutoBasalDelivery.Add(New AutoBasalDeliveryRecord(newMarker, recordNumberAutoBasalDelivery))
+                    Dim item As New AutoBasalDeliveryRecord(newMarker, recordNumberAutoBasalDelivery)
+                    s_bindingSourceMarkersAutoBasalDelivery.Add(item)
+                    basalDictionary.Add(item.OADate, item.bolusAmount)
                 Case "AUTO_MODE_STATUS"
                     newMarker = innerdic
                     _markersAutoModeStatus.Add(newMarker)
@@ -1104,7 +1110,12 @@ Public Class Form1
                     newMarker = innerdic
                     _markersInsulin.Add(newMarker)
                     recordNumberInsulin += 1
-                    s_bindingSourceMarkersInsulin.Add(New InsulinRecord(newMarker, recordNumberInsulin))
+                    Dim item1 As New InsulinRecord(newMarker, recordNumberInsulin)
+                    s_bindingSourceMarkersInsulin.Add(item1)
+                    Select Case newMarker("activationType")
+                        Case "AUTOCORRECTION"
+                            basalDictionary.Add(item1.OADate, item1.deliveredFastAmount)
+                    End Select
                 Case "LOW_GLUCOSE_SUSPENDED"
                     newMarker = innerdic
                     _markersLowGlusoseSuspended.Add(newMarker)
@@ -1119,6 +1130,21 @@ Public Class Form1
                     Throw UnreachableException("type")
             End Select
         Next
+        Dim endOADate As Double = basalDictionary.Last.Key
+        Dim i As Integer = 0
+        While i < basalDictionary.Count AndAlso basalDictionary.Keys(i) <= endOADate
+            Dim sum As Single = 0
+            Dim j As Integer = i
+            Dim startOADate As Double = basalDictionary.Keys(j)
+            While j < basalDictionary.Count AndAlso basalDictionary.Keys(j) <= startOADate + s_hourAsOADate
+                sum += basalDictionary.Values(j)
+                j += 1
+            End While
+            s_maxBasalPerHour = Math.Max(s_maxBasalPerHour, sum)
+            s_maxBasalPerDose = Math.Max(s_maxBasalPerDose, basalDictionary.Values(i))
+            i += 1
+        End While
+        Me.MaxBasalPerHour.Text = $"Max Basal/Hour = {s_maxBasalPerHour.RoundSingle(3)} U"
         s_markers.AddRange(_markersAutoBasalDelivery)
         s_markers.AddRange(_markersAutoModeStatus)
         s_markers.AddRange(_markersBgReading)
@@ -1537,27 +1563,27 @@ Public Class Form1
 
             ' Order all markers by time
             Dim timeOrderedMarkers As New SortedDictionary(Of Double, Single)
-            Dim sgOaDateTime As Double
+            Dim sgOADateTime As Double
 
             For Each marker As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
-                sgOaDateTime = s_markers.SafeGetSgDateTime(marker.Index).RoundTimeDown(RoundTo.Minute).ToOADate
+                sgOADateTime = s_markers.SafeGetSgDateTime(marker.Index).RoundTimeDown(RoundTo.Minute).ToOADate
                 Select Case marker.Value("type").ToString
                     Case "AUTO_BASAL_DELIVERY"
                         Dim bolusAmount As Single = marker.Value.GetSingleValue("bolusAmount")
-                        If timeOrderedMarkers.ContainsKey(sgOaDateTime) Then
-                            timeOrderedMarkers(sgOaDateTime) += bolusAmount
+                        If timeOrderedMarkers.ContainsKey(sgOADateTime) Then
+                            timeOrderedMarkers(sgOADateTime) += bolusAmount
                         Else
-                            timeOrderedMarkers.Add(sgOaDateTime, bolusAmount)
+                            timeOrderedMarkers.Add(sgOADateTime, bolusAmount)
                         End If
                     Case "AUTO_MODE_STATUS"
                     Case "BG_READING"
                     Case "CALIBRATION"
                     Case "INSULIN"
                         Dim bolusAmount As Single = marker.Value.GetSingleValue("deliveredFastAmount")
-                        If timeOrderedMarkers.ContainsKey(sgOaDateTime) Then
-                            timeOrderedMarkers(sgOaDateTime) += bolusAmount
+                        If timeOrderedMarkers.ContainsKey(sgOADateTime) Then
+                            timeOrderedMarkers(sgOADateTime) += bolusAmount
                         Else
-                            timeOrderedMarkers.Add(sgOaDateTime, bolusAmount)
+                            timeOrderedMarkers.Add(sgOADateTime, bolusAmount)
                         End If
                     Case "LOW_GLUCOSE_SUSPENDED"
                     Case "MEAL"
@@ -1744,10 +1770,10 @@ Public Class Form1
 
         Dim limitsIndexList() As Integer = GetLimitsList(s_bindingSourceSGs.Count - 1)
         For Each sgListIndex As IndexClass(Of SgRecord) In s_bindingSourceSGs.WithIndex()
-            Dim sgOaDateTime As Double = sgListIndex.Value.OADate()
+            Dim sgOADateTime As Double = sgListIndex.Value.OADate()
             Try
                 Me.HomeTabChart.Series(BgSeriesName).PlotOnePoint(
-                                    sgOaDateTime,
+                                    sgOADateTime,
                                     sgListIndex.Value.sg,
                                     Color.White,
                                     Me.MealRow)
@@ -1758,10 +1784,10 @@ Public Class Form1
                 Dim limitsLowValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("lowLimit").ParseSingle
                 Dim limitsHighValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("highLimit").ParseSingle
                 If limitsHighValue <> 0 Then
-                    Me.HomeTabChart.Series(HighLimitSeriesName).Points.AddXY(sgOaDateTime, limitsHighValue)
+                    Me.HomeTabChart.Series(HighLimitSeriesName).Points.AddXY(sgOADateTime, limitsHighValue)
                 End If
                 If limitsLowValue <> 0 Then
-                    Me.HomeTabChart.Series(LowLimitSeriesName).Points.AddXY(sgOaDateTime, limitsLowValue)
+                    Me.HomeTabChart.Series(LowLimitSeriesName).Points.AddXY(sgOADateTime, limitsLowValue)
                 End If
             Catch ex As Exception
                 Throw New Exception($"{ex.Message} exception while plotting Limits in {memberName} at {sourceLineNumber}")

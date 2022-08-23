@@ -38,6 +38,9 @@ https://github.com/paul1956/CareLink/releases/
 
   New in 3.5.1.12
   Guard against unexpected crashes
+  Fix some Typos
+  Add support for showing values for basal and auto correction.
+  Add Max Basal per hour to display
 
   New in 3.5.1.11
   Improve number display

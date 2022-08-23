@@ -7,8 +7,9 @@ Imports System.ComponentModel
 Public Module PumpVariables
 
     ' Manually computed
+    Friend s_maxBasalPerDose As Single
+    Friend s_maxBasalPerHour As Single
     Friend s_totalAutoCorrection As Single
-
     Friend s_totalBasal As Single
     Friend s_totalCarbs As Single
     Friend s_totalDailyDose As Single

@@ -299,7 +299,7 @@ Public Module RegionCountryLists
 
         Dim cultureName As String = filenameWithoutExtension.Substring(indexOfOpenParen + 1, indexOfClosedParen - indexOfOpenParen - 1)
         If Not s_cultureInfos.Where(Function(c As CultureInfo) c.Name = cultureName).Any Then
-            MsgBox($"Culture name '{cultureName}' is not a valid culture name.", MsgBoxStyle.OkOnly, "Invalid Culture BgSeriesName")
+            MsgBox($"Culture name '{cultureName}' is not a valid culture name.", MsgBoxStyle.OkOnly, "Invalid Culture Name")
             Return Nothing
         End If
         Return CultureInfo.GetCultureInfo(cultureName)

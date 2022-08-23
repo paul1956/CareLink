@@ -6,11 +6,12 @@ Imports System.Windows.Forms.DataVisualization.Charting
 
 Module ChartSupport
     Friend Const BasalSeriesName As String = "BasalSeries"
-    Friend Const BgSeriesName As String = "BGseries"
+    Friend Const BgSeriesName As String = "BgSeries"
     Friend Const ChartAreaName As String = "ChartArea"
     Friend Const HighLimitSeriesName As String = "HighLimitSeries"
     Friend Const LowLimitSeriesName As String = "LowLimitSeries"
     Friend Const MarkerSeriesName As String = "MarkerSeries"
+    Friend Const TimeChangeSeriesName As String = "TimeChangeSeries"
 
     Friend Function CreateChart(chartName As String) As Chart
         Return New Chart With {
@@ -118,14 +119,17 @@ Module ChartSupport
 #Region "Create Series"
 
     Friend Function CreateBasalSeries() As Series
-        Return New Series(BasalSeriesName) With {
-                     .BorderWidth = 0,
+        Dim s As New Series(BasalSeriesName) With {
+                     .BorderWidth = 5,
+                     .BorderColor = Color.HotPink,
                      .ChartArea = ChartAreaName,
                      .ChartType = SeriesChartType.Line,
                      .Color = Color.HotPink,
                      .XValueType = ChartValueType.DateTime,
                      .YAxisType = AxisType.Secondary
                  }
+
+        Return s
     End Function
 
     Friend Function CreateMarkerSeries() As Series
@@ -133,11 +137,9 @@ Module ChartSupport
                         .BorderColor = Color.Transparent,
                         .BorderWidth = 1,
                         .ChartArea = ChartAreaName,
-                        .ChartType = SeriesChartType.Point,
+                        .ChartType = SeriesChartType.Line,
                         .Color = Color.HotPink,
                         .Name = MarkerSeriesName,
-                        .MarkerSize = 8,
-                        .MarkerStyle = MarkerStyle.Circle,
                         .XValueType = ChartValueType.DateTime,
                         .YAxisType = AxisType.Secondary
                     }
@@ -173,8 +175,8 @@ Module ChartSupport
     End Function
 
     Friend Function CreateTimeChangeSeries() As Series
-        Return New Series("TimeChangeSeries") With {
-            .ChartType = SeriesChartType.FastLine,
+        Dim series1 As New Series(TimeChangeSeriesName) With {
+                        .ChartType = SeriesChartType.Line,
                         .BorderColor = Color.Transparent,
                         .BorderWidth = 1,
                         .ChartArea = ChartAreaName,
@@ -183,6 +185,7 @@ Module ChartSupport
                         .XValueType = ChartValueType.DateTime,
                         .YAxisType = AxisType.Primary
                     }
+        Return series1
     End Function
 
 #End Region

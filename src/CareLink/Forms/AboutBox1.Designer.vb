@@ -100,7 +100,7 @@ Partial Class AboutBox1
         Me.LabelProductName.Name = "LabelProductName"
         Me.LabelProductName.Size = New System.Drawing.Size(366, 20)
         Me.LabelProductName.TabIndex = 0
-        Me.LabelProductName.Text = "Product BgSeriesName"
+        Me.LabelProductName.Text = "Product Name"
         Me.LabelProductName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'LabelVersion
@@ -136,7 +136,7 @@ Partial Class AboutBox1
         Me.LabelCompanyName.Name = "LabelCompanyName"
         Me.LabelCompanyName.Size = New System.Drawing.Size(366, 20)
         Me.LabelCompanyName.TabIndex = 0
-        Me.LabelCompanyName.Text = "Company BgSeriesName"
+        Me.LabelCompanyName.Text = "Company Name"
         Me.LabelCompanyName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'TextBoxDescription

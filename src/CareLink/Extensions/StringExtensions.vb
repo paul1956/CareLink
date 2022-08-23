@@ -78,7 +78,7 @@ Public Module StringExtensions
             Return s
         End If
         s &= "000"
-        Return s.Substring(0, i + decimalDigits + 1)
+        Return s.Substring(0, i + decimalDigits + 1).TrimEnd("0")
     End Function
 
     <Extension>
