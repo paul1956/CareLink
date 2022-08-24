@@ -24,9 +24,9 @@ Module ChartingExtensions
     Private Sub AddBgReadingPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As Double, bgValueString As String, bgValue As Single)
         markerSeriesPoints.AddXY(markerOADateTime, bgValue)
         markerSeriesPoints.Last.BorderColor = Color.Gainsboro
-        markerSeriesPoints.Last.Color = Color.Transparent
-        markerSeriesPoints.Last.MarkerBorderWidth = 2
+        markerSeriesPoints.Last.Color = Color.FromArgb(5, Color.Gainsboro)
         markerSeriesPoints.Last.MarkerSize = 10
+        markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Circle
         If Not Single.IsNaN(bgValue) Then
             markerSeriesPoints.Last.ToolTip = $"Blood Glucose: Not used For calibration: {bgValueString} {BgUnitsString}"
         End If
@@ -36,7 +36,8 @@ Module ChartingExtensions
     Private Sub AddCalibrationPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As Double, bgValue As Single, entry As Dictionary(Of String, String))
         markerSeriesPoints.AddXY(markerOADateTime, bgValue)
         markerSeriesPoints.Last.BorderColor = Color.Red
-        markerSeriesPoints.Last.Color = Color.Transparent
+        markerSeriesPoints.Last.Color = Color.FromArgb(5, Color.Red)
+        markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Circle
         markerSeriesPoints.Last.MarkerBorderWidth = 2
         markerSeriesPoints.Last.MarkerSize = 8
         markerSeriesPoints.Last.ToolTip = $"Blood Glucose: Calibration {If(CBool(entry("calibrationSuccess")), "accepted", "not accepted")}: {entry("value")} {BgUnitsString}"
@@ -52,7 +53,8 @@ Module ChartingExtensions
         basalSeries.AddBasalPoint(startX, Double.NaN, Color.Transparent, toolTip)
     End Sub
 
-    Friend Sub PlotMarkers(chart As Chart, bolusRow As Double, insulinRow As Double, mealRow As Single, markerInsulinDictionary As Dictionary(Of Double, Single), markerMealDictionary As Dictionary(Of Double, Single), <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+    <Extension>
+    Friend Sub PlotMarkers(chart As Chart, chartRelitivePosition As RectangleF, bolusRow As Double, insulinRow As Double, mealRow As Single, markerInsulinDictionary As Dictionary(Of Double, Single), markerMealDictionary As Dictionary(Of Double, Single), <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
         For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             Try
                 Dim markerDateTime As Date = s_markers.SafeGetSgDateTime(markerWithIndex.Index)
@@ -67,13 +69,11 @@ Module ChartingExtensions
                 Dim markerSeriesPoints As DataPointCollection = chart.Series(MarkerSeriesName).Points
                 Select Case entry("type")
                     Case "BG_READING"
-                        If String.IsNullOrWhiteSpace(bgValueString) Then
+                        If Not String.IsNullOrWhiteSpace(bgValueString) Then
                             markerSeriesPoints.AddBgReadingPoint(markerOADateTime, bgValueString, bgValue)
-                            markerSeriesPoints.AddBgReadingPoint(markerOADateTime, bgValue.ToString, Double.NaN)
                         End If
                     Case "CALIBRATION"
                         markerSeriesPoints.AddCalibrationPoint(markerOADateTime, bgValue, entry)
-                        markerSeriesPoints.AddCalibrationPoint(markerOADateTime, Double.NaN, entry)
                     Case "AUTO_BASAL_DELIVERY"
                         Dim bolusAmount As String = entry("bolusAmount")
                         DrawBasalMarker(chart.Series(BasalSeriesName), markerOADateTime, bolusAmount.ParseSingle, bolusRow, insulinRow, Color.HotPink, $"Auto Basal:{bolusAmount.TruncateSingleString(3)} U")
@@ -84,10 +84,10 @@ Module ChartingExtensions
                                 DrawBasalMarker(chart.Series(BasalSeriesName), markerOADateTime, autoCorrection.ParseSingle, bolusRow, insulinRow, Color.Aqua, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
                             Case "RECOMMENDED", "UNDETERMINED"
                                 If markerInsulinDictionary.TryAdd(markerOADateTime, CInt(insulinRow)) Then
-                                    markerSeriesPoints.AddXY(markerOADateTime, insulinRow)
+                                    markerSeriesPoints.AddXY(markerOADateTime, insulinRow - 10)
                                     markerSeriesPoints.Last.MarkerBorderWidth = 2
-                                    markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(30, Color.Black)
-                                    markerSeriesPoints.Last.MarkerSize = 15
+                                    markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Black)
+                                    markerSeriesPoints.Last.MarkerSize = 20
                                     markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
                                     If Double.IsNaN(insulinRow) Then
                                         markerSeriesPoints.Last.Color = Color.Transparent
@@ -104,11 +104,11 @@ Module ChartingExtensions
                         End Select
                     Case "MEAL"
                         If markerMealDictionary.TryAdd(markerOADateTime, mealRow) Then
-                            markerSeriesPoints.AddXY(markerOADateTime, mealRow)
-                            markerSeriesPoints.Last.Color = Color.FromArgb(30, Color.Yellow)
+                            markerSeriesPoints.AddXY(markerOADateTime, mealRow + (s_mealImage.Height / 2))
+                            markerSeriesPoints.Last.Color = Color.FromArgb(10, Color.Yellow)
                             markerSeriesPoints.Last.MarkerBorderWidth = 2
-                            markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(30, Color.Yellow)
-                            markerSeriesPoints.Last.MarkerSize = 30
+                            markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Yellow)
+                            markerSeriesPoints.Last.MarkerSize = 20
                             markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
                             markerSeriesPoints.Last.ToolTip = $"Meal:{entry("amount")} grams"
                         End If
@@ -190,8 +190,8 @@ Module ChartingExtensions
             homePageCursorTimeLabel.Left = CInt(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.X, homePageCursorTimeLabel.Tag.ToString.ParseDate("").ToOADate))
         End If
 
-        e.PaintMarker(s_mealImage, mealDictionary)
-        e.PaintMarker(s_insulinImage, insulinDictionary)
+        e.PaintMarker(s_mealImage, mealDictionary, False)
+        e.PaintMarker(s_insulinImage, insulinDictionary, True)
     End Sub
 
 End Module

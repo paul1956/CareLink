@@ -1642,7 +1642,7 @@ Public Class Form1
             Me.ActiveInsulinChartArea.AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1
             maxActiveInsulin = Me.ActiveInsulinChartArea.AxisY.Maximum
 
-            PlotMarkers(Me.ActiveInsulinChart, Me.BolusRow, Me.InsulinRow, Me.MealRow, s_activeInsulinMarkerInsulinDictionary, s_activeInsulinMarkerMealDictionary)
+            Me.ActiveInsulinChart.PlotMarkers(_activeInsulinAbsoluteRectangle, Me.BolusRow, Me.InsulinRow, Me.MealRow, s_activeInsulinMarkerInsulinDictionary, s_activeInsulinMarkerMealDictionary)
             PlotSgSeries(Me.ActiveInsulinChart.Series(BgSeriesName), Me.MealRow)
         Catch ex As Exception
             Throw New ArithmeticException($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
@@ -1774,7 +1774,7 @@ Public Class Form1
                     s.Points.Clear()
                 Next
                 InitializeChartArea(.ChartAreas(ChartAreaName))
-                PlotMarkers(Me.HomeTabChart, Me.BolusRow, Me.InsulinRow, Me.MealRow, s_homeTabMarkerInsulinDictionary, s_homeTabMarkerMealDictionary)
+                Me.HomeTabChart.PlotMarkers(_homePageAbsoluteRectangle, Me.BolusRow, Me.InsulinRow, Me.MealRow, s_homeTabMarkerInsulinDictionary, s_homeTabMarkerMealDictionary)
             End With
         Catch ex As Exception
             Throw New Exception($"{ex.Message} exception while plotting Markers in {memberName} at {sourceLineNumber}")

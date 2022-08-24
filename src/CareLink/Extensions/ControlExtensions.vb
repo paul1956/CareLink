@@ -18,9 +18,9 @@ Public Module ControlExtensions
     End Function
 
     <Extension>
-    Friend Sub PaintMarker(e As ChartPaintEventArgs, markerImage As Bitmap, markerDictionary As Dictionary(Of Double, Single))
+    Friend Sub PaintMarker(e As ChartPaintEventArgs, markerImage As Bitmap, markerDictionary As Dictionary(Of Double, Single), noImageOffset As Boolean)
         ' Draw the cloned portion of the Bitmap object.
-        Dim halfHeight As Single = CSng(markerImage.Height / 2)
+        Dim halfHeight As Single = If(noImageOffset, 0, markerImage.Height + 2)
         Dim halfWidth As Single = CSng(markerImage.Width / 2)
         For Each markerKvp As KeyValuePair(Of Double, Single) In markerDictionary
             Dim imagePosition As RectangleF = RectangleF.Empty
