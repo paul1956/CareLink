@@ -12,6 +12,7 @@ Module ChartingExtensions
         basalSeries.Points.AddXY(startX, StartY)
         If Double.IsNaN(StartY) Then
             basalSeries.Points.Last.Color = Color.Transparent
+            basalSeries.Points.Last.MarkerSize = 0
         Else
             basalSeries.Points.Last.Color = lineColor
             basalSeries.Points.Last.ToolTip = toolTip
@@ -38,9 +39,7 @@ Module ChartingExtensions
         markerSeriesPoints.Last.Color = Color.Transparent
         markerSeriesPoints.Last.MarkerBorderWidth = 2
         markerSeriesPoints.Last.MarkerSize = 8
-        If Not Single.IsNaN(bgValue) Then
-            markerSeriesPoints.Last.ToolTip = $"Blood Glucose: Calibration {If(CBool(entry("calibrationSuccess")), "accepted", "not accepted")}: {entry("value")} {BgUnitsString}"
-        End If
+        markerSeriesPoints.Last.ToolTip = $"Blood Glucose: Calibration {If(CBool(entry("calibrationSuccess")), "accepted", "not accepted")}: {entry("value")} {BgUnitsString}"
     End Sub
 
     <Extension>
@@ -90,11 +89,12 @@ Module ChartingExtensions
                                     markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(30, Color.Black)
                                     markerSeriesPoints.Last.MarkerSize = 15
                                     markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
-                                    If Not Double.IsNaN(insulinRow) Then
-                                        markerSeriesPoints.Last.ToolTip = $"Bolus: {entry("deliveredFastAmount")} U"
-                                        markerSeriesPoints.Last.Color = Color.FromArgb(30, Color.LightBlue)
-                                    Else
+                                    If Double.IsNaN(insulinRow) Then
                                         markerSeriesPoints.Last.Color = Color.Transparent
+                                        markerSeriesPoints.Last.MarkerSize = 0
+                                    Else
+                                        markerSeriesPoints.Last.Color = Color.FromArgb(30, Color.LightBlue)
+                                        markerSeriesPoints.Last.ToolTip = $"Bolus: {entry("deliveredFastAmount")} U"
                                     End If
                                 Else
                                     Stop
@@ -108,7 +108,7 @@ Module ChartingExtensions
                             markerSeriesPoints.Last.Color = Color.FromArgb(30, Color.Yellow)
                             markerSeriesPoints.Last.MarkerBorderWidth = 2
                             markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(30, Color.Yellow)
-                            markerSeriesPoints.Last.MarkerSize = 15
+                            markerSeriesPoints.Last.MarkerSize = 30
                             markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
                             markerSeriesPoints.Last.ToolTip = $"Meal:{entry("amount")} grams"
                         End If
