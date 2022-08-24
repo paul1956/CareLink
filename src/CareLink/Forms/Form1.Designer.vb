@@ -570,11 +570,11 @@ Partial Class Form1
         '
         Me.MaxBasalPerHour.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.MaxBasalPerHour.ForeColor = System.Drawing.Color.White
-        Me.MaxBasalPerHour.Location = New System.Drawing.Point(1170, 81)
+        Me.MaxBasalPerHour.Location = New System.Drawing.Point(1159, 81)
         Me.MaxBasalPerHour.Name = "MaxBasalPerHour"
-        Me.MaxBasalPerHour.Size = New System.Drawing.Size(195, 23)
+        Me.MaxBasalPerHour.Size = New System.Drawing.Size(211, 23)
         Me.MaxBasalPerHour.TabIndex = 67
-        Me.MaxBasalPerHour.Text = "Max Basal/Hour 2.0"
+        Me.MaxBasalPerHour.Text = "Max Basal/Hr ~ 2.0 U"
         '
         'Last24HTotalsPanel
         '
@@ -733,9 +733,9 @@ Partial Class Form1
         '
         Me.ModelLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.ModelLabel.ForeColor = System.Drawing.Color.White
-        Me.ModelLabel.Location = New System.Drawing.Point(1170, 26)
+        Me.ModelLabel.Location = New System.Drawing.Point(1159, 26)
         Me.ModelLabel.Name = "ModelLabel"
-        Me.ModelLabel.Size = New System.Drawing.Size(195, 23)
+        Me.ModelLabel.Size = New System.Drawing.Size(211, 23)
         Me.ModelLabel.TabIndex = 57
         Me.ModelLabel.Text = "Model"
         '
@@ -743,9 +743,9 @@ Partial Class Form1
         '
         Me.SerialNumberLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.SerialNumberLabel.ForeColor = System.Drawing.Color.White
-        Me.SerialNumberLabel.Location = New System.Drawing.Point(1170, 53)
+        Me.SerialNumberLabel.Location = New System.Drawing.Point(1159, 53)
         Me.SerialNumberLabel.Name = "SerialNumberLabel"
-        Me.SerialNumberLabel.Size = New System.Drawing.Size(195, 23)
+        Me.SerialNumberLabel.Size = New System.Drawing.Size(211, 23)
         Me.SerialNumberLabel.TabIndex = 56
         Me.SerialNumberLabel.Text = "Serial Number"
         '
@@ -753,9 +753,9 @@ Partial Class Form1
         '
         Me.FullNameLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.FullNameLabel.ForeColor = System.Drawing.Color.White
-        Me.FullNameLabel.Location = New System.Drawing.Point(1170, 0)
+        Me.FullNameLabel.Location = New System.Drawing.Point(1159, 0)
         Me.FullNameLabel.Name = "FullNameLabel"
-        Me.FullNameLabel.Size = New System.Drawing.Size(195, 23)
+        Me.FullNameLabel.Size = New System.Drawing.Size(211, 23)
         Me.FullNameLabel.TabIndex = 55
         Me.FullNameLabel.Text = "Full Name"
         '

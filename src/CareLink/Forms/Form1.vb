@@ -1156,7 +1156,7 @@ Public Class Form1
             s_maxBasalPerDose = Math.Max(s_maxBasalPerDose, basalDictionary.Values(i))
             i += 1
         End While
-        Me.MaxBasalPerHour.Text = $"Max Basal/Hour = {s_maxBasalPerHour.RoundSingle(3)} U"
+        Me.MaxBasalPerHour.Text = $"Max Basal/Hr ~ {s_maxBasalPerHour.RoundSingle(3)} U"
         s_markers.AddRange(_markersAutoBasalDelivery)
         s_markers.AddRange(_markersAutoModeStatus)
         s_markers.AddRange(_markersBgReading)
