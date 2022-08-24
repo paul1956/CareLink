@@ -30,7 +30,7 @@ This update has a UI to show all the available data and a visual version that mi
 - 8/23/2022
 
 ## What's New in this release
-  New in 3.5.2.3
+  New in 3.5.2.4
   Show AutoBasal and AutoCorrection as bar graph
 
   New in 3.5.2.2
