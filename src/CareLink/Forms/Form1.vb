@@ -484,10 +484,18 @@ Public Class Form1
         Dim result As HitTestResult
         Try
             result = Me.HomeTabChart.HitTest(e.X, e.Y)
-            If result.Series Is Nothing OrElse result.PointIndex = -1 Then
+            If result.Series Is Nothing OrElse
+                result.PointIndex = -1 Then
                 Me.CursorPanel.Visible = False
+                Me.CursorTimeLabel.Visible = False
                 Exit Sub
             End If
+            If result.Series.Points(result.PointIndex).Color = Color.Transparent Then
+                Me.CursorPanel.Visible = False
+                Me.CursorTimeLabel.Visible = False
+                Exit Sub
+            End If
+
             Me.CursorTimeLabel.Left = e.X - (Me.CursorTimeLabel.Width \ 2)
             Select Case result.Series.Name
                 Case HighLimitSeriesName,
@@ -495,10 +503,14 @@ Public Class Form1
                     Me.CursorPanel.Visible = False
                 Case MarkerSeriesName, BasalSeriesName
                     Dim markerToolTip() As String = result.Series.Points(result.PointIndex).ToolTip.Split(":"c)
+                    If markerToolTip.Length <= 1 Then
+                        Me.CursorPanel.Visible = True
+                        Exit Sub
+                    End If
+                    markerToolTip(0) = markerToolTip(0).Trim
                     Dim xValue As Date = Date.FromOADate(result.Series.Points(result.PointIndex).XValue)
                     Me.CursorTimeLabel.Text = xValue.ToString(s_timeWithMinuteFormat)
                     Me.CursorTimeLabel.Tag = xValue
-                    markerToolTip(0) = markerToolTip(0).Trim
                     Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
                     Me.CursorPictureBox.Visible = True
                     Me.CursorTimeLabel.Visible = True
@@ -904,7 +916,7 @@ Public Class Form1
         Dim defaultLegend As Legend = CreateChartLegend(NameOf(defaultLegend))
 
         Me.HomeTabBasalSeries = CreateBasalSeries()
-        Me.HomeTabBGSeries = CreateSeriesBg(NameOf(defaultLegend))
+        Me.HomeTabBGSeries = CreateBgSeries(NameOf(defaultLegend))
         Me.HomeTabMarkerSeries = CreateMarkerSeries()
 
         Me.HomeTabHighLimitSeries = CreateSeriesLimits(HighLimitSeriesName, ChartAreaName, Color.Orange)
@@ -1023,7 +1035,7 @@ Public Class Form1
         Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinSeries)
 
         Me.ActiveInsulinBasalSeries = CreateBasalSeries()
-        Me.ActiveInsulinBGSeries = CreateSeriesBg(NameOf(ActiveInsulinChartLegend))
+        Me.ActiveInsulinBGSeries = CreateBgSeries(NameOf(ActiveInsulinChartLegend))
         Me.ActiveInsulinMarkerSeries = CreateMarkerSeries()
         Me.ActiveInsulinTimeChangeSeries = CreateTimeChangeSeries()
         Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinBasalSeries)

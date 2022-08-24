@@ -8,97 +8,124 @@ Imports System.Windows.Forms.DataVisualization.Charting
 Module ChartingExtensions
 
     <Extension>
-    Friend Sub DrawBasalMarker(ByRef basalSeries As Series, markerOADateTime As Double, amount As Single, bolusRow As Double, insulinRow As Double, lineColor As Color, toolTip As String)
-        Dim markerBasalPoints As DataPointCollection = basalSeries.Points
-        Dim yValue As Double = bolusRow - ((bolusRow - insulinRow) * (amount / s_maxBasalPerDose))
-        Dim twoMinutes As Double = s_fiveMinuteOADate / 2
-        markerBasalPoints.AddXY(markerOADateTime + twoMinutes, bolusRow)
-        markerBasalPoints.Last.ToolTip = toolTip
-        markerBasalPoints.Last.Color = lineColor
-        markerBasalPoints.AddXY(markerOADateTime + twoMinutes, yValue)
-        markerBasalPoints.Last.ToolTip = toolTip
-        markerBasalPoints.Last.Color = lineColor
-        markerBasalPoints.AddXY(markerOADateTime + twoMinutes, yValue)
-        markerBasalPoints.Last.ToolTip = toolTip
-        markerBasalPoints.Last.Color = lineColor
-        markerBasalPoints.AddXY(markerOADateTime + twoMinutes, bolusRow)
-        markerBasalPoints.Last.ToolTip = toolTip
-        markerBasalPoints.Last.Color = lineColor
-        markerBasalPoints.AddXY(markerOADateTime, Double.NaN)
-        markerBasalPoints.Last.ToolTip = toolTip
-        markerBasalPoints.Last.Color = lineColor
+    Private Sub AddBasalPoint(basalSeries As Series, startX As Double, StartY As Double, lineColor As Color, toolTip As String)
+        basalSeries.Points.AddXY(startX, StartY)
+        If Double.IsNaN(StartY) Then
+            basalSeries.Points.Last.Color = Color.Transparent
+        Else
+            basalSeries.Points.Last.Color = lineColor
+            basalSeries.Points.Last.ToolTip = toolTip
+        End If
+
     End Sub
 
-    Friend Sub PlotMarkers(chart As Chart, bolusRow As Double, insulinRow As Double, mealRow As Single, markerInsulinDictionary As Dictionary(Of Double, Single), markerMealDictionary As Dictionary(Of Double, Single))
-        For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
-            Dim markerDateTime As Date = s_markers.SafeGetSgDateTime(markerWithIndex.Index)
-            Dim markerOADateTime As Double = markerDateTime.ToOADate()
-            Dim bgValueString As String = ""
-            Dim bgValue As Single
-            Dim entry As Dictionary(Of String, String) = markerWithIndex.Value
+    <Extension>
+    Private Sub AddBgReadingPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As Double, bgValueString As String, bgValue As Single)
+        markerSeriesPoints.AddXY(markerOADateTime, bgValue)
+        markerSeriesPoints.Last.BorderColor = Color.Gainsboro
+        markerSeriesPoints.Last.Color = Color.Transparent
+        markerSeriesPoints.Last.MarkerBorderWidth = 2
+        markerSeriesPoints.Last.MarkerSize = 10
+        If Not Single.IsNaN(bgValue) Then
+            markerSeriesPoints.Last.ToolTip = $"Blood Glucose: Not used For calibration: {bgValueString} {BgUnitsString}"
+        End If
+    End Sub
 
-            If entry.TryGetValue("value", bgValueString) Then
-                bgValueString.TryParseSingle(bgValue)
-            End If
-            Dim markerSeriesPoints As DataPointCollection = chart.Series(MarkerSeriesName).Points
-            Select Case entry("type")
-                Case "BG_READING"
-                    If String.IsNullOrWhiteSpace(bgValueString) Then
-                        markerSeriesPoints.AddXY(markerOADateTime, bgValue)
-                        markerSeriesPoints.Last.BorderColor = Color.Gainsboro
-                        markerSeriesPoints.Last.Color = Color.Transparent
-                        markerSeriesPoints.Last.MarkerBorderWidth = 2
-                        markerSeriesPoints.Last.MarkerSize = 10
-                        markerSeriesPoints.Last.ToolTip = $"Blood Glucose: Not used For calibration: {bgValueString} {BgUnitsString}"
-                    End If
-                Case "CALIBRATION"
-                    markerSeriesPoints.AddXY(markerOADateTime, bgValue)
-                    markerSeriesPoints.Last.BorderColor = Color.Red
-                    markerSeriesPoints.Last.Color = Color.Transparent
-                    markerSeriesPoints.Last.MarkerBorderWidth = 2
-                    markerSeriesPoints.Last.MarkerSize = 8
-                    markerSeriesPoints.Last.ToolTip = $"Blood Glucose: Calibration {If(CBool(entry("calibrationSuccess")), "accepted", "not accepted")}: {entry("value")} {BgUnitsString}"
-                Case "AUTO_BASAL_DELIVERY"
-                    Dim bolusAmount As String = entry("bolusAmount")
-                    DrawBasalMarker(chart.Series(BasalSeriesName), markerOADateTime, bolusAmount.ParseSingle, bolusRow, insulinRow, Color.HotPink, $"Auto Basal:{bolusAmount.TruncateSingleString(3)} U")
-                Case "INSULIN"
-                    Select Case entry("activationType")
-                        Case "AUTOCORRECTION"
-                            Dim autoCorrection As String = entry("deliveredFastAmount")
-                            DrawBasalMarker(chart.Series(BasalSeriesName), markerOADateTime, autoCorrection.ParseSingle, bolusRow, insulinRow, Color.Aqua, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
-                        Case "RECOMMENDED", "UNDETERMINED"
-                            If markerInsulinDictionary.TryAdd(markerOADateTime, CInt(insulinRow)) Then
-                                markerSeriesPoints.AddXY(markerOADateTime, insulinRow)
-                                markerSeriesPoints.Last.Color = Color.FromArgb(30, Color.LightBlue)
-                                markerSeriesPoints.Last.ToolTip = $"Bolus: {entry("deliveredFastAmount")} U"
-                            Else
+    <Extension>
+    Private Sub AddCalibrationPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As Double, bgValue As Single, entry As Dictionary(Of String, String))
+        markerSeriesPoints.AddXY(markerOADateTime, bgValue)
+        markerSeriesPoints.Last.BorderColor = Color.Red
+        markerSeriesPoints.Last.Color = Color.Transparent
+        markerSeriesPoints.Last.MarkerBorderWidth = 2
+        markerSeriesPoints.Last.MarkerSize = 8
+        If Not Single.IsNaN(bgValue) Then
+            markerSeriesPoints.Last.ToolTip = $"Blood Glucose: Calibration {If(CBool(entry("calibrationSuccess")), "accepted", "not accepted")}: {entry("value")} {BgUnitsString}"
+        End If
+    End Sub
+
+    <Extension>
+    Friend Sub DrawBasalMarker(ByRef basalSeries As Series, markerOADateTime As Double, amount As Single, bolusRow As Double, insulinRow As Double, lineColor As Color, toolTip As String)
+        Dim startX As Double = markerOADateTime + s_twoHalfMinuteOADate
+        Dim startY As Double = bolusRow - ((bolusRow - insulinRow) * (amount / s_maxBasalPerDose))
+        basalSeries.AddBasalPoint(startX, bolusRow, lineColor, toolTip)
+        basalSeries.AddBasalPoint(startX, startY, lineColor, toolTip)
+        basalSeries.AddBasalPoint(startX, bolusRow, lineColor, toolTip)
+        basalSeries.AddBasalPoint(startX, Double.NaN, Color.Transparent, toolTip)
+    End Sub
+
+    Friend Sub PlotMarkers(chart As Chart, bolusRow As Double, insulinRow As Double, mealRow As Single, markerInsulinDictionary As Dictionary(Of Double, Single), markerMealDictionary As Dictionary(Of Double, Single), <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+        For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
+            Try
+                Dim markerDateTime As Date = s_markers.SafeGetSgDateTime(markerWithIndex.Index)
+                Dim markerOADateTime As Double = markerDateTime.ToOADate()
+                Dim bgValueString As String = ""
+                Dim bgValue As Single
+                Dim entry As Dictionary(Of String, String) = markerWithIndex.Value
+
+                If entry.TryGetValue("value", bgValueString) Then
+                    bgValueString.TryParseSingle(bgValue)
+                End If
+                Dim markerSeriesPoints As DataPointCollection = chart.Series(MarkerSeriesName).Points
+                Select Case entry("type")
+                    Case "BG_READING"
+                        If String.IsNullOrWhiteSpace(bgValueString) Then
+                            markerSeriesPoints.AddBgReadingPoint(markerOADateTime, bgValueString, bgValue)
+                            markerSeriesPoints.AddBgReadingPoint(markerOADateTime, bgValue.ToString, Double.NaN)
+                        End If
+                    Case "CALIBRATION"
+                        markerSeriesPoints.AddCalibrationPoint(markerOADateTime, bgValue, entry)
+                        markerSeriesPoints.AddCalibrationPoint(markerOADateTime, Double.NaN, entry)
+                    Case "AUTO_BASAL_DELIVERY"
+                        Dim bolusAmount As String = entry("bolusAmount")
+                        DrawBasalMarker(chart.Series(BasalSeriesName), markerOADateTime, bolusAmount.ParseSingle, bolusRow, insulinRow, Color.HotPink, $"Auto Basal:{bolusAmount.TruncateSingleString(3)} U")
+                    Case "INSULIN"
+                        Select Case entry("activationType")
+                            Case "AUTOCORRECTION"
+                                Dim autoCorrection As String = entry("deliveredFastAmount")
+                                DrawBasalMarker(chart.Series(BasalSeriesName), markerOADateTime, autoCorrection.ParseSingle, bolusRow, insulinRow, Color.Aqua, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
+                            Case "RECOMMENDED", "UNDETERMINED"
+                                If markerInsulinDictionary.TryAdd(markerOADateTime, CInt(insulinRow)) Then
+                                    markerSeriesPoints.AddXY(markerOADateTime, insulinRow)
+                                    markerSeriesPoints.Last.MarkerBorderWidth = 2
+                                    markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(30, Color.Black)
+                                    markerSeriesPoints.Last.MarkerSize = 15
+                                    markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
+                                    If Not Double.IsNaN(insulinRow) Then
+                                        markerSeriesPoints.Last.ToolTip = $"Bolus: {entry("deliveredFastAmount")} U"
+                                        markerSeriesPoints.Last.Color = Color.FromArgb(30, Color.LightBlue)
+                                    Else
+                                        markerSeriesPoints.Last.Color = Color.Transparent
+                                    End If
+                                Else
+                                    Stop
+                                End If
+                            Case Else
                                 Stop
-                            End If
-                        Case Else
-                            Stop
-                    End Select
-                    markerSeriesPoints.Last.MarkerBorderWidth = 0
-                    markerSeriesPoints.Last.MarkerSize = 15
-                    markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
-                Case "MEAL"
-                    If markerMealDictionary.TryAdd(markerOADateTime, mealRow) Then
-                        markerSeriesPoints.AddXY(markerOADateTime, mealRow)
-                        markerSeriesPoints.Last.Color = Color.FromArgb(30, Color.Yellow)
-                        markerSeriesPoints.Last.MarkerBorderWidth = 0
-                        markerSeriesPoints.Last.MarkerSize = 30
-                        markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
-                        markerSeriesPoints.Last.ToolTip = $"Meal:{entry("amount")} grams"
-                    End If
-                Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED"
-                Case "TIME_CHANGE"
-                    With chart.Series(TimeChangeSeriesName).Points
-                        .AddXY(markerOADateTime, 0)
-                        .AddXY(markerOADateTime, bolusRow)
-                        .AddXY(markerOADateTime, Double.NaN)
-                    End With
-                Case Else
-                    Stop
-            End Select
+                        End Select
+                    Case "MEAL"
+                        If markerMealDictionary.TryAdd(markerOADateTime, mealRow) Then
+                            markerSeriesPoints.AddXY(markerOADateTime, mealRow)
+                            markerSeriesPoints.Last.Color = Color.FromArgb(30, Color.Yellow)
+                            markerSeriesPoints.Last.MarkerBorderWidth = 2
+                            markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(30, Color.Yellow)
+                            markerSeriesPoints.Last.MarkerSize = 15
+                            markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
+                            markerSeriesPoints.Last.ToolTip = $"Meal:{entry("amount")} grams"
+                        End If
+                    Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED"
+                    Case "TIME_CHANGE"
+                        With chart.Series(TimeChangeSeriesName).Points
+                            .AddXY(markerOADateTime, 0)
+                            .AddXY(markerOADateTime, bolusRow)
+                            .AddXY(markerOADateTime, Double.NaN)
+                        End With
+                    Case Else
+                        Stop
+                End Select
+            Catch ex As Exception
+                Stop
+                '      Throw New Exception($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
+            End Try
         Next
 
     End Sub

@@ -21,7 +21,7 @@ Public Class CareLinkClient
     Private ReadOnly _httpClientHandler As HttpClientHandler
     Private ReadOnly _loginStatus As Control
     Private _lastDataSuccess As Boolean
-    Private _lastResponseCode As HttpStatusCode
+    Private _lastResponseCode? As HttpStatusCode
     Private _loginInProcess As Boolean
     Private _sessionCountrySettings As Dictionary(Of String, String)
     Private _sessionMonitorData As PumpData
@@ -271,7 +271,7 @@ Public Class CareLinkClient
 
             ' Consent
             Dim consentResponse As HttpResponseMessage = Me.DoConsent(doLoginResponse)
-            _lastResponseCode = consentResponse.StatusCode
+            _lastResponseCode = consentResponse?.StatusCode
             If consentResponse.StatusCode = HttpStatusCode.BadRequest Then
                 Me.LastErrorMessage = "Login Failure"
                 Return lastLoginSuccess
@@ -448,7 +448,7 @@ Public Class CareLinkClient
     End Function
 
     Public Overridable Function GetLastResponseCode() As HttpStatusCode
-        Return _lastResponseCode
+        Return CType(_lastResponseCode, HttpStatusCode)
     End Function
 
     Public Overridable Function GetLoginSessionAsync() As HttpResponseMessage

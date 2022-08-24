@@ -8,11 +8,22 @@ Imports System.Runtime.CompilerServices
 Friend Module DateTimeExtensions
 
     Private ReadOnly s_dateTimeFormatUniqueCultures As New List(Of CultureInfo)
+
+#Region "OaDateTime Constants"
+
     Public ReadOnly s_fiveMinuteOADate As Double = (Date.MinValue + New TimeSpan(hours:=0, minutes:=5, seconds:=0)).ToOADate
     Public ReadOnly s_hourAsOADate As Double = s_fiveMinuteOADate * 12
+    Public ReadOnly s_twoHalfMinuteOADate As Double = s_fiveMinuteOADate / 2
+
+#End Region ' OaDateTime Constants
+
     Public ReadOnly s_fiveMinuteSpan As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
+#Region "Millisecond Constants"
+
     Public ReadOnly s_minuteInMilliseconds As Integer = CType(New TimeSpan(0, minutes:=1, 0).TotalMilliseconds, Integer)
     Public ReadOnly s_thirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
+
+#End Region 'Millisecond Constants
 
     Public Enum RoundTo
         Second

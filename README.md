@@ -22,9 +22,12 @@ https://github.com/paul1956/CareLink/releases/
 - Medtronic CareLink data display
 
 ## Updated
-- 8/20/2022
+- 8/23/2022
 
 ## What's New in this release
+  New in 3.5.2.3
+  Show AutoBasal and AutoCorrection as bar graph
+
   New in 3.5.2.2
   Add support for SG Trend Arrows
   Update data more frequently

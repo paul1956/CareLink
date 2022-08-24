@@ -128,24 +128,31 @@ Module ChartSupport
                      .XValueType = ChartValueType.DateTime,
                      .YAxisType = AxisType.Secondary
                  }
+        s.EmptyPointStyle.BorderWidth = 4
+        s.EmptyPointStyle.Color = Color.Transparent
 
         Return s
     End Function
 
     Friend Function CreateMarkerSeries() As Series
-        Return New Series With {
+        Dim s As New Series With {
                         .BorderColor = Color.Transparent,
                         .BorderWidth = 1,
                         .ChartArea = ChartAreaName,
-                        .ChartType = SeriesChartType.Line,
+                        .ChartType = SeriesChartType.Point,
                         .Color = Color.HotPink,
+                        .MarkerSize = 15,
                         .Name = MarkerSeriesName,
                         .XValueType = ChartValueType.DateTime,
                         .YAxisType = AxisType.Secondary
                     }
+        s.EmptyPointStyle.BorderWidth = 4
+        s.EmptyPointStyle.Color = Color.Transparent
+
+        Return s
     End Function
 
-    Friend Function CreateSeriesBg(legendName As String) As Series
+    Friend Function CreateBgSeries(legendName As String) As Series
         Return New Series(BgSeriesName) With {
                      .BorderColor = Color.FromArgb(180, 26, 59, 105),
                      .BorderWidth = 4,
@@ -175,7 +182,7 @@ Module ChartSupport
     End Function
 
     Friend Function CreateTimeChangeSeries() As Series
-        Dim series1 As New Series(TimeChangeSeriesName) With {
+        Dim s As New Series(TimeChangeSeriesName) With {
                         .ChartType = SeriesChartType.Line,
                         .BorderColor = Color.Transparent,
                         .BorderWidth = 1,
@@ -185,7 +192,10 @@ Module ChartSupport
                         .XValueType = ChartValueType.DateTime,
                         .YAxisType = AxisType.Primary
                     }
-        Return series1
+        s.EmptyPointStyle.BorderWidth = 4
+        s.EmptyPointStyle.Color = Color.Transparent
+
+        Return s
     End Function
 
 #End Region
