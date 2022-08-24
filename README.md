@@ -2,9 +2,14 @@
 
 ## Download Latest Release from
 https://github.com/paul1956/CareLink/releases/
+
 # Requires for running
 - .NET Core 6.0.6 or later
 - Windows 10 or later
+
+Try it out and send feedback.
+This update has a UI to show all the available data and a visual version that mimics the one on iPhone.
+![Same display](https://github.com/paul1956/CareLink/blob/master/Screenshot%202021-05-16%20050718.png?raw=true)
 
 ## Requires for development
 - Visual Studio 2022 Version 17.3.0 Preview 2.0 or later
@@ -181,9 +186,6 @@ For the visualization layer I use the open source NuGet package.
 Maikebing.System.Windows.Forms.DataVisualization
 https://www.nuget.org/packages/Maikebing.System.Windows.Forms.DataVisualization/5.0.1?_src=template
 
-Try it out and send feedback.
-This update has a UI to show all the available data and a visual version that mimics the one on iPhone.
-![Same display](https://github.com/paul1956/CareLink/blob/master/Screenshot%202021-05-16%20050718.png?raw=true)
 
 #Known Issue
 If you get a "System.Configuration.ConfigurationErrorsException: 'Configuration system failed to initialize'"
