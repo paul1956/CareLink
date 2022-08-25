@@ -2030,7 +2030,7 @@ Public Class Form1
             End If
             Dim hIcon As IntPtr = bitmapText.GetHicon()
             Me.NotifyIcon1.Icon = Icon.FromHandle(hIcon)
-            notStr.Append(Date.Now().ToString(CurrentUICulture))
+            notStr.Append(Date.Now().ToShortDateTimeString.Replace($"{CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator}{Now.Year}", ""))
             notStr.Append(Environment.NewLine)
             notStr.Append($"Last SG {str} {BgUnitsString}")
             If Not s_lastBGValue = 0 Then
