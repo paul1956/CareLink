@@ -41,7 +41,7 @@ Public Class BGMiniWindow
     End Sub
 
     Private Sub BGTextBox_TextChanged(sender As Object, e As EventArgs) Handles BGTextBox.TextChanged
-        Me.Text = $"{s_firstName}'s Glucose at {Now.ToShortDateString}"
+        Me.Text = $"{s_firstName}'s Glucose at {Now.ToShortDateTimeString}"
         If Me.BGTextBox.Text.Length = 0 OrElse Me.BGTextBox.Text = "---" OrElse Me.BGTextBox.Text = "999" Then
             _currentBGValue = Double.NaN
             Me.DeltaTextBox.Text = ""

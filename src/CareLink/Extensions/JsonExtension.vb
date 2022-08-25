@@ -71,6 +71,12 @@ Public Module JsonExtensions
         Next
         Return resultDictionaryArray
     End Function
+    Public Function Loads(value As String) As Dictionary(Of String, String)
+        Dim bolusRow As Single = Nothing
+        Dim insulinRow As Single = Nothing
+        Dim mealRow As Single = Nothing
+        Return Loads(value, bolusRow, insulinRow, mealRow)
+    End Function
 
     Public Function Loads(value As String, ByRef bolusRow As Single, ByRef insulinRow As Single, ByRef mealRow As Single) As Dictionary(Of String, String)
         Dim resultDictionary As New Dictionary(Of String, String)

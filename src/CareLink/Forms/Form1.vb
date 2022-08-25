@@ -2001,7 +2001,6 @@ Public Class Form1
         Dim sg As Single = str.ParseSingle
         Dim bitmapText As New Bitmap(16, 16)
         Dim notStr As New StringBuilder
-        Dim diffsg As Double
 
         Using g As Graphics = Graphics.FromImage(bitmapText)
             Select Case sg
@@ -2036,8 +2035,19 @@ Public Class Form1
             notStr.Append($"Last SG {str} {BgUnitsString}")
             If Not s_lastBGValue = 0 Then
                 notStr.Append(Environment.NewLine)
-                diffsg = sg - s_lastBGValue
+                Dim diffsg As Double = sg - s_lastBGValue
                 notStr.Append("SG Trend ")
+                If diffsg = 0 Then
+                    If (Now - s_lastBGTime) < s_fiveMinuteSpan Then
+                        diffsg = s_lastBGDiff
+                    Else
+                        s_lastBGDiff = diffsg
+                        s_lastBGTime = Now
+                    End If
+                Else
+                    s_lastBGTime = Now
+                    s_lastBGDiff = diffsg
+                End If
                 notStr.Append(diffsg.ToString("+0;-#", CultureInfo.InvariantCulture))
             End If
             notStr.Append(Environment.NewLine)

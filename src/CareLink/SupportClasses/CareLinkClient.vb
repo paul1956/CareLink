@@ -23,7 +23,6 @@ Public Class CareLinkClient
     Private _lastDataSuccess As Boolean
     Private _lastResponseCode? As HttpStatusCode
     Private _loginInProcess As Boolean
-    Private _sessionCountrySettings As Dictionary(Of String, String)
     Private _sessionMonitorData As PumpData
     Private _sessionProfile As PumpData
     Private _sessionUser As PumpData
@@ -37,7 +36,7 @@ Public Class CareLinkClient
         ' Session info
         _sessionUser = Nothing
         _sessionProfile = Nothing
-        _sessionCountrySettings = Nothing
+        s_sessionCountrySettings = New CountrySettingsRecord
         _sessionMonitorData = Nothing
         ' State info
         _loginInProcess = False
@@ -60,7 +59,7 @@ Public Class CareLinkClient
         ' Session info
         _sessionUser = Nothing
         _sessionProfile = Nothing
-        _sessionCountrySettings = Nothing
+        s_sessionCountrySettings = New CountrySettingsRecord
         _sessionMonitorData = Nothing
         ' State info
         _loginInProcess = False
@@ -157,6 +156,7 @@ Public Class CareLinkClient
         Dim url As String = Me.ExtractResponseData(doLoginRespBody, "<form action=", " ")
         Dim sessionId As String = Me.ExtractResponseData(doLoginRespBody, "<input type=""hidden"" name=""sessionID"" value=", ">")
         Dim sessionData As String = Me.ExtractResponseData(doLoginRespBody, "<input type=""hidden"" name=""sessionData"" value=", ">")
+        _loginStatus.Text = Me.ExtractResponseData(doLoginRespBody, "LoginFailed"">", "</p>")
         ' Send consent
         Dim form As New Dictionary(Of String, String) From {
             {
@@ -247,7 +247,7 @@ Public Class CareLinkClient
             ' Clear basic infos
             _sessionUser = Nothing
             _sessionProfile = Nothing
-            _sessionCountrySettings = Nothing
+            s_sessionCountrySettings = New CountrySettingsRecord
             _sessionMonitorData = Nothing
 
             ' Open login(get SessionId And SessionData)
@@ -287,16 +287,15 @@ Public Class CareLinkClient
             If _sessionProfile Is Nothing Then
                 _sessionProfile = Me.GetMyProfile()
             End If
-            If _sessionCountrySettings Is Nothing Then
-                _sessionCountrySettings = Me.GetCountrySettings(_carelinkCountry, CarelinkLanguageEn)
-
+            If Not s_sessionCountrySettings.DataValid Then
+                s_sessionCountrySettings = New CountrySettingsRecord(Me.GetCountrySettings(_carelinkCountry, CarelinkLanguageEn))
             End If
             If _sessionMonitorData Is Nothing Then
                 _sessionMonitorData = Me.GetMonitorData()
             End If
 
             ' Set login success if everything was OK:
-            If _sessionUser IsNot Nothing AndAlso _sessionProfile IsNot Nothing AndAlso _sessionCountrySettings IsNot Nothing AndAlso _sessionMonitorData IsNot Nothing Then
+            If _sessionUser IsNot Nothing AndAlso _sessionProfile IsNot Nothing AndAlso s_sessionCountrySettings.DataValid AndAlso _sessionMonitorData IsNot Nothing Then
                 lastLoginSuccess = True
             End If
         Catch e As Exception
@@ -313,6 +312,9 @@ Public Class CareLinkClient
 
     Public Overridable Function ExtractResponseData(responseBody As String, begstr As String, endstr As String) As String
         Dim beg As Integer = responseBody.IndexOf(begstr, StringComparison.Ordinal) + begstr.Length
+        If begstr.Length = beg + 1 Then
+            Return ""
+        End If
         Dim [end] As Integer = responseBody.IndexOf(endstr, beg, StringComparison.Ordinal)
         Return responseBody.Substring(beg, [end] - beg).Replace("""", "")
     End Function
@@ -502,7 +504,7 @@ Public Class CareLinkClient
                 _sessionMonitorData.JsonData.TryGetValue("deviceFamily", deviceFamily)
                 If _carelinkCountry = countryCode OrElse deviceFamily?.Equals("BLE_X") Then
                     Dim role As String = If(_carelinkPartnerType.Contains(_sessionUser.JsonData("role")), "carepartner", "patient")
-                    Return Me.GetConnectDisplayMessage(_sessionProfile.JsonData("username").ToString(), role, _sessionCountrySettings("blePereodicDataEndpoint"))
+                    Return Me.GetConnectDisplayMessage(_sessionProfile.JsonData("username").ToString(), role, s_sessionCountrySettings.blePereodicDataEndpoint)
                 End If
             End If
         Catch ex As Exception

@@ -27,9 +27,13 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 8/23/2022
+- 8/25/2022
 
 ## What's New in this release
+  New in 3.5.2.5
+  Fix issue # 16 SG Trend not correct in Systray
+  Add infrastructure to process CountrySettings
+
   New in 3.5.2.4
   Show AutoBasal and AutoCorrection as bar graph
 

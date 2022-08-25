@@ -41,6 +41,8 @@ Public Module PumpVariables
     Friend s_filterJsonData As Boolean = True
     Friend s_firstName As String = ""
     Friend s_gstBatteryLevel As Integer
+    Friend s_lastBGDiff As Double = 0
+    Friend s_lastBGTime As Date
     Friend s_lastBGValue As Single = 0
     Friend s_lastSG As Dictionary(Of String, String)
     Friend s_limitHigh As Single
@@ -54,6 +56,7 @@ Public Module PumpVariables
     Friend s_sensorDurationHours As Integer
     Friend s_sensorDurationMinutes As Integer
     Friend s_sensorState As String
+    Friend s_sessionCountrySettings As CountrySettingsRecord
     Friend s_systemStatusMessage As String
     Friend s_timeInRange As Integer
     Friend s_timeToNextCalibHours As UShort = UShort.MaxValue
