@@ -30,9 +30,12 @@ This update has a UI to show all the available data and a visual version that mi
 - 8/25/2022
 
 ## What's New in this release
+  New 3.5.3.0
+  Add Trend value to Home Screen
+  Add additional tab with Country Specific Data that might be useful later
+
   New in 3.5.2.6
   Improve formating of TryIcon Message
-
 
   New in 3.5.2.5
   Fix issue # 16 SG Trend not correct in Systray

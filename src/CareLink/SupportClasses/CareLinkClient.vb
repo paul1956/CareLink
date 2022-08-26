@@ -91,7 +91,7 @@ Public Class CareLinkClient
         Return result
     End Function
 
-    Private Function DecodeResponse(response As HttpResponseMessage, <CallerMemberName> Optional memberName As String = Nothing) As HttpResponseMessage
+    Private Function DecodeResponse(response As HttpResponseMessage, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As HttpResponseMessage
         Dim message As String
         If response.StatusCode = Global.System.Net.HttpStatusCode.OK Then
             Me.FormatStatusMessage("OK")
@@ -99,7 +99,7 @@ Public Class CareLinkClient
             Return response
         ElseIf response.StatusCode = HttpStatusCode.BadRequest Then
             Me.FormatStatusMessage(BadRequestMessage)
-            Debug.Print($"{memberName} BadRequestMessage")
+            Debug.Print($"{memberName} at {sourceLineNumber} BadRequestMessage")
             Return response
         Else
             message = $"session response is {response.StatusCode}"
@@ -235,7 +235,7 @@ Public Class CareLinkClient
         Return Nothing
     End Function
 
-    Public Overridable Function ExecuteLoginProcedure() As Boolean
+    Public Overridable Function ExecuteLoginProcedure(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Boolean
         Dim lastLoginSuccess As Boolean = False
         _loginInProcess = True
         Me.LastErrorMessage = Nothing
@@ -319,7 +319,7 @@ Public Class CareLinkClient
         Return responseBody.Substring(beg, [end] - beg).Replace("""", "")
     End Function
 
-    Public Overridable Function GetAuthorizationToken() As String
+    Public Overridable Function GetAuthorizationToken(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As String
         Dim authToken As String = Me.GetCookieValue(Me.CareLinkServer, CarelinkAuthTokenCookieName)
         Dim authTokenValidto As String = Me.GetCookies(Me.CareLinkServer)?.Item(CarelinkTokenValidtoCookieName)?.Value
         ' New token is needed:
@@ -496,7 +496,7 @@ Public Class CareLinkClient
     End Function
 
     ' Wrapper for data retrieval methods
-    Public Overridable Function GetRecentData(countryCode As String) As PumpData
+    Public Overridable Function GetRecentData(countryCode As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As PumpData
         ' Force login to get basic info
         Try
             If Me.GetAuthorizationToken() IsNot Nothing Then

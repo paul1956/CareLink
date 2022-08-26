@@ -2,6 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Runtime.CompilerServices
+
 Public Class UserDataRecord
 
     Public Shared ReadOnly _headerColumns As New List(Of String) From
@@ -67,7 +69,7 @@ Public Class UserDataRecord
         Next
     End Sub
 
-    Friend Function GetValueFromName(entryName As String) As String
+    Friend Function GetValueFromName(entryName As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As String
         Select Case entryName
             Case NameOf(My.Settings.CareLinkUserName)
                 Return CareLinkUserName
@@ -98,7 +100,7 @@ Public Class UserDataRecord
             Case NameOf(My.Settings.AutoLogin)
                 Return AutoLogin.ToString
         End Select
-        Throw UnreachableException
+        Throw UnreachableException(memberName, sourceLineNumber)
     End Function
 
     Friend Function ToCsvString() As String

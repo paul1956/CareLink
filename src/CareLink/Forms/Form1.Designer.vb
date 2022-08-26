@@ -24,14 +24,14 @@ Partial Class Form1
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.MenuStartHere = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStartHereLogin = New System.Windows.Forms.ToolStripMenuItem()
@@ -77,7 +77,7 @@ Partial Class Form1
         Me.SensorDaysLeftLabel = New System.Windows.Forms.Label()
         Me.SensorTimeLeftLabel = New System.Windows.Forms.Label()
         Me.SensorTimeLeftPictureBox = New System.Windows.Forms.PictureBox()
-        Me.LabelTrendValue = New System.Windows.Forms.Label()
+        Me.LabelTrendArrows = New System.Windows.Forms.Label()
         Me.LabelSgTrend = New System.Windows.Forms.Label()
         Me.ModelLabel = New System.Windows.Forms.Label()
         Me.SerialNumberLabel = New System.Windows.Forms.Label()
@@ -170,6 +170,21 @@ Partial Class Form1
         Me.TabPage10BannerState = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelBannerState = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelBannerState = New System.Windows.Forms.Label()
+        Me.TabPage11CountrySettings = New System.Windows.Forms.TabPage()
+        Me.TabControlCountrySettings = New System.Windows.Forms.TabControl()
+        Me.TabPage1SingleItems = New System.Windows.Forms.TabPage()
+        Me.DataGridViewSingleCountryItems = New System.Windows.Forms.DataGridView()
+        Me.SingleItemlRecordNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SingleItemCategory = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SingleItem = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SingleItemValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.TabPage2Languages = New System.Windows.Forms.TabPage()
+        Me.DataGridViewLanguages = New System.Windows.Forms.DataGridView()
+        Me.LanguagesRecordNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LanguagesKey = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LanguagesValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.TabPage3SuportedReports = New System.Windows.Forms.TabPage()
+        Me.DataGridViewSuportedReports = New System.Windows.Forms.DataGridView()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.CursorTimer = New System.Windows.Forms.Timer(Me.components)
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
@@ -178,7 +193,7 @@ Partial Class Form1
         Me.LastUpdateTimeLabel = New System.Windows.Forms.Label()
         Me.LastUpdateTime = New System.Windows.Forms.Label()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.BindingSource1 = New System.Windows.Forms.BindingSource(Me.components)
+        Me.LabelTrendValue = New System.Windows.Forms.Label()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -246,7 +261,14 @@ Partial Class Form1
         Me.TableLayoutPanelTherapyAlgorthm.SuspendLayout()
         Me.TabPage10BannerState.SuspendLayout()
         Me.TableLayoutPanelBannerState.SuspendLayout()
-        CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage11CountrySettings.SuspendLayout()
+        Me.TabControlCountrySettings.SuspendLayout()
+        Me.TabPage1SingleItems.SuspendLayout()
+        CType(Me.DataGridViewSingleCountryItems, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage2Languages.SuspendLayout()
+        CType(Me.DataGridViewLanguages, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage3SuportedReports.SuspendLayout()
+        CType(Me.DataGridViewSuportedReports, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MenuStrip1
@@ -510,6 +532,7 @@ Partial Class Form1
         Me.TabControlHomePage.Controls.Add(Me.TabPage9Basal)
         Me.TabControlHomePage.Controls.Add(Me.TabPage09TherapyAlgorithm)
         Me.TabControlHomePage.Controls.Add(Me.TabPage10BannerState)
+        Me.TabControlHomePage.Controls.Add(Me.TabPage11CountrySettings)
         Me.TabControlHomePage.Location = New System.Drawing.Point(0, 0)
         Me.TabControlHomePage.Name = "TabControlHomePage"
         Me.TabControlHomePage.SelectedIndex = 0
@@ -537,10 +560,11 @@ Partial Class Form1
         '
         'SplitContainer2.Panel1
         '
+        Me.SplitContainer2.Panel1.Controls.Add(Me.LabelTrendValue)
         Me.SplitContainer2.Panel1.Controls.Add(Me.MaxBasalPerHour)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Last24HTotalsPanel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.SensorTimeLeftPanel)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.LabelTrendValue)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.LabelTrendArrows)
         Me.SplitContainer2.Panel1.Controls.Add(Me.LabelSgTrend)
         Me.SplitContainer2.Panel1.Controls.Add(Me.ModelLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.SerialNumberLabel)
@@ -706,23 +730,23 @@ Partial Class Form1
         Me.SensorTimeLeftPictureBox.TabIndex = 47
         Me.SensorTimeLeftPictureBox.TabStop = False
         '
-        'LabelTrendValue
+        'LabelTrendArrows
         '
-        Me.LabelTrendValue.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.LabelTrendValue.ForeColor = System.Drawing.Color.White
-        Me.LabelTrendValue.Location = New System.Drawing.Point(457, 106)
-        Me.LabelTrendValue.Name = "LabelTrendValue"
-        Me.LabelTrendValue.Size = New System.Drawing.Size(84, 23)
-        Me.LabelTrendValue.TabIndex = 62
-        Me.LabelTrendValue.Text = "↑↔↓"
-        Me.LabelTrendValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.LabelTrendArrows.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.LabelTrendArrows.ForeColor = System.Drawing.Color.White
+        Me.LabelTrendArrows.Location = New System.Drawing.Point(457, 106)
+        Me.LabelTrendArrows.Name = "LabelTrendArrows"
+        Me.LabelTrendArrows.Size = New System.Drawing.Size(84, 23)
+        Me.LabelTrendArrows.TabIndex = 62
+        Me.LabelTrendArrows.Text = "↑↔↓"
+        Me.LabelTrendArrows.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'LabelSgTrend
         '
         Me.LabelSgTrend.BackColor = System.Drawing.Color.Black
         Me.LabelSgTrend.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.LabelSgTrend.ForeColor = System.Drawing.Color.White
-        Me.LabelSgTrend.Location = New System.Drawing.Point(457, 84)
+        Me.LabelSgTrend.Location = New System.Drawing.Point(457, 62)
         Me.LabelSgTrend.Name = "LabelSgTrend"
         Me.LabelSgTrend.Size = New System.Drawing.Size(84, 23)
         Me.LabelSgTrend.TabIndex = 61
@@ -1231,16 +1255,16 @@ Partial Class Form1
         '
         Me.SummaryDataGridView.AllowUserToAddRows = False
         Me.SummaryDataGridView.AllowUserToDeleteRows = False
-        DataGridViewCellStyle1.BackColor = System.Drawing.Color.Silver
-        Me.SummaryDataGridView.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.SummaryDataGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle9.BackColor = System.Drawing.Color.Silver
+        Me.SummaryDataGridView.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle10.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        DataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.SummaryDataGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle10
         Me.SummaryDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.SummaryDataGridView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.SummaryDataGridView.Location = New System.Drawing.Point(3, 3)
@@ -1333,17 +1357,17 @@ Partial Class Form1
         Me.SGsDataGridView.AllowUserToDeleteRows = False
         Me.SGsDataGridView.AllowUserToResizeColumns = False
         Me.SGsDataGridView.AllowUserToResizeRows = False
-        DataGridViewCellStyle3.BackColor = System.Drawing.Color.Silver
-        Me.SGsDataGridView.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle11.BackColor = System.Drawing.Color.Silver
+        Me.SGsDataGridView.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle11
         Me.SGsDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.SGsDataGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle12.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        DataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.SGsDataGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle12
         Me.SGsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.SGsDataGridView.Location = New System.Drawing.Point(3, 33)
         Me.SGsDataGridView.Name = "SGsDataGridView"
@@ -1462,17 +1486,17 @@ Partial Class Form1
         Me.DataGridViewAutoBasalDelivery.AllowUserToDeleteRows = False
         Me.DataGridViewAutoBasalDelivery.AllowUserToResizeColumns = False
         Me.DataGridViewAutoBasalDelivery.AllowUserToResizeRows = False
-        DataGridViewCellStyle5.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewAutoBasalDelivery.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle13.BackColor = System.Drawing.Color.Silver
+        Me.DataGridViewAutoBasalDelivery.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle13
         Me.DataGridViewAutoBasalDelivery.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewAutoBasalDelivery.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle14.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        DataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewAutoBasalDelivery.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle14
         Me.DataGridViewAutoBasalDelivery.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridViewAutoBasalDelivery.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridViewAutoBasalDelivery.Location = New System.Drawing.Point(3, 33)
@@ -1649,16 +1673,16 @@ Partial Class Form1
         Me.DataGridViewInsulin.AllowUserToDeleteRows = False
         Me.DataGridViewInsulin.AllowUserToResizeColumns = False
         Me.DataGridViewInsulin.AllowUserToResizeRows = False
-        DataGridViewCellStyle7.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewInsulin.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle7
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewInsulin.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle15.BackColor = System.Drawing.Color.Silver
+        Me.DataGridViewInsulin.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle15
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle16.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        DataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewInsulin.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle16
         Me.DataGridViewInsulin.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridViewInsulin.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridViewInsulin.Location = New System.Drawing.Point(6, 39)
@@ -1944,6 +1968,158 @@ Partial Class Form1
         Me.LabelBannerState.Text = "Banner State"
         Me.LabelBannerState.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'TabPage11CountrySettings
+        '
+        Me.TabPage11CountrySettings.Controls.Add(Me.TabControlCountrySettings)
+        Me.TabPage11CountrySettings.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage11CountrySettings.Name = "TabPage11CountrySettings"
+        Me.TabPage11CountrySettings.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage11CountrySettings.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage11CountrySettings.TabIndex = 11
+        Me.TabPage11CountrySettings.Text = "Country Settings"
+        Me.TabPage11CountrySettings.UseVisualStyleBackColor = True
+        '
+        'TabControlCountrySettings
+        '
+        Me.TabControlCountrySettings.Controls.Add(Me.TabPage1SingleItems)
+        Me.TabControlCountrySettings.Controls.Add(Me.TabPage2Languages)
+        Me.TabControlCountrySettings.Controls.Add(Me.TabPage3SuportedReports)
+        Me.TabControlCountrySettings.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TabControlCountrySettings.Location = New System.Drawing.Point(3, 3)
+        Me.TabControlCountrySettings.Name = "TabControlCountrySettings"
+        Me.TabControlCountrySettings.SelectedIndex = 0
+        Me.TabControlCountrySettings.Size = New System.Drawing.Size(1370, 628)
+        Me.TabControlCountrySettings.TabIndex = 0
+        '
+        'TabPage1SingleItems
+        '
+        Me.TabPage1SingleItems.Controls.Add(Me.DataGridViewSingleCountryItems)
+        Me.TabPage1SingleItems.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage1SingleItems.Name = "TabPage1SingleItems"
+        Me.TabPage1SingleItems.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage1SingleItems.Size = New System.Drawing.Size(1362, 600)
+        Me.TabPage1SingleItems.TabIndex = 0
+        Me.TabPage1SingleItems.Text = "Single Items"
+        Me.TabPage1SingleItems.UseVisualStyleBackColor = True
+        '
+        'DataGridViewSingleCountryItems
+        '
+        Me.DataGridViewSingleCountryItems.AllowUserToAddRows = False
+        Me.DataGridViewSingleCountryItems.AllowUserToDeleteRows = False
+        Me.DataGridViewSingleCountryItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridViewSingleCountryItems.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.SingleItemlRecordNumber, Me.SingleItemCategory, Me.SingleItem, Me.SingleItemValue})
+        Me.DataGridViewSingleCountryItems.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridViewSingleCountryItems.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridViewSingleCountryItems.Name = "DataGridViewSingleCountryItems"
+        Me.DataGridViewSingleCountryItems.ReadOnly = True
+        Me.DataGridViewSingleCountryItems.RowTemplate.Height = 25
+        Me.DataGridViewSingleCountryItems.Size = New System.Drawing.Size(1356, 594)
+        Me.DataGridViewSingleCountryItems.TabIndex = 0
+        '
+        'SingleItemlRecordNumber
+        '
+        Me.SingleItemlRecordNumber.HeaderText = "Record Number"
+        Me.SingleItemlRecordNumber.Name = "SingleItemlRecordNumber"
+        Me.SingleItemlRecordNumber.ReadOnly = True
+        '
+        'SingleItemCategory
+        '
+        Me.SingleItemCategory.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.SingleItemCategory.HeaderText = "Category"
+        Me.SingleItemCategory.Name = "SingleItemCategory"
+        Me.SingleItemCategory.ReadOnly = True
+        Me.SingleItemCategory.Width = 80
+        '
+        'SingleItem
+        '
+        Me.SingleItem.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.SingleItem.HeaderText = "Key"
+        Me.SingleItem.Name = "SingleItem"
+        Me.SingleItem.ReadOnly = True
+        Me.SingleItem.Width = 51
+        '
+        'SingleItemValue
+        '
+        Me.SingleItemValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.SingleItemValue.HeaderText = "Value"
+        Me.SingleItemValue.Name = "SingleItemValue"
+        Me.SingleItemValue.ReadOnly = True
+        Me.SingleItemValue.Width = 60
+        '
+        'TabPage2Languages
+        '
+        Me.TabPage2Languages.Controls.Add(Me.DataGridViewLanguages)
+        Me.TabPage2Languages.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage2Languages.Name = "TabPage2Languages"
+        Me.TabPage2Languages.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage2Languages.Size = New System.Drawing.Size(1362, 600)
+        Me.TabPage2Languages.TabIndex = 2
+        Me.TabPage2Languages.Text = "Languages"
+        Me.TabPage2Languages.UseVisualStyleBackColor = True
+        '
+        'DataGridViewLanguages
+        '
+        Me.DataGridViewLanguages.AllowUserToAddRows = False
+        Me.DataGridViewLanguages.AllowUserToDeleteRows = False
+        Me.DataGridViewLanguages.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridViewLanguages.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.LanguagesRecordNumber, Me.LanguagesKey, Me.LanguagesValue})
+        Me.DataGridViewLanguages.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridViewLanguages.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridViewLanguages.Name = "DataGridViewLanguages"
+        Me.DataGridViewLanguages.ReadOnly = True
+        Me.DataGridViewLanguages.RowTemplate.Height = 25
+        Me.DataGridViewLanguages.Size = New System.Drawing.Size(1356, 594)
+        Me.DataGridViewLanguages.TabIndex = 0
+        '
+        'LanguagesRecordNumber
+        '
+        Me.LanguagesRecordNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.LanguagesRecordNumber.HeaderText = "Record Number"
+        Me.LanguagesRecordNumber.MinimumWidth = 200
+        Me.LanguagesRecordNumber.Name = "LanguagesRecordNumber"
+        Me.LanguagesRecordNumber.ReadOnly = True
+        Me.LanguagesRecordNumber.Width = 200
+        '
+        'LanguagesKey
+        '
+        Me.LanguagesKey.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.LanguagesKey.HeaderText = "Name"
+        Me.LanguagesKey.Name = "LanguagesKey"
+        Me.LanguagesKey.ReadOnly = True
+        Me.LanguagesKey.Width = 64
+        '
+        'LanguagesValue
+        '
+        Me.LanguagesValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.LanguagesValue.HeaderText = "Code"
+        Me.LanguagesValue.Name = "LanguagesValue"
+        Me.LanguagesValue.ReadOnly = True
+        Me.LanguagesValue.Width = 60
+        '
+        'TabPage3SuportedReports
+        '
+        Me.TabPage3SuportedReports.Controls.Add(Me.DataGridViewSuportedReports)
+        Me.TabPage3SuportedReports.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage3SuportedReports.Name = "TabPage3SuportedReports"
+        Me.TabPage3SuportedReports.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage3SuportedReports.Size = New System.Drawing.Size(1362, 600)
+        Me.TabPage3SuportedReports.TabIndex = 1
+        Me.TabPage3SuportedReports.Text = "Supported Reports"
+        Me.TabPage3SuportedReports.UseVisualStyleBackColor = True
+        '
+        'DataGridViewSuportedReports
+        '
+        Me.DataGridViewSuportedReports.AllowUserToAddRows = False
+        Me.DataGridViewSuportedReports.AllowUserToDeleteRows = False
+        Me.DataGridViewSuportedReports.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridViewSuportedReports.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridViewSuportedReports.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridViewSuportedReports.Name = "DataGridViewSuportedReports"
+        Me.DataGridViewSuportedReports.ReadOnly = True
+        Me.DataGridViewSuportedReports.RowTemplate.Height = 25
+        Me.DataGridViewSuportedReports.Size = New System.Drawing.Size(1356, 594)
+        Me.DataGridViewSuportedReports.TabIndex = 0
+        '
         'ImageList1
         '
         Me.ImageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit
@@ -1971,7 +2147,7 @@ Partial Class Form1
         'LoginStatusLabel
         '
         Me.LoginStatusLabel.AutoSize = True
-        Me.LoginStatusLabel.Location = New System.Drawing.Point(600, 3)
+        Me.LoginStatusLabel.Location = New System.Drawing.Point(425, 3)
         Me.LoginStatusLabel.Name = "LoginStatusLabel"
         Me.LoginStatusLabel.Size = New System.Drawing.Size(75, 15)
         Me.LoginStatusLabel.TabIndex = 23
@@ -1980,7 +2156,7 @@ Partial Class Form1
         'LoginStatus
         '
         Me.LoginStatus.AutoSize = True
-        Me.LoginStatus.Location = New System.Drawing.Point(684, 3)
+        Me.LoginStatus.Location = New System.Drawing.Point(509, 3)
         Me.LoginStatus.Name = "LoginStatus"
         Me.LoginStatus.Size = New System.Drawing.Size(58, 15)
         Me.LoginStatus.TabIndex = 24
@@ -2003,6 +2179,17 @@ Partial Class Form1
         Me.LastUpdateTime.Size = New System.Drawing.Size(58, 15)
         Me.LastUpdateTime.TabIndex = 24
         Me.LastUpdateTime.Text = "Unknown"
+        '
+        'LabelTrendValue
+        '
+        Me.LabelTrendValue.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.LabelTrendValue.ForeColor = System.Drawing.Color.White
+        Me.LabelTrendValue.Location = New System.Drawing.Point(457, 83)
+        Me.LabelTrendValue.Name = "LabelTrendValue"
+        Me.LabelTrendValue.Size = New System.Drawing.Size(84, 23)
+        Me.LabelTrendValue.TabIndex = 68
+        Me.LabelTrendValue.Text = "+ 5"
+        Me.LabelTrendValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Form1
         '
@@ -2119,7 +2306,14 @@ Partial Class Form1
         Me.TabPage10BannerState.ResumeLayout(False)
         Me.TableLayoutPanelBannerState.ResumeLayout(False)
         Me.TableLayoutPanelBannerState.PerformLayout()
-        CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage11CountrySettings.ResumeLayout(False)
+        Me.TabControlCountrySettings.ResumeLayout(False)
+        Me.TabPage1SingleItems.ResumeLayout(False)
+        CType(Me.DataGridViewSingleCountryItems, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage2Languages.ResumeLayout(False)
+        CType(Me.DataGridViewLanguages, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage3SuportedReports.ResumeLayout(False)
+        CType(Me.DataGridViewSuportedReports, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -2211,7 +2405,6 @@ Partial Class Form1
     Friend WithEvents TableLayoutPanelBannerState As TableLayoutPanel
     Friend WithEvents MenuOptionsUseLocalTimeZone As ToolStripMenuItem
     Friend WithEvents SummaryDataGridView As DataGridView
-    Friend WithEvents BindingSource1 As BindingSource
     Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
     Friend WithEvents TabControlMarker As TabControl
     Friend WithEvents TabPageAutoModeStatus As TabPage
@@ -2248,7 +2441,7 @@ Partial Class Form1
     Friend WithEvents LabelTherapyAlgorthm As Label
     Friend WithEvents LabelBannerState As Label
     Friend WithEvents Label1 As Label
-    Friend WithEvents LabelTrendValue As Label
+    Friend WithEvents LabelTrendArrows As Label
     Friend WithEvents LabelSgTrend As Label
     Friend WithEvents CursorPanel As Panel
     Friend WithEvents CursorMessage2Label As Label
@@ -2272,4 +2465,20 @@ Partial Class Form1
     Friend WithEvents DailyDoseLabel As Label
     Friend WithEvents MenuOptionsAutoLogin As ToolStripMenuItem
     Friend WithEvents MaxBasalPerHour As Label
+    Friend WithEvents TabPage11CountrySettings As TabPage
+    Friend WithEvents TabControlCountrySettings As TabControl
+    Friend WithEvents TabPage1SingleItems As TabPage
+    Friend WithEvents TabPage3SuportedReports As TabPage
+    Friend WithEvents TabPage2Languages As TabPage
+    Friend WithEvents DataGridViewSingleCountryItems As DataGridView
+    Friend WithEvents DataGridViewSuportedReports As DataGridView
+    Friend WithEvents SingleItemlRecordNumber As DataGridViewTextBoxColumn
+    Friend WithEvents SingleItemCategory As DataGridViewTextBoxColumn
+    Friend WithEvents SingleItem As DataGridViewTextBoxColumn
+    Friend WithEvents SingleItemValue As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewLanguages As DataGridView
+    Friend WithEvents LanguagesRecordNumber As DataGridViewTextBoxColumn
+    Friend WithEvents LanguagesKey As DataGridViewTextBoxColumn
+    Friend WithEvents LanguagesValue As DataGridViewTextBoxColumn
+    Friend WithEvents LabelTrendValue As Label
 End Class

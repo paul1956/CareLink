@@ -5,6 +5,7 @@
 Imports System.Runtime.CompilerServices
 
 Public Class SgRecord
+
     Private Shared ReadOnly s_columnsToHide As New List(Of String) From {
                         NameOf(SgRecord.OADate),
                         NameOf(SgRecord.kind),
@@ -58,6 +59,7 @@ Public Class SgRecord
     Public Property sensorState As String
     Public Property timeChange As String
     Public Property version As Integer
+
     Friend Shared Function HideColumn(columnName As String) As Boolean
         Return s_filterJsonData AndAlso s_columnsToHide.Contains(columnName)
     End Function
@@ -81,7 +83,7 @@ Public Class SgRecord
                     NameOf(kind)
                 cellStyle = cellStyle.CellStyleMiddleCenter
             Case Else
-                Throw New Exception($"Line {sourceLineNumber} in {memberName} thought to be unreachable for column '{columnName}'")
+                Throw UnreachableException(memberName, sourceLineNumber)
         End Select
         Return cellStyle
     End Function

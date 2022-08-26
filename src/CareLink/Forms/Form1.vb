@@ -646,6 +646,14 @@ Public Class Form1
 
 #End Region
 
+#Region "Report Tab DataGridView Events"
+
+    Private Sub DataGridViewSuportedReports_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewSuportedReports.ColumnAdded
+        DgvColumnAdded(e, supportedReportRecord.GetCellStyle(), wrapHeader:=False)
+    End Sub
+
+#End Region 'Report Tab DataGridView Events
+
 #Region "SGS Tab DataGridView Events"
 
     Private Sub SGsDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles SGsDataGridView.CellFormatting
@@ -683,7 +691,7 @@ Public Class Form1
         DgvColumnAdded(e, cellStyle, wrapHeader:=False)
     End Sub
 
-#End Region
+#End Region ' SGS Tab DataGridView Events
 
 #Region "Summary Tab DataGridView Events"
 
@@ -819,7 +827,7 @@ Public Class Form1
         Stop
     End Sub
 
-#End Region
+#End Region 'Summary Tab DataGridView Events
 
 #Region "Timer Events"
 
@@ -1093,7 +1101,7 @@ Public Class Form1
         Return newMarker
     End Function
 
-    Private Sub CollectMarkers(row As String)
+    Private Sub CollectMarkers(row As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
         Dim recordNumberAutoBasalDelivery As Integer = 0
         Dim recordNumberInsulin As Integer = 0
         Dim newMarker As Dictionary(Of String, String)
@@ -1139,7 +1147,7 @@ Public Class Form1
                     _markersTimeChange.Add(newMarker)
                 Case Else
                     Stop
-                    Throw UnreachableException("type")
+                    Throw UnreachableException(memberName, sourceLineNumber)
             End Select
         Next
         Dim endOADate As Double = basalDictionary.Last.Key
@@ -1297,9 +1305,9 @@ Public Class Form1
             Case ItemIndexs.lastSGTrend
                 Dim arrows As String = Nothing
                 If Trends.TryGetValue(row.Value, arrows) Then
-                    Me.LabelTrendValue.Text = Trends(row.Value)
+                    Me.LabelTrendArrows.Text = Trends(row.Value)
                 Else
-                    Me.LabelTrendValue.Text = $"{row.Value}"
+                    Me.LabelTrendArrows.Text = $"{row.Value}"
                 End If
                 s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
 
@@ -1764,7 +1772,7 @@ Public Class Form1
             End If
             Me.ManualBolusLabel.Text = $"Manual Bolus {s_totalManualBolus.RoundSingle(1)} U | {totalPercent}%"
         End If
-        Me.Last24CarbsValueLabel.Text = $"Carbs - {s_totalCarbs} Grams"
+        Me.Last24CarbsValueLabel.Text = $"Carbs = {s_totalCarbs} {s_sessionCountrySettings.carbohydrateUnitsDefault.ToTitle}"
     End Sub
 
     Private Sub UpdateHomeTabSerieses(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
@@ -2048,7 +2056,10 @@ Public Class Form1
                     s_lastBGTime = Now
                     s_lastBGDiff = diffsg
                 End If
-                notStr.Append(diffsg.ToString("+0;-#", CultureInfo.InvariantCulture))
+                Dim formattedTrend As String = diffsg.ToString("+0;-#", CultureInfo.InvariantCulture)
+                Me.LabelTrendValue.Text = formattedTrend
+                Me.LabelTrendValue.ForeColor = bgColor
+                notStr.Append(formattedTrend)
             End If
             notStr.Append(Environment.NewLine)
             notStr.Append("Active ins. ")

@@ -80,7 +80,7 @@ Public Class LoginForm1
         If Not Me.Client.LoggedIn Then
             Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData(countryCode)?.JsonData
             If recentData IsNot Nothing AndAlso recentData.Count > 0 Then
-                Me.LoggedOnUser = New UserDataRecord
+
                 Me.Ok_Button.Enabled = True
                 Me.Cancel_Button.Enabled = True
                 If Me.SaveCredentials.CheckState = CheckState.Checked Then
@@ -89,6 +89,9 @@ Public Class LoginForm1
                 End If
 
                 My.Settings.Save()
+                If Not s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, Me.LoggedOnUser) Then
+                    Me.LoggedOnUser = New UserDataRecord
+                End If
                 Me.DialogResult = DialogResult.OK
                 Me.Hide()
                 Exit Sub
