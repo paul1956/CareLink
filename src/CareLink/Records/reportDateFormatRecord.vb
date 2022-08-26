@@ -9,8 +9,10 @@ Public Class reportDateFormatRecord
     Public shortTimePattern24 As String
     Public dateSeparator As String
     Public timeSeparator As String
+    Private ReadOnly _asList As New List(Of KeyValuePair(Of String, String))
     Public Sub New(jsonValue As String)
         For Each kvp As KeyValuePair(Of String, String) In Loads(jsonValue)
+            _asList.Add(KeyValuePair.Create(kvp.Key, kvp.Value))
             Select Case kvp.Key
                 Case NameOf(longTimePattern12)
                     longTimePattern12 = kvp.Value
@@ -27,4 +29,8 @@ Public Class reportDateFormatRecord
             End Select
         Next
     End Sub
+
+    Public Function ToList() As List(Of KeyValuePair(Of String, String))
+        Return _asList
+    End Function
 End Class

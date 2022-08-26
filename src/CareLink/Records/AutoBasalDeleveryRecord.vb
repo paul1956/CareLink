@@ -94,7 +94,7 @@ Public Class AutoBasalDeliveryRecord
                 cellStyle = cellStyle.CellStyleMiddleRight(0)
             Case Else
                 Stop
-                Throw New Exception($"Line {sourceLineNumber} in {memberName} thought to be unreachable for column '{columnName}'")
+                Throw UnreachableException(memberName, sourceLineNumber)
         End Select
         Return cellStyle
     End Function

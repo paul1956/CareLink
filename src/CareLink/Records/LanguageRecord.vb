@@ -8,7 +8,6 @@ Imports Windows.Foundation.Collections
 Public Class LanguageRecord
     Public name As String
     Public code As String
-
     Public Sub New(values As Dictionary(Of String, String))
         If values.Count <> 2 Then
             Throw New Exception($"{NameOf(LanguageRecord)}({values}) contains {values.Count} entries.")

@@ -2,41 +2,64 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.IO
+Imports System.Reflection
+
 Public Class CountrySettingsRecord
-    Public name As String                       ' "United States"
-    Public languages As languagesRecord         ' "[{""name"":""English"",""code"":""EN""}]"
-    Public defaultLanguage As String            ' "EN"
-    Public defaultCountryName As String         ' "United States"
-    Public defaultDevice As String              ' "GM"
-    Public dialCode As String                   ' "+1"
-    Public cpMobileAppAvailable As String       ' "False"
-    Public uploaderAllowed As String            ' "True"
-    Public techSupport As String                ' "1-800-646-4633"
-    Public techDays As String                   ' "Mo-Fr"
-    Public firstDayOfWeek As String             ' "Monday"
-    Public techHours As String                  ' "7:00 am - 7:00 pm CST"
-    Public legalAge As String                   ' "18"
-    Public shortDateFormat As String            ' "MM-DD-YYYY"
-    Public shortTimeFormat As String            ' "h:mm A"
-    Public mediaHost As String                  ' "https://carelink.minimed.com"
-    Public blePereodicDataEndpoint As String    ' "https://clcloud.minimed.com/connect/v2/display/message"
-    Public region As String                     ' "US"
-    Public pathDocs As pathDocsRecord           ' "{""ddms.termsOfUse"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/terms_of_use.html"",""ddms.privacyStatementPdf"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/privacy_policy.pdf"",""ddms.termsOfUsePdf"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/terms_of_use.pdf"",""ddms.privacyStatement"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/privacy_policy.pdf"",""ddms.faqPdf"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/faq.pdf"",""ddms.privacyPractices"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/notices.pdf""}"
-    Public carbDefaultUnit As String            ' "GRAMS"
-    Public bgUnits As String                    ' "MG_DL"
-    Public timeFormat As String                 ' "HR_12"
-    Public timeUnitsDefault As String           ' "12h"
-    Public recordSeparator As String            ' ","
-    Public glucoseUnitsDefault As String        ' "MG_DL"
-    Public carbohydrateUnitsDefault As String   ' "GRAMS"
-    Public carbExchangeRatioDefault As String   ' "15.0"
-    Public reportDateFormat As reportDateFormatRecord   ' "{""longTimePattern12"":""hh:mm:ss tt"",""longTimePattern24"":""HH:mm:ss"",""shortTimePattern12"":""h:mm tt"",""shortTimePattern24"":""HH:mm"",""shortDatePattern"":""MM-dd-yyyy"",""dateSeparator"":""-"",""timeSeparator"":"":""}"
-    Public mfa As String                        ' "{""status"":""OPTIONAL"",""fromDate"":""05/10/2019"",""gracePeriod"":5,""codeValidityDuration"":15,""maxAttempts"":3,""rememberPeriod"":3}"
-    Public supportedReports As supportedReportsRecord           ' "[{""report"":""ADHERENCE"",""onlyFor"":[],""notFor"":[]},{""report"":""ASSESSMENT_AND_PROGRESS"",""onlyFor"":[],""notFor"":[]},{""report"":""BOLUS_WIZARD_FOOD_BOLUS"",""onlyFor"":[],""notFor"":[]},{""report"":""DAILY_DETAILS"",""onlyFor"":[],""notFor"":[]},{""report"":""DASHBOARD"",""onlyFor"":[],""notFor"":[]},{""report"":""DEVICE_SETTINGS"",""onlyFor"":[],""notFor"":[]},{""report"":""EPISODE_SUMMARY"",""onlyFor"":[],""notFor"":[]},{""report"":""LOGBOOK"",""onlyFor"":[],""notFor"":[]},{""report"":""OVERVIEW"",""onlyFor"":[],""notFor"":[]},{""report"":""WEEKLY_REVIEW"",""onlyFor"":[],""notFor"":[]}]"
-    Public smsSendingAllowed As String          ' "True"
-    Public postal As postalRecord               ' "{""postalFormat"":[""99999-9999"",""99999""],""regExpStr"":""^(\\d{5}-\\d{4})$|^(\\d{5})$""}"
-    Public numberFormat As numberFormatRecord   ' "{""decimalSeparator"":""."",""groupsSeparator"":"",""}"
+
+#Region "Single Items"
+
+    Public Property name As String                       ' "United States"
+    Public Property defaultLanguage As String            ' "EN"
+    Public Property defaultCountryName As String         ' "United States"
+    Public Property defaultDevice As String              ' "GM"
+    Public Property dialCode As String                   ' "+1"
+    Public Property cpMobileAppAvailable As String       ' "False"
+    Public Property uploaderAllowed As String            ' "True"
+    Public Property techSupport As String                ' "1-800-646-4633"
+    Public Property techDays As String                   ' "Mo-Fr"
+    Public Property firstDayOfWeek As String             ' "Monday"
+    Public Property techHours As String                  ' "7:00 am - 7:00 pm CST"
+    Public Property legalAge As String                   ' "18"
+    Public Property shortDateFormat As String            ' "MM-DD-YYYY"
+    Public Property shortTimeFormat As String            ' "h:mm A"
+    Public Property mediaHost As String                  ' "https://carelink.minimed.com"
+    Public Property blePereodicDataEndpoint As String    ' "https://clcloud.minimed.com/connect/v2/display/message"
+    Public Property region As String                     ' "US"
+    Public Property carbDefaultUnit As String            ' "GRAMS"
+    Public Property bgUnits As String                    ' "MG_DL"
+    Public Property timeFormat As String                 ' "HR_12"
+    Public Property timeUnitsDefault As String           ' "12h"
+    Public Property recordSeparator As String            ' ","
+    Public Property glucoseUnitsDefault As String        ' "MG_DL"
+    Public Property carbohydrateUnitsDefault As String   ' "GRAMS"
+    Public Property carbExchangeRatioDefault As String   ' "15.0"
+    Public Property mfa As mfaRecord                        ' "{""status"":""OPTIONAL"",""fromDate"":""05/10/2019"",""gracePeriod"":5,""codeValidityDuration"":15,""maxAttempts"":3,""rememberPeriod"":3}"
+    Public Property smsSendingAllowed As String          ' "True"
+
+#End Region 'Single Items
+
+#Region "Flag"
+
     Public DataValid As Boolean
+
+#End Region ' Flag
+
+#Region "Flat Records"
+
+    Public pathDocs As pathDocsRecord                   ' "{""ddms.termsOfUse"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/terms_of_use.html"",""ddms.privacyStatementPdf"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/privacy_policy.pdf"",""ddms.termsOfUsePdf"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/terms_of_use.pdf"",""ddms.privacyStatement"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/privacy_policy.pdf"",""ddms.faqPdf"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/faq.pdf"",""ddms.privacyPractices"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/notices.pdf""}"
+    Public reportDateFormat As reportDateFormatRecord   ' "{""longTimePattern12"":""hh:mm:ss tt"",""longTimePattern24"":""HH:mm:ss"",""shortTimePattern12"":""h:mm tt"",""shortTimePattern24"":""HH:mm"",""shortDatePattern"":""MM-dd-yyyy"",""dateSeparator"":""-"",""timeSeparator"":"":""}"
+    Public postal As postalRecord                       ' "{""postalFormat"":[""99999-9999"",""99999""],""regExpStr"":""^(\\d{5}-\\d{4})$|^(\\d{5})$""}"
+    Public numberFormat As numberFormatRecord           ' "{""decimalSeparator"":""."",""groupsSeparator"":"",""}"
+
+#End Region
+
+#Region "Lists"
+
+    Public languages As New List(Of LanguageRecord)                 ' "[{""name"":""English"",""code"":""EN""}]"
+    Public supportedReports As New List(Of supportedReportRecord)   ' "[{""report"":""ADHERENCE"",""onlyFor"":[],""notFor"":[]},{""report"":""ASSESSMENT_AND_PROGRESS"",""onlyFor"":[],""notFor"":[]},{""report"":""BOLUS_WIZARD_FOOD_BOLUS"",""onlyFor"":[],""notFor"":[]},{""report"":""DAILY_DETAILS"",""onlyFor"":[],""notFor"":[]},{""report"":""DASHBOARD"",""onlyFor"":[],""notFor"":[]},{""report"":""DEVICE_SETTINGS"",""onlyFor"":[],""notFor"":[]},{""report"":""EPISODE_SUMMARY"",""onlyFor"":[],""notFor"":[]},{""report"":""LOGBOOK"",""onlyFor"":[],""notFor"":[]},{""report"":""OVERVIEW"",""onlyFor"":[],""notFor"":[]},{""report"":""WEEKLY_REVIEW"",""onlyFor"":[],""notFor"":[]}]"
+
+#End Region
 
     Public Sub New()
         DataValid = False
@@ -48,78 +71,171 @@ Public Class CountrySettingsRecord
             Exit Sub
         End If
 
-        For Each row As KeyValuePair(Of String, String) In sessionCountrySettings
-            Select Case row.Key
+        Dim dataGridViewSingleCountryItems As DataGridView = My.Forms.Form1.DataGridViewSingleCountryItems
+        dataGridViewSingleCountryItems.Rows.Clear()
+        Dim dataGridViewLanguages As DataGridView = My.Forms.Form1.DataGridViewLanguages
+        dataGridViewLanguages.Rows.Clear()
+        Dim dataGridViewSupportedReports As DataGridView = My.Forms.Form1.DataGridViewSuportedReports
+        For Each row As IndexClass(Of KeyValuePair(Of String, String)) In sessionCountrySettings.WithIndex
+            Dim rowValue As KeyValuePair(Of String, String) = row.Value
+
+            Select Case rowValue.Key
                 Case NameOf(name)
-                    name = row.Value
+                    Me.name = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(languages)
-                    languages = New languagesRecord(row.Value)
+                    languages.Clear()
+                    For Each lang As IndexClass(Of Dictionary(Of String, String)) In LoadList(rowValue.Value).WithIndex
+                        languages.Add(New LanguageRecord(lang.Value))
+                        dataGridViewLanguages.Rows.Add((New String() _
+                            {$"{row.Index + 1}", languages.Last.name, languages.Last.code}))
+                    Next
+
                 Case NameOf(defaultLanguage)
-                    defaultLanguage = row.Value
+                    Me.defaultLanguage = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(defaultCountryName)
-                    defaultCountryName = row.Value
+                    Me.defaultCountryName = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(defaultDevice)
-                    defaultDevice = row.Value
+                    Me.defaultDevice = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(dialCode)
-                    dialCode = row.Value
+                    Me.dialCode = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(cpMobileAppAvailable)
-                    cpMobileAppAvailable = row.Value
+                    Me.cpMobileAppAvailable = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(uploaderAllowed)
-                    uploaderAllowed = row.Value
+                    Me.uploaderAllowed = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(techSupport)
-                    techSupport = row.Value
+                    Me.techSupport = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(techDays)
-                    techDays = row.Value
+                    Me.techDays = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(firstDayOfWeek)
-                    firstDayOfWeek = row.Value
+                    Me.firstDayOfWeek = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(techHours)
-                    techHours = row.Value
+                    Me.techHours = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(legalAge)
-                    legalAge = row.Value
+                    Me.legalAge = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(shortDateFormat)
-                    shortDateFormat = row.Value
+                    Me.shortDateFormat = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(shortTimeFormat)
-                    shortTimeFormat = row.Value
+                    Me.shortTimeFormat = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(mediaHost)
-                    mediaHost = row.Value
+                    Me.mediaHost = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(blePereodicDataEndpoint)
-                    blePereodicDataEndpoint = row.Value
+                    Me.blePereodicDataEndpoint = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(region)
-                    region = row.Value
+                    Me.region = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(pathDocs)
-                    pathDocs = New pathDocsRecord(row.Value)
+                    pathDocs = New pathDocsRecord(rowValue.Value)
+                    For Each member As IndexClass(Of KeyValuePair(Of String, String)) In pathDocs.pathDoc.WithIndex
+                        dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {$"{row.Index + 1},{member.Index}", "pathDocsRecord", member.Value.Key, member.Value.Value}))
+                    Next
                 Case NameOf(carbDefaultUnit)
-                    carbDefaultUnit = row.Value
+                    Me.carbDefaultUnit = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(bgUnits)
-                    bgUnits = row.Value
+                    Me.bgUnits = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(timeFormat)
-                    timeFormat = row.Value
+                    Me.timeFormat = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(timeUnitsDefault)
-                    timeUnitsDefault = row.Value
+                    Me.timeUnitsDefault = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(recordSeparator)
-                    recordSeparator = row.Value
+                    Me.recordSeparator = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(glucoseUnitsDefault)
-                    glucoseUnitsDefault = row.Value
+                    Me.glucoseUnitsDefault = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(carbohydrateUnitsDefault)
-                    carbohydrateUnitsDefault = row.Value
+                    Me.carbohydrateUnitsDefault = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(carbExchangeRatioDefault)
-                    carbExchangeRatioDefault = row.Value
+                    Me.carbExchangeRatioDefault = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(reportDateFormat)
-                    reportDateFormat = New reportDateFormatRecord(row.Value)
+                    reportDateFormat = New reportDateFormatRecord(rowValue.Value)
+                    For Each member As IndexClass(Of KeyValuePair(Of String, String)) In reportDateFormat.ToList.WithIndex
+                        dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {$"{row.Index + 1},{member.Index}", "reportDateFormat", member.Value.Key, member.Value.Value}))
+                    Next
+
                 Case NameOf(mfa)
-                    mfa = row.Value
+                    Me.mfa = New mfaRecord(rowValue.Value)
+                    For Each member As IndexClass(Of KeyValuePair(Of String, String)) In Me.mfa.ToList.WithIndex
+                        dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {$"{row.Index + 1},{member.Index}", "mfa", member.Value.Key, member.Value.Value}))
+                    Next
+
                 Case NameOf(supportedReports)
-                    supportedReports = New supportedReportsRecord(row.Value)
+                    supportedReports.Clear()
+                    For Each dic As IndexClass(Of Dictionary(Of String, String)) In LoadList(rowValue.Value).WithIndex
+                        supportedReports.Add(New supportedReportRecord(dic.Value, dic.Index + 1))
+                    Next
+                    dataGridViewSupportedReports.DataSource = supportedReports
                 Case NameOf(smsSendingAllowed)
-                    smsSendingAllowed = row.Value
+                    Me.smsSendingAllowed = rowValue.Value
+                    dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {(row.Index + 1).ToString, "", rowValue.Key, rowValue.Value}))
                 Case NameOf(postal)
-                    postal = New postalRecord(row.Value)
+                    postal = New postalRecord(rowValue.Value)
+                    For Each member As IndexClass(Of KeyValuePair(Of String, String)) In postal.ToList.WithIndex
+                        dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {$"{row.Index + 1},{member.Index}", "postal", member.Value.Key, member.Value.Value}))
+                    Next
+
                 Case NameOf(numberFormat)
-                    numberFormat = New numberFormatRecord(row.Value)
+                    numberFormat = New numberFormatRecord(rowValue.Value)
+                    For Each member As IndexClass(Of KeyValuePair(Of String, String)) In numberFormat.ToList.WithIndex
+                        dataGridViewSingleCountryItems.Rows.Add((New String() _
+                        {$"{row.Index + 1},{member.Index}", "postal", member.Value.Key, member.Value.Value}))
+                    Next
                 Case Else
                     Stop
             End Select
         Next
         DataValid = True
     End Sub
+
 End Class

@@ -4,6 +4,7 @@
 
 <DebuggerDisplay("{GetDebuggerDisplay(),nq}")>
 Public Class postalRecord
+    Private ReadOnly _asList As New List(Of KeyValuePair(Of String, String))
     Public postalFormat As String
     Public regExpStr As String
 
@@ -14,10 +15,18 @@ Public Class postalRecord
         End If
 
         postalFormat = values(NameOf(postalFormat))
+        _asList.Add(KeyValuePair.Create(NameOf(postalFormat), postalFormat))
         regExpStr = values(NameOf(regExpStr))
+        _asList.Add(KeyValuePair.Create(NameOf(regExpStr), regExpStr))
+
     End Sub
 
     Private Function GetDebuggerDisplay() As String
         Return Me.ToString()
     End Function
+
+    Public Function ToList() As List(Of KeyValuePair(Of String, String))
+        Return _asList
+    End Function
+
 End Class

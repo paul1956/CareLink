@@ -35,7 +35,7 @@ Public Class SummaryRecord
             Case NameOf(Value)
                 cellStyle = cellStyle.CellStyleMiddleLeft
             Case Else
-                Throw New Exception($"Line {sourceLineNumber} in {memberName} thought to be unreachable for column '{columnName}'")
+                Throw UnreachableException(memberName, sourceLineNumber)
         End Select
         Return cellStyle
     End Function
