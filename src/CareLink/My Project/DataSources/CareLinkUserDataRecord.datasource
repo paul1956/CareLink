@@ -5,6 +5,6 @@
     Renaming the file extension or editing the content of this file may   
     cause the file to be unrecognizable by the program.
 -->
-<GenericObjectDataSource DisplayName="CountrySettingsRecord" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
-  <TypeInfo>CareLink.CountrySettingsRecord, CareLink, Version=3.5.2.6, Culture=neutral, PublicKeyToken=null</TypeInfo>
+<GenericObjectDataSource DisplayName="CareLinkUserDataRecord" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+  <TypeInfo>CareLink.CareLinkUserDataRecord, CareLink, Version=3.5.3.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
 </GenericObjectDataSource>

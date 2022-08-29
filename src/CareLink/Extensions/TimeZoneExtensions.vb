@@ -2,8 +2,6 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Runtime.CompilerServices
-
 Friend Module TimeZoneExtensions
     Private ReadOnly s_specialKnownTimeZones As New Dictionary(Of String, String) From {
             {"Central European Summer Time", "Central European Daylight Time"},

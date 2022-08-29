@@ -2,12 +2,13 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.IO
-
 Public Class pathDocsRecord
     Public pathDoc As New Dictionary(Of String, String)
-    Public Sub New(jsonList As String)
-        pathDoc = Loads(jsonList)
+
+    Public Sub New(jsonData As String)
+        If Not String.IsNullOrWhiteSpace(jsonData) Then
+            pathDoc = Loads(jsonData)
+        End If
     End Sub
 
 End Class

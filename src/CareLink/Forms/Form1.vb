@@ -38,9 +38,6 @@ Public Class Form1
 
 #Region "Pump Data"
 
-    Friend Property BolusRow As Single
-    Friend Property InsulinRow As Single
-    Friend Property MealRow As Single
     Friend Property RecentData As New Dictionary(Of String, String)
 
 #End Region
@@ -124,14 +121,14 @@ Public Class Form1
             Case FileToLoadOptions.LastSaved
                 Me.Text = $"{SavedTitle} Using Last Saved Data"
                 CurrentDateCulture = LastDownloadWithPath.ExtractCultureFromFileName(RepoDownloadName)
-                Me.RecentData = Loads(File.ReadAllText(LastDownloadWithPath), Me.BolusRow, Me.InsulinRow, Me.MealRow)
+                Me.RecentData = Loads(File.ReadAllText(LastDownloadWithPath), BolusRow, InsulinRow, MealRow)
                 Me.MenuView.Visible = Debugger.IsAttached
                 Me.LastUpdateTime.Text = $"{File.GetLastWriteTime(LastDownloadWithPath).ToShortDateTimeString} from file"
             Case FileToLoadOptions.TestData
                 Me.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
                 Dim testDataWithPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")
-                Me.RecentData = Loads(File.ReadAllText(testDataWithPath), Me.BolusRow, Me.InsulinRow, Me.MealRow)
+                Me.RecentData = Loads(File.ReadAllText(testDataWithPath), BolusRow, InsulinRow, MealRow)
                 Me.MenuView.Visible = Debugger.IsAttached
                 Me.LastUpdateTime.Text = $"{File.GetLastWriteTime(testDataWithPath).ToShortDateTimeString} from file"
             Case FileToLoadOptions.Login
@@ -140,13 +137,24 @@ Public Class Form1
                 Loop
                 _client = _loginDialog.Client
                 If _client Is Nothing OrElse Not _client.LoggedIn Then
+                    Me.ServerUpdateTimer.Interval = s_minuteInMilliseconds * 5
+                    Me.ServerUpdateTimer.Start()
+                    If CareLinkClient.NetworkDown Then
+                        Me.LoginStatus.Text = "Network Down"
+                        Return False
+                    End If
+
                     Me.LastUpdateTime.Text = "Unknown"
                     Return False
                 End If
-                Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)?.ExtractPumpData(Me.BolusRow, Me.InsulinRow, Me.MealRow)
-                Me.MenuView.Visible = True
+                Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
                 Me.ServerUpdateTimer.Interval = s_minuteInMilliseconds
                 Me.ServerUpdateTimer.Start()
+                If CareLinkClient.NetworkDown Then
+                    Me.LoginStatus.Text = "Network Down"
+                    Return False
+                End If
+                Me.MenuView.Visible = True
                 Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
                 Me.LoginStatus.Text = "OK"
         End Select
@@ -183,8 +191,8 @@ Public Class Form1
             My.Settings.Save()
         End If
 
-        If s_allUserSettingsData.Keys.Count = 0 Then
-            LoadAllUserData()
+        If CareLinkUserDataRecordHelpers.s_allUserSettingsData.Keys.Count = 0 Then
+            CareLinkUserDataRecordHelpers.LoadAllUserRecords(Me.CareLinkUserDataRecordBindingSource)
         End If
 
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
@@ -220,8 +228,8 @@ Public Class Form1
             .ValueMember = "Value"
         }
         Me.MenuStrip1.Items.Insert(3, Me.AITComboBox)
-        Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact($"AIT {_loginDialog.LoggedOnUser.AIT.ToString("hh\:mm").Substring(1)}")
-        Me.MenuOptionsUseAdvancedAITDecay.CheckState = If(_loginDialog.LoggedOnUser.UseAdvancedAITDecay, CheckState.Checked, CheckState.Unchecked)
+        Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact($"AIT {My.Settings.AIT.ToString("hh\:mm").Substring(1)}")
+        Me.MenuOptionsUseAdvancedAITDecay.CheckState = If(My.Settings.UseAdvancedAITDecay, CheckState.Checked, CheckState.Unchecked)
     End Sub
 
     Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
@@ -281,7 +289,7 @@ Public Class Form1
                     ExceptionHandlerForm.ReportFileNameWithPath = fileNameWithPath
                     If ExceptionHandlerForm.ShowDialog() = DialogResult.OK Then
                         ExceptionHandlerForm.ReportFileNameWithPath = ""
-                        Me.RecentData = Loads(ExceptionHandlerForm.LocalRawData, Me.BolusRow, Me.InsulinRow, Me.MealRow)
+                        Me.RecentData = Loads(ExceptionHandlerForm.LocalRawData, BolusRow, InsulinRow, MealRow)
                         Me.MenuView.Visible = Debugger.IsAttached
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                         Me.LastUpdateTime.Text = $"{File.GetLastWriteTime(fileNameWithPath).ToShortDateTimeString} from file"
@@ -325,7 +333,7 @@ Public Class Form1
                 If File.Exists(openFileDialog1.FileName) Then
                     Me.ServerUpdateTimer.Stop()
                     CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{RepoName}", True)
-                    Me.RecentData = Loads(File.ReadAllText(openFileDialog1.FileName), Me.BolusRow, Me.InsulinRow, Me.MealRow)
+                    Me.RecentData = Loads(File.ReadAllText(openFileDialog1.FileName), BolusRow, InsulinRow, MealRow)
                     Me.MenuView.Visible = Debugger.IsAttached
                     Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
                     Me.LastUpdateTime.Text = File.GetLastWriteTime(openFileDialog1.FileName).ToShortDateTimeString
@@ -446,8 +454,12 @@ Public Class Form1
 
 #Region "HomePage Tab Events"
 
-    Private Sub TabControlHomePage_Selected(sender As Object, e As TabControlEventArgs) Handles TabControlHomePage.Selected
-        Application.DoEvents()
+    Private Sub TabControlHomePage_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlHomePage.Selecting
+        If e.TabPage.Name = NameOf(TabPage14AllUsers) Then
+            For Each c As DataGridViewColumn In Me.DataGridViewCareLinkUsers.Columns
+                c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
+            Next
+        End If
     End Sub
 
 #Region "Home Page Chart Events"
@@ -592,11 +604,80 @@ Public Class Form1
         End If
     End Sub
 
-#End Region
+#Region "Post Paint Events"
+
+    <DebuggerNonUserCode()>
+    Private Sub ActiveInsulitChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles ActiveInsulinChart.PostPaint
+
+        If Not Me.Initialized OrElse _updating OrElse _inMouseMove Then
+            Exit Sub
+        End If
+        SyncLock _updatingLock
+            PostPaintSupport(_activeInsulinAbsoluteRectangle, e, InsulinRow, s_activeInsulinMarkerInsulinDictionary, s_activeInsulinMarkerMealDictionary)
+        End SyncLock
+    End Sub
+
+    <DebuggerNonUserCode()>
+    Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomeTabChart.PostPaint
+
+        If Not Me.Initialized OrElse _updating OrElse _inMouseMove Then
+            Exit Sub
+        End If
+        SyncLock _updatingLock
+            PostPaintSupport(_homePageAbsoluteRectangle, e, InsulinRow, s_homeTabMarkerInsulinDictionary, s_homeTabMarkerMealDictionary, Me.CursorTimeLabel)
+        End SyncLock
+    End Sub
+
+#End Region ' Post Paint Events
+
+#End Region ' Home Page Chart Events
 
 #Region "Home Page DataGridView Events"
 
-#Region "DataGridView Auto Basal Delivery Events"
+#Region "All Users Tab DataGridView Events"
+
+    Private Sub DataGridViewCareLinkUsers_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewCareLinkUsers.ColumnAdded
+        e.DgvColumnAdded(CareLinkUserDataRecordHelpers.GetCellStyle(), wrapHeader:=False)
+        If CareLinkUserDataRecordHelpers.HideColumn(e.Column.DataPropertyName) Then
+            e.Column.Visible = False
+            Exit Sub
+        End If
+        Dim cellStyle As DataGridViewCellStyle = CareLinkUserDataRecordHelpers.GetCellStyle()
+        e.DgvColumnAdded(cellStyle, wrapHeader:=False)
+
+    End Sub
+
+#End Region ' All Users Tab DataGridView Events
+#Region "My User Tab DataGridView Events"
+    Private Sub DataGridViewMyUserData_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewMyUserData.ColumnAdded
+        e.DgvColumnAdded(MyProfileRecordHelpers.GetCellStyle(), wrapHeader:=False)
+        If MyProfileRecordHelpers.HideColumn(e.Column.DataPropertyName) Then
+            e.Column.Visible = False
+            Exit Sub
+        End If
+        Dim cellStyle As DataGridViewCellStyle = MyProfileRecordHelpers.GetCellStyle()
+        e.DgvColumnAdded(cellStyle, wrapHeader:=False)
+
+    End Sub
+
+#End Region ' My User Tab DataGridView Events
+
+#Region "Profile Tab DataGridView Events"
+
+    Private Sub DataGridViewProfile_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewMyProfile.ColumnAdded
+        e.DgvColumnAdded(MyProfileRecordHelpers.GetCellStyle(), wrapHeader:=False)
+        If MyProfileRecordHelpers.HideColumn(e.Column.DataPropertyName) Then
+            e.Column.Visible = False
+            Exit Sub
+        End If
+        Dim cellStyle As DataGridViewCellStyle = MyProfileRecordHelpers.GetCellStyle()
+        e.DgvColumnAdded(cellStyle, wrapHeader:=False)
+
+    End Sub
+
+#End Region ' Profile Tab DataGridView Events
+
+#Region "Auto Basal Delivery DataGridView Events"
 
     Private Sub DataGridViewAutoBasalDelivery_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DataGridViewAutoBasalDelivery.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -604,32 +685,30 @@ Public Class Form1
     End Sub
 
     Private Sub DataGridViewAutoBasalDelivery_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewAutoBasalDelivery.ColumnAdded
-        Dim hideColumn As Boolean = AutoBasalDeliveryRecord.HideColumn(e.Column.Name)
-        If hideColumn Then
+        If AutoBasalDeliveryRecordHelpers.HideColumn(e.Column.Name) Then
             e.Column.Visible = False
             Exit Sub
         End If
-        Dim cellStyle As DataGridViewCellStyle = AutoBasalDeliveryRecord.GetCellStyle(e.Column.Name)
-        DgvColumnAdded(e, cellStyle, wrapHeader:=False)
+        Dim cellStyle As DataGridViewCellStyle = AutoBasalDeliveryRecordHelpers.GetCellStyle(e.Column.Name)
+        e.DgvColumnAdded(cellStyle, wrapHeader:=False)
     End Sub
 
-#End Region
+#End Region ' Auto Basal Delivery DataGridView Events
 
-#Region "DataGridView Insulin Events"
+#Region "Insulin DataGridView Events"
 
-    Private Sub DataGridViewDataGridViewInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DataGridViewInsulin.CellFormatting
+    Private Sub DataGridViewViewInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DataGridViewInsulin.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.dgvCellFormatting(e, NameOf(InsulinRecord.dateTime))
     End Sub
 
-    Private Sub DataGridViewDataGridViewInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewInsulin.ColumnAdded
-        Dim hideColumn As Boolean = InsulinRecord.HideColumn(e.Column.Name)
-        If hideColumn Then
+    Private Sub DataGridViewInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewInsulin.ColumnAdded
+        If InsulinRecordHelpers.HideColumn(e.Column.Name) Then
             e.Column.Visible = False
             Exit Sub
         End If
-        Dim cellStyle As DataGridViewCellStyle = InsulinRecord.GetCellStyle(e.Column.Name)
-        DgvColumnAdded(e, cellStyle, wrapHeader:=True)
+        Dim cellStyle As DataGridViewCellStyle = InsulinRecordHelpers.GetCellStyle(e.Column.Name)
+        e.DgvColumnAdded(cellStyle, wrapHeader:=True)
     End Sub
 
     Private Sub DataGridViewInsulin_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewInsulin.ColumnHeaderCellChanged
@@ -640,16 +719,12 @@ Public Class Form1
         Stop
     End Sub
 
-#End Region
-
-#End Region
-
-#End Region
+#End Region 'Insulin DataGridView Events
 
 #Region "Report Tab DataGridView Events"
 
-    Private Sub DataGridViewSuportedReports_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewSuportedReports.ColumnAdded
-        DgvColumnAdded(e, supportedReportRecord.GetCellStyle(), wrapHeader:=False)
+    Private Sub DataGridViewSuportedReports_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
+        e.DgvColumnAdded(supportedReportRecordHelpers.GetCellStyle(), wrapHeader:=False)
     End Sub
 
 #End Region 'Report Tab DataGridView Events
@@ -682,13 +757,12 @@ Public Class Form1
     End Sub
 
     Private Sub SGsDataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles SGsDataGridView.ColumnAdded
-        Dim hideColumn As Boolean = SgRecord.HideColumn(e.Column.Name)
-        If hideColumn Then
+        If SgRecordHelpers.HideColumn(e.Column.Name) Then
             e.Column.Visible = False
             Exit Sub
         End If
-        Dim cellStyle As DataGridViewCellStyle = SgRecord.GetCellStyle(e.Column.Name)
-        DgvColumnAdded(e, cellStyle, wrapHeader:=False)
+        Dim cellStyle As DataGridViewCellStyle = SgRecordHelpers.GetCellStyle(e.Column.Name)
+        e.DgvColumnAdded(cellStyle, wrapHeader:=False)
     End Sub
 
 #End Region ' SGS Tab DataGridView Events
@@ -819,8 +893,8 @@ Public Class Form1
     End Sub
 
     Private Sub SummaryDataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles SummaryDataGridView.ColumnAdded
-        Dim cellStyle As DataGridViewCellStyle = SummaryRecord.GetCellStyle(e.Column.Name)
-        DgvColumnAdded(e, cellStyle, wrapHeader:=False)
+        Dim cellStyle As DataGridViewCellStyle = SummaryRecordHelpers.GetCellStyle(e.Column.Name)
+        e.DgvColumnAdded(cellStyle, wrapHeader:=False)
     End Sub
 
     Private Sub SummaryDataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles SummaryDataGridView.DataError
@@ -828,6 +902,32 @@ Public Class Form1
     End Sub
 
 #End Region 'Summary Tab DataGridView Events
+
+#End Region 'Home Page DataGridView Events
+
+#End Region ' HomePage Tab Events
+
+#Region "Settings Events"
+
+    Private Sub MySettings_SettingChanging(sender As Object, e As SettingChangingEventArgs)
+        Dim newValue As String = If(IsNothing(e.NewValue), "", e.NewValue.ToString)
+        If My.Settings(e.SettingName).ToString.ToUpperInvariant.Equals(newValue.ToString.ToUpperInvariant, StringComparison.Ordinal) Then
+            Exit Sub
+        End If
+        If e.SettingName = "CareLinkUserName" Then
+            Dim userSettings As New CareLinkUserDataRecord
+            If CareLinkUserDataRecordHelpers.s_allUserSettingsData.ContainsKey(e.NewValue.ToString) Then
+                _loginDialog.LoggedOnUser = CareLinkUserDataRecordHelpers.s_allUserSettingsData(e.NewValue.ToString)
+                Exit Sub
+            Else
+                userSettings.Update(e.SettingName, e.NewValue.ToString)
+                CareLinkUserDataRecordHelpers.s_allUserSettingsData.Add(userSettings.CareLinkUserName, userSettings)
+            End If
+        End If
+        CareLinkUserDataRecordHelpers.SaveAllUserRecords(_loginDialog.LoggedOnUser, e.SettingName, e.NewValue.ToString)
+    End Sub
+
+#End Region ' Settings Events
 
 #Region "Timer Events"
 
@@ -841,13 +941,13 @@ Public Class Form1
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
         If Not _updating Then
             Me.ServerUpdateTimer.Stop()
-            Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)?.ExtractJsonData()
+            Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
             If Me.RecentData IsNot Nothing Then
                 Me.LastUpdateTime.Text = "Unknown"
             Else
                 _client = New CareLinkClient(Me.LoginStatus, My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
                 _loginDialog.Client = _client
-                Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)?.ExtractPumpData(Me.BolusRow, Me.InsulinRow, Me.MealRow)
+                Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
                 If Me.RecentData Is Nothing Then
                     Me.LastUpdateTime.Text = "Unknown due to Login failure, try logging in again!"
                 Else
@@ -865,32 +965,6 @@ Public Class Form1
 
 #End Region ' Timer Events
 
-#Region "Post Paint Events"
-
-    <DebuggerNonUserCode()>
-    Private Sub ActiveInsulitChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles ActiveInsulinChart.PostPaint
-
-        If Not Me.Initialized OrElse _updating OrElse _inMouseMove Then
-            Exit Sub
-        End If
-        SyncLock _updatingLock
-            PostPaintSupport(_activeInsulinAbsoluteRectangle, e, Me.InsulinRow, s_activeInsulinMarkerInsulinDictionary, s_activeInsulinMarkerMealDictionary)
-        End SyncLock
-    End Sub
-
-    <DebuggerNonUserCode()>
-    Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomeTabChart.PostPaint
-
-        If Not Me.Initialized OrElse _updating OrElse _inMouseMove Then
-            Exit Sub
-        End If
-        SyncLock _updatingLock
-            PostPaintSupport(_homePageAbsoluteRectangle, e, Me.InsulinRow, s_homeTabMarkerInsulinDictionary, s_homeTabMarkerMealDictionary, Me.CursorTimeLabel)
-        End SyncLock
-    End Sub
-
-#End Region ' Post Paint Events
-
 #End Region ' Events
 
 #Region "Initialize Charts"
@@ -904,18 +978,18 @@ Public Class Form1
         Me.HomeTabChartArea = CreateChartArea()
         With Me.HomeTabChartArea
             With .AxisY2
-                .Interval = Me.MealRow
+                .Interval = MealRow
                 .IsMarginVisible = False
                 .IsStartedFromZero = False
                 .LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
                 .LineColor = Color.FromArgb(64, 64, 64, 64)
                 .MajorGrid = New Grid With {
-                        .Interval = Me.MealRow,
+                        .Interval = MealRow,
                         .LineColor = Color.FromArgb(64, 64, 64, 64)
                     }
-                .MajorTickMark = New TickMark() With {.Interval = Me.MealRow, .Enabled = True}
-                .Maximum = Me.BolusRow
-                .Minimum = Me.MealRow
+                .MajorTickMark = New TickMark() With {.Interval = MealRow, .Enabled = True}
+                .Maximum = BolusRow
+                .Minimum = MealRow
                 .Title = "BG Value"
             End With
         End With
@@ -1002,7 +1076,7 @@ Public Class Form1
         Me.ActiveInsulinChartArea = CreateChartArea()
         With Me.ActiveInsulinChartArea
             With .AxisY
-                .MajorTickMark = New TickMark() With {.Interval = Me.MealRow, .Enabled = False}
+                .MajorTickMark = New TickMark() With {.Interval = MealRow, .Enabled = False}
                 .Maximum = 25
                 .Minimum = 0
                 .Interval = 4
@@ -1010,17 +1084,17 @@ Public Class Form1
                 .TitleForeColor = Color.HotPink
             End With
             With .AxisY2
-                .Interval = Me.MealRow
+                .Interval = MealRow
                 .IsMarginVisible = False
                 .IsStartedFromZero = False
                 .LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
                 .LineColor = Color.FromArgb(64, 64, 64, 64)
                 .MajorGrid = New Grid With {
-                        .Interval = Me.MealRow,
+                        .Interval = MealRow,
                         .LineColor = Color.FromArgb(64, 64, 64, 64)
                     }
-                .Maximum = Me.BolusRow
-                .Minimum = Me.MealRow
+                .Maximum = BolusRow
+                .Minimum = MealRow
                 .Title = "BG Value"
             End With
         End With
@@ -1459,7 +1533,7 @@ Public Class Form1
             Select Case rowIndex
                 Case ItemIndexs.lastSG
                     layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelTop1, False)
-                    s_lastSG = Loads(row.Value, Me.BolusRow, Me.InsulinRow, Me.MealRow)
+                    s_lastSG = Loads(row.Value, BolusRow, InsulinRow, MealRow)
                     isColumnHeader = False
 
                 Case ItemIndexs.lastAlarm
@@ -1468,7 +1542,7 @@ Public Class Form1
 
                 Case ItemIndexs.activeInsulin
                     layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelActiveInsulin, True)
-                    s_activeInsulin = Loads(row.Value, Me.BolusRow, Me.InsulinRow, Me.MealRow)
+                    s_activeInsulin = Loads(row.Value, BolusRow, InsulinRow, MealRow)
                     isColumnHeader = True
 
                 Case ItemIndexs.notificationHistory
@@ -1498,7 +1572,7 @@ Public Class Form1
                 Else
                     layoutPanel1.RowStyles(1) = New RowStyle(SizeType.AutoSize, 0)
                 End If
-                Dim innerJsonDictionary As Dictionary(Of String, String) = Loads(row.Value, Me.BolusRow, Me.InsulinRow, Me.MealRow)
+                Dim innerJsonDictionary As Dictionary(Of String, String) = Loads(row.Value, BolusRow, InsulinRow, MealRow)
                 Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, Color.Aqua)
                 innerTableBlue.AutoScroll = True
                 layoutPanel1.Controls.Add(innerTableBlue,
@@ -1627,7 +1701,7 @@ Public Class Form1
                 remainingInsulinList.Add(New ActiveInsulinRecord(oaTime, initialBolus, s_activeInsulinIncrements, Me.MenuOptionsUseAdvancedAITDecay.Checked))
             Next
 
-            Me.ActiveInsulinChartArea.AxisY2.Maximum = Me.BolusRow
+            Me.ActiveInsulinChartArea.AxisY2.Maximum = BolusRow
 
             ' walk all markers, adjust active insulin and then add new marker
             Dim maxActiveInsulin As Double = 0
@@ -1650,8 +1724,8 @@ Public Class Form1
             Me.ActiveInsulinChartArea.AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1
             maxActiveInsulin = Me.ActiveInsulinChartArea.AxisY.Maximum
 
-            Me.ActiveInsulinChart.PlotMarkers(_activeInsulinAbsoluteRectangle, Me.BolusRow, Me.InsulinRow, Me.MealRow, s_activeInsulinMarkerInsulinDictionary, s_activeInsulinMarkerMealDictionary)
-            PlotSgSeries(Me.ActiveInsulinChart.Series(BgSeriesName), Me.MealRow)
+            Me.ActiveInsulinChart.PlotMarkers(_activeInsulinAbsoluteRectangle, BolusRow, InsulinRow, MealRow, s_activeInsulinMarkerInsulinDictionary, s_activeInsulinMarkerMealDictionary)
+            PlotSgSeries(Me.ActiveInsulinChart.Series(BgSeriesName), MealRow)
         Catch ex As Exception
             Throw New ArithmeticException($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
         End Try
@@ -1782,7 +1856,7 @@ Public Class Form1
                     s.Points.Clear()
                 Next
                 InitializeChartArea(.ChartAreas(ChartAreaName))
-                Me.HomeTabChart.PlotMarkers(_homePageAbsoluteRectangle, Me.BolusRow, Me.InsulinRow, Me.MealRow, s_homeTabMarkerInsulinDictionary, s_homeTabMarkerMealDictionary)
+                Me.HomeTabChart.PlotMarkers(_homePageAbsoluteRectangle, BolusRow, InsulinRow, MealRow, s_homeTabMarkerInsulinDictionary, s_homeTabMarkerMealDictionary)
             End With
         Catch ex As Exception
             Throw New Exception($"{ex.Message} exception while plotting Markers in {memberName} at {sourceLineNumber}")
@@ -1796,7 +1870,7 @@ Public Class Form1
                                     sgOADateTime,
                                     sgListIndex.Value.sg,
                                     Color.White,
-                                    Me.MealRow)
+                                    MealRow)
             Catch ex As Exception
                 Throw New Exception($"{ex.Message} exception while SG Values in {memberName} at {sourceLineNumber}")
             End Try
@@ -1992,12 +2066,14 @@ Public Class Form1
 #Region "NotifyIcon Support"
 
     Private Sub CleanUpNotificationIcon()
-        Me.NotifyIcon1.Visible = False
-        Me.NotifyIcon1.Icon.Dispose()
-        Me.NotifyIcon1.Icon = Nothing
-        Me.NotifyIcon1.Visible = False
-        Me.NotifyIcon1.Dispose()
-        Application.DoEvents()
+        If Me.NotifyIcon1 IsNot Nothing Then
+            Me.NotifyIcon1.Visible = False
+            Me.NotifyIcon1.Icon?.Dispose()
+            Me.NotifyIcon1.Icon = Nothing
+            Me.NotifyIcon1.Visible = False
+            Me.NotifyIcon1.Dispose()
+            Application.DoEvents()
+        End If
         End
     End Sub
 
@@ -2073,18 +2149,5 @@ Public Class Form1
     End Sub
 
 #End Region 'NotifyIcon Support
-
-#Region "Settings Events"
-
-    Private Sub MySettings_SettingChanging(sender As Object, e As SettingChangingEventArgs)
-        Dim newValue As String = If(IsNothing(e.NewValue), "", e.NewValue.ToString)
-        If My.Settings(e.SettingName).ToString.ToUpperInvariant.Equals(newValue.ToString.ToUpperInvariant, StringComparison.Ordinal) Then
-            Exit Sub
-        End If
-        _loginDialog.LoggedOnUser.Update(e.SettingName, newValue)
-        SaveAllUserData(e.SettingName, e.NewValue.ToString)
-    End Sub
-
-#End Region
 
 End Class

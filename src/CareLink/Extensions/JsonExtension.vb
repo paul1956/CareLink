@@ -109,7 +109,7 @@ Public Module JsonExtensions
                             If BgUnitsString = "mg/dl" Then
                                 scalingNeeded = False
                                 bolusRow = 400
-                                insulinRow = 334
+                                insulinRow = 342
                                 mealRow = 50
                                 s_criticalLow = 50
                                 s_limitHigh = 180
@@ -117,7 +117,7 @@ Public Module JsonExtensions
                             Else
                                 scalingNeeded = True
                                 bolusRow = 22
-                                insulinRow = 18
+                                insulinRow = 19
                                 mealRow = CSng(Math.Round(50 / MmolLUnitsDivisor, 0, MidpointRounding.ToZero))
                                 s_criticalLow = mealRow
                                 s_limitHigh = 10

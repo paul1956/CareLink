@@ -45,6 +45,10 @@ Public Module StringExtensions
     ''' <returns>This Is A Title</returns>
     <Extension()>
     Friend Function ToTitleCase(inStr As String) As String
+        If String.IsNullOrWhiteSpace(inStr) Then
+            Return ""
+        End If
+
         Dim result As New Text.StringBuilder(Char.ToUpperInvariant(inStr(0)))
 
         For Each c As Char In inStr.Substring(1)

@@ -18,8 +18,18 @@ Public Class supportedReportRecord
 
     End Sub
 
+#Region "MUST BE ON TOP"
+
     Public Property recordNumber As Integer
+
+#End Region ' End MUST BE ON TOP
+
+#Region "MUST BE SECOND"
+
     Public Property report As String
+
+#End Region ' End MUST BE  SECOND
+
     Public Property notFor As String
     Public Property onlyFor As String
 
@@ -36,10 +46,6 @@ Public Class supportedReportRecord
 
     Private Function GetDebuggerDisplay() As String
         Return Me.report.ToString()
-    End Function
-
-    Public Shared Function GetCellStyle() As DataGridViewCellStyle
-        Return New DataGridViewCellStyle().CellStyleMiddleLeft()
     End Function
 
 End Class

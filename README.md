@@ -27,9 +27,15 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 8/25/2022
+- 8/29/2022
 
 ## What's New in this release
+  New 3.5.3.1
+  Lots more user information on additional tabs
+  Improvements in multiuser support
+  Infrastructure to allow editing of multiuser data
+  Version info added to data store to allow easy upgrades
+
   New 3.5.3.0
   Add Trend value to Home Screen
   Add additional tab with Country Specific Data that might be useful later

@@ -14,9 +14,6 @@
     <Setting Name="MailServerPort" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="NotificationPhoneNumber" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="CountryCode" Type="System.String" Scope="User">
       <Value Profile="(Default)">US</Value>
     </Setting>
@@ -46,6 +43,9 @@
     </Setting>
     <Setting Name="AutoLogin" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="SettingsVersion" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1.0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

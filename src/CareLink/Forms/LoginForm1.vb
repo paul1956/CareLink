@@ -7,7 +7,7 @@ Imports System.IO
 Public Class LoginForm1
     Private ReadOnly _mySource As New AutoCompleteStringCollection()
     Public Property Client As CareLinkClient
-    Public Property LoggedOnUser As New UserDataRecord
+    Public Property LoggedOnUser As New CareLinkUserDataRecord
 
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         Me.DialogResult = DialogResult.Cancel
@@ -28,16 +28,16 @@ Public Class LoginForm1
         If commandLineArgs.Length > 1 Then
             Dim arg As String() = commandLineArgs(1).Split("=")
             If arg.Length = 2 Then
-                Dim userRecord As UserDataRecord = Nothing
-                If s_allUserSettingsData.TryGetValue(arg(1), userRecord) Then
+                Dim userRecord As CareLinkUserDataRecord = Nothing
+                If CareLinkUserDataRecordHelpers.s_allUserSettingsData.TryGetValue(arg(1), userRecord) Then
                     If userRecord.AutoLogin Then
                         userRecord.UpdateSettings()
                     End If
                 End If
             End If
         End If
-        If File.Exists(s_settingsCsvFile) Then
-            _mySource.AddRange(s_allUserSettingsData.Keys.ToArray)
+        If File.Exists(CareLinkUserDataRecordHelpers.s_settingsCsvFile) Then
+            _mySource.AddRange(CareLinkUserDataRecordHelpers.s_allUserSettingsData.Keys.ToArray)
         ElseIf Not String.IsNullOrWhiteSpace(My.Settings.CareLinkUserName) Then
             _mySource.Add(My.Settings.CareLinkUserName)
         Else
@@ -49,8 +49,8 @@ Public Class LoginForm1
             .AutoCompleteSource = AutoCompleteSource.CustomSource
             .Text = My.Settings.CareLinkUserName
         End With
-        If s_allUserSettingsData.ContainsKey(My.Settings.CareLinkUserName) Then
-            Me.PasswordTextBox.Text = s_allUserSettingsData(My.Settings.CareLinkUserName).CareLinkPassword
+        If CareLinkUserDataRecordHelpers.s_allUserSettingsData.ContainsKey(My.Settings.CareLinkUserName) Then
+            Me.PasswordTextBox.Text = CareLinkUserDataRecordHelpers.s_allUserSettingsData(My.Settings.CareLinkUserName).CareLinkPassword
         Else
             Me.PasswordTextBox.Text = My.Settings.CareLinkPassword
 
@@ -78,7 +78,7 @@ Public Class LoginForm1
         My.Settings.CountryCode = countryCode
         Me.Client = New CareLinkClient(Me.LoginStatus, Me.UsernameTextBox.Text, Me.PasswordTextBox.Text, countryCode)
         If Not Me.Client.LoggedIn Then
-            Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData(countryCode)?.JsonData
+            Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData(countryCode)
             If recentData IsNot Nothing AndAlso recentData.Count > 0 Then
 
                 Me.Ok_Button.Enabled = True
@@ -89,8 +89,8 @@ Public Class LoginForm1
                 End If
 
                 My.Settings.Save()
-                If Not s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, Me.LoggedOnUser) Then
-                    Me.LoggedOnUser = New UserDataRecord
+                If Not CareLinkUserDataRecordHelpers.s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, Me.LoggedOnUser) Then
+                    Me.LoggedOnUser = New CareLinkUserDataRecord
                 End If
                 Me.DialogResult = DialogResult.OK
                 Me.Hide()
@@ -104,7 +104,8 @@ Public Class LoginForm1
             Exit Sub
         End If
 
-        If MsgBox("Login Unsuccessful. try again? If no program will exit!", Buttons:=MsgBoxStyle.YesNo, Title:="Login Failed") = MsgBoxResult.No Then
+        Dim networkDownMessage As String = If(CareLinkClient.NetworkDown, " due to network being down", "")
+        If MsgBox($"Login Unsuccessful{networkDownMessage}. try again? If no program will exit!", Buttons:=MsgBoxStyle.YesNo, Title:="Login Failed") = MsgBoxResult.No Then
             End
         End If
         Me.Ok_Button.Enabled = True
@@ -140,8 +141,8 @@ Public Class LoginForm1
     End Sub
 
     Private Sub UsernameTextBox_Leave(sender As Object, e As EventArgs) Handles UsernameTextBox.Leave
-        Dim userSettings As UserDataRecord = Nothing
-        If s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, userSettings) Then
+        Dim userSettings As CareLinkUserDataRecord = Nothing
+        If CareLinkUserDataRecordHelpers.s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, userSettings) Then
             If userSettings.CareLinkUserName.Equals(Me.UsernameTextBox.Text, StringComparison.OrdinalIgnoreCase) Then
                 Me.UsernameTextBox.Text = userSettings.CareLinkUserName
             End If

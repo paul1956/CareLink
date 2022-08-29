@@ -2,12 +2,11 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports Windows.Foundation.Collections
-
 <DebuggerDisplay("{GetDebuggerDisplay(),nq}")>
 Public Class LanguageRecord
-    Public name As String
     Public code As String
+    Public name As String
+
     Public Sub New(values As Dictionary(Of String, String))
         If values.Count <> 2 Then
             Throw New Exception($"{NameOf(LanguageRecord)}({values}) contains {values.Count} entries.")
@@ -17,6 +16,15 @@ Public Class LanguageRecord
     End Sub
 
     Private Function GetDebuggerDisplay() As String
-        Return Me.ToString()
+        Return $"{NameOf(name)} = {name}, {NameOf(code)} = {code}"
     End Function
+
+    Public Function GetCsvKeys() As String
+        Return $"{NameOf(name)}, {NameOf(code)}"
+    End Function
+
+    Public Function GetCsvValues() As String
+        Return $"{name}, {code}"
+    End Function
+
 End Class

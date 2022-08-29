@@ -56,7 +56,7 @@ Public Module PumpVariables
     Friend s_sensorDurationHours As Integer
     Friend s_sensorDurationMinutes As Integer
     Friend s_sensorState As String
-    Friend s_sessionCountrySettings As CountrySettingsRecord
+    Friend s_sessionCountrySettings As New CountrySettingsRecord
     Friend s_systemStatusMessage As String
     Friend s_timeInRange As Integer
     Friend s_timeToNextCalibHours As UShort = UShort.MaxValue

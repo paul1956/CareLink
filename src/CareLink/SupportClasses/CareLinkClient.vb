@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
 Imports System.IO
 Imports System.Net
 Imports System.Net.Http
@@ -23,9 +24,9 @@ Public Class CareLinkClient
     Private _lastDataSuccess As Boolean
     Private _lastResponseCode? As HttpStatusCode
     Private _loginInProcess As Boolean
-    Private _sessionMonitorData As PumpData
-    Private _sessionProfile As PumpData
-    Private _sessionUser As PumpData
+    Private _sessionMonitorData As New MonitorDataRecord
+    Private _sessionProfile As New MyProfileRecord
+    Private _sessionUser As New MyUserRecord
 
     Public Sub New(LoginStatus As TextBox, carelinkUsername As String, carelinkPassword As String, carelinkCountry As String)
         _loginStatus = LoginStatus
@@ -34,10 +35,10 @@ Public Class CareLinkClient
         _carelinkPassword = carelinkPassword
         _carelinkCountry = carelinkCountry
         ' Session info
-        _sessionUser = Nothing
-        _sessionProfile = Nothing
-        s_sessionCountrySettings = New CountrySettingsRecord
-        _sessionMonitorData = Nothing
+        _sessionUser.Clear()
+        _sessionProfile.Clear()
+        s_sessionCountrySettings.Clear()
+        _sessionMonitorData.Clear()
         ' State info
         _loginInProcess = False
         Me.LoggedIn = False
@@ -57,10 +58,10 @@ Public Class CareLinkClient
         _carelinkPassword = carelinkPassword
         _carelinkCountry = carelinkCountry
         ' Session info
-        _sessionUser = Nothing
-        _sessionProfile = Nothing
-        s_sessionCountrySettings = New CountrySettingsRecord
-        _sessionMonitorData = Nothing
+        _sessionUser.Clear()
+        _sessionProfile.Clear()
+        s_sessionCountrySettings.Clear()
+        _sessionMonitorData.Clear()
         ' State info
         _loginInProcess = False
         Me.LoggedIn = False
@@ -75,6 +76,7 @@ Public Class CareLinkClient
 
     Public Property LastErrorMessage As String
     Public Property LoggedIn As Boolean
+    Public Shared Property NetworkDown As Boolean = False
 
     Private Shared Function ParseQsl(loginSessionResponse As HttpResponseMessage) As Dictionary(Of String, String)
         Dim result As New Dictionary(Of String, String)
@@ -144,7 +146,7 @@ Public Class CareLinkClient
         End Select
     End Function
 
-    Public Overridable Function CorrectTimeInRecentData(recentData As PumpData) As Boolean
+    Public Overridable Function CorrectTimeInRecentData(recentData As Dictionary(Of String, String)) As Boolean
         ' TODO
         Return True
     End Function
@@ -237,6 +239,10 @@ Public Class CareLinkClient
 
     Public Overridable Function ExecuteLoginProcedure(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Boolean
         Dim lastLoginSuccess As Boolean = False
+        If NetworkDown Then
+            Me.LastErrorMessage = "Network down"
+            Return lastLoginSuccess
+        End If
         _loginInProcess = True
         Me.LastErrorMessage = Nothing
         Dim message As String
@@ -245,10 +251,10 @@ Public Class CareLinkClient
             _httpClient.DefaultRequestHeaders.Clear()
 
             ' Clear basic infos
-            _sessionUser = Nothing
-            _sessionProfile = Nothing
-            s_sessionCountrySettings = New CountrySettingsRecord
-            _sessionMonitorData = Nothing
+            _sessionUser.Clear()
+            _sessionProfile.Clear()
+            s_sessionCountrySettings.Clear()
+            _sessionMonitorData.Clear()
 
             ' Open login(get SessionId And SessionData)
             Dim loginSessionResponse As HttpResponseMessage = Me.GetLoginSessionAsync()
@@ -281,21 +287,22 @@ Public Class CareLinkClient
             consentResponse.Dispose()
 
             ' Get sessions infos if required
-            If _sessionUser Is Nothing Then
+            If Not _sessionUser.HasValue Then
                 _sessionUser = Me.GetMyUser()
             End If
-            If _sessionProfile Is Nothing Then
+            If Not _sessionProfile.HasValue Then
                 _sessionProfile = Me.GetMyProfile()
             End If
-            If Not s_sessionCountrySettings.DataValid Then
+            If Not s_sessionCountrySettings.HasValue Then
                 s_sessionCountrySettings = New CountrySettingsRecord(Me.GetCountrySettings(_carelinkCountry, CarelinkLanguageEn))
             End If
-            If _sessionMonitorData Is Nothing Then
+            If Not _sessionMonitorData.HasValue Then
                 _sessionMonitorData = Me.GetMonitorData()
+
             End If
 
             ' Set login success if everything was OK:
-            If _sessionUser IsNot Nothing AndAlso _sessionProfile IsNot Nothing AndAlso s_sessionCountrySettings.DataValid AndAlso _sessionMonitorData IsNot Nothing Then
+            If _sessionUser.HasValue AndAlso _sessionProfile.HasValue AndAlso s_sessionCountrySettings.HasValue AndAlso _sessionMonitorData.HasValue Then
                 lastLoginSuccess = True
             End If
         Catch e As Exception
@@ -320,6 +327,10 @@ Public Class CareLinkClient
     End Function
 
     Public Overridable Function GetAuthorizationToken(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As String
+        If NetworkDown Then
+            Debug.Print("Network Down")
+            Return Nothing
+        End If
         Dim authToken As String = Me.GetCookieValue(Me.CareLinkServer, CarelinkAuthTokenCookieName)
         Dim authTokenValidto As String = Me.GetCookies(Me.CareLinkServer)?.Item(CarelinkTokenValidtoCookieName)?.Value
         ' New token is needed:
@@ -333,10 +344,13 @@ Public Class CareLinkClient
             ' execute new login process | null, if error OR already doing login
             'if loginInProcess or not executeLoginProcedure():
             If _loginInProcess Then
-                Debug.Print("loginInProcess")
+                Debug.Print("Already In login Process")
                 Return Nothing
             End If
             If Not Me.ExecuteLoginProcedure() Then
+                If NetworkDown Then
+                    Debug.Print("Network Down")
+                End If
                 Debug.Print("__executeLoginProcedure failed")
                 Return Nothing
             End If
@@ -347,7 +361,7 @@ Public Class CareLinkClient
     End Function
 
     ' Periodic data from CareLink Cloud
-    Public Overridable Function GetConnectDisplayMessage(username As String, role As String, endpointUrl As String) As PumpData
+    Public Overridable Function GetConnectDisplayMessage(username As String, role As String, endpointUrl As String) As Dictionary(Of String, String)
 
         Debug.Print("__getConnectDisplayMessage()")
         ' Build user json for request
@@ -358,7 +372,7 @@ Public Class CareLinkClient
             {
                 "role",
                 role}}
-        Dim recentData As PumpData = Me.GetData(Nothing, endpointUrl, Nothing, userJson)
+        Dim recentData As Dictionary(Of String, String) = Me.GetData(Nothing, endpointUrl, Nothing, userJson)
         If recentData IsNot Nothing Then
             Me.CorrectTimeInRecentData(recentData)
         End If
@@ -375,10 +389,10 @@ Public Class CareLinkClient
             {
                 "language",
                 language}}
-        Return Me.GetData(Me.CareLinkServer(), "patient/countries/settings", queryParams, Nothing).JsonData
+        Return Me.GetData(Me.CareLinkServer(), "patient/countries/settings", queryParams, Nothing)
     End Function
 
-    Public Overridable Function GetData(host As String, endPointPath As String, queryParams As Dictionary(Of String, String), requestBody As Dictionary(Of String, String)) As PumpData
+    Public Overridable Function GetData(host As String, endPointPath As String, queryParams As Dictionary(Of String, String), requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
         Dim url As String
         Debug.Print("__getData()")
         _lastDataSuccess = False
@@ -389,9 +403,6 @@ Public Class CareLinkClient
         End If
         Dim payload As Dictionary(Of String, String) = queryParams
 
-        Dim bolusRow As Single = Nothing
-        Dim insulinRow As Single = Nothing
-        Dim mealRow As Single = Nothing
         Dim jsonData As Dictionary(Of String, String) = Nothing
         ' Get authorization token
         Dim authToken As String = Me.GetAuthorizationToken()
@@ -418,8 +429,8 @@ Public Class CareLinkClient
                     Dim postRequest As New HttpRequestMessage(HttpMethod.Post, New Uri(url)) With {.Content = Json.JsonContent.Create(requestBody)}
                     response = _httpClient.SendAsync(postRequest).Result ' Post(url, headers, data:=requestBody)
                 End If
-                If response.StatusCode = HttpStatusCode.OK Then
-                    jsonData = Loads(response.Text, bolusRow, insulinRow, mealRow)
+                If response?.StatusCode = HttpStatusCode.OK Then
+                    jsonData = Loads(response.Text, BolusRow, InsulinRow, MealRow)
                     If jsonData.Count > 61 Then
 
                         Dim contents As String = JsonSerializer.Serialize(jsonData, New JsonSerializerOptions)
@@ -429,7 +440,7 @@ Public Class CareLinkClient
                         End Using
                     End If
                     _lastDataSuccess = True
-                ElseIf response.StatusCode = HttpStatusCode.Unauthorized Then
+                ElseIf response?.StatusCode = HttpStatusCode.Unauthorized Then
                     ' Ignore handled elsewhere
                 Else
                     Throw New Exception("session get response is not OK")
@@ -438,7 +449,7 @@ Public Class CareLinkClient
                 Debug.Print($"__getData() failed {e.Message}")
             End Try
         End If
-        Return New PumpData(bolusRow, insulinRow, mealRow, jsonData)
+        Return jsonData
     End Function
 
     Public Overridable Function GetLastDataSuccess() As Object
@@ -472,6 +483,10 @@ Public Class CareLinkClient
                 Throw New Exception($"session response is not OK, {response.ReasonPhrase}")
             End If
         Catch e As Exception
+            If NetworkDown Then
+                Debug.Print("Network Down")
+                Return Nothing
+            End If
             Debug.Print($"__getLoginSession() failed {e.Message}")
             Return response
         End Try
@@ -480,35 +495,42 @@ Public Class CareLinkClient
         Return response
     End Function
 
-    Public Overridable Function GetMonitorData() As PumpData
+    Public Overridable Function GetMonitorData() As MonitorDataRecord
         Debug.Print("__getMonitorData()")
-        Return Me.GetData(Me.CareLinkServer(), "patient/monitor/data", Nothing, Nothing)
+        Return New MonitorDataRecord(Me.GetData(Me.CareLinkServer(), "patient/monitor/data", Nothing, Nothing))
     End Function
 
-    Public Overridable Function GetMyProfile() As PumpData
+    Public Overridable Function GetMyProfile() As MyProfileRecord
         Debug.Print("__getMyProfile()")
-        Return Me.GetData(Me.CareLinkServer(), "patient/users/me/profile", Nothing, Nothing)
+        Dim myProfileRecord As New MyProfileRecord(Me.GetData(Me.CareLinkServer(), "patient/users/me/profile", Nothing, Nothing))
+        Return myProfileRecord
     End Function
 
-    Public Overridable Function GetMyUser() As PumpData
+    Public Overridable Function GetMyUser() As MyUserRecord
         Debug.Print("__getMyUser()")
-        Return Me.GetData(Me.CareLinkServer(), "patient/users/me", Nothing, Nothing)
+        Dim myUserRecord As New MyUserRecord(Me.GetData(Me.CareLinkServer(), "patient/users/me", Nothing, Nothing))
+        Return myUserRecord
     End Function
 
     ' Wrapper for data retrieval methods
-    Public Overridable Function GetRecentData(countryCode As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As PumpData
+    Public Overridable Function GetRecentData(countryCode As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Dictionary(Of String, String)
+        If NetworkDown Then
+            Debug.Print("Network Down")
+            Return Nothing
+        End If
+
         ' Force login to get basic info
         Try
             If Me.GetAuthorizationToken() IsNot Nothing Then
-                Dim deviceFamily As String = Nothing
-                _sessionMonitorData.JsonData.TryGetValue("deviceFamily", deviceFamily)
-                If _carelinkCountry = countryCode OrElse deviceFamily?.Equals("BLE_X") Then
-                    Dim role As String = If(_carelinkPartnerType.Contains(_sessionUser.JsonData("role")), "carepartner", "patient")
-                    Return Me.GetConnectDisplayMessage(_sessionProfile.JsonData("username").ToString(), role, s_sessionCountrySettings.blePereodicDataEndpoint)
+                If _carelinkCountry = countryCode OrElse _sessionMonitorData.deviceFamily?.Equals("BLE_X", StringComparison.Ordinal) Then
+                    Return Me.GetConnectDisplayMessage(
+                        _sessionProfile.username,
+                        If(_carelinkPartnerType.Contains(_sessionUser.role), "carepartner", "patient"),
+                        s_sessionCountrySettings.blePereodicDataEndpoint)
                 End If
             End If
         Catch ex As Exception
-
+            Stop
         End Try
         Return Nothing
     End Function

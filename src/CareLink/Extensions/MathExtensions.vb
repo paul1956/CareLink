@@ -29,6 +29,11 @@ Friend Module MathExtensions
     End Function
 
     <Extension>
+    Public Function IsEven(num As Integer) As Boolean
+        Return num Mod 2 = 0
+    End Function
+
+    <Extension>
     Public Function ParseSingle(valueString As String, Optional decimalDigits As Integer = 10, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Single
         If valueString.Contains(","c) AndAlso valueString.Contains("."c) Then
             Throw UnreachableException(memberName, sourceLineNumber)

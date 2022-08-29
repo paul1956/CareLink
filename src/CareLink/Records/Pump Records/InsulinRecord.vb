@@ -2,20 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Runtime.CompilerServices
-
 Public Class InsulinRecord
-
-    Private Shared ReadOnly columnsToHide As New List(Of String) From {
-            NameOf(InsulinRecord.id),
-            NameOf(InsulinRecord.index),
-            NameOf(InsulinRecord.kind),
-            NameOf(InsulinRecord.OADate),
-            NameOf(InsulinRecord.relativeOffset),
-            NameOf(InsulinRecord.type),
-            NameOf(InsulinRecord.version)
-        }
-
     Public Sub New(oneRow As Dictionary(Of String, String), recordNumber As Integer)
         Dim dic As Dictionary(Of String, String) = oneRow
         For Each kvp As KeyValuePair(Of String, String) In oneRow
@@ -99,41 +86,4 @@ Public Class InsulinRecord
     Public Property completed As Boolean
     Public Property bolusType As String
     Public Property OADate As Double
-
-    Friend Shared Function HideColumn(columnName As String) As Boolean
-        Return s_filterJsonData AndAlso columnsToHide.Contains(columnName)
-    End Function
-
-    Public Shared Function GetCellStyle(columnName As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As DataGridViewCellStyle
-        Dim cellStyle As New DataGridViewCellStyle
-
-        Select Case columnName
-            Case NameOf([dateTime]),
-                 NameOf(dateTimeAsString),
-                 NameOf(type),
-                 NameOf(activationType)
-                cellStyle = cellStyle.CellStyleMiddleLeft
-            Case NameOf(RecordNumber),
-                 NameOf(kind),
-                 NameOf(index),
-                 NameOf(id),
-                 NameOf(completed),
-                 NameOf(bolusType)
-                cellStyle = cellStyle.CellStyleMiddleCenter
-            Case NameOf(version),
-                 NameOf(programmedExtendedAmount),
-                 NameOf(relativeOffset),
-                 NameOf(deliveredExtendedAmount),
-                 NameOf(programmedFastAmount),
-                 NameOf(programmedDuration),
-                 NameOf(deliveredFastAmount),
-                 NameOf(effectiveDuration)
-                cellStyle = cellStyle.CellStyleMiddleRight(0)
-            Case Else
-                Stop
-                Throw UnreachableException(memberName, sourceLineNumber)
-        End Select
-        Return cellStyle
-    End Function
-
 End Class

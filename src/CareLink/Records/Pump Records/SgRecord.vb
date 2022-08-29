@@ -2,17 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Runtime.CompilerServices
-
 Public Class SgRecord
-
-    Private Shared ReadOnly s_columnsToHide As New List(Of String) From {
-                        NameOf(SgRecord.OADate),
-                        NameOf(SgRecord.kind),
-                        NameOf(SgRecord.relativeOffset),
-                        NameOf(SgRecord.version)
-                    }
-
     Public Sub New(allSgs As List(Of Dictionary(Of String, String)), index As Integer, ByRef lastValidTime As Date)
         Dim dic As Dictionary(Of String, String) = allSgs(index)
         Me.RecordNumber = index + 1
@@ -59,33 +49,4 @@ Public Class SgRecord
     Public Property sensorState As String
     Public Property timeChange As String
     Public Property version As Integer
-
-    Friend Shared Function HideColumn(columnName As String) As Boolean
-        Return s_filterJsonData AndAlso s_columnsToHide.Contains(columnName)
-    End Function
-
-    Public Shared Function GetCellStyle(columnName As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As DataGridViewCellStyle
-        Dim cellStyle As New DataGridViewCellStyle
-
-        Select Case columnName
-            Case NameOf(sg),
-                    NameOf(relativeOffset),
-                    NameOf(OADate)
-                cellStyle = cellStyle.CellStyleMiddleRight(10)
-            Case NameOf(RecordNumber),
-                    NameOf(version)
-                cellStyle = cellStyle.CellStyleMiddleCenter()
-            Case NameOf(datetime),
-                    NameOf(dateTimeAsString),
-                    NameOf(sensorState)
-                cellStyle = cellStyle.CellStyleMiddleLeft
-            Case NameOf(timeChange),
-                    NameOf(kind)
-                cellStyle = cellStyle.CellStyleMiddleCenter
-            Case Else
-                Throw UnreachableException(memberName, sourceLineNumber)
-        End Select
-        Return cellStyle
-    End Function
-
 End Class
