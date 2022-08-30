@@ -53,8 +53,7 @@ Partial Class Form1
         Me.MenuOptionsSetupEmailServer = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsUseAdvancedAITDecay = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsUseLocalTimeZone = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MenuView = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MenuViewShowMiniDisplay = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ShowMiniDIsplay = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelp = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelpReportAnIssue = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelpCheckForUpdates = New System.Windows.Forms.ToolStripMenuItem()
@@ -292,7 +291,7 @@ Partial Class Form1
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStartHere, Me.MenuOptions, Me.MenuView, Me.MenuHelp})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuStartHere, Me.MenuOptions, Me.ShowMiniDIsplay, Me.MenuHelp})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1384, 24)
@@ -419,21 +418,12 @@ Partial Class Form1
         Me.MenuOptionsUseLocalTimeZone.Size = New System.Drawing.Size(204, 22)
         Me.MenuOptionsUseLocalTimeZone.Text = "Use Local TImeZone"
         '
-        'MenuView
+        'ShowMiniDIsplay
         '
-        Me.MenuView.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuViewShowMiniDisplay})
-        Me.MenuView.Name = "MenuView"
-        Me.MenuView.Size = New System.Drawing.Size(44, 20)
-        Me.MenuView.Text = "View"
-        Me.MenuView.Visible = False
-        '
-        'MenuViewShowMiniDisplay
-        '
-        Me.MenuViewShowMiniDisplay.Name = "MenuViewShowMiniDisplay"
-        Me.MenuViewShowMiniDisplay.ShortcutKeys = CType(((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Shift) _
-            Or System.Windows.Forms.Keys.D1), System.Windows.Forms.Keys)
-        Me.MenuViewShowMiniDisplay.Size = New System.Drawing.Size(243, 22)
-        Me.MenuViewShowMiniDisplay.Text = "Show Mini Display"
+        Me.ShowMiniDIsplay.Name = "ShowMiniDIsplay"
+        Me.ShowMiniDIsplay.Size = New System.Drawing.Size(116, 20)
+        Me.ShowMiniDIsplay.Text = "Show Mini Display"
+        Me.ShowMiniDIsplay.Visible = False
         '
         'MenuHelp
         '
@@ -448,20 +438,20 @@ Partial Class Form1
         Me.MenuHelpReportAnIssue.Image = Global.CareLink.My.Resources.Resources.FeedbackSmile_16x
         Me.MenuHelpReportAnIssue.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.MenuHelpReportAnIssue.Name = "MenuHelpReportAnIssue"
-        Me.MenuHelpReportAnIssue.Size = New System.Drawing.Size(177, 22)
+        Me.MenuHelpReportAnIssue.Size = New System.Drawing.Size(180, 22)
         Me.MenuHelpReportAnIssue.Text = "Report A Problem..."
         '
         'MenuHelpCheckForUpdates
         '
         Me.MenuHelpCheckForUpdates.Name = "MenuHelpCheckForUpdates"
-        Me.MenuHelpCheckForUpdates.Size = New System.Drawing.Size(177, 22)
+        Me.MenuHelpCheckForUpdates.Size = New System.Drawing.Size(180, 22)
         Me.MenuHelpCheckForUpdates.Text = "Check For Updates"
         '
         'MenuHelpAbout
         '
         Me.MenuHelpAbout.Image = Global.CareLink.My.Resources.Resources.AboutBox
         Me.MenuHelpAbout.Name = "MenuHelpAbout"
-        Me.MenuHelpAbout.Size = New System.Drawing.Size(177, 22)
+        Me.MenuHelpAbout.Size = New System.Drawing.Size(180, 22)
         Me.MenuHelpAbout.Text = "&About..."
         '
         'ServerUpdateTimer
@@ -1695,7 +1685,7 @@ Partial Class Form1
         Me.LabelInsulin.Dock = System.Windows.Forms.DockStyle.Fill
         Me.LabelInsulin.Location = New System.Drawing.Point(6, 3)
         Me.LabelInsulin.Name = "LabelInsulin"
-        Me.LabelInsulin.Size = New System.Drawing.Size(1382, 30)
+        Me.LabelInsulin.Size = New System.Drawing.Size(1338, 30)
         Me.LabelInsulin.TabIndex = 1
         Me.LabelInsulin.Text = "Insulin"
         Me.LabelInsulin.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1723,7 +1713,7 @@ Partial Class Form1
         Me.DataGridViewInsulin.ReadOnly = True
         Me.DataGridViewInsulin.RowTemplate.Height = 25
         Me.DataGridViewInsulin.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.DataGridViewInsulin.Size = New System.Drawing.Size(1382, 624)
+        Me.DataGridViewInsulin.Size = New System.Drawing.Size(1338, 624)
         Me.DataGridViewInsulin.TabIndex = 0
         '
         'TabPageLowGlusoseSuspended
@@ -2508,7 +2498,6 @@ Partial Class Form1
     Friend WithEvents ServerUpdateTimer As Timer
     Friend WithEvents MenuOptionsSetupEmailServer As ToolStripMenuItem
     Friend WithEvents SGsDataGridView As DataGridView
-    Friend WithEvents MenuViewShowMiniDisplay As ToolStripMenuItem
     Friend WithEvents SplitContainer1 As SplitContainer
     Friend WithEvents MenuStartHere As ToolStripMenuItem
     Friend WithEvents TabControlHomePage As TabControl
@@ -2534,7 +2523,7 @@ Partial Class Form1
     Friend WithEvents TransmatterBatterPercentLabel As Label
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
     Friend WithEvents MenuStartHereUseTestData As ToolStripMenuItem
-    Friend WithEvents MenuView As ToolStripMenuItem
+    Friend WithEvents ShowMiniDisplay As ToolStripMenuItem
     Friend WithEvents MenuStartHereUseLastSavedFile As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
     Friend WithEvents MenuStartHereLoadSavedDataFile As ToolStripMenuItem

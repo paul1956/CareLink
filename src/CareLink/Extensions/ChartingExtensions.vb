@@ -47,6 +47,9 @@ Module ChartingExtensions
     Friend Sub DrawBasalMarker(ByRef basalSeries As Series, markerOADateTime As Double, amount As Single, bolusRow As Double, insulinRow As Double, lineColor As Color, toolTip As String)
         Dim startX As Double = markerOADateTime + s_twoHalfMinuteOADate
         Dim startY As Double = bolusRow - ((bolusRow - insulinRow) * (amount / s_maxBasalPerDose))
+        If Math.Abs(amount - 0.025) < 0.001 Then
+            lineColor = Color.DeepPink
+        End If
         basalSeries.AddBasalPoint(startX, bolusRow, lineColor, toolTip)
         basalSeries.AddBasalPoint(startX, startY, lineColor, toolTip)
         basalSeries.AddBasalPoint(startX, bolusRow, lineColor, toolTip)

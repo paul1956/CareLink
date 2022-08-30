@@ -122,14 +122,14 @@ Public Class Form1
                 Me.Text = $"{SavedTitle} Using Last Saved Data"
                 CurrentDateCulture = LastDownloadWithPath.ExtractCultureFromFileName(RepoDownloadName)
                 Me.RecentData = Loads(File.ReadAllText(LastDownloadWithPath), BolusRow, InsulinRow, MealRow)
-                Me.MenuView.Visible = Debugger.IsAttached
+                Me.ShowMiniDIsplay.Visible = Debugger.IsAttached
                 Me.LastUpdateTime.Text = $"{File.GetLastWriteTime(LastDownloadWithPath).ToShortDateTimeString} from file"
             Case FileToLoadOptions.TestData
                 Me.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
                 Dim testDataWithPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")
                 Me.RecentData = Loads(File.ReadAllText(testDataWithPath), BolusRow, InsulinRow, MealRow)
-                Me.MenuView.Visible = Debugger.IsAttached
+                Me.ShowMiniDIsplay.Visible = Debugger.IsAttached
                 Me.LastUpdateTime.Text = $"{File.GetLastWriteTime(testDataWithPath).ToShortDateTimeString} from file"
             Case FileToLoadOptions.Login
                 Me.Text = SavedTitle
@@ -154,7 +154,7 @@ Public Class Form1
                     Me.LoginStatus.Text = "Network Down"
                     Return False
                 End If
-                Me.MenuView.Visible = True
+                Me.ShowMiniDIsplay.Visible = True
                 Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
                 Me.LoginStatus.Text = "OK"
         End Select
@@ -290,7 +290,7 @@ Public Class Form1
                     If ExceptionHandlerForm.ShowDialog() = DialogResult.OK Then
                         ExceptionHandlerForm.ReportFileNameWithPath = ""
                         Me.RecentData = Loads(ExceptionHandlerForm.LocalRawData, BolusRow, InsulinRow, MealRow)
-                        Me.MenuView.Visible = Debugger.IsAttached
+                        Me.ShowMiniDIsplay.Visible = Debugger.IsAttached
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                         Me.LastUpdateTime.Text = $"{File.GetLastWriteTime(fileNameWithPath).ToShortDateTimeString} from file"
                         Me.FinishInitialization()
@@ -334,7 +334,7 @@ Public Class Form1
                     Me.ServerUpdateTimer.Stop()
                     CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{RepoName}", True)
                     Me.RecentData = Loads(File.ReadAllText(openFileDialog1.FileName), BolusRow, InsulinRow, MealRow)
-                    Me.MenuView.Visible = Debugger.IsAttached
+                    Me.ShowMiniDIsplay.Visible = Debugger.IsAttached
                     Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
                     Me.LastUpdateTime.Text = File.GetLastWriteTime(openFileDialog1.FileName).ToShortDateTimeString
                     Me.FinishInitialization()
@@ -414,7 +414,7 @@ Public Class Form1
 
 #Region "View Menus"
 
-    Private Sub MenuViewShowMiniDisplay_Click(sender As Object, e As EventArgs) Handles MenuViewShowMiniDisplay.Click
+    Private Sub ShowMiniDisplay_Click(sender As Object, e As EventArgs) Handles ShowMiniDisplay.Click
         Me.Hide()
         _bgMiniDisplay.Show()
     End Sub
@@ -974,7 +974,7 @@ Public Class Form1
     Private Sub InitializeHomePageChart()
         Me.SplitContainer3.Panel1.Controls.Clear()
         Me.SplitContainer3.Panel1.Controls.Add(Me.CursorTimeLabel)
-        Me.HomeTabChart = CreateChart(NameOf(ActiveInsulinChart))
+        Me.HomeTabChart = CreateChart(NameOf(HomeTabChart))
         Me.HomeTabChartArea = CreateChartArea()
         With Me.HomeTabChartArea
             With .AxisY2

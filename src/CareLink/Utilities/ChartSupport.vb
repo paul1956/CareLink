@@ -120,7 +120,7 @@ Module ChartSupport
 
     Friend Function CreateBasalSeries() As Series
         Dim s As New Series(BasalSeriesName) With {
-                     .BorderWidth = 5,
+                     .BorderWidth = 2,
                      .BorderColor = Color.HotPink,
                      .ChartArea = ChartAreaName,
                      .ChartType = SeriesChartType.Line,

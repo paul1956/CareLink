@@ -19,6 +19,10 @@ Public Module StringExtensions
     ''' <returns>This Is A Title</returns>
     <Extension()>
     Friend Function ToTitle(inStr As String) As String
+        If String.IsNullOrWhiteSpace(inStr) Then
+            Return ""
+        End If
+
         Dim result As New Text.StringBuilder(Char.ToUpperInvariant(inStr(0)))
         Dim firstLetterOfWord As Boolean = False
         For Each c As Char In inStr.Substring(1)

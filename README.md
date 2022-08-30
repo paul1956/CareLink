@@ -30,6 +30,10 @@ This update has a UI to show all the available data and a visual version that mi
 - 8/29/2022
 
 ## What's New in this release
+  New 3.5.3.2
+  Move Show Mini Display to top level menu
+  Change color slightly for basal of .025 U 
+
   New 3.5.3.1
   Lots more user information on additional tabs
   Improvements in multiuser support
