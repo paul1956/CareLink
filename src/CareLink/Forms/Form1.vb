@@ -458,6 +458,7 @@ Public Class Form1
         If e.TabPage.Name = NameOf(TabPage14AllUsers) Then
             For Each c As DataGridViewColumn In Me.DataGridViewCareLinkUsers.Columns
                 c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
+                c.HeaderText = If(c.HeaderText.Contains(" "c), c.HeaderText, c.HeaderText.ToTitleCase)
             Next
         End If
     End Sub

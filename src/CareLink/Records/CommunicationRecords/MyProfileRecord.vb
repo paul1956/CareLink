@@ -3,7 +3,6 @@
 ' See the LICENSE file in the project root for more information.
 
 Public Class MyProfileRecord
-    Private Shared ReadOnly s_columnsToHide As New List(Of String)
     Private _hasValue As Boolean
 
     Public Sub New(jsonData As Dictionary(Of String, String))
@@ -12,16 +11,9 @@ Public Class MyProfileRecord
             Exit Sub
         End If
 
-        My.Forms.Form1.DataGridViewMyProfile.DataSource = (
-                                From entry In jsonData
-                                Order By entry.Key
-                                Select New With {
-                                    Key entry.Key.ToTitle,
-                                    Key entry.Value
-                                }).ToList()
-
+        Dim profile As New List(Of KeyValuePair(Of String, String))
         For Each row As KeyValuePair(Of String, String) In jsonData
-
+            profile.Add(KeyValuePair.Create(row.Key.ToTitleCase(False), row.Value))
             Select Case row.Key
                 Case NameOf(username)
                     Me.username = row.Value
@@ -46,7 +38,8 @@ Public Class MyProfileRecord
                 Case NameOf(country)
                     Me.country = row.Value
                 Case NameOf(dateOfBirth)
-                    Me.dateOfBirth = row.Value
+                    Me.dateOfBirth = MyProfileRecordHelpers.GetDateOfBirth(row.Value)
+                    profile(profile.Count - 1) = KeyValuePair.Create(row.Key.ToTitleCase, MyProfileRecordHelpers.GetDateOfBirth(row.Value))
                 Case NameOf(phone)
                     Me.phone = row.Value
                 Case NameOf(phoneLegacy)
@@ -77,6 +70,8 @@ Public Class MyProfileRecord
                     Stop
             End Select
         Next
+
+        My.Forms.Form1.DataGridViewMyProfile.DataSource = profile
 
         _hasValue = True
     End Sub
@@ -111,15 +106,8 @@ Public Class MyProfileRecord
     Public Property a1C As String
     Public Property firstName As String
     Public Property lastName As String
+
 #End If  ' Prevent reordering
-
-    Friend Shared Function HideColumn(dataPropertyName As String) As Boolean
-        Return s_filterJsonData AndAlso s_columnsToHide.Contains(dataPropertyName)
-    End Function
-
-    Public Shared Function GetCellStyle() As DataGridViewCellStyle
-        Return New DataGridViewCellStyle().CellStyleMiddleLeft
-    End Function
 
     Public Sub Clear()
         _hasValue = False

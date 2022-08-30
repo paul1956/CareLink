@@ -30,6 +30,9 @@ This update has a UI to show all the available data and a visual version that mi
 - 8/30/2022
 
 ## What's New in this release
+  New 3.5.3.3
+  Clean up Header Formatting
+
   New 3.5.3.2
   Move Show Mini Display to top level menu
   Change color slightly for basal of .025 U

@@ -10,15 +10,10 @@ Public Class MyUserRecord
             _hasValue = False
             Exit Sub
         End If
-        My.Forms.Form1.DataGridViewMyUserData.DataSource = (
-                                From entry In jsonData
-                                Order By entry.Key
-                                Select New With {
-                                    Key entry.Key,
-                                    Key entry.Value
-                                }).ToList()
 
+        Dim myUser As New List(Of KeyValuePair(Of String, String))
         For Each row As KeyValuePair(Of String, String) In jsonData
+            myUser.Add(KeyValuePair.Create(row.Key.ToTitleCase, row.Value))
             Select Case row.Key
                 Case NameOf(loginDateUTC)
                     Me.loginDateUTC = row.Value
@@ -49,7 +44,7 @@ Public Class MyUserRecord
             End Select
 
         Next
-
+        My.Forms.Form1.DataGridViewMyUserData.DataSource = myUser
         _hasValue = True
 
     End Sub

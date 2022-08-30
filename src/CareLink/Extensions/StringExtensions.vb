@@ -48,18 +48,23 @@ Public Module StringExtensions
     ''' <param name="inStr">A string like ThisIsATitle</param>
     ''' <returns>This Is A Title</returns>
     <Extension()>
-    Friend Function ToTitleCase(inStr As String) As String
+    Friend Function ToTitleCase(inStr As String, Optional separateNumbers As Boolean = True) As String
         If String.IsNullOrWhiteSpace(inStr) Then
             Return ""
         End If
 
         Dim result As New Text.StringBuilder(Char.ToUpperInvariant(inStr(0)))
-
+        Dim lastWasNumeric As Boolean = Char.IsNumber(inStr(0))
         For Each c As Char In inStr.Substring(1)
-            If Char.IsLower(c) Then
+            If Char.IsLower(c) OrElse lastWasNumeric Then
                 result.Append(c)
+                lastWasNumeric = False
+            ElseIf Char.IsNumber(c) AndAlso Not separateNumbers Then
+                result.Append(c)
+                lastWasNumeric = True
             Else
                 result.Append($" {Char.ToUpperInvariant(c)}")
+                lastWasNumeric = False
             End If
         Next
         Return result.ToString().Replace("time", " Time", False, CurrentUICulture)
