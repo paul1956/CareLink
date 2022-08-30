@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Public Class InsulinRecord
+
     Public Sub New(oneRow As Dictionary(Of String, String), recordNumber As Integer)
         Dim dic As Dictionary(Of String, String) = oneRow
         For Each kvp As KeyValuePair(Of String, String) In oneRow
@@ -67,6 +68,8 @@ Public Class InsulinRecord
         Me.RecordNumber = recordNumber
     End Sub
 
+#If True Then ' Prevent reordering
+
     Public Property RecordNumber As Integer
     Public Property type As String
     Public Property index As Integer
@@ -74,6 +77,7 @@ Public Class InsulinRecord
     Public Property version As Integer
     Public Property [dateTime] As Date
     Public Property dateTimeAsString As String
+    Public Property OADate As Double
     Public Property relativeOffset As Integer
     Public Property programmedExtendedAmount As Single
     Public Property activationType As String
@@ -85,5 +89,5 @@ Public Class InsulinRecord
     Public Property effectiveDuration As Integer
     Public Property completed As Boolean
     Public Property bolusType As String
-    Public Property OADate As Double
+#End If  ' Prevent reordering
 End Class

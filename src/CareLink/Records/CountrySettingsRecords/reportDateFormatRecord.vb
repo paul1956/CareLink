@@ -3,13 +3,8 @@
 ' See the LICENSE file in the project root for more information.
 
 Public Class reportDateFormatRecord
-    Public longTimePattern12 As String
-    Public longTimePattern24 As String
-    Public shortTimePattern12 As String
-    Public shortTimePattern24 As String
-    Public dateSeparator As String
-    Public timeSeparator As String
     Private ReadOnly _asList As New List(Of KeyValuePair(Of String, String))
+
     Public Sub New(jsonValue As String)
         For Each kvp As KeyValuePair(Of String, String) In Loads(jsonValue)
             _asList.Add(KeyValuePair.Create(kvp.Key, kvp.Value))
@@ -30,7 +25,18 @@ Public Class reportDateFormatRecord
         Next
     End Sub
 
+#If True Then ' Prevent reordering
+
+    Public longTimePattern12 As String
+    Public longTimePattern24 As String
+    Public shortTimePattern12 As String
+    Public shortTimePattern24 As String
+    Public dateSeparator As String
+    Public timeSeparator As String
+#End If  ' Prevent reordering
+
     Public Function ToList() As List(Of KeyValuePair(Of String, String))
         Return _asList
     End Function
+
 End Class

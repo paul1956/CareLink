@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Public Class SgRecord
+
     Public Sub New(allSgs As List(Of Dictionary(Of String, String)), index As Integer, ByRef lastValidTime As Date)
         Dim dic As Dictionary(Of String, String) = allSgs(index)
         Me.RecordNumber = index + 1
@@ -39,14 +40,17 @@ Public Class SgRecord
 
     End Sub
 
+#If True Then ' Prevent reordering
+
     Public Property RecordNumber As Integer
+    Public Property sg As Single
     Public Property [datetime] As Date
     Public Property dateTimeAsString As String
-    Public Property sg As Single
-    Public Property kind As String
     Public Property OADate As Double
-    Public Property relativeOffset As Integer
-    Public Property sensorState As String
     Public Property timeChange As String
+    Public Property sensorState As String
+    Public Property kind As String
     Public Property version As Integer
+    Public Property relativeOffset As Integer
+#End If  ' Prevent reordering
 End Class

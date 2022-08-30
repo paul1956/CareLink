@@ -2,24 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Runtime.CompilerServices
-
 Public Class CareLinkUserDataRecord
-
-    Public Property CareLinkUserName As String
-    Public Property CareLinkPassword As String
-    Public Property AIT As TimeSpan
-    Public Property AlertPhoneNumber As String
-    Public Property CarrierTextingDomain As String
-    Public Property CountryCode As String
-    Public Property MailserverPassword As String
-    Public Property MailServerPort As Integer
-    Public Property MailserverUserName As String
-    Public Property SettingsVersion As String
-    Public Property OutGoingMailServer As String
-    Public Property UseAdvancedAITDecay As Boolean
-    Public Property UseLocalTimeZone As Boolean
-    Public Property AutoLogin As Boolean
 
     Public Sub New()
         Me.CareLinkUserName = My.Settings.CareLinkUserName
@@ -55,6 +38,25 @@ Public Class CareLinkUserDataRecord
             Me.Update(entryName, value)
         Next
     End Sub
+
+#If True Then ' Prevent reordering
+
+    Public Property CareLinkUserName As String
+    Public Property CareLinkPassword As String
+    Public Property AIT As TimeSpan
+    Public Property AlertPhoneNumber As String
+    Public Property CarrierTextingDomain As String
+    Public Property CountryCode As String
+    Public Property MailserverPassword As String
+    Public Property MailServerPort As Integer
+    Public Property MailserverUserName As String
+    Public Property SettingsVersion As String
+    Public Property OutGoingMailServer As String
+    Public Property UseAdvancedAITDecay As Boolean
+    Public Property UseLocalTimeZone As Boolean
+    Public Property AutoLogin As Boolean
+
+#End If  ' Prevent reordering
 
     Friend Function ToCsvString() As String
         Return $"{Me.CareLinkUserName},{Me.CareLinkPassword}," &

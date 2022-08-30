@@ -2,40 +2,9 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports CareLink.PumpVariables
-
 Public Class MyProfileRecord
+    Private Shared ReadOnly s_columnsToHide As New List(Of String)
     Private _hasValue As Boolean
-
-#Region "Single Items"
-
-    Public Property a1C As String
-    Public Property address As String
-    Public Property ageRange As String
-    Public Property city As String
-    Public Property country As String
-    Public Property dateOfBirth As String
-    Public Property diabetesType As String
-    Public Property email As String
-    Public Property firstName As String
-    Public Property gender As String
-    Public Property guardianParent As String
-    Public Property insulinType As String
-    Public Property lastName As String
-    Public Property middleName As String
-    Public Property parentFirstName As String
-    Public Property parentLastName As String
-    Public Property parentMiddleName As String
-    Public Property patientNickname As String
-    Public Property phone As String
-    Public Property phoneLegacy As String
-    Public Property postalCode As String
-    Public Property stateProvince As String
-    Public Property textNotification As String
-    Public Property therapyType As String
-    Public Property username As String
-
-#End Region 'Single Items
 
     Public Sub New(jsonData As Dictionary(Of String, String))
         If jsonData Is Nothing OrElse jsonData.Count = 0 Then
@@ -116,14 +85,33 @@ Public Class MyProfileRecord
         _hasValue = False
     End Sub
 
-    Public Sub Clear()
-        _hasValue = False
-    End Sub
-
-    Public Function HasValue() As Boolean
-        Return _hasValue
-    End Function
-    Private Shared ReadOnly s_columnsToHide As New List(Of String)
+#If True Then ' Prevent reordering
+    Public Property username As String
+    Public Property middleName As String
+    Public Property guardianParent As String
+    Public Property parentFirstName As String
+    Public Property parentMiddleName As String
+    Public Property parentLastName As String
+    Public Property address As String
+    Public Property city As String
+    Public Property stateProvince As String
+    Public Property postalCode As String
+    Public Property country As String
+    Public Property dateOfBirth As String
+    Public Property phone As String
+    Public Property phoneLegacy As String
+    Public Property email As String
+    Public Property gender As String
+    Public Property diabetesType As String
+    Public Property therapyType As String
+    Public Property ageRange As String
+    Public Property insulinType As String
+    Public Property patientNickname As String
+    Public Property textNotification As String
+    Public Property a1C As String
+    Public Property firstName As String
+    Public Property lastName As String
+#End If  ' Prevent reordering
 
     Friend Shared Function HideColumn(dataPropertyName As String) As Boolean
         Return s_filterJsonData AndAlso s_columnsToHide.Contains(dataPropertyName)
@@ -131,6 +119,14 @@ Public Class MyProfileRecord
 
     Public Shared Function GetCellStyle() As DataGridViewCellStyle
         Return New DataGridViewCellStyle().CellStyleMiddleLeft
+    End Function
+
+    Public Sub Clear()
+        _hasValue = False
+    End Sub
+
+    Public Function HasValue() As Boolean
+        Return _hasValue
     End Function
 
 End Class

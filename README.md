@@ -32,7 +32,8 @@ This update has a UI to show all the available data and a visual version that mi
 ## What's New in this release
   New 3.5.3.2
   Move Show Mini Display to top level menu
-  Change color slightly for basal of .025 U 
+  Change color slightly for basal of .025 U
+  Cleanup to prevent Public properties from moving
 
   New 3.5.3.1
   Lots more user information on additional tabs

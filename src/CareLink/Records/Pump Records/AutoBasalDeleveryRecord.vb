@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Public Class AutoBasalDeliveryRecord
+
     Public Sub New(marker As Dictionary(Of String, String), recordNumber As Integer)
         For Each kvp As KeyValuePair(Of String, String) In marker
 
@@ -43,15 +44,18 @@ Public Class AutoBasalDeliveryRecord
         Me.RecordNumber = recordNumber
     End Sub
 
+#If True Then ' Prevent reordering
+
     Public Property RecordNumber As Integer
-    Public Property [dateTime] As Date
-    Public Property dateTimeAsString As String
-    Public Property bolusAmount As Single
-    Public Property id As Integer
+    Public Property type As String
     Public Property index As Integer
     Public Property kind As String
+    Public Property version As Integer
+    Public Property [dateTime] As Date
+    Public Property dateTimeAsString As String
     Public Property OADate As Double
     Public Property relativeOffset As Integer
-    Public Property type As String
-    Public Property version As Integer
+    Public Property id As Integer
+    Public Property bolusAmount As Single
+#End If  ' Prevent reordering
 End Class

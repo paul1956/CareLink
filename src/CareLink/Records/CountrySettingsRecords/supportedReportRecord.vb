@@ -18,20 +18,13 @@ Public Class supportedReportRecord
 
     End Sub
 
-#Region "MUST BE ON TOP"
-
+#If True Then ' Prevent reordering
     Public Property recordNumber As Integer
-
-#End Region ' End MUST BE ON TOP
-
-#Region "MUST BE SECOND"
-
     Public Property report As String
-
-#End Region ' End MUST BE  SECOND
-
-    Public Property notFor As String
     Public Property onlyFor As String
+    Public Property notFor As String
+
+#End If  ' Prevent reordering
 
     Private Shared Function kvpToString(forList As List(Of Dictionary(Of String, String))) As StringBuilder
         Dim sb As New StringBuilder

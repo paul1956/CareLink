@@ -4,8 +4,6 @@
 
 <DebuggerDisplay("{GetDebuggerDisplay(),nq}")>
 Public Class LanguageRecord
-    Public code As String
-    Public name As String
 
     Public Sub New(values As Dictionary(Of String, String))
         If values.Count <> 2 Then
@@ -14,6 +12,12 @@ Public Class LanguageRecord
         name = values(NameOf(name))
         code = values(NameOf(code))
     End Sub
+
+#If True Then ' Prevent reordering
+    Public name As String
+    Public code As String
+
+#End If  ' Prevent reordering
 
     Private Function GetDebuggerDisplay() As String
         Return $"{NameOf(name)} = {name}, {NameOf(code)} = {code}"

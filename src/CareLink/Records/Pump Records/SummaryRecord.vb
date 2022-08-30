@@ -10,7 +10,10 @@ Public Class SummaryRecord
         Me.Value = entry.Value?.ToString(CurrentUICulture)
     End Sub
 
+#If True Then ' Prevent reordering
+
     Public Property RecordNumber As Integer
     Public Property Key As String
     Public Property Value As String
+#End If  ' Prevent reordering
 End Class
