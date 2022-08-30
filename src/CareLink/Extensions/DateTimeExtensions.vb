@@ -20,8 +20,9 @@ Friend Module DateTimeExtensions
     Public ReadOnly s_fiveMinuteSpan As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
 #Region "Millisecond Constants"
 
-    Public ReadOnly s_minuteInMilliseconds As Integer = CType(New TimeSpan(0, minutes:=1, 0).TotalMilliseconds, Integer)
+    Public ReadOnly s_fiveMinutesInMilliseconds As Integer = CType(New TimeSpan(0, minutes:=5, 0).TotalMilliseconds, Integer)
     Public ReadOnly s_thirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
+    Public ReadOnly s_twoMinutesInMilliseconds As Integer = CType(New TimeSpan(0, minutes:=2, 0).TotalMilliseconds, Integer)
 
 #End Region 'Millisecond Constants
 

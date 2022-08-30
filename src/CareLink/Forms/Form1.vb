@@ -122,14 +122,14 @@ Public Class Form1
                 Me.Text = $"{SavedTitle} Using Last Saved Data"
                 CurrentDateCulture = LastDownloadWithPath.ExtractCultureFromFileName(RepoDownloadName)
                 Me.RecentData = Loads(File.ReadAllText(LastDownloadWithPath), BolusRow, InsulinRow, MealRow)
-                Me.ShowMiniDIsplay.Visible = Debugger.IsAttached
+                Me.ShowMiniDisplay.Visible = Debugger.IsAttached
                 Me.LastUpdateTime.Text = $"{File.GetLastWriteTime(LastDownloadWithPath).ToShortDateTimeString} from file"
             Case FileToLoadOptions.TestData
                 Me.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
                 Dim testDataWithPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")
                 Me.RecentData = Loads(File.ReadAllText(testDataWithPath), BolusRow, InsulinRow, MealRow)
-                Me.ShowMiniDIsplay.Visible = Debugger.IsAttached
+                Me.ShowMiniDisplay.Visible = Debugger.IsAttached
                 Me.LastUpdateTime.Text = $"{File.GetLastWriteTime(testDataWithPath).ToShortDateTimeString} from file"
             Case FileToLoadOptions.Login
                 Me.Text = SavedTitle
@@ -137,7 +137,7 @@ Public Class Form1
                 Loop
                 _client = _loginDialog.Client
                 If _client Is Nothing OrElse Not _client.LoggedIn Then
-                    Me.ServerUpdateTimer.Interval = s_minuteInMilliseconds * 5
+                    Me.ServerUpdateTimer.Interval = s_fiveMinutesInMilliseconds
                     Me.ServerUpdateTimer.Start()
                     If CareLinkClient.NetworkDown Then
                         Me.LoginStatus.Text = "Network Down"
@@ -148,13 +148,13 @@ Public Class Form1
                     Return False
                 End If
                 Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
-                Me.ServerUpdateTimer.Interval = s_minuteInMilliseconds
+                Me.ServerUpdateTimer.Interval = s_twoMinutesInMilliseconds
                 Me.ServerUpdateTimer.Start()
                 If CareLinkClient.NetworkDown Then
                     Me.LoginStatus.Text = "Network Down"
                     Return False
                 End If
-                Me.ShowMiniDIsplay.Visible = True
+                Me.ShowMiniDisplay.Visible = True
                 Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
                 Me.LoginStatus.Text = "OK"
         End Select
@@ -290,7 +290,7 @@ Public Class Form1
                     If ExceptionHandlerForm.ShowDialog() = DialogResult.OK Then
                         ExceptionHandlerForm.ReportFileNameWithPath = ""
                         Me.RecentData = Loads(ExceptionHandlerForm.LocalRawData, BolusRow, InsulinRow, MealRow)
-                        Me.ShowMiniDIsplay.Visible = Debugger.IsAttached
+                        Me.ShowMiniDisplay.Visible = Debugger.IsAttached
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                         Me.LastUpdateTime.Text = $"{File.GetLastWriteTime(fileNameWithPath).ToShortDateTimeString} from file"
                         Me.FinishInitialization()
@@ -334,7 +334,7 @@ Public Class Form1
                     Me.ServerUpdateTimer.Stop()
                     CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{RepoName}", True)
                     Me.RecentData = Loads(File.ReadAllText(openFileDialog1.FileName), BolusRow, InsulinRow, MealRow)
-                    Me.ShowMiniDIsplay.Visible = Debugger.IsAttached
+                    Me.ShowMiniDisplay.Visible = Debugger.IsAttached
                     Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
                     Me.LastUpdateTime.Text = File.GetLastWriteTime(openFileDialog1.FileName).ToShortDateTimeString
                     Me.FinishInitialization()
@@ -958,7 +958,7 @@ Public Class Form1
             Me.Cursor = Cursors.Default
             Application.DoEvents()
         End If
-        Me.ServerUpdateTimer.Interval = s_minuteInMilliseconds
+        Me.ServerUpdateTimer.Interval = s_twoMinutesInMilliseconds
         Me.ServerUpdateTimer.Start()
         Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
     End Sub
