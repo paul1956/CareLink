@@ -430,7 +430,7 @@ Public Class CareLinkClient
                     response = _httpClient.SendAsync(postRequest).Result ' Post(url, headers, data:=requestBody)
                 End If
                 If response?.StatusCode = HttpStatusCode.OK Then
-                    jsonData = Loads(response.Text, BolusRow, InsulinRow, MealRow)
+                    jsonData = Loads(response.Text)
                     If jsonData.Count > 61 Then
 
                         Dim contents As String = JsonSerializer.Serialize(jsonData, New JsonSerializerOptions)

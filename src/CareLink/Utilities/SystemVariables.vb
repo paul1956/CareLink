@@ -3,10 +3,13 @@
 ' See the LICENSE file in the project root for more information.
 
 Module SystemVariables
-    Friend Property BolusRow As Single
-
-    Friend Property InsulinRow As Single
-
-    Friend Property MealRow As Single
-
+    Friend Property HomePageBasalRow As Single
+    Friend Property HomePageInsulinRow As Single
+    Friend Property HomePageMealRow As Single
+    Friend Property MaxBasalPerDose As Single
+    Friend Property MaxBasalPerHour As Single
+    Friend Property scalingNeeded As Boolean = Nothing
+    Friend Property TreatmentBasalRow As Single
+    Friend Property TreatmentInsulinRow As Single
+    Friend Property TreatmentMealRow As Single
 End Module

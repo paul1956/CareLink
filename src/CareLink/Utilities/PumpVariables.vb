@@ -7,8 +7,7 @@ Imports System.ComponentModel
 Public Module PumpVariables
 
     ' Manually computed
-    Friend s_maxBasalPerDose As Single
-    Friend s_maxBasalPerHour As Single
+
     Friend s_totalAutoCorrection As Single
     Friend s_totalBasal As Single
     Friend s_totalCarbs As Single
@@ -17,17 +16,21 @@ Public Module PumpVariables
 
 #Region "Global variables to hold pump values"
 
+#Region "Used for painting"
+
+    Public ReadOnly s_homeTabMarkerInsulinDictionary As New Dictionary(Of Double, Single)
+    Public ReadOnly s_homeTabMarkerMealDictionary As New Dictionary(Of Double, Single)
+    Public ReadOnly s_treatmentMarkerInsulinDictionary As New Dictionary(Of Double, Single)
+    Public ReadOnly s_treatmentMarkerMealDictionary As New Dictionary(Of Double, Single)
+
+#End Region ' Used for painting
+
     Friend Const MmolLUnitsDivisor As Single = 18
     Friend ReadOnly s_bindingSourceMarkersAutoBasalDelivery As New BindingList(Of AutoBasalDeliveryRecord)
     Friend ReadOnly s_bindingSourceMarkersInsulin As New BindingList(Of InsulinRecord)
     Friend ReadOnly s_bindingSourceSummary As New BindingList(Of SummaryRecord)
     Friend ReadOnly s_insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
-    Friend ReadOnly s_activeInsulinMarkerInsulinDictionary As New Dictionary(Of Double, Single)
-    Friend ReadOnly s_activeInsulinMarkerMealDictionary As New Dictionary(Of Double, Single)
-    Friend ReadOnly s_homeTabMarkerInsulinDictionary As New Dictionary(Of Double, Single)
-    Friend ReadOnly s_homeTabMarkerMealDictionary As New Dictionary(Of Double, Single)
     Friend ReadOnly s_mealImage As Bitmap = My.Resources.MealImage
-
     Friend s_aboveHyperLimit As Double
     Friend s_activeInsulin As Dictionary(Of String, String)
     Friend s_activeInsulinIncrements As Integer
@@ -63,10 +66,8 @@ Public Module PumpVariables
     Friend s_timeToNextCalibrationMinutes As Integer
     Friend s_timeWithMinuteFormat As String
     Friend s_timeWithoutMinuteFormat As String
-
-    Friend Property scalingNeeded As Boolean = Nothing
-    Public Property BgUnits As String
-    Public Property BgUnitsString As String
+    Friend Property BgUnits As String
+    Friend Property BgUnitsString As String
 
 #End Region
 
