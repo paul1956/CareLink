@@ -655,7 +655,7 @@ Public Class Form1
         End SyncLock
     End Sub
 
-    '<DebuggerNonUserCode()>
+    <DebuggerNonUserCode()>
     Private Sub TreatmentMarkersChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles TreatmentMarkersChart.PostPaint
 
         If Not _initialized OrElse _updating OrElse _inMouseMove Then
