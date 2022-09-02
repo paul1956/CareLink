@@ -74,7 +74,7 @@ Public Class Form1
 #Region "Legends"
 
     Private WithEvents ActiveInsulinChartLegend As Legend
-    Private WithEvents TreatmentMarkersChartLegend As Legend
+    Friend WithEvents TreatmentMarkersChartLegend As Legend
 
 #End Region
 
@@ -391,6 +391,32 @@ Public Class Form1
 
     Private Sub MenuOptionsFilterRawJSONData_Click(sender As Object, e As EventArgs) Handles MenuOptionsFilterRawJSONData.Click
         s_filterJsonData = Me.MenuOptionsFilterRawJSONData.Checked
+        For Each c As DataGridViewColumn In Me.DataGridViewAutoBasalDelivery.Columns
+            c.Visible = Not AutoBasalDeliveryRecordHelpers.HideColumn(c.DataPropertyName)
+        Next
+
+        For Each c As DataGridViewColumn In Me.DataGridViewCareLinkUsers.Columns
+            c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
+        Next
+
+        For Each c As DataGridViewColumn In Me.DataGridViewInsulin.Columns
+            c.Visible = Not InsulinRecordHelpers.HideColumn(c.DataPropertyName)
+        Next
+
+        For Each c As DataGridViewColumn In Me.DataGridViewMyProfile.Columns
+            c.Visible = Not MyProfileRecordHelpers.HideColumn(c.DataPropertyName)
+        Next
+
+        'Friend WithEvents DataGridViewMyUserData As DataGridView
+        For Each c As DataGridViewColumn In Me.DataGridViewMyProfile.Columns
+            c.Visible = Not MyProfileRecordHelpers.HideColumn(c.DataPropertyName)
+        Next
+
+        For Each c As DataGridViewColumn In Me.DataGridViewSGs.Columns
+            c.Visible = Not SgRecordHelpers.HideColumn(c.DataPropertyName)
+        Next
+
+        ' DataGridViewSummary
     End Sub
 
 #If SupportMailServer = "True" Then
@@ -457,7 +483,7 @@ Public Class Form1
 #Region "HomePage Tab Events"
 
     Private Sub TabControlHomePage_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlHomePage.Selecting
-        If e.TabPage.Name = NameOf(TabPageAllUsers) Then
+        If e.TabPage.Name = NameOf(TabPage15AllUsers) Then
             For Each c As DataGridViewColumn In Me.DataGridViewCareLinkUsers.Columns
                 c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
                 c.HeaderText = If(c.HeaderText.Contains(" "c), c.HeaderText, c.HeaderText.ToTitleCase)
@@ -629,7 +655,7 @@ Public Class Form1
         End SyncLock
     End Sub
 
-    <DebuggerNonUserCode()>
+    '<DebuggerNonUserCode()>
     Private Sub TreatmentMarkersChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles TreatmentMarkersChart.PostPaint
 
         If Not _initialized OrElse _updating OrElse _inMouseMove Then
@@ -637,7 +663,7 @@ Public Class Form1
         End If
         SyncLock _updatingLock
             e.PostPaintSupport(_treatmentMarkerAbsoluteRectangle,
-                TreatmentBasalRow,
+                TreatmentInsulinRow,
                 s_treatmentMarkerInsulinDictionary,
                 s_treatmentMarkerMealDictionary,
                 doShading:=False,
@@ -766,13 +792,13 @@ Public Class Form1
 
 #Region "SGS Tab DataGridView Events"
 
-    Private Sub SGsDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles SGsDataGridView.CellFormatting
+    Private Sub SGsDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DataGridViewSGs.CellFormatting
         If e.Value Is Nothing Then
             Return
         End If
         Dim dgv As DataGridView = CType(sender, DataGridView)
         ' Set the background to red for negative values in the Balance column.
-        If Me.SGsDataGridView.Columns(e.ColumnIndex).Name.Equals(NameOf(s_sensorState), StringComparison.OrdinalIgnoreCase) Then
+        If Me.DataGridViewSGs.Columns(e.ColumnIndex).Name.Equals(NameOf(s_sensorState), StringComparison.OrdinalIgnoreCase) Then
             If e.Value.ToString <> "NO_ERROR_MESSAGE" Then
                 e.CellStyle.BackColor = Color.Yellow
             End If
@@ -791,7 +817,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub SGsDataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles SGsDataGridView.ColumnAdded
+    Private Sub SGsDataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewSGs.ColumnAdded
         If SgRecordHelpers.HideColumn(e.Column.Name) Then
             e.Column.Visible = False
             Exit Sub
@@ -804,7 +830,7 @@ Public Class Form1
 
 #Region "Summary Tab DataGridView Events"
 
-    Private Sub SummaryDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles SummaryDataGridView.CellFormatting
+    Private Sub SummaryDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DataGridViewSummary.CellFormatting
         If e.Value Is Nothing OrElse e.ColumnIndex <> 2 Then
             Return
         End If
@@ -927,12 +953,12 @@ Public Class Form1
 
     End Sub
 
-    Private Sub SummaryDataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles SummaryDataGridView.ColumnAdded
+    Private Sub SummaryDataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewSummary.ColumnAdded
         Dim cellStyle As DataGridViewCellStyle = SummaryRecordHelpers.GetCellStyle(e.Column.Name)
         e.DgvColumnAdded(cellStyle, wrapHeader:=False)
     End Sub
 
-    Private Sub SummaryDataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles SummaryDataGridView.DataError
+    Private Sub SummaryDataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewSummary.DataError
         Stop
     End Sub
 
@@ -1185,20 +1211,45 @@ Public Class Form1
 
         Me.TreatmentMarkersChart = CreateChart(NameOf(TreatmentMarkersChart))
         Me.TreatmentMarkersChartArea = CreateChartArea()
-        TreatmentBasalRow = (MaxBasalPerDose + 2).RoundSingle(0)
-        TreatmentInsulinRow = 0.25
+        Select Case MaxBasalPerDose
+            Case < 0.25
+                TreatmentInsulinRow = 0.25
+            Case < 0.5
+                TreatmentInsulinRow = 0.5
+            Case < 0.75
+                TreatmentInsulinRow = 0.75
+            Case < 1
+                TreatmentInsulinRow = 1
+            Case < 1.25
+                TreatmentInsulinRow = 1.25
+            Case < 1.5
+                TreatmentInsulinRow = 1.5
+            Case < 1.75
+                TreatmentInsulinRow = 1.75
+            Case < 2
+                TreatmentInsulinRow = 2
+            Case Else
+                TreatmentInsulinRow = CSng(MaxBasalPerDose + 0.025)
+        End Select
+        TreatmentInsulinRow = TreatmentInsulinRow.RoundSingle(3)
         With Me.TreatmentMarkersChartArea
             With .AxisY2
-                .Interval = HomePageMealRow
+                Dim interval As Single = (TreatmentInsulinRow / 10).RoundSingle(3)
+                .Interval = interval
                 .IsMarginVisible = False
                 .IsStartedFromZero = False
                 .LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
+                .LabelStyle.Format = "{0.000}"
                 .LineColor = Color.FromArgb(64, 64, 64, 64)
-                .MajorGrid = New Grid With {
-                        .Interval = TreatmentBasalRow / 10,
+                .MajorGrid = New Grid() With {
+                        .Interval = interval,
                         .LineColor = Color.FromArgb(64, 64, 64, 64)
                     }
-                .Maximum = TreatmentBasalRow
+                .MajorTickMark = New TickMark() With {
+                        .Interval = interval,
+                        .Enabled = True
+                    }
+                .Maximum = TreatmentInsulinRow
                 .Minimum = 0
                 .Title = "Delivered Insulin"
             End With
@@ -1575,7 +1626,7 @@ Public Class Form1
 
             If rowIndex = ItemIndexs.sgs Then
                 s_bindingSourceSGs = New BindingList(Of SgRecord)(LoadList(row.Value).ToSgList())
-                ProcessListOfDictionary(Me.TableLayoutPanelSgs, Me.SGsDataGridView, s_bindingSourceSGs, rowIndex)
+                ProcessListOfDictionary(Me.TableLayoutPanelSgs, Me.DataGridViewSGs, s_bindingSourceSGs, rowIndex)
                 Me.ReadingsLabel.Text = $"{s_bindingSourceSGs.Where(Function(entry As SgRecord) Not Double.IsNaN(entry.sg)).Count}/288"
                 Continue For
             End If
@@ -1684,8 +1735,8 @@ Public Class Form1
 #Region "Update Home Tab"
 
     Friend Sub AllTabPagesUpdate()
-        Me.SummaryDataGridView.DataSource = s_bindingSourceSummary
-        Me.SummaryDataGridView.RowHeadersVisible = False
+        Me.DataGridViewSummary.DataSource = s_bindingSourceSummary
+        Me.DataGridViewSummary.RowHeadersVisible = False
         If Me.RecentData Is Nothing Then
             Exit Sub
         End If
@@ -1694,12 +1745,15 @@ Public Class Form1
         End If
         SyncLock _updatingLock
             _updating = True ' prevent paint
+            _homePageAbsoluteRectangle = RectangleF.Empty
+            _treatmentMarkerAbsoluteRectangle = RectangleF.Empty
             Me.MenuStartHere.Enabled = False
             If Not Me.LastUpdateTime.Text.Contains("from file") Then
                 Me.LastUpdateTime.Text = Now.ToShortDateTimeString
             End If
             Me.CursorPanel.Visible = False
             Me.UpdateDataTables(_formScale.Height <> 1 OrElse _formScale.Width <> 1)
+            _updating = False
             Me.UpdateActiveInsulinChart()
             Me.UpdateActiveInsulin()
             Me.UpdateAutoModeShield()
@@ -1710,12 +1764,11 @@ Public Class Form1
             Me.UpdateSensorLife()
             Me.UpdateTimeInRange()
             Me.UpdateTransmitterBatttery()
-            Me.UpdateTreatmentMarkersChart()
             Me.UpdateHomeTabSerieses()
             Me.UpdateDosingAndCarbs()
             s_recentDatalast = Me.RecentData
             Me.MenuStartHere.Enabled = True
-            _updating = False
+            Me.UpdateTreatmentMarkersChart()
         End SyncLock
         Application.DoEvents()
     End Sub
@@ -1968,10 +2021,10 @@ Public Class Form1
                 Dim limitsLowValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("lowLimit").ParseSingle
                 Dim limitsHighValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("highLimit").ParseSingle
                 If limitsHighValue <> 0 Then
-                    Me.HomeTabChart.Series(HighLimitSeriesName).Points.AddXY(sgOADateTime.AsDouble, limitsHighValue)
+                    Me.HomeTabChart.Series(HighLimitSeriesName).Points.AddXY(sgOADateTime, limitsHighValue)
                 End If
                 If limitsLowValue <> 0 Then
-                    Me.HomeTabChart.Series(LowLimitSeriesName).Points.AddXY(sgOADateTime.AsDouble, limitsLowValue)
+                    Me.HomeTabChart.Series(LowLimitSeriesName).Points.AddXY(sgOADateTime, limitsLowValue)
                 End If
             Catch ex As Exception
                 Throw New Exception($"{ex.Message} exception while plotting Limits in {memberName} at {sourceLineNumber}")

@@ -22,6 +22,7 @@ Class InsulinRecordHelpers
         Select Case columnName
             Case NameOf(InsulinRecord.[dateTime]),
                  NameOf(InsulinRecord.dateTimeAsString),
+                 NameOf(InsulinRecord.OADate),
                  NameOf(InsulinRecord.type),
                  NameOf(InsulinRecord.activationType)
                 cellStyle = cellStyle.CellStyleMiddleLeft

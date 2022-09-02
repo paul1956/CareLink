@@ -15,7 +15,7 @@ Module ChartingExtensions
             basalSeries.Points.Last().Color = Color.Transparent
             basalSeries.Points.Last().IsEmpty = True
         End If
-        basalSeries.Points.AddXY(startX.AsDouble, StartY)
+        basalSeries.Points.AddXY(startX, StartY)
         If Double.IsNaN(StartY) Then
             basalSeries.Points.Last.Color = Color.Transparent
             basalSeries.Points.Last.MarkerSize = 0
@@ -28,8 +28,8 @@ Module ChartingExtensions
     End Sub
 
     <Extension>
-    Private Sub AddBgReadingPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As OADate, bgValueString As String, bgValue As Single)
-        markerSeriesPoints.AddXY(markerOADateTime.AsDouble, bgValue)
+    Private Sub AddBgReadingPoint(markerSeriesPoints As DataPointCollection, markerOADate As OADate, bgValueString As String, bgValue As Single)
+        markerSeriesPoints.AddXY(markerOADate, bgValue)
         markerSeriesPoints.Last.BorderColor = Color.Gainsboro
         markerSeriesPoints.Last.Color = Color.FromArgb(5, Color.Gainsboro)
         markerSeriesPoints.Last.MarkerSize = 10
@@ -40,8 +40,8 @@ Module ChartingExtensions
     End Sub
 
     <Extension>
-    Private Sub AddCalibrationPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As OADate, bgValue As Single, entry As Dictionary(Of String, String))
-        markerSeriesPoints.AddXY(markerOADateTime.AsDouble, bgValue)
+    Private Sub AddCalibrationPoint(markerSeriesPoints As DataPointCollection, markerOADate As OADate, bgValue As Single, entry As Dictionary(Of String, String))
+        markerSeriesPoints.AddXY(markerOADate, bgValue)
         markerSeriesPoints.Last.BorderColor = Color.Red
         markerSeriesPoints.Last.Color = Color.FromArgb(5, Color.Red)
         markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Circle
@@ -51,17 +51,28 @@ Module ChartingExtensions
     End Sub
 
     <Extension>
-    Friend Sub DrawBasalMarker(ByRef basalSeries As Series, markerOADateTime As OADate, amount As Single, bolusRow As Double, insulinRow As Double, lineColor As Color, toolTip As String)
-        Dim startX As OADate = markerOADateTime + s_twoHalfMinuteOADate
-        Dim startY As Double = bolusRow - ((bolusRow - insulinRow) * (amount / MaxBasalPerDose))
+    Friend Sub DrawBasalMarker(ByRef basalSeries As Series, markerOADate As OADate, amount As Single, bolusRow As Double, insulinRow As Double, lineColor As Color, toolTip As String)
+        Dim startX As OADate
+        Dim startY As Double
+        If basalSeries.Legend.StartsWith(NameOf(My.Forms.Form1.TreatmentMarkersChartLegend)) Then
+            startX = markerOADate + s_twoHalfMinuteOADate
+            startY = amount.RoundSingle(3)
+            basalSeries.AddBasalPoint(startX, 0, lineColor, toolTip)
+            basalSeries.AddBasalPoint(startX, startY, lineColor, toolTip)
+            basalSeries.AddBasalPoint(startX, 0, lineColor, toolTip)
+            basalSeries.AddBasalPoint(startX, Double.NaN, Color.Transparent, toolTip)
+        Else
+            startX = markerOADate + s_twoHalfMinuteOADate
+            startY = bolusRow - ((bolusRow - insulinRow) * (amount / MaxBasalPerDose))
+            basalSeries.AddBasalPoint(startX, bolusRow, lineColor, toolTip)
+            basalSeries.AddBasalPoint(startX, startY, lineColor, toolTip)
+            basalSeries.AddBasalPoint(startX, bolusRow, lineColor, toolTip)
+            basalSeries.AddBasalPoint(startX, Double.NaN, Color.Transparent, toolTip)
+        End If
         If Math.Abs(amount - 0.025) < 0.001 Then
             lineColor = Color.DeepPink
         End If
 
-        basalSeries.AddBasalPoint(startX, bolusRow, lineColor, toolTip)
-        basalSeries.AddBasalPoint(startX, startY, lineColor, toolTip)
-        basalSeries.AddBasalPoint(startX, bolusRow, lineColor, toolTip)
-        basalSeries.AddBasalPoint(startX, Double.NaN, Color.Transparent, toolTip)
     End Sub
 
     <Extension>
@@ -95,7 +106,7 @@ Module ChartingExtensions
                                 DrawBasalMarker(chart.Series(BasalSeriesName), markerOADateTime, autoCorrection.ParseSingle, HomePageBasalRow, HomePageInsulinRow, Color.Aqua, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
                             Case "RECOMMENDED", "UNDETERMINED"
                                 If s_homeTabMarkerInsulinDictionary.TryAdd(markerOADateTime, CInt(HomePageInsulinRow)) Then
-                                    markerSeriesPoints.AddXY(markerOADateTime.AsDouble, HomePageInsulinRow - 10)
+                                    markerSeriesPoints.AddXY(markerOADateTime, HomePageInsulinRow - 10)
                                     markerSeriesPoints.Last.MarkerBorderWidth = 2
                                     markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Black)
                                     markerSeriesPoints.Last.MarkerSize = 20
@@ -115,7 +126,7 @@ Module ChartingExtensions
                         End Select
                     Case "MEAL"
                         If s_homeTabMarkerMealDictionary.TryAdd(markerOADateTime, HomePageMealRow) Then
-                            markerSeriesPoints.AddXY(markerOADateTime.AsDouble, HomePageMealRow + (s_mealImage.Height / 2))
+                            markerSeriesPoints.AddXY(markerOADateTime, HomePageMealRow + (s_mealImage.Height / 2))
                             markerSeriesPoints.Last.Color = Color.FromArgb(10, Color.Yellow)
                             markerSeriesPoints.Last.MarkerBorderWidth = 2
                             markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Yellow)
@@ -126,9 +137,9 @@ Module ChartingExtensions
                     Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED"
                     Case "TIME_CHANGE"
                         With chart.Series(TimeChangeSeriesName).Points
-                            .AddXY(markerOADateTime.AsDouble, 0)
-                            .AddXY(markerOADateTime.AsDouble, TreatmentBasalRow)
-                            .AddXY(markerOADateTime.AsDouble, Double.NaN)
+                            .AddXY(markerOADateTime, 0)
+                            .AddXY(markerOADateTime, TreatmentInsulinRow)
+                            .AddXY(markerOADateTime, Double.NaN)
                         End With
                     Case Else
                         Stop
@@ -145,7 +156,7 @@ Module ChartingExtensions
     Friend Sub PlotOnePoint(plotSeries As Series, sgOADateTime As OADate, bgValue As Single, mainLineColor As Color, HomePageMealRow As Double, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
         Try
             With plotSeries.Points
-                Dim sgDouble As Double = sgOADateTime.AsDouble
+                Dim sgDouble As Double = sgOADateTime
                 If Single.IsNaN(bgValue) OrElse Math.Abs(bgValue - 0) < Single.Epsilon Then
                     .AddXY(sgDouble, HomePageMealRow)
                     .Last().Color = Color.Transparent
@@ -200,15 +211,15 @@ Module ChartingExtensions
                 Select Case entry("type")
                     Case "AUTO_BASAL_DELIVERY"
                         Dim bolusAmount As String = entry("bolusAmount")
-                        DrawBasalMarker(chart.Series(BasalSeriesName), markerOADateTime, bolusAmount.ParseSingle, TreatmentBasalRow, TreatmentInsulinRow, Color.HotPink, $"Auto Basal:{bolusAmount.TruncateSingleString(3)} U")
+                        DrawBasalMarker(chart.Series(BasalSeriesName), markerOADateTime, bolusAmount.ParseSingle.RoundSingle(3), MaxBasalPerDose, TreatmentInsulinRow, Color.HotPink, $"Auto Basal:{bolusAmount.TruncateSingleString(3)} U")
                     Case "INSULIN"
                         Select Case entry("activationType")
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As String = entry("deliveredFastAmount")
-                                DrawBasalMarker(chart.Series(BasalSeriesName), markerOADateTime, autoCorrection.ParseSingle, TreatmentBasalRow, TreatmentInsulinRow, Color.Aqua, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
+                                DrawBasalMarker(chart.Series(BasalSeriesName), markerOADateTime, autoCorrection.ParseSingle, MaxBasalPerDose, TreatmentInsulinRow, Color.Aqua, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
                             Case "RECOMMENDED", "UNDETERMINED"
                                 If s_treatmentMarkerInsulinDictionary.TryAdd(markerOADateTime, TreatmentInsulinRow) Then
-                                    markerSeriesPoints.AddXY(markerOADateTime.AsDouble, TreatmentInsulinRow)
+                                    markerSeriesPoints.AddXY(markerOADateTime, TreatmentInsulinRow)
                                     markerSeriesPoints.Last.MarkerBorderWidth = 2
                                     markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Black)
                                     markerSeriesPoints.Last.MarkerSize = 20
@@ -227,8 +238,9 @@ Module ChartingExtensions
                                 Stop
                         End Select
                     Case "MEAL"
-                        If s_treatmentMarkerMealDictionary.TryAdd(markerOADateTime, 0) Then
-                            markerSeriesPoints.AddXY(markerOADateTime.AsDouble, s_mealImage.Height / 2)
+                        Dim mealRow As Single = CSng(TreatmentInsulinRow * 0.95).RoundSingle(3)
+                        If s_treatmentMarkerMealDictionary.TryAdd(markerOADateTime, mealRow) Then
+                            markerSeriesPoints.AddXY(markerOADateTime, mealRow)
                             markerSeriesPoints.Last.Color = Color.FromArgb(10, Color.Yellow)
                             markerSeriesPoints.Last.MarkerBorderWidth = 2
                             markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Yellow)
@@ -242,9 +254,9 @@ Module ChartingExtensions
                          "LOW_GLUCOSE_SUSPENDED"
                     Case "TIME_CHANGE"
                         With chart.Series(TimeChangeSeriesName).Points
-                            .AddXY(markerOADateTime.AsDouble, 0)
-                            .AddXY(markerOADateTime.AsDouble, HomePageBasalRow)
-                            .AddXY(markerOADateTime.AsDouble, Double.NaN)
+                            .AddXY(markerOADateTime, 0)
+                            .AddXY(markerOADateTime, TreatmentInsulinRow)
+                            .AddXY(markerOADateTime, Double.NaN)
                         End With
                     Case Else
                         Stop
@@ -262,22 +274,22 @@ Module ChartingExtensions
         Debug.Print("At SyncLock")
 
         If chartRelitivePosition.IsEmpty Then
-            chartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.X, s_bindingSourceSGs(0).OADate.AsDouble))
+            chartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.X, s_bindingSourceSGs(0).OADate))
             chartRelitivePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, topRow))
             chartRelitivePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_limitHigh)))) - chartRelitivePosition.Y
-            chartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.X, s_bindingSourceSGs.Last.OADate.AsDouble)) - chartRelitivePosition.X
+            chartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.X, s_bindingSourceSGs.Last.OADate)) - chartRelitivePosition.X
         End If
-        Dim highLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_limitHigh))
-        Dim lowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_limitLow))
-        Dim criticalLowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_criticalLow))
-        Dim chartAbsoluteHighRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelitivePosition.X, chartRelitivePosition.Y, chartRelitivePosition.Width, highLimitY - chartRelitivePosition.Y))
-        Dim chartAbsoluteLowRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelitivePosition.X, lowLimitY, chartRelitivePosition.Width, criticalLowLimitY - lowLimitY))
 
         If homePageCursorTimeLabel?.Tag IsNot Nothing Then
             homePageCursorTimeLabel.Left = CInt(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.X, homePageCursorTimeLabel.Tag.ToString.ParseDate("").ToOADate))
         End If
 
         If doShading Then
+            Dim highLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_limitHigh))
+            Dim lowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_limitLow))
+            Dim criticalLowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_criticalLow))
+            Dim chartAbsoluteHighRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelitivePosition.X, chartRelitivePosition.Y, chartRelitivePosition.Width, highLimitY - chartRelitivePosition.Y))
+            Dim chartAbsoluteLowRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelitivePosition.X, lowLimitY, chartRelitivePosition.Width, criticalLowLimitY - lowLimitY))
             Using b As New SolidBrush(Color.FromArgb(15, Color.Black))
                 e.ChartGraphics.Graphics.FillRectangle(b, chartAbsoluteHighRectangle)
                 e.ChartGraphics.Graphics.FillRectangle(b, chartAbsoluteLowRectangle)

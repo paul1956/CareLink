@@ -9,7 +9,5 @@ Module SystemVariables
     Friend Property MaxBasalPerDose As Single
     Friend Property MaxBasalPerHour As Single
     Friend Property scalingNeeded As Boolean = Nothing
-    Friend Property TreatmentBasalRow As Single
     Friend Property TreatmentInsulinRow As Single
-    Friend Property TreatmentMealRow As Single
 End Module

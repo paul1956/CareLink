@@ -24,16 +24,16 @@ Partial Class Form1
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.MenuStartHere = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStartHereLogin = New System.Windows.Forms.ToolStripMenuItem()
@@ -122,88 +122,88 @@ Partial Class Form1
         Me.TabPage02ActiveInsulin = New System.Windows.Forms.TabPage()
         Me.TabPage03TreatmentDetails = New System.Windows.Forms.TabPage()
         Me.TabPage04SummaryData = New System.Windows.Forms.TabPage()
-        Me.SummaryDataGridView = New System.Windows.Forms.DataGridView()
+        Me.DataGridViewSummary = New System.Windows.Forms.DataGridView()
         Me.TabPage05ActiveInsulin = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelActiveInsulin = New System.Windows.Forms.TableLayoutPanel()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.TabPage06SensorGlucose = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelSgs = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelSgs = New System.Windows.Forms.Label()
-        Me.SGsDataGridView = New System.Windows.Forms.DataGridView()
+        Me.DataGridViewSGs = New System.Windows.Forms.DataGridView()
         Me.TabPage07Limits = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelLimits = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelLimits = New System.Windows.Forms.Label()
-        Me.TabPageMarkers = New System.Windows.Forms.TabPage()
+        Me.TabPage08NotificationHistory = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanelNotificationHistory = New System.Windows.Forms.TableLayoutPanel()
+        Me.LabelNotificationHistory = New System.Windows.Forms.Label()
+        Me.TabPage09Basal = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanelBasal = New System.Windows.Forms.TableLayoutPanel()
+        Me.LabelBasal = New System.Windows.Forms.Label()
+        Me.TabPage10TherapyAlgorithm = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanelTherapyAlgorthm = New System.Windows.Forms.TableLayoutPanel()
+        Me.LabelTherapyAlgorthm = New System.Windows.Forms.Label()
+        Me.TabPage11BannerState = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanelBannerState = New System.Windows.Forms.TableLayoutPanel()
+        Me.LabelBannerState = New System.Windows.Forms.Label()
+        Me.TabPage12CountrySettings = New System.Windows.Forms.TabPage()
+        Me.DataGridViewCountryItems = New System.Windows.Forms.DataGridView()
+        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCountrySettingsCategory = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCountrySettingsKey = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCountrySettingsValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumberEven = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCountrySettingsCategoryEven = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCountrySettingsKeyEven = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCountrySettingsValueEven = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.TabPage13Profile = New System.Windows.Forms.TabPage()
+        Me.DataGridViewMyProfile = New System.Windows.Forms.DataGridView()
+        Me.TabPage14MyUser = New System.Windows.Forms.TabPage()
+        Me.DataGridViewMyUserData = New System.Windows.Forms.DataGridView()
+        Me.TabPage15AllUsers = New System.Windows.Forms.TabPage()
+        Me.DataGridViewCareLinkUsers = New System.Windows.Forms.DataGridView()
+        Me.DataGridViewTextBoxColumnCareLinkUserName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCareLinkPassword = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnAIT = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnAlertPhoneNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCarrierTextingDomain = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCountryCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnMailserverPassword = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnMailServerPort = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnMailserverUserName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnSettingsVersion = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnOutGoingMailServer = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewCheckBoxColumnUseAdvancedAITDecay = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.DataGridViewCheckBoxColumnUseLocalTimeZone = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.DataGridViewCheckBoxColumnAutoLogin = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.CareLinkUserDataRecordBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.TabPage16Markers = New System.Windows.Forms.TabPage()
         Me.TabControlMarker = New System.Windows.Forms.TabControl()
-        Me.TabPageAutoBasalDelivery = New System.Windows.Forms.TabPage()
+        Me.TabPage17AutoBasalDelivery = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelAutoBasalDelivery = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelAutoBasalDelivery = New System.Windows.Forms.Label()
         Me.DataGridViewAutoBasalDelivery = New System.Windows.Forms.DataGridView()
-        Me.TabPageAutoModeStatus = New System.Windows.Forms.TabPage()
+        Me.TabPage18AutoModeStatus = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelAutoModeStatus = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelAutoModeStatus = New System.Windows.Forms.Label()
-        Me.TabPageBgReading = New System.Windows.Forms.TabPage()
+        Me.TabPage17BgReading = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelBgReading = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelBgReading = New System.Windows.Forms.Label()
-        Me.TabPageCalibration = New System.Windows.Forms.TabPage()
+        Me.TabPage20Calibration = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelCalibration = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelCalibration = New System.Windows.Forms.Label()
-        Me.TabPageInsulin = New System.Windows.Forms.TabPage()
+        Me.TabPage21Insulin = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelInsulin = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelInsulin = New System.Windows.Forms.Label()
         Me.DataGridViewInsulin = New System.Windows.Forms.DataGridView()
-        Me.TabPageLowGlusoseSuspended = New System.Windows.Forms.TabPage()
+        Me.TabPage22LowGlusoseSuspended = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelLowGlusoseSuspended = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelLowGlusoseSuspended = New System.Windows.Forms.Label()
-        Me.TabPageMeal = New System.Windows.Forms.TabPage()
+        Me.TabPage23Meal = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelMeal = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelMeal = New System.Windows.Forms.Label()
-        Me.TabPageTimeChange = New System.Windows.Forms.TabPage()
+        Me.TabPage25TimeChange = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelTimeChange = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelTimeChange = New System.Windows.Forms.Label()
-        Me.TabPage09NotificationHistory = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanelNotificationHistory = New System.Windows.Forms.TableLayoutPanel()
-        Me.LabelNotificationHistory = New System.Windows.Forms.Label()
-        Me.TabPage10Basal = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanelBasal = New System.Windows.Forms.TableLayoutPanel()
-        Me.LabelBasal = New System.Windows.Forms.Label()
-        Me.TabPage11TherapyAlgorithm = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanelTherapyAlgorthm = New System.Windows.Forms.TableLayoutPanel()
-        Me.LabelTherapyAlgorthm = New System.Windows.Forms.Label()
-        Me.TabPage12BannerState = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanelBannerState = New System.Windows.Forms.TableLayoutPanel()
-        Me.LabelBannerState = New System.Windows.Forms.Label()
-        Me.TabPage13CountrySettings = New System.Windows.Forms.TabPage()
-        Me.DataGridViewCountryItems = New System.Windows.Forms.DataGridView()
-        Me.CountrySettingsRecordNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CountrySettingsCategory = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CountrySettingsKey = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CountrySettingsValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CountrySettingsRecordNumberEven = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CountrySettingsCategoryEven = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CountrySettingsKeyEven = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CountrySettingsValueEven = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.TabPage14Profile = New System.Windows.Forms.TabPage()
-        Me.DataGridViewMyProfile = New System.Windows.Forms.DataGridView()
-        Me.TabPageMyUser = New System.Windows.Forms.TabPage()
-        Me.DataGridViewMyUserData = New System.Windows.Forms.DataGridView()
-        Me.TabPageAllUsers = New System.Windows.Forms.TabPage()
-        Me.DataGridViewCareLinkUsers = New System.Windows.Forms.DataGridView()
-        Me.CareLinkUserNameDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CareLinkPasswordDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AITDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AlertPhoneNumberDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CarrierTextingDomainDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CountryCodeDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.MailserverPasswordDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.MailServerPortDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.MailserverUserNameDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SettingsVersionDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.OutGoingMailServerDataGridViewTextBoxColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UseAdvancedAITDecayDataGridViewCheckBoxColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.UseLocalTimeZoneDataGridViewCheckBoxColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.AutoLoginDataGridViewCheckBoxColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.CareLinkUserDataRecordBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.CursorTimer = New System.Windows.Forms.Timer(Me.components)
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
@@ -243,51 +243,51 @@ Partial Class Form1
         Me.SplitContainer3.Panel2.SuspendLayout()
         Me.SplitContainer3.SuspendLayout()
         Me.TabPage04SummaryData.SuspendLayout()
-        CType(Me.SummaryDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DataGridViewSummary, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage05ActiveInsulin.SuspendLayout()
         Me.TableLayoutPanelActiveInsulin.SuspendLayout()
         Me.TabPage06SensorGlucose.SuspendLayout()
         Me.TableLayoutPanelSgs.SuspendLayout()
-        CType(Me.SGsDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DataGridViewSGs, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage07Limits.SuspendLayout()
         Me.TableLayoutPanelLimits.SuspendLayout()
-        Me.TabPageMarkers.SuspendLayout()
-        Me.TabControlMarker.SuspendLayout()
-        Me.TabPageAutoBasalDelivery.SuspendLayout()
-        Me.TableLayoutPanelAutoBasalDelivery.SuspendLayout()
-        CType(Me.DataGridViewAutoBasalDelivery, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.TabPageAutoModeStatus.SuspendLayout()
-        Me.TableLayoutPanelAutoModeStatus.SuspendLayout()
-        Me.TabPageBgReading.SuspendLayout()
-        Me.TableLayoutPanelBgReading.SuspendLayout()
-        Me.TabPageCalibration.SuspendLayout()
-        Me.TableLayoutPanelCalibration.SuspendLayout()
-        Me.TabPageInsulin.SuspendLayout()
-        Me.TableLayoutPanelInsulin.SuspendLayout()
-        CType(Me.DataGridViewInsulin, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.TabPageLowGlusoseSuspended.SuspendLayout()
-        Me.TableLayoutPanelLowGlusoseSuspended.SuspendLayout()
-        Me.TabPageMeal.SuspendLayout()
-        Me.TableLayoutPanelMeal.SuspendLayout()
-        Me.TabPageTimeChange.SuspendLayout()
-        Me.TableLayoutPanelTimeChange.SuspendLayout()
-        Me.TabPage09NotificationHistory.SuspendLayout()
+        Me.TabPage08NotificationHistory.SuspendLayout()
         Me.TableLayoutPanelNotificationHistory.SuspendLayout()
-        Me.TabPage10Basal.SuspendLayout()
+        Me.TabPage09Basal.SuspendLayout()
         Me.TableLayoutPanelBasal.SuspendLayout()
-        Me.TabPage11TherapyAlgorithm.SuspendLayout()
+        Me.TabPage10TherapyAlgorithm.SuspendLayout()
         Me.TableLayoutPanelTherapyAlgorthm.SuspendLayout()
-        Me.TabPage12BannerState.SuspendLayout()
+        Me.TabPage11BannerState.SuspendLayout()
         Me.TableLayoutPanelBannerState.SuspendLayout()
-        Me.TabPage13CountrySettings.SuspendLayout()
+        Me.TabPage12CountrySettings.SuspendLayout()
         CType(Me.DataGridViewCountryItems, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.TabPage14Profile.SuspendLayout()
+        Me.TabPage13Profile.SuspendLayout()
         CType(Me.DataGridViewMyProfile, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.TabPageMyUser.SuspendLayout()
+        Me.TabPage14MyUser.SuspendLayout()
         CType(Me.DataGridViewMyUserData, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.TabPageAllUsers.SuspendLayout()
+        Me.TabPage15AllUsers.SuspendLayout()
         CType(Me.DataGridViewCareLinkUsers, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.CareLinkUserDataRecordBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage16Markers.SuspendLayout()
+        Me.TabControlMarker.SuspendLayout()
+        Me.TabPage17AutoBasalDelivery.SuspendLayout()
+        Me.TableLayoutPanelAutoBasalDelivery.SuspendLayout()
+        CType(Me.DataGridViewAutoBasalDelivery, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage18AutoModeStatus.SuspendLayout()
+        Me.TableLayoutPanelAutoModeStatus.SuspendLayout()
+        Me.TabPage17BgReading.SuspendLayout()
+        Me.TableLayoutPanelBgReading.SuspendLayout()
+        Me.TabPage20Calibration.SuspendLayout()
+        Me.TableLayoutPanelCalibration.SuspendLayout()
+        Me.TabPage21Insulin.SuspendLayout()
+        Me.TableLayoutPanelInsulin.SuspendLayout()
+        CType(Me.DataGridViewInsulin, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage22LowGlusoseSuspended.SuspendLayout()
+        Me.TableLayoutPanelLowGlusoseSuspended.SuspendLayout()
+        Me.TabPage23Meal.SuspendLayout()
+        Me.TableLayoutPanelMeal.SuspendLayout()
+        Me.TabPage25TimeChange.SuspendLayout()
+        Me.TableLayoutPanelTimeChange.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
@@ -538,15 +538,15 @@ Partial Class Form1
         Me.TabControlHomePage.Controls.Add(Me.TabPage05ActiveInsulin)
         Me.TabControlHomePage.Controls.Add(Me.TabPage06SensorGlucose)
         Me.TabControlHomePage.Controls.Add(Me.TabPage07Limits)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage09NotificationHistory)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage10Basal)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage11TherapyAlgorithm)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage12BannerState)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage13CountrySettings)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage14Profile)
-        Me.TabControlHomePage.Controls.Add(Me.TabPageMyUser)
-        Me.TabControlHomePage.Controls.Add(Me.TabPageAllUsers)
-        Me.TabControlHomePage.Controls.Add(Me.TabPageMarkers)
+        Me.TabControlHomePage.Controls.Add(Me.TabPage08NotificationHistory)
+        Me.TabControlHomePage.Controls.Add(Me.TabPage09Basal)
+        Me.TabControlHomePage.Controls.Add(Me.TabPage10TherapyAlgorithm)
+        Me.TabControlHomePage.Controls.Add(Me.TabPage11BannerState)
+        Me.TabControlHomePage.Controls.Add(Me.TabPage12CountrySettings)
+        Me.TabControlHomePage.Controls.Add(Me.TabPage13Profile)
+        Me.TabControlHomePage.Controls.Add(Me.TabPage14MyUser)
+        Me.TabControlHomePage.Controls.Add(Me.TabPage15AllUsers)
+        Me.TabControlHomePage.Controls.Add(Me.TabPage16Markers)
         Me.TabControlHomePage.Location = New System.Drawing.Point(0, 0)
         Me.TabControlHomePage.Name = "TabControlHomePage"
         Me.TabControlHomePage.SelectedIndex = 0
@@ -1277,7 +1277,7 @@ Partial Class Form1
         '
         'TabPage04SummaryData
         '
-        Me.TabPage04SummaryData.Controls.Add(Me.SummaryDataGridView)
+        Me.TabPage04SummaryData.Controls.Add(Me.DataGridViewSummary)
         Me.TabPage04SummaryData.Location = New System.Drawing.Point(4, 24)
         Me.TabPage04SummaryData.Name = "TabPage04SummaryData"
         Me.TabPage04SummaryData.Padding = New System.Windows.Forms.Padding(3)
@@ -1286,29 +1286,29 @@ Partial Class Form1
         Me.TabPage04SummaryData.Text = "Summary Data"
         Me.TabPage04SummaryData.UseVisualStyleBackColor = True
         '
-        'SummaryDataGridView
+        'DataGridViewSummary
         '
-        Me.SummaryDataGridView.AllowUserToAddRows = False
-        Me.SummaryDataGridView.AllowUserToDeleteRows = False
-        DataGridViewCellStyle1.BackColor = System.Drawing.Color.Silver
-        Me.SummaryDataGridView.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.SummaryDataGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
-        Me.SummaryDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.SummaryDataGridView.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SummaryDataGridView.Location = New System.Drawing.Point(3, 3)
-        Me.SummaryDataGridView.Name = "SummaryDataGridView"
-        Me.SummaryDataGridView.ReadOnly = True
-        Me.SummaryDataGridView.RowTemplate.Height = 25
-        Me.SummaryDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.SummaryDataGridView.Size = New System.Drawing.Size(1370, 628)
-        Me.SummaryDataGridView.TabIndex = 0
+        Me.DataGridViewSummary.AllowUserToAddRows = False
+        Me.DataGridViewSummary.AllowUserToDeleteRows = False
+        DataGridViewCellStyle11.BackColor = System.Drawing.Color.Silver
+        Me.DataGridViewSummary.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle11
+        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle12.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        DataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewSummary.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle12
+        Me.DataGridViewSummary.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridViewSummary.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridViewSummary.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridViewSummary.Name = "DataGridViewSummary"
+        Me.DataGridViewSummary.ReadOnly = True
+        Me.DataGridViewSummary.RowTemplate.Height = 25
+        Me.DataGridViewSummary.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
+        Me.DataGridViewSummary.Size = New System.Drawing.Size(1370, 628)
+        Me.DataGridViewSummary.TabIndex = 0
         '
         'TabPage05ActiveInsulin
         '
@@ -1365,7 +1365,7 @@ Partial Class Form1
         Me.TableLayoutPanelSgs.ColumnCount = 1
         Me.TableLayoutPanelSgs.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelSgs.Controls.Add(Me.LabelSgs, 0, 0)
-        Me.TableLayoutPanelSgs.Controls.Add(Me.SGsDataGridView, 0, 1)
+        Me.TableLayoutPanelSgs.Controls.Add(Me.DataGridViewSGs, 0, 1)
         Me.TableLayoutPanelSgs.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelSgs.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelSgs.Name = "TableLayoutPanelSgs"
@@ -1386,29 +1386,29 @@ Partial Class Form1
         Me.LabelSgs.Text = "Sgs"
         Me.LabelSgs.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'SGsDataGridView
+        'DataGridViewSGs
         '
-        Me.SGsDataGridView.AllowUserToAddRows = False
-        Me.SGsDataGridView.AllowUserToDeleteRows = False
-        Me.SGsDataGridView.AllowUserToResizeColumns = False
-        Me.SGsDataGridView.AllowUserToResizeRows = False
-        DataGridViewCellStyle3.BackColor = System.Drawing.Color.Silver
-        Me.SGsDataGridView.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle3
-        Me.SGsDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.SGsDataGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
-        Me.SGsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.SGsDataGridView.Location = New System.Drawing.Point(3, 33)
-        Me.SGsDataGridView.Name = "SGsDataGridView"
-        Me.SGsDataGridView.RowTemplate.Height = 25
-        Me.SGsDataGridView.Size = New System.Drawing.Size(1364, 592)
-        Me.SGsDataGridView.TabIndex = 1
+        Me.DataGridViewSGs.AllowUserToAddRows = False
+        Me.DataGridViewSGs.AllowUserToDeleteRows = False
+        Me.DataGridViewSGs.AllowUserToResizeColumns = False
+        Me.DataGridViewSGs.AllowUserToResizeRows = False
+        DataGridViewCellStyle13.BackColor = System.Drawing.Color.Silver
+        Me.DataGridViewSGs.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle13
+        Me.DataGridViewSGs.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle14.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        DataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewSGs.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle14
+        Me.DataGridViewSGs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.DataGridViewSGs.Location = New System.Drawing.Point(3, 33)
+        Me.DataGridViewSGs.Name = "DataGridViewSGs"
+        Me.DataGridViewSGs.RowTemplate.Height = 25
+        Me.DataGridViewSGs.Size = New System.Drawing.Size(1364, 592)
+        Me.DataGridViewSGs.TabIndex = 1
         '
         'TabPage07Limits
         '
@@ -1450,28 +1450,468 @@ Partial Class Form1
         Me.LabelLimits.Text = "Limits"
         Me.LabelLimits.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'TabPageMarkers
+        'TabPage08NotificationHistory
         '
-        Me.TabPageMarkers.Controls.Add(Me.TabControlMarker)
-        Me.TabPageMarkers.Location = New System.Drawing.Point(4, 24)
-        Me.TabPageMarkers.Name = "TabPageMarkers"
-        Me.TabPageMarkers.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageMarkers.Size = New System.Drawing.Size(1376, 634)
-        Me.TabPageMarkers.TabIndex = 4
-        Me.TabPageMarkers.Text = "Markers..."
-        Me.TabPageMarkers.UseVisualStyleBackColor = True
+        Me.TabPage08NotificationHistory.Controls.Add(Me.TableLayoutPanelNotificationHistory)
+        Me.TabPage08NotificationHistory.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage08NotificationHistory.Name = "TabPage08NotificationHistory"
+        Me.TabPage08NotificationHistory.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage08NotificationHistory.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage08NotificationHistory.TabIndex = 5
+        Me.TabPage08NotificationHistory.Text = "Notification History"
+        Me.TabPage08NotificationHistory.UseVisualStyleBackColor = True
+        '
+        'TableLayoutPanelNotificationHistory
+        '
+        Me.TableLayoutPanelNotificationHistory.AutoScroll = True
+        Me.TableLayoutPanelNotificationHistory.AutoSize = True
+        Me.TableLayoutPanelNotificationHistory.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelNotificationHistory.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelNotificationHistory.ColumnCount = 1
+        Me.TableLayoutPanelNotificationHistory.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelNotificationHistory.Controls.Add(Me.LabelNotificationHistory, 0, 0)
+        Me.TableLayoutPanelNotificationHistory.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanelNotificationHistory.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelNotificationHistory.Name = "TableLayoutPanelNotificationHistory"
+        Me.TableLayoutPanelNotificationHistory.RowCount = 2
+        Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelNotificationHistory.Size = New System.Drawing.Size(1370, 628)
+        Me.TableLayoutPanelNotificationHistory.TabIndex = 0
+        '
+        'LabelNotificationHistory
+        '
+        Me.LabelNotificationHistory.AutoSize = True
+        Me.LabelNotificationHistory.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.LabelNotificationHistory.Location = New System.Drawing.Point(6, 3)
+        Me.LabelNotificationHistory.Name = "LabelNotificationHistory"
+        Me.LabelNotificationHistory.Size = New System.Drawing.Size(1358, 30)
+        Me.LabelNotificationHistory.TabIndex = 0
+        Me.LabelNotificationHistory.Text = "Notification History"
+        Me.LabelNotificationHistory.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'TabPage09Basal
+        '
+        Me.TabPage09Basal.Controls.Add(Me.TableLayoutPanelBasal)
+        Me.TabPage09Basal.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage09Basal.Name = "TabPage09Basal"
+        Me.TabPage09Basal.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage09Basal.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage09Basal.TabIndex = 6
+        Me.TabPage09Basal.Text = "Basal"
+        Me.TabPage09Basal.UseVisualStyleBackColor = True
+        '
+        'TableLayoutPanelBasal
+        '
+        Me.TableLayoutPanelBasal.AutoScroll = True
+        Me.TableLayoutPanelBasal.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelBasal.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelBasal.ColumnCount = 1
+        Me.TableLayoutPanelBasal.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelBasal.Controls.Add(Me.LabelBasal, 0, 0)
+        Me.TableLayoutPanelBasal.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TableLayoutPanelBasal.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelBasal.Name = "TableLayoutPanelBasal"
+        Me.TableLayoutPanelBasal.RowCount = 2
+        Me.TableLayoutPanelBasal.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanelBasal.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelBasal.Size = New System.Drawing.Size(1370, 611)
+        Me.TableLayoutPanelBasal.TabIndex = 0
+        '
+        'LabelBasal
+        '
+        Me.LabelBasal.AutoSize = True
+        Me.LabelBasal.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.LabelBasal.Location = New System.Drawing.Point(6, 3)
+        Me.LabelBasal.Name = "LabelBasal"
+        Me.LabelBasal.Size = New System.Drawing.Size(1358, 30)
+        Me.LabelBasal.TabIndex = 0
+        Me.LabelBasal.Text = "Basal"
+        Me.LabelBasal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'TabPage10TherapyAlgorithm
+        '
+        Me.TabPage10TherapyAlgorithm.Controls.Add(Me.TableLayoutPanelTherapyAlgorthm)
+        Me.TabPage10TherapyAlgorithm.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage10TherapyAlgorithm.Name = "TabPage10TherapyAlgorithm"
+        Me.TabPage10TherapyAlgorithm.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage10TherapyAlgorithm.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage10TherapyAlgorithm.TabIndex = 9
+        Me.TabPage10TherapyAlgorithm.Text = "Therapy Algorithm"
+        Me.TabPage10TherapyAlgorithm.UseVisualStyleBackColor = True
+        '
+        'TableLayoutPanelTherapyAlgorthm
+        '
+        Me.TableLayoutPanelTherapyAlgorthm.AutoSize = True
+        Me.TableLayoutPanelTherapyAlgorthm.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelTherapyAlgorthm.ColumnCount = 1
+        Me.TableLayoutPanelTherapyAlgorthm.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelTherapyAlgorthm.Controls.Add(Me.LabelTherapyAlgorthm, 0, 0)
+        Me.TableLayoutPanelTherapyAlgorthm.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TableLayoutPanelTherapyAlgorthm.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelTherapyAlgorthm.Name = "TableLayoutPanelTherapyAlgorthm"
+        Me.TableLayoutPanelTherapyAlgorthm.RowCount = 2
+        Me.TableLayoutPanelTherapyAlgorthm.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanelTherapyAlgorthm.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelTherapyAlgorthm.Size = New System.Drawing.Size(1370, 30)
+        Me.TableLayoutPanelTherapyAlgorthm.TabIndex = 0
+        '
+        'LabelTherapyAlgorthm
+        '
+        Me.LabelTherapyAlgorthm.AutoSize = True
+        Me.LabelTherapyAlgorthm.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.LabelTherapyAlgorthm.Location = New System.Drawing.Point(3, 0)
+        Me.LabelTherapyAlgorthm.Name = "LabelTherapyAlgorthm"
+        Me.LabelTherapyAlgorthm.Size = New System.Drawing.Size(1364, 30)
+        Me.LabelTherapyAlgorthm.TabIndex = 0
+        Me.LabelTherapyAlgorthm.Text = "Therapy Algorthm"
+        Me.LabelTherapyAlgorthm.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'TabPage11BannerState
+        '
+        Me.TabPage11BannerState.Controls.Add(Me.TableLayoutPanelBannerState)
+        Me.TabPage11BannerState.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage11BannerState.Name = "TabPage11BannerState"
+        Me.TabPage11BannerState.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage11BannerState.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage11BannerState.TabIndex = 10
+        Me.TabPage11BannerState.Text = "Banner State"
+        Me.TabPage11BannerState.UseVisualStyleBackColor = True
+        '
+        'TableLayoutPanelBannerState
+        '
+        Me.TableLayoutPanelBannerState.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelBannerState.ColumnCount = 1
+        Me.TableLayoutPanelBannerState.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelBannerState.Controls.Add(Me.LabelBannerState, 0, 0)
+        Me.TableLayoutPanelBannerState.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TableLayoutPanelBannerState.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelBannerState.Name = "TableLayoutPanelBannerState"
+        Me.TableLayoutPanelBannerState.RowCount = 3
+        Me.TableLayoutPanelBannerState.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanelBannerState.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelBannerState.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelBannerState.Size = New System.Drawing.Size(1370, 56)
+        Me.TableLayoutPanelBannerState.TabIndex = 0
+        '
+        'LabelBannerState
+        '
+        Me.LabelBannerState.AutoSize = True
+        Me.LabelBannerState.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.LabelBannerState.Location = New System.Drawing.Point(3, 0)
+        Me.LabelBannerState.Name = "LabelBannerState"
+        Me.LabelBannerState.Size = New System.Drawing.Size(1364, 30)
+        Me.LabelBannerState.TabIndex = 0
+        Me.LabelBannerState.Text = "Banner State"
+        Me.LabelBannerState.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'TabPage12CountrySettings
+        '
+        Me.TabPage12CountrySettings.Controls.Add(Me.DataGridViewCountryItems)
+        Me.TabPage12CountrySettings.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage12CountrySettings.Name = "TabPage12CountrySettings"
+        Me.TabPage12CountrySettings.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage12CountrySettings.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage12CountrySettings.TabIndex = 11
+        Me.TabPage12CountrySettings.Text = "Country Settings"
+        Me.TabPage12CountrySettings.UseVisualStyleBackColor = True
+        '
+        'DataGridViewCountryItems
+        '
+        Me.DataGridViewCountryItems.AllowUserToAddRows = False
+        Me.DataGridViewCountryItems.AllowUserToDeleteRows = False
+        Me.DataGridViewCountryItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridViewCountryItems.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber, Me.DataGridViewTextBoxColumnCountrySettingsCategory, Me.DataGridViewTextBoxColumnCountrySettingsKey, Me.DataGridViewTextBoxColumnCountrySettingsValue, Me.DataGridViewTextBoxColumnCountrySettingsRecordNumberEven, Me.DataGridViewTextBoxColumnCountrySettingsCategoryEven, Me.DataGridViewTextBoxColumnCountrySettingsKeyEven, Me.DataGridViewTextBoxColumnCountrySettingsValueEven})
+        Me.DataGridViewCountryItems.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridViewCountryItems.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridViewCountryItems.Name = "DataGridViewCountryItems"
+        Me.DataGridViewCountryItems.ReadOnly = True
+        Me.DataGridViewCountryItems.RowTemplate.Height = 25
+        Me.DataGridViewCountryItems.Size = New System.Drawing.Size(1370, 628)
+        Me.DataGridViewCountryItems.TabIndex = 1
+        '
+        'DataGridViewTextBoxColumnCountrySettingsRecordNumber
+        '
+        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.DefaultCellStyle = DataGridViewCellStyle15
+        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.HeaderText = "Record Number"
+        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.MinimumWidth = 60
+        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.Name = "DataGridViewTextBoxColumnCountrySettingsRecordNumber"
+        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.ReadOnly = True
+        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.Width = 60
+        '
+        'DataGridViewTextBoxColumnCountrySettingsCategory
+        '
+        Me.DataGridViewTextBoxColumnCountrySettingsCategory.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridViewTextBoxColumnCountrySettingsCategory.DefaultCellStyle = DataGridViewCellStyle16
+        Me.DataGridViewTextBoxColumnCountrySettingsCategory.HeaderText = "Category"
+        Me.DataGridViewTextBoxColumnCountrySettingsCategory.Name = "DataGridViewTextBoxColumnCountrySettingsCategory"
+        Me.DataGridViewTextBoxColumnCountrySettingsCategory.ReadOnly = True
+        Me.DataGridViewTextBoxColumnCountrySettingsCategory.Width = 80
+        '
+        'DataGridViewTextBoxColumnCountrySettingsKey
+        '
+        Me.DataGridViewTextBoxColumnCountrySettingsKey.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnCountrySettingsKey.HeaderText = "Key"
+        Me.DataGridViewTextBoxColumnCountrySettingsKey.Name = "DataGridViewTextBoxColumnCountrySettingsKey"
+        Me.DataGridViewTextBoxColumnCountrySettingsKey.ReadOnly = True
+        Me.DataGridViewTextBoxColumnCountrySettingsKey.Width = 51
+        '
+        'DataGridViewTextBoxColumnCountrySettingsValue
+        '
+        Me.DataGridViewTextBoxColumnCountrySettingsValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnCountrySettingsValue.HeaderText = "Value"
+        Me.DataGridViewTextBoxColumnCountrySettingsValue.Name = "DataGridViewTextBoxColumnCountrySettingsValue"
+        Me.DataGridViewTextBoxColumnCountrySettingsValue.ReadOnly = True
+        Me.DataGridViewTextBoxColumnCountrySettingsValue.Width = 60
+        '
+        'DataGridViewTextBoxColumnCountrySettingsRecordNumberEven
+        '
+        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumberEven.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
+        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumberEven.HeaderText = "Record Number"
+        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumberEven.MinimumWidth = 60
+        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumberEven.Name = "DataGridViewTextBoxColumnCountrySettingsRecordNumberEven"
+        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumberEven.ReadOnly = True
+        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumberEven.Width = 60
+        '
+        'DataGridViewTextBoxColumnCountrySettingsCategoryEven
+        '
+        Me.DataGridViewTextBoxColumnCountrySettingsCategoryEven.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnCountrySettingsCategoryEven.HeaderText = "Category"
+        Me.DataGridViewTextBoxColumnCountrySettingsCategoryEven.Name = "DataGridViewTextBoxColumnCountrySettingsCategoryEven"
+        Me.DataGridViewTextBoxColumnCountrySettingsCategoryEven.ReadOnly = True
+        Me.DataGridViewTextBoxColumnCountrySettingsCategoryEven.Width = 80
+        '
+        'DataGridViewTextBoxColumnCountrySettingsKeyEven
+        '
+        Me.DataGridViewTextBoxColumnCountrySettingsKeyEven.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnCountrySettingsKeyEven.HeaderText = "Key"
+        Me.DataGridViewTextBoxColumnCountrySettingsKeyEven.Name = "DataGridViewTextBoxColumnCountrySettingsKeyEven"
+        Me.DataGridViewTextBoxColumnCountrySettingsKeyEven.ReadOnly = True
+        Me.DataGridViewTextBoxColumnCountrySettingsKeyEven.Width = 51
+        '
+        'DataGridViewTextBoxColumnCountrySettingsValueEven
+        '
+        Me.DataGridViewTextBoxColumnCountrySettingsValueEven.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnCountrySettingsValueEven.HeaderText = "Value"
+        Me.DataGridViewTextBoxColumnCountrySettingsValueEven.Name = "DataGridViewTextBoxColumnCountrySettingsValueEven"
+        Me.DataGridViewTextBoxColumnCountrySettingsValueEven.ReadOnly = True
+        Me.DataGridViewTextBoxColumnCountrySettingsValueEven.Width = 60
+        '
+        'TabPage13Profile
+        '
+        Me.TabPage13Profile.Controls.Add(Me.DataGridViewMyProfile)
+        Me.TabPage13Profile.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage13Profile.Name = "TabPage13Profile"
+        Me.TabPage13Profile.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage13Profile.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage13Profile.TabIndex = 12
+        Me.TabPage13Profile.Text = "Profile"
+        Me.TabPage13Profile.UseVisualStyleBackColor = True
+        '
+        'DataGridViewMyProfile
+        '
+        Me.DataGridViewMyProfile.AllowUserToAddRows = False
+        Me.DataGridViewMyProfile.AllowUserToDeleteRows = False
+        Me.DataGridViewMyProfile.AllowUserToResizeColumns = False
+        Me.DataGridViewMyProfile.AllowUserToResizeRows = False
+        Me.DataGridViewMyProfile.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.DataGridViewMyProfile.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
+        Me.DataGridViewMyProfile.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridViewMyProfile.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridViewMyProfile.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridViewMyProfile.Name = "DataGridViewMyProfile"
+        Me.DataGridViewMyProfile.ReadOnly = True
+        Me.DataGridViewMyProfile.RowTemplate.Height = 25
+        Me.DataGridViewMyProfile.Size = New System.Drawing.Size(1370, 628)
+        Me.DataGridViewMyProfile.TabIndex = 0
+        '
+        'TabPage14MyUser
+        '
+        Me.TabPage14MyUser.Controls.Add(Me.DataGridViewMyUserData)
+        Me.TabPage14MyUser.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage14MyUser.Name = "TabPage14MyUser"
+        Me.TabPage14MyUser.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage14MyUser.TabIndex = 13
+        Me.TabPage14MyUser.Text = "My User"
+        Me.TabPage14MyUser.UseVisualStyleBackColor = True
+        '
+        'DataGridViewMyUserData
+        '
+        Me.DataGridViewMyUserData.AllowUserToAddRows = False
+        Me.DataGridViewMyUserData.AllowUserToDeleteRows = False
+        Me.DataGridViewMyUserData.AllowUserToResizeColumns = False
+        Me.DataGridViewMyUserData.AllowUserToResizeRows = False
+        Me.DataGridViewMyUserData.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.DataGridViewMyUserData.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
+        Me.DataGridViewMyUserData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridViewMyUserData.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridViewMyUserData.Location = New System.Drawing.Point(0, 0)
+        Me.DataGridViewMyUserData.Name = "DataGridViewMyUserData"
+        Me.DataGridViewMyUserData.ReadOnly = True
+        Me.DataGridViewMyUserData.RowTemplate.Height = 25
+        Me.DataGridViewMyUserData.Size = New System.Drawing.Size(1376, 634)
+        Me.DataGridViewMyUserData.TabIndex = 0
+        '
+        'TabPage15AllUsers
+        '
+        Me.TabPage15AllUsers.Controls.Add(Me.DataGridViewCareLinkUsers)
+        Me.TabPage15AllUsers.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage15AllUsers.Name = "TabPage15AllUsers"
+        Me.TabPage15AllUsers.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage15AllUsers.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage15AllUsers.TabIndex = 14
+        Me.TabPage15AllUsers.Text = "All Users"
+        Me.TabPage15AllUsers.UseVisualStyleBackColor = True
+        '
+        'DataGridViewCareLinkUsers
+        '
+        Me.DataGridViewCareLinkUsers.AllowUserToAddRows = False
+        Me.DataGridViewCareLinkUsers.AllowUserToDeleteRows = False
+        Me.DataGridViewCareLinkUsers.AllowUserToResizeColumns = False
+        Me.DataGridViewCareLinkUsers.AllowUserToResizeRows = False
+        Me.DataGridViewCareLinkUsers.AutoGenerateColumns = False
+        Me.DataGridViewCareLinkUsers.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.DataGridViewCareLinkUsers.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
+        Me.DataGridViewCareLinkUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridViewCareLinkUsers.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumnCareLinkUserName, Me.DataGridViewTextBoxColumnCareLinkPassword, Me.DataGridViewTextBoxColumnAIT, Me.DataGridViewTextBoxColumnAlertPhoneNumber, Me.DataGridViewTextBoxColumnCarrierTextingDomain, Me.DataGridViewTextBoxColumnCountryCode, Me.DataGridViewTextBoxColumnMailserverPassword, Me.DataGridViewTextBoxColumnMailServerPort, Me.DataGridViewTextBoxColumnMailserverUserName, Me.DataGridViewTextBoxColumnSettingsVersion, Me.DataGridViewTextBoxColumnOutGoingMailServer, Me.DataGridViewCheckBoxColumnUseAdvancedAITDecay, Me.DataGridViewCheckBoxColumnUseLocalTimeZone, Me.DataGridViewCheckBoxColumnAutoLogin})
+        Me.DataGridViewCareLinkUsers.DataSource = Me.CareLinkUserDataRecordBindingSource
+        Me.DataGridViewCareLinkUsers.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridViewCareLinkUsers.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridViewCareLinkUsers.Name = "DataGridViewCareLinkUsers"
+        Me.DataGridViewCareLinkUsers.RowTemplate.Height = 25
+        Me.DataGridViewCareLinkUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
+        Me.DataGridViewCareLinkUsers.Size = New System.Drawing.Size(1370, 628)
+        Me.DataGridViewCareLinkUsers.TabIndex = 0
+        '
+        'DataGridViewTextBoxColumnCareLinkUserName
+        '
+        Me.DataGridViewTextBoxColumnCareLinkUserName.DataPropertyName = "CareLinkUserName"
+        Me.DataGridViewTextBoxColumnCareLinkUserName.HeaderText = "CareLinkUserName"
+        Me.DataGridViewTextBoxColumnCareLinkUserName.Name = "DataGridViewTextBoxColumnCareLinkUserName"
+        Me.DataGridViewTextBoxColumnCareLinkUserName.Width = 133
+        '
+        'DataGridViewTextBoxColumnCareLinkPassword
+        '
+        Me.DataGridViewTextBoxColumnCareLinkPassword.DataPropertyName = "CareLinkPassword"
+        Me.DataGridViewTextBoxColumnCareLinkPassword.HeaderText = "CareLinkPassword"
+        Me.DataGridViewTextBoxColumnCareLinkPassword.Name = "DataGridViewTextBoxColumnCareLinkPassword"
+        Me.DataGridViewTextBoxColumnCareLinkPassword.Width = 128
+        '
+        'DataGridViewTextBoxColumnAIT
+        '
+        Me.DataGridViewTextBoxColumnAIT.DataPropertyName = "AIT"
+        Me.DataGridViewTextBoxColumnAIT.HeaderText = "AIT"
+        Me.DataGridViewTextBoxColumnAIT.Name = "DataGridViewTextBoxColumnAIT"
+        Me.DataGridViewTextBoxColumnAIT.Width = 49
+        '
+        'DataGridViewTextBoxColumnAlertPhoneNumber
+        '
+        Me.DataGridViewTextBoxColumnAlertPhoneNumber.DataPropertyName = "AlertPhoneNumber"
+        Me.DataGridViewTextBoxColumnAlertPhoneNumber.HeaderText = "AlertPhoneNumber"
+        Me.DataGridViewTextBoxColumnAlertPhoneNumber.Name = "DataGridViewTextBoxColumnAlertPhoneNumber"
+        Me.DataGridViewTextBoxColumnAlertPhoneNumber.Width = 135
+        '
+        'DataGridViewTextBoxColumnCarrierTextingDomain
+        '
+        Me.DataGridViewTextBoxColumnCarrierTextingDomain.DataPropertyName = "CarrierTextingDomain"
+        Me.DataGridViewTextBoxColumnCarrierTextingDomain.HeaderText = "CarrierTextingDomain"
+        Me.DataGridViewTextBoxColumnCarrierTextingDomain.Name = "DataGridViewTextBoxColumnCarrierTextingDomain"
+        Me.DataGridViewTextBoxColumnCarrierTextingDomain.Width = 147
+        '
+        'DataGridViewTextBoxColumnCountryCode
+        '
+        Me.DataGridViewTextBoxColumnCountryCode.DataPropertyName = "CountryCode"
+        Me.DataGridViewTextBoxColumnCountryCode.HeaderText = "CountryCode"
+        Me.DataGridViewTextBoxColumnCountryCode.Name = "DataGridViewTextBoxColumnCountryCode"
+        Me.DataGridViewTextBoxColumnCountryCode.Width = 103
+        '
+        'DataGridViewTextBoxColumnMailserverPassword
+        '
+        Me.DataGridViewTextBoxColumnMailserverPassword.DataPropertyName = "MailserverPassword"
+        Me.DataGridViewTextBoxColumnMailserverPassword.HeaderText = "MailserverPassword"
+        Me.DataGridViewTextBoxColumnMailserverPassword.Name = "DataGridViewTextBoxColumnMailserverPassword"
+        Me.DataGridViewTextBoxColumnMailserverPassword.Width = 136
+        '
+        'DataGridViewTextBoxColumnMailServerPort
+        '
+        Me.DataGridViewTextBoxColumnMailServerPort.DataPropertyName = "MailServerPort"
+        Me.DataGridViewTextBoxColumnMailServerPort.HeaderText = "MailServerPort"
+        Me.DataGridViewTextBoxColumnMailServerPort.Name = "DataGridViewTextBoxColumnMailServerPort"
+        Me.DataGridViewTextBoxColumnMailServerPort.Width = 109
+        '
+        'DataGridViewTextBoxColumnMailserverUserName
+        '
+        Me.DataGridViewTextBoxColumnMailserverUserName.DataPropertyName = "MailserverUserName"
+        Me.DataGridViewTextBoxColumnMailserverUserName.HeaderText = "MailserverUserName"
+        Me.DataGridViewTextBoxColumnMailserverUserName.Name = "DataGridViewTextBoxColumnMailserverUserName"
+        Me.DataGridViewTextBoxColumnMailserverUserName.Width = 141
+        '
+        'DataGridViewTextBoxColumnSettingsVersion
+        '
+        Me.DataGridViewTextBoxColumnSettingsVersion.DataPropertyName = "SettingsVersion"
+        Me.DataGridViewTextBoxColumnSettingsVersion.HeaderText = "SettingsVersion"
+        Me.DataGridViewTextBoxColumnSettingsVersion.Name = "DataGridViewTextBoxColumnSettingsVersion"
+        Me.DataGridViewTextBoxColumnSettingsVersion.Width = 112
+        '
+        'DataGridViewTextBoxColumnOutGoingMailServer
+        '
+        Me.DataGridViewTextBoxColumnOutGoingMailServer.DataPropertyName = "OutGoingMailServer"
+        Me.DataGridViewTextBoxColumnOutGoingMailServer.HeaderText = "OutGoingMailServer"
+        Me.DataGridViewTextBoxColumnOutGoingMailServer.Name = "DataGridViewTextBoxColumnOutGoingMailServer"
+        Me.DataGridViewTextBoxColumnOutGoingMailServer.Width = 139
+        '
+        'DataGridViewCheckBoxColumnUseAdvancedAITDecay
+        '
+        Me.DataGridViewCheckBoxColumnUseAdvancedAITDecay.DataPropertyName = "UseAdvancedAITDecay"
+        Me.DataGridViewCheckBoxColumnUseAdvancedAITDecay.HeaderText = "UseAdvancedAITDecay"
+        Me.DataGridViewCheckBoxColumnUseAdvancedAITDecay.Name = "DataGridViewCheckBoxColumnUseAdvancedAITDecay"
+        Me.DataGridViewCheckBoxColumnUseAdvancedAITDecay.Width = 134
+        '
+        'DataGridViewCheckBoxColumnUseLocalTimeZone
+        '
+        Me.DataGridViewCheckBoxColumnUseLocalTimeZone.DataPropertyName = "UseLocalTimeZone"
+        Me.DataGridViewCheckBoxColumnUseLocalTimeZone.HeaderText = "UseLocalTimeZone"
+        Me.DataGridViewCheckBoxColumnUseLocalTimeZone.Name = "DataGridViewCheckBoxColumnUseLocalTimeZone"
+        Me.DataGridViewCheckBoxColumnUseLocalTimeZone.Width = 113
+        '
+        'DataGridViewCheckBoxColumnAutoLogin
+        '
+        Me.DataGridViewCheckBoxColumnAutoLogin.DataPropertyName = "AutoLogin"
+        Me.DataGridViewCheckBoxColumnAutoLogin.HeaderText = "AutoLogin"
+        Me.DataGridViewCheckBoxColumnAutoLogin.Name = "DataGridViewCheckBoxColumnAutoLogin"
+        Me.DataGridViewCheckBoxColumnAutoLogin.Width = 69
+        '
+        'CareLinkUserDataRecordBindingSource
+        '
+        Me.CareLinkUserDataRecordBindingSource.DataSource = GetType(CareLink.CareLinkUserDataRecord)
+        '
+        'TabPage16Markers
+        '
+        Me.TabPage16Markers.Controls.Add(Me.TabControlMarker)
+        Me.TabPage16Markers.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage16Markers.Name = "TabPage16Markers"
+        Me.TabPage16Markers.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage16Markers.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage16Markers.TabIndex = 4
+        Me.TabPage16Markers.Text = "Markers..."
+        Me.TabPage16Markers.UseVisualStyleBackColor = True
         '
         'TabControlMarker
         '
         Me.TabControlMarker.Appearance = System.Windows.Forms.TabAppearance.FlatButtons
-        Me.TabControlMarker.Controls.Add(Me.TabPageAutoBasalDelivery)
-        Me.TabControlMarker.Controls.Add(Me.TabPageAutoModeStatus)
-        Me.TabControlMarker.Controls.Add(Me.TabPageBgReading)
-        Me.TabControlMarker.Controls.Add(Me.TabPageCalibration)
-        Me.TabControlMarker.Controls.Add(Me.TabPageInsulin)
-        Me.TabControlMarker.Controls.Add(Me.TabPageLowGlusoseSuspended)
-        Me.TabControlMarker.Controls.Add(Me.TabPageMeal)
-        Me.TabControlMarker.Controls.Add(Me.TabPageTimeChange)
+        Me.TabControlMarker.Controls.Add(Me.TabPage17AutoBasalDelivery)
+        Me.TabControlMarker.Controls.Add(Me.TabPage18AutoModeStatus)
+        Me.TabControlMarker.Controls.Add(Me.TabPage17BgReading)
+        Me.TabControlMarker.Controls.Add(Me.TabPage20Calibration)
+        Me.TabControlMarker.Controls.Add(Me.TabPage21Insulin)
+        Me.TabControlMarker.Controls.Add(Me.TabPage22LowGlusoseSuspended)
+        Me.TabControlMarker.Controls.Add(Me.TabPage23Meal)
+        Me.TabControlMarker.Controls.Add(Me.TabPage25TimeChange)
         Me.TabControlMarker.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControlMarker.Location = New System.Drawing.Point(3, 3)
         Me.TabControlMarker.Name = "TabControlMarker"
@@ -1479,16 +1919,16 @@ Partial Class Form1
         Me.TabControlMarker.Size = New System.Drawing.Size(1370, 628)
         Me.TabControlMarker.TabIndex = 0
         '
-        'TabPageAutoBasalDelivery
+        'TabPage17AutoBasalDelivery
         '
-        Me.TabPageAutoBasalDelivery.Controls.Add(Me.TableLayoutPanelAutoBasalDelivery)
-        Me.TabPageAutoBasalDelivery.Location = New System.Drawing.Point(4, 27)
-        Me.TabPageAutoBasalDelivery.Name = "TabPageAutoBasalDelivery"
-        Me.TabPageAutoBasalDelivery.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageAutoBasalDelivery.Size = New System.Drawing.Size(1362, 597)
-        Me.TabPageAutoBasalDelivery.TabIndex = 1
-        Me.TabPageAutoBasalDelivery.Text = "Auto Basal Delivery"
-        Me.TabPageAutoBasalDelivery.UseVisualStyleBackColor = True
+        Me.TabPage17AutoBasalDelivery.Controls.Add(Me.TableLayoutPanelAutoBasalDelivery)
+        Me.TabPage17AutoBasalDelivery.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage17AutoBasalDelivery.Name = "TabPage17AutoBasalDelivery"
+        Me.TabPage17AutoBasalDelivery.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage17AutoBasalDelivery.Size = New System.Drawing.Size(1362, 597)
+        Me.TabPage17AutoBasalDelivery.TabIndex = 1
+        Me.TabPage17AutoBasalDelivery.Text = "Auto Basal Delivery"
+        Me.TabPage17AutoBasalDelivery.UseVisualStyleBackColor = True
         '
         'TableLayoutPanelAutoBasalDelivery
         '
@@ -1521,17 +1961,17 @@ Partial Class Form1
         Me.DataGridViewAutoBasalDelivery.AllowUserToDeleteRows = False
         Me.DataGridViewAutoBasalDelivery.AllowUserToResizeColumns = False
         Me.DataGridViewAutoBasalDelivery.AllowUserToResizeRows = False
-        DataGridViewCellStyle7.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewAutoBasalDelivery.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle17.BackColor = System.Drawing.Color.Silver
+        Me.DataGridViewAutoBasalDelivery.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle17
         Me.DataGridViewAutoBasalDelivery.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewAutoBasalDelivery.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle18.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        DataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewAutoBasalDelivery.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle18
         Me.DataGridViewAutoBasalDelivery.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridViewAutoBasalDelivery.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridViewAutoBasalDelivery.Location = New System.Drawing.Point(3, 33)
@@ -1541,16 +1981,16 @@ Partial Class Form1
         Me.DataGridViewAutoBasalDelivery.Size = New System.Drawing.Size(1350, 633)
         Me.DataGridViewAutoBasalDelivery.TabIndex = 0
         '
-        'TabPageAutoModeStatus
+        'TabPage18AutoModeStatus
         '
-        Me.TabPageAutoModeStatus.Controls.Add(Me.TableLayoutPanelAutoModeStatus)
-        Me.TabPageAutoModeStatus.Location = New System.Drawing.Point(4, 27)
-        Me.TabPageAutoModeStatus.Name = "TabPageAutoModeStatus"
-        Me.TabPageAutoModeStatus.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageAutoModeStatus.Size = New System.Drawing.Size(1362, 597)
-        Me.TabPageAutoModeStatus.TabIndex = 0
-        Me.TabPageAutoModeStatus.Text = "Auto Mode Status"
-        Me.TabPageAutoModeStatus.UseVisualStyleBackColor = True
+        Me.TabPage18AutoModeStatus.Controls.Add(Me.TableLayoutPanelAutoModeStatus)
+        Me.TabPage18AutoModeStatus.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage18AutoModeStatus.Name = "TabPage18AutoModeStatus"
+        Me.TabPage18AutoModeStatus.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage18AutoModeStatus.Size = New System.Drawing.Size(1362, 597)
+        Me.TabPage18AutoModeStatus.TabIndex = 0
+        Me.TabPage18AutoModeStatus.Text = "Auto Mode Status"
+        Me.TabPage18AutoModeStatus.UseVisualStyleBackColor = True
         '
         'TableLayoutPanelAutoModeStatus
         '
@@ -1581,16 +2021,16 @@ Partial Class Form1
         Me.LabelAutoModeStatus.Text = "Auto Mode Status"
         Me.LabelAutoModeStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'TabPageBgReading
+        'TabPage17BgReading
         '
-        Me.TabPageBgReading.Controls.Add(Me.TableLayoutPanelBgReading)
-        Me.TabPageBgReading.Location = New System.Drawing.Point(4, 27)
-        Me.TabPageBgReading.Name = "TabPageBgReading"
-        Me.TabPageBgReading.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageBgReading.Size = New System.Drawing.Size(1362, 597)
-        Me.TabPageBgReading.TabIndex = 2
-        Me.TabPageBgReading.Text = "Bg Reading"
-        Me.TabPageBgReading.UseVisualStyleBackColor = True
+        Me.TabPage17BgReading.Controls.Add(Me.TableLayoutPanelBgReading)
+        Me.TabPage17BgReading.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage17BgReading.Name = "TabPage17BgReading"
+        Me.TabPage17BgReading.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage17BgReading.Size = New System.Drawing.Size(1362, 597)
+        Me.TabPage17BgReading.TabIndex = 2
+        Me.TabPage17BgReading.Text = "Bg Reading"
+        Me.TabPage17BgReading.UseVisualStyleBackColor = True
         '
         'TableLayoutPanelBgReading
         '
@@ -1621,16 +2061,16 @@ Partial Class Form1
         Me.LabelBgReading.Text = "Bg Reading"
         Me.LabelBgReading.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'TabPageCalibration
+        'TabPage20Calibration
         '
-        Me.TabPageCalibration.Controls.Add(Me.TableLayoutPanelCalibration)
-        Me.TabPageCalibration.Location = New System.Drawing.Point(4, 27)
-        Me.TabPageCalibration.Name = "TabPageCalibration"
-        Me.TabPageCalibration.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageCalibration.Size = New System.Drawing.Size(1362, 597)
-        Me.TabPageCalibration.TabIndex = 3
-        Me.TabPageCalibration.Text = "Calibration"
-        Me.TabPageCalibration.UseVisualStyleBackColor = True
+        Me.TabPage20Calibration.Controls.Add(Me.TableLayoutPanelCalibration)
+        Me.TabPage20Calibration.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage20Calibration.Name = "TabPage20Calibration"
+        Me.TabPage20Calibration.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage20Calibration.Size = New System.Drawing.Size(1362, 597)
+        Me.TabPage20Calibration.TabIndex = 3
+        Me.TabPage20Calibration.Text = "Calibration"
+        Me.TabPage20Calibration.UseVisualStyleBackColor = True
         '
         'TableLayoutPanelCalibration
         '
@@ -1661,16 +2101,16 @@ Partial Class Form1
         Me.LabelCalibration.Text = "Calibration"
         Me.LabelCalibration.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'TabPageInsulin
+        'TabPage21Insulin
         '
-        Me.TabPageInsulin.Controls.Add(Me.TableLayoutPanelInsulin)
-        Me.TabPageInsulin.Location = New System.Drawing.Point(4, 27)
-        Me.TabPageInsulin.Name = "TabPageInsulin"
-        Me.TabPageInsulin.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageInsulin.Size = New System.Drawing.Size(1362, 597)
-        Me.TabPageInsulin.TabIndex = 4
-        Me.TabPageInsulin.Text = "Insulin"
-        Me.TabPageInsulin.UseVisualStyleBackColor = True
+        Me.TabPage21Insulin.Controls.Add(Me.TableLayoutPanelInsulin)
+        Me.TabPage21Insulin.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage21Insulin.Name = "TabPage21Insulin"
+        Me.TabPage21Insulin.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage21Insulin.Size = New System.Drawing.Size(1362, 597)
+        Me.TabPage21Insulin.TabIndex = 4
+        Me.TabPage21Insulin.Text = "Insulin"
+        Me.TabPage21Insulin.UseVisualStyleBackColor = True
         '
         'TableLayoutPanelInsulin
         '
@@ -1697,7 +2137,7 @@ Partial Class Form1
         Me.LabelInsulin.Dock = System.Windows.Forms.DockStyle.Fill
         Me.LabelInsulin.Location = New System.Drawing.Point(6, 3)
         Me.LabelInsulin.Name = "LabelInsulin"
-        Me.LabelInsulin.Size = New System.Drawing.Size(1335, 30)
+        Me.LabelInsulin.Size = New System.Drawing.Size(1338, 30)
         Me.LabelInsulin.TabIndex = 1
         Me.LabelInsulin.Text = "Insulin"
         Me.LabelInsulin.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1708,16 +2148,16 @@ Partial Class Form1
         Me.DataGridViewInsulin.AllowUserToDeleteRows = False
         Me.DataGridViewInsulin.AllowUserToResizeColumns = False
         Me.DataGridViewInsulin.AllowUserToResizeRows = False
-        DataGridViewCellStyle9.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewInsulin.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle9
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle10.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        DataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewInsulin.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle10
+        DataGridViewCellStyle19.BackColor = System.Drawing.Color.Silver
+        Me.DataGridViewInsulin.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle19
+        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle20.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        DataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewInsulin.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle20
         Me.DataGridViewInsulin.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridViewInsulin.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridViewInsulin.Location = New System.Drawing.Point(6, 39)
@@ -1725,19 +2165,19 @@ Partial Class Form1
         Me.DataGridViewInsulin.ReadOnly = True
         Me.DataGridViewInsulin.RowTemplate.Height = 25
         Me.DataGridViewInsulin.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.DataGridViewInsulin.Size = New System.Drawing.Size(1335, 624)
+        Me.DataGridViewInsulin.Size = New System.Drawing.Size(1338, 624)
         Me.DataGridViewInsulin.TabIndex = 0
         '
-        'TabPageLowGlusoseSuspended
+        'TabPage22LowGlusoseSuspended
         '
-        Me.TabPageLowGlusoseSuspended.Controls.Add(Me.TableLayoutPanelLowGlusoseSuspended)
-        Me.TabPageLowGlusoseSuspended.Location = New System.Drawing.Point(4, 27)
-        Me.TabPageLowGlusoseSuspended.Name = "TabPageLowGlusoseSuspended"
-        Me.TabPageLowGlusoseSuspended.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageLowGlusoseSuspended.Size = New System.Drawing.Size(1362, 597)
-        Me.TabPageLowGlusoseSuspended.TabIndex = 5
-        Me.TabPageLowGlusoseSuspended.Text = "Low Glusose Suspended"
-        Me.TabPageLowGlusoseSuspended.UseVisualStyleBackColor = True
+        Me.TabPage22LowGlusoseSuspended.Controls.Add(Me.TableLayoutPanelLowGlusoseSuspended)
+        Me.TabPage22LowGlusoseSuspended.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage22LowGlusoseSuspended.Name = "TabPage22LowGlusoseSuspended"
+        Me.TabPage22LowGlusoseSuspended.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage22LowGlusoseSuspended.Size = New System.Drawing.Size(1362, 597)
+        Me.TabPage22LowGlusoseSuspended.TabIndex = 5
+        Me.TabPage22LowGlusoseSuspended.Text = "Low Glusose Suspended"
+        Me.TabPage22LowGlusoseSuspended.UseVisualStyleBackColor = True
         '
         'TableLayoutPanelLowGlusoseSuspended
         '
@@ -1768,16 +2208,16 @@ Partial Class Form1
         Me.LabelLowGlusoseSuspended.Text = "Low Glusose Suspended"
         Me.LabelLowGlusoseSuspended.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'TabPageMeal
+        'TabPage23Meal
         '
-        Me.TabPageMeal.Controls.Add(Me.TableLayoutPanelMeal)
-        Me.TabPageMeal.Location = New System.Drawing.Point(4, 27)
-        Me.TabPageMeal.Name = "TabPageMeal"
-        Me.TabPageMeal.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageMeal.Size = New System.Drawing.Size(1362, 597)
-        Me.TabPageMeal.TabIndex = 6
-        Me.TabPageMeal.Text = "Meal"
-        Me.TabPageMeal.UseVisualStyleBackColor = True
+        Me.TabPage23Meal.Controls.Add(Me.TableLayoutPanelMeal)
+        Me.TabPage23Meal.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage23Meal.Name = "TabPage23Meal"
+        Me.TabPage23Meal.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage23Meal.Size = New System.Drawing.Size(1362, 597)
+        Me.TabPage23Meal.TabIndex = 6
+        Me.TabPage23Meal.Text = "Meal"
+        Me.TabPage23Meal.UseVisualStyleBackColor = True
         '
         'TableLayoutPanelMeal
         '
@@ -1808,16 +2248,16 @@ Partial Class Form1
         Me.LabelMeal.Text = "Meal"
         Me.LabelMeal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'TabPageTimeChange
+        'TabPage25TimeChange
         '
-        Me.TabPageTimeChange.Controls.Add(Me.TableLayoutPanelTimeChange)
-        Me.TabPageTimeChange.Location = New System.Drawing.Point(4, 27)
-        Me.TabPageTimeChange.Name = "TabPageTimeChange"
-        Me.TabPageTimeChange.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageTimeChange.Size = New System.Drawing.Size(1362, 597)
-        Me.TabPageTimeChange.TabIndex = 7
-        Me.TabPageTimeChange.Text = "Time Change"
-        Me.TabPageTimeChange.UseVisualStyleBackColor = True
+        Me.TabPage25TimeChange.Controls.Add(Me.TableLayoutPanelTimeChange)
+        Me.TabPage25TimeChange.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage25TimeChange.Name = "TabPage25TimeChange"
+        Me.TabPage25TimeChange.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage25TimeChange.Size = New System.Drawing.Size(1362, 597)
+        Me.TabPage25TimeChange.TabIndex = 7
+        Me.TabPage25TimeChange.Text = "Time Change"
+        Me.TabPage25TimeChange.UseVisualStyleBackColor = True
         '
         'TableLayoutPanelTimeChange
         '
@@ -1847,446 +2287,6 @@ Partial Class Form1
         Me.LabelTimeChange.TabIndex = 0
         Me.LabelTimeChange.Text = "Tme Change"
         Me.LabelTimeChange.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'TabPage09NotificationHistory
-        '
-        Me.TabPage09NotificationHistory.Controls.Add(Me.TableLayoutPanelNotificationHistory)
-        Me.TabPage09NotificationHistory.Location = New System.Drawing.Point(4, 24)
-        Me.TabPage09NotificationHistory.Name = "TabPage09NotificationHistory"
-        Me.TabPage09NotificationHistory.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage09NotificationHistory.Size = New System.Drawing.Size(1376, 634)
-        Me.TabPage09NotificationHistory.TabIndex = 5
-        Me.TabPage09NotificationHistory.Text = "Notification History"
-        Me.TabPage09NotificationHistory.UseVisualStyleBackColor = True
-        '
-        'TableLayoutPanelNotificationHistory
-        '
-        Me.TableLayoutPanelNotificationHistory.AutoScroll = True
-        Me.TableLayoutPanelNotificationHistory.AutoSize = True
-        Me.TableLayoutPanelNotificationHistory.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelNotificationHistory.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelNotificationHistory.ColumnCount = 1
-        Me.TableLayoutPanelNotificationHistory.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelNotificationHistory.Controls.Add(Me.LabelNotificationHistory, 0, 0)
-        Me.TableLayoutPanelNotificationHistory.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanelNotificationHistory.Location = New System.Drawing.Point(3, 3)
-        Me.TableLayoutPanelNotificationHistory.Name = "TableLayoutPanelNotificationHistory"
-        Me.TableLayoutPanelNotificationHistory.RowCount = 2
-        Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelNotificationHistory.Size = New System.Drawing.Size(1370, 628)
-        Me.TableLayoutPanelNotificationHistory.TabIndex = 0
-        '
-        'LabelNotificationHistory
-        '
-        Me.LabelNotificationHistory.AutoSize = True
-        Me.LabelNotificationHistory.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelNotificationHistory.Location = New System.Drawing.Point(6, 3)
-        Me.LabelNotificationHistory.Name = "LabelNotificationHistory"
-        Me.LabelNotificationHistory.Size = New System.Drawing.Size(1358, 30)
-        Me.LabelNotificationHistory.TabIndex = 0
-        Me.LabelNotificationHistory.Text = "Notification History"
-        Me.LabelNotificationHistory.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'TabPage10Basal
-        '
-        Me.TabPage10Basal.Controls.Add(Me.TableLayoutPanelBasal)
-        Me.TabPage10Basal.Location = New System.Drawing.Point(4, 24)
-        Me.TabPage10Basal.Name = "TabPage10Basal"
-        Me.TabPage10Basal.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage10Basal.Size = New System.Drawing.Size(1376, 634)
-        Me.TabPage10Basal.TabIndex = 6
-        Me.TabPage10Basal.Text = "Basal"
-        Me.TabPage10Basal.UseVisualStyleBackColor = True
-        '
-        'TableLayoutPanelBasal
-        '
-        Me.TableLayoutPanelBasal.AutoScroll = True
-        Me.TableLayoutPanelBasal.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelBasal.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelBasal.ColumnCount = 1
-        Me.TableLayoutPanelBasal.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelBasal.Controls.Add(Me.LabelBasal, 0, 0)
-        Me.TableLayoutPanelBasal.Dock = System.Windows.Forms.DockStyle.Top
-        Me.TableLayoutPanelBasal.Location = New System.Drawing.Point(3, 3)
-        Me.TableLayoutPanelBasal.Name = "TableLayoutPanelBasal"
-        Me.TableLayoutPanelBasal.RowCount = 2
-        Me.TableLayoutPanelBasal.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelBasal.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelBasal.Size = New System.Drawing.Size(1370, 611)
-        Me.TableLayoutPanelBasal.TabIndex = 0
-        '
-        'LabelBasal
-        '
-        Me.LabelBasal.AutoSize = True
-        Me.LabelBasal.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelBasal.Location = New System.Drawing.Point(6, 3)
-        Me.LabelBasal.Name = "LabelBasal"
-        Me.LabelBasal.Size = New System.Drawing.Size(1358, 30)
-        Me.LabelBasal.TabIndex = 0
-        Me.LabelBasal.Text = "Basal"
-        Me.LabelBasal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'TabPage11TherapyAlgorithm
-        '
-        Me.TabPage11TherapyAlgorithm.Controls.Add(Me.TableLayoutPanelTherapyAlgorthm)
-        Me.TabPage11TherapyAlgorithm.Location = New System.Drawing.Point(4, 24)
-        Me.TabPage11TherapyAlgorithm.Name = "TabPage11TherapyAlgorithm"
-        Me.TabPage11TherapyAlgorithm.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage11TherapyAlgorithm.Size = New System.Drawing.Size(1376, 634)
-        Me.TabPage11TherapyAlgorithm.TabIndex = 9
-        Me.TabPage11TherapyAlgorithm.Text = "Therapy Algorithm"
-        Me.TabPage11TherapyAlgorithm.UseVisualStyleBackColor = True
-        '
-        'TableLayoutPanelTherapyAlgorthm
-        '
-        Me.TableLayoutPanelTherapyAlgorthm.AutoSize = True
-        Me.TableLayoutPanelTherapyAlgorthm.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelTherapyAlgorthm.ColumnCount = 1
-        Me.TableLayoutPanelTherapyAlgorthm.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelTherapyAlgorthm.Controls.Add(Me.LabelTherapyAlgorthm, 0, 0)
-        Me.TableLayoutPanelTherapyAlgorthm.Dock = System.Windows.Forms.DockStyle.Top
-        Me.TableLayoutPanelTherapyAlgorthm.Location = New System.Drawing.Point(3, 3)
-        Me.TableLayoutPanelTherapyAlgorthm.Name = "TableLayoutPanelTherapyAlgorthm"
-        Me.TableLayoutPanelTherapyAlgorthm.RowCount = 2
-        Me.TableLayoutPanelTherapyAlgorthm.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelTherapyAlgorthm.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelTherapyAlgorthm.Size = New System.Drawing.Size(1370, 30)
-        Me.TableLayoutPanelTherapyAlgorthm.TabIndex = 0
-        '
-        'LabelTherapyAlgorthm
-        '
-        Me.LabelTherapyAlgorthm.AutoSize = True
-        Me.LabelTherapyAlgorthm.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelTherapyAlgorthm.Location = New System.Drawing.Point(3, 0)
-        Me.LabelTherapyAlgorthm.Name = "LabelTherapyAlgorthm"
-        Me.LabelTherapyAlgorthm.Size = New System.Drawing.Size(1364, 30)
-        Me.LabelTherapyAlgorthm.TabIndex = 0
-        Me.LabelTherapyAlgorthm.Text = "Therapy Algorthm"
-        Me.LabelTherapyAlgorthm.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'TabPage12BannerState
-        '
-        Me.TabPage12BannerState.Controls.Add(Me.TableLayoutPanelBannerState)
-        Me.TabPage12BannerState.Location = New System.Drawing.Point(4, 24)
-        Me.TabPage12BannerState.Name = "TabPage12BannerState"
-        Me.TabPage12BannerState.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage12BannerState.Size = New System.Drawing.Size(1376, 634)
-        Me.TabPage12BannerState.TabIndex = 10
-        Me.TabPage12BannerState.Text = "Banner State"
-        Me.TabPage12BannerState.UseVisualStyleBackColor = True
-        '
-        'TableLayoutPanelBannerState
-        '
-        Me.TableLayoutPanelBannerState.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelBannerState.ColumnCount = 1
-        Me.TableLayoutPanelBannerState.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelBannerState.Controls.Add(Me.LabelBannerState, 0, 0)
-        Me.TableLayoutPanelBannerState.Dock = System.Windows.Forms.DockStyle.Top
-        Me.TableLayoutPanelBannerState.Location = New System.Drawing.Point(3, 3)
-        Me.TableLayoutPanelBannerState.Name = "TableLayoutPanelBannerState"
-        Me.TableLayoutPanelBannerState.RowCount = 3
-        Me.TableLayoutPanelBannerState.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelBannerState.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelBannerState.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelBannerState.Size = New System.Drawing.Size(1370, 56)
-        Me.TableLayoutPanelBannerState.TabIndex = 0
-        '
-        'LabelBannerState
-        '
-        Me.LabelBannerState.AutoSize = True
-        Me.LabelBannerState.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelBannerState.Location = New System.Drawing.Point(3, 0)
-        Me.LabelBannerState.Name = "LabelBannerState"
-        Me.LabelBannerState.Size = New System.Drawing.Size(1364, 30)
-        Me.LabelBannerState.TabIndex = 0
-        Me.LabelBannerState.Text = "Banner State"
-        Me.LabelBannerState.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'TabPage13CountrySettings
-        '
-        Me.TabPage13CountrySettings.Controls.Add(Me.DataGridViewCountryItems)
-        Me.TabPage13CountrySettings.Location = New System.Drawing.Point(4, 24)
-        Me.TabPage13CountrySettings.Name = "TabPage13CountrySettings"
-        Me.TabPage13CountrySettings.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage13CountrySettings.Size = New System.Drawing.Size(1376, 634)
-        Me.TabPage13CountrySettings.TabIndex = 11
-        Me.TabPage13CountrySettings.Text = "Country Settings"
-        Me.TabPage13CountrySettings.UseVisualStyleBackColor = True
-        '
-        'DataGridViewCountryItems
-        '
-        Me.DataGridViewCountryItems.AllowUserToAddRows = False
-        Me.DataGridViewCountryItems.AllowUserToDeleteRows = False
-        Me.DataGridViewCountryItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewCountryItems.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.CountrySettingsRecordNumber, Me.CountrySettingsCategory, Me.CountrySettingsKey, Me.CountrySettingsValue, Me.CountrySettingsRecordNumberEven, Me.CountrySettingsCategoryEven, Me.CountrySettingsKeyEven, Me.CountrySettingsValueEven})
-        Me.DataGridViewCountryItems.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridViewCountryItems.Location = New System.Drawing.Point(3, 3)
-        Me.DataGridViewCountryItems.Name = "DataGridViewCountryItems"
-        Me.DataGridViewCountryItems.ReadOnly = True
-        Me.DataGridViewCountryItems.RowTemplate.Height = 25
-        Me.DataGridViewCountryItems.Size = New System.Drawing.Size(1370, 628)
-        Me.DataGridViewCountryItems.TabIndex = 1
-        '
-        'CountrySettingsRecordNumber
-        '
-        Me.CountrySettingsRecordNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.CountrySettingsRecordNumber.DefaultCellStyle = DataGridViewCellStyle5
-        Me.CountrySettingsRecordNumber.HeaderText = "Record Number"
-        Me.CountrySettingsRecordNumber.MinimumWidth = 60
-        Me.CountrySettingsRecordNumber.Name = "CountrySettingsRecordNumber"
-        Me.CountrySettingsRecordNumber.ReadOnly = True
-        Me.CountrySettingsRecordNumber.Width = 60
-        '
-        'CountrySettingsCategory
-        '
-        Me.CountrySettingsCategory.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.CountrySettingsCategory.DefaultCellStyle = DataGridViewCellStyle6
-        Me.CountrySettingsCategory.HeaderText = "Category"
-        Me.CountrySettingsCategory.Name = "CountrySettingsCategory"
-        Me.CountrySettingsCategory.ReadOnly = True
-        Me.CountrySettingsCategory.Width = 80
-        '
-        'CountrySettingsKey
-        '
-        Me.CountrySettingsKey.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.CountrySettingsKey.HeaderText = "Key"
-        Me.CountrySettingsKey.Name = "CountrySettingsKey"
-        Me.CountrySettingsKey.ReadOnly = True
-        Me.CountrySettingsKey.Width = 51
-        '
-        'CountrySettingsValue
-        '
-        Me.CountrySettingsValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.CountrySettingsValue.HeaderText = "Value"
-        Me.CountrySettingsValue.Name = "CountrySettingsValue"
-        Me.CountrySettingsValue.ReadOnly = True
-        Me.CountrySettingsValue.Width = 60
-        '
-        'CountrySettingsRecordNumberEven
-        '
-        Me.CountrySettingsRecordNumberEven.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
-        Me.CountrySettingsRecordNumberEven.HeaderText = "Record Number"
-        Me.CountrySettingsRecordNumberEven.MinimumWidth = 60
-        Me.CountrySettingsRecordNumberEven.Name = "CountrySettingsRecordNumberEven"
-        Me.CountrySettingsRecordNumberEven.ReadOnly = True
-        Me.CountrySettingsRecordNumberEven.Width = 60
-        '
-        'CountrySettingsCategoryEven
-        '
-        Me.CountrySettingsCategoryEven.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.CountrySettingsCategoryEven.HeaderText = "Category"
-        Me.CountrySettingsCategoryEven.Name = "CountrySettingsCategoryEven"
-        Me.CountrySettingsCategoryEven.ReadOnly = True
-        Me.CountrySettingsCategoryEven.Width = 80
-        '
-        'CountrySettingsKeyEven
-        '
-        Me.CountrySettingsKeyEven.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.CountrySettingsKeyEven.HeaderText = "Key"
-        Me.CountrySettingsKeyEven.Name = "CountrySettingsKeyEven"
-        Me.CountrySettingsKeyEven.ReadOnly = True
-        Me.CountrySettingsKeyEven.Width = 51
-        '
-        'CountrySettingsValueEven
-        '
-        Me.CountrySettingsValueEven.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.CountrySettingsValueEven.HeaderText = "Value"
-        Me.CountrySettingsValueEven.Name = "CountrySettingsValueEven"
-        Me.CountrySettingsValueEven.ReadOnly = True
-        Me.CountrySettingsValueEven.Width = 60
-        '
-        'TabPage14Profile
-        '
-        Me.TabPage14Profile.Controls.Add(Me.DataGridViewMyProfile)
-        Me.TabPage14Profile.Location = New System.Drawing.Point(4, 24)
-        Me.TabPage14Profile.Name = "TabPage14Profile"
-        Me.TabPage14Profile.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage14Profile.Size = New System.Drawing.Size(1376, 634)
-        Me.TabPage14Profile.TabIndex = 12
-        Me.TabPage14Profile.Text = "Profile"
-        Me.TabPage14Profile.UseVisualStyleBackColor = True
-        '
-        'DataGridViewMyProfile
-        '
-        Me.DataGridViewMyProfile.AllowUserToAddRows = False
-        Me.DataGridViewMyProfile.AllowUserToDeleteRows = False
-        Me.DataGridViewMyProfile.AllowUserToResizeColumns = False
-        Me.DataGridViewMyProfile.AllowUserToResizeRows = False
-        Me.DataGridViewMyProfile.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
-        Me.DataGridViewMyProfile.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
-        Me.DataGridViewMyProfile.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewMyProfile.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridViewMyProfile.Location = New System.Drawing.Point(3, 3)
-        Me.DataGridViewMyProfile.Name = "DataGridViewMyProfile"
-        Me.DataGridViewMyProfile.ReadOnly = True
-        Me.DataGridViewMyProfile.RowTemplate.Height = 25
-        Me.DataGridViewMyProfile.Size = New System.Drawing.Size(1370, 628)
-        Me.DataGridViewMyProfile.TabIndex = 0
-        '
-        'TabPageMyUser
-        '
-        Me.TabPageMyUser.Controls.Add(Me.DataGridViewMyUserData)
-        Me.TabPageMyUser.Location = New System.Drawing.Point(4, 24)
-        Me.TabPageMyUser.Name = "TabPageMyUser"
-        Me.TabPageMyUser.Size = New System.Drawing.Size(1376, 634)
-        Me.TabPageMyUser.TabIndex = 13
-        Me.TabPageMyUser.Text = "My User"
-        Me.TabPageMyUser.UseVisualStyleBackColor = True
-        '
-        'DataGridViewMyUserData
-        '
-        Me.DataGridViewMyUserData.AllowUserToAddRows = False
-        Me.DataGridViewMyUserData.AllowUserToDeleteRows = False
-        Me.DataGridViewMyUserData.AllowUserToResizeColumns = False
-        Me.DataGridViewMyUserData.AllowUserToResizeRows = False
-        Me.DataGridViewMyUserData.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
-        Me.DataGridViewMyUserData.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
-        Me.DataGridViewMyUserData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewMyUserData.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridViewMyUserData.Location = New System.Drawing.Point(0, 0)
-        Me.DataGridViewMyUserData.Name = "DataGridViewMyUserData"
-        Me.DataGridViewMyUserData.ReadOnly = True
-        Me.DataGridViewMyUserData.RowTemplate.Height = 25
-        Me.DataGridViewMyUserData.Size = New System.Drawing.Size(1376, 634)
-        Me.DataGridViewMyUserData.TabIndex = 0
-        '
-        'TabPageAllUsers
-        '
-        Me.TabPageAllUsers.Controls.Add(Me.DataGridViewCareLinkUsers)
-        Me.TabPageAllUsers.Location = New System.Drawing.Point(4, 24)
-        Me.TabPageAllUsers.Name = "TabPageAllUsers"
-        Me.TabPageAllUsers.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageAllUsers.Size = New System.Drawing.Size(1376, 634)
-        Me.TabPageAllUsers.TabIndex = 14
-        Me.TabPageAllUsers.Text = "All Users"
-        Me.TabPageAllUsers.UseVisualStyleBackColor = True
-        '
-        'DataGridViewCareLinkUsers
-        '
-        Me.DataGridViewCareLinkUsers.AllowUserToAddRows = False
-        Me.DataGridViewCareLinkUsers.AllowUserToDeleteRows = False
-        Me.DataGridViewCareLinkUsers.AllowUserToResizeColumns = False
-        Me.DataGridViewCareLinkUsers.AllowUserToResizeRows = False
-        Me.DataGridViewCareLinkUsers.AutoGenerateColumns = False
-        Me.DataGridViewCareLinkUsers.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
-        Me.DataGridViewCareLinkUsers.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
-        Me.DataGridViewCareLinkUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewCareLinkUsers.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.CareLinkUserNameDataGridViewTextBoxColumn, Me.CareLinkPasswordDataGridViewTextBoxColumn, Me.AITDataGridViewTextBoxColumn, Me.AlertPhoneNumberDataGridViewTextBoxColumn, Me.CarrierTextingDomainDataGridViewTextBoxColumn, Me.CountryCodeDataGridViewTextBoxColumn, Me.MailserverPasswordDataGridViewTextBoxColumn, Me.MailServerPortDataGridViewTextBoxColumn, Me.MailserverUserNameDataGridViewTextBoxColumn, Me.SettingsVersionDataGridViewTextBoxColumn, Me.OutGoingMailServerDataGridViewTextBoxColumn, Me.UseAdvancedAITDecayDataGridViewCheckBoxColumn, Me.UseLocalTimeZoneDataGridViewCheckBoxColumn, Me.AutoLoginDataGridViewCheckBoxColumn})
-        Me.DataGridViewCareLinkUsers.DataSource = Me.CareLinkUserDataRecordBindingSource
-        Me.DataGridViewCareLinkUsers.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridViewCareLinkUsers.Location = New System.Drawing.Point(3, 3)
-        Me.DataGridViewCareLinkUsers.Name = "DataGridViewCareLinkUsers"
-        Me.DataGridViewCareLinkUsers.RowTemplate.Height = 25
-        Me.DataGridViewCareLinkUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.DataGridViewCareLinkUsers.Size = New System.Drawing.Size(1370, 628)
-        Me.DataGridViewCareLinkUsers.TabIndex = 0
-        '
-        'CareLinkUserNameDataGridViewTextBoxColumn
-        '
-        Me.CareLinkUserNameDataGridViewTextBoxColumn.DataPropertyName = "CareLinkUserName"
-        Me.CareLinkUserNameDataGridViewTextBoxColumn.HeaderText = "CareLinkUserName"
-        Me.CareLinkUserNameDataGridViewTextBoxColumn.Name = "CareLinkUserNameDataGridViewTextBoxColumn"
-        Me.CareLinkUserNameDataGridViewTextBoxColumn.Width = 133
-        '
-        'CareLinkPasswordDataGridViewTextBoxColumn
-        '
-        Me.CareLinkPasswordDataGridViewTextBoxColumn.DataPropertyName = "CareLinkPassword"
-        Me.CareLinkPasswordDataGridViewTextBoxColumn.HeaderText = "CareLinkPassword"
-        Me.CareLinkPasswordDataGridViewTextBoxColumn.Name = "CareLinkPasswordDataGridViewTextBoxColumn"
-        Me.CareLinkPasswordDataGridViewTextBoxColumn.Width = 128
-        '
-        'AITDataGridViewTextBoxColumn
-        '
-        Me.AITDataGridViewTextBoxColumn.DataPropertyName = "AIT"
-        Me.AITDataGridViewTextBoxColumn.HeaderText = "AIT"
-        Me.AITDataGridViewTextBoxColumn.Name = "AITDataGridViewTextBoxColumn"
-        Me.AITDataGridViewTextBoxColumn.Width = 49
-        '
-        'AlertPhoneNumberDataGridViewTextBoxColumn
-        '
-        Me.AlertPhoneNumberDataGridViewTextBoxColumn.DataPropertyName = "AlertPhoneNumber"
-        Me.AlertPhoneNumberDataGridViewTextBoxColumn.HeaderText = "AlertPhoneNumber"
-        Me.AlertPhoneNumberDataGridViewTextBoxColumn.Name = "AlertPhoneNumberDataGridViewTextBoxColumn"
-        Me.AlertPhoneNumberDataGridViewTextBoxColumn.Width = 135
-        '
-        'CarrierTextingDomainDataGridViewTextBoxColumn
-        '
-        Me.CarrierTextingDomainDataGridViewTextBoxColumn.DataPropertyName = "CarrierTextingDomain"
-        Me.CarrierTextingDomainDataGridViewTextBoxColumn.HeaderText = "CarrierTextingDomain"
-        Me.CarrierTextingDomainDataGridViewTextBoxColumn.Name = "CarrierTextingDomainDataGridViewTextBoxColumn"
-        Me.CarrierTextingDomainDataGridViewTextBoxColumn.Width = 147
-        '
-        'CountryCodeDataGridViewTextBoxColumn
-        '
-        Me.CountryCodeDataGridViewTextBoxColumn.DataPropertyName = "CountryCode"
-        Me.CountryCodeDataGridViewTextBoxColumn.HeaderText = "CountryCode"
-        Me.CountryCodeDataGridViewTextBoxColumn.Name = "CountryCodeDataGridViewTextBoxColumn"
-        Me.CountryCodeDataGridViewTextBoxColumn.Width = 103
-        '
-        'MailserverPasswordDataGridViewTextBoxColumn
-        '
-        Me.MailserverPasswordDataGridViewTextBoxColumn.DataPropertyName = "MailserverPassword"
-        Me.MailserverPasswordDataGridViewTextBoxColumn.HeaderText = "MailserverPassword"
-        Me.MailserverPasswordDataGridViewTextBoxColumn.Name = "MailserverPasswordDataGridViewTextBoxColumn"
-        Me.MailserverPasswordDataGridViewTextBoxColumn.Width = 136
-        '
-        'MailServerPortDataGridViewTextBoxColumn
-        '
-        Me.MailServerPortDataGridViewTextBoxColumn.DataPropertyName = "MailServerPort"
-        Me.MailServerPortDataGridViewTextBoxColumn.HeaderText = "MailServerPort"
-        Me.MailServerPortDataGridViewTextBoxColumn.Name = "MailServerPortDataGridViewTextBoxColumn"
-        Me.MailServerPortDataGridViewTextBoxColumn.Width = 109
-        '
-        'MailserverUserNameDataGridViewTextBoxColumn
-        '
-        Me.MailserverUserNameDataGridViewTextBoxColumn.DataPropertyName = "MailserverUserName"
-        Me.MailserverUserNameDataGridViewTextBoxColumn.HeaderText = "MailserverUserName"
-        Me.MailserverUserNameDataGridViewTextBoxColumn.Name = "MailserverUserNameDataGridViewTextBoxColumn"
-        Me.MailserverUserNameDataGridViewTextBoxColumn.Width = 141
-        '
-        'SettingsVersionDataGridViewTextBoxColumn
-        '
-        Me.SettingsVersionDataGridViewTextBoxColumn.DataPropertyName = "SettingsVersion"
-        Me.SettingsVersionDataGridViewTextBoxColumn.HeaderText = "SettingsVersion"
-        Me.SettingsVersionDataGridViewTextBoxColumn.Name = "SettingsVersionDataGridViewTextBoxColumn"
-        Me.SettingsVersionDataGridViewTextBoxColumn.Width = 112
-        '
-        'OutGoingMailServerDataGridViewTextBoxColumn
-        '
-        Me.OutGoingMailServerDataGridViewTextBoxColumn.DataPropertyName = "OutGoingMailServer"
-        Me.OutGoingMailServerDataGridViewTextBoxColumn.HeaderText = "OutGoingMailServer"
-        Me.OutGoingMailServerDataGridViewTextBoxColumn.Name = "OutGoingMailServerDataGridViewTextBoxColumn"
-        Me.OutGoingMailServerDataGridViewTextBoxColumn.Width = 139
-        '
-        'UseAdvancedAITDecayDataGridViewCheckBoxColumn
-        '
-        Me.UseAdvancedAITDecayDataGridViewCheckBoxColumn.DataPropertyName = "UseAdvancedAITDecay"
-        Me.UseAdvancedAITDecayDataGridViewCheckBoxColumn.HeaderText = "UseAdvancedAITDecay"
-        Me.UseAdvancedAITDecayDataGridViewCheckBoxColumn.Name = "UseAdvancedAITDecayDataGridViewCheckBoxColumn"
-        Me.UseAdvancedAITDecayDataGridViewCheckBoxColumn.Width = 134
-        '
-        'UseLocalTimeZoneDataGridViewCheckBoxColumn
-        '
-        Me.UseLocalTimeZoneDataGridViewCheckBoxColumn.DataPropertyName = "UseLocalTimeZone"
-        Me.UseLocalTimeZoneDataGridViewCheckBoxColumn.HeaderText = "UseLocalTimeZone"
-        Me.UseLocalTimeZoneDataGridViewCheckBoxColumn.Name = "UseLocalTimeZoneDataGridViewCheckBoxColumn"
-        Me.UseLocalTimeZoneDataGridViewCheckBoxColumn.Width = 113
-        '
-        'AutoLoginDataGridViewCheckBoxColumn
-        '
-        Me.AutoLoginDataGridViewCheckBoxColumn.DataPropertyName = "AutoLogin"
-        Me.AutoLoginDataGridViewCheckBoxColumn.HeaderText = "AutoLogin"
-        Me.AutoLoginDataGridViewCheckBoxColumn.Name = "AutoLoginDataGridViewCheckBoxColumn"
-        Me.AutoLoginDataGridViewCheckBoxColumn.Width = 69
-        '
-        'CareLinkUserDataRecordBindingSource
-        '
-        Me.CareLinkUserDataRecordBindingSource.DataSource = GetType(CareLink.CareLinkUserDataRecord)
         '
         'ImageList1
         '
@@ -2402,7 +2402,7 @@ Partial Class Form1
         CType(Me.SplitContainer3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer3.ResumeLayout(False)
         Me.TabPage04SummaryData.ResumeLayout(False)
-        CType(Me.SummaryDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DataGridViewSummary, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage05ActiveInsulin.ResumeLayout(False)
         Me.TabPage05ActiveInsulin.PerformLayout()
         Me.TableLayoutPanelActiveInsulin.ResumeLayout(False)
@@ -2410,252 +2410,252 @@ Partial Class Form1
         Me.TabPage06SensorGlucose.ResumeLayout(False)
         Me.TableLayoutPanelSgs.ResumeLayout(False)
         Me.TableLayoutPanelSgs.PerformLayout()
-        CType(Me.SGsDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DataGridViewSGs, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage07Limits.ResumeLayout(False)
         Me.TabPage07Limits.PerformLayout()
         Me.TableLayoutPanelLimits.ResumeLayout(False)
         Me.TableLayoutPanelLimits.PerformLayout()
-        Me.TabPageMarkers.ResumeLayout(False)
+        Me.TabPage08NotificationHistory.ResumeLayout(False)
+        Me.TabPage08NotificationHistory.PerformLayout()
+        Me.TableLayoutPanelNotificationHistory.ResumeLayout(False)
+        Me.TableLayoutPanelNotificationHistory.PerformLayout()
+        Me.TabPage09Basal.ResumeLayout(False)
+        Me.TableLayoutPanelBasal.ResumeLayout(False)
+        Me.TableLayoutPanelBasal.PerformLayout()
+        Me.TabPage10TherapyAlgorithm.ResumeLayout(False)
+        Me.TabPage10TherapyAlgorithm.PerformLayout()
+        Me.TableLayoutPanelTherapyAlgorthm.ResumeLayout(False)
+        Me.TableLayoutPanelTherapyAlgorthm.PerformLayout()
+        Me.TabPage11BannerState.ResumeLayout(False)
+        Me.TableLayoutPanelBannerState.ResumeLayout(False)
+        Me.TableLayoutPanelBannerState.PerformLayout()
+        Me.TabPage12CountrySettings.ResumeLayout(False)
+        CType(Me.DataGridViewCountryItems, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage13Profile.ResumeLayout(False)
+        CType(Me.DataGridViewMyProfile, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage14MyUser.ResumeLayout(False)
+        CType(Me.DataGridViewMyUserData, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage15AllUsers.ResumeLayout(False)
+        CType(Me.DataGridViewCareLinkUsers, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.CareLinkUserDataRecordBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage16Markers.ResumeLayout(False)
         Me.TabControlMarker.ResumeLayout(False)
-        Me.TabPageAutoBasalDelivery.ResumeLayout(False)
+        Me.TabPage17AutoBasalDelivery.ResumeLayout(False)
         Me.TableLayoutPanelAutoBasalDelivery.ResumeLayout(False)
         CType(Me.DataGridViewAutoBasalDelivery, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.TabPageAutoModeStatus.ResumeLayout(False)
-        Me.TabPageAutoModeStatus.PerformLayout()
+        Me.TabPage18AutoModeStatus.ResumeLayout(False)
+        Me.TabPage18AutoModeStatus.PerformLayout()
         Me.TableLayoutPanelAutoModeStatus.ResumeLayout(False)
         Me.TableLayoutPanelAutoModeStatus.PerformLayout()
-        Me.TabPageBgReading.ResumeLayout(False)
-        Me.TabPageBgReading.PerformLayout()
+        Me.TabPage17BgReading.ResumeLayout(False)
+        Me.TabPage17BgReading.PerformLayout()
         Me.TableLayoutPanelBgReading.ResumeLayout(False)
         Me.TableLayoutPanelBgReading.PerformLayout()
-        Me.TabPageCalibration.ResumeLayout(False)
-        Me.TabPageCalibration.PerformLayout()
+        Me.TabPage20Calibration.ResumeLayout(False)
+        Me.TabPage20Calibration.PerformLayout()
         Me.TableLayoutPanelCalibration.ResumeLayout(False)
         Me.TableLayoutPanelCalibration.PerformLayout()
-        Me.TabPageInsulin.ResumeLayout(False)
-        Me.TabPageInsulin.PerformLayout()
+        Me.TabPage21Insulin.ResumeLayout(False)
+        Me.TabPage21Insulin.PerformLayout()
         Me.TableLayoutPanelInsulin.ResumeLayout(False)
         Me.TableLayoutPanelInsulin.PerformLayout()
         CType(Me.DataGridViewInsulin, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.TabPageLowGlusoseSuspended.ResumeLayout(False)
-        Me.TabPageLowGlusoseSuspended.PerformLayout()
+        Me.TabPage22LowGlusoseSuspended.ResumeLayout(False)
+        Me.TabPage22LowGlusoseSuspended.PerformLayout()
         Me.TableLayoutPanelLowGlusoseSuspended.ResumeLayout(False)
         Me.TableLayoutPanelLowGlusoseSuspended.PerformLayout()
-        Me.TabPageMeal.ResumeLayout(False)
-        Me.TabPageMeal.PerformLayout()
+        Me.TabPage23Meal.ResumeLayout(False)
+        Me.TabPage23Meal.PerformLayout()
         Me.TableLayoutPanelMeal.ResumeLayout(False)
         Me.TableLayoutPanelMeal.PerformLayout()
-        Me.TabPageTimeChange.ResumeLayout(False)
-        Me.TabPageTimeChange.PerformLayout()
+        Me.TabPage25TimeChange.ResumeLayout(False)
+        Me.TabPage25TimeChange.PerformLayout()
         Me.TableLayoutPanelTimeChange.ResumeLayout(False)
         Me.TableLayoutPanelTimeChange.PerformLayout()
-        Me.TabPage09NotificationHistory.ResumeLayout(False)
-        Me.TabPage09NotificationHistory.PerformLayout()
-        Me.TableLayoutPanelNotificationHistory.ResumeLayout(False)
-        Me.TableLayoutPanelNotificationHistory.PerformLayout()
-        Me.TabPage10Basal.ResumeLayout(False)
-        Me.TableLayoutPanelBasal.ResumeLayout(False)
-        Me.TableLayoutPanelBasal.PerformLayout()
-        Me.TabPage11TherapyAlgorithm.ResumeLayout(False)
-        Me.TabPage11TherapyAlgorithm.PerformLayout()
-        Me.TableLayoutPanelTherapyAlgorthm.ResumeLayout(False)
-        Me.TableLayoutPanelTherapyAlgorthm.PerformLayout()
-        Me.TabPage12BannerState.ResumeLayout(False)
-        Me.TableLayoutPanelBannerState.ResumeLayout(False)
-        Me.TableLayoutPanelBannerState.PerformLayout()
-        Me.TabPage13CountrySettings.ResumeLayout(False)
-        CType(Me.DataGridViewCountryItems, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.TabPage14Profile.ResumeLayout(False)
-        CType(Me.DataGridViewMyProfile, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.TabPageMyUser.ResumeLayout(False)
-        CType(Me.DataGridViewMyUserData, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.TabPageAllUsers.ResumeLayout(False)
-        CType(Me.DataGridViewCareLinkUsers, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.CareLinkUserDataRecordBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents MenuHelpAbout As ToolStripMenuItem
     Friend WithEvents AboveHighLimitMessageLabel As Label
     Friend WithEvents AboveHighLimitValueLabel As Label
     Friend WithEvents ActiveInsulinValue As Label
     Friend WithEvents AITAlgorithmLabel As Label
+    Friend WithEvents AutoCorrectionLabel As Label
+    Friend WithEvents AverageSGMessageLabel As Label
     Friend WithEvents AverageSGValueLabel As Label
+    Friend WithEvents BasalLabel As Label
+    Friend WithEvents BelowLowLimitMessageLabel As Label
     Friend WithEvents BelowLowLimitValueLabel As Label
     Friend WithEvents CalibrationDueImage As PictureBox
+    Friend WithEvents CalibrationShieldPanel As Panel
+    Friend WithEvents CalibrationShieldPictureBox As PictureBox
+    Friend WithEvents CareLinkUserDataRecordBindingSource As BindingSource
+    Friend WithEvents CurrentBGLabel As Label
+    Friend WithEvents CursorMessage1Label As Label
+    Friend WithEvents CursorMessage2Label As Label
+    Friend WithEvents CursorPanel As Panel
+    Friend WithEvents CursorPictureBox As PictureBox
     Friend WithEvents CursorTimeLabel As Label
     Friend WithEvents CursorTimer As Timer
-    Friend WithEvents StartHereExit As ToolStripMenuItem
-    Friend WithEvents MenuOptionsFilterRawJSONData As ToolStripMenuItem
-    Friend WithEvents MenuHelp As ToolStripMenuItem
-    Friend WithEvents MenuHelpCheckForUpdates As ToolStripMenuItem
-    Friend WithEvents MenuHelpReportAnIssue As ToolStripMenuItem
+    Friend WithEvents CursorValueLabel As Label
+    Friend WithEvents DailyDoseLabel As Label
+    Friend WithEvents DataGridViewAutoBasalDelivery As DataGridView
+    Friend WithEvents DataGridViewCareLinkUsers As DataGridView
+    Friend WithEvents DataGridViewCountryItems As DataGridView
+    Friend WithEvents DataGridViewInsulin As DataGridView
+    Friend WithEvents DataGridViewMyProfile As DataGridView
+    Friend WithEvents DataGridViewMyUserData As DataGridView
+    Friend WithEvents DataGridViewSGs As DataGridView
+    Friend WithEvents DataGridViewSummary As DataGridView
+    Friend WithEvents DataGridViewCheckBoxColumnAutoLogin As DataGridViewCheckBoxColumn
+    Friend WithEvents DataGridViewCheckBoxColumnUseAdvancedAITDecay As DataGridViewCheckBoxColumn
+    Friend WithEvents DataGridViewCheckBoxColumnUseLocalTimeZone As DataGridViewCheckBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnAIT As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnAlertPhoneNumber As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCareLinkPassword As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCareLinkUserName As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCarrierTextingDomain As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCountry As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCountryCode As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsCategory As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsCategoryEven As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsKey As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsKeyEven As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsRecordNumber As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsRecordNumberEven As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsValue As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsValueEven As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnFirstName As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnLastName As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnMailserverPassword As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnMailServerPort As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnMailserverUserName As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnOutGoingMailServer As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnSettingsVersion As DataGridViewTextBoxColumn
+    Friend WithEvents FullNameLabel As Label
     Friend WithEvents ImageList1 As ImageList
     Friend WithEvents InRangeMessageLabel As Label
     Friend WithEvents InsulinLevelPictureBox As PictureBox
+    Friend WithEvents Label1 As Label
+    Friend WithEvents LabelAutoBasalDelivery As Label
+    Friend WithEvents LabelAutoModeStatus As Label
+    Friend WithEvents LabelBannerState As Label
+    Friend WithEvents LabelBasal As Label
+    Friend WithEvents LabelBgReading As Label
+    Friend WithEvents LabelCalibration As Label
+    Friend WithEvents LabelInsulin As Label
+    Friend WithEvents LabelLimits As Label
+    Friend WithEvents LabelLowGlusoseSuspended As Label
+    Friend WithEvents LabelMeal As Label
+    Friend WithEvents LabelNotificationHistory As Label
+    Friend WithEvents LabelSgs As Label
+    Friend WithEvents LabelSgTrend As Label
+    Friend WithEvents LabelTherapyAlgorthm As Label
+    Friend WithEvents LabelTimeChange As Label
+    Friend WithEvents LabelTrendArrows As Label
+    Friend WithEvents LabelTrendValue As Label
+    Friend WithEvents Last24CarbsValueLabel As Label
+    Friend WithEvents Last24HoursLabel As Label
+    Friend WithEvents Last24HTotalsPanel As Panel
+    Friend WithEvents LastUpdateTime As Label
+    Friend WithEvents LastUpdateTimeLabel As Label
     Friend WithEvents ListView1 As ListView
-    Friend WithEvents MenuStartHereLogin As ToolStripMenuItem
-    Friend WithEvents MenuStrip1 As MenuStrip
-    Friend WithEvents NotifyIcon1 As NotifyIcon
-    Friend WithEvents MenuOptions As ToolStripMenuItem
-    Friend WithEvents PumpBatteryPictureBox As PictureBox
-    Friend WithEvents PumpBatteryRemainingLabel As Label
-    Friend WithEvents RemainingInsulinUnits As Label
-    Friend WithEvents SensorMessage As Label
     Friend WithEvents LoginStatus As Label
     Friend WithEvents LoginStatusLabel As Label
-    Friend WithEvents LastUpdateTimeLabel As Label
-    Friend WithEvents LastUpdateTime As Label
-    Friend WithEvents ServerUpdateTimer As Timer
+    Friend WithEvents ManualBolusLabel As Label
+    Friend WithEvents MaxBasalPerHourLabel As Label
+    Friend WithEvents MenuHelp As ToolStripMenuItem
+    Friend WithEvents MenuHelpAbout As ToolStripMenuItem
+    Friend WithEvents MenuHelpCheckForUpdates As ToolStripMenuItem
+    Friend WithEvents MenuHelpReportAnIssue As ToolStripMenuItem
+    Friend WithEvents MenuOptions As ToolStripMenuItem
+    Friend WithEvents MenuOptionsAutoLogin As ToolStripMenuItem
+    Friend WithEvents MenuOptionsFilterRawJSONData As ToolStripMenuItem
     Friend WithEvents MenuOptionsSetupEmailServer As ToolStripMenuItem
-    Friend WithEvents SGsDataGridView As DataGridView
-    Friend WithEvents SplitContainer1 As SplitContainer
+    Friend WithEvents MenuOptionsUseAdvancedAITDecay As ToolStripMenuItem
+    Friend WithEvents MenuOptionsUseLocalTimeZone As ToolStripMenuItem
     Friend WithEvents MenuStartHere As ToolStripMenuItem
+    Friend WithEvents MenuStartHereExceptionReportLoad As ToolStripMenuItem
+    Friend WithEvents MenuStartHereLoadSavedDataFile As ToolStripMenuItem
+    Friend WithEvents MenuStartHereLogin As ToolStripMenuItem
+    Friend WithEvents MenuStartHereSnapshotSave As ToolStripMenuItem
+    Friend WithEvents MenuStartHereUseLastSavedFile As ToolStripMenuItem
+    Friend WithEvents MenuStartHereUseTestData As ToolStripMenuItem
+    Friend WithEvents MenuStrip1 As MenuStrip
+    Friend WithEvents ModelLabel As Label
+    Friend WithEvents NotifyIcon1 As NotifyIcon
+    Friend WithEvents PumpBatteryPictureBox As PictureBox
+    Friend WithEvents PumpBatteryRemainingLabel As Label
+    Friend WithEvents ReadingIntervalLabel As Label
+    Friend WithEvents ReadingsLabel As Label
+    Friend WithEvents RemainingInsulinUnits As Label
+    Friend WithEvents SensorDaysLeftLabel As Label
+    Friend WithEvents SensorMessage As Label
+    Friend WithEvents SensorTimeLeftLabel As Label
+    Friend WithEvents SensorTimeLeftPanel As Panel
+    Friend WithEvents SensorTimeLeftPictureBox As PictureBox
+    Friend WithEvents SerialNumberLabel As Label
+    Friend WithEvents ServerUpdateTimer As Timer
+    Friend WithEvents ShieldUnitsLabel As Label
+    Friend WithEvents ShowMiniDisplay As ToolStripMenuItem
+    Friend WithEvents SplitContainer1 As SplitContainer
+    Friend WithEvents SplitContainer2 As SplitContainer
+    Friend WithEvents SplitContainer3 As SplitContainer
+    Friend WithEvents SplitContainer4 As SplitContainer
+    Friend WithEvents StartHereExit As ToolStripMenuItem
     Friend WithEvents TabControlHomePage As TabControl
+    Friend WithEvents TabControlMarker As TabControl
     Friend WithEvents TableLayoutPanelActiveInsulin As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelBasal As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelLimits As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelAutoBasalDelivery As TableLayoutPanel
     Friend WithEvents TableLayoutPanelAutoModeStatus As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelBannerState As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelBasal As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelBgReading As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelCalibration As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelInsulin As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelLimits As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelLowGlusoseSuspended As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelMeal As TableLayoutPanel
     Friend WithEvents TableLayoutPanelNotificationHistory As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelSgs As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelTherapyAlgorthm As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelTimeChange As TableLayoutPanel
     Friend WithEvents TableLayoutPanelTop1 As TableLayoutPanel
     Friend WithEvents TableLayoutPanelTop2 As TableLayoutPanel
     Friend WithEvents TabPage01HomePage As TabPage
+    Friend WithEvents TabPage02ActiveInsulin As TabPage
     Friend WithEvents TabPage03TreatmentDetails As TabPage
     Friend WithEvents TabPage04SummaryData As TabPage
     Friend WithEvents TabPage05ActiveInsulin As TabPage
     Friend WithEvents TabPage06SensorGlucose As TabPage
     Friend WithEvents TabPage07Limits As TabPage
-    Friend WithEvents TabPageMarkers As TabPage
-    Friend WithEvents TabPage09NotificationHistory As TabPage
-    Friend WithEvents TabPage10Basal As TabPage
+    Friend WithEvents TabPage08NotificationHistory As TabPage
+    Friend WithEvents TabPage09Basal As TabPage
+    Friend WithEvents TabPage10TherapyAlgorithm As TabPage
+    Friend WithEvents TabPage11BannerState As TabPage
+    Friend WithEvents TabPage12CountrySettings As TabPage
+    Friend WithEvents TabPage13Profile As TabPage
+    Friend WithEvents TabPage14MyUser As TabPage
+    Friend WithEvents TabPage15AllUsers As TabPage
+    Friend WithEvents TabPage16Markers As TabPage
+    Friend WithEvents TabPage17AutoBasalDelivery As TabPage
+    Friend WithEvents TabPage17BgReading As TabPage
+    Friend WithEvents TabPage18AutoModeStatus As TabPage
+    Friend WithEvents TabPage20Calibration As TabPage
+    Friend WithEvents TabPage21Insulin As TabPage
+    Friend WithEvents TabPage22LowGlusoseSuspended As TabPage
+    Friend WithEvents TabPage23Meal As TabPage
+    Friend WithEvents TabPage25TimeChange As TabPage
     Friend WithEvents TimeInRangeChartLabel As Label
+    Friend WithEvents TimeInRangeLabel As Label
     Friend WithEvents TimeInRangeSummaryPercentCharLabel As Label
     Friend WithEvents TimeInRangeValueLabel As Label
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
+    Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
+    Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
+    Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
+    Friend WithEvents ToolTip1 As ToolTip
+    Friend WithEvents TotalsLabel As Label
     Friend WithEvents TransmatterBatterPercentLabel As Label
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
-    Friend WithEvents MenuStartHereUseTestData As ToolStripMenuItem
-    Friend WithEvents ShowMiniDisplay As ToolStripMenuItem
-    Friend WithEvents MenuStartHereUseLastSavedFile As ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
-    Friend WithEvents MenuStartHereLoadSavedDataFile As ToolStripMenuItem
-    Friend WithEvents MenuStartHereSnapshotSave As ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
-    Friend WithEvents ToolTip1 As ToolTip
-    Friend WithEvents SplitContainer2 As SplitContainer
-    Friend WithEvents SplitContainer3 As SplitContainer
-    Friend WithEvents Last24HoursLabel As Label
-    Friend WithEvents TimeInRangeLabel As Label
-    Friend WithEvents SplitContainer4 As SplitContainer
-    Friend WithEvents ReadingIntervalLabel As Label
-    Friend WithEvents ReadingsLabel As Label
-    Friend WithEvents ModelLabel As Label
-    Friend WithEvents SerialNumberLabel As Label
-    Friend WithEvents FullNameLabel As Label
-    Friend WithEvents BelowLowLimitMessageLabel As Label
-    Friend WithEvents AverageSGMessageLabel As Label
-    Friend WithEvents MenuOptionsUseAdvancedAITDecay As ToolStripMenuItem
-    Friend WithEvents MenuStartHereExceptionReportLoad As ToolStripMenuItem
-    Friend WithEvents TabPage11TherapyAlgorithm As TabPage
-    Friend WithEvents TabPage12BannerState As TabPage
-    Friend WithEvents TableLayoutPanelTherapyAlgorthm As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelBannerState As TableLayoutPanel
-    Friend WithEvents MenuOptionsUseLocalTimeZone As ToolStripMenuItem
-    Friend WithEvents SummaryDataGridView As DataGridView
-    Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
-    Friend WithEvents TabControlMarker As TabControl
-    Friend WithEvents TabPageAutoModeStatus As TabPage
-    Friend WithEvents TabPageAutoBasalDelivery As TabPage
-    Friend WithEvents TabPageBgReading As TabPage
-    Friend WithEvents TabPageCalibration As TabPage
-    Friend WithEvents TabPageInsulin As TabPage
-    Friend WithEvents TabPageLowGlusoseSuspended As TabPage
-    Friend WithEvents TabPageMeal As TabPage
-    Friend WithEvents TabPageTimeChange As TabPage
-    Friend WithEvents TableLayoutPanelBgReading As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelCalibration As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelInsulin As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelLowGlusoseSuspended As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelMeal As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelTimeChange As TableLayoutPanel
-    Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
-    Friend WithEvents TableLayoutPanelAutoBasalDelivery As TableLayoutPanel
-    Friend WithEvents DataGridViewAutoBasalDelivery As DataGridView
-    Friend WithEvents DataGridViewInsulin As DataGridView
-    Friend WithEvents TableLayoutPanelSgs As TableLayoutPanel
-    Friend WithEvents LabelSgs As Label
-    Friend WithEvents LabelLimits As Label
-    Friend WithEvents LabelAutoBasalDelivery As Label
-    Friend WithEvents LabelAutoModeStatus As Label
-    Friend WithEvents LabelBgReading As Label
-    Friend WithEvents LabelCalibration As Label
-    Friend WithEvents LabelInsulin As Label
-    Friend WithEvents LabelLowGlusoseSuspended As Label
-    Friend WithEvents LabelMeal As Label
-    Friend WithEvents LabelTimeChange As Label
-    Friend WithEvents LabelNotificationHistory As Label
-    Friend WithEvents LabelBasal As Label
-    Friend WithEvents LabelTherapyAlgorthm As Label
-    Friend WithEvents LabelBannerState As Label
-    Friend WithEvents Label1 As Label
-    Friend WithEvents LabelTrendArrows As Label
-    Friend WithEvents LabelSgTrend As Label
-    Friend WithEvents CursorPanel As Panel
-    Friend WithEvents CursorMessage2Label As Label
-    Friend WithEvents CursorValueLabel As Label
-    Friend WithEvents CursorPictureBox As PictureBox
-    Friend WithEvents CursorMessage1Label As Label
-    Friend WithEvents CalibrationShieldPanel As Panel
-    Friend WithEvents CurrentBGLabel As Label
-    Friend WithEvents ShieldUnitsLabel As Label
-    Friend WithEvents CalibrationShieldPictureBox As PictureBox
-    Friend WithEvents SensorTimeLeftPanel As Panel
-    Friend WithEvents SensorTimeLeftLabel As Label
-    Friend WithEvents SensorDaysLeftLabel As Label
-    Friend WithEvents SensorTimeLeftPictureBox As PictureBox
-    Friend WithEvents Last24HTotalsPanel As Panel
-    Friend WithEvents Last24CarbsValueLabel As Label
-    Friend WithEvents TotalsLabel As Label
-    Friend WithEvents AutoCorrectionLabel As Label
-    Friend WithEvents ManualBolusLabel As Label
-    Friend WithEvents BasalLabel As Label
-    Friend WithEvents DailyDoseLabel As Label
-    Friend WithEvents MenuOptionsAutoLogin As ToolStripMenuItem
-    Friend WithEvents MaxBasalPerHourLabel As Label
-    Friend WithEvents TabPage13CountrySettings As TabPage
-    Friend WithEvents LabelTrendValue As Label
-    Friend WithEvents DataGridViewCountryItems As DataGridView
-    Friend WithEvents CountrySettingsRecordNumber As DataGridViewTextBoxColumn
-    Friend WithEvents CountrySettingsCategory As DataGridViewTextBoxColumn
-    Friend WithEvents CountrySettingsKey As DataGridViewTextBoxColumn
-    Friend WithEvents CountrySettingsValue As DataGridViewTextBoxColumn
-    Friend WithEvents CountrySettingsRecordNumberEven As DataGridViewTextBoxColumn
-    Friend WithEvents CountrySettingsCategoryEven As DataGridViewTextBoxColumn
-    Friend WithEvents CountrySettingsKeyEven As DataGridViewTextBoxColumn
-    Friend WithEvents CountrySettingsValueEven As DataGridViewTextBoxColumn
-    Friend WithEvents TabPage14Profile As TabPage
-    Friend WithEvents TabPageMyUser As TabPage
-    Friend WithEvents DataGridViewMyProfile As DataGridView
-    Friend WithEvents DataGridViewMyUserData As DataGridView
-    Friend WithEvents TabPageAllUsers As TabPage
-    Friend WithEvents DataGridViewCareLinkUsers As DataGridView
-    Friend WithEvents CareLinkUserDataRecordBindingSource As BindingSource
-    Friend WithEvents CountryDataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
-    Friend WithEvents FirstNameDataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
-    Friend WithEvents LastNameDataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
-    Friend WithEvents CareLinkUserNameDataGridViewTextBoxColumn As DataGridViewTextBoxColumn
-    Friend WithEvents CareLinkPasswordDataGridViewTextBoxColumn As DataGridViewTextBoxColumn
-    Friend WithEvents AITDataGridViewTextBoxColumn As DataGridViewTextBoxColumn
-    Friend WithEvents AlertPhoneNumberDataGridViewTextBoxColumn As DataGridViewTextBoxColumn
-    Friend WithEvents CarrierTextingDomainDataGridViewTextBoxColumn As DataGridViewTextBoxColumn
-    Friend WithEvents CountryCodeDataGridViewTextBoxColumn As DataGridViewTextBoxColumn
-    Friend WithEvents MailserverPasswordDataGridViewTextBoxColumn As DataGridViewTextBoxColumn
-    Friend WithEvents MailServerPortDataGridViewTextBoxColumn As DataGridViewTextBoxColumn
-    Friend WithEvents MailserverUserNameDataGridViewTextBoxColumn As DataGridViewTextBoxColumn
-    Friend WithEvents SettingsVersionDataGridViewTextBoxColumn As DataGridViewTextBoxColumn
-    Friend WithEvents OutGoingMailServerDataGridViewTextBoxColumn As DataGridViewTextBoxColumn
-    Friend WithEvents UseAdvancedAITDecayDataGridViewCheckBoxColumn As DataGridViewCheckBoxColumn
-    Friend WithEvents UseLocalTimeZoneDataGridViewCheckBoxColumn As DataGridViewCheckBoxColumn
-    Friend WithEvents AutoLoginDataGridViewCheckBoxColumn As DataGridViewCheckBoxColumn
-    Friend WithEvents TabPage02ActiveInsulin As TabPage
 End Class
