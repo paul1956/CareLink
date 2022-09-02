@@ -26,7 +26,7 @@ Public Class AutoBasalDeliveryRecord
                         Me.dateTime = value.ParseDate(NameOf([dateTime]))
                     End If
                     Me.dateTimeAsString = value
-                    Me.OADate = _dateTime.ToOADate
+                    Me.OADate = New OADate(_dateTime)
 
                 Case NameOf(relativeOffset)
                     Me.relativeOffset = Integer.Parse(kvp.Value)
@@ -53,7 +53,7 @@ Public Class AutoBasalDeliveryRecord
     Public Property version As Integer
     Public Property [dateTime] As Date
     Public Property dateTimeAsString As String
-    Public Property OADate As Double
+    Public Property OADate As OADate
     Public Property relativeOffset As Integer
     Public Property id As Integer
     Public Property bolusAmount As Single

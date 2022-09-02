@@ -11,9 +11,10 @@ Friend Module DateTimeExtensions
 
 #Region "OaDateTime Constants"
 
-    Public ReadOnly s_fiveMinuteOADate As Double = (Date.MinValue + New TimeSpan(hours:=0, minutes:=5, seconds:=0)).ToOADate
-    Public ReadOnly s_hourAsOADate As Double = s_fiveMinuteOADate * 12
-    Public ReadOnly s_twoHalfMinuteOADate As Double = s_fiveMinuteOADate / 2
+    Public ReadOnly s_fiveMinuteOADate As New OADate(Date.MinValue + New TimeSpan(hours:=0, minutes:=5, seconds:=0))
+    Public ReadOnly s_sixMinuteOADate As New OADate(Date.MinValue + New TimeSpan(hours:=0, minutes:=6, seconds:=0))
+    Public ReadOnly s_hourAsOADate As New OADate(Date.MinValue + New TimeSpan(hours:=1, minutes:=0, seconds:=0))
+    Public ReadOnly s_twoHalfMinuteOADate As New OADate(Date.MinValue + New TimeSpan(hours:=0, minutes:=2, seconds:=30))
 
 #End Region ' OaDateTime Constants
 

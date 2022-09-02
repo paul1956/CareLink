@@ -106,8 +106,8 @@ Module ChartSupport
 
     Friend Sub InitializeChartArea(c As ChartArea)
         With c
-            .AxisX.Minimum = s_bindingSourceSGs(0).OADate()
-            .AxisX.Maximum = s_bindingSourceSGs.Last.OADate()
+            .AxisX.Minimum = s_bindingSourceSGs(0).OADate.AsDouble()
+            .AxisX.Maximum = s_bindingSourceSGs.Last.OADate.AsDouble()
             .AxisX.MajorGrid.IntervalType = DateTimeIntervalType.Hours
             .AxisX.MajorGrid.IntervalOffsetType = DateTimeIntervalType.Hours
             .AxisX.MajorGrid.Interval = 1

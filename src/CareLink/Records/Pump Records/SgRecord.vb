@@ -36,7 +36,7 @@ Public Class SgRecord
             lastValidTime += s_fiveMinuteSpan
         End If
         Me.dateTimeAsString = value
-        Me.OADate = _datetime.ToOADate
+        Me.OADate = New OADate(_datetime)
 
     End Sub
 
@@ -46,7 +46,7 @@ Public Class SgRecord
     Public Property sg As Single
     Public Property [datetime] As Date
     Public Property dateTimeAsString As String
-    Public Property OADate As Double
+    Public Property OADate As OADate
     Public Property timeChange As String
     Public Property sensorState As String
     Public Property kind As String

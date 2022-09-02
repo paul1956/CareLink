@@ -14,8 +14,10 @@ Imports ToolStripControls
 
 Public Class Form1
     Private WithEvents AITComboBox As ToolStripComboBoxEx
+
     Private ReadOnly _bgMiniDisplay As New BGMiniWindow
     Private ReadOnly _calibrationToolTip As New ToolTip()
+    Private ReadOnly _loginDialog As New LoginForm1
     Private ReadOnly _markersAutoBasalDelivery As New List(Of Dictionary(Of String, String))
     Private ReadOnly _markersAutoModeStatus As New List(Of Dictionary(Of String, String))
     Private ReadOnly _markersBgReading As New List(Of Dictionary(Of String, String))
@@ -26,23 +28,16 @@ Public Class Form1
     Private ReadOnly _markersTimeChange As New List(Of Dictionary(Of String, String))
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
     Private ReadOnly _updatingLock As New Object
-    Private _client As CareLinkClient
+
     Private _activeInsulinChartAbsoluteRectangle As RectangleF = RectangleF.Empty
+    Private _client As CareLinkClient
+    Private _formScale As New SizeF(1.0F, 1.0F)
     Private _homePageAbsoluteRectangle As RectangleF
-    Private _treatmentMarkerAbsoluteRectangle As RectangleF
+    Private _initialized As Boolean = False
     Private _inMouseMove As Boolean = False
-
     Private _showBaloonTip As Boolean = True
-
+    Private _treatmentMarkerAbsoluteRectangle As RectangleF
     Private _updating As Boolean
-
-#Region "Pump Data"
-
-    Friend Property RecentData As New Dictionary(Of String, String)
-
-#End Region
-
-    Friend ReadOnly _loginDialog As New LoginForm1
 
     Private Enum FileToLoadOptions As Integer
         LastSaved = 0
@@ -50,9 +45,11 @@ Public Class Form1
         Login = 2
     End Enum
 
-    Private Property FormScale As New SizeF(1.0F, 1.0F)
+#Region "Pump Data"
 
-    Private Property Initialized As Boolean = False
+    Friend Property RecentData As New Dictionary(Of String, String)
+
+#End Region ' Pump Data
 
 #Region "Chart Objects"
 
@@ -113,7 +110,7 @@ Public Class Form1
 
 #End Region
 
-#End Region
+#End Region ' Chart Objects
 
 #Region "Events"
 
@@ -178,7 +175,7 @@ Public Class Form1
         Me.InitializeActiveInsulinTabChart()
         Me.InitializeTimeInRangeArea()
 
-        Me.Initialized = True
+        _initialized = True
     End Sub
 
     Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
@@ -246,7 +243,7 @@ Public Class Form1
         Me.SensorMessage.Parent = Me.CalibrationShieldPictureBox
         Me.SensorDaysLeftLabel.BackColor = Color.Transparent
         Me.ShieldUnitsLabel.BackColor = Color.Transparent
-        If Me.FormScale.Height > 1 Then
+        If _formScale.Height > 1 Then
             Me.SplitContainer1.SplitterDistance = 0
         End If
         s_useLocalTimeZone = My.Settings.UseLocalTimeZone
@@ -257,11 +254,24 @@ Public Class Form1
         End If
     End Sub
 
-#End Region
+#End Region ' Form Events
 
 #Region "Form Menu Events"
 
-#Region "Start Here Menus"
+    Private Sub AITComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AITComboBox.SelectedIndexChanged
+        If Me.AITComboBox.SelectedIndex < 1 Then
+            Exit Sub
+        End If
+        Dim aitTimeSpan As TimeSpan = TimeSpan.Parse(Me.AITComboBox.SelectedValue.ToString)
+        If My.Settings.AIT <> aitTimeSpan Then
+            My.Settings.AIT = aitTimeSpan
+            My.Settings.Save()
+            s_activeInsulinIncrements = CInt(TimeSpan.Parse(aitTimeSpan.ToString("hh\:mm").Substring(1)) / s_fiveMinuteSpan)
+            Me.UpdateActiveInsulinChart()
+        End If
+    End Sub
+
+#Region "Start Here Menu Events"
 
     Private Sub MenuStartHere_DropDownOpened(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpened
         Me.MenuStartHereLoadSavedDataFile.Enabled = Directory.GetFiles(MyDocumentsPath, $"{RepoName}*.json").Length > 0
@@ -371,7 +381,7 @@ Public Class Form1
         Me.MenuStartHereSnapshotSave.Enabled = False
     End Sub
 
-#End Region
+#End Region ' Start Here Menu Events
 
 #Region "Option Menus"
 
@@ -415,18 +425,18 @@ Public Class Form1
         s_clientTimeZone = CalculateTimeZone()
     End Sub
 
-#End Region
+#End Region ' Option Menus
 
-#Region "View Menus"
+#Region "View Menu Events"
 
     Private Sub ShowMiniDisplay_Click(sender As Object, e As EventArgs) Handles ShowMiniDisplay.Click
         Me.Hide()
         _bgMiniDisplay.Show()
     End Sub
 
-#End Region
+#End Region ' View Menu Events
 
-#Region "Help Menus"
+#Region "Help Menu Events"
 
     Private Sub MenuHelpAbout_Click(sender As Object, e As EventArgs) Handles MenuHelpAbout.Click
         AboutBox1.ShowDialog()
@@ -440,27 +450,14 @@ Public Class Form1
         OpenUrlInBrowser($"{GitHubCareLinkUrl}issues")
     End Sub
 
-#End Region
+#End Region ' Help Menu Events
 
-    Private Sub AITComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AITComboBox.SelectedIndexChanged
-        If Me.AITComboBox.SelectedIndex < 1 Then
-            Exit Sub
-        End If
-        Dim aitTimeSpan As TimeSpan = TimeSpan.Parse(Me.AITComboBox.SelectedValue.ToString)
-        If My.Settings.AIT <> aitTimeSpan Then
-            My.Settings.AIT = aitTimeSpan
-            My.Settings.Save()
-            s_activeInsulinIncrements = CInt(TimeSpan.Parse(aitTimeSpan.ToString("hh\:mm").Substring(1)) / s_fiveMinuteSpan)
-            Me.UpdateActiveInsulinChart()
-        End If
-    End Sub
-
-#End Region
+#End Region 'Form Menu Events
 
 #Region "HomePage Tab Events"
 
     Private Sub TabControlHomePage_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlHomePage.Selecting
-        If e.TabPage.Name = NameOf(TabPage14AllUsers) Then
+        If e.TabPage.Name = NameOf(TabPageAllUsers) Then
             For Each c As DataGridViewColumn In Me.DataGridViewCareLinkUsers.Columns
                 c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
                 c.HeaderText = If(c.HeaderText.Contains(" "c), c.HeaderText, c.HeaderText.ToTitleCase)
@@ -468,7 +465,9 @@ Public Class Form1
         End If
     End Sub
 
-#Region "Home Page Chart Events"
+#End Region ' HomePage Tab Events
+
+#Region "Home Page Events"
 
     Private Sub CalibrationDueImage_MouseHover(sender As Object, e As EventArgs) Handles CalibrationDueImage.MouseHover
         If s_timeToNextCalibrationMinutes > 0 AndAlso s_timeToNextCalibrationMinutes < 1440 Then
@@ -477,7 +476,7 @@ Public Class Form1
     End Sub
 
     Private Sub HomePageChart_CursorPositionChanging(sender As Object, e As CursorEventArgs) Handles HomeTabChart.CursorPositionChanging
-        If Not Me.Initialized Then Exit Sub
+        If Not _initialized Then Exit Sub
 
         Me.CursorTimer.Interval = s_thirtySecondInMilliseconds
         Me.CursorTimer.Start()
@@ -485,7 +484,7 @@ Public Class Form1
 
     Private Sub HomePageChart_MouseMove(sender As Object, e As MouseEventArgs) Handles HomeTabChart.MouseMove
 
-        If Not Me.Initialized Then
+        If Not _initialized Then
             Exit Sub
         End If
         _inMouseMove = True
@@ -508,7 +507,10 @@ Public Class Form1
                 Me.CursorTimeLabel.Visible = False
                 Exit Sub
             End If
-            If result.Series.Points(result.PointIndex).Color = Color.Transparent Then
+
+            Dim currentDataPoint As DataPoint = result.Series.Points(result.PointIndex)
+
+            If currentDataPoint.IsEmpty OrElse currentDataPoint.Color = Color.Transparent Then
                 Me.CursorPanel.Visible = False
                 Me.CursorTimeLabel.Visible = False
                 Exit Sub
@@ -520,13 +522,13 @@ Public Class Form1
                      LowLimitSeriesName
                     Me.CursorPanel.Visible = False
                 Case MarkerSeriesName, BasalSeriesName
-                    Dim markerToolTip() As String = result.Series.Points(result.PointIndex).ToolTip.Split(":"c)
+                    Dim markerToolTip() As String = currentDataPoint.ToolTip.Split(":"c)
                     If markerToolTip.Length <= 1 Then
                         Me.CursorPanel.Visible = True
                         Exit Sub
                     End If
                     markerToolTip(0) = markerToolTip(0).Trim
-                    Dim xValue As Date = Date.FromOADate(result.Series.Points(result.PointIndex).XValue)
+                    Dim xValue As Date = Date.FromOADate(currentDataPoint.XValue)
                     Me.CursorTimeLabel.Text = xValue.ToString(s_timeWithMinuteFormat)
                     Me.CursorTimeLabel.Tag = xValue
                     Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
@@ -577,11 +579,11 @@ Public Class Form1
                             Me.CursorPanel.Visible = False
                     End Select
                 Case BgSeriesName
-                    Me.CursorMessage1Label.Text = $"{result.Series.Points(result.PointIndex).YValues(0).RoundToSingle(3)} {BgUnitsString}"
+                    Me.CursorMessage1Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(3)} {BgUnitsString}"
                     Me.CursorMessage1Label.Visible = True
                     Me.CursorMessage2Label.Visible = False
                     Me.CursorPictureBox.Image = Nothing
-                    Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(s_timeWithMinuteFormat)
+                    Me.CursorTimeLabel.Text = Date.FromOADate(currentDataPoint.XValue).ToString(s_timeWithMinuteFormat)
                     Me.CursorTimeLabel.Visible = True
                     Me.CursorValueLabel.Visible = False
                     Me.CursorPanel.Visible = True
@@ -590,7 +592,7 @@ Public Class Form1
                     Me.CursorMessage1Label.Visible = False
                     Me.CursorMessage2Label.Visible = False
                     Me.CursorPictureBox.Image = Nothing
-                    Me.CursorTimeLabel.Text = Date.FromOADate(result.Series.Points(result.PointIndex).XValue).ToString(s_timeWithMinuteFormat)
+                    Me.CursorTimeLabel.Text = Date.FromOADate(currentDataPoint.XValue).ToString(s_timeWithMinuteFormat)
                     Me.CursorTimeLabel.Visible = True
                     Me.CursorValueLabel.Visible = False
                     Me.CursorPanel.Visible = False
@@ -611,10 +613,11 @@ Public Class Form1
     End Sub
 
 #Region "Post Paint Events"
+
     <DebuggerNonUserCode()>
     Private Sub ActiveInsulinChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles ActiveInsulinChart.PostPaint
 
-        If Not Me.Initialized OrElse _updating OrElse _inMouseMove Then
+        If Not _initialized OrElse _updating OrElse _inMouseMove Then
             Exit Sub
         End If
         SyncLock _updatingLock
@@ -626,10 +629,10 @@ Public Class Form1
         End SyncLock
     End Sub
 
-    '<DebuggerNonUserCode()>
+    <DebuggerNonUserCode()>
     Private Sub TreatmentMarkersChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles TreatmentMarkersChart.PostPaint
 
-        If Not Me.Initialized OrElse _updating OrElse _inMouseMove Then
+        If Not _initialized OrElse _updating OrElse _inMouseMove Then
             Exit Sub
         End If
         SyncLock _updatingLock
@@ -645,7 +648,7 @@ Public Class Form1
     <DebuggerNonUserCode()>
     Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomeTabChart.PostPaint
 
-        If Not Me.Initialized OrElse _updating OrElse _inMouseMove Then
+        If Not _initialized OrElse _updating OrElse _inMouseMove Then
             Exit Sub
         End If
         SyncLock _updatingLock
@@ -660,7 +663,7 @@ Public Class Form1
 
 #End Region ' Post Paint Events
 
-#End Region ' Home Page Chart Events
+#End Region ' Home Page Events
 
 #Region "Home Page DataGridView Events"
 
@@ -937,8 +940,6 @@ Public Class Form1
 
 #End Region 'Home Page DataGridView Events
 
-#End Region ' HomePage Tab Events
-
 #Region "Settings Events"
 
     Private Sub MySettings_SettingChanging(sender As Object, e As SettingChangingEventArgs)
@@ -1105,7 +1106,7 @@ Public Class Form1
 #Region "Running Active Insulin Chart"
 
     Private Sub InitializeActiveInsulinTabChart()
-        Me.TabPage1RunningActiveInsulin.Controls.Clear()
+        Me.TabPage02ActiveInsulin.Controls.Clear()
 
         Me.ActiveInsulinChart = CreateChart(NameOf(ActiveInsulinChart))
         Me.ActiveInsulinChartArea = CreateChartArea()
@@ -1170,7 +1171,7 @@ Public Class Form1
                 .ShadowOffset = 3
             }
         Me.ActiveInsulinChart.Titles.Add(Me.ActiveInsulinChartTitle)
-        Me.TabPage1RunningActiveInsulin.Controls.Add(Me.ActiveInsulinChart)
+        Me.TabPage02ActiveInsulin.Controls.Add(Me.ActiveInsulinChart)
         Application.DoEvents()
 
     End Sub
@@ -1180,7 +1181,7 @@ Public Class Form1
 #Region "Initialize Treatment Markers Chart"
 
     Private Sub InitializeTreatmentMarkersTabChart()
-        Me.TabPage2TreatmentMarkers.Controls.Clear()
+        Me.TabPage03TreatmentDetails.Controls.Clear()
 
         Me.TreatmentMarkersChart = CreateChart(NameOf(TreatmentMarkersChart))
         Me.TreatmentMarkersChartArea = CreateChartArea()
@@ -1223,7 +1224,7 @@ Public Class Form1
                 .ShadowOffset = 3
             }
         Me.TreatmentMarkersChart.Titles.Add(Me.TreatmentMarkersChartTitle)
-        Me.TabPage2TreatmentMarkers.Controls.Add(Me.TreatmentMarkersChart)
+        Me.TabPage03TreatmentDetails.Controls.Add(Me.TreatmentMarkersChart)
         Application.DoEvents()
 
     End Sub
@@ -1267,7 +1268,7 @@ Public Class Form1
         Dim recordNumberAutoBasalDelivery As Integer = 0
         Dim recordNumberInsulin As Integer = 0
         Dim newMarker As Dictionary(Of String, String)
-        Dim basalDictionary As New Dictionary(Of Double, Single)
+        Dim basalDictionary As New Dictionary(Of OADate, Single)
         MaxBasalPerHour = 0
         MaxBasalPerDose = 0
         For Each innerdic As Dictionary(Of String, String) In LoadList(row)
@@ -1312,12 +1313,12 @@ Public Class Form1
                     Throw UnreachableException(memberName, sourceLineNumber)
             End Select
         Next
-        Dim endOADate As Double = basalDictionary.Last.Key
+        Dim endOADate As OADate = basalDictionary.Last.Key
         Dim i As Integer = 0
         While i < basalDictionary.Count AndAlso basalDictionary.Keys(i) <= endOADate
             Dim sum As Single = 0
             Dim j As Integer = i
-            Dim startOADate As Double = basalDictionary.Keys(j)
+            Dim startOADate As OADate = basalDictionary.Keys(j)
             While j < basalDictionary.Count AndAlso basalDictionary.Keys(j) <= startOADate + s_hourAsOADate
                 sum += basalDictionary.Values(j)
                 j += 1
@@ -1597,21 +1598,21 @@ Public Class Form1
                             Next
                             s_limits.Add(newLimit)
                         Next
-                        ProcessListOfDictionary(Me.TableLayoutPanelLimits, s_limits, rowIndex, Me.FormScale.Height <> 1)
+                        ProcessListOfDictionary(Me.TableLayoutPanelLimits, s_limits, rowIndex, _formScale.Height <> 1)
                     Case ItemIndexs.markers
                         ProcessListOfDictionary(Me.TableLayoutPanelAutoBasalDelivery, Me.DataGridViewAutoBasalDelivery, s_bindingSourceMarkersAutoBasalDelivery, rowIndex)
-                        ProcessListOfDictionary(Me.TableLayoutPanelAutoModeStatus, _markersAutoModeStatus, rowIndex, Me.FormScale.Height <> 1)
-                        ProcessListOfDictionary(Me.TableLayoutPanelBgReading, _markersBgReading, rowIndex, Me.FormScale.Height <> 1)
-                        ProcessListOfDictionary(Me.TableLayoutPanelCalibration, _markersCalibration, rowIndex, Me.FormScale.Height <> 1)
+                        ProcessListOfDictionary(Me.TableLayoutPanelAutoModeStatus, _markersAutoModeStatus, rowIndex, _formScale.Height <> 1)
+                        ProcessListOfDictionary(Me.TableLayoutPanelBgReading, _markersBgReading, rowIndex, _formScale.Height <> 1)
+                        ProcessListOfDictionary(Me.TableLayoutPanelCalibration, _markersCalibration, rowIndex, _formScale.Height <> 1)
                         ProcesListOfDictionary(Me.TableLayoutPanelInsulin, Me.DataGridViewInsulin, s_bindingSourceMarkersInsulin, rowIndex)
-                        ProcessListOfDictionary(Me.TableLayoutPanelLowGlusoseSuspended, _markersLowGlusoseSuspended, rowIndex, Me.FormScale.Height <> 1)
-                        ProcessListOfDictionary(Me.TableLayoutPanelMeal, _markersMeal, rowIndex, Me.FormScale.Height <> 1)
-                        ProcessListOfDictionary(Me.TableLayoutPanelTimeChange, _markersTimeChange, rowIndex, Me.FormScale.Height <> 1)
+                        ProcessListOfDictionary(Me.TableLayoutPanelLowGlusoseSuspended, _markersLowGlusoseSuspended, rowIndex, _formScale.Height <> 1)
+                        ProcessListOfDictionary(Me.TableLayoutPanelMeal, _markersMeal, rowIndex, _formScale.Height <> 1)
+                        ProcessListOfDictionary(Me.TableLayoutPanelTimeChange, _markersTimeChange, rowIndex, _formScale.Height <> 1)
                     Case ItemIndexs.pumpBannerState
                         If row.Value Is Nothing Then
-                            ProcessListOfDictionary(Me.TableLayoutPanelBannerState, New List(Of Dictionary(Of String, String)), rowIndex, Me.FormScale.Height <> 1)
+                            ProcessListOfDictionary(Me.TableLayoutPanelBannerState, New List(Of Dictionary(Of String, String)), rowIndex, _formScale.Height <> 1)
                         Else
-                            ProcessListOfDictionary(Me.TableLayoutPanelBannerState, LoadList(row.Value), rowIndex, Me.FormScale.Height <> 1)
+                            ProcessListOfDictionary(Me.TableLayoutPanelBannerState, LoadList(row.Value), rowIndex, _formScale.Height <> 1)
                         End If
                 End Select
                 Continue For
@@ -1698,7 +1699,7 @@ Public Class Form1
                 Me.LastUpdateTime.Text = Now.ToShortDateTimeString
             End If
             Me.CursorPanel.Visible = False
-            Me.UpdateDataTables(Me.FormScale.Height <> 1 OrElse Me.FormScale.Width <> 1)
+            Me.UpdateDataTables(_formScale.Height <> 1 OrElse _formScale.Width <> 1)
             Me.UpdateActiveInsulinChart()
             Me.UpdateActiveInsulin()
             Me.UpdateAutoModeShield()
@@ -1730,7 +1731,7 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateActiveInsulinChart(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
-        If Not Me.Initialized Then
+        If Not _initialized Then
             Exit Sub
         End If
         Try
@@ -1953,7 +1954,7 @@ Public Class Form1
 
         Dim limitsIndexList() As Integer = GetLimitsList(s_bindingSourceSGs.Count - 1)
         For Each sgListIndex As IndexClass(Of SgRecord) In s_bindingSourceSGs.WithIndex()
-            Dim sgOADateTime As Double = sgListIndex.Value.OADate()
+            Dim sgOADateTime As OADate = sgListIndex.Value.OADate()
             Try
                 Me.HomeTabChart.Series(BgSeriesName).PlotOnePoint(
                                     sgOADateTime,
@@ -1967,10 +1968,10 @@ Public Class Form1
                 Dim limitsLowValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("lowLimit").ParseSingle
                 Dim limitsHighValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("highLimit").ParseSingle
                 If limitsHighValue <> 0 Then
-                    Me.HomeTabChart.Series(HighLimitSeriesName).Points.AddXY(sgOADateTime, limitsHighValue)
+                    Me.HomeTabChart.Series(HighLimitSeriesName).Points.AddXY(sgOADateTime.AsDouble, limitsHighValue)
                 End If
                 If limitsLowValue <> 0 Then
-                    Me.HomeTabChart.Series(LowLimitSeriesName).Points.AddXY(sgOADateTime, limitsLowValue)
+                    Me.HomeTabChart.Series(LowLimitSeriesName).Points.AddXY(sgOADateTime.AsDouble, limitsLowValue)
                 End If
             Catch ex As Exception
                 Throw New Exception($"{ex.Message} exception while plotting Limits in {memberName} at {sourceLineNumber}")
@@ -2114,7 +2115,7 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateTreatmentMarkersChart(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
-        If Not Me.Initialized Then
+        If Not _initialized Then
             Exit Sub
         End If
         Try
@@ -2124,7 +2125,6 @@ Public Class Form1
                 InitializeChartArea(.ChartAreas(ChartAreaName))
                 .PlotTreatmentMarkers(_treatmentMarkerAbsoluteRectangle)
             End With
-
         Catch ex As Exception
             Throw New ArithmeticException($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
         End Try
@@ -2137,7 +2137,7 @@ Public Class Form1
 
     Private Sub Fix(sp As SplitContainer)
         ' Scale factor depends on orientation
-        Dim sc As Single = If(sp.Orientation = Orientation.Vertical, Me.FormScale.Width, Me.FormScale.Height)
+        Dim sc As Single = If(sp.Orientation = Orientation.Vertical, _formScale.Width, _formScale.Height)
         If sp.FixedPanel = FixedPanel.Panel1 Then
             sp.SplitterDistance = CInt(Math.Truncate(Math.Round(sp.SplitterDistance * sc)))
         ElseIf sp.FixedPanel = FixedPanel.Panel2 Then
@@ -2164,7 +2164,7 @@ Public Class Form1
     ' Save the current scale value
     ' ScaleControl() is called during the Form'AiTimeInterval constructor
     Protected Overrides Sub ScaleControl(factor As SizeF, specified As BoundsSpecified)
-        Me.FormScale = New SizeF(Me.FormScale.Width * factor.Width, Me.FormScale.Height * factor.Height)
+        _formScale = New SizeF(_formScale.Width * factor.Width, _formScale.Height * factor.Height)
         MyBase.ScaleControl(factor, specified)
     End Sub
 

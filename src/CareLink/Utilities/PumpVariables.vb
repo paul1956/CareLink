@@ -18,10 +18,10 @@ Public Module PumpVariables
 
 #Region "Used for painting"
 
-    Public ReadOnly s_homeTabMarkerInsulinDictionary As New Dictionary(Of Double, Single)
-    Public ReadOnly s_homeTabMarkerMealDictionary As New Dictionary(Of Double, Single)
-    Public ReadOnly s_treatmentMarkerInsulinDictionary As New Dictionary(Of Double, Single)
-    Public ReadOnly s_treatmentMarkerMealDictionary As New Dictionary(Of Double, Single)
+    Public ReadOnly s_homeTabMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
+    Public ReadOnly s_homeTabMarkerMealDictionary As New Dictionary(Of OADate, Single)
+    Public ReadOnly s_treatmentMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
+    Public ReadOnly s_treatmentMarkerMealDictionary As New Dictionary(Of OADate, Single)
 
 #End Region ' Used for painting
 

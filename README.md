@@ -27,12 +27,11 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 8/30/2022
+- 9/01/2022
 
 ## What's New in this release
-  New 3.5.4.0
-  Add new Treatment Tab to show Basal Charts
-  At the moment they grow down that may be temporary based on feedback
+  New 3.5.4.5
+  Design cleanup
 
   New 3.5.3.3
   Clean up Header Formatting

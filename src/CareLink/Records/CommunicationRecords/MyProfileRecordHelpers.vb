@@ -7,14 +7,12 @@
 Class MyProfileRecordHelpers
     Private Shared ReadOnly s_columnsToHide As New List(Of String)
 
-    Friend Shared Function GetDateOfBirth(value As String) As String
-        Dim dob As String = value
-        Dim result As Long = 0
-        If Long.TryParse(value, result) Then
-            Dim days As Integer = CInt(result / 86400000)
-            dob = (New Date(1970, 1, 1).ToUniversalTime + New TimeSpan(days, 0, 0, 0)).ToLocalTime.ToShortDateString
+    Friend Shared Function Epoch2String(epoch As String) As String
+        If String.IsNullOrWhiteSpace(epoch) Then
+            Return ""
         End If
-        Return dob
+        Dim days As Integer = CInt(Long.Parse(epoch) / 86400000)
+        Return New Date(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddDays(days).ToShortDateString
     End Function
 
     Friend Shared Function HideColumn(dataPropertyName As String) As Boolean

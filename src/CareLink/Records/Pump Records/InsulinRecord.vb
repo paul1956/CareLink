@@ -27,7 +27,7 @@ Public Class InsulinRecord
                         Me.dateTime = value.ParseDate(NameOf(Me.dateTime))
                     End If
                     Me.dateTimeAsString = value
-                    Me.OADate = _dateTime.ToOADate
+                    Me.OADate = New OADate(_dateTime)
                 Case NameOf(Me.relativeOffset)
                     Me.relativeOffset = Integer.Parse(kvp.Value)
 
@@ -77,7 +77,7 @@ Public Class InsulinRecord
     Public Property version As Integer
     Public Property [dateTime] As Date
     Public Property dateTimeAsString As String
-    Public Property OADate As Double
+    Public Property OADate As OADate
     Public Property relativeOffset As Integer
     Public Property programmedExtendedAmount As Single
     Public Property activationType As String
