@@ -2,7 +2,6 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Data.SqlTypes
 Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
@@ -54,6 +53,9 @@ Module ChartingExtensions
     Friend Sub DrawBasalMarker(ByRef basalSeries As Series, markerOADate As OADate, amount As Single, bolusRow As Double, insulinRow As Double, lineColor As Color, toolTip As String)
         Dim startX As OADate
         Dim startY As Double
+        If Math.Abs(amount - 0.025) < 0.001 Then
+            lineColor = Color.LightYellow
+        End If
         If basalSeries.Legend.StartsWith(NameOf(My.Forms.Form1.TreatmentMarkersChartLegend)) Then
             startX = markerOADate + s_twoHalfMinuteOADate
             startY = amount.RoundSingle(3)
@@ -68,9 +70,6 @@ Module ChartingExtensions
             basalSeries.AddBasalPoint(startX, startY, lineColor, toolTip)
             basalSeries.AddBasalPoint(startX, bolusRow, lineColor, toolTip)
             basalSeries.AddBasalPoint(startX, Double.NaN, Color.Transparent, toolTip)
-        End If
-        If Math.Abs(amount - 0.025) < 0.001 Then
-            lineColor = Color.DeepPink
         End If
 
     End Sub
