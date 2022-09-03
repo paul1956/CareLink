@@ -742,6 +742,17 @@ Public Class Form1
 
     Private Sub DataGridViewAutoBasalDelivery_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DataGridViewAutoBasalDelivery.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
+        If e.Value Is Nothing Then
+            Return
+        End If
+        ' Set the background to red for negative values in the Balance column.
+        If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(AutoBasalDeliveryRecord.bolusAmount), StringComparison.OrdinalIgnoreCase) Then
+            If e.Value.ToString = "0.025" Then
+                e.CellStyle.BackColor = Color.LightYellow
+            Else
+                e.Value = CSng(e.Value).ToString("F3", CurrentUICulture)
+            End If
+        End If
         dgv.dgvCellFormatting(e, NameOf(AutoBasalDeliveryRecord.dateTime))
     End Sub
 
@@ -798,7 +809,7 @@ Public Class Form1
         End If
         Dim dgv As DataGridView = CType(sender, DataGridView)
         ' Set the background to red for negative values in the Balance column.
-        If Me.DataGridViewSGs.Columns(e.ColumnIndex).Name.Equals(NameOf(s_sensorState), StringComparison.OrdinalIgnoreCase) Then
+        If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(s_sensorState), StringComparison.OrdinalIgnoreCase) Then
             If e.Value.ToString <> "NO_ERROR_MESSAGE" Then
                 e.CellStyle.BackColor = Color.Yellow
             End If
