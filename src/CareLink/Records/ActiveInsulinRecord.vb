@@ -7,16 +7,13 @@ Friend Class ActiveInsulinRecord
     Private _adjustmentValue As Single
     Private _incrementUpCount As Integer
 
-    Public Sub New(oaTime As Double, initialInsulinLevel As Single, activeInsulinIncrements As Integer, useAdvancedAITDecay As Boolean)
-        Me.OaTime = oaTime
-        Me.EventDate = Date.FromOADate(oaTime)
-        If useAdvancedAITDecay Then
-            _incrementUpCount = CInt(Math.Ceiling(activeInsulinIncrements * (1 / 3.5)))
-        Else
-            _incrementUpCount = CInt(Math.Ceiling(activeInsulinIncrements * (1 / 3)))
-        End If
-        _incrementDownCount = activeInsulinIncrements - _incrementUpCount
-        _adjustmentValue = initialInsulinLevel / activeInsulinIncrements
+    Public Sub New(oaDateTime As OADate, initialInsulinLevel As Single, useAdvancedAITDecay As Boolean)
+        Me.OaDateTime = oaDateTime
+        Me.EventDate = Date.FromOADate(oaDateTime)
+        Dim divisor As Double = If(useAdvancedAITDecay, 3.5, 3)
+        _incrementUpCount = CInt(Math.Ceiling(s_activeInsulinIncrements * (1 / divisor)))
+        _incrementDownCount = s_activeInsulinIncrements - _incrementUpCount
+            _adjustmentValue = initialInsulinLevel / s_activeInsulinIncrements
         Me.CurrentInsulinLevel = _adjustmentValue * _incrementDownCount
     End Sub
 
@@ -24,7 +21,7 @@ Friend Class ActiveInsulinRecord
 
     Public Property EventDate As Date
 
-    Public Property OaTime As Double
+    Public Property OaDateTime As OADate
 
     Friend Function Adjust() As ActiveInsulinRecord
         If Me.CurrentInsulinLevel > 0 Then

@@ -2,10 +2,9 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Globalization
-
 <DebuggerDisplay("{GetDebuggerDisplay(),nq}")>
 Public Class OADate
+    Implements IComparable(Of OADate)
     Private ReadOnly _oADate As Double
 
     Public Sub New(oADate As Double)
@@ -63,6 +62,10 @@ Public Class OADate
     Public Shared Narrowing Operator CType(b As Byte) As OADate
         Return New OADate(b)
     End Operator
+
+    Public Function CompareTo(other As OADate) As Integer Implements IComparable(Of OADate).CompareTo
+        Return _oADate.CompareTo(other._oADate)
+    End Function
 
     Public Overrides Function Equals(obj As Object) As Boolean
         Dim oA As OADate = TryCast(obj, OADate)

@@ -1811,10 +1811,10 @@ Public Class Form1
 
             ' Order all markers by time
             Dim timeOrderedMarkers As New SortedDictionary(Of Double, Single)
-            Dim sgOADateTime As Double
+            Dim sgOADateTime As OADate
 
             For Each marker As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
-                sgOADateTime = s_markers.SafeGetSgDateTime(marker.Index).RoundTimeDown(RoundTo.Minute).ToOADate
+                sgOADateTime = New OADate(s_markers.SafeGetSgDateTime(marker.Index).RoundTimeDown(RoundTo.Minute))
                 Select Case marker.Value("type").ToString
                     Case "AUTO_BASAL_DELIVERY"
                         Dim bolusAmount As Single = marker.Value.GetSingleValue("bolusAmount")
@@ -1847,12 +1847,12 @@ Public Class Form1
 
             For i As Integer = 0 To 287
                 Dim initialBolus As Single = 0
-                Dim oaTime As Double = (s_bindingSourceSGs(0).datetime + (s_fiveMinuteSpan * i)).RoundTimeDown(RoundTo.Minute).ToOADate()
-                While currentMarker < timeOrderedMarkers.Count AndAlso timeOrderedMarkers.Keys(currentMarker) <= oaTime
+                Dim firstNotSkippedOaTime As New OADate((s_bindingSourceSGs(0).datetime + (s_fiveMinuteSpan * i)).RoundTimeDown(RoundTo.Minute))
+                While currentMarker < timeOrderedMarkers.Count AndAlso timeOrderedMarkers.Keys(currentMarker) <= firstNotSkippedOaTime
                     initialBolus += timeOrderedMarkers.Values(currentMarker)
                     currentMarker += 1
                 End While
-                remainingInsulinList.Add(New ActiveInsulinRecord(oaTime, initialBolus, s_activeInsulinIncrements, Me.MenuOptionsUseAdvancedAITDecay.Checked))
+                remainingInsulinList.Add(New ActiveInsulinRecord(firstNotSkippedOaTime, initialBolus, Me.MenuOptionsUseAdvancedAITDecay.Checked))
             Next
 
             Me.ActiveInsulinChartArea.AxisY2.Maximum = HomePageBasalRow
@@ -1861,7 +1861,7 @@ Public Class Form1
             Dim maxActiveInsulin As Double = 0
             For i As Integer = 0 To remainingInsulinList.Count - 1
                 If i < s_activeInsulinIncrements Then
-                    Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinSeries)).Points.AddXY(remainingInsulinList(i).OaTime, Double.NaN)
+                    Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinSeries)).Points.AddXY(remainingInsulinList(i).OaDateTime, Double.NaN)
                     Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinSeries)).Points.Last.IsEmpty = True
                     If i > 0 Then
                         remainingInsulinList.Adjustlist(0, i)
@@ -1871,7 +1871,7 @@ Public Class Form1
                 Dim startIndex As Integer = i - s_activeInsulinIncrements + 1
                 Dim sum As Double = remainingInsulinList.ConditionalSum(startIndex, s_activeInsulinIncrements)
                 maxActiveInsulin = Math.Max(sum, maxActiveInsulin)
-                Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinSeries)).Points.AddXY(remainingInsulinList(i).OaTime, sum)
+                Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinSeries)).Points.AddXY(remainingInsulinList(i).OaDateTime, sum)
                 remainingInsulinList.Adjustlist(startIndex, s_activeInsulinIncrements)
                 Application.DoEvents()
             Next
