@@ -1329,30 +1329,24 @@ Public Class Form1
     Private Sub CollectMarkers(row As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
         Dim recordNumberAutoBasalDelivery As Integer = 0
         Dim recordNumberInsulin As Integer = 0
-        Dim newMarker As Dictionary(Of String, String)
         Dim basalDictionary As New Dictionary(Of OADate, Single)
         MaxBasalPerHour = 0
         MaxBasalPerDose = 0
-        For Each innerdic As Dictionary(Of String, String) In LoadList(row)
-            Select Case innerdic("type")
+        For Each newMarker As Dictionary(Of String, String) In LoadList(row)
+            Select Case newMarker("type")
                 Case "AUTO_BASAL_DELIVERY"
-                    newMarker = innerdic
                     _markersAutoBasalDelivery.Add(newMarker)
                     recordNumberAutoBasalDelivery += 1
                     Dim item As New AutoBasalDeliveryRecord(newMarker, recordNumberAutoBasalDelivery)
                     s_bindingSourceMarkersAutoBasalDelivery.Add(item)
                     basalDictionary.Add(item.OADate, item.bolusAmount)
                 Case "AUTO_MODE_STATUS"
-                    newMarker = innerdic
                     _markersAutoModeStatus.Add(newMarker)
                 Case "BG_READING"
-                    newMarker = ScaleOneMarker(innerdic)
-                    _markersBgReading.Add(newMarker)
+                    _markersBgReading.Add(ScaleOneMarker(newMarker))
                 Case "CALIBRATION"
-                    newMarker = ScaleOneMarker(innerdic)
-                    _markersCalibration.Add(newMarker)
+                    _markersCalibration.Add(ScaleOneMarker(newMarker))
                 Case "INSULIN"
-                    newMarker = innerdic
                     _markersInsulin.Add(newMarker)
                     recordNumberInsulin += 1
                     Dim item1 As New InsulinRecord(newMarker, recordNumberInsulin)
@@ -1362,13 +1356,10 @@ Public Class Form1
                             basalDictionary.Add(item1.OADate, item1.deliveredFastAmount)
                     End Select
                 Case "LOW_GLUCOSE_SUSPENDED"
-                    newMarker = innerdic
                     _markersLowGlusoseSuspended.Add(newMarker)
                 Case "MEAL"
-                    newMarker = innerdic
                     _markersMeal.Add(newMarker)
                 Case "TIME_CHANGE"
-                    newMarker = innerdic
                     _markersTimeChange.Add(newMarker)
                 Case Else
                     Stop
@@ -1799,7 +1790,6 @@ Public Class Form1
             Exit Sub
         End If
         Try
-
             With Me.ActiveInsulinChart
                 For Each s As Series In .Series
                     s.Points.Clear()
@@ -1856,7 +1846,6 @@ Public Class Form1
             Next
 
             Me.ActiveInsulinChartArea.AxisY2.Maximum = HomePageBasalRow
-
             ' walk all markers, adjust active insulin and then add new marker
             Dim maxActiveInsulin As Double = 0
             For i As Integer = 0 To remainingInsulinList.Count - 1
@@ -1878,7 +1867,7 @@ Public Class Form1
             Me.ActiveInsulinChartArea.AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1
             maxActiveInsulin = Me.ActiveInsulinChartArea.AxisY.Maximum
 
-            PlotSgSeries(Me.ActiveInsulinChart.Series(BgSeriesName), HomePageMealRow)
+            Me.ActiveInsulinChart.Series(BgSeriesName).PlotSgSeries(HomePageMealRow)
         Catch ex As Exception
             Throw New ArithmeticException($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
         End Try

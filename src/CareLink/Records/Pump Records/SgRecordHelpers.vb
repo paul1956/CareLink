@@ -30,7 +30,7 @@ Class SgRecordHelpers
                     NameOf(SgRecord.version)
                 cellStyle = cellStyle.CellStyleMiddleCenter()
             Case NameOf(SgRecord.datetime),
-                    NameOf(SgRecord.dateTimeAsString),
+                    NameOf(SgRecord.datetimeAsString),
                     NameOf(SgRecord.sensorState)
                 cellStyle = cellStyle.CellStyleMiddleLeft
             Case NameOf(SgRecord.timeChange),

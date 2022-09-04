@@ -136,8 +136,9 @@ Module ChartingExtensions
                     Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED"
                     Case "TIME_CHANGE"
                         With chart.Series(TimeChangeSeriesName).Points
+                            markerOADateTime = New TimeChangeRecord(s_markers(markerWithIndex.Index)).currentOADate
                             .AddXY(markerOADateTime, 0)
-                            .AddXY(markerOADateTime, TreatmentInsulinRow)
+                            .AddXY(markerOADateTime, HomePageBasalRow)
                             .AddXY(markerOADateTime, Double.NaN)
                         End With
                     Case Else
@@ -253,6 +254,7 @@ Module ChartingExtensions
                          "LOW_GLUCOSE_SUSPENDED"
                     Case "TIME_CHANGE"
                         With chart.Series(TimeChangeSeriesName).Points
+                            markerOADateTime = New TimeChangeRecord(s_markers(markerWithIndex.Index)).previousOADate
                             .AddXY(markerOADateTime, 0)
                             .AddXY(markerOADateTime, TreatmentInsulinRow)
                             .AddXY(markerOADateTime, Double.NaN)
