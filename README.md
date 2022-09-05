@@ -33,6 +33,7 @@ This update has a UI to show all the available data and a visual version that mi
   New 3.5.4.6
   Design Summary Formating
   Improve Tab design
+  More room for login message error
 
   New 3.5.4.5
   Design cleanup
