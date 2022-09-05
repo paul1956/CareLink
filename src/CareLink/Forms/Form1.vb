@@ -1402,6 +1402,7 @@ Public Class Form1
                     _markersMeal.Add(newMarker)
                 Case "TIME_CHANGE"
                     _markersTimeChange.Add(newMarker)
+                    s_markersTimeChange.Add(New TimeChangeRecord(newMarker))
                 Case Else
                     Stop
                     Throw UnreachableException(memberName, sourceLineNumber)
@@ -1643,6 +1644,7 @@ Public Class Form1
         _markersLowGlusoseSuspended.Clear()
         _markersMeal.Clear()
         _markersTimeChange.Clear()
+        s_markersTimeChange.Clear()
         s_bindingSourceMarkersAutoBasalDelivery.Clear()
         s_bindingSourceMarkersInsulin.Clear()
         s_bindingSourceSGs.Clear()

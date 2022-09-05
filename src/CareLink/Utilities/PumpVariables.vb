@@ -52,6 +52,7 @@ Public Module PumpVariables
     Friend s_limitLow As Single
     Friend s_limits As New List(Of Dictionary(Of String, String))
     Friend s_markers As New List(Of Dictionary(Of String, String))
+    Friend s_markersTimeChange As New List(Of TimeChangeRecord)
     Friend s_medicalDeviceBatteryLevelPercent As Integer
     Friend s_recentDatalast As Dictionary(Of String, String)
     Friend s_reservoirLevelPercent As Integer

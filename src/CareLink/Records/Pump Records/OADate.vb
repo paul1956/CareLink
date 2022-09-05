@@ -7,6 +7,9 @@ Public Class OADate
     Implements IComparable(Of OADate)
     Private ReadOnly _oADate As Double
 
+    Public Sub New()
+    End Sub
+
     Public Sub New(oADate As Double)
         _oADate = oADate
     End Sub
