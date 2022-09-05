@@ -35,6 +35,8 @@ Public Class Form1
     Private _homePageAbsoluteRectangle As RectangleF
     Private _initialized As Boolean = False
     Private _inMouseMove As Boolean = False
+    Private _lastHomeTabIndex As Integer = 0
+    Private _lastMarkerTabIndex As Integer = 0
     Private _showBaloonTip As Boolean = True
     Private _treatmentMarkerAbsoluteRectangle As RectangleF
     Private _updating As Boolean
@@ -407,7 +409,6 @@ Public Class Form1
             c.Visible = Not MyProfileRecordHelpers.HideColumn(c.DataPropertyName)
         Next
 
-        'Friend WithEvents DataGridViewMyUserData As DataGridView
         For Each c As DataGridViewColumn In Me.DataGridViewMyProfile.Columns
             c.Visible = Not MyProfileRecordHelpers.HideColumn(c.DataPropertyName)
         Next
@@ -415,8 +416,6 @@ Public Class Form1
         For Each c As DataGridViewColumn In Me.DataGridViewSGs.Columns
             c.Visible = Not SgRecordHelpers.HideColumn(c.DataPropertyName)
         Next
-
-        ' DataGridViewSummary
     End Sub
 
 #If SupportMailServer = "True" Then
@@ -483,11 +482,27 @@ Public Class Form1
 #Region "HomePage Tab Events"
 
     Private Sub TabControlHomePage_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlHomePage.Selecting
-        If e.TabPage.Name = NameOf(TabPage15AllUsers) Then
-            For Each c As DataGridViewColumn In Me.DataGridViewCareLinkUsers.Columns
-                c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
-                c.HeaderText = If(c.HeaderText.Contains(" "c), c.HeaderText, c.HeaderText.ToTitleCase)
-            Next
+
+        Select Case e.TabPage.Name
+            Case NameOf(TabPage15AllUsers)
+                For Each c As DataGridViewColumn In Me.DataGridViewCareLinkUsers.Columns
+                    c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
+                    c.HeaderText = If(c.HeaderText.Contains(" "c), c.HeaderText, c.HeaderText.ToTitleCase)
+                Next
+            Case NameOf(TabPage16Markers)
+                Me.TabControlMarkers.SelectedIndex = _lastMarkerTabIndex
+                Me.TabControlHomePage.Visible = False
+                Exit Sub
+        End Select
+        _lastHomeTabIndex = e.TabPageIndex
+    End Sub
+
+    Private Sub TabControlMarkers_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlMarkers.Selecting
+        If e.TabPage.Name = NameOf(TabPage26BackToHomePage) Then
+            Me.TabControlHomePage.SelectedIndex = _lastHomeTabIndex
+            Me.TabControlHomePage.Visible = True
+        Else
+            _lastMarkerTabIndex = e.TabPageIndex
         End If
     End Sub
 
@@ -643,10 +658,13 @@ Public Class Form1
     <DebuggerNonUserCode()>
     Private Sub ActiveInsulinChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles ActiveInsulinChart.PostPaint
 
-        If Not _initialized OrElse _updating OrElse _inMouseMove Then
+        If Not _initialized OrElse _inMouseMove Then
             Exit Sub
         End If
         SyncLock _updatingLock
+            If _updating Then
+                Exit Sub
+            End If
             e.PostPaintSupport(_activeInsulinChartAbsoluteRectangle,
                 HomePageBasalRow,
                 insulinDictionary:=Nothing,
@@ -658,10 +676,13 @@ Public Class Form1
     <DebuggerNonUserCode()>
     Private Sub TreatmentMarkersChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles TreatmentMarkersChart.PostPaint
 
-        If Not _initialized OrElse _updating OrElse _inMouseMove Then
+        If Not _initialized OrElse _inMouseMove Then
             Exit Sub
         End If
         SyncLock _updatingLock
+            If _updating Then
+                Exit Sub
+            End If
             e.PostPaintSupport(_treatmentMarkerAbsoluteRectangle,
                 TreatmentInsulinRow,
                 s_treatmentMarkerInsulinDictionary,
@@ -674,10 +695,13 @@ Public Class Form1
     <DebuggerNonUserCode()>
     Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomeTabChart.PostPaint
 
-        If Not _initialized OrElse _updating OrElse _inMouseMove Then
+        If Not _initialized OrElse _inMouseMove Then
             Exit Sub
         End If
         SyncLock _updatingLock
+            If _updating Then
+                Exit Sub
+            End If
             e.PostPaintSupport(_homePageAbsoluteRectangle,
                 HomePageBasalRow,
                 s_homeTabMarkerInsulinDictionary,
@@ -855,11 +879,11 @@ Public Class Form1
             Case ItemIndexs.lastSensorTSAsString
                 e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.kind
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
+                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.version
                 e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
             Case ItemIndexs.pumpModelNumber
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
+                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.currentServerTime
                 e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
             Case ItemIndexs.lastConduitTime
@@ -869,15 +893,15 @@ Public Class Form1
             Case ItemIndexs.lastMedicalDeviceDataUpdateServerTime
                 e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
             Case ItemIndexs.firstName
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
+                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.lastName
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
+                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.conduitSerialNumber
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
+                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.conduitBatteryLevel
                 e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
             Case ItemIndexs.conduitBatteryStatus
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
+                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.conduitInRange
                 e.CellStyle = e.CellStyle.CellStyleMiddleCenter
             Case ItemIndexs.conduitMedicalDeviceInRange
@@ -885,11 +909,11 @@ Public Class Form1
             Case ItemIndexs.conduitSensorInRange
                 e.CellStyle = e.CellStyle.CellStyleMiddleCenter
             Case ItemIndexs.medicalDeviceFamily
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
+                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.sensorState
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
+                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.medicalDeviceSerialNumber
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
+                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.medicalDeviceTime
                 e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.sMedicalDeviceTime
@@ -907,11 +931,11 @@ Public Class Form1
             Case ItemIndexs.timeToNextCalibHours
                 e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
             Case ItemIndexs.calibStatus
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
+                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.bgUnits
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
+                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.timeFormat
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
+                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.lastSensorTime
                 e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.sLastSensorTime
@@ -919,9 +943,9 @@ Public Class Form1
             Case ItemIndexs.medicalDeviceSuspended
                 e.CellStyle = e.CellStyle.CellStyleMiddleCenter
             Case ItemIndexs.lastSGTrend
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
+                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.systemStatusMessage
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
+                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.averageSG
                 e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
             Case ItemIndexs.belowHypoLimit
@@ -947,7 +971,7 @@ Public Class Form1
             Case ItemIndexs.timeToNextCalibrationMinutes
                 e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
             Case ItemIndexs.clientTimeZoneName
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
+                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.sgBelowLimit
                 e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
             Case ItemIndexs.averageSGFloat
@@ -1011,27 +1035,31 @@ Public Class Form1
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
         Debug.Print($"Me.ServerUpdateTimer stopped at {Now}")
         Me.ServerUpdateTimer.Stop()
-        If Not _updating Then
-            Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
-            If Me.RecentData IsNot Nothing Then
-                Me.LastUpdateTime.Text = "Unknown"
-            Else
-                _client = New CareLinkClient(Me.LoginStatus, My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
-                _loginDialog.Client = _client
+        SyncLock _updatingLock
+            If Not _updating Then
+                _updating = True
                 Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
-                If Me.RecentData Is Nothing Then
-                    Me.LastUpdateTime.Text = "Unknown due to Login failure, try logging in again!"
+                If Me.RecentData IsNot Nothing Then
+                    Me.LastUpdateTime.Text = "Unknown"
                 Else
-                    Me.LastUpdateTime.Text = Now.ToShortDateTimeString
+                    _client = New CareLinkClient(Me.LoginStatus, My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
+                    _loginDialog.Client = _client
+                    Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
+                    If Me.RecentData Is Nothing Then
+                        Me.LastUpdateTime.Text = "Unknown due to Login failure, try logging in again!"
+                    Else
+                        Me.LastUpdateTime.Text = Now.ToShortDateTimeString
+                        Me.AllTabPagesUpdate()
+                    End If
                 End If
+                Me.Cursor = Cursors.Default
+                Application.DoEvents()
             End If
-            Me.AllTabPagesUpdate()
-            Me.Cursor = Cursors.Default
-            Application.DoEvents()
-        End If
-        Me.ServerUpdateTimer.Interval = s_twoMinutesInMilliseconds
-        Me.ServerUpdateTimer.Start()
-        Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
+            _updating = False
+            Me.ServerUpdateTimer.Interval = s_twoMinutesInMilliseconds
+            Me.ServerUpdateTimer.Start()
+            Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
+        End SyncLock
     End Sub
 
 #End Region ' Timer Events
@@ -1409,8 +1437,10 @@ Public Class Form1
                 End If
                 s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
 
-            Case ItemIndexs.kind,
-                 ItemIndexs.version
+            Case ItemIndexs.kind
+                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+
+            Case ItemIndexs.version
                 s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.pumpModelNumber
@@ -1755,7 +1785,6 @@ Public Class Form1
             End If
             Me.CursorPanel.Visible = False
             Me.UpdateDataTables(_formScale.Height <> 1 OrElse _formScale.Width <> 1)
-            _updating = False
             Me.UpdateActiveInsulinChart()
             Me.UpdateActiveInsulin()
             Me.UpdateAutoModeShield()
@@ -1771,6 +1800,7 @@ Public Class Form1
             s_recentDatalast = Me.RecentData
             Me.MenuStartHere.Enabled = True
             Me.UpdateTreatmentMarkersChart()
+            _updating = False
         End SyncLock
         Application.DoEvents()
     End Sub

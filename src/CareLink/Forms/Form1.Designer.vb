@@ -23,17 +23,17 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
-        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.MenuStartHere = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStartHereLogin = New System.Windows.Forms.ToolStripMenuItem()
@@ -63,6 +63,34 @@ Partial Class Form1
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.SplitContainer4 = New System.Windows.Forms.SplitContainer()
         Me.TableLayoutPanelTop2 = New System.Windows.Forms.TableLayoutPanel()
+        Me.TabControlMarkers = New System.Windows.Forms.TabControl()
+        Me.TabPage17AutoBasalDelivery = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanelAutoBasalDelivery = New System.Windows.Forms.TableLayoutPanel()
+        Me.LabelAutoBasalDelivery = New System.Windows.Forms.Label()
+        Me.DataGridViewAutoBasalDelivery = New System.Windows.Forms.DataGridView()
+        Me.TabPage18AutoModeStatus = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanelAutoModeStatus = New System.Windows.Forms.TableLayoutPanel()
+        Me.LabelAutoModeStatus = New System.Windows.Forms.Label()
+        Me.TabPage17BgReading = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanelBgReading = New System.Windows.Forms.TableLayoutPanel()
+        Me.LabelBgReading = New System.Windows.Forms.Label()
+        Me.TabPage20Calibration = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanelCalibration = New System.Windows.Forms.TableLayoutPanel()
+        Me.LabelCalibration = New System.Windows.Forms.Label()
+        Me.TabPage21Insulin = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanelInsulin = New System.Windows.Forms.TableLayoutPanel()
+        Me.LabelInsulin = New System.Windows.Forms.Label()
+        Me.DataGridViewInsulin = New System.Windows.Forms.DataGridView()
+        Me.TabPage22LowGlusoseSuspended = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanelLowGlusoseSuspended = New System.Windows.Forms.TableLayoutPanel()
+        Me.LabelLowGlusoseSuspended = New System.Windows.Forms.Label()
+        Me.TabPage23Meal = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanelMeal = New System.Windows.Forms.TableLayoutPanel()
+        Me.LabelMeal = New System.Windows.Forms.Label()
+        Me.TabPage25TimeChange = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanelTimeChange = New System.Windows.Forms.TableLayoutPanel()
+        Me.LabelTimeChange = New System.Windows.Forms.Label()
+        Me.TabPage26BackToHomePage = New System.Windows.Forms.TabPage()
         Me.TabControlHomePage = New System.Windows.Forms.TabControl()
         Me.TabPage01HomePage = New System.Windows.Forms.TabPage()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
@@ -177,33 +205,6 @@ Partial Class Form1
         Me.DataGridViewCheckBoxColumnAutoLogin = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.CareLinkUserDataRecordBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.TabPage16Markers = New System.Windows.Forms.TabPage()
-        Me.TabControlMarker = New System.Windows.Forms.TabControl()
-        Me.TabPage17AutoBasalDelivery = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanelAutoBasalDelivery = New System.Windows.Forms.TableLayoutPanel()
-        Me.LabelAutoBasalDelivery = New System.Windows.Forms.Label()
-        Me.DataGridViewAutoBasalDelivery = New System.Windows.Forms.DataGridView()
-        Me.TabPage18AutoModeStatus = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanelAutoModeStatus = New System.Windows.Forms.TableLayoutPanel()
-        Me.LabelAutoModeStatus = New System.Windows.Forms.Label()
-        Me.TabPage17BgReading = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanelBgReading = New System.Windows.Forms.TableLayoutPanel()
-        Me.LabelBgReading = New System.Windows.Forms.Label()
-        Me.TabPage20Calibration = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanelCalibration = New System.Windows.Forms.TableLayoutPanel()
-        Me.LabelCalibration = New System.Windows.Forms.Label()
-        Me.TabPage21Insulin = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanelInsulin = New System.Windows.Forms.TableLayoutPanel()
-        Me.LabelInsulin = New System.Windows.Forms.Label()
-        Me.DataGridViewInsulin = New System.Windows.Forms.DataGridView()
-        Me.TabPage22LowGlusoseSuspended = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanelLowGlusoseSuspended = New System.Windows.Forms.TableLayoutPanel()
-        Me.LabelLowGlusoseSuspended = New System.Windows.Forms.Label()
-        Me.TabPage23Meal = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanelMeal = New System.Windows.Forms.TableLayoutPanel()
-        Me.LabelMeal = New System.Windows.Forms.Label()
-        Me.TabPage25TimeChange = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanelTimeChange = New System.Windows.Forms.TableLayoutPanel()
-        Me.LabelTimeChange = New System.Windows.Forms.Label()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.CursorTimer = New System.Windows.Forms.Timer(Me.components)
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
@@ -221,6 +222,25 @@ Partial Class Form1
         Me.SplitContainer4.Panel1.SuspendLayout()
         Me.SplitContainer4.Panel2.SuspendLayout()
         Me.SplitContainer4.SuspendLayout()
+        Me.TabControlMarkers.SuspendLayout()
+        Me.TabPage17AutoBasalDelivery.SuspendLayout()
+        Me.TableLayoutPanelAutoBasalDelivery.SuspendLayout()
+        CType(Me.DataGridViewAutoBasalDelivery, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage18AutoModeStatus.SuspendLayout()
+        Me.TableLayoutPanelAutoModeStatus.SuspendLayout()
+        Me.TabPage17BgReading.SuspendLayout()
+        Me.TableLayoutPanelBgReading.SuspendLayout()
+        Me.TabPage20Calibration.SuspendLayout()
+        Me.TableLayoutPanelCalibration.SuspendLayout()
+        Me.TabPage21Insulin.SuspendLayout()
+        Me.TableLayoutPanelInsulin.SuspendLayout()
+        CType(Me.DataGridViewInsulin, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPage22LowGlusoseSuspended.SuspendLayout()
+        Me.TableLayoutPanelLowGlusoseSuspended.SuspendLayout()
+        Me.TabPage23Meal.SuspendLayout()
+        Me.TableLayoutPanelMeal.SuspendLayout()
+        Me.TabPage25TimeChange.SuspendLayout()
+        Me.TableLayoutPanelTimeChange.SuspendLayout()
         Me.TabControlHomePage.SuspendLayout()
         Me.TabPage01HomePage.SuspendLayout()
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -268,26 +288,6 @@ Partial Class Form1
         Me.TabPage15AllUsers.SuspendLayout()
         CType(Me.DataGridViewCareLinkUsers, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.CareLinkUserDataRecordBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.TabPage16Markers.SuspendLayout()
-        Me.TabControlMarker.SuspendLayout()
-        Me.TabPage17AutoBasalDelivery.SuspendLayout()
-        Me.TableLayoutPanelAutoBasalDelivery.SuspendLayout()
-        CType(Me.DataGridViewAutoBasalDelivery, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.TabPage18AutoModeStatus.SuspendLayout()
-        Me.TableLayoutPanelAutoModeStatus.SuspendLayout()
-        Me.TabPage17BgReading.SuspendLayout()
-        Me.TableLayoutPanelBgReading.SuspendLayout()
-        Me.TabPage20Calibration.SuspendLayout()
-        Me.TableLayoutPanelCalibration.SuspendLayout()
-        Me.TabPage21Insulin.SuspendLayout()
-        Me.TableLayoutPanelInsulin.SuspendLayout()
-        CType(Me.DataGridViewInsulin, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.TabPage22LowGlusoseSuspended.SuspendLayout()
-        Me.TableLayoutPanelLowGlusoseSuspended.SuspendLayout()
-        Me.TabPage23Meal.SuspendLayout()
-        Me.TableLayoutPanelMeal.SuspendLayout()
-        Me.TabPage25TimeChange.SuspendLayout()
-        Me.TableLayoutPanelTimeChange.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
@@ -488,6 +488,7 @@ Partial Class Form1
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.TabControlHomePage)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.TabControlMarkers)
         Me.SplitContainer1.Size = New System.Drawing.Size(1384, 817)
         Me.SplitContainer1.SplitterDistance = 157
         Me.SplitContainer1.SplitterWidth = 2
@@ -529,8 +530,407 @@ Partial Class Form1
         Me.TableLayoutPanelTop2.Size = New System.Drawing.Size(957, 157)
         Me.TableLayoutPanelTop2.TabIndex = 1
         '
+        'TabControlMarkers
+        '
+        Me.TabControlMarkers.Appearance = System.Windows.Forms.TabAppearance.Buttons
+        Me.TabControlMarkers.Controls.Add(Me.TabPage17AutoBasalDelivery)
+        Me.TabControlMarkers.Controls.Add(Me.TabPage18AutoModeStatus)
+        Me.TabControlMarkers.Controls.Add(Me.TabPage17BgReading)
+        Me.TabControlMarkers.Controls.Add(Me.TabPage20Calibration)
+        Me.TabControlMarkers.Controls.Add(Me.TabPage21Insulin)
+        Me.TabControlMarkers.Controls.Add(Me.TabPage22LowGlusoseSuspended)
+        Me.TabControlMarkers.Controls.Add(Me.TabPage23Meal)
+        Me.TabControlMarkers.Controls.Add(Me.TabPage25TimeChange)
+        Me.TabControlMarkers.Controls.Add(Me.TabPage26BackToHomePage)
+        Me.TabControlMarkers.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TabControlMarkers.Location = New System.Drawing.Point(0, 0)
+        Me.TabControlMarkers.Name = "TabControlMarkers"
+        Me.TabControlMarkers.SelectedIndex = 0
+        Me.TabControlMarkers.Size = New System.Drawing.Size(1384, 658)
+        Me.TabControlMarkers.TabIndex = 0
+        '
+        'TabPage17AutoBasalDelivery
+        '
+        Me.TabPage17AutoBasalDelivery.Controls.Add(Me.TableLayoutPanelAutoBasalDelivery)
+        Me.TabPage17AutoBasalDelivery.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage17AutoBasalDelivery.Name = "TabPage17AutoBasalDelivery"
+        Me.TabPage17AutoBasalDelivery.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage17AutoBasalDelivery.Size = New System.Drawing.Size(1376, 627)
+        Me.TabPage17AutoBasalDelivery.TabIndex = 1
+        Me.TabPage17AutoBasalDelivery.Text = "Auto Basal Delivery"
+        Me.TabPage17AutoBasalDelivery.UseVisualStyleBackColor = True
+        '
+        'TableLayoutPanelAutoBasalDelivery
+        '
+        Me.TableLayoutPanelAutoBasalDelivery.ColumnCount = 1
+        Me.TableLayoutPanelAutoBasalDelivery.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelAutoBasalDelivery.Controls.Add(Me.LabelAutoBasalDelivery, 0, 0)
+        Me.TableLayoutPanelAutoBasalDelivery.Controls.Add(Me.DataGridViewAutoBasalDelivery, 0, 1)
+        Me.TableLayoutPanelAutoBasalDelivery.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanelAutoBasalDelivery.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelAutoBasalDelivery.Name = "TableLayoutPanelAutoBasalDelivery"
+        Me.TableLayoutPanelAutoBasalDelivery.RowCount = 2
+        Me.TableLayoutPanelAutoBasalDelivery.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanelAutoBasalDelivery.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelAutoBasalDelivery.Size = New System.Drawing.Size(1370, 621)
+        Me.TableLayoutPanelAutoBasalDelivery.TabIndex = 0
+        '
+        'LabelAutoBasalDelivery
+        '
+        Me.LabelAutoBasalDelivery.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.LabelAutoBasalDelivery.Location = New System.Drawing.Point(3, 0)
+        Me.LabelAutoBasalDelivery.Name = "LabelAutoBasalDelivery"
+        Me.LabelAutoBasalDelivery.Size = New System.Drawing.Size(1364, 30)
+        Me.LabelAutoBasalDelivery.TabIndex = 1
+        Me.LabelAutoBasalDelivery.Text = "Auto Basal Delivery"
+        Me.LabelAutoBasalDelivery.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'DataGridViewAutoBasalDelivery
+        '
+        Me.DataGridViewAutoBasalDelivery.AllowUserToAddRows = False
+        Me.DataGridViewAutoBasalDelivery.AllowUserToDeleteRows = False
+        Me.DataGridViewAutoBasalDelivery.AllowUserToResizeColumns = False
+        Me.DataGridViewAutoBasalDelivery.AllowUserToResizeRows = False
+        DataGridViewCellStyle7.BackColor = System.Drawing.Color.Silver
+        Me.DataGridViewAutoBasalDelivery.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle7
+        Me.DataGridViewAutoBasalDelivery.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle8.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewAutoBasalDelivery.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle8
+        Me.DataGridViewAutoBasalDelivery.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridViewAutoBasalDelivery.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridViewAutoBasalDelivery.Location = New System.Drawing.Point(3, 33)
+        Me.DataGridViewAutoBasalDelivery.Name = "DataGridViewAutoBasalDelivery"
+        Me.DataGridViewAutoBasalDelivery.ReadOnly = True
+        Me.DataGridViewAutoBasalDelivery.RowTemplate.Height = 25
+        Me.DataGridViewAutoBasalDelivery.Size = New System.Drawing.Size(1364, 585)
+        Me.DataGridViewAutoBasalDelivery.TabIndex = 0
+        '
+        'TabPage18AutoModeStatus
+        '
+        Me.TabPage18AutoModeStatus.Controls.Add(Me.TableLayoutPanelAutoModeStatus)
+        Me.TabPage18AutoModeStatus.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage18AutoModeStatus.Name = "TabPage18AutoModeStatus"
+        Me.TabPage18AutoModeStatus.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage18AutoModeStatus.Size = New System.Drawing.Size(1376, 627)
+        Me.TabPage18AutoModeStatus.TabIndex = 0
+        Me.TabPage18AutoModeStatus.Text = "Auto Mode Status"
+        Me.TabPage18AutoModeStatus.UseVisualStyleBackColor = True
+        '
+        'TableLayoutPanelAutoModeStatus
+        '
+        Me.TableLayoutPanelAutoModeStatus.AutoScroll = True
+        Me.TableLayoutPanelAutoModeStatus.AutoSize = True
+        Me.TableLayoutPanelAutoModeStatus.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelAutoModeStatus.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelAutoModeStatus.ColumnCount = 1
+        Me.TableLayoutPanelAutoModeStatus.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelAutoModeStatus.Controls.Add(Me.LabelAutoModeStatus, 0, 0)
+        Me.TableLayoutPanelAutoModeStatus.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanelAutoModeStatus.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelAutoModeStatus.Name = "TableLayoutPanelAutoModeStatus"
+        Me.TableLayoutPanelAutoModeStatus.RowCount = 2
+        Me.TableLayoutPanelAutoModeStatus.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanelAutoModeStatus.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelAutoModeStatus.Size = New System.Drawing.Size(1370, 621)
+        Me.TableLayoutPanelAutoModeStatus.TabIndex = 0
+        '
+        'LabelAutoModeStatus
+        '
+        Me.LabelAutoModeStatus.AutoSize = True
+        Me.LabelAutoModeStatus.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.LabelAutoModeStatus.Location = New System.Drawing.Point(6, 3)
+        Me.LabelAutoModeStatus.Name = "LabelAutoModeStatus"
+        Me.LabelAutoModeStatus.Size = New System.Drawing.Size(1358, 30)
+        Me.LabelAutoModeStatus.TabIndex = 0
+        Me.LabelAutoModeStatus.Text = "Auto Mode Status"
+        Me.LabelAutoModeStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'TabPage17BgReading
+        '
+        Me.TabPage17BgReading.Controls.Add(Me.TableLayoutPanelBgReading)
+        Me.TabPage17BgReading.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage17BgReading.Name = "TabPage17BgReading"
+        Me.TabPage17BgReading.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage17BgReading.Size = New System.Drawing.Size(1376, 627)
+        Me.TabPage17BgReading.TabIndex = 2
+        Me.TabPage17BgReading.Text = "Bg Reading"
+        Me.TabPage17BgReading.UseVisualStyleBackColor = True
+        '
+        'TableLayoutPanelBgReading
+        '
+        Me.TableLayoutPanelBgReading.AutoScroll = True
+        Me.TableLayoutPanelBgReading.AutoSize = True
+        Me.TableLayoutPanelBgReading.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelBgReading.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelBgReading.ColumnCount = 1
+        Me.TableLayoutPanelBgReading.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelBgReading.Controls.Add(Me.LabelBgReading, 0, 0)
+        Me.TableLayoutPanelBgReading.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TableLayoutPanelBgReading.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelBgReading.Name = "TableLayoutPanelBgReading"
+        Me.TableLayoutPanelBgReading.RowCount = 2
+        Me.TableLayoutPanelBgReading.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanelBgReading.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelBgReading.Size = New System.Drawing.Size(1370, 39)
+        Me.TableLayoutPanelBgReading.TabIndex = 1
+        '
+        'LabelBgReading
+        '
+        Me.LabelBgReading.AutoSize = True
+        Me.LabelBgReading.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.LabelBgReading.Location = New System.Drawing.Point(6, 3)
+        Me.LabelBgReading.Name = "LabelBgReading"
+        Me.LabelBgReading.Size = New System.Drawing.Size(1358, 30)
+        Me.LabelBgReading.TabIndex = 0
+        Me.LabelBgReading.Text = "Bg Reading"
+        Me.LabelBgReading.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'TabPage20Calibration
+        '
+        Me.TabPage20Calibration.Controls.Add(Me.TableLayoutPanelCalibration)
+        Me.TabPage20Calibration.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage20Calibration.Name = "TabPage20Calibration"
+        Me.TabPage20Calibration.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage20Calibration.Size = New System.Drawing.Size(1376, 627)
+        Me.TabPage20Calibration.TabIndex = 3
+        Me.TabPage20Calibration.Text = "Calibration"
+        Me.TabPage20Calibration.UseVisualStyleBackColor = True
+        '
+        'TableLayoutPanelCalibration
+        '
+        Me.TableLayoutPanelCalibration.AutoScroll = True
+        Me.TableLayoutPanelCalibration.AutoSize = True
+        Me.TableLayoutPanelCalibration.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelCalibration.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelCalibration.ColumnCount = 1
+        Me.TableLayoutPanelCalibration.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelCalibration.Controls.Add(Me.LabelCalibration, 0, 0)
+        Me.TableLayoutPanelCalibration.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TableLayoutPanelCalibration.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelCalibration.Name = "TableLayoutPanelCalibration"
+        Me.TableLayoutPanelCalibration.RowCount = 2
+        Me.TableLayoutPanelCalibration.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanelCalibration.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelCalibration.Size = New System.Drawing.Size(1370, 39)
+        Me.TableLayoutPanelCalibration.TabIndex = 1
+        '
+        'LabelCalibration
+        '
+        Me.LabelCalibration.AutoSize = True
+        Me.LabelCalibration.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.LabelCalibration.Location = New System.Drawing.Point(6, 3)
+        Me.LabelCalibration.Name = "LabelCalibration"
+        Me.LabelCalibration.Size = New System.Drawing.Size(1358, 30)
+        Me.LabelCalibration.TabIndex = 0
+        Me.LabelCalibration.Text = "Calibration"
+        Me.LabelCalibration.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'TabPage21Insulin
+        '
+        Me.TabPage21Insulin.Controls.Add(Me.TableLayoutPanelInsulin)
+        Me.TabPage21Insulin.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage21Insulin.Name = "TabPage21Insulin"
+        Me.TabPage21Insulin.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage21Insulin.Size = New System.Drawing.Size(1376, 627)
+        Me.TabPage21Insulin.TabIndex = 4
+        Me.TabPage21Insulin.Text = "Insulin"
+        Me.TabPage21Insulin.UseVisualStyleBackColor = True
+        '
+        'TableLayoutPanelInsulin
+        '
+        Me.TableLayoutPanelInsulin.AutoScroll = True
+        Me.TableLayoutPanelInsulin.AutoSize = True
+        Me.TableLayoutPanelInsulin.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelInsulin.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelInsulin.ColumnCount = 1
+        Me.TableLayoutPanelInsulin.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelInsulin.Controls.Add(Me.LabelInsulin, 0, 0)
+        Me.TableLayoutPanelInsulin.Controls.Add(Me.DataGridViewInsulin, 0, 1)
+        Me.TableLayoutPanelInsulin.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanelInsulin.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelInsulin.Name = "TableLayoutPanelInsulin"
+        Me.TableLayoutPanelInsulin.RowCount = 2
+        Me.TableLayoutPanelInsulin.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanelInsulin.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelInsulin.Size = New System.Drawing.Size(1370, 621)
+        Me.TableLayoutPanelInsulin.TabIndex = 1
+        '
+        'LabelInsulin
+        '
+        Me.LabelInsulin.AutoSize = True
+        Me.LabelInsulin.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.LabelInsulin.Location = New System.Drawing.Point(6, 3)
+        Me.LabelInsulin.Name = "LabelInsulin"
+        Me.LabelInsulin.Size = New System.Drawing.Size(1358, 30)
+        Me.LabelInsulin.TabIndex = 1
+        Me.LabelInsulin.Text = "Insulin"
+        Me.LabelInsulin.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'DataGridViewInsulin
+        '
+        Me.DataGridViewInsulin.AllowUserToAddRows = False
+        Me.DataGridViewInsulin.AllowUserToDeleteRows = False
+        Me.DataGridViewInsulin.AllowUserToResizeColumns = False
+        Me.DataGridViewInsulin.AllowUserToResizeRows = False
+        DataGridViewCellStyle9.BackColor = System.Drawing.Color.Silver
+        Me.DataGridViewInsulin.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle10.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        DataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewInsulin.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle10
+        Me.DataGridViewInsulin.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridViewInsulin.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridViewInsulin.Location = New System.Drawing.Point(6, 39)
+        Me.DataGridViewInsulin.Name = "DataGridViewInsulin"
+        Me.DataGridViewInsulin.ReadOnly = True
+        Me.DataGridViewInsulin.RowTemplate.Height = 25
+        Me.DataGridViewInsulin.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
+        Me.DataGridViewInsulin.Size = New System.Drawing.Size(1358, 579)
+        Me.DataGridViewInsulin.TabIndex = 0
+        '
+        'TabPage22LowGlusoseSuspended
+        '
+        Me.TabPage22LowGlusoseSuspended.Controls.Add(Me.TableLayoutPanelLowGlusoseSuspended)
+        Me.TabPage22LowGlusoseSuspended.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage22LowGlusoseSuspended.Name = "TabPage22LowGlusoseSuspended"
+        Me.TabPage22LowGlusoseSuspended.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage22LowGlusoseSuspended.Size = New System.Drawing.Size(1376, 627)
+        Me.TabPage22LowGlusoseSuspended.TabIndex = 5
+        Me.TabPage22LowGlusoseSuspended.Text = "Low Glusose Suspended"
+        Me.TabPage22LowGlusoseSuspended.UseVisualStyleBackColor = True
+        '
+        'TableLayoutPanelLowGlusoseSuspended
+        '
+        Me.TableLayoutPanelLowGlusoseSuspended.AutoScroll = True
+        Me.TableLayoutPanelLowGlusoseSuspended.AutoSize = True
+        Me.TableLayoutPanelLowGlusoseSuspended.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelLowGlusoseSuspended.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelLowGlusoseSuspended.ColumnCount = 1
+        Me.TableLayoutPanelLowGlusoseSuspended.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelLowGlusoseSuspended.Controls.Add(Me.LabelLowGlusoseSuspended, 0, 0)
+        Me.TableLayoutPanelLowGlusoseSuspended.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanelLowGlusoseSuspended.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelLowGlusoseSuspended.Name = "TableLayoutPanelLowGlusoseSuspended"
+        Me.TableLayoutPanelLowGlusoseSuspended.RowCount = 2
+        Me.TableLayoutPanelLowGlusoseSuspended.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanelLowGlusoseSuspended.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelLowGlusoseSuspended.Size = New System.Drawing.Size(1370, 621)
+        Me.TableLayoutPanelLowGlusoseSuspended.TabIndex = 1
+        '
+        'LabelLowGlusoseSuspended
+        '
+        Me.LabelLowGlusoseSuspended.AutoSize = True
+        Me.LabelLowGlusoseSuspended.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.LabelLowGlusoseSuspended.Location = New System.Drawing.Point(6, 3)
+        Me.LabelLowGlusoseSuspended.Name = "LabelLowGlusoseSuspended"
+        Me.LabelLowGlusoseSuspended.Size = New System.Drawing.Size(1358, 30)
+        Me.LabelLowGlusoseSuspended.TabIndex = 0
+        Me.LabelLowGlusoseSuspended.Text = "Low Glusose Suspended"
+        Me.LabelLowGlusoseSuspended.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'TabPage23Meal
+        '
+        Me.TabPage23Meal.Controls.Add(Me.TableLayoutPanelMeal)
+        Me.TabPage23Meal.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage23Meal.Name = "TabPage23Meal"
+        Me.TabPage23Meal.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage23Meal.Size = New System.Drawing.Size(1376, 627)
+        Me.TabPage23Meal.TabIndex = 6
+        Me.TabPage23Meal.Text = "Meal"
+        Me.TabPage23Meal.UseVisualStyleBackColor = True
+        '
+        'TableLayoutPanelMeal
+        '
+        Me.TableLayoutPanelMeal.AutoScroll = True
+        Me.TableLayoutPanelMeal.AutoSize = True
+        Me.TableLayoutPanelMeal.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelMeal.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelMeal.ColumnCount = 1
+        Me.TableLayoutPanelMeal.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelMeal.Controls.Add(Me.LabelMeal, 0, 0)
+        Me.TableLayoutPanelMeal.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanelMeal.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelMeal.Name = "TableLayoutPanelMeal"
+        Me.TableLayoutPanelMeal.RowCount = 2
+        Me.TableLayoutPanelMeal.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanelMeal.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelMeal.Size = New System.Drawing.Size(1370, 621)
+        Me.TableLayoutPanelMeal.TabIndex = 1
+        '
+        'LabelMeal
+        '
+        Me.LabelMeal.AutoSize = True
+        Me.LabelMeal.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.LabelMeal.Location = New System.Drawing.Point(6, 3)
+        Me.LabelMeal.Name = "LabelMeal"
+        Me.LabelMeal.Size = New System.Drawing.Size(1358, 30)
+        Me.LabelMeal.TabIndex = 0
+        Me.LabelMeal.Text = "Meal"
+        Me.LabelMeal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'TabPage25TimeChange
+        '
+        Me.TabPage25TimeChange.Controls.Add(Me.TableLayoutPanelTimeChange)
+        Me.TabPage25TimeChange.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage25TimeChange.Name = "TabPage25TimeChange"
+        Me.TabPage25TimeChange.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage25TimeChange.Size = New System.Drawing.Size(1376, 627)
+        Me.TabPage25TimeChange.TabIndex = 7
+        Me.TabPage25TimeChange.Text = "Time Change"
+        Me.TabPage25TimeChange.UseVisualStyleBackColor = True
+        '
+        'TableLayoutPanelTimeChange
+        '
+        Me.TableLayoutPanelTimeChange.AutoScroll = True
+        Me.TableLayoutPanelTimeChange.AutoSize = True
+        Me.TableLayoutPanelTimeChange.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelTimeChange.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelTimeChange.ColumnCount = 1
+        Me.TableLayoutPanelTimeChange.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelTimeChange.Controls.Add(Me.LabelTimeChange, 0, 0)
+        Me.TableLayoutPanelTimeChange.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TableLayoutPanelTimeChange.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelTimeChange.Name = "TableLayoutPanelTimeChange"
+        Me.TableLayoutPanelTimeChange.RowCount = 2
+        Me.TableLayoutPanelTimeChange.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanelTimeChange.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelTimeChange.Size = New System.Drawing.Size(1370, 39)
+        Me.TableLayoutPanelTimeChange.TabIndex = 1
+        '
+        'LabelTimeChange
+        '
+        Me.LabelTimeChange.AutoSize = True
+        Me.LabelTimeChange.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.LabelTimeChange.Location = New System.Drawing.Point(6, 3)
+        Me.LabelTimeChange.Name = "LabelTimeChange"
+        Me.LabelTimeChange.Size = New System.Drawing.Size(1358, 30)
+        Me.LabelTimeChange.TabIndex = 0
+        Me.LabelTimeChange.Text = "Tme Change"
+        Me.LabelTimeChange.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'TabPage26BackToHomePage
+        '
+        Me.TabPage26BackToHomePage.BackColor = System.Drawing.SystemColors.MenuHighlight
+        Me.TabPage26BackToHomePage.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage26BackToHomePage.Name = "TabPage26BackToHomePage"
+        Me.TabPage26BackToHomePage.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage26BackToHomePage.Size = New System.Drawing.Size(1376, 627)
+        Me.TabPage26BackToHomePage.TabIndex = 8
+        Me.TabPage26BackToHomePage.Text = "Back to Home Page"
+        '
         'TabControlHomePage
         '
+        Me.TabControlHomePage.Appearance = System.Windows.Forms.TabAppearance.Buttons
         Me.TabControlHomePage.Controls.Add(Me.TabPage01HomePage)
         Me.TabControlHomePage.Controls.Add(Me.TabPage02ActiveInsulin)
         Me.TabControlHomePage.Controls.Add(Me.TabPage03TreatmentDetails)
@@ -557,10 +957,10 @@ Partial Class Form1
         '
         Me.TabPage01HomePage.BackColor = System.Drawing.Color.Black
         Me.TabPage01HomePage.Controls.Add(Me.SplitContainer2)
-        Me.TabPage01HomePage.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage01HomePage.Location = New System.Drawing.Point(4, 27)
         Me.TabPage01HomePage.Name = "TabPage01HomePage"
         Me.TabPage01HomePage.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage01HomePage.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage01HomePage.Size = New System.Drawing.Size(1376, 631)
         Me.TabPage01HomePage.TabIndex = 7
         Me.TabPage01HomePage.Text = "Home Page"
         '
@@ -600,7 +1000,7 @@ Partial Class Form1
         'SplitContainer2.Panel2
         '
         Me.SplitContainer2.Panel2.Controls.Add(Me.SplitContainer3)
-        Me.SplitContainer2.Size = New System.Drawing.Size(1370, 628)
+        Me.SplitContainer2.Size = New System.Drawing.Size(1370, 625)
         Me.SplitContainer2.SplitterDistance = 135
         Me.SplitContainer2.TabIndex = 52
         '
@@ -1257,20 +1657,20 @@ Partial Class Form1
         '
         'TabPage02ActiveInsulin
         '
-        Me.TabPage02ActiveInsulin.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage02ActiveInsulin.Location = New System.Drawing.Point(4, 27)
         Me.TabPage02ActiveInsulin.Name = "TabPage02ActiveInsulin"
         Me.TabPage02ActiveInsulin.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage02ActiveInsulin.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage02ActiveInsulin.Size = New System.Drawing.Size(1376, 631)
         Me.TabPage02ActiveInsulin.TabIndex = 15
         Me.TabPage02ActiveInsulin.Text = "Active Insulin"
         Me.TabPage02ActiveInsulin.UseVisualStyleBackColor = True
         '
         'TabPage03TreatmentDetails
         '
-        Me.TabPage03TreatmentDetails.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage03TreatmentDetails.Location = New System.Drawing.Point(4, 27)
         Me.TabPage03TreatmentDetails.Name = "TabPage03TreatmentDetails"
         Me.TabPage03TreatmentDetails.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage03TreatmentDetails.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage03TreatmentDetails.Size = New System.Drawing.Size(1376, 631)
         Me.TabPage03TreatmentDetails.TabIndex = 8
         Me.TabPage03TreatmentDetails.Text = "Treatment Details"
         Me.TabPage03TreatmentDetails.UseVisualStyleBackColor = True
@@ -1278,10 +1678,10 @@ Partial Class Form1
         'TabPage04SummaryData
         '
         Me.TabPage04SummaryData.Controls.Add(Me.DataGridViewSummary)
-        Me.TabPage04SummaryData.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage04SummaryData.Location = New System.Drawing.Point(4, 27)
         Me.TabPage04SummaryData.Name = "TabPage04SummaryData"
         Me.TabPage04SummaryData.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage04SummaryData.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage04SummaryData.Size = New System.Drawing.Size(1376, 631)
         Me.TabPage04SummaryData.TabIndex = 0
         Me.TabPage04SummaryData.Text = "Summary Data"
         Me.TabPage04SummaryData.UseVisualStyleBackColor = True
@@ -1290,16 +1690,16 @@ Partial Class Form1
         '
         Me.DataGridViewSummary.AllowUserToAddRows = False
         Me.DataGridViewSummary.AllowUserToDeleteRows = False
-        DataGridViewCellStyle11.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewSummary.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle11
-        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle12.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        DataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewSummary.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle12
+        DataGridViewCellStyle1.BackColor = System.Drawing.Color.Silver
+        Me.DataGridViewSummary.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewSummary.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.DataGridViewSummary.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridViewSummary.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridViewSummary.Location = New System.Drawing.Point(3, 3)
@@ -1307,16 +1707,16 @@ Partial Class Form1
         Me.DataGridViewSummary.ReadOnly = True
         Me.DataGridViewSummary.RowTemplate.Height = 25
         Me.DataGridViewSummary.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.DataGridViewSummary.Size = New System.Drawing.Size(1370, 628)
+        Me.DataGridViewSummary.Size = New System.Drawing.Size(1370, 625)
         Me.DataGridViewSummary.TabIndex = 0
         '
         'TabPage05ActiveInsulin
         '
         Me.TabPage05ActiveInsulin.Controls.Add(Me.TableLayoutPanelActiveInsulin)
-        Me.TabPage05ActiveInsulin.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage05ActiveInsulin.Location = New System.Drawing.Point(4, 27)
         Me.TabPage05ActiveInsulin.Name = "TabPage05ActiveInsulin"
         Me.TabPage05ActiveInsulin.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage05ActiveInsulin.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage05ActiveInsulin.Size = New System.Drawing.Size(1376, 631)
         Me.TabPage05ActiveInsulin.TabIndex = 1
         Me.TabPage05ActiveInsulin.Text = "Active Insulin"
         Me.TabPage05ActiveInsulin.UseVisualStyleBackColor = True
@@ -1352,10 +1752,10 @@ Partial Class Form1
         'TabPage06SensorGlucose
         '
         Me.TabPage06SensorGlucose.Controls.Add(Me.TableLayoutPanelSgs)
-        Me.TabPage06SensorGlucose.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage06SensorGlucose.Location = New System.Drawing.Point(4, 27)
         Me.TabPage06SensorGlucose.Name = "TabPage06SensorGlucose"
         Me.TabPage06SensorGlucose.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage06SensorGlucose.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage06SensorGlucose.Size = New System.Drawing.Size(1376, 631)
         Me.TabPage06SensorGlucose.TabIndex = 2
         Me.TabPage06SensorGlucose.Text = "Sensor Glucose"
         Me.TabPage06SensorGlucose.UseVisualStyleBackColor = True
@@ -1372,7 +1772,7 @@ Partial Class Form1
         Me.TableLayoutPanelSgs.RowCount = 2
         Me.TableLayoutPanelSgs.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
         Me.TableLayoutPanelSgs.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelSgs.Size = New System.Drawing.Size(1370, 628)
+        Me.TableLayoutPanelSgs.Size = New System.Drawing.Size(1370, 625)
         Me.TableLayoutPanelSgs.TabIndex = 2
         '
         'LabelSgs
@@ -1392,17 +1792,17 @@ Partial Class Form1
         Me.DataGridViewSGs.AllowUserToDeleteRows = False
         Me.DataGridViewSGs.AllowUserToResizeColumns = False
         Me.DataGridViewSGs.AllowUserToResizeRows = False
-        DataGridViewCellStyle13.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewSGs.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle13
+        DataGridViewCellStyle3.BackColor = System.Drawing.Color.Silver
+        Me.DataGridViewSGs.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle3
         Me.DataGridViewSGs.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
-        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle14.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        DataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewSGs.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle14
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewSGs.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
         Me.DataGridViewSGs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.DataGridViewSGs.Location = New System.Drawing.Point(3, 33)
         Me.DataGridViewSGs.Name = "DataGridViewSGs"
@@ -1413,10 +1813,10 @@ Partial Class Form1
         'TabPage07Limits
         '
         Me.TabPage07Limits.Controls.Add(Me.TableLayoutPanelLimits)
-        Me.TabPage07Limits.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage07Limits.Location = New System.Drawing.Point(4, 27)
         Me.TabPage07Limits.Name = "TabPage07Limits"
         Me.TabPage07Limits.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage07Limits.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage07Limits.Size = New System.Drawing.Size(1376, 631)
         Me.TabPage07Limits.TabIndex = 3
         Me.TabPage07Limits.Text = "Limits"
         Me.TabPage07Limits.UseVisualStyleBackColor = True
@@ -1436,7 +1836,7 @@ Partial Class Form1
         Me.TableLayoutPanelLimits.RowCount = 2
         Me.TableLayoutPanelLimits.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
         Me.TableLayoutPanelLimits.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelLimits.Size = New System.Drawing.Size(1370, 628)
+        Me.TableLayoutPanelLimits.Size = New System.Drawing.Size(1370, 625)
         Me.TableLayoutPanelLimits.TabIndex = 0
         '
         'LabelLimits
@@ -1453,10 +1853,10 @@ Partial Class Form1
         'TabPage08NotificationHistory
         '
         Me.TabPage08NotificationHistory.Controls.Add(Me.TableLayoutPanelNotificationHistory)
-        Me.TabPage08NotificationHistory.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage08NotificationHistory.Location = New System.Drawing.Point(4, 27)
         Me.TabPage08NotificationHistory.Name = "TabPage08NotificationHistory"
         Me.TabPage08NotificationHistory.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage08NotificationHistory.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage08NotificationHistory.Size = New System.Drawing.Size(1376, 631)
         Me.TabPage08NotificationHistory.TabIndex = 5
         Me.TabPage08NotificationHistory.Text = "Notification History"
         Me.TabPage08NotificationHistory.UseVisualStyleBackColor = True
@@ -1476,7 +1876,7 @@ Partial Class Form1
         Me.TableLayoutPanelNotificationHistory.RowCount = 2
         Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
         Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelNotificationHistory.Size = New System.Drawing.Size(1370, 628)
+        Me.TableLayoutPanelNotificationHistory.Size = New System.Drawing.Size(1370, 625)
         Me.TableLayoutPanelNotificationHistory.TabIndex = 0
         '
         'LabelNotificationHistory
@@ -1493,10 +1893,10 @@ Partial Class Form1
         'TabPage09Basal
         '
         Me.TabPage09Basal.Controls.Add(Me.TableLayoutPanelBasal)
-        Me.TabPage09Basal.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage09Basal.Location = New System.Drawing.Point(4, 27)
         Me.TabPage09Basal.Name = "TabPage09Basal"
         Me.TabPage09Basal.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage09Basal.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage09Basal.Size = New System.Drawing.Size(1376, 631)
         Me.TabPage09Basal.TabIndex = 6
         Me.TabPage09Basal.Text = "Basal"
         Me.TabPage09Basal.UseVisualStyleBackColor = True
@@ -1532,10 +1932,10 @@ Partial Class Form1
         'TabPage10TherapyAlgorithm
         '
         Me.TabPage10TherapyAlgorithm.Controls.Add(Me.TableLayoutPanelTherapyAlgorthm)
-        Me.TabPage10TherapyAlgorithm.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage10TherapyAlgorithm.Location = New System.Drawing.Point(4, 27)
         Me.TabPage10TherapyAlgorithm.Name = "TabPage10TherapyAlgorithm"
         Me.TabPage10TherapyAlgorithm.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage10TherapyAlgorithm.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage10TherapyAlgorithm.Size = New System.Drawing.Size(1376, 631)
         Me.TabPage10TherapyAlgorithm.TabIndex = 9
         Me.TabPage10TherapyAlgorithm.Text = "Therapy Algorithm"
         Me.TabPage10TherapyAlgorithm.UseVisualStyleBackColor = True
@@ -1570,10 +1970,10 @@ Partial Class Form1
         'TabPage11BannerState
         '
         Me.TabPage11BannerState.Controls.Add(Me.TableLayoutPanelBannerState)
-        Me.TabPage11BannerState.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage11BannerState.Location = New System.Drawing.Point(4, 27)
         Me.TabPage11BannerState.Name = "TabPage11BannerState"
         Me.TabPage11BannerState.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage11BannerState.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage11BannerState.Size = New System.Drawing.Size(1376, 631)
         Me.TabPage11BannerState.TabIndex = 10
         Me.TabPage11BannerState.Text = "Banner State"
         Me.TabPage11BannerState.UseVisualStyleBackColor = True
@@ -1608,10 +2008,10 @@ Partial Class Form1
         'TabPage12CountrySettings
         '
         Me.TabPage12CountrySettings.Controls.Add(Me.DataGridViewCountryItems)
-        Me.TabPage12CountrySettings.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage12CountrySettings.Location = New System.Drawing.Point(4, 27)
         Me.TabPage12CountrySettings.Name = "TabPage12CountrySettings"
         Me.TabPage12CountrySettings.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage12CountrySettings.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage12CountrySettings.Size = New System.Drawing.Size(1376, 631)
         Me.TabPage12CountrySettings.TabIndex = 11
         Me.TabPage12CountrySettings.Text = "Country Settings"
         Me.TabPage12CountrySettings.UseVisualStyleBackColor = True
@@ -1627,15 +2027,15 @@ Partial Class Form1
         Me.DataGridViewCountryItems.Name = "DataGridViewCountryItems"
         Me.DataGridViewCountryItems.ReadOnly = True
         Me.DataGridViewCountryItems.RowTemplate.Height = 25
-        Me.DataGridViewCountryItems.Size = New System.Drawing.Size(1370, 628)
+        Me.DataGridViewCountryItems.Size = New System.Drawing.Size(1370, 625)
         Me.DataGridViewCountryItems.TabIndex = 1
         '
         'DataGridViewTextBoxColumnCountrySettingsRecordNumber
         '
         Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
-        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.DefaultCellStyle = DataGridViewCellStyle15
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.DefaultCellStyle = DataGridViewCellStyle5
         Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.HeaderText = "Record Number"
         Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.MinimumWidth = 60
         Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.Name = "DataGridViewTextBoxColumnCountrySettingsRecordNumber"
@@ -1645,9 +2045,9 @@ Partial Class Form1
         'DataGridViewTextBoxColumnCountrySettingsCategory
         '
         Me.DataGridViewTextBoxColumnCountrySettingsCategory.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridViewTextBoxColumnCountrySettingsCategory.DefaultCellStyle = DataGridViewCellStyle16
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridViewTextBoxColumnCountrySettingsCategory.DefaultCellStyle = DataGridViewCellStyle6
         Me.DataGridViewTextBoxColumnCountrySettingsCategory.HeaderText = "Category"
         Me.DataGridViewTextBoxColumnCountrySettingsCategory.Name = "DataGridViewTextBoxColumnCountrySettingsCategory"
         Me.DataGridViewTextBoxColumnCountrySettingsCategory.ReadOnly = True
@@ -1705,10 +2105,10 @@ Partial Class Form1
         'TabPage13Profile
         '
         Me.TabPage13Profile.Controls.Add(Me.DataGridViewMyProfile)
-        Me.TabPage13Profile.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage13Profile.Location = New System.Drawing.Point(4, 27)
         Me.TabPage13Profile.Name = "TabPage13Profile"
         Me.TabPage13Profile.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage13Profile.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage13Profile.Size = New System.Drawing.Size(1376, 631)
         Me.TabPage13Profile.TabIndex = 12
         Me.TabPage13Profile.Text = "Profile"
         Me.TabPage13Profile.UseVisualStyleBackColor = True
@@ -1727,15 +2127,15 @@ Partial Class Form1
         Me.DataGridViewMyProfile.Name = "DataGridViewMyProfile"
         Me.DataGridViewMyProfile.ReadOnly = True
         Me.DataGridViewMyProfile.RowTemplate.Height = 25
-        Me.DataGridViewMyProfile.Size = New System.Drawing.Size(1370, 628)
+        Me.DataGridViewMyProfile.Size = New System.Drawing.Size(1370, 625)
         Me.DataGridViewMyProfile.TabIndex = 0
         '
         'TabPage14MyUser
         '
         Me.TabPage14MyUser.Controls.Add(Me.DataGridViewMyUserData)
-        Me.TabPage14MyUser.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage14MyUser.Location = New System.Drawing.Point(4, 27)
         Me.TabPage14MyUser.Name = "TabPage14MyUser"
-        Me.TabPage14MyUser.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage14MyUser.Size = New System.Drawing.Size(1376, 631)
         Me.TabPage14MyUser.TabIndex = 13
         Me.TabPage14MyUser.Text = "My User"
         Me.TabPage14MyUser.UseVisualStyleBackColor = True
@@ -1754,16 +2154,16 @@ Partial Class Form1
         Me.DataGridViewMyUserData.Name = "DataGridViewMyUserData"
         Me.DataGridViewMyUserData.ReadOnly = True
         Me.DataGridViewMyUserData.RowTemplate.Height = 25
-        Me.DataGridViewMyUserData.Size = New System.Drawing.Size(1376, 634)
+        Me.DataGridViewMyUserData.Size = New System.Drawing.Size(1376, 631)
         Me.DataGridViewMyUserData.TabIndex = 0
         '
         'TabPage15AllUsers
         '
         Me.TabPage15AllUsers.Controls.Add(Me.DataGridViewCareLinkUsers)
-        Me.TabPage15AllUsers.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage15AllUsers.Location = New System.Drawing.Point(4, 27)
         Me.TabPage15AllUsers.Name = "TabPage15AllUsers"
         Me.TabPage15AllUsers.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage15AllUsers.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage15AllUsers.Size = New System.Drawing.Size(1376, 631)
         Me.TabPage15AllUsers.TabIndex = 14
         Me.TabPage15AllUsers.Text = "All Users"
         Me.TabPage15AllUsers.UseVisualStyleBackColor = True
@@ -1785,7 +2185,7 @@ Partial Class Form1
         Me.DataGridViewCareLinkUsers.Name = "DataGridViewCareLinkUsers"
         Me.DataGridViewCareLinkUsers.RowTemplate.Height = 25
         Me.DataGridViewCareLinkUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.DataGridViewCareLinkUsers.Size = New System.Drawing.Size(1370, 628)
+        Me.DataGridViewCareLinkUsers.Size = New System.Drawing.Size(1370, 625)
         Me.DataGridViewCareLinkUsers.TabIndex = 0
         '
         'DataGridViewTextBoxColumnCareLinkUserName
@@ -1892,401 +2292,13 @@ Partial Class Form1
         '
         'TabPage16Markers
         '
-        Me.TabPage16Markers.Controls.Add(Me.TabControlMarker)
-        Me.TabPage16Markers.Location = New System.Drawing.Point(4, 24)
+        Me.TabPage16Markers.BackColor = System.Drawing.SystemColors.MenuHighlight
+        Me.TabPage16Markers.Location = New System.Drawing.Point(4, 27)
         Me.TabPage16Markers.Name = "TabPage16Markers"
         Me.TabPage16Markers.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage16Markers.Size = New System.Drawing.Size(1376, 634)
+        Me.TabPage16Markers.Size = New System.Drawing.Size(1376, 631)
         Me.TabPage16Markers.TabIndex = 4
         Me.TabPage16Markers.Text = "Markers..."
-        Me.TabPage16Markers.UseVisualStyleBackColor = True
-        '
-        'TabControlMarker
-        '
-        Me.TabControlMarker.Appearance = System.Windows.Forms.TabAppearance.FlatButtons
-        Me.TabControlMarker.Controls.Add(Me.TabPage17AutoBasalDelivery)
-        Me.TabControlMarker.Controls.Add(Me.TabPage18AutoModeStatus)
-        Me.TabControlMarker.Controls.Add(Me.TabPage17BgReading)
-        Me.TabControlMarker.Controls.Add(Me.TabPage20Calibration)
-        Me.TabControlMarker.Controls.Add(Me.TabPage21Insulin)
-        Me.TabControlMarker.Controls.Add(Me.TabPage22LowGlusoseSuspended)
-        Me.TabControlMarker.Controls.Add(Me.TabPage23Meal)
-        Me.TabControlMarker.Controls.Add(Me.TabPage25TimeChange)
-        Me.TabControlMarker.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TabControlMarker.Location = New System.Drawing.Point(3, 3)
-        Me.TabControlMarker.Name = "TabControlMarker"
-        Me.TabControlMarker.SelectedIndex = 0
-        Me.TabControlMarker.Size = New System.Drawing.Size(1370, 628)
-        Me.TabControlMarker.TabIndex = 0
-        '
-        'TabPage17AutoBasalDelivery
-        '
-        Me.TabPage17AutoBasalDelivery.Controls.Add(Me.TableLayoutPanelAutoBasalDelivery)
-        Me.TabPage17AutoBasalDelivery.Location = New System.Drawing.Point(4, 27)
-        Me.TabPage17AutoBasalDelivery.Name = "TabPage17AutoBasalDelivery"
-        Me.TabPage17AutoBasalDelivery.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage17AutoBasalDelivery.Size = New System.Drawing.Size(1362, 597)
-        Me.TabPage17AutoBasalDelivery.TabIndex = 1
-        Me.TabPage17AutoBasalDelivery.Text = "Auto Basal Delivery"
-        Me.TabPage17AutoBasalDelivery.UseVisualStyleBackColor = True
-        '
-        'TableLayoutPanelAutoBasalDelivery
-        '
-        Me.TableLayoutPanelAutoBasalDelivery.ColumnCount = 1
-        Me.TableLayoutPanelAutoBasalDelivery.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelAutoBasalDelivery.Controls.Add(Me.LabelAutoBasalDelivery, 0, 0)
-        Me.TableLayoutPanelAutoBasalDelivery.Controls.Add(Me.DataGridViewAutoBasalDelivery, 0, 1)
-        Me.TableLayoutPanelAutoBasalDelivery.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanelAutoBasalDelivery.Location = New System.Drawing.Point(3, 3)
-        Me.TableLayoutPanelAutoBasalDelivery.Name = "TableLayoutPanelAutoBasalDelivery"
-        Me.TableLayoutPanelAutoBasalDelivery.RowCount = 2
-        Me.TableLayoutPanelAutoBasalDelivery.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelAutoBasalDelivery.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelAutoBasalDelivery.Size = New System.Drawing.Size(1356, 591)
-        Me.TableLayoutPanelAutoBasalDelivery.TabIndex = 0
-        '
-        'LabelAutoBasalDelivery
-        '
-        Me.LabelAutoBasalDelivery.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelAutoBasalDelivery.Location = New System.Drawing.Point(3, 0)
-        Me.LabelAutoBasalDelivery.Name = "LabelAutoBasalDelivery"
-        Me.LabelAutoBasalDelivery.Size = New System.Drawing.Size(1350, 30)
-        Me.LabelAutoBasalDelivery.TabIndex = 1
-        Me.LabelAutoBasalDelivery.Text = "Auto Basal Delivery"
-        Me.LabelAutoBasalDelivery.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'DataGridViewAutoBasalDelivery
-        '
-        Me.DataGridViewAutoBasalDelivery.AllowUserToAddRows = False
-        Me.DataGridViewAutoBasalDelivery.AllowUserToDeleteRows = False
-        Me.DataGridViewAutoBasalDelivery.AllowUserToResizeColumns = False
-        Me.DataGridViewAutoBasalDelivery.AllowUserToResizeRows = False
-        DataGridViewCellStyle17.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewAutoBasalDelivery.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle17
-        Me.DataGridViewAutoBasalDelivery.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader
-        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle18.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        DataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewAutoBasalDelivery.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle18
-        Me.DataGridViewAutoBasalDelivery.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewAutoBasalDelivery.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridViewAutoBasalDelivery.Location = New System.Drawing.Point(3, 33)
-        Me.DataGridViewAutoBasalDelivery.Name = "DataGridViewAutoBasalDelivery"
-        Me.DataGridViewAutoBasalDelivery.ReadOnly = True
-        Me.DataGridViewAutoBasalDelivery.RowTemplate.Height = 25
-        Me.DataGridViewAutoBasalDelivery.Size = New System.Drawing.Size(1350, 633)
-        Me.DataGridViewAutoBasalDelivery.TabIndex = 0
-        '
-        'TabPage18AutoModeStatus
-        '
-        Me.TabPage18AutoModeStatus.Controls.Add(Me.TableLayoutPanelAutoModeStatus)
-        Me.TabPage18AutoModeStatus.Location = New System.Drawing.Point(4, 27)
-        Me.TabPage18AutoModeStatus.Name = "TabPage18AutoModeStatus"
-        Me.TabPage18AutoModeStatus.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage18AutoModeStatus.Size = New System.Drawing.Size(1362, 597)
-        Me.TabPage18AutoModeStatus.TabIndex = 0
-        Me.TabPage18AutoModeStatus.Text = "Auto Mode Status"
-        Me.TabPage18AutoModeStatus.UseVisualStyleBackColor = True
-        '
-        'TableLayoutPanelAutoModeStatus
-        '
-        Me.TableLayoutPanelAutoModeStatus.AutoScroll = True
-        Me.TableLayoutPanelAutoModeStatus.AutoSize = True
-        Me.TableLayoutPanelAutoModeStatus.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelAutoModeStatus.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelAutoModeStatus.ColumnCount = 1
-        Me.TableLayoutPanelAutoModeStatus.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelAutoModeStatus.Controls.Add(Me.LabelAutoModeStatus, 0, 0)
-        Me.TableLayoutPanelAutoModeStatus.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanelAutoModeStatus.Location = New System.Drawing.Point(3, 3)
-        Me.TableLayoutPanelAutoModeStatus.Name = "TableLayoutPanelAutoModeStatus"
-        Me.TableLayoutPanelAutoModeStatus.RowCount = 2
-        Me.TableLayoutPanelAutoModeStatus.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelAutoModeStatus.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelAutoModeStatus.Size = New System.Drawing.Size(1356, 591)
-        Me.TableLayoutPanelAutoModeStatus.TabIndex = 0
-        '
-        'LabelAutoModeStatus
-        '
-        Me.LabelAutoModeStatus.AutoSize = True
-        Me.LabelAutoModeStatus.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelAutoModeStatus.Location = New System.Drawing.Point(6, 3)
-        Me.LabelAutoModeStatus.Name = "LabelAutoModeStatus"
-        Me.LabelAutoModeStatus.Size = New System.Drawing.Size(1344, 30)
-        Me.LabelAutoModeStatus.TabIndex = 0
-        Me.LabelAutoModeStatus.Text = "Auto Mode Status"
-        Me.LabelAutoModeStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'TabPage17BgReading
-        '
-        Me.TabPage17BgReading.Controls.Add(Me.TableLayoutPanelBgReading)
-        Me.TabPage17BgReading.Location = New System.Drawing.Point(4, 27)
-        Me.TabPage17BgReading.Name = "TabPage17BgReading"
-        Me.TabPage17BgReading.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage17BgReading.Size = New System.Drawing.Size(1362, 597)
-        Me.TabPage17BgReading.TabIndex = 2
-        Me.TabPage17BgReading.Text = "Bg Reading"
-        Me.TabPage17BgReading.UseVisualStyleBackColor = True
-        '
-        'TableLayoutPanelBgReading
-        '
-        Me.TableLayoutPanelBgReading.AutoScroll = True
-        Me.TableLayoutPanelBgReading.AutoSize = True
-        Me.TableLayoutPanelBgReading.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelBgReading.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelBgReading.ColumnCount = 1
-        Me.TableLayoutPanelBgReading.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelBgReading.Controls.Add(Me.LabelBgReading, 0, 0)
-        Me.TableLayoutPanelBgReading.Dock = System.Windows.Forms.DockStyle.Top
-        Me.TableLayoutPanelBgReading.Location = New System.Drawing.Point(3, 3)
-        Me.TableLayoutPanelBgReading.Name = "TableLayoutPanelBgReading"
-        Me.TableLayoutPanelBgReading.RowCount = 2
-        Me.TableLayoutPanelBgReading.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelBgReading.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelBgReading.Size = New System.Drawing.Size(1356, 39)
-        Me.TableLayoutPanelBgReading.TabIndex = 1
-        '
-        'LabelBgReading
-        '
-        Me.LabelBgReading.AutoSize = True
-        Me.LabelBgReading.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelBgReading.Location = New System.Drawing.Point(6, 3)
-        Me.LabelBgReading.Name = "LabelBgReading"
-        Me.LabelBgReading.Size = New System.Drawing.Size(1344, 30)
-        Me.LabelBgReading.TabIndex = 0
-        Me.LabelBgReading.Text = "Bg Reading"
-        Me.LabelBgReading.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'TabPage20Calibration
-        '
-        Me.TabPage20Calibration.Controls.Add(Me.TableLayoutPanelCalibration)
-        Me.TabPage20Calibration.Location = New System.Drawing.Point(4, 27)
-        Me.TabPage20Calibration.Name = "TabPage20Calibration"
-        Me.TabPage20Calibration.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage20Calibration.Size = New System.Drawing.Size(1362, 597)
-        Me.TabPage20Calibration.TabIndex = 3
-        Me.TabPage20Calibration.Text = "Calibration"
-        Me.TabPage20Calibration.UseVisualStyleBackColor = True
-        '
-        'TableLayoutPanelCalibration
-        '
-        Me.TableLayoutPanelCalibration.AutoScroll = True
-        Me.TableLayoutPanelCalibration.AutoSize = True
-        Me.TableLayoutPanelCalibration.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelCalibration.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelCalibration.ColumnCount = 1
-        Me.TableLayoutPanelCalibration.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelCalibration.Controls.Add(Me.LabelCalibration, 0, 0)
-        Me.TableLayoutPanelCalibration.Dock = System.Windows.Forms.DockStyle.Top
-        Me.TableLayoutPanelCalibration.Location = New System.Drawing.Point(3, 3)
-        Me.TableLayoutPanelCalibration.Name = "TableLayoutPanelCalibration"
-        Me.TableLayoutPanelCalibration.RowCount = 2
-        Me.TableLayoutPanelCalibration.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelCalibration.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelCalibration.Size = New System.Drawing.Size(1356, 39)
-        Me.TableLayoutPanelCalibration.TabIndex = 1
-        '
-        'LabelCalibration
-        '
-        Me.LabelCalibration.AutoSize = True
-        Me.LabelCalibration.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelCalibration.Location = New System.Drawing.Point(6, 3)
-        Me.LabelCalibration.Name = "LabelCalibration"
-        Me.LabelCalibration.Size = New System.Drawing.Size(1344, 30)
-        Me.LabelCalibration.TabIndex = 0
-        Me.LabelCalibration.Text = "Calibration"
-        Me.LabelCalibration.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'TabPage21Insulin
-        '
-        Me.TabPage21Insulin.Controls.Add(Me.TableLayoutPanelInsulin)
-        Me.TabPage21Insulin.Location = New System.Drawing.Point(4, 27)
-        Me.TabPage21Insulin.Name = "TabPage21Insulin"
-        Me.TabPage21Insulin.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage21Insulin.Size = New System.Drawing.Size(1362, 597)
-        Me.TabPage21Insulin.TabIndex = 4
-        Me.TabPage21Insulin.Text = "Insulin"
-        Me.TabPage21Insulin.UseVisualStyleBackColor = True
-        '
-        'TableLayoutPanelInsulin
-        '
-        Me.TableLayoutPanelInsulin.AutoScroll = True
-        Me.TableLayoutPanelInsulin.AutoSize = True
-        Me.TableLayoutPanelInsulin.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelInsulin.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelInsulin.ColumnCount = 1
-        Me.TableLayoutPanelInsulin.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelInsulin.Controls.Add(Me.LabelInsulin, 0, 0)
-        Me.TableLayoutPanelInsulin.Controls.Add(Me.DataGridViewInsulin, 0, 1)
-        Me.TableLayoutPanelInsulin.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanelInsulin.Location = New System.Drawing.Point(3, 3)
-        Me.TableLayoutPanelInsulin.Name = "TableLayoutPanelInsulin"
-        Me.TableLayoutPanelInsulin.RowCount = 2
-        Me.TableLayoutPanelInsulin.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelInsulin.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelInsulin.Size = New System.Drawing.Size(1356, 591)
-        Me.TableLayoutPanelInsulin.TabIndex = 1
-        '
-        'LabelInsulin
-        '
-        Me.LabelInsulin.AutoSize = True
-        Me.LabelInsulin.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelInsulin.Location = New System.Drawing.Point(6, 3)
-        Me.LabelInsulin.Name = "LabelInsulin"
-        Me.LabelInsulin.Size = New System.Drawing.Size(1338, 30)
-        Me.LabelInsulin.TabIndex = 1
-        Me.LabelInsulin.Text = "Insulin"
-        Me.LabelInsulin.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'DataGridViewInsulin
-        '
-        Me.DataGridViewInsulin.AllowUserToAddRows = False
-        Me.DataGridViewInsulin.AllowUserToDeleteRows = False
-        Me.DataGridViewInsulin.AllowUserToResizeColumns = False
-        Me.DataGridViewInsulin.AllowUserToResizeRows = False
-        DataGridViewCellStyle19.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewInsulin.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle19
-        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle20.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        DataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewInsulin.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle20
-        Me.DataGridViewInsulin.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewInsulin.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridViewInsulin.Location = New System.Drawing.Point(6, 39)
-        Me.DataGridViewInsulin.Name = "DataGridViewInsulin"
-        Me.DataGridViewInsulin.ReadOnly = True
-        Me.DataGridViewInsulin.RowTemplate.Height = 25
-        Me.DataGridViewInsulin.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.DataGridViewInsulin.Size = New System.Drawing.Size(1338, 624)
-        Me.DataGridViewInsulin.TabIndex = 0
-        '
-        'TabPage22LowGlusoseSuspended
-        '
-        Me.TabPage22LowGlusoseSuspended.Controls.Add(Me.TableLayoutPanelLowGlusoseSuspended)
-        Me.TabPage22LowGlusoseSuspended.Location = New System.Drawing.Point(4, 27)
-        Me.TabPage22LowGlusoseSuspended.Name = "TabPage22LowGlusoseSuspended"
-        Me.TabPage22LowGlusoseSuspended.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage22LowGlusoseSuspended.Size = New System.Drawing.Size(1362, 597)
-        Me.TabPage22LowGlusoseSuspended.TabIndex = 5
-        Me.TabPage22LowGlusoseSuspended.Text = "Low Glusose Suspended"
-        Me.TabPage22LowGlusoseSuspended.UseVisualStyleBackColor = True
-        '
-        'TableLayoutPanelLowGlusoseSuspended
-        '
-        Me.TableLayoutPanelLowGlusoseSuspended.AutoScroll = True
-        Me.TableLayoutPanelLowGlusoseSuspended.AutoSize = True
-        Me.TableLayoutPanelLowGlusoseSuspended.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelLowGlusoseSuspended.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelLowGlusoseSuspended.ColumnCount = 1
-        Me.TableLayoutPanelLowGlusoseSuspended.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelLowGlusoseSuspended.Controls.Add(Me.LabelLowGlusoseSuspended, 0, 0)
-        Me.TableLayoutPanelLowGlusoseSuspended.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanelLowGlusoseSuspended.Location = New System.Drawing.Point(3, 3)
-        Me.TableLayoutPanelLowGlusoseSuspended.Name = "TableLayoutPanelLowGlusoseSuspended"
-        Me.TableLayoutPanelLowGlusoseSuspended.RowCount = 2
-        Me.TableLayoutPanelLowGlusoseSuspended.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelLowGlusoseSuspended.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelLowGlusoseSuspended.Size = New System.Drawing.Size(1356, 591)
-        Me.TableLayoutPanelLowGlusoseSuspended.TabIndex = 1
-        '
-        'LabelLowGlusoseSuspended
-        '
-        Me.LabelLowGlusoseSuspended.AutoSize = True
-        Me.LabelLowGlusoseSuspended.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelLowGlusoseSuspended.Location = New System.Drawing.Point(6, 3)
-        Me.LabelLowGlusoseSuspended.Name = "LabelLowGlusoseSuspended"
-        Me.LabelLowGlusoseSuspended.Size = New System.Drawing.Size(1344, 30)
-        Me.LabelLowGlusoseSuspended.TabIndex = 0
-        Me.LabelLowGlusoseSuspended.Text = "Low Glusose Suspended"
-        Me.LabelLowGlusoseSuspended.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'TabPage23Meal
-        '
-        Me.TabPage23Meal.Controls.Add(Me.TableLayoutPanelMeal)
-        Me.TabPage23Meal.Location = New System.Drawing.Point(4, 27)
-        Me.TabPage23Meal.Name = "TabPage23Meal"
-        Me.TabPage23Meal.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage23Meal.Size = New System.Drawing.Size(1362, 597)
-        Me.TabPage23Meal.TabIndex = 6
-        Me.TabPage23Meal.Text = "Meal"
-        Me.TabPage23Meal.UseVisualStyleBackColor = True
-        '
-        'TableLayoutPanelMeal
-        '
-        Me.TableLayoutPanelMeal.AutoScroll = True
-        Me.TableLayoutPanelMeal.AutoSize = True
-        Me.TableLayoutPanelMeal.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelMeal.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelMeal.ColumnCount = 1
-        Me.TableLayoutPanelMeal.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelMeal.Controls.Add(Me.LabelMeal, 0, 0)
-        Me.TableLayoutPanelMeal.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanelMeal.Location = New System.Drawing.Point(3, 3)
-        Me.TableLayoutPanelMeal.Name = "TableLayoutPanelMeal"
-        Me.TableLayoutPanelMeal.RowCount = 2
-        Me.TableLayoutPanelMeal.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelMeal.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelMeal.Size = New System.Drawing.Size(1356, 591)
-        Me.TableLayoutPanelMeal.TabIndex = 1
-        '
-        'LabelMeal
-        '
-        Me.LabelMeal.AutoSize = True
-        Me.LabelMeal.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelMeal.Location = New System.Drawing.Point(6, 3)
-        Me.LabelMeal.Name = "LabelMeal"
-        Me.LabelMeal.Size = New System.Drawing.Size(1344, 30)
-        Me.LabelMeal.TabIndex = 0
-        Me.LabelMeal.Text = "Meal"
-        Me.LabelMeal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'TabPage25TimeChange
-        '
-        Me.TabPage25TimeChange.Controls.Add(Me.TableLayoutPanelTimeChange)
-        Me.TabPage25TimeChange.Location = New System.Drawing.Point(4, 27)
-        Me.TabPage25TimeChange.Name = "TabPage25TimeChange"
-        Me.TabPage25TimeChange.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage25TimeChange.Size = New System.Drawing.Size(1362, 597)
-        Me.TabPage25TimeChange.TabIndex = 7
-        Me.TabPage25TimeChange.Text = "Time Change"
-        Me.TabPage25TimeChange.UseVisualStyleBackColor = True
-        '
-        'TableLayoutPanelTimeChange
-        '
-        Me.TableLayoutPanelTimeChange.AutoScroll = True
-        Me.TableLayoutPanelTimeChange.AutoSize = True
-        Me.TableLayoutPanelTimeChange.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelTimeChange.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelTimeChange.ColumnCount = 1
-        Me.TableLayoutPanelTimeChange.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelTimeChange.Controls.Add(Me.LabelTimeChange, 0, 0)
-        Me.TableLayoutPanelTimeChange.Dock = System.Windows.Forms.DockStyle.Top
-        Me.TableLayoutPanelTimeChange.Location = New System.Drawing.Point(3, 3)
-        Me.TableLayoutPanelTimeChange.Name = "TableLayoutPanelTimeChange"
-        Me.TableLayoutPanelTimeChange.RowCount = 2
-        Me.TableLayoutPanelTimeChange.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelTimeChange.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelTimeChange.Size = New System.Drawing.Size(1356, 39)
-        Me.TableLayoutPanelTimeChange.TabIndex = 1
-        '
-        'LabelTimeChange
-        '
-        Me.LabelTimeChange.AutoSize = True
-        Me.LabelTimeChange.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelTimeChange.Location = New System.Drawing.Point(6, 3)
-        Me.LabelTimeChange.Name = "LabelTimeChange"
-        Me.LabelTimeChange.Size = New System.Drawing.Size(1344, 30)
-        Me.LabelTimeChange.TabIndex = 0
-        Me.LabelTimeChange.Text = "Tme Change"
-        Me.LabelTimeChange.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'ImageList1
         '
@@ -2377,6 +2389,39 @@ Partial Class Form1
         Me.SplitContainer4.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer4, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer4.ResumeLayout(False)
+        Me.TabControlMarkers.ResumeLayout(False)
+        Me.TabPage17AutoBasalDelivery.ResumeLayout(False)
+        Me.TableLayoutPanelAutoBasalDelivery.ResumeLayout(False)
+        CType(Me.DataGridViewAutoBasalDelivery, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage18AutoModeStatus.ResumeLayout(False)
+        Me.TabPage18AutoModeStatus.PerformLayout()
+        Me.TableLayoutPanelAutoModeStatus.ResumeLayout(False)
+        Me.TableLayoutPanelAutoModeStatus.PerformLayout()
+        Me.TabPage17BgReading.ResumeLayout(False)
+        Me.TabPage17BgReading.PerformLayout()
+        Me.TableLayoutPanelBgReading.ResumeLayout(False)
+        Me.TableLayoutPanelBgReading.PerformLayout()
+        Me.TabPage20Calibration.ResumeLayout(False)
+        Me.TabPage20Calibration.PerformLayout()
+        Me.TableLayoutPanelCalibration.ResumeLayout(False)
+        Me.TableLayoutPanelCalibration.PerformLayout()
+        Me.TabPage21Insulin.ResumeLayout(False)
+        Me.TabPage21Insulin.PerformLayout()
+        Me.TableLayoutPanelInsulin.ResumeLayout(False)
+        Me.TableLayoutPanelInsulin.PerformLayout()
+        CType(Me.DataGridViewInsulin, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPage22LowGlusoseSuspended.ResumeLayout(False)
+        Me.TabPage22LowGlusoseSuspended.PerformLayout()
+        Me.TableLayoutPanelLowGlusoseSuspended.ResumeLayout(False)
+        Me.TableLayoutPanelLowGlusoseSuspended.PerformLayout()
+        Me.TabPage23Meal.ResumeLayout(False)
+        Me.TabPage23Meal.PerformLayout()
+        Me.TableLayoutPanelMeal.ResumeLayout(False)
+        Me.TableLayoutPanelMeal.PerformLayout()
+        Me.TabPage25TimeChange.ResumeLayout(False)
+        Me.TabPage25TimeChange.PerformLayout()
+        Me.TableLayoutPanelTimeChange.ResumeLayout(False)
+        Me.TableLayoutPanelTimeChange.PerformLayout()
         Me.TabControlHomePage.ResumeLayout(False)
         Me.TabPage01HomePage.ResumeLayout(False)
         Me.SplitContainer2.Panel1.ResumeLayout(False)
@@ -2438,40 +2483,6 @@ Partial Class Form1
         Me.TabPage15AllUsers.ResumeLayout(False)
         CType(Me.DataGridViewCareLinkUsers, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.CareLinkUserDataRecordBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.TabPage16Markers.ResumeLayout(False)
-        Me.TabControlMarker.ResumeLayout(False)
-        Me.TabPage17AutoBasalDelivery.ResumeLayout(False)
-        Me.TableLayoutPanelAutoBasalDelivery.ResumeLayout(False)
-        CType(Me.DataGridViewAutoBasalDelivery, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.TabPage18AutoModeStatus.ResumeLayout(False)
-        Me.TabPage18AutoModeStatus.PerformLayout()
-        Me.TableLayoutPanelAutoModeStatus.ResumeLayout(False)
-        Me.TableLayoutPanelAutoModeStatus.PerformLayout()
-        Me.TabPage17BgReading.ResumeLayout(False)
-        Me.TabPage17BgReading.PerformLayout()
-        Me.TableLayoutPanelBgReading.ResumeLayout(False)
-        Me.TableLayoutPanelBgReading.PerformLayout()
-        Me.TabPage20Calibration.ResumeLayout(False)
-        Me.TabPage20Calibration.PerformLayout()
-        Me.TableLayoutPanelCalibration.ResumeLayout(False)
-        Me.TableLayoutPanelCalibration.PerformLayout()
-        Me.TabPage21Insulin.ResumeLayout(False)
-        Me.TabPage21Insulin.PerformLayout()
-        Me.TableLayoutPanelInsulin.ResumeLayout(False)
-        Me.TableLayoutPanelInsulin.PerformLayout()
-        CType(Me.DataGridViewInsulin, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.TabPage22LowGlusoseSuspended.ResumeLayout(False)
-        Me.TabPage22LowGlusoseSuspended.PerformLayout()
-        Me.TableLayoutPanelLowGlusoseSuspended.ResumeLayout(False)
-        Me.TableLayoutPanelLowGlusoseSuspended.PerformLayout()
-        Me.TabPage23Meal.ResumeLayout(False)
-        Me.TabPage23Meal.PerformLayout()
-        Me.TableLayoutPanelMeal.ResumeLayout(False)
-        Me.TableLayoutPanelMeal.PerformLayout()
-        Me.TabPage25TimeChange.ResumeLayout(False)
-        Me.TabPage25TimeChange.PerformLayout()
-        Me.TableLayoutPanelTimeChange.ResumeLayout(False)
-        Me.TableLayoutPanelTimeChange.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -2604,7 +2615,7 @@ Partial Class Form1
     Friend WithEvents SplitContainer4 As SplitContainer
     Friend WithEvents StartHereExit As ToolStripMenuItem
     Friend WithEvents TabControlHomePage As TabControl
-    Friend WithEvents TabControlMarker As TabControl
+    Friend WithEvents TabControlMarkers As TabControl
     Friend WithEvents TableLayoutPanelActiveInsulin As TableLayoutPanel
     Friend WithEvents TableLayoutPanelAutoBasalDelivery As TableLayoutPanel
     Friend WithEvents TableLayoutPanelAutoModeStatus As TableLayoutPanel
@@ -2658,4 +2669,5 @@ Partial Class Form1
     Friend WithEvents TotalsLabel As Label
     Friend WithEvents TransmatterBatterPercentLabel As Label
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
+    Friend WithEvents TabPage26BackToHomePage As TabPage
 End Class

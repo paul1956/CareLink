@@ -30,6 +30,10 @@ This update has a UI to show all the available data and a visual version that mi
 - 9/01/2022
 
 ## What's New in this release
+  New 3.5.4.6
+  Design Summary Formating
+  Improve Tab design
+
   New 3.5.4.5
   Design cleanup
 
