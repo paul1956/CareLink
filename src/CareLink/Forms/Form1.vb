@@ -1039,7 +1039,7 @@ Public Class Form1
             If Not _updating Then
                 _updating = True
                 Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
-                If Me.RecentData IsNot Nothing Then
+                If Me.RecentData Is Nothing Then
                     Me.LastUpdateTime.Text = "Unknown"
                 Else
                     _client = New CareLinkClient(Me.LoginStatus, My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
