@@ -13,6 +13,7 @@ Public Class BGMiniWindow
     Private _normalizedBG As Single
 
     Public Sub SetCurrentBGString(Value As String)
+        Me.Text = $"{s_firstName}'s Glucose at {Now.ToShortDateTimeString}"
         _lastBGValue = _currentBGValue
         _currentBGValue = Value.ParseSingle(2)
         If Not Double.IsNaN(_currentBGValue) Then

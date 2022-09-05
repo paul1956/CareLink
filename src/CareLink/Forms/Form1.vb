@@ -120,7 +120,7 @@ Public Class Form1
 
     Private Function DoOptionalLoginAndUpdateData(UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
         Me.ServerUpdateTimer.Stop()
-        Debug.Print($"Me.ServerUpdateTimer stopped at {Now}")
+        Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(Me.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
         Select Case fileToLoad
             Case FileToLoadOptions.LastSaved
                 Me.Text = $"{SavedTitle} Using Last Saved Data"
@@ -143,6 +143,7 @@ Public Class Form1
                 If _client Is Nothing OrElse Not _client.LoggedIn Then
                     Me.ServerUpdateTimer.Interval = s_fiveMinutesInMilliseconds
                     Me.ServerUpdateTimer.Start()
+                    Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(Me.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
                     If CareLinkClient.NetworkDown Then
                         Me.LoginStatus.Text = "Network Down"
                         Return False
@@ -154,12 +155,12 @@ Public Class Form1
                 Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
                 Me.ServerUpdateTimer.Interval = s_twoMinutesInMilliseconds
                 Me.ServerUpdateTimer.Start()
+                Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(Me.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
                 If CareLinkClient.NetworkDown Then
                     Me.LoginStatus.Text = "Network Down"
                     Return False
                 End If
                 Me.ShowMiniDisplay.Visible = True
-                Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
                 Me.LoginStatus.Text = "OK"
         End Select
         Me.FinishInitialization()
@@ -301,6 +302,7 @@ Public Class Form1
             Try
                 Dim fileNameWithPath As String = openFileDialog1.FileName
                 Me.ServerUpdateTimer.Stop()
+                Debug.Print($"In {NameOf(MenuStartHereExceptionReportLoad_Click)}, {NameOf(Me.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
                 If File.Exists(fileNameWithPath) Then
                     Me.RecentData.Clear()
                     ExceptionHandlerForm.ReportFileNameWithPath = fileNameWithPath
@@ -349,6 +351,7 @@ Public Class Form1
             Try
                 If File.Exists(openFileDialog1.FileName) Then
                     Me.ServerUpdateTimer.Stop()
+                    Debug.Print($"In {NameOf(MenuStartHereLoadSavedDataFile_Click)}, {NameOf(Me.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
                     CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{RepoName}", True)
                     Me.RecentData = Loads(File.ReadAllText(openFileDialog1.FileName))
                     Me.ShowMiniDisplay.Visible = Debugger.IsAttached
@@ -661,8 +664,11 @@ Public Class Form1
         If Not _initialized OrElse _inMouseMove Then
             Exit Sub
         End If
+        Debug.Print($"In {NameOf(ActiveInsulinChart_PostPaint)} before SyncLock")
         SyncLock _updatingLock
+            Debug.Print($"In {NameOf(ActiveInsulinChart_PostPaint)} after SyncLock")
             If _updating Then
+                Debug.Print($"Exiting {NameOf(ActiveInsulinChart_PostPaint)} due to {NameOf(_updating)}")
                 Exit Sub
             End If
             e.PostPaintSupport(_activeInsulinChartAbsoluteRectangle,
@@ -679,8 +685,11 @@ Public Class Form1
         If Not _initialized OrElse _inMouseMove Then
             Exit Sub
         End If
+        Debug.Print($"In {NameOf(TreatmentMarkersChart_PostPaint)} before SyncLock")
         SyncLock _updatingLock
+            Debug.Print($"In {NameOf(TreatmentMarkersChart_PostPaint)} after SyncLock")
             If _updating Then
+                Debug.Print($"Exiting {NameOf(TreatmentMarkersChart_PostPaint)} due to {NameOf(_updating)}")
                 Exit Sub
             End If
             e.PostPaintSupport(_treatmentMarkerAbsoluteRectangle,
@@ -698,8 +707,11 @@ Public Class Form1
         If Not _initialized OrElse _inMouseMove Then
             Exit Sub
         End If
+        Debug.Print($"In {NameOf(HomePageChart_PostPaint)} before SyncLock")
         SyncLock _updatingLock
+            Debug.Print($"In {NameOf(HomePageChart_PostPaint)} After SyncLock")
             If _updating Then
+                Debug.Print($"Exiting {NameOf(HomePageChart_PostPaint)} due to {NameOf(_updating)}")
                 Exit Sub
             End If
             e.PostPaintSupport(_homePageAbsoluteRectangle,
@@ -1033,9 +1045,10 @@ Public Class Form1
     End Sub
 
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
-        Debug.Print($"Me.ServerUpdateTimer stopped at {Now}")
         Me.ServerUpdateTimer.Stop()
+        Debug.Print($"Approacing SyncLock in {NameOf(ServerUpdateTimer_Tick)}, {NameOf(ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
         SyncLock _updatingLock
+            Debug.Print($"Inside SyncLock in {NameOf(ServerUpdateTimer_Tick)}, at {Now.ToLongTimeString}")
             If Not _updating Then
                 _updating = True
                 Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
@@ -1058,7 +1071,7 @@ Public Class Form1
             _updating = False
             Me.ServerUpdateTimer.Interval = s_twoMinutesInMilliseconds
             Me.ServerUpdateTimer.Start()
-            Debug.Print($"Me.ServerUpdateTimer Started at {Now}")
+            Debug.Print($"Exiting SyncLock in {NameOf(ServerUpdateTimer_Tick)}, {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
         End SyncLock
     End Sub
 
@@ -1785,6 +1798,7 @@ Public Class Form1
             End If
             Me.CursorPanel.Visible = False
             Me.UpdateDataTables(_formScale.Height <> 1 OrElse _formScale.Width <> 1)
+            _updating = False
             Me.UpdateActiveInsulinChart()
             Me.UpdateActiveInsulin()
             Me.UpdateAutoModeShield()
@@ -1800,7 +1814,6 @@ Public Class Form1
             s_recentDatalast = Me.RecentData
             Me.MenuStartHere.Enabled = True
             Me.UpdateTreatmentMarkersChart()
-            _updating = False
         End SyncLock
         Application.DoEvents()
     End Sub
