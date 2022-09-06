@@ -291,12 +291,12 @@ Module ChartingExtensions
     End Sub
 
     <Extension>
-    Friend Sub PostPaintSupport(e As ChartPaintEventArgs, ByRef chartRelitivePosition As RectangleF, topRowY2 As Single, insulinDictionary As Dictionary(Of OADate, Single), mealDictionary As Dictionary(Of OADate, Single), doShading As Boolean, offsetInsulinImage As Boolean, Optional homePageCursorTimeLabel As Label = Nothing)
+    Friend Sub PostPaintSupport(e As ChartPaintEventArgs, ByRef chartRelitivePosition As RectangleF, insulinDictionary As Dictionary(Of OADate, Single), mealDictionary As Dictionary(Of OADate, Single), offsetInsulinImage As Boolean, paintOnY2 As Boolean, Optional homePageCursorTimeLabel As Label = Nothing)
         Debug.Print("At SyncLock")
 
         If chartRelitivePosition.IsEmpty Then
             chartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.X, s_bindingSourceSGs(0).OADate))
-            chartRelitivePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, topRowY2))
+            chartRelitivePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, HomePageBasalRow))
             chartRelitivePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_limitHigh)))) - chartRelitivePosition.Y
             chartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.X, s_bindingSourceSGs.Last.OADate)) - chartRelitivePosition.X
         End If
@@ -305,21 +305,19 @@ Module ChartingExtensions
             homePageCursorTimeLabel.Left = CInt(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.X, homePageCursorTimeLabel.Tag.ToString.ParseDate("").ToOADate))
         End If
 
-        If doShading Then
-            Dim highLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_limitHigh))
-            Dim lowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_limitLow))
-            Dim criticalLowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_criticalLow))
-            Dim chartAbsoluteHighRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelitivePosition.X, chartRelitivePosition.Y, chartRelitivePosition.Width, highLimitY - chartRelitivePosition.Y))
-            Dim chartAbsoluteLowRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelitivePosition.X, lowLimitY, chartRelitivePosition.Width, criticalLowLimitY - lowLimitY))
-            Using b As New SolidBrush(Color.FromArgb(15, Color.Black))
-                e.ChartGraphics.Graphics.FillRectangle(b, chartAbsoluteHighRectangle)
-                e.ChartGraphics.Graphics.FillRectangle(b, chartAbsoluteLowRectangle)
-            End Using
-        End If
+        Dim highLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_limitHigh))
+        Dim lowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_limitLow))
+        Dim criticalLowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_criticalLow))
+        Dim chartAbsoluteHighRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelitivePosition.X, chartRelitivePosition.Y, chartRelitivePosition.Width, highLimitY - chartRelitivePosition.Y))
+        Dim chartAbsoluteLowRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelitivePosition.X, lowLimitY, chartRelitivePosition.Width, criticalLowLimitY - lowLimitY))
+        Using b As New SolidBrush(Color.FromArgb(15, Color.Black))
+            e.ChartGraphics.Graphics.FillRectangle(b, chartAbsoluteHighRectangle)
+            e.ChartGraphics.Graphics.FillRectangle(b, chartAbsoluteLowRectangle)
+        End Using
 
         If insulinDictionary IsNot Nothing Then
-            e.PaintMarker(s_mealImage, mealDictionary, False)
-            e.PaintMarker(s_insulinImage, insulinDictionary, offsetInsulinImage)
+            e.PaintMarker(s_mealImage, mealDictionary, False, paintOnY2)
+            e.PaintMarker(s_insulinImage, insulinDictionary, offsetInsulinImage, paintOnY2)
         End If
     End Sub
 

@@ -673,10 +673,10 @@ Public Class Form1
                 Exit Sub
             End If
             e.PostPaintSupport(_activeInsulinChartAbsoluteRectangle,
-                HomePageBasalRow,
-                insulinDictionary:=Nothing,
-                mealDictionary:=Nothing,
-                doShading:=True, offsetInsulinImage:=True)
+                               Nothing,
+                               Nothing,
+                               True,
+                               True)
         End SyncLock
     End Sub
 
@@ -694,11 +694,10 @@ Public Class Form1
                 Exit Sub
             End If
             e.PostPaintSupport(_treatmentMarkerAbsoluteRectangle,
-                HomePageBasalRow,
-                s_treatmentMarkerInsulinDictionary,
-                s_treatmentMarkerMealDictionary,
-                doShading:=True,
-                offsetInsulinImage:=False)
+                                s_treatmentMarkerInsulinDictionary,
+                                s_treatmentMarkerMealDictionary,
+                                offsetInsulinImage:=False,
+                                False)
         End SyncLock
     End Sub
 
@@ -716,11 +715,11 @@ Public Class Form1
                 Exit Sub
             End If
             e.PostPaintSupport(_homePageAbsoluteRectangle,
-                HomePageBasalRow,
                 s_homeTabMarkerInsulinDictionary,
                 s_homeTabMarkerMealDictionary,
                 True,
-                True, Me.CursorTimeLabel)
+                True,
+                Me.CursorTimeLabel)
         End SyncLock
     End Sub
 

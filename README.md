@@ -30,7 +30,7 @@ This update has a UI to show all the available data and a visual version that mi
 - 9/05/2022
 
 ## What's New in this release
-  New 3.5.4.8
+  New 3.5.4.9
   Add BG chart to Treatment Chart
   Improve scaling on Treatment Chart
   Shade Treatment Chart

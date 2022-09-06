@@ -2336,7 +2336,7 @@ Partial Class Form1
         'LoginStatus
         '
         Me.LoginStatus.AutoSize = True
-        Me.LoginStatus.Location = New System.Drawing.Point(509, 3)
+        Me.LoginStatus.Location = New System.Drawing.Point(549, 3)
         Me.LoginStatus.Name = "LoginStatus"
         Me.LoginStatus.Size = New System.Drawing.Size(58, 15)
         Me.LoginStatus.TabIndex = 24
@@ -2354,7 +2354,7 @@ Partial Class Form1
         'LastUpdateTime
         '
         Me.LastUpdateTime.AutoSize = True
-        Me.LastUpdateTime.Location = New System.Drawing.Point(1154, 3)
+        Me.LastUpdateTime.Location = New System.Drawing.Point(1194, 3)
         Me.LastUpdateTime.Name = "LastUpdateTime"
         Me.LastUpdateTime.Size = New System.Drawing.Size(58, 15)
         Me.LastUpdateTime.TabIndex = 24
