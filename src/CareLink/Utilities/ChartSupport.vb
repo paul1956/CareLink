@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Module ChartSupport
@@ -74,6 +75,21 @@ Module ChartSupport
                 .MajorGrid.LineColor = Color.FromArgb(64, 64, 64, 64)
                 .ScaleView.Zoomable = False
             End With
+            With .AxisY2
+                .Interval = HomePageMealRow
+                .IsMarginVisible = False
+                .IsStartedFromZero = False
+                .LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
+                .LineColor = Color.FromArgb(64, 64, 64, 64)
+                .MajorGrid = New Grid With {
+                    .Interval = HomePageMealRow,
+                    .LineColor = Color.FromArgb(64, 64, 64, 64)
+                }
+                .MajorTickMark = New TickMark() With {.Interval = HomePageMealRow, .Enabled = True}
+                .Maximum = HomePageBasalRow
+                .Minimum = HomePageMealRow
+                .Title = "BG Value"
+            End With
             With .CursorX
                 .AutoScroll = True
                 .AxisType = AxisType.Primary
@@ -83,7 +99,7 @@ Module ChartSupport
             End With
             With .CursorY
                 .AutoScroll = False
-                .AxisType = AxisType.Secondary
+                .AxisType = AxisType.Primary
                 .Interval = 0
                 .IsUserEnabled = False
                 .IsUserSelectionEnabled = False
@@ -104,7 +120,8 @@ Module ChartSupport
                     }
     End Function
 
-    Friend Sub InitializeChartArea(c As ChartArea)
+    <Extension>
+    Friend Sub InitializeBGChartArea(c As ChartArea)
         With c
             .AxisX.Minimum = s_bindingSourceSGs(0).OADate
             .AxisX.Maximum = s_bindingSourceSGs.Last.OADate
@@ -118,7 +135,7 @@ Module ChartSupport
 
 #Region "Create Series"
 
-    Friend Function CreateBasalSeries() As Series
+    Friend Function CreateBasalSeries(YAxisType As AxisType) As Series
         Dim s As New Series(BasalSeriesName) With {
                      .BorderWidth = 2,
                      .BorderColor = Color.HotPink,
@@ -126,26 +143,8 @@ Module ChartSupport
                      .ChartType = SeriesChartType.Line,
                      .Color = Color.HotPink,
                      .XValueType = ChartValueType.DateTime,
-                     .YAxisType = AxisType.Secondary
+                     .YAxisType = YAxisType
                  }
-        s.EmptyPointStyle.BorderWidth = 4
-        s.EmptyPointStyle.Color = Color.Transparent
-
-        Return s
-    End Function
-
-    Friend Function CreateMarkerSeries() As Series
-        Dim s As New Series With {
-                        .BorderColor = Color.Transparent,
-                        .BorderWidth = 1,
-                        .ChartArea = ChartAreaName,
-                        .ChartType = SeriesChartType.Point,
-                        .Color = Color.HotPink,
-                        .MarkerSize = 15,
-                        .Name = MarkerSeriesName,
-                        .XValueType = ChartValueType.DateTime,
-                        .YAxisType = AxisType.Secondary
-                    }
         s.EmptyPointStyle.BorderWidth = 4
         s.EmptyPointStyle.Color = Color.Transparent
 
@@ -164,6 +163,23 @@ Module ChartSupport
                      .XValueType = ChartValueType.DateTime,
                      .YAxisType = AxisType.Secondary
                  }
+    End Function
+
+    Friend Function CreateMarkerSeries(YAxisType As AxisType) As Series
+        Dim s As New Series(MarkerSeriesName) With {
+                        .BorderColor = Color.Transparent,
+                        .BorderWidth = 1,
+                        .ChartArea = ChartAreaName,
+                        .ChartType = SeriesChartType.Point,
+                        .Color = Color.HotPink,
+                        .MarkerSize = 15,
+                        .XValueType = ChartValueType.DateTime,
+                        .YAxisType = YAxisType
+                    }
+        s.EmptyPointStyle.BorderWidth = 4
+        s.EmptyPointStyle.Color = Color.Transparent
+
+        Return s
     End Function
 
     Friend Function CreateSeriesLimits(seriesName As String, chartAreaName As String, lineColor As Color) As Series

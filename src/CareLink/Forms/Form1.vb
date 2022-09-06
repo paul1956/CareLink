@@ -97,6 +97,7 @@ Public Class Form1
     Private WithEvents HomeTabTimeChangeSeries As Series
     Private WithEvents HomeTabTimeInRangeSeries As New Series
 
+    Private WithEvents TreatmentMarkerBGSeries As Series
     Private WithEvents TreatmentMarkerBasalSeries As Series
     Private WithEvents TreatmentMarkerMarkersSeries As Series
     Private WithEvents TreatmentMarkerTimeChangeSeries As Series
@@ -1088,30 +1089,13 @@ Public Class Form1
         Me.SplitContainer3.Panel1.Controls.Add(Me.CursorTimeLabel)
         Me.HomeTabChart = CreateChart(NameOf(HomeTabChart))
         Me.HomeTabChartArea = CreateChartArea()
-        With Me.HomeTabChartArea
-            With .AxisY2
-                .Interval = HomePageMealRow
-                .IsMarginVisible = False
-                .IsStartedFromZero = False
-                .LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
-                .LineColor = Color.FromArgb(64, 64, 64, 64)
-                .MajorGrid = New Grid With {
-                        .Interval = HomePageMealRow,
-                        .LineColor = Color.FromArgb(64, 64, 64, 64)
-                    }
-                .MajorTickMark = New TickMark() With {.Interval = HomePageMealRow, .Enabled = True}
-                .Maximum = HomePageBasalRow
-                .Minimum = HomePageMealRow
-                .Title = "BG Value"
-            End With
-        End With
         Me.HomeTabChart.ChartAreas.Add(Me.HomeTabChartArea)
 
         Dim defaultLegend As Legend = CreateChartLegend(NameOf(defaultLegend))
 
-        Me.HomeTabBasalSeries = CreateBasalSeries()
+        Me.HomeTabBasalSeries = CreateBasalSeries(AxisType.Secondary)
         Me.HomeTabBGSeries = CreateBgSeries(NameOf(defaultLegend))
-        Me.HomeTabMarkerSeries = CreateMarkerSeries()
+        Me.HomeTabMarkerSeries = CreateMarkerSeries(AxisType.Secondary)
 
         Me.HomeTabHighLimitSeries = CreateSeriesLimits(HighLimitSeriesName, ChartAreaName, Color.Orange)
         Me.HomeTabLowLimitSeries = CreateSeriesLimits(LowLimitSeriesName, ChartAreaName, Color.Red)
@@ -1150,8 +1134,9 @@ Public Class Form1
             .BackSecondaryColor = Color.Transparent,
             .BorderlineColor = Color.Transparent,
             .BorderlineWidth = 0,
-            .Size = New Size(width1, width1)
-        }
+            .Size = New Size(width1,
+                             width1)
+                            }
 
         With Me.HomeTabTimeInRangeChart
             .BorderSkin.BackSecondaryColor = Color.Transparent
@@ -1164,10 +1149,9 @@ Public Class Form1
             .Location = New Point(Me.TimeInRangeChartLabel.FindHorizontalMidpoint - (.Width \ 2),
                                   CInt(Me.TimeInRangeChartLabel.FindVerticalMidpoint() - Math.Round(.Height / 2.5)))
             .Name = NameOf(HomeTabTimeInRangeChart)
-            Me.HomeTabTimeInRangeSeries = New Series With {
+            Me.HomeTabTimeInRangeSeries = New Series(NameOf(HomeTabTimeInRangeSeries)) With {
                     .ChartArea = NameOf(TimeInRangeChartArea),
-                    .ChartType = SeriesChartType.Doughnut,
-                    .Name = NameOf(HomeTabTimeInRangeSeries)
+                    .ChartType = SeriesChartType.Doughnut
                 }
             .Series.Add(Me.HomeTabTimeInRangeSeries)
             .Series(NameOf(HomeTabTimeInRangeSeries))("DoughnutRadius") = "17"
@@ -1197,40 +1181,25 @@ Public Class Form1
                 .Title = "Active Insulin"
                 .TitleForeColor = Color.HotPink
             End With
-            With .AxisY2
-                .Interval = HomePageMealRow
-                .IsMarginVisible = False
-                .IsStartedFromZero = False
-                .LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
-                .LineColor = Color.FromArgb(64, 64, 64, 64)
-                .MajorGrid = New Grid With {
-                        .Interval = HomePageMealRow,
-                        .LineColor = Color.FromArgb(64, 64, 64, 64)
-                    }
-                .Maximum = HomePageBasalRow
-                .Minimum = HomePageMealRow
-                .Title = "BG Value"
-            End With
         End With
         Me.ActiveInsulinChart.ChartAreas.Add(Me.ActiveInsulinChartArea)
 
         Me.ActiveInsulinChartLegend = CreateChartLegend(NameOf(ActiveInsulinChartLegend))
         Me.ActiveInsulinChart.Legends.Add(Me.ActiveInsulinChartLegend)
-        Me.ActiveInsulinSeries = New Series With {
+        Me.ActiveInsulinSeries = New Series(NameOf(ActiveInsulinSeries)) With {
             .BorderColor = Color.FromArgb(180, 26, 59, 105),
             .BorderWidth = 4,
             .ChartArea = ChartAreaName,
             .ChartType = SeriesChartType.Line,
             .Color = Color.HotPink,
             .Legend = NameOf(ActiveInsulinChartLegend),
-            .Name = NameOf(ActiveInsulinSeries),
             .ShadowColor = Color.Black,
             .XValueType = ChartValueType.DateTime,
             .YAxisType = AxisType.Primary
         }
         Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinSeries)
 
-        Me.ActiveInsulinBasalSeries = CreateBasalSeries()
+        Me.ActiveInsulinBasalSeries = CreateBasalSeries(AxisType.Secondary)
         Me.ActiveInsulinBGSeries = CreateBgSeries(NameOf(ActiveInsulinChartLegend))
         Me.ActiveInsulinTimeChangeSeries = CreateTimeChangeSeries()
         Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinBasalSeries)
@@ -1258,11 +1227,12 @@ Public Class Form1
 
 #Region "Initialize Treatment Markers Chart"
 
-    Private Sub InitializeTreatmentMarkersTabChart()
+    Private Sub InitializeTreatmentMarkersChart()
         Me.TabPage03TreatmentDetails.Controls.Clear()
 
         Me.TreatmentMarkersChart = CreateChart(NameOf(TreatmentMarkersChart))
         Me.TreatmentMarkersChartArea = CreateChartArea()
+
         Select Case MaxBasalPerDose
             Case < 0.25
                 TreatmentInsulinRow = 0.25
@@ -1284,39 +1254,44 @@ Public Class Form1
                 TreatmentInsulinRow = CSng(MaxBasalPerDose + 0.025)
         End Select
         TreatmentInsulinRow = TreatmentInsulinRow.RoundSingle(3)
-        With Me.TreatmentMarkersChartArea
-            With .AxisY2
-                Dim interval As Single = (TreatmentInsulinRow / 10).RoundSingle(3)
-                .Interval = interval
-                .IsMarginVisible = False
-                .IsStartedFromZero = False
-                .LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
-                .LabelStyle.Format = "{0.000}"
-                .LineColor = Color.FromArgb(64, 64, 64, 64)
-                .MajorGrid = New Grid() With {
-                        .Interval = interval,
-                        .LineColor = Color.FromArgb(64, 64, 64, 64)
-                    }
-                .MajorTickMark = New TickMark() With {
-                        .Interval = interval,
-                        .Enabled = True
-                    }
-                .Maximum = TreatmentInsulinRow
-                .Minimum = 0
-                .Title = "Delivered Insulin"
-            End With
+        With Me.TreatmentMarkersChartArea.AxisY
+            Dim interval As Single = (TreatmentInsulinRow / 10).RoundSingle(3)
+            .Interval = interval
+            .IsMarginVisible = False
+            .IsStartedFromZero = False
+            .LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
+            .LabelStyle.Format = "{0.000}"
+            .LineColor = Color.FromArgb(64, 64, 64, 64)
+            .MajorGrid = New Grid() With {
+                    .Interval = interval,
+                    .LineColor = Color.FromArgb(64, 64, 64, 64)
+                }
+            .MajorTickMark = New TickMark() With {
+                    .Interval = interval,
+                    .Enabled = True
+                }
+            .Maximum = TreatmentInsulinRow
+            .Minimum = 0
+            .Title = "Delivered Insulin"
         End With
+
         Me.TreatmentMarkersChart.ChartAreas.Add(Me.TreatmentMarkersChartArea)
         Me.TreatmentMarkersChartLegend = CreateChartLegend(NameOf(TreatmentMarkersChartLegend))
         Me.TreatmentMarkersChart.Legends.Add(Me.TreatmentMarkersChartLegend)
 
-        Me.TreatmentMarkerBasalSeries = CreateBasalSeries()
-        Me.TreatmentMarkerMarkersSeries = CreateMarkerSeries()
+        Me.TreatmentMarkerBasalSeries = CreateBasalSeries(AxisType.Primary)
+        Me.TreatmentMarkerBGSeries = CreateBgSeries(Me.TreatmentMarkersChartLegend.Name)
+        Me.TreatmentMarkerMarkersSeries = CreateMarkerSeries(AxisType.Primary)
         Me.TreatmentMarkerTimeChangeSeries = CreateTimeChangeSeries()
+        Me.TreatmentMarkersChart.Series.Add(Me.TreatmentMarkerBGSeries)
         Me.TreatmentMarkersChart.Series.Add(Me.TreatmentMarkerBasalSeries)
         Me.TreatmentMarkersChart.Series.Add(Me.TreatmentMarkerMarkersSeries)
         Me.TreatmentMarkersChart.Series.Add(Me.TreatmentMarkerTimeChangeSeries())
 
+        Me.TreatmentMarkersChart.Series(BgSeriesName).EmptyPointStyle.Color = Color.Transparent
+        Me.TreatmentMarkersChart.Series(BgSeriesName).EmptyPointStyle.BorderWidth = 4
+        Me.TreatmentMarkersChart.Series(BasalSeriesName).EmptyPointStyle.Color = Color.Transparent
+        Me.TreatmentMarkersChart.Series(BasalSeriesName).EmptyPointStyle.BorderWidth = 4
         Me.TreatmentMarkersChart.Series(MarkerSeriesName).EmptyPointStyle.Color = Color.Transparent
         Me.TreatmentMarkersChart.Series(MarkerSeriesName).EmptyPointStyle.BorderWidth = 4
         Me.TreatmentMarkersChartTitle = New Title With {
@@ -1815,7 +1790,7 @@ Public Class Form1
             Me.UpdateDosingAndCarbs()
             s_recentDatalast = Me.RecentData
             Me.MenuStartHere.Enabled = True
-            Me.UpdateTreatmentMarkersChart()
+            Me.UpdateTreatmentChart()
         End SyncLock
         Application.DoEvents()
     End Sub
@@ -1835,14 +1810,11 @@ Public Class Form1
             Exit Sub
         End If
         Try
-            With Me.ActiveInsulinChart
-                For Each s As Series In .Series
-                    s.Points.Clear()
-                Next
-
-                .Titles(NameOf(ActiveInsulinChartTitle)).Text = $"Running Active Insulin in Pink"
-                InitializeChartArea(.ChartAreas(ChartAreaName))
-            End With
+            For Each s As Series In Me.ActiveInsulinChart.Series
+                s.Points.Clear()
+            Next
+            Me.ActiveInsulinChart.Titles(NameOf(ActiveInsulinChartTitle)).Text = $"Running Active Insulin in Pink"
+            Me.ActiveInsulinChart.ChartAreas(ChartAreaName).InitializeBGChartArea()
 
             ' Order all markers by time
             Dim timeOrderedMarkers As New SortedDictionary(Of Double, Single)
@@ -1912,7 +1884,7 @@ Public Class Form1
             Me.ActiveInsulinChartArea.AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1
             maxActiveInsulin = Me.ActiveInsulinChartArea.AxisY.Maximum
 
-            Me.ActiveInsulinChart.Series(BgSeriesName).PlotSgSeries(HomePageMealRow)
+            Me.ActiveInsulinChart.PlotSgSeries(HomePageMealRow)
         Catch ex As Exception
             Throw New ArithmeticException($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
         End Try
@@ -2038,44 +2010,20 @@ Public Class Form1
 
     Private Sub UpdateHomeTabSerieses(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
         Try
-            With Me.HomeTabChart
-                For Each s As Series In .Series
-                    s.Points.Clear()
-                Next
-                InitializeChartArea(.ChartAreas(ChartAreaName))
-
-                Me.HomeTabChart.PlotHomePageMarkers(_homePageAbsoluteRectangle)
-            End With
+            For Each s As Series In Me.HomeTabChart.Series
+                s.Points.Clear()
+            Next
+            Me.HomeTabChart.ChartAreas(ChartAreaName).InitializeBGChartArea()
+            Dim limitsIndexList() As Integer = GetLimitsList(s_bindingSourceSGs.Count - 1)
+            Me.HomeTabChart.PlotHomePageMarkers(_homePageAbsoluteRectangle)
+            Me.HomeTabChart.PlotSgSeries(HomePageMealRow)
+            Me.HomeTabChart.PlotHighLowLimits(memberName, sourceLineNumber, limitsIndexList)
         Catch ex As Exception
             Throw New Exception($"{ex.Message} exception while plotting Markers in {memberName} at {sourceLineNumber}")
         End Try
 
-        Dim limitsIndexList() As Integer = GetLimitsList(s_bindingSourceSGs.Count - 1)
-        For Each sgListIndex As IndexClass(Of SgRecord) In s_bindingSourceSGs.WithIndex()
-            Dim sgOADateTime As OADate = sgListIndex.Value.OADate()
-            Try
-                Me.HomeTabChart.Series(BgSeriesName).PlotOnePoint(
-                                    sgOADateTime,
-                                    sgListIndex.Value.sg,
-                                    Color.White,
-                                    HomePageMealRow)
-            Catch ex As Exception
-                Throw New Exception($"{ex.Message} exception while SG Values in {memberName} at {sourceLineNumber}")
-            End Try
-            Try
-                Dim limitsLowValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("lowLimit").ParseSingle
-                Dim limitsHighValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("highLimit").ParseSingle
-                If limitsHighValue <> 0 Then
-                    Me.HomeTabChart.Series(HighLimitSeriesName).Points.AddXY(sgOADateTime, limitsHighValue)
-                End If
-                If limitsLowValue <> 0 Then
-                    Me.HomeTabChart.Series(LowLimitSeriesName).Points.AddXY(sgOADateTime, limitsLowValue)
-                End If
-            Catch ex As Exception
-                Throw New Exception($"{ex.Message} exception while plotting Limits in {memberName} at {sourceLineNumber}")
-            End Try
-        Next
     End Sub
+
 
     Private Sub UpdateInsulinLevel()
         Select Case s_reservoirLevelPercent
@@ -2212,17 +2160,16 @@ Public Class Form1
 
     End Sub
 
-    Private Sub UpdateTreatmentMarkersChart(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+    Private Sub UpdateTreatmentChart(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
         If Not _initialized Then
             Exit Sub
         End If
         Try
-            Me.InitializeTreatmentMarkersTabChart()
-            With Me.TreatmentMarkersChart
-                .Titles(NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Makers"
-                InitializeChartArea(.ChartAreas(ChartAreaName))
-                .PlotTreatmentMarkers(_treatmentMarkerAbsoluteRectangle)
-            End With
+            Me.InitializeTreatmentMarkersChart()
+            Me.TreatmentMarkersChart.Titles(NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Makers"
+            Me.TreatmentMarkersChart.ChartAreas(ChartAreaName).InitializeBGChartArea()
+            Me.TreatmentMarkersChart.PlotTreatmentMarkers()
+            Me.TreatmentMarkersChart.PlotSgSeries(HomePageMealRow)
         Catch ex As Exception
             Throw New ArithmeticException($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
         End Try

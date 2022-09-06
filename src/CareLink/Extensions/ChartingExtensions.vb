@@ -50,13 +50,45 @@ Module ChartingExtensions
     End Sub
 
     <Extension>
-    Friend Sub DrawBasalMarker(ByRef basalSeries As Series, markerOADate As OADate, amount As Single, bolusRow As Double, insulinRow As Double, lineColor As Color, toolTip As String)
+    Private Sub PlotOnePoint(plotSeries As Series, sgOADateTime As OADate, bgValue As Single, mainLineColor As Color, HomePageMealRow As Double, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+        Try
+            With plotSeries.Points
+                Dim sgDouble As Double = sgOADateTime
+                If Single.IsNaN(bgValue) OrElse Math.Abs(bgValue - 0) < Single.Epsilon Then
+                    .AddXY(sgDouble, HomePageMealRow)
+                    .Last().Color = Color.Transparent
+                    .Last().IsEmpty = True
+                Else
+                    If .Count > 0 AndAlso (Not .Last.IsEmpty) AndAlso New OADate(plotSeries.Points.Last.XValue).Within10Minutes(sgOADateTime) Then
+                        plotSeries.Points.AddXY(.Last.XValue, Double.NaN)
+                        .Last().Color = Color.Transparent
+                        .Last().IsEmpty = True
+                    End If
+                    .AddXY(sgDouble, bgValue)
+                    If bgValue > s_limitHigh Then
+                        .Last.Color = Color.Lime
+                    ElseIf bgValue < s_limitLow Then
+                        .Last.Color = Color.Red
+                    Else
+                        .Last.Color = mainLineColor
+                    End If
+
+                End If
+            End With
+        Catch ex As Exception
+            Throw New Exception($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
+        End Try
+
+    End Sub
+
+    <Extension>
+    Friend Sub DrawBasalMarker(ByRef basalSeries As Series, markerOADate As OADate, amount As Single, bolusRow As Double, insulinRow As Double, lineColor As Color, DrawFromBottom As Boolean, toolTip As String)
         Dim startX As OADate
         Dim startY As Double
         If Math.Abs(amount - 0.025) < 0.001 Then
             lineColor = Color.LightYellow
         End If
-        If basalSeries.Legend.StartsWith(NameOf(My.Forms.Form1.TreatmentMarkersChartLegend)) Then
+        If DrawFromBottom Then
             startX = markerOADate + s_twoHalfMinuteOADate
             startY = amount.RoundSingle(3)
             basalSeries.AddBasalPoint(startX, 0, lineColor, toolTip)
@@ -75,7 +107,26 @@ Module ChartingExtensions
     End Sub
 
     <Extension>
-    Friend Sub PlotHomePageMarkers(chart As Chart, chartRelitivePosition As RectangleF, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+    Friend Sub PlotHighLowLimits(chart As Chart, memberName As String, sourceLineNumber As Integer, limitsIndexList() As Integer)
+        For Each sgListIndex As IndexClass(Of SgRecord) In s_bindingSourceSGs.WithIndex()
+            Dim sgOADateTime As OADate = sgListIndex.Value.OADate()
+            Try
+                Dim limitsLowValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("lowLimit").ParseSingle
+                Dim limitsHighValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("highLimit").ParseSingle
+                If limitsHighValue <> 0 Then
+                    chart.Series(HighLimitSeriesName).Points.AddXY(sgOADateTime, limitsHighValue)
+                End If
+                If limitsLowValue <> 0 Then
+                    chart.Series(LowLimitSeriesName).Points.AddXY(sgOADateTime, limitsLowValue)
+                End If
+            Catch ex As Exception
+                Throw New Exception($"{ex.Message} exception while plotting Limits in {memberName} at {sourceLineNumber}")
+            End Try
+        Next
+    End Sub
+
+    <Extension>
+    Friend Sub PlotHomePageMarkers(homePageChart As Chart, chartRelitivePosition As RectangleF, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
         For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             Try
                 Dim markerDateTime As Date = s_markers.SafeGetSgDateTime(markerWithIndex.Index)
@@ -87,7 +138,7 @@ Module ChartingExtensions
                 If entry.TryGetValue("value", bgValueString) Then
                     bgValueString.TryParseSingle(bgValue)
                 End If
-                Dim markerSeriesPoints As DataPointCollection = chart.Series(MarkerSeriesName).Points
+                Dim markerSeriesPoints As DataPointCollection = homePageChart.Series(MarkerSeriesName).Points
                 Select Case entry("type")
                     Case "BG_READING"
                         If Not String.IsNullOrWhiteSpace(bgValueString) Then
@@ -97,12 +148,12 @@ Module ChartingExtensions
                         markerSeriesPoints.AddCalibrationPoint(markerOADateTime, bgValue, entry)
                     Case "AUTO_BASAL_DELIVERY"
                         Dim bolusAmount As String = entry("bolusAmount")
-                        DrawBasalMarker(chart.Series(BasalSeriesName), markerOADateTime, bolusAmount.ParseSingle, HomePageBasalRow, HomePageInsulinRow, Color.HotPink, $"Auto Basal:{bolusAmount.TruncateSingleString(3)} U")
+                        homePageChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, bolusAmount.ParseSingle, HomePageBasalRow, HomePageInsulinRow, Color.HotPink, False, $"Auto Basal:{bolusAmount.TruncateSingleString(3)} U")
                     Case "INSULIN"
                         Select Case entry("activationType")
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As String = entry("deliveredFastAmount")
-                                DrawBasalMarker(chart.Series(BasalSeriesName), markerOADateTime, autoCorrection.ParseSingle, HomePageBasalRow, HomePageInsulinRow, Color.Aqua, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
+                                homePageChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, HomePageBasalRow, HomePageInsulinRow, Color.Aqua, False, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
                             Case "RECOMMENDED", "UNDETERMINED"
                                 If s_homeTabMarkerInsulinDictionary.TryAdd(markerOADateTime, CInt(HomePageInsulinRow)) Then
                                     markerSeriesPoints.AddXY(markerOADateTime, HomePageInsulinRow - 10)
@@ -135,7 +186,7 @@ Module ChartingExtensions
                         End If
                     Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED"
                     Case "TIME_CHANGE"
-                        With chart.Series(TimeChangeSeriesName).Points
+                        With homePageChart.Series(TimeChangeSeriesName).Points
                             markerOADateTime = New TimeChangeRecord(s_markers(markerWithIndex.Index)).currentOADate
                             .AddXY(markerOADateTime, 0)
                             .AddXY(markerOADateTime, HomePageBasalRow)
@@ -153,41 +204,10 @@ Module ChartingExtensions
     End Sub
 
     <Extension>
-    Friend Sub PlotOnePoint(plotSeries As Series, sgOADateTime As OADate, bgValue As Single, mainLineColor As Color, HomePageMealRow As Double, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
-        Try
-            With plotSeries.Points
-                Dim sgDouble As Double = sgOADateTime
-                If Single.IsNaN(bgValue) OrElse Math.Abs(bgValue - 0) < Single.Epsilon Then
-                    .AddXY(sgDouble, HomePageMealRow)
-                    .Last().Color = Color.Transparent
-                    .Last().IsEmpty = True
-                Else
-                    If .Count > 0 AndAlso (Not .Last.IsEmpty) AndAlso New OADate(plotSeries.Points.Last.XValue).Within10Minutes(sgOADateTime) Then
-                        plotSeries.Points.AddXY(.Last.XValue, Double.NaN)
-                        .Last().Color = Color.Transparent
-                        .Last().IsEmpty = True
-                    End If
-                    .AddXY(sgDouble, bgValue)
-                    If bgValue > s_limitHigh Then
-                        .Last.Color = Color.Lime
-                    ElseIf bgValue < s_limitLow Then
-                        .Last.Color = Color.Red
-                    Else
-                        .Last.Color = mainLineColor
-                    End If
-
-                End If
-            End With
-        Catch ex As Exception
-            Throw New Exception($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
-        End Try
-
-    End Sub
-
-    <Extension>
-    Friend Sub PlotSgSeries(chartSeries As Series, HomePageMealRow As Double)
+    Friend Sub PlotSgSeries(chart As Chart, HomePageMealRow As Double)
         For Each sgListIndex As IndexClass(Of SgRecord) In s_bindingSourceSGs.WithIndex()
-            chartSeries.PlotOnePoint(sgListIndex.Value.OADate(),
+            chart.Series(BgSeriesName).PlotOnePoint(
+                                    sgListIndex.Value.OADate(),
                                     sgListIndex.Value.sg,
                                     Color.Black,
                                     HomePageMealRow)
@@ -195,7 +215,7 @@ Module ChartingExtensions
     End Sub
 
     <Extension>
-    Friend Sub PlotTreatmentMarkers(chart As Chart, chartRelitivePosition As RectangleF, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+    Friend Sub PlotTreatmentMarkers(treatmentChart As Chart, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
         For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             Try
                 Dim markerDateTime As Date = s_markers.SafeGetSgDateTime(markerWithIndex.Index)
@@ -207,16 +227,16 @@ Module ChartingExtensions
                 If entry.TryGetValue("value", bgValueString) Then
                     bgValueString.TryParseSingle(bgValue)
                 End If
-                Dim markerSeriesPoints As DataPointCollection = chart.Series(MarkerSeriesName).Points
+                Dim markerSeriesPoints As DataPointCollection = treatmentChart.Series(MarkerSeriesName).Points
                 Select Case entry("type")
                     Case "AUTO_BASAL_DELIVERY"
                         Dim bolusAmount As String = entry("bolusAmount")
-                        DrawBasalMarker(chart.Series(BasalSeriesName), markerOADateTime, bolusAmount.ParseSingle.RoundSingle(3), MaxBasalPerDose, TreatmentInsulinRow, Color.HotPink, $"Auto Basal:{bolusAmount.TruncateSingleString(3)} U")
+                        treatmentChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, bolusAmount.ParseSingle.RoundSingle(3), MaxBasalPerDose, TreatmentInsulinRow, Color.HotPink, True, $"Auto Basal:{bolusAmount.TruncateSingleString(3)} U")
                     Case "INSULIN"
                         Select Case entry("activationType")
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As String = entry("deliveredFastAmount")
-                                DrawBasalMarker(chart.Series(BasalSeriesName), markerOADateTime, autoCorrection.ParseSingle, MaxBasalPerDose, TreatmentInsulinRow, Color.Aqua, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
+                                treatmentChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, MaxBasalPerDose, TreatmentInsulinRow, Color.Aqua, True, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
                             Case "RECOMMENDED", "UNDETERMINED"
                                 If s_treatmentMarkerInsulinDictionary.TryAdd(markerOADateTime, TreatmentInsulinRow) Then
                                     markerSeriesPoints.AddXY(markerOADateTime, TreatmentInsulinRow)
@@ -253,7 +273,7 @@ Module ChartingExtensions
                          "CALIBRATION",
                          "LOW_GLUCOSE_SUSPENDED"
                     Case "TIME_CHANGE"
-                        With chart.Series(TimeChangeSeriesName).Points
+                        With treatmentChart.Series(TimeChangeSeriesName).Points
                             markerOADateTime = New TimeChangeRecord(s_markers(markerWithIndex.Index)).previousOADate
                             .AddXY(markerOADateTime, 0)
                             .AddXY(markerOADateTime, TreatmentInsulinRow)
