@@ -680,7 +680,7 @@ Public Class Form1
         End SyncLock
     End Sub
 
-    <DebuggerNonUserCode()>
+    '<DebuggerNonUserCode()>
     Private Sub TreatmentMarkersChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles TreatmentMarkersChart.PostPaint
 
         If Not _initialized OrElse _inMouseMove Then
@@ -694,10 +694,10 @@ Public Class Form1
                 Exit Sub
             End If
             e.PostPaintSupport(_treatmentMarkerAbsoluteRectangle,
-                TreatmentInsulinRow,
+                HomePageBasalRow,
                 s_treatmentMarkerInsulinDictionary,
                 s_treatmentMarkerMealDictionary,
-                doShading:=False,
+                doShading:=True,
                 offsetInsulinImage:=False)
         End SyncLock
     End Sub
@@ -1235,7 +1235,7 @@ Public Class Form1
 
         Select Case MaxBasalPerDose
             Case < 0.25
-                TreatmentInsulinRow = 0.25
+                TreatmentInsulinRow = 0.5
             Case < 0.5
                 TreatmentInsulinRow = 0.5
             Case < 0.75
@@ -1243,7 +1243,7 @@ Public Class Form1
             Case < 1
                 TreatmentInsulinRow = 1
             Case < 1.25
-                TreatmentInsulinRow = 1.25
+                TreatmentInsulinRow = 1.12
             Case < 1.5
                 TreatmentInsulinRow = 1.5
             Case < 1.75
