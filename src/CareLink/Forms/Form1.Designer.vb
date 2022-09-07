@@ -96,10 +96,10 @@ Partial Class Form1
         Me.ActiveInsulinValue = New System.Windows.Forms.Label()
         Me.CalibrationDueImage = New System.Windows.Forms.PictureBox()
         Me.CursorPanel = New System.Windows.Forms.Panel()
-        Me.CursorMessage2Label = New System.Windows.Forms.Label()
-        Me.CursorMessage3Label = New System.Windows.Forms.Label()
         Me.CursorPictureBox = New System.Windows.Forms.PictureBox()
         Me.CursorMessage1Label = New System.Windows.Forms.Label()
+        Me.CursorMessage2Label = New System.Windows.Forms.Label()
+        Me.CursorMessage3Label = New System.Windows.Forms.Label()
         Me.CalibrationShieldPanel = New System.Windows.Forms.Panel()
         Me.LastSGTimeLabel = New System.Windows.Forms.Label()
         Me.CurrentBGLabel = New System.Windows.Forms.Label()
@@ -611,7 +611,7 @@ Partial Class Form1
         Me.LabelTrendValue.ForeColor = System.Drawing.Color.White
         Me.LabelTrendValue.Location = New System.Drawing.Point(457, 84)
         Me.LabelTrendValue.Name = "LabelTrendValue"
-        Me.LabelTrendValue.Size = New System.Drawing.Size(84, 23)
+        Me.LabelTrendValue.Size = New System.Drawing.Size(84, 21)
         Me.LabelTrendValue.TabIndex = 68
         Me.LabelTrendValue.Text = "+ 5"
         Me.LabelTrendValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -622,7 +622,7 @@ Partial Class Form1
         Me.MaxBasalPerHourLabel.ForeColor = System.Drawing.Color.White
         Me.MaxBasalPerHourLabel.Location = New System.Drawing.Point(1159, 81)
         Me.MaxBasalPerHourLabel.Name = "MaxBasalPerHourLabel"
-        Me.MaxBasalPerHourLabel.Size = New System.Drawing.Size(211, 23)
+        Me.MaxBasalPerHourLabel.Size = New System.Drawing.Size(211, 21)
         Me.MaxBasalPerHourLabel.TabIndex = 67
         Me.MaxBasalPerHourLabel.Text = "Max Basal/Hr ~ 2.0 U"
         '
@@ -644,7 +644,7 @@ Partial Class Form1
         Me.Last24CarbsValueLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Last24CarbsValueLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.Last24CarbsValueLabel.ForeColor = System.Drawing.Color.White
-        Me.Last24CarbsValueLabel.Location = New System.Drawing.Point(0, 108)
+        Me.Last24CarbsValueLabel.Location = New System.Drawing.Point(0, 106)
         Me.Last24CarbsValueLabel.Name = "Last24CarbsValueLabel"
         Me.Last24CarbsValueLabel.Size = New System.Drawing.Size(220, 21)
         Me.Last24CarbsValueLabel.TabIndex = 66
@@ -762,7 +762,7 @@ Partial Class Form1
         Me.LabelTrendArrows.ForeColor = System.Drawing.Color.White
         Me.LabelTrendArrows.Location = New System.Drawing.Point(457, 106)
         Me.LabelTrendArrows.Name = "LabelTrendArrows"
-        Me.LabelTrendArrows.Size = New System.Drawing.Size(84, 23)
+        Me.LabelTrendArrows.Size = New System.Drawing.Size(84, 21)
         Me.LabelTrendArrows.TabIndex = 62
         Me.LabelTrendArrows.Text = "↑↔↓"
         Me.LabelTrendArrows.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -774,7 +774,7 @@ Partial Class Form1
         Me.LabelSgTrend.ForeColor = System.Drawing.Color.White
         Me.LabelSgTrend.Location = New System.Drawing.Point(457, 64)
         Me.LabelSgTrend.Name = "LabelSgTrend"
-        Me.LabelSgTrend.Size = New System.Drawing.Size(84, 23)
+        Me.LabelSgTrend.Size = New System.Drawing.Size(84, 21)
         Me.LabelSgTrend.TabIndex = 61
         Me.LabelSgTrend.Text = "SG Trend"
         Me.LabelSgTrend.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -785,7 +785,7 @@ Partial Class Form1
         Me.ModelLabel.ForeColor = System.Drawing.Color.White
         Me.ModelLabel.Location = New System.Drawing.Point(1159, 26)
         Me.ModelLabel.Name = "ModelLabel"
-        Me.ModelLabel.Size = New System.Drawing.Size(211, 23)
+        Me.ModelLabel.Size = New System.Drawing.Size(211, 21)
         Me.ModelLabel.TabIndex = 57
         Me.ModelLabel.Text = "Model"
         '
@@ -795,7 +795,7 @@ Partial Class Form1
         Me.SerialNumberLabel.ForeColor = System.Drawing.Color.White
         Me.SerialNumberLabel.Location = New System.Drawing.Point(1159, 53)
         Me.SerialNumberLabel.Name = "SerialNumberLabel"
-        Me.SerialNumberLabel.Size = New System.Drawing.Size(211, 23)
+        Me.SerialNumberLabel.Size = New System.Drawing.Size(211, 21)
         Me.SerialNumberLabel.TabIndex = 56
         Me.SerialNumberLabel.Text = "Serial Number"
         '
@@ -805,7 +805,7 @@ Partial Class Form1
         Me.FullNameLabel.ForeColor = System.Drawing.Color.White
         Me.FullNameLabel.Location = New System.Drawing.Point(1159, 0)
         Me.FullNameLabel.Name = "FullNameLabel"
-        Me.FullNameLabel.Size = New System.Drawing.Size(211, 23)
+        Me.FullNameLabel.Size = New System.Drawing.Size(211, 21)
         Me.FullNameLabel.TabIndex = 55
         Me.FullNameLabel.Text = "Full Name"
         '
@@ -815,7 +815,7 @@ Partial Class Form1
         Me.ReadingIntervalLabel.ForeColor = System.Drawing.Color.White
         Me.ReadingIntervalLabel.Location = New System.Drawing.Point(978, 80)
         Me.ReadingIntervalLabel.Name = "ReadingIntervalLabel"
-        Me.ReadingIntervalLabel.Size = New System.Drawing.Size(162, 23)
+        Me.ReadingIntervalLabel.Size = New System.Drawing.Size(162, 21)
         Me.ReadingIntervalLabel.TabIndex = 54
         Me.ReadingIntervalLabel.Text = "5 minute readings"
         Me.ReadingIntervalLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -938,39 +938,15 @@ Partial Class Form1
         '
         'CursorPanel
         '
-        Me.CursorPanel.Controls.Add(Me.CursorMessage2Label)
-        Me.CursorPanel.Controls.Add(Me.CursorMessage3Label)
         Me.CursorPanel.Controls.Add(Me.CursorPictureBox)
         Me.CursorPanel.Controls.Add(Me.CursorMessage1Label)
+        Me.CursorPanel.Controls.Add(Me.CursorMessage2Label)
+        Me.CursorPanel.Controls.Add(Me.CursorMessage3Label)
         Me.CursorPanel.Dock = System.Windows.Forms.DockStyle.Left
         Me.CursorPanel.Location = New System.Drawing.Point(0, 0)
         Me.CursorPanel.Name = "CursorPanel"
         Me.CursorPanel.Size = New System.Drawing.Size(184, 135)
         Me.CursorPanel.TabIndex = 63
-        '
-        'CursorMessage2Label
-        '
-        Me.CursorMessage2Label.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CursorMessage2Label.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.CursorMessage2Label.ForeColor = System.Drawing.Color.White
-        Me.CursorMessage2Label.Location = New System.Drawing.Point(0, 85)
-        Me.CursorMessage2Label.Name = "CursorMessage2Label"
-        Me.CursorMessage2Label.Size = New System.Drawing.Size(184, 21)
-        Me.CursorMessage2Label.TabIndex = 40
-        Me.CursorMessage2Label.Text = "Calibration Accepted"
-        Me.CursorMessage2Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'CursorMessage3Label
-        '
-        Me.CursorMessage3Label.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.CursorMessage3Label.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.CursorMessage3Label.ForeColor = System.Drawing.Color.White
-        Me.CursorMessage3Label.Location = New System.Drawing.Point(0, 114)
-        Me.CursorMessage3Label.Name = "CursorMessage3Label"
-        Me.CursorMessage3Label.Size = New System.Drawing.Size(184, 21)
-        Me.CursorMessage3Label.TabIndex = 41
-        Me.CursorMessage3Label.Text = "156 ml/dl"
-        Me.CursorMessage3Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'CursorPictureBox
         '
@@ -995,6 +971,30 @@ Partial Class Form1
         Me.CursorMessage1Label.TabIndex = 39
         Me.CursorMessage1Label.Text = "Blood Glucose"
         Me.CursorMessage1Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'CursorMessage2Label
+        '
+        Me.CursorMessage2Label.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CursorMessage2Label.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.CursorMessage2Label.ForeColor = System.Drawing.Color.White
+        Me.CursorMessage2Label.Location = New System.Drawing.Point(0, 89)
+        Me.CursorMessage2Label.Name = "CursorMessage2Label"
+        Me.CursorMessage2Label.Size = New System.Drawing.Size(184, 21)
+        Me.CursorMessage2Label.TabIndex = 40
+        Me.CursorMessage2Label.Text = "Calibration Accepted"
+        Me.CursorMessage2Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'CursorMessage3Label
+        '
+        Me.CursorMessage3Label.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.CursorMessage3Label.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.CursorMessage3Label.ForeColor = System.Drawing.Color.White
+        Me.CursorMessage3Label.Location = New System.Drawing.Point(0, 114)
+        Me.CursorMessage3Label.Name = "CursorMessage3Label"
+        Me.CursorMessage3Label.Size = New System.Drawing.Size(184, 21)
+        Me.CursorMessage3Label.TabIndex = 41
+        Me.CursorMessage3Label.Text = "156 ml/dl"
+        Me.CursorMessage3Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'CalibrationShieldPanel
         '

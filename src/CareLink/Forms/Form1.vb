@@ -1921,6 +1921,9 @@ Public Class Form1
     Private Sub UpdateAutoModeShield(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
         Try
             Me.LastSGTimeLabel.Text = s_lastSG.datetime.ToShortTimeString
+            Me.ShieldUnitsLabel.Visible = True
+            Me.ShieldUnitsLabel.BackColor = Color.Transparent
+            Me.ShieldUnitsLabel.Text = BgUnitsString
             If s_lastSG.sg <> 0 Then
                 Me.CurrentBGLabel.Visible = True
                 Me.CurrentBGLabel.Text = s_lastSG.sg.ToString
@@ -1928,14 +1931,10 @@ Public Class Form1
                 _bgMiniDisplay.SetCurrentBGString(s_lastSG.sg.ToString)
                 Me.SensorMessage.Visible = False
                 Me.CalibrationShieldPictureBox.Image = My.Resources.Shield
-                Me.ShieldUnitsLabel.Visible = True
-                Me.ShieldUnitsLabel.BackColor = Color.Transparent
-                Me.ShieldUnitsLabel.Text = BgUnitsString
             Else
                 _bgMiniDisplay.SetCurrentBGString("---")
                 Me.CurrentBGLabel.Visible = False
                 Me.CalibrationShieldPictureBox.Image = My.Resources.Shield_Disabled
-                Me.ShieldUnitsLabel.Text = BgUnitsString
                 Me.SensorMessage.Visible = True
                 Me.SensorMessage.BackColor = Color.Transparent
                 Dim message As String = ""
