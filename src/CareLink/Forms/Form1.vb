@@ -243,10 +243,10 @@ Public Class Form1
 
         Me.CurrentBGLabel.Parent = Me.CalibrationShieldPictureBox
         Me.ShieldUnitsLabel.Parent = Me.CalibrationShieldPictureBox
+        Me.ShieldUnitsLabel.BackColor = Color.Transparent
         Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLeftPictureBox
         Me.SensorMessage.Parent = Me.CalibrationShieldPictureBox
         Me.SensorDaysLeftLabel.BackColor = Color.Transparent
-        Me.ShieldUnitsLabel.BackColor = Color.Transparent
         If _formScale.Height > 1 Then
             Me.SplitContainer1.SplitterDistance = 0
         End If
@@ -1728,7 +1728,8 @@ Public Class Form1
 
                 Case ItemIndexs.activeInsulin
                     layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelActiveInsulin, True)
-                    s_activeInsulin = Loads(row.Value)
+                    s_activeInsulin = New ActiveInsulinRecord(Loads(row.Value))
+                    Me.IOBLabel.Text = $"IOB={s_activeInsulin.amount:F2} U"
                     isColumnHeader = True
 
                 Case ItemIndexs.notificationHistory
@@ -1824,7 +1825,7 @@ Public Class Form1
 
     Private Sub UpdateActiveInsulin(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
         Try
-            Dim activeInsulinStr As String = $"{s_activeInsulin("amount"):N3}"
+            Dim activeInsulinStr As String = $"{s_activeInsulin.amount:N3}"
             Me.ActiveInsulinValue.Text = $"Active Insulin{Environment.NewLine}{activeInsulinStr} U"
             _bgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
         Catch ex As Exception
@@ -1876,7 +1877,7 @@ Public Class Form1
             Next
 
             ' set up table that holds active insulin for every 5 minutes
-            Dim remainingInsulinList As New List(Of ActiveInsulinRecord)
+            Dim remainingInsulinList As New List(Of RunningActiveInsulinRecord)
             Dim currentMarker As Integer = 0
 
             For i As Integer = 0 To 287
@@ -1886,7 +1887,7 @@ Public Class Form1
                     initialBolus += timeOrderedMarkers.Values(currentMarker)
                     currentMarker += 1
                 End While
-                remainingInsulinList.Add(New ActiveInsulinRecord(firstNotSkippedOaTime, initialBolus, Me.MenuOptionsUseAdvancedAITDecay.Checked))
+                remainingInsulinList.Add(New RunningActiveInsulinRecord(firstNotSkippedOaTime, initialBolus, Me.MenuOptionsUseAdvancedAITDecay.Checked))
             Next
 
             Me.ActiveInsulinChartArea.AxisY2.Maximum = HomePageBasalRow
@@ -1908,6 +1909,9 @@ Public Class Form1
                 remainingInsulinList.Adjustlist(startIndex, s_activeInsulinIncrements)
                 Application.DoEvents()
             Next
+            Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinSeries)).Points.Add(s_activeInsulin.currentOADate, s_activeInsulin.amount)
+            Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinSeries)).Points.Last.Color = Color.Red
+
             Me.ActiveInsulinChartArea.AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1
             maxActiveInsulin = Me.ActiveInsulinChartArea.AxisY.Maximum
 
@@ -1946,7 +1950,7 @@ Public Class Form1
                     message = message.ToTitle
                 End If
                 Me.SensorMessage.Text = message
-                Me.ShieldUnitsLabel.Visible = False
+                Me.ShieldUnitsLabel.Visible = message = "---"
                 Me.SensorMessage.Visible = True
                 Application.DoEvents()
             End If
@@ -2321,7 +2325,7 @@ Public Class Form1
                 End If
                 notStr.Append(Environment.NewLine)
                 notStr.Append("Active ins. ")
-                notStr.Append(s_activeInsulin("amount"))
+                notStr.Append(s_activeInsulin.amount)
                 notStr.Append("U"c)
                 Me.NotifyIcon1.Text = notStr.ToString
                 s_lastBGValue = sg

@@ -32,7 +32,7 @@ Public Module PumpVariables
     Friend ReadOnly s_insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
     Friend ReadOnly s_mealImage As Bitmap = My.Resources.MealImage
     Friend s_aboveHyperLimit As Double
-    Friend s_activeInsulin As Dictionary(Of String, String)
+    Friend s_activeInsulin As ActiveInsulinRecord
     Friend s_activeInsulinIncrements As Integer
     Friend s_averageSG As String
     Friend s_belowHypoLimit As Single

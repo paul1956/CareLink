@@ -2,7 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Friend Class ActiveInsulinRecord
+Friend Class RunningActiveInsulinRecord
     Private ReadOnly _incrementDownCount As Integer
     Private _adjustmentValue As Single
     Private _incrementUpCount As Integer
@@ -13,7 +13,7 @@ Friend Class ActiveInsulinRecord
         Dim divisor As Double = If(useAdvancedAITDecay, 3.5, 3)
         _incrementUpCount = CInt(Math.Ceiling(s_activeInsulinIncrements * (1 / divisor)))
         _incrementDownCount = s_activeInsulinIncrements - _incrementUpCount
-            _adjustmentValue = initialInsulinLevel / s_activeInsulinIncrements
+        _adjustmentValue = initialInsulinLevel / s_activeInsulinIncrements
         Me.CurrentInsulinLevel = _adjustmentValue * _incrementDownCount
     End Sub
 
@@ -23,7 +23,7 @@ Friend Class ActiveInsulinRecord
 
     Public Property OaDateTime As OADate
 
-    Friend Function Adjust() As ActiveInsulinRecord
+    Friend Function Adjust() As RunningActiveInsulinRecord
         If Me.CurrentInsulinLevel > 0 Then
             If _incrementUpCount > 0 Then
                 _incrementUpCount -= 1

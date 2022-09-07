@@ -23,7 +23,7 @@ Public Class SgRecord
             Select Case kvp.Key
                 Case NameOf(sg)
                     Me.sg = kvp.Value.ParseSingle
-                Case NameOf(datetime)
+                Case NameOf(Me.datetime)
                     ' Handled below
                 Case NameOf(timeChange)
                     Me.timeChange = Boolean.Parse(kvp.Value).ToString()
@@ -40,7 +40,7 @@ Public Class SgRecord
             End Select
         Next
         Dim value As String = ""
-        If dic.TryGetValue(NameOf(datetime), value) Then
+        If dic.TryGetValue(NameOf(Me.datetime), value) Then
             Me.datetime = allSgs.SafeGetSgDateTime(index)
             lastValidTime = Me.datetime + s_fiveMinuteSpan
         Else

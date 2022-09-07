@@ -66,6 +66,7 @@ Partial Class Form1
         Me.TabControlHomePage = New System.Windows.Forms.TabControl()
         Me.TabPage01HomePage = New System.Windows.Forms.TabPage()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
+        Me.IOBLabel = New System.Windows.Forms.Label()
         Me.LabelTrendValue = New System.Windows.Forms.Label()
         Me.MaxBasalPerHourLabel = New System.Windows.Forms.Label()
         Me.Last24HTotalsPanel = New System.Windows.Forms.Panel()
@@ -125,7 +126,7 @@ Partial Class Form1
         Me.DataGridViewSummary = New System.Windows.Forms.DataGridView()
         Me.TabPage05ActiveInsulin = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelActiveInsulin = New System.Windows.Forms.TableLayoutPanel()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.ActiveInsulinTabLabel = New System.Windows.Forms.Label()
         Me.TabPage06SensorGlucose = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelSgs = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelSgs = New System.Windows.Forms.Label()
@@ -575,6 +576,7 @@ Partial Class Form1
         '
         'SplitContainer2.Panel1
         '
+        Me.SplitContainer2.Panel1.Controls.Add(Me.IOBLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.LabelTrendValue)
         Me.SplitContainer2.Panel1.Controls.Add(Me.MaxBasalPerHourLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Last24HTotalsPanel)
@@ -605,11 +607,23 @@ Partial Class Form1
         Me.SplitContainer2.SplitterDistance = 135
         Me.SplitContainer2.TabIndex = 52
         '
+        'IOBLabel
+        '
+        Me.IOBLabel.BackColor = System.Drawing.Color.Transparent
+        Me.IOBLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.IOBLabel.ForeColor = System.Drawing.Color.White
+        Me.IOBLabel.Location = New System.Drawing.Point(175, 111)
+        Me.IOBLabel.Name = "IOBLabel"
+        Me.IOBLabel.Size = New System.Drawing.Size(107, 21)
+        Me.IOBLabel.TabIndex = 69
+        Me.IOBLabel.Text = "IOB 2.0 U"
+        Me.IOBLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
         'LabelTrendValue
         '
         Me.LabelTrendValue.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.LabelTrendValue.ForeColor = System.Drawing.Color.White
-        Me.LabelTrendValue.Location = New System.Drawing.Point(457, 84)
+        Me.LabelTrendValue.Location = New System.Drawing.Point(461, 84)
         Me.LabelTrendValue.Name = "LabelTrendValue"
         Me.LabelTrendValue.Size = New System.Drawing.Size(84, 21)
         Me.LabelTrendValue.TabIndex = 68
@@ -634,7 +648,7 @@ Partial Class Form1
         Me.Last24HTotalsPanel.Controls.Add(Me.ManualBolusLabel)
         Me.Last24HTotalsPanel.Controls.Add(Me.BasalLabel)
         Me.Last24HTotalsPanel.Controls.Add(Me.DailyDoseLabel)
-        Me.Last24HTotalsPanel.Location = New System.Drawing.Point(735, 0)
+        Me.Last24HTotalsPanel.Location = New System.Drawing.Point(740, 0)
         Me.Last24HTotalsPanel.Name = "Last24HTotalsPanel"
         Me.Last24HTotalsPanel.Size = New System.Drawing.Size(237, 129)
         Me.Last24HTotalsPanel.TabIndex = 66
@@ -716,7 +730,7 @@ Partial Class Form1
         Me.SensorTimeLeftPanel.Controls.Add(Me.SensorDaysLeftLabel)
         Me.SensorTimeLeftPanel.Controls.Add(Me.SensorTimeLeftLabel)
         Me.SensorTimeLeftPanel.Controls.Add(Me.SensorTimeLeftPictureBox)
-        Me.SensorTimeLeftPanel.Location = New System.Drawing.Point(632, 0)
+        Me.SensorTimeLeftPanel.Location = New System.Drawing.Point(638, 0)
         Me.SensorTimeLeftPanel.Name = "SensorTimeLeftPanel"
         Me.SensorTimeLeftPanel.Size = New System.Drawing.Size(94, 129)
         Me.SensorTimeLeftPanel.TabIndex = 65
@@ -760,7 +774,7 @@ Partial Class Form1
         '
         Me.LabelTrendArrows.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.LabelTrendArrows.ForeColor = System.Drawing.Color.White
-        Me.LabelTrendArrows.Location = New System.Drawing.Point(457, 106)
+        Me.LabelTrendArrows.Location = New System.Drawing.Point(461, 106)
         Me.LabelTrendArrows.Name = "LabelTrendArrows"
         Me.LabelTrendArrows.Size = New System.Drawing.Size(84, 21)
         Me.LabelTrendArrows.TabIndex = 62
@@ -772,7 +786,7 @@ Partial Class Form1
         Me.LabelSgTrend.BackColor = System.Drawing.Color.Black
         Me.LabelSgTrend.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.LabelSgTrend.ForeColor = System.Drawing.Color.White
-        Me.LabelSgTrend.Location = New System.Drawing.Point(457, 64)
+        Me.LabelSgTrend.Location = New System.Drawing.Point(461, 64)
         Me.LabelSgTrend.Name = "LabelSgTrend"
         Me.LabelSgTrend.Size = New System.Drawing.Size(84, 21)
         Me.LabelSgTrend.TabIndex = 61
@@ -836,7 +850,7 @@ Partial Class Form1
         Me.PumpBatteryRemainingLabel.BackColor = System.Drawing.Color.Transparent
         Me.PumpBatteryRemainingLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.PumpBatteryRemainingLabel.ForeColor = System.Drawing.Color.White
-        Me.PumpBatteryRemainingLabel.Location = New System.Drawing.Point(181, 86)
+        Me.PumpBatteryRemainingLabel.Location = New System.Drawing.Point(121, 86)
         Me.PumpBatteryRemainingLabel.Name = "PumpBatteryRemainingLabel"
         Me.PumpBatteryRemainingLabel.Size = New System.Drawing.Size(80, 21)
         Me.PumpBatteryRemainingLabel.TabIndex = 11
@@ -848,7 +862,7 @@ Partial Class Form1
         Me.TransmatterBatterPercentLabel.BackColor = System.Drawing.Color.Transparent
         Me.TransmatterBatterPercentLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.TransmatterBatterPercentLabel.ForeColor = System.Drawing.Color.White
-        Me.TransmatterBatterPercentLabel.Location = New System.Drawing.Point(542, 95)
+        Me.TransmatterBatterPercentLabel.Location = New System.Drawing.Point(551, 95)
         Me.TransmatterBatterPercentLabel.Name = "TransmatterBatterPercentLabel"
         Me.TransmatterBatterPercentLabel.Size = New System.Drawing.Size(80, 21)
         Me.TransmatterBatterPercentLabel.TabIndex = 13
@@ -859,7 +873,7 @@ Partial Class Form1
         '
         Me.TransmitterBatteryPictureBox.ErrorImage = Nothing
         Me.TransmitterBatteryPictureBox.Image = Global.CareLink.My.Resources.Resources.TransmitterBatteryUnknown
-        Me.TransmitterBatteryPictureBox.Location = New System.Drawing.Point(545, 0)
+        Me.TransmitterBatteryPictureBox.Location = New System.Drawing.Point(554, 0)
         Me.TransmitterBatteryPictureBox.Name = "TransmitterBatteryPictureBox"
         Me.TransmitterBatteryPictureBox.Size = New System.Drawing.Size(74, 84)
         Me.TransmitterBatteryPictureBox.TabIndex = 47
@@ -869,7 +883,7 @@ Partial Class Form1
         '
         Me.PumpBatteryPictureBox.ErrorImage = Nothing
         Me.PumpBatteryPictureBox.Image = Global.CareLink.My.Resources.Resources.PumpBatteryFull
-        Me.PumpBatteryPictureBox.Location = New System.Drawing.Point(184, 0)
+        Me.PumpBatteryPictureBox.Location = New System.Drawing.Point(124, 0)
         Me.PumpBatteryPictureBox.Name = "PumpBatteryPictureBox"
         Me.PumpBatteryPictureBox.Size = New System.Drawing.Size(74, 84)
         Me.PumpBatteryPictureBox.TabIndex = 43
@@ -893,7 +907,7 @@ Partial Class Form1
         Me.RemainingInsulinUnits.BackColor = System.Drawing.Color.Transparent
         Me.RemainingInsulinUnits.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.RemainingInsulinUnits.ForeColor = System.Drawing.Color.White
-        Me.RemainingInsulinUnits.Location = New System.Drawing.Point(255, 86)
+        Me.RemainingInsulinUnits.Location = New System.Drawing.Point(206, 67)
         Me.RemainingInsulinUnits.Name = "RemainingInsulinUnits"
         Me.RemainingInsulinUnits.Size = New System.Drawing.Size(80, 21)
         Me.RemainingInsulinUnits.TabIndex = 12
@@ -904,11 +918,11 @@ Partial Class Form1
         '
         Me.InsulinLevelPictureBox.Image = CType(resources.GetObject("InsulinLevelPictureBox.Image"), System.Drawing.Image)
         Me.InsulinLevelPictureBox.InitialImage = Nothing
-        Me.InsulinLevelPictureBox.Location = New System.Drawing.Point(258, 0)
+        Me.InsulinLevelPictureBox.Location = New System.Drawing.Point(221, 0)
         Me.InsulinLevelPictureBox.Name = "InsulinLevelPictureBox"
         Me.InsulinLevelPictureBox.Padding = New System.Windows.Forms.Padding(10)
-        Me.InsulinLevelPictureBox.Size = New System.Drawing.Size(74, 84)
-        Me.InsulinLevelPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
+        Me.InsulinLevelPictureBox.Size = New System.Drawing.Size(51, 67)
+        Me.InsulinLevelPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
         Me.InsulinLevelPictureBox.TabIndex = 12
         Me.InsulinLevelPictureBox.TabStop = False
         '
@@ -929,7 +943,7 @@ Partial Class Form1
         '
         Me.CalibrationDueImage.BackColor = System.Drawing.Color.Transparent
         Me.CalibrationDueImage.Image = Global.CareLink.My.Resources.Resources.CalibrationUnavailable
-        Me.CalibrationDueImage.Location = New System.Drawing.Point(476, 7)
+        Me.CalibrationDueImage.Location = New System.Drawing.Point(480, 7)
         Me.CalibrationDueImage.Name = "CalibrationDueImage"
         Me.CalibrationDueImage.Size = New System.Drawing.Size(47, 47)
         Me.CalibrationDueImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
@@ -942,10 +956,10 @@ Partial Class Form1
         Me.CursorPanel.Controls.Add(Me.CursorMessage1Label)
         Me.CursorPanel.Controls.Add(Me.CursorMessage2Label)
         Me.CursorPanel.Controls.Add(Me.CursorMessage3Label)
-        Me.CursorPanel.Dock = System.Windows.Forms.DockStyle.Left
-        Me.CursorPanel.Location = New System.Drawing.Point(0, 0)
+        Me.CursorPanel.Location = New System.Drawing.Point(284, 0)
+        Me.CursorPanel.Margin = New System.Windows.Forms.Padding(0)
         Me.CursorPanel.Name = "CursorPanel"
-        Me.CursorPanel.Size = New System.Drawing.Size(184, 135)
+        Me.CursorPanel.Size = New System.Drawing.Size(178, 135)
         Me.CursorPanel.TabIndex = 63
         '
         'CursorPictureBox
@@ -953,9 +967,9 @@ Partial Class Form1
         Me.CursorPictureBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CursorPictureBox.Image = CType(resources.GetObject("CursorPictureBox.Image"), System.Drawing.Image)
         Me.CursorPictureBox.InitialImage = Nothing
-        Me.CursorPictureBox.Location = New System.Drawing.Point(68, 6)
+        Me.CursorPictureBox.Location = New System.Drawing.Point(68, 16)
         Me.CursorPictureBox.Name = "CursorPictureBox"
-        Me.CursorPictureBox.Size = New System.Drawing.Size(48, 56)
+        Me.CursorPictureBox.Size = New System.Drawing.Size(42, 56)
         Me.CursorPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
         Me.CursorPictureBox.TabIndex = 42
         Me.CursorPictureBox.TabStop = False
@@ -965,9 +979,9 @@ Partial Class Form1
         Me.CursorMessage1Label.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CursorMessage1Label.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.CursorMessage1Label.ForeColor = System.Drawing.Color.White
-        Me.CursorMessage1Label.Location = New System.Drawing.Point(0, 64)
+        Me.CursorMessage1Label.Location = New System.Drawing.Point(0, 74)
         Me.CursorMessage1Label.Name = "CursorMessage1Label"
-        Me.CursorMessage1Label.Size = New System.Drawing.Size(184, 21)
+        Me.CursorMessage1Label.Size = New System.Drawing.Size(178, 21)
         Me.CursorMessage1Label.TabIndex = 39
         Me.CursorMessage1Label.Text = "Blood Glucose"
         Me.CursorMessage1Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -977,9 +991,9 @@ Partial Class Form1
         Me.CursorMessage2Label.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CursorMessage2Label.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.CursorMessage2Label.ForeColor = System.Drawing.Color.White
-        Me.CursorMessage2Label.Location = New System.Drawing.Point(0, 89)
+        Me.CursorMessage2Label.Location = New System.Drawing.Point(0, 95)
         Me.CursorMessage2Label.Name = "CursorMessage2Label"
-        Me.CursorMessage2Label.Size = New System.Drawing.Size(184, 21)
+        Me.CursorMessage2Label.Size = New System.Drawing.Size(178, 21)
         Me.CursorMessage2Label.TabIndex = 40
         Me.CursorMessage2Label.Text = "Calibration Accepted"
         Me.CursorMessage2Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -991,29 +1005,32 @@ Partial Class Form1
         Me.CursorMessage3Label.ForeColor = System.Drawing.Color.White
         Me.CursorMessage3Label.Location = New System.Drawing.Point(0, 114)
         Me.CursorMessage3Label.Name = "CursorMessage3Label"
-        Me.CursorMessage3Label.Size = New System.Drawing.Size(184, 21)
+        Me.CursorMessage3Label.Size = New System.Drawing.Size(178, 21)
         Me.CursorMessage3Label.TabIndex = 41
         Me.CursorMessage3Label.Text = "156 ml/dl"
         Me.CursorMessage3Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'CalibrationShieldPanel
         '
+        Me.CalibrationShieldPanel.Controls.Add(Me.ShieldUnitsLabel)
         Me.CalibrationShieldPanel.Controls.Add(Me.LastSGTimeLabel)
         Me.CalibrationShieldPanel.Controls.Add(Me.CurrentBGLabel)
-        Me.CalibrationShieldPanel.Controls.Add(Me.ShieldUnitsLabel)
         Me.CalibrationShieldPanel.Controls.Add(Me.SensorMessage)
         Me.CalibrationShieldPanel.Controls.Add(Me.CalibrationShieldPictureBox)
-        Me.CalibrationShieldPanel.Location = New System.Drawing.Point(341, 3)
+        Me.CalibrationShieldPanel.Dock = System.Windows.Forms.DockStyle.Left
+        Me.CalibrationShieldPanel.Location = New System.Drawing.Point(0, 0)
+        Me.CalibrationShieldPanel.Margin = New System.Windows.Forms.Padding(0)
         Me.CalibrationShieldPanel.Name = "CalibrationShieldPanel"
-        Me.CalibrationShieldPanel.Size = New System.Drawing.Size(116, 129)
+        Me.CalibrationShieldPanel.Size = New System.Drawing.Size(116, 135)
         Me.CalibrationShieldPanel.TabIndex = 64
         '
         'LastSGTimeLabel
         '
         Me.LastSGTimeLabel.BackColor = System.Drawing.Color.Transparent
+        Me.LastSGTimeLabel.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.LastSGTimeLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.LastSGTimeLabel.ForeColor = System.Drawing.Color.White
-        Me.LastSGTimeLabel.Location = New System.Drawing.Point(0, 108)
+        Me.LastSGTimeLabel.Location = New System.Drawing.Point(0, 114)
         Me.LastSGTimeLabel.Name = "LastSGTimeLabel"
         Me.LastSGTimeLabel.Size = New System.Drawing.Size(116, 21)
         Me.LastSGTimeLabel.TabIndex = 55
@@ -1060,12 +1077,11 @@ Partial Class Form1
         '
         'CalibrationShieldPictureBox
         '
-        Me.CalibrationShieldPictureBox.Dock = System.Windows.Forms.DockStyle.Fill
         Me.CalibrationShieldPictureBox.Image = Global.CareLink.My.Resources.Resources.Shield
         Me.CalibrationShieldPictureBox.Location = New System.Drawing.Point(0, 0)
         Me.CalibrationShieldPictureBox.Margin = New System.Windows.Forms.Padding(5)
         Me.CalibrationShieldPictureBox.Name = "CalibrationShieldPictureBox"
-        Me.CalibrationShieldPictureBox.Size = New System.Drawing.Size(116, 129)
+        Me.CalibrationShieldPictureBox.Size = New System.Drawing.Size(116, 116)
         Me.CalibrationShieldPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.CalibrationShieldPictureBox.TabIndex = 5
         Me.CalibrationShieldPictureBox.TabStop = False
@@ -1327,7 +1343,7 @@ Partial Class Form1
         Me.TableLayoutPanelActiveInsulin.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelActiveInsulin.ColumnCount = 1
         Me.TableLayoutPanelActiveInsulin.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelActiveInsulin.Controls.Add(Me.Label1, 0, 0)
+        Me.TableLayoutPanelActiveInsulin.Controls.Add(Me.ActiveInsulinTabLabel, 0, 0)
         Me.TableLayoutPanelActiveInsulin.Dock = System.Windows.Forms.DockStyle.Top
         Me.TableLayoutPanelActiveInsulin.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelActiveInsulin.Name = "TableLayoutPanelActiveInsulin"
@@ -1337,16 +1353,16 @@ Partial Class Form1
         Me.TableLayoutPanelActiveInsulin.Size = New System.Drawing.Size(1370, 39)
         Me.TableLayoutPanelActiveInsulin.TabIndex = 0
         '
-        'Label1
+        'ActiveInsulinTabLabel
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label1.Location = New System.Drawing.Point(6, 3)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(1358, 30)
-        Me.Label1.TabIndex = 0
-        Me.Label1.Text = "Active Insulin"
-        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.ActiveInsulinTabLabel.AutoSize = True
+        Me.ActiveInsulinTabLabel.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ActiveInsulinTabLabel.Location = New System.Drawing.Point(6, 3)
+        Me.ActiveInsulinTabLabel.Name = "ActiveInsulinTabLabel"
+        Me.ActiveInsulinTabLabel.Size = New System.Drawing.Size(1358, 30)
+        Me.ActiveInsulinTabLabel.TabIndex = 0
+        Me.ActiveInsulinTabLabel.Text = "Active Insulin"
+        Me.ActiveInsulinTabLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'TabPage06SensorGlucose
         '
@@ -2389,6 +2405,7 @@ Partial Class Form1
         Me.TabControlHomePage.ResumeLayout(False)
         Me.TabPage01HomePage.ResumeLayout(False)
         Me.SplitContainer2.Panel1.ResumeLayout(False)
+        Me.SplitContainer2.Panel1.PerformLayout()
         Me.SplitContainer2.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer2.ResumeLayout(False)
@@ -2665,4 +2682,6 @@ Partial Class Form1
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
     Friend WithEvents TabPage26BackToHomePage As TabPage
     Friend WithEvents LastSGTimeLabel As Label
+    Friend WithEvents IOBLabel As Label
+    Friend WithEvents ActiveInsulinTabLabel As Label
 End Class

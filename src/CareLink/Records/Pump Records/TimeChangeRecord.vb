@@ -15,8 +15,8 @@ Public Class TimeChangeRecord
                     Me.kind = kvp.Value
                 Case NameOf(version)
                     Me.version = CInt(kvp.Value)
-                Case NameOf(dateTime)
-                    Me.dateTime = kvp.Value.ParseDate(NameOf(dateTime), NameOf(dateTime))
+                Case NameOf(Me.dateTime)
+                    Me.dateTime = kvp.Value.ParseDate(NameOf(Me.dateTime), NameOf(Me.dateTime))
                     Me.dateTimeAsString = kvp.Value
                     Me.currentOADate = New OADate(Me.dateTime)
                 Case NameOf(relativeOffset)
