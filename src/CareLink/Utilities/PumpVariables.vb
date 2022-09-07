@@ -47,6 +47,7 @@ Public Module PumpVariables
     Friend s_lastBGDiff As Double = 0
     Friend s_lastBGTime As Date
     Friend s_lastBGValue As Single = 0
+    Friend s_lastMedicalDeviceDataUpdateServerTime As Long
     Friend s_lastSG As Dictionary(Of String, String)
     Friend s_limitHigh As Single
     Friend s_limitLow As Single

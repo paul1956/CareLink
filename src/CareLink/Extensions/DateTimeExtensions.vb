@@ -12,13 +12,14 @@ Friend Module DateTimeExtensions
 #Region "OaDateTime Constants"
 
     Public ReadOnly s_fiveMinuteOADate As New OADate(Date.MinValue + New TimeSpan(hours:=0, minutes:=5, seconds:=0))
-    Public ReadOnly s_sixMinuteOADate As New OADate(Date.MinValue + New TimeSpan(hours:=0, minutes:=6, seconds:=0))
     Public ReadOnly s_hourAsOADate As New OADate(Date.MinValue + New TimeSpan(hours:=1, minutes:=0, seconds:=0))
+    Public ReadOnly s_sixMinuteOADate As New OADate(Date.MinValue + New TimeSpan(hours:=0, minutes:=6, seconds:=0))
     Public ReadOnly s_twoHalfMinuteOADate As New OADate(Date.MinValue + New TimeSpan(hours:=0, minutes:=2, seconds:=30))
 
 #End Region ' OaDateTime Constants
 
     Public ReadOnly s_fiveMinuteSpan As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
+
 #Region "Millisecond Constants"
 
     Public ReadOnly s_fiveMinutesInMilliseconds As Integer = CType(New TimeSpan(0, minutes:=5, 0).TotalMilliseconds, Integer)
@@ -69,6 +70,52 @@ Friend Module DateTimeExtensions
         Next
         success = False
         Return Nothing
+    End Function
+
+    ''' <summary>
+    ''' Converts a Unix Milliseconds TimeSpan to UTC Date
+    ''' </summary>
+    ''' <param name="unixTime" type="String"></param>
+    ''' <returns>UTC Date</returns>
+    <Extension>
+    Private Function FromUnixTime(unixTime As String) As Date
+        Dim epoch As New DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+        If String.IsNullOrWhiteSpace(unixTime) Then
+            Return epoch
+        End If
+
+        Return CDbl(unixTime).FromUnixTime
+    End Function
+
+    ''' <summary>
+    ''' Converts a Unix Milliseconds TimeSpan to UTC Date
+    ''' </summary>
+    ''' <param name="unixTime" type="Double">TimeSpan in Milliseconds</param>
+    ''' <returns>UTC Date</returns>
+    <Extension>
+    Private Function FromUnixTime(unixTime As Double) As Date
+        Dim epoch As New DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+        Return epoch.AddMilliseconds(unixTime)
+    End Function
+
+    ''' <summary>
+    ''' Converts a Unix Milliseconds TimeSpan to local date
+    ''' </summary>
+    ''' <param name="epoch"></param>
+    ''' <returns>Local Date as string</returns>
+    <Extension>
+    Friend Function Epoch2DateString(epoch As String) As String
+        Return epoch.FromUnixTime.ToLocalTime.ToLongDateString
+    End Function
+
+    ''' <summary>
+    ''' Converts a UNIX Timespan string to UTC DateTime
+    ''' </summary>
+    ''' <param name="epoch">In Milliseconds As String</param>
+    ''' <returns>DateTime String in UTC</returns>
+    <Extension>
+    Friend Function Epoch2DateTimeString(epoch As String) As String
+        Return $"{epoch.FromUnixTime.ToShortDateTimeString} UTC"
     End Function
 
     <Extension>
@@ -147,7 +194,7 @@ Friend Module DateTimeExtensions
 
     <Extension>
     Public Function ToShortDateTimeString(dateValue As Date) As String
-        Return $"{dateValue.ToShortDateString()} {dateValue.ToShortTimeString()}"
+        Return $"{dateValue.ToShortDateString()} {dateValue.ToLongTimeString()}"
     End Function
 
     <Extension>

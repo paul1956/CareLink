@@ -38,8 +38,8 @@ Public Class MyProfileRecord
                 Case NameOf(country)
                     Me.country = row.Value
                 Case NameOf(dateOfBirth)
-                    Me.dateOfBirth = MyProfileRecordHelpers.Epoch2String(row.Value)
-                    profile(profile.Count - 1) = KeyValuePair.Create(row.Key.ToTitleCase, MyProfileRecordHelpers.Epoch2String(row.Value))
+                    Me.dateOfBirth = row.Value.Epoch2DateString
+                    profile(profile.Count - 1) = KeyValuePair.Create(row.Key.ToTitleCase, Me.dateOfBirth)
                 Case NameOf(phone)
                     Me.phone = row.Value
                 Case NameOf(phoneLegacy)

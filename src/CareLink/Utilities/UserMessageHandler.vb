@@ -6,26 +6,10 @@ Imports System.Runtime.CompilerServices
 
 Friend Module UserMessageHandler
 
-    Friend ReadOnly s_sensorMessages As New Dictionary(Of String, String) From {
-                            {"CALIBRATING", "Calibrating ..."},
-                            {"CALIBRATION_REQUIRED", "Calibration required"},
-                            {"DO_NOT_CALIBRATE", "Do Not calibrate."},
-                            {"LOAD_RESERVOIR", "Load Reservoir"},
-                            {"NO_DATA_FROM_PUMP", "No data from pump"},
-                            {"NO_ERROR_MESSAGE", "---"},
-                            {"NO_SENSOR_SIGNAL", "Lost sensor signal, move pump closer to transmitter. May take 15 minutes to find signal"},
-                            {"SEARCHING_FOR_SENSOR_SIGNAL", "Searching for sensor signal"},
-                            {"SENSOR_DISCONNECTED", "Sensor disconnected"},
-                            {"UNKNOWN", "Unknown"},
-                            {"WAIT_TO_CALIBRATE", "Wait To Calibrate..."},
-                            {"WARM_UP", "Sensor warm up. Warm-up takes up to 2 hours. You will be notifies when calibration Is needed."}
-                        }
-
     ' These message have parameters
     ' The string is split by : character which is not allowed in the message.
     ' Everything before the : is the message, the text after the : is the key in the dictionary that
     ' will replace (0). (units) will be replace by localized units.
-    '
     Friend ReadOnly s_NotificationMessages As New Dictionary(Of String, String) From {
                         {"BC_MESSAGE_BASAL_STARTED", "Auto Mode exit(triggeredDateTime). (0) started. Would you Like to review Auto Mode Readiness Screen?:basalName"},
                         {"BC_MESSAGE_CONFIRM_SENSOR_SIGNAL_CALIBRATE", "No calibration occurred(triggeredDateTime). Confirm sensor signal. Calibrate by (secondaryTime)."},
@@ -74,12 +58,35 @@ Friend Module UserMessageHandler
                         {"BC_SID_WAIT_AT_LEAST_15_MINUTES", "Calibration Not accepted.Wait at least 15 minutes. Wash hands, test BGagain And calibrate."}
                     }
 
+    Friend ReadOnly s_sensorMessages As New Dictionary(Of String, String) From {
+                            {"CALIBRATING", "Calibrating ..."},
+                            {"CALIBRATION_REQUIRED", "Calibration required"},
+                            {"DO_NOT_CALIBRATE", "Do Not calibrate."},
+                            {"LOAD_RESERVOIR", "Load Reservoir"},
+                            {"NO_DATA_FROM_PUMP", "No data from pump"},
+                            {"NO_ERROR_MESSAGE", "---"},
+                            {"NO_SENSOR_SIGNAL", "Lost sensor signal, move pump closer to transmitter. May take 15 minutes to find signal"},
+                            {"SEARCHING_FOR_SENSOR_SIGNAL", "Searching for sensor signal"},
+                            {"SENSOR_DISCONNECTED", "Sensor disconnected"},
+                            {"UNKNOWN", "Unknown"},
+                            {"WAIT_TO_CALIBRATE", "Wait To Calibrate..."},
+                            {"WARM_UP", "Sensor warm up. Warm-up takes up to 2 hours. You will be notifies when calibration Is needed."}
+                        }
+
+    Friend s_calibrationMessages As New Dictionary(Of String, String) From {
+            {"LESS_THAN_THREE_HRS", "Less then 3 hours"},
+            {"LESS_THAN_SIX_HRS", "Less then 6 hours"},
+            {"LESS_THAN_NINE_HRS", "Less then 9 hours"},
+            {"LESS_THAN_TWELVE_HRS", "Less than twelve hours"},
+            {"UNKNOWN", "unknown"}
+        }
+
     <Extension>
     Private Function FormatTimeOnly(rawTime As String, format As String) As String
         Return New TimeOnly(CInt(rawTime.Substring(0, 2)), CInt(rawTime.Substring(3, 2))).ToString(format)
     End Function
 
-    Friend Function TranslateMessageId(dic As Dictionary(Of String, String), entryValue As String, TimeFormat As String) As String
+    Friend Function TranslateNotificationMessageId(dic As Dictionary(Of String, String), entryValue As String, TimeFormat As String) As String
         Dim formattedMessage As String = ""
         Try
             If s_NotificationMessages.TryGetValue(entryValue, formattedMessage) Then

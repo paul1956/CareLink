@@ -376,7 +376,12 @@ Public Class CareLinkClient
         If recentData IsNot Nothing Then
             Me.CorrectTimeInRecentData(recentData)
         End If
-
+        Dim lastMedicalDeviceDataUpdateServerTime As String = ""
+        If recentData?.TryGetValue(NameOf(lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerTime) Then
+            If CLng(lastMedicalDeviceDataUpdateServerTime) = s_lastMedicalDeviceDataUpdateServerTime Then
+                recentData = Nothing
+            End If
+        End If
         Return recentData
     End Function
 

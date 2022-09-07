@@ -10,6 +10,12 @@ Public Class SummaryRecord
         Me.Value = entry.Value?.ToString(CurrentUICulture)
     End Sub
 
+    Protected Friend Sub New(index As ItemIndexs, key As String, value As String)
+        Me.RecordNumber = index
+        Me.Key = key
+        Me.Value = value
+    End Sub
+
 #If True Then ' Prevent reordering
 
     Public Property RecordNumber As Integer

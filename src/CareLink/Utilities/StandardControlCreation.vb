@@ -48,7 +48,7 @@ Public Module StandardControlCreation
         Dim valueTextBox As TextBox
 
         If eValue.Key.Equals("messageId", StringComparison.OrdinalIgnoreCase) Then
-            valueTextBox = CreateBasicTextBox(TranslateMessageId(dic, eValue.Value, timeFormat))
+            valueTextBox = CreateBasicTextBox(TranslateNotificationMessageId(dic, eValue.Value, timeFormat))
         Else
             Dim result As Single = Nothing
             If Single.TryParse(eValue.Value, NumberStyles.Number, CurrentDataCulture, result) Then

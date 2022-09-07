@@ -518,8 +518,8 @@ Partial Class Form1
         Me.TableLayoutPanelTop2.CausesValidation = False
         Me.TableLayoutPanelTop2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelTop2.ColumnCount = 2
-        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.0!))
-        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 92.0!))
+        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 9.224319!))
+        Me.TableLayoutPanelTop2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 90.77568!))
         Me.TableLayoutPanelTop2.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.TableLayoutPanelTop2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelTop2.Location = New System.Drawing.Point(0, 0)
@@ -2327,7 +2327,7 @@ Partial Class Form1
         'LoginStatusLabel
         '
         Me.LoginStatusLabel.AutoSize = True
-        Me.LoginStatusLabel.Location = New System.Drawing.Point(425, 3)
+        Me.LoginStatusLabel.Location = New System.Drawing.Point(484, 3)
         Me.LoginStatusLabel.Name = "LoginStatusLabel"
         Me.LoginStatusLabel.Size = New System.Drawing.Size(75, 15)
         Me.LoginStatusLabel.TabIndex = 23
@@ -2336,7 +2336,7 @@ Partial Class Form1
         'LoginStatus
         '
         Me.LoginStatus.AutoSize = True
-        Me.LoginStatus.Location = New System.Drawing.Point(549, 3)
+        Me.LoginStatus.Location = New System.Drawing.Point(608, 3)
         Me.LoginStatus.Name = "LoginStatus"
         Me.LoginStatus.Size = New System.Drawing.Size(58, 15)
         Me.LoginStatus.TabIndex = 24
@@ -2345,7 +2345,7 @@ Partial Class Form1
         'LastUpdateTimeLabel
         '
         Me.LastUpdateTimeLabel.AutoSize = True
-        Me.LastUpdateTimeLabel.Location = New System.Drawing.Point(1041, 3)
+        Me.LastUpdateTimeLabel.Location = New System.Drawing.Point(1061, 3)
         Me.LastUpdateTimeLabel.Name = "LastUpdateTimeLabel"
         Me.LastUpdateTimeLabel.Size = New System.Drawing.Size(101, 15)
         Me.LastUpdateTimeLabel.TabIndex = 23
@@ -2354,7 +2354,7 @@ Partial Class Form1
         'LastUpdateTime
         '
         Me.LastUpdateTime.AutoSize = True
-        Me.LastUpdateTime.Location = New System.Drawing.Point(1194, 3)
+        Me.LastUpdateTime.Location = New System.Drawing.Point(1214, 3)
         Me.LastUpdateTime.Name = "LastUpdateTime"
         Me.LastUpdateTime.Size = New System.Drawing.Size(58, 15)
         Me.LastUpdateTime.TabIndex = 24

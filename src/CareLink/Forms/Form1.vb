@@ -667,7 +667,7 @@ Public Class Form1
         End If
         Debug.Print($"In {NameOf(ActiveInsulinChart_PostPaint)} before SyncLock")
         SyncLock _updatingLock
-            Debug.Print($"In {NameOf(ActiveInsulinChart_PostPaint)} after SyncLock")
+            Debug.Print($"In {NameOf(ActiveInsulinChart_PostPaint)} in SyncLock")
             If _updating Then
                 Debug.Print($"Exiting {NameOf(ActiveInsulinChart_PostPaint)} due to {NameOf(_updating)}")
                 Exit Sub
@@ -678,6 +678,7 @@ Public Class Form1
                                True,
                                True)
         End SyncLock
+        Debug.Print($"In {NameOf(ActiveInsulinChart_PostPaint)} exited SyncLock")
     End Sub
 
     '<DebuggerNonUserCode()>
@@ -688,7 +689,7 @@ Public Class Form1
         End If
         Debug.Print($"In {NameOf(TreatmentMarkersChart_PostPaint)} before SyncLock")
         SyncLock _updatingLock
-            Debug.Print($"In {NameOf(TreatmentMarkersChart_PostPaint)} after SyncLock")
+            Debug.Print($"In {NameOf(TreatmentMarkersChart_PostPaint)} in SyncLock")
             If _updating Then
                 Debug.Print($"Exiting {NameOf(TreatmentMarkersChart_PostPaint)} due to {NameOf(_updating)}")
                 Exit Sub
@@ -699,6 +700,7 @@ Public Class Form1
                                 offsetInsulinImage:=False,
                                 False)
         End SyncLock
+        Debug.Print($"In {NameOf(TreatmentMarkersChart_PostPaint)} exited SyncLock")
     End Sub
 
     <DebuggerNonUserCode()>
@@ -709,7 +711,7 @@ Public Class Form1
         End If
         Debug.Print($"In {NameOf(HomePageChart_PostPaint)} before SyncLock")
         SyncLock _updatingLock
-            Debug.Print($"In {NameOf(HomePageChart_PostPaint)} After SyncLock")
+            Debug.Print($"In {NameOf(HomePageChart_PostPaint)} in SyncLock")
             If _updating Then
                 Debug.Print($"Exiting {NameOf(HomePageChart_PostPaint)} due to {NameOf(_updating)}")
                 Exit Sub
@@ -721,6 +723,7 @@ Public Class Form1
                 True,
                 Me.CursorTimeLabel)
         End SyncLock
+        Debug.Print($"In {NameOf(HomePageChart_PostPaint)} exited SyncLock")
     End Sub
 
 #End Region ' Post Paint Events
@@ -897,13 +900,13 @@ Public Class Form1
             Case ItemIndexs.pumpModelNumber
                 e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.currentServerTime
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
+                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.lastConduitTime
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
+                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.lastConduitUpdateServerTime
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
+                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.lastMedicalDeviceDataUpdateServerTime
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
+                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.firstName
                 e.CellStyle = e.CellStyle.CellStyleMiddleLeft
             Case ItemIndexs.lastName
@@ -1046,9 +1049,9 @@ Public Class Form1
 
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
         Me.ServerUpdateTimer.Stop()
-        Debug.Print($"Approacing SyncLock in {NameOf(ServerUpdateTimer_Tick)}, {NameOf(ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
+        Debug.Print($"Before SyncLock in {NameOf(ServerUpdateTimer_Tick)}, {NameOf(ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
         SyncLock _updatingLock
-            Debug.Print($"Inside SyncLock in {NameOf(ServerUpdateTimer_Tick)}, at {Now.ToLongTimeString}")
+            Debug.Print($"In {NameOf(ServerUpdateTimer_Tick)}, inside SyncLock at {Now.ToLongTimeString}")
             If Not _updating Then
                 _updating = True
                 Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
@@ -1069,10 +1072,10 @@ Public Class Form1
                 Application.DoEvents()
             End If
             _updating = False
-            Me.ServerUpdateTimer.Interval = s_twoMinutesInMilliseconds
-            Me.ServerUpdateTimer.Start()
-            Debug.Print($"Exiting SyncLock in {NameOf(ServerUpdateTimer_Tick)}, {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
         End SyncLock
+        Me.ServerUpdateTimer.Interval = s_twoMinutesInMilliseconds
+        Me.ServerUpdateTimer.Start()
+        Debug.Print($"In {NameOf(ServerUpdateTimer_Tick)}, exited SyncLock. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
     End Sub
 
 #End Region ' Timer Events
@@ -1408,6 +1411,9 @@ Public Class Form1
     End Sub
 
     Private Sub ProcessAllSingleEntries(row As KeyValuePair(Of String, String), rowIndex As ItemIndexs, ByRef firstName As String)
+        If row.Value Is Nothing Then
+            row = KeyValuePair.Create(row.Key, "")
+        End If
         Select Case rowIndex
             Case ItemIndexs.lastSensorTS
                 If row.Value = "0" Then
@@ -1437,9 +1443,12 @@ Public Class Form1
 
             Case ItemIndexs.currentServerTime,
                ItemIndexs.lastConduitTime,
-               ItemIndexs.lastConduitUpdateServerTime,
-               ItemIndexs.lastMedicalDeviceDataUpdateServerTime
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+               ItemIndexs.lastConduitUpdateServerTime
+                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row.Key, row.Value.Epoch2DateTimeString))
+
+            Case ItemIndexs.lastMedicalDeviceDataUpdateServerTime
+                s_lastMedicalDeviceDataUpdateServerTime = CLng(row.Value)
+                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row.Key, row.Value.Epoch2DateTimeString))
 
             Case ItemIndexs.firstName
                 firstName = row.Value
@@ -1465,7 +1474,16 @@ Public Class Form1
 
             Case ItemIndexs.sensorState
                 s_sensorState = row.Value
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                Dim message As String = ""
+                If s_sensorMessages.TryGetValue(row.Value, message) Then
+                    message = $"{row.Value} = {message}"
+                    s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row.Key, message))
+                Else
+                    If Debugger.IsAttached Then
+                        MsgBox($"{row.Value} is unknown sensor state message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
+                    End If
+                    s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row.Key, row.Value.ToTitleCase))
+                End If
 
             Case ItemIndexs.medicalDeviceSerialNumber
                 Me.SerialNumberLabel.Text = row.Value
@@ -1508,7 +1526,15 @@ Public Class Form1
                 s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.calibStatus
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                Dim message As String = ""
+                If s_calibrationMessages.TryGetValue(row.Value, message) Then
+                    s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row.Key, $"{row.Value} = {message}"))
+                Else
+                    If Debugger.IsAttached Then
+                        MsgBox($"{row.Value} is unknown calibration message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
+                    End If
+                    s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row.Key, row.Value.ToTitleCase))
+                End If
 
             Case ItemIndexs.bgUnits
                 s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
@@ -1547,7 +1573,15 @@ Public Class Form1
 
             Case ItemIndexs.systemStatusMessage
                 s_systemStatusMessage = row.Value
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                Dim message As String = ""
+                If s_sensorMessages.TryGetValue(row.Value, message) Then
+                    s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row.Key, $"{row.Value} = {message}"))
+                Else
+                    If Not String.IsNullOrWhiteSpace(row.Value) AndAlso Debugger.IsAttached Then
+                        MsgBox($"{row.Value} is unknown system status message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
+                    End If
+                    s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row.Key, row.Value.ToTitleCase))
+                End If
 
             Case ItemIndexs.averageSG
                 s_averageSG = row.Value
@@ -1764,7 +1798,9 @@ Public Class Form1
         If Me.RecentData.Count > ItemIndexs.finalCalibration + 1 Then
             Stop
         End If
+        Debug.Print($"In {NameOf(AllTabPagesUpdate)} before SyncLock")
         SyncLock _updatingLock
+            Debug.Print($"In {NameOf(AllTabPagesUpdate)} inside SyncLock")
             _updating = True ' prevent paint
             _homePageAbsoluteRectangle = RectangleF.Empty
             _treatmentMarkerAbsoluteRectangle = RectangleF.Empty
@@ -1775,22 +1811,23 @@ Public Class Form1
             Me.CursorPanel.Visible = False
             Me.UpdateDataTables(_formScale.Height <> 1 OrElse _formScale.Width <> 1)
             _updating = False
-            Me.UpdateActiveInsulinChart()
-            Me.UpdateActiveInsulin()
-            Me.UpdateAutoModeShield()
-            Me.UpdateCalibrationTimeRemaining()
-            Me.UpdateInsulinLevel()
-            Me.UpdatePumpBattery()
-            Me.UpdateRemainingInsulin()
-            Me.UpdateSensorLife()
-            Me.UpdateTimeInRange()
-            Me.UpdateTransmitterBatttery()
-            Me.UpdateHomeTabSerieses()
-            Me.UpdateDosingAndCarbs()
-            s_recentDatalast = Me.RecentData
-            Me.MenuStartHere.Enabled = True
-            Me.UpdateTreatmentChart()
         End SyncLock
+        Debug.Print($"In {NameOf(AllTabPagesUpdate)} exited SyncLock")
+        Me.UpdateActiveInsulinChart()
+        Me.UpdateActiveInsulin()
+        Me.UpdateAutoModeShield()
+        Me.UpdateCalibrationTimeRemaining()
+        Me.UpdateInsulinLevel()
+        Me.UpdatePumpBattery()
+        Me.UpdateRemainingInsulin()
+        Me.UpdateSensorLife()
+        Me.UpdateTimeInRange()
+        Me.UpdateTransmitterBatttery()
+        Me.UpdateHomeTabSerieses()
+        Me.UpdateDosingAndCarbs()
+        s_recentDatalast = Me.RecentData
+        Me.MenuStartHere.Enabled = True
+        Me.UpdateTreatmentChart()
         Application.DoEvents()
     End Sub
 
@@ -1910,10 +1947,12 @@ Public Class Form1
                 Me.SensorMessage.Visible = True
                 Me.SensorMessage.BackColor = Color.Transparent
                 Dim message As String = ""
-                If s_sensorMessages.TryGetValue(s_sensorState, message) Then
+                If Not s_sensorMessages.TryGetValue(s_sensorState, message) Then
+                    If Debugger.IsAttached Then
+                        MsgBox($"{s_sensorState} is unknown sensor message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
+                    End If
+
                     message = message.ToTitle
-                Else
-                    MsgBox($"{s_sensorState} is unknown sensor message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
                 End If
                 Me.SensorMessage.Text = message
                 Me.ShieldUnitsLabel.Visible = False
