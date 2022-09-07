@@ -32,6 +32,7 @@ This update has a UI to show all the available data and a visual version that mi
 ## What's New in this release
   New 3.5.4.12
   Reorganize UI, Add IOB
+  Update Z-Order in Treatment Chart
 
   New 3.5.4.11
   Added support for updates only when server updates
