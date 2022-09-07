@@ -97,16 +97,16 @@ Partial Class Form1
         Me.CalibrationDueImage = New System.Windows.Forms.PictureBox()
         Me.CursorPanel = New System.Windows.Forms.Panel()
         Me.CursorMessage2Label = New System.Windows.Forms.Label()
-        Me.CursorValueLabel = New System.Windows.Forms.Label()
+        Me.CursorMessage3Label = New System.Windows.Forms.Label()
         Me.CursorPictureBox = New System.Windows.Forms.PictureBox()
         Me.CursorMessage1Label = New System.Windows.Forms.Label()
         Me.CalibrationShieldPanel = New System.Windows.Forms.Panel()
+        Me.LastSGTimeLabel = New System.Windows.Forms.Label()
         Me.CurrentBGLabel = New System.Windows.Forms.Label()
         Me.ShieldUnitsLabel = New System.Windows.Forms.Label()
         Me.SensorMessage = New System.Windows.Forms.Label()
         Me.CalibrationShieldPictureBox = New System.Windows.Forms.PictureBox()
         Me.SplitContainer3 = New System.Windows.Forms.SplitContainer()
-        Me.CursorTimeLabel = New System.Windows.Forms.Label()
         Me.Last24HoursLabel = New System.Windows.Forms.Label()
         Me.TimeInRangeLabel = New System.Windows.Forms.Label()
         Me.TimeInRangeSummaryPercentCharLabel = New System.Windows.Forms.Label()
@@ -240,7 +240,6 @@ Partial Class Form1
         Me.CalibrationShieldPanel.SuspendLayout()
         CType(Me.CalibrationShieldPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.SplitContainer3, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.SplitContainer3.Panel1.SuspendLayout()
         Me.SplitContainer3.Panel2.SuspendLayout()
         Me.SplitContainer3.SuspendLayout()
         Me.TabPage04SummaryData.SuspendLayout()
@@ -610,7 +609,7 @@ Partial Class Form1
         '
         Me.LabelTrendValue.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.LabelTrendValue.ForeColor = System.Drawing.Color.White
-        Me.LabelTrendValue.Location = New System.Drawing.Point(457, 83)
+        Me.LabelTrendValue.Location = New System.Drawing.Point(457, 84)
         Me.LabelTrendValue.Name = "LabelTrendValue"
         Me.LabelTrendValue.Size = New System.Drawing.Size(84, 23)
         Me.LabelTrendValue.TabIndex = 68
@@ -645,7 +644,7 @@ Partial Class Form1
         Me.Last24CarbsValueLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Last24CarbsValueLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.Last24CarbsValueLabel.ForeColor = System.Drawing.Color.White
-        Me.Last24CarbsValueLabel.Location = New System.Drawing.Point(0, 106)
+        Me.Last24CarbsValueLabel.Location = New System.Drawing.Point(0, 108)
         Me.Last24CarbsValueLabel.Name = "Last24CarbsValueLabel"
         Me.Last24CarbsValueLabel.Size = New System.Drawing.Size(220, 21)
         Me.Last24CarbsValueLabel.TabIndex = 66
@@ -773,7 +772,7 @@ Partial Class Form1
         Me.LabelSgTrend.BackColor = System.Drawing.Color.Black
         Me.LabelSgTrend.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.LabelSgTrend.ForeColor = System.Drawing.Color.White
-        Me.LabelSgTrend.Location = New System.Drawing.Point(457, 62)
+        Me.LabelSgTrend.Location = New System.Drawing.Point(457, 64)
         Me.LabelSgTrend.Name = "LabelSgTrend"
         Me.LabelSgTrend.Size = New System.Drawing.Size(84, 23)
         Me.LabelSgTrend.TabIndex = 61
@@ -940,7 +939,7 @@ Partial Class Form1
         'CursorPanel
         '
         Me.CursorPanel.Controls.Add(Me.CursorMessage2Label)
-        Me.CursorPanel.Controls.Add(Me.CursorValueLabel)
+        Me.CursorPanel.Controls.Add(Me.CursorMessage3Label)
         Me.CursorPanel.Controls.Add(Me.CursorPictureBox)
         Me.CursorPanel.Controls.Add(Me.CursorMessage1Label)
         Me.CursorPanel.Dock = System.Windows.Forms.DockStyle.Left
@@ -954,24 +953,24 @@ Partial Class Form1
         Me.CursorMessage2Label.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CursorMessage2Label.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.CursorMessage2Label.ForeColor = System.Drawing.Color.White
-        Me.CursorMessage2Label.Location = New System.Drawing.Point(0, 86)
+        Me.CursorMessage2Label.Location = New System.Drawing.Point(0, 85)
         Me.CursorMessage2Label.Name = "CursorMessage2Label"
         Me.CursorMessage2Label.Size = New System.Drawing.Size(184, 21)
         Me.CursorMessage2Label.TabIndex = 40
         Me.CursorMessage2Label.Text = "Calibration Accepted"
         Me.CursorMessage2Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'CursorValueLabel
+        'CursorMessage3Label
         '
-        Me.CursorValueLabel.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.CursorValueLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.CursorValueLabel.ForeColor = System.Drawing.Color.White
-        Me.CursorValueLabel.Location = New System.Drawing.Point(0, 114)
-        Me.CursorValueLabel.Name = "CursorValueLabel"
-        Me.CursorValueLabel.Size = New System.Drawing.Size(184, 21)
-        Me.CursorValueLabel.TabIndex = 41
-        Me.CursorValueLabel.Text = "156 ml/dl"
-        Me.CursorValueLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.CursorMessage3Label.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.CursorMessage3Label.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.CursorMessage3Label.ForeColor = System.Drawing.Color.White
+        Me.CursorMessage3Label.Location = New System.Drawing.Point(0, 114)
+        Me.CursorMessage3Label.Name = "CursorMessage3Label"
+        Me.CursorMessage3Label.Size = New System.Drawing.Size(184, 21)
+        Me.CursorMessage3Label.TabIndex = 41
+        Me.CursorMessage3Label.Text = "156 ml/dl"
+        Me.CursorMessage3Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'CursorPictureBox
         '
@@ -990,7 +989,7 @@ Partial Class Form1
         Me.CursorMessage1Label.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CursorMessage1Label.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.CursorMessage1Label.ForeColor = System.Drawing.Color.White
-        Me.CursorMessage1Label.Location = New System.Drawing.Point(0, 65)
+        Me.CursorMessage1Label.Location = New System.Drawing.Point(0, 64)
         Me.CursorMessage1Label.Name = "CursorMessage1Label"
         Me.CursorMessage1Label.Size = New System.Drawing.Size(184, 21)
         Me.CursorMessage1Label.TabIndex = 39
@@ -999,6 +998,7 @@ Partial Class Form1
         '
         'CalibrationShieldPanel
         '
+        Me.CalibrationShieldPanel.Controls.Add(Me.LastSGTimeLabel)
         Me.CalibrationShieldPanel.Controls.Add(Me.CurrentBGLabel)
         Me.CalibrationShieldPanel.Controls.Add(Me.ShieldUnitsLabel)
         Me.CalibrationShieldPanel.Controls.Add(Me.SensorMessage)
@@ -1007,6 +1007,18 @@ Partial Class Form1
         Me.CalibrationShieldPanel.Name = "CalibrationShieldPanel"
         Me.CalibrationShieldPanel.Size = New System.Drawing.Size(116, 129)
         Me.CalibrationShieldPanel.TabIndex = 64
+        '
+        'LastSGTimeLabel
+        '
+        Me.LastSGTimeLabel.BackColor = System.Drawing.Color.Transparent
+        Me.LastSGTimeLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.LastSGTimeLabel.ForeColor = System.Drawing.Color.White
+        Me.LastSGTimeLabel.Location = New System.Drawing.Point(0, 108)
+        Me.LastSGTimeLabel.Name = "LastSGTimeLabel"
+        Me.LastSGTimeLabel.Size = New System.Drawing.Size(116, 21)
+        Me.LastSGTimeLabel.TabIndex = 55
+        Me.LastSGTimeLabel.Text = "Time"
+        Me.LastSGTimeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'CurrentBGLabel
         '
@@ -1067,7 +1079,6 @@ Partial Class Form1
         'SplitContainer3.Panel1
         '
         Me.SplitContainer3.Panel1.BackColor = System.Drawing.Color.Black
-        Me.SplitContainer3.Panel1.Controls.Add(Me.CursorTimeLabel)
         '
         'SplitContainer3.Panel2
         '
@@ -1086,20 +1097,6 @@ Partial Class Form1
         Me.SplitContainer3.Size = New System.Drawing.Size(1370, 486)
         Me.SplitContainer3.SplitterDistance = 1136
         Me.SplitContainer3.TabIndex = 0
-        '
-        'CursorTimeLabel
-        '
-        Me.CursorTimeLabel.AutoSize = True
-        Me.CursorTimeLabel.BackColor = System.Drawing.Color.WhiteSmoke
-        Me.CursorTimeLabel.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.CursorTimeLabel.ForeColor = System.Drawing.Color.Black
-        Me.CursorTimeLabel.Location = New System.Drawing.Point(176, 5)
-        Me.CursorTimeLabel.Name = "CursorTimeLabel"
-        Me.CursorTimeLabel.Size = New System.Drawing.Size(99, 17)
-        Me.CursorTimeLabel.TabIndex = 15
-        Me.CursorTimeLabel.Text = "TimeForCursor"
-        Me.CursorTimeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.CursorTimeLabel.Visible = False
         '
         'Last24HoursLabel
         '
@@ -2407,8 +2404,6 @@ Partial Class Form1
         Me.CalibrationShieldPanel.ResumeLayout(False)
         Me.CalibrationShieldPanel.PerformLayout()
         CType(Me.CalibrationShieldPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.SplitContainer3.Panel1.ResumeLayout(False)
-        Me.SplitContainer3.Panel1.PerformLayout()
         Me.SplitContainer3.Panel2.ResumeLayout(False)
         Me.SplitContainer3.Panel2.PerformLayout()
         CType(Me.SplitContainer3, System.ComponentModel.ISupportInitialize).EndInit()
@@ -2506,9 +2501,8 @@ Partial Class Form1
     Friend WithEvents CursorMessage2Label As Label
     Friend WithEvents CursorPanel As Panel
     Friend WithEvents CursorPictureBox As PictureBox
-    Friend WithEvents CursorTimeLabel As Label
     Friend WithEvents CursorTimer As Timer
-    Friend WithEvents CursorValueLabel As Label
+    Friend WithEvents CursorMessage3Label As Label
     Friend WithEvents DailyDoseLabel As Label
     Friend WithEvents DataGridViewAutoBasalDelivery As DataGridView
     Friend WithEvents DataGridViewCareLinkUsers As DataGridView
@@ -2670,4 +2664,5 @@ Partial Class Form1
     Friend WithEvents TransmatterBatterPercentLabel As Label
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
     Friend WithEvents TabPage26BackToHomePage As TabPage
+    Friend WithEvents LastSGTimeLabel As Label
 End Class

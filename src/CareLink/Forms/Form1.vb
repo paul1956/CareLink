@@ -549,7 +549,6 @@ Public Class Form1
             If result.Series Is Nothing OrElse
                 result.PointIndex = -1 Then
                 Me.CursorPanel.Visible = False
-                Me.CursorTimeLabel.Visible = False
                 Exit Sub
             End If
 
@@ -557,11 +556,9 @@ Public Class Form1
 
             If currentDataPoint.IsEmpty OrElse currentDataPoint.Color = Color.Transparent Then
                 Me.CursorPanel.Visible = False
-                Me.CursorTimeLabel.Visible = False
                 Exit Sub
             End If
 
-            Me.CursorTimeLabel.Left = e.X - (Me.CursorTimeLabel.Width \ 2)
             Select Case result.Series.Name
                 Case HighLimitSeriesName,
                      LowLimitSeriesName
@@ -574,18 +571,16 @@ Public Class Form1
                     End If
                     markerToolTip(0) = markerToolTip(0).Trim
                     Dim xValue As Date = Date.FromOADate(currentDataPoint.XValue)
-                    Me.CursorTimeLabel.Text = xValue.ToString(s_timeWithMinuteFormat)
-                    Me.CursorTimeLabel.Tag = xValue
                     Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
                     Me.CursorPictureBox.Visible = True
-                    Me.CursorTimeLabel.Visible = True
                     Select Case markerToolTip.Length
                         Case 2
                             Me.CursorMessage1Label.Text = markerToolTip(0)
                             Me.CursorMessage1Label.Visible = True
                             Me.CursorMessage2Label.Text = markerToolTip(1).Trim
                             Me.CursorMessage2Label.Visible = True
-                            Me.CursorValueLabel.Visible = False
+                            Me.CursorMessage3Label.Text = Date.FromOADate(currentDataPoint.XValue).ToString(s_timeWithMinuteFormat)
+                            Me.CursorMessage3Label.Visible = True
                             Select Case markerToolTip(0)
                                 Case "Auto Correction",
                                      "Auto Basal",
@@ -616,30 +611,28 @@ Public Class Form1
                             Me.CursorMessage1Label.Visible = True
                             Me.CursorMessage2Label.Text = markerToolTip(1).Trim
                             Me.CursorMessage2Label.Visible = True
-                            Me.CursorValueLabel.Text = markerToolTip(2).Trim
-                            Me.CursorValueLabel.Visible = True
+                            Me.CursorMessage3Label.Text = $"{markerToolTip(2).Trim}@{xValue.ToString(s_timeWithMinuteFormat)}"
+                            Me.CursorMessage3Label.Visible = True
                             Me.CursorPanel.Visible = True
                         Case Else
                             Stop
                             Me.CursorPanel.Visible = False
                     End Select
                 Case BgSeriesName
-                    Me.CursorMessage1Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(3)} {BgUnitsString}"
+                    Me.CursorMessage1Label.Text = "Blood Glucose"
                     Me.CursorMessage1Label.Visible = True
-                    Me.CursorMessage2Label.Visible = False
+                    Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(3)} {BgUnitsString}"
+                    Me.CursorMessage2Label.Visible = True
+                    Me.CursorMessage3Label.Text = Date.FromOADate(currentDataPoint.XValue).ToString(s_timeWithMinuteFormat)
+                    Me.CursorMessage3Label.Visible = True
                     Me.CursorPictureBox.Image = Nothing
-                    Me.CursorTimeLabel.Text = Date.FromOADate(currentDataPoint.XValue).ToString(s_timeWithMinuteFormat)
-                    Me.CursorTimeLabel.Visible = True
-                    Me.CursorValueLabel.Visible = False
                     Me.CursorPanel.Visible = True
                 Case TimeChangeSeriesName
                     Me.CursorMessage1Label.Visible = False
                     Me.CursorMessage1Label.Visible = False
                     Me.CursorMessage2Label.Visible = False
                     Me.CursorPictureBox.Image = Nothing
-                    Me.CursorTimeLabel.Text = Date.FromOADate(currentDataPoint.XValue).ToString(s_timeWithMinuteFormat)
-                    Me.CursorTimeLabel.Visible = True
-                    Me.CursorValueLabel.Visible = False
+                    Me.CursorMessage3Label.Visible = False
                     Me.CursorPanel.Visible = False
                 Case Else
                     Stop
@@ -673,10 +666,10 @@ Public Class Form1
                 Exit Sub
             End If
             e.PostPaintSupport(_activeInsulinChartAbsoluteRectangle,
-                               Nothing,
-                               Nothing,
-                               True,
-                               True)
+                Nothing,
+                Nothing,
+                True,
+                True)
         End SyncLock
         Debug.Print($"In {NameOf(ActiveInsulinChart_PostPaint)} exited SyncLock")
     End Sub
@@ -695,10 +688,10 @@ Public Class Form1
                 Exit Sub
             End If
             e.PostPaintSupport(_treatmentMarkerAbsoluteRectangle,
-                                s_treatmentMarkerInsulinDictionary,
-                                s_treatmentMarkerMealDictionary,
-                                offsetInsulinImage:=False,
-                                False)
+                s_treatmentMarkerInsulinDictionary,
+                s_treatmentMarkerMealDictionary,
+                offsetInsulinImage:=False,
+                paintOnY2:=False)
         End SyncLock
         Debug.Print($"In {NameOf(TreatmentMarkersChart_PostPaint)} exited SyncLock")
     End Sub
@@ -720,8 +713,7 @@ Public Class Form1
                 s_homeTabMarkerInsulinDictionary,
                 s_homeTabMarkerMealDictionary,
                 True,
-                True,
-                Me.CursorTimeLabel)
+                True)
         End SyncLock
         Debug.Print($"In {NameOf(HomePageChart_PostPaint)} exited SyncLock")
     End Sub
@@ -1088,7 +1080,6 @@ Public Class Form1
 
     Private Sub InitializeHomePageChart()
         Me.SplitContainer3.Panel1.Controls.Clear()
-        Me.SplitContainer3.Panel1.Controls.Add(Me.CursorTimeLabel)
         Me.HomeTabChart = CreateChart(NameOf(HomeTabChart))
         Me.HomeTabChartArea = CreateChartArea()
         Me.HomeTabChart.ChartAreas.Add(Me.HomeTabChartArea)
@@ -1369,7 +1360,7 @@ Public Class Form1
                     recordNumberInsulin += 1
                     Dim item1 As New InsulinRecord(newMarker, recordNumberInsulin)
                     s_bindingSourceMarkersInsulin.Add(item1)
-                    Select Case newMarker("activationType")
+                    Select Case newMarker(NameOf(InsulinRecord.activationType))
                         Case "AUTOCORRECTION"
                             basalDictionary.Add(item1.OADate, item1.deliveredFastAmount)
                     End Select
@@ -1728,7 +1719,7 @@ Public Class Form1
             Select Case rowIndex
                 Case ItemIndexs.lastSG
                     layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelTop1, False)
-                    s_lastSG = Loads(row.Value)
+                    s_lastSG = New SgRecord(Loads(row.Value))
                     isColumnHeader = False
 
                 Case ItemIndexs.lastAlarm
@@ -1858,9 +1849,9 @@ Public Class Form1
 
             For Each marker As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
                 sgOADateTime = New OADate(s_markers.SafeGetSgDateTime(marker.Index).RoundTimeDown(RoundTo.Minute))
-                Select Case marker.Value("type").ToString
+                Select Case marker.Value(NameOf(InsulinRecord.type)).ToString
                     Case "AUTO_BASAL_DELIVERY"
-                        Dim bolusAmount As Single = marker.Value.GetSingleValue("bolusAmount")
+                        Dim bolusAmount As Single = marker.Value.GetSingleValue(NameOf(AutoBasalDeliveryRecord.bolusAmount))
                         If timeOrderedMarkers.ContainsKey(sgOADateTime) Then
                             timeOrderedMarkers(sgOADateTime) += bolusAmount
                         Else
@@ -1870,7 +1861,7 @@ Public Class Form1
                     Case "BG_READING"
                     Case "CALIBRATION"
                     Case "INSULIN"
-                        Dim bolusAmount As Single = marker.Value.GetSingleValue("deliveredFastAmount")
+                        Dim bolusAmount As Single = marker.Value.GetSingleValue(NameOf(InsulinRecord.deliveredFastAmount))
                         If timeOrderedMarkers.ContainsKey(sgOADateTime) Then
                             timeOrderedMarkers(sgOADateTime) += bolusAmount
                         Else
@@ -1929,11 +1920,12 @@ Public Class Form1
 
     Private Sub UpdateAutoModeShield(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
         Try
-            If s_lastSG("sg") <> "0" Then
+            Me.LastSGTimeLabel.Text = s_lastSG.datetime.ToShortTimeString
+            If s_lastSG.sg <> 0 Then
                 Me.CurrentBGLabel.Visible = True
-                Me.CurrentBGLabel.Text = s_lastSG("sg")
+                Me.CurrentBGLabel.Text = s_lastSG.sg.ToString
                 Me.UpdateNotifyIcon()
-                _bgMiniDisplay.SetCurrentBGString(s_lastSG("sg"))
+                _bgMiniDisplay.SetCurrentBGString(s_lastSG.sg.ToString)
                 Me.SensorMessage.Visible = False
                 Me.CalibrationShieldPictureBox.Image = My.Resources.Shield
                 Me.ShieldUnitsLabel.Visible = True
@@ -1994,11 +1986,11 @@ Public Class Form1
         s_totalManualBolus = 0
 
         For Each marker As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
-            Select Case marker.Value("type")
+            Select Case marker.Value(NameOf(InsulinRecord.type))
                 Case "INSULIN"
-                    Dim amountString As String = marker.Value("deliveredFastAmount").TruncateSingleString(3)
+                    Dim amountString As String = marker.Value(NameOf(InsulinRecord.deliveredFastAmount)).TruncateSingleString(3)
                     s_totalDailyDose += amountString.ParseSingle()
-                    Select Case marker.Value("activationType")
+                    Select Case marker.Value(NameOf(InsulinRecord.activationType))
                         Case "AUTOCORRECTION"
                             s_totalAutoCorrection += amountString.ParseSingle()
                         Case "RECOMMENDED", "UNDETERMINED"
@@ -2006,7 +1998,7 @@ Public Class Form1
                     End Select
 
                 Case "AUTO_BASAL_DELIVERY"
-                    Dim amountString As String = marker.Value("bolusAmount").TruncateSingleString(3)
+                    Dim amountString As String = marker.Value(NameOf(AutoBasalDeliveryRecord.bolusAmount)).TruncateSingleString(3)
                     Dim basalAmount As Single = amountString.ParseSingle
                     s_totalBasal += basalAmount
                     s_totalDailyDose += basalAmount
@@ -2269,12 +2261,11 @@ Public Class Form1
 
     Private Sub UpdateNotifyIcon()
         Try
-
-            Dim str As String = s_lastSG("sg")
+            Dim sg As Single = s_lastSG.sg
+            Dim str As String = s_lastSG.sg.ToString
             Dim fontToUse As New Font("Trebuchet MS", 10, FontStyle.Regular, GraphicsUnit.Pixel)
             Dim color As Color = Color.White
             Dim bgColor As Color
-            Dim sg As Single = str.ParseSingle
             Dim bitmapText As New Bitmap(16, 16)
             Dim notStr As New StringBuilder
 

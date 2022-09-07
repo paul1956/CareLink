@@ -4,10 +4,22 @@
 
 Public Class SgRecord
 
+    Public Sub New(dic As Dictionary(Of String, String))
+        Dim allSgs As New List(Of Dictionary(Of String, String)) From {
+            dic
+        }
+        Dim lastValidTime As Date = Nothing
+        Me.processOneSg(allSgs, 0, lastValidTime, dic)
+    End Sub
+
     Public Sub New(allSgs As List(Of Dictionary(Of String, String)), index As Integer, ByRef lastValidTime As Date)
         Dim dic As Dictionary(Of String, String) = allSgs(index)
         Me.RecordNumber = index + 1
-        For Each kvp As KeyValuePair(Of String, String) In allSgs(index)
+        lastValidTime = Me.processOneSg(allSgs, index, lastValidTime, dic)
+    End Sub
+
+    Private Function processOneSg(allSgs As List(Of Dictionary(Of String, String)), index As Integer, lastValidTime As Date, dic As Dictionary(Of String, String)) As Date
+        For Each kvp As KeyValuePair(Of String, String) In dic
             Select Case kvp.Key
                 Case NameOf(sg)
                     Me.sg = kvp.Value.ParseSingle
@@ -37,8 +49,8 @@ Public Class SgRecord
         End If
         Me.datetimeAsString = value
         Me.OADate = New OADate(_datetime)
-
-    End Sub
+        Return lastValidTime
+    End Function
 
 #If True Then ' Prevent reordering
 

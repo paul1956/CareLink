@@ -147,12 +147,12 @@ Module ChartingExtensions
                     Case "CALIBRATION"
                         markerSeriesPoints.AddCalibrationPoint(markerOADateTime, bgValue, entry)
                     Case "AUTO_BASAL_DELIVERY"
-                        Dim bolusAmount As String = entry("bolusAmount")
+                        Dim bolusAmount As String = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount))
                         homePageChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, bolusAmount.ParseSingle, HomePageBasalRow, HomePageInsulinRow, Color.HotPink, False, $"Auto Basal:{bolusAmount.TruncateSingleString(3)} U")
                     Case "INSULIN"
-                        Select Case entry("activationType")
+                        Select Case entry(NameOf(InsulinRecord.activationType))
                             Case "AUTOCORRECTION"
-                                Dim autoCorrection As String = entry("deliveredFastAmount")
+                                Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
                                 homePageChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, HomePageBasalRow, HomePageInsulinRow, Color.Aqua, False, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
                             Case "RECOMMENDED", "UNDETERMINED"
                                 If s_homeTabMarkerInsulinDictionary.TryAdd(markerOADateTime, CInt(HomePageInsulinRow)) Then
@@ -166,7 +166,7 @@ Module ChartingExtensions
                                         markerSeriesPoints.Last.MarkerSize = 0
                                     Else
                                         markerSeriesPoints.Last.Color = Color.FromArgb(30, Color.LightBlue)
-                                        markerSeriesPoints.Last.ToolTip = $"Bolus: {entry("deliveredFastAmount")} U"
+                                        markerSeriesPoints.Last.ToolTip = $"Bolus: {entry(NameOf(InsulinRecord.deliveredFastAmount))} U"
                                     End If
                                 Else
                                     Stop
@@ -230,12 +230,12 @@ Module ChartingExtensions
                 Dim markerSeriesPoints As DataPointCollection = treatmentChart.Series(MarkerSeriesName).Points
                 Select Case entry("type")
                     Case "AUTO_BASAL_DELIVERY"
-                        Dim bolusAmount As String = entry("bolusAmount")
+                        Dim bolusAmount As String = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount))
                         treatmentChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, bolusAmount.ParseSingle.RoundSingle(3), MaxBasalPerDose, TreatmentInsulinRow, Color.HotPink, True, $"Auto Basal:{bolusAmount.TruncateSingleString(3)} U")
                     Case "INSULIN"
-                        Select Case entry("activationType")
+                        Select Case entry(NameOf(InsulinRecord.activationType))
                             Case "AUTOCORRECTION"
-                                Dim autoCorrection As String = entry("deliveredFastAmount")
+                                Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
                                 treatmentChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, MaxBasalPerDose, TreatmentInsulinRow, Color.Aqua, True, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
                             Case "RECOMMENDED", "UNDETERMINED"
                                 If s_treatmentMarkerInsulinDictionary.TryAdd(markerOADateTime, TreatmentInsulinRow) Then
@@ -249,7 +249,7 @@ Module ChartingExtensions
                                         markerSeriesPoints.Last.MarkerSize = 0
                                     Else
                                         markerSeriesPoints.Last.Color = Color.FromArgb(30, Color.LightBlue)
-                                        markerSeriesPoints.Last.ToolTip = $"Bolus: {entry("deliveredFastAmount")} U"
+                                        markerSeriesPoints.Last.ToolTip = $"Bolus: {entry(NameOf(InsulinRecord.deliveredFastAmount))} U"
                                     End If
                                 Else
                                     Stop
@@ -291,16 +291,12 @@ Module ChartingExtensions
     End Sub
 
     <Extension>
-    Friend Sub PostPaintSupport(e As ChartPaintEventArgs, ByRef chartRelitivePosition As RectangleF, insulinDictionary As Dictionary(Of OADate, Single), mealDictionary As Dictionary(Of OADate, Single), offsetInsulinImage As Boolean, paintOnY2 As Boolean, Optional homePageCursorTimeLabel As Label = Nothing)
+    Friend Sub PostPaintSupport(e As ChartPaintEventArgs, ByRef chartRelitivePosition As RectangleF, insulinDictionary As Dictionary(Of OADate, Single), mealDictionary As Dictionary(Of OADate, Single), offsetInsulinImage As Boolean, paintOnY2 As Boolean)
         If chartRelitivePosition.IsEmpty Then
             chartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.X, s_bindingSourceSGs(0).OADate))
             chartRelitivePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, HomePageBasalRow))
             chartRelitivePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_limitHigh)))) - chartRelitivePosition.Y
             chartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.X, s_bindingSourceSGs.Last.OADate)) - chartRelitivePosition.X
-        End If
-
-        If homePageCursorTimeLabel?.Tag IsNot Nothing Then
-            homePageCursorTimeLabel.Left = CInt(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.X, homePageCursorTimeLabel.Tag.ToString.ParseDate("").ToOADate))
         End If
 
         Dim highLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, s_limitHigh))
