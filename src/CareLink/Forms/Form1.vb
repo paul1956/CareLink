@@ -1276,10 +1276,10 @@ Public Class Form1
         Me.TreatmentMarkerBGSeries = CreateBgSeries(Me.TreatmentMarkersChartLegend.Name)
         Me.TreatmentMarkerMarkersSeries = CreateMarkerSeries(AxisType.Primary)
         Me.TreatmentMarkerTimeChangeSeries = CreateTimeChangeSeries()
-        Me.TreatmentMarkersChart.Series.Add(Me.TreatmentMarkerBGSeries)
         Me.TreatmentMarkersChart.Series.Add(Me.TreatmentMarkerBasalSeries)
         Me.TreatmentMarkersChart.Series.Add(Me.TreatmentMarkerMarkersSeries)
         Me.TreatmentMarkersChart.Series.Add(Me.TreatmentMarkerTimeChangeSeries())
+        Me.TreatmentMarkersChart.Series.Add(Me.TreatmentMarkerBGSeries)
 
         Me.TreatmentMarkersChart.Series(BgSeriesName).EmptyPointStyle.Color = Color.Transparent
         Me.TreatmentMarkersChart.Series(BgSeriesName).EmptyPointStyle.BorderWidth = 4
