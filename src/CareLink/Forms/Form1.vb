@@ -1048,13 +1048,13 @@ Public Class Form1
                 _updating = True
                 Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
                 If Me.RecentData Is Nothing Then
-                    Me.LastUpdateTime.Text = _client.GetLastErrorMessage
                     If _client Is Nothing OrElse _client.HasErrors Then
                         _client = New CareLinkClient(My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
                         _loginDialog.Client = _client
                     End If
                     Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
                 End If
+                Me.LoginStatus.Text = _client.GetLastErrorMessage
                 Me.Cursor = Cursors.Default
                 Application.DoEvents()
             End If
