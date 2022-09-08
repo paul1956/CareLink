@@ -76,7 +76,8 @@ Public Class LoginForm1
         Me.Cancel_Button.Enabled = False
         Dim countryCode As String = Me.CountryComboBox.SelectedValue.ToString
         My.Settings.CountryCode = countryCode
-        Me.Client = New CareLinkClient(Me.LoginStatus, Me.UsernameTextBox.Text, Me.PasswordTextBox.Text, countryCode)
+        Me.Client = New CareLinkClient(Me.UsernameTextBox.Text, Me.PasswordTextBox.Text, countryCode)
+        Me.LoginStatus.Text = Me.Client.GetLastErrorMessage
         If Not Me.Client.LoggedIn Then
             Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData(countryCode)
             If recentData IsNot Nothing AndAlso recentData.Count > 0 Then

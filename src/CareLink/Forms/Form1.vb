@@ -1048,9 +1048,9 @@ Public Class Form1
                 _updating = True
                 Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
                 If Me.RecentData Is Nothing Then
-                    Me.LastUpdateTime.Text = "Unknown"
-                    If _client Is Nothing OrElse _client.LastErrorMessage IsNot Nothing Then
-                        _client = New CareLinkClient(Me.LoginStatus, My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
+                    Me.LastUpdateTime.Text = _client.GetLastErrorMessage
+                    If _client Is Nothing OrElse _client.HasErrors Then
+                        _client = New CareLinkClient(My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
                         _loginDialog.Client = _client
                     End If
                     Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
@@ -1062,7 +1062,7 @@ Public Class Form1
         End SyncLock
         Dim lastMedicalDeviceDataUpdateServerTime As String = ""
         If Me.RecentData Is Nothing Then
-            Me.LoginStatus.Text = $"Login failure due to {_client.LastErrorMessage}, try logging in again!"
+            Me.LoginStatus.Text = _client.GetLastErrorMessage
         Else
             If Me.RecentData?.TryGetValue(NameOf(lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerTime) Then
                 If CLng(lastMedicalDeviceDataUpdateServerTime) = s_lastMedicalDeviceDataUpdateServerTime Then
