@@ -444,7 +444,7 @@ Public Class CareLinkClient
                     End If
                     _lastDataSuccess = True
                 ElseIf response?.StatusCode = HttpStatusCode.Unauthorized Then
-                    ' Ignore handled elsewhere
+                    _lastResponseCode = response?.StatusCode
                 Else
                     Throw New Exception("session get response is not OK")
                 End If

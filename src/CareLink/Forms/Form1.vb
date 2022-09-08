@@ -1062,7 +1062,7 @@ Public Class Form1
         End SyncLock
         Dim lastMedicalDeviceDataUpdateServerTime As String = ""
         If Me.RecentData Is Nothing Then
-            Me.LastUpdateTime.Text = $"Login failure due to {_client.LastErrorMessage}, try logging in again!"
+            Me.LoginStatus.Text = $"Login failure due to {_client.LastErrorMessage}, try logging in again!"
         Else
             If Me.RecentData?.TryGetValue(NameOf(lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerTime) Then
                 If CLng(lastMedicalDeviceDataUpdateServerTime) = s_lastMedicalDeviceDataUpdateServerTime Then
