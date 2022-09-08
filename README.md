@@ -30,6 +30,10 @@ This update has a UI to show all the available data and a visual version that mi
 - 9/07/2022
 
 ## What's New in this release
+  New 3.5.5.0
+  Remove duplicate IOB
+  Improve login failure handling
+
   New 3.5.4.12
   Reorganize UI, Add IOB
   Update Z-Order in Treatment Chart

@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Class RunningActiveInsulinRecord
+    Private ReadOnly _dontAdjust As Boolean = False
     Private ReadOnly _incrementDownCount As Integer
     Private _adjustmentValue As Single
     Private _incrementUpCount As Integer
@@ -17,13 +18,20 @@ Friend Class RunningActiveInsulinRecord
         Me.CurrentInsulinLevel = _adjustmentValue * _incrementDownCount
     End Sub
 
-    Public Property CurrentInsulinLevel As Single
+    Public Sub New(iOB As ActiveInsulinRecord)
+        Me.OaDateTime = iOB.currentOADate
+        Me.EventDate = iOB.datetime
+        Me.CurrentInsulinLevel = iOB.amount
+        _dontAdjust = True
+    End Sub
 
+    Public Property CurrentInsulinLevel As Single
     Public Property EventDate As Date
 
     Public Property OaDateTime As OADate
 
     Friend Function Adjust() As RunningActiveInsulinRecord
+        If _dontAdjust Then Return Me
         If Me.CurrentInsulinLevel > 0 Then
             If _incrementUpCount > 0 Then
                 _incrementUpCount -= 1

@@ -1049,22 +1049,31 @@ Public Class Form1
                 Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
                 If Me.RecentData Is Nothing Then
                     Me.LastUpdateTime.Text = "Unknown"
-                Else
-                    _client = New CareLinkClient(Me.LoginStatus, My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
-                    _loginDialog.Client = _client
-                    Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
-                    If Me.RecentData Is Nothing Then
-                        Me.LastUpdateTime.Text = "Unknown due to Login failure, try logging in again!"
-                    Else
-                        Me.LastUpdateTime.Text = Now.ToShortDateTimeString
-                        Me.AllTabPagesUpdate()
+                    If _client Is Nothing OrElse _client.LastErrorMessage IsNot Nothing Then
+                        _client = New CareLinkClient(Me.LoginStatus, My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
+                        _loginDialog.Client = _client
                     End If
+                    Me.RecentData = _client.GetRecentData(_loginDialog.LoggedOnUser.CountryCode)
                 End If
                 Me.Cursor = Cursors.Default
                 Application.DoEvents()
             End If
             _updating = False
         End SyncLock
+        Dim lastMedicalDeviceDataUpdateServerTime As String = ""
+        If Me.RecentData Is Nothing Then
+            Me.LastUpdateTime.Text = $"Login failure due to {_client.LastErrorMessage}, try logging in again!"
+        Else
+            If Me.RecentData?.TryGetValue(NameOf(lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerTime) Then
+                If CLng(lastMedicalDeviceDataUpdateServerTime) = s_lastMedicalDeviceDataUpdateServerTime Then
+                    Me.RecentData = Nothing
+                Else
+                    Me.LastUpdateTime.Text = Now.ToShortDateTimeString
+                    Me.AllTabPagesUpdate()
+                End If
+            End If
+        End If
+
         Me.ServerUpdateTimer.Interval = s_twoMinutesInMilliseconds
         Me.ServerUpdateTimer.Start()
         Debug.Print($"In {NameOf(ServerUpdateTimer_Tick)}, exited SyncLock. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
@@ -1161,7 +1170,7 @@ Public Class Form1
 #Region "Running Active Insulin Chart"
 
     Private Sub InitializeActiveInsulinTabChart()
-        Me.TabPage02ActiveInsulin.Controls.Clear()
+        Me.TabPage02RunningIOB.Controls.Clear()
 
         Me.ActiveInsulinChart = CreateChart(NameOf(ActiveInsulinChart))
         Me.ActiveInsulinChartArea = CreateChartArea()
@@ -1211,7 +1220,7 @@ Public Class Form1
                 .ShadowOffset = 3
             }
         Me.ActiveInsulinChart.Titles.Add(Me.ActiveInsulinChartTitle)
-        Me.TabPage02ActiveInsulin.Controls.Add(Me.ActiveInsulinChart)
+        Me.TabPage02RunningIOB.Controls.Add(Me.ActiveInsulinChart)
         Application.DoEvents()
 
     End Sub
@@ -1729,7 +1738,10 @@ Public Class Form1
                 Case ItemIndexs.activeInsulin
                     layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelActiveInsulin, True)
                     s_activeInsulin = New ActiveInsulinRecord(Loads(row.Value))
-                    Me.IOBLabel.Text = $"IOB={s_activeInsulin.amount:F2} U"
+                    If s_activeInsulinActual.Count = 288 Then
+                        s_activeInsulinActual.RemoveAt(0)
+                    End If
+                    s_activeInsulinActual.Add(s_activeInsulin)
                     isColumnHeader = True
 
                 Case ItemIndexs.notificationHistory
@@ -1787,6 +1799,14 @@ Public Class Form1
         If Me.RecentData Is Nothing Then
             Exit Sub
         End If
+        Dim lastMedicalDeviceDataUpdateServerTime As String = ""
+        If Me.RecentData?.TryGetValue(NameOf(lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerTime) Then
+            If CLng(lastMedicalDeviceDataUpdateServerTime) = s_lastMedicalDeviceDataUpdateServerTime Then
+                Me.RecentData = Nothing
+                Exit Sub
+            End If
+        End If
+
         If Me.RecentData.Count > ItemIndexs.finalCalibration + 1 Then
             Stop
         End If
@@ -1845,7 +1865,7 @@ Public Class Form1
             Me.ActiveInsulinChart.ChartAreas(ChartAreaName).InitializeBGChartArea()
 
             ' Order all markers by time
-            Dim timeOrderedMarkers As New SortedDictionary(Of Double, Single)
+            Dim timeOrderedMarkers As New SortedDictionary(Of OADate, Single)
             Dim sgOADateTime As OADate
 
             For Each marker As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
@@ -1907,10 +1927,7 @@ Public Class Form1
                 maxActiveInsulin = Math.Max(sum, maxActiveInsulin)
                 Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinSeries)).Points.AddXY(remainingInsulinList(i).OaDateTime, sum)
                 remainingInsulinList.Adjustlist(startIndex, s_activeInsulinIncrements)
-                Application.DoEvents()
             Next
-            Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinSeries)).Points.Add(s_activeInsulin.currentOADate, s_activeInsulin.amount)
-            Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinSeries)).Points.Last.Color = Color.Red
 
             Me.ActiveInsulinChartArea.AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1
             maxActiveInsulin = Me.ActiveInsulinChartArea.AxisY.Maximum

@@ -225,16 +225,11 @@ Public Class CareLinkClient
             {
                 "actionButton",
                 "Log in"}}
-        Try
-            Dim response As HttpResponseMessage = _httpClient.Post(url, _commonHeaders, params:=payload, data:=webForm)
-            If Not response.StatusCode = HttpStatusCode.OK Then
-                Throw New Exception($"Session response is not OK, {response.StatusCode}")
-            End If
-            Return Me.DecodeResponse(response)
-        Catch e As Exception
-            Debug.Print($"__doLogin() failed with {e.Message}")
-        End Try
-        Return Nothing
+        Dim response As HttpResponseMessage = _httpClient.Post(url, _commonHeaders, params:=payload, data:=webForm)
+        If Not response.StatusCode = HttpStatusCode.OK Then
+            Throw New Exception($"HTTP Response is not OK, {response.StatusCode}")
+        End If
+        Return Me.DecodeResponse(response)
     End Function
 
     Public Overridable Function ExecuteLoginProcedure(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Boolean
@@ -265,14 +260,23 @@ Public Class CareLinkClient
             _lastResponseCode = loginSessionResponse.StatusCode
 
             ' Login
-            Dim doLoginResponse As HttpResponseMessage = Me.DoLogin(loginSessionResponse)
-            If doLoginResponse Is Nothing Then
-                Me.LastErrorMessage = "Login Failure"
+            Dim doLoginResponse As New HttpResponseMessage
+            Try
+                doLoginResponse = Me.DoLogin(loginSessionResponse)
+                If doLoginResponse Is Nothing Then
+                    Me.LastErrorMessage = "Login Failure"
+                    Return lastLoginSuccess
+                Else
+                    Me.LastErrorMessage = Nothing
+                End If
+            Catch ex As Exception
+                Me.LastErrorMessage = $"Login Failure {ex.Message}"
                 Return lastLoginSuccess
-            End If
-            _lastResponseCode = doLoginResponse.StatusCode
 
-            'setLastResponseBody(loginSessionResponse)
+            Finally
+                _lastResponseCode = doLoginResponse.StatusCode
+            End Try
+
             loginSessionResponse.Dispose()
 
             ' Consent
@@ -375,12 +379,6 @@ Public Class CareLinkClient
         Dim recentData As Dictionary(Of String, String) = Me.GetData(Nothing, endpointUrl, Nothing, userJson)
         If recentData IsNot Nothing Then
             Me.CorrectTimeInRecentData(recentData)
-        End If
-        Dim lastMedicalDeviceDataUpdateServerTime As String = ""
-        If recentData?.TryGetValue(NameOf(lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerTime) Then
-            If CLng(lastMedicalDeviceDataUpdateServerTime) = s_lastMedicalDeviceDataUpdateServerTime Then
-                recentData = Nothing
-            End If
         End If
         Return recentData
     End Function

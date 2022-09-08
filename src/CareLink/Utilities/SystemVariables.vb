@@ -10,4 +10,5 @@ Module SystemVariables
     Friend Property MaxBasalPerHour As Single
     Friend Property scalingNeeded As Boolean = Nothing
     Friend Property TreatmentInsulinRow As Single
+
 End Module

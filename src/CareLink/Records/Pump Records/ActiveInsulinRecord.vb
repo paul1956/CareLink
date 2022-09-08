@@ -5,7 +5,6 @@
 Public Class ActiveInsulinRecord
 
     Public Sub New(dic As Dictionary(Of String, String))
-        Me.Dictionary = dic
         For Each kvp As KeyValuePair(Of String, String) In dic
             Select Case kvp.Key
                 Case NameOf(amount)
@@ -25,8 +24,6 @@ Public Class ActiveInsulinRecord
             End Select
         Next
     End Sub
-
-    Friend ReadOnly Property Dictionary As Dictionary(Of String, String)
 
 #If True Then ' Prevent reordering
 

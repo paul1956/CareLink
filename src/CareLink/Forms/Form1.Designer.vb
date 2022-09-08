@@ -24,16 +24,16 @@ Partial Class Form1
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.MenuStartHere = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStartHereLogin = New System.Windows.Forms.ToolStripMenuItem()
@@ -66,7 +66,6 @@ Partial Class Form1
         Me.TabControlHomePage = New System.Windows.Forms.TabControl()
         Me.TabPage01HomePage = New System.Windows.Forms.TabPage()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
-        Me.IOBLabel = New System.Windows.Forms.Label()
         Me.LabelTrendValue = New System.Windows.Forms.Label()
         Me.MaxBasalPerHourLabel = New System.Windows.Forms.Label()
         Me.Last24HTotalsPanel = New System.Windows.Forms.Panel()
@@ -102,9 +101,9 @@ Partial Class Form1
         Me.CursorMessage2Label = New System.Windows.Forms.Label()
         Me.CursorMessage3Label = New System.Windows.Forms.Label()
         Me.CalibrationShieldPanel = New System.Windows.Forms.Panel()
+        Me.ShieldUnitsLabel = New System.Windows.Forms.Label()
         Me.LastSGTimeLabel = New System.Windows.Forms.Label()
         Me.CurrentBGLabel = New System.Windows.Forms.Label()
-        Me.ShieldUnitsLabel = New System.Windows.Forms.Label()
         Me.SensorMessage = New System.Windows.Forms.Label()
         Me.CalibrationShieldPictureBox = New System.Windows.Forms.PictureBox()
         Me.SplitContainer3 = New System.Windows.Forms.SplitContainer()
@@ -120,7 +119,7 @@ Partial Class Form1
         Me.BelowLowLimitMessageLabel = New System.Windows.Forms.Label()
         Me.AverageSGValueLabel = New System.Windows.Forms.Label()
         Me.AverageSGMessageLabel = New System.Windows.Forms.Label()
-        Me.TabPage02ActiveInsulin = New System.Windows.Forms.TabPage()
+        Me.TabPage02RunningIOB = New System.Windows.Forms.TabPage()
         Me.TabPage03TreatmentDetails = New System.Windows.Forms.TabPage()
         Me.TabPage04SummaryData = New System.Windows.Forms.TabPage()
         Me.DataGridViewSummary = New System.Windows.Forms.DataGridView()
@@ -534,7 +533,7 @@ Partial Class Form1
         '
         Me.TabControlHomePage.Appearance = System.Windows.Forms.TabAppearance.Buttons
         Me.TabControlHomePage.Controls.Add(Me.TabPage01HomePage)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage02ActiveInsulin)
+        Me.TabControlHomePage.Controls.Add(Me.TabPage02RunningIOB)
         Me.TabControlHomePage.Controls.Add(Me.TabPage03TreatmentDetails)
         Me.TabControlHomePage.Controls.Add(Me.TabPage04SummaryData)
         Me.TabControlHomePage.Controls.Add(Me.TabPage05ActiveInsulin)
@@ -549,10 +548,11 @@ Partial Class Form1
         Me.TabControlHomePage.Controls.Add(Me.TabPage14MyUser)
         Me.TabControlHomePage.Controls.Add(Me.TabPage15AllUsers)
         Me.TabControlHomePage.Controls.Add(Me.TabPage16Markers)
+        Me.TabControlHomePage.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TabControlHomePage.Location = New System.Drawing.Point(0, 0)
         Me.TabControlHomePage.Name = "TabControlHomePage"
         Me.TabControlHomePage.SelectedIndex = 0
-        Me.TabControlHomePage.Size = New System.Drawing.Size(1384, 662)
+        Me.TabControlHomePage.Size = New System.Drawing.Size(1384, 658)
         Me.TabControlHomePage.TabIndex = 0
         '
         'TabPage01HomePage
@@ -562,7 +562,7 @@ Partial Class Form1
         Me.TabPage01HomePage.Location = New System.Drawing.Point(4, 27)
         Me.TabPage01HomePage.Name = "TabPage01HomePage"
         Me.TabPage01HomePage.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage01HomePage.Size = New System.Drawing.Size(1376, 631)
+        Me.TabPage01HomePage.Size = New System.Drawing.Size(1376, 627)
         Me.TabPage01HomePage.TabIndex = 7
         Me.TabPage01HomePage.Text = "Home Page"
         '
@@ -576,7 +576,6 @@ Partial Class Form1
         '
         'SplitContainer2.Panel1
         '
-        Me.SplitContainer2.Panel1.Controls.Add(Me.IOBLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.LabelTrendValue)
         Me.SplitContainer2.Panel1.Controls.Add(Me.MaxBasalPerHourLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Last24HTotalsPanel)
@@ -603,21 +602,9 @@ Partial Class Form1
         'SplitContainer2.Panel2
         '
         Me.SplitContainer2.Panel2.Controls.Add(Me.SplitContainer3)
-        Me.SplitContainer2.Size = New System.Drawing.Size(1370, 625)
-        Me.SplitContainer2.SplitterDistance = 135
+        Me.SplitContainer2.Size = New System.Drawing.Size(1370, 621)
+        Me.SplitContainer2.SplitterDistance = 134
         Me.SplitContainer2.TabIndex = 52
-        '
-        'IOBLabel
-        '
-        Me.IOBLabel.BackColor = System.Drawing.Color.Transparent
-        Me.IOBLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.IOBLabel.ForeColor = System.Drawing.Color.White
-        Me.IOBLabel.Location = New System.Drawing.Point(175, 111)
-        Me.IOBLabel.Name = "IOBLabel"
-        Me.IOBLabel.Size = New System.Drawing.Size(107, 21)
-        Me.IOBLabel.TabIndex = 69
-        Me.IOBLabel.Text = "IOB 2.0 U"
-        Me.IOBLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'LabelTrendValue
         '
@@ -1021,8 +1008,21 @@ Partial Class Form1
         Me.CalibrationShieldPanel.Location = New System.Drawing.Point(0, 0)
         Me.CalibrationShieldPanel.Margin = New System.Windows.Forms.Padding(0)
         Me.CalibrationShieldPanel.Name = "CalibrationShieldPanel"
-        Me.CalibrationShieldPanel.Size = New System.Drawing.Size(116, 135)
+        Me.CalibrationShieldPanel.Size = New System.Drawing.Size(116, 134)
         Me.CalibrationShieldPanel.TabIndex = 64
+        '
+        'ShieldUnitsLabel
+        '
+        Me.ShieldUnitsLabel.AutoSize = True
+        Me.ShieldUnitsLabel.BackColor = System.Drawing.Color.Transparent
+        Me.ShieldUnitsLabel.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.ShieldUnitsLabel.ForeColor = System.Drawing.Color.White
+        Me.ShieldUnitsLabel.Location = New System.Drawing.Point(38, 76)
+        Me.ShieldUnitsLabel.Name = "ShieldUnitsLabel"
+        Me.ShieldUnitsLabel.Size = New System.Drawing.Size(40, 13)
+        Me.ShieldUnitsLabel.TabIndex = 8
+        Me.ShieldUnitsLabel.Text = "XX/XX"
+        Me.ShieldUnitsLabel.Visible = False
         '
         'LastSGTimeLabel
         '
@@ -1030,7 +1030,7 @@ Partial Class Form1
         Me.LastSGTimeLabel.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.LastSGTimeLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.LastSGTimeLabel.ForeColor = System.Drawing.Color.White
-        Me.LastSGTimeLabel.Location = New System.Drawing.Point(0, 114)
+        Me.LastSGTimeLabel.Location = New System.Drawing.Point(0, 113)
         Me.LastSGTimeLabel.Name = "LastSGTimeLabel"
         Me.LastSGTimeLabel.Size = New System.Drawing.Size(116, 21)
         Me.LastSGTimeLabel.TabIndex = 55
@@ -1049,19 +1049,6 @@ Partial Class Form1
         Me.CurrentBGLabel.Text = "---"
         Me.CurrentBGLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.CurrentBGLabel.Visible = False
-        '
-        'ShieldUnitsLabel
-        '
-        Me.ShieldUnitsLabel.AutoSize = True
-        Me.ShieldUnitsLabel.BackColor = System.Drawing.Color.Transparent
-        Me.ShieldUnitsLabel.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.ShieldUnitsLabel.ForeColor = System.Drawing.Color.White
-        Me.ShieldUnitsLabel.Location = New System.Drawing.Point(38, 76)
-        Me.ShieldUnitsLabel.Name = "ShieldUnitsLabel"
-        Me.ShieldUnitsLabel.Size = New System.Drawing.Size(40, 13)
-        Me.ShieldUnitsLabel.TabIndex = 8
-        Me.ShieldUnitsLabel.Text = "XX/XX"
-        Me.ShieldUnitsLabel.Visible = False
         '
         'SensorMessage
         '
@@ -1270,22 +1257,22 @@ Partial Class Form1
         Me.AverageSGMessageLabel.Text = "Average SG in XX/XX"
         Me.AverageSGMessageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'TabPage02ActiveInsulin
+        'TabPage02RunningIOB
         '
-        Me.TabPage02ActiveInsulin.Location = New System.Drawing.Point(4, 27)
-        Me.TabPage02ActiveInsulin.Name = "TabPage02ActiveInsulin"
-        Me.TabPage02ActiveInsulin.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage02ActiveInsulin.Size = New System.Drawing.Size(1376, 631)
-        Me.TabPage02ActiveInsulin.TabIndex = 15
-        Me.TabPage02ActiveInsulin.Text = "Active Insulin"
-        Me.TabPage02ActiveInsulin.UseVisualStyleBackColor = True
+        Me.TabPage02RunningIOB.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage02RunningIOB.Name = "TabPage02RunningIOB"
+        Me.TabPage02RunningIOB.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage02RunningIOB.Size = New System.Drawing.Size(1376, 627)
+        Me.TabPage02RunningIOB.TabIndex = 15
+        Me.TabPage02RunningIOB.Text = "Active Insulin Chart"
+        Me.TabPage02RunningIOB.UseVisualStyleBackColor = True
         '
         'TabPage03TreatmentDetails
         '
         Me.TabPage03TreatmentDetails.Location = New System.Drawing.Point(4, 27)
         Me.TabPage03TreatmentDetails.Name = "TabPage03TreatmentDetails"
         Me.TabPage03TreatmentDetails.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage03TreatmentDetails.Size = New System.Drawing.Size(1376, 631)
+        Me.TabPage03TreatmentDetails.Size = New System.Drawing.Size(1376, 627)
         Me.TabPage03TreatmentDetails.TabIndex = 8
         Me.TabPage03TreatmentDetails.Text = "Treatment Details"
         Me.TabPage03TreatmentDetails.UseVisualStyleBackColor = True
@@ -1296,7 +1283,7 @@ Partial Class Form1
         Me.TabPage04SummaryData.Location = New System.Drawing.Point(4, 27)
         Me.TabPage04SummaryData.Name = "TabPage04SummaryData"
         Me.TabPage04SummaryData.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage04SummaryData.Size = New System.Drawing.Size(1376, 631)
+        Me.TabPage04SummaryData.Size = New System.Drawing.Size(1376, 627)
         Me.TabPage04SummaryData.TabIndex = 0
         Me.TabPage04SummaryData.Text = "Summary Data"
         Me.TabPage04SummaryData.UseVisualStyleBackColor = True
@@ -1305,16 +1292,16 @@ Partial Class Form1
         '
         Me.DataGridViewSummary.AllowUserToAddRows = False
         Me.DataGridViewSummary.AllowUserToDeleteRows = False
-        DataGridViewCellStyle1.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewSummary.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewSummary.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle11.BackColor = System.Drawing.Color.Silver
+        Me.DataGridViewSummary.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle11
+        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle12.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        DataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewSummary.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle12
         Me.DataGridViewSummary.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridViewSummary.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridViewSummary.Location = New System.Drawing.Point(3, 3)
@@ -1322,7 +1309,7 @@ Partial Class Form1
         Me.DataGridViewSummary.ReadOnly = True
         Me.DataGridViewSummary.RowTemplate.Height = 25
         Me.DataGridViewSummary.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.DataGridViewSummary.Size = New System.Drawing.Size(1370, 625)
+        Me.DataGridViewSummary.Size = New System.Drawing.Size(1370, 621)
         Me.DataGridViewSummary.TabIndex = 0
         '
         'TabPage05ActiveInsulin
@@ -1331,7 +1318,7 @@ Partial Class Form1
         Me.TabPage05ActiveInsulin.Location = New System.Drawing.Point(4, 27)
         Me.TabPage05ActiveInsulin.Name = "TabPage05ActiveInsulin"
         Me.TabPage05ActiveInsulin.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage05ActiveInsulin.Size = New System.Drawing.Size(1376, 631)
+        Me.TabPage05ActiveInsulin.Size = New System.Drawing.Size(1376, 627)
         Me.TabPage05ActiveInsulin.TabIndex = 1
         Me.TabPage05ActiveInsulin.Text = "Active Insulin"
         Me.TabPage05ActiveInsulin.UseVisualStyleBackColor = True
@@ -1370,7 +1357,7 @@ Partial Class Form1
         Me.TabPage06SensorGlucose.Location = New System.Drawing.Point(4, 27)
         Me.TabPage06SensorGlucose.Name = "TabPage06SensorGlucose"
         Me.TabPage06SensorGlucose.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage06SensorGlucose.Size = New System.Drawing.Size(1376, 631)
+        Me.TabPage06SensorGlucose.Size = New System.Drawing.Size(1376, 627)
         Me.TabPage06SensorGlucose.TabIndex = 2
         Me.TabPage06SensorGlucose.Text = "Sensor Glucose"
         Me.TabPage06SensorGlucose.UseVisualStyleBackColor = True
@@ -1387,7 +1374,7 @@ Partial Class Form1
         Me.TableLayoutPanelSgs.RowCount = 2
         Me.TableLayoutPanelSgs.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
         Me.TableLayoutPanelSgs.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelSgs.Size = New System.Drawing.Size(1370, 625)
+        Me.TableLayoutPanelSgs.Size = New System.Drawing.Size(1370, 621)
         Me.TableLayoutPanelSgs.TabIndex = 2
         '
         'LabelSgs
@@ -1407,17 +1394,17 @@ Partial Class Form1
         Me.DataGridViewSGs.AllowUserToDeleteRows = False
         Me.DataGridViewSGs.AllowUserToResizeColumns = False
         Me.DataGridViewSGs.AllowUserToResizeRows = False
-        DataGridViewCellStyle3.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewSGs.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle13.BackColor = System.Drawing.Color.Silver
+        Me.DataGridViewSGs.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle13
         Me.DataGridViewSGs.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewSGs.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle14.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        DataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewSGs.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle14
         Me.DataGridViewSGs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.DataGridViewSGs.Location = New System.Drawing.Point(3, 33)
         Me.DataGridViewSGs.Name = "DataGridViewSGs"
@@ -1431,7 +1418,7 @@ Partial Class Form1
         Me.TabPage07Limits.Location = New System.Drawing.Point(4, 27)
         Me.TabPage07Limits.Name = "TabPage07Limits"
         Me.TabPage07Limits.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage07Limits.Size = New System.Drawing.Size(1376, 631)
+        Me.TabPage07Limits.Size = New System.Drawing.Size(1376, 627)
         Me.TabPage07Limits.TabIndex = 3
         Me.TabPage07Limits.Text = "Limits"
         Me.TabPage07Limits.UseVisualStyleBackColor = True
@@ -1451,7 +1438,7 @@ Partial Class Form1
         Me.TableLayoutPanelLimits.RowCount = 2
         Me.TableLayoutPanelLimits.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
         Me.TableLayoutPanelLimits.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelLimits.Size = New System.Drawing.Size(1370, 625)
+        Me.TableLayoutPanelLimits.Size = New System.Drawing.Size(1370, 621)
         Me.TableLayoutPanelLimits.TabIndex = 0
         '
         'LabelLimits
@@ -1471,7 +1458,7 @@ Partial Class Form1
         Me.TabPage08NotificationHistory.Location = New System.Drawing.Point(4, 27)
         Me.TabPage08NotificationHistory.Name = "TabPage08NotificationHistory"
         Me.TabPage08NotificationHistory.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage08NotificationHistory.Size = New System.Drawing.Size(1376, 631)
+        Me.TabPage08NotificationHistory.Size = New System.Drawing.Size(1376, 627)
         Me.TabPage08NotificationHistory.TabIndex = 5
         Me.TabPage08NotificationHistory.Text = "Notification History"
         Me.TabPage08NotificationHistory.UseVisualStyleBackColor = True
@@ -1491,7 +1478,7 @@ Partial Class Form1
         Me.TableLayoutPanelNotificationHistory.RowCount = 2
         Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
         Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelNotificationHistory.Size = New System.Drawing.Size(1370, 625)
+        Me.TableLayoutPanelNotificationHistory.Size = New System.Drawing.Size(1370, 621)
         Me.TableLayoutPanelNotificationHistory.TabIndex = 0
         '
         'LabelNotificationHistory
@@ -1511,7 +1498,7 @@ Partial Class Form1
         Me.TabPage09Basal.Location = New System.Drawing.Point(4, 27)
         Me.TabPage09Basal.Name = "TabPage09Basal"
         Me.TabPage09Basal.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage09Basal.Size = New System.Drawing.Size(1376, 631)
+        Me.TabPage09Basal.Size = New System.Drawing.Size(1376, 627)
         Me.TabPage09Basal.TabIndex = 6
         Me.TabPage09Basal.Text = "Basal"
         Me.TabPage09Basal.UseVisualStyleBackColor = True
@@ -1550,7 +1537,7 @@ Partial Class Form1
         Me.TabPage10TherapyAlgorithm.Location = New System.Drawing.Point(4, 27)
         Me.TabPage10TherapyAlgorithm.Name = "TabPage10TherapyAlgorithm"
         Me.TabPage10TherapyAlgorithm.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage10TherapyAlgorithm.Size = New System.Drawing.Size(1376, 631)
+        Me.TabPage10TherapyAlgorithm.Size = New System.Drawing.Size(1376, 627)
         Me.TabPage10TherapyAlgorithm.TabIndex = 9
         Me.TabPage10TherapyAlgorithm.Text = "Therapy Algorithm"
         Me.TabPage10TherapyAlgorithm.UseVisualStyleBackColor = True
@@ -1588,7 +1575,7 @@ Partial Class Form1
         Me.TabPage11BannerState.Location = New System.Drawing.Point(4, 27)
         Me.TabPage11BannerState.Name = "TabPage11BannerState"
         Me.TabPage11BannerState.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage11BannerState.Size = New System.Drawing.Size(1376, 631)
+        Me.TabPage11BannerState.Size = New System.Drawing.Size(1376, 627)
         Me.TabPage11BannerState.TabIndex = 10
         Me.TabPage11BannerState.Text = "Banner State"
         Me.TabPage11BannerState.UseVisualStyleBackColor = True
@@ -1626,7 +1613,7 @@ Partial Class Form1
         Me.TabPage12CountrySettings.Location = New System.Drawing.Point(4, 27)
         Me.TabPage12CountrySettings.Name = "TabPage12CountrySettings"
         Me.TabPage12CountrySettings.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage12CountrySettings.Size = New System.Drawing.Size(1376, 631)
+        Me.TabPage12CountrySettings.Size = New System.Drawing.Size(1376, 627)
         Me.TabPage12CountrySettings.TabIndex = 11
         Me.TabPage12CountrySettings.Text = "Country Settings"
         Me.TabPage12CountrySettings.UseVisualStyleBackColor = True
@@ -1642,15 +1629,15 @@ Partial Class Form1
         Me.DataGridViewCountryItems.Name = "DataGridViewCountryItems"
         Me.DataGridViewCountryItems.ReadOnly = True
         Me.DataGridViewCountryItems.RowTemplate.Height = 25
-        Me.DataGridViewCountryItems.Size = New System.Drawing.Size(1370, 625)
+        Me.DataGridViewCountryItems.Size = New System.Drawing.Size(1370, 621)
         Me.DataGridViewCountryItems.TabIndex = 1
         '
         'DataGridViewTextBoxColumnCountrySettingsRecordNumber
         '
         Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.DefaultCellStyle = DataGridViewCellStyle15
         Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.HeaderText = "Record Number"
         Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.MinimumWidth = 60
         Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.Name = "DataGridViewTextBoxColumnCountrySettingsRecordNumber"
@@ -1660,9 +1647,9 @@ Partial Class Form1
         'DataGridViewTextBoxColumnCountrySettingsCategory
         '
         Me.DataGridViewTextBoxColumnCountrySettingsCategory.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridViewTextBoxColumnCountrySettingsCategory.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridViewTextBoxColumnCountrySettingsCategory.DefaultCellStyle = DataGridViewCellStyle16
         Me.DataGridViewTextBoxColumnCountrySettingsCategory.HeaderText = "Category"
         Me.DataGridViewTextBoxColumnCountrySettingsCategory.Name = "DataGridViewTextBoxColumnCountrySettingsCategory"
         Me.DataGridViewTextBoxColumnCountrySettingsCategory.ReadOnly = True
@@ -1723,7 +1710,7 @@ Partial Class Form1
         Me.TabPage13Profile.Location = New System.Drawing.Point(4, 27)
         Me.TabPage13Profile.Name = "TabPage13Profile"
         Me.TabPage13Profile.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage13Profile.Size = New System.Drawing.Size(1376, 631)
+        Me.TabPage13Profile.Size = New System.Drawing.Size(1376, 627)
         Me.TabPage13Profile.TabIndex = 12
         Me.TabPage13Profile.Text = "Profile"
         Me.TabPage13Profile.UseVisualStyleBackColor = True
@@ -1742,7 +1729,7 @@ Partial Class Form1
         Me.DataGridViewMyProfile.Name = "DataGridViewMyProfile"
         Me.DataGridViewMyProfile.ReadOnly = True
         Me.DataGridViewMyProfile.RowTemplate.Height = 25
-        Me.DataGridViewMyProfile.Size = New System.Drawing.Size(1370, 625)
+        Me.DataGridViewMyProfile.Size = New System.Drawing.Size(1370, 621)
         Me.DataGridViewMyProfile.TabIndex = 0
         '
         'TabPage14MyUser
@@ -1750,7 +1737,7 @@ Partial Class Form1
         Me.TabPage14MyUser.Controls.Add(Me.DataGridViewMyUserData)
         Me.TabPage14MyUser.Location = New System.Drawing.Point(4, 27)
         Me.TabPage14MyUser.Name = "TabPage14MyUser"
-        Me.TabPage14MyUser.Size = New System.Drawing.Size(1376, 631)
+        Me.TabPage14MyUser.Size = New System.Drawing.Size(1376, 627)
         Me.TabPage14MyUser.TabIndex = 13
         Me.TabPage14MyUser.Text = "My User"
         Me.TabPage14MyUser.UseVisualStyleBackColor = True
@@ -1769,7 +1756,7 @@ Partial Class Form1
         Me.DataGridViewMyUserData.Name = "DataGridViewMyUserData"
         Me.DataGridViewMyUserData.ReadOnly = True
         Me.DataGridViewMyUserData.RowTemplate.Height = 25
-        Me.DataGridViewMyUserData.Size = New System.Drawing.Size(1376, 631)
+        Me.DataGridViewMyUserData.Size = New System.Drawing.Size(1376, 627)
         Me.DataGridViewMyUserData.TabIndex = 0
         '
         'TabPage15AllUsers
@@ -1778,7 +1765,7 @@ Partial Class Form1
         Me.TabPage15AllUsers.Location = New System.Drawing.Point(4, 27)
         Me.TabPage15AllUsers.Name = "TabPage15AllUsers"
         Me.TabPage15AllUsers.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage15AllUsers.Size = New System.Drawing.Size(1376, 631)
+        Me.TabPage15AllUsers.Size = New System.Drawing.Size(1376, 627)
         Me.TabPage15AllUsers.TabIndex = 14
         Me.TabPage15AllUsers.Text = "All Users"
         Me.TabPage15AllUsers.UseVisualStyleBackColor = True
@@ -1800,7 +1787,7 @@ Partial Class Form1
         Me.DataGridViewCareLinkUsers.Name = "DataGridViewCareLinkUsers"
         Me.DataGridViewCareLinkUsers.RowTemplate.Height = 25
         Me.DataGridViewCareLinkUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.DataGridViewCareLinkUsers.Size = New System.Drawing.Size(1370, 625)
+        Me.DataGridViewCareLinkUsers.Size = New System.Drawing.Size(1370, 621)
         Me.DataGridViewCareLinkUsers.TabIndex = 0
         '
         'DataGridViewTextBoxColumnCareLinkUserName
@@ -1911,7 +1898,7 @@ Partial Class Form1
         Me.TabPage16Markers.Location = New System.Drawing.Point(4, 27)
         Me.TabPage16Markers.Name = "TabPage16Markers"
         Me.TabPage16Markers.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage16Markers.Size = New System.Drawing.Size(1376, 631)
+        Me.TabPage16Markers.Size = New System.Drawing.Size(1376, 627)
         Me.TabPage16Markers.TabIndex = 4
         Me.TabPage16Markers.Text = "Markers..."
         '
@@ -1976,17 +1963,17 @@ Partial Class Form1
         Me.DataGridViewAutoBasalDelivery.AllowUserToDeleteRows = False
         Me.DataGridViewAutoBasalDelivery.AllowUserToResizeColumns = False
         Me.DataGridViewAutoBasalDelivery.AllowUserToResizeRows = False
-        DataGridViewCellStyle7.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewAutoBasalDelivery.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle17.BackColor = System.Drawing.Color.Silver
+        Me.DataGridViewAutoBasalDelivery.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle17
         Me.DataGridViewAutoBasalDelivery.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewAutoBasalDelivery.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle18.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        DataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewAutoBasalDelivery.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle18
         Me.DataGridViewAutoBasalDelivery.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridViewAutoBasalDelivery.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridViewAutoBasalDelivery.Location = New System.Drawing.Point(3, 33)
@@ -2163,16 +2150,16 @@ Partial Class Form1
         Me.DataGridViewInsulin.AllowUserToDeleteRows = False
         Me.DataGridViewInsulin.AllowUserToResizeColumns = False
         Me.DataGridViewInsulin.AllowUserToResizeRows = False
-        DataGridViewCellStyle9.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewInsulin.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle9
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle10.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        DataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewInsulin.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle10
+        DataGridViewCellStyle19.BackColor = System.Drawing.Color.Silver
+        Me.DataGridViewInsulin.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle19
+        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle20.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        DataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewInsulin.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle20
         Me.DataGridViewInsulin.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridViewInsulin.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridViewInsulin.Location = New System.Drawing.Point(6, 39)
@@ -2645,7 +2632,7 @@ Partial Class Form1
     Friend WithEvents TableLayoutPanelTop1 As TableLayoutPanel
     Friend WithEvents TableLayoutPanelTop2 As TableLayoutPanel
     Friend WithEvents TabPage01HomePage As TabPage
-    Friend WithEvents TabPage02ActiveInsulin As TabPage
+    Friend WithEvents TabPage02RunningIOB As TabPage
     Friend WithEvents TabPage03TreatmentDetails As TabPage
     Friend WithEvents TabPage04SummaryData As TabPage
     Friend WithEvents TabPage05ActiveInsulin As TabPage
@@ -2682,6 +2669,5 @@ Partial Class Form1
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
     Friend WithEvents TabPage26BackToHomePage As TabPage
     Friend WithEvents LastSGTimeLabel As Label
-    Friend WithEvents IOBLabel As Label
     Friend WithEvents ActiveInsulinTabLabel As Label
 End Class
