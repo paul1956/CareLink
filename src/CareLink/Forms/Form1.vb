@@ -87,7 +87,6 @@ Public Class Form1
     Private WithEvents ActiveInsulinBasalSeries As Series
     Private WithEvents ActiveInsulinBGSeries As Series
     Private WithEvents ActiveInsulinSeries As Series
-    Private WithEvents ActiveInsulinActualSeries As Series
     Private WithEvents ActiveInsulinTimeChangeSeries As Series
 
     Private WithEvents HomeTabBasalSeries As Series
@@ -1200,19 +1199,7 @@ Public Class Form1
             .XValueType = ChartValueType.DateTime,
             .YAxisType = AxisType.Primary
         }
-        Me.ActiveInsulinActualSeries = New Series(NameOf(ActiveInsulinActualSeries)) With {
-            .BorderColor = Color.FromArgb(180, Color.Green),
-            .BorderWidth = 4,
-            .ChartArea = ChartAreaName,
-            .ChartType = SeriesChartType.Line,
-            .Color = Color.BlueViolet,
-            .Legend = NameOf(ActiveInsulinChartLegend),
-            .ShadowColor = Color.Black,
-            .XValueType = ChartValueType.DateTime,
-            .YAxisType = AxisType.Primary
-        }
         Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinSeries)
-        Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinActualSeries)
 
         Me.ActiveInsulinBasalSeries = CreateBasalSeries(AxisType.Secondary)
         Me.ActiveInsulinBGSeries = CreateBgSeries(NameOf(ActiveInsulinChartLegend))
@@ -1225,8 +1212,6 @@ Public Class Form1
         Me.ActiveInsulinChart.Series(BgSeriesName).EmptyPointStyle.Color = Color.Transparent
         Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinSeries)).EmptyPointStyle.BorderWidth = 4
         Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinSeries)).EmptyPointStyle.Color = Color.Transparent
-        Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinActualSeries)).EmptyPointStyle.BorderWidth = 4
-        Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinActualSeries)).EmptyPointStyle.Color = Color.Transparent
         Me.ActiveInsulinChartTitle = New Title With {
                 .Font = New Font("Trebuchet MS", 12.0F, FontStyle.Bold),
                 .ForeColor = Color.FromArgb(26, 59, 105),
@@ -1732,9 +1717,20 @@ Public Class Form1
                         ProcessListOfDictionary(Me.TableLayoutPanelTimeChange, _markersTimeChange, rowIndex, _formScale.Height <> 1)
                     Case ItemIndexs.pumpBannerState
                         If row.Value Is Nothing Then
+                            Me.TempTargetLabel.Visible = False
                             ProcessListOfDictionary(Me.TableLayoutPanelBannerState, New List(Of Dictionary(Of String, String)), rowIndex, _formScale.Height <> 1)
                         Else
-                            ProcessListOfDictionary(Me.TableLayoutPanelBannerState, LoadList(row.Value), rowIndex, _formScale.Height <> 1)
+                            Dim innerListDictionary As List(Of Dictionary(Of String, String)) = LoadList(row.Value)
+                            Me.TempTargetLabel.Visible = False
+                            For Each dic As Dictionary(Of String, String) In innerListDictionary
+                                Dim typeValue As String = ""
+                                If dic.TryGetValue("type", typeValue) AndAlso typeValue = "TEMP_TARGET" Then
+                                    Dim minutes As Integer = CInt(dic("timeRemaining"))
+                                    Me.TempTargetLabel.Text = $"Target 150 {New TimeSpan(0, minutes \ 60, minutes Mod 60).ToString.Substring(3).TrimStart("0"c)} hr"
+                                    Me.TempTargetLabel.Visible = True
+                                End If
+                            Next
+                            ProcessListOfDictionary(Me.TableLayoutPanelBannerState, innerListDictionary, rowIndex, _formScale.Height <> 1)
                         End If
                 End Select
                 Continue For
@@ -1754,10 +1750,6 @@ Public Class Form1
                 Case ItemIndexs.activeInsulin
                     layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelActiveInsulin, True)
                     s_activeInsulin = New ActiveInsulinRecord(Loads(row.Value))
-                    If s_activeInsulinActual.Count = 288 Then
-                        s_activeInsulinActual.RemoveAt(0)
-                    End If
-                    s_activeInsulinActual.Add(s_activeInsulin)
                     isColumnHeader = True
 
                 Case ItemIndexs.notificationHistory
@@ -1951,10 +1943,6 @@ Public Class Form1
 
             Me.ActiveInsulinChartArea.AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1
             maxActiveInsulin = Me.ActiveInsulinChartArea.AxisY.Maximum
-
-            For Each actual As ActiveInsulinRecord In s_activeInsulinActual
-                Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinActualSeries)).Points.AddXY(actual.currentOADate, actual.amount)
-            Next
 
             Me.ActiveInsulinChart.PlotSgSeries(HomePageMealRow)
         Catch ex As Exception

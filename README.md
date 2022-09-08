@@ -27,9 +27,12 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 9/07/2022
+- 9/08/2022
 
 ## What's New in this release
+  New 3.5.5.1
+  Another fix for Unauthorized error
+
   New 3.5.5.0
   Remove duplicate IOB
   Improve login failure handling

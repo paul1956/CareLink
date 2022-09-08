@@ -238,7 +238,7 @@ Public Class CareLinkClient
             ' Consent
             Dim consentResponse As HttpResponseMessage = Me.DoConsent(doLoginResponse)
             _lastResponseCode = consentResponse?.StatusCode
-            If consentResponse.StatusCode = HttpStatusCode.BadRequest Then
+            If consentResponse Is Nothing OrElse consentResponse.StatusCode = HttpStatusCode.BadRequest Then
                 _lastErrorMessage = "Login Failure"
                 Return lastLoginSuccess
             End If

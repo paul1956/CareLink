@@ -101,6 +101,7 @@ Partial Class Form1
         Me.CursorMessage2Label = New System.Windows.Forms.Label()
         Me.CursorMessage3Label = New System.Windows.Forms.Label()
         Me.CalibrationShieldPanel = New System.Windows.Forms.Panel()
+        Me.TempTargetLabel = New System.Windows.Forms.Label()
         Me.ShieldUnitsLabel = New System.Windows.Forms.Label()
         Me.LastSGTimeLabel = New System.Windows.Forms.Label()
         Me.CurrentBGLabel = New System.Windows.Forms.Label()
@@ -999,6 +1000,7 @@ Partial Class Form1
         '
         'CalibrationShieldPanel
         '
+        Me.CalibrationShieldPanel.Controls.Add(Me.TempTargetLabel)
         Me.CalibrationShieldPanel.Controls.Add(Me.ShieldUnitsLabel)
         Me.CalibrationShieldPanel.Controls.Add(Me.LastSGTimeLabel)
         Me.CalibrationShieldPanel.Controls.Add(Me.CurrentBGLabel)
@@ -1010,6 +1012,19 @@ Partial Class Form1
         Me.CalibrationShieldPanel.Name = "CalibrationShieldPanel"
         Me.CalibrationShieldPanel.Size = New System.Drawing.Size(116, 134)
         Me.CalibrationShieldPanel.TabIndex = 64
+        '
+        'TempTargetLabel
+        '
+        Me.TempTargetLabel.BackColor = System.Drawing.Color.Lime
+        Me.TempTargetLabel.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TempTargetLabel.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.TempTargetLabel.ForeColor = System.Drawing.Color.Black
+        Me.TempTargetLabel.Location = New System.Drawing.Point(0, 0)
+        Me.TempTargetLabel.Name = "TempTargetLabel"
+        Me.TempTargetLabel.Size = New System.Drawing.Size(116, 21)
+        Me.TempTargetLabel.TabIndex = 56
+        Me.TempTargetLabel.Text = "Target 150 2:00 Hr"
+        Me.TempTargetLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'ShieldUnitsLabel
         '
@@ -2669,4 +2684,5 @@ Partial Class Form1
     Friend WithEvents TabPage26BackToHomePage As TabPage
     Friend WithEvents LastSGTimeLabel As Label
     Friend WithEvents ActiveInsulinTabLabel As Label
+    Friend WithEvents TempTargetLabel As Label
 End Class
