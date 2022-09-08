@@ -87,6 +87,7 @@ Public Class Form1
     Private WithEvents ActiveInsulinBasalSeries As Series
     Private WithEvents ActiveInsulinBGSeries As Series
     Private WithEvents ActiveInsulinSeries As Series
+    Private WithEvents ActiveInsulinActualSeries As Series
     Private WithEvents ActiveInsulinTimeChangeSeries As Series
 
     Private WithEvents HomeTabBasalSeries As Series
@@ -1199,7 +1200,19 @@ Public Class Form1
             .XValueType = ChartValueType.DateTime,
             .YAxisType = AxisType.Primary
         }
+        Me.ActiveInsulinActualSeries = New Series(NameOf(ActiveInsulinActualSeries)) With {
+            .BorderColor = Color.FromArgb(180, Color.Green),
+            .BorderWidth = 4,
+            .ChartArea = ChartAreaName,
+            .ChartType = SeriesChartType.Line,
+            .Color = Color.BlueViolet,
+            .Legend = NameOf(ActiveInsulinChartLegend),
+            .ShadowColor = Color.Black,
+            .XValueType = ChartValueType.DateTime,
+            .YAxisType = AxisType.Primary
+        }
         Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinSeries)
+        Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinActualSeries)
 
         Me.ActiveInsulinBasalSeries = CreateBasalSeries(AxisType.Secondary)
         Me.ActiveInsulinBGSeries = CreateBgSeries(NameOf(ActiveInsulinChartLegend))
@@ -1212,6 +1225,8 @@ Public Class Form1
         Me.ActiveInsulinChart.Series(BgSeriesName).EmptyPointStyle.Color = Color.Transparent
         Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinSeries)).EmptyPointStyle.BorderWidth = 4
         Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinSeries)).EmptyPointStyle.Color = Color.Transparent
+        Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinActualSeries)).EmptyPointStyle.BorderWidth = 4
+        Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinActualSeries)).EmptyPointStyle.Color = Color.Transparent
         Me.ActiveInsulinChartTitle = New Title With {
                 .Font = New Font("Trebuchet MS", 12.0F, FontStyle.Bold),
                 .ForeColor = Color.FromArgb(26, 59, 105),
@@ -1865,6 +1880,7 @@ Public Class Form1
             For Each s As Series In Me.ActiveInsulinChart.Series
                 s.Points.Clear()
             Next
+
             Me.ActiveInsulinChart.Titles(NameOf(ActiveInsulinChartTitle)).Text = $"Running Active Insulin in Pink"
             Me.ActiveInsulinChart.ChartAreas(ChartAreaName).InitializeBGChartArea()
 
@@ -1935,6 +1951,10 @@ Public Class Form1
 
             Me.ActiveInsulinChartArea.AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1
             maxActiveInsulin = Me.ActiveInsulinChartArea.AxisY.Maximum
+
+            For Each actual As ActiveInsulinRecord In s_activeInsulinActual
+                Me.ActiveInsulinChart.Series(NameOf(ActiveInsulinActualSeries)).Points.AddXY(actual.currentOADate, actual.amount)
+            Next
 
             Me.ActiveInsulinChart.PlotSgSeries(HomePageMealRow)
         Catch ex As Exception

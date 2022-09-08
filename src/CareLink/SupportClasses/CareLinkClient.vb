@@ -405,6 +405,7 @@ Public Class CareLinkClient
                     End If
                 ElseIf response?.StatusCode = HttpStatusCode.Unauthorized Then
                     _lastResponseCode = response?.StatusCode
+                    _lastErrorMessage = "Unauthorized"
                 Else
                     Throw New Exception("session get response is not OK")
                 End If
