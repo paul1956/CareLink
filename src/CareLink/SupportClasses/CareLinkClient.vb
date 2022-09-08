@@ -464,8 +464,9 @@ Public Class CareLinkClient
     End Function
 
     Public Overridable Function GetLastErrorMessage() As String
-        Return _lastErrorMessage
+        Return If(_lastErrorMessage, "OK")
     End Function
+
     Public Overridable Function HasErrors() As Boolean
         Return Not (String.IsNullOrWhiteSpace(_lastErrorMessage) OrElse _lastErrorMessage = "OK")
     End Function

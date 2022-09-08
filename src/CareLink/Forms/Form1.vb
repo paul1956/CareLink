@@ -1639,6 +1639,7 @@ Public Class Form1
 
     Private Sub UpdateDataTables(isScaledForm As Boolean)
         If Me.RecentData Is Nothing Then
+            Debug.Print($"Exiting {NameOf(UpdateDataTables)}, {NameOf(RecentData)} has no data!")
             Exit Sub
         End If
         Me.Cursor = Cursors.WaitCursor
@@ -1797,6 +1798,7 @@ Public Class Form1
         Me.DataGridViewSummary.DataSource = s_bindingSourceSummary
         Me.DataGridViewSummary.RowHeadersVisible = False
         If Me.RecentData Is Nothing Then
+            Debug.Print($"Exiting {NameOf(AllTabPagesUpdate)}, {NameOf(RecentData)} has no data!")
             Exit Sub
         End If
         Dim lastMedicalDeviceDataUpdateServerTime As String = ""
@@ -1818,6 +1820,8 @@ Public Class Form1
             _treatmentMarkerAbsoluteRectangle = RectangleF.Empty
             Me.MenuStartHere.Enabled = False
             If Not Me.LastUpdateTime.Text.Contains("from file") Then
+                Me.LastUpdateTime.Text = Now.ToShortDateTimeString
+            Else
                 Me.LastUpdateTime.Text = Now.ToShortDateTimeString
             End If
             Me.CursorPanel.Visible = False
@@ -1942,7 +1946,6 @@ Public Class Form1
     Private Sub UpdateAutoModeShield(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
         Try
             Me.LastSGTimeLabel.Text = s_lastSG.datetime.ToShortTimeString
-            Me.ShieldUnitsLabel.Visible = True
             Me.ShieldUnitsLabel.BackColor = Color.Transparent
             Me.ShieldUnitsLabel.Text = BgUnitsString
             If s_lastSG.sg <> 0 Then
@@ -1967,7 +1970,6 @@ Public Class Form1
                     message = message.ToTitle
                 End If
                 Me.SensorMessage.Text = message
-                Me.ShieldUnitsLabel.Visible = message = "---"
                 Me.SensorMessage.Visible = True
                 Application.DoEvents()
             End If
