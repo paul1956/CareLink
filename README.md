@@ -30,6 +30,9 @@ This update has a UI to show all the available data and a visual version that mi
 - 9/08/2022
 
 ## What's New in this release
+  New 3.5.5.2
+  Fix crash in Belgian language
+
   New 3.5.5.1
   Another fix for Unauthorized error
 

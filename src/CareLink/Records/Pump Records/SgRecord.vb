@@ -3,6 +3,9 @@
 ' See the LICENSE file in the project root for more information.
 
 Public Class SgRecord
+    Public Sub New()
+
+    End Sub
 
     Public Sub New(dic As Dictionary(Of String, String))
         Dim allSgs As New List(Of Dictionary(Of String, String)) From {
@@ -58,7 +61,7 @@ Public Class SgRecord
     Public Property sg As Single
     Public Property [datetime] As Date
     Public Property datetimeAsString As String
-    Public Property OADate As OADate
+    Public Property OADate As New OADate
     Public Property timeChange As String
     Public Property sensorState As String
     Public Property kind As String
