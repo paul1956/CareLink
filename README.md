@@ -30,6 +30,7 @@ This update has a UI to show all the available data and a visual version that mi
 - 9/08/2022
 
 ## What's New in this release
+  Fixed GitHub issues 19 and 20, add some infrastructure to support editing of CareLink User File, Added additional sensor error messages.
   New 3.5.5.2
   Fix crash in Belgian language
 
