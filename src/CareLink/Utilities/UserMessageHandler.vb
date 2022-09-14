@@ -66,14 +66,17 @@ Friend Module UserMessageHandler
                             {"NO_DATA_FROM_PUMP", "No data from pump"},
                             {"NO_ERROR_MESSAGE", "---"},
                             {"NO_SENSOR_SIGNAL", "Lost sensor signal, move pump closer to transmitter. May take 15 minutes to find signal"},
+                            {"RECONNECTING_TO_PUMP", "Reconnecting to pump"},
                             {"SEARCHING_FOR_SENSOR_SIGNAL", "Searching for sensor signal"},
                             {"SENSOR_DISCONNECTED", "Sensor disconnected"},
                             {"UNKNOWN", "Unknown"},
+                            {"UPDATING", "Sensor Updating"},
                             {"WAIT_TO_CALIBRATE", "Wait To Calibrate..."},
                             {"WARM_UP", "Sensor warm up. Warm-up takes up to 2 hours. You will be notifies when calibration Is needed."}
                         }
 
     Friend s_calibrationMessages As New Dictionary(Of String, String) From {
+            {"DUENOW", "Due now"},
             {"LESS_THAN_THREE_HRS", "Less then 3 hours"},
             {"LESS_THAN_SIX_HRS", "Less then 6 hours"},
             {"LESS_THAN_NINE_HRS", "Less then 9 hours"},

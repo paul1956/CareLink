@@ -83,14 +83,15 @@ Public Module DataGridViewExtensions
     End Sub
 
     <Extension>
-    Public Sub DgvColumnAdded(ByRef e As DataGridViewColumnEventArgs, cellStyle As DataGridViewCellStyle, wrapHeader As Boolean)
+    Public Sub DgvColumnAdded(ByRef e As DataGridViewColumnEventArgs, cellStyle As DataGridViewCellStyle, wrapHeader As Boolean, forceReadOnly As Boolean)
         e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        e.Column.ReadOnly = True
+        Dim idHeaderName As Boolean = e.Column.DataPropertyName = "ID"
+        e.Column.ReadOnly = forceReadOnly OrElse idHeaderName
         e.Column.Resizable = DataGridViewTriState.False
         Dim title As New StringBuilder
-        Dim titleInTitleCase As String = e.Column.Name.ToTitleCase()
+        Dim titleInTitleCase As String = If(e.Column.DataPropertyName.Length < 4, e.Column.Name, e.Column.Name.ToTitleCase())
         If wrapHeader Then
-            Dim titleSplit As String() = titleInTitleCase.Split(" "c)
+            Dim titleSplit As String() = titleInTitleCase.Replace("A I T", "AIT").Split(" "c)
             For Each s As String In titleSplit
                 If s.Length < 5 Then
                     title.Append(s)
@@ -99,7 +100,7 @@ Public Module DataGridViewExtensions
                 End If
             Next
         Else
-            title.Append(titleInTitleCase)
+            title.Append(titleInTitleCase.Replace("Care Link", "CareLink"))
         End If
         e.Column.HeaderText = title.ToString.TrimEnd(Environment.NewLine)
         e.Column.DefaultCellStyle = cellStyle

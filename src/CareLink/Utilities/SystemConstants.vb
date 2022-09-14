@@ -36,8 +36,20 @@ Public Module SystemConstants
 
     Public Const TwelveHourTimeWithoutMinuteFormat As String = "h:mm tt"
 
+    Public ReadOnly s_aitItemsBindingSource As New BindingSource(New Dictionary(Of String, String) From {
+                {"AIT 2:00", "2:00"}, {"AIT 2:15", "2:15"},
+                {"AIT 2:30", "2:30"}, {"AIT 2:45", "2:45"},
+                {"AIT 3:00", "3:00"}, {"AIT 3:15", "3:15"},
+                {"AIT 3:30", "3:30"}, {"AIT 3:45", "3:45"},
+                {"AIT 4:00", "4:00"}, {"AIT 4:15", "4:15"},
+                {"AIT 4:30", "4:30"}, {"AIT 4:45", "4:45"},
+                {"AIT 5:00", "5:00"}, {"AIT 5:15", "5:15"},
+                {"AIT 5:30", "5:30"}, {"AIT 5:45", "5:45"},
+                {"AIT 6:00", "6:00"}
+            }, Nothing)
+
     Public ReadOnly s_oneToNineteen As New List(Of String) From {
-                    "zero", "one", "two", "three", "four", "five",
+                        "zero", "one", "two", "three", "four", "five",
                 "six", "seven", "eight", "nine", "ten", "eleven",
                 "twelve", "thirteen", "fourteen", "fifteen",
                 "sixteen", "seventeen", "eighteen", "nineteen"}

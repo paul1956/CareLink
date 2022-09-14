@@ -197,9 +197,7 @@ Public Class Form1
             My.Settings.Save()
         End If
 
-        If CareLinkUserDataRecordHelpers.s_allUserSettingsData.Keys.Count = 0 Then
-            CareLinkUserDataRecordHelpers.LoadAllUserRecords(Me.CareLinkUserDataRecordBindingSource)
-        End If
+        s_allUserSettingsData.LoadUsers()
 
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
@@ -209,17 +207,9 @@ Public Class Form1
         s_timeZoneList = TimeZoneInfo.GetSystemTimeZones.ToList
         Me.AITComboBox = New ToolStripComboBoxEx With {
             .BackColor = Color.Black,
-            .DataSource = New BindingSource(New Dictionary(Of String, String) From {
-                {"AIT 2:00", "2:00"}, {"AIT 2:15", "2:15"},
-                {"AIT 2:30", "2:30"}, {"AIT 2:45", "2:45"},
-                {"AIT 3:00", "3:00"}, {"AIT 3:15", "3:15"},
-                {"AIT 3:30", "3:30"}, {"AIT 3:45", "3:45"},
-                {"AIT 4:00", "4:00"}, {"AIT 4:15", "4:15"},
-                {"AIT 4:30", "4:30"}, {"AIT 4:45", "4:45"},
-                {"AIT 5:00", "5:00"}, {"AIT 5:15", "5:15"},
-                {"AIT 5:30", "5:30"}, {"AIT 5:45", "5:45"},
-                {"AIT 6:00", "6:00"}
-            }, Nothing),
+            .DataSource = s_aitItemsBindingSource,
+            .DisplayMember = "Key",
+            .ValueMember = "Value",
             .DropDownStyle = ComboBoxStyle.DropDownList,
             .Font = New Font("Segoe UI", 9.0!, FontStyle.Bold, GraphicsUnit.Point),
             .ForeColor = Color.White,
@@ -229,13 +219,24 @@ Public Class Form1
             .SelectedIndex = -1,
             .SelectedItem = Nothing,
             .Size = New Size(78, 23),
-            .TabIndex = 0,
-            .DisplayMember = "Key",
-            .ValueMember = "Value"
+            .TabIndex = 0
         }
+
+        With Me.CareLinkUsersAITComboBox
+            .DataSource = s_aitItemsBindingSource
+            .DropDownStyle = ComboBoxStyle.DropDownList
+            .Font = New Font("Segoe UI", 9.0!, FontStyle.Bold, GraphicsUnit.Point)
+            .ForeColor = Color.White
+            .FormattingEnabled = True
+            .Size = New Size(78, 23)
+            .DisplayMember = "Key"
+            .ValueMember = "Value"
+        End With
+
         Me.MenuStrip1.Items.Insert(3, Me.AITComboBox)
         Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact($"AIT {My.Settings.AIT.ToString("hh\:mm").Substring(1)}")
         Me.MenuOptionsUseAdvancedAITDecay.CheckState = If(My.Settings.UseAdvancedAITDecay, CheckState.Checked, CheckState.Unchecked)
+        AddHandler Microsoft.Win32.SystemEvents.PowerModeChanged, AddressOf Me.PowerModeChanged
     End Sub
 
     Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
@@ -489,10 +490,14 @@ Public Class Form1
 
         Select Case e.TabPage.Name
             Case NameOf(TabPage15AllUsers)
+                Me.DataGridViewCareLinkUsers.DataSource = s_allUserSettingsData
                 For Each c As DataGridViewColumn In Me.DataGridViewCareLinkUsers.Columns
                     c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
-                    c.HeaderText = If(c.HeaderText.Contains(" "c), c.HeaderText, c.HeaderText.ToTitleCase)
                 Next
+                Me.CareLinkUsersAITComboBox.Width = Me.AITComboBox.Width
+                Me.CareLinkUsersAITComboBox.SelectedIndex = Me.AITComboBox.SelectedIndex
+                Me.CareLinkUsersAITComboBox.Visible = False
+                Me.DataGridViewCareLinkUsers.Columns(NameOf(DataGridViewTextBoxColumnAIT)).Width = Me.AITComboBox.Width
             Case NameOf(TabPage16Markers)
                 Me.TabControlMarkers.SelectedIndex = _lastMarkerTabIndex
                 Me.TabControlHomePage.Visible = False
@@ -726,15 +731,68 @@ Public Class Form1
 
 #Region "All Users Tab DataGridView Events"
 
+    Private Sub DataGridViewCareLinkUsers_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles DataGridViewCareLinkUsers.CellBeginEdit
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        'Here we save a current value of cell to some variable, that later we can compare with a new value
+        'For example using of dgv.Tag property
+        If e.RowIndex >= 0 AndAlso e.ColumnIndex > 0 Then
+            dgv.Tag = dgv.CurrentCell.Value.ToString
+        End If
+        'If dgv.Columns(e.ColumnIndex).DataPropertyName = NameOf(CareLinkUserDataRecord.AIT) Then
+        '    Me.CareLinkUsersAITComboBox.Visible = True
+        'End If
+
+    End Sub
+
+    Private Sub DataGridViewCareLinkUsers_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridViewCareLinkUsers.CellContentClick
+        'Dim dgv As DataGridView = CType(sender, DataGridView)
+        If e.ColumnIndex = 0 Then
+            ' Handle delete row
+            Stop
+        End If
+
+    End Sub
+
+    Private Sub DataGridViewCareLinkUsers_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles DataGridViewCareLinkUsers.CellValidating
+        If e.ColumnIndex = 0 Then
+            Exit Sub
+        End If
+        'For example used Integer check
+        'Dim iTemp As Integer
+        'If Integer.TryParse(dgv.CurrentCell.Value, iTemp) = True AndAlso iTemp > 0 Then
+        '    'value is OK
+        'Else
+        '    e.Cancel = True
+        'End If
+
+    End Sub
+
+    Private Sub DataGridViewCareLinkUsers_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridViewCareLinkUsers.CellEndEdit
+        'after you've filled your ds, on event above try something like this
+        Try
+            ' 
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+
+    End Sub
+
     Private Sub DataGridViewCareLinkUsers_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewCareLinkUsers.ColumnAdded
-        e.DgvColumnAdded(CareLinkUserDataRecordHelpers.GetCellStyle(), wrapHeader:=False)
         If CareLinkUserDataRecordHelpers.HideColumn(e.Column.DataPropertyName) Then
+            e.DgvColumnAdded(CareLinkUserDataRecordHelpers.GetCellStyle(e.Column.DataPropertyName),
+                             False,
+                             False)
             e.Column.Visible = False
             Exit Sub
         End If
-        Dim cellStyle As DataGridViewCellStyle = CareLinkUserDataRecordHelpers.GetCellStyle()
-        e.DgvColumnAdded(cellStyle, wrapHeader:=False)
+        e.DgvColumnAdded(CareLinkUserDataRecordHelpers.GetCellStyle(e.Column.DataPropertyName),
+                         False,
+                         True)
 
+    End Sub
+
+    Private Sub DataGridViewCareLinkUsers_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewCareLinkUsers.DataError
+        Stop
     End Sub
 
 #End Region ' All Users Tab DataGridView Events
@@ -742,13 +800,16 @@ Public Class Form1
 #Region "My User Tab DataGridView Events"
 
     Private Sub DataGridViewMyUserData_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewMyUserData.ColumnAdded
-        e.DgvColumnAdded(MyProfileRecordHelpers.GetCellStyle(), wrapHeader:=False)
         If MyProfileRecordHelpers.HideColumn(e.Column.DataPropertyName) Then
+            e.DgvColumnAdded(MyProfileRecordHelpers.GetCellStyle(),
+                             False,
+                             True)
             e.Column.Visible = False
             Exit Sub
         End If
-        Dim cellStyle As DataGridViewCellStyle = MyProfileRecordHelpers.GetCellStyle()
-        e.DgvColumnAdded(cellStyle, wrapHeader:=False)
+        e.DgvColumnAdded(MyProfileRecordHelpers.GetCellStyle(),
+                         False,
+                         True)
 
     End Sub
 
@@ -757,13 +818,16 @@ Public Class Form1
 #Region "Profile Tab DataGridView Events"
 
     Private Sub DataGridViewProfile_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewMyProfile.ColumnAdded
-        e.DgvColumnAdded(MyProfileRecordHelpers.GetCellStyle(), wrapHeader:=False)
         If MyProfileRecordHelpers.HideColumn(e.Column.DataPropertyName) Then
+            e.DgvColumnAdded(MyProfileRecordHelpers.GetCellStyle(),
+                             False,
+                             True)
             e.Column.Visible = False
             Exit Sub
         End If
-        Dim cellStyle As DataGridViewCellStyle = MyProfileRecordHelpers.GetCellStyle()
-        e.DgvColumnAdded(cellStyle, wrapHeader:=False)
+        e.DgvColumnAdded(MyProfileRecordHelpers.GetCellStyle(),
+                         False,
+                         True)
 
     End Sub
 
@@ -792,8 +856,9 @@ Public Class Form1
             e.Column.Visible = False
             Exit Sub
         End If
-        Dim cellStyle As DataGridViewCellStyle = AutoBasalDeliveryRecordHelpers.GetCellStyle(e.Column.Name)
-        e.DgvColumnAdded(cellStyle, wrapHeader:=False)
+        e.DgvColumnAdded(AutoBasalDeliveryRecordHelpers.GetCellStyle(e.Column.Name),
+                         False,
+                         True)
     End Sub
 
 #End Region ' Auto Basal Delivery DataGridView Events
@@ -810,8 +875,9 @@ Public Class Form1
             e.Column.Visible = False
             Exit Sub
         End If
-        Dim cellStyle As DataGridViewCellStyle = InsulinRecordHelpers.GetCellStyle(e.Column.Name)
-        e.DgvColumnAdded(cellStyle, wrapHeader:=True)
+        e.DgvColumnAdded(InsulinRecordHelpers.GetCellStyle(e.Column.Name),
+                         True,
+                         True)
     End Sub
 
     Private Sub DataGridViewInsulin_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewInsulin.ColumnHeaderCellChanged
@@ -827,7 +893,9 @@ Public Class Form1
 #Region "Report Tab DataGridView Events"
 
     Private Sub DataGridViewSuportedReports_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
-        e.DgvColumnAdded(supportedReportRecordHelpers.GetCellStyle(), wrapHeader:=False)
+        e.DgvColumnAdded(supportedReportRecordHelpers.GetCellStyle(),
+                         False,
+                         True)
     End Sub
 
 #End Region 'Report Tab DataGridView Events
@@ -864,8 +932,9 @@ Public Class Form1
             e.Column.Visible = False
             Exit Sub
         End If
-        Dim cellStyle As DataGridViewCellStyle = SgRecordHelpers.GetCellStyle(e.Column.Name)
-        e.DgvColumnAdded(cellStyle, wrapHeader:=False)
+        e.DgvColumnAdded(CType(SgRecordHelpers.GetCellStyle(CStr(e.Column.Name)), DataGridViewCellStyle),
+                         False,
+                         True)
     End Sub
 
 #End Region ' SGS Tab DataGridView Events
@@ -996,8 +1065,9 @@ Public Class Form1
     End Sub
 
     Private Sub SummaryDataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewSummary.ColumnAdded
-        Dim cellStyle As DataGridViewCellStyle = SummaryRecordHelpers.GetCellStyle(e.Column.Name)
-        e.DgvColumnAdded(cellStyle, wrapHeader:=False)
+        e.DgvColumnAdded(SummaryRecordHelpers.GetCellStyle(e.Column.Name),
+                         False,
+                         True)
     End Sub
 
     Private Sub SummaryDataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewSummary.DataError
@@ -1016,13 +1086,13 @@ Public Class Form1
             Exit Sub
         End If
         If e.SettingName = "CareLinkUserName" Then
-            Dim userSettings As New CareLinkUserDataRecord
-            If CareLinkUserDataRecordHelpers.s_allUserSettingsData.ContainsKey(e.NewValue.ToString) Then
-                _loginDialog.LoggedOnUser = CareLinkUserDataRecordHelpers.s_allUserSettingsData(e.NewValue.ToString)
+            If s_allUserSettingsData.ContainsKey(e.NewValue.ToString) Then
+                _loginDialog.LoggedOnUser = s_allUserSettingsData(e.NewValue.ToString)
                 Exit Sub
             Else
-                userSettings.Update(e.SettingName, e.NewValue.ToString)
-                CareLinkUserDataRecordHelpers.s_allUserSettingsData.Add(userSettings.CareLinkUserName, userSettings)
+                Dim userSettings As New CareLinkUserDataRecord(s_allUserSettingsData.Count.ToString)
+                userSettings.UpdateValue(e.SettingName, e.NewValue.ToString)
+                s_allUserSettingsData.Add(userSettings)
             End If
         End If
         CareLinkUserDataRecordHelpers.SaveAllUserRecords(_loginDialog.LoggedOnUser, e.SettingName, e.NewValue.ToString)
@@ -1037,6 +1107,20 @@ Public Class Form1
             Me.CursorTimer.Enabled = False
             Me.HomeTabChartArea.CursorX.Position = Double.NaN
         End If
+    End Sub
+
+    Sub PowerModeChanged(sender As Object, e As Microsoft.Win32.PowerModeChangedEventArgs)
+        Select Case e.Mode
+            Case Microsoft.Win32.PowerModes.Suspend
+                Me.ServerUpdateTimer.Stop()
+                Me.LastUpdateTime.Text = "Sleeping"
+            Case Microsoft.Win32.PowerModes.Resume
+                Me.LastUpdateTime.Text = "Awake"
+                Me.ServerUpdateTimer.Interval = s_thirtySecondInMilliseconds \ 3
+                Me.ServerUpdateTimer.Start()
+                Debug.Print($"In {NameOf(PowerModeChanged)}, restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
+        End Select
+
     End Sub
 
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
@@ -1682,6 +1766,9 @@ Public Class Form1
 
             If rowIndex = ItemIndexs.sgs Then
                 s_bindingSourceSGs = New BindingList(Of SgRecord)(LoadList(row.Value).ToSgList())
+                If s_bindingSourceSGs.Count > 2 Then
+                    s_lastBGValue = s_bindingSourceSGs.Item(s_bindingSourceSGs.Count - 2).sg
+                End If
                 ProcessListOfDictionary(Me.TableLayoutPanelSgs, Me.DataGridViewSGs, s_bindingSourceSGs, rowIndex)
                 Me.ReadingsLabel.Text = $"{s_bindingSourceSGs.Where(Function(entry As SgRecord) Not Double.IsNaN(entry.sg)).Count}/288"
                 Continue For
@@ -1726,7 +1813,7 @@ Public Class Form1
                                 Dim typeValue As String = ""
                                 If dic.TryGetValue("type", typeValue) AndAlso typeValue = "TEMP_TARGET" Then
                                     Dim minutes As Integer = CInt(dic("timeRemaining"))
-                                    Me.TempTargetLabel.Text = $"Target 150 {New TimeSpan(0, minutes \ 60, minutes Mod 60).ToString.Substring(3).TrimStart("0"c)} hr"
+                                    Me.TempTargetLabel.Text = $"Target 150   {New TimeSpan(0, minutes \ 60, minutes Mod 60).ToString.Substring(4)} hr"
                                     Me.TempTargetLabel.Visible = True
                                 End If
                             Next
@@ -2084,7 +2171,6 @@ Public Class Form1
 
     End Sub
 
-
     Private Sub UpdateInsulinLevel()
         Select Case s_reservoirLevelPercent
             Case > 85
@@ -2334,7 +2420,7 @@ Public Class Form1
                     notStr.Append(Environment.NewLine)
                     Dim diffsg As Double = sg - s_lastBGValue
                     notStr.Append("SG Trend ")
-                    If diffsg = 0 Then
+                    If Math.Abs(diffsg) < Single.Epsilon Then
                         If (Now - s_lastBGTime) < s_fiveMinuteSpan Then
                             diffsg = s_lastBGDiff
                         Else
@@ -2345,10 +2431,9 @@ Public Class Form1
                         s_lastBGTime = Now
                         s_lastBGDiff = diffsg
                     End If
-                    Dim formattedTrend As String = diffsg.ToString("+0;-#", CultureInfo.InvariantCulture)
-                    Me.LabelTrendValue.Text = formattedTrend
+                    Me.LabelTrendValue.Text = diffsg.ToString(If(BgUnits = "MG_DL", "+0;-#", "+ 0.00;-#.00"), CultureInfo.InvariantCulture)
                     Me.LabelTrendValue.ForeColor = bgColor
-                    notStr.Append(formattedTrend)
+                    notStr.Append(diffsg.ToString(If(BgUnits = "MG_DL", "+0;-#", "+ 0.00;-#.00"), CultureInfo.InvariantCulture))
                 End If
                 notStr.Append(Environment.NewLine)
                 notStr.Append("Active ins. ")

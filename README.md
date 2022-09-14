@@ -27,9 +27,14 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 9/08/2022
+- 9/13/2022
 
 ## What's New in this release
+  New 3.5.5.3
+  Fixed GitHub issues 19 and 20
+  Add some infrastructure to support editing of CareLink User File
+  Added additional sensor error messages.
+
   New 3.5.5.2
   Fix crash in Belgian language
 

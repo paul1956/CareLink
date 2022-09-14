@@ -161,21 +161,8 @@ Partial Class Form1
         Me.TabPage14MyUser = New System.Windows.Forms.TabPage()
         Me.DataGridViewMyUserData = New System.Windows.Forms.DataGridView()
         Me.TabPage15AllUsers = New System.Windows.Forms.TabPage()
+        Me.CareLinkUsersAITComboBox = New System.Windows.Forms.ComboBox()
         Me.DataGridViewCareLinkUsers = New System.Windows.Forms.DataGridView()
-        Me.DataGridViewTextBoxColumnCareLinkUserName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCareLinkPassword = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnAIT = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnAlertPhoneNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCarrierTextingDomain = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCountryCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnMailserverPassword = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnMailServerPort = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnMailserverUserName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnSettingsVersion = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnOutGoingMailServer = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewCheckBoxColumnUseAdvancedAITDecay = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.DataGridViewCheckBoxColumnUseLocalTimeZone = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.DataGridViewCheckBoxColumnAutoLogin = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.CareLinkUserDataRecordBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.TabPage16Markers = New System.Windows.Forms.TabPage()
         Me.TabControlMarkers = New System.Windows.Forms.TabControl()
@@ -214,6 +201,22 @@ Partial Class Form1
         Me.LastUpdateTimeLabel = New System.Windows.Forms.Label()
         Me.LastUpdateTime = New System.Windows.Forms.Label()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.DataGridViewButtonColumnDeleteRow = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.DataGridViewCareLinkUsersID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCareLinkUserName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCareLinkPassword = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnAIT = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnAlertPhoneNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCarrierTextingDomain = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCountryCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnMailserverPassword = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnMailServerPort = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnMailserverUserName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnSettingsVersion = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnOutGoingMailServer = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewCheckBoxColumnUseAdvancedAITDecay = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.DataGridViewCheckBoxColumnUseLocalTimeZone = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.DataGridViewCheckBoxColumnAutoLogin = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -1775,6 +1778,7 @@ Partial Class Form1
         '
         'TabPage15AllUsers
         '
+        Me.TabPage15AllUsers.Controls.Add(Me.CareLinkUsersAITComboBox)
         Me.TabPage15AllUsers.Controls.Add(Me.DataGridViewCareLinkUsers)
         Me.TabPage15AllUsers.Location = New System.Drawing.Point(4, 27)
         Me.TabPage15AllUsers.Name = "TabPage15AllUsers"
@@ -1784,123 +1788,33 @@ Partial Class Form1
         Me.TabPage15AllUsers.Text = "All Users"
         Me.TabPage15AllUsers.UseVisualStyleBackColor = True
         '
+        'CareLinkUsersAITComboBox
+        '
+        Me.CareLinkUsersAITComboBox.FormattingEnabled = True
+        Me.CareLinkUsersAITComboBox.Location = New System.Drawing.Point(796, 63)
+        Me.CareLinkUsersAITComboBox.Name = "CareLinkUsersAITComboBox"
+        Me.CareLinkUsersAITComboBox.Size = New System.Drawing.Size(121, 23)
+        Me.CareLinkUsersAITComboBox.TabIndex = 1
+        '
         'DataGridViewCareLinkUsers
         '
         Me.DataGridViewCareLinkUsers.AllowUserToAddRows = False
-        Me.DataGridViewCareLinkUsers.AllowUserToDeleteRows = False
         Me.DataGridViewCareLinkUsers.AllowUserToResizeColumns = False
         Me.DataGridViewCareLinkUsers.AllowUserToResizeRows = False
         Me.DataGridViewCareLinkUsers.AutoGenerateColumns = False
         Me.DataGridViewCareLinkUsers.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         Me.DataGridViewCareLinkUsers.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
         Me.DataGridViewCareLinkUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewCareLinkUsers.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumnCareLinkUserName, Me.DataGridViewTextBoxColumnCareLinkPassword, Me.DataGridViewTextBoxColumnAIT, Me.DataGridViewTextBoxColumnAlertPhoneNumber, Me.DataGridViewTextBoxColumnCarrierTextingDomain, Me.DataGridViewTextBoxColumnCountryCode, Me.DataGridViewTextBoxColumnMailserverPassword, Me.DataGridViewTextBoxColumnMailServerPort, Me.DataGridViewTextBoxColumnMailserverUserName, Me.DataGridViewTextBoxColumnSettingsVersion, Me.DataGridViewTextBoxColumnOutGoingMailServer, Me.DataGridViewCheckBoxColumnUseAdvancedAITDecay, Me.DataGridViewCheckBoxColumnUseLocalTimeZone, Me.DataGridViewCheckBoxColumnAutoLogin})
+        Me.DataGridViewCareLinkUsers.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewButtonColumnDeleteRow, Me.DataGridViewCareLinkUsersID, Me.DataGridViewTextBoxColumnCareLinkUserName, Me.DataGridViewTextBoxColumnCareLinkPassword, Me.DataGridViewTextBoxColumnAIT, Me.DataGridViewTextBoxColumnAlertPhoneNumber, Me.DataGridViewTextBoxColumnCarrierTextingDomain, Me.DataGridViewTextBoxColumnCountryCode, Me.DataGridViewTextBoxColumnMailserverPassword, Me.DataGridViewTextBoxColumnMailServerPort, Me.DataGridViewTextBoxColumnMailserverUserName, Me.DataGridViewTextBoxColumnSettingsVersion, Me.DataGridViewTextBoxColumnOutGoingMailServer, Me.DataGridViewCheckBoxColumnUseAdvancedAITDecay, Me.DataGridViewCheckBoxColumnUseLocalTimeZone, Me.DataGridViewCheckBoxColumnAutoLogin})
         Me.DataGridViewCareLinkUsers.DataSource = Me.CareLinkUserDataRecordBindingSource
         Me.DataGridViewCareLinkUsers.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridViewCareLinkUsers.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.DataGridViewCareLinkUsers.Location = New System.Drawing.Point(3, 3)
         Me.DataGridViewCareLinkUsers.Name = "DataGridViewCareLinkUsers"
         Me.DataGridViewCareLinkUsers.RowTemplate.Height = 25
         Me.DataGridViewCareLinkUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
         Me.DataGridViewCareLinkUsers.Size = New System.Drawing.Size(1370, 621)
         Me.DataGridViewCareLinkUsers.TabIndex = 0
-        '
-        'DataGridViewTextBoxColumnCareLinkUserName
-        '
-        Me.DataGridViewTextBoxColumnCareLinkUserName.DataPropertyName = "CareLinkUserName"
-        Me.DataGridViewTextBoxColumnCareLinkUserName.HeaderText = "CareLinkUserName"
-        Me.DataGridViewTextBoxColumnCareLinkUserName.Name = "DataGridViewTextBoxColumnCareLinkUserName"
-        Me.DataGridViewTextBoxColumnCareLinkUserName.Width = 133
-        '
-        'DataGridViewTextBoxColumnCareLinkPassword
-        '
-        Me.DataGridViewTextBoxColumnCareLinkPassword.DataPropertyName = "CareLinkPassword"
-        Me.DataGridViewTextBoxColumnCareLinkPassword.HeaderText = "CareLinkPassword"
-        Me.DataGridViewTextBoxColumnCareLinkPassword.Name = "DataGridViewTextBoxColumnCareLinkPassword"
-        Me.DataGridViewTextBoxColumnCareLinkPassword.Width = 128
-        '
-        'DataGridViewTextBoxColumnAIT
-        '
-        Me.DataGridViewTextBoxColumnAIT.DataPropertyName = "AIT"
-        Me.DataGridViewTextBoxColumnAIT.HeaderText = "AIT"
-        Me.DataGridViewTextBoxColumnAIT.Name = "DataGridViewTextBoxColumnAIT"
-        Me.DataGridViewTextBoxColumnAIT.Width = 49
-        '
-        'DataGridViewTextBoxColumnAlertPhoneNumber
-        '
-        Me.DataGridViewTextBoxColumnAlertPhoneNumber.DataPropertyName = "AlertPhoneNumber"
-        Me.DataGridViewTextBoxColumnAlertPhoneNumber.HeaderText = "AlertPhoneNumber"
-        Me.DataGridViewTextBoxColumnAlertPhoneNumber.Name = "DataGridViewTextBoxColumnAlertPhoneNumber"
-        Me.DataGridViewTextBoxColumnAlertPhoneNumber.Width = 135
-        '
-        'DataGridViewTextBoxColumnCarrierTextingDomain
-        '
-        Me.DataGridViewTextBoxColumnCarrierTextingDomain.DataPropertyName = "CarrierTextingDomain"
-        Me.DataGridViewTextBoxColumnCarrierTextingDomain.HeaderText = "CarrierTextingDomain"
-        Me.DataGridViewTextBoxColumnCarrierTextingDomain.Name = "DataGridViewTextBoxColumnCarrierTextingDomain"
-        Me.DataGridViewTextBoxColumnCarrierTextingDomain.Width = 147
-        '
-        'DataGridViewTextBoxColumnCountryCode
-        '
-        Me.DataGridViewTextBoxColumnCountryCode.DataPropertyName = "CountryCode"
-        Me.DataGridViewTextBoxColumnCountryCode.HeaderText = "CountryCode"
-        Me.DataGridViewTextBoxColumnCountryCode.Name = "DataGridViewTextBoxColumnCountryCode"
-        Me.DataGridViewTextBoxColumnCountryCode.Width = 103
-        '
-        'DataGridViewTextBoxColumnMailserverPassword
-        '
-        Me.DataGridViewTextBoxColumnMailserverPassword.DataPropertyName = "MailserverPassword"
-        Me.DataGridViewTextBoxColumnMailserverPassword.HeaderText = "MailserverPassword"
-        Me.DataGridViewTextBoxColumnMailserverPassword.Name = "DataGridViewTextBoxColumnMailserverPassword"
-        Me.DataGridViewTextBoxColumnMailserverPassword.Width = 136
-        '
-        'DataGridViewTextBoxColumnMailServerPort
-        '
-        Me.DataGridViewTextBoxColumnMailServerPort.DataPropertyName = "MailServerPort"
-        Me.DataGridViewTextBoxColumnMailServerPort.HeaderText = "MailServerPort"
-        Me.DataGridViewTextBoxColumnMailServerPort.Name = "DataGridViewTextBoxColumnMailServerPort"
-        Me.DataGridViewTextBoxColumnMailServerPort.Width = 109
-        '
-        'DataGridViewTextBoxColumnMailserverUserName
-        '
-        Me.DataGridViewTextBoxColumnMailserverUserName.DataPropertyName = "MailserverUserName"
-        Me.DataGridViewTextBoxColumnMailserverUserName.HeaderText = "MailserverUserName"
-        Me.DataGridViewTextBoxColumnMailserverUserName.Name = "DataGridViewTextBoxColumnMailserverUserName"
-        Me.DataGridViewTextBoxColumnMailserverUserName.Width = 141
-        '
-        'DataGridViewTextBoxColumnSettingsVersion
-        '
-        Me.DataGridViewTextBoxColumnSettingsVersion.DataPropertyName = "SettingsVersion"
-        Me.DataGridViewTextBoxColumnSettingsVersion.HeaderText = "SettingsVersion"
-        Me.DataGridViewTextBoxColumnSettingsVersion.Name = "DataGridViewTextBoxColumnSettingsVersion"
-        Me.DataGridViewTextBoxColumnSettingsVersion.Width = 112
-        '
-        'DataGridViewTextBoxColumnOutGoingMailServer
-        '
-        Me.DataGridViewTextBoxColumnOutGoingMailServer.DataPropertyName = "OutGoingMailServer"
-        Me.DataGridViewTextBoxColumnOutGoingMailServer.HeaderText = "OutGoingMailServer"
-        Me.DataGridViewTextBoxColumnOutGoingMailServer.Name = "DataGridViewTextBoxColumnOutGoingMailServer"
-        Me.DataGridViewTextBoxColumnOutGoingMailServer.Width = 139
-        '
-        'DataGridViewCheckBoxColumnUseAdvancedAITDecay
-        '
-        Me.DataGridViewCheckBoxColumnUseAdvancedAITDecay.DataPropertyName = "UseAdvancedAITDecay"
-        Me.DataGridViewCheckBoxColumnUseAdvancedAITDecay.HeaderText = "UseAdvancedAITDecay"
-        Me.DataGridViewCheckBoxColumnUseAdvancedAITDecay.Name = "DataGridViewCheckBoxColumnUseAdvancedAITDecay"
-        Me.DataGridViewCheckBoxColumnUseAdvancedAITDecay.Width = 134
-        '
-        'DataGridViewCheckBoxColumnUseLocalTimeZone
-        '
-        Me.DataGridViewCheckBoxColumnUseLocalTimeZone.DataPropertyName = "UseLocalTimeZone"
-        Me.DataGridViewCheckBoxColumnUseLocalTimeZone.HeaderText = "UseLocalTimeZone"
-        Me.DataGridViewCheckBoxColumnUseLocalTimeZone.Name = "DataGridViewCheckBoxColumnUseLocalTimeZone"
-        Me.DataGridViewCheckBoxColumnUseLocalTimeZone.Width = 113
-        '
-        'DataGridViewCheckBoxColumnAutoLogin
-        '
-        Me.DataGridViewCheckBoxColumnAutoLogin.DataPropertyName = "AutoLogin"
-        Me.DataGridViewCheckBoxColumnAutoLogin.HeaderText = "AutoLogin"
-        Me.DataGridViewCheckBoxColumnAutoLogin.Name = "DataGridViewCheckBoxColumnAutoLogin"
-        Me.DataGridViewCheckBoxColumnAutoLogin.Width = 69
         '
         'CareLinkUserDataRecordBindingSource
         '
@@ -2374,6 +2288,140 @@ Partial Class Form1
         Me.LastUpdateTime.TabIndex = 24
         Me.LastUpdateTime.Text = "Unknown"
         '
+        'DataGridViewButtonColumnDeleteRow
+        '
+        Me.DataGridViewButtonColumnDeleteRow.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewButtonColumnDeleteRow.DataPropertyName = "DeleteRow"
+        Me.DataGridViewButtonColumnDeleteRow.Frozen = True
+        Me.DataGridViewButtonColumnDeleteRow.HeaderText = ""
+        Me.DataGridViewButtonColumnDeleteRow.MinimumWidth = 50
+        Me.DataGridViewButtonColumnDeleteRow.Name = "DataGridViewButtonColumnDeleteRow"
+        Me.DataGridViewButtonColumnDeleteRow.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.DataGridViewButtonColumnDeleteRow.Text = "Delete Row"
+        Me.DataGridViewButtonColumnDeleteRow.UseColumnTextForButtonValue = True
+        Me.DataGridViewButtonColumnDeleteRow.Width = 50
+        '
+        'DataGridViewCareLinkUsersID
+        '
+        Me.DataGridViewCareLinkUsersID.DataPropertyName = "ID"
+        Me.DataGridViewCareLinkUsersID.HeaderText = "ID"
+        Me.DataGridViewCareLinkUsersID.Name = "DataGridViewCareLinkUsersID"
+        Me.DataGridViewCareLinkUsersID.ReadOnly = True
+        Me.DataGridViewCareLinkUsersID.Width = 43
+        '
+        'DataGridViewTextBoxColumnCareLinkUserName
+        '
+        Me.DataGridViewTextBoxColumnCareLinkUserName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnCareLinkUserName.DataPropertyName = "CareLinkUserName"
+        Me.DataGridViewTextBoxColumnCareLinkUserName.HeaderText = "CareLink UserName"
+        Me.DataGridViewTextBoxColumnCareLinkUserName.MinimumWidth = 125
+        Me.DataGridViewTextBoxColumnCareLinkUserName.Name = "DataGridViewTextBoxColumnCareLinkUserName"
+        Me.DataGridViewTextBoxColumnCareLinkUserName.Width = 125
+        '
+        'DataGridViewTextBoxColumnCareLinkPassword
+        '
+        Me.DataGridViewTextBoxColumnCareLinkPassword.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnCareLinkPassword.DataPropertyName = "CareLinkPassword"
+        Me.DataGridViewTextBoxColumnCareLinkPassword.HeaderText = "CareLink Password"
+        Me.DataGridViewTextBoxColumnCareLinkPassword.Name = "DataGridViewTextBoxColumnCareLinkPassword"
+        Me.DataGridViewTextBoxColumnCareLinkPassword.Width = 120
+        '
+        'DataGridViewTextBoxColumnAIT
+        '
+        Me.DataGridViewTextBoxColumnAIT.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None
+        Me.DataGridViewTextBoxColumnAIT.DataPropertyName = "AIT"
+        Me.DataGridViewTextBoxColumnAIT.HeaderText = "AIT"
+        Me.DataGridViewTextBoxColumnAIT.Name = "DataGridViewTextBoxColumnAIT"
+        Me.DataGridViewTextBoxColumnAIT.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumnAIT.Width = 150
+        '
+        'DataGridViewTextBoxColumnAlertPhoneNumber
+        '
+        Me.DataGridViewTextBoxColumnAlertPhoneNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnAlertPhoneNumber.DataPropertyName = "AlertPhoneNumber"
+        Me.DataGridViewTextBoxColumnAlertPhoneNumber.HeaderText = "Alert Phone Number"
+        Me.DataGridViewTextBoxColumnAlertPhoneNumber.Name = "DataGridViewTextBoxColumnAlertPhoneNumber"
+        Me.DataGridViewTextBoxColumnAlertPhoneNumber.Width = 129
+        '
+        'DataGridViewTextBoxColumnCarrierTextingDomain
+        '
+        Me.DataGridViewTextBoxColumnCarrierTextingDomain.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnCarrierTextingDomain.DataPropertyName = "CarrierTextingDomain"
+        Me.DataGridViewTextBoxColumnCarrierTextingDomain.HeaderText = "Carrier Texting Domain"
+        Me.DataGridViewTextBoxColumnCarrierTextingDomain.Name = "DataGridViewTextBoxColumnCarrierTextingDomain"
+        Me.DataGridViewTextBoxColumnCarrierTextingDomain.Width = 140
+        '
+        'DataGridViewTextBoxColumnCountryCode
+        '
+        Me.DataGridViewTextBoxColumnCountryCode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnCountryCode.DataPropertyName = "CountryCode"
+        Me.DataGridViewTextBoxColumnCountryCode.HeaderText = "Country Code"
+        Me.DataGridViewTextBoxColumnCountryCode.Name = "DataGridViewTextBoxColumnCountryCode"
+        Me.DataGridViewTextBoxColumnCountryCode.Width = 97
+        '
+        'DataGridViewTextBoxColumnMailserverPassword
+        '
+        Me.DataGridViewTextBoxColumnMailserverPassword.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnMailserverPassword.DataPropertyName = "MailserverPassword"
+        Me.DataGridViewTextBoxColumnMailserverPassword.HeaderText = "Mailserver Password"
+        Me.DataGridViewTextBoxColumnMailserverPassword.Name = "DataGridViewTextBoxColumnMailserverPassword"
+        Me.DataGridViewTextBoxColumnMailserverPassword.Width = 127
+        '
+        'DataGridViewTextBoxColumnMailServerPort
+        '
+        Me.DataGridViewTextBoxColumnMailServerPort.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnMailServerPort.DataPropertyName = "MailServerPort"
+        Me.DataGridViewTextBoxColumnMailServerPort.HeaderText = "MailServer Port"
+        Me.DataGridViewTextBoxColumnMailServerPort.Name = "DataGridViewTextBoxColumnMailServerPort"
+        Me.DataGridViewTextBoxColumnMailServerPort.Width = 103
+        '
+        'DataGridViewTextBoxColumnMailserverUserName
+        '
+        Me.DataGridViewTextBoxColumnMailserverUserName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnMailserverUserName.DataPropertyName = "MailserverUserName"
+        Me.DataGridViewTextBoxColumnMailserverUserName.HeaderText = "Mailserve rUser Name"
+        Me.DataGridViewTextBoxColumnMailserverUserName.Name = "DataGridViewTextBoxColumnMailserverUserName"
+        Me.DataGridViewTextBoxColumnMailserverUserName.Width = 106
+        '
+        'DataGridViewTextBoxColumnSettingsVersion
+        '
+        Me.DataGridViewTextBoxColumnSettingsVersion.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnSettingsVersion.DataPropertyName = "SettingsVersion"
+        Me.DataGridViewTextBoxColumnSettingsVersion.HeaderText = "Settings Version"
+        Me.DataGridViewTextBoxColumnSettingsVersion.Name = "DataGridViewTextBoxColumnSettingsVersion"
+        Me.DataGridViewTextBoxColumnSettingsVersion.Width = 106
+        '
+        'DataGridViewTextBoxColumnOutGoingMailServer
+        '
+        Me.DataGridViewTextBoxColumnOutGoingMailServer.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnOutGoingMailServer.DataPropertyName = "OutGoingMailServer"
+        Me.DataGridViewTextBoxColumnOutGoingMailServer.HeaderText = "Outgoing Mail Server"
+        Me.DataGridViewTextBoxColumnOutGoingMailServer.Name = "DataGridViewTextBoxColumnOutGoingMailServer"
+        Me.DataGridViewTextBoxColumnOutGoingMailServer.Width = 103
+        '
+        'DataGridViewCheckBoxColumnUseAdvancedAITDecay
+        '
+        Me.DataGridViewCheckBoxColumnUseAdvancedAITDecay.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewCheckBoxColumnUseAdvancedAITDecay.DataPropertyName = "UseAdvancedAITDecay"
+        Me.DataGridViewCheckBoxColumnUseAdvancedAITDecay.HeaderText = "Use Advanced AIT Decay"
+        Me.DataGridViewCheckBoxColumnUseAdvancedAITDecay.Name = "DataGridViewCheckBoxColumnUseAdvancedAITDecay"
+        '
+        'DataGridViewCheckBoxColumnUseLocalTimeZone
+        '
+        Me.DataGridViewCheckBoxColumnUseLocalTimeZone.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewCheckBoxColumnUseLocalTimeZone.DataPropertyName = "UseLocalTimeZone"
+        Me.DataGridViewCheckBoxColumnUseLocalTimeZone.HeaderText = "Use Local Time Zone"
+        Me.DataGridViewCheckBoxColumnUseLocalTimeZone.Name = "DataGridViewCheckBoxColumnUseLocalTimeZone"
+        Me.DataGridViewCheckBoxColumnUseLocalTimeZone.Width = 86
+        '
+        'DataGridViewCheckBoxColumnAutoLogin
+        '
+        Me.DataGridViewCheckBoxColumnAutoLogin.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewCheckBoxColumnAutoLogin.DataPropertyName = "AutoLogin"
+        Me.DataGridViewCheckBoxColumnAutoLogin.HeaderText = "Auto Login"
+        Me.DataGridViewCheckBoxColumnAutoLogin.Name = "DataGridViewCheckBoxColumnAutoLogin"
+        Me.DataGridViewCheckBoxColumnAutoLogin.Width = 65
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -2530,16 +2578,8 @@ Partial Class Form1
     Friend WithEvents DataGridViewMyUserData As DataGridView
     Friend WithEvents DataGridViewSGs As DataGridView
     Friend WithEvents DataGridViewSummary As DataGridView
-    Friend WithEvents DataGridViewCheckBoxColumnAutoLogin As DataGridViewCheckBoxColumn
-    Friend WithEvents DataGridViewCheckBoxColumnUseAdvancedAITDecay As DataGridViewCheckBoxColumn
-    Friend WithEvents DataGridViewCheckBoxColumnUseLocalTimeZone As DataGridViewCheckBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnAIT As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnAlertPhoneNumber As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCareLinkPassword As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCareLinkUserName As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCarrierTextingDomain As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCareLinkUsersPassword As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumnCountry As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountryCode As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumnCountrySettingsCategory As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumnCountrySettingsCategoryEven As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumnCountrySettingsKey As DataGridViewTextBoxColumn
@@ -2550,11 +2590,6 @@ Partial Class Form1
     Friend WithEvents DataGridViewTextBoxColumnCountrySettingsValueEven As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumnFirstName As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumnLastName As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnMailserverPassword As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnMailServerPort As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnMailserverUserName As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnOutGoingMailServer As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnSettingsVersion As DataGridViewTextBoxColumn
     Friend WithEvents FullNameLabel As Label
     Friend WithEvents ImageList1 As ImageList
     Friend WithEvents InRangeMessageLabel As Label
@@ -2685,4 +2720,21 @@ Partial Class Form1
     Friend WithEvents LastSGTimeLabel As Label
     Friend WithEvents ActiveInsulinTabLabel As Label
     Friend WithEvents TempTargetLabel As Label
+    Friend WithEvents CareLinkUsersAITComboBox As ComboBox
+    Friend WithEvents DataGridViewButtonColumnDeleteRow As DataGridViewButtonColumn
+    Friend WithEvents DataGridViewCareLinkUsersID As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCareLinkUserName As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCareLinkPassword As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnAIT As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnAlertPhoneNumber As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCarrierTextingDomain As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCountryCode As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnMailserverPassword As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnMailServerPort As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnMailserverUserName As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnSettingsVersion As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnOutGoingMailServer As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewCheckBoxColumnUseAdvancedAITDecay As DataGridViewCheckBoxColumn
+    Friend WithEvents DataGridViewCheckBoxColumnUseLocalTimeZone As DataGridViewCheckBoxColumn
+    Friend WithEvents DataGridViewCheckBoxColumnAutoLogin As DataGridViewCheckBoxColumn
 End Class

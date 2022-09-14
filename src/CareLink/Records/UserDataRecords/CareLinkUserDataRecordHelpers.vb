@@ -34,9 +34,6 @@ Public Class CareLinkUserDataRecordHelpers
             NameOf(My.Settings.AutoLogin)
          }
 
-    Public Shared ReadOnly s_allUserSettingsData As New Dictionary(Of String, CareLinkUserDataRecord)(StringComparer.OrdinalIgnoreCase)
-    Public Shared ReadOnly s_settingsCsvFile As String = Path.Combine(MyDocumentsPath, SavedCsvFileName)
-
     Friend Shared Function HideColumn(dataPropertyName As String) As Boolean
 #If SupportMailServer <> "True" Then
         If dataPropertyName.Contains("Mail") Then
@@ -53,47 +50,20 @@ Public Class CareLinkUserDataRecordHelpers
         Return _headerColumns(index)
     End Function
 
-    Public Shared Function GetCellStyle() As DataGridViewCellStyle
-        Return New DataGridViewCellStyle().CellStyleMiddleLeft
-    End Function
+    Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
+        If columnName = NameOf(CareLinkUserDataRecord.AIT) Then
+            Return New DataGridViewCellStyle().CellStyleMiddleLeft()
 
-    Public Shared Sub LoadAllUserRecords(BindingSource1 As BindingSource)
-        s_allUserSettingsData.Clear()
-
-        If File.Exists(s_settingsCsvFile) Then
-            Using myReader As New FileIO.TextFieldParser(s_settingsCsvFile)
-                myReader.TextFieldType = FileIO.FieldType.Delimited
-                myReader.Delimiters = New String() {","}
-                Dim currentRow As String()
-                'Loop through all of the fields in the file.
-                'If any lines are corrupt, report an error and continue parsing.
-                Dim rowIndex As Integer = 0
-                BindingSource1.Clear()
-
-                While Not myReader.EndOfData
-                    Try
-                        currentRow = myReader.ReadFields()
-                        ' Include code here to handle the row.
-                        If rowIndex <> 0 Then
-                            Dim oneUser As New CareLinkUserDataRecord(currentRow)
-                            BindingSource1.Add(oneUser)
-                            s_allUserSettingsData.Add(currentRow(0), oneUser)
-                        End If
-                        rowIndex += 1
-                    Catch ex As FileIO.MalformedLineException
-                        MsgBox($"Line {ex.Message} is invalid.  Skipping")
-                    End Try
-                End While
-            End Using
         End If
-    End Sub
+        Return New DataGridViewCellStyle().CellStyleMiddleLeft()
+    End Function
 
     Public Shared Sub SaveAllUserRecords(loggedOnUser As CareLinkUserDataRecord, Key As String, Value As String)
         If Not Key.Equals(NameOf(My.Settings.CareLinkUserName).ToString, StringComparison.OrdinalIgnoreCase) Then
             ' We are changing something other than the user name
             ' Update logged on user and the saved file
-            loggedOnUser.Update(Key, Value)
-            If Not s_allUserSettingsData.TryAdd(loggedOnUser.CareLinkUserName, loggedOnUser) Then
+            loggedOnUser.UpdateValue(Key, Value)
+            If Not s_allUserSettingsData.TryAdd(loggedOnUser) Then
                 s_allUserSettingsData(loggedOnUser.CareLinkUserName) = loggedOnUser
             End If
         Else
@@ -104,7 +74,7 @@ Public Class CareLinkUserDataRecordHelpers
             End If
             ' We have a new user
             loggedOnUser.clean(Value)
-            s_allUserSettingsData.Add(Value, loggedOnUser)
+            s_allUserSettingsData.Add(loggedOnUser)
         End If
 
         Dim sb As New StringBuilder

@@ -3,6 +3,8 @@
 ' See the LICENSE file in the project root for more information.
 
 Module SystemVariables
+    Public ReadOnly s_settingsCsvFile As String = IO.Path.Combine(MyDocumentsPath, SavedCsvFileName)
+    Public s_allUserSettingsData As New CareLinkUserDataList
     Friend Property HomePageBasalRow As Single
     Friend Property HomePageInsulinRow As Single
     Friend Property HomePageMealRow As Single

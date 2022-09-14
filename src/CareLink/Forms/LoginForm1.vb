@@ -27,17 +27,21 @@ Public Class LoginForm1
 
         If commandLineArgs.Length > 1 Then
             Dim arg As String() = commandLineArgs(1).Split("=")
-            If arg.Length = 2 Then
-                Dim userRecord As CareLinkUserDataRecord = Nothing
-                If CareLinkUserDataRecordHelpers.s_allUserSettingsData.TryGetValue(arg(1), userRecord) Then
-                    If userRecord.AutoLogin Then
-                        userRecord.UpdateSettings()
-                    End If
-                End If
+            Dim userRecord As CareLinkUserDataRecord = Nothing
+            If s_allUserSettingsData.TryGetValue(arg(1), userRecord) Then
+                Select Case arg.Length
+                    Case 1 ' /Safe
+                        My.Settings.AutoLogin = False
+                        userRecord.AutoLogin = False
+                    Case 2 ' username=name
+                        If userRecord.AutoLogin Then
+                            userRecord.UpdateSettings()
+                        End If
+                End Select
             End If
         End If
-        If File.Exists(CareLinkUserDataRecordHelpers.s_settingsCsvFile) Then
-            _mySource.AddRange(CareLinkUserDataRecordHelpers.s_allUserSettingsData.Keys.ToArray)
+        If File.Exists(s_settingsCsvFile) Then
+            _mySource.AddRange(s_allUserSettingsData.Keys.ToArray)
         ElseIf Not String.IsNullOrWhiteSpace(My.Settings.CareLinkUserName) Then
             _mySource.Add(My.Settings.CareLinkUserName)
         Else
@@ -49,8 +53,8 @@ Public Class LoginForm1
             .AutoCompleteSource = AutoCompleteSource.CustomSource
             .Text = My.Settings.CareLinkUserName
         End With
-        If CareLinkUserDataRecordHelpers.s_allUserSettingsData.ContainsKey(My.Settings.CareLinkUserName) Then
-            Me.PasswordTextBox.Text = CareLinkUserDataRecordHelpers.s_allUserSettingsData(My.Settings.CareLinkUserName).CareLinkPassword
+        If s_allUserSettingsData.ContainsKey(My.Settings.CareLinkUserName) Then
+            Me.PasswordTextBox.Text = s_allUserSettingsData(My.Settings.CareLinkUserName).CareLinkPassword
         Else
             Me.PasswordTextBox.Text = My.Settings.CareLinkPassword
 
@@ -90,7 +94,7 @@ Public Class LoginForm1
                 End If
 
                 My.Settings.Save()
-                If Not CareLinkUserDataRecordHelpers.s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, Me.LoggedOnUser) Then
+                If Not s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, Me.LoggedOnUser) Then
                     Me.LoggedOnUser = New CareLinkUserDataRecord
                 End If
                 Me.DialogResult = DialogResult.OK
@@ -143,7 +147,7 @@ Public Class LoginForm1
 
     Private Sub UsernameTextBox_Leave(sender As Object, e As EventArgs) Handles UsernameTextBox.Leave
         Dim userSettings As CareLinkUserDataRecord = Nothing
-        If CareLinkUserDataRecordHelpers.s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, userSettings) Then
+        If s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, userSettings) Then
             If userSettings.CareLinkUserName.Equals(Me.UsernameTextBox.Text, StringComparison.OrdinalIgnoreCase) Then
                 Me.UsernameTextBox.Text = userSettings.CareLinkUserName
             End If
