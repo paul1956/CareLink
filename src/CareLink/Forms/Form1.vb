@@ -1095,7 +1095,7 @@ Public Class Form1
                 s_allUserSettingsData.Add(userSettings)
             End If
         End If
-        CareLinkUserDataRecordHelpers.SaveAllUserRecords(_loginDialog.LoggedOnUser, e.SettingName, e.NewValue.ToString)
+        CareLinkUserDataRecordHelpers.SaveAllUserRecords(_loginDialog.LoggedOnUser, e.SettingName, e.NewValue?.ToString)
     End Sub
 
 #End Region ' Settings Events

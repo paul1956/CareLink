@@ -34,9 +34,7 @@ Public Class LoginForm1
                         My.Settings.AutoLogin = False
                         userRecord.AutoLogin = False
                     Case 2 ' username=name
-                        If userRecord.AutoLogin Then
-                            userRecord.UpdateSettings()
-                        End If
+                        userRecord.UpdateSettings()
                 End Select
             End If
         End If
