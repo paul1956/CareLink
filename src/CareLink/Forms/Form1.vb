@@ -2416,7 +2416,9 @@ Public Class Form1
                 notStr.Append(Date.Now().ToShortDateTimeString.Replace($"{CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator}{Now.Year}", ""))
                 notStr.Append(Environment.NewLine)
                 notStr.Append($"Last SG {str} {BgUnitsString}")
-                If Not s_lastBGValue = 0 Then
+                If s_lastBGValue = 0 Then
+                    Me.LabelTrendValue.Text = ""
+                Else
                     notStr.Append(Environment.NewLine)
                     Dim diffsg As Double = sg - s_lastBGValue
                     notStr.Append("SG Trend ")
