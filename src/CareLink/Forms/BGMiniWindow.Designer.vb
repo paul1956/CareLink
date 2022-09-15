@@ -70,21 +70,21 @@ Partial Class BGMiniWindow
         Me.DeltaTextBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.DeltaTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.DeltaTextBox.Font = New System.Drawing.Font("Segoe UI", 36.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        Me.DeltaTextBox.Location = New System.Drawing.Point(166, 40)
+        Me.DeltaTextBox.Location = New System.Drawing.Point(143, 40)
         Me.DeltaTextBox.Margin = New System.Windows.Forms.Padding(0)
         Me.DeltaTextBox.Name = "DeltaTextBox"
-        Me.DeltaTextBox.Size = New System.Drawing.Size(98, 64)
+        Me.DeltaTextBox.Size = New System.Drawing.Size(121, 64)
         Me.DeltaTextBox.TabIndex = 2
         Me.DeltaTextBox.Text = "+10"
         '
         'CloseButton
         '
         Me.CloseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CloseButton.Location = New System.Drawing.Point(167, 99)
+        Me.CloseButton.Location = New System.Drawing.Point(130, 99)
         Me.CloseButton.Name = "CloseButton"
-        Me.CloseButton.Size = New System.Drawing.Size(97, 23)
+        Me.CloseButton.Size = New System.Drawing.Size(134, 23)
         Me.CloseButton.TabIndex = 3
-        Me.CloseButton.Text = "Hide"
+        Me.CloseButton.Text = "Show Main Display"
         Me.CloseButton.UseVisualStyleBackColor = True
         '
         'chkTopMost

@@ -1,8 +1,8 @@
-# Getting started
+# Getting started with contribuating
 
 ## Requires
 
-- Visual Studio 2019 Version 17.3, the community version  can be download for free from Microsoft at
+- Visual Studio 2019 Version 17.3 or later, the community version can be download for free from Microsoft at
 https://visualstudio.microsoft.com/vs/community
 
 ## Installation of Visual Studio
@@ -14,9 +14,9 @@ Once you have download it, follow installation instructions and make sure you in
 To start you will need to make your own copy of the code, to do this open Visual Studio and on the right side of Start Menu select "Clone a Repo".
 
 Under Repo Location enter https://github.com/paul1956/CareLink.git and select Clone.
+Also clone https://github.com/kirsan31/winforms-datavisualization
 
 After a few minutes Visual Studio will start with all the code loaded.
-
 
 ## Running the code
 

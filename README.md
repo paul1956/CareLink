@@ -27,9 +27,15 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 9/13/2022
+- 9/14/2022
 
 ## What's New in this release
+  New 3.5.6.0
+  Use improved DataVisualizationPackage
+    https://github.com/kirsan31/winforms-datavisualization
+  Fix for matching username with CareLink.csv file
+  Improved support for pump time changes
+
   New 3.5.5.3
   Fixed GitHub issues 19 and 20
   Add some infrastructure to support editing of CareLink User File
@@ -243,10 +249,9 @@ This is a Visual Basic application that provides a UI to view Medtronic 670G and
 This shows all available data and is not in any way supported by Medtronic, it was created from publicly available data.
 Some data was filtered out because I could not see any use for it. You can turn off filters but performance will suffer.
 
-For the visualization layer I use the open source NuGet package.
-Maikebing.System.Windows.Forms.DataVisualization
-https://www.nuget.org/packages/Maikebing.System.Windows.Forms.DataVisualization/5.0.1?_src=template
-
+For the visualization layer I use the open source
+System.Windows.Forms.DataVisualization
+https://github.com/kirsan31/winforms-datavisualization
 
 #Known Issue
 If you get a "System.Configuration.ConfigurationErrorsException: 'Configuration system failed to initialize'"

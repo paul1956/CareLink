@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\CareLink\\CareLink.vbproj": {
-      "version": "3.5.5.3",
+      "version": "3.5.6",
       "restore": {
         "projectUniqueName": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\CareLink\\CareLink.vbproj",
         "projectName": "CareLink",
@@ -21,7 +21,7 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net6.0-windows10.0.17763.0"
+          "net6.0-windows"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
@@ -34,8 +34,8 @@
           "https://www.myget.org/F/modvb/api/v3/index.json": {}
         },
         "frameworks": {
-          "net6.0-windows10.0.17763": {
-            "targetAlias": "net6.0-windows10.0.17763.0",
+          "net6.0-windows7.0": {
+            "targetAlias": "net6.0-windows",
             "projectReferences": {
               "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\ToolStripComboBoxEx.vbproj": {
                 "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\ToolStripComboBoxEx.vbproj"
@@ -45,20 +45,16 @@
         }
       },
       "frameworks": {
-        "net6.0-windows10.0.17763": {
-          "targetAlias": "net6.0-windows10.0.17763.0",
+        "net6.0-windows7.0": {
+          "targetAlias": "net6.0-windows",
           "dependencies": {
-            "Maikebing.System.Windows.Forms.DataVisualization": {
-              "target": "Package",
-              "version": "[5.0.1, )"
-            },
             "Microsoft.Exchange.WebServices.NETStandard": {
               "target": "Package",
-              "version": "[1.1.3, )"
+              "version": "[2.0.0-beta3, )"
             },
             "Octokit": {
               "target": "Package",
-              "version": "[2.0.1, )"
+              "version": "[3.0.0, )"
             },
             "ToolStripComboBoxEx": {
               "target": "Package",
@@ -76,17 +72,8 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.Windows.SDK.NET.Ref",
-              "version": "[10.0.17763.26, 10.0.17763.26]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            },
-            "Microsoft.Windows.SDK.NET.Ref": {
               "privateAssets": "all"
             },
             "Microsoft.WindowsDesktop.App.WindowsForms": {
@@ -114,7 +101,7 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net6.0-windows10.0.17763.0"
+          "net6.0-windows"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
@@ -127,8 +114,8 @@
           "https://www.myget.org/F/modvb/api/v3/index.json": {}
         },
         "frameworks": {
-          "net6.0-windows10.0.17763": {
-            "targetAlias": "net6.0-windows10.0.17763.0",
+          "net6.0-windows7.0": {
+            "targetAlias": "net6.0-windows",
             "projectReferences": {}
           }
         },
@@ -139,8 +126,8 @@
         }
       },
       "frameworks": {
-        "net6.0-windows10.0.17763": {
-          "targetAlias": "net6.0-windows10.0.17763.0",
+        "net6.0-windows7.0": {
+          "targetAlias": "net6.0-windows",
           "imports": [
             "net461",
             "net462",
@@ -152,17 +139,8 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.Windows.SDK.NET.Ref",
-              "version": "[10.0.17763.26, 10.0.17763.26]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            },
-            "Microsoft.Windows.SDK.NET.Ref": {
               "privateAssets": "all"
             },
             "Microsoft.WindowsDesktop.App.WindowsForms": {

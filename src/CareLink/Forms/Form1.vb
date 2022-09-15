@@ -1955,7 +1955,9 @@ Public Class Form1
         If Not _initialized Then
             Exit Sub
         End If
+
         Try
+            Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
             For Each s As Series In Me.ActiveInsulinChart.Series
                 s.Points.Clear()
             Next
@@ -1990,11 +1992,15 @@ Public Class Form1
                     Case "LOW_GLUCOSE_SUSPENDED"
                     Case "MEAL"
                     Case "TIME_CHANGE"
+                        lastTimeChangeRecord = New TimeChangeRecord(s_markers(marker.Index))
                     Case Else
                         Stop
                 End Select
             Next
 
+            If lastTimeChangeRecord IsNot Nothing Then
+                Me.ActiveInsulinChart.ChartAreas(ChartAreaName).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
+            End If
             ' set up table that holds active insulin for every 5 minutes
             Dim remainingInsulinList As New List(Of RunningActiveInsulinRecord)
             Dim currentMarker As Integer = 0

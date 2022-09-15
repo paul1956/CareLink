@@ -82,6 +82,14 @@ Module ChartingExtensions
     End Sub
 
     <Extension>
+    Friend Sub AdjustXAxisStartTime(ByRef axisX As Axis, timeChangeRecord As TimeChangeRecord)
+        Dim latestTime As Date = If(timeChangeRecord.previousDateTime > timeChangeRecord.dateTime, timeChangeRecord.previousDateTime, timeChangeRecord.dateTime)
+        Dim timeOffset As Double = (latestTime - s_bindingSourceSGs(0).datetime).TotalMinutes
+        axisX.IntervalOffset = timeOffset
+        axisX.IntervalOffsetType = DateTimeIntervalType.Minutes
+    End Sub
+
+    <Extension>
     Friend Sub DrawBasalMarker(ByRef basalSeries As Series, markerOADate As OADate, amount As Single, bolusRow As Double, insulinRow As Double, lineColor As Color, DrawFromBottom As Boolean, toolTip As String)
         Dim startX As OADate
         Dim startY As Double
@@ -127,6 +135,7 @@ Module ChartingExtensions
 
     <Extension>
     Friend Sub PlotHomePageMarkers(homePageChart As Chart, chartRelitivePosition As RectangleF, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+        Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
         For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             Try
                 Dim markerDateTime As Date = s_markers.SafeGetSgDateTime(markerWithIndex.Index)
@@ -187,8 +196,10 @@ Module ChartingExtensions
                     Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED"
                     Case "TIME_CHANGE"
                         With homePageChart.Series(TimeChangeSeriesName).Points
+                            lastTimeChangeRecord = New TimeChangeRecord(s_markers(markerWithIndex.Index))
+
                             markerOADateTime = New TimeChangeRecord(s_markers(markerWithIndex.Index)).currentOADate
-                            .AddXY(markerOADateTime, 0)
+                            Call .AddXY(markerOADateTime, 0)
                             .AddXY(markerOADateTime, HomePageBasalRow)
                             .AddXY(markerOADateTime, Double.NaN)
                         End With
@@ -200,7 +211,9 @@ Module ChartingExtensions
                 '      Throw New Exception($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
             End Try
         Next
-
+        If lastTimeChangeRecord IsNot Nothing Then
+            homePageChart.ChartAreas(ChartAreaName).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
+        End If
     End Sub
 
     <Extension>
@@ -216,6 +229,7 @@ Module ChartingExtensions
 
     <Extension>
     Friend Sub PlotTreatmentMarkers(treatmentChart As Chart, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+        Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
         For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             Try
                 Dim markerDateTime As Date = s_markers.SafeGetSgDateTime(markerWithIndex.Index)
@@ -274,8 +288,9 @@ Module ChartingExtensions
                          "LOW_GLUCOSE_SUSPENDED"
                     Case "TIME_CHANGE"
                         With treatmentChart.Series(TimeChangeSeriesName).Points
+                            lastTimeChangeRecord = New TimeChangeRecord(s_markers(markerWithIndex.Index))
                             markerOADateTime = New TimeChangeRecord(s_markers(markerWithIndex.Index)).previousOADate
-                            .AddXY(markerOADateTime, 0)
+                            Call .AddXY(markerOADateTime, 0)
                             .AddXY(markerOADateTime, TreatmentInsulinRow)
                             .AddXY(markerOADateTime, Double.NaN)
                         End With
@@ -288,6 +303,9 @@ Module ChartingExtensions
             End Try
         Next
 
+        If lastTimeChangeRecord IsNot Nothing Then
+            treatmentChart.ChartAreas(ChartAreaName).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
+        End If
     End Sub
 
     <Extension>
