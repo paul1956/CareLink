@@ -90,10 +90,8 @@ Friend Module BrowserUtilities
 
             Dim gitHubVersion As String = versionStr
             If IsNewerVersion(gitHubVersion, My.Application.Info.Version) Then
-                If reportResults Then
-                    If MsgBox("There is a newer version available, do you want to install now?", MsgBoxStyle.YesNo, "Updates Available") = MsgBoxResult.Yes Then
-                        OpenUrlInBrowser($"{GitHubCareLinkUrl}releases/")
-                    End If
+                If MsgBox("There is a newer version available, do you want to install now?", MsgBoxStyle.YesNo, "Updates Available") = MsgBoxResult.Yes Then
+                    OpenUrlInBrowser($"{GitHubCareLinkUrl}releases/")
                 End If
             Else
                 If reportResults Then
