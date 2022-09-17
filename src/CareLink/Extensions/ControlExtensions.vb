@@ -24,11 +24,11 @@ Public Module ControlExtensions
         Dim halfWidth As Single = CSng(markerImage.Width / 2)
         For Each markerKvp As KeyValuePair(Of OADate, Single) In markerDictionary
             Dim imagePosition As RectangleF = RectangleF.Empty
-            imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.X, markerKvp.Key))
+            imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, markerKvp.Key))
             If paintOnY2 Then
-                imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y2, markerKvp.Value))
+                imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, markerKvp.Value))
             Else
-                imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, AxisName.Y, markerKvp.Value))
+                imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y, markerKvp.Value))
             End If
             imagePosition.Width = markerImage.Width
             imagePosition.Height = markerImage.Height

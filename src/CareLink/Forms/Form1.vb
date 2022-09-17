@@ -540,7 +540,7 @@ Public Class Form1
         _inMouseMove = True
         Dim yInPixels As Double
         Try
-            yInPixels = Me.HomeTabChart.ChartAreas(ChartAreaName).AxisY2.ValueToPixelPosition(e.Y)
+            yInPixels = Me.HomeTabChart.ChartAreas(NameOf(ChartArea)).AxisY2.ValueToPixelPosition(e.Y)
         Catch ex As Exception
             yInPixels = Double.NaN
         End Try
@@ -1183,8 +1183,8 @@ Public Class Form1
         Me.HomeTabBGSeries = CreateBgSeries(NameOf(defaultLegend))
         Me.HomeTabMarkerSeries = CreateMarkerSeries(AxisType.Secondary)
 
-        Me.HomeTabHighLimitSeries = CreateSeriesLimits(HighLimitSeriesName, ChartAreaName, Color.Orange)
-        Me.HomeTabLowLimitSeries = CreateSeriesLimits(LowLimitSeriesName, ChartAreaName, Color.Red)
+        Me.HomeTabHighLimitSeries = CreateSeriesLimits(HighLimitSeriesName, Color.Orange)
+        Me.HomeTabLowLimitSeries = CreateSeriesLimits(LowLimitSeriesName, Color.Red)
         Me.HomeTabTimeChangeSeries = CreateTimeChangeSeries()
         Me.SplitContainer3.Panel1.Controls.Add(Me.HomeTabChart)
         Application.DoEvents()
@@ -1276,7 +1276,7 @@ Public Class Form1
         Me.ActiveInsulinSeries = New Series(NameOf(ActiveInsulinSeries)) With {
             .BorderColor = Color.FromArgb(180, 26, 59, 105),
             .BorderWidth = 4,
-            .ChartArea = ChartAreaName,
+            .ChartArea = NameOf(ChartArea),
             .ChartType = SeriesChartType.Line,
             .Color = Color.HotPink,
             .Legend = NameOf(ActiveInsulinChartLegend),
@@ -1964,7 +1964,7 @@ Public Class Form1
             Next
 
             Me.ActiveInsulinChart.Titles(NameOf(ActiveInsulinChartTitle)).Text = $"Running Active Insulin in Pink"
-            Me.ActiveInsulinChart.ChartAreas(ChartAreaName).InitializeBGChartArea()
+            Me.ActiveInsulinChart.ChartAreas(NameOf(ChartArea)).InitializeBGChartArea()
 
             ' Order all markers by time
             Dim timeOrderedMarkers As New SortedDictionary(Of OADate, Single)
@@ -2000,7 +2000,7 @@ Public Class Form1
             Next
 
             If lastTimeChangeRecord IsNot Nothing Then
-                Me.ActiveInsulinChart.ChartAreas(ChartAreaName).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
+                Me.ActiveInsulinChart.ChartAreas(NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
             End If
             ' set up table that holds active insulin for every 5 minutes
             Dim remainingInsulinList As New List(Of RunningActiveInsulinRecord)
@@ -2167,7 +2167,7 @@ Public Class Form1
             For Each s As Series In Me.HomeTabChart.Series
                 s.Points.Clear()
             Next
-            Me.HomeTabChart.ChartAreas(ChartAreaName).InitializeBGChartArea()
+            Me.HomeTabChart.ChartAreas(NameOf(ChartArea)).InitializeBGChartArea()
             Dim limitsIndexList() As Integer = GetLimitsList(s_bindingSourceSGs.Count - 1)
             Me.HomeTabChart.PlotHomePageMarkers(_homePageAbsoluteRectangle)
             Me.HomeTabChart.PlotSgSeries(HomePageMealRow)
@@ -2320,7 +2320,7 @@ Public Class Form1
         Try
             Me.InitializeTreatmentMarkersChart()
             Me.TreatmentMarkersChart.Titles(NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Makers"
-            Me.TreatmentMarkersChart.ChartAreas(ChartAreaName).InitializeBGChartArea()
+            Me.TreatmentMarkersChart.ChartAreas(NameOf(ChartArea)).InitializeBGChartArea()
             Me.TreatmentMarkersChart.PlotTreatmentMarkers()
             Me.TreatmentMarkersChart.PlotSgSeries(HomePageMealRow)
         Catch ex As Exception

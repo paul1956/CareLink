@@ -8,7 +8,6 @@ Imports System.Windows.Forms.DataVisualization.Charting
 Module ChartSupport
     Friend Const BasalSeriesName As String = "BasalSeries"
     Friend Const BgSeriesName As String = "BgSeries"
-    Friend Const ChartAreaName As String = "ChartArea"
     Friend Const HighLimitSeriesName As String = "HighLimitSeries"
     Friend Const LowLimitSeriesName As String = "LowLimitSeries"
     Friend Const MarkerSeriesName As String = "MarkerSeries"
@@ -30,7 +29,7 @@ Module ChartSupport
     End Function
 
     Friend Function CreateChartArea() As ChartArea
-        Dim tmpChartArea As New ChartArea(ChartAreaName) With {
+        Dim tmpChartArea As New ChartArea(NameOf(ChartArea)) With {
                      .BackColor = Color.FromArgb(180, 23, 47, 19),
                      .BackGradientStyle = GradientStyle.TopBottom,
                      .BackSecondaryColor = Color.FromArgb(180, 29, 56, 26),
@@ -139,7 +138,7 @@ Module ChartSupport
         Dim s As New Series(BasalSeriesName) With {
                      .BorderWidth = 2,
                      .BorderColor = Color.HotPink,
-                     .ChartArea = ChartAreaName,
+                     .ChartArea = NameOf(ChartArea),
                      .ChartType = SeriesChartType.Line,
                      .Color = Color.HotPink,
                      .XValueType = ChartValueType.DateTime,
@@ -155,7 +154,7 @@ Module ChartSupport
         Return New Series(BgSeriesName) With {
                      .BorderColor = Color.FromArgb(180, 26, 59, 105),
                      .BorderWidth = 4,
-                     .ChartArea = ChartAreaName,
+                     .ChartArea = NameOf(ChartArea),
                      .ChartType = SeriesChartType.Line,
                      .Color = Color.White,
                      .Legend = legendName,
@@ -169,7 +168,7 @@ Module ChartSupport
         Dim s As New Series(MarkerSeriesName) With {
                         .BorderColor = Color.Transparent,
                         .BorderWidth = 1,
-                        .ChartArea = ChartAreaName,
+                        .ChartArea = NameOf(ChartArea),
                         .ChartType = SeriesChartType.Point,
                         .Color = Color.HotPink,
                         .MarkerSize = 15,
@@ -182,11 +181,11 @@ Module ChartSupport
         Return s
     End Function
 
-    Friend Function CreateSeriesLimits(seriesName As String, chartAreaName As String, lineColor As Color) As Series
+    Friend Function CreateSeriesLimits(seriesName As String, lineColor As Color) As Series
         Dim tmpSeries As New Series(seriesName) With {
                             .BorderColor = Color.FromArgb(180, lineColor),
                             .BorderWidth = 2,
-                            .ChartArea = chartAreaName,
+                            .ChartArea = NameOf(ChartArea),
                             .ChartType = SeriesChartType.Line,
                             .Color = lineColor,
                             .ShadowColor = Color.Black,
@@ -202,7 +201,7 @@ Module ChartSupport
                         .ChartType = SeriesChartType.Line,
                         .BorderColor = Color.Transparent,
                         .BorderWidth = 1,
-                        .ChartArea = ChartAreaName,
+                        .ChartArea = NameOf(ChartArea),
                         .Color = Color.White,
                         .ShadowColor = Color.Transparent,
                         .XValueType = ChartValueType.DateTime,
