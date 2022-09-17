@@ -93,7 +93,7 @@ Public Class LoginForm1
 
                 My.Settings.Save()
                 If Not s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, Me.LoggedOnUser) Then
-                    Me.LoggedOnUser = New CareLinkUserDataRecord
+                    CareLinkUserDataRecordHelpers.SaveAllUserRecords(New CareLinkUserDataRecord, NameOf(CareLinkUserDataRecord.CareLinkUserName), Me.UsernameTextBox.Text)
                 End If
                 Me.DialogResult = DialogResult.OK
                 Me.Hide()

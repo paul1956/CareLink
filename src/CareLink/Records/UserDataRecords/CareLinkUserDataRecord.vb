@@ -72,7 +72,7 @@ Public Class CareLinkUserDataRecord
 
     Public Sub New()
         _userData = New CareLinkUserData With {
-            ._iD = "-1",
+            ._iD = s_allUserSettingsData.Count.ToString,
             ._careLinkUserName = My.Settings.CareLinkUserName,
             ._careLinkPassword = My.Settings.CareLinkPassword,
             ._aIT = My.Settings.AIT,
@@ -274,10 +274,8 @@ Public Class CareLinkUserDataRecord
     ''' <summary>
     ''' Delete any user specific sensitive data
     ''' </summary>
-    Friend Sub clean(userName As String)
-        _userData._careLinkUserName = userName
+    Friend Sub clean()
         _userData._alertPhoneNumber = ""
-        _userData._careLinkPassword = ""
         _userData._carrierTextingDomain = ""
         _userData._mailserverPassword = ""
         _userData._mailServerPort = 0

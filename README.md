@@ -27,14 +27,18 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 9/14/2022
+- 9/16/2022
 
 ## What's New in this release
-  New 3.5.6.0
+  New 3.5.6.2
+  Improvement is multiuser support
+
+  New 3.5.6.1
   Use improved DataVisualizationPackage
     https://github.com/kirsan31/winforms-datavisualization
   Fix for matching username with CareLink.csv file
   Improved support for pump time changes
+  Icon for Show Widget Menu
 
   New 3.5.5.3
   Fixed GitHub issues 19 and 20

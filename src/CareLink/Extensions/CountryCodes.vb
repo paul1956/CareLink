@@ -313,7 +313,9 @@ Public Module RegionCountryLists
 
     <Extension>
     Public Function GetRegionFromCode(countryCode As String) As String
-        Debug.Assert(countryCode.Length = 2)
+        If String.IsNullOrWhiteSpace(countryCode) Then
+            countryCode = "US"
+        End If
         Return s_regionCountryList(GetCountryFromCode(countryCode))
     End Function
 

@@ -68,13 +68,13 @@ Public Class CareLinkUserDataRecordHelpers
             End If
         Else
             ' We are changing the user name, first try to load it
-            If s_allUserSettingsData.ContainsKey(Value) Then
+            If Not s_allUserSettingsData.ContainsKey(Value) Then
+                ' We have a new user
+                loggedOnUser.clean()
+                s_allUserSettingsData.Add(loggedOnUser)
+            Else
                 loggedOnUser = s_allUserSettingsData(Value)
-                Exit Sub
             End If
-            ' We have a new user
-            loggedOnUser.clean(Value)
-            s_allUserSettingsData.Add(loggedOnUser)
         End If
 
         Dim sb As New StringBuilder

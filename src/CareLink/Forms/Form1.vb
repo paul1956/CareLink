@@ -233,7 +233,7 @@ Public Class Form1
             .ValueMember = "Value"
         End With
 
-        Me.MenuStrip1.Items.Insert(3, Me.AITComboBox)
+        Me.MenuStrip1.Items.Insert(2, Me.AITComboBox)
         Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact($"AIT {My.Settings.AIT.ToString("hh\:mm").Substring(1)}")
         Me.MenuOptionsUseAdvancedAITDecay.CheckState = If(My.Settings.UseAdvancedAITDecay, CheckState.Checked, CheckState.Unchecked)
         AddHandler Microsoft.Win32.SystemEvents.PowerModeChanged, AddressOf Me.PowerModeChanged
@@ -253,7 +253,7 @@ Public Class Form1
         End If
         s_useLocalTimeZone = My.Settings.UseLocalTimeZone
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
-        CheckForUpdatesAsync(Me, False)
+        CheckForUpdatesAsync(Me, True)
         If Me.DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
             Me.AllTabPagesUpdate()
         End If
@@ -1224,6 +1224,7 @@ Public Class Form1
                              width1)
                             }
 
+
         With Me.HomeTabTimeInRangeChart
             .BorderSkin.BackSecondaryColor = Color.Transparent
             .BorderSkin.SkinStyle = BorderSkinStyle.None
@@ -2015,7 +2016,7 @@ Public Class Form1
                 remainingInsulinList.Add(New RunningActiveInsulinRecord(firstNotSkippedOaTime, initialBolus, Me.MenuOptionsUseAdvancedAITDecay.Checked))
             Next
 
-            Me.ActiveInsulinChartArea.AxisY2.Maximum = HomePageBasalRow
+            Me.ActiveInsulinChart.ChartAreas(NameOf(ChartArea)).AxisY2.Maximum = HomePageBasalRow
             ' walk all markers, adjust active insulin and then add new marker
             Dim maxActiveInsulin As Double = 0
             For i As Integer = 0 To remainingInsulinList.Count - 1
@@ -2034,8 +2035,8 @@ Public Class Form1
                 remainingInsulinList.Adjustlist(startIndex, s_activeInsulinIncrements)
             Next
 
-            Me.ActiveInsulinChartArea.AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1
-            maxActiveInsulin = Me.ActiveInsulinChartArea.AxisY.Maximum
+            Me.ActiveInsulinChart.ChartAreas(NameOf(ChartArea)).AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1
+            maxActiveInsulin = Me.ActiveInsulinChart.ChartAreas(NameOf(ChartArea)).AxisY.Maximum
 
             Me.ActiveInsulinChart.PlotSgSeries(HomePageMealRow)
         Catch ex As Exception

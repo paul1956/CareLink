@@ -53,11 +53,11 @@ Partial Class Form1
         Me.MenuOptionsSetupEmailServer = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsUseAdvancedAITDecay = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsUseLocalTimeZone = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ShowMiniDisplay = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelp = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelpReportAnIssue = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelpCheckForUpdates = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelpAbout = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ShowMiniDisplay = New System.Windows.Forms.ToolStripMenuItem()
         Me.ServerUpdateTimer = New System.Windows.Forms.Timer(Me.components)
         Me.TableLayoutPanelTop1 = New System.Windows.Forms.TableLayoutPanel()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
@@ -422,14 +422,6 @@ Partial Class Form1
         Me.MenuOptionsUseLocalTimeZone.Size = New System.Drawing.Size(204, 22)
         Me.MenuOptionsUseLocalTimeZone.Text = "Use Local TImeZone"
         '
-        'ShowMiniDisplay
-        '
-        Me.ShowMiniDisplay.Name = "ShowMiniDisplay"
-        Me.ShowMiniDisplay.Size = New System.Drawing.Size(89, 20)
-        Me.ShowMiniDisplay.Text = "Show Widget"
-        Me.ShowMiniDisplay.ToolTipText = "Minimize and show Widget"
-        Me.ShowMiniDisplay.Visible = False
-        '
         'MenuHelp
         '
         Me.MenuHelp.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuHelpReportAnIssue, Me.MenuHelpCheckForUpdates, Me.MenuHelpAbout})
@@ -443,21 +435,30 @@ Partial Class Form1
         Me.MenuHelpReportAnIssue.Image = Global.CareLink.My.Resources.Resources.FeedbackSmile_16x
         Me.MenuHelpReportAnIssue.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.MenuHelpReportAnIssue.Name = "MenuHelpReportAnIssue"
-        Me.MenuHelpReportAnIssue.Size = New System.Drawing.Size(177, 22)
+        Me.MenuHelpReportAnIssue.Size = New System.Drawing.Size(180, 22)
         Me.MenuHelpReportAnIssue.Text = "Report A Problem..."
         '
         'MenuHelpCheckForUpdates
         '
         Me.MenuHelpCheckForUpdates.Name = "MenuHelpCheckForUpdates"
-        Me.MenuHelpCheckForUpdates.Size = New System.Drawing.Size(177, 22)
+        Me.MenuHelpCheckForUpdates.Size = New System.Drawing.Size(180, 22)
         Me.MenuHelpCheckForUpdates.Text = "Check For Updates"
         '
         'MenuHelpAbout
         '
         Me.MenuHelpAbout.Image = Global.CareLink.My.Resources.Resources.AboutBox
         Me.MenuHelpAbout.Name = "MenuHelpAbout"
-        Me.MenuHelpAbout.Size = New System.Drawing.Size(177, 22)
+        Me.MenuHelpAbout.Size = New System.Drawing.Size(180, 22)
         Me.MenuHelpAbout.Text = "&About..."
+        '
+        'ShowMiniDisplay
+        '
+        Me.ShowMiniDisplay.Image = Global.CareLink.My.Resources.Resources.ExitFullScreen
+        Me.ShowMiniDisplay.Name = "ShowMiniDisplay"
+        Me.ShowMiniDisplay.Size = New System.Drawing.Size(105, 20)
+        Me.ShowMiniDisplay.Text = "Show Widget"
+        Me.ShowMiniDisplay.ToolTipText = "Minimize and show Widget"
+        Me.ShowMiniDisplay.Visible = False
         '
         'ServerUpdateTimer
         '
