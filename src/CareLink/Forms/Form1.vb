@@ -253,7 +253,7 @@ Public Class Form1
         End If
         s_useLocalTimeZone = My.Settings.UseLocalTimeZone
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
-        CheckForUpdatesAsync(Me, True)
+        CheckForUpdatesAsync(Me, False)
         If Me.DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
             Me.AllTabPagesUpdate()
         End If

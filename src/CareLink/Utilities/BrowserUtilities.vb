@@ -66,7 +66,7 @@ Friend Module BrowserUtilities
     ''' <a href="/paul1956/CareLink/releases/tag/3.4.0.3" data-view-component="true" class="Link--primary">CareLink Display 3.4.0.3 x64</a>
     ''' </summary>
     ''' <param name="mainForm"></param>
-    ''' <param name="reportResults"></param>
+    ''' <param name="reportResults">Always report result when true</param>
     Friend Async Sub CheckForUpdatesAsync(mainForm As Form1, reportResults As Boolean)
         Try
             Dim responseBody As String = Await s_httpClient.GetStringAsync($"{GitHubCareLinkUrl}releases")
