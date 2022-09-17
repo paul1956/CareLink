@@ -30,7 +30,7 @@ This update has a UI to show all the available data and a visual version that mi
 - 9/16/2022
 
 ## What's New in this release
-  New 3.5.6.2
+  New 3.5.6.3
   Improvement is multiuser support
 
   New 3.5.6.1
