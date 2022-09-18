@@ -9,7 +9,6 @@ Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Text
 Imports System.Text.Json
-Imports System.Windows.Forms.DataVisualization.Charting
 Imports ToolStripControls
 
 Public Class Form1
