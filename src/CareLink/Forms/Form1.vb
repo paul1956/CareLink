@@ -247,9 +247,6 @@ Public Class Form1
         Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLeftPictureBox
         Me.SensorMessage.Parent = Me.CalibrationShieldPictureBox
         Me.SensorDaysLeftLabel.BackColor = Color.Transparent
-        If _formScale.Height > 1 Then
-            Me.SplitContainer1.SplitterDistance = 0
-        End If
         s_useLocalTimeZone = My.Settings.UseLocalTimeZone
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
         CheckForUpdatesAsync(Me, False)
@@ -488,7 +485,7 @@ Public Class Form1
     Private Sub TabControlHomePage_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlHomePage.Selecting
 
         Select Case e.TabPage.Name
-            Case NameOf(TabPage15AllUsers)
+            Case NameOf(TabPageAllLocalUsers)
                 Me.DataGridViewCareLinkUsers.DataSource = s_allUserSettingsData
                 For Each c As DataGridViewColumn In Me.DataGridViewCareLinkUsers.Columns
                     c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
@@ -498,20 +495,30 @@ Public Class Form1
                 Me.CareLinkUsersAITComboBox.Visible = False
                 Me.DataGridViewCareLinkUsers.Columns(NameOf(DataGridViewTextBoxColumnAIT)).Width = Me.AITComboBox.Width
             Case NameOf(TabPage16Markers)
-                Me.TabControlMarkers.SelectedIndex = _lastMarkerTabIndex
+                Me.TabControlPage2.SelectedIndex = _lastMarkerTabIndex
                 Me.TabControlHomePage.Visible = False
                 Exit Sub
         End Select
         _lastHomeTabIndex = e.TabPageIndex
     End Sub
 
-    Private Sub TabControlMarkers_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlMarkers.Selecting
-        If e.TabPage.Name = NameOf(TabPage26BackToHomePage) Then
-            Me.TabControlHomePage.SelectedIndex = _lastHomeTabIndex
-            Me.TabControlHomePage.Visible = True
-        Else
-            _lastMarkerTabIndex = e.TabPageIndex
-        End If
+    Private Sub TabControlMarkers_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlPage2.Selecting
+        Select Case e.TabPage.Name
+            Case NameOf(TabPageBackToHomePage)
+                Me.TabControlHomePage.SelectedIndex = _lastHomeTabIndex
+                Me.TabControlHomePage.Visible = True
+                Exit Sub
+            Case NameOf(TabPageAllLocalUsers)
+                Me.DataGridViewCareLinkUsers.DataSource = s_allUserSettingsData
+                For Each c As DataGridViewColumn In Me.DataGridViewCareLinkUsers.Columns
+                    c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
+                Next
+                Me.CareLinkUsersAITComboBox.Width = Me.AITComboBox.Width
+                Me.CareLinkUsersAITComboBox.SelectedIndex = Me.AITComboBox.SelectedIndex
+                Me.CareLinkUsersAITComboBox.Visible = False
+                Me.DataGridViewCareLinkUsers.Columns(NameOf(DataGridViewTextBoxColumnAIT)).Width = Me.AITComboBox.Width
+        End Select
+        _lastMarkerTabIndex = e.TabPageIndex
     End Sub
 
 #End Region ' HomePage Tab Events
@@ -769,7 +776,7 @@ Public Class Form1
     Private Sub DataGridViewCareLinkUsers_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridViewCareLinkUsers.CellEndEdit
         'after you've filled your ds, on event above try something like this
         Try
-            ' 
+            '
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try
@@ -1796,7 +1803,7 @@ Public Class Form1
                     Case ItemIndexs.markers
                         ProcessListOfDictionary(Me.TableLayoutPanelAutoBasalDelivery, Me.DataGridViewAutoBasalDelivery, s_bindingSourceMarkersAutoBasalDelivery, rowIndex)
                         ProcessListOfDictionary(Me.TableLayoutPanelAutoModeStatus, _markersAutoModeStatus, rowIndex, _formScale.Height <> 1)
-                        ProcessListOfDictionary(Me.TableLayoutPanelBgReading, _markersBgReading, rowIndex, _formScale.Height <> 1)
+                        ProcessListOfDictionary(Me.TableLayoutPanelBgReadings, _markersBgReading, rowIndex, _formScale.Height <> 1)
                         ProcessListOfDictionary(Me.TableLayoutPanelCalibration, _markersCalibration, rowIndex, _formScale.Height <> 1)
                         ProcesListOfDictionary(Me.TableLayoutPanelInsulin, Me.DataGridViewInsulin, s_bindingSourceMarkersInsulin, rowIndex)
                         ProcessListOfDictionary(Me.TableLayoutPanelLowGlusoseSuspended, _markersLowGlusoseSuspended, rowIndex, _formScale.Height <> 1)

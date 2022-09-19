@@ -30,6 +30,10 @@ This update has a UI to show all the available data and a visual version that mi
 - 9/18/2022
 
 ## What's New in this release
+  New 3.5.6.4
+-   Move some tab items around
+-   Improve scaling by making total app smaller
+
   New 3.5.6.3
 -   Improvement is multiuser support
 
