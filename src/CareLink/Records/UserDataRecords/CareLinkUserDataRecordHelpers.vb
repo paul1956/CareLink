@@ -76,6 +76,10 @@ Public Class CareLinkUserDataRecordHelpers
             End If
         End If
 
+        SaveAllUserRecords()
+    End Sub
+
+    Public Shared Sub SaveAllUserRecords()
         Dim sb As New StringBuilder
         sb.AppendLine(String.Join(",", _headerColumns))
         For Each r As CareLinkUserDataRecord In s_allUserSettingsData.Values

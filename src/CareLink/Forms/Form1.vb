@@ -750,11 +750,17 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DataGridViewCareLinkUsers_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridViewCareLinkUsers.CellContentClick
-        'Dim dgv As DataGridView = CType(sender, DataGridView)
+    Private Sub CareLinkUserDataRecordHelpers_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridViewCareLinkUsers.CellContentClick
+        Dim dgv As DataGridView = CType(sender, DataGridView)
         If e.ColumnIndex = 0 Then
-            ' Handle delete row
-            Stop
+            If s_allUserSettingsData(e.RowIndex).CareLinkUserName = _loginDialog.LoggedOnUser.CareLinkUserName Then
+                Exit Sub
+            End If
+
+            dgv.DataSource = Nothing
+            s_allUserSettingsData.RemoveAt(e.RowIndex)
+            dgv.DataSource = s_allUserSettingsData
+            CareLinkUserDataRecordHelpers.SaveAllUserRecords()
         End If
 
     End Sub
@@ -799,6 +805,13 @@ Public Class Form1
 
     Private Sub DataGridViewCareLinkUsers_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewCareLinkUsers.DataError
         Stop
+    End Sub
+    Private Sub DataGridViewCareLinkUsers_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles DataGridViewCareLinkUsers.RowsAdded
+        If s_allUserSettingsData(e.RowIndex).CareLinkUserName = _loginDialog.LoggedOnUser.CareLinkUserName Then
+            Dim dgv As DataGridView = CType(sender, DataGridView)
+            CType(dgv.Rows(e.RowIndex).Cells(0), DataGridViewButtonCell).FlatStyle = FlatStyle.Flat
+            Stop
+        End If
     End Sub
 
 #End Region ' All Users Tab DataGridView Events
