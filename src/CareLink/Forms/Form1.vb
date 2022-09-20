@@ -2199,19 +2199,19 @@ Public Class Form1
 
     Private Sub UpdateInsulinLevel()
         Select Case s_reservoirLevelPercent
-            Case > 85
+            Case >= 85
                 Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(7)
-            Case > 71
+            Case >= 71
                 Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(6)
-            Case > 57
+            Case >= 57
                 Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(5)
-            Case > 43
+            Case >= 43
                 Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(4)
-            Case > 29
+            Case >= 29
                 Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(3)
-            Case > 15
+            Case >= 15
                 Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(2)
-            Case > 1
+            Case >= 1
                 Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(1)
             Case Else
                 Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(0)
