@@ -63,15 +63,6 @@ Public Class Form1
 
 #End Region
 
-#Region "ChartAreas"
-
-    Private WithEvents ActiveInsulinChartArea As ChartArea
-    Private WithEvents TreatmentMarkersChartArea As ChartArea
-    Public WithEvents HomeTabChartArea As ChartArea
-    Private WithEvents TimeInRangeChartArea As ChartArea
-
-#End Region
-
 #Region "Legends"
 
     Private WithEvents ActiveInsulinChartLegend As Legend
@@ -1121,9 +1112,9 @@ Public Class Form1
 #Region "Timer Events"
 
     Private Sub CursorTimer_Tick(sender As Object, e As EventArgs) Handles CursorTimer.Tick
-        If Not Me.HomeTabChartArea.AxisX.ScaleView.IsZoomed Then
+        If Not Me.HomeTabChart.ChartAreas(NameOf(ChartArea)).AxisX.ScaleView.IsZoomed Then
             Me.CursorTimer.Enabled = False
-            Me.HomeTabChartArea.CursorX.Position = Double.NaN
+            Me.HomeTabChart.ChartAreas(NameOf(ChartArea)).CursorX.Position = Double.NaN
         End If
     End Sub
 
@@ -1192,8 +1183,8 @@ Public Class Form1
     Private Sub InitializeHomePageChart()
         Me.SplitContainer3.Panel1.Controls.Clear()
         Me.HomeTabChart = CreateChart(NameOf(HomeTabChart))
-        Me.HomeTabChartArea = CreateChartArea()
-        Me.HomeTabChart.ChartAreas.Add(Me.HomeTabChartArea)
+        Dim homeTabChartArea As ChartArea = CreateChartArea()
+        Me.HomeTabChart.ChartAreas.Add(homeTabChartArea)
 
         Dim defaultLegend As Legend = CreateChartLegend(NameOf(defaultLegend))
 
@@ -1246,16 +1237,16 @@ Public Class Form1
         With Me.HomeTabTimeInRangeChart
             .BorderSkin.BackSecondaryColor = Color.Transparent
             .BorderSkin.SkinStyle = BorderSkinStyle.None
-            Me.TimeInRangeChartArea = New ChartArea With {
-                    .Name = NameOf(TimeInRangeChartArea),
+            Dim timeInRangeChartArea As New ChartArea With {
+                    .Name = NameOf(timeInRangeChartArea),
                     .BackColor = Color.Black
                 }
-            .ChartAreas.Add(Me.TimeInRangeChartArea)
+            .ChartAreas.Add(timeInRangeChartArea)
             .Location = New Point(Me.TimeInRangeChartLabel.FindHorizontalMidpoint - (.Width \ 2),
                                   CInt(Me.TimeInRangeChartLabel.FindVerticalMidpoint() - Math.Round(.Height / 2.5)))
             .Name = NameOf(HomeTabTimeInRangeChart)
             Me.HomeTabTimeInRangeSeries = New Series(NameOf(HomeTabTimeInRangeSeries)) With {
-                    .ChartArea = NameOf(TimeInRangeChartArea),
+                    .ChartArea = NameOf(timeInRangeChartArea),
                     .ChartType = SeriesChartType.Doughnut
                 }
             .Series.Add(Me.HomeTabTimeInRangeSeries)
@@ -1276,8 +1267,8 @@ Public Class Form1
         Me.TabPage02RunningIOB.Controls.Clear()
 
         Me.ActiveInsulinChart = CreateChart(NameOf(ActiveInsulinChart))
-        Me.ActiveInsulinChartArea = CreateChartArea()
-        With Me.ActiveInsulinChartArea
+        Dim activeInsulinChartArea As ChartArea = CreateChartArea()
+        With activeInsulinChartArea
             With .AxisY
                 .MajorTickMark = New TickMark() With {.Interval = HomePageMealRow, .Enabled = False}
                 .Maximum = 25
@@ -1287,7 +1278,7 @@ Public Class Form1
                 .TitleForeColor = Color.HotPink
             End With
         End With
-        Me.ActiveInsulinChart.ChartAreas.Add(Me.ActiveInsulinChartArea)
+        Me.ActiveInsulinChart.ChartAreas.Add(activeInsulinChartArea)
 
         Me.ActiveInsulinChartLegend = CreateChartLegend(NameOf(ActiveInsulinChartLegend))
         Me.ActiveInsulinChart.Legends.Add(Me.ActiveInsulinChartLegend)
@@ -1336,7 +1327,7 @@ Public Class Form1
         Me.TabPage03TreatmentDetails.Controls.Clear()
 
         Me.TreatmentMarkersChart = CreateChart(NameOf(TreatmentMarkersChart))
-        Me.TreatmentMarkersChartArea = CreateChartArea()
+        Dim treatmentMarkersChartArea As ChartArea = CreateChartArea()
 
         Select Case MaxBasalPerDose
             Case < 0.25
@@ -1359,7 +1350,7 @@ Public Class Form1
                 TreatmentInsulinRow = CSng(MaxBasalPerDose + 0.025)
         End Select
         TreatmentInsulinRow = TreatmentInsulinRow.RoundSingle(3)
-        With Me.TreatmentMarkersChartArea.AxisY
+        With treatmentMarkersChartArea.AxisY
             Dim interval As Single = (TreatmentInsulinRow / 10).RoundSingle(3)
             .Interval = interval
             .IsMarginVisible = False
@@ -1380,7 +1371,7 @@ Public Class Form1
             .Title = "Delivered Insulin"
         End With
 
-        Me.TreatmentMarkersChart.ChartAreas.Add(Me.TreatmentMarkersChartArea)
+        Me.TreatmentMarkersChart.ChartAreas.Add(treatmentMarkersChartArea)
         Me.TreatmentMarkersChartLegend = CreateChartLegend(NameOf(TreatmentMarkersChartLegend))
         Me.TreatmentMarkersChart.Legends.Add(Me.TreatmentMarkersChartLegend)
 
