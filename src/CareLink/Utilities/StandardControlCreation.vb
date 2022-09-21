@@ -87,6 +87,7 @@ Public Module StandardControlCreation
     End Function
 
     Friend Sub initializeTableLayoutPanel(realPanel As TableLayoutPanel, rowIndex As ItemIndexs)
+        realPanel.RowCount = 1
         If realPanel.Controls.Count > 1 AndAlso TypeOf realPanel.Controls(1) IsNot DataGridView Then
             For i As Integer = 1 To realPanel.Controls.Count - 1
                 realPanel.Controls.RemoveAt(1)
