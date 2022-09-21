@@ -1844,26 +1844,24 @@ Public Class Form1
             Dim docStyle As DockStyle = DockStyle.Fill
             Select Case rowIndex
                 Case ItemIndexs.lastSG
-                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelLastSG)
+                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelLastSG, ItemIndexs.lastSG)
                     s_lastSG = New SgRecord(Loads(row.Value))
 
                 Case ItemIndexs.lastAlarm
-                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelLastAlarm)
+                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelLastAlarm, ItemIndexs.lastAlarm)
 
                 Case ItemIndexs.activeInsulin
-                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelActiveInsulin)
+                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelActiveInsulin, ItemIndexs.activeInsulin)
                     s_activeInsulin = New ActiveInsulinRecord(Loads(row.Value))
 
                 Case ItemIndexs.notificationHistory
-                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelNotificationHistory)
+                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelNotificationHistory, ItemIndexs.notificationHistory)
 
                 Case ItemIndexs.therapyAlgorithmState
-                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelTherapyAlgorthm)
-                    docStyle = DockStyle.Top
+                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelTherapyAlgorthm, ItemIndexs.therapyAlgorithmState)
 
                 Case ItemIndexs.basal
-                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelBasal)
-                    docStyle = DockStyle.Fill
+                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelBasal, ItemIndexs.basal)
 
                 Case Else
                     Stop
