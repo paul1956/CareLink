@@ -86,20 +86,7 @@ Public Module StandardControlCreation
         Return valueTextBox
     End Function
 
-    Friend Sub InitializeColumnLabel(layoutPanel1 As TableLayoutPanel, rowIndex As ItemIndexs, isColumnHeader As Boolean)
-        Dim headerText As String
-        If isColumnHeader Then
-            headerText = $"{CInt(rowIndex)} {rowIndex}"
-            layoutPanel1.Controls(0).Text = headerText
-        Else
-            Dim labelControl As Label = CreateBasicLabel($"{CInt(rowIndex)}{Environment.NewLine}{rowIndex}")
-            layoutPanel1.Controls.Add(labelControl, 0, 0)
-        End If
-        Application.DoEvents()
-    End Sub
-
-    Friend Sub initializeTableLayoutPanel(realPanel As TableLayoutPanel, rowIndex As ItemIndexs, Optional initializeColumnHeader As Boolean = True)
-        realPanel.RowCount = 1
+    Friend Sub initializeTableLayoutPanel(realPanel As TableLayoutPanel, rowIndex As ItemIndexs)
         If realPanel.Controls.Count > 1 AndAlso TypeOf realPanel.Controls(1) IsNot DataGridView Then
             For i As Integer = 1 To realPanel.Controls.Count - 1
                 realPanel.Controls.RemoveAt(1)
@@ -109,19 +96,11 @@ Public Module StandardControlCreation
             Next
 
         End If
-        If initializeColumnHeader Then
-            InitializeColumnLabel(realPanel, rowIndex, True)
-        End If
+        realPanel.Controls(0).Text = $"{CInt(rowIndex)} {rowIndex}"
     End Sub
 
-    Friend Function InitializeWorkingPanel(realPanel As TableLayoutPanel, Optional HeaderOnTop? As Boolean = Nothing) As TableLayoutPanel
-        If Not HeaderOnTop Then
-            realPanel.Controls.Clear()
-            realPanel.RowStyles.Clear()
-            realPanel.RowStyles.Add(New RowStyle(SizeType.AutoSize, 0))
-        Else
-            initializeTableLayoutPanel(realPanel, 0, False)
-        End If
+    Friend Function InitializeWorkingPanel(realPanel As TableLayoutPanel) As TableLayoutPanel
+        initializeTableLayoutPanel(realPanel, 0)
         Return realPanel
     End Function
 

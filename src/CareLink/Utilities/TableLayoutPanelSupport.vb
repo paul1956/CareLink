@@ -111,34 +111,7 @@ Module TableLayoutPanelSupport
             End If
         Next
 
-        If itemIndex = ItemIndexs.lastSG Then
-            tableLevel1Blue.AutoSize = False
-            tableLevel1Blue.RowCount += 1
-            tableLevel1Blue.Width = 400
-            tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize, 0))
-        ElseIf itemIndex = ItemIndexs.lastAlarm Then
-            Dim parentTableLayoutPanel As TableLayoutPanel = CType(tableLevel1Blue.Parent, TableLayoutPanel)
-            parentTableLayoutPanel.AutoSize = False
-            tableLevel1Blue.Dock = DockStyle.Fill
-            Application.DoEvents()
-            tableLevel1Blue.ColumnStyles(1).SizeType = SizeType.Absolute
-            If tableLevel1Blue.RowCount > 7 Then
-                parentTableLayoutPanel.AutoScroll = True
-            Else
-                parentTableLayoutPanel.Width = 870
-                tableLevel1Blue.AutoScroll = False
-            End If
-            Dim tableLevel1BlueWidth As Integer = tableLevel1Blue.Width
-            tableLevel1Blue.AutoSize = False
-            tableLevel1Blue.RowCount += 1
-            tableLevel1Blue.Height = 22 * (tableLevel1Blue.RowCount - 1)
-            tableLevel1Blue.Dock = DockStyle.None
-            Application.DoEvents()
-            tableLevel1Blue.Width = tableLevel1BlueWidth - 30
-            Application.DoEvents()
-            tableLevel1Blue.Dock = DockStyle.Fill
-            Application.DoEvents()
-        ElseIf itemIndex = ItemIndexs.notificationHistory Then
+        If itemIndex = ItemIndexs.notificationHistory Then
             tableLevel1Blue.RowStyles(1) = New RowStyle(SizeType.AutoSize, 0)
         End If
         Application.DoEvents()
@@ -165,7 +138,7 @@ Module TableLayoutPanelSupport
     Friend Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, innerListDictionary As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, isScaledForm As Boolean)
 
         If innerListDictionary.Count = 0 Then
-            initializeTableLayoutPanel(realPanel, rowIndex, )
+            initializeTableLayoutPanel(realPanel, rowIndex)
             Dim rowTextBox As TextBox = CreateBasicTextBox("")
             rowTextBox.BackColor = Color.LightGray
             realPanel.Controls.Add(rowTextBox)

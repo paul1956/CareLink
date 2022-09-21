@@ -810,7 +810,6 @@ Public Class Form1
         If s_allUserSettingsData(e.RowIndex).CareLinkUserName = _loginDialog.LoggedOnUser.CareLinkUserName Then
             Dim dgv As DataGridView = CType(sender, DataGridView)
             CType(dgv.Rows(e.RowIndex).Cells(0), DataGridViewButtonCell).FlatStyle = FlatStyle.Flat
-            Stop
         End If
     End Sub
 
@@ -1843,35 +1842,28 @@ Public Class Form1
                 Continue For
             End If
             Dim docStyle As DockStyle = DockStyle.Fill
-            Dim isColumnHeader As Boolean = False
             Select Case rowIndex
                 Case ItemIndexs.lastSG
-                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelTop1, False)
+                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelLastSG)
                     s_lastSG = New SgRecord(Loads(row.Value))
-                    isColumnHeader = False
 
                 Case ItemIndexs.lastAlarm
-                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelTop2, False)
-                    isColumnHeader = False
+                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelLastAlarm)
 
                 Case ItemIndexs.activeInsulin
-                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelActiveInsulin, True)
+                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelActiveInsulin)
                     s_activeInsulin = New ActiveInsulinRecord(Loads(row.Value))
-                    isColumnHeader = True
 
                 Case ItemIndexs.notificationHistory
-                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelNotificationHistory, True)
-                    isColumnHeader = True
+                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelNotificationHistory)
 
                 Case ItemIndexs.therapyAlgorithmState
-                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelTherapyAlgorthm, True)
+                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelTherapyAlgorthm)
                     docStyle = DockStyle.Top
-                    isColumnHeader = True
 
                 Case ItemIndexs.basal
                     layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelBasal)
                     docStyle = DockStyle.Fill
-                    isColumnHeader = True
 
                 Case Else
                     Stop
@@ -1880,7 +1872,7 @@ Public Class Form1
 
             Try
                 layoutPanel1.SuspendLayout()
-                InitializeColumnLabel(layoutPanel1, rowIndex, isColumnHeader)
+                layoutPanel1.Controls(0).Text = $"{CInt(rowIndex)} {rowIndex}"
                 If layoutPanel1.RowStyles.Count = 1 Then
                     layoutPanel1.RowStyles(0) = New RowStyle(SizeType.AutoSize, 0)
                 Else
