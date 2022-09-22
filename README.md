@@ -27,10 +27,10 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 9/18/2022
+- 9/21/2022
 
 ## What's New in this release
-  New 3.5.6.4
+  New 3.5.6.5
 -   Move some tab items around
 -   Improve scaling by making total app smaller
 
