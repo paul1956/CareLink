@@ -86,10 +86,8 @@ Public Class LoginForm1
 
                 Me.Ok_Button.Enabled = True
                 Me.Cancel_Button.Enabled = True
-                If Me.SaveCredentials.CheckState = CheckState.Checked Then
-                    My.Settings.CareLinkUserName = Me.UsernameTextBox.Text
-                    My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
-                End If
+                My.Settings.CareLinkUserName = Me.UsernameTextBox.Text
+                My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
 
                 My.Settings.Save()
                 If Not s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, Me.LoggedOnUser) Then

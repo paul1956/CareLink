@@ -38,7 +38,6 @@ Partial Class LoginForm1
         Me.PasswordTextBox = New System.Windows.Forms.TextBox()
         Me.Ok_Button = New System.Windows.Forms.Button()
         Me.Cancel_Button = New System.Windows.Forms.Button()
-        Me.SaveCredentials = New System.Windows.Forms.CheckBox()
         Me.CountryComboBox = New System.Windows.Forms.ComboBox()
         Me.RegionComboBox = New System.Windows.Forms.ComboBox()
         Me.SelectRegionLabel = New System.Windows.Forms.Label()
@@ -118,17 +117,6 @@ Partial Class LoginForm1
         Me.Cancel_Button.TabIndex = 1
         Me.Cancel_Button.Text = "&Cancel"
         '
-        'SaveCredentials
-        '
-        Me.SaveCredentials.Anchor = System.Windows.Forms.AnchorStyles.Left
-        Me.SaveCredentials.AutoSize = True
-        Me.SaveCredentials.Location = New System.Drawing.Point(204, 207)
-        Me.SaveCredentials.Name = "SaveCredentials"
-        Me.SaveCredentials.Size = New System.Drawing.Size(187, 19)
-        Me.SaveCredentials.TabIndex = 11
-        Me.SaveCredentials.Text = "Save User Name and Password"
-        Me.SaveCredentials.UseVisualStyleBackColor = True
-        '
         'CountryComboBox
         '
         Me.CountryComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left
@@ -203,7 +191,6 @@ Partial Class LoginForm1
         Me.Controls.Add(Me.SelectRegionLabel)
         Me.Controls.Add(Me.RegionComboBox)
         Me.Controls.Add(Me.CountryComboBox)
-        Me.Controls.Add(Me.SaveCredentials)
         Me.Controls.Add(Me.Cancel_Button)
         Me.Controls.Add(Me.Ok_Button)
         Me.Controls.Add(Me.PasswordTextBox)
@@ -224,7 +211,6 @@ Partial Class LoginForm1
 
     End Sub
 
-    Friend WithEvents SaveCredentials As CheckBox
     Friend WithEvents CountryComboBox As ComboBox
     Friend WithEvents RegionComboBox As ComboBox
     Friend WithEvents SelectRegionLabel As Label

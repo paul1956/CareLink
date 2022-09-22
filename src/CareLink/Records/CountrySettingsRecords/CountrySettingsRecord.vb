@@ -74,7 +74,7 @@ Public Class CountrySettingsRecord
             Select Case rowValue.Key
                 Case NameOf(name)
                     Me.name = rowValue.Value
-                    dgvCountryItems.AddLeft("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddLeft("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(languages)
                     languages.Clear()
                     currentRightRow = dgvCountryItems.RowCount - 1
@@ -88,52 +88,52 @@ Public Class CountrySettingsRecord
 
                 Case NameOf(defaultLanguage)
                     Me.defaultLanguage = rowValue.Value
-                    dgvCountryItems.AddLeft("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddLeft("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(defaultCountryName)
                     Me.defaultCountryName = rowValue.Value
-                    dgvCountryItems.AddRight("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddRight("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(defaultDevice)
                     Me.defaultDevice = rowValue.Value
-                    dgvCountryItems.AddLeft("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddLeft("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(dialCode)
                     Me.dialCode = rowValue.Value
-                    dgvCountryItems.AddRight("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddRight("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(cpMobileAppAvailable)
                     Me.cpMobileAppAvailable = rowValue.Value
-                    dgvCountryItems.AddLeft("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddLeft("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(uploaderAllowed)
                     Me.uploaderAllowed = rowValue.Value
-                    dgvCountryItems.AddRight("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddRight("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(techSupport)
                     Me.techSupport = rowValue.Value
-                    dgvCountryItems.AddLeft("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddLeft("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(techDays)
                     Me.techDays = rowValue.Value
-                    dgvCountryItems.AddRight("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddRight("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(firstDayOfWeek)
                     Me.firstDayOfWeek = rowValue.Value
-                    dgvCountryItems.AddLeft("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddLeft("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(techHours)
                     Me.techHours = rowValue.Value
-                    dgvCountryItems.AddRight("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddRight("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(legalAge)
                     Me.legalAge = rowValue.Value
-                    dgvCountryItems.AddLeft("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddLeft("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(shortDateFormat)
                     Me.shortDateFormat = rowValue.Value
-                    dgvCountryItems.AddRight("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddRight("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(shortTimeFormat)
                     Me.shortTimeFormat = rowValue.Value
-                    dgvCountryItems.AddLeft("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddLeft("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(mediaHost)
                     Me.mediaHost = rowValue.Value
-                    dgvCountryItems.AddRight("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddRight("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(blePereodicDataEndpoint)
                     Me.blePereodicDataEndpoint = rowValue.Value
-                    dgvCountryItems.AddLeft("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddLeft("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(region)
                     Me.region = rowValue.Value
-                    dgvCountryItems.AddRight("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddRight("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(pathDocs)
                     pathDocs = New pathDocsRecord(rowValue.Value)
                     For Each member As IndexClass(Of KeyValuePair(Of String, String)) In pathDocs.pathDoc.WithIndex
@@ -142,28 +142,28 @@ Public Class CountrySettingsRecord
                     Next
                 Case NameOf(carbDefaultUnit)
                     Me.carbDefaultUnit = rowValue.Value
-                    dgvCountryItems.AddRight("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddRight("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(bgUnits)
                     Me.bgUnits = rowValue.Value
-                    dgvCountryItems.AddLeft("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddLeft("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(timeFormat)
                     Me.timeFormat = rowValue.Value
-                    dgvCountryItems.AddRight("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddRight("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(timeUnitsDefault)
                     Me.timeUnitsDefault = rowValue.Value
-                    dgvCountryItems.AddLeft("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddLeft("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(recordSeparator)
                     Me.recordSeparator = rowValue.Value
-                    dgvCountryItems.AddRight("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddRight("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(glucoseUnitsDefault)
                     Me.glucoseUnitsDefault = rowValue.Value
-                    dgvCountryItems.AddLeft("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddLeft("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(carbohydrateUnitsDefault)
                     Me.carbohydrateUnitsDefault = rowValue.Value
-                    dgvCountryItems.AddRight("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddRight("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(carbExchangeRatioDefault)
                     Me.carbExchangeRatioDefault = rowValue.Value
-                    dgvCountryItems.AddLeft("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddLeft("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(reportDateFormat)
                     reportDateFormat = New reportDateFormatRecord(rowValue.Value)
                     For Each member As IndexClass(Of KeyValuePair(Of String, String)) In reportDateFormat.ToList.WithIndex
@@ -188,7 +188,7 @@ Public Class CountrySettingsRecord
                     Next
                 Case NameOf(smsSendingAllowed)
                     Me.smsSendingAllowed = rowValue.Value
-                    dgvCountryItems.AddRight("Country", itemIndex, currentLeftRow, currentRightRow, row.Value)
+                    dgvCountryItems.AddRight("", itemIndex, currentLeftRow, currentRightRow, row.Value)
                 Case NameOf(postal)
                     postal = New postalRecord(rowValue.Value)
                     For Each member As IndexClass(Of KeyValuePair(Of String, String)) In postal.ToList.WithIndex
