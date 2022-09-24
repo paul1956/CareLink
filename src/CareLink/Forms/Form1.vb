@@ -74,7 +74,6 @@ Public Class Form1
 
 #Region "Common Series"
 
-    Private WithEvents ActiveInsulinBasalSeries As Series
     Private WithEvents ActiveInsulinBGSeries As Series
     Private WithEvents ActiveInsulinSeries As Series
     Private WithEvents ActiveInsulinTimeChangeSeries As Series
@@ -1295,10 +1294,8 @@ Public Class Form1
         }
         Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinSeries)
 
-        Me.ActiveInsulinBasalSeries = CreateBasalSeries(AxisType.Secondary)
         Me.ActiveInsulinBGSeries = CreateBgSeries(NameOf(ActiveInsulinChartLegend))
         Me.ActiveInsulinTimeChangeSeries = CreateTimeChangeSeries()
-        Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinBasalSeries)
         Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinBGSeries)
         Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinTimeChangeSeries())
 
