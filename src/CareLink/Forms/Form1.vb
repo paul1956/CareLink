@@ -1094,11 +1094,12 @@ Public Class Form1
             Exit Sub
         End If
         If e.SettingName = "CareLinkUserName" Then
-            If s_allUserSettingsData.ContainsKey(e.NewValue.ToString) Then
+            If s_allUserSettingsData?.ContainsKey(e.NewValue.ToString) Then
                 _loginDialog.LoggedOnUser = s_allUserSettingsData(e.NewValue.ToString)
                 Exit Sub
             Else
-                Dim userSettings As New CareLinkUserDataRecord(s_allUserSettingsData.Count.ToString)
+                Dim count As Integer = If(s_allUserSettingsData Is Nothing, 0, s_allUserSettingsData.Count)
+                Dim userSettings As New CareLinkUserDataRecord(count.ToString)
                 userSettings.UpdateValue(e.SettingName, e.NewValue.ToString)
                 s_allUserSettingsData.Add(userSettings)
             End If

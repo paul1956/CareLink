@@ -51,7 +51,7 @@ Public Class LoginForm1
             .AutoCompleteSource = AutoCompleteSource.CustomSource
             .Text = My.Settings.CareLinkUserName
         End With
-        If s_allUserSettingsData.ContainsKey(My.Settings.CareLinkUserName) Then
+        If s_allUserSettingsData?.ContainsKey(My.Settings.CareLinkUserName) Then
             Me.PasswordTextBox.Text = s_allUserSettingsData(My.Settings.CareLinkUserName).CareLinkPassword
         Else
             Me.PasswordTextBox.Text = My.Settings.CareLinkPassword

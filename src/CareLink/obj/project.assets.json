@@ -1047,6 +1047,19 @@
           }
         }
       },
+      "DataGridViewDisableButtonColumn/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/DataGridViewDisableButtonColumn.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/DataGridViewDisableButtonColumn.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App.WindowsForms"
+        ]
+      },
       "ToolStripComboBoxEx/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
@@ -3544,6 +3557,11 @@
         "version.txt"
       ]
     },
+    "DataGridViewDisableButtonColumn/1.0.0": {
+      "type": "project",
+      "path": "../DataGridViewDisableButtonColumn/DataGridViewDisableButtonColumn.vbproj",
+      "msbuildProject": "../DataGridViewDisableButtonColumn/DataGridViewDisableButtonColumn.vbproj"
+    },
     "ToolStripComboBoxEx/1.0.0": {
       "type": "project",
       "path": "../ToolStripComboBoxEx/ToolStripComboBoxEx.vbproj",
@@ -3552,6 +3570,7 @@
   },
   "projectFileDependencyGroups": {
     "net6.0-windows7.0": [
+      "DataGridViewDisableButtonColumn >= 1.0.0",
       "Microsoft.Exchange.WebServices.NETStandard >= 2.0.0-beta3",
       "Octokit >= 3.0.0",
       "ToolStripComboBoxEx >= 1.0.0"
@@ -3562,7 +3581,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "3.5.6.5",
+    "version": "3.5.6.6",
     "restore": {
       "projectUniqueName": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\CareLink\\CareLink.vbproj",
       "projectName": "CareLink",
@@ -3594,6 +3613,9 @@
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
           "projectReferences": {
+            "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumn\\DataGridViewDisableButtonColumn.vbproj": {
+              "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumn\\DataGridViewDisableButtonColumn.vbproj"
+            },
             "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\ToolStripComboBoxEx.vbproj": {
               "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\ToolStripComboBoxEx.vbproj"
             }

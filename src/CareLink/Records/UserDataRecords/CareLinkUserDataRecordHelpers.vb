@@ -67,12 +67,12 @@ Public Class CareLinkUserDataRecordHelpers
             End If
         Else
             ' We are changing the user name, first try to load it
-            If Not s_allUserSettingsData.ContainsKey(Value) Then
+            If s_allUserSettingsData.ContainsKey(Value) Then
+                loggedOnUser = s_allUserSettingsData(Value)
+            Else
                 ' We have a new user
                 loggedOnUser.clean()
                 s_allUserSettingsData.Add(loggedOnUser)
-            Else
-                loggedOnUser = s_allUserSettingsData(Value)
             End If
         End If
 
