@@ -112,7 +112,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataGridViewDisableButtonColumn\DataGridViewDisableButtonColumn.vbproj" />
+    <ProjectReference Include="..\..\..\winforms-datavisualization\src\System.Windows.Forms.DataVisualization\ChartWin.csproj" />
+    <ProjectReference Include="..\DataGridViewDisableButtonColumnEx\DataGridViewDisableButtonColumnEx.vbproj" />
     <ProjectReference Include="..\ToolStripComboBoxEx\ToolStripComboBoxEx.vbproj" />
   </ItemGroup>
 

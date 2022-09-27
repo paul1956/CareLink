@@ -38,11 +38,14 @@
           "net6.0-windows7.0": {
             "targetAlias": "net6.0-windows",
             "projectReferences": {
-              "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumn\\DataGridViewDisableButtonColumn.vbproj": {
-                "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumn\\DataGridViewDisableButtonColumn.vbproj"
+              "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumnEx\\DataGridViewDisableButtonColumnEx.vbproj": {
+                "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumnEx\\DataGridViewDisableButtonColumnEx.vbproj"
               },
               "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\ToolStripComboBoxEx.vbproj": {
                 "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\ToolStripComboBoxEx.vbproj"
+              },
+              "C:\\Users\\PaulM\\Source\\Repos\\winforms-datavisualization\\src\\System.Windows.Forms.DataVisualization\\ChartWin.csproj": {
+                "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\winforms-datavisualization\\src\\System.Windows.Forms.DataVisualization\\ChartWin.csproj"
               }
             }
           }
@@ -88,14 +91,14 @@
         }
       }
     },
-    "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumn\\DataGridViewDisableButtonColumn.vbproj": {
+    "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumnEx\\DataGridViewDisableButtonColumnEx.vbproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumn\\DataGridViewDisableButtonColumn.vbproj",
-        "projectName": "DataGridViewDisableButtonColumn",
-        "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumn\\DataGridViewDisableButtonColumn.vbproj",
+        "projectUniqueName": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumnEx\\DataGridViewDisableButtonColumnEx.vbproj",
+        "projectName": "DataGridViewDisableButtonColumnEx",
+        "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumnEx\\DataGridViewDisableButtonColumnEx.vbproj",
         "packagesPath": "C:\\Users\\PaulM\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumn\\obj\\",
+        "outputPath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumnEx\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -109,7 +112,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumn\\bin\\Debug": {},
+          "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumnEx\\bin": {},
           "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\bin\\Debug": {},
           "https://api.nuget.org/v3/index.json": {},
           "https://dotnet.myget.org/F/roslyn-analyzers/api/v3/index.json": {},
@@ -201,6 +204,80 @@
       "frameworks": {
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WindowsForms": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\PaulM\\Source\\Repos\\winforms-datavisualization\\src\\System.Windows.Forms.DataVisualization\\ChartWin.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\PaulM\\Source\\Repos\\winforms-datavisualization\\src\\System.Windows.Forms.DataVisualization\\ChartWin.csproj",
+        "projectName": "System.Windows.Forms.DataVisualization",
+        "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\winforms-datavisualization\\src\\System.Windows.Forms.DataVisualization\\ChartWin.csproj",
+        "packagesPath": "C:\\Users\\PaulM\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\PaulM\\Source\\Repos\\winforms-datavisualization\\src\\System.Windows.Forms.DataVisualization\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\PaulM\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0-windows"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumnEx\\bin": {},
+          "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\bin\\Debug": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://dotnet.myget.org/F/roslyn-analyzers/api/v3/index.json": {},
+          "https://dotnet.myget.org/F/roslyn/api/v3/index.json": {},
+          "https://dotnet.myget.org/F/system-commandline/api/v3/index.json": {},
+          "https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json": {},
+          "https://www.myget.org/F/modvb/api/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0-windows7.0": {
+            "targetAlias": "net6.0-windows",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0-windows7.0": {
+          "targetAlias": "net6.0-windows",
+          "dependencies": {
+            "Microsoft.WinForms.Designer.SDK": {
+              "target": "Package",
+              "version": "[1.1.0-prerelease-preview3.22076.5, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

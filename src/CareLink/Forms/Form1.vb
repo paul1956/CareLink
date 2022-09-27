@@ -483,7 +483,7 @@ Public Class Form1
                 Me.CareLinkUsersAITComboBox.Width = Me.AITComboBox.Width
                 Me.CareLinkUsersAITComboBox.SelectedIndex = Me.AITComboBox.SelectedIndex
                 Me.CareLinkUsersAITComboBox.Visible = False
-                Me.DataGridViewCareLinkUsers.Columns(NameOf(DataGridViewTextBoxColumnAIT)).Width = Me.AITComboBox.Width
+                Me.DataGridViewCareLinkUsers.Columns(NameOf(DataGridViewTextBoxColumnCareLinkAIT)).Width = Me.AITComboBox.Width
             Case NameOf(TabPage16Markers)
                 Me.TabControlPage2.SelectedIndex = _lastMarkerTabIndex
                 Me.TabControlHomePage.Visible = False
@@ -506,7 +506,7 @@ Public Class Form1
                 Me.CareLinkUsersAITComboBox.Width = Me.AITComboBox.Width
                 Me.CareLinkUsersAITComboBox.SelectedIndex = Me.AITComboBox.SelectedIndex
                 Me.CareLinkUsersAITComboBox.Visible = False
-                Me.DataGridViewCareLinkUsers.Columns(NameOf(DataGridViewTextBoxColumnAIT)).Width = Me.AITComboBox.Width
+                Me.DataGridViewCareLinkUsers.Columns(NameOf(DataGridViewTextBoxColumnCareLinkAIT)).Width = Me.AITComboBox.Width
         End Select
         _lastMarkerTabIndex = e.TabPageIndex
     End Sub

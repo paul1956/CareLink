@@ -48,8 +48,7 @@ Public Class DataGridViewDisableButtonCell
         If Not _enabledValue Then
 
             ' Draw the background of the cell, if specified.
-            If (paintParts And DataGridViewPaintParts.Background) =
-                DataGridViewPaintParts.Background Then
+            If (paintParts And DataGridViewPaintParts.Background) = DataGridViewPaintParts.Background Then
 
                 Dim cellBackground As New SolidBrush(cellStyle.BackColor)
                 graphics.FillRectangle(cellBackground, cellBounds)
