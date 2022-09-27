@@ -13,6 +13,7 @@
     <PackageReleaseNotes>Added MIT License</PackageReleaseNotes>
     <FileVersion>1.0.0.0</FileVersion>
     <Version>1.0.0.0</Version>
+    <ApplicationIcon>ColumnButton.ico</ApplicationIcon>
     <OptionStrict>On</OptionStrict>
     <OptionCompare>Text</OptionCompare>
     <OptionInfer>Off</OptionInfer>
@@ -20,11 +21,14 @@
     <Authors>Paul Cohen</Authors>
     <Description>This is a version of DataGridViewButtonColumn that can be disabled.</Description>
     <PackageProjectUrl>https://github.com/paul1956/CareLink/DataGridViewDisableButtonColumn</PackageProjectUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags>VB Visual Basic DataGridView Disable ButtonColumn</PackageTags>
-    <ApplicationIcon>ColumnButton.ico</ApplicationIcon>
     <PackageIcon>ColumnButton.png</PackageIcon>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>VB;Visual Basic;DaaGridView Disable Button</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>False</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,6 +39,12 @@
     <Import Include="System.Data" />
     <Import Include="System.Drawing" />
     <Import Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="DataGridViewDisableButtonColumn.vb">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

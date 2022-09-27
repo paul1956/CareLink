@@ -23,7 +23,8 @@
     <PackageProjectUrl>https://github.com/paul1956/CareLink/ToolStripComboBoxEx</PackageProjectUrl>
     <PackageIcon>ComboBox.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>VB Visual Basic ComboBox ToolStrip</PackageTags>
+    <PackageTags>VB ;Visual Basic;ToolStrip ComboBox </PackageTags>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

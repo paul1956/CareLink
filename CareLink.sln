@@ -18,7 +18,7 @@ Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "ToolStripComboBoxEx", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChartWin", "..\winforms-datavisualization\src\System.Windows.Forms.DataVisualization\ChartWin.csproj", "{3D2B85F9-C2F6-4EA8-9363-2FFF4BA8E8B2}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DataGridViewDisableButtonColumn", "src\DataGridViewDisableButtonColumn\DataGridViewDisableButtonColumn.vbproj", "{3B647A3D-3985-488B-B1AC-3BDB883215A0}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DataGridViewDisableButtonColumnEx", "src\DataGridViewDisableButtonColumnEx\DataGridViewDisableButtonColumnEx.vbproj", "{3B647A3D-3985-488B-B1AC-3BDB883215A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

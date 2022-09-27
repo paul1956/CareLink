@@ -25,6 +25,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumnEx\\bin": {},
           "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\bin\\Debug": {},
           "https://api.nuget.org/v3/index.json": {},
           "https://dotnet.myget.org/F/roslyn-analyzers/api/v3/index.json": {},
@@ -108,6 +109,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumn\\bin\\Debug": {},
           "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\bin\\Debug": {},
           "https://api.nuget.org/v3/index.json": {},
           "https://dotnet.myget.org/F/roslyn-analyzers/api/v3/index.json": {},
@@ -175,6 +177,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumnEx\\bin": {},
           "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\bin\\Debug": {},
           "https://api.nuget.org/v3/index.json": {},
           "https://dotnet.myget.org/F/roslyn-analyzers/api/v3/index.json": {},
