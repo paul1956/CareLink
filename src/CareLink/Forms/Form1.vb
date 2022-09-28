@@ -9,6 +9,7 @@ Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Text
 Imports System.Text.Json
+Imports DataGridViewColumnControls
 Imports ToolStripControls
 
 Public Class Form1
@@ -743,7 +744,7 @@ Public Class Form1
     Private Sub CareLinkUserDataRecordHelpers_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridViewCareLinkUsers.CellContentClick
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If e.ColumnIndex = 0 Then
-            If s_allUserSettingsData(e.RowIndex).CareLinkUserName = _loginDialog.LoggedOnUser.CareLinkUserName Then
+            If Not CType(dgv.Rows(e.RowIndex).Cells(0), DataGridViewDisableButtonCell).Enabled Then
                 Exit Sub
             End If
 
@@ -796,11 +797,11 @@ Public Class Form1
     Private Sub DataGridViewCareLinkUsers_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewCareLinkUsers.DataError
         Stop
     End Sub
+
     Private Sub DataGridViewCareLinkUsers_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles DataGridViewCareLinkUsers.RowsAdded
-        If s_allUserSettingsData(e.RowIndex).CareLinkUserName = _loginDialog.LoggedOnUser.CareLinkUserName Then
-            Dim dgv As DataGridView = CType(sender, DataGridView)
-            CType(dgv.Rows(e.RowIndex).Cells(0), DataGridViewButtonCell).FlatStyle = FlatStyle.Flat
-        End If
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Dim disableButtonCell As DataGridViewDisableButtonCell = CType(dgv.Rows(e.RowIndex).Cells(NameOf(DataGridViewButtonColumnCareLinkDeleteRow)), DataGridViewDisableButtonCell)
+        disableButtonCell.Enabled = s_allUserSettingsData(e.RowIndex).CareLinkUserName <> _loginDialog.LoggedOnUser.CareLinkUserName
     End Sub
 
 #End Region ' All Users Tab DataGridView Events
@@ -1232,7 +1233,6 @@ Public Class Form1
             .Size = New Size(width1,
                              width1)
                             }
-
 
         With Me.HomeTabTimeInRangeChart
             .BorderSkin.BackSecondaryColor = Color.Transparent
