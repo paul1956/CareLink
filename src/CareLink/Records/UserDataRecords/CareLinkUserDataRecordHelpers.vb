@@ -2,7 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Text
+Imports System.Runtime.CompilerServices
 
 Public Class CareLinkUserDataRecordHelpers
 
@@ -13,9 +13,10 @@ Public Class CareLinkUserDataRecordHelpers
                         NameOf(CareLinkUserDataRecord.MailserverPassword),
                         NameOf(CareLinkUserDataRecord.MailServerPort),
                         NameOf(CareLinkUserDataRecord.MailserverUserName),
-                        NameOf(CareLinkUserDataRecord.OutGoingMailServer)
+                        NameOf(CareLinkUserDataRecord.OutgoingMailServer)
                     }
-    Private Shared ReadOnly _headerColumns As New List(Of String) From
+
+    Friend Shared ReadOnly s_headerColumns As New List(Of String) From
             {
             NameOf(My.Settings.CareLinkUserName),
             NameOf(My.Settings.CareLinkPassword),
@@ -34,58 +35,44 @@ Public Class CareLinkUserDataRecordHelpers
          }
 
     Friend Shared Function HideColumn(dataPropertyName As String) As Boolean
-#If SupportMailServer <> "True" Then
-        If dataPropertyName.Contains("Mail") Then
-            Return True
-        End If
-#End If
         If String.IsNullOrWhiteSpace(dataPropertyName) Then
             Return False
         End If
         Return Not (Debugger.IsAttached AndAlso Not s_filterJsonData) AndAlso s_columnsToHide.Contains(dataPropertyName)
     End Function
 
+    Public Shared Function GetCellStyle(columnName As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As DataGridViewCellStyle
+        Dim cellStyle As New DataGridViewCellStyle
+
+        Select Case columnName
+            Case NameOf(CareLinkUserDataRecord.CareLinkUserName),
+                 NameOf(CareLinkUserDataRecord.CareLinkPassword),
+                 NameOf(CareLinkUserDataRecord.AIT),
+                 NameOf(CareLinkUserDataRecord.AlertPhoneNumber),
+                 NameOf(CareLinkUserDataRecord.CarrierTextingDomain),
+                 NameOf(CareLinkUserDataRecord.CountryCode),
+                 NameOf(CareLinkUserDataRecord.MailserverPassword),
+                 NameOf(CareLinkUserDataRecord.MailserverUserName),
+                 NameOf(CareLinkUserDataRecord.OutgoingMailServer)
+                cellStyle.CellStyleMiddleLeft
+            Case NameOf(CareLinkUserDataRecord.AutoLogin),
+                 NameOf(CareLinkUserDataRecord.UseAdvancedAITDecay),
+                 NameOf(CareLinkUserDataRecord.UseLocalTimeZone)
+                cellStyle = cellStyle.CellStyleMiddleCenter
+                cellStyle.Padding = New Padding(0, 0, 0, 0)
+            Case NameOf(CareLinkUserDataRecord.MailServerPort),
+                 NameOf(CareLinkUserDataRecord.SettingsVersion),
+                 ""
+                cellStyle = cellStyle.CellStyleMiddleRight(0)
+            Case Else
+                Stop
+                Throw UnreachableException(memberName, sourceLineNumber)
+        End Select
+        Return cellStyle
+    End Function
+
     Public Shared Function GetColumnName(index As Integer) As String
-        Return _headerColumns(index)
+        Return s_headerColumns(index)
     End Function
-
-    Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        If columnName = NameOf(CareLinkUserDataRecord.AIT) Then
-            Return New DataGridViewCellStyle().CellStyleMiddleLeft()
-
-        End If
-        Return New DataGridViewCellStyle().CellStyleMiddleLeft()
-    End Function
-
-    Public Shared Sub SaveAllUserRecords(loggedOnUser As CareLinkUserDataRecord, Key As String, Value As String)
-        If Not Key.Equals(NameOf(My.Settings.CareLinkUserName).ToString, StringComparison.OrdinalIgnoreCase) Then
-            ' We are changing something other than the user name
-            ' Update logged on user and the saved file
-            loggedOnUser.UpdateValue(Key, Value)
-            If Not s_allUserSettingsData.TryAdd(loggedOnUser) Then
-                s_allUserSettingsData(loggedOnUser.CareLinkUserName) = loggedOnUser
-            End If
-        Else
-            ' We are changing the user name, first try to load it
-            If s_allUserSettingsData.ContainsKey(Value) Then
-                loggedOnUser = s_allUserSettingsData(Value)
-            Else
-                ' We have a new user
-                loggedOnUser.clean()
-                s_allUserSettingsData.Add(loggedOnUser)
-            End If
-        End If
-
-        SaveAllUserRecords()
-    End Sub
-
-    Public Shared Sub SaveAllUserRecords()
-        Dim sb As New StringBuilder
-        sb.AppendLine(String.Join(",", _headerColumns))
-        For Each r As CareLinkUserDataRecord In s_allUserSettingsData.Values
-            sb.AppendLine(r.ToCsvString)
-        Next
-        My.Computer.FileSystem.WriteAllText(s_settingsCsvFile, sb.ToString, False)
-    End Sub
 
 End Class

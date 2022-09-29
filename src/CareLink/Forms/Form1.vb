@@ -751,7 +751,7 @@ Public Class Form1
             dgv.DataSource = Nothing
             s_allUserSettingsData.RemoveAt(e.RowIndex)
             dgv.DataSource = s_allUserSettingsData
-            CareLinkUserDataRecordHelpers.SaveAllUserRecords()
+            CareLinkUserDataListHelpers.SaveAllUserRecords()
         End If
 
     End Sub
@@ -1105,7 +1105,7 @@ Public Class Form1
                 s_allUserSettingsData.Add(userSettings)
             End If
         End If
-        CareLinkUserDataRecordHelpers.SaveAllUserRecords(_loginDialog.LoggedOnUser, e.SettingName, e.NewValue?.ToString)
+        CareLinkUserDataListHelpers.SaveAllUserRecords(_loginDialog.LoggedOnUser, e.SettingName, e.NewValue?.ToString)
     End Sub
 
 #End Region ' Settings Events

@@ -25,16 +25,12 @@ Public Class ActiveInsulinRecord
         Next
     End Sub
 
-#If True Then ' Prevent reordering
-
     Public Property amount As Single
+    Public Property currentOADate As OADate
     Public Property datetime As Date
     Public Property datetimeAsString As String
-    Public Property currentOADate As OADate
-    Public Property precision As String
     Public Property kind As String
+    Public Property precision As String
     Public Property version As Integer
-#End If
-
 
 End Class
