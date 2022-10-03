@@ -30,6 +30,11 @@ This update has a UI to show all the available data and a visual version that mi
 - 9/21/2022
 
 ## What's New in this release
+  New 3.5.6.7
+-   Fixed crash issue #21 again
+-   Improve Disabled button handling
+-   Add infrastructure for future use of DataTables to edit Records
+
   New 3.5.6.6
 -   Fixed crash issue #21
 

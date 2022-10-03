@@ -4,6 +4,7 @@
 
 Imports System.ComponentModel
 Imports System.IO
+Imports System.Text
 
 Public Class CareLinkUserDataList
     Inherits CollectionBase
@@ -159,9 +160,13 @@ Public Class CareLinkUserDataList
     End Sub
 
     Friend Function ContainsKey(key As String) As Boolean
+        If String.IsNullOrWhiteSpace(key) Then
+            Return False
+        End If
+
         If Me.List Is Nothing Then Return False
         For Each entry As CareLinkUserDataRecord In Me
-            If entry?.CareLinkUserName.Equals(key, StringComparison.OrdinalIgnoreCase) Then
+            If entry?.CareLinkUserName?.Equals(key, StringComparison.OrdinalIgnoreCase) Then
                 Return True
             End If
         Next
@@ -205,7 +210,7 @@ Public Class CareLinkUserDataList
 
     ' Methods.
     Function AddNew() As Object Implements IBindingList.AddNew
-        Dim c As New CareLinkUserDataRecord(Me.Count.ToString())
+        Dim c As New CareLinkUserDataRecord(Me)
         Me.List.Add(c)
         Return c
     End Function
@@ -222,7 +227,7 @@ Public Class CareLinkUserDataList
         Throw New NotSupportedException()
     End Function
 
-    Public Sub LoadUsers()
+    Public Sub LoadUserRecords()
         Dim l As IList = Me
         If File.Exists(s_settingsCsvFile) Then
             Using myReader As New FileIO.TextFieldParser(s_settingsCsvFile)
@@ -237,7 +242,7 @@ Public Class CareLinkUserDataList
                         currentRow = myReader.ReadFields()
                         ' Include code here to handle the row.
                         If rowIndex <> 0 Then
-                            l.Add(New CareLinkUserDataRecord(rowIndex - 1, currentRow))
+                            l.Add(New CareLinkUserDataRecord(Me, currentRow))
                         End If
                         rowIndex += 1
                     Catch ex As FileIO.MalformedLineException
@@ -260,6 +265,37 @@ Public Class CareLinkUserDataList
 
     Sub RemoveSort() Implements IBindingList.RemoveSort
         Throw New NotSupportedException()
+    End Sub
+
+    Public Sub SaveAllUserRecords(loggedOnUser As CareLinkUserDataRecord, Key As String, Value As String)
+        If Not Key.Equals(NameOf(My.Settings.CareLinkUserName).ToString, StringComparison.OrdinalIgnoreCase) Then
+            ' We are changing something other than the user name
+            ' Update logged on user and the saved file
+            loggedOnUser.UpdateValue(Key, Value)
+            If Not Me.TryAdd(loggedOnUser) Then
+                Me(loggedOnUser.CareLinkUserName) = loggedOnUser
+            End If
+        Else
+            ' We are changing the user name, first try to load it
+            If Me.ContainsKey(Value) Then
+                loggedOnUser = Me(Value)
+            Else
+                ' We have a new user
+                loggedOnUser.clean()
+                Me.Add(loggedOnUser)
+            End If
+        End If
+
+        Me.SaveAllUserRecords()
+    End Sub
+
+    Public Sub SaveAllUserRecords()
+        Dim sb As New StringBuilder
+        sb.AppendLine(String.Join(",", CareLinkUserDataRecordHelpers.s_headerColumns))
+        For Each r As CareLinkUserDataRecord In Me.Values
+            sb.AppendLine(r.ToCsvString)
+        Next
+        My.Computer.FileSystem.WriteAllText(s_settingsCsvFile, sb.ToString, False)
     End Sub
 
 End Class

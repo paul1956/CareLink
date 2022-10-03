@@ -17,39 +17,34 @@ Public Class CareLinkUserDataRecord
 
     Public Parent As CareLinkUserDataList
 
-    Public Sub New(Id As String)
+    Public Sub New(parent As CareLinkUserDataList)
+        Me.Parent = parent
         _userData = New CareLinkUserData With {
-            ._iD = Id
-        }
-    End Sub
-
-    Public Sub New()
-        _userData = New CareLinkUserData With {
-            ._iD = s_allUserSettingsData.Count.ToString,
-            ._careLinkUserName = My.Settings.CareLinkUserName,
-            ._careLinkPassword = My.Settings.CareLinkPassword,
+            ._iD = parent.Count,
+            ._careLinkUserName = If(My.Settings.CareLinkUserName, ""),
+            ._careLinkPassword = If(My.Settings.CareLinkPassword, ""),
             ._aIT = My.Settings.AIT,
-            ._alertPhoneNumber = My.Settings.AlertPhoneNumber,
-            ._carrierTextingDomain = My.Settings.CarrierTextingDomain,
-            ._countryCode = My.Settings.CountryCode,
-            ._mailserverPassword = My.Settings.MailServerPassword,
+            ._alertPhoneNumber = If(My.Settings.AlertPhoneNumber, ""),
+            ._carrierTextingDomain = If(My.Settings.CarrierTextingDomain, ""),
+            ._countryCode = If(My.Settings.CountryCode, ""),
+            ._mailserverPassword = If(My.Settings.MailServerPassword, ""),
             ._mailServerPort = My.Settings.MailServerPort,
-            ._mailserverUserName = My.Settings.MailServerUserName,
-            ._settingsVersion = My.Settings.SettingsVersion,
-            ._outgoingMailServer = My.Settings.OutGoingMailServer,
+            ._mailserverUserName = If(My.Settings.MailServerUserName, ""),
+            ._settingsVersion = If(My.Settings.SettingsVersion, ""),
+            ._outgoingMailServer = If(My.Settings.OutGoingMailServer, ""),
             ._useAdvancedAITDecay = My.Settings.UseAdvancedAITDecay,
             ._useLocalTimeZone = My.Settings.UseLocalTimeZone,
             ._autoLogin = My.Settings.AutoLogin
         }
     End Sub
 
-    Public Sub New(id As Integer, currentRow As String())
+    Public Sub New(parent As CareLinkUserDataList, currentRow As String())
         _userData = New CareLinkUserData With {
-            ._iD = id.ToString
+            ._iD = parent.Count
         }
         Dim entryName As String
         For Each e As IndexClass(Of String) In currentRow.WithIndex
-            Dim value As String = e.Value
+            Dim value As String = If(e.Value, "")
 
             entryName = CareLinkUserDataRecordHelpers.GetColumnName(e.Index)
             If String.IsNullOrEmpty(value) Then
@@ -150,7 +145,7 @@ Public Class CareLinkUserDataRecord
 
     <DisplayName("Id")>
     <Column(Order:=0)>
-    Public ReadOnly Property ID() As String
+    Public ReadOnly Property ID() As Integer
         Get
             Return _userData._iD
         End Get
@@ -359,6 +354,7 @@ Public Class CareLinkUserDataRecord
     End Sub
 
     Structure CareLinkUserData
+        Friend _iD As Integer
         Friend _aIT As TimeSpan
         Friend _alertPhoneNumber As String
         Friend _autoLogin As Boolean
@@ -366,7 +362,6 @@ Public Class CareLinkUserDataRecord
         Friend _careLinkUserName As String
         Friend _carrierTextingDomain As String
         Friend _countryCode As String
-        Friend _iD As String
         Friend _mailserverPassword As String
         Friend _mailServerPort As Integer
         Friend _mailserverUserName As String

@@ -15,6 +15,7 @@ Public Class DataGridViewDisableButtonCell
         End Get
         Set(value As Boolean)
             _enabledValue = value
+            Me.DataGridView?.InvalidateCell(Me)
         End Set
     End Property
 
@@ -47,42 +48,40 @@ Public Class DataGridViewDisableButtonCell
         ' background, and disabled button for the cell.
         If Not _enabledValue Then
 
-            ' Draw the background of the cell, if specified.
-            If (paintParts And DataGridViewPaintParts.Background) = DataGridViewPaintParts.Background Then
+            Dim currentContext As BufferedGraphicsContext = BufferedGraphicsManager.Current
 
-                Dim cellBackground As New SolidBrush(cellStyle.BackColor)
-                graphics.FillRectangle(cellBackground, cellBounds)
-                cellBackground.Dispose()
-            End If
+            Using myBuffer As BufferedGraphics = currentContext.Allocate(graphics, cellBounds)
+                ' Draw the cell background, if specified.
+                If (paintParts And DataGridViewPaintParts.Background) = DataGridViewPaintParts.Background Then
+                    Using cellBackground As New SolidBrush(cellStyle.BackColor)
+                        myBuffer.Graphics.FillRectangle(cellBackground, cellBounds)
+                    End Using
+                End If
 
-            ' Draw the cell borders, if specified.
-            If (paintParts And DataGridViewPaintParts.Border) =
-                DataGridViewPaintParts.Border Then
+                ' Draw the cell borders, if specified.
+                If (paintParts And DataGridViewPaintParts.Border) = DataGridViewPaintParts.Border Then
+                    Me.PaintBorder(myBuffer.Graphics, clipBounds, cellBounds, cellStyle, advancedBorderStyle)
+                End If
 
-                Me.PaintBorder(graphics, clipBounds, cellBounds, cellStyle,
-                    advancedBorderStyle)
-            End If
+                ' Calculate the area in which to draw the button.
+                Dim buttonArea As Rectangle = cellBounds
+                Dim buttonAdjustment As Rectangle = Me.BorderWidths(advancedBorderStyle)
+                buttonArea.X += buttonAdjustment.X
+                buttonArea.Y += buttonAdjustment.Y
+                buttonArea.Height -= buttonAdjustment.Height
+                buttonArea.Width -= buttonAdjustment.Width
 
-            ' Calculate the area in which to draw the button.
-            Dim buttonArea As Rectangle = cellBounds
-            Dim buttonAdjustment As Rectangle = Me.BorderWidths(advancedBorderStyle)
-            buttonArea.X += buttonAdjustment.X
-            buttonArea.Y += buttonAdjustment.Y
-            buttonArea.Height -= buttonAdjustment.Height
-            buttonArea.Width -= buttonAdjustment.Width
+                ' Draw the disabled button.
+                ButtonRenderer.DrawButton(myBuffer.Graphics, buttonArea, PushButtonState.Disabled)
 
-            ' Draw the disabled button.
-            ButtonRenderer.DrawButton(graphics, buttonArea,
-                PushButtonState.Disabled)
+                ' Draw the disabled button text.
+                Dim formattedValueString As String = TryCast(formattedValue, String)
+                If formattedValueString IsNot Nothing Then
+                    TextRenderer.DrawText(myBuffer.Graphics, formattedValueString, Me.DataGridView.Font, buttonArea, SystemColors.GrayText, TextFormatFlags.PreserveGraphicsTranslateTransform Or TextFormatFlags.HorizontalCenter Or TextFormatFlags.VerticalCenter)
+                End If
 
-            ' Draw the disabled button text.
-            If TypeOf Me.FormattedValue Is String Then
-                TextRenderer.DrawText(graphics,
-                                        CStr(Me.FormattedValue),
-                                        Me.DataGridView.Font,
-                                        buttonArea,
-                                        SystemColors.GrayText)
-            End If
+                myBuffer.Render()
+            End Using
         Else
             ' The button cell is enabled, so let the base class
             ' handle the painting.
