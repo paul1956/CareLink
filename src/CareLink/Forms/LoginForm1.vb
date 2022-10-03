@@ -7,7 +7,7 @@ Imports System.IO
 Public Class LoginForm1
     Private ReadOnly _mySource As New AutoCompleteStringCollection()
     Public Property Client As CareLinkClient
-    Public Property LoggedOnUser As New CareLinkUserDataRecord
+    Public Property LoggedOnUser As New CareLinkUserDataRecord(s_allUserSettingsData)
 
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         Me.DialogResult = DialogResult.Cancel
@@ -72,6 +72,7 @@ Public Class LoginForm1
             Me.OK_Button_Click(Me.Ok_Button, Nothing)
         End If
     End Sub
+
     'End Sub
     Private Sub OK_Button_Click(sender As Object, e As System.EventArgs) Handles Ok_Button.Click
         Me.Ok_Button.Enabled = False
@@ -91,7 +92,7 @@ Public Class LoginForm1
 
                 My.Settings.Save()
                 If Not s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, Me.LoggedOnUser) Then
-                    CareLinkUserDataListHelpers.SaveAllUserRecords(New CareLinkUserDataRecord, NameOf(CareLinkUserDataRecord.CareLinkUserName), Me.UsernameTextBox.Text)
+                    s_allUserSettingsData.SaveAllUserRecords(New CareLinkUserDataRecord(s_allUserSettingsData), NameOf(CareLinkUserDataRecord.CareLinkUserName), Me.UsernameTextBox.Text)
                 End If
                 Me.DialogResult = DialogResult.OK
                 Me.Hide()

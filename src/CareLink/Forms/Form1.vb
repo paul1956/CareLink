@@ -187,7 +187,7 @@ Public Class Form1
             My.Settings.Save()
         End If
 
-        s_allUserSettingsData.LoadUsers()
+        s_allUserSettingsData.LoadUserRecords()
 
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
@@ -751,7 +751,7 @@ Public Class Form1
             dgv.DataSource = Nothing
             s_allUserSettingsData.RemoveAt(e.RowIndex)
             dgv.DataSource = s_allUserSettingsData
-            CareLinkUserDataListHelpers.SaveAllUserRecords()
+            s_allUserSettingsData.SaveAllUserRecords()
         End If
 
     End Sub
@@ -1099,13 +1099,12 @@ Public Class Form1
                 _loginDialog.LoggedOnUser = s_allUserSettingsData(e.NewValue.ToString)
                 Exit Sub
             Else
-                Dim count As Integer = If(s_allUserSettingsData Is Nothing, 0, s_allUserSettingsData.Count)
-                Dim userSettings As New CareLinkUserDataRecord(count.ToString)
+                Dim userSettings As New CareLinkUserDataRecord(s_allUserSettingsData)
                 userSettings.UpdateValue(e.SettingName, e.NewValue.ToString)
                 s_allUserSettingsData.Add(userSettings)
             End If
         End If
-        CareLinkUserDataListHelpers.SaveAllUserRecords(_loginDialog.LoggedOnUser, e.SettingName, e.NewValue?.ToString)
+        s_allUserSettingsData.SaveAllUserRecords(_loginDialog.LoggedOnUser, e.SettingName, e.NewValue?.ToString)
     End Sub
 
 #End Region ' Settings Events
@@ -1337,7 +1336,7 @@ Public Class Form1
             Case < 1
                 TreatmentInsulinRow = 1
             Case < 1.25
-                TreatmentInsulinRow = 1.12
+                TreatmentInsulinRow = 1.25
             Case < 1.5
                 TreatmentInsulinRow = 1.5
             Case < 1.75
