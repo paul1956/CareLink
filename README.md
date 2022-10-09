@@ -9,7 +9,7 @@ https://github.com/paul1956/CareLink/releases/
 
 Try it out and send feedback.
 This update has a UI to show all the available data and a visual version that mimics the one on iPhone.
-![Same display](https://github.com/paul1956/CareLink/blob/master/Screenshot%202021-05-16%20050718.png?raw=true)
+![Same display](https://github.com/paul1956/CareLink/blob/master/Screenshot%202022-10-08%20203350.png?raw=true)
 
 ## Requires for development
 - Visual Studio 2022 Version 17.3.0 Preview 2.0 or later
