@@ -4,7 +4,7 @@
 
 Imports System.Runtime.CompilerServices
 
-Module ChartingExtensions
+Friend Module ChartingExtensions
 
     <Extension>
     Private Sub AddBasalPoint(basalSeries As Series, startX As OADate, StartY As Double, lineColor As Color, toolTip As String)
@@ -139,7 +139,7 @@ Module ChartingExtensions
     <Extension>
     Friend Sub PlotHighLowLimits(chart As Chart, memberName As String, sourceLineNumber As Integer, limitsIndexList() As Integer)
         For Each sgListIndex As IndexClass(Of SgRecord) In s_bindingSourceSGs.WithIndex()
-            Dim sgOADateTime As OADate = sgListIndex.Value.OADate()
+            Dim sgOADateTime As OADate = sgListIndex.Value.OADateTime()
             Try
                 Dim limitsLowValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("lowLimit").ParseSingle
                 Dim limitsHighValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("highLimit").ParseSingle
@@ -220,7 +220,7 @@ Module ChartingExtensions
                         With homePageChart.Series(TimeChangeSeriesName).Points
                             lastTimeChangeRecord = New TimeChangeRecord(s_markers(markerWithIndex.Index))
 
-                            markerOADateTime = New TimeChangeRecord(s_markers(markerWithIndex.Index)).currentOADate
+                            markerOADateTime = New TimeChangeRecord(s_markers(markerWithIndex.Index)).OADateTime
                             Call .AddXY(markerOADateTime, 0)
                             .AddXY(markerOADateTime, HomePageBasalRow)
                             .AddXY(markerOADateTime, Double.NaN)
@@ -242,7 +242,7 @@ Module ChartingExtensions
     Friend Sub PlotSgSeries(chart As Chart, HomePageMealRow As Double)
         For Each sgListIndex As IndexClass(Of SgRecord) In s_bindingSourceSGs.WithIndex()
             chart.Series(BgSeriesName).PlotOnePoint(
-                                    sgListIndex.Value.OADate(),
+                                    sgListIndex.Value.OADateTime(),
                                     sgListIndex.Value.sg,
                                     Color.Black,
                                     HomePageMealRow)
@@ -311,7 +311,7 @@ Module ChartingExtensions
                     Case "TIME_CHANGE"
                         With treatmentChart.Series(TimeChangeSeriesName).Points
                             lastTimeChangeRecord = New TimeChangeRecord(s_markers(markerWithIndex.Index))
-                            markerOADateTime = New TimeChangeRecord(s_markers(markerWithIndex.Index)).previousOADate
+                            markerOADateTime = New TimeChangeRecord(s_markers(markerWithIndex.Index)).previousOADateTime
                             Call .AddXY(markerOADateTime, 0)
                             .AddXY(markerOADateTime, TreatmentInsulinRow)
                             .AddXY(markerOADateTime, Double.NaN)
@@ -333,10 +333,10 @@ Module ChartingExtensions
     <Extension>
     Friend Sub PostPaintSupport(e As ChartPaintEventArgs, ByRef chartRelitivePosition As RectangleF, insulinDictionary As Dictionary(Of OADate, Single), mealDictionary As Dictionary(Of OADate, Single), offsetInsulinImage As Boolean, paintOnY2 As Boolean)
         If chartRelitivePosition.IsEmpty Then
-            chartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_bindingSourceSGs(0).OADate))
+            chartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_bindingSourceSGs(0).OADateTime))
             chartRelitivePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, HomePageBasalRow))
             chartRelitivePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, s_limitHigh)))) - chartRelitivePosition.Y
-            chartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_bindingSourceSGs.Last.OADate)) - chartRelitivePosition.X
+            chartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_bindingSourceSGs.Last.OADateTime)) - chartRelitivePosition.X
         End If
 
         Dim highLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, s_limitHigh))

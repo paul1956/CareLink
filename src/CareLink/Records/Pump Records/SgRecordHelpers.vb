@@ -5,10 +5,10 @@ Imports CareLink
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Class SgRecordHelpers
+Friend Class SgRecordHelpers
 
     Private Shared ReadOnly s_columnsToHide As New List(Of String) From {
-                        NameOf(SgRecord.OADate),
+                        NameOf(SgRecord.OAdatetime),
                         NameOf(SgRecord.kind),
                         NameOf(SgRecord.relativeOffset),
                         NameOf(SgRecord.version)
@@ -24,7 +24,7 @@ Class SgRecordHelpers
         Select Case columnName
             Case NameOf(SgRecord.sg),
                     NameOf(SgRecord.relativeOffset),
-                    NameOf(SgRecord.OADate)
+                    NameOf(SgRecord.OAdatetime)
                 cellStyle = cellStyle.CellStyleMiddleRight(10)
             Case NameOf(SgRecord.RecordNumber),
                     NameOf(SgRecord.version)

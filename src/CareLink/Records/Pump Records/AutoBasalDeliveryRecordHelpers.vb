@@ -4,13 +4,12 @@ Imports CareLink
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Class AutoBasalDeliveryRecordHelpers
+Friend Class AutoBasalDeliveryRecordHelpers
 
     Private Shared ReadOnly s_columnsToHide As New List(Of String) From {
             NameOf(AutoBasalDeliveryRecord.id),
             NameOf(AutoBasalDeliveryRecord.index),
             NameOf(AutoBasalDeliveryRecord.kind),
-            NameOf(AutoBasalDeliveryRecord.OADate),
             NameOf(AutoBasalDeliveryRecord.relativeOffset),
             NameOf(AutoBasalDeliveryRecord.type),
             NameOf(AutoBasalDeliveryRecord.version)
@@ -32,7 +31,7 @@ Class AutoBasalDeliveryRecordHelpers
                 cellStyle.Padding = New Padding(0, 0, 0, 0)
             Case NameOf(AutoBasalDeliveryRecord.bolusAmount),
                     NameOf(AutoBasalDeliveryRecord.version),
-                    NameOf(AutoBasalDeliveryRecord.OADate),
+                    NameOf(AutoBasalDeliveryRecord.OAdateTime),
                     NameOf(AutoBasalDeliveryRecord.relativeOffset)
                 cellStyle = cellStyle.CellStyleMiddleRight(0)
             Case Else

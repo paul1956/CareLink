@@ -3,6 +3,8 @@
 ' See the LICENSE file in the project root for more information.
 
 Public Class TimeChangeRecord
+    Private _previousDateTime As Date
+    Private _dateTime As Date
 
     Public Sub New(timeChangeItem As Dictionary(Of String, String))
         For Each kvp As KeyValuePair(Of String, String) In timeChangeItem
@@ -18,18 +20,15 @@ Public Class TimeChangeRecord
                 Case NameOf(Me.dateTime)
                     Me.dateTime = kvp.Value.ParseDate(NameOf(Me.dateTime), NameOf(Me.dateTime))
                     Me.dateTimeAsString = kvp.Value
-                    Me.currentOADate = New OADate(Me.dateTime)
                 Case NameOf(relativeOffset)
                     Me.relativeOffset = CInt(kvp.Value)
                 Case NameOf(previousDateTime)
                     Me.previousDateTime = kvp.Value.ParseDate(NameOf(previousDateTime))
                     Me.previousDateTimeAsString = kvp.Value
-                    Me.previousOADate = New OADate(Me.previousDateTime)
                 Case Else
                     Stop
             End Select
         Next
-        Me.deltaOADate = Me.previousDateTime - Me.dateTime
     End Sub
 
 #If True Then ' Prevent reordering
@@ -39,12 +38,46 @@ Public Class TimeChangeRecord
     Public Property kind As String
     Public Property version As Integer
     Public Property [dateTime] As Date
+        Get
+            Return _dateTime
+        End Get
+        Set
+            _dateTime = Value
+        End Set
+    End Property
+
     Public Property dateTimeAsString As String
-    Public Property currentOADate As OADate
+
+    Public ReadOnly Property OADateTime As OADate
+        Get
+            Return New OADate(_dateTime)
+        End Get
+    End Property
+
     Public Property relativeOffset As Integer
+
     Public Property previousDateTime As Date
+        Get
+            Return _previousDateTime
+        End Get
+        Set
+            _previousDateTime = Value
+        End Set
+    End Property
+
     Public Property previousDateTimeAsString As String
-    Public Property previousOADate As OADate
-    Public Property deltaOADate As TimeSpan
+
+    Public ReadOnly Property previousOADateTime As OADate
+        Get
+            Return New OADate(_previousDateTime)
+        End Get
+    End Property
+
+    Public ReadOnly Property deltaOADateTime As TimeSpan
+        Get
+            Return _previousDateTime - _dateTime
+        End Get
+    End Property
+
 #End If  ' Prevent reordering
 End Class

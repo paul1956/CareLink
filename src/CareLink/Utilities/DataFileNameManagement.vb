@@ -18,7 +18,7 @@ Friend Module DataFileNameManagement
     ''' An empty file name on error.
     ''' </returns>
     ''' <param Name="MustBeUnique"></param>
-    Public Function GetDataFileName(baseName As String, cultureName As String, extension As String, MustBeUnique As Boolean) As (withPath As String, withoutPath As String)
+    Public Function GetDataFileName(baseName As String, cultureName As String, extension As String, MustBeUnique As Boolean) As FileNameStruct
         If String.IsNullOrWhiteSpace(baseName) Then
             Throw New ArgumentException($"'{NameOf(baseName)}' cannot be null or whitespace.", NameOf(baseName))
         End If
@@ -32,24 +32,23 @@ Friend Module DataFileNameManagement
         End If
 
         Try
-            Dim baseFileNameWithCulture As String = $"{baseName}({cultureName})"
-            Dim fileNameWithCultureAndExtension As String = $"{baseFileNameWithCulture}.{extension}"
-            Dim filenameWithPath As String = Path.Combine(MyDocumentsPath, fileNameWithCultureAndExtension)
+            Dim fileNameWithCultureAndExtension As String = $"{baseName}({cultureName}).{extension}"
+            Dim fileNameWithPath As String = Path.Combine(MyDocumentsPath, fileNameWithCultureAndExtension)
 
-            If MustBeUnique AndAlso File.Exists(filenameWithPath) Then
+            If MustBeUnique AndAlso File.Exists(fileNameWithPath) Then
                 'Get unique file name
                 Dim lCount As Long
                 Do
                     lCount += 1
-                    filenameWithPath = Path.Combine(MyDocumentsPath, $"{baseFileNameWithCulture}{lCount}.{extension}")
-                    fileNameWithCultureAndExtension = Path.GetFileName(filenameWithPath)
-                Loop While File.Exists(filenameWithPath)
+                    fileNameWithPath = Path.Combine(MyDocumentsPath, $"{$"{baseName}({cultureName})"}{lCount}.{extension}")
+                    fileNameWithCultureAndExtension = Path.GetFileName(fileNameWithPath)
+                Loop While File.Exists(fileNameWithPath)
             End If
 
-            Return (filenameWithPath, fileNameWithCultureAndExtension)
+            Return New FileNameStruct(fileNameWithPath, fileNameWithCultureAndExtension)
         Catch ex As Exception
         End Try
-        Return ("", "")
+        Return New FileNameStruct
 
     End Function
 

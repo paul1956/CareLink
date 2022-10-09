@@ -10,7 +10,6 @@ Imports Octokit
 
 Public Class ExceptionHandlerForm
     Private _gitClient As GitHubClient
-    Private _uniqueFileNameResult As (withPath As String, withoutPath As String) = Nothing
     Public Property LocalRawData As String
     Public Property ReportFileNameWithPath As String
     Public Property UnhandledException As UnhandledExceptionEventArgs
@@ -18,8 +17,8 @@ Public Class ExceptionHandlerForm
 #Region "Form Events"
 
     Private Sub Cancel_Click(sender As Object, e As EventArgs) Handles Cancel.Click
-        If Not String.IsNullOrWhiteSpace(_uniqueFileNameResult.withPath) Then
-            File.Delete(_uniqueFileNameResult.withPath)
+        If Not String.IsNullOrWhiteSpace(Me.ReportFileNameWithPath) Then
+            File.Delete(Me.ReportFileNameWithPath)
         End If
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
@@ -36,7 +35,7 @@ Public Class ExceptionHandlerForm
             Me.StackTraceTextBox.Text = Me.TrimedStackTrace()
 
             Me.InstructionsRichTextBox.Text = $"By clicking OK, the Stack Trace, Exception and the CareLink data that caused the error will be package as a text file called" & Environment.NewLine
-            Dim uniqueFileNameResult As (withPath As String, withoutPath As String) = GetDataFileName(RepoErrorReportName, CurrentDateCulture.Name, "txt", True)
+            Dim uniqueFileNameResult As FileNameStruct = GetDataFileName(RepoErrorReportName, CurrentDateCulture.Name, "txt", True)
             Dim fileLink As String = $"{uniqueFileNameResult.withoutPath}: file://{uniqueFileNameResult.withPath}"
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, fileLink, fontBold)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "and stored in", fontNormal)

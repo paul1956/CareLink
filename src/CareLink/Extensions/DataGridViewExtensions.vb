@@ -83,7 +83,7 @@ Public Module DataGridViewExtensions
     End Sub
 
     <Extension>
-    Public Sub DgvColumnAdded(ByRef e As DataGridViewColumnEventArgs, cellStyle As DataGridViewCellStyle, wrapHeader As Boolean, forceReadOnly As Boolean)
+    Public Sub DgvColumnAdded(ByRef e As DataGridViewColumnEventArgs, cellStyle As DataGridViewCellStyle, wrapHeader As Boolean, forceReadOnly As Boolean, Optional caption As String = Nothing)
         e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
         Dim idHeaderName As Boolean = e.Column.DataPropertyName = "ID"
         e.Column.ReadOnly = forceReadOnly OrElse idHeaderName
@@ -100,11 +100,13 @@ Public Module DataGridViewExtensions
                 End If
             Next
         Else
-            title.Append(titleInTitleCase.Replace("Care Link", "CareLink"))
+            title.Append(titleInTitleCase.Replace("Care Link", "CareLink").Replace("O Adate Time", "OA Date Time"))
         End If
         e.Column.HeaderText = title.ToString.TrimEnd(Environment.NewLine)
         e.Column.DefaultCellStyle = cellStyle
         e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
+        If caption Is Nothing Then Return
+        e.Column.HeaderText = caption
     End Sub
 
 End Module

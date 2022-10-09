@@ -27,9 +27,12 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 9/21/2022
+- 10/08/2022
 
 ## What's New in this release
+  New 3.5.6.8
+-   No logic changes, just code cleanup
+
   New 3.5.6.7
 -   Fixed crash issue #21 again
 -   Improve Disabled button handling

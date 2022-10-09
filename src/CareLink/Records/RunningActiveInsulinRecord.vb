@@ -18,13 +18,6 @@ Friend Class RunningActiveInsulinRecord
         Me.CurrentInsulinLevel = _adjustmentValue * _incrementDownCount
     End Sub
 
-    Public Sub New(iOB As ActiveInsulinRecord)
-        Me.OaDateTime = iOB.currentOADate
-        Me.EventDate = iOB.datetime
-        Me.CurrentInsulinLevel = iOB.amount
-        _dontAdjust = True
-    End Sub
-
     Public Property CurrentInsulinLevel As Single
     Public Property EventDate As Date
 

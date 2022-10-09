@@ -2,60 +2,65 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.ComponentModel
+Imports System.ComponentModel.DataAnnotations.Schema
+
 Public Class AutoBasalDeliveryRecord
+    Private _dateTime As Date
 
-    Public Sub New(marker As Dictionary(Of String, String), recordNumber As Integer)
-        For Each kvp As KeyValuePair(Of String, String) In marker
-
-            Select Case kvp.Key
-                Case NameOf(type)
-                    Me.type = kvp.Value
-
-                Case NameOf(index)
-                    Me.index = Integer.Parse(kvp.Value)
-
-                Case NameOf(kind)
-                    Me.kind = kvp.Value
-
-                Case NameOf(version)
-                    Me.version = Integer.Parse(kvp.Value)
-
-                Case NameOf([dateTime])
-                    Dim value As String = ""
-                    If marker.TryGetValue(NameOf([dateTime]), value) Then
-                        Me.dateTime = value.ParseDate(NameOf([dateTime]))
-                    End If
-                    Me.dateTimeAsString = value
-                    Me.OADate = New OADate(_dateTime)
-
-                Case NameOf(relativeOffset)
-                    Me.relativeOffset = Integer.Parse(kvp.Value)
-
-                Case NameOf(id)
-                    Me.id = Integer.Parse(kvp.Value)
-
-                Case NameOf(bolusAmount)
-                    Me.bolusAmount = kvp.Value.ParseSingle
-
-                Case Else
-                    Stop
-            End Select
-        Next
-        Me.RecordNumber = recordNumber
-    End Sub
-
-#If True Then ' Prevent reordering
-
-    Public Property RecordNumber As Integer
-    Public Property type As String
-    Public Property index As Integer
-    Public Property kind As String
-    Public Property version As Integer
+    <DisplayName(NameOf([dateTime]))>
+    <Column(Order:=5)>
     Public Property [dateTime] As Date
-    Public Property dateTimeAsString As String
-    Public Property OADate As OADate
-    Public Property relativeOffset As Integer
-    Public Property id As Integer
+        Get
+            Return _dateTime
+        End Get
+        Set
+            _dateTime = Value
+        End Set
+    End Property
+
+    <DisplayName(NameOf(bolusAmount))>
+    <Column(Order:=10)>
     Public Property bolusAmount As Single
-#End If  ' Prevent reordering
+
+    <DisplayName(NameOf(dateTimeAsString))>
+    <Column(Order:=6)>
+    Public Property dateTimeAsString As String
+
+    <DisplayName(NameOf(id))>
+    <Column(Order:=9)>
+    Public Property id As Integer
+
+    <DisplayName(NameOf(index))>
+    <Column(Order:=2)>
+    Public Property index As Integer
+
+    <DisplayName(NameOf(kind))>
+    <Column(Order:=3)>
+    Public Property kind As String
+
+    <DisplayName(NameOf(OAdateTime))>
+    <Column(Order:=7)>
+    Public ReadOnly Property OAdateTime As OADate
+        Get
+            Return New OADate(_dateTime)
+        End Get
+    End Property
+
+    <DisplayName("Record Number")>
+    <Column(Order:=0)>
+    Public Property RecordNumber As Integer
+
+    <DisplayName(NameOf(relativeOffset))>
+    <Column(Order:=8)>
+    Public Property relativeOffset As Integer
+
+    <DisplayName(NameOf(type))>
+    <Column(Order:=1)>
+    Public Property type As String
+
+    <DisplayName(NameOf(version))>
+    <Column(Order:=4)>
+    Public Property version As Integer
+
 End Class

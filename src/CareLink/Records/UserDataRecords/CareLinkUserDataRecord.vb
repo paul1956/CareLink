@@ -353,7 +353,7 @@ Public Class CareLinkUserDataRecord
         End Select
     End Sub
 
-    Structure CareLinkUserData
+    Public Structure CareLinkUserData
         Friend _iD As Integer
         Friend _aIT As TimeSpan
         Friend _alertPhoneNumber As String

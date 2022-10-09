@@ -4,7 +4,7 @@
 
 Imports System.Runtime.CompilerServices
 
-Module ChartSupport
+Friend Module ChartSupport
     Friend Const BasalSeriesName As String = "BasalSeries"
     Friend Const BgSeriesName As String = "BgSeries"
     Friend Const HighLimitSeriesName As String = "HighLimitSeries"
@@ -121,8 +121,8 @@ Module ChartSupport
     <Extension>
     Friend Sub InitializeBGChartArea(c As ChartArea)
         With c
-            .AxisX.Minimum = s_bindingSourceSGs(0).OADate
-            .AxisX.Maximum = s_bindingSourceSGs.Last.OADate
+            .AxisX.Minimum = s_bindingSourceSGs(0).OAdatetime
+            .AxisX.Maximum = s_bindingSourceSGs.Last.OAdatetime
             .AxisX.MajorGrid.IntervalType = DateTimeIntervalType.Hours
             .AxisX.MajorGrid.IntervalOffsetType = DateTimeIntervalType.Hours
             .AxisX.MajorGrid.Interval = 1
