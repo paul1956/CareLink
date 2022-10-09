@@ -11,14 +11,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		GettingStarted.MD = GettingStarted.MD
 		License.txt = License.txt
 		README.md = README.md
-		Screenshot 2021-05-16 050718.png = Screenshot 2021-05-16 050718.png
+		Screenshot 2022-10-08 203350.png = Screenshot 2022-10-08 203350.png
 	EndProjectSection
 EndProject
 Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "ToolStripComboBoxEx", "src\ToolStripComboBoxEx\ToolStripComboBoxEx.vbproj", "{9817A57E-7375-4F00-9B87-0F1A82ADCAB7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChartWin", "..\winforms-datavisualization\src\System.Windows.Forms.DataVisualization\ChartWin.csproj", "{3D2B85F9-C2F6-4EA8-9363-2FFF4BA8E8B2}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DataGridViewDisableButtonColumnEx", "src\DataGridViewDisableButtonColumnEx\DataGridViewDisableButtonColumnEx.vbproj", "{3B647A3D-3985-488B-B1AC-3BDB883215A0}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "DataGridViewDisableButtonColumnEx", "src\DataGridViewDisableButtonColumnEx\DataGridViewDisableButtonColumnEx.vbproj", "{3B647A3D-3985-488B-B1AC-3BDB883215A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
