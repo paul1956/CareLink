@@ -2,9 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.ComponentModel
-
-Module TableLayoutPanelSupport
+Friend Module TableLayoutPanelSupport
 
     Friend Sub FillOneRowOfTableLayoutPanel(layoutPanel As TableLayoutPanel, innerJson As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String, isScaledForm As Boolean)
         For i As Integer = 1 To innerJson.Count - 1
@@ -117,26 +115,25 @@ Module TableLayoutPanelSupport
         Application.DoEvents()
     End Sub
 
-    Friend Sub ProcesListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of InsulinRecord), rowIndex As ItemIndexs)
+    Friend Sub ProcesListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As List(Of InsulinRecord), rowIndex As ItemIndexs)
+        initializeTableLayoutPanel(realPanel, rowIndex)
+        dGridView.DataSource = ClassToDatatable(recordData.ToArray)
+        dGridView.RowHeadersVisible = False
+    End Sub
+
+    Friend Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As DataTable, rowIndex As ItemIndexs)
         initializeTableLayoutPanel(realPanel, rowIndex)
         dGridView.DataSource = recordData
         dGridView.RowHeadersVisible = False
     End Sub
 
-    Friend Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of SgRecord), rowIndex As ItemIndexs)
+    Friend Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As List(Of AutoBasalDeliveryRecord), rowIndex As ItemIndexs)
         initializeTableLayoutPanel(realPanel, rowIndex)
-        dGridView.DataSource = recordData
-        dGridView.RowHeadersVisible = False
-    End Sub
-
-    Friend Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As BindingList(Of AutoBasalDeliveryRecord), rowIndex As ItemIndexs)
-        initializeTableLayoutPanel(realPanel, rowIndex)
-        dGridView.DataSource = recordData
+        dGridView.DataSource = ClassToDatatable(recordData.ToArray)
         dGridView.RowHeadersVisible = False
     End Sub
 
     Friend Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, innerListDictionary As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, isScaledForm As Boolean)
-
         If innerListDictionary.Count = 0 Then
             initializeTableLayoutPanel(realPanel, rowIndex)
             Dim rowTextBox As TextBox = CreateBasicTextBox("")

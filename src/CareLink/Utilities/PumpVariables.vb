@@ -26,9 +26,9 @@ Public Module PumpVariables
 #End Region ' Used for painting
 
     Friend Const MmolLUnitsDivisor As Single = 18
-    Friend ReadOnly s_bindingSourceMarkersAutoBasalDelivery As New BindingList(Of AutoBasalDeliveryRecord)
-    Friend ReadOnly s_bindingSourceMarkersInsulin As New BindingList(Of InsulinRecord)
-    Friend ReadOnly s_bindingSourceSummary As New BindingList(Of SummaryRecord)
+    Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDeliveryRecord)
+    Friend ReadOnly s_listOfInsulinMarkers As New List(Of InsulinRecord)
+    Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
     Friend ReadOnly s_insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
     Friend ReadOnly s_mealImage As Bitmap = My.Resources.MealImage
     Friend s_aboveHyperLimit As Double
@@ -36,7 +36,7 @@ Public Module PumpVariables
     Friend s_activeInsulinIncrements As Integer
     Friend s_averageSG As String
     Friend s_belowHypoLimit As Single
-    Friend s_bindingSourceSGs As New BindingList(Of SgRecord)
+    Friend s_bindingSourceSGs As New List(Of SgRecord)
     Friend s_clientTimeZone As TimeZoneInfo
     Friend s_clientTimeZoneName As String
     Friend s_conduitSensorInRange As Boolean

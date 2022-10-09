@@ -2,92 +2,100 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.ComponentModel
+Imports System.ComponentModel.DataAnnotations.Schema
+
 Public Class InsulinRecord
-
-    Public Sub New(oneRow As Dictionary(Of String, String), recordNumber As Integer)
-        Dim dic As Dictionary(Of String, String) = oneRow
-        For Each kvp As KeyValuePair(Of String, String) In oneRow
-
-            Select Case kvp.Key
-                Case NameOf(Me.type)
-                    Me.type = kvp.Value
-
-                Case NameOf(Me.index)
-                    Me.index = Integer.Parse(kvp.Value)
-
-                Case NameOf(Me.kind)
-                    Me.kind = kvp.Value
-
-                Case NameOf(Me.version)
-                    Me.version = Integer.Parse(kvp.Value)
-
-                Case NameOf(Me.dateTime)
-                    Dim value As String = ""
-                    If dic.TryGetValue(NameOf(Me.dateTime), value) Then
-                        Me.dateTime = value.ParseDate(NameOf(Me.dateTime))
-                    End If
-                    Me.dateTimeAsString = value
-                    Me.OADate = New OADate(_dateTime)
-                Case NameOf(Me.relativeOffset)
-                    Me.relativeOffset = Integer.Parse(kvp.Value)
-
-                Case NameOf(Me.programmedExtendedAmount)
-                    Me.programmedExtendedAmount = kvp.Value.ParseSingle
-
-                Case NameOf(Me.activationType)
-                    Me.activationType = kvp.Value
-
-                Case NameOf(Me.deliveredExtendedAmount)
-                    Me.deliveredExtendedAmount = kvp.Value.ParseSingle
-
-                Case NameOf(Me.programmedFastAmount)
-                    Me.programmedFastAmount = kvp.Value.ParseSingle
-
-                Case NameOf(Me.programmedDuration)
-                    Me.programmedDuration = Integer.Parse(kvp.Value)
-
-                Case NameOf(Me.deliveredFastAmount)
-                    Me.deliveredFastAmount = kvp.Value.ParseSingle
-
-                Case NameOf(Me.id)
-                    Me.id = Integer.Parse(kvp.Value)
-
-                Case NameOf(Me.effectiveDuration)
-                    Me.effectiveDuration = Integer.Parse(kvp.Value)
-
-                Case NameOf(Me.completed)
-                    Me.completed = Boolean.Parse(kvp.Value)
-
-                Case NameOf(Me.bolusType)
-                    Me.bolusType = kvp.Value
-
-                Case Else
-                    Stop
-            End Select
-        Next
-        Me.RecordNumber = recordNumber
-    End Sub
+    Private _dateTime As Date
 
 #If True Then ' Prevent reordering
 
+    <DisplayName(NameOf(RecordNumber))>
+    <Column(Order:=0)>
     Public Property RecordNumber As Integer
+
+    <DisplayName(NameOf(type))>
+    <Column(Order:=1)>
     Public Property type As String
+
+    <DisplayName(NameOf(index))>
+    <Column(Order:=2)>
     Public Property index As Integer
+
+    <DisplayName(NameOf(kind))>
+    <Column(Order:=3)>
     Public Property kind As String
+
+    <DisplayName(NameOf(version))>
+    <Column(Order:=4)>
     Public Property version As Integer
+
+    <DisplayName(NameOf([dateTime]))>
+    <Column(Order:=5)>
     Public Property [dateTime] As Date
+        Get
+            Return _dateTime
+        End Get
+        Set
+            _dateTime = Value
+        End Set
+    End Property
+
+    <DisplayName(NameOf(dateTimeAsString))>
+    <Column(Order:=6)>
     Public Property dateTimeAsString As String
-    Public Property OADate As OADate
+
+    <DisplayName("OAdatetime")>
+    <Column(Order:=7)>
+    Public ReadOnly Property OAdateTime As OADate
+        Get
+            Return New OADate(_dateTime)
+        End Get
+    End Property
+
+    <DisplayName(NameOf(relativeOffset))>
+    <Column(Order:=8)>
     Public Property relativeOffset As Integer
+
+    <DisplayName(NameOf(programmedExtendedAmount))>
+    <Column(Order:=9)>
     Public Property programmedExtendedAmount As Single
+
+    <DisplayName(NameOf(activationType))>
+    <Column(Order:=10)>
     Public Property activationType As String
+
+    <DisplayName(NameOf(deliveredExtendedAmount))>
+    <Column(Order:=11)>
     Public Property deliveredExtendedAmount As Single
+
+    <DisplayName(NameOf(programmedFastAmount))>
+    <Column(Order:=12)>
     Public Property programmedFastAmount As Single
+
+    <DisplayName(NameOf(programmedDuration))>
+    <Column(Order:=13)>
     Public Property programmedDuration As Integer
+
+    <DisplayName(NameOf(deliveredFastAmount))>
+    <Column(Order:=14)>
     Public Property deliveredFastAmount As Single
+
+    <DisplayName(NameOf(id))>
+    <Column(Order:=15)>
     Public Property id As Integer
+
+    <DisplayName(NameOf(effectiveDuration))>
+    <Column(Order:=16)>
     Public Property effectiveDuration As Integer
+
+    <DisplayName(NameOf(completed))>
+    <Column(Order:=17)>
     Public Property completed As Boolean
+
+    <DisplayName(NameOf(bolusType))>
+    <Column(Order:=18)>
     Public Property bolusType As String
+
 #End If  ' Prevent reordering
 End Class

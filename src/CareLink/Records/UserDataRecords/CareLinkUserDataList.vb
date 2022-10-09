@@ -17,56 +17,56 @@ Public Class CareLinkUserDataList
     Public Event ListChanged As ListChangedEventHandler Implements IBindingList.ListChanged
 
     ' Implements IBindingList.
-    ReadOnly Property AllowEdit() As Boolean Implements IBindingList.AllowEdit
+    Public ReadOnly Property AllowEdit() As Boolean Implements IBindingList.AllowEdit
         Get
             Return True
         End Get
     End Property
 
-    ReadOnly Property AllowNew() As Boolean Implements IBindingList.AllowNew
+    Public ReadOnly Property AllowNew() As Boolean Implements IBindingList.AllowNew
         Get
             Return True
         End Get
     End Property
 
-    ReadOnly Property AllowRemove() As Boolean Implements IBindingList.AllowRemove
+    Public ReadOnly Property AllowRemove() As Boolean Implements IBindingList.AllowRemove
         Get
             Return True
         End Get
     End Property
 
     ' Unsupported properties.
-    ReadOnly Property IsSorted() As Boolean Implements IBindingList.IsSorted
+    Public ReadOnly Property IsSorted() As Boolean Implements IBindingList.IsSorted
         Get
             Throw New NotSupportedException()
         End Get
     End Property
 
-    ReadOnly Property SortDirection() As ListSortDirection Implements IBindingList.SortDirection
+    Public ReadOnly Property SortDirection() As ListSortDirection Implements IBindingList.SortDirection
         Get
             Throw New NotSupportedException()
         End Get
     End Property
 
-    ReadOnly Property SortProperty() As PropertyDescriptor Implements IBindingList.SortProperty
+    Public ReadOnly Property SortProperty() As PropertyDescriptor Implements IBindingList.SortProperty
         Get
             Throw New NotSupportedException()
         End Get
     End Property
 
-    ReadOnly Property SupportsChangeNotification() As Boolean Implements IBindingList.SupportsChangeNotification
+    Public ReadOnly Property SupportsChangeNotification() As Boolean Implements IBindingList.SupportsChangeNotification
         Get
             Return True
         End Get
     End Property
 
-    ReadOnly Property SupportsSearching() As Boolean Implements IBindingList.SupportsSearching
+    Public ReadOnly Property SupportsSearching() As Boolean Implements IBindingList.SupportsSearching
         Get
             Return False
         End Get
     End Property
 
-    ReadOnly Property SupportsSorting() As Boolean Implements IBindingList.SupportsSorting
+    Public ReadOnly Property SupportsSorting() As Boolean Implements IBindingList.SupportsSorting
         Get
             Return False
         End Get
@@ -204,12 +204,12 @@ Public Class CareLinkUserDataList
     End Function
 
     ' Unsupported Methods.
-    Sub AddIndex(prop As PropertyDescriptor) Implements IBindingList.AddIndex
+    Public Sub AddIndex(prop As PropertyDescriptor) Implements IBindingList.AddIndex
         Throw New NotSupportedException()
     End Sub
 
     ' Methods.
-    Function AddNew() As Object Implements IBindingList.AddNew
+    Public Function AddNew() As Object Implements IBindingList.AddNew
         Dim c As New CareLinkUserDataRecord(Me)
         Me.List.Add(c)
         Return c
@@ -219,11 +219,11 @@ Public Class CareLinkUserDataList
         Return CType(CType(Me, IBindingList).AddNew(), CareLinkUserDataRecord)
     End Function
 
-    Sub ApplySort(prop As PropertyDescriptor, direction As ListSortDirection) Implements IBindingList.ApplySort
+    Public Sub ApplySort(prop As PropertyDescriptor, direction As ListSortDirection) Implements IBindingList.ApplySort
         Throw New NotSupportedException()
     End Sub
 
-    Function Find(prop As PropertyDescriptor, key As Object) As Integer Implements IBindingList.Find
+    Public Function Find(prop As PropertyDescriptor, key As Object) As Integer Implements IBindingList.Find
         Throw New NotSupportedException()
     End Function
 
@@ -259,11 +259,11 @@ Public Class CareLinkUserDataList
         Me.List.Remove(value)
     End Sub
 
-    Sub RemoveIndex(prop As PropertyDescriptor) Implements IBindingList.RemoveIndex
+    Public Sub RemoveIndex(prop As PropertyDescriptor) Implements IBindingList.RemoveIndex
         Throw New NotSupportedException()
     End Sub
 
-    Sub RemoveSort() Implements IBindingList.RemoveSort
+    Public Sub RemoveSort() Implements IBindingList.RemoveSort
         Throw New NotSupportedException()
     End Sub
 

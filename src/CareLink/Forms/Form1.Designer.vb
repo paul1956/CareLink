@@ -178,16 +178,24 @@ Partial Class Form1
         Me.TabPageTimeChange = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelTimeChange = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelTimeChange = New System.Windows.Forms.Label()
-        Me.TabPageCountrySettings = New System.Windows.Forms.TabPage()
-        Me.DataGridViewCountryItems = New System.Windows.Forms.DataGridView()
-        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.TabPageCountryDataPg1 = New System.Windows.Forms.TabPage()
+        Me.TabPageCountryDataPg2 = New System.Windows.Forms.TabPage()
+        Me.TabPageCountryDataPg3 = New System.Windows.Forms.TabPage()
+        Me.DataGridViewCountryItemsPage1 = New System.Windows.Forms.DataGridView()
+        Me.DataGridViewCountryItemsPage2 = New System.Windows.Forms.DataGridView()
+        Me.DataGridViewCountryItemsPage3 = New System.Windows.Forms.DataGridView()
         Me.DataGridViewTextBoxColumnCountrySettingsCategory = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCountrySettingsPg2Category = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCountrySettingsPg3Category = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumnCountrySettingsKey = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCountrySettingsPg2Key = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCountrySettingsPg3Key = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCountrySettingsPgRecordNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumnCountrySettingsValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumberEven = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCountrySettingsCategoryEven = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCountrySettingsKeyEven = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCountrySettingsValueEven = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCountrySettingsPg2Value = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCountrySettingsValueRight = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabPageUserProfile = New System.Windows.Forms.TabPage()
         Me.DataGridViewMyProfile = New System.Windows.Forms.DataGridView()
         Me.TabPageCareLinkMyUser = New System.Windows.Forms.TabPage()
@@ -282,8 +290,12 @@ Partial Class Form1
         Me.TableLayoutPanelMeal.SuspendLayout()
         Me.TabPageTimeChange.SuspendLayout()
         Me.TableLayoutPanelTimeChange.SuspendLayout()
-        Me.TabPageCountrySettings.SuspendLayout()
-        CType(Me.DataGridViewCountryItems, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabPageCountryDataPg1.SuspendLayout()
+        Me.TabPageCountryDataPg2.SuspendLayout()
+        Me.TabPageCountryDataPg3.SuspendLayout()
+        CType(Me.DataGridViewCountryItemsPage1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DataGridViewCountryItemsPage2, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DataGridViewCountryItemsPage3, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPageUserProfile.SuspendLayout()
         CType(Me.DataGridViewMyProfile, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPageCareLinkMyUser.SuspendLayout()
@@ -1651,7 +1663,9 @@ Partial Class Form1
         Me.TabControlPage2.Controls.Add(Me.TabPageLowGlusoseSuspended)
         Me.TabControlPage2.Controls.Add(Me.TabPageMeal)
         Me.TabControlPage2.Controls.Add(Me.TabPageTimeChange)
-        Me.TabControlPage2.Controls.Add(Me.TabPageCountrySettings)
+        Me.TabControlPage2.Controls.Add(Me.TabPageCountryDataPg1)
+        Me.TabControlPage2.Controls.Add(Me.TabPageCountryDataPg2)
+        Me.TabControlPage2.Controls.Add(Me.TabPageCountryDataPg3)
         Me.TabControlPage2.Controls.Add(Me.TabPageUserProfile)
         Me.TabControlPage2.Controls.Add(Me.TabPageCareLinkMyUser)
         Me.TabControlPage2.Controls.Add(Me.TabPageAllLocalUsers)
@@ -2032,30 +2046,30 @@ Partial Class Form1
         Me.LabelTimeChange.Text = "Tme Change"
         Me.LabelTimeChange.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'TabPageCountrySettings
+        'TabPageCountryDataPg1
         '
-        Me.TabPageCountrySettings.Controls.Add(Me.DataGridViewCountryItems)
-        Me.TabPageCountrySettings.Location = New System.Drawing.Point(4, 27)
-        Me.TabPageCountrySettings.Name = "TabPageCountrySettings"
-        Me.TabPageCountrySettings.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageCountrySettings.Size = New System.Drawing.Size(1376, 639)
-        Me.TabPageCountrySettings.TabIndex = 11
-        Me.TabPageCountrySettings.Text = "Country Settings"
-        Me.TabPageCountrySettings.UseVisualStyleBackColor = True
+        Me.TabPageCountryDataPg1.Controls.Add(Me.DataGridViewCountryItemsPage1)
+        Me.TabPageCountryDataPg1.Location = New System.Drawing.Point(4, 27)
+        Me.TabPageCountryDataPg1.Name = "TabPageCountryDataPg1"
+        Me.TabPageCountryDataPg1.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPageCountryDataPg1.Size = New System.Drawing.Size(1376, 639)
+        Me.TabPageCountryDataPg1.TabIndex = 11
+        Me.TabPageCountryDataPg1.Text = "Country Data Pg1"
+        Me.TabPageCountryDataPg1.UseVisualStyleBackColor = True
         '
-        'DataGridViewCountryItems
+        'DataGridViewCountryItemsPage1
         '
-        Me.DataGridViewCountryItems.AllowUserToAddRows = False
-        Me.DataGridViewCountryItems.AllowUserToDeleteRows = False
-        Me.DataGridViewCountryItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewCountryItems.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber, Me.DataGridViewTextBoxColumnCountrySettingsCategory, Me.DataGridViewTextBoxColumnCountrySettingsKey, Me.DataGridViewTextBoxColumnCountrySettingsValue, Me.DataGridViewTextBoxColumnCountrySettingsRecordNumberEven, Me.DataGridViewTextBoxColumnCountrySettingsCategoryEven, Me.DataGridViewTextBoxColumnCountrySettingsKeyEven, Me.DataGridViewTextBoxColumnCountrySettingsValueEven})
-        Me.DataGridViewCountryItems.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridViewCountryItems.Location = New System.Drawing.Point(3, 3)
-        Me.DataGridViewCountryItems.Name = "DataGridViewCountryItems"
-        Me.DataGridViewCountryItems.ReadOnly = True
-        Me.DataGridViewCountryItems.RowTemplate.Height = 25
-        Me.DataGridViewCountryItems.Size = New System.Drawing.Size(1370, 633)
-        Me.DataGridViewCountryItems.TabIndex = 1
+        Me.DataGridViewCountryItemsPage1.AllowUserToAddRows = False
+        Me.DataGridViewCountryItemsPage1.AllowUserToDeleteRows = False
+        Me.DataGridViewCountryItemsPage1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridViewCountryItemsPage1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber, Me.DataGridViewTextBoxColumnCountrySettingsCategory, Me.DataGridViewTextBoxColumnCountrySettingsKey, Me.DataGridViewTextBoxColumnCountrySettingsValue})
+        Me.DataGridViewCountryItemsPage1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridViewCountryItemsPage1.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridViewCountryItemsPage1.Name = "DataGridViewCountryItemsPage1"
+        Me.DataGridViewCountryItemsPage1.ReadOnly = True
+        Me.DataGridViewCountryItemsPage1.RowTemplate.Height = 25
+        Me.DataGridViewCountryItemsPage1.Size = New System.Drawing.Size(1370, 633)
+        Me.DataGridViewCountryItemsPage1.TabIndex = 1
         '
         'DataGridViewTextBoxColumnCountrySettingsRecordNumber
         '
@@ -2096,38 +2110,121 @@ Partial Class Form1
         Me.DataGridViewTextBoxColumnCountrySettingsValue.ReadOnly = True
         Me.DataGridViewTextBoxColumnCountrySettingsValue.Width = 60
         '
-        'DataGridViewTextBoxColumnCountrySettingsRecordNumberEven
+        'TabPageCountryDataPg2
         '
-        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumberEven.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
-        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumberEven.HeaderText = "Record Number"
-        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumberEven.MinimumWidth = 60
-        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumberEven.Name = "DataGridViewTextBoxColumnCountrySettingsRecordNumberEven"
-        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumberEven.ReadOnly = True
-        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumberEven.Width = 60
+        Me.TabPageCountryDataPg2.Controls.AddRange(New System.Windows.Forms.DataGridView() {Me.DataGridViewCountryItemsPage2, Me.DataGridViewCountryItemsPage3})
+        Me.TabPageCountryDataPg2.Location = New System.Drawing.Point(4, 27)
+        Me.TabPageCountryDataPg2.Name = "TabPageCountryDataPg2"
+        Me.TabPageCountryDataPg2.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPageCountryDataPg2.Size = New System.Drawing.Size(1376, 639)
+        Me.TabPageCountryDataPg2.TabIndex = 11
+        Me.TabPageCountryDataPg2.Text = "Country Data Pg2"
+        Me.TabPageCountryDataPg2.UseVisualStyleBackColor = True
         '
-        'DataGridViewTextBoxColumnCountrySettingsCategoryEven
+        'DataGridViewCountryItemsPage2
         '
-        Me.DataGridViewTextBoxColumnCountrySettingsCategoryEven.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCountrySettingsCategoryEven.HeaderText = "Category"
-        Me.DataGridViewTextBoxColumnCountrySettingsCategoryEven.Name = "DataGridViewTextBoxColumnCountrySettingsCategoryEven"
-        Me.DataGridViewTextBoxColumnCountrySettingsCategoryEven.ReadOnly = True
-        Me.DataGridViewTextBoxColumnCountrySettingsCategoryEven.Width = 80
+        Me.DataGridViewCountryItemsPage2.AllowUserToAddRows = False
+        Me.DataGridViewCountryItemsPage2.AllowUserToDeleteRows = False
+        Me.DataGridViewCountryItemsPage2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridViewCountryItemsPage2.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumnCountrySettingsPgRecordNumber, Me.DataGridViewTextBoxColumnCountrySettingsPg2Category, Me.DataGridViewTextBoxColumnCountrySettingsPg2Key, Me.DataGridViewTextBoxColumnCountrySettingsPg2Value})
+        Me.DataGridViewCountryItemsPage2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridViewCountryItemsPage2.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridViewCountryItemsPage2.Name = "DataGridViewCountryItemsPage2"
+        Me.DataGridViewCountryItemsPage2.ReadOnly = True
+        Me.DataGridViewCountryItemsPage2.RowTemplate.Height = 25
+        Me.DataGridViewCountryItemsPage2.Size = New System.Drawing.Size(1370, 633)
+        Me.DataGridViewCountryItemsPage2.TabIndex = 1
         '
-        'DataGridViewTextBoxColumnCountrySettingsKeyEven
+        'DataGridViewTextBoxColumnCountrySettingsPgRecordNumber
         '
-        Me.DataGridViewTextBoxColumnCountrySettingsKeyEven.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCountrySettingsKeyEven.HeaderText = "Key"
-        Me.DataGridViewTextBoxColumnCountrySettingsKeyEven.Name = "DataGridViewTextBoxColumnCountrySettingsKeyEven"
-        Me.DataGridViewTextBoxColumnCountrySettingsKeyEven.ReadOnly = True
-        Me.DataGridViewTextBoxColumnCountrySettingsKeyEven.Width = 51
+        Me.DataGridViewTextBoxColumnCountrySettingsPgRecordNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
+        Me.DataGridViewTextBoxColumnCountrySettingsPgRecordNumber.HeaderText = "Record Number"
+        Me.DataGridViewTextBoxColumnCountrySettingsPgRecordNumber.MinimumWidth = 60
+        Me.DataGridViewTextBoxColumnCountrySettingsPgRecordNumber.Name = "DataGridViewTextBoxColumnCountrySettingsPgRecordNumber"
+        Me.DataGridViewTextBoxColumnCountrySettingsPgRecordNumber.ReadOnly = True
+        Me.DataGridViewTextBoxColumnCountrySettingsPgRecordNumber.Width = 60
         '
-        'DataGridViewTextBoxColumnCountrySettingsValueEven
+        'DataGridViewTextBoxColumnCountrySettingsPg2Category
         '
-        Me.DataGridViewTextBoxColumnCountrySettingsValueEven.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCountrySettingsValueEven.HeaderText = "Value"
-        Me.DataGridViewTextBoxColumnCountrySettingsValueEven.Name = "DataGridViewTextBoxColumnCountrySettingsValueEven"
-        Me.DataGridViewTextBoxColumnCountrySettingsValueEven.ReadOnly = True
-        Me.DataGridViewTextBoxColumnCountrySettingsValueEven.Width = 60
+        Me.DataGridViewTextBoxColumnCountrySettingsPg2Category.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnCountrySettingsPg2Category.HeaderText = "Category"
+        Me.DataGridViewTextBoxColumnCountrySettingsPg2Category.Name = "DataGridViewTextBoxColumnCountrySettingsPg2Category"
+        Me.DataGridViewTextBoxColumnCountrySettingsPg2Category.ReadOnly = True
+        Me.DataGridViewTextBoxColumnCountrySettingsPg2Category.Width = 80
+        '
+        'DataGridViewTextBoxColumnCountrySettingsPg2Key
+        '
+        Me.DataGridViewTextBoxColumnCountrySettingsPg2Key.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnCountrySettingsPg2Key.HeaderText = "Key"
+        Me.DataGridViewTextBoxColumnCountrySettingsPg2Key.Name = "DataGridViewTextBoxColumnCountrySettingsPg2Key"
+        Me.DataGridViewTextBoxColumnCountrySettingsPg2Key.ReadOnly = True
+        Me.DataGridViewTextBoxColumnCountrySettingsPg2Key.Width = 51
+        '
+        'DataGridViewTextBoxColumnCountrySettingsPg2Value
+        '
+        Me.DataGridViewTextBoxColumnCountrySettingsPg2Value.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnCountrySettingsPg2Value.HeaderText = "Value"
+        Me.DataGridViewTextBoxColumnCountrySettingsPg2Value.Name = "DataGridViewTextBoxColumnCountrySettingsPg2Value"
+        Me.DataGridViewTextBoxColumnCountrySettingsPg2Value.ReadOnly = True
+        Me.DataGridViewTextBoxColumnCountrySettingsPg2Value.Width = 60
+        '
+        'TabPageCountryDataPg3
+        '
+        Me.TabPageCountryDataPg3.Controls.Add(Me.DataGridViewCountryItemsPage3)
+        Me.TabPageCountryDataPg3.Location = New System.Drawing.Point(4, 27)
+        Me.TabPageCountryDataPg3.Name = "TabPageCountryDataPg3"
+        Me.TabPageCountryDataPg3.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPageCountryDataPg3.Size = New System.Drawing.Size(1376, 639)
+        Me.TabPageCountryDataPg3.TabIndex = 11
+        Me.TabPageCountryDataPg3.Text = "Country Data Pg3"
+        Me.TabPageCountryDataPg3.UseVisualStyleBackColor = True
+        '
+        'DataGridViewCountryItemsPage3
+        '
+        Me.DataGridViewCountryItemsPage3.AllowUserToAddRows = False
+        Me.DataGridViewCountryItemsPage3.AllowUserToDeleteRows = False
+        Me.DataGridViewCountryItemsPage3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridViewCountryItemsPage3.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber, Me.DataGridViewTextBoxColumnCountrySettingsPg3Category, Me.DataGridViewTextBoxColumnCountrySettingsPg3Key, Me.DataGridViewTextBoxColumnCountrySettingsValueRight})
+        Me.DataGridViewCountryItemsPage3.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridViewCountryItemsPage3.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridViewCountryItemsPage3.Name = "DataGridViewCountryItemsPage3"
+        Me.DataGridViewCountryItemsPage3.ReadOnly = True
+        Me.DataGridViewCountryItemsPage3.RowTemplate.Height = 25
+        Me.DataGridViewCountryItemsPage3.Size = New System.Drawing.Size(1370, 633)
+        Me.DataGridViewCountryItemsPage3.TabIndex = 1
+        '
+        'DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber
+        '
+        Me.DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
+        Me.DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber.HeaderText = "Record Number"
+        Me.DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber.MinimumWidth = 60
+        Me.DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber.Name = "DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber"
+        Me.DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber.ReadOnly = True
+        Me.DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber.Width = 60
+        '
+        'DataGridViewTextBoxColumnCountrySettingsPg3Category
+        '
+        Me.DataGridViewTextBoxColumnCountrySettingsPg3Category.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnCountrySettingsPg3Category.HeaderText = "Category"
+        Me.DataGridViewTextBoxColumnCountrySettingsPg3Category.Name = "DataGridViewTextBoxColumnCountrySettingsPg3Category"
+        Me.DataGridViewTextBoxColumnCountrySettingsPg3Category.ReadOnly = True
+        Me.DataGridViewTextBoxColumnCountrySettingsPg3Category.Width = 80
+        '
+        'DataGridViewTextBoxColumnCountrySettingsPg3Key
+        '
+        Me.DataGridViewTextBoxColumnCountrySettingsPg3Key.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnCountrySettingsPg3Key.HeaderText = "Key"
+        Me.DataGridViewTextBoxColumnCountrySettingsPg3Key.Name = "DataGridViewTextBoxColumnCountrySettingsPg3Key"
+        Me.DataGridViewTextBoxColumnCountrySettingsPg3Key.ReadOnly = True
+        Me.DataGridViewTextBoxColumnCountrySettingsPg3Key.Width = 51
+        '
+        'DataGridViewTextBoxColumnCountrySettingsPg3Key
+        '
+        Me.DataGridViewTextBoxColumnCountrySettingsValueRight.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnCountrySettingsValueRight.HeaderText = "Value"
+        Me.DataGridViewTextBoxColumnCountrySettingsValueRight.Name = "DataGridViewTextBoxColumnCountrySettingsValueRight"
+        Me.DataGridViewTextBoxColumnCountrySettingsValueRight.ReadOnly = True
+        Me.DataGridViewTextBoxColumnCountrySettingsValueRight.Width = 60
         '
         'TabPageUserProfile
         '
@@ -2541,8 +2638,11 @@ Partial Class Form1
         Me.TabPageTimeChange.PerformLayout()
         Me.TableLayoutPanelTimeChange.ResumeLayout(False)
         Me.TableLayoutPanelTimeChange.PerformLayout()
-        Me.TabPageCountrySettings.ResumeLayout(False)
-        CType(Me.DataGridViewCountryItems, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TabPageCountryDataPg1.ResumeLayout(False)
+        Me.TabPageCountryDataPg2.ResumeLayout(False)
+        CType(Me.DataGridViewCountryItemsPage1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DataGridViewCountryItemsPage2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DataGridViewCountryItemsPage3, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPageUserProfile.ResumeLayout(False)
         CType(Me.DataGridViewMyProfile, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPageCareLinkMyUser.ResumeLayout(False)
@@ -2578,7 +2678,9 @@ Partial Class Form1
     Friend WithEvents DailyDoseLabel As Label
     Friend WithEvents DataGridViewAutoBasalDelivery As DataGridView
     Friend WithEvents DataGridViewCareLinkUsers As DataGridView
-    Friend WithEvents DataGridViewCountryItems As DataGridView
+    Friend WithEvents DataGridViewCountryItemsPage1 As DataGridView
+    Friend WithEvents DataGridViewCountryItemsPage2 As DataGridView
+    Friend WithEvents DataGridViewCountryItemsPage3 As DataGridView
     Friend WithEvents DataGridViewInsulin As DataGridView
     Friend WithEvents DataGridViewMyProfile As DataGridView
     Friend WithEvents DataGridViewMyUserData As DataGridView
@@ -2587,13 +2689,17 @@ Partial Class Form1
     Friend WithEvents DataGridViewTextBoxColumnCareLinkUsersPassword As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumnCountry As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumnCountrySettingsCategory As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsCategoryEven As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsPg2Category As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsPg3Category As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumnCountrySettingsKey As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsKeyEven As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsPg2Key As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsPg3Key As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumnCountrySettingsRecordNumber As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsRecordNumberEven As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsPgRecordNumber As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumnCountrySettingsValue As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsValueEven As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsPg2Value As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsValueRight As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumnFirstName As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumnLastName As DataGridViewTextBoxColumn
     Friend WithEvents FullNameLabel As Label
@@ -2695,7 +2801,9 @@ Partial Class Form1
     Friend WithEvents TabPage09Basal As TabPage
     Friend WithEvents TabPage10TherapyAlgorithm As TabPage
     Friend WithEvents TabPage11BannerState As TabPage
-    Friend WithEvents TabPageCountrySettings As TabPage
+    Friend WithEvents TabPageCountryDataPg1 As TabPage
+    Friend WithEvents TabPageCountryDataPg2 As TabPage
+    Friend WithEvents TabPageCountryDataPg3 As TabPage
     Friend WithEvents TabPageUserProfile As TabPage
     Friend WithEvents TabPageCareLinkMyUser As TabPage
     Friend WithEvents TabPageAllLocalUsers As TabPage

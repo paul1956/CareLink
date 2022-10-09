@@ -9,7 +9,81 @@ Imports System.Reflection
 ''' <summary>
 ''' DataTable/Class Mapping Class
 ''' </summary>
-Module Map
+Friend Module DataTableMap
+
+    ''' <summary>
+    ''' Adds a DataRow to a DataTable from the public properties of a class.
+    ''' </summary>
+    ''' <param propertyName="Table">A reference to the DataTable to insert the DataRow into.</param>
+    ''' <param propertyName="ClassObject">The class containing the data to fill the DataRow from.</param>
+    Public Sub ClassToDataRow(Of T As Class)(ByRef Table As DataTable, ClassObject As T)
+        Dim row As DataRow = Table.NewRow()
+        For Each [property] As PropertyInfo In GetType(T).GetProperties()
+            If Table.Columns.Contains([property].Name) Then
+                If Table.Columns([property].Name) IsNot Nothing Then
+                    row([property].Name) = [property].GetValue(ClassObject, Nothing)
+                End If
+            End If
+        Next [property]
+        Table.Rows.Add(row)
+    End Sub
+
+    ''' <summary>
+    ''' Creates a DataTable from a class type's public properties. The DataColumns of the table will match the propertyName and type of the public properties.
+    ''' </summary>
+    ''' <typeparam propertyName="T">The type of the class to create a DataTable from.</typeparam>
+    ''' <returns>A DataTable who's DataColumns match the propertyName and type of each class T's public properties.</returns>
+    Public Function ClassToDatatable(Of T As Class)() As DataTable
+        Dim classType As Type = GetType(T)
+        Dim result As New DataTable(classType.UnderlyingSystemType.Name)
+        Dim propertyOrder As New SortedDictionary(Of Integer, PropertyInfo)
+        For Each [property] As PropertyInfo In classType.GetProperties()
+            Dim columnAttrib As ColumnAttribute = [property].GetCustomAttributes(GetType(ColumnAttribute), True).Cast(Of ColumnAttribute)().SingleOrDefault()
+            propertyOrder.Add(columnAttrib.Order, [property])
+        Next
+        For Each [property] As PropertyInfo In propertyOrder.Values
+            Dim displayNameAttrib As DisplayNameAttribute = [property].GetCustomAttributes(GetType(DisplayNameAttribute), True).Cast(Of DisplayNameAttribute)().SingleOrDefault()
+
+            Dim displayName As String = If(displayNameAttrib IsNot Nothing, displayNameAttrib.DisplayName, [property].Name)
+            Dim column As New DataColumn With {
+                    .ColumnName = [property].Name,
+                    .Caption = displayName,
+                    .DataType = [property].PropertyType
+                }
+            If IsNullableType(column.DataType) AndAlso column.DataType.IsGenericType Then ' If Nullable<>, this is how we get the underlying Type...
+                column.DataType = column.DataType.GenericTypeArguments.FirstOrDefault()
+            Else ' True by default, so set it false
+                'column.AllowDBNull = False
+            End If
+
+            ' Add column
+            result.Columns.Add(column)
+        Next [property]
+        Return result
+    End Function
+
+    ''' <summary>
+    ''' Creates a DataTable from a class type's public properties and adds a new DataRow to the table for each class passed as a parameter.
+    ''' The DataColumns of the table will match the name and type of the public properties.
+    ''' </summary>
+    ''' <param name="ClassCollection">A class or array of class to fill the DataTable with.</param>
+    ''' <returns>A DataTable who's DataColumns match the name and type of each class T's public properties.</returns>
+    Public Function ClassToDatatable(Of T As Class)(ParamArray ClassCollection() As T) As DataTable
+        Dim result As DataTable = ClassToDatatable(Of T)()
+
+        If Not IsValidDatatable(result, IgnoreRows:=True) Then
+            Return New DataTable()
+        End If
+        If IsCollectionEmpty(ClassCollection) Then
+            Return result ' Returns and empty DataTable with columns defined (table schema)
+        End If
+
+        For Each classObject As T In ClassCollection
+            ClassToDataRow(result, classObject)
+        Next classObject
+
+        Return result
+    End Function
 
     ''' <summary>
     ''' Fills properties of a class from a row of a DataTable where the propertyName of the property matches the column propertyName from that DataTable.
@@ -56,78 +130,5 @@ Module Map
             Return New List(Of T)()
         End Try
     End Function
-
-    ''' <summary>
-    ''' Creates a DataTable from a class type's public properties. The DataColumns of the table will match the propertyName and type of the public properties.
-    ''' </summary>
-    ''' <typeparam propertyName="T">The type of the class to create a DataTable from.</typeparam>
-    ''' <returns>A DataTable who's DataColumns match the propertyName and type of each class T's public properties.</returns>
-    Public Function ClassToDatatable(Of T As Class)() As DataTable
-        Dim classType As Type = GetType(T)
-        Dim result As New DataTable(classType.UnderlyingSystemType.Name)
-        Dim propertyOrder As New SortedDictionary(Of Integer, PropertyInfo)
-        For Each [property] As PropertyInfo In classType.GetProperties()
-            Dim columnAttrib As ColumnAttribute = [property].GetCustomAttributes(GetType(ColumnAttribute), True).Cast(Of ColumnAttribute)().SingleOrDefault()
-            propertyOrder.Add(columnAttrib.Order, [property])
-        Next
-        For Each [property] As PropertyInfo In propertyOrder.Values
-            Dim displayNameAttrib As DisplayNameAttribute = [property].GetCustomAttributes(GetType(DisplayNameAttribute), True).Cast(Of DisplayNameAttribute)().SingleOrDefault()
-
-            Dim displayName As String = If(displayNameAttrib IsNot Nothing, displayNameAttrib.DisplayName, [property].Name)
-            Dim column As New DataColumn With {
-                    .ColumnName = [property].Name,
-                    .Caption = displayName,
-                    .DataType = [property].PropertyType
-                }
-            If IsNullableType(column.DataType) AndAlso column.DataType.IsGenericType Then ' If Nullable<>, this is how we get the underlying Type...
-                column.DataType = column.DataType.GenericTypeArguments.FirstOrDefault()
-            Else ' True by default, so set it false
-                'column.AllowDBNull = False
-            End If
-
-            ' Add column
-            result.Columns.Add(column)
-        Next [property]
-        Return result
-    End Function
-
-    ''' Creates a DataTable from a class type's public properties and adds a new DataRow to the table for each class passed as a parameter.
-    ''' The DataColumns of the table will match the name and type of the public properties.
-    ''' </summary>
-    ''' <param name="ClassCollection">A class or array of class to fill the DataTable with.</param>
-    ''' <returns>A DataTable who's DataColumns match the name and type of each class T's public properties.</returns>
-    Public Function ClassToDatatable(Of T As Class)(ParamArray ClassCollection() As T) As DataTable
-        Dim result As DataTable = ClassToDatatable(Of T)()
-
-        If Helper.IsValidDatatable(result, IgnoreRows:=True) Then
-            Return New DataTable()
-        End If
-        If Helper.IsCollectionEmpty(ClassCollection) Then
-            Return result ' Returns and empty DataTable with columns defined (table schema)
-        End If
-
-        For Each classObject As T In ClassCollection
-            ClassToDataRow(result, classObject)
-        Next classObject
-
-        Return result
-    End Function
-
-    ''' <summary>
-    ''' Adds a DataRow to a DataTable from the public properties of a class.
-    ''' </summary>
-    ''' <param propertyName="Table">A reference to the DataTable to insert the DataRow into.</param>
-    ''' <param propertyName="ClassObject">The class containing the data to fill the DataRow from.</param>
-    Public Sub ClassToDataRow(Of T As Class)(ByRef Table As DataTable, ClassObject As T)
-        Dim row As DataRow = Table.NewRow()
-        For Each [property] As PropertyInfo In GetType(T).GetProperties()
-            If Table.Columns.Contains([property].Name) Then
-                If Table.Columns([property].Name) IsNot Nothing Then
-                    row([property].Name) = [property].GetValue(ClassObject, Nothing)
-                End If
-            End If
-        Next [property]
-        Table.Rows.Add(row)
-    End Sub
 
 End Module

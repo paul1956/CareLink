@@ -2,7 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Module SystemVariables
+Friend Module SystemVariables
     Public ReadOnly s_settingsCsvFile As String = IO.Path.Combine(MyDocumentsPath, SavedCsvFileName)
     Public s_allUserSettingsData As New CareLinkUserDataList
     Friend Property HomePageBasalRow As Single

@@ -397,14 +397,6 @@ Public Class Form1
             c.Visible = Not InsulinRecordHelpers.HideColumn(c.DataPropertyName)
         Next
 
-        For Each c As DataGridViewColumn In Me.DataGridViewMyProfile.Columns
-            c.Visible = Not MyProfileRecordHelpers.HideColumn(c.DataPropertyName)
-        Next
-
-        For Each c As DataGridViewColumn In Me.DataGridViewMyProfile.Columns
-            c.Visible = Not MyProfileRecordHelpers.HideColumn(c.DataPropertyName)
-        Next
-
         For Each c As DataGridViewColumn In Me.DataGridViewSGs.Columns
             c.Visible = Not SgRecordHelpers.HideColumn(c.DataPropertyName)
         Next
@@ -809,17 +801,14 @@ Public Class Form1
 #Region "My User Tab DataGridView Events"
 
     Private Sub DataGridViewMyUserData_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewMyUserData.ColumnAdded
-        If MyProfileRecordHelpers.HideColumn(e.Column.DataPropertyName) Then
-            e.DgvColumnAdded(MyProfileRecordHelpers.GetCellStyle(),
-                             False,
-                             True)
-            e.Column.Visible = False
-            Exit Sub
-        End If
-        e.DgvColumnAdded(MyProfileRecordHelpers.GetCellStyle(),
+        e.DgvColumnAdded(New DataGridViewCellStyle().CellStyleMiddleLeft,
                          False,
                          True)
 
+    End Sub
+
+    Private Sub DataGridViewMyUserData_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewMyUserData.DataError
+        Stop
     End Sub
 
 #End Region ' My User Tab DataGridView Events
@@ -827,17 +816,14 @@ Public Class Form1
 #Region "Profile Tab DataGridView Events"
 
     Private Sub DataGridViewProfile_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewMyProfile.ColumnAdded
-        If MyProfileRecordHelpers.HideColumn(e.Column.DataPropertyName) Then
-            e.DgvColumnAdded(MyProfileRecordHelpers.GetCellStyle(),
-                             False,
-                             True)
-            e.Column.Visible = False
-            Exit Sub
-        End If
-        e.DgvColumnAdded(MyProfileRecordHelpers.GetCellStyle(),
+        e.DgvColumnAdded(New DataGridViewCellStyle().CellStyleMiddleLeft,
                          False,
                          True)
 
+    End Sub
+
+    Private Sub DataGridViewMyProfile_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewMyProfile.DataError
+        Stop
     End Sub
 
 #End Region ' Profile Tab DataGridView Events
@@ -865,9 +851,12 @@ Public Class Form1
             e.Column.Visible = False
             Exit Sub
         End If
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
         e.DgvColumnAdded(AutoBasalDeliveryRecordHelpers.GetCellStyle(e.Column.Name),
                          False,
-                         True)
+                         True,
+                         caption)
     End Sub
 
 #End Region ' Auto Basal Delivery DataGridView Events
@@ -902,16 +891,19 @@ Public Class Form1
 #Region "Report Tab DataGridView Events"
 
     Private Sub DataGridViewSuportedReports_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index - 1).Caption
         e.DgvColumnAdded(supportedReportRecordHelpers.GetCellStyle(),
                          False,
-                         True)
+                         True,
+                         caption)
     End Sub
 
 #End Region 'Report Tab DataGridView Events
 
 #Region "SGS Tab DataGridView Events"
 
-    Private Sub SGsDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DataGridViewSGs.CellFormatting
+    Private Sub DataGridViewSGs_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DataGridViewSGs.CellFormatting
         If e.Value Is Nothing Then
             Return
         End If
@@ -936,14 +928,15 @@ Public Class Form1
 
     End Sub
 
-    Private Sub SGsDataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewSGs.ColumnAdded
+    Private Sub DataGridViewSGs_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewSGs.ColumnAdded
         If SgRecordHelpers.HideColumn(e.Column.Name) Then
             e.Column.Visible = False
             Exit Sub
         End If
-        e.DgvColumnAdded(CType(SgRecordHelpers.GetCellStyle(CStr(e.Column.Name)), DataGridViewCellStyle),
+        e.DgvColumnAdded(SgRecordHelpers.GetCellStyle(e.Column.Name),
                          False,
                          True)
+
     End Sub
 
 #End Region ' SGS Tab DataGridView Events
@@ -1118,7 +1111,7 @@ Public Class Form1
         End If
     End Sub
 
-    Sub PowerModeChanged(sender As Object, e As Microsoft.Win32.PowerModeChangedEventArgs)
+    Public Sub PowerModeChanged(sender As Object, e As Microsoft.Win32.PowerModeChangedEventArgs)
         Select Case e.Mode
             Case Microsoft.Win32.PowerModes.Suspend
                 Me.ServerUpdateTimer.Stop()
@@ -1445,10 +1438,11 @@ Public Class Form1
             Select Case newMarker("type")
                 Case "AUTO_BASAL_DELIVERY"
                     _markersAutoBasalDelivery.Add(newMarker)
+                    Dim item As AutoBasalDeliveryRecord = DictionaryToClass(Of AutoBasalDeliveryRecord)(newMarker)
                     recordNumberAutoBasalDelivery += 1
-                    Dim item As New AutoBasalDeliveryRecord(newMarker, recordNumberAutoBasalDelivery)
-                    s_bindingSourceMarkersAutoBasalDelivery.Add(item)
-                    basalDictionary.Add(item.OADate, item.bolusAmount)
+                    item.RecordNumber = recordNumberAutoBasalDelivery
+                    s_listOfAutoBasalDeliveryMarkers.Add(item)
+                    basalDictionary.Add(item.OAdateTime, item.bolusAmount)
                 Case "AUTO_MODE_STATUS"
                     _markersAutoModeStatus.Add(newMarker)
                 Case "BG_READING"
@@ -1458,11 +1452,12 @@ Public Class Form1
                 Case "INSULIN"
                     _markersInsulin.Add(newMarker)
                     recordNumberInsulin += 1
-                    Dim item1 As New InsulinRecord(newMarker, recordNumberInsulin)
-                    s_bindingSourceMarkersInsulin.Add(item1)
+                    Dim item1 As InsulinRecord = DictionaryToClass(Of InsulinRecord)(newMarker)
+                    item1.RecordNumber = recordNumberInsulin
+                    s_listOfInsulinMarkers.Add(item1)
                     Select Case newMarker(NameOf(InsulinRecord.activationType))
                         Case "AUTOCORRECTION"
-                            basalDictionary.Add(item1.OADate, item1.deliveredFastAmount)
+                            basalDictionary.Add(item1.OAdateTime, item1.deliveredFastAmount)
                     End Select
                 Case "LOW_GLUCOSE_SUSPENDED"
                     _markersLowGlusoseSuspended.Add(newMarker)
@@ -1510,148 +1505,148 @@ Public Class Form1
                 If row.Value = "0" Then
                     ' Handled by ItemIndexs.lastSensorTSAsString
                 Else
-                    s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
                 End If
 
             Case ItemIndexs.medicalDeviceTimeAsString
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.lastSensorTSAsString
-                If s_bindingSourceSummary.Count < ItemIndexs.lastSensorTSAsString Then
-                    s_bindingSourceSummary.Insert(ItemIndexs.lastSensorTS, New SummaryRecord(ItemIndexs.lastSensorTS, New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastSensorTS), row.Value.CDateOrDefault(NameOf(ItemIndexs.lastSensorTS), CurrentUICulture))))
+                If s_listOfSummaryRecords.Count < ItemIndexs.lastSensorTSAsString Then
+                    s_listOfSummaryRecords.Insert(ItemIndexs.lastSensorTS, New SummaryRecord(ItemIndexs.lastSensorTS, New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastSensorTS), row.Value.CDateOrDefault(NameOf(ItemIndexs.lastSensorTS), CurrentUICulture))))
                 End If
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.kind
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.version
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.pumpModelNumber
                 Me.ModelLabel.Text = row.Value
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.currentServerTime,
                ItemIndexs.lastConduitTime,
                ItemIndexs.lastConduitUpdateServerTime
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row.Key, row.Value.Epoch2DateTimeString))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Key, row.Value.Epoch2DateTimeString))
 
             Case ItemIndexs.lastMedicalDeviceDataUpdateServerTime
                 s_lastMedicalDeviceDataUpdateServerTime = CLng(row.Value)
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row.Key, row.Value.Epoch2DateTimeString))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Key, row.Value.Epoch2DateTimeString))
 
             Case ItemIndexs.firstName
                 firstName = row.Value
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.lastName
                 Me.FullNameLabel.Text = $"{firstName} {row.Value}"
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.conduitSerialNumber,
                  ItemIndexs.conduitBatteryLevel,
                  ItemIndexs.conduitBatteryStatus
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.conduitInRange
                 s_conduitSensorInRange = CBool(row.Value)
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.conduitMedicalDeviceInRange,
                  ItemIndexs.conduitSensorInRange,
                  ItemIndexs.medicalDeviceFamily
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.sensorState
                 s_sensorState = row.Value
                 Dim message As String = ""
                 If s_sensorMessages.TryGetValue(row.Value, message) Then
                     message = $"{row.Value} = {message}"
-                    s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row.Key, message))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Key, message))
                 Else
                     If Debugger.IsAttached Then
                         MsgBox($"{row.Value} is unknown sensor state message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
                     End If
-                    s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row.Key, row.Value.ToTitleCase))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Key, row.Value.ToTitleCase))
                 End If
 
             Case ItemIndexs.medicalDeviceSerialNumber
                 Me.SerialNumberLabel.Text = row.Value
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.medicalDeviceTime
                 If row.Value = "0" Then
                     ' Handled by ItemIndexs.lastSensorTSAsString
                 Else
-                    s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
                 End If
 
             Case ItemIndexs.sMedicalDeviceTime
-                If s_bindingSourceSummary.Count < ItemIndexs.sMedicalDeviceTime Then
-                    s_bindingSourceSummary.Add(New SummaryRecord(ItemIndexs.medicalDeviceTime, New KeyValuePair(Of String, String)(NameOf(ItemIndexs.medicalDeviceTime), row.Value.CDateOrDefault(NameOf(ItemIndexs.medicalDeviceTime), CurrentUICulture))))
+                If s_listOfSummaryRecords.Count < ItemIndexs.sMedicalDeviceTime Then
+                    s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.medicalDeviceTime, New KeyValuePair(Of String, String)(NameOf(ItemIndexs.medicalDeviceTime), row.Value.CDateOrDefault(NameOf(ItemIndexs.medicalDeviceTime), CurrentUICulture))))
                 End If
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.reservoirLevelPercent
                 s_reservoirLevelPercent = CInt(row.Value)
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.reservoirAmount
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.reservoirRemainingUnits
                 s_reservoirRemainingUnits = row.Value.ParseSingle(0)
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.medicalDeviceBatteryLevelPercent
                 s_medicalDeviceBatteryLevelPercent = CInt(row.Value)
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.sensorDurationHours
                 s_sensorDurationHours = CInt(row.Value)
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.timeToNextCalibHours
                 s_timeToNextCalibHours = CUShort(row.Value)
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.calibStatus
                 Dim message As String = ""
                 If s_calibrationMessages.TryGetValue(row.Value, message) Then
-                    s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row.Key, $"{row.Value} = {message}"))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Key, $"{row.Value} = {message}"))
                 Else
                     If Debugger.IsAttached Then
                         MsgBox($"{row.Value} is unknown calibration message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
                     End If
-                    s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row.Key, row.Value.ToTitleCase))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Key, row.Value.ToTitleCase))
                 End If
 
             Case ItemIndexs.bgUnits
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
                 Me.AboveHighLimitMessageLabel.Text = $"Above {s_limitHigh} {BgUnitsString}"
                 Me.BelowLowLimitMessageLabel.Text = $"Below {s_limitLow} {BgUnitsString}"
 
             Case ItemIndexs.timeFormat
                 s_timeWithMinuteFormat = If(row.Value = "HR_12", TwelveHourTimeWithMinuteFormat, MilitaryTimeWithMinuteFormat)
                 s_timeWithoutMinuteFormat = If(row.Value = "HR_12", TwelveHourTimeWithoutMinuteFormat, MilitaryTimeWithoutMinuteFormat)
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.lastSensorTime
                 If row.Value = "0" Then
                     ' Handled by ItemIndexs.lastSensorTSAsString
                 Else
-                    s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
                 End If
 
             Case ItemIndexs.sLastSensorTime
-                If s_bindingSourceSummary.Count < ItemIndexs.sLastSensorTime Then
-                    s_bindingSourceSummary.Add(New SummaryRecord(ItemIndexs.lastSensorTime, New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastSensorTime), row.Value.CDateOrDefault(NameOf(ItemIndexs.medicalDeviceTime), CurrentUICulture))))
+                If s_listOfSummaryRecords.Count < ItemIndexs.sLastSensorTime Then
+                    s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.lastSensorTime, New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastSensorTime), row.Value.CDateOrDefault(NameOf(ItemIndexs.medicalDeviceTime), CurrentUICulture))))
                 End If
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.medicalDeviceSuspended
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.lastSGTrend
                 Dim arrows As String = Nothing
@@ -1660,69 +1655,69 @@ Public Class Form1
                 Else
                     Me.LabelTrendArrows.Text = $"{row.Value}"
                 End If
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.systemStatusMessage
                 s_systemStatusMessage = row.Value
                 Dim message As String = ""
                 If s_sensorMessages.TryGetValue(row.Value, message) Then
-                    s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row.Key, $"{row.Value} = {message}"))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Key, $"{row.Value} = {message}"))
                 Else
                     If Not String.IsNullOrWhiteSpace(row.Value) AndAlso Debugger.IsAttached Then
                         MsgBox($"{row.Value} is unknown system status message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
                     End If
-                    s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row.Key, row.Value.ToTitleCase))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Key, row.Value.ToTitleCase))
                 End If
 
             Case ItemIndexs.averageSG
                 s_averageSG = row.Value
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.belowHypoLimit
                 s_belowHypoLimit = row.Value.ParseSingle(1)
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.aboveHyperLimit
                 s_aboveHyperLimit = row.Value.ParseSingle(1)
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.timeInRange
                 s_timeInRange = CInt(row.Value)
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.pumpCommunicationState,
              ItemIndexs.gstCommunicationState
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.gstBatteryLevel
                 s_gstBatteryLevel = CInt(row.Value)
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.lastConduitDateTime
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastConduitDateTime), row.Value.CDateOrDefault(NameOf(ItemIndexs.lastConduitDateTime), CurrentUICulture))))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastConduitDateTime), row.Value.CDateOrDefault(NameOf(ItemIndexs.lastConduitDateTime), CurrentUICulture))))
 
             Case ItemIndexs.maxAutoBasalRate,
              ItemIndexs.maxBolusAmount
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.sensorDurationMinutes
                 s_sensorDurationMinutes = CInt(row.Value)
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.timeToNextCalibrationMinutes
                 s_timeToNextCalibrationMinutes = CInt(row.Value)
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.clientTimeZoneName
                 s_clientTimeZoneName = row.Value
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
             Case ItemIndexs.sgBelowLimit,
              ItemIndexs.averageSGFloat,
              ItemIndexs.timeToNextCalibrationRecommendedMinutes,
              ItemIndexs.calFreeSensor,
              ItemIndexs.finalCalibration
-                s_bindingSourceSummary.Add(New SummaryRecord(rowIndex, row))
+                s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
             Case Else
                 Stop
         End Select
@@ -1745,10 +1740,10 @@ Public Class Form1
         _markersMeal.Clear()
         _markersTimeChange.Clear()
         s_markersTimeChange.Clear()
-        s_bindingSourceMarkersAutoBasalDelivery.Clear()
-        s_bindingSourceMarkersInsulin.Clear()
+        s_listOfAutoBasalDeliveryMarkers.Clear()
+        s_listOfInsulinMarkers.Clear()
         s_bindingSourceSGs.Clear()
-        s_bindingSourceSummary.Clear()
+        s_listOfSummaryRecords.Clear()
         s_limits.Clear()
         s_treatmentMarkerInsulinDictionary.Clear()
         s_treatmentMarkerMealDictionary.Clear()
@@ -1772,11 +1767,12 @@ Public Class Form1
             End If
 
             If rowIndex = ItemIndexs.sgs Then
-                s_bindingSourceSGs = New BindingList(Of SgRecord)(LoadList(row.Value).ToSgList())
+                Dim sglist As List(Of SgRecord) = LoadList(row.Value).ToSgList()
+                s_bindingSourceSGs = New List(Of SgRecord)(sglist)
                 If s_bindingSourceSGs.Count > 2 Then
                     s_lastBGValue = s_bindingSourceSGs.Item(s_bindingSourceSGs.Count - 2).sg
                 End If
-                ProcessListOfDictionary(Me.TableLayoutPanelSgs, Me.DataGridViewSGs, s_bindingSourceSGs, rowIndex)
+                ProcessListOfDictionary(Me.TableLayoutPanelSgs, Me.DataGridViewSGs, ClassToDatatable(sglist.ToArray), rowIndex)
                 Me.ReadingsLabel.Text = $"{s_bindingSourceSGs.Where(Function(entry As SgRecord) Not Double.IsNaN(entry.sg)).Count}/288"
                 Continue For
             End If
@@ -1801,11 +1797,11 @@ Public Class Form1
                         Next
                         ProcessListOfDictionary(Me.TableLayoutPanelLimits, s_limits, rowIndex, _formScale.Height <> 1)
                     Case ItemIndexs.markers
-                        ProcessListOfDictionary(Me.TableLayoutPanelAutoBasalDelivery, Me.DataGridViewAutoBasalDelivery, s_bindingSourceMarkersAutoBasalDelivery, rowIndex)
+                        ProcessListOfDictionary(Me.TableLayoutPanelAutoBasalDelivery, Me.DataGridViewAutoBasalDelivery, s_listOfAutoBasalDeliveryMarkers, rowIndex)
                         ProcessListOfDictionary(Me.TableLayoutPanelAutoModeStatus, _markersAutoModeStatus, rowIndex, _formScale.Height <> 1)
                         ProcessListOfDictionary(Me.TableLayoutPanelBgReadings, _markersBgReading, rowIndex, _formScale.Height <> 1)
                         ProcessListOfDictionary(Me.TableLayoutPanelCalibration, _markersCalibration, rowIndex, _formScale.Height <> 1)
-                        ProcesListOfDictionary(Me.TableLayoutPanelInsulin, Me.DataGridViewInsulin, s_bindingSourceMarkersInsulin, rowIndex)
+                        ProcesListOfDictionary(Me.TableLayoutPanelInsulin, Me.DataGridViewInsulin, s_listOfInsulinMarkers, rowIndex)
                         ProcessListOfDictionary(Me.TableLayoutPanelLowGlusoseSuspended, _markersLowGlusoseSuspended, rowIndex, _formScale.Height <> 1)
                         ProcessListOfDictionary(Me.TableLayoutPanelMeal, _markersMeal, rowIndex, _formScale.Height <> 1)
                         ProcessListOfDictionary(Me.TableLayoutPanelTimeChange, _markersTimeChange, rowIndex, _formScale.Height <> 1)
@@ -1840,7 +1836,7 @@ Public Class Form1
 
                 Case ItemIndexs.activeInsulin
                     layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelActiveInsulin, ItemIndexs.activeInsulin)
-                    s_activeInsulin = New ActiveInsulinRecord(Loads(row.Value))
+                    s_activeInsulin = DictionaryToClass(Of ActiveInsulinRecord)(Loads(row.Value))
 
                 Case ItemIndexs.notificationHistory
                     layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelNotificationHistory, ItemIndexs.notificationHistory)
@@ -1887,8 +1883,6 @@ Public Class Form1
 #Region "Update Home Tab"
 
     Friend Sub AllTabPagesUpdate()
-        Me.DataGridViewSummary.DataSource = s_bindingSourceSummary
-        Me.DataGridViewSummary.RowHeadersVisible = False
         If Me.RecentData Is Nothing Then
             Debug.Print($"Exiting {NameOf(AllTabPagesUpdate)}, {NameOf(RecentData)} has no data!")
             Exit Sub
@@ -1936,6 +1930,7 @@ Public Class Form1
         s_recentDatalast = Me.RecentData
         Me.MenuStartHere.Enabled = True
         Me.UpdateTreatmentChart()
+        Me.UpdateSummaryTable()
         Application.DoEvents()
     End Sub
 
@@ -2258,6 +2253,11 @@ Public Class Form1
             End If
         End If
         Me.SensorDaysLeftLabel.Visible = True
+    End Sub
+
+    Private Sub UpdateSummaryTable()
+        Me.DataGridViewSummary.DataSource = ClassToDatatable(s_listOfSummaryRecords.ToArray)
+        Me.DataGridViewSummary.RowHeadersVisible = False
     End Sub
 
     Private Sub UpdateTimeInRange()

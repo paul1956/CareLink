@@ -2,7 +2,11 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.ComponentModel
+Imports System.ComponentModel.DataAnnotations.Schema
+
 Public Class SgRecord
+
     Public Sub New()
 
     End Sub
@@ -51,21 +55,54 @@ Public Class SgRecord
             lastValidTime += s_fiveMinuteSpan
         End If
         Me.datetimeAsString = value
-        Me.OADate = New OADate(_datetime)
         Return lastValidTime
     End Function
 
 #If True Then ' Prevent reordering
 
+    <DisplayName(NameOf(RecordNumber))>
+    <Column(Order:=0)>
     Public Property RecordNumber As Integer
+
+    <DisplayName(NameOf(sg))>
+    <Column(Order:=1)>
     Public Property sg As Single
+
+    <DisplayName(NameOf([datetime]))>
+    <Column(Order:=2)>
     Public Property [datetime] As Date
+
+    <DisplayName(NameOf(datetimeAsString))>
+    <Column(Order:=3)>
     Public Property datetimeAsString As String
-    Public Property OADate As New OADate
+
+    <DisplayName(NameOf(OAdatetime))>
+    <Column(Order:=4)>
+    Public ReadOnly Property OAdatetime As OADate
+        Get
+            Return New OADate(_datetime)
+        End Get
+    End Property
+
+    <DisplayName(NameOf(timeChange))>
+    <Column(Order:=5)>
     Public Property timeChange As String
+
+    <DisplayName(NameOf(sensorState))>
+    <Column(Order:=6)>
     Public Property sensorState As String
+
+    <DisplayName(NameOf(kind))>
+    <Column(Order:=7)>
     Public Property kind As String
+
+    <DisplayName(NameOf(version))>
+    <Column(Order:=8)>
     Public Property version As Integer
+
+    <DisplayName(NameOf(relativeOffset))>
+    <Column(Order:=9)>
     Public Property relativeOffset As Integer
+
 #End If  ' Prevent reordering
 End Class

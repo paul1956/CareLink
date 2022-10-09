@@ -6,8 +6,7 @@ Imports System.Text
 
 <DebuggerDisplay("{GetDebuggerDisplay(),nq}")>
 Public Class supportedReportRecord
-
-    Sub New(Values As Dictionary(Of String, String), recordnumber As Integer)
+    Public Sub New(Values As Dictionary(Of String, String), recordnumber As Integer)
         If Values.Count <> 3 Then
             Throw New Exception($"{NameOf(supportedReportRecord)}({Values}) contains {Values.Count} entries, 3 expected.")
         End If

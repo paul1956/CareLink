@@ -4,7 +4,7 @@
 
 Imports System.Runtime.CompilerServices
 
-Module DoubleExtensions
+Friend Module DoubleExtensions
 
     <Extension>
     Public Function OAToDateTime(d As Double) As String
