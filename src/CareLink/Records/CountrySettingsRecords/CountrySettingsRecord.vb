@@ -178,11 +178,9 @@ Public Class CountrySettingsRecord
                     supportedReports.Clear()
                     For Each dic As IndexClass(Of Dictionary(Of String, String)) In LoadList(rowValue.Value).WithIndex
                         supportedReports.Add(New supportedReportRecord(dic.Value, dic.Index + 1))
-                        Dim value As String
                         With supportedReports.Last
-                            value = $"{ .report} notFor '{ .notFor}', onlyFor '{ .onlyFor}'"
+                            dgvCountryItems(2).Rows.Add($"{row.Index + 1}.{dic.Index + 1}", rowValue.Key, dic.Value.Keys(0), .report, .onlyFor, .notFor)
                         End With
-                        dgvCountryItems(2).Rows.Add($"{row.Index + 1}.{dic.Index + 1}", rowValue.Key, dic.Value.Keys(0), value)
                     Next
                 Case NameOf(smsSendingAllowed)
                     Me.smsSendingAllowed = rowValue.Value

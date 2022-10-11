@@ -253,7 +253,7 @@ Public Class CareLinkUserDataRecord
         _userData._outgoingMailServer = ""
     End Sub
 
-    Friend Function GetValueByName(entryName As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As String
+    Friend Function GetValueByName(entryName As String) As String
         Select Case entryName
             Case NameOf(CareLinkUserName)
                 Return Me.CareLinkUserName
@@ -284,7 +284,7 @@ Public Class CareLinkUserDataRecord
             Case NameOf(AutoLogin)
                 Return CStr(Me.AutoLogin)
             Case Else
-                Throw UnreachableException(memberName, sourceLineNumber)
+                Throw UnreachableException()
         End Select
     End Function
 

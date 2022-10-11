@@ -16,7 +16,7 @@ Friend Module DataTableMap
     ''' </summary>
     ''' <param propertyName="Table">A reference to the DataTable to insert the DataRow into.</param>
     ''' <param propertyName="ClassObject">The class containing the data to fill the DataRow from.</param>
-    Public Sub ClassToDataRow(Of T As Class)(ByRef Table As DataTable, ClassObject As T)
+    Private Sub ClassToDataRow(Of T As Class)(ByRef Table As DataTable, ClassObject As T)
         Dim row As DataRow = Table.NewRow()
         For Each [property] As PropertyInfo In GetType(T).GetProperties()
             If Table.Columns.Contains([property].Name) Then
@@ -33,7 +33,7 @@ Friend Module DataTableMap
     ''' </summary>
     ''' <typeparam propertyName="T">The type of the class to create a DataTable from.</typeparam>
     ''' <returns>A DataTable who's DataColumns match the propertyName and type of each class T's public properties.</returns>
-    Public Function ClassToDatatable(Of T As Class)() As DataTable
+    Private Function ClassToDatatable(Of T As Class)() As DataTable
         Dim classType As Type = GetType(T)
         Dim result As New DataTable(classType.UnderlyingSystemType.Name)
         Dim propertyOrder As New SortedDictionary(Of Integer, PropertyInfo)

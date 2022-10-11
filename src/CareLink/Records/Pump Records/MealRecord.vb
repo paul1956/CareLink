@@ -5,7 +5,7 @@
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
-Public Class AutoBasalDeliveryRecord
+Public Class MealRecord
     Private _dateTime As Date
 
     <DisplayName(NameOf([dateTime]))>
@@ -19,17 +19,13 @@ Public Class AutoBasalDeliveryRecord
         End Set
     End Property
 
-    <DisplayName(NameOf(bolusAmount))>
-    <Column(Order:=10)>
-    Public Property bolusAmount As Single
+    <DisplayName("Carbs (amount)")>
+    <Column(Order:=9)>
+    Public Property amount As Integer
 
     <DisplayName(NameOf(dateTimeAsString))>
     <Column(Order:=6)>
     Public Property dateTimeAsString As String
-
-    <DisplayName(NameOf(id))>
-    <Column(Order:=9)>
-    Public Property id As Integer
 
     <DisplayName(NameOf(index))>
     <Column(Order:=2)>

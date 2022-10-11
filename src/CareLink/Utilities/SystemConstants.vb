@@ -71,6 +71,12 @@ Public Module SystemConstants
                 {"NONE", "↔"}
             }
 
+    Public Enum FileToLoadOptions As Integer
+        LastSaved = 0
+        TestData = 1
+        Login = 2
+    End Enum
+
     Public Property GitHubCareLinkUrl As String = $"https://github.com/{OwnerName}/{RepoName}/"
     Public ReadOnly Property JsonFormattingOptions As New JsonSerializerOptions With {.WriteIndented = True}
     Public ReadOnly Property MyDocumentsPath As String = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)

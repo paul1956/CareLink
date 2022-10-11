@@ -115,22 +115,57 @@ Friend Module TableLayoutPanelSupport
         Application.DoEvents()
     End Sub
 
-    Friend Sub ProcesListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As List(Of InsulinRecord), rowIndex As ItemIndexs)
+    Friend Sub ProcesListOfDictionary(realPanel As TableLayoutPanel, dGV As DataGridView, recordData As List(Of InsulinRecord), rowIndex As ItemIndexs)
         initializeTableLayoutPanel(realPanel, rowIndex)
-        dGridView.DataSource = ClassToDatatable(recordData.ToArray)
-        dGridView.RowHeadersVisible = False
+        dGV.DataSource = ClassToDatatable(recordData.ToArray)
+        dGV.RowHeadersVisible = False
     End Sub
 
-    Friend Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As DataTable, rowIndex As ItemIndexs)
+    Friend Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, dGV As DataGridView, recordData As DataTable, rowIndex As ItemIndexs)
         initializeTableLayoutPanel(realPanel, rowIndex)
-        dGridView.DataSource = recordData
-        dGridView.RowHeadersVisible = False
+        dGV.DataSource = recordData
+        dGV.RowHeadersVisible = False
     End Sub
 
-    Friend Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, dGridView As DataGridView, recordData As List(Of AutoBasalDeliveryRecord), rowIndex As ItemIndexs)
+    Friend Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, dGV As DataGridView, recordData As List(Of AutoBasalDeliveryRecord), rowIndex As ItemIndexs)
         initializeTableLayoutPanel(realPanel, rowIndex)
-        dGridView.DataSource = ClassToDatatable(recordData.ToArray)
-        dGridView.RowHeadersVisible = False
+        dGV.DataSource = ClassToDatatable(recordData.ToArray)
+        dGV.RowHeadersVisible = False
+    End Sub
+
+    Friend Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, recordData As List(Of MealRecord), rowIndex As ItemIndexs)
+        initializeTableLayoutPanel(realPanel, rowIndex)
+        Dim dGVCellStyle1 As New DataGridViewCellStyle With {
+            .BackColor = Color.Silver
+        }
+        Dim dGVCellStyle2 As New DataGridViewCellStyle With {
+            .Alignment = DataGridViewContentAlignment.MiddleCenter,
+            .BackColor = SystemColors.Control,
+            .Font = New System.Drawing.Font("Segoe UI", 9.0!, FontStyle.Regular, GraphicsUnit.Point),
+            .ForeColor = SystemColors.WindowText,
+            .SelectionBackColor = SystemColors.Highlight,
+            .SelectionForeColor = SystemColors.HighlightText,
+            .WrapMode = DataGridViewTriState.True
+        }
+        Dim dGV As New DataGridView With {
+            .AllowUserToAddRows = False,
+            .AllowUserToDeleteRows = False,
+            .AlternatingRowsDefaultCellStyle = dGVCellStyle1,
+            .ColumnHeadersDefaultCellStyle = dGVCellStyle2,
+            .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize,
+            .Dock = DockStyle.Fill,
+            .Location = New System.Drawing.Point(3, 3),
+            .Name = "dGVSummary",
+            .ReadOnly = True,
+            .SelectionMode = DataGridViewSelectionMode.CellSelect,
+            .Size = New System.Drawing.Size(1370, 633),
+            .TabIndex = 0
+        }
+        dGV.RowTemplate.Height = 25
+
+        realPanel.Controls.Add(dGV, 0, 1)
+        MealRecordHelpers.AttachHandlers(dGV)
+        dGV.DataSource = ClassToDatatable(recordData.ToArray)
     End Sub
 
     Friend Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, innerListDictionary As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, isScaledForm As Boolean)
@@ -140,9 +175,8 @@ Friend Module TableLayoutPanelSupport
             rowTextBox.BackColor = Color.LightGray
             realPanel.Controls.Add(rowTextBox)
             Exit Sub
-        Else
-            initializeTableLayoutPanel(realPanel, rowIndex)
         End If
+        initializeTableLayoutPanel(realPanel, rowIndex)
         realPanel.Hide()
         Application.DoEvents()
         realPanel.AutoScroll = True

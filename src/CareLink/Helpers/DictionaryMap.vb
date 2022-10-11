@@ -14,7 +14,7 @@ Friend Module DictionaryMap
     ''' <typeparam propertyName="T">The class type that is to be returned.</typeparam>
     ''' <param propertyName="Dictionary">Dictionary to fill from.</param>
     ''' <returns>A list of ClassType with its properties set to the data from the matching columns from the DataTable.</returns>
-    Public Function DictionaryToClass(Of T As {Class, New})(dic As Dictionary(Of String, String), <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As T
+    Public Function DictionaryToClass(Of T As {Class, New})(dic As Dictionary(Of String, String)) As T
         If dic Is Nothing Then
             Return New T
         End If
@@ -46,7 +46,7 @@ Friend Module DictionaryMap
                         Case "String", "Int32", "Boolean"
                             propertyValue = Convert.ChangeType(row.Value, [property].PropertyType)
                         Case Else
-                            Throw UnreachableException(memberName, sourceLineNumber)
+                            Throw UnreachableException()
                     End Select
 
                     classObject.GetType.GetProperty([property].Name).SetValue(classObject, propertyValue, Nothing)

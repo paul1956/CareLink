@@ -21,7 +21,7 @@ Public Module CareLinkFilters
             }
 
     Private ReadOnly s_markersFilter As New List(Of String) From {
-            "id",
+            "amount",
             "index",
             "kind",
             "relativeOffset",
@@ -31,7 +31,7 @@ Public Module CareLinkFilters
     Private ReadOnly s_notificationHistoryFilter As New List(Of String) From {
             "faultId",
             "GUID",
-            "id",
+            "amount",
             "index",
             "instanceId",
             "kind",

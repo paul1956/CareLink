@@ -48,6 +48,18 @@ Friend Module ChartingExtensions
         markerSeriesPoints.Last.ToolTip = $"Blood Glucose: Calibration {If(CBool(entry("calibrationSuccess")), "accepted", "not accepted")}: {entry("value")} {BgUnitsString}"
     End Sub
 
+    Private Function GetLimitsList(count As Integer) As Integer()
+        Dim limitsIndexList(count) As Integer
+        Dim limitsIndex As Integer = 0
+        For i As Integer = 0 To limitsIndexList.GetUpperBound(0)
+            If limitsIndex + 1 < s_limits.Count AndAlso CInt(s_limits(limitsIndex + 1)("index")) < i Then
+                limitsIndex += 1
+            End If
+            limitsIndexList(i) = limitsIndex
+        Next
+        Return limitsIndexList
+    End Function
+
     <Extension>
     Private Sub PaintMarker(e As ChartPaintEventArgs, markerImage As Bitmap, markerDictionary As Dictionary(Of OADate, Single), noImageOffset As Boolean, paintOnY2 As Boolean)
         ' Draw the cloned portion of the Bitmap object.
@@ -137,9 +149,11 @@ Friend Module ChartingExtensions
     End Sub
 
     <Extension>
-    Friend Sub PlotHighLowLimits(chart As Chart, memberName As String, sourceLineNumber As Integer, limitsIndexList() As Integer)
+    Friend Sub PlotHighLowLimits(chart As Chart, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+        Dim limitsIndexList() As Integer = GetLimitsList(s_bindingSourceSGs.Count - 1)
+
         For Each sgListIndex As IndexClass(Of SgRecord) In s_bindingSourceSGs.WithIndex()
-            Dim sgOADateTime As OADate = sgListIndex.Value.OADateTime()
+            Dim sgOADateTime As OADate = sgListIndex.Value.OAdatetime()
             Try
                 Dim limitsLowValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("lowLimit").ParseSingle
                 Dim limitsHighValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("highLimit").ParseSingle
@@ -242,7 +256,7 @@ Friend Module ChartingExtensions
     Friend Sub PlotSgSeries(chart As Chart, HomePageMealRow As Double)
         For Each sgListIndex As IndexClass(Of SgRecord) In s_bindingSourceSGs.WithIndex()
             chart.Series(BgSeriesName).PlotOnePoint(
-                                    sgListIndex.Value.OADateTime(),
+                                    sgListIndex.Value.OAdatetime(),
                                     sgListIndex.Value.sg,
                                     Color.Black,
                                     HomePageMealRow)
@@ -333,10 +347,10 @@ Friend Module ChartingExtensions
     <Extension>
     Friend Sub PostPaintSupport(e As ChartPaintEventArgs, ByRef chartRelitivePosition As RectangleF, insulinDictionary As Dictionary(Of OADate, Single), mealDictionary As Dictionary(Of OADate, Single), offsetInsulinImage As Boolean, paintOnY2 As Boolean)
         If chartRelitivePosition.IsEmpty Then
-            chartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_bindingSourceSGs(0).OADateTime))
+            chartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_bindingSourceSGs(0).OAdatetime))
             chartRelitivePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, HomePageBasalRow))
             chartRelitivePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, s_limitHigh)))) - chartRelitivePosition.Y
-            chartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_bindingSourceSGs.Last.OADateTime)) - chartRelitivePosition.X
+            chartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_bindingSourceSGs.Last.OAdatetime)) - chartRelitivePosition.X
         End If
 
         Dim highLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, s_limitHigh))

@@ -16,7 +16,7 @@ Friend Class InsulinRecordHelpers
             NameOf(InsulinRecord.version)
         }
 
-    Public Shared Function GetCellStyle(columnName As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As DataGridViewCellStyle
+    Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
         Dim cellStyle As New DataGridViewCellStyle
 
         Select Case columnName
@@ -44,7 +44,7 @@ Friend Class InsulinRecordHelpers
                 cellStyle = cellStyle.CellStyleMiddleRight(0)
             Case Else
                 Stop
-                Throw UnreachableException(memberName, sourceLineNumber)
+                Throw UnreachableException()
         End Select
         Return cellStyle
     End Function

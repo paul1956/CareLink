@@ -27,9 +27,12 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 10/08/2022
+- 10/10/2022
 
 ## What's New in this release
+  New 3.5.6.9
+-   Split Country settings to 3 tabs
+
   New 3.5.6.8
 -   No logic changes, just code cleanup
 

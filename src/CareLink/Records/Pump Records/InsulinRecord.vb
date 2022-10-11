@@ -10,7 +10,7 @@ Public Class InsulinRecord
 
 #If True Then ' Prevent reordering
 
-    <DisplayName(NameOf(RecordNumber))>
+    <DisplayName("Record Number")>
     <Column(Order:=0)>
     Public Property RecordNumber As Integer
 
@@ -41,7 +41,7 @@ Public Class InsulinRecord
         End Set
     End Property
 
-    <DisplayName(NameOf(dateTimeAsString))>
+    <DisplayName("dateTime As String")>
     <Column(Order:=6)>
     Public Property dateTimeAsString As String
 
@@ -57,27 +57,27 @@ Public Class InsulinRecord
     <Column(Order:=8)>
     Public Property relativeOffset As Integer
 
-    <DisplayName(NameOf(programmedExtendedAmount))>
+    <DisplayName("Programmed Extended Amount")>
     <Column(Order:=9)>
     Public Property programmedExtendedAmount As Single
 
-    <DisplayName(NameOf(activationType))>
+    <DisplayName("Activation Type")>
     <Column(Order:=10)>
     Public Property activationType As String
 
-    <DisplayName(NameOf(deliveredExtendedAmount))>
+    <DisplayName("delivered Extended Amount")>
     <Column(Order:=11)>
     Public Property deliveredExtendedAmount As Single
 
-    <DisplayName(NameOf(programmedFastAmount))>
+    <DisplayName("Programmed Fast Amount")>
     <Column(Order:=12)>
     Public Property programmedFastAmount As Single
 
-    <DisplayName(NameOf(programmedDuration))>
+    <DisplayName("Programmed Duration")>
     <Column(Order:=13)>
     Public Property programmedDuration As Integer
 
-    <DisplayName(NameOf(deliveredFastAmount))>
+    <DisplayName("delivered Fast Amount")>
     <Column(Order:=14)>
     Public Property deliveredFastAmount As Single
 
@@ -85,7 +85,7 @@ Public Class InsulinRecord
     <Column(Order:=15)>
     Public Property id As Integer
 
-    <DisplayName(NameOf(effectiveDuration))>
+    <DisplayName("Effective Duration")>
     <Column(Order:=16)>
     Public Property effectiveDuration As Integer
 
@@ -93,7 +93,7 @@ Public Class InsulinRecord
     <Column(Order:=17)>
     Public Property completed As Boolean
 
-    <DisplayName(NameOf(bolusType))>
+    <DisplayName("Bolus Type")>
     <Column(Order:=18)>
     Public Property bolusType As String
 

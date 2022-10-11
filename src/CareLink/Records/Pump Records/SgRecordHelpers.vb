@@ -18,7 +18,7 @@ Friend Class SgRecordHelpers
         Return s_filterJsonData AndAlso s_columnsToHide.Contains(dataPropertyName)
     End Function
 
-    Public Shared Function GetCellStyle(columnName As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As DataGridViewCellStyle
+    Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
         Dim cellStyle As New DataGridViewCellStyle
 
         Select Case columnName
@@ -37,7 +37,7 @@ Friend Class SgRecordHelpers
                     NameOf(SgRecord.kind)
                 cellStyle = cellStyle.CellStyleMiddleCenter
             Case Else
-                Throw UnreachableException(memberName, sourceLineNumber)
+                Throw UnreachableException()
         End Select
         Return cellStyle
     End Function

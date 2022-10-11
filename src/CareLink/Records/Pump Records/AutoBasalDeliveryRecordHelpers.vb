@@ -15,7 +15,7 @@ Friend Class AutoBasalDeliveryRecordHelpers
             NameOf(AutoBasalDeliveryRecord.version)
         }
 
-    Friend Shared Function GetCellStyle(columnName As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As DataGridViewCellStyle
+    Friend Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
         Dim cellStyle As New DataGridViewCellStyle
 
         Select Case columnName
@@ -36,7 +36,7 @@ Friend Class AutoBasalDeliveryRecordHelpers
                 cellStyle = cellStyle.CellStyleMiddleRight(0)
             Case Else
                 Stop
-                Throw UnreachableException(memberName, sourceLineNumber)
+                Throw UnreachableException()
         End Select
         Return cellStyle
     End Function

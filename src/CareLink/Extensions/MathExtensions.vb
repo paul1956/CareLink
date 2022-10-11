@@ -34,9 +34,9 @@ Friend Module MathExtensions
     End Function
 
     <Extension>
-    Public Function ParseSingle(valueString As String, Optional decimalDigits As Integer = 10, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Single
+    Public Function ParseSingle(valueString As String, Optional decimalDigits As Integer = 10) As Single
         If valueString.Contains(","c) AndAlso valueString.Contains("."c) Then
-            Throw UnreachableException(memberName, sourceLineNumber)
+            Throw New ArgumentException("valueString contains both a comma and period.", NameOf(valueString))
         End If
 
         Dim returnSingle As Single
