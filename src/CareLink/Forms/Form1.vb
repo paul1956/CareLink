@@ -1390,7 +1390,8 @@ Public Class Form1
                     Select Case newMarker(NameOf(InsulinRecord.activationType))
                         Case "AUTOCORRECTION"
                             basalDictionary.Add(item1.OAdateTime, item1.deliveredFastAmount)
-                        Case "UNDETERMINED"
+                        Case "UNDETERMINED",
+                             "RECOMMENDED"
                             '
                         Case Else
                             Throw UnreachableException()
@@ -1485,7 +1486,7 @@ Public Class Form1
                 If s_bindingSourceSGs.Count > 2 Then
                     s_lastBGValue = s_bindingSourceSGs.Item(s_bindingSourceSGs.Count - 2).sg
                 End If
-                ProcessListOfDictionary(Me.TableLayoutPanelSgs, Me.DataGridViewSGs, ClassToDatatable(sglist.ToArray), rowIndex)
+                ProcessListOfSGs(Me.TableLayoutPanelSgs, Me.DataGridViewSGs, ClassToDatatable(sglist.ToArray), rowIndex)
                 Me.ReadingsLabel.Text = $"{s_bindingSourceSGs.Where(Function(entry As SgRecord) Not Double.IsNaN(entry.sg)).Count}/288"
                 Continue For
             End If
@@ -1496,6 +1497,8 @@ Public Class Form1
 
                 Select Case rowIndex
                     Case ItemIndexs.limits
+                        Dim dataTable1 As DataTable = ClassToDatatable(Of LimitsRecord)()
+
                         For Each innerdic As Dictionary(Of String, String) In LoadList(row.Value)
                             Dim newLimit As New Dictionary(Of String, String)
                             For Each kvp As KeyValuePair(Of String, String) In innerdic
@@ -1508,20 +1511,20 @@ Public Class Form1
                             Next
                             s_limits.Add(newLimit)
                         Next
-                        ProcessListOfDictionary(Me.TableLayoutPanelLimits, s_limits, rowIndex, _formScale.Height <> 1)
+                        ProcessInnerListDictionary(Me.TableLayoutPanelLimits, s_limits, rowIndex, _formScale.Height <> 1)
                     Case ItemIndexs.markers
-                        ProcessListOfDictionary(Me.TableLayoutPanelAutoBasalDelivery, Me.DataGridViewAutoBasalDelivery, s_listOfAutoBasalDeliveryMarkers, rowIndex)
-                        ProcessListOfDictionary(Me.TableLayoutPanelAutoModeStatus, _markersAutoModeStatus, rowIndex, _formScale.Height <> 1)
-                        ProcessListOfDictionary(Me.TableLayoutPanelBgReadings, _markersBgReading, rowIndex, _formScale.Height <> 1)
-                        ProcessListOfDictionary(Me.TableLayoutPanelCalibration, _markersCalibration, rowIndex, _formScale.Height <> 1)
-                        ProcesListOfDictionary(Me.TableLayoutPanelInsulin, Me.DataGridViewInsulin, s_listOfInsulinMarkers, rowIndex)
-                        ProcessListOfDictionary(Me.TableLayoutPanelLowGlusoseSuspended, _markersLowGlusoseSuspended, rowIndex, _formScale.Height <> 1)
-                        ProcessListOfDictionary(Me.TableLayoutPanelMeal, _markersMealRecords, rowIndex)
-                        ProcessListOfDictionary(Me.TableLayoutPanelTimeChange, _markersTimeChange, rowIndex, _formScale.Height <> 1)
+                        ProcessListOfAutoBasalDeliveryRecords(Me.TableLayoutPanelAutoBasalDelivery, Me.DataGridViewAutoBasalDelivery, s_listOfAutoBasalDeliveryMarkers, rowIndex)
+                        ProcessInnerListDictionary(Me.TableLayoutPanelAutoModeStatus, _markersAutoModeStatus, rowIndex, _formScale.Height <> 1)
+                        ProcessInnerListDictionary(Me.TableLayoutPanelBgReadings, _markersBgReading, rowIndex, _formScale.Height <> 1)
+                        ProcessInnerListDictionary(Me.TableLayoutPanelCalibration, _markersCalibration, rowIndex, _formScale.Height <> 1)
+                        ProcessListOfInsulinRecords(Me.TableLayoutPanelInsulin, Me.DataGridViewInsulin, s_listOfInsulinMarkers, rowIndex)
+                        ProcessInnerListDictionary(Me.TableLayoutPanelLowGlusoseSuspended, _markersLowGlusoseSuspended, rowIndex, _formScale.Height <> 1)
+                        ProcessListOfMealRecords(Me.TableLayoutPanelMeal, _markersMealRecords, rowIndex)
+                        ProcessInnerListDictionary(Me.TableLayoutPanelTimeChange, _markersTimeChange, rowIndex, _formScale.Height <> 1)
                     Case ItemIndexs.pumpBannerState
                         If row.Value Is Nothing Then
                             Me.TempTargetLabel.Visible = False
-                            ProcessListOfDictionary(Me.TableLayoutPanelBannerState, New List(Of Dictionary(Of String, String)), rowIndex, _formScale.Height <> 1)
+                            ProcessInnerListDictionary(Me.TableLayoutPanelBannerState, New List(Of Dictionary(Of String, String)), rowIndex, _formScale.Height <> 1)
                         Else
                             Dim innerListDictionary As List(Of Dictionary(Of String, String)) = LoadList(row.Value)
                             Me.TempTargetLabel.Visible = False
@@ -1533,7 +1536,7 @@ Public Class Form1
                                     Me.TempTargetLabel.Visible = True
                                 End If
                             Next
-                            ProcessListOfDictionary(Me.TableLayoutPanelBannerState, innerListDictionary, rowIndex, _formScale.Height <> 1)
+                            ProcessInnerListDictionary(Me.TableLayoutPanelBannerState, innerListDictionary, rowIndex, _formScale.Height <> 1)
                         End If
                 End Select
                 Continue For
