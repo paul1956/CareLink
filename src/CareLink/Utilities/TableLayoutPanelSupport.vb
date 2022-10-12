@@ -4,18 +4,6 @@
 
 Friend Module TableLayoutPanelSupport
 
-    Friend Sub FillOneRowOfTableLayoutPanel(layoutPanel As TableLayoutPanel, innerJson As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String, isScaledForm As Boolean)
-        For i As Integer = 1 To innerJson.Count - 1
-            layoutPanel.RowStyles.Add(New RowStyle(SizeType.AutoSize, 0))
-        Next
-        For Each jsonEntry As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
-            Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, Color.Black)
-            layoutPanel.Controls.Add(innerTableBlue, 0, layoutPanel.RowCount)
-            GetInnerTable(jsonEntry.Value, innerTableBlue, rowIndex, filterJsonData, timeFormat, isScaledForm)
-            Application.DoEvents()
-        Next
-    End Sub
-
     Friend Sub GetInnerTable(innerJson As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String, isScaledForm As Boolean)
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
@@ -115,60 +103,7 @@ Friend Module TableLayoutPanelSupport
         Application.DoEvents()
     End Sub
 
-    Friend Sub ProcesListOfDictionary(realPanel As TableLayoutPanel, dGV As DataGridView, recordData As List(Of InsulinRecord), rowIndex As ItemIndexs)
-        initializeTableLayoutPanel(realPanel, rowIndex)
-        dGV.DataSource = ClassToDatatable(recordData.ToArray)
-        dGV.RowHeadersVisible = False
-    End Sub
-
-    Friend Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, dGV As DataGridView, recordData As DataTable, rowIndex As ItemIndexs)
-        initializeTableLayoutPanel(realPanel, rowIndex)
-        dGV.DataSource = recordData
-        dGV.RowHeadersVisible = False
-    End Sub
-
-    Friend Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, dGV As DataGridView, recordData As List(Of AutoBasalDeliveryRecord), rowIndex As ItemIndexs)
-        initializeTableLayoutPanel(realPanel, rowIndex)
-        dGV.DataSource = ClassToDatatable(recordData.ToArray)
-        dGV.RowHeadersVisible = False
-    End Sub
-
-    Friend Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, recordData As List(Of MealRecord), rowIndex As ItemIndexs)
-        initializeTableLayoutPanel(realPanel, rowIndex)
-        Dim dGVCellStyle1 As New DataGridViewCellStyle With {
-            .BackColor = Color.Silver
-        }
-        Dim dGVCellStyle2 As New DataGridViewCellStyle With {
-            .Alignment = DataGridViewContentAlignment.MiddleCenter,
-            .BackColor = SystemColors.Control,
-            .Font = New System.Drawing.Font("Segoe UI", 9.0!, FontStyle.Regular, GraphicsUnit.Point),
-            .ForeColor = SystemColors.WindowText,
-            .SelectionBackColor = SystemColors.Highlight,
-            .SelectionForeColor = SystemColors.HighlightText,
-            .WrapMode = DataGridViewTriState.True
-        }
-        Dim dGV As New DataGridView With {
-            .AllowUserToAddRows = False,
-            .AllowUserToDeleteRows = False,
-            .AlternatingRowsDefaultCellStyle = dGVCellStyle1,
-            .ColumnHeadersDefaultCellStyle = dGVCellStyle2,
-            .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize,
-            .Dock = DockStyle.Fill,
-            .Location = New System.Drawing.Point(3, 3),
-            .Name = "dGVSummary",
-            .ReadOnly = True,
-            .SelectionMode = DataGridViewSelectionMode.CellSelect,
-            .Size = New System.Drawing.Size(1370, 633),
-            .TabIndex = 0
-        }
-        dGV.RowTemplate.Height = 25
-
-        realPanel.Controls.Add(dGV, 0, 1)
-        MealRecordHelpers.AttachHandlers(dGV)
-        dGV.DataSource = ClassToDatatable(recordData.ToArray)
-    End Sub
-
-    Friend Sub ProcessListOfDictionary(realPanel As TableLayoutPanel, innerListDictionary As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, isScaledForm As Boolean)
+    Friend Sub ProcessInnerListDictionary(realPanel As TableLayoutPanel, innerListDictionary As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, isScaledForm As Boolean)
         If innerListDictionary.Count = 0 Then
             initializeTableLayoutPanel(realPanel, rowIndex)
             Dim rowTextBox As TextBox = CreateBasicTextBox("")
@@ -181,16 +116,44 @@ Friend Module TableLayoutPanelSupport
         Application.DoEvents()
         realPanel.AutoScroll = True
         realPanel.Parent.Parent.UseWaitCursor = True
-        FillOneRowOfTableLayoutPanel(
-            realPanel,
-            innerListDictionary,
-            rowIndex,
-            s_filterJsonData,
-            s_timeWithMinuteFormat,
-            isScaledForm)
+        For i As Integer = 1 To innerListDictionary.Count - 1
+            realPanel.RowStyles.Add(New RowStyle(SizeType.AutoSize, 0))
+        Next
+        For Each jsonEntry As IndexClass(Of Dictionary(Of String, String)) In innerListDictionary.WithIndex()
+            Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, Color.Black)
+            realPanel.Controls.Add(innerTableBlue, 0, realPanel.RowCount)
+            GetInnerTable(jsonEntry.Value, innerTableBlue, rowIndex, s_filterJsonData, s_timeWithMinuteFormat, isScaledForm)
+            Application.DoEvents()
+        Next
         realPanel.Parent.Parent.UseWaitCursor = False
         realPanel.Show()
         Application.DoEvents()
+    End Sub
+
+    Friend Sub ProcessListOfAutoBasalDeliveryRecords(realPanel As TableLayoutPanel, dGV As DataGridView, recordData As List(Of AutoBasalDeliveryRecord), rowIndex As ItemIndexs)
+        initializeTableLayoutPanel(realPanel, rowIndex)
+        dGV.DataSource = ClassToDatatable(recordData.ToArray)
+        dGV.RowHeadersVisible = False
+    End Sub
+
+    Friend Sub ProcessListOfInsulinRecords(realPanel As TableLayoutPanel, dGV As DataGridView, recordData As List(Of InsulinRecord), rowIndex As ItemIndexs)
+        initializeTableLayoutPanel(realPanel, rowIndex)
+        dGV.DataSource = ClassToDatatable(recordData.ToArray)
+        dGV.RowHeadersVisible = False
+    End Sub
+
+    Friend Sub ProcessListOfMealRecords(realPanel As TableLayoutPanel, recordData As List(Of MealRecord), rowIndex As ItemIndexs)
+        initializeTableLayoutPanel(realPanel, rowIndex)
+        Dim dGV As DataGridView = CreateDefaultDataGridView("DataGridViewMealRecord")
+        realPanel.Controls.Add(dGV, 0, 1)
+        MealRecordHelpers.AttachHandlers(dGV)
+        dGV.DataSource = ClassToDatatable(recordData.ToArray)
+    End Sub
+
+    Friend Sub ProcessListOfSGs(realPanel As TableLayoutPanel, dGV As DataGridView, recordData As DataTable, rowIndex As ItemIndexs)
+        initializeTableLayoutPanel(realPanel, rowIndex)
+        dGV.DataSource = recordData
+        dGV.RowHeadersVisible = False
     End Sub
 
 End Module

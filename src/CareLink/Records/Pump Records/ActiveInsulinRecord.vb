@@ -6,6 +6,7 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class ActiveInsulinRecord
+
     Private _datetime As Date
     Private _amount As Single
 
