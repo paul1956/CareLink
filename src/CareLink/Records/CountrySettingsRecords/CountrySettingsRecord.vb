@@ -65,8 +65,11 @@ Public Class CountrySettingsRecord
 
         Dim dgvCountryItems() As DataGridView = {My.Forms.Form1.DataGridViewCountryItemsPage1, My.Forms.Form1.DataGridViewCountryItemsPage2, My.Forms.Form1.DataGridViewCountryItemsPage3}
         dgvCountryItems(0).Rows.Clear()
+        dgvCountryItems(0).RowHeadersVisible = False
         dgvCountryItems(1).Rows.Clear()
+        dgvCountryItems(1).RowHeadersVisible = False
         dgvCountryItems(2).Rows.Clear()
+        dgvCountryItems(2).RowHeadersVisible = False
         Dim currentLeftRow As Integer = 0
         Dim currentRightRow As Integer = 0
         For Each row As IndexClass(Of KeyValuePair(Of String, String)) In jsonData.WithIndex

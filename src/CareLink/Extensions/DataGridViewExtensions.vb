@@ -65,6 +65,10 @@ Public Module DataGridViewExtensions
         e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
         If String.IsNullOrWhiteSpace(caption) Then Return
         e.Column.HeaderText = caption
+        If e.Column.DataPropertyName = "message" Then
+            e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+        End If
+
     End Sub
 
 End Module

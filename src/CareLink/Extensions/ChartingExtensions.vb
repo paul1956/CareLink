@@ -118,7 +118,7 @@ Friend Module ChartingExtensions
     <Extension>
     Friend Sub AdjustXAxisStartTime(ByRef axisX As Axis, timeChangeRecord As TimeChangeRecord)
         Dim latestTime As Date = If(timeChangeRecord.previousDateTime > timeChangeRecord.dateTime, timeChangeRecord.previousDateTime, timeChangeRecord.dateTime)
-        Dim timeOffset As Double = (latestTime - s_bindingSourceSGs(0).datetime).TotalMinutes
+        Dim timeOffset As Double = (latestTime - s_listOfSGs(0).datetime).TotalMinutes
         axisX.IntervalOffset = timeOffset
         axisX.IntervalOffsetType = DateTimeIntervalType.Minutes
     End Sub
@@ -150,9 +150,9 @@ Friend Module ChartingExtensions
 
     <Extension>
     Friend Sub PlotHighLowLimits(chart As Chart, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
-        Dim limitsIndexList() As Integer = GetLimitsList(s_bindingSourceSGs.Count - 1)
+        Dim limitsIndexList() As Integer = GetLimitsList(s_listOfSGs.Count - 1)
 
-        For Each sgListIndex As IndexClass(Of SgRecord) In s_bindingSourceSGs.WithIndex()
+        For Each sgListIndex As IndexClass(Of SgRecord) In s_listOfSGs.WithIndex()
             Dim sgOADateTime As OADate = sgListIndex.Value.OAdatetime()
             Try
                 Dim limitsLowValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("lowLimit").ParseSingle
@@ -254,7 +254,7 @@ Friend Module ChartingExtensions
 
     <Extension>
     Friend Sub PlotSgSeries(chart As Chart, HomePageMealRow As Double)
-        For Each sgListIndex As IndexClass(Of SgRecord) In s_bindingSourceSGs.WithIndex()
+        For Each sgListIndex As IndexClass(Of SgRecord) In s_listOfSGs.WithIndex()
             chart.Series(BgSeriesName).PlotOnePoint(
                                     sgListIndex.Value.OAdatetime(),
                                     sgListIndex.Value.sg,
@@ -347,10 +347,10 @@ Friend Module ChartingExtensions
     <Extension>
     Friend Sub PostPaintSupport(e As ChartPaintEventArgs, ByRef chartRelitivePosition As RectangleF, insulinDictionary As Dictionary(Of OADate, Single), mealDictionary As Dictionary(Of OADate, Single), offsetInsulinImage As Boolean, paintOnY2 As Boolean)
         If chartRelitivePosition.IsEmpty Then
-            chartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_bindingSourceSGs(0).OAdatetime))
+            chartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_listOfSGs(0).OAdatetime))
             chartRelitivePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, HomePageBasalRow))
             chartRelitivePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, s_limitHigh)))) - chartRelitivePosition.Y
-            chartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_bindingSourceSGs.Last.OAdatetime)) - chartRelitivePosition.X
+            chartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_listOfSGs.Last.OAdatetime)) - chartRelitivePosition.X
         End If
 
         Dim highLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, s_limitHigh))

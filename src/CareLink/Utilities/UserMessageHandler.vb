@@ -61,6 +61,7 @@ Friend Module UserMessageHandler
     Friend ReadOnly s_sensorMessages As New Dictionary(Of String, String) From {
                             {"CALIBRATING", "Calibrating ..."},
                             {"CALIBRATION_REQUIRED", "Calibration required"},
+                            {"CHANGE_SENSOR", "Change sensor"},
                             {"DO_NOT_CALIBRATE", "Do Not calibrate."},
                             {"LOAD_RESERVOIR", "Load Reservoir"},
                             {"NO_DATA_FROM_PUMP", "No data from pump"},

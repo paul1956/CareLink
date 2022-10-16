@@ -411,7 +411,7 @@ Public Class Form1
     Private Sub TabControlHomePage_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlHomePage.Selecting
 
         Select Case e.TabPage.Name
-            Case NameOf(TabPageAllLocalUsers)
+            Case NameOf(TabPageAllUsers)
                 Me.DataGridViewCareLinkUsers.DataSource = s_allUserSettingsData
                 For Each c As DataGridViewColumn In Me.DataGridViewCareLinkUsers.Columns
                     c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
@@ -434,7 +434,7 @@ Public Class Form1
                 Me.TabControlHomePage.SelectedIndex = _lastHomeTabIndex
                 Me.TabControlHomePage.Visible = True
                 Exit Sub
-            Case NameOf(TabPageAllLocalUsers)
+            Case NameOf(TabPageAllUsers)
                 Me.DataGridViewCareLinkUsers.DataSource = s_allUserSettingsData
                 For Each c As DataGridViewColumn In Me.DataGridViewCareLinkUsers.Columns
                     c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
@@ -747,7 +747,7 @@ Public Class Form1
 
 #Region "My User Tab DataGridView Events"
 
-    Private Sub DataGridViewMyUserData_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewMyUserData.ColumnAdded
+    Private Sub DataGridViewMyUserData_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewCurrentUser.ColumnAdded
         e.DgvColumnAdded(New DataGridViewCellStyle().CellStyleMiddleLeft,
                          False,
                          True,
@@ -755,7 +755,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DataGridViewMyUserData_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewMyUserData.DataError
+    Private Sub DataGridViewMyUserData_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewCurrentUser.DataError
         Stop
     End Sub
 
@@ -763,7 +763,7 @@ Public Class Form1
 
 #Region "Profile Tab DataGridView Events"
 
-    Private Sub DataGridViewProfile_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewMyProfile.ColumnAdded
+    Private Sub DataGridViewUserProfile_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewUserProfile.ColumnAdded
         e.DgvColumnAdded(New DataGridViewCellStyle().CellStyleMiddleLeft,
                          False,
                          True,
@@ -771,7 +771,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DataGridViewMyProfile_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewMyProfile.DataError
+    Private Sub DataGridViewUserProfile_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewUserProfile.DataError
         Stop
     End Sub
 
@@ -897,130 +897,51 @@ Public Class Form1
 
 #Region "Summary Tab DataGridView Events"
 
-    Private Sub SummaryDataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DataGridViewSummary.CellFormatting
+    Private Sub DataGridViewSummary_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DataGridViewSummary.CellFormatting
         If e.Value Is Nothing OrElse e.ColumnIndex <> 2 Then
             Return
         End If
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
         Select Case CType([Enum].Parse(GetType(ItemIndexs), key), ItemIndexs)
-            Case ItemIndexs.lastSensorTS
+            Case ItemIndexs.lastSensorTS, ItemIndexs.medicalDeviceTimeAsString,
+                 ItemIndexs.lastSensorTSAsString, ItemIndexs.kind,
+                 ItemIndexs.pumpModelNumber, ItemIndexs.currentServerTime,
+                 ItemIndexs.lastConduitTime, ItemIndexs.lastConduitUpdateServerTime,
+                 ItemIndexs.lastMedicalDeviceDataUpdateServerTime,
+                 ItemIndexs.firstName, ItemIndexs.lastName, ItemIndexs.conduitSerialNumber,
+                 ItemIndexs.conduitBatteryStatus, ItemIndexs.medicalDeviceFamily,
+                 ItemIndexs.sensorState, ItemIndexs.medicalDeviceSerialNumber,
+                 ItemIndexs.medicalDeviceTime, ItemIndexs.sMedicalDeviceTime,
+                 ItemIndexs.calibStatus, ItemIndexs.bgUnits, ItemIndexs.timeFormat,
+                 ItemIndexs.lastSensorTime, ItemIndexs.sLastSensorTime,
+                 ItemIndexs.lastSGTrend, ItemIndexs.systemStatusMessage,
+                 ItemIndexs.lastConduitDateTime, ItemIndexs.clientTimeZoneName
                 e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.medicalDeviceTimeAsString
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.lastSensorTSAsString
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.kind
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.version
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.pumpModelNumber
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.currentServerTime
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.lastConduitTime
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.lastConduitUpdateServerTime
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.lastMedicalDeviceDataUpdateServerTime
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.firstName
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.lastName
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.conduitSerialNumber
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.conduitBatteryLevel
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.conduitBatteryStatus
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.conduitInRange
+            Case ItemIndexs.conduitInRange, ItemIndexs.conduitMedicalDeviceInRange,
+                 ItemIndexs.conduitSensorInRange, ItemIndexs.medicalDeviceSuspended,
+                 ItemIndexs.pumpCommunicationState, ItemIndexs.gstCommunicationState,
+                 ItemIndexs.calFreeSensor, ItemIndexs.finalCalibration
                 e.CellStyle = e.CellStyle.CellStyleMiddleCenter
-            Case ItemIndexs.conduitMedicalDeviceInRange
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
-            Case ItemIndexs.conduitSensorInRange
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
-            Case ItemIndexs.medicalDeviceFamily
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.sensorState
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.medicalDeviceSerialNumber
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.medicalDeviceTime
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.sMedicalDeviceTime
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.reservoirLevelPercent
+            Case ItemIndexs.averageSG, ItemIndexs.version, ItemIndexs.conduitBatteryLevel,
+                 ItemIndexs.reservoirLevelPercent, ItemIndexs.reservoirAmount,
+                 ItemIndexs.reservoirRemainingUnits, ItemIndexs.medicalDeviceBatteryLevelPercent,
+                 ItemIndexs.sensorDurationHours, ItemIndexs.timeToNextCalibHours,
+                 ItemIndexs.belowHypoLimit, ItemIndexs.aboveHyperLimit,
+                 ItemIndexs.timeInRange, ItemIndexs.gstBatteryLevel,
+                 ItemIndexs.maxAutoBasalRate, ItemIndexs.maxBolusAmount,
+                 ItemIndexs.sensorDurationMinutes,
+                 ItemIndexs.timeToNextCalibrationMinutes, ItemIndexs.sgBelowLimit,
+                 ItemIndexs.averageSGFloat,
+                 ItemIndexs.timeToNextCalibrationRecommendedMinutes
                 e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.reservoirAmount
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.reservoirRemainingUnits
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.medicalDeviceBatteryLevelPercent
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.sensorDurationHours
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.timeToNextCalibHours
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.calibStatus
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.bgUnits
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.timeFormat
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.lastSensorTime
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.sLastSensorTime
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.medicalDeviceSuspended
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
-            Case ItemIndexs.lastSGTrend
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.systemStatusMessage
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.averageSG
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.belowHypoLimit
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.aboveHyperLimit
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.timeInRange
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.pumpCommunicationState
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
-            Case ItemIndexs.gstCommunicationState
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
-            Case ItemIndexs.gstBatteryLevel
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.lastConduitDateTime
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.maxAutoBasalRate
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.maxBolusAmount
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.sensorDurationMinutes
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.timeToNextCalibrationMinutes
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.clientTimeZoneName
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
-            Case ItemIndexs.sgBelowLimit
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.averageSGFloat
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.timeToNextCalibrationRecommendedMinutes
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
-            Case ItemIndexs.calFreeSensor
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
-            Case ItemIndexs.finalCalibration
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
             Case Else
                 Stop
         End Select
 
     End Sub
 
-    Private Sub SummaryDataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewSummary.ColumnAdded
+    Private Sub DataGridViewSummary_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewSummary.ColumnAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
         e.DgvColumnAdded(SummaryRecordHelpers.GetCellStyle(e.Column.Name),
@@ -1029,7 +950,7 @@ Public Class Form1
                          caption)
     End Sub
 
-    Private Sub SummaryDataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewSummary.DataError
+    Private Sub DataGridViewSummary_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewSummary.DataError
         Stop
     End Sub
 
@@ -1456,7 +1377,7 @@ Public Class Form1
         s_markersTimeChange.Clear()
         s_listOfAutoBasalDeliveryMarkers.Clear()
         s_listOfInsulinMarkers.Clear()
-        s_bindingSourceSGs.Clear()
+        s_listOfSGs.Clear()
         s_listOfSummaryRecords.Clear()
         s_limits.Clear()
         s_treatmentMarkerInsulinDictionary.Clear()
@@ -1481,13 +1402,12 @@ Public Class Form1
             End If
 
             If rowIndex = ItemIndexs.sgs Then
-                Dim sglist As List(Of SgRecord) = LoadList(row.Value).ToSgList()
-                s_bindingSourceSGs = New List(Of SgRecord)(sglist)
-                If s_bindingSourceSGs.Count > 2 Then
-                    s_lastBGValue = s_bindingSourceSGs.Item(s_bindingSourceSGs.Count - 2).sg
+                s_listOfSGs = LoadList(row.Value).ToSgList()
+                If s_listOfSGs.Count > 2 Then
+                    s_lastBGValue = s_listOfSGs.Item(s_listOfSGs.Count - 2).sg
                 End If
-                ProcessListOfSGs(Me.TableLayoutPanelSgs, Me.DataGridViewSGs, ClassToDatatable(sglist.ToArray), rowIndex)
-                Me.ReadingsLabel.Text = $"{s_bindingSourceSGs.Where(Function(entry As SgRecord) Not Double.IsNaN(entry.sg)).Count}/288"
+                DisplayDataTableInDGV(Me.TableLayoutPanelSgs, Me.DataGridViewSGs, ClassToDatatable(s_listOfSGs.ToArray), rowIndex)
+                Me.ReadingsLabel.Text = $"{s_listOfSGs.Where(Function(entry As SgRecord) Not Double.IsNaN(entry.sg)).Count}/288"
                 Continue For
             End If
 
@@ -1513,14 +1433,14 @@ Public Class Form1
                         Next
                         ProcessInnerListDictionary(Me.TableLayoutPanelLimits, s_limits, rowIndex, _formScale.Height <> 1)
                     Case ItemIndexs.markers
-                        ProcessListOfAutoBasalDeliveryRecords(Me.TableLayoutPanelAutoBasalDelivery, Me.DataGridViewAutoBasalDelivery, s_listOfAutoBasalDeliveryMarkers, rowIndex)
+                        DisplayDataTableInDGV(Me.TableLayoutPanelAutoBasalDelivery, Me.DataGridViewAutoBasalDelivery, ClassToDatatable(s_listOfAutoBasalDeliveryMarkers.ToArray), rowIndex)
+                        DisplayDataTableInDGV(Me.TableLayoutPanelInsulin, Me.DataGridViewInsulin, ClassToDatatable(s_listOfInsulinMarkers.ToArray), rowIndex)
                         ProcessInnerListDictionary(Me.TableLayoutPanelAutoModeStatus, _markersAutoModeStatus, rowIndex, _formScale.Height <> 1)
                         ProcessInnerListDictionary(Me.TableLayoutPanelBgReadings, _markersBgReading, rowIndex, _formScale.Height <> 1)
                         ProcessInnerListDictionary(Me.TableLayoutPanelCalibration, _markersCalibration, rowIndex, _formScale.Height <> 1)
-                        ProcessListOfInsulinRecords(Me.TableLayoutPanelInsulin, Me.DataGridViewInsulin, s_listOfInsulinMarkers, rowIndex)
                         ProcessInnerListDictionary(Me.TableLayoutPanelLowGlusoseSuspended, _markersLowGlusoseSuspended, rowIndex, _formScale.Height <> 1)
-                        ProcessListOfMealRecords(Me.TableLayoutPanelMeal, _markersMealRecords, rowIndex)
                         ProcessInnerListDictionary(Me.TableLayoutPanelTimeChange, _markersTimeChange, rowIndex, _formScale.Height <> 1)
+                        DisplayDataTableInDGV(Me.TableLayoutPanelMeal, ClassToDatatable(_markersMealRecords.ToArray), NameOf(MealRecord), AddressOf MealRecordHelpers.AttachHandlers, rowIndex)
                     Case ItemIndexs.pumpBannerState
                         If row.Value Is Nothing Then
                             Me.TempTargetLabel.Visible = False
@@ -1726,7 +1646,7 @@ Public Class Form1
 
             For i As Integer = 0 To 287
                 Dim initialBolus As Single = 0
-                Dim firstNotSkippedOaTime As New OADate((s_bindingSourceSGs(0).datetime + (s_fiveMinuteSpan * i)).RoundTimeDown(RoundTo.Minute))
+                Dim firstNotSkippedOaTime As New OADate((s_listOfSGs(0).datetime + (s_fiveMinuteSpan * i)).RoundTimeDown(RoundTo.Minute))
                 While currentMarker < timeOrderedMarkers.Count AndAlso timeOrderedMarkers.Keys(currentMarker) <= firstNotSkippedOaTime
                     initialBolus += timeOrderedMarkers.Values(currentMarker)
                     currentMarker += 1
@@ -1981,8 +1901,7 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateSummaryTable()
-        Dim dataTable1 As DataTable = ClassToDatatable(s_listOfSummaryRecords.ToArray)
-        Me.DataGridViewSummary.DataSource = dataTable1
+        Me.DataGridViewSummary.DataSource = ClassToDatatable(s_listOfSummaryRecords.ToArray)
         Me.DataGridViewSummary.RowHeadersVisible = False
     End Sub
 

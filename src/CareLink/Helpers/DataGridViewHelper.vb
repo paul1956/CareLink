@@ -26,7 +26,6 @@ Friend Module DataGridViewHelper
             .Name = dgvName,
             .[ReadOnly] = True,
             .SelectionMode = DataGridViewSelectionMode.CellSelect,
-            .Size = New System.Drawing.Size(1370, 633),
             .TabIndex = 0
         }
         dGV.RowTemplate.Height = 25

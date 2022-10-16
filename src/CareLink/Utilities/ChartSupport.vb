@@ -121,8 +121,8 @@ Friend Module ChartSupport
     <Extension>
     Friend Sub InitializeBGChartArea(c As ChartArea)
         With c
-            .AxisX.Minimum = s_bindingSourceSGs(0).OAdatetime
-            .AxisX.Maximum = s_bindingSourceSGs.Last.OAdatetime
+            .AxisX.Minimum = s_listOfSGs(0).OAdatetime
+            .AxisX.Maximum = s_listOfSGs.Last.OAdatetime
             .AxisX.MajorGrid.IntervalType = DateTimeIntervalType.Hours
             .AxisX.MajorGrid.IntervalOffsetType = DateTimeIntervalType.Hours
             .AxisX.MajorGrid.Interval = 1

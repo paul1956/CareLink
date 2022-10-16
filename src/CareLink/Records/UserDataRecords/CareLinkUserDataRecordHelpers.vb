@@ -2,8 +2,6 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Runtime.CompilerServices
-
 Public Class CareLinkUserDataRecordHelpers
 
     Private Shared ReadOnly s_columnsToHide As New List(Of String) From {

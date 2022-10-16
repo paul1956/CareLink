@@ -2,8 +2,6 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.ComponentModel
-
 Public Module PumpVariables
 
     ' Manually computed
@@ -36,7 +34,6 @@ Public Module PumpVariables
     Friend s_activeInsulinIncrements As Integer
     Friend s_averageSG As String
     Friend s_belowHypoLimit As Single
-    Friend s_bindingSourceSGs As New List(Of SgRecord)
     Friend s_clientTimeZone As TimeZoneInfo
     Friend s_clientTimeZoneName As String
     Friend s_conduitSensorInRange As Boolean
@@ -52,6 +49,7 @@ Public Module PumpVariables
     Friend s_limitHigh As Single
     Friend s_limitLow As Single
     Friend s_limits As New List(Of Dictionary(Of String, String))
+    Friend s_listOfSGs As New List(Of SgRecord)
     Friend s_markers As New List(Of Dictionary(Of String, String))
     Friend s_markersTimeChange As New List(Of TimeChangeRecord)
     Friend s_medicalDeviceBatteryLevelPercent As Integer

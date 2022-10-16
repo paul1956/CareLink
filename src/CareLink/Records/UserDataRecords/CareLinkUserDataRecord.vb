@@ -4,7 +4,6 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
-Imports System.Runtime.CompilerServices
 
 Public Class CareLinkUserDataRecord
     Implements IEditableObject

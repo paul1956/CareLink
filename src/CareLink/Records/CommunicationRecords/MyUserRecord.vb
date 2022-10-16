@@ -44,7 +44,7 @@ Public Class MyUserRecord
             End Select
 
         Next
-        My.Forms.Form1.DataGridViewMyUserData.DataSource = myUser
+        My.Forms.Form1.DataGridViewCurrentUser.DataSource = myUser
         _hasValue = True
 
     End Sub
