@@ -6,7 +6,7 @@ Partial Public Class CareLinkClient
     Private Const BadRequestMessage As String = "Login Failure __doConsent() failed with HttpStatusCode.BadRequest"
     Private Const CarelinkAuthTokenCookieName As String = "auth_tmp_token"
     Private Const CarelinkConnectServerEu As String = "carelink.minimed.eu"
-    Private Const CarelinkConnectServerOther As String = "carelink.minimed.eu" ' "mdtlogin.medtronic.com"
+    Private Const CarelinkConnectServerOther As String = "carelink.minimed.eu"
     Private Const CarelinkConnectServerUs As String = "carelink.minimed.com"
     Private Const CarelinkLanguageEn As String = "en"
     Private Const CarelinkLocaleEn As String = "en"

@@ -10,7 +10,7 @@ Imports System.Text.Json
 
 Public Class CareLinkClient
 
-    Private ReadOnly _carelinkCountry As String
+    Private ReadOnly _carelinkCountry As String = Nothing
 
     Private ReadOnly _carelinkPassword As String
 
@@ -46,6 +46,12 @@ Public Class CareLinkClient
         _httpClient = New HttpClient(_httpClientHandler)
     End Sub
 
+    Public ReadOnly Property CarelinkCountry As String
+        Get
+            Return _carelinkCountry
+        End Get
+    End Property
+
     Public Property LoggedIn As Boolean
     Public Shared Property NetworkDown As Boolean = False
 
@@ -80,7 +86,7 @@ Public Class CareLinkClient
 
     ' Get server URL
     Private Function CareLinkServer() As String
-        Select Case _carelinkCountry.GetRegionFromCode
+        Select Case Me.CarelinkCountry.GetRegionFromCode
             Case "North America"
                 Return CarelinkConnectServerUs
             Case "Europe"
@@ -90,15 +96,15 @@ Public Class CareLinkClient
         End Select
     End Function
 
-    Private Function DecodeResponse(response As HttpResponseMessage, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As HttpResponseMessage
+    Private Function DecodeResponse(response As HttpResponseMessage, <CallerMemberName> Optional memberName As String = Nothing) As HttpResponseMessage
         Dim message As String
-        If response.StatusCode = Global.System.Net.HttpStatusCode.OK Then
+        If response.StatusCode = HttpStatusCode.OK Then
             _lastErrorMessage = Nothing
             Debug.Print($"{memberName} success")
             Return response
         ElseIf response.StatusCode = HttpStatusCode.BadRequest Then
             _lastErrorMessage = BadRequestMessage
-            Debug.Print($"{memberName} at {sourceLineNumber} BadRequestMessage")
+            Debug.Print($"{memberName} failed with HttpStatusCode.BadRequest")
             Return response
         Else
             message = $"session response is {response.StatusCode}"
@@ -156,7 +162,7 @@ Public Class CareLinkClient
         Dim payload As New Dictionary(Of String, String) From {
             {
                 "country",
-                _carelinkCountry},
+                Me.CarelinkCountry},
             {
                 "locale",
                 CarelinkLocaleEn}}
@@ -189,7 +195,7 @@ Public Class CareLinkClient
         Return Me.DecodeResponse(response)
     End Function
 
-    Private Function ExecuteLoginProcedure(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Boolean
+    Private Function ExecuteLoginProcedure() As Boolean
         Dim lastLoginSuccess As Boolean = False
         If NetworkDown Then
             _lastErrorMessage = "Network down"
@@ -227,7 +233,7 @@ Public Class CareLinkClient
                     _lastErrorMessage = Nothing
                 End If
             Catch ex As Exception
-                _lastErrorMessage = $"Login Failure {ex.Message}, in {memberName} line {sourceLineNumber}."
+                _lastErrorMessage = $"Login Failure {ex.Message}, in {NameOf(ExecuteLoginProcedure)}."
                 Return lastLoginSuccess
             Finally
                 _lastResponseCode = doLoginResponse.StatusCode
@@ -254,7 +260,7 @@ Public Class CareLinkClient
                 _sessionProfile = Me.GetMyProfile()
             End If
             If Not s_sessionCountrySettings.HasValue Then
-                s_sessionCountrySettings = New CountrySettingsRecord(Me.GetCountrySettings(_carelinkCountry, CarelinkLanguageEn))
+                s_sessionCountrySettings = New CountrySettingsRecord(Me.GetCountrySettings())
             End If
             If Not _sessionMonitorData.HasValue Then
                 _sessionMonitorData = Me.GetMonitorData()
@@ -345,15 +351,15 @@ Public Class CareLinkClient
         Return cookie?.Value
     End Function
 
-    Private Function GetCountrySettings(country As String, language As String) As Dictionary(Of String, String)
+    Private Function GetCountrySettings() As Dictionary(Of String, String)
         Debug.Print("__getCountrySettings()")
         Dim queryParams As New Dictionary(Of String, String) From {
             {
                 "countryCode",
-                country},
+                Me.CarelinkCountry},
             {
                 "language",
-                language}}
+                CarelinkLanguageEn}}
         Return Me.GetData(Me.CareLinkServer(), "patient/countries/settings", queryParams, Nothing)
     End Function
 
@@ -422,7 +428,7 @@ Public Class CareLinkClient
         Dim payload As New Dictionary(Of String, String) From {
             {
                 "country",
-                _carelinkCountry},
+                Me.CarelinkCountry},
             {
                 "lang",
                 CarelinkLanguageEn}
@@ -468,12 +474,8 @@ Public Class CareLinkClient
         Return If(_lastErrorMessage, "OK")
     End Function
 
-    Public Overridable Function HasErrors() As Boolean
-        Return Not (String.IsNullOrWhiteSpace(_lastErrorMessage) OrElse _lastErrorMessage = "OK")
-    End Function
-
     ' Wrapper for data retrieval methods
-    Public Overridable Function GetRecentData(countryCode As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Dictionary(Of String, String)
+    Public Overridable Function GetRecentData(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Dictionary(Of String, String)
         If NetworkDown Then
             Debug.Print("Network Down")
             Return Nothing
@@ -482,7 +484,7 @@ Public Class CareLinkClient
         ' Force login to get basic info
         Try
             If Me.GetAuthorizationToken() IsNot Nothing Then
-                If _carelinkCountry = countryCode OrElse _sessionMonitorData.deviceFamily?.Equals("BLE_X", StringComparison.Ordinal) Then
+                If Me.CarelinkCountry IsNot Nothing OrElse _sessionMonitorData.deviceFamily?.Equals("BLE_X", StringComparison.Ordinal) Then
                     Return Me.GetConnectDisplayMessage(
                         _sessionProfile.username,
                         If(_carelinkPartnerType.Contains(_sessionUser.role), "carepartner", "patient"),
@@ -493,6 +495,10 @@ Public Class CareLinkClient
             Stop
         End Try
         Return Nothing
+    End Function
+
+    Public Overridable Function HasErrors() As Boolean
+        Return Not (String.IsNullOrWhiteSpace(_lastErrorMessage) OrElse _lastErrorMessage = "OK")
     End Function
 
 End Class
