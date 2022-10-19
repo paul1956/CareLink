@@ -24,10 +24,14 @@ Public Module PumpVariables
 #End Region ' Used for painting
 
     Friend Const MmolLUnitsDivisor As Single = 18
-    Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDeliveryRecord)
-    Friend ReadOnly s_listOfInsulinMarkers As New List(Of InsulinRecord)
-    Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
     Friend ReadOnly s_insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
+    Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDeliveryRecord)
+    Friend ReadOnly s_listOfAutoModeStatusMarkers As New List(Of AutoModeStatusRecord)
+    Friend ReadOnly s_listOfBgReadingMarkers As New List(Of BGReadingRecord)
+    Friend ReadOnly s_listOfCalibrationMarkers As New List(Of CalibrationRecord)
+    Friend ReadOnly s_listOfInsulinMarkers As New List(Of InsulinRecord)
+    Friend ReadOnly s_listOfLastAlarmSummaryRecords As New List(Of LastAlarmSummary)
+    Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
     Friend ReadOnly s_mealImage As Bitmap = My.Resources.MealImage
     Friend s_aboveHyperLimit As Double
     Friend s_activeInsulin As ActiveInsulinRecord
@@ -51,7 +55,7 @@ Public Module PumpVariables
     Friend s_limits As New List(Of Dictionary(Of String, String))
     Friend s_listOfSGs As New List(Of SgRecord)
     Friend s_markers As New List(Of Dictionary(Of String, String))
-    Friend s_markersTimeChange As New List(Of TimeChangeRecord)
+    Friend s_listOfTimeChangeMarkers As New List(Of TimeChangeRecord)
     Friend s_medicalDeviceBatteryLevelPercent As Integer
     Friend s_recentDatalast As Dictionary(Of String, String)
     Friend s_reservoirLevelPercent As Integer

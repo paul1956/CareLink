@@ -5,12 +5,6 @@
 Public Class MonitorDataRecord
     Private _hasValue As Boolean
 
-#Region "Single Items"
-
-    Public ReadOnly Property deviceFamily As String
-
-#End Region 'Single Items
-
     Public Sub New(jsonData As Dictionary(Of String, String))
         If jsonData Is Nothing OrElse jsonData.Count = 0 Then
             _hasValue = False
@@ -28,6 +22,8 @@ Public Class MonitorDataRecord
     Public Sub New()
         _hasValue = False
     End Sub
+
+    Public ReadOnly Property deviceFamily As String
 
     Public Sub Clear()
         _hasValue = False

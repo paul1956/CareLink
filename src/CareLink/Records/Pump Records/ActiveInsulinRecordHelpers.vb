@@ -2,14 +2,12 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Friend Class SgRecordHelpers
+Class ActiveInsulinRecordHelpers
 
-    Private Shared ReadOnly s_columnsToHide As New List(Of String) From {
-                        NameOf(SgRecord.OAdatetime),
-                        NameOf(SgRecord.kind),
-                        NameOf(SgRecord.relativeOffset),
-                        NameOf(SgRecord.version)
-                    }
+    Private Shared ReadOnly columnsToHide As New List(Of String) From {
+         NameOf(ActiveInsulinRecord.OAdatetime),
+         NameOf(ActiveInsulinRecord.version)
+    }
 
     Private Shared Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         If HideColumn(e.Column.Name) Then
@@ -19,9 +17,9 @@ Friend Class SgRecordHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
         e.DgvColumnAdded(GetCellStyle(e.Column.Name),
-                         True,
-                         True,
-                         caption)
+                     True,
+                     True,
+                     caption)
     End Sub
 
     Private Shared Sub DataGridView_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs)
@@ -34,11 +32,11 @@ Friend Class SgRecordHelpers
 
     Private Shared Sub DataGridViewView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.dgvCellFormatting(e, NameOf(SgRecord.datetime))
+        dgv.dgvCellFormatting(e, NameOf(ActiveInsulinRecord.datetime))
     End Sub
 
-    Friend Shared Function HideColumn(dataPropertyName As String) As Boolean
-        Return s_filterJsonData AndAlso s_columnsToHide.Contains(dataPropertyName)
+    Friend Shared Function HideColumn(columnName As String) As Boolean
+        Return s_filterJsonData AndAlso columnsToHide.Contains(columnName)
     End Function
 
     Public Shared Sub AttachHandlers(dgv As DataGridView)
@@ -52,21 +50,18 @@ Friend Class SgRecordHelpers
         Dim cellStyle As New DataGridViewCellStyle
 
         Select Case columnName
-            Case NameOf(SgRecord.sg),
-                    NameOf(SgRecord.relativeOffset),
-                    NameOf(SgRecord.OAdatetime)
-                cellStyle = cellStyle.CellStyleMiddleRight(10)
-            Case NameOf(SgRecord.RecordNumber),
-                    NameOf(SgRecord.version)
-                cellStyle = cellStyle.CellStyleMiddleCenter()
-            Case NameOf(SgRecord.datetime),
-                    NameOf(SgRecord.datetimeAsString),
-                    NameOf(SgRecord.sensorState)
+            Case NameOf(ActiveInsulinRecord.kind),
+                 NameOf(ActiveInsulinRecord.datetime),
+                 NameOf(ActiveInsulinRecord.datetimeAsString),
+                 NameOf(ActiveInsulinRecord.OAdatetime)
                 cellStyle = cellStyle.CellStyleMiddleLeft
-            Case NameOf(SgRecord.timeChange),
-                    NameOf(SgRecord.kind)
-                cellStyle = cellStyle.CellStyleMiddleCenter
+            Case NameOf(ActiveInsulinRecord.amount),
+                 NameOf(ActiveInsulinRecord.precision),
+                 NameOf(ActiveInsulinRecord.version)
+                cellStyle = cellStyle.CellStyleMiddleRight(0)
             Case Else
+                Stop
+                cellStyle = cellStyle.CellStyleMiddleCenter
                 Throw UnreachableException()
         End Select
         Return cellStyle

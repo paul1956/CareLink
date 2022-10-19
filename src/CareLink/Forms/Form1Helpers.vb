@@ -5,13 +5,8 @@
 Imports System.Globalization
 Imports System.IO
 Imports System.Runtime.CompilerServices
-Imports CareLink
 
-' Licensed to the .NET Foundation under one or more agreements.
-' The .NET Foundation licenses this file to you under the MIT license.
-' See the LICENSE file in the project root for more information.
-
-Module Form1Helpers
+Friend Module Form1Helpers
 
     <Extension>
     Friend Function DoOptionalLoginAndUpdateData(MeForm As Form1, UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean

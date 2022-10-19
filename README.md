@@ -30,8 +30,13 @@ This update has a UI to show all the available data and a visual version that mi
 - 10/10/2022
 
 ## What's New in this release
+  New 3.5.6.11
+-   Fix crash on 780G Issue #25
+-   Lots of code cleanup
+-   Create more pump objects
+
   New 3.5.6.10
-  Fix crash on 780G Issue #24
+-   Fix crash on 780G Issue #24
 
   New 3.5.6.9
 -   Split Country settings to 3 tabs

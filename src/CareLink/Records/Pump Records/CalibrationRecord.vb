@@ -5,11 +5,11 @@
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
-Public Class AutoBasalDeliveryRecord
+Public Class CalibrationRecord
     Private _dateTime As Date
 
     <DisplayName(NameOf([dateTime]))>
-    <Column(Order:=5, TypeName:="Date")>
+    <Column(Order:=6)>
     Public Property [dateTime] As Date
         Get
             Return _dateTime
@@ -19,48 +19,36 @@ Public Class AutoBasalDeliveryRecord
         End Set
     End Property
 
-    <DisplayName("Bolus Amount")>
-    <Column(Order:=10, TypeName:="Single")>
-    Public Property bolusAmount As Single
-
     <DisplayName("dateTime As String")>
-    <Column(Order:=6, TypeName:="String")>
+    <Column(Order:=7)>
     Public Property dateTimeAsString As String
-
-    <DisplayName(NameOf(id))>
-    <Column(Order:=9)>
-    Public Property id As Integer
 
     <DisplayName(NameOf(index))>
     <Column(Order:=2)>
     Public Property index As Integer
 
     <DisplayName(NameOf(kind))>
-    <Column(Order:=3, TypeName:="String")>
+    <Column(Order:=4)>
     Public Property kind As String
-
-    <DisplayName("OA date Time")>
-    <Column(Order:=7)>
-    Public ReadOnly Property OAdateTime As OADate
-        Get
-            Return New OADate(_dateTime)
-        End Get
-    End Property
 
     <DisplayName("Record Number")>
     <Column(Order:=0)>
     Public Property RecordNumber As Integer
 
     <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=8)>
+    <Column(Order:=9)>
     Public Property relativeOffset As Integer
 
     <DisplayName(NameOf(type))>
-    <Column(Order:=1, TypeName:="String")>
+    <Column(Order:=1)>
     Public Property type As String
 
+    <DisplayName(NameOf(value))>
+    <Column(Order:=3)>
+    Public Property value As Single
+
     <DisplayName(NameOf(version))>
-    <Column(Order:=4)>
+    <Column(Order:=5)>
     Public Property version As Integer
 
 End Class

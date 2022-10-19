@@ -3,8 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Module TableLayoutPanelSupport
-
-    Delegate Sub attachHandlers(dgv As DataGridView)
+    Public Delegate Sub attachHandlers(dgv As DataGridView)
 
     Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, dGV As DataGridView, table As DataTable, rowIndex As ItemIndexs)
         initializeTableLayoutPanel(realPanel, rowIndex)
@@ -35,7 +34,7 @@ Friend Module TableLayoutPanelSupport
             tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22))
             Dim keyLabel As Label = CreateBasicLabel("messageId")
             tableLevel1Blue.RowCount += 1
-            Dim textBox1 As TextBox = CreateValueTextBox(innerJson, messageOrDefault, timeFormat, isScaledForm)
+            Dim textBox1 As TextBox = CreateValueTextBox(innerJson, messageOrDefault, isScaledForm)
 
             If textBox1.Text.Length > 100 Then
                 My.Forms.Form1.ToolTip1.SetToolTip(textBox1, textBox1.Text)
@@ -97,7 +96,7 @@ Friend Module TableLayoutPanelSupport
                                 tableLevel3.Controls.AddRange({valueLabel, CreateBasicTextBox(eValue.Value)})
                                 valueLabel = CreateBasicLabel("Message")
                             End If
-                            tableLevel3.Controls.AddRange({valueLabel, CreateValueTextBox(dic, eValue, timeFormat, isScaledForm)})
+                            tableLevel3.Controls.AddRange({valueLabel, CreateValueTextBox(dic, eValue, isScaledForm)})
                             Application.DoEvents()
                         Next
                         tableLevel3.Height += 40
@@ -112,7 +111,7 @@ Friend Module TableLayoutPanelSupport
             Else
                 ' This is ItemIndexs.lastAlarm and its already been done
                 If innerRow.Key <> "messageId" Then
-                    Dim textBox1 As TextBox = CreateValueTextBox(innerJson, innerRow, timeFormat, isScaledForm)
+                    Dim textBox1 As TextBox = CreateValueTextBox(innerJson, innerRow, isScaledForm)
                     My.Forms.Form1.ToolTip1.SetToolTip(textBox1, textBox1.Text)
                     tableLevel1Blue.Controls.AddRange({CreateBasicLabel(innerRow.Key), textBox1})
                 End If

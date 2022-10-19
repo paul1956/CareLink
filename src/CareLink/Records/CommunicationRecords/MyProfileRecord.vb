@@ -80,34 +80,31 @@ Public Class MyProfileRecord
         _hasValue = False
     End Sub
 
-#If True Then ' Prevent reordering
-    Public Property username As String
-    Public Property middleName As String
-    Public Property guardianParent As String
-    Public Property parentFirstName As String
-    Public Property parentMiddleName As String
-    Public Property parentLastName As String
+    Public Property a1C As String
     Public Property address As String
+    Public Property ageRange As String
     Public Property city As String
-    Public Property stateProvince As String
-    Public Property postalCode As String
     Public Property country As String
     Public Property dateOfBirth As String
+    Public Property diabetesType As String
+    Public Property email As String
+    Public Property firstName As String
+    Public Property gender As String
+    Public Property guardianParent As String
+    Public Property insulinType As String
+    Public Property lastName As String
+    Public Property middleName As String
+    Public Property parentFirstName As String
+    Public Property parentLastName As String
+    Public Property parentMiddleName As String
+    Public Property patientNickname As String
     Public Property phone As String
     Public Property phoneLegacy As String
-    Public Property email As String
-    Public Property gender As String
-    Public Property diabetesType As String
-    Public Property therapyType As String
-    Public Property ageRange As String
-    Public Property insulinType As String
-    Public Property patientNickname As String
+    Public Property postalCode As String
+    Public Property stateProvince As String
     Public Property textNotification As String
-    Public Property a1C As String
-    Public Property firstName As String
-    Public Property lastName As String
-
-#End If  ' Prevent reordering
+    Public Property therapyType As String
+    Public Property username As String
 
     Public Sub Clear()
         _hasValue = False

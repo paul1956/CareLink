@@ -44,11 +44,11 @@ Public Module StandardControlCreation
 
     End Function
 
-    Friend Function CreateValueTextBox(dic As Dictionary(Of String, String), eValue As KeyValuePair(Of String, String), timeFormat As String, isScaledForm As Boolean) As TextBox
+    Friend Function CreateValueTextBox(dic As Dictionary(Of String, String), eValue As KeyValuePair(Of String, String), isScaledForm As Boolean) As TextBox
         Dim valueTextBox As TextBox
 
         If eValue.Key.Equals("messageId", StringComparison.OrdinalIgnoreCase) Then
-            valueTextBox = CreateBasicTextBox(TranslateNotificationMessageId(dic, eValue.Value, timeFormat))
+            valueTextBox = CreateBasicTextBox(TranslateNotificationMessageId(dic, eValue.Value))
         Else
             Dim result As Single = Nothing
             If Single.TryParse(eValue.Value, NumberStyles.Number, CurrentDataCulture, result) Then

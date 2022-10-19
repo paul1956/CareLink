@@ -49,27 +49,23 @@ Public Class MyUserRecord
 
     End Sub
 
-#If True Then ' Prevent reordering
-
-    Public Property loginDateUTC As String
-    Public Property id As String
-    Public Property country As String
-    Public Property language As String
-    Public Property lastName As String
-    Public Property firstName As String
-    Public Property accountId As String
-    Public Property role As String
-    Public Property cpRegistrationStatus As String
-    Public Property accountSuspended As String
-    Public Property needToReconsent As String
-    Public Property mfaRequired As String
-    Public Property mfaEnabled As String
-
-#End If  ' Prevent reordering
-
     Public Sub New()
         _hasValue = False
     End Sub
+
+    Public Property accountId As String
+    Public Property accountSuspended As String
+    Public Property country As String
+    Public Property cpRegistrationStatus As String
+    Public Property firstName As String
+    Public Property id As String
+    Public Property language As String
+    Public Property lastName As String
+    Public Property loginDateUTC As String
+    Public Property mfaEnabled As String
+    Public Property mfaRequired As String
+    Public Property needToReconsent As String
+    Public Property role As String
 
     Public Sub Clear()
         _hasValue = False
