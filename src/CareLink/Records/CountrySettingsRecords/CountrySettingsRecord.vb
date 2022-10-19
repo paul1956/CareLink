@@ -4,55 +4,6 @@
 
 Public Class CountrySettingsRecord
 
-#Region "Single Items"
-
-    Public Property bgUnits As String
-    Public Property blePereodicDataEndpoint As String
-    Public Property carbDefaultUnit As String
-    Public Property carbExchangeRatioDefault As String
-    Public Property carbohydrateUnitsDefault As String
-    Public Property cpMobileAppAvailable As String
-    Public Property defaultCountryName As String
-    Public Property defaultDevice As String
-    Public Property defaultLanguage As String
-    Public Property dialCode As String
-    Public Property firstDayOfWeek As String
-    Public Property glucoseUnitsDefault As String
-    Public Property legalAge As String
-    Public Property mediaHost As String
-    Public Property mfa As mfaRecord
-    Public Property name As String
-    Public Property recordSeparator As String
-    Public Property region As String
-    Public Property shortDateFormat As String
-    Public Property shortTimeFormat As String
-    Public Property smsSendingAllowed As String
-    Public Property techDays As String
-    Public Property techHours As String
-    Public Property techSupport As String
-    Public Property timeFormat As String
-    Public Property timeUnitsDefault As String
-    Public Property uploaderAllowed As String
-
-#End Region 'Single Items
-
-#Region "Flat Records"
-
-    Public numberFormat As numberFormatRecord
-    Public pathDocs As pathDocsRecord                   ' "{""ddms.termsOfUse"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/terms_of_use.html"",""ddms.privacyStatementPdf"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/privacy_policy.pdf"",""ddms.termsOfUsePdf"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/terms_of_use.pdf"",""ddms.privacyStatement"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/privacy_policy.pdf"",""ddms.faqPdf"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/faq.pdf"",""ddms.privacyPractices"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/notices.pdf""}"
-    Public postal As postalRecord
-    Public reportDateFormat As reportDateFormatRecord   ' "{""longTimePattern12"":""hh:mm:ss tt"",""longTimePattern24"":""HH:mm:ss"",""shortTimePattern12"":""h:mm tt"",""shortTimePattern24"":""HH:mm"",""shortDatePattern"":""MM-dd-yyyy"",""dateSeparator"":""-"",""timeSeparator"":"":""}"
-
-#End Region
-
-#Region "Lists"
-
-    Public languages As New List(Of LanguageRecord)                 ' "[{""name"":""English"",""code"":""EN""}]"
-    Public supportedReports As New List(Of supportedReportRecord)   ' "[{""report"":""ADHERENCE"",""onlyFor"":[],""notFor"":[]},{""report"":""ASSESSMENT_AND_PROGRESS"",""onlyFor"":[],""notFor"":[]},{""report"":""BOLUS_WIZARD_FOOD_BOLUS"",""onlyFor"":[],""notFor"":[]},{""report"":""DAILY_DETAILS"",""onlyFor"":[],""notFor"":[]},{""report"":""DASHBOARD"",""onlyFor"":[],""notFor"":[]},{""report"":""DEVICE_SETTINGS"",""onlyFor"":[],""notFor"":[]},{""report"":""EPISODE_SUMMARY"",""onlyFor"":[],""notFor"":[]},{""report"":""LOGBOOK"",""onlyFor"":[],""notFor"":[]},{""report"":""OVERVIEW"",""onlyFor"":[],""notFor"":[]},{""report"":""WEEKLY_REVIEW"",""onlyFor"":[],""notFor"":[]}]"
-    Private _hasValue As Boolean
-
-#End Region
-
     Public Sub New()
         _hasValue = False
     End Sub
@@ -136,8 +87,8 @@ Public Class CountrySettingsRecord
                     Me.region = rowValue.Value
                     dgvCountryItems(0).Rows.Add(itemIndex, "", rowValue.Key, rowValue.Value)
                 Case NameOf(pathDocs)
-                    pathDocs = New pathDocsRecord(rowValue.Value)
-                    For Each member As IndexClass(Of KeyValuePair(Of String, String)) In pathDocs.pathDoc.WithIndex
+                    Me.pathDocs = New pathDocsRecord(rowValue.Value)
+                    For Each member As IndexClass(Of KeyValuePair(Of String, String)) In Me.pathDocs.pathDoc.WithIndex
                         Dim itemIndex1 As String = $"{row.Index + 1}.{member.Index + 1}"
                         dgvCountryItems(1).Rows.Add(itemIndex1, rowValue.Key, member.Value.Key, member.Value.Value)
                     Next
@@ -166,8 +117,8 @@ Public Class CountrySettingsRecord
                     Me.carbExchangeRatioDefault = rowValue.Value
                     dgvCountryItems(1).Rows.Add(itemIndex, "", rowValue.Key, rowValue.Value)
                 Case NameOf(reportDateFormat)
-                    reportDateFormat = New reportDateFormatRecord(rowValue.Value)
-                    For Each member As IndexClass(Of KeyValuePair(Of String, String)) In reportDateFormat.ToList.WithIndex
+                    Me.reportDateFormat = New reportDateFormatRecord(rowValue.Value)
+                    For Each member As IndexClass(Of KeyValuePair(Of String, String)) In Me.reportDateFormat.ToList.WithIndex
                         dgvCountryItems(1).Rows.Add($"{row.Index + 1}.{member.Index + 1}", rowValue.Key, member.Value.Key, member.Value.Value)
                     Next
 
@@ -189,14 +140,14 @@ Public Class CountrySettingsRecord
                     Me.smsSendingAllowed = rowValue.Value
                     dgvCountryItems(2).Rows.Add(itemIndex, "", rowValue.Key, rowValue.Value)
                 Case NameOf(postal)
-                    postal = New postalRecord(rowValue.Value)
-                    For Each member As IndexClass(Of KeyValuePair(Of String, String)) In postal.ToList.WithIndex
+                    Me.postal = New postalRecord(rowValue.Value)
+                    For Each member As IndexClass(Of KeyValuePair(Of String, String)) In Me.postal.ToList.WithIndex
                         dgvCountryItems(2).Rows.Add($"{row.Index + 1}.{member.Index + 1}", rowValue.Key, member.Value.Key, member.Value.Value)
                     Next
 
                 Case NameOf(numberFormat)
-                    numberFormat = New numberFormatRecord(rowValue.Value)
-                    For Each member As IndexClass(Of KeyValuePair(Of String, String)) In numberFormat.ToList.WithIndex
+                    Me.numberFormat = New numberFormatRecord(rowValue.Value)
+                    For Each member As IndexClass(Of KeyValuePair(Of String, String)) In Me.numberFormat.ToList.WithIndex
                         dgvCountryItems(2).Rows.Add(itemIndex, rowValue.Key, member.Value.Key, member.Value.Value)
                     Next
                 Case Else
@@ -207,9 +158,57 @@ Public Class CountrySettingsRecord
         _hasValue = True
     End Sub
 
+    Public Property bgUnits As String
+    Public Property blePereodicDataEndpoint As String
+    Public Property carbDefaultUnit As String
+    Public Property carbExchangeRatioDefault As String
+    Public Property carbohydrateUnitsDefault As String
+    Public Property cpMobileAppAvailable As String
+    Public Property defaultCountryName As String
+    Public Property defaultDevice As String
+    Public Property defaultLanguage As String
+    Public Property dialCode As String
+    Public Property firstDayOfWeek As String
+    Public Property glucoseUnitsDefault As String
+    Public Property legalAge As String
+    Public Property mediaHost As String
+    Public Property mfa As mfaRecord
+    Public Property name As String
+    Public Property numberFormat As numberFormatRecord
+
+    ' "{""ddms.termsOfUse"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/terms_of_use.html"",""ddms.privacyStatementPdf"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/privacy_policy.pdf"",""ddms.termsOfUsePdf"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/terms_of_use.pdf"",""ddms.privacyStatement"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/privacy_policy.pdf"",""ddms.faqPdf"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/faq.pdf"",""ddms.privacyPractices"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/notices.pdf""}"
+    Public Property pathDocs As pathDocsRecord
+
+    Public Property postal As postalRecord
+
+    Public Property recordSeparator As String
+    Public Property region As String
+
+    ' "{""longTimePattern12"":""hh:mm:ss tt"",""longTimePattern24"":""HH:mm:ss"",""shortTimePattern12"":""h:mm tt"",""shortTimePattern24"":""HH:mm"",""shortDatePattern"":""MM-dd-yyyy"",""dateSeparator"":""-"",""timeSeparator"":"":""}"
+    Public Property reportDateFormat As reportDateFormatRecord
+
+    Public Property shortDateFormat As String
+    Public Property shortTimeFormat As String
+    Public Property smsSendingAllowed As String
+    Public Property techDays As String
+    Public Property techHours As String
+    Public Property techSupport As String
+    Public Property timeFormat As String
+    Public Property timeUnitsDefault As String
+    Public Property uploaderAllowed As String
+
+#Region "Lists"
+
+    Private _hasValue As Boolean
+    Public languages As New List(Of LanguageRecord)                 ' "[{""name"":""English"",""code"":""EN""}]"
+    Public supportedReports As New List(Of supportedReportRecord)   ' "[{""report"":""ADHERENCE"",""onlyFor"":[],""notFor"":[]},{""report"":""ASSESSMENT_AND_PROGRESS"",""onlyFor"":[],""notFor"":[]},{""report"":""BOLUS_WIZARD_FOOD_BOLUS"",""onlyFor"":[],""notFor"":[]},{""report"":""DAILY_DETAILS"",""onlyFor"":[],""notFor"":[]},{""report"":""DASHBOARD"",""onlyFor"":[],""notFor"":[]},{""report"":""DEVICE_SETTINGS"",""onlyFor"":[],""notFor"":[]},{""report"":""EPISODE_SUMMARY"",""onlyFor"":[],""notFor"":[]},{""report"":""LOGBOOK"",""onlyFor"":[],""notFor"":[]},{""report"":""OVERVIEW"",""onlyFor"":[],""notFor"":[]},{""report"":""WEEKLY_REVIEW"",""onlyFor"":[],""notFor"":[]}]"
+
+#End Region
+
     Public Sub Clear()
         _hasValue = False
     End Sub
+
     Public Function HasValue() As Boolean
         Return _hasValue
     End Function

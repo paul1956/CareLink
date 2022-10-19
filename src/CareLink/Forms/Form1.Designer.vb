@@ -1303,18 +1303,20 @@ Partial Class Form1
         Me.TableLayoutPanelLastSG.ColumnCount = 1
         Me.TableLayoutPanelLastSG.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelLastSG.Controls.Add(Me.LastSGLabel, 0, 0)
-        Me.TableLayoutPanelLastSG.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TableLayoutPanelLastSG.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelLastSG.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelLastSG.Name = "TableLayoutPanelLastSG"
         Me.TableLayoutPanelLastSG.RowCount = 2
-        Me.TableLayoutPanelLastSG.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanelLastSG.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
         Me.TableLayoutPanelLastSG.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelLastSG.Size = New System.Drawing.Size(1370, 628)
         Me.TableLayoutPanelLastSG.TabIndex = 1
         '
         'LastSGLabel
         '
-        Me.LastSGLabel.Location = New System.Drawing.Point(6, 3)
+        Me.LastSGLabel.AutoSize = True
+        Me.LastSGLabel.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.LastSGLabel.Location = New System.Drawing.Point(0, 0)
+        Me.LastSGLabel.Margin = New System.Windows.Forms.Padding(3)
         Me.LastSGLabel.Name = "LastSGLabel"
         Me.LastSGLabel.Size = New System.Drawing.Size(1358, 30)
         Me.LastSGLabel.TabIndex = 0
@@ -1342,21 +1344,21 @@ Partial Class Form1
         Me.TableLayoutPanelLastAlarm.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelLastAlarm.Controls.Add(Me.LastAlarmLabel, 0, 0)
         Me.TableLayoutPanelLastAlarm.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.TableLayoutPanelLastAlarm.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TableLayoutPanelLastAlarm.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelLastAlarm.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelLastAlarm.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanelLastAlarm.Name = "TableLayoutPanelLastAlarm"
         Me.TableLayoutPanelLastAlarm.RowCount = 2
-        Me.TableLayoutPanelLastAlarm.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanelLastAlarm.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
         Me.TableLayoutPanelLastAlarm.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelLastAlarm.Size = New System.Drawing.Size(1370, 621)
         Me.TableLayoutPanelLastAlarm.TabIndex = 2
         '
         'LastAlarmLabel
         '
         Me.LastAlarmLabel.AutoSize = True
         Me.LastAlarmLabel.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LastAlarmLabel.Location = New System.Drawing.Point(6, 3)
+        Me.LastAlarmLabel.Location = New System.Drawing.Point(0, 0)
+        Me.LastAlarmLabel.Margin = New System.Windows.Forms.Padding(3)
         Me.LastAlarmLabel.Name = "LastAlarmLabel"
         Me.LastAlarmLabel.Size = New System.Drawing.Size(1358, 30)
         Me.LastAlarmLabel.TabIndex = 0
@@ -1382,12 +1384,12 @@ Partial Class Form1
         Me.TableLayoutPanelActiveInsulin.ColumnCount = 1
         Me.TableLayoutPanelActiveInsulin.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelActiveInsulin.Controls.Add(Me.ActiveInsulinTabLabel, 0, 0)
-        Me.TableLayoutPanelActiveInsulin.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TableLayoutPanelActiveInsulin.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelActiveInsulin.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelActiveInsulin.Name = "TableLayoutPanelActiveInsulin"
         Me.TableLayoutPanelActiveInsulin.RowCount = 2
-        Me.TableLayoutPanelActiveInsulin.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelActiveInsulin.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelActiveInsulin.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
+        Me.TableLayoutPanelActiveInsulin.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelActiveInsulin.Size = New System.Drawing.Size(1370, 39)
         Me.TableLayoutPanelActiveInsulin.TabIndex = 0
         '
@@ -1395,7 +1397,8 @@ Partial Class Form1
         '
         Me.ActiveInsulinTabLabel.AutoSize = True
         Me.ActiveInsulinTabLabel.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ActiveInsulinTabLabel.Location = New System.Drawing.Point(6, 3)
+        Me.ActiveInsulinTabLabel.Location = New System.Drawing.Point(0, 0)
+        Me.ActiveInsulinTabLabel.Margin = New System.Windows.Forms.Padding(3)
         Me.ActiveInsulinTabLabel.Name = "ActiveInsulinTabLabel"
         Me.ActiveInsulinTabLabel.Size = New System.Drawing.Size(1358, 30)
         Me.ActiveInsulinTabLabel.Text = "Active Insulin"
@@ -1424,7 +1427,7 @@ Partial Class Form1
         Me.TableLayoutPanelSgs.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelSgs.Name = "TableLayoutPanelSgs"
         Me.TableLayoutPanelSgs.RowCount = 2
-        Me.TableLayoutPanelSgs.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanelSgs.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
         Me.TableLayoutPanelSgs.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelSgs.Size = New System.Drawing.Size(1370, 621)
         Me.TableLayoutPanelSgs.TabIndex = 2
@@ -1433,7 +1436,8 @@ Partial Class Form1
         '
         Me.LabelSgs.AutoSize = True
         Me.LabelSgs.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelSgs.Location = New System.Drawing.Point(6, 3)
+        Me.LabelSgs.Location = New System.Drawing.Point(0, 0)
+        Me.LabelSgs.Margin = New System.Windows.Forms.Padding(3)
         Me.LabelSgs.Name = "LabelSgs"
         Me.LabelSgs.Size = New System.Drawing.Size(1358, 30)
         Me.LabelSgs.Text = "Sgs"
@@ -1489,8 +1493,8 @@ Partial Class Form1
         Me.TableLayoutPanelLimits.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelLimits.Name = "TableLayoutPanelLimits"
         Me.TableLayoutPanelLimits.RowCount = 2
-        Me.TableLayoutPanelLimits.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelLimits.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelLimits.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
+        Me.TableLayoutPanelLimits.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelLimits.Size = New System.Drawing.Size(1370, 633)
         Me.TableLayoutPanelLimits.TabIndex = 0
         '
@@ -1498,7 +1502,8 @@ Partial Class Form1
         '
         Me.LabelLimits.AutoSize = True
         Me.LabelLimits.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelLimits.Location = New System.Drawing.Point(6, 3)
+        Me.LabelLimits.Location = New System.Drawing.Point(0, 0)
+        Me.LabelLimits.Margin = New System.Windows.Forms.Padding(3)
         Me.LabelLimits.Name = "LabelLimits"
         Me.LabelLimits.Size = New System.Drawing.Size(1358, 30)
         Me.LabelLimits.TabIndex = 0
@@ -1529,8 +1534,8 @@ Partial Class Form1
         Me.TableLayoutPanelNotificationHistory.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelNotificationHistory.Name = "TableLayoutPanelNotificationHistory"
         Me.TableLayoutPanelNotificationHistory.RowCount = 2
-        Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
+        Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
         Me.TableLayoutPanelNotificationHistory.Size = New System.Drawing.Size(1370, 633)
         Me.TableLayoutPanelNotificationHistory.TabIndex = 0
         '
@@ -1538,7 +1543,8 @@ Partial Class Form1
         '
         Me.LabelNotificationHistory.AutoSize = True
         Me.LabelNotificationHistory.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelNotificationHistory.Location = New System.Drawing.Point(6, 3)
+        Me.LabelNotificationHistory.Location = New System.Drawing.Point(0, 0)
+        Me.LabelNotificationHistory.Margin = New System.Windows.Forms.Padding(3)
         Me.LabelNotificationHistory.Name = "LabelNotificationHistory"
         Me.LabelNotificationHistory.Size = New System.Drawing.Size(1358, 30)
         Me.LabelNotificationHistory.TabIndex = 0
@@ -1564,20 +1570,20 @@ Partial Class Form1
         Me.TableLayoutPanelBasal.ColumnCount = 1
         Me.TableLayoutPanelBasal.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelBasal.Controls.Add(Me.LabelBasal, 0, 0)
-        Me.TableLayoutPanelBasal.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TableLayoutPanelBasal.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelBasal.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelBasal.Name = "TableLayoutPanelBasal"
         Me.TableLayoutPanelBasal.RowCount = 2
-        Me.TableLayoutPanelBasal.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelBasal.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelBasal.Size = New System.Drawing.Size(1370, 611)
+        Me.TableLayoutPanelBasal.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
+        Me.TableLayoutPanelBasal.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelBasal.TabIndex = 0
         '
         'LabelBasal
         '
         Me.LabelBasal.AutoSize = True
         Me.LabelBasal.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelBasal.Location = New System.Drawing.Point(6, 3)
+        Me.LabelBasal.Location = New System.Drawing.Point(0, 0)
+        Me.LabelLimits.Margin = New System.Windows.Forms.Padding(3)
         Me.LabelBasal.Name = "LabelBasal"
         Me.LabelBasal.Size = New System.Drawing.Size(1358, 30)
         Me.LabelBasal.TabIndex = 0
@@ -1603,20 +1609,20 @@ Partial Class Form1
         Me.TableLayoutPanelTherapyAlgorthm.ColumnCount = 1
         Me.TableLayoutPanelTherapyAlgorthm.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelTherapyAlgorthm.Controls.Add(Me.LabelTherapyAlgorthm, 0, 0)
-        Me.TableLayoutPanelTherapyAlgorthm.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TableLayoutPanelTherapyAlgorthm.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelTherapyAlgorthm.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelTherapyAlgorthm.Name = "TableLayoutPanelTherapyAlgorthm"
         Me.TableLayoutPanelTherapyAlgorthm.RowCount = 2
-        Me.TableLayoutPanelTherapyAlgorthm.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanelTherapyAlgorthm.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
         Me.TableLayoutPanelTherapyAlgorthm.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelTherapyAlgorthm.Size = New System.Drawing.Size(1370, 300)
         Me.TableLayoutPanelTherapyAlgorthm.TabIndex = 0
         '
         'LabelTherapyAlgorthm
         '
         Me.LabelTherapyAlgorthm.AutoSize = True
         Me.LabelTherapyAlgorthm.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelTherapyAlgorthm.Location = New System.Drawing.Point(6, 3)
+        Me.LabelTherapyAlgorthm.Location = New System.Drawing.Point(0, 0)
+        Me.LabelTherapyAlgorthm.Margin = New System.Windows.Forms.Padding(3)
         Me.LabelTherapyAlgorthm.Name = "LabelTherapyAlgorthm"
         Me.LabelTherapyAlgorthm.Size = New System.Drawing.Size(1358, 30)
         Me.LabelTherapyAlgorthm.TabIndex = 0
@@ -1647,16 +1653,16 @@ Partial Class Form1
         Me.TableLayoutPanelBannerState.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanelBannerState.Name = "TableLayoutPanelBannerState"
         Me.TableLayoutPanelBannerState.RowCount = 2
-        Me.TableLayoutPanelBannerState.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanelBannerState.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
         Me.TableLayoutPanelBannerState.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelBannerState.Size = New System.Drawing.Size(1370, 109)
         Me.TableLayoutPanelBannerState.TabIndex = 0
         '
         'LabelBannerState
         '
         Me.LabelBannerState.AutoSize = True
         Me.LabelBannerState.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelBannerState.Location = New System.Drawing.Point(6, 3)
+        Me.LabelBannerState.Location = New System.Drawing.Point(0, 0)
+        Me.LabelBannerState.Margin = New System.Windows.Forms.Padding(3)
         Me.LabelBannerState.Name = "LabelBannerState"
         Me.LabelBannerState.Size = New System.Drawing.Size(1358, 30)
         Me.LabelBannerState.TabIndex = 0
@@ -1722,15 +1728,17 @@ Partial Class Form1
         Me.TableLayoutPanelAutoBasalDelivery.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelAutoBasalDelivery.Name = "TableLayoutPanelAutoBasalDelivery"
         Me.TableLayoutPanelAutoBasalDelivery.RowCount = 2
-        Me.TableLayoutPanelAutoBasalDelivery.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelAutoBasalDelivery.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelAutoBasalDelivery.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
+        Me.TableLayoutPanelAutoBasalDelivery.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelAutoBasalDelivery.Size = New System.Drawing.Size(1370, 633)
         Me.TableLayoutPanelAutoBasalDelivery.TabIndex = 0
         '
         'LabelAutoBasalDelivery
         '
+        Me.LabelAutoBasalDelivery.AutoSize = True
         Me.LabelAutoBasalDelivery.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelAutoBasalDelivery.Location = New System.Drawing.Point(6, 3)
+        Me.LabelAutoBasalDelivery.Location = New System.Drawing.Point(0, 0)
+        Me.LabelAutoBasalDelivery.Margin = New System.Windows.Forms.Padding(3)
         Me.LabelAutoBasalDelivery.Name = "LabelAutoBasalDelivery"
         Me.LabelAutoBasalDelivery.Size = New System.Drawing.Size(1358, 30)
         Me.LabelAutoBasalDelivery.TabIndex = 1
@@ -1787,8 +1795,8 @@ Partial Class Form1
         Me.TableLayoutPanelAutoModeStatus.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelAutoModeStatus.Name = "TableLayoutPanelAutoModeStatus"
         Me.TableLayoutPanelAutoModeStatus.RowCount = 2
-        Me.TableLayoutPanelAutoModeStatus.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelAutoModeStatus.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelAutoModeStatus.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
+        Me.TableLayoutPanelAutoModeStatus.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelAutoModeStatus.Size = New System.Drawing.Size(1370, 633)
         Me.TableLayoutPanelAutoModeStatus.TabIndex = 0
         '
@@ -1796,7 +1804,8 @@ Partial Class Form1
         '
         Me.LabelAutoModeStatus.AutoSize = True
         Me.LabelAutoModeStatus.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelAutoModeStatus.Location = New System.Drawing.Point(6, 3)
+        Me.LabelAutoModeStatus.Location = New System.Drawing.Point(0, 0)
+        Me.LabelAutoModeStatus.Margin = New System.Windows.Forms.Padding(3)
         Me.LabelAutoModeStatus.Name = "LabelAutoModeStatus"
         Me.LabelAutoModeStatus.Size = New System.Drawing.Size(1358, 30)
         Me.LabelAutoModeStatus.TabIndex = 0
@@ -1823,12 +1832,12 @@ Partial Class Form1
         Me.TableLayoutPanelBgReadings.ColumnCount = 1
         Me.TableLayoutPanelBgReadings.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelBgReadings.Controls.Add(Me.LabelBgReading, 0, 0)
-        Me.TableLayoutPanelBgReadings.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TableLayoutPanelBgReadings.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelBgReadings.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelBgReadings.Name = "TableLayoutPanelBgReadings"
         Me.TableLayoutPanelBgReadings.RowCount = 2
-        Me.TableLayoutPanelBgReadings.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelBgReadings.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelBgReadings.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
+        Me.TableLayoutPanelBgReadings.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelBgReadings.Size = New System.Drawing.Size(1370, 39)
         Me.TableLayoutPanelBgReadings.TabIndex = 1
         '
@@ -1836,7 +1845,8 @@ Partial Class Form1
         '
         Me.LabelBgReading.AutoSize = True
         Me.LabelBgReading.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelBgReading.Location = New System.Drawing.Point(6, 3)
+        Me.LabelBgReading.Location = New System.Drawing.Point(0, 0)
+        Me.LabelBgReading.Margin = New System.Windows.Forms.Padding(3)
         Me.LabelBgReading.Name = "LabelBgReading"
         Me.LabelBgReading.Size = New System.Drawing.Size(1358, 30)
         Me.LabelBgReading.TabIndex = 0
@@ -1863,20 +1873,20 @@ Partial Class Form1
         Me.TableLayoutPanelCalibration.ColumnCount = 1
         Me.TableLayoutPanelCalibration.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelCalibration.Controls.Add(Me.LabelCalibration, 0, 0)
-        Me.TableLayoutPanelCalibration.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TableLayoutPanelCalibration.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelCalibration.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelCalibration.Name = "TableLayoutPanelCalibration"
         Me.TableLayoutPanelCalibration.RowCount = 2
-        Me.TableLayoutPanelCalibration.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelCalibration.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelCalibration.Size = New System.Drawing.Size(1370, 39)
+        Me.TableLayoutPanelCalibration.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
+        Me.TableLayoutPanelCalibration.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelCalibration.TabIndex = 1
         '
         'LabelCalibration
         '
         Me.LabelCalibration.AutoSize = True
         Me.LabelCalibration.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelCalibration.Location = New System.Drawing.Point(6, 3)
+        Me.LabelCalibration.Location = New System.Drawing.Point(0, 0)
+        Me.LabelCalibration.Margin = New System.Windows.Forms.Padding(3)
         Me.LabelCalibration.Name = "LabelCalibration"
         Me.LabelCalibration.Size = New System.Drawing.Size(1358, 30)
         Me.LabelCalibration.TabIndex = 0
@@ -1908,8 +1918,8 @@ Partial Class Form1
         Me.TableLayoutPanelInsulin.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelInsulin.Name = "TableLayoutPanelInsulin"
         Me.TableLayoutPanelInsulin.RowCount = 2
-        Me.TableLayoutPanelInsulin.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelInsulin.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelInsulin.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
+        Me.TableLayoutPanelInsulin.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelInsulin.Size = New System.Drawing.Size(1370, 633)
         Me.TableLayoutPanelInsulin.TabIndex = 1
         '
@@ -1917,7 +1927,8 @@ Partial Class Form1
         '
         Me.LabelInsulin.AutoSize = True
         Me.LabelInsulin.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelInsulin.Location = New System.Drawing.Point(6, 3)
+        Me.LabelInsulin.Location = New System.Drawing.Point(0, 0)
+        Me.LabelInsulin.Margin = New System.Windows.Forms.Padding(3)
         Me.LabelInsulin.Name = "LabelInsulin"
         Me.LabelInsulin.Size = New System.Drawing.Size(1358, 30)
         Me.LabelInsulin.TabIndex = 1
@@ -1973,8 +1984,8 @@ Partial Class Form1
         Me.TableLayoutPanelLowGlusoseSuspended.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelLowGlusoseSuspended.Name = "TableLayoutPanelLowGlusoseSuspended"
         Me.TableLayoutPanelLowGlusoseSuspended.RowCount = 2
-        Me.TableLayoutPanelLowGlusoseSuspended.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelLowGlusoseSuspended.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelLowGlusoseSuspended.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
+        Me.TableLayoutPanelLowGlusoseSuspended.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelLowGlusoseSuspended.Size = New System.Drawing.Size(1370, 633)
         Me.TableLayoutPanelLowGlusoseSuspended.TabIndex = 1
         '
@@ -1982,7 +1993,8 @@ Partial Class Form1
         '
         Me.LabelLowGlusoseSuspended.AutoSize = True
         Me.LabelLowGlusoseSuspended.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelLowGlusoseSuspended.Location = New System.Drawing.Point(6, 3)
+        Me.LabelLowGlusoseSuspended.Location = New System.Drawing.Point(0, 0)
+        Me.LabelLowGlusoseSuspended.Margin = New System.Windows.Forms.Padding(3)
         Me.LabelLowGlusoseSuspended.Name = "LabelLowGlusoseSuspended"
         Me.LabelLowGlusoseSuspended.Size = New System.Drawing.Size(1358, 30)
         Me.LabelLowGlusoseSuspended.TabIndex = 0
@@ -2013,8 +2025,8 @@ Partial Class Form1
         Me.TableLayoutPanelMeal.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelMeal.Name = "TableLayoutPanelMeal"
         Me.TableLayoutPanelMeal.RowCount = 2
-        Me.TableLayoutPanelMeal.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelMeal.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelMeal.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
+        Me.TableLayoutPanelMeal.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelMeal.Size = New System.Drawing.Size(1370, 633)
         Me.TableLayoutPanelMeal.TabIndex = 1
         '
@@ -2022,7 +2034,8 @@ Partial Class Form1
         '
         Me.LabelMeal.AutoSize = True
         Me.LabelMeal.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelMeal.Location = New System.Drawing.Point(6, 3)
+        Me.LabelMeal.Location = New System.Drawing.Point(0, 0)
+        Me.LabelMeal.Margin = New System.Windows.Forms.Padding(3)
         Me.LabelMeal.Name = "LabelMeal"
         Me.LabelMeal.Size = New System.Drawing.Size(1358, 30)
         Me.LabelMeal.TabIndex = 0
@@ -2050,19 +2063,19 @@ Partial Class Form1
         Me.TableLayoutPanelTimeChange.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelTimeChange.Controls.Add(Me.LabelTimeChange, 0, 0)
         Me.TableLayoutPanelTimeChange.Dock = System.Windows.Forms.DockStyle.Top
-        Me.TableLayoutPanelTimeChange.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelTimeChange.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanelTimeChange.Name = "TableLayoutPanelTimeChange"
         Me.TableLayoutPanelTimeChange.RowCount = 2
-        Me.TableLayoutPanelTimeChange.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanelTimeChange.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.TableLayoutPanelTimeChange.Size = New System.Drawing.Size(1370, 39)
+        Me.TableLayoutPanelTimeChange.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
+        Me.TableLayoutPanelTimeChange.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelTimeChange.TabIndex = 1
         '
         'LabelTimeChange
         '
         Me.LabelTimeChange.AutoSize = True
         Me.LabelTimeChange.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelTimeChange.Location = New System.Drawing.Point(6, 3)
+        Me.LabelTimeChange.Location = New System.Drawing.Point(0, 0)
+        Me.LabelTimeChange.Margin = New System.Windows.Forms.Padding(3)
         Me.LabelTimeChange.Name = "LabelTimeChange"
         Me.LabelTimeChange.Size = New System.Drawing.Size(1358, 30)
         Me.LabelTimeChange.TabIndex = 0

@@ -31,9 +31,17 @@ Public Class SgRecord
                 Case NameOf(sg)
                     Me.sg = kvp.Value.ParseSingle
                 Case NameOf(Me.datetime)
-                    ' Handled below
+                    Dim value As String = ""
+                    If dic.TryGetValue(NameOf(Me.datetime), value) Then
+                        Me.datetime = allSgs.SafeGetSgDateTime(index)
+                        lastValidTime = Me.datetime + s_fiveMinuteSpan
+                    Else
+                        Me.datetime = lastValidTime
+                        lastValidTime += s_fiveMinuteSpan
+                    End If
+                    Me.datetimeAsString = value
                 Case NameOf(timeChange)
-                    Me.timeChange = Boolean.Parse(kvp.Value).ToString()
+                    Me.timeChange = Boolean.Parse(kvp.Value)
                 Case NameOf(sensorState)
                     Me.sensorState = kvp.Value
                 Case NameOf(kind)
@@ -46,15 +54,6 @@ Public Class SgRecord
                     Stop
             End Select
         Next
-        Dim value As String = ""
-        If dic.TryGetValue(NameOf(Me.datetime), value) Then
-            Me.datetime = allSgs.SafeGetSgDateTime(index)
-            lastValidTime = Me.datetime + s_fiveMinuteSpan
-        Else
-            Me.datetime = lastValidTime
-            lastValidTime += s_fiveMinuteSpan
-        End If
-        Me.datetimeAsString = value
         Return lastValidTime
     End Function
 
@@ -72,7 +71,7 @@ Public Class SgRecord
     <Column(Order:=2)>
     Public Property [datetime] As Date
 
-    <DisplayName(NameOf(datetimeAsString))>
+    <DisplayName("dateTime As String")>
     <Column(Order:=3)>
     Public Property datetimeAsString As String
 
@@ -84,11 +83,11 @@ Public Class SgRecord
         End Get
     End Property
 
-    <DisplayName(NameOf(timeChange))>
+    <DisplayName("Time Change")>
     <Column(Order:=5)>
-    Public Property timeChange As String
+    Public Property timeChange As Boolean
 
-    <DisplayName(NameOf(sensorState))>
+    <DisplayName("Sensor State")>
     <Column(Order:=6)>
     Public Property sensorState As String
 

@@ -8,8 +8,6 @@ Imports System.ComponentModel.DataAnnotations.Schema
 Public Class InsulinRecord
     Private _dateTime As Date
 
-#If True Then ' Prevent reordering
-
     <DisplayName("Record Number")>
     <Column(Order:=0)>
     Public Property RecordNumber As Integer
@@ -45,7 +43,7 @@ Public Class InsulinRecord
     <Column(Order:=6)>
     Public Property dateTimeAsString As String
 
-    <DisplayName("OAdatetime")>
+    <DisplayName("OA Date Time")>
     <Column(Order:=7)>
     Public ReadOnly Property OAdateTime As OADate
         Get
@@ -97,5 +95,4 @@ Public Class InsulinRecord
     <Column(Order:=18)>
     Public Property bolusType As String
 
-#End If  ' Prevent reordering
 End Class

@@ -23,7 +23,7 @@ Public Class MealRecord
     <Column(Order:=9)>
     Public Property amount As Integer
 
-    <DisplayName(NameOf(dateTimeAsString))>
+    <DisplayName("dateTime As String")>
     <Column(Order:=6)>
     Public Property dateTimeAsString As String
 

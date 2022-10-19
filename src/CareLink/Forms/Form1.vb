@@ -17,11 +17,6 @@ Public Class Form1
 
     Private ReadOnly _bgMiniDisplay As New BGMiniWindow
     Private ReadOnly _calibrationToolTip As New ToolTip()
-    Private ReadOnly _markersAutoBasalDelivery As New List(Of Dictionary(Of String, String))
-    Private ReadOnly _markersAutoModeStatus As New List(Of Dictionary(Of String, String))
-    Private ReadOnly _markersBgReading As New List(Of Dictionary(Of String, String))
-    Private ReadOnly _markersCalibration As New List(Of Dictionary(Of String, String))
-    Private ReadOnly _markersInsulin As New List(Of Dictionary(Of String, String))
     Private ReadOnly _markersLowGlusoseSuspended As New List(Of Dictionary(Of String, String))
     Private ReadOnly _markersMeal As New List(Of Dictionary(Of String, String))
     Private ReadOnly _markersMealRecords As New List(Of MealRecord)
@@ -944,7 +939,7 @@ Public Class Form1
     Private Sub DataGridViewSummary_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewSummary.ColumnAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
-        e.DgvColumnAdded(SummaryRecordHelpers.GetCellStyle(e.Column.Name),
+        e.DgvColumnAdded(SummaryHelpers.GetCellStyle(e.Column.Name),
                          False,
                          True,
                          caption)
@@ -1242,7 +1237,6 @@ Public Class Form1
         Me.TreatmentMarkersChart.ChartAreas.Add(treatmentMarkersChartArea)
         Me.TreatmentMarkersChartLegend = CreateChartLegend(NameOf(TreatmentMarkersChartLegend))
         Me.TreatmentMarkersChart.Legends.Add(Me.TreatmentMarkersChartLegend)
-
         Me.TreatmentMarkerBasalSeries = CreateBasalSeries(AxisType.Primary)
         Me.TreatmentMarkerBGSeries = CreateBgSeries(Me.TreatmentMarkersChartLegend.Name)
         Me.TreatmentMarkerMarkersSeries = CreateMarkerSeries(AxisType.Primary)
@@ -1280,9 +1274,6 @@ Public Class Form1
 #Region "Update Data and Tables"
 
     Private Sub CollectMarkers(row As String)
-        Dim recordNumberAutoBasalDelivery As Integer = 0
-        Dim recordNumberInsulin As Integer = 0
-        Dim recordNumberMealRecord As Integer = 0
 
         Dim basalDictionary As New Dictionary(Of OADate, Single)
         MaxBasalPerHour = 0
@@ -1290,27 +1281,24 @@ Public Class Form1
         For Each newMarker As Dictionary(Of String, String) In LoadList(row)
             Select Case newMarker("type")
                 Case "AUTO_BASAL_DELIVERY"
-                    _markersAutoBasalDelivery.Add(newMarker)
-                    Dim item As AutoBasalDeliveryRecord = DictionaryToClass(Of AutoBasalDeliveryRecord)(newMarker)
-                    recordNumberAutoBasalDelivery += 1
-                    item.RecordNumber = recordNumberAutoBasalDelivery
+                    s_markers.Add(newMarker)
+                    Dim item As AutoBasalDeliveryRecord = DictionaryToClass(Of AutoBasalDeliveryRecord)(newMarker, s_listOfAutoBasalDeliveryMarkers.Count + 1)
                     s_listOfAutoBasalDeliveryMarkers.Add(item)
                     basalDictionary.Add(item.OAdateTime, item.bolusAmount)
                 Case "AUTO_MODE_STATUS"
-                    _markersAutoModeStatus.Add(newMarker)
+                    s_listOfAutoModeStatusMarkers.Add(DictionaryToClass(Of AutoModeStatusRecord)(newMarker, s_listOfAutoModeStatusMarkers.Count + 1))
                 Case "BG_READING"
-                    _markersBgReading.Add(newMarker.ScaleMarker)
+                    s_listOfBgReadingMarkers.Add(DictionaryToClass(Of BGReadingRecord)(newMarker.ScaleMarker(), s_listOfBgReadingMarkers.Count + 1))
                 Case "CALIBRATION"
-                    _markersCalibration.Add(newMarker.ScaleMarker)
+                    s_markers.Add(newMarker.ScaleMarker)
+                    s_listOfCalibrationMarkers.Add(DictionaryToClass(Of CalibrationRecord)(newMarker.ScaleMarker(), s_listOfCalibrationMarkers.Count + 1))
                 Case "INSULIN"
-                    _markersInsulin.Add(newMarker)
-                    recordNumberInsulin += 1
-                    Dim item1 As InsulinRecord = DictionaryToClass(Of InsulinRecord)(newMarker)
-                    item1.RecordNumber = recordNumberInsulin
-                    s_listOfInsulinMarkers.Add(item1)
+                    s_markers.Add(newMarker)
+                    Dim lastInsulinRecord As InsulinRecord = DictionaryToClass(Of InsulinRecord)(newMarker, s_listOfInsulinMarkers.Count + 1)
+                    s_listOfInsulinMarkers.Add(lastInsulinRecord)
                     Select Case newMarker(NameOf(InsulinRecord.activationType))
                         Case "AUTOCORRECTION"
-                            basalDictionary.Add(item1.OAdateTime, item1.deliveredFastAmount)
+                            basalDictionary.Add(lastInsulinRecord.OAdateTime, lastInsulinRecord.deliveredFastAmount)
                         Case "UNDETERMINED",
                              "RECOMMENDED"
                             '
@@ -1320,20 +1308,17 @@ Public Class Form1
                 Case "LOW_GLUCOSE_SUSPENDED"
                     _markersLowGlusoseSuspended.Add(newMarker)
                 Case "MEAL"
-                    Dim item As MealRecord = DictionaryToClass(Of MealRecord)(newMarker)
-                    recordNumberMealRecord += 1
-                    item.RecordNumber = recordNumberMealRecord
-                    _markersMealRecords.Add(item)
+                    _markersMealRecords.Add(DictionaryToClass(Of MealRecord)(newMarker, _markersMealRecords.Count + 1))
                     _markersMeal.Add(newMarker)
                 Case "TIME_CHANGE"
                     _markersTimeChange.Add(newMarker)
-                    s_markersTimeChange.Add(New TimeChangeRecord(newMarker))
+                    s_listOfTimeChangeMarkers.Add(New TimeChangeRecord(newMarker))
                 Case Else
                     Stop
                     Throw UnreachableException()
             End Select
         Next
-        Dim endOADate As OADate = basalDictionary.Last.Key
+        Dim endOADate As OADate = If(basalDictionary.Count = 0, New OADate(Now), basalDictionary.Last.Key)
         Dim i As Integer = 0
         While i < basalDictionary.Count AndAlso basalDictionary.Keys(i) <= endOADate
             Dim sum As Single = 0
@@ -1348,11 +1333,6 @@ Public Class Form1
             i += 1
         End While
         Me.MaxBasalPerHourLabel.Text = $"Max Basal/Hr ~ {MaxBasalPerHour.RoundSingle(3)} U"
-        s_markers.AddRange(_markersAutoBasalDelivery)
-        s_markers.AddRange(_markersAutoModeStatus)
-        s_markers.AddRange(_markersBgReading)
-        s_markers.AddRange(_markersCalibration)
-        s_markers.AddRange(_markersInsulin)
         s_markers.AddRange(_markersLowGlusoseSuspended)
         s_markers.AddRange(_markersMeal)
         s_markers.AddRange(_markersTimeChange)
@@ -1366,25 +1346,22 @@ Public Class Form1
         Me.Cursor = Cursors.WaitCursor
         Application.DoEvents()
 
-        _markersAutoBasalDelivery.Clear()
-        _markersAutoModeStatus.Clear()
-        _markersBgReading.Clear()
-        _markersCalibration.Clear()
-        _markersInsulin.Clear()
         _markersLowGlusoseSuspended.Clear()
         _markersMeal.Clear()
         _markersTimeChange.Clear()
-        s_markersTimeChange.Clear()
+        s_homeTabMarkerInsulinDictionary.Clear()
+        s_homeTabMarkerMealDictionary.Clear()
+        s_limits.Clear()
         s_listOfAutoBasalDeliveryMarkers.Clear()
+        s_listOfAutoModeStatusMarkers.Clear()
+        s_listOfBgReadingMarkers.Clear()
         s_listOfInsulinMarkers.Clear()
         s_listOfSGs.Clear()
         s_listOfSummaryRecords.Clear()
-        s_limits.Clear()
+        s_listOfTimeChangeMarkers.Clear()
+        s_markers.Clear()
         s_treatmentMarkerInsulinDictionary.Clear()
         s_treatmentMarkerMealDictionary.Clear()
-        s_homeTabMarkerInsulinDictionary.Clear()
-        s_homeTabMarkerMealDictionary.Clear()
-        s_markers.Clear()
 
         Dim markerRowString As String = ""
         If Me.RecentData.TryGetValue(ItemIndexs.markers.ToString, markerRowString) Then
@@ -1411,17 +1388,29 @@ Public Class Form1
                 Continue For
             End If
 
-            If rowIndex = ItemIndexs.limits OrElse
-                rowIndex = ItemIndexs.markers OrElse
-                rowIndex = ItemIndexs.pumpBannerState Then
+            If {ItemIndexs.lastSG, ItemIndexs.lastAlarm, ItemIndexs.activeInsulin, ItemIndexs.limits,
+                ItemIndexs.markers, ItemIndexs.pumpBannerState}.Contains(rowIndex) Then
 
                 Select Case rowIndex
+                    Case ItemIndexs.lastSG
+                        layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelLastSG, ItemIndexs.lastSG)
+                        s_lastSG = New SgRecord(Loads(row.Value))
+                        DisplayDataTableInDGV(layoutPanel1, ClassToDatatable({s_lastSG}.ToArray), NameOf(SgRecord), AddressOf SgRecordHelpers.AttachHandlers, rowIndex)
+                    Case ItemIndexs.lastAlarm
+                        layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelLastAlarm, ItemIndexs.lastAlarm)
+                        GetLastAlarmSummaryRecords(Loads(row.Value))
+                        DisplayDataTableInDGV(layoutPanel1, ClassToDatatable(s_listOfLastAlarmSummaryRecords.ToArray), NameOf(LastAlarmSummary), AddressOf LastAlarmSummaryHelpers.AttachHandlers, ItemIndexs.lastAlarm)
+                    Case ItemIndexs.activeInsulin
+                        layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelActiveInsulin, ItemIndexs.activeInsulin)
+                        s_activeInsulin = DictionaryToClass(Of ActiveInsulinRecord)(Loads(row.Value), 0)
+                        DisplayDataTableInDGV(layoutPanel1, ClassToDatatable({s_activeInsulin}.ToArray), NameOf(ActiveInsulinRecord), AddressOf ActiveInsulinRecordHelpers.AttachHandlers, ItemIndexs.lastAlarm)
+
                     Case ItemIndexs.limits
                         Dim dataTable1 As DataTable = ClassToDatatable(Of LimitsRecord)()
-
-                        For Each innerdic As Dictionary(Of String, String) In LoadList(row.Value)
+                        Dim limitRecordList As New List(Of LimitsRecord)
+                        For Each e As IndexClass(Of Dictionary(Of String, String)) In LoadList(row.Value).WithIndex
                             Dim newLimit As New Dictionary(Of String, String)
-                            For Each kvp As KeyValuePair(Of String, String) In innerdic
+                            For Each kvp As KeyValuePair(Of String, String) In e.Value
                                 Select Case kvp.Key
                                     Case "lowLimit", "highLimit"
                                         newLimit.Add(kvp.Key, kvp.scaleValue(1))
@@ -1430,17 +1419,18 @@ Public Class Form1
                                 End Select
                             Next
                             s_limits.Add(newLimit)
+                            limitRecordList.Add(DictionaryToClass(Of LimitsRecord)(e.Value, limitRecordList.Count + 1))
                         Next
-                        ProcessInnerListDictionary(Me.TableLayoutPanelLimits, s_limits, rowIndex, _formScale.Height <> 1)
+                        DisplayDataTableInDGV(Me.TableLayoutPanelLimits, ClassToDatatable(limitRecordList.ToArray), NameOf(LimitsRecord), AddressOf LimitsRecordHelpers.AttachHandlers, rowIndex)
                     Case ItemIndexs.markers
                         DisplayDataTableInDGV(Me.TableLayoutPanelAutoBasalDelivery, Me.DataGridViewAutoBasalDelivery, ClassToDatatable(s_listOfAutoBasalDeliveryMarkers.ToArray), rowIndex)
+                        DisplayDataTableInDGV(Me.TableLayoutPanelAutoModeStatus, ClassToDatatable(s_listOfAutoModeStatusMarkers.ToArray), NameOf(AutoModeStatusRecord), AddressOf AutoModeStatusRecordHelpers.AttachHandlers, rowIndex)
+                        DisplayDataTableInDGV(Me.TableLayoutPanelBgReadings, ClassToDatatable(s_listOfBgReadingMarkers.ToArray), NameOf(BGReadingRecord), AddressOf BGReadingRecordHelpers.AttachHandlers, rowIndex)
                         DisplayDataTableInDGV(Me.TableLayoutPanelInsulin, Me.DataGridViewInsulin, ClassToDatatable(s_listOfInsulinMarkers.ToArray), rowIndex)
-                        ProcessInnerListDictionary(Me.TableLayoutPanelAutoModeStatus, _markersAutoModeStatus, rowIndex, _formScale.Height <> 1)
-                        ProcessInnerListDictionary(Me.TableLayoutPanelBgReadings, _markersBgReading, rowIndex, _formScale.Height <> 1)
-                        ProcessInnerListDictionary(Me.TableLayoutPanelCalibration, _markersCalibration, rowIndex, _formScale.Height <> 1)
+                        DisplayDataTableInDGV(Me.TableLayoutPanelMeal, ClassToDatatable(_markersMealRecords.ToArray), NameOf(MealRecord), AddressOf MealRecordHelpers.AttachHandlers, rowIndex)
+                        DisplayDataTableInDGV(Me.TableLayoutPanelCalibration, ClassToDatatable(s_listOfCalibrationMarkers.ToArray), NameOf(CalibrationRecord), AddressOf CalibrationRecordHelpers.AttachHandlers, rowIndex)
                         ProcessInnerListDictionary(Me.TableLayoutPanelLowGlusoseSuspended, _markersLowGlusoseSuspended, rowIndex, _formScale.Height <> 1)
                         ProcessInnerListDictionary(Me.TableLayoutPanelTimeChange, _markersTimeChange, rowIndex, _formScale.Height <> 1)
-                        DisplayDataTableInDGV(Me.TableLayoutPanelMeal, ClassToDatatable(_markersMealRecords.ToArray), NameOf(MealRecord), AddressOf MealRecordHelpers.AttachHandlers, rowIndex)
                     Case ItemIndexs.pumpBannerState
                         If row.Value Is Nothing Then
                             Me.TempTargetLabel.Visible = False
@@ -1461,19 +1451,7 @@ Public Class Form1
                 End Select
                 Continue For
             End If
-            Dim docStyle As DockStyle = DockStyle.Fill
             Select Case rowIndex
-                Case ItemIndexs.lastSG
-                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelLastSG, ItemIndexs.lastSG)
-                    s_lastSG = New SgRecord(Loads(row.Value))
-
-                Case ItemIndexs.lastAlarm
-                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelLastAlarm, ItemIndexs.lastAlarm)
-
-                Case ItemIndexs.activeInsulin
-                    layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelActiveInsulin, ItemIndexs.activeInsulin)
-                    s_activeInsulin = DictionaryToClass(Of ActiveInsulinRecord)(Loads(row.Value))
-
                 Case ItemIndexs.notificationHistory
                     layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelNotificationHistory, ItemIndexs.notificationHistory)
 
@@ -1491,11 +1469,6 @@ Public Class Form1
             Try
                 layoutPanel1.SuspendLayout()
                 layoutPanel1.Controls(0).Text = $"{CInt(rowIndex)} {rowIndex}"
-                If layoutPanel1.RowStyles.Count = 1 Then
-                    layoutPanel1.RowStyles(0) = New RowStyle(SizeType.AutoSize, 0)
-                Else
-                    layoutPanel1.RowStyles(1) = New RowStyle(SizeType.AutoSize, 0)
-                End If
                 Dim innerJsonDictionary As Dictionary(Of String, String) = Loads(row.Value)
                 Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, Color.Aqua)
                 innerTableBlue.AutoScroll = True
@@ -1618,9 +1591,6 @@ Public Class Form1
                         Else
                             timeOrderedMarkers.Add(sgOADateTime, bolusAmount)
                         End If
-                    Case "AUTO_MODE_STATUS"
-                    Case "BG_READING"
-                    Case "CALIBRATION"
                     Case "INSULIN"
                         Dim bolusAmount As Single = marker.Value.GetSingleValue(NameOf(InsulinRecord.deliveredFastAmount))
                         If timeOrderedMarkers.ContainsKey(sgOADateTime) Then
@@ -1628,10 +1598,11 @@ Public Class Form1
                         Else
                             timeOrderedMarkers.Add(sgOADateTime, bolusAmount)
                         End If
-                    Case "LOW_GLUCOSE_SUSPENDED"
-                    Case "MEAL"
                     Case "TIME_CHANGE"
                         lastTimeChangeRecord = New TimeChangeRecord(s_markers(marker.Index))
+                    Case "CALIBRATION"
+                    Case "LOW_GLUCOSE_SUSPENDED"
+                    Case "MEAL"
                     Case Else
                         Stop
                 End Select

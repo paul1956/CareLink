@@ -229,7 +229,7 @@ Friend Module ChartingExtensions
                             markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
                             markerSeriesPoints.Last.ToolTip = $"Meal:{entry("amount")} grams"
                         End If
-                    Case "AUTO_MODE_STATUS", "LOW_GLUCOSE_SUSPENDED"
+                    Case "LOW_GLUCOSE_SUSPENDED"
                     Case "TIME_CHANGE"
                         With homePageChart.Series(TimeChangeSeriesName).Points
                             lastTimeChangeRecord = New TimeChangeRecord(s_markers(markerWithIndex.Index))
@@ -318,8 +318,7 @@ Friend Module ChartingExtensions
                             markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
                             markerSeriesPoints.Last.ToolTip = $"Meal:{entry("amount")} grams"
                         End If
-                    Case "AUTO_MODE_STATUS",
-                         "BG_READING",
+                    Case "BG_READING",
                          "CALIBRATION",
                          "LOW_GLUCOSE_SUSPENDED"
                     Case "TIME_CHANGE"

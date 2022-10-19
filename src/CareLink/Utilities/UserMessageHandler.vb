@@ -32,7 +32,7 @@ Friend Module UserMessageHandler
                         {"BC_SID_DELIVERY_STOPPED_INSERT_NEW_BATTERY", "Insert battery(triggeredDateTime). Delivery stopped. Insert a New battery now."},
                         {"BC_SID_DO_NOT_CALIBRATE_UNLESS_NOTIFIED", "Sensor updating, Do Not calibrate unless notified. This could take up to 3 hours"},
                         {"BC_SID_ENSURE_CONNECTION_SECURE", "Check connection. Ensure transmitter and sensor is secure, then select OK."},
-                        {"BC_SID_ENSURE_DELIVERY_CHANGE_RESERVOIR", "Reservoir empty(triggeredDateTime), ensure delivery change reservoir."},
+                        {"BC_SID_ENSURE_DELIVERY_CHANGE_RESERVOIR", "Reservoir empty reminder, change reservior and infusin set."},
                         {"BC_SID_ENTER_BG_TO_CALIBRATE_SENSOR_SENSOR_INFO_NO_AVAILABLE", "Enter BG to calibrate sensor. Sensor info not available."},
                         {"BC_SID_ENTER_BG_TO_CONTINUE_IN_SMART_GUARD", "Enter BG to continue in SmartGuard(triggeredDateTime)."},
                         {"BC_SID_FILL_TUBING_STOPPED_DISCONNECT", "Fill tubing, delivery stopped."},
@@ -52,6 +52,7 @@ Friend Module UserMessageHandler
                         {"BC_SID_SMART_GUARD_MINIMUM_DELIVERY", "SmartGuard minimum delivery."},
                         {"BC_SID_START_NEW_SENSOR", "Start New sensor."},
                         {"BC_SID_THREE_DAYS_SINCE_LAST_SET_CHANGE", "Set Change reminder(triggeredDateTime). (0) days since last set change. Time to change reservoir and infusion set.:lastSetChange"},
+                        {"BC_SID_THREE_DAYS_SINCE_LAST_SET_CHANGE1", "Set change reminder. changer reservior and infusion set."},
                         {"BC_SID_UMAX_ALERT_INFO", "Auto Mode max delivery. Auto Mode has been at maximum delivery for 4 hours. Enter BG to continue in Auto Mode."},
                         {"BC_SID_UMIN_ALERT_INFO", "Auto Mode min delivery. Auto Mode has been at minimum delivery for 2 hours. Enter BG to continue in Auto Mode."},
                         {"BC_SID_UPDATING_CAN_TAKE_UP_TO_THREE_HOURS", "Sensor updating(triggeredDateTime), it can take up to 3 hours."},
@@ -90,7 +91,7 @@ Friend Module UserMessageHandler
         Return New TimeOnly(CInt(rawTime.Substring(0, 2)), CInt(rawTime.Substring(3, 2))).ToString(format)
     End Function
 
-    Friend Function TranslateNotificationMessageId(dic As Dictionary(Of String, String), entryValue As String, TimeFormat As String) As String
+    Friend Function TranslateNotificationMessageId(dic As Dictionary(Of String, String), entryValue As String) As String
         Dim formattedMessage As String = ""
         Try
             If s_NotificationMessages.TryGetValue(entryValue, formattedMessage) Then
@@ -103,21 +104,23 @@ Friend Module UserMessageHandler
                         replacementValue = s_oneToNineteen(CInt(dic(key))).ToTitle
                     Else
                         replacementValue = dic(key)
-                    End If
-                    Dim resultDate As Date
-                    If replacementValue.TryParseDate(resultDate, key) Then
-                        replacementValue = resultDate.ToString
+                        Dim resultDate As Date
+                        If replacementValue.TryParseDate(resultDate, key) Then
+                            replacementValue = resultDate.ToString
+                        End If
                     End If
                 End If
 
-                Dim secondaryTime As String = If(dic.ContainsKey("secondaryTime"), dic("secondaryTime").FormatTimeOnly(TimeFormat), "")
+                Dim secondaryTime As String = If(dic.ContainsKey("secondaryTime"), dic("secondaryTime").FormatTimeOnly(s_timeWithMinuteFormat), "")
                 Dim triggeredDateTime As String = ""
                 If dic.ContainsKey("triggeredDateTime") Then
                     triggeredDateTime = $" {dic("triggeredDateTime").ParseDate("triggeredDateTime")}"
                 ElseIf dic.ContainsKey("datetime") Then
                     triggeredDateTime = $" {dic("datetime").ParseDate("datetime")}"
+                ElseIf dic.ContainsKey("DateTime") Then
+                    triggeredDateTime = $" {dic("DateTime").ParseDate("DateTime")}"
                 ElseIf dic.ContainsKey("dateTime") Then
-                    triggeredDateTime = $" {dic("dateTime").ParseDate("DateTime")}"
+                    triggeredDateTime = $" {dic("dateTime").ParseDate("dateTime")}"
                 Else
                     Stop
                 End If

@@ -371,8 +371,8 @@ Public Class CareLinkClient
         ' Get authorization token
         Dim authToken As String = Me.GetAuthorizationToken()
         If authToken IsNot Nothing Then
+            Dim response As New HttpResponseMessage
             Try
-                Dim response As HttpResponseMessage
                 ' Add header
                 Dim headers As Dictionary(Of String, String) = _commonHeaders
                 headers("Authorization") = authToken
@@ -410,7 +410,7 @@ Public Class CareLinkClient
                     Throw New Exception("session get response is not OK")
                 End If
             Catch e As Exception
-                Debug.Print($"__getData() failed {e.Message}")
+                Debug.Print($"__getData() failed {e.Message}, status {response?.StatusCode}")
             End Try
         End If
         Return jsonData

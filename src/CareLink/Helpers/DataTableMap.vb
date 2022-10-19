@@ -27,6 +27,21 @@ Friend Module DataTableMap
         Next [property]
         Table.Rows.Add(row)
     End Sub
+    ''' <summary>
+    ''' Created a Dictionary that maps Class Property Name to DisplayName
+    ''' </summary>
+    ''' <typeparam name="T"></typeparam>
+    ''' <returns>Dictionary</returns>
+    Public Function ClassPropertiesToDisplayNames(Of T As Class)() As Dictionary(Of String, String)
+        Dim classType As Type = GetType(T)
+        Dim result As New Dictionary(Of String, String)
+        For Each [property] As PropertyInfo In classType.GetProperties()
+            Dim displayNameAttrib As DisplayNameAttribute = [property].GetCustomAttributes(GetType(DisplayNameAttribute), True).Cast(Of DisplayNameAttribute)().SingleOrDefault()
+            Dim displayName As String = If(displayNameAttrib IsNot Nothing, displayNameAttrib.DisplayName, [property].Name)
+            result.Add([property].Name, displayName)
+        Next
+        Return result
+    End Function
 
     ''' <summary>
     ''' Creates a DataTable from a class type's public properties. The DataColumns of the table will match the propertyName and type of the public properties.
