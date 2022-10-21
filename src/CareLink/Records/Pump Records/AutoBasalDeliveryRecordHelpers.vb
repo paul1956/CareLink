@@ -9,7 +9,6 @@ Friend Class AutoBasalDeliveryRecordHelpers
             NameOf(AutoBasalDeliveryRecord.index),
             NameOf(AutoBasalDeliveryRecord.kind),
             NameOf(AutoBasalDeliveryRecord.relativeOffset),
-            NameOf(AutoBasalDeliveryRecord.type),
             NameOf(AutoBasalDeliveryRecord.version)
         }
 
@@ -20,18 +19,17 @@ Friend Class AutoBasalDeliveryRecordHelpers
             Case NameOf(AutoBasalDeliveryRecord.[dateTime]),
                     NameOf(AutoBasalDeliveryRecord.dateTimeAsString),
                     NameOf(AutoBasalDeliveryRecord.type)
-                cellStyle.CellStyleMiddleLeft
+                cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
             Case NameOf(AutoBasalDeliveryRecord.RecordNumber),
                     NameOf(AutoBasalDeliveryRecord.kind),
                     NameOf(AutoBasalDeliveryRecord.index),
                     NameOf(AutoBasalDeliveryRecord.id)
-                cellStyle = cellStyle.CellStyleMiddleCenter
-                cellStyle.Padding = New Padding(0, 0, 0, 0)
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
             Case NameOf(AutoBasalDeliveryRecord.bolusAmount),
                     NameOf(AutoBasalDeliveryRecord.version),
                     NameOf(AutoBasalDeliveryRecord.OAdateTime),
                     NameOf(AutoBasalDeliveryRecord.relativeOffset)
-                cellStyle = cellStyle.CellStyleMiddleRight(0)
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
             Case Else
                 Stop
                 Throw UnreachableException()

@@ -16,11 +16,11 @@ Public Class TherapyAlgorithmStateRecord
     Public Property autoModeReadinessState As String
 
     <DisplayName(NameOf(plgmLgsState))>
-    <Column(Order:=3, TypeName:="String")>
+    <Column(Order:=2, TypeName:="String")>
     Public ReadOnly Property plgmLgsState As String
 
     <DisplayName(NameOf(safeBasalDuration))>
-    <Column(Order:=4, TypeName:="Integer")>
+    <Column(Order:=3, TypeName:="Integer")>
     Public Property safeBasalDuration As Integer
 
     <DisplayName(NameOf(waitToCalibrateDuration))>

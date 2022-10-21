@@ -5,13 +5,23 @@
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
-Public Class LastAlarmSummary
+Public Class SummaryRecord
 
-    Protected Friend Sub New(kvp As KeyValuePair(Of String, String), Index As Integer)
-        Me.RecordNumber = Index
-        Me.Key = GetDisplayName(kvp.Key)
-        Me.Value = kvp.Value
-        Me.Message = ""
+    Protected Friend Sub New(key As String, value As String, message As String, index As Integer)
+        Me.New(key, value, index)
+        Me.Message = message
+    End Sub
+
+    Protected Friend Sub New(entry As KeyValuePair(Of String, String), recordNumber As Integer)
+        Me.RecordNumber = recordNumber
+        Me.Key = entry.Key
+        Me.Value = entry.Value?.ToString(CurrentUICulture)
+    End Sub
+
+    Protected Friend Sub New(key As String, value As String, recordNumber As Integer)
+        Me.RecordNumber = recordNumber
+        Me.Key = key
+        Me.Value = value
     End Sub
 
     <DisplayName(NameOf(Key))>

@@ -35,6 +35,13 @@ Friend Module DictionaryMap
         Return result
     End Function
 
+    Public Function GetDisplayName(Of T As Class)(_displayNameMapping As Dictionary(Of String, String), name As String) As String
+        If _displayNameMapping.Count = 0 Then
+            _displayNameMapping = ClassPropertiesToDisplayNames(Of T)()
+        End If
+        Return _displayNameMapping(name)
+    End Function
+
     ''' <summary>
     ''' Fills properties of a class from a row of a Dictionary where the propertyName of the property matches the ket from that dictionary.
     ''' It does this for each row in the Dictionary, returning a class.

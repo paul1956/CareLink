@@ -30,7 +30,6 @@ Public Module PumpVariables
     Friend ReadOnly s_listOfBgReadingMarkers As New List(Of BGReadingRecord)
     Friend ReadOnly s_listOfCalibrationMarkers As New List(Of CalibrationRecord)
     Friend ReadOnly s_listOfInsulinMarkers As New List(Of InsulinRecord)
-    Friend ReadOnly s_listOfLastAlarmSummaryRecords As New List(Of LastAlarmSummary)
     Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
     Friend ReadOnly s_mealImage As Bitmap = My.Resources.MealImage
     Friend s_aboveHyperLimit As Double

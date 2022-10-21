@@ -84,14 +84,18 @@ Public Module StringExtensions
                                   .Replace("\", "\\")},"
     End Function
 
+    ''' <summary>
+    ''' If s starts with upper case character and the string contains
+    ''' at least 1 _ we will assume its a Message
+    ''' </summary>
+    ''' <param name="s"></param>
+    ''' <returns>True if possible Message</returns>
     <Extension>
-    Public Function TruncateSingleString(s As String, decimalDigits As Integer) As String
-        Dim i As Integer = s.IndexOfAny({"."c, ","c})
-        If i < 0 Then
-            Return s
+    Public Function IsPossibleMessage(s As String) As Boolean
+        If String.IsNullOrWhiteSpace(s) Then
+            Return False
         End If
-        s &= "000"
-        Return s.Substring(0, i + decimalDigits + 1).TrimEnd("0")
+        Return Char.IsUpper(s(0)) AndAlso s.Contains("_"c)
     End Function
 
     <Extension>
@@ -100,6 +104,16 @@ Public Module StringExtensions
             Return source
         End If
         Return source.Substring(0, source.Length - trimString.Length)
+    End Function
+
+    <Extension>
+    Public Function TruncateSingleString(s As String, decimalDigits As Integer) As String
+        Dim i As Integer = s.IndexOfAny({"."c, ","c})
+        If i < 0 Then
+            Return s
+        End If
+        s &= "000"
+        Return s.Substring(0, i + decimalDigits + 1).TrimEnd("0")
     End Function
 
 End Module

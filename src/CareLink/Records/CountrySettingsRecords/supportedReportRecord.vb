@@ -2,10 +2,13 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.ComponentModel
+Imports System.ComponentModel.DataAnnotations.Schema
 Imports System.Text
 
 <DebuggerDisplay("{GetDebuggerDisplay(),nq}")>
 Public Class supportedReportRecord
+
     Public Sub New(Values As Dictionary(Of String, String), recordnumber As Integer)
         If Values.Count <> 3 Then
             Throw New Exception($"{NameOf(supportedReportRecord)}({Values}) contains {Values.Count} entries, 3 expected.")
@@ -18,9 +21,21 @@ Public Class supportedReportRecord
     End Sub
 
 #If True Then ' Prevent reordering
+
+    <DisplayName("Record Number")>
+    <Column(Order:=0)>
     Public Property recordNumber As Integer
+
+    <DisplayName("Report")>
+    <Column(Order:=1)>
     Public Property report As String
+
+    <DisplayName("Only For")>
+    <Column(Order:=2)>
     Public Property onlyFor As String
+
+    <DisplayName("Not For")>
+    <Column(Order:=3)>
     Public Property notFor As String
 
 #End If  ' Prevent reordering

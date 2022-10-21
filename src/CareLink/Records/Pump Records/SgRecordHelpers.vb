@@ -53,19 +53,17 @@ Friend Class SgRecordHelpers
 
         Select Case columnName
             Case NameOf(SgRecord.sg),
-                    NameOf(SgRecord.relativeOffset),
-                    NameOf(SgRecord.OAdatetime)
-                cellStyle = cellStyle.CellStyleMiddleRight(10)
-            Case NameOf(SgRecord.RecordNumber),
-                    NameOf(SgRecord.version)
-                cellStyle = cellStyle.CellStyleMiddleCenter()
+                 NameOf(SgRecord.relativeOffset),
+                 NameOf(SgRecord.OAdatetime)
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(10, 1, 1, 1))
+            Case NameOf(SgRecord.RecordNumber), NameOf(SgRecord.timeChange),
+                 NameOf(SgRecord.kind), NameOf(SgRecord.version)
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
             Case NameOf(SgRecord.datetime),
-                    NameOf(SgRecord.datetimeAsString),
-                    NameOf(SgRecord.sensorState)
-                cellStyle = cellStyle.CellStyleMiddleLeft
-            Case NameOf(SgRecord.timeChange),
-                    NameOf(SgRecord.kind)
-                cellStyle = cellStyle.CellStyleMiddleCenter
+                 NameOf(SgRecord.datetimeAsString),
+                 NameOf(SgRecord.Message),
+                 NameOf(SgRecord.sensorState)
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
             Case Else
                 Throw UnreachableException()
         End Select

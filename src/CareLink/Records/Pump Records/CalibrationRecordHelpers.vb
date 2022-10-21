@@ -6,8 +6,7 @@ Friend Class CalibrationRecordHelpers
 
     Private Shared ReadOnly columnsToHide As New List(Of String) From {
          NameOf(CalibrationRecord.kind), NameOf(CalibrationRecord.version),
-         NameOf(CalibrationRecord.relativeOffset), NameOf(CalibrationRecord.index),
-         NameOf(CalibrationRecord.type)
+         NameOf(CalibrationRecord.relativeOffset), NameOf(CalibrationRecord.index)
     }
 
     Private Shared Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
@@ -64,12 +63,12 @@ Friend Class CalibrationRecordHelpers
         Select Case columnName
             Case NameOf(CalibrationRecord.kind), NameOf(CalibrationRecord.type),
              NameOf(CalibrationRecord.dateTime), NameOf(CalibrationRecord.dateTimeAsString)
-                cellStyle = cellStyle.CellStyleMiddleLeft
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
             Case NameOf(CalibrationRecord.RecordNumber)
-                cellStyle = cellStyle.CellStyleMiddleCenter
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
             Case NameOf(CalibrationRecord.index), NameOf(CalibrationRecord.value),
              NameOf(CalibrationRecord.relativeOffset), NameOf(CalibrationRecord.version)
-                cellStyle = cellStyle.CellStyleMiddleRight(0)
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
             Case Else
                 Stop
                 Throw UnreachableException()

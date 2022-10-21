@@ -5,8 +5,7 @@
 Friend Class BGReadingRecordHelpers
     Private Shared ReadOnly columnsToHide As New List(Of String) From {
              NameOf(BGReadingRecord.kind), NameOf(BGReadingRecord.version),
-             NameOf(BGReadingRecord.relativeOffset), NameOf(BGReadingRecord.index),
-             NameOf(BGReadingRecord.type)
+             NameOf(BGReadingRecord.relativeOffset), NameOf(BGReadingRecord.index)
         }
 
     Private Shared Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
@@ -63,12 +62,12 @@ Friend Class BGReadingRecordHelpers
         Select Case columnName
             Case NameOf(BGReadingRecord.kind), NameOf(BGReadingRecord.type),
                  NameOf(BGReadingRecord.dateTime), NameOf(BGReadingRecord.dateTimeAsString)
-                cellStyle = cellStyle.CellStyleMiddleLeft
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
             Case NameOf(BGReadingRecord.RecordNumber)
-                cellStyle = cellStyle.CellStyleMiddleCenter
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
             Case NameOf(BGReadingRecord.index), NameOf(BGReadingRecord.value),
                  NameOf(BGReadingRecord.relativeOffset), NameOf(BGReadingRecord.version)
-                cellStyle = cellStyle.CellStyleMiddleRight(0)
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
             Case Else
                 Stop
                 Throw UnreachableException()

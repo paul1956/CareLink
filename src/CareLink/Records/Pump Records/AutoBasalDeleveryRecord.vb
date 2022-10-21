@@ -28,19 +28,19 @@ Public Class AutoBasalDeliveryRecord
     Public Property dateTimeAsString As String
 
     <DisplayName(NameOf(id))>
-    <Column(Order:=9)>
+    <Column(Order:=9, TypeName:="Integer")>
     Public Property id As Integer
 
     <DisplayName(NameOf(index))>
-    <Column(Order:=2)>
+    <Column(Order:=2, TypeName:="Integer")>
     Public Property index As Integer
 
-    <DisplayName(NameOf(kind))>
+    <DisplayName("Kind")>
     <Column(Order:=3, TypeName:="String")>
     Public Property kind As String
 
     <DisplayName("OA date Time")>
-    <Column(Order:=7)>
+    <Column(Order:=7, TypeName:="Double")>
     Public ReadOnly Property OAdateTime As OADate
         Get
             Return New OADate(_dateTime)
@@ -48,19 +48,19 @@ Public Class AutoBasalDeliveryRecord
     End Property
 
     <DisplayName("Record Number")>
-    <Column(Order:=0)>
+    <Column(Order:=0, TypeName:="Integer")>
     Public Property RecordNumber As Integer
 
     <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=8)>
+    <Column(Order:=8, TypeName:="Integer")>
     Public Property relativeOffset As Integer
 
-    <DisplayName(NameOf(type))>
+    <DisplayName("Type")>
     <Column(Order:=1, TypeName:="String")>
     Public Property type As String
 
-    <DisplayName(NameOf(version))>
-    <Column(Order:=4)>
+    <DisplayName("Version")>
+    <Column(Order:=4, TypeName:="Integer")>
     Public Property version As Integer
 
 End Class

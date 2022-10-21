@@ -5,6 +5,6 @@
 Friend Class supportedReportRecordHelpers
 
     Public Shared Function GetCellStyle() As DataGridViewCellStyle
-        Return New DataGridViewCellStyle().CellStyleMiddleLeft()
+        Return New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
     End Function
 End Class

@@ -8,7 +8,6 @@ Friend Class MealRecordHelpers
         NameOf(MealRecord.index),
         NameOf(MealRecord.kind),
         NameOf(MealRecord.relativeOffset),
-        NameOf(MealRecord.type),
         NameOf(MealRecord.version)
     }
 
@@ -50,18 +49,17 @@ Friend Class MealRecordHelpers
             Case NameOf(MealRecord.[dateTime]),
                     NameOf(MealRecord.dateTimeAsString),
                     NameOf(MealRecord.type)
-                cellStyle.CellStyleMiddleLeft
+                cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
             Case NameOf(MealRecord.RecordNumber),
                     NameOf(MealRecord.kind),
                     NameOf(MealRecord.index),
                     NameOf(MealRecord.amount)
-                cellStyle = cellStyle.CellStyleMiddleCenter
-                cellStyle.Padding = New Padding(0, 0, 0, 0)
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
             Case NameOf(MealRecord.amount),
                     NameOf(MealRecord.version),
                     NameOf(MealRecord.OAdateTime),
                     NameOf(MealRecord.relativeOffset)
-                cellStyle = cellStyle.CellStyleMiddleRight(0)
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
             Case Else
                 Stop
                 Throw UnreachableException()

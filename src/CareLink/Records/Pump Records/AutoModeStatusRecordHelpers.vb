@@ -48,14 +48,14 @@ Friend Class AutoModeStatusRecordHelpers
         Select Case columnName
             Case NameOf(AutoModeStatusRecord.kind), NameOf(AutoModeStatusRecord.type),
              NameOf(AutoModeStatusRecord.dateTime), NameOf(AutoModeStatusRecord.dateTimeAsString)
-                cellStyle = cellStyle.CellStyleMiddleLeft
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
             Case NameOf(AutoModeStatusRecord.RecordNumber),
                  NameOf(AutoModeStatusRecord.autoModeOn)
-                cellStyle = cellStyle.CellStyleMiddleCenter
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
             Case NameOf(AutoModeStatusRecord.index),
                  NameOf(AutoModeStatusRecord.relativeOffset),
                  NameOf(AutoModeStatusRecord.version)
-                cellStyle = cellStyle.CellStyleMiddleRight(0)
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
             Case Else
                 Stop
                 Throw UnreachableException()

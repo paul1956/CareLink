@@ -52,16 +52,15 @@ Public Class CareLinkUserDataRecordHelpers
                  NameOf(CareLinkUserDataRecord.MailserverPassword),
                  NameOf(CareLinkUserDataRecord.MailserverUserName),
                  NameOf(CareLinkUserDataRecord.OutgoingMailServer)
-                cellStyle.CellStyleMiddleLeft
+                cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
             Case NameOf(CareLinkUserDataRecord.AutoLogin),
                  NameOf(CareLinkUserDataRecord.UseAdvancedAITDecay),
                  NameOf(CareLinkUserDataRecord.UseLocalTimeZone)
-                cellStyle = cellStyle.CellStyleMiddleCenter
-                cellStyle.Padding = New Padding(0, 0, 0, 0)
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
             Case NameOf(CareLinkUserDataRecord.MailServerPort),
                  NameOf(CareLinkUserDataRecord.SettingsVersion),
                  ""
-                cellStyle = cellStyle.CellStyleMiddleRight(0)
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(1, 1, 1, 1))
             Case Else
                 Stop
                 Throw UnreachableException()

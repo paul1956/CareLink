@@ -54,14 +54,14 @@ Class ActiveInsulinRecordHelpers
                  NameOf(ActiveInsulinRecord.datetime),
                  NameOf(ActiveInsulinRecord.datetimeAsString),
                  NameOf(ActiveInsulinRecord.OAdatetime)
-                cellStyle = cellStyle.CellStyleMiddleLeft
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
             Case NameOf(ActiveInsulinRecord.amount),
                  NameOf(ActiveInsulinRecord.precision),
                  NameOf(ActiveInsulinRecord.version)
-                cellStyle = cellStyle.CellStyleMiddleRight(0)
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
             Case Else
                 Stop
-                cellStyle = cellStyle.CellStyleMiddleCenter
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
                 Throw UnreachableException()
         End Select
         Return cellStyle

@@ -9,7 +9,7 @@ Public Class BGReadingRecord
     Private _dateTime As Date
 
     <DisplayName(NameOf([dateTime]))>
-    <Column(Order:=6)>
+    <Column(Order:=6, TypeName:="Date")>
     Public Property [dateTime] As Date
         Get
             Return _dateTime
@@ -20,35 +20,35 @@ Public Class BGReadingRecord
     End Property
 
     <DisplayName("dateTime As String")>
-    <Column(Order:=7)>
+    <Column(Order:=7, TypeName:="String")>
     Public Property dateTimeAsString As String
 
     <DisplayName(NameOf(index))>
-    <Column(Order:=2)>
+    <Column(Order:=2, TypeName:="Integer")>
     Public Property index As Integer
 
-    <DisplayName(NameOf(kind))>
-    <Column(Order:=4)>
+    <DisplayName("Kind")>
+    <Column(Order:=4, TypeName:="String")>
     Public Property kind As String
 
     <DisplayName("Record Number")>
-    <Column(Order:=0)>
+    <Column(Order:=0, TypeName:="Integer")>
     Public Property RecordNumber As Integer
 
     <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=9)>
+    <Column(Order:=9, TypeName:="Integer")>
     Public Property relativeOffset As Integer
 
-    <DisplayName(NameOf(type))>
-    <Column(Order:=1)>
+    <DisplayName("Type")>
+    <Column(Order:=1, TypeName:="Integer")>
     Public Property type As String
 
-    <DisplayName(NameOf(value))>
-    <Column(Order:=3)>
+    <DisplayName("Value")>
+    <Column(Order:=3, TypeName:="Single")>
     Public Property value As Single
 
-    <DisplayName(NameOf(version))>
-    <Column(Order:=5)>
+    <DisplayName("Version")>
+    <Column(Order:=5, TypeName:="Integer")>
     Public Property version As Integer
 
 End Class

@@ -8,23 +8,9 @@ Imports System.Text
 Public Module DataGridViewExtensions
 
     <Extension>
-    Public Function CellStyleMiddleCenter(cellStyle As DataGridViewCellStyle) As DataGridViewCellStyle
-        cellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-        cellStyle.Padding = New Padding(1)
-        Return cellStyle
-    End Function
-
-    <Extension>
-    Public Function CellStyleMiddleLeft(cellStyle As DataGridViewCellStyle) As DataGridViewCellStyle
-        cellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-        cellStyle.Padding = New Padding(1)
-        Return cellStyle
-    End Function
-
-    <Extension>
-    Public Function CellStyleMiddleRight(cellStyle As DataGridViewCellStyle, leftPadding As Integer) As DataGridViewCellStyle
-        cellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-        cellStyle.Padding = New Padding(leftPadding, 1, 1, 1)
+    Public Function SetCellStyle(cellStyle As DataGridViewCellStyle, alignment As DataGridViewContentAlignment, padding As Padding) As DataGridViewCellStyle
+        cellStyle.Alignment = alignment
+        cellStyle.Padding = padding
         Return cellStyle
     End Function
 

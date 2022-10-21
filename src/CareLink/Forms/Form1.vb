@@ -743,7 +743,7 @@ Public Class Form1
 #Region "My User Tab DataGridView Events"
 
     Private Sub DataGridViewMyUserData_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewCurrentUser.ColumnAdded
-        e.DgvColumnAdded(New DataGridViewCellStyle().CellStyleMiddleLeft,
+        e.DgvColumnAdded(New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1)),
                          False,
                          True,
                          Nothing)
@@ -759,7 +759,7 @@ Public Class Form1
 #Region "Profile Tab DataGridView Events"
 
     Private Sub DataGridViewUserProfile_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewUserProfile.ColumnAdded
-        e.DgvColumnAdded(New DataGridViewCellStyle().CellStyleMiddleLeft,
+        e.DgvColumnAdded(New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1)),
                          False,
                          True,
                          Nothing)
@@ -912,12 +912,12 @@ Public Class Form1
                  ItemIndexs.lastSensorTime, ItemIndexs.sLastSensorTime,
                  ItemIndexs.lastSGTrend, ItemIndexs.systemStatusMessage,
                  ItemIndexs.lastConduitDateTime, ItemIndexs.clientTimeZoneName
-                e.CellStyle = e.CellStyle.CellStyleMiddleLeft
+                e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
             Case ItemIndexs.conduitInRange, ItemIndexs.conduitMedicalDeviceInRange,
                  ItemIndexs.conduitSensorInRange, ItemIndexs.medicalDeviceSuspended,
                  ItemIndexs.pumpCommunicationState, ItemIndexs.gstCommunicationState,
                  ItemIndexs.calFreeSensor, ItemIndexs.finalCalibration
-                e.CellStyle = e.CellStyle.CellStyleMiddleCenter
+                e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
             Case ItemIndexs.averageSG, ItemIndexs.version, ItemIndexs.conduitBatteryLevel,
                  ItemIndexs.reservoirLevelPercent, ItemIndexs.reservoirAmount,
                  ItemIndexs.reservoirRemainingUnits, ItemIndexs.medicalDeviceBatteryLevelPercent,
@@ -929,7 +929,7 @@ Public Class Form1
                  ItemIndexs.timeToNextCalibrationMinutes, ItemIndexs.sgBelowLimit,
                  ItemIndexs.averageSGFloat,
                  ItemIndexs.timeToNextCalibrationRecommendedMinutes
-                e.CellStyle = e.CellStyle.CellStyleMiddleRight(0)
+                e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
             Case Else
                 Stop
         End Select
@@ -939,7 +939,7 @@ Public Class Form1
     Private Sub DataGridViewSummary_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewSummary.ColumnAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
-        e.DgvColumnAdded(SummaryHelpers.GetCellStyle(e.Column.Name),
+        e.DgvColumnAdded(DataGridViewHelper.GetCellStyle(e.Column.Name),
                          False,
                          True,
                          caption)
@@ -1398,8 +1398,7 @@ Public Class Form1
                         DisplayDataTableInDGV(layoutPanel1, ClassToDatatable({s_lastSG}.ToArray), NameOf(SgRecord), AddressOf SgRecordHelpers.AttachHandlers, rowIndex)
                     Case ItemIndexs.lastAlarm
                         layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelLastAlarm, ItemIndexs.lastAlarm)
-                        GetLastAlarmSummaryRecords(Loads(row.Value))
-                        DisplayDataTableInDGV(layoutPanel1, ClassToDatatable(s_listOfLastAlarmSummaryRecords.ToArray), NameOf(LastAlarmSummary), AddressOf LastAlarmSummaryHelpers.AttachHandlers, ItemIndexs.lastAlarm)
+                        DisplayDataTableInDGV(layoutPanel1, ClassToDatatable(GetSummaryRecords(Loads(row.Value)).ToArray), NameOf(SummaryRecord), AddressOf SummaryRecordHelpers.AttachHandlers, ItemIndexs.lastAlarm)
                     Case ItemIndexs.activeInsulin
                         layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelActiveInsulin, ItemIndexs.activeInsulin)
                         s_activeInsulin = DictionaryToClass(Of ActiveInsulinRecord)(Loads(row.Value), 0)
@@ -1457,7 +1456,8 @@ Public Class Form1
 
                 Case ItemIndexs.therapyAlgorithmState
                     layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelTherapyAlgorthm, ItemIndexs.therapyAlgorithmState)
-
+                    DisplayDataTableInDGV(layoutPanel1, ClassToDatatable(GetSummaryRecords(Loads(row.Value)).ToArray), NameOf(SummaryRecord), AddressOf SummaryRecordHelpers.AttachHandlers, ItemIndexs.lastAlarm)
+                    Continue For
                 Case ItemIndexs.basal
                     layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelBasal, ItemIndexs.basal)
 

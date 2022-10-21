@@ -9,12 +9,11 @@ Public Module SGListExtensions
     <Extension()>
     Friend Function ToSgList(innerJson As List(Of Dictionary(Of String, String))) As List(Of SgRecord)
         Dim sGs As New List(Of SgRecord)
-        Dim firstValidTime As Integer
-        Dim lastValidTime As Date
-        For firstValidTime = 0 To innerJson.Count - 1
+        Dim lastValidTime As Date = Now - New TimeSpan(24, 0, 0)
+        For firstValidTimeIndex As Integer = 0 To innerJson.Count - 1
             Dim dateTimeString As String = Nothing
-            If innerJson(firstValidTime).TryGetValue("datetime", dateTimeString) Then
-                lastValidTime = dateTimeString.ParseDate("datetime") - (firstValidTime * s_fiveMinuteSpan)
+            If innerJson(firstValidTimeIndex).TryGetValue("datetime", dateTimeString) Then
+                lastValidTime = dateTimeString.ParseDate("datetime") - (firstValidTimeIndex * s_fiveMinuteSpan)
                 Exit For
             End If
         Next

@@ -49,14 +49,14 @@ Friend Class LimitsRecordHelpers
 
         Select Case columnName
             Case NameOf(LimitsRecord.kind)
-                cellStyle = cellStyle.CellStyleMiddleLeft
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
             Case NameOf(LimitsRecord.RecordNumber)
-                cellStyle = cellStyle.CellStyleMiddleCenter
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
             Case NameOf(LimitsRecord.index),
                  NameOf(LimitsRecord.version),
                  NameOf(LimitsRecord.highLimit),
                  NameOf(LimitsRecord.lowLimit)
-                cellStyle = cellStyle.CellStyleMiddleRight(0)
+                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
             Case Else
                 Stop
                 Throw UnreachableException()

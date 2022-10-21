@@ -2,6 +2,9 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.ComponentModel
+Imports System.ComponentModel.DataAnnotations.Schema
+
 Public Class TimeChangeRecord
     Private _previousDateTime As Date
     Private _dateTime As Date
@@ -12,7 +15,7 @@ Public Class TimeChangeRecord
                 Case NameOf(type)
                     Me.type = kvp.Value
                 Case NameOf(index)
-                    Me.index = kvp.Value
+                    Me.index = CInt(kvp.Value)
                 Case NameOf(kind)
                     Me.kind = kvp.Value
                 Case NameOf(version)
@@ -33,10 +36,24 @@ Public Class TimeChangeRecord
 
 #If True Then ' Prevent reordering
 
+    <DisplayName("Type")>
+    <Column(Order:=1, TypeName:="String")>
     Public Property type As String
-    Public Property index As String
+
+    <DisplayName(NameOf(index))>
+    <Column(Order:=2, TypeName:="Integer")>
+    Public Property index As Integer
+
+    <DisplayName("Kind")>
+    <Column(Order:=3, TypeName:="Integer")>
     Public Property kind As String
+
+    <DisplayName("Version")>
+    <Column(Order:=4, TypeName:="Integer")>
     Public Property version As Integer
+
+    <DisplayName(NameOf([dateTime]))>
+    <Column(Order:=5, TypeName:="Date")>
     Public Property [dateTime] As Date
         Get
             Return _dateTime
@@ -46,6 +63,8 @@ Public Class TimeChangeRecord
         End Set
     End Property
 
+    <DisplayName(NameOf(OADateTime))>
+    <Column(Order:=6, TypeName:="String")>
     Public Property dateTimeAsString As String
 
     Public ReadOnly Property OADateTime As OADate
@@ -54,8 +73,12 @@ Public Class TimeChangeRecord
         End Get
     End Property
 
+    <DisplayName(NameOf(relativeOffset))>
+    <Column(Order:=7, TypeName:="Integer")>
     Public Property relativeOffset As Integer
 
+    <DisplayName(NameOf(previousDateTime))>
+    <Column(Order:=8, TypeName:="Date")>
     Public Property previousDateTime As Date
         Get
             Return _previousDateTime
@@ -65,14 +88,20 @@ Public Class TimeChangeRecord
         End Set
     End Property
 
+    <DisplayName(NameOf(previousDateTimeAsString))>
+    <Column(Order:=9, TypeName:="String")>
     Public Property previousDateTimeAsString As String
 
+    <DisplayName(NameOf(previousDateTimeAsString))>
+    <Column(Order:=10, TypeName:="Double")>
     Public ReadOnly Property previousOADateTime As OADate
         Get
             Return New OADate(_previousDateTime)
         End Get
     End Property
 
+    <DisplayName(NameOf(previousDateTimeAsString))>
+    <Column(Order:=11, TypeName:="TimeSpan")>
     Public ReadOnly Property deltaOADateTime As TimeSpan
         Get
             Return _previousDateTime - _dateTime

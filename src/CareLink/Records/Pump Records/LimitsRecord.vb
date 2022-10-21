@@ -15,7 +15,7 @@ Public Class LimitsRecord
     <Column(Order:=1)>
     Public Property index As Integer
 
-    <DisplayName(NameOf(kind))>
+    <DisplayName("Kind")>
     <Column(Order:=4)>
     Public Property kind As String
 
@@ -27,7 +27,7 @@ Public Class LimitsRecord
     <Column(Order:=0)>
     Public Property RecordNumber As Integer
 
-    <DisplayName(NameOf(version))>
+    <DisplayName("Version")>
     <Column(Order:=5)>
     Public Property version As Integer
 

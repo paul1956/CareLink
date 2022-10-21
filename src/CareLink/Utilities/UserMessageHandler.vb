@@ -60,31 +60,31 @@ Friend Module UserMessageHandler
                     }
 
     Friend ReadOnly s_sensorMessages As New Dictionary(Of String, String) From {
-                            {"CALIBRATING", "Calibrating ..."},
-                            {"CALIBRATION_REQUIRED", "Calibration required"},
-                            {"CHANGE_SENSOR", "Change sensor"},
-                            {"DO_NOT_CALIBRATE", "Do Not calibrate."},
-                            {"LOAD_RESERVOIR", "Load Reservoir"},
-                            {"NO_DATA_FROM_PUMP", "No data from pump"},
-                            {"NO_ERROR_MESSAGE", "---"},
-                            {"NO_SENSOR_SIGNAL", "Lost sensor signal, move pump closer to transmitter. May take 15 minutes to find signal"},
-                            {"RECONNECTING_TO_PUMP", "Reconnecting to pump"},
-                            {"SEARCHING_FOR_SENSOR_SIGNAL", "Searching for sensor signal"},
-                            {"SENSOR_DISCONNECTED", "Sensor disconnected"},
-                            {"UNKNOWN", "Unknown"},
-                            {"UPDATING", "Sensor Updating"},
-                            {"WAIT_TO_CALIBRATE", "Wait To Calibrate..."},
-                            {"WARM_UP", "Sensor warm up. Warm-up takes up to 2 hours. You will be notifies when calibration Is needed."}
-                        }
+                        {"CALIBRATING", "Calibrating ..."},
+                        {"CALIBRATION_REQUIRED", "Calibration required"},
+                        {"CHANGE_SENSOR", "Change sensor"},
+                        {"DO_NOT_CALIBRATE", "Do Not calibrate."},
+                        {"LOAD_RESERVOIR", "Load Reservoir"},
+                        {"NO_DATA_FROM_PUMP", "No data from pump"},
+                        {"NO_ERROR_MESSAGE", "---"},
+                        {"NO_SENSOR_SIGNAL", "Lost sensor signal, move pump closer to transmitter. May take 15 minutes to find signal"},
+                        {"RECONNECTING_TO_PUMP", "Reconnecting to pump"},
+                        {"SEARCHING_FOR_SENSOR_SIGNAL", "Searching for sensor signal"},
+                        {"SENSOR_DISCONNECTED", "Sensor disconnected"},
+                        {"UNKNOWN", "Unknown"},
+                        {"UPDATING", "Sensor Updating"},
+                        {"WAIT_TO_CALIBRATE", "Wait To Calibrate..."},
+                        {"WARM_UP", "Sensor warm up. Warm-up takes up to 2 hours. You will be notifies when calibration Is needed."}
+                    }
 
-    Friend s_calibrationMessages As New Dictionary(Of String, String) From {
-            {"DUENOW", "Due now"},
-            {"LESS_THAN_THREE_HRS", "Less then 3 hours"},
-            {"LESS_THAN_SIX_HRS", "Less then 6 hours"},
-            {"LESS_THAN_NINE_HRS", "Less then 9 hours"},
-            {"LESS_THAN_TWELVE_HRS", "Less than twelve hours"},
-            {"UNKNOWN", "unknown"}
-        }
+    Friend ReadOnly s_calibrationMessages As New Dictionary(Of String, String) From {
+                        {"DUENOW", "Due now"},
+                        {"LESS_THAN_THREE_HRS", "Less then 3 hours"},
+                        {"LESS_THAN_SIX_HRS", "Less then 6 hours"},
+                        {"LESS_THAN_NINE_HRS", "Less then 9 hours"},
+                        {"LESS_THAN_TWELVE_HRS", "Less than twelve hours"},
+                        {"UNKNOWN", "unknown"}
+                    }
 
     <Extension>
     Private Function FormatTimeOnly(rawTime As String, format As String) As String

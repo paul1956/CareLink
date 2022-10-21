@@ -6,7 +6,8 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class SgRecord
-
+    Private _message As String
+    Private _sensorState As String
     Public Sub New()
 
     End Sub
@@ -25,58 +26,55 @@ Public Class SgRecord
         lastValidTime = Me.processOneSg(allSgs, index, lastValidTime, dic)
     End Sub
 
-    Private Function processOneSg(allSgs As List(Of Dictionary(Of String, String)), index As Integer, lastValidTime As Date, dic As Dictionary(Of String, String)) As Date
-        For Each kvp As KeyValuePair(Of String, String) In dic
-            Select Case kvp.Key
-                Case NameOf(sg)
-                    Me.sg = kvp.Value.ParseSingle
-                Case NameOf(Me.datetime)
-                    Dim value As String = ""
-                    If dic.TryGetValue(NameOf(Me.datetime), value) Then
-                        Me.datetime = allSgs.SafeGetSgDateTime(index)
-                        lastValidTime = Me.datetime + s_fiveMinuteSpan
-                    Else
-                        Me.datetime = lastValidTime
-                        lastValidTime += s_fiveMinuteSpan
-                    End If
-                    Me.datetimeAsString = value
-                Case NameOf(timeChange)
-                    Me.timeChange = Boolean.Parse(kvp.Value)
-                Case NameOf(sensorState)
-                    Me.sensorState = kvp.Value
-                Case NameOf(kind)
-                    Me.kind = kvp.Value
-                Case NameOf(version)
-                    Me.version = CInt(kvp.Value)
-                Case NameOf(relativeOffset)
-                    Me.relativeOffset = CInt(kvp.Value)
-                Case Else
-                    Stop
-            End Select
-        Next
+    Private Function processOneSg(allSgs As List(Of Dictionary(Of String, String)), Index As Integer, lastValidTime As Date, dic As Dictionary(Of String, String)) As Date
+        Me.sg = dic(NameOf(sg)).ParseSingle
+        Dim value As String = ""
+        If dic.TryGetValue(NameOf(Me.datetime), value) Then
+            Me.datetime = allSgs.SafeGetSgDateTime(Index)
+            lastValidTime = Me.datetime + s_fiveMinuteSpan
+        Else
+            Me.datetime = lastValidTime
+            lastValidTime += s_fiveMinuteSpan
+        End If
+        Me.datetimeAsString = value
+        If dic.TryGetValue(NameOf(timeChange), value) Then
+            Me.timeChange = Boolean.Parse(value)
+        End If
+        If dic.TryGetValue(NameOf(sensorState), value) Then
+            Me.sensorState = value
+        End If
+        If dic.TryGetValue(NameOf(kind), value) Then
+            Me.kind = value
+        End If
+        If dic.TryGetValue(NameOf(version), value) Then
+            Me.version = CInt(value)
+        End If
+        If dic.TryGetValue(NameOf(relativeOffset), value) Then
+            Me.relativeOffset = CInt(value)
+        End If
         Return lastValidTime
     End Function
 
 #If True Then ' Prevent reordering
 
-    <DisplayName(NameOf(RecordNumber))>
-    <Column(Order:=0)>
+    <DisplayName("Record Number")>
+    <Column(Order:=0, TypeName:="Integer")>
     Public Property RecordNumber As Integer
 
-    <DisplayName(NameOf(sg))>
-    <Column(Order:=1)>
+    <DisplayName("Sensor Glucose (sg)")>
+    <Column(Order:=1, TypeName:="Single")>
     Public Property sg As Single
 
     <DisplayName(NameOf([datetime]))>
-    <Column(Order:=2)>
+    <Column(Order:=2, TypeName:="Date")>
     Public Property [datetime] As Date
 
-    <DisplayName("dateTime As String")>
-    <Column(Order:=3)>
+    <DisplayName("datetime As String")>
+    <Column(Order:=3, TypeName:="String")>
     Public Property datetimeAsString As String
 
     <DisplayName(NameOf(OAdatetime))>
-    <Column(Order:=4)>
+    <Column(Order:=4, TypeName:="Double")>
     Public ReadOnly Property OAdatetime As OADate
         Get
             Return New OADate(_datetime)
@@ -84,23 +82,41 @@ Public Class SgRecord
     End Property
 
     <DisplayName("Time Change")>
-    <Column(Order:=5)>
+    <Column(Order:=5, TypeName:="Boolean")>
     Public Property timeChange As Boolean
 
     <DisplayName("Sensor State")>
-    <Column(Order:=6)>
+    <Column(Order:=6, TypeName:="String")>
     Public Property sensorState As String
+        Get
+            Return _sensorState
+        End Get
+        Set
+            _sensorState = Value
+        End Set
+    End Property
 
-    <DisplayName(NameOf(kind))>
-    <Column(Order:=7)>
+    <DisplayName("Sensor Message")>
+    <Column(Order:=7, TypeName:="String")>
+    Public ReadOnly Property Message As String
+        Get
+            If Not s_sensorMessages.TryGetValue(_sensorState, _message) Then
+                Return _sensorState.ToTitle
+            End If
+            Return _Message
+        End Get
+    End Property
+
+    <DisplayName("Kind")>
+    <Column(Order:=8, TypeName:="String")>
     Public Property kind As String
 
-    <DisplayName(NameOf(version))>
-    <Column(Order:=8)>
+    <DisplayName("Version")>
+    <Column(Order:=9, TypeName:="Integer")>
     Public Property version As Integer
 
     <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=9)>
+    <Column(Order:=10, TypeName:="Integer")>
     Public Property relativeOffset As Integer
 
 #End If  ' Prevent reordering

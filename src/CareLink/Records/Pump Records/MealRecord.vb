@@ -8,7 +8,7 @@ Imports System.ComponentModel.DataAnnotations.Schema
 Public Class MealRecord
     Private _dateTime As Date
 
-    <DisplayName(NameOf([dateTime]))>
+    <DisplayName(NameOf(MealRecord.dateTime))>
     <Column(Order:=5)>
     Public Property [dateTime] As Date
         Get
@@ -31,11 +31,11 @@ Public Class MealRecord
     <Column(Order:=2)>
     Public Property index As Integer
 
-    <DisplayName(NameOf(kind))>
+    <DisplayName("Kind")>
     <Column(Order:=3)>
     Public Property kind As String
 
-    <DisplayName("OA date Time")>
+    <DisplayName("OA dateTime")>
     <Column(Order:=7)>
     Public ReadOnly Property OAdateTime As OADate
         Get
@@ -51,11 +51,11 @@ Public Class MealRecord
     <Column(Order:=8)>
     Public Property relativeOffset As Integer
 
-    <DisplayName(NameOf(type))>
+    <DisplayName("Type")>
     <Column(Order:=1)>
     Public Property type As String
 
-    <DisplayName(NameOf(version))>
+    <DisplayName("Version")>
     <Column(Order:=4)>
     Public Property version As Integer
 
