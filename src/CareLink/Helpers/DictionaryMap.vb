@@ -43,7 +43,7 @@ Friend Module DictionaryMap
     End Function
 
     ''' <summary>
-    ''' Fills properties of a class from a row of a Dictionary where the propertyName of the property matches the ket from that dictionary.
+    ''' Fills properties of a class from a row of a Dictionary where the propertyName of the property matches the Key from that dictionary.
     ''' It does this for each row in the Dictionary, returning a class.
     ''' </summary>
     ''' <typeparam propertyName="T">The class type that is to be returned.</typeparam>

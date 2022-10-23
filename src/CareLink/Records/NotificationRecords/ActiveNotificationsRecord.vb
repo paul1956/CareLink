@@ -12,12 +12,8 @@ Public Class ActiveNotificationsRecord
     <Column(Order:=0, TypeName:="Integer")>
     Public Property RecordNumber As Integer
 
-    <DisplayName(NameOf(referenceGUID))>
-    <Column(Order:=1, TypeName:="String")>
-    Public Property referenceGUID As String
-
     <DisplayName(NameOf(ClearedNotificationsRecord.dateTime))>
-    <Column(Order:=2, TypeName:="Date")>
+    <Column(Order:=1, TypeName:="Date")>
     Public Property [dateTime] As Date
         Get
             Return _dateTime
@@ -28,8 +24,12 @@ Public Class ActiveNotificationsRecord
     End Property
 
     <DisplayName("dateTime As String")>
-    <Column(Order:=3, TypeName:="String")>
+    <Column(Order:=2, TypeName:="String")>
     Public Property dateTimeAsString As String
+
+    <DisplayName("GUID")>
+    <Column(Order:=3, TypeName:="String")>
+    Public Property GUID As String = Nothing
 
     <DisplayName("Type")>
     <Column(Order:=4, TypeName:="String")>
@@ -43,7 +43,6 @@ Public Class ActiveNotificationsRecord
     <Column(Order:=6, TypeName:="Integer")>
     Public Property instanceId As Integer
 
-
     <DisplayName("Message Id")>
     <Column(Order:=7, TypeName:="String")>
     Public Property messageId As String
@@ -51,6 +50,14 @@ Public Class ActiveNotificationsRecord
     <DisplayName("Message")>
     <Column(Order:=8, TypeName:="String")>
     Public Property message As String
+
+    <DisplayName("Pump Delivery Suspend State")>
+    <Column(Order:=9, TypeName:="Boolean")>
+    Public Property pumpDeliverySuspendState As Boolean = Nothing
+
+    <DisplayName(NameOf(relativeOffset))>
+    <Column(Order:=10, TypeName:="Integer")>
+    Public Property relativeOffset As Integer = Nothing
 
     <DisplayName(NameOf(basalName))>
     <Column(Order:=11, TypeName:="String")>
@@ -64,36 +71,24 @@ Public Class ActiveNotificationsRecord
     <Column(Order:=13, TypeName:="Date")>
     Public Property secondaryTime As Date = Nothing
 
-    <DisplayName("Pump Delivery Suspend State")>
-    <Column(Order:=14, TypeName:="Boolean")>
-    Public Property pumpDeliverySuspendState As Boolean = Nothing
-
     <DisplayName("pnpId")>
-    <Column(Order:=15, TypeName:="Single")>
+    <Column(Order:=14, TypeName:="Single")>
     Public Property pnpId As Single = Nothing
 
-    <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=16, TypeName:="Integer")>
-    Public Property relativeOffset As Integer = Nothing
-
     <DisplayName("Triggered DateTime")>
-    <Column(Order:=17, TypeName:="Date")>
+    <Column(Order:=15, TypeName:="Date")>
     Public Property triggeredDateTime As Date = Nothing
 
-    <DisplayName("GUID")>
-    <Column(Order:=18, TypeName:="String")>
-    Public Property GUID As String = Nothing
-
     <DisplayName(NameOf(index))>
-    <Column(Order:=19)>
+    <Column(Order:=16)>
     Public Property index As Integer
 
     <DisplayName("Kind")>
-    <Column(Order:=20)>
+    <Column(Order:=17)>
     Public Property kind As String
 
     <DisplayName("Version")>
-    <Column(Order:=21)>
+    <Column(Order:=18)>
     Public Property version As Integer
 
 End Class

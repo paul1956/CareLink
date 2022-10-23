@@ -17,7 +17,7 @@ Public Class Form1
 
     Private ReadOnly _bgMiniDisplay As New BGMiniWindow
     Private ReadOnly _calibrationToolTip As New ToolTip()
-    Private ReadOnly _listOfLowGlusoseSuspendedRecords As New List(Of LowGlusoceSuspendRecord)
+    Private ReadOnly _listOfLowGlucoseSuspendedRecords As New List(Of LowGlusoceSuspendRecord)
     Private ReadOnly _listOfMealRecords As New List(Of MealRecord)
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
     Private ReadOnly _updatingLock As New Object
@@ -123,7 +123,7 @@ Public Class Form1
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
 #If SupportMailServer <> "True" Then
-        Me.MenuOptionsSetupEmailServer.Visible = False
+        Me.MenuOptionsSetupEMailServer.Visible = False
 #End If
         s_timeZoneList = TimeZoneInfo.GetSystemTimeZones.ToList
         Me.AITComboBox = New ToolStripComboBoxEx With {
@@ -338,7 +338,7 @@ Public Class Form1
     End Sub
 
 #If SupportMailServer = "True" Then
-    Private Sub MenuOptionsSetupEmailServer_Click(sender As Object, e As EventArgs) Handles MenuOptionsSetupEmailServer.Click
+    Private Sub MenuOptionsSetupEMailServer_Click(sender As Object, e As EventArgs) Handles MenuOptionsSetupEMailServer.Click
         MailSetupDialog.ShowDialog()
     End Sub
 
@@ -700,7 +700,7 @@ Public Class Form1
     End Sub
 
     Private Sub DataGridViewCareLinkUsers_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridViewCareLinkUsers.CellEndEdit
-        'after you've filled your ds, on event above try something like this
+        'after you've filled your dataSet, on event above try something like this
         Try
             '
         Catch ex As Exception
@@ -938,7 +938,7 @@ Public Class Form1
     Private Sub DataGridViewSummary_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewSummary.ColumnAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
-        e.DgvColumnAdded(DataGridViewHelper.GetCellStyle(e.Column.Name),
+        e.DgvColumnAdded(SummaryRecordHelpers.GetCellStyle(e.Column.Name),
                          False,
                          True,
                          caption)
@@ -1309,7 +1309,7 @@ Public Class Form1
                             Throw UnreachableException()
                     End Select
                 Case "LOW_GLUCOSE_SUSPENDED"
-                    _listOfLowGlusoseSuspendedRecords.Add(DictionaryToClass(Of LowGlusoceSuspendRecord)(newMarker, _listOfLowGlusoseSuspendedRecords.Count + 1))
+                    _listOfLowGlucoseSuspendedRecords.Add(DictionaryToClass(Of LowGlusoceSuspendRecord)(newMarker, _listOfLowGlucoseSuspendedRecords.Count + 1))
                 Case "MEAL"
                     _listOfMealRecords.Add(DictionaryToClass(Of MealRecord)(newMarker, _listOfMealRecords.Count + 1))
                     s_markers.Add(newMarker)
@@ -1370,7 +1370,7 @@ Public Class Form1
         Me.Cursor = Cursors.WaitCursor
         Application.DoEvents()
 
-        _listOfLowGlusoseSuspendedRecords.Clear()
+        _listOfLowGlucoseSuspendedRecords.Clear()
         s_listOfAutoBasalDeliveryMarkers.Clear()
         s_listOfAutoModeStatusMarkers.Clear()
         s_listOfBgReadingMarkers.Clear()
@@ -1572,8 +1572,8 @@ Public Class Form1
                                           NameOf(CalibrationRecord),
                                           AddressOf CalibrationRecordHelpers.AttachHandlers,
                                           ItemIndexs.markers)
-                    DisplayDataTableInDGV(Me.TableLayoutPanelLowGlusoseSuspended,
-                                          ClassToDatatable(_listOfLowGlusoseSuspendedRecords.ToArray),
+                    DisplayDataTableInDGV(Me.TableLayoutPanelLowGlucoseSuspended,
+                                          ClassToDatatable(_listOfLowGlucoseSuspendedRecords.ToArray),
                                           NameOf(LowGlusoceSuspendRecord),
                                           AddressOf LowGlusoceSuspendRecordHelpers.AttachHandlers,
                                           ItemIndexs.markers)
@@ -1583,7 +1583,7 @@ Public Class Form1
                                           AddressOf TimeChangeRecordHelpers.AttachHandlers,
                                           ItemIndexs.markers)
                 Case ItemIndexs.therapyAlgorithmState
-                    DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelTherapyAlgorthm, ItemIndexs.therapyAlgorithmState),
+                    DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelTherapyAlgorithm, ItemIndexs.therapyAlgorithmState),
                                           ClassToDatatable(GetSummaryRecords(Loads(row.Value)).ToArray),
                                           NameOf(SummaryRecord),
                                           AddressOf SummaryRecordHelpers.AttachHandlers,
@@ -1614,6 +1614,8 @@ Public Class Form1
                                     Me.TempTargetLabel.Text = $"Target 150   {New TimeSpan(0, minutes \ 60, minutes Mod 60).ToString.Substring(4)} hr"
                                     Me.TempTargetLabel.Visible = True
                                 Case "BG_REQUIRED"
+                                Case "DELIVERY_SUSPEND"
+                                Case "LOAD_RESERVOIR"
                                 Case Else
                                     If Debugger.IsAttached Then
                                         MsgBox($"{typeValue} is unknown banner message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
@@ -1635,7 +1637,20 @@ Public Class Form1
                         layoutPanel1.AutoScroll = True
                         layoutPanel1.Controls(0).Text = $"{CInt(rowIndex)} {rowIndex}"
                         Dim innerJsonDictionary As Dictionary(Of String, String) = Loads(row.Value)
-                        Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, Color.DarkBlue)
+                        Dim innerTableBlue As New TableLayoutPanel With {
+                                .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                .AutoScroll = False,
+                                .AutoSize = True,
+                                .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                                .BackColor = Color.LightBlue,
+                                .BorderStyle = BorderStyle.FixedSingle,
+                                .ColumnCount = 2,
+                                .Dock = DockStyle.Top,
+                                .Margin = New Padding(3),
+                                .Name = NameOf(innerTableBlue),
+                                .Padding = New Padding(3),
+                                .RowCount = 0
+                            }
                         innerTableBlue.AutoScroll = True
                         layoutPanel1.Controls.Add(innerTableBlue, 0, 1)
                         CreateNotificationTables(innerJsonDictionary, innerTableBlue, rowIndex, s_filterJsonData, isScaledForm)

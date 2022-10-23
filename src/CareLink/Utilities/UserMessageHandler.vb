@@ -42,7 +42,7 @@ Friend Module UserMessageHandler
                         {"BC_SID_DELIVERY_STOPPED_INSERT_NEW_BATTERY", "Insert battery(triggeredDateTime). Delivery stopped. Insert a New battery now."},
                         {"BC_SID_DO_NOT_CALIBRATE_UNLESS_NOTIFIED", "Sensor updating, Do Not calibrate unless notified. This could take up to 3 hours"},
                         {"BC_SID_ENSURE_CONNECTION_SECURE", "Check connection. Ensure transmitter and sensor is secure, then select OK."},
-                        {"BC_SID_ENSURE_DELIVERY_CHANGE_RESERVOIR", "Reservoir empty reminder, change reservior and infusin set."},
+                        {"BC_SID_ENSURE_DELIVERY_CHANGE_RESERVOIR", "Reservoir empty reminder, change reservoir and infusion set."},
                         {"BC_SID_ENTER_BG_TO_CALIBRATE_SENSOR_SENSOR_INFO_NO_AVAILABLE", "Enter BG to calibrate sensor(triggeredDateTime). Sensor info not available."},
                         {"BC_SID_ENTER_BG_TO_CONTINUE_IN_SMART_GUARD", "Enter BG to continue in SmartGuard(triggeredDateTime)."},
                         {"BC_SID_FILL_TUBING_STOPPED_DISCONNECT", "Fill tubing, delivery stopped."},
@@ -51,7 +51,7 @@ Friend Module UserMessageHandler
                         {"BC_SID_INSERT_NEW_SENSOR", "Sensor expired(triggeredDateTime). Insert New sensor."},
                         {"BC_SID_LOW_SD_CHECK_BG", "Alert on low (0) (units)(triggeredDateTime). Low sensor glucose. Check BG.:sg"},
                         {"BC_SID_LOW_SG_INSULIN_DELIVERY_SUSPENDED_SINCE_X_CHECK_BG", "Alert on low (0) (units)(triggeredDateTime). Insulin delivery suspended since (secondaryTime). Check BG.:sg"},
-                        {"BC_SID_MAXIMUM_2_HOUR_SUSPEND_TIME_REACHED_CHECK_BG", "Maximum 2 hour suspend time time reached(triggeredDateTime). Check BG"},
+                        {"BC_SID_MAXIMUM_2_HOUR_SUSPEND_TIME_REACHED_CHECK_BG", "Maximum 2 hour suspend time reached(triggeredDateTime). Check BG"},
                         {"BC_SID_MOVE_AWAY_FROM_ELECTR_DEVICES", "Possible signal interface(triggeredDateTime). Move away from electronic devices. May take 15 minutes to find signal."},
                         {"BC_SID_MOVE_PUMP_CLOSER_TO_MINILINK", "Lost sensor signal(triggeredDateTime). Move pump closer to transmitter. May take 15 minutes to find signal."},
                         {"BC_SID_REPLACE_BATTERY_SOON", "Battery low(triggeredDateTime). Replace battery soon."},
@@ -63,7 +63,7 @@ Friend Module UserMessageHandler
                         {"BC_SID_SMART_GUARD_MINIMUM_DELIVERY", "SmartGuard minimum delivery."},
                         {"BC_SID_START_NEW_SENSOR", "Start New sensor."},
                         {"BC_SID_THREE_DAYS_SINCE_LAST_SET_CHANGE", "Set Change reminder(triggeredDateTime). (0) days since last set change. Time to change reservoir and infusion set.:lastSetChange"},
-                        {"BC_SID_THREE_DAYS_SINCE_LAST_SET_CHANGE1", "Set change reminder. changer reservior and infusion set."},
+                        {"BC_SID_THREE_DAYS_SINCE_LAST_SET_CHANGE1", "Set change reminder. changer reservoir and infusion set."},
                         {"BC_SID_UMAX_ALERT_INFO", "Auto Mode max delivery. Auto Mode has been at maximum delivery for 4 hours. Enter BG to continue in Auto Mode."},
                         {"BC_SID_UMIN_ALERT_INFO", "Auto Mode min delivery. Auto Mode has been at minimum delivery for 2 hours. Enter BG to continue in Auto Mode."},
                         {"BC_SID_UPDATING_CAN_TAKE_UP_TO_THREE_HOURS", "Sensor updating(triggeredDateTime), it can take up to 3 hours."},
@@ -75,6 +75,7 @@ Friend Module UserMessageHandler
                             {"CALIBRATING", "Calibrating ..."},
                             {"CALIBRATION_REQUIRED", "Calibration required"},
                             {"CHANGE_SENSOR", "Change sensor"},
+                            {"DELIVERY_SUSPEND", "Delivery Suspended"},
                             {"DO_NOT_CALIBRATE", "Do Not calibrate."},
                             {"LOAD_RESERVOIR", "Load Reservoir"},
                             {"NO_DATA_FROM_PUMP", "No data from pump"},
@@ -95,7 +96,7 @@ Friend Module UserMessageHandler
         Return New TimeOnly(CInt(rawTime.Substring(0, 2)), CInt(rawTime.Substring(3, 2))).ToString(format)
     End Function
 
-    Friend Function TranslateNotificationMessageId(dic As Dictionary(Of String, String), entryValue As String) As String
+    Friend Function TranslateNotificationMessageId(jsonDictionary As Dictionary(Of String, String), entryValue As String) As String
         Dim formattedMessage As String = ""
         Try
             If s_NotificationMessages.TryGetValue(entryValue, formattedMessage) Then
@@ -105,9 +106,9 @@ Friend Module UserMessageHandler
                 If splitMessageValue.Length > 1 Then
                     key = splitMessageValue(1)
                     If key = "lastSetChange" Then
-                        replacementValue = s_oneToNineteen(CInt(dic(key))).ToTitle
+                        replacementValue = s_oneToNineteen(CInt(jsonDictionary(key))).ToTitle
                     Else
-                        replacementValue = dic(key)
+                        replacementValue = jsonDictionary(key)
                         Dim resultDate As Date
                         If replacementValue.TryParseDate(resultDate, key) Then
                             replacementValue = resultDate.ToString
@@ -115,16 +116,16 @@ Friend Module UserMessageHandler
                     End If
                 End If
 
-                Dim secondaryTime As String = If(dic.ContainsKey("secondaryTime"), dic("secondaryTime").FormatTimeOnly(s_timeWithMinuteFormat), "")
+                Dim secondaryTime As String = If(jsonDictionary.ContainsKey("secondaryTime"), jsonDictionary("secondaryTime").FormatTimeOnly(s_timeWithMinuteFormat), "")
                 Dim triggeredDateTime As String = ""
-                If dic.ContainsKey("triggeredDateTime") Then
-                    triggeredDateTime = $" {dic("triggeredDateTime").ParseDate("triggeredDateTime")}"
-                ElseIf dic.ContainsKey("datetime") Then
-                    triggeredDateTime = $" {dic("datetime").ParseDate("datetime")}"
-                ElseIf dic.ContainsKey("DateTime") Then
-                    triggeredDateTime = $" {dic("DateTime").ParseDate("DateTime")}"
-                ElseIf dic.ContainsKey("dateTime") Then
-                    triggeredDateTime = $" {dic("dateTime").ParseDate("dateTime")}"
+                If jsonDictionary.ContainsKey("triggeredDateTime") Then
+                    triggeredDateTime = $" {jsonDictionary("triggeredDateTime").ParseDate("triggeredDateTime")}"
+                ElseIf jsonDictionary.ContainsKey("datetime") Then
+                    triggeredDateTime = $" {jsonDictionary("datetime").ParseDate("datetime")}"
+                ElseIf jsonDictionary.ContainsKey("DateTime") Then
+                    triggeredDateTime = $" {jsonDictionary("DateTime").ParseDate("DateTime")}"
+                ElseIf jsonDictionary.ContainsKey("dateTime") Then
+                    triggeredDateTime = $" {jsonDictionary("dateTime").ParseDate("dateTime")}"
                 Else
                     Stop
                 End If

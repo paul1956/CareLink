@@ -27,14 +27,14 @@ Public Class MailSetupDialog
 
     Private _useExchange As Boolean = True
 
-    Private Shared Function IsValidEmailAddress(mailServerUserName As String, ByRef errorMsg As String) As Boolean
-        If String.IsNullOrWhiteSpace(mailServerUserName) Then
+    Private Shared Function IsValidEmailAddress(MailServerUserName As String, ByRef errorMsg As String) As Boolean
+        If String.IsNullOrWhiteSpace(MailServerUserName) Then
             errorMsg = "Required"
             Return False
         End If
 
         Try
-            Dim tempVar As New Net.Mail.MailAddress(mailServerUserName)
+            Dim tempVar As New Net.Mail.MailAddress(MailServerUserName)
         Catch e1 As ArgumentException
             errorMsg = "Required"
             Return False

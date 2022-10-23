@@ -158,11 +158,11 @@ Partial Class MailSetupDialog
         '
         Me.ErrorProvider1.ContainerControl = Me
         '
-        'LabelLowGlusoseSuspended
+        'LabelLowGlucoseSuspended
         '
         Me.Label5.AutoSize = True
         Me.Label5.Location = New System.Drawing.Point(18, 202)
-        Me.Label5.Name = "LabelLowGlusoseSuspended"
+        Me.Label5.Name = "LabelLowGlucoseSuspended"
         Me.Label5.Size = New System.Drawing.Size(105, 15)
         Me.Label5.TabIndex = 11
         Me.Label5.Text = "Alert Phone Digits:"

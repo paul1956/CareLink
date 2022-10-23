@@ -9,7 +9,6 @@ Class NotificationsRecordHelpers
             NameOf(ActiveNotificationsRecord.index),
             NameOf(ActiveNotificationsRecord.instanceId),
             NameOf(ActiveNotificationsRecord.kind),
-            NameOf(ActiveNotificationsRecord.referenceGUID),
             NameOf(ActiveNotificationsRecord.relativeOffset),
             NameOf(ActiveNotificationsRecord.version),
             NameOf(ClearedNotificationsRecord.faultId),

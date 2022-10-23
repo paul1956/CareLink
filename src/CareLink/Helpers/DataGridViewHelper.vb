@@ -3,22 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Module DataGridViewHelper
-
-    Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
-        e.DgvColumnAdded(GetCellStyle(e.Column.Name),
-                        False,
-                        True,
-                        caption)
-    End Sub
-
-    Private Function GetDisplayName(Of T As Class)(_displayNameMapping As Dictionary(Of String, String), name As String) As String
-        If _displayNameMapping.Count = 0 Then
-            _displayNameMapping = ClassPropertiesToDisplayNames(Of T)()
-        End If
-        Return _displayNameMapping(name)
-    End Function
+    Friend Delegate Sub attachHandlers(dgv As DataGridView)
 
     Friend Function CreateDefaultDataGridView(dgvName As String) As DataGridView
         Dim dGV As New DataGridView With {
@@ -48,32 +33,37 @@ Friend Module DataGridViewHelper
         Return dGV
     End Function
 
-    Public Sub AttachHandlers(dgv As DataGridView)
-        AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
+    Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, dGV As DataGridView, table As DataTable, rowIndex As ItemIndexs)
+        initializeTableLayoutPanel(realPanel, rowIndex)
+        dGV.DataSource = table
+        dGV.RowHeadersVisible = False
     End Sub
 
-    Public Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Dim cellStyle As New DataGridViewCellStyle
-
-        Select Case columnName
-            Case NameOf(SummaryRecord.RecordNumber)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
-            Case NameOf(SummaryRecord.Key),
-                 NameOf(SummaryRecord.Message)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-            Case NameOf(SummaryRecord.Value)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-            Case Else
-                Throw UnreachableException()
-        End Select
-        Return cellStyle
-    End Function
-
-    Public Function GetColumnAlignment(Of T As Class)(_columnAlignmentMapping As Dictionary(Of String, DataGridViewContentAlignment), name As String) As DataGridViewContentAlignment
-        If _columnAlignmentMapping.Count = 0 Then
-            _columnAlignmentMapping = ClassPropertiesToCoumnAlignment(Of T)()
+    Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As ItemIndexs)
+        initializeTableLayoutPanel(realPanel, rowIndex)
+        Dim dGV As DataGridView
+        If realPanel.Controls.Count > 1 Then
+            dGV = CType(realPanel.Controls(1), DataGridView)
+        Else
+            dGV = CreateDefaultDataGridView($"DataGridView{className}")
+            realPanel.Controls.Add(dGV, 0, 1)
+            attachHandlers(dGV)
         End If
-        Return _columnAlignmentMapping(name)
-    End Function
+        dGV.DataSource = table
+        dGV.RowHeadersVisible = False
+    End Sub
+
+    Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As Integer)
+        Dim dGV As DataGridView = CreateDefaultDataGridView($"DataGridView{className}")
+        dGV.AllowUserToResizeRows = False
+        dGV.AutoSize = False
+        dGV.ColumnHeadersVisible = False
+        dGV.ReadOnly = True
+        realPanel.Controls.Add(dGV, 0, rowIndex)
+        attachHandlers(dGV)
+        dGV.DataSource = table
+        dGV.RowHeadersVisible = False
+        dGV.Height = table.Rows.Count * 30
+    End Sub
 
 End Module

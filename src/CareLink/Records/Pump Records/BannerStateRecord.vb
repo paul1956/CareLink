@@ -33,7 +33,7 @@ Public Class BannerStateRecord
                 Stop
             End If
 
-            Return _type.ToTitle.Replace("Bg ", "BG ")
+            Return _type.ToTitle
         End Get
     End Property
 

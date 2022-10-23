@@ -51,6 +51,7 @@
 
   <ItemGroup>
     <Compile Remove="Forms\FileNameStruct.vb" />
+    <Compile Remove="Utilities\CareLinkFilters.vb" />
   </ItemGroup>
 
   <ItemGroup>

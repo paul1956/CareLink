@@ -14,7 +14,6 @@ Friend Module SummaryRecordHelpers
                         True,
                         caption)
     End Sub
-
     Friend Function GetSummaryRecords(dic As Dictionary(Of String, String), Optional rowsToHide As List(Of String) = Nothing) As List(Of SummaryRecord)
         Dim summaryList As New List(Of SummaryRecord)
         For Each row As KeyValuePair(Of String, String) In dic
@@ -66,7 +65,7 @@ Friend Module SummaryRecordHelpers
             Case NameOf(SummaryRecord.RecordNumber)
                 cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
             Case NameOf(SummaryRecord.Key),
-                NameOf(SummaryRecord.Message)
+                 NameOf(SummaryRecord.Message)
                 cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
             Case NameOf(SummaryRecord.Value)
                 cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))

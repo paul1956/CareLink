@@ -62,7 +62,7 @@ Partial Class Form1
         Me.MenuOptions = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsAutoLogin = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsFilterRawJSONData = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MenuOptionsSetupEmailServer = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuOptionsSetupEMailServer = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsUseAdvancedAITDecay = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsUseLocalTimeZone = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelp = New System.Windows.Forms.ToolStripMenuItem()
@@ -155,8 +155,8 @@ Partial Class Form1
         Me.TableLayoutPanelBasal = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelBasal = New System.Windows.Forms.Label()
         Me.TabPage10TherapyAlgorithm = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanelTherapyAlgorthm = New System.Windows.Forms.TableLayoutPanel()
-        Me.LabelTherapyAlgorthm = New System.Windows.Forms.Label()
+        Me.TableLayoutPanelTherapyAlgorithm = New System.Windows.Forms.TableLayoutPanel()
+        Me.LabelTherapyAlgorithm = New System.Windows.Forms.Label()
         Me.TabPage11BannerState = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelBannerState = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelBannerState = New System.Windows.Forms.Label()
@@ -180,9 +180,9 @@ Partial Class Form1
         Me.LabelInsulin = New System.Windows.Forms.Label()
         Me.DataGridViewInsulin = New System.Windows.Forms.DataGridView()
         Me.DataGridViewMeal = New System.Windows.Forms.DataGridView()
-        Me.TabPageLowGlusoseSuspended = New System.Windows.Forms.TabPage()
-        Me.TableLayoutPanelLowGlusoseSuspended = New System.Windows.Forms.TableLayoutPanel()
-        Me.LabelLowGlusoseSuspended = New System.Windows.Forms.Label()
+        Me.TabPageLowGlucoseSuspended = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanelLowGlucoseSuspended = New System.Windows.Forms.TableLayoutPanel()
+        Me.LabelLowGlucoseSuspended = New System.Windows.Forms.Label()
         Me.TabPageMeal = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelMeal = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelMeal = New System.Windows.Forms.Label()
@@ -224,9 +224,9 @@ Partial Class Form1
         Me.DataGridViewTextBoxColumnCareLinkAlertPhoneNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumnCareLinkCarrierTextingDomain = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumnCareLinkCountryCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCareLinkMailserverPassword = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCareLinkMailServerPassword = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumnCareLinkMailServerPort = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCareLinkMailserverUserName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumnCareLinkMailServerUserName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumnCareLinkSettingsVersion = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumnCareLinkOutGoingMailServer = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewCheckBoxColumnCareLinkUseAdvancedAITDecay = New System.Windows.Forms.DataGridViewCheckBoxColumn()
@@ -281,7 +281,7 @@ Partial Class Form1
         Me.TabPage09Basal.SuspendLayout()
         Me.TableLayoutPanelBasal.SuspendLayout()
         Me.TabPage10TherapyAlgorithm.SuspendLayout()
-        Me.TableLayoutPanelTherapyAlgorthm.SuspendLayout()
+        Me.TableLayoutPanelTherapyAlgorithm.SuspendLayout()
         Me.TabPage11BannerState.SuspendLayout()
         Me.TableLayoutPanelBannerState.SuspendLayout()
         Me.TabControlPage2.SuspendLayout()
@@ -297,8 +297,8 @@ Partial Class Form1
         Me.TabPageInsulin.SuspendLayout()
         Me.TableLayoutPanelInsulin.SuspendLayout()
         CType(Me.DataGridViewInsulin, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.TabPageLowGlusoseSuspended.SuspendLayout()
-        Me.TableLayoutPanelLowGlusoseSuspended.SuspendLayout()
+        Me.TabPageLowGlucoseSuspended.SuspendLayout()
+        Me.TableLayoutPanelLowGlucoseSuspended.SuspendLayout()
         Me.TabPageMeal.SuspendLayout()
         Me.TableLayoutPanelMeal.SuspendLayout()
         CType(Me.DataGridViewMeal, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -402,7 +402,7 @@ Partial Class Form1
         '
         'MenuOptions
         '
-        Me.MenuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuOptionsAutoLogin, Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsSetupEmailServer, Me.MenuOptionsUseAdvancedAITDecay, Me.MenuOptionsUseLocalTimeZone})
+        Me.MenuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuOptionsAutoLogin, Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsSetupEMailServer, Me.MenuOptionsUseAdvancedAITDecay, Me.MenuOptionsUseLocalTimeZone})
         Me.MenuOptions.Name = "MenuOptions"
         Me.MenuOptions.Size = New System.Drawing.Size(61, 20)
         Me.MenuOptions.Text = "Options"
@@ -423,12 +423,12 @@ Partial Class Form1
         Me.MenuOptionsFilterRawJSONData.Size = New System.Drawing.Size(204, 22)
         Me.MenuOptionsFilterRawJSONData.Text = "Filter Raw JSON Data"
         '
-        'MenuOptionsSetupEmailServer
+        'MenuOptionsSetupEMailServer
         '
-        Me.MenuOptionsSetupEmailServer.Name = "MenuOptionsSetupEmailServer"
-        Me.MenuOptionsSetupEmailServer.Size = New System.Drawing.Size(204, 22)
-        Me.MenuOptionsSetupEmailServer.Text = "Setup Email Server"
-        Me.MenuOptionsSetupEmailServer.Visible = False
+        Me.MenuOptionsSetupEMailServer.Name = "MenuOptionsSetupEMailServer"
+        Me.MenuOptionsSetupEMailServer.Size = New System.Drawing.Size(204, 22)
+        Me.MenuOptionsSetupEMailServer.Text = "Setup Email Server"
+        Me.MenuOptionsSetupEMailServer.Visible = False
         '
         'MenuOptionsUseAdvancedAITDecay
         '
@@ -1440,7 +1440,7 @@ Partial Class Form1
         Me.LabelSgs.Margin = New System.Windows.Forms.Padding(3)
         Me.LabelSgs.Name = "LabelSgs"
         Me.LabelSgs.Size = New System.Drawing.Size(1358, 30)
-        Me.LabelSgs.Text = "Sgs"
+        Me.LabelSgs.Text = "SGs"
         Me.LabelSgs.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'DataGridViewSGs
@@ -1592,7 +1592,7 @@ Partial Class Form1
         '
         'TabPage10TherapyAlgorithm
         '
-        Me.TabPage10TherapyAlgorithm.Controls.Add(Me.TableLayoutPanelTherapyAlgorthm)
+        Me.TabPage10TherapyAlgorithm.Controls.Add(Me.TableLayoutPanelTherapyAlgorithm)
         Me.TabPage10TherapyAlgorithm.Location = New System.Drawing.Point(4, 27)
         Me.TabPage10TherapyAlgorithm.Name = "TabPage10TherapyAlgorithm"
         Me.TabPage10TherapyAlgorithm.Padding = New System.Windows.Forms.Padding(3)
@@ -1601,33 +1601,33 @@ Partial Class Form1
         Me.TabPage10TherapyAlgorithm.Text = "Therapy Algorithm"
         Me.TabPage10TherapyAlgorithm.UseVisualStyleBackColor = True
         '
-        'TableLayoutPanelTherapyAlgorthm
+        'TableLayoutPanelTherapyAlgorithm
         '
-        Me.TableLayoutPanelTherapyAlgorthm.AutoSize = True
-        Me.TableLayoutPanelTherapyAlgorthm.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelTherapyAlgorthm.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelTherapyAlgorthm.ColumnCount = 1
-        Me.TableLayoutPanelTherapyAlgorthm.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelTherapyAlgorthm.Controls.Add(Me.LabelTherapyAlgorthm, 0, 0)
-        Me.TableLayoutPanelTherapyAlgorthm.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanelTherapyAlgorthm.Location = New System.Drawing.Point(3, 3)
-        Me.TableLayoutPanelTherapyAlgorthm.Name = "TableLayoutPanelTherapyAlgorthm"
-        Me.TableLayoutPanelTherapyAlgorthm.RowCount = 2
-        Me.TableLayoutPanelTherapyAlgorthm.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
-        Me.TableLayoutPanelTherapyAlgorthm.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelTherapyAlgorthm.TabIndex = 0
+        Me.TableLayoutPanelTherapyAlgorithm.AutoSize = True
+        Me.TableLayoutPanelTherapyAlgorithm.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelTherapyAlgorithm.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelTherapyAlgorithm.ColumnCount = 1
+        Me.TableLayoutPanelTherapyAlgorithm.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelTherapyAlgorithm.Controls.Add(Me.LabelTherapyAlgorithm, 0, 0)
+        Me.TableLayoutPanelTherapyAlgorithm.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanelTherapyAlgorithm.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelTherapyAlgorithm.Name = "TableLayoutPanelTherapyAlgorithm"
+        Me.TableLayoutPanelTherapyAlgorithm.RowCount = 2
+        Me.TableLayoutPanelTherapyAlgorithm.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
+        Me.TableLayoutPanelTherapyAlgorithm.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelTherapyAlgorithm.TabIndex = 0
         '
-        'LabelTherapyAlgorthm
+        'LabelTherapyAlgorithm
         '
-        Me.LabelTherapyAlgorthm.AutoSize = True
-        Me.LabelTherapyAlgorthm.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelTherapyAlgorthm.Location = New System.Drawing.Point(0, 0)
-        Me.LabelTherapyAlgorthm.Margin = New System.Windows.Forms.Padding(3)
-        Me.LabelTherapyAlgorthm.Name = "LabelTherapyAlgorthm"
-        Me.LabelTherapyAlgorthm.Size = New System.Drawing.Size(1358, 30)
-        Me.LabelTherapyAlgorthm.TabIndex = 0
-        Me.LabelTherapyAlgorthm.Text = "Therapy Algorthm"
-        Me.LabelTherapyAlgorthm.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.LabelTherapyAlgorithm.AutoSize = True
+        Me.LabelTherapyAlgorithm.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.LabelTherapyAlgorithm.Location = New System.Drawing.Point(0, 0)
+        Me.LabelTherapyAlgorithm.Margin = New System.Windows.Forms.Padding(3)
+        Me.LabelTherapyAlgorithm.Name = "LabelTherapyAlgorithm"
+        Me.LabelTherapyAlgorithm.Size = New System.Drawing.Size(1358, 30)
+        Me.LabelTherapyAlgorithm.TabIndex = 0
+        Me.LabelTherapyAlgorithm.Text = "Therapy Algorithm"
+        Me.LabelTherapyAlgorithm.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'TabPage11BannerState
         '
@@ -1687,7 +1687,7 @@ Partial Class Form1
         Me.TabControlPage2.Controls.Add(Me.TabPageBgReadings)
         Me.TabControlPage2.Controls.Add(Me.TabPageCalibration)
         Me.TabControlPage2.Controls.Add(Me.TabPageInsulin)
-        Me.TabControlPage2.Controls.Add(Me.TabPageLowGlusoseSuspended)
+        Me.TabControlPage2.Controls.Add(Me.TabPageLowGlucoseSuspended)
         Me.TabControlPage2.Controls.Add(Me.TabPageMeal)
         Me.TabControlPage2.Controls.Add(Me.TabPageTimeChange)
         Me.TabControlPage2.Controls.Add(Me.TabPageCountryDataPg1)
@@ -1960,46 +1960,46 @@ Partial Class Form1
         Me.DataGridViewInsulin.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
         Me.DataGridViewInsulin.TabIndex = 0
         '
-        'TabPageLowGlusoseSuspended
+        'TabPageLowGlucoseSuspended
         '
-        Me.TabPageLowGlusoseSuspended.Controls.Add(Me.TableLayoutPanelLowGlusoseSuspended)
-        Me.TabPageLowGlusoseSuspended.Location = New System.Drawing.Point(4, 27)
-        Me.TabPageLowGlusoseSuspended.Name = "TabPageLowGlusoseSuspended"
-        Me.TabPageLowGlusoseSuspended.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageLowGlusoseSuspended.Size = New System.Drawing.Size(1376, 639)
-        Me.TabPageLowGlusoseSuspended.TabIndex = 5
-        Me.TabPageLowGlusoseSuspended.Text = "Low Glusose Suspended"
-        Me.TabPageLowGlusoseSuspended.UseVisualStyleBackColor = True
+        Me.TabPageLowGlucoseSuspended.Controls.Add(Me.TableLayoutPanelLowGlucoseSuspended)
+        Me.TabPageLowGlucoseSuspended.Location = New System.Drawing.Point(4, 27)
+        Me.TabPageLowGlucoseSuspended.Name = "TabPageLowGlucoseSuspended"
+        Me.TabPageLowGlucoseSuspended.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPageLowGlucoseSuspended.Size = New System.Drawing.Size(1376, 639)
+        Me.TabPageLowGlucoseSuspended.TabIndex = 5
+        Me.TabPageLowGlucoseSuspended.Text = "Low Glucose Suspended"
+        Me.TabPageLowGlucoseSuspended.UseVisualStyleBackColor = True
         '
-        'TableLayoutPanelLowGlusoseSuspended
+        'TableLayoutPanelLowGlucoseSuspended
         '
-        Me.TableLayoutPanelLowGlusoseSuspended.AutoScroll = True
-        Me.TableLayoutPanelLowGlusoseSuspended.AutoSize = True
-        Me.TableLayoutPanelLowGlusoseSuspended.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelLowGlusoseSuspended.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelLowGlusoseSuspended.ColumnCount = 1
-        Me.TableLayoutPanelLowGlusoseSuspended.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelLowGlusoseSuspended.Controls.Add(Me.LabelLowGlusoseSuspended, 0, 0)
-        Me.TableLayoutPanelLowGlusoseSuspended.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanelLowGlusoseSuspended.Location = New System.Drawing.Point(3, 3)
-        Me.TableLayoutPanelLowGlusoseSuspended.Name = "TableLayoutPanelLowGlusoseSuspended"
-        Me.TableLayoutPanelLowGlusoseSuspended.RowCount = 2
-        Me.TableLayoutPanelLowGlusoseSuspended.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
-        Me.TableLayoutPanelLowGlusoseSuspended.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelLowGlusoseSuspended.Size = New System.Drawing.Size(1370, 633)
-        Me.TableLayoutPanelLowGlusoseSuspended.TabIndex = 1
+        Me.TableLayoutPanelLowGlucoseSuspended.AutoScroll = True
+        Me.TableLayoutPanelLowGlucoseSuspended.AutoSize = True
+        Me.TableLayoutPanelLowGlucoseSuspended.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelLowGlucoseSuspended.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelLowGlucoseSuspended.ColumnCount = 1
+        Me.TableLayoutPanelLowGlucoseSuspended.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelLowGlucoseSuspended.Controls.Add(Me.LabelLowGlucoseSuspended, 0, 0)
+        Me.TableLayoutPanelLowGlucoseSuspended.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanelLowGlucoseSuspended.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelLowGlucoseSuspended.Name = "TableLayoutPanelLowGlucoseSuspended"
+        Me.TableLayoutPanelLowGlucoseSuspended.RowCount = 2
+        Me.TableLayoutPanelLowGlucoseSuspended.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
+        Me.TableLayoutPanelLowGlucoseSuspended.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelLowGlucoseSuspended.Size = New System.Drawing.Size(1370, 633)
+        Me.TableLayoutPanelLowGlucoseSuspended.TabIndex = 1
         '
-        'LabelLowGlusoseSuspended
+        'LabelLowGlucoseSuspended
         '
-        Me.LabelLowGlusoseSuspended.AutoSize = True
-        Me.LabelLowGlusoseSuspended.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.LabelLowGlusoseSuspended.Location = New System.Drawing.Point(0, 0)
-        Me.LabelLowGlusoseSuspended.Margin = New System.Windows.Forms.Padding(3)
-        Me.LabelLowGlusoseSuspended.Name = "LabelLowGlusoseSuspended"
-        Me.LabelLowGlusoseSuspended.Size = New System.Drawing.Size(1358, 30)
-        Me.LabelLowGlusoseSuspended.TabIndex = 0
-        Me.LabelLowGlusoseSuspended.Text = "Low Glusose Suspended"
-        Me.LabelLowGlusoseSuspended.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.LabelLowGlucoseSuspended.AutoSize = True
+        Me.LabelLowGlucoseSuspended.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.LabelLowGlucoseSuspended.Location = New System.Drawing.Point(0, 0)
+        Me.LabelLowGlucoseSuspended.Margin = New System.Windows.Forms.Padding(3)
+        Me.LabelLowGlucoseSuspended.Name = "LabelLowGlucoseSuspended"
+        Me.LabelLowGlucoseSuspended.Size = New System.Drawing.Size(1358, 30)
+        Me.LabelLowGlucoseSuspended.TabIndex = 0
+        Me.LabelLowGlucoseSuspended.Text = "Low Glucose Suspended"
+        Me.LabelLowGlucoseSuspended.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'TabPageMeal
         '
@@ -2079,7 +2079,7 @@ Partial Class Form1
         Me.LabelTimeChange.Name = "LabelTimeChange"
         Me.LabelTimeChange.Size = New System.Drawing.Size(1358, 30)
         Me.LabelTimeChange.TabIndex = 0
-        Me.LabelTimeChange.Text = "Tme Change"
+        Me.LabelTimeChange.Text = "Time Change"
         Me.LabelTimeChange.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'TabPageCountryDataPg1
@@ -2418,7 +2418,7 @@ Partial Class Form1
         DataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DataGridViewCareLinkUsers.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle20
         Me.DataGridViewCareLinkUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewCareLinkUsers.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewButtonColumnCareLinkDeleteRow, Me.DataGridViewTextBoxColumnCareLinkUsersID, Me.DataGridViewTextBoxColumnCareLinkUserName, Me.DataGridViewTextBoxColumnCareLinkPassword, Me.DataGridViewTextBoxColumnCareLinkAIT, Me.DataGridViewTextBoxColumnCareLinkAlertPhoneNumber, Me.DataGridViewTextBoxColumnCareLinkCarrierTextingDomain, Me.DataGridViewTextBoxColumnCareLinkCountryCode, Me.DataGridViewTextBoxColumnCareLinkMailserverPassword, Me.DataGridViewTextBoxColumnCareLinkMailServerPort, Me.DataGridViewTextBoxColumnCareLinkMailserverUserName, Me.DataGridViewTextBoxColumnCareLinkSettingsVersion, Me.DataGridViewTextBoxColumnCareLinkOutGoingMailServer, Me.DataGridViewCheckBoxColumnCareLinkUseAdvancedAITDecay, Me.DataGridViewCheckBoxColumnCareLinkUseLocalTimeZone, Me.DataGridViewCheckBoxColumnCareLinkAutoLogin})
+        Me.DataGridViewCareLinkUsers.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewButtonColumnCareLinkDeleteRow, Me.DataGridViewTextBoxColumnCareLinkUsersID, Me.DataGridViewTextBoxColumnCareLinkUserName, Me.DataGridViewTextBoxColumnCareLinkPassword, Me.DataGridViewTextBoxColumnCareLinkAIT, Me.DataGridViewTextBoxColumnCareLinkAlertPhoneNumber, Me.DataGridViewTextBoxColumnCareLinkCarrierTextingDomain, Me.DataGridViewTextBoxColumnCareLinkCountryCode, Me.DataGridViewTextBoxColumnCareLinkMailServerPassword, Me.DataGridViewTextBoxColumnCareLinkMailServerPort, Me.DataGridViewTextBoxColumnCareLinkMailServerUserName, Me.DataGridViewTextBoxColumnCareLinkSettingsVersion, Me.DataGridViewTextBoxColumnCareLinkOutGoingMailServer, Me.DataGridViewCheckBoxColumnCareLinkUseAdvancedAITDecay, Me.DataGridViewCheckBoxColumnCareLinkUseLocalTimeZone, Me.DataGridViewCheckBoxColumnCareLinkAutoLogin})
         Me.DataGridViewCareLinkUsers.DataSource = Me.CareLinkUserDataRecordBindingSource
         Me.DataGridViewCareLinkUsers.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridViewCareLinkUsers.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
@@ -2499,29 +2499,29 @@ Partial Class Form1
         Me.DataGridViewTextBoxColumnCareLinkCountryCode.Name = "DataGridViewTextBoxColumnCareLinkCountryCode"
         Me.DataGridViewTextBoxColumnCareLinkCountryCode.Width = 97
         '
-        'DataGridViewTextBoxColumnCareLinkMailserverPassword
+        'DataGridViewTextBoxColumnCareLinkMailServerPassword
         '
-        Me.DataGridViewTextBoxColumnCareLinkMailserverPassword.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCareLinkMailserverPassword.DataPropertyName = "MailserverPassword"
-        Me.DataGridViewTextBoxColumnCareLinkMailserverPassword.HeaderText = "Mailserver Password"
-        Me.DataGridViewTextBoxColumnCareLinkMailserverPassword.Name = "DataGridViewTextBoxColumnCareLinkMailserverPassword"
-        Me.DataGridViewTextBoxColumnCareLinkMailserverPassword.Width = 127
+        Me.DataGridViewTextBoxColumnCareLinkMailServerPassword.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnCareLinkMailServerPassword.DataPropertyName = "MailServerPassword"
+        Me.DataGridViewTextBoxColumnCareLinkMailServerPassword.HeaderText = "Mail Server Password"
+        Me.DataGridViewTextBoxColumnCareLinkMailServerPassword.Name = "DataGridViewTextBoxColumnCareLinkMailServerPassword"
+        Me.DataGridViewTextBoxColumnCareLinkMailServerPassword.Width = 127
         '
         'DataGridViewTextBoxColumnCareLinkMailServerPort
         '
         Me.DataGridViewTextBoxColumnCareLinkMailServerPort.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
         Me.DataGridViewTextBoxColumnCareLinkMailServerPort.DataPropertyName = "MailServerPort"
-        Me.DataGridViewTextBoxColumnCareLinkMailServerPort.HeaderText = "MailServer Port"
+        Me.DataGridViewTextBoxColumnCareLinkMailServerPort.HeaderText = "Mail Server Port"
         Me.DataGridViewTextBoxColumnCareLinkMailServerPort.Name = "DataGridViewTextBoxColumnCareLinkMailServerPort"
         Me.DataGridViewTextBoxColumnCareLinkMailServerPort.Width = 103
         '
-        'DataGridViewTextBoxColumnCareLinkMailserverUserName
+        'DataGridViewTextBoxColumnCareLinkMailServerUserName
         '
-        Me.DataGridViewTextBoxColumnCareLinkMailserverUserName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCareLinkMailserverUserName.DataPropertyName = "MailserverUserName"
-        Me.DataGridViewTextBoxColumnCareLinkMailserverUserName.HeaderText = "Mailserver User Name"
-        Me.DataGridViewTextBoxColumnCareLinkMailserverUserName.Name = "DataGridViewTextBoxColumnCareLinkMailserverUserName"
-        Me.DataGridViewTextBoxColumnCareLinkMailserverUserName.Width = 106
+        Me.DataGridViewTextBoxColumnCareLinkMailServerUserName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewTextBoxColumnCareLinkMailServerUserName.DataPropertyName = "MailServerUserName"
+        Me.DataGridViewTextBoxColumnCareLinkMailServerUserName.HeaderText = "MailServer User Name"
+        Me.DataGridViewTextBoxColumnCareLinkMailServerUserName.Name = "DataGridViewTextBoxColumnCareLinkMailServerUserName"
+        Me.DataGridViewTextBoxColumnCareLinkMailServerUserName.Width = 106
         '
         'DataGridViewTextBoxColumnCareLinkSettingsVersion
         '
@@ -2708,8 +2708,8 @@ Partial Class Form1
         Me.TableLayoutPanelBasal.PerformLayout()
         Me.TabPage10TherapyAlgorithm.ResumeLayout(False)
         Me.TabPage10TherapyAlgorithm.PerformLayout()
-        Me.TableLayoutPanelTherapyAlgorthm.ResumeLayout(False)
-        Me.TableLayoutPanelTherapyAlgorthm.PerformLayout()
+        Me.TableLayoutPanelTherapyAlgorithm.ResumeLayout(False)
+        Me.TableLayoutPanelTherapyAlgorithm.PerformLayout()
         Me.TabPage11BannerState.ResumeLayout(False)
         Me.TableLayoutPanelBannerState.ResumeLayout(False)
         Me.TableLayoutPanelBannerState.PerformLayout()
@@ -2734,10 +2734,10 @@ Partial Class Form1
         Me.TableLayoutPanelInsulin.ResumeLayout(False)
         Me.TableLayoutPanelInsulin.PerformLayout()
         CType(Me.DataGridViewInsulin, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.TabPageLowGlusoseSuspended.ResumeLayout(False)
-        Me.TabPageLowGlusoseSuspended.PerformLayout()
-        Me.TableLayoutPanelLowGlusoseSuspended.ResumeLayout(False)
-        Me.TableLayoutPanelLowGlusoseSuspended.PerformLayout()
+        Me.TabPageLowGlucoseSuspended.ResumeLayout(False)
+        Me.TabPageLowGlucoseSuspended.PerformLayout()
+        Me.TableLayoutPanelLowGlucoseSuspended.ResumeLayout(False)
+        Me.TableLayoutPanelLowGlucoseSuspended.PerformLayout()
         Me.TabPageMeal.ResumeLayout(False)
         Me.TabPageMeal.PerformLayout()
         Me.TableLayoutPanelMeal.ResumeLayout(False)
@@ -2826,12 +2826,12 @@ Partial Class Form1
     Friend WithEvents LabelCalibration As Label
     Friend WithEvents LabelInsulin As Label
     Friend WithEvents LabelLimits As Label
-    Friend WithEvents LabelLowGlusoseSuspended As Label
+    Friend WithEvents LabelLowGlucoseSuspended As Label
     Friend WithEvents LabelMeal As Label
     Friend WithEvents LabelNotificationHistory As Label
     Friend WithEvents LabelSgs As Label
     Friend WithEvents LabelSgTrend As Label
-    Friend WithEvents LabelTherapyAlgorthm As Label
+    Friend WithEvents LabelTherapyAlgorithm As Label
     Friend WithEvents LabelTimeChange As Label
     Friend WithEvents LabelTrendArrows As Label
     Friend WithEvents LabelTrendValue As Label
@@ -2852,7 +2852,7 @@ Partial Class Form1
     Friend WithEvents MenuOptions As ToolStripMenuItem
     Friend WithEvents MenuOptionsAutoLogin As ToolStripMenuItem
     Friend WithEvents MenuOptionsFilterRawJSONData As ToolStripMenuItem
-    Friend WithEvents MenuOptionsSetupEmailServer As ToolStripMenuItem
+    Friend WithEvents MenuOptionsSetupEMailServer As ToolStripMenuItem
     Friend WithEvents MenuOptionsUseAdvancedAITDecay As ToolStripMenuItem
     Friend WithEvents MenuOptionsUseLocalTimeZone As ToolStripMenuItem
     Friend WithEvents MenuStartHere As ToolStripMenuItem
@@ -2893,11 +2893,11 @@ Partial Class Form1
     Friend WithEvents TableLayoutPanelCalibration As TableLayoutPanel
     Friend WithEvents TableLayoutPanelInsulin As TableLayoutPanel
     Friend WithEvents TableLayoutPanelLimits As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelLowGlusoseSuspended As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelLowGlucoseSuspended As TableLayoutPanel
     Friend WithEvents TableLayoutPanelMeal As TableLayoutPanel
     Friend WithEvents TableLayoutPanelNotificationHistory As TableLayoutPanel
     Friend WithEvents TableLayoutPanelSgs As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelTherapyAlgorthm As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelTherapyAlgorithm As TableLayoutPanel
     Friend WithEvents TableLayoutPanelTimeChange As TableLayoutPanel
     Friend WithEvents TableLayoutPanelLastSG As TableLayoutPanel
     Friend WithEvents TableLayoutPanelLastAlarm As TableLayoutPanel
@@ -2923,7 +2923,7 @@ Partial Class Form1
     Friend WithEvents TabPageCountryDataPg3 As TabPage
     Friend WithEvents TabPageCurrentUser As TabPage
     Friend WithEvents TabPageInsulin As TabPage
-    Friend WithEvents TabPageLowGlusoseSuspended As TabPage
+    Friend WithEvents TabPageLowGlucoseSuspended As TabPage
     Friend WithEvents TabPageMeal As TabPage
     Friend WithEvents TabPageTimeChange As TabPage
     Friend WithEvents TabPageUserProfile As TabPage
@@ -2952,9 +2952,9 @@ Partial Class Form1
     Friend WithEvents DataGridViewTextBoxColumnCareLinkAlertPhoneNumber As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumnCareLinkCarrierTextingDomain As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumnCareLinkCountryCode As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCareLinkMailserverPassword As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCareLinkMailServerPassword As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumnCareLinkMailServerPort As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCareLinkMailserverUserName As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumnCareLinkMailServerUserName As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumnCareLinkSettingsVersion As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumnCareLinkOutGoingMailServer As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewCheckBoxColumnCareLinkUseAdvancedAITDecay As DataGridViewCheckBoxColumn

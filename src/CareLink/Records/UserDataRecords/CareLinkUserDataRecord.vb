@@ -26,9 +26,9 @@ Public Class CareLinkUserDataRecord
             ._alertPhoneNumber = If(My.Settings.AlertPhoneNumber, ""),
             ._carrierTextingDomain = If(My.Settings.CarrierTextingDomain, ""),
             ._countryCode = If(My.Settings.CountryCode, ""),
-            ._mailserverPassword = If(My.Settings.MailServerPassword, ""),
+            ._mailServerPassword = If(My.Settings.MailServerPassword, ""),
             ._mailServerPort = My.Settings.MailServerPort,
-            ._mailserverUserName = If(My.Settings.MailServerUserName, ""),
+            ._mailServerUserName = If(My.Settings.MailServerUserName, ""),
             ._settingsVersion = If(My.Settings.SettingsVersion, ""),
             ._outgoingMailServer = If(My.Settings.OutGoingMailServer, ""),
             ._useAdvancedAITDecay = My.Settings.UseAdvancedAITDecay,
@@ -150,19 +150,19 @@ Public Class CareLinkUserDataRecord
         End Get
     End Property
 
-    <DisplayName("Mailserver Password")>
+    <DisplayName("Mail Server Password")>
     <Column(Order:=8)>
-    Public Property MailserverPassword As String
+    Public Property MailServerPassword As String
         Get
-            Return _userData._mailserverPassword
+            Return _userData._mailServerPassword
         End Get
         Set
-            _userData._mailserverPassword = Value
+            _userData._mailServerPassword = Value
             Me.OnCareLinkUserChanged()
         End Set
     End Property
 
-    <DisplayName("MailServer Port")>
+    <DisplayName("Mail Server Port")>
     <Column(Order:=9)>
     Public Property MailServerPort As Integer
         Get
@@ -174,14 +174,14 @@ Public Class CareLinkUserDataRecord
         End Set
     End Property
 
-    <DisplayName("Mailserver User Name")>
+    <DisplayName("Mail Server User Name")>
     <Column(Order:=10)>
-    Public Property MailserverUserName As String
+    Public Property MailServerUserName As String
         Get
-            Return _userData._mailserverUserName
+            Return _userData._mailServerUserName
         End Get
         Set
-            _userData._mailserverUserName = Value
+            _userData._mailServerUserName = Value
             Me.OnCareLinkUserChanged()
         End Set
     End Property
@@ -246,9 +246,9 @@ Public Class CareLinkUserDataRecord
     Friend Sub clean()
         _userData._alertPhoneNumber = ""
         _userData._carrierTextingDomain = ""
-        _userData._mailserverPassword = ""
+        _userData._mailServerPassword = ""
         _userData._mailServerPort = 0
-        _userData._mailserverUserName = ""
+        _userData._mailServerUserName = ""
         _userData._outgoingMailServer = ""
     End Sub
 
@@ -266,12 +266,12 @@ Public Class CareLinkUserDataRecord
                 Return Me.CarrierTextingDomain
             Case NameOf(CountryCode)
                 Return Me.CountryCode
-            Case NameOf(MailserverPassword)
-                Return Me.MailserverPassword
+            Case NameOf(MailServerPassword)
+                Return Me.MailServerPassword
             Case NameOf(MailServerPort)
                 Return CStr(Me.MailServerPort)
-            Case NameOf(MailserverUserName)
-                Return Me.MailserverUserName
+            Case NameOf(MailServerUserName)
+                Return Me.MailServerUserName
             Case NameOf(SettingsVersion)
                 Return Me.SettingsVersion
             Case NameOf(OutgoingMailServer)
@@ -290,9 +290,9 @@ Public Class CareLinkUserDataRecord
     Friend Function ToCsvString() As String
         Return $"{Me.CareLinkUserName},{Me.CareLinkPassword}," &
                 $"{Me.AIT},{Me.AlertPhoneNumber},{Me.CarrierTextingDomain}," &
-                $"{Me.CountryCode},{Me.MailserverPassword}," &
-                $"{Me.MailServerPort},{Me.MailserverUserName}," &
-                $"{Me.MailserverUserName},{Me.OutgoingMailServer}," &
+                $"{Me.CountryCode},{Me.MailServerPassword}," &
+                $"{Me.MailServerPort},{Me.MailServerUserName}," &
+                $"{Me.MailServerUserName},{Me.OutgoingMailServer}," &
                 $"{Me.UseAdvancedAITDecay},{Me.UseLocalTimeZone},{Me.AutoLogin}"
     End Function
 
@@ -303,9 +303,9 @@ Public Class CareLinkUserDataRecord
         My.Settings.AlertPhoneNumber = _userData._alertPhoneNumber
         My.Settings.CarrierTextingDomain = _userData._carrierTextingDomain
         My.Settings.CountryCode = _userData._countryCode
-        My.Settings.MailServerPassword = _userData._mailserverPassword
+        My.Settings.MailServerPassword = _userData._mailServerPassword
         My.Settings.MailServerPort = _userData._mailServerPort
-        My.Settings.MailServerUserName = _userData._mailserverUserName
+        My.Settings.MailServerUserName = _userData._mailServerUserName
         My.Settings.SettingsVersion = _userData._settingsVersion
         My.Settings.OutGoingMailServer = _userData._outgoingMailServer
         My.Settings.UseAdvancedAITDecay = _userData._useAdvancedAITDecay
@@ -332,12 +332,12 @@ Public Class CareLinkUserDataRecord
                 Me.CarrierTextingDomain = value
             Case NameOf(CountryCode)
                 Me.CountryCode = value
-            Case NameOf(MailserverPassword)
-                Me.MailserverPassword = value
+            Case NameOf(MailServerPassword)
+                Me.MailServerPassword = value
             Case NameOf(MailServerPort)
                 Me.MailServerPort = CInt(value)
-            Case NameOf(MailserverUserName)
-                Me.MailserverUserName = value
+            Case NameOf(MailServerUserName)
+                Me.MailServerUserName = value
             Case NameOf(SettingsVersion)
                 Me.SettingsVersion = value
             Case NameOf(OutgoingMailServer)
@@ -361,9 +361,9 @@ Public Class CareLinkUserDataRecord
         Friend _careLinkUserName As String
         Friend _carrierTextingDomain As String
         Friend _countryCode As String
-        Friend _mailserverPassword As String
+        Friend _mailServerPassword As String
         Friend _mailServerPort As Integer
-        Friend _mailserverUserName As String
+        Friend _mailServerUserName As String
         Friend _outgoingMailServer As String
         Friend _settingsVersion As String
         Friend _useAdvancedAITDecay As Boolean
