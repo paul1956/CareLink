@@ -7,9 +7,9 @@ Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class LimitsRecord
 
-    <DisplayName(NameOf(highLimit))>
+    <DisplayName("High Limit")>
     <Column(Order:=2)>
-    Public Property highLimit As Integer
+    Public Property highLimit As Single
 
     <DisplayName(NameOf(index))>
     <Column(Order:=1)>
@@ -19,9 +19,9 @@ Public Class LimitsRecord
     <Column(Order:=4)>
     Public Property kind As String
 
-    <DisplayName(NameOf(lowLimit))>
+    <DisplayName("Low Limit")>
     <Column(Order:=3)>
-    Public Property lowLimit As Integer
+    Public Property lowLimit As Single
 
     <DisplayName("Record Number")>
     <Column(Order:=0)>

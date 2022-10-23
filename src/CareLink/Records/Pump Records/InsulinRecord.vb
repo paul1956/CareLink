@@ -63,7 +63,7 @@ Public Class InsulinRecord
     <Column(Order:=10, TypeName:="String", TypeName:="String")>
     Public Property activationType As String
 
-    <DisplayName("delivered Extended Amount")>
+    <DisplayName("Delivered Extended Amount")>
     <Column(Order:=11, TypeName:="Single")>
     Public Property deliveredExtendedAmount As Single
 
@@ -75,7 +75,7 @@ Public Class InsulinRecord
     <Column(Order:=13, TypeName:="Integer")>
     Public Property programmedDuration As Integer
 
-    <DisplayName("delivered Fast Amount")>
+    <DisplayName("Delivered Fast Amount")>
     <Column(Order:=14, TypeName:="Single")>
     Public Property deliveredFastAmount As Single
 
@@ -87,7 +87,7 @@ Public Class InsulinRecord
     <Column(Order:=16, TypeName:="Integer")>
     Public Property effectiveDuration As Integer
 
-    <DisplayName(NameOf(completed))>
+    <DisplayName("Completed")>
     <Column(Order:=17, TypeName:="Boolean")>
     Public Property completed As Boolean
 

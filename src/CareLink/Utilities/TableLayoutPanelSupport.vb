@@ -25,24 +25,24 @@ Friend Module TableLayoutPanelSupport
         dGV.RowHeadersVisible = False
     End Sub
 
-    Friend Sub GetInnerTable(innerJson As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexs, filterJsonData As Boolean, timeFormat As String, isScaledForm As Boolean)
+    Friend Sub GetInnerTable(innerJson As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexs, filterJsonData As Boolean, isScaledForm As Boolean)
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
         tableLevel1Blue.BackColor = Color.LightBlue
-        Dim messageOrDefault As KeyValuePair(Of String, String) = innerJson.Where(Function(kvp As KeyValuePair(Of String, String)) kvp.Key = "messageId").FirstOrDefault
-        If itemIndex = ItemIndexs.lastAlarm AndAlso messageOrDefault.Key IsNot Nothing Then
-            tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22))
-            Dim keyLabel As Label = CreateBasicLabel("messageId")
-            tableLevel1Blue.RowCount += 1
-            Dim textBox1 As TextBox = CreateValueTextBox(innerJson, messageOrDefault, isScaledForm)
+        'Dim messageOrDefault As KeyValuePair(Of String, String) = innerJson.Where(Function(kvp As KeyValuePair(Of String, String)) kvp.Key = "messageId").FirstOrDefault
+        'If itemIndex = ItemIndexs.lastAlarm AndAlso messageOrDefault.Key IsNot Nothing Then
+        '    tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22))
+        '    Dim keyLabel As Label = CreateBasicLabel("messageId")
+        '    tableLevel1Blue.RowCount += 1
+        '    Dim textBox1 As TextBox = CreateValueTextBox(innerJson, messageOrDefault, isScaledForm)
 
-            If textBox1.Text.Length > 100 Then
-                My.Forms.Form1.ToolTip1.SetToolTip(textBox1, textBox1.Text)
-            Else
-                My.Forms.Form1.ToolTip1.SetToolTip(textBox1, Nothing)
-            End If
-            tableLevel1Blue.Controls.AddRange({keyLabel, textBox1})
-        End If
+        '    If textBox1.Text.Length > 100 Then
+        '        My.Forms.Form1.ToolTip1.SetToolTip(textBox1, textBox1.Text)
+        '    Else
+        '        My.Forms.Form1.ToolTip1.SetToolTip(textBox1, Nothing)
+        '    End If
+        '    tableLevel1Blue.Controls.AddRange({keyLabel, textBox1})
+        'End If
 
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In innerJson.WithIndex()
             Application.DoEvents()
@@ -55,14 +55,12 @@ Friend Module TableLayoutPanelSupport
                 End If
             End If
             If innerRow.Key = "clearedNotifications" Then
-                tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize, 0))
+                tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize))
             Else
                 tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22))
             End If
             tableLevel1Blue.RowCount += 1
-            If itemIndex = ItemIndexs.notificationHistory AndAlso c.Value.Key = "activeNotifications" Then
-                tableLevel1Blue.AutoSize = True
-            End If
+            tableLevel1Blue.AutoSize = True
 
             If innerRow.Value.StartsWith("[") Then
                 Dim innerJson1 As List(Of Dictionary(Of String, String)) = LoadList(innerRow.Value)
@@ -108,13 +106,6 @@ Friend Module TableLayoutPanelSupport
                 Else
                     tableLevel1Blue.Controls.AddRange({CreateBasicLabel(innerRow.Key), CreateBasicTextBox("")})
                 End If
-            Else
-                ' This is ItemIndexs.lastAlarm and its already been done
-                If innerRow.Key <> "messageId" Then
-                    Dim textBox1 As TextBox = CreateValueTextBox(innerJson, innerRow, isScaledForm)
-                    My.Forms.Form1.ToolTip1.SetToolTip(textBox1, textBox1.Text)
-                    tableLevel1Blue.Controls.AddRange({CreateBasicLabel(innerRow.Key), textBox1})
-                End If
             End If
         Next
 
@@ -143,7 +134,7 @@ Friend Module TableLayoutPanelSupport
         For Each jsonEntry As IndexClass(Of Dictionary(Of String, String)) In innerListDictionary.WithIndex()
             Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, Color.Black)
             realPanel.Controls.Add(innerTableBlue, 0, realPanel.RowCount)
-            GetInnerTable(jsonEntry.Value, innerTableBlue, rowIndex, s_filterJsonData, s_timeWithMinuteFormat, isScaledForm)
+            GetInnerTable(jsonEntry.Value, innerTableBlue, rowIndex, s_filterJsonData, isScaledForm)
             Application.DoEvents()
         Next
         realPanel.Parent.Parent.UseWaitCursor = False

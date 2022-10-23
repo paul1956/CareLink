@@ -2,14 +2,14 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Friend Class MealRecordHelpers
+Class LowGlusoceSuspendRecordHelpers
 
     Private Shared ReadOnly columnsToHide As New List(Of String) From {
-        NameOf(MealRecord.index),
-        NameOf(MealRecord.kind),
-        NameOf(MealRecord.relativeOffset),
-        NameOf(MealRecord.version)
-    }
+            NameOf(LowGlusoceSuspendRecord.index),
+            NameOf(LowGlusoceSuspendRecord.kind),
+            NameOf(LowGlusoceSuspendRecord.relativeOffset),
+            NameOf(LowGlusoceSuspendRecord.version)
+        }
 
     Private Shared Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         If HideColumn(e.Column.Name) Then
@@ -19,9 +19,13 @@ Friend Class MealRecordHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
         e.DgvColumnAdded(GetCellStyle(e.Column.Name),
-                         True,
-                         True,
-                         caption)
+                     True,
+                     True,
+                     caption)
+    End Sub
+
+    Private Shared Sub DataGridView_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs)
+        Stop
     End Sub
 
     Private Shared Sub DataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs)
@@ -30,31 +34,24 @@ Friend Class MealRecordHelpers
 
     Private Shared Sub DataGridViewView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        If dgv.Columns(e.ColumnIndex).Name = NameOf(MealRecord.amount) Then
-            e.Value = $"{e.Value} {s_sessionCountrySettings.carbDefaultUnit}"
-            e.FormattingApplied = True
-        Else
-            dgv.dgvCellFormatting(e, NameOf(MealRecord.dateTime))
-        End If
+        dgv.dgvCellFormatting(e, NameOf(ActiveInsulinRecord.datetime))
     End Sub
 
-    Private Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
+    Friend Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
         Dim cellStyle As New DataGridViewCellStyle
 
         Select Case columnName
-            Case NameOf(MealRecord.[dateTime]),
-                    NameOf(MealRecord.dateTimeAsString),
-                    NameOf(MealRecord.type)
+            Case NameOf(LowGlusoceSuspendRecord.[dateTime]),
+                 NameOf(LowGlusoceSuspendRecord.dateTimeAsString),
+                 NameOf(LowGlusoceSuspendRecord.type)
                 cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-            Case NameOf(MealRecord.RecordNumber),
-                    NameOf(MealRecord.kind),
-                    NameOf(MealRecord.index),
-                    NameOf(MealRecord.amount)
+            Case NameOf(LowGlusoceSuspendRecord.RecordNumber),
+                 NameOf(LowGlusoceSuspendRecord.kind),
+                 NameOf(LowGlusoceSuspendRecord.index),
+                 NameOf(LowGlusoceSuspendRecord.deliverySuspended)
                 cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
-            Case NameOf(MealRecord.amount),
-                    NameOf(MealRecord.version),
-                    NameOf(MealRecord.OAdateTime),
-                    NameOf(MealRecord.relativeOffset)
+            Case NameOf(LowGlusoceSuspendRecord.version),
+                 NameOf(LowGlusoceSuspendRecord.relativeOffset)
                 cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
             Case Else
                 Stop
@@ -63,12 +60,13 @@ Friend Class MealRecordHelpers
         Return cellStyle
     End Function
 
-    Friend Shared Function HideColumn(dataPropertyName As String) As Boolean
-        Return s_filterJsonData AndAlso columnsToHide.Contains(dataPropertyName)
+    Friend Shared Function HideColumn(columnName As String) As Boolean
+        Return s_filterJsonData AndAlso columnsToHide.Contains(columnName)
     End Function
 
     Public Shared Sub AttachHandlers(dgv As DataGridView)
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
+        AddHandler dgv.ColumnHeaderCellChanged, AddressOf DataGridView_ColumnHeaderCellChanged
         AddHandler dgv.DataError, AddressOf DataGridView_DataError
         AddHandler dgv.CellFormatting, AddressOf DataGridViewView_CellFormatting
     End Sub

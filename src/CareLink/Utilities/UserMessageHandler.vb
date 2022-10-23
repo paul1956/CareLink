@@ -6,6 +6,15 @@ Imports System.Runtime.CompilerServices
 
 Friend Module UserMessageHandler
 
+    Friend ReadOnly s_calibrationMessages As New Dictionary(Of String, String) From {
+                            {"DUENOW", "Due now"},
+                            {"LESS_THAN_THREE_HRS", "Less then 3 hours"},
+                            {"LESS_THAN_SIX_HRS", "Less then 6 hours"},
+                            {"LESS_THAN_NINE_HRS", "Less then 9 hours"},
+                            {"LESS_THAN_TWELVE_HRS", "Less than twelve hours"},
+                            {"UNKNOWN", "unknown"}
+                        }
+
     ' These message have parameters
     ' The string is split by : character which is not allowed in the message.
     ' Everything before the : is the message, the text after the : is the key in the dictionary that
@@ -26,6 +35,7 @@ Friend Module UserMessageHandler
                         {"BC_SID_BASAL_STARTED_SMART_GUARD", "SmartGuard started(triggeredDateTime)."},
                         {"BC_SID_BG_REQUIRED_CONTENT", "BG required. Enter a New BG for Auto Mode."},
                         {"BC_SID_BOLUS_ENTRY_TIMED_OUT", "Bolus Not delivered. Bolus entry timed out before delivery. If bolus was intended, enter values again."},
+                        {"BC_SID_CALL_FOR_EMERGENCY", "Call for emergency(triggeredDateTime)."},
                         {"BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR", "Calibrate now(triggeredDateTime). Check BG And calibrate sensor."},
                         {"BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR_TO_RECEIVE", "Calibrate by (secondaryTime). Check BG and calibrate to continuing receiving sensor information."},
                         {"BC_SID_CHECK_BG_CONSIDER_TESTING_KETONES_CHANGE_RESERVOIR", "Check BG and consider testing ketones and changing reservoir."},
@@ -33,7 +43,7 @@ Friend Module UserMessageHandler
                         {"BC_SID_DO_NOT_CALIBRATE_UNLESS_NOTIFIED", "Sensor updating, Do Not calibrate unless notified. This could take up to 3 hours"},
                         {"BC_SID_ENSURE_CONNECTION_SECURE", "Check connection. Ensure transmitter and sensor is secure, then select OK."},
                         {"BC_SID_ENSURE_DELIVERY_CHANGE_RESERVOIR", "Reservoir empty reminder, change reservior and infusin set."},
-                        {"BC_SID_ENTER_BG_TO_CALIBRATE_SENSOR_SENSOR_INFO_NO_AVAILABLE", "Enter BG to calibrate sensor. Sensor info not available."},
+                        {"BC_SID_ENTER_BG_TO_CALIBRATE_SENSOR_SENSOR_INFO_NO_AVAILABLE", "Enter BG to calibrate sensor(triggeredDateTime). Sensor info not available."},
                         {"BC_SID_ENTER_BG_TO_CONTINUE_IN_SMART_GUARD", "Enter BG to continue in SmartGuard(triggeredDateTime)."},
                         {"BC_SID_FILL_TUBING_STOPPED_DISCONNECT", "Fill tubing, delivery stopped."},
                         {"BC_SID_HIGH_SG_CHECK_BG", "Alert on high (0) (units)(triggeredDateTime). High sensor glucose. Check BG.:sg"},
@@ -41,6 +51,7 @@ Friend Module UserMessageHandler
                         {"BC_SID_INSERT_NEW_SENSOR", "Sensor expired(triggeredDateTime). Insert New sensor."},
                         {"BC_SID_LOW_SD_CHECK_BG", "Alert on low (0) (units)(triggeredDateTime). Low sensor glucose. Check BG.:sg"},
                         {"BC_SID_LOW_SG_INSULIN_DELIVERY_SUSPENDED_SINCE_X_CHECK_BG", "Alert on low (0) (units)(triggeredDateTime). Insulin delivery suspended since (secondaryTime). Check BG.:sg"},
+                        {"BC_SID_MAXIMUM_2_HOUR_SUSPEND_TIME_REACHED_CHECK_BG", "Maximum 2 hour suspend time time reached(triggeredDateTime). Check BG"},
                         {"BC_SID_MOVE_AWAY_FROM_ELECTR_DEVICES", "Possible signal interface(triggeredDateTime). Move away from electronic devices. May take 15 minutes to find signal."},
                         {"BC_SID_MOVE_PUMP_CLOSER_TO_MINILINK", "Lost sensor signal(triggeredDateTime). Move pump closer to transmitter. May take 15 minutes to find signal."},
                         {"BC_SID_REPLACE_BATTERY_SOON", "Battery low(triggeredDateTime). Replace battery soon."},
@@ -60,31 +71,24 @@ Friend Module UserMessageHandler
                     }
 
     Friend ReadOnly s_sensorMessages As New Dictionary(Of String, String) From {
-                        {"CALIBRATING", "Calibrating ..."},
-                        {"CALIBRATION_REQUIRED", "Calibration required"},
-                        {"CHANGE_SENSOR", "Change sensor"},
-                        {"DO_NOT_CALIBRATE", "Do Not calibrate."},
-                        {"LOAD_RESERVOIR", "Load Reservoir"},
-                        {"NO_DATA_FROM_PUMP", "No data from pump"},
-                        {"NO_ERROR_MESSAGE", "---"},
-                        {"NO_SENSOR_SIGNAL", "Lost sensor signal, move pump closer to transmitter. May take 15 minutes to find signal"},
-                        {"RECONNECTING_TO_PUMP", "Reconnecting to pump"},
-                        {"SEARCHING_FOR_SENSOR_SIGNAL", "Searching for sensor signal"},
-                        {"SENSOR_DISCONNECTED", "Sensor disconnected"},
-                        {"UNKNOWN", "Unknown"},
-                        {"UPDATING", "Sensor Updating"},
-                        {"WAIT_TO_CALIBRATE", "Wait To Calibrate..."},
-                        {"WARM_UP", "Sensor warm up. Warm-up takes up to 2 hours. You will be notifies when calibration Is needed."}
-                    }
-
-    Friend ReadOnly s_calibrationMessages As New Dictionary(Of String, String) From {
-                        {"DUENOW", "Due now"},
-                        {"LESS_THAN_THREE_HRS", "Less then 3 hours"},
-                        {"LESS_THAN_SIX_HRS", "Less then 6 hours"},
-                        {"LESS_THAN_NINE_HRS", "Less then 9 hours"},
-                        {"LESS_THAN_TWELVE_HRS", "Less than twelve hours"},
-                        {"UNKNOWN", "unknown"}
-                    }
+                            {"BG_REQUIRED", "BG Required"},
+                            {"CALIBRATING", "Calibrating ..."},
+                            {"CALIBRATION_REQUIRED", "Calibration required"},
+                            {"CHANGE_SENSOR", "Change sensor"},
+                            {"DO_NOT_CALIBRATE", "Do Not calibrate."},
+                            {"LOAD_RESERVOIR", "Load Reservoir"},
+                            {"NO_DATA_FROM_PUMP", "No data from pump"},
+                            {"NO_ERROR_MESSAGE", "---"},
+                            {"NO_SENSOR_SIGNAL", "Lost sensor signal, move pump closer to transmitter. May take 15 minutes to find signal"},
+                            {"RECONNECTING_TO_PUMP", "Reconnecting to pump"},
+                            {"SEARCHING_FOR_SENSOR_SIGNAL", "Searching for sensor signal"},
+                            {"SENSOR_DISCONNECTED", "Sensor disconnected"},
+                            {"TEMP_TARGET", "Temp Target"},
+                            {"UNKNOWN", "Unknown"},
+                            {"UPDATING", "Sensor Updating"},
+                            {"WAIT_TO_CALIBRATE", "Wait To Calibrate..."},
+                            {"WARM_UP", "Sensor warm up. Warm-up takes up to 2 hours. You will be notifies when calibration Is needed."}
+                        }
 
     <Extension>
     Private Function FormatTimeOnly(rawTime As String, format As String) As String

@@ -34,8 +34,6 @@ Public Class TimeChangeRecord
         Next
     End Sub
 
-#If True Then ' Prevent reordering
-
     <DisplayName("Type")>
     <Column(Order:=1, TypeName:="String")>
     Public Property type As String
@@ -63,22 +61,24 @@ Public Class TimeChangeRecord
         End Set
     End Property
 
-    <DisplayName(NameOf(OADateTime))>
+    <DisplayName("dateTime As String")>
     <Column(Order:=6, TypeName:="String")>
     Public Property dateTimeAsString As String
 
-    Public ReadOnly Property OADateTime As OADate
+    <DisplayName("OA dateTime")>
+    <Column(Order:=7, TypeName:="Double")>
+    Public ReadOnly Property OAdateTime As OADate
         Get
             Return New OADate(_dateTime)
         End Get
     End Property
 
     <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=7, TypeName:="Integer")>
+    <Column(Order:=8, TypeName:="Integer")>
     Public Property relativeOffset As Integer
 
-    <DisplayName(NameOf(previousDateTime))>
-    <Column(Order:=8, TypeName:="Date")>
+    <DisplayName("Previous DateTime")>
+    <Column(Order:=9, TypeName:="Date")>
     Public Property previousDateTime As Date
         Get
             Return _previousDateTime
@@ -88,25 +88,24 @@ Public Class TimeChangeRecord
         End Set
     End Property
 
-    <DisplayName(NameOf(previousDateTimeAsString))>
-    <Column(Order:=9, TypeName:="String")>
+    <DisplayName("Previous DateTime As String")>
+    <Column(Order:=10, TypeName:="String")>
     Public Property previousDateTimeAsString As String
 
-    <DisplayName(NameOf(previousDateTimeAsString))>
-    <Column(Order:=10, TypeName:="Double")>
+    <DisplayName("Previous DateTime")>
+    <Column(Order:=11, TypeName:="Double")>
     Public ReadOnly Property previousOADateTime As OADate
         Get
             Return New OADate(_previousDateTime)
         End Get
     End Property
 
-    <DisplayName(NameOf(previousDateTimeAsString))>
-    <Column(Order:=11, TypeName:="TimeSpan")>
-    Public ReadOnly Property deltaOADateTime As TimeSpan
+    <DisplayName("Delta OA TimeSpan")>
+    <Column(Order:=12, TypeName:="TimeSpan")>
+    Public ReadOnly Property deltaOATimeSpan As TimeSpan
         Get
             Return _previousDateTime - _dateTime
         End Get
     End Property
 
-#End If  ' Prevent reordering
 End Class

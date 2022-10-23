@@ -1417,7 +1417,7 @@ Partial Class Form1
         '
         'TableLayoutPanelSgs
         '
-        Me.TableLayoutPanelSgs.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelSgs.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelSgs.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelSgs.ColumnCount = 1
         Me.TableLayoutPanelSgs.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
@@ -1718,7 +1718,7 @@ Partial Class Form1
         'TableLayoutPanelAutoBasalDelivery
         '
         Me.TableLayoutPanelAutoBasalDelivery.AutoSize = True
-        Me.TableLayoutPanelAutoBasalDelivery.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelAutoBasalDelivery.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelAutoBasalDelivery.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelAutoBasalDelivery.ColumnCount = 1
         Me.TableLayoutPanelAutoBasalDelivery.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))

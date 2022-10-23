@@ -4,7 +4,7 @@
 
 Friend Class SgRecordHelpers
 
-    Private Shared ReadOnly s_columnsToHide As New List(Of String) From {
+    Private Shared ReadOnly columnsToHide As New List(Of String) From {
                         NameOf(SgRecord.OAdatetime),
                         NameOf(SgRecord.kind),
                         NameOf(SgRecord.relativeOffset),
@@ -24,10 +24,6 @@ Friend Class SgRecordHelpers
                          caption)
     End Sub
 
-    Private Shared Sub DataGridView_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs)
-        Stop
-    End Sub
-
     Private Shared Sub DataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs)
         Stop
     End Sub
@@ -38,12 +34,11 @@ Friend Class SgRecordHelpers
     End Sub
 
     Friend Shared Function HideColumn(dataPropertyName As String) As Boolean
-        Return s_filterJsonData AndAlso s_columnsToHide.Contains(dataPropertyName)
+        Return s_filterJsonData AndAlso columnsToHide.Contains(dataPropertyName)
     End Function
 
     Public Shared Sub AttachHandlers(dgv As DataGridView)
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
-        AddHandler dgv.ColumnHeaderCellChanged, AddressOf DataGridView_ColumnHeaderCellChanged
         AddHandler dgv.DataError, AddressOf DataGridView_DataError
         AddHandler dgv.CellFormatting, AddressOf DataGridViewView_CellFormatting
     End Sub

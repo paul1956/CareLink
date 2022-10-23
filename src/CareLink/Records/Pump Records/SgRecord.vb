@@ -6,7 +6,6 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class SgRecord
-    Private _message As String
     Private _sensorState As String
     Public Sub New()
 
@@ -92,7 +91,7 @@ Public Class SgRecord
             Return _sensorState
         End Get
         Set
-            _sensorState = Value
+            _sensorState = If(Value, "")
         End Set
     End Property
 
@@ -100,10 +99,12 @@ Public Class SgRecord
     <Column(Order:=7, TypeName:="String")>
     Public ReadOnly Property Message As String
         Get
-            If Not s_sensorMessages.TryGetValue(_sensorState, _message) Then
-                Return _sensorState.ToTitle
+            _sensorState = If(_sensorState, "")
+            Dim resultMessage As String = Nothing
+            If s_sensorMessages.TryGetValue(_sensorState, resultMessage) Then
+                Return resultMessage
             End If
-            Return _Message
+            Return _sensorState?.ToTitle
         End Get
     End Property
 

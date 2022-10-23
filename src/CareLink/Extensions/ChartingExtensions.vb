@@ -52,7 +52,7 @@ Friend Module ChartingExtensions
         Dim limitsIndexList(count) As Integer
         Dim limitsIndex As Integer = 0
         For i As Integer = 0 To limitsIndexList.GetUpperBound(0)
-            If limitsIndex + 1 < s_limits.Count AndAlso CInt(s_limits(limitsIndex + 1)("index")) < i Then
+            If limitsIndex + 1 < s_listOflimitRecords.Count AndAlso CInt(s_listOflimitRecords(limitsIndex + 1).index) < i Then
                 limitsIndex += 1
             End If
             limitsIndexList(i) = limitsIndex
@@ -155,8 +155,8 @@ Friend Module ChartingExtensions
         For Each sgListIndex As IndexClass(Of SgRecord) In s_listOfSGs.WithIndex()
             Dim sgOADateTime As OADate = sgListIndex.Value.OAdatetime()
             Try
-                Dim limitsLowValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("lowLimit").ParseSingle
-                Dim limitsHighValue As Single = s_limits(limitsIndexList(sgListIndex.Index))("highLimit").ParseSingle
+                Dim limitsLowValue As Single = s_listOflimitRecords(limitsIndexList(sgListIndex.Index)).lowLimit
+                Dim limitsHighValue As Single = s_listOflimitRecords(limitsIndexList(sgListIndex.Index)).highLimit
                 If limitsHighValue <> 0 Then
                     chart.Series(HighLimitSeriesName).Points.AddXY(sgOADateTime, limitsHighValue)
                 End If
@@ -172,6 +172,9 @@ Friend Module ChartingExtensions
     <Extension>
     Friend Sub PlotHomePageMarkers(homePageChart As Chart, chartRelitivePosition As RectangleF, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
         Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
+        s_homeTabMarkerInsulinDictionary.Clear()
+        s_homeTabMarkerMealDictionary.Clear()
+
         For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             Try
                 Dim markerDateTime As Date = s_markers.SafeGetSgDateTime(markerWithIndex.Index)
@@ -229,12 +232,11 @@ Friend Module ChartingExtensions
                             markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
                             markerSeriesPoints.Last.ToolTip = $"Meal:{entry("amount")} grams"
                         End If
-                    Case "LOW_GLUCOSE_SUSPENDED"
                     Case "TIME_CHANGE"
                         With homePageChart.Series(TimeChangeSeriesName).Points
                             lastTimeChangeRecord = New TimeChangeRecord(s_markers(markerWithIndex.Index))
 
-                            markerOADateTime = New TimeChangeRecord(s_markers(markerWithIndex.Index)).OADateTime
+                            markerOADateTime = New TimeChangeRecord(s_markers(markerWithIndex.Index)).OAdateTime
                             Call .AddXY(markerOADateTime, 0)
                             .AddXY(markerOADateTime, HomePageBasalRow)
                             .AddXY(markerOADateTime, Double.NaN)
@@ -319,8 +321,7 @@ Friend Module ChartingExtensions
                             markerSeriesPoints.Last.ToolTip = $"Meal:{entry("amount")} grams"
                         End If
                     Case "BG_READING",
-                         "CALIBRATION",
-                         "LOW_GLUCOSE_SUSPENDED"
+                         "CALIBRATION"
                     Case "TIME_CHANGE"
                         With treatmentChart.Series(TimeChangeSeriesName).Points
                             lastTimeChangeRecord = New TimeChangeRecord(s_markers(markerWithIndex.Index))

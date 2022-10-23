@@ -4,7 +4,7 @@
 
 Friend Class AutoBasalDeliveryRecordHelpers
 
-    Private Shared ReadOnly s_columnsToHide As New List(Of String) From {
+    Private Shared ReadOnly columnsToHide As New List(Of String) From {
             NameOf(AutoBasalDeliveryRecord.id),
             NameOf(AutoBasalDeliveryRecord.index),
             NameOf(AutoBasalDeliveryRecord.kind),
@@ -38,6 +38,6 @@ Friend Class AutoBasalDeliveryRecordHelpers
     End Function
 
     Friend Shared Function HideColumn(dataPropertyName As String) As Boolean
-        Return s_filterJsonData AndAlso s_columnsToHide.Contains(dataPropertyName)
+        Return s_filterJsonData AndAlso columnsToHide.Contains(dataPropertyName)
     End Function
 End Class

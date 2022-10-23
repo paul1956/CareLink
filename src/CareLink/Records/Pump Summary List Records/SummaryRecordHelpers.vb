@@ -2,6 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Runtime.CompilerServices
+
 Friend Module SummaryRecordHelpers
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
@@ -38,6 +40,16 @@ Friend Module SummaryRecordHelpers
             End Select
         Next
         Return summaryList
+    End Function
+
+    <Extension>
+    Friend Function GetValue(l As List(Of SummaryRecord), Key As String) As String
+        For Each s As SummaryRecord In l
+            If s.Key = Key Then
+                Return s.Value
+            End If
+        Next
+        Throw New ArgumentException("Key not found", NameOf(Key))
     End Function
 
     Public Sub AttachHandlers(dgv As DataGridView)

@@ -77,7 +77,7 @@ Friend Module DataTableMap
             Select Case [property].PropertyType.Name
                 Case "Date", "String"
                     cellAlignment = DataGridViewContentAlignment.MiddleLeft
-                Case "Double", "Integer", "Single"
+                Case "Double", "Integer", "Single", "TimeSpan"
                     cellAlignment = DataGridViewContentAlignment.MiddleRight
                 Case "Boolean"
                     cellAlignment = DataGridViewContentAlignment.MiddleCenter

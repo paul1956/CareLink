@@ -22,10 +22,6 @@ Friend Class CalibrationRecordHelpers
                      caption)
     End Sub
 
-    Private Shared Sub DataGridView_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs)
-        Stop
-    End Sub
-
     Private Shared Sub DataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs)
         Stop
     End Sub
@@ -52,7 +48,6 @@ Friend Class CalibrationRecordHelpers
 
     Public Shared Sub AttachHandlers(dgv As DataGridView)
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
-        AddHandler dgv.ColumnHeaderCellChanged, AddressOf DataGridView_ColumnHeaderCellChanged
         AddHandler dgv.DataError, AddressOf DataGridView_DataError
         AddHandler dgv.CellFormatting, AddressOf DataGridViewView_CellFormatting
     End Sub
