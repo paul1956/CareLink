@@ -1535,7 +1535,7 @@ Partial Class Form1
         Me.TableLayoutPanelNotificationHistory.Name = "TableLayoutPanelNotificationHistory"
         Me.TableLayoutPanelNotificationHistory.RowCount = 2
         Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
-        Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize))
+        Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelNotificationHistory.Size = New System.Drawing.Size(1370, 633)
         Me.TableLayoutPanelNotificationHistory.TabIndex = 0
         '
