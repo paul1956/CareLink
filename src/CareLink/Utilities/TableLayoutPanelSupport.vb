@@ -3,80 +3,60 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Module TableLayoutPanelSupport
+
     Public Delegate Sub attachHandlers(dgv As DataGridView)
 
-    Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, dGV As DataGridView, table As DataTable, rowIndex As ItemIndexs)
-        initializeTableLayoutPanel(realPanel, rowIndex)
-        dGV.DataSource = table
-        dGV.RowHeadersVisible = False
-    End Sub
+    Friend Sub CreateNotificationTables(notificationJson As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexs, filterJsonData As Boolean, isScaledForm As Boolean)
+        tableLevel1Blue.AutoScroll = False
+        tableLevel1Blue.AutoSize = True
+        tableLevel1Blue.BorderStyle = BorderStyle.FixedSingle
+        tableLevel1Blue.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single
+        tableLevel1Blue.Controls.Clear()
+        tableLevel1Blue.ColumnCount = 2
+        tableLevel1Blue.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 15.39028!))
+        tableLevel1Blue.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 84.60972!))
+        tableLevel1Blue.Dock = DockStyle.Fill
+        tableLevel1Blue.Location = New Point(6, 30)
+        tableLevel1Blue.Name = "TableLayoutPanel1"
+        tableLevel1Blue.RowCount = 2
+        tableLevel1Blue.RowStyles.Clear()
+        tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize))
+        tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0!))
+        tableLevel1Blue.Size = New Size(1358, 597)
+        tableLevel1Blue.TabIndex = 1
 
-    Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As ItemIndexs)
-        initializeTableLayoutPanel(realPanel, rowIndex)
-        Dim dGV As DataGridView
-        If realPanel.Controls.Count > 1 Then
-            dGV = CType(realPanel.Controls(1), DataGridView)
-        Else
-            dGV = CreateDefaultDataGridView($"DataGridView{className}")
-            realPanel.Controls.Add(dGV, 0, 1)
-            attachHandlers(dGV)
-        End If
-        dGV.DataSource = table
-        dGV.RowHeadersVisible = False
-    End Sub
-
-    Friend Sub GetInnerTable(innerJson As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexs, filterJsonData As Boolean, isScaledForm As Boolean)
-        tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
-        tableLevel1Blue.ColumnStyles.Add(New ColumnStyle())
+        Dim tableLayoutPanel2 As New TableLayoutPanel With {
+            .AutoScroll = True,
+            .AutoSize = True,
+            .ColumnCount = 1,
+            .Dock = DockStyle.Fill,
+            .Name = $"tableLayoutPanel{itemIndex}",
+            .RowCount = 1,
+            .TabIndex = 0
+        }
         tableLevel1Blue.BackColor = Color.LightBlue
-        'Dim messageOrDefault As KeyValuePair(Of String, String) = innerJson.Where(Function(kvp As KeyValuePair(Of String, String)) kvp.Key = "messageId").FirstOrDefault
-        'If itemIndex = ItemIndexs.lastAlarm AndAlso messageOrDefault.Key IsNot Nothing Then
-        '    tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22))
-        '    Dim keyLabel As Label = CreateBasicLabel("messageId")
-        '    tableLevel1Blue.RowCount += 1
-        '    Dim textBox1 As TextBox = CreateValueTextBox(innerJson, messageOrDefault, isScaledForm)
 
-        '    If textBox1.Text.Length > 100 Then
-        '        My.Forms.Form1.ToolTip1.SetToolTip(textBox1, textBox1.Text)
-        '    Else
-        '        My.Forms.Form1.ToolTip1.SetToolTip(textBox1, Nothing)
-        '    End If
-        '    tableLevel1Blue.Controls.AddRange({keyLabel, textBox1})
-        'End If
-
-        For Each c As IndexClass(Of KeyValuePair(Of String, String)) In innerJson.WithIndex()
+        For Each c As IndexClass(Of KeyValuePair(Of String, String)) In notificationJson.WithIndex()
             Application.DoEvents()
-            Dim innerRow As KeyValuePair(Of String, String) = c.Value
-            ' Comment out 4 lines below to see all data fields.
-            ' I did not see any use to display the filtered out ones
-            If filterJsonData AndAlso s_zFilterList.ContainsKey(itemIndex) AndAlso innerJson.Count > 4 Then
-                If s_zFilterList(itemIndex).Contains(innerRow.Key) Then
-                    Continue For
-                End If
-            End If
-            If innerRow.Key = "clearedNotifications" Then
-                tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize))
-            Else
+            Dim notificationType As KeyValuePair(Of String, String) = c.Value
+            Dim innerJson As List(Of Dictionary(Of String, String)) = LoadList(notificationType.Value)
+
+            tableLevel1Blue.Controls.Add(CreateBasicLabel(notificationType.Key), 0, c.Index)
+            If innerJson.Count > 0 Then
                 tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22))
-            End If
-            tableLevel1Blue.RowCount += 1
-            tableLevel1Blue.AutoSize = True
-
-            If innerRow.Value.StartsWith("[") Then
-                Dim innerJson1 As List(Of Dictionary(Of String, String)) = LoadList(innerRow.Value)
-                If innerRow.Key = "clearedNotifications" Then
-                    innerJson1.Reverse()
-                End If
-                If innerJson1.Count > 0 Then
-                    Dim tableLevel2 As TableLayoutPanel = CreateTableLayoutPanel(NameOf(tableLevel2), innerJson1.Count, Color.LightBlue)
-
-                    For i As Integer = 0 To innerJson1.Count - 1
-                        tableLevel2.RowStyles.Add(New RowStyle(SizeType.AutoSize, 0))
+                If notificationType.Key = "clearedNotifications" Then
+                    innerJson.Reverse()
+                    For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
+                        DisplayDataTableInDGV(tableLayoutPanel2,
+                                              ClassToDatatable(GetSummaryRecords(innerDictionary.Value, NotificationsRecordHelpers.rowsToHide).ToArray),
+                                              NameOf(SummaryRecord),
+                                              AddressOf SummaryRecordHelpers.AttachHandlers,
+                                              innerDictionary.Index)
                     Next
-                    tableLevel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 80.0))
-                    For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson1.WithIndex()
+                Else
+                    For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
                         Dim dic As Dictionary(Of String, String) = innerDictionary.Value
-                        tableLevel2.RowStyles.Add(New RowStyle(SizeType.Absolute, 4 + (dic.Keys.Count * 22)))
+                        tableLayoutPanel2.RowStyles.Add(New RowStyle(SizeType.Absolute, 4 + (dic.Keys.Count * 22)))
                         Dim tableLevel3 As TableLayoutPanel = CreateTableLayoutPanel(NameOf(tableLevel3), 0, Color.Aqua)
                         For Each e As IndexClass(Of KeyValuePair(Of String, String)) In dic.WithIndex()
                             Dim eValue As KeyValuePair(Of String, String) = e.Value
@@ -98,48 +78,50 @@ Friend Module TableLayoutPanelSupport
                             Application.DoEvents()
                         Next
                         tableLevel3.Height += 40
-                        tableLevel2.Controls.Add(tableLevel3, 0, innerDictionary.Index)
-                        tableLevel2.Height += 4
+                        tableLevel3.Controls.Add(tableLevel3, 0, innerDictionary.Index)
+                        tableLevel3.Height += 4
+                        tableLevel1Blue.Controls.Add(tableLevel3)
                         Application.DoEvents()
                     Next
-                    tableLevel1Blue.Controls.AddRange({CreateBasicLabel(innerRow.Key), tableLevel2})
-                Else
-                    tableLevel1Blue.Controls.AddRange({CreateBasicLabel(innerRow.Key), CreateBasicTextBox("")})
                 End If
             End If
         Next
+        tableLevel1Blue.Controls.Add(tableLayoutPanel2, 1, 1)
 
-        If itemIndex = ItemIndexs.notificationHistory Then
-            tableLevel1Blue.RowStyles(1) = New RowStyle(SizeType.AutoSize, 0)
-        End If
         Application.DoEvents()
     End Sub
 
-    Friend Sub ProcessInnerListDictionary(realPanel As TableLayoutPanel, innerListDictionary As List(Of Dictionary(Of String, String)), rowIndex As ItemIndexs, isScaledForm As Boolean)
-        If innerListDictionary.Count = 0 Then
-            initializeTableLayoutPanel(realPanel, rowIndex)
-            Dim rowTextBox As TextBox = CreateBasicTextBox("")
-            rowTextBox.BackColor = Color.LightGray
-            realPanel.Controls.Add(rowTextBox)
-            Exit Sub
-        End If
+    Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, dGV As DataGridView, table As DataTable, rowIndex As ItemIndexs)
         initializeTableLayoutPanel(realPanel, rowIndex)
-        realPanel.Hide()
-        Application.DoEvents()
-        realPanel.AutoScroll = True
-        realPanel.Parent.Parent.UseWaitCursor = True
-        For i As Integer = 1 To innerListDictionary.Count - 1
-            realPanel.RowStyles.Add(New RowStyle(SizeType.AutoSize, 0))
-        Next
-        For Each jsonEntry As IndexClass(Of Dictionary(Of String, String)) In innerListDictionary.WithIndex()
-            Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, Color.Black)
-            realPanel.Controls.Add(innerTableBlue, 0, realPanel.RowCount)
-            GetInnerTable(jsonEntry.Value, innerTableBlue, rowIndex, s_filterJsonData, isScaledForm)
-            Application.DoEvents()
-        Next
-        realPanel.Parent.Parent.UseWaitCursor = False
-        realPanel.Show()
-        Application.DoEvents()
+        dGV.DataSource = table
+        dGV.RowHeadersVisible = False
+    End Sub
+
+    Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As ItemIndexs)
+        initializeTableLayoutPanel(realPanel, rowIndex)
+        Dim dGV As DataGridView
+        If realPanel.Controls.Count > 1 Then
+            dGV = CType(realPanel.Controls(1), DataGridView)
+        Else
+            dGV = CreateDefaultDataGridView($"DataGridView{className}")
+            realPanel.Controls.Add(dGV, 0, 1)
+            attachHandlers(dGV)
+        End If
+        dGV.DataSource = table
+        dGV.RowHeadersVisible = False
+    End Sub
+
+    Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As Integer)
+        Dim dGV As DataGridView = CreateDefaultDataGridView($"DataGridView{className}")
+        dGV.AllowUserToResizeRows = False
+        dGV.AutoSize = False
+        dGV.ColumnHeadersVisible = False
+        dGV.ReadOnly = True
+        realPanel.Controls.Add(dGV, 0, rowIndex)
+        attachHandlers(dGV)
+        dGV.DataSource = table
+        dGV.RowHeadersVisible = False
+        dGV.Height = table.Rows.Count * 30
     End Sub
 
 End Module

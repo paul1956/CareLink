@@ -15,10 +15,13 @@ Friend Module SummaryRecordHelpers
                         caption)
     End Sub
 
-    Friend Function GetSummaryRecords(dic As Dictionary(Of String, String)) As List(Of SummaryRecord)
+    Friend Function GetSummaryRecords(dic As Dictionary(Of String, String), Optional rowsToHide As List(Of String) = Nothing) As List(Of SummaryRecord)
         Dim summaryList As New List(Of SummaryRecord)
         For Each row As KeyValuePair(Of String, String) In dic
-            If row.Value Is Nothing Then Continue For
+            If row.Value Is Nothing OrElse (rowsToHide IsNot Nothing AndAlso rowsToHide.Contains(row.Key)) Then
+                Continue For
+            End If
+
             Select Case row.Key
                 Case "messageId"
                     Dim item As New SummaryRecord(row, summaryList.Count + 1)

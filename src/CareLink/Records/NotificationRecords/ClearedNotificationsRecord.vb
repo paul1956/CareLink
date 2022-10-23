@@ -6,6 +6,7 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class ClearedNotificationsRecord
+
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:="Integer")>
     Public Property RecordNumber As Integer

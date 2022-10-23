@@ -1632,16 +1632,13 @@ Public Class Form1
                 Case ItemIndexs.notificationHistory
                     layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelNotificationHistory, ItemIndexs.notificationHistory)
                     Try
-                        layoutPanel1.SuspendLayout()
+                        layoutPanel1.AutoScroll = True
                         layoutPanel1.Controls(0).Text = $"{CInt(rowIndex)} {rowIndex}"
                         Dim innerJsonDictionary As Dictionary(Of String, String) = Loads(row.Value)
-                        Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, Color.Aqua)
+                        Dim innerTableBlue As TableLayoutPanel = CreateTableLayoutPanel(NameOf(innerTableBlue), 0, Color.DarkBlue)
                         innerTableBlue.AutoScroll = True
-                        layoutPanel1.Controls.Add(innerTableBlue,
-                                  1,
-                                  0)
-                        GetInnerTable(innerJsonDictionary, innerTableBlue, rowIndex, s_filterJsonData, isScaledForm)
-                        layoutPanel1.ResumeLayout()
+                        layoutPanel1.Controls.Add(innerTableBlue, 0, 1)
+                        CreateNotificationTables(innerJsonDictionary, innerTableBlue, rowIndex, s_filterJsonData, isScaledForm)
                     Catch ex As Exception
                         Stop
                         Throw
