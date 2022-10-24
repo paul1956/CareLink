@@ -27,9 +27,19 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 10/10/2022
+- 10/23/2022
 
 ## What's New in this release
+  New 3.5.7.0
+-    Add Additional message translations. 
+-    Spelling errors fixed througout
+-    Change update frequency to 1 minute
+-    Internal items
+
+    -    All Tables converted to DataGridView to improve performance
+    -    Create record for all pump objects allowing future improvement
+    -    Code more resilient to new unexpected keys
+
   New 3.5.6.11
 -   Fix crash on 780G Issue #25
 -   Lots of code cleanup

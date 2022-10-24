@@ -33,11 +33,17 @@ Friend Module SummaryRecordHelpers
                         End If
                     End If
                     summaryList.Add(item)
+                Case "autoModeReadinessState"
+                    summaryList.Add(New SummaryRecord(row, s_autoModeReadinessMessages, NameOf(s_autoModeReadinessMessages), summaryList.Count + 1))
+                Case "autoModeShieldState"
+                    summaryList.Add(New SummaryRecord(row, s_autoModeShieldMessages, NameOf(s_autoModeShieldMessages), summaryList.Count + 1))
+                Case "plgmLgsState"
+                    summaryList.Add(New SummaryRecord(row, s_plgmLgsMessages, NameOf(s_plgmLgsMessages), summaryList.Count + 1))
                 Case Else
                     If row.Value.IsPossibleMessage Then
-                        summaryList.Add(New SummaryRecord(row.Key, row.Value, row.Value.ToTitle, summaryList.Count + 1))
+                        summaryList.Add(New SummaryRecord(row, summaryList.Count + 1))
                     Else
-                        summaryList.Add(New SummaryRecord(row.Key, row.Value, summaryList.Count + 1))
+                        summaryList.Add(New SummaryRecord(row, summaryList.Count + 1))
                     End If
             End Select
         Next

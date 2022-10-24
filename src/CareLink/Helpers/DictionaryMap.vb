@@ -66,28 +66,36 @@ Friend Module DictionaryMap
         Dim classObject As New T
         For Each row As KeyValuePair(Of String, String) In dic
             Dim [property] As PropertyInfo = classType.GetProperty(row.Key, BindingFlags.Public Or BindingFlags.Instance)
-            If [property] IsNot Nothing AndAlso [property].CanWrite Then ' Make sure property isn't read only
-                Try
-                    Dim propertyValue As Object
-                    Select Case [property].PropertyType.Name
-                        Case "DateTime", "dateTime"
-                            propertyValue = row.Value.ParseDate([property].Name)
-                            classObject.GetType.GetProperty($"{[property].Name}AsString").SetValue(classObject, row.Value, Nothing)
-                        Case "previousDateTime"
-                            propertyValue = row.Value.ParseDate($"{[property].Name}AsString")
-                            classObject.GetType.GetProperty([property].Name).SetValue(classObject, row.Value, Nothing)
-                        Case "Single"
-                            propertyValue = row.Value.ParseSingle
-                        Case "String", "Int32", "Boolean"
-                            propertyValue = Convert.ChangeType(row.Value, [property].PropertyType)
-                        Case Else
-                            Throw UnreachableException()
-                    End Select
+            If [property] IsNot Nothing Then
+                If [property].CanWrite Then ' Make sure property isn't read only
 
-                    classObject.GetType.GetProperty([property].Name).SetValue(classObject, propertyValue, Nothing)
-                Catch ex As Exception
-                    Return New T
-                End Try
+                    Try
+                        Dim propertyValue As Object
+                        Select Case [property].PropertyType.Name
+                            Case "DateTime", "dateTime"
+                                propertyValue = row.Value.ParseDate([property].Name)
+                                classObject.GetType.GetProperty($"{[property].Name}AsString").SetValue(classObject, row.Value, Nothing)
+                            Case "previousDateTime"
+                                propertyValue = row.Value.ParseDate($"{[property].Name}AsString")
+                                classObject.GetType.GetProperty([property].Name).SetValue(classObject, row.Value, Nothing)
+                            Case "Single"
+                                propertyValue = row.Value.ParseSingle
+                            Case "String", "Int32", "Boolean"
+                                propertyValue = Convert.ChangeType(row.Value, [property].PropertyType)
+                            Case Else
+                                Throw UnreachableException()
+                        End Select
+
+                        classObject.GetType.GetProperty([property].Name).SetValue(classObject, propertyValue, Nothing)
+                    Catch ex As Exception
+                        Return New T
+                    End Try
+                End If
+            Else
+                Stop
+                If Not Debugger.IsAttached Then
+                    MsgBox($"{row.Key} is unknown Property, please open a GitHub issue", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
+                End If
             End If
         Next row
         classObject.GetType.GetProperty(NameOf(RecordNumber))?.SetValue(classObject, RecordNumber, Nothing)

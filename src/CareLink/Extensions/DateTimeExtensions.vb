@@ -24,7 +24,7 @@ Friend Module DateTimeExtensions
 
     Public ReadOnly s_fiveMinutesInMilliseconds As Integer = CInt(New TimeSpan(0, minutes:=5, 0).TotalMilliseconds)
     Public ReadOnly s_thirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
-    Public ReadOnly s_twoMinutesInMilliseconds As Integer = CInt(New TimeSpan(0, minutes:=2, 0).TotalMilliseconds)
+    Public ReadOnly s_oneMinutesInMilliseconds As Integer = CInt(New TimeSpan(0, minutes:=1, 0).TotalMilliseconds)
 
 #End Region 'Millisecond Constants
 
@@ -115,6 +115,9 @@ Friend Module DateTimeExtensions
     ''' <returns>DateTime String in UTC</returns>
     <Extension>
     Friend Function Epoch2DateTimeString(epoch As String) As String
+        If epoch = "0" Then
+            Return ""
+        End If
         Return $"{epoch.FromUnixTime.ToShortDateTimeString} UTC"
     End Function
 

@@ -56,13 +56,18 @@ Friend Class CalibrationRecordHelpers
         Dim cellStyle As New DataGridViewCellStyle
 
         Select Case columnName
-            Case NameOf(CalibrationRecord.kind), NameOf(CalibrationRecord.type),
-             NameOf(CalibrationRecord.dateTime), NameOf(CalibrationRecord.dateTimeAsString)
+            Case NameOf(CalibrationRecord.kind),
+                 NameOf(CalibrationRecord.dateTime),
+                 NameOf(CalibrationRecord.dateTimeAsString),
+                 NameOf(CalibrationRecord.type)
                 cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-            Case NameOf(CalibrationRecord.RecordNumber)
+            Case NameOf(CalibrationRecord.calibrationSuccess),
+                 NameOf(CalibrationRecord.RecordNumber)
                 cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
-            Case NameOf(CalibrationRecord.index), NameOf(CalibrationRecord.value),
-             NameOf(CalibrationRecord.relativeOffset), NameOf(CalibrationRecord.version)
+            Case NameOf(CalibrationRecord.index),
+                 NameOf(CalibrationRecord.relativeOffset),
+                 NameOf(CalibrationRecord.value),
+                 NameOf(CalibrationRecord.version)
                 cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
             Case Else
                 Stop

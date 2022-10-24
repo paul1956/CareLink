@@ -43,7 +43,7 @@ Friend Module Form1Helpers
                     Return False
                 End If
                 MeForm.RecentData = MeForm.client.GetRecentData(MeForm.LoginDialog.LoggedOnUser.CountryCode)
-                MeForm.ServerUpdateTimer.Interval = s_twoMinutesInMilliseconds
+                MeForm.ServerUpdateTimer.Interval = s_oneMinutesInMilliseconds
                 MeForm.ServerUpdateTimer.Start()
                 Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MeForm.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
                 If CareLinkClient.NetworkDown Then
