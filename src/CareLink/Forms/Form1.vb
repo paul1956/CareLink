@@ -804,6 +804,24 @@ Public Class Form1
     Private Sub DataGridViewViewInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DataGridViewInsulin.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.dgvCellFormatting(e, NameOf(InsulinRecord.dateTime))
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(InsulinRecord.programmedFastAmount)
+                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.deliveredFastAmount)).Value.ToString Then
+                    e.CellStyle.BackColor = Color.Red
+                End If
+            Case NameOf(InsulinRecord.deliveredFastAmount)
+                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.programmedFastAmount)).Value.ToString Then
+                    e.CellStyle.BackColor = Color.Red
+                End If
+            Case NameOf(InsulinRecord.programmedExtendedAmount)
+                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.deliveredExtendedAmount)).Value.ToString Then
+                    e.CellStyle.BackColor = Color.Red
+                End If
+            Case NameOf(InsulinRecord.deliveredExtendedAmount)
+                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.programmedExtendedAmount)).Value.ToString Then
+                    e.CellStyle.BackColor = Color.Red
+                End If
+        End Select
     End Sub
 
     Private Sub DataGridViewInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewInsulin.ColumnAdded
@@ -1302,6 +1320,7 @@ Public Class Form1
                              "RECOMMENDED"
                             '
                         Case Else
+                            Stop
                             Throw UnreachableException(NameOf(CollectMarkers))
                     End Select
                 Case "LOW_GLUCOSE_SUSPENDED"
@@ -1700,6 +1719,7 @@ Public Class Form1
             Me.ActiveInsulinValue.Text = $"Active Insulin{Environment.NewLine}{activeInsulinStr} U"
             _bgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
         Catch ex As Exception
+            Stop
             Throw New ArithmeticException($"{ex.Message} exception in {NameOf(UpdateActiveInsulin)}")
         End Try
     End Sub
@@ -1789,6 +1809,7 @@ Public Class Form1
 
             Me.ActiveInsulinChart.PlotSgSeries(HomePageMealRow)
         Catch ex As Exception
+            Stop
             Throw New ArithmeticException($"{ex.Message} exception in {NameOf(UpdateActiveInsulinChart)}")
         End Try
         Application.DoEvents()
@@ -1828,6 +1849,7 @@ Public Class Form1
                 _bgMiniDisplay.BGTextBox.SelectionLength = 0
             End If
         Catch ex As Exception
+            Stop
             Throw New ArithmeticException($"{ex.Message} exception in {NameOf(UpdateAutoModeShield)}")
         End Try
         Application.DoEvents()
@@ -1847,6 +1869,7 @@ Public Class Form1
                 Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(timeToNextCalibrationMinutes / 60, timeToNextCalibrationMinutes / 60 / 12)
             End If
         Catch ex As Exception
+            Stop
             Throw New ArithmeticException($"{ex.Message} exception in {NameOf(UpdateCalibrationTimeRemaining)}")
         End Try
 
@@ -1923,6 +1946,7 @@ Public Class Form1
             Me.HomeTabChart.PlotSgSeries(HomePageMealRow)
             Me.HomeTabChart.PlotHighLowLimits()
         Catch ex As Exception
+            Stop
             Throw New Exception($"{ex.Message} exception while plotting Markers in {NameOf(UpdateHomeTabSerieses)}")
         End Try
 
@@ -1980,6 +2004,7 @@ Public Class Form1
         Try
             Me.RemainingInsulinUnits.Text = $"{s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.reservoirRemainingUnits)).ParseSingle(0):N1} U"
         Catch ex As Exception
+            Stop
             Throw New ArithmeticException($"{ex.Message} exception in {NameOf(UpdateRemainingInsulin)}")
         End Try
     End Sub
@@ -2084,6 +2109,7 @@ Public Class Form1
             Me.TreatmentMarkersChart.PlotTreatmentMarkers()
             Me.TreatmentMarkersChart.PlotSgSeries(HomePageMealRow)
         Catch ex As Exception
+            Stop
             Throw New ArithmeticException($"{ex.Message} exception in {NameOf(InitializeTreatmentMarkersChart)}")
         End Try
         Application.DoEvents()

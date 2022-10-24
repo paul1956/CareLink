@@ -50,4 +50,5 @@ Friend Class InsulinRecordHelpers
     Friend Shared Function HideColumn(columnName As String) As Boolean
         Return s_filterJsonData AndAlso columnsToHide.Contains(columnName)
     End Function
+
 End Class

@@ -57,7 +57,6 @@ Class ActiveInsulinRecordHelpers
             Case Else
                 Stop
                 cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
-                Throw UnreachableException($"{NameOf(ActiveInsulinRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
         End Select
         Return cellStyle
     End Function

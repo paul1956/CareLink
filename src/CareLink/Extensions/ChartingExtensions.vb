@@ -110,6 +110,7 @@ Friend Module ChartingExtensions
                 End If
             End With
         Catch ex As Exception
+            Stop
             Throw New Exception($"{ex.Message} exception in {NameOf(PlotOnePoint)}")
         End Try
 
@@ -164,6 +165,7 @@ Friend Module ChartingExtensions
                     chart.Series(LowLimitSeriesName).Points.AddXY(sgOADateTime, limitsLowValue)
                 End If
             Catch ex As Exception
+                Stop
                 Throw New Exception($"{ex.Message} exception while plotting Limits in {NameOf(PlotHighLowLimits)}")
             End Try
         Next

@@ -57,6 +57,7 @@ Friend Module SummaryRecordHelpers
                 Return s.Value
             End If
         Next
+        Stop
         Throw New ArgumentException("Key not found", NameOf(Key))
     End Function
 
@@ -76,6 +77,7 @@ Friend Module SummaryRecordHelpers
             Case NameOf(SummaryRecord.Value)
                 cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
             Case Else
+                Stop
                 Throw UnreachableException($"{NameOf(SummaryRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
         End Select
         Return cellStyle

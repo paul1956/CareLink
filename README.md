@@ -30,17 +30,18 @@ This update has a UI to show all the available data and a visual version that mi
 - 10/23/2022
 
 ## What's New in this release
-  New 3.5.7.0
--    Add Additional message translations. 
--    Spelling errors fixed througout
--    Change update frequency to 1 minute
--    Internal items
+New 3.5.7.0
+- Hightlight when insulin flow is blocked, less insulin is delevered
+- Add Additional message translations. 
+- Spelling errors fixed througout
+- Change update frequency to 1 minute
+- Internal items
 
     -    All Tables converted to DataGridView to improve performance
     -    Create record for all pump objects allowing future improvement
     -    Code more resilient to new unexpected keys
 
-  New 3.5.6.11
+New 3.5.6.11
 -   Fix crash on 780G Issue #25
 -   Lots of code cleanup
 -   Create more pump objects
@@ -71,7 +72,7 @@ This update has a UI to show all the available data and a visual version that mi
 
   New 3.5.6.1
 -   Use improved DataVisualizationPackage
--     https://github.com/kirsan31/winforms-datavisualization
+    -   https://github.com/kirsan31/winforms-datavisualization
 -   Fix for matching username with CareLink.csv file
 -   Improved support for pump time changes
 -   Icon for Show Widget Menu
