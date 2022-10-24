@@ -76,7 +76,7 @@ Friend Module SummaryRecordHelpers
             Case NameOf(SummaryRecord.Value)
                 cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
             Case Else
-                Throw UnreachableException()
+                Throw UnreachableException($"{NameOf(SummaryRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
         End Select
         Return cellStyle
     End Function

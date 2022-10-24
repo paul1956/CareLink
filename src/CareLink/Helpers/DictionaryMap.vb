@@ -83,7 +83,7 @@ Friend Module DictionaryMap
                             Case "String", "Int32", "Boolean"
                                 propertyValue = Convert.ChangeType(row.Value, [property].PropertyType)
                             Case Else
-                                Throw UnreachableException()
+                                Throw UnreachableException($"{NameOf(SummaryRecordHelpers)}.{NameOf(GetCellStyle)} [property].PropertyType.Name = {[property].PropertyType.Name}")
                         End Select
 
                         classObject.GetType.GetProperty([property].Name).SetValue(classObject, propertyValue, Nothing)

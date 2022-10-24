@@ -10,14 +10,16 @@ Public Class SummaryRecord
     Protected Friend Sub New(entry As KeyValuePair(Of String, String), messages As Dictionary(Of String, String), messageTableName As String, index As Integer)
         Me.New(entry, index)
         Dim message As String = ""
-        If Not messages.TryGetValue(entry.Value, message) Then
-            If Debugger.IsAttached Then
-                MsgBox($"{entry.Value} is unknown message for {messageTableName}")
+        If Not String.IsNullOrWhiteSpace(entry.Value) Then
+            If Not messages.TryGetValue(entry.Value, message) Then
+                If Debugger.IsAttached Then
+                    MsgBox($"{entry.Value} is unknown message for {messageTableName}")
+                End If
+                message = entry.Value.ToTitleCase
             End If
-            message = entry.Value.ToTitleCase
         End If
 
-        Me.Message = message
+        Me.Message = Message
     End Sub
 
     Protected Friend Sub New(entry As KeyValuePair(Of String, String), recordNumber As Integer)

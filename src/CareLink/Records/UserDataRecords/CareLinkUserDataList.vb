@@ -93,13 +93,16 @@ Public Class CareLinkUserDataList
 
     Default Public Property Item(itemName As String) As CareLinkUserDataRecord
         Get
+            If String.IsNullOrWhiteSpace(itemName) Then
+                Throw New KeyNotFoundException($"Key may not be Nothing, in CareLinkUserDataList.Item")
+            End If
             For i As Integer = 0 To Me.List.Count - 1
                 Dim entry As CareLinkUserDataRecord = CType(Me.List(i), CareLinkUserDataRecord)
                 If entry?.CareLinkUserName.Equals(itemName, StringComparison.OrdinalIgnoreCase) Then
                     Return CType(Me.List(i), CareLinkUserDataRecord)
                 End If
             Next
-            Throw New KeyNotFoundException($"Key {itemName} Not Present in Dictionary")
+            Throw New KeyNotFoundException($"Key '{itemName}' Not Present in Dictionary, in CareLinkUserDataList.Item")
         End Get
         Set(Value As CareLinkUserDataRecord)
             For i As Integer = 0 To Me.List.Count - 1
@@ -109,7 +112,7 @@ Public Class CareLinkUserDataList
                     Exit Property
                 End If
             Next
-            Throw New KeyNotFoundException($"Key {itemName} Not Present in Dictionary")
+            Throw New KeyNotFoundException($"Key '{itemName}' Not Present in Dictionary")
         End Set
     End Property
 

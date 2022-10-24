@@ -36,7 +36,7 @@ Friend Module MathExtensions
     <Extension>
     Public Function ParseSingle(valueString As String, Optional decimalDigits As Integer = 10) As Single
         If valueString.Contains(","c) AndAlso valueString.Contains("."c) Then
-            Throw New ArgumentException("valueString contains both a comma and period.", NameOf(valueString))
+            Throw New ArgumentException($"{NameOf(valueString)} = {valueString}, contains both a comma and period.", NameOf(valueString))
         End If
 
         Dim returnSingle As Single
@@ -52,7 +52,7 @@ Friend Module MathExtensions
     <Extension>
     Public Function TryParseSingle(valueString As String, ByRef result As Single, Optional decimalDigits As Integer = 10, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Boolean
         If valueString.Contains(","c) AndAlso valueString.Contains("."c) Then
-            Throw New Exception($"{NameOf(valueString)} = {valueString} and contains both comma and period in Line {sourceLineNumber} in {memberName}.")
+            Throw New Exception($"{NameOf(valueString)} = {valueString}, and contains both comma and period in Line {sourceLineNumber} in {memberName}.")
         End If
 
         If Single.TryParse(valueString.Replace(",", "."), NumberStyles.Number, CurrentDataCulture, result) Then

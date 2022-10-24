@@ -78,8 +78,7 @@ Public Module JsonExtensions
                 .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 .NumberHandling = JsonNumberHandling.WriteAsString}
         Dim item As KeyValuePair(Of String, Object)
-        If value IsNot Nothing Then
-
+        If Not String.IsNullOrWhiteSpace(value) Then
             Dim rawJsonData As List(Of KeyValuePair(Of String, Object)) = JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(value, options).ToList()
             For Each item In rawJsonData
                 If item.Value Is Nothing Then

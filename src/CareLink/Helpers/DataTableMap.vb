@@ -82,7 +82,7 @@ Friend Module DataTableMap
                 Case "Boolean"
                     cellAlignment = DataGridViewContentAlignment.MiddleCenter
                 Case Else
-                    Throw UnreachableException()
+                    Throw UnreachableException($"{NameOf(DataTableMap)}.{NameOf(ClassPropertiesToCoumnAlignment)} [property].PropertyType.Name = {[property].PropertyType.Name}")
             End Select
             result.Add([property].Name, cellAlignment)
         Next

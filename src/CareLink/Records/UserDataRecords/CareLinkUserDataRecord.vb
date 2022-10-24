@@ -290,7 +290,7 @@ Public Class CareLinkUserDataRecord
             Case NameOf(AutoLogin)
                 Return CStr(Me.AutoLogin)
             Case Else
-                Throw UnreachableException()
+                Throw UnreachableException($"{NameOf(CareLinkUserDataRecord)}.{NameOf(GetValueByName)} {NameOf(entryName)} = {entryName}")
         End Select
     End Function
 

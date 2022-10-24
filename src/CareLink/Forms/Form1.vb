@@ -1302,7 +1302,7 @@ Public Class Form1
                              "RECOMMENDED"
                             '
                         Case Else
-                            Throw UnreachableException()
+                            Throw UnreachableException(NameOf(CollectMarkers))
                     End Select
                 Case "LOW_GLUCOSE_SUSPENDED"
                     _listOfLowGlucoseSuspendedRecords.Add(DictionaryToClass(Of LowGlusoceSuspendRecord)(newMarker, _listOfLowGlucoseSuspendedRecords.Count + 1))
@@ -1314,7 +1314,7 @@ Public Class Form1
                     s_listOfTimeChangeMarkers.Add(New TimeChangeRecord(newMarker))
                 Case Else
                     Stop
-                    Throw UnreachableException()
+                    Throw UnreachableException(NameOf(CollectMarkers))
             End Select
         Next
         Dim endOADate As OADate = If(basalDictionary.Count = 0, New OADate(Now), basalDictionary.Last.Key)
@@ -1610,7 +1610,7 @@ Public Class Form1
                         End Try
                     Case Else
                         Stop
-                        Throw UnreachableException()
+                        Throw UnreachableException(NameOf(UpdateDataTables))
                 End Select
             Catch ex As Exception
                 Stop
@@ -1694,17 +1694,17 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
-    Private Sub UpdateActiveInsulin(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+    Private Sub UpdateActiveInsulin()
         Try
             Dim activeInsulinStr As String = $"{s_activeInsulin.amount:N3}"
             Me.ActiveInsulinValue.Text = $"Active Insulin{Environment.NewLine}{activeInsulinStr} U"
             _bgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
         Catch ex As Exception
-            Throw New ArithmeticException($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
+            Throw New ArithmeticException($"{ex.Message} exception in {NameOf(UpdateActiveInsulin)}")
         End Try
     End Sub
 
-    Private Sub UpdateActiveInsulinChart(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+    Private Sub UpdateActiveInsulinChart()
         If Not _Initialized Then
             Exit Sub
         End If
@@ -1789,12 +1789,12 @@ Public Class Form1
 
             Me.ActiveInsulinChart.PlotSgSeries(HomePageMealRow)
         Catch ex As Exception
-            Throw New ArithmeticException($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
+            Throw New ArithmeticException($"{ex.Message} exception in {NameOf(UpdateActiveInsulinChart)}")
         End Try
         Application.DoEvents()
     End Sub
 
-    Private Sub UpdateAutoModeShield(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+    Private Sub UpdateAutoModeShield()
         Try
             Me.LastSGTimeLabel.Text = s_lastSG.datetime.ToShortTimeString
             Me.ShieldUnitsLabel.BackColor = Color.Transparent
@@ -1828,12 +1828,12 @@ Public Class Form1
                 _bgMiniDisplay.BGTextBox.SelectionLength = 0
             End If
         Catch ex As Exception
-            Throw New ArithmeticException($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
+            Throw New ArithmeticException($"{ex.Message} exception in {NameOf(UpdateAutoModeShield)}")
         End Try
         Application.DoEvents()
     End Sub
 
-    Private Sub UpdateCalibrationTimeRemaining(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+    Private Sub UpdateCalibrationTimeRemaining()
         Try
             Dim timeToNextCalibrationMinutes As Integer = CInt(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.timeToNextCalibrationMinutes)))
             Dim timeToNextCalibHours As UShort = CUShort(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.timeToNextCalibHours)))
@@ -1847,7 +1847,7 @@ Public Class Form1
                 Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(timeToNextCalibrationMinutes / 60, timeToNextCalibrationMinutes / 60 / 12)
             End If
         Catch ex As Exception
-            Throw New ArithmeticException($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
+            Throw New ArithmeticException($"{ex.Message} exception in {NameOf(UpdateCalibrationTimeRemaining)}")
         End Try
 
         Application.DoEvents()
@@ -1913,7 +1913,7 @@ Public Class Form1
         Me.Last24CarbsValueLabel.Text = $"Carbs = {s_totalCarbs} {s_sessionCountrySettings.carbohydrateUnitsDefault.ToTitle}"
     End Sub
 
-    Private Sub UpdateHomeTabSerieses(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+    Private Sub UpdateHomeTabSerieses()
         Try
             For Each s As Series In Me.HomeTabChart.Series
                 s.Points.Clear()
@@ -1921,9 +1921,9 @@ Public Class Form1
             Me.HomeTabChart.ChartAreas(NameOf(ChartArea)).InitializeBGChartArea()
             Me.HomeTabChart.PlotHomePageMarkers(_homePageAbsoluteRectangle)
             Me.HomeTabChart.PlotSgSeries(HomePageMealRow)
-            Me.HomeTabChart.PlotHighLowLimits(memberName, sourceLineNumber)
+            Me.HomeTabChart.PlotHighLowLimits()
         Catch ex As Exception
-            Throw New Exception($"{ex.Message} exception while plotting Markers in {memberName} at {sourceLineNumber}")
+            Throw New Exception($"{ex.Message} exception while plotting Markers in {NameOf(UpdateHomeTabSerieses)}")
         End Try
 
     End Sub
@@ -1976,11 +1976,11 @@ Public Class Form1
         End Select
     End Sub
 
-    Private Sub UpdateRemainingInsulin(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+    Private Sub UpdateRemainingInsulin()
         Try
             Me.RemainingInsulinUnits.Text = $"{s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.reservoirRemainingUnits)).ParseSingle(0):N1} U"
         Catch ex As Exception
-            Throw New ArithmeticException($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
+            Throw New ArithmeticException($"{ex.Message} exception in {NameOf(UpdateRemainingInsulin)}")
         End Try
     End Sub
 
@@ -2084,7 +2084,7 @@ Public Class Form1
             Me.TreatmentMarkersChart.PlotTreatmentMarkers()
             Me.TreatmentMarkersChart.PlotSgSeries(HomePageMealRow)
         Catch ex As Exception
-            Throw New ArithmeticException($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
+            Throw New ArithmeticException($"{ex.Message} exception in {NameOf(InitializeTreatmentMarkersChart)}")
         End Try
         Application.DoEvents()
     End Sub

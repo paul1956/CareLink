@@ -60,7 +60,7 @@ Friend Class SgRecordHelpers
                  NameOf(SgRecord.sensorState)
                 cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
             Case Else
-                Throw UnreachableException()
+                Throw UnreachableException($"{NameOf(SgRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
         End Select
         Return cellStyle
     End Function

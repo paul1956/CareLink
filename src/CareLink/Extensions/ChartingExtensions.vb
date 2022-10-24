@@ -84,7 +84,7 @@ Friend Module ChartingExtensions
     End Sub
 
     <Extension>
-    Private Sub PlotOnePoint(plotSeries As Series, sgOADateTime As OADate, bgValue As Single, mainLineColor As Color, HomePageMealRow As Double, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+    Private Sub PlotOnePoint(plotSeries As Series, sgOADateTime As OADate, bgValue As Single, mainLineColor As Color, HomePageMealRow As Double)
         Try
             With plotSeries.Points
                 Dim sgDouble As Double = sgOADateTime
@@ -110,7 +110,7 @@ Friend Module ChartingExtensions
                 End If
             End With
         Catch ex As Exception
-            Throw New Exception($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
+            Throw New Exception($"{ex.Message} exception in {NameOf(PlotOnePoint)}")
         End Try
 
     End Sub
@@ -149,7 +149,7 @@ Friend Module ChartingExtensions
     End Sub
 
     <Extension>
-    Friend Sub PlotHighLowLimits(chart As Chart, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+    Friend Sub PlotHighLowLimits(chart As Chart)
         Dim limitsIndexList() As Integer = GetLimitsList(s_listOfSGs.Count - 1)
 
         For Each sgListIndex As IndexClass(Of SgRecord) In s_listOfSGs.WithIndex()
@@ -164,13 +164,13 @@ Friend Module ChartingExtensions
                     chart.Series(LowLimitSeriesName).Points.AddXY(sgOADateTime, limitsLowValue)
                 End If
             Catch ex As Exception
-                Throw New Exception($"{ex.Message} exception while plotting Limits in {memberName} at {sourceLineNumber}")
+                Throw New Exception($"{ex.Message} exception while plotting Limits in {NameOf(PlotHighLowLimits)}")
             End Try
         Next
     End Sub
 
     <Extension>
-    Friend Sub PlotHomePageMarkers(homePageChart As Chart, chartRelitivePosition As RectangleF, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+    Friend Sub PlotHomePageMarkers(homePageChart As Chart, chartRelitivePosition As RectangleF)
         Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
         s_homeTabMarkerInsulinDictionary.Clear()
         s_homeTabMarkerMealDictionary.Clear()
@@ -266,7 +266,7 @@ Friend Module ChartingExtensions
     End Sub
 
     <Extension>
-    Friend Sub PlotTreatmentMarkers(treatmentChart As Chart, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+    Friend Sub PlotTreatmentMarkers(treatmentChart As Chart)
         Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
         For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             Try

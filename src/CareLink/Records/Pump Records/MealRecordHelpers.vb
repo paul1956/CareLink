@@ -58,7 +58,7 @@ Friend Class MealRecordHelpers
                 cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
             Case Else
                 Stop
-                Throw UnreachableException()
+                Throw UnreachableException($"{NameOf(MealRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
         End Select
         Return cellStyle
     End Function

@@ -62,7 +62,7 @@ Public Class CareLinkUserDataRecordHelpers
                 cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(1, 1, 1, 1))
             Case Else
                 Stop
-                Throw UnreachableException()
+                Throw UnreachableException($"{NameOf(CareLinkUserDataRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
         End Select
         Return cellStyle
     End Function
