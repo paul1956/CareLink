@@ -726,8 +726,10 @@ Public Class Form1
 
     Private Sub DataGridViewCareLinkUsers_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles DataGridViewCareLinkUsers.RowsAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim disableButtonCell As DataGridViewDisableButtonCell = CType(dgv.Rows(e.RowIndex).Cells(NameOf(DataGridViewButtonColumnCareLinkDeleteRow)), DataGridViewDisableButtonCell)
-        disableButtonCell.Enabled = s_allUserSettingsData(e.RowIndex).CareLinkUserName <> _LoginDialog.LoggedOnUser.CareLinkUserName
+        For i As Integer = e.RowIndex To e.RowIndex + (e.RowCount - 1)
+            Dim disableButtonCell As DataGridViewDisableButtonCell = CType(dgv.Rows(i).Cells(NameOf(DataGridViewButtonColumnCareLinkDeleteRow)), DataGridViewDisableButtonCell)
+            disableButtonCell.Enabled = s_allUserSettingsData(i).CareLinkUserName <> _LoginDialog.LoggedOnUser.CareLinkUserName
+        Next
     End Sub
 
 #End Region ' All Users Tab DataGridView Events
