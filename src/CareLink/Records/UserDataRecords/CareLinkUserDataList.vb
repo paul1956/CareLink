@@ -95,7 +95,7 @@ Public Class CareLinkUserDataList
         Get
             For i As Integer = 0 To Me.List.Count - 1
                 Dim entry As CareLinkUserDataRecord = CType(Me.List(i), CareLinkUserDataRecord)
-                If entry.CareLinkUserName.Equals(itemName, StringComparison.OrdinalIgnoreCase) Then
+                If entry?.CareLinkUserName.Equals(itemName, StringComparison.OrdinalIgnoreCase) Then
                     Return CType(Me.List(i), CareLinkUserDataRecord)
                 End If
             Next
