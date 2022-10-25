@@ -6,30 +6,10 @@ Imports System.Runtime.CompilerServices
 
 Friend Module ItemIndexesModule
 
-    Public ReadOnly s_singleEntries As New List(Of String) From {
-                        NameOf(ItemIndexs.lastSensorTS), NameOf(ItemIndexs.lastSensorTSAsString),
-                        NameOf(ItemIndexs.kind), NameOf(ItemIndexs.version),
-                        NameOf(ItemIndexs.pumpModelNumber), NameOf(ItemIndexs.medicalDeviceTimeAsString),
-                        NameOf(ItemIndexs.firstName), NameOf(ItemIndexs.lastName),
-                        NameOf(ItemIndexs.conduitSerialNumber), NameOf(ItemIndexs.conduitBatteryLevel),
-                        NameOf(ItemIndexs.conduitBatteryStatus), NameOf(ItemIndexs.conduitInRange),
-                        NameOf(ItemIndexs.conduitMedicalDeviceInRange), NameOf(ItemIndexs.conduitSensorInRange),
-                        NameOf(ItemIndexs.medicalDeviceFamily), NameOf(ItemIndexs.medicalDeviceSerialNumber),
-                        NameOf(ItemIndexs.reservoirLevelPercent), NameOf(ItemIndexs.reservoirAmount),
-                        NameOf(ItemIndexs.reservoirRemainingUnits), NameOf(ItemIndexs.medicalDeviceBatteryLevelPercent),
-                        NameOf(ItemIndexs.sensorDurationHours), NameOf(ItemIndexs.timeToNextCalibHours),
-                        NameOf(ItemIndexs.bgUnits), NameOf(ItemIndexs.timeFormat),
-                        NameOf(ItemIndexs.medicalDeviceSuspended), NameOf(ItemIndexs.lastSGTrend),
-                        NameOf(ItemIndexs.averageSG), NameOf(ItemIndexs.belowHypoLimit),
-                        NameOf(ItemIndexs.aboveHyperLimit), NameOf(ItemIndexs.timeInRange),
-                        NameOf(ItemIndexs.pumpCommunicationState), NameOf(ItemIndexs.gstCommunicationState),
-                        NameOf(ItemIndexs.gstBatteryLevel), NameOf(ItemIndexs.maxAutoBasalRate),
-                        NameOf(ItemIndexs.maxBolusAmount), NameOf(ItemIndexs.sensorDurationMinutes),
-                        NameOf(ItemIndexs.timeToNextCalibrationMinutes), NameOf(ItemIndexs.clientTimeZoneName),
-                        NameOf(ItemIndexs.sgBelowLimit), NameOf(ItemIndexs.averageSGFloat),
-                        NameOf(ItemIndexs.timeToNextCalibrationRecommendedMinutes),
-                        NameOf(ItemIndexs.calFreeSensor), NameOf(ItemIndexs.finalCalibration)
-                    }
+    Friend Function HandleAsSingleItem(rowIndex As ItemIndexs) As Boolean
+        Return rowIndex <= ItemIndexs.lastSGTrend OrElse (rowIndex >= ItemIndexs.systemStatusMessage AndAlso
+                    Not {ItemIndexs.sensorState, ItemIndexs.calibStatus, ItemIndexs.systemStatusMessage, ItemIndexs.lastConduitDateTime}.Contains(rowIndex))
+    End Function
 
     ' Do not rename these name are matched used in case sensitive matching
     Public Enum ItemIndexs As Integer

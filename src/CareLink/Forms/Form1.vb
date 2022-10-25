@@ -182,7 +182,7 @@ Public Class Form1
 #Region "Form Menu Events"
 
     Private Sub AITComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AITComboBox.SelectedIndexChanged
-        If Me.AITComboBox.SelectedIndex < 1 Then
+        If Me.AITComboBox.SelectedIndex < 0 Then
             Exit Sub
         End If
         Dim aitTimeSpan As TimeSpan = TimeSpan.Parse(Me.AITComboBox.SelectedValue.ToString)
@@ -1285,6 +1285,7 @@ Public Class Form1
 #End Region ' Initialize Charts
 
 #Region "Update Data and Tables"
+
     ''' <summary>
     ''' Collect up markers
     ''' </summary>
@@ -1384,84 +1385,84 @@ Public Class Form1
         s_listOfSummaryRecords.Clear()
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In recentDataEnumerable
             Dim row As KeyValuePair(Of String, String) = c.Value
-            If Not s_singleEntries.Contains(row.Key) Then Continue For
-            s_listOfSummaryRecords.Add(New SummaryRecord(row, GetItemIndex(c.Value.Key)))
+            Dim rowIndex As ItemIndexs = GetItemIndex(row.Key)
+            If Not HandleAsSingleItem(rowIndex) Then Continue For
+
+            Select Case rowIndex
+                Case ItemIndexs.lastSensorTS
+                    If row.Value = "0" Then
+                        ' Handled by ItemIndexs.lastSensorTSAsString
+                    Else
+                        s_listOfSummaryRecords.Add(New SummaryRecord(row, rowIndex))
+                    End If
+                Case ItemIndexs.lastSensorTSAsString
+                    If s_listOfSummaryRecords.Count < ItemIndexs.lastSensorTSAsString Then
+                        s_listOfSummaryRecords.Insert(ItemIndexs.lastSensorTS, New SummaryRecord(New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastSensorTS), row.Value.CDateOrDefault(NameOf(ItemIndexs.lastSensorTS), CurrentUICulture)), ItemIndexs.lastSensorTS))
+                    End If
+                    s_listOfSummaryRecords.Add(New SummaryRecord(row, rowIndex))
+                Case ItemIndexs.currentServerTime,
+                       ItemIndexs.lastConduitTime,
+                       ItemIndexs.lastConduitUpdateServerTime
+                    s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, row.Value.Epoch2DateTimeString, rowIndex))
+
+                Case ItemIndexs.lastMedicalDeviceDataUpdateServerTime
+                    s_lastMedicalDeviceDataUpdateServerEpoch = CLng(row.Value)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, row.Value.Epoch2DateTimeString, rowIndex))
+                Case ItemIndexs.medicalDeviceTime
+                    If row.Value = "0" Then
+                        ' Handled by ItemIndexs.lastSensorTSAsString
+                    Else
+                        s_listOfSummaryRecords.Add(New SummaryRecord(row, rowIndex))
+                    End If
+                Case ItemIndexs.sMedicalDeviceTime
+                    If s_listOfSummaryRecords.Count < ItemIndexs.sMedicalDeviceTime Then
+                        Dim value As String = row.Value.CDateOrDefault(NameOf(ItemIndexs.medicalDeviceTime), CurrentUICulture)
+                        Dim entry As New KeyValuePair(Of String, String)(NameOf(ItemIndexs.medicalDeviceTime), value)
+                        s_listOfSummaryRecords.Add(New SummaryRecord(entry, ItemIndexs.medicalDeviceTime))
+                    End If
+                    s_listOfSummaryRecords.Add(New SummaryRecord(row, rowIndex))
+
+                Case ItemIndexs.lastSensorTime
+                    If row.Value = "0" Then
+                        ' Handled by ItemIndexs.lastSensorTSAsString
+                    Else
+                        s_listOfSummaryRecords.Add(New SummaryRecord(row, rowIndex))
+                    End If
+
+                Case ItemIndexs.sLastSensorTime
+                    If s_listOfSummaryRecords.Count < ItemIndexs.sLastSensorTime Then
+                        s_listOfSummaryRecords.Add(New SummaryRecord(New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastSensorTime), row.Value.CDateOrDefault(NameOf(ItemIndexs.medicalDeviceTime), CurrentUICulture)), ItemIndexs.lastSensorTime))
+                    End If
+                    s_listOfSummaryRecords.Add(New SummaryRecord(row, rowIndex))
+
+                Case Else
+                    s_listOfSummaryRecords.Add(New SummaryRecord(row, GetItemIndex(c.Value.Key)))
+            End Select
         Next
 
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In recentDataEnumerable
             Try
                 Dim row As KeyValuePair(Of String, String) = c.Value
                 Dim rowIndex As ItemIndexs = GetItemIndex(row.Key)
-                If s_singleEntries.Contains(row.Key) Then Continue For
+                If HandleAsSingleItem(rowIndex) Then Continue For
                 Dim layoutPanel1 As TableLayoutPanel
 
                 If row.Value Is Nothing Then
                     row = KeyValuePair.Create(row.Key, "")
                 End If
+
                 Select Case rowIndex
-                    Case ItemIndexs.lastSensorTS
-                        If row.Value = "0" Then
-                            ' Handled by ItemIndexs.lastSensorTSAsString
-                        Else
-                            s_listOfSummaryRecords.Add(New SummaryRecord(row, rowIndex))
-                        End If
 
-                    Case ItemIndexs.lastSensorTSAsString
-                        If s_listOfSummaryRecords.Count < ItemIndexs.lastSensorTSAsString Then
-                            s_listOfSummaryRecords.Insert(ItemIndexs.lastSensorTS, New SummaryRecord(New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastSensorTS), row.Value.CDateOrDefault(NameOf(ItemIndexs.lastSensorTS), CurrentUICulture)), ItemIndexs.lastSensorTS))
-                        End If
-                        s_listOfSummaryRecords.Add(New SummaryRecord(row, rowIndex))
-
-                    Case ItemIndexs.lastMedicalDeviceDataUpdateServerTime
-                        s_lastMedicalDeviceDataUpdateServerEpoch = CLng(row.Value)
-                        s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, row.Value.Epoch2DateTimeString, rowIndex))
-
-                    Case ItemIndexs.currentServerTime,
-                       ItemIndexs.lastConduitTime,
-                       ItemIndexs.lastConduitUpdateServerTime
-                        s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, row.Value.Epoch2DateTimeString, rowIndex))
+#Region "Summaries 0-35"
 
                     Case ItemIndexs.sensorState
                         s_sensorState = row.Value
                         s_listOfSummaryRecords.Add(New SummaryRecord(row, s_sensorMessages, NameOf(s_sensorMessages), rowIndex))
 
-                    Case ItemIndexs.medicalDeviceTime
-                        If row.Value = "0" Then
-                            ' Handled by ItemIndexs.lastSensorTSAsString
-                        Else
-                            s_listOfSummaryRecords.Add(New SummaryRecord(row, rowIndex))
-                        End If
-
-                    Case ItemIndexs.sMedicalDeviceTime
-                        If s_listOfSummaryRecords.Count < ItemIndexs.sMedicalDeviceTime Then
-                            Dim value As String = row.Value.CDateOrDefault(NameOf(ItemIndexs.medicalDeviceTime), CurrentUICulture)
-                            Dim entry As New KeyValuePair(Of String, String)(NameOf(ItemIndexs.medicalDeviceTime), value)
-                            s_listOfSummaryRecords.Add(New SummaryRecord(entry, ItemIndexs.medicalDeviceTime))
-                        End If
-                        s_listOfSummaryRecords.Add(New SummaryRecord(row, rowIndex))
-
                     Case ItemIndexs.calibStatus
                         s_listOfSummaryRecords.Add(New SummaryRecord(row, s_calibrationMessages, NameOf(s_calibrationMessages), rowIndex))
 
-                    Case ItemIndexs.lastSensorTime
-                        If row.Value = "0" Then
-                            ' Handled by ItemIndexs.lastSensorTSAsString
-                        Else
-                            s_listOfSummaryRecords.Add(New SummaryRecord(row, rowIndex))
-                        End If
-
-                    Case ItemIndexs.sLastSensorTime
-                        If s_listOfSummaryRecords.Count < ItemIndexs.sLastSensorTime Then
-                            s_listOfSummaryRecords.Add(New SummaryRecord(New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastSensorTime), row.Value.CDateOrDefault(NameOf(ItemIndexs.medicalDeviceTime), CurrentUICulture)), ItemIndexs.lastSensorTime))
-                        End If
-                        s_listOfSummaryRecords.Add(New SummaryRecord(row, rowIndex))
-
-                    Case ItemIndexs.systemStatusMessage
-                        s_systemStatusMessage = row.Value
-                        s_listOfSummaryRecords.Add(New SummaryRecord(row, s_sensorMessages, NameOf(s_sensorMessages), rowIndex))
-
-                    Case ItemIndexs.lastConduitDateTime
-                        s_listOfSummaryRecords.Add(New SummaryRecord(New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastConduitDateTime), row.Value.CDateOrDefault(NameOf(ItemIndexs.lastConduitDateTime), CurrentUICulture)), rowIndex))
+#End Region ' End summaries 0-35
 
                     Case ItemIndexs.lastSG
                         s_lastSG = New SgRecord(Loads(row.Value))
@@ -1485,6 +1486,7 @@ Public Class Form1
                                               NameOf(ActiveInsulinRecord),
                                               AddressOf ActiveInsulinRecordHelpers.AttachHandlers,
                                               ItemIndexs.lastAlarm)
+
                     Case ItemIndexs.sgs
                         s_listOfSGs = LoadList(row.Value).ToSgList()
                         If s_listOfSGs.Count > 2 Then
@@ -1492,6 +1494,7 @@ Public Class Form1
                         End If
                         Dim table As DataTable = ClassToDatatable(s_listOfSGs.ToArray)
                         DisplayDataTableInDGV(Me.TableLayoutPanelSgs, Me.DataGridViewSGs, table, rowIndex)
+
                     Case ItemIndexs.limits
                         s_listOflimitRecords.Clear()
 
@@ -1551,20 +1554,43 @@ Public Class Form1
                                               NameOf(TimeChangeRecord),
                                               AddressOf TimeChangeRecordHelpers.AttachHandlers,
                                               ItemIndexs.markers)
+
+                    Case ItemIndexs.notificationHistory
+                        layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelNotificationHistory, ItemIndexs.notificationHistory)
+                        Try
+                            layoutPanel1.AutoScroll = True
+                            layoutPanel1.Controls(0).Text = $"{CInt(rowIndex)} {rowIndex}"
+                            Dim innerJsonDictionary As Dictionary(Of String, String) = Loads(row.Value)
+                            Dim innerTableBlue As New TableLayoutPanel With {
+                                    .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                                    .AutoScroll = False,
+                                    .AutoSize = True,
+                                    .AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                                    .BackColor = Color.LightBlue,
+                                    .BorderStyle = BorderStyle.FixedSingle,
+                                    .ColumnCount = 2,
+                                    .Dock = DockStyle.Top,
+                                    .Margin = New Padding(3),
+                                    .Name = NameOf(innerTableBlue),
+                                    .Padding = New Padding(3),
+                                    .RowCount = 0
+                                }
+                            innerTableBlue.AutoScroll = True
+                            layoutPanel1.Controls.Add(innerTableBlue, 0, 1)
+                            CreateNotificationTables(innerJsonDictionary, innerTableBlue, rowIndex, s_filterJsonData, isScaledForm)
+                        Catch ex As Exception
+                            Stop
+                            Throw
+                        End Try
+
                     Case ItemIndexs.therapyAlgorithmState
                         DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelTherapyAlgorithm, ItemIndexs.therapyAlgorithmState),
                                               ClassToDatatable(GetSummaryRecords(Loads(row.Value)).ToArray),
                                               NameOf(SummaryRecord),
                                               AddressOf SummaryRecordHelpers.AttachHandlers,
-                                              ItemIndexs.lastAlarm)
-                    Case ItemIndexs.basal
-                        DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelBasal, ItemIndexs.basal),
-                                              ClassToDatatable({DictionaryToClass(Of BasalRecord)(Loads(row.Value), 0)}.ToArray),
-                                              NameOf(BasalRecord),
-                                              AddressOf BasalRecordHelpers.AttachHandlers,
-                                              ItemIndexs.basal)
-                    Case ItemIndexs.pumpBannerState
+                                             ItemIndexs.lastAlarm)
 
+                    Case ItemIndexs.pumpBannerState
                         Me.TempTargetLabel.Visible = False
                         Dim innerListDictionary As New List(Of Dictionary(Of String, String))
                         If Not String.IsNullOrWhiteSpace(row.Value) Then
@@ -1600,33 +1626,24 @@ Public Class Form1
                                                         AddressOf BannerStateRecordHelpers.AttachHandlers,
                                                         ItemIndexs.pumpBannerState)
 
-                    Case ItemIndexs.notificationHistory
-                        layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelNotificationHistory, ItemIndexs.notificationHistory)
-                        Try
-                            layoutPanel1.AutoScroll = True
-                            layoutPanel1.Controls(0).Text = $"{CInt(rowIndex)} {rowIndex}"
-                            Dim innerJsonDictionary As Dictionary(Of String, String) = Loads(row.Value)
-                            Dim innerTableBlue As New TableLayoutPanel With {
-                                    .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                    .AutoScroll = False,
-                                    .AutoSize = True,
-                                    .AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                                    .BackColor = Color.LightBlue,
-                                    .BorderStyle = BorderStyle.FixedSingle,
-                                    .ColumnCount = 2,
-                                    .Dock = DockStyle.Top,
-                                    .Margin = New Padding(3),
-                                    .Name = NameOf(innerTableBlue),
-                                    .Padding = New Padding(3),
-                                    .RowCount = 0
-                                }
-                            innerTableBlue.AutoScroll = True
-                            layoutPanel1.Controls.Add(innerTableBlue, 0, 1)
-                            CreateNotificationTables(innerJsonDictionary, innerTableBlue, rowIndex, s_filterJsonData, isScaledForm)
-                        Catch ex As Exception
-                            Stop
-                            Throw
-                        End Try
+                    Case ItemIndexs.basal
+                        DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelBasal, ItemIndexs.basal),
+                                              ClassToDatatable({DictionaryToClass(Of BasalRecord)(Loads(row.Value), 0)}.ToArray),
+                                              NameOf(BasalRecord),
+                                              AddressOf BasalRecordHelpers.AttachHandlers,
+                                              ItemIndexs.basal)
+
+#Region "Summaries 46-64"
+
+                    Case ItemIndexs.systemStatusMessage
+                        s_systemStatusMessage = row.Value
+                        s_listOfSummaryRecords.Add(New SummaryRecord(row, s_sensorMessages, NameOf(s_sensorMessages), rowIndex))
+
+                    Case ItemIndexs.lastConduitDateTime
+                        s_listOfSummaryRecords.Add(New SummaryRecord(New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastConduitDateTime), row.Value.CDateOrDefault(NameOf(ItemIndexs.lastConduitDateTime), CurrentUICulture)), rowIndex))
+
+#End Region ' End Summaries 46-64
+
                     Case Else
                         Stop
                         Throw UnreachableException(NameOf(UpdateDataTables))
