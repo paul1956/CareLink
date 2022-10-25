@@ -6,11 +6,6 @@ Imports System.Runtime.CompilerServices
 
 Friend Module UserMessageHandler
 
-    Friend ReadOnly s_autoModeReadinessMessages As New Dictionary(Of String, String) From {
-                        {"NO_ACTION_REQUIRED", "No Action Required"},
-                        {"BG_REQUIRED", "BG Required"}
-                    }
-
     Friend ReadOnly s_autoModeShieldMessages As New Dictionary(Of String, String) From {
                         {"AUTO_BASAL", "Auto Basal"},
                         {"FEATURE_OFF", "Feature Off"},
@@ -100,6 +95,7 @@ Friend Module UserMessageHandler
                         {"NO_DATA_FROM_PUMP", "No data from pump"},
                         {"NO_ERROR_MESSAGE", "---"},
                         {"NO_SENSOR_SIGNAL", "Lost sensor signal, move pump closer to transmitter. May take 15 minutes to find signal"},
+                        {"PROCESSING_BG", "Processing_BG"},
                         {"RECONNECTING_TO_PUMP", "Reconnecting to pump"},
                         {"SEARCHING_FOR_SENSOR_SIGNAL", "Searching for sensor signal"},
                         {"SENSOR_DISCONNECTED", "Sensor disconnected"},

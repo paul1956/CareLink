@@ -1585,6 +1585,7 @@ Public Class Form1
                                     Case "BG_REQUIRED"
                                     Case "DELIVERY_SUSPEND"
                                     Case "LOAD_RESERVOIR"
+                                    Case "PROCESSING_BG"
                                     Case Else
                                         If Debugger.IsAttached Then
                                             MsgBox($"{typeValue} is unknown banner message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
