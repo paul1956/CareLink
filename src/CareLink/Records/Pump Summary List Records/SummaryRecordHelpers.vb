@@ -14,6 +14,7 @@ Friend Module SummaryRecordHelpers
                         True,
                         caption)
     End Sub
+
     Friend Function GetSummaryRecords(dic As Dictionary(Of String, String), Optional rowsToHide As List(Of String) = Nothing) As List(Of SummaryRecord)
         Dim summaryList As New List(Of SummaryRecord)
         For Each row As KeyValuePair(Of String, String) In dic

@@ -224,7 +224,7 @@ Public Class Form1
                 Me.ServerUpdateTimer.Stop()
                 Debug.Print($"In {NameOf(MenuStartHereExceptionReportLoad_Click)}, {NameOf(Me.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
                 If File.Exists(fileNameWithPath) Then
-                    Me.RecentData.Clear()
+                    Me.RecentData?.Clear()
                     ExceptionHandlerForm.ReportFileNameWithPath = fileNameWithPath
                     If ExceptionHandlerForm.ShowDialog() = DialogResult.OK Then
                         ExceptionHandlerForm.ReportFileNameWithPath = ""
@@ -2041,6 +2041,7 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateSummaryTable()
+        s_listOfSummaryRecords.Sort()
         Me.DataGridViewSummary.DataSource = ClassToDatatable(s_listOfSummaryRecords.ToArray)
         Me.DataGridViewSummary.RowHeadersVisible = False
     End Sub
