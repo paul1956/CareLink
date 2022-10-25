@@ -1383,18 +1383,17 @@ Public Class Form1
         Dim recentDataEnumerable As IEnumerable(Of IndexClass(Of KeyValuePair(Of String, String))) = Me.RecentData.WithIndex()
         s_listOfSummaryRecords.Clear()
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In recentDataEnumerable
-            If Not s_singleEntries.Contains(c.Value.Key) Then Continue For
-            If s_singleEntries.Contains(c.Value.Key) Then
-                s_listOfSummaryRecords.Add(New SummaryRecord(c.Value, GetItemIndex(c.Value.Key)))
-            End If
+            Dim row As KeyValuePair(Of String, String) = c.Value
+            If Not s_singleEntries.Contains(row.Key) Then Continue For
+            s_listOfSummaryRecords.Add(New SummaryRecord(row, GetItemIndex(c.Value.Key)))
         Next
 
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In recentDataEnumerable
             Try
-                If s_singleEntries.Contains(c.Value.Key) Then Continue For
-                Dim layoutPanel1 As TableLayoutPanel
                 Dim row As KeyValuePair(Of String, String) = c.Value
-                Dim rowIndex As ItemIndexs = GetItemIndex(c.Value.Key)
+                Dim rowIndex As ItemIndexs = GetItemIndex(row.Key)
+                If s_singleEntries.Contains(row.Key) Then Continue For
+                Dim layoutPanel1 As TableLayoutPanel
 
                 If row.Value Is Nothing Then
                     row = KeyValuePair.Create(row.Key, "")

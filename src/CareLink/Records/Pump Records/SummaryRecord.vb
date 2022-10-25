@@ -23,10 +23,10 @@ Public Class SummaryRecord
         Me.Message = message
     End Sub
 
-    Protected Friend Sub New(entry As KeyValuePair(Of String, String), recordNumber As Integer)
+    Protected Friend Sub New(row As KeyValuePair(Of String, String), recordNumber As Integer)
         Me.RecordNumber = recordNumber
-        Me.Key = entry.Key
-        Me.Value = entry.Value?.ToString(CurrentUICulture)
+        Me.Key = row.Key
+        Me.Value = row.Value?.ToString(CurrentUICulture)
     End Sub
 
     ''' <summary>

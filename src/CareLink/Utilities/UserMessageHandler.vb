@@ -93,6 +93,7 @@ Friend Module UserMessageHandler
                         {"DO_NOT_CALIBRATE", "Do Not calibrate."},
                         {"LOAD_RESERVOIR", "Load Reservoir"},
                         {"NO_DATA_FROM_PUMP", "No data from pump"},
+                        {"NO_ACTION_REQUIRED", "No Action required"},
                         {"NO_ERROR_MESSAGE", "---"},
                         {"NO_SENSOR_SIGNAL", "Lost sensor signal, move pump closer to transmitter. May take 15 minutes to find signal"},
                         {"PROCESSING_BG", "Processing_BG"},

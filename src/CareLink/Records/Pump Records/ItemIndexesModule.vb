@@ -7,6 +7,7 @@ Imports System.Runtime.CompilerServices
 Friend Module ItemIndexesModule
 
     Public ReadOnly s_singleEntries As New List(Of String) From {
+                        NameOf(ItemIndexs.lastSensorTS), NameOf(ItemIndexs.lastSensorTSAsString),
                         NameOf(ItemIndexs.kind), NameOf(ItemIndexs.version),
                         NameOf(ItemIndexs.pumpModelNumber), NameOf(ItemIndexs.medicalDeviceTimeAsString),
                         NameOf(ItemIndexs.firstName), NameOf(ItemIndexs.lastName),
