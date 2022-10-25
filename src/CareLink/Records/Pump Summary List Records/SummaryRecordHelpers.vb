@@ -51,14 +51,17 @@ Friend Module SummaryRecordHelpers
     End Function
 
     <Extension>
-    Friend Function GetValue(l As List(Of SummaryRecord), Key As String) As String
+    Friend Function GetValue(l As List(Of SummaryRecord), Key As String, Optional throwError As Boolean = True) As String
         For Each s As SummaryRecord In l
             If s.Key = Key Then
                 Return s.Value
             End If
         Next
-        Stop
-        Throw New ArgumentException("Key not found", NameOf(Key))
+        If throwError Then
+            Stop
+            Throw New ArgumentException("Key not found", NameOf(Key))
+        End If
+        Return Nothing
     End Function
 
     Public Sub AttachHandlers(dgv As DataGridView)

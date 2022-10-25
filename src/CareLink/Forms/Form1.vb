@@ -1857,7 +1857,7 @@ Public Class Form1
 
     Private Sub UpdateCalibrationTimeRemaining()
         Try
-            Dim timeToNextCalibrationMinutes As Integer = CInt(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.timeToNextCalibrationMinutes)))
+            Dim timeToNextCalibrationMinutes As Integer = CInt(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.timeToNextCalibrationMinutes), False))
             Dim timeToNextCalibHours As UShort = CUShort(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.timeToNextCalibHours)))
             If timeToNextCalibHours = UShort.MaxValue Then
                 Me.CalibrationDueImage.Image = My.Resources.CalibrationUnavailable
@@ -2021,7 +2021,7 @@ Public Class Form1
             Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
         Else
             If sensorDurationHours = 0 Then
-                Dim sensorDurationMinutes As Integer = CInt(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.sensorDurationMinutes)))
+                Dim sensorDurationMinutes As Integer = CInt(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.sensorDurationMinutes), False))
                 If sensorDurationMinutes = 0 Then
                     Me.SensorDaysLeftLabel.Text = ""
                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpired
@@ -2078,7 +2078,7 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateTransmitterBatttery()
-        Dim gstBatteryLevel As Integer = CInt(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.gstBatteryLevel)))
+        Dim gstBatteryLevel As Integer = CInt(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.gstBatteryLevel), False))
         Me.TransmatterBatterPercentLabel.Text = $"{gstBatteryLevel}%"
         If CBool(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.conduitSensorInRange))) Then
             Select Case gstBatteryLevel
