@@ -31,7 +31,8 @@ This update has a UI to show all the available data and a visual version that mi
 
 ## What's New in this release
 New in 3.5.7.1
-- Hightlight when insulin flow is blocked, less insulin is delevered
+- Hightlight when insulin flow is blocked, less insulin is delivered
+- Handle when no transmitter if found in json file
 
 New in 3.5.7.0
 - Add Additional message translations. 
