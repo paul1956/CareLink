@@ -1367,10 +1367,12 @@ Public Class Form1
         s_listOfAutoBasalDeliveryMarkers.Clear()
         s_listOfAutoModeStatusMarkers.Clear()
         s_listOfBgReadingMarkers.Clear()
+        s_listOfCalibrationMarkers.Clear()
         s_listOfInsulinMarkers.Clear()
         s_listOfSGs.Clear()
         s_listOfTimeChangeMarkers.Clear()
         s_markers.Clear()
+
         s_treatmentMarkerInsulinDictionary.Clear()
         s_treatmentMarkerMealDictionary.Clear()
 
