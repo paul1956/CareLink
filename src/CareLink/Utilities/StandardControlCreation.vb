@@ -14,7 +14,7 @@ Public Module StandardControlCreation
                 realPanel.RowStyles.RemoveAt(1)
             Next
         End If
-        realPanel.Controls(0).Text = $"{CInt(rowIndex)} {rowIndex}"
+        realPanel.Controls(0).Text = GetTabName(rowIndex)
     End Sub
 
     Friend Function InitializeWorkingPanel(realPanel As TableLayoutPanel, rowIndex As ItemIndexs) As TableLayoutPanel

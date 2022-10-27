@@ -81,7 +81,8 @@ Friend Module UserMessageHandler
 
     Friend ReadOnly s_plgmLgsMessages As New Dictionary(Of String, String) From {
                         {"FEATURE_OFF", "Feature Off"},
-                        {"MONITORING", "Monitoring"}
+                        {"MONITORING", "Monitoring"},
+                        {"REFRACTORY_PERIOD", "Refractory Period"}
                     }
 
     Friend ReadOnly s_sensorMessages As New Dictionary(Of String, String) From {
@@ -100,10 +101,12 @@ Friend Module UserMessageHandler
                         {"RECONNECTING_TO_PUMP", "Reconnecting to pump"},
                         {"SEARCHING_FOR_SENSOR_SIGNAL", "Searching for sensor signal"},
                         {"SENSOR_DISCONNECTED", "Sensor disconnected"},
+                        {"SENSOR_OFF", "Sensor off"},
                         {"TEMP_TARGET", "Temp Target"},
                         {"UNKNOWN", "Unknown"},
                         {"UPDATING", "Sensor Updating"},
                         {"WAIT_TO_CALIBRATE", "Wait To Calibrate..."},
+                        {"WAIT_TO_ENTER_BG", "Wait To enter BG..."},
                         {"WARM_UP", "Sensor warm up. Warm-up takes up to 2 hours. You will be notifies when calibration Is needed."}
                     }
 

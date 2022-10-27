@@ -128,8 +128,4 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Records\Pump Summary List Records\" />
-  </ItemGroup>
-
 </Project>

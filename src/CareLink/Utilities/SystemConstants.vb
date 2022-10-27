@@ -7,6 +7,8 @@ Imports System.Text.Json
 
 Public Module SystemConstants
 
+    Public Const ClickToShowDetails As String = "Click To Show Details"
+
     Public Const ExceptionStartingString As String = "--- Start of Exception ---"
 
     Public Const ExceptionTerminatingString As String = "--- End of Exception ---"

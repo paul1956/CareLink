@@ -2,45 +2,9 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.ComponentModel.DataAnnotations.Schema
 Imports System.Reflection
 
 Friend Module DictionaryMap
-
-    Public Function ClassToDictionary(Of T)(ClassObject As T, ParamArray skipProperties() As String) As Dictionary(Of String, String)
-        Dim sortedResult As New SortedDictionary(Of Integer, KeyValuePair(Of String, String))
-
-        Dim result As New Dictionary(Of String, String)
-        If ClassObject Is Nothing Then
-            Return result
-        End If
-
-        Dim classType As Type = GetType(T)
-        Dim propertyList As IList(Of PropertyInfo) = classType.GetProperties()
-
-        ' Parameter class has no public properties.
-        If propertyList.Count = 0 Then
-            Return result
-        End If
-
-        For Each [property] As PropertyInfo In GetType(T).GetProperties()
-            If skipProperties.Contains([property].Name) Then Continue For
-            Dim v As String = [property].GetValue(ClassObject, Nothing).ToString
-            Dim columnAttrib As ColumnAttribute = [property].GetCustomAttributes(GetType(ColumnAttribute), True).Cast(Of ColumnAttribute)().SingleOrDefault()
-            sortedResult.Add(columnAttrib.Order, KeyValuePair.Create([property].Name, v))
-        Next [property]
-        For Each r As KeyValuePair(Of String, String) In sortedResult.Values
-            result.Add(r.Key, r.Value)
-        Next
-        Return result
-    End Function
-
-    Public Function GetDisplayName(Of T As Class)(_displayNameMapping As Dictionary(Of String, String), name As String) As String
-        If _displayNameMapping.Count = 0 Then
-            _displayNameMapping = ClassPropertiesToDisplayNames(Of T)()
-        End If
-        Return _displayNameMapping(name)
-    End Function
 
     ''' <summary>
     ''' Fills properties of a class from a row of a Dictionary where the propertyName of the property matches the Key from that dictionary.

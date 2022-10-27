@@ -400,7 +400,7 @@ Public Class Form1
 
 #Region "HomePage Tab Events"
 
-    Private Sub TabControlHomePage_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlHomePage.Selecting
+    Private Sub TabControlHomePage_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlPage1.Selecting
 
         Select Case e.TabPage.Name
             Case NameOf(TabPageAllUsers)
@@ -412,9 +412,9 @@ Public Class Form1
                 Me.CareLinkUsersAITComboBox.SelectedIndex = Me.AITComboBox.SelectedIndex
                 Me.CareLinkUsersAITComboBox.Visible = False
                 Me.DataGridViewCareLinkUsers.Columns(NameOf(DataGridViewTextBoxColumnCareLinkAIT)).Width = Me.AITComboBox.Width
-            Case NameOf(TabPage16Markers)
+            Case NameOf(TabPage14Markers)
                 Me.TabControlPage2.SelectedIndex = _lastMarkerTabIndex
-                Me.TabControlHomePage.Visible = False
+                Me.TabControlPage1.Visible = False
                 Exit Sub
         End Select
         _lastHomeTabIndex = e.TabPageIndex
@@ -423,8 +423,8 @@ Public Class Form1
     Private Sub TabControlMarkers_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlPage2.Selecting
         Select Case e.TabPage.Name
             Case NameOf(TabPageBackToHomePage)
-                Me.TabControlHomePage.SelectedIndex = _lastHomeTabIndex
-                Me.TabControlHomePage.Visible = True
+                Me.TabControlPage1.SelectedIndex = _lastHomeTabIndex
+                Me.TabControlPage1.Visible = True
                 Exit Sub
             Case NameOf(TabPageAllUsers)
                 Me.DataGridViewCareLinkUsers.DataSource = s_allUserSettingsData
@@ -925,11 +925,6 @@ Public Class Form1
                  ItemIndexs.lastSGTrend, ItemIndexs.systemStatusMessage,
                  ItemIndexs.lastConduitDateTime, ItemIndexs.clientTimeZoneName
                 e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-            Case ItemIndexs.conduitInRange, ItemIndexs.conduitMedicalDeviceInRange,
-                 ItemIndexs.conduitSensorInRange, ItemIndexs.medicalDeviceSuspended,
-                 ItemIndexs.pumpCommunicationState, ItemIndexs.gstCommunicationState,
-                 ItemIndexs.calFreeSensor, ItemIndexs.finalCalibration
-                e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
             Case ItemIndexs.averageSG, ItemIndexs.version, ItemIndexs.conduitBatteryLevel,
                  ItemIndexs.reservoirLevelPercent, ItemIndexs.reservoirAmount,
                  ItemIndexs.reservoirRemainingUnits, ItemIndexs.medicalDeviceBatteryLevelPercent,
@@ -943,9 +938,42 @@ Public Class Form1
                  ItemIndexs.timeToNextCalibrationRecommendedMinutes
                 e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
             Case Else
-                Stop
+                e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
         End Select
 
+    End Sub
+    Private Sub DataGridViewSummary_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DataGridViewSummary.CellMouseClick
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Dim value As String = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString
+        Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
+        If value.StartsWith(ClickToShowDetails) Then
+
+            Select Case GetItemIndex(key)
+                Case ItemIndexs.lastSG
+                    Me.TabControlPage1.SelectedIndex = GetTabIndexFromName(NameOf(TabPage05LastSG))
+                Case ItemIndexs.lastAlarm
+                    Me.TabControlPage1.SelectedIndex = GetTabIndexFromName(NameOf(TabPage06LastAlarm))
+                Case ItemIndexs.activeInsulin
+                    Me.TabControlPage1.SelectedIndex = GetTabIndexFromName(NameOf(TabPage07ActiveInsulin))
+                Case ItemIndexs.sgs
+                    Me.TabControlPage1.SelectedIndex = GetTabIndexFromName(NameOf(TabPage08SensorGlucose))
+                Case ItemIndexs.limits
+                    Me.TabControlPage1.SelectedIndex = GetTabIndexFromName(NameOf(TabPage09Limits))
+                Case ItemIndexs.markers
+                    _lastMarkerTabIndex = If(_lastMarkerTabIndex < 8, _lastMarkerTabIndex, 0)
+                    Me.TabControlPage2.SelectedIndex = _lastMarkerTabIndex
+                    Me.TabControlPage1.Visible = False
+                    Exit Select
+                Case ItemIndexs.notificationHistory
+                    Me.TabControlPage1.SelectedIndex = GetTabIndexFromName(NameOf(TabPage10NotificationHistory))
+                Case ItemIndexs.therapyAlgorithmState
+                    Me.TabControlPage1.SelectedIndex = GetTabIndexFromName(NameOf(TabPage11TherapyAlgorithm))
+                Case ItemIndexs.pumpBannerState
+                    Me.TabControlPage1.SelectedIndex = GetTabIndexFromName(NameOf(TabPage12BannerState))
+                Case ItemIndexs.basal
+                    Me.TabControlPage1.SelectedIndex = GetTabIndexFromName(NameOf(TabPage13Basal))
+            End Select
+        End If
     End Sub
 
     Private Sub DataGridViewSummary_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewSummary.ColumnAdded
@@ -1455,8 +1483,6 @@ Public Class Form1
 
                 Select Case rowIndex
 
-#Region "Summaries 0-35"
-
                     Case ItemIndexs.sensorState
                         s_sensorState = row.Value
                         s_listOfSummaryRecords.Add(New SummaryRecord(row, s_sensorMessages, NameOf(s_sensorMessages), rowIndex))
@@ -1464,9 +1490,8 @@ Public Class Form1
                     Case ItemIndexs.calibStatus
                         s_listOfSummaryRecords.Add(New SummaryRecord(row, s_calibrationMessages, NameOf(s_calibrationMessages), rowIndex))
 
-#End Region ' End summaries 0-35
-
                     Case ItemIndexs.lastSG
+                        s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
                         s_lastSG = New SgRecord(Loads(row.Value))
                         DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelLastSG, ItemIndexs.lastSG),
                                               ClassToDatatable({s_lastSG}.ToArray),
@@ -1475,6 +1500,7 @@ Public Class Form1
                                               ItemIndexs.lastSG)
 
                     Case ItemIndexs.lastAlarm
+                        s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
                         DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelLastAlarm, ItemIndexs.lastAlarm),
                                               ClassToDatatable(GetSummaryRecords(Loads(row.Value)).ToArray),
                                               NameOf(SummaryRecord),
@@ -1482,6 +1508,7 @@ Public Class Form1
                                               ItemIndexs.lastAlarm)
 
                     Case ItemIndexs.activeInsulin
+                        s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
                         s_activeInsulin = DictionaryToClass(Of ActiveInsulinRecord)(Loads(row.Value), 0)
                         DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelActiveInsulin, ItemIndexs.activeInsulin),
                                               ClassToDatatable({s_activeInsulin}.ToArray),
@@ -1490,6 +1517,7 @@ Public Class Form1
                                               ItemIndexs.lastAlarm)
 
                     Case ItemIndexs.sgs
+                        s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
                         s_listOfSGs = LoadList(row.Value).ToSgList()
                         If s_listOfSGs.Count > 2 Then
                             s_lastBGValue = s_listOfSGs.Item(s_listOfSGs.Count - 2).sg
@@ -1498,8 +1526,9 @@ Public Class Form1
                         DisplayDataTableInDGV(Me.TableLayoutPanelSgs, Me.DataGridViewSGs, table, rowIndex)
 
                     Case ItemIndexs.limits
-                        s_listOflimitRecords.Clear()
+                        s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
 
+                        s_listOflimitRecords.Clear()
                         For Each e As IndexClass(Of Dictionary(Of String, String)) In LoadList(row.Value).WithIndex
                             Dim newLimit As New Dictionary(Of String, String)
                             For Each kvp As KeyValuePair(Of String, String) In e.Value
@@ -1518,6 +1547,7 @@ Public Class Form1
                                               AddressOf LimitsRecordHelpers.AttachHandlers,
                                               ItemIndexs.limits)
                     Case ItemIndexs.markers
+                        s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
                         DisplayDataTableInDGV(Me.TableLayoutPanelAutoBasalDelivery,
                                               Me.DataGridViewAutoBasalDelivery,
                                               ClassToDatatable(s_listOfAutoBasalDeliveryMarkers.ToArray),
@@ -1558,10 +1588,11 @@ Public Class Form1
                                               ItemIndexs.markers)
 
                     Case ItemIndexs.notificationHistory
+                        s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
                         layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelNotificationHistory, ItemIndexs.notificationHistory)
                         Try
                             layoutPanel1.AutoScroll = True
-                            layoutPanel1.Controls(0).Text = $"{CInt(rowIndex)} {rowIndex}"
+                            layoutPanel1.Controls(0).Text = GetTabName(rowIndex)
                             Dim innerJsonDictionary As Dictionary(Of String, String) = Loads(row.Value)
                             Dim innerTableBlue As New TableLayoutPanel With {
                                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
@@ -1586,6 +1617,7 @@ Public Class Form1
                         End Try
 
                     Case ItemIndexs.therapyAlgorithmState
+                        s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
                         DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelTherapyAlgorithm, ItemIndexs.therapyAlgorithmState),
                                               ClassToDatatable(GetSummaryRecords(Loads(row.Value)).ToArray),
                                               NameOf(SummaryRecord),
@@ -1593,6 +1625,7 @@ Public Class Form1
                                              ItemIndexs.lastAlarm)
 
                     Case ItemIndexs.pumpBannerState
+                        s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
                         Me.TempTargetLabel.Visible = False
                         Dim innerListDictionary As New List(Of Dictionary(Of String, String))
                         If Not String.IsNullOrWhiteSpace(row.Value) Then
@@ -1629,13 +1662,12 @@ Public Class Form1
                                                         ItemIndexs.pumpBannerState)
 
                     Case ItemIndexs.basal
+                        s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
                         DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelBasal, ItemIndexs.basal),
                                               ClassToDatatable({DictionaryToClass(Of BasalRecord)(Loads(row.Value), 0)}.ToArray),
                                               NameOf(BasalRecord),
                                               AddressOf BasalRecordHelpers.AttachHandlers,
                                               ItemIndexs.basal)
-
-#Region "Summaries 46-64"
 
                     Case ItemIndexs.systemStatusMessage
                         s_systemStatusMessage = row.Value
@@ -1643,8 +1675,6 @@ Public Class Form1
 
                     Case ItemIndexs.lastConduitDateTime
                         s_listOfSummaryRecords.Add(New SummaryRecord(New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastConduitDateTime), row.Value.CDateOrDefault(NameOf(ItemIndexs.lastConduitDateTime), CurrentUICulture)), rowIndex))
-
-#End Region ' End Summaries 46-64
 
                     Case Else
                         Stop

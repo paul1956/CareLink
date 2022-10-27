@@ -3,6 +3,18 @@
 ' See the LICENSE file in the project root for more information.
 
 Class BasalRecordHelpers
+    Private Shared alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
+
+    Private Shared Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        If e.Value Is Nothing Then
+            Return
+        End If
+        ' Set the background to red for negative values in the Balance column.
+        If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(BasalRecord.basalRate), StringComparison.OrdinalIgnoreCase) Then
+            e.Value = $"{CSng(e.Value).ToString("F2", CurrentUICulture)} U"
+        End If
+    End Sub
 
     Private Shared Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -25,21 +37,11 @@ Class BasalRecordHelpers
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
         AddHandler dgv.ColumnHeaderCellChanged, AddressOf DataGridView_ColumnHeaderCellChanged
         AddHandler dgv.DataError, AddressOf DataGridView_DataError
+        AddHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
     End Sub
 
     Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Dim cellStyle As New DataGridViewCellStyle
-
-        Select Case columnName
-            Case NameOf(BasalRecord.activeBasalPattern)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-            Case NameOf(BasalRecord.basalRate)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
-            Case Else
-                Stop
-                Throw UnreachableException($"{NameOf(BasalRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
-        End Select
-        Return cellStyle
+        Return ClassPropertiesToCoumnAlignment(Of BasalRecord)(alignmentTable, columnName)
     End Function
 
 End Class

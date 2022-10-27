@@ -42,14 +42,12 @@ Friend Module DataTableMap
             propertyOrder.Add(columnAttrib.Order, [property])
         Next
         For Each [property] As PropertyInfo In propertyOrder.Values
-            Dim displayNameAttrib As DisplayNameAttribute = [property].GetCustomAttributes(GetType(DisplayNameAttribute), True).Cast(Of DisplayNameAttribute)().SingleOrDefault()
-
-            Dim displayName As String = If(displayNameAttrib IsNot Nothing, displayNameAttrib.DisplayName, [property].Name)
+            Dim displayName As String = GetColumnDisplayName([property])
             Dim column As New DataColumn With {
-                    .ColumnName = [property].Name,
-                    .Caption = displayName,
-                    .DataType = [property].PropertyType
-                }
+                                .ColumnName = [property].Name,
+                                .Caption = displayName,
+                                .DataType = [property].PropertyType
+                            }
             If IsNullableType(column.DataType) AndAlso column.DataType.IsGenericType Then ' If Nullable<>, this is how we get the underlying Type...
                 column.DataType = column.DataType.GenericTypeArguments.FirstOrDefault()
             Else ' True by default, so set it false
@@ -62,47 +60,40 @@ Friend Module DataTableMap
         Return result
     End Function
 
+    Private Function GetColumnDisplayName([property] As PropertyInfo) As String
+        Dim displayNameAttrib As DisplayNameAttribute = [property].GetCustomAttributes(GetType(DisplayNameAttribute), True).Cast(Of DisplayNameAttribute)().SingleOrDefault()
+        Return If(displayNameAttrib IsNot Nothing, displayNameAttrib.DisplayName, [property].Name)
+    End Function
+
     ''' <summary>
     ''' Created a Dictionary that maps Class Property Name to Column Alignment
     ''' </summary>
     ''' <typeparam name="T"></typeparam>
     ''' <returns>Dictionary</returns>
-    Public Function ClassPropertiesToCoumnAlignment(Of T As Class)() As Dictionary(Of String, DataGridViewContentAlignment)
+    Public Function ClassPropertiesToCoumnAlignment(Of T As Class)(ByRef alignmentTable As Dictionary(Of String, DataGridViewCellStyle), columnName As String) As DataGridViewCellStyle
         Dim classType As Type = GetType(T)
-        Dim result As New Dictionary(Of String, DataGridViewContentAlignment)
-        For Each [property] As PropertyInfo In classType.GetProperties()
-            Dim displayNameAttrib As DisplayNameAttribute = [property].GetCustomAttributes(GetType(DisplayNameAttribute), True).Cast(Of DisplayNameAttribute)().SingleOrDefault()
-
-            Dim cellAlignment As DataGridViewContentAlignment
-            Select Case [property].PropertyType.Name
-                Case "Date", "String"
-                    cellAlignment = DataGridViewContentAlignment.MiddleLeft
-                Case "Double", "Integer", "Single", "TimeSpan"
-                    cellAlignment = DataGridViewContentAlignment.MiddleRight
-                Case "Boolean"
-                    cellAlignment = DataGridViewContentAlignment.MiddleCenter
-                Case Else
-                    Throw UnreachableException($"{NameOf(DataTableMap)}.{NameOf(ClassPropertiesToCoumnAlignment)} [property].PropertyType.Name = {[property].PropertyType.Name}")
-            End Select
-            result.Add([property].Name, cellAlignment)
-        Next
-        Return result
-    End Function
-
-    ''' <summary>
-    ''' Created a Dictionary that maps Class Property Name to DisplayName
-    ''' </summary>
-    ''' <typeparam name="T"></typeparam>
-    ''' <returns>Dictionary</returns>
-    Public Function ClassPropertiesToDisplayNames(Of T As Class)() As Dictionary(Of String, String)
-        Dim classType As Type = GetType(T)
-        Dim result As New Dictionary(Of String, String)
-        For Each [property] As PropertyInfo In classType.GetProperties()
-            Dim displayNameAttrib As DisplayNameAttribute = [property].GetCustomAttributes(GetType(DisplayNameAttribute), True).Cast(Of DisplayNameAttribute)().SingleOrDefault()
-            Dim displayName As String = If(displayNameAttrib IsNot Nothing, displayNameAttrib.DisplayName, [property].Name)
-            result.Add([property].Name, displayName)
-        Next
-        Return result
+        If Not alignmentTable.Any Then
+            For Each [property] As PropertyInfo In classType.GetProperties()
+                Dim columnAttrib As ColumnAttribute = [property].GetCustomAttributes(GetType(ColumnAttribute), True).Cast(Of ColumnAttribute)().SingleOrDefault()
+                Dim cellStyle As New DataGridViewCellStyle
+                Select Case columnAttrib.TypeName
+                    Case "Date", "OADate", "String"
+                        cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
+                    Case "Double", "Integer", "Single", "TimeSpan"
+                        If [property].Name = "RecordNumber" Then
+                            cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
+                        Else
+                            cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
+                        End If
+                    Case "Boolean"
+                        cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
+                    Case Else
+                        Throw UnreachableException($"{NameOf(DataTableMap)}.{NameOf(ClassPropertiesToCoumnAlignment)} [property].PropertyType.Name = {[property].PropertyType.Name}")
+                End Select
+                alignmentTable.Add([property].Name, cellStyle)
+            Next
+        End If
+        Return alignmentTable(columnName)
     End Function
 
     ''' <summary>

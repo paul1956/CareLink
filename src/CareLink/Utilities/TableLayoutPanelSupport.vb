@@ -3,7 +3,6 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Module TableLayoutPanelSupport
-
     Friend Sub CreateNotificationTables(notificationJson As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexs, filterJsonData As Boolean, isScaledForm As Boolean)
         tableLevel1Blue.AutoScroll = True
         tableLevel1Blue.AutoSize = True
@@ -70,4 +69,7 @@ Friend Module TableLayoutPanelSupport
         Application.DoEvents()
     End Sub
 
+    Friend Function GetTabName(rowIndex As ItemIndexs) As String
+        Return $"{CInt(rowIndex)} {rowIndex}"
+    End Function
 End Module
