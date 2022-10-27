@@ -19,9 +19,9 @@
     <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
     <RepositoryUrl>https://github.com/paul1956/CareLink</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>3.5.7.1</Version>
-    <AssemblyVersion>3.5.7.1</AssemblyVersion>
-    <FileVersion>3.5.7.1</FileVersion>
+    <Version>3.5.7.2</Version>
+    <AssemblyVersion>3.5.7.2</AssemblyVersion>
+    <FileVersion>3.5.7.2</FileVersion>
     <PackageIcon>IconImage.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/paul1956/CareLink</PackageProjectUrl>
@@ -126,10 +126,6 @@
     <Reference Include="System.Windows.Forms.DataVisualization">
       <HintPath>..\..\..\winforms-datavisualization\src\System.Windows.Forms.DataVisualization\bin\$(Configuration)\$(TargetFramework)\System.Windows.Forms.DataVisualization.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Records\Pump Summary List Records\" />
   </ItemGroup>
 
 </Project>

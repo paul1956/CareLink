@@ -6,6 +6,8 @@ Imports System.Runtime.CompilerServices
 
 Friend Module SummaryRecordHelpers
 
+    Private alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
+
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
@@ -14,6 +16,10 @@ Friend Module SummaryRecordHelpers
                         True,
                         caption)
     End Sub
+
+    Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
+        Return ClassPropertiesToCoumnAlignment(Of SummaryRecord)(alignmentTable, columnName)
+    End Function
 
     Friend Function GetSummaryRecords(dic As Dictionary(Of String, String), Optional rowsToHide As List(Of String) = Nothing) As List(Of SummaryRecord)
         Dim summaryList As New List(Of SummaryRecord)
@@ -69,22 +75,8 @@ Friend Module SummaryRecordHelpers
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
     End Sub
 
-    Public Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Dim cellStyle As New DataGridViewCellStyle
-
-        Select Case columnName
-            Case NameOf(SummaryRecord.RecordNumber)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
-            Case NameOf(SummaryRecord.Key),
-                 NameOf(SummaryRecord.Message)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-            Case NameOf(SummaryRecord.Value)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-            Case Else
-                Stop
-                Throw UnreachableException($"{NameOf(SummaryRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
-        End Select
-        Return cellStyle
+    Public Function GetTabIndexFromName(tabPageName As String) As Integer
+        Return CInt(tabPageName.Replace(NameOf(TabPage), "").Substring(0, 2)) - 1
     End Function
 
 End Module

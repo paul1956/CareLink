@@ -3,10 +3,13 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Class BGReadingRecordHelpers
+
     Private Shared ReadOnly columnsToHide As New List(Of String) From {
              NameOf(BGReadingRecord.kind), NameOf(BGReadingRecord.version),
              NameOf(BGReadingRecord.relativeOffset), NameOf(BGReadingRecord.index)
         }
+
+    Private Shared alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Shared Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         If HideColumn(e.Column.Name) Then
@@ -52,21 +55,7 @@ Friend Class BGReadingRecordHelpers
     End Sub
 
     Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Dim cellStyle As New DataGridViewCellStyle
-
-        Select Case columnName
-            Case NameOf(BGReadingRecord.kind), NameOf(BGReadingRecord.type),
-                 NameOf(BGReadingRecord.dateTime), NameOf(BGReadingRecord.dateTimeAsString)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-            Case NameOf(BGReadingRecord.RecordNumber)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
-            Case NameOf(BGReadingRecord.index), NameOf(BGReadingRecord.value),
-                 NameOf(BGReadingRecord.relativeOffset), NameOf(BGReadingRecord.version)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
-            Case Else
-                Stop
-                Throw UnreachableException($"{NameOf(BGReadingRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
-        End Select
-        Return cellStyle
+        Return ClassPropertiesToCoumnAlignment(Of BGReadingRecord)(alignmentTable, columnName)
     End Function
+
 End Class

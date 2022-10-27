@@ -23,19 +23,19 @@ Public Class supportedReportRecord
 #If True Then ' Prevent reordering
 
     <DisplayName("Record Number")>
-    <Column(Order:=0)>
+    <Column(Order:=0, TypeName:="Integer")>
     Public Property recordNumber As Integer
 
     <DisplayName("Report")>
-    <Column(Order:=1)>
+    <Column(Order:=1, TypeName:="String")>
     Public Property report As String
 
     <DisplayName("Only For")>
-    <Column(Order:=2)>
+    <Column(Order:=2, TypeName:="String")>
     Public Property onlyFor As String
 
     <DisplayName("Not For")>
-    <Column(Order:=3)>
+    <Column(Order:=3, TypeName:="String")>
     Public Property notFor As String
 
 #End If  ' Prevent reordering

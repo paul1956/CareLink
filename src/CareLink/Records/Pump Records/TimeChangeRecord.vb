@@ -66,7 +66,7 @@ Public Class TimeChangeRecord
     Public Property dateTimeAsString As String
 
     <DisplayName("OA dateTime")>
-    <Column(Order:=7, TypeName:="Double")>
+    <Column(Order:=7, TypeName:="OADate")>
     Public ReadOnly Property OAdateTime As OADate
         Get
             Return New OADate(_dateTime)

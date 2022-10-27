@@ -9,7 +9,7 @@ Public Class MealRecord
     Private _dateTime As Date
 
     <DisplayName(NameOf(MealRecord.dateTime))>
-    <Column(Order:=5)>
+    <Column(Order:=5, TypeName:="Date")>
     Public Property [dateTime] As Date
         Get
             Return _dateTime
@@ -20,23 +20,23 @@ Public Class MealRecord
     End Property
 
     <DisplayName("Carbs (amount)")>
-    <Column(Order:=9)>
+    <Column(Order:=9, TypeName:="Integer")>
     Public Property amount As Integer
 
     <DisplayName("dateTime As String")>
-    <Column(Order:=6)>
+    <Column(Order:=6, TypeName:="String")>
     Public Property dateTimeAsString As String
 
     <DisplayName(NameOf(index))>
-    <Column(Order:=2)>
+    <Column(Order:=2, TypeName:="Integer")>
     Public Property index As Integer
 
     <DisplayName("Kind")>
-    <Column(Order:=3)>
+    <Column(Order:=3, TypeName:="String")>
     Public Property kind As String
 
     <DisplayName("OA dateTime")>
-    <Column(Order:=7)>
+    <Column(Order:=7, TypeName:="OADate")>
     Public ReadOnly Property OAdateTime As OADate
         Get
             Return New OADate(_dateTime)
@@ -44,19 +44,19 @@ Public Class MealRecord
     End Property
 
     <DisplayName("Record Number")>
-    <Column(Order:=0)>
+    <Column(Order:=0, TypeName:="Integer")>
     Public Property RecordNumber As Integer
 
     <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=8)>
+    <Column(Order:=8, TypeName:="Integer")>
     Public Property relativeOffset As Integer
 
     <DisplayName("Type")>
-    <Column(Order:=1)>
+    <Column(Order:=1, TypeName:="String")>
     Public Property type As String
 
     <DisplayName("Version")>
-    <Column(Order:=4)>
+    <Column(Order:=4, TypeName:="Integer")>
     Public Property version As Integer
 
 End Class

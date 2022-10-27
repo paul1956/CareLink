@@ -71,7 +71,7 @@ Partial Class Form1
         Me.MenuHelpAbout = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowMiniDisplay = New System.Windows.Forms.ToolStripMenuItem()
         Me.ServerUpdateTimer = New System.Windows.Forms.Timer(Me.components)
-        Me.TabControlHomePage = New System.Windows.Forms.TabControl()
+        Me.TabControlPage1 = New System.Windows.Forms.TabControl()
         Me.TabPage01HomePage = New System.Windows.Forms.TabPage()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
         Me.LabelTrendValue = New System.Windows.Forms.Label()
@@ -141,26 +141,26 @@ Partial Class Form1
         Me.TabPage07ActiveInsulin = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelActiveInsulin = New System.Windows.Forms.TableLayoutPanel()
         Me.ActiveInsulinTabLabel = New System.Windows.Forms.Label()
-        Me.TabPage06SensorGlucose = New System.Windows.Forms.TabPage()
+        Me.TabPage08SensorGlucose = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelSgs = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelSgs = New System.Windows.Forms.Label()
         Me.DataGridViewSGs = New System.Windows.Forms.DataGridView()
-        Me.TabPage07Limits = New System.Windows.Forms.TabPage()
+        Me.TabPage09Limits = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelLimits = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelLimits = New System.Windows.Forms.Label()
-        Me.TabPage08NotificationHistory = New System.Windows.Forms.TabPage()
+        Me.TabPage10NotificationHistory = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelNotificationHistory = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelNotificationHistory = New System.Windows.Forms.Label()
-        Me.TabPage09Basal = New System.Windows.Forms.TabPage()
+        Me.TabPage13Basal = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelBasal = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelBasal = New System.Windows.Forms.Label()
-        Me.TabPage10TherapyAlgorithm = New System.Windows.Forms.TabPage()
+        Me.TabPage11TherapyAlgorithm = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelTherapyAlgorithm = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelTherapyAlgorithm = New System.Windows.Forms.Label()
-        Me.TabPage11BannerState = New System.Windows.Forms.TabPage()
+        Me.TabPage12BannerState = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelBannerState = New System.Windows.Forms.TableLayoutPanel()
         Me.LabelBannerState = New System.Windows.Forms.Label()
-        Me.TabPage16Markers = New System.Windows.Forms.TabPage()
+        Me.TabPage14Markers = New System.Windows.Forms.TabPage()
         Me.TabControlPage2 = New System.Windows.Forms.TabControl()
         Me.TabPageAutoBasalDelivery = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelAutoBasalDelivery = New System.Windows.Forms.TableLayoutPanel()
@@ -243,7 +243,7 @@ Partial Class Form1
         Me.LastUpdateTime = New System.Windows.Forms.Label()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.MenuStrip1.SuspendLayout()
-        Me.TabControlHomePage.SuspendLayout()
+        Me.TabControlPage1.SuspendLayout()
         Me.TabPage01HomePage.SuspendLayout()
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer2.Panel1.SuspendLayout()
@@ -271,18 +271,18 @@ Partial Class Form1
         Me.TableLayoutPanelLastAlarm.SuspendLayout()
         Me.TabPage07ActiveInsulin.SuspendLayout()
         Me.TableLayoutPanelActiveInsulin.SuspendLayout()
-        Me.TabPage06SensorGlucose.SuspendLayout()
+        Me.TabPage08SensorGlucose.SuspendLayout()
         Me.TableLayoutPanelSgs.SuspendLayout()
         CType(Me.DataGridViewSGs, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.TabPage07Limits.SuspendLayout()
+        Me.TabPage09Limits.SuspendLayout()
         Me.TableLayoutPanelLimits.SuspendLayout()
-        Me.TabPage08NotificationHistory.SuspendLayout()
+        Me.TabPage10NotificationHistory.SuspendLayout()
         Me.TableLayoutPanelNotificationHistory.SuspendLayout()
-        Me.TabPage09Basal.SuspendLayout()
+        Me.TabPage13Basal.SuspendLayout()
         Me.TableLayoutPanelBasal.SuspendLayout()
-        Me.TabPage10TherapyAlgorithm.SuspendLayout()
+        Me.TabPage11TherapyAlgorithm.SuspendLayout()
         Me.TableLayoutPanelTherapyAlgorithm.SuspendLayout()
-        Me.TabPage11BannerState.SuspendLayout()
+        Me.TabPage12BannerState.SuspendLayout()
         Me.TableLayoutPanelBannerState.SuspendLayout()
         Me.TabControlPage2.SuspendLayout()
         Me.TabPageAutoBasalDelivery.SuspendLayout()
@@ -490,29 +490,29 @@ Partial Class Form1
         '
         Me.ServerUpdateTimer.Interval = 300000
         '
-        'TabControlHomePage
+        'TabControlPage1
         '
-        Me.TabControlHomePage.Appearance = System.Windows.Forms.TabAppearance.Buttons
-        Me.TabControlHomePage.Controls.Add(Me.TabPage01HomePage)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage02RunningIOB)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage03TreatmentDetails)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage04SummaryData)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage05LastSG)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage06LastAlarm)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage07ActiveInsulin)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage06SensorGlucose)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage07Limits)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage08NotificationHistory)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage09Basal)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage10TherapyAlgorithm)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage11BannerState)
-        Me.TabControlHomePage.Controls.Add(Me.TabPage16Markers)
-        Me.TabControlHomePage.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TabControlHomePage.Location = New System.Drawing.Point(0, 24)
-        Me.TabControlHomePage.Name = "TabControlHomePage"
-        Me.TabControlHomePage.SelectedIndex = 0
-        Me.TabControlHomePage.Size = New System.Drawing.Size(1384, 670)
-        Me.TabControlHomePage.TabIndex = 0
+        Me.TabControlPage1.Appearance = System.Windows.Forms.TabAppearance.Buttons
+        Me.TabControlPage1.Controls.Add(Me.TabPage01HomePage)
+        Me.TabControlPage1.Controls.Add(Me.TabPage02RunningIOB)
+        Me.TabControlPage1.Controls.Add(Me.TabPage03TreatmentDetails)
+        Me.TabControlPage1.Controls.Add(Me.TabPage04SummaryData)
+        Me.TabControlPage1.Controls.Add(Me.TabPage05LastSG)
+        Me.TabControlPage1.Controls.Add(Me.TabPage06LastAlarm)
+        Me.TabControlPage1.Controls.Add(Me.TabPage07ActiveInsulin)
+        Me.TabControlPage1.Controls.Add(Me.TabPage08SensorGlucose)
+        Me.TabControlPage1.Controls.Add(Me.TabPage09Limits)
+        Me.TabControlPage1.Controls.Add(Me.TabPage10NotificationHistory)
+        Me.TabControlPage1.Controls.Add(Me.TabPage11TherapyAlgorithm)
+        Me.TabControlPage1.Controls.Add(Me.TabPage12BannerState)
+        Me.TabControlPage1.Controls.Add(Me.TabPage13Basal)
+        Me.TabControlPage1.Controls.Add(Me.TabPage14Markers)
+        Me.TabControlPage1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TabControlPage1.Location = New System.Drawing.Point(0, 24)
+        Me.TabControlPage1.Name = "TabControlPage1"
+        Me.TabControlPage1.SelectedIndex = 0
+        Me.TabControlPage1.Size = New System.Drawing.Size(1384, 670)
+        Me.TabControlPage1.TabIndex = 0
         '
         'TabPage01HomePage
         '
@@ -1404,16 +1404,16 @@ Partial Class Form1
         Me.ActiveInsulinTabLabel.Text = "Active Insulin"
         Me.ActiveInsulinTabLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'TabPage06SensorGlucose
+        'TabPage08SensorGlucose
         '
-        Me.TabPage06SensorGlucose.Controls.Add(Me.TableLayoutPanelSgs)
-        Me.TabPage06SensorGlucose.Location = New System.Drawing.Point(4, 27)
-        Me.TabPage06SensorGlucose.Name = "TabPage06SensorGlucose"
-        Me.TabPage06SensorGlucose.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage06SensorGlucose.Size = New System.Drawing.Size(1376, 639)
-        Me.TabPage06SensorGlucose.TabIndex = 2
-        Me.TabPage06SensorGlucose.Text = "Sensor Glucose"
-        Me.TabPage06SensorGlucose.UseVisualStyleBackColor = True
+        Me.TabPage08SensorGlucose.Controls.Add(Me.TableLayoutPanelSgs)
+        Me.TabPage08SensorGlucose.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage08SensorGlucose.Name = "TabPage08SensorGlucose"
+        Me.TabPage08SensorGlucose.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage08SensorGlucose.Size = New System.Drawing.Size(1376, 639)
+        Me.TabPage08SensorGlucose.TabIndex = 2
+        Me.TabPage08SensorGlucose.Text = "Sensor Glucose"
+        Me.TabPage08SensorGlucose.UseVisualStyleBackColor = True
         '
         'TableLayoutPanelSgs
         '
@@ -1469,16 +1469,16 @@ Partial Class Form1
         Me.DataGridViewSGs.Size = New System.Drawing.Size(1364, 597)
         Me.DataGridViewSGs.TabIndex = 1
         '
-        'TabPage07Limits
+        'TabPage09Limits
         '
-        Me.TabPage07Limits.Controls.Add(Me.TableLayoutPanelLimits)
-        Me.TabPage07Limits.Location = New System.Drawing.Point(4, 27)
-        Me.TabPage07Limits.Name = "TabPage07Limits"
-        Me.TabPage07Limits.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage07Limits.Size = New System.Drawing.Size(1376, 639)
-        Me.TabPage07Limits.TabIndex = 3
-        Me.TabPage07Limits.Text = "Limits"
-        Me.TabPage07Limits.UseVisualStyleBackColor = True
+        Me.TabPage09Limits.Controls.Add(Me.TableLayoutPanelLimits)
+        Me.TabPage09Limits.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage09Limits.Name = "TabPage09Limits"
+        Me.TabPage09Limits.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage09Limits.Size = New System.Drawing.Size(1376, 639)
+        Me.TabPage09Limits.TabIndex = 3
+        Me.TabPage09Limits.Text = "Limits"
+        Me.TabPage09Limits.UseVisualStyleBackColor = True
         '
         'TableLayoutPanelLimits
         '
@@ -1510,16 +1510,16 @@ Partial Class Form1
         Me.LabelLimits.Text = "Limits"
         Me.LabelLimits.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'TabPage08NotificationHistory
+        'TabPage10NotificationHistory
         '
-        Me.TabPage08NotificationHistory.Controls.Add(Me.TableLayoutPanelNotificationHistory)
-        Me.TabPage08NotificationHistory.Location = New System.Drawing.Point(4, 27)
-        Me.TabPage08NotificationHistory.Name = "TabPage08NotificationHistory"
-        Me.TabPage08NotificationHistory.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage08NotificationHistory.Size = New System.Drawing.Size(1376, 639)
-        Me.TabPage08NotificationHistory.TabIndex = 5
-        Me.TabPage08NotificationHistory.Text = "Notification History"
-        Me.TabPage08NotificationHistory.UseVisualStyleBackColor = True
+        Me.TabPage10NotificationHistory.Controls.Add(Me.TableLayoutPanelNotificationHistory)
+        Me.TabPage10NotificationHistory.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage10NotificationHistory.Name = "TabPage10NotificationHistory"
+        Me.TabPage10NotificationHistory.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage10NotificationHistory.Size = New System.Drawing.Size(1376, 639)
+        Me.TabPage10NotificationHistory.TabIndex = 5
+        Me.TabPage10NotificationHistory.Text = "Notification History"
+        Me.TabPage10NotificationHistory.UseVisualStyleBackColor = True
         '
         'TableLayoutPanelNotificationHistory
         '
@@ -1551,16 +1551,16 @@ Partial Class Form1
         Me.LabelNotificationHistory.Text = "Notification History"
         Me.LabelNotificationHistory.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'TabPage09Basal
+        'TabPage13Basal
         '
-        Me.TabPage09Basal.Controls.Add(Me.TableLayoutPanelBasal)
-        Me.TabPage09Basal.Location = New System.Drawing.Point(4, 27)
-        Me.TabPage09Basal.Name = "TabPage09Basal"
-        Me.TabPage09Basal.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage09Basal.Size = New System.Drawing.Size(1376, 639)
-        Me.TabPage09Basal.TabIndex = 6
-        Me.TabPage09Basal.Text = "Basal"
-        Me.TabPage09Basal.UseVisualStyleBackColor = True
+        Me.TabPage13Basal.Controls.Add(Me.TableLayoutPanelBasal)
+        Me.TabPage13Basal.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage13Basal.Name = "TabPage13Basal"
+        Me.TabPage13Basal.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage13Basal.Size = New System.Drawing.Size(1376, 639)
+        Me.TabPage13Basal.TabIndex = 6
+        Me.TabPage13Basal.Text = "Basal"
+        Me.TabPage13Basal.UseVisualStyleBackColor = True
         '
         'TableLayoutPanelBasal
         '
@@ -1590,16 +1590,16 @@ Partial Class Form1
         Me.LabelBasal.Text = "Basal"
         Me.LabelBasal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'TabPage10TherapyAlgorithm
+        'TabPage11TherapyAlgorithm
         '
-        Me.TabPage10TherapyAlgorithm.Controls.Add(Me.TableLayoutPanelTherapyAlgorithm)
-        Me.TabPage10TherapyAlgorithm.Location = New System.Drawing.Point(4, 27)
-        Me.TabPage10TherapyAlgorithm.Name = "TabPage10TherapyAlgorithm"
-        Me.TabPage10TherapyAlgorithm.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage10TherapyAlgorithm.Size = New System.Drawing.Size(1376, 639)
-        Me.TabPage10TherapyAlgorithm.TabIndex = 9
-        Me.TabPage10TherapyAlgorithm.Text = "Therapy Algorithm"
-        Me.TabPage10TherapyAlgorithm.UseVisualStyleBackColor = True
+        Me.TabPage11TherapyAlgorithm.Controls.Add(Me.TableLayoutPanelTherapyAlgorithm)
+        Me.TabPage11TherapyAlgorithm.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage11TherapyAlgorithm.Name = "TabPage11TherapyAlgorithm"
+        Me.TabPage11TherapyAlgorithm.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage11TherapyAlgorithm.Size = New System.Drawing.Size(1376, 639)
+        Me.TabPage11TherapyAlgorithm.TabIndex = 9
+        Me.TabPage11TherapyAlgorithm.Text = "Therapy Algorithm"
+        Me.TabPage11TherapyAlgorithm.UseVisualStyleBackColor = True
         '
         'TableLayoutPanelTherapyAlgorithm
         '
@@ -1629,16 +1629,16 @@ Partial Class Form1
         Me.LabelTherapyAlgorithm.Text = "Therapy Algorithm"
         Me.LabelTherapyAlgorithm.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'TabPage11BannerState
+        'TabPage12BannerState
         '
-        Me.TabPage11BannerState.Controls.Add(Me.TableLayoutPanelBannerState)
-        Me.TabPage11BannerState.Location = New System.Drawing.Point(4, 27)
-        Me.TabPage11BannerState.Name = "TabPage11BannerState"
-        Me.TabPage11BannerState.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage11BannerState.Size = New System.Drawing.Size(1376, 639)
-        Me.TabPage11BannerState.TabIndex = 10
-        Me.TabPage11BannerState.Text = "Banner State"
-        Me.TabPage11BannerState.UseVisualStyleBackColor = True
+        Me.TabPage12BannerState.Controls.Add(Me.TableLayoutPanelBannerState)
+        Me.TabPage12BannerState.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage12BannerState.Name = "TabPage12BannerState"
+        Me.TabPage12BannerState.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage12BannerState.Size = New System.Drawing.Size(1376, 639)
+        Me.TabPage12BannerState.TabIndex = 10
+        Me.TabPage12BannerState.Text = "Banner State"
+        Me.TabPage12BannerState.UseVisualStyleBackColor = True
         '
         'TableLayoutPanelBannerState
         '
@@ -1669,15 +1669,15 @@ Partial Class Form1
         Me.LabelBannerState.Text = "Banner State"
         Me.LabelBannerState.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'TabPage16Markers
+        'TabPage14Markers
         '
-        Me.TabPage16Markers.BackColor = System.Drawing.SystemColors.MenuHighlight
-        Me.TabPage16Markers.Location = New System.Drawing.Point(4, 27)
-        Me.TabPage16Markers.Name = "TabPage16Markers"
-        Me.TabPage16Markers.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage16Markers.Size = New System.Drawing.Size(1376, 639)
-        Me.TabPage16Markers.TabIndex = 4
-        Me.TabPage16Markers.Text = "Markers and More..."
+        Me.TabPage14Markers.BackColor = System.Drawing.SystemColors.MenuHighlight
+        Me.TabPage14Markers.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage14Markers.Name = "TabPage14Markers"
+        Me.TabPage14Markers.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage14Markers.Size = New System.Drawing.Size(1376, 639)
+        Me.TabPage14Markers.TabIndex = 4
+        Me.TabPage14Markers.Text = "Markers and More..."
         '
         'TabControlPage2
         '
@@ -2645,7 +2645,7 @@ Partial Class Form1
         Me.Controls.Add(Me.LoginStatus)
         Me.Controls.Add(Me.LastUpdateTime)
         Me.Controls.Add(Me.LastUpdateTimeLabel)
-        Me.Controls.Add(Me.TabControlHomePage)
+        Me.Controls.Add(Me.TabControlPage1)
         Me.Controls.Add(Me.TabControlPage2)
         Me.Controls.Add(Me.MenuStrip1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -2658,7 +2658,7 @@ Partial Class Form1
         Me.Text = "CareLink For Windows"
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
-        Me.TabControlHomePage.ResumeLayout(False)
+        Me.TabControlPage1.ResumeLayout(False)
         Me.TabPage01HomePage.ResumeLayout(False)
         Me.SplitContainer2.Panel1.ResumeLayout(False)
         Me.SplitContainer2.Panel1.PerformLayout()
@@ -2691,26 +2691,26 @@ Partial Class Form1
         Me.TabPage07ActiveInsulin.PerformLayout()
         Me.TableLayoutPanelActiveInsulin.ResumeLayout(False)
         Me.TableLayoutPanelActiveInsulin.PerformLayout()
-        Me.TabPage06SensorGlucose.ResumeLayout(False)
+        Me.TabPage08SensorGlucose.ResumeLayout(False)
         Me.TableLayoutPanelSgs.ResumeLayout(False)
         Me.TableLayoutPanelSgs.PerformLayout()
         CType(Me.DataGridViewSGs, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.TabPage07Limits.ResumeLayout(False)
-        Me.TabPage07Limits.PerformLayout()
+        Me.TabPage09Limits.ResumeLayout(False)
+        Me.TabPage09Limits.PerformLayout()
         Me.TableLayoutPanelLimits.ResumeLayout(False)
         Me.TableLayoutPanelLimits.PerformLayout()
-        Me.TabPage08NotificationHistory.ResumeLayout(False)
-        Me.TabPage08NotificationHistory.PerformLayout()
+        Me.TabPage10NotificationHistory.ResumeLayout(False)
+        Me.TabPage10NotificationHistory.PerformLayout()
         Me.TableLayoutPanelNotificationHistory.ResumeLayout(False)
         Me.TableLayoutPanelNotificationHistory.PerformLayout()
-        Me.TabPage09Basal.ResumeLayout(False)
+        Me.TabPage13Basal.ResumeLayout(False)
         Me.TableLayoutPanelBasal.ResumeLayout(False)
         Me.TableLayoutPanelBasal.PerformLayout()
-        Me.TabPage10TherapyAlgorithm.ResumeLayout(False)
-        Me.TabPage10TherapyAlgorithm.PerformLayout()
+        Me.TabPage11TherapyAlgorithm.ResumeLayout(False)
+        Me.TabPage11TherapyAlgorithm.PerformLayout()
         Me.TableLayoutPanelTherapyAlgorithm.ResumeLayout(False)
         Me.TableLayoutPanelTherapyAlgorithm.PerformLayout()
-        Me.TabPage11BannerState.ResumeLayout(False)
+        Me.TabPage12BannerState.ResumeLayout(False)
         Me.TableLayoutPanelBannerState.ResumeLayout(False)
         Me.TableLayoutPanelBannerState.PerformLayout()
         Me.TabControlPage2.ResumeLayout(False)
@@ -2882,7 +2882,7 @@ Partial Class Form1
     Friend WithEvents SplitContainer2 As SplitContainer
     Friend WithEvents SplitContainer3 As SplitContainer
     Friend WithEvents StartHereExit As ToolStripMenuItem
-    Friend WithEvents TabControlHomePage As TabControl
+    Friend WithEvents TabControlPage1 As TabControl
     Friend WithEvents TabControlPage2 As TabControl
     Friend WithEvents TableLayoutPanelActiveInsulin As TableLayoutPanel
     Friend WithEvents TableLayoutPanelAutoBasalDelivery As TableLayoutPanel
@@ -2906,13 +2906,13 @@ Partial Class Form1
     Friend WithEvents TabPage03TreatmentDetails As TabPage
     Friend WithEvents TabPage04SummaryData As TabPage
     Friend WithEvents TabPage07ActiveInsulin As TabPage
-    Friend WithEvents TabPage06SensorGlucose As TabPage
-    Friend WithEvents TabPage07Limits As TabPage
-    Friend WithEvents TabPage08NotificationHistory As TabPage
-    Friend WithEvents TabPage09Basal As TabPage
-    Friend WithEvents TabPage10TherapyAlgorithm As TabPage
-    Friend WithEvents TabPage11BannerState As TabPage
-    Friend WithEvents TabPage16Markers As TabPage
+    Friend WithEvents TabPage08SensorGlucose As TabPage
+    Friend WithEvents TabPage09Limits As TabPage
+    Friend WithEvents TabPage10NotificationHistory As TabPage
+    Friend WithEvents TabPage13Basal As TabPage
+    Friend WithEvents TabPage11TherapyAlgorithm As TabPage
+    Friend WithEvents TabPage12BannerState As TabPage
+    Friend WithEvents TabPage14Markers As TabPage
     Friend WithEvents TabPageAllUsers As TabPage
     Friend WithEvents TabPageAutoBasalDelivery As TabPage
     Friend WithEvents TabPageAutoModeStatus As TabPage

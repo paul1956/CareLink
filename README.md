@@ -30,16 +30,16 @@ This update has a UI to show all the available data and a visual version that mi
 - 10/24/2022
 
 ## What's New in this release
-New in 3.5.7.1
+New in 3.5.7.2
 - Hightlight when insulin flow is blocked, less insulin is delivered
 - Handle when no transmitter if found in json file
+- Update Summary Tab to allow clicking for details
 
 New in 3.5.7.0
 - Add Additional message translations. 
 - Spelling errors fixed througout
 - Change update frequency to 1 minute
 - Internal items
-
     -    All Tables converted to DataGridView to improve performance
     -    Create record for all pump objects allowing future improvement
     -    Code more resilient to new unexpected keys
