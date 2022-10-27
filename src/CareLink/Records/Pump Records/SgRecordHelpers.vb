@@ -11,6 +11,8 @@ Friend Class SgRecordHelpers
                         NameOf(SgRecord.version)
                     }
 
+    Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
+
     Private Shared Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         If HideColumn(e.Column.Name) Then
             e.Column.Visible = False
@@ -44,25 +46,7 @@ Friend Class SgRecordHelpers
     End Sub
 
     Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Dim cellStyle As New DataGridViewCellStyle
-
-        Select Case columnName
-            Case NameOf(SgRecord.sg),
-                 NameOf(SgRecord.relativeOffset),
-                 NameOf(SgRecord.OAdatetime)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(10, 1, 1, 1))
-            Case NameOf(SgRecord.RecordNumber), NameOf(SgRecord.timeChange),
-                 NameOf(SgRecord.kind), NameOf(SgRecord.version)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
-            Case NameOf(SgRecord.datetime),
-                 NameOf(SgRecord.datetimeAsString),
-                 NameOf(SgRecord.Message),
-                 NameOf(SgRecord.sensorState)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-            Case Else
-                Throw UnreachableException($"{NameOf(SgRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
-        End Select
-        Return cellStyle
+        Return ClassPropertiesToCoumnAlignment(Of SgRecord)(s_alignmentTable, columnName)
     End Function
 
 End Class

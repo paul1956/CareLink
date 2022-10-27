@@ -36,8 +36,8 @@ Friend Module TableLayoutPanelSupport
          }
             tableLevel1Blue.Controls.Add(New Label With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                                 .AutoSize = True,
-                                                                .TextAlign = If(False, ContentAlignment.MiddleCenter, ContentAlignment.MiddleLeft),
-                                                                .Text = notificationType.Key
+                                                                .TextAlign = ContentAlignment.MiddleLeft,
+                                                                .Text = notificationType.Key.ToTitleCase.Replace(" ", Environment.NewLine)
                                                                },
                                          0,
                                          c.Index)

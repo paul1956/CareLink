@@ -3,8 +3,10 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Class supportedReportRecordHelpers
+    Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
-    Public Shared Function GetCellStyle() As DataGridViewCellStyle
-        Return New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
+    Friend Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
+        Return ClassPropertiesToCoumnAlignment(Of supportedReportRecord)(s_alignmentTable, columnName)
     End Function
+
 End Class

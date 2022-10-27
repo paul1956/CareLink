@@ -14,37 +14,10 @@ Friend Class InsulinRecordHelpers
             NameOf(InsulinRecord.version)
         }
 
-    Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Dim cellStyle As New DataGridViewCellStyle
+    Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
-        Select Case columnName
-            Case NameOf(InsulinRecord.[dateTime]),
-                 NameOf(InsulinRecord.dateTimeAsString),
-                 NameOf(InsulinRecord.OAdateTime),
-                 NameOf(InsulinRecord.type),
-                 NameOf(InsulinRecord.activationType)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-            Case NameOf(InsulinRecord.RecordNumber),
-                 NameOf(InsulinRecord.kind),
-                 NameOf(InsulinRecord.index),
-                 NameOf(InsulinRecord.id),
-                 NameOf(InsulinRecord.completed),
-                 NameOf(InsulinRecord.bolusType)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
-            Case NameOf(InsulinRecord.version),
-                 NameOf(InsulinRecord.programmedExtendedAmount),
-                 NameOf(InsulinRecord.relativeOffset),
-                 NameOf(InsulinRecord.deliveredExtendedAmount),
-                 NameOf(InsulinRecord.programmedFastAmount),
-                 NameOf(InsulinRecord.programmedDuration),
-                 NameOf(InsulinRecord.deliveredFastAmount),
-                 NameOf(InsulinRecord.effectiveDuration)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
-            Case Else
-                Stop
-                Throw UnreachableException($"{NameOf(InsulinRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
-        End Select
-        Return cellStyle
+    Friend Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
+        Return ClassPropertiesToCoumnAlignment(Of InsulinRecord)(s_alignmentTable, columnName)
     End Function
 
     Friend Shared Function HideColumn(columnName As String) As Boolean

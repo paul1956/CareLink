@@ -9,7 +9,7 @@ Friend Class BGReadingRecordHelpers
              NameOf(BGReadingRecord.relativeOffset), NameOf(BGReadingRecord.index)
         }
 
-    Private Shared alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
+    Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Shared Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         If HideColumn(e.Column.Name) Then
@@ -55,7 +55,7 @@ Friend Class BGReadingRecordHelpers
     End Sub
 
     Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToCoumnAlignment(Of BGReadingRecord)(alignmentTable, columnName)
+        Return ClassPropertiesToCoumnAlignment(Of BGReadingRecord)(s_alignmentTable, columnName)
     End Function
 
 End Class

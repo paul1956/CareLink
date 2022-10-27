@@ -27,9 +27,12 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 10/24/2022
+- 10/27/2022
 
 ## What's New in this release
+New in 3.5.7.3
+- Improve Formatting of all tables
+
 New in 3.5.7.2
 - Hightlight when insulin flow is blocked, less insulin is delivered
 - Handle when no transmitter if found in json file

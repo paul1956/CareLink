@@ -72,20 +72,17 @@ Friend Module DataTableMap
     ''' <returns>Dictionary</returns>
     Public Function ClassPropertiesToCoumnAlignment(Of T As Class)(ByRef alignmentTable As Dictionary(Of String, DataGridViewCellStyle), columnName As String) As DataGridViewCellStyle
         Dim classType As Type = GetType(T)
+        Dim cellStyle As New DataGridViewCellStyle
         If Not alignmentTable.Any Then
             For Each [property] As PropertyInfo In classType.GetProperties()
                 Dim columnAttrib As ColumnAttribute = [property].GetCustomAttributes(GetType(ColumnAttribute), True).Cast(Of ColumnAttribute)().SingleOrDefault()
-                Dim cellStyle As New DataGridViewCellStyle
+                cellStyle = New DataGridViewCellStyle
                 Select Case columnAttrib.TypeName
-                    Case "Date", "OADate", "String"
-                        cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-                    Case "Double", "Integer", "Single", "TimeSpan"
-                        If [property].Name = "RecordNumber" Then
-                            cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
-                        Else
-                            cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
-                        End If
-                    Case "Boolean"
+                    Case NameOf([DateTime]), NameOf(OADate), NameOf([String])
+                        cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
+                    Case NameOf([Double]), NameOf([Int32]), NameOf([Single]), NameOf([TimeSpan])
+                        cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
+                    Case NameOf([Boolean]), NameOf(Summaryrecord.RecordNumber)
                         cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
                     Case Else
                         Throw UnreachableException($"{NameOf(DataTableMap)}.{NameOf(ClassPropertiesToCoumnAlignment)} [property].PropertyType.Name = {[property].PropertyType.Name}")
@@ -93,7 +90,14 @@ Friend Module DataTableMap
                 alignmentTable.Add([property].Name, cellStyle)
             Next
         End If
-        Return alignmentTable(columnName)
+        If Not alignmentTable.TryGetValue(columnName, cellStyle) Then
+            If columnName = NameOf(SummaryRecord.RecordNumber) Then
+                cellStyle = (New DataGridViewCellStyle).SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
+            Else
+                cellStyle = (New DataGridViewCellStyle).SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
+            End If
+        End If
+        Return cellStyle
     End Function
 
     ''' <summary>

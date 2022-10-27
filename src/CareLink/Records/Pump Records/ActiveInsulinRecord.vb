@@ -11,7 +11,7 @@ Public Class ActiveInsulinRecord
     Private _amount As Single
 
     <DisplayName("Amount")>
-    <Column(Order:=0, TypeName:="Single")>
+    <Column(Order:=0, TypeName:=NameOf([Single]))>
     Public Property amount As Single
         Get
             Return _amount
@@ -34,11 +34,11 @@ Public Class ActiveInsulinRecord
     End Property
 
     <DisplayName("datetime As String")>
-    <Column(Order:=2, TypeName:="String")>
+    <Column(Order:=2, TypeName:=NameOf([String]))>
     Public Property datetimeAsString As String
 
     <DisplayName("OA datetime")>
-    <Column(Order:=3, TypeName:="OADate")>
+    <Column(Order:=3, TypeName:=NameOf(OADate))>
     Public ReadOnly Property OAdatetime As OADate
         Get
             Return New OADate(_datetime)
@@ -46,14 +46,14 @@ Public Class ActiveInsulinRecord
     End Property
 
     <DisplayName("Kind")>
-    <Column(Order:=4, TypeName:="String")>
+    <Column(Order:=4, TypeName:=NameOf([String]))>
     Public Property kind As String
 
     <DisplayName("Precision")>
-    <Column(Order:=5, TypeName:="String")>
+    <Column(Order:=5, TypeName:=NameOf([String]))>
     Public Property precision As String
 
     <DisplayName("Version")>
-    <Column(Order:=6, TypeName:="Integer")>
+    <Column(Order:=6, TypeName:=NameOf([Int32]))>
     Public Property version As Integer
 End Class

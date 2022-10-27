@@ -2,8 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Class BasalRecordHelpers
-    Private Shared alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
+Friend Class BasalRecordHelpers
+    Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Shared Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -25,23 +25,18 @@ Class BasalRecordHelpers
                          caption)
     End Sub
 
-    Private Shared Sub DataGridView_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs)
-        Stop
-    End Sub
-
     Private Shared Sub DataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs)
         Stop
     End Sub
 
     Public Shared Sub AttachHandlers(dgv As DataGridView)
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
-        AddHandler dgv.ColumnHeaderCellChanged, AddressOf DataGridView_ColumnHeaderCellChanged
         AddHandler dgv.DataError, AddressOf DataGridView_DataError
         AddHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
     End Sub
 
     Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToCoumnAlignment(Of BasalRecord)(alignmentTable, columnName)
+        Return ClassPropertiesToCoumnAlignment(Of BasalRecord)(s_alignmentTable, columnName)
     End Function
 
 End Class

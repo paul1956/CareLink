@@ -42,19 +42,19 @@ Public Class SummaryRecord
     End Sub
 
     <DisplayName("Record Number")>
-    <Column(Order:=0, TypeName:="Integer")>
+    <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public Property RecordNumber As Integer
 
     <DisplayName(NameOf(Key))>
-    <Column(Order:=1, TypeName:="String")>
+    <Column(Order:=1, TypeName:=NameOf([String]))>
     Public Property Key As String
 
     <DisplayName(NameOf(Value))>
-    <Column(Order:=2, TypeName:="String")>
+    <Column(Order:=2, TypeName:=NameOf([String]))>
     Public Property Value As String
 
     <DisplayName(NameOf(Message))>
-    <Column(Order:=3, TypeName:="String")>
+    <Column(Order:=3, TypeName:=NameOf([String]))>
     Public Property Message As String = ""
 
     Public Function CompareTo(obj As Object) As Integer Implements IComparable.CompareTo

@@ -57,11 +57,11 @@ Public Class SgRecord
 #If True Then ' Prevent reordering
 
     <DisplayName("Record Number")>
-    <Column(Order:=0, TypeName:="Integer")>
+    <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public Property RecordNumber As Integer
 
     <DisplayName("Sensor Glucose (sg)")>
-    <Column(Order:=1, TypeName:="Single")>
+    <Column(Order:=1, TypeName:=NameOf([Single]))>
     Public Property sg As Single
 
     <DisplayName(NameOf([datetime]))>
@@ -69,11 +69,11 @@ Public Class SgRecord
     Public Property [datetime] As Date
 
     <DisplayName("datetime As String")>
-    <Column(Order:=3, TypeName:="String")>
+    <Column(Order:=3, TypeName:=NameOf([String]))>
     Public Property datetimeAsString As String
 
     <DisplayName(NameOf(OAdatetime))>
-    <Column(Order:=4, TypeName:="Double")>
+    <Column(Order:=4, TypeName:=NameOf([Double]))>
     Public ReadOnly Property OAdatetime As OADate
         Get
             Return New OADate(_datetime)
@@ -81,11 +81,11 @@ Public Class SgRecord
     End Property
 
     <DisplayName("Time Change")>
-    <Column(Order:=5, TypeName:="Boolean")>
+    <Column(Order:=5, TypeName:=NameOf([Boolean]))>
     Public Property timeChange As Boolean
 
     <DisplayName("Sensor State")>
-    <Column(Order:=6, TypeName:="String")>
+    <Column(Order:=6, TypeName:=NameOf([String]))>
     Public Property sensorState As String
         Get
             Return _sensorState
@@ -96,7 +96,7 @@ Public Class SgRecord
     End Property
 
     <DisplayName("Sensor Message")>
-    <Column(Order:=7, TypeName:="String")>
+    <Column(Order:=7, TypeName:=NameOf([String]))>
     Public ReadOnly Property Message As String
         Get
             _sensorState = If(_sensorState, "")
@@ -109,15 +109,15 @@ Public Class SgRecord
     End Property
 
     <DisplayName("Kind")>
-    <Column(Order:=8, TypeName:="String")>
+    <Column(Order:=8, TypeName:=NameOf([String]))>
     Public Property kind As String
 
     <DisplayName("Version")>
-    <Column(Order:=9, TypeName:="Integer")>
+    <Column(Order:=9, TypeName:=NameOf([Int32]))>
     Public Property version As Integer
 
     <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=10, TypeName:="Integer")>
+    <Column(Order:=10, TypeName:=NameOf([Int32]))>
     Public Property relativeOffset As Integer
 
 #End If  ' Prevent reordering

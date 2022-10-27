@@ -9,6 +9,8 @@ Friend Class LimitsRecordHelpers
              NameOf(LimitsRecord.version)
         }
 
+    Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
+
     Private Shared Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         If HideColumn(e.Column.Name) Then
             e.Column.Visible = False
@@ -40,23 +42,7 @@ Friend Class LimitsRecordHelpers
     End Sub
 
     Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Dim cellStyle As New DataGridViewCellStyle
-
-        Select Case columnName
-            Case NameOf(LimitsRecord.kind)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-            Case NameOf(LimitsRecord.RecordNumber)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
-            Case NameOf(LimitsRecord.index),
-                 NameOf(LimitsRecord.version),
-                 NameOf(LimitsRecord.highLimit),
-                 NameOf(LimitsRecord.lowLimit)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
-            Case Else
-                Stop
-                Throw UnreachableException($"{NameOf(LimitsRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
-        End Select
-        Return cellStyle
+        Return ClassPropertiesToCoumnAlignment(Of LimitsRecord)(s_alignmentTable, columnName)
     End Function
 
 End Class

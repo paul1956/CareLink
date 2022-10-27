@@ -8,27 +8,27 @@ Imports System.ComponentModel.DataAnnotations.Schema
 Public Class LimitsRecord
 
     <DisplayName("High Limit")>
-    <Column(Order:=2, TypeName:="Single")>
+    <Column(Order:=2, TypeName:=NameOf([Single]))>
     Public Property highLimit As Single
 
     <DisplayName(NameOf(index))>
-    <Column(Order:=1, TypeName:="Integer")>
+    <Column(Order:=1, TypeName:=NameOf([Int32]))>
     Public Property index As Integer
 
     <DisplayName("Kind")>
-    <Column(Order:=4, TypeName:="String")>
+    <Column(Order:=4, TypeName:=NameOf([String]))>
     Public Property kind As String
 
     <DisplayName("Low Limit")>
-    <Column(Order:=3, TypeName:="Single")>
+    <Column(Order:=3, TypeName:=NameOf([Single]))>
     Public Property lowLimit As Single
 
     <DisplayName("Record Number")>
-    <Column(Order:=0, TypeName:="Integer")>
+    <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public Property RecordNumber As Integer
 
     <DisplayName("Version")>
-    <Column(Order:=5, TypeName:="Integer")>
+    <Column(Order:=5, TypeName:=NameOf([Int32]))>
     Public Property version As Integer
 
 End Class

@@ -20,59 +20,55 @@ Public Class LastAlarmRecord
     End Property
 
     <DisplayName(NameOf(basalName))>
-    <Column(Order:=15, TypeName:="String")>
+    <Column(Order:=15,TypeName:=NameOf([String]))>
     Public Property basalName As String = Nothing
 
     <DisplayName(NameOf(bgValue))>
-    <Column(Order:=16, TypeName:="Single")>
+    <Column(Order:=16,TypeName:=NameOf([Single]))>
     Public Property bgValue As Single = Nothing
 
     <DisplayName(NameOf(code))>
-    <Column(Order:=1, TypeName:="String")>
+    <Column(Order:=1,TypeName:=NameOf([String]))>
     Public Property code As String = Nothing
 
     <DisplayName("datetime As String")>
-    <Column(Order:=3, TypeName:="String")>
+    <Column(Order:=3,TypeName:=NameOf([String]))>
     Public Property datetimeAsString As String
 
     <DisplayName("Flash")>
-    <Column(Order:=5, TypeName:="Boolean")>
+    <Column(Order:=5,TypeName:=NameOf([Boolean]))>
     Public Property flash As Boolean = Nothing
 
     <DisplayName(NameOf(GUID))>
-    <Column(Order:=14, TypeName:="String")>
+    <Column(Order:=14,TypeName:=NameOf([String]))>
     Public Property GUID As String = Nothing
 
     <DisplayName(NameOf(instanceId))>
-    <Column(Order:=6, TypeName:="Integer")>
+    <Column(Order:=6,TypeName:=NameOf([Integer]))>
     Public Property instanceId As Integer
 
     <DisplayName("Kind")>
-    <Column(Order:=13, TypeName:="String")>
+    <Column(Order:=13,TypeName:=NameOf([String]))>
     Public Property kind As String = Nothing
 
     <DisplayName(NameOf(lastSetChange))>
-    <Column(Order:=9, TypeName:="Integer")>
+    <Column(Order:=9,TypeName:=NameOf([Integer]))>
     Public Property lastSetChange As Integer = Nothing
 
     <DisplayName("Message Id")>
-    <Column(Order:=7, TypeName:="String")>
+    <Column(Order:=7,TypeName:=NameOf([String]))>
     Public Property messageId As String
 
     <DisplayName("Pump Delivery Suspend State")>
-    <Column(Order:=11, TypeName:="Boolean")>
+    <Column(Order:=11,TypeName:=NameOf([Boolean]))>
     Public Property pumpDeliverySuspendState As Boolean = Nothing
 
-    <DisplayName("Record Number")>
-    <Column(Order:=0, TypeName:="Integer")>
-    Public Property RecordNumber As Integer
-
     <DisplayName(NameOf(referenceGUID))>
-    <Column(Order:=12, TypeName:="String")>
+    <Column(Order:=12,TypeName:=NameOf([String]))>
     Public Property referenceGUID As String
 
     <DisplayName(NameOf(reminderName))>
-    <Column(Order:=16, TypeName:="String")>
+    <Column(Order:=16,TypeName:=NameOf([String]))>
     Public Property reminderName As String = Nothing
 
     <DisplayName(NameOf(secondaryTime))>
@@ -80,7 +76,7 @@ Public Class LastAlarmRecord
     Public Property secondaryTime As Date = Nothing
 
     <DisplayName("Sensor Glucose")>
-    <Column(Order:=19, TypeName:="Single")>
+    <Column(Order:=19,TypeName:=NameOf([Single]))>
     Public Property sg As Single
 
     <DisplayName("Triggered DateTime")>
@@ -88,15 +84,15 @@ Public Class LastAlarmRecord
     Public Property triggeredDateTime As Date = Nothing
 
     <DisplayName("Type")>
-    <Column(Order:=4, TypeName:="String")>
+    <Column(Order:=4,TypeName:=NameOf([String]))>
     Public Property type As String
 
     <DisplayName("Units Remaining")>
-    <Column(Order:=10, TypeName:="Single")>
+    <Column(Order:=10,TypeName:=NameOf([Single]))>
     Public Property unitsRemaining As Single = Nothing
 
     <DisplayName("Version")>
-    <Column(Order:=14, TypeName:="Integer")>
+    <Column(Order:=14,TypeName:=NameOf([Integer]))>
     Public Property version As Integer
 
 End Class

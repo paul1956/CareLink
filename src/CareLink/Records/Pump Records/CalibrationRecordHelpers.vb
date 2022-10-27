@@ -9,6 +9,8 @@ Friend Class CalibrationRecordHelpers
          NameOf(CalibrationRecord.relativeOffset), NameOf(CalibrationRecord.index)
     }
 
+    Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
+
     Private Shared Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         If HideColumn(e.Column.Name) Then
             e.Column.Visible = False
@@ -53,27 +55,7 @@ Friend Class CalibrationRecordHelpers
     End Sub
 
     Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Dim cellStyle As New DataGridViewCellStyle
-
-        Select Case columnName
-            Case NameOf(CalibrationRecord.kind),
-                 NameOf(CalibrationRecord.dateTime),
-                 NameOf(CalibrationRecord.dateTimeAsString),
-                 NameOf(CalibrationRecord.type)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-            Case NameOf(CalibrationRecord.calibrationSuccess),
-                 NameOf(CalibrationRecord.RecordNumber)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
-            Case NameOf(CalibrationRecord.index),
-                 NameOf(CalibrationRecord.relativeOffset),
-                 NameOf(CalibrationRecord.value),
-                 NameOf(CalibrationRecord.version)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
-            Case Else
-                Stop
-                Throw UnreachableException($"{NameOf(CalibrationRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
-        End Select
-        Return cellStyle
+        Return ClassPropertiesToCoumnAlignment(Of CalibrationRecord)(s_alignmentTable, columnName)
     End Function
 
 End Class

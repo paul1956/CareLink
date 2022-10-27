@@ -2,7 +2,9 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Class BannerStateRecordHelpers
+Friend Class BannerStateRecordHelpers
+
+    Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Shared Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -37,21 +39,7 @@ Class BannerStateRecordHelpers
     End Sub
 
     Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Dim cellStyle As New DataGridViewCellStyle
-
-        Select Case columnName
-            Case NameOf(BannerStateRecord.type),
-                 NameOf(BannerStateRecord.message)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-            Case NameOf(BannerStateRecord.RecordNumber)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
-            Case NameOf(BannerStateRecord.timeRemaining)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
-            Case Else
-                Stop
-                Throw UnreachableException($"{NameOf(BannerStateRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
-        End Select
-        Return cellStyle
+        Return ClassPropertiesToCoumnAlignment(Of BannerStateRecord)(s_alignmentTable, columnName)
     End Function
 
 End Class

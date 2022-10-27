@@ -8,9 +8,9 @@ Public Class CareLinkUserDataRecordHelpers
                         NameOf(CareLinkUserDataRecord.AlertPhoneNumber),
                         NameOf(CareLinkUserDataRecord.CareLinkPassword),
                         NameOf(CareLinkUserDataRecord.CarrierTextingDomain),
-                        NameOf(CareLinkUserDataRecord.MailserverPassword),
+                        NameOf(CareLinkUserDataRecord.MailServerPassword),
                         NameOf(CareLinkUserDataRecord.MailServerPort),
-                        NameOf(CareLinkUserDataRecord.MailserverUserName),
+                        NameOf(CareLinkUserDataRecord.MailServerUserName),
                         NameOf(CareLinkUserDataRecord.OutgoingMailServer)
                     }
 
@@ -48,8 +48,8 @@ Public Class CareLinkUserDataRecordHelpers
                  NameOf(CareLinkUserDataRecord.AlertPhoneNumber),
                  NameOf(CareLinkUserDataRecord.CarrierTextingDomain),
                  NameOf(CareLinkUserDataRecord.CountryCode),
-                 NameOf(CareLinkUserDataRecord.MailserverPassword),
-                 NameOf(CareLinkUserDataRecord.MailserverUserName),
+                 NameOf(CareLinkUserDataRecord.MailServerPassword),
+                 NameOf(CareLinkUserDataRecord.MailServerUserName),
                  NameOf(CareLinkUserDataRecord.OutgoingMailServer)
                 cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
             Case NameOf(CareLinkUserDataRecord.AutoLogin),

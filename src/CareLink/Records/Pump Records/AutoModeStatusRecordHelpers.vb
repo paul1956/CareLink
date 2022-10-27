@@ -9,12 +9,7 @@ Friend Class AutoModeStatusRecordHelpers
              NameOf(AutoModeStatusRecord.relativeOffset), NameOf(AutoModeStatusRecord.index)
         }
 
-    Public Shared Sub AttachHandlers(dgv As DataGridView)
-        AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
-        AddHandler dgv.ColumnHeaderCellChanged, AddressOf DataGridView_ColumnHeaderCellChanged
-        AddHandler dgv.DataError, AddressOf DataGridView_DataError
-        AddHandler dgv.CellFormatting, AddressOf DataGridViewView_CellFormatting
-    End Sub
+    Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Shared Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         If HideColumn(e.Column.Name) Then
@@ -42,28 +37,19 @@ Friend Class AutoModeStatusRecordHelpers
         dgv.dgvCellFormatting(e, NameOf(AutoModeStatusRecord.dateTime))
     End Sub
 
-    Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Dim cellStyle As New DataGridViewCellStyle
-
-        Select Case columnName
-            Case NameOf(AutoModeStatusRecord.kind), NameOf(AutoModeStatusRecord.type),
-             NameOf(AutoModeStatusRecord.dateTime), NameOf(AutoModeStatusRecord.dateTimeAsString)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-            Case NameOf(AutoModeStatusRecord.RecordNumber),
-                 NameOf(AutoModeStatusRecord.autoModeOn)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
-            Case NameOf(AutoModeStatusRecord.index),
-                 NameOf(AutoModeStatusRecord.relativeOffset),
-                 NameOf(AutoModeStatusRecord.version)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
-            Case Else
-                Stop
-                Throw UnreachableException($"{NameOf(AutoModeStatusRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
-        End Select
-        Return cellStyle
+    Friend Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
+        Return ClassPropertiesToCoumnAlignment(Of AutoModeStatusRecord)(s_alignmentTable, columnName)
     End Function
 
     Friend Shared Function HideColumn(columnName As String) As Boolean
         Return s_filterJsonData AndAlso columnsToHide.Contains(columnName)
     End Function
+
+    Public Shared Sub AttachHandlers(dgv As DataGridView)
+        AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
+        AddHandler dgv.ColumnHeaderCellChanged, AddressOf DataGridView_ColumnHeaderCellChanged
+        AddHandler dgv.DataError, AddressOf DataGridView_DataError
+        AddHandler dgv.CellFormatting, AddressOf DataGridViewView_CellFormatting
+    End Sub
+
 End Class

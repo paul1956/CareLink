@@ -39,7 +39,7 @@ Friend Module DataGridViewHelper
         dGV.RowHeadersVisible = False
     End Sub
 
-    Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As ItemIndexs)
+    Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As ItemIndexs, hideRecordNumberColumn As Boolean)
         initializeTableLayoutPanel(realPanel, rowIndex)
         Dim dGV As DataGridView
         If realPanel.Controls.Count > 1 Then
@@ -51,6 +51,9 @@ Friend Module DataGridViewHelper
         End If
         dGV.DataSource = table
         dGV.RowHeadersVisible = False
+        If hideRecordNumberColumn AndAlso dGV.Columns(0).Name = NameOf(SummaryRecord.RecordNumber) Then
+            dGV.Columns(0).Visible = False
+        End If
     End Sub
 
     Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As Integer)

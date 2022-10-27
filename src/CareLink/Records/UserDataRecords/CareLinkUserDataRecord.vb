@@ -61,7 +61,7 @@ Public Class CareLinkUserDataRecord
 #If True Then ' Do not reorder
 
     <DisplayName("Id")>
-    <Column(Order:=0, TypeName:="Integer")>
+    <Column(Order:=0, TypeName:=NameOf([Int32]))>
     Public ReadOnly Property ID() As Integer
         Get
             Return _userData._iD
@@ -69,7 +69,7 @@ Public Class CareLinkUserDataRecord
     End Property
 
     <DisplayName("CareLink UserName")>
-    <Column(Order:=1, TypeName:="String")>
+    <Column(Order:=1, TypeName:=NameOf([String]))>
     Public Property CareLinkUserName As String
         Get
             Return _userData._careLinkUserName
@@ -81,7 +81,7 @@ Public Class CareLinkUserDataRecord
     End Property
 
     <DisplayName("CareLink Password")>
-    <Column(Order:=2, TypeName:="String")>
+    <Column(Order:=2, TypeName:=NameOf([String]))>
     Public Property CareLinkPassword As String
         Get
             Return _userData._careLinkPassword
@@ -105,7 +105,7 @@ Public Class CareLinkUserDataRecord
     End Property
 
     <DisplayName("Alert Phone Number")>
-    <Column(Order:=4, TypeName:="String")>
+    <Column(Order:=4, TypeName:=NameOf([String]))>
     Public Property AlertPhoneNumber As String
         Get
             Return _userData._alertPhoneNumber
@@ -118,7 +118,7 @@ Public Class CareLinkUserDataRecord
 
 
     <DisplayName("Carrier Texting Domain")>
-    <Column(Order:=5, TypeName:="String")>
+    <Column(Order:=5, TypeName:=NameOf([String]))>
     Public Property CarrierTextingDomain As String
         Get
             Return _userData._carrierTextingDomain
@@ -130,7 +130,7 @@ Public Class CareLinkUserDataRecord
     End Property
 
     <DisplayName("Country Code")>
-    <Column(Order:=6, TypeName:="String")>
+    <Column(Order:=6, TypeName:=NameOf([String]))>
     Public Property CountryCode As String
         Get
             Return _userData._countryCode
@@ -143,7 +143,7 @@ Public Class CareLinkUserDataRecord
 
 
     <DisplayName("SettingsVersion")>
-    <Column(Order:=7, TypeName:="String")>
+    <Column(Order:=7, TypeName:=NameOf([String]))>
     Public Property SettingsVersion As String
         Get
             Return _userData._settingsVersion
@@ -155,7 +155,7 @@ Public Class CareLinkUserDataRecord
     End Property
 
     <DisplayName("Mail Server Password")>
-    <Column(Order:=8, TypeName:="String")>
+    <Column(Order:=8, TypeName:=NameOf([String]))>
     Public Property MailServerPassword As String
         Get
             Return _userData._mailServerPassword
@@ -167,7 +167,7 @@ Public Class CareLinkUserDataRecord
     End Property
 
     <DisplayName("Mail Server Port")>
-    <Column(Order:=9, TypeName:="Integer")>
+    <Column(Order:=9, TypeName:=NameOf([Int32]))>
     Public Property MailServerPort As Integer
         Get
             Return _userData._mailServerPort
@@ -179,7 +179,7 @@ Public Class CareLinkUserDataRecord
     End Property
 
     <DisplayName("Mail Server User Name")>
-    <Column(Order:=10, TypeName:="String")>
+    <Column(Order:=10, TypeName:=NameOf([String]))>
     Public Property MailServerUserName As String
         Get
             Return _userData._mailServerUserName
@@ -191,7 +191,7 @@ Public Class CareLinkUserDataRecord
     End Property
 
     <DisplayName("Outgoing Mail Server")>
-    <Column(Order:=11, TypeName:="String")>
+    <Column(Order:=11, TypeName:=NameOf([String]))>
     Public Property OutgoingMailServer As String
         Get
             Return _userData._outgoingMailServer
@@ -204,7 +204,7 @@ Public Class CareLinkUserDataRecord
 
 
     <DisplayName("Use Advanced AIT Decay")>
-    <Column(Order:=12, TypeName:="Boolean")>
+    <Column(Order:=12, TypeName:=NameOf([Boolean]))>
     Public Property UseAdvancedAITDecay As Boolean
         Get
             Return _userData._useAdvancedAITDecay
@@ -216,7 +216,7 @@ Public Class CareLinkUserDataRecord
     End Property
 
     <DisplayName("Use Local Time Zone")>
-    <Column(Order:=13, TypeName:="Boolean")>
+    <Column(Order:=13, TypeName:=NameOf([Boolean]))>
     Public Property UseLocalTimeZone As Boolean
         Get
             Return _userData._useLocalTimeZone
@@ -228,7 +228,7 @@ Public Class CareLinkUserDataRecord
     End Property
 
     <DisplayName("Auto Login")>
-    <Column(Order:=14, TypeName:="Boolean")>
+    <Column(Order:=14, TypeName:=NameOf([Boolean]))>
     Public Property AutoLogin As Boolean
         Get
             Return _userData._autoLogin

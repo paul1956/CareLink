@@ -140,7 +140,7 @@ Friend Module DateTimeExtensions
             index -= 1
         End If
         If sgList(index).TryGetValue(NameOf(SgRecord.datetime), sgDateTimeString) Then
-            sgDateTime = sgDateTimeString.ParseDate("datetime")
+            sgDateTime = sgDateTimeString.ParseDate(NameOf(SgRecord.datetime))
         ElseIf sgList(index).TryGetValue(NameOf(TimeChangeRecord.dateTime), sgDateTimeString) Then
             sgDateTime = sgDateTimeString.ParseDate(NameOf(TimeChangeRecord.dateTime))
         ElseIf sgList(index).TryGetValue(NameOf(TimeChangeRecord.previousDateTime), sgDateTimeString) Then
@@ -215,13 +215,13 @@ Friend Module DateTimeExtensions
             Case "loginDateUTC"
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal)
                 Stop
-            Case "datetime", "dateTime"
-                If key = "datetime" Then
+            Case NameOf(SgRecord.datetime), NameOf(TimeChangeRecord.dateTime)
+                If key = NameOf(SgRecord.datetime) Then
                     resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
                 Else
                     resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
                 End If
-            Case "previousDateTime"
+            Case NameOf(TimeChangeRecord.previousDateTime)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal)
             Case "secondaryTime"
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.NoCurrentDateDefault)

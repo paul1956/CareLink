@@ -2,12 +2,14 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Class ActiveInsulinRecordHelpers
+Friend Class ActiveInsulinRecordHelpers
 
     Private Shared ReadOnly columnsToHide As New List(Of String) From {
          NameOf(ActiveInsulinRecord.OAdatetime),
          NameOf(ActiveInsulinRecord.version)
     }
+
+    Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Shared Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         If HideColumn(e.Column.Name) Then
@@ -42,23 +44,7 @@ Class ActiveInsulinRecordHelpers
     End Sub
 
     Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Dim cellStyle As New DataGridViewCellStyle
-
-        Select Case columnName
-            Case NameOf(ActiveInsulinRecord.kind),
-                 NameOf(ActiveInsulinRecord.datetime),
-                 NameOf(ActiveInsulinRecord.datetimeAsString),
-                 NameOf(ActiveInsulinRecord.OAdatetime)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-            Case NameOf(ActiveInsulinRecord.amount),
-                 NameOf(ActiveInsulinRecord.precision),
-                 NameOf(ActiveInsulinRecord.version)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
-            Case Else
-                Stop
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
-        End Select
-        Return cellStyle
+        Return ClassPropertiesToCoumnAlignment(Of ActiveInsulinRecord)(s_alignmentTable, columnName)
     End Function
 
 End Class

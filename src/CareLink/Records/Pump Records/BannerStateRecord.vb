@@ -8,11 +8,11 @@ Imports System.ComponentModel.DataAnnotations.Schema
 Public Class BannerStateRecord
     Private _type As String
     <DisplayName("Record Number")>
-    <Column(Order:=0, TypeName:="Integer")>
+    <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public Property RecordNumber As Integer = Nothing
 
     <DisplayName("Type")>
-    <Column(Order:=1, TypeName:="String")>
+    <Column(Order:=1, TypeName:=NameOf([String]))>
     Public Property type As String
         Get
             Return _type
@@ -23,7 +23,7 @@ Public Class BannerStateRecord
     End Property
 
     <DisplayName("Message")>
-    <Column(Order:=2, TypeName:="String")>
+    <Column(Order:=2, TypeName:=NameOf([String]))>
     Public ReadOnly Property message As String
         Get
             Dim formattedMessage As String = Nothing
@@ -38,7 +38,7 @@ Public Class BannerStateRecord
     End Property
 
     <DisplayName("Time Remaining")>
-    <Column(Order:=3, TypeName:="Integer")>
+    <Column(Order:=3, TypeName:=NameOf([Int32]))>
     Public Property timeRemaining As Integer = Nothing
 
 End Class

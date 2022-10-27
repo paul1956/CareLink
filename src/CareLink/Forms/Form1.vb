@@ -851,7 +851,7 @@ Public Class Form1
     Private Sub DataGridViewSuportedReports_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index - 1).Caption
-        e.DgvColumnAdded(supportedReportRecordHelpers.GetCellStyle(),
+        e.DgvColumnAdded(supportedReportRecordHelpers.GetCellStyle(e.Column.Name),
                          False,
                          True,
                          caption)
@@ -1494,27 +1494,27 @@ Public Class Form1
                         s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
                         s_lastSG = New SgRecord(Loads(row.Value))
                         DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelLastSG, ItemIndexs.lastSG),
-                                              ClassToDatatable({s_lastSG}.ToArray),
-                                              NameOf(SgRecord),
-                                              AddressOf SgRecordHelpers.AttachHandlers,
-                                              ItemIndexs.lastSG)
+                            ClassToDatatable({s_lastSG}.ToArray),
+                            NameOf(SgRecord),
+                            AddressOf SgRecordHelpers.AttachHandlers,
+                            ItemIndexs.lastSG, True)
 
                     Case ItemIndexs.lastAlarm
                         s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
                         DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelLastAlarm, ItemIndexs.lastAlarm),
-                                              ClassToDatatable(GetSummaryRecords(Loads(row.Value)).ToArray),
-                                              NameOf(SummaryRecord),
-                                              AddressOf SummaryRecordHelpers.AttachHandlers,
-                                              ItemIndexs.lastAlarm)
+                            ClassToDatatable(GetSummaryRecords(Loads(row.Value)).ToArray),
+                            NameOf(LastAlarmRecord),
+                            AddressOf SummaryRecordHelpers.AttachHandlers,
+                            ItemIndexs.lastAlarm, True)
 
                     Case ItemIndexs.activeInsulin
                         s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
                         s_activeInsulin = DictionaryToClass(Of ActiveInsulinRecord)(Loads(row.Value), 0)
                         DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelActiveInsulin, ItemIndexs.activeInsulin),
-                                              ClassToDatatable({s_activeInsulin}.ToArray),
-                                              NameOf(ActiveInsulinRecord),
-                                              AddressOf ActiveInsulinRecordHelpers.AttachHandlers,
-                                              ItemIndexs.lastAlarm)
+                            ClassToDatatable({s_activeInsulin}.ToArray),
+                            NameOf(ActiveInsulinRecord),
+                            AddressOf ActiveInsulinRecordHelpers.AttachHandlers,
+                            ItemIndexs.lastAlarm, True)
 
                     Case ItemIndexs.sgs
                         s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
@@ -1522,9 +1522,10 @@ Public Class Form1
                         If s_listOfSGs.Count > 2 Then
                             s_lastBGValue = s_listOfSGs.Item(s_listOfSGs.Count - 2).sg
                         End If
+
                         Dim table As DataTable = ClassToDatatable(s_listOfSGs.ToArray)
                         DisplayDataTableInDGV(Me.TableLayoutPanelSgs, Me.DataGridViewSGs, table, rowIndex)
-
+                        Me.DataGridViewSGs.Sort(Me.DataGridViewSGs.Columns(0), ListSortDirection.Descending)
                     Case ItemIndexs.limits
                         s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
 
@@ -1542,10 +1543,10 @@ Public Class Form1
                             s_listOflimitRecords.Add(DictionaryToClass(Of LimitsRecord)(e.Value, s_listOflimitRecords.Count + 1))
                         Next
                         DisplayDataTableInDGV(Me.TableLayoutPanelLimits,
-                                              ClassToDatatable(s_listOflimitRecords.ToArray),
-                                              NameOf(LimitsRecord),
-                                              AddressOf LimitsRecordHelpers.AttachHandlers,
-                                              ItemIndexs.limits)
+                            ClassToDatatable(s_listOflimitRecords.ToArray),
+                            NameOf(LimitsRecord),
+                            AddressOf LimitsRecordHelpers.AttachHandlers,
+                            ItemIndexs.limits, False)
                     Case ItemIndexs.markers
                         s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
                         DisplayDataTableInDGV(Me.TableLayoutPanelAutoBasalDelivery,
@@ -1553,39 +1554,39 @@ Public Class Form1
                                               ClassToDatatable(s_listOfAutoBasalDeliveryMarkers.ToArray),
                                               ItemIndexs.markers)
                         DisplayDataTableInDGV(Me.TableLayoutPanelAutoModeStatus,
-                                              ClassToDatatable(s_listOfAutoModeStatusMarkers.ToArray),
-                                              NameOf(AutoModeStatusRecord),
-                                              AddressOf AutoModeStatusRecordHelpers.AttachHandlers,
-                                              ItemIndexs.markers)
+                            ClassToDatatable(s_listOfAutoModeStatusMarkers.ToArray),
+                            NameOf(AutoModeStatusRecord),
+                            AddressOf AutoModeStatusRecordHelpers.AttachHandlers,
+                            ItemIndexs.markers, False)
                         DisplayDataTableInDGV(Me.TableLayoutPanelBgReadings,
-                                              ClassToDatatable(s_listOfBgReadingMarkers.ToArray),
-                                              NameOf(BGReadingRecord),
-                                              AddressOf BGReadingRecordHelpers.AttachHandlers,
-                                              ItemIndexs.markers)
+                            ClassToDatatable(s_listOfBgReadingMarkers.ToArray),
+                            NameOf(BGReadingRecord),
+                            AddressOf BGReadingRecordHelpers.AttachHandlers,
+                            ItemIndexs.markers, False)
                         DisplayDataTableInDGV(Me.TableLayoutPanelInsulin,
                                               Me.DataGridViewInsulin,
                                               ClassToDatatable(s_listOfInsulinMarkers.ToArray),
                                               ItemIndexs.markers)
                         DisplayDataTableInDGV(Me.TableLayoutPanelMeal,
-                                              ClassToDatatable(_listOfMealRecords.ToArray),
-                                              NameOf(MealRecord),
-                                              AddressOf MealRecordHelpers.AttachHandlers,
-                                              ItemIndexs.markers)
+                            ClassToDatatable(_listOfMealRecords.ToArray),
+                            NameOf(MealRecord),
+                            AddressOf MealRecordHelpers.AttachHandlers,
+                            ItemIndexs.markers, False)
                         DisplayDataTableInDGV(Me.TableLayoutPanelCalibration,
-                                              ClassToDatatable(s_listOfCalibrationMarkers.ToArray),
-                                              NameOf(CalibrationRecord),
-                                              AddressOf CalibrationRecordHelpers.AttachHandlers,
-                                              ItemIndexs.markers)
+                            ClassToDatatable(s_listOfCalibrationMarkers.ToArray),
+                            NameOf(CalibrationRecord),
+                            AddressOf CalibrationRecordHelpers.AttachHandlers,
+                            ItemIndexs.markers, False)
                         DisplayDataTableInDGV(Me.TableLayoutPanelLowGlucoseSuspended,
-                                              ClassToDatatable(_listOfLowGlucoseSuspendedRecords.ToArray),
-                                              NameOf(LowGlusoceSuspendRecord),
-                                              AddressOf LowGlusoceSuspendRecordHelpers.AttachHandlers,
-                                              ItemIndexs.markers)
+                            ClassToDatatable(_listOfLowGlucoseSuspendedRecords.ToArray),
+                            NameOf(LowGlusoceSuspendRecord),
+                            AddressOf LowGlusoceSuspendRecordHelpers.AttachHandlers,
+                            ItemIndexs.markers, False)
                         DisplayDataTableInDGV(Me.TableLayoutPanelTimeChange,
-                                              ClassToDatatable(s_listOfTimeChangeMarkers.ToArray),
-                                              NameOf(TimeChangeRecord),
-                                              AddressOf TimeChangeRecordHelpers.AttachHandlers,
-                                              ItemIndexs.markers)
+                            ClassToDatatable(s_listOfTimeChangeMarkers.ToArray),
+                            NameOf(TimeChangeRecord),
+                            AddressOf TimeChangeRecordHelpers.AttachHandlers,
+                            ItemIndexs.markers, False)
 
                     Case ItemIndexs.notificationHistory
                         s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
@@ -1619,10 +1620,10 @@ Public Class Form1
                     Case ItemIndexs.therapyAlgorithmState
                         s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
                         DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelTherapyAlgorithm, ItemIndexs.therapyAlgorithmState),
-                                              ClassToDatatable(GetSummaryRecords(Loads(row.Value)).ToArray),
-                                              NameOf(SummaryRecord),
-                                              AddressOf SummaryRecordHelpers.AttachHandlers,
-                                             ItemIndexs.lastAlarm)
+                            ClassToDatatable(GetSummaryRecords(Loads(row.Value)).ToArray),
+                            NameOf(SummaryRecord),
+                            AddressOf SummaryRecordHelpers.AttachHandlers,
+                            ItemIndexs.lastAlarm, True)
 
                     Case ItemIndexs.pumpBannerState
                         s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
@@ -1656,18 +1657,18 @@ Public Class Form1
                             End If
                         Next
                         DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelBannerState, ItemIndexs.pumpBannerState),
-                                                        ClassToDatatable(listOfPumpBannerState.ToArray),
-                                                        NameOf(BannerStateRecord),
-                                                        AddressOf BannerStateRecordHelpers.AttachHandlers,
-                                                        ItemIndexs.pumpBannerState)
+                            ClassToDatatable(listOfPumpBannerState.ToArray),
+                            NameOf(BannerStateRecord),
+                            AddressOf BannerStateRecordHelpers.AttachHandlers,
+                            ItemIndexs.pumpBannerState, False)
 
                     Case ItemIndexs.basal
                         s_listOfSummaryRecords.Add(New SummaryRecord(row.Key, ClickToShowDetails, rowIndex))
                         DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelBasal, ItemIndexs.basal),
-                                              ClassToDatatable({DictionaryToClass(Of BasalRecord)(Loads(row.Value), 0)}.ToArray),
-                                              NameOf(BasalRecord),
-                                              AddressOf BasalRecordHelpers.AttachHandlers,
-                                              ItemIndexs.basal)
+                            ClassToDatatable({DictionaryToClass(Of BasalRecord)(Loads(row.Value), 0)}.ToArray),
+                            NameOf(BasalRecord),
+                            AddressOf BasalRecordHelpers.AttachHandlers,
+                            ItemIndexs.basal, True)
 
                     Case ItemIndexs.systemStatusMessage
                         s_systemStatusMessage = row.Value

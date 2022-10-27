@@ -42,9 +42,9 @@ Friend Module DictionaryMap
                             Case "previousDateTime"
                                 propertyValue = row.Value.ParseDate($"{[property].Name}AsString")
                                 classObject.GetType.GetProperty([property].Name).SetValue(classObject, row.Value, Nothing)
-                            Case "Single"
+                            Case NameOf([Single])
                                 propertyValue = row.Value.ParseSingle
-                            Case "String", "Int32", "Boolean"
+                            Case NameOf([Boolean]), NameOf([Int32]), NameOf([String])
                                 propertyValue = Convert.ChangeType(row.Value, [property].PropertyType)
                             Case Else
                                 Throw UnreachableException($"{NameOf(SummaryRecordHelpers)}.{NameOf(GetCellStyle)} [property].PropertyType.Name = {[property].PropertyType.Name}")

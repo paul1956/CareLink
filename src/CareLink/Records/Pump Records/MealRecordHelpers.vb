@@ -11,6 +11,8 @@ Friend Class MealRecordHelpers
         NameOf(MealRecord.version)
     }
 
+    Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
+
     Private Shared Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         If HideColumn(e.Column.Name) Then
             e.Column.Visible = False
@@ -39,28 +41,7 @@ Friend Class MealRecordHelpers
     End Sub
 
     Private Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Dim cellStyle As New DataGridViewCellStyle
-
-        Select Case columnName
-            Case NameOf(MealRecord.[dateTime]),
-                    NameOf(MealRecord.dateTimeAsString),
-                    NameOf(MealRecord.type)
-                cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-            Case NameOf(MealRecord.RecordNumber),
-                    NameOf(MealRecord.kind),
-                    NameOf(MealRecord.index),
-                    NameOf(MealRecord.amount)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
-            Case NameOf(MealRecord.amount),
-                    NameOf(MealRecord.version),
-                    NameOf(MealRecord.OAdateTime),
-                    NameOf(MealRecord.relativeOffset)
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
-            Case Else
-                Stop
-                Throw UnreachableException($"{NameOf(MealRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
-        End Select
-        Return cellStyle
+        Return ClassPropertiesToCoumnAlignment(Of MealRecord)(s_alignmentTable, columnName)
     End Function
 
     Friend Shared Function HideColumn(dataPropertyName As String) As Boolean

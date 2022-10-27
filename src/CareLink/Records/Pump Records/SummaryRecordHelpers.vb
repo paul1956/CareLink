@@ -6,7 +6,7 @@ Imports System.Runtime.CompilerServices
 
 Friend Module SummaryRecordHelpers
 
-    Private alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
+    Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -18,7 +18,7 @@ Friend Module SummaryRecordHelpers
     End Sub
 
     Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToCoumnAlignment(Of SummaryRecord)(alignmentTable, columnName)
+        Return ClassPropertiesToCoumnAlignment(Of SummaryRecord)(s_alignmentTable, columnName)
     End Function
 
     Friend Function GetSummaryRecords(dic As Dictionary(Of String, String), Optional rowsToHide As List(Of String) = Nothing) As List(Of SummaryRecord)

@@ -12,8 +12,8 @@ Public Module SGListExtensions
         Dim lastValidTime As Date = Now - New TimeSpan(24, 0, 0)
         For firstValidTimeIndex As Integer = 0 To innerJson.Count - 1
             Dim dateTimeString As String = Nothing
-            If innerJson(firstValidTimeIndex).TryGetValue("datetime", dateTimeString) Then
-                lastValidTime = dateTimeString.ParseDate("datetime") - (firstValidTimeIndex * s_fiveMinuteSpan)
+            If innerJson(firstValidTimeIndex).TryGetValue(NameOf(SgRecord.datetime), dateTimeString) Then
+                lastValidTime = dateTimeString.ParseDate(NameOf(SgRecord.datetime)) - (firstValidTimeIndex * s_fiveMinuteSpan)
                 Exit For
             End If
         Next
