@@ -1914,9 +1914,9 @@ Public Class Form1
             ElseIf timeToNextCalibHours < 1 Then
                 Me.CalibrationDueImage.Image = If(s_systemStatusMessage = "WAIT_TO_CALIBRATE" OrElse s_sensorState = "WARM_UP",
                 My.Resources.CalibrationNotReady,
-                My.Resources.CalibrationDotRed.DrawCenteredArc(timeToNextCalibHours, timeToNextCalibrationMinutes / 60))
+                My.Resources.CalibrationDotRed.DrawCenteredArc(timeToNextCalibrationMinutes))
             Else
-                Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(timeToNextCalibrationMinutes / 60, timeToNextCalibrationMinutes / 60 / 12)
+                Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(timeToNextCalibrationMinutes)
             End If
         Catch ex As Exception
             Stop
