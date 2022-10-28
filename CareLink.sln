@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "ToolStripComboBoxEx", "src\ToolStripComboBoxEx\ToolStripComboBoxEx.vbproj", "{9817A57E-7375-4F00-9B87-0F1A82ADCAB7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChartWin", "..\winforms-datavisualization\src\System.Windows.Forms.DataVisualization\ChartWin.csproj", "{3D2B85F9-C2F6-4EA8-9363-2FFF4BA8E8B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChartWin", "..\winforms-datavisualization\src\System.Windows.Forms.DataVisualization\ChartWin.csproj", "{9C46286E-A1F9-439A-AD3B-755CE7C6997C}"
 EndProject
 Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "DataGridViewDisableButtonColumnEx", "src\DataGridViewDisableButtonColumnEx\DataGridViewDisableButtonColumnEx.vbproj", "{3B647A3D-3985-488B-B1AC-3BDB883215A0}"
 EndProject
@@ -34,14 +34,14 @@ Global
 		{9817A57E-7375-4F00-9B87-0F1A82ADCAB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9817A57E-7375-4F00-9B87-0F1A82ADCAB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9817A57E-7375-4F00-9B87-0F1A82ADCAB7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3D2B85F9-C2F6-4EA8-9363-2FFF4BA8E8B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D2B85F9-C2F6-4EA8-9363-2FFF4BA8E8B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3D2B85F9-C2F6-4EA8-9363-2FFF4BA8E8B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3D2B85F9-C2F6-4EA8-9363-2FFF4BA8E8B2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3B647A3D-3985-488B-B1AC-3BDB883215A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3B647A3D-3985-488B-B1AC-3BDB883215A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B647A3D-3985-488B-B1AC-3BDB883215A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B647A3D-3985-488B-B1AC-3BDB883215A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C46286E-A1F9-439A-AD3B-755CE7C6997C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C46286E-A1F9-439A-AD3B-755CE7C6997C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C46286E-A1F9-439A-AD3B-755CE7C6997C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C46286E-A1F9-439A-AD3B-755CE7C6997C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -13,7 +13,6 @@ Public Class BGMiniWindow
     Private _normalizedBG As Single
 
     Public Sub SetCurrentBGString(Value As String)
-        Me.Text = $"{s_firstName}'s Glucose at {Now.ToShortDateTimeString}"
         _lastBGValue = _currentBGValue
         _currentBGValue = Value.ParseSingle(2)
         If Not Double.IsNaN(_currentBGValue) Then
@@ -21,6 +20,9 @@ Public Class BGMiniWindow
             If BgUnitsString <> "mg/dl" Then
                 _normalizedBG *= 18
             End If
+            Me.BGTextBox.ForeColor = SystemColors.ControlText
+        Else
+            Me.BGTextBox.ForeColor = Color.Red
         End If
         Me.BGTextBox.Text = Value
     End Sub
@@ -42,7 +44,7 @@ Public Class BGMiniWindow
     End Sub
 
     Private Sub BGTextBox_TextChanged(sender As Object, e As EventArgs) Handles BGTextBox.TextChanged
-        Me.Text = $"{s_firstName}'s Glucose at {Now.ToShortDateTimeString}"
+        Me.Text = $"{s_firstName}'s Updated {(Now - LastServerUpdateTime).Minutes} minutes ago"
         If Me.BGTextBox.Text.Length = 0 OrElse Me.BGTextBox.Text = "---" OrElse Me.BGTextBox.Text = "999" Then
             _currentBGValue = Double.NaN
             Me.DeltaTextBox.Text = ""

@@ -1066,8 +1066,16 @@ Public Class Form1
             Dim lastMedicalDeviceDataUpdateServerEpochString As String = ""
             If Me.RecentData?.TryGetValue(NameOf(ItemIndexs.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
+                    If LastServerUpdateTime + s_fiveMinuteSpan < Now Then
+                        Me.LastUpdateTime.ForeColor = Color.Red
+                        _bgMiniDisplay.SetCurrentBGString("---")
+                    Else
+                        Me.LastUpdateTime.ForeColor = SystemColors.ControlText
+                    End If
                     Me.RecentData = Nothing
                 Else
+                    LastServerUpdateTime = Now
+                    Me.LastUpdateTime.ForeColor = SystemColors.ControlText
                     Me.LastUpdateTime.Text = Now.ToShortDateTimeString
                     Me.AllTabPagesUpdate()
                 End If

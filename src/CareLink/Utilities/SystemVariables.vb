@@ -11,6 +11,7 @@ Friend Module SystemVariables
     Friend Property MaxBasalPerDose As Single
     Friend Property MaxBasalPerHour As Single
     Friend Property scalingNeeded As Boolean = Nothing
+    Friend Property LastServerUpdateTime As Date = Now
     Friend Property TreatmentInsulinRow As Single
 
 End Module
