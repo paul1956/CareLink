@@ -36,10 +36,10 @@ Friend Module DictionaryMap
                     Try
                         Dim propertyValue As Object
                         Select Case [property].PropertyType.Name
-                            Case "DateTime", "dateTime"
+                            Case NameOf(TimeChangeRecord.dateTime)
                                 propertyValue = row.Value.ParseDate([property].Name)
                                 classObject.GetType.GetProperty($"{[property].Name}AsString").SetValue(classObject, row.Value, Nothing)
-                            Case "previousDateTime"
+                            Case NameOf(TimeChangeRecord.previousDateTime)
                                 propertyValue = row.Value.ParseDate($"{[property].Name}AsString")
                                 classObject.GetType.GetProperty([property].Name).SetValue(classObject, row.Value, Nothing)
                             Case NameOf([Single])

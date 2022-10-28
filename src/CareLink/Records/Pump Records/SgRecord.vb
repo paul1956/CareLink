@@ -64,7 +64,7 @@ Public Class SgRecord
     <Column(Order:=1, TypeName:=NameOf([Single]))>
     Public Property sg As Single
 
-    <DisplayName(NameOf([datetime]))>
+    <DisplayName(NameOf(SgRecord.datetime))>
     <Column(Order:=2, TypeName:="Date")>
     Public Property [datetime] As Date
 

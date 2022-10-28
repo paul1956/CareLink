@@ -13,7 +13,7 @@ Public Class ActiveNotificationsRecord
     Public Property RecordNumber As Integer
 
     <DisplayName(NameOf(ClearedNotificationsRecord.dateTime))>
-    <Column(Order:=1, TypeName:="Date")>
+    <Column(Order:=1, TypeName:=NameOf(ClearedNotificationsRecord.dateTime))>
     Public Property [dateTime] As Date
         Get
             Return _dateTime
@@ -67,8 +67,8 @@ Public Class ActiveNotificationsRecord
     <Column(Order:=12, TypeName:=NameOf([Single]))>
     Public Property sg As Single = Nothing
 
-    <DisplayName(NameOf(secondaryTime))>
-    <Column(Order:=13, TypeName:="Date")>
+    <DisplayName("Secondary Time")>
+    <Column(Order:=13, TypeName:=NameOf(secondaryTime))>
     Public Property secondaryTime As Date = Nothing
 
     <DisplayName("pnpId")>

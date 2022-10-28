@@ -63,7 +63,7 @@ Public Class ClearedNotificationsRecord
     Public Property sg As Single = Nothing
 
     <DisplayName(NameOf(secondaryTime))>
-    <Column(Order:=13, TypeName:="Date")>
+    <Column(Order:=13, TypeName:=NameOf(secondaryTime))>
     Public Property secondaryTime As Date = Nothing
 
     <DisplayName("Pump Delivery Suspend State")>

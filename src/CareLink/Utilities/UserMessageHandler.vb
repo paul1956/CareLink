@@ -135,16 +135,14 @@ Friend Module UserMessageHandler
                     End If
                 End If
 
-                Dim secondaryTime As String = If(jsonDictionary.ContainsKey("secondaryTime"), jsonDictionary("secondaryTime").FormatTimeOnly(s_timeWithMinuteFormat), "")
+                Dim secondaryTime As String = If(jsonDictionary.ContainsKey(NameOf(ClearedNotificationsRecord.secondaryTime)), jsonDictionary(NameOf(ClearedNotificationsRecord.secondaryTime)).FormatTimeOnly(s_timeWithMinuteFormat), "")
                 Dim triggeredDateTime As String = ""
-                If jsonDictionary.ContainsKey("triggeredDateTime") Then
-                    triggeredDateTime = $" {jsonDictionary("triggeredDateTime").ParseDate("triggeredDateTime")}"
-                ElseIf jsonDictionary.ContainsKey("datetime") Then
-                    triggeredDateTime = $" {jsonDictionary("datetime").ParseDate("datetime")}"
-                ElseIf jsonDictionary.ContainsKey("DateTime") Then
-                    triggeredDateTime = $" {jsonDictionary("DateTime").ParseDate("DateTime")}"
-                ElseIf jsonDictionary.ContainsKey("dateTime") Then
-                    triggeredDateTime = $" {jsonDictionary("dateTime").ParseDate("dateTime")}"
+                If jsonDictionary.ContainsKey(NameOf(ClearedNotificationsRecord.triggeredDateTime)) Then
+                    triggeredDateTime = $" {jsonDictionary(NameOf(ClearedNotificationsRecord.triggeredDateTime)).ParseDate("triggeredDateTime")}"
+                ElseIf jsonDictionary.ContainsKey(NameOf(SgRecord.datetime)) Then
+                    triggeredDateTime = $" {jsonDictionary(NameOf(SgRecord.datetime)).ParseDate(NameOf(SgRecord.datetime))}"
+                ElseIf jsonDictionary.ContainsKey(NameOf(TimeChangeRecord.dateTime)) Then
+                    triggeredDateTime = $" {jsonDictionary(NameOf(TimeChangeRecord.dateTime)).ParseDate("dateTime")}"
                 Else
                     Stop
                 End If
@@ -154,7 +152,7 @@ Friend Module UserMessageHandler
                     .Replace("(triggeredDateTime)", $", happened at {triggeredDateTime}") _
                     .Replace("(CriticalLow)", s_criticalLow.ToString(CurrentUICulture)) _
                     .Replace("(units)", BgUnitsString) _
-                    .Replace("(secondaryTime)", secondaryTime)
+                    .Replace($"(secondaryTime)", secondaryTime)
             Else
                 If Debugger.IsAttached Then
                     MsgBox($"Unknown sensor message '{entryValue}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Unknown Sensor Message")

@@ -223,9 +223,9 @@ Friend Module DateTimeExtensions
                 End If
             Case NameOf(TimeChangeRecord.previousDateTime)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal)
-            Case "secondaryTime"
+            Case NameOf(ClearedNotificationsRecord.secondaryTime)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.NoCurrentDateDefault)
-            Case "triggeredDateTime"
+            Case NameOf(ClearedNotificationsRecord.triggeredDateTime)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
             Case Else
         End Select

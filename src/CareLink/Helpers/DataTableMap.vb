@@ -78,7 +78,7 @@ Friend Module DataTableMap
                 Dim columnAttrib As ColumnAttribute = [property].GetCustomAttributes(GetType(ColumnAttribute), True).Cast(Of ColumnAttribute)().SingleOrDefault()
                 cellStyle = New DataGridViewCellStyle
                 Select Case columnAttrib.TypeName
-                    Case NameOf([DateTime]), NameOf(OADate), NameOf([String])
+                    Case "Date", NameOf(OADate), NameOf([String])
                         cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
                     Case NameOf([Double]), NameOf([Int32]), NameOf([Single]), NameOf([TimeSpan])
                         cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
