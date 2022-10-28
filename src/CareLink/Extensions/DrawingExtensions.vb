@@ -19,7 +19,6 @@ Friend Module DrawingExtensions
     <Extension>
     Friend Function DrawCenteredArc(backImage As Bitmap, minutesToNextCalibration As Integer, Optional colorTable As IReadOnlyDictionary(Of String, Color) = Nothing, Optional segmentName As String = "") As Bitmap
 
-
         If minutesToNextCalibration = 0 Then
             Return backImage
         End If
@@ -69,4 +68,5 @@ Friend Module DrawingExtensions
         If parts >= count Then Return {collection}
         Return Enumerable.Range(0, CInt(Math.Ceiling(count / parts))).Select(Function(i) collection.Skip(i * parts).Take(parts))
     End Function
+
 End Module
