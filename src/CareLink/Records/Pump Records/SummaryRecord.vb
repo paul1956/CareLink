@@ -8,37 +8,44 @@ Imports System.ComponentModel.DataAnnotations.Schema
 Public Class SummaryRecord
     Implements IComparable
 
-    Protected Friend Sub New(entry As KeyValuePair(Of String, String), messages As Dictionary(Of String, String), messageTableName As String, index As Integer)
-        Me.New(entry, index)
+    ''' <summary>
+    ''' Used where message needs to be translated
+    ''' </summary>
+    ''' <param name="recordNumber"></param>
+    ''' <param name="row"></param>
+    ''' <param name="messages"></param>
+    ''' <param name="messageTableName"></param>
+    Protected Friend Sub New(recordNumber As Integer, row As KeyValuePair(Of String, String), messages As Dictionary(Of String, String), messageTableName As String)
+        Me.New(recordNumber, row)
         Dim message As String = ""
-        If Not String.IsNullOrWhiteSpace(entry.Value) Then
-            If Not messages.TryGetValue(entry.Value, message) Then
+        If Not String.IsNullOrWhiteSpace(row.Value) Then
+            If Not messages.TryGetValue(row.Value, message) Then
                 If Debugger.IsAttached Then
-                    MsgBox($"{entry.Value} is unknown message for {messageTableName}")
+                    MsgBox($"{row.Value} is unknown message for {messageTableName}")
                 End If
-                message = entry.Value.ToTitleCase
+                message = row.Value.ToTitleCase
             End If
         End If
 
         Me.Message = message
     End Sub
 
-    Protected Friend Sub New(row As KeyValuePair(Of String, String), recordNumber As Integer)
-        Me.RecordNumber = recordNumber
-        Me.Key = row.Key
-        Me.Value = row.Value?.ToString(CurrentUICulture)
+    Protected Friend Sub New(recordNumber As Integer, row As KeyValuePair(Of String, String), Optional message As String = "")
+        Me.New(recordNumber, row.Key, row.Value)
+        Me.Message = message
     End Sub
 
     ''' <summary>
-    ''' Handles Epoch2DateTimeString
+    ''' Handles No Message Case
     ''' </summary>
-    ''' <param name="key"></param>
-    ''' <param name="value">This is an Epoch(Unix) time that has already been converted to string</param>
     ''' <param name="recordNumber"></param>
-    Protected Friend Sub New(key As String, value As String, recordNumber As Integer)
+    ''' <param name="key"></param>
+    ''' <param name="value"></param>
+    Protected Friend Sub New(recordNumber As Integer, key As String, value As String)
         Me.RecordNumber = recordNumber
         Me.Key = key
         Me.Value = value
+        Me.Message = ""
     End Sub
 
     <DisplayName("Record Number")>

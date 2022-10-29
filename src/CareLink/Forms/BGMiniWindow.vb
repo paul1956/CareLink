@@ -13,6 +13,10 @@ Public Class BGMiniWindow
     Private _normalizedBG As Single
 
     Public Sub SetCurrentBGString(Value As String)
+        If String.IsNullOrEmpty(Value) Then
+            Value = "---"
+        End If
+
         _lastBGValue = _currentBGValue
         _currentBGValue = Value.ParseSingle(2)
         If Not Double.IsNaN(_currentBGValue) Then

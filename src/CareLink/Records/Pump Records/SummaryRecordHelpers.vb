@@ -30,7 +30,7 @@ Friend Module SummaryRecordHelpers
 
             Select Case row.Key
                 Case "messageId"
-                    Dim item As New SummaryRecord(row, summaryList.Count + 1)
+                    Dim item As New SummaryRecord(summaryList.Count + 1, row)
                     Dim message As String = ""
                     If s_NotificationMessages.TryGetValue(row.Value, message) Then
                         item.Message = TranslateNotificationMessageId(dic, row.Value)
@@ -41,16 +41,16 @@ Friend Module SummaryRecordHelpers
                     End If
                     summaryList.Add(item)
                 Case "autoModeReadinessState"
-                    summaryList.Add(New SummaryRecord(row, s_sensorMessages, NameOf(s_sensorMessages), summaryList.Count + 1))
+                    summaryList.Add(New SummaryRecord(summaryList.Count + 1, row, s_sensorMessages, NameOf(s_sensorMessages)))
                 Case "autoModeShieldState"
-                    summaryList.Add(New SummaryRecord(row, s_autoModeShieldMessages, NameOf(s_autoModeShieldMessages), summaryList.Count + 1))
+                    summaryList.Add(New SummaryRecord(summaryList.Count + 1, row, s_autoModeShieldMessages, NameOf(s_autoModeShieldMessages)))
                 Case "plgmLgsState"
-                    summaryList.Add(New SummaryRecord(row, s_plgmLgsMessages, NameOf(s_plgmLgsMessages), summaryList.Count + 1))
+                    summaryList.Add(New SummaryRecord(summaryList.Count + 1, row, s_plgmLgsMessages, NameOf(s_plgmLgsMessages)))
                 Case Else
                     If row.Value.IsPossibleMessage Then
-                        summaryList.Add(New SummaryRecord(row, summaryList.Count + 1))
+                        summaryList.Add(New SummaryRecord(summaryList.Count + 1, row))
                     Else
-                        summaryList.Add(New SummaryRecord(row, summaryList.Count + 1))
+                        summaryList.Add(New SummaryRecord(summaryList.Count + 1, row))
                     End If
             End Select
         Next
