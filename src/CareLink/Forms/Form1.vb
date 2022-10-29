@@ -1060,13 +1060,13 @@ Public Class Form1
             _updating = False
         End SyncLock
 
+        Dim lastMedicalDeviceDataUpdateServerEpochString As String = ""
         If Me.RecentData Is Nothing Then
             Me.LoginStatus.Text = _client.GetLastErrorMessage
         Else
-            Dim lastMedicalDeviceDataUpdateServerEpochString As String = ""
             If Me.RecentData?.TryGetValue(NameOf(ItemIndexs.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
-                    If LastServerUpdateTime + s_fiveMinuteSpan < Now Then
+                    If lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime + s_fiveMinuteSpan < Now Then
                         Me.LastUpdateTime.ForeColor = Color.Red
                         _bgMiniDisplay.SetCurrentBGString("---")
                     Else
@@ -1074,14 +1074,15 @@ Public Class Form1
                     End If
                     Me.RecentData = Nothing
                 Else
-                    LastServerUpdateTime = Now
                     Me.LastUpdateTime.ForeColor = SystemColors.ControlText
                     Me.LastUpdateTime.Text = Now.ToShortDateTimeString
                     Me.AllTabPagesUpdate()
                 End If
+            Else
+                Stop
             End If
         End If
-
+        LastServerUpdateTime = lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime
         Me.ServerUpdateTimer.Interval = s_oneMinutesInMilliseconds
         Me.ServerUpdateTimer.Start()
         Debug.Print($"In {NameOf(ServerUpdateTimer_Tick)}, exited SyncLock. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")

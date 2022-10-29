@@ -23,8 +23,8 @@ Friend Module DateTimeExtensions
 #Region "Millisecond Constants"
 
     Public ReadOnly s_fiveMinutesInMilliseconds As Integer = CInt(New TimeSpan(0, minutes:=5, 0).TotalMilliseconds)
-    Public ReadOnly s_thirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
     Public ReadOnly s_oneMinutesInMilliseconds As Integer = CInt(New TimeSpan(0, minutes:=1, 0).TotalMilliseconds)
+    Public ReadOnly s_thirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
 
 #End Region 'Millisecond Constants
 
@@ -106,6 +106,26 @@ Friend Module DateTimeExtensions
     <Extension>
     Friend Function Epoch2DateString(epoch As String) As String
         Return epoch.FromUnixTime.ToLocalTime.ToLongDateString
+    End Function
+
+    ''' <summary>
+    ''' Converts a Unix Milliseconds TimeSpan to local DateTime
+    ''' </summary>
+    ''' <param name="epoch"></param>
+    ''' <returns>Local DateTime</returns>
+    <Extension>
+    Friend Function Epoch2DateTime(epoch As Long) As Date
+        Return epoch.ToString.FromUnixTime.ToLocalTime
+    End Function
+
+    ''' <summary>
+    ''' Converts a Unix Milliseconds TimeSpan to local DateTime
+    ''' </summary>
+    ''' <param name="epoch"></param>
+    ''' <returns>Local DateTime</returns>
+    <Extension>
+    Friend Function Epoch2DateTime(epoch As String) As Date
+        Return epoch.FromUnixTime.ToLocalTime
     End Function
 
     ''' <summary>
