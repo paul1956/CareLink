@@ -24,6 +24,7 @@ Public Class BGMiniWindow
         Else
             Me.BGTextBox.ForeColor = Color.Red
         End If
+        Me.Text = $"{s_firstName}'s Updated {(Now - LastServerUpdateTime).Minutes} minutes ago"
         Me.BGTextBox.Text = Value
     End Sub
 
