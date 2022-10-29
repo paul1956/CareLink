@@ -151,8 +151,8 @@ Friend Module ChartingExtensions
 
     <Extension>
     Friend Sub PlotHighLowLimits(chart As Chart)
+        If s_listOflimitRecords.Count = 0 Then Exit Sub
         Dim limitsIndexList() As Integer = GetLimitsList(s_listOfSGs.Count - 1)
-
         For Each sgListIndex As IndexClass(Of SgRecord) In s_listOfSGs.WithIndex()
             Dim sgOADateTime As OADate = sgListIndex.Value.OAdatetime()
             Try
@@ -348,6 +348,7 @@ Friend Module ChartingExtensions
 
     <Extension>
     Friend Sub PostPaintSupport(e As ChartPaintEventArgs, ByRef chartRelitivePosition As RectangleF, insulinDictionary As Dictionary(Of OADate, Single), mealDictionary As Dictionary(Of OADate, Single), offsetInsulinImage As Boolean, paintOnY2 As Boolean)
+        If s_listOfSGs.Count = 0 Then Exit Sub
         If chartRelitivePosition.IsEmpty Then
             chartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_listOfSGs(0).OAdatetime))
             chartRelitivePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, HomePageBasalRow))

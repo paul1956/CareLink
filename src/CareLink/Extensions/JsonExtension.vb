@@ -51,6 +51,10 @@ Public Module JsonExtensions
 
     Public Function LoadList(value As String) As List(Of Dictionary(Of String, String))
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
+        If String.IsNullOrWhiteSpace(value) Then
+            Return resultDictionaryArray
+        End If
+
         Dim options As New JsonSerializerOptions() With {
                 .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 .NumberHandling = JsonNumberHandling.WriteAsString}
@@ -74,6 +78,9 @@ Public Module JsonExtensions
 
     Public Function Loads(value As String) As Dictionary(Of String, String)
         Dim resultDictionary As New Dictionary(Of String, String)
+        If String.IsNullOrWhiteSpace(value) Then
+            Return resultDictionary
+        End If
         Dim options As New JsonSerializerOptions() With {
                 .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 .NumberHandling = JsonNumberHandling.WriteAsString}

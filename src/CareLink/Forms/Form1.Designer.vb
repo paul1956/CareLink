@@ -796,9 +796,9 @@ Partial Class Form1
         Me.PumpBatteryRemainingLabel.BackColor = System.Drawing.Color.Transparent
         Me.PumpBatteryRemainingLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.PumpBatteryRemainingLabel.ForeColor = System.Drawing.Color.White
-        Me.PumpBatteryRemainingLabel.Location = New System.Drawing.Point(121, 86)
+        Me.PumpBatteryRemainingLabel.Location = New System.Drawing.Point(118, 86)
         Me.PumpBatteryRemainingLabel.Name = "PumpBatteryRemainingLabel"
-        Me.PumpBatteryRemainingLabel.Size = New System.Drawing.Size(80, 21)
+        Me.PumpBatteryRemainingLabel.Size = New System.Drawing.Size(86, 21)
         Me.PumpBatteryRemainingLabel.TabIndex = 11
         Me.PumpBatteryRemainingLabel.Text = "???"
         Me.PumpBatteryRemainingLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter

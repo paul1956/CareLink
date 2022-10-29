@@ -69,6 +69,8 @@ Public Class BGMiniWindow
                 End Select
             End If
             Select Case _normalizedBG
+                Case = 0
+                    Me.BGTextBox.ForeColor = Color.Black
                 Case <= 70
                     Me.BGTextBox.ForeColor = Color.Orange
                     If Not _alarmPlayedLow Then
