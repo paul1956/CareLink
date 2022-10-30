@@ -4,7 +4,7 @@
 
 Public Module StandardControlCreation
 
-    Friend Sub initializeTableLayoutPanel(realPanel As TableLayoutPanel, rowIndex As ItemIndexs)
+    Friend Function TableLayoutPanelInitialization(realPanel As TableLayoutPanel, rowIndex As ItemIndexs) As TableLayoutPanel
         realPanel.RowCount = 1
         If realPanel.Controls.Count > 1 AndAlso TypeOf realPanel.Controls(1) IsNot DataGridView Then
             For i As Integer = 1 To realPanel.Controls.Count - 1
@@ -15,10 +15,6 @@ Public Module StandardControlCreation
             Next
         End If
         realPanel.Controls(0).Text = GetTabName(rowIndex)
-    End Sub
-
-    Friend Function InitializeWorkingPanel(realPanel As TableLayoutPanel, rowIndex As ItemIndexs) As TableLayoutPanel
-        initializeTableLayoutPanel(realPanel, rowIndex)
         Return realPanel
     End Function
 

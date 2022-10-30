@@ -118,22 +118,7 @@ Friend Module ChartSupport
                     }
     End Function
 
-    <Extension>
-    Friend Sub InitializeBGChartArea(c As ChartArea)
-        With c
-            .AxisX.Minimum = s_listOfSGs(0).OAdatetime
-            .AxisX.Maximum = s_listOfSGs.Last.OAdatetime
-            .AxisX.MajorGrid.IntervalType = DateTimeIntervalType.Hours
-            .AxisX.MajorGrid.IntervalOffsetType = DateTimeIntervalType.Hours
-            .AxisX.MajorGrid.Interval = 1
-            .AxisX.IntervalType = DateTimeIntervalType.Hours
-            .AxisX.Interval = 2
-        End With
-    End Sub
-
-#Region "Create Series"
-
-    Friend Function CreateBasalSeries(YAxisType As AxisType) As Series
+    Friend Function CreateSeriesBasal(YAxisType As AxisType) As Series
         Dim s As New Series(BasalSeriesName) With {
                      .BorderWidth = 2,
                      .BorderColor = Color.HotPink,
@@ -149,7 +134,7 @@ Friend Module ChartSupport
         Return s
     End Function
 
-    Friend Function CreateBgSeries(legendName As String) As Series
+    Friend Function CreateSeriesBg(legendName As String) As Series
         Return New Series(BgSeriesName) With {
                      .BorderColor = Color.FromArgb(180, 26, 59, 105),
                      .BorderWidth = 4,
@@ -161,23 +146,6 @@ Friend Module ChartSupport
                      .XValueType = ChartValueType.DateTime,
                      .YAxisType = AxisType.Secondary
                  }
-    End Function
-
-    Friend Function CreateMarkerSeries(YAxisType As AxisType) As Series
-        Dim s As New Series(MarkerSeriesName) With {
-                        .BorderColor = Color.Transparent,
-                        .BorderWidth = 1,
-                        .ChartArea = NameOf(ChartArea),
-                        .ChartType = SeriesChartType.Point,
-                        .Color = Color.HotPink,
-                        .MarkerSize = 15,
-                        .XValueType = ChartValueType.DateTime,
-                        .YAxisType = YAxisType
-                    }
-        s.EmptyPointStyle.BorderWidth = 4
-        s.EmptyPointStyle.Color = Color.Transparent
-
-        Return s
     End Function
 
     Friend Function CreateSeriesLimits(seriesName As String, lineColor As Color) As Series
@@ -195,7 +163,24 @@ Friend Module ChartSupport
         Return tmpSeries
     End Function
 
-    Friend Function CreateTimeChangeSeries() As Series
+    Friend Function CreateSeriesMarker(YAxisType As AxisType) As Series
+        Dim s As New Series(MarkerSeriesName) With {
+                        .BorderColor = Color.Transparent,
+                        .BorderWidth = 1,
+                        .ChartArea = NameOf(ChartArea),
+                        .ChartType = SeriesChartType.Point,
+                        .Color = Color.HotPink,
+                        .MarkerSize = 15,
+                        .XValueType = ChartValueType.DateTime,
+                        .YAxisType = YAxisType
+                    }
+        s.EmptyPointStyle.BorderWidth = 4
+        s.EmptyPointStyle.Color = Color.Transparent
+
+        Return s
+    End Function
+
+    Friend Function CreateSeriesTimeChange() As Series
         Dim s As New Series(TimeChangeSeriesName) With {
                         .ChartType = SeriesChartType.Line,
                         .BorderColor = Color.Transparent,
@@ -212,6 +197,17 @@ Friend Module ChartSupport
         Return s
     End Function
 
-#End Region
+    <Extension>
+    Friend Sub InitializeChartAreaBG(c As ChartArea)
+        With c
+            .AxisX.Minimum = s_listOfSGs(0).OAdatetime
+            .AxisX.Maximum = s_listOfSGs.Last.OAdatetime
+            .AxisX.MajorGrid.IntervalType = DateTimeIntervalType.Hours
+            .AxisX.MajorGrid.IntervalOffsetType = DateTimeIntervalType.Hours
+            .AxisX.MajorGrid.Interval = 1
+            .AxisX.IntervalType = DateTimeIntervalType.Hours
+            .AxisX.Interval = 2
+        End With
+    End Sub
 
 End Module

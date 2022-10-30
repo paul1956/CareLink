@@ -6,10 +6,6 @@ Imports System.Runtime.CompilerServices
 
 Friend Module ItemIndexesModule
 
-    Friend Function HandleAsSingleItem(rowIndex As ItemIndexs) As Boolean
-        Return rowIndex <= ItemIndexs.lastSG OrElse rowIndex >= ItemIndexs.systemStatusMessage
-    End Function
-
     ' Do not rename these name are matched used in case sensitive matching
     Public Enum ItemIndexs As Integer
         lastSensorTS = 0

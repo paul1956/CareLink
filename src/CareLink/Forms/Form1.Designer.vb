@@ -793,6 +793,7 @@ Partial Class Form1
         '
         'PumpBatteryRemainingLabel
         '
+        Me.PumpBatteryRemainingLabel.AutoSize = True
         Me.PumpBatteryRemainingLabel.BackColor = System.Drawing.Color.Transparent
         Me.PumpBatteryRemainingLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
         Me.PumpBatteryRemainingLabel.ForeColor = System.Drawing.Color.White

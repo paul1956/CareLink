@@ -239,7 +239,7 @@ Public Class MailSetupDialog
                                                        Me.MailServerUserEmailTextBox.Text,
                                                        Me.MailServerPasswordTextBox.Text)
                     mailTestClient.SendUsingExchange($"{Me.AlertPhoneNumberMaskedTextBox.Text}@{Me.CarrierDomainTextBox.Text}",
-                                                    $"{s_lastSGRecord.sg} {BgUnitsString}")
+                                                    $"{s_lastSgRecord.sg} {BgUnitsString}")
                     Me.Cursor = Cursors.Default
                 Else
                     Dim port As Integer
@@ -251,7 +251,7 @@ Public Class MailSetupDialog
                                                            port)
                         mailTestClient.Send($"{Me.AlertPhoneNumberMaskedTextBox.Text}@{Me.CarrierDomainTextBox.Text}",
                                             Me.MailServerUserEmailTextBox.Text,
-                                            $"{s_lastSGRecord.sg} {BgUnitsString}")
+                                            $"{s_lastSgRecord.sg} {BgUnitsString}")
                         My.Settings.MailServerPort = port
                     Else
                         Me.DialogResult = DialogResult.Cancel

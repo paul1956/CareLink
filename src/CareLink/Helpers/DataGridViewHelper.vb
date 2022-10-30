@@ -35,13 +35,13 @@ Friend Module DataGridViewHelper
     End Function
 
     Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, dGV As DataGridView, table As DataTable, rowIndex As ItemIndexs)
-        initializeTableLayoutPanel(realPanel, rowIndex)
+        TableLayoutPanelInitialization(realPanel, rowIndex)
         dGV.DataSource = table
         dGV.RowHeadersVisible = False
     End Sub
 
     Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As ItemIndexs, hideRecordNumberColumn As Boolean)
-        initializeTableLayoutPanel(realPanel, rowIndex)
+        TableLayoutPanelInitialization(realPanel, rowIndex)
         Dim dGV As DataGridView
         If realPanel.Controls.Count > 1 Then
             dGV = CType(realPanel.Controls(1), DataGridView)

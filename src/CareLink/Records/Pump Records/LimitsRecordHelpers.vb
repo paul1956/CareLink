@@ -35,6 +35,22 @@ Friend Class LimitsRecordHelpers
         Return s_filterJsonData AndAlso columnsToHide.Contains(columnName)
     End Function
 
+    Friend Shared Sub UpdateListOflimitRecords(row As KeyValuePair(Of String, String))
+        s_listOflimitRecords.Clear()
+        For Each e As IndexClass(Of Dictionary(Of String, String)) In LoadList(row.Value).WithIndex
+            Dim newLimit As New Dictionary(Of String, String)
+            For Each kvp As KeyValuePair(Of String, String) In e.Value
+                Select Case kvp.Key
+                    Case "lowLimit", "highLimit"
+                        newLimit.Add(kvp.Key, kvp.scaleValue(1))
+                    Case Else
+                        newLimit.Add(kvp.Key, kvp.Value)
+                End Select
+            Next
+            s_listOflimitRecords.Add(DictionaryToClass(Of LimitsRecord)(e.Value, s_listOflimitRecords.Count + 1))
+        Next
+    End Sub
+
     Public Shared Sub AttachHandlers(dgv As DataGridView)
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
         AddHandler dgv.DataError, AddressOf DataGridView_DataError

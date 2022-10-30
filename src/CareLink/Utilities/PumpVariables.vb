@@ -38,26 +38,31 @@ Public Module PumpVariables
     Friend s_aboveHyperLimit As Double
     Friend s_activeInsulin As ActiveInsulinRecord
     Friend s_activeInsulinIncrements As Integer
+    Friend s_basalValue As Dictionary(Of String, String)
     Friend s_belowHypoLimit As Single
     Friend s_clientTimeZone As TimeZoneInfo
     Friend s_clientTimeZoneName As String
     Friend s_criticalLow As Single
     Friend s_filterJsonData As Boolean = True
     Friend s_firstName As String = ""
+    Friend s_lastAlarmValue As Dictionary(Of String, String)
     Friend s_lastBGDiff As Double = 0
     Friend s_lastBGTime As Date
     Friend s_lastBGValue As Single = 0
     Friend s_lastMedicalDeviceDataUpdateServerEpoch As Long
-    Friend s_lastSGRecord As New SgRecord
+    Friend s_lastSgRecord As New SgRecord
     Friend s_limitHigh As Single
     Friend s_limitLow As Single
     Friend s_listOfSGs As New List(Of SgRecord)
-    Friend s_markers As New List(Of Dictionary(Of String, String))
     Friend s_listOfTimeChangeMarkers As New List(Of TimeChangeRecord)
+    Friend s_markers As New List(Of Dictionary(Of String, String))
+    Friend s_notificationHistoryValue As Dictionary(Of String, String)
+    Friend s_pumpBannerStateValue As New List(Of Dictionary(Of String, String))
     Friend s_recentDatalast As Dictionary(Of String, String)
     Friend s_sensorState As String
     Friend s_sessionCountrySettings As New CountrySettingsRecord
     Friend s_systemStatusMessage As String
+    Friend s_theraphyAlgorthmStateValue As Dictionary(Of String, String)
     Friend s_timeInRange As Integer
     Friend s_timeWithMinuteFormat As String
     Friend s_timeWithoutMinuteFormat As String
