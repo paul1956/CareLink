@@ -18,7 +18,7 @@ Friend Module UserMessageHandler
                         {"LESS_THAN_SIX_HRS", "Less then 6 hours"},
                         {"LESS_THAN_NINE_HRS", "Less then 9 hours"},
                         {"LESS_THAN_TWELVE_HRS", "Less than twelve hours"},
-                        {"UNKNOWN", "unknown"}
+                        {"UNKNOWN", "Unknown"}
                     }
 
     ''' <summary>
@@ -110,59 +110,5 @@ Friend Module UserMessageHandler
                         {"WARM_UP", "Sensor warm up. Warm-up takes up to 2 hours. You will be notifies when calibration Is needed."}
                     }
 
-    <Extension>
-    Private Function FormatTimeOnly(rawTime As String, format As String) As String
-        Return New TimeOnly(CInt(rawTime.Substring(0, 2)), CInt(rawTime.Substring(3, 2))).ToString(format)
-    End Function
-
-    Friend Function TranslateNotificationMessageId(jsonDictionary As Dictionary(Of String, String), entryValue As String) As String
-        Dim formattedMessage As String = ""
-        Try
-            If s_NotificationMessages.TryGetValue(entryValue, formattedMessage) Then
-                Dim splitMessageValue As String() = formattedMessage.Split(":")
-                Dim key As String = ""
-                Dim replacementValue As String = ""
-                If splitMessageValue.Length > 1 Then
-                    key = splitMessageValue(1)
-                    If key = "lastSetChange" Then
-                        replacementValue = s_oneToNineteen(CInt(jsonDictionary(key))).ToTitle
-                    Else
-                        replacementValue = jsonDictionary(key)
-                        Dim resultDate As Date
-                        If replacementValue.TryParseDate(resultDate, key) Then
-                            replacementValue = resultDate.ToString
-                        End If
-                    End If
-                End If
-
-                Dim secondaryTime As String = If(jsonDictionary.ContainsKey(NameOf(ClearedNotificationsRecord.secondaryTime)), jsonDictionary(NameOf(ClearedNotificationsRecord.secondaryTime)).FormatTimeOnly(s_timeWithMinuteFormat), "")
-                Dim triggeredDateTime As String = ""
-                If jsonDictionary.ContainsKey(NameOf(ClearedNotificationsRecord.triggeredDateTime)) Then
-                    triggeredDateTime = $" {jsonDictionary(NameOf(ClearedNotificationsRecord.triggeredDateTime)).ParseDate("triggeredDateTime")}"
-                ElseIf jsonDictionary.ContainsKey(NameOf(SgRecord.datetime)) Then
-                    triggeredDateTime = $" {jsonDictionary(NameOf(SgRecord.datetime)).ParseDate(NameOf(SgRecord.datetime))}"
-                ElseIf jsonDictionary.ContainsKey(NameOf(TimeChangeRecord.dateTime)) Then
-                    triggeredDateTime = $" {jsonDictionary(NameOf(TimeChangeRecord.dateTime)).ParseDate("dateTime")}"
-                Else
-                    Stop
-                End If
-
-                formattedMessage = splitMessageValue(0) _
-                    .Replace("(0)", replacementValue) _
-                    .Replace("(triggeredDateTime)", $", happened at {triggeredDateTime}") _
-                    .Replace("(CriticalLow)", s_criticalLow.ToString(CurrentUICulture)) _
-                    .Replace("(units)", BgUnitsString) _
-                    .Replace($"(secondaryTime)", secondaryTime)
-            Else
-                If Debugger.IsAttached Then
-                    MsgBox($"Unknown sensor message '{entryValue}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Unknown Sensor Message")
-                End If
-                formattedMessage = entryValue.Replace("_", " ")
-            End If
-        Catch ex As Exception
-            Stop
-        End Try
-        Return formattedMessage
-    End Function
 
 End Module

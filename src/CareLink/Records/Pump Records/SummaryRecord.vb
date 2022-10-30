@@ -49,19 +49,19 @@ Public Class SummaryRecord
 
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
-    Public Property RecordNumber As Integer
+    Public ReadOnly Property RecordNumber As Integer
 
     <DisplayName(NameOf(Key))>
     <Column(Order:=1, TypeName:=NameOf([String]))>
-    Public Property Key As String
+    Public ReadOnly Property Key As String
 
     <DisplayName(NameOf(Value))>
     <Column(Order:=2, TypeName:=NameOf([String]))>
-    Public Property Value As String
+    Public ReadOnly Property Value As String
 
     <DisplayName(NameOf(Message))>
     <Column(Order:=3, TypeName:=NameOf([String]))>
-    Public Property Message As String = ""
+    Public ReadOnly Property Message As String = ""
 
     Public Function CompareTo(obj As Object) As Integer Implements IComparable.CompareTo
         Dim bom As SummaryRecord = CType(obj, SummaryRecord)

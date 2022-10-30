@@ -17,6 +17,61 @@ Friend Module SummaryRecordHelpers
                         caption)
     End Sub
 
+    <Extension>
+    Private Function FormatTimeOnly(rawTime As String, format As String) As String
+        Return New TimeOnly(CInt(rawTime.Substring(0, 2)), CInt(rawTime.Substring(3, 2))).ToString(format)
+    End Function
+
+    Private Function TranslateNotificationMessageId(jsonDictionary As Dictionary(Of String, String), entryValue As String) As String
+        Dim formattedMessage As String = ""
+        Try
+            If s_NotificationMessages.TryGetValue(entryValue, formattedMessage) Then
+                Dim splitMessageValue As String() = formattedMessage.Split(":")
+                Dim key As String = ""
+                Dim replacementValue As String = ""
+                If splitMessageValue.Length > 1 Then
+                    key = splitMessageValue(1)
+                    If key = "lastSetChange" Then
+                        replacementValue = s_oneToNineteen(CInt(jsonDictionary(key))).ToTitle
+                    Else
+                        replacementValue = jsonDictionary(key)
+                        Dim resultDate As Date
+                        If replacementValue.TryParseDate(resultDate, key) Then
+                            replacementValue = resultDate.ToString
+                        End If
+                    End If
+                End If
+
+                Dim secondaryTime As String = If(jsonDictionary.ContainsKey(NameOf(ClearedNotificationsRecord.secondaryTime)), jsonDictionary(NameOf(ClearedNotificationsRecord.secondaryTime)).FormatTimeOnly(s_timeWithMinuteFormat), "")
+                Dim triggeredDateTime As String = ""
+                If jsonDictionary.ContainsKey(NameOf(ClearedNotificationsRecord.triggeredDateTime)) Then
+                    triggeredDateTime = $" {jsonDictionary(NameOf(ClearedNotificationsRecord.triggeredDateTime)).ParseDate("triggeredDateTime")}"
+                ElseIf jsonDictionary.ContainsKey(NameOf(SgRecord.datetime)) Then
+                    triggeredDateTime = $" {jsonDictionary(NameOf(SgRecord.datetime)).ParseDate(NameOf(SgRecord.datetime))}"
+                ElseIf jsonDictionary.ContainsKey(NameOf(TimeChangeRecord.dateTime)) Then
+                    triggeredDateTime = $" {jsonDictionary(NameOf(TimeChangeRecord.dateTime)).ParseDate("dateTime")}"
+                Else
+                    Stop
+                End If
+
+                formattedMessage = splitMessageValue(0) _
+                    .Replace("(0)", replacementValue) _
+                    .Replace("(triggeredDateTime)", $", happened at {triggeredDateTime}") _
+                    .Replace("(CriticalLow)", s_criticalLow.ToString(CurrentUICulture)) _
+                    .Replace("(units)", BgUnitsString) _
+                    .Replace($"(secondaryTime)", secondaryTime)
+            Else
+                If Debugger.IsAttached Then
+                    MsgBox($"Unknown sensor message '{entryValue}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Unknown Sensor Message")
+                End If
+                formattedMessage = entryValue.Replace("_", " ")
+            End If
+        Catch ex As Exception
+            Stop
+        End Try
+        Return formattedMessage
+    End Function
+
     Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
         Return ClassPropertiesToCoumnAlignment(Of SummaryRecord)(s_alignmentTable, columnName)
     End Function
@@ -30,16 +85,16 @@ Friend Module SummaryRecordHelpers
 
             Select Case row.Key
                 Case "messageId"
-                    Dim item As New SummaryRecord(summaryList.Count + 1, row)
                     Dim message As String = ""
                     If s_NotificationMessages.TryGetValue(row.Value, message) Then
-                        item.Message = TranslateNotificationMessageId(dic, row.Value)
+                        message = TranslateNotificationMessageId(dic, row.Value)
                     Else
                         If Not String.IsNullOrWhiteSpace(row.Value) AndAlso Debugger.IsAttached Then
                             MsgBox($"{row.Value} is unknown system status message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
                         End If
+                        message = row.Value.ToTitle
                     End If
-                    summaryList.Add(item)
+                    summaryList.Add(New SummaryRecord(summaryList.Count + 1, row, message))
                 Case "autoModeReadinessState"
                     summaryList.Add(New SummaryRecord(summaryList.Count + 1, row, s_sensorMessages, NameOf(s_sensorMessages)))
                 Case "autoModeShieldState"
@@ -47,14 +102,11 @@ Friend Module SummaryRecordHelpers
                 Case "plgmLgsState"
                     summaryList.Add(New SummaryRecord(summaryList.Count + 1, row, s_plgmLgsMessages, NameOf(s_plgmLgsMessages)))
                 Case Else
-                    If row.Value.IsPossibleMessage Then
-                        summaryList.Add(New SummaryRecord(summaryList.Count + 1, row))
-                    Else
-                        summaryList.Add(New SummaryRecord(summaryList.Count + 1, row))
-                    End If
+                    summaryList.Add(New SummaryRecord(summaryList.Count + 1, row))
             End Select
         Next
         Return summaryList
+
     End Function
 
     <Extension>

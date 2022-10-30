@@ -84,20 +84,6 @@ Public Module StringExtensions
                                   .Replace("\", "\\")},"
     End Function
 
-    ''' <summary>
-    ''' If s starts with upper case character and the string contains
-    ''' at least 1 _ we will assume its a Message
-    ''' </summary>
-    ''' <param name="s"></param>
-    ''' <returns>True if possible Message</returns>
-    <Extension>
-    Public Function IsPossibleMessage(s As String) As Boolean
-        If String.IsNullOrWhiteSpace(s) Then
-            Return False
-        End If
-        Return Char.IsUpper(s(0)) AndAlso s.Contains("_"c)
-    End Function
-
     <Extension>
     Public Function TrimEnd(source As String, trimString As String) As String
         If Not source.EndsWith(trimString) Then
