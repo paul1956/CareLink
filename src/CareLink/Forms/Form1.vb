@@ -879,7 +879,7 @@ Public Class Form1
         End If
         Dim dgv As DataGridView = CType(sender, DataGridView)
         ' Set the background to red for negative values in the Balance column.
-        If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(s_sensorState), StringComparison.OrdinalIgnoreCase) Then
+        If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(SgRecord.sensorState), StringComparison.OrdinalIgnoreCase) Then
             If e.Value.ToString <> "NO_ERROR_MESSAGE" Then
                 e.CellStyle.BackColor = Color.Yellow
             End If
@@ -1455,11 +1455,11 @@ Public Class Form1
                 Case ItemIndexs.currentServerTime,
                        ItemIndexs.lastConduitTime,
                        ItemIndexs.lastConduitUpdateServerTime
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Value, row.Value.Epoch2DateTimeString))
 
                 Case ItemIndexs.lastMedicalDeviceDataUpdateServerTime
                     s_lastMedicalDeviceDataUpdateServerEpoch = CLng(row.Value)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Value, row.Value.Epoch2DateTimeString))
                 Case ItemIndexs.medicalDeviceTime
                     If row.Value = "0" Then
                         ' Handled by ItemIndexs.lastSensorTSAsString
@@ -1487,20 +1487,20 @@ Public Class Form1
                     End If
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
                 Case ItemIndexs.gstCommunicationState
-                    s_listOfSummaryRecords.Add(New SummaryRecord(GetItemIndex(c.Value.Key), row))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.gstCommunicationState, row))
                     Dim gstBatteryLevel As String = Nothing
                     If Me.RecentData.TryGetValue(NameOf(ItemIndexs.gstBatteryLevel), gstBatteryLevel) Then
                         Continue For
                     End If
-                    s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.gstBatteryLevel, NameOf(ItemIndexs.gstBatteryLevel), "0", "No data from pump"))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.gstBatteryLevel, "0", "No data from pump"))
                 Case ItemIndexs.maxBolusAmount
                     s_listOfSummaryRecords.Add(New SummaryRecord(GetItemIndex(c.Value.Key), row))
                     Dim doNotCare As String = Nothing
                     If Not Me.RecentData.TryGetValue(NameOf(ItemIndexs.sensorDurationMinutes), doNotCare) Then
-                        s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.sensorDurationMinutes, NameOf(ItemIndexs.sensorDurationMinutes), "-1", "No data from pump"))
+                        s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.sensorDurationMinutes, "-1", "No data from pump"))
                     End If
                     If Not Me.RecentData.TryGetValue(NameOf(ItemIndexs.timeToNextCalibrationMinutes), doNotCare) Then
-                        s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.timeToNextCalibrationMinutes, NameOf(ItemIndexs.timeToNextCalibrationMinutes), UShort.MaxValue.ToString, "No data from pump"))
+                        s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.timeToNextCalibrationMinutes, UShort.MaxValue.ToString, "No data from pump"))
                     End If
                 Case Else
                     s_listOfSummaryRecords.Add(New SummaryRecord(GetItemIndex(c.Value.Key), row))
@@ -1528,7 +1528,7 @@ Public Class Form1
                         s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_calibrationMessages, NameOf(s_calibrationMessages)))
 
                     Case ItemIndexs.lastSG
-                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Key, ClickToShowDetails, ""))
+                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
                         s_lastSG = New SgRecord(Loads(row.Value))
                         DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelLastSG, ItemIndexs.lastSG),
                             ClassToDatatable({s_lastSG}.ToArray),
@@ -1538,7 +1538,7 @@ Public Class Form1
                             True)
 
                     Case ItemIndexs.lastAlarm
-                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Key, ClickToShowDetails, ""))
+                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
                         DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelLastAlarm, ItemIndexs.lastAlarm),
                             ClassToDatatable(GetSummaryRecords(Loads(row.Value)).ToArray),
                             NameOf(LastAlarmRecord),
@@ -1547,7 +1547,7 @@ Public Class Form1
                             True)
 
                     Case ItemIndexs.activeInsulin
-                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Key, ClickToShowDetails, ""))
+                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
                         s_activeInsulin = DictionaryToClass(Of ActiveInsulinRecord)(Loads(row.Value), 0)
                         DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelActiveInsulin, ItemIndexs.activeInsulin),
                             ClassToDatatable({s_activeInsulin}.ToArray),
@@ -1557,7 +1557,7 @@ Public Class Form1
                             True)
 
                     Case ItemIndexs.sgs
-                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Key, ClickToShowDetails, ""))
+                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
                         s_listOfSGs = LoadList(row.Value).ToSgList()
                         If s_listOfSGs.Count > 2 Then
                             s_lastBGValue = s_listOfSGs.Item(s_listOfSGs.Count - 2).sg
@@ -1570,7 +1570,7 @@ Public Class Form1
                                               rowIndex)
                         Me.DataGridViewSGs.Sort(Me.DataGridViewSGs.Columns(0), ListSortDirection.Descending)
                     Case ItemIndexs.limits
-                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Key, ClickToShowDetails, ""))
+                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
 
                         s_listOflimitRecords.Clear()
                         For Each e As IndexClass(Of Dictionary(Of String, String)) In LoadList(row.Value).WithIndex
@@ -1592,7 +1592,7 @@ Public Class Form1
                                              ItemIndexs.limits,
                                              False)
                     Case ItemIndexs.markers
-                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Key, ClickToShowDetails, ""))
+                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
                         DisplayDataTableInDGV(Me.TableLayoutPanelAutoBasalDelivery,
                                               Me.DataGridViewAutoBasalDelivery,
                                               ClassToDatatable(s_listOfAutoBasalDeliveryMarkers.ToArray),
@@ -1639,7 +1639,7 @@ Public Class Form1
                                               False)
 
                     Case ItemIndexs.notificationHistory
-                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Key, ClickToShowDetails, ""))
+                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
                         layoutPanel1 = InitializeWorkingPanel(Me.TableLayoutPanelNotificationHistory, ItemIndexs.notificationHistory)
                         Try
                             layoutPanel1.AutoScroll = True
@@ -1672,7 +1672,7 @@ Public Class Form1
                         End Try
 
                     Case ItemIndexs.therapyAlgorithmState
-                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Key, ClickToShowDetails, ""))
+                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
                         DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelTherapyAlgorithm, ItemIndexs.therapyAlgorithmState),
                                               ClassToDatatable(GetSummaryRecords(Loads(row.Value)).ToArray),
                                               NameOf(SummaryRecord),
@@ -1681,7 +1681,7 @@ Public Class Form1
                                               True)
 
                     Case ItemIndexs.pumpBannerState
-                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Key, ClickToShowDetails, ""))
+                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
                         Me.TempTargetLabel.Visible = False
                         Dim innerListDictionary As New List(Of Dictionary(Of String, String))
                         If Not String.IsNullOrWhiteSpace(row.Value) Then
@@ -1719,7 +1719,7 @@ Public Class Form1
                                               False)
 
                     Case ItemIndexs.basal
-                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Key, ClickToShowDetails, ""))
+                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
                         DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelBasal, ItemIndexs.basal),
                                               ClassToDatatable({DictionaryToClass(Of BasalRecord)(Loads(row.Value), 0)}.ToArray),
                                               NameOf(BasalRecord),

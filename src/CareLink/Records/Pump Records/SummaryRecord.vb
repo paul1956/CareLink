@@ -31,7 +31,7 @@ Public Class SummaryRecord
     End Sub
 
     Protected Friend Sub New(recordNumber As Integer, row As KeyValuePair(Of String, String), Optional message As String = "")
-        Me.New(recordNumber, row.Key, row.Value, message)
+        Me.New(recordNumber, row.Value, message)
     End Sub
 
     ''' <summary>
@@ -40,9 +40,9 @@ Public Class SummaryRecord
     ''' <param name="recordNumber"></param>
     ''' <param name="key"></param>
     ''' <param name="value"></param>
-    Protected Friend Sub New(recordNumber As Integer, key As String, value As String, message As String)
+    Protected Friend Sub New(recordNumber As Integer, value As String, message As String)
         Me.RecordNumber = recordNumber
-        Me.Key = key
+        Me.Key = CType(recordNumber, ItemIndexs).ToString
         Me.Value = value
         Me.Message = message
     End Sub
