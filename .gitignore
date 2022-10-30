@@ -389,3 +389,4 @@ FodyWeavers.xsd
 /TestProject1
 *.cache
 
+/src/CareLink/obj/CareLink.vbproj.nuget.dgspec.json
