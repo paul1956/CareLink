@@ -56,21 +56,6 @@
           }
         }
       },
-      "Microsoft.WinForms.Designer.SDK/1.1.0-prerelease-preview3.22076.5": {
-        "type": "package",
-        "dependencies": {
-          "System.CodeDom": "4.6.0",
-          "System.Composition": "1.2.0"
-        },
-        "compile": {
-          "ref/netcoreapp3.1/Microsoft.DotNet.DesignTools.Protocol.dll": {},
-          "ref/netcoreapp3.1/Microsoft.DotNet.DesignTools.Server.dll": {},
-          "ref/netcoreapp3.1/Microsoft.WinForms.Utilities.Shared.dll": {}
-        },
-        "build": {
-          "build/netcoreapp3.1/_._": {}
-        }
-      },
       "Octokit/3.0.0": {
         "type": "package",
         "compile": {
@@ -242,19 +227,6 @@
           }
         }
       },
-      "System.CodeDom/4.6.0": {
-        "type": "package",
-        "compile": {
-          "ref/netstandard2.0/System.CodeDom.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/netstandard2.0/System.CodeDom.dll": {
-            "related": ".xml"
-          }
-        }
-      },
       "System.Collections/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -289,72 +261,6 @@
         },
         "runtime": {
           "lib/netstandard1.3/System.Collections.Concurrent.dll": {}
-        }
-      },
-      "System.Composition/1.2.0": {
-        "type": "package",
-        "dependencies": {
-          "System.Composition.AttributedModel": "1.2.0",
-          "System.Composition.Convention": "1.2.0",
-          "System.Composition.Hosting": "1.2.0",
-          "System.Composition.Runtime": "1.2.0",
-          "System.Composition.TypedParts": "1.2.0"
-        }
-      },
-      "System.Composition.AttributedModel/1.2.0": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard2.0/System.Composition.AttributedModel.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/System.Composition.AttributedModel.dll": {}
-        }
-      },
-      "System.Composition.Convention/1.2.0": {
-        "type": "package",
-        "dependencies": {
-          "System.Composition.AttributedModel": "1.2.0"
-        },
-        "compile": {
-          "lib/netstandard2.0/System.Composition.Convention.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/System.Composition.Convention.dll": {}
-        }
-      },
-      "System.Composition.Hosting/1.2.0": {
-        "type": "package",
-        "dependencies": {
-          "System.Composition.Runtime": "1.2.0"
-        },
-        "compile": {
-          "lib/netstandard2.0/System.Composition.Hosting.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/System.Composition.Hosting.dll": {}
-        }
-      },
-      "System.Composition.Runtime/1.2.0": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard2.0/System.Composition.Runtime.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/System.Composition.Runtime.dll": {}
-        }
-      },
-      "System.Composition.TypedParts/1.2.0": {
-        "type": "package",
-        "dependencies": {
-          "System.Composition.AttributedModel": "1.2.0",
-          "System.Composition.Hosting": "1.2.0",
-          "System.Composition.Runtime": "1.2.0"
-        },
-        "compile": {
-          "lib/netstandard2.0/System.Composition.TypedParts.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/System.Composition.TypedParts.dll": {}
         }
       },
       "System.Diagnostics.Debug/4.3.0": {
@@ -1154,22 +1060,6 @@
           "Microsoft.WindowsDesktop.App.WindowsForms"
         ]
       },
-      "System.Windows.Forms.DataVisualization/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
-        "dependencies": {
-          "Microsoft.WinForms.Designer.SDK": "1.1.0-prerelease-preview3.22076.5"
-        },
-        "compile": {
-          "bin/placeholder/System.Windows.Forms.DataVisualization.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/System.Windows.Forms.DataVisualization.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.WindowsDesktop.App.WindowsForms"
-        ]
-      },
       "ToolStripComboBoxEx/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
@@ -1258,26 +1148,6 @@
         "runtimes/win/lib/netcoreapp3.0/Microsoft.Win32.SystemEvents.xml",
         "useSharedDesignerContext.txt",
         "version.txt"
-      ]
-    },
-    "Microsoft.WinForms.Designer.SDK/1.1.0-prerelease-preview3.22076.5": {
-      "sha512": "FK5bobrdhkBNxAjWIIB15mWfxnRBA8FaLd+jn/A0CTi94Y2a1B6IbMIYcmhz0xNFyB0QGOjvYk23cIzu7bxzyQ==",
-      "type": "package",
-      "path": "microsoft.winforms.designer.sdk/1.1.0-prerelease-preview3.22076.5",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "build/netcoreapp3.1/Microsoft.WinForms.Designer.SDK.props",
-        "build/netcoreapp3.1/Microsoft.WinForms.Designer.SDK.targets",
-        "microsoft.winforms.designer.sdk.1.1.0-prerelease-preview3.22076.5.nupkg.sha512",
-        "microsoft.winforms.designer.sdk.nuspec",
-        "ref/net472/Microsoft.DotNet.DesignTools.Client.dll",
-        "ref/net472/Microsoft.DotNet.DesignTools.Protocol.dll",
-        "ref/net472/Microsoft.WinForms.Utilities.Shared.dll",
-        "ref/netcoreapp3.1/Microsoft.DotNet.DesignTools.Protocol.dll",
-        "ref/netcoreapp3.1/Microsoft.DotNet.DesignTools.Server.dll",
-        "ref/netcoreapp3.1/Microsoft.WinForms.Utilities.Shared.dll"
       ]
     },
     "Octokit/3.0.0": {
@@ -1496,29 +1366,6 @@
         "runtimes/ubuntu.16.10-x64/native/System.Security.Cryptography.Native.OpenSsl.so"
       ]
     },
-    "System.CodeDom/4.6.0": {
-      "sha512": "ArWGZOxPhOaJUd4YgvbTxGZDbVDJHPAOQNiJIpbRDPW6v2NT5xkallQv1zpu8Rwwb5Z3iZ1jwWA4gSQuWgR+jw==",
-      "type": "package",
-      "path": "system.codedom/4.6.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/net461/System.CodeDom.dll",
-        "lib/net461/System.CodeDom.xml",
-        "lib/netstandard2.0/System.CodeDom.dll",
-        "lib/netstandard2.0/System.CodeDom.xml",
-        "ref/net461/System.CodeDom.dll",
-        "ref/net461/System.CodeDom.xml",
-        "ref/netstandard2.0/System.CodeDom.dll",
-        "ref/netstandard2.0/System.CodeDom.xml",
-        "system.codedom.4.6.0.nupkg.sha512",
-        "system.codedom.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
-      ]
-    },
     "System.Collections/4.3.0": {
       "sha512": "3Dcj85/TBdVpL5Zr+gEEBUuFe2icOnLalmEh9hfck1PTYbbyWuZgh4fmm2ysCLTrqLQw6t3TgTyJ+VLp+Qb+Lw==",
       "type": "package",
@@ -1653,111 +1500,6 @@
         "ref/xamarinwatchos10/_._",
         "system.collections.concurrent.4.3.0.nupkg.sha512",
         "system.collections.concurrent.nuspec"
-      ]
-    },
-    "System.Composition/1.2.0": {
-      "sha512": "nTgIj77StlLM7CW3uFM3B/0Yen5udzaeSQcdSCVV3wIlRGYsXYLjZWTYa9m8IBjQiyZKsukKYaogqhOa6QUlDA==",
-      "type": "package",
-      "path": "system.composition/1.2.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "system.composition.1.2.0.nupkg.sha512",
-        "system.composition.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
-      ]
-    },
-    "System.Composition.AttributedModel/1.2.0": {
-      "sha512": "IQ2bn1BR/Q7gapjnXR/HGh0BMtjYVU0t0uPZ3LXE4yfwjM7x/HcImJxwwhUtnL+YWU5/pTOhzZnqsjwKJpWaug==",
-      "type": "package",
-      "path": "system.composition.attributedmodel/1.2.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/netstandard1.0/System.Composition.AttributedModel.dll",
-        "lib/netstandard2.0/System.Composition.AttributedModel.dll",
-        "lib/portable-net45+win8+wp8+wpa81/System.Composition.AttributedModel.dll",
-        "system.composition.attributedmodel.1.2.0.nupkg.sha512",
-        "system.composition.attributedmodel.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
-      ]
-    },
-    "System.Composition.Convention/1.2.0": {
-      "sha512": "g9PSAdL/0dT3GZbdwt5r238RLHfnn+ujRVhoOGvVNjbbhlgZeKcDA+zsje4Y81csMywAPsDXkeXrBigtjINurg==",
-      "type": "package",
-      "path": "system.composition.convention/1.2.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/netstandard1.0/System.Composition.Convention.dll",
-        "lib/netstandard2.0/System.Composition.Convention.dll",
-        "lib/portable-net45+win8+wp8+wpa81/System.Composition.Convention.dll",
-        "system.composition.convention.1.2.0.nupkg.sha512",
-        "system.composition.convention.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
-      ]
-    },
-    "System.Composition.Hosting/1.2.0": {
-      "sha512": "NQa4OanHFuWVpMuj3+0RnoAq2v+5KQNA3+EYuhmuDbOfR06o7rYjzs9FHP0XWJWN85vqnM76dgAgj46OYsDV8A==",
-      "type": "package",
-      "path": "system.composition.hosting/1.2.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/netstandard1.0/System.Composition.Hosting.dll",
-        "lib/netstandard2.0/System.Composition.Hosting.dll",
-        "lib/portable-net45+win8+wp8+wpa81/System.Composition.Hosting.dll",
-        "system.composition.hosting.1.2.0.nupkg.sha512",
-        "system.composition.hosting.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
-      ]
-    },
-    "System.Composition.Runtime/1.2.0": {
-      "sha512": "F8Ef3y9/JKbK4lEqJScFnfhT8/CwboGS890a/Js9E11wb1N6rl63pU8wxRPmy2MUUUHSafxrF3ooIh94pNEF0g==",
-      "type": "package",
-      "path": "system.composition.runtime/1.2.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/netstandard1.0/System.Composition.Runtime.dll",
-        "lib/netstandard2.0/System.Composition.Runtime.dll",
-        "lib/portable-net45+win8+wp8+wpa81/System.Composition.Runtime.dll",
-        "system.composition.runtime.1.2.0.nupkg.sha512",
-        "system.composition.runtime.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
-      ]
-    },
-    "System.Composition.TypedParts/1.2.0": {
-      "sha512": "cLjoUGnaLRkJSwL6FLEx3aJanDgwEtyoEqf9cE6Z5ipbjNXAlk7W11uwNfHaECxdPa/QfGbvaRd4i24gxc5ygg==",
-      "type": "package",
-      "path": "system.composition.typedparts/1.2.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/netstandard1.0/System.Composition.TypedParts.dll",
-        "lib/netstandard2.0/System.Composition.TypedParts.dll",
-        "lib/portable-net45+win8+wp8+wpa81/System.Composition.TypedParts.dll",
-        "system.composition.typedparts.1.2.0.nupkg.sha512",
-        "system.composition.typedparts.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
       ]
     },
     "System.Diagnostics.Debug/4.3.0": {
@@ -3820,11 +3562,6 @@
       "path": "../DataGridViewDisableButtonColumnEx/DataGridViewDisableButtonColumnEx.vbproj",
       "msbuildProject": "../DataGridViewDisableButtonColumnEx/DataGridViewDisableButtonColumnEx.vbproj"
     },
-    "System.Windows.Forms.DataVisualization/1.0.0": {
-      "type": "project",
-      "path": "../../../winforms-datavisualization/src/System.Windows.Forms.DataVisualization/ChartWin.csproj",
-      "msbuildProject": "../../../winforms-datavisualization/src/System.Windows.Forms.DataVisualization/ChartWin.csproj"
-    },
     "ToolStripComboBoxEx/1.0.0": {
       "type": "project",
       "path": "../ToolStripComboBoxEx/ToolStripComboBoxEx.vbproj",
@@ -3836,7 +3573,6 @@
       "DataGridViewDisableButtonColumnEx >= 1.0.0",
       "Microsoft.Exchange.WebServices.NETStandard >= 2.0.0-beta3",
       "Octokit >= 3.0.0",
-      "System.Windows.Forms.DataVisualization >= 1.0.0",
       "ToolStripComboBoxEx >= 1.0.0"
     ]
   },
@@ -3883,9 +3619,6 @@
             },
             "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\ToolStripComboBoxEx.vbproj": {
               "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\ToolStripComboBoxEx.vbproj"
-            },
-            "C:\\Users\\PaulM\\Source\\Repos\\winforms-datavisualization\\src\\System.Windows.Forms.DataVisualization\\ChartWin.csproj": {
-              "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\winforms-datavisualization\\src\\System.Windows.Forms.DataVisualization\\ChartWin.csproj"
             }
           }
         }
