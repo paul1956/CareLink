@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Module TableLayoutPanelSupport
+
     Friend Sub CreateNotificationTables(notificationJson As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexs, filterJsonData As Boolean)
         tableLevel1Blue.AutoScroll = True
         tableLevel1Blue.AutoSize = True
@@ -20,7 +21,6 @@ Friend Module TableLayoutPanelSupport
         tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize))
         tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize))
         tableLevel1Blue.TabIndex = 1
-
 
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In notificationJson.WithIndex()
             Dim notificationType As KeyValuePair(Of String, String) = c.Value
@@ -72,4 +72,5 @@ Friend Module TableLayoutPanelSupport
     Friend Function GetTabName(rowIndex As ItemIndexs) As String
         Return $"{CInt(rowIndex)} {rowIndex}"
     End Function
+
 End Module

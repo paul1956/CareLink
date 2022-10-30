@@ -50,4 +50,5 @@ Public Class AutoModeStatusRecord
     <DisplayName("Version")>
     <Column(Order:=4, TypeName:=NameOf([Int32]))>
     Public Property version As Integer
+
 End Class

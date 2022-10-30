@@ -6,6 +6,7 @@ Imports System.Diagnostics.CodeAnalysis
 Imports System.Runtime.CompilerServices
 
 Friend Module Exceptions
+
     <ExcludeFromCodeCoverage>
     Public ReadOnly Property UnreachableException(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Exception
         Get

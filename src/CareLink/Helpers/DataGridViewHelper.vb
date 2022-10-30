@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Module DataGridViewHelper
+
     Friend Delegate Sub attachHandlers(dgv As DataGridView)
 
     Friend Function CreateDefaultDataGridView(dgvName As String) As DataGridView

@@ -82,7 +82,7 @@ Friend Module DataTableMap
                         cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
                     Case NameOf([Double]), NameOf([Int32]), NameOf([Single]), NameOf([TimeSpan])
                         cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
-                    Case NameOf([Boolean]), NameOf(Summaryrecord.RecordNumber)
+                    Case NameOf([Boolean]), NameOf(SummaryRecord.RecordNumber)
                         cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
                     Case Else
                         Throw UnreachableException($"{NameOf(DataTableMap)}.{NameOf(ClassPropertiesToCoumnAlignment)} [property].PropertyType.Name = {[property].PropertyType.Name}")

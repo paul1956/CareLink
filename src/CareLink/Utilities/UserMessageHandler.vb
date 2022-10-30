@@ -2,8 +2,6 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Runtime.CompilerServices
-
 Friend Module UserMessageHandler
 
     Friend ReadOnly s_autoModeShieldMessages As New Dictionary(Of String, String) From {
@@ -109,6 +107,5 @@ Friend Module UserMessageHandler
                         {"WAIT_TO_ENTER_BG", "Wait To enter BG..."},
                         {"WARM_UP", "Sensor warm up. Warm-up takes up to 2 hours. You will be notifies when calibration Is needed."}
                     }
-
 
 End Module

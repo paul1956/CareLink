@@ -169,4 +169,5 @@ Public Class ExceptionHandlerForm
         My.Forms.Form1.Show()
         Me.TopMost = True
     End Sub
+
 End Class

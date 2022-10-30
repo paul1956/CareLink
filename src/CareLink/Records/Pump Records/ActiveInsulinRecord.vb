@@ -56,4 +56,5 @@ Public Class ActiveInsulinRecord
     <DisplayName("Version")>
     <Column(Order:=6, TypeName:=NameOf([Int32]))>
     Public Property version As Integer
+
 End Class

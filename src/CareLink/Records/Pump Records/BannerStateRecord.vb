@@ -7,6 +7,7 @@ Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class BannerStateRecord
     Private _type As String
+
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public Property RecordNumber As Integer = Nothing

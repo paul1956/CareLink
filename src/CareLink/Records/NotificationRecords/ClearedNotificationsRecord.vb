@@ -17,7 +17,6 @@ Public Class ClearedNotificationsRecord
 
     Private _dateTime As Date
 
-
     <DisplayName(NameOf(ClearedNotificationsRecord.dateTime))>
     <Column(Order:=2, TypeName:="Date")>
     Public Property [dateTime] As Date
@@ -44,7 +43,6 @@ Public Class ClearedNotificationsRecord
     <DisplayName(NameOf(instanceId))>
     <Column(Order:=6, TypeName:=NameOf([Int32]))>
     Public Property instanceId As Integer
-
 
     <DisplayName("Message Id")>
     <Column(Order:=7, TypeName:=NameOf([String]))>

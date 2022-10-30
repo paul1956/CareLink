@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Module TimeZoneExtensions
+
     Private ReadOnly s_specialKnownTimeZones As New Dictionary(Of String, String) From {
             {"Argentina Standard Time", "Argentina Standard Time"},
             {"Central European Summer Time", "Central European Daylight Time"},
@@ -42,6 +43,5 @@ Friend Module TimeZoneExtensions
                                         Return t.DisplayName = id
                                     End Function).FirstOrDefault
     End Function
-
 
 End Module

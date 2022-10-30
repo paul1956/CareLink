@@ -116,7 +116,6 @@ Public Class CareLinkUserDataRecord
         End Set
     End Property
 
-
     <DisplayName("Carrier Texting Domain")>
     <Column(Order:=5, TypeName:=NameOf([String]))>
     Public Property CarrierTextingDomain As String
@@ -140,7 +139,6 @@ Public Class CareLinkUserDataRecord
             Me.OnCareLinkUserChanged()
         End Set
     End Property
-
 
     <DisplayName("SettingsVersion")>
     <Column(Order:=7, TypeName:=NameOf([String]))>
@@ -201,7 +199,6 @@ Public Class CareLinkUserDataRecord
             _userData._outgoingMailServer = Value
         End Set
     End Property
-
 
     <DisplayName("Use Advanced AIT Decay")>
     <Column(Order:=12, TypeName:=NameOf([Boolean]))>

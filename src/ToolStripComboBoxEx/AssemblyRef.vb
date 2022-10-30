@@ -3,9 +3,11 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Module FXAssembly
+
     ' NB: this must never-ever change to facilitate type-forwarding from
     ' .NET Framework, if those are referenced in .NET project.
     Friend Const Version As String = "4.0.0.0"
+
 End Module
 
 Friend Module AssemblyRef

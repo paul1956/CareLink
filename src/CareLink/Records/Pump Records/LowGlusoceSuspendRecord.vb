@@ -50,4 +50,5 @@ Public Class LowGlusoceSuspendRecord
     <DisplayName("Delivery Suspended")>
     <Column(Order:=8, TypeName:=NameOf([Boolean]))>
     Public Property deliverySuspended As Boolean
+
 End Class

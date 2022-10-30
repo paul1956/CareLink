@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Module MarkerHelpers
+
     ''' <summary>
     ''' Collect up markers
     ''' </summary>
