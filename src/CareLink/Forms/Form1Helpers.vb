@@ -55,7 +55,7 @@ Friend Module Form1Helpers
         End Select
         MeForm.FinishInitialization()
         If UpdateAllTabs Then
-            MeForm.AllTabPagesUpdate()
+            MeForm.UpdateAllTabPages()
         End If
         Return True
     End Function

@@ -7,8 +7,7 @@ Imports System.Runtime.CompilerServices
 Friend Module ItemIndexesModule
 
     Friend Function HandleAsSingleItem(rowIndex As ItemIndexs) As Boolean
-        Return (rowIndex <= ItemIndexs.lastSGTrend OrElse rowIndex >= ItemIndexs.systemStatusMessage) AndAlso
-                    Not {ItemIndexs.sensorState, ItemIndexs.calibStatus, ItemIndexs.systemStatusMessage, ItemIndexs.lastConduitDateTime}.Contains(rowIndex)
+        Return rowIndex <= ItemIndexs.lastSG OrElse rowIndex >= ItemIndexs.systemStatusMessage
     End Function
 
     ' Do not rename these name are matched used in case sensitive matching

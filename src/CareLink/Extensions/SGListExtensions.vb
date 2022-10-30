@@ -20,9 +20,6 @@ Public Module SGListExtensions
         For i As Integer = 0 To innerJson.Count - 1
 
             Dim sgItem As New SgRecord(innerJson, i, lastValidTime)
-            If sgItem.sg = 0 Then
-                sgItem.sg = Single.NaN
-            End If
             sGs.Add(sgItem)
         Next
         Return sGs

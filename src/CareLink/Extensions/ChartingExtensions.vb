@@ -270,6 +270,8 @@ Friend Module ChartingExtensions
     <Extension>
     Friend Sub PlotTreatmentMarkers(treatmentChart As Chart)
         Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
+        s_treatmentMarkerInsulinDictionary.Clear()
+        s_treatmentMarkerMealDictionary.Clear()
         For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             Try
                 Dim markerDateTime As Date = s_markers.SafeGetSgDateTime(markerWithIndex.Index)

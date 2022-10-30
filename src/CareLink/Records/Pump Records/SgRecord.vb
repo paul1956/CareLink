@@ -7,6 +7,8 @@ Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class SgRecord
     Private _sensorState As String
+    Private _sg As Single
+
     Public Sub New()
 
     End Sub
@@ -63,6 +65,17 @@ Public Class SgRecord
     <DisplayName("Sensor Glucose (sg)")>
     <Column(Order:=1, TypeName:=NameOf([Single]))>
     Public Property sg As Single
+        Get
+            Return _sg
+        End Get
+        Set
+            If Value = 0 Then
+                _sg = Single.NaN
+            Else
+                _sg = Value
+            End If
+        End Set
+    End Property
 
     <DisplayName(NameOf(SgRecord.datetime))>
     <Column(Order:=2, TypeName:="Date")>

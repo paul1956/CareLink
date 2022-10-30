@@ -31,6 +31,8 @@ Public Module PumpVariables
     Friend ReadOnly s_listOfCalibrationMarkers As New List(Of CalibrationRecord)
     Friend ReadOnly s_listOfInsulinMarkers As New List(Of InsulinRecord)
     Friend ReadOnly s_listOflimitRecords As New List(Of LimitsRecord)
+    Friend ReadOnly s_listOfLowGlucoseSuspendedMarkers As New List(Of LowGlusoceSuspendRecord)
+    Friend ReadOnly s_listOfMealMarkers As New List(Of MealRecord)
     Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
     Friend ReadOnly s_mealImage As Bitmap = My.Resources.MealImage
     Friend s_aboveHyperLimit As Double
@@ -46,7 +48,7 @@ Public Module PumpVariables
     Friend s_lastBGTime As Date
     Friend s_lastBGValue As Single = 0
     Friend s_lastMedicalDeviceDataUpdateServerEpoch As Long
-    Friend s_lastSG As New SgRecord
+    Friend s_lastSGRecord As New SgRecord
     Friend s_limitHigh As Single
     Friend s_limitLow As Single
     Friend s_listOfSGs As New List(Of SgRecord)

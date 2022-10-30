@@ -10,7 +10,7 @@ Friend Module DrawingExtensions
         If hoursToNextCalibration <= 1.9 Then
             Return Color.Red
         ElseIf hoursToNextCalibration < 4 Then
-            Return Color.Yellow
+            Return Color.Orange
         Else
             Return Color.Lime
         End If

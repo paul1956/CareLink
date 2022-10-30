@@ -3,7 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Module TableLayoutPanelSupport
-    Friend Sub CreateNotificationTables(notificationJson As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexs, filterJsonData As Boolean, isScaledForm As Boolean)
+    Friend Sub CreateNotificationTables(notificationJson As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexs, filterJsonData As Boolean)
         tableLevel1Blue.AutoScroll = True
         tableLevel1Blue.AutoSize = True
         tableLevel1Blue.BorderStyle = BorderStyle.FixedSingle

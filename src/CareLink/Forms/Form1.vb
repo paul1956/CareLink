@@ -17,8 +17,6 @@ Public Class Form1
 
     Private ReadOnly _bgMiniDisplay As New BGMiniWindow
     Private ReadOnly _calibrationToolTip As New ToolTip()
-    Private ReadOnly _listOfLowGlucoseSuspendedRecords As New List(Of LowGlusoceSuspendRecord)
-    Private ReadOnly _listOfMealRecords As New List(Of MealRecord)
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
     Private ReadOnly _updatingLock As New Object
     Private _activeInsulinChartAbsoluteRectangle As RectangleF = RectangleF.Empty
@@ -173,7 +171,7 @@ Public Class Form1
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
         CheckForUpdatesAsync(Me, False)
         If Me.DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
-            Me.AllTabPagesUpdate()
+            Me.UpdateAllTabPages()
         End If
     End Sub
 
@@ -239,12 +237,12 @@ Public Class Form1
                         Try
                             Me.FinishInitialization()
                             Try
-                                Me.AllTabPagesUpdate()
+                                Me.UpdateAllTabPages()
                             Catch ex As ArgumentException
-                                MessageBox.Show($"Error in AllTabPagesUpdate. Original error: {ex.Message}")
+                                MessageBox.Show($"Error in {NameOf(UpdateAllTabPages)}. Original error: {ex.Message}")
                             End Try
                         Catch ex As ArgumentException
-                            MessageBox.Show($"Error in FinishInitialization. Original error: {ex.Message}")
+                            MessageBox.Show($"Error in {NameOf(FinishInitialization)}. Original error: {ex.Message}")
                         End Try
                     End If
                 End If
@@ -290,7 +288,7 @@ Public Class Form1
                     Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
                     Me.LastUpdateTime.Text = File.GetLastWriteTime(openFileDialog1.FileName).ToShortDateTimeString
                     Me.FinishInitialization()
-                    Me.AllTabPagesUpdate()
+                    Me.UpdateAllTabPages()
                 End If
             Catch ex As Exception
                 MessageBox.Show($"Cannot read file from disk. Original error: {ex.Message}")
@@ -954,6 +952,7 @@ Public Class Form1
         End Select
 
     End Sub
+
     Private Sub DataGridViewSummary_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DataGridViewSummary.CellMouseClick
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim value As String = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString
@@ -1084,13 +1083,13 @@ Public Class Form1
                         _bgMiniDisplay.SetCurrentBGString("---")
                     Else
                         Me.LastUpdateTime.ForeColor = SystemColors.ControlText
-                        _bgMiniDisplay.SetCurrentBGString(s_lastSG?.sg.ToString)
+                        _bgMiniDisplay.SetCurrentBGString(s_lastSGRecord?.sg.ToString)
                     End If
                     Me.RecentData = Nothing
                 Else
                     Me.LastUpdateTime.ForeColor = SystemColors.ControlText
                     Me.LastUpdateTime.Text = Now.ToShortDateTimeString
-                    Me.AllTabPagesUpdate()
+                    Me.UpdateAllTabPages()
                 End If
             Else
                 Stop
@@ -1337,75 +1336,7 @@ Public Class Form1
 
 #Region "Update Data and Tables"
 
-    ''' <summary>
-    ''' Collect up markers
-    ''' </summary>
-    ''' <param name="jsonRow">JSON Marker Row</param>
-    ''' <returns>Max Basal/Hr</returns>
-    Private Function CollectMarkers(jsonRow As String) As String
-
-        Dim basalDictionary As New Dictionary(Of OADate, Single)
-        MaxBasalPerHour = 0
-        MaxBasalPerDose = 0
-        For Each newMarker As Dictionary(Of String, String) In LoadList(jsonRow)
-            Select Case newMarker("type")
-                Case "AUTO_BASAL_DELIVERY"
-                    s_markers.Add(newMarker)
-                    Dim item As AutoBasalDeliveryRecord = DictionaryToClass(Of AutoBasalDeliveryRecord)(newMarker, s_listOfAutoBasalDeliveryMarkers.Count + 1)
-                    s_listOfAutoBasalDeliveryMarkers.Add(item)
-                    basalDictionary.Add(item.OAdateTime, item.bolusAmount)
-                Case "AUTO_MODE_STATUS"
-                    s_listOfAutoModeStatusMarkers.Add(DictionaryToClass(Of AutoModeStatusRecord)(newMarker, s_listOfAutoModeStatusMarkers.Count + 1))
-                Case "BG_READING"
-                    s_listOfBgReadingMarkers.Add(DictionaryToClass(Of BGReadingRecord)(newMarker.ScaleMarker(), s_listOfBgReadingMarkers.Count + 1))
-                Case "CALIBRATION"
-                    s_markers.Add(newMarker.ScaleMarker)
-                    s_listOfCalibrationMarkers.Add(DictionaryToClass(Of CalibrationRecord)(newMarker.ScaleMarker(), s_listOfCalibrationMarkers.Count + 1))
-                Case "INSULIN"
-                    s_markers.Add(newMarker)
-                    Dim lastInsulinRecord As InsulinRecord = DictionaryToClass(Of InsulinRecord)(newMarker, s_listOfInsulinMarkers.Count + 1)
-                    s_listOfInsulinMarkers.Add(lastInsulinRecord)
-                    Select Case newMarker(NameOf(InsulinRecord.activationType))
-                        Case "AUTOCORRECTION"
-                            basalDictionary.Add(lastInsulinRecord.OAdateTime, lastInsulinRecord.deliveredFastAmount)
-                        Case "UNDETERMINED",
-                             "RECOMMENDED"
-                            '
-                        Case Else
-                            Stop
-                            Throw UnreachableException(NameOf(CollectMarkers))
-                    End Select
-                Case "LOW_GLUCOSE_SUSPENDED"
-                    _listOfLowGlucoseSuspendedRecords.Add(DictionaryToClass(Of LowGlusoceSuspendRecord)(newMarker, _listOfLowGlucoseSuspendedRecords.Count + 1))
-                Case "MEAL"
-                    _listOfMealRecords.Add(DictionaryToClass(Of MealRecord)(newMarker, _listOfMealRecords.Count + 1))
-                    s_markers.Add(newMarker)
-                Case "TIME_CHANGE"
-                    s_markers.Add(newMarker)
-                    s_listOfTimeChangeMarkers.Add(New TimeChangeRecord(newMarker))
-                Case Else
-                    Stop
-                    Throw UnreachableException(NameOf(CollectMarkers))
-            End Select
-        Next
-        Dim endOADate As OADate = If(basalDictionary.Count = 0, New OADate(Now), basalDictionary.Last.Key)
-        Dim i As Integer = 0
-        While i < basalDictionary.Count AndAlso basalDictionary.Keys(i) <= endOADate
-            Dim sum As Single = 0
-            Dim j As Integer = i
-            Dim startOADate As OADate = basalDictionary.Keys(j)
-            While j < basalDictionary.Count AndAlso basalDictionary.Keys(j) <= startOADate + s_hourAsOADate
-                sum += basalDictionary.Values(j)
-                j += 1
-            End While
-            MaxBasalPerHour = Math.Max(MaxBasalPerHour, sum)
-            MaxBasalPerDose = Math.Max(MaxBasalPerDose, basalDictionary.Values(i))
-            i += 1
-        End While
-        Return $"Max Basal/Hr ~ {MaxBasalPerHour.RoundSingle(3)} U"
-    End Function
-
-    Private Sub UpdateDataTables(isScaledForm As Boolean)
+    Private Sub UpdateDataTables()
 
         If Me.RecentData Is Nothing Then
             Debug.Print($"Exiting {NameOf(UpdateDataTables)}, {NameOf(RecentData)} has no data!")
@@ -1414,25 +1345,7 @@ Public Class Form1
         Me.Cursor = Cursors.WaitCursor
         Application.DoEvents()
 
-        _listOfLowGlucoseSuspendedRecords.Clear()
-        s_listOfAutoBasalDeliveryMarkers.Clear()
-        s_listOfAutoModeStatusMarkers.Clear()
-        s_listOfBgReadingMarkers.Clear()
-        s_listOfCalibrationMarkers.Clear()
-        s_listOfInsulinMarkers.Clear()
         s_listOfSGs.Clear()
-        s_listOfTimeChangeMarkers.Clear()
-        s_markers.Clear()
-
-        s_treatmentMarkerInsulinDictionary.Clear()
-        s_treatmentMarkerMealDictionary.Clear()
-
-        Dim markerRowString As String = ""
-        If Me.RecentData.TryGetValue(ItemIndexs.markers.ToString, markerRowString) Then
-            Me.MaxBasalPerHourLabel.Text = Me.CollectMarkers(markerRowString)
-        Else
-            Me.MaxBasalPerHourLabel.Text = ""
-        End If
 
         s_listOfSummaryRecords.Clear()
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In Me.RecentData.WithIndex()
@@ -1447,36 +1360,48 @@ Public Class Form1
                     Else
                         s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
                     End If
+
                 Case ItemIndexs.lastSensorTSAsString
                     If s_listOfSummaryRecords.Count < ItemIndexs.lastSensorTSAsString Then
                         s_listOfSummaryRecords.Insert(ItemIndexs.lastSensorTS, New SummaryRecord(ItemIndexs.lastSensorTS, New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastSensorTS), row.Value.CDateOrDefault(NameOf(ItemIndexs.lastSensorTS), CurrentUICulture))))
                     End If
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
-                Case ItemIndexs.currentServerTime,
-                       ItemIndexs.lastConduitTime,
-                       ItemIndexs.lastConduitUpdateServerTime
+
+                Case ItemIndexs.currentServerTime
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Value, row.Value.Epoch2DateTimeString))
+                Case ItemIndexs.lastConduitTime
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Value, row.Value.Epoch2DateTimeString))
+                Case ItemIndexs.lastConduitUpdateServerTime
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Value, row.Value.Epoch2DateTimeString))
 
                 Case ItemIndexs.lastMedicalDeviceDataUpdateServerTime
                     s_lastMedicalDeviceDataUpdateServerEpoch = CLng(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Value, row.Value.Epoch2DateTimeString))
+
+                Case ItemIndexs.sensorState
+                    s_sensorState = row.Value
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_sensorMessages, NameOf(s_sensorMessages)))
+
                 Case ItemIndexs.medicalDeviceTime
                     If row.Value = "0" Then
-                        ' Handled by ItemIndexs.lastSensorTSAsString
+                        ' Handled by ItemIndexs.sMedicalDeviceTime
                     Else
                         s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
                     End If
+
                 Case ItemIndexs.sMedicalDeviceTime
                     If s_listOfSummaryRecords.Count < ItemIndexs.sMedicalDeviceTime Then
                         Dim value As String = row.Value.CDateOrDefault(NameOf(ItemIndexs.medicalDeviceTime), CurrentUICulture)
-                        Dim entry As New KeyValuePair(Of String, String)(NameOf(ItemIndexs.medicalDeviceTime), value)
-                        s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.medicalDeviceTime, entry))
+                        s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.medicalDeviceTime, "0", value))
                     End If
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
+                Case ItemIndexs.calibStatus
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_calibrationMessages, NameOf(s_calibrationMessages)))
+
                 Case ItemIndexs.lastSensorTime
                     If row.Value = "0" Then
-                        ' Handled by ItemIndexs.lastSensorTSAsString
+                        ' Handled by ItemIndexs.sLastSensorTime
                     Else
                         s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
                     End If
@@ -1486,6 +1411,15 @@ Public Class Form1
                         s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.lastSensorTime, New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastSensorTime), row.Value.CDateOrDefault(NameOf(ItemIndexs.medicalDeviceTime), CurrentUICulture))))
                     End If
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexs.lastSG
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
+                    s_lastSGRecord = New SgRecord(Loads(row.Value))
+
+                Case ItemIndexs.systemStatusMessage
+                    s_systemStatusMessage = row.Value
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_sensorMessages, NameOf(s_sensorMessages)))
+
                 Case ItemIndexs.gstCommunicationState
                     s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.gstCommunicationState, row))
                     Dim gstBatteryLevel As String = Nothing
@@ -1493,6 +1427,13 @@ Public Class Form1
                         Continue For
                     End If
                     s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.gstBatteryLevel, "0", "No data from pump"))
+
+                Case ItemIndexs.gstBatteryLevel
+                    s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.gstCommunicationState, row))
+
+                Case ItemIndexs.lastConduitDateTime
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastConduitDateTime), row.Value.CDateOrDefault(NameOf(ItemIndexs.lastConduitDateTime), CurrentUICulture))))
+
                 Case ItemIndexs.maxBolusAmount
                     s_listOfSummaryRecords.Add(New SummaryRecord(GetItemIndex(c.Value.Key), row))
                     Dim doNotCare As String = Nothing
@@ -1520,23 +1461,6 @@ Public Class Form1
 
                 Select Case rowIndex
 
-                    Case ItemIndexs.sensorState
-                        s_sensorState = row.Value
-                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_sensorMessages, NameOf(s_sensorMessages)))
-
-                    Case ItemIndexs.calibStatus
-                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_calibrationMessages, NameOf(s_calibrationMessages)))
-
-                    Case ItemIndexs.lastSG
-                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
-                        s_lastSG = New SgRecord(Loads(row.Value))
-                        DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelLastSG, ItemIndexs.lastSG),
-                            ClassToDatatable({s_lastSG}.ToArray),
-                            NameOf(SgRecord),
-                            AddressOf SgRecordHelpers.AttachHandlers,
-                            ItemIndexs.lastSG,
-                            True)
-
                     Case ItemIndexs.lastAlarm
                         s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
                         DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelLastAlarm, ItemIndexs.lastAlarm),
@@ -1549,12 +1473,6 @@ Public Class Form1
                     Case ItemIndexs.activeInsulin
                         s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
                         s_activeInsulin = DictionaryToClass(Of ActiveInsulinRecord)(Loads(row.Value), 0)
-                        DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelActiveInsulin, ItemIndexs.activeInsulin),
-                            ClassToDatatable({s_activeInsulin}.ToArray),
-                            NameOf(ActiveInsulinRecord),
-                            AddressOf ActiveInsulinRecordHelpers.AttachHandlers,
-                            ItemIndexs.lastAlarm,
-                            True)
 
                     Case ItemIndexs.sgs
                         s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
@@ -1563,12 +1481,6 @@ Public Class Form1
                             s_lastBGValue = s_listOfSGs.Item(s_listOfSGs.Count - 2).sg
                         End If
 
-                        Dim table As DataTable = ClassToDatatable(s_listOfSGs.ToArray)
-                        DisplayDataTableInDGV(Me.TableLayoutPanelSgs,
-                                              Me.DataGridViewSGs,
-                                              table,
-                                              rowIndex)
-                        Me.DataGridViewSGs.Sort(Me.DataGridViewSGs.Columns(0), ListSortDirection.Descending)
                     Case ItemIndexs.limits
                         s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
 
@@ -1593,50 +1505,6 @@ Public Class Form1
                                              False)
                     Case ItemIndexs.markers
                         s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
-                        DisplayDataTableInDGV(Me.TableLayoutPanelAutoBasalDelivery,
-                                              Me.DataGridViewAutoBasalDelivery,
-                                              ClassToDatatable(s_listOfAutoBasalDeliveryMarkers.ToArray),
-                                              ItemIndexs.markers)
-                        DisplayDataTableInDGV(Me.TableLayoutPanelAutoModeStatus,
-                                              ClassToDatatable(s_listOfAutoModeStatusMarkers.ToArray),
-                                              NameOf(AutoModeStatusRecord),
-                                              AddressOf AutoModeStatusRecordHelpers.AttachHandlers,
-                                              ItemIndexs.markers,
-                                              False)
-                        DisplayDataTableInDGV(Me.TableLayoutPanelBgReadings,
-                                              ClassToDatatable(s_listOfBgReadingMarkers.ToArray),
-                                              NameOf(BGReadingRecord),
-                                              AddressOf BGReadingRecordHelpers.AttachHandlers,
-                                              ItemIndexs.markers,
-                                              False)
-                        DisplayDataTableInDGV(Me.TableLayoutPanelInsulin,
-                                              Me.DataGridViewInsulin,
-                                              ClassToDatatable(s_listOfInsulinMarkers.ToArray),
-                                              ItemIndexs.markers)
-                        DisplayDataTableInDGV(Me.TableLayoutPanelMeal,
-                                              ClassToDatatable(_listOfMealRecords.ToArray),
-                                              NameOf(MealRecord),
-                                              AddressOf MealRecordHelpers.AttachHandlers,
-                                              ItemIndexs.markers,
-                                              False)
-                        DisplayDataTableInDGV(Me.TableLayoutPanelCalibration,
-                                              ClassToDatatable(s_listOfCalibrationMarkers.ToArray),
-                                              NameOf(CalibrationRecord),
-                                              AddressOf CalibrationRecordHelpers.AttachHandlers,
-                                              ItemIndexs.markers,
-                                              False)
-                        DisplayDataTableInDGV(Me.TableLayoutPanelLowGlucoseSuspended,
-                                              ClassToDatatable(_listOfLowGlucoseSuspendedRecords.ToArray),
-                                              NameOf(LowGlusoceSuspendRecord),
-                                              AddressOf LowGlusoceSuspendRecordHelpers.AttachHandlers,
-                                              ItemIndexs.markers,
-                                              False)
-                        DisplayDataTableInDGV(Me.TableLayoutPanelTimeChange,
-                                              ClassToDatatable(s_listOfTimeChangeMarkers.ToArray),
-                                              NameOf(TimeChangeRecord),
-                                              AddressOf TimeChangeRecordHelpers.AttachHandlers,
-                                              ItemIndexs.markers,
-                                              False)
 
                     Case ItemIndexs.notificationHistory
                         s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
@@ -1662,10 +1530,9 @@ Public Class Form1
                             innerTableBlue.AutoScroll = True
                             layoutPanel1.Controls.Add(innerTableBlue, 0, 1)
                             CreateNotificationTables(innerJsonDictionary,
-                                                     innerTableBlue,
-                                                     rowIndex,
-                                                     s_filterJsonData,
-                                                     isScaledForm)
+                                innerTableBlue,
+                                rowIndex,
+                                s_filterJsonData)
                         Catch ex As Exception
                             Stop
                             Throw
@@ -1727,13 +1594,6 @@ Public Class Form1
                                               ItemIndexs.basal,
                                               True)
 
-                    Case ItemIndexs.systemStatusMessage
-                        s_systemStatusMessage = row.Value
-                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_sensorMessages, NameOf(s_sensorMessages)))
-
-                    Case ItemIndexs.lastConduitDateTime
-                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastConduitDateTime), row.Value.CDateOrDefault(NameOf(ItemIndexs.lastConduitDateTime), CurrentUICulture))))
-
                     Case Else
                         Stop
                         Throw UnreachableException(NameOf(UpdateDataTables))
@@ -1761,9 +1621,9 @@ Public Class Form1
 
 #Region "Update Home Tab"
 
-    Friend Sub AllTabPagesUpdate()
+    Friend Sub UpdateAllTabPages()
         If Me.RecentData Is Nothing Then
-            Debug.Print($"Exiting {NameOf(AllTabPagesUpdate)}, {NameOf(RecentData)} has no data!")
+            Debug.Print($"Exiting {NameOf(UpdateAllTabPages)}, {NameOf(RecentData)} has no data!")
             Exit Sub
         End If
         Dim lastMedicalDeviceDataUpdateServerTimeEpoch As String = ""
@@ -1777,9 +1637,9 @@ Public Class Form1
         If Me.RecentData.Count > ItemIndexs.finalCalibration + 1 Then
             Stop
         End If
-        Debug.Print($"In {NameOf(AllTabPagesUpdate)} before SyncLock")
+        Debug.Print($"In {NameOf(UpdateAllTabPages)} before SyncLock")
         SyncLock _updatingLock
-            Debug.Print($"In {NameOf(AllTabPagesUpdate)} inside SyncLock")
+            Debug.Print($"In {NameOf(UpdateAllTabPages)} inside SyncLock")
             _updating = True ' prevent paint
             _homePageAbsoluteRectangle = RectangleF.Empty
             _treatmentMarkerAbsoluteRectangle = RectangleF.Empty
@@ -1790,11 +1650,20 @@ Public Class Form1
                 Me.LastUpdateTime.Text = Now.ToShortDateTimeString
             End If
             Me.CursorPanel.Visible = False
-            Me.UpdateDataTables(_formScale.Height <> 1 OrElse _formScale.Width <> 1)
+
+            ' Update all Markets
+            Dim markerRowString As String = ""
+            If Me.RecentData.TryGetValue(ItemIndexs.markers.ToString, markerRowString) Then
+                Me.MaxBasalPerHourLabel.Text = CollectMarkers(markerRowString)
+            Else
+                Me.MaxBasalPerHourLabel.Text = ""
+            End If
+
+            Me.UpdateDataTables()
             _updating = False
         End SyncLock
-        Debug.Print($"In {NameOf(AllTabPagesUpdate)} exited SyncLock")
-        Me.UpdateSummaryTable()
+        Debug.Print($"In {NameOf(UpdateAllTabPages)} exited SyncLock")
+        Me.UpdateSummaryTab()
         Me.UpdateActiveInsulinChart()
         Me.UpdateActiveInsulin()
         Me.UpdateAutoModeShield()
@@ -1805,15 +1674,33 @@ Public Class Form1
         Me.UpdateSensorLife()
         Me.UpdateTimeInRange()
         Me.UpdateTransmitterBatttery()
+        Me.UpdateHomeTabSerieses()
+        Me.UpdateDosingAndCarbs()
 
         Me.AboveHighLimitMessageLabel.Text = $"Above {s_limitHigh} {BgUnitsString}"
         Me.BelowLowLimitMessageLabel.Text = $"Below {s_limitLow} {BgUnitsString}"
         Me.FullNameLabel.Text = $"{s_firstName} {s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.lastName))}"
         Me.ModelLabel.Text = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.pumpModelNumber))
-        Me.ReadingsLabel.Text = $"{s_listOfSGs.Where(Function(entry As SgRecord) Not Double.IsNaN(entry.sg)).Count}/288"
+        Me.ReadingsLabel.Text = $"{s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288"
 
-        Me.UpdateHomeTabSerieses()
-        Me.UpdateDosingAndCarbs()
+        Me.UpdateMarkerTabs()
+
+        DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelLastSG, ItemIndexs.lastSG),
+                              ClassToDatatable({s_lastSGRecord}.ToArray),
+                              NameOf(SgRecord),
+                              AddressOf SgRecordHelpers.AttachHandlers,
+                              ItemIndexs.lastSG,
+                              True)
+
+        DisplayDataTableInDGV(InitializeWorkingPanel(Me.TableLayoutPanelActiveInsulin, ItemIndexs.activeInsulin),
+                            ClassToDatatable({s_activeInsulin}.ToArray),
+                            NameOf(ActiveInsulinRecord),
+                            AddressOf ActiveInsulinRecordHelpers.AttachHandlers,
+                            ItemIndexs.lastAlarm,
+                            True)
+
+        Me.UpdateSgsTab()
+
         s_recentDatalast = Me.RecentData
         Me.MenuStartHere.Enabled = True
         Me.UpdateTreatmentChart()
@@ -1924,14 +1811,14 @@ Public Class Form1
 
     Private Sub UpdateAutoModeShield()
         Try
-            Me.LastSGTimeLabel.Text = s_lastSG.datetime.ToShortTimeString
+            Me.LastSGTimeLabel.Text = s_lastSGRecord.datetime.ToShortTimeString
             Me.ShieldUnitsLabel.BackColor = Color.Transparent
             Me.ShieldUnitsLabel.Text = BgUnitsString
-            If s_lastSG.sg <> 0 Then
+            If Not Single.IsNaN(s_lastSGRecord.sg) Then
                 Me.CurrentBGLabel.Visible = True
-                Me.CurrentBGLabel.Text = s_lastSG.sg.ToString
+                Me.CurrentBGLabel.Text = s_lastSGRecord.sg.ToString
                 Me.UpdateNotifyIcon()
-                _bgMiniDisplay.SetCurrentBGString(s_lastSG.sg.ToString)
+                _bgMiniDisplay.SetCurrentBGString(s_lastSGRecord.sg.ToString)
                 Me.SensorMessage.Visible = False
                 Me.CalibrationShieldPictureBox.Image = My.Resources.Shield
             Else
@@ -1965,8 +1852,8 @@ Public Class Form1
     Private Sub UpdateCalibrationTimeRemaining()
         Try
             Dim timeToNextCalibrationMinutes As UShort = CUShort(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.timeToNextCalibrationMinutes), False))
-            Dim timeToNextCalibHours As Byte = CByte(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.timeToNextCalibHours)))
-            If timeToNextCalibHours = Byte.MaxValue Then
+            Dim timeToNextCalibHours As UShort = CUShort(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.timeToNextCalibHours)))
+            If timeToNextCalibHours > Byte.MaxValue Then
                 Me.CalibrationDueImage.Image = My.Resources.CalibrationUnavailable
             ElseIf timeToNextCalibHours = 0 Then
                 Me.CalibrationDueImage.Image = If(s_systemStatusMessage = "WAIT_TO_CALIBRATE" OrElse s_sensorState = "WARM_UP" OrElse s_sensorState = "CHANGE_SENSOR",
@@ -2148,12 +2035,6 @@ Public Class Form1
         Me.SensorDaysLeftLabel.Visible = True
     End Sub
 
-    Private Sub UpdateSummaryTable()
-        s_listOfSummaryRecords.Sort()
-        Me.DataGridViewSummary.DataSource = ClassToDatatable(s_listOfSummaryRecords.ToArray)
-        Me.DataGridViewSummary.RowHeadersVisible = False
-    End Sub
-
     Private Sub UpdateTimeInRange()
         With Me.HomeTabTimeInRangeChart
             With .Series(NameOf(HomeTabTimeInRangeSeries)).Points
@@ -2183,27 +2064,6 @@ Public Class Form1
         Me.SerialNumberLabel.Text = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.medicalDeviceSerialNumber))
         Me.TimeInRangeChartLabel.Text = s_timeInRange.ToString
         Me.TimeInRangeValueLabel.Text = $"{s_timeInRange} %"
-
-    End Sub
-
-    Private Sub UpdateTransmitterBatttery()
-        Dim gstBatteryLevel As Integer = CInt(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.gstBatteryLevel), False))
-        Me.TransmatterBatterPercentLabel.Text = $"{gstBatteryLevel}%"
-        If CBool(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.conduitSensorInRange))) Then
-            Select Case gstBatteryLevel
-                Case 100
-                    Me.TransmitterBatteryPictureBox.Image = My.Resources.TransmitterBatteryFull
-                Case > 50
-                    Me.TransmitterBatteryPictureBox.Image = My.Resources.TransmitterBatteryOK
-                Case > 20
-                    Me.TransmitterBatteryPictureBox.Image = My.Resources.TransmitterBatteryMedium
-                Case > 0
-                    Me.TransmitterBatteryPictureBox.Image = My.Resources.TransmitterBatteryLow
-            End Select
-        Else
-            Me.TransmitterBatteryPictureBox.Image = My.Resources.TransmitterBatteryUnknown
-            Me.TransmatterBatterPercentLabel.Text = $"???"
-        End If
 
     End Sub
 
@@ -2279,8 +2139,8 @@ Public Class Form1
 
     Private Sub UpdateNotifyIcon()
         Try
-            Dim sg As Single = s_lastSG.sg
-            Dim str As String = s_lastSG.sg.ToString
+            Dim sg As Single = s_lastSGRecord.sg
+            Dim str As String = s_lastSGRecord.sg.ToString
             Dim fontToUse As New Font("Trebuchet MS", 10, FontStyle.Regular, GraphicsUnit.Pixel)
             Dim color As Color = Color.White
             Dim bgColor As Color
