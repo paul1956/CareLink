@@ -584,7 +584,7 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub SensorAgeLeftLabel_MouseHover(sender As Object, e As EventArgs)
+    Private Sub SensorAgeLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles TransmitterBatteryPictureBox.MouseHover
         Dim sensorDurationHours As Integer = CInt(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.sensorDurationHours)))
         If sensorDurationHours < 24 Then
             _sensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {sensorDurationHours} hours")
@@ -1472,7 +1472,7 @@ Public Class Form1
                     s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.gstBatteryLevel, "0", "No data from pump"))
 
                 Case ItemIndexs.gstBatteryLevel
-                    s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.gstCommunicationState, row))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexs.lastConduitDateTime
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastConduitDateTime), row.Value.CDateOrDefault(NameOf(ItemIndexs.lastConduitDateTime), CurrentUICulture))))
