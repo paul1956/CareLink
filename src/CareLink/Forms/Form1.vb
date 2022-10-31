@@ -1547,13 +1547,13 @@ Public Class Form1
             End If
 
             Me.UpdateDataTables()
+            s_firstName = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.firstName))
+            s_aboveHyperLimit = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.aboveHyperLimit)).ParseSingle(1)
+            s_belowHypoLimit = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.belowHypoLimit)).ParseSingle(1)
+            s_timeInRange = CInt(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.timeInRange)))
             _updating = False
         End SyncLock
         Debug.Print($"In {NameOf(UpdateAllTabPages)} exited SyncLock")
-        s_firstName = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.firstName))
-        s_aboveHyperLimit = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.aboveHyperLimit)).ParseSingle(1)
-        s_belowHypoLimit = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.belowHypoLimit)).ParseSingle(1)
-        s_timeInRange = CInt(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.timeInRange)))
 
         Dim rowValue As String = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.lastSGTrend))
         Dim arrows As String = Nothing
