@@ -18,7 +18,7 @@ Friend Module UpdateTabHelpers
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0!))
         tableLevel1Blue.Dock = DockStyle.Fill
         tableLevel1Blue.Location = New Point(6, 30)
-        tableLevel1Blue.Name = "TableLayoutPanel1"
+        tableLevel1Blue.Name = "TableLayoutPanelSgsTop"
         tableLevel1Blue.RowCount = 2
         tableLevel1Blue.RowStyles.Clear()
         tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize))
@@ -122,13 +122,12 @@ Friend Module UpdateTabHelpers
 
     <Extension>
     Friend Sub UpdateNotificationTab(MeForm As Form1)
-        Dim layoutPanel1 As TableLayoutPanel = TableLayoutPanelInitialization(MeForm.TableLayoutPanelNotificationHistory, ItemIndexs.notificationHistory)
         Try
-            layoutPanel1.AutoScroll = True
-            layoutPanel1.Controls(0).Text = GetTabName(ItemIndexs.notificationHistory)
+            MeForm.TableLayoutPanelNotificationHistory.AutoScroll = True
+            MeForm.TableLayoutPanelNotificationHistory.Controls(0).Text = GetTabName(ItemIndexs.notificationHistory)
             Dim innerTableBlue As New TableLayoutPanel With {
                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                    .AutoScroll = False,
+                    .AutoScroll = True,
                     .AutoSize = True,
                     .AutoSizeMode = AutoSizeMode.GrowAndShrink,
                     .BackColor = Color.LightBlue,
@@ -140,8 +139,7 @@ Friend Module UpdateTabHelpers
                     .Padding = New Padding(3),
                     .RowCount = 0
                 }
-            innerTableBlue.AutoScroll = True
-            layoutPanel1.Controls.Add(innerTableBlue, 0, 1)
+            MeForm.TableLayoutPanelNotificationHistory.Controls.Add(innerTableBlue, 0, 1)
             CreateNotificationTables(s_notificationHistoryValue,
                                      innerTableBlue,
                                      ItemIndexs.notificationHistory,
@@ -178,7 +176,7 @@ Friend Module UpdateTabHelpers
                 Stop
             End If
         Next
-        DisplayDataTableInDGV(TableLayoutPanelInitialization(MeForm.TableLayoutPanelBannerState, ItemIndexs.pumpBannerState),
+        DisplayDataTableInDGV(MeForm.TableLayoutPanelBannerState,
                               ClassToDatatable(listOfPumpBannerState.ToArray),
                               NameOf(BannerStateRecord),
                               AddressOf BannerStateRecordHelpers.AttachHandlers,

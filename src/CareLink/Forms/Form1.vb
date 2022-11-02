@@ -663,7 +663,7 @@ Public Class Form1
 
 #End Region ' Home Page Events
 
-#Region "Home Page DataGridView Events"
+#Region "DataGridView Events"
 
 #Region "All Users Tab DataGridView Events"
 
@@ -1002,7 +1002,16 @@ Public Class Form1
 
 #End Region 'Summary Tab DataGridView Events
 
-#End Region 'Home Page DataGridView Events
+#End Region ' DataGridView Events
+
+#Region "Tab Button Events"
+
+    Private Sub LastAlarmButton_Click(sender As Object, e As EventArgs) Handles LastSGButton.Click, LastAlarmButton.Click, ActiveInsulinButton.Click, SgsButton.Click, LimitsButton.Click, NotificationHistoryButton.Click, TherapyAlgorithmButton.Click, BannerStateButton.Click, BasalButton.Click
+        Me.TabControlPage1.SelectedIndex = 3
+        Me.TabControlPage1.Visible = True
+    End Sub
+
+#End Region
 
 #Region "Settings Events"
 
@@ -1582,21 +1591,21 @@ Public Class Form1
         Me.ModelLabel.Text = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.pumpModelNumber))
         Me.ReadingsLabel.Text = $"{s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288"
 
-        DisplayDataTableInDGV(TableLayoutPanelInitialization(Me.TableLayoutPanelLastSG, ItemIndexs.lastSG),
+        DisplayDataTableInDGV(Me.TableLayoutPanelLastSG,
                               ClassToDatatable({s_lastSgRecord}.ToArray),
                               NameOf(SgRecord),
                               AddressOf SgRecordHelpers.AttachHandlers,
                               ItemIndexs.lastSG,
                               True)
 
-        DisplayDataTableInDGV(TableLayoutPanelInitialization(Me.TableLayoutPanelLastAlarm, ItemIndexs.lastAlarm),
+        DisplayDataTableInDGV(Me.TableLayoutPanelLastAlarm,
                               ClassToDatatable(GetSummaryRecords(s_lastAlarmValue).ToArray),
                               NameOf(LastAlarmRecord),
                               AddressOf SummaryRecordHelpers.AttachHandlers,
                               ItemIndexs.lastAlarm,
                               True)
 
-        DisplayDataTableInDGV(TableLayoutPanelInitialization(Me.TableLayoutPanelActiveInsulin, ItemIndexs.activeInsulin),
+        DisplayDataTableInDGV(Me.TableLayoutPanelActiveInsulin,
                               ClassToDatatable({s_activeInsulin}.ToArray),
                               NameOf(ActiveInsulinRecord),
                               AddressOf ActiveInsulinRecordHelpers.AttachHandlers,
@@ -1616,7 +1625,7 @@ Public Class Form1
 
         Me.UpdateNotificationTab()
 
-        DisplayDataTableInDGV(TableLayoutPanelInitialization(Me.TableLayoutPanelTherapyAlgorithm, ItemIndexs.therapyAlgorithmState),
+        DisplayDataTableInDGV(Me.TableLayoutPanelTherapyAlgorithm,
                               ClassToDatatable(GetSummaryRecords(s_theraphyAlgorthmStateValue).ToArray),
                               NameOf(SummaryRecord),
                               AddressOf SummaryRecordHelpers.AttachHandlers,
@@ -1625,7 +1634,7 @@ Public Class Form1
 
         Me.UpdatePumpBannerStateTab()
 
-        DisplayDataTableInDGV(TableLayoutPanelInitialization(Me.TableLayoutPanelBasal, ItemIndexs.basal),
+        DisplayDataTableInDGV(Me.TableLayoutPanelBasal,
                               ClassToDatatable({DictionaryToClass(Of BasalRecord)(s_basalValue, 0)}.ToArray),
                               NameOf(BasalRecord),
                               AddressOf BasalRecordHelpers.AttachHandlers,
@@ -1836,27 +1845,27 @@ Public Class Form1
         Else
             totalPercent = $"{CInt(s_totalBasal / s_totalDailyDose * 100)}"
         End If
-        Me.BasalLabel.Text = $"Basal {s_totalBasal.RoundSingle(1)} U | {totalPercent}%"
+        Me.Last24HourBasalLabel.Text = $"Basal {s_totalBasal.RoundSingle(1)} U | {totalPercent}%"
 
-        Me.DailyDoseLabel.Text = $"Daily Dose {s_totalDailyDose.RoundSingle(1)} U"
+        Me.Last24DailyDoseLabel.Text = $"Daily Dose {s_totalDailyDose.RoundSingle(1)} U"
 
         If s_totalAutoCorrection > 0 Then
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalAutoCorrection / s_totalDailyDose * 100).ToString
             End If
-            Me.AutoCorrectionLabel.Text = $"Auto Correction {s_totalAutoCorrection.RoundSingle(1)} U | {totalPercent}%"
-            Me.AutoCorrectionLabel.Visible = True
+            Me.Last24AutoCorrectionLabel.Text = $"Auto Correction {s_totalAutoCorrection.RoundSingle(1)} U | {totalPercent}%"
+            Me.Last24AutoCorrectionLabel.Visible = True
             Dim totalBolus As Single = s_totalManualBolus + s_totalAutoCorrection
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.ManualBolusLabel.Text = $"Manual Bolus {totalBolus.RoundSingle(1)} U | {totalPercent}%"
+            Me.Last24ManualBolusLabel.Text = $"Manual Bolus {totalBolus.RoundSingle(1)} U | {totalPercent}%"
         Else
-            Me.AutoCorrectionLabel.Visible = False
+            Me.Last24AutoCorrectionLabel.Visible = False
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.ManualBolusLabel.Text = $"Manual Bolus {s_totalManualBolus.RoundSingle(1)} U | {totalPercent}%"
+            Me.Last24ManualBolusLabel.Text = $"Manual Bolus {s_totalManualBolus.RoundSingle(1)} U | {totalPercent}%"
         End If
         Me.Last24CarbsValueLabel.Text = $"Carbs = {s_totalCarbs} {s_sessionCountrySettings.carbohydrateUnitsDefault.ToTitle}"
     End Sub

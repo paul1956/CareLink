@@ -2,6 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Runtime.CompilerServices
+
 Friend Module DataGridViewHelper
 
     Friend Delegate Sub attachHandlers(dgv As DataGridView)
@@ -35,17 +37,22 @@ Friend Module DataGridViewHelper
     End Function
 
     Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, dGV As DataGridView, table As DataTable, rowIndex As ItemIndexs)
-        TableLayoutPanelInitialization(realPanel, rowIndex)
+        realPanel.Controls(0).Text = GetTabName(rowIndex)
         dGV.DataSource = table
         dGV.RowHeadersVisible = False
     End Sub
 
     Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As ItemIndexs, hideRecordNumberColumn As Boolean)
-        TableLayoutPanelInitialization(realPanel, rowIndex)
-        Dim dGV As DataGridView
-        If realPanel.Controls.Count > 1 Then
-            dGV = CType(realPanel.Controls(1), DataGridView)
+        Dim button1 As Button = TryCast(realPanel.Controls(0), Button)
+        If button1 Is Nothing Then
+            realPanel.Controls(0).Text = GetTabName(rowIndex)
         Else
+            realPanel.Controls(1).Text = GetTabName(rowIndex)
+        End If
+        Dim dGVIndex As Integer = realPanel.Controls.Count - 1
+        Dim dGV As DataGridView = TryCast(realPanel.Controls(dGVIndex), DataGridView)
+
+        If dGV Is Nothing Then
             dGV = CreateDefaultDataGridView($"DataGridView{className}")
             realPanel.Controls.Add(dGV, 0, 1)
             attachHandlers(dGV)
