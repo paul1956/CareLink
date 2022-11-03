@@ -13,4 +13,14 @@
     <SourceRoot Include="C:\Users\PaulM\.nuget\packages\" />
     <SourceRoot Include="C:\Program Files\dotnet\sdk\NuGetFallbackFolder\" />
   </ItemGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Content Include="$(NuGetPackageRoot)datagridviewdisablebuttoncolumnex\1.0.0\contentFiles\any\net6.0-windows7.0\ColumnButton.ico" Condition="Exists('$(NuGetPackageRoot)datagridviewdisablebuttoncolumnex\1.0.0\contentFiles\any\net6.0-windows7.0\ColumnButton.ico')">
+      <NuGetPackageId>DataGridViewDisableButtonColumnEx</NuGetPackageId>
+      <NuGetPackageVersion>1.0.0</NuGetPackageVersion>
+      <NuGetItemType>Content</NuGetItemType>
+      <Pack>false</Pack>
+      <Private>False</Private>
+      <Link>ColumnButton.ico</Link>
+    </Content>
+  </ItemGroup>
 </Project>

@@ -124,7 +124,7 @@ Friend Module UpdateTabHelpers
     Friend Sub UpdateNotificationTab(MeForm As Form1)
         Try
             MeForm.TableLayoutPanelNotificationHistory.AutoScroll = True
-            MeForm.TableLayoutPanelNotificationHistory.Controls(0).Text = GetTabName(ItemIndexs.notificationHistory)
+            MeForm.TableLayoutPanelNotificationHistory.SetTabName(ItemIndexs.notificationHistory)
             Dim innerTableBlue As New TableLayoutPanel With {
                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                     .AutoScroll = True,
@@ -133,12 +133,15 @@ Friend Module UpdateTabHelpers
                     .BackColor = Color.LightBlue,
                     .BorderStyle = BorderStyle.FixedSingle,
                     .ColumnCount = 2,
-                    .Dock = DockStyle.Top,
+                    .Dock = DockStyle.Fill,
                     .Margin = New Padding(3),
                     .Name = NameOf(innerTableBlue),
                     .Padding = New Padding(3),
                     .RowCount = 0
                 }
+            For i As Integer = MeForm.TableLayoutPanelNotificationHistory.Controls.Count - 1 To 1 Step -1
+                MeForm.TableLayoutPanelNotificationHistory.Controls.RemoveAt(i)
+            Next
             MeForm.TableLayoutPanelNotificationHistory.Controls.Add(innerTableBlue, 0, 1)
             CreateNotificationTables(s_notificationHistoryValue,
                                      innerTableBlue,

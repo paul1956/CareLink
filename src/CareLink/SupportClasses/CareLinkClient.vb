@@ -475,7 +475,7 @@ Public Class CareLinkClient
     End Function
 
     ' Wrapper for data retrieval methods
-    Public Overridable Function GetRecentData(<CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Dictionary(Of String, String)
+    Public Overridable Function GetRecentData() As Dictionary(Of String, String)
         If NetworkDown Then
             Debug.Print("Network Down")
             Return Nothing

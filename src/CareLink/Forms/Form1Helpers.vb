@@ -42,7 +42,7 @@ Friend Module Form1Helpers
                     MeForm.LastUpdateTime.Text = "Unknown"
                     Return False
                 End If
-                MeForm.RecentData = MeForm.client.GetRecentData(MeForm.LoginDialog.LoggedOnUser.CountryCode)
+                MeForm.RecentData = MeForm.client.GetRecentData()
                 MeForm.ServerUpdateTimer.Interval = s_oneMinutesInMilliseconds
                 MeForm.ServerUpdateTimer.Start()
                 Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MeForm.ServerUpdateTimer)} started at {Now.ToLongTimeString}")

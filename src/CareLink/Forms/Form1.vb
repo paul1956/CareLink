@@ -1065,13 +1065,13 @@ Public Class Form1
             Debug.Print($"In {NameOf(ServerUpdateTimer_Tick)}, inside SyncLock at {Now.ToLongTimeString}")
             If Not _updating Then
                 _updating = True
-                Me.RecentData = _client?.GetRecentData(_LoginDialog.LoggedOnUser.CountryCode)
+                Me.RecentData = _client?.GetRecentData()
                 If Me.RecentData Is Nothing Then
                     If _client Is Nothing OrElse _client.HasErrors Then
                         _client = New CareLinkClient(My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
                         _LoginDialog.Client = _client
                     End If
-                    Me.RecentData = _client.GetRecentData(_LoginDialog.LoggedOnUser.CountryCode)
+                    Me.RecentData = _client.GetRecentData()
                 End If
                 Me.LoginStatus.Text = _client.GetLastErrorMessage
                 Me.Cursor = Cursors.Default
@@ -1375,11 +1375,11 @@ Public Class Form1
                 Case ItemIndexs.currentServerTime,
                     ItemIndexs.lastConduitTime,
                     ItemIndexs.lastConduitUpdateServerTime
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Value, row.Value.Epoch2DateTimeString))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
 
                 Case ItemIndexs.lastMedicalDeviceDataUpdateServerTime
                     s_lastMedicalDeviceDataUpdateServerEpoch = CLng(row.Value)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Value, row.Value.Epoch2DateTimeString))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
 
                 Case ItemIndexs.firstName,
                      ItemIndexs.lastName,
@@ -1419,46 +1419,46 @@ Public Class Form1
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexs.lastSG
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
                     s_lastSgRecord = New SgRecord(Loads(row.Value))
 
                 Case ItemIndexs.lastAlarm
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
                     s_lastAlarmValue = Loads(row.Value)
 
                 Case ItemIndexs.activeInsulin
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
                     s_activeInsulin = DictionaryToClass(Of ActiveInsulinRecord)(Loads(row.Value), 0)
 
                 Case ItemIndexs.sgs
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
                     s_listOfSGs = LoadList(row.Value).ToSgList()
                     If s_listOfSGs.Count > 2 Then
                         s_lastBGValue = s_listOfSGs.Item(s_listOfSGs.Count - 2).sg
                     End If
 
                 Case ItemIndexs.limits
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
                     LimitsRecordHelpers.UpdateListOflimitRecords(row)
 
                 Case ItemIndexs.markers
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
 
                 Case ItemIndexs.notificationHistory
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
                     s_notificationHistoryValue = Loads(row.Value)
 
                 Case ItemIndexs.therapyAlgorithmState
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
                     s_theraphyAlgorthmStateValue = Loads(row.Value)
 
                 Case ItemIndexs.pumpBannerState
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
                     Me.TempTargetLabel.Visible = False
                     s_pumpBannerStateValue = LoadList(row.Value)
 
                 Case ItemIndexs.basal
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails, ""))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
                     s_basalValue = Loads(row.Value)
 
                 Case ItemIndexs.systemStatusMessage
