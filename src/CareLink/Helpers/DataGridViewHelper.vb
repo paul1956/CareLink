@@ -37,7 +37,7 @@ Friend Module DataGridViewHelper
     End Function
 
     Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, dGV As DataGridView, table As DataTable, rowIndex As ItemIndexs)
-        realPanel.Controls(0).Text = GetTabName(rowIndex)
+        realPanel.SetTabName(rowIndex)
         dGV.DataSource = table
         dGV.RowHeadersVisible = False
     End Sub
@@ -45,9 +45,9 @@ Friend Module DataGridViewHelper
     Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As ItemIndexs, hideRecordNumberColumn As Boolean)
         Dim button1 As Button = TryCast(realPanel.Controls(0), Button)
         If button1 Is Nothing Then
-            realPanel.Controls(0).Text = GetTabName(rowIndex)
+            realPanel.SetTabName(rowIndex)
         Else
-            realPanel.Controls(1).Text = GetTabName(rowIndex)
+            realPanel.SetTabName(rowIndex)
         End If
         Dim dGVIndex As Integer = realPanel.Controls.Count - 1
         Dim dGV As DataGridView = TryCast(realPanel.Controls(dGVIndex), DataGridView)

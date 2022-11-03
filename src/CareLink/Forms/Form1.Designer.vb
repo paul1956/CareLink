@@ -117,6 +117,7 @@ Partial Class Form1
         Me.DataGridViewCheckBoxColumnCareLinkUseAdvancedAITDecay = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.DataGridViewCheckBoxColumnCareLinkUseLocalTimeZone = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.DataGridViewCheckBoxColumnCareLinkAutoLogin = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.DataGridViewButtonColumnCareLinkDeleteRow = New DataGridViewDisableButtonColumn()
         Me.DataGridViewCountryItemsPage1 = New System.Windows.Forms.DataGridView()
         Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumnCountrySettingsCategory = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -669,7 +670,7 @@ Partial Class Form1
         Me.BasalLabel.Location = New System.Drawing.Point(157, 6)
         Me.BasalLabel.Margin = New System.Windows.Forms.Padding(3)
         Me.BasalLabel.Name = "BasalLabel"
-        Me.BasalLabel.Size = New System.Drawing.Size(34, 25)
+        Me.BasalLabel.Size = New System.Drawing.Size(1201, 25)
         Me.BasalLabel.TabIndex = 1
         Me.BasalLabel.Text = "Basal"
         Me.BasalLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -921,7 +922,7 @@ Partial Class Form1
         DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DataGridViewCareLinkUsers.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
         Me.DataGridViewCareLinkUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewCareLinkUsers.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumnCareLinkUsersID, Me.DataGridViewTextBoxColumnCareLinkUserName, Me.DataGridViewTextBoxColumnCareLinkPassword, Me.DataGridViewTextBoxColumnCareLinkAIT, Me.DataGridViewTextBoxColumnCareLinkAlertPhoneNumber, Me.DataGridViewTextBoxColumnCareLinkCarrierTextingDomain, Me.DataGridViewTextBoxColumnCareLinkCountryCode, Me.DataGridViewTextBoxColumnCareLinkMailServerPassword, Me.DataGridViewTextBoxColumnCareLinkMailServerPort, Me.DataGridViewTextBoxColumnCareLinkMailServerUserName, Me.DataGridViewTextBoxColumnCareLinkSettingsVersion, Me.DataGridViewCheckBoxColumnCareLinkUseAdvancedAITDecay, Me.DataGridViewCheckBoxColumnCareLinkUseLocalTimeZone, Me.DataGridViewCheckBoxColumnCareLinkAutoLogin})
+        Me.DataGridViewCareLinkUsers.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumnCareLinkUsersID, Me.DataGridViewButtonColumnCareLinkDeleteRow, Me.DataGridViewTextBoxColumnCareLinkUserName, Me.DataGridViewTextBoxColumnCareLinkPassword, Me.DataGridViewTextBoxColumnCareLinkAIT, Me.DataGridViewTextBoxColumnCareLinkAlertPhoneNumber, Me.DataGridViewTextBoxColumnCareLinkCarrierTextingDomain, Me.DataGridViewTextBoxColumnCareLinkCountryCode, Me.DataGridViewTextBoxColumnCareLinkMailServerPassword, Me.DataGridViewTextBoxColumnCareLinkMailServerPort, Me.DataGridViewTextBoxColumnCareLinkMailServerUserName, Me.DataGridViewTextBoxColumnCareLinkSettingsVersion, Me.DataGridViewCheckBoxColumnCareLinkUseAdvancedAITDecay, Me.DataGridViewCheckBoxColumnCareLinkUseLocalTimeZone, Me.DataGridViewCheckBoxColumnCareLinkAutoLogin})
         Me.DataGridViewCareLinkUsers.DataSource = Me.CareLinkUserDataRecordBindingSource
         Me.DataGridViewCareLinkUsers.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridViewCareLinkUsers.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
@@ -939,6 +940,18 @@ Partial Class Form1
         Me.DataGridViewTextBoxColumnCareLinkUsersID.Name = "DataGridViewTextBoxColumnCareLinkUsersID"
         Me.DataGridViewTextBoxColumnCareLinkUsersID.ReadOnly = True
         Me.DataGridViewTextBoxColumnCareLinkUsersID.Width = 43
+        '
+        'DataGridViewButtonColumnCareLinkDeleteRow
+        '
+        Me.DataGridViewButtonColumnCareLinkDeleteRow.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DataGridViewButtonColumnCareLinkDeleteRow.DataPropertyName = "DeleteRow"
+        Me.DataGridViewButtonColumnCareLinkDeleteRow.HeaderText = ""
+        Me.DataGridViewButtonColumnCareLinkDeleteRow.MinimumWidth = 50
+        Me.DataGridViewButtonColumnCareLinkDeleteRow.Name = "DataGridViewButtonColumnCareLinkDeleteRow"
+        Me.DataGridViewButtonColumnCareLinkDeleteRow.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.DataGridViewButtonColumnCareLinkDeleteRow.Text = "Delete Row"
+        Me.DataGridViewButtonColumnCareLinkDeleteRow.UseColumnTextForButtonValue = True
+        Me.DataGridViewButtonColumnCareLinkDeleteRow.Width = 50
         '
         'DataGridViewTextBoxColumnCareLinkUserName
         '
@@ -2538,6 +2551,7 @@ Partial Class Form1
         Me.TableLayoutPanelBasalTop.Controls.Add(Me.BasalButton, 0, 0)
         Me.TableLayoutPanelBasalTop.Controls.Add(Me.BasalLabel, 1, 0)
         Me.TableLayoutPanelBasalTop.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelBasalTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelBasalTop.Name = "TableLayoutPanelBasalTop"
         Me.TableLayoutPanelBasalTop.RowCount = 1
         Me.TableLayoutPanelBasalTop.RowStyles.Add(New System.Windows.Forms.RowStyle())

@@ -30,8 +30,33 @@ Public Class SummaryRecord
         Me.Message = message
     End Sub
 
+    ''' <summary>
+    ''' Create new summary record form KVP
+    ''' </summary>
+    ''' <param name="recordNumber"></param>
+    ''' <param name="row"></param>
+    ''' <param name="message"></param>
     Protected Friend Sub New(recordNumber As Integer, row As KeyValuePair(Of String, String), Optional message As String = "")
-        Me.New(recordNumber, row.Value, message)
+        Me.New(recordNumber, row.Key, row.Value, message)
+    End Sub
+
+    ''' <summary>
+    ''' Summary record where record number is key
+    ''' </summary>
+    ''' <param name="recordNumber"></param>
+    ''' <param name="Value"></param>
+    Protected Friend Sub New(recordNumber As Integer, Value As String)
+        Me.New(recordNumber, CType(recordNumber, ItemIndexs).ToString, Value, "")
+    End Sub
+
+    ''' <summary>
+    ''' Summary record where record number is key and we have a message
+    ''' </summary>
+    ''' <param name="recordNumber"></param>
+    ''' <param name="Value"></param>
+    ''' <param name="message"></param>
+    Protected Friend Sub New(recordNumber As Integer, Value As String, message As String)
+        Me.New(recordNumber, CType(recordNumber, ItemIndexs).ToString, Value, message)
     End Sub
 
     ''' <summary>
@@ -40,28 +65,28 @@ Public Class SummaryRecord
     ''' <param name="recordNumber"></param>
     ''' <param name="key"></param>
     ''' <param name="value"></param>
-    Protected Friend Sub New(recordNumber As Integer, value As String, message As String)
+    Protected Friend Sub New(recordNumber As Integer, key As String, value As String, message As String)
         Me.RecordNumber = recordNumber
-        Me.Key = CType(recordNumber, ItemIndexs).ToString
+        Me.Key = key
         Me.Value = value
         Me.Message = message
     End Sub
-
-    <DisplayName("Record Number")>
-    <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
-    Public ReadOnly Property RecordNumber As Integer
 
     <DisplayName(NameOf(Key))>
     <Column(Order:=1, TypeName:=NameOf([String]))>
     Public ReadOnly Property Key As String
 
-    <DisplayName(NameOf(Value))>
-    <Column(Order:=2, TypeName:=NameOf([String]))>
-    Public ReadOnly Property Value As String
-
     <DisplayName(NameOf(Message))>
     <Column(Order:=3, TypeName:=NameOf([String]))>
     Public ReadOnly Property Message As String = ""
+
+    <DisplayName("Record Number")>
+    <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
+    Public ReadOnly Property RecordNumber As Integer
+
+    <DisplayName(NameOf(Value))>
+    <Column(Order:=2, TypeName:=NameOf([String]))>
+    Public ReadOnly Property Value As String
 
     Public Function CompareTo(obj As Object) As Integer Implements IComparable.CompareTo
         Dim bom As SummaryRecord = CType(obj, SummaryRecord)

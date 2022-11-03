@@ -2,6 +2,25 @@
   "version": 3,
   "targets": {
     "net6.0-windows7.0": {
+      "DataGridViewDisableButtonColumnEx/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0-windows7.0/DataGridViewDisableButtonColumnEx.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0-windows7.0/DataGridViewDisableButtonColumnEx.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App.WindowsForms"
+        ],
+        "contentFiles": {
+          "contentFiles/any/net6.0-windows7.0/ColumnButton.ico": {
+            "buildAction": "Content",
+            "codeLanguage": "any",
+            "copyToOutput": false
+          }
+        }
+      },
       "Microsoft.Exchange.WebServices.NETStandard/2.0.0-beta3": {
         "type": "package",
         "dependencies": {
@@ -71,7 +90,7 @@
           "build/netcoreapp3.1/_._": {}
         }
       },
-      "Octokit/3.0.0": {
+      "Octokit/4.0.1": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/Octokit.dll": {
@@ -1141,19 +1160,6 @@
           }
         }
       },
-      "DataGridViewDisableButtonColumnEx/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
-        "compile": {
-          "bin/placeholder/DataGridViewDisableButtonColumnEx.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/DataGridViewDisableButtonColumnEx.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.WindowsDesktop.App.WindowsForms"
-        ]
-      },
       "System.Windows.Forms.DataVisualization/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
@@ -1186,6 +1192,20 @@
     }
   },
   "libraries": {
+    "DataGridViewDisableButtonColumnEx/1.0.0": {
+      "sha512": "wZUkehiER8QLrC+0n6d6J8Qma2uDCKj0Te/ZsnxJ+ZE+t8iiWpLpREzyrBi4VV4B9XIUOxUwZklm4kzAjZuyMg==",
+      "type": "package",
+      "path": "datagridviewdisablebuttoncolumnex/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        "ColumnButton.png",
+        "content/ColumnButton.ico",
+        "contentFiles/any/net6.0-windows7.0/ColumnButton.ico",
+        "datagridviewdisablebuttoncolumnex.1.0.0.nupkg.sha512",
+        "datagridviewdisablebuttoncolumnex.nuspec",
+        "lib/net6.0-windows7.0/DataGridViewDisableButtonColumnEx.dll"
+      ]
+    },
     "Microsoft.Exchange.WebServices.NETStandard/2.0.0-beta3": {
       "sha512": "kPH/1BLG7JoqBbPjnV529hA9p6YbMPqVoAbEjFncX7b/O2u2MqIuULSTHddKjGSEJDuIfYpXTb8PjsxPWkgUVQ==",
       "type": "package",
@@ -1280,16 +1300,16 @@
         "ref/netcoreapp3.1/Microsoft.WinForms.Utilities.Shared.dll"
       ]
     },
-    "Octokit/3.0.0": {
-      "sha512": "IM7sDD1DSu+6jiFKcRyB8Tb0CZlPJ7nnBdPnhCXEToEZWJAlr/01PVk/UTRiCutF62Dni3n2gZWJrusLytxzpw==",
+    "Octokit/4.0.1": {
+      "sha512": "fwTQ/mEyvRA+LPvEApqziBR1Qvo6+AshUBQTZqXM5RMuJaSBzW3PGrG33HA+zOaq+71E4+EmN7kjCDBc+Ra3WQ==",
       "type": "package",
-      "path": "octokit/3.0.0",
+      "path": "octokit/4.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Octokit.dll",
         "lib/netstandard2.0/Octokit.xml",
-        "octokit.3.0.0.nupkg.sha512",
+        "octokit.4.0.1.nupkg.sha512",
         "octokit.nuspec",
         "octokit.png"
       ]
@@ -3815,11 +3835,6 @@
         "version.txt"
       ]
     },
-    "DataGridViewDisableButtonColumnEx/1.0.0": {
-      "type": "project",
-      "path": "../DataGridViewDisableButtonColumnEx/DataGridViewDisableButtonColumnEx.vbproj",
-      "msbuildProject": "../DataGridViewDisableButtonColumnEx/DataGridViewDisableButtonColumnEx.vbproj"
-    },
     "System.Windows.Forms.DataVisualization/1.0.0": {
       "type": "project",
       "path": "../../../winforms-datavisualization/src/System.Windows.Forms.DataVisualization/ChartWin.csproj",
@@ -3835,7 +3850,7 @@
     "net6.0-windows7.0": [
       "DataGridViewDisableButtonColumnEx >= 1.0.0",
       "Microsoft.Exchange.WebServices.NETStandard >= 2.0.0-beta3",
-      "Octokit >= 3.0.0",
+      "Octokit >= 4.0.1",
       "System.Windows.Forms.DataVisualization >= 1.0.0",
       "ToolStripComboBoxEx >= 1.0.0"
     ]
@@ -3845,7 +3860,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "3.5.7.3",
+    "version": "3.5.7.4",
     "restore": {
       "projectUniqueName": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\CareLink\\CareLink.vbproj",
       "projectName": "CareLink",
@@ -3878,9 +3893,6 @@
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
           "projectReferences": {
-            "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumnEx\\DataGridViewDisableButtonColumnEx.vbproj": {
-              "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumnEx\\DataGridViewDisableButtonColumnEx.vbproj"
-            },
             "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\ToolStripComboBoxEx.vbproj": {
               "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\ToolStripComboBoxEx.vbproj"
             },
@@ -3895,13 +3907,17 @@
       "net6.0-windows7.0": {
         "targetAlias": "net6.0-windows",
         "dependencies": {
+          "DataGridViewDisableButtonColumnEx": {
+            "target": "Package",
+            "version": "[1.0.0, )"
+          },
           "Microsoft.Exchange.WebServices.NETStandard": {
             "target": "Package",
             "version": "[2.0.0-beta3, )"
           },
           "Octokit": {
             "target": "Package",
-            "version": "[3.0.0, )"
+            "version": "[4.0.1, )"
           },
           "ToolStripComboBoxEx": {
             "target": "Package",
