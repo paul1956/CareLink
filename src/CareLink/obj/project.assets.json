@@ -3837,8 +3837,8 @@
     },
     "System.Windows.Forms.DataVisualization/1.0.0": {
       "type": "project",
-      "path": "../../../winforms-datavisualization.old/src/System.Windows.Forms.DataVisualization/ChartWin.csproj",
-      "msbuildProject": "../../../winforms-datavisualization.old/src/System.Windows.Forms.DataVisualization/ChartWin.csproj"
+      "path": "../../../winforms-datavisualization/src/System.Windows.Forms.DataVisualization/ChartWin.csproj",
+      "msbuildProject": "../../../winforms-datavisualization/src/System.Windows.Forms.DataVisualization/ChartWin.csproj"
     },
     "ToolStripComboBoxEx/1.0.0": {
       "type": "project",
@@ -3896,8 +3896,8 @@
             "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\ToolStripComboBoxEx.vbproj": {
               "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\ToolStripComboBoxEx.vbproj"
             },
-            "C:\\Users\\PaulM\\Source\\Repos\\winforms-datavisualization.old\\src\\System.Windows.Forms.DataVisualization\\ChartWin.csproj": {
-              "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\winforms-datavisualization.old\\src\\System.Windows.Forms.DataVisualization\\ChartWin.csproj"
+            "C:\\Users\\PaulM\\Source\\Repos\\winforms-datavisualization\\src\\System.Windows.Forms.DataVisualization\\ChartWin.csproj": {
+              "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\winforms-datavisualization\\src\\System.Windows.Forms.DataVisualization\\ChartWin.csproj"
             }
           }
         }

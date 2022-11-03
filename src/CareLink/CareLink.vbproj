@@ -118,13 +118,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\winforms-datavisualization.old\src\System.Windows.Forms.DataVisualization\ChartWin.csproj" />
+    <ProjectReference Include="..\..\..\winforms-datavisualization\src\System.Windows.Forms.DataVisualization\ChartWin.csproj" />
     <ProjectReference Include="..\ToolStripComboBoxEx\ToolStripComboBoxEx.vbproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="System.Windows.Forms.DataVisualization">
-      <HintPath>..\..\..\winforms-datavisualization.old\src\System.Windows.Forms.DataVisualization\bin\$(Configuration)\$(TargetFramework)\System.Windows.Forms.DataVisualization.dll</HintPath>
+      <HintPath>..\..\..\winforms-datavisualization\src\System.Windows.Forms.DataVisualization\bin\$(Configuration)\$(TargetFramework)\System.Windows.Forms.DataVisualization.dll</HintPath>
     </Reference>
   </ItemGroup>
 
