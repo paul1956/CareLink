@@ -92,7 +92,7 @@ Public Class TimeChangeRecord
     <Column(Order:=10, TypeName:=NameOf([String]))>
     Public Property previousDateTimeAsString As String
 
-    <DisplayName("Previous DateTime")>
+    <DisplayName("Previous OA DateTime")>
     <Column(Order:=11, TypeName:=NameOf(OADate))>
     Public ReadOnly Property previousOADateTime As OADate
         Get
