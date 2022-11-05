@@ -1006,7 +1006,17 @@ Public Class Form1
 
 #Region "Tab Button Events"
 
-    Private Sub LastAlarmButton_Click(sender As Object, e As EventArgs) Handles LastSGButton.Click, LastAlarmButton.Click, ActiveInsulinButton.Click, SgsButton.Click, LimitsButton.Click, NotificationHistoryButton.Click, TherapyAlgorithmButton.Click, BannerStateButton.Click, BasalButton.Click
+    Private Sub LastAlarmButton_Click(sender As Object, e As EventArgs) _
+        Handles TableLayoutPanelLastSgTop.ButtonClick, TableLayoutPanelLastAlarmTop.ButtonClick,
+        TableLayoutPanelActiveInsulinTop.ButtonClick, SgsButton.Click,
+        TableLayoutPanelSgsTop.ButtonClick, TableLayoutPanelLimitsTop.ButtonClick,
+        TableLayoutPanelNotificationHistoryTop.ButtonClick,
+        TableLayoutPanelTherapyAlgorithmTop.ButtonClick, TableLayoutPanelBannerStateTop.ButtonClick,
+        TableLayoutPanelBasalTop.ButtonClick, TableLayoutPanelAutoBasalDeliveryTop.ButtonClick,
+        TableLayoutPanelAutoModeStatusTop.ButtonClick, TableLayoutPanelBgReadingsTop.ButtonClick,
+        TableLayoutPanelCalibrationTop.ButtonClick, TableLayoutPanelInsulinTop.ButtonClick,
+        TableLayoutPanelLowGlucoseSuspendedTop.ButtonClick, TableLayoutPanelMealTop.ButtonClick,
+        TableLayoutPanelTimeChangeTop.ButtonClick
         Me.TabControlPage1.SelectedIndex = 3
         Me.TabControlPage1.Visible = True
     End Sub
@@ -1373,8 +1383,8 @@ Public Class Form1
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexs.currentServerTime,
-                    ItemIndexs.lastConduitTime,
-                    ItemIndexs.lastConduitUpdateServerTime
+                     ItemIndexs.lastConduitTime,
+                     ItemIndexs.lastConduitUpdateServerTime
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
 
                 Case ItemIndexs.lastMedicalDeviceDataUpdateServerTime
@@ -1382,29 +1392,57 @@ Public Class Form1
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
 
                 Case ItemIndexs.firstName,
-                     ItemIndexs.lastName,
-                     ItemIndexs.conduitSerialNumber,
-                     ItemIndexs.conduitBatteryLevel,
-                     ItemIndexs.conduitBatteryStatus,
-                     ItemIndexs.conduitInRange,
-                     ItemIndexs.conduitMedicalDeviceInRange,
-                     ItemIndexs.conduitSensorInRange,
-                     ItemIndexs.medicalDeviceFamily
+                     ItemIndexs.lastName
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexs.conduitSerialNumber
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexs.conduitBatteryLevel
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Phone battery level {row.Value}%."))
+
+                Case ItemIndexs.conduitBatteryStatus
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Phone battery status is {row.Value}"))
+
+                Case ItemIndexs.conduitInRange
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Phone {If(CBool(row.Value) = True, "is", "is not")} in range of pump"))
+
+                Case ItemIndexs.conduitMedicalDeviceInRange
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Pump {If(CBool(row.Value) = True, "is", "is not")} in range of phone"))
+
+                Case ItemIndexs.conduitSensorInRange
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Transmitter {If(CBool(row.Value) = True, "is", "is not")} in range of pump"))
+
+                Case ItemIndexs.medicalDeviceFamily
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexs.sensorState
                     s_sensorState = row.Value
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_sensorMessages, NameOf(s_sensorMessages)))
 
-                Case ItemIndexs.medicalDeviceSerialNumber,
-                     ItemIndexs.medicalDeviceTime,
-                     ItemIndexs.sMedicalDeviceTime,
-                     ItemIndexs.reservoirLevelPercent,
-                     ItemIndexs.reservoirAmount,
-                     ItemIndexs.reservoirRemainingUnits,
-                     ItemIndexs.medicalDeviceBatteryLevelPercent,
-                     ItemIndexs.sensorDurationHours,
-                     ItemIndexs.timeToNextCalibHours
+                Case ItemIndexs.medicalDeviceSerialNumber
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Pump serial number is {row.Value}."))
+
+                Case ItemIndexs.medicalDeviceTime
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexs.sMedicalDeviceTime
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexs.reservoirLevelPercent
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Reservoir is {row.Value}%"))
+
+                Case ItemIndexs.reservoirAmount
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Full reservoir holds {row.Value}U"))
+
+                Case ItemIndexs.reservoirRemainingUnits
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Reservoir has {row.Value}U remaining"))
+
+                Case ItemIndexs.medicalDeviceBatteryLevelPercent
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Pump battery is at {row.Value}%"))
+
+                Case ItemIndexs.sensorDurationHours,
+                       ItemIndexs.timeToNextCalibHours
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexs.calibStatus
@@ -1465,11 +1503,19 @@ Public Class Form1
                     s_systemStatusMessage = row.Value
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_sensorMessages, NameOf(s_sensorMessages)))
 
-                Case ItemIndexs.averageSG,
-                     ItemIndexs.belowHypoLimit,
-                     ItemIndexs.aboveHyperLimit,
-                     ItemIndexs.timeInRange,
-                     ItemIndexs.pumpCommunicationState
+                Case ItemIndexs.averageSG
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexs.belowHypoLimit
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Time below limit = {ConvertPercent24HoursToDisplayValueString(row.Value)}"))
+
+                Case ItemIndexs.aboveHyperLimit
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Time above limit = {ConvertPercent24HoursToDisplayValueString(row.Value)}"))
+
+                Case ItemIndexs.timeInRange
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Time in range = {ConvertPercent24HoursToDisplayValueString(row.Value)}"))
+
+                Case ItemIndexs.pumpCommunicationState
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexs.gstCommunicationState
@@ -1481,7 +1527,7 @@ Public Class Form1
                     s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.gstBatteryLevel, "0", "No data from pump"))
 
                 Case ItemIndexs.gstBatteryLevel
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"{row.Value}%"))
 
                 Case ItemIndexs.lastConduitDateTime
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastConduitDateTime), row.Value.CDateOrDefault(NameOf(ItemIndexs.lastConduitDateTime), CurrentUICulture))))
@@ -1512,6 +1558,17 @@ Public Class Form1
 
         Me.Cursor = Cursors.Default
     End Sub
+
+    Private Shared Function ConvertPercent24HoursToDisplayValueString(rowValue As String) As String
+        Dim val As Decimal = CDec(Convert.ToInt32(rowValue) * 0.24)
+        Dim hours As Integer = Convert.ToInt32(val)
+        Dim minutes As Integer = CInt((val Mod 1) * 60)
+        If minutes = 0 Then
+            Return $"{hours} hours, out of last 24 hours."
+        Else
+            Return $"{hours} hours and {minutes} minutes, out of last 24 hours."
+        End If
+    End Function
 
 #End Region ' Update Data and Tables
 

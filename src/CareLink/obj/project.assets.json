@@ -1176,6 +1176,19 @@
           "Microsoft.WindowsDesktop.App.WindowsForms"
         ]
       },
+      "TableLayputPanelTop/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/TableLayputPanelTop.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TableLayputPanelTop.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App.WindowsForms"
+        ]
+      },
       "ToolStripComboBoxEx/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
@@ -3840,6 +3853,11 @@
       "path": "../../../winforms-datavisualization/src/System.Windows.Forms.DataVisualization/ChartWin.csproj",
       "msbuildProject": "../../../winforms-datavisualization/src/System.Windows.Forms.DataVisualization/ChartWin.csproj"
     },
+    "TableLayputPanelTop/1.0.0": {
+      "type": "project",
+      "path": "../../../TableLayputPanelTop/TableLayputPanelTop/TableLayputPanelTop.vbproj",
+      "msbuildProject": "../../../TableLayputPanelTop/TableLayputPanelTop/TableLayputPanelTop.vbproj"
+    },
     "ToolStripComboBoxEx/1.0.0": {
       "type": "project",
       "path": "../ToolStripComboBoxEx/ToolStripComboBoxEx.vbproj",
@@ -3852,6 +3870,7 @@
       "Microsoft.Exchange.WebServices.NETStandard >= 2.0.0-beta3",
       "Octokit >= 4.0.1",
       "System.Windows.Forms.DataVisualization >= 1.0.0",
+      "TableLayputPanelTop >= 1.0.0",
       "ToolStripComboBoxEx >= 1.0.0"
     ]
   },
@@ -3860,7 +3879,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "3.5.7.4",
+    "version": "3.5.7.5",
     "restore": {
       "projectUniqueName": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\CareLink\\CareLink.vbproj",
       "projectName": "CareLink",
@@ -3882,6 +3901,7 @@
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\DataGridViewDisableButtonColumnEx\\bin": {},
         "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\bin\\Debug": {},
+        "C:\\Users\\PaulM\\Source\\Repos\\TableLayputPanelTop\\TableLayputPanelTop\\bin\\Debug": {},
         "https://api.nuget.org/v3/index.json": {},
         "https://dotnet.myget.org/F/roslyn-analyzers/api/v3/index.json": {},
         "https://dotnet.myget.org/F/roslyn/api/v3/index.json": {},
@@ -3895,6 +3915,9 @@
           "projectReferences": {
             "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\ToolStripComboBoxEx.vbproj": {
               "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\ToolStripComboBoxEx\\ToolStripComboBoxEx.vbproj"
+            },
+            "C:\\Users\\PaulM\\Source\\Repos\\TableLayputPanelTop\\TableLayputPanelTop\\TableLayputPanelTop.vbproj": {
+              "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\TableLayputPanelTop\\TableLayputPanelTop\\TableLayputPanelTop.vbproj"
             },
             "C:\\Users\\PaulM\\Source\\Repos\\winforms-datavisualization\\src\\System.Windows.Forms.DataVisualization\\ChartWin.csproj": {
               "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\winforms-datavisualization\\src\\System.Windows.Forms.DataVisualization\\ChartWin.csproj"

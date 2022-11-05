@@ -19,9 +19,9 @@
     <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
     <RepositoryUrl>https://github.com/paul1956/CareLink</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>3.5.7.4</Version>
-    <AssemblyVersion>3.5.7.4</AssemblyVersion>
-    <FileVersion>3.5.7.4</FileVersion>
+    <Version>3.5.7.5</Version>
+    <AssemblyVersion>3.5.7.5</AssemblyVersion>
+    <FileVersion>3.5.7.5</FileVersion>
     <PackageIcon>IconImage.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/paul1956/CareLink</PackageProjectUrl>
@@ -118,6 +118,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\TableLayputPanelTop\TableLayputPanelTop\TableLayputPanelTop.vbproj" />
     <ProjectReference Include="..\..\..\winforms-datavisualization\src\System.Windows.Forms.DataVisualization\ChartWin.csproj" />
     <ProjectReference Include="..\ToolStripComboBoxEx\ToolStripComboBoxEx.vbproj" />
   </ItemGroup>
