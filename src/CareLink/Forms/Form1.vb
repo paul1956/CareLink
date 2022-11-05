@@ -454,7 +454,7 @@ Public Class Form1
 #Region "Home Page Events"
 
     Private Sub CalibrationDueImage_MouseHover(sender As Object, e As EventArgs) Handles CalibrationDueImage.MouseHover
-        Dim timeToNextCalibrationMinutes As UShort = CUShort(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.timeToNextCalibrationMinutes)))
+        Dim timeToNextCalibrationMinutes As UShort = s_listOfSummaryRecords.GetValue(Of UShort)(NameOf(ItemIndexs.timeToNextCalibrationMinutes))
         If timeToNextCalibrationMinutes > 0 AndAlso timeToNextCalibrationMinutes < 1440 Then
             _calibrationToolTip.SetToolTip(Me.CalibrationDueImage, $"Calibration Due {Now.AddMinutes(timeToNextCalibrationMinutes).ToShortTimeString}")
         End If
@@ -585,7 +585,7 @@ Public Class Form1
     End Sub
 
     Private Sub SensorAgeLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles TransmitterBatteryPictureBox.MouseHover
-        Dim sensorDurationHours As Integer = CInt(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.sensorDurationHours)))
+        Dim sensorDurationHours As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexs.sensorDurationHours))
         If sensorDurationHours < 24 Then
             _sensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {sensorDurationHours} hours")
         End If
@@ -1006,7 +1006,17 @@ Public Class Form1
 
 #Region "Tab Button Events"
 
-    Private Sub LastAlarmButton_Click(sender As Object, e As EventArgs) Handles LastSGButton.Click, LastAlarmButton.Click, ActiveInsulinButton.Click, SgsButton.Click, LimitsButton.Click, NotificationHistoryButton.Click, TherapyAlgorithmButton.Click, BannerStateButton.Click, BasalButton.Click
+    Private Sub LastAlarmButton_Click(sender As Object, e As EventArgs) _
+        Handles TableLayoutPanelLastSgTop.ButtonClick, TableLayoutPanelLastAlarmTop.ButtonClick,
+        TableLayoutPanelActiveInsulinTop.ButtonClick, SgsButton.Click,
+        TableLayoutPanelSgsTop.ButtonClick, TableLayoutPanelLimitsTop.ButtonClick,
+        TableLayoutPanelNotificationHistoryTop.ButtonClick,
+        TableLayoutPanelTherapyAlgorithmTop.ButtonClick, TableLayoutPanelBannerStateTop.ButtonClick,
+        TableLayoutPanelBasalTop.ButtonClick, TableLayoutPanelAutoBasalDeliveryTop.ButtonClick,
+        TableLayoutPanelAutoModeStatusTop.ButtonClick, TableLayoutPanelBgReadingsTop.ButtonClick,
+        TableLayoutPanelCalibrationTop.ButtonClick, TableLayoutPanelInsulinTop.ButtonClick,
+        TableLayoutPanelLowGlucoseSuspendedTop.ButtonClick, TableLayoutPanelMealTop.ButtonClick,
+        TableLayoutPanelTimeChangeTop.ButtonClick
         Me.TabControlPage1.SelectedIndex = 3
         Me.TabControlPage1.Visible = True
     End Sub
@@ -1373,8 +1383,8 @@ Public Class Form1
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexs.currentServerTime,
-                    ItemIndexs.lastConduitTime,
-                    ItemIndexs.lastConduitUpdateServerTime
+                     ItemIndexs.lastConduitTime,
+                     ItemIndexs.lastConduitUpdateServerTime
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
 
                 Case ItemIndexs.lastMedicalDeviceDataUpdateServerTime
@@ -1382,29 +1392,57 @@ Public Class Form1
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
 
                 Case ItemIndexs.firstName,
-                     ItemIndexs.lastName,
-                     ItemIndexs.conduitSerialNumber,
-                     ItemIndexs.conduitBatteryLevel,
-                     ItemIndexs.conduitBatteryStatus,
-                     ItemIndexs.conduitInRange,
-                     ItemIndexs.conduitMedicalDeviceInRange,
-                     ItemIndexs.conduitSensorInRange,
-                     ItemIndexs.medicalDeviceFamily
+                     ItemIndexs.lastName
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexs.conduitSerialNumber
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexs.conduitBatteryLevel
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Phone battery level {row.Value}%."))
+
+                Case ItemIndexs.conduitBatteryStatus
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Phone battery status is {row.Value}"))
+
+                Case ItemIndexs.conduitInRange
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Phone {If(CBool(row.Value) = True, "is", "is not")} in range of pump"))
+
+                Case ItemIndexs.conduitMedicalDeviceInRange
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Pump {If(CBool(row.Value) = True, "is", "is not")} in range of phone"))
+
+                Case ItemIndexs.conduitSensorInRange
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Transmitter {If(CBool(row.Value) = True, "is", "is not")} in range of pump"))
+
+                Case ItemIndexs.medicalDeviceFamily
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexs.sensorState
                     s_sensorState = row.Value
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_sensorMessages, NameOf(s_sensorMessages)))
 
-                Case ItemIndexs.medicalDeviceSerialNumber,
-                     ItemIndexs.medicalDeviceTime,
-                     ItemIndexs.sMedicalDeviceTime,
-                     ItemIndexs.reservoirLevelPercent,
-                     ItemIndexs.reservoirAmount,
-                     ItemIndexs.reservoirRemainingUnits,
-                     ItemIndexs.medicalDeviceBatteryLevelPercent,
-                     ItemIndexs.sensorDurationHours,
-                     ItemIndexs.timeToNextCalibHours
+                Case ItemIndexs.medicalDeviceSerialNumber
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Pump serial number is {row.Value}."))
+
+                Case ItemIndexs.medicalDeviceTime
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexs.sMedicalDeviceTime
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexs.reservoirLevelPercent
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Reservoir is {row.Value}%"))
+
+                Case ItemIndexs.reservoirAmount
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Full reservoir holds {row.Value}U"))
+
+                Case ItemIndexs.reservoirRemainingUnits
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Reservoir has {row.Value}U remaining"))
+
+                Case ItemIndexs.medicalDeviceBatteryLevelPercent
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Pump battery is at {row.Value}%"))
+
+                Case ItemIndexs.sensorDurationHours,
+                       ItemIndexs.timeToNextCalibHours
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexs.calibStatus
@@ -1465,11 +1503,19 @@ Public Class Form1
                     s_systemStatusMessage = row.Value
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_sensorMessages, NameOf(s_sensorMessages)))
 
-                Case ItemIndexs.averageSG,
-                     ItemIndexs.belowHypoLimit,
-                     ItemIndexs.aboveHyperLimit,
-                     ItemIndexs.timeInRange,
-                     ItemIndexs.pumpCommunicationState
+                Case ItemIndexs.averageSG
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexs.belowHypoLimit
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Time below limit = {ConvertPercent24HoursToDisplayValueString(row.Value)}"))
+
+                Case ItemIndexs.aboveHyperLimit
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Time above limit = {ConvertPercent24HoursToDisplayValueString(row.Value)}"))
+
+                Case ItemIndexs.timeInRange
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Time in range = {ConvertPercent24HoursToDisplayValueString(row.Value)}"))
+
+                Case ItemIndexs.pumpCommunicationState
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexs.gstCommunicationState
@@ -1481,7 +1527,7 @@ Public Class Form1
                     s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.gstBatteryLevel, "0", "No data from pump"))
 
                 Case ItemIndexs.gstBatteryLevel
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"{row.Value}%"))
 
                 Case ItemIndexs.lastConduitDateTime
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, New KeyValuePair(Of String, String)(NameOf(ItemIndexs.lastConduitDateTime), row.Value.CDateOrDefault(NameOf(ItemIndexs.lastConduitDateTime), CurrentUICulture))))
@@ -1512,6 +1558,17 @@ Public Class Form1
 
         Me.Cursor = Cursors.Default
     End Sub
+
+    Private Shared Function ConvertPercent24HoursToDisplayValueString(rowValue As String) As String
+        Dim val As Decimal = CDec(Convert.ToInt32(rowValue) * 0.24)
+        Dim hours As Integer = Convert.ToInt32(val)
+        Dim minutes As Integer = CInt((val Mod 1) * 60)
+        If minutes = 0 Then
+            Return $"{hours} hours, out of last 24 hours."
+        Else
+            Return $"{hours} hours and {minutes} minutes, out of last 24 hours."
+        End If
+    End Function
 
 #End Region ' Update Data and Tables
 
@@ -1556,15 +1613,15 @@ Public Class Form1
             End If
 
             Me.UpdateDataTables()
-            s_firstName = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.firstName))
-            s_aboveHyperLimit = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.aboveHyperLimit)).ParseSingle(1)
-            s_belowHypoLimit = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.belowHypoLimit)).ParseSingle(1)
-            s_timeInRange = CInt(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.timeInRange)))
+            s_firstName = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.firstName))
+            s_aboveHyperLimit = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.aboveHyperLimit)).ParseSingle(1)
+            s_belowHypoLimit = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.belowHypoLimit)).ParseSingle(1)
+            s_timeInRange = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexs.timeInRange))
             _updating = False
         End SyncLock
         Debug.Print($"In {NameOf(UpdateAllTabPages)} exited SyncLock")
 
-        Dim rowValue As String = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.lastSGTrend))
+        Dim rowValue As String = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.lastSGTrend))
         Dim arrows As String = Nothing
         If Trends.TryGetValue(rowValue, arrows) Then
             Me.LabelTrendArrows.Text = Trends(rowValue)
@@ -1587,8 +1644,8 @@ Public Class Form1
 
         Me.AboveHighLimitMessageLabel.Text = $"Above {s_limitHigh} {BgUnitsString}"
         Me.BelowLowLimitMessageLabel.Text = $"Below {s_limitLow} {BgUnitsString}"
-        Me.FullNameLabel.Text = $"{s_firstName} {s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.lastName))}"
-        Me.ModelLabel.Text = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.pumpModelNumber))
+        Me.FullNameLabel.Text = $"{s_firstName} {s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.lastName))}"
+        Me.ModelLabel.Text = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.pumpModelNumber))
         Me.ReadingsLabel.Text = $"{s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288"
 
         DisplayDataTableInDGV(Me.TableLayoutPanelLastSG,
@@ -1761,6 +1818,7 @@ Public Class Form1
                 _bgMiniDisplay.SetCurrentBGString(s_lastSgRecord.sg.ToString)
                 Me.SensorMessage.Visible = False
                 Me.CalibrationShieldPictureBox.Image = My.Resources.Shield
+                Me.ShieldUnitsLabel.Visible = True
             Else
                 _bgMiniDisplay.SetCurrentBGString("---")
                 Me.CurrentBGLabel.Visible = False
@@ -1768,7 +1826,14 @@ Public Class Form1
                 Me.SensorMessage.Visible = True
                 Me.SensorMessage.BackColor = Color.Transparent
                 Dim message As String = ""
-                If Not s_sensorMessages.TryGetValue(s_sensorState, message) Then
+                If s_sensorMessages.TryGetValue(s_sensorState, message) Then
+                    Dim splitMessage As String = message.Split(".")(0)
+                    If message.Contains("...") Then
+                        message = splitMessage & "..."
+                    Else
+                        message = splitMessage
+                    End If
+                Else
                     If Debugger.IsAttached Then
                         MsgBox($"{s_sensorState} is unknown sensor message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
                     End If
@@ -1777,6 +1842,7 @@ Public Class Form1
                 End If
                 Me.SensorMessage.Text = message
                 Me.SensorMessage.Visible = True
+                Me.ShieldUnitsLabel.Visible = False
                 Application.DoEvents()
             End If
             If _bgMiniDisplay.Visible Then
@@ -1791,8 +1857,8 @@ Public Class Form1
 
     Private Sub UpdateCalibrationTimeRemaining()
         Try
-            Dim timeToNextCalibrationMinutes As UShort = CUShort(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.timeToNextCalibrationMinutes), False))
-            Dim timeToNextCalibHours As UShort = CUShort(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.timeToNextCalibHours)))
+            Dim timeToNextCalibrationMinutes As UShort = s_listOfSummaryRecords.GetValue(Of UShort)(NameOf(ItemIndexs.timeToNextCalibrationMinutes), False)
+            Dim timeToNextCalibHours As UShort = s_listOfSummaryRecords.GetValue(Of UShort)(NameOf(ItemIndexs.timeToNextCalibHours))
             If timeToNextCalibHours > Byte.MaxValue Then
                 Me.CalibrationDueImage.Image = My.Resources.CalibrationUnavailable
             ElseIf timeToNextCalibHours = 0 Then
@@ -1887,7 +1953,7 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateInsulinLevel()
-        Select Case CInt(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.reservoirLevelPercent)))
+        Select Case s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexs.reservoirLevelPercent))
             Case >= 85
                 Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(7)
             Case >= 71
@@ -1909,13 +1975,13 @@ Public Class Form1
     End Sub
 
     Private Sub UpdatePumpBattery()
-        If Not CBool(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.conduitInRange))) Then
+        If Not s_listOfSummaryRecords.GetValue(Of Boolean)(NameOf(ItemIndexs.conduitInRange)) Then
             Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryUnknown
             Me.PumpBatteryRemainingLabel.Text = $"Unknown"
             Exit Sub
         End If
 
-        Dim batteryLeftPercent As Integer = CInt(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.medicalDeviceBatteryLevelPercent)))
+        Dim batteryLeftPercent As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexs.medicalDeviceBatteryLevelPercent))
         Select Case batteryLeftPercent
             Case > 90
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryFull
@@ -1937,7 +2003,7 @@ Public Class Form1
 
     Private Sub UpdateRemainingInsulin()
         Try
-            Me.RemainingInsulinUnits.Text = $"{s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.reservoirRemainingUnits)).ParseSingle(0):N1} U"
+            Me.RemainingInsulinUnits.Text = $"{s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.reservoirRemainingUnits)).ParseSingle(0):N1} U"
         Catch ex As Exception
             Stop
             Throw New ArithmeticException($"{ex.Message} exception in {NameOf(UpdateRemainingInsulin)}")
@@ -1946,7 +2012,7 @@ Public Class Form1
 
     Private Sub UpdateSensorLife()
 
-        Dim sensorDurationHours As Integer = CInt(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.sensorDurationHours)))
+        Dim sensorDurationHours As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexs.sensorDurationHours))
         If sensorDurationHours = 255 Then
             Me.SensorDaysLeftLabel.Text = $"???"
             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
@@ -1957,7 +2023,7 @@ Public Class Form1
             Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
         Else
             If sensorDurationHours = 0 Then
-                Dim sensorDurationMinutes As Integer = CInt(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.sensorDurationMinutes), False))
+                Dim sensorDurationMinutes As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexs.sensorDurationMinutes), False)
                 If sensorDurationMinutes = 0 Then
                     Me.SensorDaysLeftLabel.Text = ""
                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpired
@@ -1997,12 +2063,12 @@ Public Class Form1
             .Series(NameOf(HomeTabTimeInRangeSeries))("PieStartAngle") = "270"
         End With
 
-        Dim averageSgStr As String = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.averageSG))
+        Dim averageSgStr As String = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.averageSG))
         Me.AboveHighLimitValueLabel.Text = $"{s_aboveHyperLimit} %"
         Me.AverageSGMessageLabel.Text = $"Average SG in {BgUnitsString}"
         Me.AverageSGValueLabel.Text = If(BgUnitsString = "mg/dl", averageSgStr, averageSgStr.TruncateSingleString(2))
         Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
-        Me.SerialNumberLabel.Text = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.medicalDeviceSerialNumber))
+        Me.SerialNumberLabel.Text = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.medicalDeviceSerialNumber))
         Me.TimeInRangeChartLabel.Text = s_timeInRange.ToString
         Me.TimeInRangeValueLabel.Text = $"{s_timeInRange} %"
 

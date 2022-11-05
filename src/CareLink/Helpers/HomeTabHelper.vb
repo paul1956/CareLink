@@ -7,9 +7,9 @@ Imports System.Runtime.CompilerServices
 Module HomeTabHelper
     <Extension>
     Friend Sub UpdateTransmitterBatttery(MeForm As Form1)
-        Dim gstBatteryLevel As Integer = CInt(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.gstBatteryLevel), False))
+        Dim gstBatteryLevel As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexs.gstBatteryLevel), False)
         MeForm.TransmatterBatterPercentLabel.Text = $"{gstBatteryLevel}%"
-        If CBool(s_listOfSummaryRecords.GetValue(NameOf(ItemIndexs.conduitSensorInRange))) Then
+        If s_listOfSummaryRecords.GetValue(Of Boolean)(NameOf(ItemIndexs.conduitSensorInRange)) Then
             Select Case gstBatteryLevel
                 Case 100
                     MeForm.TransmitterBatteryPictureBox.Image = My.Resources.TransmitterBatteryFull

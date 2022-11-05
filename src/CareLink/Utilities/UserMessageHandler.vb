@@ -87,28 +87,28 @@ Friend Module UserMessageHandler
                     }
 
     Friend ReadOnly s_sensorMessages As New Dictionary(Of String, String) From {
-                        {"BG_REQUIRED", "BG Required"},
+                        {"BG_REQUIRED", "BG Required."},
                         {"CALIBRATING", "Calibrating ..."},
-                        {"CALIBRATION_REQUIRED", "Calibration required"},
-                        {"CHANGE_SENSOR", "Change sensor"},
-                        {"DELIVERY_SUSPEND", "Delivery Suspended"},
+                        {"CALIBRATION_REQUIRED", "Calibration required."},
+                        {"CHANGE_SENSOR", "Change sensor."},
+                        {"DELIVERY_SUSPEND", "Delivery Suspended."},
                         {"DO_NOT_CALIBRATE", "Do Not calibrate."},
-                        {"LOAD_RESERVOIR", "Load Reservoir"},
-                        {"NO_DATA_FROM_PUMP", "No data from pump"},
-                        {"NO_ACTION_REQUIRED", "No Action required"},
+                        {"LOAD_RESERVOIR", "Load Reservoir."},
+                        {"NO_DATA_FROM_PUMP", "No data from pump."},
+                        {"NO_ACTION_REQUIRED", "No Action required."},
                         {"NO_ERROR_MESSAGE", "---"},
-                        {"NO_SENSOR_SIGNAL", "Lost sensor signal, move pump closer to transmitter. May take 15 minutes to find signal"},
-                        {"PROCESSING_BG", "Processing_BG"},
-                        {"RECONNECTING_TO_PUMP", "Reconnecting to pump"},
-                        {"SEARCHING_FOR_SENSOR_SIGNAL", "Searching for sensor signal"},
-                        {"SENSOR_DISCONNECTED", "Sensor disconnected"},
-                        {"SENSOR_OFF", "Sensor off"},
+                        {"NO_SENSOR_SIGNAL", "Lost sensor signal. Move pump closer to transmitter. May take 15 minutes to find signal"},
+                        {"PROCESSING_BG", "Processing BG."},
+                        {"RECONNECTING_TO_PUMP", "Reconnecting to pump."},
+                        {"SEARCHING_FOR_SENSOR_SIGNAL", "Searching for sensor signal."},
+                        {"SENSOR_DISCONNECTED", "Sensor disconnected."},
+                        {"SENSOR_OFF", "Sensor off."},
                         {"TEMP_TARGET", "Temp Target"},
                         {"UNKNOWN", "Unknown"},
-                        {"UPDATING", "Sensor Updating"},
+                        {"UPDATING", "Sensor Updating."},
                         {"WAIT_TO_CALIBRATE", "Wait To Calibrate..."},
                         {"WAIT_TO_ENTER_BG", "Wait To enter BG..."},
-                        {"WARM_UP", "Sensor warm up. Warm-up takes up to 2 hours. You will be notifies when calibration Is needed."}
+                        {"WARM_UP", "Sensor warm up... Warm-up takes up to 2 hours. You will be notifies when calibration Is needed."}
                     }
 
 End Module

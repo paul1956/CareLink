@@ -109,19 +109,6 @@ Friend Module SummaryRecordHelpers
 
     End Function
 
-    <Extension>
-    Friend Function GetValue(l As List(Of SummaryRecord), Key As String, Optional throwError As Boolean = True) As String
-        For Each s As SummaryRecord In l
-            If s.Key = Key Then
-                Return s.Value
-            End If
-        Next
-        If throwError Then
-            Stop
-            Throw New ArgumentException("Key not found", NameOf(Key))
-        End If
-        Return Nothing
-    End Function
 
     Public Sub AttachHandlers(dgv As DataGridView)
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
@@ -131,4 +118,27 @@ Friend Module SummaryRecordHelpers
         Return CInt(tabPageName.Replace(NameOf(TabPage), "").Substring(0, 2)) - 1
     End Function
 
+    Public Function CAnyType(Of T)(UTO As Object) As T
+        Return CType(UTO, T)
+    End Function
+
+    <Extension>
+    Public Function GetValue(Of T)(l As List(Of SummaryRecord), Key As String, Optional throwError As Boolean = True) As T
+
+        Try
+            For Each s As SummaryRecord In l
+                If s.Key = Key Then
+                    Return CAnyType(Of T)(s.Value)
+                End If
+            Next
+            If throwError Then
+                Stop
+                Throw New ArgumentException("Key not found", NameOf(Key))
+            End If
+        Catch ex As Exception
+
+        End Try
+
+        Return Nothing
+    End Function
 End Module

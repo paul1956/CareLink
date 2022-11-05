@@ -27,9 +27,12 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 11/2/2022
+- 11/4/2022
 
 ## What's New in this release
+New in 3.5.7.5
+-  More improvement to Makers
+
 New in 3.5.7.4
 - Additional 780G message handling
 - Summary Tab lists all available pump data with option to click to view details when available and return to summary tab.
