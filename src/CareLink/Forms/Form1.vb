@@ -376,7 +376,8 @@ Public Class Form1
         Dim useLocalTimeZoneChecked As Boolean = Me.MenuOptionsUseLocalTimeZone.Checked
         My.Settings.UseLocalTimeZone = useLocalTimeZoneChecked
         My.Settings.Save()
-        s_clientTimeZone = CalculateTimeZone()
+        Dim clientTimeZoneName As String = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.clientTimeZoneName))
+        s_clientTimeZone = CalculateTimeZone(clientTimeZoneName)
     End Sub
 
 #End Region ' Option Menus

@@ -41,7 +41,6 @@ Public Module PumpVariables
     Friend s_basalValue As Dictionary(Of String, String)
     Friend s_belowHypoLimit As Single
     Friend s_clientTimeZone As TimeZoneInfo
-    Friend s_clientTimeZoneName As String
     Friend s_criticalLow As Single
     Friend s_filterJsonData As Boolean = True
     Friend s_firstName As String = ""
