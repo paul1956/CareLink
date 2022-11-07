@@ -955,6 +955,7 @@ Public Class Form1
     End Sub
 
     Private Sub DataGridViewSummary_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DataGridViewSummary.CellMouseClick
+        If e.RowIndex < 0 Then Exit Sub
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim value As String = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString
         Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
