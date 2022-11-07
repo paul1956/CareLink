@@ -128,7 +128,7 @@ Public Module JsonExtensions
                             If s_useLocalTimeZone Then
                                 s_clientTimeZone = TimeZoneInfo.Local
                             Else
-                                s_clientTimeZoneName = item.Value.ToString
+                                clientTimeZoneName = item.Value.ToString
                                 s_clientTimeZone = CalculateTimeZone()
                                 Dim message As String
                                 Dim messageButtons As MessageBoxButtons
