@@ -2,11 +2,12 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <RootNamespace>CareLink</RootNamespace>
     <StartupObject>Sub Main</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>
     <MyType>WindowsForms</MyType>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
     <NeutralLanguage>en-US</NeutralLanguage>
     <OptionStrict>On</OptionStrict>
     <OptionCompare>Text</OptionCompare>
@@ -27,9 +28,7 @@
     <PackageProjectUrl>https://github.com/paul1956/CareLink</PackageProjectUrl>
     <PackageTags>CareLink Medtronic Insulin Pump</PackageTags>
     <PackageLicenseFile>License.txt</PackageLicenseFile>
-    <PackageReleaseNotes>Requires
-    Windows 10 or later
-    .Net 6.06 of later
+    <PackageReleaseNotes>Requires Windows 10 or later .Net 6.06 of later
     </PackageReleaseNotes>
     <Title>CareLink For Windows</Title>
     <PackageReadmeFile>README.md</PackageReadmeFile>
