@@ -83,7 +83,8 @@ Friend Module UserMessageHandler
     Friend ReadOnly s_plgmLgsMessages As New Dictionary(Of String, String) From {
                         {"FEATURE_OFF", "Feature Off"},
                         {"MONITORING", "Monitoring"},
-                        {"REFRACTORY_PERIOD", "Refractory Period"}
+                        {"REFRACTORY_PERIOD", "Refractory Period"},
+                        {"SUSPEND_FIRED_PLGM", "Suspend Fired"}
                     }
 
     Friend ReadOnly s_sensorMessages As New Dictionary(Of String, String) From {
@@ -103,6 +104,7 @@ Friend Module UserMessageHandler
                         {"SEARCHING_FOR_SENSOR_SIGNAL", "Searching for sensor signal."},
                         {"SENSOR_DISCONNECTED", "Sensor disconnected."},
                         {"SENSOR_OFF", "Sensor off."},
+                        {"SUSPENDED_BEFORE_LOW", "Suspended before low."},
                         {"TEMP_TARGET", "Temp Target"},
                         {"UNKNOWN", "Unknown"},
                         {"UPDATING", "Sensor Updating."},

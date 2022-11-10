@@ -170,6 +170,7 @@ Friend Module UpdateTabHelpers
                     Case "DELIVERY_SUSPEND"
                     Case "LOAD_RESERVOIR"
                     Case "PROCESSING_BG"
+                    Case "SUSPENDED_BEFORE_LOW"
                     Case Else
                         If Debugger.IsAttached Then
                             MsgBox($"{typeValue} is unknown banner message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")

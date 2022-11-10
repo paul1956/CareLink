@@ -35,6 +35,10 @@ Friend Module MathExtensions
 
     <Extension>
     Public Function ParseSingle(valueString As String, Optional decimalDigits As Integer = 10) As Single
+        If valueString Is Nothing Then
+            Return Single.NaN
+        End If
+
         If valueString.Contains(","c) AndAlso valueString.Contains("."c) Then
             Throw New ArgumentException($"{NameOf(valueString)} = {valueString}, contains both a comma and period.", NameOf(valueString))
         End If

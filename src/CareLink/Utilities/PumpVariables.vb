@@ -35,12 +35,13 @@ Public Module PumpVariables
     Friend ReadOnly s_listOfMealMarkers As New List(Of MealRecord)
     Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
     Friend ReadOnly s_mealImage As Bitmap = My.Resources.MealImage
-    Friend s_aboveHyperLimit As Double
+    Friend s_aboveHyperLimit As Single
     Friend s_activeInsulin As ActiveInsulinRecord
     Friend s_activeInsulinIncrements As Integer
     Friend s_basalValue As Dictionary(Of String, String)
     Friend s_belowHypoLimit As Single
     Friend s_clientTimeZone As TimeZoneInfo
+    Friend s_clientTimeZoneName As String
     Friend s_criticalLow As Single
     Friend s_filterJsonData As Boolean = True
     Friend s_firstName As String = ""
@@ -58,11 +59,15 @@ Public Module PumpVariables
     Friend s_notificationHistoryValue As Dictionary(Of String, String)
     Friend s_pumpBannerStateValue As New List(Of Dictionary(Of String, String))
     Friend s_recentDatalast As Dictionary(Of String, String)
+    Friend s_reservoirLevelPercent As Integer
+    Friend s_sensorDurationHours As Integer
     Friend s_sensorState As String
     Friend s_sessionCountrySettings As New CountrySettingsRecord
     Friend s_systemStatusMessage As String
     Friend s_theraphyAlgorthmStateValue As Dictionary(Of String, String)
     Friend s_timeInRange As Integer
+    Friend s_timeToNextCalibHours As UShort
+    Friend s_timeToNextCalibrationMinutes As UShort
     Friend s_timeWithMinuteFormat As String
     Friend s_timeWithoutMinuteFormat As String
     Friend Property BgUnits As String
