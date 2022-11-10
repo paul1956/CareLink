@@ -166,13 +166,14 @@ Public Class CareLinkClient
             {
                 "locale",
                 CarelinkLocaleEn}}
+
         Dim webForm As New Dictionary(Of String, String) From {
             {
                 "sessionID",
-                queryParameters("sessionID")},
+                queryParameters.GetValueOrDefault("sessionID")},
             {
                 "sessionData",
-                queryParameters("sessionData")},
+                queryParameters.GetValueOrDefault("sessionData")},
             {
                 "locale",
                 CarelinkLocaleEn},
@@ -412,6 +413,9 @@ Public Class CareLinkClient
                 ElseIf response?.StatusCode = HttpStatusCode.Unauthorized Then
                     _lastResponseCode = response?.StatusCode
                     _lastErrorMessage = "Unauthorized"
+                ElseIf response?.StatusCode = HttpStatusCode.InternalServerError Then
+                    _lastResponseCode = response?.StatusCode
+                    _lastErrorMessage = "CareLink Server Down"
                 Else
                     Throw New Exception("session get response is not OK")
                 End If

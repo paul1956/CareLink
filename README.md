@@ -27,9 +27,13 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 11/4/2022
+- 11/9/2022
 
 ## What's New in this release
+New in 3.5.7.6
+-  More guards against bad server data
+- Update error handling for server down
+
 New in 3.5.7.5
 -  More improvement to Makers
 

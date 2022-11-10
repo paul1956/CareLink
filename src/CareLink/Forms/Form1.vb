@@ -376,8 +376,8 @@ Public Class Form1
         Dim useLocalTimeZoneChecked As Boolean = Me.MenuOptionsUseLocalTimeZone.Checked
         My.Settings.UseLocalTimeZone = useLocalTimeZoneChecked
         My.Settings.Save()
-        Dim clientTimeZoneName As String = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.clientTimeZoneName))
-        s_clientTimeZone = CalculateTimeZone(clientTimeZoneName)
+        s_clientTimeZoneName = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.clientTimeZoneName))
+        s_clientTimeZone = CalculateTimeZone(s_clientTimeZoneName)
     End Sub
 
 #End Region ' Option Menus
@@ -455,9 +455,8 @@ Public Class Form1
 #Region "Home Page Events"
 
     Private Sub CalibrationDueImage_MouseHover(sender As Object, e As EventArgs) Handles CalibrationDueImage.MouseHover
-        Dim timeToNextCalibrationMinutes As UShort = s_listOfSummaryRecords.GetValue(Of UShort)(NameOf(ItemIndexs.timeToNextCalibrationMinutes))
-        If timeToNextCalibrationMinutes > 0 AndAlso timeToNextCalibrationMinutes < 1440 Then
-            _calibrationToolTip.SetToolTip(Me.CalibrationDueImage, $"Calibration Due {Now.AddMinutes(timeToNextCalibrationMinutes).ToShortTimeString}")
+        If s_timeToNextCalibrationMinutes > 0 AndAlso s_timeToNextCalibrationMinutes < 1440 Then
+            _calibrationToolTip.SetToolTip(Me.CalibrationDueImage, $"Calibration Due {Now.AddMinutes(s_timeToNextCalibrationMinutes).ToShortTimeString}")
         End If
     End Sub
 
@@ -586,9 +585,8 @@ Public Class Form1
     End Sub
 
     Private Sub SensorAgeLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles TransmitterBatteryPictureBox.MouseHover
-        Dim sensorDurationHours As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexs.sensorDurationHours))
-        If sensorDurationHours < 24 Then
-            _sensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {sensorDurationHours} hours")
+        If s_sensorDurationHours < 24 Then
+            _sensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {s_sensorDurationHours} hours")
         End If
     End Sub
 
@@ -1393,8 +1391,11 @@ Public Class Form1
                     s_lastMedicalDeviceDataUpdateServerEpoch = CLng(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
 
-                Case ItemIndexs.firstName,
-                     ItemIndexs.lastName
+                Case ItemIndexs.firstName
+                    s_firstName = row.Value
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, s_firstName))
+
+                Case ItemIndexs.lastName
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexs.conduitSerialNumber
@@ -1432,6 +1433,7 @@ Public Class Form1
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexs.reservoirLevelPercent
+                    s_reservoirLevelPercent = CInt(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Reservoir is {row.Value}%"))
 
                 Case ItemIndexs.reservoirAmount
@@ -1443,8 +1445,12 @@ Public Class Form1
                 Case ItemIndexs.medicalDeviceBatteryLevelPercent
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Pump battery is at {row.Value}%"))
 
-                Case ItemIndexs.sensorDurationHours,
-                       ItemIndexs.timeToNextCalibHours
+                Case ItemIndexs.sensorDurationHours
+                    s_sensorDurationHours = CInt(row.Value)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexs.timeToNextCalibHours
+                    s_timeToNextCalibHours = CUShort(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexs.calibStatus
@@ -1493,13 +1499,13 @@ Public Class Form1
                     s_theraphyAlgorthmStateValue = Loads(row.Value)
 
                 Case ItemIndexs.pumpBannerState
+                    s_pumpBannerStateValue = LoadList(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
                     Me.TempTargetLabel.Visible = False
-                    s_pumpBannerStateValue = LoadList(row.Value)
 
                 Case ItemIndexs.basal
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
                     s_basalValue = Loads(row.Value)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
 
                 Case ItemIndexs.systemStatusMessage
                     s_systemStatusMessage = row.Value
@@ -1509,19 +1515,22 @@ Public Class Form1
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexs.belowHypoLimit
+                    s_belowHypoLimit = row.Value.ParseSingle(1)
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Time below limit = {ConvertPercent24HoursToDisplayValueString(row.Value)}"))
 
                 Case ItemIndexs.aboveHyperLimit
+                    s_aboveHyperLimit = row.Value.ParseSingle(1)
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Time above limit = {ConvertPercent24HoursToDisplayValueString(row.Value)}"))
 
                 Case ItemIndexs.timeInRange
+                    s_timeInRange = CInt(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Time in range = {ConvertPercent24HoursToDisplayValueString(row.Value)}"))
 
                 Case ItemIndexs.pumpCommunicationState
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexs.gstCommunicationState
-                    s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.gstCommunicationState, row))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
                     Dim gstBatteryLevel As String = Nothing
                     If Me.RecentData.TryGetValue(NameOf(ItemIndexs.gstBatteryLevel), gstBatteryLevel) Then
                         Continue For
@@ -1539,21 +1548,35 @@ Public Class Form1
 
                 Case ItemIndexs.maxBolusAmount
                     s_listOfSummaryRecords.Add(New SummaryRecord(GetItemIndex(c.Value.Key), row))
-                    Dim doNotCare As String = Nothing
-                    If Not Me.RecentData.TryGetValue(NameOf(ItemIndexs.sensorDurationMinutes), doNotCare) Then
+                    Dim tempStr As String = Nothing
+                    If Not Me.RecentData.TryGetValue(NameOf(ItemIndexs.sensorDurationMinutes), tempStr) Then
                         s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.sensorDurationMinutes, "-1", "No data from pump"))
                     End If
-                    If Not Me.RecentData.TryGetValue(NameOf(ItemIndexs.timeToNextCalibrationMinutes), doNotCare) Then
-                        s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.timeToNextCalibrationMinutes, UShort.MaxValue.ToString, "No data from pump"))
+                    If Not Me.RecentData.TryGetValue(NameOf(ItemIndexs.timeToNextCalibrationMinutes), tempStr) Then
+                        s_timeToNextCalibrationMinutes = UShort.MaxValue
+                        s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexs.timeToNextCalibrationMinutes, s_timeToNextCalibrationMinutes.ToString, "No data from pump"))
                     End If
-                Case ItemIndexs.sensorDurationMinutes,
-                     ItemIndexs.timeToNextCalibrationMinutes,
-                     ItemIndexs.clientTimeZoneName,
-                     ItemIndexs.sgBelowLimit,
-                     ItemIndexs.averageSGFloat,
-                     ItemIndexs.timeToNextCalibrationRecommendedMinutes,
-                     ItemIndexs.calFreeSensor,
-                     ItemIndexs.finalCalibration
+                Case ItemIndexs.sensorDurationMinutes
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexs.timeToNextCalibrationMinutes
+                    s_timeToNextCalibrationMinutes = CUShort(row.Value)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexs.clientTimeZoneName
+                    s_clientTimeZoneName = row.Value
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, s_clientTimeZoneName))
+
+                Case ItemIndexs.sgBelowLimit,
+                        ItemIndexs.averageSGFloat
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexs.timeToNextCalibrationRecommendedMinutes
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+
+                Case ItemIndexs.calFreeSensor,
+                         ItemIndexs.finalCalibration
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
             End Select
         Next
@@ -1615,10 +1638,6 @@ Public Class Form1
             End If
 
             Me.UpdateDataTables()
-            s_firstName = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.firstName))
-            s_aboveHyperLimit = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.aboveHyperLimit)).ParseSingle(1)
-            s_belowHypoLimit = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.belowHypoLimit)).ParseSingle(1)
-            s_timeInRange = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexs.timeInRange))
             _updating = False
         End SyncLock
         Debug.Print($"In {NameOf(UpdateAllTabPages)} exited SyncLock")
@@ -1859,16 +1878,14 @@ Public Class Form1
 
     Private Sub UpdateCalibrationTimeRemaining()
         Try
-            Dim timeToNextCalibrationMinutes As UShort = s_listOfSummaryRecords.GetValue(Of UShort)(NameOf(ItemIndexs.timeToNextCalibrationMinutes), False)
-            Dim timeToNextCalibHours As UShort = s_listOfSummaryRecords.GetValue(Of UShort)(NameOf(ItemIndexs.timeToNextCalibHours))
-            If timeToNextCalibHours > Byte.MaxValue Then
+            If s_timeToNextCalibHours > Byte.MaxValue Then
                 Me.CalibrationDueImage.Image = My.Resources.CalibrationUnavailable
-            ElseIf timeToNextCalibHours = 0 Then
+            ElseIf s_timeToNextCalibHours = 0 Then
                 Me.CalibrationDueImage.Image = If(s_systemStatusMessage = "WAIT_TO_CALIBRATE" OrElse s_sensorState = "WARM_UP" OrElse s_sensorState = "CHANGE_SENSOR",
                 My.Resources.CalibrationNotReady,
-                My.Resources.CalibrationDotRed.DrawCenteredArc(timeToNextCalibrationMinutes))
+                My.Resources.CalibrationDotRed.DrawCenteredArc(s_timeToNextCalibrationMinutes))
             Else
-                Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(timeToNextCalibrationMinutes)
+                Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(s_timeToNextCalibrationMinutes)
             End If
         Catch ex As Exception
             Stop
@@ -1955,7 +1972,7 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateInsulinLevel()
-        Select Case s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexs.reservoirLevelPercent))
+        Select Case s_reservoirLevelPercent
             Case >= 85
                 Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(7)
             Case >= 71
@@ -2014,17 +2031,16 @@ Public Class Form1
 
     Private Sub UpdateSensorLife()
 
-        Dim sensorDurationHours As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexs.sensorDurationHours))
-        If sensorDurationHours = 255 Then
+        If s_sensorDurationHours = 255 Then
             Me.SensorDaysLeftLabel.Text = $"???"
             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
             Me.SensorTimeLeftLabel.Text = ""
-        ElseIf sensorDurationHours >= 24 Then
-            Me.SensorDaysLeftLabel.Text = Math.Ceiling(sensorDurationHours / 24).ToString(CurrentUICulture)
+        ElseIf s_sensorDurationHours >= 24 Then
+            Me.SensorDaysLeftLabel.Text = Math.Ceiling(s_sensorDurationHours / 24).ToString(CurrentUICulture)
             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
             Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
         Else
-            If sensorDurationHours = 0 Then
+            If s_sensorDurationHours = 0 Then
                 Dim sensorDurationMinutes As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexs.sensorDurationMinutes), False)
                 If sensorDurationMinutes = 0 Then
                     Me.SensorDaysLeftLabel.Text = ""
@@ -2038,7 +2054,7 @@ Public Class Form1
             Else
                 Me.SensorDaysLeftLabel.Text = $"1"
                 Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
-                Me.SensorTimeLeftLabel.Text = $"{sensorDurationHours + 1} Hours"
+                Me.SensorTimeLeftLabel.Text = $"{s_sensorDurationHours + 1} Hours"
             End If
         End If
         Me.SensorDaysLeftLabel.Visible = True

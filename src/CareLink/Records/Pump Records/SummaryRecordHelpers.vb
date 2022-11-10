@@ -8,6 +8,10 @@ Friend Module SummaryRecordHelpers
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
+    Private Function CAnyType(Of T)(UTO As Object) As T
+        Return CType(UTO, T)
+    End Function
+
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
@@ -115,17 +119,12 @@ Friend Module SummaryRecordHelpers
 
     End Function
 
-
     Public Sub AttachHandlers(dgv As DataGridView)
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
     End Sub
 
     Public Function GetTabIndexFromName(tabPageName As String) As Integer
         Return CInt(tabPageName.Replace(NameOf(TabPage), "").Substring(0, 2)) - 1
-    End Function
-
-    Public Function CAnyType(Of T)(UTO As Object) As T
-        Return CType(UTO, T)
     End Function
 
     <Extension>
@@ -145,6 +144,21 @@ Friend Module SummaryRecordHelpers
 
         End Try
 
-        Return Nothing
+        Dim tReturnType As Type = GetType(T)
+        If tReturnType Is GetType(String) Then
+            Return CAnyType(Of T)("")
+        ElseIf tReturnType Is GetType(Boolean) Then
+            Return CAnyType(Of T)(False)
+        ElseIf tReturnType Is GetType(Integer) Then
+            Return CAnyType(Of T)(0)
+        ElseIf tReturnType Is GetType(Single) Then
+            Return CAnyType(Of T)(0.0)
+        ElseIf tReturnType Is GetType(UShort) Then
+            Return CAnyType(Of T)(UShort.MaxValue)
+        Else
+            MsgBox($"{tReturnType} type is not yet defined.")
+        End If
+
     End Function
+
 End Module

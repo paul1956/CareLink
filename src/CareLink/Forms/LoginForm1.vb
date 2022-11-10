@@ -73,16 +73,15 @@ Public Class LoginForm1
         End If
     End Sub
 
-    'End Sub
     Private Sub OK_Button_Click(sender As Object, e As System.EventArgs) Handles Ok_Button.Click
         Me.Ok_Button.Enabled = False
         Me.Cancel_Button.Enabled = False
         Dim countryCode As String = Me.CountryComboBox.SelectedValue.ToString
         My.Settings.CountryCode = countryCode
         Me.Client = New CareLinkClient(Me.UsernameTextBox.Text, Me.PasswordTextBox.Text, countryCode)
-        Me.LoginStatus.Text = Me.Client.GetLastErrorMessage
         If Not Me.Client.LoggedIn Then
             Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData()
+            Me.LoginStatus.Text = Me.Client.GetLastErrorMessage
             If recentData IsNot Nothing AndAlso recentData.Count > 0 Then
 
                 Me.Ok_Button.Enabled = True
@@ -106,8 +105,8 @@ Public Class LoginForm1
             Exit Sub
         End If
 
-        Dim networkDownMessage As String = If(CareLinkClient.NetworkDown, " due to network being down", "")
-        If MsgBox($"Login Unsuccessful{networkDownMessage}. try again? If no program will exit!", Buttons:=MsgBoxStyle.YesNo, Title:="Login Failed") = MsgBoxResult.No Then
+        Dim networkDownMessage As String = If(CareLinkClient.NetworkDown, "due to network being down", Me.Client.GetLastErrorMessage)
+        If MsgBox($"Login Unsuccessful {networkDownMessage}. try again? If no program will exit!", Buttons:=MsgBoxStyle.YesNo, Title:="Login Failed") = MsgBoxResult.No Then
             End
         End If
         Me.Ok_Button.Enabled = True

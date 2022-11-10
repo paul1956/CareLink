@@ -51,7 +51,7 @@ Friend Module Form1Helpers
                     Return False
                 End If
                 MeForm.ShowMiniDisplay.Visible = True
-                MeForm.LoginStatus.Text = "OK"
+                MeForm.LoginStatus.Text = If(MeForm.RecentData?.Count > 0, "OK", MeForm.client.GetLastErrorMessage)
         End Select
         MeForm.FinishInitialization()
         If UpdateAllTabs Then
