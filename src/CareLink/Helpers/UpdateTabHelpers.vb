@@ -73,46 +73,46 @@ Friend Module UpdateTabHelpers
     End Sub
 
     <Extension>
-    Friend Sub UpdateMarkerTabs(MeForm As Form1)
-        DisplayDataTableInDGV(MeForm.TableLayoutPanelAutoBasalDelivery,
-                              MeForm.DataGridViewAutoBasalDelivery,
+    Friend Sub UpdateMarkerTabs(MainForm As Form1)
+        DisplayDataTableInDGV(MainForm.TableLayoutPanelAutoBasalDelivery,
+                              MainForm.DataGridViewAutoBasalDelivery,
                               ClassToDatatable(s_listOfAutoBasalDeliveryMarkers.ToArray),
                               ItemIndexs.markers)
-        DisplayDataTableInDGV(MeForm.TableLayoutPanelAutoModeStatus,
+        DisplayDataTableInDGV(MainForm.TableLayoutPanelAutoModeStatus,
                               ClassToDatatable(s_listOfAutoModeStatusMarkers.ToArray),
                               NameOf(AutoModeStatusRecord),
                               AddressOf AutoModeStatusRecordHelpers.AttachHandlers,
                               ItemIndexs.markers,
                               False)
-        DisplayDataTableInDGV(MeForm.TableLayoutPanelBgReadings,
+        DisplayDataTableInDGV(MainForm.TableLayoutPanelBgReadings,
                               ClassToDatatable(s_listOfBgReadingMarkers.ToArray),
                               NameOf(BGReadingRecord),
                               AddressOf BGReadingRecordHelpers.AttachHandlers,
                               ItemIndexs.markers,
                               False)
-        DisplayDataTableInDGV(MeForm.TableLayoutPanelInsulin,
-                              MeForm.DataGridViewInsulin,
+        DisplayDataTableInDGV(MainForm.TableLayoutPanelInsulin,
+                              MainForm.DataGridViewInsulin,
                               ClassToDatatable(s_listOfInsulinMarkers.ToArray),
                               ItemIndexs.markers)
-        DisplayDataTableInDGV(MeForm.TableLayoutPanelMeal,
+        DisplayDataTableInDGV(MainForm.TableLayoutPanelMeal,
                               ClassToDatatable(s_listOfMealMarkers.ToArray),
                               NameOf(MealRecord),
                               AddressOf MealRecordHelpers.AttachHandlers,
                               ItemIndexs.markers,
                               False)
-        DisplayDataTableInDGV(MeForm.TableLayoutPanelCalibration,
+        DisplayDataTableInDGV(MainForm.TableLayoutPanelCalibration,
                               ClassToDatatable(s_listOfCalibrationMarkers.ToArray),
                               NameOf(CalibrationRecord),
                               AddressOf CalibrationRecordHelpers.AttachHandlers,
                               ItemIndexs.markers,
                               False)
-        DisplayDataTableInDGV(MeForm.TableLayoutPanelLowGlucoseSuspended,
+        DisplayDataTableInDGV(MainForm.TableLayoutPanelLowGlucoseSuspended,
                               ClassToDatatable(s_listOfLowGlucoseSuspendedMarkers.ToArray),
                               NameOf(LowGlusoceSuspendRecord),
                               AddressOf LowGlusoceSuspendRecordHelpers.AttachHandlers,
                               ItemIndexs.markers,
                               False)
-        DisplayDataTableInDGV(MeForm.TableLayoutPanelTimeChange,
+        DisplayDataTableInDGV(MainForm.TableLayoutPanelTimeChange,
                               ClassToDatatable(s_listOfTimeChangeMarkers.ToArray),
                               NameOf(TimeChangeRecord),
                               AddressOf TimeChangeRecordHelpers.AttachHandlers,
@@ -121,10 +121,10 @@ Friend Module UpdateTabHelpers
     End Sub
 
     <Extension>
-    Friend Sub UpdateNotificationTab(MeForm As Form1)
+    Friend Sub UpdateNotificationTab(MainForm As Form1)
         Try
-            MeForm.TableLayoutPanelNotificationHistory.AutoScroll = True
-            MeForm.TableLayoutPanelNotificationHistory.SetTabName(ItemIndexs.notificationHistory)
+            MainForm.TableLayoutPanelNotificationHistory.AutoScroll = True
+            MainForm.TableLayoutPanelNotificationHistory.SetTabName(ItemIndexs.notificationHistory)
             Dim innerTableBlue As New TableLayoutPanel With {
                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                     .AutoScroll = True,
@@ -139,10 +139,10 @@ Friend Module UpdateTabHelpers
                     .Padding = New Padding(3),
                     .RowCount = 0
                 }
-            For i As Integer = MeForm.TableLayoutPanelNotificationHistory.Controls.Count - 1 To 1 Step -1
-                MeForm.TableLayoutPanelNotificationHistory.Controls.RemoveAt(i)
+            For i As Integer = MainForm.TableLayoutPanelNotificationHistory.Controls.Count - 1 To 1 Step -1
+                MainForm.TableLayoutPanelNotificationHistory.Controls.RemoveAt(i)
             Next
-            MeForm.TableLayoutPanelNotificationHistory.Controls.Add(innerTableBlue, 0, 1)
+            MainForm.TableLayoutPanelNotificationHistory.Controls.Add(innerTableBlue, 0, 1)
             CreateNotificationTables(s_notificationHistoryValue,
                                      innerTableBlue,
                                      ItemIndexs.notificationHistory,
@@ -154,7 +154,7 @@ Friend Module UpdateTabHelpers
     End Sub
 
     <Extension>
-    Friend Sub UpdatePumpBannerStateTab(MeForm As Form1)
+    Friend Sub UpdatePumpBannerStateTab(MainForm As Form1)
         Dim listOfPumpBannerState As New List(Of BannerStateRecord)
         For Each dic As Dictionary(Of String, String) In s_pumpBannerStateValue
             Dim typeValue As String = ""
@@ -164,8 +164,8 @@ Friend Module UpdateTabHelpers
                 Select Case typeValue
                     Case "TEMP_TARGET"
                         Dim minutes As Integer = bannerStateRecord1.timeRemaining
-                        MeForm.TempTargetLabel.Text = $"Target 150   {New TimeSpan(0, minutes \ 60, minutes Mod 60).ToString.Substring(4)} hr"
-                        MeForm.TempTargetLabel.Visible = True
+                        MainForm.TempTargetLabel.Text = $"Target 150   {New TimeSpan(0, minutes \ 60, minutes Mod 60).ToString.Substring(4)} hr"
+                        MainForm.TempTargetLabel.Visible = True
                     Case "BG_REQUIRED"
                     Case "DELIVERY_SUSPEND"
                     Case "LOAD_RESERVOIR"
@@ -180,7 +180,7 @@ Friend Module UpdateTabHelpers
                 Stop
             End If
         Next
-        DisplayDataTableInDGV(MeForm.TableLayoutPanelBannerState,
+        DisplayDataTableInDGV(MainForm.TableLayoutPanelBannerState,
                               ClassToDatatable(listOfPumpBannerState.ToArray),
                               NameOf(BannerStateRecord),
                               AddressOf BannerStateRecordHelpers.AttachHandlers,
@@ -189,19 +189,19 @@ Friend Module UpdateTabHelpers
     End Sub
 
     <Extension>
-    Friend Sub UpdateSgsTab(MeForm As Form1)
-        DisplayDataTableInDGV(MeForm.TableLayoutPanelSgs,
-                              MeForm.DataGridViewSGs,
+    Friend Sub UpdateSgsTab(MainForm As Form1)
+        DisplayDataTableInDGV(MainForm.TableLayoutPanelSgs,
+                              MainForm.DataGridViewSGs,
                               ClassToDatatable(s_listOfSGs.ToArray),
                               ItemIndexs.sgs)
-        MeForm.DataGridViewSGs.Sort(MeForm.DataGridViewSGs.Columns(0), ListSortDirection.Descending)
+        MainForm.DataGridViewSGs.Sort(MainForm.DataGridViewSGs.Columns(0), ListSortDirection.Descending)
     End Sub
 
     <Extension>
-    Friend Sub UpdateSummaryTab(MeForm As Form1)
+    Friend Sub UpdateSummaryTab(MainForm As Form1)
         s_listOfSummaryRecords.Sort()
-        MeForm.DataGridViewSummary.DataSource = ClassToDatatable(s_listOfSummaryRecords.ToArray)
-        MeForm.DataGridViewSummary.RowHeadersVisible = False
+        MainForm.DataGridViewSummary.DataSource = ClassToDatatable(s_listOfSummaryRecords.ToArray)
+        MainForm.DataGridViewSummary.RowHeadersVisible = False
     End Sub
 
 End Module

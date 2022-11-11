@@ -15,7 +15,7 @@ Imports ToolStripControls
 Public Class Form1
     Private WithEvents AITComboBox As ToolStripComboBoxEx
 
-    Private ReadOnly _bgMiniDisplay As New BGMiniWindow
+    Private ReadOnly _bgMiniDisplay As New BGMiniWindow(Me)
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
     Private ReadOnly _updatingLock As New Object
@@ -1075,13 +1075,13 @@ Public Class Form1
             Debug.Print($"In {NameOf(ServerUpdateTimer_Tick)}, inside SyncLock at {Now.ToLongTimeString}")
             If Not _updating Then
                 _updating = True
-                Me.RecentData = _client?.GetRecentData()
+                Me.RecentData = _client?.GetRecentData(Me)
                 If Me.RecentData Is Nothing Then
                     If _client Is Nothing OrElse _client.HasErrors Then
                         _client = New CareLinkClient(My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
                         _LoginDialog.Client = _client
                     End If
-                    Me.RecentData = _client.GetRecentData()
+                    Me.RecentData = _client.GetRecentData(Me)
                 End If
                 Me.LoginStatus.Text = _client.GetLastErrorMessage
                 Me.Cursor = Cursors.Default
@@ -1910,7 +1910,7 @@ Public Class Form1
                     Select Case marker.Value(NameOf(InsulinRecord.activationType))
                         Case "AUTOCORRECTION"
                             s_totalAutoCorrection += amountString.ParseSingle()
-                        Case "RECOMMENDED", "UNDETERMINED"
+                        Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                             s_totalManualBolus += amountString.ParseSingle()
                     End Select
 

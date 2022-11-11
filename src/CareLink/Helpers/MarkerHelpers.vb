@@ -44,7 +44,8 @@ Friend Module MarkerHelpers
                     Select Case newMarker(NameOf(InsulinRecord.activationType))
                         Case "AUTOCORRECTION"
                             basalDictionary.Add(lastInsulinRecord.OAdateTime, lastInsulinRecord.deliveredFastAmount)
-                        Case "UNDETERMINED",
+                        Case "MANUAL",
+                             "UNDETERMINED",
                              "RECOMMENDED"
                             '
                         Case Else

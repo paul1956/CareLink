@@ -6,23 +6,23 @@ Imports System.Runtime.CompilerServices
 
 Module HomeTabHelper
     <Extension>
-    Friend Sub UpdateTransmitterBatttery(MeForm As Form1)
+    Friend Sub UpdateTransmitterBatttery(MainForm As Form1)
         Dim gstBatteryLevel As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexs.gstBatteryLevel), False)
-        MeForm.TransmatterBatterPercentLabel.Text = $"{gstBatteryLevel}%"
+        MainForm.TransmatterBatterPercentLabel.Text = $"{gstBatteryLevel}%"
         If s_listOfSummaryRecords.GetValue(Of Boolean)(NameOf(ItemIndexs.conduitSensorInRange)) Then
             Select Case gstBatteryLevel
                 Case 100
-                    MeForm.TransmitterBatteryPictureBox.Image = My.Resources.TransmitterBatteryFull
+                    MainForm.TransmitterBatteryPictureBox.Image = My.Resources.TransmitterBatteryFull
                 Case > 50
-                    MeForm.TransmitterBatteryPictureBox.Image = My.Resources.TransmitterBatteryOK
+                    MainForm.TransmitterBatteryPictureBox.Image = My.Resources.TransmitterBatteryOK
                 Case > 20
-                    MeForm.TransmitterBatteryPictureBox.Image = My.Resources.TransmitterBatteryMedium
+                    MainForm.TransmitterBatteryPictureBox.Image = My.Resources.TransmitterBatteryMedium
                 Case > 0
-                    MeForm.TransmitterBatteryPictureBox.Image = My.Resources.TransmitterBatteryLow
+                    MainForm.TransmitterBatteryPictureBox.Image = My.Resources.TransmitterBatteryLow
             End Select
         Else
-            MeForm.TransmitterBatteryPictureBox.Image = My.Resources.TransmitterBatteryUnknown
-            MeForm.TransmatterBatterPercentLabel.Text = $"???"
+            MainForm.TransmitterBatteryPictureBox.Image = My.Resources.TransmitterBatteryUnknown
+            MainForm.TransmatterBatterPercentLabel.Text = $"???"
         End If
 
     End Sub

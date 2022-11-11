@@ -11,6 +11,18 @@ Public Class BGMiniWindow
     Private _currentBGValue As Single = Double.NaN
     Private _lastBGValue As Single
     Private _normalizedBG As Single
+    Private ReadOnly _form1 As Form1
+
+    Public Sub New()
+        MyBase.New
+        Me.InitializeComponent()
+    End Sub
+
+    Public Sub New(form1 As Form1)
+        MyBase.New
+        Me.InitializeComponent()
+        _form1 = form1
+    End Sub
 
     Public Sub SetCurrentBGString(Value As String)
         If String.IsNullOrEmpty(Value) Then
@@ -37,7 +49,7 @@ Public Class BGMiniWindow
     End Sub
 
     Private Sub BGMiniWindow_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        My.Forms.Form1.Visible = True
+        _form1.Visible = True
     End Sub
 
     Private Sub BGMiniWindow_GotFocus(sender As Object, e As EventArgs) Handles Me.GotFocus
@@ -101,7 +113,7 @@ Public Class BGMiniWindow
     End Sub
 
     Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
-        My.Forms.Form1.Visible = True
+        _form1.Visible = True
         Me.Hide()
     End Sub
 

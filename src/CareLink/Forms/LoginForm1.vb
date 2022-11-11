@@ -80,7 +80,7 @@ Public Class LoginForm1
         My.Settings.CountryCode = countryCode
         Me.Client = New CareLinkClient(Me.UsernameTextBox.Text, Me.PasswordTextBox.Text, countryCode)
         If Not Me.Client.LoggedIn Then
-            Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData()
+            Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData(My.Forms.Form1)
             Me.LoginStatus.Text = Me.Client.GetLastErrorMessage
             If recentData IsNot Nothing AndAlso recentData.Count > 0 Then
 

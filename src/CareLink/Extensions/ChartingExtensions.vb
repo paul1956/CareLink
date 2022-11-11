@@ -204,7 +204,7 @@ Friend Module ChartingExtensions
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
                                 homePageChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, HomePageBasalRow, HomePageInsulinRow, Color.Aqua, False, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
-                            Case "RECOMMENDED", "UNDETERMINED"
+                            Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 If s_homeTabMarkerInsulinDictionary.TryAdd(markerOADateTime, CInt(HomePageInsulinRow)) Then
                                     markerSeriesPoints.AddXY(markerOADateTime, HomePageInsulinRow - 10)
                                     markerSeriesPoints.Last.MarkerBorderWidth = 2
@@ -293,7 +293,7 @@ Friend Module ChartingExtensions
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
                                 treatmentChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, MaxBasalPerDose, TreatmentInsulinRow, Color.Aqua, True, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
-                            Case "RECOMMENDED", "UNDETERMINED"
+                            Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 If s_treatmentMarkerInsulinDictionary.TryAdd(markerOADateTime, TreatmentInsulinRow) Then
                                     markerSeriesPoints.AddXY(markerOADateTime, TreatmentInsulinRow)
                                     markerSeriesPoints.Last.MarkerBorderWidth = 2

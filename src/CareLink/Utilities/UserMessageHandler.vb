@@ -53,6 +53,7 @@ Friend Module UserMessageHandler
                         {"BC_SID_ENTER_BG_TO_CALIBRATE_SENSOR_SENSOR_INFO_NO_AVAILABLE", "Enter BG to calibrate sensor(triggeredDateTime). Sensor info not available."},
                         {"BC_SID_ENTER_BG_TO_CONTINUE_IN_SMART_GUARD", "Enter BG to continue in SmartGuard(triggeredDateTime)."},
                         {"BC_SID_FILL_TUBING_STOPPED_DISCONNECT", "Fill tubing, delivery stopped."},
+                        {"BC_SID_GLUCOSE_WAS_HIGHER_THREE_HOURS", "Glucose was higher(triggeredDateTime). Three hours."},
                         {"BC_SID_HIGH_SG_CHECK_BG", "Alert on high (0) (units)(triggeredDateTime). High sensor glucose. Check BG.:sg"},
                         {"BC_SID_IF_NEW_SENSR_SELCT_START_NEW_ELSE_REWIND", "Sensor connected. If New sensor, select Start New. If Not, select Reconnect."},
                         {"BC_SID_INSERT_AND_START_NEW_SENSOR", "Sensor expired(triggeredDateTime). Insert New sensor and Start New'."},
