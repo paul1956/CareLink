@@ -30,8 +30,12 @@ This update has a UI to show all the available data and a visual version that mi
 - 11/9/2022
 
 ## What's New in this release
+New in 3.5.7.7
+- Add support for MANUAL basal
+- Add additional time zone
+
 New in 3.5.7.6
--  More guards against bad server data
+- More guards against bad server data
 - Update error handling for server down
 
 New in 3.5.7.5

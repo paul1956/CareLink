@@ -196,7 +196,7 @@ Public Class CareLinkClient
         Return Me.DecodeResponse(response)
     End Function
 
-    Private Function ExecuteLoginProcedure() As Boolean
+    Private Function ExecuteLoginProcedure(MainForm As Form1) As Boolean
         Dim lastLoginSuccess As Boolean = False
         If NetworkDown Then
             _lastErrorMessage = "Network down"
@@ -255,16 +255,16 @@ Public Class CareLinkClient
 
             ' Get sessions infos if required
             If Not _sessionUser.HasValue Then
-                _sessionUser = Me.GetMyUser()
+                _sessionUser = Me.GetMyUser(MainForm)
             End If
             If Not _sessionProfile.HasValue Then
-                _sessionProfile = Me.GetMyProfile()
+                _sessionProfile = Me.GetMyProfile(MainForm)
             End If
             If Not s_sessionCountrySettings.HasValue Then
-                s_sessionCountrySettings = New CountrySettingsRecord(Me.GetCountrySettings())
+                s_sessionCountrySettings = New CountrySettingsRecord(MainForm, Me.GetCountrySettings(MainForm))
             End If
             If Not _sessionMonitorData.HasValue Then
-                _sessionMonitorData = Me.GetMonitorData()
+                _sessionMonitorData = Me.GetMonitorData(MainForm)
 
             End If
 
@@ -284,7 +284,7 @@ Public Class CareLinkClient
 
     End Function
 
-    Private Function GetAuthorizationToken() As String
+    Private Function GetAuthorizationToken(MainForm As Form1) As String
         If NetworkDown Then
             Debug.Print("Network Down")
             Return Nothing
@@ -305,7 +305,7 @@ Public Class CareLinkClient
                 Debug.Print("Already In login Process")
                 Return Nothing
             End If
-            If Not Me.ExecuteLoginProcedure() Then
+            If Not Me.ExecuteLoginProcedure(MainForm) Then
                 If NetworkDown Then
                     Debug.Print("Network Down")
                 End If
@@ -319,7 +319,7 @@ Public Class CareLinkClient
     End Function
 
     ' Periodic data from CareLink Cloud
-    Private Function GetConnectDisplayMessage(username As String, role As String, endpointUrl As String) As Dictionary(Of String, String)
+    Private Function GetConnectDisplayMessage(MainForm As Form1, username As String, role As String, endpointUrl As String) As Dictionary(Of String, String)
 
         Debug.Print("__getConnectDisplayMessage()")
         ' Build user json for request
@@ -330,7 +330,7 @@ Public Class CareLinkClient
             {
                 "role",
                 role}}
-        Dim recentData As Dictionary(Of String, String) = Me.GetData(Nothing, endpointUrl, Nothing, userJson)
+        Dim recentData As Dictionary(Of String, String) = Me.GetData(MainForm, Nothing, endpointUrl, Nothing, userJson)
         If recentData IsNot Nothing Then
             CorrectTimeInRecentData(recentData)
         End If
@@ -352,7 +352,7 @@ Public Class CareLinkClient
         Return cookie?.Value
     End Function
 
-    Private Function GetCountrySettings() As Dictionary(Of String, String)
+    Private Function GetCountrySettings(MainForm As Form1) As Dictionary(Of String, String)
         Debug.Print("__getCountrySettings()")
         Dim queryParams As New Dictionary(Of String, String) From {
             {
@@ -361,10 +361,10 @@ Public Class CareLinkClient
             {
                 "language",
                 CarelinkLanguageEn}}
-        Return Me.GetData(Me.CareLinkServer(), "patient/countries/settings", queryParams, Nothing)
+        Return Me.GetData(MainForm, Me.CareLinkServer(), "patient/countries/settings", queryParams, Nothing)
     End Function
 
-    Private Function GetData(host As String, endPointPath As String, queryParams As Dictionary(Of String, String), requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
+    Private Function GetData(MainForm As Form1, host As String, endPointPath As String, queryParams As Dictionary(Of String, String), requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
         Dim url As String
         Debug.Print("__getData()")
         If host Is Nothing Then
@@ -376,7 +376,7 @@ Public Class CareLinkClient
 
         Dim jsonData As Dictionary(Of String, String) = Nothing
         ' Get authorization token
-        Dim authToken As String = Me.GetAuthorizationToken()
+        Dim authToken As String = Me.GetAuthorizationToken(MainForm)
         If authToken IsNot Nothing Then
             Dim response As New HttpResponseMessage
             Try
@@ -457,20 +457,20 @@ Public Class CareLinkClient
         Return response
     End Function
 
-    Private Function GetMonitorData() As MonitorDataRecord
+    Private Function GetMonitorData(MainForm As Form1) As MonitorDataRecord
         Debug.Print("__getMonitorData()")
-        Return New MonitorDataRecord(Me.GetData(Me.CareLinkServer(), "patient/monitor/data", Nothing, Nothing))
+        Return New MonitorDataRecord(Me.GetData(MainForm, Me.CareLinkServer(), "patient/monitor/data", Nothing, Nothing))
     End Function
 
-    Private Function GetMyProfile() As MyProfileRecord
+    Private Function GetMyProfile(MainForm As Form1) As MyProfileRecord
         Debug.Print("__getMyProfile()")
-        Dim myProfileRecord As New MyProfileRecord(Me.GetData(Me.CareLinkServer(), "patient/users/me/profile", Nothing, Nothing))
+        Dim myProfileRecord As New MyProfileRecord(Me.GetData(MainForm, Me.CareLinkServer(), "patient/users/me/profile", Nothing, Nothing))
         Return myProfileRecord
     End Function
 
-    Private Function GetMyUser() As MyUserRecord
+    Private Function GetMyUser(MainForm As Form1) As MyUserRecord
         Debug.Print("__getMyUser()")
-        Dim myUserRecord As New MyUserRecord(Me.GetData(Me.CareLinkServer(), "patient/users/me", Nothing, Nothing))
+        Dim myUserRecord As New MyUserRecord(Me.GetData(MainForm, Me.CareLinkServer(), "patient/users/me", Nothing, Nothing))
         Return myUserRecord
     End Function
 
@@ -479,7 +479,7 @@ Public Class CareLinkClient
     End Function
 
     ' Wrapper for data retrieval methods
-    Public Overridable Function GetRecentData() As Dictionary(Of String, String)
+    Public Overridable Function GetRecentData(MainForm As Form1) As Dictionary(Of String, String)
         If NetworkDown Then
             Debug.Print("Network Down")
             Return Nothing
@@ -487,9 +487,10 @@ Public Class CareLinkClient
 
         ' Force login to get basic info
         Try
-            If Me.GetAuthorizationToken() IsNot Nothing Then
+            If Me.GetAuthorizationToken(MainForm) IsNot Nothing Then
                 If Me.CarelinkCountry IsNot Nothing OrElse _sessionMonitorData.deviceFamily?.Equals("BLE_X", StringComparison.Ordinal) Then
                     Return Me.GetConnectDisplayMessage(
+                        MainForm,
                         _sessionProfile.username,
                         If(_carelinkPartnerType.Contains(_sessionUser.role), "carepartner", "patient"),
                         s_sessionCountrySettings.blePereodicDataEndpoint)

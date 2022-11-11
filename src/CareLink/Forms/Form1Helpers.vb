@@ -9,67 +9,67 @@ Imports System.Runtime.CompilerServices
 Friend Module Form1Helpers
 
     <Extension>
-    Friend Function DoOptionalLoginAndUpdateData(MeForm As Form1, UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
-        MeForm.ServerUpdateTimer.Stop()
-        Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MeForm.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
+    Friend Function DoOptionalLoginAndUpdateData(MainForm As Form1, UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
+        MainForm.ServerUpdateTimer.Stop()
+        Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
         Select Case fileToLoad
             Case FileToLoadOptions.LastSaved
-                MeForm.Text = $"{SavedTitle} Using Last Saved Data"
+                MainForm.Text = $"{SavedTitle} Using Last Saved Data"
                 CurrentDateCulture = LastDownloadWithPath.ExtractCultureFromFileName(RepoDownloadName)
-                MeForm.RecentData = Loads(File.ReadAllText(LastDownloadWithPath))
-                MeForm.ShowMiniDisplay.Visible = Debugger.IsAttached
-                MeForm.LastUpdateTime.Text = $"{File.GetLastWriteTime(LastDownloadWithPath).ToShortDateTimeString} from file"
+                MainForm.RecentData = Loads(File.ReadAllText(LastDownloadWithPath))
+                MainForm.ShowMiniDisplay.Visible = Debugger.IsAttached
+                MainForm.LastUpdateTime.Text = $"{File.GetLastWriteTime(LastDownloadWithPath).ToShortDateTimeString} from file"
             Case FileToLoadOptions.TestData
-                MeForm.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
+                MainForm.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
                 Dim testDataWithPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")
-                MeForm.RecentData = Loads(File.ReadAllText(testDataWithPath))
-                MeForm.ShowMiniDisplay.Visible = Debugger.IsAttached
-                MeForm.LastUpdateTime.Text = $"{File.GetLastWriteTime(testDataWithPath).ToShortDateTimeString} from file"
+                MainForm.RecentData = Loads(File.ReadAllText(testDataWithPath))
+                MainForm.ShowMiniDisplay.Visible = Debugger.IsAttached
+                MainForm.LastUpdateTime.Text = $"{File.GetLastWriteTime(testDataWithPath).ToShortDateTimeString} from file"
             Case FileToLoadOptions.Login
-                MeForm.Text = SavedTitle
-                Do Until MeForm.LoginDialog.ShowDialog() <> DialogResult.Retry
+                MainForm.Text = SavedTitle
+                Do Until MainForm.LoginDialog.ShowDialog() <> DialogResult.Retry
                 Loop
-                If MeForm.client Is Nothing OrElse Not MeForm.client.LoggedIn Then
-                    MeForm.ServerUpdateTimer.Interval = s_fiveMinutesInMilliseconds
-                    MeForm.ServerUpdateTimer.Start()
-                    Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MeForm.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
+                If MainForm.client Is Nothing OrElse Not MainForm.client.LoggedIn Then
+                    MainForm.ServerUpdateTimer.Interval = s_fiveMinutesInMilliseconds
+                    MainForm.ServerUpdateTimer.Start()
+                    Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
                     If CareLinkClient.NetworkDown Then
-                        MeForm.LoginStatus.Text = "Network Down"
+                        MainForm.LoginStatus.Text = "Network Down"
                         Return False
                     End If
 
-                    MeForm.LastUpdateTime.Text = "Unknown"
+                    MainForm.LastUpdateTime.Text = "Unknown"
                     Return False
                 End If
-                MeForm.RecentData = MeForm.client.GetRecentData()
-                MeForm.ServerUpdateTimer.Interval = s_oneMinutesInMilliseconds
-                MeForm.ServerUpdateTimer.Start()
-                Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MeForm.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
+                MainForm.RecentData = MainForm.client.GetRecentData(MainForm)
+                MainForm.ServerUpdateTimer.Interval = s_oneMinutesInMilliseconds
+                MainForm.ServerUpdateTimer.Start()
+                Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
                 If CareLinkClient.NetworkDown Then
-                    MeForm.LoginStatus.Text = "Network Down"
+                    MainForm.LoginStatus.Text = "Network Down"
                     Return False
                 End If
-                MeForm.ShowMiniDisplay.Visible = True
-                MeForm.LoginStatus.Text = If(MeForm.RecentData?.Count > 0, "OK", MeForm.client.GetLastErrorMessage)
+                MainForm.ShowMiniDisplay.Visible = True
+                MainForm.LoginStatus.Text = If(MainForm.RecentData?.Count > 0, "OK", MainForm.client.GetLastErrorMessage)
         End Select
-        MeForm.FinishInitialization()
+        MainForm.FinishInitialization()
         If UpdateAllTabs Then
-            MeForm.UpdateAllTabPages()
+            MainForm.UpdateAllTabPages()
         End If
         Return True
     End Function
 
     <Extension>
-    Friend Sub FinishInitialization(MeForm As Form1)
-        MeForm.Cursor = Cursors.Default
+    Friend Sub FinishInitialization(MainForm As Form1)
+        MainForm.Cursor = Cursors.Default
         Application.DoEvents()
 
-        MeForm.InitializeHomePageChart()
-        MeForm.InitializeActiveInsulinTabChart()
-        MeForm.InitializeTimeInRangeArea()
+        MainForm.InitializeHomePageChart()
+        MainForm.InitializeActiveInsulinTabChart()
+        MainForm.InitializeTimeInRangeArea()
 
-        MeForm.Initialized = True
+        MainForm.Initialized = True
     End Sub
 
     <Extension>
