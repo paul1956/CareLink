@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <RootNamespace>CareLink</RootNamespace>
     <StartupObject>Sub Main</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>
@@ -64,7 +64,8 @@
     <PackageReference Include="DataGridViewDisableButtonColumnEx" Version="1.0.0" />
     <PackageReference Include="Microsoft.Exchange.WebServices.NETStandard" Version="2.0.0-beta3" />
     <PackageReference Include="Octokit" Version="4.0.1" />
-    <PackageReference Include="ToolStripComboBoxEx" Version="1.0.0" />
+    <PackageReference Include="TableLayputPanelTop" Version="1.0.0.1" />
+    <PackageReference Include="ToolStripComboBoxEx" Version="1.0.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -114,13 +115,6 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\TableLayputPanelTop\TableLayputPanelTop\TableLayputPanelTop.vbproj" />
-    <ProjectReference Include="..\..\..\winforms-datavisualization\src\System.Windows.Forms.DataVisualization\ChartWin.csproj" />
-    <ProjectReference Include="..\DataGridViewDisableButtonColumnEx\DataGridViewDisableButtonColumnEx.vbproj" />
-    <ProjectReference Include="..\ToolStripComboBoxEx\ToolStripComboBoxEx.vbproj" />
   </ItemGroup>
 
   <ItemGroup>

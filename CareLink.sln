@@ -14,14 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Screenshot 2022-10-08 203350.png = Screenshot 2022-10-08 203350.png
 	EndProjectSection
 EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "DataGridViewDisableButtonColumnEx", "src\DataGridViewDisableButtonColumnEx\DataGridViewDisableButtonColumnEx.vbproj", "{3B647A3D-3985-488B-B1AC-3BDB883215A0}"
-EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "TableLayputPanelTop", "..\TableLayputPanelTop\TableLayputPanelTop\TableLayputPanelTop.vbproj", "{030452F6-3735-4B1E-82FF-F8209DEF3CC2}"
-EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "ToolStripComboBoxEx", "src\ToolStripComboBoxEx\ToolStripComboBoxEx.vbproj", "{EC39AF92-DFBD-4D25-913A-4DD59378F2B7}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChartWin", "..\winforms-datavisualization\src\System.Windows.Forms.DataVisualization\ChartWin.csproj", "{80FB2D04-3E33-4EF5-B88A-6B68A9B7C927}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,22 +24,6 @@ Global
 		{3DF0DB17-7515-4C29-916E-C6EF66A82672}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DF0DB17-7515-4C29-916E-C6EF66A82672}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DF0DB17-7515-4C29-916E-C6EF66A82672}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3B647A3D-3985-488B-B1AC-3BDB883215A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3B647A3D-3985-488B-B1AC-3BDB883215A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3B647A3D-3985-488B-B1AC-3BDB883215A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3B647A3D-3985-488B-B1AC-3BDB883215A0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{030452F6-3735-4B1E-82FF-F8209DEF3CC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{030452F6-3735-4B1E-82FF-F8209DEF3CC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{030452F6-3735-4B1E-82FF-F8209DEF3CC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{030452F6-3735-4B1E-82FF-F8209DEF3CC2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EC39AF92-DFBD-4D25-913A-4DD59378F2B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EC39AF92-DFBD-4D25-913A-4DD59378F2B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EC39AF92-DFBD-4D25-913A-4DD59378F2B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EC39AF92-DFBD-4D25-913A-4DD59378F2B7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{80FB2D04-3E33-4EF5-B88A-6B68A9B7C927}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{80FB2D04-3E33-4EF5-B88A-6B68A9B7C927}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{80FB2D04-3E33-4EF5-B88A-6B68A9B7C927}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{80FB2D04-3E33-4EF5-B88A-6B68A9B7C927}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
