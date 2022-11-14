@@ -72,7 +72,7 @@ Friend Module SummaryRecordHelpers
                 .Replace($"(secondaryTime)", secondaryTime)
             Else
                 If Debugger.IsAttached Then
-                    MsgBox($"Unknown sensor message '{entryValue}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Unknown Sensor Message")
+                    MsgBox($"Unknown Notification Message '{entryValue}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Unknown Notification Message")
                 End If
                 formattedMessage = entryValue.Replace("_", " ")
             End If
@@ -99,8 +99,8 @@ Friend Module SummaryRecordHelpers
                     If s_NotificationMessages.TryGetValue(row.Value, message) Then
                         message = TranslateNotificationMessageId(dic, row.Value)
                     Else
-                        If Not String.IsNullOrWhiteSpace(row.Value) AndAlso Debugger.IsAttached Then
-                            MsgBox($"{row.Value} is unknown system status message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
+                        If Debugger.IsAttached AndAlso Not String.IsNullOrWhiteSpace(row.Value) Then
+                            MsgBox($"{row.Value} is unknown Notification Messages", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
                         End If
                         message = row.Value.ToTitle
                     End If
@@ -156,7 +156,10 @@ Friend Module SummaryRecordHelpers
         ElseIf tReturnType Is GetType(UShort) Then
             Return CAnyType(Of T)(UShort.MaxValue)
         Else
-            MsgBox($"{tReturnType} type is not yet defined.")
+            If Debugger.IsAttached Then
+                MsgBox($"{tReturnType} type is not yet defined.")
+            End If
+            Return Nothing
         End If
 
     End Function

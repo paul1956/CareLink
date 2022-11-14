@@ -193,7 +193,6 @@ Friend Module DateTimeExtensions
             Return resultDate
         End If
 
-        MsgBox($"System.FormatException: String '{dateAsString}' from {memberName} line {sourceLineNumber} was not recognized as a valid DateTime in any supported culture.", MsgBoxStyle.ApplicationModal Or MsgBoxStyle.Critical)
         Throw New System.FormatException($"String '{dateAsString}' with {NameOf(key)} = {key} from {memberName} line {sourceLineNumber} was not recognized as a valid DateTime in any supported culture.")
     End Function
 
