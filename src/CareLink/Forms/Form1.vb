@@ -49,9 +49,9 @@ Public Class Form1
 #Region "Charts"
 
     Private WithEvents ActiveInsulinChart As Chart
-    Private WithEvents TreatmentMarkersChart As Chart
     Private WithEvents HomeTabChart As Chart
     Private WithEvents HomeTabTimeInRangeChart As Chart
+    Private WithEvents TreatmentMarkersChart As Chart
 
 #End Region
 
@@ -78,8 +78,8 @@ Public Class Form1
     Private WithEvents HomeTabTimeChangeSeries As Series
     Private WithEvents HomeTabTimeInRangeSeries As New Series
 
-    Private WithEvents TreatmentMarkerBGSeries As Series
     Private WithEvents TreatmentMarkerBasalSeries As Series
+    Private WithEvents TreatmentMarkerBGSeries As Series
     Private WithEvents TreatmentMarkerMarkersSeries As Series
     Private WithEvents TreatmentMarkerTimeChangeSeries As Series
 
@@ -348,9 +348,9 @@ Public Class Form1
     End Sub
 
 #If SupportMailServer = "True" Then
-    Private Sub MenuOptionsSetupEMailServer_Click(sender As Object, e As EventArgs) Handles MenuOptionsSetupEMailServer.Click
-        MailSetupDialog.ShowDialog()
-    End Sub
+        Private Sub MenuOptionsSetupEMailServer_Click(sender As Object, e As EventArgs) Handles MenuOptionsSetupEMailServer.Click
+            MailSetupDialog.ShowDialog()
+        End Sub
 
 #End If
 
@@ -614,28 +614,6 @@ Public Class Form1
         Debug.Print($"In {NameOf(ActiveInsulinChart_PostPaint)} exited SyncLock")
     End Sub
 
-    '<DebuggerNonUserCode()>
-    Private Sub TreatmentMarkersChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles TreatmentMarkersChart.PostPaint
-
-        If Not _Initialized OrElse _inMouseMove Then
-            Exit Sub
-        End If
-        Debug.Print($"In {NameOf(TreatmentMarkersChart_PostPaint)} before SyncLock")
-        SyncLock _updatingLock
-            Debug.Print($"In {NameOf(TreatmentMarkersChart_PostPaint)} in SyncLock")
-            If _updating Then
-                Debug.Print($"Exiting {NameOf(TreatmentMarkersChart_PostPaint)} due to {NameOf(_updating)}")
-                Exit Sub
-            End If
-            e.PostPaintSupport(_treatmentMarkerAbsoluteRectangle,
-                s_treatmentMarkerInsulinDictionary,
-                s_treatmentMarkerMealDictionary,
-                offsetInsulinImage:=False,
-                paintOnY2:=False)
-        End SyncLock
-        Debug.Print($"In {NameOf(TreatmentMarkersChart_PostPaint)} exited SyncLock")
-    End Sub
-
     <DebuggerNonUserCode()>
     Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomeTabChart.PostPaint
 
@@ -658,6 +636,28 @@ Public Class Form1
         Debug.Print($"In {NameOf(HomePageChart_PostPaint)} exited SyncLock")
     End Sub
 
+    '<DebuggerNonUserCode()>
+    Private Sub TreatmentMarkersChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles TreatmentMarkersChart.PostPaint
+
+        If Not _Initialized OrElse _inMouseMove Then
+            Exit Sub
+        End If
+        Debug.Print($"In {NameOf(TreatmentMarkersChart_PostPaint)} before SyncLock")
+        SyncLock _updatingLock
+            Debug.Print($"In {NameOf(TreatmentMarkersChart_PostPaint)} in SyncLock")
+            If _updating Then
+                Debug.Print($"Exiting {NameOf(TreatmentMarkersChart_PostPaint)} due to {NameOf(_updating)}")
+                Exit Sub
+            End If
+            e.PostPaintSupport(_treatmentMarkerAbsoluteRectangle,
+                s_treatmentMarkerInsulinDictionary,
+                s_treatmentMarkerMealDictionary,
+                offsetInsulinImage:=False,
+                paintOnY2:=False)
+        End SyncLock
+        Debug.Print($"In {NameOf(TreatmentMarkersChart_PostPaint)} exited SyncLock")
+    End Sub
+
 #End Region ' Post Paint Events
 
 #End Region ' Home Page Events
@@ -665,19 +665,6 @@ Public Class Form1
 #Region "DataGridView Events"
 
 #Region "All Users Tab DataGridView Events"
-
-    Private Sub DataGridViewCareLinkUsers_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles DataGridViewCareLinkUsers.CellBeginEdit
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        'Here we save a current value of cell to some variable, that later we can compare with a new value
-        'For example using of dgv.Tag property
-        If e.RowIndex >= 0 AndAlso e.ColumnIndex > 0 Then
-            dgv.Tag = dgv.CurrentCell.Value.ToString
-        End If
-        'If dgv.Columns(e.ColumnIndex).DataPropertyName = NameOf(CareLinkUserDataRecord.AIT) Then
-        '    Me.CareLinkUsersAITComboBox.Visible = True
-        'End If
-
-    End Sub
 
     Private Sub CareLinkUserDataRecordHelpers_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridViewCareLinkUsers.CellContentClick
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -694,10 +681,16 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DataGridViewCareLinkUsers_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles DataGridViewCareLinkUsers.CellValidating
-        If e.ColumnIndex = 0 Then
-            Exit Sub
+    Private Sub DataGridViewCareLinkUsers_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles DataGridViewCareLinkUsers.CellBeginEdit
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        'Here we save a current value of cell to some variable, that later we can compare with a new value
+        'For example using of dgv.Tag property
+        If e.RowIndex >= 0 AndAlso e.ColumnIndex > 0 Then
+            dgv.Tag = dgv.CurrentCell.Value.ToString
         End If
+        'If dgv.Columns(e.ColumnIndex).DataPropertyName = NameOf(CareLinkUserDataRecord.AIT) Then
+        '    Me.CareLinkUsersAITComboBox.Visible = True
+        'End If
 
     End Sub
 
@@ -708,6 +701,13 @@ Public Class Form1
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try
+
+    End Sub
+
+    Private Sub DataGridViewCareLinkUsers_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles DataGridViewCareLinkUsers.CellValidating
+        If e.ColumnIndex = 0 Then
+            Exit Sub
+        End If
 
     End Sub
 
@@ -810,6 +810,26 @@ Public Class Form1
 
 #Region "Insulin DataGridView Events"
 
+    Private Sub DataGridViewInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewInsulin.ColumnAdded
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
+        If InsulinRecordHelpers.HideColumn(e.Column.Name) Then
+            e.Column.Visible = False
+            Exit Sub
+        End If
+        e.DgvColumnAdded(InsulinRecordHelpers.GetCellStyle(e.Column.Name),
+                         True,
+                         True, caption)
+    End Sub
+
+    Private Sub DataGridViewInsulin_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewInsulin.ColumnHeaderCellChanged
+        Stop
+    End Sub
+
+    Private Sub DataGridViewInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewInsulin.DataError
+        Stop
+    End Sub
+
     Private Sub DataGridViewViewInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DataGridViewInsulin.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.dgvCellFormatting(e, NameOf(InsulinRecord.dateTime))
@@ -831,26 +851,6 @@ Public Class Form1
                     e.CellStyle.BackColor = Color.Red
                 End If
         End Select
-    End Sub
-
-    Private Sub DataGridViewInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewInsulin.ColumnAdded
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
-        If InsulinRecordHelpers.HideColumn(e.Column.Name) Then
-            e.Column.Visible = False
-            Exit Sub
-        End If
-        e.DgvColumnAdded(InsulinRecordHelpers.GetCellStyle(e.Column.Name),
-                         True,
-                         True, caption)
-    End Sub
-
-    Private Sub DataGridViewInsulin_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewInsulin.ColumnHeaderCellChanged
-        Stop
-    End Sub
-
-    Private Sub DataGridViewInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewInsulin.DataError
-        Stop
     End Sub
 
 #End Region 'Insulin DataGridView Events
@@ -1054,20 +1054,6 @@ Public Class Form1
         End If
     End Sub
 
-    Public Sub PowerModeChanged(sender As Object, e As Microsoft.Win32.PowerModeChangedEventArgs)
-        Select Case e.Mode
-            Case Microsoft.Win32.PowerModes.Suspend
-                Me.ServerUpdateTimer.Stop()
-                Me.LastUpdateTime.Text = "Sleeping"
-            Case Microsoft.Win32.PowerModes.Resume
-                Me.LastUpdateTime.Text = "Awake"
-                Me.ServerUpdateTimer.Interval = s_thirtySecondInMilliseconds \ 3
-                Me.ServerUpdateTimer.Start()
-                Debug.Print($"In {NameOf(PowerModeChanged)}, restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
-        End Select
-
-    End Sub
-
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
         Me.ServerUpdateTimer.Stop()
         Debug.Print($"Before SyncLock in {NameOf(ServerUpdateTimer_Tick)}, {NameOf(ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
@@ -1118,6 +1104,20 @@ Public Class Form1
         Me.ServerUpdateTimer.Interval = s_oneMinutesInMilliseconds
         Me.ServerUpdateTimer.Start()
         Debug.Print($"In {NameOf(ServerUpdateTimer_Tick)}, exited SyncLock. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
+    End Sub
+
+    Public Sub PowerModeChanged(sender As Object, e As Microsoft.Win32.PowerModeChangedEventArgs)
+        Select Case e.Mode
+            Case Microsoft.Win32.PowerModes.Suspend
+                Me.ServerUpdateTimer.Stop()
+                Me.LastUpdateTime.Text = "Sleeping"
+            Case Microsoft.Win32.PowerModes.Resume
+                Me.LastUpdateTime.Text = "Awake"
+                Me.ServerUpdateTimer.Interval = s_thirtySecondInMilliseconds \ 3
+                Me.ServerUpdateTimer.Start()
+                Debug.Print($"In {NameOf(PowerModeChanged)}, restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
+        End Select
+
     End Sub
 
 #End Region ' Timer Events
@@ -1355,6 +1355,17 @@ Public Class Form1
 
 #Region "Update Data and Tables"
 
+    Private Shared Function ConvertPercent24HoursToDisplayValueString(rowValue As String) As String
+        Dim val As Decimal = CDec(Convert.ToInt32(rowValue) * 0.24)
+        Dim hours As Integer = Convert.ToInt32(val)
+        Dim minutes As Integer = CInt((val Mod 1) * 60)
+        If minutes = 0 Then
+            Return $"{hours} hours, out of last 24 hours."
+        Else
+            Return $"{hours} hours and {minutes} minutes, out of last 24 hours."
+        End If
+    End Function
+
     Private Sub UpdateDataTables()
 
         If Me.RecentData Is Nothing Then
@@ -1574,7 +1585,6 @@ Public Class Form1
                 Case ItemIndexs.timeToNextCalibrationRecommendedMinutes
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
-
                 Case ItemIndexs.calFreeSensor,
                          ItemIndexs.finalCalibration
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
@@ -1584,146 +1594,9 @@ Public Class Form1
         Me.Cursor = Cursors.Default
     End Sub
 
-    Private Shared Function ConvertPercent24HoursToDisplayValueString(rowValue As String) As String
-        Dim val As Decimal = CDec(Convert.ToInt32(rowValue) * 0.24)
-        Dim hours As Integer = Convert.ToInt32(val)
-        Dim minutes As Integer = CInt((val Mod 1) * 60)
-        If minutes = 0 Then
-            Return $"{hours} hours, out of last 24 hours."
-        Else
-            Return $"{hours} hours and {minutes} minutes, out of last 24 hours."
-        End If
-    End Function
-
 #End Region ' Update Data and Tables
 
 #Region "Update Home Tab"
-
-    Friend Sub UpdateAllTabPages()
-        If Me.RecentData Is Nothing Then
-            Debug.Print($"Exiting {NameOf(UpdateAllTabPages)}, {NameOf(RecentData)} has no data!")
-            Exit Sub
-        End If
-        Dim lastMedicalDeviceDataUpdateServerTimeEpoch As String = ""
-        If Me.RecentData?.TryGetValue(NameOf(ItemIndexs.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerTimeEpoch) Then
-            If CLng(lastMedicalDeviceDataUpdateServerTimeEpoch) = s_lastMedicalDeviceDataUpdateServerEpoch Then
-                Me.RecentData = Nothing
-                Exit Sub
-            End If
-        End If
-
-        If Me.RecentData.Count > ItemIndexs.finalCalibration + 1 Then
-            Stop
-        End If
-        Debug.Print($"In {NameOf(UpdateAllTabPages)} before SyncLock")
-        SyncLock _updatingLock
-            Debug.Print($"In {NameOf(UpdateAllTabPages)} inside SyncLock")
-            _updating = True ' prevent paint
-            _homePageAbsoluteRectangle = RectangleF.Empty
-            _treatmentMarkerAbsoluteRectangle = RectangleF.Empty
-            Me.MenuStartHere.Enabled = False
-            If Not Me.LastUpdateTime.Text.Contains("from file") Then
-                Me.LastUpdateTime.Text = Now.ToShortDateTimeString
-            Else
-                Me.LastUpdateTime.Text = Now.ToShortDateTimeString
-            End If
-            Me.CursorPanel.Visible = False
-
-            ' Update all Markets
-            Dim markerRowString As String = ""
-            If Me.RecentData.TryGetValue(ItemIndexs.markers.ToString, markerRowString) Then
-                Me.MaxBasalPerHourLabel.Text = CollectMarkers(markerRowString)
-            Else
-                Me.MaxBasalPerHourLabel.Text = ""
-            End If
-
-            Me.UpdateDataTables()
-            _updating = False
-        End SyncLock
-        Debug.Print($"In {NameOf(UpdateAllTabPages)} exited SyncLock")
-
-        Dim rowValue As String = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.lastSGTrend))
-        Dim arrows As String = Nothing
-        If Trends.TryGetValue(rowValue, arrows) Then
-            Me.LabelTrendArrows.Text = Trends(rowValue)
-        Else
-            Me.LabelTrendArrows.Text = $"{rowValue}"
-        End If
-        Me.UpdateSummaryTab()
-        Me.UpdateActiveInsulinChart()
-        Me.UpdateActiveInsulin()
-        Me.UpdateAutoModeShield()
-        Me.UpdateCalibrationTimeRemaining()
-        Me.UpdateInsulinLevel()
-        Me.UpdatePumpBattery()
-        Me.UpdateRemainingInsulin()
-        Me.UpdateSensorLife()
-        Me.UpdateTimeInRange()
-        Me.UpdateTransmitterBatttery()
-        Me.UpdateHomeTabSerieses()
-        Me.UpdateDosingAndCarbs()
-
-        Me.AboveHighLimitMessageLabel.Text = $"Above {s_limitHigh} {BgUnitsString}"
-        Me.BelowLowLimitMessageLabel.Text = $"Below {s_limitLow} {BgUnitsString}"
-        Me.FullNameLabel.Text = $"{s_firstName} {s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.lastName))}"
-        Me.ModelLabel.Text = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.pumpModelNumber))
-        Me.ReadingsLabel.Text = $"{s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288"
-
-        DisplayDataTableInDGV(Me.TableLayoutPanelLastSG,
-                              ClassToDatatable({s_lastSgRecord}.ToArray),
-                              NameOf(SgRecord),
-                              AddressOf SgRecordHelpers.AttachHandlers,
-                              ItemIndexs.lastSG,
-                              True)
-
-        DisplayDataTableInDGV(Me.TableLayoutPanelLastAlarm,
-                              ClassToDatatable(GetSummaryRecords(s_lastAlarmValue).ToArray),
-                              NameOf(LastAlarmRecord),
-                              AddressOf SummaryRecordHelpers.AttachHandlers,
-                              ItemIndexs.lastAlarm,
-                              True)
-
-        DisplayDataTableInDGV(Me.TableLayoutPanelActiveInsulin,
-                              ClassToDatatable({s_activeInsulin}.ToArray),
-                              NameOf(ActiveInsulinRecord),
-                              AddressOf ActiveInsulinRecordHelpers.AttachHandlers,
-                              ItemIndexs.activeInsulin,
-                              True)
-
-        Me.UpdateSgsTab()
-
-        DisplayDataTableInDGV(Me.TableLayoutPanelLimits,
-                              ClassToDatatable(s_listOflimitRecords.ToArray),
-                              NameOf(LimitsRecord),
-                              AddressOf LimitsRecordHelpers.AttachHandlers,
-                              ItemIndexs.limits,
-                              False)
-
-        Me.UpdateMarkerTabs()
-
-        Me.UpdateNotificationTab()
-
-        DisplayDataTableInDGV(Me.TableLayoutPanelTherapyAlgorithm,
-                              ClassToDatatable(GetSummaryRecords(s_theraphyAlgorthmStateValue).ToArray),
-                              NameOf(SummaryRecord),
-                              AddressOf SummaryRecordHelpers.AttachHandlers,
-                              ItemIndexs.therapyAlgorithmState,
-                              True)
-
-        Me.UpdatePumpBannerStateTab()
-
-        DisplayDataTableInDGV(Me.TableLayoutPanelBasal,
-                              ClassToDatatable({DictionaryToClass(Of BasalRecord)(s_basalValue, 0)}.ToArray),
-                              NameOf(BasalRecord),
-                              AddressOf BasalRecordHelpers.AttachHandlers,
-                              ItemIndexs.basal,
-                              True)
-
-        s_recentDatalast = Me.RecentData
-        Me.MenuStartHere.Enabled = True
-        Me.UpdateTreatmentChart()
-        Application.DoEvents()
-    End Sub
 
     Private Sub UpdateActiveInsulin()
         Try
@@ -2109,6 +1982,132 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
+    Friend Sub UpdateAllTabPages()
+        If Me.RecentData Is Nothing Then
+            Debug.Print($"Exiting {NameOf(UpdateAllTabPages)}, {NameOf(RecentData)} has no data!")
+            Exit Sub
+        End If
+        Dim lastMedicalDeviceDataUpdateServerTimeEpoch As String = ""
+        If Me.RecentData?.TryGetValue(NameOf(ItemIndexs.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerTimeEpoch) Then
+            If CLng(lastMedicalDeviceDataUpdateServerTimeEpoch) = s_lastMedicalDeviceDataUpdateServerEpoch Then
+                Me.RecentData = Nothing
+                Exit Sub
+            End If
+        End If
+
+        If Me.RecentData.Count > ItemIndexs.finalCalibration + 1 Then
+            Stop
+        End If
+        Debug.Print($"In {NameOf(UpdateAllTabPages)} before SyncLock")
+        SyncLock _updatingLock
+            Debug.Print($"In {NameOf(UpdateAllTabPages)} inside SyncLock")
+            _updating = True ' prevent paint
+            _homePageAbsoluteRectangle = RectangleF.Empty
+            _treatmentMarkerAbsoluteRectangle = RectangleF.Empty
+            Me.MenuStartHere.Enabled = False
+            If Not Me.LastUpdateTime.Text.Contains("from file") Then
+                Me.LastUpdateTime.Text = Now.ToShortDateTimeString
+            Else
+                Me.LastUpdateTime.Text = Now.ToShortDateTimeString
+            End If
+            Me.CursorPanel.Visible = False
+
+            ' Update all Markets
+            Dim markerRowString As String = ""
+            If Me.RecentData.TryGetValue(ItemIndexs.markers.ToString, markerRowString) Then
+                Me.MaxBasalPerHourLabel.Text = CollectMarkers(markerRowString)
+            Else
+                Me.MaxBasalPerHourLabel.Text = ""
+            End If
+
+            Me.UpdateDataTables()
+            _updating = False
+        End SyncLock
+        Debug.Print($"In {NameOf(UpdateAllTabPages)} exited SyncLock")
+
+        Dim rowValue As String = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.lastSGTrend))
+        Dim arrows As String = Nothing
+        If Trends.TryGetValue(rowValue, arrows) Then
+            Me.LabelTrendArrows.Text = Trends(rowValue)
+        Else
+            Me.LabelTrendArrows.Text = $"{rowValue}"
+        End If
+        Me.UpdateSummaryTab()
+        Me.UpdateActiveInsulinChart()
+        Me.UpdateActiveInsulin()
+        Me.UpdateAutoModeShield()
+        Me.UpdateCalibrationTimeRemaining()
+        Me.UpdateInsulinLevel()
+        Me.UpdatePumpBattery()
+        Me.UpdateRemainingInsulin()
+        Me.UpdateSensorLife()
+        Me.UpdateTimeInRange()
+        Me.UpdateTransmitterBatttery()
+        Me.UpdateHomeTabSerieses()
+        Me.UpdateDosingAndCarbs()
+
+        Me.AboveHighLimitMessageLabel.Text = $"Above {s_limitHigh} {BgUnitsString}"
+        Me.BelowLowLimitMessageLabel.Text = $"Below {s_limitLow} {BgUnitsString}"
+        Me.FullNameLabel.Text = $"{s_firstName} {s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.lastName))}"
+        Me.ModelLabel.Text = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.pumpModelNumber))
+        Me.ReadingsLabel.Text = $"{s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288"
+
+        DisplayDataTableInDGV(Me.TableLayoutPanelLastSG,
+                              ClassToDatatable({s_lastSgRecord}.ToArray),
+                              NameOf(SgRecord),
+                              AddressOf SgRecordHelpers.AttachHandlers,
+                              ItemIndexs.lastSG,
+                              True)
+
+        DisplayDataTableInDGV(Me.TableLayoutPanelLastAlarm,
+                              ClassToDatatable(GetSummaryRecords(s_lastAlarmValue).ToArray),
+                              NameOf(LastAlarmRecord),
+                              AddressOf SummaryRecordHelpers.AttachHandlers,
+                              ItemIndexs.lastAlarm,
+                              True)
+
+        DisplayDataTableInDGV(Me.TableLayoutPanelActiveInsulin,
+                              ClassToDatatable({s_activeInsulin}.ToArray),
+                              NameOf(ActiveInsulinRecord),
+                              AddressOf ActiveInsulinRecordHelpers.AttachHandlers,
+                              ItemIndexs.activeInsulin,
+                              True)
+
+        Me.UpdateSgsTab()
+
+        DisplayDataTableInDGV(Me.TableLayoutPanelLimits,
+                              ClassToDatatable(s_listOflimitRecords.ToArray),
+                              NameOf(LimitsRecord),
+                              AddressOf LimitsRecordHelpers.AttachHandlers,
+                              ItemIndexs.limits,
+                              False)
+
+        Me.UpdateMarkerTabs()
+
+        Me.UpdateNotificationTab()
+
+        DisplayDataTableInDGV(Me.TableLayoutPanelTherapyAlgorithm,
+                              ClassToDatatable(GetSummaryRecords(s_theraphyAlgorthmStateValue).ToArray),
+                              NameOf(SummaryRecord),
+                              AddressOf SummaryRecordHelpers.AttachHandlers,
+                              ItemIndexs.therapyAlgorithmState,
+                              True)
+
+        Me.UpdatePumpBannerStateTab()
+
+        DisplayDataTableInDGV(Me.TableLayoutPanelBasal,
+                              ClassToDatatable({DictionaryToClass(Of BasalRecord)(s_basalValue, 0)}.ToArray),
+                              NameOf(BasalRecord),
+                              AddressOf BasalRecordHelpers.AttachHandlers,
+                              ItemIndexs.basal,
+                              True)
+
+        s_recentDatalast = Me.RecentData
+        Me.MenuStartHere.Enabled = True
+        Me.UpdateTreatmentChart()
+        Application.DoEvents()
+    End Sub
+
 #End Region ' Update Home Tab
 
 #Region "Scale Split Containers"
@@ -2125,6 +2124,13 @@ Public Class Form1
         End If
     End Sub
 
+    ' Save the current scale value
+    ' ScaleControl() is called during the Form'AiTimeInterval constructor
+    Protected Overrides Sub ScaleControl(factor As SizeF, specified As BoundsSpecified)
+        _formScale = New SizeF(_formScale.Width * factor.Width, _formScale.Height * factor.Height)
+        MyBase.ScaleControl(factor, specified)
+    End Sub
+
     ' Recursively search for SplitContainer controls
     Private Sub Fix(c As Control)
         For Each child As Control In c.Controls
@@ -2137,13 +2143,6 @@ Public Class Form1
                 Me.Fix(child)
             End If
         Next child
-    End Sub
-
-    ' Save the current scale value
-    ' ScaleControl() is called during the Form'AiTimeInterval constructor
-    Protected Overrides Sub ScaleControl(factor As SizeF, specified As BoundsSpecified)
-        _formScale = New SizeF(_formScale.Width * factor.Width, _formScale.Height * factor.Height)
-        MyBase.ScaleControl(factor, specified)
     End Sub
 
 #End Region ' Scale Split Containers

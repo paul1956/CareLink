@@ -19,16 +19,12 @@ Public Class mfaRecord
 
     End Sub
 
-#If True Then ' Prevent reordering
-
-    Public Property status As String
+    Public Property codeValidityDuration As String
     Public Property fromDate As String
     Public Property gracePeriod As String
-    Public Property codeValidityDuration As String
     Public Property maxAttempts As String
     Public Property rememberPeriod As String
-
-#End If  ' Prevent reordering
+    Public Property status As String
 
     Public Function ToList() As Dictionary(Of String, String)
         Return _asList

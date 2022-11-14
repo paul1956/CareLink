@@ -58,38 +58,12 @@ Public Class CareLinkUserDataRecord
         Next
     End Sub
 
-#If True Then ' Do not reorder
-
     <DisplayName("Id")>
     <Column(Order:=0, TypeName:=NameOf([Int32]))>
     Public ReadOnly Property ID() As Integer
         Get
             Return _userData._iD
         End Get
-    End Property
-
-    <DisplayName("CareLink UserName")>
-    <Column(Order:=1, TypeName:=NameOf([String]))>
-    Public Property CareLinkUserName As String
-        Get
-            Return _userData._careLinkUserName
-        End Get
-        Set
-            _userData._careLinkUserName = Value
-            Me.OnCareLinkUserChanged()
-        End Set
-    End Property
-
-    <DisplayName("CareLink Password")>
-    <Column(Order:=2, TypeName:=NameOf([String]))>
-    Public Property CareLinkPassword As String
-        Get
-            Return _userData._careLinkPassword
-        End Get
-        Set
-            _userData._careLinkPassword = Value
-            Me.OnCareLinkUserChanged()
-        End Set
     End Property
 
     <DisplayName("AIT")>
@@ -116,6 +90,42 @@ Public Class CareLinkUserDataRecord
         End Set
     End Property
 
+    <DisplayName("Auto Login")>
+    <Column(Order:=14, TypeName:=NameOf([Boolean]))>
+    Public Property AutoLogin As Boolean
+        Get
+            Return _userData._autoLogin
+        End Get
+        Set
+            _userData._autoLogin = Value
+            Me.OnCareLinkUserChanged()
+        End Set
+    End Property
+
+    <DisplayName("CareLink Password")>
+    <Column(Order:=2, TypeName:=NameOf([String]))>
+    Public Property CareLinkPassword As String
+        Get
+            Return _userData._careLinkPassword
+        End Get
+        Set
+            _userData._careLinkPassword = Value
+            Me.OnCareLinkUserChanged()
+        End Set
+    End Property
+
+    <DisplayName("CareLink UserName")>
+    <Column(Order:=1, TypeName:=NameOf([String]))>
+    Public Property CareLinkUserName As String
+        Get
+            Return _userData._careLinkUserName
+        End Get
+        Set
+            _userData._careLinkUserName = Value
+            Me.OnCareLinkUserChanged()
+        End Set
+    End Property
+
     <DisplayName("Carrier Texting Domain")>
     <Column(Order:=5, TypeName:=NameOf([String]))>
     Public Property CarrierTextingDomain As String
@@ -136,18 +146,6 @@ Public Class CareLinkUserDataRecord
         End Get
         Set
             _userData._countryCode = Value
-            Me.OnCareLinkUserChanged()
-        End Set
-    End Property
-
-    <DisplayName("SettingsVersion")>
-    <Column(Order:=7, TypeName:=NameOf([String]))>
-    Public Property SettingsVersion As String
-        Get
-            Return _userData._settingsVersion
-        End Get
-        Set
-            _userData._settingsVersion = Value
             Me.OnCareLinkUserChanged()
         End Set
     End Property
@@ -200,6 +198,18 @@ Public Class CareLinkUserDataRecord
         End Set
     End Property
 
+    <DisplayName("SettingsVersion")>
+    <Column(Order:=7, TypeName:=NameOf([String]))>
+    Public Property SettingsVersion As String
+        Get
+            Return _userData._settingsVersion
+        End Get
+        Set
+            _userData._settingsVersion = Value
+            Me.OnCareLinkUserChanged()
+        End Set
+    End Property
+
     <DisplayName("Use Advanced AIT Decay")>
     <Column(Order:=12, TypeName:=NameOf([Boolean]))>
     Public Property UseAdvancedAITDecay As Boolean
@@ -223,26 +233,6 @@ Public Class CareLinkUserDataRecord
             Me.OnCareLinkUserChanged()
         End Set
     End Property
-
-    <DisplayName("Auto Login")>
-    <Column(Order:=14, TypeName:=NameOf([Boolean]))>
-    Public Property AutoLogin As Boolean
-        Get
-            Return _userData._autoLogin
-        End Get
-        Set
-            _userData._autoLogin = Value
-            Me.OnCareLinkUserChanged()
-        End Set
-    End Property
-
-#End If
-
-    Private Sub OnCareLinkUserChanged()
-        If Not _inTxn And (Parent IsNot Nothing) Then
-            Parent.CareLinkUserChanged(Me)
-        End If
-    End Sub
 
     ''' <summary>
     ''' Delete any user specific sensitive data
@@ -356,8 +346,13 @@ Public Class CareLinkUserDataRecord
         End Select
     End Sub
 
+    Private Sub OnCareLinkUserChanged()
+        If Not _inTxn And (Parent IsNot Nothing) Then
+            Parent.CareLinkUserChanged(Me)
+        End If
+    End Sub
+
     Public Structure CareLinkUserData
-        Friend _iD As Integer
         Friend _aIT As TimeSpan
         Friend _alertPhoneNumber As String
         Friend _autoLogin As Boolean
@@ -365,6 +360,7 @@ Public Class CareLinkUserDataRecord
         Friend _careLinkUserName As String
         Friend _carrierTextingDomain As String
         Friend _countryCode As String
+        Friend _iD As Integer
         Friend _mailServerPassword As String
         Friend _mailServerPort As Integer
         Friend _mailServerUserName As String

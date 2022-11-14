@@ -6,6 +6,10 @@
 Public Class numberFormatRecord
     Private ReadOnly _asList As New Dictionary(Of String, String)
 
+    Public decimalSeparator As String
+
+    Public groupsSeparator As String
+
     Public Sub New(jsonData As String)
         _asList = Loads(jsonData)
         If _asList.Count <> 2 Then
@@ -14,12 +18,6 @@ Public Class numberFormatRecord
         decimalSeparator = _asList(NameOf(decimalSeparator))
         groupsSeparator = _asList(NameOf(groupsSeparator))
     End Sub
-
-#If True Then ' Prevent reordering
-
-    Public decimalSeparator As String
-    Public groupsSeparator As String
-#End If  ' Prevent reordering
 
     Private Function GetDebuggerDisplay() As String
         Return $"{NameOf(decimalSeparator)} = {decimalSeparator}, {NameOf(groupsSeparator)} = {groupsSeparator}"

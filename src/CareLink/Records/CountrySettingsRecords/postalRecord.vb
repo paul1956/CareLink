@@ -6,6 +6,10 @@
 Public Class postalRecord
     Private ReadOnly _asList As New Dictionary(Of String, String)
 
+    Public postalFormat As String
+
+    Public regExpStr As String
+
     Public Sub New(jsonData As String)
         _asList = Loads(jsonData)
         If _asList.Keys.Count <> 2 Then
@@ -16,12 +20,6 @@ Public Class postalRecord
         regExpStr = _asList(NameOf(regExpStr))
 
     End Sub
-
-#If True Then ' Prevent reordering
-
-    Public postalFormat As String
-    Public regExpStr As String
-#End If  ' Prevent reordering
 
     Private Function GetDebuggerDisplay() As String
         Return $"{NameOf(postalFormat)} = {postalFormat}, {NameOf(regExpStr)} = {regExpStr}"
