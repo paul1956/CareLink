@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <RootNamespace>CareLink</RootNamespace>
     <StartupObject>Sub Main</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>
@@ -119,7 +119,7 @@
 
   <ItemGroup>
     <Reference Include="System.Windows.Forms.DataVisualization">
-      <HintPath>..\..\..\winforms-datavisualization\src\System.Windows.Forms.DataVisualization\bin\$(Configuration)\net6.0-windows\System.Windows.Forms.DataVisualization.dll</HintPath>
+      <HintPath>..\..\..\winforms-datavisualization\src\System.Windows.Forms.DataVisualization\bin\$(Configuration)\$(TargetFramework)\System.Windows.Forms.DataVisualization.dll</HintPath>
     </Reference>
   </ItemGroup>
 
