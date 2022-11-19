@@ -2,19 +2,19 @@
   "version": 3,
   "targets": {
     "net7.0-windows7.0": {
-      "DataGridViewDisableButtonColumnEx/1.0.0": {
+      "DataGridViewDisableButtonColumnEx/1.0.0.1": {
         "type": "package",
         "compile": {
-          "lib/net6.0-windows7.0/DataGridViewDisableButtonColumnEx.dll": {}
+          "lib/net7.0-windows7.0/DataGridViewDisableButtonColumnEx.dll": {}
         },
         "runtime": {
-          "lib/net6.0-windows7.0/DataGridViewDisableButtonColumnEx.dll": {}
+          "lib/net7.0-windows7.0/DataGridViewDisableButtonColumnEx.dll": {}
         },
         "frameworkReferences": [
           "Microsoft.WindowsDesktop.App.WindowsForms"
         ],
         "contentFiles": {
-          "contentFiles/any/net6.0-windows7.0/ColumnButton.ico": {
+          "contentFiles/any/net7.0-windows7.0/ColumnButton.ico": {
             "buildAction": "Content",
             "codeLanguage": "any",
             "copyToOutput": false
@@ -1066,38 +1066,38 @@
           }
         }
       },
-      "TableLayputPanelTop/1.0.0.1": {
+      "TableLayputPanelTop/1.0.0.2": {
         "type": "package",
         "compile": {
-          "lib/net6.0-windows7.0/TableLayputPanelTop.dll": {}
+          "lib/net7.0-windows7.0/TableLayputPanelTop.dll": {}
         },
         "runtime": {
-          "lib/net6.0-windows7.0/TableLayputPanelTop.dll": {}
+          "lib/net7.0-windows7.0/TableLayputPanelTop.dll": {}
         },
         "frameworkReferences": [
           "Microsoft.WindowsDesktop.App.WindowsForms"
         ],
         "contentFiles": {
-          "contentFiles/any/net6.0-windows7.0/LayoutPanel.ico": {
+          "contentFiles/any/net7.0-windows7.0/LayoutPanel.ico": {
             "buildAction": "Content",
             "codeLanguage": "any",
             "copyToOutput": false
           }
         }
       },
-      "ToolStripComboBoxEx/1.0.0.1": {
+      "ToolStripComboBoxEx/1.0.0.2": {
         "type": "package",
         "compile": {
-          "lib/net6.0-windows7.0/ToolStripComboBoxEx.dll": {}
+          "lib/net7.0-windows7.0/ToolStripComboBoxEx.dll": {}
         },
         "runtime": {
-          "lib/net6.0-windows7.0/ToolStripComboBoxEx.dll": {}
+          "lib/net7.0-windows7.0/ToolStripComboBoxEx.dll": {}
         },
         "frameworkReferences": [
           "Microsoft.WindowsDesktop.App.WindowsForms"
         ],
         "contentFiles": {
-          "contentFiles/any/net6.0-windows7.0/ComboBox.ico": {
+          "contentFiles/any/net7.0-windows7.0/ComboBox.ico": {
             "buildAction": "Content",
             "codeLanguage": "any",
             "copyToOutput": false
@@ -1107,18 +1107,23 @@
     }
   },
   "libraries": {
-    "DataGridViewDisableButtonColumnEx/1.0.0": {
-      "sha512": "wZUkehiER8QLrC+0n6d6J8Qma2uDCKj0Te/ZsnxJ+ZE+t8iiWpLpREzyrBi4VV4B9XIUOxUwZklm4kzAjZuyMg==",
+    "DataGridViewDisableButtonColumnEx/1.0.0.1": {
+      "sha512": "PrHkKQVt8KVoKQCk1B69Kw+TxsGOGkKU/1wzqpwWjvvlboquKPFbZKdwTd3Gwh0XO8sJFkekxHFNAK2KWqSEng==",
       "type": "package",
-      "path": "datagridviewdisablebuttoncolumnex/1.0.0",
+      "path": "datagridviewdisablebuttoncolumnex/1.0.0.1",
       "files": [
         ".nupkg.metadata",
+        ".signature.p7s",
         "ColumnButton.png",
+        "LICENSE.txt",
+        "ReadMe.MD",
         "content/ColumnButton.ico",
         "contentFiles/any/net6.0-windows7.0/ColumnButton.ico",
-        "datagridviewdisablebuttoncolumnex.1.0.0.nupkg.sha512",
+        "contentFiles/any/net7.0-windows7.0/ColumnButton.ico",
+        "datagridviewdisablebuttoncolumnex.1.0.0.1.nupkg.sha512",
         "datagridviewdisablebuttoncolumnex.nuspec",
-        "lib/net6.0-windows7.0/DataGridViewDisableButtonColumnEx.dll"
+        "lib/net6.0-windows7.0/DataGridViewDisableButtonColumnEx.dll",
+        "lib/net7.0-windows7.0/DataGridViewDisableButtonColumnEx.dll"
       ]
     },
     "Microsoft.Exchange.WebServices.NETStandard/2.0.0-beta3": {
@@ -3602,10 +3607,10 @@
         "version.txt"
       ]
     },
-    "TableLayputPanelTop/1.0.0.1": {
-      "sha512": "KIs1fRfXV7MFbzPy7ZjNyUDB5EZUKNI3lCnfX+Yv3aKtLiQCIX8B9YKIqmynf8zRB6j49bmhcjOraYJBL0fgOg==",
+    "TableLayputPanelTop/1.0.0.2": {
+      "sha512": "dbRSy+2+ur8bNu8aMGms6WRS/HLNfBqT1q6MKF4KnmNTlxb0Q9GRVg1eMCj8Y6f3v2F7v8NINZKKrIwMbXhY0g==",
       "type": "package",
-      "path": "tablelayputpaneltop/1.0.0.1",
+      "path": "tablelayputpaneltop/1.0.0.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3614,15 +3619,17 @@
         "ReadMe.MD",
         "content/LayoutPanel.ico",
         "contentFiles/any/net6.0-windows7.0/LayoutPanel.ico",
+        "contentFiles/any/net7.0-windows7.0/LayoutPanel.ico",
         "lib/net6.0-windows7.0/TableLayputPanelTop.dll",
-        "tablelayputpaneltop.1.0.0.1.nupkg.sha512",
+        "lib/net7.0-windows7.0/TableLayputPanelTop.dll",
+        "tablelayputpaneltop.1.0.0.2.nupkg.sha512",
         "tablelayputpaneltop.nuspec"
       ]
     },
-    "ToolStripComboBoxEx/1.0.0.1": {
-      "sha512": "Aekj4nLInskNjCa5nSqzkHxXsoVk7z/msqP8v0lORTmZoSomd4OV2qo5DliEgVn+weB1LHCeJz6eeIj2LGXxvw==",
+    "ToolStripComboBoxEx/1.0.0.2": {
+      "sha512": "yko9u/R/I7sb7FQEkR/YOitq5OGBSboTdWwKx+D054pg5ef5/CzYbQKSIt9t0TC8EnRfEjOvxkoINXB/byXIWw==",
       "type": "package",
-      "path": "toolstripcomboboxex/1.0.0.1",
+      "path": "toolstripcomboboxex/1.0.0.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3631,19 +3638,21 @@
         "ReadMe.MD",
         "content/ComboBox.ico",
         "contentFiles/any/net6.0-windows7.0/ComboBox.ico",
+        "contentFiles/any/net7.0-windows7.0/ComboBox.ico",
         "lib/net6.0-windows7.0/ToolStripComboBoxEx.dll",
-        "toolstripcomboboxex.1.0.0.1.nupkg.sha512",
+        "lib/net7.0-windows7.0/ToolStripComboBoxEx.dll",
+        "toolstripcomboboxex.1.0.0.2.nupkg.sha512",
         "toolstripcomboboxex.nuspec"
       ]
     }
   },
   "projectFileDependencyGroups": {
     "net7.0-windows7.0": [
-      "DataGridViewDisableButtonColumnEx >= 1.0.0",
+      "DataGridViewDisableButtonColumnEx >= 1.0.0.1",
       "Microsoft.Exchange.WebServices.NETStandard >= 2.0.0-beta3",
       "Octokit >= 4.0.1",
-      "TableLayputPanelTop >= 1.0.0.1",
-      "ToolStripComboBoxEx >= 1.0.0.1"
+      "TableLayputPanelTop >= 1.0.0.2",
+      "ToolStripComboBoxEx >= 1.0.0.2"
     ]
   },
   "packageFolders": {
@@ -3689,7 +3698,7 @@
         "dependencies": {
           "DataGridViewDisableButtonColumnEx": {
             "target": "Package",
-            "version": "[1.0.0, )"
+            "version": "[1.0.0.1, )"
           },
           "Microsoft.Exchange.WebServices.NETStandard": {
             "target": "Package",
@@ -3701,11 +3710,11 @@
           },
           "TableLayputPanelTop": {
             "target": "Package",
-            "version": "[1.0.0.1, )"
+            "version": "[1.0.0.2, )"
           },
           "ToolStripComboBoxEx": {
             "target": "Package",
-            "version": "[1.0.0.1, )"
+            "version": "[1.0.0.2, )"
           }
         },
         "imports": [

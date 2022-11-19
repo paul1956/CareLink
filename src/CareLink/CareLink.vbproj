@@ -61,11 +61,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DataGridViewDisableButtonColumnEx" Version="1.0.0" />
+    <PackageReference Include="DataGridViewDisableButtonColumnEx" Version="1.0.0.1" />
     <PackageReference Include="Microsoft.Exchange.WebServices.NETStandard" Version="2.0.0-beta3" />
     <PackageReference Include="Octokit" Version="4.0.1" />
-    <PackageReference Include="TableLayputPanelTop" Version="1.0.0.1" />
-    <PackageReference Include="ToolStripComboBoxEx" Version="1.0.0.1" />
+    <PackageReference Include="TableLayputPanelTop" Version="1.0.0.2" />
+    <PackageReference Include="ToolStripComboBoxEx" Version="1.0.0.2" />
   </ItemGroup>
 
   <ItemGroup>
