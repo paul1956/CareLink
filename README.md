@@ -27,9 +27,13 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 11/9/2022
+- 11/19/2022
 
 ## What's New in this release
+New in 3.5.7.8
+- Improve network connectivity failure display
+- Upgrade to .Net 7.0
+
 New in 3.5.7.7
 - Add support for MANUAL basal
 - Add additional time zone

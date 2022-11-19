@@ -81,8 +81,8 @@ Public Class LoginForm1
         Me.Client = New CareLinkClient(Me.UsernameTextBox.Text, Me.PasswordTextBox.Text, countryCode)
         If Not Me.Client.LoggedIn Then
             Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData(My.Forms.Form1)
-            Me.LoginStatus.Text = Me.Client.GetLastErrorMessage
             If recentData IsNot Nothing AndAlso recentData.Count > 0 Then
+                ReportLoginStatus(Me.LoginStatus, False)
 
                 Me.Ok_Button.Enabled = True
                 Me.Cancel_Button.Enabled = True
@@ -96,6 +96,8 @@ Public Class LoginForm1
                 Me.DialogResult = DialogResult.OK
                 Me.Hide()
                 Exit Sub
+            Else
+                ReportLoginStatus(Me.LoginStatus, True, Me.Client.GetLastErrorMessage)
             End If
         Else
             Me.Ok_Button.Enabled = True

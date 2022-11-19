@@ -30,12 +30,13 @@ Friend Module Form1Helpers
                 MainForm.Text = SavedTitle
                 Do Until MainForm.LoginDialog.ShowDialog() <> DialogResult.Retry
                 Loop
+
                 If MainForm.client Is Nothing OrElse Not MainForm.client.LoggedIn Then
                     MainForm.ServerUpdateTimer.Interval = s_fiveMinutesInMilliseconds
                     MainForm.ServerUpdateTimer.Start()
                     Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
                     If CareLinkClient.NetworkDown Then
-                        MainForm.LoginStatus.Text = "Network Down"
+                        ReportLoginStatus(MainForm.LoginStatus)
                         Return False
                     End If
 
@@ -46,12 +47,14 @@ Friend Module Form1Helpers
                 MainForm.ServerUpdateTimer.Interval = s_oneMinutesInMilliseconds
                 MainForm.ServerUpdateTimer.Start()
                 Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
+
                 If CareLinkClient.NetworkDown Then
-                    MainForm.LoginStatus.Text = "Network Down"
+                    ReportLoginStatus(MainForm.LoginStatus)
                     Return False
                 End If
+
+                ReportLoginStatus(MainForm.LoginStatus, MainForm.RecentData Is Nothing OrElse MainForm.RecentData.Count = 0, MainForm.client.GetLastErrorMessage)
                 MainForm.ShowMiniDisplay.Visible = True
-                MainForm.LoginStatus.Text = If(MainForm.RecentData?.Count > 0, "OK", MainForm.client.GetLastErrorMessage)
         End Select
         MainForm.FinishInitialization()
         If UpdateAllTabs Then
@@ -85,5 +88,29 @@ Friend Module Form1Helpers
         Next
         Return newMarker
     End Function
+
+    Public Sub ReportLoginStatus(loginStatus As Label)
+        ReportLoginStatus(loginStatus, True, "No Internet Connection!")
+    End Sub
+
+    Public Sub ReportLoginStatus(loginStatus As Label, hasErrors As Boolean, Optional lastErrorMessage As String = "")
+        If hasErrors Then
+            loginStatus.ForeColor = Color.Red
+            loginStatus.Text = lastErrorMessage
+        Else
+            loginStatus.ForeColor = Color.Black
+            loginStatus.Text = "OK"
+        End If
+    End Sub
+
+    Public Sub ReportLoginStatus(loginStatus As TextBox, hasErrors As Boolean, Optional lastErrorMessage As String = "")
+        If hasErrors Then
+            loginStatus.ForeColor = Color.Red
+            loginStatus.Text = lastErrorMessage
+        Else
+            loginStatus.ForeColor = Color.Black
+            loginStatus.Text = "OK"
+        End If
+    End Sub
 
 End Module

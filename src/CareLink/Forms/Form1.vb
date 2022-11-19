@@ -1069,7 +1069,8 @@ Public Class Form1
                     End If
                     Me.RecentData = _client.GetRecentData(Me)
                 End If
-                Me.LoginStatus.Text = _client.GetLastErrorMessage
+                ReportLoginStatus(Me.LoginStatus, True, _client.GetLastErrorMessage)
+
                 Me.Cursor = Cursors.Default
                 Application.DoEvents()
             End If
@@ -1078,7 +1079,8 @@ Public Class Form1
 
         Dim lastMedicalDeviceDataUpdateServerEpochString As String = ""
         If Me.RecentData Is Nothing Then
-            Me.LoginStatus.Text = _client.GetLastErrorMessage
+            ReportLoginStatus(Me.LoginStatus, True, _client.GetLastErrorMessage)
+
             _bgMiniDisplay.SetCurrentBGString("---")
         Else
             If Me.RecentData?.TryGetValue(NameOf(ItemIndexs.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then

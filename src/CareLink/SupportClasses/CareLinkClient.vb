@@ -199,7 +199,8 @@ Public Class CareLinkClient
     Private Function ExecuteLoginProcedure(MainForm As Form1) As Boolean
         Dim lastLoginSuccess As Boolean = False
         If NetworkDown Then
-            _lastErrorMessage = "Network down"
+            _lastErrorMessage = "No Internet Connection!"
+            ReportLoginStatus(MainForm.LoginStatus)
             Return lastLoginSuccess
         End If
         _loginInProcess = True
@@ -286,7 +287,8 @@ Public Class CareLinkClient
 
     Private Function GetAuthorizationToken(MainForm As Form1) As String
         If NetworkDown Then
-            Debug.Print("Network Down")
+            _lastErrorMessage = "No Internet Connection!"
+            ReportLoginStatus(MainForm.LoginStatus)
             Return Nothing
         End If
         Dim authToken As String = Me.GetCookieValue(Me.CareLinkServer, CarelinkAuthTokenCookieName)
@@ -307,7 +309,9 @@ Public Class CareLinkClient
             End If
             If Not Me.ExecuteLoginProcedure(MainForm) Then
                 If NetworkDown Then
-                    Debug.Print("Network Down")
+                    _lastErrorMessage = "No Internet Connection!"
+                    ReportLoginStatus(MainForm.LoginStatus)
+                    Debug.Print("No Internet Connection!")
                 End If
                 Debug.Print("__executeLoginProcedure failed")
                 Return Nothing
@@ -446,7 +450,8 @@ Public Class CareLinkClient
             End If
         Catch e As Exception
             If NetworkDown Then
-                Debug.Print("Network Down")
+                _lastErrorMessage = "No Internet Connection!"
+                Debug.Print("No Internet Connection!")
                 Return Nothing
             End If
             Debug.Print($"__getLoginSession() failed {e.Message}")
@@ -481,7 +486,9 @@ Public Class CareLinkClient
     ' Wrapper for data retrieval methods
     Public Overridable Function GetRecentData(MainForm As Form1) As Dictionary(Of String, String)
         If NetworkDown Then
-            Debug.Print("Network Down")
+            _lastErrorMessage = "No Internet Connection!"
+            ReportLoginStatus(MainForm.LoginStatus)
+            Debug.Print("No Internet Connection!")
             Return Nothing
         End If
 
