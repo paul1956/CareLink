@@ -513,7 +513,7 @@ Partial Class Form1
         Me.AboveHighLimitMessageLabel.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.AboveHighLimitMessageLabel.BackColor = System.Drawing.Color.Transparent
         Me.AboveHighLimitMessageLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.AboveHighLimitMessageLabel.ForeColor = System.Drawing.Color.Orange
+        Me.AboveHighLimitMessageLabel.ForeColor = System.Drawing.Color.Yellow
         Me.AboveHighLimitMessageLabel.Location = New System.Drawing.Point(30, 251)
         Me.AboveHighLimitMessageLabel.Name = "AboveHighLimitMessageLabel"
         Me.AboveHighLimitMessageLabel.Size = New System.Drawing.Size(170, 21)

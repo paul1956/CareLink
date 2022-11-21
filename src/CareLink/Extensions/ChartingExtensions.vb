@@ -100,7 +100,7 @@ Friend Module ChartingExtensions
                     End If
                     .AddXY(sgDouble, bgValue)
                     If bgValue > s_limitHigh Then
-                        .Last.Color = Color.Lime
+                        .Last.Color = Color.Yellow
                     ElseIf bgValue < s_limitLow Then
                         .Last.Color = Color.Red
                     Else

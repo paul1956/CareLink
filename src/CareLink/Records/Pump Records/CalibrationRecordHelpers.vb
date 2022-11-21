@@ -38,7 +38,7 @@ Friend Class CalibrationRecordHelpers
             ElseIf sendorValue < s_limitLow Then
                 e.CellStyle.BackColor = Color.Red
             ElseIf sendorValue > s_limitHigh Then
-                e.CellStyle.BackColor = Color.Orange
+                e.CellStyle.BackColor = Color.Yellow
             End If
         End If
 

@@ -5,7 +5,9 @@
 Friend Module TimeZoneExtensions
 
     Private ReadOnly s_specialKnownTimeZones As New Dictionary(Of String, String) From {
+            {"Amazon Standard Time", "Central Brazilian Standard Time"},
             {"Argentina Standard Time", "Argentina Standard Time"},
+            {"Bolivia Time", "SA Western Standard Time"},
             {"Central European Summer Time", "Central European Daylight Time"},
             {"Eastern European Summer Time", "E. Europe Daylight Time"},
             {"Eastern European Standard Time", "E. Europe Standard Time"}

@@ -233,6 +233,7 @@ Public Class Form1
                         End Try
                         Me.ShowMiniDisplay.Visible = Debugger.IsAttached
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
+                        Me.LastUpdateTime.ForeColor = SystemColors.ControlText
                         Me.LastUpdateTime.Text = $"{File.GetLastWriteTime(fileNameWithPath).ToShortDateTimeString} from file"
                         Try
                             Me.FinishInitialization()
@@ -286,6 +287,7 @@ Public Class Form1
                     Me.RecentData = Loads(File.ReadAllText(openFileDialog1.FileName))
                     Me.ShowMiniDisplay.Visible = Debugger.IsAttached
                     Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
+                    Me.LastUpdateTime.ForeColor = SystemColors.ControlText
                     Me.LastUpdateTime.Text = File.GetLastWriteTime(openFileDialog1.FileName).ToShortDateTimeString
                     Me.FinishInitialization()
                     Me.UpdateAllTabPages()
@@ -889,7 +891,7 @@ Public Class Form1
             ElseIf sendorValue < s_limitLow Then
                 e.CellStyle.BackColor = Color.Red
             ElseIf sendorValue > s_limitHigh Then
-                e.CellStyle.BackColor = Color.Orange
+                e.CellStyle.BackColor = Color.Yellow
             End If
         End If
 
@@ -1069,7 +1071,7 @@ Public Class Form1
                     End If
                     Me.RecentData = _client.GetRecentData(Me)
                 End If
-                ReportLoginStatus(Me.LoginStatus, True, _client.GetLastErrorMessage)
+                ReportLoginStatus(Me.LoginStatus, Me.RecentData Is Nothing OrElse Me.RecentData.Count = 0, _client.GetLastErrorMessage)
 
                 Me.Cursor = Cursors.Default
                 Application.DoEvents()
@@ -1078,7 +1080,7 @@ Public Class Form1
         End SyncLock
 
         Dim lastMedicalDeviceDataUpdateServerEpochString As String = ""
-        If Me.RecentData Is Nothing Then
+        If Me.RecentData Is Nothing OrElse Me.RecentData.Count = 0 Then
             ReportLoginStatus(Me.LoginStatus, True, _client.GetLastErrorMessage)
 
             _bgMiniDisplay.SetCurrentBGString("---")
@@ -1142,7 +1144,7 @@ Public Class Form1
         Me.HomeTabBGSeries = CreateSeriesBg(NameOf(defaultLegend))
         Me.HomeTabMarkerSeries = CreateSeriesMarker(AxisType.Secondary)
 
-        Me.HomeTabHighLimitSeries = CreateSeriesLimits(HighLimitSeriesName, Color.Orange)
+        Me.HomeTabHighLimitSeries = CreateSeriesLimits(HighLimitSeriesName, Color.Yellow)
         Me.HomeTabLowLimitSeries = CreateSeriesLimits(LowLimitSeriesName, Color.Red)
         Me.HomeTabTimeChangeSeries = CreateSeriesTimeChange()
         Me.SplitContainer3.Panel1.Controls.Add(Me.HomeTabChart)
@@ -1939,12 +1941,12 @@ Public Class Form1
         With Me.HomeTabTimeInRangeChart
             With .Series(NameOf(HomeTabTimeInRangeSeries)).Points
                 .Clear()
-                .AddXY($"{s_aboveHyperLimit}% Above {s_limitHigh} {BgUnitsString}", s_aboveHyperLimit / 100)
-                .Last().Color = Color.Orange
-                .Last().BorderColor = Color.Black
-                .Last().BorderWidth = 2
                 .AddXY($"{s_belowHypoLimit}% Below {s_limitLow} {BgUnitsString}", s_belowHypoLimit / 100)
                 .Last().Color = Color.Red
+                .Last().BorderColor = Color.Black
+                .Last().BorderWidth = 2
+                .AddXY($"{s_aboveHyperLimit}% Above {s_limitHigh} {BgUnitsString}", s_aboveHyperLimit / 100)
+                .Last().Color = Color.Yellow
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
                 .AddXY($"{s_timeInRange}% In Range", s_timeInRange / 100)
@@ -2007,6 +2009,7 @@ Public Class Form1
             _homePageAbsoluteRectangle = RectangleF.Empty
             _treatmentMarkerAbsoluteRectangle = RectangleF.Empty
             Me.MenuStartHere.Enabled = False
+            Me.LastUpdateTime.ForeColor = SystemColors.ControlText
             If Not Me.LastUpdateTime.Text.Contains("from file") Then
                 Me.LastUpdateTime.Text = Now.ToShortDateTimeString
             Else
@@ -2176,16 +2179,16 @@ Public Class Form1
             Using g As Graphics = Graphics.FromImage(bitmapText)
                 Select Case sg
                     Case <= s_limitLow
-                        bgColor = Color.Orange
+                        bgColor = Color.Red
                         If _showBaloonTip Then
                             Me.NotifyIcon1.ShowBalloonTip(10000, "CareLink Alert", $"SG below {s_limitLow} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                         End If
                         _showBaloonTip = False
                     Case <= s_limitHigh
-                        bgColor = Color.Green
+                        bgColor = Color.White
                         _showBaloonTip = True
                     Case Else
-                        bgColor = Color.Red
+                        bgColor = Color.Yellow
                         If _showBaloonTip Then
                             Me.NotifyIcon1.ShowBalloonTip(10000, "CareLink Alert", $"SG above {s_limitHigh} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                         End If

@@ -84,7 +84,7 @@ Public Class BGMiniWindow
                 Case = 0
                     Me.BGTextBox.ForeColor = Color.Black
                 Case <= 70
-                    Me.BGTextBox.ForeColor = Color.Orange
+                    Me.BGTextBox.ForeColor = Color.Red
                     If Not _alarmPlayedLow Then
                         Me.playSoundFromResource("Low Alarm")
                         _alarmPlayedLow = True
@@ -95,7 +95,7 @@ Public Class BGMiniWindow
                     _alarmPlayedLow = False
                     _alarmPlayedHigh = False
                 Case Else
-                    Me.BGTextBox.ForeColor = Color.Red
+                    Me.BGTextBox.ForeColor = Color.Yellow
                     If Not _alarmPlayedHigh Then
                         Me.playSoundFromResource("High Alarm")
                         _alarmPlayedLow = False

@@ -231,8 +231,8 @@ New in 3.5.0.0
 -  Another contribution from Chris Deprez https://github.com/Krikke99
 shows SG on System Tray with dynamic background color:
     - Green normal
-    - Orange low
-    - Red high
+    - Red low
+    - Yekkiw high
   
 ![image](https://user-images.githubusercontent.com/4416348/182358729-dfcf680b-4127-4505-9e59-be7250b25383.png)
 
