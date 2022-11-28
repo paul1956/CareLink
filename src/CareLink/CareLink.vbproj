@@ -20,9 +20,9 @@
     <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
     <RepositoryUrl>https://github.com/paul1956/CareLink</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>3.5.7.8</Version>
-    <AssemblyVersion>3.5.7.8</AssemblyVersion>
-    <FileVersion>3.5.7.8</FileVersion>
+    <Version>3.5.7.9</Version>
+    <AssemblyVersion>3.5.7.9</AssemblyVersion>
+    <FileVersion>3.5.7.9</FileVersion>
     <PackageIcon>IconImage.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/paul1956/CareLink</PackageProjectUrl>
@@ -54,10 +54,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="C:\Users\PaulM\.nuget\packages\datagridviewdisablebuttoncolumnex\1.0.0.1\contentFiles\any\net7.0-windows7.0\ColumnButton.ico" />
+    <Content Remove="C:\Users\PaulM\.nuget\packages\tablelayputpaneltop\1.0.0.2\contentFiles\any\net7.0-windows7.0\LayoutPanel.ico" />
+    <Content Remove="C:\Users\PaulM\.nuget\packages\toolstripcomboboxex\1.0.0.2\contentFiles\any\net7.0-windows7.0\ComboBox.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Import Include="System.Data" />
     <Import Include="System.Drawing" />
     <Import Include="System.Windows.Forms" />
-    <Import Include="System.Windows.Forms.DataVisualization.Charting" />
   </ItemGroup>
 
   <ItemGroup>
@@ -66,6 +71,7 @@
     <PackageReference Include="Octokit" Version="4.0.1" />
     <PackageReference Include="TableLayputPanelTop" Version="1.0.0.2" />
     <PackageReference Include="ToolStripComboBoxEx" Version="1.0.0.2" />
+    <PackageReference Include="WinForms.DataVisualization" Version="1.4.0-pr1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -117,10 +123,10 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <Reference Include="System.Windows.Forms.DataVisualization">
       <HintPath>..\..\..\winforms-datavisualization\src\System.Windows.Forms.DataVisualization\bin\$(Configuration)\$(TargetFramework)\System.Windows.Forms.DataVisualization.dll</HintPath>
     </Reference>
-  </ItemGroup>
+  </ItemGroup>-->
 
 </Project>

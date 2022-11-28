@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Runtime.CompilerServices
+Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module ChartingExtensions
 

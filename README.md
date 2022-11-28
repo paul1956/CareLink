@@ -27,9 +27,18 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 11/19/2022
+- 11/28/2022
 
 ## What's New in this release
+New in 3.5.7.9
+- Fix Totals Calculation
+- Dispose of Objects with Using where possible
+- Use DataVisualization NuGet Package
+- Add Additional Messages to s_NotificationMessages
+- Improve error messages for CheckForUpdates
+- Add Additional TimeZones
+- Update to .Net 7.0
+
 New in 3.5.7.8
 - Improve network connectivity failure display
 - Upgrade to .Net 7.0
@@ -54,13 +63,13 @@ New in 3.5.7.3
 - Improve Formatting of all tables
 
 New in 3.5.7.2
-- Hightlight when insulin flow is blocked, less insulin is delivered
+- Highlight when insulin flow is blocked, less insulin is delivered
 - Handle when no transmitter if found in json file
 - Update Summary Tab to allow clicking for details
 
 New in 3.5.7.0
 - Add Additional message translations. 
-- Spelling errors fixed througout
+- Spelling errors fixed throughout
 - Change update frequency to 1 minute
 - Internal items
     -    All Tables converted to DataGridView to improve performance
@@ -232,7 +241,7 @@ New in 3.5.0.0
 shows SG on System Tray with dynamic background color:
     - Green normal
     - Red low
-    - Yekkiw high
+    - Yellow high
   
 ![image](https://user-images.githubusercontent.com/4416348/182358729-dfcf680b-4127-4505-9e59-be7250b25383.png)
 

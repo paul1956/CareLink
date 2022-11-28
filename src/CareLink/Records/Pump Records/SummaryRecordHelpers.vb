@@ -53,6 +53,16 @@ Friend Module SummaryRecordHelpers
                     secondaryTime = ""
                 End If
 
+                Dim deliveredAmount As String = ""
+                If jsonDictionary.TryGetValue("deliveredAmount", deliveredAmount) Then
+                End If
+
+                Dim programmedAmount As String = ""
+                Dim notDeliveredAmount As String = ""
+                If jsonDictionary.TryGetValue("programmedAmount", programmedAmount) Then
+                    notDeliveredAmount = (programmedAmount.ParseSingle(3) - deliveredAmount.ParseSingle(3)).ToString("F3", CurrentUICulture)
+                End If
+
                 Dim triggeredDateTime As String = ""
                 If jsonDictionary.TryGetValue(NameOf(ClearedNotificationsRecord.triggeredDateTime), triggeredDateTime) Then
                     triggeredDateTime = $" { triggeredDateTime.ParseDate("triggeredDateTime")}"
@@ -66,10 +76,12 @@ Friend Module SummaryRecordHelpers
 
                 formattedMessage = splitMessageValue(0) _
                 .Replace("(0)", replacementValue) _
+                .Replace($"({NameOf(deliveredAmount)})", deliveredAmount) _
+                .Replace($"({NameOf(programmedAmount)})", programmedAmount) _
+                .Replace($"({NameOf(notDeliveredAmount)})", notDeliveredAmount) _
+                .Replace($"({NameOf(ClearedNotificationsRecord.secondaryTime)})", secondaryTime) _
                 .Replace("(triggeredDateTime)", $", happened at {triggeredDateTime}") _
-                .Replace("(CriticalLow)", s_criticalLow.ToString(CurrentUICulture)) _
-                .Replace("(units)", BgUnitsString) _
-                .Replace($"(secondaryTime)", secondaryTime)
+                .Replace("(units)", BgUnitsString)
             Else
                 If Debugger.IsAttached Then
                     MsgBox($"Unknown Notification Message '{entryValue}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Unknown Notification Message")

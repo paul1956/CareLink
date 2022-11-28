@@ -2,15 +2,18 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Diagnostics.CodeAnalysis
+
 <DebuggerDisplay("{GetDebuggerDisplay(),nq}")>
 Public Class postalRecord
     Private ReadOnly _asList As New Dictionary(Of String, String)
 
     Public postalFormat As String
 
+    <StringSyntax(StringSyntaxAttribute.Regex)>
     Public regExpStr As String
 
-    Public Sub New(jsonData As String)
+    Public Sub New(<StringSyntax(StringSyntaxAttribute.Json)> jsonData As String)
         _asList = Loads(jsonData)
         If _asList.Keys.Count <> 2 Then
             Throw New Exception($"{NameOf(postalRecord)}({NameOf(jsonData)}) contains {jsonData.Length} entries, 2 expected.")

@@ -1103,6 +1103,19 @@
             "copyToOutput": false
           }
         }
+      },
+      "WinForms.DataVisualization/1.4.0-pr1": {
+        "type": "package",
+        "compile": {
+          "lib/net7.0-windows7.0/WinForms.DataVisualization.dll": {
+            "related": ".pdb"
+          }
+        },
+        "runtime": {
+          "lib/net7.0-windows7.0/WinForms.DataVisualization.dll": {
+            "related": ".pdb"
+          }
+        }
       }
     }
   },
@@ -3644,6 +3657,25 @@
         "toolstripcomboboxex.1.0.0.2.nupkg.sha512",
         "toolstripcomboboxex.nuspec"
       ]
+    },
+    "WinForms.DataVisualization/1.4.0-pr1": {
+      "sha512": "+V6BY59P1Ma0CKD3KPOeBt3p+CBWLX1tgiGMkrsRScqi7IzPZ9ffEsx1Hme0SiF/HDSJ3+kkH1V2U9v4mv2dNA==",
+      "type": "package",
+      "path": "winforms.datavisualization/1.4.0-pr1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "README.md",
+        "lib/net6.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Designer.Client.dll",
+        "lib/net6.0-windows7.0/WinForms.DataVisualization.dll",
+        "lib/net6.0-windows7.0/WinForms.DataVisualization.pdb",
+        "lib/net7.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Designer.Client.dll",
+        "lib/net7.0-windows7.0/WinForms.DataVisualization.dll",
+        "lib/net7.0-windows7.0/WinForms.DataVisualization.pdb",
+        "winforms.datavisualization.1.4.0-pr1.nupkg.sha512",
+        "winforms.datavisualization.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
@@ -3652,7 +3684,8 @@
       "Microsoft.Exchange.WebServices.NETStandard >= 2.0.0-beta3",
       "Octokit >= 4.0.1",
       "TableLayputPanelTop >= 1.0.0.2",
-      "ToolStripComboBoxEx >= 1.0.0.2"
+      "ToolStripComboBoxEx >= 1.0.0.2",
+      "WinForms.DataVisualization >= 1.4.0-pr1"
     ]
   },
   "packageFolders": {
@@ -3660,7 +3693,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "3.5.7.8",
+    "version": "3.5.7.9",
     "restore": {
       "projectUniqueName": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\CareLink\\CareLink.vbproj",
       "projectName": "CareLink",
@@ -3715,6 +3748,10 @@
           "ToolStripComboBoxEx": {
             "target": "Package",
             "version": "[1.0.0.2, )"
+          },
+          "WinForms.DataVisualization": {
+            "target": "Package",
+            "version": "[1.4.0-pr1, )"
           }
         },
         "imports": [
