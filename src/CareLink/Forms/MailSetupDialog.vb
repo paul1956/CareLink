@@ -3,11 +3,15 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.ComponentModel
+Imports System.Diagnostics.CodeAnalysis
 Imports System.Text.RegularExpressions
 
 Public Class MailSetupDialog
 
-    Private Shared ReadOnly _invalidNameCharacters As String = "\/:*?""<>| "
+    Private Const InvalidNameCharacters As String = "\/:*?""<>| "
+
+    <StringSyntax(StringSyntaxAttribute.Regex)>
+    Private Const SpacePattern As String = "\s+"
 
     Private ReadOnly _defaultPorts As New Dictionary(Of String, Integer) From {
                     {"Microsoft Exchange", 0},
@@ -50,7 +54,7 @@ Public Class MailSetupDialog
         Dim keyValue As Char = e.KeyChar
 
         e.Handled = True
-        If _invalidNameCharacters.Contains(e.KeyChar) OrElse (sender.SelectionStart = 0 AndAlso e.KeyChar = ".") Then
+        If InvalidNameCharacters.Contains(e.KeyChar) OrElse (sender.SelectionStart = 0 AndAlso e.KeyChar = ".") Then
             Return
         End If
         ' Allow nothing else
@@ -113,7 +117,7 @@ Public Class MailSetupDialog
 
     Private Sub MailServerPasswordTextBox_TextChanged(sender As Object, e As EventArgs) Handles MailServerPasswordTextBox.TextChanged
         ' We remove white spaces from text inserted
-        TryCast(sender, TextBox).Text = Regex.Replace(TryCast(sender, TextBox).Text, "\s+", "")
+        TryCast(sender, TextBox).Text = Regex.Replace(TryCast(sender, TextBox).Text, SpacePattern, "")
 
     End Sub
 

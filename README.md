@@ -54,13 +54,13 @@ New in 3.5.7.3
 - Improve Formatting of all tables
 
 New in 3.5.7.2
-- Hightlight when insulin flow is blocked, less insulin is delivered
+- Highlight when insulin flow is blocked, less insulin is delivered
 - Handle when no transmitter if found in json file
 - Update Summary Tab to allow clicking for details
 
 New in 3.5.7.0
 - Add Additional message translations. 
-- Spelling errors fixed througout
+- Spelling errors fixed throughout
 - Change update frequency to 1 minute
 - Internal items
     -    All Tables converted to DataGridView to improve performance
@@ -232,7 +232,7 @@ New in 3.5.0.0
 shows SG on System Tray with dynamic background color:
     - Green normal
     - Red low
-    - Yekkiw high
+    - Yellow high
   
 ![image](https://user-images.githubusercontent.com/4416348/182358729-dfcf680b-4127-4505-9e59-be7250b25383.png)
 

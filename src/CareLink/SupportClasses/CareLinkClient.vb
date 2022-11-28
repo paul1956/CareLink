@@ -217,57 +217,44 @@ Public Class CareLinkClient
             _sessionMonitorData.Clear()
 
             ' Open login(get SessionId And SessionData)
-            Dim loginSessionResponse As HttpResponseMessage = Me.GetLoginSessionAsync()
-            If loginSessionResponse Is Nothing Then
-                _lastErrorMessage = "Login Failure"
-                Return lastLoginSuccess
-            End If
-            _lastResponseCode = loginSessionResponse.StatusCode
-
-            ' Login
-            Dim doLoginResponse As New HttpResponseMessage
-            Try
-                doLoginResponse = Me.DoLogin(loginSessionResponse)
-                If doLoginResponse Is Nothing Then
+            Using loginSessionResponse As HttpResponseMessage = Me.GetLoginSessionAsync()
+                If loginSessionResponse Is Nothing Then
                     _lastErrorMessage = "Login Failure"
                     Return lastLoginSuccess
-                Else
-                    _lastErrorMessage = Nothing
                 End If
-            Catch ex As Exception
-                _lastErrorMessage = $"Login Failure {ex.Message}, in {NameOf(ExecuteLoginProcedure)}."
-                Return lastLoginSuccess
-            Finally
-                _lastResponseCode = doLoginResponse.StatusCode
-            End Try
+                _lastResponseCode = loginSessionResponse.StatusCode
 
-            loginSessionResponse.Dispose()
+                ' Login
+                Using doLoginResponse As HttpResponseMessage = Me.DoLogin(loginSessionResponse)
+                    Try
+                        If doLoginResponse Is Nothing Then
+                            _lastErrorMessage = "Login Failure"
+                            Return lastLoginSuccess
+                        Else
+                            _lastErrorMessage = Nothing
+                        End If
+                    Catch ex As Exception
+                        _lastErrorMessage = $"Login Failure {ex.Message}, in {NameOf(ExecuteLoginProcedure)}."
+                        Return lastLoginSuccess
+                    Finally
+                        _lastResponseCode = doLoginResponse.StatusCode
+                    End Try
 
-            ' Consent
-            Dim consentResponse As HttpResponseMessage = Me.DoConsent(doLoginResponse)
-            _lastResponseCode = consentResponse?.StatusCode
-            If consentResponse Is Nothing OrElse consentResponse.StatusCode = HttpStatusCode.BadRequest Then
-                _lastErrorMessage = "Login Failure"
-                Return lastLoginSuccess
-            End If
-            'setLastResponseBody(consentResponse);
-            doLoginResponse.Dispose()
-            consentResponse.Dispose()
+                    ' Consent
+                    Using consentResponse As HttpResponseMessage = Me.DoConsent(doLoginResponse)
+                        _lastResponseCode = consentResponse?.StatusCode
+                        If consentResponse Is Nothing OrElse consentResponse.StatusCode = HttpStatusCode.BadRequest Then
+                            _lastErrorMessage = "Login Failure"
+                            Return lastLoginSuccess
+                        End If
+                    End Using
+                End Using
+            End Using
 
-            ' Get sessions infos if required
-            If Not _sessionUser.HasValue Then
-                _sessionUser = Me.GetMyUser(MainForm)
-            End If
-            If Not _sessionProfile.HasValue Then
-                _sessionProfile = Me.GetMyProfile(MainForm)
-            End If
-            If Not s_sessionCountrySettings.HasValue Then
-                s_sessionCountrySettings = New CountrySettingsRecord(MainForm, Me.GetCountrySettings(MainForm))
-            End If
-            If Not _sessionMonitorData.HasValue Then
-                _sessionMonitorData = Me.GetMonitorData(MainForm)
-
-            End If
+            _sessionUser = Me.GetMyUser(MainForm)
+            _sessionProfile = Me.GetMyProfile(MainForm)
+            s_sessionCountrySettings = New CountrySettingsRecord(MainForm, Me.GetCountrySettings(MainForm))
+            _sessionMonitorData = Me.GetMonitorData(MainForm)
 
             ' Set login success if everything was OK:
             If _sessionUser.HasValue AndAlso _sessionProfile.HasValue AndAlso s_sessionCountrySettings.HasValue AndAlso _sessionMonitorData.HasValue Then

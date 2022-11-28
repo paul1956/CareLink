@@ -7,7 +7,7 @@ Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class BasalRecord
 
-    <DisplayName("Active Basal Pattern")>
+    <DisplayName("Active Basal Space Pattern")>
     <Column(Order:=0, TypeName:=NameOf([String]))>
     Public Property activeBasalPattern As String
 
