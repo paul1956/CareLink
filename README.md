@@ -30,6 +30,9 @@ This update has a UI to show all the available data and a visual version that mi
 - 11/28/2022
 
 ## What's New in this release
+New in 3.5.7.10
+- Add basal values to Active Insulin chart
+
 New in 3.5.7.9
 - Fix Totals Calculation
 - Dispose of Objects with Using where possible

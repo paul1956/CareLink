@@ -70,7 +70,9 @@ Public Class Form1
 
 #Region "Common Series"
 
+    Private WithEvents ActiveInsulinBasalSeries As Series
     Private WithEvents ActiveInsulinBGSeries As Series
+    Private WithEvents ActiveInsulinMarkerSeries As Series
     Private WithEvents ActiveInsulinSeries As Series
     Private WithEvents ActiveInsulinTimeChangeSeries As Series
 
@@ -1235,6 +1237,10 @@ Public Class Form1
 
         Me.ActiveInsulinChartLegend = CreateChartLegend(NameOf(ActiveInsulinChartLegend))
         Me.ActiveInsulinChart.Legends.Add(Me.ActiveInsulinChartLegend)
+        Me.ActiveInsulinBasalSeries = CreateSeriesBasal(AxisType.Secondary)
+        Me.ActiveInsulinBGSeries = CreateSeriesBg(Me.ActiveInsulinChartLegend.Name)
+        Me.ActiveInsulinMarkerSeries = CreateSeriesMarker(AxisType.Primary)
+
         Me.ActiveInsulinSeries = New Series(NameOf(ActiveInsulinSeries)) With {
             .BorderColor = Color.FromArgb(180, 26, 59, 105),
             .BorderWidth = 4,
@@ -1246,6 +1252,8 @@ Public Class Form1
             .XValueType = ChartValueType.DateTime,
             .YAxisType = AxisType.Primary
         }
+        Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinBasalSeries)
+        Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinMarkerSeries)
         Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinSeries)
 
         Me.ActiveInsulinBGSeries = CreateSeriesBg(NameOf(ActiveInsulinChartLegend))
@@ -2051,6 +2059,7 @@ Public Class Form1
         Me.UpdateTimeInRange()
         Me.UpdateTransmitterBatttery()
         Me.UpdateHomeTabSerieses()
+        Me.ActiveInsulinChart.PlotHomePageMarkers(_activeInsulinChartAbsoluteRectangle)
         Me.UpdateDosingAndCarbs()
 
         Me.AboveHighLimitMessageLabel.Text = $"Above {s_limitHigh} {BgUnitsString}"
