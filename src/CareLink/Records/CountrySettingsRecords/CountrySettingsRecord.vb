@@ -8,13 +8,13 @@ Public Class CountrySettingsRecord
         _hasValue = False
     End Sub
 
-    Public Sub New(MainForm As Form1, jsonData As Dictionary(Of String, String))
+    Public Sub New(mainform As Form1, jsonData As Dictionary(Of String, String))
         If jsonData Is Nothing OrElse jsonData.Count = 0 Then
             _hasValue = False
             Exit Sub
         End If
 
-        Dim dgvCountryItems() As DataGridView = {MainForm.DataGridViewCountryItemsPage1, MainForm.DataGridViewCountryItemsPage2, MainForm.DataGridViewCountryItemsPage3}
+        Dim dgvCountryItems() As DataGridView = {mainform.DataGridViewCountryItemsPage1, mainform.DataGridViewCountryItemsPage2, mainform.DataGridViewCountryItemsPage3}
         For Each dgv As DataGridView In dgvCountryItems
             dgv.Rows.Clear()
             dgv.RowHeadersVisible = False

@@ -16,7 +16,7 @@ Namespace My
     Partial Friend Class MyApplication
 
         Private Sub MyApplication_NetworkAvailabilityChanged(sender As Object, e As NetworkAvailableEventArgs) Handles Me.NetworkAvailabilityChanged
-            CareLinkClient.NetworkDown = Not e.IsNetworkAvailable
+            NetworkDown = Not e.IsNetworkAvailable
         End Sub
 
         Private Sub MyApplication_UnhandledException(sender As Object, e As UnhandledExceptionEventArgs) Handles Me.UnhandledException

@@ -997,7 +997,7 @@ Public Class Form1
     Private Sub DataGridViewSummary_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewSummary.ColumnAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
-        e.DgvColumnAdded(SummaryRecordHelpers.GetCellStyle(e.Column.Name),
+        e.DgvColumnAdded(GetCellStyle(e.Column.Name),
                          False,
                          True,
                          caption)
