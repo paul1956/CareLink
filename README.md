@@ -30,6 +30,9 @@ This update has a UI to show all the available data and a visual version that mi
 - 11/28/2022
 
 ## What's New in this release
+New in 3.5.7.11
+- Added markers and ToolTips to Active Insulin Graph
+
 New in 3.5.7.10
 - Add basal values to Active Insulin chart
 

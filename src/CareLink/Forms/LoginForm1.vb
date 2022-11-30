@@ -107,7 +107,7 @@ Public Class LoginForm1
             Exit Sub
         End If
 
-        Dim networkDownMessage As String = If(CareLinkClient.NetworkDown, "due to network being down", Me.Client.GetLastErrorMessage)
+        Dim networkDownMessage As String = If(NetworkDown, "due to network being down", Me.Client.GetLastErrorMessage)
         If MsgBox($"Login Unsuccessful {networkDownMessage}. try again? If no program will exit!", Buttons:=MsgBoxStyle.YesNo, Title:="Login Failed") = MsgBoxResult.No Then
             End
         End If

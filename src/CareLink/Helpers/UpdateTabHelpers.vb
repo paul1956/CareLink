@@ -50,20 +50,20 @@ Friend Module UpdateTabHelpers
                     tableLayoutPanel2.BackColor = Color.LightGreen
                     innerJson.Reverse()
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
-                        DisplayDataTableInDGV(tableLayoutPanel2,
-                                              ClassToDatatable(GetSummaryRecords(innerDictionary.Value, NotificationsRecordHelpers.rowsToHide).ToArray),
-                                              NameOf(SummaryRecord),
-                                              AddressOf SummaryRecordHelpers.AttachHandlers,
-                                              innerDictionary.Index)
+                        tableLayoutPanel2.DisplayDataTableInDGV(
+                            ClassToDatatable(GetSummaryRecords(innerDictionary.Value, NotificationsRecordHelpers.rowsToHide).ToArray),
+                            NameOf(SummaryRecord),
+                            AddressOf SummaryRecordHelpers.AttachHandlers,
+                            innerDictionary.Index)
                     Next
                 Else
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
                         tableLayoutPanel2.BackColor = Color.PaleVioletRed
-                        DisplayDataTableInDGV(tableLayoutPanel2,
-                                              ClassToDatatable(GetSummaryRecords(innerDictionary.Value, NotificationsRecordHelpers.rowsToHide).ToArray),
-                                              NameOf(SummaryRecord),
-                                              AddressOf SummaryRecordHelpers.AttachHandlers,
-                                              innerDictionary.Index)
+                        tableLayoutPanel2.DisplayDataTableInDGV(
+                            ClassToDatatable(GetSummaryRecords(innerDictionary.Value, NotificationsRecordHelpers.rowsToHide).ToArray),
+                            NameOf(SummaryRecord),
+                            AddressOf SummaryRecordHelpers.AttachHandlers,
+                            innerDictionary.Index)
                     Next
                 End If
                 tableLevel1Blue.Controls.Add(tableLayoutPanel2, 1, c.Index)
@@ -74,50 +74,55 @@ Friend Module UpdateTabHelpers
 
     <Extension>
     Friend Sub UpdateMarkerTabs(MainForm As Form1)
-        DisplayDataTableInDGV(MainForm.TableLayoutPanelAutoBasalDelivery,
-                              MainForm.DataGridViewAutoBasalDelivery,
+        With MainForm
+            .TableLayoutPanelAutoBasalDelivery.DisplayDataTableInDGV(
+                              .DataGridViewAutoBasalDelivery,
                               ClassToDatatable(s_listOfAutoBasalDeliveryMarkers.ToArray),
                               ItemIndexs.markers)
-        DisplayDataTableInDGV(MainForm.TableLayoutPanelAutoModeStatus,
-                              ClassToDatatable(s_listOfAutoModeStatusMarkers.ToArray),
+            .TableLayoutPanelAutoModeStatus.DisplayDataTableInDGV(
+                              ClassToDatatable(
+                              s_listOfAutoModeStatusMarkers.ToArray),
                               NameOf(AutoModeStatusRecord),
                               AddressOf AutoModeStatusRecordHelpers.AttachHandlers,
                               ItemIndexs.markers,
                               False)
-        DisplayDataTableInDGV(MainForm.TableLayoutPanelBgReadings,
-                              ClassToDatatable(s_listOfBgReadingMarkers.ToArray),
+            .TableLayoutPanelBgReadings.DisplayDataTableInDGV(
+                              ClassToDatatable(
+                              s_listOfBgReadingMarkers.ToArray),
                               NameOf(BGReadingRecord),
                               AddressOf BGReadingRecordHelpers.AttachHandlers,
                               ItemIndexs.markers,
                               False)
-        DisplayDataTableInDGV(MainForm.TableLayoutPanelInsulin,
-                              MainForm.DataGridViewInsulin,
+            .TableLayoutPanelInsulin.DisplayDataTableInDGV(
+                              .DataGridViewInsulin,
                               ClassToDatatable(s_listOfInsulinMarkers.ToArray),
                               ItemIndexs.markers)
-        DisplayDataTableInDGV(MainForm.TableLayoutPanelMeal,
+            .TableLayoutPanelMeal.DisplayDataTableInDGV(
                               ClassToDatatable(s_listOfMealMarkers.ToArray),
                               NameOf(MealRecord),
                               AddressOf MealRecordHelpers.AttachHandlers,
                               ItemIndexs.markers,
                               False)
-        DisplayDataTableInDGV(MainForm.TableLayoutPanelCalibration,
+            .TableLayoutPanelCalibration.DisplayDataTableInDGV(
                               ClassToDatatable(s_listOfCalibrationMarkers.ToArray),
                               NameOf(CalibrationRecord),
                               AddressOf CalibrationRecordHelpers.AttachHandlers,
                               ItemIndexs.markers,
                               False)
-        DisplayDataTableInDGV(MainForm.TableLayoutPanelLowGlucoseSuspended,
+            .TableLayoutPanelLowGlucoseSuspended.DisplayDataTableInDGV(
                               ClassToDatatable(s_listOfLowGlucoseSuspendedMarkers.ToArray),
                               NameOf(LowGlusoceSuspendRecord),
                               AddressOf LowGlusoceSuspendRecordHelpers.AttachHandlers,
                               ItemIndexs.markers,
                               False)
-        DisplayDataTableInDGV(MainForm.TableLayoutPanelTimeChange,
+            .TableLayoutPanelTimeChange.DisplayDataTableInDGV(
                               ClassToDatatable(s_listOfTimeChangeMarkers.ToArray),
                               NameOf(TimeChangeRecord),
                               AddressOf TimeChangeRecordHelpers.AttachHandlers,
                               ItemIndexs.markers,
                               False)
+        End With
+
     End Sub
 
     <Extension>
@@ -181,7 +186,7 @@ Friend Module UpdateTabHelpers
                 Stop
             End If
         Next
-        DisplayDataTableInDGV(MainForm.TableLayoutPanelBannerState,
+        MainForm.TableLayoutPanelBannerState.DisplayDataTableInDGV(
                               ClassToDatatable(listOfPumpBannerState.ToArray),
                               NameOf(BannerStateRecord),
                               AddressOf BannerStateRecordHelpers.AttachHandlers,

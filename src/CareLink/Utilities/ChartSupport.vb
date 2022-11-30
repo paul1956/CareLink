@@ -6,6 +6,7 @@ Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module ChartSupport
+    Friend Const ActiveInsulinSeriesName As String = "ActiveInsulinSeries"
     Friend Const BasalSeriesName As String = "BasalSeries"
     Friend Const BgSeriesName As String = "BgSeries"
     Friend Const HighLimitSeriesName As String = "HighLimitSeries"

@@ -474,15 +474,17 @@ Public Class Form1
         Me.CursorTimer.Start()
     End Sub
 
-    Private Sub HomePageChart_MouseMove(sender As Object, e As MouseEventArgs) Handles HomeTabChart.MouseMove
+    Private Sub HomePageChart_MouseMove(sender As Object, e As MouseEventArgs) Handles HomeTabChart.MouseMove, ActiveInsulinChart.MouseMove
 
         If Not _Initialized Then
             Exit Sub
         End If
         _inMouseMove = True
         Dim yInPixels As Double
+        Dim chart1 As Chart = CType(sender, Chart)
+
         Try
-            yInPixels = Me.HomeTabChart.ChartAreas(NameOf(ChartArea)).AxisY2.ValueToPixelPosition(e.Y)
+            yInPixels = chart1.ChartAreas(NameOf(ChartArea)).AxisY2.ValueToPixelPosition(e.Y)
         Catch ex As Exception
             yInPixels = Double.NaN
         End Try
@@ -492,7 +494,7 @@ Public Class Form1
         End If
         Dim result As HitTestResult
         Try
-            result = Me.HomeTabChart.HitTest(e.X, e.Y)
+            result = chart1.HitTest(e.X, e.Y, True)
             If result.Series Is Nothing OrElse
                 result.PointIndex = -1 Then
                 Me.CursorPanel.Visible = False
@@ -581,6 +583,8 @@ Public Class Form1
                     Me.CursorPictureBox.Image = Nothing
                     Me.CursorMessage3Label.Visible = False
                     Me.CursorPanel.Visible = False
+                Case ActiveInsulinSeriesName
+                    currentDataPoint.ToolTip = $"{currentDataPoint.YValues.FirstOrDefault:F3} U"
                 Case Else
                     Stop
             End Select
@@ -997,7 +1001,7 @@ Public Class Form1
     Private Sub DataGridViewSummary_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewSummary.ColumnAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
-        e.DgvColumnAdded(SummaryRecordHelpers.GetCellStyle(e.Column.Name),
+        e.DgvColumnAdded(GetCellStyle(e.Column.Name),
                          False,
                          True,
                          caption)
@@ -1248,6 +1252,9 @@ Public Class Form1
             .ChartType = SeriesChartType.Line,
             .Color = Color.HotPink,
             .Legend = NameOf(ActiveInsulinChartLegend),
+            .MarkerColor = Color.Black,
+            .MarkerSize = 4,
+            .MarkerStyle = MarkerStyle.Circle,
             .ShadowColor = Color.Black,
             .XValueType = ChartValueType.DateTime,
             .YAxisType = AxisType.Primary
@@ -1631,7 +1638,7 @@ Public Class Form1
 
         Try
             Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
-            For Each s As Series In Me.ActiveInsulinChart.Series
+            For Each s As Series In aitChart.Series
                 s.Points.Clear()
             Next
             With aitChart
@@ -2068,21 +2075,21 @@ Public Class Form1
         Me.ModelLabel.Text = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.pumpModelNumber))
         Me.ReadingsLabel.Text = $"{s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288"
 
-        DisplayDataTableInDGV(Me.TableLayoutPanelLastSG,
+        Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
                               ClassToDatatable({s_lastSgRecord}.ToArray),
                               NameOf(SgRecord),
                               AddressOf SgRecordHelpers.AttachHandlers,
                               ItemIndexs.lastSG,
                               True)
 
-        DisplayDataTableInDGV(Me.TableLayoutPanelLastAlarm,
+        Me.TableLayoutPanelLastAlarm.DisplayDataTableInDGV(
                               ClassToDatatable(GetSummaryRecords(s_lastAlarmValue).ToArray),
                               NameOf(LastAlarmRecord),
                               AddressOf SummaryRecordHelpers.AttachHandlers,
                               ItemIndexs.lastAlarm,
                               True)
 
-        DisplayDataTableInDGV(Me.TableLayoutPanelActiveInsulin,
+        Me.TableLayoutPanelActiveInsulin.DisplayDataTableInDGV(
                               ClassToDatatable({s_activeInsulin}.ToArray),
                               NameOf(ActiveInsulinRecord),
                               AddressOf ActiveInsulinRecordHelpers.AttachHandlers,
@@ -2091,7 +2098,7 @@ Public Class Form1
 
         Me.UpdateSgsTab()
 
-        DisplayDataTableInDGV(Me.TableLayoutPanelLimits,
+        Me.TableLayoutPanelLimits.DisplayDataTableInDGV(
                               ClassToDatatable(s_listOflimitRecords.ToArray),
                               NameOf(LimitsRecord),
                               AddressOf LimitsRecordHelpers.AttachHandlers,
@@ -2102,7 +2109,7 @@ Public Class Form1
 
         Me.UpdateNotificationTab()
 
-        DisplayDataTableInDGV(Me.TableLayoutPanelTherapyAlgorithm,
+        Me.TableLayoutPanelTherapyAlgorithm.DisplayDataTableInDGV(
                               ClassToDatatable(GetSummaryRecords(s_theraphyAlgorthmStateValue).ToArray),
                               NameOf(SummaryRecord),
                               AddressOf SummaryRecordHelpers.AttachHandlers,
@@ -2111,7 +2118,7 @@ Public Class Form1
 
         Me.UpdatePumpBannerStateTab()
 
-        DisplayDataTableInDGV(Me.TableLayoutPanelBasal,
+        Me.TableLayoutPanelBasal.DisplayDataTableInDGV(
                               ClassToDatatable({DictionaryToClass(Of BasalRecord)(s_basalValue, 0)}.ToArray),
                               NameOf(BasalRecord),
                               AddressOf BasalRecordHelpers.AttachHandlers,

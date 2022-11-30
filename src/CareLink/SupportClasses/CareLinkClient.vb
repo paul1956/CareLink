@@ -5,38 +5,37 @@
 Imports System.IO
 Imports System.Net
 Imports System.Net.Http
-Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 
 Public Class CareLinkClient
+    Private Const CarelinkAuthTokenCookieName As String = "auth_tmp_token"
+    Private Const CarelinkTokenValidtoCookieName As String = "c_token_valid_to"
 
-    Private ReadOnly _carelinkCountry As String = Nothing
-
-    Private ReadOnly _carelinkPassword As String
-
-    Private ReadOnly _carelinkUsername As String
+    Private ReadOnly _carelinkPartnerType As New List(Of String) From {
+                        "CARE_PARTNER",
+                        "CARE_PARTNER_OUS"}
 
     Private ReadOnly _httpClient As HttpClient
     Private ReadOnly _httpClientHandler As HttpClientHandler
+    Private _inLoginInProcess As Boolean
     Private _lastErrorMessage As String
     Private _lastResponseCode? As HttpStatusCode
-    Private _loginInProcess As Boolean
     Private _sessionMonitorData As New MonitorDataRecord
     Private _sessionProfile As New MyProfileRecord
     Private _sessionUser As New MyUserRecord
 
-    Public Sub New(carelinkUsername As String, carelinkPassword As String, carelinkCountry As String)
+    Public Sub New(username As String, password As String, country As String)
         ' User info
-        _carelinkUsername = carelinkUsername
-        _carelinkPassword = carelinkPassword
-        _carelinkCountry = carelinkCountry
+        Me.CarelinkUsername = username
+        Me.CarelinkPassword = password
+        Me.CarelinkCountry = country
         ' Session info
         _sessionUser.Clear()
         _sessionProfile.Clear()
         s_sessionCountrySettings.Clear()
         _sessionMonitorData.Clear()
         ' State info
-        _loginInProcess = False
+        _inLoginInProcess = False
         Me.LoggedIn = False
         _lastErrorMessage = Nothing
         _lastResponseCode = Nothing
@@ -46,164 +45,26 @@ Public Class CareLinkClient
         _httpClient = New HttpClient(_httpClientHandler)
     End Sub
 
-    Public ReadOnly Property CarelinkCountry As String
-        Get
-            Return _carelinkCountry
-        End Get
-    End Property
-
     Public Property LoggedIn As Boolean
-    Public Shared Property NetworkDown As Boolean = False
+    Private ReadOnly Property CarelinkCountry As String = Nothing
+
+    Private ReadOnly Property CarelinkPassword As String
+
+    Private ReadOnly Property CarelinkUsername As String
 
     Private Shared Function CorrectTimeInRecentData(recentData As Dictionary(Of String, String)) As Boolean
         ' TODO
         Return recentData IsNot Nothing
     End Function
 
-    Private Shared Function ExtractResponseData(responseBody As String, begstr As String, endstr As String) As String
-        Dim beg As Integer = responseBody.IndexOf(begstr, StringComparison.Ordinal) + begstr.Length
-        If begstr.Length = beg + 1 Then
-            Return ""
-        End If
-        Dim [end] As Integer = responseBody.IndexOf(endstr, beg, StringComparison.Ordinal)
-        Return responseBody.Substring(beg, [end] - beg).Replace("""", "")
-    End Function
-
-    Private Shared Function ParseQsl(loginSessionResponse As HttpResponseMessage) As Dictionary(Of String, String)
-        Dim result As New Dictionary(Of String, String)
-        Dim absoluteUri As String = loginSessionResponse.RequestMessage.RequestUri.AbsoluteUri
-        Dim splitAbsoluteUri() As String = absoluteUri.Split("&")
-        For Each item As String In splitAbsoluteUri
-            Dim splitItem() As String
-            If Not result.Any Then
-                item = item.Split("?")(1)
-            End If
-            splitItem = item.Split("=")
-            result.Add(splitItem(0), splitItem(1))
-        Next
-        Return result
-    End Function
-
-    ' Get server URL
-    Private Function CareLinkServer() As String
-        Select Case Me.CarelinkCountry.GetRegionFromCode
-            Case "North America"
-                Return CarelinkConnectServerUs
-            Case "Europe"
-                Return CarelinkConnectServerEu
-            Case Else
-                Return CarelinkConnectServerOther
-        End Select
-    End Function
-
-    Private Function DecodeResponse(response As HttpResponseMessage, <CallerMemberName> Optional memberName As String = Nothing) As HttpResponseMessage
-        Dim message As String
-        If response.StatusCode = HttpStatusCode.OK Then
-            _lastErrorMessage = Nothing
-            Debug.Print($"{memberName} success")
-            Return response
-        ElseIf response.StatusCode = HttpStatusCode.BadRequest Then
-            _lastErrorMessage = BadRequestMessage
-            Debug.Print($"{memberName} failed with HttpStatusCode.BadRequest")
-            Return response
-        Else
-            message = $"session response is {response.StatusCode}"
-            _lastErrorMessage = message
-            Debug.Print(message)
-            Throw New Exception(message)
-        End If
-    End Function
-
-    Private Function DoConsent(doLoginResponse As HttpResponseMessage) As HttpResponseMessage
-
-        ' Extract data for consent
-        Dim doLoginRespBody As String = doLoginResponse.Text
-        Dim url As String = ExtractResponseData(doLoginRespBody, "<form action=", " ")
-        Dim sessionId As String = ExtractResponseData(doLoginRespBody, "<input type=""hidden"" name=""sessionID"" value=", ">")
-        Dim sessionData As String = ExtractResponseData(doLoginRespBody, "<input type=""hidden"" name=""sessionData"" value=", ">")
-        _lastErrorMessage = ExtractResponseData(doLoginRespBody, "LoginFailed"">", "</p>")
-        ' Send consent
-        Dim form As New Dictionary(Of String, String) From {
-            {
-                "action",
-                "consent"},
-            {
-                "sessionID",
-                sessionId},
-            {
-                "sessionData",
-                sessionData},
-            {
-                "response_type",
-                "code"},
-            {
-                "response_mode",
-                "query"}}
-        ' Add header
-        Dim consentHeaders As Dictionary(Of String, String) = _commonHeaders
-        consentHeaders("Content-Type") = "application/x-www-form-urlencoded"
-
-        Try
-            Dim response As HttpResponseMessage = _httpClient.Post(url, headers:=consentHeaders, data:=form)
-            Return Me.DecodeResponse(response)
-        Catch e As Exception
-            Dim message As String = $"__doConsent() failed with {e.Message}"
-            _lastErrorMessage = message
-            Debug.Print(message)
-        End Try
-
-        Return Nothing
-    End Function
-
-    Private Function DoLogin(loginSessionResponse As HttpResponseMessage) As HttpResponseMessage
-
-        Dim queryParameters As Dictionary(Of String, String) = ParseQsl(loginSessionResponse)
-        Const url As String = "https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login"
-        Dim payload As New Dictionary(Of String, String) From {
-            {
-                "country",
-                Me.CarelinkCountry},
-            {
-                "locale",
-                CarelinkLocaleEn}}
-
-        Dim webForm As New Dictionary(Of String, String) From {
-            {
-                "sessionID",
-                queryParameters.GetValueOrDefault("sessionID")},
-            {
-                "sessionData",
-                queryParameters.GetValueOrDefault("sessionData")},
-            {
-                "locale",
-                CarelinkLocaleEn},
-            {
-                "action",
-                "login"},
-            {
-                "username",
-                _carelinkUsername},
-            {
-                "password",
-                _carelinkPassword},
-            {
-                "actionButton",
-                "Log in"}}
-        Dim response As HttpResponseMessage = _httpClient.Post(url, _commonHeaders, params:=payload, data:=webForm)
-        If Not response.StatusCode = HttpStatusCode.OK Then
-            Throw New Exception($"HTTP Response is not OK, {response.StatusCode}")
-        End If
-        Return Me.DecodeResponse(response)
-    End Function
-
-    Private Function ExecuteLoginProcedure(MainForm As Form1) As Boolean
+    Private Function ExecuteLoginProcedure(mainForm As Form1, host As String) As Boolean
         Dim lastLoginSuccess As Boolean = False
         If NetworkDown Then
             _lastErrorMessage = "No Internet Connection!"
-            ReportLoginStatus(MainForm.LoginStatus)
+            ReportLoginStatus(mainForm.LoginStatus)
             Return lastLoginSuccess
         End If
-        _loginInProcess = True
+        _inLoginInProcess = True
         _lastErrorMessage = Nothing
         Dim message As String
         Try
@@ -217,7 +78,7 @@ Public Class CareLinkClient
             _sessionMonitorData.Clear()
 
             ' Open login(get SessionId And SessionData)
-            Using loginSessionResponse As HttpResponseMessage = Me.GetLoginSessionAsync()
+            Using loginSessionResponse As HttpResponseMessage = Me.GetLoginSessionAsync(host)
                 If loginSessionResponse Is Nothing Then
                     _lastErrorMessage = "Login Failure"
                     Return lastLoginSuccess
@@ -225,7 +86,7 @@ Public Class CareLinkClient
                 _lastResponseCode = loginSessionResponse.StatusCode
 
                 ' Login
-                Using doLoginResponse As HttpResponseMessage = Me.DoLogin(loginSessionResponse)
+                Using doLoginResponse As HttpResponseMessage = DoLogin(_httpClient, loginSessionResponse, Me.CarelinkUsername, Me.CarelinkPassword, Me.CarelinkCountry, _lastErrorMessage)
                     Try
                         If doLoginResponse Is Nothing Then
                             _lastErrorMessage = "Login Failure"
@@ -241,7 +102,7 @@ Public Class CareLinkClient
                     End Try
 
                     ' Consent
-                    Using consentResponse As HttpResponseMessage = Me.DoConsent(doLoginResponse)
+                    Using consentResponse As HttpResponseMessage = DoConsent(_httpClient, doLoginResponse, _lastErrorMessage)
                         _lastResponseCode = consentResponse?.StatusCode
                         If consentResponse Is Nothing OrElse consentResponse.StatusCode = HttpStatusCode.BadRequest Then
                             _lastErrorMessage = "Login Failure"
@@ -251,10 +112,11 @@ Public Class CareLinkClient
                 End Using
             End Using
 
-            _sessionUser = Me.GetMyUser(MainForm)
-            _sessionProfile = Me.GetMyProfile(MainForm)
-            s_sessionCountrySettings = New CountrySettingsRecord(MainForm, Me.GetCountrySettings(MainForm))
-            _sessionMonitorData = Me.GetMonitorData(MainForm)
+            Dim authToken As String = Me.GetBearerToken(CareLinkServerURL(Me.CarelinkCountry))
+            s_sessionCountrySettings = New CountrySettingsRecord(mainForm, Me.GetCountrySettings(authToken))
+            _sessionUser = Me.GetMyUser(authToken)
+            _sessionProfile = Me.GetMyProfile(authToken)
+            _sessionMonitorData = Me.GetMonitorData(authToken)
 
             ' Set login success if everything was OK:
             If _sessionUser.HasValue AndAlso _sessionProfile.HasValue AndAlso s_sessionCountrySettings.HasValue AndAlso _sessionMonitorData.HasValue Then
@@ -265,48 +127,47 @@ Public Class CareLinkClient
             Debug.Print(message)
             _lastErrorMessage = e.Message
         Finally
-            _loginInProcess = False
+            _inLoginInProcess = False
             Me.LoggedIn = lastLoginSuccess
         End Try
         Return lastLoginSuccess
 
     End Function
 
-    Private Function GetAuthorizationToken(MainForm As Form1) As String
+    Private Function GetAuthorizationToken(MainForm As Form1, ByRef authToken As String) As GetAuthorizationTokenResult
         If NetworkDown Then
             _lastErrorMessage = "No Internet Connection!"
-            ReportLoginStatus(MainForm.LoginStatus)
-            Return Nothing
+            Return GetAuthorizationTokenResult.NetworkDown
         End If
-        Dim authToken As String = Me.GetCookieValue(Me.CareLinkServer, CarelinkAuthTokenCookieName)
-        Dim authTokenValidto As String = Me.GetCookies(Me.CareLinkServer)?.Item(CarelinkTokenValidtoCookieName)?.Value
+
+        Dim url As String = CareLinkServerURL(Me.CarelinkCountry)
         ' New token is needed:
         ' a) no token or about to expire => execute authentication
         ' b) last response 401
-        If authToken Is Nothing OrElse authTokenValidto Is Nothing OrElse New List(Of Object) From {
-            401,
-            403
-        }.Contains(_lastResponseCode) Then
+        If Me.GetCookieValue(url, CarelinkAuthTokenCookieName) Is Nothing OrElse
+            Me.GetCookies(url)?.Item(CarelinkTokenValidtoCookieName)?.Value Is Nothing OrElse
+            New List(Of Object)() From {401, 403}.Contains(_lastResponseCode) Then
             ' TODO: add check for expired token
             ' execute new login process | null, if error OR already doing login
             'if loginInProcess or not executeLoginProcedure():
-            If _loginInProcess Then
+            If _inLoginInProcess Then
                 Debug.Print("Already In login Process")
-                Return Nothing
+                Return GetAuthorizationTokenResult.InLoginProcess
             End If
-            If Not Me.ExecuteLoginProcedure(MainForm) Then
+            If Not Me.ExecuteLoginProcedure(MainForm, url) Then
                 If NetworkDown Then
                     _lastErrorMessage = "No Internet Connection!"
-                    ReportLoginStatus(MainForm.LoginStatus)
                     Debug.Print("No Internet Connection!")
+                    Return GetAuthorizationTokenResult.NetworkDown
                 End If
                 Debug.Print("__executeLoginProcedure failed")
-                Return Nothing
+                Return GetAuthorizationTokenResult.LoginFailed
             End If
-            Debug.Print($"auth_token_validto = {Me.GetCookies(Me.CareLinkServer).Item(CarelinkTokenValidtoCookieName).Value}")
+            Debug.Print($"auth_token_validto = {Me.GetCookies(url).Item(CarelinkTokenValidtoCookieName).Value}")
         End If
         ' there can be only one
-        Return $"Bearer {Me.GetCookieValue(Me.CareLinkServer, CarelinkAuthTokenCookieName)}"
+        authToken = Me.GetBearerToken(url)
+        Return GetAuthorizationTokenResult.OK
     End Function
 
     ' Periodic data from CareLink Cloud
@@ -343,7 +204,7 @@ Public Class CareLinkClient
         Return cookie?.Value
     End Function
 
-    Private Function GetCountrySettings(MainForm As Form1) As Dictionary(Of String, String)
+    Private Function GetCountrySettings(authToken As String) As Dictionary(Of String, String)
         Debug.Print("__getCountrySettings()")
         Dim queryParams As New Dictionary(Of String, String) From {
             {
@@ -351,33 +212,24 @@ Public Class CareLinkClient
                 Me.CarelinkCountry},
             {
                 "language",
-                CarelinkLanguageEn}}
-        Return Me.GetData(MainForm, Me.CareLinkServer(), "patient/countries/settings", queryParams, Nothing)
+                "en"}}
+        Return Me.GetData(authToken, CareLinkServerURL(Me.CarelinkCountry), "patient/countries/settings", queryParams, Nothing)
     End Function
 
-    Private Function GetData(MainForm As Form1, host As String, endPointPath As String, queryParams As Dictionary(Of String, String), requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
-        Dim url As String
-        Debug.Print("__getData()")
-        If host Is Nothing Then
-            url = endPointPath
-        Else
-            url = $"https://{host}/{endPointPath}"
-        End If
-        Dim payload As Dictionary(Of String, String) = queryParams
-
+    Private Function GetData(authToken As String, host As String, endPointPath As String, queryParams As Dictionary(Of String, String), requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
         Dim jsonData As Dictionary(Of String, String) = Nothing
-        ' Get authorization token
-        Dim authToken As String = Me.GetAuthorizationToken(MainForm)
         If authToken IsNot Nothing Then
             Dim response As New HttpResponseMessage
             Try
                 ' Add header
-                Dim headers As Dictionary(Of String, String) = _commonHeaders
+                Dim headers As Dictionary(Of String, String) = CommonHeaders
                 headers("Authorization") = authToken
+
+                Dim url As String = If(host Is Nothing, endPointPath, $"https://{host}/{endPointPath}")
                 If requestBody Is Nothing OrElse requestBody.Count = 0 Then
                     headers("Accept") = "application/json, text/plain, */*"
                     headers("Content-Type") = "application/json; charset=utf-8"
-                    response = _httpClient.Get(url, headers, params:=payload)
+                    response = _httpClient.Get(url, headers, params:=queryParams)
                     _lastResponseCode = response.StatusCode
                 Else
                     headers("Accept") = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;deviceFamily=b3;q=0.9"
@@ -388,16 +240,17 @@ Public Class CareLinkClient
                             _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
                         End If
                     Next
+                    ' Post(url, headers, data:=requestBody)
                     Dim postRequest As New HttpRequestMessage(HttpMethod.Post, New Uri(url)) With {.Content = Json.JsonContent.Create(requestBody)}
-                    response = _httpClient.SendAsync(postRequest).Result ' Post(url, headers, data:=requestBody)
+                    response = _httpClient.SendAsync(postRequest).Result
+                    _lastResponseCode = response.StatusCode
                 End If
                 If response?.StatusCode = HttpStatusCode.OK Then
                     jsonData = Loads(response.Text)
                     If jsonData.Count > 61 Then
 
                         Dim contents As String = JsonSerializer.Serialize(jsonData, New JsonSerializerOptions)
-                        Dim options As New JsonDocumentOptions
-                        Using jDocument As JsonDocument = JsonDocument.Parse(contents, options)
+                        Using jDocument As JsonDocument = JsonDocument.Parse(contents, New JsonDocumentOptions)
                             File.WriteAllText(LastDownloadWithPath, JsonSerializer.Serialize(jDocument, JsonFormattingOptions))
                         End Using
                     End If
@@ -410,6 +263,7 @@ Public Class CareLinkClient
                 Else
                     Throw New Exception("session get response is not OK")
                 End If
+                response.Dispose()
             Catch e As Exception
                 Debug.Print($"__getData() failed {e.Message}, status {response?.StatusCode}")
             End Try
@@ -417,21 +271,21 @@ Public Class CareLinkClient
         Return jsonData
     End Function
 
-    Private Function GetLoginSessionAsync() As HttpResponseMessage
+    Private Function GetLoginSessionAsync(host As String) As HttpResponseMessage
         ' https://carelink.minimed.com/patient/sso/login?country=us&lang=en
-        Dim url As String = "https://" & Me.CareLinkServer() & "/patient/sso/login"
+        Dim url As String = $"https://{host}/patient/sso/login"
         Dim payload As New Dictionary(Of String, String) From {
             {
                 "country",
                 Me.CarelinkCountry},
             {
                 "lang",
-                CarelinkLanguageEn}
+                "en"}
                 }
         Dim response As HttpResponseMessage = Nothing
 
         Try
-            response = _httpClient.Get(url, headers:=_commonHeaders, params:=payload)
+            response = _httpClient.Get(url, headers:=CommonHeaders, params:=payload)
             If Not response.StatusCode = HttpStatusCode.OK Then
                 Throw New Exception($"session response is not OK, {response.ReasonPhrase}")
             End If
@@ -449,20 +303,20 @@ Public Class CareLinkClient
         Return response
     End Function
 
-    Private Function GetMonitorData(MainForm As Form1) As MonitorDataRecord
+    Private Function GetMonitorData(authToken As String) As MonitorDataRecord
         Debug.Print("__getMonitorData()")
-        Return New MonitorDataRecord(Me.GetData(MainForm, Me.CareLinkServer(), "patient/monitor/data", Nothing, Nothing))
+        Return New MonitorDataRecord(Me.GetData(authToken, CareLinkServerURL(Me.CarelinkCountry), "patient/monitor/data", Nothing, Nothing))
     End Function
 
-    Private Function GetMyProfile(MainForm As Form1) As MyProfileRecord
+    Private Function GetMyProfile(authToken As String) As MyProfileRecord
         Debug.Print("__getMyProfile()")
-        Dim myProfileRecord As New MyProfileRecord(Me.GetData(MainForm, Me.CareLinkServer(), "patient/users/me/profile", Nothing, Nothing))
+        Dim myProfileRecord As New MyProfileRecord(Me.GetData(authToken, CareLinkServerURL(Me.CarelinkCountry), "patient/users/me/profile", Nothing, Nothing))
         Return myProfileRecord
     End Function
 
-    Private Function GetMyUser(MainForm As Form1) As MyUserRecord
+    Private Function GetMyUser(authToken As String) As MyUserRecord
         Debug.Print("__getMyUser()")
-        Dim myUserRecord As New MyUserRecord(Me.GetData(MainForm, Me.CareLinkServer(), "patient/users/me", Nothing, Nothing))
+        Dim myUserRecord As New MyUserRecord(Me.GetData(authToken, CareLinkServerURL(Me.CarelinkCountry), "patient/users/me", Nothing, Nothing))
         Return myUserRecord
     End Function
 
@@ -481,8 +335,10 @@ Public Class CareLinkClient
 
         ' Force login to get basic info
         Try
-            If Me.GetAuthorizationToken(MainForm) IsNot Nothing Then
+            Dim authToken As String = Nothing
+            If Me.GetAuthorizationToken(MainForm, authToken) = GetAuthorizationTokenResult.OK Then
                 If Me.CarelinkCountry IsNot Nothing OrElse _sessionMonitorData.deviceFamily?.Equals("BLE_X", StringComparison.Ordinal) Then
+
                     Return Me.GetConnectDisplayMessage(
                         MainForm,
                         _sessionProfile.username,
@@ -498,6 +354,27 @@ Public Class CareLinkClient
 
     Public Overridable Function HasErrors() As Boolean
         Return Not (String.IsNullOrWhiteSpace(_lastErrorMessage) OrElse _lastErrorMessage = "OK")
+    End Function
+
+    Private Function GetBearerToken(url As String) As String
+        Return $"Bearer {Me.GetCookieValue(url, CarelinkAuthTokenCookieName)}"
+    End Function
+
+    Private Function GetData(MainForm As Form1, host As String, endPointPath As String, queryParams As Dictionary(Of String, String), requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
+        Debug.Print($"GetData(mainForm As Form1, {host}, {endPointPath}, queryParams As Dictionary(Of String, String), requestBody As Dictionary(Of String, String)")
+        ' Get authorization token
+        Dim authToken As String = Nothing
+        Select Case Me.GetAuthorizationToken(MainForm, authToken)
+            Case GetAuthorizationTokenResult.OK
+                Return Me.GetData(authToken, host, endPointPath, queryParams, requestBody)
+            Case GetAuthorizationTokenResult.NetworkDown
+                ReportLoginStatus(MainForm.LoginStatus)
+            Case GetAuthorizationTokenResult.InLoginProcess
+                Exit Select
+            Case GetAuthorizationTokenResult.LoginFailed
+                ReportLoginStatus(MainForm.LoginStatus, True, _lastErrorMessage)
+        End Select
+        Return Nothing
     End Function
 
 End Class
