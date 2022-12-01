@@ -30,6 +30,9 @@ This update has a UI to show all the available data and a visual version that mi
 - 11/28/2022
 
 ## What's New in this release
+New in 3.5.7.12
+- Update CareLink Client for better performance and diagnostics
+
 New in 3.5.7.11
 - Added markers and ToolTips to Active Insulin Graph
 
@@ -209,7 +212,6 @@ New in 3.5.1.9
 New in 3.5.1.8
 -    Add support for multiple users and multiple profiles
 -    When user changes all properties are copied
-
 
 New in 3.5.1.7
 -   Move AIT to Main Menu
