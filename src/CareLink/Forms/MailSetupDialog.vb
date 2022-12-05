@@ -271,7 +271,7 @@ Public Class MailSetupDialog
             End If
             Me.DialogResult = DialogResult.OK
         Catch ex As Exception
-            If MsgBox($"Mail send error {ex.Message}, retry?",
+            If MsgBox($"Mail send error {ex.DecodeException()}, retry?",
                       MsgBoxStyle.OkCancel,
                       "Server Validation Error") = MsgBoxResult.Cancel Then
                 Me.DialogResult = DialogResult.Cancel

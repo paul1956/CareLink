@@ -6,7 +6,6 @@ Imports System.Net.Http
 Imports Microsoft.Win32
 
 Friend Module BrowserUtilities
-    Private Const InnerExceptionMessage As String = ", see inner exception."
     Private ReadOnly s_httpClient As New HttpClient()
     Private ReadOnly s_versionSearchKey As String = $"<a href=""/{OwnerName}/{RepoName}/releases/tag/"
 
@@ -100,11 +99,7 @@ Friend Module BrowserUtilities
             End If
         Catch ex As Exception
             If reportResults Then
-                Dim errorMsg As String = ex.Message
-                If errorMsg.EndsWith(InnerExceptionMessage) Then
-                    errorMsg = $"{errorMsg.Replace(InnerExceptionMessage, ".")}{Environment.NewLine}{Environment.NewLine}{ex.InnerException.Message}"
-                End If
-                MsgBox($"Connection failed while checking for new version:{Environment.NewLine}{Environment.NewLine}{errorMsg}", MsgBoxStyle.Information, "Version Check Failed")
+                MsgBox($"Connection failed while checking for new version:{Environment.NewLine}{Environment.NewLine}{ex.DecodeException()}", MsgBoxStyle.Information, "Version Check Failed")
             End If
         End Try
     End Sub

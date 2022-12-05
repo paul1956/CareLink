@@ -5,6 +5,7 @@
 Imports System.IO
 Imports System.Net
 Imports System.Net.Http
+Imports System.Text
 Imports System.Text.Json
 
 Public Class CareLinkClient
@@ -74,9 +75,8 @@ Public Class CareLinkClient
             _sessionMonitorData.Clear()
 
             ' Open login(get SessionId And SessionData)
-            Using loginSessionResponse As HttpResponseMessage = Me.GetLoginSessionAsync(host)
-                If loginSessionResponse Is Nothing Then
-                    _lastErrorMessage = "Login Failure"
+            Using loginSessionResponse As HttpResponseMessage = Me.GetLoginSession(host)
+                If Not loginSessionResponse.IsSuccessStatusCode Then
                     Return lastLoginSuccess
                 End If
                 _lastResponseCode = loginSessionResponse.StatusCode
@@ -91,7 +91,7 @@ Public Class CareLinkClient
                             _lastErrorMessage = Nothing
                         End If
                     Catch ex As Exception
-                        _lastErrorMessage = $"Login Failure {ex.Message}, in {NameOf(ExecuteLoginProcedure)}."
+                        _lastErrorMessage = $"Login Failure {ex.DecodeException()}, in {NameOf(ExecuteLoginProcedure)}."
                         Return lastLoginSuccess
                     Finally
                         _lastResponseCode = doLoginResponse.StatusCode
@@ -100,7 +100,8 @@ Public Class CareLinkClient
                     ' Consent
                     Using consentResponse As HttpResponseMessage = DoConsent(_httpClient, doLoginResponse, _lastErrorMessage)
                         _lastResponseCode = consentResponse?.StatusCode
-                        If consentResponse Is Nothing OrElse consentResponse.StatusCode = HttpStatusCode.BadRequest Then
+                        If consentResponse?.IsSuccessStatusCode Then
+                        Else
                             _lastErrorMessage = "Login Failure"
                             Return lastLoginSuccess
                         End If
@@ -117,7 +118,10 @@ Public Class CareLinkClient
             _sessionMonitorData = Me.GetMonitorData(authToken)
 
             ' Set login success if everything was OK:
-            If _sessionUser.HasValue AndAlso _sessionProfile.HasValue AndAlso s_sessionCountrySettings.HasValue AndAlso _sessionMonitorData.HasValue Then
+            If _sessionUser.HasValue _
+               AndAlso _sessionProfile.HasValue _
+               AndAlso s_sessionCountrySettings.HasValue _
+               AndAlso _sessionMonitorData.HasValue Then
                 lastLoginSuccess = True
             End If
         Catch e As Exception
@@ -219,7 +223,7 @@ Public Class CareLinkClient
     End Function
 
     Private Function GetData(MainForm As Form1, endPointPath As String, requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
-        Debug.Print($"GetData(mainForm As Form1, {endPointPath}, queryParams As Dictionary(Of String, String), requestBody As Dictionary(Of String, String)")
+        Debug.Print($"GetData(mainForm = {MainForm.Name}, endPointPath = {endPointPath}, requestBody = {requestBody.ToCsv}")
         ' Get authorization token
         Dim authToken As String = Nothing
         Select Case Me.GetAuthorizationToken(MainForm, authToken)
@@ -235,9 +239,9 @@ Public Class CareLinkClient
         Return Nothing
     End Function
 
-    Private Function GetLoginSessionAsync(host As String) As HttpResponseMessage
+    Private Function GetLoginSession(host As String) As HttpResponseMessage
         ' https://carelink.minimed.com/patient/sso/login?country=us&lang=en
-        Dim url As String = $"https://{host}/patient/sso/login"
+        Dim url As New StringBuilder($"https://{host}/patient/sso/login")
         Dim payload As New Dictionary(Of String, String) From {
             {
                 "country",
@@ -249,8 +253,8 @@ Public Class CareLinkClient
         Dim response As HttpResponseMessage = Nothing
 
         Try
-            response = _httpClient.Get(url, headers:=CommonHeaders, params:=payload)
-            If Not response.StatusCode = HttpStatusCode.OK Then
+            response = _httpClient.Get(url, _lastErrorMessage, headers:=CommonHeaders, params:=payload)
+            If Not response.IsSuccessStatusCode Then
                 Throw New Exception($"session response is not OK, {response.ReasonPhrase}")
             End If
         Catch e As Exception
@@ -301,8 +305,9 @@ Public Class CareLinkClient
         Try
             Dim authToken As String = Nothing
             If Me.GetAuthorizationToken(MainForm, authToken) = GetAuthorizationTokenResult.OK Then
-                If Me.CarelinkCountry IsNot Nothing OrElse _sessionMonitorData.deviceFamily?.Equals("BLE_X", StringComparison.Ordinal) Then
-
+                If (s_sessionCountrySettings.HasValue _
+                        AndAlso Not String.IsNullOrWhiteSpace(Me.CarelinkCountry)) OrElse
+                        _sessionMonitorData.deviceFamily?.Equals("BLE_X", StringComparison.Ordinal) Then
                     Return Me.GetConnectDisplayMessage(
                         MainForm,
                         _sessionProfile.username,
@@ -317,6 +322,7 @@ Public Class CareLinkClient
     End Function
 
     Private Function GetData(authToken As String, host As String, endPointPath As String, queryParams As Dictionary(Of String, String), requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
+        Debug.Print($"GetData(mainForm As {NameOf(Form1)},host = {host}, endPointPath = {endPointPath}, queryParams = {queryParams.ToCsv}, requestBody = {requestBody.ToCsv}")
         Dim jsonData As Dictionary(Of String, String) = Nothing
         If authToken IsNot Nothing Then
             Dim response As New HttpResponseMessage
@@ -325,11 +331,11 @@ Public Class CareLinkClient
                 Dim headers As Dictionary(Of String, String) = CommonHeaders
                 headers("Authorization") = authToken
 
-                Dim url As String = If(host Is Nothing, endPointPath, $"https://{host}/{endPointPath}")
+                Dim url As New StringBuilder(If(host Is Nothing, endPointPath, $"https://{host}/{endPointPath}"))
                 If requestBody Is Nothing OrElse requestBody.Count = 0 Then
                     headers("Accept") = "application/json, text/plain, */*"
                     headers("Content-Type") = "application/json; charset=utf-8"
-                    response = _httpClient.Get(url, headers, params:=queryParams)
+                    response = _httpClient.Get(url, _lastErrorMessage, headers, params:=queryParams)
                     _lastResponseCode = response.StatusCode
                 Else
                     headers("Accept") = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;deviceFamily=b3;q=0.9"
@@ -341,11 +347,11 @@ Public Class CareLinkClient
                         End If
                     Next
                     ' Post(url, headers, data:=requestBody)
-                    Dim postRequest As New HttpRequestMessage(HttpMethod.Post, New Uri(url)) With {.Content = Json.JsonContent.Create(requestBody)}
+                    Dim postRequest As New HttpRequestMessage(HttpMethod.Post, New Uri(url.ToString)) With {.Content = Json.JsonContent.Create(requestBody)}
                     response = _httpClient.SendAsync(postRequest).Result
                     _lastResponseCode = response.StatusCode
                 End If
-                If response?.StatusCode = HttpStatusCode.OK Then
+                If response?.IsSuccessStatusCode Then
                     jsonData = Loads(response.Text)
                     If jsonData.Count > 61 Then
 
@@ -361,7 +367,7 @@ Public Class CareLinkClient
                     _lastResponseCode = response?.StatusCode
                     _lastErrorMessage = "CareLink Server Down"
                 Else
-                    Throw New Exception("session get response is not OK")
+                    Throw New Exception($"session get response is not OK, last error = {_lastErrorMessage}")
                 End If
                 response.Dispose()
             Catch e As Exception

@@ -5,6 +5,7 @@
 Imports System.Net
 Imports System.Net.Http
 Imports System.Runtime.CompilerServices
+Imports System.Text
 Imports CareLink
 
 Public Module CareLinkClientHelpers
@@ -30,17 +31,10 @@ Public Module CareLinkClientHelpers
                             "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;deviceFamily=b3;q=0.9"}}
 
     Friend Enum GetAuthorizationTokenResult
-        OK
-        NetworkDown
         InLoginProcess
         LoginFailed
-    End Enum
-
-    Friend Enum LoginResult
-        InLoginProcess
         NetworkDown
         OK
-        LoginFailed
     End Enum
 
     Public Property NetworkDown As Boolean = False
@@ -84,20 +78,20 @@ Public Module CareLinkClientHelpers
 
     Friend Function DecodeResponse(response As HttpResponseMessage, ByRef lastErrorMessage As String) As HttpResponseMessage
         Dim message As String
-        If response.StatusCode = HttpStatusCode.OK Then
+        If response?.IsSuccessStatusCode Then
             lastErrorMessage = Nothing
             Debug.Print($"{NameOf(DecodeResponse)} success")
             Return response
-        ElseIf response.StatusCode = HttpStatusCode.BadRequest Then
+        ElseIf response?.StatusCode = HttpStatusCode.BadRequest Then
             message = $"{NameOf(DecodeResponse)} failed with HttpStatusCode.BadRequest"
             lastErrorMessage = $"Login Failure {message}"
             Debug.Print(message)
             Return response
         Else
-            message = $"{NameOf(DecodeResponse)} failed, session response is {response.StatusCode}"
+            message = $"{NameOf(DecodeResponse)} failed, session response is {response?.StatusCode}"
             lastErrorMessage = message
             Debug.Print(message)
-            Throw New Exception(message)
+            Return response
         End If
     End Function
 
@@ -105,7 +99,7 @@ Public Module CareLinkClientHelpers
 
         ' Extract data for consent
         Dim doLoginRespBody As String = doLoginResponse.Text
-        Dim url As String = doLoginRespBody.ExtractResponseData("<form action=", " ")
+        Dim url As New StringBuilder(doLoginRespBody.ExtractResponseData("<form action=", " "))
         Dim sessionId As String = doLoginRespBody.ExtractResponseData("<input type=""hidden"" name=""sessionID"" value=", ">")
         Dim sessionData As String = doLoginRespBody.ExtractResponseData("<input type=""hidden"" name=""sessionData"" value=", ">")
         lastErrorMessage = doLoginRespBody.ExtractResponseData("LoginFailed"">", "</p>")
@@ -137,15 +131,14 @@ Public Module CareLinkClientHelpers
             Dim message As String = $"__doConsent() failed with {e.Message}"
             lastErrorMessage = message
             Debug.Print(message)
+            Return New HttpResponseMessage(HttpStatusCode.Ambiguous)
         End Try
-
-        Return Nothing
     End Function
 
     Friend Function DoLogin(ByRef httpClient As HttpClient, loginSessionResponse As HttpResponseMessage, userName As String, password As String, country As String, ByRef lastErrorMessage As String) As HttpResponseMessage
 
         Dim queryParameters As Dictionary(Of String, String) = ParseQsl(loginSessionResponse)
-        Const url As String = "https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login"
+        Dim url As New StringBuilder("https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login")
 
         Dim webForm As New Dictionary(Of String, String) From {
             {
@@ -176,11 +169,17 @@ Public Module CareLinkClientHelpers
             {
                 "locale",
                 "en"}}
-        Dim response As HttpResponseMessage = httpClient.Post(url, CommonHeaders, params:=payload, data:=webForm)
-        If Not response.StatusCode = HttpStatusCode.OK Then
-            Throw New Exception($"HTTP Response is not OK, {response.StatusCode}")
-        End If
-        Return DecodeResponse(response, lastErrorMessage)
+        Dim response As HttpResponseMessage = Nothing
+        Try
+            response = httpClient.Post(url, CommonHeaders, params:=payload, data:=webForm)
+            If response?.IsSuccessStatusCode Then
+                Return DecodeResponse(response, lastErrorMessage)
+            End If
+        Catch ex As Exception
+            Stop
+            Throw New Exception($"HTTP Response is not OK, {response?.StatusCode}")
+        End Try
+        Return Nothing
     End Function
 
 End Module

@@ -4,11 +4,12 @@
 
 Imports System.Net.Http
 Imports System.Runtime.CompilerServices
+Imports System.Text
 
 Friend Module HttpClientExtensions
 
     <Extension>
-    Public Function [Get](client As HttpClient, url As String, Optional headers As Dictionary(Of String, String) = Nothing, Optional params As Dictionary(Of String, String) = Nothing, Optional data As Dictionary(Of String, String) = Nothing) As HttpResponseMessage
+    Public Function [Get](client As HttpClient, url As StringBuilder, ByRef lastError As String, Optional headers As Dictionary(Of String, String) = Nothing, Optional params As Dictionary(Of String, String) = Nothing, Optional data As Dictionary(Of String, String) = Nothing) As HttpResponseMessage
         Dim formContent As HttpContent = Nothing
         If data IsNot Nothing Then
             formContent = New FormUrlEncodedContent(data.ToList())
@@ -26,24 +27,29 @@ Friend Module HttpClientExtensions
             Next
         End If
         If params IsNot Nothing Then
-            url &= "?"
+            url.Append("?"c)
             For Each param As KeyValuePair(Of String, String) In params
-                url &= $"{param.Key}={param.Value}&"
+                url.Append($"{param.Key}={param.Value}&")
             Next
             url = url.TrimEnd("&"c)
         End If
-        If data Is Nothing Then
-            Return client.GetAsync(url).Result
-        End If
-        Return client.PostAsync(url, formContent).Result
+        Try
+            If data Is Nothing Then
+                Return client.GetAsync(url.ToString).Result
+            End If
+            Return client.PostAsync(url.ToString, formContent).Result
+        Catch ex As Exception
+            lastError = ex.DecodeException()
+            Return New HttpResponseMessage(Net.HttpStatusCode.Ambiguous)
+        End Try
     End Function
 
     <Extension>
-    Public Function Post(client As HttpClient, url As String, Optional headers As Dictionary(Of String, String) = Nothing, Optional params As Dictionary(Of String, String) = Nothing, Optional data As Dictionary(Of String, String) = Nothing) As HttpResponseMessage
+    Public Function Post(client As HttpClient, url As StringBuilder, Optional headers As Dictionary(Of String, String) = Nothing, Optional params As Dictionary(Of String, String) = Nothing, Optional data As Dictionary(Of String, String) = Nothing) As HttpResponseMessage
         If params IsNot Nothing Then
-            url &= "?"
+            url.Append("?"c)
             For Each header As KeyValuePair(Of String, String) In params
-                url &= $"{header.Key}={header.Value}&"
+                url.Append($"{header.Key}={header.Value}&")
             Next
             url = url.TrimEnd("&"c)
         End If
@@ -58,7 +64,7 @@ Friend Module HttpClientExtensions
                 End If
             Next
         End If
-        Return client.PostAsync(url, formData).Result
+        Return client.PostAsync(url.ToString, formData).Result
     End Function
 
     <Extension>
