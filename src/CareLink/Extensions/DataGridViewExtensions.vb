@@ -46,7 +46,7 @@ Public Module DataGridViewExtensions
         Else
             title.Append(titleInTitleCase.Replace("Care Link", "CareLink").Replace("O Adate Time", "OA Date Time"))
         End If
-        e.Column.HeaderText = title.ToString.TrimEnd(Environment.NewLine)
+        e.Column.HeaderText = title.TrimEnd(Environment.NewLine).ToString
         e.Column.DefaultCellStyle = cellStyle
         e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
         If String.IsNullOrWhiteSpace(caption) Then Return

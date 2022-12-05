@@ -112,7 +112,7 @@ Friend Module ChartingExtensions
             End With
         Catch ex As Exception
             Stop
-            Throw New Exception($"{ex.Message} exception in {NameOf(PlotOnePoint)}")
+            Throw New Exception($"{ex.DecodeException()} exception in {NameOf(PlotOnePoint)}")
         End Try
 
     End Sub
@@ -167,16 +167,16 @@ Friend Module ChartingExtensions
                 End If
             Catch ex As Exception
                 Stop
-                Throw New Exception($"{ex.Message} exception while plotting Limits in {NameOf(PlotHighLowLimits)}")
+                Throw New Exception($"{ex.DecodeException()} exception while plotting Limits in {NameOf(PlotHighLowLimits)}")
             End Try
         Next
     End Sub
 
     <Extension>
-    Friend Sub PlotHomePageMarkers(homePageChart As Chart, chartRelitivePosition As RectangleF)
+    Friend Sub PlotMarkers(pageChart As Chart, chartRelitivePosition As RectangleF, markerInsulinDictionary As Dictionary(Of OADate, Single), markerMealDictionary As Dictionary(Of OADate, Single))
         Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
-        s_homeTabMarkerInsulinDictionary.Clear()
-        s_homeTabMarkerMealDictionary.Clear()
+        markerInsulinDictionary.Clear()
+        markerMealDictionary?.Clear()
 
         For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             Try
@@ -189,7 +189,7 @@ Friend Module ChartingExtensions
                 If entry.TryGetValue("value", bgValueString) Then
                     bgValueString.TryParseSingle(bgValue)
                 End If
-                Dim markerSeriesPoints As DataPointCollection = homePageChart.Series(MarkerSeriesName).Points
+                Dim markerSeriesPoints As DataPointCollection = pageChart.Series(MarkerSeriesName).Points
                 Select Case entry("type")
                     Case "BG_READING"
                         If Not String.IsNullOrWhiteSpace(bgValueString) Then
@@ -199,14 +199,14 @@ Friend Module ChartingExtensions
                         markerSeriesPoints.AddCalibrationPoint(markerOADateTime, bgValue, entry)
                     Case "AUTO_BASAL_DELIVERY"
                         Dim bolusAmount As String = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount))
-                        homePageChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, bolusAmount.ParseSingle, HomePageBasalRow, HomePageInsulinRow, Color.HotPink, False, $"Auto Basal:{bolusAmount.TruncateSingleString(3)} U")
+                        pageChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, bolusAmount.ParseSingle, HomePageBasalRow, HomePageInsulinRow, Color.HotPink, False, $"Auto Basal:{bolusAmount.TruncateSingleString(3)} U")
                     Case "INSULIN"
                         Select Case entry(NameOf(InsulinRecord.activationType))
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
-                                homePageChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, HomePageBasalRow, HomePageInsulinRow, Color.Aqua, False, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
+                                pageChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, HomePageBasalRow, HomePageInsulinRow, Color.Aqua, False, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
-                                If s_homeTabMarkerInsulinDictionary.TryAdd(markerOADateTime, CInt(HomePageInsulinRow)) Then
+                                If markerInsulinDictionary.TryAdd(markerOADateTime, CInt(HomePageInsulinRow)) Then
                                     markerSeriesPoints.AddXY(markerOADateTime, HomePageInsulinRow - 10)
                                     markerSeriesPoints.Last.MarkerBorderWidth = 2
                                     markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Black)
@@ -226,7 +226,8 @@ Friend Module ChartingExtensions
                                 Stop
                         End Select
                     Case "MEAL"
-                        If s_homeTabMarkerMealDictionary.TryAdd(markerOADateTime, HomePageMealRow) Then
+                        If markerMealDictionary Is Nothing Then Continue For
+                        If markerMealDictionary.TryAdd(markerOADateTime, HomePageMealRow) Then
                             markerSeriesPoints.AddXY(markerOADateTime, HomePageMealRow + (s_mealImage.Height / 2))
                             markerSeriesPoints.Last.Color = Color.FromArgb(10, Color.Yellow)
                             markerSeriesPoints.Last.MarkerBorderWidth = 2
@@ -236,7 +237,7 @@ Friend Module ChartingExtensions
                             markerSeriesPoints.Last.ToolTip = $"Meal:{entry("amount")} grams"
                         End If
                     Case "TIME_CHANGE"
-                        With homePageChart.Series(TimeChangeSeriesName).Points
+                        With pageChart.Series(TimeChangeSeriesName).Points
                             lastTimeChangeRecord = New TimeChangeRecord(s_markers(markerWithIndex.Index))
 
                             markerOADateTime = New TimeChangeRecord(s_markers(markerWithIndex.Index)).OAdateTime
@@ -249,11 +250,11 @@ Friend Module ChartingExtensions
                 End Select
             Catch ex As Exception
                 Stop
-                '      Throw New Exception($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
+                '      Throw New Exception($"{ex.DecodeException()} exception in {memberName} at {sourceLineNumber}")
             End Try
         Next
         If lastTimeChangeRecord IsNot Nothing Then
-            homePageChart.ChartAreas(NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
+            pageChart.ChartAreas(NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
         End If
     End Sub
 
@@ -340,7 +341,7 @@ Friend Module ChartingExtensions
                 End Select
             Catch ex As Exception
                 Stop
-                '      Throw New Exception($"{ex.Message} exception in {memberName} at {sourceLineNumber}")
+                '      Throw New Exception($"{ex.DecodeException()} exception in {memberName} at {sourceLineNumber}")
             End Try
         Next
 
@@ -364,14 +365,16 @@ Friend Module ChartingExtensions
         Dim criticalLowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, s_criticalLow))
         Dim chartAbsoluteHighRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelitivePosition.X, chartRelitivePosition.Y, chartRelitivePosition.Width, highLimitY - chartRelitivePosition.Y))
         Dim chartAbsoluteLowRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelitivePosition.X, lowLimitY, chartRelitivePosition.Width, criticalLowLimitY - lowLimitY))
-        Using b As New SolidBrush(Color.FromArgb(15, Color.Black))
+        Using b As New SolidBrush(Color.FromArgb(10, Color.Black))
             e.ChartGraphics.Graphics.FillRectangle(b, chartAbsoluteHighRectangle)
             e.ChartGraphics.Graphics.FillRectangle(b, chartAbsoluteLowRectangle)
         End Using
 
         If insulinDictionary IsNot Nothing Then
-            e.PaintMarker(s_mealImage, mealDictionary, False, paintOnY2)
             e.PaintMarker(s_insulinImage, insulinDictionary, offsetInsulinImage, paintOnY2)
+        End If
+        If mealDictionary IsNot Nothing Then
+            e.PaintMarker(s_mealImage, mealDictionary, False, paintOnY2)
         End If
     End Sub
 

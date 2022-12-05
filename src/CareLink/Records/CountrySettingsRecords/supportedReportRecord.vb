@@ -15,8 +15,8 @@ Public Class supportedReportRecord
         End If
         Me.recordNumber = recordnumber
         Me.report = Values(NameOf(report))
-        Me.onlyFor = kvpToString(LoadList(Values(NameOf(onlyFor)))).ToString.TrimStart(" "c).TrimEnd(",")
-        Me.notFor = kvpToString(LoadList(Values(NameOf(notFor)))).ToString.TrimStart(" "c).TrimEnd(",")
+        Me.onlyFor = kvpToString(LoadList(Values(NameOf(onlyFor)))).ToString.TrimStart(" "c).TrimEnd(","c)
+        Me.notFor = kvpToString(LoadList(Values(NameOf(notFor)))).ToString.TrimStart(" "c).TrimEnd(","c)
 
     End Sub
 

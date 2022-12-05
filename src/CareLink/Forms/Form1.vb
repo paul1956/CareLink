@@ -234,7 +234,7 @@ Public Class Form1
                         Try
                             Me.RecentData = Loads(ExceptionHandlerForm.LocalRawData)
                         Catch ex As Exception
-                            MessageBox.Show($"Error reading date file. Original error: {ex.Message}")
+                            MessageBox.Show($"Error reading date file. Original error: {ex.DecodeException()}")
                         End Try
                         Me.ShowMiniDisplay.Visible = Debugger.IsAttached
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
@@ -253,7 +253,7 @@ Public Class Form1
                     End If
                 End If
             Catch ex As Exception
-                MessageBox.Show($"Cannot read file from disk. Original error: {ex.Message}")
+                MessageBox.Show($"Cannot read file from disk. Original error: {ex.DecodeException()}")
             End Try
         End If
 
@@ -298,7 +298,7 @@ Public Class Form1
                     Me.UpdateAllTabPages()
                 End If
             Catch ex As Exception
-                MessageBox.Show($"Cannot read file from disk. Original error: {ex.Message}")
+                MessageBox.Show($"Cannot read file from disk. Original error: {ex.DecodeException()}")
             End Try
         End If
     End Sub
@@ -467,14 +467,14 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub HomePageChart_CursorPositionChanging(sender As Object, e As CursorEventArgs) Handles HomeTabChart.CursorPositionChanging
+    Private Sub Chart_CursorPositionChanging(sender As Object, e As CursorEventArgs) Handles ActiveInsulinChart.CursorPositionChanging, HomeTabChart.CursorPositionChanging
         If Not _Initialized Then Exit Sub
 
         Me.CursorTimer.Interval = s_thirtySecondInMilliseconds
         Me.CursorTimer.Start()
     End Sub
 
-    Private Sub HomePageChart_MouseMove(sender As Object, e As MouseEventArgs) Handles HomeTabChart.MouseMove, ActiveInsulinChart.MouseMove
+    Private Sub Chart_MouseMove(sender As Object, e As MouseEventArgs) Handles HomeTabChart.MouseMove, ActiveInsulinChart.MouseMove
 
         If Not _Initialized Then
             Exit Sub
@@ -482,7 +482,7 @@ Public Class Form1
         _inMouseMove = True
         Dim yInPixels As Double
         Dim chart1 As Chart = CType(sender, Chart)
-
+        Dim isHomePage As Boolean = chart1.Name = "HomeTabChart"
         Try
             yInPixels = chart1.ChartAreas(NameOf(ChartArea)).AxisY2.ValueToPixelPosition(e.Y)
         Catch ex As Exception
@@ -519,54 +519,67 @@ Public Class Form1
                         Exit Sub
                     End If
                     markerToolTip(0) = markerToolTip(0).Trim
-                    Dim xValue As Date = Date.FromOADate(currentDataPoint.XValue)
-                    Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
-                    Me.CursorPictureBox.Visible = True
-                    Select Case markerToolTip.Length
-                        Case 2
-                            Me.CursorMessage1Label.Text = markerToolTip(0)
-                            Me.CursorMessage1Label.Visible = True
-                            Me.CursorMessage2Label.Text = markerToolTip(1).Trim
-                            Me.CursorMessage2Label.Visible = True
-                            Me.CursorMessage3Label.Text = Date.FromOADate(currentDataPoint.XValue).ToString(s_timeWithMinuteFormat)
-                            Me.CursorMessage3Label.Visible = True
-                            Select Case markerToolTip(0)
-                                Case "Auto Correction",
-                                     "Auto Basal",
-                                     "Basal"
-                                    Me.CursorPictureBox.Image = My.Resources.InsulinVial
-                                Case "Bolus"
-                                    Me.CursorPictureBox.Image = My.Resources.InsulinVial
-                                Case "Meal"
-                                    Me.CursorPictureBox.Image = My.Resources.MealImageLarge
-                                Case Else
-                                    Stop
-                                    Me.CursorMessage1Label.Visible = False
-                                    Me.CursorMessage2Label.Visible = False
-                                    Me.CursorPictureBox.Image = Nothing
-                            End Select
-                            Me.CursorPanel.Visible = True
-                        Case 3
-                            Select Case markerToolTip(1).Trim
-                                Case "Calibration accepted",
-                                       "Calibration not accepted"
-                                    Me.CursorPictureBox.Image = My.Resources.CalibrationDotRed
-                                Case "Not used For calibration"
-                                    Me.CursorPictureBox.Image = My.Resources.CalibrationDot
-                                Case Else
-                                    Stop
-                            End Select
-                            Me.CursorMessage1Label.Text = markerToolTip(0)
-                            Me.CursorMessage1Label.Visible = True
-                            Me.CursorMessage2Label.Text = markerToolTip(1).Trim
-                            Me.CursorMessage2Label.Visible = True
-                            Me.CursorMessage3Label.Text = $"{markerToolTip(2).Trim}@{xValue.ToString(s_timeWithMinuteFormat)}"
-                            Me.CursorMessage3Label.Visible = True
-                            Me.CursorPanel.Visible = True
-                        Case Else
-                            Stop
-                            Me.CursorPanel.Visible = False
-                    End Select
+                    If isHomePage Then
+                        Dim xValue As Date = Date.FromOADate(currentDataPoint.XValue)
+                        Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
+                        Me.CursorPictureBox.Visible = True
+                        Select Case markerToolTip.Length
+                            Case 2
+                                Me.CursorMessage1Label.Text = markerToolTip(0)
+                                Me.CursorMessage1Label.Visible = True
+                                Me.CursorMessage2Label.Text = markerToolTip(1).Trim
+                                Me.CursorMessage2Label.Visible = True
+                                Me.CursorMessage3Label.Text = Date.FromOADate(currentDataPoint.XValue).ToString(s_timeWithMinuteFormat)
+                                Me.CursorMessage3Label.Visible = True
+                                Select Case markerToolTip(0)
+                                    Case "Auto Correction",
+                                         "Auto Basal",
+                                         "Basal"
+                                        Me.CursorPictureBox.Image = My.Resources.InsulinVial
+                                    Case "Bolus"
+                                        Me.CursorPictureBox.Image = My.Resources.InsulinVial
+                                    Case "Meal"
+                                        Me.CursorPictureBox.Image = My.Resources.MealImageLarge
+                                    Case Else
+                                        Stop
+                                        Me.CursorMessage1Label.Visible = False
+                                        Me.CursorMessage2Label.Visible = False
+                                        Me.CursorPictureBox.Image = Nothing
+                                End Select
+                                Me.CursorPanel.Visible = True
+                            Case 3
+                                Select Case markerToolTip(1).Trim
+                                    Case "Calibration accepted",
+                                           "Calibration not accepted"
+                                        Me.CursorPictureBox.Image = My.Resources.CalibrationDotRed
+                                    Case "Not used For calibration"
+                                        Me.CursorPictureBox.Image = My.Resources.CalibrationDot
+                                    Case Else
+                                        Stop
+                                End Select
+                                Me.CursorMessage1Label.Text = markerToolTip(0)
+                                Me.CursorMessage1Label.Visible = True
+                                Me.CursorMessage2Label.Text = markerToolTip(1).Trim
+                                Me.CursorMessage2Label.Visible = True
+                                Me.CursorMessage3Label.Text = $"{markerToolTip(2).Trim}@{xValue.ToString(s_timeWithMinuteFormat)}"
+                                Me.CursorMessage3Label.Visible = True
+                                Me.CursorPanel.Visible = True
+                            Case Else
+                                Stop
+                                Me.CursorPanel.Visible = False
+                        End Select
+                    Else
+                        Select Case markerToolTip.Length
+                            Case 1
+                                currentDataPoint.ToolTip = $"{markerToolTip(0)}"
+                            Case 2
+                                currentDataPoint.ToolTip = $"{markerToolTip(0)} {markerToolTip(1)}"
+                            Case 3
+                                currentDataPoint.ToolTip = $"{markerToolTip(0)} {markerToolTip(1)} {markerToolTip(2)}"
+                            Case Else
+                                Stop
+                        End Select
+                    End If
                 Case BgSeriesName
                     Me.CursorMessage1Label.Text = "Blood Glucose"
                     Me.CursorMessage1Label.Visible = True
@@ -617,7 +630,7 @@ Public Class Form1
                 Exit Sub
             End If
             e.PostPaintSupport(_activeInsulinChartAbsoluteRectangle,
-                Nothing,
+                s_ActiveInsulinMarkerInsulinDictionary,
                 Nothing,
                 True,
                 True)
@@ -710,7 +723,7 @@ Public Class Form1
         Try
             '
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
+            MessageBox.Show(ex.DecodeException())
         End Try
 
     End Sub
@@ -1243,7 +1256,7 @@ Public Class Form1
         Me.ActiveInsulinChart.Legends.Add(Me.ActiveInsulinChartLegend)
         Me.ActiveInsulinBasalSeries = CreateSeriesBasal(AxisType.Secondary)
         Me.ActiveInsulinBGSeries = CreateSeriesBg(Me.ActiveInsulinChartLegend.Name)
-        Me.ActiveInsulinMarkerSeries = CreateSeriesMarker(AxisType.Primary)
+        Me.ActiveInsulinMarkerSeries = CreateSeriesMarker(AxisType.Secondary)
 
         Me.ActiveInsulinSeries = New Series(NameOf(ActiveInsulinSeries)) With {
             .BorderColor = Color.FromArgb(180, 26, 59, 105),
@@ -1627,7 +1640,7 @@ Public Class Form1
             _bgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
         Catch ex As Exception
             Stop
-            Throw New ArithmeticException($"{ex.Message} exception in {NameOf(UpdateActiveInsulin)}")
+            Throw New ArithmeticException($"{ex.DecodeException()} exception in {NameOf(UpdateActiveInsulin)}")
         End Try
     End Sub
 
@@ -1713,11 +1726,12 @@ Public Class Form1
 
                 .ChartAreas(NameOf(ChartArea)).AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1
 
+                .PlotMarkers(_homePageAbsoluteRectangle, s_homeTabMarkerInsulinDictionary, s_homeTabMarkerMealDictionary)
                 .PlotSgSeries(HomePageMealRow)
             End With
         Catch ex As Exception
             Stop
-            Throw New ArithmeticException($"{ex.Message} exception in {NameOf(UpdateActiveInsulinChart)}")
+            Throw New ArithmeticException($"{ex.DecodeException()} exception in {NameOf(UpdateActiveInsulinChart)}")
         End Try
         Application.DoEvents()
     End Sub
@@ -1766,7 +1780,7 @@ Public Class Form1
             End If
         Catch ex As Exception
             Stop
-            Throw New ArithmeticException($"{ex.Message} exception in {NameOf(UpdateAutoModeShield)}")
+            Throw New ArithmeticException($"{ex.DecodeException()} exception in {NameOf(UpdateAutoModeShield)}")
         End Try
         Application.DoEvents()
     End Sub
@@ -1784,7 +1798,7 @@ Public Class Form1
             End If
         Catch ex As Exception
             Stop
-            Throw New ArithmeticException($"{ex.Message} exception in {NameOf(UpdateCalibrationTimeRemaining)}")
+            Throw New ArithmeticException($"{ex.DecodeException()} exception in {NameOf(UpdateCalibrationTimeRemaining)}")
         End Try
 
         Application.DoEvents()
@@ -1855,12 +1869,12 @@ Public Class Form1
                 s.Points.Clear()
             Next
             Me.HomeTabChart.ChartAreas(NameOf(ChartArea)).InitializeChartAreaBG()
-            Me.HomeTabChart.PlotHomePageMarkers(_homePageAbsoluteRectangle)
+            Me.HomeTabChart.PlotMarkers(_homePageAbsoluteRectangle, s_homeTabMarkerInsulinDictionary, s_homeTabMarkerMealDictionary)
             Me.HomeTabChart.PlotSgSeries(HomePageMealRow)
             Me.HomeTabChart.PlotHighLowLimits()
         Catch ex As Exception
             Stop
-            Throw New Exception($"{ex.Message} exception while plotting Markers in {NameOf(UpdateHomeTabSerieses)}")
+            Throw New Exception($"{ex.DecodeException()} exception while plotting Markers in {NameOf(UpdateHomeTabSerieses)}")
         End Try
 
     End Sub
@@ -1916,10 +1930,10 @@ Public Class Form1
 
     Private Sub UpdateRemainingInsulin()
         Try
-            Me.RemainingInsulinUnits.Text = $"{s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.reservoirRemainingUnits)).ParseSingle(0):N1} U"
+            Me.RemainingInsulinUnits.Text = $"{s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.reservoirRemainingUnits)).ParseSingle(1):N1} U"
         Catch ex As Exception
             Stop
-            Throw New ArithmeticException($"{ex.Message} exception in {NameOf(UpdateRemainingInsulin)}")
+            Throw New ArithmeticException($"{ex.DecodeException()} exception in {NameOf(UpdateRemainingInsulin)}")
         End Try
     End Sub
 
@@ -1998,7 +2012,7 @@ Public Class Form1
             Me.TreatmentMarkersChart.PlotSgSeries(HomePageMealRow)
         Catch ex As Exception
             Stop
-            Throw New ArithmeticException($"{ex.Message} exception in {NameOf(InitializeTreatmentMarkersChart)}")
+            Throw New ArithmeticException($"{ex.DecodeException()} exception in {NameOf(InitializeTreatmentMarkersChart)}")
         End Try
         Application.DoEvents()
     End Sub
@@ -2066,7 +2080,7 @@ Public Class Form1
         Me.UpdateTimeInRange()
         Me.UpdateTransmitterBatttery()
         Me.UpdateHomeTabSerieses()
-        Me.ActiveInsulinChart.PlotHomePageMarkers(_activeInsulinChartAbsoluteRectangle)
+        Me.ActiveInsulinChart.PlotMarkers(_activeInsulinChartAbsoluteRectangle, s_ActiveInsulinMarkerInsulinDictionary, Nothing)
         Me.UpdateDosingAndCarbs()
 
         Me.AboveHighLimitMessageLabel.Text = $"Above {s_limitHigh} {BgUnitsString}"

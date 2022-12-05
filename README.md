@@ -27,9 +27,14 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 12/02/2022
+- 12/07/2022
 
 ## What's New in this release
+New in 3.5.7.14
+- Minor performance improvements
+- More improvements to error handling
+- Consolidate exception message decoding
+
 New in 3.5.7.12
 - Update CareLink Client for better performance and diagnostics
 
