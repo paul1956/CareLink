@@ -8,47 +8,8 @@ Imports System.Text.RegularExpressions
 
 Public Class MailSetupDialog
 
-    Private Const InvalidNameCharacters As String = "\/:*?""<>| "
-
-    <StringSyntax(StringSyntaxAttribute.Regex)>
-    Private Const SpacePattern As String = "\s+"
-
-    Private ReadOnly _defaultPorts As New Dictionary(Of String, Integer) From {
-                    {"Microsoft Exchange", 0},
-                    {"smtp.comcast.net", 587},
-                    {"smtp.gmail.com", 587},
-                    {"smtpout.secureserver.net", 587},
-                    {"smtp.mail.yahoo.com", 587}
-                }
-
-    Private ReadOnly _servers As New Dictionary(Of String, String) From {
-                    {"Microsoft Exchange", ""},
-                    {"Comcast/Xfinity", "smtp.comcast.net"},
-                    {"Gmail", "smtp.gmail.com"},
-                    {"GoDaddy", "smtpout.secureserver.net"},
-                    {"Yahoo", "smtp.mail.yahoo.com"}
-                }
 
     Private _useExchange As Boolean = True
-
-    Private Shared Function IsValidEmailAddress(MailServerUserName As String, ByRef errorMsg As String) As Boolean
-        If String.IsNullOrWhiteSpace(MailServerUserName) Then
-            errorMsg = "Required"
-            Return False
-        End If
-
-        Try
-            Dim tempVar As New Net.Mail.MailAddress(MailServerUserName)
-        Catch e1 As ArgumentException
-            errorMsg = "Required"
-            Return False
-        Catch e2 As FormatException
-            'textBox contains no valid mail address
-            errorMsg = e2.Message
-            Return False
-        End Try
-        Return True
-    End Function
 
     Private Shared Sub validateDomainLKeyPress(sender As TextBox, ByRef e As KeyPressEventArgs)
         Dim keyValue As Char = e.KeyChar
@@ -161,7 +122,7 @@ Public Class MailSetupDialog
 
     Private Sub MailServerUserEmailTextBox_Validating(sender As Object, e As CancelEventArgs) Handles MailServerUserEmailTextBox.Validating
         Dim errorMsg As String = ""
-        If Not IsValidEmailAddress(Me.MailServerUserEmailTextBox.Text, errorMsg) Then
+        If Not Me.MailServerUserEmailTextBox.Text.IsValidEmailAddress(errorMsg) Then
             ' Cancel the event and select the text to be corrected by the user.
             e.Cancel = True
             Me.MailServerUserEmailTextBox.Select(0, Me.MailServerUserEmailTextBox.Text.Length)
@@ -176,7 +137,7 @@ Public Class MailSetupDialog
     End Sub
 
     Private Sub MailSetupDialog_Load(sender As Object, e As EventArgs) Handles Me.Load
-        Me.OutGoingMailServerComboBox.DataSource = New BindingSource(_servers, Nothing)
+        Me.OutGoingMailServerComboBox.DataSource = New BindingSource(s_knownMailServers, Nothing)
         Me.OutGoingMailServerComboBox.DisplayMember = "Key"
         Me.OutGoingMailServerComboBox.ValueMember = "Value"
         Dim outGoingMailServer As String = My.Settings.OutGoingMailServer
@@ -194,7 +155,7 @@ Public Class MailSetupDialog
 
         If Not _useExchange Then
             If My.Settings.MailServerPort = 0 Then
-                Me.MailServerPortTextBox.Text = _defaultPorts(outGoingMailServer).ToString
+                Me.MailServerPortTextBox.Text = s_knownDefaultPorts(outGoingMailServer).ToString
             Else
                 Me.MailServerPortTextBox.Text = My.Settings.MailServerPort.ToString
             End If
@@ -202,7 +163,7 @@ Public Class MailSetupDialog
 
         Dim errorMsg As String = ""
 
-        If IsValidEmailAddress(My.Settings.MailServerUserName, errorMsg) Then
+        If My.Settings.MailServerUserName.IsValidEmailAddress(errorMsg) Then
             Me.MailServerUserEmailTextBox.Text = My.Settings.MailServerUserName
         Else
             Me.ErrorProvider1.SetError(Me.MailServerUserEmailTextBox, errorMsg)
@@ -296,7 +257,7 @@ Public Class MailSetupDialog
             Me.SMTPServerURLTextBox.Visible = False
         Else
             Me.MailServerPortLabel.Visible = True
-            Me.MailServerPortTextBox.Text = _defaultPorts(outgoingServer).ToString
+            Me.MailServerPortTextBox.Text = s_knownDefaultPorts(outgoingServer).ToString
             Me.MailServerPortTextBox.Visible = True
             Me.SMTPServerURLLabel.Visible = True
             Me.SMTPServerURLTextBox.Visible = True

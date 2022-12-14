@@ -6,12 +6,12 @@ Imports System.ComponentModel
 Imports System.Media
 
 Public Class BGMiniWindow
+    Private ReadOnly _form1 As Form1
     Private _alarmPlayedHigh As Boolean
     Private _alarmPlayedLow As Boolean
     Private _currentBGValue As Single = Double.NaN
     Private _lastBGValue As Single
     Private _normalizedBG As Single
-    Private ReadOnly _form1 As Form1
 
     Public Sub New()
         MyBase.New
@@ -22,26 +22,6 @@ Public Class BGMiniWindow
         MyBase.New
         Me.InitializeComponent()
         _form1 = form1
-    End Sub
-
-    Public Sub SetCurrentBGString(Value As String)
-        If String.IsNullOrEmpty(Value) Then
-            Value = "---"
-        End If
-
-        _lastBGValue = _currentBGValue
-        _currentBGValue = Value.ParseSingle(2)
-        If Not Double.IsNaN(_currentBGValue) Then
-            _normalizedBG = _currentBGValue
-            If BgUnitsString <> "mg/dl" Then
-                _normalizedBG *= 18
-            End If
-            Me.BGTextBox.ForeColor = SystemColors.ControlText
-        Else
-            Me.BGTextBox.ForeColor = Color.Red
-        End If
-        Me.Text = $"{s_firstName}'s Updated {CInt((Now - s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime).TotalMinutes)} minutes ago"
-        Me.BGTextBox.Text = Value
     End Sub
 
     Private Sub ActiveInsulinTextBox_GotFocus(sender As Object, e As EventArgs) Handles ActiveInsulinTextBox.GotFocus
@@ -106,10 +86,12 @@ Public Class BGMiniWindow
 
     End Sub
 
-    Private Sub playSoundFromResource(SoundName As String)
-        Using player As New SoundPlayer(My.Resources.ResourceManager.GetStream(SoundName, CurrentUICulture))
-            player.Play()
-        End Using
+    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles chkTopMost.CheckedChanged
+        If Me.chkTopMost.Checked Then
+            Me.TopMost = True
+        ElseIf Not Me.chkTopMost.Checked Then
+            Me.TopMost = False
+        End If
     End Sub
 
     Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
@@ -117,12 +99,30 @@ Public Class BGMiniWindow
         Me.Hide()
     End Sub
 
-    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles chkTopMost.CheckedChanged
-        If Me.chkTopMost.Checked Then
-            Me.TopMost = True
-        ElseIf Not Me.chkTopMost.Checked Then
-            Me.TopMost = False
+    Private Sub playSoundFromResource(SoundName As String)
+        Using player As New SoundPlayer(My.Resources.ResourceManager.GetStream(SoundName, CurrentUICulture))
+            player.Play()
+        End Using
+    End Sub
+
+    Public Sub SetCurrentBGString(Value As String)
+        If String.IsNullOrEmpty(Value) Then
+            Value = "---"
         End If
+
+        _lastBGValue = _currentBGValue
+        _currentBGValue = Value.ParseSingle(2)
+        If Not Double.IsNaN(_currentBGValue) Then
+            _normalizedBG = _currentBGValue
+            If BgUnitsString <> "mg/dl" Then
+                _normalizedBG *= 18
+            End If
+            Me.BGTextBox.ForeColor = SystemColors.ControlText
+        Else
+            Me.BGTextBox.ForeColor = Color.Red
+        End If
+        Me.Text = $"{s_firstName}'s Updated {CInt((Now - s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime).TotalMinutes)} minutes ago"
+        Me.BGTextBox.Text = Value
     End Sub
 
 End Class

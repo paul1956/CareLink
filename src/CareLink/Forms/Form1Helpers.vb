@@ -8,6 +8,17 @@ Imports System.Runtime.CompilerServices
 
 Friend Module Form1Helpers
 
+    Friend Function ConvertPercent24HoursToDisplayValueString(rowValue As String) As String
+        Dim val As Decimal = CDec(Convert.ToInt32(rowValue) * 0.24)
+        Dim hours As Integer = Convert.ToInt32(val)
+        Dim minutes As Integer = CInt((val Mod 1) * 60)
+        If minutes = 0 Then
+            Return $"{hours} hours, out of last 24 hours."
+        Else
+            Return $"{hours} hours and {minutes} minutes, out of last 24 hours."
+        End If
+    End Function
+
     <Extension>
     Friend Function DoOptionalLoginAndUpdateData(MainForm As Form1, UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
         MainForm.ServerUpdateTimer.Stop()
@@ -31,7 +42,7 @@ Friend Module Form1Helpers
                 Do Until MainForm.LoginDialog.ShowDialog() <> DialogResult.Retry
                 Loop
 
-                If MainForm.client Is Nothing OrElse Not MainForm.client.LoggedIn Then
+                If MainForm.Client Is Nothing OrElse Not MainForm.Client.LoggedIn Then
                     MainForm.ServerUpdateTimer.Interval = s_fiveMinutesInMilliseconds
                     MainForm.ServerUpdateTimer.Start()
                     Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
@@ -43,7 +54,7 @@ Friend Module Form1Helpers
                     MainForm.LastUpdateTime.Text = "Unknown"
                     Return False
                 End If
-                MainForm.RecentData = MainForm.client.GetRecentData(MainForm)
+                MainForm.RecentData = MainForm.Client.GetRecentData(MainForm)
                 MainForm.ServerUpdateTimer.Interval = s_oneMinutesInMilliseconds
                 MainForm.ServerUpdateTimer.Start()
                 Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
@@ -53,7 +64,7 @@ Friend Module Form1Helpers
                     Return False
                 End If
 
-                ReportLoginStatus(MainForm.LoginStatus, MainForm.RecentData Is Nothing OrElse MainForm.RecentData.Count = 0, MainForm.client.GetLastErrorMessage)
+                ReportLoginStatus(MainForm.LoginStatus, MainForm.RecentData Is Nothing OrElse MainForm.RecentData.Count = 0, MainForm.Client.GetLastErrorMessage)
                 MainForm.ShowMiniDisplay.Visible = True
         End Select
         MainForm.FinishInitialization()

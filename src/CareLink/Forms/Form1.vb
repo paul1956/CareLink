@@ -1390,17 +1390,6 @@ Public Class Form1
 
 #Region "Update Data and Tables"
 
-    Private Shared Function ConvertPercent24HoursToDisplayValueString(rowValue As String) As String
-        Dim val As Decimal = CDec(Convert.ToInt32(rowValue) * 0.24)
-        Dim hours As Integer = Convert.ToInt32(val)
-        Dim minutes As Integer = CInt((val Mod 1) * 60)
-        If minutes = 0 Then
-            Return $"{hours} hours, out of last 24 hours."
-        Else
-            Return $"{hours} hours and {minutes} minutes, out of last 24 hours."
-        End If
-    End Function
-
     Private Sub UpdateDataTables()
 
         If Me.RecentData Is Nothing Then

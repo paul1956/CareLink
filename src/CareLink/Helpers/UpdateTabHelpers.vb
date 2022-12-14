@@ -176,6 +176,7 @@ Friend Module UpdateTabHelpers
                     Case "LOAD_RESERVOIR"
                     Case "PROCESSING_BG"
                     Case "SUSPENDED_BEFORE_LOW"
+                    Case "TEMP_BASAL"
                     Case "WAIT_TO_ENTER_BG"
                     Case Else
                         If Debugger.IsAttached Then

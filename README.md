@@ -27,9 +27,13 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 12/07/2022
+- 12/17/2022
 
 ## What's New in this release
+New in 3.5.7.16
+- Fix TempBasal  Banner
+- Fix Time to Next Calibration Graph
+
 New in 3.5.7.14
 - Minor performance improvements
 - More improvements to error handling

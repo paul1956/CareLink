@@ -25,11 +25,11 @@ Friend Module DrawingExtensions
         Dim targetImage As Bitmap = backImage
         Dim myGraphics As Graphics = Graphics.FromImage(targetImage)
         myGraphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-        Dim newPen As Pen = If(colorTable Is Nothing, New Pen(GetColorFromTimeToNextCalib(minutesToNextCalibration / 60), 2), New Pen(colorTable(segmentName), 5))
-        Dim rect As New Rectangle(1, 1, backImage.Width - 2, backImage.Height - 2)
+        Dim newPen As Pen = If(colorTable Is Nothing, New Pen(GetColorFromTimeToNextCalib(minutesToNextCalibration / 60), 3), New Pen(colorTable(segmentName), 5))
+        Dim rect As New Rectangle(1, 0, backImage.Width - 2, backImage.Height - 2)
 
         Dim arcAngle As Integer
-        Select Case minutesToNextCalibration \ 2
+        Select Case minutesToNextCalibration
             Case Is > 660
                 arcAngle = 360
             Case Is > 600
