@@ -30,6 +30,10 @@ This update has a UI to show all the available data and a visual version that mi
 - 12/17/2022
 
 ## What's New in this release
+New in 3.5.7.17
+- Update NuGet packages
+- Fix Off by 1 in FromUnixTime
+
 New in 3.5.7.16
 - Fix TempBasal  Banner
 - Fix Time to Next Calibration Graph

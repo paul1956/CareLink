@@ -75,7 +75,7 @@
           }
         }
       },
-      "Octokit/4.0.1": {
+      "Octokit/4.0.3": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/Octokit.dll": {
@@ -1104,16 +1104,22 @@
           }
         }
       },
-      "WinForms.DataVisualization/1.4.0-pr1": {
+      "WinForms.DataVisualization/1.5.0-pr": {
         "type": "package",
         "compile": {
-          "lib/net7.0-windows7.0/WinForms.DataVisualization.dll": {
+          "lib/net7.0-windows7.0/WinForms.DataVisualization.Utilities.dll": {
             "related": ".pdb"
+          },
+          "lib/net7.0-windows7.0/WinForms.DataVisualization.dll": {
+            "related": ".pdb;.Utilities.pdb"
           }
         },
         "runtime": {
-          "lib/net7.0-windows7.0/WinForms.DataVisualization.dll": {
+          "lib/net7.0-windows7.0/WinForms.DataVisualization.Utilities.dll": {
             "related": ".pdb"
+          },
+          "lib/net7.0-windows7.0/WinForms.DataVisualization.dll": {
+            "related": ".pdb;.Utilities.pdb"
           }
         }
       }
@@ -1213,16 +1219,16 @@
         "version.txt"
       ]
     },
-    "Octokit/4.0.1": {
-      "sha512": "fwTQ/mEyvRA+LPvEApqziBR1Qvo6+AshUBQTZqXM5RMuJaSBzW3PGrG33HA+zOaq+71E4+EmN7kjCDBc+Ra3WQ==",
+    "Octokit/4.0.3": {
+      "sha512": "KhRtKMEJfjwGKwpha1JalVlRrUP4WfhqG6b0VCiQ2w8JTa1LwhoRPWH9EpZ01Q8I9Qshu2kJu/1lMUOaR4yc3Q==",
       "type": "package",
-      "path": "octokit/4.0.1",
+      "path": "octokit/4.0.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Octokit.dll",
         "lib/netstandard2.0/Octokit.xml",
-        "octokit.4.0.1.nupkg.sha512",
+        "octokit.4.0.3.nupkg.sha512",
         "octokit.nuspec",
         "octokit.png"
       ]
@@ -3658,22 +3664,30 @@
         "toolstripcomboboxex.nuspec"
       ]
     },
-    "WinForms.DataVisualization/1.4.0-pr1": {
-      "sha512": "+V6BY59P1Ma0CKD3KPOeBt3p+CBWLX1tgiGMkrsRScqi7IzPZ9ffEsx1Hme0SiF/HDSJ3+kkH1V2U9v4mv2dNA==",
+    "WinForms.DataVisualization/1.5.0-pr": {
+      "sha512": "0SQdK94kFtTTPCD4uEXuZRpUrA1Y+NQbsjuqUiXlixLp9rNozGDfhhJwmwaHG2rDjylt3dlQzUpKKrN35UNT6g==",
       "type": "package",
-      "path": "winforms.datavisualization/1.4.0-pr1",
+      "path": "winforms.datavisualization/1.5.0-pr",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
-        "README.md",
+        "NuGetReadme.md",
+        "lib/net6.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Designer.Server.dll",
         "lib/net6.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Designer.Client.dll",
+        "lib/net6.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Utilities.dll",
+        "lib/net6.0-windows7.0/WinForms.DataVisualization.Utilities.dll",
+        "lib/net6.0-windows7.0/WinForms.DataVisualization.Utilities.pdb",
         "lib/net6.0-windows7.0/WinForms.DataVisualization.dll",
         "lib/net6.0-windows7.0/WinForms.DataVisualization.pdb",
+        "lib/net7.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Designer.Server.dll",
         "lib/net7.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Designer.Client.dll",
+        "lib/net7.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Utilities.dll",
+        "lib/net7.0-windows7.0/WinForms.DataVisualization.Utilities.dll",
+        "lib/net7.0-windows7.0/WinForms.DataVisualization.Utilities.pdb",
         "lib/net7.0-windows7.0/WinForms.DataVisualization.dll",
         "lib/net7.0-windows7.0/WinForms.DataVisualization.pdb",
-        "winforms.datavisualization.1.4.0-pr1.nupkg.sha512",
+        "winforms.datavisualization.1.5.0-pr.nupkg.sha512",
         "winforms.datavisualization.nuspec"
       ]
     }
@@ -3682,10 +3696,10 @@
     "net7.0-windows7.0": [
       "DataGridViewDisableButtonColumnEx >= 1.0.0.1",
       "Microsoft.Exchange.WebServices.NETStandard >= 2.0.0-beta3",
-      "Octokit >= 4.0.1",
+      "Octokit >= 4.0.3",
       "TableLayputPanelTop >= 1.0.0.2",
       "ToolStripComboBoxEx >= 1.0.0.2",
-      "WinForms.DataVisualization >= 1.4.0-pr1"
+      "WinForms.DataVisualization >= 1.5.0-pr"
     ]
   },
   "packageFolders": {
@@ -3693,7 +3707,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "3.5.7.16",
+    "version": "3.5.7.17",
     "restore": {
       "projectUniqueName": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\CareLink\\CareLink.vbproj",
       "projectName": "CareLink",
@@ -3739,7 +3753,7 @@
           },
           "Octokit": {
             "target": "Package",
-            "version": "[4.0.1, )"
+            "version": "[4.0.3, )"
           },
           "TableLayputPanelTop": {
             "target": "Package",
@@ -3751,7 +3765,7 @@
           },
           "WinForms.DataVisualization": {
             "target": "Package",
-            "version": "[1.4.0-pr1, )"
+            "version": "[1.5.0-pr, )"
           }
         },
         "imports": [

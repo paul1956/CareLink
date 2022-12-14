@@ -20,9 +20,9 @@
     <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
     <RepositoryUrl>https://github.com/paul1956/CareLink</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>3.5.7.16</Version>
-    <AssemblyVersion>3.5.7.16</AssemblyVersion>
-    <FileVersion>3.5.7.16</FileVersion>
+    <Version>3.5.7.17</Version>
+    <AssemblyVersion>3.5.7.17</AssemblyVersion>
+    <FileVersion>3.5.7.17</FileVersion>
     <PackageIcon>IconImage.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/paul1956/CareLink</PackageProjectUrl>
@@ -68,10 +68,10 @@
   <ItemGroup>
     <PackageReference Include="DataGridViewDisableButtonColumnEx" Version="1.0.0.1" />
     <PackageReference Include="Microsoft.Exchange.WebServices.NETStandard" Version="2.0.0-beta3" />
-    <PackageReference Include="Octokit" Version="4.0.1" />
+    <PackageReference Include="Octokit" Version="4.0.3" />
     <PackageReference Include="TableLayputPanelTop" Version="1.0.0.2" />
     <PackageReference Include="ToolStripComboBoxEx" Version="1.0.0.2" />
-    <PackageReference Include="WinForms.DataVisualization" Version="1.4.0-pr1" />
+    <PackageReference Include="WinForms.DataVisualization" Version="1.5.0-pr" />
   </ItemGroup>
 
   <ItemGroup>

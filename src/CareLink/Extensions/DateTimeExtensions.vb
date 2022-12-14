@@ -79,7 +79,7 @@ Friend Module DateTimeExtensions
     ''' <returns>UTC Date</returns>
     <Extension>
     Private Function FromUnixTime(unixTime As String) As Date
-        Dim epoch As New DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+        Dim epoch As New DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Local)
         If String.IsNullOrWhiteSpace(unixTime) Then
             Return epoch
         End If
@@ -105,7 +105,7 @@ Friend Module DateTimeExtensions
     ''' <returns>Local Date as string</returns>
     <Extension>
     Friend Function Epoch2DateString(epoch As String) As String
-        Return epoch.FromUnixTime.ToLocalTime.ToLongDateString
+        Return epoch.FromUnixTime.ToLongDateString
     End Function
 
     ''' <summary>
