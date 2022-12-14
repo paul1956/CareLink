@@ -6,6 +6,7 @@ Imports System.Net
 Imports System.Net.Http
 Imports System.Runtime.CompilerServices
 Imports System.Text
+
 Imports CareLink
 
 Public Module CareLinkClientHelpers

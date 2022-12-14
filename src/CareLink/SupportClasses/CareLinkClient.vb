@@ -295,7 +295,7 @@ Public Class CareLinkClient
 
     Private Function NewHttpClientWithCookieContainer() As HttpClient
         Dim cookieContainer As New CookieContainer()
-        _httpClientHandler = New HttpClientHandler With {.CookieContainer = cookieContainer}
+        _httpClientHandler = New HttpClientHandler With {.cookieContainer = cookieContainer}
         Return New HttpClient(_httpClientHandler)
     End Function
 
