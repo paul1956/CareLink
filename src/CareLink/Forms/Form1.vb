@@ -2200,16 +2200,16 @@ Public Class Form1
                 Using g As Graphics = Graphics.FromImage(bitmapText)
                     Select Case sg
                         Case <= s_limitLow
-                            bgColor = Color.Red
+                            bgColor = Color.Orange
                             If _showBaloonTip Then
                                 Me.NotifyIcon1.ShowBalloonTip(10000, "CareLink Alert", $"SG below {s_limitLow} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBaloonTip = False
                         Case <= s_limitHigh
-                            bgColor = Color.White
+                            bgColor = Color.Green
                             _showBaloonTip = True
                         Case Else
-                            bgColor = Color.Yellow
+                            bgColor = Color.Red
                             If _showBaloonTip Then
                                 Me.NotifyIcon1.ShowBalloonTip(10000, "CareLink Alert", $"SG above {s_limitHigh} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                             End If
