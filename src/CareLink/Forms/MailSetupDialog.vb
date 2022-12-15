@@ -3,11 +3,9 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.ComponentModel
-Imports System.Diagnostics.CodeAnalysis
 Imports System.Text.RegularExpressions
 
 Public Class MailSetupDialog
-
 
     Private _useExchange As Boolean = True
 

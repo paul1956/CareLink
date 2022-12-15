@@ -6,6 +6,7 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class RaceRecord
+
     <DisplayName("Base")>
     <Column(Order:=0, TypeName:=NameOf([String]))>
     Public Property base As String

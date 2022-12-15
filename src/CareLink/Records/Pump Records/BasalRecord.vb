@@ -31,5 +31,4 @@ Public Class BasalRecord
     <Column(Order:=5, TypeName:=NameOf([Int32]))>
     Public Property tempBasalDurationRemaining As Integer
 
-
 End Class

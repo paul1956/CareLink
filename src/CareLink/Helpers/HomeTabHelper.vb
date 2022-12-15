@@ -5,6 +5,7 @@
 Imports System.Runtime.CompilerServices
 
 Module HomeTabHelper
+
     <Extension>
     Friend Sub UpdateTransmitterBatttery(MainForm As Form1)
         Dim gstBatteryLevel As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexs.gstBatteryLevel), False)

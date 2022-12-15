@@ -5,6 +5,7 @@
 Imports System.Runtime.CompilerServices
 
 Friend Module TableLayoutPanelSupport
+
     <Extension>
     Friend Sub SetTabName(table As TableLayoutPanel, rowIndex As ItemIndexs)
         Select Case True

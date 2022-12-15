@@ -84,4 +84,5 @@ Partial Class ExceptionHandlerForm
     Private Sub ReportInvalidErrorFile(currentLine As String, expectedLine As String)
         Throw New NotImplementedException()
     End Sub
+
 End Class

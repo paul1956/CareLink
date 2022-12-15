@@ -25,5 +25,4 @@ Friend Module Exceptions
         Return errorMsg
     End Function
 
-
 End Module
