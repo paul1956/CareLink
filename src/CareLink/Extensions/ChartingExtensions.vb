@@ -264,7 +264,7 @@ Friend Module ChartingExtensions
             chart.Series(BgSeriesName).PlotOnePoint(
                                     sgListIndex.Value.OAdatetime(),
                                     sgListIndex.Value.sg,
-                                    Color.Black,
+                                    Color.White,
                                     HomePageMealRow)
         Next
     End Sub

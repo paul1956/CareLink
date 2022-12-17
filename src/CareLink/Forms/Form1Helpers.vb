@@ -106,7 +106,7 @@ Friend Module Form1Helpers
 
     Public Sub ReportLoginStatus(loginStatus As Label, hasErrors As Boolean, Optional lastErrorMessage As String = "")
         If hasErrors Then
-            loginStatus.ForeColor = Color.Red
+            loginStatus.ForeColor = If(lastErrorMessage = "OK", Color.Black, Color.Red)
             loginStatus.Text = lastErrorMessage
         Else
             loginStatus.ForeColor = Color.Black
