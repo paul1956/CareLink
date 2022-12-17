@@ -36,6 +36,7 @@ Friend Module UserMessageHandler
                         {"BC_MESSAGE_SG_UNDER_50_MG_DL", "Low SG(triggeredDateTime). Sensor Glucose is under (CriticalLow) (units). Check BG and treat."},
                         {"BC_MESSAGE_SMART_GUARD_SETTINGS_TURNED_OFF", "Auto mode started. The following SmartGuard settings are turned off Suspend before low And Suspend on low. "},
                         {"BC_MESSAGE_TIME_REMAINING_CHANGE_RESERVOIR", "Low Reservoir(triggeredDateTime). (0) units remaining. Change reservoir.:unitsRemaining"},
+                        {"BC_MESSAGE_TIME_SINCE_LAST_BOLUS_CHECK_BG", "Need correct message for 'BC_MESSAGE_TIME_SINCE_LAST_BOLUS_CHECK_BG'"},
                         {"BC_REMINDER_TIME", "Reminder time to take (0).:reminderName"},
                         {"BC_SID_BASAL_DELIVERY_RESUMED_AT_X_AFTER_LOW_SUSPEND", "Basal delivery resumed at (secondaryTime) after suspend by sensor, Check BG."},
                         {"BC_SID_BASAL_STARTED_SMART_GUARD", "SmartGuard started(triggeredDateTime)."},
