@@ -27,8 +27,12 @@ Public Class BasalRecord
     <Column(Order:=4, TypeName:=NameOf([String]))>
     Public Property tempBasalType As String
 
+    <DisplayName("Preset Temp Name")>
+    <Column(Order:=5, TypeName:=NameOf([String]))>
+    Public Property presetTempName As String
+
     <DisplayName("Temp Basal Duration Remaining")>
-    <Column(Order:=5, TypeName:=NameOf([Int32]))>
+    <Column(Order:=6, TypeName:=NameOf([Int32]))>
     Public Property tempBasalDurationRemaining As Integer
 
 End Class
