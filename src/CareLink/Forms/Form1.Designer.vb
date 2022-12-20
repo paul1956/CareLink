@@ -1432,7 +1432,7 @@ Partial Class Form1
         Me.Last24AutoCorrectionLabel.Name = "Last24AutoCorrectionLabel"
         Me.Last24AutoCorrectionLabel.Size = New System.Drawing.Size(237, 21)
         Me.Last24AutoCorrectionLabel.TabIndex = 64
-        Me.Last24AutoCorrectionLabel.Text = "Auto Correction 20 U | 50%"
+        Me.Last24AutoCorrectionLabel.Text = "Auto Correction 20 U | 20%"
         Me.Last24AutoCorrectionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Last24CarbsValueLabel
