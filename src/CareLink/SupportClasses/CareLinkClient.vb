@@ -386,6 +386,7 @@ Public Class CareLinkClient
                 End If
                 response.Dispose()
             Catch e As Exception
+                _lastErrorMessage = e.Message
                 Debug.Print($"__getData() failed {e.Message}, status {response?.StatusCode}")
             End Try
         End If

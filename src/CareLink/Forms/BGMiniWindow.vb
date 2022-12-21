@@ -41,7 +41,7 @@ Public Class BGMiniWindow
     End Sub
 
     Private Sub BGTextBox_TextChanged(sender As Object, e As EventArgs) Handles BGTextBox.TextChanged
-        Me.Text = $"{s_firstName}'s Updated {CInt((Now - s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime).TotalMinutes)} minutes ago"
+        Me.Text = GetLastUpdateMessage()
         If Me.BGTextBox.Text.Length = 0 OrElse Me.BGTextBox.Text = "---" OrElse Me.BGTextBox.Text = "999" Then
             _currentBGValue = Double.NaN
             Me.DeltaTextBox.Text = ""
@@ -121,8 +121,14 @@ Public Class BGMiniWindow
         Else
             Me.BGTextBox.ForeColor = Color.Red
         End If
-        Me.Text = $"{s_firstName}'s Updated {CInt((Now - s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime).TotalMinutes)} minutes ago"
+        Me.Text = GetLastUpdateMessage()
         Me.BGTextBox.Text = Value
     End Sub
 
+    Private Shared Function GetLastUpdateMessage() As String
+        If s_lastMedicalDeviceDataUpdateServerEpoch = 0 Then
+            Return $"{s_firstName}'s Last Update Unknown"
+        End If
+        Return $"{s_firstName}'s Updated {CInt((Now - s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime).TotalMinutes)} minutes ago"
+    End Function
 End Class
