@@ -21,7 +21,7 @@ Public Class TimeChangeRecord
                 Case NameOf(version)
                     Me.version = CInt(kvp.Value)
                 Case NameOf(Me.dateTime)
-                    Me.dateTime = kvp.Value.ParseDate(NameOf(Me.dateTime), NameOf(Me.dateTime))
+                    Me.dateTime = kvp.Value.ParseDate(NameOf(Me.dateTime))
                     Me.dateTimeAsString = kvp.Value
                 Case NameOf(relativeOffset)
                     Me.relativeOffset = CInt(kvp.Value)

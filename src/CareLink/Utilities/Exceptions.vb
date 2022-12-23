@@ -18,8 +18,13 @@ Friend Module Exceptions
     <Extension>
     Public Function DecodeException(ex As Exception) As String
         Dim errorMsg As String = ex.Message
-        If errorMsg.EndsWith(InnerExceptionMessage) Then
-            errorMsg = $"{errorMsg.Replace(InnerExceptionMessage, ".")}{Environment.NewLine}{Environment.NewLine}{ex.InnerException.Message}"
+        If errorMsg.Contains(InnerExceptionMessage) Then
+            Dim innerExMessage As String = ex.InnerException.Message
+            If innerExMessage.Contains(InnerExceptionMessage) Then
+                errorMsg = DecodeException(ex.InnerException)
+            Else
+                errorMsg = $"{errorMsg.Replace(InnerExceptionMessage, ".")}{Environment.NewLine}{innerExMessage}"
+            End If
         End If
 
         Return errorMsg

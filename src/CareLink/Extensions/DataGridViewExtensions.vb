@@ -21,7 +21,7 @@ Public Module DataGridViewExtensions
         End If
         Dim columnName As String = dgv.Columns(e.ColumnIndex).Name
         If columnName.Equals(key, StringComparison.Ordinal) Then
-            Dim dateValue As Date = e.Value.ToString.ParseDate(columnName)
+            Dim dateValue As Date = CDate(e.Value)
             e.Value = dateValue.ToShortDateTimeString
         End If
     End Sub

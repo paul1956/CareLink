@@ -386,8 +386,8 @@ Public Class CareLinkClient
                 End If
                 response.Dispose()
             Catch e As Exception
-                _lastErrorMessage = e.Message
-                Debug.Print($"__getData() failed {e.Message}, status {response?.StatusCode}")
+                _lastErrorMessage = DecodeException(e)
+                Debug.Print($"__getData() failed {_lastErrorMessage}, status {response?.StatusCode}")
             End Try
         End If
         Return jsonData
