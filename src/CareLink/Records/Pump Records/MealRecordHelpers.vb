@@ -5,7 +5,6 @@
 Friend Class MealRecordHelpers
 
     Private Shared ReadOnly columnsToHide As New List(Of String) From {
-        NameOf(MealRecord.index),
         NameOf(MealRecord.kind),
         NameOf(MealRecord.relativeOffset),
         NameOf(MealRecord.version)

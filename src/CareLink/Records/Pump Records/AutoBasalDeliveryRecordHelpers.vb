@@ -6,7 +6,6 @@ Friend Class AutoBasalDeliveryRecordHelpers
 
     Private Shared ReadOnly columnsToHide As New List(Of String) From {
             NameOf(AutoBasalDeliveryRecord.id),
-            NameOf(AutoBasalDeliveryRecord.index),
             NameOf(AutoBasalDeliveryRecord.kind),
             NameOf(AutoBasalDeliveryRecord.relativeOffset),
             NameOf(AutoBasalDeliveryRecord.version)

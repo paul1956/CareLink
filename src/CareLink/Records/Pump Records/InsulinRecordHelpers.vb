@@ -5,7 +5,6 @@
 Friend Class InsulinRecordHelpers
 
     Private Shared ReadOnly columnsToHide As New List(Of String) From {
-            NameOf(InsulinRecord.id),
             NameOf(InsulinRecord.index),
             NameOf(InsulinRecord.kind),
             NameOf(InsulinRecord.OAdateTime),

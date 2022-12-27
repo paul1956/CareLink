@@ -5,7 +5,6 @@
 Friend Class LowGlusoceSuspendRecordHelpers
 
     Private Shared ReadOnly columnsToHide As New List(Of String) From {
-            NameOf(LowGlusoceSuspendRecord.index),
             NameOf(LowGlusoceSuspendRecord.kind),
             NameOf(LowGlusoceSuspendRecord.relativeOffset),
             NameOf(LowGlusoceSuspendRecord.version)

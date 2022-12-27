@@ -27,9 +27,13 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 12/17/2022
+- 12/27/2022
 
 ## What's New in this release
+New in 3.5.7.19
+- Add additional error messages
+- Correct Type in TimeChange Record
+
 New in 3.5.7.18
 - Add support for more Manual Mode Featured
 - Improve error handling

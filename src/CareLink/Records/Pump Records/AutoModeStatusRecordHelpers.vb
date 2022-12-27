@@ -5,8 +5,9 @@
 Friend Class AutoModeStatusRecordHelpers
 
     Private Shared ReadOnly columnsToHide As New List(Of String) From {
-             NameOf(AutoModeStatusRecord.kind), NameOf(AutoModeStatusRecord.version),
-             NameOf(AutoModeStatusRecord.relativeOffset), NameOf(AutoModeStatusRecord.index)
+             NameOf(AutoModeStatusRecord.kind),
+             NameOf(AutoModeStatusRecord.relativeOffset),
+             NameOf(AutoModeStatusRecord.version)
         }
 
     Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)

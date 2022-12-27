@@ -5,8 +5,9 @@
 Friend Class BGReadingRecordHelpers
 
     Private Shared ReadOnly columnsToHide As New List(Of String) From {
-             NameOf(BGReadingRecord.kind), NameOf(BGReadingRecord.version),
-             NameOf(BGReadingRecord.relativeOffset), NameOf(BGReadingRecord.index)
+             NameOf(BGReadingRecord.kind),
+             NameOf(BGReadingRecord.relativeOffset),
+             NameOf(BGReadingRecord.version)
         }
 
     Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)

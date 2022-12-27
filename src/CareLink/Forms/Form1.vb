@@ -1030,7 +1030,7 @@ Public Class Form1
 
 #Region "Tab Button Events"
 
-    Private Sub LastAlarmButton_Click(sender As Object, e As EventArgs) _
+    Private Sub TableLayoutPanelTopButton_Click(sender As Object, e As EventArgs) _
         Handles TableLayoutPanelLastSgTop.ButtonClick, TableLayoutPanelLastAlarmTop.ButtonClick,
         TableLayoutPanelActiveInsulinTop.ButtonClick, SgsButton.Click,
         TableLayoutPanelSgsTop.ButtonClick, TableLayoutPanelLimitsTop.ButtonClick,

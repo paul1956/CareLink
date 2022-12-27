@@ -5,8 +5,8 @@
 Friend Class SgRecordHelpers
 
     Private Shared ReadOnly columnsToHide As New List(Of String) From {
-                        NameOf(SgRecord.OAdatetime),
                         NameOf(SgRecord.kind),
+                        NameOf(SgRecord.OAdatetime),
                         NameOf(SgRecord.relativeOffset),
                         NameOf(SgRecord.version)
                     }

@@ -43,6 +43,7 @@ Friend Module UserMessageHandler
                         {"BC_SID_BATTERY_LIFE_LESS_30_MINUTES", "Battery life less than 30 minutes(triggeredDateTime), replace battery now."},
                         {"BC_SID_BG_REQUIRED_CONTENT", "BG required. Enter a New BG for Auto Mode."},
                         {"BC_SID_BOLUS_ENTRY_TIMED_OUT", "Bolus Not delivered. Bolus entry timed out before delivery. If bolus was intended, enter values again."},
+                        {"BC_SID_BUTTON_PRESSED_FOR_MOR_THAN_3_MIN", "Stuck button(triggeredDateTime). Button pressed for more then 3 minutes."},
                         {"BC_SID_CALL_FOR_EMERGENCY", "Call for emergency(triggeredDateTime)."},
                         {"BC_SID_CANNOT_RESUME_BOLUS_FILL_CANNULA", "Bolus stopped(triggeredDateTime). Cannot resume bolus for cannula fill, (deliveredAmount) of (programmedAmount) U delivered. (notDeliveredAmount) U not delivered. If needed, enter values again."},
                         {"BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR", "Calibrate now(triggeredDateTime). Check BG And calibrate sensor."},

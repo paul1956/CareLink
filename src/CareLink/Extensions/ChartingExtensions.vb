@@ -53,7 +53,7 @@ Friend Module ChartingExtensions
         Dim limitsIndexList(count) As Integer
         Dim limitsIndex As Integer = 0
         For i As Integer = 0 To limitsIndexList.GetUpperBound(0)
-            If limitsIndex + 1 < s_listOflimitRecords.Count AndAlso CInt(s_listOflimitRecords(limitsIndex + 1).index) < i Then
+            If limitsIndex + 1 < s_listOflimitRecords.Count AndAlso s_listOflimitRecords(limitsIndex + 1).index < i Then
                 limitsIndex += 1
             End If
             limitsIndexList(i) = limitsIndex
@@ -239,9 +239,8 @@ Friend Module ChartingExtensions
                     Case "TIME_CHANGE"
                         With pageChart.Series(TimeChangeSeriesName).Points
                             lastTimeChangeRecord = New TimeChangeRecord(s_markers(markerWithIndex.Index))
-
-                            markerOADateTime = New TimeChangeRecord(s_markers(markerWithIndex.Index)).OAdateTime
-                            Call .AddXY(markerOADateTime, 0)
+                            markerOADateTime = lastTimeChangeRecord.OAdateTime
+                            .AddXY(markerOADateTime, 0)
                             .AddXY(markerOADateTime, HomePageBasalRow)
                             .AddXY(markerOADateTime, Double.NaN)
                         End With
@@ -331,8 +330,8 @@ Friend Module ChartingExtensions
                     Case "TIME_CHANGE"
                         With treatmentChart.Series(TimeChangeSeriesName).Points
                             lastTimeChangeRecord = New TimeChangeRecord(s_markers(markerWithIndex.Index))
-                            markerOADateTime = New TimeChangeRecord(s_markers(markerWithIndex.Index)).previousOADateTime
-                            Call .AddXY(markerOADateTime, 0)
+                            markerOADateTime = lastTimeChangeRecord.previousOADateTime
+                            .AddXY(markerOADateTime, 0)
                             .AddXY(markerOADateTime, TreatmentInsulinRow)
                             .AddXY(markerOADateTime, Double.NaN)
                         End With

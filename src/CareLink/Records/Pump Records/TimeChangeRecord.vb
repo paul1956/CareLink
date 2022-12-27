@@ -100,9 +100,9 @@ Public Class TimeChangeRecord
         End Get
     End Property
 
-    <DisplayName("Delta OA TimeSpan")>
+    <DisplayName("Delta TimeSpan")>
     <Column(Order:=12, TypeName:="TimeSpan")>
-    Public ReadOnly Property deltaOATimeSpan As TimeSpan
+    Public ReadOnly Property deltaTimeSpan As TimeSpan
         Get
             Return _previousDateTime - _dateTime
         End Get

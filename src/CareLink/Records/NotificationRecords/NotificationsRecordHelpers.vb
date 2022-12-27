@@ -6,7 +6,6 @@ Friend Class NotificationsRecordHelpers
 
     Friend Shared ReadOnly rowsToHide As New List(Of String) From {
             NameOf(ActiveNotificationsRecord.GUID),
-            NameOf(ActiveNotificationsRecord.index),
             NameOf(ActiveNotificationsRecord.instanceId),
             NameOf(ActiveNotificationsRecord.kind),
             NameOf(ActiveNotificationsRecord.relativeOffset),

@@ -5,7 +5,6 @@
 Friend Class TimeChangeRecordHelpers
 
     Private Shared ReadOnly columnsToHide As New List(Of String) From {
-            NameOf(TimeChangeRecord.index),
             NameOf(TimeChangeRecord.kind),
             NameOf(TimeChangeRecord.relativeOffset),
             NameOf(TimeChangeRecord.version)

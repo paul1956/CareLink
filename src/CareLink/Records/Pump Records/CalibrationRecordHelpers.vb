@@ -5,9 +5,10 @@
 Friend Class CalibrationRecordHelpers
 
     Private Shared ReadOnly columnsToHide As New List(Of String) From {
-         NameOf(CalibrationRecord.kind), NameOf(CalibrationRecord.version),
-         NameOf(CalibrationRecord.relativeOffset), NameOf(CalibrationRecord.index)
-    }
+                         NameOf(CalibrationRecord.kind),
+                         NameOf(CalibrationRecord.relativeOffset),
+                         NameOf(CalibrationRecord.version)
+                    }
 
     Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
