@@ -71,24 +71,30 @@ Public Class Form1
 
 #Region "Common Series"
 
+    Public WithEvents ActiveInsulinActiveInsulinSeries As Series
+    Public WithEvents ActiveInsulinAutoCorrectionSeries As Series
     Public WithEvents ActiveInsulinBasalSeries As Series
     Public WithEvents ActiveInsulinBGSeries As Series
     Public WithEvents ActiveInsulinMarkerSeries As Series
-    Public WithEvents ActiveInsulinActiveInsulinSeries As Series
+    Public WithEvents ActiveInsulinMinBasalSeries As Series
     Public WithEvents ActiveInsulinTimeChangeSeries As Series
 
+    Public WithEvents HomeTabAutoCorrectionSeries As Series
     Public WithEvents HomeTabBasalSeries As Series
     Public WithEvents HomeTabBGSeries As Series
     Public WithEvents HomeTabHighLimitSeries As Series
     Public WithEvents HomeTabLowLimitSeries As Series
     Public WithEvents HomeTabMarkerSeries As Series
+    Public WithEvents HomeTabMinBasalSeries As Series
     Public WithEvents HomeTabTimeChangeSeries As Series
 
     Public WithEvents TimeInRangeSeries As New Series
 
+    Public WithEvents TreatmentMarkerAutoCorrectionSeries As Series
     Public WithEvents TreatmentMarkerBasalSeries As Series
     Public WithEvents TreatmentMarkerBGSeries As Series
     Public WithEvents TreatmentMarkerMarkersSeries As Series
+    Public WithEvents TreatmentMarkerMinBasalSeries As Series
     Public WithEvents TreatmentMarkerTimeChangeSeries As Series
 
 #End Region
@@ -845,7 +851,7 @@ Public Class Form1
         ' Set the background to red for negative values in the Balance column.
         If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(AutoBasalDeliveryRecord.bolusAmount), StringComparison.OrdinalIgnoreCase) Then
             If e.Value.ToString = "0.025" Then
-                e.CellStyle.BackColor = Color.LightYellow
+                e.CellStyle.BackColor = GetGraphColor("Min Basal")
             Else
                 e.Value = CSng(e.Value).ToString("F3", CurrentUICulture)
             End If
@@ -1194,13 +1200,19 @@ Public Class Form1
         Me.HomeTabChart = CreateChart(NameOf(HomeTabChart))
         Dim homeTabChartArea As ChartArea = CreateChartArea()
         Me.HomeTabChart.ChartAreas.Add(homeTabChartArea)
-        Me.HomeChartLegend = CreateLegend(NameOf(HomeChartLegend))
+        Me.HomeChartLegend = CreateChartLegend(NameOf(HomeChartLegend))
 
-        Me.HomeTabBasalSeries = CreateSeriesBasal(AxisType.Secondary)
+        Me.HomeTabAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeriesName, "Auto Correction", AxisType.Secondary)
+        Me.HomeTabBasalSeries = CreateSeriesBasal(BasalSeriesName, "Basal Series", AxisType.Secondary)
+        Me.HomeTabMinBasalSeries = CreateSeriesBasal(MinBasalSeriesName, "Min Basal", AxisType.Secondary)
+
         Me.HomeTabBGSeries = CreateSeriesBg(NameOf(HomeChartLegend))
+
         Me.HomeTabHighLimitSeries = CreateSeriesLimits(HighLimitSeriesName)
         Me.HomeTabLowLimitSeries = CreateSeriesLimits(LowLimitSeriesName)
+
         Me.HomeTabMarkerSeries = CreateSeriesMarker(AxisType.Secondary)
+
         Me.HomeTabTimeChangeSeries = CreateSeriesTimeChange()
 
         Me.SplitContainer3.Panel1.Controls.Add(Me.HomeTabChart)
@@ -1208,11 +1220,16 @@ Public Class Form1
 
         With Me.HomeTabChart
             With .Series
+                .Add(Me.HomeTabAutoCorrectionSeries)
                 .Add(Me.HomeTabBasalSeries)
+                .Add(Me.HomeTabMinBasalSeries)
+
                 .Add(Me.HomeTabBGSeries)
                 .Add(Me.HomeTabMarkerSeries)
+
                 .Add(Me.HomeTabHighLimitSeries)
                 .Add(Me.HomeTabLowLimitSeries)
+
                 .Add(Me.HomeTabTimeChangeSeries)
             End With
             .Legends.Add(Me.HomeChartLegend)
@@ -1289,35 +1306,40 @@ Public Class Form1
             End With
         End With
         Me.ActiveInsulinChart.ChartAreas.Add(activeInsulinChartArea)
-        Me.ActiveInsulinChartLegend = CreateLegend(NameOf(ActiveInsulinChartLegend))
-
+        Me.ActiveInsulinChartLegend = CreateChartLegend(NameOf(ActiveInsulinChartLegend))
+        Dim chartTitle As String = $"Running Active Insulin in {GetGraphColor("Active Insulin").ToKnownColor}"
+        Me.ActiveInsulinChartTitle = CreateChartTitle(chartTitle,
+                                                      NameOf(ActiveInsulinChartTitle),
+                                                      GetGraphColor("Active Insulin"))
         Me.ActiveInsulinActiveInsulinSeries = CreateSeriesActiveInsulin(NameOf(ActiveInsulinChartLegend))
-        Me.ActiveInsulinBasalSeries = CreateSeriesBasal(AxisType.Secondary)
+
+        Me.ActiveInsulinAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeriesName, "Auto Correction", AxisType.Secondary)
+        Me.ActiveInsulinBasalSeries = CreateSeriesBasal(BasalSeriesName, "Basal Series", AxisType.Secondary)
+        Me.ActiveInsulinMinBasalSeries = CreateSeriesBasal(MinBasalSeriesName, "Min Basal", AxisType.Secondary)
+
         Me.ActiveInsulinBGSeries = CreateSeriesBg(NameOf(ActiveInsulinChartLegend))
         Me.ActiveInsulinMarkerSeries = CreateSeriesMarker(AxisType.Secondary)
         Me.ActiveInsulinTimeChangeSeries = CreateSeriesTimeChange()
 
-        Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinActiveInsulinSeries)
-        Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinBasalSeries)
-        Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinBGSeries)
-        Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinMarkerSeries)
-        Me.ActiveInsulinChart.Series.Add(Me.ActiveInsulinTimeChangeSeries())
-        Me.ActiveInsulinChart.Legends.Add(Me.ActiveInsulinChartLegend)
+        With Me.ActiveInsulinChart
+            With .Series
+                .Add(Me.ActiveInsulinActiveInsulinSeries)
 
-        Dim foregroundColor As Color = GetGraphColor("Active Insulin")
-        Me.ActiveInsulinChart.Series(BgSeriesName).EmptyPointStyle.BorderWidth = 4
-        Me.ActiveInsulinChart.Series(BgSeriesName).EmptyPointStyle.Color = Color.Transparent
-        Me.ActiveInsulinChart.Series(ActiveInsulinSeriesName).EmptyPointStyle.BorderWidth = 4
-        Me.ActiveInsulinChart.Series(ActiveInsulinSeriesName).EmptyPointStyle.Color = Color.Transparent
+                .Add(Me.ActiveInsulinAutoCorrectionSeries)
+                .Add(Me.ActiveInsulinBasalSeries)
+                .Add(Me.ActiveInsulinMinBasalSeries)
 
-        Me.ActiveInsulinChartTitle = New Title With {
-                .Font = New Font("Trebuchet MS", 12.0F, FontStyle.Bold), .ForeColor = foregroundColor,
-                .BackColor = .ForeColor.GetContrastingColor(),
-                .Name = NameOf(ActiveInsulinChartTitle),
-                .ShadowColor = Color.FromArgb(32, 0, 0, 0),
-                .ShadowOffset = 3,
-                .Text = $"Running Active Insulin in {foregroundColor.ToKnownColor}"
-            }
+                .Add(Me.ActiveInsulinBGSeries)
+                .Add(Me.ActiveInsulinMarkerSeries)
+                .Add(Me.ActiveInsulinTimeChangeSeries())
+            End With
+            .Series(BgSeriesName).EmptyPointStyle.BorderWidth = 4
+            .Series(BgSeriesName).EmptyPointStyle.Color = Color.Transparent
+            .Series(ActiveInsulinSeriesName).EmptyPointStyle.BorderWidth = 4
+            .Series(ActiveInsulinSeriesName).EmptyPointStyle.Color = Color.Transparent
+            .Legends.Add(Me.ActiveInsulinChartLegend)
+        End With
+
         Me.ActiveInsulinChart.Titles.Add(Me.ActiveInsulinChartTitle)
         Me.TabPage02RunningIOB.Controls.Add(Me.ActiveInsulinChart)
         Application.DoEvents()
@@ -1377,33 +1399,44 @@ Public Class Form1
         End With
 
         Me.TreatmentMarkersChart.ChartAreas.Add(treatmentMarkersChartArea)
-        Me.TreatmentMarkersChartLegend = CreateLegend(NameOf(TreatmentMarkersChartLegend))
-
-        Me.TreatmentMarkerBasalSeries = CreateSeriesBasal(AxisType.Primary)
-        Me.TreatmentMarkerBGSeries = CreateSeriesBg(Me.TreatmentMarkersChartLegend.Name)
-        Me.TreatmentMarkerMarkersSeries = CreateSeriesMarker(AxisType.Primary)
-        Me.TreatmentMarkerTimeChangeSeries = CreateSeriesTimeChange()
-
-        Me.TreatmentMarkersChart.Series.Add(Me.TreatmentMarkerBasalSeries)
-        Me.TreatmentMarkersChart.Series.Add(Me.TreatmentMarkerBGSeries)
-        Me.TreatmentMarkersChart.Series.Add(Me.TreatmentMarkerMarkersSeries)
-        Me.TreatmentMarkersChart.Series.Add(Me.TreatmentMarkerTimeChangeSeries())
-        Me.TreatmentMarkersChart.Legends.Add(Me.TreatmentMarkersChartLegend)
-
-        Me.TreatmentMarkersChart.Series(BgSeriesName).EmptyPointStyle.Color = Color.Transparent
-        Me.TreatmentMarkersChart.Series(BgSeriesName).EmptyPointStyle.BorderWidth = 4
-        Me.TreatmentMarkersChart.Series(BasalSeriesName).EmptyPointStyle.Color = Color.Transparent
-        Me.TreatmentMarkersChart.Series(BasalSeriesName).EmptyPointStyle.BorderWidth = 4
-        Me.TreatmentMarkersChart.Series(MarkerSeriesName).EmptyPointStyle.Color = Color.Transparent
-        Me.TreatmentMarkersChart.Series(MarkerSeriesName).EmptyPointStyle.BorderWidth = 4
+        Me.TreatmentMarkersChartLegend = CreateChartLegend(NameOf(TreatmentMarkersChartLegend))
 
         Me.TreatmentMarkersChartTitle = New Title With {
                 .Font = New Font("Trebuchet MS", 12.0F, FontStyle.Bold),
                 .ForeColor = Color.FromArgb(26, 59, 105),
+                .BackColor = .ForeColor.GetContrastingColor(),
                 .Name = NameOf(TreatmentMarkersChartTitle),
                 .ShadowColor = Color.FromArgb(32, 0, 0, 0),
                 .ShadowOffset = 3
             }
+
+        Me.TreatmentMarkerAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeriesName, "Auto Correction", AxisType.Primary)
+        Me.TreatmentMarkerBasalSeries = CreateSeriesBasal(BasalSeriesName, "Basal Series", AxisType.Primary)
+        Me.TreatmentMarkerMinBasalSeries = CreateSeriesBasal(MinBasalSeriesName, "Min Basal", AxisType.Primary)
+
+        Me.TreatmentMarkerBGSeries = CreateSeriesBg(Me.TreatmentMarkersChartLegend.Name)
+        Me.TreatmentMarkerMarkersSeries = CreateSeriesMarker(AxisType.Primary)
+        Me.TreatmentMarkerTimeChangeSeries = CreateSeriesTimeChange()
+
+        With Me.TreatmentMarkersChart
+            With .Series
+                .Add(Me.TreatmentMarkerAutoCorrectionSeries)
+                .Add(Me.TreatmentMarkerBasalSeries)
+                .Add(Me.TreatmentMarkerMinBasalSeries)
+
+                .Add(Me.TreatmentMarkerBGSeries)
+                .Add(Me.TreatmentMarkerMarkersSeries)
+                .Add(Me.TreatmentMarkerTimeChangeSeries())
+            End With
+            .Legends.Add(Me.TreatmentMarkersChartLegend)
+            .Series(BgSeriesName).EmptyPointStyle.Color = Color.Transparent
+            .Series(BgSeriesName).EmptyPointStyle.BorderWidth = 4
+            .Series(BasalSeriesName).EmptyPointStyle.Color = Color.Transparent
+            .Series(BasalSeriesName).EmptyPointStyle.BorderWidth = 4
+            .Series(MarkerSeriesName).EmptyPointStyle.Color = Color.Transparent
+            .Series(MarkerSeriesName).EmptyPointStyle.BorderWidth = 4
+        End With
+
         Me.TreatmentMarkersChart.Titles.Add(Me.TreatmentMarkersChartTitle)
         Me.TabPage03TreatmentDetails.Controls.Add(Me.TreatmentMarkersChart)
         Application.DoEvents()

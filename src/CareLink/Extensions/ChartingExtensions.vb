@@ -130,7 +130,7 @@ Friend Module ChartingExtensions
         Dim startX As OADate
         Dim startY As Double
         If Math.Abs(amount - 0.025) < 0.001 Then
-            lineColor = Color.LightYellow
+            lineColor = GetGraphColor("Min Basal")
         End If
         If DrawFromBottom Then
             startX = markerOADate + s_twoHalfMinuteOADate
@@ -204,7 +204,7 @@ Friend Module ChartingExtensions
                         Select Case entry(NameOf(InsulinRecord.activationType))
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
-                                pageChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, HomePageBasalRow, HomePageInsulinRow, GetGraphColor("Basal Series Auto Correction"), False, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
+                                pageChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, HomePageBasalRow, HomePageInsulinRow, GetGraphColor("Auto Correction"), False, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 If markerInsulinDictionary.TryAdd(markerOADateTime, CInt(HomePageInsulinRow)) Then
                                     markerSeriesPoints.AddXY(markerOADateTime, HomePageInsulinRow - 10)
@@ -297,7 +297,7 @@ Friend Module ChartingExtensions
                         Select Case entry(NameOf(InsulinRecord.activationType))
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
-                                treatmentChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, MaxBasalPerDose, TreatmentInsulinRow, GetGraphColor("Basal Series Auto Correction"), True, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
+                                treatmentChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, MaxBasalPerDose, TreatmentInsulinRow, GetGraphColor("Auto Correction"), True, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 If s_treatmentMarkerInsulinDictionary.TryAdd(markerOADateTime, TreatmentInsulinRow) Then
                                     markerSeriesPoints.AddXY(markerOADateTime, TreatmentInsulinRow)

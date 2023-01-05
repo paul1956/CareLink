@@ -9,11 +9,12 @@ Partial Public Module ColorSelector
 
     Public Property GraphColorDictionary As New Dictionary(Of String, KnownColor) From {
                         {"Active Insulin", KnownColor.Lime},
-                        {"Basal Series Auto Correction", KnownColor.Aqua},
+                        {"Auto Correction", KnownColor.Aqua},
                         {"Basal Series", KnownColor.HotPink},
+                        {"Min Basal", KnownColor.LightYellow},
                         {"BG Series", KnownColor.White},
-                        {"High Limit Series", KnownColor.Yellow},
-                        {"Low Limit Series", KnownColor.Red}
+                        {"High Limit", KnownColor.Yellow},
+                        {"Low Limit", KnownColor.Red}
                     }
 
     Public Function GetGraphColor(lineName As String) As Color

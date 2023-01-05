@@ -8,11 +8,13 @@ Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module ChartSupport
     Friend Const ActiveInsulinSeriesName As String = "ActiveInsulinSeries"
+    Friend Const AutoCorrectionSeriesName As String = "AutoCorrection"
     Friend Const BasalSeriesName As String = "BasalSeries"
     Friend Const BgSeriesName As String = "BgSeries"
     Friend Const HighLimitSeriesName As String = "HighLimitSeries"
     Friend Const LowLimitSeriesName As String = "LowLimitSeries"
     Friend Const MarkerSeriesName As String = "MarkerSeries"
+    Friend Const MinBasalSeriesName As String = "MinBasal"
     Friend Const TimeChangeSeriesName As String = "TimeChangeSeries"
 
     Friend Function CreateChart(chartName As String) As Chart
@@ -112,13 +114,16 @@ Friend Module ChartSupport
         Return tmpChartArea
     End Function
 
-    Friend Function CreateLegend(legendName As String) As Legend
+    Friend Function CreateChartLegend(legendName As String) As Legend
         Return New Legend(legendName) With {
-                        .BackColor = Color.LightGray,
+                        .BackColor = Color.Gray,
+                        .BorderWidth = 0,
                         .Enabled = File.Exists(GetShowLegendFileNameWithPath),
                         .Font = New Font("Trebuchet MS", 20.0F, FontStyle.Bold),
+                        .ForeColor = .BackColor.GetContrastingColor,
                         .IsTextAutoFit = True,
-                        .Title = "Legend"
+                        .Title = "Series Legend",
+                        .TitleBackColor = Color.White
                     }
     End Function
 
@@ -140,14 +145,15 @@ Friend Module ChartSupport
                 }
     End Function
 
-    Friend Function CreateSeriesBasal(YAxisType As AxisType) As Series
-        Dim s As New Series(BasalSeriesName) With {
+    Friend Function CreateSeriesBasal(SeriesName As String, legendName As String, YAxisType As AxisType) As Series
+        Dim basalColor As Color = GetGraphColor(legendName)
+        Dim s As New Series(SeriesName) With {
                      .BorderWidth = 2,
-                     .BorderColor = GetGraphColor("Basal Series"),
+                     .BorderColor = basalColor,
                      .ChartArea = NameOf(ChartArea),
                      .ChartType = SeriesChartType.Line,
-                     .Color = GetGraphColor("Basal Series"),
-                     .LegendText = "Basal Series",
+                     .Color = basalColor,
+                     .LegendText = legendName,
                      .XValueType = ChartValueType.DateTime,
                      .YAxisType = YAxisType
                  }
@@ -166,7 +172,7 @@ Friend Module ChartSupport
                      .ChartType = SeriesChartType.Line,
                      .Color = lineColor,
                      .Legend = legendName,
-                     .LegendText = "BG Series",
+                     .LegendText = "BG",
                      .ShadowColor = lineColor.GetContrastingColor,
                      .XValueType = ChartValueType.DateTime,
                      .YAxisType = AxisType.Secondary
@@ -176,7 +182,7 @@ Friend Module ChartSupport
     Friend Function CreateSeriesLimits(seriesName As String) As Series
         Dim legendName As String
         Dim lineColor As Color
-        If seriesName.StartsWith("HighLimit") Then
+        If seriesName.Equals(HighLimitSeriesName) Then
             legendName = "High Limit"
             lineColor = Color.Yellow
         Else
@@ -246,5 +252,17 @@ Friend Module ChartSupport
             .AxisX.Interval = 2
         End With
     End Sub
+
+    Public Function CreateChartTitle(chartTitle As String, name As String, foreColor As Color) As Title
+        Return New Title With {
+                        .Font = New Font("Trebuchet MS", 12.0F, FontStyle.Bold),
+                        .ForeColor = foreColor,
+                        .BackColor = foreColor.GetContrastingColor(),
+                        .Name = name,
+                        .ShadowColor = Color.FromArgb(32, 0, 0, 0),
+                        .ShadowOffset = 3,
+                        .Text = chartTitle
+                    }
+    End Function
 
 End Module
