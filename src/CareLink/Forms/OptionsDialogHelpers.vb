@@ -11,9 +11,9 @@ Public Module OptionsDialogHelpers
     End Function
 
     <Extension>
-    Public Function GetContrastingColor(ClrBase As Color) As Color
+    Public Function GetContrastingColor(baseColor As Color) As Color
         ' Y is the "brightness"
-        Dim y As Double = (0.299 * clrBase.R) + (0.587 * clrBase.G) + (0.114 * clrBase.B)
+        Dim y As Double = (0.299 * baseColor.R) + (0.587 * baseColor.G) + (0.114 * baseColor.B)
         If y < 140 Then
             Return Color.White
         Else
