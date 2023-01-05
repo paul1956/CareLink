@@ -31,7 +31,7 @@ Public Class ExceptionHandlerForm
             Me.StackTraceTextBox.Text = TrimedStackTrace(Me.UnhandledException.Exception.StackTrace)
 
             Me.InstructionsRichTextBox.Text = $"By clicking OK, the Stack Trace, Exception and the CareLink data that caused the error will be package as a text file called" & Environment.NewLine
-            Dim uniqueFileNameResult As FileNameStruct = GetDataFileName(RepoErrorReportName, CurrentDateCulture.Name, "txt", True)
+            Dim uniqueFileNameResult As FileNameStruct = GetDataFileName(SavedErrorReportName, CurrentDateCulture.Name, "txt", True)
             Dim fileLink As String = $"{uniqueFileNameResult.withoutPath}: file://{uniqueFileNameResult.withPath}"
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, fileLink, fontBold)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "and stored in", fontNormal)
@@ -41,7 +41,7 @@ Public Class ExceptionHandlerForm
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "This will help me isolate issues quickly.", fontNormal)
             CreateReportFile(Me.ExceptionTextBox.Text, Me.StackTraceTextBox.Text, uniqueFileNameResult.withPath, My.Forms.Form1.RecentData)
         Else
-            CurrentDateCulture = Me.ReportFileNameWithPath.ExtractCultureFromFileName(RepoErrorReportName)
+            CurrentDateCulture = Me.ReportFileNameWithPath.ExtractCultureFromFileName(SavedErrorReportName)
             If CurrentDateCulture Is Nothing Then
                 Me.Close()
                 Exit Sub

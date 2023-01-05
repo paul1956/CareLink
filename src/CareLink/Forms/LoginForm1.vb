@@ -38,7 +38,7 @@ Public Class LoginForm1
                 End Select
             End If
         End If
-        If File.Exists(s_settingsCsvFile) Then
+        If File.Exists(GetSavedUsersFileNameWithPath) Then
             _mySource.AddRange(s_allUserSettingsData.Keys.ToArray)
         ElseIf Not String.IsNullOrWhiteSpace(My.Settings.CareLinkUserName) Then
             _mySource.Add(My.Settings.CareLinkUserName)

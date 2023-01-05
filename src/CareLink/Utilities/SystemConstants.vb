@@ -3,39 +3,20 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Globalization
+Imports System.IO
 Imports System.Text.Json
 
 Public Module SystemConstants
 
     Public Const ClickToShowDetails As String = "Click To Show Details"
-
     Public Const ExceptionStartingString As String = "--- Start of Exception ---"
-
     Public Const ExceptionTerminatingString As String = "--- End of Exception ---"
-
     Public Const MilitaryTimeWithMinuteFormat As String = "HH:mm"
-
     Public Const MilitaryTimeWithoutMinuteFormat As String = "HH:mm"
-
     Public Const OwnerName As String = "paul1956"
-
-    Public Const RepoDownloadName As String = "CareLinkLastDownload"
-
-    Public Const RepoErrorReportName As String = "CareLinkErrorReport"
-
-    Public Const RepoName As String = "CareLink"
-
-    Public Const RepoSnapshotName As String = "CareLinkSnapshot"
-
-    Public Const SavedCsvFileName As String = "CareLink.Csv"
-    Public Const SavedTitle As String = "CareLink For Windows"
-
     Public Const StackTraceStartingString As String = "--- Start of stack trace ---"
-
     Public Const StackTraceTerminatingString As String = "--- End of stack trace from previous location ---"
-
     Public Const TwelveHourTimeWithMinuteFormat As String = "h:mm tt"
-
     Public Const TwelveHourTimeWithoutMinuteFormat As String = "h:mm tt"
 
     Public ReadOnly s_aitItemsBindingSource As New BindingSource(New Dictionary(Of String, String) From {
@@ -79,9 +60,28 @@ Public Module SystemConstants
         Login = 2
     End Enum
 
-    Public Property GitHubCareLinkUrl As String = $"https://github.com/{OwnerName}/{RepoName}/"
+    Friend ReadOnly Property RepoName As String = "CareLink"
+    Public ReadOnly Property GitHubCareLinkUrl As String = $"https://github.com/{OwnerName}/{RepoName}/"
     Public ReadOnly Property JsonFormattingOptions As New JsonSerializerOptions With {.WriteIndented = True}
     Public ReadOnly Property MyDocumentsPath As String = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+    Public ReadOnly Property SavedErrorReportName As String = $"{RepoName}ErrorReport"
+    Public ReadOnly Property SavedLastDownloadName As String = $"{RepoName}LastDownload"
+
+    Public ReadOnly Property SavedSnapshotName As String = $"{RepoName}Snapshot"
+
+    Public ReadOnly Property SavedTitle As String = $"{RepoName} For Windows"
+
+    Public Function GetSavedErrorReportNameBaseWithPath() As String
+        Return Path.Combine(MyDocumentsPath, SavedErrorReportName)
+    End Function
+
+    Public Function GetSavedGraphColorsFileNameWithPath() As String
+        Return Path.Combine(MyDocumentsPath, $"{RepoName}GraphColors.Csv")
+    End Function
+
+    Public Function GetSavedUsersFileNameWithPath() As String
+        Return Path.Combine(MyDocumentsPath, $"{RepoName}.Csv")
+    End Function
 
 #Region "All Culture Info"
 
@@ -103,7 +103,7 @@ Public Module SystemConstants
 
     Public ReadOnly Property LastDownloadWithPath As String
         Get
-            Return GetDataFileName(RepoDownloadName, CultureInfo.CurrentUICulture.Name, "json", False).withPath
+            Return GetDataFileName(SavedLastDownloadName, CultureInfo.CurrentUICulture.Name, "json", False).withPath
         End Get
     End Property
 

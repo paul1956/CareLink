@@ -3,7 +3,6 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.ComponentModel
-Imports System.IO
 Imports System.Text
 
 Public Class CareLinkUserDataList
@@ -15,6 +14,16 @@ Public Class CareLinkUserDataList
 
     ' Events.
     Public Event ListChanged As ListChangedEventHandler Implements IBindingList.ListChanged
+
+    Friend ReadOnly Property Values As List(Of CareLinkUserDataRecord)
+        Get
+            Dim result As New List(Of CareLinkUserDataRecord)
+            For Each entry As CareLinkUserDataRecord In Me
+                result.Add(entry)
+            Next
+            Return result
+        End Get
+    End Property
 
     ' Implements IBindingList.
     Public ReadOnly Property AllowEdit() As Boolean Implements IBindingList.AllowEdit
@@ -69,16 +78,6 @@ Public Class CareLinkUserDataList
     Public ReadOnly Property SupportsSorting() As Boolean Implements IBindingList.SupportsSorting
         Get
             Return False
-        End Get
-    End Property
-
-    Friend ReadOnly Property Values As List(Of CareLinkUserDataRecord)
-        Get
-            Dim result As New List(Of CareLinkUserDataRecord)
-            For Each entry As CareLinkUserDataRecord In Me
-                result.Add(entry)
-            Next
-            Return result
         End Get
     End Property
 
@@ -232,8 +231,10 @@ Public Class CareLinkUserDataList
 
     Public Sub LoadUserRecords()
         Dim l As IList = Me
-        If File.Exists(s_settingsCsvFile) Then
-            Using myReader As New FileIO.TextFieldParser(s_settingsCsvFile)
+
+        Dim userSettingsCsvFileWithPath As String = GetSavedUsersFileNameWithPath()
+        If CareLinkUserDataRecordHelpers.SavedUsersFileExists(userSettingsCsvFileWithPath) Then
+            Using myReader As New FileIO.TextFieldParser(userSettingsCsvFileWithPath)
                 myReader.TextFieldType = FileIO.FieldType.Delimited
                 myReader.Delimiters = New String() {","}
                 Dim currentRow As String()
@@ -298,7 +299,7 @@ Public Class CareLinkUserDataList
         For Each r As CareLinkUserDataRecord In Me.Values
             sb.AppendLine(r.ToCsvString)
         Next
-        My.Computer.FileSystem.WriteAllText(s_settingsCsvFile, sb.ToString, False)
+        My.Computer.FileSystem.WriteAllText(GetSavedUsersFileNameWithPath, sb.ToString, False)
     End Sub
 
 End Class

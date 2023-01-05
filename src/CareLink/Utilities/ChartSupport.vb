@@ -111,22 +111,42 @@ Friend Module ChartSupport
         Return tmpChartArea
     End Function
 
-    Friend Function CreateChartLegend(legendName As String) As Legend
+    Friend Function CreateLegend(legendName As String) As Legend
         Return New Legend(legendName) With {
-                        .BackColor = Color.Transparent,
-                        .Enabled = False,
-                        .Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold),
-                        .IsTextAutoFit = False
+                        .BackColor = Color.LightGray,
+                        .Enabled = True,
+                        .Font = New Font("Trebuchet MS", 20.0F, FontStyle.Bold),
+                        .IsTextAutoFit = True,
+                        .Title = "Legend"
                     }
+    End Function
+
+    Friend Function CreateSeriesActiveInsulin(activeInsulinChartLegendName As String) As Series
+        Return New Series(ActiveInsulinSeriesName) With {
+                    .BorderColor = Color.FromArgb(180, 26, 59, 105),
+                    .BorderWidth = 4,
+                    .ChartArea = NameOf(ChartArea),
+                    .ChartType = SeriesChartType.Line,
+                    .Color = GetGraphColor("Active Insulin"),
+                    .Legend = activeInsulinChartLegendName,
+                    .LegendText = "Active Insulin",
+                    .MarkerColor = Color.Black,
+                    .MarkerSize = 4,
+                    .MarkerStyle = MarkerStyle.Circle,
+                    .ShadowColor = Color.Black,
+                    .XValueType = ChartValueType.DateTime,
+                    .YAxisType = AxisType.Primary
+                }
     End Function
 
     Friend Function CreateSeriesBasal(YAxisType As AxisType) As Series
         Dim s As New Series(BasalSeriesName) With {
                      .BorderWidth = 2,
-                     .BorderColor = Color.HotPink,
+                     .BorderColor = GetGraphColor("Basal Series"),
                      .ChartArea = NameOf(ChartArea),
                      .ChartType = SeriesChartType.Line,
-                     .Color = Color.HotPink,
+                     .Color = GetGraphColor("Basal Series"),
+                     .LegendText = "Basal Series",
                      .XValueType = ChartValueType.DateTime,
                      .YAxisType = YAxisType
                  }
@@ -137,26 +157,38 @@ Friend Module ChartSupport
     End Function
 
     Friend Function CreateSeriesBg(legendName As String) As Series
+        Dim lineColor As Color = GetGraphColor("BG Series")
         Return New Series(BgSeriesName) With {
                      .BorderColor = Color.FromArgb(180, 26, 59, 105),
                      .BorderWidth = 4,
                      .ChartArea = NameOf(ChartArea),
                      .ChartType = SeriesChartType.Line,
-                     .Color = Color.White,
+                     .Color = lineColor,
                      .Legend = legendName,
-                     .ShadowColor = Color.Black,
+                     .LegendText = "BG Series",
+                     .ShadowColor = lineColor.GetContrastingColor,
                      .XValueType = ChartValueType.DateTime,
                      .YAxisType = AxisType.Secondary
                  }
     End Function
 
-    Friend Function CreateSeriesLimits(seriesName As String, lineColor As Color) As Series
+    Friend Function CreateSeriesLimits(seriesName As String) As Series
+        Dim legendName As String
+        Dim lineColor As Color
+        If seriesName.StartsWith("HighLimit") Then
+            legendName = "High Limit"
+            lineColor = Color.Yellow
+        Else
+            legendName = "Low Limit"
+            lineColor = Color.Red
+        End If
         Dim tmpSeries As New Series(seriesName) With {
                             .BorderColor = Color.FromArgb(180, lineColor),
                             .BorderWidth = 2,
                             .ChartArea = NameOf(ChartArea),
                             .ChartType = SeriesChartType.Line,
                             .Color = lineColor,
+                            .LegendText = legendName,
                             .ShadowColor = Color.Black,
                             .XValueType = ChartValueType.DateTime,
                             .YAxisType = AxisType.Secondary
@@ -172,6 +204,7 @@ Friend Module ChartSupport
                         .ChartArea = NameOf(ChartArea),
                         .ChartType = SeriesChartType.Point,
                         .Color = Color.HotPink,
+                        .IsVisibleInLegend = False,
                         .MarkerSize = 15,
                         .XValueType = ChartValueType.DateTime,
                         .YAxisType = YAxisType
@@ -188,7 +221,8 @@ Friend Module ChartSupport
                         .BorderColor = Color.Transparent,
                         .BorderWidth = 1,
                         .ChartArea = NameOf(ChartArea),
-                        .Color = Color.White,
+                        .Color = Color.LightGoldenrodYellow,
+                        .LegendText = "Time Change",
                         .ShadowColor = Color.Transparent,
                         .XValueType = ChartValueType.DateTime,
                         .YAxisType = AxisType.Primary

@@ -26,7 +26,7 @@ Friend Module Form1Helpers
         Select Case fileToLoad
             Case FileToLoadOptions.LastSaved
                 MainForm.Text = $"{SavedTitle} Using Last Saved Data"
-                CurrentDateCulture = LastDownloadWithPath.ExtractCultureFromFileName(RepoDownloadName)
+                CurrentDateCulture = LastDownloadWithPath.ExtractCultureFromFileName(SavedLastDownloadName)
                 MainForm.RecentData = Loads(File.ReadAllText(LastDownloadWithPath))
                 MainForm.ShowMiniDisplay.Visible = Debugger.IsAttached
                 MainForm.LastUpdateTime.Text = $"{File.GetLastWriteTime(LastDownloadWithPath).ToShortDateTimeString} from file"

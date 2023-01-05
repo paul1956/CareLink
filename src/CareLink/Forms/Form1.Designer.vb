@@ -65,6 +65,7 @@ Partial Class Form1
         Me.MenuOptionsSetupEMailServer = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsUseAdvancedAITDecay = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsUseLocalTimeZone = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuOptionsColorPicker = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelp = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelpReportAnIssue = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelpCheckForUpdates = New System.Windows.Forms.ToolStripMenuItem()
@@ -424,7 +425,7 @@ Partial Class Form1
         '
         'MenuOptions
         '
-        Me.MenuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuOptionsAutoLogin, Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsSetupEMailServer, Me.MenuOptionsUseAdvancedAITDecay, Me.MenuOptionsUseLocalTimeZone})
+        Me.MenuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuOptionsAutoLogin, Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsSetupEMailServer, Me.MenuOptionsUseAdvancedAITDecay, Me.MenuOptionsUseLocalTimeZone, Me.MenuOptionsColorPicker})
         Me.MenuOptions.Name = "MenuOptions"
         Me.MenuOptions.Size = New System.Drawing.Size(61, 20)
         Me.MenuOptions.Text = "Options"
@@ -469,6 +470,12 @@ Partial Class Form1
         Me.MenuOptionsUseLocalTimeZone.Name = "MenuOptionsUseLocalTimeZone"
         Me.MenuOptionsUseLocalTimeZone.Size = New System.Drawing.Size(204, 22)
         Me.MenuOptionsUseLocalTimeZone.Text = "Use Local TImeZone"
+        '
+        'MenuOptionsColorPicker
+        '
+        Me.MenuOptionsColorPicker.Name = "MenuOptionsColorPicker"
+        Me.MenuOptionsColorPicker.Size = New System.Drawing.Size(360, 22)
+        Me.MenuOptionsColorPicker.Text = "Color Picker..."
         '
         'MenuHelp
         '
@@ -2865,6 +2872,7 @@ Partial Class Form1
     Friend WithEvents MenuOptionsSetupEMailServer As ToolStripMenuItem
     Friend WithEvents MenuOptionsUseAdvancedAITDecay As ToolStripMenuItem
     Friend WithEvents MenuOptionsUseLocalTimeZone As ToolStripMenuItem
+    Friend WithEvents MenuOptionsColorPicker As ToolStripMenuItem
     Friend WithEvents MenuStartHere As ToolStripMenuItem
     Friend WithEvents MenuStartHereExceptionReportLoad As ToolStripMenuItem
     Friend WithEvents MenuStartHereLoadSavedDataFile As ToolStripMenuItem

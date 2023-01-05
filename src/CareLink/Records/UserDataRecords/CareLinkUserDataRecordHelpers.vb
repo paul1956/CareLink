@@ -2,6 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.IO
+
 Public Class CareLinkUserDataRecordHelpers
 
     Private Shared ReadOnly columnsToHide As New List(Of String) From {
@@ -69,6 +71,14 @@ Public Class CareLinkUserDataRecordHelpers
 
     Public Shared Function GetColumnName(index As Integer) As String
         Return s_headerColumns(index)
+    End Function
+
+    Public Shared Function SavedUsersFileExists(userSettingsCsvFileWithPath As String) As Boolean
+        Return File.Exists(userSettingsCsvFileWithPath)
+    End Function
+
+    Public Shared Function SavedUsersFileExists() As Boolean
+        Return SavedUsersFileExists(GetSavedUsersFileNameWithPath())
     End Function
 
 End Class

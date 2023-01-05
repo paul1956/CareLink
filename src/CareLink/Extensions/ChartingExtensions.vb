@@ -173,7 +173,7 @@ Friend Module ChartingExtensions
     End Sub
 
     <Extension>
-    Friend Sub PlotMarkers(pageChart As Chart, chartRelitivePosition As RectangleF, markerInsulinDictionary As Dictionary(Of OADate, Single), markerMealDictionary As Dictionary(Of OADate, Single))
+    Friend Sub PlotMarkers(pageChart As Chart, timeChangeSeries As Series, chartRelitivePosition As RectangleF, markerInsulinDictionary As Dictionary(Of OADate, Single), markerMealDictionary As Dictionary(Of OADate, Single), <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
         Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
         markerInsulinDictionary.Clear()
         markerMealDictionary?.Clear()
@@ -199,12 +199,12 @@ Friend Module ChartingExtensions
                         markerSeriesPoints.AddCalibrationPoint(markerOADateTime, bgValue, entry)
                     Case "AUTO_BASAL_DELIVERY"
                         Dim bolusAmount As String = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount))
-                        pageChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, bolusAmount.ParseSingle, HomePageBasalRow, HomePageInsulinRow, Color.HotPink, False, $"Auto Basal:{bolusAmount.TruncateSingleString(3)} U")
+                        pageChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, bolusAmount.ParseSingle, HomePageBasalRow, HomePageInsulinRow, GetGraphColor("Basal Series"), False, $"Auto Basal:{bolusAmount.TruncateSingleString(3)} U")
                     Case "INSULIN"
                         Select Case entry(NameOf(InsulinRecord.activationType))
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
-                                pageChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, HomePageBasalRow, HomePageInsulinRow, Color.Aqua, False, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
+                                pageChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, HomePageBasalRow, HomePageInsulinRow, GetGraphColor("Basal Series Auto Correction"), False, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 If markerInsulinDictionary.TryAdd(markerOADateTime, CInt(HomePageInsulinRow)) Then
                                     markerSeriesPoints.AddXY(markerOADateTime, HomePageInsulinRow - 10)
@@ -252,7 +252,11 @@ Friend Module ChartingExtensions
                 '      Throw New Exception($"{ex.DecodeException()} exception in {memberName} at {sourceLineNumber}")
             End Try
         Next
-        If lastTimeChangeRecord IsNot Nothing Then
+
+        If lastTimeChangeRecord Is Nothing Then
+            timeChangeSeries.IsVisibleInLegend = False
+        Else
+            timeChangeSeries.IsVisibleInLegend = True
             pageChart.ChartAreas(NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
         End If
     End Sub
@@ -269,7 +273,7 @@ Friend Module ChartingExtensions
     End Sub
 
     <Extension>
-    Friend Sub PlotTreatmentMarkers(treatmentChart As Chart)
+    Friend Sub PlotTreatmentMarkers(treatmentChart As Chart, treatmentMarkerTimeChangeSeries As Series)
         Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
         s_treatmentMarkerInsulinDictionary.Clear()
         s_treatmentMarkerMealDictionary.Clear()
@@ -288,12 +292,12 @@ Friend Module ChartingExtensions
                 Select Case entry("type")
                     Case "AUTO_BASAL_DELIVERY"
                         Dim bolusAmount As String = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount))
-                        treatmentChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, bolusAmount.ParseSingle.RoundSingle(3), MaxBasalPerDose, TreatmentInsulinRow, Color.HotPink, True, $"Auto Basal:{bolusAmount.TruncateSingleString(3)} U")
+                        treatmentChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, bolusAmount.ParseSingle.RoundSingle(3), MaxBasalPerDose, TreatmentInsulinRow, GetGraphColor("Basal Series"), True, $"Auto Basal:{bolusAmount.TruncateSingleString(3)} U")
                     Case "INSULIN"
                         Select Case entry(NameOf(InsulinRecord.activationType))
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
-                                treatmentChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, MaxBasalPerDose, TreatmentInsulinRow, Color.Aqua, True, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
+                                treatmentChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, MaxBasalPerDose, TreatmentInsulinRow, GetGraphColor("Basal Series Auto Correction"), True, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 If s_treatmentMarkerInsulinDictionary.TryAdd(markerOADateTime, TreatmentInsulinRow) Then
                                     markerSeriesPoints.AddXY(markerOADateTime, TreatmentInsulinRow)
@@ -343,15 +347,19 @@ Friend Module ChartingExtensions
                 '      Throw New Exception($"{ex.DecodeException()} exception in {memberName} at {sourceLineNumber}")
             End Try
         Next
-
-        If lastTimeChangeRecord IsNot Nothing Then
+        If lastTimeChangeRecord Is Nothing Then
+            treatmentMarkerTimeChangeSeries.IsVisibleInLegend = False
+        Else
+            treatmentMarkerTimeChangeSeries.IsVisibleInLegend = True
             treatmentChart.ChartAreas(NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
         End If
+
     End Sub
 
     <Extension>
     Friend Sub PostPaintSupport(e As ChartPaintEventArgs, ByRef chartRelitivePosition As RectangleF, insulinDictionary As Dictionary(Of OADate, Single), mealDictionary As Dictionary(Of OADate, Single), offsetInsulinImage As Boolean, paintOnY2 As Boolean)
         If s_listOfSGs.Count = 0 Then Exit Sub
+
         If chartRelitivePosition.IsEmpty Then
             chartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_listOfSGs(0).OAdatetime))
             chartRelitivePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, HomePageBasalRow))
@@ -364,7 +372,9 @@ Friend Module ChartingExtensions
         Dim criticalLowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, s_criticalLow))
         Dim chartAbsoluteHighRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelitivePosition.X, chartRelitivePosition.Y, chartRelitivePosition.Width, highLimitY - chartRelitivePosition.Y))
         Dim chartAbsoluteLowRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelitivePosition.X, lowLimitY, chartRelitivePosition.Width, criticalLowLimitY - lowLimitY))
-        Using b As New SolidBrush(Color.FromArgb(10, Color.Black))
+
+        Dim alpha As Integer = If(e.Chart.Name = "TreatmentMarkersChart", 10, 5)
+        Using b As New SolidBrush(Color.FromArgb(alpha, Color.Black))
             e.ChartGraphics.Graphics.FillRectangle(b, chartAbsoluteHighRectangle)
             e.ChartGraphics.Graphics.FillRectangle(b, chartAbsoluteLowRectangle)
         End Using

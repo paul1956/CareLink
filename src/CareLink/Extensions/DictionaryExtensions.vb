@@ -8,8 +8,13 @@ Imports System.Text
 Public Module DictionaryExtensions
 
     <Extension>
-    Public Function Clone(dic As Dictionary(Of String, String)) As Dictionary(Of String, String)
+    Public Function Clone(Of T)(dic As Dictionary(Of String, T)) As Dictionary(Of String, T)
         Return (From x In dic Select x).ToDictionary(Function(p) p.Key, Function(p) p.Value)
+    End Function
+
+    <Extension>
+    Public Function IndexOfValue(dic As Dictionary(Of String, KnownColor), item As KnownColor) As Integer
+        Return dic.Values.ToList.IndexOf(item)
     End Function
 
     <Extension>

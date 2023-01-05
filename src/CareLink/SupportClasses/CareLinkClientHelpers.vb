@@ -77,21 +77,21 @@ Public Module CareLinkClientHelpers
         End Select
     End Function
 
-    Friend Function DecodeResponse(response As HttpResponseMessage, ByRef lastErrorMessage As String) As HttpResponseMessage
+    Friend Function DecodeResponse(response As HttpResponseMessage, ByRef lastErrorMessage As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As HttpResponseMessage
         Dim message As String
         If response?.IsSuccessStatusCode Then
             lastErrorMessage = Nothing
-            Debug.Print($"{NameOf(DecodeResponse)} success")
+            Debug.Print($"{NameOf(DecodeResponse)} success from {memberName}, line {sourceLineNumber}.")
             Return response
         ElseIf response?.StatusCode = HttpStatusCode.BadRequest Then
             message = $"{NameOf(DecodeResponse)} failed with HttpStatusCode.BadRequest"
             lastErrorMessage = $"Login Failure {message}"
-            Debug.Print(message)
+            Debug.Print($"{message} from {memberName}, line {sourceLineNumber}")
             Return response
         Else
             message = $"{NameOf(DecodeResponse)} failed, session response is {response?.StatusCode}"
             lastErrorMessage = message
-            Debug.Print(message)
+            Debug.Print($"{message} from {memberName}, line {sourceLineNumber}")
             Return response
         End If
     End Function
@@ -128,10 +128,10 @@ Public Module CareLinkClientHelpers
         Try
             Dim response As HttpResponseMessage = httpClient.Post(url, headers:=consentHeaders, data:=form)
             Return DecodeResponse(response, lastErrorMessage)
-        Catch e As Exception
-            Dim message As String = $"__doConsent() failed with {e.Message}"
+        Catch ex As Exception
+            Dim message As String = $"__doConsent() failed with {ex.DecodeException()}"
             lastErrorMessage = message
-            Debug.Print(message)
+            Debug.Print(message.Replace(Environment.NewLine, ""))
             Return New HttpResponseMessage(HttpStatusCode.Ambiguous)
         End Try
     End Function

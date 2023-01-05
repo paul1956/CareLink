@@ -131,4 +131,5 @@ Public Class BGMiniWindow
         End If
         Return $"{s_firstName}'s Updated {CInt((Now - s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime).TotalMinutes)} minutes ago"
     End Function
+
 End Class

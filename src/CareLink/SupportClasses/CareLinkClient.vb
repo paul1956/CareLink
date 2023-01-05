@@ -124,10 +124,10 @@ Public Class CareLinkClient
                AndAlso _sessionMonitorData.HasValue Then
                 lastLoginSuccess = True
             End If
-        Catch e As Exception
-            message = $"__executeLoginProcedure failed with {e.Message}"
-            Debug.Print(message)
-            _lastErrorMessage = e.Message
+        Catch ex As Exception
+            message = $"__executeLoginProcedure failed with {ex.DecodeException()}"
+            Debug.Print(message.Replace(Environment.NewLine, ""))
+            _lastErrorMessage = ex.DecodeException()
         Finally
             _inLoginInProcess = False
             Me.LoggedIn = lastLoginSuccess
@@ -262,13 +262,13 @@ Public Class CareLinkClient
             If Not response.IsSuccessStatusCode Then
                 Throw New Exception($"session response is not OK, {response.ReasonPhrase}")
             End If
-        Catch e As Exception
+        Catch ex As Exception
             If NetworkDown Then
                 _lastErrorMessage = "No Internet Connection!"
                 Debug.Print("No Internet Connection!")
                 Return response
             End If
-            Debug.Print($"__getLoginSession() failed {e.Message}")
+            Debug.Print($"__getLoginSession() failed {ex.DecodeException().Replace(Environment.NewLine, "")}")
             Return response
         End Try
 
@@ -385,9 +385,9 @@ Public Class CareLinkClient
                     Throw New Exception($"session get response is not OK, last error = {_lastErrorMessage}")
                 End If
                 response.Dispose()
-            Catch e As Exception
-                _lastErrorMessage = DecodeException(e)
-                Debug.Print($"__getData() failed {_lastErrorMessage}, status {response?.StatusCode}")
+            Catch ex As Exception
+                _lastErrorMessage = ex.DecodeException()
+                Debug.Print($"__getData() failed {_lastErrorMessage.Replace(Environment.NewLine, "")}, status {response?.StatusCode}")
             End Try
         End If
         Return jsonData
