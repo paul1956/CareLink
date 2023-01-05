@@ -71,8 +71,8 @@ Public Module SystemConstants
 
     Public ReadOnly Property SavedTitle As String = $"{RepoName} For Windows"
 
-    Public Function GetSavedErrorReportNameBaseWithPath() As String
-        Return Path.Combine(MyDocumentsPath, SavedErrorReportName)
+    Public Function GetSavedErrorReportNameBaseWithPath(additionalText As String) As String
+        Return Path.Combine(MyDocumentsPath, $"{SavedErrorReportName}{additionalText}")
     End Function
 
     Public Function GetSavedGraphColorsFileNameWithPath() As String
@@ -81,6 +81,10 @@ Public Module SystemConstants
 
     Public Function GetSavedUsersFileNameWithPath() As String
         Return Path.Combine(MyDocumentsPath, $"{RepoName}.Csv")
+    End Function
+
+    Public Function GetShowLegendFileNameWithPath() As String
+        Return Path.Combine(MyDocumentsPath, $"{RepoName}ShowLegend.txt")
     End Function
 
 #Region "All Culture Info"

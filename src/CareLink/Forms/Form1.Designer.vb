@@ -60,6 +60,8 @@ Partial Class Form1
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.StartHereExit = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptions = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuOptionsShowLegend = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator
         Me.MenuOptionsAutoLogin = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsFilterRawJSONData = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsSetupEMailServer = New System.Windows.Forms.ToolStripMenuItem()
@@ -115,7 +117,7 @@ Partial Class Form1
         Me.DataGridViewCheckBoxColumnCareLinkUseAdvancedAITDecay = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.DataGridViewCheckBoxColumnCareLinkUseLocalTimeZone = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.DataGridViewCheckBoxColumnCareLinkAutoLogin = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.DataGridViewButtonColumnCareLinkDeleteRow = New DataGridViewDisableButtonColumn()
+        Me.DataGridViewButtonColumnCareLinkDeleteRow = New DataGridViewColumnControls.DataGridViewDisableButtonColumn()
         Me.DataGridViewCountryItemsPage1 = New System.Windows.Forms.DataGridView()
         Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumnCountrySettingsCategory = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -204,7 +206,7 @@ Partial Class Form1
         Me.TableLayoutPanelLimitsTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
         Me.TabPage10NotificationHistory = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelNotificationHistory = New System.Windows.Forms.TableLayoutPanel()
-        Me.TableLayoutPanelNotificationHistoryTop = New TableLayoutPanelTopEx()
+        Me.TableLayoutPanelNotificationHistoryTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
         Me.TabPage11TherapyAlgorithm = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelTherapyAlgorithm = New System.Windows.Forms.TableLayoutPanel()
         Me.TableLayoutPanelTherapyAlgorithmTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
@@ -218,28 +220,28 @@ Partial Class Form1
         Me.TabControlPage2 = New System.Windows.Forms.TabControl()
         Me.TabPageAutoBasalDelivery = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelAutoBasalDelivery = New System.Windows.Forms.TableLayoutPanel()
-        Me.TableLayoutPanelAutoBasalDeliveryTop = New TableLayoutPanelTopEx()
+        Me.TableLayoutPanelAutoBasalDeliveryTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
         Me.TabPageAutoModeStatus = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelAutoModeStatus = New System.Windows.Forms.TableLayoutPanel()
-        Me.TableLayoutPanelAutoModeStatusTop = New TableLayoutPanelTopEx()
+        Me.TableLayoutPanelAutoModeStatusTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
         Me.TabPageBgReadings = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelBgReadings = New System.Windows.Forms.TableLayoutPanel()
-        Me.TableLayoutPanelBgReadingsTop = New TableLayoutPanelTopEx()
+        Me.TableLayoutPanelBgReadingsTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
         Me.TabPageCalibration = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelCalibration = New System.Windows.Forms.TableLayoutPanel()
-        Me.TableLayoutPanelCalibrationTop = New TableLayoutPanelTopEx()
+        Me.TableLayoutPanelCalibrationTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
         Me.TabPageInsulin = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelInsulin = New System.Windows.Forms.TableLayoutPanel()
-        Me.TableLayoutPanelInsulinTop = New TableLayoutPanelTopEx()
+        Me.TableLayoutPanelInsulinTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
         Me.TabPageLowGlucoseSuspended = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelLowGlucoseSuspended = New System.Windows.Forms.TableLayoutPanel()
-        Me.TableLayoutPanelLowGlucoseSuspendedTop = New TableLayoutPanelTopEx()
+        Me.TableLayoutPanelLowGlucoseSuspendedTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
         Me.TabPageMeal = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelMeal = New System.Windows.Forms.TableLayoutPanel()
-        Me.TableLayoutPanelMealTop = New TableLayoutPanelTopEx()
+        Me.TableLayoutPanelMealTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
         Me.TabPageTimeChange = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanelTimeChange = New System.Windows.Forms.TableLayoutPanel()
-        Me.TableLayoutPanelTimeChangeTop = New TableLayoutPanelTopEx()
+        Me.TableLayoutPanelTimeChangeTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
         Me.TabPageCountryDataPg1 = New System.Windows.Forms.TabPage()
         Me.TabPageCountryDataPg2 = New System.Windows.Forms.TabPage()
         Me.TabPageCountryDataPg3 = New System.Windows.Forms.TabPage()
@@ -425,10 +427,24 @@ Partial Class Form1
         '
         'MenuOptions
         '
-        Me.MenuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuOptionsAutoLogin, Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsSetupEMailServer, Me.MenuOptionsUseAdvancedAITDecay, Me.MenuOptionsUseLocalTimeZone, Me.MenuOptionsColorPicker})
+        Me.MenuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuOptionsColorPicker, Me.MenuOptionsShowLegend, Me.ToolStripSeparator5, Me.MenuOptionsAutoLogin, Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsSetupEMailServer, Me.MenuOptionsUseAdvancedAITDecay, Me.MenuOptionsUseLocalTimeZone})
         Me.MenuOptions.Name = "MenuOptions"
         Me.MenuOptions.Size = New System.Drawing.Size(61, 20)
         Me.MenuOptions.Text = "Options"
+        '
+        'ToolStripSeparator5
+        '
+        Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
+        Me.ToolStripSeparator5.Size = New System.Drawing.Size(201, 6)
+        '
+        'MenuOptionsShowLegend
+        '
+        Me.MenuOptionsShowLegend.Checked = True
+        Me.MenuOptionsShowLegend.CheckOnClick = True
+        Me.MenuOptionsShowLegend.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.MenuOptionsShowLegend.Name = "MenuOptionsShowLegend"
+        Me.MenuOptionsShowLegend.Size = New System.Drawing.Size(204, 22)
+        Me.MenuOptionsShowLegend.Text = "Show Legend"
         '
         'MenuOptionsAutoLogin
         '
@@ -2867,12 +2883,13 @@ Partial Class Form1
     Friend WithEvents MenuHelpCheckForUpdates As ToolStripMenuItem
     Friend WithEvents MenuHelpReportAnIssue As ToolStripMenuItem
     Friend WithEvents MenuOptions As ToolStripMenuItem
+    Friend WithEvents MenuOptionsColorPicker As ToolStripMenuItem
+    Friend WithEvents MenuOptionsShowLegend As ToolStripMenuItem
     Friend WithEvents MenuOptionsAutoLogin As ToolStripMenuItem
     Friend WithEvents MenuOptionsFilterRawJSONData As ToolStripMenuItem
     Friend WithEvents MenuOptionsSetupEMailServer As ToolStripMenuItem
     Friend WithEvents MenuOptionsUseAdvancedAITDecay As ToolStripMenuItem
     Friend WithEvents MenuOptionsUseLocalTimeZone As ToolStripMenuItem
-    Friend WithEvents MenuOptionsColorPicker As ToolStripMenuItem
     Friend WithEvents MenuStartHere As ToolStripMenuItem
     Friend WithEvents MenuStartHereExceptionReportLoad As ToolStripMenuItem
     Friend WithEvents MenuStartHereLoadSavedDataFile As ToolStripMenuItem
@@ -2975,6 +2992,7 @@ Partial Class Form1
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
     Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
     Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
+    Friend WithEvents ToolStripSeparator5 As ToolStripSeparator
     Friend WithEvents ToolTip1 As ToolTip
     Friend WithEvents TransmatterBatterPercentLabel As Label
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox

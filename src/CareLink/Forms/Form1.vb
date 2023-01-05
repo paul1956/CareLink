@@ -61,9 +61,9 @@ Public Class Form1
 
 #Region "Legends"
 
+    Friend WithEvents ActiveInsulinChartLegend As Legend
     Friend WithEvents HomeChartLegend As Legend
     Friend WithEvents TreatmentMarkersChartLegend As Legend
-    Friend WithEvents ActiveInsulinChartLegend As Legend
 
 #End Region
 
@@ -135,7 +135,13 @@ Public Class Form1
             If c.Name = NameOf(KnownColor.Transparent) Then Continue For
             AllKnownColors.Add(c.Name, Color.FromName(c.Name).ToKnownColor)
         Next c
-        OptionallyLoadColorDictionaryFromFile(GraphColorDictionary)
+        If File.Exists(GetSavedGraphColorsFileNameWithPath) Then
+            LoadColorDictionaryFromFile(GraphColorDictionary)
+            Me.MenuOptionsShowLegend.Checked = File.Exists(GetShowLegendFileNameWithPath)
+        Else
+            WriteColorDictionaryToFile(GraphColorDictionary)
+            File.Create(GetShowLegendFileNameWithPath)
+        End If
 
         s_timeZoneList = TimeZoneInfo.GetSystemTimeZones.ToList
         Me.AITComboBox = New ToolStripComboBoxEx With {
@@ -211,7 +217,7 @@ Public Class Form1
     Private Sub MenuStartHere_DropDownOpened(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpened
         Me.MenuStartHereLoadSavedDataFile.Enabled = Directory.GetFiles(MyDocumentsPath, $"{RepoName}*.json").Length > 0
         Me.MenuStartHereSnapshotSave.Enabled = Me.RecentData IsNot Nothing AndAlso Me.RecentData.Count > 0
-        Me.MenuStartHereExceptionReportLoad.Visible = Path.Combine(MyDocumentsPath, $"{SavedErrorReportName}*.txt").Length > 0
+        Me.MenuStartHereExceptionReportLoad.Visible = GetSavedErrorReportNameBaseWithPath("*.txt").Length > 0
     End Sub
 
     Private Sub MenuStartHereExceptionReportLoad_Click(sender As Object, e As EventArgs) Handles MenuStartHereExceptionReportLoad.Click
@@ -370,6 +376,27 @@ Public Class Form1
 
 #End If
 
+    Private Sub MenuOptionsShowLegend_CheckStateChanged(sender As Object, e As EventArgs) Handles MenuOptionsShowLegend.CheckStateChanged
+        If Not Me.Initialized Then Exit Sub
+        If Me.MenuOptionsShowLegend.Checked Then
+            File.Create(GetShowLegendFileNameWithPath)
+            Me.ActiveInsulinChartLegend.Enabled = True
+            Me.HomeChartLegend.Enabled = True
+            Me.TreatmentMarkersChartLegend.Enabled = True
+        Else
+            File.Delete(GetShowLegendFileNameWithPath)
+            Me.ActiveInsulinChartLegend.Enabled = False
+            Me.HomeChartLegend.Enabled = False
+            Me.TreatmentMarkersChartLegend.Enabled = False
+        End If
+    End Sub
+
+    Private Sub MenuOptionsColorPicker_Click(sender As Object, e As EventArgs) Handles MenuOptionsColorPicker.Click
+        Using o As New OptionsDialog()
+            o.ShowDialog(Me)
+        End Using
+    End Sub
+
     Private Sub MenuOptionsUseAdvancedAITDecay_CheckStateChanged(sender As Object, e As EventArgs) Handles MenuOptionsUseAdvancedAITDecay.CheckStateChanged
         Dim increments As Double = TimeSpan.Parse(_LoginDialog.LoggedOnUser.AIT.ToString("hh\:mm").Substring(1)) / s_fiveMinuteSpan
         If Me.MenuOptionsUseAdvancedAITDecay.Checked Then
@@ -394,12 +421,6 @@ Public Class Form1
         My.Settings.Save()
         s_clientTimeZoneName = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexs.clientTimeZoneName))
         s_clientTimeZone = CalculateTimeZone(s_clientTimeZoneName)
-    End Sub
-
-    Private Sub MenuOptionsAdvanced_Click(sender As Object, e As EventArgs) Handles MenuOptionsColorPicker.Click
-        Using o As New OptionsDialog()
-            o.ShowDialog(Me)
-        End Using
     End Sub
 
 #End Region ' Option Menus

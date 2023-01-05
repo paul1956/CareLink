@@ -20,34 +20,27 @@ Partial Public Module ColorSelector
         Return GraphColorDictionary(lineName).ToColor
     End Function
 
-    ''' <summary>
-    ''' If SavedGraphColorsFileName exists in MyDocuments then load it
-    ''' Otherwise no nothing
-    ''' </summary>
-    ''' <param name="lineColorDictionary"></param>
-    Public Sub OptionallyLoadColorDictionaryFromFile(ByRef lineColorDictionary As Dictionary(Of String, KnownColor))
+    Public Sub LoadColorDictionaryFromFile(ByRef lineColorDictionary As Dictionary(Of String, KnownColor))
 
-        Dim fileWithPath As String = GetSavedGraphColorsFileNameWithPath()
+        Using fileStream As FileStream = File.OpenRead(GetSavedGraphColorsFileNameWithPath())
+            Using sr As New StreamReader(fileStream)
+                sr.ReadLine()
+                While sr.Peek() <> -1
+                    Dim line As String = sr.ReadLine()
+                    If Not line.Any Then
+                        Continue While
+                    End If
+                    Dim splitLine() As String = line.Split(","c)
+                    Dim key As String = splitLine(0)
+                    If lineColorDictionary.ContainsKey(key) Then
+                        lineColorDictionary(key) = AllKnownColors(splitLine(1))
+                    End If
+                End While
+                sr.Close()
+            End Using
 
-        If Not File.Exists(fileWithPath) Then
-            Exit Sub
-        End If
-        Dim fileStream As FileStream = File.OpenRead(fileWithPath)
-        Dim sr As New StreamReader(fileStream)
-        sr.ReadLine()
-        While sr.Peek() <> -1
-            Dim line As String = sr.ReadLine()
-            If Not line.Any Then
-                Continue While
-            End If
-            Dim splitLine() As String = line.Split(","c)
-            Dim key As String = splitLine(0)
-            If lineColorDictionary.ContainsKey(key) Then
-                lineColorDictionary(key) = AllKnownColors(splitLine(1))
-            End If
-        End While
-        sr.Close()
-        fileStream.Close()
+            fileStream.Close()
+        End Using
     End Sub
 
     <Extension>
