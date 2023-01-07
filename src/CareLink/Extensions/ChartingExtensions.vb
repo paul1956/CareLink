@@ -118,8 +118,8 @@ Friend Module ChartingExtensions
     End Sub
 
     <Extension>
-    Friend Sub AdjustXAxisStartTime(ByRef axisX As Axis, localTtimeChangeRecord As TimeChangeRecord)
-        Dim latestTime As Date = localTtimeChangeRecord.GetLatestTime
+    Friend Sub AdjustXAxisStartTime(ByRef axisX As Axis, lastTimeChangeRecord As TimeChangeRecord)
+        Dim latestTime As Date = If(lastTimeChangeRecord.previousDateTime > lastTimeChangeRecord.dateTime, lastTimeChangeRecord.previousDateTime, lastTimeChangeRecord.dateTime)
         Dim timeOffset As Double = (latestTime - s_listOfSGs(0).datetime).TotalMinutes
         axisX.IntervalOffset = timeOffset
         axisX.IntervalOffsetType = DateTimeIntervalType.Minutes

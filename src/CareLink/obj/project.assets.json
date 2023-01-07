@@ -1104,22 +1104,22 @@
           }
         }
       },
-      "WinForms.DataVisualization/1.5.0-pr": {
+      "WinForms.DataVisualization/1.7.0-pr": {
         "type": "package",
         "compile": {
           "lib/net7.0-windows7.0/WinForms.DataVisualization.Utilities.dll": {
-            "related": ".pdb"
+            "related": ".pdb;.xml"
           },
           "lib/net7.0-windows7.0/WinForms.DataVisualization.dll": {
-            "related": ".pdb;.Utilities.pdb"
+            "related": ".pdb;.Utilities.pdb;.Utilities.xml;.xml"
           }
         },
         "runtime": {
           "lib/net7.0-windows7.0/WinForms.DataVisualization.Utilities.dll": {
-            "related": ".pdb"
+            "related": ".pdb;.xml"
           },
           "lib/net7.0-windows7.0/WinForms.DataVisualization.dll": {
-            "related": ".pdb;.Utilities.pdb"
+            "related": ".pdb;.Utilities.pdb;.Utilities.xml;.xml"
           }
         }
       }
@@ -3664,30 +3664,40 @@
         "toolstripcomboboxex.nuspec"
       ]
     },
-    "WinForms.DataVisualization/1.5.0-pr": {
-      "sha512": "0SQdK94kFtTTPCD4uEXuZRpUrA1Y+NQbsjuqUiXlixLp9rNozGDfhhJwmwaHG2rDjylt3dlQzUpKKrN35UNT6g==",
+    "WinForms.DataVisualization/1.7.0-pr": {
+      "sha512": "8SDrFKFz+GZHw8c7b0YmmjgAywCjaWXyjXfWp0QpuM9qSrEDutlZjcK9nV0vnz9G1msxsTLldsoaQPSoW1fxPg==",
       "type": "package",
-      "path": "winforms.datavisualization/1.5.0-pr",
+      "path": "winforms.datavisualization/1.7.0-pr",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "NuGetReadme.md",
+        "lib/net6.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Designer.ClientServerProtocol.dll",
         "lib/net6.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Designer.Server.dll",
+        "lib/net6.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Utilities.dll",
         "lib/net6.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Designer.Client.dll",
+        "lib/net6.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Designer.ClientServerProtocol.dll",
         "lib/net6.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Utilities.dll",
         "lib/net6.0-windows7.0/WinForms.DataVisualization.Utilities.dll",
         "lib/net6.0-windows7.0/WinForms.DataVisualization.Utilities.pdb",
+        "lib/net6.0-windows7.0/WinForms.DataVisualization.Utilities.xml",
         "lib/net6.0-windows7.0/WinForms.DataVisualization.dll",
         "lib/net6.0-windows7.0/WinForms.DataVisualization.pdb",
+        "lib/net6.0-windows7.0/WinForms.DataVisualization.xml",
+        "lib/net7.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Designer.ClientServerProtocol.dll",
         "lib/net7.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Designer.Server.dll",
+        "lib/net7.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Utilities.dll",
         "lib/net7.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Designer.Client.dll",
+        "lib/net7.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Designer.ClientServerProtocol.dll",
         "lib/net7.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Utilities.dll",
         "lib/net7.0-windows7.0/WinForms.DataVisualization.Utilities.dll",
         "lib/net7.0-windows7.0/WinForms.DataVisualization.Utilities.pdb",
+        "lib/net7.0-windows7.0/WinForms.DataVisualization.Utilities.xml",
         "lib/net7.0-windows7.0/WinForms.DataVisualization.dll",
         "lib/net7.0-windows7.0/WinForms.DataVisualization.pdb",
-        "winforms.datavisualization.1.5.0-pr.nupkg.sha512",
+        "lib/net7.0-windows7.0/WinForms.DataVisualization.xml",
+        "winforms.datavisualization.1.7.0-pr.nupkg.sha512",
         "winforms.datavisualization.nuspec"
       ]
     }
@@ -3699,7 +3709,7 @@
       "Octokit >= 4.0.3",
       "TableLayputPanelTop >= 1.0.0.2",
       "ToolStripComboBoxEx >= 1.0.0.2",
-      "WinForms.DataVisualization >= 1.5.0-pr"
+      "WinForms.DataVisualization >= 1.7.0-pr"
     ]
   },
   "packageFolders": {
@@ -3765,7 +3775,7 @@
           },
           "WinForms.DataVisualization": {
             "target": "Package",
-            "version": "[1.5.0-pr, )"
+            "version": "[1.7.0-pr, )"
           }
         },
         "imports": [

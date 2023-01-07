@@ -71,7 +71,7 @@
     <PackageReference Include="Octokit" Version="4.0.3" />
     <PackageReference Include="TableLayputPanelTop" Version="1.0.0.2" />
     <PackageReference Include="ToolStripComboBoxEx" Version="1.0.0.2" />
-    <PackageReference Include="WinForms.DataVisualization" Version="1.5.0-pr" />
+    <PackageReference Include="WinForms.DataVisualization" Version="1.7.0-pr" />
   </ItemGroup>
 
   <ItemGroup>
