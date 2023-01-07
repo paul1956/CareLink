@@ -6,8 +6,8 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class TimeChangeRecord
-    Private _previousDateTime As Date
     Private _dateTime As Date
+    Private _previousDateTime As Date
 
     Public Sub New(timeChangeItem As Dictionary(Of String, String))
         For Each kvp As KeyValuePair(Of String, String) In timeChangeItem
@@ -34,22 +34,6 @@ Public Class TimeChangeRecord
         Next
     End Sub
 
-    <DisplayName("Type")>
-    <Column(Order:=1, TypeName:=NameOf([String]))>
-    Public Property type As String
-
-    <DisplayName(NameOf(index))>
-    <Column(Order:=2, TypeName:=NameOf([Int32]))>
-    Public Property index As Integer
-
-    <DisplayName("Kind")>
-    <Column(Order:=3, TypeName:=NameOf([Int32]))>
-    Public Property kind As String
-
-    <DisplayName("Version")>
-    <Column(Order:=4, TypeName:=NameOf([Int32]))>
-    Public Property version As Integer
-
     <DisplayName(NameOf([dateTime]))>
     <Column(Order:=5, TypeName:="Date")>
     Public Property [dateTime] As Date
@@ -65,6 +49,22 @@ Public Class TimeChangeRecord
     <Column(Order:=6, TypeName:=NameOf([String]))>
     Public Property dateTimeAsString As String
 
+    <DisplayName("Delta TimeSpan")>
+    <Column(Order:=12, TypeName:="TimeSpan")>
+    Public ReadOnly Property deltaTimeSpan As TimeSpan
+        Get
+            Return _previousDateTime - _dateTime
+        End Get
+    End Property
+
+    <DisplayName(NameOf(index))>
+    <Column(Order:=2, TypeName:=NameOf([Int32]))>
+    Public Property index As Integer
+
+    <DisplayName("Kind")>
+    <Column(Order:=3, TypeName:=NameOf([Int32]))>
+    Public Property kind As String
+
     <DisplayName("OA dateTime")>
     <Column(Order:=7, TypeName:=NameOf(OADate))>
     Public ReadOnly Property OAdateTime As OADate
@@ -72,10 +72,6 @@ Public Class TimeChangeRecord
             Return New OADate(_dateTime)
         End Get
     End Property
-
-    <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=8, TypeName:=NameOf([Int32]))>
-    Public Property relativeOffset As Integer
 
     <DisplayName("Previous DateTime")>
     <Column(Order:=9, TypeName:="Date")>
@@ -100,12 +96,20 @@ Public Class TimeChangeRecord
         End Get
     End Property
 
-    <DisplayName("Delta TimeSpan")>
-    <Column(Order:=12, TypeName:="TimeSpan")>
-    Public ReadOnly Property deltaTimeSpan As TimeSpan
-        Get
-            Return _previousDateTime - _dateTime
-        End Get
-    End Property
+    <DisplayName(NameOf(relativeOffset))>
+    <Column(Order:=8, TypeName:=NameOf([Int32]))>
+    Public Property relativeOffset As Integer
+
+    <DisplayName("Type")>
+    <Column(Order:=1, TypeName:=NameOf([String]))>
+    Public Property type As String
+
+    <DisplayName("Version")>
+    <Column(Order:=4, TypeName:=NameOf([Int32]))>
+    Public Property version As Integer
+
+    Public Function GetLatestTime() As Date
+        Return If(DateDiff(DateInterval.Second, Me.previousDateTime, Me.dateTime) < 0, Me.previousDateTime, Me.dateTime)
+    End Function
 
 End Class
