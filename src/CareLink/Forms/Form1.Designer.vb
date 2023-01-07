@@ -1,7 +1,4 @@
-﻿Imports DataGridViewColumnControls
-Imports TableLayputPanelTop
-
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Form1
     Inherits System.Windows.Forms.Form
 
@@ -60,14 +57,14 @@ Partial Class Form1
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.StartHereExit = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptions = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuOptionsColorPicker = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsShowLegend = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator
+        Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         Me.MenuOptionsAutoLogin = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsFilterRawJSONData = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsSetupEMailServer = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsUseAdvancedAITDecay = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuOptionsUseLocalTimeZone = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MenuOptionsColorPicker = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelp = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelpReportAnIssue = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuHelpCheckForUpdates = New System.Windows.Forms.ToolStripMenuItem()
@@ -250,6 +247,8 @@ Partial Class Form1
         Me.TabPageAllUsers = New System.Windows.Forms.TabPage()
         Me.TabPageBackToHomePage = New System.Windows.Forms.TabPage()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.OptionsMenuAdvancedOptions = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.CalibrationDueImage, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CalibrationShieldPanel.SuspendLayout()
@@ -286,56 +285,39 @@ Partial Class Form1
         Me.TabPage04SummaryData.SuspendLayout()
         Me.TabPage05LastSG.SuspendLayout()
         Me.TableLayoutPanelLastSG.SuspendLayout()
-        Me.TableLayoutPanelLastSgTop.SuspendLayout()
         Me.TabPage06LastAlarm.SuspendLayout()
         Me.TableLayoutPanelLastAlarm.SuspendLayout()
-        Me.TableLayoutPanelLastAlarmTop.SuspendLayout()
         Me.TabPage07ActiveInsulin.SuspendLayout()
         Me.TableLayoutPanelActiveInsulin.SuspendLayout()
-        Me.TableLayoutPanelActiveInsulinTop.SuspendLayout()
         Me.TabPage08SensorGlucose.SuspendLayout()
         Me.TableLayoutPanelSgs.SuspendLayout()
-        Me.TableLayoutPanelSgsTop.SuspendLayout()
         Me.TabPage09Limits.SuspendLayout()
         Me.TableLayoutPanelLimits.SuspendLayout()
-        Me.TableLayoutPanelLimitsTop.SuspendLayout()
         Me.TabPage10NotificationHistory.SuspendLayout()
         Me.TableLayoutPanelNotificationHistory.SuspendLayout()
-        Me.TableLayoutPanelNotificationHistoryTop.SuspendLayout()
         Me.TabPage11TherapyAlgorithm.SuspendLayout()
         Me.TableLayoutPanelTherapyAlgorithm.SuspendLayout()
-        Me.TableLayoutPanelTherapyAlgorithmTop.SuspendLayout()
         Me.TabPage12BannerState.SuspendLayout()
         Me.TableLayoutPanelBannerState.SuspendLayout()
-        Me.TableLayoutPanelBannerStateTop.SuspendLayout()
         Me.TabPage13Basal.SuspendLayout()
         Me.TableLayoutPanelBasal.SuspendLayout()
-        Me.TableLayoutPanelBasalTop.SuspendLayout()
         Me.TabControlPage2.SuspendLayout()
         Me.TabPageAutoBasalDelivery.SuspendLayout()
         Me.TableLayoutPanelAutoBasalDelivery.SuspendLayout()
-        Me.TableLayoutPanelAutoBasalDeliveryTop.SuspendLayout()
         Me.TabPageAutoModeStatus.SuspendLayout()
         Me.TableLayoutPanelAutoModeStatus.SuspendLayout()
-        Me.TableLayoutPanelAutoModeStatusTop.SuspendLayout()
         Me.TabPageBgReadings.SuspendLayout()
         Me.TableLayoutPanelBgReadings.SuspendLayout()
-        Me.TableLayoutPanelBgReadingsTop.SuspendLayout()
         Me.TabPageCalibration.SuspendLayout()
         Me.TableLayoutPanelCalibration.SuspendLayout()
-        Me.TableLayoutPanelCalibrationTop.SuspendLayout()
         Me.TabPageInsulin.SuspendLayout()
         Me.TableLayoutPanelInsulin.SuspendLayout()
-        Me.TableLayoutPanelInsulinTop.SuspendLayout()
         Me.TabPageLowGlucoseSuspended.SuspendLayout()
         Me.TableLayoutPanelLowGlucoseSuspended.SuspendLayout()
-        Me.TableLayoutPanelLowGlucoseSuspendedTop.SuspendLayout()
         Me.TabPageMeal.SuspendLayout()
         Me.TableLayoutPanelMeal.SuspendLayout()
-        Me.TableLayoutPanelMealTop.SuspendLayout()
         Me.TabPageTimeChange.SuspendLayout()
         Me.TableLayoutPanelTimeChange.SuspendLayout()
-        Me.TableLayoutPanelTimeChangeTop.SuspendLayout()
         Me.TabPageCountryDataPg1.SuspendLayout()
         Me.TabPageCountryDataPg2.SuspendLayout()
         Me.TabPageCountryDataPg3.SuspendLayout()
@@ -427,15 +409,16 @@ Partial Class Form1
         '
         'MenuOptions
         '
-        Me.MenuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuOptionsColorPicker, Me.MenuOptionsShowLegend, Me.ToolStripSeparator5, Me.MenuOptionsAutoLogin, Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsSetupEMailServer, Me.MenuOptionsUseAdvancedAITDecay, Me.MenuOptionsUseLocalTimeZone})
+        Me.MenuOptions.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MenuOptionsColorPicker, Me.MenuOptionsShowLegend, Me.ToolStripSeparator5, Me.MenuOptionsAutoLogin, Me.ToolStripSeparator6, Me.OptionsMenuAdvancedOptions, Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsSetupEMailServer, Me.MenuOptionsUseAdvancedAITDecay, Me.MenuOptionsUseLocalTimeZone})
         Me.MenuOptions.Name = "MenuOptions"
         Me.MenuOptions.Size = New System.Drawing.Size(61, 20)
         Me.MenuOptions.Text = "Options"
         '
-        'ToolStripSeparator5
+        'MenuOptionsColorPicker
         '
-        Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
-        Me.ToolStripSeparator5.Size = New System.Drawing.Size(201, 6)
+        Me.MenuOptionsColorPicker.Name = "MenuOptionsColorPicker"
+        Me.MenuOptionsColorPicker.Size = New System.Drawing.Size(204, 22)
+        Me.MenuOptionsColorPicker.Text = "Color Picker..."
         '
         'MenuOptionsShowLegend
         '
@@ -445,6 +428,11 @@ Partial Class Form1
         Me.MenuOptionsShowLegend.Name = "MenuOptionsShowLegend"
         Me.MenuOptionsShowLegend.Size = New System.Drawing.Size(204, 22)
         Me.MenuOptionsShowLegend.Text = "Show Legend"
+        '
+        'ToolStripSeparator5
+        '
+        Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
+        Me.ToolStripSeparator5.Size = New System.Drawing.Size(201, 6)
         '
         'MenuOptionsAutoLogin
         '
@@ -486,12 +474,6 @@ Partial Class Form1
         Me.MenuOptionsUseLocalTimeZone.Name = "MenuOptionsUseLocalTimeZone"
         Me.MenuOptionsUseLocalTimeZone.Size = New System.Drawing.Size(204, 22)
         Me.MenuOptionsUseLocalTimeZone.Text = "Use Local TImeZone"
-        '
-        'MenuOptionsColorPicker
-        '
-        Me.MenuOptionsColorPicker.Name = "MenuOptionsColorPicker"
-        Me.MenuOptionsColorPicker.Size = New System.Drawing.Size(360, 22)
-        Me.MenuOptionsColorPicker.Text = "Color Picker..."
         '
         'MenuHelp
         '
@@ -873,11 +855,11 @@ Partial Class Form1
         Me.DataGridViewAutoBasalDelivery.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.DataGridViewAutoBasalDelivery.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridViewAutoBasalDelivery.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridViewAutoBasalDelivery.Location = New System.Drawing.Point(6, 30)
+        Me.DataGridViewAutoBasalDelivery.Location = New System.Drawing.Point(6, 52)
         Me.DataGridViewAutoBasalDelivery.Name = "DataGridViewAutoBasalDelivery"
         Me.DataGridViewAutoBasalDelivery.ReadOnly = True
         Me.DataGridViewAutoBasalDelivery.RowTemplate.Height = 25
-        Me.DataGridViewAutoBasalDelivery.Size = New System.Drawing.Size(1358, 597)
+        Me.DataGridViewAutoBasalDelivery.Size = New System.Drawing.Size(1358, 575)
         Me.DataGridViewAutoBasalDelivery.TabIndex = 0
         '
         'DataGridViewCareLinkUsers
@@ -1056,7 +1038,7 @@ Partial Class Form1
         Me.DataGridViewCountryItemsPage1.Name = "DataGridViewCountryItemsPage1"
         Me.DataGridViewCountryItemsPage1.ReadOnly = True
         Me.DataGridViewCountryItemsPage1.RowTemplate.Height = 25
-        Me.DataGridViewCountryItemsPage1.Size = New System.Drawing.Size(186, 63)
+        Me.DataGridViewCountryItemsPage1.Size = New System.Drawing.Size(1370, 633)
         Me.DataGridViewCountryItemsPage1.TabIndex = 1
         '
         'DataGridViewTextBoxColumnCountrySettingsRecordNumber
@@ -1112,7 +1094,7 @@ Partial Class Form1
         Me.DataGridViewCountryItemsPage2.Name = "DataGridViewCountryItemsPage2"
         Me.DataGridViewCountryItemsPage2.ReadOnly = True
         Me.DataGridViewCountryItemsPage2.RowTemplate.Height = 25
-        Me.DataGridViewCountryItemsPage2.Size = New System.Drawing.Size(186, 63)
+        Me.DataGridViewCountryItemsPage2.Size = New System.Drawing.Size(1370, 633)
         Me.DataGridViewCountryItemsPage2.TabIndex = 1
         '
         'DataGridViewTextBoxColumnCountrySettingsPgRecordNumber
@@ -1168,7 +1150,7 @@ Partial Class Form1
         Me.DataGridViewCountryItemsPage3.Name = "DataGridViewCountryItemsPage3"
         Me.DataGridViewCountryItemsPage3.ReadOnly = True
         Me.DataGridViewCountryItemsPage3.RowTemplate.Height = 25
-        Me.DataGridViewCountryItemsPage3.Size = New System.Drawing.Size(186, 63)
+        Me.DataGridViewCountryItemsPage3.Size = New System.Drawing.Size(1370, 633)
         Me.DataGridViewCountryItemsPage3.TabIndex = 1
         '
         'DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber
@@ -1243,7 +1225,7 @@ Partial Class Form1
         Me.DataGridViewCurrentUser.ReadOnly = True
         Me.DataGridViewCurrentUser.RowHeadersVisible = False
         Me.DataGridViewCurrentUser.RowTemplate.Height = 25
-        Me.DataGridViewCurrentUser.Size = New System.Drawing.Size(192, 69)
+        Me.DataGridViewCurrentUser.Size = New System.Drawing.Size(1376, 639)
         Me.DataGridViewCurrentUser.TabIndex = 0
         '
         'DataGridViewInsulin
@@ -1264,12 +1246,12 @@ Partial Class Form1
         Me.DataGridViewInsulin.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle14
         Me.DataGridViewInsulin.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridViewInsulin.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridViewInsulin.Location = New System.Drawing.Point(6, 30)
+        Me.DataGridViewInsulin.Location = New System.Drawing.Point(6, 52)
         Me.DataGridViewInsulin.Name = "DataGridViewInsulin"
         Me.DataGridViewInsulin.ReadOnly = True
         Me.DataGridViewInsulin.RowTemplate.Height = 25
         Me.DataGridViewInsulin.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.DataGridViewInsulin.Size = New System.Drawing.Size(174, 27)
+        Me.DataGridViewInsulin.Size = New System.Drawing.Size(1358, 575)
         Me.DataGridViewInsulin.TabIndex = 0
         '
         'DataGridViewMeal
@@ -1319,7 +1301,7 @@ Partial Class Form1
         Me.DataGridViewSummary.ReadOnly = True
         Me.DataGridViewSummary.RowTemplate.Height = 25
         Me.DataGridViewSummary.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.DataGridViewSummary.Size = New System.Drawing.Size(186, 63)
+        Me.DataGridViewSummary.Size = New System.Drawing.Size(1370, 633)
         Me.DataGridViewSummary.TabIndex = 0
         '
         'DataGridViewUserProfile
@@ -1347,7 +1329,7 @@ Partial Class Form1
         Me.DataGridViewUserProfile.ReadOnly = True
         Me.DataGridViewUserProfile.RowHeadersVisible = False
         Me.DataGridViewUserProfile.RowTemplate.Height = 25
-        Me.DataGridViewUserProfile.Size = New System.Drawing.Size(186, 63)
+        Me.DataGridViewUserProfile.Size = New System.Drawing.Size(1370, 633)
         Me.DataGridViewUserProfile.TabIndex = 0
         '
         'FullNameLabel
@@ -1921,7 +1903,7 @@ Partial Class Form1
         Me.TabPage03TreatmentDetails.Location = New System.Drawing.Point(4, 27)
         Me.TabPage03TreatmentDetails.Name = "TabPage03TreatmentDetails"
         Me.TabPage03TreatmentDetails.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage03TreatmentDetails.Size = New System.Drawing.Size(192, 69)
+        Me.TabPage03TreatmentDetails.Size = New System.Drawing.Size(1376, 639)
         Me.TabPage03TreatmentDetails.TabIndex = 8
         Me.TabPage03TreatmentDetails.Text = "Treatment Details"
         Me.TabPage03TreatmentDetails.UseVisualStyleBackColor = True
@@ -1932,7 +1914,7 @@ Partial Class Form1
         Me.TabPage04SummaryData.Location = New System.Drawing.Point(4, 27)
         Me.TabPage04SummaryData.Name = "TabPage04SummaryData"
         Me.TabPage04SummaryData.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage04SummaryData.Size = New System.Drawing.Size(192, 69)
+        Me.TabPage04SummaryData.Size = New System.Drawing.Size(1376, 639)
         Me.TabPage04SummaryData.TabIndex = 0
         Me.TabPage04SummaryData.Text = "Summary Data"
         Me.TabPage04SummaryData.UseVisualStyleBackColor = True
@@ -1966,8 +1948,24 @@ Partial Class Form1
         '
         'TableLayoutPanelLastSgTop
         '
+        Me.TableLayoutPanelLastSgTop.AutoSize = True
+        Me.TableLayoutPanelLastSgTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelLastSgTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelLastSgTop.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelLastSgTop.ColumnCount = 2
+        Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelLastSgTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelLastSgTop.LabelText = "last SG"
+        Me.TableLayoutPanelLastSgTop.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelLastSgTop.Name = "TableLayoutPanelLastSgTop"
+        Me.TableLayoutPanelLastSgTop.RowCount = 1
+        Me.TableLayoutPanelLastSgTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelLastSgTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelLastSgTop.Size = New System.Drawing.Size(1364, 37)
+        Me.TableLayoutPanelLastSgTop.TabIndex = 1
         '
         'TabPage06LastAlarm
         '
@@ -1999,8 +1997,24 @@ Partial Class Form1
         '
         'TableLayoutPanelLastAlarmTop
         '
+        Me.TableLayoutPanelLastAlarmTop.AutoSize = True
+        Me.TableLayoutPanelLastAlarmTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelLastAlarmTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelLastAlarmTop.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelLastAlarmTop.ColumnCount = 2
+        Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelLastAlarmTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelLastAlarmTop.LabelText = "Last Alarm"
+        Me.TableLayoutPanelLastAlarmTop.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelLastAlarmTop.Name = "TableLayoutPanelLastAlarmTop"
+        Me.TableLayoutPanelLastAlarmTop.RowCount = 1
+        Me.TableLayoutPanelLastAlarmTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelLastAlarmTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelLastAlarmTop.Size = New System.Drawing.Size(1364, 37)
+        Me.TableLayoutPanelLastAlarmTop.TabIndex = 1
         '
         'TabPage07ActiveInsulin
         '
@@ -2031,8 +2045,24 @@ Partial Class Form1
         '
         'TableLayoutPanelActiveInsulinTop
         '
+        Me.TableLayoutPanelActiveInsulinTop.AutoSize = True
+        Me.TableLayoutPanelActiveInsulinTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelActiveInsulinTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelActiveInsulinTop.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelActiveInsulinTop.ColumnCount = 2
+        Me.TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelActiveInsulinTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelActiveInsulinTop.LabelText = "Active Insulin"
+        Me.TableLayoutPanelActiveInsulinTop.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelActiveInsulinTop.Name = "TableLayoutPanelActiveInsulinTop"
+        Me.TableLayoutPanelActiveInsulinTop.RowCount = 1
+        Me.TableLayoutPanelActiveInsulinTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelActiveInsulinTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelActiveInsulinTop.Size = New System.Drawing.Size(1364, 37)
+        Me.TableLayoutPanelActiveInsulinTop.TabIndex = 1
         '
         'TabPage08SensorGlucose
         '
@@ -2064,8 +2094,24 @@ Partial Class Form1
         '
         'TableLayoutPanelSgsTop
         '
+        Me.TableLayoutPanelSgsTop.AutoSize = True
+        Me.TableLayoutPanelSgsTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelSgsTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelSgsTop.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelSgsTop.ColumnCount = 2
+        Me.TableLayoutPanelSgsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelSgsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelSgsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelSgsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelSgsTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelSgsTop.LabelText = "SGs"
+        Me.TableLayoutPanelSgsTop.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelSgsTop.Name = "TableLayoutPanelSgsTop"
+        Me.TableLayoutPanelSgsTop.RowCount = 1
+        Me.TableLayoutPanelSgsTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelSgsTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelSgsTop.Size = New System.Drawing.Size(1364, 37)
+        Me.TableLayoutPanelSgsTop.TabIndex = 1
         '
         'TabPage09Limits
         '
@@ -2096,8 +2142,24 @@ Partial Class Form1
         '
         'TableLayoutPanelLimitsTop
         '
+        Me.TableLayoutPanelLimitsTop.AutoSize = True
+        Me.TableLayoutPanelLimitsTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelLimitsTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelLimitsTop.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelLimitsTop.ColumnCount = 2
+        Me.TableLayoutPanelLimitsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelLimitsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelLimitsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelLimitsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelLimitsTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelLimitsTop.LabelText = "Limits"
+        Me.TableLayoutPanelLimitsTop.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelLimitsTop.Name = "TableLayoutPanelLimitsTop"
+        Me.TableLayoutPanelLimitsTop.RowCount = 1
+        Me.TableLayoutPanelLimitsTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelLimitsTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelLimitsTop.Size = New System.Drawing.Size(1364, 37)
+        Me.TableLayoutPanelLimitsTop.TabIndex = 1
         '
         'TabPage10NotificationHistory
         '
@@ -2129,8 +2191,24 @@ Partial Class Form1
         '
         'TableLayoutPanelNotificationHistoryTop
         '
+        Me.TableLayoutPanelNotificationHistoryTop.AutoSize = True
+        Me.TableLayoutPanelNotificationHistoryTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelNotificationHistoryTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelNotificationHistoryTop.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelNotificationHistoryTop.ColumnCount = 2
+        Me.TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelNotificationHistoryTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelNotificationHistoryTop.LabelText = "Notification History"
+        Me.TableLayoutPanelNotificationHistoryTop.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelNotificationHistoryTop.Name = "TableLayoutPanelNotificationHistoryTop"
+        Me.TableLayoutPanelNotificationHistoryTop.RowCount = 1
+        Me.TableLayoutPanelNotificationHistoryTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelNotificationHistoryTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelNotificationHistoryTop.Size = New System.Drawing.Size(1364, 37)
+        Me.TableLayoutPanelNotificationHistoryTop.TabIndex = 1
         '
         'TabPage11TherapyAlgorithm
         '
@@ -2138,7 +2216,7 @@ Partial Class Form1
         Me.TabPage11TherapyAlgorithm.Location = New System.Drawing.Point(4, 27)
         Me.TabPage11TherapyAlgorithm.Name = "TabPage11TherapyAlgorithm"
         Me.TabPage11TherapyAlgorithm.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage11TherapyAlgorithm.Size = New System.Drawing.Size(192, 69)
+        Me.TabPage11TherapyAlgorithm.Size = New System.Drawing.Size(1376, 639)
         Me.TabPage11TherapyAlgorithm.TabIndex = 21
         Me.TabPage11TherapyAlgorithm.Text = "Therapy Algorithm"
         Me.TabPage11TherapyAlgorithm.UseVisualStyleBackColor = True
@@ -2156,13 +2234,29 @@ Partial Class Form1
         Me.TableLayoutPanelTherapyAlgorithm.RowCount = 2
         Me.TableLayoutPanelTherapyAlgorithm.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelTherapyAlgorithm.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelTherapyAlgorithm.Size = New System.Drawing.Size(186, 63)
+        Me.TableLayoutPanelTherapyAlgorithm.Size = New System.Drawing.Size(1370, 633)
         Me.TableLayoutPanelTherapyAlgorithm.TabIndex = 0
         '
         'TableLayoutPanelTherapyAlgorithmTop
         '
+        Me.TableLayoutPanelTherapyAlgorithmTop.AutoSize = True
+        Me.TableLayoutPanelTherapyAlgorithmTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelTherapyAlgorithmTop.ButtonText = "Return To Summary Tab"
-        Me.TableLayoutPanelTherapyAlgorithmTop.LabelText = "TherapyAlgorithmT"       '
+        Me.TableLayoutPanelTherapyAlgorithmTop.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelTherapyAlgorithmTop.ColumnCount = 2
+        Me.TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelTherapyAlgorithmTop.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanelTherapyAlgorithmTop.LabelText = "TherapyAlgorithmT"
+        Me.TableLayoutPanelTherapyAlgorithmTop.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelTherapyAlgorithmTop.Name = "TableLayoutPanelTherapyAlgorithmTop"
+        Me.TableLayoutPanelTherapyAlgorithmTop.RowCount = 1
+        Me.TableLayoutPanelTherapyAlgorithmTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelTherapyAlgorithmTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelTherapyAlgorithmTop.Size = New System.Drawing.Size(1364, 37)
+        Me.TableLayoutPanelTherapyAlgorithmTop.TabIndex = 1
         '
         'TabPage12BannerState
         '
@@ -2170,7 +2264,7 @@ Partial Class Form1
         Me.TabPage12BannerState.Location = New System.Drawing.Point(4, 27)
         Me.TabPage12BannerState.Name = "TabPage12BannerState"
         Me.TabPage12BannerState.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage12BannerState.Size = New System.Drawing.Size(192, 69)
+        Me.TabPage12BannerState.Size = New System.Drawing.Size(1376, 639)
         Me.TabPage12BannerState.TabIndex = 22
         Me.TabPage12BannerState.Text = "Banner State"
         Me.TabPage12BannerState.UseVisualStyleBackColor = True
@@ -2189,13 +2283,29 @@ Partial Class Form1
         Me.TableLayoutPanelBannerState.RowCount = 2
         Me.TableLayoutPanelBannerState.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelBannerState.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelBannerState.Size = New System.Drawing.Size(186, 63)
+        Me.TableLayoutPanelBannerState.Size = New System.Drawing.Size(1370, 633)
         Me.TableLayoutPanelBannerState.TabIndex = 0
         '
         'TableLayoutPanelBannerStateTop
         '
+        Me.TableLayoutPanelBannerStateTop.AutoSize = True
+        Me.TableLayoutPanelBannerStateTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelBannerStateTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelBannerStateTop.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelBannerStateTop.ColumnCount = 2
+        Me.TableLayoutPanelBannerStateTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelBannerStateTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelBannerStateTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelBannerStateTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelBannerStateTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelBannerStateTop.LabelText = "Banner State"
+        Me.TableLayoutPanelBannerStateTop.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelBannerStateTop.Name = "TableLayoutPanelBannerStateTop"
+        Me.TableLayoutPanelBannerStateTop.RowCount = 1
+        Me.TableLayoutPanelBannerStateTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelBannerStateTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelBannerStateTop.Size = New System.Drawing.Size(1364, 37)
+        Me.TableLayoutPanelBannerStateTop.TabIndex = 1
         '
         'TabPage13Basal
         '
@@ -2203,7 +2313,7 @@ Partial Class Form1
         Me.TabPage13Basal.Location = New System.Drawing.Point(4, 27)
         Me.TabPage13Basal.Name = "TabPage13Basal"
         Me.TabPage13Basal.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage13Basal.Size = New System.Drawing.Size(192, 69)
+        Me.TabPage13Basal.Size = New System.Drawing.Size(1376, 639)
         Me.TabPage13Basal.TabIndex = 23
         Me.TabPage13Basal.Text = "Basal"
         Me.TabPage13Basal.UseVisualStyleBackColor = True
@@ -2221,13 +2331,29 @@ Partial Class Form1
         Me.TableLayoutPanelBasal.RowCount = 2
         Me.TableLayoutPanelBasal.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelBasal.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelBasal.Size = New System.Drawing.Size(186, 63)
+        Me.TableLayoutPanelBasal.Size = New System.Drawing.Size(1370, 633)
         Me.TableLayoutPanelBasal.TabIndex = 0
         '
         'TableLayoutPanelBasalTop
         '
+        Me.TableLayoutPanelBasalTop.AutoSize = True
+        Me.TableLayoutPanelBasalTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelBasalTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelBasalTop.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelBasalTop.ColumnCount = 2
+        Me.TableLayoutPanelBasalTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelBasalTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelBasalTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelBasalTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelBasalTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelBasalTop.LabelText = "Basal"
+        Me.TableLayoutPanelBasalTop.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanelBasalTop.Name = "TableLayoutPanelBasalTop"
+        Me.TableLayoutPanelBasalTop.RowCount = 1
+        Me.TableLayoutPanelBasalTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelBasalTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelBasalTop.Size = New System.Drawing.Size(1364, 37)
+        Me.TableLayoutPanelBasalTop.TabIndex = 1
         '
         'TabPage14Markers
         '
@@ -2235,7 +2361,7 @@ Partial Class Form1
         Me.TabPage14Markers.Location = New System.Drawing.Point(4, 27)
         Me.TabPage14Markers.Name = "TabPage14Markers"
         Me.TabPage14Markers.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage14Markers.Size = New System.Drawing.Size(192, 69)
+        Me.TabPage14Markers.Size = New System.Drawing.Size(1376, 639)
         Me.TabPage14Markers.TabIndex = 24
         Me.TabPage14Markers.Text = "Markers and More..."
         '
@@ -2295,8 +2421,24 @@ Partial Class Form1
         '
         'TableLayoutPanelAutoBasalDeliveryTop
         '
+        Me.TableLayoutPanelAutoBasalDeliveryTop.AutoSize = True
+        Me.TableLayoutPanelAutoBasalDeliveryTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelAutoBasalDeliveryTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelAutoBasalDeliveryTop.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelAutoBasalDeliveryTop.ColumnCount = 2
+        Me.TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelAutoBasalDeliveryTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelAutoBasalDeliveryTop.LabelText = "Basal"
+        Me.TableLayoutPanelAutoBasalDeliveryTop.Location = New System.Drawing.Point(6, 6)
+        Me.TableLayoutPanelAutoBasalDeliveryTop.Name = "TableLayoutPanelAutoBasalDeliveryTop"
+        Me.TableLayoutPanelAutoBasalDeliveryTop.RowCount = 1
+        Me.TableLayoutPanelAutoBasalDeliveryTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelAutoBasalDeliveryTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelAutoBasalDeliveryTop.Size = New System.Drawing.Size(1358, 37)
+        Me.TableLayoutPanelAutoBasalDeliveryTop.TabIndex = 1
         '
         'TabPageAutoModeStatus
         '
@@ -2304,7 +2446,7 @@ Partial Class Form1
         Me.TabPageAutoModeStatus.Location = New System.Drawing.Point(4, 27)
         Me.TabPageAutoModeStatus.Name = "TabPageAutoModeStatus"
         Me.TabPageAutoModeStatus.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageAutoModeStatus.Size = New System.Drawing.Size(192, 69)
+        Me.TabPageAutoModeStatus.Size = New System.Drawing.Size(1376, 639)
         Me.TabPageAutoModeStatus.TabIndex = 0
         Me.TabPageAutoModeStatus.Text = "Auto Mode Status"
         Me.TabPageAutoModeStatus.UseVisualStyleBackColor = True
@@ -2324,13 +2466,29 @@ Partial Class Form1
         Me.TableLayoutPanelAutoModeStatus.RowCount = 2
         Me.TableLayoutPanelAutoModeStatus.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelAutoModeStatus.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelAutoModeStatus.Size = New System.Drawing.Size(186, 63)
+        Me.TableLayoutPanelAutoModeStatus.Size = New System.Drawing.Size(1370, 633)
         Me.TableLayoutPanelAutoModeStatus.TabIndex = 0
         '
         'TableLayoutPanelAutoModeStatusTop
         '
+        Me.TableLayoutPanelAutoModeStatusTop.AutoSize = True
+        Me.TableLayoutPanelAutoModeStatusTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelAutoModeStatusTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelAutoModeStatusTop.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelAutoModeStatusTop.ColumnCount = 2
+        Me.TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelAutoModeStatusTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelAutoModeStatusTop.LabelText = "Auto Mode Status"
+        Me.TableLayoutPanelAutoModeStatusTop.Location = New System.Drawing.Point(6, 6)
+        Me.TableLayoutPanelAutoModeStatusTop.Name = "TableLayoutPanelAutoModeStatusTop"
+        Me.TableLayoutPanelAutoModeStatusTop.RowCount = 1
+        Me.TableLayoutPanelAutoModeStatusTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelAutoModeStatusTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelAutoModeStatusTop.Size = New System.Drawing.Size(1358, 37)
+        Me.TableLayoutPanelAutoModeStatusTop.TabIndex = 1
         '
         'TabPageBgReadings
         '
@@ -2338,7 +2496,7 @@ Partial Class Form1
         Me.TabPageBgReadings.Location = New System.Drawing.Point(4, 27)
         Me.TabPageBgReadings.Name = "TabPageBgReadings"
         Me.TabPageBgReadings.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageBgReadings.Size = New System.Drawing.Size(192, 69)
+        Me.TabPageBgReadings.Size = New System.Drawing.Size(1376, 639)
         Me.TabPageBgReadings.TabIndex = 2
         Me.TabPageBgReadings.Text = "BG Readings"
         Me.TabPageBgReadings.UseVisualStyleBackColor = True
@@ -2358,13 +2516,29 @@ Partial Class Form1
         Me.TableLayoutPanelBgReadings.RowCount = 2
         Me.TableLayoutPanelBgReadings.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelBgReadings.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelBgReadings.Size = New System.Drawing.Size(186, 63)
+        Me.TableLayoutPanelBgReadings.Size = New System.Drawing.Size(1370, 633)
         Me.TableLayoutPanelBgReadings.TabIndex = 1
         '
         'TableLayoutPanelBgReadingsTop
         '
+        Me.TableLayoutPanelBgReadingsTop.AutoSize = True
+        Me.TableLayoutPanelBgReadingsTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelBgReadingsTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelBgReadingsTop.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelBgReadingsTop.ColumnCount = 2
+        Me.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelBgReadingsTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelBgReadingsTop.LabelText = "BG Readings"
+        Me.TableLayoutPanelBgReadingsTop.Location = New System.Drawing.Point(6, 6)
+        Me.TableLayoutPanelBgReadingsTop.Name = "TableLayoutPanelBgReadingsTop"
+        Me.TableLayoutPanelBgReadingsTop.RowCount = 1
+        Me.TableLayoutPanelBgReadingsTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelBgReadingsTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelBgReadingsTop.Size = New System.Drawing.Size(1358, 37)
+        Me.TableLayoutPanelBgReadingsTop.TabIndex = 1
         '
         'TabPageCalibration
         '
@@ -2372,7 +2546,7 @@ Partial Class Form1
         Me.TabPageCalibration.Location = New System.Drawing.Point(4, 27)
         Me.TabPageCalibration.Name = "TabPageCalibration"
         Me.TabPageCalibration.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageCalibration.Size = New System.Drawing.Size(192, 69)
+        Me.TabPageCalibration.Size = New System.Drawing.Size(1376, 639)
         Me.TabPageCalibration.TabIndex = 3
         Me.TabPageCalibration.Text = "Calibration"
         Me.TabPageCalibration.UseVisualStyleBackColor = True
@@ -2392,14 +2566,29 @@ Partial Class Form1
         Me.TableLayoutPanelCalibration.RowCount = 2
         Me.TableLayoutPanelCalibration.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelCalibration.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelCalibration.Size = New System.Drawing.Size(186, 63)
+        Me.TableLayoutPanelCalibration.Size = New System.Drawing.Size(1370, 633)
         Me.TableLayoutPanelCalibration.TabIndex = 1
         '
         'TableLayoutPanelCalibrationTop
         '
+        Me.TableLayoutPanelCalibrationTop.AutoSize = True
+        Me.TableLayoutPanelCalibrationTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelCalibrationTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelCalibrationTop.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelCalibrationTop.ColumnCount = 2
+        Me.TableLayoutPanelCalibrationTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelCalibrationTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelCalibrationTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelCalibrationTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelCalibrationTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelCalibrationTop.LabelText = "Calibration"
-        '
+        Me.TableLayoutPanelCalibrationTop.Location = New System.Drawing.Point(6, 6)
+        Me.TableLayoutPanelCalibrationTop.Name = "TableLayoutPanelCalibrationTop"
+        Me.TableLayoutPanelCalibrationTop.RowCount = 1
+        Me.TableLayoutPanelCalibrationTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelCalibrationTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelCalibrationTop.Size = New System.Drawing.Size(1358, 37)
+        Me.TableLayoutPanelCalibrationTop.TabIndex = 1
         '
         'TabPageInsulin
         '
@@ -2407,7 +2596,7 @@ Partial Class Form1
         Me.TabPageInsulin.Location = New System.Drawing.Point(4, 27)
         Me.TabPageInsulin.Name = "TabPageInsulin"
         Me.TabPageInsulin.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageInsulin.Size = New System.Drawing.Size(192, 69)
+        Me.TabPageInsulin.Size = New System.Drawing.Size(1376, 639)
         Me.TabPageInsulin.TabIndex = 4
         Me.TabPageInsulin.Text = "Insulin"
         Me.TabPageInsulin.UseVisualStyleBackColor = True
@@ -2428,13 +2617,29 @@ Partial Class Form1
         Me.TableLayoutPanelInsulin.RowCount = 2
         Me.TableLayoutPanelInsulin.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelInsulin.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelInsulin.Size = New System.Drawing.Size(186, 63)
+        Me.TableLayoutPanelInsulin.Size = New System.Drawing.Size(1370, 633)
         Me.TableLayoutPanelInsulin.TabIndex = 1
         '
         'TableLayoutPanelInsulinTop
         '
+        Me.TableLayoutPanelInsulinTop.AutoSize = True
+        Me.TableLayoutPanelInsulinTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelInsulinTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelInsulinTop.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelInsulinTop.ColumnCount = 2
+        Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelInsulinTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelInsulinTop.LabelText = "Insulin"
+        Me.TableLayoutPanelInsulinTop.Location = New System.Drawing.Point(6, 6)
+        Me.TableLayoutPanelInsulinTop.Name = "TableLayoutPanelInsulinTop"
+        Me.TableLayoutPanelInsulinTop.RowCount = 1
+        Me.TableLayoutPanelInsulinTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelInsulinTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelInsulinTop.Size = New System.Drawing.Size(1358, 37)
+        Me.TableLayoutPanelInsulinTop.TabIndex = 1
         '
         'TabPageLowGlucoseSuspended
         '
@@ -2442,7 +2647,7 @@ Partial Class Form1
         Me.TabPageLowGlucoseSuspended.Location = New System.Drawing.Point(4, 27)
         Me.TabPageLowGlucoseSuspended.Name = "TabPageLowGlucoseSuspended"
         Me.TabPageLowGlucoseSuspended.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageLowGlucoseSuspended.Size = New System.Drawing.Size(192, 69)
+        Me.TabPageLowGlucoseSuspended.Size = New System.Drawing.Size(1376, 639)
         Me.TabPageLowGlucoseSuspended.TabIndex = 5
         Me.TabPageLowGlucoseSuspended.Text = "Low Glucose Suspended"
         Me.TabPageLowGlucoseSuspended.UseVisualStyleBackColor = True
@@ -2462,13 +2667,29 @@ Partial Class Form1
         Me.TableLayoutPanelLowGlucoseSuspended.RowCount = 2
         Me.TableLayoutPanelLowGlucoseSuspended.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelLowGlucoseSuspended.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelLowGlucoseSuspended.Size = New System.Drawing.Size(186, 63)
+        Me.TableLayoutPanelLowGlucoseSuspended.Size = New System.Drawing.Size(1370, 633)
         Me.TableLayoutPanelLowGlucoseSuspended.TabIndex = 1
         '
         'TableLayoutPanelLowGlucoseSuspendedTop
         '
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.AutoSize = True
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelLowGlucoseSuspendedTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.ColumnCount = 2
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelLowGlucoseSuspendedTop.LabelText = "Low Glucose Suspended"
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.Location = New System.Drawing.Point(6, 6)
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.Name = "TableLayoutPanelLowGlucoseSuspendedTop"
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.RowCount = 1
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.Size = New System.Drawing.Size(1358, 37)
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.TabIndex = 1
         '
         'TabPageMeal
         '
@@ -2476,7 +2697,7 @@ Partial Class Form1
         Me.TabPageMeal.Location = New System.Drawing.Point(4, 27)
         Me.TabPageMeal.Name = "TabPageMeal"
         Me.TabPageMeal.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageMeal.Size = New System.Drawing.Size(192, 69)
+        Me.TabPageMeal.Size = New System.Drawing.Size(1376, 639)
         Me.TabPageMeal.TabIndex = 6
         Me.TabPageMeal.Text = "Meal"
         Me.TabPageMeal.UseVisualStyleBackColor = True
@@ -2496,13 +2717,29 @@ Partial Class Form1
         Me.TableLayoutPanelMeal.RowCount = 2
         Me.TableLayoutPanelMeal.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelMeal.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelMeal.Size = New System.Drawing.Size(186, 63)
+        Me.TableLayoutPanelMeal.Size = New System.Drawing.Size(1370, 633)
         Me.TableLayoutPanelMeal.TabIndex = 1
         '
-        'TableLayoutPanelLowGlucoseSuspendedTop
+        'TableLayoutPanelMealTop
         '
+        Me.TableLayoutPanelMealTop.AutoSize = True
+        Me.TableLayoutPanelMealTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelMealTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelMealTop.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelMealTop.ColumnCount = 2
+        Me.TableLayoutPanelMealTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelMealTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelMealTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelMealTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelMealTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelMealTop.LabelText = "Meal"
+        Me.TableLayoutPanelMealTop.Location = New System.Drawing.Point(6, 6)
+        Me.TableLayoutPanelMealTop.Name = "TableLayoutPanelMealTop"
+        Me.TableLayoutPanelMealTop.RowCount = 1
+        Me.TableLayoutPanelMealTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelMealTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelMealTop.Size = New System.Drawing.Size(1358, 37)
+        Me.TableLayoutPanelMealTop.TabIndex = 1
         '
         'TabPageTimeChange
         '
@@ -2510,7 +2747,7 @@ Partial Class Form1
         Me.TabPageTimeChange.Location = New System.Drawing.Point(4, 27)
         Me.TabPageTimeChange.Name = "TabPageTimeChange"
         Me.TabPageTimeChange.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageTimeChange.Size = New System.Drawing.Size(192, 69)
+        Me.TabPageTimeChange.Size = New System.Drawing.Size(1376, 639)
         Me.TabPageTimeChange.TabIndex = 7
         Me.TabPageTimeChange.Text = "Time Change"
         Me.TabPageTimeChange.UseVisualStyleBackColor = True
@@ -2530,13 +2767,29 @@ Partial Class Form1
         Me.TableLayoutPanelTimeChange.RowCount = 2
         Me.TableLayoutPanelTimeChange.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelTimeChange.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanelTimeChange.Size = New System.Drawing.Size(186, 30)
+        Me.TableLayoutPanelTimeChange.Size = New System.Drawing.Size(1370, 52)
         Me.TableLayoutPanelTimeChange.TabIndex = 1
         '
         'TableLayoutPanelTimeChangeTop
         '
+        Me.TableLayoutPanelTimeChangeTop.AutoSize = True
+        Me.TableLayoutPanelTimeChangeTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanelTimeChangeTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelTimeChangeTop.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelTimeChangeTop.ColumnCount = 2
+        Me.TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelTimeChangeTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelTimeChangeTop.LabelText = "Time Change"
+        Me.TableLayoutPanelTimeChangeTop.Location = New System.Drawing.Point(6, 6)
+        Me.TableLayoutPanelTimeChangeTop.Name = "TableLayoutPanelTimeChangeTop"
+        Me.TableLayoutPanelTimeChangeTop.RowCount = 1
+        Me.TableLayoutPanelTimeChangeTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelTimeChangeTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.TableLayoutPanelTimeChangeTop.Size = New System.Drawing.Size(1358, 37)
+        Me.TableLayoutPanelTimeChangeTop.TabIndex = 1
         '
         'TabPageCountryDataPg1
         '
@@ -2544,7 +2797,7 @@ Partial Class Form1
         Me.TabPageCountryDataPg1.Location = New System.Drawing.Point(4, 27)
         Me.TabPageCountryDataPg1.Name = "TabPageCountryDataPg1"
         Me.TabPageCountryDataPg1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageCountryDataPg1.Size = New System.Drawing.Size(192, 69)
+        Me.TabPageCountryDataPg1.Size = New System.Drawing.Size(1376, 639)
         Me.TabPageCountryDataPg1.TabIndex = 11
         Me.TabPageCountryDataPg1.Text = "Country Data Pg1"
         Me.TabPageCountryDataPg1.UseVisualStyleBackColor = True
@@ -2555,7 +2808,7 @@ Partial Class Form1
         Me.TabPageCountryDataPg2.Location = New System.Drawing.Point(4, 27)
         Me.TabPageCountryDataPg2.Name = "TabPageCountryDataPg2"
         Me.TabPageCountryDataPg2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageCountryDataPg2.Size = New System.Drawing.Size(192, 69)
+        Me.TabPageCountryDataPg2.Size = New System.Drawing.Size(1376, 639)
         Me.TabPageCountryDataPg2.TabIndex = 11
         Me.TabPageCountryDataPg2.Text = "Country Data Pg2"
         Me.TabPageCountryDataPg2.UseVisualStyleBackColor = True
@@ -2566,7 +2819,7 @@ Partial Class Form1
         Me.TabPageCountryDataPg3.Location = New System.Drawing.Point(4, 27)
         Me.TabPageCountryDataPg3.Name = "TabPageCountryDataPg3"
         Me.TabPageCountryDataPg3.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageCountryDataPg3.Size = New System.Drawing.Size(192, 69)
+        Me.TabPageCountryDataPg3.Size = New System.Drawing.Size(1376, 639)
         Me.TabPageCountryDataPg3.TabIndex = 11
         Me.TabPageCountryDataPg3.Text = "Country Data Pg3"
         Me.TabPageCountryDataPg3.UseVisualStyleBackColor = True
@@ -2577,7 +2830,7 @@ Partial Class Form1
         Me.TabPageUserProfile.Location = New System.Drawing.Point(4, 27)
         Me.TabPageUserProfile.Name = "TabPageUserProfile"
         Me.TabPageUserProfile.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageUserProfile.Size = New System.Drawing.Size(192, 69)
+        Me.TabPageUserProfile.Size = New System.Drawing.Size(1376, 639)
         Me.TabPageUserProfile.TabIndex = 12
         Me.TabPageUserProfile.Text = "User Profile"
         Me.TabPageUserProfile.UseVisualStyleBackColor = True
@@ -2587,7 +2840,7 @@ Partial Class Form1
         Me.TabPageCurrentUser.Controls.Add(Me.DataGridViewCurrentUser)
         Me.TabPageCurrentUser.Location = New System.Drawing.Point(4, 27)
         Me.TabPageCurrentUser.Name = "TabPageCurrentUser"
-        Me.TabPageCurrentUser.Size = New System.Drawing.Size(192, 69)
+        Me.TabPageCurrentUser.Size = New System.Drawing.Size(1376, 639)
         Me.TabPageCurrentUser.TabIndex = 13
         Me.TabPageCurrentUser.Text = "Current User"
         Me.TabPageCurrentUser.UseVisualStyleBackColor = True
@@ -2599,7 +2852,7 @@ Partial Class Form1
         Me.TabPageAllUsers.Location = New System.Drawing.Point(4, 27)
         Me.TabPageAllUsers.Name = "TabPageAllUsers"
         Me.TabPageAllUsers.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageAllUsers.Size = New System.Drawing.Size(192, 69)
+        Me.TabPageAllUsers.Size = New System.Drawing.Size(1376, 639)
         Me.TabPageAllUsers.TabIndex = 14
         Me.TabPageAllUsers.Text = "All Users"
         Me.TabPageAllUsers.UseVisualStyleBackColor = True
@@ -2610,9 +2863,21 @@ Partial Class Form1
         Me.TabPageBackToHomePage.Location = New System.Drawing.Point(4, 27)
         Me.TabPageBackToHomePage.Name = "TabPageBackToHomePage"
         Me.TabPageBackToHomePage.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPageBackToHomePage.Size = New System.Drawing.Size(192, 69)
+        Me.TabPageBackToHomePage.Size = New System.Drawing.Size(1376, 639)
         Me.TabPageBackToHomePage.TabIndex = 8
         Me.TabPageBackToHomePage.Text = "Back.."
+        '
+        'OptionsMenuAdvancedOptions
+        '
+        Me.OptionsMenuAdvancedOptions.Enabled = False
+        Me.OptionsMenuAdvancedOptions.Name = "OptionsMenuAdvancedOptions"
+        Me.OptionsMenuAdvancedOptions.Size = New System.Drawing.Size(204, 22)
+        Me.OptionsMenuAdvancedOptions.Text = "Advanced Options"
+        '
+        'ToolStripSeparator6
+        '
+        Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
+        Me.ToolStripSeparator6.Size = New System.Drawing.Size(201, 6)
         '
         'Form1
         '
@@ -2676,105 +2941,70 @@ Partial Class Form1
         Me.TabPage05LastSG.PerformLayout()
         Me.TableLayoutPanelLastSG.ResumeLayout(False)
         Me.TableLayoutPanelLastSG.PerformLayout()
-        Me.TableLayoutPanelLastSgTop.ResumeLayout(False)
-        Me.TableLayoutPanelLastSgTop.PerformLayout()
         Me.TabPage06LastAlarm.ResumeLayout(False)
         Me.TabPage06LastAlarm.PerformLayout()
         Me.TableLayoutPanelLastAlarm.ResumeLayout(False)
         Me.TableLayoutPanelLastAlarm.PerformLayout()
-        Me.TableLayoutPanelLastAlarmTop.ResumeLayout(False)
-        Me.TableLayoutPanelLastAlarmTop.PerformLayout()
         Me.TabPage07ActiveInsulin.ResumeLayout(False)
         Me.TabPage07ActiveInsulin.PerformLayout()
         Me.TableLayoutPanelActiveInsulin.ResumeLayout(False)
         Me.TableLayoutPanelActiveInsulin.PerformLayout()
-        Me.TableLayoutPanelActiveInsulinTop.ResumeLayout(False)
-        Me.TableLayoutPanelActiveInsulinTop.PerformLayout()
         Me.TabPage08SensorGlucose.ResumeLayout(False)
         Me.TabPage08SensorGlucose.PerformLayout()
         Me.TableLayoutPanelSgs.ResumeLayout(False)
         Me.TableLayoutPanelSgs.PerformLayout()
-        Me.TableLayoutPanelSgsTop.ResumeLayout(False)
-        Me.TableLayoutPanelSgsTop.PerformLayout()
         Me.TabPage09Limits.ResumeLayout(False)
         Me.TabPage09Limits.PerformLayout()
         Me.TableLayoutPanelLimits.ResumeLayout(False)
         Me.TableLayoutPanelLimits.PerformLayout()
-        Me.TableLayoutPanelLimitsTop.ResumeLayout(False)
-        Me.TableLayoutPanelLimitsTop.PerformLayout()
         Me.TabPage10NotificationHistory.ResumeLayout(False)
         Me.TabPage10NotificationHistory.PerformLayout()
         Me.TableLayoutPanelNotificationHistory.ResumeLayout(False)
         Me.TableLayoutPanelNotificationHistory.PerformLayout()
-        Me.TableLayoutPanelNotificationHistoryTop.ResumeLayout(False)
-        Me.TableLayoutPanelNotificationHistoryTop.PerformLayout()
         Me.TabPage11TherapyAlgorithm.ResumeLayout(False)
         Me.TabPage11TherapyAlgorithm.PerformLayout()
         Me.TableLayoutPanelTherapyAlgorithm.ResumeLayout(False)
         Me.TableLayoutPanelTherapyAlgorithm.PerformLayout()
-        Me.TableLayoutPanelTherapyAlgorithmTop.ResumeLayout(False)
-        Me.TableLayoutPanelTherapyAlgorithmTop.PerformLayout()
         Me.TabPage12BannerState.ResumeLayout(False)
         Me.TabPage12BannerState.PerformLayout()
         Me.TableLayoutPanelBannerState.ResumeLayout(False)
         Me.TableLayoutPanelBannerState.PerformLayout()
-        Me.TableLayoutPanelBannerStateTop.ResumeLayout(False)
-        Me.TableLayoutPanelBannerStateTop.PerformLayout()
         Me.TabPage13Basal.ResumeLayout(False)
         Me.TableLayoutPanelBasal.ResumeLayout(False)
         Me.TableLayoutPanelBasal.PerformLayout()
-        Me.TableLayoutPanelBasalTop.ResumeLayout(False)
-        Me.TableLayoutPanelBasalTop.PerformLayout()
         Me.TabControlPage2.ResumeLayout(False)
-        Me.TabControlPage2.PerformLayout()
         Me.TabPageAutoBasalDelivery.ResumeLayout(False)
         Me.TabPageAutoBasalDelivery.PerformLayout()
         Me.TableLayoutPanelAutoBasalDelivery.ResumeLayout(False)
         Me.TableLayoutPanelAutoBasalDelivery.PerformLayout()
-        Me.TableLayoutPanelAutoBasalDeliveryTop.ResumeLayout(False)
-        Me.TableLayoutPanelAutoBasalDeliveryTop.PerformLayout()
         Me.TabPageAutoModeStatus.ResumeLayout(False)
         Me.TabPageAutoModeStatus.PerformLayout()
         Me.TableLayoutPanelAutoModeStatus.ResumeLayout(False)
         Me.TableLayoutPanelAutoModeStatus.PerformLayout()
-        Me.TableLayoutPanelAutoModeStatusTop.ResumeLayout(False)
-        Me.TableLayoutPanelAutoModeStatusTop.PerformLayout()
         Me.TabPageBgReadings.ResumeLayout(False)
         Me.TabPageBgReadings.PerformLayout()
         Me.TableLayoutPanelBgReadings.ResumeLayout(False)
         Me.TableLayoutPanelBgReadings.PerformLayout()
-        Me.TableLayoutPanelBgReadingsTop.ResumeLayout(False)
-        Me.TableLayoutPanelBgReadingsTop.PerformLayout()
         Me.TabPageCalibration.ResumeLayout(False)
         Me.TabPageCalibration.PerformLayout()
         Me.TableLayoutPanelCalibration.ResumeLayout(False)
         Me.TableLayoutPanelCalibration.PerformLayout()
-        Me.TableLayoutPanelCalibrationTop.ResumeLayout(False)
-        Me.TableLayoutPanelCalibrationTop.PerformLayout()
         Me.TabPageInsulin.ResumeLayout(False)
         Me.TabPageInsulin.PerformLayout()
         Me.TableLayoutPanelInsulin.ResumeLayout(False)
         Me.TableLayoutPanelInsulin.PerformLayout()
-        Me.TableLayoutPanelInsulinTop.ResumeLayout(False)
-        Me.TableLayoutPanelInsulinTop.PerformLayout()
         Me.TabPageLowGlucoseSuspended.ResumeLayout(False)
         Me.TabPageLowGlucoseSuspended.PerformLayout()
         Me.TableLayoutPanelLowGlucoseSuspended.ResumeLayout(False)
         Me.TableLayoutPanelLowGlucoseSuspended.PerformLayout()
-        Me.TableLayoutPanelLowGlucoseSuspendedTop.ResumeLayout(False)
-        Me.TableLayoutPanelLowGlucoseSuspendedTop.PerformLayout()
         Me.TabPageMeal.ResumeLayout(False)
         Me.TabPageMeal.PerformLayout()
         Me.TableLayoutPanelMeal.ResumeLayout(False)
         Me.TableLayoutPanelMeal.PerformLayout()
-        Me.TableLayoutPanelMealTop.ResumeLayout(False)
-        Me.TableLayoutPanelMealTop.PerformLayout()
         Me.TabPageTimeChange.ResumeLayout(False)
         Me.TabPageTimeChange.PerformLayout()
         Me.TableLayoutPanelTimeChange.ResumeLayout(False)
         Me.TableLayoutPanelTimeChange.PerformLayout()
-        Me.TableLayoutPanelTimeChangeTop.ResumeLayout(False)
-        Me.TableLayoutPanelTimeChangeTop.PerformLayout()
         Me.TabPageCountryDataPg1.ResumeLayout(False)
         Me.TabPageCountryDataPg2.ResumeLayout(False)
         Me.TabPageCountryDataPg3.ResumeLayout(False)
@@ -2811,7 +3041,7 @@ Partial Class Form1
     Friend WithEvents CursorPictureBox As PictureBox
     Friend WithEvents CursorTimer As Timer
     Friend WithEvents DataGridViewAutoBasalDelivery As DataGridView
-    Friend WithEvents DataGridViewButtonColumnCareLinkDeleteRow As DataGridViewDisableButtonColumn
+    Friend WithEvents DataGridViewButtonColumnCareLinkDeleteRow As DataGridViewColumnControls.DataGridViewDisableButtonColumn
     Friend WithEvents DataGridViewCareLinkUsers As DataGridView
     Friend WithEvents DataGridViewCheckBoxColumnCareLinkAutoLogin As DataGridViewCheckBoxColumn
     Friend WithEvents DataGridViewCheckBoxColumnCareLinkUseAdvancedAITDecay As DataGridViewCheckBoxColumn
@@ -2921,39 +3151,39 @@ Partial Class Form1
     Friend WithEvents TabControlPage1 As TabControl
     Friend WithEvents TabControlPage2 As TabControl
     Friend WithEvents TableLayoutPanelActiveInsulin As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelActiveInsulinTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelActiveInsulinTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelAutoBasalDelivery As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelAutoBasalDeliveryTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelAutoBasalDeliveryTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelAutoModeStatus As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelAutoModeStatusTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelAutoModeStatusTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelBannerState As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelBannerStateTop As New TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelBannerStateTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelBasal As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelBasalTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelBasalTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelBgReadings As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelBgReadingsTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelBgReadingsTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelCalibration As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelCalibrationTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelCalibrationTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelInsulin As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelInsulinTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelInsulinTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelLastAlarm As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelLastAlarmTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelLastAlarmTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelLastSG As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelLastSgTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelLastSgTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelLimits As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelLimitsTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelLimitsTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelLowGlucoseSuspended As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelLowGlucoseSuspendedTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelLowGlucoseSuspendedTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelMeal As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelMealTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelMealTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelNotificationHistory As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelNotificationHistoryTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelNotificationHistoryTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelSgs As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelSgsTop As New TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelSgsTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelTherapyAlgorithm As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelTherapyAlgorithmTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelTherapyAlgorithmTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelTimeChange As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelTimeChangeTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelTimeChangeTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TabPage01HomePage As TabPage
     Friend WithEvents TabPage02RunningIOB As TabPage
     Friend WithEvents TabPage03TreatmentDetails As TabPage
@@ -2996,4 +3226,6 @@ Partial Class Form1
     Friend WithEvents ToolTip1 As ToolTip
     Friend WithEvents TransmatterBatterPercentLabel As Label
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
+    Friend WithEvents ToolStripSeparator6 As ToolStripSeparator
+    Friend WithEvents OptionsMenuAdvancedOptions As ToolStripMenuItem
 End Class

@@ -228,7 +228,7 @@ Friend Module ChartSupport
                         .BorderColor = Color.Transparent,
                         .BorderWidth = 1,
                         .ChartArea = NameOf(ChartArea),
-                        .Color = Color.LightGoldenrodYellow,
+                        .Color = Color.White,
                         .LegendText = "Time Change",
                         .ShadowColor = Color.Transparent,
                         .XValueType = ChartValueType.DateTime,

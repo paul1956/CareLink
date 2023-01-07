@@ -118,8 +118,8 @@ Friend Module ChartingExtensions
     End Sub
 
     <Extension>
-    Friend Sub AdjustXAxisStartTime(ByRef axisX As Axis, timeChangeRecord As TimeChangeRecord)
-        Dim latestTime As Date = If(timeChangeRecord.previousDateTime > timeChangeRecord.dateTime, timeChangeRecord.previousDateTime, timeChangeRecord.dateTime)
+    Friend Sub AdjustXAxisStartTime(ByRef axisX As Axis, localTtimeChangeRecord As TimeChangeRecord)
+        Dim latestTime As Date = localTtimeChangeRecord.GetLatestTime
         Dim timeOffset As Double = (latestTime - s_listOfSGs(0).datetime).TotalMinutes
         axisX.IntervalOffset = timeOffset
         axisX.IntervalOffsetType = DateTimeIntervalType.Minutes
@@ -238,8 +238,8 @@ Friend Module ChartingExtensions
                         End If
                     Case "TIME_CHANGE"
                         With pageChart.Series(TimeChangeSeriesName).Points
-                            lastTimeChangeRecord = New TimeChangeRecord(s_markers(markerWithIndex.Index))
-                            markerOADateTime = lastTimeChangeRecord.OAdateTime
+                            lastTimeChangeRecord = New TimeChangeRecord(entry)
+                            markerOADateTime = New OADate(lastTimeChangeRecord.GetLatestTime)
                             .AddXY(markerOADateTime, 0)
                             .AddXY(markerOADateTime, HomePageBasalRow)
                             .AddXY(markerOADateTime, Double.NaN)
@@ -253,11 +253,11 @@ Friend Module ChartingExtensions
             End Try
         Next
 
-        If lastTimeChangeRecord Is Nothing Then
-            timeChangeSeries.IsVisibleInLegend = False
-        Else
+        If s_listOfTimeChangeMarkers.Any Then
             timeChangeSeries.IsVisibleInLegend = True
             pageChart.ChartAreas(NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
+        Else
+            timeChangeSeries.IsVisibleInLegend = False
         End If
     End Sub
 
@@ -333,8 +333,8 @@ Friend Module ChartingExtensions
                          "CALIBRATION"
                     Case "TIME_CHANGE"
                         With treatmentChart.Series(TimeChangeSeriesName).Points
-                            lastTimeChangeRecord = New TimeChangeRecord(s_markers(markerWithIndex.Index))
-                            markerOADateTime = lastTimeChangeRecord.previousOADateTime
+                            lastTimeChangeRecord = New TimeChangeRecord(entry)
+                            markerOADateTime = New OADate(lastTimeChangeRecord.GetLatestTime)
                             .AddXY(markerOADateTime, 0)
                             .AddXY(markerOADateTime, TreatmentInsulinRow)
                             .AddXY(markerOADateTime, Double.NaN)
@@ -347,11 +347,11 @@ Friend Module ChartingExtensions
                 '      Throw New Exception($"{ex.DecodeException()} exception in {memberName} at {sourceLineNumber}")
             End Try
         Next
-        If lastTimeChangeRecord Is Nothing Then
-            treatmentMarkerTimeChangeSeries.IsVisibleInLegend = False
-        Else
+        If s_listOfTimeChangeMarkers.Any Then
             treatmentMarkerTimeChangeSeries.IsVisibleInLegend = True
             treatmentChart.ChartAreas(NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
+        Else
+            treatmentMarkerTimeChangeSeries.IsVisibleInLegend = False
         End If
 
     End Sub

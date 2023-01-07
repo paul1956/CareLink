@@ -1331,7 +1331,7 @@ Public Class Form1
 
                 .Add(Me.ActiveInsulinBGSeries)
                 .Add(Me.ActiveInsulinMarkerSeries)
-                .Add(Me.ActiveInsulinTimeChangeSeries())
+                .Add(Me.ActiveInsulinTimeChangeSeries)
             End With
             .Series(BgSeriesName).EmptyPointStyle.BorderWidth = 4
             .Series(BgSeriesName).EmptyPointStyle.Color = Color.Transparent
@@ -1426,7 +1426,7 @@ Public Class Form1
 
                 .Add(Me.TreatmentMarkerBGSeries)
                 .Add(Me.TreatmentMarkerMarkersSeries)
-                .Add(Me.TreatmentMarkerTimeChangeSeries())
+                .Add(Me.TreatmentMarkerTimeChangeSeries)
             End With
             .Legends.Add(Me.TreatmentMarkersChartLegend)
             .Series(BgSeriesName).EmptyPointStyle.Color = Color.Transparent
