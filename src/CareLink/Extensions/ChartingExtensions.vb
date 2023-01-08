@@ -129,7 +129,7 @@ Friend Module ChartingExtensions
     Friend Sub DrawBasalMarker(ByRef basalSeries As Series, markerOADate As OADate, amount As Single, bolusRow As Double, insulinRow As Double, lineColor As Color, DrawFromBottom As Boolean, toolTip As String)
         Dim startX As OADate
         Dim startY As Double
-        If Math.Abs(amount - 0.025) < 0.001 Then
+        If amount.IsMinBasal() Then
             lineColor = GetGraphColor("Min Basal")
         End If
         If DrawFromBottom Then
@@ -198,13 +198,33 @@ Friend Module ChartingExtensions
                     Case "CALIBRATION"
                         markerSeriesPoints.AddCalibrationPoint(markerOADateTime, bgValue, entry)
                     Case "AUTO_BASAL_DELIVERY"
-                        Dim bolusAmount As String = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount))
-                        pageChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, bolusAmount.ParseSingle, HomePageBasalRow, HomePageInsulinRow, GetGraphColor("Basal Series"), False, $"Auto Basal:{bolusAmount.TruncateSingleString(3)} U")
+                        Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle.RoundSingle(3)
+                        Dim minBasalMsg As String = ""
+                        If amount.IsMinBasal() Then
+                            minBasalMsg = "Min "
+                        End If
+                        With pageChart.Series(BasalSeriesName)
+                            .DrawBasalMarker(markerOADateTime,
+                                             amount,
+                                             HomePageBasalRow,
+                                             HomePageInsulinRow,
+                                             GetGraphColor("Basal Series"),
+                                             False,
+                                             $"{minBasalMsg}Auto Basal: {amount} U")
+                        End With
                     Case "INSULIN"
                         Select Case entry(NameOf(InsulinRecord.activationType))
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
-                                pageChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, HomePageBasalRow, HomePageInsulinRow, GetGraphColor("Auto Correction"), False, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
+                                With pageChart.Series(BasalSeriesName)
+                                    .DrawBasalMarker(markerOADateTime,
+                                                     autoCorrection.ParseSingle,
+                                                     HomePageBasalRow,
+                                                     HomePageInsulinRow,
+                                                     GetGraphColor("Auto Correction"),
+                                                     False,
+                                                     $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
+                                End With
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 If markerInsulinDictionary.TryAdd(markerOADateTime, CInt(HomePageInsulinRow)) Then
                                     markerSeriesPoints.AddXY(markerOADateTime, HomePageInsulinRow - 10)
@@ -234,7 +254,7 @@ Friend Module ChartingExtensions
                             markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Yellow)
                             markerSeriesPoints.Last.MarkerSize = 20
                             markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
-                            markerSeriesPoints.Last.ToolTip = $"Meal:{entry("amount")} grams"
+                            markerSeriesPoints.Last.ToolTip = $"Meal: {entry("amount")} grams"
                         End If
                     Case "TIME_CHANGE"
                         With pageChart.Series(TimeChangeSeriesName).Points
@@ -256,8 +276,10 @@ Friend Module ChartingExtensions
         If s_listOfTimeChangeMarkers.Any Then
             timeChangeSeries.IsVisibleInLegend = True
             pageChart.ChartAreas(NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
+            pageChart.Legends(0).CustomItems.Last.Enabled = True
         Else
             timeChangeSeries.IsVisibleInLegend = False
+            pageChart.Legends(0).CustomItems.Last.Enabled = False
         End If
     End Sub
 
@@ -291,8 +313,21 @@ Friend Module ChartingExtensions
                 Dim markerSeriesPoints As DataPointCollection = treatmentChart.Series(MarkerSeriesName).Points
                 Select Case entry("type")
                     Case "AUTO_BASAL_DELIVERY"
-                        Dim bolusAmount As String = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount))
-                        treatmentChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, bolusAmount.ParseSingle.RoundSingle(3), MaxBasalPerDose, TreatmentInsulinRow, GetGraphColor("Basal Series"), True, $"Auto Basal:{bolusAmount.TruncateSingleString(3)} U")
+                        Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle.RoundSingle(3)
+                        Dim minBasalMsg As String = ""
+                        If amount.IsMinBasal() Then
+                            minBasalMsg = "Min "
+                        End If
+                        With treatmentChart.Series(BasalSeriesName)
+                            .DrawBasalMarker(markerOADateTime,
+                                             amount,
+                                             MaxBasalPerDose,
+                                             TreatmentInsulinRow,
+                                             GetGraphColor("Basal Series"),
+                                             True,
+                                             $"{minBasalMsg}Auto Basal: {amount} U")
+
+                        End With
                     Case "INSULIN"
                         Select Case entry(NameOf(InsulinRecord.activationType))
                             Case "AUTOCORRECTION"
@@ -327,7 +362,7 @@ Friend Module ChartingExtensions
                             markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Yellow)
                             markerSeriesPoints.Last.MarkerSize = 20
                             markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
-                            markerSeriesPoints.Last.ToolTip = $"Meal:{entry("amount")} grams"
+                            markerSeriesPoints.Last.ToolTip = $"Meal: {entry("amount")} grams"
                         End If
                     Case "BG_READING",
                          "CALIBRATION"
@@ -350,8 +385,10 @@ Friend Module ChartingExtensions
         If s_listOfTimeChangeMarkers.Any Then
             treatmentMarkerTimeChangeSeries.IsVisibleInLegend = True
             treatmentChart.ChartAreas(NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
+            treatmentChart.Legends(0).CustomItems.Last.Enabled = True
         Else
             treatmentMarkerTimeChangeSeries.IsVisibleInLegend = False
+            treatmentChart.Legends(0).CustomItems.Last.Enabled = False
         End If
 
     End Sub
@@ -386,5 +423,15 @@ Friend Module ChartingExtensions
             e.PaintMarker(s_mealImage, mealDictionary, False, paintOnY2)
         End If
     End Sub
+
+    <Extension>
+    Public Function IsMinBasal(amount As Single) As Boolean
+        Return Math.Abs(amount - 0.025) < 0.001
+    End Function
+
+    <Extension>
+    Public Function IsMinBasal(amount As String) As Boolean
+        Return amount = "0.025"
+    End Function
 
 End Module

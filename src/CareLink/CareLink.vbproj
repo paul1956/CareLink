@@ -50,6 +50,8 @@
 
   <ItemGroup>
     <Compile Remove="Forms\FileNameStruct.vb" />
+    <Compile Remove="Helpers\ColorDistance.vb" />
+    <Compile Remove="Helpers\LooksLikeColor.vb" />
     <Compile Remove="Utilities\CareLinkFilters.vb" />
   </ItemGroup>
 

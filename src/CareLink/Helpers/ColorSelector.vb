@@ -14,11 +14,51 @@ Partial Public Module ColorSelector
                         {"Min Basal", KnownColor.LightYellow},
                         {"BG Series", KnownColor.White},
                         {"High Limit", KnownColor.Yellow},
-                        {"Low Limit", KnownColor.Red}
+                        {"Low Limit", KnownColor.Red},
+                        {"Time Change", KnownColor.White}
                     }
+
+    Private Function HSBdiff(col1 As Color, col2 As Color) As Single
+        Dim h, s, b As Single
+        h = Math.Abs(col1.GetHue - col2.GetHue)
+        s = Math.Abs(col1.GetSaturation - col2.GetSaturation)
+        b = Math.Abs(col1.GetBrightness - col2.GetBrightness)
+        Return h + s + b
+    End Function
+
+    Private Function RGBdiff(col1 As Color, col2 As Color) As Integer
+        Dim r, g, b As Integer
+        r = Math.Abs(CInt(col1.R) - CInt(col2.R))
+        g = Math.Abs(CInt(col1.G) - CInt(col2.G))
+        b = Math.Abs(CInt(col1.B) - CInt(col2.B))
+        Return CInt((r ^ 2) + (g ^ 2) + (b ^ 2))
+    End Function
 
     Public Function GetGraphColor(lineName As String) As Color
         Return GraphColorDictionary(lineName).ToColor
+    End Function
+
+    Public Function GetNearestKnownColor(col As Color, Optional excludeSystemColors As Boolean = True) As KnownColor
+        Dim rgblist As New SortedList(Of Long, KnownColor)
+        Dim rgb As Integer, hsb As Single, kcol As Color
+        For Each known As KnownColor In System.Enum.GetValues(GetType(KnownColor))
+            kcol = Color.FromKnownColor(known)
+            If Not excludeSystemColors OrElse Not kcol.IsSystemColor Then
+                rgb = RGBdiff(kcol, col)
+                If Not rgblist.ContainsKey(rgb) Then
+                    rgblist.Add(rgb, known)
+                End If
+            End If
+        Next
+        Dim hsblist As New SortedList(Of Single, KnownColor)
+        For i As Integer = 0 To 4
+            kcol = Color.FromKnownColor(rgblist.Values(i))
+            hsb = HSBdiff(col, kcol)
+            If Not hsblist.ContainsKey(hsb) Then
+                hsblist.Add(hsb, rgblist.Values(i))
+            End If
+        Next
+        Return hsblist.Values(0)
     End Function
 
     Public Sub LoadColorDictionaryFromFile(ByRef lineColorDictionary As Dictionary(Of String, KnownColor))

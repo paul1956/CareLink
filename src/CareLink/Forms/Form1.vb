@@ -576,7 +576,8 @@ Public Class Form1
                                 Select Case markerToolTip(0)
                                     Case "Auto Correction",
                                          "Auto Basal",
-                                         "Basal"
+                                         "Basal",
+                                         "Min Auto Basal"
                                         Me.CursorPictureBox.Image = My.Resources.InsulinVial
                                     Case "Bolus"
                                         Me.CursorPictureBox.Image = My.Resources.InsulinVial
@@ -850,10 +851,10 @@ Public Class Form1
         End If
         ' Set the background to red for negative values in the Balance column.
         If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(AutoBasalDeliveryRecord.bolusAmount), StringComparison.OrdinalIgnoreCase) Then
-            If e.Value.ToString = "0.025" Then
+            Dim basalAmount As String = CSng(e.Value).ToString("F3", CurrentUICulture)
+            e.Value = basalAmount
+            If basalAmount.IsMinBasal Then
                 e.CellStyle.BackColor = GetGraphColor("Min Basal")
-            Else
-                e.Value = CSng(e.Value).ToString("F3", CurrentUICulture)
             End If
         End If
         dgv.dgvCellFormatting(e, NameOf(AutoBasalDeliveryRecord.dateTime))
@@ -1202,18 +1203,17 @@ Public Class Form1
         Me.HomeTabChart.ChartAreas.Add(homeTabChartArea)
         Me.HomeChartLegend = CreateChartLegend(NameOf(HomeChartLegend))
 
-        Me.HomeTabAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeriesName, "Auto Correction", AxisType.Secondary)
-        Me.HomeTabBasalSeries = CreateSeriesBasal(BasalSeriesName, "Basal Series", AxisType.Secondary)
-        Me.HomeTabMinBasalSeries = CreateSeriesBasal(MinBasalSeriesName, "Min Basal", AxisType.Secondary)
+        Me.HomeTabAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeriesName, Me.HomeChartLegend, "Auto Correction", AxisType.Secondary)
+        Me.HomeTabBasalSeries = CreateSeriesBasal(BasalSeriesName, Me.HomeChartLegend, "Basal Series", AxisType.Secondary)
+        Me.HomeTabMinBasalSeries = CreateSeriesBasal(MinBasalSeriesName, Me.HomeChartLegend, "Min Basal", AxisType.Secondary)
 
-        Me.HomeTabBGSeries = CreateSeriesBg(NameOf(HomeChartLegend))
+        Me.HomeTabHighLimitSeries = CreateSeriesLimits(Me.HomeChartLegend, HighLimitSeriesName)
+        Me.HomeTabBGSeries = CreateSeriesBg(Me.HomeChartLegend)
+        Me.HomeTabLowLimitSeries = CreateSeriesLimits(Me.HomeChartLegend, LowLimitSeriesName)
 
-        Me.HomeTabHighLimitSeries = CreateSeriesLimits(HighLimitSeriesName)
-        Me.HomeTabLowLimitSeries = CreateSeriesLimits(LowLimitSeriesName)
+        Me.HomeTabMarkerSeries = CreateSeriesWithoutVisibleLegend(AxisType.Secondary)
 
-        Me.HomeTabMarkerSeries = CreateSeriesMarker(AxisType.Secondary)
-
-        Me.HomeTabTimeChangeSeries = CreateSeriesTimeChange()
+        Me.HomeTabTimeChangeSeries = CreateSeriesTimeChange(Me.HomeChartLegend)
 
         Me.SplitContainer3.Panel1.Controls.Add(Me.HomeTabChart)
         Application.DoEvents()
@@ -1311,15 +1311,15 @@ Public Class Form1
         Me.ActiveInsulinChartTitle = CreateChartTitle(chartTitle,
                                                       NameOf(ActiveInsulinChartTitle),
                                                       GetGraphColor("Active Insulin"))
-        Me.ActiveInsulinActiveInsulinSeries = CreateSeriesActiveInsulin(NameOf(ActiveInsulinChartLegend))
+        Me.ActiveInsulinActiveInsulinSeries = CreateSeriesActiveInsulin()
 
-        Me.ActiveInsulinAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeriesName, "Auto Correction", AxisType.Secondary)
-        Me.ActiveInsulinBasalSeries = CreateSeriesBasal(BasalSeriesName, "Basal Series", AxisType.Secondary)
-        Me.ActiveInsulinMinBasalSeries = CreateSeriesBasal(MinBasalSeriesName, "Min Basal", AxisType.Secondary)
+        Me.ActiveInsulinAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeriesName, Me.ActiveInsulinChartLegend, "Auto Correction", AxisType.Secondary)
+        Me.ActiveInsulinBasalSeries = CreateSeriesBasal(BasalSeriesName, Me.ActiveInsulinChartLegend, "Basal Series", AxisType.Secondary)
+        Me.ActiveInsulinMinBasalSeries = CreateSeriesBasal(MinBasalSeriesName, Me.ActiveInsulinChartLegend, "Min Basal", AxisType.Secondary)
 
-        Me.ActiveInsulinBGSeries = CreateSeriesBg(NameOf(ActiveInsulinChartLegend))
-        Me.ActiveInsulinMarkerSeries = CreateSeriesMarker(AxisType.Secondary)
-        Me.ActiveInsulinTimeChangeSeries = CreateSeriesTimeChange()
+        Me.ActiveInsulinBGSeries = CreateSeriesBg(Me.ActiveInsulinChartLegend)
+        Me.ActiveInsulinMarkerSeries = CreateSeriesWithoutVisibleLegend(AxisType.Secondary)
+        Me.ActiveInsulinTimeChangeSeries = CreateSeriesTimeChange(Me.ActiveInsulinChartLegend)
 
         With Me.ActiveInsulinChart
             With .Series
@@ -1406,17 +1406,17 @@ Public Class Form1
                 .ForeColor = Color.FromArgb(26, 59, 105),
                 .BackColor = .ForeColor.GetContrastingColor(),
                 .Name = NameOf(TreatmentMarkersChartTitle),
-                .ShadowColor = Color.FromArgb(32, 0, 0, 0),
+                .ShadowColor = Color.FromArgb(32, Color.Black),
                 .ShadowOffset = 3
             }
 
-        Me.TreatmentMarkerAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeriesName, "Auto Correction", AxisType.Primary)
-        Me.TreatmentMarkerBasalSeries = CreateSeriesBasal(BasalSeriesName, "Basal Series", AxisType.Primary)
-        Me.TreatmentMarkerMinBasalSeries = CreateSeriesBasal(MinBasalSeriesName, "Min Basal", AxisType.Primary)
+        Me.TreatmentMarkerAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeriesName, Me.TreatmentMarkersChartLegend, "Auto Correction", AxisType.Primary)
+        Me.TreatmentMarkerBasalSeries = CreateSeriesBasal(BasalSeriesName, Me.TreatmentMarkersChartLegend, "Basal Series", AxisType.Primary)
+        Me.TreatmentMarkerMinBasalSeries = CreateSeriesBasal(MinBasalSeriesName, Me.TreatmentMarkersChartLegend, "Min Basal", AxisType.Primary)
 
-        Me.TreatmentMarkerBGSeries = CreateSeriesBg(Me.TreatmentMarkersChartLegend.Name)
-        Me.TreatmentMarkerMarkersSeries = CreateSeriesMarker(AxisType.Primary)
-        Me.TreatmentMarkerTimeChangeSeries = CreateSeriesTimeChange()
+        Me.TreatmentMarkerBGSeries = CreateSeriesBg(Me.TreatmentMarkersChartLegend)
+        Me.TreatmentMarkerMarkersSeries = CreateSeriesWithoutVisibleLegend(AxisType.Primary)
+        Me.TreatmentMarkerTimeChangeSeries = CreateSeriesTimeChange(Me.TreatmentMarkersChartLegend)
 
         With Me.TreatmentMarkersChart
             With .Series
@@ -1757,8 +1757,10 @@ Public Class Form1
                 Dim maxActiveInsulin As Double = 0
                 For i As Integer = 0 To remainingInsulinList.Count - 1
                     If i < s_activeInsulinIncrements Then
-                        .Series(ActiveInsulinSeriesName).Points.AddXY(remainingInsulinList(i).OaDateTime, Double.NaN)
-                        .Series(ActiveInsulinSeriesName).Points.Last.IsEmpty = True
+                        With Me.ActiveInsulinActiveInsulinSeries
+                            .Points.AddXY(remainingInsulinList(i).OaDateTime, Double.NaN)
+                            .Points.Last.IsEmpty = True
+                        End With
                         If i > 0 Then
                             remainingInsulinList.Adjustlist(0, i)
                         End If
@@ -1767,7 +1769,7 @@ Public Class Form1
                     Dim startIndex As Integer = i - s_activeInsulinIncrements + 1
                     Dim sum As Double = remainingInsulinList.ConditionalSum(startIndex, s_activeInsulinIncrements)
                     maxActiveInsulin = Math.Max(sum, maxActiveInsulin)
-                    .Series(ActiveInsulinSeriesName).Points.AddXY(remainingInsulinList(i).OaDateTime, sum)
+                    Me.ActiveInsulinActiveInsulinSeries.Points.AddXY(remainingInsulinList(i).OaDateTime, sum)
                     remainingInsulinList.Adjustlist(startIndex, s_activeInsulinIncrements)
                 Next
 
@@ -1870,10 +1872,9 @@ Public Class Form1
                     End Select
 
                 Case "AUTO_BASAL_DELIVERY"
-                    Dim amountString As String = marker.Value(NameOf(AutoBasalDeliveryRecord.bolusAmount)).TruncateSingleString(3)
-                    Dim basalAmount As Single = amountString.ParseSingle
-                    s_totalBasal += basalAmount
-                    s_totalDailyDose += basalAmount
+                    Dim amount As Single = marker.Value(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle.RoundSingle(3)
+                    s_totalBasal += amount
+                    s_totalDailyDose += amount
                 Case "MEAL"
                     s_totalCarbs += marker.Value("amount").ParseSingle
             End Select
@@ -2187,6 +2188,10 @@ Public Class Form1
         s_recentDatalast = Me.RecentData
         Me.MenuStartHere.Enabled = True
         Me.UpdateTreatmentChart()
+        If s_totalAutoCorrection > 0 Then
+            EnableAutoCorrectionLegend(Me.ActiveInsulinChartLegend, Me.HomeChartLegend, Me.TreatmentMarkersChartLegend)
+        End If
+
         Application.DoEvents()
     End Sub
 

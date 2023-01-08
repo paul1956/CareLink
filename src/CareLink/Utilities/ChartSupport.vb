@@ -17,6 +17,23 @@ Friend Module ChartSupport
     Friend Const MinBasalSeriesName As String = "MinBasal"
     Friend Const TimeChangeSeriesName As String = "TimeChangeSeries"
 
+    Private Function CreateBaseSeries(seriesName As String, legendText As String, borderWidth As Integer, yAxisType As AxisType) As Series
+        Dim lineColor As Color = GetGraphColor(legendText)
+        Dim tmpSeries As New Series(seriesName) With {
+                            .BorderColor = Color.FromArgb(180, lineColor),
+                            .BorderWidth = borderWidth,
+                            .ChartArea = NameOf(ChartArea),
+                            .ChartType = SeriesChartType.Line,
+                            .Color = lineColor,
+                            .IsValueShownAsLabel = False,
+                            .LegendText = legendText,
+                            .ShadowColor = lineColor.GetContrastingColor,
+                            .XValueType = ChartValueType.DateTime,
+                            .YAxisType = yAxisType
+                        }
+        Return tmpSeries
+    End Function
+
     Friend Function CreateChart(chartName As String) As Chart
         Return New Chart With {
                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
@@ -127,84 +144,72 @@ Friend Module ChartSupport
                     }
     End Function
 
-    Friend Function CreateSeriesActiveInsulin(activeInsulinChartLegendName As String) As Series
-        Return New Series(ActiveInsulinSeriesName) With {
-                    .BorderColor = Color.FromArgb(180, 26, 59, 105),
-                    .BorderWidth = 4,
-                    .ChartArea = NameOf(ChartArea),
-                    .ChartType = SeriesChartType.Line,
-                    .Color = GetGraphColor("Active Insulin"),
-                    .Legend = activeInsulinChartLegendName,
-                    .LegendText = "Active Insulin",
-                    .MarkerColor = Color.Black,
-                    .MarkerSize = 4,
-                    .MarkerStyle = MarkerStyle.Circle,
-                    .ShadowColor = Color.Black,
-                    .XValueType = ChartValueType.DateTime,
-                    .YAxisType = AxisType.Primary
-                }
-    End Function
-
-    Friend Function CreateSeriesBasal(SeriesName As String, legendName As String, YAxisType As AxisType) As Series
-        Dim basalColor As Color = GetGraphColor(legendName)
-        Dim s As New Series(SeriesName) With {
-                     .BorderWidth = 2,
-                     .BorderColor = basalColor,
-                     .ChartArea = NameOf(ChartArea),
-                     .ChartType = SeriesChartType.Line,
-                     .Color = basalColor,
-                     .LegendText = legendName,
-                     .XValueType = ChartValueType.DateTime,
-                     .YAxisType = YAxisType
-                 }
-        s.EmptyPointStyle.BorderWidth = 4
-        s.EmptyPointStyle.Color = Color.Transparent
-
+    Friend Function CreateSeriesActiveInsulin() As Series
+        Dim s As Series = CreateBaseSeries(ActiveInsulinSeriesName, "Active Insulin", 4, AxisType.Primary)
+        s.MarkerColor = Color.Black
+        s.MarkerSize = 4
+        s.MarkerStyle = MarkerStyle.Circle
         Return s
     End Function
 
-    Friend Function CreateSeriesBg(legendName As String) As Series
-        Dim lineColor As Color = GetGraphColor("BG Series")
-        Return New Series(BgSeriesName) With {
-                     .BorderColor = Color.FromArgb(180, 26, 59, 105),
-                     .BorderWidth = 4,
-                     .ChartArea = NameOf(ChartArea),
-                     .ChartType = SeriesChartType.Line,
-                     .Color = lineColor,
-                     .Legend = legendName,
-                     .LegendText = "BG",
-                     .ShadowColor = lineColor.GetContrastingColor,
-                     .XValueType = ChartValueType.DateTime,
-                     .YAxisType = AxisType.Secondary
-                 }
+    Friend Function CreateSeriesBasal(SeriesName As String, basalLegend As Legend, legendText As String, YAxisType As AxisType) As Series
+        Dim s As Series = CreateBaseSeries(SeriesName, legendText, 2, YAxisType)
+        s.IsVisibleInLegend = False
+        Dim lineColor As Color = GetGraphColor(legendText)
+        Select Case legendText
+            Case "Min Basal"
+                lineColor = Color.FromArgb(150, lineColor)
+                basalLegend.CustomItems.Add(New LegendItem(legendText, lineColor, ""))
+            Case "Auto Correction"
+                basalLegend.CustomItems.Add(New LegendItem(legendText, lineColor, ""))
+                basalLegend.CustomItems.Last.Enabled = False
+            Case "Basal Series"
+                basalLegend.CustomItems.Add(New LegendItem(legendText, lineColor, ""))
+            Case Else
+                Stop
+        End Select
+        s.EmptyPointStyle.BorderWidth = 2
+        s.EmptyPointStyle.Color = Color.Transparent
+        Return s
     End Function
 
-    Friend Function CreateSeriesLimits(seriesName As String) As Series
-        Dim legendName As String
+    Friend Function CreateSeriesBg(bgLegend As Legend) As Series
+        Const legendText As String = "BG Series"
+        Dim s As Series = CreateBaseSeries(BgSeriesName, legendText, 4, AxisType.Secondary)
+        s.IsVisibleInLegend = False
+        bgLegend.CustomItems.Add(New LegendItem(legendText, GetGraphColor(legendText), ""))
+        Return s
+    End Function
+
+    Friend Function CreateSeriesLimits(limitsLegend As Legend, seriesName As String) As Series
+        Dim legendText As String
         Dim lineColor As Color
         If seriesName.Equals(HighLimitSeriesName) Then
-            legendName = "High Limit"
+            legendText = "High Limit"
             lineColor = Color.Yellow
         Else
-            legendName = "Low Limit"
+            legendText = "Low Limit"
             lineColor = Color.Red
         End If
-        Dim tmpSeries As New Series(seriesName) With {
-                            .BorderColor = Color.FromArgb(180, lineColor),
-                            .BorderWidth = 2,
-                            .ChartArea = NameOf(ChartArea),
-                            .ChartType = SeriesChartType.Line,
-                            .Color = lineColor,
-                            .LegendText = legendName,
-                            .ShadowColor = Color.Black,
-                            .XValueType = ChartValueType.DateTime,
-                            .YAxisType = AxisType.Secondary
-                        }
-        tmpSeries.EmptyPointStyle.Color = Color.Transparent
-        Return tmpSeries
+
+        Dim s As Series = CreateBaseSeries(seriesName, legendText, 2, AxisType.Secondary)
+        s.IsVisibleInLegend = False
+        limitsLegend.CustomItems.Add(New LegendItem(legendText, GetGraphColor(legendText), ""))
+        s.EmptyPointStyle.Color = Color.Transparent
+        Return s
     End Function
 
-    Friend Function CreateSeriesMarker(YAxisType As AxisType) As Series
+    Friend Function CreateSeriesTimeChange(basalLegend As Legend) As Series
+        Const legendText As String = "Time Change"
+        Dim s As Series = CreateBaseSeries(TimeChangeSeriesName, legendText, 1, AxisType.Primary)
+        s.IsVisibleInLegend = False
+        basalLegend.CustomItems.Add(New LegendItem(legendText, GetGraphColor(legendText), ""))
+        s.EmptyPointStyle.BorderWidth = 4
+        s.EmptyPointStyle.Color = Color.Transparent
+        Return s
+    End Function
+
+    Friend Function CreateSeriesWithoutVisibleLegend(YAxisType As AxisType) As Series
         Dim s As New Series(MarkerSeriesName) With {
                         .BorderColor = Color.Transparent,
                         .BorderWidth = 1,
@@ -215,24 +220,6 @@ Friend Module ChartSupport
                         .MarkerSize = 15,
                         .XValueType = ChartValueType.DateTime,
                         .YAxisType = YAxisType
-                    }
-        s.EmptyPointStyle.BorderWidth = 4
-        s.EmptyPointStyle.Color = Color.Transparent
-
-        Return s
-    End Function
-
-    Friend Function CreateSeriesTimeChange() As Series
-        Dim s As New Series(TimeChangeSeriesName) With {
-                        .ChartType = SeriesChartType.Line,
-                        .BorderColor = Color.Transparent,
-                        .BorderWidth = 1,
-                        .ChartArea = NameOf(ChartArea),
-                        .Color = Color.White,
-                        .LegendText = "Time Change",
-                        .ShadowColor = Color.Transparent,
-                        .XValueType = ChartValueType.DateTime,
-                        .YAxisType = AxisType.Primary
                     }
         s.EmptyPointStyle.BorderWidth = 4
         s.EmptyPointStyle.Color = Color.Transparent
@@ -259,10 +246,29 @@ Friend Module ChartSupport
                         .ForeColor = foreColor,
                         .BackColor = foreColor.GetContrastingColor(),
                         .Name = name,
-                        .ShadowColor = Color.FromArgb(32, 0, 0, 0),
+                        .ShadowColor = Color.FromArgb(32, Color.Black),
                         .ShadowOffset = 3,
                         .Text = chartTitle
                     }
+    End Function
+
+    Public Sub EnableAutoCorrectionLegend(activeInsulinChartLegend As Legend, homeChartLegend As Legend, treatmentMarkersChartLegend As Legend)
+        Dim i As Integer = IndexOfName(activeInsulinChartLegend.CustomItems, "Auto Correction")
+        activeInsulinChartLegend.CustomItems(i).Enabled = True
+        i = IndexOfName(homeChartLegend.CustomItems, "Auto Correction")
+        homeChartLegend.CustomItems(i).Enabled = True
+        i = IndexOfName(treatmentMarkersChartLegend.CustomItems, "Auto Correction")
+        treatmentMarkersChartLegend.CustomItems(i).Enabled = True
+    End Sub
+
+    Private Function IndexOfName(customItems As LegendItemsCollection, name As String) As Integer
+        For Each item As IndexClass(Of LegendItem) In customItems.WithIndex
+            If item.Value.Name = name Then
+                Return item.Index
+            End If
+        Next
+        Stop
+        Return -1
     End Function
 
 End Module
