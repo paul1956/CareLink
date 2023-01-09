@@ -18,7 +18,7 @@ Friend Module ChartSupport
     Friend Const TimeChangeSeriesName As String = "TimeChangeSeries"
 
     Private Function CreateBaseSeries(seriesName As String, legendText As String, borderWidth As Integer, yAxisType As AxisType) As Series
-        Dim lineColor As Color = GetGraphColor(legendText)
+        Dim lineColor As Color = GetGraphLineColor(legendText)
         Dim tmpSeries As New Series(seriesName) With {
                             .BorderColor = Color.FromArgb(180, lineColor),
                             .BorderWidth = borderWidth,
@@ -40,7 +40,7 @@ Friend Module ChartSupport
                     .BackColor = Color.WhiteSmoke,
                     .BackGradientStyle = GradientStyle.TopBottom,
                     .BackSecondaryColor = Color.White,
-                    .BorderlineColor = Color.FromArgb(26, 59, 105),
+                    .BorderlineColor = Color.MidnightBlue,
                     .BorderlineDashStyle = ChartDashStyle.Solid,
                     .BorderlineWidth = 2,
                     .Dock = DockStyle.Fill,
@@ -54,7 +54,7 @@ Friend Module ChartSupport
                      .BackColor = Color.FromArgb(180, 23, 47, 19),
                      .BackGradientStyle = GradientStyle.TopBottom,
                      .BackSecondaryColor = Color.FromArgb(180, 29, 56, 26),
-                     .BorderColor = Color.FromArgb(64, 64, 64, 64),
+                     .BorderColor = Color.FromArgb(64, Color.DimGray),
                      .BorderDashStyle = ChartDashStyle.Solid,
                      .ShadowColor = Color.Transparent
                  }
@@ -72,8 +72,8 @@ Friend Module ChartSupport
                     .Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
                     .Format = s_timeWithoutMinuteFormat
                 End With
-                .LineColor = Color.FromArgb(64, 64, 64, 64)
-                .MajorGrid.LineColor = Color.FromArgb(64, 64, 64, 64)
+                .LineColor = Color.FromArgb(64, Color.DimGray)
+                .MajorGrid.LineColor = Color.FromArgb(64, Color.DimGray)
                 .ScaleView.Zoomable = True
                 With .ScrollBar
                     .BackColor = Color.White
@@ -91,8 +91,8 @@ Friend Module ChartSupport
                 .IsMarginVisible = False
                 .IsStartedFromZero = True
                 .LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
-                .LineColor = Color.FromArgb(64, 64, 64, 64)
-                .MajorGrid.LineColor = Color.FromArgb(64, 64, 64, 64)
+                .LineColor = Color.FromArgb(64, Color.DimGray)
+                .MajorGrid.LineColor = Color.FromArgb(64, Color.DimGray)
                 .ScaleView.Zoomable = False
             End With
             With .AxisY2
@@ -100,10 +100,10 @@ Friend Module ChartSupport
                 .IsMarginVisible = False
                 .IsStartedFromZero = False
                 .LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
-                .LineColor = Color.FromArgb(64, 64, 64, 64)
+                .LineColor = Color.FromArgb(64, Color.DimGray)
                 .MajorGrid = New Grid With {
                     .Interval = HomePageMealRow,
-                    .LineColor = Color.FromArgb(64, 64, 64, 64)
+                    .LineColor = Color.FromArgb(64, Color.DimGray)
                 }
                 .MajorTickMark = New TickMark() With {.Interval = HomePageMealRow, .Enabled = True}
                 .Maximum = HomePageBasalRow
@@ -155,7 +155,7 @@ Friend Module ChartSupport
     Friend Function CreateSeriesBasal(SeriesName As String, basalLegend As Legend, legendText As String, YAxisType As AxisType) As Series
         Dim s As Series = CreateBaseSeries(SeriesName, legendText, 2, YAxisType)
         s.IsVisibleInLegend = False
-        Dim lineColor As Color = GetGraphColor(legendText)
+        Dim lineColor As Color = GetGraphLineColor(legendText)
         Select Case legendText
             Case "Min Basal"
                 lineColor = Color.FromArgb(150, lineColor)
@@ -177,7 +177,7 @@ Friend Module ChartSupport
         Const legendText As String = "BG Series"
         Dim s As Series = CreateBaseSeries(BgSeriesName, legendText, 4, AxisType.Secondary)
         s.IsVisibleInLegend = False
-        bgLegend.CustomItems.Add(New LegendItem(legendText, GetGraphColor(legendText), ""))
+        bgLegend.CustomItems.Add(New LegendItem(legendText, GetGraphLineColor(legendText), ""))
         Return s
     End Function
 
@@ -194,7 +194,7 @@ Friend Module ChartSupport
 
         Dim s As Series = CreateBaseSeries(seriesName, legendText, 2, AxisType.Secondary)
         s.IsVisibleInLegend = False
-        limitsLegend.CustomItems.Add(New LegendItem(legendText, GetGraphColor(legendText), ""))
+        limitsLegend.CustomItems.Add(New LegendItem(legendText, GetGraphLineColor(legendText), ""))
         s.EmptyPointStyle.Color = Color.Transparent
         Return s
     End Function
@@ -203,7 +203,7 @@ Friend Module ChartSupport
         Const legendText As String = "Time Change"
         Dim s As Series = CreateBaseSeries(TimeChangeSeriesName, legendText, 1, AxisType.Primary)
         s.IsVisibleInLegend = False
-        basalLegend.CustomItems.Add(New LegendItem(legendText, GetGraphColor(legendText), ""))
+        basalLegend.CustomItems.Add(New LegendItem(legendText, GetGraphLineColor(legendText), ""))
         s.EmptyPointStyle.BorderWidth = 4
         s.EmptyPointStyle.Color = Color.Transparent
         Return s

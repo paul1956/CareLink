@@ -75,10 +75,6 @@ Public Module SystemConstants
         Return Path.Combine(MyDocumentsPath, $"{SavedErrorReportName}{additionalText}")
     End Function
 
-    Public Function GetSavedGraphColorsFileNameWithPath() As String
-        Return Path.Combine(MyDocumentsPath, $"{RepoName}GraphColors.Csv")
-    End Function
-
     Public Function GetSavedUsersFileNameWithPath() As String
         Return Path.Combine(MyDocumentsPath, $"{RepoName}.Csv")
     End Function

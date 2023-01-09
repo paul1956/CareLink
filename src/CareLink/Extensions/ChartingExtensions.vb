@@ -130,7 +130,7 @@ Friend Module ChartingExtensions
         Dim startX As OADate
         Dim startY As Double
         If amount.IsMinBasal() Then
-            lineColor = GetGraphColor("Min Basal")
+            lineColor = GetGraphLineColor("Min Basal")
         End If
         If DrawFromBottom Then
             startX = markerOADate + s_twoHalfMinuteOADate
@@ -208,7 +208,7 @@ Friend Module ChartingExtensions
                                              amount,
                                              HomePageBasalRow,
                                              HomePageInsulinRow,
-                                             GetGraphColor("Basal Series"),
+                                             GetGraphLineColor("Basal Series"),
                                              False,
                                              $"{minBasalMsg}Auto Basal: {amount} U")
                         End With
@@ -221,7 +221,7 @@ Friend Module ChartingExtensions
                                                      autoCorrection.ParseSingle,
                                                      HomePageBasalRow,
                                                      HomePageInsulinRow,
-                                                     GetGraphColor("Auto Correction"),
+                                                     GetGraphLineColor("Auto Correction"),
                                                      False,
                                                      $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
                                 End With
@@ -323,7 +323,7 @@ Friend Module ChartingExtensions
                                              amount,
                                              MaxBasalPerDose,
                                              TreatmentInsulinRow,
-                                             GetGraphColor("Basal Series"),
+                                             GetGraphLineColor("Basal Series"),
                                              True,
                                              $"{minBasalMsg}Auto Basal: {amount} U")
 
@@ -332,7 +332,7 @@ Friend Module ChartingExtensions
                         Select Case entry(NameOf(InsulinRecord.activationType))
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
-                                treatmentChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, MaxBasalPerDose, TreatmentInsulinRow, GetGraphColor("Auto Correction"), True, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
+                                treatmentChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, MaxBasalPerDose, TreatmentInsulinRow, GetGraphLineColor("Auto Correction"), True, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 If s_treatmentMarkerInsulinDictionary.TryAdd(markerOADateTime, TreatmentInsulinRow) Then
                                     markerSeriesPoints.AddXY(markerOADateTime, TreatmentInsulinRow)

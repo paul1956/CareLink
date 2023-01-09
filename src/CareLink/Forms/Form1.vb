@@ -136,16 +136,13 @@ Public Class Form1
 #If SupportMailServer <> "True" Then
         Me.MenuOptionsSetupEMailServer.Visible = False
 #End If
-        Dim propInfoList() As PropertyInfo = GetType(Color).GetProperties(BindingFlags.Static Or BindingFlags.DeclaredOnly Or BindingFlags.Public)
-        For Each c As PropertyInfo In propInfoList
-            If c.Name = NameOf(KnownColor.Transparent) Then Continue For
-            AllKnownColors.Add(c.Name, Color.FromName(c.Name).ToKnownColor)
-        Next c
-        If File.Exists(GetSavedGraphColorsFileNameWithPath) Then
-            LoadColorDictionaryFromFile(GraphColorDictionary)
+        ' Prime know colors here
+        GetAllKnownColors()
+        If File.Exists(GetGraphColorsFileNameWithPath(RepoName)) Then
+            ColorDictionaryFromFile(RepoName)
             Me.MenuOptionsShowLegend.Checked = File.Exists(GetShowLegendFileNameWithPath)
         Else
-            WriteColorDictionaryToFile(GraphColorDictionary)
+            ColorDictionaryToFile(RepoName)
             File.Create(GetShowLegendFileNameWithPath)
         End If
 
@@ -854,7 +851,7 @@ Public Class Form1
             Dim basalAmount As String = CSng(e.Value).ToString("F3", CurrentUICulture)
             e.Value = basalAmount
             If basalAmount.IsMinBasal Then
-                e.CellStyle.BackColor = GetGraphColor("Min Basal")
+                e.CellStyle.BackColor = GetGraphLineColor("Min Basal")
             End If
         End If
         dgv.dgvCellFormatting(e, NameOf(AutoBasalDeliveryRecord.dateTime))
@@ -1307,10 +1304,10 @@ Public Class Form1
         End With
         Me.ActiveInsulinChart.ChartAreas.Add(activeInsulinChartArea)
         Me.ActiveInsulinChartLegend = CreateChartLegend(NameOf(ActiveInsulinChartLegend))
-        Dim chartTitle As String = $"Running Active Insulin in {GetGraphColor("Active Insulin").ToKnownColor}"
+        Dim chartTitle As String = $"Running Active Insulin in {GetGraphLineColor("Active Insulin").ToKnownColor}"
         Me.ActiveInsulinChartTitle = CreateChartTitle(chartTitle,
                                                       NameOf(ActiveInsulinChartTitle),
-                                                      GetGraphColor("Active Insulin"))
+                                                      GetGraphLineColor("Active Insulin"))
         Me.ActiveInsulinActiveInsulinSeries = CreateSeriesActiveInsulin()
 
         Me.ActiveInsulinAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeriesName, Me.ActiveInsulinChartLegend, "Auto Correction", AxisType.Secondary)
@@ -1384,10 +1381,10 @@ Public Class Form1
             .IsStartedFromZero = False
             .LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
             .LabelStyle.Format = "{0.000}"
-            .LineColor = Color.FromArgb(64, 64, 64, 64)
+            .LineColor = Color.FromArgb(64, Color.DimGray)
             .MajorGrid = New Grid() With {
                     .Interval = interval,
-                    .LineColor = Color.FromArgb(64, 64, 64, 64)
+                    .LineColor = Color.FromArgb(64, Color.DimGray)
                 }
             .MajorTickMark = New TickMark() With {
                     .Interval = interval,
@@ -1403,7 +1400,7 @@ Public Class Form1
 
         Me.TreatmentMarkersChartTitle = New Title With {
                 .Font = New Font("Trebuchet MS", 12.0F, FontStyle.Bold),
-                .ForeColor = Color.FromArgb(26, 59, 105),
+                .ForeColor = Color.MidnightBlue,
                 .BackColor = .ForeColor.GetContrastingColor(),
                 .Name = NameOf(TreatmentMarkersChartTitle),
                 .ShadowColor = Color.FromArgb(32, Color.Black),
@@ -1705,7 +1702,7 @@ Public Class Form1
                 s.Points.Clear()
             Next
             With aitChart
-                .Titles(NameOf(ActiveInsulinChartTitle)).Text = $"Running Active Insulin in {GraphColorDictionary("Active Insulin")}"
+                .Titles(NameOf(ActiveInsulinChartTitle)).Text = $"Running Active Insulin in {GetGraphLineColor("Active Insulin")}"
                 .ChartAreas(NameOf(ChartArea)).InitializeChartAreaBG()
 
                 ' Order all markers by time

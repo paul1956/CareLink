@@ -3,7 +3,6 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Module SystemVariables
-    Public ReadOnly AllKnownColors As New Dictionary(Of String, KnownColor)
     Public s_allUserSettingsData As New CareLinkUserDataList
     Friend Property HomePageBasalRow As Single = 400
     Friend Property HomePageInsulinRow As Single = 342

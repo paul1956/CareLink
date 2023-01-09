@@ -32,7 +32,7 @@ This update has a UI to show all the available data and a visual version that mi
 ## What's New in this release
 New in 3.5.7.20
 - Allow editing of plot line colors
-= Add a legend to the chart, future version will have menu to hide Legend
+= Add a legend to the chart, you can disable under options.
 
 New in 3.5.7.19
 - Add additional error messages
