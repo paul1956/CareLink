@@ -4,9 +4,9 @@
 
 Imports System.ComponentModel
 Imports System.Configuration
+Imports System.Data.Common
 Imports System.Globalization
 Imports System.IO
-Imports System.Reflection
 Imports System.Text
 Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
@@ -972,6 +972,33 @@ Public Class Form1
                          caption)
 
     End Sub
+
+    'Private Sub DataGridViewSGs_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DataGridViewSGs.ColumnHeaderMouseClick
+    '    If e.ColumnIndex > 1 Then Exit Sub
+    '    Dim dgv As DataGridView = CType(sender, DataGridView)
+    '    Dim col As DataGridViewColumn = dgv.Columns(e.ColumnIndex)
+    '    Dim dir As ListSortDirection
+
+    '    Select Case col.HeaderCell.SortGlyphDirection
+    '        Case SortOrder.None, SortOrder.Ascending
+    '            dir = ListSortDirection.Descending
+    '        Case Else
+    '            dir = ListSortDirection.Ascending
+    '    End Select
+
+    '    dgv.Sort(col, dir)
+    'End Sub
+
+    'Private Sub DataGridViewSGs_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles DataGridViewSGs.DataBindingComplete
+    '    Dim dgv As DataGridView = CType(sender, DataGridView)
+    '    For Each column As DataGridViewColumn In dgv.Columns
+    '        column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+    '    Next
+    '    dgv.Columns(dgv.Columns.Count - 1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+    '    dgv.Columns(0).SortMode = DataGridViewColumnSortMode.Programmatic
+    '    dgv.Columns(1).SortMode = DataGridViewColumnSortMode.Programmatic
+
+    'End Sub
 
 #End Region ' SGS Tab DataGridView Events
 

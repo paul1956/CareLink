@@ -907,7 +907,7 @@ Partial Class Form1
         Me.DataGridViewButtonColumnCareLinkDeleteRow.HeaderText = ""
         Me.DataGridViewButtonColumnCareLinkDeleteRow.MinimumWidth = 50
         Me.DataGridViewButtonColumnCareLinkDeleteRow.Name = "DataGridViewButtonColumnCareLinkDeleteRow"
-        Me.DataGridViewButtonColumnCareLinkDeleteRow.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.DataGridViewButtonColumnCareLinkDeleteRow.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewButtonColumnCareLinkDeleteRow.Text = "Delete Row"
         Me.DataGridViewButtonColumnCareLinkDeleteRow.UseColumnTextForButtonValue = True
         Me.DataGridViewButtonColumnCareLinkDeleteRow.Width = 50
