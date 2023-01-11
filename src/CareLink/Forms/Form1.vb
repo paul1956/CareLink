@@ -1831,11 +1831,7 @@ Public Class Form1
                 Dim message As String = ""
                 If s_sensorMessages.TryGetValue(s_sensorState, message) Then
                     Dim splitMessage As String = message.Split(".")(0)
-                    If message.Contains("...") Then
-                        message = splitMessage & "..."
-                    Else
-                        message = splitMessage
-                    End If
+                    message = If(message.Contains("..."), $"{splitMessage}...", splitMessage)
                 Else
                     If Debugger.IsAttached Then
                         MsgBox($"{s_sensorState} is unknown sensor message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
