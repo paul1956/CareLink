@@ -798,10 +798,6 @@ Public Class Form1
         Stop
     End Sub
 
-    Private Sub DataGridViewCareLinkUsers_DataSourceChanged(sender As Object, e As EventArgs) Handles DataGridViewCareLinkUsers.DataSourceChanged
-        Stop
-    End Sub
-
     Private Sub DataGridViewCareLinkUsers_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles DataGridViewCareLinkUsers.RowsAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
         For i As Integer = e.RowIndex To e.RowIndex + (e.RowCount - 1)
