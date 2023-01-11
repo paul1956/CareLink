@@ -731,8 +731,10 @@ Public Class Form1
 
     Private Sub CareLinkUserDataRecordHelpers_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridViewCareLinkUsers.CellContentClick
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        If e.ColumnIndex = 0 Then
-            If Not CType(dgv.Rows(e.RowIndex).Cells(0), DataGridViewDisableButtonCell).Enabled Then
+        Dim dataGridViewDisableButtonCell As DataGridViewDisableButtonCell = TryCast(dgv.Rows(e.RowIndex).Cells(e.ColumnIndex), DataGridViewDisableButtonCell)
+        If dataGridViewDisableButtonCell IsNot Nothing Then
+
+            If Not dataGridViewDisableButtonCell.Enabled Then
                 Exit Sub
             End If
 
@@ -793,6 +795,10 @@ Public Class Form1
     End Sub
 
     Private Sub DataGridViewCareLinkUsers_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewCareLinkUsers.DataError
+        Stop
+    End Sub
+
+    Private Sub DataGridViewCareLinkUsers_DataSourceChanged(sender As Object, e As EventArgs) Handles DataGridViewCareLinkUsers.DataSourceChanged
         Stop
     End Sub
 
