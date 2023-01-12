@@ -352,24 +352,39 @@ Public Class Form1
 
     Private Sub MenuOptionsFilterRawJSONData_Click(sender As Object, e As EventArgs) Handles MenuOptionsFilterRawJSONData.Click
         s_filterJsonData = Me.MenuOptionsFilterRawJSONData.Checked
-        For Each c As DataGridViewColumn In Me.DgvAutoBasalDelivery.Columns
+
+        Dim lastColumnIndex As Integer = Me.DgvAutoBasalDelivery.Columns.Count - 1
+        For i As Integer = 0 To lastColumnIndex
+            Dim c As DataGridViewColumn = DirectCast(Me.DgvAutoBasalDelivery.Columns(i), DataGridViewColumn)
             c.Visible = Not AutoBasalDeliveryRecordHelpers.HideColumn(c.DataPropertyName)
+            c.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
         Next
 
-        For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
+        lastColumnIndex = Me.DgvCareLinkUsers.Columns.Count - 1
+        For i As Integer = 0 To lastColumnIndex
+            Dim c As DataGridViewColumn = DirectCast(Me.DgvCareLinkUsers.Columns(i), DataGridViewColumn)
             c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
+            c.AutoSizeMode = If(i = lastColumnIndex, DataGridViewAutoSizeColumnMode.Fill, DataGridViewAutoSizeColumnMode.AllCells)
         Next
 
-        For Each c As DataGridViewColumn In Me.DgvInsulin.Columns
+        lastColumnIndex = Me.DgvInsulin.Columns.Count - 1
+        For i As Integer = 0 To lastColumnIndex
+            Dim c As DataGridViewColumn = DirectCast(Me.DgvInsulin.Columns(i), DataGridViewColumn)
             c.Visible = Not InsulinRecordHelpers.HideColumn(c.DataPropertyName)
+            c.AutoSizeMode = If(i = lastColumnIndex, DataGridViewAutoSizeColumnMode.Fill, DataGridViewAutoSizeColumnMode.AllCells)
         Next
 
-        For Each c As DataGridViewColumn In Me.DgvMeal.Columns
-            c.Visible = Not MealRecordHelpers.HideColumn(c.DataPropertyName)
+        lastColumnIndex = Me.DgvMeal.Columns.Count - 1
+        For i As Integer = 0 To lastColumnIndex
+            Dim c As DataGridViewColumn = DirectCast(Me.DgvMeal.Columns()(i), DataGridViewColumn)
+            c.AutoSizeMode = If(i = lastColumnIndex, DataGridViewAutoSizeColumnMode.Fill, DataGridViewAutoSizeColumnMode.AllCells)
         Next
 
-        For Each c As DataGridViewColumn In Me.DgvSGs.Columns
+        lastColumnIndex = Me.DgvSGs.Columns.Count - 1
+        For i As Integer = 0 To lastColumnIndex
+            Dim c As DataGridViewColumn = DirectCast(Me.DgvSGs.Columns()(i), DataGridViewColumn)
             c.Visible = Not SgRecordHelpers.HideColumn(c.DataPropertyName)
+            c.AutoSizeMode = If(c.HeaderText = "Sensor Message", DataGridViewAutoSizeColumnMode.Fill, DataGridViewAutoSizeColumnMode.AllCells)
         Next
     End Sub
 
