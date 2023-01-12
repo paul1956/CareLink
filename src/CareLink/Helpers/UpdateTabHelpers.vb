@@ -76,7 +76,7 @@ Friend Module UpdateTabHelpers
     Friend Sub UpdateMarkerTabs(MainForm As Form1)
         With MainForm
             .TableLayoutPanelAutoBasalDelivery.DisplayDataTableInDGV(
-                              .DataGridViewAutoBasalDelivery,
+                              .DgvAutoBasalDelivery,
                               ClassToDatatable(s_listOfAutoBasalDeliveryMarkers.ToArray),
                               ItemIndexs.markers)
             .TableLayoutPanelAutoModeStatus.DisplayDataTableInDGV(
@@ -94,7 +94,7 @@ Friend Module UpdateTabHelpers
                               ItemIndexs.markers,
                               False)
             .TableLayoutPanelInsulin.DisplayDataTableInDGV(
-                              .DataGridViewInsulin,
+                              .DgvInsulin,
                               ClassToDatatable(s_listOfInsulinMarkers.ToArray),
                               ItemIndexs.markers)
             .TableLayoutPanelMeal.DisplayDataTableInDGV(
@@ -198,17 +198,17 @@ Friend Module UpdateTabHelpers
     <Extension>
     Friend Sub UpdateSgsTab(MainForm As Form1)
         DisplayDataTableInDGV(MainForm.TableLayoutPanelSgs,
-                              MainForm.DataGridViewSGs,
+                              MainForm.DgvSGs,
                               ClassToDatatable(s_listOfSGs.ToArray),
                               ItemIndexs.sgs)
-        MainForm.DataGridViewSGs.Sort(MainForm.DataGridViewSGs.Columns(0), ListSortDirection.Descending)
+        MainForm.DgvSGs.Sort(MainForm.DgvSGs.Columns(0), ListSortDirection.Descending)
     End Sub
 
     <Extension>
     Friend Sub UpdateSummaryTab(MainForm As Form1)
         s_listOfSummaryRecords.Sort()
-        MainForm.DataGridViewSummary.DataSource = ClassToDatatable(s_listOfSummaryRecords.ToArray)
-        MainForm.DataGridViewSummary.RowHeadersVisible = False
+        MainForm.DgvSummary.DataSource = ClassToDatatable(s_listOfSummaryRecords.ToArray)
+        MainForm.DgvSummary.RowHeadersVisible = False
     End Sub
 
 End Module

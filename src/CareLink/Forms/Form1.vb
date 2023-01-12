@@ -9,7 +9,9 @@ Imports System.IO
 Imports System.Text
 Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
+
 Imports DataGridViewColumnControls
+
 Imports ToolStripControls
 
 Public Class Form1
@@ -350,23 +352,23 @@ Public Class Form1
 
     Private Sub MenuOptionsFilterRawJSONData_Click(sender As Object, e As EventArgs) Handles MenuOptionsFilterRawJSONData.Click
         s_filterJsonData = Me.MenuOptionsFilterRawJSONData.Checked
-        For Each c As DataGridViewColumn In Me.DataGridViewAutoBasalDelivery.Columns
+        For Each c As DataGridViewColumn In Me.DgvAutoBasalDelivery.Columns
             c.Visible = Not AutoBasalDeliveryRecordHelpers.HideColumn(c.DataPropertyName)
         Next
 
-        For Each c As DataGridViewColumn In Me.DataGridViewCareLinkUsers.Columns
+        For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
             c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
         Next
 
-        For Each c As DataGridViewColumn In Me.DataGridViewInsulin.Columns
+        For Each c As DataGridViewColumn In Me.DgvInsulin.Columns
             c.Visible = Not InsulinRecordHelpers.HideColumn(c.DataPropertyName)
         Next
 
-        For Each c As DataGridViewColumn In Me.DataGridViewMeal.Columns
+        For Each c As DataGridViewColumn In Me.DgvMeal.Columns
             c.Visible = Not MealRecordHelpers.HideColumn(c.DataPropertyName)
         Next
 
-        For Each c As DataGridViewColumn In Me.DataGridViewSGs.Columns
+        For Each c As DataGridViewColumn In Me.DgvSGs.Columns
             c.Visible = Not SgRecordHelpers.HideColumn(c.DataPropertyName)
         Next
     End Sub
@@ -460,14 +462,14 @@ Public Class Form1
 
         Select Case e.TabPage.Name
             Case NameOf(TabPageAllUsers)
-                Me.DataGridViewCareLinkUsers.DataSource = s_allUserSettingsData
-                For Each c As DataGridViewColumn In Me.DataGridViewCareLinkUsers.Columns
+                Me.DgvCareLinkUsers.DataSource = s_allUserSettingsData
+                For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
                     c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
                 Next
                 Me.CareLinkUsersAITComboBox.Width = Me.AITComboBox.Width
                 Me.CareLinkUsersAITComboBox.SelectedIndex = Me.AITComboBox.SelectedIndex
                 Me.CareLinkUsersAITComboBox.Visible = False
-                Me.DataGridViewCareLinkUsers.Columns(NameOf(DataGridViewTextBoxColumnCareLinkAIT)).Width = Me.AITComboBox.Width
+                Me.DgvCareLinkUsers.Columns(NameOf(DgvCareLinkUsersAIT)).Width = Me.AITComboBox.Width
             Case NameOf(TabPage14Markers)
                 Me.TabControlPage2.SelectedIndex = _lastMarkerTabIndex
                 Me.TabControlPage1.Visible = False
@@ -483,14 +485,14 @@ Public Class Form1
                 Me.TabControlPage1.Visible = True
                 Exit Sub
             Case NameOf(TabPageAllUsers)
-                Me.DataGridViewCareLinkUsers.DataSource = s_allUserSettingsData
-                For Each c As DataGridViewColumn In Me.DataGridViewCareLinkUsers.Columns
+                Me.DgvCareLinkUsers.DataSource = s_allUserSettingsData
+                For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
                     c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
                 Next
                 Me.CareLinkUsersAITComboBox.Width = Me.AITComboBox.Width
                 Me.CareLinkUsersAITComboBox.SelectedIndex = Me.AITComboBox.SelectedIndex
                 Me.CareLinkUsersAITComboBox.Visible = False
-                Me.DataGridViewCareLinkUsers.Columns(NameOf(DataGridViewTextBoxColumnCareLinkAIT)).Width = Me.AITComboBox.Width
+                Me.DgvCareLinkUsers.Columns(NameOf(DgvCareLinkUsersAIT)).Width = Me.AITComboBox.Width
         End Select
         _lastMarkerTabIndex = e.TabPageIndex
     End Sub
@@ -729,7 +731,7 @@ Public Class Form1
 
 #Region "All Users Tab DataGridView Events"
 
-    Private Sub CareLinkUserDataRecordHelpers_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridViewCareLinkUsers.CellContentClick
+    Private Sub CareLinkUserDataRecordHelpers_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvCareLinkUsers.CellContentClick
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim dataGridViewDisableButtonCell As DataGridViewDisableButtonCell = TryCast(dgv.Rows(e.RowIndex).Cells(e.ColumnIndex), DataGridViewDisableButtonCell)
         If dataGridViewDisableButtonCell IsNot Nothing Then
@@ -746,7 +748,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DataGridViewCareLinkUsers_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles DataGridViewCareLinkUsers.CellBeginEdit
+    Private Sub DataGridViewCareLinkUsers_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles DgvCareLinkUsers.CellBeginEdit
         Dim dgv As DataGridView = CType(sender, DataGridView)
         'Here we save a current value of cell to some variable, that later we can compare with a new value
         'For example using of dgv.Tag property
@@ -759,7 +761,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DataGridViewCareLinkUsers_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridViewCareLinkUsers.CellEndEdit
+    Private Sub DataGridViewCareLinkUsers_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DgvCareLinkUsers.CellEndEdit
         'after you've filled your dataSet, on event above try something like this
         Try
             '
@@ -769,14 +771,14 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DataGridViewCareLinkUsers_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles DataGridViewCareLinkUsers.CellValidating
+    Private Sub DataGridViewCareLinkUsers_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles DgvCareLinkUsers.CellValidating
         If e.ColumnIndex = 0 Then
             Exit Sub
         End If
 
     End Sub
 
-    Private Sub DataGridViewCareLinkUsers_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewCareLinkUsers.ColumnAdded
+    Private Sub DataGridViewCareLinkUsers_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCareLinkUsers.ColumnAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim caption As String = CType(dgv.DataSource, DataTable)?.Columns(e.Column.Index).Caption
         If CareLinkUserDataRecordHelpers.HideColumn(e.Column.DataPropertyName) Then
@@ -794,14 +796,14 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DataGridViewCareLinkUsers_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewCareLinkUsers.DataError
+    Private Sub DataGridViewCareLinkUsers_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvCareLinkUsers.DataError
         Stop
     End Sub
 
-    Private Sub DataGridViewCareLinkUsers_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles DataGridViewCareLinkUsers.RowsAdded
+    Private Sub DataGridViewCareLinkUsers_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles DgvCareLinkUsers.RowsAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
         For i As Integer = e.RowIndex To e.RowIndex + (e.RowCount - 1)
-            Dim disableButtonCell As DataGridViewDisableButtonCell = CType(dgv.Rows(i).Cells(NameOf(DataGridViewButtonColumnCareLinkDeleteRow)), DataGridViewDisableButtonCell)
+            Dim disableButtonCell As DataGridViewDisableButtonCell = CType(dgv.Rows(i).Cells(NameOf(DgvCareLinkUsersDeleteRow)), DataGridViewDisableButtonCell)
             disableButtonCell.Enabled = s_allUserSettingsData(i).CareLinkUserName <> _LoginDialog.LoggedOnUser.CareLinkUserName
         Next
     End Sub
@@ -810,7 +812,7 @@ Public Class Form1
 
 #Region "My User Tab DataGridView Events"
 
-    Private Sub DataGridViewMyUserData_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewCurrentUser.ColumnAdded
+    Private Sub DataGridViewMyUserData_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCurrentUser.ColumnAdded
         e.DgvColumnAdded(New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1)),
                          False,
                          True,
@@ -818,7 +820,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DataGridViewMyUserData_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewCurrentUser.DataError
+    Private Sub DataGridViewMyUserData_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvCurrentUser.DataError
         Stop
     End Sub
 
@@ -826,7 +828,7 @@ Public Class Form1
 
 #Region "Profile Tab DataGridView Events"
 
-    Private Sub DataGridViewUserProfile_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewUserProfile.ColumnAdded
+    Private Sub DataGridViewUserProfile_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvUserProfile.ColumnAdded
         e.DgvColumnAdded(New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1)),
                          False,
                          True,
@@ -834,7 +836,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DataGridViewUserProfile_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewUserProfile.DataError
+    Private Sub DataGridViewUserProfile_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvUserProfile.DataError
         Stop
     End Sub
 
@@ -842,7 +844,7 @@ Public Class Form1
 
 #Region "Auto Basal Delivery DataGridView Events"
 
-    Private Sub DataGridViewAutoBasalDelivery_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DataGridViewAutoBasalDelivery.CellFormatting
+    Private Sub DataGridViewAutoBasalDelivery_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvAutoBasalDelivery.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If e.Value Is Nothing Then
             Return
@@ -858,7 +860,7 @@ Public Class Form1
         dgv.dgvCellFormatting(e, NameOf(AutoBasalDeliveryRecord.dateTime))
     End Sub
 
-    Private Sub DataGridViewAutoBasalDelivery_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewAutoBasalDelivery.ColumnAdded
+    Private Sub DataGridViewAutoBasalDelivery_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvAutoBasalDelivery.ColumnAdded
         If AutoBasalDeliveryRecordHelpers.HideColumn(e.Column.Name) Then
             e.Column.Visible = False
             Exit Sub
@@ -875,7 +877,7 @@ Public Class Form1
 
 #Region "Insulin DataGridView Events"
 
-    Private Sub DataGridViewInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewInsulin.ColumnAdded
+    Private Sub DataGridViewInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
         If InsulinRecordHelpers.HideColumn(e.Column.Name) Then
@@ -887,15 +889,15 @@ Public Class Form1
                          True, caption)
     End Sub
 
-    Private Sub DataGridViewInsulin_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewInsulin.ColumnHeaderCellChanged
+    Private Sub DataGridViewInsulin_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnHeaderCellChanged
         Stop
     End Sub
 
-    Private Sub DataGridViewInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewInsulin.DataError
+    Private Sub DataGridViewInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvInsulin.DataError
         Stop
     End Sub
 
-    Private Sub DataGridViewViewInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DataGridViewInsulin.CellFormatting
+    Private Sub DataGridViewViewInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvInsulin.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.dgvCellFormatting(e, NameOf(InsulinRecord.dateTime))
         Select Case dgv.Columns(e.ColumnIndex).Name
@@ -935,7 +937,7 @@ Public Class Form1
 
 #Region "SGS Tab DataGridView Events"
 
-    Private Sub DataGridViewSGs_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DataGridViewSGs.CellFormatting
+    Private Sub DataGridViewSGs_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvSGs.CellFormatting
         If e.Value Is Nothing Then
             Return
         End If
@@ -960,7 +962,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DataGridViewSGs_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewSGs.ColumnAdded
+    Private Sub DataGridViewSGs_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSGs.ColumnAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
         If SgRecordHelpers.HideColumn(e.Column.Name) Then
@@ -974,7 +976,7 @@ Public Class Form1
 
     End Sub
 
-    'Private Sub DataGridViewSGs_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DataGridViewSGs.ColumnHeaderMouseClick
+    'Private Sub DataGridViewSGs_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DgvSGs.ColumnHeaderMouseClick
     '    If e.ColumnIndex > 1 Then Exit Sub
     '    Dim dgv As DataGridView = CType(sender, DataGridView)
     '    Dim col As DataGridViewColumn = dgv.Columns(e.ColumnIndex)
@@ -990,7 +992,7 @@ Public Class Form1
     '    dgv.Sort(col, dir)
     'End Sub
 
-    'Private Sub DataGridViewSGs_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles DataGridViewSGs.DataBindingComplete
+    'Private Sub DataGridViewSGs_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles DgvSGs.DataBindingComplete
     '    Dim dgv As DataGridView = CType(sender, DataGridView)
     '    For Each column As DataGridViewColumn In dgv.Columns
     '        column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -1005,7 +1007,7 @@ Public Class Form1
 
 #Region "Summary Tab DataGridView Events"
 
-    Private Sub DataGridViewSummary_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DataGridViewSummary.CellFormatting
+    Private Sub DataGridViewSummary_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvSummary.CellFormatting
         If e.Value Is Nothing OrElse e.ColumnIndex <> 2 Then
             Return
         End If
@@ -1044,7 +1046,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DataGridViewSummary_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DataGridViewSummary.CellMouseClick
+    Private Sub DataGridViewSummary_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DgvSummary.CellMouseClick
         If e.RowIndex < 0 Then Exit Sub
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim value As String = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString
@@ -1079,7 +1081,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub DataGridViewSummary_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DataGridViewSummary.ColumnAdded
+    Private Sub DataGridViewSummary_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSummary.ColumnAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
         e.DgvColumnAdded(GetCellStyle(e.Column.Name),
@@ -1088,7 +1090,7 @@ Public Class Form1
                          caption)
     End Sub
 
-    Private Sub DataGridViewSummary_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DataGridViewSummary.DataError
+    Private Sub DataGridViewSummary_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvSummary.DataError
         Stop
     End Sub
 

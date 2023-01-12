@@ -14,7 +14,7 @@ Public Class CountrySettingsRecord
             Exit Sub
         End If
 
-        Dim dgvCountryItems() As DataGridView = {mainform.DataGridViewCountryItemsPage1, mainform.DataGridViewCountryItemsPage2, mainform.DataGridViewCountryItemsPage3}
+        Dim dgvCountryItems() As DataGridView = {mainform.DgvCountryDataPg1, mainform.DgvCountryDataPg2, mainform.DgvCountryDataPg3}
         For Each dgv As DataGridView In dgvCountryItems
             dgv.Rows.Clear()
             dgv.RowHeadersVisible = False

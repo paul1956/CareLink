@@ -100,46 +100,46 @@ Partial Class Form1
         Me.CursorPanel = New System.Windows.Forms.Panel()
         Me.CursorPictureBox = New System.Windows.Forms.PictureBox()
         Me.CursorTimer = New System.Windows.Forms.Timer(Me.components)
-        Me.DataGridViewAutoBasalDelivery = New System.Windows.Forms.DataGridView()
-        Me.DataGridViewCareLinkUsers = New System.Windows.Forms.DataGridView()
-        Me.DataGridViewTextBoxColumnCareLinkUsersID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCareLinkUserName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCareLinkPassword = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCareLinkAIT = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCareLinkAlertPhoneNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCareLinkCarrierTextingDomain = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCareLinkCountryCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCareLinkMailServerPassword = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCareLinkMailServerPort = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCareLinkMailServerUserName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCareLinkSettingsVersion = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewCheckBoxColumnCareLinkUseAdvancedAITDecay = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.DataGridViewCheckBoxColumnCareLinkUseLocalTimeZone = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.DataGridViewCheckBoxColumnCareLinkAutoLogin = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.DataGridViewButtonColumnCareLinkDeleteRow = New DataGridViewColumnControls.DataGridViewDisableButtonColumn()
-        Me.DataGridViewCountryItemsPage1 = New System.Windows.Forms.DataGridView()
-        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCountrySettingsCategory = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCountrySettingsKey = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCountrySettingsValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewCountryItemsPage2 = New System.Windows.Forms.DataGridView()
-        Me.DataGridViewTextBoxColumnCountrySettingsPgRecordNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCountrySettingsPg2Category = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCountrySettingsPg2Key = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCountrySettingsPg2Value = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewCountryItemsPage3 = New System.Windows.Forms.DataGridView()
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3Category = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3Key = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3Value = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3OnlyFor = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3NotFor = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewCurrentUser = New System.Windows.Forms.DataGridView()
-        Me.DataGridViewInsulin = New System.Windows.Forms.DataGridView()
-        Me.DataGridViewMeal = New System.Windows.Forms.DataGridView()
-        Me.DataGridViewSGs = New System.Windows.Forms.DataGridView()
-        Me.DataGridViewSummary = New System.Windows.Forms.DataGridView()
-        Me.DataGridViewUserProfile = New System.Windows.Forms.DataGridView()
+        Me.DgvAutoBasalDelivery = New System.Windows.Forms.DataGridView()
+        Me.DgvCountryDataPg1 = New System.Windows.Forms.DataGridView()
+        Me.DgvCountryDataPg1RecordNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCareLinkUsers = New System.Windows.Forms.DataGridView()
+        Me.DgvCareLinkUsersAIT = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCareLinkUsersAlertPhoneNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCareLinkUsersAutoLogin = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.DgvCareLinkUsersCareLinkPassword = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCareLinkUsersCareLinkUserName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCareLinkUsersCarrierTextingDomain = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCareLinkUsersCountryCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCareLinkUsersDeleteRow = New DataGridViewColumnControls.DataGridViewDisableButtonColumn()
+        Me.DgvCareLinkUsersMailServerPassword = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCareLinkUsersMailServerPort = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCareLinkUsersMailServerUserName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCareLinkUsersSettingsVersion = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCareLinkUsersUseAdvancedAITDecay = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.DgvCareLinkUsersUseLocalTimeZone = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.DgvCareLinkUsersUserID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg1Category = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg1Key = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg1Value = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg2 = New System.Windows.Forms.DataGridView()
+        Me.DgvCountryDataPg2RecordNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg2Category = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg2Key = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg2Value = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg3 = New System.Windows.Forms.DataGridView()
+        Me.DgvCountryDataPg3RecordNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg3Category = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg3Key = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg3Value = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg3OnlyFor = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg3NotFor = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCurrentUser = New System.Windows.Forms.DataGridView()
+        Me.DgvInsulin = New System.Windows.Forms.DataGridView()
+        Me.DgvMeal = New System.Windows.Forms.DataGridView()
+        Me.DgvSGs = New System.Windows.Forms.DataGridView()
+        Me.DgvSummary = New System.Windows.Forms.DataGridView()
+        Me.DgvUserProfile = New System.Windows.Forms.DataGridView()
         Me.FullNameLabel = New System.Windows.Forms.Label()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.InRangeMessageLabel = New System.Windows.Forms.Label()
@@ -256,17 +256,17 @@ Partial Class Form1
         CType(Me.CareLinkUserDataRecordBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CursorPanel.SuspendLayout()
         CType(Me.CursorPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.DataGridViewAutoBasalDelivery, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.DataGridViewCareLinkUsers, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.DataGridViewCountryItemsPage1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.DataGridViewCountryItemsPage2, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.DataGridViewCountryItemsPage3, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.DataGridViewCurrentUser, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.DataGridViewInsulin, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.DataGridViewMeal, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.DataGridViewSGs, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.DataGridViewSummary, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.DataGridViewUserProfile, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DgvAutoBasalDelivery, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DgvCareLinkUsers, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DgvCountryDataPg1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DgvCountryDataPg2, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DgvCountryDataPg3, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DgvCurrentUser, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DgvInsulin, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DgvMeal, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DgvSGs, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DgvSummary, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DgvUserProfile, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.InsulinLevelPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Last24HTotalsPanel.SuspendLayout()
         CType(Me.PumpBatteryPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -848,15 +848,15 @@ Partial Class Form1
         '
         Me.CursorTimer.Interval = 60000
         '
-        'DataGridViewAutoBasalDelivery
+        'DgvAutoBasalDelivery
         '
-        Me.DataGridViewAutoBasalDelivery.AllowUserToAddRows = False
-        Me.DataGridViewAutoBasalDelivery.AllowUserToDeleteRows = False
-        Me.DataGridViewAutoBasalDelivery.AllowUserToResizeColumns = False
-        Me.DataGridViewAutoBasalDelivery.AllowUserToResizeRows = False
+        Me.DgvAutoBasalDelivery.AllowUserToAddRows = False
+        Me.DgvAutoBasalDelivery.AllowUserToDeleteRows = False
+        Me.DgvAutoBasalDelivery.AllowUserToResizeColumns = False
+        Me.DgvAutoBasalDelivery.AllowUserToResizeRows = False
         DataGridViewCellStyle1.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewAutoBasalDelivery.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
-        Me.DataGridViewAutoBasalDelivery.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader
+        Me.DgvAutoBasalDelivery.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
+        Me.DgvAutoBasalDelivery.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader
         DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
         DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
@@ -864,26 +864,26 @@ Partial Class Form1
         DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewAutoBasalDelivery.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
-        Me.DataGridViewAutoBasalDelivery.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewAutoBasalDelivery.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridViewAutoBasalDelivery.Location = New System.Drawing.Point(6, 52)
-        Me.DataGridViewAutoBasalDelivery.Name = "DataGridViewAutoBasalDelivery"
-        Me.DataGridViewAutoBasalDelivery.ReadOnly = True
-        Me.DataGridViewAutoBasalDelivery.RowTemplate.Height = 25
-        Me.DataGridViewAutoBasalDelivery.Size = New System.Drawing.Size(1358, 575)
-        Me.DataGridViewAutoBasalDelivery.TabIndex = 0
+        Me.DgvAutoBasalDelivery.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        Me.DgvAutoBasalDelivery.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DgvAutoBasalDelivery.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DgvAutoBasalDelivery.Location = New System.Drawing.Point(6, 52)
+        Me.DgvAutoBasalDelivery.Name = "DgvAutoBasalDelivery"
+        Me.DgvAutoBasalDelivery.ReadOnly = True
+        Me.DgvAutoBasalDelivery.RowTemplate.Height = 25
+        Me.DgvAutoBasalDelivery.Size = New System.Drawing.Size(1358, 575)
+        Me.DgvAutoBasalDelivery.TabIndex = 0
         '
-        'DataGridViewCareLinkUsers
+        'DgvCareLinkUsers
         '
-        Me.DataGridViewCareLinkUsers.AllowUserToAddRows = False
-        Me.DataGridViewCareLinkUsers.AllowUserToResizeColumns = False
-        Me.DataGridViewCareLinkUsers.AllowUserToResizeRows = False
+        Me.DgvCareLinkUsers.AllowUserToAddRows = False
+        Me.DgvCareLinkUsers.AllowUserToResizeColumns = False
+        Me.DgvCareLinkUsers.AllowUserToResizeRows = False
         DataGridViewCellStyle3.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewCareLinkUsers.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle3
-        Me.DataGridViewCareLinkUsers.AutoGenerateColumns = False
-        Me.DataGridViewCareLinkUsers.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
-        Me.DataGridViewCareLinkUsers.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
+        Me.DgvCareLinkUsers.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle3
+        Me.DgvCareLinkUsers.AutoGenerateColumns = False
+        Me.DgvCareLinkUsers.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.DgvCareLinkUsers.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
         DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
         DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle4.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
@@ -891,150 +891,150 @@ Partial Class Form1
         DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewCareLinkUsers.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
-        Me.DataGridViewCareLinkUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewCareLinkUsers.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumnCareLinkUsersID, Me.DataGridViewButtonColumnCareLinkDeleteRow, Me.DataGridViewTextBoxColumnCareLinkUserName, Me.DataGridViewTextBoxColumnCareLinkPassword, Me.DataGridViewTextBoxColumnCareLinkAIT, Me.DataGridViewTextBoxColumnCareLinkAlertPhoneNumber, Me.DataGridViewTextBoxColumnCareLinkCarrierTextingDomain, Me.DataGridViewTextBoxColumnCareLinkCountryCode, Me.DataGridViewTextBoxColumnCareLinkMailServerPassword, Me.DataGridViewTextBoxColumnCareLinkMailServerPort, Me.DataGridViewTextBoxColumnCareLinkMailServerUserName, Me.DataGridViewTextBoxColumnCareLinkSettingsVersion, Me.DataGridViewCheckBoxColumnCareLinkUseAdvancedAITDecay, Me.DataGridViewCheckBoxColumnCareLinkUseLocalTimeZone, Me.DataGridViewCheckBoxColumnCareLinkAutoLogin})
-        Me.DataGridViewCareLinkUsers.DataSource = Me.CareLinkUserDataRecordBindingSource
-        Me.DataGridViewCareLinkUsers.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridViewCareLinkUsers.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
-        Me.DataGridViewCareLinkUsers.Location = New System.Drawing.Point(3, 3)
-        Me.DataGridViewCareLinkUsers.Name = "DataGridViewCareLinkUsers"
-        Me.DataGridViewCareLinkUsers.RowTemplate.Height = 25
-        Me.DataGridViewCareLinkUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.DataGridViewCareLinkUsers.Size = New System.Drawing.Size(1370, 633)
-        Me.DataGridViewCareLinkUsers.TabIndex = 0
+        Me.DgvCareLinkUsers.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
+        Me.DgvCareLinkUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DgvCareLinkUsers.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DgvCareLinkUsersUserID, Me.DgvCareLinkUsersDeleteRow, Me.DgvCareLinkUsersCareLinkUserName, Me.DgvCareLinkUsersCareLinkPassword, Me.DgvCareLinkUsersAIT, Me.DgvCareLinkUsersAlertPhoneNumber, Me.DgvCareLinkUsersCarrierTextingDomain, Me.DgvCareLinkUsersCountryCode, Me.DgvCareLinkUsersMailServerPassword, Me.DgvCareLinkUsersMailServerPort, Me.DgvCareLinkUsersMailServerUserName, Me.DgvCareLinkUsersSettingsVersion, Me.DgvCareLinkUsersUseAdvancedAITDecay, Me.DgvCareLinkUsersUseLocalTimeZone, Me.DgvCareLinkUsersAutoLogin})
+        Me.DgvCareLinkUsers.DataSource = Me.CareLinkUserDataRecordBindingSource
+        Me.DgvCareLinkUsers.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DgvCareLinkUsers.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
+        Me.DgvCareLinkUsers.Location = New System.Drawing.Point(3, 3)
+        Me.DgvCareLinkUsers.Name = "DgvCareLinkUsers"
+        Me.DgvCareLinkUsers.RowTemplate.Height = 25
+        Me.DgvCareLinkUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
+        Me.DgvCareLinkUsers.Size = New System.Drawing.Size(1370, 633)
+        Me.DgvCareLinkUsers.TabIndex = 0
         '
-        'DataGridViewTextBoxColumnCareLinkUsersID
+        'DgvCareLinkUsersUserID
         '
-        Me.DataGridViewTextBoxColumnCareLinkUsersID.DataPropertyName = "ID"
-        Me.DataGridViewTextBoxColumnCareLinkUsersID.HeaderText = "ID"
-        Me.DataGridViewTextBoxColumnCareLinkUsersID.Name = "DataGridViewTextBoxColumnCareLinkUsersID"
-        Me.DataGridViewTextBoxColumnCareLinkUsersID.ReadOnly = True
-        Me.DataGridViewTextBoxColumnCareLinkUsersID.Width = 43
+        Me.DgvCareLinkUsersUserID.DataPropertyName = "ID"
+        Me.DgvCareLinkUsersUserID.HeaderText = "ID"
+        Me.DgvCareLinkUsersUserID.Name = "DgvCareLinkUsersUserID"
+        Me.DgvCareLinkUsersUserID.ReadOnly = True
+        Me.DgvCareLinkUsersUserID.Width = 43
         '
-        'DataGridViewButtonColumnCareLinkDeleteRow
+        'DgvCareLinkUsersDeleteRow
         '
-        Me.DataGridViewButtonColumnCareLinkDeleteRow.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewButtonColumnCareLinkDeleteRow.DataPropertyName = "DeleteRow"
-        Me.DataGridViewButtonColumnCareLinkDeleteRow.HeaderText = ""
-        Me.DataGridViewButtonColumnCareLinkDeleteRow.MinimumWidth = 50
-        Me.DataGridViewButtonColumnCareLinkDeleteRow.Name = "DataGridViewButtonColumnCareLinkDeleteRow"
-        Me.DataGridViewButtonColumnCareLinkDeleteRow.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewButtonColumnCareLinkDeleteRow.Text = "Delete Row"
-        Me.DataGridViewButtonColumnCareLinkDeleteRow.UseColumnTextForButtonValue = True
-        Me.DataGridViewButtonColumnCareLinkDeleteRow.Width = 50
+        Me.DgvCareLinkUsersDeleteRow.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCareLinkUsersDeleteRow.DataPropertyName = "DeleteRow"
+        Me.DgvCareLinkUsersDeleteRow.HeaderText = ""
+        Me.DgvCareLinkUsersDeleteRow.MinimumWidth = 50
+        Me.DgvCareLinkUsersDeleteRow.Name = "DgvCareLinkUsersDeleteRow"
+        Me.DgvCareLinkUsersDeleteRow.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DgvCareLinkUsersDeleteRow.Text = "Delete Row"
+        Me.DgvCareLinkUsersDeleteRow.UseColumnTextForButtonValue = True
+        Me.DgvCareLinkUsersDeleteRow.Width = 50
         '
-        'DataGridViewTextBoxColumnCareLinkUserName
+        'DgvCareLinkUsersCareLinkUserName
         '
-        Me.DataGridViewTextBoxColumnCareLinkUserName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCareLinkUserName.DataPropertyName = "CareLinkUserName"
-        Me.DataGridViewTextBoxColumnCareLinkUserName.HeaderText = "CareLink UserName"
-        Me.DataGridViewTextBoxColumnCareLinkUserName.MinimumWidth = 125
-        Me.DataGridViewTextBoxColumnCareLinkUserName.Name = "DataGridViewTextBoxColumnCareLinkUserName"
-        Me.DataGridViewTextBoxColumnCareLinkUserName.Width = 125
+        Me.DgvCareLinkUsersCareLinkUserName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCareLinkUsersCareLinkUserName.DataPropertyName = "CareLinkUserName"
+        Me.DgvCareLinkUsersCareLinkUserName.HeaderText = "CareLink UserName"
+        Me.DgvCareLinkUsersCareLinkUserName.MinimumWidth = 125
+        Me.DgvCareLinkUsersCareLinkUserName.Name = "DgvCareLinkUsersCareLinkUserName"
+        Me.DgvCareLinkUsersCareLinkUserName.Width = 125
         '
-        'DataGridViewTextBoxColumnCareLinkPassword
+        'DgvCareLinkUsersCareLinkPassword
         '
-        Me.DataGridViewTextBoxColumnCareLinkPassword.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCareLinkPassword.DataPropertyName = "CareLinkPassword"
-        Me.DataGridViewTextBoxColumnCareLinkPassword.HeaderText = "CareLink Password"
-        Me.DataGridViewTextBoxColumnCareLinkPassword.Name = "DataGridViewTextBoxColumnCareLinkPassword"
-        Me.DataGridViewTextBoxColumnCareLinkPassword.Width = 120
+        Me.DgvCareLinkUsersCareLinkPassword.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCareLinkUsersCareLinkPassword.DataPropertyName = "CareLinkPassword"
+        Me.DgvCareLinkUsersCareLinkPassword.HeaderText = "CareLink Password"
+        Me.DgvCareLinkUsersCareLinkPassword.Name = "DgvCareLinkUsersCareLinkPassword"
+        Me.DgvCareLinkUsersCareLinkPassword.Width = 120
         '
-        'DataGridViewTextBoxColumnCareLinkAIT
+        'DgvCareLinkUsersAIT
         '
-        Me.DataGridViewTextBoxColumnCareLinkAIT.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None
-        Me.DataGridViewTextBoxColumnCareLinkAIT.DataPropertyName = "AIT"
-        Me.DataGridViewTextBoxColumnCareLinkAIT.HeaderText = "AIT"
-        Me.DataGridViewTextBoxColumnCareLinkAIT.Name = "DataGridViewTextBoxColumnCareLinkAIT"
-        Me.DataGridViewTextBoxColumnCareLinkAIT.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumnCareLinkAIT.Width = 150
+        Me.DgvCareLinkUsersAIT.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None
+        Me.DgvCareLinkUsersAIT.DataPropertyName = "AIT"
+        Me.DgvCareLinkUsersAIT.HeaderText = "AIT"
+        Me.DgvCareLinkUsersAIT.Name = "DgvCareLinkUsersAIT"
+        Me.DgvCareLinkUsersAIT.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DgvCareLinkUsersAIT.Width = 150
         '
-        'DataGridViewTextBoxColumnCareLinkAlertPhoneNumber
+        'DgvCareLinkUsersAlertPhoneNumber
         '
-        Me.DataGridViewTextBoxColumnCareLinkAlertPhoneNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCareLinkAlertPhoneNumber.DataPropertyName = "AlertPhoneNumber"
-        Me.DataGridViewTextBoxColumnCareLinkAlertPhoneNumber.HeaderText = "Alert Phone Number"
-        Me.DataGridViewTextBoxColumnCareLinkAlertPhoneNumber.Name = "DataGridViewTextBoxColumnCareLinkAlertPhoneNumber"
-        Me.DataGridViewTextBoxColumnCareLinkAlertPhoneNumber.Width = 129
+        Me.DgvCareLinkUsersAlertPhoneNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCareLinkUsersAlertPhoneNumber.DataPropertyName = "AlertPhoneNumber"
+        Me.DgvCareLinkUsersAlertPhoneNumber.HeaderText = "Alert Phone Number"
+        Me.DgvCareLinkUsersAlertPhoneNumber.Name = "DgvCareLinkUsersAlertPhoneNumber"
+        Me.DgvCareLinkUsersAlertPhoneNumber.Width = 129
         '
-        'DataGridViewTextBoxColumnCareLinkCarrierTextingDomain
+        'DgvCareLinkUsersCarrierTextingDomain
         '
-        Me.DataGridViewTextBoxColumnCareLinkCarrierTextingDomain.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCareLinkCarrierTextingDomain.DataPropertyName = "CarrierTextingDomain"
-        Me.DataGridViewTextBoxColumnCareLinkCarrierTextingDomain.HeaderText = "Carrier Texting Domain"
-        Me.DataGridViewTextBoxColumnCareLinkCarrierTextingDomain.Name = "DataGridViewTextBoxColumnCareLinkCarrierTextingDomain"
-        Me.DataGridViewTextBoxColumnCareLinkCarrierTextingDomain.Width = 140
+        Me.DgvCareLinkUsersCarrierTextingDomain.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCareLinkUsersCarrierTextingDomain.DataPropertyName = "CarrierTextingDomain"
+        Me.DgvCareLinkUsersCarrierTextingDomain.HeaderText = "Carrier Texting Domain"
+        Me.DgvCareLinkUsersCarrierTextingDomain.Name = "DgvCareLinkUsersCarrierTextingDomain"
+        Me.DgvCareLinkUsersCarrierTextingDomain.Width = 140
         '
-        'DataGridViewTextBoxColumnCareLinkCountryCode
+        'DgvCareLinkUsersCountryCode
         '
-        Me.DataGridViewTextBoxColumnCareLinkCountryCode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCareLinkCountryCode.DataPropertyName = "CountryCode"
-        Me.DataGridViewTextBoxColumnCareLinkCountryCode.HeaderText = "Country Code"
-        Me.DataGridViewTextBoxColumnCareLinkCountryCode.Name = "DataGridViewTextBoxColumnCareLinkCountryCode"
-        Me.DataGridViewTextBoxColumnCareLinkCountryCode.Width = 97
+        Me.DgvCareLinkUsersCountryCode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCareLinkUsersCountryCode.DataPropertyName = "CountryCode"
+        Me.DgvCareLinkUsersCountryCode.HeaderText = "Country Code"
+        Me.DgvCareLinkUsersCountryCode.Name = "DgvCareLinkUsersCountryCode"
+        Me.DgvCareLinkUsersCountryCode.Width = 97
         '
-        'DataGridViewTextBoxColumnCareLinkMailServerPassword
+        'DgvCareLinkUsersMailServerPassword
         '
-        Me.DataGridViewTextBoxColumnCareLinkMailServerPassword.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCareLinkMailServerPassword.DataPropertyName = "MailServerPassword"
-        Me.DataGridViewTextBoxColumnCareLinkMailServerPassword.HeaderText = "Mail Server Password"
-        Me.DataGridViewTextBoxColumnCareLinkMailServerPassword.Name = "DataGridViewTextBoxColumnCareLinkMailServerPassword"
-        Me.DataGridViewTextBoxColumnCareLinkMailServerPassword.Width = 131
+        Me.DgvCareLinkUsersMailServerPassword.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCareLinkUsersMailServerPassword.DataPropertyName = "MailServerPassword"
+        Me.DgvCareLinkUsersMailServerPassword.HeaderText = "Mail Server Password"
+        Me.DgvCareLinkUsersMailServerPassword.Name = "DgvCareLinkUsersMailServerPassword"
+        Me.DgvCareLinkUsersMailServerPassword.Width = 131
         '
-        'DataGridViewTextBoxColumnCareLinkMailServerPort
+        'DgvCareLinkUsersMailServerPort
         '
-        Me.DataGridViewTextBoxColumnCareLinkMailServerPort.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCareLinkMailServerPort.DataPropertyName = "MailServerPort"
-        Me.DataGridViewTextBoxColumnCareLinkMailServerPort.HeaderText = "Mail Server Port"
-        Me.DataGridViewTextBoxColumnCareLinkMailServerPort.Name = "DataGridViewTextBoxColumnCareLinkMailServerPort"
-        Me.DataGridViewTextBoxColumnCareLinkMailServerPort.Width = 106
+        Me.DgvCareLinkUsersMailServerPort.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCareLinkUsersMailServerPort.DataPropertyName = "MailServerPort"
+        Me.DgvCareLinkUsersMailServerPort.HeaderText = "Mail Server Port"
+        Me.DgvCareLinkUsersMailServerPort.Name = "DgvCareLinkUsersMailServerPort"
+        Me.DgvCareLinkUsersMailServerPort.Width = 106
         '
-        'DataGridViewTextBoxColumnCareLinkMailServerUserName
+        'DgvCareLinkUsersMailServerUserName
         '
-        Me.DataGridViewTextBoxColumnCareLinkMailServerUserName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCareLinkMailServerUserName.DataPropertyName = "MailServerUserName"
-        Me.DataGridViewTextBoxColumnCareLinkMailServerUserName.HeaderText = "MailServer User Name"
-        Me.DataGridViewTextBoxColumnCareLinkMailServerUserName.Name = "DataGridViewTextBoxColumnCareLinkMailServerUserName"
-        Me.DataGridViewTextBoxColumnCareLinkMailServerUserName.Width = 106
+        Me.DgvCareLinkUsersMailServerUserName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCareLinkUsersMailServerUserName.DataPropertyName = "MailServerUserName"
+        Me.DgvCareLinkUsersMailServerUserName.HeaderText = "MailServer User Name"
+        Me.DgvCareLinkUsersMailServerUserName.Name = "DgvCareLinkUsersMailServerUserName"
+        Me.DgvCareLinkUsersMailServerUserName.Width = 106
         '
-        'DataGridViewTextBoxColumnCareLinkSettingsVersion
+        'DgvCareLinkUsersSettingsVersion
         '
-        Me.DataGridViewTextBoxColumnCareLinkSettingsVersion.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCareLinkSettingsVersion.DataPropertyName = "SettingsVersion"
-        Me.DataGridViewTextBoxColumnCareLinkSettingsVersion.HeaderText = "Settings Version"
-        Me.DataGridViewTextBoxColumnCareLinkSettingsVersion.Name = "DataGridViewTextBoxColumnCareLinkSettingsVersion"
-        Me.DataGridViewTextBoxColumnCareLinkSettingsVersion.Width = 106
+        Me.DgvCareLinkUsersSettingsVersion.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCareLinkUsersSettingsVersion.DataPropertyName = "SettingsVersion"
+        Me.DgvCareLinkUsersSettingsVersion.HeaderText = "Settings Version"
+        Me.DgvCareLinkUsersSettingsVersion.Name = "DgvCareLinkUsersSettingsVersion"
+        Me.DgvCareLinkUsersSettingsVersion.Width = 106
         '
-        'DataGridViewCheckBoxColumnCareLinkUseAdvancedAITDecay
+        'DgvCareLinkUsersUseAdvancedAITDecay
         '
-        Me.DataGridViewCheckBoxColumnCareLinkUseAdvancedAITDecay.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewCheckBoxColumnCareLinkUseAdvancedAITDecay.DataPropertyName = "UseAdvancedAITDecay"
-        Me.DataGridViewCheckBoxColumnCareLinkUseAdvancedAITDecay.HeaderText = "Use Advanced AIT Decay"
-        Me.DataGridViewCheckBoxColumnCareLinkUseAdvancedAITDecay.Name = "DataGridViewCheckBoxColumnCareLinkUseAdvancedAITDecay"
+        Me.DgvCareLinkUsersUseAdvancedAITDecay.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCareLinkUsersUseAdvancedAITDecay.DataPropertyName = "UseAdvancedAITDecay"
+        Me.DgvCareLinkUsersUseAdvancedAITDecay.HeaderText = "Use Advanced AIT Decay"
+        Me.DgvCareLinkUsersUseAdvancedAITDecay.Name = "DgvCareLinkUsersUseAdvancedAITDecay"
         '
-        'DataGridViewCheckBoxColumnCareLinkUseLocalTimeZone
+        'DgvCareLinkUsersUseLocalTimeZone
         '
-        Me.DataGridViewCheckBoxColumnCareLinkUseLocalTimeZone.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewCheckBoxColumnCareLinkUseLocalTimeZone.DataPropertyName = "UseLocalTimeZone"
-        Me.DataGridViewCheckBoxColumnCareLinkUseLocalTimeZone.HeaderText = "Use Local Time Zone"
-        Me.DataGridViewCheckBoxColumnCareLinkUseLocalTimeZone.Name = "DataGridViewCheckBoxColumnCareLinkUseLocalTimeZone"
-        Me.DataGridViewCheckBoxColumnCareLinkUseLocalTimeZone.Width = 86
+        Me.DgvCareLinkUsersUseLocalTimeZone.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCareLinkUsersUseLocalTimeZone.DataPropertyName = "UseLocalTimeZone"
+        Me.DgvCareLinkUsersUseLocalTimeZone.HeaderText = "Use Local Time Zone"
+        Me.DgvCareLinkUsersUseLocalTimeZone.Name = "DgvCareLinkUsersUseLocalTimeZone"
+        Me.DgvCareLinkUsersUseLocalTimeZone.Width = 86
         '
-        'DataGridViewCheckBoxColumnCareLinkAutoLogin
+        'DgvCareLinkUsersAutoLogin
         '
-        Me.DataGridViewCheckBoxColumnCareLinkAutoLogin.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewCheckBoxColumnCareLinkAutoLogin.DataPropertyName = "AutoLogin"
-        Me.DataGridViewCheckBoxColumnCareLinkAutoLogin.HeaderText = "Auto Login"
-        Me.DataGridViewCheckBoxColumnCareLinkAutoLogin.Name = "DataGridViewCheckBoxColumnCareLinkAutoLogin"
-        Me.DataGridViewCheckBoxColumnCareLinkAutoLogin.Width = 65
+        Me.DgvCareLinkUsersAutoLogin.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCareLinkUsersAutoLogin.DataPropertyName = "AutoLogin"
+        Me.DgvCareLinkUsersAutoLogin.HeaderText = "Auto Login"
+        Me.DgvCareLinkUsersAutoLogin.Name = "DgvCareLinkUsersAutoLogin"
+        Me.DgvCareLinkUsersAutoLogin.Width = 65
         '
-        'DataGridViewCountryItemsPage1
+        'DgvCountryDataPg1
         '
-        Me.DataGridViewCountryItemsPage1.AllowUserToAddRows = False
-        Me.DataGridViewCountryItemsPage1.AllowUserToDeleteRows = False
+        Me.DgvCountryDataPg1.AllowUserToAddRows = False
+        Me.DgvCountryDataPg1.AllowUserToDeleteRows = False
         DataGridViewCellStyle5.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewCountryItemsPage1.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle5
+        Me.DgvCountryDataPg1.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle5
         DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
         DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle6.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
@@ -1042,55 +1042,55 @@ Partial Class Form1
         DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewCountryItemsPage1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle6
-        Me.DataGridViewCountryItemsPage1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewCountryItemsPage1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber, Me.DataGridViewTextBoxColumnCountrySettingsCategory, Me.DataGridViewTextBoxColumnCountrySettingsKey, Me.DataGridViewTextBoxColumnCountrySettingsValue})
-        Me.DataGridViewCountryItemsPage1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridViewCountryItemsPage1.Location = New System.Drawing.Point(3, 3)
-        Me.DataGridViewCountryItemsPage1.Name = "DataGridViewCountryItemsPage1"
-        Me.DataGridViewCountryItemsPage1.ReadOnly = True
-        Me.DataGridViewCountryItemsPage1.RowTemplate.Height = 25
-        Me.DataGridViewCountryItemsPage1.Size = New System.Drawing.Size(1370, 633)
-        Me.DataGridViewCountryItemsPage1.TabIndex = 1
+        Me.DgvCountryDataPg1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle6
+        Me.DgvCountryDataPg1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DgvCountryDataPg1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DgvCountryDataPg1RecordNumber, Me.DgvCountryDataPg1Category, Me.DgvCountryDataPg1Key, Me.DgvCountryDataPg1Value})
+        Me.DgvCountryDataPg1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DgvCountryDataPg1.Location = New System.Drawing.Point(3, 3)
+        Me.DgvCountryDataPg1.Name = "DgvCountryDataPg1"
+        Me.DgvCountryDataPg1.ReadOnly = True
+        Me.DgvCountryDataPg1.RowTemplate.Height = 25
+        Me.DgvCountryDataPg1.Size = New System.Drawing.Size(1370, 633)
+        Me.DgvCountryDataPg1.TabIndex = 1
         '
-        'DataGridViewTextBoxColumnCountrySettingsRecordNumber
+        'DgvCountryDataPg1RecordNumber
         '
-        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
-        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.HeaderText = "Record Number"
-        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.MinimumWidth = 60
-        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.Name = "DataGridViewTextBoxColumnCountrySettingsRecordNumber"
-        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.ReadOnly = True
-        Me.DataGridViewTextBoxColumnCountrySettingsRecordNumber.Width = 60
+        Me.DgvCountryDataPg1RecordNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
+        Me.DgvCountryDataPg1RecordNumber.HeaderText = "Record Number"
+        Me.DgvCountryDataPg1RecordNumber.MinimumWidth = 60
+        Me.DgvCountryDataPg1RecordNumber.Name = "DgvCountryDataPg1RecordNumber"
+        Me.DgvCountryDataPg1RecordNumber.ReadOnly = True
+        Me.DgvCountryDataPg1RecordNumber.Width = 60
         '
-        'DataGridViewTextBoxColumnCountrySettingsCategory
+        'DgvCountryDataPg1Category
         '
-        Me.DataGridViewTextBoxColumnCountrySettingsCategory.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCountrySettingsCategory.HeaderText = "Category"
-        Me.DataGridViewTextBoxColumnCountrySettingsCategory.Name = "DataGridViewTextBoxColumnCountrySettingsCategory"
-        Me.DataGridViewTextBoxColumnCountrySettingsCategory.ReadOnly = True
-        Me.DataGridViewTextBoxColumnCountrySettingsCategory.Width = 80
+        Me.DgvCountryDataPg1Category.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCountryDataPg1Category.HeaderText = "Category"
+        Me.DgvCountryDataPg1Category.Name = "DgvCountryDataPg1Category"
+        Me.DgvCountryDataPg1Category.ReadOnly = True
+        Me.DgvCountryDataPg1Category.Width = 80
         '
-        'DataGridViewTextBoxColumnCountrySettingsKey
+        'DgvCountryDataPg1Key
         '
-        Me.DataGridViewTextBoxColumnCountrySettingsKey.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCountrySettingsKey.HeaderText = "Key"
-        Me.DataGridViewTextBoxColumnCountrySettingsKey.Name = "DataGridViewTextBoxColumnCountrySettingsKey"
-        Me.DataGridViewTextBoxColumnCountrySettingsKey.ReadOnly = True
-        Me.DataGridViewTextBoxColumnCountrySettingsKey.Width = 51
+        Me.DgvCountryDataPg1Key.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCountryDataPg1Key.HeaderText = "Key"
+        Me.DgvCountryDataPg1Key.Name = "DgvCountryDataPg1Key"
+        Me.DgvCountryDataPg1Key.ReadOnly = True
+        Me.DgvCountryDataPg1Key.Width = 51
         '
-        'DataGridViewTextBoxColumnCountrySettingsValue
+        'DgvCountryDataPg1Value
         '
-        Me.DataGridViewTextBoxColumnCountrySettingsValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.DataGridViewTextBoxColumnCountrySettingsValue.HeaderText = "Value"
-        Me.DataGridViewTextBoxColumnCountrySettingsValue.Name = "DataGridViewTextBoxColumnCountrySettingsValue"
-        Me.DataGridViewTextBoxColumnCountrySettingsValue.ReadOnly = True
+        Me.DgvCountryDataPg1Value.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.DgvCountryDataPg1Value.HeaderText = "Value"
+        Me.DgvCountryDataPg1Value.Name = "DgvCountryDataPg1Value"
+        Me.DgvCountryDataPg1Value.ReadOnly = True
         '
-        'DataGridViewCountryItemsPage2
+        'DgvCountryDataPg2
         '
-        Me.DataGridViewCountryItemsPage2.AllowUserToAddRows = False
-        Me.DataGridViewCountryItemsPage2.AllowUserToDeleteRows = False
+        Me.DgvCountryDataPg2.AllowUserToAddRows = False
+        Me.DgvCountryDataPg2.AllowUserToDeleteRows = False
         DataGridViewCellStyle7.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewCountryItemsPage2.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle7
+        Me.DgvCountryDataPg2.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle7
         DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
         DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle8.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
@@ -1098,55 +1098,55 @@ Partial Class Form1
         DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewCountryItemsPage2.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle8
-        Me.DataGridViewCountryItemsPage2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewCountryItemsPage2.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumnCountrySettingsPgRecordNumber, Me.DataGridViewTextBoxColumnCountrySettingsPg2Category, Me.DataGridViewTextBoxColumnCountrySettingsPg2Key, Me.DataGridViewTextBoxColumnCountrySettingsPg2Value})
-        Me.DataGridViewCountryItemsPage2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridViewCountryItemsPage2.Location = New System.Drawing.Point(3, 3)
-        Me.DataGridViewCountryItemsPage2.Name = "DataGridViewCountryItemsPage2"
-        Me.DataGridViewCountryItemsPage2.ReadOnly = True
-        Me.DataGridViewCountryItemsPage2.RowTemplate.Height = 25
-        Me.DataGridViewCountryItemsPage2.Size = New System.Drawing.Size(1370, 633)
-        Me.DataGridViewCountryItemsPage2.TabIndex = 1
+        Me.DgvCountryDataPg2.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle8
+        Me.DgvCountryDataPg2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DgvCountryDataPg2.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DgvCountryDataPg2RecordNumber, Me.DgvCountryDataPg2Category, Me.DgvCountryDataPg2Key, Me.DgvCountryDataPg2Value})
+        Me.DgvCountryDataPg2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DgvCountryDataPg2.Location = New System.Drawing.Point(3, 3)
+        Me.DgvCountryDataPg2.Name = "DgvCountryDataPg2"
+        Me.DgvCountryDataPg2.ReadOnly = True
+        Me.DgvCountryDataPg2.RowTemplate.Height = 25
+        Me.DgvCountryDataPg2.Size = New System.Drawing.Size(1370, 633)
+        Me.DgvCountryDataPg2.TabIndex = 1
         '
-        'DataGridViewTextBoxColumnCountrySettingsPgRecordNumber
+        'DgvCountryDataPg2RecordNumber
         '
-        Me.DataGridViewTextBoxColumnCountrySettingsPgRecordNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
-        Me.DataGridViewTextBoxColumnCountrySettingsPgRecordNumber.HeaderText = "Record Number"
-        Me.DataGridViewTextBoxColumnCountrySettingsPgRecordNumber.MinimumWidth = 60
-        Me.DataGridViewTextBoxColumnCountrySettingsPgRecordNumber.Name = "DataGridViewTextBoxColumnCountrySettingsPgRecordNumber"
-        Me.DataGridViewTextBoxColumnCountrySettingsPgRecordNumber.ReadOnly = True
-        Me.DataGridViewTextBoxColumnCountrySettingsPgRecordNumber.Width = 60
+        Me.DgvCountryDataPg2RecordNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
+        Me.DgvCountryDataPg2RecordNumber.HeaderText = "Record Number"
+        Me.DgvCountryDataPg2RecordNumber.MinimumWidth = 60
+        Me.DgvCountryDataPg2RecordNumber.Name = "DgvCountryDataPg2RecordNumber"
+        Me.DgvCountryDataPg2RecordNumber.ReadOnly = True
+        Me.DgvCountryDataPg2RecordNumber.Width = 60
         '
-        'DataGridViewTextBoxColumnCountrySettingsPg2Category
+        'DgvCountryDataPg2Category
         '
-        Me.DataGridViewTextBoxColumnCountrySettingsPg2Category.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCountrySettingsPg2Category.HeaderText = "Category"
-        Me.DataGridViewTextBoxColumnCountrySettingsPg2Category.Name = "DataGridViewTextBoxColumnCountrySettingsPg2Category"
-        Me.DataGridViewTextBoxColumnCountrySettingsPg2Category.ReadOnly = True
-        Me.DataGridViewTextBoxColumnCountrySettingsPg2Category.Width = 80
+        Me.DgvCountryDataPg2Category.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCountryDataPg2Category.HeaderText = "Category"
+        Me.DgvCountryDataPg2Category.Name = "DgvCountryDataPg2Category"
+        Me.DgvCountryDataPg2Category.ReadOnly = True
+        Me.DgvCountryDataPg2Category.Width = 80
         '
-        'DataGridViewTextBoxColumnCountrySettingsPg2Key
+        'DgvCountryDataPg2Key
         '
-        Me.DataGridViewTextBoxColumnCountrySettingsPg2Key.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCountrySettingsPg2Key.HeaderText = "Key"
-        Me.DataGridViewTextBoxColumnCountrySettingsPg2Key.Name = "DataGridViewTextBoxColumnCountrySettingsPg2Key"
-        Me.DataGridViewTextBoxColumnCountrySettingsPg2Key.ReadOnly = True
-        Me.DataGridViewTextBoxColumnCountrySettingsPg2Key.Width = 51
+        Me.DgvCountryDataPg2Key.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCountryDataPg2Key.HeaderText = "Key"
+        Me.DgvCountryDataPg2Key.Name = "DgvCountryDataPg2Key"
+        Me.DgvCountryDataPg2Key.ReadOnly = True
+        Me.DgvCountryDataPg2Key.Width = 51
         '
-        'DataGridViewTextBoxColumnCountrySettingsPg2Value
+        'DgvCountryDataPg2Value
         '
-        Me.DataGridViewTextBoxColumnCountrySettingsPg2Value.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.DataGridViewTextBoxColumnCountrySettingsPg2Value.HeaderText = "Value"
-        Me.DataGridViewTextBoxColumnCountrySettingsPg2Value.Name = "DataGridViewTextBoxColumnCountrySettingsPg2Value"
-        Me.DataGridViewTextBoxColumnCountrySettingsPg2Value.ReadOnly = True
+        Me.DgvCountryDataPg2Value.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.DgvCountryDataPg2Value.HeaderText = "Value"
+        Me.DgvCountryDataPg2Value.Name = "DgvCountryDataPg2Value"
+        Me.DgvCountryDataPg2Value.ReadOnly = True
         '
-        'DataGridViewCountryItemsPage3
+        'DgvCountryDataPg3
         '
-        Me.DataGridViewCountryItemsPage3.AllowUserToAddRows = False
-        Me.DataGridViewCountryItemsPage3.AllowUserToDeleteRows = False
+        Me.DgvCountryDataPg3.AllowUserToAddRows = False
+        Me.DgvCountryDataPg3.AllowUserToDeleteRows = False
         DataGridViewCellStyle9.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewCountryItemsPage3.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle9
+        Me.DgvCountryDataPg3.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle9
         DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
         DataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle10.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
@@ -1154,74 +1154,74 @@ Partial Class Form1
         DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewCountryItemsPage3.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle10
-        Me.DataGridViewCountryItemsPage3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewCountryItemsPage3.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber, Me.DataGridViewTextBoxColumnCountrySettingsPg3Category, Me.DataGridViewTextBoxColumnCountrySettingsPg3Key, Me.DataGridViewTextBoxColumnCountrySettingsPg3Value, Me.DataGridViewTextBoxColumnCountrySettingsPg3OnlyFor, Me.DataGridViewTextBoxColumnCountrySettingsPg3NotFor})
-        Me.DataGridViewCountryItemsPage3.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridViewCountryItemsPage3.Location = New System.Drawing.Point(3, 3)
-        Me.DataGridViewCountryItemsPage3.Name = "DataGridViewCountryItemsPage3"
-        Me.DataGridViewCountryItemsPage3.ReadOnly = True
-        Me.DataGridViewCountryItemsPage3.RowTemplate.Height = 25
-        Me.DataGridViewCountryItemsPage3.Size = New System.Drawing.Size(1370, 633)
-        Me.DataGridViewCountryItemsPage3.TabIndex = 1
+        Me.DgvCountryDataPg3.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle10
+        Me.DgvCountryDataPg3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DgvCountryDataPg3.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DgvCountryDataPg3RecordNumber, Me.DgvCountryDataPg3Category, Me.DgvCountryDataPg3Key, Me.DgvCountryDataPg3Value, Me.DgvCountryDataPg3OnlyFor, Me.DgvCountryDataPg3NotFor})
+        Me.DgvCountryDataPg3.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DgvCountryDataPg3.Location = New System.Drawing.Point(3, 3)
+        Me.DgvCountryDataPg3.Name = "DgvCountryDataPg3"
+        Me.DgvCountryDataPg3.ReadOnly = True
+        Me.DgvCountryDataPg3.RowTemplate.Height = 25
+        Me.DgvCountryDataPg3.Size = New System.Drawing.Size(1370, 633)
+        Me.DgvCountryDataPg3.TabIndex = 1
         '
-        'DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber
+        'DgvCountryDataPg3RecordNumber
         '
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber.HeaderText = "Record Number"
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber.MinimumWidth = 60
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber.Name = "DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber"
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber.ReadOnly = True
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber.Width = 60
+        Me.DgvCountryDataPg3RecordNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
+        Me.DgvCountryDataPg3RecordNumber.HeaderText = "Record Number"
+        Me.DgvCountryDataPg3RecordNumber.MinimumWidth = 60
+        Me.DgvCountryDataPg3RecordNumber.Name = "DgvCountryDataPg3RecordNumber"
+        Me.DgvCountryDataPg3RecordNumber.ReadOnly = True
+        Me.DgvCountryDataPg3RecordNumber.Width = 60
         '
-        'DataGridViewTextBoxColumnCountrySettingsPg3Category
+        'DgvCountryDataPg3Category
         '
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3Category.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3Category.HeaderText = "Category"
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3Category.Name = "DataGridViewTextBoxColumnCountrySettingsPg3Category"
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3Category.ReadOnly = True
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3Category.Width = 80
+        Me.DgvCountryDataPg3Category.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCountryDataPg3Category.HeaderText = "Category"
+        Me.DgvCountryDataPg3Category.Name = "DgvCountryDataPg3Category"
+        Me.DgvCountryDataPg3Category.ReadOnly = True
+        Me.DgvCountryDataPg3Category.Width = 80
         '
-        'DataGridViewTextBoxColumnCountrySettingsPg3Key
+        'DgvCountryDataPg3Key
         '
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3Key.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3Key.HeaderText = "Key"
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3Key.Name = "DataGridViewTextBoxColumnCountrySettingsPg3Key"
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3Key.ReadOnly = True
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3Key.Width = 51
+        Me.DgvCountryDataPg3Key.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCountryDataPg3Key.HeaderText = "Key"
+        Me.DgvCountryDataPg3Key.Name = "DgvCountryDataPg3Key"
+        Me.DgvCountryDataPg3Key.ReadOnly = True
+        Me.DgvCountryDataPg3Key.Width = 51
         '
-        'DataGridViewTextBoxColumnCountrySettingsPg3Value
+        'DgvCountryDataPg3Value
         '
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3Value.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3Value.HeaderText = "Value"
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3Value.Name = "DataGridViewTextBoxColumnCountrySettingsPg3Value"
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3Value.ReadOnly = True
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3Value.Width = 60
+        Me.DgvCountryDataPg3Value.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCountryDataPg3Value.HeaderText = "Value"
+        Me.DgvCountryDataPg3Value.Name = "DgvCountryDataPg3Value"
+        Me.DgvCountryDataPg3Value.ReadOnly = True
+        Me.DgvCountryDataPg3Value.Width = 60
         '
-        'DataGridViewTextBoxColumnCountrySettingsPg3OnlyFor
+        'DgvCountryDataPg3OnlyFor
         '
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3OnlyFor.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3OnlyFor.HeaderText = "Report Only For"
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3OnlyFor.Name = "DataGridViewTextBoxColumnCountrySettingsPg3OnlyFor"
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3OnlyFor.ReadOnly = True
+        Me.DgvCountryDataPg3OnlyFor.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.DgvCountryDataPg3OnlyFor.HeaderText = "Report Only For"
+        Me.DgvCountryDataPg3OnlyFor.Name = "DgvCountryDataPg3OnlyFor"
+        Me.DgvCountryDataPg3OnlyFor.ReadOnly = True
         '
-        'DataGridViewTextBoxColumnCountrySettingsPg3NotFor
+        'DgvCountryDataPg3NotFor
         '
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3NotFor.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3NotFor.HeaderText = "Report Not For"
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3NotFor.Name = "DataGridViewTextBoxColumnCountrySettingsPg3NotFor"
-        Me.DataGridViewTextBoxColumnCountrySettingsPg3NotFor.ReadOnly = True
+        Me.DgvCountryDataPg3NotFor.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.DgvCountryDataPg3NotFor.HeaderText = "Report Not For"
+        Me.DgvCountryDataPg3NotFor.Name = "DgvCountryDataPg3NotFor"
+        Me.DgvCountryDataPg3NotFor.ReadOnly = True
         '
-        'DataGridViewCurrentUser
+        'DgvCurrentUser
         '
-        Me.DataGridViewCurrentUser.AllowUserToAddRows = False
-        Me.DataGridViewCurrentUser.AllowUserToDeleteRows = False
-        Me.DataGridViewCurrentUser.AllowUserToResizeColumns = False
-        Me.DataGridViewCurrentUser.AllowUserToResizeRows = False
+        Me.DgvCurrentUser.AllowUserToAddRows = False
+        Me.DgvCurrentUser.AllowUserToDeleteRows = False
+        Me.DgvCurrentUser.AllowUserToResizeColumns = False
+        Me.DgvCurrentUser.AllowUserToResizeRows = False
         DataGridViewCellStyle11.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewCurrentUser.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle11
-        Me.DataGridViewCurrentUser.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
-        Me.DataGridViewCurrentUser.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
+        Me.DgvCurrentUser.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle11
+        Me.DgvCurrentUser.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.DgvCurrentUser.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
         DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
         DataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle12.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
@@ -1229,25 +1229,25 @@ Partial Class Form1
         DataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewCurrentUser.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle12
-        Me.DataGridViewCurrentUser.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewCurrentUser.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridViewCurrentUser.Location = New System.Drawing.Point(0, 0)
-        Me.DataGridViewCurrentUser.Name = "DataGridViewCurrentUser"
-        Me.DataGridViewCurrentUser.ReadOnly = True
-        Me.DataGridViewCurrentUser.RowHeadersVisible = False
-        Me.DataGridViewCurrentUser.RowTemplate.Height = 25
-        Me.DataGridViewCurrentUser.Size = New System.Drawing.Size(1376, 639)
-        Me.DataGridViewCurrentUser.TabIndex = 0
+        Me.DgvCurrentUser.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle12
+        Me.DgvCurrentUser.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DgvCurrentUser.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DgvCurrentUser.Location = New System.Drawing.Point(0, 0)
+        Me.DgvCurrentUser.Name = "DgvCurrentUser"
+        Me.DgvCurrentUser.ReadOnly = True
+        Me.DgvCurrentUser.RowHeadersVisible = False
+        Me.DgvCurrentUser.RowTemplate.Height = 25
+        Me.DgvCurrentUser.Size = New System.Drawing.Size(1376, 639)
+        Me.DgvCurrentUser.TabIndex = 0
         '
-        'DataGridViewInsulin
+        'DgvInsulin
         '
-        Me.DataGridViewInsulin.AllowUserToAddRows = False
-        Me.DataGridViewInsulin.AllowUserToDeleteRows = False
-        Me.DataGridViewInsulin.AllowUserToResizeColumns = False
-        Me.DataGridViewInsulin.AllowUserToResizeRows = False
+        Me.DgvInsulin.AllowUserToAddRows = False
+        Me.DgvInsulin.AllowUserToDeleteRows = False
+        Me.DgvInsulin.AllowUserToResizeColumns = False
+        Me.DgvInsulin.AllowUserToResizeRows = False
         DataGridViewCellStyle13.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewInsulin.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle13
+        Me.DgvInsulin.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle13
         DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
         DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle14.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
@@ -1255,35 +1255,35 @@ Partial Class Form1
         DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewInsulin.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle14
-        Me.DataGridViewInsulin.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewInsulin.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridViewInsulin.Location = New System.Drawing.Point(6, 52)
-        Me.DataGridViewInsulin.Name = "DataGridViewInsulin"
-        Me.DataGridViewInsulin.ReadOnly = True
-        Me.DataGridViewInsulin.RowTemplate.Height = 25
-        Me.DataGridViewInsulin.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.DataGridViewInsulin.Size = New System.Drawing.Size(1358, 575)
-        Me.DataGridViewInsulin.TabIndex = 0
+        Me.DgvInsulin.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle14
+        Me.DgvInsulin.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DgvInsulin.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DgvInsulin.Location = New System.Drawing.Point(6, 52)
+        Me.DgvInsulin.Name = "DgvInsulin"
+        Me.DgvInsulin.ReadOnly = True
+        Me.DgvInsulin.RowTemplate.Height = 25
+        Me.DgvInsulin.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
+        Me.DgvInsulin.Size = New System.Drawing.Size(1358, 575)
+        Me.DgvInsulin.TabIndex = 0
         '
-        'DataGridViewMeal
+        'DgvMeal
         '
-        Me.DataGridViewMeal.Location = New System.Drawing.Point(0, 0)
-        Me.DataGridViewMeal.Name = "DataGridViewMeal"
-        Me.DataGridViewMeal.Size = New System.Drawing.Size(240, 150)
-        Me.DataGridViewMeal.TabIndex = 0
+        Me.DgvMeal.Location = New System.Drawing.Point(0, 0)
+        Me.DgvMeal.Name = "DgvMeal"
+        Me.DgvMeal.Size = New System.Drawing.Size(240, 150)
+        Me.DgvMeal.TabIndex = 0
         '
-        'DataGridViewSGs
+        'DgvSGs
         '
-        Me.DataGridViewSGs.AllowUserToAddRows = False
-        Me.DataGridViewSGs.AllowUserToDeleteRows = False
-        Me.DataGridViewSGs.AllowUserToResizeColumns = False
-        Me.DataGridViewSGs.AllowUserToResizeRows = False
+        Me.DgvSGs.AllowUserToAddRows = False
+        Me.DgvSGs.AllowUserToDeleteRows = False
+        Me.DgvSGs.AllowUserToResizeColumns = False
+        Me.DgvSGs.AllowUserToResizeRows = False
         DataGridViewCellStyle15.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewSGs.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle15
-        Me.DataGridViewSGs.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.DgvSGs.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle15
+        Me.DgvSGs.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.DataGridViewSGs.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.DgvSGs.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
         DataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle16.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
@@ -1291,41 +1291,41 @@ Partial Class Form1
         DataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewSGs.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle16
-        Me.DataGridViewSGs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.DataGridViewSGs.Location = New System.Drawing.Point(3, 46)
-        Me.DataGridViewSGs.Name = "DataGridViewSGs"
-        Me.DataGridViewSGs.RowTemplate.Height = 25
-        Me.DataGridViewSGs.Size = New System.Drawing.Size(1358, 584)
-        Me.DataGridViewSGs.TabIndex = 1
+        Me.DgvSGs.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle16
+        Me.DgvSGs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.DgvSGs.Location = New System.Drawing.Point(3, 46)
+        Me.DgvSGs.Name = "DgvSGs"
+        Me.DgvSGs.RowTemplate.Height = 25
+        Me.DgvSGs.Size = New System.Drawing.Size(1358, 584)
+        Me.DgvSGs.TabIndex = 1
         '
-        'DataGridViewSummary
+        'DgvSummary
         '
-        Me.DataGridViewSummary.AllowUserToAddRows = False
-        Me.DataGridViewSummary.AllowUserToDeleteRows = False
+        Me.DgvSummary.AllowUserToAddRows = False
+        Me.DgvSummary.AllowUserToDeleteRows = False
         DataGridViewCellStyle17.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewSummary.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle17
-        Me.DataGridViewSummary.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle6
-        Me.DataGridViewSummary.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewSummary.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridViewSummary.Location = New System.Drawing.Point(3, 3)
-        Me.DataGridViewSummary.Name = "DataGridViewSummary"
-        Me.DataGridViewSummary.ReadOnly = True
-        Me.DataGridViewSummary.RowTemplate.Height = 25
-        Me.DataGridViewSummary.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.DataGridViewSummary.Size = New System.Drawing.Size(1370, 633)
-        Me.DataGridViewSummary.TabIndex = 0
+        Me.DgvSummary.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle17
+        Me.DgvSummary.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle6
+        Me.DgvSummary.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DgvSummary.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DgvSummary.Location = New System.Drawing.Point(3, 3)
+        Me.DgvSummary.Name = "DgvSummary"
+        Me.DgvSummary.ReadOnly = True
+        Me.DgvSummary.RowTemplate.Height = 25
+        Me.DgvSummary.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
+        Me.DgvSummary.Size = New System.Drawing.Size(1370, 633)
+        Me.DgvSummary.TabIndex = 0
         '
-        'DataGridViewUserProfile
+        'DgvUserProfile
         '
-        Me.DataGridViewUserProfile.AllowUserToAddRows = False
-        Me.DataGridViewUserProfile.AllowUserToDeleteRows = False
-        Me.DataGridViewUserProfile.AllowUserToResizeColumns = False
-        Me.DataGridViewUserProfile.AllowUserToResizeRows = False
+        Me.DgvUserProfile.AllowUserToAddRows = False
+        Me.DgvUserProfile.AllowUserToDeleteRows = False
+        Me.DgvUserProfile.AllowUserToResizeColumns = False
+        Me.DgvUserProfile.AllowUserToResizeRows = False
         DataGridViewCellStyle18.BackColor = System.Drawing.Color.Silver
-        Me.DataGridViewUserProfile.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle18
-        Me.DataGridViewUserProfile.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
-        Me.DataGridViewUserProfile.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
+        Me.DgvUserProfile.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle18
+        Me.DgvUserProfile.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.DgvUserProfile.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
         DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
         DataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle19.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
@@ -1333,16 +1333,16 @@ Partial Class Form1
         DataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewUserProfile.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle19
-        Me.DataGridViewUserProfile.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewUserProfile.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridViewUserProfile.Location = New System.Drawing.Point(3, 3)
-        Me.DataGridViewUserProfile.Name = "DataGridViewUserProfile"
-        Me.DataGridViewUserProfile.ReadOnly = True
-        Me.DataGridViewUserProfile.RowHeadersVisible = False
-        Me.DataGridViewUserProfile.RowTemplate.Height = 25
-        Me.DataGridViewUserProfile.Size = New System.Drawing.Size(1370, 633)
-        Me.DataGridViewUserProfile.TabIndex = 0
+        Me.DgvUserProfile.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle19
+        Me.DgvUserProfile.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DgvUserProfile.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DgvUserProfile.Location = New System.Drawing.Point(3, 3)
+        Me.DgvUserProfile.Name = "DgvUserProfile"
+        Me.DgvUserProfile.ReadOnly = True
+        Me.DgvUserProfile.RowHeadersVisible = False
+        Me.DgvUserProfile.RowTemplate.Height = 25
+        Me.DgvUserProfile.Size = New System.Drawing.Size(1370, 633)
+        Me.DgvUserProfile.TabIndex = 0
         '
         'FullNameLabel
         '
@@ -1922,7 +1922,7 @@ Partial Class Form1
         '
         'TabPage04SummaryData
         '
-        Me.TabPage04SummaryData.Controls.Add(Me.DataGridViewSummary)
+        Me.TabPage04SummaryData.Controls.Add(Me.DgvSummary)
         Me.TabPage04SummaryData.Location = New System.Drawing.Point(4, 27)
         Me.TabPage04SummaryData.Name = "TabPage04SummaryData"
         Me.TabPage04SummaryData.Padding = New System.Windows.Forms.Padding(3)
@@ -2103,7 +2103,7 @@ Partial Class Form1
         Me.TableLayoutPanelSgs.ColumnCount = 1
         Me.TableLayoutPanelSgs.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelSgs.Controls.Add(Me.TableLayoutPanelSgsTop, 0, 0)
-        Me.TableLayoutPanelSgs.Controls.Add(Me.DataGridViewSGs, 0, 1)
+        Me.TableLayoutPanelSgs.Controls.Add(Me.DgvSGs, 0, 1)
         Me.TableLayoutPanelSgs.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelSgs.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelSgs.Name = "TableLayoutPanelSgs"
@@ -2448,7 +2448,7 @@ Partial Class Form1
         Me.TableLayoutPanelAutoBasalDelivery.ColumnCount = 1
         Me.TableLayoutPanelAutoBasalDelivery.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelAutoBasalDelivery.Controls.Add(Me.TableLayoutPanelAutoBasalDeliveryTop, 0, 0)
-        Me.TableLayoutPanelAutoBasalDelivery.Controls.Add(Me.DataGridViewAutoBasalDelivery, 0, 1)
+        Me.TableLayoutPanelAutoBasalDelivery.Controls.Add(Me.DgvAutoBasalDelivery, 0, 1)
         Me.TableLayoutPanelAutoBasalDelivery.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelAutoBasalDelivery.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelAutoBasalDelivery.Name = "TableLayoutPanelAutoBasalDelivery"
@@ -2661,7 +2661,7 @@ Partial Class Form1
         Me.TableLayoutPanelInsulin.ColumnCount = 1
         Me.TableLayoutPanelInsulin.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelInsulin.Controls.Add(Me.TableLayoutPanelInsulinTop, 0, 0)
-        Me.TableLayoutPanelInsulin.Controls.Add(Me.DataGridViewInsulin, 0, 1)
+        Me.TableLayoutPanelInsulin.Controls.Add(Me.DgvInsulin, 0, 1)
         Me.TableLayoutPanelInsulin.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelInsulin.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelInsulin.Name = "TableLayoutPanelInsulin"
@@ -2856,7 +2856,7 @@ Partial Class Form1
         '
         'TabPageCountryDataPg1
         '
-        Me.TabPageCountryDataPg1.Controls.Add(Me.DataGridViewCountryItemsPage1)
+        Me.TabPageCountryDataPg1.Controls.Add(Me.DgvCountryDataPg1)
         Me.TabPageCountryDataPg1.Location = New System.Drawing.Point(4, 27)
         Me.TabPageCountryDataPg1.Name = "TabPageCountryDataPg1"
         Me.TabPageCountryDataPg1.Padding = New System.Windows.Forms.Padding(3)
@@ -2867,7 +2867,7 @@ Partial Class Form1
         '
         'TabPageCountryDataPg2
         '
-        Me.TabPageCountryDataPg2.Controls.Add(Me.DataGridViewCountryItemsPage2)
+        Me.TabPageCountryDataPg2.Controls.Add(Me.DgvCountryDataPg2)
         Me.TabPageCountryDataPg2.Location = New System.Drawing.Point(4, 27)
         Me.TabPageCountryDataPg2.Name = "TabPageCountryDataPg2"
         Me.TabPageCountryDataPg2.Padding = New System.Windows.Forms.Padding(3)
@@ -2878,7 +2878,7 @@ Partial Class Form1
         '
         'TabPageCountryDataPg3
         '
-        Me.TabPageCountryDataPg3.Controls.Add(Me.DataGridViewCountryItemsPage3)
+        Me.TabPageCountryDataPg3.Controls.Add(Me.DgvCountryDataPg3)
         Me.TabPageCountryDataPg3.Location = New System.Drawing.Point(4, 27)
         Me.TabPageCountryDataPg3.Name = "TabPageCountryDataPg3"
         Me.TabPageCountryDataPg3.Padding = New System.Windows.Forms.Padding(3)
@@ -2889,7 +2889,7 @@ Partial Class Form1
         '
         'TabPageUserProfile
         '
-        Me.TabPageUserProfile.Controls.Add(Me.DataGridViewUserProfile)
+        Me.TabPageUserProfile.Controls.Add(Me.DgvUserProfile)
         Me.TabPageUserProfile.Location = New System.Drawing.Point(4, 27)
         Me.TabPageUserProfile.Name = "TabPageUserProfile"
         Me.TabPageUserProfile.Padding = New System.Windows.Forms.Padding(3)
@@ -2900,7 +2900,7 @@ Partial Class Form1
         '
         'TabPageCurrentUser
         '
-        Me.TabPageCurrentUser.Controls.Add(Me.DataGridViewCurrentUser)
+        Me.TabPageCurrentUser.Controls.Add(Me.DgvCurrentUser)
         Me.TabPageCurrentUser.Location = New System.Drawing.Point(4, 27)
         Me.TabPageCurrentUser.Name = "TabPageCurrentUser"
         Me.TabPageCurrentUser.Size = New System.Drawing.Size(1376, 639)
@@ -2911,7 +2911,7 @@ Partial Class Form1
         'TabPageAllUsers
         '
         Me.TabPageAllUsers.Controls.Add(Me.CareLinkUsersAITComboBox)
-        Me.TabPageAllUsers.Controls.Add(Me.DataGridViewCareLinkUsers)
+        Me.TabPageAllUsers.Controls.Add(Me.DgvCareLinkUsers)
         Me.TabPageAllUsers.Location = New System.Drawing.Point(4, 27)
         Me.TabPageAllUsers.Name = "TabPageAllUsers"
         Me.TabPageAllUsers.Padding = New System.Windows.Forms.Padding(3)
@@ -2959,17 +2959,17 @@ Partial Class Form1
         CType(Me.CareLinkUserDataRecordBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CursorPanel.ResumeLayout(False)
         CType(Me.CursorPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.DataGridViewAutoBasalDelivery, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.DataGridViewCareLinkUsers, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.DataGridViewCountryItemsPage1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.DataGridViewCountryItemsPage2, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.DataGridViewCountryItemsPage3, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.DataGridViewCurrentUser, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.DataGridViewInsulin, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.DataGridViewMeal, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.DataGridViewSGs, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.DataGridViewSummary, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.DataGridViewUserProfile, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DgvAutoBasalDelivery, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DgvCareLinkUsers, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DgvCountryDataPg1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DgvCountryDataPg2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DgvCountryDataPg3, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DgvCurrentUser, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DgvInsulin, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DgvMeal, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DgvSGs, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DgvSummary, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DgvUserProfile, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.InsulinLevelPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Last24HTotalsPanel.ResumeLayout(False)
         CType(Me.PumpBatteryPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
@@ -3091,51 +3091,48 @@ Partial Class Form1
     Friend WithEvents CursorPanel As Panel
     Friend WithEvents CursorPictureBox As PictureBox
     Friend WithEvents CursorTimer As Timer
-    Friend WithEvents DataGridViewAutoBasalDelivery As DataGridView
-    Friend WithEvents DataGridViewButtonColumnCareLinkDeleteRow As DataGridViewColumnControls.DataGridViewDisableButtonColumn
-    Friend WithEvents DataGridViewCareLinkUsers As DataGridView
-    Friend WithEvents DataGridViewCheckBoxColumnCareLinkAutoLogin As DataGridViewCheckBoxColumn
-    Friend WithEvents DataGridViewCheckBoxColumnCareLinkUseAdvancedAITDecay As DataGridViewCheckBoxColumn
-    Friend WithEvents DataGridViewCheckBoxColumnCareLinkUseLocalTimeZone As DataGridViewCheckBoxColumn
-    Friend WithEvents DataGridViewCountryItemsPage1 As DataGridView
-    Friend WithEvents DataGridViewCountryItemsPage2 As DataGridView
-    Friend WithEvents DataGridViewCountryItemsPage3 As DataGridView
-    Friend WithEvents DataGridViewCurrentUser As DataGridView
-    Friend WithEvents DataGridViewInsulin As DataGridView
-    Friend WithEvents DataGridViewMeal As DataGridView
-    Friend WithEvents DataGridViewSGs As DataGridView
-    Friend WithEvents DataGridViewSummary As DataGridView
-    Friend WithEvents DataGridViewTextBoxColumnCareLinkAIT As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCareLinkAlertPhoneNumber As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCareLinkCarrierTextingDomain As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCareLinkCountryCode As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCareLinkMailServerPassword As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCareLinkMailServerPort As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCareLinkMailServerUserName As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCareLinkOutGoingMailServer As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCareLinkPassword As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCareLinkSettingsVersion As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCareLinkUserName As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCareLinkUsersID As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCareLinkUsersPassword As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountry As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsCategory As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsKey As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsPg2Category As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsPg2Key As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsPg2Value As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsPg3Category As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsPg3Key As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsPg3NotFor As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsPg3OnlyFor As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsPg3RecordNumber As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsPg3Value As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsPgRecordNumber As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsRecordNumber As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnCountrySettingsValue As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnFirstName As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumnLastName As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewUserProfile As DataGridView
+    Friend WithEvents DgvAutoBasalDelivery As DataGridView
+    Friend WithEvents DgvCareLinkUsers As DataGridView
+    Friend WithEvents DgvCareLinkUsersAIT As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCareLinkUsersAlertPhoneNumber As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCareLinkUsersAutoLogin As DataGridViewCheckBoxColumn
+    Friend WithEvents DgvCareLinkUsersCareLinkPassword As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCareLinkUsersCareLinkUserName As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCareLinkUsersCarrierTextingDomain As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCareLinkUsersCountryCode As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCareLinkUsersDeleteRow As DataGridViewColumnControls.DataGridViewDisableButtonColumn
+    Friend WithEvents DgvCareLinkUsersMailServerPassword As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCareLinkUsersMailServerPort As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCareLinkUsersMailServerUserName As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCareLinkUsersOutGoingMailServer As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCareLinkUsersSettingsVersion As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCareLinkUsersUseAdvancedAITDecay As DataGridViewCheckBoxColumn
+    Friend WithEvents DgvCareLinkUsersUseLocalTimeZone As DataGridViewCheckBoxColumn
+    Friend WithEvents DgvCareLinkUsersUserID As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCareLinkUsersUserPassword As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCountryDataPg1 As DataGridView
+    Friend WithEvents DgvCountryDataPg1Category As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCountryDataPg1Key As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCountryDataPg1RecordNumber As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCountryDataPg1Value As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCountryDataPg2 As DataGridView
+    Friend WithEvents DgvCountryDataPg2Category As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCountryDataPg2Key As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCountryDataPg2RecordNumber As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCountryDataPg2Value As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCountryDataPg3 As DataGridView
+    Friend WithEvents DgvCountryDataPg3Category As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCountryDataPg3Key As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCountryDataPg3NotFor As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCountryDataPg3OnlyFor As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCountryDataPg3RecordNumber As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCountryDataPg3Value As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCurrentUser As DataGridView
+    Friend WithEvents DgvInsulin As DataGridView
+    Friend WithEvents DgvMeal As DataGridView
+    Friend WithEvents DgvSGs As DataGridView
+    Friend WithEvents DgvSummary As DataGridView
+    Friend WithEvents DgvUserProfile As DataGridView
     Friend WithEvents FullNameLabel As Label
     Friend WithEvents ImageList1 As ImageList
     Friend WithEvents InRangeMessageLabel As Label
@@ -3164,11 +3161,11 @@ Partial Class Form1
     Friend WithEvents MenuHelpCheckForUpdates As ToolStripMenuItem
     Friend WithEvents MenuHelpReportAnIssue As ToolStripMenuItem
     Friend WithEvents MenuOptions As ToolStripMenuItem
-    Friend WithEvents MenuOptionsColorPicker As ToolStripMenuItem
-    Friend WithEvents MenuOptionsShowLegend As ToolStripMenuItem
     Friend WithEvents MenuOptionsAutoLogin As ToolStripMenuItem
+    Friend WithEvents MenuOptionsColorPicker As ToolStripMenuItem
     Friend WithEvents MenuOptionsFilterRawJSONData As ToolStripMenuItem
     Friend WithEvents MenuOptionsSetupEMailServer As ToolStripMenuItem
+    Friend WithEvents MenuOptionsShowLegend As ToolStripMenuItem
     Friend WithEvents MenuOptionsUseAdvancedAITDecay As ToolStripMenuItem
     Friend WithEvents MenuOptionsUseLocalTimeZone As ToolStripMenuItem
     Friend WithEvents MenuStartHere As ToolStripMenuItem
@@ -3181,6 +3178,7 @@ Partial Class Form1
     Friend WithEvents MenuStrip1 As MenuStrip
     Friend WithEvents ModelLabel As Label
     Friend WithEvents NotifyIcon1 As NotifyIcon
+    Friend WithEvents OptionsMenuAdvancedOptions As ToolStripMenuItem
     Friend WithEvents PumpBatteryPictureBox As PictureBox
     Friend WithEvents PumpBatteryRemainingLabel As Label
     Friend WithEvents ReadingIntervalLabel As Label
@@ -3274,9 +3272,8 @@ Partial Class Form1
     Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
     Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
     Friend WithEvents ToolStripSeparator5 As ToolStripSeparator
+    Friend WithEvents ToolStripSeparator6 As ToolStripSeparator
     Friend WithEvents ToolTip1 As ToolTip
     Friend WithEvents TransmatterBatterPercentLabel As Label
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
-    Friend WithEvents ToolStripSeparator6 As ToolStripSeparator
-    Friend WithEvents OptionsMenuAdvancedOptions As ToolStripMenuItem
 End Class

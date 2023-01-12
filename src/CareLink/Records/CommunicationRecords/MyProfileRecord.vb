@@ -78,7 +78,7 @@ Public Class MyProfileRecord
             End Select
         Next
 
-        My.Forms.Form1.DataGridViewUserProfile.DataSource = profile
+        My.Forms.Form1.DgvUserProfile.DataSource = profile
 
         _hasValue = True
     End Sub
