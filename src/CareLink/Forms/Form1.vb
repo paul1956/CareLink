@@ -355,34 +355,33 @@ Public Class Form1
 
         Dim lastColumnIndex As Integer = Me.DgvAutoBasalDelivery.Columns.Count - 1
         For i As Integer = 0 To lastColumnIndex
-            Dim c As DataGridViewColumn = DirectCast(Me.DgvAutoBasalDelivery.Columns(i), DataGridViewColumn)
+            Dim c As DataGridViewColumn = Me.DgvAutoBasalDelivery.Columns(i)
             c.Visible = Not AutoBasalDeliveryRecordHelpers.HideColumn(c.DataPropertyName)
             c.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
         Next
 
         lastColumnIndex = Me.DgvCareLinkUsers.Columns.Count - 1
         For i As Integer = 0 To lastColumnIndex
-            Dim c As DataGridViewColumn = DirectCast(Me.DgvCareLinkUsers.Columns(i), DataGridViewColumn)
+            Dim c As DataGridViewColumn = Me.DgvCareLinkUsers.Columns(i)
             c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
             c.AutoSizeMode = If(i = lastColumnIndex, DataGridViewAutoSizeColumnMode.Fill, DataGridViewAutoSizeColumnMode.AllCells)
         Next
 
         lastColumnIndex = Me.DgvInsulin.Columns.Count - 1
         For i As Integer = 0 To lastColumnIndex
-            Dim c As DataGridViewColumn = DirectCast(Me.DgvInsulin.Columns(i), DataGridViewColumn)
+            Dim c As DataGridViewColumn = Me.DgvInsulin.Columns(i)
             c.Visible = Not InsulinRecordHelpers.HideColumn(c.DataPropertyName)
-            c.AutoSizeMode = If(i = lastColumnIndex, DataGridViewAutoSizeColumnMode.Fill, DataGridViewAutoSizeColumnMode.AllCells)
         Next
 
         lastColumnIndex = Me.DgvMeal.Columns.Count - 1
         For i As Integer = 0 To lastColumnIndex
-            Dim c As DataGridViewColumn = DirectCast(Me.DgvMeal.Columns()(i), DataGridViewColumn)
+            Dim c As DataGridViewColumn = Me.DgvMeal.Columns()(i)
             c.AutoSizeMode = If(i = lastColumnIndex, DataGridViewAutoSizeColumnMode.Fill, DataGridViewAutoSizeColumnMode.AllCells)
         Next
 
         lastColumnIndex = Me.DgvSGs.Columns.Count - 1
         For i As Integer = 0 To lastColumnIndex
-            Dim c As DataGridViewColumn = DirectCast(Me.DgvSGs.Columns()(i), DataGridViewColumn)
+            Dim c As DataGridViewColumn = Me.DgvSGs.Columns()(i)
             c.Visible = Not SgRecordHelpers.HideColumn(c.DataPropertyName)
             c.AutoSizeMode = If(c.HeaderText = "Sensor Message", DataGridViewAutoSizeColumnMode.Fill, DataGridViewAutoSizeColumnMode.AllCells)
         Next
