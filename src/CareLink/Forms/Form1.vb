@@ -1428,11 +1428,11 @@ Public Class Form1
             .LabelStyle.Format = "{0.000}"
             .LineColor = Color.FromArgb(64, Color.DimGray)
             .MajorGrid = New Grid() With {
-                    .Interval = interval,
+                    .interval = interval,
                     .LineColor = Color.FromArgb(64, Color.DimGray)
                 }
             .MajorTickMark = New TickMark() With {
-                    .Interval = interval,
+                    .interval = interval,
                     .Enabled = True
                 }
             .Maximum = TreatmentInsulinRow
@@ -2291,7 +2291,7 @@ Public Class Form1
             Dim sg As Single = s_lastSgRecord.sg
             Dim str As String = s_lastSgRecord.sg.ToString
             Dim fontToUse As New Font("Trebuchet MS", 10, FontStyle.Regular, GraphicsUnit.Pixel)
-            Dim color As Color = Color.White
+            Dim color As Color = color.White
             Dim bgColor As Color
             Dim notStr As New StringBuilder
 
@@ -2299,16 +2299,16 @@ Public Class Form1
                 Using g As Graphics = Graphics.FromImage(bitmapText)
                     Select Case sg
                         Case <= s_limitLow
-                            bgColor = Color.Orange
+                            bgColor = color.Orange
                             If _showBaloonTip Then
                                 Me.NotifyIcon1.ShowBalloonTip(10000, "CareLink Alert", $"SG below {s_limitLow} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBaloonTip = False
                         Case <= s_limitHigh
-                            bgColor = Color.Green
+                            bgColor = color.Green
                             _showBaloonTip = True
                         Case Else
-                            bgColor = Color.Red
+                            bgColor = color.Red
                             If _showBaloonTip Then
                                 Me.NotifyIcon1.ShowBalloonTip(10000, "CareLink Alert", $"SG above {s_limitHigh} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                             End If
