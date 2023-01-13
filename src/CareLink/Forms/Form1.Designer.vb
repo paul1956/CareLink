@@ -103,6 +103,9 @@ Partial Class Form1
         Me.DgvAutoBasalDelivery = New System.Windows.Forms.DataGridView()
         Me.DgvCountryDataPg1 = New System.Windows.Forms.DataGridView()
         Me.DgvCountryDataPg1RecordNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg1Category = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg1Key = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg1Value = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DgvCareLinkUsers = New System.Windows.Forms.DataGridView()
         Me.DgvCareLinkUsersUserID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DgvCareLinkUsersDeleteRow = New DataGridViewColumnControls.DataGridViewDisableButtonColumn()
@@ -119,9 +122,6 @@ Partial Class Form1
         Me.DgvCareLinkUsersUseAdvancedAITDecay = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.DgvCareLinkUsersUseLocalTimeZone = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.DgvCareLinkUsersAutoLogin = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.DgvCountryDataPg1Category = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DgvCountryDataPg1Key = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DgvCountryDataPg1Value = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DgvCountryDataPg2 = New System.Windows.Forms.DataGridView()
         Me.DgvCountryDataPg2RecordNumber = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DgvCountryDataPg2Category = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -257,8 +257,8 @@ Partial Class Form1
         Me.CursorPanel.SuspendLayout()
         CType(Me.CursorPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DgvAutoBasalDelivery, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.DgvCareLinkUsers, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DgvCountryDataPg1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DgvCareLinkUsers, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DgvCountryDataPg2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DgvCountryDataPg3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DgvCurrentUser, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -874,16 +874,12 @@ Partial Class Form1
         Me.DgvAutoBasalDelivery.Size = New System.Drawing.Size(1358, 575)
         Me.DgvAutoBasalDelivery.TabIndex = 0
         '
-        'DgvCareLinkUsers
+        'DgvCountryDataPg1
         '
-        Me.DgvCareLinkUsers.AllowUserToAddRows = False
-        Me.DgvCareLinkUsers.AllowUserToResizeColumns = False
-        Me.DgvCareLinkUsers.AllowUserToResizeRows = False
+        Me.DgvCountryDataPg1.AllowUserToAddRows = False
+        Me.DgvCountryDataPg1.AllowUserToDeleteRows = False
         DataGridViewCellStyle3.BackColor = System.Drawing.Color.Silver
-        Me.DgvCareLinkUsers.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle3
-        Me.DgvCareLinkUsers.AutoGenerateColumns = False
-        Me.DgvCareLinkUsers.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
-        Me.DgvCareLinkUsers.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
+        Me.DgvCountryDataPg1.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle3
         DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
         DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle4.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
@@ -891,7 +887,67 @@ Partial Class Form1
         DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DgvCareLinkUsers.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
+        Me.DgvCountryDataPg1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
+        Me.DgvCountryDataPg1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DgvCountryDataPg1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DgvCountryDataPg1RecordNumber, Me.DgvCountryDataPg1Category, Me.DgvCountryDataPg1Key, Me.DgvCountryDataPg1Value})
+        Me.DgvCountryDataPg1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DgvCountryDataPg1.Location = New System.Drawing.Point(3, 3)
+        Me.DgvCountryDataPg1.Name = "DgvCountryDataPg1"
+        Me.DgvCountryDataPg1.ReadOnly = True
+        Me.DgvCountryDataPg1.RowTemplate.Height = 25
+        Me.DgvCountryDataPg1.Size = New System.Drawing.Size(1370, 633)
+        Me.DgvCountryDataPg1.TabIndex = 1
+        '
+        'DgvCountryDataPg1RecordNumber
+        '
+        Me.DgvCountryDataPg1RecordNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
+        Me.DgvCountryDataPg1RecordNumber.HeaderText = "Record Number"
+        Me.DgvCountryDataPg1RecordNumber.MinimumWidth = 60
+        Me.DgvCountryDataPg1RecordNumber.Name = "DgvCountryDataPg1RecordNumber"
+        Me.DgvCountryDataPg1RecordNumber.ReadOnly = True
+        Me.DgvCountryDataPg1RecordNumber.Width = 60
+        '
+        'DgvCountryDataPg1Category
+        '
+        Me.DgvCountryDataPg1Category.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCountryDataPg1Category.HeaderText = "Category"
+        Me.DgvCountryDataPg1Category.Name = "DgvCountryDataPg1Category"
+        Me.DgvCountryDataPg1Category.ReadOnly = True
+        Me.DgvCountryDataPg1Category.Width = 80
+        '
+        'DgvCountryDataPg1Key
+        '
+        Me.DgvCountryDataPg1Key.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCountryDataPg1Key.HeaderText = "Key"
+        Me.DgvCountryDataPg1Key.Name = "DgvCountryDataPg1Key"
+        Me.DgvCountryDataPg1Key.ReadOnly = True
+        Me.DgvCountryDataPg1Key.Width = 51
+        '
+        'DgvCountryDataPg1Value
+        '
+        Me.DgvCountryDataPg1Value.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.DgvCountryDataPg1Value.HeaderText = "Value"
+        Me.DgvCountryDataPg1Value.Name = "DgvCountryDataPg1Value"
+        Me.DgvCountryDataPg1Value.ReadOnly = True
+        '
+        'DgvCareLinkUsers
+        '
+        Me.DgvCareLinkUsers.AllowUserToAddRows = False
+        Me.DgvCareLinkUsers.AllowUserToResizeColumns = False
+        Me.DgvCareLinkUsers.AllowUserToResizeRows = False
+        DataGridViewCellStyle5.BackColor = System.Drawing.Color.Silver
+        Me.DgvCareLinkUsers.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle5
+        Me.DgvCareLinkUsers.AutoGenerateColumns = False
+        Me.DgvCareLinkUsers.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
+        Me.DgvCareLinkUsers.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle6.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
+        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DgvCareLinkUsers.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle6
         Me.DgvCareLinkUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DgvCareLinkUsers.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DgvCareLinkUsersUserID, Me.DgvCareLinkUsersDeleteRow, Me.DgvCareLinkUsersCareLinkUserName, Me.DgvCareLinkUsersCareLinkPassword, Me.DgvCareLinkUsersAIT, Me.DgvCareLinkUsersAlertPhoneNumber, Me.DgvCareLinkUsersCarrierTextingDomain, Me.DgvCareLinkUsersCountryCode, Me.DgvCareLinkUsersMailServerPassword, Me.DgvCareLinkUsersMailServerPort, Me.DgvCareLinkUsersMailServerUserName, Me.DgvCareLinkUsersSettingsVersion, Me.DgvCareLinkUsersUseAdvancedAITDecay, Me.DgvCareLinkUsersUseLocalTimeZone, Me.DgvCareLinkUsersAutoLogin})
         Me.DgvCareLinkUsers.DataSource = Me.CareLinkUserDataRecordBindingSource
@@ -1028,62 +1084,6 @@ Partial Class Form1
         Me.DgvCareLinkUsersAutoLogin.HeaderText = "Auto Login"
         Me.DgvCareLinkUsersAutoLogin.Name = "DgvCareLinkUsersAutoLogin"
         Me.DgvCareLinkUsersAutoLogin.Width = 65
-        '
-        'DgvCountryDataPg1
-        '
-        Me.DgvCountryDataPg1.AllowUserToAddRows = False
-        Me.DgvCountryDataPg1.AllowUserToDeleteRows = False
-        DataGridViewCellStyle5.BackColor = System.Drawing.Color.Silver
-        Me.DgvCountryDataPg1.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle5
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
-        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DgvCountryDataPg1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle6
-        Me.DgvCountryDataPg1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DgvCountryDataPg1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DgvCountryDataPg1RecordNumber, Me.DgvCountryDataPg1Category, Me.DgvCountryDataPg1Key, Me.DgvCountryDataPg1Value})
-        Me.DgvCountryDataPg1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DgvCountryDataPg1.Location = New System.Drawing.Point(3, 3)
-        Me.DgvCountryDataPg1.Name = "DgvCountryDataPg1"
-        Me.DgvCountryDataPg1.ReadOnly = True
-        Me.DgvCountryDataPg1.RowTemplate.Height = 25
-        Me.DgvCountryDataPg1.Size = New System.Drawing.Size(1370, 633)
-        Me.DgvCountryDataPg1.TabIndex = 1
-        '
-        'DgvCountryDataPg1RecordNumber
-        '
-        Me.DgvCountryDataPg1RecordNumber.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
-        Me.DgvCountryDataPg1RecordNumber.HeaderText = "Record Number"
-        Me.DgvCountryDataPg1RecordNumber.MinimumWidth = 60
-        Me.DgvCountryDataPg1RecordNumber.Name = "DgvCountryDataPg1RecordNumber"
-        Me.DgvCountryDataPg1RecordNumber.ReadOnly = True
-        Me.DgvCountryDataPg1RecordNumber.Width = 60
-        '
-        'DgvCountryDataPg1Category
-        '
-        Me.DgvCountryDataPg1Category.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DgvCountryDataPg1Category.HeaderText = "Category"
-        Me.DgvCountryDataPg1Category.Name = "DgvCountryDataPg1Category"
-        Me.DgvCountryDataPg1Category.ReadOnly = True
-        Me.DgvCountryDataPg1Category.Width = 80
-        '
-        'DgvCountryDataPg1Key
-        '
-        Me.DgvCountryDataPg1Key.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.DgvCountryDataPg1Key.HeaderText = "Key"
-        Me.DgvCountryDataPg1Key.Name = "DgvCountryDataPg1Key"
-        Me.DgvCountryDataPg1Key.ReadOnly = True
-        Me.DgvCountryDataPg1Key.Width = 51
-        '
-        'DgvCountryDataPg1Value
-        '
-        Me.DgvCountryDataPg1Value.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.DgvCountryDataPg1Value.HeaderText = "Value"
-        Me.DgvCountryDataPg1Value.Name = "DgvCountryDataPg1Value"
-        Me.DgvCountryDataPg1Value.ReadOnly = True
         '
         'DgvCountryDataPg2
         '
@@ -1305,7 +1305,7 @@ Partial Class Form1
         Me.DgvSummary.AllowUserToDeleteRows = False
         DataGridViewCellStyle17.BackColor = System.Drawing.Color.Silver
         Me.DgvSummary.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle17
-        Me.DgvSummary.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle6
+        Me.DgvSummary.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
         Me.DgvSummary.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DgvSummary.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DgvSummary.Location = New System.Drawing.Point(3, 3)
@@ -1971,11 +1971,14 @@ Partial Class Form1
         Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelLastSgTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelLastSgTop.LabelText = "last SG"
         Me.TableLayoutPanelLastSgTop.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelLastSgTop.Name = "TableLayoutPanelLastSgTop"
         Me.TableLayoutPanelLastSgTop.RowCount = 1
+        Me.TableLayoutPanelLastSgTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelLastSgTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelLastSgTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelLastSgTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
@@ -2023,11 +2026,14 @@ Partial Class Form1
         Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelLastAlarmTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelLastAlarmTop.LabelText = "Last Alarm"
         Me.TableLayoutPanelLastAlarmTop.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelLastAlarmTop.Name = "TableLayoutPanelLastAlarmTop"
         Me.TableLayoutPanelLastAlarmTop.RowCount = 1
+        Me.TableLayoutPanelLastAlarmTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelLastAlarmTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelLastAlarmTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelLastAlarmTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
@@ -2074,11 +2080,14 @@ Partial Class Form1
         Me.TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelActiveInsulinTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelActiveInsulinTop.LabelText = "Active Insulin"
         Me.TableLayoutPanelActiveInsulinTop.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelActiveInsulinTop.Name = "TableLayoutPanelActiveInsulinTop"
         Me.TableLayoutPanelActiveInsulinTop.RowCount = 1
+        Me.TableLayoutPanelActiveInsulinTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelActiveInsulinTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelActiveInsulinTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelActiveInsulinTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
@@ -2126,11 +2135,14 @@ Partial Class Form1
         Me.TableLayoutPanelSgsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelSgsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanelSgsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelSgsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelSgsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelSgsTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelSgsTop.LabelText = "SGs"
         Me.TableLayoutPanelSgsTop.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelSgsTop.Name = "TableLayoutPanelSgsTop"
         Me.TableLayoutPanelSgsTop.RowCount = 1
+        Me.TableLayoutPanelSgsTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelSgsTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelSgsTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelSgsTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
@@ -2177,11 +2189,14 @@ Partial Class Form1
         Me.TableLayoutPanelLimitsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelLimitsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanelLimitsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelLimitsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelLimitsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelLimitsTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelLimitsTop.LabelText = "Limits"
         Me.TableLayoutPanelLimitsTop.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelLimitsTop.Name = "TableLayoutPanelLimitsTop"
         Me.TableLayoutPanelLimitsTop.RowCount = 1
+        Me.TableLayoutPanelLimitsTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelLimitsTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelLimitsTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelLimitsTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
@@ -2229,11 +2244,14 @@ Partial Class Form1
         Me.TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelNotificationHistoryTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelNotificationHistoryTop.LabelText = "Notification History"
         Me.TableLayoutPanelNotificationHistoryTop.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelNotificationHistoryTop.Name = "TableLayoutPanelNotificationHistoryTop"
         Me.TableLayoutPanelNotificationHistoryTop.RowCount = 1
+        Me.TableLayoutPanelNotificationHistoryTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelNotificationHistoryTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelNotificationHistoryTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelNotificationHistoryTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
@@ -2280,11 +2298,14 @@ Partial Class Form1
         Me.TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelTherapyAlgorithmTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelTherapyAlgorithmTop.LabelText = "TherapyAlgorithmT"
         Me.TableLayoutPanelTherapyAlgorithmTop.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelTherapyAlgorithmTop.Name = "TableLayoutPanelTherapyAlgorithmTop"
         Me.TableLayoutPanelTherapyAlgorithmTop.RowCount = 1
+        Me.TableLayoutPanelTherapyAlgorithmTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelTherapyAlgorithmTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelTherapyAlgorithmTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelTherapyAlgorithmTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
@@ -2332,11 +2353,14 @@ Partial Class Form1
         Me.TableLayoutPanelBannerStateTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelBannerStateTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanelBannerStateTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelBannerStateTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelBannerStateTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelBannerStateTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelBannerStateTop.LabelText = "Banner State"
         Me.TableLayoutPanelBannerStateTop.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelBannerStateTop.Name = "TableLayoutPanelBannerStateTop"
         Me.TableLayoutPanelBannerStateTop.RowCount = 1
+        Me.TableLayoutPanelBannerStateTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelBannerStateTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelBannerStateTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelBannerStateTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
@@ -2383,11 +2407,14 @@ Partial Class Form1
         Me.TableLayoutPanelBasalTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelBasalTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanelBasalTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelBasalTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelBasalTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelBasalTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelBasalTop.LabelText = "Basal"
         Me.TableLayoutPanelBasalTop.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanelBasalTop.Name = "TableLayoutPanelBasalTop"
         Me.TableLayoutPanelBasalTop.RowCount = 1
+        Me.TableLayoutPanelBasalTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelBasalTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelBasalTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelBasalTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
@@ -2471,11 +2498,14 @@ Partial Class Form1
         Me.TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelAutoBasalDeliveryTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelAutoBasalDeliveryTop.LabelText = "Basal"
         Me.TableLayoutPanelAutoBasalDeliveryTop.Location = New System.Drawing.Point(6, 6)
         Me.TableLayoutPanelAutoBasalDeliveryTop.Name = "TableLayoutPanelAutoBasalDeliveryTop"
         Me.TableLayoutPanelAutoBasalDeliveryTop.RowCount = 1
+        Me.TableLayoutPanelAutoBasalDeliveryTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelAutoBasalDeliveryTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelAutoBasalDeliveryTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelAutoBasalDeliveryTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
@@ -2524,11 +2554,14 @@ Partial Class Form1
         Me.TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelAutoModeStatusTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelAutoModeStatusTop.LabelText = "Auto Mode Status"
         Me.TableLayoutPanelAutoModeStatusTop.Location = New System.Drawing.Point(6, 6)
         Me.TableLayoutPanelAutoModeStatusTop.Name = "TableLayoutPanelAutoModeStatusTop"
         Me.TableLayoutPanelAutoModeStatusTop.RowCount = 1
+        Me.TableLayoutPanelAutoModeStatusTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelAutoModeStatusTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelAutoModeStatusTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelAutoModeStatusTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
@@ -2577,11 +2610,14 @@ Partial Class Form1
         Me.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelBgReadingsTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelBgReadingsTop.LabelText = "BG Readings"
         Me.TableLayoutPanelBgReadingsTop.Location = New System.Drawing.Point(6, 6)
         Me.TableLayoutPanelBgReadingsTop.Name = "TableLayoutPanelBgReadingsTop"
         Me.TableLayoutPanelBgReadingsTop.RowCount = 1
+        Me.TableLayoutPanelBgReadingsTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelBgReadingsTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelBgReadingsTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelBgReadingsTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
@@ -2630,11 +2666,14 @@ Partial Class Form1
         Me.TableLayoutPanelCalibrationTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelCalibrationTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanelCalibrationTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelCalibrationTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelCalibrationTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelCalibrationTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelCalibrationTop.LabelText = "Calibration"
         Me.TableLayoutPanelCalibrationTop.Location = New System.Drawing.Point(6, 6)
         Me.TableLayoutPanelCalibrationTop.Name = "TableLayoutPanelCalibrationTop"
         Me.TableLayoutPanelCalibrationTop.RowCount = 1
+        Me.TableLayoutPanelCalibrationTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelCalibrationTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelCalibrationTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelCalibrationTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
@@ -2684,11 +2723,14 @@ Partial Class Form1
         Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelInsulinTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelInsulinTop.LabelText = "Insulin"
         Me.TableLayoutPanelInsulinTop.Location = New System.Drawing.Point(6, 6)
         Me.TableLayoutPanelInsulinTop.Name = "TableLayoutPanelInsulinTop"
         Me.TableLayoutPanelInsulinTop.RowCount = 1
+        Me.TableLayoutPanelInsulinTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelInsulinTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelInsulinTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelInsulinTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
@@ -2737,11 +2779,14 @@ Partial Class Form1
         Me.TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelLowGlucoseSuspendedTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelLowGlucoseSuspendedTop.LabelText = "Low Glucose Suspended"
         Me.TableLayoutPanelLowGlucoseSuspendedTop.Location = New System.Drawing.Point(6, 6)
         Me.TableLayoutPanelLowGlucoseSuspendedTop.Name = "TableLayoutPanelLowGlucoseSuspendedTop"
         Me.TableLayoutPanelLowGlucoseSuspendedTop.RowCount = 1
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelLowGlucoseSuspendedTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelLowGlucoseSuspendedTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelLowGlucoseSuspendedTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
@@ -2790,11 +2835,14 @@ Partial Class Form1
         Me.TableLayoutPanelMealTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelMealTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanelMealTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelMealTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelMealTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelMealTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelMealTop.LabelText = "Meal"
         Me.TableLayoutPanelMealTop.Location = New System.Drawing.Point(6, 6)
         Me.TableLayoutPanelMealTop.Name = "TableLayoutPanelMealTop"
         Me.TableLayoutPanelMealTop.RowCount = 1
+        Me.TableLayoutPanelMealTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelMealTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelMealTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelMealTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
@@ -2843,11 +2891,14 @@ Partial Class Form1
         Me.TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanelTimeChangeTop.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanelTimeChangeTop.LabelText = "Time Change"
         Me.TableLayoutPanelTimeChangeTop.Location = New System.Drawing.Point(6, 6)
         Me.TableLayoutPanelTimeChangeTop.Name = "TableLayoutPanelTimeChangeTop"
         Me.TableLayoutPanelTimeChangeTop.RowCount = 1
+        Me.TableLayoutPanelTimeChangeTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelTimeChangeTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelTimeChangeTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
         Me.TableLayoutPanelTimeChangeTop.RowStyles.Add(New System.Windows.Forms.RowStyle())
@@ -2960,8 +3011,8 @@ Partial Class Form1
         Me.CursorPanel.ResumeLayout(False)
         CType(Me.CursorPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DgvAutoBasalDelivery, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.DgvCareLinkUsers, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DgvCountryDataPg1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DgvCareLinkUsers, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DgvCountryDataPg2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DgvCountryDataPg3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DgvCurrentUser, System.ComponentModel.ISupportInitialize).EndInit()
