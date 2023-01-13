@@ -2053,6 +2053,10 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateTimeInRange()
+        If Me.HomeTabTimeInRangeChart Is Nothing Then
+            Stop
+            Exit Sub
+        End If
         With Me.HomeTabTimeInRangeChart
             With .Series(NameOf(TimeInRangeSeries)).Points
                 .Clear()
