@@ -16,7 +16,7 @@ Public Module PumpVariables
 
 #Region "Used for painting"
 
-    Friend ReadOnly s_ActiveInsulinMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
+    Friend ReadOnly s_activeInsulinMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
     Friend ReadOnly s_homeTabMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
     Friend ReadOnly s_homeTabMarkerMealDictionary As New Dictionary(Of OADate, Single)
     Friend ReadOnly s_treatmentMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
@@ -24,7 +24,6 @@ Public Module PumpVariables
 
 #End Region ' Used for painting
 
-    Friend Const MmolLUnitsDivisor As Single = 18
     Friend ReadOnly s_insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
     Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDeliveryRecord)
     Friend ReadOnly s_listOfAutoModeStatusMarkers As New List(Of AutoModeStatusRecord)

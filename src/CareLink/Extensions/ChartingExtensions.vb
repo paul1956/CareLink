@@ -160,10 +160,10 @@ Friend Module ChartingExtensions
                 Dim limitsLowValue As Single = s_listOflimitRecords(limitsIndexList(sgListIndex.Index)).lowLimit
                 Dim limitsHighValue As Single = s_listOflimitRecords(limitsIndexList(sgListIndex.Index)).highLimit
                 If limitsHighValue <> 0 Then
-                    chart.Series(HighLimitSeriesName).Points.AddXY(sgOADateTime, limitsHighValue)
+                    chart.Series(HighLimitSeries).Points.AddXY(sgOADateTime, limitsHighValue)
                 End If
                 If limitsLowValue <> 0 Then
-                    chart.Series(LowLimitSeriesName).Points.AddXY(sgOADateTime, limitsLowValue)
+                    chart.Series(LowLimitSeries).Points.AddXY(sgOADateTime, limitsLowValue)
                 End If
             Catch ex As Exception
                 Stop
@@ -189,7 +189,7 @@ Friend Module ChartingExtensions
                 If entry.TryGetValue("value", bgValueString) Then
                     bgValueString.TryParseSingle(bgValue)
                 End If
-                Dim markerSeriesPoints As DataPointCollection = pageChart.Series(MarkerSeriesName).Points
+                Dim markerSeriesPoints As DataPointCollection = pageChart.Series(MarkerSeries).Points
                 Select Case entry("type")
                     Case "BG_READING"
                         If Not String.IsNullOrWhiteSpace(bgValueString) Then
@@ -203,7 +203,7 @@ Friend Module ChartingExtensions
                         If amount.IsMinBasal() Then
                             minBasalMsg = "Min "
                         End If
-                        With pageChart.Series(BasalSeriesName)
+                        With pageChart.Series(BasalSeries)
                             .DrawBasalMarker(markerOADateTime,
                                              amount,
                                              HomePageBasalRow,
@@ -216,7 +216,7 @@ Friend Module ChartingExtensions
                         Select Case entry(NameOf(InsulinRecord.activationType))
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
-                                With pageChart.Series(BasalSeriesName)
+                                With pageChart.Series(BasalSeries)
                                     .DrawBasalMarker(markerOADateTime,
                                                      autoCorrection.ParseSingle,
                                                      HomePageBasalRow,
@@ -257,12 +257,12 @@ Friend Module ChartingExtensions
                             markerSeriesPoints.Last.ToolTip = $"Meal: {entry("amount")} grams"
                         End If
                     Case "TIME_CHANGE"
-                        With pageChart.Series(TimeChangeSeriesName).Points
+                        With pageChart.Series(ChartSupport.TimeChangeSeries).Points
                             lastTimeChangeRecord = New TimeChangeRecord(entry)
                             markerOADateTime = New OADate(lastTimeChangeRecord.GetLatestTime)
-                            .AddXY(markerOADateTime, 0)
-                            .AddXY(markerOADateTime, HomePageBasalRow)
-                            .AddXY(markerOADateTime, Double.NaN)
+                            Call .AddXY(markerOADateTime, 0)
+                            Call .AddXY(markerOADateTime, HomePageBasalRow)
+                            Call .AddXY(markerOADateTime, Double.NaN)
                         End With
                     Case Else
                         Stop
@@ -286,7 +286,7 @@ Friend Module ChartingExtensions
     <Extension>
     Friend Sub PlotSgSeries(chart As Chart, HomePageMealRow As Double)
         For Each sgListIndex As IndexClass(Of SgRecord) In s_listOfSGs.WithIndex()
-            chart.Series(BgSeriesName).PlotOnePoint(
+            chart.Series(BgSeries).PlotOnePoint(
                                     sgListIndex.Value.OAdatetime(),
                                     sgListIndex.Value.sg,
                                     Color.White,
@@ -310,7 +310,7 @@ Friend Module ChartingExtensions
                 If entry.TryGetValue("value", bgValueString) Then
                     bgValueString.TryParseSingle(bgValue)
                 End If
-                Dim markerSeriesPoints As DataPointCollection = treatmentChart.Series(MarkerSeriesName).Points
+                Dim markerSeriesPoints As DataPointCollection = treatmentChart.Series(MarkerSeries).Points
                 Select Case entry("type")
                     Case "AUTO_BASAL_DELIVERY"
                         Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle.RoundSingle(3)
@@ -318,7 +318,7 @@ Friend Module ChartingExtensions
                         If amount.IsMinBasal() Then
                             minBasalMsg = "Min "
                         End If
-                        With treatmentChart.Series(BasalSeriesName)
+                        With treatmentChart.Series(BasalSeries)
                             .DrawBasalMarker(markerOADateTime,
                                              amount,
                                              MaxBasalPerDose,
@@ -332,7 +332,7 @@ Friend Module ChartingExtensions
                         Select Case entry(NameOf(InsulinRecord.activationType))
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
-                                treatmentChart.Series(BasalSeriesName).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, MaxBasalPerDose, TreatmentInsulinRow, GetGraphLineColor("Auto Correction"), True, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
+                                treatmentChart.Series(BasalSeries).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, MaxBasalPerDose, TreatmentInsulinRow, GetGraphLineColor("Auto Correction"), True, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 If s_treatmentMarkerInsulinDictionary.TryAdd(markerOADateTime, TreatmentInsulinRow) Then
                                     markerSeriesPoints.AddXY(markerOADateTime, TreatmentInsulinRow)
@@ -367,7 +367,7 @@ Friend Module ChartingExtensions
                     Case "BG_READING",
                          "CALIBRATION"
                     Case "TIME_CHANGE"
-                        With treatmentChart.Series(TimeChangeSeriesName).Points
+                        With treatmentChart.Series(TimeChangeSeries).Points
                             lastTimeChangeRecord = New TimeChangeRecord(entry)
                             markerOADateTime = New OADate(lastTimeChangeRecord.GetLatestTime)
                             .AddXY(markerOADateTime, 0)
@@ -410,8 +410,7 @@ Friend Module ChartingExtensions
         Dim chartAbsoluteHighRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelitivePosition.X, chartRelitivePosition.Y, chartRelitivePosition.Width, highLimitY - chartRelitivePosition.Y))
         Dim chartAbsoluteLowRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelitivePosition.X, lowLimitY, chartRelitivePosition.Width, criticalLowLimitY - lowLimitY))
 
-        Dim alpha As Integer = If(e.Chart.Name = "TreatmentMarkersChart", 10, 5)
-        Using b As New SolidBrush(Color.FromArgb(alpha, Color.Black))
+        Using b As New SolidBrush(Color.FromArgb(5, Color.Black))
             e.ChartGraphics.Graphics.FillRectangle(b, chartAbsoluteHighRectangle)
             e.ChartGraphics.Graphics.FillRectangle(b, chartAbsoluteLowRectangle)
         End Using

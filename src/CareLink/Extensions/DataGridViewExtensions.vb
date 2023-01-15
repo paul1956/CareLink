@@ -44,7 +44,7 @@ Public Module DataGridViewExtensions
                 End If
             Next
         Else
-            title.Append(titleInTitleCase.Replace("Care Link", "CareLink").Replace("O Adate Time", "OA Date Time"))
+            title.Append(titleInTitleCase.Replace("Care Link", $"{ProjectName}").Replace("O Adate Time", "OA Date Time"))
         End If
         e.Column.HeaderText = title.TrimEnd(Environment.NewLine).ToString
         e.Column.DefaultCellStyle = cellStyle

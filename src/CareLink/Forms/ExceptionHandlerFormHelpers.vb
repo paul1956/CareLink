@@ -18,11 +18,11 @@ Partial Class ExceptionHandlerForm
             ' write exception trailer
             stream.WriteLine(ExceptionTerminatingString)
             ' write stack trace header
-            stream.WriteLine(StackTraceStartingString)
+            stream.WriteLine(StackTraceStartingStr)
             ' write stack trace
             stream.WriteLine(stackTraceText)
             ' write stack trace trailer
-            stream.WriteLine(StackTraceTerminatingString)
+            stream.WriteLine(StackTraceTerminatingStr)
             ' write out data file
             Using jd As JsonDocument = JsonDocument.Parse(jsonData.CleanUserData(), New JsonDocumentOptions)
                 stream.Write(JsonSerializer.Serialize(jd, JsonFormattingOptions))
@@ -31,7 +31,7 @@ Partial Class ExceptionHandlerForm
     End Sub
 
     Private Shared Function TrimedStackTrace(stackTrace As String) As String
-        Dim index As Integer = stackTrace.IndexOf(StackTraceTerminatingString)
+        Dim index As Integer = stackTrace.IndexOf(StackTraceTerminatingStr)
         If index < 0 Then
             Return stackTrace
         End If
@@ -58,23 +58,23 @@ Partial Class ExceptionHandlerForm
 
             ' read stack trace header
             currentLine = stream.ReadLine
-            If currentLine <> StackTraceStartingString Then
-                Me.ReportInvalidErrorFile(currentLine, StackTraceStartingString)
+            If currentLine <> StackTraceStartingStr Then
+                Me.ReportInvalidErrorFile(currentLine, StackTraceStartingStr)
             End If
 
             ' read stack trace
             Dim sb As New StringBuilder
             While stream.Peek > 0
                 currentLine = stream.ReadLine
-                If currentLine <> StackTraceTerminatingString Then
+                If currentLine <> StackTraceTerminatingStr Then
                     sb.AppendLine(currentLine)
                 Else
                     Exit While
                 End If
                 currentLine = ""
             End While
-            If currentLine <> StackTraceTerminatingString Then
-                Me.ReportInvalidErrorFile(currentLine, StackTraceTerminatingString)
+            If currentLine <> StackTraceTerminatingStr Then
+                Me.ReportInvalidErrorFile(currentLine, StackTraceTerminatingStr)
             End If
             stackTraceTextBox.Text = sb.ToString
             Return stream.ReadToEnd

@@ -380,7 +380,7 @@ Public Class CareLinkClient
                     _lastErrorMessage = "Unauthorized"
                 ElseIf response?.StatusCode = HttpStatusCode.InternalServerError Then
                     _lastResponseCode = response?.StatusCode
-                    _lastErrorMessage = "CareLink Server Down"
+                    _lastErrorMessage = $"{ProjectName} Server Down"
                 Else
                     Throw New Exception($"session get response is not OK, last error = {_lastErrorMessage}")
                 End If

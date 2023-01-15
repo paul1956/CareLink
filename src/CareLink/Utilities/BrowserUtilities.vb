@@ -7,7 +7,7 @@ Imports Microsoft.Win32
 
 Friend Module BrowserUtilities
     Private ReadOnly s_httpClient As New HttpClient()
-    Private ReadOnly s_versionSearchKey As String = $"<a href=""/{OwnerName}/{RepoName}/releases/tag/"
+    Private ReadOnly s_versionSearchKey As String = $"<a href=""/{GitOwnerName}/{ProjectName}/releases/tag/"
 
     ''' <summary>
     ''' Compare version of executable with ReadMe.MkDir from GitHub

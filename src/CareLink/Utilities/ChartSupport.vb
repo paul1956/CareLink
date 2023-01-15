@@ -7,17 +7,17 @@ Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module ChartSupport
-    Friend Const ActiveInsulinSeriesName As String = "ActiveInsulinSeries"
-    Friend Const AutoCorrectionSeriesName As String = "AutoCorrection"
-    Friend Const BasalSeriesName As String = "BasalSeries"
-    Friend Const BgSeriesName As String = "BgSeries"
-    Friend Const HighLimitSeriesName As String = "HighLimitSeries"
-    Friend Const LowLimitSeriesName As String = "LowLimitSeries"
-    Friend Const MarkerSeriesName As String = "MarkerSeries"
-    Friend Const MinBasalSeriesName As String = "MinBasal"
-    Friend Const TimeChangeSeriesName As String = "TimeChangeSeries"
+    Friend Const ActiveInsulinSeries As String = NameOf(ActiveInsulinSeries)
+    Friend Const AutoCorrectionSeries As String = NameOf(AutoCorrectionSeries)
+    Friend Const BasalSeries As String = NameOf(BasalSeries)
+    Friend Const BgSeries As String = NameOf(BgSeries)
+    Friend Const HighLimitSeries As String = NameOf(HighLimitSeries)
+    Friend Const LowLimitSeries As String = NameOf(LowLimitSeries)
+    Friend Const MarkerSeries As String = NameOf(MarkerSeries)
+    Friend Const MinBasalSeries As String = NameOf(MinBasalSeries)
+    Friend Const TimeChangeSeries As String = NameOf(TimeChangeSeries)
 
-    Private Function CreateBaseSeries(seriesName As String, legendText As String, borderWidth As Integer, yAxisType As AxisType) As Series
+    Private Function CreateSeriesBase(seriesName As String, legendText As String, borderWidth As Integer, yAxisType As AxisType) As Series
         Dim lineColor As Color = GetGraphLineColor(legendText)
         Dim tmpSeries As New Series(seriesName) With {
                             .BorderColor = Color.FromArgb(180, lineColor),
@@ -34,12 +34,21 @@ Friend Module ChartSupport
         Return tmpSeries
     End Function
 
+    <Extension>
+    Private Function IndexOfAutoCorrection(customItems As LegendItemsCollection) As Integer
+        For Each item As IndexClass(Of LegendItem) In customItems.WithIndex
+            If item.Value.Name = "Auto Correction" Then
+                Return item.Index
+            End If
+        Next
+        Stop
+        Return -1
+    End Function
+
     Friend Function CreateChart(chartName As String) As Chart
         Return New Chart With {
                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                    .BackColor = Color.WhiteSmoke,
-                    .BackGradientStyle = GradientStyle.TopBottom,
-                    .BackSecondaryColor = Color.White,
+                    .BackColor = Color.Black,
                     .BorderlineColor = Color.MidnightBlue,
                     .BorderlineDashStyle = ChartDashStyle.Solid,
                     .BorderlineWidth = 2,
@@ -49,31 +58,35 @@ Friend Module ChartSupport
                 }
     End Function
 
-    Friend Function CreateChartArea() As ChartArea
+    Friend Function CreateChartArea(containingChart As Chart) As ChartArea
         Dim tmpChartArea As New ChartArea(NameOf(ChartArea)) With {
-                     .BackColor = Color.FromArgb(180, 23, 47, 19),
-                     .BackGradientStyle = GradientStyle.TopBottom,
-                     .BackSecondaryColor = Color.FromArgb(180, 29, 56, 26),
+                     .BackColor = Color.FromArgb(90, 107, 87),
                      .BorderColor = Color.FromArgb(64, Color.DimGray),
                      .BorderDashStyle = ChartDashStyle.Solid,
                      .ShadowColor = Color.Transparent
                  }
         With tmpChartArea
+            Dim labelColor As Color = containingChart.BackColor.GetContrastingColor
+            Dim labelFont As New Font("Trebuchet MS", 12.0F, FontStyle.Bold)
+
             With .AxisX
                 .Interval = 2
                 .IntervalType = DateTimeIntervalType.Hours
                 .IsInterlaced = True
                 .IsMarginVisible = True
                 .LabelAutoFitStyle = LabelAutoFitStyles.IncreaseFont Or LabelAutoFitStyles.DecreaseFont Or LabelAutoFitStyles.WordWrap
-                .MajorGrid.Interval = 1
-                .MajorGrid.IntervalOffsetType = DateTimeIntervalType.Hours
-                .MajorGrid.IntervalType = DateTimeIntervalType.Hours
                 With .LabelStyle
-                    .Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
+                    .Font = labelFont
+                    .ForeColor = labelColor
                     .Format = s_timeWithoutMinuteFormat
                 End With
-                .LineColor = Color.FromArgb(64, Color.DimGray)
-                .MajorGrid.LineColor = Color.FromArgb(64, Color.DimGray)
+                .LineColor = Color.FromArgb(64, labelColor)
+                With .MajorGrid
+                    .Interval = 1
+                    .IntervalOffsetType = DateTimeIntervalType.Hours
+                    .IntervalType = DateTimeIntervalType.Hours
+                    .LineColor = Color.FromArgb(64, labelColor)
+                End With
                 .ScaleView.Zoomable = True
                 With .ScrollBar
                     .BackColor = Color.White
@@ -90,25 +103,40 @@ Friend Module ChartSupport
                 .IsLabelAutoFit = False
                 .IsMarginVisible = False
                 .IsStartedFromZero = True
-                .LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
-                .LineColor = Color.FromArgb(64, Color.DimGray)
-                .MajorGrid.LineColor = Color.FromArgb(64, Color.DimGray)
+                With .LabelStyle
+                    .Font = labelFont
+                    .ForeColor = labelColor
+                End With
+                .LineColor = Color.FromArgb(64, labelColor)
+                With .MajorGrid
+                    .Enabled = False
+                End With
                 .ScaleView.Zoomable = False
             End With
             With .AxisY2
                 .Interval = HomePageMealRow
                 .IsMarginVisible = False
                 .IsStartedFromZero = False
-                .LabelStyle.Font = New Font("Trebuchet MS", 8.25F, FontStyle.Bold)
-                .LineColor = Color.FromArgb(64, Color.DimGray)
-                .MajorGrid = New Grid With {
-                    .Interval = HomePageMealRow,
-                    .LineColor = Color.FromArgb(64, Color.DimGray)
-                }
-                .MajorTickMark = New TickMark() With {.Interval = HomePageMealRow, .Enabled = True}
+                With .LabelStyle
+                    .Font = labelFont
+                    .ForeColor = labelColor
+                End With
+                .LineColor = Color.FromArgb(64, labelColor)
+                With .MajorGrid
+                    .Interval = HomePageMealRow
+                    .LineColor = Color.FromArgb(64, labelColor)
+                End With
+                With .MajorTickMark
+                    .Enabled = True
+                    .Interval = HomePageMealRow
+                    .LineColor = Color.FromArgb(64, labelColor)
+                End With
+
                 .Maximum = HomePageBasalRow
                 .Minimum = HomePageMealRow
-                .Title = "BG Value"
+                .Title = "Blood Glucose Value"
+                .TitleFont = New Font(labelFont.FontFamily, 14)
+                .TitleForeColor = labelColor
             End With
             With .CursorX
                 .AutoScroll = True
@@ -145,7 +173,7 @@ Friend Module ChartSupport
     End Function
 
     Friend Function CreateSeriesActiveInsulin() As Series
-        Dim s As Series = CreateBaseSeries(ActiveInsulinSeriesName, "Active Insulin", 4, AxisType.Primary)
+        Dim s As Series = CreateSeriesBase(ActiveInsulinSeries, "Active Insulin", 4, AxisType.Primary)
         s.MarkerColor = Color.Black
         s.MarkerSize = 4
         s.MarkerStyle = MarkerStyle.Circle
@@ -153,7 +181,7 @@ Friend Module ChartSupport
     End Function
 
     Friend Function CreateSeriesBasal(SeriesName As String, basalLegend As Legend, legendText As String, YAxisType As AxisType) As Series
-        Dim s As Series = CreateBaseSeries(SeriesName, legendText, 2, YAxisType)
+        Dim s As Series = CreateSeriesBase(SeriesName, legendText, 2, YAxisType)
         s.IsVisibleInLegend = False
         Dim lineColor As Color = GetGraphLineColor(legendText)
         Select Case legendText
@@ -168,14 +196,16 @@ Friend Module ChartSupport
             Case Else
                 Stop
         End Select
-        s.EmptyPointStyle.BorderWidth = 2
-        s.EmptyPointStyle.Color = Color.Transparent
+        With s.EmptyPointStyle
+            .BorderWidth = 2
+            .Color = Color.Transparent
+        End With
         Return s
     End Function
 
     Friend Function CreateSeriesBg(bgLegend As Legend) As Series
         Const legendText As String = "BG Series"
-        Dim s As Series = CreateBaseSeries(BgSeriesName, legendText, 4, AxisType.Secondary)
+        Dim s As Series = CreateSeriesBase(BgSeries, legendText, 4, AxisType.Secondary)
         s.IsVisibleInLegend = False
         bgLegend.CustomItems.Add(New LegendItem(legendText, GetGraphLineColor(legendText), ""))
         Return s
@@ -184,7 +214,7 @@ Friend Module ChartSupport
     Friend Function CreateSeriesLimits(limitsLegend As Legend, seriesName As String) As Series
         Dim legendText As String
         Dim lineColor As Color
-        If seriesName.Equals(HighLimitSeriesName) Then
+        If seriesName.Equals(HighLimitSeries) Then
             legendText = "High Limit"
             lineColor = Color.Yellow
         Else
@@ -192,25 +222,27 @@ Friend Module ChartSupport
             lineColor = Color.Red
         End If
 
-        Dim s As Series = CreateBaseSeries(seriesName, legendText, 2, AxisType.Secondary)
+        Dim s As Series = CreateSeriesBase(seriesName, legendText, 2, AxisType.Secondary)
         s.IsVisibleInLegend = False
-        limitsLegend.CustomItems.Add(New LegendItem(legendText, GetGraphLineColor(legendText), ""))
         s.EmptyPointStyle.Color = Color.Transparent
+        limitsLegend.CustomItems.Add(New LegendItem(legendText, GetGraphLineColor(legendText), ""))
         Return s
     End Function
 
     Friend Function CreateSeriesTimeChange(basalLegend As Legend) As Series
         Const legendText As String = "Time Change"
-        Dim s As Series = CreateBaseSeries(TimeChangeSeriesName, legendText, 1, AxisType.Primary)
+        Dim s As Series = CreateSeriesBase(TimeChangeSeries, legendText, 1, AxisType.Primary)
         s.IsVisibleInLegend = False
         basalLegend.CustomItems.Add(New LegendItem(legendText, GetGraphLineColor(legendText), ""))
-        s.EmptyPointStyle.BorderWidth = 4
-        s.EmptyPointStyle.Color = Color.Transparent
+        With s.EmptyPointStyle
+            .BorderWidth = 4
+            .Color = Color.Transparent
+        End With
         Return s
     End Function
 
     Friend Function CreateSeriesWithoutVisibleLegend(YAxisType As AxisType) As Series
-        Dim s As New Series(MarkerSeriesName) With {
+        Dim s As New Series(MarkerSeries) With {
                         .BorderColor = Color.Transparent,
                         .BorderWidth = 1,
                         .ChartArea = NameOf(ChartArea),
@@ -221,30 +253,19 @@ Friend Module ChartSupport
                         .XValueType = ChartValueType.DateTime,
                         .YAxisType = YAxisType
                     }
-        s.EmptyPointStyle.BorderWidth = 4
-        s.EmptyPointStyle.Color = Color.Transparent
+        With s.EmptyPointStyle
+            .BorderWidth = 4
+            .Color = Color.Transparent
+        End With
 
         Return s
     End Function
 
-    <Extension>
-    Friend Sub InitializeChartAreaBG(c As ChartArea)
-        With c
-            .AxisX.Minimum = s_listOfSGs(0).OAdatetime
-            .AxisX.Maximum = s_listOfSGs.Last.OAdatetime
-            .AxisX.MajorGrid.IntervalType = DateTimeIntervalType.Hours
-            .AxisX.MajorGrid.IntervalOffsetType = DateTimeIntervalType.Hours
-            .AxisX.MajorGrid.Interval = 1
-            .AxisX.IntervalType = DateTimeIntervalType.Hours
-            .AxisX.Interval = 2
-        End With
-    End Sub
-
-    Public Function CreateChartTitle(chartTitle As String, name As String, foreColor As Color) As Title
+    Friend Function CreateTitle(chartTitle As String, name As String, foreColor As Color) As Title
         Return New Title With {
-                        .Font = New Font("Trebuchet MS", 12.0F, FontStyle.Bold),
-                        .ForeColor = foreColor,
                         .BackColor = foreColor.GetContrastingColor(),
+                        .Font = New Font("Trebuchet MS", 14.0F, FontStyle.Bold),
+                        .ForeColor = foreColor,
                         .Name = name,
                         .ShadowColor = Color.FromArgb(32, Color.Black),
                         .ShadowOffset = 3,
@@ -252,23 +273,30 @@ Friend Module ChartSupport
                     }
     End Function
 
-    Public Sub EnableAutoCorrectionLegend(activeInsulinChartLegend As Legend, homeChartLegend As Legend, treatmentMarkersChartLegend As Legend)
-        Dim i As Integer = IndexOfName(activeInsulinChartLegend.CustomItems, "Auto Correction")
+    Friend Sub EnableAutoCorrectionLegend(activeInsulinChartLegend As Legend, homeChartLegend As Legend, treatmentMarkersChartLegend As Legend)
+        Dim i As Integer = activeInsulinChartLegend.CustomItems.IndexOfAutoCorrection()
         activeInsulinChartLegend.CustomItems(i).Enabled = True
-        i = IndexOfName(homeChartLegend.CustomItems, "Auto Correction")
+        i = homeChartLegend.CustomItems.IndexOfAutoCorrection()
         homeChartLegend.CustomItems(i).Enabled = True
-        i = IndexOfName(treatmentMarkersChartLegend.CustomItems, "Auto Correction")
+        i = treatmentMarkersChartLegend.CustomItems.IndexOfAutoCorrection()
         treatmentMarkersChartLegend.CustomItems(i).Enabled = True
     End Sub
 
-    Private Function IndexOfName(customItems As LegendItemsCollection, name As String) As Integer
-        For Each item As IndexClass(Of LegendItem) In customItems.WithIndex
-            If item.Value.Name = name Then
-                Return item.Index
-            End If
-        Next
-        Stop
-        Return -1
-    End Function
+    <Extension>
+    Friend Sub UpdateChartAreaBGAxisX(c As ChartArea)
+        With c
+            With .AxisX
+                .Interval = 2
+                .IntervalType = DateTimeIntervalType.Hours
+                With .MajorGrid
+                    .Interval = 1
+                    .IntervalOffsetType = DateTimeIntervalType.Hours
+                    .IntervalType = DateTimeIntervalType.Hours
+                End With
+                .Maximum = s_listOfSGs.Last.OAdatetime
+                .Minimum = s_listOfSGs(0).OAdatetime
+            End With
+        End With
+    End Sub
 
 End Module

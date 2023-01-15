@@ -24,7 +24,7 @@ Public Class ExceptionHandlerForm
         My.Forms.Form1.ServerUpdateTimer.Stop()
         Dim fontBold As New Font(Me.InstructionsRichTextBox.Font, FontStyle.Bold)
         Dim fontNormal As Font = Me.InstructionsRichTextBox.Font
-        _gitClient = New GitHubClient(New ProductHeaderValue($"{RepoName}.Issues"), New Uri(GitHubCareLinkUrl))
+        _gitClient = New GitHubClient(New ProductHeaderValue($"{ProjectName}.Issues"), New Uri(GitHubCareLinkUrl))
         If String.IsNullOrWhiteSpace(Me.ReportFileNameWithPath) Then
             ' Create error report and issue
             Me.ExceptionTextBox.Text = Me.UnhandledException.Exception.Message
@@ -37,7 +37,7 @@ Public Class ExceptionHandlerForm
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "and stored in", fontNormal)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, MyDocumentsPath, fontBold)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "You can review what is being stored and then attach it to a new issue at", fontNormal)
-            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, $"{_gitClient.Repository.Get(OwnerName, RepoName).Result.HtmlUrl}/issues.", fontNormal)
+            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, $"{_gitClient.Repository.Get(GitOwnerName, ProjectName).Result.HtmlUrl}/issues.", fontNormal)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "This will help me isolate issues quickly.", fontNormal)
             CreateReportFile(Me.ExceptionTextBox.Text, Me.StackTraceTextBox.Text, uniqueFileNameResult.withPath, My.Forms.Form1.RecentData)
         Else
