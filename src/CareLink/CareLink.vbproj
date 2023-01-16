@@ -49,6 +49,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="C:\Users\PaulM\.nuget\packages\datagridviewdisablebuttoncolumnex\1.0.0.1\contentFiles\any\net7.0-windows7.0\ColumnButton.ico" />
+    <Content Remove="C:\Users\PaulM\.nuget\packages\tablelayputpaneltop\1.0.0.2\contentFiles\any\net7.0-windows7.0\LayoutPanel.ico" />
+    <Content Remove="C:\Users\PaulM\.nuget\packages\toolstripcomboboxex\1.0.0.2\contentFiles\any\net7.0-windows7.0\ComboBox.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Import Include="System.Data" />
     <Import Include="System.Drawing" />
     <Import Include="System.Windows.Forms" />
