@@ -27,12 +27,13 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 12/27/2022
+- 01/15/2022
 
 ## What's New in this release
 New in 3.5.7.20
 - Allow editing of plot line colors
-= Add a legend to the chart, you can disable under options.
+- Add a legend to the chart, you can disable under options.
+- Better contrast for charts with new Titles
 
 New in 3.5.7.19
 - Add additional error messages
