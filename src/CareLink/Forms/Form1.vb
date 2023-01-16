@@ -746,9 +746,9 @@ Public Class Form1
 
 #Region "DataGridView Events"
 
-#Region "Summary Tab DataGridView Events"
+#Region "Summary Data DataGridView Events"
 
-    Private Sub DataGridViewSummary_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvSummary.CellFormatting
+    Private Sub DgvSummary_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvSummary.CellFormatting
         If e.Value Is Nothing OrElse e.ColumnIndex <> 2 Then
             Return
         End If
@@ -787,7 +787,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DataGridViewSummary_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DgvSummary.CellMouseClick
+    Private Sub DgvSummary_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DgvSummary.CellMouseClick
         If e.RowIndex < 0 Then Exit Sub
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim value As String = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString
@@ -822,7 +822,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub DataGridViewSummary_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSummary.ColumnAdded
+    Private Sub DgvSummary_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSummary.ColumnAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
         e.DgvColumnAdded(GetCellStyle(e.Column.Name),
@@ -831,58 +831,11 @@ Public Class Form1
                          caption)
     End Sub
 
-    Private Sub DataGridViewSummary_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvSummary.DataError
+    Private Sub DgvSummary_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvSummary.DataError
         Stop
     End Sub
 
-#End Region 'Summary Tab DataGridView Events
-
-#Region "Insulin DataGridView Events"
-
-    Private Sub DgvInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnAdded
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
-        If InsulinRecordHelpers.HideColumn(e.Column.Name) Then
-            e.Column.Visible = False
-            Exit Sub
-        End If
-        e.DgvColumnAdded(InsulinRecordHelpers.GetCellStyle(e.Column.Name),
-                         True,
-                         True, caption)
-    End Sub
-
-    Private Sub DgvInsulin_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnHeaderCellChanged
-        Stop
-    End Sub
-
-    Private Sub DgvInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvInsulin.DataError
-        Stop
-    End Sub
-
-    Private Sub DgvInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvInsulin.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.dgvCellFormatting(e, NameOf(InsulinRecord.dateTime))
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(InsulinRecord.programmedFastAmount)
-                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.deliveredFastAmount)).Value.ToString Then
-                    e.CellStyle.BackColor = Color.Red
-                End If
-            Case NameOf(InsulinRecord.deliveredFastAmount)
-                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.programmedFastAmount)).Value.ToString Then
-                    e.CellStyle.BackColor = Color.Red
-                End If
-            Case NameOf(InsulinRecord.programmedExtendedAmount)
-                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.deliveredExtendedAmount)).Value.ToString Then
-                    e.CellStyle.BackColor = Color.Red
-                End If
-            Case NameOf(InsulinRecord.deliveredExtendedAmount)
-                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.programmedExtendedAmount)).Value.ToString Then
-                    e.CellStyle.BackColor = Color.Red
-                End If
-        End Select
-    End Sub
-
-#End Region ' Insulin DataGridView Events
+#End Region 'Summary Data DataGridView Events
 
 #Region "SGs DataGridView Events"
 
@@ -986,6 +939,53 @@ Public Class Form1
     End Sub
 
 #End Region ' Auto Basal Delivery (Basal) DataGridView Events
+
+#Region "Insulin DataGridView Events"
+
+    Private Sub DgvInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnAdded
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
+        If InsulinRecordHelpers.HideColumn(e.Column.Name) Then
+            e.Column.Visible = False
+            Exit Sub
+        End If
+        e.DgvColumnAdded(InsulinRecordHelpers.GetCellStyle(e.Column.Name),
+                         True,
+                         True, caption)
+    End Sub
+
+    Private Sub DgvInsulin_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnHeaderCellChanged
+        Stop
+    End Sub
+
+    Private Sub DgvInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvInsulin.DataError
+        Stop
+    End Sub
+
+    Private Sub DgvInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvInsulin.CellFormatting
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        dgv.dgvCellFormatting(e, NameOf(InsulinRecord.dateTime))
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(InsulinRecord.programmedFastAmount)
+                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.deliveredFastAmount)).Value.ToString Then
+                    e.CellStyle.BackColor = Color.Red
+                End If
+            Case NameOf(InsulinRecord.deliveredFastAmount)
+                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.programmedFastAmount)).Value.ToString Then
+                    e.CellStyle.BackColor = Color.Red
+                End If
+            Case NameOf(InsulinRecord.programmedExtendedAmount)
+                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.deliveredExtendedAmount)).Value.ToString Then
+                    e.CellStyle.BackColor = Color.Red
+                End If
+            Case NameOf(InsulinRecord.deliveredExtendedAmount)
+                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.programmedExtendedAmount)).Value.ToString Then
+                    e.CellStyle.BackColor = Color.Red
+                End If
+        End Select
+    End Sub
+
+#End Region ' Insulin DataGridView Events
 
 #Region "User Profile DataGridView Events"
 
@@ -1102,7 +1102,7 @@ Public Class Form1
 
 #End Region ' DataGridView Events
 
-#Region "Tab Button Events"
+#Region "TableLayoutPanelTop Button Events"
 
     Private Sub TableLayoutPanelTopButton_Click(sender As Object, e As EventArgs) _
         Handles TableLayoutPanelLastSgTop.ButtonClick, TableLayoutPanelLastAlarmTop.ButtonClick,
@@ -1119,7 +1119,7 @@ Public Class Form1
         Me.TabControlPage1.Visible = True
     End Sub
 
-#End Region
+#End Region ' TableLayoutPanelTop Button Events
 
 #Region "Settings Events"
 
