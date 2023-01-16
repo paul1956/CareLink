@@ -176,7 +176,7 @@ Partial Class Form1
         Me.ServerUpdateTimer = New System.Windows.Forms.Timer(Me.components)
         Me.SgsButton = New System.Windows.Forms.Button()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
-        Me.TransmatterBatterPercentLabel = New System.Windows.Forms.Label()
+        Me.TransmatterBatteryPercentLabel = New System.Windows.Forms.Label()
         Me.TransmitterBatteryPictureBox = New System.Windows.Forms.PictureBox()
         Me.SplitContainer3 = New System.Windows.Forms.SplitContainer()
         Me.TimeInRangeLabel = New System.Windows.Forms.Label()
@@ -1746,7 +1746,7 @@ Partial Class Form1
         Me.SplitContainer2.Panel1.Controls.Add(Me.ReadingIntervalLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.ReadingsLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.PumpBatteryRemainingLabel)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.TransmatterBatterPercentLabel)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.TransmatterBatteryPercentLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.TransmitterBatteryPictureBox)
         Me.SplitContainer2.Panel1.Controls.Add(Me.PumpBatteryPictureBox)
         Me.SplitContainer2.Panel1.Controls.Add(Me.AITAlgorithmLabel)
@@ -1764,17 +1764,17 @@ Partial Class Form1
         Me.SplitContainer2.SplitterDistance = 134
         Me.SplitContainer2.TabIndex = 52
         '
-        'TransmatterBatterPercentLabel
+        'TransmatterBatteryPercentLabel
         '
-        Me.TransmatterBatterPercentLabel.BackColor = System.Drawing.Color.Transparent
-        Me.TransmatterBatterPercentLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.TransmatterBatterPercentLabel.ForeColor = System.Drawing.Color.White
-        Me.TransmatterBatterPercentLabel.Location = New System.Drawing.Point(551, 95)
-        Me.TransmatterBatterPercentLabel.Name = "TransmatterBatterPercentLabel"
-        Me.TransmatterBatterPercentLabel.Size = New System.Drawing.Size(80, 21)
-        Me.TransmatterBatterPercentLabel.TabIndex = 13
-        Me.TransmatterBatterPercentLabel.Text = "???"
-        Me.TransmatterBatterPercentLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.TransmatterBatteryPercentLabel.BackColor = System.Drawing.Color.Transparent
+        Me.TransmatterBatteryPercentLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.TransmatterBatteryPercentLabel.ForeColor = System.Drawing.Color.White
+        Me.TransmatterBatteryPercentLabel.Location = New System.Drawing.Point(551, 95)
+        Me.TransmatterBatteryPercentLabel.Name = "TransmatterBatteryPercentLabel"
+        Me.TransmatterBatteryPercentLabel.Size = New System.Drawing.Size(80, 21)
+        Me.TransmatterBatteryPercentLabel.TabIndex = 13
+        Me.TransmatterBatteryPercentLabel.Text = "???"
+        Me.TransmatterBatteryPercentLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'TransmitterBatteryPictureBox
         '
@@ -1898,7 +1898,7 @@ Partial Class Form1
         Me.TabPage01HomePage.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage01HomePage.Size = New System.Drawing.Size(1376, 639)
         Me.TabPage01HomePage.TabIndex = 7
-        Me.TabPage01HomePage.Text = "Home Page"
+        Me.TabPage01HomePage.Text = "Summary"
         '
         'TabPage02RunningIOB
         '
@@ -3427,6 +3427,6 @@ Partial Class Form1
     Friend WithEvents ToolStripSeparator5 As ToolStripSeparator
     Friend WithEvents ToolStripSeparator6 As ToolStripSeparator
     Friend WithEvents ToolTip1 As ToolTip
-    Friend WithEvents TransmatterBatterPercentLabel As Label
+    Friend WithEvents TransmatterBatteryPercentLabel As Label
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
 End Class

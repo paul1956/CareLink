@@ -23,9 +23,9 @@ Public Class Form1
     Private ReadOnly _updatingLock As New Object
     Private _activeInsulinChartAbsoluteRectangle As RectangleF = RectangleF.Empty
     Private _formScale As New SizeF(1.0F, 1.0F)
-    Private _homePageAbsoluteRectangle As RectangleF
+    Private _summaryChartAbsoluteRectangle As RectangleF
     Private _inMouseMove As Boolean = False
-    Private _lastHomeTabIndex As Integer = 0
+    Private _lastSummaryTabIndex As Integer = 0
     Private _lastMarkerTabIndex As Integer = 0
     Private _showBaloonTip As Boolean = True
     Private _treatmentMarkerAbsoluteRectangle As RectangleF
@@ -54,8 +54,8 @@ Public Class Form1
 #Region "Charts"
 
     Private WithEvents ActiveInsulinChart As Chart
-    Private WithEvents HomeTabChart As Chart
-    Private WithEvents HomeTabTimeInRangeChart As Chart
+    Private WithEvents SummaryChart As Chart
+    Private WithEvents TimeInRangeChart As Chart
     Private WithEvents TreatmentMarkersChart As Chart
 
 #End Region
@@ -63,7 +63,7 @@ Public Class Form1
 #Region "Legends"
 
     Friend WithEvents ActiveInsulinChartLegend As Legend
-    Friend WithEvents HomeChartLegend As Legend
+    Friend WithEvents SummaryChartLegend As Legend
     Friend WithEvents TreatmentMarkersChartLegend As Legend
 
 #End Region
@@ -80,14 +80,14 @@ Public Class Form1
     Public WithEvents ActiveInsulinMinBasalSeries As Series
     Public WithEvents ActiveInsulinTimeChangeSeries As Series
 
-    Public WithEvents HomeTabAutoCorrectionSeries As Series
-    Public WithEvents HomeTabBasalSeries As Series
-    Public WithEvents HomeTabBGSeries As Series
-    Public WithEvents HomeTabHighLimitSeries As Series
-    Public WithEvents HomeTabLowLimitSeries As Series
-    Public WithEvents HomeTabMarkerSeries As Series
-    Public WithEvents HomeTabMinBasalSeries As Series
-    Public WithEvents HomeTabTimeChangeSeries As Series
+    Public WithEvents SummaryAutoCorrectionSeries As Series
+    Public WithEvents SummaryBasalSeries As Series
+    Public WithEvents SummaryBGSeries As Series
+    Public WithEvents SummaryHighLimitSeries As Series
+    Public WithEvents SummaryLowLimitSeries As Series
+    Public WithEvents SummaryMarkerSeries As Series
+    Public WithEvents SummaryMinBasalSeries As Series
+    Public WithEvents SummaryTimeChangeSeries As Series
 
     Public WithEvents TimeInRangeSeries As New Series
 
@@ -399,12 +399,12 @@ Public Class Form1
         If Me.MenuOptionsShowLegend.Checked Then
             File.Create(GetShowLegendFileNameWithPath)
             Me.ActiveInsulinChartLegend.Enabled = True
-            Me.HomeChartLegend.Enabled = True
+            Me.SummaryChartLegend.Enabled = True
             Me.TreatmentMarkersChartLegend.Enabled = True
         Else
             File.Delete(GetShowLegendFileNameWithPath)
             Me.ActiveInsulinChartLegend.Enabled = False
-            Me.HomeChartLegend.Enabled = False
+            Me.SummaryChartLegend.Enabled = False
             Me.TreatmentMarkersChartLegend.Enabled = False
         End If
     End Sub
@@ -470,9 +470,9 @@ Public Class Form1
 
 #End Region 'Form Menu Events
 
-#Region "HomePage Tab Events"
+#Region "Tab Events"
 
-    Private Sub TabControlHomePage_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlPage1.Selecting
+    Private Sub TabControlPage1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlPage1.Selecting
 
         Select Case e.TabPage.Name
             Case NameOf(TabPageAllUsers)
@@ -489,13 +489,13 @@ Public Class Form1
                 Me.TabControlPage1.Visible = False
                 Exit Sub
         End Select
-        _lastHomeTabIndex = e.TabPageIndex
+        _lastSummaryTabIndex = e.TabPageIndex
     End Sub
 
     Private Sub TabControlMarkers_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlPage2.Selecting
         Select Case e.TabPage.Name
             Case NameOf(TabPageBackToHomePage)
-                Me.TabControlPage1.SelectedIndex = _lastHomeTabIndex
+                Me.TabControlPage1.SelectedIndex = _lastSummaryTabIndex
                 Me.TabControlPage1.Visible = True
                 Exit Sub
             Case NameOf(TabPageAllUsers)
@@ -511,9 +511,9 @@ Public Class Form1
         _lastMarkerTabIndex = e.TabPageIndex
     End Sub
 
-#End Region ' HomePage Tab Events
+#End Region ' Tab Events
 
-#Region "Home Page Events"
+#Region "Summary Events"
 
     Private Sub CalibrationDueImage_MouseHover(sender As Object, e As EventArgs) Handles CalibrationDueImage.MouseHover
         If s_timeToNextCalibrationMinutes > 0 AndAlso s_timeToNextCalibrationMinutes < 1440 Then
@@ -521,14 +521,24 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub Chart_CursorPositionChanging(sender As Object, e As CursorEventArgs) Handles ActiveInsulinChart.CursorPositionChanging, HomeTabChart.CursorPositionChanging
+    Private Sub SensorAgeLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles TransmitterBatteryPictureBox.MouseHover
+        If s_sensorDurationHours < 24 Then
+            _sensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {s_sensorDurationHours} hours")
+        End If
+    End Sub
+
+#End Region ' Summary Events
+
+#Region "Chart Events"
+
+    Private Sub Chart_CursorPositionChanging(sender As Object, e As CursorEventArgs) Handles ActiveInsulinChart.CursorPositionChanging, SummaryChart.CursorPositionChanging
         If Not _Initialized Then Exit Sub
 
         Me.CursorTimer.Interval = s_thirtySecondInMilliseconds
         Me.CursorTimer.Start()
     End Sub
 
-    Private Sub Chart_MouseMove(sender As Object, e As MouseEventArgs) Handles HomeTabChart.MouseMove, ActiveInsulinChart.MouseMove
+    Private Sub Chart_MouseMove(sender As Object, e As MouseEventArgs) Handles SummaryChart.MouseMove, ActiveInsulinChart.MouseMove
 
         If Not _Initialized Then
             Exit Sub
@@ -536,7 +546,7 @@ Public Class Form1
         _inMouseMove = True
         Dim yInPixels As Double
         Dim chart1 As Chart = CType(sender, Chart)
-        Dim isHomePage As Boolean = chart1.Name = "HomeTabChart"
+        Dim isHomePage As Boolean = chart1.Name = "SummaryChart"
         Try
             yInPixels = chart1.ChartAreas(NameOf(ChartArea)).AxisY2.ValueToPixelPosition(e.Y)
         Catch ex As Exception
@@ -662,14 +672,9 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub SensorAgeLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles TransmitterBatteryPictureBox.MouseHover
-        If s_sensorDurationHours < 24 Then
-            _sensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {s_sensorDurationHours} hours")
-        End If
-    End Sub
-
 #Region "Post Paint Events"
 
+    <DebuggerNonUserCode()>
     Private Sub ActiveInsulinChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles ActiveInsulinChart.PostPaint
 
         If Not _Initialized OrElse _inMouseMove Then
@@ -692,7 +697,7 @@ Public Class Form1
     End Sub
 
     <DebuggerNonUserCode()>
-    Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles HomeTabChart.PostPaint
+    Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles SummaryChart.PostPaint
 
         If Not _Initialized OrElse _inMouseMove Then
             Exit Sub
@@ -704,16 +709,16 @@ Public Class Form1
                 Debug.Print($"Exiting {NameOf(HomePageChart_PostPaint)} due to {NameOf(_updating)}")
                 Exit Sub
             End If
-            e.PostPaintSupport(_homePageAbsoluteRectangle,
-                s_homeTabMarkerInsulinDictionary,
-                s_homeTabMarkerMealDictionary,
+            e.PostPaintSupport(_summaryChartAbsoluteRectangle,
+                s_summaryMarkerInsulinDictionary,
+                s_summaryMarkerMealDictionary,
                 True,
                 True)
         End SyncLock
         Debug.Print($"In {NameOf(HomePageChart_PostPaint)} exited SyncLock")
     End Sub
 
-    '<DebuggerNonUserCode()>
+    <DebuggerNonUserCode()>
     Private Sub TreatmentMarkersChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles TreatmentMarkersChart.PostPaint
 
         If Not _Initialized OrElse _inMouseMove Then
@@ -737,285 +742,9 @@ Public Class Form1
 
 #End Region ' Post Paint Events
 
-#End Region ' Home Page Events
+#End Region ' Chart Events
 
 #Region "DataGridView Events"
-
-#Region "All Users Tab DataGridView Events"
-
-    Private Sub CareLinkUserDataRecordHelpers_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvCareLinkUsers.CellContentClick
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim dataGridViewDisableButtonCell As DataGridViewDisableButtonCell = TryCast(dgv.Rows(e.RowIndex).Cells(e.ColumnIndex), DataGridViewDisableButtonCell)
-        If dataGridViewDisableButtonCell IsNot Nothing Then
-
-            If Not dataGridViewDisableButtonCell.Enabled Then
-                Exit Sub
-            End If
-
-            dgv.DataSource = Nothing
-            s_allUserSettingsData.RemoveAt(e.RowIndex)
-            dgv.DataSource = s_allUserSettingsData
-            s_allUserSettingsData.SaveAllUserRecords()
-        End If
-
-    End Sub
-
-    Private Sub DataGridViewCareLinkUsers_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles DgvCareLinkUsers.CellBeginEdit
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        'Here we save a current value of cell to some variable, that later we can compare with a new value
-        'For example using of dgv.Tag property
-        If e.RowIndex >= 0 AndAlso e.ColumnIndex > 0 Then
-            dgv.Tag = dgv.CurrentCell.Value.ToString
-        End If
-        'If dgv.Columns(e.ColumnIndex).DataPropertyName = NameOf(CareLinkUserDataRecord.AIT) Then
-        '    Me.CareLinkUsersAITComboBox.Visible = True
-        'End If
-
-    End Sub
-
-    Private Sub DataGridViewCareLinkUsers_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DgvCareLinkUsers.CellEndEdit
-        'after you've filled your dataSet, on event above try something like this
-        Try
-            '
-        Catch ex As Exception
-            MessageBox.Show(ex.DecodeException())
-        End Try
-
-    End Sub
-
-    Private Sub DataGridViewCareLinkUsers_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles DgvCareLinkUsers.CellValidating
-        If e.ColumnIndex = 0 Then
-            Exit Sub
-        End If
-
-    End Sub
-
-    Private Sub DataGridViewCareLinkUsers_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCareLinkUsers.ColumnAdded
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim caption As String = CType(dgv.DataSource, DataTable)?.Columns(e.Column.Index).Caption
-        If CareLinkUserDataRecordHelpers.HideColumn(e.Column.DataPropertyName) Then
-            e.DgvColumnAdded(CareLinkUserDataRecordHelpers.GetCellStyle(e.Column.DataPropertyName),
-                             False,
-                             False,
-                             caption)
-            e.Column.Visible = False
-            Exit Sub
-        End If
-        e.DgvColumnAdded(CareLinkUserDataRecordHelpers.GetCellStyle(e.Column.DataPropertyName),
-                         False,
-                         True,
-                         caption)
-
-    End Sub
-
-    Private Sub DataGridViewCareLinkUsers_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvCareLinkUsers.DataError
-        Stop
-    End Sub
-
-    Private Sub DataGridViewCareLinkUsers_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles DgvCareLinkUsers.RowsAdded
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        For i As Integer = e.RowIndex To e.RowIndex + (e.RowCount - 1)
-            Dim disableButtonCell As DataGridViewDisableButtonCell = CType(dgv.Rows(i).Cells(NameOf(DgvCareLinkUsersDeleteRow)), DataGridViewDisableButtonCell)
-            disableButtonCell.Enabled = s_allUserSettingsData(i).CareLinkUserName <> _LoginDialog.LoggedOnUser.CareLinkUserName
-        Next
-    End Sub
-
-#End Region ' All Users Tab DataGridView Events
-
-#Region "My User Tab DataGridView Events"
-
-    Private Sub DataGridViewMyUserData_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCurrentUser.ColumnAdded
-        e.DgvColumnAdded(New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1)),
-                         False,
-                         True,
-                         Nothing)
-
-    End Sub
-
-    Private Sub DataGridViewMyUserData_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvCurrentUser.DataError
-        Stop
-    End Sub
-
-#End Region ' My User Tab DataGridView Events
-
-#Region "Profile Tab DataGridView Events"
-
-    Private Sub DataGridViewUserProfile_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvUserProfile.ColumnAdded
-        e.DgvColumnAdded(New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1)),
-                         False,
-                         True,
-                         Nothing)
-
-    End Sub
-
-    Private Sub DataGridViewUserProfile_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvUserProfile.DataError
-        Stop
-    End Sub
-
-#End Region ' Profile Tab DataGridView Events
-
-#Region "Auto Basal Delivery DataGridView Events"
-
-    Private Sub DataGridViewAutoBasalDelivery_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvAutoBasalDelivery.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        If e.Value Is Nothing Then
-            Return
-        End If
-        ' Set the background to red for negative values in the Balance column.
-        If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(AutoBasalDeliveryRecord.bolusAmount), StringComparison.OrdinalIgnoreCase) Then
-            Dim basalAmount As String = CSng(e.Value).ToString("F3", CurrentUICulture)
-            e.Value = basalAmount
-            If basalAmount.IsMinBasal Then
-                e.CellStyle.BackColor = GetGraphLineColor("Min Basal")
-            End If
-        End If
-        dgv.dgvCellFormatting(e, NameOf(AutoBasalDeliveryRecord.dateTime))
-    End Sub
-
-    Private Sub DataGridViewAutoBasalDelivery_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvAutoBasalDelivery.ColumnAdded
-        If AutoBasalDeliveryRecordHelpers.HideColumn(e.Column.Name) Then
-            e.Column.Visible = False
-            Exit Sub
-        End If
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
-        e.DgvColumnAdded(AutoBasalDeliveryRecordHelpers.GetCellStyle(e.Column.Name),
-                         False,
-                         True,
-                         caption)
-    End Sub
-
-#End Region ' Auto Basal Delivery DataGridView Events
-
-#Region "Insulin DataGridView Events"
-
-    Private Sub DataGridViewInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnAdded
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
-        If InsulinRecordHelpers.HideColumn(e.Column.Name) Then
-            e.Column.Visible = False
-            Exit Sub
-        End If
-        e.DgvColumnAdded(InsulinRecordHelpers.GetCellStyle(e.Column.Name),
-                         True,
-                         True, caption)
-    End Sub
-
-    Private Sub DataGridViewInsulin_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnHeaderCellChanged
-        Stop
-    End Sub
-
-    Private Sub DataGridViewInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvInsulin.DataError
-        Stop
-    End Sub
-
-    Private Sub DataGridViewViewInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvInsulin.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.dgvCellFormatting(e, NameOf(InsulinRecord.dateTime))
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(InsulinRecord.programmedFastAmount)
-                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.deliveredFastAmount)).Value.ToString Then
-                    e.CellStyle.BackColor = Color.Red
-                End If
-            Case NameOf(InsulinRecord.deliveredFastAmount)
-                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.programmedFastAmount)).Value.ToString Then
-                    e.CellStyle.BackColor = Color.Red
-                End If
-            Case NameOf(InsulinRecord.programmedExtendedAmount)
-                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.deliveredExtendedAmount)).Value.ToString Then
-                    e.CellStyle.BackColor = Color.Red
-                End If
-            Case NameOf(InsulinRecord.deliveredExtendedAmount)
-                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.programmedExtendedAmount)).Value.ToString Then
-                    e.CellStyle.BackColor = Color.Red
-                End If
-        End Select
-    End Sub
-
-#End Region 'Insulin DataGridView Events
-
-#Region "Report Tab DataGridView Events"
-
-    Private Sub DataGridViewSuportedReports_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index - 1).Caption
-        e.DgvColumnAdded(supportedReportRecordHelpers.GetCellStyle(e.Column.Name),
-                         False,
-                         True,
-                         caption)
-    End Sub
-
-#End Region 'Report Tab DataGridView Events
-
-#Region "SGS Tab DataGridView Events"
-
-    Private Sub DataGridViewSGs_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvSGs.CellFormatting
-        If e.Value Is Nothing Then
-            Return
-        End If
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        ' Set the background to red for negative values in the Balance column.
-        If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(SgRecord.sensorState), StringComparison.OrdinalIgnoreCase) Then
-            If e.Value.ToString <> "NO_ERROR_MESSAGE" Then
-                e.CellStyle.BackColor = Color.Yellow
-            End If
-        End If
-        dgv.dgvCellFormatting(e, "")
-        If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(SgRecord.sg), StringComparison.OrdinalIgnoreCase) Then
-            Dim sendorValue As Single = e.Value.ToString().ParseSingle
-            If Single.IsNaN(sendorValue) Then
-                e.CellStyle.BackColor = Color.Gray
-            ElseIf sendorValue < s_limitLow Then
-                e.CellStyle.BackColor = Color.Red
-            ElseIf sendorValue > s_limitHigh Then
-                e.CellStyle.BackColor = Color.Yellow
-            End If
-        End If
-
-    End Sub
-
-    Private Sub DataGridViewSGs_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSGs.ColumnAdded
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
-        If SgRecordHelpers.HideColumn(e.Column.Name) Then
-            e.Column.Visible = False
-            Exit Sub
-        End If
-        e.DgvColumnAdded(SgRecordHelpers.GetCellStyle(e.Column.Name),
-                         False,
-                         True,
-                         caption)
-
-    End Sub
-
-    'Private Sub DataGridViewSGs_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DgvSGs.ColumnHeaderMouseClick
-    '    If e.ColumnIndex > 1 Then Exit Sub
-    '    Dim dgv As DataGridView = CType(sender, DataGridView)
-    '    Dim col As DataGridViewColumn = dgv.Columns(e.ColumnIndex)
-    '    Dim dir As ListSortDirection
-
-    '    Select Case col.HeaderCell.SortGlyphDirection
-    '        Case SortOrder.None, SortOrder.Ascending
-    '            dir = ListSortDirection.Descending
-    '        Case Else
-    '            dir = ListSortDirection.Ascending
-    '    End Select
-
-    '    dgv.Sort(col, dir)
-    'End Sub
-
-    'Private Sub DataGridViewSGs_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles DgvSGs.DataBindingComplete
-    '    Dim dgv As DataGridView = CType(sender, DataGridView)
-    '    For Each column As DataGridViewColumn In dgv.Columns
-    '        column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-    '    Next
-    '    dgv.Columns(dgv.Columns.Count - 1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-    '    dgv.Columns(0).SortMode = DataGridViewColumnSortMode.Programmatic
-    '    dgv.Columns(1).SortMode = DataGridViewColumnSortMode.Programmatic
-
-    'End Sub
-
-#End Region ' SGS Tab DataGridView Events
 
 #Region "Summary Tab DataGridView Events"
 
@@ -1108,6 +837,269 @@ Public Class Form1
 
 #End Region 'Summary Tab DataGridView Events
 
+#Region "Insulin DataGridView Events"
+
+    Private Sub DgvInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnAdded
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
+        If InsulinRecordHelpers.HideColumn(e.Column.Name) Then
+            e.Column.Visible = False
+            Exit Sub
+        End If
+        e.DgvColumnAdded(InsulinRecordHelpers.GetCellStyle(e.Column.Name),
+                         True,
+                         True, caption)
+    End Sub
+
+    Private Sub DgvInsulin_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnHeaderCellChanged
+        Stop
+    End Sub
+
+    Private Sub DgvInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvInsulin.DataError
+        Stop
+    End Sub
+
+    Private Sub DgvInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvInsulin.CellFormatting
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        dgv.dgvCellFormatting(e, NameOf(InsulinRecord.dateTime))
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(InsulinRecord.programmedFastAmount)
+                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.deliveredFastAmount)).Value.ToString Then
+                    e.CellStyle.BackColor = Color.Red
+                End If
+            Case NameOf(InsulinRecord.deliveredFastAmount)
+                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.programmedFastAmount)).Value.ToString Then
+                    e.CellStyle.BackColor = Color.Red
+                End If
+            Case NameOf(InsulinRecord.programmedExtendedAmount)
+                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.deliveredExtendedAmount)).Value.ToString Then
+                    e.CellStyle.BackColor = Color.Red
+                End If
+            Case NameOf(InsulinRecord.deliveredExtendedAmount)
+                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.programmedExtendedAmount)).Value.ToString Then
+                    e.CellStyle.BackColor = Color.Red
+                End If
+        End Select
+    End Sub
+
+#End Region ' Insulin DataGridView Events
+
+#Region "SGs DataGridView Events"
+
+    Private Sub DgvSGs_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvSGs.CellFormatting
+        If e.Value Is Nothing Then
+            Return
+        End If
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        ' Set the background to red for negative values in the Balance column.
+        If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(SgRecord.sensorState), StringComparison.OrdinalIgnoreCase) Then
+            If e.Value.ToString <> "NO_ERROR_MESSAGE" Then
+                e.CellStyle.BackColor = Color.Yellow
+            End If
+        End If
+        dgv.dgvCellFormatting(e, "")
+        If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(SgRecord.sg), StringComparison.OrdinalIgnoreCase) Then
+            Dim sendorValue As Single = e.Value.ToString().ParseSingle
+            If Single.IsNaN(sendorValue) Then
+                e.CellStyle.BackColor = Color.Gray
+            ElseIf sendorValue < s_limitLow Then
+                e.CellStyle.BackColor = Color.Red
+            ElseIf sendorValue > s_limitHigh Then
+                e.CellStyle.BackColor = Color.Yellow
+            End If
+        End If
+
+    End Sub
+
+    Private Sub DgvSGs_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSGs.ColumnAdded
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
+        If SgRecordHelpers.HideColumn(e.Column.Name) Then
+            e.Column.Visible = False
+            Exit Sub
+        End If
+        e.DgvColumnAdded(SgRecordHelpers.GetCellStyle(e.Column.Name),
+                         False,
+                         True,
+                         caption)
+
+    End Sub
+
+    'Private Sub DgvSGs_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DgvSGs.ColumnHeaderMouseClick
+    '    If e.ColumnIndex > 1 Then Exit Sub
+    '    Dim dgv As DataGridView = CType(sender, DataGridView)
+    '    Dim col As DataGridViewColumn = dgv.Columns(e.ColumnIndex)
+    '    Dim dir As ListSortDirection
+
+    '    Select Case col.HeaderCell.SortGlyphDirection
+    '        Case SortOrder.None, SortOrder.Ascending
+    '            dir = ListSortDirection.Descending
+    '        Case Else
+    '            dir = ListSortDirection.Ascending
+    '    End Select
+
+    '    dgv.Sort(col, dir)
+    'End Sub
+
+    'Private Sub DgvSGs_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles DgvSGs.DataBindingComplete
+    '    Dim dgv As DataGridView = CType(sender, DataGridView)
+    '    For Each column As DataGridViewColumn In dgv.Columns
+    '        column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+    '    Next
+    '    dgv.Columns(dgv.Columns.Count - 1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+    '    dgv.Columns(0).SortMode = DataGridViewColumnSortMode.Programmatic
+    '    dgv.Columns(1).SortMode = DataGridViewColumnSortMode.Programmatic
+
+    'End Sub
+
+#End Region ' SGs DataGridView Events
+
+#Region "Auto Basal Delivery (Basal) DataGridView Events"
+
+    Private Sub DgvAutoBasalDelivery_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvAutoBasalDelivery.CellFormatting
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        If e.Value Is Nothing Then
+            Return
+        End If
+        ' Set the background to red for negative values in the Balance column.
+        If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(AutoBasalDeliveryRecord.bolusAmount), StringComparison.OrdinalIgnoreCase) Then
+            Dim basalAmount As String = CSng(e.Value).ToString("F3", CurrentUICulture)
+            e.Value = basalAmount
+            If basalAmount.IsMinBasal Then
+                e.CellStyle.BackColor = GetGraphLineColor("Min Basal")
+            End If
+        End If
+        dgv.dgvCellFormatting(e, NameOf(AutoBasalDeliveryRecord.dateTime))
+    End Sub
+
+    Private Sub DgvAutoBasalDelivery_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvAutoBasalDelivery.ColumnAdded
+        If AutoBasalDeliveryRecordHelpers.HideColumn(e.Column.Name) Then
+            e.Column.Visible = False
+            Exit Sub
+        End If
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
+        e.DgvColumnAdded(AutoBasalDeliveryRecordHelpers.GetCellStyle(e.Column.Name),
+                         False,
+                         True,
+                         caption)
+    End Sub
+
+#End Region ' Auto Basal Delivery (Basal) DataGridView Events
+
+#Region "User Profile DataGridView Events"
+
+    Private Sub DgvUserProfile_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvUserProfile.ColumnAdded
+        e.DgvColumnAdded(New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1)),
+                         False,
+                         True,
+                         Nothing)
+
+    End Sub
+
+    Private Sub DgvUserProfile_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvUserProfile.DataError
+        Stop
+    End Sub
+
+#End Region ' User Profile DataGridView Events
+
+#Region "Current User DataGridView Events"
+
+    Private Sub DgvCurrentUser_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCurrentUser.ColumnAdded
+        e.DgvColumnAdded(New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1)),
+                         False,
+                         True,
+                         Nothing)
+
+    End Sub
+
+    Private Sub DgvCurrentUser_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvCurrentUser.DataError
+        Stop
+    End Sub
+
+#End Region ' Current User DataGridView Events
+
+#Region "CareLink Users DataGridView Events"
+
+    Private Sub DgvCareLinkUsers_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvCareLinkUsers.CellContentClick
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Dim dataGridViewDisableButtonCell As DataGridViewDisableButtonCell = TryCast(dgv.Rows(e.RowIndex).Cells(e.ColumnIndex), DataGridViewDisableButtonCell)
+        If dataGridViewDisableButtonCell IsNot Nothing Then
+
+            If Not dataGridViewDisableButtonCell.Enabled Then
+                Exit Sub
+            End If
+
+            dgv.DataSource = Nothing
+            s_allUserSettingsData.RemoveAt(e.RowIndex)
+            dgv.DataSource = s_allUserSettingsData
+            s_allUserSettingsData.SaveAllUserRecords()
+        End If
+
+    End Sub
+
+    Private Sub DgvCareLinkUsers_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles DgvCareLinkUsers.CellBeginEdit
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        'Here we save a current value of cell to some variable, that later we can compare with a new value
+        'For example using of dgv.Tag property
+        If e.RowIndex >= 0 AndAlso e.ColumnIndex > 0 Then
+            dgv.Tag = dgv.CurrentCell.Value.ToString
+        End If
+        'If dgv.Columns(e.ColumnIndex).DataPropertyName = NameOf(CareLinkUserDataRecord.AIT) Then
+        '    Me.CareLinkUsersAITComboBox.Visible = True
+        'End If
+
+    End Sub
+
+    Private Sub DgvCareLinkUsers_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DgvCareLinkUsers.CellEndEdit
+        'after you've filled your dataSet, on event above try something like this
+        Try
+            '
+        Catch ex As Exception
+            MessageBox.Show(ex.DecodeException())
+        End Try
+
+    End Sub
+
+    Private Sub DgvCareLinkUsers_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles DgvCareLinkUsers.CellValidating
+        If e.ColumnIndex = 0 Then
+            Exit Sub
+        End If
+
+    End Sub
+
+    Private Sub DgvCareLinkUsers_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCareLinkUsers.ColumnAdded
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Dim caption As String = CType(dgv.DataSource, DataTable)?.Columns(e.Column.Index).Caption
+        If CareLinkUserDataRecordHelpers.HideColumn(e.Column.DataPropertyName) Then
+            e.DgvColumnAdded(CareLinkUserDataRecordHelpers.GetCellStyle(e.Column.DataPropertyName),
+                             False,
+                             False,
+                             caption)
+            e.Column.Visible = False
+            Exit Sub
+        End If
+        e.DgvColumnAdded(CareLinkUserDataRecordHelpers.GetCellStyle(e.Column.DataPropertyName),
+                         False,
+                         True,
+                         caption)
+
+    End Sub
+
+    Private Sub DgvCareLinkUsers_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvCareLinkUsers.DataError
+        Stop
+    End Sub
+
+    Private Sub DgvCareLinkUsers_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles DgvCareLinkUsers.RowsAdded
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        For i As Integer = e.RowIndex To e.RowIndex + (e.RowCount - 1)
+            Dim disableButtonCell As DataGridViewDisableButtonCell = CType(dgv.Rows(i).Cells(NameOf(DgvCareLinkUsersDeleteRow)), DataGridViewDisableButtonCell)
+            disableButtonCell.Enabled = s_allUserSettingsData(i).CareLinkUserName <> _LoginDialog.LoggedOnUser.CareLinkUserName
+        Next
+    End Sub
+
+#End Region ' CareLink Users DataGridView Events
+
 #End Region ' DataGridView Events
 
 #Region "Tab Button Events"
@@ -1154,9 +1146,9 @@ Public Class Form1
 #Region "Timer Events"
 
     Private Sub CursorTimer_Tick(sender As Object, e As EventArgs) Handles CursorTimer.Tick
-        If Not Me.HomeTabChart.ChartAreas(NameOf(ChartArea)).AxisX.ScaleView.IsZoomed Then
+        If Not Me.SummaryChart.ChartAreas(NameOf(ChartArea)).AxisX.ScaleView.IsZoomed Then
             Me.CursorTimer.Enabled = False
-            Me.HomeTabChart.ChartAreas(NameOf(ChartArea)).CursorX.Position = Double.NaN
+            Me.SummaryChart.ChartAreas(NameOf(ChartArea)).CursorX.Position = Double.NaN
         End If
     End Sub
 
@@ -1233,53 +1225,53 @@ Public Class Form1
 
 #Region "Initialize Charts"
 
-#Region "Initialize Home Tab Charts"
+#Region "Initialize Summary Charts"
 
-    Friend Sub InitializeHomePageChart()
+    Friend Sub InitializeSummaryTabCharts()
         Me.SplitContainer3.Panel1.Controls.Clear()
-        Me.HomeTabChart = CreateChart(NameOf(HomeTabChart))
+        Me.SummaryChart = CreateChart(NameOf(SummaryChart))
         Dim summaryTitle As Title = CreateTitle("Summary",
                                                 NameOf(summaryTitle),
-                                                Me.HomeTabChart.BackColor.GetContrastingColor)
+                                                Me.SummaryChart.BackColor.GetContrastingColor)
 
-        Dim homeTabChartArea As ChartArea = CreateChartArea(Me.HomeTabChart)
-        Me.HomeTabChart.ChartAreas.Add(homeTabChartArea)
-        Me.HomeChartLegend = CreateChartLegend(NameOf(HomeChartLegend))
+        Dim summaryChartArea As ChartArea = CreateChartArea(Me.SummaryChart)
+        Me.SummaryChart.ChartAreas.Add(summaryChartArea)
+        Me.SummaryChartLegend = CreateChartLegend(NameOf(SummaryChartLegend))
 
-        Me.HomeTabAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeries, Me.HomeChartLegend, "Auto Correction", AxisType.Secondary)
-        Me.HomeTabBasalSeries = CreateSeriesBasal(BasalSeries, Me.HomeChartLegend, "Basal Series", AxisType.Secondary)
-        Me.HomeTabMinBasalSeries = CreateSeriesBasal(MinBasalSeries, Me.HomeChartLegend, "Min Basal", AxisType.Secondary)
+        Me.SummaryAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeries, Me.SummaryChartLegend, "Auto Correction", AxisType.Secondary)
+        Me.SummaryBasalSeries = CreateSeriesBasal(BasalSeries, Me.SummaryChartLegend, "Basal Series", AxisType.Secondary)
+        Me.SummaryMinBasalSeries = CreateSeriesBasal(MinBasalSeries, Me.SummaryChartLegend, "Min Basal", AxisType.Secondary)
 
-        Me.HomeTabHighLimitSeries = CreateSeriesLimits(Me.HomeChartLegend, HighLimitSeries)
-        Me.HomeTabBGSeries = CreateSeriesBg(Me.HomeChartLegend)
-        Me.HomeTabLowLimitSeries = CreateSeriesLimits(Me.HomeChartLegend, LowLimitSeries)
+        Me.SummaryHighLimitSeries = CreateSeriesLimits(Me.SummaryChartLegend, HighLimitSeries)
+        Me.SummaryBGSeries = CreateSeriesBg(Me.SummaryChartLegend)
+        Me.SummaryLowLimitSeries = CreateSeriesLimits(Me.SummaryChartLegend, LowLimitSeries)
 
-        Me.HomeTabMarkerSeries = CreateSeriesWithoutVisibleLegend(AxisType.Secondary)
+        Me.SummaryMarkerSeries = CreateSeriesWithoutVisibleLegend(AxisType.Secondary)
 
-        Me.HomeTabTimeChangeSeries = CreateSeriesTimeChange(Me.HomeChartLegend)
+        Me.SummaryTimeChangeSeries = CreateSeriesTimeChange(Me.SummaryChartLegend)
 
-        Me.SplitContainer3.Panel1.Controls.Add(Me.HomeTabChart)
+        Me.SplitContainer3.Panel1.Controls.Add(Me.SummaryChart)
         Application.DoEvents()
 
-        With Me.HomeTabChart
+        With Me.SummaryChart
             With .Series
-                .Add(Me.HomeTabAutoCorrectionSeries)
-                .Add(Me.HomeTabBasalSeries)
-                .Add(Me.HomeTabMinBasalSeries)
+                .Add(Me.SummaryAutoCorrectionSeries)
+                .Add(Me.SummaryBasalSeries)
+                .Add(Me.SummaryMinBasalSeries)
 
-                .Add(Me.HomeTabBGSeries)
-                .Add(Me.HomeTabMarkerSeries)
+                .Add(Me.SummaryBGSeries)
+                .Add(Me.SummaryMarkerSeries)
 
-                .Add(Me.HomeTabHighLimitSeries)
-                .Add(Me.HomeTabLowLimitSeries)
+                .Add(Me.SummaryHighLimitSeries)
+                .Add(Me.SummaryLowLimitSeries)
 
-                .Add(Me.HomeTabTimeChangeSeries)
+                .Add(Me.SummaryTimeChangeSeries)
             End With
             With .Series(BgSeries).EmptyPointStyle
                 .BorderWidth = 4
                 .Color = Color.Transparent
             End With
-            .Legends.Add(Me.HomeChartLegend)
+            .Legends.Add(Me.SummaryChartLegend)
             .Titles.Add(summaryTitle)
         End With
         Application.DoEvents()
@@ -1294,7 +1286,7 @@ Public Class Form1
         For Each control1 As Control In Me.SplitContainer3.Panel2.Controls
             control1.Left = splitPanelMidpoint - (control1.Width \ 2)
         Next
-        Me.HomeTabTimeInRangeChart = New Chart With {
+        Me.TimeInRangeChart = New Chart With {
             .Anchor = AnchorStyles.Top,
             .BackColor = Color.Transparent,
             .BackGradientStyle = GradientStyle.None,
@@ -1305,7 +1297,7 @@ Public Class Form1
                              width1)
                             }
 
-        With Me.HomeTabTimeInRangeChart
+        With Me.TimeInRangeChart
             .BorderSkin.BackSecondaryColor = Color.Transparent
             .BorderSkin.SkinStyle = BorderSkinStyle.None
             Dim timeInRangeChartArea As New ChartArea With {
@@ -1315,7 +1307,7 @@ Public Class Form1
             .ChartAreas.Add(timeInRangeChartArea)
             .Location = New Point(Me.TimeInRangeChartLabel.FindHorizontalMidpoint - (.Width \ 2),
                                   CInt(Me.TimeInRangeChartLabel.FindVerticalMidpoint() - Math.Round(.Height / 2.5)))
-            .Name = NameOf(HomeTabTimeInRangeChart)
+            .Name = NameOf(TimeInRangeChart)
             Me.TimeInRangeSeries = New Series(NameOf(TimeInRangeSeries)) With {
                     .ChartArea = NameOf(timeInRangeChartArea),
                     .ChartType = SeriesChartType.Doughnut
@@ -1324,7 +1316,7 @@ Public Class Form1
             .Series(NameOf(TimeInRangeSeries))("DoughnutRadius") = "17"
         End With
 
-        Me.SplitContainer3.Panel2.Controls.Add(Me.HomeTabTimeInRangeChart)
+        Me.SplitContainer3.Panel2.Controls.Add(Me.TimeInRangeChart)
         Application.DoEvents()
     End Sub
 
@@ -1802,7 +1794,7 @@ Public Class Form1
                 Next
 
                 .ChartAreas(NameOf(ChartArea)).AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1
-                .PlotMarkers(Me.ActiveInsulinTimeChangeSeries, _homePageAbsoluteRectangle, s_activeInsulinMarkerInsulinDictionary, Nothing)
+                .PlotMarkers(Me.ActiveInsulinTimeChangeSeries, _summaryChartAbsoluteRectangle, s_activeInsulinMarkerInsulinDictionary, Nothing)
                 .PlotSgSeries(HomePageMealRow)
             End With
         Catch ex As Exception
@@ -1934,18 +1926,18 @@ Public Class Form1
         Me.Last24CarbsValueLabel.Text = $"Carbs = {s_totalCarbs} {s_sessionCountrySettings.carbohydrateUnitsDefault.ToTitle}"
     End Sub
 
-    Private Sub UpdateHomeTabSerieses()
+    Private Sub UpdateSummarySerieses()
         Try
-            For Each s As Series In Me.HomeTabChart.Series
+            For Each s As Series In Me.SummaryChart.Series
                 s.Points.Clear()
             Next
-            Me.HomeTabChart.ChartAreas(NameOf(ChartArea)).UpdateChartAreaBGAxisX()
-            Me.HomeTabChart.PlotMarkers(Me.HomeTabTimeChangeSeries, _homePageAbsoluteRectangle, s_homeTabMarkerInsulinDictionary, s_homeTabMarkerMealDictionary)
-            Me.HomeTabChart.PlotSgSeries(HomePageMealRow)
-            Me.HomeTabChart.PlotHighLowLimits()
+            Me.SummaryChart.ChartAreas(NameOf(ChartArea)).UpdateChartAreaBGAxisX()
+            Me.SummaryChart.PlotMarkers(Me.SummaryTimeChangeSeries, _summaryChartAbsoluteRectangle, s_summaryMarkerInsulinDictionary, s_summaryMarkerMealDictionary)
+            Me.SummaryChart.PlotSgSeries(HomePageMealRow)
+            Me.SummaryChart.PlotHighLowLimits()
         Catch ex As Exception
             Stop
-            Throw New Exception($"{ex.DecodeException()} exception while plotting Markers in {NameOf(UpdateHomeTabSerieses)}")
+            Throw New Exception($"{ex.DecodeException()} exception while plotting Markers in {NameOf(UpdateSummarySerieses)}")
         End Try
 
     End Sub
@@ -2040,11 +2032,11 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateTimeInRange()
-        If Me.HomeTabTimeInRangeChart Is Nothing Then
+        If Me.TimeInRangeChart Is Nothing Then
             Stop
             Exit Sub
         End If
-        With Me.HomeTabTimeInRangeChart
+        With Me.TimeInRangeChart
             With .Series(NameOf(TimeInRangeSeries)).Points
                 .Clear()
                 .AddXY($"{s_belowHypoLimit}% Below {s_limitLow} {BgUnitsString}", s_belowHypoLimit / 100)
@@ -2112,7 +2104,7 @@ Public Class Form1
         SyncLock _updatingLock
             Debug.Print($"In {NameOf(UpdateAllTabPages)} inside SyncLock")
             _updating = True ' prevent paint
-            _homePageAbsoluteRectangle = RectangleF.Empty
+            _summaryChartAbsoluteRectangle = RectangleF.Empty
             _treatmentMarkerAbsoluteRectangle = RectangleF.Empty
             Me.MenuStartHere.Enabled = False
             Me.LastUpdateTime.ForeColor = SystemColors.ControlText
@@ -2154,7 +2146,7 @@ Public Class Form1
         Me.UpdateSensorLife()
         Me.UpdateTimeInRange()
         Me.UpdateTransmitterBatttery()
-        Me.UpdateHomeTabSerieses()
+        Me.UpdateSummarySerieses()
         Me.UpdateDosingAndCarbs()
 
         Me.AboveHighLimitMessageLabel.Text = $"Above {s_limitHigh} {BgUnitsString}"
@@ -2217,7 +2209,7 @@ Public Class Form1
         Me.MenuStartHere.Enabled = True
         Me.UpdateTreatmentChart()
         If s_totalAutoCorrection > 0 Then
-            EnableAutoCorrectionLegend(Me.ActiveInsulinChartLegend, Me.HomeChartLegend, Me.TreatmentMarkersChartLegend)
+            EnableAutoCorrectionLegend(Me.ActiveInsulinChartLegend, Me.SummaryChartLegend, Me.TreatmentMarkersChartLegend)
         End If
 
         Application.DoEvents()

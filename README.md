@@ -210,7 +210,7 @@ New in 3.5.2.2
 -   Add support for SG Trend Arrows
 -   Update data more frequently
 -   Improve display for 780G when no data is available
--   ActiveInsulin Page now has many of the features of Home Page
+-   ActiveInsulin Page now has many of the features of Summary Page
 -   Bolus's are now show on a separate row to make them easier to see
 -   There is full support for multiple copies of the application
 running at the same time each with their own CareLink

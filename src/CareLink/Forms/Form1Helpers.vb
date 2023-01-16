@@ -103,7 +103,7 @@ Friend Module Form1Helpers
         MainForm.Cursor = Cursors.Default
         Application.DoEvents()
 
-        MainForm.InitializeHomePageChart()
+        MainForm.InitializeSummaryTabCharts()
         MainForm.InitializeActiveInsulinTabChart()
         MainForm.InitializeTimeInRangeArea()
 

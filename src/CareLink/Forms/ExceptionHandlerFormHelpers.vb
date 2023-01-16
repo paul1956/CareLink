@@ -7,7 +7,7 @@ Imports System.Text
 Imports System.Text.Json
 Imports CareLink
 
-Partial Class ExceptionHandlerForm
+Partial Public Class ExceptionHandlerForm
 
     Private Shared Sub CreateReportFile(exceptionText As String, stackTraceText As String, UniqueFileNameWithPath As String, jsonData As Dictionary(Of String, String))
         Using stream As StreamWriter = File.CreateText(UniqueFileNameWithPath)
