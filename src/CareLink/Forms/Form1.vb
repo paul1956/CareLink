@@ -1933,8 +1933,11 @@ Public Class Form1
             Next
             Me.SummaryChart.ChartAreas(NameOf(ChartArea)).UpdateChartAreaBGAxisX()
             Me.SummaryChart.PlotMarkers(Me.SummaryTimeChangeSeries, _summaryChartAbsoluteRectangle, s_summaryMarkerInsulinDictionary, s_summaryMarkerMealDictionary)
+            Application.DoEvents()
             Me.SummaryChart.PlotSgSeries(HomePageMealRow)
+            Application.DoEvents()
             Me.SummaryChart.PlotHighLowLimits()
+            Application.DoEvents()
         Catch ex As Exception
             Stop
             Throw New Exception($"{ex.DecodeException()} exception while plotting Markers in {NameOf(UpdateSummarySerieses)}")
@@ -2156,21 +2159,21 @@ Public Class Form1
         Me.ReadingsLabel.Text = $"{s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288"
 
         Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
-                              ClassToDatatable({s_lastSgRecord}.ToArray),
+                              ClassCollectionToDatatable({s_lastSgRecord}.ToList),
                               NameOf(SgRecord),
                               AddressOf SgRecordHelpers.AttachHandlers,
                               ItemIndexs.lastSG,
                               True)
 
         Me.TableLayoutPanelLastAlarm.DisplayDataTableInDGV(
-                              ClassToDatatable(GetSummaryRecords(s_lastAlarmValue).ToArray),
+                              ClassCollectionToDatatable(GetSummaryRecords(s_lastAlarmValue)),
                               NameOf(LastAlarmRecord),
                               AddressOf SummaryRecordHelpers.AttachHandlers,
                               ItemIndexs.lastAlarm,
                               True)
 
         Me.TableLayoutPanelActiveInsulin.DisplayDataTableInDGV(
-                              ClassToDatatable({s_activeInsulin}.ToArray),
+                              ClassCollectionToDatatable({s_activeInsulin}.ToList),
                               NameOf(ActiveInsulinRecord),
                               AddressOf ActiveInsulinRecordHelpers.AttachHandlers,
                               ItemIndexs.activeInsulin,
@@ -2179,7 +2182,7 @@ Public Class Form1
         Me.UpdateSgsTab()
 
         Me.TableLayoutPanelLimits.DisplayDataTableInDGV(
-                              ClassToDatatable(s_listOflimitRecords.ToArray),
+                              ClassCollectionToDatatable(s_listOflimitRecords),
                               NameOf(LimitsRecord),
                               AddressOf LimitsRecordHelpers.AttachHandlers,
                               ItemIndexs.limits,
@@ -2190,7 +2193,7 @@ Public Class Form1
         Me.UpdateNotificationTab()
 
         Me.TableLayoutPanelTherapyAlgorithm.DisplayDataTableInDGV(
-                              ClassToDatatable(GetSummaryRecords(s_theraphyAlgorthmStateValue).ToArray),
+                              ClassCollectionToDatatable(GetSummaryRecords(s_theraphyAlgorthmStateValue)),
                               NameOf(SummaryRecord),
                               AddressOf SummaryRecordHelpers.AttachHandlers,
                               ItemIndexs.therapyAlgorithmState,
@@ -2199,7 +2202,7 @@ Public Class Form1
         Me.UpdatePumpBannerStateTab()
 
         Me.TableLayoutPanelBasal.DisplayDataTableInDGV(
-                              ClassToDatatable({DictionaryToClass(Of BasalRecord)(s_basalValue, 0)}.ToArray),
+                              ClassCollectionToDatatable({DictionaryToClass(Of BasalRecord)(s_basalValue, 0)}.ToList),
                               NameOf(BasalRecord),
                               AddressOf BasalRecordHelpers.AttachHandlers,
                               ItemIndexs.basal,

@@ -272,7 +272,6 @@ Friend Module ChartingExtensions
                 '      Throw New Exception($"{ex.DecodeException()} exception in {memberName} at {sourceLineNumber}")
             End Try
         Next
-
         If s_listOfTimeChangeMarkers.Any Then
             timeChangeSeries.IsVisibleInLegend = True
             pageChart.ChartAreas(NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)

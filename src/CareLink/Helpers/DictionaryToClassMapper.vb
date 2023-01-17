@@ -4,7 +4,7 @@
 
 Imports System.Reflection
 
-Friend Module DictionaryMap
+Friend Module DictionaryToClassMapper
 
     ''' <summary>
     ''' Fills properties of a class from a row of a Dictionary where the propertyName of the property matches the Key from that dictionary.

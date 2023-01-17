@@ -28,7 +28,7 @@ Public Class ExceptionHandlerForm
         If String.IsNullOrWhiteSpace(Me.ReportFileNameWithPath) Then
             ' Create error report and issue
             Me.ExceptionTextBox.Text = Me.UnhandledException.Exception.Message
-            Me.StackTraceTextBox.Text = TrimedStackTrace(Me.UnhandledException.Exception.StackTrace)
+            Me.StackTraceTextBox.Text = TrimmedStackTrace(Me.UnhandledException.Exception.StackTrace)
 
             Me.InstructionsRichTextBox.Text = $"By clicking OK, the Stack Trace, Exception and the CareLink data that caused the error will be package as a text file called" & Environment.NewLine
             Dim uniqueFileNameResult As FileNameStruct = GetDataFileName(SavedErrorReportName, CurrentDateCulture.Name, "txt", True)
@@ -51,7 +51,7 @@ Public Class ExceptionHandlerForm
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, fileLink, fontBold)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "and stored in", fontNormal)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, MyDocumentsPath, fontBold)
-            Me.LocalRawData = Me.DecomposeReportFile(Me.ExceptionTextBox, Me.StackTraceTextBox)
+            Me.LocalRawData = DecomposeReportFile(Me.ExceptionTextBox, Me.StackTraceTextBox, Me.ReportFileNameWithPath)
         End If
     End Sub
 

@@ -4,7 +4,7 @@
 
 Imports System.IO
 
-Friend Module ManageColorDictionary
+Friend Module KnownColorDictionaryHelpers
 
     Private Property GraphColorDictionary As New Dictionary(Of String, KnownColor) From {
                         {"Active Insulin", KnownColor.Lime},

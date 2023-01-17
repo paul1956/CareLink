@@ -30,6 +30,9 @@ This update has a UI to show all the available data and a visual version that mi
 - 01/15/2023
 
 ## What's New in this release
+New in 3.5.7.21
+- Code cleanup and consolidation
+
 New in 3.5.7.20
 - Allow editing of plot line colors
 - Add a legend to the chart, you can disable under options.

@@ -4,7 +4,7 @@
 
 Imports System.Runtime.CompilerServices
 
-Public Module KnownColorExtensions
+Public Module KnownColorHelpers
 
     Private Function HSBdiff(col1 As Color, col2 As Color) As Single
         Dim h, s, b As Single

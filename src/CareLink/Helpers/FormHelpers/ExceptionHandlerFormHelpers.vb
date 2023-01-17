@@ -7,9 +7,9 @@ Imports System.Text
 Imports System.Text.Json
 Imports CareLink
 
-Partial Public Class ExceptionHandlerForm
+Public Module ExceptionHandlerFormHelpers
 
-    Private Shared Sub CreateReportFile(exceptionText As String, stackTraceText As String, UniqueFileNameWithPath As String, jsonData As Dictionary(Of String, String))
+    Friend Sub CreateReportFile(exceptionText As String, stackTraceText As String, UniqueFileNameWithPath As String, jsonData As Dictionary(Of String, String))
         Using stream As StreamWriter = File.CreateText(UniqueFileNameWithPath)
             ' write exception header
             stream.WriteLine(ExceptionStartingString)
@@ -30,21 +30,13 @@ Partial Public Class ExceptionHandlerForm
         End Using
     End Sub
 
-    Private Shared Function TrimedStackTrace(stackTrace As String) As String
-        Dim index As Integer = stackTrace.IndexOf(StackTraceTerminatingStr)
-        If index < 0 Then
-            Return stackTrace
-        End If
-        Return stackTrace.Substring(0, index - 1)
-    End Function
+    Friend Function DecomposeReportFile(ExceptionTextBox As TextBox, stackTraceTextBox As TextBox, ReportFileNameWithPath As String) As String
 
-    Private Function DecomposeReportFile(ExceptionTextBox As TextBox, stackTraceTextBox As TextBox) As String
-
-        Using stream As StreamReader = File.OpenText(Me.ReportFileNameWithPath)
+        Using stream As StreamReader = File.OpenText(ReportFileNameWithPath)
             ' read exception header
             Dim currentLine As String = stream.ReadLine()
             If currentLine <> ExceptionStartingString Then
-                Me.ReportInvalidErrorFile(currentLine, ExceptionStartingString)
+                ReportInvalidErrorFile(currentLine, ExceptionStartingString)
             End If
 
             ' read exception
@@ -53,13 +45,13 @@ Partial Public Class ExceptionHandlerForm
             ' read exception trailer
             currentLine = stream.ReadLine
             If currentLine <> ExceptionTerminatingString Then
-                Me.ReportInvalidErrorFile(currentLine, ExceptionTerminatingString)
+                ReportInvalidErrorFile(currentLine, ExceptionTerminatingString)
             End If
 
             ' read stack trace header
             currentLine = stream.ReadLine
             If currentLine <> StackTraceStartingStr Then
-                Me.ReportInvalidErrorFile(currentLine, StackTraceStartingStr)
+                ReportInvalidErrorFile(currentLine, StackTraceStartingStr)
             End If
 
             ' read stack trace
@@ -74,7 +66,7 @@ Partial Public Class ExceptionHandlerForm
                 currentLine = ""
             End While
             If currentLine <> StackTraceTerminatingStr Then
-                Me.ReportInvalidErrorFile(currentLine, StackTraceTerminatingStr)
+                ReportInvalidErrorFile(currentLine, StackTraceTerminatingStr)
             End If
             stackTraceTextBox.Text = sb.ToString
             Return stream.ReadToEnd
@@ -85,4 +77,12 @@ Partial Public Class ExceptionHandlerForm
         Throw New NotImplementedException()
     End Sub
 
-End Class
+    Friend Function TrimmedStackTrace(stackTrace As String) As String
+        Dim index As Integer = stackTrace.IndexOf(StackTraceTerminatingStr)
+        If index < 0 Then
+            Return stackTrace
+        End If
+        Return stackTrace.Substring(0, index - 1)
+    End Function
+
+End Module
