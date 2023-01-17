@@ -31,7 +31,7 @@ This update has a UI to show all the available data and a visual version that mi
 
 ## What's New in this release
 New in 3.5.7.21
-- Code cleanup and consolidation
+- Fixed issue with Military Time causing a crash
 
 New in 3.5.7.20
 - Allow editing of plot line colors

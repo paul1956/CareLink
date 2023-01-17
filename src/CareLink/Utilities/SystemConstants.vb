@@ -16,8 +16,8 @@ Public Module SystemConstants
     Friend Const ProjectName As String = "CareLink"
     Friend Const StackTraceStartingStr As String = "--- Start of stack trace ---"
     Friend Const StackTraceTerminatingStr As String = "--- End of stack trace from previous location ---"
-    Friend Const TimeFormatMilitaryWithMinutes As String = "H:mm"
-    Friend Const TimeFormatMilitaryWithoutMinutes As String = "H"
+    Friend Const TimeFormatMilitaryWithMinutes As String = "HH:mm"
+    Friend Const TimeFormatMilitaryWithoutMinutes As String = "HH"
     Friend Const TimeFormatTwelveHourWithMinutes As String = "h:mm tt"
     Friend Const TimeFormatTwelveHourWithoutMinutes As String = "h tt"
 
