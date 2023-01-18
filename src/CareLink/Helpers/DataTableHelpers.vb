@@ -35,13 +35,13 @@ Friend Module DataTableHelpers
     ''' </summary>
     ''' <typeparam propertyName="T">The type of the class to create a DataTable from.</typeparam>
     ''' <returns>A DataTable who's DataColumns match the propertyName and type of each class T's public properties.</returns>
-    Private Function ClassToDatatable(Of T As Class)() As DataTable
+    Private Function ClassToDataTable(Of T As Class)() As DataTable
         Dim classType As Type = GetType(T)
         Dim result As New DataTable(classType.UnderlyingSystemType.Name)
         Dim propertyOrder As New SortedDictionary(Of Integer, PropertyInfo)
         For Each [property] As PropertyInfo In classType.GetProperties()
-            Dim columnAttrib As ColumnAttribute = [property].GetCustomAttributes(GetType(ColumnAttribute), True).Cast(Of ColumnAttribute)().SingleOrDefault()
-            propertyOrder.Add(columnAttrib.Order, [property])
+            Dim colAttribute As ColumnAttribute = [property].GetCustomAttributes(GetType(ColumnAttribute), True).Cast(Of ColumnAttribute)().SingleOrDefault()
+            propertyOrder.Add(colAttribute.Order, [property])
         Next
         For Each [property] As PropertyInfo In propertyOrder.Values
             Dim displayName As String = GetColumnDisplayName([property])
@@ -63,8 +63,8 @@ Friend Module DataTableHelpers
     End Function
 
     Private Function GetColumnDisplayName([property] As PropertyInfo) As String
-        Dim displayNameAttrib As DisplayNameAttribute = [property].GetCustomAttributes(GetType(DisplayNameAttribute), True).Cast(Of DisplayNameAttribute)().SingleOrDefault()
-        Return If(displayNameAttrib IsNot Nothing, displayNameAttrib.DisplayName, [property].Name)
+        Dim displayNameAttribute As DisplayNameAttribute = [property].GetCustomAttributes(GetType(DisplayNameAttribute), True).Cast(Of DisplayNameAttribute)().SingleOrDefault()
+        Return If(displayNameAttribute Is Nothing, [property].Name, displayNameAttribute.DisplayName)
     End Function
 
     ''' <summary>
@@ -73,10 +73,10 @@ Friend Module DataTableHelpers
     ''' </summary>
     ''' <param name="ClassCollection">A class or array of class to fill the DataTable with.</param>
     ''' <returns>A DataTable who's DataColumns match the name and type of each class T's public properties.</returns>
-    Public Function ClassCollectionToDatatable(Of T As Class)(ClassCollection As List(Of T)) As DataTable
-        Dim result As DataTable = ClassToDatatable(Of T)()
+    Public Function ClassCollectionToDataTable(Of T As Class)(ClassCollection As List(Of T)) As DataTable
+        Dim result As DataTable = ClassToDataTable(Of T)()
 
-        If Not IsValidDatatable(result, IgnoreRows:=True) Then
+        If Not IsValidDataTable(result, IgnoreRows:=True) Then
             Return New DataTable()
         End If
         If IsCollectionEmpty(ClassCollection) Then
@@ -95,14 +95,13 @@ Friend Module DataTableHelpers
     ''' </summary>
     ''' <typeparam name="T"></typeparam>
     ''' <returns>Dictionary</returns>
-    Public Function ClassPropertiesToCoumnAlignment(Of T As Class)(ByRef alignmentTable As Dictionary(Of String, DataGridViewCellStyle), columnName As String) As DataGridViewCellStyle
+    Public Function ClassPropertiesToColumnAlignment(Of T As Class)(ByRef alignmentTable As Dictionary(Of String, DataGridViewCellStyle), columnName As String) As DataGridViewCellStyle
         Dim classType As Type = GetType(T)
         Dim cellStyle As New DataGridViewCellStyle
         If Not alignmentTable.Any Then
             For Each [property] As PropertyInfo In classType.GetProperties()
-                Dim columnAttrib As ColumnAttribute = [property].GetCustomAttributes(GetType(ColumnAttribute), True).Cast(Of ColumnAttribute)().SingleOrDefault()
                 cellStyle = New DataGridViewCellStyle
-                Select Case columnAttrib.TypeName
+                Select Case [property].GetCustomAttributes(GetType(ColumnAttribute), True).Cast(Of ColumnAttribute)().SingleOrDefault().TypeName
                     Case "Date", NameOf(OADate), NameOf([String])
                         cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
                     Case NameOf([Double]), NameOf([Int32]), NameOf([Single]), NameOf([TimeSpan])
@@ -110,7 +109,7 @@ Friend Module DataTableHelpers
                     Case NameOf([Boolean]), NameOf(SummaryRecord.RecordNumber)
                         cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
                     Case Else
-                        Throw UnreachableException($"{NameOf(DataTableHelpers)}.{NameOf(ClassPropertiesToCoumnAlignment)} [property].PropertyType.Name = {[property].PropertyType.Name}")
+                        Throw UnreachableException($"{NameOf(DataTableHelpers)}.{NameOf(ClassPropertiesToColumnAlignment)} [property].PropertyType.Name = {[property].PropertyType.Name}")
                 End Select
                 alignmentTable.Add([property].Name, cellStyle)
             Next

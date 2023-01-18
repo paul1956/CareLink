@@ -14,7 +14,7 @@ Friend Class AutoBasalDeliveryRecordHelpers
     Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Friend Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToCoumnAlignment(Of AutoBasalDeliveryRecord)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of AutoBasalDeliveryRecord)(s_alignmentTable, columnName)
     End Function
 
     Friend Shared Function HideColumn(dataPropertyName As String) As Boolean

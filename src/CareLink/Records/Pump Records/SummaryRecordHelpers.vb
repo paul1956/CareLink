@@ -95,7 +95,7 @@ Friend Module SummaryRecordHelpers
     End Function
 
     Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToCoumnAlignment(Of SummaryRecord)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of SummaryRecord)(s_alignmentTable, columnName)
     End Function
 
     Friend Function GetSummaryRecords(dic As Dictionary(Of String, String), Optional rowsToHide As List(Of String) = Nothing) As List(Of SummaryRecord)

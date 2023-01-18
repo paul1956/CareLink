@@ -19,7 +19,7 @@ Public Module DataTableHelper
     ''' <summary>
     ''' Returns an enumerator, which supports a simple iteration over a collection of all the DataColumns in a specified DataTable.
     ''' </summary>
-    Public Function GetDatatableColumns(Input As DataTable) As IEnumerable(Of DataColumn)
+    Public Function GetDataTableColumns(Input As DataTable) As IEnumerable(Of DataColumn)
         If Input Is Nothing OrElse Input.Columns.Count < 1 Then
             Return New List(Of DataColumn)()
         End If
@@ -29,8 +29,8 @@ Public Module DataTableHelper
     ''' <summary>
     ''' Returns an enumerator, which supports a simple iteration over a collection of all the DataRows in a specified DataTable.
     ''' </summary>
-    Public Function GetDatatableRows(Input As DataTable) As IEnumerable(Of DataRow)
-        If Not IsValidDatatable(Input) Then
+    Public Function GetDataTableRows(Input As DataTable) As IEnumerable(Of DataRow)
+        If Not IsValidDataTable(Input) Then
             Return New List(Of DataRow)()
         End If
         Return Input.Rows.OfType(Of DataRow)().ToList()
@@ -67,7 +67,7 @@ Public Module DataTableHelper
     ''' <param name="Table">DataTable to check.</param>
     ''' <param name="IgnoreRows">When set to true, the function will return true even if the table's row count is equal to zero.</param>
     ''' <returns>False if the specified DataTable null, has zero columns, or zero rows, otherwise true.</returns>
-    Public Function IsValidDatatable(Table As DataTable, Optional IgnoreRows As Boolean = False) As Boolean
+    Public Function IsValidDataTable(Table As DataTable, Optional IgnoreRows As Boolean = False) As Boolean
         If Table Is Nothing Then
             Return False
         End If
@@ -127,7 +127,7 @@ Public Module DataTableHelper
     ''' </summary>
     ''' <returns>A string formatted like the values specified in an SQL 'INSERT INTO' statement.</returns>
     Public Function RowToValueString(Row As DataRow) As String
-        Dim collection As IEnumerable(Of String) = GetDatatableColumns(Row.Table).Select(Function(c) c.ColumnName)
+        Dim collection As IEnumerable(Of String) = GetDataTableColumns(Row.Table).Select(Function(c) c.ColumnName)
         Return ListToDelimitedString(collection, "('", "', '", "')")
     End Function
 

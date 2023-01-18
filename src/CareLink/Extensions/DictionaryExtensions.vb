@@ -13,18 +13,18 @@ Public Module DictionaryExtensions
     End Function
 
     <Extension>
-    Public Function IndexOfValue(dic As Dictionary(Of String, KnownColor), item As KnownColor) As Integer
+    Public Function IndexOfValue(dic As SortedDictionary(Of String, KnownColor), item As KnownColor) As Integer
         Return dic.Values.ToList.IndexOf(item)
     End Function
 
     <Extension>
-    Public Function ToCsv(dic As Dictionary(Of String, String)) As String
+    Public Function ToCsv(Of T)(dic As Dictionary(Of String, T)) As String
         If dic Is Nothing Then
             Return "{}"
         End If
 
         Dim result As New StringBuilder
-        For Each kvp As KeyValuePair(Of String, String) In dic
+        For Each kvp As KeyValuePair(Of String, T) In dic
             result.Append($"{kvp.Key} = {kvp.Value}, ")
         Next
         result.TrimEnd(", ")

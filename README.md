@@ -30,6 +30,9 @@ This update has a UI to show all the available data and a visual version that mi
 - 01/15/2023
 
 ## What's New in this release
+New in 3.5.7.22
+
+
 New in 3.5.7.21
 - Fixed issue with Military Time causing a crash
 

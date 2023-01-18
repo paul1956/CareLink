@@ -16,7 +16,7 @@ Friend Class InsulinRecordHelpers
     Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Friend Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToCoumnAlignment(Of InsulinRecord)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of InsulinRecord)(s_alignmentTable, columnName)
     End Function
 
     Friend Shared Function HideColumn(columnName As String) As Boolean

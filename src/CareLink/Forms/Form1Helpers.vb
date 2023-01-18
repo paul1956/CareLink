@@ -111,9 +111,9 @@ Friend Module Form1Helpers
     End Sub
 
     <Extension>
-    Friend Function ScaleMarker(innerdic As Dictionary(Of String, String)) As Dictionary(Of String, String)
+    Friend Function ScaleMarker(innerDictionary As Dictionary(Of String, String)) As Dictionary(Of String, String)
         Dim newMarker As New Dictionary(Of String, String)
-        For Each kvp As KeyValuePair(Of String, String) In innerdic
+        For Each kvp As KeyValuePair(Of String, String) In innerDictionary
             Select Case kvp.Key
                 Case "value"
                     newMarker.Add(kvp.Key, kvp.scaleValue(2))

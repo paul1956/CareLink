@@ -33,7 +33,12 @@ Public Module DataGridViewExtensions
         e.Column.ReadOnly = forceReadOnly OrElse idHeaderName
         e.Column.Resizable = DataGridViewTriState.False
         Dim title As New StringBuilder
-        Dim titleInTitleCase As String = If(e.Column.DataPropertyName.Length < 4, e.Column.Name, e.Column.Name.ToTitleCase())
+        Dim name As String = e.Column.Name
+        Dim titleInTitleCase As String = name
+        If Not name.Contains($"OADateTime", StringComparison.InvariantCultureIgnoreCase) Then
+            titleInTitleCase = If(e.Column.DataPropertyName.Length < 4, name, name.ToTitleCase())
+        End If
+
         If wrapHeader Then
             Dim titleSplit As String() = titleInTitleCase.Replace("A I T", "AIT").Split(" "c)
             For Each s As String In titleSplit
@@ -44,13 +49,15 @@ Public Module DataGridViewExtensions
                 End If
             Next
         Else
-            title.Append(titleInTitleCase.Replace("Care Link", $"{ProjectName}").Replace("O Adate Time", "OA Date Time"))
+            title.Append(titleInTitleCase.Replace("Care Link", $"{ProjectName}"))
         End If
         e.Column.HeaderText = title.TrimEnd(Environment.NewLine).ToString
         e.Column.DefaultCellStyle = cellStyle
-        e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
+        If e.Column.HeaderText <> "Record Number" Then
+            e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
+        End If
         If String.IsNullOrWhiteSpace(caption) Then Return
-        e.Column.HeaderText = caption
+        e.Column.HeaderText = caption.Replace("_", "")
         If e.Column.DataPropertyName = "message" Then
             e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
         End If

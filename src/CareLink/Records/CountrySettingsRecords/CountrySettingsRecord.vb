@@ -8,13 +8,13 @@ Public Class CountrySettingsRecord
         _hasValue = False
     End Sub
 
-    Public Sub New(mainform As Form1, jsonData As Dictionary(Of String, String))
+    Public Sub New(mainForm As Form1, jsonData As Dictionary(Of String, String))
         If jsonData Is Nothing OrElse jsonData.Count = 0 Then
             _hasValue = False
             Exit Sub
         End If
 
-        Dim dgvCountryItems() As DataGridView = {mainform.DgvCountryDataPg1, mainform.DgvCountryDataPg2, mainform.DgvCountryDataPg3}
+        Dim dgvCountryItems() As DataGridView = {mainForm.DgvCountryDataPg1, mainForm.DgvCountryDataPg2, mainForm.DgvCountryDataPg3}
         For Each dgv As DataGridView In dgvCountryItems
             dgv.Rows.Clear()
             dgv.RowHeadersVisible = False
@@ -174,7 +174,6 @@ Public Class CountrySettingsRecord
     Public Property name As String
     Public Property numberFormat As numberFormatRecord
 
-    ' "{""ddms.termsOfUse"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/terms_of_use.html"",""ddms.privacyStatementPdf"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/privacy_policy.pdf"",""ddms.termsOfUsePdf"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/terms_of_use.pdf"",""ddms.privacyStatement"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/privacy_policy.pdf"",""ddms.faqPdf"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/faq.pdf"",""ddms.privacyPractices"":""https://carelink.minimed.com/crs/ocl/14.06/media/en/us/notices.pdf""}"
     Public Property pathDocs As pathDocsRecord
 
     Public Property postal As postalRecord
@@ -182,7 +181,6 @@ Public Class CountrySettingsRecord
     Public Property recordSeparator As String
     Public Property region As String
 
-    ' "{""longTimePattern12"":""hh:mm:ss tt"",""longTimePattern24"":""HH:mm:ss"",""shortTimePattern12"":""h:mm tt"",""shortTimePattern24"":""HH:mm"",""shortDatePattern"":""MM-dd-yyyy"",""dateSeparator"":""-"",""timeSeparator"":"":""}"
     Public Property reportDateFormat As reportDateFormatRecord
 
     Public Property shortDateFormat As String

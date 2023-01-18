@@ -53,7 +53,7 @@ Friend Module ChartingExtensions
         Dim limitsIndexList(count) As Integer
         Dim limitsIndex As Integer = 0
         For i As Integer = 0 To limitsIndexList.GetUpperBound(0)
-            If limitsIndex + 1 < s_listOflimitRecords.Count AndAlso s_listOflimitRecords(limitsIndex + 1).index < i Then
+            If limitsIndex + 1 < s_listOfLimitRecords.Count AndAlso s_listOfLimitRecords(limitsIndex + 1).index < i Then
                 limitsIndex += 1
             End If
             limitsIndexList(i) = limitsIndex
@@ -152,13 +152,13 @@ Friend Module ChartingExtensions
 
     <Extension>
     Friend Sub PlotHighLowLimits(chart As Chart)
-        If s_listOflimitRecords.Count = 0 Then Exit Sub
+        If s_listOfLimitRecords.Count = 0 Then Exit Sub
         Dim limitsIndexList() As Integer = GetLimitsList(s_listOfSGs.Count - 1)
         For Each sgListIndex As IndexClass(Of SgRecord) In s_listOfSGs.WithIndex()
-            Dim sgOADateTime As OADate = sgListIndex.Value.OAdatetime()
+            Dim sgOADateTime As OADate = sgListIndex.Value.OaDateTime()
             Try
-                Dim limitsLowValue As Single = s_listOflimitRecords(limitsIndexList(sgListIndex.Index)).lowLimit
-                Dim limitsHighValue As Single = s_listOflimitRecords(limitsIndexList(sgListIndex.Index)).highLimit
+                Dim limitsLowValue As Single = s_listOfLimitRecords(limitsIndexList(sgListIndex.Index)).lowLimit
+                Dim limitsHighValue As Single = s_listOfLimitRecords(limitsIndexList(sgListIndex.Index)).highLimit
                 If limitsHighValue <> 0 Then
                     chart.Series(HighLimitSeries).Points.AddXY(sgOADateTime, limitsHighValue)
                 End If
@@ -173,7 +173,7 @@ Friend Module ChartingExtensions
     End Sub
 
     <Extension>
-    Friend Sub PlotMarkers(pageChart As Chart, timeChangeSeries As Series, chartRelitivePosition As RectangleF, markerInsulinDictionary As Dictionary(Of OADate, Single), markerMealDictionary As Dictionary(Of OADate, Single), <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+    Friend Sub PlotMarkers(pageChart As Chart, timeChangeSeries As Series, chartRelativePosition As RectangleF, markerInsulinDictionary As Dictionary(Of OADate, Single), markerMealDictionary As Dictionary(Of OADate, Single), <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
         Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
         markerInsulinDictionary.Clear()
         markerMealDictionary?.Clear()
@@ -286,7 +286,7 @@ Friend Module ChartingExtensions
     Friend Sub PlotSgSeries(chart As Chart, HomePageMealRow As Double)
         For Each sgListIndex As IndexClass(Of SgRecord) In s_listOfSGs.WithIndex()
             chart.Series(BgSeries).PlotOnePoint(
-                                    sgListIndex.Value.OAdatetime(),
+                                    sgListIndex.Value.OaDateTime(),
                                     sgListIndex.Value.sg,
                                     Color.White,
                                     HomePageMealRow)
@@ -393,21 +393,21 @@ Friend Module ChartingExtensions
     End Sub
 
     <Extension>
-    Friend Sub PostPaintSupport(e As ChartPaintEventArgs, ByRef chartRelitivePosition As RectangleF, insulinDictionary As Dictionary(Of OADate, Single), mealDictionary As Dictionary(Of OADate, Single), offsetInsulinImage As Boolean, paintOnY2 As Boolean)
+    Friend Sub PostPaintSupport(e As ChartPaintEventArgs, ByRef chartRelativePosition As RectangleF, insulinDictionary As Dictionary(Of OADate, Single), mealDictionary As Dictionary(Of OADate, Single), offsetInsulinImage As Boolean, paintOnY2 As Boolean)
         If s_listOfSGs.Count = 0 Then Exit Sub
 
-        If chartRelitivePosition.IsEmpty Then
-            chartRelitivePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_listOfSGs(0).OAdatetime))
-            chartRelitivePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, HomePageBasalRow))
-            chartRelitivePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, s_limitHigh)))) - chartRelitivePosition.Y
-            chartRelitivePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_listOfSGs.Last.OAdatetime)) - chartRelitivePosition.X
+        If chartRelativePosition.IsEmpty Then
+            chartRelativePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_listOfSGs(0).OaDateTime))
+            chartRelativePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, HomePageBasalRow))
+            chartRelativePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, s_limitHigh)))) - chartRelativePosition.Y
+            chartRelativePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_listOfSGs.Last.OaDateTime)) - chartRelativePosition.X
         End If
 
         Dim highLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, s_limitHigh))
         Dim lowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, s_limitLow))
         Dim criticalLowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, s_criticalLow))
-        Dim chartAbsoluteHighRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelitivePosition.X, chartRelitivePosition.Y, chartRelitivePosition.Width, highLimitY - chartRelitivePosition.Y))
-        Dim chartAbsoluteLowRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelitivePosition.X, lowLimitY, chartRelitivePosition.Width, criticalLowLimitY - lowLimitY))
+        Dim chartAbsoluteHighRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelativePosition.X, chartRelativePosition.Y, chartRelativePosition.Width, highLimitY - chartRelativePosition.Y))
+        Dim chartAbsoluteLowRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelativePosition.X, lowLimitY, chartRelativePosition.Width, criticalLowLimitY - lowLimitY))
 
         Using b As New SolidBrush(Color.FromArgb(5, Color.Black))
             e.ChartGraphics.Graphics.FillRectangle(b, chartAbsoluteHighRectangle)

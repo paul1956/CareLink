@@ -35,7 +35,7 @@ Friend Class TimeChangeRecordHelpers
     End Sub
 
     Friend Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToCoumnAlignment(Of TimeChangeRecord)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of TimeChangeRecord)(s_alignmentTable, columnName)
     End Function
 
     Friend Shared Function HideColumn(columnName As String) As Boolean

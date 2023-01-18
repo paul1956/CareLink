@@ -176,7 +176,7 @@ Partial Class Form1
         Me.ServerUpdateTimer = New System.Windows.Forms.Timer(Me.components)
         Me.SgsButton = New System.Windows.Forms.Button()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
-        Me.TransmatterBatteryPercentLabel = New System.Windows.Forms.Label()
+        Me.TransmitterBatteryPercentLabel = New System.Windows.Forms.Label()
         Me.TransmitterBatteryPictureBox = New System.Windows.Forms.PictureBox()
         Me.SplitContainer3 = New System.Windows.Forms.SplitContainer()
         Me.TimeInRangeLabel = New System.Windows.Forms.Label()
@@ -1292,7 +1292,7 @@ Partial Class Form1
         DataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DgvSGs.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle16
-        Me.DgvSGs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.DgvSGs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DgvSGs.Location = New System.Drawing.Point(3, 46)
         Me.DgvSGs.Name = "DgvSGs"
         Me.DgvSGs.RowTemplate.Height = 25
@@ -1746,7 +1746,7 @@ Partial Class Form1
         Me.SplitContainer2.Panel1.Controls.Add(Me.ReadingIntervalLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.ReadingsLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.PumpBatteryRemainingLabel)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.TransmatterBatteryPercentLabel)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.TransmitterBatteryPercentLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.TransmitterBatteryPictureBox)
         Me.SplitContainer2.Panel1.Controls.Add(Me.PumpBatteryPictureBox)
         Me.SplitContainer2.Panel1.Controls.Add(Me.AITAlgorithmLabel)
@@ -1764,17 +1764,17 @@ Partial Class Form1
         Me.SplitContainer2.SplitterDistance = 134
         Me.SplitContainer2.TabIndex = 52
         '
-        'TransmatterBatteryPercentLabel
+        'TransmitterBatteryPercentLabel
         '
-        Me.TransmatterBatteryPercentLabel.BackColor = System.Drawing.Color.Transparent
-        Me.TransmatterBatteryPercentLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
-        Me.TransmatterBatteryPercentLabel.ForeColor = System.Drawing.Color.White
-        Me.TransmatterBatteryPercentLabel.Location = New System.Drawing.Point(551, 95)
-        Me.TransmatterBatteryPercentLabel.Name = "TransmatterBatteryPercentLabel"
-        Me.TransmatterBatteryPercentLabel.Size = New System.Drawing.Size(80, 21)
-        Me.TransmatterBatteryPercentLabel.TabIndex = 13
-        Me.TransmatterBatteryPercentLabel.Text = "???"
-        Me.TransmatterBatteryPercentLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.TransmitterBatteryPercentLabel.BackColor = System.Drawing.Color.Transparent
+        Me.TransmitterBatteryPercentLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point)
+        Me.TransmitterBatteryPercentLabel.ForeColor = System.Drawing.Color.White
+        Me.TransmitterBatteryPercentLabel.Location = New System.Drawing.Point(551, 95)
+        Me.TransmitterBatteryPercentLabel.Name = "TransmitterBatteryPercentLabel"
+        Me.TransmitterBatteryPercentLabel.Size = New System.Drawing.Size(80, 21)
+        Me.TransmitterBatteryPercentLabel.TabIndex = 13
+        Me.TransmitterBatteryPercentLabel.Text = "???"
+        Me.TransmitterBatteryPercentLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'TransmitterBatteryPictureBox
         '
@@ -3427,6 +3427,6 @@ Partial Class Form1
     Friend WithEvents ToolStripSeparator5 As ToolStripSeparator
     Friend WithEvents ToolStripSeparator6 As ToolStripSeparator
     Friend WithEvents ToolTip1 As ToolTip
-    Friend WithEvents TransmatterBatteryPercentLabel As Label
+    Friend WithEvents TransmitterBatteryPercentLabel As Label
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
 End Class

@@ -6,7 +6,7 @@ Friend Class SgRecordHelpers
 
     Private Shared ReadOnly columnsToHide As New List(Of String) From {
                         NameOf(SgRecord.kind),
-                        NameOf(SgRecord.OAdatetime),
+                        NameOf(SgRecord.OaDateTime),
                         NameOf(SgRecord.relativeOffset),
                         NameOf(SgRecord.version)
                     }
@@ -46,7 +46,7 @@ Friend Class SgRecordHelpers
     End Sub
 
     Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToCoumnAlignment(Of SgRecord)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of SgRecord)(s_alignmentTable, columnName)
     End Function
 
 End Class

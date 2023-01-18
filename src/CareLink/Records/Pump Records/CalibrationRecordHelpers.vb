@@ -56,7 +56,7 @@ Friend Class CalibrationRecordHelpers
     End Sub
 
     Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToCoumnAlignment(Of CalibrationRecord)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of CalibrationRecord)(s_alignmentTable, columnName)
     End Function
 
 End Class

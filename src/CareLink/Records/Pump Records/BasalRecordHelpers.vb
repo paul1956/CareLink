@@ -36,7 +36,7 @@ Friend Class BasalRecordHelpers
     End Sub
 
     Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToCoumnAlignment(Of BasalRecord)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of BasalRecord)(s_alignmentTable, columnName)
     End Function
 
 End Class

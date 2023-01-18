@@ -35,9 +35,9 @@ Public Class MealRecord
     <Column(Order:=3, TypeName:=NameOf([String]))>
     Public Property kind As String
 
-    <DisplayName("OA dateTime")>
+    <DisplayName(NameOf(OA_dateTime))>
     <Column(Order:=7, TypeName:=NameOf(OADate))>
-    Public ReadOnly Property OAdateTime As OADate
+    Public ReadOnly Property OA_dateTime As OADate
         Get
             Return New OADate(_dateTime)
         End Get

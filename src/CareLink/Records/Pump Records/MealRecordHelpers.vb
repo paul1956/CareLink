@@ -40,7 +40,7 @@ Friend Class MealRecordHelpers
     End Sub
 
     Private Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToCoumnAlignment(Of MealRecord)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of MealRecord)(s_alignmentTable, columnName)
     End Function
 
     Friend Shared Function HideColumn(dataPropertyName As String) As Boolean

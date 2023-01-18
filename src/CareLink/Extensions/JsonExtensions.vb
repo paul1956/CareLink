@@ -138,10 +138,10 @@ Public Module JsonExtensions
                                         message = $"Your pump appears to be off-line, some values will be wrong do you want to continue? If you select OK '{TimeZoneInfo.Local.Id}' will be used as you local time and you will not be prompted further. Cancel will Exit."
                                         messageButtons = MessageBoxButtons.OKCancel
                                     Else
-                                        message = $"Your pump timezone '{clientTimeZoneName}' is not recognized, do you want to exit? If you select No permanently use '{TimeZoneInfo.Local.Id}''? If you select Yes '{TimeZoneInfo.Local.Id}' will be used and you will not be prompted further. No will use '{TimeZoneInfo.Local.Id}' until you restart program. Cancel will exit program. Please open an issue and provide the name '{clientTimeZoneName}'. After selecting 'Yes' you can change the behavior under the Options Menu."
+                                        message = $"Your pump TimeZone '{clientTimeZoneName}' is not recognized, do you want to exit? If you select No permanently use '{TimeZoneInfo.Local.Id}''? If you select Yes '{TimeZoneInfo.Local.Id}' will be used and you will not be prompted further. No will use '{TimeZoneInfo.Local.Id}' until you restart program. Cancel will exit program. Please open an issue and provide the name '{clientTimeZoneName}'. After selecting 'Yes' you can change the behavior under the Options Menu."
                                         messageButtons = MessageBoxButtons.YesNoCancel
                                     End If
-                                    Dim result As DialogResult = MessageBox.Show(message, "Timezone Unknown",
+                                    Dim result As DialogResult = MessageBox.Show(message, "TimeZone Unknown",
                                                                                  messageButtons,
                                                                                  MessageBoxIcon.Question)
                                     s_useLocalTimeZone = True
@@ -156,9 +156,9 @@ Public Module JsonExtensions
                             End If
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
                         Case NameOf(ItemIndexs.timeFormat)
-                            Dim internaltimeFormat As String = item.Value.ToString
-                            s_timeWithMinuteFormat = If(internaltimeFormat = "HR_12", TimeFormatTwelveHourWithMinutes, TimeFormatMilitaryWithMinutes)
-                            s_timeWithoutMinuteFormat = If(internaltimeFormat = "HR_12", TimeFormatTwelveHourWithoutMinutes, TimeFormatMilitaryWithoutMinutes)
+                            Dim internalTimeFormat As String = item.Value.ToString
+                            s_timeWithMinuteFormat = If(internalTimeFormat = "HR_12", TimeFormatTwelveHourWithMinutes, TimeFormatMilitaryWithMinutes)
+                            s_timeWithoutMinuteFormat = If(internalTimeFormat = "HR_12", TimeFormatTwelveHourWithoutMinutes, TimeFormatMilitaryWithoutMinutes)
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
                         Case "Sg", "sg", NameOf(ItemIndexs.averageSGFloat), NameOf(ItemIndexs.averageSG), NameOf(ItemIndexs.sgBelowLimit)
                             resultDictionary.Add(item.Key, item.scaleJsonValue())

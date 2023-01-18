@@ -39,7 +39,7 @@ Friend Class AutoModeStatusRecordHelpers
     End Sub
 
     Friend Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToCoumnAlignment(Of AutoModeStatusRecord)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of AutoModeStatusRecord)(s_alignmentTable, columnName)
     End Function
 
     Friend Shared Function HideColumn(columnName As String) As Boolean

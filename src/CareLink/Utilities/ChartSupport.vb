@@ -293,8 +293,8 @@ Friend Module ChartSupport
                     .IntervalOffsetType = DateTimeIntervalType.Hours
                     .IntervalType = DateTimeIntervalType.Hours
                 End With
-                .Maximum = s_listOfSGs.Last.OAdatetime
-                .Minimum = s_listOfSGs(0).OAdatetime
+                .Maximum = s_listOfSGs.Last.OaDateTime
+                .Minimum = s_listOfSGs(0).OaDateTime
             End With
         End With
     End Sub

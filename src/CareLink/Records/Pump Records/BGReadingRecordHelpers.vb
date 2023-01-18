@@ -56,7 +56,7 @@ Friend Class BGReadingRecordHelpers
     End Sub
 
     Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToCoumnAlignment(Of BGReadingRecord)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of BGReadingRecord)(s_alignmentTable, columnName)
     End Function
 
 End Class

@@ -65,9 +65,9 @@ Public Class TimeChangeRecord
     <Column(Order:=3, TypeName:=NameOf([Int32]))>
     Public Property kind As String
 
-    <DisplayName("OA dateTime")>
+    <DisplayName("OA_dateTime")>
     <Column(Order:=7, TypeName:=NameOf(OADate))>
-    Public ReadOnly Property OAdateTime As OADate
+    Public ReadOnly Property OaDateTime As OADate
         Get
             Return New OADate(_dateTime)
         End Get
@@ -88,7 +88,7 @@ Public Class TimeChangeRecord
     <Column(Order:=10, TypeName:=NameOf([String]))>
     Public Property previousDateTimeAsString As String
 
-    <DisplayName("Previous OA DateTime")>
+    <DisplayName("Previous OADateTime")>
     <Column(Order:=11, TypeName:=NameOf(OADate))>
     Public ReadOnly Property previousOADateTime As OADate
         Get

@@ -23,11 +23,11 @@ Public Class Form1
     Private ReadOnly _updatingLock As New Object
     Private _activeInsulinChartAbsoluteRectangle As RectangleF = RectangleF.Empty
     Private _formScale As New SizeF(1.0F, 1.0F)
-    Private _summaryChartAbsoluteRectangle As RectangleF
     Private _inMouseMove As Boolean = False
-    Private _lastSummaryTabIndex As Integer = 0
     Private _lastMarkerTabIndex As Integer = 0
-    Private _showBaloonTip As Boolean = True
+    Private _lastSummaryTabIndex As Integer = 0
+    Private _showBalloonTip As Boolean = True
+    Private _summaryChartAbsoluteRectangle As RectangleF
     Private _treatmentMarkerAbsoluteRectangle As RectangleF
     Private _updating As Boolean
 
@@ -809,7 +809,6 @@ Public Class Form1
                     _lastMarkerTabIndex = If(_lastMarkerTabIndex < 8, _lastMarkerTabIndex, 0)
                     Me.TabControlPage2.SelectedIndex = _lastMarkerTabIndex
                     Me.TabControlPage1.Visible = False
-                    Exit Select
                 Case ItemIndexs.notificationHistory
                     Me.TabControlPage1.SelectedIndex = GetTabIndexFromName(NameOf(TabPage10NotificationHistory))
                 Case ItemIndexs.therapyAlgorithmState
@@ -852,12 +851,12 @@ Public Class Form1
         End If
         dgv.dgvCellFormatting(e, "")
         If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(SgRecord.sg), StringComparison.OrdinalIgnoreCase) Then
-            Dim sendorValue As Single = e.Value.ToString().ParseSingle
-            If Single.IsNaN(sendorValue) Then
+            Dim sensorValue As Single = e.Value.ToString().ParseSingle
+            If Single.IsNaN(sensorValue) Then
                 e.CellStyle.BackColor = Color.Gray
-            ElseIf sendorValue < s_limitLow Then
+            ElseIf sensorValue < s_limitLow Then
                 e.CellStyle.BackColor = Color.Red
-            ElseIf sendorValue > s_limitHigh Then
+            ElseIf sensorValue > s_limitHigh Then
                 e.CellStyle.BackColor = Color.Yellow
             End If
         End If
@@ -875,35 +874,51 @@ Public Class Form1
                          False,
                          True,
                          caption)
-
+        Select Case e.Column.Index
+            Case 0
+                e.Column.SortMode = DataGridViewColumnSortMode.Automatic
+                e.Column.HeaderCell.SortGlyphDirection = SortOrder.Descending
+            Case 1
+                e.Column.SortMode = DataGridViewColumnSortMode.Automatic
+                e.Column.HeaderCell.SortGlyphDirection = SortOrder.None
+            Case Else
+                e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
+        End Select
     End Sub
 
-    'Private Sub DgvSGs_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DgvSGs.ColumnHeaderMouseClick
-    '    If e.ColumnIndex > 1 Then Exit Sub
-    '    Dim dgv As DataGridView = CType(sender, DataGridView)
-    '    Dim col As DataGridViewColumn = dgv.Columns(e.ColumnIndex)
-    '    Dim dir As ListSortDirection
+    Private Sub DgvSGs_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DgvSGs.ColumnHeaderMouseClick
+        If e.ColumnIndex > 1 Then Exit Sub
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Dim col As DataGridViewColumn = dgv.Columns(e.ColumnIndex)
+        Dim dir As ListSortDirection
 
-    '    Select Case col.HeaderCell.SortGlyphDirection
-    '        Case SortOrder.None, SortOrder.Ascending
-    '            dir = ListSortDirection.Descending
-    '        Case Else
-    '            dir = ListSortDirection.Ascending
-    '    End Select
+        Select Case col.HeaderCell.SortGlyphDirection
+            Case SortOrder.None, SortOrder.Ascending
+                dir = ListSortDirection.Descending
+            Case SortOrder.Descending
+                dir = ListSortDirection.Ascending
+        End Select
 
-    '    dgv.Sort(col, dir)
-    'End Sub
+        dgv.Sort(col, dir)
+    End Sub
 
-    'Private Sub DgvSGs_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles DgvSGs.DataBindingComplete
-    '    Dim dgv As DataGridView = CType(sender, DataGridView)
-    '    For Each column As DataGridViewColumn In dgv.Columns
-    '        column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-    '    Next
-    '    dgv.Columns(dgv.Columns.Count - 1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-    '    dgv.Columns(0).SortMode = DataGridViewColumnSortMode.Programmatic
-    '    dgv.Columns(1).SortMode = DataGridViewColumnSortMode.Programmatic
-
-    'End Sub
+    Private Sub DgvSGs_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles DgvSGs.DataBindingComplete
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        For Each column As DataGridViewColumn In dgv.Columns
+            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+        Next
+        dgv.Columns(dgv.Columns.Count - 1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+        Dim order As SortOrder = SortOrder.None
+        If dgv.RowCount > 0 Then
+            Dim value As String = dgv.Rows(0).Cells(0).Value.ToString
+            If value = "288" Then
+                order = SortOrder.Ascending
+            ElseIf value = "1" Then
+                order = SortOrder.Descending
+            End If
+        End If
+        dgv.Columns(0).HeaderCell.SortGlyphDirection = order
+    End Sub
 
 #End Region ' SGs DataGridView Events
 
@@ -1566,7 +1581,7 @@ Public Class Form1
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexs.timeToNextCalibHours
-                    s_timeToNextCalibHours = CUShort(row.Value)
+                    s_timeToNextCalibrationHours = CUShort(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexs.calibStatus
@@ -1612,7 +1627,7 @@ Public Class Form1
 
                 Case ItemIndexs.therapyAlgorithmState
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-                    s_theraphyAlgorthmStateValue = Loads(row.Value)
+                    s_therapyAlgorithmStateValue = Loads(row.Value)
 
                 Case ItemIndexs.pumpBannerState
                     s_pumpBannerStateValue = LoadList(row.Value)
@@ -1804,6 +1819,25 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
+    Private Sub UpdateAllSummarySeries()
+        Try
+            For Each s As Series In Me.SummaryChart.Series
+                s.Points.Clear()
+            Next
+            Me.SummaryChart.ChartAreas(NameOf(ChartArea)).UpdateChartAreaBGAxisX()
+            Me.SummaryChart.PlotMarkers(Me.SummaryTimeChangeSeries, _summaryChartAbsoluteRectangle, s_summaryMarkerInsulinDictionary, s_summaryMarkerMealDictionary)
+            Application.DoEvents()
+            Me.SummaryChart.PlotSgSeries(HomePageMealRow)
+            Application.DoEvents()
+            Me.SummaryChart.PlotHighLowLimits()
+            Application.DoEvents()
+        Catch ex As Exception
+            Stop
+            Throw New Exception($"{ex.DecodeException()} exception while plotting Markers in {NameOf(UpdateAllSummarySeries)}")
+        End Try
+
+    End Sub
+
     Private Sub UpdateAutoModeShield()
         Try
             Me.LastSGTimeLabel.Text = s_lastSgRecord.datetime.ToShortTimeString
@@ -1851,9 +1885,9 @@ Public Class Form1
 
     Private Sub UpdateCalibrationTimeRemaining()
         Try
-            If s_timeToNextCalibHours > Byte.MaxValue Then
+            If s_timeToNextCalibrationHours > Byte.MaxValue Then
                 Me.CalibrationDueImage.Image = My.Resources.CalibrationUnavailable
-            ElseIf s_timeToNextCalibHours = 0 Then
+            ElseIf s_timeToNextCalibrationHours = 0 Then
                 Me.CalibrationDueImage.Image = If(s_systemStatusMessage = "WAIT_TO_CALIBRATE" OrElse s_sensorState = "WARM_UP" OrElse s_sensorState = "CHANGE_SENSOR",
                 My.Resources.CalibrationNotReady,
                 My.Resources.CalibrationDotRed.DrawCenteredArc(s_timeToNextCalibrationMinutes))
@@ -1924,25 +1958,6 @@ Public Class Form1
             Me.Last24ManualBolusLabel.Text = $"Manual Bolus {s_totalManualBolus.RoundSingle(1)} U | {totalPercent}%"
         End If
         Me.Last24CarbsValueLabel.Text = $"Carbs = {s_totalCarbs} {s_sessionCountrySettings.carbohydrateUnitsDefault.ToTitle}"
-    End Sub
-
-    Private Sub UpdateSummarySerieses()
-        Try
-            For Each s As Series In Me.SummaryChart.Series
-                s.Points.Clear()
-            Next
-            Me.SummaryChart.ChartAreas(NameOf(ChartArea)).UpdateChartAreaBGAxisX()
-            Me.SummaryChart.PlotMarkers(Me.SummaryTimeChangeSeries, _summaryChartAbsoluteRectangle, s_summaryMarkerInsulinDictionary, s_summaryMarkerMealDictionary)
-            Application.DoEvents()
-            Me.SummaryChart.PlotSgSeries(HomePageMealRow)
-            Application.DoEvents()
-            Me.SummaryChart.PlotHighLowLimits()
-            Application.DoEvents()
-        Catch ex As Exception
-            Stop
-            Throw New Exception($"{ex.DecodeException()} exception while plotting Markers in {NameOf(UpdateSummarySerieses)}")
-        End Try
-
     End Sub
 
     Private Sub UpdateInsulinLevel()
@@ -2148,8 +2163,8 @@ Public Class Form1
         Me.UpdateRemainingInsulin()
         Me.UpdateSensorLife()
         Me.UpdateTimeInRange()
-        Me.UpdateTransmitterBatttery()
-        Me.UpdateSummarySerieses()
+        Me.UpdateTransmitterBattery()
+        Me.UpdateAllSummarySeries()
         Me.UpdateDosingAndCarbs()
 
         Me.AboveHighLimitMessageLabel.Text = $"Above {s_limitHigh} {BgUnitsString}"
@@ -2159,21 +2174,21 @@ Public Class Form1
         Me.ReadingsLabel.Text = $"{s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288"
 
         Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
-                              ClassCollectionToDatatable({s_lastSgRecord}.ToList),
+                              ClassCollectionToDataTable({s_lastSgRecord}.ToList),
                               NameOf(SgRecord),
                               AddressOf SgRecordHelpers.AttachHandlers,
                               ItemIndexs.lastSG,
                               True)
 
         Me.TableLayoutPanelLastAlarm.DisplayDataTableInDGV(
-                              ClassCollectionToDatatable(GetSummaryRecords(s_lastAlarmValue)),
+                              ClassCollectionToDataTable(GetSummaryRecords(s_lastAlarmValue)),
                               NameOf(LastAlarmRecord),
                               AddressOf SummaryRecordHelpers.AttachHandlers,
                               ItemIndexs.lastAlarm,
                               True)
 
         Me.TableLayoutPanelActiveInsulin.DisplayDataTableInDGV(
-                              ClassCollectionToDatatable({s_activeInsulin}.ToList),
+                              ClassCollectionToDataTable({s_activeInsulin}.ToList),
                               NameOf(ActiveInsulinRecord),
                               AddressOf ActiveInsulinRecordHelpers.AttachHandlers,
                               ItemIndexs.activeInsulin,
@@ -2182,7 +2197,7 @@ Public Class Form1
         Me.UpdateSgsTab()
 
         Me.TableLayoutPanelLimits.DisplayDataTableInDGV(
-                              ClassCollectionToDatatable(s_listOflimitRecords),
+                              ClassCollectionToDataTable(s_listOfLimitRecords),
                               NameOf(LimitsRecord),
                               AddressOf LimitsRecordHelpers.AttachHandlers,
                               ItemIndexs.limits,
@@ -2193,7 +2208,7 @@ Public Class Form1
         Me.UpdateNotificationTab()
 
         Me.TableLayoutPanelTherapyAlgorithm.DisplayDataTableInDGV(
-                              ClassCollectionToDatatable(GetSummaryRecords(s_theraphyAlgorthmStateValue)),
+                              ClassCollectionToDataTable(GetSummaryRecords(s_therapyAlgorithmStateValue)),
                               NameOf(SummaryRecord),
                               AddressOf SummaryRecordHelpers.AttachHandlers,
                               ItemIndexs.therapyAlgorithmState,
@@ -2202,13 +2217,13 @@ Public Class Form1
         Me.UpdatePumpBannerStateTab()
 
         Me.TableLayoutPanelBasal.DisplayDataTableInDGV(
-                              ClassCollectionToDatatable({DictionaryToClass(Of BasalRecord)(s_basalValue, 0)}.ToList),
+                              ClassCollectionToDataTable({DictionaryToClass(Of BasalRecord)(s_basalValue, 0)}.ToList),
                               NameOf(BasalRecord),
                               AddressOf BasalRecordHelpers.AttachHandlers,
                               ItemIndexs.basal,
                               True)
 
-        s_recentDatalast = Me.RecentData
+        s_previousRecentData = Me.RecentData
         Me.MenuStartHere.Enabled = True
         Me.UpdateTreatmentChart()
         If s_totalAutoCorrection > 0 Then
@@ -2229,8 +2244,7 @@ Public Class Form1
             sp.SplitterDistance = CInt(Math.Truncate(Math.Round(sp.SplitterDistance * sc)))
         ElseIf sp.FixedPanel = FixedPanel.Panel2 Then
             Dim cs As Integer = If(sp.Orientation = Orientation.Vertical, sp.Panel2.ClientSize.Width, sp.Panel2.ClientSize.Height)
-            Dim newcs As Integer = CInt(Math.Truncate(cs * sc))
-            sp.SplitterDistance -= newcs - cs
+            sp.SplitterDistance -= CInt(Math.Truncate(cs * sc)) - cs
         End If
     End Sub
 
@@ -2285,19 +2299,19 @@ Public Class Form1
                     Select Case sg
                         Case <= s_limitLow
                             bgColor = Color.Orange
-                            If _showBaloonTip Then
+                            If _showBalloonTip Then
                                 Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName} Alert", $"SG below {s_limitLow} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                             End If
-                            _showBaloonTip = False
+                            _showBalloonTip = False
                         Case <= s_limitHigh
                             bgColor = Color.Green
-                            _showBaloonTip = True
+                            _showBalloonTip = True
                         Case Else
                             bgColor = Color.Red
-                            If _showBaloonTip Then
+                            If _showBalloonTip Then
                                 Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName} Alert", $"SG above {s_limitHigh} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                             End If
-                            _showBaloonTip = False
+                            _showBalloonTip = False
                     End Select
                     Dim brushToUse As New SolidBrush(color)
                     g.Clear(bgColor)
@@ -2316,22 +2330,22 @@ Public Class Form1
                         Me.LabelTrendValue.Text = ""
                     Else
                         notStr.Append(Environment.NewLine)
-                        Dim diffsg As Double = sg - s_lastBGValue
+                        Dim diffSg As Double = sg - s_lastBGValue
                         notStr.Append("SG Trend ")
-                        If Math.Abs(diffsg) < Single.Epsilon Then
+                        If Math.Abs(diffSg) < Single.Epsilon Then
                             If (Now - s_lastBGTime) < s_fiveMinuteSpan Then
-                                diffsg = s_lastBGDiff
+                                diffSg = s_lastBGDiff
                             Else
-                                s_lastBGDiff = diffsg
+                                s_lastBGDiff = diffSg
                                 s_lastBGTime = Now
                             End If
                         Else
                             s_lastBGTime = Now
-                            s_lastBGDiff = diffsg
+                            s_lastBGDiff = diffSg
                         End If
-                        Me.LabelTrendValue.Text = diffsg.ToString(If(BgUnits = "MG_DL", "+0;-#", "+ 0.00;-#.00"), CultureInfo.InvariantCulture)
+                        Me.LabelTrendValue.Text = diffSg.ToString(If(BgUnits = "MG_DL", "+0;-#", "+ 0.00;-#.00"), CultureInfo.InvariantCulture)
                         Me.LabelTrendValue.ForeColor = bgColor
-                        notStr.Append(diffsg.ToString(If(BgUnits = "MG_DL", "+0;-#", "+ 0.00;-#.00"), CultureInfo.InvariantCulture))
+                        notStr.Append(diffSg.ToString(If(BgUnits = "MG_DL", "+0;-#", "+ 0.00;-#.00"), CultureInfo.InvariantCulture))
                     End If
                     notStr.Append(Environment.NewLine)
                     notStr.Append("Active ins. ")

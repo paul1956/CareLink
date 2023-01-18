@@ -29,7 +29,7 @@ Friend Module CollectMarkersHelper
                     s_markers.Add(newMarker)
                     Dim item As AutoBasalDeliveryRecord = DictionaryToClass(Of AutoBasalDeliveryRecord)(newMarker, s_listOfAutoBasalDeliveryMarkers.Count + 1)
                     s_listOfAutoBasalDeliveryMarkers.Add(item)
-                    basalDictionary.Add(item.OAdateTime, item.bolusAmount)
+                    basalDictionary.Add(item.OA_dateTime, item.bolusAmount)
                 Case "AUTO_MODE_STATUS"
                     s_listOfAutoModeStatusMarkers.Add(DictionaryToClass(Of AutoModeStatusRecord)(newMarker, s_listOfAutoModeStatusMarkers.Count + 1))
                 Case "BG_READING"
@@ -53,7 +53,7 @@ Friend Module CollectMarkersHelper
                             Throw UnreachableException(NameOf(CollectMarkers))
                     End Select
                 Case "LOW_GLUCOSE_SUSPENDED"
-                    s_listOfLowGlucoseSuspendedMarkers.Add(DictionaryToClass(Of LowGlusoceSuspendRecord)(newMarker, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
+                    s_listOfLowGlucoseSuspendedMarkers.Add(DictionaryToClass(Of LowGlucoseSuspendRecord)(newMarker, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
                 Case "MEAL"
                     s_listOfMealMarkers.Add(DictionaryToClass(Of MealRecord)(newMarker, s_listOfMealMarkers.Count + 1))
                     s_markers.Add(newMarker)

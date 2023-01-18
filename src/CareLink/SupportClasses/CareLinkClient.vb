@@ -9,10 +9,10 @@ Imports System.Text
 Imports System.Text.Json
 
 Public Class CareLinkClient
-    Private Const CarelinkAuthTokenCookieName As String = "auth_tmp_token"
-    Private Const CarelinkTokenValidtoCookieName As String = "c_token_valid_to"
+    Private Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
+    Private Const CareLinkTokenValidToCookieName As String = "c_token_valid_to"
 
-    Private ReadOnly _carelinkPartnerType As New List(Of String) From {
+    Private ReadOnly _careLinkPartnerType As New List(Of String) From {
                         "CARE_PARTNER",
                         "CARE_PARTNER_OUS"}
 
@@ -27,9 +27,9 @@ Public Class CareLinkClient
 
     Public Sub New(username As String, password As String, country As String)
         ' User info
-        Me.CarelinkUsername = username
-        Me.CarelinkPassword = password
-        Me.CarelinkCountry = country
+        Me.CareLinkUsername = username
+        Me.CareLinkPassword = password
+        Me.CareLinkCountry = country
 
         ' State info
         _inLoginInProcess = False
@@ -40,9 +40,9 @@ Public Class CareLinkClient
         _httpClient = Me.NewHttpClientWithCookieContainer
     End Sub
 
-    Private ReadOnly Property CarelinkCountry As String = Nothing
-    Private ReadOnly Property CarelinkPassword As String
-    Private ReadOnly Property CarelinkUsername As String
+    Private ReadOnly Property CareLinkCountry As String = Nothing
+    Private ReadOnly Property CareLinkPassword As String
+    Private ReadOnly Property CareLinkUsername As String
     Public Property LoggedIn As Boolean
 
     Private Shared Function CorrectTimeInRecentData(recentData As Dictionary(Of String, String)) As Boolean
@@ -64,7 +64,7 @@ Public Class CareLinkClient
             ' Clear cookies
             _httpClient.DefaultRequestHeaders.Clear()
 
-            ' Clear basic infos
+            ' Clear basic session records
             _sessionUser.Clear()
             _sessionProfile.Clear()
             s_sessionCountrySettings.Clear()
@@ -78,7 +78,7 @@ Public Class CareLinkClient
                 _lastResponseCode = loginSessionResponse.StatusCode
 
                 ' Login
-                Using doLoginResponse As HttpResponseMessage = DoLogin(_httpClient, loginSessionResponse, Me.CarelinkUsername, Me.CarelinkPassword, Me.CarelinkCountry, _lastErrorMessage)
+                Using doLoginResponse As HttpResponseMessage = DoLogin(_httpClient, loginSessionResponse, Me.CareLinkUsername, Me.CareLinkPassword, Me.CareLinkCountry, _lastErrorMessage)
                     Try
                         If doLoginResponse Is Nothing Then
                             _lastErrorMessage = "Login Failure"
@@ -109,7 +109,7 @@ Public Class CareLinkClient
                 End Using
             End Using
 
-            Dim authToken As String = Me.GetBearerToken(CareLinkServerURL(Me.CarelinkCountry))
+            Dim authToken As String = Me.GetBearerToken(CareLinkServerURL(Me.CareLinkCountry))
 
             ' MUST BE FIRST DO NOT MOVE NEXT LINE
             s_sessionCountrySettings = New CountrySettingsRecord(mainForm, Me.GetCountrySettings(authToken))
@@ -142,12 +142,12 @@ Public Class CareLinkClient
             Return GetAuthorizationTokenResult.NetworkDown
         End If
 
-        Dim url As String = CareLinkServerURL(Me.CarelinkCountry)
+        Dim url As String = CareLinkServerURL(Me.CareLinkCountry)
         ' New token is needed:
         ' a) no token or about to expire => execute authentication
         ' b) last response 401
-        If Me.GetCookieValue(url, CarelinkAuthTokenCookieName) Is Nothing OrElse
-            Me.GetCookies(url)?.Item(CarelinkTokenValidtoCookieName)?.Value Is Nothing OrElse
+        If Me.GetCookieValue(url, CareLinkAuthTokenCookieName) Is Nothing OrElse
+            Me.GetCookies(url)?.Item(CareLinkTokenValidToCookieName)?.Value Is Nothing OrElse
             New List(Of Object)() From {401, 403}.Contains(_lastResponseCode) Then
             ' TODO: add check for expired token
             ' execute new login process | null, if error OR already doing login
@@ -165,7 +165,7 @@ Public Class CareLinkClient
                 Debug.Print("__executeLoginProcedure failed")
                 Return GetAuthorizationTokenResult.LoginFailed
             End If
-            Debug.Print($"auth_token_validto = {Me.GetCookies(url).Item(CarelinkTokenValidtoCookieName).Value}")
+            Debug.Print($"auth_token_validTo = {Me.GetCookies(url).Item(CareLinkTokenValidToCookieName).Value}")
         End If
         ' there can be only one
         authToken = Me.GetBearerToken(url)
@@ -173,14 +173,14 @@ Public Class CareLinkClient
     End Function
 
     Private Function GetBearerToken(url As String) As String
-        Return $"Bearer {Me.GetCookieValue(url, CarelinkAuthTokenCookieName)}"
+        Return $"Bearer {Me.GetCookieValue(url, CareLinkAuthTokenCookieName)}"
     End Function
 
     ' Periodic data from CareLink Cloud
     Private Function GetConnectDisplayMessage(MainForm As Form1, username As String, role As String, endpointUrl As String) As Dictionary(Of String, String)
 
         Debug.Print("__getConnectDisplayMessage()")
-        ' Build user json for request
+        ' Build user Json for request
         Dim userJson As New Dictionary(Of String, String) From {
             {
                 "username",
@@ -215,11 +215,11 @@ Public Class CareLinkClient
         Dim queryParams As New Dictionary(Of String, String) From {
             {
                 "countryCode",
-                Me.CarelinkCountry},
+                Me.CareLinkCountry},
             {
                 "language",
                 "en"}}
-        Return Me.GetData(authToken, CareLinkServerURL(Me.CarelinkCountry), "patient/countries/settings", queryParams, Nothing)
+        Return Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/countries/settings", queryParams, Nothing)
     End Function
 
     Private Function GetData(MainForm As Form1, endPointPath As String, requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
@@ -245,12 +245,12 @@ Public Class CareLinkClient
     End Function
 
     Private Function GetLoginSession(host As String) As HttpResponseMessage
-        ' https://carelink.minimed.com/patient/sso/login?country=us&lang=en
+        ' https://CareLink.MiniMed.com/patient/sso/login?country=us&lang=en
         Dim url As New StringBuilder($"https://{host}/patient/sso/login")
         Dim payload As New Dictionary(Of String, String) From {
             {
                 "country",
-                Me.CarelinkCountry},
+                Me.CareLinkCountry},
             {
                 "lang",
                 "en"}
@@ -278,18 +278,18 @@ Public Class CareLinkClient
 
     Private Function GetMonitorData(authToken As String) As MonitorDataRecord
         Debug.Print("__getMonitorData()")
-        Return New MonitorDataRecord(Me.GetData(authToken, CareLinkServerURL(Me.CarelinkCountry), "patient/monitor/data", Nothing, Nothing))
+        Return New MonitorDataRecord(Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/monitor/data", Nothing, Nothing))
     End Function
 
     Private Function GetMyProfile(authToken As String) As MyProfileRecord
         Debug.Print("__getMyProfile()")
-        Dim myProfileRecord As New MyProfileRecord(Me.GetData(authToken, CareLinkServerURL(Me.CarelinkCountry), "patient/users/me/profile", Nothing, Nothing))
+        Dim myProfileRecord As New MyProfileRecord(Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/users/me/profile", Nothing, Nothing))
         Return myProfileRecord
     End Function
 
     Private Function GetMyUser(authToken As String) As MyUserRecord
         Debug.Print("__getMyUser()")
-        Dim myUserRecord As New MyUserRecord(Me.GetData(authToken, CareLinkServerURL(Me.CarelinkCountry), "patient/users/me", Nothing, Nothing))
+        Dim myUserRecord As New MyUserRecord(Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/users/me", Nothing, Nothing))
         Return myUserRecord
     End Function
 
@@ -317,12 +317,12 @@ Public Class CareLinkClient
             Dim authToken As String = Nothing
             If Me.GetAuthorizationToken(MainForm, authToken) = GetAuthorizationTokenResult.OK Then
                 If (s_sessionCountrySettings.HasValue _
-                        AndAlso Not String.IsNullOrWhiteSpace(Me.CarelinkCountry)) OrElse
+                        AndAlso Not String.IsNullOrWhiteSpace(Me.CareLinkCountry)) OrElse
                         _sessionMonitorData.deviceFamily?.Equals("BLE_X", StringComparison.Ordinal) Then
                     Return Me.GetConnectDisplayMessage(
                         MainForm,
                         _sessionProfile.username,
-                        If(_carelinkPartnerType.Contains(_sessionUser.role), "carepartner", "patient"),
+                        If(_careLinkPartnerType.Contains(_sessionUser.role, StringComparer.InvariantCultureIgnoreCase), "CarePartner", "patient"),
                         s_sessionCountrySettings.blePereodicDataEndpoint)
                 End If
             End If
@@ -353,8 +353,8 @@ Public Class CareLinkClient
                     response = _httpClient.Get(url, _lastErrorMessage, headers, params:=queryParams)
                     _lastResponseCode = response.StatusCode
                 Else
-                    headers("Accept") = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;deviceFamily=b3;q=0.9"
-                    'headers("Content-Type") = "application/x-www-form-urlencoded"
+                    headers("Accept") = "text/html,application/xHtml+xml,application/xml;q=0.9,image/aVif,image/webP,image/aPng,*/*;q=0.8,application/signed-exchange;deviceFamily=b3;q=0.9"
+                    'headers("Content-Type") = "application/x-www-form-urlEncoded"
                     _httpClient.DefaultRequestHeaders.Clear()
                     For Each header As KeyValuePair(Of String, String) In headers
                         If header.Key <> "Content-Type" Then

@@ -278,26 +278,26 @@ Public Module RegionCountryLists
             Return Nothing
         End If
 
-        Dim indexOfOpenParen As Integer = filenameWithoutExtension.IndexOf("("c)
+        Dim indexOfOpenParenthesis As Integer = filenameWithoutExtension.IndexOf("("c)
         If fuzzy Then
-            If indexOfOpenParen < FixedPart.Length Then
+            If indexOfOpenParenthesis < FixedPart.Length Then
                 MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{Environment.NewLine}it must contain '(' after '{FixedPart}.", MsgBoxStyle.OkOnly, "Malformed Error Report Filename")
                 Return Nothing
             End If
         Else
-            If indexOfOpenParen <> FixedPart.Length Then
+            If indexOfOpenParenthesis <> FixedPart.Length Then
                 MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{Environment.NewLine}it must contain '(' immediately after '{FixedPart}.", MsgBoxStyle.OkOnly, "Malformed Error Report Filename")
                 Return Nothing
             End If
         End If
 
-        Dim indexOfClosedParen As Integer = filenameWithoutExtension.IndexOf(")"c)
-        If indexOfClosedParen < 0 Then
+        Dim indexOfClosedParenthesis As Integer = filenameWithoutExtension.IndexOf(")"c)
+        If indexOfClosedParenthesis < 0 Then
             MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{Environment.NewLine}it must contain ')'.", MsgBoxStyle.OkOnly, "Malformed Error Report Filename")
             Return Nothing
         End If
 
-        Dim cultureName As String = filenameWithoutExtension.Substring(indexOfOpenParen + 1, indexOfClosedParen - indexOfOpenParen - 1)
+        Dim cultureName As String = filenameWithoutExtension.Substring(indexOfOpenParenthesis + 1, indexOfClosedParenthesis - indexOfOpenParenthesis - 1)
         If Not s_cultureInfos.Where(Function(c As CultureInfo) c.Name = cultureName).Any Then
             MsgBox($"Culture name '{cultureName}' is not a valid culture name.", MsgBoxStyle.OkOnly, "Invalid Culture Name")
             Return CultureInfo.CurrentCulture

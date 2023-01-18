@@ -5,9 +5,9 @@
 Friend Class LowGlusoceSuspendRecordHelpers
 
     Private Shared ReadOnly columnsToHide As New List(Of String) From {
-            NameOf(LowGlusoceSuspendRecord.kind),
-            NameOf(LowGlusoceSuspendRecord.relativeOffset),
-            NameOf(LowGlusoceSuspendRecord.version)
+            NameOf(LowGlucoseSuspendRecord.kind),
+            NameOf(LowGlucoseSuspendRecord.relativeOffset),
+            NameOf(LowGlucoseSuspendRecord.version)
         }
 
     Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
@@ -31,11 +31,11 @@ Friend Class LowGlusoceSuspendRecordHelpers
 
     Private Shared Sub DataGridViewView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.dgvCellFormatting(e, NameOf(LowGlusoceSuspendRecord.dateTime))
+        dgv.dgvCellFormatting(e, NameOf(LowGlucoseSuspendRecord.dateTime))
     End Sub
 
     Friend Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToCoumnAlignment(Of LowGlusoceSuspendRecord)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of LowGlucoseSuspendRecord)(s_alignmentTable, columnName)
     End Function
 
     Friend Shared Function HideColumn(columnName As String) As Boolean

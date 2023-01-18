@@ -4,17 +4,16 @@
 
 Imports System.Runtime.CompilerServices
 
-Public Module OptionsDialogHelpers
+Module ColorHelpers
 
     <Extension>
-    Public Function GetContrastingKnownColor(knownClrBase As KnownColor) As KnownColor
-        Dim clrBase As Color = knownClrBase.ToColor
+    Public Function GetContrastingColor(baseColor As Color) As Color
         ' Y is the "brightness"
-        Dim y As Double = (0.299 * clrBase.R) + (0.587 * clrBase.G) + (0.114 * clrBase.B)
+        Dim y As Double = (0.299 * baseColor.R) + (0.587 * baseColor.G) + (0.114 * baseColor.B)
         If y < 140 Then
-            Return KnownColor.White
+            Return Color.White
         Else
-            Return KnownColor.Black
+            Return Color.Black
         End If
     End Function
 

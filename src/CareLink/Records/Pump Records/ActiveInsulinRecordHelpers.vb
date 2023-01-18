@@ -44,7 +44,7 @@ Friend Class ActiveInsulinRecordHelpers
     End Sub
 
     Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToCoumnAlignment(Of ActiveInsulinRecord)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of ActiveInsulinRecord)(s_alignmentTable, columnName)
     End Function
 
 End Class

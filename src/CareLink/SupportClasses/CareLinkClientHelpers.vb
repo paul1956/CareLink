@@ -10,9 +10,9 @@ Imports System.Text
 Imports CareLink
 
 Public Module CareLinkClientHelpers
-    Private Const CarelinkConnectServerEu As String = "carelink.minimed.eu"
-    Private Const CarelinkConnectServerOther As String = "carelink.minimed.eu"
-    Private Const CarelinkConnectServerUs As String = "carelink.minimed.com"
+    Private Const CareLinkConnectServerEu As String = "CareLink.MiniMed.eu"
+    Private Const CareLinkConnectServerOther As String = "CareLink.MiniMed.eu"
+    Private Const CareLinkConnectServerUs As String = "CareLink.MiniMed.com"
 
     Friend ReadOnly s_commonHeaders As New Dictionary(Of String, String) From {
                         {
@@ -41,12 +41,12 @@ Public Module CareLinkClientHelpers
     Public Property NetworkDown As Boolean = False
 
     <Extension>
-    Private Function ExtractResponseData(responseBody As String, startStr As String, endstr As String) As String
+    Private Function ExtractResponseData(responseBody As String, startStr As String, endStr As String) As String
         Dim startIndex As Integer = responseBody.IndexOf(startStr, StringComparison.Ordinal) + startStr.Length
         If startStr.Length = startIndex + 1 Then
             Return ""
         End If
-        Dim endIndex As Integer = responseBody.IndexOf(endstr, startIndex, StringComparison.Ordinal)
+        Dim endIndex As Integer = responseBody.IndexOf(endStr, startIndex, StringComparison.Ordinal)
         Return responseBody.Substring(startIndex, endIndex - startIndex).Replace("""", "")
     End Function
 
@@ -69,11 +69,11 @@ Public Module CareLinkClientHelpers
     Friend Function CareLinkServerURL(country As String) As String
         Select Case country.GetRegionFromCode
             Case "North America"
-                Return CarelinkConnectServerUs
+                Return CareLinkConnectServerUs
             Case "Europe"
-                Return CarelinkConnectServerEu
+                Return CareLinkConnectServerEu
             Case Else
-                Return CarelinkConnectServerOther
+                Return CareLinkConnectServerOther
         End Select
     End Function
 
@@ -139,7 +139,9 @@ Public Module CareLinkClientHelpers
     Friend Function DoLogin(ByRef httpClient As HttpClient, loginSessionResponse As HttpResponseMessage, userName As String, password As String, country As String, ByRef lastErrorMessage As String) As HttpResponseMessage
 
         Dim queryParameters As Dictionary(Of String, String) = ParseQsl(loginSessionResponse)
-        Dim url As New StringBuilder("https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login")
+#Disable Warning CA1308 ' Normalize strings to uppercase
+        Dim url As New StringBuilder("https://MdtLogin.Medtronic.com/mmcl/auth/oAuth/v2/authorize/login".ToLowerInvariant)
+#Enable Warning CA1308 ' Normalize strings to uppercase
 
         Dim webForm As New Dictionary(Of String, String) From {
             {

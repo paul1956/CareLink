@@ -155,7 +155,7 @@ Public Class CareLinkUserDataList
         End If
     End Sub
 
-    ' Called by CarelinkUserDataRecord when it changes.
+    ' Called by CareLinkUserDataRecord when it changes.
     Friend Sub CareLinkUserChanged(user As CareLinkUserDataRecord)
         Dim index As Integer = Me.List.IndexOf(user)
         Me.OnListChanged(New ListChangedEventArgs(ListChangedType.ItemChanged, index))

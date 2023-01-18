@@ -62,6 +62,7 @@ Friend Module DictionaryToClassMapper
                 End If
             End If
         Next row
+
         classObject.GetType.GetProperty(NameOf(RecordNumber))?.SetValue(classObject, RecordNumber, Nothing)
 
         Return classObject

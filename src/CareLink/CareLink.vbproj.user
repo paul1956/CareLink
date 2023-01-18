@@ -4,6 +4,12 @@
     <ShowAllFiles>true</ShowAllFiles>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Update="CustomControls\KnownColorComboBox.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="CustomControls\NameColorComboBox.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="Forms\AboutBox1.vb">
       <SubType>Form</SubType>
     </Compile>

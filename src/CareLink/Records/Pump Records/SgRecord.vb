@@ -52,9 +52,9 @@ Public Class SgRecord
         End Get
     End Property
 
-    <DisplayName(NameOf(OAdatetime))>
+    <DisplayName(NameOf(OaDateTime))>
     <Column(Order:=4, TypeName:=NameOf([Double]))>
-    Public ReadOnly Property OAdatetime As OADate
+    Public ReadOnly Property OaDateTime As OADate
         Get
             Return New OADate(_datetime)
         End Get

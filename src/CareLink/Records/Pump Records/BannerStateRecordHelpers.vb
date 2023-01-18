@@ -39,7 +39,7 @@ Friend Class BannerStateRecordHelpers
     End Sub
 
     Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToCoumnAlignment(Of BannerStateRecord)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of BannerStateRecord)(s_alignmentTable, columnName)
     End Function
 
 End Class

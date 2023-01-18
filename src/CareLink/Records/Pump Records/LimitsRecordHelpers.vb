@@ -36,7 +36,7 @@ Friend Class LimitsRecordHelpers
     End Function
 
     Friend Shared Sub UpdateListOflimitRecords(row As KeyValuePair(Of String, String))
-        s_listOflimitRecords.Clear()
+        s_listOfLimitRecords.Clear()
         For Each e As IndexClass(Of Dictionary(Of String, String)) In LoadList(row.Value).WithIndex
             Dim newLimit As New Dictionary(Of String, String)
             For Each kvp As KeyValuePair(Of String, String) In e.Value
@@ -47,7 +47,7 @@ Friend Class LimitsRecordHelpers
                         newLimit.Add(kvp.Key, kvp.Value)
                 End Select
             Next
-            s_listOflimitRecords.Add(DictionaryToClass(Of LimitsRecord)(e.Value, s_listOflimitRecords.Count + 1))
+            s_listOfLimitRecords.Add(DictionaryToClass(Of LimitsRecord)(e.Value, s_listOfLimitRecords.Count + 1))
         Next
     End Sub
 
@@ -58,7 +58,7 @@ Friend Class LimitsRecordHelpers
     End Sub
 
     Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToCoumnAlignment(Of LimitsRecord)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of LimitsRecord)(s_alignmentTable, columnName)
     End Function
 
 End Class

@@ -2,18 +2,21 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Friend Module KnownColors
-    Private ReadOnly _allKnownColors As New Dictionary(Of String, KnownColor)
+Imports System.Runtime.CompilerServices
 
-    Public Function GetAllKnownColors() As Dictionary(Of String, KnownColor)
+Friend Module KnownColors
+    Private ReadOnly _allKnownColors As New SortedDictionary(Of String, KnownColor)
+
+    Public Function GetAllKnownColors() As SortedDictionary(Of String, KnownColor)
         If _allKnownColors.Count = 0 Then
-            Dim kcol As Color
+            Dim kColor As Color
             For Each known As KnownColor In [Enum].GetValues(GetType(KnownColor))
                 If known = KnownColor.Transparent Then Continue For
-                kcol = Color.FromKnownColor(known)
-                If Not kcol.IsSystemColor Then
-                    _allKnownColors.Add(kcol.Name, known)
+                kColor = Color.FromKnownColor(known)
+                If kColor.IsSystemColor OrElse _allKnownColors.ContainsValue(known) Then
+                    Continue For
                 End If
+                _allKnownColors.Add(kColor.Name, known)
             Next
         End If
         Return _allKnownColors
@@ -33,8 +36,18 @@ Friend Module KnownColors
         Return KnownColor.Red
     End Function
 
-    Public Function GetKnownColorsBindingSource() As BindingSource
-        Return New BindingSource(_allKnownColors, Nothing)
+    Public Function GetNameFromKnownColor(known As KnownColor) As String
+        Dim index As Integer = _allKnownColors.IndexOfValue(known)
+        If index = -1 Then
+            Return "Unknown"
+        End If
+        Stop
+        Return _allKnownColors.Keys(index)
+    End Function
+
+    <Extension>
+    Public Function ToColor(c As KnownColor) As Color
+        Return Color.FromKnownColor(c)
     End Function
 
 End Module

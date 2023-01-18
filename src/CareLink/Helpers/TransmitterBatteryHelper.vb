@@ -4,7 +4,7 @@
 
 Imports System.Runtime.CompilerServices
 
-Friend Module TransmitterBattteryHelper
+Friend Module TransmitterBatteryHelper
 
     Private Function GetBatteryImage(gstBatteryLevel As Integer) As Image
         Select Case gstBatteryLevel
@@ -22,14 +22,14 @@ Friend Module TransmitterBattteryHelper
     End Function
 
     <Extension>
-    Friend Sub UpdateTransmitterBatttery(MainForm As Form1)
+    Friend Sub UpdateTransmitterBattery(MainForm As Form1)
         If s_listOfSummaryRecords.GetValue(Of Boolean)(NameOf(ItemIndexs.conduitSensorInRange)) Then
             Dim gstBatteryLevel As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexs.gstBatteryLevel), False)
             MainForm.TransmitterBatteryPictureBox.Image = GetBatteryImage(gstBatteryLevel)
-            MainForm.TransmatterBatteryPercentLabel.Text = $"{gstBatteryLevel}%"
+            MainForm.TransmitterBatteryPercentLabel.Text = $"{gstBatteryLevel}%"
         Else
             MainForm.TransmitterBatteryPictureBox.Image = My.Resources.TransmitterBatteryUnknown
-            MainForm.TransmatterBatteryPercentLabel.Text = $"???"
+            MainForm.TransmitterBatteryPercentLabel.Text = $"???"
         End If
 
     End Sub

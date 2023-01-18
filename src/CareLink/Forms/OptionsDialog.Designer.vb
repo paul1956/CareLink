@@ -1,5 +1,4 @@
-﻿Imports Microsoft.VisualBasic
-<CompilerServices.DesignerGenerated()>
+﻿<CompilerServices.DesignerGenerated()>
 Partial Class OptionsDialog
     Inherits Form
 
@@ -26,10 +25,10 @@ Partial Class OptionsDialog
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.OK_Button = New System.Windows.Forms.Button()
         Me.Cancel_Button = New System.Windows.Forms.Button()
-        Me.ItemNameComboBox = New System.Windows.Forms.ComboBox()
+        Me.ItemNameComboBox = New CareLink.NameColorComboBox()
         Me.UpdateForeground_Button = New System.Windows.Forms.Button()
         Me.FontDialog1 = New System.Windows.Forms.FontDialog()
-        Me.KnownColorsComboBox = New System.Windows.Forms.ComboBox()
+        Me.KnownColorsComboBox1 = New CareLink.KnownColorComboBox()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -90,17 +89,17 @@ Partial Class OptionsDialog
         Me.UpdateForeground_Button.Text = "Update Foreground Color"
         Me.UpdateForeground_Button.UseVisualStyleBackColor = True
         '
-        'KnownColorsComboBox
+        'KnownColorsComboBox1
         '
-        Me.KnownColorsComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
-        Me.KnownColorsComboBox.DropDownHeight = 120
-        Me.KnownColorsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.KnownColorsComboBox.FormattingEnabled = True
-        Me.KnownColorsComboBox.IntegralHeight = False
-        Me.KnownColorsComboBox.Location = New System.Drawing.Point(303, 56)
-        Me.KnownColorsComboBox.Name = "KnownColorsComboBox"
-        Me.KnownColorsComboBox.Size = New System.Drawing.Size(169, 24)
-        Me.KnownColorsComboBox.TabIndex = 6
+        Me.KnownColorsComboBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+        Me.KnownColorsComboBox1.DropDownHeight = 120
+        Me.KnownColorsComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.KnownColorsComboBox1.FormattingEnabled = True
+        Me.KnownColorsComboBox1.IntegralHeight = False
+        Me.KnownColorsComboBox1.Location = New System.Drawing.Point(303, 56)
+        Me.KnownColorsComboBox1.Name = "KnownColorsComboBox1"
+        Me.KnownColorsComboBox1.Size = New System.Drawing.Size(169, 24)
+        Me.KnownColorsComboBox1.TabIndex = 6
         '
         'OptionsDialog
         '
@@ -109,7 +108,7 @@ Partial Class OptionsDialog
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel_Button
         Me.ClientSize = New System.Drawing.Size(486, 143)
-        Me.Controls.Add(Me.KnownColorsComboBox)
+        Me.Controls.Add(Me.KnownColorsComboBox1)
         Me.Controls.Add(Me.UpdateForeground_Button)
         Me.Controls.Add(Me.ItemNameComboBox)
         Me.Controls.Add(Me.TableLayoutPanel1)
@@ -128,9 +127,9 @@ Partial Class OptionsDialog
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents OK_Button As Button
     Friend WithEvents Cancel_Button As Button
-    Friend WithEvents ItemNameComboBox As ComboBox
+    Friend WithEvents ItemNameComboBox As NameColorComboBox
     Friend WithEvents UpdateForeground_Button As Button
     Friend WithEvents OptionsBindingSource As BindingSource
     Friend WithEvents FontDialog1 As FontDialog
-    Friend WithEvents KnownColorsComboBox As ComboBox
+    Friend WithEvents KnownColorsComboBox1 As KnownColorComboBox
 End Class

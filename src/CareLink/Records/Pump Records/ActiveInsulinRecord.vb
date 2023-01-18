@@ -37,7 +37,7 @@ Public Class ActiveInsulinRecord
     <Column(Order:=2, TypeName:=NameOf([String]))>
     Public Property datetimeAsString As String
 
-    <DisplayName("OA datetime")>
+    <DisplayName(NameOf(OAdatetime))>
     <Column(Order:=3, TypeName:=NameOf(OADate))>
     Public ReadOnly Property OAdatetime As OADate
         Get

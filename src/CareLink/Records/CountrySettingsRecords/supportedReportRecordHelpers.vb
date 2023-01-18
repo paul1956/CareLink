@@ -6,7 +6,7 @@ Friend Class supportedReportRecordHelpers
     Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Friend Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToCoumnAlignment(Of supportedReportRecord)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of supportedReportRecord)(s_alignmentTable, columnName)
     End Function
 
 End Class

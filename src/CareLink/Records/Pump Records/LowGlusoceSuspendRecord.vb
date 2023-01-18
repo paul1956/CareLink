@@ -5,7 +5,7 @@
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
-Public Class LowGlusoceSuspendRecord
+Public Class LowGlucoseSuspendRecord
     Private _dateTime As Date
 
     <DisplayName("Record Number")>
