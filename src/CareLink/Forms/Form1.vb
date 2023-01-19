@@ -115,7 +115,7 @@ Public Class Form1
 
 #Region "Form Events"
 
-    Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+    Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
         Me.CleanUpNotificationIcon()
     End Sub
 
@@ -123,7 +123,7 @@ Public Class Form1
         Me.CleanUpNotificationIcon()
     End Sub
 
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If My.Settings.UpgradeRequired Then
             My.Settings.Upgrade()
             My.Settings.UpgradeRequired = False
@@ -182,7 +182,7 @@ Public Class Form1
         AddHandler Microsoft.Win32.SystemEvents.PowerModeChanged, AddressOf Me.PowerModeChanged
     End Sub
 
-    Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+    Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         Me.Fix(Me)
 
         Me.CurrentBGLabel.Parent = Me.CalibrationShieldPictureBox
