@@ -20,7 +20,7 @@ Public Class ExceptionHandlerForm
         Me.Close()
     End Sub
 
-    Private Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Private Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         My.Forms.Form1.ServerUpdateTimer.Stop()
         Dim fontBold As New Font(Me.InstructionsRichTextBox.Font, FontStyle.Bold)
         Dim fontNormal As Font = Me.InstructionsRichTextBox.Font
@@ -55,7 +55,7 @@ Public Class ExceptionHandlerForm
         End If
     End Sub
 
-    Private Sub ExceptionHandlerForm_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+    Private Sub ExceptionHandlerForm_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         My.Forms.BGMiniWindow.Hide()
         My.Forms.Form1.Show()
         Me.TopMost = True
