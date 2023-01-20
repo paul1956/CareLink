@@ -3438,7 +3438,7 @@ Partial Class Form1
         Me.TabPageBackToHomePage.Text = "Back.." ' 
         ' Form1
         ' 
-        Me.AutoScaleDimensions = New SizeF(96.0F, 96.0F)
+        Me.AutoScaleDimensions = New SizeF(96F, 96F)
         Me.AutoScaleMode = AutoScaleMode.Dpi
         Me.ClientSize = New Size(1384, 694)
         Me.Controls.Add(Me.LoginStatusLabel)
