@@ -28,11 +28,11 @@ Public Class BGMiniWindow
         Me.HiddenTextBox.Focus()
     End Sub
 
-    Private Sub BGMiniWindow_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+    Private Sub BGMiniWindow_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
         _form1.Visible = True
     End Sub
 
-    Private Sub BGMiniWindow_GotFocus(sender As Object, e As EventArgs) Handles Me.GotFocus
+    Private Sub BGMiniWindow_GotFocus(sender As Object, e As EventArgs) Handles MyBase.GotFocus
         Me.HiddenTextBox.Focus()
     End Sub
 
