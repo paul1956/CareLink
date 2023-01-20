@@ -134,7 +134,7 @@ Public Class MailSetupDialog
         validateDomainLKeyPress(CType(sender, TextBox), e)
     End Sub
 
-    Private Sub MailSetupDialog_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Private Sub MailSetupDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.OutGoingMailServerComboBox.DataSource = New BindingSource(s_knownMailServers, Nothing)
         Me.OutGoingMailServerComboBox.DisplayMember = "Key"
         Me.OutGoingMailServerComboBox.ValueMember = "Value"
@@ -142,7 +142,7 @@ Public Class MailSetupDialog
 
         If Not String.IsNullOrWhiteSpace(outGoingMailServer) Then
             Me.OutGoingMailServerComboBox.SelectedValue = outGoingMailServer
-            If outGoingMailServer = "smtp.gmail.com" Then
+            If outGoingMailServer = "smtp.Gmail.com" Then
                 Me.ServerPasswordLabel.Text = "Google App Password"
             Else
                 Me.ServerPasswordLabel.Text = "Mail Server Password:"
