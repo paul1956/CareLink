@@ -22,11 +22,11 @@ Public Class LoginForm1
         End If
     End Sub
 
-    Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles Me.Load
-        Dim commandLineArgs As String() = Environment.GetCommandLineArgs()
+    Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Dim commandLineArguments As String() = Environment.GetCommandLineArgs()
 
-        If commandLineArgs.Length > 1 Then
-            Dim arg As String() = commandLineArgs(1).Split("=")
+        If commandLineArguments.Length > 1 Then
+            Dim arg As String() = commandLineArguments(1).Split("=")
             Dim userRecord As CareLinkUserDataRecord = Nothing
             If s_allUserSettingsData.TryGetValue(arg(1), userRecord) Then
                 Select Case arg.Length
@@ -67,7 +67,7 @@ Public Class LoginForm1
         Me.CountryComboBox.Text = My.Settings.CountryCode.GetCountryFromCode
     End Sub
 
-    Private Sub LoginForm1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+    Private Sub LoginForm1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         If My.Settings.AutoLogin Then
             Me.OK_Button_Click(Me.Ok_Button, Nothing)
         End If
