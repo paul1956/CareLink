@@ -47,7 +47,7 @@ Public Class OptionsDialog
         Me.Close()
     End Sub
 
-    Private Sub OptionsDialog_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Private Sub OptionsDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Form1.ServerUpdateTimer.Stop()
         ColorDictionaryBackup(Me.SaveGraphColorDictionary)
         Me.ItemNameComboBox.Items.Clear()

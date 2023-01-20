@@ -48,6 +48,9 @@
     <EmbeddedResource Update="Forms\LoginForm1.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Update="Forms\OptionsDialog.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Update="My Project\Resources.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
