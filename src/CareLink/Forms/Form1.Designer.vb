@@ -333,18 +333,21 @@ Partial Class Form1
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New Size(1384, 24)
         Me.MenuStrip1.TabIndex = 0
-        Me.MenuStrip1.Text = "MenuStrip1" ' 
+        Me.MenuStrip1.Text = "MenuStrip1"
+        ' 
         ' MenuStartHere
         ' 
         Me.MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {Me.MenuStartHereLogin, Me.ToolStripSeparator1, Me.MenuStartHereLoadSavedDataFile, Me.MenuStartHereExceptionReportLoad, Me.ToolStripSeparator4, Me.MenuStartHereUseLastSavedFile, Me.MenuStartHereUseTestData, Me.ToolStripSeparator2, Me.MenuStartHereSnapshotSave, Me.ToolStripSeparator3, Me.StartHereExit})
         Me.MenuStartHere.Name = "MenuStartHere"
         Me.MenuStartHere.Size = New Size(71, 20)
-        Me.MenuStartHere.Text = "Start Here" ' 
+        Me.MenuStartHere.Text = "Start Here"
+        ' 
         ' MenuStartHereLogin
         ' 
         Me.MenuStartHereLogin.Name = "MenuStartHereLogin"
         Me.MenuStartHereLogin.Size = New Size(211, 22)
-        Me.MenuStartHereLogin.Text = "Login" ' 
+        Me.MenuStartHereLogin.Text = "Login"
+        ' 
         ' ToolStripSeparator1
         ' 
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
@@ -354,12 +357,14 @@ Partial Class Form1
         ' 
         Me.MenuStartHereLoadSavedDataFile.Name = "MenuStartHereLoadSavedDataFile"
         Me.MenuStartHereLoadSavedDataFile.Size = New Size(211, 22)
-        Me.MenuStartHereLoadSavedDataFile.Text = "Load A Saved Data File" ' 
+        Me.MenuStartHereLoadSavedDataFile.Text = "Load A Saved Data File"
+        ' 
         ' MenuStartHereExceptionReportLoad
         ' 
         Me.MenuStartHereExceptionReportLoad.Name = "MenuStartHereExceptionReportLoad"
         Me.MenuStartHereExceptionReportLoad.Size = New Size(211, 22)
-        Me.MenuStartHereExceptionReportLoad.Text = "Load An Exception Report" ' 
+        Me.MenuStartHereExceptionReportLoad.Text = "Load An Exception Report"
+        ' 
         ' ToolStripSeparator4
         ' 
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
@@ -369,12 +374,14 @@ Partial Class Form1
         ' 
         Me.MenuStartHereUseLastSavedFile.Name = "MenuStartHereUseLastSavedFile"
         Me.MenuStartHereUseLastSavedFile.Size = New Size(211, 22)
-        Me.MenuStartHereUseLastSavedFile.Text = "Use Last Data File" ' 
+        Me.MenuStartHereUseLastSavedFile.Text = "Use Last Data File"
+        ' 
         ' MenuStartHereUseTestData
         ' 
         Me.MenuStartHereUseTestData.Name = "MenuStartHereUseTestData"
         Me.MenuStartHereUseTestData.Size = New Size(211, 22)
-        Me.MenuStartHereUseTestData.Text = "Use Test Data" ' 
+        Me.MenuStartHereUseTestData.Text = "Use Test Data"
+        ' 
         ' ToolStripSeparator2
         ' 
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
@@ -385,7 +392,8 @@ Partial Class Form1
         Me.MenuStartHereSnapshotSave.Name = "MenuStartHereSnapshotSave"
         Me.MenuStartHereSnapshotSave.ShortcutKeys = Keys.Control Or Keys.S
         Me.MenuStartHereSnapshotSave.Size = New Size(211, 22)
-        Me.MenuStartHereSnapshotSave.Text = "Snapshot &Save" ' 
+        Me.MenuStartHereSnapshotSave.Text = "Snapshot &Save"
+        ' 
         ' ToolStripSeparator3
         ' 
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
@@ -397,18 +405,21 @@ Partial Class Form1
         Me.StartHereExit.Name = "StartHereExit"
         Me.StartHereExit.ShortcutKeys = Keys.Alt Or Keys.X
         Me.StartHereExit.Size = New Size(211, 22)
-        Me.StartHereExit.Text = "E&xit" ' 
+        Me.StartHereExit.Text = "E&xit"
+        ' 
         ' MenuOptions
         ' 
         Me.MenuOptions.DropDownItems.AddRange(New ToolStripItem() {Me.MenuOptionsColorPicker, Me.MenuOptionsShowLegend, Me.ToolStripSeparator5, Me.MenuOptionsAutoLogin, Me.ToolStripSeparator6, Me.OptionsMenuAdvancedOptions, Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsSetupEMailServer, Me.MenuOptionsUseAdvancedAITDecay, Me.MenuOptionsUseLocalTimeZone})
         Me.MenuOptions.Name = "MenuOptions"
         Me.MenuOptions.Size = New Size(61, 20)
-        Me.MenuOptions.Text = "Options" ' 
+        Me.MenuOptions.Text = "Options"
+        ' 
         ' MenuOptionsColorPicker
         ' 
         Me.MenuOptionsColorPicker.Name = "MenuOptionsColorPicker"
         Me.MenuOptionsColorPicker.Size = New Size(204, 22)
-        Me.MenuOptionsColorPicker.Text = "Color Picker..." ' 
+        Me.MenuOptionsColorPicker.Text = "Color Picker..."
+        ' 
         ' MenuOptionsShowLegend
         ' 
         Me.MenuOptionsShowLegend.Checked = True
@@ -416,7 +427,8 @@ Partial Class Form1
         Me.MenuOptionsShowLegend.CheckState = CheckState.Checked
         Me.MenuOptionsShowLegend.Name = "MenuOptionsShowLegend"
         Me.MenuOptionsShowLegend.Size = New Size(204, 22)
-        Me.MenuOptionsShowLegend.Text = "Show Legend" ' 
+        Me.MenuOptionsShowLegend.Text = "Show Legend"
+        ' 
         ' ToolStripSeparator5
         ' 
         Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
@@ -427,7 +439,8 @@ Partial Class Form1
         Me.MenuOptionsAutoLogin.CheckOnClick = True
         Me.MenuOptionsAutoLogin.Name = "MenuOptionsAutoLogin"
         Me.MenuOptionsAutoLogin.Size = New Size(204, 22)
-        Me.MenuOptionsAutoLogin.Text = "Auto Login" ' 
+        Me.MenuOptionsAutoLogin.Text = "Auto Login"
+        ' 
         ' ToolStripSeparator6
         ' 
         Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
@@ -438,7 +451,8 @@ Partial Class Form1
         Me.OptionsMenuAdvancedOptions.Enabled = False
         Me.OptionsMenuAdvancedOptions.Name = "OptionsMenuAdvancedOptions"
         Me.OptionsMenuAdvancedOptions.Size = New Size(204, 22)
-        Me.OptionsMenuAdvancedOptions.Text = "Advanced Options" ' 
+        Me.OptionsMenuAdvancedOptions.Text = "Advanced Options"
+        ' 
         ' MenuOptionsFilterRawJSONData
         ' 
         Me.MenuOptionsFilterRawJSONData.Checked = True
@@ -446,7 +460,8 @@ Partial Class Form1
         Me.MenuOptionsFilterRawJSONData.CheckState = CheckState.Checked
         Me.MenuOptionsFilterRawJSONData.Name = "MenuOptionsFilterRawJSONData"
         Me.MenuOptionsFilterRawJSONData.Size = New Size(204, 22)
-        Me.MenuOptionsFilterRawJSONData.Text = "Filter Raw JSON Data" ' 
+        Me.MenuOptionsFilterRawJSONData.Text = "Filter Raw JSON Data"
+        ' 
         ' MenuOptionsSetupEMailServer
         ' 
         Me.MenuOptionsSetupEMailServer.Name = "MenuOptionsSetupEMailServer"
@@ -461,7 +476,8 @@ Partial Class Form1
         Me.MenuOptionsUseAdvancedAITDecay.CheckState = CheckState.Indeterminate
         Me.MenuOptionsUseAdvancedAITDecay.Name = "MenuOptionsUseAdvancedAITDecay"
         Me.MenuOptionsUseAdvancedAITDecay.Size = New Size(204, 22)
-        Me.MenuOptionsUseAdvancedAITDecay.Text = "Use Advanced AIT Decay" ' 
+        Me.MenuOptionsUseAdvancedAITDecay.Text = "Use Advanced AIT Decay"
+        ' 
         ' MenuOptionsUseLocalTimeZone
         ' 
         Me.MenuOptionsUseLocalTimeZone.Checked = True
@@ -469,32 +485,37 @@ Partial Class Form1
         Me.MenuOptionsUseLocalTimeZone.CheckState = CheckState.Indeterminate
         Me.MenuOptionsUseLocalTimeZone.Name = "MenuOptionsUseLocalTimeZone"
         Me.MenuOptionsUseLocalTimeZone.Size = New Size(204, 22)
-        Me.MenuOptionsUseLocalTimeZone.Text = "Use Local TImeZone" ' 
+        Me.MenuOptionsUseLocalTimeZone.Text = "Use Local TImeZone"
+        ' 
         ' MenuHelp
         ' 
         Me.MenuHelp.DropDownItems.AddRange(New ToolStripItem() {Me.MenuHelpReportAnIssue, Me.MenuHelpCheckForUpdates, Me.MenuHelpAbout})
         Me.MenuHelp.Name = "MenuHelp"
         Me.MenuHelp.ShortcutKeys = Keys.Alt Or Keys.H
         Me.MenuHelp.Size = New Size(44, 20)
-        Me.MenuHelp.Text = "&Help" ' 
+        Me.MenuHelp.Text = "&Help"
+        ' 
         ' MenuHelpReportAnIssue
         ' 
         Me.MenuHelpReportAnIssue.Image = My.Resources.Resources.FeedbackSmile_16x
         Me.MenuHelpReportAnIssue.ImageScaling = ToolStripItemImageScaling.None
         Me.MenuHelpReportAnIssue.Name = "MenuHelpReportAnIssue"
         Me.MenuHelpReportAnIssue.Size = New Size(177, 22)
-        Me.MenuHelpReportAnIssue.Text = "Report A Problem..." ' 
+        Me.MenuHelpReportAnIssue.Text = "Report A Problem..."
+        ' 
         ' MenuHelpCheckForUpdates
         ' 
         Me.MenuHelpCheckForUpdates.Name = "MenuHelpCheckForUpdates"
         Me.MenuHelpCheckForUpdates.Size = New Size(177, 22)
-        Me.MenuHelpCheckForUpdates.Text = "Check For Updates" ' 
+        Me.MenuHelpCheckForUpdates.Text = "Check For Updates"
+        ' 
         ' MenuHelpAbout
         ' 
         Me.MenuHelpAbout.Image = My.Resources.Resources.AboutBox
         Me.MenuHelpAbout.Name = "MenuHelpAbout"
         Me.MenuHelpAbout.Size = New Size(177, 22)
-        Me.MenuHelpAbout.Text = "&About..." ' 
+        Me.MenuHelpAbout.Text = "&About..."
+        ' 
         ' ShowMiniDisplay
         ' 
         Me.ShowMiniDisplay.Image = My.Resources.Resources.ExitFullScreen
@@ -590,7 +611,8 @@ Partial Class Form1
         Me.BannerStateButton.Name = "BannerStateButton"
         Me.BannerStateButton.Size = New Size(142, 25)
         Me.BannerStateButton.TabIndex = 0
-        Me.BannerStateButton.Text = "Return To Summary Tab" ' 
+        Me.BannerStateButton.Text = "Return To Summary Tab"
+        ' 
         ' BannerStateLabel
         ' 
         Me.BannerStateLabel.AutoSize = True
@@ -610,7 +632,8 @@ Partial Class Form1
         Me.BasalButton.Name = "BasalButton"
         Me.BasalButton.Size = New Size(142, 25)
         Me.BasalButton.TabIndex = 0
-        Me.BasalButton.Text = "Return To Summary Tab" ' 
+        Me.BasalButton.Text = "Return To Summary Tab"
+        ' 
         ' BasalLabel
         ' 
         Me.BasalLabel.AutoSize = True
@@ -698,7 +721,8 @@ Partial Class Form1
         Me.ShieldUnitsLabel.Name = "ShieldUnitsLabel"
         Me.ShieldUnitsLabel.Size = New Size(40, 13)
         Me.ShieldUnitsLabel.TabIndex = 8
-        Me.ShieldUnitsLabel.Text = "XX/XX" ' 
+        Me.ShieldUnitsLabel.Text = "XX/XX"
+        ' 
         ' LastSGTimeLabel
         ' 
         Me.LastSGTimeLabel.BackColor = Color.Transparent
@@ -1041,7 +1065,8 @@ Partial Class Form1
         Me.DgvCareLinkUsersUseAdvancedAITDecay.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
         Me.DgvCareLinkUsersUseAdvancedAITDecay.DataPropertyName = "UseAdvancedAITDecay"
         Me.DgvCareLinkUsersUseAdvancedAITDecay.HeaderText = "Use Advanced AIT Decay"
-        Me.DgvCareLinkUsersUseAdvancedAITDecay.Name = "DgvCareLinkUsersUseAdvancedAITDecay" ' 
+        Me.DgvCareLinkUsersUseAdvancedAITDecay.Name = "DgvCareLinkUsersUseAdvancedAITDecay"
+        ' 
         ' DgvCareLinkUsersUseLocalTimeZone
         ' 
         Me.DgvCareLinkUsersUseLocalTimeZone.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -1324,7 +1349,8 @@ Partial Class Form1
         Me.FullNameLabel.Name = "FullNameLabel"
         Me.FullNameLabel.Size = New Size(211, 21)
         Me.FullNameLabel.TabIndex = 55
-        Me.FullNameLabel.Text = "Full Name" ' 
+        Me.FullNameLabel.Text = "Full Name"
+        ' 
         ' ImageList1
         ' 
         Me.ImageList1.ColorDepth = ColorDepth.Depth32Bit
@@ -1469,7 +1495,8 @@ Partial Class Form1
         Me.Last24HoursLabel.Name = "Last24HoursLabel"
         Me.Last24HoursLabel.Size = New Size(109, 21)
         Me.Last24HoursLabel.TabIndex = 34
-        Me.Last24HoursLabel.Text = "Last 24 hours" ' 
+        Me.Last24HoursLabel.Text = "Last 24 hours"
+        ' 
         ' Last24HTotalsPanel
         ' 
         Me.Last24HTotalsPanel.Controls.Add(Me.Last24CarbsValueLabel)
@@ -1514,7 +1541,8 @@ Partial Class Form1
         Me.LastUpdateTime.Name = "LastUpdateTime"
         Me.LastUpdateTime.Size = New Size(58, 15)
         Me.LastUpdateTime.TabIndex = 24
-        Me.LastUpdateTime.Text = "Unknown" ' 
+        Me.LastUpdateTime.Text = "Unknown"
+        ' 
         ' LastUpdateTimeLabel
         ' 
         Me.LastUpdateTimeLabel.AutoSize = True
@@ -1522,7 +1550,8 @@ Partial Class Form1
         Me.LastUpdateTimeLabel.Name = "LastUpdateTimeLabel"
         Me.LastUpdateTimeLabel.Size = New Size(101, 15)
         Me.LastUpdateTimeLabel.TabIndex = 23
-        Me.LastUpdateTimeLabel.Text = "Last Update Time:" ' 
+        Me.LastUpdateTimeLabel.Text = "Last Update Time:"
+        ' 
         ' LoginStatus
         ' 
         Me.LoginStatus.AutoSize = True
@@ -1530,7 +1559,8 @@ Partial Class Form1
         Me.LoginStatus.Name = "LoginStatus"
         Me.LoginStatus.Size = New Size(58, 15)
         Me.LoginStatus.TabIndex = 24
-        Me.LoginStatus.Text = "Unknown" ' 
+        Me.LoginStatus.Text = "Unknown"
+        ' 
         ' LoginStatusLabel
         ' 
         Me.LoginStatusLabel.AutoSize = True
@@ -1538,7 +1568,8 @@ Partial Class Form1
         Me.LoginStatusLabel.Name = "LoginStatusLabel"
         Me.LoginStatusLabel.Size = New Size(75, 15)
         Me.LoginStatusLabel.TabIndex = 23
-        Me.LoginStatusLabel.Text = "Login Status:" ' 
+        Me.LoginStatusLabel.Text = "Login Status:"
+        ' 
         ' MaxBasalPerHourLabel
         ' 
         Me.MaxBasalPerHourLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
@@ -1547,7 +1578,8 @@ Partial Class Form1
         Me.MaxBasalPerHourLabel.Name = "MaxBasalPerHourLabel"
         Me.MaxBasalPerHourLabel.Size = New Size(211, 21)
         Me.MaxBasalPerHourLabel.TabIndex = 67
-        Me.MaxBasalPerHourLabel.Text = "Max Basal/Hr ~ 2.0 U" ' 
+        Me.MaxBasalPerHourLabel.Text = "Max Basal/Hr ~ 2.0 U"
+        ' 
         ' ModelLabel
         ' 
         Me.ModelLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
@@ -1556,7 +1588,8 @@ Partial Class Form1
         Me.ModelLabel.Name = "ModelLabel"
         Me.ModelLabel.Size = New Size(211, 21)
         Me.ModelLabel.TabIndex = 57
-        Me.ModelLabel.Text = "Model" ' 
+        Me.ModelLabel.Text = "Model"
+        ' 
         ' NotifyIcon1
         ' 
         Me.NotifyIcon1.Icon = CType(resources.GetObject("NotifyIcon1.Icon"), Icon)
@@ -1673,7 +1706,8 @@ Partial Class Form1
         Me.SerialNumberLabel.Name = "SerialNumberLabel"
         Me.SerialNumberLabel.Size = New Size(211, 21)
         Me.SerialNumberLabel.TabIndex = 56
-        Me.SerialNumberLabel.Text = "Serial Number" ' 
+        Me.SerialNumberLabel.Text = "Serial Number"
+        ' 
         ' ServerUpdateTimer
         ' 
         Me.ServerUpdateTimer.Interval = 300000
@@ -1685,7 +1719,8 @@ Partial Class Form1
         Me.SgsButton.Name = "SgsButton"
         Me.SgsButton.Size = New Size(142, 25)
         Me.SgsButton.TabIndex = 0
-        Me.SgsButton.Text = "Return To Summary Tab" ' 
+        Me.SgsButton.Text = "Return To Summary Tab"
+        ' 
         ' SplitContainer2
         ' 
         Me.SplitContainer2.Dock = DockStyle.Fill
@@ -1752,7 +1787,8 @@ Partial Class Form1
         ' 
         Me.SplitContainer3.IsSplitterFixed = True
         Me.SplitContainer3.Location = New Point(0, 0)
-        Me.SplitContainer3.Name = "SplitContainer3" ' 
+        Me.SplitContainer3.Name = "SplitContainer3"
+        ' 
         ' SplitContainer3.Panel1
         ' 
         Me.SplitContainer3.Panel1.BackColor = Color.Black
@@ -1785,7 +1821,8 @@ Partial Class Form1
         Me.TimeInRangeLabel.Name = "TimeInRangeLabel"
         Me.TimeInRangeLabel.Size = New Size(115, 21)
         Me.TimeInRangeLabel.TabIndex = 33
-        Me.TimeInRangeLabel.Text = "Time in range" ' 
+        Me.TimeInRangeLabel.Text = "Time in range"
+        ' 
         ' TimeInRangeSummaryPercentCharLabel
         ' 
         Me.TimeInRangeSummaryPercentCharLabel.Anchor = AnchorStyles.Top
@@ -1797,7 +1834,8 @@ Partial Class Form1
         Me.TimeInRangeSummaryPercentCharLabel.Name = "TimeInRangeSummaryPercentCharLabel"
         Me.TimeInRangeSummaryPercentCharLabel.Size = New Size(42, 40)
         Me.TimeInRangeSummaryPercentCharLabel.TabIndex = 3
-        Me.TimeInRangeSummaryPercentCharLabel.Text = "%" ' 
+        Me.TimeInRangeSummaryPercentCharLabel.Text = "%"
+        ' 
         ' TimeInRangeChartLabel
         ' 
         Me.TimeInRangeChartLabel.Anchor = AnchorStyles.Top
@@ -1857,7 +1895,8 @@ Partial Class Form1
         Me.TabPage01HomePage.Padding = New Padding(3)
         Me.TabPage01HomePage.Size = New Size(1376, 639)
         Me.TabPage01HomePage.TabIndex = 7
-        Me.TabPage01HomePage.Text = "Summary" ' 
+        Me.TabPage01HomePage.Text = "Summary"
+        ' 
         ' TabPage02RunningIOB
         ' 
         Me.TabPage02RunningIOB.Location = New Point(4, 27)
@@ -2630,7 +2669,8 @@ Partial Class Form1
         Me.TabPage14Markers.Padding = New Padding(3)
         Me.TabPage14Markers.Size = New Size(1376, 639)
         Me.TabPage14Markers.TabIndex = 24
-        Me.TabPage14Markers.Text = "Markers and More..." ' 
+        Me.TabPage14Markers.Text = "Markers and More..."
+        ' 
         ' TabControlPage2
         ' 
         Me.TabControlPage2.Appearance = TabAppearance.Buttons
@@ -3395,10 +3435,10 @@ Partial Class Form1
         Me.TabPageBackToHomePage.Padding = New Padding(3)
         Me.TabPageBackToHomePage.Size = New Size(1376, 639)
         Me.TabPageBackToHomePage.TabIndex = 8
-        Me.TabPageBackToHomePage.Text = "Back.."' 
+        Me.TabPageBackToHomePage.Text = "Back.." ' 
         ' Form1
         ' 
-        Me.AutoScaleDimensions = New SizeF(96F, 96F)
+        Me.AutoScaleDimensions = New SizeF(96.0F, 96.0F)
         Me.AutoScaleMode = AutoScaleMode.Dpi
         Me.ClientSize = New Size(1384, 694)
         Me.Controls.Add(Me.LoginStatusLabel)
