@@ -1121,7 +1121,7 @@ Public Class Form1
 
     Private Sub TableLayoutPanelTopButton_Click(sender As Object, e As EventArgs) _
         Handles TableLayoutPanelLastSgTop.ButtonClick, TableLayoutPanelLastAlarmTop.ButtonClick,
-        TableLayoutPanelActiveInsulinTop.ButtonClick, SgsButton.Click,
+        TableLayoutPanelActiveInsulinTop.ButtonClick,
         TableLayoutPanelSgsTop.ButtonClick, TableLayoutPanelLimitsTop.ButtonClick,
         TableLayoutPanelNotificationHistoryTop.ButtonClick,
         TableLayoutPanelTherapyAlgorithmTop.ButtonClick, TableLayoutPanelBannerStateTop.ButtonClick,
