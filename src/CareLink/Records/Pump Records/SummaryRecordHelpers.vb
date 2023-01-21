@@ -13,12 +13,13 @@ Friend Module SummaryRecordHelpers
     End Function
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
-        e.DgvColumnAdded(GetCellStyle(e.Column.Name),
-                        False,
-                        True,
-                        caption)
+        With e.Column
+            Dim dgv As DataGridView = CType(sender, DataGridView)
+            e.DgvColumnAdded(GetCellStyle(.Name),
+                             False,
+                             True,
+                             CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+        End With
     End Sub
 
     <Extension>

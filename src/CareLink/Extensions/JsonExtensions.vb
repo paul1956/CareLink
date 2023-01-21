@@ -94,10 +94,10 @@ Public Module JsonExtensions
                 End If
                 Try
                     Select Case item.Key
-                        Case NameOf(ItemIndexs.bgUnits)
+                        Case NameOf(ItemIndexes.bgUnits)
                             BgUnits = item.Value.ToString()
                             If Not s_unitsStrings.TryGetValue(BgUnits, BgUnitsString) Then
-                                Dim averageSGFloatAsString As String = rawJsonData(ItemIndexs.averageSGFloat).jsonItemAsString
+                                Dim averageSGFloatAsString As String = rawJsonData(ItemIndexes.averageSGFloat).jsonItemAsString
                                 If averageSGFloatAsString.ParseSingle() > 40 Then
                                     BgUnitsString = "mg/dl"
                                     BgUnits = "MG_DL"
@@ -124,7 +124,7 @@ Public Module JsonExtensions
                                 s_limitLow = 3.9
                             End If
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
-                        Case NameOf(ItemIndexs.clientTimeZoneName)
+                        Case NameOf(ItemIndexes.clientTimeZoneName)
                             Dim clientTimeZoneName As String
                             If s_useLocalTimeZone Then
                                 s_clientTimeZone = TimeZoneInfo.Local
@@ -155,12 +155,12 @@ Public Module JsonExtensions
                                 End If
                             End If
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
-                        Case NameOf(ItemIndexs.timeFormat)
+                        Case NameOf(ItemIndexes.timeFormat)
                             Dim internalTimeFormat As String = item.Value.ToString
                             s_timeWithMinuteFormat = If(internalTimeFormat = "HR_12", TimeFormatTwelveHourWithMinutes, TimeFormatMilitaryWithMinutes)
                             s_timeWithoutMinuteFormat = If(internalTimeFormat = "HR_12", TimeFormatTwelveHourWithoutMinutes, TimeFormatMilitaryWithoutMinutes)
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
-                        Case "Sg", "sg", NameOf(ItemIndexs.averageSGFloat), NameOf(ItemIndexs.averageSG), NameOf(ItemIndexs.sgBelowLimit)
+                        Case "Sg", "sg", NameOf(ItemIndexes.averageSGFloat), NameOf(ItemIndexes.averageSG), NameOf(ItemIndexes.sgBelowLimit)
                             resultDictionary.Add(item.Key, item.scaleJsonValue())
                         Case Else
                             resultDictionary.Add(item.Key, item.jsonItemAsString)

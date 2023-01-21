@@ -7,7 +7,7 @@ Imports System.Runtime.CompilerServices
 Friend Module ItemIndexesModule
 
     ' Do not rename these name are matched used in case sensitive matching
-    Public Enum ItemIndexs As Integer
+    Public Enum ItemIndexes As Integer
         lastSensorTS = 0
         medicalDeviceTimeAsString = 1
         lastSensorTSAsString = 2
@@ -76,8 +76,8 @@ Friend Module ItemIndexesModule
     End Enum
 
     <Extension>
-    Friend Function GetItemIndex(key As String) As ItemIndexs
-        Return CType([Enum].Parse(GetType(ItemIndexs), key), ItemIndexs)
+    Friend Function GetItemIndex(key As String) As ItemIndexes
+        Return CType([Enum].Parse(GetType(ItemIndexes), key), ItemIndexes)
     End Function
 
 End Module

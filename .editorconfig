@@ -218,7 +218,7 @@ dotnet_diagnostic.ca1303.severity = silent
 dotnet_diagnostic.ca1308.severity = suggestion
 
 # CA1826: Do not use Enumerable methods on indexable collections. Instead use the collection directly
-dotnet_diagnostic.ca1826.severity = silent
+dotnet_diagnostic.ca1826.severity = suggestion
 
 # Xml project files
 [*.{csproj,vcxproj,vcxproj.filters,proj,nativeproj,locproj,vbproj}]
@@ -236,3 +236,5 @@ insert_final_newline = true
 
 [*.{cmd,bat}]
 end_of_line = crlf
+
+spelling_exclusion_path = .\exclusion.dic

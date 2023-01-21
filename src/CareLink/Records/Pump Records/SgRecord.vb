@@ -40,7 +40,7 @@ Public Class SgRecord
     Public Property kind As String
 
     <DisplayName("Sensor Message")>
-    <Column(Order:=7, TypeName:=NameOf([String]))>
+    <Column(Order:=10, TypeName:=NameOf([String]))>
     Public ReadOnly Property Message As String
         Get
             _sensorState = If(_sensorState, "")
@@ -65,11 +65,11 @@ Public Class SgRecord
     Public Property RecordNumber As Integer
 
     <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=10, TypeName:=NameOf([Int32]))>
+    <Column(Order:=7, TypeName:=NameOf([Int32]))>
     Public Property relativeOffset As Integer
 
     <DisplayName("Sensor State")>
-    <Column(Order:=6, TypeName:=NameOf([String]))>
+    <Column(Order:=9, TypeName:=NameOf([String]))>
     Public Property sensorState As String
         Get
             Return _sensorState
@@ -99,7 +99,7 @@ Public Class SgRecord
     Public Property timeChange As Boolean
 
     <DisplayName("Version")>
-    <Column(Order:=9, TypeName:=NameOf([Int32]))>
+    <Column(Order:=6, TypeName:=NameOf([Int32]))>
     Public Property version As Integer
 
     Private Function processOneSg(allSgs As List(Of Dictionary(Of String, String)), Index As Integer, lastValidTime As Date, dic As Dictionary(Of String, String)) As Date

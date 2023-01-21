@@ -13,7 +13,7 @@ Friend Module DictionaryToClassMapper
     ''' <typeparam propertyName="T">The class type that is to be returned.</typeparam>
     ''' <param propertyName="Dictionary">Dictionary to fill from.</param>
     ''' <returns>A list of ClassType with its properties set to the data from the matching columns from the DataTable.</returns>
-    Public Function DictionaryToClass(Of T As {Class, New})(dic As Dictionary(Of String, String), RecordNumber As Integer) As T
+    Public Function DictionaryToClass(Of T As {Class, New})(dic As Dictionary(Of String, String), recordNumber As Integer) As T
         If dic Is Nothing Then
             Return New T
         End If
@@ -63,7 +63,7 @@ Friend Module DictionaryToClassMapper
             End If
         Next row
 
-        classObject.GetType.GetProperty(NameOf(RecordNumber))?.SetValue(classObject, RecordNumber, Nothing)
+        classObject.GetType.GetProperty("RecordNumber")?.SetValue(classObject, recordNumber, Nothing)
 
         Return classObject
     End Function

@@ -7,7 +7,7 @@ Imports System.Runtime.CompilerServices
 
 Friend Module UpdateTabHelpers
 
-    Private Sub CreateNotificationTables(notificationDictionary As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexs, filterJsonData As Boolean)
+    Private Sub CreateNotificationTables(notificationDictionary As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexes, filterJsonData As Boolean)
         tableLevel1Blue.AutoScroll = True
         tableLevel1Blue.AutoSize = True
         tableLevel1Blue.BorderStyle = BorderStyle.FixedSingle
@@ -77,47 +77,47 @@ Friend Module UpdateTabHelpers
             .TableLayoutPanelAutoBasalDelivery.DisplayDataTableInDGV(
                               .DgvAutoBasalDelivery,
                               ClassCollectionToDataTable(s_listOfAutoBasalDeliveryMarkers),
-                              ItemIndexs.markers)
+                              ItemIndexes.markers)
             .TableLayoutPanelAutoModeStatus.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(s_listOfAutoModeStatusMarkers),
                               NameOf(AutoModeStatusRecord),
                               AddressOf AutoModeStatusRecordHelpers.AttachHandlers,
-                              ItemIndexs.markers,
+                              ItemIndexes.markers,
                               False)
             .TableLayoutPanelBgReadings.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(
                               s_listOfBgReadingMarkers),
                               NameOf(BGReadingRecord),
                               AddressOf BGReadingRecordHelpers.AttachHandlers,
-                              ItemIndexs.markers,
+                              ItemIndexes.markers,
                               False)
             .TableLayoutPanelInsulin.DisplayDataTableInDGV(
                               .DgvInsulin,
                               ClassCollectionToDataTable(s_listOfInsulinMarkers),
-                              ItemIndexs.markers)
+                              ItemIndexes.markers)
             .TableLayoutPanelMeal.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(s_listOfMealMarkers),
                               NameOf(MealRecord),
                               AddressOf MealRecordHelpers.AttachHandlers,
-                              ItemIndexs.markers,
+                              ItemIndexes.markers,
                               False)
             .TableLayoutPanelCalibration.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(s_listOfCalibrationMarkers),
                               NameOf(CalibrationRecord),
                               AddressOf CalibrationRecordHelpers.AttachHandlers,
-                              ItemIndexs.markers,
+                              ItemIndexes.markers,
                               False)
             .TableLayoutPanelLowGlucoseSuspended.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(s_listOfLowGlucoseSuspendedMarkers),
                               NameOf(LowGlucoseSuspendRecord),
-                              AddressOf LowGlusoceSuspendRecordHelpers.AttachHandlers,
-                              ItemIndexs.markers,
+                              AddressOf LowGlucoseSuspendRecordHelpers.AttachHandlers,
+                              ItemIndexes.markers,
                               False)
             .TableLayoutPanelTimeChange.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(s_listOfTimeChangeMarkers),
                               NameOf(TimeChangeRecord),
                               AddressOf TimeChangeRecordHelpers.AttachHandlers,
-                              ItemIndexs.markers,
+                              ItemIndexes.markers,
                               False)
         End With
 
@@ -127,7 +127,7 @@ Friend Module UpdateTabHelpers
     Friend Sub UpdateNotificationTab(MainForm As Form1)
         Try
             MainForm.TableLayoutPanelNotificationHistory.AutoScroll = True
-            MainForm.TableLayoutPanelNotificationHistory.SetTabName(ItemIndexs.notificationHistory)
+            MainForm.TableLayoutPanelNotificationHistory.SetTabName(ItemIndexes.notificationHistory)
             Dim innerTableBlue As New TableLayoutPanel With {
                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                     .AutoScroll = True,
@@ -148,7 +148,7 @@ Friend Module UpdateTabHelpers
             MainForm.TableLayoutPanelNotificationHistory.Controls.Add(innerTableBlue, 0, 1)
             CreateNotificationTables(s_notificationHistoryValue,
                                      innerTableBlue,
-                                     ItemIndexs.notificationHistory,
+                                     ItemIndexes.notificationHistory,
                                      s_filterJsonData)
         Catch ex As Exception
             Stop
@@ -189,7 +189,7 @@ Friend Module UpdateTabHelpers
                               ClassCollectionToDataTable(listOfPumpBannerState),
                               NameOf(BannerStateRecord),
                               AddressOf BannerStateRecordHelpers.AttachHandlers,
-                              ItemIndexs.pumpBannerState,
+                              ItemIndexes.pumpBannerState,
                               False)
     End Sub
 
@@ -198,7 +198,7 @@ Friend Module UpdateTabHelpers
         DisplayDataTableInDGV(MainForm.TableLayoutPanelSgs,
                               MainForm.DgvSGs,
                               ClassCollectionToDataTable(s_listOfSGs.OrderByDescending(Function(x) x.RecordNumber).ToList()),
-                              ItemIndexs.sgs)
+                              ItemIndexes.sgs)
         MainForm.DgvSGs.Columns(0).HeaderCell.SortGlyphDirection = SortOrder.Descending
     End Sub
 
@@ -206,6 +206,7 @@ Friend Module UpdateTabHelpers
     Friend Sub UpdateSummaryTab(MainForm As Form1)
         s_listOfSummaryRecords.Sort()
         MainForm.DgvSummary.DataSource = ClassCollectionToDataTable(s_listOfSummaryRecords)
+        MainForm.DgvSummary.Columns(0).HeaderCell.SortGlyphDirection = SortOrder.Ascending
         MainForm.DgvSummary.RowHeadersVisible = False
     End Sub
 

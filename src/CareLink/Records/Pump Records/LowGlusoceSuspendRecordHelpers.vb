@@ -2,7 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Friend Class LowGlusoceSuspendRecordHelpers
+Friend Class LowGlucoseSuspendRecordHelpers
 
     Private Shared ReadOnly columnsToHide As New List(Of String) From {
             NameOf(LowGlucoseSuspendRecord.kind),
@@ -13,16 +13,17 @@ Friend Class LowGlusoceSuspendRecordHelpers
     Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Shared Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
-        If HideColumn(e.Column.Name) Then
-            e.Column.Visible = False
-            Exit Sub
-        End If
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
-        e.DgvColumnAdded(GetCellStyle(e.Column.Name),
-                     True,
-                     True,
-                     caption)
+        With e.Column
+            If HideColumn(.Name) Then
+                .Visible = False
+                Exit Sub
+            End If
+            Dim dgv As DataGridView = CType(sender, DataGridView)
+            e.DgvColumnAdded(GetCellStyle(.Name),
+                             True,
+                             True,
+                             CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+        End With
     End Sub
 
     Private Shared Sub DataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs)

@@ -353,7 +353,7 @@ Public Class CareLinkClient
                     response = _httpClient.Get(url, _lastErrorMessage, headers, params:=queryParams)
                     _lastResponseCode = response.StatusCode
                 Else
-                    headers("Accept") = "text/html,application/xHtml+xml,application/xml;q=0.9,image/aVif,image/webP,image/aPng,*/*;q=0.8,application/signed-exchange;deviceFamily=b3;q=0.9"
+                    headers("Accept") = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webP,image/apng,*/*;q=0.8,application/signed-exchange;deviceFamily=b3;q=0.9"
                     'headers("Content-Type") = "application/x-www-form-urlEncoded"
                     _httpClient.DefaultRequestHeaders.Clear()
                     For Each header As KeyValuePair(Of String, String) In headers

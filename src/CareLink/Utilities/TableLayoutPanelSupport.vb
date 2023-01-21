@@ -7,7 +7,7 @@ Imports System.Runtime.CompilerServices
 Friend Module TableLayoutPanelSupport
 
     <Extension>
-    Friend Sub SetTabName(table As TableLayoutPanel, rowIndex As ItemIndexs)
+    Friend Sub SetTabName(table As TableLayoutPanel, rowIndex As ItemIndexes)
         Select Case True
             Case TypeOf table.Controls(0) Is TableLayoutPanel
                 Select Case True

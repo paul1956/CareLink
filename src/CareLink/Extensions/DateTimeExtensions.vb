@@ -225,11 +225,11 @@ Friend Module DateTimeExtensions
         Select Case key
             Case ""
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeLocal)
-            Case NameOf(ItemIndexs.lastConduitDateTime)
+            Case NameOf(ItemIndexes.lastConduitDateTime)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeLocal)
-            Case NameOf(ItemIndexs.medicalDeviceTime)
+            Case NameOf(ItemIndexes.medicalDeviceTime)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
-            Case NameOf(ItemIndexs.lastSensorTS)
+            Case NameOf(ItemIndexes.lastSensorTS)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
             Case "loginDateUTC"
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal)

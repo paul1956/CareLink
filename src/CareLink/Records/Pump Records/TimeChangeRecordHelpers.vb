@@ -13,16 +13,17 @@ Friend Class TimeChangeRecordHelpers
     Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Shared Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
-        If HideColumn(e.Column.Name) Then
-            e.Column.Visible = False
-            Exit Sub
-        End If
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim caption As String = CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption
-        e.DgvColumnAdded(GetCellStyle(e.Column.Name),
-                     True,
-                     True,
-                     caption)
+        With e.Column
+            If HideColumn(e.Column.Name) Then
+                .Visible = False
+                Exit Sub
+            End If
+            Dim dgv As DataGridView = CType(sender, DataGridView)
+            e.DgvColumnAdded(GetCellStyle(.Name),
+                             True,
+                             True,
+                             CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+        End With
     End Sub
 
     Private Shared Sub DataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs)
@@ -30,8 +31,9 @@ Friend Class TimeChangeRecordHelpers
     End Sub
 
     Private Shared Sub DataGridViewView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.dgvCellFormatting(e, NameOf(TimeChangeRecord.dateTime))
+        Using dgv As DataGridView = CType(sender, DataGridView)
+            dgv.dgvCellFormatting(e, NameOf(TimeChangeRecord.dateTime))
+        End Using
     End Sub
 
     Friend Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
