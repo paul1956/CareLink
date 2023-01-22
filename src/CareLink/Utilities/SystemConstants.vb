@@ -11,7 +11,7 @@ Public Module SystemConstants
     Friend Const ClickToShowDetails As String = "Click To Show Details"
     Friend Const ExceptionStartingString As String = "--- Start of Exception ---"
     Friend Const ExceptionTerminatingString As String = "--- End of Exception ---"
-    Friend Const GitOwnerName As String = "paul1956"
+    Friend Const GitOwnerName As String = "Paul1956"
     Friend Const MmolLUnitsDivisor As Single = 18
     Friend Const ProjectName As String = "CareLink"
     Friend Const StackTraceStartingStr As String = "--- Start of stack trace ---"
@@ -65,7 +65,7 @@ Public Module SystemConstants
         Login = 2
     End Enum
 
-    Public ReadOnly Property GitHubCareLinkUrl As String = $"https://github.com/{GitOwnerName}/{ProjectName}/"
+    Public ReadOnly Property GitHubCareLinkUrl As String = $"https://GitHub.com/{GitOwnerName}/{ProjectName}/"
     Public ReadOnly Property JsonFormattingOptions As New JsonSerializerOptions With {.WriteIndented = True}
     Public ReadOnly Property MyDocumentsPath As String = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
     Public ReadOnly Property SavedErrorReportName As String = $"{ProjectName}ErrorReport"
@@ -90,7 +90,7 @@ Public Module SystemConstants
 #Region "All Culture Info"
 
     Private _CurrentDateCulture As CultureInfo
-    Public ReadOnly s_cultureInfos As CultureInfo() = CultureInfo.GetCultures(CultureTypes.AllCultures)
+    Public ReadOnly s_cultureInfoArray As CultureInfo() = CultureInfo.GetCultures(CultureTypes.AllCultures)
 
     Public Property CurrentDateCulture As CultureInfo
         Get

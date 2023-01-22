@@ -9,11 +9,11 @@ Imports System.Text
 <DebuggerDisplay("{GetDebuggerDisplay(),nq}")>
 Public Class supportedReportRecord
 
-    Public Sub New(Values As Dictionary(Of String, String), recordnumber As Integer)
+    Public Sub New(Values As Dictionary(Of String, String), recordNumber As Integer)
         If Values.Count <> 3 Then
             Throw New Exception($"{NameOf(supportedReportRecord)}({Values}) contains {Values.Count} entries, 3 expected.")
         End If
-        Me.recordNumber = recordnumber
+        Me.recordNumber = recordNumber
         Me.report = Values(NameOf(report))
         Me.onlyFor = kvpToString(LoadList(Values(NameOf(onlyFor)))).ToString.TrimStart(" "c).TrimEnd(","c)
         Me.notFor = kvpToString(LoadList(Values(NameOf(notFor)))).ToString.TrimStart(" "c).TrimEnd(","c)

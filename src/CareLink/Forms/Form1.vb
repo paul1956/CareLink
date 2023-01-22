@@ -1808,7 +1808,7 @@ Public Class Form1
                             .Points.Last.IsEmpty = True
                         End With
                         If i > 0 Then
-                            remainingInsulinList.Adjustlist(0, i)
+                            remainingInsulinList.AdjustList(0, i)
                         End If
                         Continue For
                     End If
@@ -1816,7 +1816,7 @@ Public Class Form1
                     Dim sum As Double = remainingInsulinList.ConditionalSum(startIndex, s_activeInsulinIncrements)
                     maxActiveInsulin = Math.Max(sum, maxActiveInsulin)
                     Me.ActiveInsulinActiveInsulinSeries.Points.AddXY(remainingInsulinList(i).OaDateTime, sum)
-                    remainingInsulinList.Adjustlist(startIndex, s_activeInsulinIncrements)
+                    remainingInsulinList.AdjustList(startIndex, s_activeInsulinIncrements)
                 Next
 
                 .ChartAreas(NameOf(ChartArea)).AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1

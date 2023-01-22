@@ -1,7 +1,7 @@
 # CareLink
 
 ## Download Latest Release from
-https://github.com/paul1956/CareLink/releases/
+https://GitHub.com/paul1956/CareLink/releases/
 
 # Requires for running
 - .NET Core 6.0.6 or later
@@ -9,7 +9,7 @@ https://github.com/paul1956/CareLink/releases/
 
 Try it out and send feedback.
 This update has a UI to show all the available data and a visual version that mimics the one on iPhone.
-![Same display](https://github.com/paul1956/CareLink/blob/master/Screenshot%202022-10-08%20203350.png?raw=true)
+![Same display](https://GitHub.com/paul1956/CareLink/blob/master/Screenshot%202022-10-08%20203350.png?raw=true)
 
 ## Requires for development
 - Visual Studio 2022 Version 17.3.0 Preview 2.0 or later
@@ -148,7 +148,7 @@ New in 3.5.6.3
 
 New in 3.5.6.1
 -   Use improved DataVisualizationPackage
-    -   https://github.com/kirsan31/winforms-datavisualization
+    -   https://GitHub.com/Kirsan31/WinForms-DataVisualization
 -   Fix for matching username with CareLink.csv file
 -   Improved support for pump time changes
 -   Icon for Show Widget Menu
@@ -183,7 +183,7 @@ New in 3.5.4.9
 -   Shade Treatment Chart
 
 New in 3.5.4.6
--   Design Summary Formating
+-   Design Summary Formatting
 -   Improve Tab design
 -   More room for login message error
 
@@ -203,10 +203,10 @@ New in 3.5.3.0
 -   Add additional tab with Country Specific Data that might be useful later
 
 New in 3.5.2.6
--   Improve formating of TryIcon Message
+-   Improve formatting of TryIcon Message
 
 New in 3.5.2.5
--   Fixed [issue #16](https://github.com/paul1956/CareLink/issues/16) SG Trend not correct in Systray
+-   Fixed [issue #16](https://github.com/paul1956/CareLink/issues/16) SG Trend not correct in SysTray
 -   Add infrastructure to process CountrySettings
 
 New in 3.5.2.4
@@ -277,7 +277,7 @@ New in 3.5.0.0
 -  Complete rewrite of time handling
 -  Improved support for mmol/L with all values scaled
 -  Added better TimeZone support
--  Another contribution from Chris Deprez https://github.com/Krikke99
+-  Another contribution from Chris Deprez https://GitHub.com/Krikke99
 shows SG on System Tray with dynamic background color:
     - Green normal
     - Red low
@@ -358,7 +358,7 @@ Some data was filtered out because I could not see any use for it. You can turn 
 
 For the visualization layer I use the open source
 System.Windows.Forms.DataVisualization
-https://github.com/kirsan31/winforms-datavisualization
+https://GitHub.com/kirsan31/WinForms-DataVisualization
 
 #Known Issue
 - If you get a 

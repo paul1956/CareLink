@@ -7,7 +7,7 @@ Imports Microsoft.Win32
 
 Friend Module BrowserUtilities
     Private ReadOnly s_httpClient As New HttpClient()
-    Private ReadOnly s_versionSearchKey As String = $"<a href=""/{GitOwnerName}/{ProjectName}/releases/tag/"
+    Private ReadOnly s_versionSearchKey As String = $"<a hRef=""/{GitOwnerName}/{ProjectName}/releases/tag/"
 
     ''' <summary>
     ''' Compare version of executable with ReadMe.MkDir from GitHub
@@ -29,7 +29,7 @@ Friend Module BrowserUtilities
             If userChoiceKey Is Nothing Then
                 Return False
             End If
-            Dim progIdObject As Object = userChoiceKey.GetValue("Progid")
+            Dim progIdObject As Object = userChoiceKey.GetValue("ProgId")
             If progIdObject Is Nothing Then
                 Return False
             End If
@@ -60,7 +60,7 @@ Friend Module BrowserUtilities
 
     ''' <summary>
     ''' Find version string in HTML page
-    ''' https://github.com/paul1956/CareLink/releases
+    ''' https://GitHub.com/paul1956/CareLink/releases
     ''' Then look for version
     ''' <a href="/paul1956/CareLink/releases/tag/3.4.0.3" data-view-component="true" class="Link--primary">CareLink Display 3.4.0.3 x64</a>
     ''' </summary>

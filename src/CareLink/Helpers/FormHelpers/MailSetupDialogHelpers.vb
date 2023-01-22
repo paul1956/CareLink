@@ -14,16 +14,16 @@ Friend Module MailSetupDialogHelpers
     Friend ReadOnly s_knownDefaultPorts As New Dictionary(Of String, Integer) From {
                     {"Microsoft Exchange", 0},
                     {"smtp.comcast.net", 587},
-                    {"smtp.gmail.com", 587},
-                    {"smtpout.secureserver.net", 587},
+                    {"smtp.Gmail.com", 587},
+                    {"smtpOut.SecureServer.net", 587},
                     {"smtp.mail.yahoo.com", 587}
                 }
 
     Friend ReadOnly s_knownMailServers As New Dictionary(Of String, String) From {
                     {"Microsoft Exchange", ""},
                     {"Comcast/Xfinity", "smtp.comcast.net"},
-                    {"Gmail", "smtp.gmail.com"},
-                    {"GoDaddy", "smtpout.secureserver.net"},
+                    {"Gmail", "smtp.Gmail.com"},
+                    {"GoDaddy", "smtpOut.SecureServer.net"},
                     {"Yahoo", "smtp.mail.yahoo.com"}
                 }
 

@@ -7,7 +7,7 @@ Imports System.Runtime.CompilerServices
 Friend Module InsulinListExtensions
 
     <Extension>
-    Friend Sub Adjustlist(myList As List(Of RunningActiveInsulinRecord), startIndex As Integer, count As Integer)
+    Friend Sub AdjustList(myList As List(Of RunningActiveInsulinRecord), startIndex As Integer, count As Integer)
         For i As Integer = startIndex To startIndex + count
             If i >= myList.Count Then Exit Sub
             myList(i) = myList(i).Adjust()

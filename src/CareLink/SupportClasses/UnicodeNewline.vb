@@ -50,7 +50,7 @@ End Enum
 
 ''' <summary>
 ''' Defines Unicode new lines according to Unicode Technical Report #13
-''' http://www.unicode.org/standard/reports/tr13/tr13-5.html
+''' http://www.Unicode.org/standard/reports/tr13/tr13-5.html
 ''' </summary>
 
 Public Module NewLine
