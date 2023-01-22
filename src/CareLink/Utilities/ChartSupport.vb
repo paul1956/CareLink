@@ -163,12 +163,11 @@ Friend Module ChartSupport
         Return New Legend(legendName) With {
                         .BackColor = Color.Gray,
                         .BorderWidth = 0,
+                        .Docking = Docking.Bottom,
                         .Enabled = File.Exists(GetShowLegendFileNameWithPath),
                         .Font = New Font("Trebuchet MS", 20.0F, FontStyle.Bold),
                         .ForeColor = .BackColor.GetContrastingColor,
-                        .IsTextAutoFit = True,
-                        .Title = "Series Legend",
-                        .TitleBackColor = Color.White
+                        .IsTextAutoFit = True
                     }
     End Function
 

@@ -24,23 +24,37 @@ Public Class BGMiniWindow
         _form1 = form1
     End Sub
 
-    Private Sub ActiveInsulinTextBox_GotFocus(sender As Object, e As EventArgs) Handles ActiveInsulinTextBox.GotFocus
+    Private Shared Function GetLastUpdateMessage() As String
+        If s_lastMedicalDeviceDataUpdateServerEpoch = 0 Then
+            Return $"{s_firstName}'s Last Update Unknown"
+        End If
+        Return $"{s_firstName}'s Updated {CInt((Now - s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime).TotalMinutes)} minutes ago"
+    End Function
+
+    Private Sub ActiveInsulinTextBox_GotFocus(sender As Object, e As EventArgs)
         Me.HiddenTextBox.Focus()
     End Sub
 
-    Private Sub BGMiniWindow_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
+    Private Sub BGMiniWindow_Closing(sender As Object, e As CancelEventArgs)
         _form1.Visible = True
     End Sub
 
-    Private Sub BGMiniWindow_GotFocus(sender As Object, e As EventArgs) Handles MyBase.GotFocus
+    Private Sub BGMiniWindow_GotFocus(sender As Object, e As EventArgs)
         Me.HiddenTextBox.Focus()
     End Sub
 
-    Private Sub BGTextBox_GotFocus(sender As Object, e As EventArgs) Handles BGTextBox.GotFocus
+    Private Sub BGMiniWindow_KeyDown(sender As Object, e As KeyEventArgs)
+        If e.Modifiers = Keys.Alt AndAlso e.KeyCode = Keys.W Then
+            _form1.Visible = True
+            Me.Hide()
+        End If
+    End Sub
+
+    Private Sub BGTextBox_GotFocus(sender As Object, e As EventArgs)
         Me.HiddenTextBox.Focus()
     End Sub
 
-    Private Sub BGTextBox_TextChanged(sender As Object, e As EventArgs) Handles BGTextBox.TextChanged
+    Private Sub BGTextBox_TextChanged(sender As Object, e As EventArgs)
         Me.Text = GetLastUpdateMessage()
         If Me.BGTextBox.Text.Length = 0 OrElse Me.BGTextBox.Text = "---" OrElse Me.BGTextBox.Text = "999" Then
             _currentBGValue = Double.NaN
@@ -86,7 +100,7 @@ Public Class BGMiniWindow
 
     End Sub
 
-    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles chkTopMost.CheckedChanged
+    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs)
         If Me.chkTopMost.Checked Then
             Me.TopMost = True
         ElseIf Not Me.chkTopMost.Checked Then
@@ -94,7 +108,7 @@ Public Class BGMiniWindow
         End If
     End Sub
 
-    Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
+    Private Sub CloseButton_Click(sender As Object, e As EventArgs)
         _form1.Visible = True
         Me.Hide()
     End Sub
@@ -124,12 +138,5 @@ Public Class BGMiniWindow
         Me.Text = GetLastUpdateMessage()
         Me.BGTextBox.Text = Value
     End Sub
-
-    Private Shared Function GetLastUpdateMessage() As String
-        If s_lastMedicalDeviceDataUpdateServerEpoch = 0 Then
-            Return $"{s_firstName}'s Last Update Unknown"
-        End If
-        Return $"{s_firstName}'s Updated {CInt((Now - s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime).TotalMinutes)} minutes ago"
-    End Function
 
 End Class

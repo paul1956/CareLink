@@ -255,7 +255,7 @@ Public Class Form1
                         Catch ex As Exception
                             MessageBox.Show($"Error reading date file. Original error: {ex.DecodeException()}")
                         End Try
-                        Me.ShowMiniDisplay.Visible = Debugger.IsAttached
+                        Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                         Me.LastUpdateTime.ForeColor = SystemColors.ControlText
                         Me.LastUpdateTime.Text = $"{File.GetLastWriteTime(fileNameWithPath).ToShortDateTimeString} from file"
@@ -309,7 +309,7 @@ Public Class Form1
                     Debug.Print($"In {NameOf(MenuStartHereLoadSavedDataFile_Click)}, {NameOf(Me.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
                     CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{ProjectName}", True)
                     Me.RecentData = Loads(File.ReadAllText(openFileDialog1.FileName))
-                    Me.ShowMiniDisplay.Visible = Debugger.IsAttached
+                    Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                     Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
                     Me.LastUpdateTime.ForeColor = SystemColors.ControlText
                     Me.LastUpdateTime.Text = File.GetLastWriteTime(openFileDialog1.FileName).ToShortDateTimeString
@@ -445,7 +445,7 @@ Public Class Form1
 
 #Region "View Menu Events"
 
-    Private Sub ShowMiniDisplay_Click(sender As Object, e As EventArgs) Handles ShowMiniDisplay.Click
+    Private Sub ShowMiniDisplay_Click(sender As Object, e As EventArgs) Handles MenuShowMiniDisplay.Click
         Me.Hide()
         _bgMiniDisplay.Show()
     End Sub

@@ -52,14 +52,14 @@ Friend Module Form1Helpers
                 MainForm.Text = $"{SavedTitle} Using Last Saved Data"
                 CurrentDateCulture = LastDownloadWithPath.ExtractCultureFromFileName(SavedLastDownloadName)
                 MainForm.RecentData = Loads(File.ReadAllText(LastDownloadWithPath))
-                MainForm.ShowMiniDisplay.Visible = Debugger.IsAttached
+                MainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 MainForm.LastUpdateTime.Text = $"{File.GetLastWriteTime(LastDownloadWithPath).ToShortDateTimeString} from file"
             Case FileToLoadOptions.TestData
                 MainForm.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
                 Dim testDataWithPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")
                 MainForm.RecentData = Loads(File.ReadAllText(testDataWithPath))
-                MainForm.ShowMiniDisplay.Visible = Debugger.IsAttached
+                MainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 MainForm.LastUpdateTime.Text = $"{File.GetLastWriteTime(testDataWithPath).ToShortDateTimeString} from file"
             Case FileToLoadOptions.Login
                 MainForm.Text = SavedTitle
@@ -89,7 +89,7 @@ Friend Module Form1Helpers
                 End If
 
                 ReportLoginStatus(MainForm.LoginStatus, MainForm.RecentData Is Nothing OrElse MainForm.RecentData.Count = 0, MainForm.Client.GetLastErrorMessage)
-                MainForm.ShowMiniDisplay.Visible = True
+                MainForm.MenuShowMiniDisplay.Visible = True
         End Select
         MainForm.FinishInitialization()
         If UpdateAllTabs Then

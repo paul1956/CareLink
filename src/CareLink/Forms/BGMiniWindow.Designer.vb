@@ -79,11 +79,11 @@ Partial Class BGMiniWindow
         ' CloseButton
         ' 
         Me.CloseButton.Anchor = AnchorStyles.Top Or AnchorStyles.Right
-        Me.CloseButton.Location = New Point(130, 99)
+        Me.CloseButton.Location = New Point(82, 99)
         Me.CloseButton.Name = "CloseButton"
-        Me.CloseButton.Size = New Size(134, 23)
+        Me.CloseButton.Size = New Size(182, 23)
         Me.CloseButton.TabIndex = 3
-        Me.CloseButton.Text = "Show Main Display"
+        Me.CloseButton.Text = "Show Main Display ALT+W"
         Me.CloseButton.UseVisualStyleBackColor = True
         ' 
         ' chkTopMost
@@ -112,6 +112,7 @@ Partial Class BGMiniWindow
         Me.Controls.Add(Me.BGTextBox)
         Me.Controls.Add(Me.HiddenTextBox)
         Me.FormBorderStyle = FormBorderStyle.FixedDialog
+        Me.KeyPreview = True
         Me.Margin = New Padding(4, 3, 4, 3)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
