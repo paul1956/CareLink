@@ -31,7 +31,7 @@ Partial Class BGMiniWindow
         Me.HiddenTextBox = New TextBox()
         Me.DeltaTextBox = New TextBox()
         Me.CloseButton = New Button()
-        Me.chkTopMost = New CheckBox()
+        Me.ChkTopMost = New CheckBox()
         Me.SuspendLayout()
         ' 
         ' BGTextBox
@@ -86,17 +86,17 @@ Partial Class BGMiniWindow
         Me.CloseButton.Text = "Show Main Display ALT+W"
         Me.CloseButton.UseVisualStyleBackColor = True
         ' 
-        ' chkTopMost
+        ' ChkTopMost
         ' 
-        Me.chkTopMost.AutoSize = True
-        Me.chkTopMost.Checked = True
-        Me.chkTopMost.CheckState = CheckState.Checked
-        Me.chkTopMost.Location = New Point(4, 103)
-        Me.chkTopMost.Name = "chkTopMost"
-        Me.chkTopMost.Size = New Size(72, 19)
-        Me.chkTopMost.TabIndex = 4
-        Me.chkTopMost.Text = "Topmost"
-        Me.chkTopMost.UseVisualStyleBackColor = True
+        Me.ChkTopMost.AutoSize = True
+        Me.ChkTopMost.Checked = True
+        Me.ChkTopMost.CheckState = CheckState.Checked
+        Me.ChkTopMost.Location = New Point(4, 103)
+        Me.ChkTopMost.Name = "ChkTopMost"
+        Me.ChkTopMost.Size = New Size(72, 19)
+        Me.ChkTopMost.TabIndex = 4
+        Me.ChkTopMost.Text = "Topmost"
+        Me.ChkTopMost.UseVisualStyleBackColor = True
         ' 
         ' BGMiniWindow
         ' 
@@ -105,7 +105,7 @@ Partial Class BGMiniWindow
         Me.BackColor = SystemColors.Window
         Me.ClientSize = New Size(264, 123)
         Me.ControlBox = False
-        Me.Controls.Add(Me.chkTopMost)
+        Me.Controls.Add(Me.ChkTopMost)
         Me.Controls.Add(Me.CloseButton)
         Me.Controls.Add(Me.DeltaTextBox)
         Me.Controls.Add(Me.ActiveInsulinTextBox)
@@ -129,5 +129,5 @@ Partial Class BGMiniWindow
     Friend WithEvents HiddenTextBox As TextBox
     Friend WithEvents DeltaTextBox As TextBox
     Friend WithEvents CloseButton As Button
-    Friend WithEvents chkTopMost As CheckBox
+    Friend WithEvents ChkTopMost As CheckBox
 End Class

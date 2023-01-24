@@ -31,30 +31,30 @@ Public Class BGMiniWindow
         Return $"{s_firstName}'s Updated {CInt((Now - s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime).TotalMinutes)} minutes ago"
     End Function
 
-    Private Sub ActiveInsulinTextBox_GotFocus(sender As Object, e As EventArgs)
+    Private Sub ActiveInsulinTextBox_GotFocus(sender As Object, e As EventArgs) Handles ActiveInsulinTextBox.GotFocus
         Me.HiddenTextBox.Focus()
     End Sub
 
-    Private Sub BGMiniWindow_Closing(sender As Object, e As CancelEventArgs)
+    Private Sub BGMiniWindow_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
         _form1.Visible = True
     End Sub
 
-    Private Sub BGMiniWindow_GotFocus(sender As Object, e As EventArgs)
+    Private Sub BGMiniWindow_GotFocus(sender As Object, e As EventArgs) Handles MyBase.GotFocus
         Me.HiddenTextBox.Focus()
     End Sub
 
-    Private Sub BGMiniWindow_KeyDown(sender As Object, e As KeyEventArgs)
+    Private Sub BGMiniWindow_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
         If e.Modifiers = Keys.Alt AndAlso e.KeyCode = Keys.W Then
             _form1.Visible = True
             Me.Hide()
         End If
     End Sub
 
-    Private Sub BGTextBox_GotFocus(sender As Object, e As EventArgs)
+    Private Sub BGTextBox_GotFocus(sender As Object, e As EventArgs) Handles BGTextBox.GotFocus
         Me.HiddenTextBox.Focus()
     End Sub
 
-    Private Sub BGTextBox_TextChanged(sender As Object, e As EventArgs)
+    Private Sub BGTextBox_TextChanged(sender As Object, e As EventArgs) Handles BGTextBox.TextChanged
         Me.Text = GetLastUpdateMessage()
         If Me.BGTextBox.Text.Length = 0 OrElse Me.BGTextBox.Text = "---" OrElse Me.BGTextBox.Text = "999" Then
             _currentBGValue = Double.NaN
@@ -100,15 +100,15 @@ Public Class BGMiniWindow
 
     End Sub
 
-    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs)
-        If Me.chkTopMost.Checked Then
+    Private Sub ChkTopMost_CheckedChanged(sender As Object, e As EventArgs) Handles ChkTopMost.CheckedChanged
+        If Me.ChkTopMost.Checked Then
             Me.TopMost = True
-        ElseIf Not Me.chkTopMost.Checked Then
+        ElseIf Not Me.ChkTopMost.Checked Then
             Me.TopMost = False
         End If
     End Sub
 
-    Private Sub CloseButton_Click(sender As Object, e As EventArgs)
+    Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
         _form1.Visible = True
         Me.Hide()
     End Sub
