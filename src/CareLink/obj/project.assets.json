@@ -75,7 +75,7 @@
           }
         }
       },
-      "Octokit/4.0.3": {
+      "Octokit/5.0.0": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/Octokit.dll": {
@@ -1219,16 +1219,16 @@
         "version.txt"
       ]
     },
-    "Octokit/4.0.3": {
-      "sha512": "KhRtKMEJfjwGKwpha1JalVlRrUP4WfhqG6b0VCiQ2w8JTa1LwhoRPWH9EpZ01Q8I9Qshu2kJu/1lMUOaR4yc3Q==",
+    "Octokit/5.0.0": {
+      "sha512": "cNspbuFsQSjbKIl+9Ko+XwvfepekDHQncnewKwCDjmsL8HaIujgKlWzmkWnWPVCmZvBdGVp2JsVECIsOkYK/MA==",
       "type": "package",
-      "path": "octokit/4.0.3",
+      "path": "octokit/5.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Octokit.dll",
         "lib/netstandard2.0/Octokit.xml",
-        "octokit.4.0.3.nupkg.sha512",
+        "octokit.5.0.0.nupkg.sha512",
         "octokit.nuspec",
         "octokit.png"
       ]
@@ -3706,7 +3706,7 @@
     "net7.0-windows7.0": [
       "DataGridViewDisableButtonColumnEx >= 1.0.0.1",
       "Microsoft.Exchange.WebServices.NETStandard >= 2.0.0-beta3",
-      "Octokit >= 4.0.3",
+      "Octokit >= 5.0.0",
       "TableLayputPanelTop >= 1.0.0.2",
       "ToolStripComboBoxEx >= 1.0.0.2",
       "WinForms.DataVisualization >= 1.7.0"
@@ -3717,7 +3717,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "3.5.7.22",
+    "version": "3.5.7.23",
     "restore": {
       "projectUniqueName": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\CareLink\\CareLink.vbproj",
       "projectName": "CareLink",
@@ -3761,7 +3761,7 @@
           },
           "Octokit": {
             "target": "Package",
-            "version": "[4.0.3, )"
+            "version": "[5.0.0, )"
           },
           "TableLayputPanelTop": {
             "target": "Package",

@@ -95,12 +95,16 @@ Public Class CareLinkUserDataList
             If String.IsNullOrWhiteSpace(itemName) Then
                 Throw New KeyNotFoundException($"Key may not be Nothing, in CareLinkUserDataList.Item")
             End If
-            For i As Integer = 0 To Me.List.Count - 1
-                Dim entry As CareLinkUserDataRecord = CType(Me.List(i), CareLinkUserDataRecord)
-                If entry?.CareLinkUserName.Equals(itemName, StringComparison.OrdinalIgnoreCase) Then
-                    Return CType(Me.List(i), CareLinkUserDataRecord)
-                End If
-            Next
+            Try
+                For i As Integer = 0 To Me.List.Count - 1
+                    Dim entry As CareLinkUserDataRecord = CType(Me.List(i), CareLinkUserDataRecord)
+                    If entry?.CareLinkUserName.Equals(itemName, StringComparison.OrdinalIgnoreCase) Then
+                        Return CType(Me.List(i), CareLinkUserDataRecord)
+                    End If
+                Next
+            Catch ex As Exception
+                Return New CareLinkUserDataRecord(Me)
+            End Try
             Throw New KeyNotFoundException($"Key '{itemName}' Not Present in Dictionary, in CareLinkUserDataList.Item")
         End Get
         Set(Value As CareLinkUserDataRecord)

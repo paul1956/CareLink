@@ -20,9 +20,9 @@
     <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
     <RepositoryUrl>https://github.com/paul1956/CareLink</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>3.5.7.22</Version>
-    <AssemblyVersion>3.5.7.22</AssemblyVersion>
-    <FileVersion>3.5.7.22</FileVersion>
+    <Version>3.5.7.23</Version>
+    <AssemblyVersion>3.5.7.23</AssemblyVersion>
+    <FileVersion>3.5.7.23</FileVersion>
     <PackageIcon>IconImage.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/paul1956/CareLink</PackageProjectUrl>
@@ -49,12 +49,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="C:\Users\PaulM\.nuget\packages\datagridviewdisablebuttoncolumnex\1.0.0.1\contentFiles\any\net7.0-windows7.0\ColumnButton.ico" />
-    <Content Remove="C:\Users\PaulM\.nuget\packages\tablelayputpaneltop\1.0.0.2\contentFiles\any\net7.0-windows7.0\LayoutPanel.ico" />
-    <Content Remove="C:\Users\PaulM\.nuget\packages\toolstripcomboboxex\1.0.0.2\contentFiles\any\net7.0-windows7.0\ComboBox.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Import Include="System.Data" />
     <Import Include="System.Drawing" />
     <Import Include="System.Windows.Forms" />
@@ -63,7 +57,7 @@
   <ItemGroup>
     <PackageReference Include="DataGridViewDisableButtonColumnEx" Version="1.0.0.1" />
     <PackageReference Include="Microsoft.Exchange.WebServices.NETStandard" Version="2.0.0-beta3" />
-    <PackageReference Include="Octokit" Version="4.0.3" />
+    <PackageReference Include="Octokit" Version="5.0.0" />
     <PackageReference Include="TableLayputPanelTop" Version="1.0.0.2" />
     <PackageReference Include="ToolStripComboBoxEx" Version="1.0.0.2" />
     <PackageReference Include="WinForms.DataVisualization" Version="1.7.0" />

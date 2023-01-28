@@ -27,11 +27,11 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 01/15/2023
+- 02/01/2023
 
 ## What's New in this release
-New in 3.5.7.22
-
+New in 3.5.7.23
+- Prevent possible crash when CareLink.CSV is corrupt
 
 New in 3.5.7.21
 - Fixed issue with Military Time causing a crash
@@ -358,12 +358,12 @@ Some data was filtered out because I could not see any use for it. You can turn 
 
 For the visualization layer I use the open source
 System.Windows.Forms.DataVisualization
-https://GitHub.com/kirsan31/WinForms-DataVisualization
+https://GitHub.com/Kirsan31/WinForms-DataVisualization
 
 #Known Issue
 - If you get a 
 > "System.Configuration.ConfigurationErrorsException: 'Configuration system failed to initialize'"
-> will need to edit CareLink\src\CareLink\bin\Debug\net6.0-windows\CareLink.dll.config and remove the following lines
+> will need to edit CareLink\src\CareLink\bin\Debug\net7.0-windows\CareLink.dll.config and remove the following lines
 ```
 <system.diagnostics>
     <sources>
