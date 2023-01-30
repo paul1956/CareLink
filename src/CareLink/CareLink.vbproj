@@ -13,7 +13,7 @@
     <OptionCompare>Text</OptionCompare>
     <OptionInfer>Off</OptionInfer>
     <ApplicationIcon>Images\IconImage.ico</ApplicationIcon>
-    <Authors>Paul Cohen</Authors>
+    <Authors>Paul M Cohen</Authors>
     <Company>Travel By Paul</Company>
     <Product>CareLink Data Viewer</Product>
     <Description>View raw and visualized pump data from Medtronic 770G and 780G Insulin Pumps</Description>
@@ -101,10 +101,6 @@
     </None>
     <None Update="SampleUserData.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
     </None>
     <None Include="Images\IconImage.png">
       <Pack>True</Pack>

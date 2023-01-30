@@ -144,17 +144,22 @@ Public Class LoginForm1
     End Sub
 
     Private Sub UsernameTextBox_Leave(sender As Object, e As EventArgs) Handles UsernameTextBox.Leave
-        Dim userSettings As CareLinkUserDataRecord = Nothing
-        If s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, userSettings) Then
-            If userSettings.CareLinkUserName.Equals(Me.UsernameTextBox.Text, StringComparison.OrdinalIgnoreCase) Then
-                Me.UsernameTextBox.Text = userSettings.CareLinkUserName
-            End If
+        Try
 
-            My.Settings.CareLinkUserName = Me.UsernameTextBox.Text
-            Me.PasswordTextBox.Text = userSettings.CareLinkPassword
-            Me.RegionComboBox.SelectedValue = userSettings.CountryCode.GetRegionFromCode
-            Me.CountryComboBox.Text = userSettings.CountryCode.GetCountryFromCode
-        End If
+            Dim userSettings As CareLinkUserDataRecord = Nothing
+            If s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, userSettings) Then
+                If userSettings.CareLinkUserName.Equals(Me.UsernameTextBox.Text, StringComparison.OrdinalIgnoreCase) Then
+                    Me.UsernameTextBox.Text = userSettings.CareLinkUserName
+                End If
+                My.Settings.CareLinkUserName = Me.UsernameTextBox.Text
+                Me.PasswordTextBox.Text = userSettings.CareLinkPassword
+                Me.RegionComboBox.SelectedValue = userSettings.CountryCode.GetRegionFromCode
+                Me.CountryComboBox.Text = userSettings.CountryCode.GetCountryFromCode
+            End If
+        Catch ex As Exception
+
+        End Try
+
     End Sub
 
 End Class
