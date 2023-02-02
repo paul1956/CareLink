@@ -23,7 +23,9 @@ Friend Module CollectMarkersHelper
         Dim basalDictionary As New Dictionary(Of OADate, Single)
         MaxBasalPerHour = 0
         MaxBasalPerDose = 0
-        For Each newMarker As Dictionary(Of String, String) In LoadList(jsonRow)
+
+        Dim markers As List(Of Dictionary(Of String, String)) = LoadList(jsonRow)
+        For Each newMarker As Dictionary(Of String, String) In markers
             Select Case newMarker("type")
                 Case "AUTO_BASAL_DELIVERY"
                     s_markers.Add(newMarker)
@@ -44,10 +46,10 @@ Friend Module CollectMarkersHelper
                     Select Case newMarker(NameOf(InsulinRecord.activationType))
                         Case "AUTOCORRECTION"
                             basalDictionary.Add(lastInsulinRecord.OAdateTime, lastInsulinRecord.deliveredFastAmount)
-                        Case "MANUAL",
-                             "UNDETERMINED",
+                        Case "MANUAL"
+                            Stop
+                        Case "UNDETERMINED",
                              "RECOMMENDED"
-                            '
                         Case Else
                             Stop
                             Throw UnreachableException(NameOf(CollectMarkers))
@@ -65,6 +67,15 @@ Friend Module CollectMarkersHelper
                     Throw UnreachableException(NameOf(CollectMarkers))
             End Select
         Next
+
+        For Each r As BasalRecord In s_listOfManualBasal.ToList
+            If r.activeBasalPattern <> "BASAL1" OrElse r.basalRate > 0 Then
+                basalDictionary.Add(r.GetOaGetTime, r.GetBasal)
+                s_listOfAutoBasalDeliveryMarkers.Add(New AutoBasalDeliveryRecord(r, basalDictionary.Count, 288 - basalDictionary.Count))
+                s_markers.Add(r.ToDictionary)
+            End If
+        Next
+
         Dim endOADate As OADate = If(basalDictionary.Count = 0, New OADate(Now), basalDictionary.Last.Key)
         Dim i As Integer = 0
         While i < basalDictionary.Count AndAlso basalDictionary.Keys(i) <= endOADate

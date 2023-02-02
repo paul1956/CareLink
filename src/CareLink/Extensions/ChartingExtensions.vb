@@ -197,7 +197,7 @@ Friend Module ChartingExtensions
                         End If
                     Case "CALIBRATION"
                         markerSeriesPoints.AddCalibrationPoint(markerOADateTime, bgValue, entry)
-                    Case "AUTO_BASAL_DELIVERY"
+                    Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
                         Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle.RoundSingle(3)
                         Dim minBasalMsg As String = ""
                         If amount.IsMinBasal() Then
@@ -311,7 +311,7 @@ Friend Module ChartingExtensions
                 End If
                 Dim markerSeriesPoints As DataPointCollection = treatmentChart.Series(MarkerSeries).Points
                 Select Case entry("type")
-                    Case "AUTO_BASAL_DELIVERY"
+                    Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
                         Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle.RoundSingle(3)
                         Dim minBasalMsg As String = ""
                         If amount.IsMinBasal() Then

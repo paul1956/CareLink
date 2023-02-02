@@ -157,6 +157,10 @@ Friend Module DateTimeExtensions
         Dim sgDateTimeString As String = ""
         Dim sgDateTime As Date
         If sgList(index).Count < 7 Then
+            If sgList(index).TryGetValue("sgOADateTime", sgDateTimeString) Then
+                sgDateTime = Date.FromOADate(New OADate(Double.Parse(sgDateTimeString)))
+                Return sgDateTime
+            End If
             index -= 1
         End If
         If sgList(index).TryGetValue(NameOf(SgRecord.datetime), sgDateTimeString) Then

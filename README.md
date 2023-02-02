@@ -27,9 +27,13 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-- 01/29/2023
+02/01/2023
+
 
 ## What's New in this release
+New in 3.5.7.25
+- Support graphing of manual mode basal
+
 New in 3.5.7.23
 - Prevent possible crash when CareLink.CSV is corrupt
 

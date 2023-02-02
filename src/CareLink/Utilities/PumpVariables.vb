@@ -38,7 +38,6 @@ Public Module PumpVariables
     Friend s_aboveHyperLimit As Single
     Friend s_activeInsulin As ActiveInsulinRecord
     Friend s_activeInsulinIncrements As Integer
-    Friend s_basalValue As Dictionary(Of String, String)
     Friend s_belowHypoLimit As Single
     Friend s_clientTimeZone As TimeZoneInfo
     Friend s_clientTimeZoneName As String
@@ -53,12 +52,13 @@ Public Module PumpVariables
     Friend s_lastSgRecord As New SgRecord
     Friend s_limitHigh As Single
     Friend s_limitLow As Single
+    Friend s_listOfManualBasal As New BasalRecords(288)
     Friend s_listOfSGs As New List(Of SgRecord)
     Friend s_listOfTimeChangeMarkers As New List(Of TimeChangeRecord)
     Friend s_markers As New List(Of Dictionary(Of String, String))
     Friend s_notificationHistoryValue As Dictionary(Of String, String)
-    Friend s_pumpBannerStateValue As New List(Of Dictionary(Of String, String))
     Friend s_previousRecentData As Dictionary(Of String, String)
+    Friend s_pumpBannerStateValue As New List(Of Dictionary(Of String, String))
     Friend s_reservoirLevelPercent As Integer
     Friend s_sensorDurationHours As Integer
     Friend s_sensorState As String

@@ -212,7 +212,7 @@ Public Class Form1
             My.Settings.AIT = aitTimeSpan
             My.Settings.Save()
             s_activeInsulinIncrements = CInt(TimeSpan.Parse(aitTimeSpan.ToString("hh\:mm").Substring(1)) / s_fiveMinuteSpan)
-            Me.UpdateActiveInsulinChart(Me.ActiveInsulinChart)
+            Me.UpdateActiveInsulinChart()
         End If
     End Sub
 
@@ -429,7 +429,7 @@ Public Class Form1
             Me.AITAlgorithmLabel.ForeColor = Color.White
         End If
         My.Settings.Save()
-        Me.UpdateActiveInsulinChart(Me.ActiveInsulinChart)
+        Me.UpdateActiveInsulinChart()
 
     End Sub
 
@@ -1506,10 +1506,10 @@ Public Class Form1
         Me.Cursor = Cursors.WaitCursor
         Application.DoEvents()
 
-        s_listOfSGs.Clear()
-
         s_listOfSummaryRecords.Clear()
+
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In Me.RecentData.WithIndex()
+
             Dim row As KeyValuePair(Of String, String) = c.Value
             If row.Value Is Nothing Then
                 row = KeyValuePair.Create(row.Key, "")
@@ -1620,7 +1620,6 @@ Public Class Form1
 
                 Case ItemIndexes.sgs
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-                    s_listOfSGs = LoadList(row.Value).ToSgList()
                     If s_listOfSGs.Count > 2 Then
                         s_lastBGValue = s_listOfSGs.Item(s_listOfSGs.Count - 2).sg
                     End If
@@ -1646,7 +1645,6 @@ Public Class Form1
                     Me.TempTargetLabel.Visible = False
 
                 Case ItemIndexes.basal
-                    s_basalValue = Loads(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
 
                 Case ItemIndexes.systemStatusMessage
@@ -1698,6 +1696,7 @@ Public Class Form1
                         s_timeToNextCalibrationMinutes = UShort.MaxValue
                         s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexes.timeToNextCalibrationMinutes, s_timeToNextCalibrationMinutes.ToString, "No data from pump"))
                     End If
+
                 Case ItemIndexes.sensorDurationMinutes
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
@@ -1740,18 +1739,18 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub UpdateActiveInsulinChart(aitChart As Chart)
+    Private Sub UpdateActiveInsulinChart()
         If Not Me.Initialized Then
             Exit Sub
         End If
 
         Try
 
-            For Each s As Series In aitChart.Series
+            For Each s As Series In Me.ActiveInsulinChart.Series
                 s.Points.Clear()
             Next
-            With aitChart
-                .Titles(NameOf(ActiveInsulinChartTitle)).Text = s_iobTitle
+            With Me.ActiveInsulinChart
+                .Titles(NameOf(ActiveInsulinChartTitle)).Text = $"{s_iobTitle}{s_listOfManualBasal.GetSubTitle}"
                 .ChartAreas(NameOf(ChartArea)).UpdateChartAreaBGAxisX()
 
                 ' Order all markers by time
@@ -1762,7 +1761,7 @@ Public Class Form1
                 For Each marker As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
                     sgOADateTime = New OADate(s_markers.SafeGetSgDateTime(marker.Index).RoundTimeDown(RoundTo.Minute))
                     Select Case marker.Value(NameOf(InsulinRecord.type)).ToString
-                        Case "AUTO_BASAL_DELIVERY"
+                        Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
                             Dim bolusAmount As Single = marker.Value.GetSingleValue(NameOf(AutoBasalDeliveryRecord.bolusAmount))
                             If timeOrderedMarkers.ContainsKey(sgOADateTime) Then
                                 timeOrderedMarkers(sgOADateTime) += bolusAmount
@@ -1836,6 +1835,7 @@ Public Class Form1
                 s.Points.Clear()
             Next
             Me.SummaryChart.ChartAreas(NameOf(ChartArea)).UpdateChartAreaBGAxisX()
+            Me.SummaryChart.Titles(0).Text = $"Summary {s_listOfManualBasal.GetSubTitle}"
             Me.SummaryChart.PlotMarkers(Me.SummaryTimeChangeSeries, _summaryChartAbsoluteRectangle, s_summaryMarkerInsulinDictionary, s_summaryMarkerMealDictionary)
             Application.DoEvents()
             Me.SummaryChart.PlotSgSeries(HomePageMealRow)
@@ -1932,7 +1932,7 @@ Public Class Form1
                             s_totalManualBolus += amountString.ParseSingle()
                     End Select
 
-                Case "AUTO_BASAL_DELIVERY"
+                Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
                     Dim amount As Single = marker.Value(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle.RoundSingle(3)
                     s_totalBasal += amount
                     s_totalDailyDose += amount
@@ -2102,7 +2102,7 @@ Public Class Form1
         End If
         Try
             Me.InitializeTreatmentMarkersChart()
-            Me.TreatmentMarkersChart.Titles(NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details"
+            Me.TreatmentMarkersChart.Titles(NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details {s_listOfManualBasal.GetSubTitle}"
             Me.TreatmentMarkersChart.ChartAreas(NameOf(ChartArea)).UpdateChartAreaBGAxisX()
             Me.TreatmentMarkersChart.PlotTreatmentMarkers(Me.TreatmentMarkerTimeChangeSeries)
             Me.TreatmentMarkersChart.PlotSgSeries(HomePageMealRow)
@@ -2144,13 +2144,25 @@ Public Class Form1
             End If
             Me.CursorPanel.Visible = False
 
-            ' Update all Markets
+#Region "Update all Markers"
+
             Dim markerRowString As String = ""
+            If Me.RecentData.TryGetValue(ItemIndexes.sgs.ToString, markerRowString) Then
+                s_listOfSGs = LoadList(markerRowString).ToSgList()
+            End If
+
+            If Me.RecentData.TryGetValue(ItemIndexes.basal.ToString, markerRowString) Then
+                Dim item As BasalRecord = DictionaryToClass(Of BasalRecord)(Loads(markerRowString), recordNumber:=0)
+                item.OaDateTime(s_listOfSGs.Last.OaDateTime)
+                s_listOfManualBasal.Add(item)
+            End If
             If Me.RecentData.TryGetValue(ItemIndexes.markers.ToString, markerRowString) Then
                 Me.MaxBasalPerHourLabel.Text = CollectMarkers(markerRowString)
             Else
                 Me.MaxBasalPerHourLabel.Text = ""
             End If
+
+#End Region ' Update all Markers
 
             Me.UpdateDataTables()
             _updating = False
@@ -2165,7 +2177,7 @@ Public Class Form1
             Me.LabelTrendArrows.Text = $"{rowValue}"
         End If
         Me.UpdateSummaryTab()
-        Me.UpdateActiveInsulinChart(Me.ActiveInsulinChart)
+        Me.UpdateActiveInsulinChart()
         Me.UpdateActiveInsulin()
         Me.UpdateAutoModeShield()
         Me.UpdateCalibrationTimeRemaining()
@@ -2228,7 +2240,7 @@ Public Class Form1
         Me.UpdatePumpBannerStateTab()
 
         Me.TableLayoutPanelBasal.DisplayDataTableInDGV(
-                              ClassCollectionToDataTable({DictionaryToClass(Of BasalRecord)(s_basalValue, 0)}.ToList),
+                              ClassCollectionToDataTable(s_listOfManualBasal.ToList),
                               NameOf(BasalRecord),
                               AddressOf BasalRecordHelpers.AttachHandlers,
                               ItemIndexes.basal,

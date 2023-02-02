@@ -47,6 +47,7 @@ Friend Module Form1Helpers
     Friend Function DoOptionalLoginAndUpdateData(MainForm As Form1, UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
         MainForm.ServerUpdateTimer.Stop()
         Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
+        s_listOfAutoBasalDeliveryMarkers.Clear()
         Select Case fileToLoad
             Case FileToLoadOptions.LastSaved
                 MainForm.Text = $"{SavedTitle} Using Last Saved Data"
