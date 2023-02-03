@@ -72,6 +72,7 @@ Public Module PumpVariables
     Friend s_timeWithoutMinuteFormat As String
     Friend Property BgUnits As String
     Friend Property BgUnitsString As String
+    Friend Property InAutoMode As Boolean
 
 #End Region
 

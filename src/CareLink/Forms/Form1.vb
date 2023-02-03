@@ -1508,6 +1508,32 @@ Public Class Form1
 
         s_listOfSummaryRecords.Clear()
 
+        Dim markerRowString As String = ""
+
+        If Me.RecentData.TryGetValue(ItemIndexes.therapyAlgorithmState.ToString, markerRowString) Then
+            s_therapyAlgorithmStateValue = Loads(markerRowString)
+            InAutoMode = s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.autoModeShieldState)) = "AUTO_BASAL"
+        End If
+
+#Region "Update all Markers"
+
+        If Me.RecentData.TryGetValue(ItemIndexes.sgs.ToString, markerRowString) Then
+            s_listOfSGs = LoadList(markerRowString).ToSgList()
+        End If
+
+        If Me.RecentData.TryGetValue(ItemIndexes.basal.ToString, markerRowString) Then
+            Dim item As BasalRecord = DictionaryToClass(Of BasalRecord)(Loads(markerRowString), recordNumber:=0)
+            item.OaDateTime(s_listOfSGs.Last.OaDateTime)
+            s_listOfManualBasal.Add(item)
+        End If
+        If Me.RecentData.TryGetValue(ItemIndexes.markers.ToString, markerRowString) Then
+            Me.MaxBasalPerHourLabel.Text = CollectMarkers(markerRowString)
+        Else
+            Me.MaxBasalPerHourLabel.Text = ""
+        End If
+
+#End Region ' Update all Markers
+
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In Me.RecentData.WithIndex()
 
             Dim row As KeyValuePair(Of String, String) = c.Value
@@ -1637,7 +1663,6 @@ Public Class Form1
 
                 Case ItemIndexes.therapyAlgorithmState
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-                    s_therapyAlgorithmStateValue = Loads(row.Value)
 
                 Case ItemIndexes.pumpBannerState
                     s_pumpBannerStateValue = LoadList(row.Value)
@@ -2031,32 +2056,32 @@ Public Class Form1
 
     Private Sub UpdateSensorLife()
 
-        If s_sensorDurationHours = 255 Then
-            Me.SensorDaysLeftLabel.Text = $"???"
-            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
-            Me.SensorTimeLeftLabel.Text = ""
-        ElseIf s_sensorDurationHours >= 24 Then
-            Me.SensorDaysLeftLabel.Text = Math.Ceiling(s_sensorDurationHours / 24).ToString(CurrentUICulture)
-            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
-            Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
-        Else
-            If s_sensorDurationHours = 0 Then
+        Select Case s_sensorDurationHours
+            Case Is >= 255
+                Me.SensorDaysLeftLabel.Text = $"???"
+                Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
+                Me.SensorTimeLeftLabel.Text = ""
+            Case Is >= 24
+                Me.SensorDaysLeftLabel.Text = Math.Ceiling(s_sensorDurationHours / 24).ToString(CurrentUICulture)
+                Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
+                Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
+            Case 0
                 Dim sensorDurationMinutes As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexes.sensorDurationMinutes), False)
                 If sensorDurationMinutes = 0 Then
                     Me.SensorDaysLeftLabel.Text = ""
                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpired
                     Me.SensorTimeLeftLabel.Text = $"Expired"
                 Else
-                    Me.SensorDaysLeftLabel.Text = $"1"
+                    Me.SensorDaysLeftLabel.Text = $"<1"
                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
                     Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes} Minutes"
                 End If
-            Else
-                Me.SensorDaysLeftLabel.Text = $"1"
+
+            Case Else
+                Me.SensorDaysLeftLabel.Text = $"0"
                 Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
                 Me.SensorTimeLeftLabel.Text = $"{s_sensorDurationHours + 1} Hours"
-            End If
-        End If
+        End Select
         Me.SensorDaysLeftLabel.Visible = True
     End Sub
 
@@ -2143,26 +2168,6 @@ Public Class Form1
                 Me.LastUpdateTime.Text = Now.ToShortDateTimeString
             End If
             Me.CursorPanel.Visible = False
-
-#Region "Update all Markers"
-
-            Dim markerRowString As String = ""
-            If Me.RecentData.TryGetValue(ItemIndexes.sgs.ToString, markerRowString) Then
-                s_listOfSGs = LoadList(markerRowString).ToSgList()
-            End If
-
-            If Me.RecentData.TryGetValue(ItemIndexes.basal.ToString, markerRowString) Then
-                Dim item As BasalRecord = DictionaryToClass(Of BasalRecord)(Loads(markerRowString), recordNumber:=0)
-                item.OaDateTime(s_listOfSGs.Last.OaDateTime)
-                s_listOfManualBasal.Add(item)
-            End If
-            If Me.RecentData.TryGetValue(ItemIndexes.markers.ToString, markerRowString) Then
-                Me.MaxBasalPerHourLabel.Text = CollectMarkers(markerRowString)
-            Else
-                Me.MaxBasalPerHourLabel.Text = ""
-            End If
-
-#End Region ' Update all Markers
 
             Me.UpdateDataTables()
             _updating = False

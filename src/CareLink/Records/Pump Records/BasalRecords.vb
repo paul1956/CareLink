@@ -3,14 +3,14 @@
 ' See the LICENSE file in the project root for more information.
 
 Public Class BasalRecords
-    Private ReadOnly _size As Integer
     Private ReadOnly _buffer As New List(Of BasalRecord)
+    Private ReadOnly _size As Integer
 
     Public Sub New(size As Integer)
         _size = size
     End Sub
 
-    Public Sub Add(item As BasalRecord)
+    Friend Sub Add(item As BasalRecord)
         If _buffer.Any(Function(r As BasalRecord) r.GetOaGetTime = item.GetOaGetTime) Then
             Exit Sub
         End If
@@ -20,25 +20,20 @@ Public Class BasalRecords
         _buffer.Add(item)
     End Sub
 
-    Public Function ToList() As List(Of BasalRecord)
+    Friend Sub Clear()
+        _buffer.Clear()
+    End Sub
+
+    Friend Function GetSubTitle() As String
+        If InAutoMode Then
+            Return ""
+        End If
+        Return $" {_buffer.Last().activeBasalPattern} rate = {_buffer.Last().GetBasalPerHour}U Per Hour".Replace("  ", " ")
+
+    End Function
+
+    Friend Function ToList() As List(Of BasalRecord)
         Return _buffer
     End Function
-
-    Public Function GetSubTitle() As String
-        Dim lastBasalRecord As BasalRecord = _buffer.Last
-        Select Case _buffer.Last.activeBasalPattern
-            Case "BASAL1"
-                Return If(lastBasalRecord.GetBasal = 0, "", $" BASAL1, current rate={lastBasalRecord.GetBasal}")
-            Case Else
-                Return $" {lastBasalRecord.activeBasalPattern} rate = {lastBasalRecord.GetBasal}".Replace("  ", " ")
-        End Select
-
-    End Function
-
-    Default ReadOnly Property Value(index As Integer) As BasalRecord
-        Get
-            Return _buffer(index)
-        End Get
-    End Property
 
 End Class

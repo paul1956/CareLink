@@ -66,13 +66,12 @@ Partial Class AboutBox1
         Me.TableLayoutPanel.Margin = New Padding(4, 3, 4, 3)
         Me.TableLayoutPanel.Name = "TableLayoutPanel"
         Me.TableLayoutPanel.RowCount = 6
-        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 14.9635F))
-        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 4.744525F))
-        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10F))
-        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10F))
-        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
-        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10F))
-        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Absolute, 20F))
+        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 15.0F))
+        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 5.0F))
+        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10.0F))
+        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10.0F))
+        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 50.0F))
+        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10.0F))
         Me.TableLayoutPanel.Size = New Size(562, 311)
         Me.TableLayoutPanel.TabIndex = 0
         ' 

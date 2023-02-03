@@ -8,30 +8,6 @@ Imports System.Runtime.CompilerServices
 
 Friend Module Form1Helpers
 
-    Friend Sub SetTreatmentInsulinRow()
-        Select Case MaxBasalPerDose
-            Case < 0.25
-                TreatmentInsulinRow = 0.5
-            Case < 0.5
-                TreatmentInsulinRow = 0.5
-            Case < 0.75
-                TreatmentInsulinRow = 0.75
-            Case < 1
-                TreatmentInsulinRow = 1
-            Case < 1.25
-                TreatmentInsulinRow = 1.25
-            Case < 1.5
-                TreatmentInsulinRow = 1.5
-            Case < 1.75
-                TreatmentInsulinRow = 1.75
-            Case < 2
-                TreatmentInsulinRow = 2
-            Case Else
-                TreatmentInsulinRow = CSng(MaxBasalPerDose + 0.025)
-        End Select
-        TreatmentInsulinRow = TreatmentInsulinRow.RoundSingle(3)
-    End Sub
-
     Friend Function ConvertPercent24HoursToDisplayValueString(rowValue As String) As String
         Dim val As Decimal = CDec(Convert.ToInt32(rowValue) * 0.24)
         Dim hours As Integer = Convert.ToInt32(val)
@@ -79,6 +55,7 @@ Friend Module Form1Helpers
                     MainForm.LastUpdateTime.Text = "Unknown"
                     Return False
                 End If
+                s_listOfManualBasal.Clear()
                 MainForm.RecentData = MainForm.Client.GetRecentData(MainForm)
                 MainForm.ServerUpdateTimer.Interval = s_oneMinutesInMilliseconds
                 MainForm.ServerUpdateTimer.Start()
@@ -90,6 +67,7 @@ Friend Module Form1Helpers
                 End If
 
                 ReportLoginStatus(MainForm.LoginStatus, MainForm.RecentData Is Nothing OrElse MainForm.RecentData.Count = 0, MainForm.Client.GetLastErrorMessage)
+
                 MainForm.MenuShowMiniDisplay.Visible = True
         End Select
         MainForm.FinishInitialization()
@@ -124,6 +102,30 @@ Friend Module Form1Helpers
         Next
         Return newMarker
     End Function
+
+    Friend Sub SetTreatmentInsulinRow()
+        Select Case MaxBasalPerDose
+            Case < 0.25
+                TreatmentInsulinRow = 0.5
+            Case < 0.5
+                TreatmentInsulinRow = 0.5
+            Case < 0.75
+                TreatmentInsulinRow = 0.75
+            Case < 1
+                TreatmentInsulinRow = 1
+            Case < 1.25
+                TreatmentInsulinRow = 1.25
+            Case < 1.5
+                TreatmentInsulinRow = 1.5
+            Case < 1.75
+                TreatmentInsulinRow = 1.75
+            Case < 2
+                TreatmentInsulinRow = 2
+            Case Else
+                TreatmentInsulinRow = CSng(MaxBasalPerDose + 0.025)
+        End Select
+        TreatmentInsulinRow = TreatmentInsulinRow.RoundSingle(3)
+    End Sub
 
     Public Sub ReportLoginStatus(loginStatus As Label)
         ReportLoginStatus(loginStatus, True, "No Internet Connection!")
