@@ -44,6 +44,7 @@ Public Module PumpVariables
     Friend s_criticalLow As Single
     Friend s_filterJsonData As Boolean = True
     Friend s_firstName As String = ""
+    Friend s_gstCommunicationState As Boolean
     Friend s_lastAlarmValue As Dictionary(Of String, String)
     Friend s_lastBGDiff As Double = 0
     Friend s_lastBGTime As Date
