@@ -2060,7 +2060,7 @@ Public Class Form1
             Case Is >= 255
                 Me.SensorDaysLeftLabel.Text = $"???"
                 Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
-                Me.SensorTimeLeftLabel.Text = ""
+                Me.SensorTimeLeftLabel.Text = "Unknown"
             Case Is >= 24
                 Me.SensorDaysLeftLabel.Text = Math.Ceiling(s_sensorDurationHours / 24).ToString(CurrentUICulture)
                 Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
