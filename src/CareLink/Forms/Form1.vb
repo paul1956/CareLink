@@ -2063,7 +2063,7 @@ Public Class Form1
                 If s_gstCommunicationState Then
                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
                 Else
-                    Me.SensorTimeLeftPictureBox.Image = My.Resources.PumpConnicitivityToTransmitterNotOK
+                    Me.SensorTimeLeftPictureBox.Image = My.Resources.PumpConnectivityToTransmitterNotOK
                 End If
                 Me.SensorTimeLeftLabel.Text = "Unknown"
             Case Is >= 24
