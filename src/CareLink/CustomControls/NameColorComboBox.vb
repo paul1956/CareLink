@@ -35,7 +35,7 @@ Public Class NameColorComboBox
 
     Protected Overrides Sub InitLayout()
         MyBase.InitLayout()
-        If Me.DesignMode = True Then Exit Sub
+        If Me.DesignMode Then Exit Sub
         Me.Items.Clear()
         Me.DrawMode = DrawMode.OwnerDrawFixed
         Me.DropDownStyle = ComboBoxStyle.DropDownList

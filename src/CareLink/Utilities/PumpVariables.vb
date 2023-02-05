@@ -60,6 +60,8 @@ Public Module PumpVariables
     Friend s_notificationHistoryValue As Dictionary(Of String, String)
     Friend s_previousRecentData As Dictionary(Of String, String)
     Friend s_pumpBannerStateValue As New List(Of Dictionary(Of String, String))
+    Friend s_pumpInRangeOfPhone As Boolean
+    Friend s_pumpInRangeOfTransmitter As Boolean
     Friend s_reservoirLevelPercent As Integer
     Friend s_sensorDurationHours As Integer
     Friend s_sensorState As String

@@ -11,7 +11,7 @@ Friend Module MathExtensions
     Friend Function GetSingleValue(item As Dictionary(Of String, String), value As String) As Single
         Dim returnString As String = ""
         If item.TryGetValue(value, returnString) Then
-            Return returnString.ParseSingle
+            Return returnString.ParseSingle()
         End If
         Return Single.NaN
     End Function
@@ -59,7 +59,7 @@ Friend Module MathExtensions
             Throw New Exception($"{NameOf(valueString)} = {valueString}, and contains both comma and period in Line {sourceLineNumber} in {memberName}.")
         End If
 
-        If Single.TryParse(valueString.Replace(",", "."), NumberStyles.Number, CurrentDataCulture, result) Then
+        If Single.TryParse(valueString.Replace(",", "."), NumberStyles.Number, usDataCulture, result) Then
             result = result.RoundSingle(decimalDigits)
             Return True
         End If

@@ -23,12 +23,12 @@ Friend Module TransmitterBatteryHelper
 
     <Extension>
     Friend Sub UpdateTransmitterBattery(MainForm As Form1)
-        If s_listOfSummaryRecords.GetValue(Of Boolean)(NameOf(ItemIndexes.conduitSensorInRange)) Then
+        If s_pumpInRangeOfTransmitter Then
             Dim gstBatteryLevel As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexes.gstBatteryLevel), False)
             MainForm.TransmitterBatteryPictureBox.Image = GetBatteryImage(gstBatteryLevel)
             MainForm.TransmitterBatteryPercentLabel.Text = $"{gstBatteryLevel}%"
         Else
-            MainForm.TransmitterBatteryPictureBox.Image = My.Resources.TransmitterBatteryUnknown
+            MainForm.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToTransmitterNotOK
             MainForm.TransmitterBatteryPercentLabel.Text = $"???"
         End If
 

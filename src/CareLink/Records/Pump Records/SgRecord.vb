@@ -13,18 +13,16 @@ Public Class SgRecord
 
     End Sub
 
-    Public Sub New(dic As Dictionary(Of String, String))
-        Dim allSgs As New List(Of Dictionary(Of String, String)) From {
-            dic
-        }
-        Dim lastValidTime As Date = Nothing
-        Me.processOneSg(allSgs, 0, lastValidTime, dic)
-    End Sub
-
-    Public Sub New(allSgs As List(Of Dictionary(Of String, String)), index As Integer, ByRef lastValidTime As Date)
-        Dim dic As Dictionary(Of String, String) = allSgs(index)
+    Public Sub New(innerJson As Dictionary(Of String, String), index As Integer)
         Me.RecordNumber = index + 1
-        lastValidTime = Me.processOneSg(allSgs, index, lastValidTime, dic)
+        Me.sg = innerJson(NameOf(sg)).ParseSingle()
+        Me.datetimeAsString = innerJson(NameOf(Me.datetime))
+        Me.datetime = Me.datetimeAsString.ParseDate(NameOf(SgRecord.datetime))
+        Me.timeChange = Boolean.Parse(innerJson(NameOf(timeChange)))
+        Me.sensorState = innerJson(NameOf(sensorState))
+        Me.kind = innerJson(NameOf(kind))
+        Me.version = CInt(innerJson(NameOf(version)))
+        Me.relativeOffset = CInt(innerJson(NameOf(relativeOffset)))
     End Sub
 
     <DisplayName(NameOf(SgRecord.datetime))>
@@ -101,34 +99,5 @@ Public Class SgRecord
     <DisplayName("Version")>
     <Column(Order:=6, TypeName:=NameOf([Int32]))>
     Public Property version As Integer
-
-    Private Function processOneSg(allSgs As List(Of Dictionary(Of String, String)), Index As Integer, lastValidTime As Date, dic As Dictionary(Of String, String)) As Date
-        Me.sg = dic(NameOf(sg)).ParseSingle
-        Dim value As String = ""
-        If dic.TryGetValue(NameOf(Me.datetime), value) Then
-            Me.datetime = allSgs.SafeGetSgDateTime(Index)
-            lastValidTime = Me.datetime + s_fiveMinuteSpan
-        Else
-            Me.datetime = lastValidTime
-            lastValidTime += s_fiveMinuteSpan
-        End If
-        Me.datetimeAsString = value
-        If dic.TryGetValue(NameOf(timeChange), value) Then
-            Me.timeChange = Boolean.Parse(value)
-        End If
-        If dic.TryGetValue(NameOf(sensorState), value) Then
-            Me.sensorState = value
-        End If
-        If dic.TryGetValue(NameOf(kind), value) Then
-            Me.kind = value
-        End If
-        If dic.TryGetValue(NameOf(version), value) Then
-            Me.version = CInt(value)
-        End If
-        If dic.TryGetValue(NameOf(relativeOffset), value) Then
-            Me.relativeOffset = CInt(value)
-        End If
-        Return lastValidTime
-    End Function
 
 End Class

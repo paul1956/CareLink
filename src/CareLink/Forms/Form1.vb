@@ -255,6 +255,7 @@ Public Class Form1
                         Catch ex As Exception
                             MessageBox.Show($"Error reading date file. Original error: {ex.DecodeException()}")
                         End Try
+                        CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{ProjectName}", True)
                         Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                         Me.LastUpdateTime.ForeColor = SystemColors.ControlText
@@ -278,7 +279,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub MenuStartHereExit_Click(sender As Object, e As EventArgs) Handles StartHereExit.Click
+    Private Sub StartHereExit_Click(sender As Object, e As EventArgs) Handles StartHereExit.Click
         Me.CleanUpNotificationIcon()
     End Sub
 
@@ -346,7 +347,7 @@ Public Class Form1
 
 #Region "Option Menus"
 
-    Private Sub MenuOptionsAutoLogin_CheckChanger(sender As Object, e As EventArgs) Handles MenuOptionsAutoLogin.CheckedChanged
+    Private Sub MenuOptionsAutoLogin_CheckedChanged(sender As Object, e As EventArgs) Handles MenuOptionsAutoLogin.CheckedChanged
         My.Settings.AutoLogin = Me.MenuOptionsAutoLogin.Checked
     End Sub
 
@@ -445,7 +446,7 @@ Public Class Form1
 
 #Region "View Menu Events"
 
-    Private Sub ShowMiniDisplay_Click(sender As Object, e As EventArgs) Handles MenuShowMiniDisplay.Click
+    Private Sub MenuShowMiniDisplay_Click(sender As Object, e As EventArgs) Handles MenuShowMiniDisplay.Click
         Me.Hide()
         _bgMiniDisplay.Show()
     End Sub
@@ -492,7 +493,7 @@ Public Class Form1
         _lastSummaryTabIndex = e.TabPageIndex
     End Sub
 
-    Private Sub TabControlMarkers_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlPage2.Selecting
+    Private Sub TabControlPage2_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlPage2.Selecting
         Select Case e.TabPage.Name
             Case NameOf(TabPageBackToHomePage)
                 Me.TabControlPage1.SelectedIndex = _lastSummaryTabIndex
@@ -521,7 +522,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub SensorAgeLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles TransmitterBatteryPictureBox.MouseHover
+    Private Sub SensorDaysLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles SensorDaysLeftLabel.MouseHover
         If s_sensorDurationHours < 24 Then
             _sensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {s_sensorDurationHours} hours")
         End If
@@ -697,16 +698,16 @@ Public Class Form1
     End Sub
 
     <DebuggerNonUserCode()>
-    Private Sub HomePageChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles SummaryChart.PostPaint
+    Private Sub SummaryChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles SummaryChart.PostPaint
 
         If Not _Initialized OrElse _inMouseMove Then
             Exit Sub
         End If
-        Debug.Print($"In {NameOf(HomePageChart_PostPaint)} before SyncLock")
+        Debug.Print($"In {NameOf(SummaryChart_PostPaint)} before SyncLock")
         SyncLock _updatingLock
-            Debug.Print($"In {NameOf(HomePageChart_PostPaint)} in SyncLock")
+            Debug.Print($"In {NameOf(SummaryChart_PostPaint)} in SyncLock")
             If _updating Then
-                Debug.Print($"Exiting {NameOf(HomePageChart_PostPaint)} due to {NameOf(_updating)}")
+                Debug.Print($"Exiting {NameOf(SummaryChart_PostPaint)} due to {NameOf(_updating)}")
                 Exit Sub
             End If
             e.PostPaintSupport(_summaryChartAbsoluteRectangle,
@@ -715,7 +716,7 @@ Public Class Form1
                 True,
                 True)
         End SyncLock
-        Debug.Print($"In {NameOf(HomePageChart_PostPaint)} exited SyncLock")
+        Debug.Print($"In {NameOf(SummaryChart_PostPaint)} exited SyncLock")
     End Sub
 
     <DebuggerNonUserCode()>
@@ -854,7 +855,7 @@ Public Class Form1
             End If
             dgv.dgvCellFormatting(e, NameOf(SgRecord.datetime))
             If columnName.Equals(NameOf(SgRecord.sg), StringComparison.OrdinalIgnoreCase) Then
-                Dim sensorValue As Single = e.Value.ToString().ParseSingle
+                Dim sensorValue As Single = e.Value.ToString().ParseSingle()
                 If Single.IsNaN(sensorValue) Then
                     .BackColor = Color.Gray
                 ElseIf sensorValue < s_limitLow Then
@@ -1508,11 +1509,11 @@ Public Class Form1
 
         s_listOfSummaryRecords.Clear()
 
+        s_lastMedicalDeviceDataUpdateServerEpoch = CLng(Me.RecentData(ItemIndexes.lastMedicalDeviceDataUpdateServerTime.ToString))
         Dim markerRowString As String = ""
-
         If Me.RecentData.TryGetValue(ItemIndexes.therapyAlgorithmState.ToString, markerRowString) Then
             s_therapyAlgorithmStateValue = Loads(markerRowString)
-            InAutoMode = s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.autoModeShieldState)) = "AUTO_BASAL"
+            InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.autoModeShieldState)) = "AUTO_BASAL"
         End If
 
 #Region "Update all Markers"
@@ -1523,7 +1524,7 @@ Public Class Form1
 
         If Me.RecentData.TryGetValue(ItemIndexes.basal.ToString, markerRowString) Then
             Dim item As BasalRecord = DictionaryToClass(Of BasalRecord)(Loads(markerRowString), recordNumber:=0)
-            item.OaDateTime(s_listOfSGs.Last.OaDateTime)
+            item.OaDateTime(s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime)
             s_listOfManualBasal.Add(item)
         End If
         If Me.RecentData.TryGetValue(ItemIndexes.markers.ToString, markerRowString) Then
@@ -1556,7 +1557,6 @@ Public Class Form1
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
 
                 Case ItemIndexes.lastMedicalDeviceDataUpdateServerTime
-                    s_lastMedicalDeviceDataUpdateServerEpoch = CLng(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
 
                 Case ItemIndexes.firstName
@@ -1576,13 +1576,15 @@ Public Class Form1
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Phone battery status is {row.Value}"))
 
                 Case ItemIndexes.conduitInRange
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Phone {If(CBool(row.Value) = True, "is", "is not")} in range of pump"))
+                    s_pumpInRangeOfPhone = CBool(row.Value)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Phone {If(s_pumpInRangeOfPhone, "is", "is not")} in range of pump"))
 
                 Case ItemIndexes.conduitMedicalDeviceInRange
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Pump {If(CBool(row.Value) = True, "is", "is not")} in range of phone"))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Pump {If(CBool(row.Value), "is", "is not")} in range of phone"))
 
                 Case ItemIndexes.conduitSensorInRange
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Transmitter {If(CBool(row.Value) = True, "is", "is not")} in range of pump"))
+                    s_pumpInRangeOfTransmitter = CBool(row.Value)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Transmitter {If(s_pumpInRangeOfTransmitter, "is", "is not")} in range of pump"))
 
                 Case ItemIndexes.medicalDeviceFamily
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
@@ -1634,7 +1636,7 @@ Public Class Form1
 
                 Case ItemIndexes.lastSG
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-                    s_lastSgRecord = New SgRecord(Loads(row.Value))
+                    s_lastSgRecord = New SgRecord(Loads(row.Value), 0)
 
                 Case ItemIndexes.lastAlarm
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
@@ -1701,7 +1703,7 @@ Public Class Form1
                     If Me.RecentData.TryGetValue(NameOf(ItemIndexes.gstBatteryLevel), gstBatteryLevel) Then
                         Continue For
                     End If
-                    s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexes.gstBatteryLevel, "0", "No data from pump"))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexes.gstBatteryLevel, "-1", "No data from pump"))
 
                 Case ItemIndexes.gstBatteryLevel
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"{row.Value}%"))
@@ -1781,25 +1783,25 @@ Public Class Form1
 
                 ' Order all markers by time
                 Dim timeOrderedMarkers As New SortedDictionary(Of OADate, Single)
-                Dim sgOADateTime As OADate
+                Dim markerOADateTime As OADate
 
                 Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
                 For Each marker As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
-                    sgOADateTime = New OADate(s_markers.SafeGetSgDateTime(marker.Index).RoundTimeDown(RoundTo.Minute))
+                    markerOADateTime = New OADate(s_markers(marker.Index).GetMarkerDateTime)
                     Select Case marker.Value(NameOf(InsulinRecord.type)).ToString
                         Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
                             Dim bolusAmount As Single = marker.Value.GetSingleValue(NameOf(AutoBasalDeliveryRecord.bolusAmount))
-                            If timeOrderedMarkers.ContainsKey(sgOADateTime) Then
-                                timeOrderedMarkers(sgOADateTime) += bolusAmount
+                            If timeOrderedMarkers.ContainsKey(markerOADateTime) Then
+                                timeOrderedMarkers(markerOADateTime) += bolusAmount
                             Else
-                                timeOrderedMarkers.Add(sgOADateTime, bolusAmount)
+                                timeOrderedMarkers.Add(markerOADateTime, bolusAmount)
                             End If
                         Case "INSULIN"
                             Dim bolusAmount As Single = marker.Value.GetSingleValue(NameOf(InsulinRecord.deliveredFastAmount))
-                            If timeOrderedMarkers.ContainsKey(sgOADateTime) Then
-                                timeOrderedMarkers(sgOADateTime) += bolusAmount
+                            If timeOrderedMarkers.ContainsKey(markerOADateTime) Then
+                                timeOrderedMarkers(markerOADateTime) += bolusAmount
                             Else
-                                timeOrderedMarkers.Add(sgOADateTime, bolusAmount)
+                                timeOrderedMarkers.Add(markerOADateTime, bolusAmount)
                             End If
                         Case "TIME_CHANGE"
                         Case "CALIBRATION"
@@ -1959,7 +1961,7 @@ Public Class Form1
                     End Select
 
                 Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
-                    Dim amount As Single = marker.Value(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle.RoundSingle(3)
+                    Dim amount As Single = marker.Value(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
                     s_totalBasal += amount
                     s_totalDailyDose += amount
                 Case "MEAL"
@@ -1998,30 +2000,38 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateInsulinLevel()
-        Select Case s_reservoirLevelPercent
-            Case >= 85
-                Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(7)
-            Case >= 71
-                Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(6)
-            Case >= 57
-                Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(5)
-            Case >= 43
-                Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(4)
-            Case >= 29
-                Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(3)
-            Case >= 15
-                Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(2)
-            Case >= 1
-                Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(1)
-            Case Else
-                Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(0)
-        End Select
+
+        Me.InsulinLevelPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
+        If Not s_pumpInRangeOfPhone Then
+            Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(8)
+            Me.RemainingInsulinUnits.Text = "???U"
+        Else
+            Me.RemainingInsulinUnits.Text = $"{s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.reservoirRemainingUnits)).ParseSingle(1):N1} U"
+            Select Case s_reservoirLevelPercent
+                Case >= 85
+                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(7)
+                Case >= 71
+                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(6)
+                Case >= 57
+                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(5)
+                Case >= 43
+                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(4)
+                Case >= 29
+                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(3)
+                Case >= 15
+                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(2)
+                Case >= 1
+                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(1)
+                Case Else
+                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(0)
+            End Select
+        End If
         Application.DoEvents()
     End Sub
 
     Private Sub UpdatePumpBattery()
-        If Not s_listOfSummaryRecords.GetValue(Of Boolean)(NameOf(ItemIndexes.conduitInRange)) Then
-            Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryUnknown
+        If Not s_pumpInRangeOfPhone Then
+            Me.PumpBatteryPictureBox.Image = My.Resources.PumpConnectivityToPhoneNotOK
             Me.PumpBatteryRemainingLabel.Text = $"Unknown"
             Exit Sub
         End If
@@ -2040,19 +2050,13 @@ Public Class Form1
             Case > 10
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryLow
                 Me.PumpBatteryRemainingLabel.Text = $"Low{Environment.NewLine}{batteryLeftPercent}%"
-            Case Else
+            Case > 0
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryCritical
                 Me.PumpBatteryRemainingLabel.Text = $"Critical{Environment.NewLine}{batteryLeftPercent}%"
+            Case Else
+                Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryCritical
+                Me.PumpBatteryRemainingLabel.Text = $"Critical{Environment.NewLine}0%"
         End Select
-    End Sub
-
-    Private Sub UpdateRemainingInsulin()
-        Try
-            Me.RemainingInsulinUnits.Text = $"{s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.reservoirRemainingUnits)).ParseSingle(1):N1} U"
-        Catch ex As Exception
-            Stop
-            Throw New ArithmeticException($"{ex.DecodeException()} exception in {NameOf(UpdateRemainingInsulin)}")
-        End Try
     End Sub
 
     Private Sub UpdateSensorLife()
@@ -2072,20 +2076,25 @@ Public Class Form1
                 Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
             Case 0
                 Dim sensorDurationMinutes As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexes.sensorDurationMinutes), False)
-                If sensorDurationMinutes = 0 Then
-                    Me.SensorDaysLeftLabel.Text = ""
-                    Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpired
-                    Me.SensorTimeLeftLabel.Text = $"Expired"
-                Else
-                    Me.SensorDaysLeftLabel.Text = $"<1"
-                    Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
-                    Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes} Minutes"
-                End If
+                Select Case sensorDurationMinutes
+                    Case > 0
+                        Me.SensorDaysLeftLabel.Text = "0"
+                        Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
+                        Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes} minutes"
+                    Case 0
+                        Me.SensorDaysLeftLabel.Text = "0"
+                        Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpired
+                        Me.SensorTimeLeftLabel.Text = "Expired"
+                    Case Else
+                        Me.SensorDaysLeftLabel.Text = ""
+                        Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
+                        Me.SensorTimeLeftLabel.Text = "Unknown"
+                End Select
 
             Case Else
-                Me.SensorDaysLeftLabel.Text = $"0"
-                Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
-                Me.SensorTimeLeftLabel.Text = $"{s_sensorDurationHours + 1} Hours"
+                Me.SensorDaysLeftLabel.Text = ""
+                Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
+                Me.SensorTimeLeftLabel.Text = "Unknown"
         End Select
         Me.SensorDaysLeftLabel.Visible = True
     End Sub
@@ -2193,7 +2202,6 @@ Public Class Form1
         Me.UpdateCalibrationTimeRemaining()
         Me.UpdateInsulinLevel()
         Me.UpdatePumpBattery()
-        Me.UpdateRemainingInsulin()
         Me.UpdateSensorLife()
         Me.UpdateTimeInRange()
         Me.UpdateTransmitterBattery()

@@ -1341,6 +1341,7 @@ Partial Class Form1
         Me.ImageList1.Images.SetKeyName(5, "ReservoirRemains57+.png")
         Me.ImageList1.Images.SetKeyName(6, "ReservoirRemains71+.png")
         Me.ImageList1.Images.SetKeyName(7, "ReservoirRemains85+.png")
+        Me.ImageList1.Images.SetKeyName(8, "ReservoirRemainsUnknown.png")
         ' 
         ' InRangeMessageLabel
         ' 
@@ -1625,14 +1626,15 @@ Partial Class Form1
         ' 
         ' SensorDaysLeftLabel
         ' 
+        Me.SensorDaysLeftLabel.AutoSize = False
         Me.SensorDaysLeftLabel.BackColor = Color.Transparent
         Me.SensorDaysLeftLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         Me.SensorDaysLeftLabel.ForeColor = Color.White
-        Me.SensorDaysLeftLabel.Location = New Point(17, 16)
+        Me.SensorDaysLeftLabel.Location = New Point(0, 16)
         Me.SensorDaysLeftLabel.Name = "SensorDaysLeftLabel"
-        Me.SensorDaysLeftLabel.Size = New Size(37, 52)
+        Me.SensorDaysLeftLabel.Size = New Size(55, 40)
         Me.SensorDaysLeftLabel.TabIndex = 45
-        Me.SensorDaysLeftLabel.Text = "5"
+        Me.SensorDaysLeftLabel.Text = "<1"
         Me.SensorDaysLeftLabel.TextAlign = ContentAlignment.MiddleCenter
         Me.SensorDaysLeftLabel.Visible = False
         ' 
@@ -1642,9 +1644,9 @@ Partial Class Form1
         Me.SensorTimeLeftLabel.Dock = DockStyle.Bottom
         Me.SensorTimeLeftLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.SensorTimeLeftLabel.ForeColor = Color.White
-        Me.SensorTimeLeftLabel.Location = New Point(0, 95)
+        Me.SensorTimeLeftLabel.Location = New Point(0, 108)
         Me.SensorTimeLeftLabel.Name = "SensorTimeLeftLabel"
-        Me.SensorTimeLeftLabel.Size = New Size(120, 21)
+        Me.SensorTimeLeftLabel.Size = New Size(94, 21)
         Me.SensorTimeLeftLabel.TabIndex = 46
         Me.SensorTimeLeftLabel.Text = "???"
         Me.SensorTimeLeftLabel.TextAlign = ContentAlignment.MiddleCenter

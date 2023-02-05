@@ -18,7 +18,7 @@ Friend Module DataGridViewHelper
             .ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
                     .Alignment = DataGridViewContentAlignment.MiddleCenter,
                     .BackColor = SystemColors.Control,
-                    .Font = New System.Drawing.Font("Segoe UI", 9.0!, FontStyle.Regular, GraphicsUnit.Point),
+                    .Font = New Font("Segoe UI", 9.0!, FontStyle.Regular, GraphicsUnit.Point),
                     .ForeColor = SystemColors.WindowText,
                     .SelectionBackColor = SystemColors.Highlight,
                     .SelectionForeColor = SystemColors.HighlightText,
@@ -26,7 +26,7 @@ Friend Module DataGridViewHelper
                 },
             .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize,
             .Dock = DockStyle.Fill,
-            .Location = New System.Drawing.Point(3, 3),
+            .Location = New Point(3, 3),
             .Name = dgvName,
             .[ReadOnly] = True,
             .SelectionMode = DataGridViewSelectionMode.CellSelect,

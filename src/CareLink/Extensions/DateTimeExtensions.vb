@@ -75,7 +75,7 @@ Friend Module DateTimeExtensions
     ''' <summary>
     ''' Converts a Unix Milliseconds TimeSpan to UTC Date
     ''' </summary>
-    ''' <param name="unixTime" type="String"></param>
+    ''' <param name="unixTime" kind="String"></param>
     ''' <returns>UTC Date</returns>
     <Extension>
     Private Function FromUnixTime(unixTime As String) As Date
@@ -84,13 +84,13 @@ Friend Module DateTimeExtensions
             Return epoch
         End If
 
-        Return CDbl(unixTime).FromUnixTime
+        Return Double.Parse(unixTime).FromUnixTime
     End Function
 
     ''' <summary>
     ''' Converts a Unix Milliseconds TimeSpan to UTC Date
     ''' </summary>
-    ''' <param name="unixTime" type="Double">TimeSpan in Milliseconds</param>
+    ''' <param name="unixTime" kind="Double">TimeSpan in Milliseconds</param>
     ''' <returns>UTC Date</returns>
     <Extension>
     Private Function FromUnixTime(unixTime As Double) As Date
@@ -153,32 +153,13 @@ Friend Module DateTimeExtensions
     End Function
 
     <Extension>
-    Friend Function SafeGetSgDateTime(sgList As List(Of Dictionary(Of String, String)), index As Integer) As Date
-        Dim sgDateTimeString As String = ""
-        Dim sgDateTime As Date
-        If sgList(index).Count < 7 Then
-            If sgList(index).TryGetValue("sgOADateTime", sgDateTimeString) Then
-                sgDateTime = Date.FromOADate(New OADate(Double.Parse(sgDateTimeString)))
-                Return sgDateTime
-            End If
-            index -= 1
-        End If
-        If sgList(index).TryGetValue(NameOf(SgRecord.datetime), sgDateTimeString) Then
-            sgDateTime = sgDateTimeString.ParseDate(NameOf(SgRecord.datetime))
-        ElseIf sgList(index).TryGetValue(NameOf(TimeChangeRecord.dateTime), sgDateTimeString) Then
-            sgDateTime = sgDateTimeString.ParseDate(NameOf(TimeChangeRecord.dateTime))
-        ElseIf sgList(index).TryGetValue(NameOf(TimeChangeRecord.previousDateTime), sgDateTimeString) Then
-            sgDateTime = sgDateTimeString.ParseDate(NameOf(TimeChangeRecord.previousDateTime))
-        Else
-            sgDateTime = Now
-        End If
-        If sgDateTime.Year = 2000 Then
-            sgDateTime = Date.Now - ((sgList.Count - index) * s_fiveMinuteSpan)
-        End If
-        If sgList(index).Count < 7 Then
-            sgDateTime = sgDateTime.AddMinutes(5)
-        End If
-        Return sgDateTime
+    Friend Function GetMarkerDateTime(marker As Dictionary(Of String, String)) As Date
+        Try
+            Return marker.ParseDate("dateTime").RoundTimeDown(RoundTo.Minute)
+        Catch ex As Exception
+            Stop
+        End Try
+        Return Nothing
     End Function
 
     <Extension>
@@ -197,7 +178,18 @@ Friend Module DateTimeExtensions
             Return resultDate
         End If
 
-        Throw New System.FormatException($"String '{dateAsString}' with {NameOf(key)} = {key} from {memberName} line {sourceLineNumber} was not recognized as a valid DateTime in any supported culture.")
+        Throw New FormatException($"String '{dateAsString}' with {NameOf(key)} = {key} from {memberName} line {sourceLineNumber} was not recognized as a valid DateTime in any supported culture.")
+    End Function
+
+    <Extension>
+    Public Function ParseDate(marker As Dictionary(Of String, String), key As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Date
+        Dim resultDate As Date
+        Dim dateAsString As String = marker(key)
+        If dateAsString.TryParseDate(resultDate, key) Then
+            Return resultDate
+        End If
+
+        Throw New FormatException($"String '{dateAsString}' with {NameOf(key)} = {key} from {memberName} line {sourceLineNumber} was not recognized as a valid DateTime in any supported culture.")
     End Function
 
     <Extension>

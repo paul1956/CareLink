@@ -4,6 +4,7 @@
 
 Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
+Imports Octokit
 
 Friend Module ChartingExtensions
 
@@ -180,7 +181,7 @@ Friend Module ChartingExtensions
 
         For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             Try
-                Dim markerDateTime As Date = s_markers.SafeGetSgDateTime(markerWithIndex.Index)
+                Dim markerDateTime As Date = markerWithIndex.Value.GetMarkerDateTime
                 Dim markerOADateTime As New OADate(markerDateTime)
                 Dim bgValueString As String = ""
                 Dim bgValue As Single
@@ -198,11 +199,7 @@ Friend Module ChartingExtensions
                     Case "CALIBRATION"
                         markerSeriesPoints.AddCalibrationPoint(markerOADateTime, bgValue, entry)
                     Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
-                        Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle.RoundSingle(3)
-                        Dim minBasalMsg As String = ""
-                        If amount.IsMinBasal() Then
-                            minBasalMsg = "Min "
-                        End If
+                        Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
                         With pageChart.Series(BasalSeries)
                             .DrawBasalMarker(markerOADateTime,
                                              amount,
@@ -210,7 +207,7 @@ Friend Module ChartingExtensions
                                              HomePageInsulinRow,
                                              GetGraphLineColor("Basal Series"),
                                              False,
-                                             $"{minBasalMsg}Auto Basal: {amount} U")
+                                             GetToolTip(entry("type"), amount))
                         End With
                     Case "INSULIN"
                         Select Case entry(NameOf(InsulinRecord.activationType))
@@ -300,7 +297,7 @@ Friend Module ChartingExtensions
         s_treatmentMarkerMealDictionary.Clear()
         For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             Try
-                Dim markerDateTime As Date = s_markers.SafeGetSgDateTime(markerWithIndex.Index)
+                Dim markerDateTime As Date = markerWithIndex.Value.GetMarkerDateTime
                 Dim markerOADateTime As New OADate(markerDateTime)
                 Dim bgValueString As String = ""
                 Dim bgValue As Single
@@ -312,26 +309,24 @@ Friend Module ChartingExtensions
                 Dim markerSeriesPoints As DataPointCollection = treatmentChart.Series(MarkerSeries).Points
                 Select Case entry("type")
                     Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
-                        Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle.RoundSingle(3)
-                        Dim minBasalMsg As String = ""
-                        If amount.IsMinBasal() Then
-                            minBasalMsg = "Min "
-                        End If
+                        Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
                         With treatmentChart.Series(BasalSeries)
-                            .DrawBasalMarker(markerOADateTime,
-                                             amount,
-                                             MaxBasalPerDose,
-                                             TreatmentInsulinRow,
-                                             GetGraphLineColor("Basal Series"),
-                                             True,
-                                             $"{minBasalMsg}Auto Basal: {amount} U")
+                            Call .DrawBasalMarker(markerOADateTime,
+                                                  amount,
+                                                  MaxBasalPerDose,
+                                                  TreatmentInsulinRow,
+                                                  GetGraphLineColor("Basal Series"),
+                                                  True,
+                                                  GetToolTip(entry("type"), amount))
 
                         End With
                     Case "INSULIN"
                         Select Case entry(NameOf(InsulinRecord.activationType))
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
-                                treatmentChart.Series(BasalSeries).DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle, MaxBasalPerDose, TreatmentInsulinRow, GetGraphLineColor("Auto Correction"), True, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
+                                With treatmentChart.Series(BasalSeries)
+                                    .DrawBasalMarker(markerOADateTime, autoCorrection.ParseSingle(3), MaxBasalPerDose, TreatmentInsulinRow, GetGraphLineColor("Auto Correction"), True, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
+                                End With
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 If s_treatmentMarkerInsulinDictionary.TryAdd(markerOADateTime, TreatmentInsulinRow) Then
                                     markerSeriesPoints.AddXY(markerOADateTime, TreatmentInsulinRow)
@@ -391,6 +386,19 @@ Friend Module ChartingExtensions
         End If
 
     End Sub
+
+    Private Function GetToolTip(type As String, amount As Single) As String
+        Dim minBasalMsg As String = ""
+        If amount.IsMinBasal() Then
+            minBasalMsg = "Min "
+        End If
+
+        If type = "AUTO_BASAL_DELIVERY" Then
+            Return $"{minBasalMsg}Auto Basal: {amount} U"
+        Else
+            Return $"{minBasalMsg}Manual Basal: {amount} U"
+        End If
+    End Function
 
     <Extension>
     Friend Sub PostPaintSupport(e As ChartPaintEventArgs, ByRef chartRelativePosition As RectangleF, insulinDictionary As Dictionary(Of OADate, Single), mealDictionary As Dictionary(Of OADate, Single), offsetInsulinImage As Boolean, paintOnY2 As Boolean)

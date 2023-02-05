@@ -69,14 +69,20 @@ Friend Module CollectMarkersHelper
         Next
 
         For Each r As BasalRecord In s_listOfManualBasal.ToList
-            If r.activeBasalPattern <> "BASAL1" OrElse r.basalRate > 0 Then
-                basalDictionary.Add(r.GetOaGetTime, r.GetBasal)
-                s_listOfAutoBasalDeliveryMarkers.Add(New AutoBasalDeliveryRecord(r, basalDictionary.Count, 288 - basalDictionary.Count))
+            basalDictionary.Add(r.GetOaGetTime, r.GetBasal)
+            s_listOfAutoBasalDeliveryMarkers.Add(New AutoBasalDeliveryRecord(r, basalDictionary.Count, 288 - basalDictionary.Count))
+            If r.basalRate > 0 Then
                 s_markers.Add(r.ToDictionary)
             End If
         Next
 
-        Dim endOADate As OADate = If(basalDictionary.Count = 0, New OADate(Now), basalDictionary.Last.Key)
+        Dim endOADate As OADate
+        If basalDictionary.Count = 0 Then
+            endOADate = New OADate(Now)
+        Else
+            endOADate = basalDictionary.Last.Key
+        End If
+
         Dim i As Integer = 0
         While i < basalDictionary.Count AndAlso basalDictionary.Keys(i) <= endOADate
             Dim sum As Single = 0

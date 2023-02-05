@@ -18,9 +18,7 @@ Public Module SGListExtensions
             End If
         Next
         For i As Integer = 0 To innerJson.Count - 1
-
-            Dim sgItem As New SgRecord(innerJson, i, lastValidTime)
-            sGs.Add(sgItem)
+            sGs.Add(New SgRecord(innerJson(i), i))
         Next
         Return sGs
     End Function

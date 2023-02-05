@@ -20,7 +20,7 @@ Public Module DataGridViewExtensions
             Return
         End If
         If dgv.Columns(e.ColumnIndex).Name.Equals(key, StringComparison.Ordinal) Then
-            Dim dateValue As Date = CDate(e.Value)
+            Dim dateValue As Date = e.Value.ToString.ParseDate("")
             e.Value = dateValue.ToShortDateTimeString
         End If
     End Sub

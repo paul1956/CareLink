@@ -43,7 +43,7 @@ Friend Module DictionaryToClassMapper
                                 propertyValue = row.Value.ParseDate($"{[property].Name}AsString")
                                 classObject.GetType.GetProperty([property].Name).SetValue(classObject, row.Value, Nothing)
                             Case NameOf([Single])
-                                propertyValue = row.Value.ParseSingle
+                                propertyValue = row.Value.ParseSingle()
                             Case NameOf([Boolean]), NameOf([Int32]), NameOf([String])
                                 propertyValue = Convert.ChangeType(row.Value, [property].PropertyType)
                             Case Else

@@ -24,6 +24,10 @@ Public Class BasalRecords
         _buffer.Clear()
     End Sub
 
+    Friend Function Count() As Integer
+        Return _buffer.Count
+    End Function
+
     Friend Function GetSubTitle() As String
         If InAutoMode Then
             Return ""

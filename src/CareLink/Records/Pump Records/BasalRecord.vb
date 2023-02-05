@@ -9,18 +9,6 @@ Public Class BasalRecord
 
     Private _oaDateTime As OADate
 
-    <DisplayName("Preset Temp Name")>
-    <Column(Order:=5, TypeName:=NameOf([String]))>
-    Public Property presetTempName As String
-
-    <DisplayName("Temp Basal Duration Remaining")>
-    <Column(Order:=6, TypeName:=NameOf([Int32]))>
-    Public Property tempBasalDurationRemaining As Integer
-
-    <DisplayName("Temp Basal Type")>
-    <Column(Order:=4, TypeName:=NameOf([String]))>
-    Public Property tempBasalType As String
-
     <DisplayName("Active Basal Pattern")>
     <Column(Order:=0, TypeName:=NameOf([String]))>
     Public Property activeBasalPattern As String
@@ -28,6 +16,14 @@ Public Class BasalRecord
     <DisplayName("Basal Rate")>
     <Column(Order:=1, TypeName:=NameOf([Single]))>
     Public Property basalRate As Single
+
+    <DisplayName("Preset Temp Name")>
+    <Column(Order:=5, TypeName:=NameOf([String]))>
+    Public Property presetTempName As String
+
+    <DisplayName("Temp Basal Duration Remaining")>
+    <Column(Order:=6, TypeName:=NameOf([Int32]))>
+    Public Property tempBasalDurationRemaining As Integer
 
     <DisplayName("Temp Basal Percentage")>
     <Column(Order:=3, TypeName:=NameOf([Int32]))>
@@ -37,14 +33,19 @@ Public Class BasalRecord
     <Column(Order:=2, TypeName:=NameOf([Single]))>
     Public Property tempBasalRate As Single
 
+    <DisplayName("Temp Basal Type")>
+    <Column(Order:=4, TypeName:=NameOf([String]))>
+    Public Property tempBasalType As String
+
     Friend Function ToDictionary() As Dictionary(Of String, String)
-        Dim d As New Dictionary(Of String, String) From {
+        Return New Dictionary(Of String, String) From {
+            {"kind", "Marker"},
             {"type", "MANUAL_BASAL_DELIVERY"},
             {"activationType", "MANUAL"},
-            {"sgOADateTime", _oaDateTime.ToString},
-            {"bolusAmount", Me.GetBasal.ToString}
+            {"bolusAmount", Me.GetBasal.ToString},
+            {"dateTime", Date.FromOADate(Me.GetOaGetTime).ToString(CurrentDateCulture)},
+            {"oaDateTime", _oaDateTime.ToString}
         }
-        Return d
     End Function
 
     Public Function GetBasal() As Single
@@ -70,8 +71,8 @@ Public Class BasalRecord
         Return _oaDateTime
     End Function
 
-    Public Sub OaDateTime(oa As OADate)
-        _oaDateTime = oa
+    Public Sub OaDateTime(d As Date)
+        _oaDateTime = New OADate(d)
     End Sub
 
 End Class
