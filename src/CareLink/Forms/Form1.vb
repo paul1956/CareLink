@@ -1925,7 +1925,7 @@ Public Class Form1
     Private Sub UpdateCalibrationTimeRemaining()
         Try
             If s_timeToNextCalibrationHours > Byte.MaxValue Then
-                Me.CalibrationDueImage.Image = My.Resources.CalibrationUnavailable
+                Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(720)
             ElseIf s_timeToNextCalibrationHours = 0 Then
                 Me.CalibrationDueImage.Image = If(s_systemStatusMessage = "WAIT_TO_CALIBRATE" OrElse s_sensorState = "WARM_UP" OrElse s_sensorState = "CHANGE_SENSOR",
                 My.Resources.CalibrationNotReady,
@@ -2082,7 +2082,7 @@ Public Class Form1
                         Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
                         Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes} minutes"
                     Case 0
-                        Me.SensorDaysLeftLabel.Text = "0"
+                        Me.SensorDaysLeftLabel.Text = ""
                         Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpired
                         Me.SensorTimeLeftLabel.Text = "Expired"
                     Case Else

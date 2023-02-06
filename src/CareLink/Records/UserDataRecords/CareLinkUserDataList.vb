@@ -15,16 +15,6 @@ Public Class CareLinkUserDataList
     ' Events.
     Public Event ListChanged As ListChangedEventHandler Implements IBindingList.ListChanged
 
-    Friend ReadOnly Property Values As List(Of CareLinkUserDataRecord)
-        Get
-            Dim result As New List(Of CareLinkUserDataRecord)
-            For Each entry As CareLinkUserDataRecord In Me
-                result.Add(entry)
-            Next
-            Return result
-        End Get
-    End Property
-
     ' Implements IBindingList.
     Public ReadOnly Property AllowEdit() As Boolean Implements IBindingList.AllowEdit
         Get
@@ -300,7 +290,7 @@ Public Class CareLinkUserDataList
     Public Sub SaveAllUserRecords()
         Dim sb As New StringBuilder
         sb.AppendLine(String.Join(",", CareLinkUserDataRecordHelpers.s_headerColumns))
-        For Each r As CareLinkUserDataRecord In Me.Values
+        For Each r As CareLinkUserDataRecord In Me
             sb.AppendLine(r.ToCsvString)
         Next
         My.Computer.FileSystem.WriteAllText(GetSavedUsersFileNameWithPath, sb.ToString, False)
