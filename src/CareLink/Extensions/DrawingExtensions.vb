@@ -17,7 +17,7 @@ Friend Module DrawingExtensions
     End Function
 
     <Extension>
-    Friend Function DrawCenteredArc(backImage As Bitmap, minutesToNextCalibration As Integer, Optional colorTable As IReadOnlyDictionary(Of String, Color) = Nothing, Optional segmentName As String = "") As Bitmap
+    Friend Function DrawCenteredArc(backImage As Bitmap, minutesToNextCalibration As Integer) As Bitmap
 
         If minutesToNextCalibration = 0 Then
             Return backImage
@@ -25,8 +25,8 @@ Friend Module DrawingExtensions
         Dim targetImage As Bitmap = backImage
         Dim myGraphics As Graphics = Graphics.FromImage(targetImage)
         myGraphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-        Dim newPen As Pen = If(colorTable Is Nothing, New Pen(GetColorFromTimeToNextCalib(minutesToNextCalibration / 60), 3), New Pen(colorTable(segmentName), 5))
-        Dim backImageRectangle As New Rectangle(1, 0, backImage.Width - 2, backImage.Height - 2)
+        Dim newPen As New Pen(GetColorFromTimeToNextCalib(minutesToNextCalibration / 60), 4)
+        Dim backImageRectangle As New Rectangle(4, 2, backImage.Width - 6, backImage.Height - 6)
 
         Dim arcAngle As Integer
         Select Case minutesToNextCalibration

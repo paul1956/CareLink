@@ -1778,7 +1778,7 @@ Public Class Form1
                 s.Points.Clear()
             Next
             With Me.ActiveInsulinChart
-                .Titles(NameOf(ActiveInsulinChartTitle)).Text = $"{s_iobTitle}{s_listOfManualBasal.GetSubTitle}"
+                .Titles(NameOf(ActiveInsulinChartTitle)).Text = $"{s_iobTitle} {s_listOfManualBasal.GetSubTitle}"
                 .ChartAreas(NameOf(ChartArea)).UpdateChartAreaBGAxisX()
 
                 ' Order all markers by time

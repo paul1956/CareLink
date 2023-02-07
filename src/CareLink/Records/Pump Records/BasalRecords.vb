@@ -30,9 +30,9 @@ Public Class BasalRecords
 
     Friend Function GetSubTitle() As String
         If InAutoMode Then
-            Return ""
+            Return "AutoMode"
         End If
-        Return $" {_buffer.Last().activeBasalPattern} rate = {_buffer.Last().GetBasalPerHour}U Per Hour".Replace("  ", " ")
+        Return $"{_buffer.Last().activeBasalPattern} rate = {_buffer.Last().GetBasalPerHour}U Per Hour".Replace("  ", " ")
 
     End Function
 

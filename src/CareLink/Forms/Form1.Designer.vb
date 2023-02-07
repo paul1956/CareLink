@@ -656,9 +656,9 @@ Partial Class Form1
         ' 
         Me.CalibrationDueImage.BackColor = Color.Transparent
         Me.CalibrationDueImage.Image = My.Resources.Resources.CalibrationUnavailable
-        Me.CalibrationDueImage.Location = New Point(480, 7)
+        Me.CalibrationDueImage.Location = New Point(474, 0)
         Me.CalibrationDueImage.Name = "CalibrationDueImage"
-        Me.CalibrationDueImage.Size = New Size(47, 47)
+        Me.CalibrationDueImage.Size = New Size(58, 58)
         Me.CalibrationDueImage.SizeMode = PictureBoxSizeMode.CenterImage
         Me.CalibrationDueImage.TabIndex = 5
         Me.CalibrationDueImage.TabStop = False
@@ -768,7 +768,7 @@ Partial Class Form1
         Me.CursorMessage1Label.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Me.CursorMessage1Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.CursorMessage1Label.ForeColor = Color.White
-        Me.CursorMessage1Label.Location = New Point(0, 74)
+        Me.CursorMessage1Label.Location = New Point(0, 64)
         Me.CursorMessage1Label.Name = "CursorMessage1Label"
         Me.CursorMessage1Label.Size = New Size(178, 21)
         Me.CursorMessage1Label.TabIndex = 39
@@ -780,7 +780,7 @@ Partial Class Form1
         Me.CursorMessage2Label.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Me.CursorMessage2Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.CursorMessage2Label.ForeColor = Color.White
-        Me.CursorMessage2Label.Location = New Point(0, 95)
+        Me.CursorMessage2Label.Location = New Point(0, 89)
         Me.CursorMessage2Label.Name = "CursorMessage2Label"
         Me.CursorMessage2Label.Size = New Size(178, 21)
         Me.CursorMessage2Label.TabIndex = 40
@@ -816,7 +816,7 @@ Partial Class Form1
         Me.CursorPictureBox.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Me.CursorPictureBox.Image = CType(resources.GetObject("CursorPictureBox.Image"), Image)
         Me.CursorPictureBox.InitialImage = Nothing
-        Me.CursorPictureBox.Location = New Point(68, 16)
+        Me.CursorPictureBox.Location = New Point(68, 0)
         Me.CursorPictureBox.Name = "CursorPictureBox"
         Me.CursorPictureBox.Size = New Size(42, 56)
         Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.CenterImage
@@ -1397,7 +1397,7 @@ Partial Class Form1
         ' 
         Me.LabelTrendArrows.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
         Me.LabelTrendArrows.ForeColor = Color.White
-        Me.LabelTrendArrows.Location = New Point(461, 106)
+        Me.LabelTrendArrows.Location = New Point(461, 112)
         Me.LabelTrendArrows.Name = "LabelTrendArrows"
         Me.LabelTrendArrows.Size = New Size(84, 21)
         Me.LabelTrendArrows.TabIndex = 62
@@ -1408,7 +1408,7 @@ Partial Class Form1
         ' 
         Me.LabelTrendValue.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.LabelTrendValue.ForeColor = Color.White
-        Me.LabelTrendValue.Location = New Point(461, 84)
+        Me.LabelTrendValue.Location = New Point(461, 89)
         Me.LabelTrendValue.Name = "LabelTrendValue"
         Me.LabelTrendValue.Size = New Size(84, 21)
         Me.LabelTrendValue.TabIndex = 68
@@ -1579,13 +1579,12 @@ Partial Class Form1
         ' 
         ' PumpBatteryRemainingLabel
         ' 
-        Me.PumpBatteryRemainingLabel.AutoSize = True
         Me.PumpBatteryRemainingLabel.BackColor = Color.Transparent
         Me.PumpBatteryRemainingLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.PumpBatteryRemainingLabel.ForeColor = Color.White
-        Me.PumpBatteryRemainingLabel.Location = New Point(118, 86)
+        Me.PumpBatteryRemainingLabel.Location = New Point(118, 89)
         Me.PumpBatteryRemainingLabel.Name = "PumpBatteryRemainingLabel"
-        Me.PumpBatteryRemainingLabel.Size = New Size(31, 21)
+        Me.PumpBatteryRemainingLabel.Size = New Size(74, 21)
         Me.PumpBatteryRemainingLabel.TabIndex = 11
         Me.PumpBatteryRemainingLabel.Text = "???"
         Me.PumpBatteryRemainingLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -1617,7 +1616,7 @@ Partial Class Form1
         Me.RemainingInsulinUnits.BackColor = Color.Transparent
         Me.RemainingInsulinUnits.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.RemainingInsulinUnits.ForeColor = Color.White
-        Me.RemainingInsulinUnits.Location = New Point(206, 67)
+        Me.RemainingInsulinUnits.Location = New Point(206, 89)
         Me.RemainingInsulinUnits.Name = "RemainingInsulinUnits"
         Me.RemainingInsulinUnits.Size = New Size(80, 21)
         Me.RemainingInsulinUnits.TabIndex = 12
@@ -1626,7 +1625,6 @@ Partial Class Form1
         ' 
         ' SensorDaysLeftLabel
         ' 
-        Me.SensorDaysLeftLabel.AutoSize = False
         Me.SensorDaysLeftLabel.BackColor = Color.Transparent
         Me.SensorDaysLeftLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         Me.SensorDaysLeftLabel.ForeColor = Color.White
@@ -1641,10 +1639,9 @@ Partial Class Form1
         ' SensorTimeLeftLabel
         ' 
         Me.SensorTimeLeftLabel.BackColor = Color.Transparent
-        Me.SensorTimeLeftLabel.Dock = DockStyle.Bottom
         Me.SensorTimeLeftLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.SensorTimeLeftLabel.ForeColor = Color.White
-        Me.SensorTimeLeftLabel.Location = New Point(0, 108)
+        Me.SensorTimeLeftLabel.Location = New Point(0, 89)
         Me.SensorTimeLeftLabel.Name = "SensorTimeLeftLabel"
         Me.SensorTimeLeftLabel.Size = New Size(94, 21)
         Me.SensorTimeLeftLabel.TabIndex = 46
@@ -1729,7 +1726,7 @@ Partial Class Form1
         Me.TransmitterBatteryPercentLabel.BackColor = Color.Transparent
         Me.TransmitterBatteryPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.TransmitterBatteryPercentLabel.ForeColor = Color.White
-        Me.TransmitterBatteryPercentLabel.Location = New Point(549, 95)
+        Me.TransmitterBatteryPercentLabel.Location = New Point(549, 89)
         Me.TransmitterBatteryPercentLabel.Name = "TransmitterBatteryPercentLabel"
         Me.TransmitterBatteryPercentLabel.Size = New Size(85, 21)
         Me.TransmitterBatteryPercentLabel.TabIndex = 13

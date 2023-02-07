@@ -54,9 +54,7 @@ Public Class BasalRecord
 
     Public Function GetBasalPerHour() As Single
         Select Case Me.activeBasalPattern
-            Case "BASAL1"
-                Return Me.basalRate
-            Case "BASAL2"
+            Case "BASAL1", "BASAL2"
                 Return Me.basalRate
             Case Else
                 If Me.tempBasalPercentage > 0 Then
