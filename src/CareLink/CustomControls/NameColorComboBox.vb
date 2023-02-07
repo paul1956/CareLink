@@ -9,6 +9,10 @@ Public Class NameColorComboBox
         MyBase.New
     End Sub
 
+    ''' <summary>
+    ''' Returns the selected KeyValuePair(Of String, KnownColor)
+    ''' </summary>
+    ''' <returns></returns>
     Public Shadows Property SelectedItem() As KeyValuePair(Of String, KnownColor)
         Get
             Return CType(MyBase.SelectedItem, KeyValuePair(Of String, KnownColor))
