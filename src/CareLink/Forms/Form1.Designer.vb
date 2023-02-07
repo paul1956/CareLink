@@ -1420,9 +1420,9 @@ Partial Class Form1
         Me.Last24AutoCorrectionLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Me.Last24AutoCorrectionLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.Last24AutoCorrectionLabel.ForeColor = Color.White
-        Me.Last24AutoCorrectionLabel.Location = New Point(0, 85)
+        Me.Last24AutoCorrectionLabel.Location = New Point(0, 84)
         Me.Last24AutoCorrectionLabel.Name = "Last24AutoCorrectionLabel"
-        Me.Last24AutoCorrectionLabel.Size = New Size(237, 21)
+        Me.Last24AutoCorrectionLabel.Size = New Size(235, 21)
         Me.Last24AutoCorrectionLabel.TabIndex = 64
         Me.Last24AutoCorrectionLabel.Text = "Auto Correction 20 U | 20%"
         Me.Last24AutoCorrectionLabel.TextAlign = ContentAlignment.MiddleLeft
@@ -1432,9 +1432,9 @@ Partial Class Form1
         Me.Last24CarbsValueLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Me.Last24CarbsValueLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.Last24CarbsValueLabel.ForeColor = Color.White
-        Me.Last24CarbsValueLabel.Location = New Point(0, 106)
+        Me.Last24CarbsValueLabel.Location = New Point(0, 105)
         Me.Last24CarbsValueLabel.Name = "Last24CarbsValueLabel"
-        Me.Last24CarbsValueLabel.Size = New Size(220, 21)
+        Me.Last24CarbsValueLabel.Size = New Size(218, 21)
         Me.Last24CarbsValueLabel.TabIndex = 66
         Me.Last24CarbsValueLabel.Text = "Carbs 100 Grams"
         Me.Last24CarbsValueLabel.TextAlign = ContentAlignment.MiddleLeft
@@ -1444,9 +1444,9 @@ Partial Class Form1
         Me.Last24DailyDoseLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Me.Last24DailyDoseLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.Last24DailyDoseLabel.ForeColor = Color.White
-        Me.Last24DailyDoseLabel.Location = New Point(0, 22)
+        Me.Last24DailyDoseLabel.Location = New Point(0, 21)
         Me.Last24DailyDoseLabel.Name = "Last24DailyDoseLabel"
-        Me.Last24DailyDoseLabel.Size = New Size(237, 21)
+        Me.Last24DailyDoseLabel.Size = New Size(235, 21)
         Me.Last24DailyDoseLabel.TabIndex = 61
         Me.Last24DailyDoseLabel.Text = "Dose 100 U"
         Me.Last24DailyDoseLabel.TextAlign = ContentAlignment.MiddleLeft
@@ -1456,9 +1456,9 @@ Partial Class Form1
         Me.Last24HourBasalLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Me.Last24HourBasalLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.Last24HourBasalLabel.ForeColor = Color.White
-        Me.Last24HourBasalLabel.Location = New Point(0, 43)
+        Me.Last24HourBasalLabel.Location = New Point(0, 42)
         Me.Last24HourBasalLabel.Name = "Last24HourBasalLabel"
-        Me.Last24HourBasalLabel.Size = New Size(237, 21)
+        Me.Last24HourBasalLabel.Size = New Size(235, 21)
         Me.Last24HourBasalLabel.TabIndex = 62
         Me.Last24HourBasalLabel.Text = "Basal 50 U | 50%"
         Me.Last24HourBasalLabel.TextAlign = ContentAlignment.MiddleLeft
@@ -1476,6 +1476,7 @@ Partial Class Form1
         Me.Last24HoursLabel.Text = "Last 24 hours" ' 
         ' Last24HTotalsPanel
         ' 
+        Me.Last24HTotalsPanel.BorderStyle = BorderStyle.FixedSingle
         Me.Last24HTotalsPanel.Controls.Add(Me.Last24CarbsValueLabel)
         Me.Last24HTotalsPanel.Controls.Add(Me.Last24TotalsLabel)
         Me.Last24HTotalsPanel.Controls.Add(Me.Last24AutoCorrectionLabel)
@@ -1492,9 +1493,9 @@ Partial Class Form1
         Me.Last24TotalsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Me.Last24TotalsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.Last24TotalsLabel.ForeColor = Color.White
-        Me.Last24TotalsLabel.Location = New Point(0, 1)
+        Me.Last24TotalsLabel.Location = New Point(0, 0)
         Me.Last24TotalsLabel.Name = "Last24TotalsLabel"
-        Me.Last24TotalsLabel.Size = New Size(237, 21)
+        Me.Last24TotalsLabel.Size = New Size(235, 21)
         Me.Last24TotalsLabel.TabIndex = 65
         Me.Last24TotalsLabel.Text = "Last 24 Hr Totals"
         Me.Last24TotalsLabel.TextAlign = ContentAlignment.TopCenter
@@ -1504,9 +1505,9 @@ Partial Class Form1
         Me.Last24ManualBolusLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Me.Last24ManualBolusLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.Last24ManualBolusLabel.ForeColor = Color.White
-        Me.Last24ManualBolusLabel.Location = New Point(0, 64)
+        Me.Last24ManualBolusLabel.Location = New Point(0, 63)
         Me.Last24ManualBolusLabel.Name = "Last24ManualBolusLabel"
-        Me.Last24ManualBolusLabel.Size = New Size(237, 21)
+        Me.Last24ManualBolusLabel.Size = New Size(235, 21)
         Me.Last24ManualBolusLabel.TabIndex = 63
         Me.Last24ManualBolusLabel.Text = "Manual Bolus 30 U | 30%"
         Me.Last24ManualBolusLabel.TextAlign = ContentAlignment.MiddleLeft
