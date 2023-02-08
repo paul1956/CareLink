@@ -227,7 +227,7 @@ Public Class CareLinkUserDataList
         Dim l As IList = Me
 
         Dim userSettingsCsvFileWithPath As String = GetSavedUsersFileNameWithPath()
-        If CareLinkUserDataRecordHelpers.SavedUsersFileExists(userSettingsCsvFileWithPath) Then
+        If SavedUsersFileExists(userSettingsCsvFileWithPath) Then
             Using myReader As New FileIO.TextFieldParser(userSettingsCsvFileWithPath)
                 myReader.TextFieldType = FileIO.FieldType.Delimited
                 myReader.Delimiters = New String() {","}

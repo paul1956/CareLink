@@ -9,9 +9,7 @@ Imports System.IO
 Imports System.Text
 Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
-
 Imports DataGridViewColumnControls
-
 Imports ToolStripControls
 
 Public Class Form1
@@ -357,13 +355,20 @@ Public Class Form1
         Dim lastColumnIndex As Integer = Me.DgvAutoBasalDelivery.Columns.Count - 1
         For i As Integer = 0 To lastColumnIndex
             Dim c As DataGridViewColumn = Me.DgvAutoBasalDelivery.Columns(i)
+            If i > 0 AndAlso String.IsNullOrWhiteSpace(c.DataPropertyName) Then
+                Stop
+            End If
             c.Visible = Not AutoBasalDeliveryRecordHelpers.HideColumn(c.DataPropertyName)
             c.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
         Next
 
         lastColumnIndex = Me.DgvCareLinkUsers.Columns.Count - 1
+
         For i As Integer = 0 To lastColumnIndex
             Dim c As DataGridViewColumn = Me.DgvCareLinkUsers.Columns(i)
+            If i > 0 AndAlso String.IsNullOrWhiteSpace(c.DataPropertyName) Then
+                Stop
+            End If
             c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
             c.AutoSizeMode = If(i = lastColumnIndex, DataGridViewAutoSizeColumnMode.Fill, DataGridViewAutoSizeColumnMode.AllCells)
         Next
@@ -478,6 +483,7 @@ Public Class Form1
         Select Case e.TabPage.Name
             Case NameOf(TabPage14Markers)
                 Me.DgvCareLinkUsers.InitializeDgv
+
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
                     c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
                 Next
@@ -1097,15 +1103,20 @@ Public Class Form1
         With e.Column
             Dim dgv As DataGridView = CType(sender, DataGridView)
             Dim caption As String = CType(dgv.DataSource, DataTable)?.Columns(.Index).Caption
-            If CareLinkUserDataRecordHelpers.HideColumn(.DataPropertyName) Then
-                e.DgvColumnAdded(CareLinkUserDataRecordHelpers.GetCellStyle(.DataPropertyName),
+            Dim dataPropertyName As String = e.Column.DataPropertyName
+
+            If .Index > 0 AndAlso String.IsNullOrWhiteSpace(dataPropertyName) AndAlso String.IsNullOrWhiteSpace(caption) Then
+                dataPropertyName = CareLinkUserDataRecordHelpers.s_headerColumns(.Index - 1)
+            End If
+            If CareLinkUserDataRecordHelpers.HideColumn(dataPropertyName) Then
+                CType(e, DataGridViewColumnEventArgs).DgvColumnAdded(CareLinkUserDataRecordHelpers.GetCellStyle(dataPropertyName),
                                  False,
                                  False,
                                  caption)
                 .Visible = False
                 Exit Sub
             End If
-            e.DgvColumnAdded(CareLinkUserDataRecordHelpers.GetCellStyle(.DataPropertyName),
+            CType(e, DataGridViewColumnEventArgs).DgvColumnAdded(CareLinkUserDataRecordHelpers.GetCellStyle(dataPropertyName),
                              False,
                              True,
                              caption)
