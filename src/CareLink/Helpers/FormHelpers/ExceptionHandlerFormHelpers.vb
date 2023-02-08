@@ -9,6 +9,10 @@ Imports CareLink
 
 Public Module ExceptionHandlerFormHelpers
 
+    Private Sub ReportInvalidErrorFile(currentLine As String, expectedLine As String)
+        Throw New NotImplementedException()
+    End Sub
+
     Friend Sub CreateReportFile(exceptionText As String, stackTraceText As String, UniqueFileNameWithPath As String, jsonData As Dictionary(Of String, String))
         Using stream As StreamWriter = File.CreateText(UniqueFileNameWithPath)
             ' write exception header
@@ -72,10 +76,6 @@ Public Module ExceptionHandlerFormHelpers
             Return stream.ReadToEnd
         End Using
     End Function
-
-    Private Sub ReportInvalidErrorFile(currentLine As String, expectedLine As String)
-        Throw New NotImplementedException()
-    End Sub
 
     Friend Function TrimmedStackTrace(stackTrace As String) As String
         Dim index As Integer = stackTrace.IndexOf(StackTraceTerminatingStr)

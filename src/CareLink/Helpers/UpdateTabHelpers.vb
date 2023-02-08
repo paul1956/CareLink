@@ -51,7 +51,7 @@ Friend Module UpdateTabHelpers
                     innerJson.Reverse()
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
                         tableLayoutPanel2.DisplayDataTableInDGV(
-                            ClassCollectionToDataTable(GetSummaryRecords(innerDictionary.Value, NotificationsRecordHelpers.rowsToHide)),
+                            ClassCollectionToDataTable(GetSummaryRecords(innerDictionary.Value, NotificationsRecordHelpers.s_rowsToHide)),
                             NameOf(SummaryRecord),
                             AddressOf SummaryRecordHelpers.AttachHandlers,
                             innerDictionary.Index)
@@ -60,7 +60,7 @@ Friend Module UpdateTabHelpers
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
                         tableLayoutPanel2.BackColor = Color.PaleVioletRed
                         tableLayoutPanel2.DisplayDataTableInDGV(
-                            ClassCollectionToDataTable(GetSummaryRecords(innerDictionary.Value, NotificationsRecordHelpers.rowsToHide)),
+                            ClassCollectionToDataTable(GetSummaryRecords(innerDictionary.Value, NotificationsRecordHelpers.s_rowsToHide)),
                             NameOf(SummaryRecord),
                             AddressOf SummaryRecordHelpers.AttachHandlers,
                             innerDictionary.Index)

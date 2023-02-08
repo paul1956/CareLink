@@ -2,16 +2,16 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Friend Class LimitsRecordHelpers
+Friend Module LimitsRecordHelpers
 
-    Private Shared ReadOnly s_columnsToHide As New List(Of String) From {
+    Private ReadOnly s_columnsToHide As New List(Of String) From {
              NameOf(LimitsRecord.kind),
              NameOf(LimitsRecord.version)
         }
 
-    Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
+    Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
-    Private Shared Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
+    Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         With e.Column
             If HideColumn(.Name) Then
                 .Visible = False
@@ -25,15 +25,19 @@ Friend Class LimitsRecordHelpers
         End With
     End Sub
 
-    Private Shared Sub DataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs)
+    Private Sub DataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs)
         Stop
     End Sub
 
-    Friend Shared Function HideColumn(columnName As String) As Boolean
+    Private Function GetCellStyle(columnName As String) As DataGridViewCellStyle
+        Return ClassPropertiesToColumnAlignment(Of LimitsRecord)(s_alignmentTable, columnName)
+    End Function
+
+    Private Function HideColumn(columnName As String) As Boolean
         Return s_filterJsonData AndAlso s_columnsToHide.Contains(columnName)
     End Function
 
-    Friend Shared Sub UpdateListOfLimitRecords(row As KeyValuePair(Of String, String))
+    Friend Sub UpdateListOfLimitRecords(row As KeyValuePair(Of String, String))
         s_listOfLimitRecords.Clear()
         For Each e As IndexClass(Of Dictionary(Of String, String)) In LoadList(row.Value).WithIndex
             Dim newLimit As New Dictionary(Of String, String)
@@ -49,13 +53,9 @@ Friend Class LimitsRecordHelpers
         Next
     End Sub
 
-    Public Shared Sub AttachHandlers(dgv As DataGridView)
+    Friend Sub AttachHandlers(dgv As DataGridView)
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
         AddHandler dgv.DataError, AddressOf DataGridView_DataError
     End Sub
 
-    Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToColumnAlignment(Of LimitsRecord)(s_alignmentTable, columnName)
-    End Function
-
-End Class
+End Module

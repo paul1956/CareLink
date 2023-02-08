@@ -4,9 +4,9 @@
 
 Imports System.IO
 
-Public Class CareLinkUserDataRecordHelpers
+Public Module CareLinkUserDataRecordHelpers
 
-    Private Shared ReadOnly s_columnsToHide As New List(Of String) From {
+    Private ReadOnly s_columnsToHide As New List(Of String) From {
                         NameOf(CareLinkUserDataRecord.AlertPhoneNumber),
                         NameOf(CareLinkUserDataRecord.CareLinkPassword),
                         NameOf(CareLinkUserDataRecord.CarrierTextingDomain),
@@ -16,7 +16,7 @@ Public Class CareLinkUserDataRecordHelpers
                         NameOf(CareLinkUserDataRecord.OutgoingMailServer)
                     }
 
-    Friend Shared ReadOnly s_headerColumns As New List(Of String) From {
+    Friend ReadOnly s_headerColumns As New List(Of String) From {
             NameOf(My.Settings.CareLinkUserName),
             NameOf(My.Settings.CareLinkPassword),
             NameOf(My.Settings.AIT),
@@ -33,14 +33,7 @@ Public Class CareLinkUserDataRecordHelpers
             NameOf(My.Settings.AutoLogin)
          }
 
-    Friend Shared Function HideColumn(dataPropertyName As String) As Boolean
-        If String.IsNullOrWhiteSpace(dataPropertyName) Then
-            Return False
-        End If
-        Return Not (Debugger.IsAttached AndAlso Not s_filterJsonData) AndAlso s_columnsToHide.Contains(dataPropertyName)
-    End Function
-
-    Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
+    Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
         Dim cellStyle As New DataGridViewCellStyle
 
         Select Case columnName
@@ -69,16 +62,23 @@ Public Class CareLinkUserDataRecordHelpers
         Return cellStyle
     End Function
 
-    Public Shared Function GetColumnName(index As Integer) As String
+    Friend Function GetColumnName(index As Integer) As String
         Return s_headerColumns(index)
     End Function
 
-    Public Shared Function SavedUsersFileExists(userSettingsCsvFileWithPath As String) As Boolean
+    Friend Function HideColumn(dataPropertyName As String) As Boolean
+        If String.IsNullOrWhiteSpace(dataPropertyName) Then
+            Return False
+        End If
+        Return Not (Debugger.IsAttached AndAlso Not s_filterJsonData) AndAlso s_columnsToHide.Contains(dataPropertyName)
+    End Function
+
+    Public Function SavedUsersFileExists(userSettingsCsvFileWithPath As String) As Boolean
         Return File.Exists(userSettingsCsvFileWithPath)
     End Function
 
-    Public Shared Function SavedUsersFileExists() As Boolean
+    Public Function SavedUsersFileExists() As Boolean
         Return SavedUsersFileExists(GetSavedUsersFileNameWithPath())
     End Function
 
-End Class
+End Module

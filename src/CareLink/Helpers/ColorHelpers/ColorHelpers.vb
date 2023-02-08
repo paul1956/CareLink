@@ -4,7 +4,7 @@
 
 Imports System.Runtime.CompilerServices
 
-Module ColorHelpers
+Friend Module ColorHelpers
 
     <Extension>
     Public Function GetContrastingColor(baseColor As Color) As Color

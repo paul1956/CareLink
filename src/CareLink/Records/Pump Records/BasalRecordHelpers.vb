@@ -2,10 +2,10 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Friend Class BasalRecordHelpers
-    Private Shared s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
+Friend Module BasalRecordHelpers
+    Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
-    Private Shared Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
+    Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If e.Value Is Nothing Then
             Return
@@ -16,7 +16,7 @@ Friend Class BasalRecordHelpers
         End If
     End Sub
 
-    Private Shared Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
+    Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         With e.Column
             Dim dgv As DataGridView = CType(sender, DataGridView)
             e.DgvColumnAdded(GetCellStyle(.Name),
@@ -26,11 +26,11 @@ Friend Class BasalRecordHelpers
         End With
     End Sub
 
-    Private Shared Sub DataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs)
+    Private Sub DataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs)
         Stop
     End Sub
 
-    Private Shared Sub DataGridView_RowAdded(sender As Object, e As DataGridViewRowsAddedEventArgs)
+    Private Sub DataGridView_RowAdded(sender As Object, e As DataGridViewRowsAddedEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
 
         If s_listOfManualBasal.Count > 1 Then
@@ -41,15 +41,15 @@ Friend Class BasalRecordHelpers
         End If
     End Sub
 
-    Public Shared Sub AttachHandlers(dgv As DataGridView)
+    Private Function GetCellStyle(columnName As String) As DataGridViewCellStyle
+        Return ClassPropertiesToColumnAlignment(Of BasalRecord)(s_alignmentTable, columnName)
+    End Function
+
+    Friend Sub AttachHandlers(dgv As DataGridView)
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
         AddHandler dgv.DataError, AddressOf DataGridView_DataError
         AddHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
         AddHandler dgv.RowsAdded, AddressOf DataGridView_RowAdded
     End Sub
 
-    Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToColumnAlignment(Of BasalRecord)(s_alignmentTable, columnName)
-    End Function
-
-End Class
+End Module

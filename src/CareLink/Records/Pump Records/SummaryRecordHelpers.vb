@@ -132,16 +132,12 @@ Friend Module SummaryRecordHelpers
 
     End Function
 
-    Public Sub AttachHandlers(dgv As DataGridView)
-        AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
-    End Sub
-
-    Public Function GetTabIndexFromName(tabPageName As String) As Integer
+    Friend Function GetTabIndexFromName(tabPageName As String) As Integer
         Return CInt(tabPageName.Replace(NameOf(TabPage), "").Substring(0, 2)) - 1
     End Function
 
     <Extension>
-    Public Function GetValue(Of T)(l As List(Of SummaryRecord), Key As String, Optional throwError As Boolean = True) As T
+    Friend Function GetValue(Of T)(l As List(Of SummaryRecord), Key As String, Optional throwError As Boolean = True) As T
 
         Try
             For Each s As SummaryRecord In l
@@ -176,5 +172,9 @@ Friend Module SummaryRecordHelpers
         End If
 
     End Function
+
+    Public Sub AttachHandlers(dgv As DataGridView)
+        AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
+    End Sub
 
 End Module

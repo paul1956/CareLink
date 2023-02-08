@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.IO
+Imports System.Runtime.CompilerServices
 
 Friend Module ColorDictionaryHelpers
 
@@ -16,6 +17,18 @@ Friend Module ColorDictionaryHelpers
                         {"Low Limit", KnownColor.Red},
                         {"Time Change", KnownColor.White}
                     }
+
+    <Extension>
+    Private Function GetContrastingKnownColor(knownClrBase As KnownColor) As KnownColor
+        Dim clrBase As Color = knownClrBase.ToColor
+        ' Y is the "brightness"
+        Dim y As Double = (0.299 * clrBase.R) + (0.587 * clrBase.G) + (0.114 * clrBase.B)
+        If y < 140 Then
+            Return KnownColor.White
+        Else
+            Return KnownColor.Black
+        End If
+    End Function
 
     Public Sub ColorDictionaryBackup(ByRef SaveGraphColorDictionary As Dictionary(Of String, KnownColor))
         SaveGraphColorDictionary = GraphColorDictionary.Clone
