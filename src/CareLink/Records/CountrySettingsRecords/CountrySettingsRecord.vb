@@ -18,6 +18,8 @@ Public Class CountrySettingsRecord
         For Each dgv As DataGridView In dgvCountryItems
             dgv.Rows.Clear()
             dgv.RowHeadersVisible = False
+            dgv.InitializeDgv()
+
         Next
         Dim currentLeftRow As Integer = 0
         Dim currentRightRow As Integer = 0

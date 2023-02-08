@@ -4,7 +4,7 @@
 
 Friend Class BGReadingRecordHelpers
 
-    Private Shared ReadOnly columnsToHide As New List(Of String) From {
+    Private Shared ReadOnly s_columnsToHide As New List(Of String) From {
              NameOf(BGReadingRecord.kind),
              NameOf(BGReadingRecord.relativeOffset),
              NameOf(BGReadingRecord.version)
@@ -42,12 +42,13 @@ Friend Class BGReadingRecordHelpers
             ElseIf sensorValue > s_limitHigh Then
                 e.CellStyle.BackColor = Color.Yellow
             End If
+            e.CellStyle.ForeColor = e.CellStyle.BackColor.GetContrastingColor()
         End If
 
     End Sub
 
     Friend Shared Function HideColumn(columnName As String) As Boolean
-        Return s_filterJsonData AndAlso columnsToHide.Contains(columnName)
+        Return s_filterJsonData AndAlso s_columnsToHide.Contains(columnName)
     End Function
 
     Public Shared Sub AttachHandlers(dgv As DataGridView)

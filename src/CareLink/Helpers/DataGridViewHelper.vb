@@ -8,49 +8,25 @@ Friend Module DataGridViewHelper
 
     Friend Delegate Sub attachHandlers(dgv As DataGridView)
 
-    Friend Function CreateDefaultDataGridView(dgvName As String) As DataGridView
+    Private Function CreateDefaultDataGridView(dgvName As String) As DataGridView
         Dim dGV As New DataGridView With {
-            .AllowUserToAddRows = False,
-            .AllowUserToDeleteRows = False,
-            .AlternatingRowsDefaultCellStyle = New DataGridViewCellStyle With {
-                    .BackColor = Color.Silver
-                },
-            .ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
-                    .Alignment = DataGridViewContentAlignment.MiddleCenter,
-                    .BackColor = SystemColors.Control,
-                    .Font = New Font("Segoe UI", 9.0!, FontStyle.Regular, GraphicsUnit.Point),
-                    .ForeColor = SystemColors.WindowText,
-                    .SelectionBackColor = SystemColors.Highlight,
-                    .SelectionForeColor = SystemColors.HighlightText,
-                    .WrapMode = DataGridViewTriState.True
-                },
-            .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize,
-            .Dock = DockStyle.Fill,
-            .Location = New Point(3, 3),
-            .Name = dgvName,
-            .[ReadOnly] = True,
-            .SelectionMode = DataGridViewSelectionMode.CellSelect,
-            .TabIndex = 0
+            .Name = dgvName
         }
-        dGV.RowTemplate.Height = 25
+        dGV.InitializeDgv()
         Return dGV
     End Function
 
     <Extension>
     Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, dGV As DataGridView, table As DataTable, rowIndex As ItemIndexes)
         realPanel.SetTabName(rowIndex)
+        dGV.InitializeDgv()
         dGV.DataSource = table
         dGV.RowHeadersVisible = False
     End Sub
 
     <Extension>
     Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As ItemIndexes, hideRecordNumberColumn As Boolean)
-        Dim button1 As Button = TryCast(realPanel.Controls(0), Button)
-        If button1 Is Nothing Then
-            realPanel.SetTabName(rowIndex)
-        Else
-            realPanel.SetTabName(rowIndex)
-        End If
+        realPanel.SetTabName(rowIndex)
         Dim dGVIndex As Integer = realPanel.Controls.Count - 1
         Dim dGV As DataGridView = TryCast(realPanel.Controls(dGVIndex), DataGridView)
 
@@ -58,6 +34,8 @@ Friend Module DataGridViewHelper
             dGV = CreateDefaultDataGridView($"DataGridView{className}")
             realPanel.Controls.Add(dGV, 0, 1)
             attachHandlers(dGV)
+        Else
+            dGV.InitializeDgv()
         End If
         dGV.DataSource = table
         dGV.RowHeadersVisible = False
@@ -69,15 +47,42 @@ Friend Module DataGridViewHelper
     <Extension>
     Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As Integer)
         Dim dGV As DataGridView = CreateDefaultDataGridView($"DataGridView{className}")
-        dGV.AllowUserToResizeRows = False
         dGV.AutoSize = False
         dGV.ColumnHeadersVisible = False
-        dGV.ReadOnly = True
         realPanel.Controls.Add(dGV, 0, rowIndex)
         attachHandlers(dGV)
         dGV.DataSource = table
         dGV.RowHeadersVisible = False
         dGV.Height = table.Rows.Count * 30
+    End Sub
+
+    <Extension>
+    Friend Sub InitializeDgv(dGV As DataGridView)
+        With dGV
+            .AllowUserToAddRows = False
+            .AllowUserToDeleteRows = False
+            .AllowUserToResizeColumns = False
+            .AllowUserToResizeRows = False
+            .AlternatingRowsDefaultCellStyle = New DataGridViewCellStyle With {
+                    .BackColor = Color.Silver
+                }
+            .ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
+                    .Alignment = DataGridViewContentAlignment.MiddleCenter,
+                    .BackColor = SystemColors.Control,
+                    .Font = New Font("Segoe UI", 9.0!, FontStyle.Regular, GraphicsUnit.Point),
+                    .ForeColor = SystemColors.WindowText,
+                    .SelectionBackColor = SystemColors.Highlight,
+                    .SelectionForeColor = SystemColors.HighlightText,
+                    .WrapMode = DataGridViewTriState.True
+                }
+            .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+            .Dock = DockStyle.Fill
+            .Location = New Point(3, 3)
+            .ReadOnly = True
+            .RowTemplate.Height = 25
+            .SelectionMode = DataGridViewSelectionMode.CellSelect
+            .TabIndex = 0
+        End With
     End Sub
 
 End Module

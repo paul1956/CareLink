@@ -4,7 +4,7 @@
 
 Friend Class LimitsRecordHelpers
 
-    Private Shared ReadOnly columnsToHide As New List(Of String) From {
+    Private Shared ReadOnly s_columnsToHide As New List(Of String) From {
              NameOf(LimitsRecord.kind),
              NameOf(LimitsRecord.version)
         }
@@ -29,11 +29,8 @@ Friend Class LimitsRecordHelpers
         Stop
     End Sub
 
-    Private Shared Sub DataGridViewView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
-    End Sub
-
     Friend Shared Function HideColumn(columnName As String) As Boolean
-        Return s_filterJsonData AndAlso columnsToHide.Contains(columnName)
+        Return s_filterJsonData AndAlso s_columnsToHide.Contains(columnName)
     End Function
 
     Friend Shared Sub UpdateListOfLimitRecords(row As KeyValuePair(Of String, String))
@@ -55,7 +52,6 @@ Friend Class LimitsRecordHelpers
     Public Shared Sub AttachHandlers(dgv As DataGridView)
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
         AddHandler dgv.DataError, AddressOf DataGridView_DataError
-        AddHandler dgv.CellFormatting, AddressOf DataGridViewView_CellFormatting
     End Sub
 
     Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle

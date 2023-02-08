@@ -113,8 +113,8 @@ Public Class CareLinkClient
 
             ' MUST BE FIRST DO NOT MOVE NEXT LINE
             s_sessionCountrySettings = New CountrySettingsRecord(mainForm, Me.GetCountrySettings(authToken))
-            _sessionUser = Me.GetMyUser(authToken)
-            _sessionProfile = Me.GetMyProfile(authToken)
+            _sessionUser = Me.GetMyUser(mainForm, authToken)
+            _sessionProfile = Me.GetMyProfile(mainForm, authToken)
             _sessionMonitorData = Me.GetMonitorData(authToken)
 
             ' Set login success if everything was OK:
@@ -281,15 +281,15 @@ Public Class CareLinkClient
         Return New MonitorDataRecord(Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/monitor/data", Nothing, Nothing))
     End Function
 
-    Private Function GetMyProfile(authToken As String) As MyProfileRecord
+    Private Function GetMyProfile(MainForm As Form1, authToken As String) As MyProfileRecord
         Debug.Print("__getMyProfile()")
-        Dim myProfileRecord As New MyProfileRecord(Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/users/me/profile", Nothing, Nothing))
+        Dim myProfileRecord As New MyProfileRecord(MainForm.DgvUserProfile, Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/users/me/profile", Nothing, Nothing))
         Return myProfileRecord
     End Function
 
-    Private Function GetMyUser(authToken As String) As MyUserRecord
+    Private Function GetMyUser(MainForm As Form1, authToken As String) As MyUserRecord
         Debug.Print("__getMyUser()")
-        Dim myUserRecord As New MyUserRecord(Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/users/me", Nothing, Nothing))
+        Dim myUserRecord As New MyUserRecord(MainForm.DgvCurrentUser, Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/users/me", Nothing, Nothing))
         Return myUserRecord
     End Function
 

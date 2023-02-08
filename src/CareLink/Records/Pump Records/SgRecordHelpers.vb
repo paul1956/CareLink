@@ -4,7 +4,7 @@
 
 Friend Class SgRecordHelpers
 
-    Private Shared ReadOnly columnsToHide As New List(Of String) From {
+    Private Shared ReadOnly s_columnsToHide As New List(Of String) From {
                         NameOf(SgRecord.kind),
                         NameOf(SgRecord.OaDateTime),
                         NameOf(SgRecord.relativeOffset),
@@ -37,7 +37,7 @@ Friend Class SgRecordHelpers
     End Sub
 
     Friend Shared Function HideColumn(dataPropertyName As String) As Boolean
-        Return s_filterJsonData AndAlso columnsToHide.Contains(dataPropertyName)
+        Return s_filterJsonData AndAlso s_columnsToHide.Contains(dataPropertyName)
     End Function
 
     Public Shared Sub AttachHandlers(dgv As DataGridView)

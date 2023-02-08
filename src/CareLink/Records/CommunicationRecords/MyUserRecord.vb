@@ -5,7 +5,7 @@
 Public Class MyUserRecord
     Private _hasValue As Boolean
 
-    Public Sub New(jsonData As Dictionary(Of String, String))
+    Public Sub New(dgv As DataGridView, jsonData As Dictionary(Of String, String))
         If jsonData Is Nothing OrElse jsonData.Count = 0 Then
             _hasValue = False
             Exit Sub
@@ -44,7 +44,10 @@ Public Class MyUserRecord
             End Select
 
         Next
-        My.Forms.Form1.DgvCurrentUser.DataSource = myUser
+        With dgv
+            .InitializeDgv()
+            .DataSource = myUser
+        End With
         _hasValue = True
 
     End Sub

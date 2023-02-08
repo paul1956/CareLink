@@ -8,7 +8,7 @@ Imports System.ComponentModel.DataAnnotations.Schema
 Public Class MyProfileRecord
     Private _hasValue As Boolean
 
-    Public Sub New(jsonData As Dictionary(Of String, String))
+    Public Sub New(dgv As DataGridView, jsonData As Dictionary(Of String, String))
         If jsonData Is Nothing OrElse jsonData.Count = 0 Then
             _hasValue = False
             Exit Sub
@@ -77,8 +77,10 @@ Public Class MyProfileRecord
                     Stop
             End Select
         Next
-
-        My.Forms.Form1.DgvUserProfile.DataSource = profile
+        With dgv
+            .InitializeDgv()
+            .DataSource = profile
+        End With
 
         _hasValue = True
     End Sub

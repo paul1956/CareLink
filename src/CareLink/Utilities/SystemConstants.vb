@@ -33,7 +33,7 @@ Public Module SystemConstants
                         {"AIT 6:00", "6:00"}
                     }, Nothing)
 
-    Public ReadOnly s_iobTitle As String = $"Running Insulin On Board (IOB) {GetGraphLineColor("Active Insulin")}".Replace("Color ", "")
+    Public ReadOnly s_iobTitle As String = $"Running Insulin On Board (IOB)"
 
     Public ReadOnly s_oneToNineteen As New List(Of String) From {
                         "zero", "one", "two", "three", "four", "five",

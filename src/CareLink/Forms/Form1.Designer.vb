@@ -24,25 +24,6 @@ Partial Class Form1
     Private Sub InitializeComponent()
         components = New ComponentModel.Container()
         Dim resources As ComponentModel.ComponentResourceManager = New ComponentModel.ComponentResourceManager(GetType(Form1))
-        Dim DataGridViewCellStyle1 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle11 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle12 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle13 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle14 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle15 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle16 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle17 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle18 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle19 As DataGridViewCellStyle = New DataGridViewCellStyle()
         Me.MenuStrip1 = New MenuStrip()
         Me.MenuStartHere = New ToolStripMenuItem()
         Me.MenuStartHereLogin = New ToolStripMenuItem()
@@ -593,7 +574,7 @@ Partial Class Form1
         Me.BannerStateButton.Name = "BannerStateButton"
         Me.BannerStateButton.Size = New Size(142, 25)
         Me.BannerStateButton.TabIndex = 0
-        Me.BannerStateButton.Text = "Return To Summary Tab" ' 
+        Me.BannerStateButton.Text = "Return To Status Page" ' 
         ' BannerStateLabel
         ' 
         Me.BannerStateLabel.AutoSize = True
@@ -613,7 +594,7 @@ Partial Class Form1
         Me.BasalButton.Name = "BasalButton"
         Me.BasalButton.Size = New Size(142, 25)
         Me.BasalButton.TabIndex = 0
-        Me.BasalButton.Text = "Return To Summary Tab" ' 
+        Me.BasalButton.Text = "Return To Status Page" ' 
         ' BasalLabel
         ' 
         Me.BasalLabel.AutoSize = True
@@ -829,22 +810,6 @@ Partial Class Form1
         ' 
         ' DgvAutoBasalDelivery
         ' 
-        Me.DgvAutoBasalDelivery.AllowUserToAddRows = False
-        Me.DgvAutoBasalDelivery.AllowUserToDeleteRows = False
-        Me.DgvAutoBasalDelivery.AllowUserToResizeColumns = False
-        Me.DgvAutoBasalDelivery.AllowUserToResizeRows = False
-        DataGridViewCellStyle1.BackColor = Color.Silver
-        Me.DgvAutoBasalDelivery.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
-        Me.DgvAutoBasalDelivery.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader
-        DataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle2.BackColor = SystemColors.Control
-        DataGridViewCellStyle2.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
-        DataGridViewCellStyle2.ForeColor = SystemColors.WindowText
-        DataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = DataGridViewTriState.True
-        Me.DgvAutoBasalDelivery.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
-        Me.DgvAutoBasalDelivery.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DgvAutoBasalDelivery.Dock = DockStyle.Fill
         Me.DgvAutoBasalDelivery.Location = New Point(6, 52)
         Me.DgvAutoBasalDelivery.Name = "DgvAutoBasalDelivery"
@@ -855,18 +820,6 @@ Partial Class Form1
         ' 
         ' DgvCountryDataPg1
         ' 
-        Me.DgvCountryDataPg1.AllowUserToAddRows = False
-        Me.DgvCountryDataPg1.AllowUserToDeleteRows = False
-        DataGridViewCellStyle3.BackColor = Color.Silver
-        Me.DgvCountryDataPg1.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle3
-        DataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle4.BackColor = SystemColors.Control
-        DataGridViewCellStyle4.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
-        DataGridViewCellStyle4.ForeColor = SystemColors.WindowText
-        DataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText
-        DataGridViewCellStyle4.WrapMode = DataGridViewTriState.True
-        Me.DgvCountryDataPg1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
         Me.DgvCountryDataPg1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DgvCountryDataPg1.Columns.AddRange(New DataGridViewColumn() {Me.DgvCountryDataPg1RecordNumber, Me.DgvCountryDataPg1Category, Me.DgvCountryDataPg1Key, Me.DgvCountryDataPg1Value})
         Me.DgvCountryDataPg1.Dock = DockStyle.Fill
@@ -914,19 +867,9 @@ Partial Class Form1
         Me.DgvCareLinkUsers.AllowUserToAddRows = False
         Me.DgvCareLinkUsers.AllowUserToResizeColumns = False
         Me.DgvCareLinkUsers.AllowUserToResizeRows = False
-        DataGridViewCellStyle5.BackColor = Color.Silver
-        Me.DgvCareLinkUsers.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle5
         Me.DgvCareLinkUsers.AutoGenerateColumns = False
         Me.DgvCareLinkUsers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
         Me.DgvCareLinkUsers.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
-        DataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle6.BackColor = SystemColors.Control
-        DataGridViewCellStyle6.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
-        DataGridViewCellStyle6.ForeColor = SystemColors.WindowText
-        DataGridViewCellStyle6.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle6.SelectionForeColor = SystemColors.HighlightText
-        DataGridViewCellStyle6.WrapMode = DataGridViewTriState.True
-        Me.DgvCareLinkUsers.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle6
         Me.DgvCareLinkUsers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DgvCareLinkUsers.Columns.AddRange(New DataGridViewColumn() {Me.DgvCareLinkUsersUserID, Me.DgvCareLinkUsersDeleteRow, Me.DgvCareLinkUsersCareLinkUserName, Me.DgvCareLinkUsersCareLinkPassword, Me.DgvCareLinkUsersAIT, Me.DgvCareLinkUsersAlertPhoneNumber, Me.DgvCareLinkUsersCarrierTextingDomain, Me.DgvCareLinkUsersCountryCode, Me.DgvCareLinkUsersMailServerPassword, Me.DgvCareLinkUsersMailServerPort, Me.DgvCareLinkUsersMailServerUserName, Me.DgvCareLinkUsersSettingsVersion, Me.DgvCareLinkUsersUseAdvancedAITDecay, Me.DgvCareLinkUsersUseLocalTimeZone, Me.DgvCareLinkUsersAutoLogin})
         Me.DgvCareLinkUsers.DataSource = Me.CareLinkUserDataRecordBindingSource
@@ -1063,19 +1006,6 @@ Partial Class Form1
         ' 
         ' DgvCountryDataPg2
         ' 
-        Me.DgvCountryDataPg2.AllowUserToAddRows = False
-        Me.DgvCountryDataPg2.AllowUserToDeleteRows = False
-        DataGridViewCellStyle7.BackColor = Color.Silver
-        Me.DgvCountryDataPg2.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle7
-        DataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle8.BackColor = SystemColors.Control
-        DataGridViewCellStyle8.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
-        DataGridViewCellStyle8.ForeColor = SystemColors.WindowText
-        DataGridViewCellStyle8.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = SystemColors.HighlightText
-        DataGridViewCellStyle8.WrapMode = DataGridViewTriState.True
-        Me.DgvCountryDataPg2.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle8
-        Me.DgvCountryDataPg2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DgvCountryDataPg2.Columns.AddRange(New DataGridViewColumn() {Me.DgvCountryDataPg2RecordNumber, Me.DgvCountryDataPg2Category, Me.DgvCountryDataPg2Key, Me.DgvCountryDataPg2Value})
         Me.DgvCountryDataPg2.Dock = DockStyle.Fill
         Me.DgvCountryDataPg2.Location = New Point(3, 3)
@@ -1119,18 +1049,6 @@ Partial Class Form1
         ' 
         ' DgvCountryDataPg3
         ' 
-        Me.DgvCountryDataPg3.AllowUserToAddRows = False
-        Me.DgvCountryDataPg3.AllowUserToDeleteRows = False
-        DataGridViewCellStyle9.BackColor = Color.Silver
-        Me.DgvCountryDataPg3.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle9
-        DataGridViewCellStyle10.Alignment = DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle10.BackColor = SystemColors.Control
-        DataGridViewCellStyle10.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
-        DataGridViewCellStyle10.ForeColor = SystemColors.WindowText
-        DataGridViewCellStyle10.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle10.SelectionForeColor = SystemColors.HighlightText
-        DataGridViewCellStyle10.WrapMode = DataGridViewTriState.True
-        Me.DgvCountryDataPg3.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle10
         Me.DgvCountryDataPg3.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DgvCountryDataPg3.Columns.AddRange(New DataGridViewColumn() {Me.DgvCountryDataPg3RecordNumber, Me.DgvCountryDataPg3Category, Me.DgvCountryDataPg3Key, Me.DgvCountryDataPg3Value, Me.DgvCountryDataPg3OnlyFor, Me.DgvCountryDataPg3NotFor})
         Me.DgvCountryDataPg3.Dock = DockStyle.Fill
@@ -1194,19 +1112,8 @@ Partial Class Form1
         Me.DgvCurrentUser.AllowUserToDeleteRows = False
         Me.DgvCurrentUser.AllowUserToResizeColumns = False
         Me.DgvCurrentUser.AllowUserToResizeRows = False
-        DataGridViewCellStyle11.BackColor = Color.Silver
-        Me.DgvCurrentUser.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle11
         Me.DgvCurrentUser.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
         Me.DgvCurrentUser.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
-        DataGridViewCellStyle12.Alignment = DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle12.BackColor = SystemColors.Control
-        DataGridViewCellStyle12.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
-        DataGridViewCellStyle12.ForeColor = SystemColors.WindowText
-        DataGridViewCellStyle12.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle12.SelectionForeColor = SystemColors.HighlightText
-        DataGridViewCellStyle12.WrapMode = DataGridViewTriState.True
-        Me.DgvCurrentUser.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle12
-        Me.DgvCurrentUser.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DgvCurrentUser.Dock = DockStyle.Fill
         Me.DgvCurrentUser.Location = New Point(0, 0)
         Me.DgvCurrentUser.Name = "DgvCurrentUser"
@@ -1218,21 +1125,6 @@ Partial Class Form1
         ' 
         ' DgvInsulin
         ' 
-        Me.DgvInsulin.AllowUserToAddRows = False
-        Me.DgvInsulin.AllowUserToDeleteRows = False
-        Me.DgvInsulin.AllowUserToResizeColumns = False
-        Me.DgvInsulin.AllowUserToResizeRows = False
-        DataGridViewCellStyle13.BackColor = Color.Silver
-        Me.DgvInsulin.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle13
-        DataGridViewCellStyle14.Alignment = DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle14.BackColor = SystemColors.Control
-        DataGridViewCellStyle14.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
-        DataGridViewCellStyle14.ForeColor = SystemColors.WindowText
-        DataGridViewCellStyle14.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle14.SelectionForeColor = SystemColors.HighlightText
-        DataGridViewCellStyle14.WrapMode = DataGridViewTriState.True
-        Me.DgvInsulin.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle14
-        Me.DgvInsulin.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DgvInsulin.Dock = DockStyle.Fill
         Me.DgvInsulin.Location = New Point(6, 52)
         Me.DgvInsulin.Name = "DgvInsulin"
@@ -1251,23 +1143,6 @@ Partial Class Form1
         ' 
         ' DgvSGs
         ' 
-        Me.DgvSGs.AllowUserToAddRows = False
-        Me.DgvSGs.AllowUserToDeleteRows = False
-        Me.DgvSGs.AllowUserToResizeColumns = False
-        Me.DgvSGs.AllowUserToResizeRows = False
-        DataGridViewCellStyle15.BackColor = Color.Silver
-        Me.DgvSGs.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle15
-        Me.DgvSGs.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left
-        Me.DgvSGs.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
-        DataGridViewCellStyle16.Alignment = DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle16.BackColor = SystemColors.Control
-        DataGridViewCellStyle16.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
-        DataGridViewCellStyle16.ForeColor = SystemColors.WindowText
-        DataGridViewCellStyle16.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle16.SelectionForeColor = SystemColors.HighlightText
-        DataGridViewCellStyle16.WrapMode = DataGridViewTriState.True
-        Me.DgvSGs.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle16
-        Me.DgvSGs.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DgvSGs.Location = New Point(3, 46)
         Me.DgvSGs.Name = "DgvSGs"
         Me.DgvSGs.RowTemplate.Height = 25
@@ -1276,12 +1151,6 @@ Partial Class Form1
         ' 
         ' DgvSummary
         ' 
-        Me.DgvSummary.AllowUserToAddRows = False
-        Me.DgvSummary.AllowUserToDeleteRows = False
-        DataGridViewCellStyle17.BackColor = Color.Silver
-        Me.DgvSummary.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle17
-        Me.DgvSummary.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
-        Me.DgvSummary.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DgvSummary.Dock = DockStyle.Fill
         Me.DgvSummary.Location = New Point(3, 3)
         Me.DgvSummary.Name = "DgvSummary"
@@ -1293,23 +1162,6 @@ Partial Class Form1
         ' 
         ' DgvUserProfile
         ' 
-        Me.DgvUserProfile.AllowUserToAddRows = False
-        Me.DgvUserProfile.AllowUserToDeleteRows = False
-        Me.DgvUserProfile.AllowUserToResizeColumns = False
-        Me.DgvUserProfile.AllowUserToResizeRows = False
-        DataGridViewCellStyle18.BackColor = Color.Silver
-        Me.DgvUserProfile.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle18
-        Me.DgvUserProfile.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
-        Me.DgvUserProfile.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
-        DataGridViewCellStyle19.Alignment = DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle19.BackColor = SystemColors.Control
-        DataGridViewCellStyle19.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
-        DataGridViewCellStyle19.ForeColor = SystemColors.WindowText
-        DataGridViewCellStyle19.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle19.SelectionForeColor = SystemColors.HighlightText
-        DataGridViewCellStyle19.WrapMode = DataGridViewTriState.True
-        Me.DgvUserProfile.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle19
-        Me.DgvUserProfile.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DgvUserProfile.Dock = DockStyle.Fill
         Me.DgvUserProfile.Location = New Point(3, 3)
         Me.DgvUserProfile.Name = "DgvUserProfile"
@@ -1490,15 +1342,16 @@ Partial Class Form1
         ' 
         ' Last24TotalsLabel
         ' 
-        Me.Last24TotalsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Me.Last24TotalsLabel.BorderStyle = BorderStyle.FixedSingle
+        Me.Last24TotalsLabel.Dock = DockStyle.Top
         Me.Last24TotalsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.Last24TotalsLabel.ForeColor = Color.White
         Me.Last24TotalsLabel.Location = New Point(0, 0)
         Me.Last24TotalsLabel.Name = "Last24TotalsLabel"
-        Me.Last24TotalsLabel.Size = New Size(235, 21)
+        Me.Last24TotalsLabel.Size = New Size(235, 23)
         Me.Last24TotalsLabel.TabIndex = 65
         Me.Last24TotalsLabel.Text = "Last 24 Hr Totals"
-        Me.Last24TotalsLabel.TextAlign = ContentAlignment.TopCenter
+        Me.Last24TotalsLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' Last24ManualBolusLabel
         ' 
@@ -1916,7 +1769,7 @@ Partial Class Form1
         ' 
         Me.TableLayoutPanelLastSgTop.AutoSize = True
         Me.TableLayoutPanelLastSgTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelLastSgTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelLastSgTop.ButtonText = "Return To Status Page"
         Me.TableLayoutPanelLastSgTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelLastSgTop.ColumnCount = 2
         Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle())
@@ -1962,7 +1815,7 @@ Partial Class Form1
         ' 
         Me.TableLayoutPanelLastAlarmTop.AutoSize = True
         Me.TableLayoutPanelLastAlarmTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelLastAlarmTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelLastAlarmTop.ButtonText = "Return To Status Page"
         Me.TableLayoutPanelLastAlarmTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelLastAlarmTop.ColumnCount = 2
         Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
@@ -2007,7 +1860,7 @@ Partial Class Form1
         ' 
         Me.TableLayoutPanelActiveInsulinTop.AutoSize = True
         Me.TableLayoutPanelActiveInsulinTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelActiveInsulinTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelActiveInsulinTop.ButtonText = "Return To Status Page"
         Me.TableLayoutPanelActiveInsulinTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelActiveInsulinTop.ColumnCount = 2
         Me.TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
@@ -2053,7 +1906,7 @@ Partial Class Form1
         ' 
         Me.TableLayoutPanelSgsTop.AutoSize = True
         Me.TableLayoutPanelSgsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelSgsTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelSgsTop.ButtonText = "Return To Status Page"
         Me.TableLayoutPanelSgsTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelSgsTop.ColumnCount = 2
         Me.TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle())
@@ -2098,7 +1951,7 @@ Partial Class Form1
         ' 
         Me.TableLayoutPanelLimitsTop.AutoSize = True
         Me.TableLayoutPanelLimitsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelLimitsTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelLimitsTop.ButtonText = "Return To Status Page"
         Me.TableLayoutPanelLimitsTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelLimitsTop.ColumnCount = 2
         Me.TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle())
@@ -2144,7 +1997,7 @@ Partial Class Form1
         ' 
         Me.TableLayoutPanelNotificationHistoryTop.AutoSize = True
         Me.TableLayoutPanelNotificationHistoryTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelNotificationHistoryTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelNotificationHistoryTop.ButtonText = "Return To Status Page"
         Me.TableLayoutPanelNotificationHistoryTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelNotificationHistoryTop.ColumnCount = 2
         Me.TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New ColumnStyle())
@@ -2189,7 +2042,7 @@ Partial Class Form1
         ' 
         Me.TableLayoutPanelTherapyAlgorithmTop.AutoSize = True
         Me.TableLayoutPanelTherapyAlgorithmTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelTherapyAlgorithmTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelTherapyAlgorithmTop.ButtonText = "Return To Status Page"
         Me.TableLayoutPanelTherapyAlgorithmTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelTherapyAlgorithmTop.ColumnCount = 2
         Me.TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New ColumnStyle())
@@ -2235,7 +2088,7 @@ Partial Class Form1
         ' 
         Me.TableLayoutPanelBannerStateTop.AutoSize = True
         Me.TableLayoutPanelBannerStateTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelBannerStateTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelBannerStateTop.ButtonText = "Return To Status Page"
         Me.TableLayoutPanelBannerStateTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelBannerStateTop.ColumnCount = 2
         Me.TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle())
@@ -2280,7 +2133,7 @@ Partial Class Form1
         ' 
         Me.TableLayoutPanelBasalTop.AutoSize = True
         Me.TableLayoutPanelBasalTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelBasalTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelBasalTop.ButtonText = "Return To Status Page"
         Me.TableLayoutPanelBasalTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelBasalTop.ColumnCount = 2
         Me.TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle())
@@ -2311,8 +2164,8 @@ Partial Class Form1
         Me.TabControlPage2.Controls.Add(Me.TabPageBgReadings)
         Me.TabControlPage2.Controls.Add(Me.TabPageCalibration)
         Me.TabControlPage2.Controls.Add(Me.TabPageInsulin)
-        Me.TabControlPage2.Controls.Add(Me.TabPageLowGlucoseSuspended)
         Me.TabControlPage2.Controls.Add(Me.TabPageMeal)
+        Me.TabControlPage2.Controls.Add(Me.TabPageLowGlucoseSuspended)
         Me.TabControlPage2.Controls.Add(Me.TabPageTimeChange)
         Me.TabControlPage2.Controls.Add(Me.TabPageCountryDataPg1)
         Me.TabControlPage2.Controls.Add(Me.TabPageCountryDataPg2)
@@ -2361,7 +2214,7 @@ Partial Class Form1
         ' 
         Me.TableLayoutPanelAutoBasalDeliveryTop.AutoSize = True
         Me.TableLayoutPanelAutoBasalDeliveryTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelAutoBasalDeliveryTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelAutoBasalDeliveryTop.ButtonText = "Return To Status Page"
         Me.TableLayoutPanelAutoBasalDeliveryTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelAutoBasalDeliveryTop.ColumnCount = 2
         Me.TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
@@ -2408,7 +2261,7 @@ Partial Class Form1
         ' 
         Me.TableLayoutPanelAutoModeStatusTop.AutoSize = True
         Me.TableLayoutPanelAutoModeStatusTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelAutoModeStatusTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelAutoModeStatusTop.ButtonText = "Return To Status Page"
         Me.TableLayoutPanelAutoModeStatusTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelAutoModeStatusTop.ColumnCount = 2
         Me.TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
@@ -2455,7 +2308,7 @@ Partial Class Form1
         ' 
         Me.TableLayoutPanelBgReadingsTop.AutoSize = True
         Me.TableLayoutPanelBgReadingsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelBgReadingsTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelBgReadingsTop.ButtonText = "Return To Status Page"
         Me.TableLayoutPanelBgReadingsTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelBgReadingsTop.ColumnCount = 2
         Me.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
@@ -2502,7 +2355,7 @@ Partial Class Form1
         ' 
         Me.TableLayoutPanelCalibrationTop.AutoSize = True
         Me.TableLayoutPanelCalibrationTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelCalibrationTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelCalibrationTop.ButtonText = "Return To Status Page"
         Me.TableLayoutPanelCalibrationTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelCalibrationTop.ColumnCount = 2
         Me.TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle())
@@ -2549,7 +2402,7 @@ Partial Class Form1
         ' 
         Me.TableLayoutPanelInsulinTop.AutoSize = True
         Me.TableLayoutPanelInsulinTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelInsulinTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelInsulinTop.ButtonText = "Return To Status Page"
         Me.TableLayoutPanelInsulinTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelInsulinTop.ColumnCount = 2
         Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle())
@@ -2596,7 +2449,7 @@ Partial Class Form1
         ' 
         Me.TableLayoutPanelLowGlucoseSuspendedTop.AutoSize = True
         Me.TableLayoutPanelLowGlucoseSuspendedTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelLowGlucoseSuspendedTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.ButtonText = "Return To Status Page"
         Me.TableLayoutPanelLowGlucoseSuspendedTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelLowGlucoseSuspendedTop.ColumnCount = 2
         Me.TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
@@ -2643,7 +2496,7 @@ Partial Class Form1
         ' 
         Me.TableLayoutPanelMealTop.AutoSize = True
         Me.TableLayoutPanelMealTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelMealTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelMealTop.ButtonText = "Return To Status Page"
         Me.TableLayoutPanelMealTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelMealTop.ColumnCount = 2
         Me.TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle())
@@ -2690,7 +2543,7 @@ Partial Class Form1
         ' 
         Me.TableLayoutPanelTimeChangeTop.AutoSize = True
         Me.TableLayoutPanelTimeChangeTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelTimeChangeTop.ButtonText = "Return To Summary Tab"
+        Me.TableLayoutPanelTimeChangeTop.ButtonText = "Return To Status Page"
         Me.TableLayoutPanelTimeChangeTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Me.TableLayoutPanelTimeChangeTop.ColumnCount = 2
         Me.TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle())

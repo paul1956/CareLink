@@ -4,7 +4,7 @@
 
 Friend Class LowGlucoseSuspendRecordHelpers
 
-    Private Shared ReadOnly columnsToHide As New List(Of String) From {
+    Private Shared ReadOnly s_columnsToHide As New List(Of String) From {
             NameOf(LowGlucoseSuspendRecord.kind),
             NameOf(LowGlucoseSuspendRecord.relativeOffset),
             NameOf(LowGlucoseSuspendRecord.version)
@@ -40,7 +40,7 @@ Friend Class LowGlucoseSuspendRecordHelpers
     End Function
 
     Friend Shared Function HideColumn(columnName As String) As Boolean
-        Return s_filterJsonData AndAlso columnsToHide.Contains(columnName)
+        Return s_filterJsonData AndAlso s_columnsToHide.Contains(columnName)
     End Function
 
     Public Shared Sub AttachHandlers(dgv As DataGridView)

@@ -15,14 +15,22 @@ Public Class SgRecord
 
     Public Sub New(innerJson As Dictionary(Of String, String), index As Integer)
         Me.RecordNumber = index + 1
-        Me.sg = innerJson(NameOf(sg)).ParseSingle()
-        Me.datetimeAsString = innerJson(NameOf(Me.datetime))
-        Me.datetime = Me.datetimeAsString.ParseDate(NameOf(SgRecord.datetime))
-        Me.timeChange = Boolean.Parse(innerJson(NameOf(timeChange)))
-        Me.sensorState = innerJson(NameOf(sensorState))
+        If innerJson(NameOf(sg)) = "0" Then
+            Me.datetime = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime
+            Me.datetimeAsString = ""
+            Me.relativeOffset = 0
+            Me.sg = Single.NaN
+            Me.timeChange = False
+        Else
+            Me.datetimeAsString = innerJson(NameOf(Me.datetime))
+            Me.datetime = Me.datetimeAsString.ParseDate(NameOf(SgRecord.datetime))
+            Me.relativeOffset = CInt(innerJson(NameOf(relativeOffset)))
+            Me.timeChange = Boolean.Parse(innerJson(NameOf(timeChange)))
+            Me.sensorState = innerJson(NameOf(sensorState))
+            Me.sg = innerJson(NameOf(sg)).ParseSingle()
+        End If
         Me.kind = innerJson(NameOf(kind))
         Me.version = CInt(innerJson(NameOf(version)))
-        Me.relativeOffset = CInt(innerJson(NameOf(relativeOffset)))
     End Sub
 
     <DisplayName(NameOf(SgRecord.datetime))>

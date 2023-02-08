@@ -6,7 +6,7 @@ Imports System.IO
 
 Public Class CareLinkUserDataRecordHelpers
 
-    Private Shared ReadOnly columnsToHide As New List(Of String) From {
+    Private Shared ReadOnly s_columnsToHide As New List(Of String) From {
                         NameOf(CareLinkUserDataRecord.AlertPhoneNumber),
                         NameOf(CareLinkUserDataRecord.CareLinkPassword),
                         NameOf(CareLinkUserDataRecord.CarrierTextingDomain),
@@ -37,7 +37,7 @@ Public Class CareLinkUserDataRecordHelpers
         If String.IsNullOrWhiteSpace(dataPropertyName) Then
             Return False
         End If
-        Return Not (Debugger.IsAttached AndAlso Not s_filterJsonData) AndAlso columnsToHide.Contains(dataPropertyName)
+        Return Not (Debugger.IsAttached AndAlso Not s_filterJsonData) AndAlso s_columnsToHide.Contains(dataPropertyName)
     End Function
 
     Public Shared Function GetCellStyle(columnName As String) As DataGridViewCellStyle

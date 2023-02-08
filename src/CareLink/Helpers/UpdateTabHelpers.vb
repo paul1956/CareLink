@@ -85,16 +85,17 @@ Friend Module UpdateTabHelpers
                               ItemIndexes.markers,
                               False)
             .TableLayoutPanelBgReadings.DisplayDataTableInDGV(
-                              ClassCollectionToDataTable(
-                              s_listOfBgReadingMarkers),
+                              ClassCollectionToDataTable(s_listOfBgReadingMarkers),
                               NameOf(BGReadingRecord),
                               AddressOf BGReadingRecordHelpers.AttachHandlers,
                               ItemIndexes.markers,
                               False)
             .TableLayoutPanelInsulin.DisplayDataTableInDGV(
-                              .DgvInsulin,
                               ClassCollectionToDataTable(s_listOfInsulinMarkers),
-                              ItemIndexes.markers)
+                              NameOf(InsulinRecord),
+                              AddressOf InsulinRecordHelpers.AddHandlers,
+                              ItemIndexes.markers,
+            False)
             .TableLayoutPanelMeal.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(s_listOfMealMarkers),
                               NameOf(MealRecord),
@@ -205,6 +206,7 @@ Friend Module UpdateTabHelpers
     <Extension>
     Friend Sub UpdateSummaryTab(MainForm As Form1)
         s_listOfSummaryRecords.Sort()
+        MainForm.DgvSummary.InitializeDgv()
         MainForm.DgvSummary.DataSource = ClassCollectionToDataTable(s_listOfSummaryRecords)
         MainForm.DgvSummary.Columns(0).HeaderCell.SortGlyphDirection = SortOrder.Ascending
         MainForm.DgvSummary.RowHeadersVisible = False

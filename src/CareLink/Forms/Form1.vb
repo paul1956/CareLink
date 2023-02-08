@@ -476,8 +476,8 @@ Public Class Form1
     Private Sub TabControlPage1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlPage1.Selecting
 
         Select Case e.TabPage.Name
-            Case NameOf(TabPageAllUsers)
-                Me.DgvCareLinkUsers.DataSource = s_allUserSettingsData
+            Case NameOf(TabPage14Markers)
+                Me.DgvCareLinkUsers.InitializeDgv
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
                     c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
                 Next
@@ -485,7 +485,6 @@ Public Class Form1
                 Me.CareLinkUsersAITComboBox.SelectedIndex = Me.AITComboBox.SelectedIndex
                 Me.CareLinkUsersAITComboBox.Visible = False
                 Me.DgvCareLinkUsers.Columns(NameOf(DgvCareLinkUsersAIT)).Width = Me.AITComboBox.Width
-            Case NameOf(TabPage14Markers)
                 Me.TabControlPage2.SelectedIndex = _lastMarkerTabIndex
                 Me.TabControlPage1.Visible = False
                 Exit Sub
@@ -825,7 +824,7 @@ Public Class Form1
     Private Sub DgvSummary_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSummary.ColumnAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
-            e.DgvColumnAdded(GetCellStyle(.Name),
+            e.DgvColumnAdded(SummaryRecordHelpers.GetCellStyle(.Name),
                              False,
                              True,
                              CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
@@ -1118,6 +1117,7 @@ Public Class Form1
     End Sub
 
     Private Sub DgvCareLinkUsers_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles DgvCareLinkUsers.RowsAdded
+        If s_allUserSettingsData.Count = 0 Then Exit Sub
         Dim dgv As DataGridView = CType(sender, DataGridView)
         For i As Integer = e.RowIndex To e.RowIndex + (e.RowCount - 1)
             Dim disableButtonCell As DataGridViewDisableButtonCell = CType(dgv.Rows(i).Cells(NameOf(DgvCareLinkUsersDeleteRow)), DataGridViewDisableButtonCell)
@@ -1132,15 +1132,22 @@ Public Class Form1
 #Region "TableLayoutPanelTop Button Events"
 
     Private Sub TableLayoutPanelTopButton_Click(sender As Object, e As EventArgs) _
-        Handles TableLayoutPanelLastSgTop.ButtonClick, TableLayoutPanelLastAlarmTop.ButtonClick,
-        TableLayoutPanelActiveInsulinTop.ButtonClick,
-        TableLayoutPanelSgsTop.ButtonClick, TableLayoutPanelLimitsTop.ButtonClick,
+        Handles TableLayoutPanelActiveInsulinTop.ButtonClick,
+        TableLayoutPanelAutoBasalDeliveryTop.ButtonClick,
+        TableLayoutPanelAutoModeStatusTop.ButtonClick,
+        TableLayoutPanelBannerStateTop.ButtonClick,
+        TableLayoutPanelBasalTop.ButtonClick,
+        TableLayoutPanelBgReadingsTop.ButtonClick,
+        TableLayoutPanelCalibrationTop.ButtonClick,
+        TableLayoutPanelInsulinTop.ButtonClick,
+        TableLayoutPanelLastAlarmTop.ButtonClick,
+        TableLayoutPanelLastSgTop.ButtonClick,
+        TableLayoutPanelLimitsTop.ButtonClick,
+        TableLayoutPanelLowGlucoseSuspendedTop.ButtonClick,
+        TableLayoutPanelMealTop.ButtonClick,
         TableLayoutPanelNotificationHistoryTop.ButtonClick,
-        TableLayoutPanelTherapyAlgorithmTop.ButtonClick, TableLayoutPanelBannerStateTop.ButtonClick,
-        TableLayoutPanelBasalTop.ButtonClick, TableLayoutPanelAutoBasalDeliveryTop.ButtonClick,
-        TableLayoutPanelAutoModeStatusTop.ButtonClick, TableLayoutPanelBgReadingsTop.ButtonClick,
-        TableLayoutPanelCalibrationTop.ButtonClick, TableLayoutPanelInsulinTop.ButtonClick,
-        TableLayoutPanelLowGlucoseSuspendedTop.ButtonClick, TableLayoutPanelMealTop.ButtonClick,
+        TableLayoutPanelSgsTop.ButtonClick,
+        TableLayoutPanelTherapyAlgorithmTop.ButtonClick,
         TableLayoutPanelTimeChangeTop.ButtonClick
         Me.TabControlPage1.SelectedIndex = 3
         Me.TabControlPage1.Visible = True
@@ -1847,7 +1854,10 @@ Public Class Form1
                 Next
 
                 .ChartAreas(NameOf(ChartArea)).AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1
-                .PlotMarkers(Me.ActiveInsulinTimeChangeSeries, _summaryChartAbsoluteRectangle, s_activeInsulinMarkerInsulinDictionary, Nothing)
+                .PlotMarkers(Me.ActiveInsulinTimeChangeSeries,
+                             _summaryChartAbsoluteRectangle,
+                             s_activeInsulinMarkerInsulinDictionary,
+                             Nothing)
                 .PlotSgSeries(HomePageMealRow)
             End With
         Catch ex As Exception
@@ -1863,8 +1873,11 @@ Public Class Form1
                 s.Points.Clear()
             Next
             Me.SummaryChart.ChartAreas(NameOf(ChartArea)).UpdateChartAreaBGAxisX()
-            Me.SummaryChart.Titles(0).Text = $"Summary {s_listOfManualBasal.GetSubTitle}"
-            Me.SummaryChart.PlotMarkers(Me.SummaryTimeChangeSeries, _summaryChartAbsoluteRectangle, s_summaryMarkerInsulinDictionary, s_summaryMarkerMealDictionary)
+            Me.SummaryChart.Titles(0).Text = $"Status - {s_listOfManualBasal.GetSubTitle}"
+            Me.SummaryChart.PlotMarkers(Me.SummaryTimeChangeSeries,
+                                        _summaryChartAbsoluteRectangle,
+                                        s_summaryMarkerInsulinDictionary,
+                                        s_summaryMarkerMealDictionary)
             Application.DoEvents()
             Me.SummaryChart.PlotSgSeries(HomePageMealRow)
             Application.DoEvents()
