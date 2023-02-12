@@ -9,8 +9,11 @@ Imports System.IO
 Imports System.Text
 Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
+
 Imports DataGridViewColumnControls
+
 Imports TableLayputPanelTop
+
 Imports ToolStripControls
 
 Public Class Form1
@@ -2140,7 +2143,7 @@ Public Class Form1
             Dim sg As Single = s_lastSgRecord.sg
             Dim str As String = s_lastSgRecord.sg.ToString
             Dim fontToUse As New Font("Trebuchet MS", 10, FontStyle.Regular, GraphicsUnit.Pixel)
-            Dim color As Color = Color.White
+            Dim color As Color = color.White
             Dim bgColor As Color
             Dim notStr As New StringBuilder
 
@@ -2148,16 +2151,16 @@ Public Class Form1
                 Using g As Graphics = Graphics.FromImage(bitmapText)
                     Select Case sg
                         Case <= s_limitLow
-                            bgColor = Color.Orange
+                            bgColor = color.Orange
                             If _showBalloonTip Then
                                 Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName} Alert", $"SG below {s_limitLow} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
                         Case <= s_limitHigh
-                            bgColor = Color.Green
+                            bgColor = color.Green
                             _showBalloonTip = True
                         Case Else
-                            bgColor = Color.Red
+                            bgColor = color.Red
                             If _showBalloonTip Then
                                 Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName} Alert", $"SG above {s_limitHigh} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                             End If
