@@ -2,7 +2,23 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Runtime.CompilerServices
+
 Friend Module CollectMarkersHelper
+
+    <Extension>
+    Private Function ScaleMarker(innerDictionary As Dictionary(Of String, String)) As Dictionary(Of String, String)
+        Dim newMarker As New Dictionary(Of String, String)
+        For Each kvp As KeyValuePair(Of String, String) In innerDictionary
+            Select Case kvp.Key
+                Case "value"
+                    newMarker.Add(kvp.Key, kvp.scaleValue(2))
+                Case Else
+                    newMarker.Add(kvp.Key, kvp.Value)
+            End Select
+        Next
+        Return newMarker
+    End Function
 
     ''' <summary>
     ''' Collect up markers
@@ -97,6 +113,17 @@ Friend Module CollectMarkersHelper
             i += 1
         End While
         Return $"Max Basal/Hr ~ {MaxBasalPerHour.RoundSingle(3)} U"
+    End Function
+
+    <Extension>
+    Friend Function MatchesMeal(entry As Dictionary(Of String, String)) As Boolean
+        Dim entryIndex As Integer = CInt(entry("index"))
+        If entry(NameOf(InsulinRecord.activationType)) <> "RECOMMENDED" Then
+            Return False
+        End If
+        Return s_markers.Any(Function(d As Dictionary(Of String, String))
+                                 Return d("type") = "MEAL" AndAlso CInt(d("index")) = entryIndex
+                             End Function)
     End Function
 
 End Module

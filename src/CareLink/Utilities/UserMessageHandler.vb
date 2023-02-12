@@ -57,6 +57,7 @@ Friend Module UserMessageHandler
                         {"BC_SID_DO_NOT_CALIBRATE_UNLESS_NOTIFIED", "Sensor updating, Do Not calibrate unless notified. This could take up to 3 hours"},
                         {"BC_SID_ENSURE_CONNECTION_SECURE", "Check connection. Ensure transmitter and sensor is secure, then select OK."},
                         {"BC_SID_ENSURE_DELIVERY_CHANGE_RESERVOIR", "Reservoir empty reminder, change reservoir and infusion set."},
+                        {"BC_SID_ENTER_BG_TO_CALIBRATE_SENSOR", "Enter BG to calibrate sensor(triggeredDateTime)."},
                         {"BC_SID_ENTER_BG_TO_CALIBRATE_SENSOR_SENSOR_INFO_NO_AVAILABLE", "Enter BG to calibrate sensor(triggeredDateTime). Sensor info not available."},
                         {"BC_SID_ENTER_BG_TO_CONTINUE_IN_SMART_GUARD", "Enter BG to continue in SmartGuard(triggeredDateTime)."},
                         {"BC_SID_FILL_TUBING_STOPPED_DISCONNECT", "Fill tubing, delivery stopped."},
