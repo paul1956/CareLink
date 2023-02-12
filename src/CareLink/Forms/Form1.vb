@@ -2143,7 +2143,7 @@ Public Class Form1
             Dim sg As Single = s_lastSgRecord.sg
             Dim str As String = s_lastSgRecord.sg.ToString
             Dim fontToUse As New Font("Trebuchet MS", 10, FontStyle.Regular, GraphicsUnit.Pixel)
-            Dim color As Color = color.White
+            Dim color As Color = Color.White
             Dim bgColor As Color
             Dim notStr As New StringBuilder
 
@@ -2151,16 +2151,16 @@ Public Class Form1
                 Using g As Graphics = Graphics.FromImage(bitmapText)
                     Select Case sg
                         Case <= s_limitLow
-                            bgColor = color.Orange
+                            bgColor = Color.Orange
                             If _showBalloonTip Then
                                 Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName} Alert", $"SG below {s_limitLow} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
                         Case <= s_limitHigh
-                            bgColor = color.Green
+                            bgColor = Color.Green
                             _showBalloonTip = True
                         Case Else
-                            bgColor = color.Red
+                            bgColor = Color.Red
                             If _showBalloonTip Then
                                 Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName} Alert", $"SG above {s_limitHigh} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                             End If
