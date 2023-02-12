@@ -168,10 +168,10 @@ Partial Class Form1
         Me.TabPage02RunningIOB = New TabPage()
         Me.TabPage03TreatmentDetails = New TabPage()
         Me.TabPage04SummaryData = New TabPage()
-        Me.TabPage05LastSG = New TabPage()
+        Me.TabPageLastSG = New TabPage()
         Me.TableLayoutPanelLastSG = New TableLayoutPanel()
         Me.TableLayoutPanelLastSgTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
-        Me.TabPage06LastAlarm = New TabPage()
+        Me.TabPageLastAlarm = New TabPage()
         Me.TableLayoutPanelLastAlarm = New TableLayoutPanel()
         Me.TableLayoutPanelLastAlarmTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
         Me.TabPage07ActiveInsulin = New TabPage()
@@ -209,10 +209,10 @@ Partial Class Form1
         Me.TabPageCalibration = New TabPage()
         Me.TableLayoutPanelCalibration = New TableLayoutPanel()
         Me.TableLayoutPanelCalibrationTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
-        Me.TabPageInsulin = New TabPage()
+        Me.TabPage05Insulin = New TabPage()
         Me.TableLayoutPanelInsulin = New TableLayoutPanel()
         Me.TableLayoutPanelInsulinTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
-        Me.TabPageMeal = New TabPage()
+        Me.TabPage06Meal = New TabPage()
         Me.TableLayoutPanelMeal = New TableLayoutPanel()
         Me.TableLayoutPanelMealTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
         Me.TabPageLowGlucoseSuspended = New TabPage()
@@ -263,9 +263,9 @@ Partial Class Form1
         Me.TabControlPage1.SuspendLayout()
         Me.TabPage01HomePage.SuspendLayout()
         Me.TabPage04SummaryData.SuspendLayout()
-        Me.TabPage05LastSG.SuspendLayout()
+        Me.TabPageLastSG.SuspendLayout()
         Me.TableLayoutPanelLastSG.SuspendLayout()
-        Me.TabPage06LastAlarm.SuspendLayout()
+        Me.TabPageLastAlarm.SuspendLayout()
         Me.TableLayoutPanelLastAlarm.SuspendLayout()
         Me.TabPage07ActiveInsulin.SuspendLayout()
         Me.TableLayoutPanelActiveInsulin.SuspendLayout()
@@ -290,9 +290,9 @@ Partial Class Form1
         Me.TableLayoutPanelBgReadings.SuspendLayout()
         Me.TabPageCalibration.SuspendLayout()
         Me.TableLayoutPanelCalibration.SuspendLayout()
-        Me.TabPageInsulin.SuspendLayout()
+        Me.TabPage05Insulin.SuspendLayout()
         Me.TableLayoutPanelInsulin.SuspendLayout()
-        Me.TabPageMeal.SuspendLayout()
+        Me.TabPage06Meal.SuspendLayout()
         Me.TableLayoutPanelMeal.SuspendLayout()
         Me.TabPageLowGlucoseSuspended.SuspendLayout()
         Me.TableLayoutPanelLowGlucoseSuspended.SuspendLayout()
@@ -313,18 +313,18 @@ Partial Class Form1
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New Size(1384, 24)
         Me.MenuStrip1.TabIndex = 0
-        Me.MenuStrip1.Text = "MenuStrip1"' 
+        Me.MenuStrip1.Text = "MenuStrip1" ' 
         ' MenuStartHere
         ' 
         Me.MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {Me.MenuStartHereLogin, Me.ToolStripSeparator1, Me.MenuStartHereLoadSavedDataFile, Me.MenuStartHereExceptionReportLoad, Me.ToolStripSeparator4, Me.MenuStartHereUseLastSavedFile, Me.MenuStartHereUseTestData, Me.ToolStripSeparator2, Me.MenuStartHereSnapshotSave, Me.ToolStripSeparator3, Me.StartHereExit})
         Me.MenuStartHere.Name = "MenuStartHere"
         Me.MenuStartHere.Size = New Size(71, 20)
-        Me.MenuStartHere.Text = "Start Here"' 
+        Me.MenuStartHere.Text = "Start Here" ' 
         ' MenuStartHereLogin
         ' 
         Me.MenuStartHereLogin.Name = "MenuStartHereLogin"
         Me.MenuStartHereLogin.Size = New Size(211, 22)
-        Me.MenuStartHereLogin.Text = "Login"' 
+        Me.MenuStartHereLogin.Text = "Login" ' 
         ' ToolStripSeparator1
         ' 
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
@@ -334,12 +334,12 @@ Partial Class Form1
         ' 
         Me.MenuStartHereLoadSavedDataFile.Name = "MenuStartHereLoadSavedDataFile"
         Me.MenuStartHereLoadSavedDataFile.Size = New Size(211, 22)
-        Me.MenuStartHereLoadSavedDataFile.Text = "Load A Saved Data File"' 
+        Me.MenuStartHereLoadSavedDataFile.Text = "Load A Saved Data File" ' 
         ' MenuStartHereExceptionReportLoad
         ' 
         Me.MenuStartHereExceptionReportLoad.Name = "MenuStartHereExceptionReportLoad"
         Me.MenuStartHereExceptionReportLoad.Size = New Size(211, 22)
-        Me.MenuStartHereExceptionReportLoad.Text = "Load An Exception Report"' 
+        Me.MenuStartHereExceptionReportLoad.Text = "Load An Exception Report" ' 
         ' ToolStripSeparator4
         ' 
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
@@ -349,12 +349,12 @@ Partial Class Form1
         ' 
         Me.MenuStartHereUseLastSavedFile.Name = "MenuStartHereUseLastSavedFile"
         Me.MenuStartHereUseLastSavedFile.Size = New Size(211, 22)
-        Me.MenuStartHereUseLastSavedFile.Text = "Use Last Data File"' 
+        Me.MenuStartHereUseLastSavedFile.Text = "Use Last Data File" ' 
         ' MenuStartHereUseTestData
         ' 
         Me.MenuStartHereUseTestData.Name = "MenuStartHereUseTestData"
         Me.MenuStartHereUseTestData.Size = New Size(211, 22)
-        Me.MenuStartHereUseTestData.Text = "Use Test Data"' 
+        Me.MenuStartHereUseTestData.Text = "Use Test Data" ' 
         ' ToolStripSeparator2
         ' 
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
@@ -365,7 +365,7 @@ Partial Class Form1
         Me.MenuStartHereSnapshotSave.Name = "MenuStartHereSnapshotSave"
         Me.MenuStartHereSnapshotSave.ShortcutKeys = Keys.Control Or Keys.S
         Me.MenuStartHereSnapshotSave.Size = New Size(211, 22)
-        Me.MenuStartHereSnapshotSave.Text = "Snapshot &Save"' 
+        Me.MenuStartHereSnapshotSave.Text = "Snapshot &Save" ' 
         ' ToolStripSeparator3
         ' 
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
@@ -377,18 +377,18 @@ Partial Class Form1
         Me.StartHereExit.Name = "StartHereExit"
         Me.StartHereExit.ShortcutKeys = Keys.Alt Or Keys.X
         Me.StartHereExit.Size = New Size(211, 22)
-        Me.StartHereExit.Text = "E&xit"' 
+        Me.StartHereExit.Text = "E&xit" ' 
         ' MenuOptions
         ' 
         Me.MenuOptions.DropDownItems.AddRange(New ToolStripItem() {Me.MenuOptionsColorPicker, Me.MenuOptionsShowLegend, Me.ToolStripSeparator5, Me.MenuOptionsAutoLogin, Me.ToolStripSeparator6, Me.OptionsMenuAdvancedOptions, Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsSetupEMailServer, Me.MenuOptionsUseAdvancedAITDecay, Me.MenuOptionsUseLocalTimeZone})
         Me.MenuOptions.Name = "MenuOptions"
         Me.MenuOptions.Size = New Size(61, 20)
-        Me.MenuOptions.Text = "Options"' 
+        Me.MenuOptions.Text = "Options" ' 
         ' MenuOptionsColorPicker
         ' 
         Me.MenuOptionsColorPicker.Name = "MenuOptionsColorPicker"
         Me.MenuOptionsColorPicker.Size = New Size(204, 22)
-        Me.MenuOptionsColorPicker.Text = "Color Picker..."' 
+        Me.MenuOptionsColorPicker.Text = "Color Picker..." ' 
         ' MenuOptionsShowLegend
         ' 
         Me.MenuOptionsShowLegend.Checked = True
@@ -396,7 +396,7 @@ Partial Class Form1
         Me.MenuOptionsShowLegend.CheckState = CheckState.Checked
         Me.MenuOptionsShowLegend.Name = "MenuOptionsShowLegend"
         Me.MenuOptionsShowLegend.Size = New Size(204, 22)
-        Me.MenuOptionsShowLegend.Text = "Show Legend"' 
+        Me.MenuOptionsShowLegend.Text = "Show Legend" ' 
         ' ToolStripSeparator5
         ' 
         Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
@@ -407,7 +407,7 @@ Partial Class Form1
         Me.MenuOptionsAutoLogin.CheckOnClick = True
         Me.MenuOptionsAutoLogin.Name = "MenuOptionsAutoLogin"
         Me.MenuOptionsAutoLogin.Size = New Size(204, 22)
-        Me.MenuOptionsAutoLogin.Text = "Auto Login"' 
+        Me.MenuOptionsAutoLogin.Text = "Auto Login" ' 
         ' ToolStripSeparator6
         ' 
         Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
@@ -418,7 +418,7 @@ Partial Class Form1
         Me.OptionsMenuAdvancedOptions.Enabled = False
         Me.OptionsMenuAdvancedOptions.Name = "OptionsMenuAdvancedOptions"
         Me.OptionsMenuAdvancedOptions.Size = New Size(204, 22)
-        Me.OptionsMenuAdvancedOptions.Text = "Advanced Options"' 
+        Me.OptionsMenuAdvancedOptions.Text = "Advanced Options" ' 
         ' MenuOptionsFilterRawJSONData
         ' 
         Me.MenuOptionsFilterRawJSONData.Checked = True
@@ -426,7 +426,7 @@ Partial Class Form1
         Me.MenuOptionsFilterRawJSONData.CheckState = CheckState.Checked
         Me.MenuOptionsFilterRawJSONData.Name = "MenuOptionsFilterRawJSONData"
         Me.MenuOptionsFilterRawJSONData.Size = New Size(204, 22)
-        Me.MenuOptionsFilterRawJSONData.Text = "Filter Raw JSON Data"' 
+        Me.MenuOptionsFilterRawJSONData.Text = "Filter Raw JSON Data" ' 
         ' MenuOptionsSetupEMailServer
         ' 
         Me.MenuOptionsSetupEMailServer.Name = "MenuOptionsSetupEMailServer"
@@ -441,7 +441,7 @@ Partial Class Form1
         Me.MenuOptionsUseAdvancedAITDecay.CheckState = CheckState.Indeterminate
         Me.MenuOptionsUseAdvancedAITDecay.Name = "MenuOptionsUseAdvancedAITDecay"
         Me.MenuOptionsUseAdvancedAITDecay.Size = New Size(204, 22)
-        Me.MenuOptionsUseAdvancedAITDecay.Text = "Use Advanced AIT Decay"' 
+        Me.MenuOptionsUseAdvancedAITDecay.Text = "Use Advanced AIT Decay" ' 
         ' MenuOptionsUseLocalTimeZone
         ' 
         Me.MenuOptionsUseLocalTimeZone.Checked = True
@@ -449,32 +449,32 @@ Partial Class Form1
         Me.MenuOptionsUseLocalTimeZone.CheckState = CheckState.Indeterminate
         Me.MenuOptionsUseLocalTimeZone.Name = "MenuOptionsUseLocalTimeZone"
         Me.MenuOptionsUseLocalTimeZone.Size = New Size(204, 22)
-        Me.MenuOptionsUseLocalTimeZone.Text = "Use Local TImeZone"' 
+        Me.MenuOptionsUseLocalTimeZone.Text = "Use Local TImeZone" ' 
         ' MenuHelp
         ' 
         Me.MenuHelp.DropDownItems.AddRange(New ToolStripItem() {Me.MenuHelpReportAnIssue, Me.MenuHelpCheckForUpdates, Me.MenuHelpAbout})
         Me.MenuHelp.Name = "MenuHelp"
         Me.MenuHelp.ShortcutKeys = Keys.Alt Or Keys.H
         Me.MenuHelp.Size = New Size(44, 20)
-        Me.MenuHelp.Text = "&Help"' 
+        Me.MenuHelp.Text = "&Help" ' 
         ' MenuHelpReportAnIssue
         ' 
         Me.MenuHelpReportAnIssue.Image = My.Resources.Resources.FeedbackSmile_16x
         Me.MenuHelpReportAnIssue.ImageScaling = ToolStripItemImageScaling.None
         Me.MenuHelpReportAnIssue.Name = "MenuHelpReportAnIssue"
         Me.MenuHelpReportAnIssue.Size = New Size(177, 22)
-        Me.MenuHelpReportAnIssue.Text = "Report A Problem..."' 
+        Me.MenuHelpReportAnIssue.Text = "Report A Problem..." ' 
         ' MenuHelpCheckForUpdates
         ' 
         Me.MenuHelpCheckForUpdates.Name = "MenuHelpCheckForUpdates"
         Me.MenuHelpCheckForUpdates.Size = New Size(177, 22)
-        Me.MenuHelpCheckForUpdates.Text = "Check For Updates"' 
+        Me.MenuHelpCheckForUpdates.Text = "Check For Updates" ' 
         ' MenuHelpAbout
         ' 
         Me.MenuHelpAbout.Image = My.Resources.Resources.AboutBox
         Me.MenuHelpAbout.Name = "MenuHelpAbout"
         Me.MenuHelpAbout.Size = New Size(177, 22)
-        Me.MenuHelpAbout.Text = "&About..."' 
+        Me.MenuHelpAbout.Text = "&About..." ' 
         ' MenuShowMiniDisplay
         ' 
         Me.MenuShowMiniDisplay.ForeColor = Color.Red
@@ -492,7 +492,7 @@ Partial Class Form1
         ' 
         Me.AboveHighLimitMessageLabel.Anchor = AnchorStyles.Top
         Me.AboveHighLimitMessageLabel.BackColor = Color.Transparent
-        Me.AboveHighLimitMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Me.AboveHighLimitMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.AboveHighLimitMessageLabel.ForeColor = Color.Yellow
         Me.AboveHighLimitMessageLabel.Location = New Point(30, 251)
         Me.AboveHighLimitMessageLabel.Name = "AboveHighLimitMessageLabel"
@@ -518,7 +518,7 @@ Partial Class Form1
         ' 
         Me.ActiveInsulinValue.BackColor = Color.Transparent
         Me.ActiveInsulinValue.BorderStyle = BorderStyle.FixedSingle
-        Me.ActiveInsulinValue.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Me.ActiveInsulinValue.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.ActiveInsulinValue.ForeColor = Color.White
         Me.ActiveInsulinValue.Location = New Point(995, 32)
         Me.ActiveInsulinValue.Name = "ActiveInsulinValue"
@@ -530,7 +530,7 @@ Partial Class Form1
         ' AITAlgorithmLabel
         ' 
         Me.AITAlgorithmLabel.BackColor = Color.Transparent
-        Me.AITAlgorithmLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Me.AITAlgorithmLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.AITAlgorithmLabel.ForeColor = Color.White
         Me.AITAlgorithmLabel.Location = New Point(972, 3)
         Me.AITAlgorithmLabel.Margin = New Padding(0)
@@ -544,7 +544,7 @@ Partial Class Form1
         ' 
         Me.AverageSGMessageLabel.Anchor = AnchorStyles.Top
         Me.AverageSGMessageLabel.BackColor = Color.Transparent
-        Me.AverageSGMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Me.AverageSGMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.AverageSGMessageLabel.ForeColor = Color.White
         Me.AverageSGMessageLabel.Location = New Point(3, 436)
         Me.AverageSGMessageLabel.Name = "AverageSGMessageLabel"
@@ -1680,8 +1680,8 @@ Partial Class Form1
         Me.TabControlPage1.Controls.Add(Me.TabPage02RunningIOB)
         Me.TabControlPage1.Controls.Add(Me.TabPage03TreatmentDetails)
         Me.TabControlPage1.Controls.Add(Me.TabPage04SummaryData)
-        Me.TabControlPage1.Controls.Add(Me.TabPage05LastSG)
-        Me.TabControlPage1.Controls.Add(Me.TabPage06LastAlarm)
+        Me.TabControlPage1.Controls.Add(Me.TabPage05Insulin)
+        Me.TabControlPage1.Controls.Add(Me.TabPage06Meal)
         Me.TabControlPage1.Controls.Add(Me.TabPage07ActiveInsulin)
         Me.TabControlPage1.Controls.Add(Me.TabPage08SensorGlucose)
         Me.TabControlPage1.Controls.Add(Me.TabPage09Limits)
@@ -1738,16 +1738,16 @@ Partial Class Form1
         Me.TabPage04SummaryData.Text = "Summary Data"
         Me.TabPage04SummaryData.UseVisualStyleBackColor = True
         ' 
-        ' TabPage05LastSG
+        ' TabPageLastSG
         ' 
-        Me.TabPage05LastSG.Controls.Add(Me.TableLayoutPanelLastSG)
-        Me.TabPage05LastSG.Location = New Point(4, 27)
-        Me.TabPage05LastSG.Name = "TabPage05LastSG"
-        Me.TabPage05LastSG.Padding = New Padding(3)
-        Me.TabPage05LastSG.Size = New Size(1376, 663)
-        Me.TabPage05LastSG.TabIndex = 16
-        Me.TabPage05LastSG.Text = "Last SG"
-        Me.TabPage05LastSG.UseVisualStyleBackColor = True
+        Me.TabPageLastSG.Controls.Add(Me.TableLayoutPanelLastSG)
+        Me.TabPageLastSG.Location = New Point(4, 27)
+        Me.TabPageLastSG.Name = "TabPageLastSG"
+        Me.TabPageLastSG.Padding = New Padding(3)
+        Me.TabPageLastSG.Size = New Size(1376, 663)
+        Me.TabPageLastSG.TabIndex = 16
+        Me.TabPageLastSG.Text = "Last SG"
+        Me.TabPageLastSG.UseVisualStyleBackColor = True
         ' 
         ' TableLayoutPanelLastSG
         ' 
@@ -1783,16 +1783,16 @@ Partial Class Form1
         Me.TableLayoutPanelLastSgTop.Size = New Size(1364, 37)
         Me.TableLayoutPanelLastSgTop.TabIndex = 1
         ' 
-        ' TabPage06LastAlarm
+        ' TabPageLastAlarm
         ' 
-        Me.TabPage06LastAlarm.Controls.Add(Me.TableLayoutPanelLastAlarm)
-        Me.TabPage06LastAlarm.Location = New Point(4, 27)
-        Me.TabPage06LastAlarm.Name = "TabPage06LastAlarm"
-        Me.TabPage06LastAlarm.Padding = New Padding(3)
-        Me.TabPage06LastAlarm.Size = New Size(1376, 663)
-        Me.TabPage06LastAlarm.TabIndex = 17
-        Me.TabPage06LastAlarm.Text = "Last Alarm"
-        Me.TabPage06LastAlarm.UseVisualStyleBackColor = True
+        Me.TabPageLastAlarm.Controls.Add(Me.TableLayoutPanelLastAlarm)
+        Me.TabPageLastAlarm.Location = New Point(4, 27)
+        Me.TabPageLastAlarm.Name = "TabPageLastAlarm"
+        Me.TabPageLastAlarm.Padding = New Padding(3)
+        Me.TabPageLastAlarm.Size = New Size(1376, 663)
+        Me.TabPageLastAlarm.TabIndex = 17
+        Me.TabPageLastAlarm.Text = "Last Alarm"
+        Me.TabPageLastAlarm.UseVisualStyleBackColor = True
         ' 
         ' TableLayoutPanelLastAlarm
         ' 
@@ -2155,7 +2155,7 @@ Partial Class Form1
         Me.TabPage14Markers.Padding = New Padding(3)
         Me.TabPage14Markers.Size = New Size(1376, 663)
         Me.TabPage14Markers.TabIndex = 24
-        Me.TabPage14Markers.Text = "Markers and More..." ' 
+        Me.TabPage14Markers.Text = "More..." ' 
         ' TabControlPage2
         ' 
         Me.TabControlPage2.Appearance = TabAppearance.Buttons
@@ -2163,10 +2163,10 @@ Partial Class Form1
         Me.TabControlPage2.Controls.Add(Me.TabPageAutoModeStatus)
         Me.TabControlPage2.Controls.Add(Me.TabPageBgReadings)
         Me.TabControlPage2.Controls.Add(Me.TabPageCalibration)
-        Me.TabControlPage2.Controls.Add(Me.TabPageInsulin)
-        Me.TabControlPage2.Controls.Add(Me.TabPageMeal)
         Me.TabControlPage2.Controls.Add(Me.TabPageLowGlucoseSuspended)
         Me.TabControlPage2.Controls.Add(Me.TabPageTimeChange)
+        Me.TabControlPage2.Controls.Add(Me.TabPageLastSG)
+        Me.TabControlPage2.Controls.Add(Me.TabPageLastAlarm)
         Me.TabControlPage2.Controls.Add(Me.TabPageCountryDataPg1)
         Me.TabControlPage2.Controls.Add(Me.TabPageCountryDataPg2)
         Me.TabControlPage2.Controls.Add(Me.TabPageCountryDataPg3)
@@ -2369,16 +2369,16 @@ Partial Class Form1
         Me.TableLayoutPanelCalibrationTop.Size = New Size(1358, 37)
         Me.TableLayoutPanelCalibrationTop.TabIndex = 1
         ' 
-        ' TabPageInsulin
+        ' TabPage05Insulin
         ' 
-        Me.TabPageInsulin.Controls.Add(Me.TableLayoutPanelInsulin)
-        Me.TabPageInsulin.Location = New Point(4, 27)
-        Me.TabPageInsulin.Name = "TabPageInsulin"
-        Me.TabPageInsulin.Padding = New Padding(3)
-        Me.TabPageInsulin.Size = New Size(1376, 639)
-        Me.TabPageInsulin.TabIndex = 4
-        Me.TabPageInsulin.Text = "Insulin"
-        Me.TabPageInsulin.UseVisualStyleBackColor = True
+        Me.TabPage05Insulin.Controls.Add(Me.TableLayoutPanelInsulin)
+        Me.TabPage05Insulin.Location = New Point(4, 27)
+        Me.TabPage05Insulin.Name = "TabPage05Insulin"
+        Me.TabPage05Insulin.Padding = New Padding(3)
+        Me.TabPage05Insulin.Size = New Size(1376, 639)
+        Me.TabPage05Insulin.TabIndex = 4
+        Me.TabPage05Insulin.Text = "Insulin"
+        Me.TabPage05Insulin.UseVisualStyleBackColor = True
         ' 
         ' TableLayoutPanelInsulin
         ' 
@@ -2416,16 +2416,16 @@ Partial Class Form1
         Me.TableLayoutPanelInsulinTop.Size = New Size(1358, 37)
         Me.TableLayoutPanelInsulinTop.TabIndex = 1
         ' 
-        ' TabPageMeal
+        ' TabPage06Meal
         ' 
-        Me.TabPageMeal.Controls.Add(Me.TableLayoutPanelMeal)
-        Me.TabPageMeal.Location = New Point(4, 27)
-        Me.TabPageMeal.Name = "TabPageMeal"
-        Me.TabPageMeal.Padding = New Padding(3)
-        Me.TabPageMeal.Size = New Size(1376, 639)
-        Me.TabPageMeal.TabIndex = 6
-        Me.TabPageMeal.Text = "Meal"
-        Me.TabPageMeal.UseVisualStyleBackColor = True
+        Me.TabPage06Meal.Controls.Add(Me.TableLayoutPanelMeal)
+        Me.TabPage06Meal.Location = New Point(4, 27)
+        Me.TabPage06Meal.Name = "TabPage06Meal"
+        Me.TabPage06Meal.Padding = New Padding(3)
+        Me.TabPage06Meal.Size = New Size(1376, 639)
+        Me.TabPage06Meal.TabIndex = 6
+        Me.TabPage06Meal.Text = "Meal"
+        Me.TabPage06Meal.UseVisualStyleBackColor = True
         ' 
         ' TableLayoutPanelMeal
         ' 
@@ -2689,12 +2689,12 @@ Partial Class Form1
         Me.TabControlPage1.ResumeLayout(False)
         Me.TabPage01HomePage.ResumeLayout(False)
         Me.TabPage04SummaryData.ResumeLayout(False)
-        Me.TabPage05LastSG.ResumeLayout(False)
-        Me.TabPage05LastSG.PerformLayout()
+        Me.TabPageLastSG.ResumeLayout(False)
+        Me.TabPageLastSG.PerformLayout()
         Me.TableLayoutPanelLastSG.ResumeLayout(False)
         Me.TableLayoutPanelLastSG.PerformLayout()
-        Me.TabPage06LastAlarm.ResumeLayout(False)
-        Me.TabPage06LastAlarm.PerformLayout()
+        Me.TabPageLastAlarm.ResumeLayout(False)
+        Me.TabPageLastAlarm.PerformLayout()
         Me.TableLayoutPanelLastAlarm.ResumeLayout(False)
         Me.TableLayoutPanelLastAlarm.PerformLayout()
         Me.TabPage07ActiveInsulin.ResumeLayout(False)
@@ -2741,12 +2741,12 @@ Partial Class Form1
         Me.TabPageCalibration.PerformLayout()
         Me.TableLayoutPanelCalibration.ResumeLayout(False)
         Me.TableLayoutPanelCalibration.PerformLayout()
-        Me.TabPageInsulin.ResumeLayout(False)
-        Me.TabPageInsulin.PerformLayout()
+        Me.TabPage05Insulin.ResumeLayout(False)
+        Me.TabPage05Insulin.PerformLayout()
         Me.TableLayoutPanelInsulin.ResumeLayout(False)
         Me.TableLayoutPanelInsulin.PerformLayout()
-        Me.TabPageMeal.ResumeLayout(False)
-        Me.TabPageMeal.PerformLayout()
+        Me.TabPage06Meal.ResumeLayout(False)
+        Me.TabPage06Meal.PerformLayout()
         Me.TableLayoutPanelMeal.ResumeLayout(False)
         Me.TableLayoutPanelMeal.PerformLayout()
         Me.TabPageLowGlucoseSuspended.ResumeLayout(False)
@@ -2921,8 +2921,8 @@ Partial Class Form1
     Friend WithEvents TabPage02RunningIOB As TabPage
     Friend WithEvents TabPage03TreatmentDetails As TabPage
     Friend WithEvents TabPage04SummaryData As TabPage
-    Friend WithEvents TabPage05LastSG As TabPage
-    Friend WithEvents TabPage06LastAlarm As TabPage
+    Friend WithEvents TabPageLastSG As TabPage
+    Friend WithEvents TabPageLastAlarm As TabPage
     Friend WithEvents TabPage07ActiveInsulin As TabPage
     Friend WithEvents TabPage08SensorGlucose As TabPage
     Friend WithEvents TabPage09Limits As TabPage
@@ -2941,9 +2941,9 @@ Partial Class Form1
     Friend WithEvents TabPageCountryDataPg2 As TabPage
     Friend WithEvents TabPageCountryDataPg3 As TabPage
     Friend WithEvents TabPageCurrentUser As TabPage
-    Friend WithEvents TabPageInsulin As TabPage
+    Friend WithEvents TabPage05Insulin As TabPage
     Friend WithEvents TabPageLowGlucoseSuspended As TabPage
-    Friend WithEvents TabPageMeal As TabPage
+    Friend WithEvents TabPage06Meal As TabPage
     Friend WithEvents TabPageTimeChange As TabPage
     Friend WithEvents TabPageUserProfile As TabPage
     Friend WithEvents TempTargetLabel As Label

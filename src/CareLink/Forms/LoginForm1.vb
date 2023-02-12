@@ -9,6 +9,16 @@ Public Class LoginForm1
     Public Property Client As CareLinkClient
     Public Property LoggedOnUser As New CareLinkUserDataRecord(s_allUserSettingsData)
 
+    Private Shared Sub ReportLoginStatus(loginStatus As TextBox, hasErrors As Boolean, Optional lastErrorMessage As String = "")
+        If hasErrors Then
+            loginStatus.ForeColor = Color.Red
+            loginStatus.Text = lastErrorMessage
+        Else
+            loginStatus.ForeColor = Color.Black
+            loginStatus.Text = "OK"
+        End If
+    End Sub
+
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
