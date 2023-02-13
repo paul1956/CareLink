@@ -4,6 +4,7 @@
 
 Imports System.Globalization
 Imports System.Runtime.CompilerServices
+Imports System.Threading
 
 Friend Module DateTimeExtensions
 
@@ -115,7 +116,10 @@ Friend Module DateTimeExtensions
     ''' <returns>Local DateTime</returns>
     <Extension>
     Friend Function Epoch2DateTime(epoch As Long) As Date
-        Return epoch.ToString.FromUnixTime.ToLocalTime
+        Dim timeUtc As Date = epoch.ToString.FromUnixTime
+        Dim localZone As TimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(s_clientTimeZoneName)
+        Dim localTime As Date = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, localZone)
+        Return localTime
     End Function
 
     ''' <summary>

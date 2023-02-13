@@ -561,12 +561,12 @@ Public Class Form1
         Me.CursorTimer.Start()
     End Sub
 
-    Private Sub Chart_MouseLeave(sender As Object, e As EventArgs) Handles SummaryChart.MouseLeave, ActiveInsulinChart.MouseLeave
+    Private Sub Chart_MouseLeave(sender As Object, e As EventArgs) Handles SummaryChart.MouseLeave, ActiveInsulinChart.MouseLeave, TreatmentMarkersChart.MouseLeave
         Dim name As String = CType(sender, Chart).Name
         SetCalloutVisibility(name)
     End Sub
 
-    Private Sub Chart_MouseMove(sender As Object, e As MouseEventArgs) Handles SummaryChart.MouseMove, ActiveInsulinChart.MouseMove
+    Private Sub Chart_MouseMove(sender As Object, e As MouseEventArgs) Handles SummaryChart.MouseMove, ActiveInsulinChart.MouseMove, TreatmentMarkersChart.MouseMove
 
         If Not _Initialized Then
             Exit Sub

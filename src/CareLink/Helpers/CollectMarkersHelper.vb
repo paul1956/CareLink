@@ -94,7 +94,7 @@ Friend Module CollectMarkersHelper
 
         Dim endOADate As OADate
         If basalDictionary.Count = 0 Then
-            endOADate = New OADate(Now)
+            endOADate = New OADate(s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime)
         Else
             endOADate = basalDictionary.Last.Key
         End If

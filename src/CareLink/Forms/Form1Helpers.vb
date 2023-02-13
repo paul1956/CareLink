@@ -122,8 +122,13 @@ Friend Module Form1Helpers
 
         s_listOfSummaryRecords.Clear()
 
-        s_lastMedicalDeviceDataUpdateServerEpoch = CLng(recentData(ItemIndexes.lastMedicalDeviceDataUpdateServerTime.ToString))
         Dim markerRowString As String = ""
+        If recentData.TryGetValue(ItemIndexes.clientTimeZoneName.ToString, markerRowString) Then
+            s_clientTimeZone = CalculateTimeZone(markerRowString)
+            s_clientTimeZoneName = s_clientTimeZone.StandardName
+        End If
+
+        s_lastMedicalDeviceDataUpdateServerEpoch = CLng(recentData(ItemIndexes.lastMedicalDeviceDataUpdateServerTime.ToString))
         If recentData.TryGetValue(ItemIndexes.therapyAlgorithmState.ToString, markerRowString) Then
             s_therapyAlgorithmStateValue = Loads(markerRowString)
             InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.autoModeShieldState)) = "AUTO_BASAL"
@@ -356,7 +361,6 @@ Friend Module Form1Helpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexes.clientTimeZoneName
-                    s_clientTimeZoneName = row.Value
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, s_clientTimeZoneName))
 
                 Case ItemIndexes.sgBelowLimit,
