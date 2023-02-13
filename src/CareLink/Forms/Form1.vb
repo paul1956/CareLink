@@ -21,6 +21,7 @@ Public Class Form1
 
     Private ReadOnly _bgMiniDisplay As New BGMiniWindow(Me)
     Private ReadOnly _calibrationToolTip As New ToolTip()
+
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
     Private ReadOnly _updatingLock As New Object
     Private _activeInsulinChartAbsoluteRectangle As RectangleF = RectangleF.Empty
@@ -28,6 +29,7 @@ Public Class Form1
     Private _inMouseMove As Boolean = False
     Private _lastMarkerTabIndex As (page As Integer, tab As Integer) = (0, 0)
     Private _lastSummaryTabIndex As Integer = 0
+    Private _prevLoc As Point
     Private _showBalloonTip As Boolean = True
     Private _summaryChartAbsoluteRectangle As RectangleF
     Private _treatmentMarkerAbsoluteRectangle As RectangleF
@@ -220,7 +222,7 @@ Public Class Form1
 
 #Region "Start Here Menu Events"
 
-    Private Sub MenuStartHere_DropDownOpened(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpened
+    Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpening
         Me.MenuStartHereLoadSavedDataFile.Enabled = Directory.GetFiles(MyDocumentsPath, $"{ProjectName}*.json").Length > 0
         Me.MenuStartHereSnapshotSave.Enabled = Me.RecentData IsNot Nothing AndAlso Me.RecentData.Count > 0
         Me.MenuStartHereExceptionReportLoad.Visible = GetSavedErrorReportNameBaseWithPath("*.txt").Length > 0
@@ -559,12 +561,21 @@ Public Class Form1
         Me.CursorTimer.Start()
     End Sub
 
+    Private Sub Chart_MouseLeave(sender As Object, e As EventArgs) Handles SummaryChart.MouseLeave, ActiveInsulinChart.MouseLeave
+        Dim name As String = CType(sender, Chart).Name
+        SetCalloutVisibility(name)
+    End Sub
+
     Private Sub Chart_MouseMove(sender As Object, e As MouseEventArgs) Handles SummaryChart.MouseMove, ActiveInsulinChart.MouseMove
 
         If Not _Initialized Then
             Exit Sub
         End If
+        If e.Button <> MouseButtons.None OrElse e.Clicks > 0 OrElse e.Location = _prevLoc Then
+            Return
+        End If
         _inMouseMove = True
+        _prevLoc = e.Location
         Dim yInPixels As Double
         Dim chart1 As Chart = CType(sender, Chart)
         Dim isHomePage As Boolean = chart1.Name = "SummaryChart"
@@ -597,25 +608,25 @@ Public Class Form1
                 Case HighLimitSeries, LowLimitSeries
                     Me.CursorPanel.Visible = False
                 Case MarkerSeries, BasalSeries
-                    Dim markerToolTip() As String = currentDataPoint.ToolTip.Split(":"c)
-                    If markerToolTip.Length <= 1 Then
+                    Dim markerTag() As String = currentDataPoint.Tag.ToString.Split(":"c)
+                    If markerTag.Length <= 1 Then
                         Me.CursorPanel.Visible = True
                         Exit Sub
                     End If
-                    markerToolTip(0) = markerToolTip(0).Trim
+                    markerTag(0) = markerTag(0).Trim
                     If isHomePage Then
                         Dim xValue As Date = Date.FromOADate(currentDataPoint.XValue)
                         Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
                         Me.CursorPictureBox.Visible = True
-                        Select Case markerToolTip.Length
+                        Select Case markerTag.Length
                             Case 2
-                                Me.CursorMessage1Label.Text = markerToolTip(0)
+                                Me.CursorMessage1Label.Text = markerTag(0)
                                 Me.CursorMessage1Label.Visible = True
-                                Me.CursorMessage2Label.Text = markerToolTip(1).Trim
+                                Me.CursorMessage2Label.Text = markerTag(1).Trim
                                 Me.CursorMessage2Label.Visible = True
                                 Me.CursorMessage3Label.Text = Date.FromOADate(currentDataPoint.XValue).ToString(s_timeWithMinuteFormat)
                                 Me.CursorMessage3Label.Visible = True
-                                Select Case markerToolTip(0)
+                                Select Case markerTag(0)
                                     Case "Auto Correction",
                                          "Auto Basal",
                                          "Basal",
@@ -633,7 +644,7 @@ Public Class Form1
                                 End Select
                                 Me.CursorPanel.Visible = True
                             Case 3
-                                Select Case markerToolTip(1).Trim
+                                Select Case markerTag(1).Trim
                                     Case "Calibration accepted",
                                            "Calibration not accepted"
                                         Me.CursorPictureBox.Image = My.Resources.CalibrationDotRed
@@ -642,29 +653,20 @@ Public Class Form1
                                     Case Else
                                         Stop
                                 End Select
-                                Me.CursorMessage1Label.Text = markerToolTip(0)
+                                Me.CursorMessage1Label.Text = markerTag(0)
                                 Me.CursorMessage1Label.Visible = True
-                                Me.CursorMessage2Label.Text = markerToolTip(1).Trim
+                                Me.CursorMessage2Label.Text = markerTag(1).Trim
                                 Me.CursorMessage2Label.Visible = True
-                                Me.CursorMessage3Label.Text = $"{markerToolTip(2).Trim}@{xValue.ToString(s_timeWithMinuteFormat)}"
+                                Me.CursorMessage3Label.Text = $"{markerTag(2).Trim}@{xValue.ToString(s_timeWithMinuteFormat)}"
                                 Me.CursorMessage3Label.Visible = True
                                 Me.CursorPanel.Visible = True
                             Case Else
                                 Stop
                                 Me.CursorPanel.Visible = False
                         End Select
-                    Else
-                        Select Case markerToolTip.Length
-                            Case 1
-                                currentDataPoint.ToolTip = $"{markerToolTip(0)}"
-                            Case 2
-                                currentDataPoint.ToolTip = $"{markerToolTip(0)} {markerToolTip(1)}"
-                            Case 3
-                                currentDataPoint.ToolTip = $"{markerToolTip(0)} {markerToolTip(1)} {markerToolTip(2)}"
-                            Case Else
-                                Stop
-                        End Select
                     End If
+                    chart1.SetUpCallout(currentDataPoint, markerTag)
+
                 Case BgSeries
                     Me.CursorMessage1Label.Text = "Blood Glucose"
                     Me.CursorMessage1Label.Visible = True
@@ -674,6 +676,7 @@ Public Class Form1
                     Me.CursorMessage3Label.Visible = True
                     Me.CursorPictureBox.Image = Nothing
                     Me.CursorPanel.Visible = True
+                    chart1.SetupCallout(currentDataPoint, "Blood Glucose" & Me.CursorMessage2Label.Text)
                 Case TimeChangeSeries
                     Me.CursorMessage1Label.Visible = False
                     Me.CursorMessage1Label.Visible = False
@@ -682,7 +685,7 @@ Public Class Form1
                     Me.CursorMessage3Label.Visible = False
                     Me.CursorPanel.Visible = False
                 Case ActiveInsulinSeries
-                    currentDataPoint.ToolTip = $"{currentDataPoint.YValues.FirstOrDefault:F3} U"
+                    currentDataPoint.Tag = $"{currentDataPoint.YValues.FirstOrDefault:F3} U"
                 Case Else
                     Stop
             End Select

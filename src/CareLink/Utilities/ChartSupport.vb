@@ -46,7 +46,7 @@ Friend Module ChartSupport
     End Function
 
     Friend Function CreateChart(chartName As String) As Chart
-        Return New Chart With {
+        Dim chart As New Chart With {
                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                     .BackColor = Color.Black,
                     .BorderlineColor = Color.MidnightBlue,
@@ -56,6 +56,8 @@ Friend Module ChartSupport
                     .Name = chartName,
                     .TabIndex = 0
                 }
+        chart.Annotations.Add(s_calloutAnnotations(chartName))
+        Return chart
     End Function
 
     Friend Function CreateChartArea(containingChart As Chart) As ChartArea
