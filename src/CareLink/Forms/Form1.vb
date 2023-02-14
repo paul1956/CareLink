@@ -685,7 +685,7 @@ Public Class Form1
                     Me.CursorMessage3Label.Visible = False
                     Me.CursorPanel.Visible = False
                 Case ActiveInsulinSeries
-                    currentDataPoint.Tag = $"{currentDataPoint.YValues.FirstOrDefault:F3} U"
+                    chart1.SetupCallout(currentDataPoint, $"Theoretical Active Insulin {currentDataPoint.YValues.FirstOrDefault:F3} U")
                 Case Else
                     Stop
             End Select
