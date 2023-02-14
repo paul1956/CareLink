@@ -72,7 +72,7 @@ Friend Module PlotMarkers
                 If entry.TryGetValue("value", bgValueString) Then
                     bgValueString.TryParseSingle(bgValue)
                 End If
-                Dim markerSeriesPoints As DataPointCollection = pageChart.Series(MarkerSeries).Points
+                Dim markerSeriesPoints As DataPointCollection = pageChart.Series(MarkerSeriesName).Points
                 Select Case entry("type")
                     Case "BG_READING"
                         If Not String.IsNullOrWhiteSpace(bgValueString) Then
@@ -82,20 +82,18 @@ Friend Module PlotMarkers
                         markerSeriesPoints.AddCalibrationPoint(markerOADateTime, bgValue, entry)
                     Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
                         Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
-                        With pageChart.Series(BasalSeries)
-                            .PlotBasalSeries(markerOADateTime,
-                                             amount,
-                                             HomePageBasalRow,
-                                             HomePageInsulinRow,
-                                             GetGraphLineColor("Basal Series"),
-                                             False,
-                                             GetToolTip(entry("type"), amount))
-                        End With
+                        pageChart.Series(BasalSeriesNameName).PlotBasalSeries(markerOADateTime,
+                                         amount,
+                                         HomePageBasalRow,
+                                         HomePageInsulinRow,
+                                         GetGraphLineColor("Basal Series"),
+                                         False,
+                                         GetToolTip(entry("type"), amount))
                     Case "INSULIN"
                         Select Case entry(NameOf(InsulinRecord.activationType))
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
-                                With pageChart.Series(BasalSeries)
+                                With pageChart.Series(BasalSeriesNameName)
                                     .PlotBasalSeries(markerOADateTime,
                                                      autoCorrection.ParseSingle,
                                                      HomePageBasalRow,
@@ -136,7 +134,7 @@ Friend Module PlotMarkers
                             markerSeriesPoints.Last.Tag = $"Meal: {entry("amount")} grams"
                         End If
                     Case "TIME_CHANGE"
-                        With pageChart.Series(ChartSupport.TimeChangeSeries).Points
+                        With pageChart.Series(ChartSupport.TimeChangeSeriesName).Points
                             lastTimeChangeRecord = New TimeChangeRecord(entry)
                             markerOADateTime = New OADate(lastTimeChangeRecord.GetLatestTime)
                             Call .AddXY(markerOADateTime, 0)
@@ -177,11 +175,11 @@ Friend Module PlotMarkers
                 If entry.TryGetValue("value", bgValueString) Then
                     bgValueString.TryParseSingle(bgValue)
                 End If
-                Dim markerSeriesPoints As DataPointCollection = treatmentChart.Series(MarkerSeries).Points
+                Dim markerSeriesPoints As DataPointCollection = treatmentChart.Series(MarkerSeriesName).Points
                 Select Case entry("type")
                     Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
                         Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
-                        With treatmentChart.Series(BasalSeries)
+                        With treatmentChart.Series(BasalSeriesNameName)
                             Call .PlotBasalSeries(markerOADateTime,
                                                   amount,
                                                   MaxBasalPerDose,
@@ -195,7 +193,7 @@ Friend Module PlotMarkers
                         Select Case entry(NameOf(InsulinRecord.activationType))
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
-                                With treatmentChart.Series(BasalSeries)
+                                With treatmentChart.Series(BasalSeriesNameName)
                                     .PlotBasalSeries(markerOADateTime, autoCorrection.ParseSingle(3), MaxBasalPerDose, TreatmentInsulinRow, GetGraphLineColor("Auto Correction"), True, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
                                 End With
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
@@ -233,7 +231,7 @@ Friend Module PlotMarkers
                     Case "BG_READING",
                          "CALIBRATION"
                     Case "TIME_CHANGE"
-                        With treatmentChart.Series(TimeChangeSeries).Points
+                        With treatmentChart.Series(TimeChangeSeriesName).Points
                             lastTimeChangeRecord = New TimeChangeRecord(entry)
                             markerOADateTime = New OADate(lastTimeChangeRecord.GetLatestTime)
                             .AddXY(markerOADateTime, 0)

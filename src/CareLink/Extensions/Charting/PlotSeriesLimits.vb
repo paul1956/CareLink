@@ -29,10 +29,10 @@ Friend Module PlotSeriesLimits
                 Dim limitsLowValue As Single = s_listOfLimitRecords(limitsIndexList(sgListIndex.Index)).lowLimit
                 Dim limitsHighValue As Single = s_listOfLimitRecords(limitsIndexList(sgListIndex.Index)).highLimit
                 If limitsHighValue <> 0 Then
-                    chart.Series(HighLimitSeries).Points.AddXY(sgOADateTime, limitsHighValue)
+                    chart.Series(HighLimitSeriesName).Points.AddXY(sgOADateTime, limitsHighValue)
                 End If
                 If limitsLowValue <> 0 Then
-                    chart.Series(LowLimitSeries).Points.AddXY(sgOADateTime, limitsLowValue)
+                    chart.Series(LowLimitSeriesName).Points.AddXY(sgOADateTime, limitsLowValue)
                 End If
             Catch ex As Exception
                 Stop

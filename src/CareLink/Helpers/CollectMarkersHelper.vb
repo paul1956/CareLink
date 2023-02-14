@@ -64,8 +64,9 @@ Friend Module CollectMarkersHelper
                             basalDictionary.Add(lastInsulinRecord.OAdateTime, lastInsulinRecord.deliveredFastAmount)
                         Case "MANUAL"
                             Stop
-                        Case "UNDETERMINED",
-                             "RECOMMENDED"
+                        Case "UNDETERMINED"
+                        Case "RECOMMENDED"
+                            Stop
                         Case Else
                             Stop
                             Throw UnreachableException(NameOf(CollectMarkers))

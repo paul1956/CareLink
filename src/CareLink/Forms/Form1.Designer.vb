@@ -168,12 +168,12 @@ Partial Class Form1
         Me.TabPage02RunningIOB = New TabPage()
         Me.TabPage03TreatmentDetails = New TabPage()
         Me.TabPage04SummaryData = New TabPage()
-        Me.TabPageLastSG = New TabPage()
-        Me.TableLayoutPanelLastSG = New TableLayoutPanel()
-        Me.TableLayoutPanelLastSgTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
-        Me.TabPageLastAlarm = New TabPage()
-        Me.TableLayoutPanelLastAlarm = New TableLayoutPanel()
-        Me.TableLayoutPanelLastAlarmTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
+        Me.TabPage05Insulin = New TabPage()
+        Me.TableLayoutPanelInsulin = New TableLayoutPanel()
+        Me.TableLayoutPanelInsulinTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
+        Me.TabPage06Meal = New TabPage()
+        Me.TableLayoutPanelMeal = New TableLayoutPanel()
+        Me.TableLayoutPanelMealTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
         Me.TabPage07ActiveInsulin = New TabPage()
         Me.TableLayoutPanelActiveInsulin = New TableLayoutPanel()
         Me.TableLayoutPanelActiveInsulinTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
@@ -196,6 +196,12 @@ Partial Class Form1
         Me.TableLayoutPanelBasal = New TableLayoutPanel()
         Me.TableLayoutPanelBasalTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
         Me.TabPage14Markers = New TabPage()
+        Me.TabPageLastSG = New TabPage()
+        Me.TableLayoutPanelLastSG = New TableLayoutPanel()
+        Me.TableLayoutPanelLastSgTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
+        Me.TabPageLastAlarm = New TabPage()
+        Me.TableLayoutPanelLastAlarm = New TableLayoutPanel()
+        Me.TableLayoutPanelLastAlarmTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
         Me.TabControlPage2 = New TabControl()
         Me.TabPageAutoBasalDelivery = New TabPage()
         Me.TableLayoutPanelAutoBasalDelivery = New TableLayoutPanel()
@@ -209,12 +215,6 @@ Partial Class Form1
         Me.TabPageCalibration = New TabPage()
         Me.TableLayoutPanelCalibration = New TableLayoutPanel()
         Me.TableLayoutPanelCalibrationTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
-        Me.TabPage05Insulin = New TabPage()
-        Me.TableLayoutPanelInsulin = New TableLayoutPanel()
-        Me.TableLayoutPanelInsulinTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
-        Me.TabPage06Meal = New TabPage()
-        Me.TableLayoutPanelMeal = New TableLayoutPanel()
-        Me.TableLayoutPanelMealTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
         Me.TabPageLowGlucoseSuspended = New TabPage()
         Me.TableLayoutPanelLowGlucoseSuspended = New TableLayoutPanel()
         Me.TableLayoutPanelLowGlucoseSuspendedTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
@@ -263,10 +263,10 @@ Partial Class Form1
         Me.TabControlPage1.SuspendLayout()
         Me.TabPage01HomePage.SuspendLayout()
         Me.TabPage04SummaryData.SuspendLayout()
-        Me.TabPageLastSG.SuspendLayout()
-        Me.TableLayoutPanelLastSG.SuspendLayout()
-        Me.TabPageLastAlarm.SuspendLayout()
-        Me.TableLayoutPanelLastAlarm.SuspendLayout()
+        Me.TabPage05Insulin.SuspendLayout()
+        Me.TableLayoutPanelInsulin.SuspendLayout()
+        Me.TabPage06Meal.SuspendLayout()
+        Me.TableLayoutPanelMeal.SuspendLayout()
         Me.TabPage07ActiveInsulin.SuspendLayout()
         Me.TableLayoutPanelActiveInsulin.SuspendLayout()
         Me.TabPage08SensorGlucose.SuspendLayout()
@@ -281,6 +281,10 @@ Partial Class Form1
         Me.TableLayoutPanelBannerState.SuspendLayout()
         Me.TabPage13Basal.SuspendLayout()
         Me.TableLayoutPanelBasal.SuspendLayout()
+        Me.TabPageLastSG.SuspendLayout()
+        Me.TableLayoutPanelLastSG.SuspendLayout()
+        Me.TabPageLastAlarm.SuspendLayout()
+        Me.TableLayoutPanelLastAlarm.SuspendLayout()
         Me.TabControlPage2.SuspendLayout()
         Me.TabPageAutoBasalDelivery.SuspendLayout()
         Me.TableLayoutPanelAutoBasalDelivery.SuspendLayout()
@@ -290,10 +294,6 @@ Partial Class Form1
         Me.TableLayoutPanelBgReadings.SuspendLayout()
         Me.TabPageCalibration.SuspendLayout()
         Me.TableLayoutPanelCalibration.SuspendLayout()
-        Me.TabPage05Insulin.SuspendLayout()
-        Me.TableLayoutPanelInsulin.SuspendLayout()
-        Me.TabPage06Meal.SuspendLayout()
-        Me.TableLayoutPanelMeal.SuspendLayout()
         Me.TabPageLowGlucoseSuspended.SuspendLayout()
         Me.TableLayoutPanelLowGlucoseSuspended.SuspendLayout()
         Me.TabPageTimeChange.SuspendLayout()
@@ -837,7 +837,6 @@ Partial Class Form1
         Me.DgvCountryDataPg1RecordNumber.MinimumWidth = 60
         Me.DgvCountryDataPg1RecordNumber.Name = "DgvCountryDataPg1RecordNumber"
         Me.DgvCountryDataPg1RecordNumber.ReadOnly = True
-        Me.DgvCountryDataPg1RecordNumber.Width = 60
         ' 
         ' DgvCountryDataPg1Category
         ' 
@@ -845,7 +844,6 @@ Partial Class Form1
         Me.DgvCountryDataPg1Category.HeaderText = "Category"
         Me.DgvCountryDataPg1Category.Name = "DgvCountryDataPg1Category"
         Me.DgvCountryDataPg1Category.ReadOnly = True
-        Me.DgvCountryDataPg1Category.Width = 80
         ' 
         ' DgvCountryDataPg1Key
         ' 
@@ -853,7 +851,6 @@ Partial Class Form1
         Me.DgvCountryDataPg1Key.HeaderText = "Key"
         Me.DgvCountryDataPg1Key.Name = "DgvCountryDataPg1Key"
         Me.DgvCountryDataPg1Key.ReadOnly = True
-        Me.DgvCountryDataPg1Key.Width = 51
         ' 
         ' DgvCountryDataPg1Value
         ' 
@@ -1066,7 +1063,6 @@ Partial Class Form1
         Me.DgvCountryDataPg3RecordNumber.MinimumWidth = 60
         Me.DgvCountryDataPg3RecordNumber.Name = "DgvCountryDataPg3RecordNumber"
         Me.DgvCountryDataPg3RecordNumber.ReadOnly = True
-        Me.DgvCountryDataPg3RecordNumber.Width = 60
         ' 
         ' DgvCountryDataPg3Category
         ' 
@@ -1074,7 +1070,6 @@ Partial Class Form1
         Me.DgvCountryDataPg3Category.HeaderText = "Category"
         Me.DgvCountryDataPg3Category.Name = "DgvCountryDataPg3Category"
         Me.DgvCountryDataPg3Category.ReadOnly = True
-        Me.DgvCountryDataPg3Category.Width = 80
         ' 
         ' DgvCountryDataPg3Key
         ' 
@@ -1082,7 +1077,6 @@ Partial Class Form1
         Me.DgvCountryDataPg3Key.HeaderText = "Key"
         Me.DgvCountryDataPg3Key.Name = "DgvCountryDataPg3Key"
         Me.DgvCountryDataPg3Key.ReadOnly = True
-        Me.DgvCountryDataPg3Key.Width = 51
         ' 
         ' DgvCountryDataPg3Value
         ' 
@@ -1090,7 +1084,6 @@ Partial Class Form1
         Me.DgvCountryDataPg3Value.HeaderText = "Value"
         Me.DgvCountryDataPg3Value.Name = "DgvCountryDataPg3Value"
         Me.DgvCountryDataPg3Value.ReadOnly = True
-        Me.DgvCountryDataPg3Value.Width = 60
         ' 
         ' DgvCountryDataPg3OnlyFor
         ' 
@@ -1157,7 +1150,7 @@ Partial Class Form1
         Me.DgvSummary.ReadOnly = True
         Me.DgvSummary.RowTemplate.Height = 25
         Me.DgvSummary.SelectionMode = DataGridViewSelectionMode.CellSelect
-        Me.DgvSummary.Size = New Size(1370, 657)
+        Me.DgvSummary.Size = New Size(1370, 633)
         Me.DgvSummary.TabIndex = 0
         ' 
         ' DgvUserProfile
@@ -1175,9 +1168,9 @@ Partial Class Form1
         ' 
         Me.FullNameLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.FullNameLabel.ForeColor = Color.White
-        Me.FullNameLabel.Location = New Point(1159, 0)
+        Me.FullNameLabel.Location = New Point(1140, 0)
         Me.FullNameLabel.Name = "FullNameLabel"
-        Me.FullNameLabel.Size = New Size(211, 21)
+        Me.FullNameLabel.Size = New Size(230, 21)
         Me.FullNameLabel.TabIndex = 55
         Me.FullNameLabel.Text = "Full Name" ' 
         ' ImageList1
@@ -1401,18 +1394,18 @@ Partial Class Form1
         ' 
         Me.MaxBasalPerHourLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.MaxBasalPerHourLabel.ForeColor = Color.White
-        Me.MaxBasalPerHourLabel.Location = New Point(1159, 81)
+        Me.MaxBasalPerHourLabel.Location = New Point(1140, 81)
         Me.MaxBasalPerHourLabel.Name = "MaxBasalPerHourLabel"
-        Me.MaxBasalPerHourLabel.Size = New Size(211, 21)
+        Me.MaxBasalPerHourLabel.Size = New Size(230, 21)
         Me.MaxBasalPerHourLabel.TabIndex = 67
         Me.MaxBasalPerHourLabel.Text = "Max Basal/Hr ~ 2.0 U" ' 
         ' ModelLabel
         ' 
         Me.ModelLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.ModelLabel.ForeColor = Color.White
-        Me.ModelLabel.Location = New Point(1159, 26)
+        Me.ModelLabel.Location = New Point(1140, 26)
         Me.ModelLabel.Name = "ModelLabel"
-        Me.ModelLabel.Size = New Size(211, 21)
+        Me.ModelLabel.Size = New Size(230, 21)
         Me.ModelLabel.TabIndex = 57
         Me.ModelLabel.Text = "Model" ' 
         ' NotifyIcon1
@@ -1526,9 +1519,9 @@ Partial Class Form1
         ' 
         Me.SerialNumberLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.SerialNumberLabel.ForeColor = Color.White
-        Me.SerialNumberLabel.Location = New Point(1159, 53)
+        Me.SerialNumberLabel.Location = New Point(1140, 53)
         Me.SerialNumberLabel.Name = "SerialNumberLabel"
-        Me.SerialNumberLabel.Size = New Size(211, 21)
+        Me.SerialNumberLabel.Size = New Size(230, 21)
         Me.SerialNumberLabel.TabIndex = 56
         Me.SerialNumberLabel.Text = "Serial Number" ' 
         ' ServerUpdateTimer
@@ -1712,7 +1705,7 @@ Partial Class Form1
         Me.TabPage02RunningIOB.Location = New Point(4, 27)
         Me.TabPage02RunningIOB.Name = "TabPage02RunningIOB"
         Me.TabPage02RunningIOB.Padding = New Padding(3)
-        Me.TabPage02RunningIOB.Size = New Size(1376, 663)
+        Me.TabPage02RunningIOB.Size = New Size(1376, 639)
         Me.TabPage02RunningIOB.TabIndex = 15
         Me.TabPage02RunningIOB.Text = "Running IOB"
         Me.TabPage02RunningIOB.UseVisualStyleBackColor = True
@@ -1722,7 +1715,7 @@ Partial Class Form1
         Me.TabPage03TreatmentDetails.Location = New Point(4, 27)
         Me.TabPage03TreatmentDetails.Name = "TabPage03TreatmentDetails"
         Me.TabPage03TreatmentDetails.Padding = New Padding(3)
-        Me.TabPage03TreatmentDetails.Size = New Size(1376, 663)
+        Me.TabPage03TreatmentDetails.Size = New Size(1376, 639)
         Me.TabPage03TreatmentDetails.TabIndex = 8
         Me.TabPage03TreatmentDetails.Text = "Treatment Details"
         Me.TabPage03TreatmentDetails.UseVisualStyleBackColor = True
@@ -1733,101 +1726,104 @@ Partial Class Form1
         Me.TabPage04SummaryData.Location = New Point(4, 27)
         Me.TabPage04SummaryData.Name = "TabPage04SummaryData"
         Me.TabPage04SummaryData.Padding = New Padding(3)
-        Me.TabPage04SummaryData.Size = New Size(1376, 663)
+        Me.TabPage04SummaryData.Size = New Size(1376, 639)
         Me.TabPage04SummaryData.TabIndex = 0
         Me.TabPage04SummaryData.Text = "Summary Data"
         Me.TabPage04SummaryData.UseVisualStyleBackColor = True
         ' 
-        ' TabPageLastSG
+        ' TabPage05Insulin
         ' 
-        Me.TabPageLastSG.Controls.Add(Me.TableLayoutPanelLastSG)
-        Me.TabPageLastSG.Location = New Point(4, 27)
-        Me.TabPageLastSG.Name = "TabPageLastSG"
-        Me.TabPageLastSG.Padding = New Padding(3)
-        Me.TabPageLastSG.Size = New Size(1376, 663)
-        Me.TabPageLastSG.TabIndex = 16
-        Me.TabPageLastSG.Text = "Last SG"
-        Me.TabPageLastSG.UseVisualStyleBackColor = True
+        Me.TabPage05Insulin.Controls.Add(Me.TableLayoutPanelInsulin)
+        Me.TabPage05Insulin.Location = New Point(4, 27)
+        Me.TabPage05Insulin.Name = "TabPage05Insulin"
+        Me.TabPage05Insulin.Padding = New Padding(3)
+        Me.TabPage05Insulin.Size = New Size(1376, 639)
+        Me.TabPage05Insulin.TabIndex = 4
+        Me.TabPage05Insulin.Text = "Insulin"
+        Me.TabPage05Insulin.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelLastSG
+        ' TableLayoutPanelInsulin
         ' 
-        Me.TableLayoutPanelLastSG.AutoSize = True
-        Me.TableLayoutPanelLastSG.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelLastSG.ColumnCount = 1
-        Me.TableLayoutPanelLastSG.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelLastSG.Controls.Add(Me.TableLayoutPanelLastSgTop, 0, 0)
-        Me.TableLayoutPanelLastSG.Dock = DockStyle.Fill
-        Me.TableLayoutPanelLastSG.Location = New Point(3, 3)
-        Me.TableLayoutPanelLastSG.Name = "TableLayoutPanelLastSG"
-        Me.TableLayoutPanelLastSG.RowCount = 2
-        Me.TableLayoutPanelLastSG.RowStyles.Add(New RowStyle())
-        Me.TableLayoutPanelLastSG.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelLastSG.Size = New Size(1370, 657)
-        Me.TableLayoutPanelLastSG.TabIndex = 1
+        Me.TableLayoutPanelInsulin.AutoScroll = True
+        Me.TableLayoutPanelInsulin.AutoSize = True
+        Me.TableLayoutPanelInsulin.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelInsulin.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelInsulin.ColumnCount = 1
+        Me.TableLayoutPanelInsulin.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelInsulin.Controls.Add(Me.TableLayoutPanelInsulinTop, 0, 0)
+        Me.TableLayoutPanelInsulin.Dock = DockStyle.Fill
+        Me.TableLayoutPanelInsulin.Location = New Point(3, 3)
+        Me.TableLayoutPanelInsulin.Name = "TableLayoutPanelInsulin"
+        Me.TableLayoutPanelInsulin.RowCount = 2
+        Me.TableLayoutPanelInsulin.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelInsulin.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelInsulin.Size = New Size(1370, 633)
+        Me.TableLayoutPanelInsulin.TabIndex = 1
         ' 
-        ' TableLayoutPanelLastSgTop
+        ' TableLayoutPanelInsulinTop
         ' 
-        Me.TableLayoutPanelLastSgTop.AutoSize = True
-        Me.TableLayoutPanelLastSgTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelLastSgTop.ButtonText = "Return To 'Summary Data' Tab"
-        Me.TableLayoutPanelLastSgTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelLastSgTop.ColumnCount = 2
-        Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle())
-        Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelLastSgTop.Dock = DockStyle.Fill
-        Me.TableLayoutPanelLastSgTop.LabelText = "last SG"
-        Me.TableLayoutPanelLastSgTop.Location = New Point(3, 3)
-        Me.TableLayoutPanelLastSgTop.Name = "TableLayoutPanelLastSgTop"
-        Me.TableLayoutPanelLastSgTop.RowCount = 1
-        Me.TableLayoutPanelLastSgTop.RowStyles.Add(New RowStyle())
-        Me.TableLayoutPanelLastSgTop.Size = New Size(1364, 37)
-        Me.TableLayoutPanelLastSgTop.TabIndex = 1
+        Me.TableLayoutPanelInsulinTop.AutoSize = True
+        Me.TableLayoutPanelInsulinTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelInsulinTop.ButtonText = "Return To 'Summary Data' Tab"
+        Me.TableLayoutPanelInsulinTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelInsulinTop.ColumnCount = 2
+        Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelInsulinTop.Dock = DockStyle.Fill
+        Me.TableLayoutPanelInsulinTop.LabelText = "Insulin"
+        Me.TableLayoutPanelInsulinTop.Location = New Point(6, 6)
+        Me.TableLayoutPanelInsulinTop.Name = "TableLayoutPanelInsulinTop"
+        Me.TableLayoutPanelInsulinTop.RowCount = 1
+        Me.TableLayoutPanelInsulinTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelInsulinTop.Size = New Size(1358, 37)
+        Me.TableLayoutPanelInsulinTop.TabIndex = 1
         ' 
-        ' TabPageLastAlarm
+        ' TabPage06Meal
         ' 
-        Me.TabPageLastAlarm.Controls.Add(Me.TableLayoutPanelLastAlarm)
-        Me.TabPageLastAlarm.Location = New Point(4, 27)
-        Me.TabPageLastAlarm.Name = "TabPageLastAlarm"
-        Me.TabPageLastAlarm.Padding = New Padding(3)
-        Me.TabPageLastAlarm.Size = New Size(1376, 663)
-        Me.TabPageLastAlarm.TabIndex = 17
-        Me.TabPageLastAlarm.Text = "Last Alarm"
-        Me.TabPageLastAlarm.UseVisualStyleBackColor = True
+        Me.TabPage06Meal.Controls.Add(Me.TableLayoutPanelMeal)
+        Me.TabPage06Meal.Location = New Point(4, 27)
+        Me.TabPage06Meal.Name = "TabPage06Meal"
+        Me.TabPage06Meal.Padding = New Padding(3)
+        Me.TabPage06Meal.Size = New Size(1376, 639)
+        Me.TabPage06Meal.TabIndex = 6
+        Me.TabPage06Meal.Text = "Meal"
+        Me.TabPage06Meal.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelLastAlarm
+        ' TableLayoutPanelMeal
         ' 
-        Me.TableLayoutPanelLastAlarm.AutoSize = True
-        Me.TableLayoutPanelLastAlarm.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelLastAlarm.ColumnCount = 1
-        Me.TableLayoutPanelLastAlarm.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelLastAlarm.Controls.Add(Me.TableLayoutPanelLastAlarmTop, 0, 0)
-        Me.TableLayoutPanelLastAlarm.Dock = DockStyle.Fill
-        Me.TableLayoutPanelLastAlarm.Location = New Point(3, 3)
-        Me.TableLayoutPanelLastAlarm.Margin = New Padding(0)
-        Me.TableLayoutPanelLastAlarm.Name = "TableLayoutPanelLastAlarm"
-        Me.TableLayoutPanelLastAlarm.RowCount = 2
-        Me.TableLayoutPanelLastAlarm.RowStyles.Add(New RowStyle())
-        Me.TableLayoutPanelLastAlarm.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelLastAlarm.Size = New Size(1370, 657)
-        Me.TableLayoutPanelLastAlarm.TabIndex = 0
+        Me.TableLayoutPanelMeal.AutoScroll = True
+        Me.TableLayoutPanelMeal.AutoSize = True
+        Me.TableLayoutPanelMeal.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelMeal.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelMeal.ColumnCount = 1
+        Me.TableLayoutPanelMeal.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelMeal.Controls.Add(Me.TableLayoutPanelMealTop, 0, 0)
+        Me.TableLayoutPanelMeal.Dock = DockStyle.Fill
+        Me.TableLayoutPanelMeal.Location = New Point(3, 3)
+        Me.TableLayoutPanelMeal.Name = "TableLayoutPanelMeal"
+        Me.TableLayoutPanelMeal.RowCount = 2
+        Me.TableLayoutPanelMeal.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelMeal.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelMeal.Size = New Size(1370, 633)
+        Me.TableLayoutPanelMeal.TabIndex = 1
         ' 
-        ' TableLayoutPanelLastAlarmTop
+        ' TableLayoutPanelMealTop
         ' 
-        Me.TableLayoutPanelLastAlarmTop.AutoSize = True
-        Me.TableLayoutPanelLastAlarmTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelLastAlarmTop.ButtonText = "Return To 'Summary Data' Tab"
-        Me.TableLayoutPanelLastAlarmTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelLastAlarmTop.ColumnCount = 2
-        Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
-        Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelLastAlarmTop.Dock = DockStyle.Fill
-        Me.TableLayoutPanelLastAlarmTop.LabelText = "Last Alarm"
-        Me.TableLayoutPanelLastAlarmTop.Location = New Point(3, 3)
-        Me.TableLayoutPanelLastAlarmTop.Name = "TableLayoutPanelLastAlarmTop"
-        Me.TableLayoutPanelLastAlarmTop.RowCount = 1
-        Me.TableLayoutPanelLastAlarmTop.RowStyles.Add(New RowStyle())
-        Me.TableLayoutPanelLastAlarmTop.Size = New Size(1364, 37)
-        Me.TableLayoutPanelLastAlarmTop.TabIndex = 1
+        Me.TableLayoutPanelMealTop.AutoSize = True
+        Me.TableLayoutPanelMealTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelMealTop.ButtonText = "Return To 'Summary Data' Tab"
+        Me.TableLayoutPanelMealTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelMealTop.ColumnCount = 2
+        Me.TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelMealTop.Dock = DockStyle.Fill
+        Me.TableLayoutPanelMealTop.LabelText = "Meal"
+        Me.TableLayoutPanelMealTop.Location = New Point(6, 6)
+        Me.TableLayoutPanelMealTop.Name = "TableLayoutPanelMealTop"
+        Me.TableLayoutPanelMealTop.RowCount = 1
+        Me.TableLayoutPanelMealTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelMealTop.Size = New Size(1358, 37)
+        Me.TableLayoutPanelMealTop.TabIndex = 1
         ' 
         ' TabPage07ActiveInsulin
         ' 
@@ -1835,7 +1831,7 @@ Partial Class Form1
         Me.TabPage07ActiveInsulin.Location = New Point(4, 27)
         Me.TabPage07ActiveInsulin.Name = "TabPage07ActiveInsulin"
         Me.TabPage07ActiveInsulin.Padding = New Padding(3)
-        Me.TabPage07ActiveInsulin.Size = New Size(1376, 663)
+        Me.TabPage07ActiveInsulin.Size = New Size(1376, 639)
         Me.TabPage07ActiveInsulin.TabIndex = 18
         Me.TabPage07ActiveInsulin.Text = "Active Insulin"
         Me.TabPage07ActiveInsulin.UseVisualStyleBackColor = True
@@ -1853,7 +1849,7 @@ Partial Class Form1
         Me.TableLayoutPanelActiveInsulin.RowCount = 2
         Me.TableLayoutPanelActiveInsulin.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelActiveInsulin.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelActiveInsulin.Size = New Size(1370, 657)
+        Me.TableLayoutPanelActiveInsulin.Size = New Size(1370, 633)
         Me.TableLayoutPanelActiveInsulin.TabIndex = 0
         ' 
         ' TableLayoutPanelActiveInsulinTop
@@ -1880,7 +1876,7 @@ Partial Class Form1
         Me.TabPage08SensorGlucose.Location = New Point(4, 27)
         Me.TabPage08SensorGlucose.Name = "TabPage08SensorGlucose"
         Me.TabPage08SensorGlucose.Padding = New Padding(3)
-        Me.TabPage08SensorGlucose.Size = New Size(1376, 663)
+        Me.TabPage08SensorGlucose.Size = New Size(1376, 639)
         Me.TabPage08SensorGlucose.TabIndex = 19
         Me.TabPage08SensorGlucose.Text = "Sensor Glucose"
         Me.TabPage08SensorGlucose.UseVisualStyleBackColor = True
@@ -1899,7 +1895,7 @@ Partial Class Form1
         Me.TableLayoutPanelSgs.RowCount = 2
         Me.TableLayoutPanelSgs.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelSgs.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelSgs.Size = New Size(1370, 657)
+        Me.TableLayoutPanelSgs.Size = New Size(1370, 633)
         Me.TableLayoutPanelSgs.TabIndex = 1
         ' 
         ' TableLayoutPanelSgsTop
@@ -1926,7 +1922,7 @@ Partial Class Form1
         Me.TabPage09Limits.Location = New Point(4, 27)
         Me.TabPage09Limits.Name = "TabPage09Limits"
         Me.TabPage09Limits.Padding = New Padding(3)
-        Me.TabPage09Limits.Size = New Size(1376, 663)
+        Me.TabPage09Limits.Size = New Size(1376, 639)
         Me.TabPage09Limits.TabIndex = 20
         Me.TabPage09Limits.Text = "Limits"
         Me.TabPage09Limits.UseVisualStyleBackColor = True
@@ -1944,7 +1940,7 @@ Partial Class Form1
         Me.TableLayoutPanelLimits.RowCount = 2
         Me.TableLayoutPanelLimits.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelLimits.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelLimits.Size = New Size(1370, 657)
+        Me.TableLayoutPanelLimits.Size = New Size(1370, 633)
         Me.TableLayoutPanelLimits.TabIndex = 0
         ' 
         ' TableLayoutPanelLimitsTop
@@ -1971,7 +1967,7 @@ Partial Class Form1
         Me.TabPage10NotificationHistory.Location = New Point(4, 27)
         Me.TabPage10NotificationHistory.Name = "TabPage10NotificationHistory"
         Me.TabPage10NotificationHistory.Padding = New Padding(3)
-        Me.TabPage10NotificationHistory.Size = New Size(1376, 663)
+        Me.TabPage10NotificationHistory.Size = New Size(1376, 639)
         Me.TabPage10NotificationHistory.TabIndex = 5
         Me.TabPage10NotificationHistory.Text = "Notification History"
         Me.TabPage10NotificationHistory.UseVisualStyleBackColor = True
@@ -1990,7 +1986,7 @@ Partial Class Form1
         Me.TableLayoutPanelNotificationHistory.RowCount = 2
         Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelNotificationHistory.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelNotificationHistory.Size = New Size(1370, 657)
+        Me.TableLayoutPanelNotificationHistory.Size = New Size(1370, 633)
         Me.TableLayoutPanelNotificationHistory.TabIndex = 0
         ' 
         ' TableLayoutPanelNotificationHistoryTop
@@ -2017,7 +2013,7 @@ Partial Class Form1
         Me.TabPage11TherapyAlgorithm.Location = New Point(4, 27)
         Me.TabPage11TherapyAlgorithm.Name = "TabPage11TherapyAlgorithm"
         Me.TabPage11TherapyAlgorithm.Padding = New Padding(3)
-        Me.TabPage11TherapyAlgorithm.Size = New Size(1376, 663)
+        Me.TabPage11TherapyAlgorithm.Size = New Size(1376, 639)
         Me.TabPage11TherapyAlgorithm.TabIndex = 21
         Me.TabPage11TherapyAlgorithm.Text = "Therapy Algorithm"
         Me.TabPage11TherapyAlgorithm.UseVisualStyleBackColor = True
@@ -2035,7 +2031,7 @@ Partial Class Form1
         Me.TableLayoutPanelTherapyAlgorithm.RowCount = 2
         Me.TableLayoutPanelTherapyAlgorithm.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelTherapyAlgorithm.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelTherapyAlgorithm.Size = New Size(1370, 657)
+        Me.TableLayoutPanelTherapyAlgorithm.Size = New Size(1370, 633)
         Me.TableLayoutPanelTherapyAlgorithm.TabIndex = 0
         ' 
         ' TableLayoutPanelTherapyAlgorithmTop
@@ -2062,7 +2058,7 @@ Partial Class Form1
         Me.TabPage12BannerState.Location = New Point(4, 27)
         Me.TabPage12BannerState.Name = "TabPage12BannerState"
         Me.TabPage12BannerState.Padding = New Padding(3)
-        Me.TabPage12BannerState.Size = New Size(1376, 663)
+        Me.TabPage12BannerState.Size = New Size(1376, 639)
         Me.TabPage12BannerState.TabIndex = 22
         Me.TabPage12BannerState.Text = "Banner State"
         Me.TabPage12BannerState.UseVisualStyleBackColor = True
@@ -2081,7 +2077,7 @@ Partial Class Form1
         Me.TableLayoutPanelBannerState.RowCount = 2
         Me.TableLayoutPanelBannerState.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelBannerState.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelBannerState.Size = New Size(1370, 657)
+        Me.TableLayoutPanelBannerState.Size = New Size(1370, 633)
         Me.TableLayoutPanelBannerState.TabIndex = 0
         ' 
         ' TableLayoutPanelBannerStateTop
@@ -2108,7 +2104,7 @@ Partial Class Form1
         Me.TabPage13Basal.Location = New Point(4, 27)
         Me.TabPage13Basal.Name = "TabPage13Basal"
         Me.TabPage13Basal.Padding = New Padding(3)
-        Me.TabPage13Basal.Size = New Size(1376, 663)
+        Me.TabPage13Basal.Size = New Size(1376, 639)
         Me.TabPage13Basal.TabIndex = 23
         Me.TabPage13Basal.Text = "Basal"
         Me.TabPage13Basal.UseVisualStyleBackColor = True
@@ -2126,7 +2122,7 @@ Partial Class Form1
         Me.TableLayoutPanelBasal.RowCount = 2
         Me.TableLayoutPanelBasal.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelBasal.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelBasal.Size = New Size(1370, 657)
+        Me.TableLayoutPanelBasal.Size = New Size(1370, 633)
         Me.TableLayoutPanelBasal.TabIndex = 0
         ' 
         ' TableLayoutPanelBasalTop
@@ -2153,9 +2149,106 @@ Partial Class Form1
         Me.TabPage14Markers.Location = New Point(4, 27)
         Me.TabPage14Markers.Name = "TabPage14Markers"
         Me.TabPage14Markers.Padding = New Padding(3)
-        Me.TabPage14Markers.Size = New Size(1376, 663)
+        Me.TabPage14Markers.Size = New Size(1376, 639)
         Me.TabPage14Markers.TabIndex = 24
         Me.TabPage14Markers.Text = "More..." ' 
+        ' TabPageLastSG
+        ' 
+        Me.TabPageLastSG.Controls.Add(Me.TableLayoutPanelLastSG)
+        Me.TabPageLastSG.Location = New Point(4, 27)
+        Me.TabPageLastSG.Name = "TabPageLastSG"
+        Me.TabPageLastSG.Padding = New Padding(3)
+        Me.TabPageLastSG.Size = New Size(1376, 639)
+        Me.TabPageLastSG.TabIndex = 16
+        Me.TabPageLastSG.Text = "Last SG"
+        Me.TabPageLastSG.UseVisualStyleBackColor = True
+        ' 
+        ' TableLayoutPanelLastSG
+        ' 
+        Me.TableLayoutPanelLastSG.AutoSize = True
+        Me.TableLayoutPanelLastSG.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelLastSG.ColumnCount = 1
+        Me.TableLayoutPanelLastSG.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelLastSG.Controls.Add(Me.TableLayoutPanelLastSgTop, 0, 0)
+        Me.TableLayoutPanelLastSG.Dock = DockStyle.Fill
+        Me.TableLayoutPanelLastSG.Location = New Point(3, 3)
+        Me.TableLayoutPanelLastSG.Name = "TableLayoutPanelLastSG"
+        Me.TableLayoutPanelLastSG.RowCount = 2
+        Me.TableLayoutPanelLastSG.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelLastSG.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelLastSG.Size = New Size(1370, 633)
+        Me.TableLayoutPanelLastSG.TabIndex = 1
+        ' 
+        ' TableLayoutPanelLastSgTop
+        ' 
+        Me.TableLayoutPanelLastSgTop.AutoSize = True
+        Me.TableLayoutPanelLastSgTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelLastSgTop.ButtonText = "Return To 'Summary Data' Tab"
+        Me.TableLayoutPanelLastSgTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelLastSgTop.ColumnCount = 2
+        Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelLastSgTop.Dock = DockStyle.Fill
+        Me.TableLayoutPanelLastSgTop.LabelText = "last SG"
+        Me.TableLayoutPanelLastSgTop.Location = New Point(3, 3)
+        Me.TableLayoutPanelLastSgTop.Name = "TableLayoutPanelLastSgTop"
+        Me.TableLayoutPanelLastSgTop.RowCount = 1
+        Me.TableLayoutPanelLastSgTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelLastSgTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelLastSgTop.Size = New Size(1364, 37)
+        Me.TableLayoutPanelLastSgTop.TabIndex = 1
+        ' 
+        ' TabPageLastAlarm
+        ' 
+        Me.TabPageLastAlarm.Controls.Add(Me.TableLayoutPanelLastAlarm)
+        Me.TabPageLastAlarm.Location = New Point(4, 27)
+        Me.TabPageLastAlarm.Name = "TabPageLastAlarm"
+        Me.TabPageLastAlarm.Padding = New Padding(3)
+        Me.TabPageLastAlarm.Size = New Size(1376, 639)
+        Me.TabPageLastAlarm.TabIndex = 17
+        Me.TabPageLastAlarm.Text = "Last Alarm"
+        Me.TabPageLastAlarm.UseVisualStyleBackColor = True
+        ' 
+        ' TableLayoutPanelLastAlarm
+        ' 
+        Me.TableLayoutPanelLastAlarm.AutoSize = True
+        Me.TableLayoutPanelLastAlarm.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelLastAlarm.ColumnCount = 1
+        Me.TableLayoutPanelLastAlarm.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelLastAlarm.Controls.Add(Me.TableLayoutPanelLastAlarmTop, 0, 0)
+        Me.TableLayoutPanelLastAlarm.Dock = DockStyle.Fill
+        Me.TableLayoutPanelLastAlarm.Location = New Point(3, 3)
+        Me.TableLayoutPanelLastAlarm.Margin = New Padding(0)
+        Me.TableLayoutPanelLastAlarm.Name = "TableLayoutPanelLastAlarm"
+        Me.TableLayoutPanelLastAlarm.RowCount = 2
+        Me.TableLayoutPanelLastAlarm.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelLastAlarm.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelLastAlarm.Size = New Size(1370, 633)
+        Me.TableLayoutPanelLastAlarm.TabIndex = 0
+        ' 
+        ' TableLayoutPanelLastAlarmTop
+        ' 
+        Me.TableLayoutPanelLastAlarmTop.AutoSize = True
+        Me.TableLayoutPanelLastAlarmTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelLastAlarmTop.ButtonText = "Return To 'Summary Data' Tab"
+        Me.TableLayoutPanelLastAlarmTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelLastAlarmTop.ColumnCount = 2
+        Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelLastAlarmTop.Dock = DockStyle.Fill
+        Me.TableLayoutPanelLastAlarmTop.LabelText = "Last Alarm"
+        Me.TableLayoutPanelLastAlarmTop.Location = New Point(3, 3)
+        Me.TableLayoutPanelLastAlarmTop.Name = "TableLayoutPanelLastAlarmTop"
+        Me.TableLayoutPanelLastAlarmTop.RowCount = 1
+        Me.TableLayoutPanelLastAlarmTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelLastAlarmTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelLastAlarmTop.Size = New Size(1364, 37)
+        Me.TableLayoutPanelLastAlarmTop.TabIndex = 1
+        ' 
         ' TabControlPage2
         ' 
         Me.TabControlPage2.Appearance = TabAppearance.Buttons
@@ -2368,100 +2461,6 @@ Partial Class Form1
         Me.TableLayoutPanelCalibrationTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelCalibrationTop.Size = New Size(1358, 37)
         Me.TableLayoutPanelCalibrationTop.TabIndex = 1
-        ' 
-        ' TabPage05Insulin
-        ' 
-        Me.TabPage05Insulin.Controls.Add(Me.TableLayoutPanelInsulin)
-        Me.TabPage05Insulin.Location = New Point(4, 27)
-        Me.TabPage05Insulin.Name = "TabPage05Insulin"
-        Me.TabPage05Insulin.Padding = New Padding(3)
-        Me.TabPage05Insulin.Size = New Size(1376, 639)
-        Me.TabPage05Insulin.TabIndex = 4
-        Me.TabPage05Insulin.Text = "Insulin"
-        Me.TabPage05Insulin.UseVisualStyleBackColor = True
-        ' 
-        ' TableLayoutPanelInsulin
-        ' 
-        Me.TableLayoutPanelInsulin.AutoScroll = True
-        Me.TableLayoutPanelInsulin.AutoSize = True
-        Me.TableLayoutPanelInsulin.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelInsulin.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelInsulin.ColumnCount = 1
-        Me.TableLayoutPanelInsulin.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelInsulin.Controls.Add(Me.TableLayoutPanelInsulinTop, 0, 0)
-        Me.TableLayoutPanelInsulin.Dock = DockStyle.Fill
-        Me.TableLayoutPanelInsulin.Location = New Point(3, 3)
-        Me.TableLayoutPanelInsulin.Name = "TableLayoutPanelInsulin"
-        Me.TableLayoutPanelInsulin.RowCount = 2
-        Me.TableLayoutPanelInsulin.RowStyles.Add(New RowStyle())
-        Me.TableLayoutPanelInsulin.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelInsulin.Size = New Size(1370, 633)
-        Me.TableLayoutPanelInsulin.TabIndex = 1
-        ' 
-        ' TableLayoutPanelInsulinTop
-        ' 
-        Me.TableLayoutPanelInsulinTop.AutoSize = True
-        Me.TableLayoutPanelInsulinTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelInsulinTop.ButtonText = "Return To 'Summary Data' Tab"
-        Me.TableLayoutPanelInsulinTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelInsulinTop.ColumnCount = 2
-        Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle())
-        Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelInsulinTop.Dock = DockStyle.Fill
-        Me.TableLayoutPanelInsulinTop.LabelText = "Insulin"
-        Me.TableLayoutPanelInsulinTop.Location = New Point(6, 6)
-        Me.TableLayoutPanelInsulinTop.Name = "TableLayoutPanelInsulinTop"
-        Me.TableLayoutPanelInsulinTop.RowCount = 1
-        Me.TableLayoutPanelInsulinTop.RowStyles.Add(New RowStyle())
-        Me.TableLayoutPanelInsulinTop.Size = New Size(1358, 37)
-        Me.TableLayoutPanelInsulinTop.TabIndex = 1
-        ' 
-        ' TabPage06Meal
-        ' 
-        Me.TabPage06Meal.Controls.Add(Me.TableLayoutPanelMeal)
-        Me.TabPage06Meal.Location = New Point(4, 27)
-        Me.TabPage06Meal.Name = "TabPage06Meal"
-        Me.TabPage06Meal.Padding = New Padding(3)
-        Me.TabPage06Meal.Size = New Size(1376, 639)
-        Me.TabPage06Meal.TabIndex = 6
-        Me.TabPage06Meal.Text = "Meal"
-        Me.TabPage06Meal.UseVisualStyleBackColor = True
-        ' 
-        ' TableLayoutPanelMeal
-        ' 
-        Me.TableLayoutPanelMeal.AutoScroll = True
-        Me.TableLayoutPanelMeal.AutoSize = True
-        Me.TableLayoutPanelMeal.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelMeal.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelMeal.ColumnCount = 1
-        Me.TableLayoutPanelMeal.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelMeal.Controls.Add(Me.TableLayoutPanelMealTop, 0, 0)
-        Me.TableLayoutPanelMeal.Dock = DockStyle.Fill
-        Me.TableLayoutPanelMeal.Location = New Point(3, 3)
-        Me.TableLayoutPanelMeal.Name = "TableLayoutPanelMeal"
-        Me.TableLayoutPanelMeal.RowCount = 2
-        Me.TableLayoutPanelMeal.RowStyles.Add(New RowStyle())
-        Me.TableLayoutPanelMeal.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelMeal.Size = New Size(1370, 633)
-        Me.TableLayoutPanelMeal.TabIndex = 1
-        ' 
-        ' TableLayoutPanelMealTop
-        ' 
-        Me.TableLayoutPanelMealTop.AutoSize = True
-        Me.TableLayoutPanelMealTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelMealTop.ButtonText = "Return To 'Summary Data' Tab"
-        Me.TableLayoutPanelMealTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelMealTop.ColumnCount = 2
-        Me.TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle())
-        Me.TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelMealTop.Dock = DockStyle.Fill
-        Me.TableLayoutPanelMealTop.LabelText = "Meal"
-        Me.TableLayoutPanelMealTop.Location = New Point(6, 6)
-        Me.TableLayoutPanelMealTop.Name = "TableLayoutPanelMealTop"
-        Me.TableLayoutPanelMealTop.RowCount = 1
-        Me.TableLayoutPanelMealTop.RowStyles.Add(New RowStyle())
-        Me.TableLayoutPanelMealTop.Size = New Size(1358, 37)
-        Me.TableLayoutPanelMealTop.TabIndex = 1
         ' 
         ' TabPageLowGlucoseSuspended
         ' 
@@ -2689,14 +2688,14 @@ Partial Class Form1
         Me.TabControlPage1.ResumeLayout(False)
         Me.TabPage01HomePage.ResumeLayout(False)
         Me.TabPage04SummaryData.ResumeLayout(False)
-        Me.TabPageLastSG.ResumeLayout(False)
-        Me.TabPageLastSG.PerformLayout()
-        Me.TableLayoutPanelLastSG.ResumeLayout(False)
-        Me.TableLayoutPanelLastSG.PerformLayout()
-        Me.TabPageLastAlarm.ResumeLayout(False)
-        Me.TabPageLastAlarm.PerformLayout()
-        Me.TableLayoutPanelLastAlarm.ResumeLayout(False)
-        Me.TableLayoutPanelLastAlarm.PerformLayout()
+        Me.TabPage05Insulin.ResumeLayout(False)
+        Me.TabPage05Insulin.PerformLayout()
+        Me.TableLayoutPanelInsulin.ResumeLayout(False)
+        Me.TableLayoutPanelInsulin.PerformLayout()
+        Me.TabPage06Meal.ResumeLayout(False)
+        Me.TabPage06Meal.PerformLayout()
+        Me.TableLayoutPanelMeal.ResumeLayout(False)
+        Me.TableLayoutPanelMeal.PerformLayout()
         Me.TabPage07ActiveInsulin.ResumeLayout(False)
         Me.TabPage07ActiveInsulin.PerformLayout()
         Me.TableLayoutPanelActiveInsulin.ResumeLayout(False)
@@ -2724,6 +2723,14 @@ Partial Class Form1
         Me.TabPage13Basal.ResumeLayout(False)
         Me.TableLayoutPanelBasal.ResumeLayout(False)
         Me.TableLayoutPanelBasal.PerformLayout()
+        Me.TabPageLastSG.ResumeLayout(False)
+        Me.TabPageLastSG.PerformLayout()
+        Me.TableLayoutPanelLastSG.ResumeLayout(False)
+        Me.TableLayoutPanelLastSG.PerformLayout()
+        Me.TabPageLastAlarm.ResumeLayout(False)
+        Me.TabPageLastAlarm.PerformLayout()
+        Me.TableLayoutPanelLastAlarm.ResumeLayout(False)
+        Me.TableLayoutPanelLastAlarm.PerformLayout()
         Me.TabControlPage2.ResumeLayout(False)
         Me.TabPageAutoBasalDelivery.ResumeLayout(False)
         Me.TabPageAutoBasalDelivery.PerformLayout()
@@ -2741,14 +2748,6 @@ Partial Class Form1
         Me.TabPageCalibration.PerformLayout()
         Me.TableLayoutPanelCalibration.ResumeLayout(False)
         Me.TableLayoutPanelCalibration.PerformLayout()
-        Me.TabPage05Insulin.ResumeLayout(False)
-        Me.TabPage05Insulin.PerformLayout()
-        Me.TableLayoutPanelInsulin.ResumeLayout(False)
-        Me.TableLayoutPanelInsulin.PerformLayout()
-        Me.TabPage06Meal.ResumeLayout(False)
-        Me.TabPage06Meal.PerformLayout()
-        Me.TableLayoutPanelMeal.ResumeLayout(False)
-        Me.TableLayoutPanelMeal.PerformLayout()
         Me.TabPageLowGlucoseSuspended.ResumeLayout(False)
         Me.TabPageLowGlucoseSuspended.PerformLayout()
         Me.TableLayoutPanelLowGlucoseSuspended.ResumeLayout(False)

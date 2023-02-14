@@ -11,7 +11,7 @@ Friend Module PlotSeriesSg
     Friend Sub PlotSgSeries(chart As Chart, HomePageMealRow As Double)
         For Each sgListIndex As IndexClass(Of SgRecord) In s_listOfSGs.WithIndex()
             Try
-                With chart.Series(BgSeries).Points
+                With chart.Series(BgSeriesName).Points
                     Dim sgOADateTime As OADate = sgListIndex.Value.OaDateTime()
                     Dim bgValue As Single = sgListIndex.Value.sg
                     If Single.IsNaN(bgValue) OrElse Math.Abs(bgValue - 0) < Single.Epsilon Then

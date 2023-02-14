@@ -605,9 +605,9 @@ Public Class Form1
             End If
 
             Select Case result.Series.Name
-                Case HighLimitSeries, LowLimitSeries
+                Case HighLimitSeriesName, LowLimitSeriesName
                     Me.CursorPanel.Visible = False
-                Case MarkerSeries, BasalSeries
+                Case MarkerSeriesName, BasalSeriesNameName
                     Dim markerTag() As String = currentDataPoint.Tag.ToString.Split(":"c)
                     If markerTag.Length <= 1 Then
                         Me.CursorPanel.Visible = True
@@ -667,7 +667,7 @@ Public Class Form1
                     End If
                     chart1.SetUpCallout(currentDataPoint, markerTag)
 
-                Case BgSeries
+                Case BgSeriesName
                     Me.CursorMessage1Label.Text = "Blood Glucose"
                     Me.CursorMessage1Label.Visible = True
                     Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(3)} {BgUnitsString}"
@@ -677,14 +677,14 @@ Public Class Form1
                     Me.CursorPictureBox.Image = Nothing
                     Me.CursorPanel.Visible = True
                     chart1.SetupCallout(currentDataPoint, "Blood Glucose" & Me.CursorMessage2Label.Text)
-                Case TimeChangeSeries
+                Case TimeChangeSeriesName
                     Me.CursorMessage1Label.Visible = False
                     Me.CursorMessage1Label.Visible = False
                     Me.CursorMessage2Label.Visible = False
                     Me.CursorPictureBox.Image = Nothing
                     Me.CursorMessage3Label.Visible = False
                     Me.CursorPanel.Visible = False
-                Case ActiveInsulinSeries
+                Case ActiveInsulinSeriesName
                     chart1.SetupCallout(currentDataPoint, $"Theoretical Active Insulin {currentDataPoint.YValues.FirstOrDefault:F3} U")
                 Case Else
                     Stop
@@ -1328,13 +1328,13 @@ Public Class Form1
         Me.SummaryChart.ChartAreas.Add(summaryChartArea)
         Me.SummaryChartLegend = CreateChartLegend(NameOf(SummaryChartLegend))
 
-        Me.SummaryAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeries, Me.SummaryChartLegend, "Auto Correction", AxisType.Secondary)
-        Me.SummaryBasalSeries = CreateSeriesBasal(BasalSeries, Me.SummaryChartLegend, "Basal Series", AxisType.Secondary)
-        Me.SummaryMinBasalSeries = CreateSeriesBasal(MinBasalSeries, Me.SummaryChartLegend, "Min Basal", AxisType.Secondary)
+        Me.SummaryAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeriesName, Me.SummaryChartLegend, "Auto Correction", AxisType.Secondary)
+        Me.SummaryBasalSeries = CreateSeriesBasal(BasalSeriesNameName, Me.SummaryChartLegend, "Basal Series", AxisType.Secondary)
+        Me.SummaryMinBasalSeries = CreateSeriesBasal(MinBasalSeriesName, Me.SummaryChartLegend, "Min Basal", AxisType.Secondary)
 
-        Me.SummaryHighLimitSeries = CreateSeriesLimits(Me.SummaryChartLegend, HighLimitSeries)
+        Me.SummaryHighLimitSeries = CreateSeriesLimits(Me.SummaryChartLegend, HighLimitSeriesName)
         Me.SummaryBGSeries = CreateSeriesBg(Me.SummaryChartLegend)
-        Me.SummaryLowLimitSeries = CreateSeriesLimits(Me.SummaryChartLegend, LowLimitSeries)
+        Me.SummaryLowLimitSeries = CreateSeriesLimits(Me.SummaryChartLegend, LowLimitSeriesName)
 
         Me.SummaryMarkerSeries = CreateSeriesWithoutVisibleLegend(AxisType.Secondary)
 
@@ -1357,7 +1357,7 @@ Public Class Form1
 
                 .Add(Me.SummaryTimeChangeSeries)
             End With
-            With .Series(BgSeries).EmptyPointStyle
+            With .Series(BgSeriesName).EmptyPointStyle
                 .BorderWidth = 4
                 .Color = Color.Transparent
             End With
@@ -1444,9 +1444,9 @@ Public Class Form1
                                                  GetGraphLineColor("Active Insulin"))
         Me.ActiveInsulinActiveInsulinSeries = CreateSeriesActiveInsulin()
 
-        Me.ActiveInsulinAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeries, Me.ActiveInsulinChartLegend, "Auto Correction", AxisType.Secondary)
-        Me.ActiveInsulinBasalSeries = CreateSeriesBasal(BasalSeries, Me.ActiveInsulinChartLegend, "Basal Series", AxisType.Secondary)
-        Me.ActiveInsulinMinBasalSeries = CreateSeriesBasal(MinBasalSeries, Me.ActiveInsulinChartLegend, "Min Basal", AxisType.Secondary)
+        Me.ActiveInsulinAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeriesName, Me.ActiveInsulinChartLegend, "Auto Correction", AxisType.Secondary)
+        Me.ActiveInsulinBasalSeries = CreateSeriesBasal(BasalSeriesNameName, Me.ActiveInsulinChartLegend, "Basal Series", AxisType.Secondary)
+        Me.ActiveInsulinMinBasalSeries = CreateSeriesBasal(MinBasalSeriesName, Me.ActiveInsulinChartLegend, "Min Basal", AxisType.Secondary)
 
         Me.ActiveInsulinBGSeries = CreateSeriesBg(Me.ActiveInsulinChartLegend)
         Me.ActiveInsulinMarkerSeries = CreateSeriesWithoutVisibleLegend(AxisType.Secondary)
@@ -1464,10 +1464,10 @@ Public Class Form1
                 .Add(Me.ActiveInsulinMarkerSeries)
                 .Add(Me.ActiveInsulinTimeChangeSeries)
             End With
-            .Series(BgSeries).EmptyPointStyle.BorderWidth = 4
-            .Series(BgSeries).EmptyPointStyle.Color = Color.Transparent
-            .Series(ActiveInsulinSeries).EmptyPointStyle.BorderWidth = 4
-            .Series(ActiveInsulinSeries).EmptyPointStyle.Color = Color.Transparent
+            .Series(BgSeriesName).EmptyPointStyle.BorderWidth = 4
+            .Series(BgSeriesName).EmptyPointStyle.Color = Color.Transparent
+            .Series(ActiveInsulinSeriesName).EmptyPointStyle.BorderWidth = 4
+            .Series(ActiveInsulinSeriesName).EmptyPointStyle.Color = Color.Transparent
             .Legends.Add(Me.ActiveInsulinChartLegend)
         End With
 
@@ -1520,9 +1520,9 @@ Public Class Form1
         Me.TreatmentMarkersChartLegend = CreateChartLegend(NameOf(TreatmentMarkersChartLegend))
 
         Me.TreatmentMarkersChartTitle = CreateTitle("Treatment Details", NameOf(TreatmentMarkersChartTitle), Me.TreatmentMarkersChart.BackColor.GetContrastingColor)
-        Me.TreatmentMarkerAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeries, Me.TreatmentMarkersChartLegend, "Auto Correction", AxisType.Primary)
-        Me.TreatmentMarkerBasalSeries = CreateSeriesBasal(BasalSeries, Me.TreatmentMarkersChartLegend, "Basal Series", AxisType.Primary)
-        Me.TreatmentMarkerMinBasalSeries = CreateSeriesBasal(MinBasalSeries, Me.TreatmentMarkersChartLegend, "Min Basal", AxisType.Primary)
+        Me.TreatmentMarkerAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeriesName, Me.TreatmentMarkersChartLegend, "Auto Correction", AxisType.Primary)
+        Me.TreatmentMarkerBasalSeries = CreateSeriesBasal(BasalSeriesNameName, Me.TreatmentMarkersChartLegend, "Basal Series", AxisType.Primary)
+        Me.TreatmentMarkerMinBasalSeries = CreateSeriesBasal(MinBasalSeriesName, Me.TreatmentMarkersChartLegend, "Min Basal", AxisType.Primary)
 
         Me.TreatmentMarkerBGSeries = CreateSeriesBg(Me.TreatmentMarkersChartLegend)
         Me.TreatmentMarkerMarkersSeries = CreateSeriesWithoutVisibleLegend(AxisType.Primary)
@@ -1539,12 +1539,12 @@ Public Class Form1
                 .Add(Me.TreatmentMarkerTimeChangeSeries)
             End With
             .Legends.Add(Me.TreatmentMarkersChartLegend)
-            .Series(BgSeries).EmptyPointStyle.Color = Color.Transparent
-            .Series(BgSeries).EmptyPointStyle.BorderWidth = 4
-            .Series(BasalSeries).EmptyPointStyle.Color = Color.Transparent
-            .Series(BasalSeries).EmptyPointStyle.BorderWidth = 4
-            .Series(MarkerSeries).EmptyPointStyle.Color = Color.Transparent
-            .Series(MarkerSeries).EmptyPointStyle.BorderWidth = 4
+            .Series(BgSeriesName).EmptyPointStyle.Color = Color.Transparent
+            .Series(BgSeriesName).EmptyPointStyle.BorderWidth = 4
+            .Series(BasalSeriesNameName).EmptyPointStyle.Color = Color.Transparent
+            .Series(BasalSeriesNameName).EmptyPointStyle.BorderWidth = 4
+            .Series(MarkerSeriesName).EmptyPointStyle.Color = Color.Transparent
+            .Series(MarkerSeriesName).EmptyPointStyle.BorderWidth = 4
         End With
 
         Me.TreatmentMarkersChart.Titles.Add(Me.TreatmentMarkersChartTitle)

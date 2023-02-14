@@ -7,15 +7,16 @@ Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module ChartSupport
-    Friend Const ActiveInsulinSeries As String = NameOf(ActiveInsulinSeries)
-    Friend Const AutoCorrectionSeries As String = NameOf(AutoCorrectionSeries)
-    Friend Const BasalSeries As String = NameOf(BasalSeries)
-    Friend Const BgSeries As String = NameOf(BgSeries)
-    Friend Const HighLimitSeries As String = NameOf(HighLimitSeries)
-    Friend Const LowLimitSeries As String = NameOf(LowLimitSeries)
-    Friend Const MarkerSeries As String = NameOf(MarkerSeries)
-    Friend Const MinBasalSeries As String = NameOf(MinBasalSeries)
-    Friend Const TimeChangeSeries As String = NameOf(TimeChangeSeries)
+
+    Friend Const ActiveInsulinSeriesName As String = NameOf(ActiveInsulinSeriesName)
+    Friend Const AutoCorrectionSeriesName As String = NameOf(AutoCorrectionSeriesName)
+    Friend Const BasalSeriesNameName As String = NameOf(BasalSeriesNameName)
+    Friend Const BgSeriesName As String = NameOf(BgSeriesName)
+    Friend Const HighLimitSeriesName As String = NameOf(HighLimitSeriesName)
+    Friend Const LowLimitSeriesName As String = NameOf(LowLimitSeriesName)
+    Friend Const MarkerSeriesName As String = NameOf(MarkerSeriesName)
+    Friend Const MinBasalSeriesName As String = NameOf(MinBasalSeriesName)
+    Friend Const TimeChangeSeriesName As String = NameOf(TimeChangeSeriesName)
 
     Private Function CreateSeriesBase(seriesName As String, legendText As String, borderWidth As Integer, yAxisType As AxisType) As Series
         Dim lineColor As Color = GetGraphLineColor(legendText)
@@ -174,7 +175,7 @@ Friend Module ChartSupport
     End Function
 
     Friend Function CreateSeriesActiveInsulin() As Series
-        Dim s As Series = CreateSeriesBase(ActiveInsulinSeries, "Active Insulin", 4, AxisType.Primary)
+        Dim s As Series = CreateSeriesBase(ActiveInsulinSeriesName, "Active Insulin", 4, AxisType.Primary)
         s.MarkerColor = Color.Black
         s.MarkerSize = 4
         s.MarkerStyle = MarkerStyle.Circle
@@ -206,7 +207,7 @@ Friend Module ChartSupport
 
     Friend Function CreateSeriesBg(bgLegend As Legend) As Series
         Const legendText As String = "BG Series"
-        Dim s As Series = CreateSeriesBase(BgSeries, legendText, 4, AxisType.Secondary)
+        Dim s As Series = CreateSeriesBase(BgSeriesName, legendText, 4, AxisType.Secondary)
         s.IsVisibleInLegend = False
         bgLegend.CustomItems.Add(New LegendItem(legendText, GetGraphLineColor(legendText), ""))
         Return s
@@ -215,7 +216,7 @@ Friend Module ChartSupport
     Friend Function CreateSeriesLimits(limitsLegend As Legend, seriesName As String) As Series
         Dim legendText As String
         Dim lineColor As Color
-        If seriesName.Equals(HighLimitSeries) Then
+        If seriesName.Equals(HighLimitSeriesName) Then
             legendText = "High Limit"
             lineColor = Color.Yellow
         Else
@@ -232,7 +233,7 @@ Friend Module ChartSupport
 
     Friend Function CreateSeriesTimeChange(basalLegend As Legend) As Series
         Const legendText As String = "Time Change"
-        Dim s As Series = CreateSeriesBase(TimeChangeSeries, legendText, 1, AxisType.Primary)
+        Dim s As Series = CreateSeriesBase(TimeChangeSeriesName, legendText, 1, AxisType.Primary)
         s.IsVisibleInLegend = False
         basalLegend.CustomItems.Add(New LegendItem(legendText, GetGraphLineColor(legendText), ""))
         With s.EmptyPointStyle
@@ -243,7 +244,7 @@ Friend Module ChartSupport
     End Function
 
     Friend Function CreateSeriesWithoutVisibleLegend(YAxisType As AxisType) As Series
-        Dim s As New Series(MarkerSeries) With {
+        Dim s As New Series(MarkerSeriesName) With {
                         .BorderColor = Color.Transparent,
                         .BorderWidth = 1,
                         .ChartArea = NameOf(ChartArea),
