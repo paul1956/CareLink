@@ -6,7 +6,7 @@ Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
-Friend Module ChartSupport
+Friend Module CreateChartItems
 
     Friend Const ActiveInsulinSeriesName As String = NameOf(ActiveInsulinSeriesName)
     Friend Const AutoCorrectionSeriesName As String = NameOf(AutoCorrectionSeriesName)
@@ -45,6 +45,15 @@ Friend Module ChartSupport
         Stop
         Return -1
     End Function
+
+    Friend Sub AddAutoCorrectionLegend(activeInsulinChartLegend As Legend, homeChartLegend As Legend, treatmentMarkersChartLegend As Legend)
+        Dim i As Integer = activeInsulinChartLegend.CustomItems.IndexOfAutoCorrection()
+        activeInsulinChartLegend.CustomItems(i).Enabled = True
+        i = homeChartLegend.CustomItems.IndexOfAutoCorrection()
+        homeChartLegend.CustomItems(i).Enabled = True
+        i = treatmentMarkersChartLegend.CustomItems.IndexOfAutoCorrection()
+        treatmentMarkersChartLegend.CustomItems(i).Enabled = True
+    End Sub
 
     Friend Function CreateChart(chartName As String) As Chart
         Dim chart As New Chart With {
@@ -274,15 +283,6 @@ Friend Module ChartSupport
                         .Text = chartTitle
                     }
     End Function
-
-    Friend Sub EnableAutoCorrectionLegend(activeInsulinChartLegend As Legend, homeChartLegend As Legend, treatmentMarkersChartLegend As Legend)
-        Dim i As Integer = activeInsulinChartLegend.CustomItems.IndexOfAutoCorrection()
-        activeInsulinChartLegend.CustomItems(i).Enabled = True
-        i = homeChartLegend.CustomItems.IndexOfAutoCorrection()
-        homeChartLegend.CustomItems(i).Enabled = True
-        i = treatmentMarkersChartLegend.CustomItems.IndexOfAutoCorrection()
-        treatmentMarkersChartLegend.CustomItems(i).Enabled = True
-    End Sub
 
     <Extension>
     Friend Sub UpdateChartAreaBGAxisX(c As ChartArea)

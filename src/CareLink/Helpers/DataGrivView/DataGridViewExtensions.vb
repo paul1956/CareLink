@@ -8,11 +8,33 @@ Imports System.Text
 Public Module DataGridViewExtensions
 
     <Extension>
-    Public Function SetCellStyle(cellStyle As DataGridViewCellStyle, alignment As DataGridViewContentAlignment, padding As Padding) As DataGridViewCellStyle
-        cellStyle.Alignment = alignment
-        cellStyle.Padding = padding
-        Return cellStyle
-    End Function
+    Friend Sub InitializeDgv(dGV As DataGridView)
+        With dGV
+            .AllowUserToAddRows = False
+            .AllowUserToDeleteRows = False
+            .AllowUserToResizeColumns = False
+            .AllowUserToResizeRows = False
+            .AlternatingRowsDefaultCellStyle = New DataGridViewCellStyle With {
+                    .BackColor = Color.Silver
+                }
+            .ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
+                    .Alignment = DataGridViewContentAlignment.MiddleCenter,
+                    .BackColor = SystemColors.Control,
+                    .Font = New Font("Segoe UI", 9.0!, FontStyle.Regular, GraphicsUnit.Point),
+                    .ForeColor = SystemColors.WindowText,
+                    .SelectionBackColor = SystemColors.Highlight,
+                    .SelectionForeColor = SystemColors.HighlightText,
+                    .WrapMode = DataGridViewTriState.True
+                }
+            .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+            .Dock = DockStyle.Fill
+            .Location = New Point(3, 3)
+            .ReadOnly = True
+            .RowTemplate.Height = 25
+            .SelectionMode = DataGridViewSelectionMode.CellSelect
+            .TabIndex = 0
+        End With
+    End Sub
 
     <Extension>
     Public Sub dgvCellFormatting(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, key As String)
@@ -66,5 +88,12 @@ Public Module DataGridViewExtensions
         End With
 
     End Sub
+
+    <Extension>
+    Public Function SetCellStyle(cellStyle As DataGridViewCellStyle, alignment As DataGridViewContentAlignment, padding As Padding) As DataGridViewCellStyle
+        cellStyle.Alignment = alignment
+        cellStyle.Padding = padding
+        Return cellStyle
+    End Function
 
 End Module

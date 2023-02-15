@@ -2010,7 +2010,7 @@ Public Class Form1
         Else
             Me.LabelTrendArrows.Text = $"{rowValue}"
         End If
-        Me.UpdateSummaryTab()
+        UpdateSummaryTab(Me.DgvSummary)
         Me.UpdateActiveInsulinChart()
         Me.UpdateActiveInsulin()
         Me.UpdateAutoModeShield()
@@ -2083,7 +2083,7 @@ Public Class Form1
         Me.MenuStartHere.Enabled = True
         Me.UpdateTreatmentChart()
         If s_totalAutoCorrection > 0 Then
-            EnableAutoCorrectionLegend(Me.ActiveInsulinChartLegend, Me.SummaryChartLegend, Me.TreatmentMarkersChartLegend)
+            AddAutoCorrectionLegend(Me.ActiveInsulinChartLegend, Me.SummaryChartLegend, Me.TreatmentMarkersChartLegend)
         End If
 
         Application.DoEvents()

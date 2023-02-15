@@ -8,7 +8,7 @@ Friend Module DataGridViewHelper
 
     Friend Delegate Sub attachHandlers(dgv As DataGridView)
 
-    Private Function CreateDefaultDataGridView(dgvName As String) As DataGridView
+    Friend Function CreateDefaultDataGridView(dgvName As String) As DataGridView
         Dim dGV As New DataGridView With {
             .Name = dgvName
         }
@@ -57,32 +57,12 @@ Friend Module DataGridViewHelper
     End Sub
 
     <Extension>
-    Friend Sub InitializeDgv(dGV As DataGridView)
-        With dGV
-            .AllowUserToAddRows = False
-            .AllowUserToDeleteRows = False
-            .AllowUserToResizeColumns = False
-            .AllowUserToResizeRows = False
-            .AlternatingRowsDefaultCellStyle = New DataGridViewCellStyle With {
-                    .BackColor = Color.Silver
-                }
-            .ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
-                    .Alignment = DataGridViewContentAlignment.MiddleCenter,
-                    .BackColor = SystemColors.Control,
-                    .Font = New Font("Segoe UI", 9.0!, FontStyle.Regular, GraphicsUnit.Point),
-                    .ForeColor = SystemColors.WindowText,
-                    .SelectionBackColor = SystemColors.Highlight,
-                    .SelectionForeColor = SystemColors.HighlightText,
-                    .WrapMode = DataGridViewTriState.True
-                }
-            .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-            .Dock = DockStyle.Fill
-            .Location = New Point(3, 3)
-            .ReadOnly = True
-            .RowTemplate.Height = 25
-            .SelectionMode = DataGridViewSelectionMode.CellSelect
-            .TabIndex = 0
-        End With
+    Friend Sub UpdateSummaryTab(dgvSummary As DataGridView)
+        s_listOfSummaryRecords.Sort()
+        dgvSummary.InitializeDgv()
+        dgvSummary.DataSource = ClassCollectionToDataTable(s_listOfSummaryRecords)
+        dgvSummary.Columns(0).HeaderCell.SortGlyphDirection = SortOrder.Ascending
+        dgvSummary.RowHeadersVisible = False
     End Sub
 
 End Module

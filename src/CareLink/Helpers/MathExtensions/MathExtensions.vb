@@ -8,15 +8,6 @@ Imports System.Runtime.CompilerServices
 Friend Module MathExtensions
 
     <Extension>
-    Friend Function GetSingleValue(item As Dictionary(Of String, String), value As String) As Single
-        Dim returnString As String = ""
-        If item.TryGetValue(value, returnString) Then
-            Return returnString.ParseSingle()
-        End If
-        Return Single.NaN
-    End Function
-
-    <Extension>
     Friend Function RoundSingle(singleValue As Single, decimalDigits As Integer) As Single
 
         Return CSng(Math.Round(singleValue, decimalDigits))
@@ -26,11 +17,6 @@ Friend Module MathExtensions
     Friend Function RoundToSingle(doubleValue As Double, decimalDigits As Integer) As Single
 
         Return CSng(Math.Round(doubleValue, decimalDigits))
-    End Function
-
-    <Extension>
-    Public Function IsEven(num As Integer) As Boolean
-        Return num Mod 2 = 0
     End Function
 
     <Extension>

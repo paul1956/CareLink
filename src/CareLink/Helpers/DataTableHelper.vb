@@ -12,72 +12,18 @@ Public Module DataTableHelper
     ''' <summary>
     ''' Returns a new string in which all occurrences of the single quote character in the current instance are replaced with a back-tick character.
     ''' </summary>
-    Public Function EscapeSingleQuotes(Input As String) As String
+    Private Function EscapeSingleQuotes(Input As String) As String
         Return Input.Replace("'"c, "`"c) ' Replace with back-tick
     End Function
 
     ''' <summary>
     ''' Returns an enumerator, which supports a simple iteration over a collection of all the DataColumns in a specified DataTable.
     ''' </summary>
-    Public Function GetDataTableColumns(Input As DataTable) As IEnumerable(Of DataColumn)
+    Private Function GetDataTableColumns(Input As DataTable) As IEnumerable(Of DataColumn)
         If Input Is Nothing OrElse Input.Columns.Count < 1 Then
             Return New List(Of DataColumn)()
         End If
         Return Input.Columns.OfType(Of DataColumn)().ToList()
-    End Function
-
-    ''' <summary>
-    ''' Returns an enumerator, which supports a simple iteration over a collection of all the DataRows in a specified DataTable.
-    ''' </summary>
-    Public Function GetDataTableRows(Input As DataTable) As IEnumerable(Of DataRow)
-        If Not IsValidDataTable(Input) Then
-            Return New List(Of DataRow)()
-        End If
-        Return Input.Rows.OfType(Of DataRow)().ToList()
-    End Function
-
-    ''' <summary>
-    ''' Indicates whether a specified Enumerable collection is null or an empty collection.
-    ''' </summary>
-    ''' <typeparam name="T">The specified type contained in the collection.</typeparam>
-    ''' <param name="Input">An Enumerator to the collection to check.</param>
-    ''' <returns>True if the specified Enumerable collection is null or empty, otherwise false.</returns>
-    Public Function IsCollectionEmpty(Of T)(Input As IEnumerable(Of T)) As Boolean
-        Return Input Is Nothing OrElse Not Input.Any()
-    End Function
-
-    ''' <summary>
-    '''  Indicates whether a specified Type can be assigned null.
-    ''' </summary>
-    ''' <param name="Input">The Type to check for nullable property.</param>
-    ''' <returns>True if the specified Type can be assigned null, otherwise false.</returns>
-    Public Function IsNullableType(Input As Type) As Boolean
-        If Not Input.IsValueType Then
-            Return True ' Reference Type
-        End If
-        If Nullable.GetUnderlyingType(Input) IsNot Nothing Then
-            Return True ' Nullable<T>
-        End If
-        Return False ' Value Type
-    End Function
-
-    ''' <summary>
-    ''' Indicates whether a specified DataTable is null, has zero columns, or (optionally) zero rows.
-    ''' </summary>
-    ''' <param name="Table">DataTable to check.</param>
-    ''' <param name="IgnoreRows">When set to true, the function will return true even if the table's row count is equal to zero.</param>
-    ''' <returns>False if the specified DataTable null, has zero columns, or zero rows, otherwise true.</returns>
-    Public Function IsValidDataTable(Table As DataTable, Optional IgnoreRows As Boolean = False) As Boolean
-        If Table Is Nothing Then
-            Return False
-        End If
-        If Table.Columns.Count = 0 Then
-            Return False
-        End If
-        If Not IgnoreRows AndAlso Table.Rows.Count = 0 Then
-            Return False
-        End If
-        Return True
     End Function
 
     ''' <summary>
@@ -88,8 +34,8 @@ Public Module DataTableHelper
     ''' <param name="Prefix">The string to prefix the result.</param>
     ''' <param name="Delimiter">The string that will appear between each item in the specified collection.</param>
     ''' <param name="Postfix">The string to postfix the result.</param>
-    Public Function ListToDelimitedString(Of T)(Collection As IEnumerable(Of T), Prefix As String, Delimiter As String, Postfix As String) As String
-        If IsCollectionEmpty(Of T)(Collection) Then
+    Private Function ListToDelimitedString(Of T)(Collection As IEnumerable(Of T), Prefix As String, Delimiter As String, Postfix As String) As String
+        If Collection Is Nothing OrElse Not Collection.Any() Then
             Return String.Empty
         End If
 
@@ -109,6 +55,16 @@ Public Module DataTableHelper
         result.Append(Postfix)
 
         Return result.ToString()
+    End Function
+
+    ''' <summary>
+    ''' Returns an list, which supports a simple iteration over a collection of all the DataRows in a specified DataTable.
+    ''' </summary>
+    Public Function GetDataTableRows(Input As DataTable) As IEnumerable(Of DataRow)
+        If Not IsValidDataTable(Input) Then
+            Return New List(Of DataRow)()
+        End If
+        Return Input.Rows.OfType(Of DataRow)().ToList()
     End Function
 
     ''' <summary>

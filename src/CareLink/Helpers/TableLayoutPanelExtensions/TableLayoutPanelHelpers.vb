@@ -4,7 +4,7 @@
 
 Imports System.Runtime.CompilerServices
 
-Friend Module TableLayoutPanelSupport
+Friend Module TableLayoutPanelHelpers
 
     <Extension>
     Friend Sub SetTabName(table As TableLayoutPanel, rowIndex As ItemIndexes)

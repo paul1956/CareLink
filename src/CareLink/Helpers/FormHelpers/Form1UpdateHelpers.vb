@@ -6,7 +6,7 @@ Imports System.Globalization
 Imports System.IO
 Imports System.Runtime.CompilerServices
 
-Friend Module Form1Helpers
+Friend Module Form1UpdateHelpers
 
     Private Function ConvertPercent24HoursToDisplayValueString(rowValue As String) As String
         Dim val As Decimal = CDec(Convert.ToInt32(rowValue) * 0.24)
@@ -17,64 +17,6 @@ Friend Module Form1Helpers
         Else
             Return $"{hours} hours and {minutes} minutes, out of last 24 hours."
         End If
-    End Function
-
-    <Extension>
-    Friend Function DoOptionalLoginAndUpdateData(MainForm As Form1, UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
-        MainForm.ServerUpdateTimer.Stop()
-        Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
-        s_listOfAutoBasalDeliveryMarkers.Clear()
-        Select Case fileToLoad
-            Case FileToLoadOptions.LastSaved
-                MainForm.Text = $"{SavedTitle} Using Last Saved Data"
-                CurrentDateCulture = LastDownloadWithPath.ExtractCultureFromFileName(SavedLastDownloadName)
-                MainForm.RecentData = Loads(File.ReadAllText(LastDownloadWithPath))
-                MainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                MainForm.LastUpdateTime.Text = $"{File.GetLastWriteTime(LastDownloadWithPath).ToShortDateTimeString} from file"
-            Case FileToLoadOptions.TestData
-                MainForm.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
-                CurrentDateCulture = New CultureInfo("en-US")
-                Dim testDataWithPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")
-                MainForm.RecentData = Loads(File.ReadAllText(testDataWithPath))
-                MainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                MainForm.LastUpdateTime.Text = $"{File.GetLastWriteTime(testDataWithPath).ToShortDateTimeString} from file"
-            Case FileToLoadOptions.Login
-                MainForm.Text = SavedTitle
-                Do Until MainForm.LoginDialog.ShowDialog() <> DialogResult.Retry
-                Loop
-
-                If MainForm.Client Is Nothing OrElse Not MainForm.Client.LoggedIn Then
-                    MainForm.ServerUpdateTimer.Interval = s_fiveMinutesInMilliseconds
-                    MainForm.ServerUpdateTimer.Start()
-                    Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
-                    If NetworkDown Then
-                        ReportLoginStatus(MainForm.LoginStatus)
-                        Return False
-                    End If
-
-                    MainForm.LastUpdateTime.Text = "Unknown"
-                    Return False
-                End If
-                s_listOfManualBasal.Clear()
-                MainForm.RecentData = MainForm.Client.GetRecentData(MainForm)
-                MainForm.ServerUpdateTimer.Interval = s_oneMinutesInMilliseconds
-                MainForm.ServerUpdateTimer.Start()
-                Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
-
-                If NetworkDown Then
-                    ReportLoginStatus(MainForm.LoginStatus)
-                    Return False
-                End If
-
-                ReportLoginStatus(MainForm.LoginStatus, MainForm.RecentData Is Nothing OrElse MainForm.RecentData.Count = 0, MainForm.Client.GetLastErrorMessage)
-
-                MainForm.MenuShowMiniDisplay.Visible = True
-        End Select
-        MainForm.FinishInitialization()
-        If UpdateAllTabs Then
-            MainForm.UpdateAllTabPages()
-        End If
-        Return True
     End Function
 
     <Extension>
@@ -376,6 +318,105 @@ Friend Module Form1Helpers
             End Select
         Next
 
+    End Sub
+
+    <Extension>
+    Friend Sub UpdateMarkerTabs(MainForm As Form1)
+        With MainForm
+            .TableLayoutPanelAutoBasalDelivery.DisplayDataTableInDGV(
+                              .DgvAutoBasalDelivery,
+                              ClassCollectionToDataTable(s_listOfAutoBasalDeliveryMarkers),
+                              ItemIndexes.markers)
+            .TableLayoutPanelAutoModeStatus.DisplayDataTableInDGV(
+                              ClassCollectionToDataTable(s_listOfAutoModeStatusMarkers),
+                              NameOf(AutoModeStatusRecord),
+                              AddressOf AutoModeStatusRecordHelpers.AttachHandlers,
+                              ItemIndexes.markers,
+                              False)
+            .TableLayoutPanelBgReadings.DisplayDataTableInDGV(
+                              ClassCollectionToDataTable(s_listOfBgReadingMarkers),
+                              NameOf(BGReadingRecord),
+                              AddressOf BGReadingRecordHelpers.AttachHandlers,
+                              ItemIndexes.markers,
+                              False)
+            .TableLayoutPanelInsulin.DisplayDataTableInDGV(
+                              ClassCollectionToDataTable(s_listOfInsulinMarkers),
+                              NameOf(InsulinRecord),
+                              AddressOf InsulinRecordHelpers.AddHandlers,
+                              ItemIndexes.markers,
+            False)
+            .TableLayoutPanelMeal.DisplayDataTableInDGV(
+                              ClassCollectionToDataTable(s_listOfMealMarkers),
+                              NameOf(MealRecord),
+                              AddressOf MealRecordHelpers.AttachHandlers,
+                              ItemIndexes.markers,
+                              False)
+            .TableLayoutPanelCalibration.DisplayDataTableInDGV(
+                              ClassCollectionToDataTable(s_listOfCalibrationMarkers),
+                              NameOf(CalibrationRecord),
+                              AddressOf CalibrationRecordHelpers.AttachHandlers,
+                              ItemIndexes.markers,
+                              False)
+            .TableLayoutPanelLowGlucoseSuspended.DisplayDataTableInDGV(
+                              ClassCollectionToDataTable(s_listOfLowGlucoseSuspendedMarkers),
+                              NameOf(LowGlucoseSuspendRecord),
+                              AddressOf LowGlucoseSuspendRecordHelpers.AttachHandlers,
+                              ItemIndexes.markers,
+                              False)
+            .TableLayoutPanelTimeChange.DisplayDataTableInDGV(
+                              ClassCollectionToDataTable(s_listOfTimeChangeMarkers),
+                              NameOf(TimeChangeRecord),
+                              AddressOf TimeChangeRecordHelpers.AttachHandlers,
+                              ItemIndexes.markers,
+                              False)
+        End With
+
+    End Sub
+
+    <Extension>
+    Friend Sub UpdatePumpBannerStateTab(mainForm As Form1)
+        Dim listOfPumpBannerState As New List(Of BannerStateRecord)
+        For Each dic As Dictionary(Of String, String) In s_pumpBannerStateValue
+            Dim typeValue As String = ""
+            If dic.TryGetValue("type", typeValue) Then
+                Dim bannerStateRecord1 As BannerStateRecord = DictionaryToClass(Of BannerStateRecord)(dic, listOfPumpBannerState.Count + 1)
+                listOfPumpBannerState.Add(bannerStateRecord1)
+                Select Case typeValue
+                    Case "TEMP_TARGET"
+                        Dim minutes As Integer = bannerStateRecord1.timeRemaining
+                        mainForm.TempTargetLabel.Text = $"Target 150   {New TimeSpan(0, minutes \ 60, minutes Mod 60).ToString.Substring(4)} hr"
+                        mainForm.TempTargetLabel.Visible = True
+                    Case "BG_REQUIRED"
+                    Case "DELIVERY_SUSPEND"
+                    Case "LOAD_RESERVOIR"
+                    Case "PROCESSING_BG"
+                    Case "SUSPENDED_BEFORE_LOW"
+                    Case "TEMP_BASAL"
+                    Case "WAIT_TO_ENTER_BG"
+                    Case Else
+                        If Debugger.IsAttached Then
+                            MsgBox($"{typeValue} is unknown banner message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
+                        End If
+                End Select
+            Else
+                Stop
+            End If
+        Next
+        mainForm.TableLayoutPanelBannerState.DisplayDataTableInDGV(
+                              ClassCollectionToDataTable(listOfPumpBannerState),
+                              NameOf(BannerStateRecord),
+                              AddressOf BannerStateRecordHelpers.AttachHandlers,
+                              ItemIndexes.pumpBannerState,
+                              False)
+    End Sub
+
+    <Extension>
+    Friend Sub UpdateSgsTab(mainForm As Form1)
+        DisplayDataTableInDGV(mainForm.TableLayoutPanelSgs,
+                              mainForm.DgvSGs,
+                              ClassCollectionToDataTable(s_listOfSGs.OrderByDescending(Function(x) x.RecordNumber).ToList()),
+                              ItemIndexes.sgs)
+        mainForm.DgvSGs.Columns(0).HeaderCell.SortGlyphDirection = SortOrder.Descending
     End Sub
 
 End Module

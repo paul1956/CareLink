@@ -68,22 +68,37 @@ Friend Module DataTableHelpers
     End Function
 
     ''' <summary>
+    '''  Indicates whether a specified Type can be assigned null.
+    ''' </summary>
+    ''' <param name="Input">The Type to check for nullable property.</param>
+    ''' <returns>True if the specified Type can be assigned null, otherwise false.</returns>
+    Private Function IsNullableType(Input As Type) As Boolean
+        If Not Input.IsValueType Then
+            Return True ' Reference Type
+        End If
+        If Nullable.GetUnderlyingType(Input) IsNot Nothing Then
+            Return True ' Nullable<T>
+        End If
+        Return False ' Value Type
+    End Function
+
+    ''' <summary>
     ''' Creates a DataTable from a class type's public properties and adds a new DataRow to the table for each class passed as a parameter.
     ''' The DataColumns of the table will match the name and type of the public properties.
     ''' </summary>
     ''' <param name="ClassCollection">A class or array of class to fill the DataTable with.</param>
     ''' <returns>A DataTable who's DataColumns match the name and type of each class T's public properties.</returns>
-    Public Function ClassCollectionToDataTable(Of T As Class)(ClassCollection As List(Of T)) As DataTable
+    Public Function ClassCollectionToDataTable(Of T As Class)(classCollection As List(Of T)) As DataTable
         Dim result As DataTable = ClassToDataTable(Of T)()
 
         If Not IsValidDataTable(result, IgnoreRows:=True) Then
             Return New DataTable()
         End If
-        If IsCollectionEmpty(ClassCollection) Then
-            Return result ' Returns and empty DataTable with columns defined (table schema)
+        If classCollection Is Nothing OrElse Not classCollection.Any() Then
+            Return result
         End If
 
-        For Each classObject As T In ClassCollection
+        For Each classObject As T In classCollection
             result.Add(classObject)
         Next classObject
 
@@ -122,6 +137,25 @@ Friend Module DataTableHelpers
             End If
         End If
         Return cellStyle
+    End Function
+
+    ''' <summary>
+    ''' Indicates whether a specified DataTable is null, has zero columns, or (optionally) zero rows.
+    ''' </summary>
+    ''' <param name="Table">DataTable to check.</param>
+    ''' <param name="IgnoreRows">When set to true, the function will return true even if the table's row count is equal to zero.</param>
+    ''' <returns>False if the specified DataTable null, has zero columns, or zero rows, otherwise true.</returns>
+    Public Function IsValidDataTable(Table As DataTable, Optional IgnoreRows As Boolean = False) As Boolean
+        If Table Is Nothing Then
+            Return False
+        End If
+        If Table.Columns.Count = 0 Then
+            Return False
+        End If
+        If Not IgnoreRows AndAlso Table.Rows.Count = 0 Then
+            Return False
+        End If
+        Return True
     End Function
 
 End Module

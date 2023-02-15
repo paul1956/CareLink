@@ -4,7 +4,7 @@
 
 Imports System.Runtime.CompilerServices
 
-Friend Module InsulinListExtensions
+Friend Module RunningActiveInsulinRecordHelpers
 
     <Extension>
     Friend Sub AdjustList(myList As List(Of RunningActiveInsulinRecord), startIndex As Integer, count As Integer)

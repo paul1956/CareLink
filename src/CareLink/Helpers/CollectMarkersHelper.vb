@@ -41,25 +41,25 @@ Friend Module CollectMarkersHelper
         MaxBasalPerDose = 0
 
         Dim markers As List(Of Dictionary(Of String, String)) = LoadList(jsonRow)
-        For Each newMarker As Dictionary(Of String, String) In markers
-            Select Case newMarker("type")
+        For Each markerEntry As Dictionary(Of String, String) In markers
+            Select Case markerEntry("type")
                 Case "AUTO_BASAL_DELIVERY"
-                    s_markers.Add(newMarker)
-                    Dim item As AutoBasalDeliveryRecord = DictionaryToClass(Of AutoBasalDeliveryRecord)(newMarker, s_listOfAutoBasalDeliveryMarkers.Count + 1)
+                    s_markers.Add(markerEntry)
+                    Dim item As AutoBasalDeliveryRecord = DictionaryToClass(Of AutoBasalDeliveryRecord)(markerEntry, s_listOfAutoBasalDeliveryMarkers.Count + 1)
                     s_listOfAutoBasalDeliveryMarkers.Add(item)
                     basalDictionary.Add(item.OA_dateTime, item.bolusAmount)
                 Case "AUTO_MODE_STATUS"
-                    s_listOfAutoModeStatusMarkers.Add(DictionaryToClass(Of AutoModeStatusRecord)(newMarker, s_listOfAutoModeStatusMarkers.Count + 1))
+                    s_listOfAutoModeStatusMarkers.Add(DictionaryToClass(Of AutoModeStatusRecord)(markerEntry, s_listOfAutoModeStatusMarkers.Count + 1))
                 Case "BG_READING"
-                    s_listOfBgReadingMarkers.Add(DictionaryToClass(Of BGReadingRecord)(newMarker.ScaleMarker(), s_listOfBgReadingMarkers.Count + 1))
+                    s_listOfBgReadingMarkers.Add(DictionaryToClass(Of BGReadingRecord)(markerEntry.ScaleMarker(), s_listOfBgReadingMarkers.Count + 1))
                 Case "CALIBRATION"
-                    s_markers.Add(newMarker.ScaleMarker)
-                    s_listOfCalibrationMarkers.Add(DictionaryToClass(Of CalibrationRecord)(newMarker.ScaleMarker(), s_listOfCalibrationMarkers.Count + 1))
+                    s_markers.Add(markerEntry.ScaleMarker)
+                    s_listOfCalibrationMarkers.Add(DictionaryToClass(Of CalibrationRecord)(markerEntry.ScaleMarker(), s_listOfCalibrationMarkers.Count + 1))
                 Case "INSULIN"
-                    s_markers.Add(newMarker)
-                    Dim lastInsulinRecord As InsulinRecord = DictionaryToClass(Of InsulinRecord)(newMarker, s_listOfInsulinMarkers.Count + 1)
+                    s_markers.Add(markerEntry)
+                    Dim lastInsulinRecord As InsulinRecord = DictionaryToClass(Of InsulinRecord)(markerEntry, s_listOfInsulinMarkers.Count + 1)
                     s_listOfInsulinMarkers.Add(lastInsulinRecord)
-                    Select Case newMarker(NameOf(InsulinRecord.activationType))
+                    Select Case markerEntry(NameOf(InsulinRecord.activationType))
                         Case "AUTOCORRECTION"
                             basalDictionary.Add(lastInsulinRecord.OAdateTime, lastInsulinRecord.deliveredFastAmount)
                         Case "MANUAL"
@@ -67,18 +67,22 @@ Friend Module CollectMarkersHelper
                         Case "UNDETERMINED"
                         Case "RECOMMENDED"
                             Stop
+                            If MatchesMeal(markerEntry) Then
+                            Else
+
+                            End If
                         Case Else
                             Stop
                             Throw UnreachableException(NameOf(CollectMarkers))
                     End Select
                 Case "LOW_GLUCOSE_SUSPENDED"
-                    s_listOfLowGlucoseSuspendedMarkers.Add(DictionaryToClass(Of LowGlucoseSuspendRecord)(newMarker, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
+                    s_listOfLowGlucoseSuspendedMarkers.Add(DictionaryToClass(Of LowGlucoseSuspendRecord)(markerEntry, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
                 Case "MEAL"
-                    s_listOfMealMarkers.Add(DictionaryToClass(Of MealRecord)(newMarker, s_listOfMealMarkers.Count + 1))
-                    s_markers.Add(newMarker)
+                    s_listOfMealMarkers.Add(DictionaryToClass(Of MealRecord)(markerEntry, s_listOfMealMarkers.Count + 1))
+                    s_markers.Add(markerEntry)
                 Case "TIME_CHANGE"
-                    s_markers.Add(newMarker)
-                    s_listOfTimeChangeMarkers.Add(New TimeChangeRecord(newMarker))
+                    s_markers.Add(markerEntry)
+                    s_listOfTimeChangeMarkers.Add(New TimeChangeRecord(markerEntry))
                 Case Else
                     Stop
                     Throw UnreachableException(NameOf(CollectMarkers))
