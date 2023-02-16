@@ -12,7 +12,7 @@ Friend Module TimeZoneExtensions
             {"Central European Summer Time", "Central European Daylight Time"},
             {"Eastern European Summer Time", "E. Europe Daylight Time"},
             {"Eastern European Standard Time", "E. Europe Standard Time"},
-            {"Mitteleuropäische Zeit", "Central European Standard Time"}
+            {"Mitteleuropäische Zeit", "E. Europe Standard Time"}
         }
 
     Friend Function CalculateTimeZone(clientTimeZoneName As String) As TimeZoneInfo

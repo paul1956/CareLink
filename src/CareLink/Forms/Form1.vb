@@ -199,7 +199,7 @@ Public Class Form1
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
         CheckForUpdatesAsync(Me, False)
 
-        'InitializeDialog.ShowDialog()
+        InitializeDialog.ShowDialog()
 
         If Me.DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
             Me.UpdateAllTabPages()
