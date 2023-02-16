@@ -13,6 +13,9 @@ Public Module CareLinkClientHelpers
     Private Const CareLinkConnectServerEu As String = "CareLink.MiniMed.eu"
     Private Const CareLinkConnectServerOther As String = "CareLink.MiniMed.eu"
     Private Const CareLinkConnectServerUs As String = "CareLink.MiniMed.com"
+#Disable Warning IDE0051 ' Remove unused private members
+    Private Const CareLinkConnectServerReports As String = "/app/reports"
+#Enable Warning IDE0051 ' Remove unused private members
 
     Friend ReadOnly s_commonHeaders As New Dictionary(Of String, String) From {
                         {

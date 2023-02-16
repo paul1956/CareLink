@@ -27,9 +27,13 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-02/07/2023
+02/16/2023
 
 ## What's New in this release
+New in 3.5.7.25
+- Add support for 1 German TimeZone
+- Add additional error messages
+
 New in 3.5.7.25
 - Support graphing of manual mode basal
 - Improvements in images, support for G4 transmitter

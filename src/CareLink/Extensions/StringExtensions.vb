@@ -96,10 +96,14 @@ Public Module StringExtensions
     Public Function TruncateSingleString(s As String, decimalDigits As Integer) As String
         Dim i As Integer = s.IndexOfAny({"."c, ","c})
         If i < 0 Then
-            Return s
+            If Not IsNumeric(s) Then
+                Return s
+            End If
+            i = s.Length + 1
+            s &= CurrentDataCulture.NumberFormat.NumberDecimalSeparator
         End If
-        s &= "000"
-        Return s.Substring(0, i + decimalDigits + 1).TrimEnd("0"c)
+        s &= New String("0"c, decimalDigits)
+        Return s.Substring(0, i + decimalDigits)
     End Function
 
 End Module

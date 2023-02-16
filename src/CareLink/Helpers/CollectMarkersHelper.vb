@@ -56,6 +56,11 @@ Friend Module CollectMarkersHelper
                     s_markers.Add(markerEntry.ScaleMarker)
                     s_listOfCalibrationMarkers.Add(DictionaryToClass(Of CalibrationRecord)(markerEntry.ScaleMarker(), s_listOfCalibrationMarkers.Count + 1))
                 Case "INSULIN"
+                    If MatchesMeal(markerEntry) Then
+                        'Stop
+                    Else
+                        'Stop
+                    End If
                     s_markers.Add(markerEntry)
                     Dim lastInsulinRecord As InsulinRecord = DictionaryToClass(Of InsulinRecord)(markerEntry, s_listOfInsulinMarkers.Count + 1)
                     s_listOfInsulinMarkers.Add(lastInsulinRecord)
@@ -66,11 +71,6 @@ Friend Module CollectMarkersHelper
                             Stop
                         Case "UNDETERMINED"
                         Case "RECOMMENDED"
-                            Stop
-                            If MatchesMeal(markerEntry) Then
-                            Else
-
-                            End If
                         Case Else
                             Stop
                             Throw UnreachableException(NameOf(CollectMarkers))
@@ -126,9 +126,11 @@ Friend Module CollectMarkersHelper
         If entry(NameOf(InsulinRecord.activationType)) <> "RECOMMENDED" Then
             Return False
         End If
-        Return s_markers.Any(Function(d As Dictionary(Of String, String))
-                                 Return d("type") = "MEAL" AndAlso CInt(d("index")) = entryIndex
-                             End Function)
+        Dim isMeal As Boolean = s_markers.Any(Function(d As Dictionary(Of String, String))
+                                                  Return d("type") = "MEAL" AndAlso CInt(d("index")) = entryIndex
+                                              End Function)
+        If Not isMeal Then Stop
+        Return isMeal
     End Function
 
 End Module

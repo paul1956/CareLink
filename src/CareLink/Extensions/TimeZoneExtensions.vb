@@ -11,8 +11,9 @@ Friend Module TimeZoneExtensions
             {"Brasilia Standard Time", "Central Brazilian Standard Time"},
             {"Central European Summer Time", "Central European Daylight Time"},
             {"Eastern European Summer Time", "E. Europe Daylight Time"},
-            {"Eastern European Standard Time", "E. Europe Standard Time"}
-      }
+            {"Eastern European Standard Time", "E. Europe Standard Time"},
+            {"Mitteleuropäische Zeit", "Central European Standard Time"}
+        }
 
     Friend Function CalculateTimeZone(clientTimeZoneName As String) As TimeZoneInfo
         If My.Settings.UseLocalTimeZone Then
