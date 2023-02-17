@@ -660,7 +660,7 @@ Public Class DataGridViewNumericUpDownCell
     ''' Returns a standard textual representation of the cell.
     ''' </summary>
     Public Overrides Function ToString() As String
-        Return "DataGridViewNumericUpDownCell { ColumnIndex=" & Me.ColumnIndex.ToString(CultureInfo.CurrentCulture) & ", RowIndex=" & Me.RowIndex.ToString(CultureInfo.CurrentCulture) & " }"
+        Return $"DataGridViewNumericUpDownCell {{ ColumnIndex={Me.ColumnIndex.ToString(CultureInfo.CurrentCulture)}, RowIndex={Me.RowIndex.ToString(CultureInfo.CurrentCulture)} }}"
     End Function
 
     ''' <summary>

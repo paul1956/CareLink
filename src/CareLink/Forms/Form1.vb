@@ -684,7 +684,7 @@ Public Class Form1
                     Me.CursorMessage3Label.Visible = True
                     Me.CursorPictureBox.Image = Nothing
                     Me.CursorPanel.Visible = True
-                    chart1.SetupCallout(currentDataPoint, "Blood Glucose" & Me.CursorMessage2Label.Text)
+                    chart1.SetupCallout(currentDataPoint, $"Blood Glucose {Me.CursorMessage2Label.Text}")
                 Case TimeChangeSeriesName
                     Me.CursorMessage1Label.Visible = False
                     Me.CursorMessage1Label.Visible = False
