@@ -2,8 +2,6 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Globalization
-Imports System.IO
 Imports System.Runtime.CompilerServices
 
 Friend Module Form1UpdateHelpers
@@ -17,6 +15,17 @@ Friend Module Form1UpdateHelpers
         Else
             Return $"{hours} hours and {minutes} minutes, out of last 24 hours."
         End If
+    End Function
+
+    Friend Function GetPumpName(value As String) As String
+        Select Case value
+            Case "MMT-1880"
+                Return $"Medtronic MiniMed{TmChar} 770G"
+            Case "MMT-1886"
+                Return $"Medtronic MiniMed{TmChar} 780G"
+            Case Else
+                Return "Unknown"
+        End Select
     End Function
 
     Friend Sub SetTreatmentInsulinRow()
@@ -95,10 +104,11 @@ Friend Module Form1UpdateHelpers
                      ItemIndexes.medicalDeviceTimeAsString,
                      ItemIndexes.lastSensorTSAsString,
                      ItemIndexes.kind,
-                     ItemIndexes.version,
-                     ItemIndexes.pumpModelNumber
+                     ItemIndexes.version
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
+                Case ItemIndexes.pumpModelNumber
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, GetPumpName(row.Value)))
                 Case ItemIndexes.currentServerTime,
                      ItemIndexes.lastConduitTime,
                      ItemIndexes.lastConduitUpdateServerTime

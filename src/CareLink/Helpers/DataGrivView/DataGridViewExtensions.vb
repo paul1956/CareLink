@@ -70,7 +70,7 @@ Public Module DataGridViewExtensions
                     End If
                 Next
             Else
-                title.Append(titleInTitleCase.Replace("Care Link", $"{ProjectName}"))
+                title.Append(titleInTitleCase.Replace("Care Link", $"{ProjectName}{TmChar}"))
             End If
             .HeaderText = title.TrimEnd(Environment.NewLine).ToString
             .DefaultCellStyle = cellStyle

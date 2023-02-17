@@ -15,15 +15,15 @@ Public Class SgRecord
 
     Public Sub New(innerJson As Dictionary(Of String, String), index As Integer)
         Try
-            If innerJson(NameOf(sg)) = "0" Then
-                Me.datetimeAsString = ""
-                Me.sg = Single.NaN
-            Else
+            If innerJson(NameOf(sg)) <> "0" OrElse innerJson.Count = 7 Then
                 Me.datetimeAsString = innerJson(NameOf(Me.datetime))
                 Me.datetime = Me.datetimeAsString.ParseDate(NameOf(SgRecord.datetime))
                 Me.sensorState = innerJson(NameOf(sensorState))
                 Me.sg = innerJson(NameOf(sg)).ParseSingle()
                 Me.timeChange = Boolean.Parse(innerJson(NameOf(timeChange)))
+            Else
+                Me.datetimeAsString = ""
+                Me.sg = Single.NaN
             End If
             Me.kind = innerJson(NameOf(kind))
             Me.RecordNumber = index + 1

@@ -30,7 +30,7 @@ Public Class ExceptionHandlerForm
             Me.ExceptionTextBox.Text = Me.UnhandledException.Exception.Message
             Me.StackTraceTextBox.Text = TrimmedStackTrace(Me.UnhandledException.Exception.StackTrace)
 
-            Me.InstructionsRichTextBox.Text = $"By clicking OK, the Stack Trace, Exception and the CareLink data that caused the error will be package as a text file called{Environment.NewLine}"
+            Me.InstructionsRichTextBox.Text = $"By clicking OK, the Stack Trace, Exception and the CareLink{TmChar} data that caused the error will be package as a text file called{Environment.NewLine}"
             Dim uniqueFileNameResult As FileNameStruct = GetDataFileName(SavedErrorReportName, CurrentDateCulture.Name, "txt", True)
             Dim fileLink As String = $"{uniqueFileNameResult.withoutPath}: file://{uniqueFileNameResult.withPath}"
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, fileLink, fontBold)

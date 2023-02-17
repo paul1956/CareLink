@@ -60,9 +60,9 @@ Friend Module BrowserUtilities
 
     ''' <summary>
     ''' Find version string in HTML page
-    ''' https://GitHub.com/paul1956/CareLink/releases
+    ''' https://GitHub.com/Paul1956/CareLink/releases
     ''' Then look for version
-    ''' <a href="/paul1956/CareLink/releases/tag/3.4.0.3" data-view-component="true" class="Link--primary">CareLink Display 3.4.0.3 x64</a>
+    ''' <a href="/Paul1956/CareLink/releases/tag/3.4.0.3" data-view-component="true" class="Link--primary">CareLink Display 3.4.0.3 x64</a>
     ''' </summary>
     ''' <param name="mainForm"></param>
     ''' <param name="reportResults">Always report result when true</param>

@@ -244,7 +244,7 @@ Public Class Form1
             .ReadOnlyChecked = True,
             .RestoreDirectory = True,
             .SupportMultiDottedExtensions = False,
-            .Title = $"Select {ProjectName} saved snapshot to load",
+            .Title = $"Select {ProjectName}{TmChar} saved snapshot to load",
             .ValidateNames = True
         }
 
@@ -307,7 +307,7 @@ Public Class Form1
             .ReadOnlyChecked = True,
             .RestoreDirectory = True,
             .SupportMultiDottedExtensions = False,
-            .Title = "Select CareLink saved snapshot to load",
+            .Title = $"Select CareLink{TmChar} saved snapshot to load",
             .ValidateNames = True
         }
 
@@ -2034,7 +2034,9 @@ Public Class Form1
         Me.AboveHighLimitMessageLabel.Text = $"Above {s_limitHigh} {BgUnitsString}"
         Me.BelowLowLimitMessageLabel.Text = $"Below {s_limitLow} {BgUnitsString}"
         Me.FullNameLabel.Text = $"{s_firstName} {s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.lastName))}"
-        Me.ModelLabel.Text = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.pumpModelNumber))
+        Dim modelNumber As String = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.pumpModelNumber))
+        Me.ModelLabel.Text = modelNumber
+        Me.PumpNameLabel.Text = GetPumpName(modelNumber)
         Me.ReadingsLabel.Text = $"{s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288"
 
         Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
@@ -2164,7 +2166,7 @@ Public Class Form1
                         Case <= s_limitLow
                             bgColor = Color.Orange
                             If _showBalloonTip Then
-                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName} Alert", $"SG below {s_limitLow} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
+                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}{TmChar} Alert", $"SG below {s_limitLow} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
                         Case <= s_limitHigh
@@ -2173,7 +2175,7 @@ Public Class Form1
                         Case Else
                             bgColor = Color.Red
                             If _showBalloonTip Then
-                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName} Alert", $"SG above {s_limitHigh} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
+                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}{TmChar} Alert", $"SG above {s_limitHigh} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
                     End Select

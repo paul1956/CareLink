@@ -143,6 +143,7 @@ Partial Class Form1
         Me.LoginStatusLabel = New Label()
         Me.MaxBasalPerHourLabel = New Label()
         Me.ModelLabel = New Label()
+        Me.PumpNameLabel = New Label()
         Me.NotifyIcon1 = New NotifyIcon(components)
         Me.PumpBatteryPictureBox = New PictureBox()
         Me.PumpBatteryRemainingLabel = New Label()
@@ -1402,7 +1403,7 @@ Partial Class Form1
         ' 
         Me.MaxBasalPerHourLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.MaxBasalPerHourLabel.ForeColor = Color.White
-        Me.MaxBasalPerHourLabel.Location = New Point(1140, 81)
+        Me.MaxBasalPerHourLabel.Location = New Point(1140, 106)
         Me.MaxBasalPerHourLabel.Name = "MaxBasalPerHourLabel"
         Me.MaxBasalPerHourLabel.Size = New Size(230, 21)
         Me.MaxBasalPerHourLabel.TabIndex = 67
@@ -1415,7 +1416,7 @@ Partial Class Form1
         Me.ModelLabel.Name = "ModelLabel"
         Me.ModelLabel.Size = New Size(230, 21)
         Me.ModelLabel.TabIndex = 57
-        Me.ModelLabel.Text = "Model" ' 
+        Me.ModelLabel.Text = "Model" '
         ' NotifyIcon1
         ' 
         Me.NotifyIcon1.Icon = CType(resources.GetObject("NotifyIcon1.Icon"), Icon)
@@ -1455,6 +1456,16 @@ Partial Class Form1
         Me.ReadingIntervalLabel.Text = "5 minute readings"
         Me.ReadingIntervalLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
+        ' PumpNameLabel
+        ' 
+        Me.PumpNameLabel.AutoSize = True
+        Me.PumpNameLabel.ForeColor = Color.White
+        Me.PumpNameLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Me.PumpNameLabel.Location = New Point(1140, 55)
+        Me.PumpNameLabel.Name = "PumpNameLabel"
+        Me.PumpNameLabel.Size = New Size(230, 21)
+        Me.PumpNameLabel.TabIndex = 70
+        Me.PumpNameLabel.Text = "Pump Name" '
         ' ReadingsLabel
         ' 
         Me.ReadingsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
@@ -1527,7 +1538,7 @@ Partial Class Form1
         ' 
         Me.SerialNumberLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.SerialNumberLabel.ForeColor = Color.White
-        Me.SerialNumberLabel.Location = New Point(1140, 53)
+        Me.SerialNumberLabel.Location = New Point(1140, 80)
         Me.SerialNumberLabel.Name = "SerialNumberLabel"
         Me.SerialNumberLabel.Size = New Size(230, 21)
         Me.SerialNumberLabel.TabIndex = 56
@@ -1553,6 +1564,7 @@ Partial Class Form1
         Me.SplitContainer2.Panel1.Controls.Add(Me.LabelTrendArrows)
         Me.SplitContainer2.Panel1.Controls.Add(Me.LabelSgTrend)
         Me.SplitContainer2.Panel1.Controls.Add(Me.ModelLabel)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.PumpNameLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.SerialNumberLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.FullNameLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.ReadingIntervalLabel)
@@ -2691,6 +2703,7 @@ Partial Class Form1
         Me.SensorTimeLeftPanel.ResumeLayout(False)
         CType(Me.SensorTimeLeftPictureBox, ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer2.Panel1.ResumeLayout(False)
+        Me.SplitContainer2.Panel1.PerformLayout()
         Me.SplitContainer2.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer2, ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer2.ResumeLayout(False)
@@ -2989,4 +3002,5 @@ Partial Class Form1
     Friend WithEvents DgvCareLinkUsersUseLocalTimeZone As DataGridViewCheckBoxColumn
     Friend WithEvents DgvCareLinkUsersAutoLogin As DataGridViewCheckBoxColumn
     Friend WithEvents PumpBatteryRemaining2Label As Label
+    Friend WithEvents PumpNameLabel As Label
 End Class
