@@ -1851,7 +1851,8 @@ Public Class Form1
     Private Sub UpdatePumpBattery()
         If Not s_pumpInRangeOfPhone Then
             Me.PumpBatteryPictureBox.Image = My.Resources.PumpConnectivityToPhoneNotOK
-            Me.PumpBatteryRemainingLabel.Text = $"Unknown"
+            Me.PumpBatteryRemainingLabel.Text = "Pump out"
+            Me.PumpBatteryRemaining2Label.Text = "of range"
             Exit Sub
         End If
 
@@ -1859,22 +1860,25 @@ Public Class Form1
         Select Case batteryLeftPercent
             Case > 90
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryFull
-                Me.PumpBatteryRemainingLabel.Text = $"Full{Environment.NewLine}{batteryLeftPercent}%"
+                Me.PumpBatteryRemainingLabel.Text = "Full"
+                Me.PumpBatteryRemaining2Label.Text = $"{batteryLeftPercent}%"
             Case > 50
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryHigh
-                Me.PumpBatteryRemainingLabel.Text = $"High{Environment.NewLine}{batteryLeftPercent}%"
+                Me.PumpBatteryRemainingLabel.Text = "High"
+                Me.PumpBatteryRemaining2Label.Text = $"{batteryLeftPercent}%"
             Case > 25
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryMedium
-                Me.PumpBatteryRemainingLabel.Text = $"Medium{Environment.NewLine}{batteryLeftPercent}%"
+                Me.PumpBatteryRemainingLabel.Text = $"Medium"
+                Me.PumpBatteryRemaining2Label.Text = $"{batteryLeftPercent}%"
             Case > 10
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryLow
-                Me.PumpBatteryRemainingLabel.Text = $"Low{Environment.NewLine}{batteryLeftPercent}%"
-            Case > 0
-                Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryCritical
-                Me.PumpBatteryRemainingLabel.Text = $"Critical{Environment.NewLine}{batteryLeftPercent}%"
+                Me.PumpBatteryRemainingLabel.Text = "Low"
+                Me.PumpBatteryRemaining2Label.Text = $"{batteryLeftPercent}%"
+
             Case Else
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryCritical
-                Me.PumpBatteryRemainingLabel.Text = $"Critical{Environment.NewLine}0%"
+                Me.PumpBatteryRemainingLabel.Text = "Critical"
+                Me.PumpBatteryRemaining2Label.Text = $"{batteryLeftPercent}%"
         End Select
     End Sub
 
