@@ -263,7 +263,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexes.gstBatteryLevel, "-1", "No data from pump"))
 
                 Case ItemIndexes.gstBatteryLevel
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"{row.Value}%"))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Transmitter battery is at {row.Value}%"))
 
                 Case ItemIndexes.lastConduitDateTime
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, New KeyValuePair(Of String, String)(NameOf(ItemIndexes.lastConduitDateTime), row.Value.CDateOrDefault(NameOf(ItemIndexes.lastConduitDateTime), CurrentUICulture))))

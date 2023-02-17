@@ -1437,11 +1437,11 @@ Partial Class Form1
         Me.PumpBatteryRemainingLabel.BackColor = Color.Transparent
         Me.PumpBatteryRemainingLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.PumpBatteryRemainingLabel.ForeColor = Color.White
-        Me.PumpBatteryRemainingLabel.Location = New Point(146, 89)
+        Me.PumpBatteryRemainingLabel.Location = New Point(119, 89)
         Me.PumpBatteryRemainingLabel.Name = "PumpBatteryRemainingLabel"
-        Me.PumpBatteryRemainingLabel.Size = New Size(31, 21)
+        Me.PumpBatteryRemainingLabel.Size = New Size(84, 21)
         Me.PumpBatteryRemainingLabel.TabIndex = 11
-        Me.PumpBatteryRemainingLabel.Text = "???"
+        Me.PumpBatteryRemainingLabel.Text = "Unknown"
         Me.PumpBatteryRemainingLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' ReadingIntervalLabel
