@@ -1369,7 +1369,7 @@ Partial Class Form1
         ' LastUpdateTime
         ' 
         Me.LastUpdateTime.AutoSize = True
-        Me.LastUpdateTime.Location = New Point(1108, 3)
+        Me.LastUpdateTime.Location = New Point(1058, 3)
         Me.LastUpdateTime.Name = "LastUpdateTime"
         Me.LastUpdateTime.Size = New Size(58, 15)
         Me.LastUpdateTime.TabIndex = 24
@@ -1377,7 +1377,7 @@ Partial Class Form1
         ' LastUpdateTimeLabel
         ' 
         Me.LastUpdateTimeLabel.AutoSize = True
-        Me.LastUpdateTimeLabel.Location = New Point(999, 3)
+        Me.LastUpdateTimeLabel.Location = New Point(949, 3)
         Me.LastUpdateTimeLabel.Name = "LastUpdateTimeLabel"
         Me.LastUpdateTimeLabel.Size = New Size(101, 15)
         Me.LastUpdateTimeLabel.TabIndex = 23
@@ -1385,7 +1385,7 @@ Partial Class Form1
         ' LoginStatus
         ' 
         Me.LoginStatus.AutoSize = True
-        Me.LoginStatus.Location = New Point(559, 3)
+        Me.LoginStatus.Location = New Point(491, 3)
         Me.LoginStatus.Name = "LoginStatus"
         Me.LoginStatus.Size = New Size(58, 15)
         Me.LoginStatus.TabIndex = 24
@@ -1393,7 +1393,7 @@ Partial Class Form1
         ' LoginStatusLabel
         ' 
         Me.LoginStatusLabel.AutoSize = True
-        Me.LoginStatusLabel.Location = New Point(484, 3)
+        Me.LoginStatusLabel.Location = New Point(416, 3)
         Me.LoginStatusLabel.Name = "LoginStatusLabel"
         Me.LoginStatusLabel.Size = New Size(75, 15)
         Me.LoginStatusLabel.TabIndex = 23
