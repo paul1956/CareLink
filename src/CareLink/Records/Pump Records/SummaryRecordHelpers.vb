@@ -137,7 +137,7 @@ Friend Module SummaryRecordHelpers
     End Function
 
     <Extension>
-    Friend Function GetValue(Of T)(l As List(Of SummaryRecord), Key As String, Optional throwError As Boolean = True) As T
+    Friend Function GetValue(Of T)(l As List(Of SummaryRecord), Key As String, throwError As Boolean, Optional defaultValue As T = Nothing) As T
 
         Try
             For Each s As SummaryRecord In l
@@ -152,6 +152,9 @@ Friend Module SummaryRecordHelpers
         Catch ex As Exception
 
         End Try
+        If defaultValue IsNot Nothing Then
+            Return defaultValue
+        End If
 
         Dim tReturnType As Type = GetType(T)
         If tReturnType Is GetType(String) Then
@@ -171,6 +174,16 @@ Friend Module SummaryRecordHelpers
             Return Nothing
         End If
 
+    End Function
+
+    <Extension>
+    Friend Function GetValue(Of T)(l As List(Of SummaryRecord), Key As String) As T
+        For Each s As SummaryRecord In l
+            If s.Key = Key Then
+                Return CAnyType(Of T)(s.Value)
+            End If
+        Next
+        Throw New ArgumentException("Key not found", NameOf(Key))
     End Function
 
     Public Sub AttachHandlers(dgv As DataGridView)

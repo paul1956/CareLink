@@ -1894,7 +1894,7 @@ Public Class Form1
                 Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
                 Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
             Case 0
-                Dim sensorDurationMinutes As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexes.sensorDurationMinutes), False)
+                Dim sensorDurationMinutes As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexes.sensorDurationMinutes), False, -1)
                 Select Case sensorDurationMinutes
                     Case > 0
                         Me.SensorDaysLeftLabel.Text = "0"

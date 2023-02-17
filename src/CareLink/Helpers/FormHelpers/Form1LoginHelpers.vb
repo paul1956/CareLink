@@ -66,4 +66,16 @@ Friend Module Form1LoginHelpers
         Return True
     End Function
 
+    <Extension>
+    Friend Sub FinishInitialization(MainForm As Form1)
+        MainForm.Cursor = Cursors.Default
+        Application.DoEvents()
+
+        MainForm.InitializeSummaryTabCharts()
+        MainForm.InitializeActiveInsulinTabChart()
+        MainForm.InitializeTimeInRangeArea()
+
+        MainForm.Initialized = True
+    End Sub
+
 End Module

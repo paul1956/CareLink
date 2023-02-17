@@ -19,18 +19,6 @@ Friend Module Form1UpdateHelpers
         End If
     End Function
 
-    <Extension>
-    Friend Sub FinishInitialization(MainForm As Form1)
-        MainForm.Cursor = Cursors.Default
-        Application.DoEvents()
-
-        MainForm.InitializeSummaryTabCharts()
-        MainForm.InitializeActiveInsulinTabChart()
-        MainForm.InitializeTimeInRangeArea()
-
-        MainForm.Initialized = True
-    End Sub
-
     Friend Sub SetTreatmentInsulinRow()
         Select Case MaxBasalPerDose
             Case < 0.25
