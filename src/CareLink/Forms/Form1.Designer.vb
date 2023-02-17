@@ -1458,9 +1458,8 @@ Partial Class Form1
         ' 
         ' PumpNameLabel
         ' 
-        Me.PumpNameLabel.AutoSize = True
-        Me.PumpNameLabel.ForeColor = Color.White
         Me.PumpNameLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Me.PumpNameLabel.ForeColor = Color.White
         Me.PumpNameLabel.Location = New Point(1140, 55)
         Me.PumpNameLabel.Name = "PumpNameLabel"
         Me.PumpNameLabel.Size = New Size(230, 21)
