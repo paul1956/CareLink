@@ -66,8 +66,7 @@ Friend Module Form1UpdateHelpers
 
         Dim markerRowString As String = ""
         If recentData.TryGetValue(ItemIndexes.clientTimeZoneName.ToString, markerRowString) Then
-            s_clientTimeZone = CalculateTimeZone(markerRowString)
-            s_clientTimeZoneName = s_clientTimeZone.StandardName
+            ClientTimeZoneInfo = CalculateTimeZone(markerRowString)
         End If
 
         s_lastMedicalDeviceDataUpdateServerEpoch = CLng(recentData(ItemIndexes.lastMedicalDeviceDataUpdateServerTime.ToString))
@@ -303,7 +302,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexes.clientTimeZoneName
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, s_clientTimeZoneName))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Value))
 
                 Case ItemIndexes.sgBelowLimit,
                         ItemIndexes.averageSGFloat

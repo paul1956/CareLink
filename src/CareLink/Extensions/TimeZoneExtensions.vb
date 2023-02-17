@@ -9,44 +9,56 @@ Friend Module TimeZoneExtensions
             {"Argentina Standard Time", "Argentina Standard Time"},
             {"Bolivia Time", "SA Western Standard Time"},
             {"Brasilia Standard Time", "Central Brazilian Standard Time"},
-            {"Central European Summer Time", "Central European Daylight Time"},
+            {"Central European Summer Time", "W. Europe Standard Time"},
             {"Eastern European Summer Time", "E. Europe Daylight Time"},
             {"Eastern European Standard Time", "E. Europe Standard Time"},
-            {"Mitteleuropäische Zeit", "E. Europe Standard Time"}
+            {"Mitteleuropäische Zeit", "W. Europe Standard Time"}
         }
 
-    Friend Function CalculateTimeZone(clientTimeZoneName As String) As TimeZoneInfo
+    Private s_systemTimeZones As List(Of TimeZoneInfo)
+
+    Friend Function CalculateTimeZone(Name As String) As TimeZoneInfo
+        If String.IsNullOrWhiteSpace(Name) Then
+            Return Nothing
+        End If
+
         If My.Settings.UseLocalTimeZone Then
             Return TimeZoneInfo.Local
         End If
-        If clientTimeZoneName = "NaN" Then
-            Return Nothing
-        End If
-        Dim clientTimeZone As TimeZoneInfo
+
         Dim id As String = ""
-        If Not s_specialKnownTimeZones.TryGetValue(clientTimeZoneName, id) Then
-            id = clientTimeZoneName
+        If Not s_specialKnownTimeZones.TryGetValue(Name, id) Then
+            id = Name
         End If
 
+        If s_systemTimeZones Is Nothing Then
+            s_systemTimeZones = TimeZoneInfo.GetSystemTimeZones.ToList
+        End If
+
+        Dim possibleTimeZone As TimeZoneInfo
         If id.Contains("Daylight") Then
-            clientTimeZone = s_timeZoneList.Where(Function(t As TimeZoneInfo)
-                                                      Return t.DaylightName = id
-                                                  End Function).FirstOrDefault
-            If clientTimeZone IsNot Nothing Then
-                Return clientTimeZone
+            possibleTimeZone = s_systemTimeZones.Where(Function(t As TimeZoneInfo)
+                                                           Return t.DaylightName = id
+                                                       End Function).FirstOrDefault
+            If possibleTimeZone IsNot Nothing Then
+                Return possibleTimeZone
             End If
         End If
-
-        clientTimeZone = s_timeZoneList.Where(Function(t As TimeZoneInfo)
-                                                  Return t.StandardName = id
-                                              End Function).FirstOrDefault
-        If clientTimeZone IsNot Nothing Then
-            Return clientTimeZone
+        possibleTimeZone = s_systemTimeZones.Where(Function(t As TimeZoneInfo)
+                                                       Return t.StandardName = id
+                                                   End Function).FirstOrDefault
+        If possibleTimeZone IsNot Nothing Then
+            Return possibleTimeZone
         End If
 
-        Return s_timeZoneList.Where(Function(t As TimeZoneInfo)
-                                        Return t.DisplayName = id
-                                    End Function).FirstOrDefault
+        possibleTimeZone = s_systemTimeZones.Where(Function(t As TimeZoneInfo)
+                                                       Return t.Id = id
+                                                   End Function).FirstOrDefault
+        If possibleTimeZone IsNot Nothing Then
+            Return possibleTimeZone
+        End If
+
+        Return TimeZoneInfo.Local
     End Function
 
 End Module

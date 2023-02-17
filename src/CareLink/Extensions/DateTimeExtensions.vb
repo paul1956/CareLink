@@ -117,8 +117,7 @@ Friend Module DateTimeExtensions
     <Extension>
     Friend Function Epoch2DateTime(epoch As Long) As Date
         Dim timeUtc As Date = epoch.ToString.FromUnixTime
-        Dim localZone As TimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(s_clientTimeZoneName)
-        Dim localTime As Date = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, localZone)
+        Dim localTime As Date = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, ClientTimeZoneInfo)
         Return localTime
     End Function
 

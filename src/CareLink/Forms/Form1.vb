@@ -151,7 +151,6 @@ Public Class Form1
             File.Create(GetShowLegendFileNameWithPath)
         End If
 
-        s_timeZoneList = TimeZoneInfo.GetSystemTimeZones.ToList
         Me.AITComboBox = New ToolStripComboBoxEx With {
             .BackColor = Color.Black,
             .DataSource = s_aitItemsBindingSource,
@@ -199,7 +198,9 @@ Public Class Form1
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
         CheckForUpdatesAsync(Me, False)
 
-        InitializeDialog.ShowDialog()
+        If Debugger.IsAttached Then
+            InitializeDialog.ShowDialog()
+        End If
 
         If Me.DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
             Me.UpdateAllTabPages()
@@ -449,11 +450,15 @@ Public Class Form1
     End Sub
 
     Private Sub MenuOptionsUseLocalTimeZone_Click(sender As Object, e As EventArgs) Handles MenuOptionsUseLocalTimeZone.Click
-        Dim useLocalTimeZoneChecked As Boolean = Me.MenuOptionsUseLocalTimeZone.Checked
-        My.Settings.UseLocalTimeZone = useLocalTimeZoneChecked
-        My.Settings.Save()
-        s_clientTimeZoneName = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.clientTimeZoneName))
-        s_clientTimeZone = CalculateTimeZone(s_clientTimeZoneName)
+        Dim saveRequired As Boolean = Me.MenuOptionsUseLocalTimeZone.Checked <> My.Settings.UseLocalTimeZone
+        If Me.MenuOptionsUseLocalTimeZone.Checked Then
+            ClientTimeZoneInfo = TimeZoneInfo.Local
+            My.Settings.UseLocalTimeZone = True
+        Else
+            ClientTimeZoneInfo = CalculateTimeZone(s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.clientTimeZoneName)))
+            My.Settings.UseLocalTimeZone = False
+        End If
+        If saveRequired Then My.Settings.Save()
     End Sub
 
 #End Region ' Option Menus

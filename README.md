@@ -30,8 +30,8 @@ This update has a UI to show all the available data and a visual version that mi
 02/16/2023
 
 ## What's New in this release
-New in 3.5.7.25
-- Add support for 1 German TimeZone
+New in 3.5.7.27
+- Rewrite of TimeZone handling code
 - Add additional error messages
 
 New in 3.5.7.25

@@ -125,27 +125,25 @@ Public Module JsonExtensions
                             End If
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
                         Case NameOf(ItemIndexes.clientTimeZoneName)
-                            Dim clientTimeZoneName As String
                             If s_useLocalTimeZone Then
-                                s_clientTimeZone = TimeZoneInfo.Local
+                                ClientTimeZoneInfo = TimeZoneInfo.Local
                             Else
-                                clientTimeZoneName = item.Value.ToString
-                                s_clientTimeZone = CalculateTimeZone(clientTimeZoneName)
+                                ClientTimeZoneInfo = CalculateTimeZone(item.Value.ToString)
                                 Dim message As String
                                 Dim messageButtons As MessageBoxButtons
-                                If s_clientTimeZone Is Nothing Then
-                                    If String.IsNullOrWhiteSpace(clientTimeZoneName) Then
+                                If ClientTimeZoneInfo Is Nothing Then
+                                    If String.IsNullOrWhiteSpace(item.Value.ToString) Then
                                         message = $"Your pump appears to be off-line, some values will be wrong do you want to continue? If you select OK '{TimeZoneInfo.Local.Id}' will be used as you local time and you will not be prompted further. Cancel will Exit."
                                         messageButtons = MessageBoxButtons.OKCancel
                                     Else
-                                        message = $"Your pump TimeZone '{clientTimeZoneName}' is not recognized, do you want to exit? If you select No permanently use '{TimeZoneInfo.Local.Id}''? If you select Yes '{TimeZoneInfo.Local.Id}' will be used and you will not be prompted further. No will use '{TimeZoneInfo.Local.Id}' until you restart program. Cancel will exit program. Please open an issue and provide the name '{clientTimeZoneName}'. After selecting 'Yes' you can change the behavior under the Options Menu."
+                                        message = $"Your pump TimeZone '{item.Value}' is not recognized, do you want to exit? If you select No permanently use '{TimeZoneInfo.Local.Id}''? If you select Yes '{TimeZoneInfo.Local.Id}' will be used and you will not be prompted further. No will use '{TimeZoneInfo.Local.Id}' until you restart program. Cancel will exit program. Please open an issue and provide the name '{item.Value}'. After selecting 'Yes' you can change the behavior under the Options Menu."
                                         messageButtons = MessageBoxButtons.YesNoCancel
                                     End If
                                     Dim result As DialogResult = MessageBox.Show(message, "TimeZone Unknown",
                                                                                  messageButtons,
                                                                                  MessageBoxIcon.Question)
                                     s_useLocalTimeZone = True
-                                    s_clientTimeZone = TimeZoneInfo.Local
+                                    ClientTimeZoneInfo = TimeZoneInfo.Local
                                     Select Case result
                                         Case DialogResult.Yes
                                             My.Settings.UseLocalTimeZone = True

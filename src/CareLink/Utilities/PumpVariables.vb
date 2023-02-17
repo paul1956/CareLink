@@ -24,6 +24,8 @@ Public Module PumpVariables
 
 #End Region ' Used for painting
 
+    Private _clientTimeZoneInfo As TimeZoneInfo
+
     Friend ReadOnly s_insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
     Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDeliveryRecord)
     Friend ReadOnly s_listOfAutoModeStatusMarkers As New List(Of AutoModeStatusRecord)
@@ -39,8 +41,6 @@ Public Module PumpVariables
     Friend s_activeInsulin As ActiveInsulinRecord
     Friend s_activeInsulinIncrements As Integer
     Friend s_belowHypoLimit As Single
-    Friend s_clientTimeZone As TimeZoneInfo
-    Friend s_clientTimeZoneName As String
     Friend s_criticalLow As Single
     Friend s_filterJsonData As Boolean = True
     Friend s_firstName As String = ""
@@ -73,6 +73,19 @@ Public Module PumpVariables
     Friend s_timeToNextCalibrationMinutes As UShort
     Friend s_timeWithMinuteFormat As String
     Friend s_timeWithoutMinuteFormat As String
+
+    Friend Property ClientTimeZoneInfo As TimeZoneInfo
+        Get
+            If _clientTimeZoneInfo Is Nothing Then
+                Return TimeZoneInfo.Local
+            End If
+            Return _clientTimeZoneInfo
+        End Get
+        Set
+            _clientTimeZoneInfo = Value
+        End Set
+    End Property
+
     Friend Property BgUnits As String
     Friend Property BgUnitsString As String
     Friend Property InAutoMode As Boolean

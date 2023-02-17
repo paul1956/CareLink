@@ -41,7 +41,9 @@ Public Class InitializeDialog
                     For Each c As DataGridViewCell In .Rows(e.RowIndex).Cells
                         c.ReadOnly = True
                     Next
+                    CType(.Rows(e.RowIndex).Cells(4), DataGridViewDisableButtonCell).Enabled = False
                     If .Rows(e.RowIndex).Cells(NameOf(ColumnEnd)).Value.ToString = _midnight Then
+                        Me.OK_Button.Enabled = True
                         Me.OK_Button.Select()
                         Exit Sub
                     End If
@@ -59,7 +61,6 @@ Public Class InitializeDialog
                         CType(.Cells(0), DataGridViewDisableButtonCell).Enabled = False
                     End With
                 End With
-                Stop
         End Select
 
     End Sub
