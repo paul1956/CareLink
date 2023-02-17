@@ -117,7 +117,7 @@ Friend Module DateTimeExtensions
     <Extension>
     Friend Function Epoch2DateTime(epoch As Long) As Date
         Dim timeUtc As Date = epoch.ToString.FromUnixTime
-        Dim localTime As Date = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, ClientTimeZoneInfo)
+        Dim localTime As Date = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, PumpTimeZoneInfo)
         Return localTime
     End Function
 
@@ -233,12 +233,10 @@ Friend Module DateTimeExtensions
             Case "loginDateUTC"
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal)
                 Stop
-            Case NameOf(SgRecord.datetime), NameOf(TimeChangeRecord.dateTime)
-                If key = NameOf(SgRecord.datetime) Then
-                    resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
-                Else
-                    resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
-                End If
+            Case NameOf(SgRecord.datetime)
+                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
+            Case NameOf(TimeChangeRecord.dateTime)
+                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
             Case NameOf(TimeChangeRecord.previousDateTime)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal)
             Case NameOf(ClearedNotificationsRecord.secondaryTime)

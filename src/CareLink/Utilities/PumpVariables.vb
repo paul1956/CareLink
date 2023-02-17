@@ -24,7 +24,7 @@ Public Module PumpVariables
 
 #End Region ' Used for painting
 
-    Private _clientTimeZoneInfo As TimeZoneInfo
+    Private _pumpTimeZoneInfo As TimeZoneInfo
 
     Friend ReadOnly s_insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
     Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDeliveryRecord)
@@ -74,15 +74,15 @@ Public Module PumpVariables
     Friend s_timeWithMinuteFormat As String
     Friend s_timeWithoutMinuteFormat As String
 
-    Friend Property ClientTimeZoneInfo As TimeZoneInfo
+    Friend Property PumpTimeZoneInfo As TimeZoneInfo
         Get
-            If _clientTimeZoneInfo Is Nothing Then
+            If _pumpTimeZoneInfo Is Nothing Then
                 Return TimeZoneInfo.Local
             End If
-            Return _clientTimeZoneInfo
+            Return _pumpTimeZoneInfo
         End Get
         Set
-            _clientTimeZoneInfo = Value
+            _pumpTimeZoneInfo = Value
         End Set
     End Property
 

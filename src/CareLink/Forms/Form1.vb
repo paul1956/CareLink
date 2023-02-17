@@ -267,7 +267,7 @@ Public Class Form1
                         Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                         Me.LastUpdateTime.ForeColor = SystemColors.ControlText
-                        Me.LastUpdateTime.Text = $"{File.GetLastWriteTime(fileNameWithPath).ToShortDateTimeString} from file"
+                        Me.LastUpdateTime.Text = $"{s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime.ToShortDateTimeString} from file"
                         Try
                             Me.FinishInitialization()
                             Try
@@ -452,10 +452,10 @@ Public Class Form1
     Private Sub MenuOptionsUseLocalTimeZone_Click(sender As Object, e As EventArgs) Handles MenuOptionsUseLocalTimeZone.Click
         Dim saveRequired As Boolean = Me.MenuOptionsUseLocalTimeZone.Checked <> My.Settings.UseLocalTimeZone
         If Me.MenuOptionsUseLocalTimeZone.Checked Then
-            ClientTimeZoneInfo = TimeZoneInfo.Local
+            PumpTimeZoneInfo = TimeZoneInfo.Local
             My.Settings.UseLocalTimeZone = True
         Else
-            ClientTimeZoneInfo = CalculateTimeZone(s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.clientTimeZoneName)))
+            PumpTimeZoneInfo = CalculateTimeZone(s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.clientTimeZoneName)))
             My.Settings.UseLocalTimeZone = False
         End If
         If saveRequired Then My.Settings.Save()
@@ -548,7 +548,7 @@ Public Class Form1
 
     Private Sub CalibrationDueImage_MouseHover(sender As Object, e As EventArgs) Handles CalibrationDueImage.MouseHover
         If s_timeToNextCalibrationMinutes > 0 AndAlso s_timeToNextCalibrationMinutes < 1440 Then
-            _calibrationToolTip.SetToolTip(Me.CalibrationDueImage, $"Calibration Due {Now.AddMinutes(s_timeToNextCalibrationMinutes).ToShortTimeString}")
+            _calibrationToolTip.SetToolTip(Me.CalibrationDueImage, $"Calibration Due {PumpNow.AddMinutes(s_timeToNextCalibrationMinutes).ToShortTimeString}")
         End If
     End Sub
 
@@ -1280,7 +1280,7 @@ Public Class Form1
         Else
             If Me.RecentData?.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
-                    If lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime + s_fiveMinuteSpan < Now Then
+                    If lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime + s_fiveMinuteSpan < PumpNow() Then
                         Me.LastUpdateTime.ForeColor = Color.Red
                         _bgMiniDisplay.SetCurrentBGString("---")
                     Else
@@ -1290,7 +1290,7 @@ Public Class Form1
                     Me.RecentData = Nothing
                 Else
                     Me.LastUpdateTime.ForeColor = SystemColors.ControlText
-                    Me.LastUpdateTime.Text = Now.ToShortDateTimeString
+                    Me.LastUpdateTime.Text = GetTimeZoneName(TimeZoneNameFormat.StandardName)
                     Me.UpdateAllTabPages()
                 End If
             Else
@@ -1995,11 +1995,7 @@ Public Class Form1
             _treatmentMarkerAbsoluteRectangle = RectangleF.Empty
             Me.MenuStartHere.Enabled = False
             Me.LastUpdateTime.ForeColor = SystemColors.ControlText
-            If Not Me.LastUpdateTime.Text.Contains("from file") Then
-                Me.LastUpdateTime.Text = Now.ToShortDateTimeString
-            Else
-                Me.LastUpdateTime.Text = Now.ToShortDateTimeString
-            End If
+            Me.LastUpdateTime.Text = $"{PumpNow.ToShortDateTimeString} {GetTimeZoneName(TimeZoneNameFormat.StandardName)}"
             Me.CursorPanel.Visible = False
 
             Me.Cursor = Cursors.WaitCursor

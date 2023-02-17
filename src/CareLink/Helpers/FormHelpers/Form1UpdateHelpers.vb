@@ -54,7 +54,7 @@ Friend Module Form1UpdateHelpers
 
         Dim markerRowString As String = ""
         If recentData.TryGetValue(ItemIndexes.clientTimeZoneName.ToString, markerRowString) Then
-            ClientTimeZoneInfo = CalculateTimeZone(markerRowString)
+            PumpTimeZoneInfo = CalculateTimeZone(markerRowString)
         End If
 
         s_lastMedicalDeviceDataUpdateServerEpoch = CLng(recentData(ItemIndexes.lastMedicalDeviceDataUpdateServerTime.ToString))

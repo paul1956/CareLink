@@ -4,6 +4,7 @@
 
 Imports System.ComponentModel
 Imports System.Media
+Imports System.Runtime.InteropServices
 
 Public Class BGMiniWindow
     Private ReadOnly _form1 As Form1
@@ -28,7 +29,7 @@ Public Class BGMiniWindow
         If s_lastMedicalDeviceDataUpdateServerEpoch = 0 Then
             Return $"{s_firstName}'s Last Update Unknown"
         End If
-        Return $"{s_firstName}'s Updated {CInt((Now - s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime).TotalMinutes)} minutes ago"
+        Return $"{s_firstName}'s Updated {CInt((PumpNow() - s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime).TotalMinutes)} minutes ago"
     End Function
 
     Private Sub ActiveInsulinTextBox_GotFocus(sender As Object, e As EventArgs) Handles ActiveInsulinTextBox.GotFocus

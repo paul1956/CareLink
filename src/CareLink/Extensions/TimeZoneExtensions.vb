@@ -61,4 +61,31 @@ Friend Module TimeZoneExtensions
         Return TimeZoneInfo.Local
     End Function
 
+    Public Enum TimeZoneNameFormat
+        BaseUtcOffset
+        DisplayName
+        StandardName
+    End Enum
+
+    Public Function GetTimeZoneName(format As TimeZoneNameFormat) As String
+        If String.IsNullOrWhiteSpace(PumpTimeZoneInfo?.DisplayName) Then
+            Return String.Empty
+        End If
+        Dim displayName As String = PumpTimeZoneInfo.DisplayName
+        Select Case format
+            Case TimeZoneNameFormat.DisplayName
+                Return PumpTimeZoneInfo.DisplayName
+            Case TimeZoneNameFormat.StandardName
+                Return PumpTimeZoneInfo.StandardName
+            Case TimeZoneNameFormat.BaseUtcOffset
+                Return PumpTimeZoneInfo.BaseUtcOffset.ToString
+            Case Else
+                Return ""
+        End Select
+    End Function
+
+    Public Function PumpNow() As Date
+        Return TimeZoneInfo.ConvertTime(Now, PumpTimeZoneInfo)
+    End Function
+
 End Module

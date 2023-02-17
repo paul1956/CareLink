@@ -1361,7 +1361,7 @@ Partial Class Form1
         ' LastUpdateTime
         ' 
         Me.LastUpdateTime.AutoSize = True
-        Me.LastUpdateTime.Location = New Point(1214, 3)
+        Me.LastUpdateTime.Location = New Point(1170, 3)
         Me.LastUpdateTime.Name = "LastUpdateTime"
         Me.LastUpdateTime.Size = New Size(58, 15)
         Me.LastUpdateTime.TabIndex = 24
@@ -1426,10 +1426,11 @@ Partial Class Form1
         ' 
         ' PumpBatteryRemainingLabel
         ' 
+        Me.PumpBatteryRemainingLabel.AutoSize = True
         Me.PumpBatteryRemainingLabel.BackColor = Color.Transparent
         Me.PumpBatteryRemainingLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.PumpBatteryRemainingLabel.ForeColor = Color.White
-        Me.PumpBatteryRemainingLabel.Location = New Point(118, 89)
+        Me.PumpBatteryRemainingLabel.Location = New Point(124, 89)
         Me.PumpBatteryRemainingLabel.Name = "PumpBatteryRemainingLabel"
         Me.PumpBatteryRemainingLabel.Size = New Size(74, 21)
         Me.PumpBatteryRemainingLabel.TabIndex = 11

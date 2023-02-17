@@ -15,19 +15,25 @@ Public Class SgRecord
 
     Public Sub New(innerJson As Dictionary(Of String, String), index As Integer)
         Try
-            Me.datetimeAsString = innerJson(NameOf(Me.datetime))
-            Me.datetime = Me.datetimeAsString.ParseDate(NameOf(SgRecord.datetime))
-            Me.kind = innerJson(NameOf(kind))
-            Me.RecordNumber = index + 1
-            Me.relativeOffset = CInt(innerJson(NameOf(relativeOffset)))
-            Me.sensorState = innerJson(NameOf(sensorState))
-            Me.timeChange = Boolean.Parse(innerJson(NameOf(timeChange)))
-            Me.version = CInt(innerJson(NameOf(version)))
             If innerJson(NameOf(sg)) = "0" Then
+                Me.datetimeAsString = ""
                 Me.sg = Single.NaN
             Else
+                Me.datetimeAsString = innerJson(NameOf(Me.datetime))
+                Me.datetime = Me.datetimeAsString.ParseDate(NameOf(SgRecord.datetime))
+                Me.sensorState = innerJson(NameOf(sensorState))
                 Me.sg = innerJson(NameOf(sg)).ParseSingle()
+                Me.timeChange = Boolean.Parse(innerJson(NameOf(timeChange)))
             End If
+            Me.kind = innerJson(NameOf(kind))
+            Me.RecordNumber = index + 1
+            Dim offset As String = Nothing
+            If innerJson.TryGetValue(NameOf(relativeOffset), offset) Then
+                Me.relativeOffset = CInt(offset)
+            Else
+                Me.relativeOffset = -1
+            End If
+            Me.version = CInt(innerJson(NameOf(version)))
         Catch ex As Exception
             Stop
         End Try

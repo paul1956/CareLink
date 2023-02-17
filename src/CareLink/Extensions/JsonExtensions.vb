@@ -126,12 +126,12 @@ Public Module JsonExtensions
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
                         Case NameOf(ItemIndexes.clientTimeZoneName)
                             If s_useLocalTimeZone Then
-                                ClientTimeZoneInfo = TimeZoneInfo.Local
+                                PumpTimeZoneInfo = TimeZoneInfo.Local
                             Else
-                                ClientTimeZoneInfo = CalculateTimeZone(item.Value.ToString)
+                                PumpTimeZoneInfo = CalculateTimeZone(item.Value.ToString)
                                 Dim message As String
                                 Dim messageButtons As MessageBoxButtons
-                                If ClientTimeZoneInfo Is Nothing Then
+                                If PumpTimeZoneInfo Is Nothing Then
                                     If String.IsNullOrWhiteSpace(item.Value.ToString) Then
                                         message = $"Your pump appears to be off-line, some values will be wrong do you want to continue? If you select OK '{TimeZoneInfo.Local.Id}' will be used as you local time and you will not be prompted further. Cancel will Exit."
                                         messageButtons = MessageBoxButtons.OKCancel
@@ -143,7 +143,7 @@ Public Module JsonExtensions
                                                                                  messageButtons,
                                                                                  MessageBoxIcon.Question)
                                     s_useLocalTimeZone = True
-                                    ClientTimeZoneInfo = TimeZoneInfo.Local
+                                    PumpTimeZoneInfo = TimeZoneInfo.Local
                                     Select Case result
                                         Case DialogResult.Yes
                                             My.Settings.UseLocalTimeZone = True
