@@ -837,6 +837,7 @@ Partial Class Form1
         Me.DgvCountryDataPg1RecordNumber.MinimumWidth = 60
         Me.DgvCountryDataPg1RecordNumber.Name = "DgvCountryDataPg1RecordNumber"
         Me.DgvCountryDataPg1RecordNumber.ReadOnly = True
+        Me.DgvCountryDataPg1RecordNumber.Width = 60
         ' 
         ' DgvCountryDataPg1Category
         ' 
@@ -844,6 +845,7 @@ Partial Class Form1
         Me.DgvCountryDataPg1Category.HeaderText = "Category"
         Me.DgvCountryDataPg1Category.Name = "DgvCountryDataPg1Category"
         Me.DgvCountryDataPg1Category.ReadOnly = True
+        Me.DgvCountryDataPg1Category.Width = 80
         ' 
         ' DgvCountryDataPg1Key
         ' 
@@ -851,6 +853,7 @@ Partial Class Form1
         Me.DgvCountryDataPg1Key.HeaderText = "Key"
         Me.DgvCountryDataPg1Key.Name = "DgvCountryDataPg1Key"
         Me.DgvCountryDataPg1Key.ReadOnly = True
+        Me.DgvCountryDataPg1Key.Width = 51
         ' 
         ' DgvCountryDataPg1Value
         ' 
@@ -1063,6 +1066,7 @@ Partial Class Form1
         Me.DgvCountryDataPg3RecordNumber.MinimumWidth = 60
         Me.DgvCountryDataPg3RecordNumber.Name = "DgvCountryDataPg3RecordNumber"
         Me.DgvCountryDataPg3RecordNumber.ReadOnly = True
+        Me.DgvCountryDataPg3RecordNumber.Width = 60
         ' 
         ' DgvCountryDataPg3Category
         ' 
@@ -1070,6 +1074,7 @@ Partial Class Form1
         Me.DgvCountryDataPg3Category.HeaderText = "Category"
         Me.DgvCountryDataPg3Category.Name = "DgvCountryDataPg3Category"
         Me.DgvCountryDataPg3Category.ReadOnly = True
+        Me.DgvCountryDataPg3Category.Width = 80
         ' 
         ' DgvCountryDataPg3Key
         ' 
@@ -1077,6 +1082,7 @@ Partial Class Form1
         Me.DgvCountryDataPg3Key.HeaderText = "Key"
         Me.DgvCountryDataPg3Key.Name = "DgvCountryDataPg3Key"
         Me.DgvCountryDataPg3Key.ReadOnly = True
+        Me.DgvCountryDataPg3Key.Width = 51
         ' 
         ' DgvCountryDataPg3Value
         ' 
@@ -1084,6 +1090,7 @@ Partial Class Form1
         Me.DgvCountryDataPg3Value.HeaderText = "Value"
         Me.DgvCountryDataPg3Value.Name = "DgvCountryDataPg3Value"
         Me.DgvCountryDataPg3Value.ReadOnly = True
+        Me.DgvCountryDataPg3Value.Width = 60
         ' 
         ' DgvCountryDataPg3OnlyFor
         ' 
@@ -1361,7 +1368,7 @@ Partial Class Form1
         ' LastUpdateTime
         ' 
         Me.LastUpdateTime.AutoSize = True
-        Me.LastUpdateTime.Location = New Point(1170, 3)
+        Me.LastUpdateTime.Location = New Point(1108, 3)
         Me.LastUpdateTime.Name = "LastUpdateTime"
         Me.LastUpdateTime.Size = New Size(58, 15)
         Me.LastUpdateTime.TabIndex = 24
@@ -1369,7 +1376,7 @@ Partial Class Form1
         ' LastUpdateTimeLabel
         ' 
         Me.LastUpdateTimeLabel.AutoSize = True
-        Me.LastUpdateTimeLabel.Location = New Point(1061, 3)
+        Me.LastUpdateTimeLabel.Location = New Point(999, 3)
         Me.LastUpdateTimeLabel.Name = "LastUpdateTimeLabel"
         Me.LastUpdateTimeLabel.Size = New Size(101, 15)
         Me.LastUpdateTimeLabel.TabIndex = 23
@@ -1377,7 +1384,7 @@ Partial Class Form1
         ' LoginStatus
         ' 
         Me.LoginStatus.AutoSize = True
-        Me.LoginStatus.Location = New Point(608, 3)
+        Me.LoginStatus.Location = New Point(559, 3)
         Me.LoginStatus.Name = "LoginStatus"
         Me.LoginStatus.Size = New Size(58, 15)
         Me.LoginStatus.TabIndex = 24
@@ -1430,9 +1437,9 @@ Partial Class Form1
         Me.PumpBatteryRemainingLabel.BackColor = Color.Transparent
         Me.PumpBatteryRemainingLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.PumpBatteryRemainingLabel.ForeColor = Color.White
-        Me.PumpBatteryRemainingLabel.Location = New Point(124, 89)
+        Me.PumpBatteryRemainingLabel.Location = New Point(146, 89)
         Me.PumpBatteryRemainingLabel.Name = "PumpBatteryRemainingLabel"
-        Me.PumpBatteryRemainingLabel.Size = New Size(74, 21)
+        Me.PumpBatteryRemainingLabel.Size = New Size(31, 21)
         Me.PumpBatteryRemainingLabel.TabIndex = 11
         Me.PumpBatteryRemainingLabel.Text = "???"
         Me.PumpBatteryRemainingLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -2678,6 +2685,7 @@ Partial Class Form1
         Me.SensorTimeLeftPanel.ResumeLayout(False)
         CType(Me.SensorTimeLeftPictureBox, ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer2.Panel1.ResumeLayout(False)
+        Me.SplitContainer2.Panel1.PerformLayout()
         Me.SplitContainer2.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer2, ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer2.ResumeLayout(False)
