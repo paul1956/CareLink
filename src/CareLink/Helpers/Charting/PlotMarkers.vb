@@ -209,7 +209,12 @@ Friend Module PlotMarkers
                                     Else
                                         markerSeriesPoints.Last.Color = Color.FromArgb(30, Color.LightBlue)
                                         markerSeriesPoints.Last.Tag = $"Bolus: {entry(NameOf(InsulinRecord.deliveredFastAmount))} U"
-
+                                        Dim callout As New CalloutAnnotation With {
+                                                .AnchorDataPoint = markerSeriesPoints.Last,
+                                                .Text = markerSeriesPoints.Last.Tag.ToString,
+                                                .Visible = True
+                                            }
+                                        treatmentChart.Annotations.Add(callout)
                                     End If
                                 Else
                                     Stop

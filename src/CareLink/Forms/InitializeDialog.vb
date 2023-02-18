@@ -16,56 +16,95 @@ Public Class InitializeDialog
         items.Add("12:00 AM")
     End Sub
 
+    Private Sub AitAdvancedDelayComboBox_Leave(sender As Object, e As EventArgs) Handles AitAdvancedDelayComboBox.Leave
+        Dim c As ComboBox = CType(sender, ComboBox)
+        If c.SelectedIndex <> -1 Then
+            Me.ErrorProvider1.SetError(c, "")
+        End If
+    End Sub
+
+    Private Sub AitAdvancedDelayComboBox_Validating(sender As Object, e As CancelEventArgs) Handles AitAdvancedDelayComboBox.Validating
+        Dim c As ComboBox = CType(sender, ComboBox)
+        If c.SelectedIndex = -1 Then
+            Me.ErrorProvider1.SetError(c, "You must select an AIT Value")
+            e.Cancel = True
+        Else
+            Me.ErrorProvider1.SetError(c, "")
+        End If
+    End Sub
+
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub
 
-    Private Sub DataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles InitializeDataGridView.DataError
-        Stop
-    End Sub
-
     Private Sub InitializeDataGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles InitializeDataGridView.CellContentClick
-        Select Case e.ColumnIndex
-            Case 0 ' Delete row
-                If e.RowIndex = 0 Then Exit Sub
-            Case 1 ' Start
-                If e.RowIndex = 0 Then Exit Sub
-            Case 2 ' End
-                If e.RowIndex = 0 Then Exit Sub
-            Case 3 ' U value
-                If e.RowIndex = 0 Then Exit Sub
-            Case 4 ' Save
-                ' Validate Row
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Dim cell As DataGridViewCell = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex)
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(ColumnDeleteRow)
+                If Not CType(cell, DataGridViewDisableButtonCell).Enabled Then Exit Sub
+                dgv.Rows.Remove(dgv.Rows(e.RowIndex))
+                Dim currentRow As Integer = e.RowIndex - 1
+                With dgv.Rows(currentRow)
+                    Dim buttonCell As DataGridViewDisableButtonCell = CType(.Cells(NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell)
+                    buttonCell.Enabled = False
+                    buttonCell.ReadOnly = True
+                    Dim c As DataGridViewComboBoxCell = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
+                    Dim startTime As TimeOnly = TimeOnly.Parse(Me.InitializeDataGridView.Rows(currentRow).Cells(NameOf(ColumnEnd)).Value.ToString)
+                    Dim value As String = startTime.ToString
+                    InitializeComboList(c.Items, CInt(startTime.ToTimeSpan.TotalMinutes / 30))
+                    c.Value = _midnight
+                    c.ReadOnly = False
+                    buttonCell = CType(.Cells(NameOf(ColumnSave)), DataGridViewDisableButtonCell)
+                    buttonCell.ReadOnly = False
+                    buttonCell.Enabled = True
+                End With
+                Stop
+
+            Case NameOf(ColumnStart)
+                dgv.CurrentCell = dgv.Rows(e.RowIndex).Cells(NameOf(ColumnEnd))
+
+            Case NameOf(ColumnEnd)
+
+            Case NameOf(ColumnNumericUpDown)
+
+            Case NameOf(ColumnSave)
                 With Me.InitializeDataGridView
+                    If .Rows(e.RowIndex).Cells(NameOf(ColumnEnd)).Value.ToString = _midnight Then
+                        Me.AitAdvancedDelayComboBox.CausesValidation = True
+                        If Me.ValidateChildren() Then
+                            Me.OK_Button.Focus()
+                            Me.OK_Button.Enabled = True
+                        End If
+                        Exit Sub
+                    End If
+                    With .Rows(e.RowIndex)
+                        CType(.Cells(NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell).Enabled = False
+                        CType(.Cells(NameOf(ColumnSave)), DataGridViewDisableButtonCell).Enabled = False
+                    End With
                     For Each c As DataGridViewCell In .Rows(e.RowIndex).Cells
                         c.ReadOnly = True
                     Next
-                    CType(.Rows(e.RowIndex).Cells(4), DataGridViewDisableButtonCell).Enabled = False
-                    If .Rows(e.RowIndex).Cells(NameOf(ColumnEnd)).Value.ToString = _midnight Then
-                        Me.OK_Button.Enabled = True
-                        Me.OK_Button.Select()
-                        Exit Sub
-                    End If
                     Me.InitializeDataGridView.Rows.Add()
                     With .Rows(.Rows.Count - 1)
-                        Dim c As DataGridViewComboBoxCell = CType(.Cells(1), DataGridViewComboBoxCell)
-                        Dim timeOnly As TimeOnly = TimeOnly.Parse(Me.InitializeDataGridView.Rows(e.RowIndex).Cells(2).Value.ToString)
+                        Dim c As DataGridViewComboBoxCell = CType(.Cells(NameOf(ColumnStart)), DataGridViewComboBoxCell)
+                        Dim timeOnly As TimeOnly = TimeOnly.Parse(Me.InitializeDataGridView.Rows(e.RowIndex).Cells(NameOf(ColumnEnd)).Value.ToString)
                         Dim value As String = timeOnly.ToString
                         c.Items.Add(value)
                         c.Value = value
-                        c = CType(.Cells(2), DataGridViewComboBoxCell)
-                        InitializeComboList(c.Items, CInt(timeOnly.ToTimeSpan.TotalMinutes / 30))
+                        c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
+                        InitializeComboList(c.Items, CInt(timeOnly.ToTimeSpan.TotalMinutes / 30) + 1)
                         c.Value = _midnight
-                        .Cells(3).Value = 15.0
-                        CType(.Cells(0), DataGridViewDisableButtonCell).Enabled = False
+                        .Cells(NameOf(ColumnNumericUpDown)).Value = 15.0
+                        CType(.Cells(NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell).Enabled = True
                     End With
                 End With
         End Select
 
     End Sub
 
-    Private Sub InitializeDataGridView_Validating(sender As Object, e As CancelEventArgs) Handles InitializeDataGridView.Validating
+    Private Sub InitializeDataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles InitializeDataGridView.DataError
         Stop
     End Sub
 
@@ -83,34 +122,52 @@ Public Class InitializeDialog
 
         With Me.InitializeDataGridView
             With .Rows(0)
-                Dim c As DataGridViewComboBoxCell = CType(.Cells(1), DataGridViewComboBoxCell)
+                Dim buttonCell As DataGridViewDisableButtonCell = CType(.Cells(NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell)
+                buttonCell.Enabled = False
+                Dim c As DataGridViewComboBoxCell = CType(.Cells(NameOf(ColumnStart)), DataGridViewComboBoxCell)
                 c.Items.Add(_midnight)
                 c.Value = _midnight
-                c = CType(.Cells(2), DataGridViewComboBoxCell)
+                c.ReadOnly = True
+
+                c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
                 InitializeComboList(c.Items, 1)
                 c.Value = _midnight
-                .Cells(3).Value = 15.0
-                CType(.Cells(0), DataGridViewDisableButtonCell).Enabled = False
-            End With
+                Dim numericCell As DataGridViewNumericUpDownCell = CType(.Cells(NameOf(ColumnNumericUpDown)), DataGridViewNumericUpDownCell)
+                numericCell.Value = 15.0
 
-            .Columns(0).HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .Columns(0).SortMode = DataGridViewColumnSortMode.NotSortable
-            .Columns(1).HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .Columns(1).SortMode = DataGridViewColumnSortMode.NotSortable
-            .Columns(2).HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .Columns(2).SortMode = DataGridViewColumnSortMode.NotSortable
-            .Columns(3).HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .Columns(3).SortMode = DataGridViewColumnSortMode.NotSortable
+            End With
+            For Each col As DataGridViewColumn In .Columns
+                col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
+                col.SortMode = DataGridViewColumnSortMode.NotSortable
+            Next
         End With
 
         Me.ColumnNumericUpDown.DecimalPlaces = 1
         Me.InitializeDataGridView.CurrentCell = Me.InitializeDataGridView.Rows(0).Cells(2)
 
+        With Me.AitAdvancedDelayComboBox
+            .DataSource = s_aitItemsBindingSource
+            .DropDownStyle = ComboBoxStyle.DropDownList
+            .Font = New Font("Segoe UI", 9.0!, FontStyle.Bold, GraphicsUnit.Point)
+            .FormattingEnabled = True
+            .Size = New Size(78, 23)
+            .DisplayMember = "Key"
+            .ValueMember = "Value"
+            .SelectedIndex = -1
+        End With
     End Sub
 
     Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
-        Me.DialogResult = DialogResult.OK
-        Me.Close()
+        Dim cell As DataGridViewCell = Me.InitializeDataGridView.Rows(Me.InitializeDataGridView.RowCount - 1).Cells(NameOf(ColumnEnd))
+        If cell.Value.ToString <> _midnight Then
+            cell.ErrorText = $"Value must be {_midnight}"
+            Me.InitializeDataGridView.CurrentCell = cell
+            Me.DialogResult = DialogResult.None
+        Else
+            cell.ErrorText = ""
+            Me.DialogResult = DialogResult.OK
+            Me.Close()
+        End If
     End Sub
 
 End Class

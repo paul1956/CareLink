@@ -13,6 +13,8 @@ Friend Module CalloutHelpers
             {"TreatmentMarkersChart", New CalloutAnnotation}
        }
 
+    Friend s_treatmentCalloutAnnotations As New Dictionary(Of Double, CalloutAnnotation)
+
     Private Function GetAnnotationText(markerTag() As String) As String
         Dim annotationText As String = ""
         Select Case markerTag.Length
@@ -39,6 +41,10 @@ Friend Module CalloutHelpers
 
     <Extension>
     Friend Sub SetupCallout(chart1 As Chart, currentDataPoint As DataPoint, annotationText As String)
+
+        If chart1.Name = "TreatmentMarkersChart" AndAlso annotationText.StartsWith("Bolus ") Then
+            Return
+        End If
         With s_calloutAnnotations(chart1.Name)
             .AnchorDataPoint = currentDataPoint
             .Text = annotationText

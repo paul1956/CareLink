@@ -29,7 +29,7 @@ Public Class Form1
     Private _inMouseMove As Boolean = False
     Private _lastMarkerTabIndex As (page As Integer, tab As Integer) = (0, 0)
     Private _lastSummaryTabIndex As Integer = 0
-    Private _prevLoc As Point
+    Private _previousLoc As Point
     Private _showBalloonTip As Boolean = True
     Private _summaryChartAbsoluteRectangle As RectangleF
     Private _treatmentMarkerAbsoluteRectangle As RectangleF
@@ -579,11 +579,11 @@ Public Class Form1
         If Not _Initialized Then
             Exit Sub
         End If
-        If e.Button <> MouseButtons.None OrElse e.Clicks > 0 OrElse e.Location = _prevLoc Then
+        If e.Button <> MouseButtons.None OrElse e.Clicks > 0 OrElse e.Location = _previousLoc Then
             Return
         End If
         _inMouseMove = True
-        _prevLoc = e.Location
+        _previousLoc = e.Location
         Dim yInPixels As Double
         Dim chart1 As Chart = CType(sender, Chart)
         Dim isHomePage As Boolean = chart1.Name = "SummaryChart"

@@ -59,7 +59,7 @@ Friend Module CollectMarkersHelper
                     If MatchesMeal(markerEntry) Then
                         'Stop
                     Else
-                        'Stop
+                        ' Correction without food
                     End If
                     s_markers.Add(markerEntry)
                     Dim lastInsulinRecord As InsulinRecord = DictionaryToClass(Of InsulinRecord)(markerEntry, s_listOfInsulinMarkers.Count + 1)
