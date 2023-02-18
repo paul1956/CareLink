@@ -1887,11 +1887,7 @@ Public Class Form1
         Select Case s_sensorDurationHours
             Case Is >= 255
                 Me.SensorDaysLeftLabel.Text = ""
-                If s_gstCommunicationState Then
-                    Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
-                Else
-                    Me.SensorTimeLeftPictureBox.Image = My.Resources.PumpConnectivityToTransmitterNotOK
-                End If
+                Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
                 Me.SensorTimeLeftLabel.Text = "Unknown"
             Case Is >= 24
                 Me.SensorDaysLeftLabel.Text = Math.Ceiling(s_sensorDurationHours / 24).ToString(CurrentUICulture)
