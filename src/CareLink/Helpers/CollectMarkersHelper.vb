@@ -56,11 +56,6 @@ Friend Module CollectMarkersHelper
                     s_markers.Add(markerEntry.ScaleMarker)
                     s_listOfCalibrationMarkers.Add(DictionaryToClass(Of CalibrationRecord)(markerEntry.ScaleMarker(), s_listOfCalibrationMarkers.Count + 1))
                 Case "INSULIN"
-                    If MatchesMeal(markerEntry) Then
-                        'Stop
-                    Else
-                        ' Correction without food
-                    End If
                     s_markers.Add(markerEntry)
                     Dim lastInsulinRecord As InsulinRecord = DictionaryToClass(Of InsulinRecord)(markerEntry, s_listOfInsulinMarkers.Count + 1)
                     s_listOfInsulinMarkers.Add(lastInsulinRecord)
@@ -118,19 +113,6 @@ Friend Module CollectMarkersHelper
             i += 1
         End While
         Return $"Max Basal/Hr ~ {MaxBasalPerHour.RoundSingle(3)} U"
-    End Function
-
-    <Extension>
-    Friend Function MatchesMeal(entry As Dictionary(Of String, String)) As Boolean
-        Dim entryIndex As Integer = CInt(entry("index"))
-        If entry(NameOf(InsulinRecord.activationType)) <> "RECOMMENDED" Then
-            Return False
-        End If
-        Dim isMeal As Boolean = s_markers.Any(Function(d As Dictionary(Of String, String))
-                                                  Return d("type") = "MEAL" AndAlso CInt(d("index")) = entryIndex
-                                              End Function)
-        If Not isMeal Then Stop
-        Return isMeal
     End Function
 
 End Module

@@ -6,6 +6,13 @@ Imports System.ComponentModel
 Imports DataGridViewColumnControls
 
 Public Class InitializeDialog
+
+    Private ReadOnly _insulinTypesBindingSource As New BindingSource(
+        New Dictionary(Of String, String) From {
+                    {$"Humalog{RegisteredTrademark}/Novolog{RegisteredTrademark}", "04:00"},
+                    {$"Lyumjev{RegisteredTrademark}/FIASP{RegisteredTrademark}", "03:00"}
+                                                        }, Nothing)
+
     Private ReadOnly _midnight As String = New TimeOnly(0, 0).ToString
 
     Private Shared Sub InitializeComboList(items As DataGridViewComboBoxCell.ObjectCollection, start As Integer)
@@ -16,17 +23,18 @@ Public Class InitializeDialog
         items.Add("12:00 AM")
     End Sub
 
-    Private Sub AitAdvancedDelayComboBox_Leave(sender As Object, e As EventArgs) Handles AitAdvancedDelayComboBox.Leave
+    Private Sub AitAdvancedDelayComboBox_SelectedValueChanged(sender As Object, e As EventArgs) Handles AitAdvancedDelayComboBox.SelectedValueChanged
         Dim c As ComboBox = CType(sender, ComboBox)
         If c.SelectedIndex <> -1 Then
             Me.ErrorProvider1.SetError(c, "")
         End If
+
     End Sub
 
     Private Sub AitAdvancedDelayComboBox_Validating(sender As Object, e As CancelEventArgs) Handles AitAdvancedDelayComboBox.Validating
         Dim c As ComboBox = CType(sender, ComboBox)
         If c.SelectedIndex = -1 Then
-            Me.ErrorProvider1.SetError(c, "You must select an AIT Value")
+            Me.ErrorProvider1.SetError(c, "You must select an AIT Value!")
             e.Cancel = True
         Else
             Me.ErrorProvider1.SetError(c, "")
@@ -73,6 +81,7 @@ Public Class InitializeDialog
                 With Me.InitializeDataGridView
                     If .Rows(e.RowIndex).Cells(NameOf(ColumnEnd)).Value.ToString = _midnight Then
                         Me.AitAdvancedDelayComboBox.CausesValidation = True
+                        Me.InsulinTypeComboBox.CausesValidation = True
                         If Me.ValidateChildren() Then
                             Me.OK_Button.Focus()
                             Me.OK_Button.Enabled = True
@@ -111,16 +120,16 @@ Public Class InitializeDialog
     Private Sub InitializeDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.ColumnStart.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
         Me.ColumnEnd.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
-        Dim endList As New List(Of String)
 
+        Dim endList As New List(Of String)
         For i As Integer = 1 To 47
             Dim t As New TimeOnly(i \ 2, (i Mod 2) * 30)
             endList.Add(t.ToString)
         Next
         endList.Add(_midnight)
-        Me.InitializeDataGridView.Rows.Add()
 
         With Me.InitializeDataGridView
+            .Rows.Add()
             With .Rows(0)
                 Dim buttonCell As DataGridViewDisableButtonCell = CType(.Cells(NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell)
                 buttonCell.Enabled = False
@@ -142,19 +151,40 @@ Public Class InitializeDialog
             Next
         End With
 
-        Me.ColumnNumericUpDown.DecimalPlaces = 1
         Me.InitializeDataGridView.CurrentCell = Me.InitializeDataGridView.Rows(0).Cells(2)
 
-        With Me.AitAdvancedDelayComboBox
-            .DataSource = s_aitItemsBindingSource
-            .DropDownStyle = ComboBoxStyle.DropDownList
-            .Font = New Font("Segoe UI", 9.0!, FontStyle.Bold, GraphicsUnit.Point)
-            .FormattingEnabled = True
-            .Size = New Size(78, 23)
+        With Me.InsulinTypeComboBox
+            .DataSource = _insulinTypesBindingSource
             .DisplayMember = "Key"
             .ValueMember = "Value"
             .SelectedIndex = -1
         End With
+
+        With Me.AitAdvancedDelayComboBox
+            .DataSource = s_aitItemsBindingSource
+            .DisplayMember = "Key"
+            .ValueMember = "Value"
+            .SelectedIndex = -1
+        End With
+    End Sub
+
+    Private Sub InsulinTypeComboBox_SelectedValueChanged(sender As Object, e As EventArgs) Handles InsulinTypeComboBox.SelectedValueChanged
+        Dim c As ComboBox = CType(sender, ComboBox)
+        If c.SelectedIndex <> -1 Then
+            Me.ErrorProvider1.SetError(c, "")
+        End If
+
+    End Sub
+
+    Private Sub InsulinTypeComboBox_Validating(sender As Object, e As CancelEventArgs) Handles InsulinTypeComboBox.Validating
+        Dim c As ComboBox = CType(sender, ComboBox)
+        If c.SelectedIndex = -1 Then
+            Me.ErrorProvider1.SetError(c, "You must select an Insulin Type!")
+            e.Cancel = True
+        Else
+            Me.ErrorProvider1.SetError(c, "")
+        End If
+
     End Sub
 
     Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click

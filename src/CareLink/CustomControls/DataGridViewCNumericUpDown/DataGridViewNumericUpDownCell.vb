@@ -408,22 +408,22 @@ Public Class DataGridViewNumericUpDownCell
     ''' <summary>
     ''' Called when a cell characteristic that affects its rendering and/or preferred size has changed.
     ''' This implementation only takes care of repainting the cells. The DataGridView's autosizing methods
-    ''' also need to be called in cases where some grid elements autosize.
+    ''' also need to be called in cases where some grid elements AutoSize.
     ''' </summary>
     Private Sub OnCommonChange()
         If Me.DataGridView IsNot Nothing AndAlso Not Me.DataGridView.IsDisposed AndAlso Not Me.DataGridView.Disposing Then
             If Me.RowIndex = -1 Then
-                ' Invalidate and autosize column
+                ' Invalidate and AutoSize column
                 Me.DataGridView.InvalidateColumn(Me.ColumnIndex)
             Else
                 ' The DataGridView control exposes a public method called UpdateCellValue
                 ' that invalidates the cell so that it gets repainted and also triggers all
                 ' the necessary autosizing: the cell's column and/or row, the column headers
-                ' and the row headers are autosized depending on their autosize settings.
+                ' and the row headers are autosized depending on their AutoSize settings.
                 Me.DataGridView.UpdateCellValue(Me.ColumnIndex, Me.RowIndex)
 
-                ' TODO: Add code to autosize the cell's column, the rows, the column headers
-                ' and the row headers depending on their autosize settings.
+                ' TODO: Add code to AutoSize the cell's column, the rows, the column headers
+                ' and the row headers depending on their AutoSize settings.
                 ' The DataGridView control does not expose a public method that takes care of this.
             End If
         End If

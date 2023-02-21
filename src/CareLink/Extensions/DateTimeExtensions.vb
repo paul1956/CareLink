@@ -158,7 +158,7 @@ Friend Module DateTimeExtensions
     <Extension>
     Friend Function GetMarkerDateTime(marker As Dictionary(Of String, String)) As Date
         Try
-            Return marker.ParseDate("dateTime").RoundTimeDown(RoundTo.Minute)
+            Return marker.ParseDate(NameOf(MealRecord.dateTime)).RoundTimeDown(RoundTo.Minute)
         Catch ex As Exception
             Stop
         End Try

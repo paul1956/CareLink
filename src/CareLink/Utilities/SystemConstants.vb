@@ -20,6 +20,7 @@ Public Module SystemConstants
     Friend Const TimeFormatMilitaryWithoutMinutes As String = "HH"
     Friend Const TimeFormatTwelveHourWithMinutes As String = "h:mm tt"
     Friend Const TimeFormatTwelveHourWithoutMinutes As String = "h tt"
+    Friend Const RegisteredTrademark As String = ChrW(&HAE)
     Friend Const TmChar As String = ChrW(&H2122)
 
     Public ReadOnly s_aitItemsBindingSource As New BindingSource(New Dictionary(Of String, String) From {

@@ -264,6 +264,12 @@ Friend Module CreateChartItems
                         .XValueType = ChartValueType.DateTime,
                         .YAxisType = YAxisType
                     }
+        s.SmartLabelStyle.Enabled = False
+        s.SmartLabelStyle.CalloutLineWidth = 1
+        s.SmartLabelStyle.CalloutStyle = LabelCalloutStyle.Box
+        s.SmartLabelStyle.IsMarkerOverlappingAllowed = False
+        s.SmartLabelStyle.IsOverlappedHidden = False
+
         With s.EmptyPointStyle
             .BorderWidth = 4
             .Color = Color.Transparent

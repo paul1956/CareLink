@@ -13,7 +13,39 @@ Friend Module CalloutHelpers
             {"TreatmentMarkersChart", New CalloutAnnotation}
        }
 
+    Friend calloutBounds As New Dictionary(Of Double, Rectangle)
+
     Friend s_treatmentCalloutAnnotations As New Dictionary(Of Double, CalloutAnnotation)
+
+    <Extension>
+    Private Sub AddUpdateAnnotation(treatmentChart As Chart, lastDataPoint As DataPoint, tagText As String)
+        Dim movingDirection As LabelAlignmentStyles = LabelAlignmentStyles.Bottom
+        For Each e As IndexClass(Of Annotation) In treatmentChart.Annotations.ToList.WithIndex
+            Dim annotation As CalloutAnnotation = CType(e.Value, CalloutAnnotation)
+            If annotation.AnchorDataPoint Is Nothing Then Continue For
+            If annotation.AnchorDataPoint.XValue = lastDataPoint.XValue Then
+                Dim yValue As Double = lastDataPoint.YValues(0) - ((lastDataPoint.YValues(0) - annotation.AnchorDataPoint.YValues(0)) / 2)
+                With CType(treatmentChart.Annotations.Item(e.Index), CalloutAnnotation)
+                    .Text = $"{tagText}{Environment.NewLine}{annotation.Text}"
+                    .AnchorDataPoint.SetValueXY(lastDataPoint.XValue, yValue)
+                End With
+                Exit Sub
+            End If
+        Next
+        Dim item As New CalloutAnnotation With {
+                                .Alignment = ContentAlignment.BottomCenter,
+                                .AnchorDataPoint = lastDataPoint,
+                                .Text = tagText,
+                                .Visible = True
+                            }
+        item.SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.No
+        item.SmartLabelStyle.Enabled = True
+        item.SmartLabelStyle.IsMarkerOverlappingAllowed = False
+        item.SmartLabelStyle.IsOverlappedHidden = False
+        item.SmartLabelStyle.MovingDirection = movingDirection
+        movingDirection = movingDirection Or LabelAlignmentStyles.BottomRight Or LabelAlignmentStyles.BottomLeft
+        treatmentChart.Annotations.Add(item)
+    End Sub
 
     Private Function GetAnnotationText(markerTag() As String) As String
         Dim annotationText As String = ""
@@ -31,6 +63,16 @@ Friend Module CalloutHelpers
         Return annotationText
     End Function
 
+    Friend Sub CreateCallout(treatmentChart As Chart, lastDataPoint As DataPoint, markerBorderColor As Color, tagText As String)
+        lastDataPoint.Color = markerBorderColor
+        lastDataPoint.MarkerBorderWidth = 2
+        lastDataPoint.MarkerBorderColor = markerBorderColor
+        lastDataPoint.MarkerSize = 20
+        lastDataPoint.MarkerStyle = MarkerStyle.Square
+        lastDataPoint.Tag = tagText
+        treatmentChart.AddUpdateAnnotation(lastDataPoint, tagText)
+    End Sub
+
     Friend Sub SetCalloutVisibility(name As String)
         With s_calloutAnnotations(name)
             If .Visible Then
@@ -42,7 +84,9 @@ Friend Module CalloutHelpers
     <Extension>
     Friend Sub SetupCallout(chart1 As Chart, currentDataPoint As DataPoint, annotationText As String)
 
-        If chart1.Name = "TreatmentMarkersChart" AndAlso annotationText.StartsWith("Bolus ") Then
+        If chart1.Name = "TreatmentMarkersChart" AndAlso
+            (annotationText.StartsWith("Bolus ") OrElse
+             annotationText.StartsWith("Meal ")) Then
             Return
         End If
         With s_calloutAnnotations(chart1.Name)

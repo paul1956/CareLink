@@ -42,6 +42,8 @@ Partial Class InitializeDialog
         Me.ColumnSave = New DataGridViewColumnControls.DataGridViewDisableButtonColumn()
         Me.UseAdvancedAITDecayHelpLabel = New Label()
         Me.ErrorProvider1 = New ErrorProvider(components)
+        Me.InsulinTypeComboBox = New ComboBox()
+        Me.InsulinTypeLabel = New Label()
         Me.TableLayoutPanel1.SuspendLayout()
         CType(Me.InitializeDataGridView, ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ErrorProvider1, ComponentModel.ISupportInitialize).BeginInit()
@@ -51,15 +53,15 @@ Partial Class InitializeDialog
         ' 
         Me.TableLayoutPanel1.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         Me.TableLayoutPanel1.ColumnCount = 2
-        Me.TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
         Me.TableLayoutPanel1.Controls.Add(Me.OK_Button, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Cancel_Button, 1, 0)
         Me.TableLayoutPanel1.Location = New Point(323, 316)
         Me.TableLayoutPanel1.Margin = New Padding(4, 3, 4, 3)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
-        Me.TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
+        Me.TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50.0F))
         Me.TableLayoutPanel1.Size = New Size(170, 33)
         Me.TableLayoutPanel1.TabIndex = 0
         ' 
@@ -72,7 +74,7 @@ Partial Class InitializeDialog
         Me.OK_Button.Name = "OK_Button"
         Me.OK_Button.Size = New Size(77, 27)
         Me.OK_Button.TabIndex = 0
-        Me.OK_Button.Text = "OK"' 
+        Me.OK_Button.Text = "OK" ' 
         ' Cancel_Button
         ' 
         Me.Cancel_Button.Anchor = AnchorStyles.None
@@ -81,24 +83,25 @@ Partial Class InitializeDialog
         Me.Cancel_Button.Name = "Cancel_Button"
         Me.Cancel_Button.Size = New Size(77, 27)
         Me.Cancel_Button.TabIndex = 1
-        Me.Cancel_Button.Text = "Cancel"' 
+        Me.Cancel_Button.Text = "Cancel" ' 
         ' AitAdvancedDelayComboBox
         ' 
         Me.AitAdvancedDelayComboBox.CausesValidation = False
+        Me.AitAdvancedDelayComboBox.DropDownStyle = ComboBoxStyle.DropDownList
         Me.AitAdvancedDelayComboBox.FormattingEnabled = True
-        Me.AitAdvancedDelayComboBox.Location = New Point(122, 5)
+        Me.AitAdvancedDelayComboBox.Location = New Point(117, 5)
         Me.AitAdvancedDelayComboBox.Name = "AitAdvancedDelayComboBox"
-        Me.AitAdvancedDelayComboBox.Size = New Size(121, 23)
+        Me.AitAdvancedDelayComboBox.Size = New Size(78, 23)
         Me.AitAdvancedDelayComboBox.TabIndex = 1
         ' 
         ' SelectAITLabel
         ' 
         Me.SelectAITLabel.AutoSize = True
-        Me.SelectAITLabel.Location = New Point(16, 9)
+        Me.SelectAITLabel.Location = New Point(18, 9)
         Me.SelectAITLabel.Name = "SelectAITLabel"
-        Me.SelectAITLabel.Size = New Size(93, 15)
+        Me.SelectAITLabel.Size = New Size(96, 15)
         Me.SelectAITLabel.TabIndex = 2
-        Me.SelectAITLabel.Text = "Select Pump AIT"' 
+        Me.SelectAITLabel.Text = "Select Pump AIT:" ' 
         ' UseAITAdvancedDecayCheckBox
         ' 
         Me.UseAITAdvancedDecayCheckBox.AutoSize = True
@@ -182,18 +185,38 @@ Partial Class InitializeDialog
         Me.UseAdvancedAITDecayHelpLabel.Name = "UseAdvancedAITDecayHelpLabel"
         Me.UseAdvancedAITDecayHelpLabel.Size = New Size(312, 15)
         Me.UseAdvancedAITDecayHelpLabel.TabIndex = 4
-        Me.UseAdvancedAITDecayHelpLabel.Text = "Checking this box decays AIT to more closely match body"' 
+        Me.UseAdvancedAITDecayHelpLabel.Text = "Checking this box decays AIT to more closely match body" ' 
         ' ErrorProvider1
         ' 
         Me.ErrorProvider1.ContainerControl = Me
         ' 
+        ' InsulinTypeComboBox
+        ' 
+        Me.InsulinTypeComboBox.CausesValidation = False
+        Me.InsulinTypeComboBox.DropDownStyle = ComboBoxStyle.DropDownList
+        Me.InsulinTypeComboBox.FormattingEnabled = True
+        Me.InsulinTypeComboBox.Location = New Point(306, 5)
+        Me.InsulinTypeComboBox.Name = "InsulinTypeComboBox"
+        Me.InsulinTypeComboBox.Size = New Size(181, 23)
+        Me.InsulinTypeComboBox.TabIndex = 5
+        ' 
+        ' InsulinTypeLabel
+        ' 
+        Me.InsulinTypeLabel.AutoSize = True
+        Me.InsulinTypeLabel.Location = New Point(228, 9)
+        Me.InsulinTypeLabel.Name = "InsulinTypeLabel"
+        Me.InsulinTypeLabel.Size = New Size(72, 15)
+        Me.InsulinTypeLabel.TabIndex = 6
+        Me.InsulinTypeLabel.Text = "Insulin Type:" ' 
         ' InitializeDialog
         ' 
         Me.AcceptButton = Me.OK_Button
-        Me.AutoScaleDimensions = New SizeF(7F, 15F)
+        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.CancelButton = Me.Cancel_Button
         Me.ClientSize = New Size(507, 363)
+        Me.Controls.Add(Me.InsulinTypeLabel)
+        Me.Controls.Add(Me.InsulinTypeComboBox)
         Me.Controls.Add(Me.UseAdvancedAITDecayHelpLabel)
         Me.Controls.Add(Me.InitializeDataGridView)
         Me.Controls.Add(Me.UseAITAdvancedDecayCheckBox)
@@ -218,7 +241,7 @@ Partial Class InitializeDialog
     Friend WithEvents OK_Button As System.Windows.Forms.Button
     Friend WithEvents Cancel_Button As System.Windows.Forms.Button
     Friend WithEvents AitAdvancedDelayComboBox As ComboBox
-    Friend WithEvents Label1 As Label
+    Friend WithEvents InsulinTypeLabel As Label
     Friend WithEvents UseAITAdvancedDecayCheckBox As CheckBox
     Friend WithEvents SelectAITLabel As Label
     Friend WithEvents UseAdvancedAITDecayHelpLabel As Label
@@ -229,4 +252,5 @@ Partial Class InitializeDialog
     Friend WithEvents ColumnSave As DataGridViewColumnControls.DataGridViewDisableButtonColumn
     Friend WithEvents InitializeDataGridView As DataGridView
     Friend WithEvents ErrorProvider1 As ErrorProvider
+    Friend WithEvents InsulinTypeComboBox As ComboBox
 End Class

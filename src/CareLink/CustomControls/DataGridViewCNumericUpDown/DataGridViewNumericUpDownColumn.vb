@@ -165,7 +165,7 @@ Public Class DataGridViewNumericUpDownColumn
 
                 Me.DataGridView.InvalidateColumn(Me.Index)
                 ' TODO: This column and/or grid rows may need to be autosized depending on their
-                '       autosize settings. Call the autosizing methods to autosize the column, rows,
+                '       AutoSize settings. Call the autosizing methods to autosize the column, rows,
                 '       column headers / row headers as needed.
             End If
         End Set
@@ -209,7 +209,7 @@ Public Class DataGridViewNumericUpDownColumn
 
                 Me.DataGridView.InvalidateColumn(Me.Index)
                 ' TODO: This column and/or grid rows may need to be autosized depending on their
-                '       autosize settings. Call the autosizing methods to autosize the column, rows,
+                '       AutoSize settings. Call the autosizing methods to autosize the column, rows,
                 '       column headers / row headers as needed.
             End If
         End Set
@@ -253,7 +253,7 @@ Public Class DataGridViewNumericUpDownColumn
 
                 Me.DataGridView.InvalidateColumn(Me.Index)
                 ' TODO: This column and/or grid rows may need to be autosized depending on their
-                '       autosize settings. Call the autosizing methods to autosize the column, rows,
+                '       AutoSize settings. Call the autosizing methods to autosize the column, rows,
                 '       column headers / row headers as needed.
             End If
         End Set

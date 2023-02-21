@@ -131,7 +131,7 @@ Friend Module PlotMarkers
                             markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Yellow)
                             markerSeriesPoints.Last.MarkerSize = 20
                             markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
-                            markerSeriesPoints.Last.Tag = $"Meal: {entry("amount")} grams"
+                            markerSeriesPoints.Last.Tag = $"Meal {entry("amount")} grams"
                         End If
                     Case "TIME_CHANGE"
                         With pageChart.Series(CreateChartItems.TimeChangeSeriesName).Points
@@ -166,10 +166,9 @@ Friend Module PlotMarkers
         s_treatmentMarkerMealDictionary.Clear()
         For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             Try
-                Dim markerDateTime As Date = markerWithIndex.Value.GetMarkerDateTime
-                Dim markerOADateTime As New OADate(markerDateTime)
-                Dim bgValueString As String = ""
+                Dim markerOADateTime As New OADate(markerWithIndex.Value.GetMarkerDateTime())
                 Dim bgValue As Single
+                Dim bgValueString As String = ""
                 Dim entry As Dictionary(Of String, String) = markerWithIndex.Value
 
                 If entry.TryGetValue("value", bgValueString) Then
@@ -199,22 +198,16 @@ Friend Module PlotMarkers
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 If s_treatmentMarkerInsulinDictionary.TryAdd(markerOADateTime, TreatmentInsulinRow) Then
                                     markerSeriesPoints.AddXY(markerOADateTime, TreatmentInsulinRow)
-                                    markerSeriesPoints.Last.MarkerBorderWidth = 2
-                                    markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Black)
-                                    markerSeriesPoints.Last.MarkerSize = 20
-                                    markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
+                                    Dim lastDataPoint As DataPoint = markerSeriesPoints.Last
                                     If Double.IsNaN(HomePageInsulinRow) Then
-                                        markerSeriesPoints.Last.Color = Color.Transparent
-                                        markerSeriesPoints.Last.MarkerSize = 0
+                                        lastDataPoint.Color = Color.Transparent
+                                        lastDataPoint.MarkerSize = 0
                                     Else
-                                        markerSeriesPoints.Last.Color = Color.FromArgb(30, Color.LightBlue)
-                                        markerSeriesPoints.Last.Tag = $"Bolus: {entry(NameOf(InsulinRecord.deliveredFastAmount))} U"
-                                        Dim callout As New CalloutAnnotation With {
-                                                .AnchorDataPoint = markerSeriesPoints.Last,
-                                                .Text = markerSeriesPoints.Last.Tag.ToString,
-                                                .Visible = True
-                                            }
-                                        treatmentChart.Annotations.Add(callout)
+                                        lastDataPoint.Color = Color.FromArgb(30, Color.LightBlue)
+                                        CreateCallout(treatmentChart,
+                                                      lastDataPoint,
+                                                      Color.FromArgb(10, Color.Black),
+                                                      $"Bolus {entry(NameOf(InsulinRecord.deliveredFastAmount))} U")
                                     End If
                                 Else
                                     Stop
@@ -226,12 +219,10 @@ Friend Module PlotMarkers
                         Dim mealRow As Single = CSng(TreatmentInsulinRow * 0.95).RoundSingle(3)
                         If s_treatmentMarkerMealDictionary.TryAdd(markerOADateTime, mealRow) Then
                             markerSeriesPoints.AddXY(markerOADateTime, mealRow)
-                            markerSeriesPoints.Last.Color = Color.FromArgb(10, Color.Yellow)
-                            markerSeriesPoints.Last.MarkerBorderWidth = 2
-                            markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Yellow)
-                            markerSeriesPoints.Last.MarkerSize = 20
-                            markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
-                            markerSeriesPoints.Last.Tag = $"Meal: {entry("amount")} grams"
+                            CreateCallout(treatmentChart,
+                                          markerSeriesPoints.Last,
+                                          Color.FromArgb(10, Color.Yellow),
+                                          $"Meal {entry("amount")} grams")
                         End If
                     Case "BG_READING",
                          "CALIBRATION"
