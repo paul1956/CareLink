@@ -35,6 +35,10 @@ Public Class Form1
     Private _treatmentMarkerAbsoluteRectangle As RectangleF
     Private _updating As Boolean
 
+    Public Property Initialized As Boolean = False
+
+    Public ReadOnly Property LoginDialog As New LoginForm1
+
     Public Property Client As CareLinkClient
         Get
             Return Me.LoginDialog?.Client
@@ -43,9 +47,6 @@ Public Class Form1
             Me.LoginDialog.Client = value
         End Set
     End Property
-
-    Public Property Initialized As Boolean = False
-    Public ReadOnly Property LoginDialog As New LoginForm1
 
 #Region "Pump Data"
 
@@ -138,9 +139,6 @@ Public Class Form1
 
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
-#If SupportMailServer <> "True" Then
-        Me.MenuOptionsSetupEMailServer.Visible = False
-#End If
         ' Prime know colors here
         GetAllKnownColors()
         If File.Exists(GetGraphColorsFileNameWithPath(ProjectName)) Then
@@ -153,7 +151,7 @@ Public Class Form1
 
         Me.AITComboBox = New ToolStripComboBoxEx With {
             .BackColor = Color.Black,
-            .DataSource = s_aitItemsBindingSource,
+            .DataSource = New BindingSource(s_aitValues, Nothing),
             .DisplayMember = "Key",
             .ValueMember = "Value",
             .DropDownStyle = ComboBoxStyle.DropDownList,
@@ -167,17 +165,6 @@ Public Class Form1
             .Size = New Size(78, 23),
             .TabIndex = 0
         }
-
-        With Me.CareLinkUsersAITComboBox
-            .DataSource = s_aitItemsBindingSource
-            .DropDownStyle = ComboBoxStyle.DropDownList
-            .Font = New Font("Segoe UI", 9.0!, FontStyle.Bold, GraphicsUnit.Point)
-            .ForeColor = Color.White
-            .FormattingEnabled = True
-            .Size = New Size(78, 23)
-            .DisplayMember = "Key"
-            .ValueMember = "Value"
-        End With
 
         Me.MenuStrip1.Items.Insert(2, Me.AITComboBox)
         Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact($"AIT {My.Settings.AIT.ToString("hh\:mm").Substring(1)}")
@@ -197,10 +184,6 @@ Public Class Form1
         s_useLocalTimeZone = My.Settings.UseLocalTimeZone
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
         CheckForUpdatesAsync(Me, False)
-
-        If Debugger.IsAttached Then
-            InitializeDialog.ShowDialog()
-        End If
 
         If Me.DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
             Me.UpdateAllTabPages()
@@ -287,10 +270,6 @@ Public Class Form1
 
     End Sub
 
-    Private Sub StartHereExit_Click(sender As Object, e As EventArgs) Handles StartHereExit.Click
-        Me.CleanUpNotificationIcon()
-    End Sub
-
     Private Sub MenuStartHereLoadSavedDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereLoadSavedDataFile.Click
         Dim di As New DirectoryInfo(MyDocumentsPath)
         Dim fileList As String() = New DirectoryInfo(MyDocumentsPath).
@@ -351,12 +330,22 @@ Public Class Form1
         Me.MenuStartHereSnapshotSave.Enabled = False
     End Sub
 
+    Private Sub StartHereExit_Click(sender As Object, e As EventArgs) Handles StartHereExit.Click
+        Me.CleanUpNotificationIcon()
+    End Sub
+
 #End Region ' Start Here Menu Events
 
 #Region "Option Menus"
 
     Private Sub MenuOptionsAutoLogin_CheckedChanged(sender As Object, e As EventArgs) Handles MenuOptionsAutoLogin.CheckedChanged
         My.Settings.AutoLogin = Me.MenuOptionsAutoLogin.Checked
+    End Sub
+
+    Private Sub MenuOptionsColorPicker_Click(sender As Object, e As EventArgs) Handles MenuOptionsColorPicker.Click
+        Using o As New OptionsDialog()
+            o.ShowDialog(Me)
+        End Using
     End Sub
 
     Private Sub MenuOptionsFilterRawJSONData_Click(sender As Object, e As EventArgs) Handles MenuOptionsFilterRawJSONData.Click
@@ -403,13 +392,6 @@ Public Class Form1
         Next
     End Sub
 
-#If SupportMailServer = "True" Then
-        Private Sub MenuOptionsSetupEMailServer_Click(sender As Object, e As EventArgs) Handles MenuOptionsSetupEMailServer.Click
-            MailSetupDialog.ShowDialog()
-        End Sub
-
-#End If
-
     Private Sub MenuOptionsShowLegend_CheckStateChanged(sender As Object, e As EventArgs) Handles MenuOptionsShowLegend.CheckStateChanged
         If Not Me.Initialized Then Exit Sub
         If Me.MenuOptionsShowLegend.Checked Then
@@ -423,12 +405,6 @@ Public Class Form1
             Me.SummaryChartLegend.Enabled = False
             Me.TreatmentMarkersChartLegend.Enabled = False
         End If
-    End Sub
-
-    Private Sub MenuOptionsColorPicker_Click(sender As Object, e As EventArgs) Handles MenuOptionsColorPicker.Click
-        Using o As New OptionsDialog()
-            o.ShowDialog(Me)
-        End Using
     End Sub
 
     Private Sub MenuOptionsUseAdvancedAITDecay_CheckStateChanged(sender As Object, e As EventArgs) Handles MenuOptionsUseAdvancedAITDecay.CheckStateChanged
@@ -501,9 +477,6 @@ Public Class Form1
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
                     c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
                 Next
-                Me.CareLinkUsersAITComboBox.Width = Me.AITComboBox.Width
-                Me.CareLinkUsersAITComboBox.SelectedIndex = Me.AITComboBox.SelectedIndex
-                Me.CareLinkUsersAITComboBox.Visible = False
                 Me.DgvCareLinkUsers.Columns(NameOf(DgvCareLinkUsersAIT)).Width = Me.AITComboBox.Width
                 If _lastMarkerTabIndex.page = 0 Then
                     Me.TabControlPage2.SelectedIndex = 0
@@ -531,9 +504,6 @@ Public Class Form1
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
                     c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
                 Next
-                Me.CareLinkUsersAITComboBox.Width = Me.AITComboBox.Width
-                Me.CareLinkUsersAITComboBox.SelectedIndex = Me.AITComboBox.SelectedIndex
-                Me.CareLinkUsersAITComboBox.Visible = False
                 Me.DgvCareLinkUsers.Columns(NameOf(DgvCareLinkUsersAIT)).Width = Me.AITComboBox.Width
             Case Else
                 If e.TabPageIndex < Me.TabControlPage2.TabPages.Count - 2 Then
@@ -1013,28 +983,6 @@ Public Class Form1
 
 #Region "Insulin DataGridView Events"
 
-    Private Sub DgvInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnAdded
-        With e.Column
-            If InsulinRecordHelpers.HideColumn(.Name) Then
-                .Visible = False
-                Exit Sub
-            End If
-            Dim dgv As DataGridView = CType(sender, DataGridView)
-            e.DgvColumnAdded(InsulinRecordHelpers.GetCellStyle(.Name),
-                             True,
-                             True,
-                             CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
-        End With
-    End Sub
-
-    Private Sub DgvInsulin_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnHeaderCellChanged
-        Stop
-    End Sub
-
-    Private Sub DgvInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvInsulin.DataError
-        Stop
-    End Sub
-
     Private Sub DgvInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvInsulin.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.dgvCellFormatting(e, NameOf(InsulinRecord.dateTime))
@@ -1056,6 +1004,28 @@ Public Class Form1
                     e.CellStyle.BackColor = Color.Red
                 End If
         End Select
+    End Sub
+
+    Private Sub DgvInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnAdded
+        With e.Column
+            If InsulinRecordHelpers.HideColumn(.Name) Then
+                .Visible = False
+                Exit Sub
+            End If
+            Dim dgv As DataGridView = CType(sender, DataGridView)
+            e.DgvColumnAdded(InsulinRecordHelpers.GetCellStyle(.Name),
+                             True,
+                             True,
+                             CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+        End With
+    End Sub
+
+    Private Sub DgvInsulin_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnHeaderCellChanged
+        Stop
+    End Sub
+
+    Private Sub DgvInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvInsulin.DataError
+        Stop
     End Sub
 
 #End Region ' Insulin DataGridView Events
@@ -1094,6 +1064,16 @@ Public Class Form1
 
 #Region "CareLink Users DataGridView Events"
 
+    Private Sub DgvCareLinkUsers_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles DgvCareLinkUsers.CellBeginEdit
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        'Here we save a current value of cell to some variable, that later we can compare with a new value
+        'For example using of dgv.Tag property
+        If e.RowIndex >= 0 AndAlso e.ColumnIndex > 0 Then
+            dgv.Tag = dgv.CurrentCell.Value.ToString
+        End If
+
+    End Sub
+
     Private Sub DgvCareLinkUsers_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvCareLinkUsers.CellContentClick
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim dataGridViewDisableButtonCell As DataGridViewDisableButtonCell = TryCast(dgv.Rows(e.RowIndex).Cells(e.ColumnIndex), DataGridViewDisableButtonCell)
@@ -1108,19 +1088,6 @@ Public Class Form1
             dgv.DataSource = s_allUserSettingsData
             s_allUserSettingsData.SaveAllUserRecords()
         End If
-
-    End Sub
-
-    Private Sub DgvCareLinkUsers_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles DgvCareLinkUsers.CellBeginEdit
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        'Here we save a current value of cell to some variable, that later we can compare with a new value
-        'For example using of dgv.Tag property
-        If e.RowIndex >= 0 AndAlso e.ColumnIndex > 0 Then
-            dgv.Tag = dgv.CurrentCell.Value.ToString
-        End If
-        'If dgv.Columns(e.ColumnIndex).DataPropertyName = NameOf(CareLinkUserDataRecord.AIT) Then
-        '    Me.CareLinkUsersAITComboBox.Visible = True
-        'End If
 
     End Sub
 

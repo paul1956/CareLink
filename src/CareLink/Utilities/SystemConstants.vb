@@ -23,7 +23,7 @@ Public Module SystemConstants
     Friend Const RegisteredTrademark As String = ChrW(&HAE)
     Friend Const TmChar As String = ChrW(&H2122)
 
-    Public ReadOnly s_aitItemsBindingSource As New BindingSource(New Dictionary(Of String, String) From {
+    Public ReadOnly s_aitValues As New Dictionary(Of String, String) From {
                         {"AIT 2:00", "2:00"}, {"AIT 2:15", "2:15"},
                         {"AIT 2:30", "2:30"}, {"AIT 2:45", "2:45"},
                         {"AIT 3:00", "3:00"}, {"AIT 3:15", "3:15"},
@@ -33,7 +33,7 @@ Public Module SystemConstants
                         {"AIT 5:00", "5:00"}, {"AIT 5:15", "5:15"},
                         {"AIT 5:30", "5:30"}, {"AIT 5:45", "5:45"},
                         {"AIT 6:00", "6:00"}
-                    }, Nothing)
+                    }
 
     Public ReadOnly s_iobTitle As String = $"Running Insulin On Board (IOB)"
 

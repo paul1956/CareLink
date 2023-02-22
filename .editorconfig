@@ -209,7 +209,7 @@ dotnet_naming_rule.locals_must_have_camel_case.style = camel_case_style
 dotnet_diagnostic.ca1031.severity = silent
 
 # CA1050: Declare types in namespaces
-dotnet_diagnostic.CA1050.severity = none
+dotnet_diagnostic.CA1050.severity = suggestion
 
 # CA1303: Do not pass literals as localized parameters
 dotnet_diagnostic.ca1303.severity = silent

@@ -45,7 +45,6 @@ Partial Class Form1
         Me.ToolStripSeparator6 = New ToolStripSeparator()
         Me.OptionsMenuAdvancedOptions = New ToolStripMenuItem()
         Me.MenuOptionsFilterRawJSONData = New ToolStripMenuItem()
-        Me.MenuOptionsSetupEMailServer = New ToolStripMenuItem()
         Me.MenuOptionsUseAdvancedAITDecay = New ToolStripMenuItem()
         Me.MenuOptionsUseLocalTimeZone = New ToolStripMenuItem()
         Me.MenuHelp = New ToolStripMenuItem()
@@ -74,7 +73,6 @@ Partial Class Form1
         Me.SensorMessage = New Label()
         Me.CalibrationShieldPictureBox = New PictureBox()
         Me.CareLinkUserDataRecordBindingSource = New BindingSource(components)
-        Me.CareLinkUsersAITComboBox = New ComboBox()
         Me.CursorMessage1Label = New Label()
         Me.CursorMessage2Label = New Label()
         Me.CursorMessage3Label = New Label()
@@ -382,7 +380,7 @@ Partial Class Form1
         Me.StartHereExit.Text = "E&xit" ' 
         ' MenuOptions
         ' 
-        Me.MenuOptions.DropDownItems.AddRange(New ToolStripItem() {Me.MenuOptionsColorPicker, Me.MenuOptionsShowLegend, Me.ToolStripSeparator5, Me.MenuOptionsAutoLogin, Me.ToolStripSeparator6, Me.OptionsMenuAdvancedOptions, Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsSetupEMailServer, Me.MenuOptionsUseAdvancedAITDecay, Me.MenuOptionsUseLocalTimeZone})
+        Me.MenuOptions.DropDownItems.AddRange(New ToolStripItem() {Me.MenuOptionsColorPicker, Me.MenuOptionsShowLegend, Me.ToolStripSeparator5, Me.MenuOptionsAutoLogin, Me.ToolStripSeparator6, Me.OptionsMenuAdvancedOptions, Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsUseAdvancedAITDecay, Me.MenuOptionsUseLocalTimeZone})
         Me.MenuOptions.Name = "MenuOptions"
         Me.MenuOptions.Size = New Size(61, 20)
         Me.MenuOptions.Text = "Options" ' 
@@ -429,13 +427,6 @@ Partial Class Form1
         Me.MenuOptionsFilterRawJSONData.Name = "MenuOptionsFilterRawJSONData"
         Me.MenuOptionsFilterRawJSONData.Size = New Size(204, 22)
         Me.MenuOptionsFilterRawJSONData.Text = "Filter Raw JSON Data" ' 
-        ' MenuOptionsSetupEMailServer
-        ' 
-        Me.MenuOptionsSetupEMailServer.Name = "MenuOptionsSetupEMailServer"
-        Me.MenuOptionsSetupEMailServer.Size = New Size(204, 22)
-        Me.MenuOptionsSetupEMailServer.Text = "Setup Email Server"
-        Me.MenuOptionsSetupEMailServer.Visible = False
-        ' 
         ' MenuOptionsUseAdvancedAITDecay
         ' 
         Me.MenuOptionsUseAdvancedAITDecay.Checked = True
@@ -737,15 +728,6 @@ Partial Class Form1
         ' CareLinkUserDataRecordBindingSource
         ' 
         Me.CareLinkUserDataRecordBindingSource.DataSource = GetType(CareLinkUserDataRecord)
-        ' 
-        ' CareLinkUsersAITComboBox
-        ' 
-        Me.CareLinkUsersAITComboBox.FormattingEnabled = True
-        Me.CareLinkUsersAITComboBox.Location = New Point(796, 63)
-        Me.CareLinkUsersAITComboBox.Name = "CareLinkUsersAITComboBox"
-        Me.CareLinkUsersAITComboBox.Size = New Size(121, 23)
-        Me.CareLinkUsersAITComboBox.TabIndex = 1
-        ' 
         ' CursorMessage1Label
         ' 
         Me.CursorMessage1Label.Anchor = AnchorStyles.Left Or AnchorStyles.Right
@@ -2637,7 +2619,6 @@ Partial Class Form1
         ' 
         ' TabPageAllUsers
         ' 
-        Me.TabPageAllUsers.Controls.Add(Me.CareLinkUsersAITComboBox)
         Me.TabPageAllUsers.Controls.Add(Me.DgvCareLinkUsers)
         Me.TabPageAllUsers.Location = New Point(4, 27)
         Me.TabPageAllUsers.Name = "TabPageAllUsers"
@@ -2808,7 +2789,6 @@ Partial Class Form1
     Friend WithEvents CalibrationShieldPanel As Panel
     Friend WithEvents CalibrationShieldPictureBox As PictureBox
     Friend WithEvents CareLinkUserDataRecordBindingSource As BindingSource
-    Friend WithEvents CareLinkUsersAITComboBox As ComboBox
     Friend WithEvents CurrentBGLabel As Label
     Friend WithEvents CursorMessage1Label As Label
     Friend WithEvents CursorMessage2Label As Label
@@ -2874,7 +2854,6 @@ Partial Class Form1
     Friend WithEvents MenuOptionsAutoLogin As ToolStripMenuItem
     Friend WithEvents MenuOptionsColorPicker As ToolStripMenuItem
     Friend WithEvents MenuOptionsFilterRawJSONData As ToolStripMenuItem
-    Friend WithEvents MenuOptionsSetupEMailServer As ToolStripMenuItem
     Friend WithEvents MenuOptionsShowLegend As ToolStripMenuItem
     Friend WithEvents MenuOptionsUseAdvancedAITDecay As ToolStripMenuItem
     Friend WithEvents MenuOptionsUseLocalTimeZone As ToolStripMenuItem

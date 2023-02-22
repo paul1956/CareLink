@@ -53,46 +53,45 @@ Partial Class InitializeDialog
         ' 
         Me.TableLayoutPanel1.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         Me.TableLayoutPanel1.ColumnCount = 2
-        Me.TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
         Me.TableLayoutPanel1.Controls.Add(Me.OK_Button, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Cancel_Button, 1, 0)
-        Me.TableLayoutPanel1.Location = New Point(323, 316)
+        Me.TableLayoutPanel1.Location = New Point(228, 316)
         Me.TableLayoutPanel1.Margin = New Padding(4, 3, 4, 3)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
-        Me.TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50.0F))
-        Me.TableLayoutPanel1.Size = New Size(170, 33)
+        Me.TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
+        Me.TableLayoutPanel1.Size = New Size(265, 33)
         Me.TableLayoutPanel1.TabIndex = 0
         ' 
         ' OK_Button
         ' 
         Me.OK_Button.Anchor = AnchorStyles.None
         Me.OK_Button.Enabled = False
-        Me.OK_Button.Location = New Point(4, 3)
+        Me.OK_Button.Location = New Point(6, 3)
         Me.OK_Button.Margin = New Padding(4, 3, 4, 3)
         Me.OK_Button.Name = "OK_Button"
-        Me.OK_Button.Size = New Size(77, 27)
+        Me.OK_Button.Size = New Size(119, 27)
         Me.OK_Button.TabIndex = 0
-        Me.OK_Button.Text = "OK" ' 
+        Me.OK_Button.Text = "OK"' 
         ' Cancel_Button
         ' 
         Me.Cancel_Button.Anchor = AnchorStyles.None
-        Me.Cancel_Button.Location = New Point(89, 3)
+        Me.Cancel_Button.Location = New Point(139, 3)
         Me.Cancel_Button.Margin = New Padding(4, 3, 4, 3)
         Me.Cancel_Button.Name = "Cancel_Button"
-        Me.Cancel_Button.Size = New Size(77, 27)
+        Me.Cancel_Button.Size = New Size(119, 27)
         Me.Cancel_Button.TabIndex = 1
-        Me.Cancel_Button.Text = "Cancel" ' 
+        Me.Cancel_Button.Text = "Cancel"' 
         ' AitAdvancedDelayComboBox
         ' 
-        Me.AitAdvancedDelayComboBox.CausesValidation = False
         Me.AitAdvancedDelayComboBox.DropDownStyle = ComboBoxStyle.DropDownList
         Me.AitAdvancedDelayComboBox.FormattingEnabled = True
         Me.AitAdvancedDelayComboBox.Location = New Point(117, 5)
         Me.AitAdvancedDelayComboBox.Name = "AitAdvancedDelayComboBox"
         Me.AitAdvancedDelayComboBox.Size = New Size(78, 23)
-        Me.AitAdvancedDelayComboBox.TabIndex = 1
+        Me.AitAdvancedDelayComboBox.TabIndex = 0
         ' 
         ' SelectAITLabel
         ' 
@@ -101,16 +100,18 @@ Partial Class InitializeDialog
         Me.SelectAITLabel.Name = "SelectAITLabel"
         Me.SelectAITLabel.Size = New Size(96, 15)
         Me.SelectAITLabel.TabIndex = 2
-        Me.SelectAITLabel.Text = "Select Pump AIT:" ' 
+        Me.SelectAITLabel.Text = "Select Pump AIT:"' 
         ' UseAITAdvancedDecayCheckBox
         ' 
+        Me.UseAITAdvancedDecayCheckBox.AutoCheck = False
         Me.UseAITAdvancedDecayCheckBox.AutoSize = True
         Me.UseAITAdvancedDecayCheckBox.Checked = True
-        Me.UseAITAdvancedDecayCheckBox.CheckState = CheckState.Checked
+        Me.UseAITAdvancedDecayCheckBox.CheckState = CheckState.Indeterminate
+        Me.UseAITAdvancedDecayCheckBox.Enabled = False
         Me.UseAITAdvancedDecayCheckBox.Location = New Point(337, 34)
         Me.UseAITAdvancedDecayCheckBox.Name = "UseAITAdvancedDecayCheckBox"
         Me.UseAITAdvancedDecayCheckBox.Size = New Size(156, 19)
-        Me.UseAITAdvancedDecayCheckBox.TabIndex = 0
+        Me.UseAITAdvancedDecayCheckBox.TabIndex = 2
         Me.UseAITAdvancedDecayCheckBox.Text = "Use Advanced AIT Decay"
         Me.UseAITAdvancedDecayCheckBox.UseVisualStyleBackColor = True
         ' 
@@ -122,6 +123,7 @@ Partial Class InitializeDialog
         Me.InitializeDataGridView.CausesValidation = False
         Me.InitializeDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.InitializeDataGridView.Columns.AddRange(New DataGridViewColumn() {Me.ColumnDeleteRow, Me.ColumnStart, Me.ColumnEnd, Me.ColumnNumericUpDown, Me.ColumnSave})
+        Me.InitializeDataGridView.Enabled = False
         Me.InitializeDataGridView.Location = New Point(14, 65)
         Me.InitializeDataGridView.Name = "InitializeDataGridView"
         Me.InitializeDataGridView.RowTemplate.Height = 25
@@ -185,7 +187,7 @@ Partial Class InitializeDialog
         Me.UseAdvancedAITDecayHelpLabel.Name = "UseAdvancedAITDecayHelpLabel"
         Me.UseAdvancedAITDecayHelpLabel.Size = New Size(312, 15)
         Me.UseAdvancedAITDecayHelpLabel.TabIndex = 4
-        Me.UseAdvancedAITDecayHelpLabel.Text = "Checking this box decays AIT to more closely match body" ' 
+        Me.UseAdvancedAITDecayHelpLabel.Text = "Checking this box decays AIT to more closely match body"' 
         ' ErrorProvider1
         ' 
         Me.ErrorProvider1.ContainerControl = Me
@@ -194,11 +196,12 @@ Partial Class InitializeDialog
         ' 
         Me.InsulinTypeComboBox.CausesValidation = False
         Me.InsulinTypeComboBox.DropDownStyle = ComboBoxStyle.DropDownList
+        Me.InsulinTypeComboBox.Enabled = False
         Me.InsulinTypeComboBox.FormattingEnabled = True
         Me.InsulinTypeComboBox.Location = New Point(306, 5)
         Me.InsulinTypeComboBox.Name = "InsulinTypeComboBox"
         Me.InsulinTypeComboBox.Size = New Size(181, 23)
-        Me.InsulinTypeComboBox.TabIndex = 5
+        Me.InsulinTypeComboBox.TabIndex = 1
         ' 
         ' InsulinTypeLabel
         ' 
@@ -207,12 +210,13 @@ Partial Class InitializeDialog
         Me.InsulinTypeLabel.Name = "InsulinTypeLabel"
         Me.InsulinTypeLabel.Size = New Size(72, 15)
         Me.InsulinTypeLabel.TabIndex = 6
-        Me.InsulinTypeLabel.Text = "Insulin Type:" ' 
+        Me.InsulinTypeLabel.Text = "Insulin Type:"' 
         ' InitializeDialog
         ' 
         Me.AcceptButton = Me.OK_Button
-        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
+        Me.AutoScaleDimensions = New SizeF(7F, 15F)
         Me.AutoScaleMode = AutoScaleMode.Font
+        Me.AutoValidate = AutoValidate.EnableAllowFocusChange
         Me.CancelButton = Me.Cancel_Button
         Me.ClientSize = New Size(507, 363)
         Me.Controls.Add(Me.InsulinTypeLabel)

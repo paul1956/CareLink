@@ -44,6 +44,11 @@ Friend Module Form1LoginHelpers
                     MainForm.LastUpdateTime.Text = "Unknown"
                     Return False
                 End If
+
+                If Debugger.IsAttached Then
+                    InitializeDialog.ShowDialog()
+                End If
+
                 s_listOfManualBasal.Clear()
                 MainForm.RecentData = MainForm.Client.GetRecentData(MainForm)
                 MainForm.ServerUpdateTimer.Interval = s_oneMinutesInMilliseconds
