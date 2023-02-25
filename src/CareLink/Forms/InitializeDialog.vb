@@ -30,14 +30,8 @@ Public Class InitializeDialog
                 {"6:00", New TimeSpan(6, 0, 0)}
             }
 
-    Private ReadOnly _insulinTypes As New Dictionary(Of String, TimeSpan) From
-            {
-                {$"Humalog{RegisteredTrademark}/Novolog{RegisteredTrademark}", New TimeSpan(3, 0, 0)},
-                {$"Lyumjev{RegisteredTrademark}/FIASP{RegisteredTrademark}", New TimeSpan(3, 0, 0)}
-            }
-
     Private ReadOnly _insulinTypesBindingSource As New BindingSource(
-                _insulinTypes, Nothing)
+                s_insulinTypes, Nothing)
 
     Private ReadOnly _midday As String = New TimeOnly(12, 0).ToString(CurrentDateCulture)
     Private ReadOnly _midnight As String = New TimeOnly(0, 0).ToString(CurrentDateCulture)

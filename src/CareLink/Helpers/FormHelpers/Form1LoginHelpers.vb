@@ -55,6 +55,7 @@ Friend Module Form1LoginHelpers
                 SetUpCareLinkUser(userSettingsPath)
 
                 MainForm.AITComboBox.SelectedIndex = MainForm.AITComboBox.FindStringExact($"AIT {CType(CurrentUser.Ait, TimeSpan).ToString("hh\:mm").Substring(1)}")
+                MainForm.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName
                 MainForm.RecentData = MainForm.Client.GetRecentData(MainForm)
                 MainForm.ServerUpdateTimer.Interval = CInt(s_1MinutesInMilliseconds)
                 MainForm.ServerUpdateTimer.Start()

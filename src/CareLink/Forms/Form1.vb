@@ -168,7 +168,7 @@ Public Class Form1
             .Size = New Size(78, 23),
             .TabIndex = 0
         }
-
+        Me.ReadingsLabel.Text = s_insulinTypes.Keys(1)
         Me.MenuStrip1.Items.Insert(2, Me.AITComboBox)
         AddHandler Microsoft.Win32.SystemEvents.PowerModeChanged, AddressOf Me.PowerModeChanged
     End Sub
@@ -1984,7 +1984,7 @@ Public Class Form1
         Dim modelNumber As String = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.pumpModelNumber))
         Me.ModelLabel.Text = modelNumber
         Me.PumpNameLabel.Text = GetPumpName(modelNumber)
-        Me.ReadingsLabel.Text = $"{s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288"
+        Me.ReadingsLabel.Text = $"{s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288 Readings"
 
         Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
                               ClassCollectionToDataTable({s_lastSgRecord}.ToList),

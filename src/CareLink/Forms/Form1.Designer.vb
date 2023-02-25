@@ -136,7 +136,7 @@ Partial Class Form1
         Me.NotifyIcon1 = New NotifyIcon(components)
         Me.PumpBatteryPictureBox = New PictureBox()
         Me.PumpBatteryRemainingLabel = New Label()
-        Me.ReadingIntervalLabel = New Label()
+        Me.InsulinTypeLabel = New Label()
         Me.ReadingsLabel = New Label()
         Me.RemainingInsulinUnits = New Label()
         Me.SensorDaysLeftLabel = New Label()
@@ -378,7 +378,7 @@ Partial Class Form1
         ' MenuOptionsColorPicker
         ' 
         Me.MenuOptionsColorPicker.Name = "MenuOptionsColorPicker"
-        Me.MenuOptionsColorPicker.Size = New Size(204, 22)
+        Me.MenuOptionsColorPicker.Size = New Size(183, 22)
         Me.MenuOptionsColorPicker.Text = "Color Picker..." ' 
         ' MenuOptionsShowLegend
         ' 
@@ -386,29 +386,29 @@ Partial Class Form1
         Me.MenuOptionsShowLegend.CheckOnClick = True
         Me.MenuOptionsShowLegend.CheckState = CheckState.Checked
         Me.MenuOptionsShowLegend.Name = "MenuOptionsShowLegend"
-        Me.MenuOptionsShowLegend.Size = New Size(204, 22)
+        Me.MenuOptionsShowLegend.Size = New Size(183, 22)
         Me.MenuOptionsShowLegend.Text = "Show Legend" ' 
         ' ToolStripSeparator5
         ' 
         Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
-        Me.ToolStripSeparator5.Size = New Size(201, 6)
+        Me.ToolStripSeparator5.Size = New Size(180, 6)
         ' 
         ' MenuOptionsAutoLogin
         ' 
         Me.MenuOptionsAutoLogin.CheckOnClick = True
         Me.MenuOptionsAutoLogin.Name = "MenuOptionsAutoLogin"
-        Me.MenuOptionsAutoLogin.Size = New Size(204, 22)
+        Me.MenuOptionsAutoLogin.Size = New Size(183, 22)
         Me.MenuOptionsAutoLogin.Text = "Auto Login" ' 
         ' ToolStripSeparator6
         ' 
         Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
-        Me.ToolStripSeparator6.Size = New Size(201, 6)
+        Me.ToolStripSeparator6.Size = New Size(180, 6)
         ' 
         ' OptionsMenuAdvancedOptions
         ' 
         Me.OptionsMenuAdvancedOptions.Enabled = False
         Me.OptionsMenuAdvancedOptions.Name = "OptionsMenuAdvancedOptions"
-        Me.OptionsMenuAdvancedOptions.Size = New Size(204, 22)
+        Me.OptionsMenuAdvancedOptions.Size = New Size(183, 22)
         Me.OptionsMenuAdvancedOptions.Text = "Advanced Options" ' 
         ' MenuOptionsFilterRawJSONData
         ' 
@@ -416,7 +416,7 @@ Partial Class Form1
         Me.MenuOptionsFilterRawJSONData.CheckOnClick = True
         Me.MenuOptionsFilterRawJSONData.CheckState = CheckState.Checked
         Me.MenuOptionsFilterRawJSONData.Name = "MenuOptionsFilterRawJSONData"
-        Me.MenuOptionsFilterRawJSONData.Size = New Size(204, 22)
+        Me.MenuOptionsFilterRawJSONData.Size = New Size(183, 22)
         Me.MenuOptionsFilterRawJSONData.Text = "Filter Raw JSON Data" ' 
         ' MenuOptionsUseLocalTimeZone
         ' 
@@ -424,7 +424,7 @@ Partial Class Form1
         Me.MenuOptionsUseLocalTimeZone.CheckOnClick = True
         Me.MenuOptionsUseLocalTimeZone.CheckState = CheckState.Indeterminate
         Me.MenuOptionsUseLocalTimeZone.Name = "MenuOptionsUseLocalTimeZone"
-        Me.MenuOptionsUseLocalTimeZone.Size = New Size(204, 22)
+        Me.MenuOptionsUseLocalTimeZone.Size = New Size(183, 22)
         Me.MenuOptionsUseLocalTimeZone.Text = "Use Local TImeZone" ' 
         ' MenuHelp
         ' 
@@ -711,6 +711,7 @@ Partial Class Form1
         ' CareLinkUserDataRecordBindingSource
         ' 
         Me.CareLinkUserDataRecordBindingSource.DataSource = GetType(CareLinkUserDataRecord)
+        ' 
         ' CursorMessage1Label
         ' 
         Me.CursorMessage1Label.Anchor = AnchorStyles.Left Or AnchorStyles.Right
@@ -863,7 +864,12 @@ Partial Class Form1
         Me.DgvCareLinkUsersCareLinkPassword.HeaderText = "CareLink Password"
         Me.DgvCareLinkUsersCareLinkPassword.Name = "DgvCareLinkUsersCareLinkPassword"
         Me.DgvCareLinkUsersCareLinkPassword.Width = 120
-        '
+        ' 
+        ' DgvCareLinkUsersCountryCode
+        ' 
+        Me.DgvCareLinkUsersCountryCode.Name = "DgvCareLinkUsersCountryCode"
+        Me.DgvCareLinkUsersCountryCode.Width = 198
+        ' 
         ' DgvCareLinkUsersUseLocalTimeZone
         ' 
         Me.DgvCareLinkUsersUseLocalTimeZone.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -899,7 +905,7 @@ Partial Class Form1
         Me.DgvCareLinkUsers.SelectionMode = DataGridViewSelectionMode.CellSelect
         Me.DgvCareLinkUsers.Size = New Size(1370, 633)
         Me.DgvCareLinkUsers.TabIndex = 0
-        ' 
+        '
         ' DgvCountryDataPg2
         ' 
         Me.DgvCountryDataPg2.Columns.AddRange(New DataGridViewColumn() {Me.DgvCountryDataPg2RecordNumber, Me.DgvCountryDataPg2Category, Me.DgvCountryDataPg2Key, Me.DgvCountryDataPg2Value})
@@ -1310,7 +1316,16 @@ Partial Class Form1
         Me.ModelLabel.Name = "ModelLabel"
         Me.ModelLabel.Size = New Size(230, 21)
         Me.ModelLabel.TabIndex = 57
-        Me.ModelLabel.Text = "Model" '
+        Me.ModelLabel.Text = "Model" ' 
+        ' PumpNameLabel
+        ' 
+        Me.PumpNameLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Me.PumpNameLabel.ForeColor = Color.White
+        Me.PumpNameLabel.Location = New Point(1140, 55)
+        Me.PumpNameLabel.Name = "PumpNameLabel"
+        Me.PumpNameLabel.Size = New Size(230, 21)
+        Me.PumpNameLabel.TabIndex = 70
+        Me.PumpNameLabel.Text = "Pump Name" ' 
         ' NotifyIcon1
         ' 
         Me.NotifyIcon1.Icon = CType(resources.GetObject("NotifyIcon1.Icon"), Icon)
@@ -1339,35 +1354,26 @@ Partial Class Form1
         Me.PumpBatteryRemainingLabel.Text = "Unknown"
         Me.PumpBatteryRemainingLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
-        ' ReadingIntervalLabel
+        ' InsulinTypeLabel
         ' 
-        Me.ReadingIntervalLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
-        Me.ReadingIntervalLabel.ForeColor = Color.White
-        Me.ReadingIntervalLabel.Location = New Point(978, 80)
-        Me.ReadingIntervalLabel.Name = "ReadingIntervalLabel"
-        Me.ReadingIntervalLabel.Size = New Size(162, 21)
-        Me.ReadingIntervalLabel.TabIndex = 54
-        Me.ReadingIntervalLabel.Text = "5 minute readings"
-        Me.ReadingIntervalLabel.TextAlign = ContentAlignment.MiddleCenter
+        Me.InsulinTypeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Me.InsulinTypeLabel.ForeColor = Color.White
+        Me.InsulinTypeLabel.Location = New Point(978, 80)
+        Me.InsulinTypeLabel.Name = "InsulinTypeLabel"
+        Me.InsulinTypeLabel.Size = New Size(162, 21)
+        Me.InsulinTypeLabel.TabIndex = 54
+        Me.InsulinTypeLabel.Text = $"Humalog/Novolog"
+        Me.InsulinTypeLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
-        ' PumpNameLabel
-        ' 
-        Me.PumpNameLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
-        Me.PumpNameLabel.ForeColor = Color.White
-        Me.PumpNameLabel.Location = New Point(1140, 55)
-        Me.PumpNameLabel.Name = "PumpNameLabel"
-        Me.PumpNameLabel.Size = New Size(230, 21)
-        Me.PumpNameLabel.TabIndex = 70
-        Me.PumpNameLabel.Text = "Pump Name" '
         ' ReadingsLabel
         ' 
         Me.ReadingsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.ReadingsLabel.ForeColor = Color.White
-        Me.ReadingsLabel.Location = New Point(993, 106)
+        Me.ReadingsLabel.Location = New Point(977, 106)
         Me.ReadingsLabel.Name = "ReadingsLabel"
-        Me.ReadingsLabel.Size = New Size(132, 21)
+        Me.ReadingsLabel.Size = New Size(165, 21)
         Me.ReadingsLabel.TabIndex = 53
-        Me.ReadingsLabel.Text = "280/288"
+        Me.ReadingsLabel.Text = "280/288 Readings"
         Me.ReadingsLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' RemainingInsulinUnits
@@ -1460,7 +1466,7 @@ Partial Class Form1
         Me.SplitContainer2.Panel1.Controls.Add(Me.PumpNameLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.SerialNumberLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.FullNameLabel)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.ReadingIntervalLabel)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.InsulinTypeLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.ReadingsLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.PumpBatteryRemainingLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.PumpBatteryRemaining2Label)
@@ -2595,7 +2601,6 @@ Partial Class Form1
         Me.SensorTimeLeftPanel.ResumeLayout(False)
         CType(Me.SensorTimeLeftPictureBox, ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer2.Panel1.ResumeLayout(False)
-        Me.SplitContainer2.Panel1.PerformLayout()
         Me.SplitContainer2.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer2, ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer2.ResumeLayout(False)
@@ -2781,7 +2786,7 @@ Partial Class Form1
     Friend WithEvents OptionsMenuAdvancedOptions As ToolStripMenuItem
     Friend WithEvents PumpBatteryPictureBox As PictureBox
     Friend WithEvents PumpBatteryRemainingLabel As Label
-    Friend WithEvents ReadingIntervalLabel As Label
+    Friend WithEvents InsulinTypeLabel As Label
     Friend WithEvents ReadingsLabel As Label
     Friend WithEvents RemainingInsulinUnits As Label
     Friend WithEvents SensorDaysLeftLabel As Label
