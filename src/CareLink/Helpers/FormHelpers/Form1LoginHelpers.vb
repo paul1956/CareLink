@@ -54,7 +54,6 @@ Friend Module Form1LoginHelpers
                 Dim userSettingsPath As String = Path.Combine(MyDocumentsPath, currentUserSettingsFileName)
                 SetUpCareLinkUser(userSettingsPath)
 
-                MainForm.AITComboBox.SelectedIndex = MainForm.AITComboBox.FindStringExact($"AIT {CType(CurrentUser.Ait, TimeSpan).ToString("hh\:mm").Substring(1)}")
                 MainForm.RecentData = MainForm.Client.GetRecentData(MainForm)
                 MainForm.ServerUpdateTimer.Interval = CInt(s_1MinutesInMilliseconds)
                 MainForm.ServerUpdateTimer.Start()
@@ -69,6 +68,8 @@ Friend Module Form1LoginHelpers
 
                 MainForm.MenuShowMiniDisplay.Visible = True
         End Select
+        MainForm.AITComboBox.SelectedIndex = MainForm.AITComboBox.FindStringExact($"AIT {CType(CurrentUser.Ait, TimeSpan).ToString("hh\:mm").Substring(1)}")
+        MainForm.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName
         MainForm.FinishInitialization()
         If UpdateAllTabs Then
             MainForm.UpdateAllTabPages()

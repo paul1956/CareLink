@@ -23,6 +23,12 @@ Public Module SystemConstants
     Friend Const TimeFormatTwelveHourWithoutMinutes As String = "h tt"
     Friend Const TmChar As String = ChrW(&H2122)
 
+    Friend ReadOnly s_insulinTypes As New Dictionary(Of String, TimeSpan) From
+            {
+                {$"Humalog{RegisteredTrademark}/Novolog{RegisteredTrademark}", New TimeSpan(3, 0, 0)},
+                {$"Lyumjev{RegisteredTrademark}/FIASP{RegisteredTrademark}", New TimeSpan(3, 0, 0)}
+            }
+
     Friend ReadOnly s_testSettingsFileName As String = $"{ProjectName}TestFileSettings.json"
 
     Public ReadOnly s_aitValues As New Dictionary(Of String, String) From {
