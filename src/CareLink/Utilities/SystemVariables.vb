@@ -4,6 +4,7 @@
 
 Friend Module SystemVariables
     Public s_allUserSettingsData As New CareLinkUserDataList
+    Friend Property CurrentUser As CurrentUserRecord
     Friend Property HomePageBasalRow As Single = 400
     Friend Property HomePageInsulinRow As Single = 342
     Friend Property HomePageMealRow As Single = 50

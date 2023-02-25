@@ -223,10 +223,9 @@ Public Class CareLinkUserDataList
         Throw New NotSupportedException()
     End Function
 
-    Public Sub LoadUserRecords()
+    Public Sub LoadUserRecords(userSettingsCsvFileWithPath As String)
         Dim l As IList = Me
 
-        Dim userSettingsCsvFileWithPath As String = GetSavedUsersFileNameWithPath()
         If SavedUsersFileExists(userSettingsCsvFileWithPath) Then
             Using myReader As New FileIO.TextFieldParser(userSettingsCsvFileWithPath)
                 myReader.TextFieldType = FileIO.FieldType.Delimited
@@ -235,12 +234,15 @@ Public Class CareLinkUserDataList
                 'Loop through all of the fields in the file.
                 'If any lines are corrupt, report an error and continue parsing.
                 Dim rowIndex As Integer = 0
+                Dim headerRow As String() = Nothing
                 While Not myReader.EndOfData
                     Try
                         currentRow = myReader.ReadFields()
                         ' Include code here to handle the row.
-                        If rowIndex <> 0 Then
-                            l.Add(New CareLinkUserDataRecord(Me, currentRow))
+                        If rowIndex = 0 Then
+                            headerRow = currentRow
+                        Else
+                            l.Add(New CareLinkUserDataRecord(Me, headerRow, currentRow))
                         End If
                         rowIndex += 1
                     Catch ex As FileIO.MalformedLineException
@@ -279,7 +281,6 @@ Public Class CareLinkUserDataList
                 loggedOnUser = Me(Value)
             Else
                 ' We have a new user
-                loggedOnUser.clean()
                 Me.Add(loggedOnUser)
             End If
         End If
@@ -289,7 +290,7 @@ Public Class CareLinkUserDataList
 
     Public Sub SaveAllUserRecords()
         Dim sb As New StringBuilder
-        sb.AppendLine(String.Join(",", CareLinkUserDataRecordHelpers.s_headerColumns))
+        sb.AppendLine(String.Join(",", s_headerColumns))
         For Each r As CareLinkUserDataRecord In Me
             sb.AppendLine(r.ToCsvString)
         Next

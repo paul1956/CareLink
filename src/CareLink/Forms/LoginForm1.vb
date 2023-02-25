@@ -48,6 +48,7 @@ Public Class LoginForm1
                 End Select
             End If
         End If
+
         If File.Exists(GetSavedUsersFileNameWithPath) Then
             _mySource.AddRange(s_allUserSettingsData.Keys.ToArray)
         ElseIf Not String.IsNullOrWhiteSpace(My.Settings.CareLinkUserName) Then
@@ -55,18 +56,20 @@ Public Class LoginForm1
         Else
             _mySource.Clear()
         End If
+
         With Me.UsernameTextBox
             .AutoCompleteCustomSource = _mySource
             .AutoCompleteMode = AutoCompleteMode.SuggestAppend
             .AutoCompleteSource = AutoCompleteSource.CustomSource
             .Text = My.Settings.CareLinkUserName
         End With
+
         If s_allUserSettingsData?.ContainsKey(My.Settings.CareLinkUserName) Then
             Me.PasswordTextBox.Text = s_allUserSettingsData(My.Settings.CareLinkUserName).CareLinkPassword
         Else
             Me.PasswordTextBox.Text = My.Settings.CareLinkPassword
-
         End If
+
         Me.RegionComboBox.DataSource = New BindingSource(s_regionList, Nothing)
         Me.RegionComboBox.DisplayMember = "Key"
         Me.RegionComboBox.ValueMember = "Value"

@@ -15,7 +15,7 @@ Option Explicit On
 Namespace My
     
     <Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(),  _
-     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.4.0.0"),  _
+     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.6.0.0"),  _
      Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)>  _
     Partial Friend NotInheritable Class MySettings
         Inherits Global.System.Configuration.ApplicationSettingsBase
@@ -80,30 +80,6 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property OutGoingMailServer() As String
-            Get
-                Return CType(Me("OutGoingMailServer"),String)
-            End Get
-            Set
-                Me("OutGoingMailServer") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
-        Public Property MailServerPort() As Integer
-            Get
-                Return CType(Me("MailServerPort"),Integer)
-            End Get
-            Set
-                Me("MailServerPort") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("US")>  _
         Public Property CountryCode() As String
             Get
@@ -116,54 +92,6 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property MailServerUserName() As String
-            Get
-                Return CType(Me("MailServerUserName"),String)
-            End Get
-            Set
-                Me("MailServerUserName") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property MailServerPassword() As String
-            Get
-                Return CType(Me("MailServerPassword"),String)
-            End Get
-            Set
-                Me("MailServerPassword") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property AlertPhoneNumber() As String
-            Get
-                Return CType(Me("AlertPhoneNumber"),String)
-            End Get
-            Set
-                Me("AlertPhoneNumber") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("02:15:00")>  _
-        Public Property AIT() As Global.System.TimeSpan
-            Get
-                Return CType(Me("AIT"),Global.System.TimeSpan)
-            End Get
-            Set
-                Me("AIT") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public Property UpgradeRequired() As Boolean
             Get
@@ -171,30 +99,6 @@ Namespace My
             End Get
             Set
                 Me("UpgradeRequired") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("txt.att.net")>  _
-        Public Property CarrierTextingDomain() As String
-            Get
-                Return CType(Me("CarrierTextingDomain"),String)
-            End Get
-            Set
-                Me("CarrierTextingDomain") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
-        Public Property UseAdvancedAITDecay() As Boolean
-            Get
-                Return CType(Me("UseAdvancedAITDecay"),Boolean)
-            End Get
-            Set
-                Me("UseAdvancedAITDecay") = value
             End Set
         End Property
         
@@ -219,18 +123,6 @@ Namespace My
             End Get
             Set
                 Me("AutoLogin") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("1.0")>  _
-        Public Property SettingsVersion() As String
-            Get
-                Return CType(Me("SettingsVersion"),String)
-            End Get
-            Set
-                Me("SettingsVersion") = value
             End Set
         End Property
     End Class

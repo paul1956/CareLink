@@ -49,6 +49,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Forms\MailSetupDialog.Designer.vb" />
+    <Compile Remove="Forms\MailSetupDialog.vb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Forms\MailSetupDialog.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Import Include="System.Data" />
     <Import Include="System.Drawing" />
     <Import Include="System.Windows.Forms" />
@@ -90,6 +99,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="CareLinkTestFileSettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>

@@ -31,9 +31,6 @@
     <Compile Update="Forms\LoginForm1.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Forms\MailSetupDialog.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="Forms\OptionsDialog.vb">
       <SubType>Form</SubType>
     </Compile>

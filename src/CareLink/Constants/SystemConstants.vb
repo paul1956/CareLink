@@ -14,14 +14,16 @@ Public Module SystemConstants
     Friend Const GitOwnerName As String = "Paul1956"
     Friend Const MmolLUnitsDivisor As Single = 18
     Friend Const ProjectName As String = "CareLink"
+    Friend Const RegisteredTrademark As String = ChrW(&HAE)
     Friend Const StackTraceStartingStr As String = "--- Start of stack trace ---"
     Friend Const StackTraceTerminatingStr As String = "--- End of stack trace from previous location ---"
     Friend Const TimeFormatMilitaryWithMinutes As String = "HH:mm"
     Friend Const TimeFormatMilitaryWithoutMinutes As String = "HH"
     Friend Const TimeFormatTwelveHourWithMinutes As String = "h:mm tt"
     Friend Const TimeFormatTwelveHourWithoutMinutes As String = "h tt"
-    Friend Const RegisteredTrademark As String = ChrW(&HAE)
     Friend Const TmChar As String = ChrW(&H2122)
+
+    Friend ReadOnly s_testSettingsFileName As String = $"{ProjectName}TestFileSettings.json"
 
     Public ReadOnly s_aitValues As New Dictionary(Of String, String) From {
                         {"AIT 2:00", "2:00"}, {"AIT 2:15", "2:15"},

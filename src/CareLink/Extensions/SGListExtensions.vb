@@ -15,7 +15,7 @@ Public Module SGListExtensions
                 If i = 0 Then
                     sGs.Last.datetime = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime.RoundTimeDown(RoundTo.Minute)
                 Else
-                    sGs.Last.datetime = sGs(0).datetime + (s_fiveMinuteSpan * i)
+                    sGs.Last.datetime = sGs(0).datetime + (s_5MinuteSpan * i)
                 End If
             End If
         Next

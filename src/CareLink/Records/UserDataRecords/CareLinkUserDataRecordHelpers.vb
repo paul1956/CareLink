@@ -7,28 +7,12 @@ Imports System.IO
 Public Module CareLinkUserDataRecordHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
-                        NameOf(CareLinkUserDataRecord.AlertPhoneNumber),
-                        NameOf(CareLinkUserDataRecord.CareLinkPassword),
-                        NameOf(CareLinkUserDataRecord.CarrierTextingDomain),
-                        NameOf(CareLinkUserDataRecord.MailServerPassword),
-                        NameOf(CareLinkUserDataRecord.MailServerPort),
-                        NameOf(CareLinkUserDataRecord.MailServerUserName),
-                        NameOf(CareLinkUserDataRecord.OutgoingMailServer)
-                    }
+        NameOf(CareLinkUserDataRecord.ID)}
 
     Friend ReadOnly s_headerColumns As New List(Of String) From {
             NameOf(My.Settings.CareLinkUserName),
             NameOf(My.Settings.CareLinkPassword),
-            NameOf(My.Settings.AIT),
-            NameOf(My.Settings.AlertPhoneNumber),
-            NameOf(My.Settings.CarrierTextingDomain),
             NameOf(My.Settings.CountryCode),
-            NameOf(My.Settings.MailServerPassword),
-            NameOf(My.Settings.MailServerPort),
-            NameOf(My.Settings.MailServerUserName),
-            NameOf(My.Settings.SettingsVersion),
-            NameOf(My.Settings.OutGoingMailServer),
-            NameOf(My.Settings.UseAdvancedAITDecay),
             NameOf(My.Settings.UseLocalTimeZone),
             NameOf(My.Settings.AutoLogin)
          }
@@ -37,33 +21,22 @@ Public Module CareLinkUserDataRecordHelpers
         Dim cellStyle As New DataGridViewCellStyle
 
         Select Case columnName
-            Case NameOf(CareLinkUserDataRecord.CareLinkUserName),
+            Case NameOf(CareLinkUserDataRecord.ID),
+                 NameOf(CareLinkUserDataRecord.CareLinkUserName),
                  NameOf(CareLinkUserDataRecord.CareLinkPassword),
-                 NameOf(CareLinkUserDataRecord.AIT),
-                 NameOf(CareLinkUserDataRecord.AlertPhoneNumber),
-                 NameOf(CareLinkUserDataRecord.CarrierTextingDomain),
-                 NameOf(CareLinkUserDataRecord.CountryCode),
-                 NameOf(CareLinkUserDataRecord.MailServerPassword),
-                 NameOf(CareLinkUserDataRecord.MailServerUserName),
-                 NameOf(CareLinkUserDataRecord.OutgoingMailServer)
+                 NameOf(CareLinkUserDataRecord.CountryCode)
                 cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
             Case NameOf(CareLinkUserDataRecord.AutoLogin),
-                 NameOf(CareLinkUserDataRecord.UseAdvancedAITDecay),
+                 "DeleteRow",
                  NameOf(CareLinkUserDataRecord.UseLocalTimeZone)
                 cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
-            Case NameOf(CareLinkUserDataRecord.MailServerPort),
-                 NameOf(CareLinkUserDataRecord.SettingsVersion),
-                 ""
+            Case ""
                 cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(1, 1, 1, 1))
             Case Else
                 Stop
-                Throw UnreachableException($"{NameOf(CareLinkUserDataRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
+                'Throw UnreachableException($"{NameOf(CareLinkUserDataRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
         End Select
         Return cellStyle
-    End Function
-
-    Friend Function GetColumnName(index As Integer) As String
-        Return s_headerColumns(index)
     End Function
 
     Friend Function HideColumn(dataPropertyName As String) As Boolean

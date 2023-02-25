@@ -10,32 +10,6 @@ Friend Module DateTimeExtensions
 
     Private ReadOnly s_dateTimeFormatUniqueCultures As New List(Of CultureInfo)
 
-#Region "OaDateTime Constants"
-
-    Public ReadOnly s_fiveMinuteOADate As New OADate(Date.MinValue + New TimeSpan(hours:=0, minutes:=5, seconds:=0))
-    Public ReadOnly s_hourAsOADate As New OADate(Date.MinValue + New TimeSpan(hours:=1, minutes:=0, seconds:=0))
-    Public ReadOnly s_sixMinuteOADate As New OADate(Date.MinValue + New TimeSpan(hours:=0, minutes:=6, seconds:=0))
-    Public ReadOnly s_twoHalfMinuteOADate As New OADate(Date.MinValue + New TimeSpan(hours:=0, minutes:=2, seconds:=30))
-
-#End Region ' OaDateTime Constants
-
-    Public ReadOnly s_fiveMinuteSpan As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
-
-#Region "Millisecond Constants"
-
-    Public ReadOnly s_fiveMinutesInMilliseconds As Integer = CInt(New TimeSpan(0, minutes:=5, 0).TotalMilliseconds)
-    Public ReadOnly s_oneMinutesInMilliseconds As Integer = CInt(New TimeSpan(0, minutes:=1, 0).TotalMilliseconds)
-    Public ReadOnly s_thirtySecondInMilliseconds As Integer = CInt(New TimeSpan(0, 0, seconds:=30).TotalMilliseconds)
-
-#End Region 'Millisecond Constants
-
-    Public Enum RoundTo
-        Second
-        Minute
-        Hour
-        Day
-    End Enum
-
     Private Function DoCultureSpecificParse(dateAsString As String, ByRef success As Boolean, defaultCulture As CultureInfo, styles As DateTimeStyles) As Date
         If s_dateTimeFormatUniqueCultures.Count = 0 Then
             s_dateTimeFormatUniqueCultures.Add(CurrentDateCulture)

@@ -5,6 +5,8 @@
 Imports System.Globalization
 Imports System.IO
 Imports System.Runtime.CompilerServices
+Imports System.Text.Json
+Imports System.Windows.Forms.Design.AxImporter
 
 Friend Module Form1LoginHelpers
 
@@ -13,6 +15,7 @@ Friend Module Form1LoginHelpers
         MainForm.ServerUpdateTimer.Stop()
         Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
         s_listOfAutoBasalDeliveryMarkers.Clear()
+        s_listOfManualBasal.Clear()
         Select Case fileToLoad
             Case FileToLoadOptions.LastSaved
                 MainForm.Text = $"{SavedTitle} Using Last Saved Data"
@@ -20,6 +23,7 @@ Friend Module Form1LoginHelpers
                 MainForm.RecentData = Loads(File.ReadAllText(LastDownloadWithPath))
                 MainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 MainForm.LastUpdateTime.Text = $"{File.GetLastWriteTime(LastDownloadWithPath).ToShortDateTimeString} from file"
+                SetUpCareLinkUser(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, s_testSettingsFileName))
             Case FileToLoadOptions.TestData
                 MainForm.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
@@ -27,13 +31,14 @@ Friend Module Form1LoginHelpers
                 MainForm.RecentData = Loads(File.ReadAllText(testDataWithPath))
                 MainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 MainForm.LastUpdateTime.Text = $"{File.GetLastWriteTime(testDataWithPath).ToShortDateTimeString} from file"
+                SetUpCareLinkUser(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, s_testSettingsFileName))
             Case FileToLoadOptions.Login
                 MainForm.Text = SavedTitle
                 Do Until MainForm.LoginDialog.ShowDialog() <> DialogResult.Retry
                 Loop
 
                 If MainForm.Client Is Nothing OrElse Not MainForm.Client.LoggedIn Then
-                    MainForm.ServerUpdateTimer.Interval = s_fiveMinutesInMilliseconds
+                    MainForm.ServerUpdateTimer.Interval = CInt(s_5MinutesInMilliseconds)
                     MainForm.ServerUpdateTimer.Start()
                     Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
                     If NetworkDown Then
@@ -45,13 +50,13 @@ Friend Module Form1LoginHelpers
                     Return False
                 End If
 
-                If Debugger.IsAttached Then
-                    InitializeDialog.ShowDialog()
-                End If
+                Dim currentUserSettingsFileName As String = $"{ProjectName}{My.Settings.CareLinkUserName}Settings.json"
+                Dim userSettingsPath As String = Path.Combine(MyDocumentsPath, currentUserSettingsFileName)
+                SetUpCareLinkUser(userSettingsPath)
 
-                s_listOfManualBasal.Clear()
+                MainForm.AITComboBox.SelectedIndex = MainForm.AITComboBox.FindStringExact($"AIT {CType(CurrentUser.Ait, TimeSpan).ToString("hh\:mm").Substring(1)}")
                 MainForm.RecentData = MainForm.Client.GetRecentData(MainForm)
-                MainForm.ServerUpdateTimer.Interval = s_oneMinutesInMilliseconds
+                MainForm.ServerUpdateTimer.Interval = CInt(s_1MinutesInMilliseconds)
                 MainForm.ServerUpdateTimer.Start()
                 Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
 
@@ -70,6 +75,19 @@ Friend Module Form1LoginHelpers
         End If
         Return True
     End Function
+
+    Private Sub SetUpCareLinkUser(userSettingsPath As String)
+        Dim contents As String
+        If Path.Exists(userSettingsPath) Then
+            contents = File.ReadAllText(userSettingsPath)
+            CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
+        Else
+            CurrentUser = New CurrentUserRecord(My.Settings.CareLinkUserName)
+            Dim f As New InitializeDialog With {.CurrentUser = CurrentUser}
+            f.ShowDialog()
+            CurrentUser = f.CurrentUser
+        End If
+    End Sub
 
     <Extension>
     Friend Sub FinishInitialization(MainForm As Form1)

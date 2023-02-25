@@ -67,6 +67,7 @@ Public Module StringExtensions
                 lastWasNumeric = False
             End If
         Next
+        result = result.Replace("Care Link", $"CareLink{TmChar}")
         Return result.ToString().Replace("time", " Time", False, CurrentUICulture)
     End Function
 

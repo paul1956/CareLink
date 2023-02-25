@@ -17,8 +17,8 @@ Imports TableLayputPanelTop
 Imports ToolStripControls
 
 Public Class Form1
-    Private WithEvents AITComboBox As ToolStripComboBoxEx
 
+    Public WithEvents AITComboBox As ToolStripComboBoxEx
     Private ReadOnly _bgMiniDisplay As New BGMiniWindow(Me)
     Private ReadOnly _calibrationToolTip As New ToolTip()
 
@@ -37,8 +37,6 @@ Public Class Form1
 
     Public Property Initialized As Boolean = False
 
-    Public ReadOnly Property LoginDialog As New LoginForm1
-
     Public Property Client As CareLinkClient
         Get
             Return Me.LoginDialog?.Client
@@ -47,6 +45,8 @@ Public Class Form1
             Me.LoginDialog.Client = value
         End Set
     End Property
+
+    Public ReadOnly Property LoginDialog As New LoginForm1
 
 #Region "Pump Data"
 
@@ -135,7 +135,9 @@ Public Class Form1
             My.Settings.Save()
         End If
 
-        s_allUserSettingsData.LoadUserRecords()
+        If File.Exists(GetSavedUsersFileNameWithPath) Then
+            s_allUserSettingsData.LoadUserRecords(GetSavedUsersFileNameWithPath)
+        End If
 
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
@@ -155,6 +157,7 @@ Public Class Form1
             .DisplayMember = "Key",
             .ValueMember = "Value",
             .DropDownStyle = ComboBoxStyle.DropDownList,
+            .Enabled = False,
             .Font = New Font("Segoe UI", 9.0!, FontStyle.Bold, GraphicsUnit.Point),
             .ForeColor = Color.White,
             .FormattingEnabled = True,
@@ -167,8 +170,6 @@ Public Class Form1
         }
 
         Me.MenuStrip1.Items.Insert(2, Me.AITComboBox)
-        Me.AITComboBox.SelectedIndex = Me.AITComboBox.FindStringExact($"AIT {My.Settings.AIT.ToString("hh\:mm").Substring(1)}")
-        Me.MenuOptionsUseAdvancedAITDecay.CheckState = If(My.Settings.UseAdvancedAITDecay, CheckState.Checked, CheckState.Unchecked)
         AddHandler Microsoft.Win32.SystemEvents.PowerModeChanged, AddressOf Me.PowerModeChanged
     End Sub
 
@@ -193,19 +194,6 @@ Public Class Form1
 #End Region ' Form Events
 
 #Region "Form Menu Events"
-
-    Private Sub AITComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles AITComboBox.SelectedIndexChanged
-        If Me.AITComboBox.SelectedIndex < 0 Then
-            Exit Sub
-        End If
-        Dim aitTimeSpan As TimeSpan = TimeSpan.Parse(Me.AITComboBox.SelectedValue.ToString)
-        If My.Settings.AIT <> aitTimeSpan Then
-            My.Settings.AIT = aitTimeSpan
-            My.Settings.Save()
-            s_activeInsulinIncrements = CInt(TimeSpan.Parse(aitTimeSpan.ToString("hh\:mm").Substring(1)) / s_fiveMinuteSpan)
-            Me.UpdateActiveInsulinChart()
-        End If
-    End Sub
 
 #Region "Start Here Menu Events"
 
@@ -407,24 +395,6 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub MenuOptionsUseAdvancedAITDecay_CheckStateChanged(sender As Object, e As EventArgs) Handles MenuOptionsUseAdvancedAITDecay.CheckStateChanged
-        Dim increments As Double = TimeSpan.Parse(_LoginDialog.LoggedOnUser.AIT.ToString("hh\:mm").Substring(1)) / s_fiveMinuteSpan
-        If Me.MenuOptionsUseAdvancedAITDecay.Checked Then
-            s_activeInsulinIncrements = CInt(increments * 1.4)
-            My.Settings.UseAdvancedAITDecay = True
-            Me.AITAlgorithmLabel.Text = "Advanced AIT Decay"
-            Me.AITAlgorithmLabel.ForeColor = Color.Yellow
-        Else
-            s_activeInsulinIncrements = CInt(increments)
-            My.Settings.UseAdvancedAITDecay = False
-            Me.AITAlgorithmLabel.Text = "Default AIT Decay"
-            Me.AITAlgorithmLabel.ForeColor = Color.White
-        End If
-        My.Settings.Save()
-        Me.UpdateActiveInsulinChart()
-
-    End Sub
-
     Private Sub MenuOptionsUseLocalTimeZone_Click(sender As Object, e As EventArgs) Handles MenuOptionsUseLocalTimeZone.Click
         Dim saveRequired As Boolean = Me.MenuOptionsUseLocalTimeZone.Checked <> My.Settings.UseLocalTimeZone
         If Me.MenuOptionsUseLocalTimeZone.Checked Then
@@ -477,7 +447,6 @@ Public Class Form1
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
                     c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
                 Next
-                Me.DgvCareLinkUsers.Columns(NameOf(DgvCareLinkUsersAIT)).Width = Me.AITComboBox.Width
                 If _lastMarkerTabIndex.page = 0 Then
                     Me.TabControlPage2.SelectedIndex = 0
                 Else
@@ -504,7 +473,6 @@ Public Class Form1
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
                     c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
                 Next
-                Me.DgvCareLinkUsers.Columns(NameOf(DgvCareLinkUsersAIT)).Width = Me.AITComboBox.Width
             Case Else
                 If e.TabPageIndex < Me.TabControlPage2.TabPages.Count - 2 Then
                     _lastMarkerTabIndex = (1, e.TabPageIndex)
@@ -535,7 +503,7 @@ Public Class Form1
     Private Sub Chart_CursorPositionChanging(sender As Object, e As CursorEventArgs) Handles ActiveInsulinChart.CursorPositionChanging, SummaryChart.CursorPositionChanging
         If Not _Initialized Then Exit Sub
 
-        Me.CursorTimer.Interval = s_thirtySecondInMilliseconds
+        Me.CursorTimer.Interval = CInt(s_30SecondInMilliseconds)
         Me.CursorTimer.Start()
     End Sub
 
@@ -1113,22 +1081,29 @@ Public Class Form1
             Dim dgv As DataGridView = CType(sender, DataGridView)
             Dim caption As String = CType(dgv.DataSource, DataTable)?.Columns(.Index).Caption
             Dim dataPropertyName As String = e.Column.DataPropertyName
-
-            If .Index > 0 AndAlso String.IsNullOrWhiteSpace(dataPropertyName) AndAlso String.IsNullOrWhiteSpace(caption) Then
-                dataPropertyName = CareLinkUserDataRecordHelpers.s_headerColumns(.Index - 1)
+            If String.IsNullOrWhiteSpace(caption) Then
+                caption = dataPropertyName.Replace("DgvCareLinkUsers", "")
+            End If
+            If caption.Contains("DeleteRow", StringComparison.OrdinalIgnoreCase) Then
+                caption = ""
+            Else
+                If .Index > 0 AndAlso String.IsNullOrWhiteSpace(dataPropertyName) AndAlso String.IsNullOrWhiteSpace(caption) Then
+                    dataPropertyName = s_headerColumns(.Index - 2)
+                End If
             End If
             If CareLinkUserDataRecordHelpers.HideColumn(dataPropertyName) Then
-                CType(e, DataGridViewColumnEventArgs).DgvColumnAdded(CareLinkUserDataRecordHelpers.GetCellStyle(dataPropertyName),
+                e.DgvColumnAdded(CareLinkUserDataRecordHelpers.GetCellStyle(dataPropertyName),
                                  False,
                                  False,
                                  caption)
                 .Visible = False
-                Exit Sub
+            Else
+                e.DgvColumnAdded(CareLinkUserDataRecordHelpers.GetCellStyle(dataPropertyName),
+                                 False,
+                                 True,
+                                 caption)
+                e.Column.HeaderText = caption.ToTitleCase
             End If
-            CType(e, DataGridViewColumnEventArgs).DgvColumnAdded(CareLinkUserDataRecordHelpers.GetCellStyle(dataPropertyName),
-                             False,
-                             True,
-                             caption)
         End With
     End Sub
 
@@ -1247,7 +1222,7 @@ Public Class Form1
         Else
             If Me.RecentData?.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
-                    If lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime + s_fiveMinuteSpan < PumpNow() Then
+                    If lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime + s_5MinuteSpan < PumpNow() Then
                         Me.LastUpdateTime.ForeColor = Color.Red
                         _bgMiniDisplay.SetCurrentBGString("---")
                     Else
@@ -1265,7 +1240,7 @@ Public Class Form1
             End If
         End If
         LastServerUpdateTime = lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime
-        Me.ServerUpdateTimer.Interval = s_oneMinutesInMilliseconds
+        Me.ServerUpdateTimer.Interval = CInt(s_1MinutesInMilliseconds)
         Me.ServerUpdateTimer.Start()
         Debug.Print($"In {NameOf(ServerUpdateTimer_Tick)}, exited SyncLock. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
     End Sub
@@ -1277,7 +1252,7 @@ Public Class Form1
                 Me.LastUpdateTime.Text = "Sleeping"
             Case Microsoft.Win32.PowerModes.Resume
                 Me.LastUpdateTime.Text = "Awake"
-                Me.ServerUpdateTimer.Interval = s_thirtySecondInMilliseconds \ 3
+                Me.ServerUpdateTimer.Interval = CInt(s_30SecondInMilliseconds) \ 3
                 Me.ServerUpdateTimer.Start()
                 Debug.Print($"In {NameOf(PowerModeChanged)}, restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
         End Select
@@ -1553,6 +1528,15 @@ Public Class Form1
         End If
 
         Try
+            If CurrentUser.UseAdvancedAitDecay = CheckState.Checked Then
+                s_activeInsulinIncrements = CInt(CurrentUser.InsulinRealAit / s_5MinuteSpan)
+                Me.AITAlgorithmLabel.Text = "Advanced AIT Decay"
+                Me.AITAlgorithmLabel.ForeColor = Color.Yellow
+            Else
+                s_activeInsulinIncrements = CInt(CType(CurrentUser.Ait, TimeSpan) / s_5MinuteSpan)
+                Me.AITAlgorithmLabel.Text = "Default AIT Decay"
+                Me.AITAlgorithmLabel.ForeColor = Color.White
+            End If
 
             For Each s As Series In Me.ActiveInsulinChart.Series
                 s.Points.Clear()
@@ -1597,12 +1581,12 @@ Public Class Form1
 
                 For i As Integer = 0 To 287
                     Dim initialBolus As Single = 0
-                    Dim firstNotSkippedOaTime As New OADate((s_listOfSGs(0).datetime + (s_fiveMinuteSpan * i)).RoundTimeDown(RoundTo.Minute))
+                    Dim firstNotSkippedOaTime As New OADate((s_listOfSGs(0).datetime + (s_5MinuteSpan * i)).RoundTimeDown(RoundTo.Minute))
                     While currentMarker < timeOrderedMarkers.Count AndAlso timeOrderedMarkers.Keys(currentMarker) <= firstNotSkippedOaTime
                         initialBolus += timeOrderedMarkers.Values(currentMarker)
                         currentMarker += 1
                     End While
-                    remainingInsulinList.Add(New RunningActiveInsulinRecord(firstNotSkippedOaTime, initialBolus, Me.MenuOptionsUseAdvancedAITDecay.Checked))
+                    remainingInsulinList.Add(New RunningActiveInsulinRecord(firstNotSkippedOaTime, initialBolus, CurrentUser.UseAdvancedAitDecay = CheckState.Checked))
                 Next
 
                 .ChartAreas(NameOf(ChartArea)).AxisY2.Maximum = HomePageBasalRow
@@ -2162,7 +2146,7 @@ Public Class Form1
                         Dim diffSg As Double = sg - s_lastBGValue
                         notStr.Append("SG Trend ")
                         If Math.Abs(diffSg) < Single.Epsilon Then
-                            If (Now - s_lastBGTime) < s_fiveMinuteSpan Then
+                            If (Now - s_lastBGTime) < s_5MinuteSpan Then
                                 diffSg = s_lastBGDiff
                             Else
                                 s_lastBGDiff = diffSg

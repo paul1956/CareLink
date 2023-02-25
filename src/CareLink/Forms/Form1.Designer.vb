@@ -45,7 +45,6 @@ Partial Class Form1
         Me.ToolStripSeparator6 = New ToolStripSeparator()
         Me.OptionsMenuAdvancedOptions = New ToolStripMenuItem()
         Me.MenuOptionsFilterRawJSONData = New ToolStripMenuItem()
-        Me.MenuOptionsUseAdvancedAITDecay = New ToolStripMenuItem()
         Me.MenuOptionsUseLocalTimeZone = New ToolStripMenuItem()
         Me.MenuHelp = New ToolStripMenuItem()
         Me.MenuHelpReportAnIssue = New ToolStripMenuItem()
@@ -90,15 +89,7 @@ Partial Class Form1
         Me.DgvCareLinkUsersDeleteRow = New DataGridViewColumnControls.DataGridViewDisableButtonColumn()
         Me.DgvCareLinkUsersCareLinkUserName = New DataGridViewTextBoxColumn()
         Me.DgvCareLinkUsersCareLinkPassword = New DataGridViewTextBoxColumn()
-        Me.DgvCareLinkUsersAIT = New DataGridViewTextBoxColumn()
-        Me.DgvCareLinkUsersAlertPhoneNumber = New DataGridViewTextBoxColumn()
-        Me.DgvCareLinkUsersCarrierTextingDomain = New DataGridViewTextBoxColumn()
         Me.DgvCareLinkUsersCountryCode = New DataGridViewTextBoxColumn()
-        Me.DgvCareLinkUsersMailServerPassword = New DataGridViewTextBoxColumn()
-        Me.DgvCareLinkUsersMailServerPort = New DataGridViewTextBoxColumn()
-        Me.DgvCareLinkUsersMailServerUserName = New DataGridViewTextBoxColumn()
-        Me.DgvCareLinkUsersSettingsVersion = New DataGridViewTextBoxColumn()
-        Me.DgvCareLinkUsersUseAdvancedAITDecay = New DataGridViewCheckBoxColumn()
         Me.DgvCareLinkUsersUseLocalTimeZone = New DataGridViewCheckBoxColumn()
         Me.DgvCareLinkUsersAutoLogin = New DataGridViewCheckBoxColumn()
         Me.DgvCountryDataPg2 = New DataGridView()
@@ -380,7 +371,7 @@ Partial Class Form1
         Me.StartHereExit.Text = "E&xit" ' 
         ' MenuOptions
         ' 
-        Me.MenuOptions.DropDownItems.AddRange(New ToolStripItem() {Me.MenuOptionsColorPicker, Me.MenuOptionsShowLegend, Me.ToolStripSeparator5, Me.MenuOptionsAutoLogin, Me.ToolStripSeparator6, Me.OptionsMenuAdvancedOptions, Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsUseAdvancedAITDecay, Me.MenuOptionsUseLocalTimeZone})
+        Me.MenuOptions.DropDownItems.AddRange(New ToolStripItem() {Me.MenuOptionsColorPicker, Me.MenuOptionsShowLegend, Me.ToolStripSeparator5, Me.MenuOptionsAutoLogin, Me.ToolStripSeparator6, Me.OptionsMenuAdvancedOptions, Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsUseLocalTimeZone})
         Me.MenuOptions.Name = "MenuOptions"
         Me.MenuOptions.Size = New Size(61, 20)
         Me.MenuOptions.Text = "Options" ' 
@@ -427,14 +418,6 @@ Partial Class Form1
         Me.MenuOptionsFilterRawJSONData.Name = "MenuOptionsFilterRawJSONData"
         Me.MenuOptionsFilterRawJSONData.Size = New Size(204, 22)
         Me.MenuOptionsFilterRawJSONData.Text = "Filter Raw JSON Data" ' 
-        ' MenuOptionsUseAdvancedAITDecay
-        ' 
-        Me.MenuOptionsUseAdvancedAITDecay.Checked = True
-        Me.MenuOptionsUseAdvancedAITDecay.CheckOnClick = True
-        Me.MenuOptionsUseAdvancedAITDecay.CheckState = CheckState.Indeterminate
-        Me.MenuOptionsUseAdvancedAITDecay.Name = "MenuOptionsUseAdvancedAITDecay"
-        Me.MenuOptionsUseAdvancedAITDecay.Size = New Size(204, 22)
-        Me.MenuOptionsUseAdvancedAITDecay.Text = "Use Advanced AIT Decay" ' 
         ' MenuOptionsUseLocalTimeZone
         ' 
         Me.MenuOptionsUseLocalTimeZone.Checked = True
@@ -846,26 +829,6 @@ Partial Class Form1
         Me.DgvCountryDataPg1Value.Name = "DgvCountryDataPg1Value"
         Me.DgvCountryDataPg1Value.ReadOnly = True
         ' 
-        ' DgvCareLinkUsers
-        ' 
-        Me.DgvCareLinkUsers.AllowUserToAddRows = False
-        Me.DgvCareLinkUsers.AllowUserToResizeColumns = False
-        Me.DgvCareLinkUsers.AllowUserToResizeRows = False
-        Me.DgvCareLinkUsers.AutoGenerateColumns = False
-        Me.DgvCareLinkUsers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
-        Me.DgvCareLinkUsers.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
-        Me.DgvCareLinkUsers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DgvCareLinkUsers.Columns.AddRange(New DataGridViewColumn() {Me.DgvCareLinkUsersUserID, Me.DgvCareLinkUsersDeleteRow, Me.DgvCareLinkUsersCareLinkUserName, Me.DgvCareLinkUsersCareLinkPassword, Me.DgvCareLinkUsersAIT, Me.DgvCareLinkUsersAlertPhoneNumber, Me.DgvCareLinkUsersCarrierTextingDomain, Me.DgvCareLinkUsersCountryCode, Me.DgvCareLinkUsersMailServerPassword, Me.DgvCareLinkUsersMailServerPort, Me.DgvCareLinkUsersMailServerUserName, Me.DgvCareLinkUsersSettingsVersion, Me.DgvCareLinkUsersUseAdvancedAITDecay, Me.DgvCareLinkUsersUseLocalTimeZone, Me.DgvCareLinkUsersAutoLogin})
-        Me.DgvCareLinkUsers.DataSource = Me.CareLinkUserDataRecordBindingSource
-        Me.DgvCareLinkUsers.Dock = DockStyle.Fill
-        Me.DgvCareLinkUsers.EditMode = DataGridViewEditMode.EditOnEnter
-        Me.DgvCareLinkUsers.Location = New Point(3, 3)
-        Me.DgvCareLinkUsers.Name = "DgvCareLinkUsers"
-        Me.DgvCareLinkUsers.RowTemplate.Height = 25
-        Me.DgvCareLinkUsers.SelectionMode = DataGridViewSelectionMode.CellSelect
-        Me.DgvCareLinkUsers.Size = New Size(1370, 633)
-        Me.DgvCareLinkUsers.TabIndex = 0
-        ' 
         ' DgvCareLinkUsersUserID
         ' 
         Me.DgvCareLinkUsersUserID.DataPropertyName = "ID"
@@ -900,78 +863,7 @@ Partial Class Form1
         Me.DgvCareLinkUsersCareLinkPassword.HeaderText = "CareLink Password"
         Me.DgvCareLinkUsersCareLinkPassword.Name = "DgvCareLinkUsersCareLinkPassword"
         Me.DgvCareLinkUsersCareLinkPassword.Width = 120
-        ' 
-        ' DgvCareLinkUsersAIT
-        ' 
-        Me.DgvCareLinkUsersAIT.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-        Me.DgvCareLinkUsersAIT.DataPropertyName = "AIT"
-        Me.DgvCareLinkUsersAIT.HeaderText = "AIT"
-        Me.DgvCareLinkUsersAIT.Name = "DgvCareLinkUsersAIT"
-        Me.DgvCareLinkUsersAIT.Resizable = DataGridViewTriState.True
-        Me.DgvCareLinkUsersAIT.Width = 150
-        ' 
-        ' DgvCareLinkUsersAlertPhoneNumber
-        ' 
-        Me.DgvCareLinkUsersAlertPhoneNumber.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.DgvCareLinkUsersAlertPhoneNumber.DataPropertyName = "AlertPhoneNumber"
-        Me.DgvCareLinkUsersAlertPhoneNumber.HeaderText = "Alert Phone Number"
-        Me.DgvCareLinkUsersAlertPhoneNumber.Name = "DgvCareLinkUsersAlertPhoneNumber"
-        Me.DgvCareLinkUsersAlertPhoneNumber.Width = 129
-        ' 
-        ' DgvCareLinkUsersCarrierTextingDomain
-        ' 
-        Me.DgvCareLinkUsersCarrierTextingDomain.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.DgvCareLinkUsersCarrierTextingDomain.DataPropertyName = "CarrierTextingDomain"
-        Me.DgvCareLinkUsersCarrierTextingDomain.HeaderText = "Carrier Texting Domain"
-        Me.DgvCareLinkUsersCarrierTextingDomain.Name = "DgvCareLinkUsersCarrierTextingDomain"
-        Me.DgvCareLinkUsersCarrierTextingDomain.Width = 140
-        ' 
-        ' DgvCareLinkUsersCountryCode
-        ' 
-        Me.DgvCareLinkUsersCountryCode.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.DgvCareLinkUsersCountryCode.DataPropertyName = "CountryCode"
-        Me.DgvCareLinkUsersCountryCode.HeaderText = "Country Code"
-        Me.DgvCareLinkUsersCountryCode.Name = "DgvCareLinkUsersCountryCode"
-        Me.DgvCareLinkUsersCountryCode.Width = 97
-        ' 
-        ' DgvCareLinkUsersMailServerPassword
-        ' 
-        Me.DgvCareLinkUsersMailServerPassword.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.DgvCareLinkUsersMailServerPassword.DataPropertyName = "MailServerPassword"
-        Me.DgvCareLinkUsersMailServerPassword.HeaderText = "Mail Server Password"
-        Me.DgvCareLinkUsersMailServerPassword.Name = "DgvCareLinkUsersMailServerPassword"
-        Me.DgvCareLinkUsersMailServerPassword.Width = 131
-        ' 
-        ' DgvCareLinkUsersMailServerPort
-        ' 
-        Me.DgvCareLinkUsersMailServerPort.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.DgvCareLinkUsersMailServerPort.DataPropertyName = "MailServerPort"
-        Me.DgvCareLinkUsersMailServerPort.HeaderText = "Mail Server Port"
-        Me.DgvCareLinkUsersMailServerPort.Name = "DgvCareLinkUsersMailServerPort"
-        Me.DgvCareLinkUsersMailServerPort.Width = 106
-        ' 
-        ' DgvCareLinkUsersMailServerUserName
-        ' 
-        Me.DgvCareLinkUsersMailServerUserName.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.DgvCareLinkUsersMailServerUserName.DataPropertyName = "MailServerUserName"
-        Me.DgvCareLinkUsersMailServerUserName.HeaderText = "MailServer User Name"
-        Me.DgvCareLinkUsersMailServerUserName.Name = "DgvCareLinkUsersMailServerUserName"
-        Me.DgvCareLinkUsersMailServerUserName.Width = 106
-        ' 
-        ' DgvCareLinkUsersSettingsVersion
-        ' 
-        Me.DgvCareLinkUsersSettingsVersion.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.DgvCareLinkUsersSettingsVersion.DataPropertyName = "SettingsVersion"
-        Me.DgvCareLinkUsersSettingsVersion.HeaderText = "Settings Version"
-        Me.DgvCareLinkUsersSettingsVersion.Name = "DgvCareLinkUsersSettingsVersion"
-        Me.DgvCareLinkUsersSettingsVersion.Width = 106
-        ' 
-        ' DgvCareLinkUsersUseAdvancedAITDecay
-        ' 
-        Me.DgvCareLinkUsersUseAdvancedAITDecay.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.DgvCareLinkUsersUseAdvancedAITDecay.DataPropertyName = "UseAdvancedAITDecay"
-        Me.DgvCareLinkUsersUseAdvancedAITDecay.HeaderText = "Use Advanced AIT Decay"
-        Me.DgvCareLinkUsersUseAdvancedAITDecay.Name = "DgvCareLinkUsersUseAdvancedAITDecay" ' 
+        '
         ' DgvCareLinkUsersUseLocalTimeZone
         ' 
         Me.DgvCareLinkUsersUseLocalTimeZone.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -987,6 +879,26 @@ Partial Class Form1
         Me.DgvCareLinkUsersAutoLogin.HeaderText = "Auto Login"
         Me.DgvCareLinkUsersAutoLogin.Name = "DgvCareLinkUsersAutoLogin"
         Me.DgvCareLinkUsersAutoLogin.Width = 65
+        ' 
+        ' DgvCareLinkUsers
+        ' 
+        Me.DgvCareLinkUsers.AllowUserToAddRows = False
+        Me.DgvCareLinkUsers.AllowUserToResizeColumns = False
+        Me.DgvCareLinkUsers.AllowUserToResizeRows = False
+        Me.DgvCareLinkUsers.AutoGenerateColumns = False
+        Me.DgvCareLinkUsers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
+        Me.DgvCareLinkUsers.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
+        Me.DgvCareLinkUsers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DgvCareLinkUsers.Columns.AddRange(New DataGridViewColumn() {Me.DgvCareLinkUsersUserID, Me.DgvCareLinkUsersDeleteRow, Me.DgvCareLinkUsersCareLinkUserName, Me.DgvCareLinkUsersCareLinkPassword, Me.DgvCareLinkUsersCountryCode, Me.DgvCareLinkUsersUseLocalTimeZone, Me.DgvCareLinkUsersAutoLogin})
+        Me.DgvCareLinkUsers.DataSource = Me.CareLinkUserDataRecordBindingSource
+        Me.DgvCareLinkUsers.Dock = DockStyle.Fill
+        Me.DgvCareLinkUsers.EditMode = DataGridViewEditMode.EditOnEnter
+        Me.DgvCareLinkUsers.Location = New Point(3, 3)
+        Me.DgvCareLinkUsers.Name = "DgvCareLinkUsers"
+        Me.DgvCareLinkUsers.RowTemplate.Height = 25
+        Me.DgvCareLinkUsers.SelectionMode = DataGridViewSelectionMode.CellSelect
+        Me.DgvCareLinkUsers.Size = New Size(1370, 633)
+        Me.DgvCareLinkUsers.TabIndex = 0
         ' 
         ' DgvCountryDataPg2
         ' 
@@ -2855,7 +2767,6 @@ Partial Class Form1
     Friend WithEvents MenuOptionsColorPicker As ToolStripMenuItem
     Friend WithEvents MenuOptionsFilterRawJSONData As ToolStripMenuItem
     Friend WithEvents MenuOptionsShowLegend As ToolStripMenuItem
-    Friend WithEvents MenuOptionsUseAdvancedAITDecay As ToolStripMenuItem
     Friend WithEvents MenuOptionsUseLocalTimeZone As ToolStripMenuItem
     Friend WithEvents MenuStartHere As ToolStripMenuItem
     Friend WithEvents MenuStartHereExceptionReportLoad As ToolStripMenuItem
@@ -2968,15 +2879,7 @@ Partial Class Form1
     Friend WithEvents DgvCareLinkUsersDeleteRow As DataGridViewColumnControls.DataGridViewDisableButtonColumn
     Friend WithEvents DgvCareLinkUsersCareLinkUserName As DataGridViewTextBoxColumn
     Friend WithEvents DgvCareLinkUsersCareLinkPassword As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCareLinkUsersAIT As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCareLinkUsersAlertPhoneNumber As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCareLinkUsersCarrierTextingDomain As DataGridViewTextBoxColumn
     Friend WithEvents DgvCareLinkUsersCountryCode As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCareLinkUsersMailServerPassword As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCareLinkUsersMailServerPort As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCareLinkUsersMailServerUserName As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCareLinkUsersSettingsVersion As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCareLinkUsersUseAdvancedAITDecay As DataGridViewCheckBoxColumn
     Friend WithEvents DgvCareLinkUsersUseLocalTimeZone As DataGridViewCheckBoxColumn
     Friend WithEvents DgvCareLinkUsersAutoLogin As DataGridViewCheckBoxColumn
     Friend WithEvents PumpBatteryRemaining2Label As Label

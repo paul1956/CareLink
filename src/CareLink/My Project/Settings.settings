@@ -8,44 +8,17 @@
     <Setting Name="CareLinkPassword" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="OutGoingMailServer" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="MailServerPort" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
     <Setting Name="CountryCode" Type="System.String" Scope="User">
       <Value Profile="(Default)">US</Value>
     </Setting>
-    <Setting Name="MailServerUserName" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="MailServerPassword" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="AlertPhoneNumber" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="AIT" Type="System.TimeSpan" Scope="User">
-      <Value Profile="(Default)">02:15:00</Value>
-    </Setting>
     <Setting Name="UpgradeRequired" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="CarrierTextingDomain" Type="System.String" Scope="User">
-      <Value Profile="(Default)">txt.att.net</Value>
-    </Setting>
-    <Setting Name="UseAdvancedAITDecay" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="UseLocalTimeZone" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="AutoLogin" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="SettingsVersion" Type="System.String" Scope="User">
-      <Value Profile="(Default)">1.0</Value>
     </Setting>
   </Settings>
 </SettingsFile>
