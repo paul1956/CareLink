@@ -5,7 +5,7 @@
 Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
-Module PlotSeriesBasal
+Friend Module PlotSeriesBasal
 
     <Extension>
     Private Sub AddBasalPoint(basalSeries As Series, startX As OADate, StartY As Double, lineColor As Color, tagString As String)

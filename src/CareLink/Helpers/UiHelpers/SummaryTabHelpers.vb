@@ -4,7 +4,7 @@
 
 Imports System.Runtime.CompilerServices
 
-Module SummaryTabHelpers
+Friend Module SummaryTabHelpers
 
     <Extension>
     Friend Sub UpdateSummaryTab(dgvSummary As DataGridView)

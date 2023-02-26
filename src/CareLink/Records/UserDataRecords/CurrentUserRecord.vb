@@ -4,7 +4,7 @@
 
 Public Class CurrentUserRecord
 
-    Sub New(userName As String)
+    Public Sub New(userName As String)
         Me.UserName = userName
         Me.UseAdvancedAitDecay = CheckState.Indeterminate
     End Sub

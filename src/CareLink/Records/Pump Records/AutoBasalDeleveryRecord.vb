@@ -8,10 +8,10 @@ Imports System.ComponentModel.DataAnnotations.Schema
 Public Class AutoBasalDeliveryRecord
     Private _dateTime As Date
 
-    Sub New()
+    Public Sub New()
     End Sub
 
-    Sub New(r As BasalRecord, recordNumber As Integer, index As Integer)
+    Public Sub New(r As BasalRecord, recordNumber As Integer, index As Integer)
         Me.type = "MANUAL_BASAL_DELIVERY"
         Me.index = index
         Me.kind = "Marker"

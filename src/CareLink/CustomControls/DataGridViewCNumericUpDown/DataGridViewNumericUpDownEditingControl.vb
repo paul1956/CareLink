@@ -1,12 +1,11 @@
 ﻿' Licensed to the .NET Foundation under one or more agreements.
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
-' To configure or remove Option's included in result, go to Options/Advanced Options...
 
 ''' <summary>
 ''' Defines the editing control for the DataGridViewNumericUpDownCell custom cell type.
 ''' </summary>
-Class DataGridViewNumericUpDownEditingControl
+Friend Class DataGridViewNumericUpDownEditingControl
     Inherits NumericUpDown
     Implements IDataGridViewEditingControl
 
