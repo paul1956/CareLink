@@ -1362,7 +1362,7 @@ Partial Class Form1
         Me.InsulinTypeLabel.Name = "InsulinTypeLabel"
         Me.InsulinTypeLabel.Size = New Size(162, 21)
         Me.InsulinTypeLabel.TabIndex = 54
-        Me.InsulinTypeLabel.Text = $"Humalog/Novolog"
+        Me.InsulinTypeLabel.Text = "Humalog/Novolog"
         Me.InsulinTypeLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' ReadingsLabel
