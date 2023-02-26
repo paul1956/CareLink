@@ -4,7 +4,6 @@
 
 Imports System.ComponentModel
 Imports System.Media
-Imports System.Runtime.InteropServices
 
 Public Class BGMiniWindow
     Private ReadOnly _form1 As Form1

@@ -3,9 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Text
-Imports System.Diagnostics
 Imports System.Globalization
-Imports System.Windows.Forms
 Imports System.ComponentModel
 
 ''' <summary>

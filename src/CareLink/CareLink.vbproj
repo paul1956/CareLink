@@ -20,19 +20,19 @@
     <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
     <RepositoryUrl>https://github.com/paul1956/CareLink</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>3.5.7.27</Version>
-    <AssemblyVersion>3.5.7.27</AssemblyVersion>
-    <FileVersion>3.5.7.27</FileVersion>
+    <Version>3.6.0.0</Version>
+    <AssemblyVersion>3.6.0.0</AssemblyVersion>
+    <FileVersion>3.6.0.0</FileVersion>
     <PackageIcon>IconImage.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/paul1956/CareLink</PackageProjectUrl>
     <PackageTags>CareLink Medtronic Insulin Pump</PackageTags>
     <PackageLicenseFile>License.txt</PackageLicenseFile>
-    <PackageReleaseNotes>Requires Windows 10 or later .Net 6.06 of later
+    <PackageReleaseNotes>Requires Windows 10 or later and .Net 7.0 of later
     </PackageReleaseNotes>
     <Title>CareLink For Windows</Title>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <ImportedNamespaces>System.Data=False,System.Drawing=False,System.Windows.Forms=False,System.Windows.Forms.DataVisualization.Charting=False,Microsoft.VisualBasic=True,System=True,System.Collections=True,System.Collections.Generic=True,System.Diagnostics=True,System.Linq=True,System.Xml.Linq=True,System.Threading.Tasks=True,CareLink=True</ImportedNamespaces>
+    <ImportedNamespaces>System.Data=True,System.Drawing=True,System.Windows.Forms=True,System.Windows.Forms.DataVisualization.Charting=True,Microsoft.VisualBasic=True,System=True,System.Collections=True,System.Collections.Generic=True,System.Diagnostics=True,System.Linq=True,System.Xml.Linq=True,System.Threading.Tasks=True,CareLink=True</ImportedNamespaces>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -47,16 +47,6 @@
     <PlatformTarget>x64</PlatformTarget>
     <DefineConstants>SupportMailServer="False"</DefineConstants>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Forms\MailSetupDialog.Designer.vb" />
-    <Compile Remove="Forms\MailSetupDialog.vb" />
-    <Compile Remove="Helpers\FormHelpers\MailSetupDialogHelpers.vb" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Remove="Forms\MailSetupDialog.resx" />
-  </ItemGroup>
 
   <ItemGroup>
     <Import Include="System.Data" />

@@ -4,7 +4,6 @@
 
 Imports System.Globalization
 Imports System.Runtime.CompilerServices
-Imports System.Threading
 
 Friend Module DateTimeExtensions
 
