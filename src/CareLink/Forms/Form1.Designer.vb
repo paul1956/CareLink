@@ -220,6 +220,8 @@ Partial Class Form1
         Me.TabPageAllUsers = New TabPage()
         Me.TabPageBackToHomePage = New TabPage()
         Me.ToolTip1 = New ToolTip(components)
+        Me.MenuOptionsEditPumpSettings = New ToolStripMenuItem()
+        Me.ToolStripSeparator7 = New ToolStripSeparator()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         Me.CalibrationShieldPanel.SuspendLayout()
@@ -371,7 +373,7 @@ Partial Class Form1
         Me.StartHereExit.Text = "E&xit" ' 
         ' MenuOptions
         ' 
-        Me.MenuOptions.DropDownItems.AddRange(New ToolStripItem() {Me.MenuOptionsColorPicker, Me.MenuOptionsShowLegend, Me.ToolStripSeparator5, Me.MenuOptionsAutoLogin, Me.ToolStripSeparator6, Me.OptionsMenuAdvancedOptions, Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsUseLocalTimeZone})
+        Me.MenuOptions.DropDownItems.AddRange(New ToolStripItem() {Me.MenuOptionsColorPicker, Me.MenuOptionsShowLegend, Me.ToolStripSeparator5, Me.MenuOptionsAutoLogin, Me.ToolStripSeparator6, Me.OptionsMenuAdvancedOptions, Me.MenuOptionsFilterRawJSONData, Me.MenuOptionsUseLocalTimeZone, Me.ToolStripSeparator7, Me.MenuOptionsEditPumpSettings})
         Me.MenuOptions.Name = "MenuOptions"
         Me.MenuOptions.Size = New Size(61, 20)
         Me.MenuOptions.Text = "Options" ' 
@@ -867,6 +869,9 @@ Partial Class Form1
         ' 
         ' DgvCareLinkUsersCountryCode
         ' 
+        Me.DgvCareLinkUsersCountryCode.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCareLinkUsersCountryCode.DataPropertyName = "CountryCode"
+        Me.DgvCareLinkUsersCountryCode.HeaderText = "Country Code"
         Me.DgvCareLinkUsersCountryCode.Name = "DgvCareLinkUsersCountryCode"
         Me.DgvCareLinkUsersCountryCode.Width = 198
         ' 
@@ -2555,6 +2560,16 @@ Partial Class Form1
         Me.TabPageBackToHomePage.Size = New Size(1376, 639)
         Me.TabPageBackToHomePage.TabIndex = 8
         Me.TabPageBackToHomePage.Text = "Back.." ' 
+        ' EditPumpSettingsToolStripMenuItem
+        ' 
+        Me.MenuOptionsEditPumpSettings.Name = "EditPumpSettingsToolStripMenuItem"
+        Me.MenuOptionsEditPumpSettings.Size = New Size(183, 22)
+        Me.MenuOptionsEditPumpSettings.Text = "Edit Pump Settings" ' 
+        ' ToolStripSeparator7
+        ' 
+        Me.ToolStripSeparator7.Name = "ToolStripSeparator7"
+        Me.ToolStripSeparator7.Size = New Size(180, 6)
+        ' 
         ' Form1
         ' 
         Me.AutoScaleDimensions = New SizeF(96.0F, 96.0F)
@@ -2889,4 +2904,6 @@ Partial Class Form1
     Friend WithEvents DgvCareLinkUsersAutoLogin As DataGridViewCheckBoxColumn
     Friend WithEvents PumpBatteryRemaining2Label As Label
     Friend WithEvents PumpNameLabel As Label
+    Friend WithEvents ToolStripSeparator7 As ToolStripSeparator
+    Friend WithEvents MenuOptionsEditPumpSettings As ToolStripMenuItem
 End Class

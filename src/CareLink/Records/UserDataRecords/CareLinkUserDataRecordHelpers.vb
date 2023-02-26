@@ -23,12 +23,12 @@ Public Module CareLinkUserDataRecordHelpers
         Select Case columnName
             Case NameOf(CareLinkUserDataRecord.ID),
                  NameOf(CareLinkUserDataRecord.CareLinkUserName),
-                 NameOf(CareLinkUserDataRecord.CareLinkPassword),
-                 NameOf(CareLinkUserDataRecord.CountryCode)
+                 NameOf(CareLinkUserDataRecord.CareLinkPassword)
                 cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
             Case NameOf(CareLinkUserDataRecord.AutoLogin),
-                 "DeleteRow",
-                 NameOf(CareLinkUserDataRecord.UseLocalTimeZone)
+                 NameOf(CareLinkUserDataRecord.CountryCode),
+                 NameOf(CareLinkUserDataRecord.UseLocalTimeZone),
+                 "DeleteRow"
                 cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
             Case ""
                 cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(1, 1, 1, 1))
@@ -46,12 +46,12 @@ Public Module CareLinkUserDataRecordHelpers
         Return Not (Debugger.IsAttached AndAlso Not s_filterJsonData) AndAlso s_columnsToHide.Contains(dataPropertyName)
     End Function
 
-    Public Function SavedUsersFileExists(userSettingsCsvFileWithPath As String) As Boolean
-        Return File.Exists(userSettingsCsvFileWithPath)
-    End Function
-
     Public Function AllUserLoginInfoFileExists() As Boolean
         Return SavedUsersFileExists(GetPathToAllUserLoginInfo(True))
+    End Function
+
+    Public Function SavedUsersFileExists(userSettingsCsvFileWithPath As String) As Boolean
+        Return File.Exists(userSettingsCsvFileWithPath)
     End Function
 
 End Module

@@ -35,14 +35,24 @@ Public Class InitializeDialog
 
     Private ReadOnly _midday As String = New TimeOnly(12, 0).ToString(CurrentDateCulture)
     Private ReadOnly _midnight As String = New TimeOnly(0, 0).ToString(CurrentDateCulture)
+
+    Private _currentUserBackup As CurrentUserRecord = Nothing
     Public Property CurrentUser As CurrentUserRecord
 
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
-        If MsgBox("If you select Cancel, the program will exit, Retry will allow editing.", MsgBoxStyle.RetryCancel, "Exit or Retry") = MsgBoxResult.Cancel Then
-            End
+        If _currentUserBackup Is Nothing Then
+            If MsgBox("If you select Cancel, the program will exit, Retry will allow editing.", MsgBoxStyle.RetryCancel, "Exit or Retry") = MsgBoxResult.Cancel Then
+                End
+            End If
+            Me.PumpAitComboBox.Enabled = True
+            Me.DialogResult = DialogResult.None
+        Else
+            If Not Me.CurrentUser.Equals(_currentUserBackup) Then
+                ' TODO Warn editing will be lost
+                Me.CurrentUser = _currentUserBackup.Clone
+            End If
+            Me.DialogResult = DialogResult.OK
         End If
-        Me.PumpAitComboBox.Enabled = True
-        Me.DialogResult = DialogResult.None
     End Sub
 
     Private Sub InitializeComboList(items As DataGridViewComboBoxCell.ObjectCollection, start As Integer)
@@ -155,6 +165,7 @@ Public Class InitializeDialog
             If Me.CurrentUser.Ait Is Nothing Then
                 .SelectedIndex = -1
             Else
+                _currentUserBackup = Me.CurrentUser.Clone
                 .Enabled = True
                 .SelectedIndex = .Items.IndexOfValue(Of String, TimeSpan)(CType(Me.CurrentUser.Ait, TimeSpan))
             End If

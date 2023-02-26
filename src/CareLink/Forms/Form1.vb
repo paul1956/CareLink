@@ -360,6 +360,16 @@ Public Class Form1
         End Using
     End Sub
 
+    Private Sub MenuOptionsEditPumpSettings_Click(sender As Object, e As EventArgs) Handles MenuOptionsEditPumpSettings.Click
+        Dim contents As String = File.ReadAllText(GetPathToUserSettingsFile(My.Settings.CareLinkUserName))
+        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
+        Dim f As New InitializeDialog With {.CurrentUser = CurrentUser}
+        If f.ShowDialog() = DialogResult.OK Then
+            CurrentUser = f.CurrentUser
+        End If
+
+    End Sub
+
     Private Sub MenuOptionsFilterRawJSONData_Click(sender As Object, e As EventArgs) Handles MenuOptionsFilterRawJSONData.Click
         s_filterJsonData = Me.MenuOptionsFilterRawJSONData.Checked
 
