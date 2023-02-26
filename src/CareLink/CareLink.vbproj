@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Remove="Forms\MailSetupDialog.Designer.vb" />
     <Compile Remove="Forms\MailSetupDialog.vb" />
+    <Compile Remove="Helpers\FormHelpers\MailSetupDialogHelpers.vb" />
   </ItemGroup>
 
   <ItemGroup>
@@ -99,7 +100,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="CareLinkTestFileSettings.json">
+    <None Update="TestFileSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="My Project\Application.myapp">
@@ -118,6 +119,10 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Helpers\DataGrivView\" />
   </ItemGroup>
 
 </Project>

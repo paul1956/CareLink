@@ -294,7 +294,7 @@ Public Class CareLinkUserDataList
         For Each r As CareLinkUserDataRecord In Me
             sb.AppendLine(r.ToCsvString)
         Next
-        My.Computer.FileSystem.WriteAllText(GetSavedUsersFileNameWithPath, sb.ToString, False)
+        My.Computer.FileSystem.WriteAllText(GetPathToAllUserLoginInfo(True), sb.ToString, False)
     End Sub
 
 End Class

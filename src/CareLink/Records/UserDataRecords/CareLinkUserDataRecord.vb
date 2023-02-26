@@ -38,14 +38,6 @@ Public Class CareLinkUserDataRecord
         Next
     End Sub
 
-    <DisplayName("Id")>
-    <Column(Order:=0, TypeName:=NameOf([Int32]))>
-    Public ReadOnly Property ID() As Integer
-        Get
-            Return _userData._iD
-        End Get
-    End Property
-
     <DisplayName("Auto Login")>
     <Column(Order:=5, TypeName:=NameOf([Boolean]))>
     Public Property AutoLogin As Boolean
@@ -94,6 +86,14 @@ Public Class CareLinkUserDataRecord
         End Set
     End Property
 
+    <DisplayName("Id")>
+    <Column(Order:=0, TypeName:=NameOf([Int32]))>
+    Public ReadOnly Property ID() As Integer
+        Get
+            Return _userData._iD
+        End Get
+    End Property
+
     <DisplayName("Use Local Time Zone")>
     <Column(Order:=4, TypeName:=NameOf([Boolean]))>
     Public Property UseLocalTimeZone As Boolean
@@ -105,6 +105,12 @@ Public Class CareLinkUserDataRecord
             Me.OnCareLinkUserChanged()
         End Set
     End Property
+
+    Private Sub OnCareLinkUserChanged()
+        If Not _inTxn And (Parent IsNot Nothing) Then
+            Parent.CareLinkUserChanged(Me)
+        End If
+    End Sub
 
     Friend Function ToCsvString() As String
         Return $"{Me.CareLinkUserName},{Me.CareLinkPassword}," &
@@ -139,12 +145,6 @@ Public Class CareLinkUserDataRecord
                 Me.AutoLogin = CBool(value)
             Case Else
         End Select
-    End Sub
-
-    Private Sub OnCareLinkUserChanged()
-        If Not _inTxn And (Parent IsNot Nothing) Then
-            Parent.CareLinkUserChanged(Me)
-        End If
     End Sub
 
     Public Structure CareLinkUserData
@@ -186,6 +186,21 @@ Public Class CareLinkUserDataRecord
         End If
         Debug.WriteLine("End EndEdit")
     End Sub
+
+    Public Overrides Function Equals(obj As Object) As Boolean
+        Dim record As CareLinkUserDataRecord = TryCast(obj, CareLinkUserDataRecord)
+        Return record IsNot Nothing AndAlso
+               Me.ID = record.ID AndAlso
+               Me.AutoLogin = record.AutoLogin AndAlso
+               Me.CareLinkPassword = record.CareLinkPassword AndAlso
+               Me.CareLinkUserName = record.CareLinkUserName AndAlso
+               Me.CountryCode = record.CountryCode AndAlso
+               Me.UseLocalTimeZone = record.UseLocalTimeZone
+    End Function
+
+    Public Overrides Function GetHashCode() As Integer
+        Throw New NotImplementedException()
+    End Function
 
 #End Region ' Implements IEditableObject
 

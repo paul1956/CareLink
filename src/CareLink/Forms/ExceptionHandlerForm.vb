@@ -31,17 +31,17 @@ Public Class ExceptionHandlerForm
             Me.StackTraceTextBox.Text = TrimmedStackTrace(Me.UnhandledException.Exception.StackTrace)
 
             Me.InstructionsRichTextBox.Text = $"By clicking OK, the Stack Trace, Exception and the CareLink{TmChar} data that caused the error will be package as a text file called{Environment.NewLine}"
-            Dim uniqueFileNameResult As FileNameStruct = GetDataFileName(SavedErrorReportName, CurrentDateCulture.Name, "txt", True)
+            Dim uniqueFileNameResult As FileNameStruct = GetDataFileName(SavedErrorReportBaseName, CurrentDateCulture.Name, "txt", True)
             Dim fileLink As String = $"{uniqueFileNameResult.withoutPath}: file://{uniqueFileNameResult.withPath}"
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, fileLink, fontBold)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "and stored in", fontNormal)
-            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, MyDocumentsPath, fontBold)
+            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, GetDirectoryForProjectData(), fontBold)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "You can review what is being stored and then attach it to a new issue at", fontNormal)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, $"{_gitClient.Repository.Get(GitOwnerName, ProjectName).Result.HtmlUrl}/issues.", fontNormal)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "This will help me isolate issues quickly.", fontNormal)
             CreateReportFile(Me.ExceptionTextBox.Text, Me.StackTraceTextBox.Text, uniqueFileNameResult.withPath, My.Forms.Form1.RecentData)
         Else
-            CurrentDateCulture = Me.ReportFileNameWithPath.ExtractCultureFromFileName(SavedErrorReportName)
+            CurrentDateCulture = Me.ReportFileNameWithPath.ExtractCultureFromFileName(SavedErrorReportBaseName)
             If CurrentDateCulture Is Nothing Then
                 Me.Close()
                 Exit Sub
@@ -50,7 +50,7 @@ Public Class ExceptionHandlerForm
             Dim fileLink As String = $"{Path.GetFileName(Me.ReportFileNameWithPath)}: file://{Me.ReportFileNameWithPath}"
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, fileLink, fontBold)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "and stored in", fontNormal)
-            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, MyDocumentsPath, fontBold)
+            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, GetDirectoryForProjectData(), fontBold)
             Me.LocalRawData = DecomposeReportFile(Me.ExceptionTextBox, Me.StackTraceTextBox, Me.ReportFileNameWithPath)
         End If
     End Sub

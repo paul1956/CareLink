@@ -49,7 +49,7 @@ Public Class LoginForm1
             End If
         End If
 
-        If File.Exists(GetSavedUsersFileNameWithPath) Then
+        If AllUserLoginInfoFileExists() Then
             _mySource.AddRange(s_allUserSettingsData.Keys.ToArray)
         ElseIf Not String.IsNullOrWhiteSpace(My.Settings.CareLinkUserName) Then
             _mySource.Add(My.Settings.CareLinkUserName)

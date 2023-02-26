@@ -135,20 +135,44 @@ Public Class Form1
             My.Settings.Save()
         End If
 
-        If File.Exists(GetSavedUsersFileNameWithPath) Then
-            s_allUserSettingsData.LoadUserRecords(GetSavedUsersFileNameWithPath)
+        Dim currentAllUserLoginFile As String = GetPathToAllUserLoginInfo(True)
+        If Not Directory.Exists(GetDirectoryForProjectData()) Then
+            Dim lastError As String = $"Can't create required project directories!"
+            Directory.CreateDirectory(GetDirectoryForProjectData())
+            Directory.CreateDirectory(GetDirectoryForSettings())
+            Try
+                MoveIfExists(GetPathToAllUserLoginInfo(False), currentAllUserLoginFile, lastError)
+                MoveIfExists(GetPathToGraphColorsFile(False), GetPathToGraphColorsFile(True), lastError)
+                MoveIfExists(GetPathToShowLegendFile(False), GetPathToShowLegendFile(True), lastError)
+
+                ' Move files with unique/variable names
+                ' Error Reports
+                lastError = $"Moving {SavedErrorReportBaseName} files!"
+                MoveFiles(GetDirectoryForMyDocuments, GetDirectoryForProjectData, $"{SavedErrorReportBaseName}*.txt")
+                lastError = $"Moving {SavedLastDownloadBaseName} files!"
+                MoveFiles(GetDirectoryForMyDocuments, GetDirectoryForProjectData, $"{SavedLastDownloadBaseName}*.json")
+                lastError = $"Moving {SavedSnapshotBaseName} files!"
+                MoveFiles(GetDirectoryForMyDocuments, GetDirectoryForProjectData, $"{SavedSnapshotBaseName}*.json")
+            Catch ex As Exception
+                MsgBox($"{lastError}{Environment.NewLine}{ex.Message}", MsgBoxStyle.Critical, "Fatal Error")
+                End
+            End Try
+        End If
+
+        If File.Exists(currentAllUserLoginFile) Then
+            s_allUserSettingsData.LoadUserRecords(currentAllUserLoginFile)
         End If
 
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
         ' Prime know colors here
         GetAllKnownColors()
-        If File.Exists(GetGraphColorsFileNameWithPath(ProjectName)) Then
-            ColorDictionaryFromFile(ProjectName)
-            Me.MenuOptionsShowLegend.Checked = File.Exists(GetShowLegendFileNameWithPath)
+        If File.Exists(GetPathToGraphColorsFile(True)) Then
+            ColorDictionaryFromFile()
+            Me.MenuOptionsShowLegend.Checked = File.Exists(GetPathToShowLegendFile(True))
         Else
-            ColorDictionaryToFile(ProjectName)
-            File.Create(GetShowLegendFileNameWithPath)
+            ColorDictionaryToFile()
+            File.Create(GetPathToShowLegendFile(True))
         End If
 
         Me.AITComboBox = New ToolStripComboBoxEx With {
@@ -198,19 +222,19 @@ Public Class Form1
 #Region "Start Here Menu Events"
 
     Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpening
-        Me.MenuStartHereLoadSavedDataFile.Enabled = Directory.GetFiles(MyDocumentsPath, $"{ProjectName}*.json").Length > 0
+        Me.MenuStartHereLoadSavedDataFile.Enabled = AnyMatchingFiles($"{ProjectName}*.json")
         Me.MenuStartHereSnapshotSave.Enabled = Me.RecentData IsNot Nothing AndAlso Me.RecentData.Count > 0
-        Me.MenuStartHereExceptionReportLoad.Visible = GetSavedErrorReportNameBaseWithPath("*.txt").Length > 0
+        Me.MenuStartHereExceptionReportLoad.Visible = AnyMatchingFiles("SavedErrorReportName*.txt")
     End Sub
 
     Private Sub MenuStartHereExceptionReportLoad_Click(sender As Object, e As EventArgs) Handles MenuStartHereExceptionReportLoad.Click
-        Dim fileList As String() = Directory.GetFiles(MyDocumentsPath, $"{SavedErrorReportName}*.txt")
+        Dim fileList As String() = Directory.GetFiles(GetDirectoryForProjectData(), $"{SavedErrorReportBaseName}*.txt")
         Dim openFileDialog1 As New OpenFileDialog With {
             .CheckFileExists = True,
             .CheckPathExists = True,
             .FileName = If(fileList.Length > 0, Path.GetFileName(fileList(0)), ProjectName),
-            .Filter = $"Error files (*.txt)|{SavedErrorReportName}*.txt",
-            .InitialDirectory = MyDocumentsPath,
+            .Filter = $"Error files (*.txt)|{SavedErrorReportBaseName}*.txt",
+            .InitialDirectory = GetDirectoryForProjectData(),
             .Multiselect = False,
             .ReadOnlyChecked = True,
             .RestoreDirectory = True,
@@ -259,8 +283,8 @@ Public Class Form1
     End Sub
 
     Private Sub MenuStartHereLoadSavedDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereLoadSavedDataFile.Click
-        Dim di As New DirectoryInfo(MyDocumentsPath)
-        Dim fileList As String() = New DirectoryInfo(MyDocumentsPath).
+        Dim di As New DirectoryInfo(GetDirectoryForProjectData())
+        Dim fileList As String() = New DirectoryInfo(GetDirectoryForProjectData()).
                                         EnumerateFiles($"{ProjectName}*.json").
                                         OrderBy(Function(f As FileInfo) f.LastWriteTime).
                                         Select(Function(f As FileInfo) f.Name).ToArray
@@ -269,7 +293,7 @@ Public Class Form1
             .CheckPathExists = True,
             .FileName = If(fileList.Length > 0, fileList.Last, ProjectName),
             .Filter = $"json files (*.json)|{ProjectName}*.json",
-            .InitialDirectory = MyDocumentsPath,
+            .InitialDirectory = GetDirectoryForProjectData(),
             .Multiselect = False,
             .ReadOnlyChecked = True,
             .RestoreDirectory = True,
@@ -304,7 +328,7 @@ Public Class Form1
 
     Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotSave.Click
         Using jd As JsonDocument = JsonDocument.Parse(Me.RecentData.CleanUserData(), New JsonDocumentOptions)
-            File.WriteAllText(GetDataFileName(SavedSnapshotName, CurrentDateCulture.Name, "json", True).withPath, JsonSerializer.Serialize(jd, JsonFormattingOptions))
+            File.WriteAllText(GetDataFileName(SavedSnapshotBaseName, CurrentDateCulture.Name, "json", True).withPath, JsonSerializer.Serialize(jd, JsonFormattingOptions))
         End Using
     End Sub
 
@@ -383,12 +407,12 @@ Public Class Form1
     Private Sub MenuOptionsShowLegend_CheckStateChanged(sender As Object, e As EventArgs) Handles MenuOptionsShowLegend.CheckStateChanged
         If Not Me.Initialized Then Exit Sub
         If Me.MenuOptionsShowLegend.Checked Then
-            File.Create(GetShowLegendFileNameWithPath)
+            File.Create(GetPathToShowLegendFile(True))
             Me.ActiveInsulinChartLegend.Enabled = True
             Me.SummaryChartLegend.Enabled = True
             Me.TreatmentMarkersChartLegend.Enabled = True
         Else
-            File.Delete(GetShowLegendFileNameWithPath)
+            File.Delete(GetPathToShowLegendFile(True))
             Me.ActiveInsulinChartLegend.Enabled = False
             Me.SummaryChartLegend.Enabled = False
             Me.TreatmentMarkersChartLegend.Enabled = False

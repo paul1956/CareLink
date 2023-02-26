@@ -38,9 +38,9 @@ Friend Module ColorDictionaryHelpers
         GraphColorDictionary = SavedGraphColorDictionary.Clone
     End Sub
 
-    Public Sub ColorDictionaryFromFile(repoName As String)
+    Public Sub ColorDictionaryFromFile()
 
-        Using fileStream As FileStream = File.OpenRead(GetGraphColorsFileNameWithPath(repoName))
+        Using fileStream As FileStream = File.OpenRead(GetPathToGraphColorsFile(True))
             Using sr As New StreamReader(fileStream)
                 sr.ReadLine()
                 While sr.Peek() <> -1
@@ -61,8 +61,8 @@ Friend Module ColorDictionaryHelpers
         End Using
     End Sub
 
-    Public Sub ColorDictionaryToFile(repoName As String)
-        Using fileStream As FileStream = File.OpenWrite(GetGraphColorsFileNameWithPath(repoName))
+    Public Sub ColorDictionaryToFile()
+        Using fileStream As FileStream = File.OpenWrite(GetPathToGraphColorsFile(True))
             Using sw As New StreamWriter(fileStream)
                 sw.WriteLine($"Key,ForegroundColor,BackgroundColor")
                 For Each kvp As KeyValuePair(Of String, KnownColor) In GraphColorDictionary
@@ -77,10 +77,6 @@ Friend Module ColorDictionaryHelpers
 
     Public Function GetGraphColorsBindingSource() As BindingSource
         Return New BindingSource(GraphColorDictionary, Nothing)
-    End Function
-
-    Public Function GetGraphColorsFileNameWithPath(repoName As String) As String
-        Return Path.Combine(MyDocumentsPath, $"{repoName}GraphColors.Csv")
     End Function
 
     Public Function GetGraphLineColor(lineName As String) As Color

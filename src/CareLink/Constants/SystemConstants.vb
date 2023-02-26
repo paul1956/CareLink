@@ -3,7 +3,6 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Globalization
-Imports System.IO
 Imports System.Text.Json
 
 Public Module SystemConstants
@@ -28,8 +27,6 @@ Public Module SystemConstants
                 {$"Humalog{RegisteredTrademark}/Novolog{RegisteredTrademark}", New TimeSpan(3, 0, 0)},
                 {$"Lyumjev{RegisteredTrademark}/FIASP{RegisteredTrademark}", New TimeSpan(3, 0, 0)}
             }
-
-    Friend ReadOnly s_testSettingsFileName As String = $"{ProjectName}TestFileSettings.json"
 
     Public ReadOnly s_aitValues As New Dictionary(Of String, String) From {
                         {"AIT 2:00", "2:00"}, {"AIT 2:15", "2:15"},
@@ -77,25 +74,8 @@ Public Module SystemConstants
 
     Public ReadOnly Property GitHubCareLinkUrl As String = $"https://GitHub.com/{GitOwnerName}/{ProjectName}/"
     Public ReadOnly Property JsonFormattingOptions As New JsonSerializerOptions With {.WriteIndented = True}
-    Public ReadOnly Property MyDocumentsPath As String = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-    Public ReadOnly Property SavedErrorReportName As String = $"{ProjectName}ErrorReport"
-    Public ReadOnly Property SavedLastDownloadName As String = $"{ProjectName}LastDownload"
-
-    Public ReadOnly Property SavedSnapshotName As String = $"{ProjectName}Snapshot"
 
     Public ReadOnly Property SavedTitle As String = $"{ProjectName} For Windows"
-
-    Public Function GetSavedErrorReportNameBaseWithPath(additionalText As String) As String
-        Return Path.Combine(MyDocumentsPath, $"{SavedErrorReportName}{additionalText}")
-    End Function
-
-    Public Function GetSavedUsersFileNameWithPath() As String
-        Return Path.Combine(MyDocumentsPath, $"{ProjectName}.Csv")
-    End Function
-
-    Public Function GetShowLegendFileNameWithPath() As String
-        Return Path.Combine(MyDocumentsPath, $"{ProjectName}ShowLegend.txt")
-    End Function
 
 #Region "All Culture Info"
 
@@ -113,12 +93,6 @@ Public Module SystemConstants
         Set
             _CurrentDateCulture = Value
         End Set
-    End Property
-
-    Public ReadOnly Property LastDownloadWithPath As String
-        Get
-            Return GetDataFileName(SavedLastDownloadName, CultureInfo.CurrentUICulture.Name, "json", False).withPath
-        End Get
     End Property
 
     Public ReadOnly Property CurrentDataCulture As New CultureInfo("en-US")

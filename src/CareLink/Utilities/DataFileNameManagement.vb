@@ -32,20 +32,20 @@ Friend Module DataFileNameManagement
         End If
 
         Try
-            Dim fileNameWithCultureAndExtension As String = $"{baseName}({cultureName}).{extension}"
-            Dim fileNameWithPath As String = Path.Combine(MyDocumentsPath, fileNameWithCultureAndExtension)
+            Dim baseWithCultureAndExtension As String = $"{baseName}({cultureName}).{extension}"
+            Dim fileNameWithPath As String = Path.Combine(GetDirectoryForProjectData(), baseWithCultureAndExtension)
 
             If MustBeUnique AndAlso File.Exists(fileNameWithPath) Then
                 'Get unique file name
-                Dim lCount As Long
+                Dim count As Long
                 Do
-                    lCount += 1
-                    fileNameWithPath = Path.Combine(MyDocumentsPath, $"{$"{baseName}({cultureName})"}{lCount}.{extension}")
-                    fileNameWithCultureAndExtension = Path.GetFileName(fileNameWithPath)
+                    count += 1
+                    fileNameWithPath = Path.Combine(GetDirectoryForProjectData(), $"{baseName}({cultureName}){count}.{extension}")
+                    baseWithCultureAndExtension = Path.GetFileName(fileNameWithPath)
                 Loop While File.Exists(fileNameWithPath)
             End If
 
-            Return New FileNameStruct(fileNameWithPath, fileNameWithCultureAndExtension)
+            Return New FileNameStruct(fileNameWithPath, baseWithCultureAndExtension)
         Catch ex As Exception
         End Try
         Return New FileNameStruct

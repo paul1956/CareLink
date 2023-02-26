@@ -28,6 +28,14 @@ Friend Module Form1UpdateHelpers
         End Select
     End Function
 
+    Friend Sub SetCalloutVisibility(name As String)
+        With s_calloutAnnotations(name)
+            If .Visible Then
+                .Visible = False
+            End If
+        End With
+    End Sub
+
     Friend Sub SetTreatmentInsulinRow()
         Select Case MaxBasalPerDose
             Case < 0.25

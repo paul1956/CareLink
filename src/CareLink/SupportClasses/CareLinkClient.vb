@@ -372,7 +372,7 @@ Public Class CareLinkClient
 
                         Dim contents As String = JsonSerializer.Serialize(jsonData, New JsonSerializerOptions)
                         Using jDocument As JsonDocument = JsonDocument.Parse(contents, New JsonDocumentOptions)
-                            File.WriteAllText(LastDownloadWithPath, JsonSerializer.Serialize(jDocument, JsonFormattingOptions))
+                            File.WriteAllText(GetPathToLastDownloadFile(), JsonSerializer.Serialize(jDocument, JsonFormattingOptions))
                         End Using
                     End If
                 ElseIf response?.StatusCode = HttpStatusCode.Unauthorized Then

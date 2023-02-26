@@ -38,15 +38,11 @@ Public Class InitializeDialog
     Public Property CurrentUser As CurrentUserRecord
 
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
-        If Me.Cancel_Button.Text = "Confirm Exit!" Then End
-        If MsgBox("If you continue, the program will exit!", MsgBoxStyle.RetryCancel, "Exit or Retry") = MsgBoxResult.Cancel Then
+        If MsgBox("If you select Cancel, the program will exit, Retry will allow editing.", MsgBoxStyle.RetryCancel, "Exit or Retry") = MsgBoxResult.Cancel Then
             End
         End If
+        Me.PumpAitComboBox.Enabled = True
         Me.DialogResult = DialogResult.None
-    End Sub
-
-    Private Sub Cancel_Button_GotFocus(sender As Object, e As EventArgs) Handles Cancel_Button.GotFocus
-        Me.Cancel_Button.Text = "Confirm Exit!"
     End Sub
 
     Private Sub InitializeComboList(items As DataGridViewComboBoxCell.ObjectCollection, start As Integer)
@@ -128,6 +124,10 @@ Public Class InitializeDialog
 
     Private Sub InitializeDataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles InitializeDataGridView.DataError
         Stop
+    End Sub
+
+    Private Sub InitializeDataGridView_Enter(sender As Object, e As EventArgs) Handles InitializeDataGridView.Enter
+        Me.InitializeDataGridView.CausesValidation = True
     End Sub
 
     Private Sub InitializeDataGridView_Validating(sender As Object, e As CancelEventArgs) Handles InitializeDataGridView.Validating
@@ -227,10 +227,13 @@ Public Class InitializeDialog
 
     End Sub
 
+    Private Sub InsulinTypeComboBox_Enter(sender As Object, e As EventArgs) Handles InsulinTypeComboBox.Enter
+        Me.InsulinTypeComboBox.CausesValidation = True
+    End Sub
+
     Private Sub InsulinTypeComboBox_Leave(sender As Object, e As EventArgs) Handles InsulinTypeComboBox.Leave
         Dim c As ComboBox = CType(sender, ComboBox)
         c.Enabled = False
-        Me.UseAITAdvancedDecayCheckBox.CausesValidation = True
     End Sub
 
     Private Sub InsulinTypeComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles InsulinTypeComboBox.SelectedIndexChanged
@@ -275,9 +278,8 @@ Public Class InitializeDialog
             carbRecord.CarbRatio = CSng(numericCell.Value)
             Me.CurrentUser.CarbRatios.Add(carbRecord)
         Next
-        Dim userSettingsPath As String = $"{Path.Combine(MyDocumentsPath, $"{ProjectName}{My.Settings.CareLinkUserName}")}.json"
 
-        File.WriteAllText(userSettingsPath,
+        File.WriteAllText(GetPathToUserSettingsFile(My.Settings.CareLinkUserName),
                           JsonSerializer.Serialize(Me.CurrentUser, JsonFormattingOptions))
 
         Me.Close()
@@ -286,7 +288,6 @@ Public Class InitializeDialog
     Private Sub PumpAitComboBoxComboBox_Leave(sender As Object, e As EventArgs) Handles PumpAitComboBox.Leave
         Dim c As ComboBox = CType(sender, ComboBox)
         c.Enabled = False
-        Me.InsulinTypeComboBox.CausesValidation = True
     End Sub
 
     Private Sub PumpAitComboBoxComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles PumpAitComboBox.SelectedIndexChanged
@@ -317,8 +318,11 @@ Public Class InitializeDialog
         Dim dgv As DataGridView = Me.InitializeDataGridView
         Dim cell As DataGridViewCell = dgv.Rows(Me.InitializeDataGridView.RowCount - 1).Cells(NameOf(ColumnEnd))
         cell.Value = _midnight
-        Me.InitializeDataGridView.CausesValidation = True
         Me.InitializeDataGridView.Enabled = True
+    End Sub
+
+    Private Sub UseAITAdvancedDecayCheckBox_Enter(sender As Object, e As EventArgs) Handles UseAITAdvancedDecayCheckBox.Enter
+        Me.UseAITAdvancedDecayCheckBox.CausesValidation = True
     End Sub
 
     Private Sub UseAITAdvancedDecayCheckBox_Leave(sender As Object, e As EventArgs) Handles UseAITAdvancedDecayCheckBox.Leave

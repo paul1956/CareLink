@@ -35,7 +35,7 @@ Public Class OptionsDialog
         Me.Cursor = Cursors.WaitCursor
         Application.DoEvents()
         If MsgBox("If you continue, changes will be saved and application will restart, if you select ""No"" changes will be lost.", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            ColorDictionaryToFile(ProjectName)
+            ColorDictionaryToFile()
             Application.Restart()
         Else
             ColorDictionaryFromBackup(Me.SaveGraphColorDictionary)

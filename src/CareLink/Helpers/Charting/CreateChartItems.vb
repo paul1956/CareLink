@@ -176,7 +176,7 @@ Friend Module CreateChartItems
                         .BackColor = Color.Gray,
                         .BorderWidth = 0,
                         .Docking = Docking.Bottom,
-                        .Enabled = File.Exists(GetShowLegendFileNameWithPath),
+                        .Enabled = File.Exists(GetPathToShowLegendFile(True)),
                         .Font = New Font("Trebuchet MS", 20.0F, FontStyle.Bold),
                         .ForeColor = .BackColor.GetContrastingColor,
                         .IsTextAutoFit = True

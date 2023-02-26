@@ -4,11 +4,11 @@
 
 Imports System.Runtime.CompilerServices
 
-Friend Module DataGridViewHelper
+Friend Module DisplayDataTableInDgvHelpers
 
     Friend Delegate Sub attachHandlers(dgv As DataGridView)
 
-    Friend Function CreateDefaultDataGridView(dgvName As String) As DataGridView
+    Private Function CreateDefaultDataGridView(dgvName As String) As DataGridView
         Dim dGV As New DataGridView With {
             .Name = dgvName
         }
@@ -54,15 +54,6 @@ Friend Module DataGridViewHelper
         dGV.DataSource = table
         dGV.RowHeadersVisible = False
         dGV.Height = table.Rows.Count * 30
-    End Sub
-
-    <Extension>
-    Friend Sub UpdateSummaryTab(dgvSummary As DataGridView)
-        s_listOfSummaryRecords.Sort()
-        dgvSummary.InitializeDgv()
-        dgvSummary.DataSource = ClassCollectionToDataTable(s_listOfSummaryRecords)
-        dgvSummary.Columns(0).HeaderCell.SortGlyphDirection = SortOrder.Ascending
-        dgvSummary.RowHeadersVisible = False
     End Sub
 
 End Module

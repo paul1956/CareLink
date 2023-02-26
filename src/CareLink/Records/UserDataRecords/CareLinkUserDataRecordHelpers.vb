@@ -50,8 +50,8 @@ Public Module CareLinkUserDataRecordHelpers
         Return File.Exists(userSettingsCsvFileWithPath)
     End Function
 
-    Public Function SavedUsersFileExists() As Boolean
-        Return SavedUsersFileExists(GetSavedUsersFileNameWithPath())
+    Public Function AllUserLoginInfoFileExists() As Boolean
+        Return SavedUsersFileExists(GetPathToAllUserLoginInfo(True))
     End Function
 
 End Module

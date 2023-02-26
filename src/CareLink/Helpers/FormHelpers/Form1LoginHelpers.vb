@@ -6,9 +6,21 @@ Imports System.Globalization
 Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
-Imports System.Windows.Forms.Design.AxImporter
 
 Friend Module Form1LoginHelpers
+
+    Private Sub SetUpCareLinkUser(userSettingsPath As String)
+        Dim contents As String
+        If Path.Exists(userSettingsPath) Then
+            contents = File.ReadAllText(userSettingsPath)
+            CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
+        Else
+            CurrentUser = New CurrentUserRecord(My.Settings.CareLinkUserName)
+            Dim f As New InitializeDialog With {.CurrentUser = CurrentUser}
+            f.ShowDialog()
+            CurrentUser = f.CurrentUser
+        End If
+    End Sub
 
     <Extension>
     Friend Function DoOptionalLoginAndUpdateData(MainForm As Form1, UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
@@ -19,19 +31,18 @@ Friend Module Form1LoginHelpers
         Select Case fileToLoad
             Case FileToLoadOptions.LastSaved
                 MainForm.Text = $"{SavedTitle} Using Last Saved Data"
-                CurrentDateCulture = LastDownloadWithPath.ExtractCultureFromFileName(SavedLastDownloadName)
-                MainForm.RecentData = Loads(File.ReadAllText(LastDownloadWithPath))
+                CurrentDateCulture = GetPathToLastDownloadFile().ExtractCultureFromFileName(SavedLastDownloadBaseName)
+                MainForm.RecentData = Loads(File.ReadAllText(GetPathToLastDownloadFile()))
                 MainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                MainForm.LastUpdateTime.Text = $"{File.GetLastWriteTime(LastDownloadWithPath).ToShortDateTimeString} from file"
-                SetUpCareLinkUser(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, s_testSettingsFileName))
+                MainForm.LastUpdateTime.Text = $"{File.GetLastWriteTime(GetPathToLastDownloadFile()).ToShortDateTimeString} from file"
+                SetUpCareLinkUser(GetPathToTestSettingsFile())
             Case FileToLoadOptions.TestData
                 MainForm.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
-                Dim testDataWithPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")
-                MainForm.RecentData = Loads(File.ReadAllText(testDataWithPath))
+                MainForm.RecentData = Loads(File.ReadAllText(GetPathToTestData()))
                 MainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                MainForm.LastUpdateTime.Text = $"{File.GetLastWriteTime(testDataWithPath).ToShortDateTimeString} from file"
-                SetUpCareLinkUser(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, s_testSettingsFileName))
+                MainForm.LastUpdateTime.Text = $"{File.GetLastWriteTime(GetPathToTestData()).ToShortDateTimeString} from file"
+                SetUpCareLinkUser(GetPathToTestSettingsFile)
             Case FileToLoadOptions.Login
                 MainForm.Text = SavedTitle
                 Do Until MainForm.LoginDialog.ShowDialog() <> DialogResult.Retry
@@ -50,8 +61,7 @@ Friend Module Form1LoginHelpers
                     Return False
                 End If
 
-                Dim currentUserSettingsFileName As String = $"{ProjectName}{My.Settings.CareLinkUserName}Settings.json"
-                Dim userSettingsPath As String = Path.Combine(MyDocumentsPath, currentUserSettingsFileName)
+                Dim userSettingsPath As String = GetPathToUserSettingsFile(My.Settings.CareLinkUserName)
                 SetUpCareLinkUser(userSettingsPath)
 
                 MainForm.RecentData = MainForm.Client.GetRecentData(MainForm)
@@ -76,19 +86,6 @@ Friend Module Form1LoginHelpers
         End If
         Return True
     End Function
-
-    Private Sub SetUpCareLinkUser(userSettingsPath As String)
-        Dim contents As String
-        If Path.Exists(userSettingsPath) Then
-            contents = File.ReadAllText(userSettingsPath)
-            CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
-        Else
-            CurrentUser = New CurrentUserRecord(My.Settings.CareLinkUserName)
-            Dim f As New InitializeDialog With {.CurrentUser = CurrentUser}
-            f.ShowDialog()
-            CurrentUser = f.CurrentUser
-        End If
-    End Sub
 
     <Extension>
     Friend Sub FinishInitialization(MainForm As Form1)
