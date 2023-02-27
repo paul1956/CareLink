@@ -46,6 +46,8 @@ Partial Class Form1
         Me.OptionsMenuAdvancedOptions = New ToolStripMenuItem()
         Me.MenuOptionsFilterRawJSONData = New ToolStripMenuItem()
         Me.MenuOptionsUseLocalTimeZone = New ToolStripMenuItem()
+        Me.ToolStripSeparator7 = New ToolStripSeparator()
+        Me.MenuOptionsEditPumpSettings = New ToolStripMenuItem()
         Me.MenuHelp = New ToolStripMenuItem()
         Me.MenuHelpReportAnIssue = New ToolStripMenuItem()
         Me.MenuHelpCheckForUpdates = New ToolStripMenuItem()
@@ -109,8 +111,7 @@ Partial Class Form1
         Me.DgvMeal = New DataGridView()
         Me.DgvSGs = New DataGridView()
         Me.DgvSummary = New DataGridView()
-        Me.DgvUserProfile = New DataGridView()
-        Me.FullNameLabel = New Label()
+        Me.DgvSessionProfile = New DataGridView()
         Me.ImageList1 = New ImageList(components)
         Me.InRangeMessageLabel = New Label()
         Me.InsulinLevelPictureBox = New PictureBox()
@@ -126,10 +127,6 @@ Partial Class Form1
         Me.Last24HTotalsPanel = New Panel()
         Me.Last24TotalsLabel = New Label()
         Me.Last24ManualBolusLabel = New Label()
-        Me.LastUpdateTime = New Label()
-        Me.LastUpdateTimeLabel = New Label()
-        Me.LoginStatus = New Label()
-        Me.LoginStatusLabel = New Label()
         Me.MaxBasalPerHourLabel = New Label()
         Me.ModelLabel = New Label()
         Me.PumpNameLabel = New Label()
@@ -220,8 +217,11 @@ Partial Class Form1
         Me.TabPageAllUsers = New TabPage()
         Me.TabPageBackToHomePage = New TabPage()
         Me.ToolTip1 = New ToolTip(components)
-        Me.MenuOptionsEditPumpSettings = New ToolStripMenuItem()
-        Me.ToolStripSeparator7 = New ToolStripSeparator()
+        Me.StatusStrip1 = New StatusStrip()
+        Me.LoginStatus = New ToolStripStatusLabel()
+        Me.ToolStripSpacer = New ToolStripStatusLabel()
+        Me.LastUpdateTime = New ToolStripStatusLabel()
+        Me.FullNameLabel = New ToolStripStatusLabel()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         Me.CalibrationShieldPanel.SuspendLayout()
@@ -239,7 +239,7 @@ Partial Class Form1
         CType(Me.DgvMeal, ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DgvSGs, ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DgvSummary, ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.DgvUserProfile, ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DgvSessionProfile, ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.InsulinLevelPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         Me.Last24HTotalsPanel.SuspendLayout()
         CType(Me.PumpBatteryPictureBox, ComponentModel.ISupportInitialize).BeginInit()
@@ -297,6 +297,7 @@ Partial Class Form1
         Me.TabPageUserProfile.SuspendLayout()
         Me.TabPageCurrentUser.SuspendLayout()
         Me.TabPageAllUsers.SuspendLayout()
+        Me.StatusStrip1.SuspendLayout()
         Me.SuspendLayout()
         ' 
         ' MenuStrip1
@@ -428,6 +429,16 @@ Partial Class Form1
         Me.MenuOptionsUseLocalTimeZone.Name = "MenuOptionsUseLocalTimeZone"
         Me.MenuOptionsUseLocalTimeZone.Size = New Size(183, 22)
         Me.MenuOptionsUseLocalTimeZone.Text = "Use Local TImeZone" ' 
+        ' ToolStripSeparator7
+        ' 
+        Me.ToolStripSeparator7.Name = "ToolStripSeparator7"
+        Me.ToolStripSeparator7.Size = New Size(180, 6)
+        ' 
+        ' MenuOptionsEditPumpSettings
+        ' 
+        Me.MenuOptionsEditPumpSettings.Name = "MenuOptionsEditPumpSettings"
+        Me.MenuOptionsEditPumpSettings.Size = New Size(183, 22)
+        Me.MenuOptionsEditPumpSettings.Text = "Edit Pump Settings" ' 
         ' MenuHelp
         ' 
         Me.MenuHelp.DropDownItems.AddRange(New ToolStripItem() {Me.MenuHelpReportAnIssue, Me.MenuHelpCheckForUpdates, Me.MenuHelpAbout})
@@ -515,7 +526,7 @@ Partial Class Form1
         Me.AITAlgorithmLabel.Name = "AITAlgorithmLabel"
         Me.AITAlgorithmLabel.Size = New Size(175, 21)
         Me.AITAlgorithmLabel.TabIndex = 8
-        Me.AITAlgorithmLabel.Text = "Active Insulin TIme"
+        Me.AITAlgorithmLabel.Text = "AIT Algorithm"
         Me.AITAlgorithmLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' AverageSGMessageLabel
@@ -634,7 +645,7 @@ Partial Class Form1
         Me.CalibrationShieldPanel.Location = New Point(0, 0)
         Me.CalibrationShieldPanel.Margin = New Padding(0)
         Me.CalibrationShieldPanel.Name = "CalibrationShieldPanel"
-        Me.CalibrationShieldPanel.Size = New Size(116, 132)
+        Me.CalibrationShieldPanel.Size = New Size(116, 131)
         Me.CalibrationShieldPanel.TabIndex = 64
         ' 
         ' TempTargetLabel
@@ -667,7 +678,7 @@ Partial Class Form1
         Me.LastSGTimeLabel.Dock = DockStyle.Bottom
         Me.LastSGTimeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.LastSGTimeLabel.ForeColor = Color.White
-        Me.LastSGTimeLabel.Location = New Point(0, 111)
+        Me.LastSGTimeLabel.Location = New Point(0, 110)
         Me.LastSGTimeLabel.Name = "LastSGTimeLabel"
         Me.LastSGTimeLabel.Size = New Size(116, 21)
         Me.LastSGTimeLabel.TabIndex = 55
@@ -831,7 +842,7 @@ Partial Class Form1
         Me.DgvCountryDataPg1Value.HeaderText = "Value"
         Me.DgvCountryDataPg1Value.Name = "DgvCountryDataPg1Value"
         Me.DgvCountryDataPg1Value.ReadOnly = True
-        ' 
+        '
         ' DgvCareLinkUsersUserID
         ' 
         Me.DgvCareLinkUsersUserID.DataPropertyName = "ID"
@@ -873,7 +884,7 @@ Partial Class Form1
         Me.DgvCareLinkUsersCountryCode.DataPropertyName = "CountryCode"
         Me.DgvCareLinkUsersCountryCode.HeaderText = "Country Code"
         Me.DgvCareLinkUsersCountryCode.Name = "DgvCareLinkUsersCountryCode"
-        Me.DgvCareLinkUsersCountryCode.Width = 198
+        Me.DgvCareLinkUsersCountryCode.Width = 97
         ' 
         ' DgvCareLinkUsersUseLocalTimeZone
         ' 
@@ -910,7 +921,7 @@ Partial Class Form1
         Me.DgvCareLinkUsers.SelectionMode = DataGridViewSelectionMode.CellSelect
         Me.DgvCareLinkUsers.Size = New Size(1370, 633)
         Me.DgvCareLinkUsers.TabIndex = 0
-        '
+        ' 
         ' DgvCountryDataPg2
         ' 
         Me.DgvCountryDataPg2.Columns.AddRange(New DataGridViewColumn() {Me.DgvCountryDataPg2RecordNumber, Me.DgvCountryDataPg2Category, Me.DgvCountryDataPg2Key, Me.DgvCountryDataPg2Value})
@@ -1067,26 +1078,17 @@ Partial Class Form1
         Me.DgvSummary.Size = New Size(1370, 633)
         Me.DgvSummary.TabIndex = 0
         ' 
-        ' DgvUserProfile
+        ' DgvSessionProfile
         ' 
-        Me.DgvUserProfile.Dock = DockStyle.Fill
-        Me.DgvUserProfile.Location = New Point(3, 3)
-        Me.DgvUserProfile.Name = "DgvUserProfile"
-        Me.DgvUserProfile.ReadOnly = True
-        Me.DgvUserProfile.RowHeadersVisible = False
-        Me.DgvUserProfile.RowTemplate.Height = 25
-        Me.DgvUserProfile.Size = New Size(1370, 633)
-        Me.DgvUserProfile.TabIndex = 0
+        Me.DgvSessionProfile.Dock = DockStyle.Fill
+        Me.DgvSessionProfile.Location = New Point(3, 3)
+        Me.DgvSessionProfile.Name = "DgvSessionProfile"
+        Me.DgvSessionProfile.ReadOnly = True
+        Me.DgvSessionProfile.RowHeadersVisible = False
+        Me.DgvSessionProfile.RowTemplate.Height = 25
+        Me.DgvSessionProfile.Size = New Size(1370, 633)
+        Me.DgvSessionProfile.TabIndex = 0
         ' 
-        ' FullNameLabel
-        ' 
-        Me.FullNameLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
-        Me.FullNameLabel.ForeColor = Color.White
-        Me.FullNameLabel.Location = New Point(1140, 0)
-        Me.FullNameLabel.Name = "FullNameLabel"
-        Me.FullNameLabel.Size = New Size(230, 21)
-        Me.FullNameLabel.TabIndex = 55
-        Me.FullNameLabel.Text = "Full Name" ' 
         ' ImageList1
         ' 
         Me.ImageList1.ColorDepth = ColorDepth.Depth32Bit
@@ -1272,38 +1274,6 @@ Partial Class Form1
         Me.Last24ManualBolusLabel.Text = "Manual Bolus 30 U | 30%"
         Me.Last24ManualBolusLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
-        ' LastUpdateTime
-        ' 
-        Me.LastUpdateTime.AutoSize = True
-        Me.LastUpdateTime.Location = New Point(1058, 3)
-        Me.LastUpdateTime.Name = "LastUpdateTime"
-        Me.LastUpdateTime.Size = New Size(58, 15)
-        Me.LastUpdateTime.TabIndex = 24
-        Me.LastUpdateTime.Text = "Unknown" ' 
-        ' LastUpdateTimeLabel
-        ' 
-        Me.LastUpdateTimeLabel.AutoSize = True
-        Me.LastUpdateTimeLabel.Location = New Point(949, 3)
-        Me.LastUpdateTimeLabel.Name = "LastUpdateTimeLabel"
-        Me.LastUpdateTimeLabel.Size = New Size(101, 15)
-        Me.LastUpdateTimeLabel.TabIndex = 23
-        Me.LastUpdateTimeLabel.Text = "Last Update Time:" ' 
-        ' LoginStatus
-        ' 
-        Me.LoginStatus.AutoSize = True
-        Me.LoginStatus.Location = New Point(491, 3)
-        Me.LoginStatus.Name = "LoginStatus"
-        Me.LoginStatus.Size = New Size(58, 15)
-        Me.LoginStatus.TabIndex = 24
-        Me.LoginStatus.Text = "Unknown" ' 
-        ' LoginStatusLabel
-        ' 
-        Me.LoginStatusLabel.AutoSize = True
-        Me.LoginStatusLabel.Location = New Point(416, 3)
-        Me.LoginStatusLabel.Name = "LoginStatusLabel"
-        Me.LoginStatusLabel.Size = New Size(75, 15)
-        Me.LoginStatusLabel.TabIndex = 23
-        Me.LoginStatusLabel.Text = "Login Status:" ' 
         ' MaxBasalPerHourLabel
         ' 
         Me.MaxBasalPerHourLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
@@ -1470,7 +1440,6 @@ Partial Class Form1
         Me.SplitContainer2.Panel1.Controls.Add(Me.ModelLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.PumpNameLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.SerialNumberLabel)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.FullNameLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.InsulinTypeLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.ReadingsLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.PumpBatteryRemainingLabel)
@@ -1490,7 +1459,7 @@ Partial Class Form1
         ' 
         Me.SplitContainer2.Panel2.Controls.Add(Me.SplitContainer3)
         Me.SplitContainer2.Size = New Size(1370, 633)
-        Me.SplitContainer2.SplitterDistance = 132
+        Me.SplitContainer2.SplitterDistance = 131
         Me.SplitContainer2.TabIndex = 52
         ' 
         ' PumpBatteryRemaining2Label
@@ -1549,7 +1518,7 @@ Partial Class Form1
         Me.SplitContainer3.Panel2.Controls.Add(Me.BelowLowLimitMessageLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.AverageSGValueLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.AverageSGMessageLabel)
-        Me.SplitContainer3.Size = New Size(1370, 486)
+        Me.SplitContainer3.Size = New Size(1370, 498)
         Me.SplitContainer3.SplitterDistance = 1136
         Me.SplitContainer3.TabIndex = 0
         ' 
@@ -2521,7 +2490,7 @@ Partial Class Form1
         ' 
         ' TabPageUserProfile
         ' 
-        Me.TabPageUserProfile.Controls.Add(Me.DgvUserProfile)
+        Me.TabPageUserProfile.Controls.Add(Me.DgvSessionProfile)
         Me.TabPageUserProfile.Location = New Point(4, 27)
         Me.TabPageUserProfile.Name = "TabPageUserProfile"
         Me.TabPageUserProfile.Padding = New Padding(3)
@@ -2560,28 +2529,47 @@ Partial Class Form1
         Me.TabPageBackToHomePage.Size = New Size(1376, 639)
         Me.TabPageBackToHomePage.TabIndex = 8
         Me.TabPageBackToHomePage.Text = "Back.." ' 
-        ' EditPumpSettingsToolStripMenuItem
+        ' StatusStrip1
         ' 
-        Me.MenuOptionsEditPumpSettings.Name = "EditPumpSettingsToolStripMenuItem"
-        Me.MenuOptionsEditPumpSettings.Size = New Size(183, 22)
-        Me.MenuOptionsEditPumpSettings.Text = "Edit Pump Settings" ' 
-        ' ToolStripSeparator7
+        Me.StatusStrip1.Items.AddRange(New ToolStripItem() {Me.LoginStatus, Me.LastUpdateTime, Me.ToolStripSpacer, Me.FullNameLabel})
+        Me.StatusStrip1.Location = New Point(0, 694)
+        Me.StatusStrip1.Name = "StatusStrip1"
+        Me.StatusStrip1.Size = New Size(1384, 22)
+        Me.StatusStrip1.TabIndex = 53
+        Me.StatusStrip1.Text = "StatusStrip1" ' 
+        ' ToolStripStatusLabel2
+        '
+        Me.LoginStatus.BorderSides = ToolStripStatusLabelBorderSides.Right Or ToolStripStatusLabelBorderSides.Left
+        Me.LoginStatus.BorderStyle = Border3DStyle.RaisedOuter
+        Me.LoginStatus.DisplayStyle = ToolStripItemDisplayStyle.Text
+        Me.LoginStatus.Name = "ToolStripStatusLabel2"
+        Me.LoginStatus.Size = New Size(119, 17)
+        Me.LoginStatus.Text = "Login Status: Unknown" ' 
+        ' LastUpdateTime
         ' 
-        Me.ToolStripSeparator7.Name = "ToolStripSeparator7"
-        Me.ToolStripSeparator7.Size = New Size(180, 6)
+        Me.LastUpdateTime.BorderSides = ToolStripStatusLabelBorderSides.Right Or ToolStripStatusLabelBorderSides.Left
+        Me.LastUpdateTime.BorderStyle = Border3DStyle.RaisedOuter
+        Me.LastUpdateTime.Name = "LastUpdateTime"
+        Me.LastUpdateTime.Size = New Size(58, 17)
+        Me.LastUpdateTime.Spring = True
+        Me.LastUpdateTime.Text = "                           Last Update Time: Unknown" ' 
+        ' FullNameLabel
         ' 
+        Me.FullNameLabel.BorderSides = ToolStripStatusLabelBorderSides.Right Or ToolStripStatusLabelBorderSides.Left
+        Me.FullNameLabel.BorderStyle = Border3DStyle.RaisedOuter
+        Me.FullNameLabel.DisplayStyle = ToolStripItemDisplayStyle.Text
+        Me.FullNameLabel.Name = "FullNameLabel"
+        Me.FullNameLabel.Size = New Size(65, 17)
+        Me.FullNameLabel.Text = "User Name" ' 
         ' Form1
         ' 
         Me.AutoScaleDimensions = New SizeF(96.0F, 96.0F)
         Me.AutoScaleMode = AutoScaleMode.Dpi
-        Me.ClientSize = New Size(1384, 694)
-        Me.Controls.Add(Me.LoginStatusLabel)
-        Me.Controls.Add(Me.LoginStatus)
-        Me.Controls.Add(Me.LastUpdateTime)
-        Me.Controls.Add(Me.LastUpdateTimeLabel)
+        Me.ClientSize = New Size(1384, 716)
         Me.Controls.Add(Me.TabControlPage1)
         Me.Controls.Add(Me.TabControlPage2)
         Me.Controls.Add(Me.MenuStrip1)
+        Me.Controls.Add(Me.StatusStrip1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), Icon)
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Margin = New Padding(4, 3, 4, 3)
@@ -2609,7 +2597,7 @@ Partial Class Form1
         CType(Me.DgvMeal, ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DgvSGs, ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DgvSummary, ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.DgvUserProfile, ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DgvSessionProfile, ComponentModel.ISupportInitialize).EndInit()
         CType(Me.InsulinLevelPictureBox, ComponentModel.ISupportInitialize).EndInit()
         Me.Last24HTotalsPanel.ResumeLayout(False)
         CType(Me.PumpBatteryPictureBox, ComponentModel.ISupportInitialize).EndInit()
@@ -2701,6 +2689,8 @@ Partial Class Form1
         Me.TabPageUserProfile.ResumeLayout(False)
         Me.TabPageCurrentUser.ResumeLayout(False)
         Me.TabPageAllUsers.ResumeLayout(False)
+        Me.StatusStrip1.ResumeLayout(False)
+        Me.StatusStrip1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
     End Sub
@@ -2754,8 +2744,7 @@ Partial Class Form1
     Friend WithEvents DgvMeal As DataGridView
     Friend WithEvents DgvSGs As DataGridView
     Friend WithEvents DgvSummary As DataGridView
-    Friend WithEvents DgvUserProfile As DataGridView
-    Friend WithEvents FullNameLabel As Label
+    Friend WithEvents DgvSessionProfile As DataGridView
     Friend WithEvents ImageList1 As ImageList
     Friend WithEvents InRangeMessageLabel As Label
     Friend WithEvents InsulinLevelPictureBox As PictureBox
@@ -2772,11 +2761,7 @@ Partial Class Form1
     Friend WithEvents Last24ManualBolusLabel As Label
     Friend WithEvents Last24TotalsLabel As Label
     Friend WithEvents LastSGTimeLabel As Label
-    Friend WithEvents LastUpdateTime As Label
-    Friend WithEvents LastUpdateTimeLabel As Label
     Friend WithEvents ListView1 As ListView
-    Friend WithEvents LoginStatus As Label
-    Friend WithEvents LoginStatusLabel As Label
     Friend WithEvents MaxBasalPerHourLabel As Label
     Friend WithEvents MenuHelp As ToolStripMenuItem
     Friend WithEvents MenuHelpAbout As ToolStripMenuItem
@@ -2906,4 +2891,11 @@ Partial Class Form1
     Friend WithEvents PumpNameLabel As Label
     Friend WithEvents ToolStripSeparator7 As ToolStripSeparator
     Friend WithEvents MenuOptionsEditPumpSettings As ToolStripMenuItem
+    Friend WithEvents StatusStrip1 As StatusStrip
+    Friend WithEvents LoginStatus As ToolStripStatusLabel
+    Friend WithEvents ToolStripSplitButton1 As ToolStripSplitButton
+    Friend WithEvents LastUpdateTime As ToolStripStatusLabel
+    Friend WithEvents ToolStripSplitButton2 As ToolStripSplitButton
+    Friend WithEvents FullNameLabel As ToolStripStatusLabel
+    Friend WithEvents ToolStripSpacer As ToolStripStatusLabel
 End Class

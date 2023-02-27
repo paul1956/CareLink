@@ -4,17 +4,17 @@
 
 Friend Module LoginFormHelpers
 
-    Friend Sub ReportLoginStatus(loginStatus As Label)
-        ReportLoginStatus(loginStatus, True, "No Internet Connection!")
+    Friend Sub ReportLoginStatus(loginStatus As ToolStripStatusLabel)
+        ReportLoginStatus(loginStatus, True, "Login Status: No Internet Connection!")
     End Sub
 
-    Friend Sub ReportLoginStatus(loginStatus As Label, hasErrors As Boolean, Optional lastErrorMessage As String = "")
+    Friend Sub ReportLoginStatus(loginStatus As ToolStripStatusLabel, hasErrors As Boolean, Optional lastErrorMessage As String = "")
         If hasErrors Then
             loginStatus.ForeColor = If(lastErrorMessage = "OK", Color.Black, Color.Red)
-            loginStatus.Text = lastErrorMessage
+            loginStatus.Text = $"Login Status: {lastErrorMessage}"
         Else
             loginStatus.ForeColor = Color.Black
-            loginStatus.Text = "OK"
+            loginStatus.Text = "Login Status: OK"
         End If
     End Sub
 

@@ -261,8 +261,7 @@ Public Class Form1
                         CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{ProjectName}", True)
                         Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
-                        Me.LastUpdateTime.ForeColor = SystemColors.ControlText
-                        Me.LastUpdateTime.Text = $"{s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime.ToShortDateTimeString} from file"
+                        Me.SetLastUpdateTime($"{s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime.ToShortDateTimeString} from file", False)
                         Try
                             Me.FinishInitialization()
                             Try
@@ -311,8 +310,7 @@ Public Class Form1
                     Me.RecentData = Loads(File.ReadAllText(openFileDialog1.FileName))
                     Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                     Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
-                    Me.LastUpdateTime.ForeColor = SystemColors.ControlText
-                    Me.LastUpdateTime.Text = File.GetLastWriteTime(openFileDialog1.FileName).ToShortDateTimeString
+                    Me.SetLastUpdateTime(File.GetLastWriteTime(openFileDialog1.FileName).ToShortDateTimeString, False)
                     Me.FinishInitialization()
                     Me.UpdateAllTabPages()
                 End If
@@ -1032,9 +1030,9 @@ Public Class Form1
 
 #End Region ' Insulin DataGridView Events
 
-#Region "User Profile DataGridView Events"
+#Region "Session Profile DataGridView Events"
 
-    Private Sub DgvUserProfile_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvUserProfile.ColumnAdded
+    Private Sub DgvSessionProfile_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSessionProfile.ColumnAdded
         e.DgvColumnAdded(New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1)),
                          False,
                          True,
@@ -1042,11 +1040,11 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DgvUserProfile_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvUserProfile.DataError
+    Private Sub DgvSessionProfile_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvSessionProfile.DataError
         Stop
     End Sub
 
-#End Region ' User Profile DataGridView Events
+#End Region ' Session Profile DataGridView Events
 
 #Region "Current User DataGridView Events"
 
@@ -1257,16 +1255,15 @@ Public Class Form1
             If Me.RecentData?.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
                     If lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime + s_5MinuteSpan < PumpNow() Then
-                        Me.LastUpdateTime.ForeColor = Color.Red
+                        Me.SetLastUpdateTime(Me.LastUpdateTime.Text.Trim, True)
                         _bgMiniDisplay.SetCurrentBGString("---")
                     Else
-                        Me.LastUpdateTime.ForeColor = SystemColors.ControlText
+                        Me.SetLastUpdateTime(Me.LastUpdateTime.Text.Trim, False)
                         _bgMiniDisplay.SetCurrentBGString(s_lastSgRecord?.sg.ToString)
                     End If
                     Me.RecentData = Nothing
                 Else
-                    Me.LastUpdateTime.ForeColor = SystemColors.ControlText
-                    Me.LastUpdateTime.Text = GetTimeZoneName(TimeZoneNameFormat.StandardName)
+                    Me.SetLastUpdateTime($"{PumpNow.ToShortDateTimeString} {GetTimeZoneName(TimeZoneNameFormat.StandardName)}", False)
                     Me.UpdateAllTabPages()
                 End If
             Else
@@ -1283,9 +1280,9 @@ Public Class Form1
         Select Case e.Mode
             Case Microsoft.Win32.PowerModes.Suspend
                 Me.ServerUpdateTimer.Stop()
-                Me.LastUpdateTime.Text = "Sleeping"
+                Me.SetLastUpdateTime("Sleeping", True)
             Case Microsoft.Win32.PowerModes.Resume
-                Me.LastUpdateTime.Text = "Awake"
+                Me.SetLastUpdateTime("Awake", True)
                 Me.ServerUpdateTimer.Interval = CInt(s_30SecondInMilliseconds) \ 3
                 Me.ServerUpdateTimer.Start()
                 Debug.Print($"In {NameOf(PowerModeChanged)}, restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
@@ -1979,8 +1976,7 @@ Public Class Form1
             _summaryChartAbsoluteRectangle = RectangleF.Empty
             _treatmentMarkerAbsoluteRectangle = RectangleF.Empty
             Me.MenuStartHere.Enabled = False
-            Me.LastUpdateTime.ForeColor = SystemColors.ControlText
-            Me.LastUpdateTime.Text = $"{PumpNow.ToShortDateTimeString} {GetTimeZoneName(TimeZoneNameFormat.StandardName)}"
+            Me.SetLastUpdateTime($"{PumpNow.ToShortDateTimeString} {GetTimeZoneName(TimeZoneNameFormat.StandardName)}", False)
             Me.CursorPanel.Visible = False
 
             Me.Cursor = Cursors.WaitCursor

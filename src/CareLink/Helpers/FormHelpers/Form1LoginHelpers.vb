@@ -9,7 +9,7 @@ Imports System.Text.Json
 
 Friend Module Form1LoginHelpers
 
-    Private Sub SetUpCareLinkUser(userSettingsPath As String)
+    Private Sub SetUpCareLinkUser(mainForm As Form1, userSettingsPath As String)
         Dim contents As String
         If Path.Exists(userSettingsPath) Then
             contents = File.ReadAllText(userSettingsPath)
@@ -20,6 +20,7 @@ Friend Module Form1LoginHelpers
             f.ShowDialog()
             CurrentUser = f.CurrentUser
         End If
+
     End Sub
 
     <Extension>
@@ -34,15 +35,15 @@ Friend Module Form1LoginHelpers
                 CurrentDateCulture = GetPathToLastDownloadFile().ExtractCultureFromFileName(SavedLastDownloadBaseName)
                 MainForm.RecentData = Loads(File.ReadAllText(GetPathToLastDownloadFile()))
                 MainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                MainForm.LastUpdateTime.Text = $"{File.GetLastWriteTime(GetPathToLastDownloadFile()).ToShortDateTimeString} from file"
-                SetUpCareLinkUser(GetPathToTestSettingsFile())
+                MainForm.SetLastUpdateTime($"{File.GetLastWriteTime(GetPathToLastDownloadFile()).ToShortDateTimeString} from file", False)
+                SetUpCareLinkUser(MainForm, GetPathToTestSettingsFile())
             Case FileToLoadOptions.TestData
                 MainForm.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
                 MainForm.RecentData = Loads(File.ReadAllText(GetPathToTestData()))
                 MainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                MainForm.LastUpdateTime.Text = $"{File.GetLastWriteTime(GetPathToTestData()).ToShortDateTimeString} from file"
-                SetUpCareLinkUser(GetPathToTestSettingsFile)
+                MainForm.SetLastUpdateTime($"{File.GetLastWriteTime(GetPathToTestData()).ToShortDateTimeString} from file", False)
+                SetUpCareLinkUser(MainForm, GetPathToTestSettingsFile)
             Case FileToLoadOptions.Login
                 MainForm.Text = SavedTitle
                 Do Until MainForm.LoginDialog.ShowDialog() <> DialogResult.Retry
@@ -57,12 +58,12 @@ Friend Module Form1LoginHelpers
                         Return False
                     End If
 
-                    MainForm.LastUpdateTime.Text = "Unknown"
+                    MainForm.SetLastUpdateTime("Unknown", True)
                     Return False
                 End If
 
                 Dim userSettingsPath As String = GetPathToUserSettingsFile(My.Settings.CareLinkUserName)
-                SetUpCareLinkUser(userSettingsPath)
+                SetUpCareLinkUser(MainForm, userSettingsPath)
 
                 MainForm.RecentData = MainForm.Client.GetRecentData(MainForm)
                 MainForm.ServerUpdateTimer.Interval = CInt(s_1MinutesInMilliseconds)
@@ -78,6 +79,13 @@ Friend Module Form1LoginHelpers
 
                 MainForm.MenuShowMiniDisplay.Visible = True
         End Select
+
+        MainForm.Client.SessionProfile.insulinType = CurrentUser.InsulinTypeName
+        With MainForm.DgvSessionProfile
+            .InitializeDgv()
+            .DataSource = MainForm.Client.SessionProfile
+        End With
+
         MainForm.AITComboBox.SelectedIndex = MainForm.AITComboBox.FindStringExact($"AIT {CType(CurrentUser.Ait, TimeSpan).ToString("hh\:mm").Substring(1)}")
         MainForm.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName
         MainForm.FinishInitialization()
@@ -97,6 +105,21 @@ Friend Module Form1LoginHelpers
         MainForm.InitializeTimeInRangeArea()
 
         MainForm.Initialized = True
+    End Sub
+
+    <Extension>
+    Friend Sub SetLastUpdateTime(mainForm As Form1, msg As String, highLight As Boolean)
+        mainForm.LastUpdateTime.ForeColor = If(highLight, Color.Red, SystemColors.ControlText)
+        mainForm.LastUpdateTime.BackColor = If(highLight, Color.Red.GetContrastingColor, SystemColors.Control)
+        mainForm.LastUpdateTime.Text = $"Last Update Time: {msg}"
+        Dim spaceWidth As Integer = TextRenderer.MeasureText(" "c, mainForm.LastUpdateTime.Font).Width
+        Dim desiredMidWidth As Integer = mainForm.StatusStrip1.Width - (mainForm.LoginStatus.Width + mainForm.FullNameLabel.Width)
+        desiredMidWidth -= mainForm.LastUpdateTime.Width \ 2
+        If desiredMidWidth > 0 Then
+            Dim neededSpaces As Integer = desiredMidWidth \ spaceWidth
+            Dim nSpaces As String = StrDup(neededSpaces, " "c)
+            mainForm.LastUpdateTime.Text = $"{nSpaces}{mainForm.LastUpdateTime.Text}{nSpaces}"
+        End If
     End Sub
 
 End Module
