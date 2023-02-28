@@ -143,6 +143,7 @@ Partial Class Form1
         Me.SerialNumberLabel = New Label()
         Me.ServerUpdateTimer = New Timer(components)
         Me.SplitContainer2 = New SplitContainer()
+        Me.PumpAITLabel = New Label()
         Me.PumpBatteryRemaining2Label = New Label()
         Me.TransmitterBatteryPercentLabel = New Label()
         Me.TransmitterBatteryPictureBox = New PictureBox()
@@ -509,7 +510,7 @@ Partial Class Form1
         Me.ActiveInsulinValue.BorderStyle = BorderStyle.FixedSingle
         Me.ActiveInsulinValue.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.ActiveInsulinValue.ForeColor = Color.White
-        Me.ActiveInsulinValue.Location = New Point(995, 51)
+        Me.ActiveInsulinValue.Location = New Point(995, 53)
         Me.ActiveInsulinValue.Name = "ActiveInsulinValue"
         Me.ActiveInsulinValue.Size = New Size(128, 48)
         Me.ActiveInsulinValue.TabIndex = 0
@@ -842,6 +843,7 @@ Partial Class Form1
         Me.DgvCountryDataPg1Value.HeaderText = "Value"
         Me.DgvCountryDataPg1Value.Name = "DgvCountryDataPg1Value"
         Me.DgvCountryDataPg1Value.ReadOnly = True
+        ' 
         ' 
         ' DgvCareLinkUsersUserID
         ' 
@@ -1431,6 +1433,7 @@ Partial Class Form1
         ' 
         ' SplitContainer2.Panel1
         ' 
+        Me.SplitContainer2.Panel1.Controls.Add(Me.PumpAITLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.LabelTrendValue)
         Me.SplitContainer2.Panel1.Controls.Add(Me.MaxBasalPerHourLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Last24HTotalsPanel)
@@ -1461,6 +1464,17 @@ Partial Class Form1
         Me.SplitContainer2.Size = New Size(1370, 631)
         Me.SplitContainer2.SplitterDistance = 130
         Me.SplitContainer2.TabIndex = 52
+        ' 
+        ' PumpAITLabel
+        ' 
+        Me.PumpAITLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Me.PumpAITLabel.ForeColor = Color.White
+        Me.PumpAITLabel.Location = New Point(978, 28)
+        Me.PumpAITLabel.Name = "PumpAITLabel"
+        Me.PumpAITLabel.Size = New Size(162, 21)
+        Me.PumpAITLabel.TabIndex = 71
+        Me.PumpAITLabel.Text = "Pump AIT 3:00"
+        Me.PumpAITLabel.TextAlign = ContentAlignment.BottomCenter
         ' 
         ' PumpBatteryRemaining2Label
         ' 
@@ -2903,4 +2917,5 @@ Partial Class Form1
     Friend WithEvents ToolStripSplitButton2 As ToolStripSplitButton
     Friend WithEvents FullNameLabel As ToolStripStatusLabel
     Friend WithEvents ToolStripSpacer As ToolStripStatusLabel
+    Friend WithEvents PumpAITLabel As Label
 End Class

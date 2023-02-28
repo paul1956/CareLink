@@ -10,7 +10,7 @@ Friend Module PlotMarkers
     <Extension>
     Private Sub AddBgReadingPoint(markerSeriesPoints As DataPointCollection, markerOADate As OADate, bgValueString As String, bgValue As Single)
         markerSeriesPoints.AddXY(markerOADate, bgValue)
-        markerSeriesPoints.Last.BorderColor = Color.Gainsboro
+        markerSeriesPoints.Last.BorderColor = Color.DarkOrange
         markerSeriesPoints.Last.Color = Color.FromArgb(5, Color.Gainsboro)
         markerSeriesPoints.Last.MarkerSize = 10
         markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Circle
@@ -224,8 +224,8 @@ Friend Module PlotMarkers
                                           Color.FromArgb(10, Color.Yellow),
                                           $"Meal {entry("amount")} grams")
                         End If
-                    Case "BG_READING",
-                         "CALIBRATION"
+                    Case "BG_READING"
+                    Case "CALIBRATION"
                     Case "TIME_CHANGE"
                         With treatmentChart.Series(TimeChangeSeriesName).Points
                             lastTimeChangeRecord = New TimeChangeRecord(entry)

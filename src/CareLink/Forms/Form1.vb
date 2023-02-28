@@ -18,7 +18,6 @@ Imports ToolStripControls
 
 Public Class Form1
 
-    Public WithEvents AITComboBox As ToolStripComboBoxEx
     Private ReadOnly _bgMiniDisplay As New BGMiniWindow(Me)
     Private ReadOnly _calibrationToolTip As New ToolTip()
 
@@ -175,25 +174,7 @@ Public Class Form1
             File.Create(GetPathToShowLegendFile(True))
         End If
 
-        Me.AITComboBox = New ToolStripComboBoxEx With {
-            .BackColor = Color.Black,
-            .DataSource = New BindingSource(s_aitValues, Nothing),
-            .DisplayMember = "Key",
-            .ValueMember = "Value",
-            .DropDownStyle = ComboBoxStyle.DropDownList,
-            .Enabled = False,
-            .Font = New Font("Segoe UI", 9.0!, FontStyle.Bold, GraphicsUnit.Point),
-            .ForeColor = Color.White,
-            .FormattingEnabled = True,
-            .Location = New Point(226, 3),
-            .Name = "AITComboBox",
-            .SelectedIndex = -1,
-            .SelectedItem = Nothing,
-            .Size = New Size(78, 23),
-            .TabIndex = 0
-        }
         Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(1)
-        Me.MenuStrip1.Items.Insert(2, Me.AITComboBox)
         AddHandler Microsoft.Win32.SystemEvents.PowerModeChanged, AddressOf Me.PowerModeChanged
     End Sub
 
@@ -1257,11 +1238,11 @@ Public Class Form1
         Else
             If Me.RecentData?.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
-                    If lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime + s_5MinuteSpan < PumpNow() Then
-                        Me.LastUpdateTime.FlagErrorInLastUpdateTime()
+                    If lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime + s_5MinuteSpan < Now() Then
+                        Me.LastUpdateTime.UpdateHighLightInLastUpdateTime(True)
                         _bgMiniDisplay.SetCurrentBGString("---")
                     Else
-                        Me.LastUpdateTime.FlagErrorInLastUpdateTime()
+                        Me.LastUpdateTime.UpdateHighLightInLastUpdateTime(False)
                         _bgMiniDisplay.SetCurrentBGString(s_lastSgRecord?.sg.ToString)
                     End If
                     Me.RecentData = Nothing
@@ -1601,9 +1582,10 @@ Public Class Form1
                             Else
                                 timeOrderedMarkers.Add(markerOADateTime, bolusAmount)
                             End If
-                        Case "TIME_CHANGE"
+                        Case "BG_READING"
                         Case "CALIBRATION"
                         Case "MEAL"
+                        Case "TIME_CHANGE"
                         Case Else
                             Stop
                     End Select

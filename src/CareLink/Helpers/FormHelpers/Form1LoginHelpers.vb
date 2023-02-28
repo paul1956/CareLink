@@ -72,7 +72,7 @@ Friend Module Form1LoginHelpers
             .DataSource = MainForm.Client.SessionProfile.ToDataSource
         End With
 
-        MainForm.AITComboBox.SelectedIndex = MainForm.AITComboBox.FindStringExact($"AIT {CType(CurrentUser.Ait, TimeSpan).ToString("hh\:mm").Substring(1)}")
+        MainForm.PumpAITLabel.Text = $"Pump AIT {CType(CurrentUser.Ait, TimeSpan):h\:mm}"
         MainForm.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName
         MainForm.FinishInitialization()
         If UpdateAllTabs Then
@@ -94,21 +94,19 @@ Friend Module Form1LoginHelpers
     End Sub
 
     <Extension>
-    Friend Sub FlagErrorInLastUpdateTime(statusLabel As ToolStripStatusLabel)
-        statusLabel.ForeColor = Color.Red
-        statusLabel.BackColor = Color.Red.GetContrastingColor
-        statusLabel.LiveSetting = Automation.AutomationLiveSetting.Polite
+    Friend Sub UpdateHighLightInLastUpdateTime(statusLabel As ToolStripStatusLabel, highLight As Boolean)
+        If highLight = True Then
+            statusLabel.ForeColor = Color.Red
+            statusLabel.BackColor = Color.Red.GetContrastingColor
+        Else
+            statusLabel.ForeColor = SystemColors.ControlText
+            statusLabel.BackColor = SystemColors.Control
+        End If
     End Sub
 
     <Extension>
     Friend Sub SetLastUpdateTime(mainForm As Form1, msg As String, highLight As Boolean)
-        If highLight = True Then
-            mainForm.LastUpdateTime.ForeColor = Color.Red
-            mainForm.LastUpdateTime.BackColor = Color.Red.GetContrastingColor
-        Else
-            mainForm.LastUpdateTime.ForeColor = SystemColors.ControlText
-            mainForm.LastUpdateTime.BackColor = SystemColors.Control
-        End If
+        UpdateHighLightInLastUpdateTime(mainForm.LastUpdateTime, highLight)
         mainForm.LastUpdateTime.Text = $"Last Update Time: {msg}"
         Dim spaceWidth As Integer = TextRenderer.MeasureText(" "c, mainForm.LastUpdateTime.Font).Width
         Dim desiredMidWidth As Integer = mainForm.StatusStrip1.Width - (mainForm.LoginStatus.Width + mainForm.FullNameLabel.Width)

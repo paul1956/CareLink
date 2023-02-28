@@ -51,6 +51,7 @@ Friend Module CollectMarkersHelper
                 Case "AUTO_MODE_STATUS"
                     s_listOfAutoModeStatusMarkers.Add(DictionaryToClass(Of AutoModeStatusRecord)(markerEntry, s_listOfAutoModeStatusMarkers.Count + 1))
                 Case "BG_READING"
+                    s_markers.Add(markerEntry.ScaleMarker)
                     s_listOfBgReadingMarkers.Add(DictionaryToClass(Of BGReadingRecord)(markerEntry.ScaleMarker(), s_listOfBgReadingMarkers.Count + 1))
                 Case "CALIBRATION"
                     s_markers.Add(markerEntry.ScaleMarker)
