@@ -219,8 +219,8 @@ Partial Class Form1
         Me.ToolTip1 = New ToolTip(components)
         Me.StatusStrip1 = New StatusStrip()
         Me.LoginStatus = New ToolStripStatusLabel()
-        Me.ToolStripSpacer = New ToolStripStatusLabel()
         Me.LastUpdateTime = New ToolStripStatusLabel()
+        Me.ToolStripSpacer = New ToolStripStatusLabel()
         Me.FullNameLabel = New ToolStripStatusLabel()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
@@ -521,13 +521,13 @@ Partial Class Form1
         Me.AITAlgorithmLabel.BackColor = Color.Transparent
         Me.AITAlgorithmLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.AITAlgorithmLabel.ForeColor = Color.White
-        Me.AITAlgorithmLabel.Location = New Point(972, 3)
+        Me.AITAlgorithmLabel.Location = New Point(1140, 3)
         Me.AITAlgorithmLabel.Margin = New Padding(0)
         Me.AITAlgorithmLabel.Name = "AITAlgorithmLabel"
-        Me.AITAlgorithmLabel.Size = New Size(175, 21)
+        Me.AITAlgorithmLabel.Size = New Size(230, 21)
         Me.AITAlgorithmLabel.TabIndex = 8
         Me.AITAlgorithmLabel.Text = "AIT Algorithm"
-        Me.AITAlgorithmLabel.TextAlign = ContentAlignment.MiddleCenter
+        Me.AITAlgorithmLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' AverageSGMessageLabel
         ' 
@@ -645,7 +645,7 @@ Partial Class Form1
         Me.CalibrationShieldPanel.Location = New Point(0, 0)
         Me.CalibrationShieldPanel.Margin = New Padding(0)
         Me.CalibrationShieldPanel.Name = "CalibrationShieldPanel"
-        Me.CalibrationShieldPanel.Size = New Size(116, 131)
+        Me.CalibrationShieldPanel.Size = New Size(116, 130)
         Me.CalibrationShieldPanel.TabIndex = 64
         ' 
         ' TempTargetLabel
@@ -678,7 +678,7 @@ Partial Class Form1
         Me.LastSGTimeLabel.Dock = DockStyle.Bottom
         Me.LastSGTimeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.LastSGTimeLabel.ForeColor = Color.White
-        Me.LastSGTimeLabel.Location = New Point(0, 110)
+        Me.LastSGTimeLabel.Location = New Point(0, 109)
         Me.LastSGTimeLabel.Name = "LastSGTimeLabel"
         Me.LastSGTimeLabel.Size = New Size(116, 21)
         Me.LastSGTimeLabel.TabIndex = 55
@@ -796,7 +796,7 @@ Partial Class Form1
         Me.DgvAutoBasalDelivery.Name = "DgvAutoBasalDelivery"
         Me.DgvAutoBasalDelivery.ReadOnly = True
         Me.DgvAutoBasalDelivery.RowTemplate.Height = 25
-        Me.DgvAutoBasalDelivery.Size = New Size(1358, 575)
+        Me.DgvAutoBasalDelivery.Size = New Size(1358, 573)
         Me.DgvAutoBasalDelivery.TabIndex = 0
         ' 
         ' DgvCountryDataPg1
@@ -842,7 +842,7 @@ Partial Class Form1
         Me.DgvCountryDataPg1Value.HeaderText = "Value"
         Me.DgvCountryDataPg1Value.Name = "DgvCountryDataPg1Value"
         Me.DgvCountryDataPg1Value.ReadOnly = True
-        '
+        ' 
         ' DgvCareLinkUsersUserID
         ' 
         Me.DgvCareLinkUsersUserID.DataPropertyName = "ID"
@@ -1458,8 +1458,8 @@ Partial Class Form1
         ' SplitContainer2.Panel2
         ' 
         Me.SplitContainer2.Panel2.Controls.Add(Me.SplitContainer3)
-        Me.SplitContainer2.Size = New Size(1370, 633)
-        Me.SplitContainer2.SplitterDistance = 131
+        Me.SplitContainer2.Size = New Size(1370, 631)
+        Me.SplitContainer2.SplitterDistance = 130
         Me.SplitContainer2.TabIndex = 52
         ' 
         ' PumpBatteryRemaining2Label
@@ -1592,7 +1592,7 @@ Partial Class Form1
         Me.TabControlPage1.Location = New Point(0, 24)
         Me.TabControlPage1.Name = "TabControlPage1"
         Me.TabControlPage1.SelectedIndex = 0
-        Me.TabControlPage1.Size = New Size(1384, 670)
+        Me.TabControlPage1.Size = New Size(1384, 668)
         Me.TabControlPage1.TabIndex = 0
         ' 
         ' TabPage01HomePage
@@ -1602,7 +1602,7 @@ Partial Class Form1
         Me.TabPage01HomePage.Location = New Point(4, 27)
         Me.TabPage01HomePage.Name = "TabPage01HomePage"
         Me.TabPage01HomePage.Padding = New Padding(3)
-        Me.TabPage01HomePage.Size = New Size(1376, 639)
+        Me.TabPage01HomePage.Size = New Size(1376, 637)
         Me.TabPage01HomePage.TabIndex = 7
         Me.TabPage01HomePage.Text = "Summary" ' 
         ' TabPage02RunningIOB
@@ -2170,7 +2170,7 @@ Partial Class Form1
         Me.TabControlPage2.Location = New Point(0, 24)
         Me.TabControlPage2.Name = "TabControlPage2"
         Me.TabControlPage2.SelectedIndex = 0
-        Me.TabControlPage2.Size = New Size(1384, 670)
+        Me.TabControlPage2.Size = New Size(1384, 668)
         Me.TabControlPage2.TabIndex = 0
         ' 
         ' TabPageAutoBasalDelivery
@@ -2179,7 +2179,7 @@ Partial Class Form1
         Me.TabPageAutoBasalDelivery.Location = New Point(4, 27)
         Me.TabPageAutoBasalDelivery.Name = "TabPageAutoBasalDelivery"
         Me.TabPageAutoBasalDelivery.Padding = New Padding(3)
-        Me.TabPageAutoBasalDelivery.Size = New Size(1376, 639)
+        Me.TabPageAutoBasalDelivery.Size = New Size(1376, 637)
         Me.TabPageAutoBasalDelivery.TabIndex = 1
         Me.TabPageAutoBasalDelivery.Text = "Auto Basal Delivery"
         Me.TabPageAutoBasalDelivery.UseVisualStyleBackColor = True
@@ -2199,7 +2199,7 @@ Partial Class Form1
         Me.TableLayoutPanelAutoBasalDelivery.RowCount = 2
         Me.TableLayoutPanelAutoBasalDelivery.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelAutoBasalDelivery.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelAutoBasalDelivery.Size = New Size(1370, 633)
+        Me.TableLayoutPanelAutoBasalDelivery.Size = New Size(1370, 631)
         Me.TableLayoutPanelAutoBasalDelivery.TabIndex = 0
         ' 
         ' TableLayoutPanelAutoBasalDeliveryTop
@@ -2532,34 +2532,39 @@ Partial Class Form1
         ' StatusStrip1
         ' 
         Me.StatusStrip1.Items.AddRange(New ToolStripItem() {Me.LoginStatus, Me.LastUpdateTime, Me.ToolStripSpacer, Me.FullNameLabel})
-        Me.StatusStrip1.Location = New Point(0, 694)
+        Me.StatusStrip1.Location = New Point(0, 692)
         Me.StatusStrip1.Name = "StatusStrip1"
-        Me.StatusStrip1.Size = New Size(1384, 22)
+        Me.StatusStrip1.Size = New Size(1384, 24)
         Me.StatusStrip1.TabIndex = 53
         Me.StatusStrip1.Text = "StatusStrip1" ' 
-        ' ToolStripStatusLabel2
-        '
-        Me.LoginStatus.BorderSides = ToolStripStatusLabelBorderSides.Right Or ToolStripStatusLabelBorderSides.Left
+        ' LoginStatus
+        ' 
+        Me.LoginStatus.BorderSides = ToolStripStatusLabelBorderSides.Left Or ToolStripStatusLabelBorderSides.Right
         Me.LoginStatus.BorderStyle = Border3DStyle.RaisedOuter
         Me.LoginStatus.DisplayStyle = ToolStripItemDisplayStyle.Text
-        Me.LoginStatus.Name = "ToolStripStatusLabel2"
-        Me.LoginStatus.Size = New Size(119, 17)
+        Me.LoginStatus.Name = "LoginStatus"
+        Me.LoginStatus.Size = New Size(133, 19)
         Me.LoginStatus.Text = "Login Status: Unknown" ' 
         ' LastUpdateTime
         ' 
-        Me.LastUpdateTime.BorderSides = ToolStripStatusLabelBorderSides.Right Or ToolStripStatusLabelBorderSides.Left
+        Me.LastUpdateTime.BorderSides = ToolStripStatusLabelBorderSides.Left Or ToolStripStatusLabelBorderSides.Right
         Me.LastUpdateTime.BorderStyle = Border3DStyle.RaisedOuter
         Me.LastUpdateTime.Name = "LastUpdateTime"
-        Me.LastUpdateTime.Size = New Size(58, 17)
+        Me.LastUpdateTime.Size = New Size(1167, 19)
         Me.LastUpdateTime.Spring = True
         Me.LastUpdateTime.Text = "                           Last Update Time: Unknown" ' 
+        ' ToolStripSpacer
+        ' 
+        Me.ToolStripSpacer.Name = "ToolStripSpacer"
+        Me.ToolStripSpacer.Size = New Size(0, 19)
+        ' 
         ' FullNameLabel
         ' 
-        Me.FullNameLabel.BorderSides = ToolStripStatusLabelBorderSides.Right Or ToolStripStatusLabelBorderSides.Left
+        Me.FullNameLabel.BorderSides = ToolStripStatusLabelBorderSides.Left Or ToolStripStatusLabelBorderSides.Right
         Me.FullNameLabel.BorderStyle = Border3DStyle.RaisedOuter
         Me.FullNameLabel.DisplayStyle = ToolStripItemDisplayStyle.Text
         Me.FullNameLabel.Name = "FullNameLabel"
-        Me.FullNameLabel.Size = New Size(65, 17)
+        Me.FullNameLabel.Size = New Size(69, 19)
         Me.FullNameLabel.Text = "User Name" ' 
         ' Form1
         ' 

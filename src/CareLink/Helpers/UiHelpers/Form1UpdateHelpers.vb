@@ -77,7 +77,7 @@ Friend Module Form1UpdateHelpers
         s_lastMedicalDeviceDataUpdateServerEpoch = CLng(recentData(ItemIndexes.lastMedicalDeviceDataUpdateServerTime.ToString))
         If recentData.TryGetValue(ItemIndexes.therapyAlgorithmState.ToString, markerRowString) Then
             s_therapyAlgorithmStateValue = Loads(markerRowString)
-            InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.autoModeShieldState)) = "AUTO_BASAL"
+            InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso {"AUTO_BASAL", "SAFE_BASAL"}.Contains(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.autoModeShieldState)))
         End If
 
 #Region "Update all Markers"

@@ -192,7 +192,7 @@ Public Class Form1
             .Size = New Size(78, 23),
             .TabIndex = 0
         }
-        Me.ReadingsLabel.Text = s_insulinTypes.Keys(1)
+        Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(1)
         Me.MenuStrip1.Items.Insert(2, Me.AITComboBox)
         AddHandler Microsoft.Win32.SystemEvents.PowerModeChanged, AddressOf Me.PowerModeChanged
     End Sub
@@ -262,6 +262,8 @@ Public Class Form1
                         Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                         Me.SetLastUpdateTime($"{s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime.ToShortDateTimeString} from file", False)
+                        SetUpCareLinkUser(Me, GetPathToTestSettingsFile())
+
                         Try
                             Me.FinishInitialization()
                             Try
@@ -305,6 +307,7 @@ Public Class Form1
             Try
                 If File.Exists(openFileDialog1.FileName) Then
                     Me.ServerUpdateTimer.Stop()
+                    SetUpCareLinkUser(Me, GetPathToTestSettingsFile())
                     Debug.Print($"In {NameOf(MenuStartHereLoadSavedDataFile_Click)}, {NameOf(Me.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
                     CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{ProjectName}", True)
                     Me.RecentData = Loads(File.ReadAllText(openFileDialog1.FileName))
@@ -1561,11 +1564,11 @@ Public Class Form1
         Try
             If CurrentUser.UseAdvancedAitDecay = CheckState.Checked Then
                 s_activeInsulinIncrements = CInt(CurrentUser.InsulinRealAit / s_5MinuteSpan)
-                Me.AITAlgorithmLabel.Text = "Advanced AIT Decay"
+                Me.AITAlgorithmLabel.Text = $"AIT will Decay over {CurrentUser.InsulinRealAit.Hours} hours"
                 Me.AITAlgorithmLabel.ForeColor = Color.Yellow
             Else
                 s_activeInsulinIncrements = CInt(CType(CurrentUser.Ait, TimeSpan) / s_5MinuteSpan)
-                Me.AITAlgorithmLabel.Text = "Default AIT Decay"
+                Me.AITAlgorithmLabel.Text = $"AIT will Decay over {CType(CurrentUser.Ait, TimeSpan).Hours} hours"
                 Me.AITAlgorithmLabel.ForeColor = Color.White
             End If
 

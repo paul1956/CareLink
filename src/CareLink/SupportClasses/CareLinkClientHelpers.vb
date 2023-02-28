@@ -142,9 +142,7 @@ Public Module CareLinkClientHelpers
     Friend Function DoLogin(ByRef httpClient As HttpClient, loginSessionResponse As HttpResponseMessage, userName As String, password As String, country As String, ByRef lastErrorMessage As String) As HttpResponseMessage
 
         Dim queryParameters As Dictionary(Of String, String) = ParseQsl(loginSessionResponse)
-#Disable Warning CA1308 ' Normalize strings to uppercase
-        Dim url As New StringBuilder("https://MdtLogin.Medtronic.com/mmcl/auth/oAuth/v2/authorize/login".ToLowerInvariant)
-#Enable Warning CA1308 ' Normalize strings to uppercase
+        Dim url As New StringBuilder("https://mdtLogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login")
 
         Dim webForm As New Dictionary(Of String, String) From {
             {

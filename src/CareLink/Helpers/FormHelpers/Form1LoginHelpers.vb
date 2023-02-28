@@ -9,20 +9,6 @@ Imports System.Text.Json
 
 Friend Module Form1LoginHelpers
 
-    Private Sub SetUpCareLinkUser(mainForm As Form1, userSettingsPath As String)
-        Dim contents As String
-        If Path.Exists(userSettingsPath) Then
-            contents = File.ReadAllText(userSettingsPath)
-            CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
-        Else
-            CurrentUser = New CurrentUserRecord(My.Settings.CareLinkUserName)
-            Dim f As New InitializeDialog With {.CurrentUser = CurrentUser}
-            f.ShowDialog()
-            CurrentUser = f.CurrentUser
-        End If
-
-    End Sub
-
     <Extension>
     Friend Function DoOptionalLoginAndUpdateData(MainForm As Form1, UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
         MainForm.ServerUpdateTimer.Stop()
@@ -120,6 +106,20 @@ Friend Module Form1LoginHelpers
             Dim nSpaces As String = StrDup(neededSpaces, " "c)
             mainForm.LastUpdateTime.Text = $"{nSpaces}{mainForm.LastUpdateTime.Text}{nSpaces}"
         End If
+    End Sub
+
+    Friend Sub SetUpCareLinkUser(mainForm As Form1, userSettingsPath As String)
+        Dim contents As String
+        If Path.Exists(userSettingsPath) Then
+            contents = File.ReadAllText(userSettingsPath)
+            CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
+        Else
+            CurrentUser = New CurrentUserRecord(My.Settings.CareLinkUserName)
+            Dim f As New InitializeDialog With {.CurrentUser = CurrentUser}
+            f.ShowDialog()
+            CurrentUser = f.CurrentUser
+        End If
+
     End Sub
 
 End Module
