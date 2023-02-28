@@ -752,10 +752,9 @@ Partial Class Form1
         ' 
         ' CursorMessage3Label
         ' 
-        Me.CursorMessage3Label.Dock = DockStyle.Bottom
         Me.CursorMessage3Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.CursorMessage3Label.ForeColor = Color.White
-        Me.CursorMessage3Label.Location = New Point(0, 114)
+        Me.CursorMessage3Label.Location = New Point(0, 106)
         Me.CursorMessage3Label.Name = "CursorMessage3Label"
         Me.CursorMessage3Label.Size = New Size(178, 21)
         Me.CursorMessage3Label.TabIndex = 41
@@ -1236,7 +1235,7 @@ Partial Class Form1
         Me.Last24HoursLabel.Size = New Size(109, 21)
         Me.Last24HoursLabel.TabIndex = 34
         Me.Last24HoursLabel.Text = "Last 24 hours"
-        Me.Last24HoursLabel.TextAlign = ContentAlignment.MiddleCenter 
+        Me.Last24HoursLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' Last24HTotalsPanel
         ' 
@@ -2576,7 +2575,8 @@ Partial Class Form1
         Me.ToolStripSpacer.Size = New Size(0, 19)
         ' 
         ' FullNameLabel
-        ' 
+        '
+        Me.FullNameLabel.Dock = DockStyle.Top
         Me.FullNameLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.FullNameLabel.ForeColor = Color.White
         Me.FullNameLabel.Location = New Point(65, 10)

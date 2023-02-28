@@ -107,7 +107,7 @@ Public Module DictionaryExtensions
     Public Function ToDataSource(Of T)(dic As Dictionary(Of String, T)) As List(Of KeyValuePair(Of String, T))
         Dim dataSource As New List(Of KeyValuePair(Of String, T))
         For Each kvp As KeyValuePair(Of String, T) In dic
-            dataSource.Add(KeyValuePair.Create(kvp.Key.ToTitleCase(False), kvp.Value))
+            dataSource.Add(KeyValuePair.Create(kvp.Key, kvp.Value))
         Next
         Return dataSource
     End Function

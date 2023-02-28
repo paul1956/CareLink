@@ -28,6 +28,7 @@ Partial Class InitializeDialog
     Private Sub InitializeComponent()
         components = New ComponentModel.Container()
         Dim DataGridViewCellStyle1 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim resources As ComponentModel.ComponentResourceManager = New ComponentModel.ComponentResourceManager(GetType(InitializeDialog))
         Me.TableLayoutPanel1 = New TableLayoutPanel()
         Me.OK_Button = New Button()
         Me.Cancel_Button = New Button()
@@ -40,10 +41,10 @@ Partial Class InitializeDialog
         Me.ColumnEnd = New DataGridViewComboBoxColumn()
         Me.ColumnNumericUpDown = New DataGridViewNumericUpDownColumn()
         Me.ColumnSave = New DataGridViewColumnControls.DataGridViewDisableButtonColumn()
-        Me.UseAdvancedAITDecayHelpLabel = New Label()
         Me.ErrorProvider1 = New ErrorProvider(components)
         Me.InsulinTypeComboBox = New ComboBox()
         Me.InsulinTypeLabel = New Label()
+        Me.InstructionsLabel = New Label()
         Me.TableLayoutPanel1.SuspendLayout()
         CType(Me.InitializeDataGridView, ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ErrorProvider1, ComponentModel.ISupportInitialize).BeginInit()
@@ -57,7 +58,7 @@ Partial Class InitializeDialog
         Me.TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
         Me.TableLayoutPanel1.Controls.Add(Me.OK_Button, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Cancel_Button, 1, 0)
-        Me.TableLayoutPanel1.Location = New Point(228, 316)
+        Me.TableLayoutPanel1.Location = New Point(224, 383)
         Me.TableLayoutPanel1.Margin = New Padding(4, 3, 4, 3)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
@@ -84,19 +85,19 @@ Partial Class InitializeDialog
         Me.Cancel_Button.Size = New Size(119, 27)
         Me.Cancel_Button.TabIndex = 1
         Me.Cancel_Button.Text = "Cancel" ' 
-        ' AitAdvancedDelayComboBox
+        ' PumpAitComboBox
         ' 
         Me.PumpAitComboBox.DropDownStyle = ComboBoxStyle.DropDownList
         Me.PumpAitComboBox.FormattingEnabled = True
-        Me.PumpAitComboBox.Location = New Point(117, 5)
-        Me.PumpAitComboBox.Name = "AitAdvancedDelayComboBox"
+        Me.PumpAitComboBox.Location = New Point(111, 5)
+        Me.PumpAitComboBox.Name = "PumpAitComboBox"
         Me.PumpAitComboBox.Size = New Size(78, 23)
         Me.PumpAitComboBox.TabIndex = 0
         ' 
         ' SelectAITLabel
         ' 
         Me.SelectAITLabel.AutoSize = True
-        Me.SelectAITLabel.Location = New Point(18, 9)
+        Me.SelectAITLabel.Location = New Point(11, 9)
         Me.SelectAITLabel.Name = "SelectAITLabel"
         Me.SelectAITLabel.Size = New Size(96, 15)
         Me.SelectAITLabel.TabIndex = 2
@@ -108,11 +109,11 @@ Partial Class InitializeDialog
         Me.UseAITAdvancedDecayCheckBox.Checked = True
         Me.UseAITAdvancedDecayCheckBox.CheckState = CheckState.Indeterminate
         Me.UseAITAdvancedDecayCheckBox.Enabled = False
-        Me.UseAITAdvancedDecayCheckBox.Location = New Point(337, 34)
+        Me.UseAITAdvancedDecayCheckBox.Location = New Point(11, 34)
         Me.UseAITAdvancedDecayCheckBox.Name = "UseAITAdvancedDecayCheckBox"
-        Me.UseAITAdvancedDecayCheckBox.Size = New Size(156, 19)
+        Me.UseAITAdvancedDecayCheckBox.Size = New Size(447, 19)
         Me.UseAITAdvancedDecayCheckBox.TabIndex = 2
-        Me.UseAITAdvancedDecayCheckBox.Text = "Use Advanced AIT Decay"
+        Me.UseAITAdvancedDecayCheckBox.Text = "Use Advanced Decay: Checking this box decays AIT to more closely match body"
         Me.UseAITAdvancedDecayCheckBox.UseVisualStyleBackColor = True
         ' 
         ' InitializeDataGridView
@@ -124,10 +125,10 @@ Partial Class InitializeDialog
         Me.InitializeDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.InitializeDataGridView.Columns.AddRange(New DataGridViewColumn() {Me.ColumnDeleteRow, Me.ColumnStart, Me.ColumnEnd, Me.ColumnNumericUpDown, Me.ColumnSave})
         Me.InitializeDataGridView.Enabled = False
-        Me.InitializeDataGridView.Location = New Point(14, 65)
+        Me.InitializeDataGridView.Location = New Point(14, 140)
         Me.InitializeDataGridView.Name = "InitializeDataGridView"
         Me.InitializeDataGridView.RowTemplate.Height = 25
-        Me.InitializeDataGridView.Size = New Size(481, 245)
+        Me.InitializeDataGridView.Size = New Size(481, 233)
         Me.InitializeDataGridView.TabIndex = 3
         ' 
         ' ColumnDeleteRow
@@ -180,14 +181,6 @@ Partial Class InitializeDialog
         Me.ColumnSave.UseColumnTextForButtonValue = True
         Me.ColumnSave.Width = 5
         ' 
-        ' UseAdvancedAITDecayHelpLabel
-        ' 
-        Me.UseAdvancedAITDecayHelpLabel.AutoSize = True
-        Me.UseAdvancedAITDecayHelpLabel.Location = New Point(16, 36)
-        Me.UseAdvancedAITDecayHelpLabel.Name = "UseAdvancedAITDecayHelpLabel"
-        Me.UseAdvancedAITDecayHelpLabel.Size = New Size(312, 15)
-        Me.UseAdvancedAITDecayHelpLabel.TabIndex = 4
-        Me.UseAdvancedAITDecayHelpLabel.Text = "Checking this box decays AIT to more closely match body" ' 
         ' ErrorProvider1
         ' 
         Me.ErrorProvider1.ContainerControl = Me
@@ -211,6 +204,15 @@ Partial Class InitializeDialog
         Me.InsulinTypeLabel.Size = New Size(72, 15)
         Me.InsulinTypeLabel.TabIndex = 6
         Me.InsulinTypeLabel.Text = "Insulin Type:" ' 
+        ' InstructionsLabel
+        ' 
+        Me.InstructionsLabel.AutoSize = True
+        Me.InstructionsLabel.Location = New Point(11, 62)
+        Me.InstructionsLabel.Name = "InstructionsLabel"
+        Me.InstructionsLabel.Size = New Size(489, 75)
+        Me.InstructionsLabel.TabIndex = 7
+        Me.InstructionsLabel.Text = resources.GetString("InstructionsLabel.Text")
+        ' 
         ' InitializeDialog
         ' 
         Me.AcceptButton = Me.OK_Button
@@ -218,10 +220,10 @@ Partial Class InitializeDialog
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.AutoValidate = AutoValidate.EnableAllowFocusChange
         Me.CancelButton = Me.Cancel_Button
-        Me.ClientSize = New Size(507, 363)
+        Me.ClientSize = New Size(503, 430)
+        Me.Controls.Add(Me.InstructionsLabel)
         Me.Controls.Add(Me.InsulinTypeLabel)
         Me.Controls.Add(Me.InsulinTypeComboBox)
-        Me.Controls.Add(Me.UseAdvancedAITDecayHelpLabel)
         Me.Controls.Add(Me.InitializeDataGridView)
         Me.Controls.Add(Me.UseAITAdvancedDecayCheckBox)
         Me.Controls.Add(Me.SelectAITLabel)
@@ -248,7 +250,6 @@ Partial Class InitializeDialog
     Friend WithEvents InsulinTypeLabel As Label
     Friend WithEvents UseAITAdvancedDecayCheckBox As CheckBox
     Friend WithEvents SelectAITLabel As Label
-    Friend WithEvents UseAdvancedAITDecayHelpLabel As Label
     Friend WithEvents ColumnDeleteRow As DataGridViewColumnControls.DataGridViewDisableButtonColumn
     Friend WithEvents ColumnStart As DataGridViewComboBoxColumn
     Friend WithEvents ColumnEnd As DataGridViewComboBoxColumn
@@ -257,4 +258,5 @@ Partial Class InitializeDialog
     Friend WithEvents InitializeDataGridView As DataGridView
     Friend WithEvents ErrorProvider1 As ErrorProvider
     Friend WithEvents InsulinTypeComboBox As ComboBox
+    Friend WithEvents InstructionsLabel As Label
 End Class

@@ -16,7 +16,8 @@ Public Class SessionProfileRecord
         End If
 
         For Each row As KeyValuePair(Of String, String) In jsonData
-            _profileDictionary.Add(row.Key.ToTitleCase(False), row.Value)
+            Dim key As String = row.Key.ToTitleCase(False)
+            _profileDictionary.Add(key, row.Value)
             Select Case row.Key
                 Case NameOf(username)
                     Me.username = row.Value
@@ -42,7 +43,7 @@ Public Class SessionProfileRecord
                     Me.country = row.Value
                 Case NameOf(dateOfBirth)
                     Me.dateOfBirth = row.Value.Epoch2DateString
-                    _profileDictionary(row.Key.ToTitleCase) = Me.dateOfBirth
+                    _profileDictionary(key) = Me.dateOfBirth
                 Case NameOf(phone)
                     Me.phone = row.Value
                 Case NameOf(phoneLegacy)
@@ -72,7 +73,7 @@ Public Class SessionProfileRecord
                 Case NameOf(race)
                     Dim raceRecord As New RaceRecord(Loads(row.Value))
                     Me.race = raceRecord.ToString
-                    _profileDictionary(row.Key.ToTitleCase) = Me.race
+                    _profileDictionary(key) = Me.race
                 Case Else
                     Stop
             End Select
@@ -190,7 +191,7 @@ Public Class SessionProfileRecord
     Public Property username As String
 
     Public Sub SetInsulinType(insulinType As String)
-        _profileDictionary(NameOf(insulinType).ToTitleCase) = insulinType
+        _profileDictionary(NameOf(insulinType)) = insulinType
     End Sub
 
     Public Sub Clear()

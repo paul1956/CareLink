@@ -75,4 +75,11 @@
   <metadata name="ErrorProvider1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="InstructionsLabel.Text" xml:space="preserve">
+    <value>The box below lets you enter your Carb Ratios and matches the way the pump lets you edit
+them. First select an End Time then &lt;TAB&gt; to "Carb Ratio g/U" you can enter a number or
+use Up/Down Arrows to select a value. Then &lt;TAB&gt; to "Save". If you have entered values for
+all 24 hours. You can select OK to save. Otherwise a new row will appear and you can
+continue entering values. There is a MAX of 12 rows.</value>
+  </data>
 </root>

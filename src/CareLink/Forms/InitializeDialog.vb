@@ -95,13 +95,13 @@ Public Class InitializeDialog
 
             Case NameOf(ColumnSave)
                 With Me.InitializeDataGridView
-                    If .Rows(e.RowIndex).Cells(NameOf(ColumnEnd)).Value.ToString = _midnight Then
+                    If .Rows(e.RowIndex).Cells(NameOf(ColumnEnd)).Value.ToString = _midnight OrElse .RowCount = 12 Then
                         Me.OK_Button.Enabled = True
-                        Me.OK_Button.Focus()
                         Dim buttonCell As DataGridViewDisableButtonCell = CType(.Rows(.RowCount - 1).Cells(NameOf(ColumnSave)), DataGridViewDisableButtonCell)
                         buttonCell.ReadOnly = True
                         buttonCell.Enabled = False
                         Me.InitializeDataGridView.Enabled = False
+                        Me.OK_Button.Focus()
                         Exit Sub
                     End If
                     With .Rows(e.RowIndex)
@@ -111,7 +111,7 @@ Public Class InitializeDialog
                     For Each c As DataGridViewCell In .Rows(e.RowIndex).Cells
                         c.ReadOnly = Not c.OwningColumn.HeaderText = "Carb Ratio g/U"
                     Next
-                    Me.InitializeDataGridView.Rows.Add()
+                    .Rows.Add()
                     With .Rows(.Rows.Count - 1)
                         Me.OK_Button.Enabled = False
                         Dim c As DataGridViewComboBoxCell = CType(.Cells(NameOf(ColumnStart)), DataGridViewComboBoxCell)
@@ -127,6 +127,7 @@ Public Class InitializeDialog
                         .Cells(NameOf(ColumnNumericUpDown)).Value = 15.0
                         CType(.Cells(NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell).Enabled = True
                     End With
+
                 End With
         End Select
 
@@ -205,7 +206,11 @@ Public Class InitializeDialog
                         c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
                         Me.InitializeComboList(c.Items, CInt((New TimeSpan(value.StartTime.Hour, value.StartTime.Minute, 0) / s_30MinuteSpan) + 1))
                         c.Value = value.EndTime.ToString(CurrentDateCulture)
-                        c.ReadOnly = i.IsLast AndAlso Not i.IsFirst
+                        If i.Index < 11 Then
+                            c.ReadOnly = i.IsLast AndAlso Not i.IsFirst
+                        Else
+                            c.ReadOnly = True
+                        End If
                         Dim numericCell As DataGridViewNumericUpDownCell = CType(.Cells(NameOf(ColumnNumericUpDown)), DataGridViewNumericUpDownCell)
                         numericCell.Value = value.CarbRatio
                         numericCell.ReadOnly = False
