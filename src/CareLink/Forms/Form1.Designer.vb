@@ -222,7 +222,7 @@ Partial Class Form1
         Me.LoginStatus = New ToolStripStatusLabel()
         Me.LastUpdateTime = New ToolStripStatusLabel()
         Me.ToolStripSpacer = New ToolStripStatusLabel()
-        Me.FullNameLabel = New ToolStripStatusLabel()
+        Me.FullNameLabel = New Label()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         Me.CalibrationShieldPanel.SuspendLayout()
@@ -484,7 +484,7 @@ Partial Class Form1
         Me.AboveHighLimitMessageLabel.BackColor = Color.Transparent
         Me.AboveHighLimitMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.AboveHighLimitMessageLabel.ForeColor = Color.Yellow
-        Me.AboveHighLimitMessageLabel.Location = New Point(30, 251)
+        Me.AboveHighLimitMessageLabel.Location = New Point(30, 283)
         Me.AboveHighLimitMessageLabel.Name = "AboveHighLimitMessageLabel"
         Me.AboveHighLimitMessageLabel.Size = New Size(170, 21)
         Me.AboveHighLimitMessageLabel.TabIndex = 28
@@ -497,7 +497,7 @@ Partial Class Form1
         Me.AboveHighLimitValueLabel.BackColor = Color.Black
         Me.AboveHighLimitValueLabel.Font = New Font("Microsoft Sans Serif", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         Me.AboveHighLimitValueLabel.ForeColor = Color.White
-        Me.AboveHighLimitValueLabel.Location = New Point(55, 218)
+        Me.AboveHighLimitValueLabel.Location = New Point(55, 250)
         Me.AboveHighLimitValueLabel.Name = "AboveHighLimitValueLabel"
         Me.AboveHighLimitValueLabel.Size = New Size(120, 33)
         Me.AboveHighLimitValueLabel.TabIndex = 22
@@ -536,7 +536,7 @@ Partial Class Form1
         Me.AverageSGMessageLabel.BackColor = Color.Transparent
         Me.AverageSGMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.AverageSGMessageLabel.ForeColor = Color.White
-        Me.AverageSGMessageLabel.Location = New Point(3, 436)
+        Me.AverageSGMessageLabel.Location = New Point(3, 468)
         Me.AverageSGMessageLabel.Name = "AverageSGMessageLabel"
         Me.AverageSGMessageLabel.Size = New Size(224, 21)
         Me.AverageSGMessageLabel.TabIndex = 0
@@ -549,7 +549,7 @@ Partial Class Form1
         Me.AverageSGValueLabel.BackColor = Color.Black
         Me.AverageSGValueLabel.Font = New Font("Microsoft Sans Serif", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         Me.AverageSGValueLabel.ForeColor = Color.White
-        Me.AverageSGValueLabel.Location = New Point(55, 401)
+        Me.AverageSGValueLabel.Location = New Point(55, 433)
         Me.AverageSGValueLabel.Margin = New Padding(0)
         Me.AverageSGValueLabel.Name = "AverageSGValueLabel"
         Me.AverageSGValueLabel.Size = New Size(120, 33)
@@ -603,7 +603,7 @@ Partial Class Form1
         Me.BelowLowLimitMessageLabel.BackColor = Color.Transparent
         Me.BelowLowLimitMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.BelowLowLimitMessageLabel.ForeColor = Color.Red
-        Me.BelowLowLimitMessageLabel.Location = New Point(30, 373)
+        Me.BelowLowLimitMessageLabel.Location = New Point(30, 405)
         Me.BelowLowLimitMessageLabel.Name = "BelowLowLimitMessageLabel"
         Me.BelowLowLimitMessageLabel.Size = New Size(170, 21)
         Me.BelowLowLimitMessageLabel.TabIndex = 32
@@ -616,7 +616,7 @@ Partial Class Form1
         Me.BelowLowLimitValueLabel.BackColor = Color.Black
         Me.BelowLowLimitValueLabel.Font = New Font("Microsoft Sans Serif", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         Me.BelowLowLimitValueLabel.ForeColor = Color.White
-        Me.BelowLowLimitValueLabel.Location = New Point(55, 340)
+        Me.BelowLowLimitValueLabel.Location = New Point(55, 372)
         Me.BelowLowLimitValueLabel.Name = "BelowLowLimitValueLabel"
         Me.BelowLowLimitValueLabel.Size = New Size(120, 33)
         Me.BelowLowLimitValueLabel.TabIndex = 26
@@ -843,8 +843,7 @@ Partial Class Form1
         Me.DgvCountryDataPg1Value.HeaderText = "Value"
         Me.DgvCountryDataPg1Value.Name = "DgvCountryDataPg1Value"
         Me.DgvCountryDataPg1Value.ReadOnly = True
-        ' 
-        ' 
+        '
         ' DgvCareLinkUsersUserID
         ' 
         Me.DgvCareLinkUsersUserID.DataPropertyName = "ID"
@@ -903,7 +902,7 @@ Partial Class Form1
         Me.DgvCareLinkUsersAutoLogin.HeaderText = "Auto Login"
         Me.DgvCareLinkUsersAutoLogin.Name = "DgvCareLinkUsersAutoLogin"
         Me.DgvCareLinkUsersAutoLogin.Width = 65
-        '
+        ' 
         ' DgvCareLinkUsers
         ' 
         Me.DgvCareLinkUsers.AllowUserToAddRows = False
@@ -923,7 +922,7 @@ Partial Class Form1
         Me.DgvCareLinkUsers.SelectionMode = DataGridViewSelectionMode.CellSelect
         Me.DgvCareLinkUsers.Size = New Size(1370, 631)
         Me.DgvCareLinkUsers.TabIndex = 0
-        ' 
+        '
         ' DgvCountryDataPg2
         ' 
         Me.DgvCountryDataPg2.Columns.AddRange(New DataGridViewColumn() {Me.DgvCountryDataPg2RecordNumber, Me.DgvCountryDataPg2Category, Me.DgvCountryDataPg2Key, Me.DgvCountryDataPg2Value})
@@ -1113,7 +1112,7 @@ Partial Class Form1
         Me.InRangeMessageLabel.BackColor = Color.Transparent
         Me.InRangeMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.InRangeMessageLabel.ForeColor = Color.Lime
-        Me.InRangeMessageLabel.Location = New Point(81, 312)
+        Me.InRangeMessageLabel.Location = New Point(81, 344)
         Me.InRangeMessageLabel.Name = "InRangeMessageLabel"
         Me.InRangeMessageLabel.Size = New Size(73, 21)
         Me.InRangeMessageLabel.TabIndex = 30
@@ -1232,11 +1231,13 @@ Partial Class Form1
         Me.Last24HoursLabel.AutoSize = True
         Me.Last24HoursLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.Last24HoursLabel.ForeColor = Color.White
-        Me.Last24HoursLabel.Location = New Point(61, 29)
+        Me.Last24HoursLabel.Location = New Point(61, 61)
         Me.Last24HoursLabel.Name = "Last24HoursLabel"
         Me.Last24HoursLabel.Size = New Size(109, 21)
         Me.Last24HoursLabel.TabIndex = 34
-        Me.Last24HoursLabel.Text = "Last 24 hours" ' 
+        Me.Last24HoursLabel.Text = "Last 24 hours"
+        Me.Last24HoursLabel.TextAlign = ContentAlignment.MiddleCenter 
+        ' 
         ' Last24HTotalsPanel
         ' 
         Me.Last24HTotalsPanel.BorderStyle = BorderStyle.FixedSingle
@@ -1520,6 +1521,7 @@ Partial Class Form1
         ' 
         ' SplitContainer3.Panel2
         ' 
+        Me.SplitContainer3.Panel2.Controls.Add(Me.FullNameLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.Last24HoursLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.TimeInRangeLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.TimeInRangeSummaryPercentCharLabel)
@@ -1539,14 +1541,15 @@ Partial Class Form1
         ' TimeInRangeLabel
         ' 
         Me.TimeInRangeLabel.Anchor = AnchorStyles.Top
-        Me.TimeInRangeLabel.AutoSize = True
         Me.TimeInRangeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.TimeInRangeLabel.ForeColor = Color.White
-        Me.TimeInRangeLabel.Location = New Point(58, 7)
+        Me.TimeInRangeLabel.Location = New Point(65, 39)
         Me.TimeInRangeLabel.Name = "TimeInRangeLabel"
-        Me.TimeInRangeLabel.Size = New Size(115, 21)
+        Me.TimeInRangeLabel.Size = New Size(100, 23)
         Me.TimeInRangeLabel.TabIndex = 33
-        Me.TimeInRangeLabel.Text = "Time in range" ' 
+        Me.TimeInRangeLabel.Text = "Time in range"
+        Me.TimeInRangeLabel.TextAlign = ContentAlignment.MiddleCenter
+        ' 
         ' TimeInRangeSummaryPercentCharLabel
         ' 
         Me.TimeInRangeSummaryPercentCharLabel.Anchor = AnchorStyles.Top
@@ -1554,7 +1557,7 @@ Partial Class Form1
         Me.TimeInRangeSummaryPercentCharLabel.BackColor = Color.Transparent
         Me.TimeInRangeSummaryPercentCharLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         Me.TimeInRangeSummaryPercentCharLabel.ForeColor = Color.White
-        Me.TimeInRangeSummaryPercentCharLabel.Location = New Point(94, 136)
+        Me.TimeInRangeSummaryPercentCharLabel.Location = New Point(94, 168)
         Me.TimeInRangeSummaryPercentCharLabel.Name = "TimeInRangeSummaryPercentCharLabel"
         Me.TimeInRangeSummaryPercentCharLabel.Size = New Size(42, 40)
         Me.TimeInRangeSummaryPercentCharLabel.TabIndex = 3
@@ -1565,7 +1568,7 @@ Partial Class Form1
         Me.TimeInRangeChartLabel.BackColor = Color.Black
         Me.TimeInRangeChartLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         Me.TimeInRangeChartLabel.ForeColor = Color.White
-        Me.TimeInRangeChartLabel.Location = New Point(65, 97)
+        Me.TimeInRangeChartLabel.Location = New Point(65, 129)
         Me.TimeInRangeChartLabel.Name = "TimeInRangeChartLabel"
         Me.TimeInRangeChartLabel.Size = New Size(100, 47)
         Me.TimeInRangeChartLabel.TabIndex = 2
@@ -1578,7 +1581,7 @@ Partial Class Form1
         Me.TimeInRangeValueLabel.BackColor = Color.Black
         Me.TimeInRangeValueLabel.Font = New Font("Microsoft Sans Serif", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         Me.TimeInRangeValueLabel.ForeColor = Color.White
-        Me.TimeInRangeValueLabel.Location = New Point(55, 279)
+        Me.TimeInRangeValueLabel.Location = New Point(55, 311)
         Me.TimeInRangeValueLabel.Name = "TimeInRangeValueLabel"
         Me.TimeInRangeValueLabel.Size = New Size(120, 33)
         Me.TimeInRangeValueLabel.TabIndex = 24
@@ -2545,7 +2548,7 @@ Partial Class Form1
         Me.TabPageBackToHomePage.Text = "Back.." ' 
         ' StatusStrip1
         ' 
-        Me.StatusStrip1.Items.AddRange(New ToolStripItem() {Me.LoginStatus, Me.LastUpdateTime, Me.ToolStripSpacer, Me.FullNameLabel})
+        Me.StatusStrip1.Items.AddRange(New ToolStripItem() {Me.LoginStatus, Me.LastUpdateTime, Me.ToolStripSpacer})
         Me.StatusStrip1.Location = New Point(0, 692)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New Size(1384, 24)
@@ -2564,7 +2567,7 @@ Partial Class Form1
         Me.LastUpdateTime.BorderSides = ToolStripStatusLabelBorderSides.Left Or ToolStripStatusLabelBorderSides.Right
         Me.LastUpdateTime.BorderStyle = Border3DStyle.RaisedOuter
         Me.LastUpdateTime.Name = "LastUpdateTime"
-        Me.LastUpdateTime.Size = New Size(1167, 19)
+        Me.LastUpdateTime.Size = New Size(1236, 19)
         Me.LastUpdateTime.Spring = True
         Me.LastUpdateTime.Text = "                           Last Update Time: Unknown" ' 
         ' ToolStripSpacer
@@ -2574,12 +2577,15 @@ Partial Class Form1
         ' 
         ' FullNameLabel
         ' 
-        Me.FullNameLabel.BorderSides = ToolStripStatusLabelBorderSides.Left Or ToolStripStatusLabelBorderSides.Right
-        Me.FullNameLabel.BorderStyle = Border3DStyle.RaisedOuter
-        Me.FullNameLabel.DisplayStyle = ToolStripItemDisplayStyle.Text
+        Me.FullNameLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Me.FullNameLabel.ForeColor = Color.White
+        Me.FullNameLabel.Location = New Point(65, 10)
         Me.FullNameLabel.Name = "FullNameLabel"
-        Me.FullNameLabel.Size = New Size(69, 19)
-        Me.FullNameLabel.Text = "User Name" ' 
+        Me.FullNameLabel.Size = New Size(100, 23)
+        Me.FullNameLabel.TabIndex = 35
+        Me.FullNameLabel.Text = "User Name"
+        Me.FullNameLabel.TextAlign = ContentAlignment.MiddleCenter
+        ' 
         ' Form1
         ' 
         Me.AutoScaleDimensions = New SizeF(96.0F, 96.0F)
@@ -2915,7 +2921,7 @@ Partial Class Form1
     Friend WithEvents ToolStripSplitButton1 As ToolStripSplitButton
     Friend WithEvents LastUpdateTime As ToolStripStatusLabel
     Friend WithEvents ToolStripSplitButton2 As ToolStripSplitButton
-    Friend WithEvents FullNameLabel As ToolStripStatusLabel
     Friend WithEvents ToolStripSpacer As ToolStripStatusLabel
     Friend WithEvents PumpAITLabel As Label
+    Friend WithEvents FullNameLabel As Label
 End Class
