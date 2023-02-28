@@ -21,9 +21,9 @@ Public Class CareLinkClient
     Private _inLoginInProcess As Boolean
     Private _lastErrorMessage As String
     Private _lastResponseCode? As HttpStatusCode
-    Private _sessionMonitorData As New MonitorDataRecord
-    Private _sessionProfile As New MyProfileRecord
-    Private _sessionUser As New MyUserRecord
+    Private _sessionMonitorData As New SessionMonitorDataRecord
+    Private _sessionProfile As New SessionProfileRecord
+    Private _sessionUser As New SessionUserRecord
 
     Public Sub New(username As String, password As String, country As String)
         ' User info
@@ -42,11 +42,11 @@ Public Class CareLinkClient
 
     Public Property LoggedIn As Boolean
 
-    Public Property SessionProfile As MyProfileRecord
+    Public Property SessionProfile As SessionProfileRecord
         Get
             Return _sessionProfile
         End Get
-        Set(value As MyProfileRecord)
+        Set(value As SessionProfileRecord)
             _sessionProfile = value
         End Set
     End Property
@@ -317,19 +317,19 @@ Public Class CareLinkClient
         Return response
     End Function
 
-    Private Function GetMonitorData(authToken As String) As MonitorDataRecord
+    Private Function GetMonitorData(authToken As String) As SessionMonitorDataRecord
         Debug.Print("__getMonitorData()")
-        Return New MonitorDataRecord(Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/monitor/data", Nothing, Nothing))
+        Return New SessionMonitorDataRecord(Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/monitor/data", Nothing, Nothing))
     End Function
 
-    Private Function GetMyProfile(authToken As String) As MyProfileRecord
+    Private Function GetMyProfile(authToken As String) As SessionProfileRecord
         Debug.Print("__getMyProfile()")
-        Return New MyProfileRecord(Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/users/me/profile", Nothing, Nothing))
+        Return New SessionProfileRecord(Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/users/me/profile", Nothing, Nothing))
     End Function
 
-    Private Function GetMyUser(MainForm As Form1, authToken As String) As MyUserRecord
+    Private Function GetMyUser(MainForm As Form1, authToken As String) As SessionUserRecord
         Debug.Print("__getMyUser()")
-        Dim myUserRecord As New MyUserRecord(MainForm.DgvCurrentUser, Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/users/me", Nothing, Nothing))
+        Dim myUserRecord As New SessionUserRecord(MainForm.DgvCurrentUser, Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/users/me", Nothing, Nothing))
         Return myUserRecord
     End Function
 

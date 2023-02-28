@@ -2,7 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Public Class MonitorDataRecord
+Public Class SessionMonitorDataRecord
     Private _hasValue As Boolean
 
     Public Sub New(jsonData As Dictionary(Of String, String))
@@ -11,7 +11,7 @@ Public Class MonitorDataRecord
             Exit Sub
         End If
         If jsonData.Count <> 1 Then
-            Throw New Exception($"{NameOf(MonitorDataRecord)}({NameOf(jsonData)}) contains {jsonData.Count} entries, 1 expected.")
+            Throw New Exception($"{NameOf(SessionMonitorDataRecord)}({NameOf(jsonData)}) contains {jsonData.Count} entries, 1 expected.")
         End If
 
         Me.deviceFamily = jsonData(NameOf(deviceFamily))

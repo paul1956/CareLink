@@ -1258,10 +1258,10 @@ Public Class Form1
             If Me.RecentData?.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
                     If lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime + s_5MinuteSpan < PumpNow() Then
-                        Me.SetLastUpdateTime(Me.LastUpdateTime.Text.Trim, True)
+                        Me.LastUpdateTime.FlagErrorInLastUpdateTime()
                         _bgMiniDisplay.SetCurrentBGString("---")
                     Else
-                        Me.SetLastUpdateTime(Me.LastUpdateTime.Text.Trim, False)
+                        Me.LastUpdateTime.FlagErrorInLastUpdateTime()
                         _bgMiniDisplay.SetCurrentBGString(s_lastSgRecord?.sg.ToString)
                     End If
                     Me.RecentData = Nothing

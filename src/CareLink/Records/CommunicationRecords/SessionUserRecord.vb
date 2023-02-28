@@ -2,7 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Public Class MyUserRecord
+Public Class SessionUserRecord
     Private _hasValue As Boolean
 
     Public Sub New(dgv As DataGridView, jsonData As Dictionary(Of String, String))

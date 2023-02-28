@@ -5,8 +5,9 @@
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
-Public Class MyProfileRecord
+Public Class SessionProfileRecord
     Private _hasValue As Boolean
+    Private ReadOnly _profileDictionary As New Dictionary(Of String, String)
 
     Public Sub New(jsonData As Dictionary(Of String, String))
         If jsonData Is Nothing OrElse jsonData.Count = 0 Then
@@ -14,9 +15,8 @@ Public Class MyProfileRecord
             Exit Sub
         End If
 
-        Dim profile As New List(Of KeyValuePair(Of String, String))
         For Each row As KeyValuePair(Of String, String) In jsonData
-            profile.Add(KeyValuePair.Create(row.Key.ToTitleCase(False), row.Value))
+            _profileDictionary.Add(row.Key.ToTitleCase(False), row.Value)
             Select Case row.Key
                 Case NameOf(username)
                     Me.username = row.Value
@@ -42,7 +42,7 @@ Public Class MyProfileRecord
                     Me.country = row.Value
                 Case NameOf(dateOfBirth)
                     Me.dateOfBirth = row.Value.Epoch2DateString
-                    profile(profile.Count - 1) = KeyValuePair.Create(row.Key.ToTitleCase, Me.dateOfBirth)
+                    _profileDictionary(row.Key.ToTitleCase) = Me.dateOfBirth
                 Case NameOf(phone)
                     Me.phone = row.Value
                 Case NameOf(phoneLegacy)
@@ -72,7 +72,7 @@ Public Class MyProfileRecord
                 Case NameOf(race)
                     Dim raceRecord As New RaceRecord(Loads(row.Value))
                     Me.race = raceRecord.ToString
-                    profile(profile.Count - 1) = KeyValuePair.Create(row.Key.ToTitleCase, Me.race)
+                    _profileDictionary(row.Key.ToTitleCase) = Me.race
                 Case Else
                     Stop
             End Select
@@ -189,12 +189,20 @@ Public Class MyProfileRecord
     <Column(Order:=0, TypeName:=NameOf([String]))>
     Public Property username As String
 
+    Public Sub SetInsulinType(insulinType As String)
+        _profileDictionary(NameOf(insulinType).ToTitleCase) = insulinType
+    End Sub
+
     Public Sub Clear()
         _hasValue = False
     End Sub
 
     Public Function HasValue() As Boolean
         Return _hasValue
+    End Function
+
+    Public Function ToDataSource() As List(Of KeyValuePair(Of String, String))
+        Return _profileDictionary.ToDataSource
     End Function
 
 End Class

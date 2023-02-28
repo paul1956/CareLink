@@ -66,10 +66,10 @@ Friend Module Form1LoginHelpers
                 MainForm.MenuShowMiniDisplay.Visible = True
         End Select
 
-        MainForm.Client.SessionProfile.insulinType = CurrentUser.InsulinTypeName
+        MainForm.Client.SessionProfile.SetInsulinType(CurrentUser.InsulinTypeName)
         With MainForm.DgvSessionProfile
             .InitializeDgv()
-            .DataSource = MainForm.Client.SessionProfile
+            .DataSource = MainForm.Client.SessionProfile.ToDataSource
         End With
 
         MainForm.AITComboBox.SelectedIndex = MainForm.AITComboBox.FindStringExact($"AIT {CType(CurrentUser.Ait, TimeSpan).ToString("hh\:mm").Substring(1)}")
@@ -94,9 +94,21 @@ Friend Module Form1LoginHelpers
     End Sub
 
     <Extension>
+    Friend Sub FlagErrorInLastUpdateTime(statusLabel As ToolStripStatusLabel)
+        statusLabel.ForeColor = Color.Red
+        statusLabel.BackColor = Color.Red.GetContrastingColor
+        statusLabel.LiveSetting = Automation.AutomationLiveSetting.Polite
+    End Sub
+
+    <Extension>
     Friend Sub SetLastUpdateTime(mainForm As Form1, msg As String, highLight As Boolean)
-        mainForm.LastUpdateTime.ForeColor = If(highLight, Color.Red, SystemColors.ControlText)
-        mainForm.LastUpdateTime.BackColor = If(highLight, Color.Red.GetContrastingColor, SystemColors.Control)
+        If highLight = True Then
+            mainForm.LastUpdateTime.ForeColor = Color.Red
+            mainForm.LastUpdateTime.BackColor = Color.Red.GetContrastingColor
+        Else
+            mainForm.LastUpdateTime.ForeColor = SystemColors.ControlText
+            mainForm.LastUpdateTime.BackColor = SystemColors.Control
+        End If
         mainForm.LastUpdateTime.Text = $"Last Update Time: {msg}"
         Dim spaceWidth As Integer = TextRenderer.MeasureText(" "c, mainForm.LastUpdateTime.Font).Width
         Dim desiredMidWidth As Integer = mainForm.StatusStrip1.Width - (mainForm.LoginStatus.Width + mainForm.FullNameLabel.Width)
@@ -104,8 +116,9 @@ Friend Module Form1LoginHelpers
         If desiredMidWidth > 0 Then
             Dim neededSpaces As Integer = desiredMidWidth \ spaceWidth
             Dim nSpaces As String = StrDup(neededSpaces, " "c)
-            mainForm.LastUpdateTime.Text = $"{nSpaces}{mainForm.LastUpdateTime.Text}{nSpaces}"
+            mainForm.LastUpdateTime.Text = $"{nSpaces}{$"Last Update Time: {msg}"}{nSpaces}"
         End If
+
     End Sub
 
     Friend Sub SetUpCareLinkUser(mainForm As Form1, userSettingsPath As String)

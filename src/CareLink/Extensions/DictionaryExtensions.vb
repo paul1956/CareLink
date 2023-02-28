@@ -22,25 +22,6 @@ Public Module DictionaryExtensions
         Return (From x In dic Select x).ToDictionary(Function(p) p.Key, Function(p) p.Value)
     End Function
 
-    <Extension>
-    Public Function IndexOfValue(dic As SortedDictionary(Of String, KnownColor), item As KnownColor) As Integer
-        Return dic.Values.ToList.IndexOf(item)
-    End Function
-
-    <Extension>
-    Public Function ToCsv(Of T)(dic As Dictionary(Of String, T)) As String
-        If dic Is Nothing Then
-            Return "{}"
-        End If
-
-        Dim result As New StringBuilder
-        For Each kvp As KeyValuePair(Of String, T) In dic
-            result.Append($"{kvp.Key} = {kvp.Value}, ")
-        Next
-        result.TrimEnd(", ")
-        Return $"{{{result}}}"
-    End Function
-
     ''' <summary>
     ''' Fills properties of a class from a row of a Dictionary where the propertyName of the property matches the Key from that dictionary.
     ''' It does this for each row in the Dictionary, returning a class.
@@ -101,6 +82,34 @@ Public Module DictionaryExtensions
         classObject.GetType.GetProperty("RecordNumber")?.SetValue(classObject, recordNumber, Nothing)
 
         Return classObject
+    End Function
+
+    <Extension>
+    Public Function IndexOfValue(dic As SortedDictionary(Of String, KnownColor), item As KnownColor) As Integer
+        Return dic.Values.ToList.IndexOf(item)
+    End Function
+
+    <Extension>
+    Public Function ToCsv(Of T)(dic As Dictionary(Of String, T)) As String
+        If dic Is Nothing Then
+            Return "{}"
+        End If
+
+        Dim result As New StringBuilder
+        For Each kvp As KeyValuePair(Of String, T) In dic
+            result.Append($"{kvp.Key} = {kvp.Value}, ")
+        Next
+        result.TrimEnd(", ")
+        Return $"{{{result}}}"
+    End Function
+
+    <Extension>
+    Public Function ToDataSource(Of T)(dic As Dictionary(Of String, T)) As List(Of KeyValuePair(Of String, T))
+        Dim dataSource As New List(Of KeyValuePair(Of String, T))
+        For Each kvp As KeyValuePair(Of String, T) In dic
+            dataSource.Add(KeyValuePair.Create(kvp.Key.ToTitleCase(False), kvp.Value))
+        Next
+        Return dataSource
     End Function
 
 End Module
