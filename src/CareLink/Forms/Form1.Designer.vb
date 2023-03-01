@@ -1226,12 +1226,11 @@ Partial Class Form1
         ' Last24HoursLabel
         ' 
         Me.Last24HoursLabel.Anchor = AnchorStyles.Top
-        Me.Last24HoursLabel.AutoSize = True
         Me.Last24HoursLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.Last24HoursLabel.ForeColor = Color.White
-        Me.Last24HoursLabel.Location = New Point(61, 61)
+        Me.Last24HoursLabel.Location = New Point(30, 61)
         Me.Last24HoursLabel.Name = "Last24HoursLabel"
-        Me.Last24HoursLabel.Size = New Size(109, 21)
+        Me.Last24HoursLabel.Size = New Size(170, 21)
         Me.Last24HoursLabel.TabIndex = 34
         Me.Last24HoursLabel.Text = "Last 24 hours"
         Me.Last24HoursLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -1538,14 +1537,13 @@ Partial Class Form1
         ' TimeInRangeLabel
         ' 
         Me.TimeInRangeLabel.Anchor = AnchorStyles.Top
-        Me.TimeInRangeLabel.AutoSize = True
-        Me.TimeInRangeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Me.TimeInRangeLabel.Font = New Font("Segoe UI", 14.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.TimeInRangeLabel.ForeColor = Color.White
-        Me.TimeInRangeLabel.Location = New Point(65, 39)
+        Me.TimeInRangeLabel.Location = New Point(30, 35)
         Me.TimeInRangeLabel.Name = "TimeInRangeLabel"
-        Me.TimeInRangeLabel.Size = New Size(100, 46)
+        Me.TimeInRangeLabel.Size = New Size(170, 21)
         Me.TimeInRangeLabel.TabIndex = 33
-        Me.TimeInRangeLabel.Text = "24 Hour" & Environment.NewLine & "Time in range"
+        Me.TimeInRangeLabel.Text = "Time in range"
         Me.TimeInRangeLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' TimeInRangeSummaryPercentCharLabel
