@@ -242,6 +242,8 @@ Friend Module PlotMarkers
                 '      Throw New Exception($"{ex.DecodeException()} exception in {memberName} at {sourceLineNumber}")
             End Try
         Next
+        treatmentChart.Annotations.Last.BringToFront()
+
         If s_listOfTimeChangeMarkers.Any Then
             treatmentMarkerTimeChangeSeries.IsVisibleInLegend = True
             treatmentChart.ChartAreas(NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)

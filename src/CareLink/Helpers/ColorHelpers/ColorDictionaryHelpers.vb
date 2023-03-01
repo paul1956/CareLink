@@ -12,7 +12,7 @@ Friend Module ColorDictionaryHelpers
                         {"Auto Correction", KnownColor.Aqua},
                         {"Basal Series", KnownColor.HotPink},
                         {"Min Basal", KnownColor.LightYellow},
-                        {"BG Series", KnownColor.White},
+                        {"SG Series", KnownColor.White},
                         {"High Limit", KnownColor.Yellow},
                         {"Low Limit", KnownColor.Red},
                         {"Time Change", KnownColor.White}

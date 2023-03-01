@@ -72,7 +72,7 @@ Friend Module Form1LoginHelpers
             .DataSource = MainForm.Client.SessionProfile.ToDataSource
         End With
 
-        MainForm.PumpAITLabel.Text = $"Pump AIT {CType(CurrentUser.Ait, TimeSpan):h\:mm}"
+        MainForm.PumpAITLabel.Text = CurrentUser.GetPumpAitString
         MainForm.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName
         MainForm.FinishInitialization()
         If UpdateAllTabs Then
@@ -108,14 +108,15 @@ Friend Module Form1LoginHelpers
     Friend Sub SetLastUpdateTime(mainForm As Form1, msg As String, highLight As Boolean)
         UpdateHighLightInLastUpdateTime(mainForm.LastUpdateTime, highLight)
         mainForm.LastUpdateTime.Text = $"Last Update Time: {msg}"
-        Dim spaceWidth As Integer = TextRenderer.MeasureText(" "c, mainForm.LastUpdateTime.Font).Width
-        Dim desiredMidWidth As Integer = mainForm.StatusStrip1.Width - (mainForm.LoginStatus.Width + mainForm.FullNameLabel.Width)
-        desiredMidWidth -= mainForm.LastUpdateTime.Width \ 2
-        If desiredMidWidth > 0 Then
-            Dim neededSpaces As Integer = desiredMidWidth \ spaceWidth
-            Dim nSpaces As String = StrDup(neededSpaces, " "c)
-            mainForm.LastUpdateTime.Text = $"{nSpaces}{$"Last Update Time: {msg}"}{nSpaces}"
-        End If
+        mainForm.LastUpdateTime.Spring = True
+        'Dim spaceWidth As Integer = TextRenderer.MeasureText(" "c, mainForm.LastUpdateTime.Font).Width
+        'Dim desiredMidWidth As Integer = mainForm.StatusStrip1.Width - mainForm.LoginStatus.Width
+        'desiredMidWidth -= mainForm.LastUpdateTime.Width \ 2
+        'If desiredMidWidth > 0 Then
+        '    Dim neededSpaces As Integer = desiredMidWidth \ spaceWidth
+        '    Dim nSpaces As String = StrDup(neededSpaces, " "c)
+        '    mainForm.LastUpdateTime.Text = $"{nSpaces}{$"Last Update Time: {msg}"}{nSpaces}"
+        'End If
 
     End Sub
 

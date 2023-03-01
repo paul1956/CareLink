@@ -11,11 +11,11 @@ Friend Module CreateChartItems
     Friend Const ActiveInsulinSeriesName As String = NameOf(ActiveInsulinSeriesName)
     Friend Const AutoCorrectionSeriesName As String = NameOf(AutoCorrectionSeriesName)
     Friend Const BasalSeriesNameName As String = NameOf(BasalSeriesNameName)
-    Friend Const BgSeriesName As String = NameOf(BgSeriesName)
     Friend Const HighLimitSeriesName As String = NameOf(HighLimitSeriesName)
     Friend Const LowLimitSeriesName As String = NameOf(LowLimitSeriesName)
     Friend Const MarkerSeriesName As String = NameOf(MarkerSeriesName)
     Friend Const MinBasalSeriesName As String = NameOf(MinBasalSeriesName)
+    Friend Const SgSeriesName As String = NameOf(SgSeriesName)
     Friend Const TimeChangeSeriesName As String = NameOf(TimeChangeSeriesName)
 
     Private Function CreateSeriesBase(seriesName As String, legendText As String, borderWidth As Integer, yAxisType As AxisType) As Series
@@ -214,9 +214,9 @@ Friend Module CreateChartItems
         Return s
     End Function
 
-    Friend Function CreateSeriesBg(bgLegend As Legend) As Series
-        Const legendText As String = "BG Series"
-        Dim s As Series = CreateSeriesBase(BgSeriesName, legendText, 4, AxisType.Secondary)
+    Friend Function CreateSeriesSg(bgLegend As Legend) As Series
+        Const legendText As String = "SG Series"
+        Dim s As Series = CreateSeriesBase(SgSeriesName, legendText, 4, AxisType.Secondary)
         s.IsVisibleInLegend = False
         bgLegend.CustomItems.Add(New LegendItem(legendText, GetGraphLineColor(legendText), ""))
         Return s
@@ -291,7 +291,7 @@ Friend Module CreateChartItems
     End Function
 
     <Extension>
-    Friend Sub UpdateChartAreaBGAxisX(c As ChartArea)
+    Friend Sub UpdateChartAreaSgAxisX(c As ChartArea)
         With c
             With .AxisX
                 .Interval = 2

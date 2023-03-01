@@ -22,10 +22,13 @@ Public Module SystemConstants
     Friend Const TimeFormatTwelveHourWithoutMinutes As String = "h tt"
     Friend Const TmChar As String = ChrW(&H2122)
 
-    Friend ReadOnly s_insulinTypes As New Dictionary(Of String, TimeSpan) From
+    Friend ReadOnly s_insulinTypes As New Dictionary(Of String, Single) From
             {
-                {$"Humalog{RegisteredTrademark}/Novolog{RegisteredTrademark}", New TimeSpan(3, 0, 0)},
-                {$"Lyumjev{RegisteredTrademark}/FIASP{RegisteredTrademark}", New TimeSpan(3, 0, 0)}
+                {$"Humalog{RegisteredTrademark}", 4},
+                {$"Novolog{RegisteredTrademark}", 4},
+                {$"Generic (Insulin Lispro)", 4},
+                {$"FIASP{RegisteredTrademark}", 3},
+                {$"Lyumjev{RegisteredTrademark}", 3}
             }
 
     Public ReadOnly s_aitValues As New Dictionary(Of String, String) From {
@@ -39,8 +42,6 @@ Public Module SystemConstants
                         {"AIT 5:30", "5:30"}, {"AIT 5:45", "5:45"},
                         {"AIT 6:00", "6:00"}
                     }
-
-    Public ReadOnly s_iobTitle As String = $"Running Insulin On Board (IOB)"
 
     Public ReadOnly s_oneToNineteen As New List(Of String) From {
                         "zero", "one", "two", "three", "four", "five",

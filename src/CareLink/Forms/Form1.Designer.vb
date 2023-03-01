@@ -56,7 +56,7 @@ Partial Class Form1
         Me.AboveHighLimitMessageLabel = New Label()
         Me.AboveHighLimitValueLabel = New Label()
         Me.ActiveInsulinValue = New Label()
-        Me.AITAlgorithmLabel = New Label()
+        Me.FullNameLabel = New Label()
         Me.AverageSGMessageLabel = New Label()
         Me.AverageSGValueLabel = New Label()
         Me.BannerStateButton = New Button()
@@ -222,7 +222,6 @@ Partial Class Form1
         Me.LoginStatus = New ToolStripStatusLabel()
         Me.LastUpdateTime = New ToolStripStatusLabel()
         Me.ToolStripSpacer = New ToolStripStatusLabel()
-        Me.FullNameLabel = New Label()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         Me.CalibrationShieldPanel.SuspendLayout()
@@ -517,18 +516,18 @@ Partial Class Form1
         Me.ActiveInsulinValue.Text = "Active Insulin 0.000 U"
         Me.ActiveInsulinValue.TextAlign = ContentAlignment.TopCenter
         ' 
-        ' AITAlgorithmLabel
+        ' FullNameLabel
         ' 
-        Me.AITAlgorithmLabel.BackColor = Color.Transparent
-        Me.AITAlgorithmLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
-        Me.AITAlgorithmLabel.ForeColor = Color.White
-        Me.AITAlgorithmLabel.Location = New Point(1140, 3)
-        Me.AITAlgorithmLabel.Margin = New Padding(0)
-        Me.AITAlgorithmLabel.Name = "AITAlgorithmLabel"
-        Me.AITAlgorithmLabel.Size = New Size(230, 21)
-        Me.AITAlgorithmLabel.TabIndex = 8
-        Me.AITAlgorithmLabel.Text = "AIT Algorithm"
-        Me.AITAlgorithmLabel.TextAlign = ContentAlignment.MiddleLeft
+        Me.FullNameLabel.BackColor = Color.Transparent
+        Me.FullNameLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Me.FullNameLabel.ForeColor = Color.White
+        Me.FullNameLabel.Location = New Point(1140, 3)
+        Me.FullNameLabel.Margin = New Padding(0)
+        Me.FullNameLabel.Name = "FullNameLabel"
+        Me.FullNameLabel.Size = New Size(230, 21)
+        Me.FullNameLabel.TabIndex = 8
+        Me.FullNameLabel.Text = "User Name"
+        Me.FullNameLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' AverageSGMessageLabel
         ' 
@@ -1450,7 +1449,7 @@ Partial Class Form1
         Me.SplitContainer2.Panel1.Controls.Add(Me.TransmitterBatteryPercentLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.TransmitterBatteryPictureBox)
         Me.SplitContainer2.Panel1.Controls.Add(Me.PumpBatteryPictureBox)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.AITAlgorithmLabel)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.FullNameLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.RemainingInsulinUnits)
         Me.SplitContainer2.Panel1.Controls.Add(Me.InsulinLevelPictureBox)
         Me.SplitContainer2.Panel1.Controls.Add(Me.ActiveInsulinValue)
@@ -1520,7 +1519,6 @@ Partial Class Form1
         ' 
         ' SplitContainer3.Panel2
         ' 
-        Me.SplitContainer3.Panel2.Controls.Add(Me.FullNameLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.Last24HoursLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.TimeInRangeLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.TimeInRangeSummaryPercentCharLabel)
@@ -1540,13 +1538,14 @@ Partial Class Form1
         ' TimeInRangeLabel
         ' 
         Me.TimeInRangeLabel.Anchor = AnchorStyles.Top
+        Me.TimeInRangeLabel.AutoSize = True
         Me.TimeInRangeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.TimeInRangeLabel.ForeColor = Color.White
         Me.TimeInRangeLabel.Location = New Point(65, 39)
         Me.TimeInRangeLabel.Name = "TimeInRangeLabel"
-        Me.TimeInRangeLabel.Size = New Size(100, 23)
+        Me.TimeInRangeLabel.Size = New Size(100, 46)
         Me.TimeInRangeLabel.TabIndex = 33
-        Me.TimeInRangeLabel.Text = "Time in range"
+        Me.TimeInRangeLabel.Text = "24 Hour" & Environment.NewLine & "Time in range"
         Me.TimeInRangeLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' TimeInRangeSummaryPercentCharLabel
@@ -2574,18 +2573,6 @@ Partial Class Form1
         Me.ToolStripSpacer.Name = "ToolStripSpacer"
         Me.ToolStripSpacer.Size = New Size(0, 19)
         ' 
-        ' FullNameLabel
-        '
-        Me.FullNameLabel.Dock = DockStyle.Top
-        Me.FullNameLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
-        Me.FullNameLabel.ForeColor = Color.White
-        Me.FullNameLabel.Location = New Point(65, 10)
-        Me.FullNameLabel.Name = "FullNameLabel"
-        Me.FullNameLabel.Size = New Size(100, 23)
-        Me.FullNameLabel.TabIndex = 35
-        Me.FullNameLabel.Text = "User Name"
-        Me.FullNameLabel.TextAlign = ContentAlignment.MiddleCenter
-        ' 
         ' Form1
         ' 
         Me.AutoScaleDimensions = New SizeF(96.0F, 96.0F)
@@ -2723,7 +2710,6 @@ Partial Class Form1
     Friend WithEvents AboveHighLimitMessageLabel As Label
     Friend WithEvents AboveHighLimitValueLabel As Label
     Friend WithEvents ActiveInsulinValue As Label
-    Friend WithEvents AITAlgorithmLabel As Label
     Friend WithEvents AverageSGMessageLabel As Label
     Friend WithEvents AverageSGValueLabel As Label
     Friend WithEvents BannerStateButton As Button

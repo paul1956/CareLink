@@ -9,25 +9,25 @@ Imports DataGridViewColumnControls
 
 Public Class InitializeDialog
 
-    Private ReadOnly _aitLengths As New Dictionary(Of String, TimeSpan) From
+    Private ReadOnly _aitLengths As New Dictionary(Of String, Single) From
             {
-                {"2:00", New TimeSpan(2, 0, 0)},
-                {"2:15", New TimeSpan(2, 15, 0)},
-                {"2:30", New TimeSpan(2, 30, 0)},
-                {"2:45", New TimeSpan(2, 45, 0)},
-                {"3:00", New TimeSpan(3, 0, 0)},
-                {"3:15", New TimeSpan(3, 15, 0)},
-                {"3:30", New TimeSpan(3, 30, 0)},
-                {"3:45", New TimeSpan(3, 45, 0)},
-                {"4:00", New TimeSpan(4, 0, 0)},
-                {"4:15", New TimeSpan(4, 15, 0)},
-                {"4:30", New TimeSpan(4, 30, 0)},
-                {"4:45", New TimeSpan(4, 45, 0)},
-                {"5:00", New TimeSpan(5, 0, 0)},
-                {"5:15", New TimeSpan(5, 15, 0)},
-                {"5:30", New TimeSpan(5, 30, 0)},
-                {"5:45", New TimeSpan(5, 45, 0)},
-                {"6:00", New TimeSpan(6, 0, 0)}
+                {"2:00", 2},
+                {"2:15", 2.25},
+                {"2:30", 2.5},
+                {"2:45", 2.75},
+                {"3:00", 3},
+                {"3:15", 3.25},
+                {"3:30", 3.5},
+                {"3:45", 3.75},
+                {"4:00", 4},
+                {"4:15", 4.25},
+                {"4:30", 4.5},
+                {"4:45", 4.75},
+                {"5:00", 5},
+                {"5:15", 5.25},
+                {"5:30", 5.5},
+                {"5:45", 5.45},
+                {"6:00", 6}
             }
 
     Private ReadOnly _insulinTypesBindingSource As New BindingSource(
@@ -146,9 +146,21 @@ Public Class InitializeDialog
         If cell.Value.ToString = _midnight Then
             cell.ErrorText = ""
         Else
-            cell.ErrorText = $"Value must be {_midnight}"
-            Me.InitializeDataGridView.CurrentCell = cell
-            Me.DialogResult = DialogResult.None
+            With Me.InitializeDataGridView
+                If .RowCount = 12 Then
+                    cell.Value = _midnight
+                    cell.ErrorText = ""
+                    Dim buttonCell As DataGridViewDisableButtonCell = CType(.Rows(.RowCount - 1).Cells(NameOf(ColumnSave)), DataGridViewDisableButtonCell)
+                    buttonCell.ReadOnly = True
+                    buttonCell.Enabled = False
+                    .Enabled = False
+                    Me.OK_Button.Focus()
+                Else
+                    cell.ErrorText = $"Value must be {_midnight}"
+                    .CurrentCell = cell
+                    Me.DialogResult = DialogResult.None
+                End If
+            End With
         End If
     End Sub
 
@@ -163,12 +175,12 @@ Public Class InitializeDialog
             .DataSource = New BindingSource(_aitLengths, Nothing)
             .DisplayMember = "Key"
             .ValueMember = "Value"
-            If Me.CurrentUser.Ait Is Nothing Then
+            If Me.CurrentUser.PumpAit = 0 Then
                 .SelectedIndex = -1
             Else
                 _currentUserBackup = Me.CurrentUser.Clone
                 .Enabled = True
-                .SelectedIndex = .Items.IndexOfValue(Of String, TimeSpan)(CType(Me.CurrentUser.Ait, TimeSpan))
+                .SelectedIndex = .Items.IndexOfValue(Of String, Single)(CType(Me.CurrentUser.PumpAit, Single))
             End If
             .Enabled = True
             .Focus()
@@ -273,11 +285,11 @@ Public Class InitializeDialog
         cell.ErrorText = ""
         Me.DialogResult = DialogResult.OK
 
-        Dim selectedValue As TimeSpan = CType(Me.PumpAitComboBox.SelectedValue, TimeSpan)
-        Me.CurrentUser.Ait = selectedValue
+        Dim selectedValue As Single = CType(Me.PumpAitComboBox.SelectedValue, Single)
+        Me.CurrentUser.PumpAit = selectedValue
 
         Me.CurrentUser.InsulinTypeName = Me.InsulinTypeComboBox.Text
-        Me.CurrentUser.InsulinRealAit = CType(Me.InsulinTypeComboBox.SelectedValue, TimeSpan)
+        Me.CurrentUser.InsulinRealAit = CType(Me.InsulinTypeComboBox.SelectedValue, Single)
 
         Me.CurrentUser.UseAdvancedAitDecay = Me.UseAITAdvancedDecayCheckBox.CheckState
 

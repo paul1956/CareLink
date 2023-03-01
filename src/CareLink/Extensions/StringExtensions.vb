@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Runtime.CompilerServices
+Imports System.Text
 
 Public Module StringExtensions
 
@@ -91,6 +92,31 @@ Public Module StringExtensions
             Return source
         End If
         Return source.Substring(0, source.Length - trimString.Length)
+    End Function
+
+    ''' <summary>
+    ''' Convert all multiple " " with one " "
+    ''' </summary>
+    ''' <param name="Value"></param>
+    ''' <returns></returns>
+    <Extension>
+    Public Function TrimWhiteSpace(Value As String) As String
+        Dim sbOut As New StringBuilder()
+        If Not String.IsNullOrEmpty(Value) Then
+            Dim isWhiteSpace As Boolean = False
+            For i As Integer = 0 To Value.Length - 1
+                If Char.IsWhiteSpace(Value.Chars(i)) Then 'Comparison with WhiteSpace
+                    If Not isWhiteSpace Then 'Comparison with previous Char
+                        sbOut.Append(Value.Chars(i))
+                        isWhiteSpace = True
+                    End If
+                Else
+                    isWhiteSpace = False
+                    sbOut.Append(Value.Chars(i))
+                End If
+            Next i
+        End If
+        Return sbOut.ToString()
     End Function
 
     <Extension>

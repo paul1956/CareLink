@@ -39,7 +39,6 @@ Public Module PumpVariables
     Friend ReadOnly s_mealImage As Bitmap = My.Resources.MealImage
     Friend s_aboveHyperLimit As Single
     Friend s_activeInsulin As ActiveInsulinRecord
-    Friend s_activeInsulinIncrements As Integer
     Friend s_belowHypoLimit As Single
     Friend s_criticalLow As Single
     Friend s_filterJsonData As Boolean = True

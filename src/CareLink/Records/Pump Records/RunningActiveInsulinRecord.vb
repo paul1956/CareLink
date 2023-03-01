@@ -3,28 +3,29 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Class RunningActiveInsulinRecord
-    Private ReadOnly _doNotAdjust As Boolean = False
     Private ReadOnly _incrementDownCount As Integer
     Private _adjustmentValue As Single
     Private _incrementUpCount As Integer
 
-    Public Sub New(oaDateTime As OADate, initialInsulinLevel As Single, useAdvancedAITDecay As Boolean)
+    Public Sub New(oaDateTime As OADate, initialInsulinLevel As Single, currentUser As CurrentUserRecord)
         Me.OaDateTime = oaDateTime
         Me.EventDate = Date.FromOADate(oaDateTime)
-        Dim divisor As Double = If(useAdvancedAITDecay, 3.5, 3)
-        _incrementUpCount = CInt(Math.Ceiling(s_activeInsulinIncrements * (1 / divisor)))
-        _incrementDownCount = s_activeInsulinIncrements - _incrementUpCount
-        _adjustmentValue = initialInsulinLevel / s_activeInsulinIncrements
+
+        Dim divisor As Single
+        With currentUser
+            divisor = If(.UseAdvancedAitDecay = CheckState.Checked, .InsulinRealAit, .PumpAit)
+        End With
+        _incrementUpCount = CInt(Math.Ceiling(currentUser.GetActiveInsulinIncrements * (1 / divisor)))
+        _incrementDownCount = currentUser.GetActiveInsulinIncrements - _incrementUpCount
+        _adjustmentValue = initialInsulinLevel / currentUser.GetActiveInsulinIncrements
         Me.CurrentInsulinLevel = _adjustmentValue * _incrementDownCount
     End Sub
 
-    Public Property CurrentInsulinLevel As Single
     Public Property EventDate As Date
-
     Public Property OaDateTime As OADate
+    Public Property CurrentInsulinLevel As Single
 
     Friend Function Adjust() As RunningActiveInsulinRecord
-        If _doNotAdjust Then Return Me
         If Me.CurrentInsulinLevel > 0 Then
             If _incrementUpCount > 0 Then
                 _incrementUpCount -= 1
