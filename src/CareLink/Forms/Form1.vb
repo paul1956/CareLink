@@ -1382,7 +1382,7 @@ Public Class Form1
 #Region "Running Active Insulin Chart"
 
     Friend Sub InitializeActiveInsulinTabChart()
-        Me.TabPage02RunningIOB.Controls.Clear()
+        Me.SplitContainer1.Panel2.Controls.Clear()
 
         Me.ActiveInsulinChart = CreateChart(NameOf(ActiveInsulinChart))
         Dim activeInsulinChartArea As ChartArea = CreateChartArea(Me.ActiveInsulinChart)
@@ -1437,7 +1437,7 @@ Public Class Form1
         End With
 
         Me.ActiveInsulinChart.Titles.Add(Me.ActiveInsulinChartTitle)
-        Me.TabPage02RunningIOB.Controls.Add(Me.ActiveInsulinChart)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.ActiveInsulinChart)
         Application.DoEvents()
 
     End Sub

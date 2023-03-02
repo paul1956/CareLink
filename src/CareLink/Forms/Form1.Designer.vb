@@ -155,6 +155,7 @@ Partial Class Form1
         Me.TabControlPage1 = New TabControl()
         Me.TabPage01HomePage = New TabPage()
         Me.TabPage02RunningIOB = New TabPage()
+        Me.SplitContainer1 = New SplitContainer()
         Me.TabPage03TreatmentDetails = New TabPage()
         Me.TabPage04SummaryData = New TabPage()
         Me.TabPage05Insulin = New TabPage()
@@ -255,6 +256,9 @@ Partial Class Form1
         Me.SplitContainer3.SuspendLayout()
         Me.TabControlPage1.SuspendLayout()
         Me.TabPage01HomePage.SuspendLayout()
+        Me.TabPage02RunningIOB.SuspendLayout()
+        CType(Me.SplitContainer1, ComponentModel.ISupportInitialize).BeginInit()
+        Me.SplitContainer1.SuspendLayout()
         Me.TabPage04SummaryData.SuspendLayout()
         Me.TabPage05Insulin.SuspendLayout()
         Me.TableLayoutPanelInsulin.SuspendLayout()
@@ -1620,6 +1624,7 @@ Partial Class Form1
         Me.TabPage01HomePage.Text = "Summary" ' 
         ' TabPage02RunningIOB
         ' 
+        Me.TabPage02RunningIOB.Controls.Add(Me.SplitContainer1)
         Me.TabPage02RunningIOB.Location = New Point(4, 27)
         Me.TabPage02RunningIOB.Name = "TabPage02RunningIOB"
         Me.TabPage02RunningIOB.Padding = New Padding(3)
@@ -1627,6 +1632,19 @@ Partial Class Form1
         Me.TabPage02RunningIOB.TabIndex = 15
         Me.TabPage02RunningIOB.Text = "Running IOB"
         Me.TabPage02RunningIOB.UseVisualStyleBackColor = True
+        ' 
+        ' SplitContainer1
+        ' 
+        Me.SplitContainer1.Dock = DockStyle.Fill
+        Me.SplitContainer1.FixedPanel = FixedPanel.Panel1
+        Me.SplitContainer1.Location = New Point(0, 0)
+        Me.SplitContainer1.Name = "SplitContainer1"
+        Me.SplitContainer1.Orientation = Orientation.Horizontal
+        ' 
+        ' SplitContainer1.Panel2
+        ' 
+        Me.SplitContainer1.Size = New Size(1370, 631)
+        Me.SplitContainer1.SplitterDistance = 30
         ' 
         ' TabPage03TreatmentDetails
         ' 
@@ -2701,6 +2719,8 @@ Partial Class Form1
         Me.TabPageAllUsers.ResumeLayout(False)
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
+        CType(Me.SplitContainer1, ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitContainer1.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
     End Sub
@@ -2908,4 +2928,5 @@ Partial Class Form1
     Friend WithEvents ToolStripSpacer As ToolStripStatusLabel
     Friend WithEvents PumpAITLabel As Label
     Friend WithEvents FullNameLabel As Label
+    Friend WithEvents SplitContainer1 As SplitContainer
 End Class
