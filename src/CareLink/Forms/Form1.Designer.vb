@@ -156,6 +156,7 @@ Partial Class Form1
         Me.TabPage01HomePage = New TabPage()
         Me.TabPage02RunningIOB = New TabPage()
         Me.SplitContainer1 = New SplitContainer()
+        Me.TemporaryUseAdvanceAITDecayCheckBox = New CheckBox()
         Me.TabPage03TreatmentDetails = New TabPage()
         Me.TabPage04SummaryData = New TabPage()
         Me.TabPage05Insulin = New TabPage()
@@ -258,6 +259,7 @@ Partial Class Form1
         Me.TabPage01HomePage.SuspendLayout()
         Me.TabPage02RunningIOB.SuspendLayout()
         CType(Me.SplitContainer1, ComponentModel.ISupportInitialize).BeginInit()
+        Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
         Me.TabPage04SummaryData.SuspendLayout()
         Me.TabPage05Insulin.SuspendLayout()
@@ -1637,17 +1639,30 @@ Partial Class Form1
         ' 
         Me.SplitContainer1.Dock = DockStyle.Fill
         Me.SplitContainer1.FixedPanel = FixedPanel.Panel1
-        Me.SplitContainer1.Location = New Point(0, 0)
+        Me.SplitContainer1.Location = New Point(3, 3)
         Me.SplitContainer1.Name = "SplitContainer1"
         Me.SplitContainer1.Orientation = Orientation.Horizontal
         '
         ' SplitContainer1.Panel1
         ' 
+        Me.SplitContainer1.Panel1.Controls.Add(Me.TemporaryUseAdvanceAITDecayCheckBox)
         Me.SplitContainer1.Panel1.BackColor = Color.Black
         Me.SplitContainer1.Size = New Size(1370, 631)
         Me.SplitContainer1.SplitterDistance = 30
         Me.SplitContainer1.TabIndex = 0
         ' 
+        ' TemporaryUseAdvanceAITDecayCheckBox
+        ' 
+        Me.TemporaryUseAdvanceAITDecayCheckBox.AutoSize = True
+        Me.TemporaryUseAdvanceAITDecayCheckBox.BackColor = SystemColors.ControlText
+        Me.TemporaryUseAdvanceAITDecayCheckBox.ForeColor = SystemColors.ControlLightLight
+        Me.TemporaryUseAdvanceAITDecayCheckBox.Location = New Point(12, 6)
+        Me.TemporaryUseAdvanceAITDecayCheckBox.Name = "TemporaryUseAdvanceAITDecayCheckBox"
+        Me.TemporaryUseAdvanceAITDecayCheckBox.Size = New Size(149, 19)
+        Me.TemporaryUseAdvanceAITDecayCheckBox.TabIndex = 0
+        Me.TemporaryUseAdvanceAITDecayCheckBox.Text = "AIT Decay over 3 hours"
+        Me.TemporaryUseAdvanceAITDecayCheckBox.UseVisualStyleBackColor = False
+        '
         ' TabPage03TreatmentDetails
         ' 
         Me.TabPage03TreatmentDetails.Location = New Point(4, 27)
@@ -2644,6 +2659,11 @@ Partial Class Form1
         Me.SplitContainer3.ResumeLayout(False)
         Me.TabControlPage1.ResumeLayout(False)
         Me.TabPage01HomePage.ResumeLayout(False)
+        Me.TabPage02RunningIOB.ResumeLayout(False)
+        Me.SplitContainer1.Panel1.ResumeLayout(False)
+        Me.SplitContainer1.Panel1.PerformLayout()
+        CType(Me.SplitContainer1, ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitContainer1.ResumeLayout(False)
         Me.TabPage04SummaryData.ResumeLayout(False)
         Me.TabPage05Insulin.ResumeLayout(False)
         Me.TabPage05Insulin.PerformLayout()
@@ -2929,4 +2949,5 @@ Partial Class Form1
     Friend WithEvents PumpAITLabel As Label
     Friend WithEvents FullNameLabel As Label
     Friend WithEvents SplitContainer1 As SplitContainer
+    Friend WithEvents TemporaryUseAdvanceAITDecayCheckBox As CheckBox
 End Class

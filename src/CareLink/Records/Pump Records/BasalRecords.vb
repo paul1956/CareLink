@@ -28,25 +28,24 @@ Public Class BasalRecords
         Return _buffer.Count
     End Function
 
-    Friend Function GetSubTitle(Optional msg As String = "") As String
+    Friend Function GetSubTitle() As String
         Dim title As String = ""
         If InAutoMode Then
             Dim automodeState As String = s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.autoModeShieldState))
+            title = automodeState.ToTitle
             If automodeState = "SAFE_BASAL" Then
-                Dim spWorkMin As TimeSpan = TimeSpan.FromMinutes(CUInt(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.safeBasalDuration))))
-                title = $"{automodeState.ToTitle}, {spWorkMin:h\:mm} left."
-            Else
-                title = automodeState.ToTitle
+                Dim safeBasalDuration As UInteger = CUInt(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.safeBasalDuration)))
+                If safeBasalDuration > 0 Then
+                    Dim spWorkMin As TimeSpan = TimeSpan.FromMinutes(safeBasalDuration)
+                    title &= $", {spWorkMin:h\:mm} left."
+                End If
             End If
         Else
             If _buffer.Any Then
-                title = $"{_buffer.Last().activeBasalPattern} rate = {_buffer.Last().GetBasalPerHour}U Per Hour".TrimWhiteSpace
+                Return $"{_buffer.Last().activeBasalPattern} rate = {_buffer.Last().GetBasalPerHour}U Per Hour".TrimWhiteSpace
             End If
         End If
-        If String.IsNullOrWhiteSpace(msg) Then
-            Return title
-        End If
-        Return $"{title}, {msg}"
+        Return title
     End Function
 
     Friend Function ToList() As List(Of BasalRecord)

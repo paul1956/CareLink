@@ -14,8 +14,6 @@ Imports DataGridViewColumnControls
 
 Imports TableLayputPanelTop
 
-Imports ToolStripControls
-
 Public Class Form1
 
     Private ReadOnly _sgMiniDisplay As New BGMiniWindow(Me)
@@ -1276,6 +1274,16 @@ Public Class Form1
 
 #End Region ' Timer Events
 
+    Private Sub TemporaryUseAdvanceAITDecayCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles TemporaryUseAdvanceAITDecayCheckBox.CheckedChanged
+        If Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState = CheckState.Checked Then
+            Me.TemporaryUseAdvanceAITDecayCheckBox.Text = $"Advanced Decay, AIT will decay over {CurrentUser.InsulinRealAit} hours"
+        Else
+            Me.TemporaryUseAdvanceAITDecayCheckBox.Text = $"AIT will decay over {CurrentUser.PumpAit.ToHoursMinutes}"
+        End If
+        CurrentUser.UseAdvancedAitDecay = Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState
+        Me.UpdateActiveInsulinChart()
+    End Sub
+
 #End Region ' Events
 
 #Region "Initialize Charts"
@@ -1404,7 +1412,7 @@ Public Class Form1
         End With
         Me.ActiveInsulinChart.ChartAreas.Add(activeInsulinChartArea)
         Me.ActiveInsulinChartLegend = CreateChartLegend(NameOf(ActiveInsulinChartLegend))
-        Me.ActiveInsulinChartTitle = CreateTitle(CurrentUser.GetIobChartTitle,
+        Me.ActiveInsulinChartTitle = CreateTitle($"Running Insulin On Board (IOB)",
                                                  NameOf(ActiveInsulinChartTitle),
                                                  GetGraphLineColor("Active Insulin"))
         Me.ActiveInsulinActiveInsulinSeries = CreateSeriesActiveInsulin()
@@ -1543,12 +1551,12 @@ Public Class Form1
         End If
 
         Try
-
+            Me.TemporaryUseAdvanceAITDecayCheckBox.Checked = CurrentUser.UseAdvancedAitDecay = CheckState.Checked
             For Each s As Series In Me.ActiveInsulinChart.Series
                 s.Points.Clear()
             Next
             With Me.ActiveInsulinChart
-                .Titles(NameOf(ActiveInsulinChartTitle)).Text = CurrentUser.GetIobChartTitle
+                .Titles(NameOf(ActiveInsulinChartTitle)).Text = $"Running Insulin On Board (IOB) - {s_listOfManualBasal.GetSubTitle}"
                 .ChartAreas(NameOf(ChartArea)).UpdateChartAreaSgAxisX()
 
                 ' Order all markers by time
@@ -1918,7 +1926,7 @@ Public Class Form1
         End If
         Try
             Me.InitializeTreatmentMarkersChart()
-            Me.TreatmentMarkersChart.Titles(NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details {s_listOfManualBasal.GetSubTitle}"
+            Me.TreatmentMarkersChart.Titles(NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details - {s_listOfManualBasal.GetSubTitle}"
             Me.TreatmentMarkersChart.ChartAreas(NameOf(ChartArea)).UpdateChartAreaSgAxisX()
             Me.TreatmentMarkersChart.PlotTreatmentMarkers(Me.TreatmentMarkerTimeChangeSeries)
             Me.TreatmentMarkersChart.PlotSgSeries(HomePageMealRow)

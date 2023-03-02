@@ -389,7 +389,7 @@ Friend Module Form1UpdateHelpers
                 Select Case typeValue
                     Case "TEMP_TARGET"
                         Dim minutes As Integer = bannerStateRecord1.timeRemaining
-                        mainForm.TempTargetLabel.Text = $"Target 150   {New TimeSpan(0, minutes \ 60, minutes Mod 60).ToString.Substring(4)} hr"
+                        mainForm.TempTargetLabel.Text = $"Target 150  {minutes.ToHours} hr"
                         mainForm.TempTargetLabel.Visible = True
                     Case "BG_REQUIRED"
                     Case "DELIVERY_SUSPEND"

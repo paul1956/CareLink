@@ -187,6 +187,18 @@ Friend Module DateTimeExtensions
     End Function
 
     <Extension>
+    Public Function ToHours(minutes As Integer) As String
+        Return New TimeSpan(0, minutes \ 60, minutes Mod 60).ToString.Substring(4)
+    End Function
+
+    <Extension>
+    Public Function ToHoursMinutes(timeInHours As Single) As String
+        Dim hours As Integer = CInt(timeInHours)
+        Return $"{New TimeSpan(hours, CInt((timeInHours - hours) * 60), 0):h\:mm}"
+
+    End Function
+
+    <Extension>
     Public Function ToShortDateTimeString(dateValue As Date) As String
         Return $"{dateValue.ToShortDateString()} {dateValue.ToLongTimeString()}"
     End Function

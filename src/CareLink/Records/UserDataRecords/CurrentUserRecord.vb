@@ -57,17 +57,7 @@ Public Class CurrentUserRecord
 
     Public Function GetPumpAitString() As String
         Dim hours As Integer = CInt(Me.PumpAit)
-        Return $"Pump AIT {New TimeSpan(hours, CInt((Me.PumpAit - hours) * 60), 0):h\:mm}"
-    End Function
-
-    Public Function GetIobChartTitle() As String
-        Dim msg As String
-        If CurrentUser.UseAdvancedAitDecay = CheckState.Checked Then
-            msg = $"Advanced Decay, AIT will Decay over {Me.InsulinRealAit} hours"
-        Else
-            msg = $"AIT will Decay over {Me.PumpAit} hours"
-        End If
-        Return $"Running Insulin On Board (IOB) {s_listOfManualBasal.GetSubTitle(msg)}"
+        Return $"Pump AIT {Me.PumpAit.ToHoursMinutes}"
     End Function
 
 End Class
