@@ -1640,11 +1640,13 @@ Partial Class Form1
         Me.SplitContainer1.Location = New Point(0, 0)
         Me.SplitContainer1.Name = "SplitContainer1"
         Me.SplitContainer1.Orientation = Orientation.Horizontal
+        '
+        ' SplitContainer1.Panel1
         ' 
-        ' SplitContainer1.Panel2
-        ' 
+        Me.SplitContainer1.Panel1.BackColor = Color.Black
         Me.SplitContainer1.Size = New Size(1370, 631)
         Me.SplitContainer1.SplitterDistance = 30
+        Me.SplitContainer1.TabIndex = 0
         ' 
         ' TabPage03TreatmentDetails
         ' 
@@ -2719,8 +2721,6 @@ Partial Class Form1
         Me.TabPageAllUsers.ResumeLayout(False)
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
-        CType(Me.SplitContainer1, ComponentModel.ISupportInitialize).EndInit()
-        Me.SplitContainer1.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
     End Sub
