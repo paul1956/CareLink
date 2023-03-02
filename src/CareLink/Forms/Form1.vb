@@ -1276,9 +1276,9 @@ Public Class Form1
 
     Private Sub TemporaryUseAdvanceAITDecayCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles TemporaryUseAdvanceAITDecayCheckBox.CheckedChanged
         If Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState = CheckState.Checked Then
-            Me.TemporaryUseAdvanceAITDecayCheckBox.Text = $"Advanced Decay, AIT will decay over {CurrentUser.InsulinRealAit} hours"
+            Me.TemporaryUseAdvanceAITDecayCheckBox.Text = $"Advanced Decay, AIT will decay over {CurrentUser.InsulinRealAit} hours while using {CurrentUser.InsulinTypeName}"
         Else
-            Me.TemporaryUseAdvanceAITDecayCheckBox.Text = $"AIT will decay over {CurrentUser.PumpAit.ToHoursMinutes}"
+            Me.TemporaryUseAdvanceAITDecayCheckBox.Text = $"AIT will decay over {CurrentUser.PumpAit.ToHoursMinutes} while using {CurrentUser.InsulinTypeName}"
         End If
         CurrentUser.UseAdvancedAitDecay = Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState
         Me.UpdateActiveInsulinChart()
