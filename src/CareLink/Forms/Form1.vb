@@ -16,10 +16,9 @@ Imports TableLayputPanelTop
 
 Public Class Form1
 
-    Private ReadOnly _sgMiniDisplay As New BGMiniWindow(Me)
     Private ReadOnly _calibrationToolTip As New ToolTip()
-
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
+    Private ReadOnly _sgMiniDisplay As New BGMiniWindow(Me)
     Private ReadOnly _updatingLock As New Object
     Private _activeInsulinChartAbsoluteRectangle As RectangleF = RectangleF.Empty
     Private _formScale As New SizeF(1.0F, 1.0F)
@@ -34,6 +33,8 @@ Public Class Form1
 
     Public Property Initialized As Boolean = False
 
+    Public ReadOnly Property LoginDialog As New LoginForm1
+
     Public Property Client As CareLinkClient
         Get
             Return Me.LoginDialog?.Client
@@ -42,8 +43,6 @@ Public Class Form1
             Me.LoginDialog.Client = value
         End Set
     End Property
-
-    Public ReadOnly Property LoginDialog As New LoginForm1
 
 #Region "Pump Data"
 
@@ -77,27 +76,28 @@ Public Class Form1
     Public WithEvents ActiveInsulinActiveInsulinSeries As Series
     Public WithEvents ActiveInsulinAutoCorrectionSeries As Series
     Public WithEvents ActiveInsulinBasalSeries As Series
-    Public WithEvents ActiveInsulinSgSeries As Series
     Public WithEvents ActiveInsulinMarkerSeries As Series
     Public WithEvents ActiveInsulinMinBasalSeries As Series
+    Public WithEvents ActiveInsulinSgSeries As Series
     Public WithEvents ActiveInsulinTimeChangeSeries As Series
 
     Public WithEvents SummaryAutoCorrectionSeries As Series
     Public WithEvents SummaryBasalSeries As Series
-    Public WithEvents SummarySgSeries As Series
     Public WithEvents SummaryHighLimitSeries As Series
     Public WithEvents SummaryLowLimitSeries As Series
     Public WithEvents SummaryMarkerSeries As Series
     Public WithEvents SummaryMinBasalSeries As Series
+    Public WithEvents SummarySgSeries As Series
+    Public WithEvents SummaryTargetSeries As Series
     Public WithEvents SummaryTimeChangeSeries As Series
 
     Public WithEvents TimeInRangeSeries As New Series
 
     Public WithEvents TreatmentMarkerAutoCorrectionSeries As Series
     Public WithEvents TreatmentMarkerBasalSeries As Series
-    Public WithEvents TreatmentMarkerSgSeries As Series
     Public WithEvents TreatmentMarkerMarkersSeries As Series
     Public WithEvents TreatmentMarkerMinBasalSeries As Series
+    Public WithEvents TreatmentMarkerSgSeries As Series
     Public WithEvents TreatmentMarkerTimeChangeSeries As Series
 
 #End Region
@@ -568,7 +568,7 @@ Public Class Form1
             End If
 
             Select Case result.Series.Name
-                Case HighLimitSeriesName, LowLimitSeriesName
+                Case HighLimitSeriesName, LowLimitSeriesName, TargetSeriesName
                     Me.CursorPanel.Visible = False
                 Case MarkerSeriesName, BasalSeriesNameName
                     Dim markerTag() As String = currentDataPoint.Tag.ToString.Split(":"c)
@@ -1308,9 +1308,10 @@ Public Class Form1
         Me.SummaryBasalSeries = CreateSeriesBasal(BasalSeriesNameName, Me.SummaryChartLegend, "Basal Series", AxisType.Secondary)
         Me.SummaryMinBasalSeries = CreateSeriesBasal(MinBasalSeriesName, Me.SummaryChartLegend, "Min Basal", AxisType.Secondary)
 
-        Me.SummaryHighLimitSeries = CreateSeriesLimits(Me.SummaryChartLegend, HighLimitSeriesName)
+        Me.SummaryHighLimitSeries = CreateSeriesLimitsAndTarget(Me.SummaryChartLegend, HighLimitSeriesName)
+        Me.SummaryTargetSeries = CreateSeriesLimitsAndTarget(Me.SummaryChartLegend, TargetSeriesName)
         Me.SummarySgSeries = CreateSeriesSg(Me.SummaryChartLegend)
-        Me.SummaryLowLimitSeries = CreateSeriesLimits(Me.SummaryChartLegend, LowLimitSeriesName)
+        Me.SummaryLowLimitSeries = CreateSeriesLimitsAndTarget(Me.SummaryChartLegend, LowLimitSeriesName)
 
         Me.SummaryMarkerSeries = CreateSeriesWithoutVisibleLegend(AxisType.Secondary)
 
@@ -1329,6 +1330,7 @@ Public Class Form1
                 .Add(Me.SummaryMarkerSeries)
 
                 .Add(Me.SummaryHighLimitSeries)
+                .Add(Me.SummaryTargetSeries)
                 .Add(Me.SummaryLowLimitSeries)
 
                 .Add(Me.SummaryTimeChangeSeries)
@@ -1656,7 +1658,7 @@ Public Class Form1
             Application.DoEvents()
             Me.SummaryChart.PlotSgSeries(HomePageMealRow)
             Application.DoEvents()
-            Me.SummaryChart.PlotHighLowLimits()
+            Me.SummaryChart.PlotHighLowLimitsAndTargetSg()
             Application.DoEvents()
         Catch ex As Exception
             Stop
@@ -2115,6 +2117,10 @@ Public Class Form1
         End
     End Sub
 
+    Private Sub MenuOptions_DropDownOpening(sender As Object, e As EventArgs) Handles MenuOptions.DropDownOpening
+        Me.MenuOptionsEditPumpSettings.Enabled = Not String.IsNullOrWhiteSpace(CurrentUser?.UserName)
+    End Sub
+
     Private Sub UpdateNotifyIcon()
         Try
             Dim sg As Single = s_lastSgRecord.sg
@@ -2173,9 +2179,9 @@ Public Class Form1
                             s_lastBGTime = Now
                             s_lastBGDiff = diffSg
                         End If
-                        Me.LabelTrendValue.Text = diffSg.ToString(If(BgUnits = "MG_DL", "+0;-#", "+ 0.00;-#.00"), CultureInfo.InvariantCulture)
+                        Me.LabelTrendValue.Text = diffSg.ToString(If(BgUnits.StartsWith("MG", StringComparison.InvariantCultureIgnoreCase), "+0;-#", "+ 0.00;-#.00"), CultureInfo.InvariantCulture)
                         Me.LabelTrendValue.ForeColor = bgColor
-                        notStr.Append(diffSg.ToString(If(BgUnits = "MG_DL", "+0;-#", "+ 0.00;-#.00"), CultureInfo.InvariantCulture))
+                        notStr.Append(diffSg.ToString(If(BgUnits.StartsWith("MG", StringComparison.InvariantCultureIgnoreCase), "+0;-#", "+ 0.00;-#.00"), CultureInfo.InvariantCulture))
                     End If
                     notStr.Append(Environment.NewLine)
                     notStr.Append("Active ins. ")

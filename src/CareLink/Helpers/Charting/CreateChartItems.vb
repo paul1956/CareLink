@@ -12,6 +12,7 @@ Friend Module CreateChartItems
     Friend Const AutoCorrectionSeriesName As String = NameOf(AutoCorrectionSeriesName)
     Friend Const BasalSeriesNameName As String = NameOf(BasalSeriesNameName)
     Friend Const HighLimitSeriesName As String = NameOf(HighLimitSeriesName)
+    Friend Const TargetSeriesName As String = NameOf(TargetSeriesName)
     Friend Const LowLimitSeriesName As String = NameOf(LowLimitSeriesName)
     Friend Const MarkerSeriesName As String = NameOf(MarkerSeriesName)
     Friend Const MinBasalSeriesName As String = NameOf(MinBasalSeriesName)
@@ -222,16 +223,20 @@ Friend Module CreateChartItems
         Return s
     End Function
 
-    Friend Function CreateSeriesLimits(limitsLegend As Legend, seriesName As String) As Series
+    Friend Function CreateSeriesLimitsAndTarget(limitsLegend As Legend, seriesName As String) As Series
         Dim legendText As String
         Dim lineColor As Color
-        If seriesName.Equals(HighLimitSeriesName) Then
-            legendText = "High Limit"
-            lineColor = Color.Yellow
-        Else
-            legendText = "Low Limit"
-            lineColor = Color.Red
-        End If
+        Select Case seriesName
+            Case HighLimitSeriesName
+                legendText = "High Limit"
+                lineColor = Color.Yellow
+            Case LowLimitSeriesName
+                legendText = "Low Limit"
+                lineColor = Color.Red
+            Case Else
+                legendText = "SG Target"
+                lineColor = Color.Teal
+        End Select
 
         Dim s As Series = CreateSeriesBase(seriesName, legendText, 2, AxisType.Secondary)
         s.IsVisibleInLegend = False

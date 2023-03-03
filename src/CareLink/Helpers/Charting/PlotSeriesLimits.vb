@@ -20,9 +20,10 @@ Friend Module PlotSeriesLimits
     End Function
 
     <Extension>
-    Friend Sub PlotHighLowLimits(chart As Chart)
+    Friend Sub PlotHighLowLimitsAndTargetSg(chart As Chart)
         If s_listOfLimitRecords.Count = 0 Then Exit Sub
         Dim limitsIndexList() As Integer = GetLimitsList(s_listOfSGs.Count - 1)
+        Dim targetSG As Single = CurrentUser.CurrentTarget
         For Each sgListIndex As IndexClass(Of SgRecord) In s_listOfSGs.WithIndex()
             Dim sgOADateTime As OADate = sgListIndex.Value.OaDateTime()
             Try
@@ -31,12 +32,15 @@ Friend Module PlotSeriesLimits
                 If limitsHighValue <> 0 Then
                     chart.Series(HighLimitSeriesName).Points.AddXY(sgOADateTime, limitsHighValue)
                 End If
+                If targetSG <> 0 Then
+                    chart.Series(TargetSeriesName).Points.AddXY(sgOADateTime, targetSG)
+                End If
                 If limitsLowValue <> 0 Then
                     chart.Series(LowLimitSeriesName).Points.AddXY(sgOADateTime, limitsLowValue)
                 End If
             Catch ex As Exception
                 Stop
-                Throw New Exception($"{ex.DecodeException()} exception while plotting Limits in {NameOf(PlotHighLowLimits)}")
+                Throw New Exception($"{ex.DecodeException()} exception while plotting Limits in {NameOf(PlotHighLowLimitsAndTargetSg)}")
             End Try
         Next
     End Sub

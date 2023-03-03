@@ -8,10 +8,11 @@ Public Class CurrentUserRecord
     Public Sub New(userName As String)
         Me.UserName = userName
         Me.UseAdvancedAitDecay = CheckState.Indeterminate
+        Me.CurrentTarget = CSng(If(BgUnits.StartsWith("MG", StringComparison.InvariantCultureIgnoreCase), 120.0, 6.7))
     End Sub
 
     Public Property CarbRatios As New List(Of CarbRatioRecord)
-    Public Property CurrentTarget As Single = 0
+    Public Property CurrentTarget As Single
     Public Property InsulinRealAit As Single
     Public Property InsulinTypeName As String
     Public Property PumpAit As Single

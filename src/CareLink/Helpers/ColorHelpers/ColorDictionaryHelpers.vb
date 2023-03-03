@@ -11,10 +11,11 @@ Friend Module ColorDictionaryHelpers
                         {"Active Insulin", KnownColor.Lime},
                         {"Auto Correction", KnownColor.Aqua},
                         {"Basal Series", KnownColor.HotPink},
-                        {"Min Basal", KnownColor.LightYellow},
-                        {"SG Series", KnownColor.White},
                         {"High Limit", KnownColor.Yellow},
                         {"Low Limit", KnownColor.Red},
+                        {"Min Basal", KnownColor.LightYellow},
+                        {"SG Series", KnownColor.White},
+                        {"SG Target", KnownColor.Teal},
                         {"Time Change", KnownColor.White}
                     }
 
