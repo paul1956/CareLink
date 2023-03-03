@@ -11,6 +11,7 @@ Public Class CurrentUserRecord
     End Sub
 
     Public Property CarbRatios As New List(Of CarbRatioRecord)
+    Public Property CurrentTarget As Single = 0
     Public Property InsulinRealAit As Single
     Public Property InsulinTypeName As String
     Public Property PumpAit As Single
@@ -20,10 +21,11 @@ Public Class CurrentUserRecord
     Friend Function Clone() As CurrentUserRecord
 
         Return New CurrentUserRecord(Me.UserName) With {
-                .PumpAit = Me.PumpAit,
                 .CarbRatios = Me.CarbRatios,
+                .CurrentTarget = Me.CurrentTarget,
                 .InsulinRealAit = Me.InsulinRealAit,
                 .InsulinTypeName = Me.InsulinTypeName,
+                .PumpAit = Me.PumpAit,
                 .UseAdvancedAitDecay = Me.UseAdvancedAitDecay
             }
     End Function
@@ -35,18 +37,19 @@ Public Class CurrentUserRecord
     Public Overloads Function Equals(other As CurrentUserRecord) As Boolean Implements IEquatable(Of CurrentUserRecord).Equals
         Return other IsNot Nothing AndAlso
                EqualityComparer(Of List(Of CarbRatioRecord)).Default.Equals(Me.CarbRatios, other.CarbRatios) AndAlso
-               Me.PumpAit.Equals(other.PumpAit) AndAlso
+               Me.CurrentTarget.Equals(other.CurrentTarget) AndAlso
                Me.InsulinRealAit.Equals(other.InsulinRealAit) AndAlso
                Me.InsulinTypeName = other.InsulinTypeName AndAlso
+               Me.PumpAit.Equals(other.PumpAit) AndAlso
                Me.UseAdvancedAitDecay = other.UseAdvancedAitDecay AndAlso
                Me.UserName = other.UserName
     End Function
 
     Public Function GetActiveInsulinIncrements() As Integer
         If Me.UseAdvancedAitDecay = CheckState.Checked Then
-            Return CInt(Me.InsulinRealAit * 60 / 5)
+            Return CInt(Me.InsulinRealAit * 12)
         Else
-            Return CInt(Me.PumpAit * 60 / 5)
+            Return CInt(Me.PumpAit * 12)
         End If
 
     End Function

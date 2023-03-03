@@ -33,15 +33,28 @@ Public Class InitializeDialog
     Private ReadOnly _insulinTypesBindingSource As New BindingSource(
                 s_insulinTypes, Nothing)
 
+    Private ReadOnly _mgDlItems As New Dictionary(Of String, Single) From {
+                    {$"100 mg/dl", 100.0},
+                    {$"110 mg/dl", 110.0},
+                    {$"120 mg/dl", 120.0}
+                }
+
     Private ReadOnly _midday As String = New TimeOnly(12, 0).ToString(CurrentDateCulture)
+
     Private ReadOnly _midnight As String = New TimeOnly(0, 0).ToString(CurrentDateCulture)
+
+    Private ReadOnly _mmolLItems As New Dictionary(Of String, Single) From {
+                        {$"5.5 mmol/L", 5.5},
+                        {$"6.0 mmol/L", 6.0},
+                        {$"6.7 mmol/L", 6.7}
+                    }
 
     Private _currentUserBackup As CurrentUserRecord = Nothing
     Public Property CurrentUser As CurrentUserRecord
 
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         If _currentUserBackup Is Nothing Then
-            If MsgBox("If you select Cancel, the program will exit, Retry will allow editing.", MsgBoxStyle.RetryCancel, "Exit or Retry") = MsgBoxResult.Cancel Then
+            If MsgBox("If you select Cancel, the program will exit, Retry will allow editing.", MsgBoxStyle.RetryCancel, "Exit Or Retry") = MsgBoxResult.Cancel Then
                 End
             End If
             Me.PumpAitComboBox.Enabled = True
@@ -168,6 +181,26 @@ Public Class InitializeDialog
 
         Me.ColumnStart.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
         Me.ColumnEnd.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
+        Me.UseAITAdvancedDecayCheckBox.Text = $"Use Advanced Decay: Checking this box{Environment.NewLine}decays AIT to more closely match body."
+
+        With Me.TargetSgComboBox
+
+            If BgUnitsString = "mg/dl" Then
+                .DataSource = New BindingSource(_mgDlItems, Nothing)
+                If Me.CurrentUser.CurrentTarget = 0 Then
+                    Me.CurrentUser.CurrentTarget = _mgDlItems.Last.Value
+                End If
+            Else
+                .DataSource = New BindingSource(_mmolLItems, Nothing)
+                If Me.CurrentUser.CurrentTarget = 0 Then
+                    Me.CurrentUser.CurrentTarget = _mmolLItems.Last.Value
+                End If
+            End If
+            .Enabled = Not Is770G()
+            .DisplayMember = "Key"
+            .ValueMember = "Value"
+            .SelectedIndex = Me.TargetSgComboBox.Items.IndexOfValue(Of String, Single)(Me.CurrentUser.CurrentTarget)
+        End With
 
         Me.Text = $"Initialize CareLink{TmChar} For {Me.CurrentUser.UserName}"
 
@@ -194,7 +227,7 @@ Public Class InitializeDialog
                 .SelectedIndex = -1
             Else
                 .Enabled = True
-                .SelectedIndex = .Items.IndexOfKey(Of String, TimeSpan)(Me.CurrentUser.InsulinTypeName)
+                .SelectedIndex = .Items.IndexOfKey(Of String, InsulinActivationProperties)(Me.CurrentUser.InsulinTypeName)
             End If
         End With
 
@@ -289,11 +322,13 @@ Public Class InitializeDialog
         Me.CurrentUser.PumpAit = selectedValue
 
         Me.CurrentUser.InsulinTypeName = Me.InsulinTypeComboBox.Text
-        Me.CurrentUser.InsulinRealAit = CType(Me.InsulinTypeComboBox.SelectedValue, Single)
+        Me.CurrentUser.InsulinRealAit = CType(Me.InsulinTypeComboBox.SelectedValue, InsulinActivationProperties).AitHours
 
         Me.CurrentUser.UseAdvancedAitDecay = Me.UseAITAdvancedDecayCheckBox.CheckState
+        Me.CurrentUser.CurrentTarget = CType(Me.TargetSgComboBox.SelectedItem, KeyValuePair(Of String, Single)).Value
 
         Me.CurrentUser.CarbRatios.Clear()
+
         ' Save all carb ratios
         Dim rowIndex As Integer = 0
         For Each row As DataGridViewRow In Me.InitializeDataGridView.Rows

@@ -45,6 +45,8 @@ Partial Class InitializeDialog
         Me.InsulinTypeComboBox = New ComboBox()
         Me.InsulinTypeLabel = New Label()
         Me.InstructionsLabel = New Label()
+        Me.TargetSgComboBox = New ComboBox()
+        Me.TargetSgValueLabel = New Label()
         Me.TableLayoutPanel1.SuspendLayout()
         CType(Me.InitializeDataGridView, ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ErrorProvider1, ComponentModel.ISupportInitialize).BeginInit()
@@ -111,9 +113,9 @@ Partial Class InitializeDialog
         Me.UseAITAdvancedDecayCheckBox.Enabled = False
         Me.UseAITAdvancedDecayCheckBox.Location = New Point(11, 34)
         Me.UseAITAdvancedDecayCheckBox.Name = "UseAITAdvancedDecayCheckBox"
-        Me.UseAITAdvancedDecayCheckBox.Size = New Size(447, 19)
+        Me.UseAITAdvancedDecayCheckBox.Size = New Size(145, 19)
         Me.UseAITAdvancedDecayCheckBox.TabIndex = 2
-        Me.UseAITAdvancedDecayCheckBox.Text = "Use Advanced Decay: Checking this box decays AIT to more closely match body"
+        Me.UseAITAdvancedDecayCheckBox.Text = "Use Advanced Decay..."
         Me.UseAITAdvancedDecayCheckBox.UseVisualStyleBackColor = True
         ' 
         ' InitializeDataGridView
@@ -125,10 +127,10 @@ Partial Class InitializeDialog
         Me.InitializeDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.InitializeDataGridView.Columns.AddRange(New DataGridViewColumn() {Me.ColumnDeleteRow, Me.ColumnStart, Me.ColumnEnd, Me.ColumnNumericUpDown, Me.ColumnSave})
         Me.InitializeDataGridView.Enabled = False
-        Me.InitializeDataGridView.Location = New Point(14, 140)
+        Me.InitializeDataGridView.Location = New Point(14, 153)
         Me.InitializeDataGridView.Name = "InitializeDataGridView"
         Me.InitializeDataGridView.RowTemplate.Height = 25
-        Me.InitializeDataGridView.Size = New Size(481, 233)
+        Me.InitializeDataGridView.Size = New Size(481, 220)
         Me.InitializeDataGridView.TabIndex = 3
         ' 
         ' ColumnDeleteRow
@@ -191,15 +193,15 @@ Partial Class InitializeDialog
         Me.InsulinTypeComboBox.DropDownStyle = ComboBoxStyle.DropDownList
         Me.InsulinTypeComboBox.Enabled = False
         Me.InsulinTypeComboBox.FormattingEnabled = True
-        Me.InsulinTypeComboBox.Location = New Point(306, 5)
+        Me.InsulinTypeComboBox.Location = New Point(363, 5)
         Me.InsulinTypeComboBox.Name = "InsulinTypeComboBox"
-        Me.InsulinTypeComboBox.Size = New Size(181, 23)
+        Me.InsulinTypeComboBox.Size = New Size(132, 23)
         Me.InsulinTypeComboBox.TabIndex = 1
         ' 
         ' InsulinTypeLabel
         ' 
         Me.InsulinTypeLabel.AutoSize = True
-        Me.InsulinTypeLabel.Location = New Point(228, 9)
+        Me.InsulinTypeLabel.Location = New Point(266, 9)
         Me.InsulinTypeLabel.Name = "InsulinTypeLabel"
         Me.InsulinTypeLabel.Size = New Size(72, 15)
         Me.InsulinTypeLabel.TabIndex = 6
@@ -207,12 +209,28 @@ Partial Class InitializeDialog
         ' InstructionsLabel
         ' 
         Me.InstructionsLabel.AutoSize = True
-        Me.InstructionsLabel.Location = New Point(11, 62)
+        Me.InstructionsLabel.Location = New Point(7, 75)
         Me.InstructionsLabel.Name = "InstructionsLabel"
         Me.InstructionsLabel.Size = New Size(489, 75)
         Me.InstructionsLabel.TabIndex = 7
         Me.InstructionsLabel.Text = resources.GetString("InstructionsLabel.Text")
         ' 
+        ' TargetSgComboBox
+        ' 
+        Me.TargetSgComboBox.FormattingEnabled = True
+        Me.TargetSgComboBox.Location = New Point(363, 40)
+        Me.TargetSgComboBox.Name = "TargetSgComboBox"
+        Me.TargetSgComboBox.Size = New Size(132, 23)
+        Me.TargetSgComboBox.TabIndex = 8
+        Me.TargetSgComboBox.Text = "120" ' 
+        ' TargetSgValueLabel
+        ' 
+        Me.TargetSgValueLabel.AutoSize = True
+        Me.TargetSgValueLabel.Location = New Point(266, 44)
+        Me.TargetSgValueLabel.Name = "TargetSgValueLabel"
+        Me.TargetSgValueLabel.Size = New Size(90, 15)
+        Me.TargetSgValueLabel.TabIndex = 9
+        Me.TargetSgValueLabel.Text = "Target SG Value:" ' 
         ' InitializeDialog
         ' 
         Me.AcceptButton = Me.OK_Button
@@ -221,6 +239,8 @@ Partial Class InitializeDialog
         Me.AutoValidate = AutoValidate.EnableAllowFocusChange
         Me.CancelButton = Me.Cancel_Button
         Me.ClientSize = New Size(503, 430)
+        Me.Controls.Add(Me.TargetSgValueLabel)
+        Me.Controls.Add(Me.TargetSgComboBox)
         Me.Controls.Add(Me.InstructionsLabel)
         Me.Controls.Add(Me.InsulinTypeLabel)
         Me.Controls.Add(Me.InsulinTypeComboBox)
@@ -259,4 +279,6 @@ Partial Class InitializeDialog
     Friend WithEvents ErrorProvider1 As ErrorProvider
     Friend WithEvents InsulinTypeComboBox As ComboBox
     Friend WithEvents InstructionsLabel As Label
+    Friend WithEvents TargetSgValueLabel As Label
+    Friend WithEvents TargetSgComboBox As ComboBox
 End Class

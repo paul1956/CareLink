@@ -28,6 +28,10 @@ Friend Module Form1UpdateHelpers
         End Select
     End Function
 
+    Friend Function Is770G() As Boolean
+        Return s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.pumpModelNumber)) = "MMT-1880"
+    End Function
+
     Friend Sub SetCalloutVisibility(name As String)
         With s_calloutAnnotations(name)
             If .Visible Then

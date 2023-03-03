@@ -22,13 +22,13 @@ Public Module SystemConstants
     Friend Const TimeFormatTwelveHourWithoutMinutes As String = "h tt"
     Friend Const TmChar As String = ChrW(&H2122)
 
-    Friend ReadOnly s_insulinTypes As New Dictionary(Of String, Single) From
+    Friend ReadOnly s_insulinTypes As New Dictionary(Of String, InsulinActivationProperties) From
             {
-                {$"Humalog{RegisteredTrademark}", 4},
-                {$"Novolog{RegisteredTrademark}", 4},
-                {$"Generic (Insulin Lispro)", 4},
-                {$"FIASP{RegisteredTrademark}", 3},
-                {$"Lyumjev{RegisteredTrademark}", 3}
+                {$"Humalog{RegisteredTrademark}", New InsulinActivationProperties(8, 4)},
+                {$"Novolog{RegisteredTrademark}", New InsulinActivationProperties(8, 4)},
+                {$"Generic (Insulin Lispro)", New InsulinActivationProperties(9, 4)},
+                {$"FIASP{RegisteredTrademark}", New InsulinActivationProperties(4, 3)},
+                {$"Lyumjev{RegisteredTrademark}", New InsulinActivationProperties(3, 3)}
             }
 
     Public ReadOnly s_aitValues As New Dictionary(Of String, String) From {

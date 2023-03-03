@@ -11,14 +11,10 @@ Friend Class RunningActiveInsulinRecord
         Me.OaDateTime = oaDateTime
         Me.EventDate = Date.FromOADate(oaDateTime)
 
-        Dim divisor As Single
-        With currentUser
-            divisor = If(.UseAdvancedAitDecay = CheckState.Checked, .InsulinRealAit, .PumpAit)
-        End With
-        _incrementUpCount = CInt(Math.Ceiling(currentUser.GetActiveInsulinIncrements * (1 / divisor)))
+        _incrementUpCount = s_insulinTypes(currentUser.InsulinTypeName).UpCount
         _incrementDownCount = currentUser.GetActiveInsulinIncrements - _incrementUpCount
         _adjustmentValue = initialInsulinLevel / currentUser.GetActiveInsulinIncrements
-        Me.CurrentInsulinLevel = _adjustmentValue * _incrementDownCount
+        Me.CurrentInsulinLevel = _adjustmentValue
     End Sub
 
     Public Property EventDate As Date
