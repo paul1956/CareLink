@@ -46,7 +46,7 @@ Friend Module NotificationTabHelpers
             If innerJson.Count > 0 Then
                 tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22))
                 If notificationType.Key = "clearedNotifications" Then
-                    tableLayoutPanel2.BackColor = Color.LightGreen
+                    tableLayoutPanel2.BackColor = Color.Green
                     innerJson.Reverse()
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
                         tableLayoutPanel2.DisplayDataTableInDGV(

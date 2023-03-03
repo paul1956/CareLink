@@ -15,7 +15,7 @@ Friend Module ColorDictionaryHelpers
                         {"Low Limit", KnownColor.Red},
                         {"Min Basal", KnownColor.LightYellow},
                         {"SG Series", KnownColor.White},
-                        {"SG Target", KnownColor.Teal},
+                        {"SG Target", KnownColor.Green},
                         {"Time Change", KnownColor.White}
                     }
 

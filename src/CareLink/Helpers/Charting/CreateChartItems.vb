@@ -12,7 +12,7 @@ Friend Module CreateChartItems
     Friend Const AutoCorrectionSeriesName As String = NameOf(AutoCorrectionSeriesName)
     Friend Const BasalSeriesNameName As String = NameOf(BasalSeriesNameName)
     Friend Const HighLimitSeriesName As String = NameOf(HighLimitSeriesName)
-    Friend Const TargetSeriesName As String = NameOf(TargetSeriesName)
+    Friend Const TargetSgSeriesName As String = NameOf(TargetSgSeriesName)
     Friend Const LowLimitSeriesName As String = NameOf(LowLimitSeriesName)
     Friend Const MarkerSeriesName As String = NameOf(MarkerSeriesName)
     Friend Const MinBasalSeriesName As String = NameOf(MinBasalSeriesName)
@@ -236,7 +236,7 @@ Friend Module CreateChartItems
                 lineColor = Color.Red
             Case Else
                 legendText = "SG Target"
-                lineColor = Color.Teal
+                lineColor = Color.Green
                 boarderWidth = 4
         End Select
 
