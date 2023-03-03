@@ -84,6 +84,10 @@ Friend Module ColorDictionaryHelpers
         Return GraphColorDictionary(lineName).ToColor
     End Function
 
+    Public Function GetGraphLineContrastingColor(lineName As String) As Color
+        Return GraphColorDictionary(lineName).ToColor
+    End Function
+
     Public Sub UpdateColorDictionary(key As String, item As KnownColor)
         GraphColorDictionary(key) = item
     End Sub

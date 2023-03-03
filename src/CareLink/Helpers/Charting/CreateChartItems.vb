@@ -230,13 +230,13 @@ Friend Module CreateChartItems
         Select Case seriesName
             Case HighLimitSeriesName
                 legendText = "High Limit"
-                lineColor = Color.Yellow
+                lineColor = GetGraphLineColor("High Limit")
             Case LowLimitSeriesName
                 legendText = "Low Limit"
-                lineColor = Color.Red
+                lineColor = GetGraphLineColor("Low Limit")
             Case Else
                 legendText = "SG Target"
-                lineColor = Color.Green
+                lineColor = GetGraphLineColor("SG Target")
                 boarderWidth = 4
         End Select
 

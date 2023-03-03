@@ -96,8 +96,8 @@ Friend Module Form1LoginHelpers
     <Extension>
     Friend Sub UpdateHighLightInLastUpdateTime(statusLabel As ToolStripStatusLabel, highLight As Boolean)
         If highLight = True Then
-            statusLabel.ForeColor = Color.Red
-            statusLabel.BackColor = Color.Red.GetContrastingColor
+            statusLabel.ForeColor = GetGraphLineColor("High Limit")
+            statusLabel.BackColor = statusLabel.ForeColor.GetContrastingColor
         Else
             statusLabel.ForeColor = SystemColors.ControlText
             statusLabel.BackColor = SystemColors.Control
