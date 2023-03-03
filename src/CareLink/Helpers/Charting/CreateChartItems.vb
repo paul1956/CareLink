@@ -226,6 +226,7 @@ Friend Module CreateChartItems
     Friend Function CreateSeriesLimitsAndTarget(limitsLegend As Legend, seriesName As String) As Series
         Dim legendText As String
         Dim lineColor As Color
+        Dim boarderWidth As Integer = 2
         Select Case seriesName
             Case HighLimitSeriesName
                 legendText = "High Limit"
@@ -236,9 +237,10 @@ Friend Module CreateChartItems
             Case Else
                 legendText = "SG Target"
                 lineColor = Color.Teal
+                boarderWidth = 4
         End Select
 
-        Dim s As Series = CreateSeriesBase(seriesName, legendText, 2, AxisType.Secondary)
+        Dim s As Series = CreateSeriesBase(seriesName, legendText, boarderWidth, AxisType.Secondary)
         s.IsVisibleInLegend = False
         s.EmptyPointStyle.Color = Color.Transparent
         limitsLegend.CustomItems.Add(New LegendItem(legendText, GetGraphLineColor(legendText), ""))

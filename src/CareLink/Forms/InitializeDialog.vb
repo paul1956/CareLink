@@ -11,43 +11,33 @@ Public Class InitializeDialog
 
     Private ReadOnly _aitLengths As New Dictionary(Of String, Single) From
             {
-                {"2:00", 2},
-                {"2:15", 2.25},
-                {"2:30", 2.5},
-                {"2:45", 2.75},
-                {"3:00", 3},
-                {"3:15", 3.25},
-                {"3:30", 3.5},
-                {"3:45", 3.75},
-                {"4:00", 4},
-                {"4:15", 4.25},
-                {"4:30", 4.5},
-                {"4:45", 4.75},
-                {"5:00", 5},
-                {"5:15", 5.25},
-                {"5:30", 5.5},
-                {"5:45", 5.45},
+                {"2:00", 2}, {"2:15", 2.25}, {"2:30", 2.5}, {"2:45", 2.75},
+                {"3:00", 3}, {"3:15", 3.25}, {"3:30", 3.5}, {"3:45", 3.75},
+                {"4:00", 4}, {"4:15", 4.25}, {"4:30", 4.5}, {"4:45", 4.75},
+                {"5:00", 5}, {"5:15", 5.25}, {"5:30", 5.5}, {"5:45", 5.45},
                 {"6:00", 6}
             }
 
     Private ReadOnly _insulinTypesBindingSource As New BindingSource(
                 s_insulinTypes, Nothing)
 
-    Private ReadOnly _mgDlItems As New Dictionary(Of String, Single) From {
-                    {$"100 mg/dl", 100.0},
-                    {$"110 mg/dl", 110.0},
-                    {$"120 mg/dl", 120.0}
-                }
+    Private ReadOnly _mgDlItems As New Dictionary(Of String, Single) From
+            {
+                {$"100 mg/dl", 100.0},
+                {$"110 mg/dl", 110.0},
+                {$"120 mg/dl", 120.0}
+            }
 
     Private ReadOnly _midday As String = New TimeOnly(12, 0).ToString(CurrentDateCulture)
 
     Private ReadOnly _midnight As String = New TimeOnly(0, 0).ToString(CurrentDateCulture)
 
-    Private ReadOnly _mmolLItems As New Dictionary(Of String, Single) From {
-                        {$"5.6 mmol/L", 5.6},
-                        {$"6.1 mmol/L", 6.1},
-                        {$"6.7 mmol/L", 6.7}
-                    }
+    Private ReadOnly _mmolLItems As New Dictionary(Of String, Single) From
+            {
+                {$"5.6 mmol/L", 5.6},
+                {$"6.1 mmol/L", 6.1},
+                {$"6.7 mmol/L", 6.7}
+            }
 
     Private _currentUserBackup As CurrentUserRecord = Nothing
     Public Property CurrentUser As CurrentUserRecord
@@ -259,6 +249,9 @@ Public Class InitializeDialog
                         Dim numericCell As DataGridViewNumericUpDownCell = CType(.Cells(NameOf(ColumnNumericUpDown)), DataGridViewNumericUpDownCell)
                         numericCell.Value = value.CarbRatio
                         numericCell.ReadOnly = False
+                        buttonCell = CType(.Cells(NameOf(ColumnSave)), DataGridViewDisableButtonCell)
+                        buttonCell.ReadOnly = False
+                        buttonCell.Enabled = i.IsLast
                     End With
                 Next
                 Me.InitializeDataGridView.Enabled = True
