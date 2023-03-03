@@ -44,8 +44,8 @@ Public Class InitializeDialog
     Private ReadOnly _midnight As String = New TimeOnly(0, 0).ToString(CurrentDateCulture)
 
     Private ReadOnly _mmolLItems As New Dictionary(Of String, Single) From {
-                        {$"5.5 mmol/L", 5.5},
-                        {$"6.0 mmol/L", 6.0},
+                        {$"5.6 mmol/L", 5.6},
+                        {$"6.1 mmol/L", 6.1},
                         {$"6.7 mmol/L", 6.7}
                     }
 
