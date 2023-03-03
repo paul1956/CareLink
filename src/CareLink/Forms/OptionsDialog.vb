@@ -64,6 +64,7 @@ Public Class OptionsDialog
         Dim key As String = Me.ItemNameComboBox.SelectedText
         Dim saveIndex As Integer = Me.ItemNameComboBox.SelectedIndex
         UpdateColorDictionary(key, item)
+        Me.ItemNameComboBox.DataSource = Nothing
         Me.ItemNameComboBox.Items.Clear()
         Me.ItemNameComboBox.DataSource = GetGraphColorsBindingSource()
         Me.ItemNameComboBox.SelectedIndex = saveIndex
