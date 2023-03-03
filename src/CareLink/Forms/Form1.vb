@@ -1322,6 +1322,11 @@ Public Class Form1
 
         With Me.SummaryChart
             With .Series
+                .Add(Me.SummaryHighLimitSeries)
+                .Add(Me.SummaryTargetSeries)
+                .Add(Me.SummaryLowLimitSeries)
+                .Add(Me.SummaryTimeChangeSeries)
+
                 .Add(Me.SummaryAutoCorrectionSeries)
                 .Add(Me.SummaryBasalSeries)
                 .Add(Me.SummaryMinBasalSeries)
@@ -1329,11 +1334,6 @@ Public Class Form1
                 .Add(Me.SummarySgSeries)
                 .Add(Me.SummaryMarkerSeries)
 
-                .Add(Me.SummaryHighLimitSeries)
-                .Add(Me.SummaryTargetSeries)
-                .Add(Me.SummaryLowLimitSeries)
-
-                .Add(Me.SummaryTimeChangeSeries)
             End With
             With .Series(SgSeriesName).EmptyPointStyle
                 .BorderWidth = 4
@@ -1432,6 +1432,8 @@ Public Class Form1
 
         With Me.ActiveInsulinChart
             With .Series
+                .Add(Me.ActiveInsulinTimeChangeSeries)
+
                 .Add(Me.ActiveInsulinActiveInsulinSeries)
 
                 .Add(Me.ActiveInsulinAutoCorrectionSeries)
@@ -1440,7 +1442,6 @@ Public Class Form1
 
                 .Add(Me.ActiveInsulinSgSeries)
                 .Add(Me.ActiveInsulinMarkerSeries)
-                .Add(Me.ActiveInsulinTimeChangeSeries)
             End With
             .Series(SgSeriesName).EmptyPointStyle.BorderWidth = 4
             .Series(SgSeriesName).EmptyPointStyle.Color = Color.Transparent
@@ -1508,13 +1509,14 @@ Public Class Form1
 
         With Me.TreatmentMarkersChart
             With .Series
+                .Add(Me.TreatmentMarkerTimeChangeSeries)
+
                 .Add(Me.TreatmentMarkerAutoCorrectionSeries)
                 .Add(Me.TreatmentMarkerBasalSeries)
                 .Add(Me.TreatmentMarkerMinBasalSeries)
 
                 .Add(Me.TreatmentMarkerSgSeries)
                 .Add(Me.TreatmentMarkerMarkersSeries)
-                .Add(Me.TreatmentMarkerTimeChangeSeries)
             End With
             .Legends.Add(Me.TreatmentMarkersChartLegend)
             .Series(SgSeriesName).EmptyPointStyle.Color = Color.Transparent
