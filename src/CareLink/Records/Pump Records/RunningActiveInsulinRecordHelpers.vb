@@ -19,7 +19,9 @@ Friend Module RunningActiveInsulinRecordHelpers
         If start + length > myList.Count Then
             length = myList.Count - start
         End If
-        Return myList.GetRange(start, length).Sum(Function(i As RunningActiveInsulinRecord) i.CurrentInsulinLevel)
+        Dim sum As Single = myList.GetRange(start, length).Sum(Function(i As RunningActiveInsulinRecord) i.CurrentInsulinLevel)
+        If sum < 0 Then sum = 0
+        Return sum
     End Function
 
 End Module

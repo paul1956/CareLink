@@ -14,7 +14,7 @@ Friend Class RunningActiveInsulinRecord
         _incrementUpCount = s_insulinTypes(currentUser.InsulinTypeName).UpCount
         _incrementDownCount = currentUser.GetActiveInsulinIncrements - _incrementUpCount
         _adjustmentValue = initialInsulinLevel / currentUser.GetActiveInsulinIncrements
-        Me.CurrentInsulinLevel = _adjustmentValue
+        Me.CurrentInsulinLevel = _adjustmentValue * _incrementDownCount
     End Sub
 
     Public Property EventDate As Date
