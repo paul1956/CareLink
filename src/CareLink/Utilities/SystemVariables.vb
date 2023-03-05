@@ -5,6 +5,19 @@
 Friend Module SystemVariables
     Public s_allUserSettingsData As New CareLinkUserDataList
     Friend Property CurrentUser As CurrentUserRecord
+
+    Friend Property GraphColorDictionary As New Dictionary(Of String, KnownColor) From {
+                        {"Active Insulin", KnownColor.Lime},
+                        {"Auto Correction", KnownColor.Aqua},
+                        {"Basal Series", KnownColor.HotPink},
+                        {"High Limit", KnownColor.Yellow},
+                        {"Low Limit", KnownColor.Red},
+                        {"Min Basal", KnownColor.LightYellow},
+                        {"SG Series", KnownColor.White},
+                        {"SG Target", KnownColor.Green},
+                        {"Time Change", KnownColor.White}
+                    }
+
     Friend Property HomePageBasalRow As Single = 400
     Friend Property HomePageInsulinRow As Single = 342
     Friend Property HomePageMealRow As Single = 50
@@ -13,5 +26,4 @@ Friend Module SystemVariables
     Friend Property MaxBasalPerHour As Single
     Friend Property scalingNeeded As Boolean = Nothing
     Friend Property TreatmentInsulinRow As Single
-
 End Module

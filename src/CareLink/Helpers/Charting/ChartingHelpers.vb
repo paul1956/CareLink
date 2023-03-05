@@ -6,6 +6,10 @@ Imports System.Runtime.CompilerServices
 
 Friend Module ChartingHelpers
 
+    Public Function GetGraphLineColor(lineName As String) As Color
+        Return GraphColorDictionary(lineName).ToColor
+    End Function
+
     <Extension>
     Friend Function IsMinBasal(amount As Single) As Boolean
         Return Math.Abs(amount - 0.025) < 0.001

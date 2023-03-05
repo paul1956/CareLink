@@ -2,9 +2,36 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.IO
+
 Public Class OptionsDialog
 
     Private Property SaveGraphColorDictionary As Dictionary(Of String, KnownColor)
+
+    Private Shared Function GetContrastingKnownColor(knownClrBase As KnownColor) As KnownColor
+        Dim clrBase As Color = knownClrBase.ToColor
+        ' Y is the "brightness"
+        Dim y As Double = (0.299 * clrBase.R) + (0.587 * clrBase.G) + (0.114 * clrBase.B)
+        If y < 140 Then
+            Return KnownColor.White
+        Else
+            Return KnownColor.Black
+        End If
+    End Function
+
+    Public Shared Sub WriteColorDictionaryToFile()
+        Using fileStream As FileStream = File.OpenWrite(GetPathToGraphColorsFile(True))
+            Using sw As New StreamWriter(fileStream)
+                sw.WriteLine($"Key,ForegroundColor,BackgroundColor")
+                For Each kvp As KeyValuePair(Of String, KnownColor) In GraphColorDictionary
+                    Dim contrastingColor As KnownColor = GetContrastingKnownColor(kvp.Value)
+                    sw.WriteLine($"{kvp.Key},{kvp.Value},{contrastingColor}")
+                Next
+                sw.Flush()
+                sw.Close()
+            End Using
+        End Using
+    End Sub
 
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         Me.DialogResult = DialogResult.Cancel
@@ -37,7 +64,7 @@ Public Class OptionsDialog
             WriteColorDictionaryToFile()
             Application.Restart()
         Else
-            ColorDictionaryFromBackup(Me.SaveGraphColorDictionary)
+            GraphColorDictionary = Me.SaveGraphColorDictionary.Clone
         End If
 
         Form1.ServerUpdateTimer.Start()
@@ -48,9 +75,9 @@ Public Class OptionsDialog
 
     Private Sub OptionsDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Form1.ServerUpdateTimer.Stop()
-        ColorDictionaryBackup(Me.SaveGraphColorDictionary)
+        Me.SaveGraphColorDictionary = GraphColorDictionary.Clone
         Me.ItemNameComboBox.Items.Clear()
-        Me.ItemNameComboBox.DataSource = GetGraphColorsBindingSource()
+        Me.ItemNameComboBox.DataSource = New BindingSource(GraphColorDictionary, Nothing)
         Me.ItemNameComboBox.DisplayMember = "Key"
         Me.ItemNameComboBox.ValueMember = "Value"
 
@@ -62,13 +89,44 @@ Public Class OptionsDialog
         Dim item As KnownColor = Me.KnownColorsComboBox1.SelectedValue
         Dim key As String = Me.ItemNameComboBox.SelectedText
         Dim saveIndex As Integer = Me.ItemNameComboBox.SelectedIndex
-        UpdateColorDictionary(key, item)
+        GraphColorDictionary(key) = item
         Me.ItemNameComboBox.DataSource = Nothing
         Me.ItemNameComboBox.Items.Clear()
-        Me.ItemNameComboBox.DataSource = GetGraphColorsBindingSource()
+        Me.ItemNameComboBox.DataSource = New BindingSource(GraphColorDictionary, Nothing)
         Me.ItemNameComboBox.SelectedIndex = saveIndex
         Me.OK_Button.Enabled = True
         Application.DoEvents()
+    End Sub
+
+    Public Shared Sub GetColorDictionaryFromFile()
+
+        Using fileStream As FileStream = File.OpenRead(GetPathToGraphColorsFile(True))
+            Using sr As New StreamReader(fileStream)
+                sr.ReadLine()
+                While sr.Peek() <> -1
+                    Dim line As String = sr.ReadLine()
+                    If Not line.Any Then
+                        Continue While
+                    End If
+                    Dim splitLine() As String = line.Split(","c)
+                    Dim key As String = splitLine(0)
+                    If GraphColorDictionary.ContainsKey(key) Then
+                        GraphColorDictionary(key) = GetKnownColorFromName(splitLine(1))
+                    End If
+                End While
+                sr.Close()
+            End Using
+
+            fileStream.Close()
+        End Using
+    End Sub
+
+    Public Shared Sub UpdateColorDictionary(key As String, item As KnownColor)
+        GraphColorDictionary(key) = item
+    End Sub
+
+    Public Shared Sub UpdateColorDictionary(key As String, colorName As String)
+        GraphColorDictionary(key) = GetKnownColorFromName(colorName)
     End Sub
 
 End Class

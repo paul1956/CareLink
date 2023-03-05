@@ -168,10 +168,10 @@ Public Class Form1
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
         If File.Exists(GetPathToGraphColorsFile(True)) Then
-            GetColorDictionaryFromFile()
+            OptionsDialog.GetColorDictionaryFromFile()
             Me.MenuOptionsShowLegend.Checked = File.Exists(GetPathToShowLegendFile(True))
         Else
-            WriteColorDictionaryToFile()
+            OptionsDialog.WriteColorDictionaryToFile()
             File.Create(GetPathToShowLegendFile(True))
         End If
 

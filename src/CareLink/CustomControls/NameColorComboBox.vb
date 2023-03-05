@@ -44,7 +44,7 @@ Public Class NameColorComboBox
         Me.DrawMode = DrawMode.OwnerDrawFixed
         Me.DropDownStyle = ComboBoxStyle.DropDownList
         Me.Sorted = False
-        For Each item As KeyValuePair(Of String, KnownColor) In GetGraphColorsBindingSource()
+        For Each item As KeyValuePair(Of String, KnownColor) In GraphColorDictionary
             Me.Items.Add(item)
         Next
     End Sub
