@@ -30,7 +30,7 @@ This update has a UI to show all the available data and a visual version that mi
 03/04/2023
 
 ## What's New in this release
-New in 3.6.0.0
+New in 3.6.0.1
 - All Graphs have Legends and line colors are editable
 - All files associated with application are moved under MyDocuments/CareLink, the first install will move old files to new location. You can delete anything in that directory and if it's still needed it will be recreated. If you had old error files you should probably delete them.
 
