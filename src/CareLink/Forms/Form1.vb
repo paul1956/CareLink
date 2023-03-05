@@ -167,13 +167,11 @@ Public Class Form1
 
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
-        ' Prime know colors here
-        GetAllKnownColors()
         If File.Exists(GetPathToGraphColorsFile(True)) Then
-            ColorDictionaryFromFile()
+            GetColorDictionaryFromFile()
             Me.MenuOptionsShowLegend.Checked = File.Exists(GetPathToShowLegendFile(True))
         Else
-            ColorDictionaryToFile()
+            WriteColorDictionaryToFile()
             File.Create(GetPathToShowLegendFile(True))
         End If
 
@@ -575,7 +573,12 @@ Public Class Form1
                 Case MarkerSeriesName, BasalSeriesNameName
                     Dim markerTag() As String = currentDataPoint.Tag.ToString.Split(":"c)
                     If markerTag.Length <= 1 Then
-                        Me.CursorPanel.Visible = True
+                        If chart1.Name = NameOf(TreatmentMarkersChart) Then
+                            Dim callout As CalloutAnnotation = chart1.FindAnnotation(currentDataPoint)
+                            callout.BringToFront()
+                        Else
+                            Me.CursorPanel.Visible = True
+                        End If
                         Exit Sub
                     End If
                     markerTag(0) = markerTag(0).Trim

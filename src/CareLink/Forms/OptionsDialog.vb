@@ -12,7 +12,6 @@ Public Class OptionsDialog
     End Sub
 
     Private Sub ItemNameComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ItemNameComboBox.SelectedIndexChanged
-        If GetAllKnownColors().Count = 0 Then Exit Sub
         Me.KnownColorsComboBox1.SelectedIndex = GetIndexOfKnownColor(Me.ItemNameComboBox.SelectedValue)
         Me.UpdateForeground_Button.Enabled = False
         Application.DoEvents()
@@ -35,7 +34,7 @@ Public Class OptionsDialog
         Me.Cursor = Cursors.WaitCursor
         Application.DoEvents()
         If MsgBox("If you continue, changes will be saved and application will restart, if you select ""No"" changes will be lost.", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-            ColorDictionaryToFile()
+            WriteColorDictionaryToFile()
             Application.Restart()
         Else
             ColorDictionaryFromBackup(Me.SaveGraphColorDictionary)

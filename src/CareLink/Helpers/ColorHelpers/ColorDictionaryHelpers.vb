@@ -39,7 +39,7 @@ Friend Module ColorDictionaryHelpers
         GraphColorDictionary = SavedGraphColorDictionary.Clone
     End Sub
 
-    Public Sub ColorDictionaryFromFile()
+    Public Sub GetColorDictionaryFromFile()
 
         Using fileStream As FileStream = File.OpenRead(GetPathToGraphColorsFile(True))
             Using sr As New StreamReader(fileStream)
@@ -62,7 +62,7 @@ Friend Module ColorDictionaryHelpers
         End Using
     End Sub
 
-    Public Sub ColorDictionaryToFile()
+    Public Sub WriteColorDictionaryToFile()
         Using fileStream As FileStream = File.OpenWrite(GetPathToGraphColorsFile(True))
             Using sw As New StreamWriter(fileStream)
                 sw.WriteLine($"Key,ForegroundColor,BackgroundColor")
@@ -81,10 +81,6 @@ Friend Module ColorDictionaryHelpers
     End Function
 
     Public Function GetGraphLineColor(lineName As String) As Color
-        Return GraphColorDictionary(lineName).ToColor
-    End Function
-
-    Public Function GetGraphLineContrastingColor(lineName As String) As Color
         Return GraphColorDictionary(lineName).ToColor
     End Function
 

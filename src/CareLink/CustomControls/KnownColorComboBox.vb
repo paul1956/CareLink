@@ -5,12 +5,20 @@
 Public Class KnownColorComboBox
     Inherits ComboBox
 
+    Private ReadOnly _allKnownColors As New SortedDictionary(Of String, KnownColor)
+
     Public Sub New()
         MyBase.New
-        Me._allKnownColors = GetAllKnownColors()
+        Dim kColor As Color
+        For Each known As KnownColor In [Enum].GetValues(GetType(KnownColor))
+            If known = KnownColor.Transparent Then Continue For
+            kColor = Color.FromKnownColor(known)
+            If kColor.IsSystemColor OrElse _allKnownColors.ContainsValue(known) Then
+                Continue For
+            End If
+            _allKnownColors.Add(kColor.Name, known)
+        Next
     End Sub
-
-    Private ReadOnly Property _allKnownColors As New SortedDictionary(Of String, KnownColor)
 
     Public Shadows Property SelectedItem() As KeyValuePair(Of String, KnownColor)
         Get
@@ -43,7 +51,7 @@ Public Class KnownColorComboBox
         Me.DrawMode = DrawMode.OwnerDrawFixed
         Me.DropDownStyle = ComboBoxStyle.DropDownList
         Me.Sorted = True
-        For Each item As KeyValuePair(Of String, KnownColor) In Me._allKnownColors
+        For Each item As KeyValuePair(Of String, KnownColor) In _allKnownColors
             Me.Items.Add(item)
         Next
     End Sub
