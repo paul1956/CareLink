@@ -19,7 +19,7 @@ Friend Module CalloutHelpers
 
     <Extension>
     Private Sub AddOrUpdateAnnotation(treatmentChart As Chart, lastDataPoint As DataPoint, tagText As String)
-        Dim annotation As CalloutAnnotation = FindAnnotation(treatmentChart, lastDataPoint)
+        Dim annotation As CalloutAnnotation = treatmentChart.FindAnnotation(lastDataPoint)
         With annotation
             If annotation IsNot Nothing Then
                 Dim yValue As Double = lastDataPoint.YValues(0) - ((lastDataPoint.YValues(0) - annotation.AnchorDataPoint.YValues(0)) / 2)
@@ -38,7 +38,7 @@ Friend Module CalloutHelpers
         item.SmartLabelStyle.Enabled = True
         item.SmartLabelStyle.IsMarkerOverlappingAllowed = False
         item.SmartLabelStyle.IsOverlappedHidden = False
-        Dim movingDirection As LabelAlignmentStyles = LabelAlignmentStyles.Bottom Or LabelAlignmentStyles.BottomRight Or LabelAlignmentStyles.BottomLeft
+        Dim movingDirection As LabelAlignmentStyles = LabelAlignmentStyles.Bottom
         item.SmartLabelStyle.MovingDirection = movingDirection
         treatmentChart.Annotations.Add(item)
     End Sub
@@ -70,6 +70,7 @@ Friend Module CalloutHelpers
         treatmentChart.AddOrUpdateAnnotation(lastDataPoint, tagText)
     End Sub
 
+    <Extension>
     Friend Function FindAnnotation(treatmentChart As Chart, lastDataPoint As DataPoint) As CalloutAnnotation
         For Each e As IndexClass(Of Annotation) In treatmentChart.Annotations.ToList.WithIndex
             Dim annotation As CalloutAnnotation = CType(e.Value, CalloutAnnotation)
