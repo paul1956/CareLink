@@ -32,14 +32,17 @@ Public Class BasalRecords
         Dim title As String = ""
         If InAutoMode Then
             Dim automodeState As String = s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.autoModeShieldState))
-            title = automodeState.ToTitle
-            If automodeState = "SAFE_BASAL" Then
-                Dim safeBasalDuration As UInteger = CUInt(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.safeBasalDuration)))
-                If safeBasalDuration > 0 Then
-                    Dim spWorkMin As TimeSpan = TimeSpan.FromMinutes(safeBasalDuration)
-                    title &= $", {spWorkMin:h\:mm} left."
-                End If
-            End If
+            Select Case automodeState
+                Case "AUTO_BASAL"
+                    title = "AutoMode"
+                Case "SAFE_BASAL"
+                    title = automodeState.ToTitle
+                    Dim safeBasalDuration As UInteger = CUInt(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.safeBasalDuration)))
+                    If safeBasalDuration > 0 Then
+                        Dim spWorkMin As TimeSpan = TimeSpan.FromMinutes(safeBasalDuration)
+                        title &= $", {spWorkMin:h\:mm} left."
+                    End If
+            End Select
         Else
             If _buffer.Any Then
                 Return $"{_buffer.Last().activeBasalPattern} rate = {_buffer.Last().GetBasalPerHour}U Per Hour".TrimWhiteSpace
