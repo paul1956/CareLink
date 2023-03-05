@@ -3,7 +3,7 @@
 ## Requires
 
 - Visual Studio 2019 Version 17.3 or later, the community version can be download for free from Microsoft at
-https://visualstudio.microsoft.com/vs/community
+https://VisualStudio.Microsoft.com/vs/community
 
 ## Installation of Visual Studio
 
