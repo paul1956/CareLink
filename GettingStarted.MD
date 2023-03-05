@@ -1,4 +1,4 @@
-# Getting started with contribuating
+# Getting started with contributing
 
 ## Requires
 
@@ -14,7 +14,7 @@ Once you have download it, follow installation instructions and make sure you in
 To start you will need to make your own copy of the code, to do this open Visual Studio and on the right side of Start Menu select "Clone a Repo".
 
 Under Repo Location enter https://github.com/paul1956/CareLink.git and select Clone.
-Also clone https://github.com/kirsan31/winforms-datavisualization
+Also clone https://github.com/kirsan31/WinForms-DataVisualization
 
 After a few minutes Visual Studio will start with all the code loaded.
 

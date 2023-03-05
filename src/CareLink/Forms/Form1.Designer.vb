@@ -1681,7 +1681,7 @@ Partial Class Form1
         Me.TabPage04SummaryData.Padding = New Padding(3)
         Me.TabPage04SummaryData.Size = New Size(1376, 637)
         Me.TabPage04SummaryData.TabIndex = 0
-        Me.TabPage04SummaryData.Text = "Summary Data"
+        Me.TabPage04SummaryData.Text = "Summary Data As Table"
         Me.TabPage04SummaryData.UseVisualStyleBackColor = True
         ' 
         ' TabPage05Insulin
