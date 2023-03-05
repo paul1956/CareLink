@@ -39,6 +39,7 @@ A new Directory MyDocuments/CareLink/Settings contains a Settings File which is 
 - Pump AIT
 - Insulin Type from drop down List, currently limited to 5 popular pump insulin type open issue it yours is missing and one listed isn't close
 - A check box to allow selection of AIT decay algorithm (one uses pump value and an advanced one that is based on Insulin Type.
+- For 780 it allows setting you pump Target SG for 770G its fixed at 120
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Description
