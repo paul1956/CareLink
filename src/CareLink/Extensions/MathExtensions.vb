@@ -40,6 +40,16 @@ Friend Module MathExtensions
     End Function
 
     <Extension>
+    Public Function RoundTo025(originalValue As Single) As Decimal
+        Return CDec(originalValue).RoundTo025()
+    End Function
+
+    <Extension>
+    Public Function RoundTo025(originalValue As Decimal) As Decimal
+        Return Math.Floor(Math.Round(originalValue, 3, MidpointRounding.ToZero) / CDec(0.025)) * CDec(0.025)
+    End Function
+
+    <Extension>
     Public Function TryParseSingle(valueString As String, ByRef result As Single, Optional decimalDigits As Integer = 10, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Boolean
         If valueString.Contains(","c) AndAlso valueString.Contains("."c) Then
             Throw New Exception($"{NameOf(valueString)} = {valueString}, and contains both comma and period in Line {sourceLineNumber} in {memberName}.")

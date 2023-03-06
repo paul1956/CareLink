@@ -49,7 +49,7 @@ Public Class BasalRecord
     End Function
 
     Public Function GetBasal() As Single
-        Return Me.GetBasalPerHour / 12
+        Return (Me.GetBasalPerHour / 12).RoundTo025
     End Function
 
     Public Function GetBasalPerHour() As Single

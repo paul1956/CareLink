@@ -9,6 +9,7 @@ Friend Module TimeConstants
     Public ReadOnly s_1MinuteSpan As New TimeSpan(hours:=0, minutes:=1, seconds:=0)
     Public ReadOnly s_5MinuteSpan As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
     Public ReadOnly s_30MinuteSpan As New TimeSpan(0, 30, 0)
+    Public ReadOnly s_Minus1TickSpan As New TimeSpan(-1)
 
 #End Region ' TimeSpan Constants
 

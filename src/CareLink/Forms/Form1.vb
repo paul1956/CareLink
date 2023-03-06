@@ -857,7 +857,7 @@ Public Class Form1
             ' Set the background to red for negative values in the Balance column.
             If columnName.Equals(NameOf(SgRecord.sensorState), StringComparison.OrdinalIgnoreCase) Then
                 If e.Value.ToString <> "NO_ERROR_MESSAGE" Then
-                    .BackColor = Color.Yellow
+                    .ForeColor = Color.Red
                 End If
             End If
             dgv.dgvCellFormatting(e, NameOf(SgRecord.datetime))

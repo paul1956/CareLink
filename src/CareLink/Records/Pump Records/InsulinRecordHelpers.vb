@@ -6,6 +6,8 @@ Friend Module InsulinRecordHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
             NameOf(InsulinRecord.dateTimeAsString),
+            NameOf(InsulinRecord.effectiveDuration),
+            NameOf(InsulinRecord.id),
             NameOf(InsulinRecord.kind),
             NameOf(InsulinRecord.OAdateTime),
             NameOf(InsulinRecord.relativeOffset),
@@ -35,10 +37,11 @@ Friend Module InsulinRecordHelpers
     Private Sub DataGridViewView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If dgv.Columns(e.ColumnIndex).ValueType = GetType(Single) Then
-            Dim valueString As String = e.Value.ToString
+            Dim value As Single = CSng(e.Value)
 
-            If valueString <> "0" Then
-                e.Value = valueString.TruncateSingleString(3)
+            If value <> 0 AndAlso dgv.Columns(e.ColumnIndex).Name = NameOf(InsulinRecord.SafeMealReduction) Then
+                e.Value = value.RoundTo025.ToString
+                e.CellStyle.ForeColor = Color.OrangeRed
                 e.FormattingApplied = True
                 Exit Sub
             End If

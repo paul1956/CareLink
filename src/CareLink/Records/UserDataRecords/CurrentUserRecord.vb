@@ -55,6 +55,17 @@ Public Class CurrentUserRecord
 
     End Function
 
+    Public Function GetCarbRatio(forTime As TimeOnly) As Single
+
+        For Each carbRatio As CarbRatioRecord In Me.CarbRatios
+            If forTime.IsBetween(carbRatio.StartTime, carbRatio.EndTime.Add(s_Minus1TickSpan)) Then
+                Return carbRatio.CarbRatio
+            End If
+        Next
+        Stop
+        Throw UnreachableException(NameOf(forTime))
+    End Function
+
     Public Overrides Function GetHashCode() As Integer
         Return HashCode.Combine(Me.PumpAit, Me.CarbRatios, Me.InsulinRealAit, Me.InsulinTypeName, Me.UseAdvancedAitDecay, Me.UserName)
     End Function

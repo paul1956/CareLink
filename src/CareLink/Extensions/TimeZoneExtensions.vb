@@ -35,7 +35,11 @@ Friend Module TimeZoneExtensions
             s_systemTimeZones = TimeZoneInfo.GetSystemTimeZones.ToList
         End If
 
-        Dim possibleTimeZone As TimeZoneInfo
+        Dim possibleTimeZone As TimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(id)
+        If possibleTimeZone IsNot Nothing Then
+            Return possibleTimeZone
+        End If
+
         If id.Contains("Daylight") Then
             possibleTimeZone = s_systemTimeZones.Where(Function(t As TimeZoneInfo)
                                                            Return t.DaylightName = id

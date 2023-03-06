@@ -113,7 +113,7 @@ Friend Module CollectMarkersHelper
             MaxBasalPerDose = Math.Max(MaxBasalPerDose, basalDictionary.Values(i))
             i += 1
         End While
-        Return $"Max Basal/Hr ~ {MaxBasalPerHour.RoundSingle(3)} U"
+        Return $"Max Basal/Hr ~ {MaxBasalPerHour.RoundTo025} U"
     End Function
 
 End Module

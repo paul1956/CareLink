@@ -7,6 +7,7 @@ Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class InsulinRecord
     Private _dateTime As Date
+    Private _programmedFastAmount As Single
 
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
@@ -70,14 +71,31 @@ Public Class InsulinRecord
     <DisplayName("Programmed Fast Amount")>
     <Column(Order:=12, TypeName:=NameOf([Single]))>
     Public Property programmedFastAmount As Single
+        Get
+            Return _programmedFastAmount
+        End Get
+        Set
+            If {"RECOMMENDED", "UNDETERMINED"}.Contains(Me.activationType) Then
+                Dim meal As MealRecord = Nothing
+                If TryGetMealRecord(Me.index, meal) Then
+                    Dim cRatio As Single = CurrentUser.GetCarbRatio(TimeOnly.FromDateTime(meal.dateTime))
+                    Dim expectedBolus As Decimal = RoundTo025(meal.amount / cRatio)
+                    If expectedBolus > Value Then
+                        Me.SafeMealReduction = RoundTo025(expectedBolus - Value)
+                    End If
+                End If
+            End If
+            _programmedFastAmount = Value
+        End Set
+    End Property
 
     <DisplayName("Programmed Duration")>
     <Column(Order:=13, TypeName:=NameOf([Int32]))>
     Public Property programmedDuration As Integer
 
     <DisplayName("Delivered Fast Amount")>
-    <Column(Order:=14, TypeName:=NameOf([Single]))>
-    Public Property deliveredFastAmount As Single
+    <Column(Order:=14, TypeName:=NameOf([Decimal]))>
+    Public Property deliveredFastAmount As Decimal
 
     <DisplayName(NameOf(id))>
     <Column(Order:=15, TypeName:=NameOf([Int32]))>
@@ -87,12 +105,16 @@ Public Class InsulinRecord
     <Column(Order:=16, TypeName:=NameOf([Int32]))>
     Public Property effectiveDuration As Integer
 
+    <DisplayName("Safe Meal Reduction")>
+    <Column(Order:=17, TypeName:=NameOf([Single]))>
+    Public Property SafeMealReduction As Single
+
     <DisplayName("Completed")>
-    <Column(Order:=17, TypeName:=NameOf([Boolean]))>
+    <Column(Order:=18, TypeName:=NameOf([Boolean]))>
     Public Property completed As Boolean
 
     <DisplayName("Bolus Type")>
-    <Column(Order:=18, TypeName:=NameOf([String]))>
+    <Column(Order:=19, TypeName:=NameOf([String]))>
     Public Property bolusType As String
 
 End Class
