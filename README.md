@@ -27,9 +27,12 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-03/04/2023
+03/06/2023
 
 ## What's New in this release
+New in 3.6.0.3
+- Prevent Crash with setting up new users
+
 New in 3.6.0.2
 - Improve overlap of Callouts, if you don't like it hovering over a blocked callout will bring it to front.
 

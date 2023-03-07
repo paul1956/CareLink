@@ -9,12 +9,24 @@ Imports System.Text
 Public Module DictionaryExtensions
 
     <Extension>
-    Friend Function GetSingleValue(item As Dictionary(Of String, String), value As String) As Single
+    Friend Function GetSingleValue(item As Dictionary(Of String, String), key As String) As Single
         Dim returnString As String = ""
-        If item.TryGetValue(value, returnString) Then
+        If item.TryGetValue(key, returnString) Then
             Return returnString.ParseSingle()
         End If
         Return Single.NaN
+    End Function
+
+    <Extension>
+    Friend Function GetStringValueOrEmpty(item As Dictionary(Of String, String), Key As String) As String
+        If item Is Nothing Then
+            Return ""
+        End If
+        Dim returnString As String = ""
+        If item.TryGetValue(Key, returnString) Then
+            Return returnString
+        End If
+        Return ""
     End Function
 
     <Extension>

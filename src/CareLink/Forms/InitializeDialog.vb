@@ -40,6 +40,7 @@ Public Class InitializeDialog
             }
 
     Private _currentUserBackup As CurrentUserRecord = Nothing
+    Public Property RecentData As Dictionary(Of String, String)
     Public Property CurrentUser As CurrentUserRecord
 
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
@@ -186,7 +187,7 @@ Public Class InitializeDialog
                     Me.CurrentUser.CurrentTarget = _mmolLItems.Last.Value
                 End If
             End If
-            .Enabled = Not Is770G()
+            .Enabled = Not Is770G(Me.RecentData)
             .DisplayMember = "Key"
             .ValueMember = "Value"
             .SelectedIndex = Me.TargetSgComboBox.Items.IndexOfValue(Of String, Single)(Me.CurrentUser.CurrentTarget)

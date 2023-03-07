@@ -28,8 +28,8 @@ Friend Module Form1UpdateHelpers
         End Select
     End Function
 
-    Friend Function Is770G() As Boolean
-        Return s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.pumpModelNumber)) = "MMT-1880"
+    Friend Function Is770G(recentData As Dictionary(Of String, String)) As Boolean
+        Return recentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber)) = "MMT-1880"
     End Function
 
     Friend Sub SetCalloutVisibility(name As String)

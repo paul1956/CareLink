@@ -346,7 +346,10 @@ Public Class Form1
     Private Sub MenuOptionsEditPumpSettings_Click(sender As Object, e As EventArgs) Handles MenuOptionsEditPumpSettings.Click
         Dim contents As String = File.ReadAllText(GetPathToUserSettingsFile(My.Settings.CareLinkUserName))
         CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
-        Dim f As New InitializeDialog With {.CurrentUser = CurrentUser}
+        Dim f As New InitializeDialog With {
+            .CurrentUser = CurrentUser,
+            .RecentData = Me.RecentData
+            }
         If f.ShowDialog() = DialogResult.OK Then
             CurrentUser = f.CurrentUser
         End If
@@ -418,7 +421,7 @@ Public Class Form1
             PumpTimeZoneInfo = TimeZoneInfo.Local
             My.Settings.UseLocalTimeZone = True
         Else
-            PumpTimeZoneInfo = CalculateTimeZone(s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.clientTimeZoneName)))
+            PumpTimeZoneInfo = CalculateTimeZone(Me.RecentData(NameOf(ItemIndexes.clientTimeZoneName)))
             My.Settings.UseLocalTimeZone = False
         End If
         If saveRequired Then My.Settings.Save()
@@ -1882,7 +1885,7 @@ Public Class Form1
                 Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
                 Me.SensorTimeLeftLabel.Text = $"{s_sensorDurationHours} Hours"
             Case 0
-                Dim sensorDurationMinutes As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexes.sensorDurationMinutes), False, -1)
+                Dim sensorDurationMinutes As Integer = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexes.sensorDurationMinutes), False, -1)
                 Select Case sensorDurationMinutes
                     Case > 0
                         Me.SensorDaysLeftLabel.Text = "0"
@@ -1931,12 +1934,12 @@ Public Class Form1
             .Series(NameOf(TimeInRangeSeries))("PieStartAngle") = "270"
         End With
 
-        Dim averageSgStr As String = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.averageSG))
+        Dim averageSgStr As String = Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.averageSG))
         Me.AboveHighLimitValueLabel.Text = $"{s_aboveHyperLimit} %"
         Me.AverageSGMessageLabel.Text = $"Average SG in {BgUnitsString}"
         Me.AverageSGValueLabel.Text = If(BgUnitsString = "mg/dl", averageSgStr, averageSgStr.TruncateSingleString(2))
         Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
-        Me.SerialNumberLabel.Text = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.medicalDeviceSerialNumber))
+        Me.SerialNumberLabel.Text = Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.medicalDeviceSerialNumber))
         Me.TimeInRangeChartLabel.Text = s_timeInRange.ToString
         Me.TimeInRangeValueLabel.Text = $"{s_timeInRange} %"
 
@@ -1995,7 +1998,7 @@ Public Class Form1
         End SyncLock
         Debug.Print($"In {NameOf(UpdateAllTabPages)} exited SyncLock")
 
-        Dim rowValue As String = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.lastSGTrend))
+        Dim rowValue As String = Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastSGTrend))
         Dim arrows As String = Nothing
         If Trends.TryGetValue(rowValue, arrows) Then
             Me.LabelTrendArrows.Text = Trends(rowValue)
@@ -2017,8 +2020,8 @@ Public Class Form1
 
         Me.AboveHighLimitMessageLabel.Text = $"Above {s_limitHigh} {BgUnitsString}"
         Me.BelowLowLimitMessageLabel.Text = $"Below {s_limitLow} {BgUnitsString}"
-        Me.FullNameLabel.Text = $"{s_firstName} {s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.lastName))}"
-        Dim modelNumber As String = s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.pumpModelNumber))
+        Me.FullNameLabel.Text = $"{s_firstName} {Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastName))}"
+        Dim modelNumber As String = Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber))
         Me.ModelLabel.Text = modelNumber
         Me.PumpNameLabel.Text = GetPumpName(modelNumber)
         Me.ReadingsLabel.Text = $"{s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288 Readings"

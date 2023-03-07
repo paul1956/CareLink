@@ -49,9 +49,8 @@ Friend Module Form1LoginHelpers
                 End If
 
                 Dim userSettingsPath As String = GetPathToUserSettingsFile(My.Settings.CareLinkUserName)
-                SetUpCareLinkUser(MainForm, userSettingsPath)
-
                 MainForm.RecentData = MainForm.Client.GetRecentData(MainForm)
+                SetUpCareLinkUser(MainForm, userSettingsPath)
                 MainForm.ServerUpdateTimer.Interval = CInt(s_1MinutesInMilliseconds)
                 MainForm.ServerUpdateTimer.Start()
                 Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
@@ -127,7 +126,10 @@ Friend Module Form1LoginHelpers
             CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
         Else
             CurrentUser = New CurrentUserRecord(My.Settings.CareLinkUserName)
-            Dim f As New InitializeDialog With {.CurrentUser = CurrentUser}
+            Dim f As New InitializeDialog With {
+                .CurrentUser = CurrentUser,
+                .RecentData = mainForm.RecentData
+            }
             f.ShowDialog()
             CurrentUser = f.CurrentUser
         End If
