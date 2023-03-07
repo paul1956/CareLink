@@ -1,9 +1,4 @@
 {
-  "UserName": "TestFile",
-  "Ait": "02:15:00",
-  "InsulinTypeName": "Lyumjev\u00AE/FIASP\u00AE",
-  "InsulinRealAit": "03:00:00",
-  "UseAdvancedAitDecay": 1,
   "CarbRatios": [
     {
       "StartTime": "00:00:00",
@@ -15,5 +10,11 @@
       "EndTime": "00:00:00",
       "CarbRatio": 4.5
     }
-  ]
+  ],
+  "CurrentTarget": 120,
+  "InsulinRealAit": 3,
+  "InsulinTypeName": "Lyumjev\u00AE",
+  "PumpAit": 2.25,
+  "UseAdvancedAitDecay": 1,
+  "UserName": "TestFile"
 }

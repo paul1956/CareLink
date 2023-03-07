@@ -19,7 +19,7 @@ Public Class SgRecord
                 Me.datetimeAsString = innerJson(NameOf(Me.datetime))
                 Me.datetime = Me.datetimeAsString.ParseDate(NameOf(SgRecord.datetime))
                 Me.sensorState = innerJson(NameOf(sensorState))
-                Me.sg = innerJson(NameOf(sg)).ParseSingle()
+                Me.sg = innerJson(NameOf(sg)).ParseSingle(2)
                 Me.timeChange = Boolean.Parse(innerJson(NameOf(timeChange)))
             Else
                 Me.datetimeAsString = ""

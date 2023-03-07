@@ -206,7 +206,7 @@ Public Class Form1
     Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpening
         Me.MenuStartHereLoadSavedDataFile.Enabled = AnyMatchingFiles($"{ProjectName}*.json")
         Me.MenuStartHereSnapshotSave.Enabled = Me.RecentData IsNot Nothing AndAlso Me.RecentData.Count > 0
-        Me.MenuStartHereExceptionReportLoad.Visible = AnyMatchingFiles("SavedErrorReportName*.txt")
+        Me.MenuStartHereExceptionReportLoad.Visible = AnyMatchingFiles($"{SavedErrorReportBaseName}*.txt")
     End Sub
 
     Private Sub MenuStartHereExceptionReportLoad_Click(sender As Object, e As EventArgs) Handles MenuStartHereExceptionReportLoad.Click
@@ -865,7 +865,7 @@ Public Class Form1
             End If
             dgv.dgvCellFormatting(e, NameOf(SgRecord.datetime))
             If columnName.Equals(NameOf(SgRecord.sg), StringComparison.OrdinalIgnoreCase) Then
-                Dim sensorValue As Single = e.Value.ToString().ParseSingle()
+                Dim sensorValue As Single = e.Value.ToString().ParseSingle(2)
                 If Single.IsNaN(sensorValue) Then
                     .BackColor = Color.Gray
                 ElseIf sensorValue < s_limitLow Then
@@ -1758,20 +1758,20 @@ Public Class Form1
             Select Case marker.Value(NameOf(InsulinRecord.type))
                 Case "INSULIN"
                     Dim amountString As String = marker.Value(NameOf(InsulinRecord.deliveredFastAmount)).TruncateSingleString(3)
-                    s_totalDailyDose += amountString.ParseSingle()
+                    s_totalDailyDose += amountString.ParseSingle(3)
                     Select Case marker.Value(NameOf(InsulinRecord.activationType))
                         Case "AUTOCORRECTION"
-                            s_totalAutoCorrection += amountString.ParseSingle()
+                            s_totalAutoCorrection += amountString.ParseSingle(3)
                         Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
-                            s_totalManualBolus += amountString.ParseSingle()
+                            s_totalManualBolus += amountString.ParseSingle(3)
                     End Select
 
                 Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
-                    Dim amount As Single = marker.Value(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
+                    Dim amount As Single = marker.Value(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3).RoundTo025
                     s_totalBasal += amount
                     s_totalDailyDose += amount
                 Case "MEAL"
-                    s_totalCarbs += marker.Value("amount").ParseSingle
+                    s_totalCarbs += CInt(marker.Value("amount"))
             End Select
         Next
 

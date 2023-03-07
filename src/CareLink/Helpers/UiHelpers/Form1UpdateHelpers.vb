@@ -61,7 +61,7 @@ Friend Module Form1UpdateHelpers
             Case Else
                 TreatmentInsulinRow = CSng(MaxBasalPerDose + 0.025)
         End Select
-        TreatmentInsulinRow = TreatmentInsulinRow.RoundSingle(3)
+        TreatmentInsulinRow = TreatmentInsulinRow.RoundTo025
     End Sub
 
     Friend Sub UpdateDataTables(mainForm As Form1, recentData As Dictionary(Of String, String))

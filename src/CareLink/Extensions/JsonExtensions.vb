@@ -30,7 +30,7 @@ Public Module JsonExtensions
 
     <Extension>
     Private Function jsonToSingle(item As KeyValuePair(Of String, Object)) As Single
-        Return item.jsonItemAsString.ParseSingle()
+        Return item.jsonItemAsString.ParseSingle(10)
     End Function
 
     <Extension>
@@ -98,7 +98,7 @@ Public Module JsonExtensions
                             BgUnits = item.Value.ToString()
                             If Not s_unitsStrings.TryGetValue(BgUnits, BgUnitsString) Then
                                 Dim averageSGFloatAsString As String = rawJsonData(ItemIndexes.averageSGFloat).jsonItemAsString
-                                If averageSGFloatAsString.ParseSingle() > 40 Then
+                                If averageSGFloatAsString.ParseSingle(1) > 40 Then
                                     BgUnitsString = "mg/dl"
                                     BgUnits = "MG_DL"
                                 Else
@@ -180,7 +180,7 @@ Public Module JsonExtensions
 
     <Extension>
     Public Function scaleValue(item As KeyValuePair(Of String, String), decimalDigits As Integer) As String
-        Dim valueAsSingle As Single = item.Value.ParseSingle()
+        Dim valueAsSingle As Single = item.Value.ParseSingle(decimalDigits)
         Return valueAsSingle.scaleToString(decimalDigits)
     End Function
 

@@ -12,7 +12,7 @@ Public Module DictionaryExtensions
     Friend Function GetSingleValue(item As Dictionary(Of String, String), key As String) As Single
         Dim returnString As String = ""
         If item.TryGetValue(key, returnString) Then
-            Return returnString.ParseSingle()
+            Return returnString.ParseSingle(3)
         End If
         Return Single.NaN
     End Function
@@ -71,9 +71,9 @@ Public Module DictionaryExtensions
                                 propertyValue = row.Value.ParseDate($"{[property].Name}AsString")
                                 classObject.GetType.GetProperty([property].Name).SetValue(classObject, row.Value, Nothing)
                             Case NameOf([Single])
-                                propertyValue = row.Value.ParseSingle()
+                                propertyValue = row.Value.ParseSingle(10)
                             Case NameOf([Double])
-                                propertyValue = row.Value.ParseSingle()
+                                propertyValue = row.Value.ParseSingle(10)
                             Case NameOf([Decimal])
                                 propertyValue = Decimal.Parse(row.Value).RoundTo025
                             Case NameOf([Boolean]),

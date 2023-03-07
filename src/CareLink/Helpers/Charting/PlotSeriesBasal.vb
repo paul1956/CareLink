@@ -35,7 +35,7 @@ Friend Module PlotSeriesBasal
         End If
         If DrawFromBottom Then
             startX = markerOADate + s_twoHalfMinuteOADate
-            startY = amount.RoundSingle(3)
+            startY = amount.RoundTo025
             basalSeries.AddBasalPoint(startX, 0, lineColor, tag)
             basalSeries.AddBasalPoint(startX, startY, lineColor, tag)
             basalSeries.AddBasalPoint(startX, 0, lineColor, tag)

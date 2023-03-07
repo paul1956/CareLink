@@ -82,20 +82,22 @@ Friend Module PlotMarkers
                         markerSeriesPoints.AddCalibrationPoint(markerOADateTime, bgValue, entry)
                     Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
                         Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
-                        pageChart.Series(BasalSeriesNameName).PlotBasalSeries(markerOADateTime,
-                                         amount,
-                                         HomePageBasalRow,
-                                         HomePageInsulinRow,
-                                         GetGraphLineColor("Basal Series"),
-                                         False,
-                                         GetToolTip(entry("type"), amount))
+                        With pageChart.Series(BasalSeriesNameName)
+                            .PlotBasalSeries(markerOADateTime,
+                                             amount,
+                                             HomePageBasalRow,
+                                             HomePageInsulinRow,
+                                             GetGraphLineColor("Basal Series"),
+                                             False,
+                                             GetToolTip(entry("type"), amount))
+                        End With
                     Case "INSULIN"
                         Select Case entry(NameOf(InsulinRecord.activationType))
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
                                 With pageChart.Series(BasalSeriesNameName)
                                     .PlotBasalSeries(markerOADateTime,
-                                                     autoCorrection.ParseSingle,
+                                                     autoCorrection.ParseSingle(3),
                                                      HomePageBasalRow,
                                                      HomePageInsulinRow,
                                                      GetGraphLineColor("Auto Correction"),
@@ -179,13 +181,13 @@ Friend Module PlotMarkers
                     Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
                         Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
                         With treatmentChart.Series(BasalSeriesNameName)
-                            Call .PlotBasalSeries(markerOADateTime,
-                                                  amount,
-                                                  MaxBasalPerDose,
-                                                  TreatmentInsulinRow,
-                                                  GetGraphLineColor("Basal Series"),
-                                                  True,
-                                                  GetToolTip(entry("type"), amount))
+                            .PlotBasalSeries(markerOADateTime,
+                                             amount,
+                                             MaxBasalPerDose,
+                                             TreatmentInsulinRow,
+                                             GetGraphLineColor("Basal Series"),
+                                             True,
+                                             GetToolTip(entry("type"), amount))
 
                         End With
                     Case "INSULIN"
@@ -193,7 +195,13 @@ Friend Module PlotMarkers
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
                                 With treatmentChart.Series(BasalSeriesNameName)
-                                    .PlotBasalSeries(markerOADateTime, autoCorrection.ParseSingle(3), MaxBasalPerDose, TreatmentInsulinRow, GetGraphLineColor("Auto Correction"), True, $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
+                                    .PlotBasalSeries(markerOADateTime,
+                                                     autoCorrection.ParseSingle(3),
+                                                     MaxBasalPerDose,
+                                                     TreatmentInsulinRow,
+                                                     GetGraphLineColor("Auto Correction"),
+                                                     True,
+                                                     $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
                                 End With
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 If s_treatmentMarkerInsulinDictionary.TryAdd(markerOADateTime, TreatmentInsulinRow) Then

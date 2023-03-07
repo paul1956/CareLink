@@ -20,7 +20,7 @@ Friend Module MathExtensions
     End Function
 
     <Extension>
-    Public Function ParseSingle(valueString As String, Optional decimalDigits As Integer = 10) As Single
+    Public Function ParseSingle(valueString As String, decimalDigits As Integer) As Single
         If valueString Is Nothing Then
             Return Single.NaN
         End If
@@ -31,10 +31,10 @@ Friend Module MathExtensions
 
         Dim returnSingle As Single
         If Single.TryParse(valueString.Replace(",", "."), NumberStyles.Number, CurrentDataCulture, returnSingle) Then
-            Return returnSingle.RoundSingle(decimalDigits)
+            Return If(decimalDigits = 3, returnSingle.RoundTo025, returnSingle.RoundSingle(decimalDigits))
         End If
         If Single.TryParse(valueString, NumberStyles.Number, CurrentUICulture, returnSingle) Then
-            Return returnSingle.RoundSingle(decimalDigits)
+            Return If(decimalDigits = 3, returnSingle.RoundTo025, returnSingle.RoundSingle(decimalDigits))
         End If
         Return Single.NaN
     End Function
