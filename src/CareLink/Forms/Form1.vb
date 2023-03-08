@@ -33,8 +33,6 @@ Public Class Form1
 
     Public Property Initialized As Boolean = False
 
-    Public ReadOnly Property LoginDialog As New LoginForm1
-
     Public Property Client As CareLinkClient
         Get
             Return Me.LoginDialog?.Client
@@ -43,6 +41,8 @@ Public Class Form1
             Me.LoginDialog.Client = value
         End Set
     End Property
+
+    Public ReadOnly Property LoginDialog As New LoginForm1
 
 #Region "Pump Data"
 
@@ -99,8 +99,8 @@ Public Class Form1
     Public TreatmentMarkerMarkersSeries As Series
     Public TreatmentMarkerMinBasalSeries As Series
     Public TreatmentMarkerSgSeries As Series
-    Public TreatmentTargetSeries As Series
     Public TreatmentMarkerTimeChangeSeries As Series
+    Public TreatmentTargetSeries As Series
 
 #End Region
 
@@ -665,6 +665,16 @@ Public Class Form1
         Finally
             _inMouseMove = False
         End Try
+    End Sub
+
+    Private Sub TemporaryUseAdvanceAITDecayCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles TemporaryUseAdvanceAITDecayCheckBox.CheckedChanged
+        If Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState = CheckState.Checked Then
+            Me.TemporaryUseAdvanceAITDecayCheckBox.Text = $"Advanced Decay, AIT will decay over {CurrentUser.InsulinRealAit} hours while using {CurrentUser.InsulinTypeName}"
+        Else
+            Me.TemporaryUseAdvanceAITDecayCheckBox.Text = $"AIT will decay over {CurrentUser.PumpAit.ToHoursMinutes} while using {CurrentUser.InsulinTypeName}"
+        End If
+        CurrentUser.UseAdvancedAitDecay = Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState
+        Me.UpdateActiveInsulinChart()
     End Sub
 
 #Region "Post Paint Events"
@@ -1285,16 +1295,6 @@ Public Class Form1
 
 #End Region ' Timer Events
 
-    Private Sub TemporaryUseAdvanceAITDecayCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles TemporaryUseAdvanceAITDecayCheckBox.CheckedChanged
-        If Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState = CheckState.Checked Then
-            Me.TemporaryUseAdvanceAITDecayCheckBox.Text = $"Advanced Decay, AIT will decay over {CurrentUser.InsulinRealAit} hours while using {CurrentUser.InsulinTypeName}"
-        Else
-            Me.TemporaryUseAdvanceAITDecayCheckBox.Text = $"AIT will decay over {CurrentUser.PumpAit.ToHoursMinutes} while using {CurrentUser.InsulinTypeName}"
-        End If
-        CurrentUser.UseAdvancedAitDecay = Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState
-        Me.UpdateActiveInsulinChart()
-    End Sub
-
 #End Region ' Events
 
 #Region "Initialize Charts"
@@ -1398,9 +1398,9 @@ Public Class Form1
 
 #End Region ' Initialize Home Tab Charts
 
-#Region "Initialize Treatment Details Tab Charts"
+#Region "Initialize Chart Tabs"
 
-#Region "Running Active Insulin Chart"
+#Region "Initialize Active Insulin Chart"
 
     Friend Sub InitializeActiveInsulinTabChart()
         Me.SplitContainer1.Panel2.Controls.Clear()
@@ -1466,7 +1466,7 @@ Public Class Form1
 
     End Sub
 
-#End Region
+#End Region ' Initialize Active Insulin Chart
 
 #Region "Initialize Treatment Markers Chart"
 
@@ -1545,9 +1545,9 @@ Public Class Form1
 
     End Sub
 
-#End Region
+#End Region ' Initialize Treatment Markers Chart
 
-#End Region
+#End Region ' Initialize Chart Tabs
 
 #End Region ' Initialize Charts
 
