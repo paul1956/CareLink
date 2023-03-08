@@ -55,6 +55,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.100.3" />
     <PackageReference Include="DataGridViewDisableButtonColumnEx" Version="1.0.0.1" />
     <PackageReference Include="Microsoft.Exchange.WebServices.NETStandard" Version="2.0.0-beta3" />
     <PackageReference Include="Octokit" Version="5.0.0" />
@@ -109,10 +110,6 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Helpers\DataGrivView\" />
   </ItemGroup>
 
 </Project>
