@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.IO
 Imports System.Net.Http
 Imports Microsoft.Win32
 
@@ -37,13 +38,23 @@ Friend Module BrowserUtilities
             If progIdValue Is Nothing Then
                 Return False
             End If
+            Dim programFiles As String = Environment.ExpandEnvironmentVariables("%ProgramW6432%")
+            Dim programFilesX86 As String = Environment.ExpandEnvironmentVariables("%ProgramFiles(x86)%")
             Dim browserPath As String = Nothing
             If progIdValue.Contains("chrome", StringComparison.OrdinalIgnoreCase) Then
-                browserPath = "%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe"
+                If File.Exists($"{programFiles}\Google\Chrome\Application\chrome.exe") Then
+                    browserPath = $"{programFiles}\Google\Chrome\Application\chrome.exe"
+                Else
+                    browserPath = $"{programFilesX86}\Google\Chrome\Application\chrome.exe"
+                End If
             ElseIf progIdValue.Contains("Firefox", StringComparison.OrdinalIgnoreCase) Then
-                browserPath = "C:\Program Files\Mozilla Firefox\Firefox.exe"
+                browserPath = $"{programFiles}\Mozilla Firefox\Firefox.exe"
             ElseIf progIdValue.Contains("msEdgeHtm", StringComparison.OrdinalIgnoreCase) Then
-                browserPath = "%ProgramFiles(x86)%\Microsoft\Edge\Application\msEdge.exe"
+                If File.Exists($"{programFiles}\Microsoft\Edge\Application\msEdge.exe") Then
+                    browserPath = $"{programFiles}\Microsoft\Edge\Application\msEdge.exe"
+                Else
+                    browserPath = $"{programFilesX86}\Microsoft\Edge\Application\msEdge.exe"
+                End If
             End If
 
             If Not String.IsNullOrWhiteSpace(browserPath) Then
@@ -51,7 +62,7 @@ Friend Module BrowserUtilities
                 Process.Start(info)
             Else
                 Dim msgResult As MsgBoxResult = MsgBox($"Your default browser can't be found!, Please use any browser and navigate to {url}.",
-                                   MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation Or MsgBoxStyle.MsgBoxSetForeground)
+                                                       MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation Or MsgBoxStyle.MsgBoxSetForeground)
 
             End If
         End Using

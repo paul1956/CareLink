@@ -30,6 +30,9 @@ This update has a UI to show all the available data and a visual version that mi
 03/06/2023
 
 ## What's New in this release
+New in 3.6.0.4
+- Update Browser handling code
+
 New in 3.6.0.3
 - Prevent Crash with setting up new users
 
