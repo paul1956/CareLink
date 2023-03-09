@@ -82,7 +82,7 @@ Public Module StringExtensions
         Return $"{value?.ToString _
                                   .Replace("""", """""") _
                                   .Replace(",", "\,") _
-                                  .Replace(Environment.NewLine, $"\{Environment.NewLine}") _
+                                  .Replace(s_environmentNewLine, $"\{s_environmentNewLine}") _
                                   .Replace("\", "\\")},"
     End Function
 

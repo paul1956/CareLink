@@ -134,7 +134,7 @@ Public Module CareLinkClientHelpers
         Catch ex As Exception
             Dim message As String = $"__doConsent() failed with {ex.DecodeException()}"
             lastErrorMessage = message
-            Debug.Print(message.Replace(Environment.NewLine, ""))
+            Debug.Print(message.Replace(s_environmentNewLine, ""))
             Return New HttpResponseMessage(HttpStatusCode.Ambiguous)
         End Try
     End Function

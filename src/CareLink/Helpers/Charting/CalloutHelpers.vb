@@ -23,7 +23,7 @@ Friend Module CalloutHelpers
         With annotation
             If annotation IsNot Nothing Then
                 Dim yValue As Double = lastDataPoint.YValues(0) - ((lastDataPoint.YValues(0) - annotation.AnchorDataPoint.YValues(0)) / 2)
-                .Text = $"{tagText}{Environment.NewLine}{annotation.Text}"
+                .Text = $"{tagText}{s_environmentNewLine}{annotation.Text}"
                 .AnchorDataPoint.SetValueXY(lastDataPoint.XValue, yValue)
                 Exit Sub
             End If

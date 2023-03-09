@@ -136,7 +136,7 @@ Public Class CareLinkClient
             End If
         Catch ex As Exception
             message = $"__executeLoginProcedure failed with {ex.DecodeException()}"
-            Debug.Print(message.Replace(Environment.NewLine, ""))
+            Debug.Print(message.Replace(s_environmentNewLine, ""))
             _lastErrorMessage = ex.DecodeException()
         Finally
             _inLoginInProcess = False
@@ -279,7 +279,7 @@ Public Class CareLinkClient
                 response.Dispose()
             Catch ex As Exception
                 _lastErrorMessage = ex.DecodeException()
-                Debug.Print($"__getData() failed {_lastErrorMessage.Replace(Environment.NewLine, "")}, status {response?.StatusCode}")
+                Debug.Print($"__getData() failed {_lastErrorMessage.Replace(s_environmentNewLine, "")}, status {response?.StatusCode}")
             End Try
         End If
         Return jsonData
@@ -309,7 +309,7 @@ Public Class CareLinkClient
                 Debug.Print("No Internet Connection!")
                 Return response
             End If
-            Debug.Print($"__getLoginSession() failed {ex.DecodeException().Replace(Environment.NewLine, "")}")
+            Debug.Print($"__getLoginSession() failed {ex.DecodeException().Replace(s_environmentNewLine, "")}")
             Return response
         End Try
 

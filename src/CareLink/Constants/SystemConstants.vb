@@ -22,6 +22,8 @@ Public Module SystemConstants
     Friend Const TimeFormatTwelveHourWithoutMinutes As String = "h tt"
     Friend Const TmChar As String = ChrW(&H2122)
 
+    Friend ReadOnly s_environmentNewLine As String = Environment.NewLine
+
     Friend ReadOnly s_insulinTypes As New Dictionary(Of String, InsulinActivationProperties) From
             {
                 {$"Humalog{RegisteredTrademark}", New InsulinActivationProperties(8, 4)},

@@ -33,6 +33,8 @@ Public Class Form1
 
     Public Property Initialized As Boolean = False
 
+    Public ReadOnly Property LoginDialog As New LoginForm1
+
     Public Property Client As CareLinkClient
         Get
             Return Me.LoginDialog?.Client
@@ -41,8 +43,6 @@ Public Class Form1
             Me.LoginDialog.Client = value
         End Set
     End Property
-
-    Public ReadOnly Property LoginDialog As New LoginForm1
 
 #Region "Pump Data"
 
@@ -153,7 +153,7 @@ Public Class Form1
                 lastError = $"Moving {SavedSnapshotBaseName} files!"
                 MoveFiles(GetDirectoryForMyDocuments, GetDirectoryForProjectData, $"{SavedSnapshotBaseName}*.json")
             Catch ex As Exception
-                MsgBox($"{lastError}{Environment.NewLine}{ex.Message}", MsgBoxStyle.Critical, "Fatal Error")
+                MsgBox($"{lastError}{s_environmentNewLine}{ex.Message}", MsgBoxStyle.Critical, "Fatal Error")
                 End
             End Try
         End If

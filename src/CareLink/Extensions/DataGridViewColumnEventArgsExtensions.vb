@@ -32,7 +32,7 @@ Friend Module DataGridViewColumnEventArgsExtensions
             Else
                 title.Append(titleInTitleCase.Replace("Care Link", $"{ProjectName}{TmChar}"))
             End If
-            .HeaderText = title.TrimEnd(Environment.NewLine).ToString
+            .HeaderText = title.TrimEnd(s_environmentNewLine).ToString
             .DefaultCellStyle = cellStyle
             If .HeaderText <> "Record Number" Then
                 .SortMode = DataGridViewColumnSortMode.NotSortable

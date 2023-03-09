@@ -172,7 +172,7 @@ Public Class InitializeDialog
 
         Me.ColumnStart.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
         Me.ColumnEnd.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
-        Me.UseAITAdvancedDecayCheckBox.Text = $"Use Advanced Decay: Checking this box{Environment.NewLine}decays AIT to more closely match body."
+        Me.UseAITAdvancedDecayCheckBox.Text = $"Use Advanced Decay: Checking this box{s_environmentNewLine}decays AIT to more closely match body."
 
         With Me.TargetSgComboBox
 
