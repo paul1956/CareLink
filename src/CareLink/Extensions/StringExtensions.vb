@@ -126,11 +126,11 @@ Public Module StringExtensions
             If Not IsNumeric(s) Then
                 Return s
             End If
-            i = s.Length + 1
+            i = s.Length
             s &= CurrentDataCulture.NumberFormat.NumberDecimalSeparator
         End If
-        s &= New String("0"c, decimalDigits)
-        Return s.Substring(0, i + decimalDigits)
+        s &= New String("0"c, decimalDigits + 1)
+        Return s.Substring(0, i + decimalDigits + 1)
     End Function
 
 End Module
