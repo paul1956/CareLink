@@ -30,6 +30,9 @@ This update has a UI to show all the available data and a visual version that mi
 03/09/2023
 
 ## What's New in this release
+New 3.6.1.1
+- Form1 cleanup
+
 New in 3.6.1.0
 - It is now possible to export 4 of the tables to the Clipboard with and without headers and to Excel with all formatting intact.
     - Insulin

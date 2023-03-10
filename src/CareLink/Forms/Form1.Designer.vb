@@ -1054,15 +1054,15 @@ Partial Class Form1
         Me.DgvInsulin.ReadOnly = True
         Me.DgvInsulin.RowTemplate.Height = 25
         Me.DgvInsulin.SelectionMode = DataGridViewSelectionMode.CellSelect
-        Me.DgvInsulin.Size = New Size(1358, 575)
+        Me.DgvInsulin.Size = New Size(1358, 573)
         Me.DgvInsulin.TabIndex = 0
         ' 
         ' DgvMeal
         ' 
-        Me.DgvMeal.Location = New Point(0, 0)
+        Me.DgvMeal.Dock = DockStyle.Fill
+        Me.DgvMeal.Location = New Point(6, 52)
         Me.DgvMeal.Name = "DgvMeal"
-        Me.DgvMeal.Size = New Size(240, 150)
-        Me.DgvMeal.TabIndex = 0
+        Me.DgvMeal.Size = New Size(1358, 573)
         ' 
         ' DgvSGs
         ' 
@@ -1645,8 +1645,8 @@ Partial Class Form1
         '
         ' SplitContainer1.Panel1
         ' 
-        Me.SplitContainer1.Panel1.Controls.Add(Me.TemporaryUseAdvanceAITDecayCheckBox)
         Me.SplitContainer1.Panel1.BackColor = Color.Black
+        Me.SplitContainer1.Panel1.Controls.Add(Me.TemporaryUseAdvanceAITDecayCheckBox)
         Me.SplitContainer1.Size = New Size(1370, 631)
         Me.SplitContainer1.SplitterDistance = 30
         Me.SplitContainer1.TabIndex = 0
@@ -1658,7 +1658,7 @@ Partial Class Form1
         Me.TemporaryUseAdvanceAITDecayCheckBox.ForeColor = SystemColors.ControlLightLight
         Me.TemporaryUseAdvanceAITDecayCheckBox.Location = New Point(12, 6)
         Me.TemporaryUseAdvanceAITDecayCheckBox.Name = "TemporaryUseAdvanceAITDecayCheckBox"
-        Me.TemporaryUseAdvanceAITDecayCheckBox.Size = New Size(149, 19)
+        Me.TemporaryUseAdvanceAITDecayCheckBox.Size = New Size(146, 19)
         Me.TemporaryUseAdvanceAITDecayCheckBox.TabIndex = 0
         Me.TemporaryUseAdvanceAITDecayCheckBox.Text = "AIT Decay over 3 hours"
         Me.TemporaryUseAdvanceAITDecayCheckBox.UseVisualStyleBackColor = False
