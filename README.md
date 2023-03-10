@@ -27,9 +27,19 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-03/06/2023
+03/09/2023
 
 ## What's New in this release
+New in 3.6.1.0
+- It is now possible to export 4 of the tables to the Clipboard with and without headers and to Excel with all formatting intact.
+    - Insulin
+    - Meal
+    - Sensor Glucose (SG's)
+    - Auto Bolus 
+- To export right-click anywhere within the 4 listed tables and choose the type of export for Excel the program will prompt for a destination to save.
+
+** If there is interest in other tables, open an issue on GitHub.
+
 New in 3.6.0.4
 - Update Browser handling code
 
