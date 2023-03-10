@@ -751,7 +751,57 @@ Public Class Form1
 
 #Region "DataGridView Events"
 
-#Region "Summary Data DataGridView Events"
+    Private WithEvents DgvCopyMenuStrip As New ContextMenuStrip
+
+    Private Shared Function GetDataGridView(sender As Object) As DataGridView
+        Dim contextStrip As ContextMenuStrip = CType(CType(sender, ToolStripMenuItem).GetCurrentParent, ContextMenuStrip)
+        Dim dgv As DataGridView = CType(contextStrip.SourceControl, DataGridView)
+        Return dgv
+    End Function
+
+    Private Sub Dgv_CellContextMenuStripNeeded(sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs) Handles _
+                        DgvAutoBasalDelivery.CellContextMenuStripNeeded,
+                        DgvInsulin.CellContextMenuStripNeeded,
+                        DgvMeal.CellContextMenuStripNeeded,
+                        DgvSGs.CellContextMenuStripNeeded
+
+        If e.RowIndex >= 0 Then
+            e.ContextMenuStrip = Me.DgvCopyMenuStrip
+        End If
+
+    End Sub
+
+    Private Sub DgvCopyMenuStrip_Opening(sender As Object, e As CancelEventArgs) Handles DgvCopyMenuStrip.Opening
+        ' Acquire references to the owning control and item.
+
+        Me.DgvCopyMenuStrip.Tag = CType(Me.DgvCopyMenuStrip.SourceControl, DataGridView)
+
+        ' Clear the ContextMenuStrip control's Items collection.
+        Me.DgvCopyMenuStrip.Items.Clear()
+
+        ' Populate the ContextMenuStrip control with its default items.
+        Me.DgvCopyMenuStrip.Items.Add("Copy with Header", My.Resources.Copy, AddressOf Me.DgvCopyToClipBoardWithHeader)
+        Me.DgvCopyMenuStrip.Items.Add("Copy without Header", My.Resources.Copy, AddressOf Me.DgvCopyToClipBoardWithoutHeader)
+        Me.DgvCopyMenuStrip.Items.Add("Save To Excel", My.Resources.ExportData, AddressOf Me.DgvExportToExcel)
+
+        ' Set Cancel to false.
+        ' It is optimized to true based on empty entry.
+        e.Cancel = False
+    End Sub
+
+    Private Sub DgvCopyToClipBoardWithHeader(sender As Object, e As EventArgs)
+        GetDataGridView(sender).CopyToClipboard(True)
+    End Sub
+
+    Private Sub DgvCopyToClipBoardWithoutHeader(sender As Object, e As EventArgs)
+        GetDataGridView(sender).CopyToClipboard(False)
+    End Sub
+
+    Private Sub DgvExportToExcel(sender As Object, e As EventArgs)
+        GetDataGridView(sender).ExportToExcelWithFormatting()
+    End Sub
+
+#Region "Dgv Summary Events"
 
     Private Sub DgvSummary_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvSummary.CellFormatting
         If e.Value Is Nothing OrElse e.ColumnIndex <> 2 Then
@@ -856,9 +906,9 @@ Public Class Form1
         Stop
     End Sub
 
-#End Region 'Summary Data DataGridView Events
+#End Region ' Dgv Summary Events
 
-#Region "SGs DataGridView Events"
+#Region "Dgv SGs Events"
 
     Private Sub DgvSGs_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvSGs.CellFormatting
         If e.Value Is Nothing Then
@@ -870,18 +920,18 @@ Public Class Form1
             ' Set the background to red for negative values in the Balance column.
             If columnName.Equals(NameOf(SgRecord.sensorState), StringComparison.OrdinalIgnoreCase) Then
                 If e.Value.ToString <> "NO_ERROR_MESSAGE" Then
-                    .ForeColor = Color.Red
+                    FormatCell(e, Color.Red)
                 End If
             End If
             dgv.dgvCellFormatting(e, NameOf(SgRecord.datetime))
             If columnName.Equals(NameOf(SgRecord.sg), StringComparison.OrdinalIgnoreCase) Then
                 Dim sensorValue As Single = e.Value.ToString().ParseSingle(2)
                 If Single.IsNaN(sensorValue) Then
-                    .BackColor = Color.Gray
+                    FormatCell(e, Color.Gray)
                 ElseIf sensorValue < s_limitLow Then
-                    .BackColor = Color.Red
+                    FormatCell(e, Color.Red)
                 ElseIf sensorValue > s_limitHigh Then
-                    .BackColor = Color.Yellow
+                    FormatCell(e, Color.Yellow)
                 End If
             End If
         End With
@@ -948,9 +998,9 @@ Public Class Form1
         dgv.Columns(0).HeaderCell.SortGlyphDirection = order
     End Sub
 
-#End Region ' SGs DataGridView Events
+#End Region ' Dgv SGs Events
 
-#Region "Auto Basal Delivery (Basal) DataGridView Events"
+#Region "Dgv Auto Basal Delivery (Basal) Events"
 
     Private Sub DgvAutoBasalDelivery_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvAutoBasalDelivery.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -959,10 +1009,10 @@ Public Class Form1
         End If
         ' Set the background to red for negative values in the Balance column.
         If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(AutoBasalDeliveryRecord.bolusAmount), StringComparison.OrdinalIgnoreCase) Then
-            Dim basalAmount As String = CSng(e.Value).ToString("F3", CurrentUICulture)
+            Dim basalAmount As String = CDec(e.Value).RoundTo025.ToString
             e.Value = basalAmount
             If basalAmount.IsMinBasal Then
-                e.CellStyle.BackColor = GetGraphLineColor("Min Basal")
+                FormatCell(e, GetGraphLineColor("Min Basal"))
             End If
         End If
         dgv.dgvCellFormatting(e, NameOf(AutoBasalDeliveryRecord.dateTime))
@@ -982,31 +1032,22 @@ Public Class Form1
         End With
     End Sub
 
-#End Region ' Auto Basal Delivery (Basal) DataGridView Events
+#End Region ' Dgv Auto Basal Delivery (Basal) Events
 
-#Region "Insulin DataGridView Events"
+#Region "Dgv Insulin Events"
 
     Private Sub DgvInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvInsulin.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
+        If dgv.Columns(e.ColumnIndex).ValueType = GetType(Single) Then
+            Dim value As Single = CSng(e.Value)
+            e.Value = value.RoundTo025.ToString
+            If value <> 0 AndAlso dgv.Columns(e.ColumnIndex).Name = NameOf(InsulinRecord.SafeMealReduction) Then
+                e.CellStyle.ForeColor = Color.OrangeRed
+            End If
+            e.FormattingApplied = True
+            Exit Sub
+        End If
         dgv.dgvCellFormatting(e, NameOf(InsulinRecord.dateTime))
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(InsulinRecord.programmedFastAmount)
-                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.deliveredFastAmount)).Value.ToString Then
-                    e.CellStyle.BackColor = Color.Red
-                End If
-            Case NameOf(InsulinRecord.deliveredFastAmount)
-                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.programmedFastAmount)).Value.ToString Then
-                    e.CellStyle.BackColor = Color.Red
-                End If
-            Case NameOf(InsulinRecord.programmedExtendedAmount)
-                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.deliveredExtendedAmount)).Value.ToString Then
-                    e.CellStyle.BackColor = Color.Red
-                End If
-            Case NameOf(InsulinRecord.deliveredExtendedAmount)
-                If e.Value.ToString <> dgv.Rows(e.RowIndex).Cells(NameOf(InsulinRecord.programmedExtendedAmount)).Value.ToString Then
-                    e.CellStyle.BackColor = Color.Red
-                End If
-        End Select
     End Sub
 
     Private Sub DgvInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnAdded
@@ -1023,17 +1064,45 @@ Public Class Form1
         End With
     End Sub
 
-    Private Sub DgvInsulin_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnHeaderCellChanged
-        Stop
-    End Sub
-
     Private Sub DgvInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvInsulin.DataError
         Stop
     End Sub
 
-#End Region ' Insulin DataGridView Events
+#End Region ' Dgv Insulin Events
 
-#Region "Session Profile DataGridView Events"
+#Region "Dgv Meal Events"
+
+    Private Sub DgvMeal_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvMeal.CellFormatting
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        If dgv.Columns(e.ColumnIndex).Name = NameOf(MealRecord.amount) Then
+            e.Value = $"{e.Value} {s_sessionCountrySettings.carbDefaultUnit}"
+            e.FormattingApplied = True
+        Else
+            dgv.dgvCellFormatting(e, NameOf(MealRecord.dateTime))
+        End If
+    End Sub
+
+    Private Sub DgvMeal_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvMeal.ColumnAdded
+        With e.Column
+            If MealRecordHelpers.HideColumn(.Name) Then
+                .Visible = False
+                Exit Sub
+            End If
+            Dim dgv As DataGridView = CType(sender, DataGridView)
+            e.DgvColumnAdded(MealRecordHelpers.GetCellStyle(.Name),
+                            True,
+                            True,
+                            CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+        End With
+    End Sub
+
+    Private Sub DgvMeal_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvMeal.DataError
+        Stop
+    End Sub
+
+#End Region ' Dgv Meal Events
+
+#Region "Dgv Session Profile Events"
 
     Private Sub DgvSessionProfile_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSessionProfile.ColumnAdded
         e.DgvColumnAdded(New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1)),
@@ -1047,9 +1116,9 @@ Public Class Form1
         Stop
     End Sub
 
-#End Region ' Session Profile DataGridView Events
+#End Region ' Dgv Session Profile Events
 
-#Region "Current User DataGridView Events"
+#Region "Dgv Current User Events"
 
     Private Sub DgvCurrentUser_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCurrentUser.ColumnAdded
         e.DgvColumnAdded(New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1)),
@@ -1063,9 +1132,9 @@ Public Class Form1
         Stop
     End Sub
 
-#End Region ' Current User DataGridView Events
+#End Region ' Dgv Current User Events
 
-#Region "CareLink Users DataGridView Events"
+#Region "Dgv CareLink Users Events"
 
     Private Sub DgvCareLinkUsers_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles DgvCareLinkUsers.CellBeginEdit
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -1155,7 +1224,7 @@ Public Class Form1
         Next
     End Sub
 
-#End Region ' CareLink Users DataGridView Events
+#End Region ' Dgv CareLink Users Events
 
 #End Region ' DataGridView Events
 
@@ -1556,7 +1625,7 @@ Public Class Form1
     Private Sub UpdateActiveInsulin()
         Try
             Dim activeInsulinStr As String = $"{s_activeInsulin.amount:N3}"
-            Me.ActiveInsulinValue.Text = $"Active Insulin{Environment.NewLine}{activeInsulinStr} U"
+            Me.ActiveInsulinValue.Text = $"Active Insulin{s_environmentNewLine}{activeInsulinStr} U"
             _sgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
         Catch ex As Exception
             Stop
@@ -2181,12 +2250,12 @@ Public Class Form1
                     Dim hIcon As IntPtr = bitmapText.GetHicon()
                     Me.NotifyIcon1.Icon = Icon.FromHandle(hIcon)
                     notStr.Append(Date.Now().ToShortDateTimeString.Replace($"{CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator}{Now.Year}", ""))
-                    notStr.Append(Environment.NewLine)
+                    notStr.Append(s_environmentNewLine)
                     notStr.Append($"Last SG {str} {BgUnitsString}")
                     If s_lastBGValue = 0 Then
                         Me.LabelTrendValue.Text = ""
                     Else
-                        notStr.Append(Environment.NewLine)
+                        notStr.Append(s_environmentNewLine)
                         Dim diffSg As Double = sg - s_lastBGValue
                         notStr.Append("SG Trend ")
                         If Math.Abs(diffSg) < Single.Epsilon Then
@@ -2204,7 +2273,7 @@ Public Class Form1
                         Me.LabelTrendValue.ForeColor = bgColor
                         notStr.Append(diffSg.ToString(If(BgUnits.StartsWith("MG", StringComparison.InvariantCultureIgnoreCase), "+0;-#", "+ 0.00;-#.00"), CultureInfo.InvariantCulture))
                     End If
-                    notStr.Append(Environment.NewLine)
+                    notStr.Append(s_environmentNewLine)
                     notStr.Append("Active ins. ")
                     notStr.Append($"{s_activeInsulin.amount:N3}")
                     notStr.Append("U"c)

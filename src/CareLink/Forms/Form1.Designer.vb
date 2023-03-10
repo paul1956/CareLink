@@ -1704,6 +1704,7 @@ Partial Class Form1
         Me.TableLayoutPanelInsulin.ColumnCount = 1
         Me.TableLayoutPanelInsulin.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         Me.TableLayoutPanelInsulin.Controls.Add(Me.TableLayoutPanelInsulinTop, 0, 0)
+        Me.TableLayoutPanelInsulin.Controls.Add(Me.DgvInsulin, 0, 1)
         Me.TableLayoutPanelInsulin.Dock = DockStyle.Fill
         Me.TableLayoutPanelInsulin.Location = New Point(3, 3)
         Me.TableLayoutPanelInsulin.Name = "TableLayoutPanelInsulin"
@@ -1751,6 +1752,7 @@ Partial Class Form1
         Me.TableLayoutPanelMeal.ColumnCount = 1
         Me.TableLayoutPanelMeal.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         Me.TableLayoutPanelMeal.Controls.Add(Me.TableLayoutPanelMealTop, 0, 0)
+        Me.TableLayoutPanelMeal.Controls.Add(Me.DgvMeal, 0, 1)
         Me.TableLayoutPanelMeal.Dock = DockStyle.Fill
         Me.TableLayoutPanelMeal.Location = New Point(3, 3)
         Me.TableLayoutPanelMeal.Name = "TableLayoutPanelMeal"

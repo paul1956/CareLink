@@ -35,14 +35,15 @@ Friend Module BGReadingRecordHelpers
         dgv.dgvCellFormatting(e, NameOf(BGReadingRecord.dateTime))
         If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(BGReadingRecord.value), StringComparison.OrdinalIgnoreCase) Then
             Dim sensorValue As Single = e.Value.ToString().ParseSingle(2)
-            If Single.IsNaN(sensorValue) Then
-                e.CellStyle.BackColor = Color.Gray
-            ElseIf sensorValue < s_limitLow Then
-                e.CellStyle.BackColor = Color.Red
-            ElseIf sensorValue > s_limitHigh Then
-                e.CellStyle.BackColor = Color.Yellow
-            End If
-            e.CellStyle.ForeColor = e.CellStyle.BackColor.GetContrastingColor()
+            With e.CellStyle
+                If Single.IsNaN(sensorValue) Then
+                    FormatCell(e, Color.Gray)
+                ElseIf sensorValue < s_limitLow Then
+                    FormatCell(e, Color.Red)
+                ElseIf sensorValue > s_limitHigh Then
+                    FormatCell(e, Color.Yellow)
+                End If
+            End With
         End If
 
     End Sub

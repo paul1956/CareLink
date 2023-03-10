@@ -153,7 +153,7 @@ Friend Module DateTimeExtensions
         If dateAsString.TryParseDate(resultDate, key) Then
             Return resultDate
         End If
-
+        Stop
         Throw New FormatException($"String '{dateAsString}' with {NameOf(key)} = {key} from {memberName} line {sourceLineNumber} was not recognized as a valid DateTime in any supported culture.")
     End Function
 

@@ -351,13 +351,13 @@ Friend Module Form1UpdateHelpers
             .TableLayoutPanelInsulin.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(s_listOfInsulinMarkers),
                               NameOf(InsulinRecord),
-                              AddressOf InsulinRecordHelpers.AddHandlers,
+                              Nothing,
                               ItemIndexes.markers,
             False)
             .TableLayoutPanelMeal.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(s_listOfMealMarkers),
                               NameOf(MealRecord),
-                              AddressOf MealRecordHelpers.AttachHandlers,
+                              Nothing,
                               ItemIndexes.markers,
                               False)
             .TableLayoutPanelCalibration.DisplayDataTableInDGV(
