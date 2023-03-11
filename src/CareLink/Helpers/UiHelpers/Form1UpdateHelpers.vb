@@ -59,7 +59,7 @@ Friend Module Form1UpdateHelpers
             Case < 2
                 TreatmentInsulinRow = 2
             Case Else
-                TreatmentInsulinRow = CSng(MaxBasalPerDose + 0.025)
+                TreatmentInsulinRow = MaxBasalPerDose + 0.025!
         End Select
         TreatmentInsulinRow = TreatmentInsulinRow.RoundTo025
     End Sub

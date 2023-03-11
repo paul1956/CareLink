@@ -34,7 +34,7 @@ Friend Module CalibrationRecordHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.dgvCellFormatting(e, NameOf(CalibrationRecord.dateTime))
         If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(CalibrationRecord.value), StringComparison.OrdinalIgnoreCase) Then
-            Dim sensorValue As Single = e.Value.ToString().ParseSingle(2)
+            Dim sensorValue As Single = ParseSingle(e.Value, 2)
             If Single.IsNaN(sensorValue) Then
                 e.CellStyle.BackColor = Color.Gray
             ElseIf sensorValue < s_limitLow Then

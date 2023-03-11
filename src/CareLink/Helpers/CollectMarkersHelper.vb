@@ -85,10 +85,11 @@ Friend Module CollectMarkersHelper
             End Select
         Next
 
-        For Each r As BasalRecord In s_listOfManualBasal.ToList
+        For Each e As IndexClass(Of BasalRecord) In s_listOfManualBasal.ToList.WithIndex
+            Dim r As BasalRecord = e.Value
             basalDictionary.Add(r.GetOaGetTime, r.GetBasal)
-            s_listOfAutoBasalDeliveryMarkers.Add(New AutoBasalDeliveryRecord(r, basalDictionary.Count, 288 - basalDictionary.Count))
             If r.basalRate > 0 Then
+                s_listOfAutoBasalDeliveryMarkers.Add(New AutoBasalDeliveryRecord(r, basalDictionary.Count, 288 - e.Index))
                 s_markers.Add(r.ToDictionary)
             End If
         Next
@@ -111,6 +112,7 @@ Friend Module CollectMarkersHelper
             End While
             MaxBasalPerHour = Math.Max(MaxBasalPerHour, sum)
             MaxBasalPerDose = Math.Max(MaxBasalPerDose, basalDictionary.Values(i))
+            MaxBasalPerDose = Math.Min(MaxBasalPerDose, 25)
             i += 1
         End While
         Return $"Max Basal/Hr ~ {MaxBasalPerHour.RoundTo025} U"

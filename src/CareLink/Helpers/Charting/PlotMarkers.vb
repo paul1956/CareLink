@@ -80,7 +80,18 @@ Friend Module PlotMarkers
                         End If
                     Case "CALIBRATION"
                         markerSeriesPoints.AddCalibrationPoint(markerOADateTime, bgValue, entry)
-                    Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
+                    Case "AUTO_BASAL_DELIVERY"
+                        Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
+                        With pageChart.Series(BasalSeriesNameName)
+                            .PlotBasalSeries(markerOADateTime,
+                                             amount,
+                                             HomePageBasalRow,
+                                             HomePageInsulinRow,
+                                             GetGraphLineColor("Basal Series"),
+                                             False,
+                                             GetToolTip(entry("type"), amount))
+                        End With
+                    Case "MANUAL_BASAL_DELIVERY"
                         Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
                         With pageChart.Series(BasalSeriesNameName)
                             .PlotBasalSeries(markerOADateTime,
@@ -178,7 +189,19 @@ Friend Module PlotMarkers
                 End If
                 Dim markerSeriesPoints As DataPointCollection = treatmentChart.Series(MarkerSeriesName).Points
                 Select Case entry("type")
-                    Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
+                    Case "AUTO_BASAL_DELIVERY"
+                        Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
+                        With treatmentChart.Series(BasalSeriesNameName)
+                            .PlotBasalSeries(markerOADateTime,
+                                             amount,
+                                             MaxBasalPerDose,
+                                             TreatmentInsulinRow,
+                                             GetGraphLineColor("Basal Series"),
+                                             True,
+                                             GetToolTip(entry("type"), amount))
+
+                        End With
+                    Case "MANUAL_BASAL_DELIVERY"
                         Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
                         With treatmentChart.Series(BasalSeriesNameName)
                             .PlotBasalSeries(markerOADateTime,

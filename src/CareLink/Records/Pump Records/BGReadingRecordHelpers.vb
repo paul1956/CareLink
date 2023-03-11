@@ -34,7 +34,7 @@ Friend Module BGReadingRecordHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.dgvCellFormatting(e, NameOf(BGReadingRecord.dateTime))
         If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(BGReadingRecord.value), StringComparison.OrdinalIgnoreCase) Then
-            Dim sensorValue As Single = e.Value.ToString().ParseSingle(2)
+            Dim sensorValue As Single = ParseSingle(e.Value, 2)
             With e.CellStyle
                 If Single.IsNaN(sensorValue) Then
                     FormatCell(e, Color.Gray)

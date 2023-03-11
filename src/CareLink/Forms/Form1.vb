@@ -292,6 +292,8 @@ Public Class Form1
                     SetUpCareLinkUser(Me, GetPathToTestSettingsFile())
                     Debug.Print($"In {NameOf(MenuStartHereLoadSavedDataFile_Click)}, {NameOf(Me.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
                     CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{ProjectName}", True)
+                    CurrentUICulture = CurrentDateCulture
+
                     Me.RecentData = Loads(File.ReadAllText(openFileDialog1.FileName))
                     Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                     Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
@@ -925,7 +927,7 @@ Public Class Form1
             End If
             dgv.dgvCellFormatting(e, NameOf(SgRecord.datetime))
             If columnName.Equals(NameOf(SgRecord.sg), StringComparison.OrdinalIgnoreCase) Then
-                Dim sensorValue As Single = e.Value.ToString().ParseSingle(2)
+                Dim sensorValue As Single = ParseSingle(e.Value, 2)
                 If Single.IsNaN(sensorValue) Then
                     FormatCell(e, Color.Gray)
                 ElseIf sensorValue < s_limitLow Then
@@ -1009,11 +1011,13 @@ Public Class Form1
         End If
         ' Set the background to red for negative values in the Balance column.
         If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(AutoBasalDeliveryRecord.bolusAmount), StringComparison.OrdinalIgnoreCase) Then
-            Dim basalAmount As String = CDec(e.Value).RoundTo025.ToString
-            e.Value = basalAmount
+            Dim basalAmount As Single = ParseSingle(e.Value, 3)
+            e.Value = basalAmount.ToString("F3", CurrentUICulture)
             If basalAmount.IsMinBasal Then
                 FormatCell(e, GetGraphLineColor("Min Basal"))
             End If
+            e.FormattingApplied = True
+            Return
         End If
         dgv.dgvCellFormatting(e, NameOf(AutoBasalDeliveryRecord.dateTime))
     End Sub
@@ -1039,8 +1043,8 @@ Public Class Form1
     Private Sub DgvInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvInsulin.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If dgv.Columns(e.ColumnIndex).ValueType = GetType(Single) Then
-            Dim value As Single = CSng(e.Value)
-            e.Value = value.RoundTo025.ToString
+            Dim value As Single = ParseSingle(e.Value, 3)
+            e.Value = value.ToString("F3", CurrentDataCulture)
             If value <> 0 AndAlso dgv.Columns(e.ColumnIndex).Name = NameOf(InsulinRecord.SafeMealReduction) Then
                 e.CellStyle.ForeColor = Color.OrangeRed
             End If
@@ -1655,7 +1659,14 @@ Public Class Form1
                 For Each marker As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
                     markerOADateTime = New OADate(s_markers(marker.Index).GetMarkerDateTime)
                     Select Case marker.Value(NameOf(InsulinRecord.type)).ToString
-                        Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
+                        Case "AUTO_BASAL_DELIVERY"
+                            Dim bolusAmount As Single = marker.Value.GetSingleValue(NameOf(AutoBasalDeliveryRecord.bolusAmount))
+                            If timeOrderedMarkers.ContainsKey(markerOADateTime) Then
+                                timeOrderedMarkers(markerOADateTime) += bolusAmount
+                            Else
+                                timeOrderedMarkers.Add(markerOADateTime, bolusAmount)
+                            End If
+                        Case "MANUAL_BASAL_DELIVERY"
                             Dim bolusAmount As Single = marker.Value.GetSingleValue(NameOf(AutoBasalDeliveryRecord.bolusAmount))
                             If timeOrderedMarkers.ContainsKey(markerOADateTime) Then
                                 timeOrderedMarkers(markerOADateTime) += bolusAmount
@@ -1826,17 +1837,21 @@ Public Class Form1
         For Each marker As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             Select Case marker.Value(NameOf(InsulinRecord.type))
                 Case "INSULIN"
-                    Dim amountString As String = marker.Value(NameOf(InsulinRecord.deliveredFastAmount)).TruncateSingleString(3)
-                    s_totalDailyDose += amountString.ParseSingle(3)
+                    Dim deliveredAmount As String = marker.Value(NameOf(InsulinRecord.deliveredFastAmount))
+                    s_totalDailyDose += deliveredAmount.ParseSingle(3)
                     Select Case marker.Value(NameOf(InsulinRecord.activationType))
                         Case "AUTOCORRECTION"
-                            s_totalAutoCorrection += amountString.ParseSingle(3)
+                            s_totalAutoCorrection += deliveredAmount.ParseSingle(3)
                         Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
-                            s_totalManualBolus += amountString.ParseSingle(3)
+                            s_totalManualBolus += deliveredAmount.ParseSingle(3)
                     End Select
 
-                Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
-                    Dim amount As Single = marker.Value(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3).RoundTo025
+                Case "AUTO_BASAL_DELIVERY"
+                    Dim amount As Single = marker.Value(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
+                    s_totalBasal += amount
+                    s_totalDailyDose += amount
+                Case "MANUAL_BASAL_DELIVERY"
+                    Dim amount As Single = marker.Value(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
                     s_totalBasal += amount
                     s_totalDailyDose += amount
                 Case "MEAL"

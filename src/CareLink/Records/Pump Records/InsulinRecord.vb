@@ -94,8 +94,8 @@ Public Class InsulinRecord
     Public Property programmedDuration As Integer
 
     <DisplayName("Delivered Fast Amount")>
-    <Column(Order:=14, TypeName:=NameOf([Decimal]))>
-    Public Property deliveredFastAmount As Decimal
+    <Column(Order:=14, TypeName:=NameOf([Single]))>
+    Public Property deliveredFastAmount As Single
 
     <DisplayName(NameOf(id))>
     <Column(Order:=15, TypeName:=NameOf([Int32]))>

@@ -10,9 +10,9 @@ Public Module DictionaryExtensions
 
     <Extension>
     Friend Function GetSingleValue(item As Dictionary(Of String, String), key As String) As Single
-        Dim returnString As String = ""
-        If item.TryGetValue(key, returnString) Then
-            Return returnString.ParseSingle(3)
+        Dim ret As String = ""
+        If item.TryGetValue(key, ret) Then
+            Return ret.ParseSingle(3)
         End If
         Return Single.NaN
     End Function
@@ -73,9 +73,9 @@ Public Module DictionaryExtensions
                             Case NameOf([Single])
                                 propertyValue = row.Value.ParseSingle(10)
                             Case NameOf([Double])
-                                propertyValue = row.Value.ParseSingle(10)
+                                propertyValue = CDbl(row.Value.ParseSingle(10))
                             Case NameOf([Decimal])
-                                propertyValue = Decimal.Parse(row.Value).RoundTo025
+                                propertyValue = CDec(row.Value.ParseSingle(3))
                             Case NameOf([Boolean]),
                                  NameOf([Int32]),
                                  NameOf([String])

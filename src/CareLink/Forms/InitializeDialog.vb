@@ -312,8 +312,7 @@ Public Class InitializeDialog
         cell.ErrorText = ""
         Me.DialogResult = DialogResult.OK
 
-        Dim selectedValue As Single = CType(Me.PumpAitComboBox.SelectedValue, Single)
-        Me.CurrentUser.PumpAit = selectedValue
+        Me.CurrentUser.PumpAit = ParseSingle(Me.PumpAitComboBox.SelectedValue, 2)
 
         Me.CurrentUser.InsulinTypeName = Me.InsulinTypeComboBox.Text
         Me.CurrentUser.InsulinRealAit = CType(Me.InsulinTypeComboBox.SelectedValue, InsulinActivationProperties).AitHours
@@ -332,7 +331,7 @@ Public Class InitializeDialog
             cell = row.Cells(NameOf(ColumnEnd))
             carbRecord.EndTime = TimeOnly.Parse(cell.Value.ToString, CurrentDateCulture)
             Dim numericCell As DataGridViewNumericUpDownCell = CType(row.Cells(NameOf(ColumnNumericUpDown)), DataGridViewNumericUpDownCell)
-            carbRecord.CarbRatio = CSng(numericCell.Value)
+            carbRecord.CarbRatio = ParseSingle(numericCell.Value, 1)
             Me.CurrentUser.CarbRatios.Add(carbRecord)
         Next
 

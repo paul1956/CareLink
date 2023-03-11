@@ -27,10 +27,11 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-03/09/2023
+03/11/2023
 
 ## What's New in this release
 New 3.6.1.1
+- Fixed conversion issue for languages that use comma as a decimal separator
 - Form1 cleanup
 
 New in 3.6.1.0

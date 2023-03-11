@@ -77,25 +77,25 @@ Friend Module ExportDataGridView
                             Select Case dgvCell.ValueType.Name
                                 Case NameOf([Int32])
                                     align = XLAlignmentHorizontalValues.Right
-                                    .Value = CType(value, Integer)
+                                    .Value = CInt(value)
                                 Case NameOf([Single])
                                     align = XLAlignmentHorizontalValues.Right
-                                    .Value = value.ToString.ParseSingle()
+                                    .Value = ParseSingle(value)
                                 Case NameOf([Double])
                                     align = XLAlignmentHorizontalValues.Right
-                                    .Value = value.ToString.ParseSingle()
+                                    .Value = ParseSingle(value)
                                 Case NameOf([Decimal])
                                     align = XLAlignmentHorizontalValues.Right
-                                    .Value = value.ToString.ParseSingle()
+                                    .Value = ParseSingle(value)
                                 Case NameOf([Boolean])
                                     align = XLAlignmentHorizontalValues.Center
-                                    .Value = CType(value, Boolean)
+                                    .Value = CBool(value)
                                 Case NameOf([String])
                                     align = XLAlignmentHorizontalValues.Left
                                     .Value = value.ToString
                                 Case NameOf([DateTime])
                                     align = XLAlignmentHorizontalValues.Left
-                                    .Value = value.ToString
+                                    .Value = CDate(value)
                                 Case Else
                                     Stop
                                     align = XLAlignmentHorizontalValues.Left

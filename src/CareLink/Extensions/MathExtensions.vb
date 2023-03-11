@@ -24,28 +24,46 @@ Friend Module MathExtensions
         If valueString Is Nothing Then
             Return Single.NaN
         End If
-
         If valueString.Contains(","c) AndAlso valueString.Contains("."c) Then
             Throw New ArgumentException($"{NameOf(valueString)} = {valueString}, contains both a comma and period.", NameOf(valueString))
         End If
-
+        valueString = valueString.Replace(",", ".")
+        Dim returnSingle As Single
         If decimalDigits = -1 Then
-            Dim index As Integer = valueString.IndexOf(CurrentDataCulture.NumberFormat.NumberDecimalSeparator)
+            Dim index As Integer = valueString.IndexOf(".")
             If index = -1 Then
                 decimalDigits = 0
             Else
                 decimalDigits = valueString.Substring(index).Length
             End If
         End If
+        If Single.TryParse(valueString, NumberStyles.Number, usDataCulture, returnSingle) Then
+        Else
+            Return Single.NaN
+        End If
+        Return If(decimalDigits = 3, returnSingle.RoundTo025, returnSingle.RoundSingle(decimalDigits))
+    End Function
+
+    Public Function ParseSingle(valueObject As Object, Optional decimalDigits As Integer = -1) As Single
+        If valueObject Is Nothing Then
+            Return Single.NaN
+        End If
 
         Dim returnSingle As Single
-        If Single.TryParse(valueString.Replace(",", "."), NumberStyles.Number, CurrentDataCulture, returnSingle) Then
-            Return If(decimalDigits = 3, returnSingle.RoundTo025, returnSingle.RoundSingle(decimalDigits))
-        End If
-        If Single.TryParse(valueString, NumberStyles.Number, CurrentUICulture, returnSingle) Then
-            Return If(decimalDigits = 3, returnSingle.RoundTo025, returnSingle.RoundSingle(decimalDigits))
-        End If
-        Return Single.NaN
+        Select Case True
+            Case TypeOf valueObject Is String
+                Return CStr(valueObject).ParseSingle(decimalDigits)
+            Case TypeOf valueObject Is Single
+                returnSingle = CSng(valueObject)
+            Case TypeOf valueObject Is Double
+                returnSingle = CSng(valueObject)
+            Case TypeOf valueObject Is Decimal
+                returnSingle = CSng(valueObject)
+            Case Else
+                Throw UnreachableException($"{NameOf(valueObject)} of type {valueObject.GetType.Name} is unknown in ParseSingle")
+        End Select
+
+        Return If(decimalDigits = 3, returnSingle.RoundTo025, returnSingle.RoundSingle(decimalDigits))
     End Function
 
     <Extension>
@@ -55,7 +73,7 @@ Friend Module MathExtensions
 
     <Extension>
     Public Function RoundTo025(originalValue As Decimal) As Decimal
-        Return Math.Floor(Math.Round(originalValue, 3, MidpointRounding.ToZero) / CDec(0.025)) * CDec(0.025)
+        Return Math.Floor(Math.Round(originalValue, 3, MidpointRounding.ToZero) / 0.025D) * 0.025D
     End Function
 
     <Extension>

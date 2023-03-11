@@ -12,7 +12,7 @@ Friend Module ChartingHelpers
 
     <Extension>
     Friend Function IsMinBasal(amount As Single) As Boolean
-        Return Math.Abs(amount - 0.025) < 0.001
+        Return Math.Abs(amount - 0.025!) < 0.005
     End Function
 
     <Extension>
