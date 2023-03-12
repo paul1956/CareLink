@@ -215,7 +215,7 @@
           "System.Xml.XDocument": "4.3.0"
         }
       },
-      "Octokit/5.0.0": {
+      "Octokit/5.0.2": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/Octokit.dll": {
@@ -2000,16 +2000,16 @@
         "netstandard.library.nuspec"
       ]
     },
-    "Octokit/5.0.0": {
-      "sha512": "cNspbuFsQSjbKIl+9Ko+XwvfepekDHQncnewKwCDjmsL8HaIujgKlWzmkWnWPVCmZvBdGVp2JsVECIsOkYK/MA==",
+    "Octokit/5.0.2": {
+      "sha512": "W2dSerUsobOoBIGfTOVlA1o7/N/Rcdg4vHvx8pNp0QgZUGZyMX9KVVmyRDuOySSCixgxccL+x6RM4QFEcbbe/w==",
       "type": "package",
-      "path": "octokit/5.0.0",
+      "path": "octokit/5.0.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Octokit.dll",
         "lib/netstandard2.0/Octokit.xml",
-        "octokit.5.0.0.nupkg.sha512",
+        "octokit.5.0.2.nupkg.sha512",
         "octokit.nuspec",
         "octokit.png"
       ]
@@ -5691,7 +5691,7 @@
       "ClosedXML >= 0.100.3",
       "DataGridViewDisableButtonColumnEx >= 1.0.0.1",
       "Microsoft.Exchange.WebServices.NETStandard >= 2.0.0-beta3",
-      "Octokit >= 5.0.0",
+      "Octokit >= 5.0.2",
       "TableLayputPanelTop >= 1.0.0.2",
       "ToolStripComboBoxEx >= 1.0.0.2",
       "WinForms.DataVisualization >= 1.7.0"
@@ -5750,7 +5750,7 @@
           },
           "Octokit": {
             "target": "Package",
-            "version": "[5.0.0, )"
+            "version": "[5.0.2, )"
           },
           "TableLayputPanelTop": {
             "target": "Package",
