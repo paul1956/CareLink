@@ -6,6 +6,7 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class BasalRecord
+    Implements IEquatable(Of BasalRecord)
 
     Private _oaDateTime As OADate
 
@@ -72,5 +73,32 @@ Public Class BasalRecord
     Public Sub OaDateTime(d As Date)
         _oaDateTime = New OADate(d)
     End Sub
+
+    Public Overrides Function Equals(obj As Object) As Boolean
+        Return Me.Equals(TryCast(obj, BasalRecord))
+    End Function
+
+    Public Overloads Function Equals(other As BasalRecord) As Boolean Implements IEquatable(Of BasalRecord).Equals
+        Return other IsNot Nothing AndAlso
+               Me.activeBasalPattern = other.activeBasalPattern AndAlso
+               Me.basalRate = other.basalRate AndAlso
+               Me.presetTempName = other.presetTempName AndAlso
+               Me.tempBasalDurationRemaining = other.tempBasalDurationRemaining AndAlso
+               Me.tempBasalPercentage = other.tempBasalPercentage AndAlso
+               Me.tempBasalRate = other.tempBasalRate AndAlso
+               Me.tempBasalType = other.tempBasalType
+    End Function
+
+    Public Overrides Function GetHashCode() As Integer
+        Return HashCode.Combine(Me.activeBasalPattern, Me.basalRate, Me.presetTempName, Me.tempBasalDurationRemaining, Me.tempBasalPercentage, Me.tempBasalRate, Me.tempBasalType)
+    End Function
+
+    Public Shared Operator =(left As BasalRecord, right As BasalRecord) As Boolean
+        Return EqualityComparer(Of BasalRecord).Default.Equals(left, right)
+    End Operator
+
+    Public Shared Operator <>(left As BasalRecord, right As BasalRecord) As Boolean
+        Return Not left = right
+    End Operator
 
 End Class
