@@ -14,6 +14,12 @@ Public Class BasalRecords
         If _buffer.Any(Function(r As BasalRecord) r.GetOaGetTime = item.GetOaGetTime) Then
             Exit Sub
         End If
+        If _buffer.Any Then
+            If item.Equals(_buffer.Last) Then
+                _buffer.Last.OaDateTime(Date.FromOADate(item.GetOaGetTime))
+                Exit Sub
+            End If
+        End If
         If _buffer.Count = _size Then
             _buffer.RemoveAt(0)
         End If

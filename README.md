@@ -30,6 +30,9 @@ This update has a UI to show all the available data and a visual version that mi
 03/11/2023
 
 ## What's New in this release
+New 3.6.1.3
+Remove duplicate BasalRecords (only effects MM)
+
 New 3.6.1.1
 - Fixed conversion issue for languages that use comma as a decimal separator
 - Form1 cleanup
