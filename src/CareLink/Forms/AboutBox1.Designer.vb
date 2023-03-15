@@ -66,12 +66,12 @@ Partial Class AboutBox1
         Me.TableLayoutPanel.Margin = New Padding(4, 3, 4, 3)
         Me.TableLayoutPanel.Name = "TableLayoutPanel"
         Me.TableLayoutPanel.RowCount = 6
-        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 15.0F))
-        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 5.0F))
-        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10.0F))
-        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10.0F))
-        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 50.0F))
-        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10.0F))
+        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 15F))
+        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 5F))
+        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10F))
+        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10F))
+        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
+        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10F))
         Me.TableLayoutPanel.Size = New Size(562, 311)
         Me.TableLayoutPanel.TabIndex = 0
         ' 
@@ -109,7 +109,7 @@ Partial Class AboutBox1
         Me.LabelVersion.Margin = New Padding(7, 0, 4, 0)
         Me.LabelVersion.MaximumSize = New Size(0, 20)
         Me.LabelVersion.Name = "LabelVersion"
-        Me.LabelVersion.Size = New Size(366, 14)
+        Me.LabelVersion.Size = New Size(366, 15)
         Me.LabelVersion.TabIndex = 0
         Me.LabelVersion.Text = "Version"
         Me.LabelVersion.TextAlign = ContentAlignment.MiddleLeft
@@ -117,7 +117,7 @@ Partial Class AboutBox1
         ' LabelCopyright
         ' 
         Me.LabelCopyright.Dock = DockStyle.Fill
-        Me.LabelCopyright.Location = New Point(192, 60)
+        Me.LabelCopyright.Location = New Point(192, 61)
         Me.LabelCopyright.Margin = New Padding(7, 0, 4, 0)
         Me.LabelCopyright.MaximumSize = New Size(0, 20)
         Me.LabelCopyright.Name = "LabelCopyright"
@@ -129,7 +129,7 @@ Partial Class AboutBox1
         ' LabelCompanyName
         ' 
         Me.LabelCompanyName.Dock = DockStyle.Fill
-        Me.LabelCompanyName.Location = New Point(192, 91)
+        Me.LabelCompanyName.Location = New Point(192, 92)
         Me.LabelCompanyName.Margin = New Padding(7, 0, 4, 0)
         Me.LabelCompanyName.MaximumSize = New Size(0, 20)
         Me.LabelCompanyName.Name = "LabelCompanyName"
@@ -141,7 +141,7 @@ Partial Class AboutBox1
         ' TextBoxDescription
         ' 
         Me.TextBoxDescription.Dock = DockStyle.Fill
-        Me.TextBoxDescription.Location = New Point(192, 125)
+        Me.TextBoxDescription.Location = New Point(192, 126)
         Me.TextBoxDescription.Margin = New Padding(7, 3, 4, 3)
         Me.TextBoxDescription.Multiline = True
         Me.TextBoxDescription.Name = "TextBoxDescription"
@@ -161,7 +161,8 @@ Partial Class AboutBox1
         Me.OKButton.Name = "OKButton"
         Me.OKButton.Size = New Size(88, 23)
         Me.OKButton.TabIndex = 0
-        Me.OKButton.Text = "&OK"' 
+        Me.OKButton.Text = "&OK"
+        ' 
         ' AboutBox1
         ' 
         Me.AutoScaleDimensions = New SizeF(7F, 15F)

@@ -56,15 +56,15 @@ Partial Class InitializeDialog
         ' 
         Me.TableLayoutPanel1.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         Me.TableLayoutPanel1.ColumnCount = 2
-        Me.TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
         Me.TableLayoutPanel1.Controls.Add(Me.OK_Button, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Cancel_Button, 1, 0)
         Me.TableLayoutPanel1.Location = New Point(224, 383)
         Me.TableLayoutPanel1.Margin = New Padding(4, 3, 4, 3)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
-        Me.TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50.0F))
+        Me.TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
         Me.TableLayoutPanel1.Size = New Size(265, 33)
         Me.TableLayoutPanel1.TabIndex = 0
         ' 
@@ -77,7 +77,8 @@ Partial Class InitializeDialog
         Me.OK_Button.Name = "OK_Button"
         Me.OK_Button.Size = New Size(119, 27)
         Me.OK_Button.TabIndex = 0
-        Me.OK_Button.Text = "OK" ' 
+        Me.OK_Button.Text = "OK"
+        ' 
         ' Cancel_Button
         ' 
         Me.Cancel_Button.Anchor = AnchorStyles.None
@@ -86,7 +87,8 @@ Partial Class InitializeDialog
         Me.Cancel_Button.Name = "Cancel_Button"
         Me.Cancel_Button.Size = New Size(119, 27)
         Me.Cancel_Button.TabIndex = 1
-        Me.Cancel_Button.Text = "Cancel" ' 
+        Me.Cancel_Button.Text = "Cancel"
+        ' 
         ' PumpAitComboBox
         ' 
         Me.PumpAitComboBox.DropDownStyle = ComboBoxStyle.DropDownList
@@ -103,7 +105,8 @@ Partial Class InitializeDialog
         Me.SelectAITLabel.Name = "SelectAITLabel"
         Me.SelectAITLabel.Size = New Size(96, 15)
         Me.SelectAITLabel.TabIndex = 2
-        Me.SelectAITLabel.Text = "Select Pump AIT:" ' 
+        Me.SelectAITLabel.Text = "Select Pump AIT:"
+        ' 
         ' UseAITAdvancedDecayCheckBox
         ' 
         Me.UseAITAdvancedDecayCheckBox.AutoCheck = False
@@ -205,7 +208,8 @@ Partial Class InitializeDialog
         Me.InsulinTypeLabel.Name = "InsulinTypeLabel"
         Me.InsulinTypeLabel.Size = New Size(72, 15)
         Me.InsulinTypeLabel.TabIndex = 6
-        Me.InsulinTypeLabel.Text = "Insulin Type:" ' 
+        Me.InsulinTypeLabel.Text = "Insulin Type:"
+        ' 
         ' InstructionsLabel
         ' 
         Me.InstructionsLabel.AutoSize = True
@@ -222,7 +226,8 @@ Partial Class InitializeDialog
         Me.TargetSgComboBox.Name = "TargetSgComboBox"
         Me.TargetSgComboBox.Size = New Size(132, 23)
         Me.TargetSgComboBox.TabIndex = 8
-        Me.TargetSgComboBox.Text = "120" ' 
+        Me.TargetSgComboBox.Text = "120"
+        ' 
         ' TargetSgValueLabel
         ' 
         Me.TargetSgValueLabel.AutoSize = True
@@ -230,11 +235,12 @@ Partial Class InitializeDialog
         Me.TargetSgValueLabel.Name = "TargetSgValueLabel"
         Me.TargetSgValueLabel.Size = New Size(90, 15)
         Me.TargetSgValueLabel.TabIndex = 9
-        Me.TargetSgValueLabel.Text = "Target SG Value:" ' 
+        Me.TargetSgValueLabel.Text = "Target SG Value:"
+        ' 
         ' InitializeDialog
         ' 
         Me.AcceptButton = Me.OK_Button
-        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
+        Me.AutoScaleDimensions = New SizeF(7F, 15F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.AutoValidate = AutoValidate.EnableAllowFocusChange
         Me.CancelButton = Me.Cancel_Button
@@ -256,7 +262,7 @@ Partial Class InitializeDialog
         Me.Name = "InitializeDialog"
         Me.ShowInTaskbar = False
         Me.StartPosition = FormStartPosition.CenterParent
-        Me.Text = "Initialize CareLink"
+        Me.Text = "Initialize Pump Settings"
         Me.TableLayoutPanel1.ResumeLayout(False)
         CType(Me.InitializeDataGridView, ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ErrorProvider1, ComponentModel.ISupportInitialize).EndInit()

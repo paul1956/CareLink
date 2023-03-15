@@ -105,7 +105,8 @@ Partial Class LoginForm1
         Me.Ok_Button.Name = "Ok_Button"
         Me.Ok_Button.Size = New Size(94, 23)
         Me.Ok_Button.TabIndex = 0
-        Me.Ok_Button.Text = "&OK"' 
+        Me.Ok_Button.Text = "&OK"
+        ' 
         ' Cancel_Button
         ' 
         Me.Cancel_Button.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
@@ -114,7 +115,8 @@ Partial Class LoginForm1
         Me.Cancel_Button.Name = "Cancel_Button"
         Me.Cancel_Button.Size = New Size(94, 23)
         Me.Cancel_Button.TabIndex = 1
-        Me.Cancel_Button.Text = "&Cancel"' 
+        Me.Cancel_Button.Text = "&Cancel"
+        ' 
         ' CountryComboBox
         ' 
         Me.CountryComboBox.Anchor = AnchorStyles.Left
@@ -144,7 +146,8 @@ Partial Class LoginForm1
         Me.SelectRegionLabel.Name = "SelectRegionLabel"
         Me.SelectRegionLabel.Size = New Size(78, 15)
         Me.SelectRegionLabel.TabIndex = 7
-        Me.SelectRegionLabel.Text = "Select Region"' 
+        Me.SelectRegionLabel.Text = "Select Region"
+        ' 
         ' SelectCountryLabel
         ' 
         Me.SelectCountryLabel.Anchor = AnchorStyles.Left
@@ -153,7 +156,8 @@ Partial Class LoginForm1
         Me.SelectCountryLabel.Name = "SelectCountryLabel"
         Me.SelectCountryLabel.Size = New Size(84, 15)
         Me.SelectCountryLabel.TabIndex = 9
-        Me.SelectCountryLabel.Text = "Select Country"' 
+        Me.SelectCountryLabel.Text = "Select Country"
+        ' 
         ' ShowPasswordCheckBox
         ' 
         Me.ShowPasswordCheckBox.AutoSize = True
@@ -172,7 +176,8 @@ Partial Class LoginForm1
         Me.LoginStatus.Name = "LoginStatus"
         Me.LoginStatus.Size = New Size(191, 80)
         Me.LoginStatus.TabIndex = 12
-        Me.LoginStatus.Text = "Login Status: Unknown"' 
+        Me.LoginStatus.Text = "Login Status: Unknown"
+        ' 
         ' LoginForm1
         ' 
         Me.AcceptButton = Me.Ok_Button

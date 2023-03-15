@@ -55,7 +55,8 @@ Partial Class OptionsDialog
         Me.OK_Button.Name = "OK_Button"
         Me.OK_Button.Size = New Size(66, 23)
         Me.OK_Button.TabIndex = 0
-        Me.OK_Button.Text = "OK"' 
+        Me.OK_Button.Text = "OK"
+        ' 
         ' Cancel_Button
         ' 
         Me.Cancel_Button.Anchor = AnchorStyles.None
@@ -64,7 +65,8 @@ Partial Class OptionsDialog
         Me.Cancel_Button.Name = "Cancel_Button"
         Me.Cancel_Button.Size = New Size(66, 23)
         Me.Cancel_Button.TabIndex = 1
-        Me.Cancel_Button.Text = "Cancel"' 
+        Me.Cancel_Button.Text = "Cancel"
+        ' 
         ' ItemNameComboBox
         ' 
         Me.ItemNameComboBox.DrawMode = DrawMode.OwnerDrawFixed
@@ -105,7 +107,7 @@ Partial Class OptionsDialog
         ' OptionsDialog
         ' 
         Me.AcceptButton = Me.OK_Button
-        Me.AutoScaleDimensions = New SizeF(7F, 15F)
+        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.CancelButton = Me.Cancel_Button
         Me.ClientSize = New Size(486, 143)
@@ -113,7 +115,7 @@ Partial Class OptionsDialog
         Me.Controls.Add(Me.UpdateForeground_Button)
         Me.Controls.Add(Me.ItemNameComboBox)
         Me.Controls.Add(Me.TableLayoutPanel1)
-        Me.Font = New Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point)
+        Me.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
         Me.FormBorderStyle = FormBorderStyle.FixedDialog
         Me.MaximizeBox = False
         Me.MinimizeBox = False

@@ -75,7 +75,8 @@ Partial Class BGMiniWindow
         Me.DeltaTextBox.Name = "DeltaTextBox"
         Me.DeltaTextBox.Size = New Size(121, 64)
         Me.DeltaTextBox.TabIndex = 2
-        Me.DeltaTextBox.Text = "+10"' 
+        Me.DeltaTextBox.Text = "+10"
+        ' 
         ' CloseButton
         ' 
         Me.CloseButton.Anchor = AnchorStyles.Top Or AnchorStyles.Right

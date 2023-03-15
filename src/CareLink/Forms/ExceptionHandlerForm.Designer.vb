@@ -46,7 +46,8 @@ Partial Class ExceptionHandlerForm
         Me.OK.Name = "OK"
         Me.OK.Size = New Size(94, 23)
         Me.OK.TabIndex = 4
-        Me.OK.Text = "&OK" ' 
+        Me.OK.Text = "&OK"
+        ' 
         ' Cancel
         ' 
         Me.Cancel.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
@@ -55,7 +56,8 @@ Partial Class ExceptionHandlerForm
         Me.Cancel.Name = "Cancel"
         Me.Cancel.Size = New Size(94, 23)
         Me.Cancel.TabIndex = 4
-        Me.Cancel.Text = "&Cancel" ' 
+        Me.Cancel.Text = "&Cancel"
+        ' 
         ' StackTraceTextBox
         ' 
         Me.StackTraceTextBox.Location = New Point(5, 63)
@@ -71,7 +73,8 @@ Partial Class ExceptionHandlerForm
         Me.AutoModeStatusLabel.Name = "AutoModeStatusLabel"
         Me.AutoModeStatusLabel.Size = New Size(62, 15)
         Me.AutoModeStatusLabel.TabIndex = 7
-        Me.AutoModeStatusLabel.Text = "Exception:" ' 
+        Me.AutoModeStatusLabel.Text = "Exception:"
+        ' 
         ' ExceptionTextBox
         ' 
         Me.ExceptionTextBox.Location = New Point(75, 2)
@@ -86,7 +89,8 @@ Partial Class ExceptionHandlerForm
         Me.BgReadingLabel.Name = "BgReadingLabel"
         Me.BgReadingLabel.Size = New Size(68, 15)
         Me.BgReadingLabel.TabIndex = 9
-        Me.BgReadingLabel.Text = "Stack Trace:" ' 
+        Me.BgReadingLabel.Text = "Stack Trace:"
+        ' 
         ' InstructionsRichTextBox
         ' 
         Me.InstructionsRichTextBox.Anchor = AnchorStyles.Top Or AnchorStyles.Right
@@ -94,11 +98,12 @@ Partial Class ExceptionHandlerForm
         Me.InstructionsRichTextBox.Name = "InstructionsRichTextBox"
         Me.InstructionsRichTextBox.Size = New Size(261, 282)
         Me.InstructionsRichTextBox.TabIndex = 10
-        Me.InstructionsRichTextBox.Text = "" ' 
+        Me.InstructionsRichTextBox.Text = ""
+        ' 
         ' ExceptionHandlerForm
         ' 
         Me.AcceptButton = Me.OK
-        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
+        Me.AutoScaleDimensions = New SizeF(7F, 15F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.ClientSize = New Size(1417, 383)
         Me.Controls.Add(Me.InstructionsRichTextBox)
