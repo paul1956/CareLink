@@ -274,6 +274,7 @@ Partial Class Form1
         Me.TableLayoutPanelLimits.SuspendLayout()
         Me.TabPage10NotificationHistory.SuspendLayout()
         Me.TableLayoutPanelNotificationHistory.SuspendLayout()
+        Me.TimeZoneLabel = New ToolStripStatusLabel()
         Me.TabPage11TherapyAlgorithm.SuspendLayout()
         Me.TableLayoutPanelTherapyAlgorithm.SuspendLayout()
         Me.TabPage12BannerState.SuspendLayout()
@@ -2615,7 +2616,7 @@ Partial Class Form1
         ' 
         ' StatusStrip1
         ' 
-        Me.StatusStrip1.Items.AddRange(New ToolStripItem() {Me.LoginStatus, Me.LastUpdateTime, Me.ToolStripSpacer})
+        Me.StatusStrip1.Items.AddRange(New ToolStripItem() {Me.LoginStatus, Me.LastUpdateTime, Me.ToolStripSpacer, Me.TimeZoneLabel})
         Me.StatusStrip1.Location = New Point(0, 692)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New Size(1384, 24)
@@ -2644,7 +2645,13 @@ Partial Class Form1
         ' 
         Me.ToolStripSpacer.Name = "ToolStripSpacer"
         Me.ToolStripSpacer.Size = New Size(0, 19)
+        '
+        ' TimeZoneLabel
         ' 
+        Me.TimeZoneLabel.Name = "TimeZoneLabel"
+        Me.TimeZoneLabel.Size = New Size(60, 19)
+        Me.TimeZoneLabel.Text = "TImeZone"
+        '
         ' Form1
         ' 
         Me.AutoScaleDimensions = New SizeF(96F, 96F)
@@ -2989,4 +2996,5 @@ Partial Class Form1
     Friend WithEvents FullNameLabel As Label
     Friend WithEvents SplitContainer1 As SplitContainer
     Friend WithEvents TemporaryUseAdvanceAITDecayCheckBox As CheckBox
+    Friend WithEvents TimeZoneLabel As ToolStripStatusLabel
 End Class

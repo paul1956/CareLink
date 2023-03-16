@@ -15,6 +15,7 @@ Friend Module Form1LoginHelpers
         Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
         s_listOfAutoBasalDeliveryMarkers.Clear()
         s_listOfManualBasal.Clear()
+        Dim fromFile As Boolean
         Select Case fileToLoad
             Case FileToLoadOptions.LastSaved
                 MainForm.Text = $"{SavedTitle} Using Last Saved Data"
@@ -23,6 +24,7 @@ Friend Module Form1LoginHelpers
                 MainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 MainForm.SetLastUpdateTime($"{File.GetLastWriteTime(GetPathToLastDownloadFile()).ToShortDateTimeString} from file", False)
                 SetUpCareLinkUser(MainForm, GetPathToTestSettingsFile())
+                fromFile = True
             Case FileToLoadOptions.TestData
                 MainForm.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
@@ -30,6 +32,7 @@ Friend Module Form1LoginHelpers
                 MainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 MainForm.SetLastUpdateTime($"{File.GetLastWriteTime(GetPathToTestData()).ToShortDateTimeString} from file", False)
                 SetUpCareLinkUser(MainForm, GetPathToTestSettingsFile)
+                fromFile = True
             Case FileToLoadOptions.Login
                 MainForm.Text = SavedTitle
                 Do Until MainForm.LoginDialog.ShowDialog() <> DialogResult.Retry
@@ -63,19 +66,22 @@ Friend Module Form1LoginHelpers
                 ReportLoginStatus(MainForm.LoginStatus, MainForm.RecentData Is Nothing OrElse MainForm.RecentData.Count = 0, MainForm.Client.GetLastErrorMessage)
 
                 MainForm.MenuShowMiniDisplay.Visible = True
+                fromFile = False
         End Select
 
-        MainForm.Client.SessionProfile.SetInsulinType(CurrentUser.InsulinTypeName)
-        With MainForm.DgvSessionProfile
-            .InitializeDgv()
-            .DataSource = MainForm.Client.SessionProfile.ToDataSource
-        End With
+        If MainForm.Client IsNot Nothing Then
+            MainForm.Client.SessionProfile?.SetInsulinType(CurrentUser.InsulinTypeName)
+            With MainForm.DgvSessionProfile
+                .InitializeDgv()
+                .DataSource = MainForm.Client.SessionProfile.ToDataSource
+            End With
+        End If
 
         MainForm.PumpAITLabel.Text = CurrentUser.GetPumpAitString
         MainForm.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName
         MainForm.FinishInitialization()
         If UpdateAllTabs Then
-            MainForm.UpdateAllTabPages()
+            MainForm.UpdateAllTabPages(fromFile)
         End If
         Return True
     End Function
@@ -107,15 +113,11 @@ Friend Module Form1LoginHelpers
     Friend Sub SetLastUpdateTime(mainForm As Form1, msg As String, highLight As Boolean)
         UpdateHighLightInLastUpdateTime(mainForm.LastUpdateTime, highLight)
         mainForm.LastUpdateTime.Text = $"Last Update Time: {msg}"
+        Dim timeZoneName As String = Nothing
+        mainForm.TimeZoneLabel.Text = If(mainForm.RecentData.TryGetValue(NameOf(ItemIndexes.clientTimeZoneName), timeZoneName),
+                                            CalculateTimeZone(timeZoneName).StandardName,
+                                            "")
         mainForm.LastUpdateTime.Spring = True
-        'Dim spaceWidth As Integer = TextRenderer.MeasureText(" "c, mainForm.LastUpdateTime.Font).Width
-        'Dim desiredMidWidth As Integer = mainForm.StatusStrip1.Width - mainForm.LoginStatus.Width
-        'desiredMidWidth -= mainForm.LastUpdateTime.Width \ 2
-        'If desiredMidWidth > 0 Then
-        '    Dim neededSpaces As Integer = desiredMidWidth \ spaceWidth
-        '    Dim nSpaces As String = StrDup(neededSpaces, " "c)
-        '    mainForm.LastUpdateTime.Text = $"{nSpaces}{$"Last Update Time: {msg}"}{nSpaces}"
-        'End If
 
     End Sub
 

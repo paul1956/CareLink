@@ -193,7 +193,7 @@ Public Class Form1
         CheckForUpdatesAsync(Me, False)
 
         If Me.DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
-            Me.UpdateAllTabPages()
+            Me.UpdateAllTabPages(False)
         End If
     End Sub
 
@@ -249,7 +249,7 @@ Public Class Form1
                         Try
                             Me.FinishInitialization()
                             Try
-                                Me.UpdateAllTabPages()
+                                Me.UpdateAllTabPages(True)
                             Catch ex As ArgumentException
                                 MessageBox.Show($"Error in {NameOf(UpdateAllTabPages)}. Original error: {ex.Message}")
                             End Try
@@ -299,7 +299,7 @@ Public Class Form1
                     Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
                     Me.SetLastUpdateTime(File.GetLastWriteTime(openFileDialog1.FileName).ToShortDateTimeString, False)
                     Me.FinishInitialization()
-                    Me.UpdateAllTabPages()
+                    Me.UpdateAllTabPages(True)
                 End If
             Catch ex As Exception
                 MessageBox.Show($"Cannot read file from disk. Original error: {ex.DecodeException()}")
@@ -1339,8 +1339,7 @@ Public Class Form1
                     End If
                     Me.RecentData = Nothing
                 Else
-                    Me.SetLastUpdateTime($"{PumpNow.ToShortDateTimeString} {GetTimeZoneName(TimeZoneNameFormat.StandardName)}", False)
-                    Me.UpdateAllTabPages()
+                    Me.UpdateAllTabPages(False)
                 End If
             Else
                 Stop
@@ -1486,12 +1485,17 @@ Public Class Form1
         With activeInsulinChartArea.AxisY
             .Interval = 2
             .IsInterlaced = False
+            With .LabelStyle
+                .Font = labelFont
+                .ForeColor = labelColor
+                .Format = "{0.00}"
+            End With
             With .MajorTickMark
                 .Interval = 4
                 .Enabled = False
             End With
             .Maximum = 25
-            .Minimum = 0
+            .Minimum = Double.Epsilon
             .Title = "Active Insulin"
             .TitleFont = New Font(labelFont.FontFamily, 14)
             .TitleForeColor = labelColor
@@ -1559,7 +1563,6 @@ Public Class Form1
             .Interval = interval
             .IsInterlaced = False
             .IsMarginVisible = False
-            .IsStartedFromZero = False
             With .LabelStyle
                 .Font = labelFont
                 .ForeColor = labelColor
@@ -2047,7 +2050,7 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
-    Friend Sub UpdateAllTabPages()
+    Friend Sub UpdateAllTabPages(fromFile As Boolean)
         If Me.RecentData Is Nothing Then
             Debug.Print($"Exiting {NameOf(UpdateAllTabPages)}, {NameOf(RecentData)} has no data!")
             Exit Sub
@@ -2070,7 +2073,11 @@ Public Class Form1
             _summaryChartAbsoluteRectangle = RectangleF.Empty
             _treatmentMarkerAbsoluteRectangle = RectangleF.Empty
             Me.MenuStartHere.Enabled = False
-            Me.SetLastUpdateTime($"{PumpNow.ToShortDateTimeString} {GetTimeZoneName(TimeZoneNameFormat.StandardName)}", False)
+            If fromFile Then
+                Me.LoginStatus.Text = "Login Status: N/A From Saved File"
+            Else
+                Me.SetLastUpdateTime(PumpNow.ToShortDateTimeString, False)
+            End If
             Me.CursorPanel.Visible = False
 
             Me.Cursor = Cursors.WaitCursor

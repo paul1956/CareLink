@@ -35,7 +35,12 @@ Friend Module TimeZoneExtensions
             s_systemTimeZones = TimeZoneInfo.GetSystemTimeZones.ToList
         End If
 
-        Dim possibleTimeZone As TimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(id)
+        Dim possibleTimeZone As TimeZoneInfo = Nothing
+        Try
+            possibleTimeZone = TimeZoneInfo.FindSystemTimeZoneById(id)
+        Catch ex As Exception
+
+        End Try
         If possibleTimeZone IsNot Nothing Then
             Return possibleTimeZone
         End If
