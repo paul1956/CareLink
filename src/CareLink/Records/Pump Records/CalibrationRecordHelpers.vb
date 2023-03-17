@@ -37,9 +37,9 @@ Friend Module CalibrationRecordHelpers
             Dim sensorValue As Single = ParseSingle(e.Value, 2)
             If Single.IsNaN(sensorValue) Then
                 e.CellStyle.BackColor = Color.Gray
-            ElseIf sensorValue < s_limitLow Then
+            ElseIf sensorValue < TirLowLimit() Then
                 e.CellStyle.BackColor = Color.Red
-            ElseIf sensorValue > s_limitHigh Then
+            ElseIf sensorValue > TirHighLimit() Then
                 e.CellStyle.BackColor = Color.Yellow
             End If
             e.CellStyle.ForeColor = e.CellStyle.BackColor.GetContrastingColor()

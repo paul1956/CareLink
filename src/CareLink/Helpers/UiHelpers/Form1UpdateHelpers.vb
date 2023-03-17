@@ -40,29 +40,30 @@ Friend Module Form1UpdateHelpers
         End With
     End Sub
 
-    Friend Sub SetTreatmentInsulinRow()
+    Friend Function SetTreatmentInsulinRow() As Single
+        Dim row As Single
         Select Case MaxBasalPerDose
             Case < 0.25
-                TreatmentInsulinRow = 0.4
+                row = 0.4
             Case < 0.5
-                TreatmentInsulinRow = 0.5
+                row = 0.5
             Case < 0.75
-                TreatmentInsulinRow = 0.75
+                row = 0.75
             Case < 1
-                TreatmentInsulinRow = 1
+                row = 1
             Case < 1.25
-                TreatmentInsulinRow = 1.25
+                row = 1.25
             Case < 1.5
-                TreatmentInsulinRow = 1.5
+                row = 1.5
             Case < 1.75
-                TreatmentInsulinRow = 1.75
+                row = 1.75
             Case < 2
-                TreatmentInsulinRow = 2
+                row = 2
             Case Else
-                TreatmentInsulinRow = MaxBasalPerDose + 0.025!
+                row = MaxBasalPerDose
         End Select
-        TreatmentInsulinRow = TreatmentInsulinRow.RoundTo025
-    End Sub
+        Return (row + 0.025!).RoundTo025
+    End Function
 
     Friend Sub UpdateDataTables(mainForm As Form1, recentData As Dictionary(Of String, String))
 

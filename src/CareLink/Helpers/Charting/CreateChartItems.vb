@@ -119,6 +119,7 @@ Friend Module CreateChartItems
                 With .LabelStyle
                     .Font = labelFont
                     .ForeColor = labelColor
+                    .Format = "{0}"
                 End With
                 .LineColor = Color.FromArgb(64, labelColor)
                 With .MajorGrid
@@ -127,26 +128,28 @@ Friend Module CreateChartItems
                 .ScaleView.Zoomable = False
             End With
             With .AxisY2
-                .Interval = HomePageMealRow
                 .IsMarginVisible = False
                 .IsStartedFromZero = False
                 With .LabelStyle
                     .Font = labelFont
                     .ForeColor = labelColor
+                    .Format = "{0}"
                 End With
                 .LineColor = Color.FromArgb(64, labelColor)
+                Dim mealRowRounded As Double = Math.Round(GetYMinValue(), 0, MidpointRounding.ToZero)
+
                 With .MajorGrid
-                    .Interval = HomePageMealRow
+                    .Interval = mealRowRounded
                     .LineColor = Color.FromArgb(64, labelColor)
                 End With
                 With .MajorTickMark
                     .Enabled = True
-                    .Interval = HomePageMealRow
+                    .Interval = mealRowRounded
                     .LineColor = Color.FromArgb(64, labelColor)
                 End With
 
-                .Maximum = HomePageBasalRow
-                .Minimum = HomePageMealRow
+                .Maximum = Math.Round(GetYMaxValue(), 0, MidpointRounding.AwayFromZero)
+                .Minimum = mealRowRounded
                 .Title = "Blood Glucose Value"
                 .TitleFont = New Font(labelFont.FontFamily, 14)
                 .TitleForeColor = labelColor

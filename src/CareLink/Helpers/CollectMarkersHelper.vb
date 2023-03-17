@@ -12,7 +12,7 @@ Friend Module CollectMarkersHelper
         For Each kvp As KeyValuePair(Of String, String) In innerDictionary
             Select Case kvp.Key
                 Case "value"
-                    newMarker.Add(kvp.Key, kvp.scaleValue(2))
+                    newMarker.Add(kvp.Key, kvp.ScaleSgToString())
                 Case Else
                     newMarker.Add(kvp.Key, kvp.Value)
             End Select

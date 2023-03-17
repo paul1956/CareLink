@@ -687,11 +687,8 @@ Public Class Form1
         If Not _Initialized OrElse _inMouseMove Then
             Exit Sub
         End If
-        Debug.Print($"In {NameOf(ActiveInsulinChart_PostPaint)} before SyncLock")
         SyncLock _updatingLock
-            Debug.Print($"In {NameOf(ActiveInsulinChart_PostPaint)} in SyncLock")
             If _updating Then
-                Debug.Print($"Exiting {NameOf(ActiveInsulinChart_PostPaint)} due to {NameOf(_updating)}")
                 Exit Sub
             End If
             e.PostPaintSupport(_activeInsulinChartAbsoluteRectangle,
@@ -700,7 +697,6 @@ Public Class Form1
                 True,
                 True)
         End SyncLock
-        Debug.Print($"In {NameOf(ActiveInsulinChart_PostPaint)} exited SyncLock")
     End Sub
 
     <DebuggerNonUserCode()>
@@ -709,11 +705,8 @@ Public Class Form1
         If Not _Initialized OrElse _inMouseMove Then
             Exit Sub
         End If
-        Debug.Print($"In {NameOf(SummaryChart_PostPaint)} before SyncLock")
         SyncLock _updatingLock
-            Debug.Print($"In {NameOf(SummaryChart_PostPaint)} in SyncLock")
             If _updating Then
-                Debug.Print($"Exiting {NameOf(SummaryChart_PostPaint)} due to {NameOf(_updating)}")
                 Exit Sub
             End If
             e.PostPaintSupport(_summaryChartAbsoluteRectangle,
@@ -722,7 +715,6 @@ Public Class Form1
                 True,
                 True)
         End SyncLock
-        Debug.Print($"In {NameOf(SummaryChart_PostPaint)} exited SyncLock")
     End Sub
 
     <DebuggerNonUserCode()>
@@ -731,11 +723,8 @@ Public Class Form1
         If Not _Initialized OrElse _inMouseMove Then
             Exit Sub
         End If
-        Debug.Print($"In {NameOf(TreatmentMarkersChart_PostPaint)} before SyncLock")
         SyncLock _updatingLock
-            Debug.Print($"In {NameOf(TreatmentMarkersChart_PostPaint)} in SyncLock")
             If _updating Then
-                Debug.Print($"Exiting {NameOf(TreatmentMarkersChart_PostPaint)} due to {NameOf(_updating)}")
                 Exit Sub
             End If
             e.PostPaintSupport(_treatmentMarkerAbsoluteRectangle,
@@ -744,7 +733,6 @@ Public Class Form1
                 offsetInsulinImage:=False,
                 paintOnY2:=False)
         End SyncLock
-        Debug.Print($"In {NameOf(TreatmentMarkersChart_PostPaint)} exited SyncLock")
     End Sub
 
 #End Region ' Post Paint Events
@@ -930,9 +918,9 @@ Public Class Form1
                 Dim sensorValue As Single = ParseSingle(e.Value, 2)
                 If Single.IsNaN(sensorValue) Then
                     FormatCell(e, Color.Gray)
-                ElseIf sensorValue < s_limitLow Then
+                ElseIf sensorValue < TirLowLimit() Then
                     FormatCell(e, Color.Red)
-                ElseIf sensorValue > s_limitHigh Then
+                ElseIf sensorValue > TirHighLimit() Then
                     FormatCell(e, Color.Yellow)
                 End If
             End If
@@ -1302,9 +1290,7 @@ Public Class Form1
 
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
         Me.ServerUpdateTimer.Stop()
-        Debug.Print($"Before SyncLock in {NameOf(ServerUpdateTimer_Tick)}, {NameOf(ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
         SyncLock _updatingLock
-            Debug.Print($"In {NameOf(ServerUpdateTimer_Tick)}, inside SyncLock at {Now.ToLongTimeString}")
             If Not _updating Then
                 _updating = True
                 Me.RecentData = Me.Client?.GetRecentData(Me)
@@ -1348,7 +1334,6 @@ Public Class Form1
         LastServerUpdateTime = lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime
         Me.ServerUpdateTimer.Interval = CInt(s_1MinutesInMilliseconds)
         Me.ServerUpdateTimer.Start()
-        Debug.Print($"In {NameOf(ServerUpdateTimer_Tick)}, exited SyncLock. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
     End Sub
 
     Public Sub PowerModeChanged(sender As Object, e As Microsoft.Win32.PowerModeChangedEventArgs)
@@ -1488,14 +1473,14 @@ Public Class Form1
             With .LabelStyle
                 .Font = labelFont
                 .ForeColor = labelColor
-                .Format = "{0.00}"
+                .Format = "{0}"
             End With
             With .MajorTickMark
                 .Interval = 4
                 .Enabled = False
             End With
             .Maximum = 25
-            .Minimum = Double.Epsilon
+            .Minimum = 0
             .Title = "Active Insulin"
             .TitleFont = New Font(labelFont.FontFamily, 14)
             .TitleForeColor = labelColor
@@ -1553,7 +1538,7 @@ Public Class Form1
         Me.TreatmentMarkersChart = CreateChart(NameOf(TreatmentMarkersChart))
         Dim treatmentMarkersChartArea As ChartArea = CreateChartArea(Me.TreatmentMarkersChart)
 
-        SetTreatmentInsulinRow()
+        TreatmentInsulinRow = SetTreatmentInsulinRow()
 
         Dim labelColor As Color = Me.TreatmentMarkersChart.BackColor.GetContrastingColor
         Dim labelFont As New Font("Trebuchet MS", 12.0F, FontStyle.Bold)
@@ -1566,7 +1551,7 @@ Public Class Form1
             With .LabelStyle
                 .Font = labelFont
                 .ForeColor = labelColor
-                .Format = "{0.00}"
+                .Format = "{0.000}"
             End With
             .LineColor = Color.FromArgb(64, labelColor)
             With .MajorTickMark
@@ -1706,7 +1691,7 @@ Public Class Form1
                     remainingInsulinList.Add(New RunningActiveInsulinRecord(firstNotSkippedOaTime, initialBolus, CurrentUser))
                 Next
 
-                .ChartAreas(NameOf(ChartArea)).AxisY2.Maximum = HomePageBasalRow
+                .ChartAreas(NameOf(ChartArea)).AxisY2.Maximum = GetYMaxValue()
                 ' walk all markers, adjust active insulin and then add new marker
                 Dim maxActiveInsulin As Double = 0
                 For i As Integer = 0 To remainingInsulinList.Count - 1
@@ -1732,7 +1717,7 @@ Public Class Form1
                              _summaryChartAbsoluteRectangle,
                              s_activeInsulinMarkerInsulinDictionary,
                              Nothing)
-                .PlotSgSeries(HomePageMealRow)
+                .PlotSgSeries(GetYMinValue())
                 .PlotHighLowLimitsAndTargetSg(True)
             End With
         Catch ex As Exception
@@ -1755,7 +1740,7 @@ Public Class Form1
                              _summaryChartAbsoluteRectangle,
                              s_summaryMarkerInsulinDictionary,
                              s_summaryMarkerMealDictionary)
-                .PlotSgSeries(HomePageMealRow)
+                .PlotSgSeries(GetYMinValue())
                 .PlotHighLowLimitsAndTargetSg(False)
                 Application.DoEvents()
             End With
@@ -2004,11 +1989,11 @@ Public Class Form1
         With Me.TimeInRangeChart
             With .Series(NameOf(TimeInRangeSeries)).Points
                 .Clear()
-                .AddXY($"{s_belowHypoLimit}% Below {s_limitLow} {BgUnitsString}", s_belowHypoLimit / 100)
+                .AddXY($"{s_belowHypoLimit}% Below {TirLowLimit()} {BgUnitsString}", s_belowHypoLimit / 100)
                 .Last().Color = Color.Red
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
-                .AddXY($"{s_aboveHyperLimit}% Above {s_limitHigh} {BgUnitsString}", s_aboveHyperLimit / 100)
+                .AddXY($"{s_aboveHyperLimit}% Above {TirHighLimit()} {BgUnitsString}", s_aboveHyperLimit / 100)
                 .Last().Color = Color.Yellow
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
@@ -2041,7 +2026,7 @@ Public Class Form1
             Me.TreatmentMarkersChart.Titles(NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details - {s_listOfManualBasal.GetSubTitle}"
             Me.TreatmentMarkersChart.ChartAreas(NameOf(ChartArea)).UpdateChartAreaSgAxisX()
             Me.TreatmentMarkersChart.PlotTreatmentMarkers(TreatmentMarkerTimeChangeSeries)
-            Me.TreatmentMarkersChart.PlotSgSeries(HomePageMealRow)
+            Me.TreatmentMarkersChart.PlotSgSeries(GetYMinValue())
             Me.TreatmentMarkersChart.PlotHighLowLimitsAndTargetSg(True)
         Catch ex As Exception
             Stop
@@ -2066,9 +2051,7 @@ Public Class Form1
         If Me.RecentData.Count > ItemIndexes.finalCalibration + 1 Then
             Stop
         End If
-        Debug.Print($"In {NameOf(UpdateAllTabPages)} before SyncLock")
         SyncLock _updatingLock
-            Debug.Print($"In {NameOf(UpdateAllTabPages)} inside SyncLock")
             _updating = True ' prevent paint
             _summaryChartAbsoluteRectangle = RectangleF.Empty
             _treatmentMarkerAbsoluteRectangle = RectangleF.Empty
@@ -2087,7 +2070,6 @@ Public Class Form1
             Me.Cursor = Cursors.Default
             _updating = False
         End SyncLock
-        Debug.Print($"In {NameOf(UpdateAllTabPages)} exited SyncLock")
 
         Dim rowValue As String = Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastSGTrend))
         Dim arrows As String = Nothing
@@ -2109,8 +2091,8 @@ Public Class Form1
         Me.UpdateAllSummarySeries()
         Me.UpdateDosingAndCarbs()
 
-        Me.AboveHighLimitMessageLabel.Text = $"Above {s_limitHigh} {BgUnitsString}"
-        Me.BelowLowLimitMessageLabel.Text = $"Below {s_limitLow} {BgUnitsString}"
+        Me.AboveHighLimitMessageLabel.Text = $"Above {TirHighLimit()} {BgUnitsString}"
+        Me.BelowLowLimitMessageLabel.Text = $"Below {TirLowLimit()} {BgUnitsString}"
         Me.FullNameLabel.Text = $"{s_firstName} {Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastName))}"
         Dim modelNumber As String = Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber))
         Me.ModelLabel.Text = modelNumber
@@ -2245,19 +2227,19 @@ Public Class Form1
             Using bitmapText As New Bitmap(16, 16)
                 Using g As Graphics = Graphics.FromImage(bitmapText)
                     Select Case sg
-                        Case <= s_limitLow
+                        Case <= TirLowLimit()
                             bgColor = Color.Yellow
                             If _showBalloonTip Then
-                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}{TmChar} Alert", $"SG below {s_limitLow} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
+                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}{TmChar} Alert", $"SG below {TirLowLimit()} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
-                        Case <= s_limitHigh
+                        Case <= TirHighLimit()
                             bgColor = Color.Green
                             _showBalloonTip = True
                         Case Else
                             bgColor = Color.Red
                             If _showBalloonTip Then
-                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}{TmChar} Alert", $"SG above {s_limitHigh} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
+                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}{TmChar} Alert", $"SG above {TirHighLimit()} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
                     End Select

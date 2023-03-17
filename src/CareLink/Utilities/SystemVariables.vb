@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Module SystemVariables
+    Friend s_useLocalTimeZone As Boolean
     Public s_allUserSettingsData As New CareLinkUserDataList
     Friend Property CurrentUser As CurrentUserRecord
 
@@ -18,12 +19,38 @@ Friend Module SystemVariables
                         {"Time Change", KnownColor.White}
                     }
 
-    Friend Property HomePageBasalRow As Single = 400
-    Friend Property HomePageInsulinRow As Single = 342
-    Friend Property HomePageMealRow As Single = 50
     Friend Property LastServerUpdateTime As Date
+
     Friend Property MaxBasalPerDose As Single
+
     Friend Property MaxBasalPerHour As Single
-    Friend Property scalingNeeded As Boolean = Nothing
+
+    Friend Property ScalingNeeded As Boolean = False
+
     Friend Property TreatmentInsulinRow As Single
+
+    Private Function ScaleValue(value As Integer) As Single
+        Return If(ScalingNeeded, CSng(Math.Round(value / MmolLUnitsDivisor, 2, MidpointRounding.ToZero)), value)
+    End Function
+
+    Friend Function GetInsulinYValue() As Single
+        Return ScaleValue(342)
+    End Function
+
+    Friend Function GetYMaxValue() As Single
+        Return ScaleValue(400)
+    End Function
+
+    Friend Function GetYMinValue() As Single
+        Return ScaleValue(50)
+    End Function
+
+    Friend Function TirHighLimit() As Single
+        Return ScaleValue(180)
+    End Function
+
+    Friend Function TirLowLimit() As Single
+        Return ScaleValue(70)
+    End Function
+
 End Module

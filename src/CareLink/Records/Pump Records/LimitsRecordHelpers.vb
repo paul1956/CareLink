@@ -44,7 +44,7 @@ Friend Module LimitsRecordHelpers
             For Each kvp As KeyValuePair(Of String, String) In e.Value
                 Select Case kvp.Key
                     Case "lowLimit", "highLimit"
-                        newLimit.Add(kvp.Key, kvp.scaleValue(1))
+                        newLimit.Add(kvp.Key, kvp.ScaleSgToString)
                     Case Else
                         newLimit.Add(kvp.Key, kvp.Value)
                 End Select

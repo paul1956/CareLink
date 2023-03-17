@@ -7,8 +7,6 @@ Imports System.Text.Json
 Imports System.Text.Json.Serialization
 
 Public Module JsonExtensions
-    Friend s_timeZoneList As List(Of TimeZoneInfo)
-    Friend s_useLocalTimeZone As Boolean
 
     <Extension>
     Private Function jsonItemAsString(item As KeyValuePair(Of String, Object)) As String
@@ -26,19 +24,6 @@ Public Module JsonExtensions
             Case JsonValueKind.String
         End Select
         Return valueAsString
-    End Function
-
-    <Extension>
-    Private Function jsonToSingle(item As KeyValuePair(Of String, Object)) As Single
-        Return item.jsonItemAsString.ParseSingle(10)
-    End Function
-
-    <Extension>
-    Private Function scaleToString(valueAsSingle As Single, decimalDigits As Integer) As String
-        If scalingNeeded AndAlso valueAsSingle > 49 Then
-            Return (valueAsSingle / MmolLUnitsDivisor).RoundSingle(decimalDigits).ToString(CurrentDataCulture)
-        End If
-        Return valueAsSingle.ToString(CurrentDataCulture)
     End Function
 
     <Extension>
@@ -65,7 +50,7 @@ Public Module JsonExtensions
                 If item.Value Is Nothing Then
                     resultDictionary.Add(item.Key, Nothing)
                 ElseIf item.Key = "sg" Then
-                    resultDictionary.Add(item.Key, item.scaleJsonValue)
+                    resultDictionary.Add(item.Key, item.ScaleSgToString)
                 Else
                     resultDictionary.Add(item.Key, item.jsonItemAsString)
                 End If
@@ -107,21 +92,9 @@ Public Module JsonExtensions
                                 End If
                             End If
                             If BgUnitsString = "mg/dl" Then
-                                scalingNeeded = False
-                                HomePageBasalRow = 400
-                                HomePageInsulinRow = 342
-                                HomePageMealRow = 50
-                                s_criticalLow = 50
-                                s_limitHigh = 180
-                                s_limitLow = 70
+                                ScalingNeeded = False
                             Else
-                                scalingNeeded = True
-                                HomePageBasalRow = 22
-                                HomePageInsulinRow = 19
-                                HomePageMealRow = CSng(Math.Round(50 / MmolLUnitsDivisor, 0, MidpointRounding.ToZero))
-                                s_criticalLow = HomePageMealRow
-                                s_limitHigh = 10
-                                s_limitLow = 3.9
+                                ScalingNeeded = True
                             End If
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
                         Case NameOf(ItemIndexes.clientTimeZoneName)
@@ -159,7 +132,7 @@ Public Module JsonExtensions
                             s_timeWithoutMinuteFormat = If(internalTimeFormat = "HR_12", TimeFormatTwelveHourWithoutMinutes, TimeFormatMilitaryWithoutMinutes)
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
                         Case "Sg", "sg", NameOf(ItemIndexes.averageSGFloat), NameOf(ItemIndexes.averageSG), NameOf(ItemIndexes.sgBelowLimit)
-                            resultDictionary.Add(item.Key, item.scaleJsonValue())
+                            resultDictionary.Add(item.Key, item.ScaleSgToString())
                         Case Else
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
                     End Select
@@ -170,18 +143,6 @@ Public Module JsonExtensions
             Next
         End If
         Return resultDictionary
-    End Function
-
-    <Extension>
-    Public Function scaleJsonValue(item As KeyValuePair(Of String, Object)) As String
-        Dim valueAsSingle As Single = item.jsonToSingle()
-        Return valueAsSingle.scaleToString(2)
-    End Function
-
-    <Extension>
-    Public Function scaleValue(item As KeyValuePair(Of String, String), decimalDigits As Integer) As String
-        Dim valueAsSingle As Single = item.Value.ParseSingle(decimalDigits)
-        Return valueAsSingle.scaleToString(decimalDigits)
     End Function
 
 End Module
