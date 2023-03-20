@@ -75,6 +75,7 @@ Friend Module UserMessageHandler
                         {"BC_SID_MOVE_AWAY_FROM_ELECTR_DEVICES", "Possible signal interface(triggeredDateTime). Move away from electronic devices. May take 15 minutes to find signal."},
                         {"BC_SID_MOVE_PUMP_CLOSER_TO_MINILINK", "Lost sensor signal(triggeredDateTime). Move pump closer to transmitter. May take 15 minutes to find signal."},
                         {"BC_SID_RECHARGE_MINILINK_WITHIN_24_HR", "Recharge transmitter within 24 hours(triggeredDateTime)."},
+                        {"BC_SID_REMOVE_RESERVOIR_SELECT_REWIND", "Remove reservoir and select rewind(triggeredDateTime)."},
                         {"BC_SID_REPLACE_BATTERY_SOON", "Battery low pump(triggeredDateTime). Replace battery soon."},
                         {"BC_SID_SECOND_CALIBRATION_NOT_ACCEPT", "Change Sensor(triggeredDateTime). Second calibration not accepted. Insert new sensor."},
                         {"BC_SID_SENSOR_INFO_UNAVAILABLE_FOR_UP_TO_TWO_HOURS", "Sensor info unavailable for up to two hours(triggeredDateTime)."},

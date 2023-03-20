@@ -1551,7 +1551,7 @@ Public Class Form1
             With .LabelStyle
                 .Font = labelFont
                 .ForeColor = labelColor
-                .Format = "{0.000}"
+                .Format = "{0.00}"
             End With
             .LineColor = Color.FromArgb(64, labelColor)
             With .MajorTickMark
