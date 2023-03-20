@@ -1685,7 +1685,7 @@
           }
         }
       },
-      "WinForms.DataVisualization/1.7.0": {
+      "WinForms.DataVisualization/1.8.0": {
         "type": "package",
         "compile": {
           "lib/net7.0-windows7.0/WinForms.DataVisualization.Utilities.dll": {
@@ -5634,10 +5634,10 @@
         "toolstripcomboboxex.nuspec"
       ]
     },
-    "WinForms.DataVisualization/1.7.0": {
-      "sha512": "ws9wkGa3df+Bij7mvXdm73WrijAi+3rA8hrMfANZqAkhwqlCfSWaFo+xNsnOzyDLCaPNrQ/fkq1/HAWuEpUiTA==",
+    "WinForms.DataVisualization/1.8.0": {
+      "sha512": "+L0hJaW1kq78Z4HQlIhq8Jmsuz8n9rRaJgTdwLwzYItgiL6U9zNgM+RWRBsD3pSUw1QRMy7GlpZI/+XMmnXCmA==",
       "type": "package",
-      "path": "winforms.datavisualization/1.7.0",
+      "path": "winforms.datavisualization/1.8.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -5667,7 +5667,7 @@
         "lib/net7.0-windows7.0/WinForms.DataVisualization.dll",
         "lib/net7.0-windows7.0/WinForms.DataVisualization.pdb",
         "lib/net7.0-windows7.0/WinForms.DataVisualization.xml",
-        "winforms.datavisualization.1.7.0.nupkg.sha512",
+        "winforms.datavisualization.1.8.0.nupkg.sha512",
         "winforms.datavisualization.nuspec"
       ]
     },
@@ -5694,7 +5694,7 @@
       "Octokit >= 5.0.2",
       "TableLayputPanelTop >= 1.0.0.2",
       "ToolStripComboBoxEx >= 1.0.0.2",
-      "WinForms.DataVisualization >= 1.7.0"
+      "WinForms.DataVisualization >= 1.8.0"
     ]
   },
   "packageFolders": {
@@ -5762,7 +5762,7 @@
           },
           "WinForms.DataVisualization": {
             "target": "Package",
-            "version": "[1.7.0, )"
+            "version": "[1.8.0, )"
           }
         },
         "imports": [
