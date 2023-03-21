@@ -41,8 +41,13 @@ Public Module DataGridViewExtensions
             Return
         End If
         If dgv.Columns(e.ColumnIndex).Name.Equals(key, StringComparison.Ordinal) Then
-            Dim dateValue As Date = e.Value.ToString.ParseDate("")
-            e.Value = dateValue.ToShortDateTimeString
+            Try
+                Dim dateValue As Date
+                dateValue = e.Value.ToString.ParseDate("")
+                e.Value = dateValue.ToShortDateTimeString
+            Catch ex As Exception
+                e.Value = e.Value.ToString
+            End Try
         End If
     End Sub
 
