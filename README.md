@@ -27,13 +27,14 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-03/17/2023
+03/22/2023
 
 ## What's New in this release
 New in 3.6.2.0
 - Add label to active insulin chart
 - Fix times for file based displays
 - Separate TimeZone in Status Bar
+- Fix crash in some tables, in non-English language versions of Windows
 
 New in 3.6.1.3
 - Remove duplicate BasalRecords (only effects MM)
