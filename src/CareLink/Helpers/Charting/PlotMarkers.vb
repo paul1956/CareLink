@@ -144,7 +144,7 @@ Friend Module PlotMarkers
                             markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Yellow)
                             markerSeriesPoints.Last.MarkerSize = 20
                             markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
-                            markerSeriesPoints.Last.Tag = $"Meal {entry("amount")} grams"
+                            markerSeriesPoints.Last.Tag = $"Meal:{entry("amount")} grams"
                         End If
                     Case "TIME_CHANGE"
                         With pageChart.Series(CreateChartItems.TimeChangeSeriesName).Points
