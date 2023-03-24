@@ -33,8 +33,6 @@ Public Class Form1
 
     Public Property Initialized As Boolean = False
 
-    Public ReadOnly Property LoginDialog As New LoginForm1
-
     Public Property Client As CareLinkClient
         Get
             Return Me.LoginDialog?.Client
@@ -43,6 +41,8 @@ Public Class Form1
             Me.LoginDialog.Client = value
         End Set
     End Property
+
+    Public ReadOnly Property LoginDialog As New LoginForm1
 
 #Region "Pump Data"
 
@@ -118,6 +118,10 @@ Public Class Form1
 #Region "Events"
 
 #Region "Form Events"
+
+    Private Sub ActiveInsulinValue_Paint(sender As Object, e As PaintEventArgs) Handles ActiveInsulinValue.Paint
+        ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.LimeGreen, ButtonBorderStyle.Solid)
+    End Sub
 
     Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
         Me.CleanUpNotificationIcon()
@@ -1244,9 +1248,8 @@ Public Class Form1
         Me.TabControlPage1.Visible = True
         Dim topTable As TableLayoutPanelTopEx = CType(CType(sender, Button).Parent, TableLayoutPanelTopEx)
         Dim dgv As DataGridView = CType(Me.TabControlPage1.TabPages(3).Controls(0), DataGridView)
+        Dim tabName As String = topTable.LabelText.Substring(3)
         For Each row As DataGridViewRow In dgv.Rows
-            Dim tabName As String = topTable.LabelText.Substring(3)
-
             If row.Cells(1).FormattedValue.ToString = tabName Then
                 dgv.CurrentCell = row.Cells(2)
                 Exit For

@@ -27,9 +27,12 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-03/22/2023
+03/24/2023
 
 ## What's New in this release
+New in 3.6.2.1
+- Added discoverability to table Export features 
+
 New in 3.6.2.0
 - Add label to active insulin chart
 - Fix times for file based displays

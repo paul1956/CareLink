@@ -31,9 +31,7 @@ Friend Module TimeChangeRecordHelpers
     End Sub
 
     Private Sub DataGridViewView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
-        Using dgv As DataGridView = CType(sender, DataGridView)
-            dgv.dgvCellFormatting(e, NameOf(TimeChangeRecord.dateTime))
-        End Using
+        CType(sender, DataGridView).dgvCellFormatting(e, NameOf(TimeChangeRecord.dateTime))
     End Sub
 
     Private Function GetCellStyle(columnName As String) As DataGridViewCellStyle

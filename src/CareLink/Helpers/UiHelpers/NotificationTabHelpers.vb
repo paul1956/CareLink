@@ -17,7 +17,7 @@ Friend Module NotificationTabHelpers
         tableLevel1Blue.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0!))
         tableLevel1Blue.Dock = DockStyle.Fill
         tableLevel1Blue.Location = New Point(6, 30)
-        tableLevel1Blue.Name = "TableLayoutPanelSgsTop"
+        tableLevel1Blue.Name = "TableLayoutPanelNotificationHistoryTop"
         tableLevel1Blue.RowCount = 2
         tableLevel1Blue.RowStyles.Clear()
         tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize))
