@@ -224,6 +224,8 @@ Partial Class Form1
         Me.LoginStatus = New ToolStripStatusLabel()
         Me.LastUpdateTime = New ToolStripStatusLabel()
         Me.ToolStripSpacer = New ToolStripStatusLabel()
+        Me.TimeZoneLabel = New ToolStripStatusLabel()
+        Me.SmartGuardLabel = New Label()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         Me.CalibrationShieldPanel.SuspendLayout()
@@ -274,7 +276,6 @@ Partial Class Form1
         Me.TableLayoutPanelLimits.SuspendLayout()
         Me.TabPage10NotificationHistory.SuspendLayout()
         Me.TableLayoutPanelNotificationHistory.SuspendLayout()
-        Me.TimeZoneLabel = New ToolStripStatusLabel()
         Me.TabPage11TherapyAlgorithm.SuspendLayout()
         Me.TableLayoutPanelTherapyAlgorithm.SuspendLayout()
         Me.TabPage12BannerState.SuspendLayout()
@@ -1567,6 +1568,7 @@ Partial Class Form1
         Me.SplitContainer3.Panel2.Controls.Add(Me.BelowLowLimitMessageLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.AverageSGValueLabel)
         Me.SplitContainer3.Panel2.Controls.Add(Me.AverageSGMessageLabel)
+        Me.SplitContainer3.Panel2.Controls.Add(Me.SmartGuardLabel)
         Me.SplitContainer3.Size = New Size(1370, 498)
         Me.SplitContainer3.SplitterDistance = 1136
         Me.SplitContainer3.TabIndex = 0
@@ -2652,6 +2654,19 @@ Partial Class Form1
         Me.TimeZoneLabel.Size = New Size(60, 19)
         Me.TimeZoneLabel.Text = "TImeZone"
         '
+        ' SmartGuardLabel
+        ' 
+        Me.SmartGuardLabel.Anchor = AnchorStyles.Top
+        Me.SmartGuardLabel.BackColor = Color.Transparent
+        Me.SmartGuardLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
+        Me.SmartGuardLabel.ForeColor = Color.DodgerBlue
+        Me.SmartGuardLabel.Location = New Point(3, 463)
+        Me.SmartGuardLabel.Name = "SmartGuardLabel"
+        Me.SmartGuardLabel.Size = New Size(224, 21)
+        Me.SmartGuardLabel.TabIndex = 35
+        Me.SmartGuardLabel.Text = "SmartGuard 100%"
+        Me.SmartGuardLabel.TextAlign = ContentAlignment.MiddleCenter
+        '
         ' Form1
         ' 
         Me.AutoScaleDimensions = New SizeF(96F, 96F)
@@ -2997,4 +3012,5 @@ Partial Class Form1
     Friend WithEvents SplitContainer1 As SplitContainer
     Friend WithEvents TemporaryUseAdvanceAITDecayCheckBox As CheckBox
     Friend WithEvents TimeZoneLabel As ToolStripStatusLabel
+    Friend WithEvents SmartGuardLabel As Label
 End Class

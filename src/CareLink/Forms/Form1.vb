@@ -1416,7 +1416,7 @@ Public Class Form1
     End Sub
 
     Friend Sub InitializeTimeInRangeArea()
-        If Me.SplitContainer3.Panel2.Controls.Count > 12 Then
+        If Me.SplitContainer3.Panel2.Controls.Count > 13 Then
             Me.SplitContainer3.Panel2.Controls.RemoveAt(Me.SplitContainer3.Panel2.Controls.Count - 1)
         End If
         Dim width1 As Integer = Me.SplitContainer3.Panel2.Width - 65
@@ -2020,6 +2020,48 @@ Public Class Form1
         Me.TimeInRangeChartLabel.Text = s_timeInRange.ToString
         Me.TimeInRangeValueLabel.Text = $"{s_timeInRange} %"
 
+        ' Calculate Time in AutoMode
+        If s_listOfAutoModeStatusMarkers.Count = 0 Then
+            Me.SmartGuardLabel.Text = "SmartGuard 0%"
+            Exit Sub
+        ElseIf s_listOfAutoModeStatusMarkers.Count = 1 AndAlso s_listOfAutoModeStatusMarkers.First.autoModeOn = True Then
+            Me.SmartGuardLabel.Text = "SmartGuard 100%"
+        Else
+            Try
+
+                ' need to figure out %
+                Dim autoModeStartTime As New Date
+                Dim timeInAutoMode As New TimeSpan(0)
+                For Each r As IndexClass(Of AutoModeStatusRecord) In s_listOfAutoModeStatusMarkers.WithIndex
+                    If r.IsFirst Then
+                        If r.Value.autoModeOn Then
+                            autoModeStartTime = r.Value.dateTime
+                        Else
+
+                        End If
+                    Else
+                        If r.Value.autoModeOn Then
+                            If r.IsLast Then
+                                timeInAutoMode += s_listOfAutoModeStatusMarkers.First.dateTime.AddDays(1) - r.Value.dateTime
+                            Else
+                                autoModeStartTime = r.Value.dateTime
+                            End If
+                        Else
+                            timeInAutoMode += r.Value.dateTime - autoModeStartTime
+                            autoModeStartTime = r.Value.dateTime
+                        End If
+                    End If
+                Next
+                If timeInAutoMode >= s_OneDay Then
+                    Me.SmartGuardLabel.Text = "SmartGuard 100%"
+                Else
+                    Me.SmartGuardLabel.Text = $"SmartGuard {CInt(timeInAutoMode / s_OneDay * 100)}%"
+                End If
+            Catch ex As Exception
+                Me.SmartGuardLabel.Text = "SmartGuard ???%"
+            End Try
+
+        End If
     End Sub
 
     Private Sub UpdateTreatmentChart()

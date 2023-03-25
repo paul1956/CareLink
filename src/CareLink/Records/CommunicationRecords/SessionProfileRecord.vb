@@ -6,8 +6,9 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class SessionProfileRecord
-    Private _hasValue As Boolean
     Private ReadOnly _profileDictionary As New Dictionary(Of String, String)
+    Private _hasValue As Boolean
+    Private _insulinType As String
 
     Public Sub New(jsonData As Dictionary(Of String, String))
         If jsonData Is Nothing OrElse jsonData.Count = 0 Then
@@ -52,6 +53,10 @@ Public Class SessionProfileRecord
                     Me.email = row.Value
                 Case NameOf(gender)
                     Me.gender = row.Value
+                Case NameOf(race)
+                    Dim raceRecord As New RaceRecord(Loads(row.Value))
+                    Me.race = raceRecord.ToString
+                    _profileDictionary(key) = Me.race
                 Case NameOf(diabetesType)
                     Me.diabetesType = row.Value
                 Case NameOf(therapyType)
@@ -64,16 +69,22 @@ Public Class SessionProfileRecord
                     Me.patientNickname = row.Value
                 Case NameOf(textNotification)
                     Me.textNotification = row.Value
+                Case NameOf(clinicRestrictionsEnable)
+                    Me.clinicRestrictionsEnable = row.Value
                 Case NameOf(a1C)
                     Me.a1C = row.Value
+                Case NameOf(StreetAddress1)
+                    Me.StreetAddress1 = row.Value
+                Case NameOf(Zip)
+                    Me.Zip = row.Value
+                Case NameOf(countryCode)
+                    Me.countryCode = row.Value
+                Case NameOf(state)
+                    Me.state = row.Value
                 Case NameOf(firstName)
                     Me.firstName = row.Value
                 Case NameOf(lastName)
                     Me.lastName = row.Value
-                Case NameOf(race)
-                    Dim raceRecord As New RaceRecord(Loads(row.Value))
-                    Me.race = raceRecord.ToString
-                    _profileDictionary(key) = Me.race
                 Case Else
                     Stop
             End Select
@@ -86,21 +97,45 @@ Public Class SessionProfileRecord
         _hasValue = False
     End Sub
 
-    <DisplayName("A1C")>
-    <Column(Order:=23, TypeName:=NameOf([String]))>
-    Public Property a1C As String
+    <DisplayName("Username")>
+    <Column(Order:=0, TypeName:=NameOf([String]))>
+    Public Property username As String
+
+    <DisplayName("Middle Name")>
+    <Column(Order:=1, TypeName:=NameOf([String]))>
+    Public Property middleName As String
+
+    <DisplayName("Guardian Parent")>
+    <Column(Order:=2, TypeName:=NameOf([String]))>
+    Public Property guardianParent As String
+
+    <DisplayName("Parent First Name")>
+    <Column(Order:=3, TypeName:=NameOf([String]))>
+    Public Property parentFirstName As String
+
+    <DisplayName("Parent Middle Name")>
+    <Column(Order:=4, TypeName:=NameOf([String]))>
+    Public Property parentMiddleName As String
+
+    <DisplayName("Parent Last Name")>
+    <Column(Order:=5, TypeName:=NameOf([String]))>
+    Public Property parentLastName As String
 
     <DisplayName("Address")>
     <Column(Order:=6, TypeName:=NameOf([String]))>
     Public Property address As String
 
-    <DisplayName("Age Range")>
-    <Column(Order:=19, TypeName:=NameOf([String]))>
-    Public Property ageRange As String
-
     <DisplayName("City")>
     <Column(Order:=7, TypeName:=NameOf([String]))>
     Public Property city As String
+
+    <DisplayName("State/Province")>
+    <Column(Order:=8, TypeName:=NameOf([String]))>
+    Public Property stateProvince As String
+
+    <DisplayName("Postal Code")>
+    <Column(Order:=9, TypeName:=NameOf([String]))>
+    Public Property postalCode As String
 
     <DisplayName("Country")>
     <Column(Order:=10, TypeName:=NameOf([String]))>
@@ -110,54 +145,6 @@ Public Class SessionProfileRecord
     <Column(Order:=11, TypeName:=NameOf([String]))>
     Public Property dateOfBirth As String
 
-    <DisplayName("Diabetes Type")>
-    <Column(Order:=17, TypeName:=NameOf([String]))>
-    Public Property diabetesType As String
-
-    <DisplayName("eMail")>
-    <Column(Order:=14, TypeName:=NameOf([String]))>
-    Public Property email As String
-
-    <DisplayName("First Name")>
-    <Column(Order:=24, TypeName:=NameOf([String]))>
-    Public Property firstName As String
-
-    <DisplayName("Gender")>
-    <Column(Order:=15, TypeName:=NameOf([String]))>
-    Public Property gender As String
-
-    <DisplayName("Guardian Parent")>
-    <Column(Order:=2, TypeName:=NameOf([String]))>
-    Public Property guardianParent As String
-
-    <DisplayName("Insulin Type")>
-    <Column(Order:=20, TypeName:=NameOf([String]))>
-    Public Property insulinType As String
-
-    <DisplayName("Last Name")>
-    <Column(Order:=25, TypeName:=NameOf([String]))>
-    Public Property lastName As String
-
-    <DisplayName("Middle Name")>
-    <Column(Order:=1, TypeName:=NameOf([String]))>
-    Public Property middleName As String
-
-    <DisplayName("Parent First Name")>
-    <Column(Order:=3, TypeName:=NameOf([String]))>
-    Public Property parentFirstName As String
-
-    <DisplayName("Parent Last Name")>
-    <Column(Order:=5, TypeName:=NameOf([String]))>
-    Public Property parentLastName As String
-
-    <DisplayName("Parent Middle Name")>
-    <Column(Order:=4, TypeName:=NameOf([String]))>
-    Public Property parentMiddleName As String
-
-    <DisplayName("Patient Nickname")>
-    <Column(Order:=21, TypeName:=NameOf([String]))>
-    Public Property patientNickname As String
-
     <DisplayName("Phone")>
     <Column(Order:=12, TypeName:=NameOf([String]))>
     Public Property phone As String
@@ -166,33 +153,80 @@ Public Class SessionProfileRecord
     <Column(Order:=13, TypeName:=NameOf([String]))>
     Public Property phoneLegacy As String
 
-    <DisplayName("Postal Code")>
-    <Column(Order:=9, TypeName:=NameOf([String]))>
-    Public Property postalCode As String
+    <DisplayName("eMail")>
+    <Column(Order:=14, TypeName:=NameOf([String]))>
+    Public Property email As String
+
+    <DisplayName("Gender")>
+    <Column(Order:=15, TypeName:=NameOf([String]))>
+    Public Property gender As String
 
     <DisplayName("Race")>
     <Column(Order:=16, TypeName:=NameOf([String]))>
     Public Property race As String
 
-    <DisplayName("State/Province")>
-    <Column(Order:=8, TypeName:=NameOf([String]))>
-    Public Property stateProvince As String
-
-    <DisplayName("Text Notification")>
-    <Column(Order:=22, TypeName:=NameOf([String]))>
-    Public Property textNotification As String
+    <DisplayName("Diabetes Type")>
+    <Column(Order:=17, TypeName:=NameOf([String]))>
+    Public Property diabetesType As String
 
     <DisplayName("Therapy Type")>
     <Column(Order:=18, TypeName:=NameOf([String]))>
     Public Property therapyType As String
 
-    <DisplayName("Username")>
-    <Column(Order:=0, TypeName:=NameOf([String]))>
-    Public Property username As String
+    <DisplayName("Age Range")>
+    <Column(Order:=19, TypeName:=NameOf([String]))>
+    Public Property ageRange As String
 
-    Public Sub SetInsulinType(insulinType As String)
-        _profileDictionary(NameOf(insulinType)) = insulinType
-    End Sub
+    <DisplayName("Insulin Type")>
+    <Column(Order:=20, TypeName:=NameOf([String]))>
+    Public Property insulinType As String
+        Get
+            Return _insulinType
+        End Get
+        Set
+            _insulinType = Value
+        End Set
+    End Property
+
+    <DisplayName("Patient Nickname")>
+    <Column(Order:=21, TypeName:=NameOf([String]))>
+    Public Property patientNickname As String
+
+    <DisplayName("Text Notification")>
+    <Column(Order:=22, TypeName:=NameOf([String]))>
+    Public Property textNotification As String
+
+    <DisplayName("Clinic Restrictions Enable")>
+    <Column(Order:=23, TypeName:=NameOf([String]))>
+    Public Property clinicRestrictionsEnable As String
+
+    <DisplayName("A1C")>
+    <Column(Order:=24, TypeName:=NameOf([String]))>
+    Public Property a1C As String
+
+    <DisplayName("Street Address 1")>
+    <Column(Order:=25, TypeName:=NameOf([String]))>
+    Public Property StreetAddress1 As String
+
+    <DisplayName("Zip")>
+    <Column(Order:=26, TypeName:=NameOf([String]))>
+    Public Property Zip As String
+
+    <DisplayName("Country Code")>
+    <Column(Order:=27, TypeName:=NameOf([String]))>
+    Public Property countryCode As String
+
+    <DisplayName("State")>
+    <Column(Order:=28, TypeName:=NameOf([String]))>
+    Public Property state As String
+
+    <DisplayName("First Name")>
+    <Column(Order:=29, TypeName:=NameOf([String]))>
+    Public Property firstName As String
+
+    <DisplayName("Last Name")>
+    <Column(Order:=30, TypeName:=NameOf([String]))>
+    Public Property lastName As String
 
     Public Sub Clear()
         _hasValue = False
@@ -201,6 +235,10 @@ Public Class SessionProfileRecord
     Public Function HasValue() As Boolean
         Return _hasValue
     End Function
+
+    Public Sub SetInsulinType(insulinType As String)
+        _profileDictionary(NameOf(insulinType).ToTitleCase(False)) = insulinType
+    End Sub
 
     Public Function ToDataSource() As List(Of KeyValuePair(Of String, String))
         Return _profileDictionary.ToDataSource
