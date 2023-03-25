@@ -15,7 +15,7 @@ Friend Module PlotMarkers
         markerSeriesPoints.Last.MarkerSize = 10
         markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Circle
         If Not Single.IsNaN(bgValue) Then
-            markerSeriesPoints.Last.Tag = $"Blood Glucose: Not used For calibration: {bgValueString} {BgUnitsString}"
+            markerSeriesPoints.Last.Tag = $"Blood Glucose: Not used for calibration: {bgValueString} {BgUnitsString}"
         End If
     End Sub
 

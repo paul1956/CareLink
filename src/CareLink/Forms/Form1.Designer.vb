@@ -761,7 +761,7 @@ Partial Class Form1
         Me.CursorMessage1Label.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Me.CursorMessage1Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
         Me.CursorMessage1Label.ForeColor = Color.White
-        Me.CursorMessage1Label.Location = New Point(0, 64)
+        Me.CursorMessage1Label.Location = New Point(0, 63)
         Me.CursorMessage1Label.Name = "CursorMessage1Label"
         Me.CursorMessage1Label.Size = New Size(178, 21)
         Me.CursorMessage1Label.TabIndex = 39
@@ -771,9 +771,9 @@ Partial Class Form1
         ' CursorMessage2Label
         ' 
         Me.CursorMessage2Label.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Me.CursorMessage2Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Me.CursorMessage2Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Me.CursorMessage2Label.ForeColor = Color.White
-        Me.CursorMessage2Label.Location = New Point(0, 89)
+        Me.CursorMessage2Label.Location = New Point(0, 84)
         Me.CursorMessage2Label.Name = "CursorMessage2Label"
         Me.CursorMessage2Label.Size = New Size(178, 21)
         Me.CursorMessage2Label.TabIndex = 40
@@ -784,7 +784,7 @@ Partial Class Form1
         ' 
         Me.CursorMessage3Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
         Me.CursorMessage3Label.ForeColor = Color.White
-        Me.CursorMessage3Label.Location = New Point(0, 106)
+        Me.CursorMessage3Label.Location = New Point(0, 105)
         Me.CursorMessage3Label.Name = "CursorMessage3Label"
         Me.CursorMessage3Label.Size = New Size(178, 21)
         Me.CursorMessage3Label.TabIndex = 41

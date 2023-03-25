@@ -595,6 +595,7 @@ Public Class Form1
                         Dim xValue As Date = Date.FromOADate(currentDataPoint.XValue)
                         Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
                         Me.CursorPictureBox.Visible = True
+                        Me.CursorMessage2Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
                         Select Case markerTag.Length
                             Case 2
                                 Me.CursorMessage1Label.Text = markerTag(0)
@@ -625,8 +626,9 @@ Public Class Form1
                                     Case "Calibration accepted",
                                            "Calibration not accepted"
                                         Me.CursorPictureBox.Image = My.Resources.CalibrationDotRed
-                                    Case "Not used For calibration"
+                                    Case "Not used for calibration"
                                         Me.CursorPictureBox.Image = My.Resources.CalibrationDot
+                                        Me.CursorMessage2Label.Font = New Font("Segoe UI", 11.0F, FontStyle.Bold, GraphicsUnit.Point)
                                     Case Else
                                         Stop
                                 End Select
