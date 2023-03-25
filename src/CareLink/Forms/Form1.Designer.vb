@@ -511,7 +511,7 @@ Partial Class Form1
         Me.AboveHighLimitMessageLabel.BackColor = Color.Transparent
         Me.AboveHighLimitMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
         Me.AboveHighLimitMessageLabel.ForeColor = Color.Yellow
-        Me.AboveHighLimitMessageLabel.Location = New Point(30, 283)
+        Me.AboveHighLimitMessageLabel.Location = New Point(30, 248)
         Me.AboveHighLimitMessageLabel.Name = "AboveHighLimitMessageLabel"
         Me.AboveHighLimitMessageLabel.Size = New Size(170, 21)
         Me.AboveHighLimitMessageLabel.TabIndex = 28
@@ -524,7 +524,7 @@ Partial Class Form1
         Me.AboveHighLimitValueLabel.BackColor = Color.Black
         Me.AboveHighLimitValueLabel.Font = New Font("Microsoft Sans Serif", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         Me.AboveHighLimitValueLabel.ForeColor = Color.White
-        Me.AboveHighLimitValueLabel.Location = New Point(55, 250)
+        Me.AboveHighLimitValueLabel.Location = New Point(55, 215)
         Me.AboveHighLimitValueLabel.Name = "AboveHighLimitValueLabel"
         Me.AboveHighLimitValueLabel.Size = New Size(120, 33)
         Me.AboveHighLimitValueLabel.TabIndex = 22
@@ -563,7 +563,7 @@ Partial Class Form1
         Me.AverageSGMessageLabel.BackColor = Color.Transparent
         Me.AverageSGMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
         Me.AverageSGMessageLabel.ForeColor = Color.White
-        Me.AverageSGMessageLabel.Location = New Point(3, 468)
+        Me.AverageSGMessageLabel.Location = New Point(3, 433)
         Me.AverageSGMessageLabel.Name = "AverageSGMessageLabel"
         Me.AverageSGMessageLabel.Size = New Size(224, 21)
         Me.AverageSGMessageLabel.TabIndex = 0
@@ -576,7 +576,7 @@ Partial Class Form1
         Me.AverageSGValueLabel.BackColor = Color.Black
         Me.AverageSGValueLabel.Font = New Font("Microsoft Sans Serif", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         Me.AverageSGValueLabel.ForeColor = Color.White
-        Me.AverageSGValueLabel.Location = New Point(55, 433)
+        Me.AverageSGValueLabel.Location = New Point(55, 398)
         Me.AverageSGValueLabel.Margin = New Padding(0)
         Me.AverageSGValueLabel.Name = "AverageSGValueLabel"
         Me.AverageSGValueLabel.Size = New Size(120, 33)
@@ -632,7 +632,7 @@ Partial Class Form1
         Me.BelowLowLimitMessageLabel.BackColor = Color.Transparent
         Me.BelowLowLimitMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
         Me.BelowLowLimitMessageLabel.ForeColor = Color.Red
-        Me.BelowLowLimitMessageLabel.Location = New Point(30, 405)
+        Me.BelowLowLimitMessageLabel.Location = New Point(30, 370)
         Me.BelowLowLimitMessageLabel.Name = "BelowLowLimitMessageLabel"
         Me.BelowLowLimitMessageLabel.Size = New Size(170, 21)
         Me.BelowLowLimitMessageLabel.TabIndex = 32
@@ -645,7 +645,7 @@ Partial Class Form1
         Me.BelowLowLimitValueLabel.BackColor = Color.Black
         Me.BelowLowLimitValueLabel.Font = New Font("Microsoft Sans Serif", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         Me.BelowLowLimitValueLabel.ForeColor = Color.White
-        Me.BelowLowLimitValueLabel.Location = New Point(55, 372)
+        Me.BelowLowLimitValueLabel.Location = New Point(55, 337)
         Me.BelowLowLimitValueLabel.Name = "BelowLowLimitValueLabel"
         Me.BelowLowLimitValueLabel.Size = New Size(120, 33)
         Me.BelowLowLimitValueLabel.TabIndex = 26
@@ -1142,7 +1142,7 @@ Partial Class Form1
         Me.InRangeMessageLabel.BackColor = Color.Transparent
         Me.InRangeMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
         Me.InRangeMessageLabel.ForeColor = Color.Lime
-        Me.InRangeMessageLabel.Location = New Point(81, 344)
+        Me.InRangeMessageLabel.Location = New Point(81, 309)
         Me.InRangeMessageLabel.Name = "InRangeMessageLabel"
         Me.InRangeMessageLabel.Size = New Size(73, 21)
         Me.InRangeMessageLabel.TabIndex = 30
@@ -1260,7 +1260,7 @@ Partial Class Form1
         Me.Last24HoursLabel.Anchor = AnchorStyles.Top
         Me.Last24HoursLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
         Me.Last24HoursLabel.ForeColor = Color.White
-        Me.Last24HoursLabel.Location = New Point(30, 61)
+        Me.Last24HoursLabel.Location = New Point(30, 26)
         Me.Last24HoursLabel.Name = "Last24HoursLabel"
         Me.Last24HoursLabel.Size = New Size(170, 21)
         Me.Last24HoursLabel.TabIndex = 34
@@ -1576,7 +1576,7 @@ Partial Class Form1
         Me.TimeInRangeLabel.Anchor = AnchorStyles.Top
         Me.TimeInRangeLabel.Font = New Font("Segoe UI", 14F, FontStyle.Bold, GraphicsUnit.Point)
         Me.TimeInRangeLabel.ForeColor = Color.White
-        Me.TimeInRangeLabel.Location = New Point(30, 35)
+        Me.TimeInRangeLabel.Location = New Point(30, 0)
         Me.TimeInRangeLabel.Name = "TimeInRangeLabel"
         Me.TimeInRangeLabel.Size = New Size(170, 21)
         Me.TimeInRangeLabel.TabIndex = 33
@@ -1590,7 +1590,7 @@ Partial Class Form1
         Me.TimeInRangeSummaryPercentCharLabel.BackColor = Color.Transparent
         Me.TimeInRangeSummaryPercentCharLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         Me.TimeInRangeSummaryPercentCharLabel.ForeColor = Color.White
-        Me.TimeInRangeSummaryPercentCharLabel.Location = New Point(94, 168)
+        Me.TimeInRangeSummaryPercentCharLabel.Location = New Point(94, 133)
         Me.TimeInRangeSummaryPercentCharLabel.Name = "TimeInRangeSummaryPercentCharLabel"
         Me.TimeInRangeSummaryPercentCharLabel.Size = New Size(42, 40)
         Me.TimeInRangeSummaryPercentCharLabel.TabIndex = 3
@@ -1602,7 +1602,7 @@ Partial Class Form1
         Me.TimeInRangeChartLabel.BackColor = Color.Black
         Me.TimeInRangeChartLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         Me.TimeInRangeChartLabel.ForeColor = Color.White
-        Me.TimeInRangeChartLabel.Location = New Point(65, 129)
+        Me.TimeInRangeChartLabel.Location = New Point(65, 94)
         Me.TimeInRangeChartLabel.Name = "TimeInRangeChartLabel"
         Me.TimeInRangeChartLabel.Size = New Size(100, 47)
         Me.TimeInRangeChartLabel.TabIndex = 2
@@ -1615,7 +1615,7 @@ Partial Class Form1
         Me.TimeInRangeValueLabel.BackColor = Color.Black
         Me.TimeInRangeValueLabel.Font = New Font("Microsoft Sans Serif", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         Me.TimeInRangeValueLabel.ForeColor = Color.White
-        Me.TimeInRangeValueLabel.Location = New Point(55, 311)
+        Me.TimeInRangeValueLabel.Location = New Point(55, 276)
         Me.TimeInRangeValueLabel.Name = "TimeInRangeValueLabel"
         Me.TimeInRangeValueLabel.Size = New Size(120, 33)
         Me.TimeInRangeValueLabel.TabIndex = 24
