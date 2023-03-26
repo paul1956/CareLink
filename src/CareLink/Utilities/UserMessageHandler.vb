@@ -43,6 +43,7 @@ Friend Module UserMessageHandler
                         {"BC_SID_BASAL_DELIVERY_RESUMED_AT_X_AFTER_LOW_SUSPEND", "Basal delivery resumed at (secondaryTime) after suspend by sensor, Check BG."},
                         {"BC_SID_BASAL_STARTED_SMART_GUARD", "SmartGuard started(triggeredDateTime)."},
                         {"BC_SID_BATTERY_LIFE_LESS_30_MINUTES", "Battery life less than 30 minutes(triggeredDateTime), replace battery now."},
+                        {"BC_SID_BATTERY_REMOVED_RE_ENTER_TIME_AND_DATE", "Insert battery(triggeredDateTime). Delivery stopped. Insert a new battery now."},
                         {"BC_SID_BG_REQUIRED_CONTENT", "BG required. Enter a New BG for Auto Mode."},
                         {"BC_SID_BOLUS_ENTRY_TIMED_OUT", "Bolus Not delivered. Bolus entry timed out before delivery. If bolus was intended, enter values again."},
                         {"BC_SID_BUTTON_PRESSED_FOR_MOR_THAN_3_MIN", "Stuck button(triggeredDateTime). Button pressed for more then 3 minutes."},
