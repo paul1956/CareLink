@@ -145,6 +145,7 @@ Partial Class Form1
         Me.TimeInRangeSummaryPercentCharLabel = New Label()
         Me.TimeInRangeChartLabel = New Label()
         Me.TimeInRangeValueLabel = New Label()
+        Me.SmartGuardLabel = New Label()
         Me.TabControlPage1 = New TabControl()
         Me.TabPage01HomePage = New TabPage()
         Me.TabPage02RunningIOB = New TabPage()
@@ -218,7 +219,6 @@ Partial Class Form1
         Me.LastUpdateTime = New ToolStripStatusLabel()
         Me.ToolStripSpacer = New ToolStripStatusLabel()
         Me.TimeZoneLabel = New ToolStripStatusLabel()
-        Me.SmartGuardLabel = New Label()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         Me.CalibrationShieldPanel.SuspendLayout()
@@ -765,7 +765,7 @@ Partial Class Form1
         ' CursorMessage2Label
         ' 
         Me.CursorMessage2Label.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Me.CursorMessage2Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Me.CursorMessage2Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
         Me.CursorMessage2Label.ForeColor = Color.White
         Me.CursorMessage2Label.Location = New Point(0, 84)
         Me.CursorMessage2Label.Name = "CursorMessage2Label"
@@ -872,7 +872,6 @@ Partial Class Form1
         Me.DgvCareLinkUsers.AllowUserToAddRows = False
         Me.DgvCareLinkUsers.AllowUserToResizeColumns = False
         Me.DgvCareLinkUsers.AllowUserToResizeRows = False
-        Me.DgvCareLinkUsers.AutoGenerateColumns = False
         Me.DgvCareLinkUsers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
         Me.DgvCareLinkUsers.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
         Me.DgvCareLinkUsers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
@@ -1555,6 +1554,19 @@ Partial Class Form1
         Me.TimeInRangeValueLabel.TabIndex = 24
         Me.TimeInRangeValueLabel.Text = "90 %"
         Me.TimeInRangeValueLabel.TextAlign = ContentAlignment.MiddleCenter
+        ' 
+        ' SmartGuardLabel
+        ' 
+        Me.SmartGuardLabel.Anchor = AnchorStyles.Top
+        Me.SmartGuardLabel.BackColor = Color.Transparent
+        Me.SmartGuardLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
+        Me.SmartGuardLabel.ForeColor = Color.DodgerBlue
+        Me.SmartGuardLabel.Location = New Point(3, 463)
+        Me.SmartGuardLabel.Name = "SmartGuardLabel"
+        Me.SmartGuardLabel.Size = New Size(224, 21)
+        Me.SmartGuardLabel.TabIndex = 35
+        Me.SmartGuardLabel.Text = "SmartGuard 100%"
+        Me.SmartGuardLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' TabControlPage1
         ' 
@@ -2376,6 +2388,7 @@ Partial Class Form1
         Me.TableLayoutPanelCalibrationTop.Name = "TableLayoutPanelCalibrationTop"
         Me.TableLayoutPanelCalibrationTop.RowCount = 1
         Me.TableLayoutPanelCalibrationTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelCalibrationTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelCalibrationTop.Size = New Size(1358, 37)
         Me.TableLayoutPanelCalibrationTop.TabIndex = 1
         ' 
@@ -2571,7 +2584,7 @@ Partial Class Form1
         Me.LastUpdateTime.BorderSides = ToolStripStatusLabelBorderSides.Left Or ToolStripStatusLabelBorderSides.Right
         Me.LastUpdateTime.BorderStyle = Border3DStyle.RaisedOuter
         Me.LastUpdateTime.Name = "LastUpdateTime"
-        Me.LastUpdateTime.Size = New Size(1236, 19)
+        Me.LastUpdateTime.Size = New Size(1176, 19)
         Me.LastUpdateTime.Spring = True
         Me.LastUpdateTime.Text = "                           Last Update Time: Unknown"
         ' 
@@ -2579,26 +2592,13 @@ Partial Class Form1
         ' 
         Me.ToolStripSpacer.Name = "ToolStripSpacer"
         Me.ToolStripSpacer.Size = New Size(0, 19)
-        '
+        ' 
         ' TimeZoneLabel
         ' 
         Me.TimeZoneLabel.Name = "TimeZoneLabel"
         Me.TimeZoneLabel.Size = New Size(60, 19)
         Me.TimeZoneLabel.Text = "TImeZone"
-        '
-        ' SmartGuardLabel
         ' 
-        Me.SmartGuardLabel.Anchor = AnchorStyles.Top
-        Me.SmartGuardLabel.BackColor = Color.Transparent
-        Me.SmartGuardLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
-        Me.SmartGuardLabel.ForeColor = Color.DodgerBlue
-        Me.SmartGuardLabel.Location = New Point(3, 463)
-        Me.SmartGuardLabel.Name = "SmartGuardLabel"
-        Me.SmartGuardLabel.Size = New Size(224, 21)
-        Me.SmartGuardLabel.TabIndex = 35
-        Me.SmartGuardLabel.Text = "SmartGuard 100%"
-        Me.SmartGuardLabel.TextAlign = ContentAlignment.MiddleCenter
-        '
         ' Form1
         ' 
         Me.AutoScaleDimensions = New SizeF(96F, 96F)
