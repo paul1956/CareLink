@@ -16,7 +16,9 @@ Friend Module DataGridViewColumnEventArgsExtensions
             .Resizable = DataGridViewTriState.False
             Dim title As New StringBuilder
             Dim titleInTitleCase As String = .Name
-            If Not .Name.Contains("OADateTime", StringComparison.InvariantCultureIgnoreCase) Then
+            If .Name.Contains("DeleteRow") Then
+                titleInTitleCase = ""
+            ElseIf Not .Name.Contains("OADateTime", StringComparison.InvariantCultureIgnoreCase) Then
                 titleInTitleCase = If(.DataPropertyName.Length < 4, .Name, .Name.ToTitleCase())
             End If
 
@@ -30,7 +32,11 @@ Friend Module DataGridViewColumnEventArgsExtensions
                     End If
                 Next
             Else
-                title.Append(titleInTitleCase.Replace("Care Link", $"{ProjectName}{TmChar}"))
+                If titleInTitleCase.Contains(TmChar) Then
+                    title.Append(titleInTitleCase)
+                Else
+                    title.Append(titleInTitleCase.Replace("Care Link", $"{ProjectName}{TmChar}"))
+                End If
             End If
             .HeaderText = title.TrimEnd(s_environmentNewLine).ToString
             .DefaultCellStyle = cellStyle

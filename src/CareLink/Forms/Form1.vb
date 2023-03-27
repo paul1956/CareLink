@@ -1189,7 +1189,7 @@ Public Class Form1
     Private Sub DgvCareLinkUsers_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCareLinkUsers.ColumnAdded
         With e.Column
             Dim dgv As DataGridView = CType(sender, DataGridView)
-            Dim caption As String = CType(dgv.DataSource, DataTable)?.Columns(.Index).Caption
+            Dim caption As String = dgv.Columns(.Index).HeaderText
             Dim dataPropertyName As String = e.Column.DataPropertyName
             If String.IsNullOrWhiteSpace(caption) Then
                 caption = dataPropertyName.Replace("DgvCareLinkUsers", "")
@@ -1212,7 +1212,7 @@ Public Class Form1
                                  False,
                                  True,
                                  caption)
-                e.Column.HeaderText = caption.ToTitleCase
+
             End If
         End With
     End Sub
@@ -1252,7 +1252,7 @@ Public Class Form1
         Me.DgvCareLinkUsersCareLinkUserName = New DataGridViewTextBoxColumn With {
             .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
             .DataPropertyName = "CareLinkUserName",
-            .HeaderText = "CareLink UserName",
+            .HeaderText = $"CareLink{TmChar} UserName",
             .MinimumWidth = 125,
             .Name = "DgvCareLinkUsersCareLinkUserName",
             .Width = 125
@@ -1261,7 +1261,7 @@ Public Class Form1
         Me.DgvCareLinkUsersCareLinkPassword = New DataGridViewTextBoxColumn With {
             .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
             .DataPropertyName = "CareLinkPassword",
-            .HeaderText = "CareLink Password",
+            .HeaderText = $"CareLink{TmChar} Password",
             .Name = "DgvCareLinkUsersCareLinkPassword",
             .Width = 120
         }
@@ -1277,7 +1277,7 @@ Public Class Form1
         Me.DgvCareLinkUsersUseLocalTimeZone = New DataGridViewCheckBoxColumn With {
             .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
             .DataPropertyName = "UseLocalTimeZone",
-            .HeaderText = "Use Local Time Zone",
+            .HeaderText = $"Use Local{Environment.NewLine} Time Zone",
             .Name = "DgvCareLinkUsersUseLocalTimeZone",
             .Width = 86
         }
