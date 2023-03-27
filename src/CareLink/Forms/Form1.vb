@@ -15,6 +15,13 @@ Imports DataGridViewColumnControls
 Imports TableLayputPanelTop
 
 Public Class Form1
+    Friend WithEvents DgvCareLinkUsersAutoLogin As DataGridViewCheckBoxColumn
+    Friend WithEvents DgvCareLinkUsersCareLinkPassword As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCareLinkUsersCareLinkUserName As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCareLinkUsersCountryCode As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCareLinkUsersDeleteRow As DataGridViewDisableButtonColumn
+    Friend WithEvents DgvCareLinkUsersUseLocalTimeZone As DataGridViewCheckBoxColumn
+    Friend WithEvents DgvCareLinkUsersUserID As DataGridViewTextBoxColumn
 
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
@@ -169,6 +176,7 @@ Public Class Form1
             s_allUserSettingsData.LoadUserRecords(currentAllUserLoginFile)
         End If
 
+        Me.InitializeDgvCareLinkUsers(Me.DgvCareLinkUsers)
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
         If File.Exists(GetPathToGraphColorsFile(True)) Then
@@ -1220,6 +1228,70 @@ Public Class Form1
             Dim disableButtonCell As DataGridViewDisableButtonCell = CType(dgv.Rows(i).Cells(NameOf(DgvCareLinkUsersDeleteRow)), DataGridViewDisableButtonCell)
             disableButtonCell.Enabled = s_allUserSettingsData(i).CareLinkUserName <> _LoginDialog.LoggedOnUser.CareLinkUserName
         Next
+    End Sub
+
+    Private Sub InitializeDgvCareLinkUsers(dgv As DataGridView)
+        Me.DgvCareLinkUsersUserID = New DataGridViewTextBoxColumn With {
+            .DataPropertyName = "ID",
+            .HeaderText = "ID",
+            .Name = "DgvCareLinkUsersUserID",
+            .ReadOnly = True,
+            .Width = 43
+        }
+
+        Me.DgvCareLinkUsersDeleteRow = New DataGridViewDisableButtonColumn With {
+            .DataPropertyName = "DeleteRow",
+            .HeaderText = "",
+            .Name = "DgvCareLinkUsersDeleteRow",
+            .ReadOnly = True,
+            .Text = "Delete Row",
+            .UseColumnTextForButtonValue = True,
+            .Width = 5
+        }
+
+        Me.DgvCareLinkUsersCareLinkUserName = New DataGridViewTextBoxColumn With {
+            .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            .DataPropertyName = "CareLinkUserName",
+            .HeaderText = "CareLink UserName",
+            .MinimumWidth = 125,
+            .Name = "DgvCareLinkUsersCareLinkUserName",
+            .Width = 125
+        }
+
+        Me.DgvCareLinkUsersCareLinkPassword = New DataGridViewTextBoxColumn With {
+            .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            .DataPropertyName = "CareLinkPassword",
+            .HeaderText = "CareLink Password",
+            .Name = "DgvCareLinkUsersCareLinkPassword",
+            .Width = 120
+        }
+
+        Me.DgvCareLinkUsersCountryCode = New DataGridViewTextBoxColumn With {
+            .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            .DataPropertyName = "CountryCode",
+            .HeaderText = "Country Code",
+            .Name = "DgvCareLinkUsersCountryCode",
+            .Width = 97
+        }
+
+        Me.DgvCareLinkUsersUseLocalTimeZone = New DataGridViewCheckBoxColumn With {
+            .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            .DataPropertyName = "UseLocalTimeZone",
+            .HeaderText = "Use Local Time Zone",
+            .Name = "DgvCareLinkUsersUseLocalTimeZone",
+            .Width = 86
+        }
+
+        Me.DgvCareLinkUsersAutoLogin = New DataGridViewCheckBoxColumn With {
+            .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            .DataPropertyName = "AutoLogin",
+            .HeaderText = "Auto Login",
+            .Name = "DgvCareLinkUsersAutoLogin",
+            .Width = 65
+        }
+
+        dgv.Columns.AddRange(New DataGridViewColumn() {Me.DgvCareLinkUsersUserID, Me.DgvCareLinkUsersDeleteRow, Me.DgvCareLinkUsersCareLinkUserName, Me.DgvCareLinkUsersCareLinkPassword, Me.DgvCareLinkUsersCountryCode, Me.DgvCareLinkUsersUseLocalTimeZone, Me.DgvCareLinkUsersAutoLogin})
+        dgv.DataSource = Me.CareLinkUserDataRecordBindingSource
     End Sub
 
 #End Region ' Dgv CareLink Users Events

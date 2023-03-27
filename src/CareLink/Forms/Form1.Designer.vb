@@ -87,13 +87,6 @@ Partial Class Form1
         Me.DgvCountryDataPg1Key = New DataGridViewTextBoxColumn()
         Me.DgvCountryDataPg1Value = New DataGridViewTextBoxColumn()
         Me.DgvCareLinkUsers = New DataGridView()
-        Me.DgvCareLinkUsersUserID = New DataGridViewTextBoxColumn()
-        Me.DgvCareLinkUsersDeleteRow = New DataGridViewColumnControls.DataGridViewDisableButtonColumn()
-        Me.DgvCareLinkUsersCareLinkUserName = New DataGridViewTextBoxColumn()
-        Me.DgvCareLinkUsersCareLinkPassword = New DataGridViewTextBoxColumn()
-        Me.DgvCareLinkUsersCountryCode = New DataGridViewTextBoxColumn()
-        Me.DgvCareLinkUsersUseLocalTimeZone = New DataGridViewCheckBoxColumn()
-        Me.DgvCareLinkUsersAutoLogin = New DataGridViewCheckBoxColumn()
         Me.DgvCountryDataPg2 = New DataGridView()
         Me.DgvCountryDataPg2RecordNumber = New DataGridViewTextBoxColumn()
         Me.DgvCountryDataPg2Category = New DataGridViewTextBoxColumn()
@@ -874,65 +867,6 @@ Partial Class Form1
         Me.DgvCountryDataPg1Value.Name = "DgvCountryDataPg1Value"
         Me.DgvCountryDataPg1Value.ReadOnly = True
         ' 
-        ' DgvCareLinkUsersUserID
-        ' 
-        Me.DgvCareLinkUsersUserID.DataPropertyName = "ID"
-        Me.DgvCareLinkUsersUserID.HeaderText = "ID"
-        Me.DgvCareLinkUsersUserID.Name = "DgvCareLinkUsersUserID"
-        Me.DgvCareLinkUsersUserID.ReadOnly = True
-        Me.DgvCareLinkUsersUserID.Width = 43
-        ' 
-        ' DgvCareLinkUsersDeleteRow
-        ' 
-        Me.DgvCareLinkUsersDeleteRow.DataPropertyName = "DeleteRow"
-        Me.DgvCareLinkUsersDeleteRow.HeaderText = ""
-        Me.DgvCareLinkUsersDeleteRow.Name = "DgvCareLinkUsersDeleteRow"
-        Me.DgvCareLinkUsersDeleteRow.ReadOnly = True
-        Me.DgvCareLinkUsersDeleteRow.Text = "Delete Row"
-        Me.DgvCareLinkUsersDeleteRow.UseColumnTextForButtonValue = True
-        Me.DgvCareLinkUsersDeleteRow.Width = 5
-        ' 
-        ' DgvCareLinkUsersCareLinkUserName
-        ' 
-        Me.DgvCareLinkUsersCareLinkUserName.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.DgvCareLinkUsersCareLinkUserName.DataPropertyName = "CareLinkUserName"
-        Me.DgvCareLinkUsersCareLinkUserName.HeaderText = "CareLink UserName"
-        Me.DgvCareLinkUsersCareLinkUserName.MinimumWidth = 125
-        Me.DgvCareLinkUsersCareLinkUserName.Name = "DgvCareLinkUsersCareLinkUserName"
-        Me.DgvCareLinkUsersCareLinkUserName.Width = 125
-        ' 
-        ' DgvCareLinkUsersCareLinkPassword
-        ' 
-        Me.DgvCareLinkUsersCareLinkPassword.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.DgvCareLinkUsersCareLinkPassword.DataPropertyName = "CareLinkPassword"
-        Me.DgvCareLinkUsersCareLinkPassword.HeaderText = "CareLink Password"
-        Me.DgvCareLinkUsersCareLinkPassword.Name = "DgvCareLinkUsersCareLinkPassword"
-        Me.DgvCareLinkUsersCareLinkPassword.Width = 120
-        ' 
-        ' DgvCareLinkUsersCountryCode
-        ' 
-        Me.DgvCareLinkUsersCountryCode.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.DgvCareLinkUsersCountryCode.DataPropertyName = "CountryCode"
-        Me.DgvCareLinkUsersCountryCode.HeaderText = "Country Code"
-        Me.DgvCareLinkUsersCountryCode.Name = "DgvCareLinkUsersCountryCode"
-        Me.DgvCareLinkUsersCountryCode.Width = 97
-        ' 
-        ' DgvCareLinkUsersUseLocalTimeZone
-        ' 
-        Me.DgvCareLinkUsersUseLocalTimeZone.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.DgvCareLinkUsersUseLocalTimeZone.DataPropertyName = "UseLocalTimeZone"
-        Me.DgvCareLinkUsersUseLocalTimeZone.HeaderText = "Use Local Time Zone"
-        Me.DgvCareLinkUsersUseLocalTimeZone.Name = "DgvCareLinkUsersUseLocalTimeZone"
-        Me.DgvCareLinkUsersUseLocalTimeZone.Width = 86
-        ' 
-        ' DgvCareLinkUsersAutoLogin
-        ' 
-        Me.DgvCareLinkUsersAutoLogin.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.DgvCareLinkUsersAutoLogin.DataPropertyName = "AutoLogin"
-        Me.DgvCareLinkUsersAutoLogin.HeaderText = "Auto Login"
-        Me.DgvCareLinkUsersAutoLogin.Name = "DgvCareLinkUsersAutoLogin"
-        Me.DgvCareLinkUsersAutoLogin.Width = 65
-        ' 
         ' DgvCareLinkUsers
         ' 
         Me.DgvCareLinkUsers.AllowUserToAddRows = False
@@ -942,8 +876,6 @@ Partial Class Form1
         Me.DgvCareLinkUsers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
         Me.DgvCareLinkUsers.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
         Me.DgvCareLinkUsers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DgvCareLinkUsers.Columns.AddRange(New DataGridViewColumn() {Me.DgvCareLinkUsersUserID, Me.DgvCareLinkUsersDeleteRow, Me.DgvCareLinkUsersCareLinkUserName, Me.DgvCareLinkUsersCareLinkPassword, Me.DgvCareLinkUsersCountryCode, Me.DgvCareLinkUsersUseLocalTimeZone, Me.DgvCareLinkUsersAutoLogin})
-        Me.DgvCareLinkUsers.DataSource = Me.CareLinkUserDataRecordBindingSource
         Me.DgvCareLinkUsers.Dock = DockStyle.Fill
         Me.DgvCareLinkUsers.EditMode = DataGridViewEditMode.EditOnEnter
         Me.DgvCareLinkUsers.Location = New Point(3, 3)
@@ -2990,13 +2922,6 @@ Partial Class Form1
     Friend WithEvents ToolTip1 As ToolTip
     Friend WithEvents TransmitterBatteryPercentLabel As Label
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
-    Friend WithEvents DgvCareLinkUsersUserID As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCareLinkUsersDeleteRow As DataGridViewColumnControls.DataGridViewDisableButtonColumn
-    Friend WithEvents DgvCareLinkUsersCareLinkUserName As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCareLinkUsersCareLinkPassword As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCareLinkUsersCountryCode As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCareLinkUsersUseLocalTimeZone As DataGridViewCheckBoxColumn
-    Friend WithEvents DgvCareLinkUsersAutoLogin As DataGridViewCheckBoxColumn
     Friend WithEvents PumpBatteryRemaining2Label As Label
     Friend WithEvents PumpNameLabel As Label
     Friend WithEvents ToolStripSeparator7 As ToolStripSeparator
