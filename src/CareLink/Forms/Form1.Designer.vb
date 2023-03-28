@@ -297,13 +297,13 @@ Partial Class Form1
         Me.TabPageCountryDataPg2.SuspendLayout()
         Me.CountryDataPg2TableLayoutPanel.SuspendLayout()
         CType(Me.DgvCountryDataPg2, ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.WebView, ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPageCountryDataPg3.SuspendLayout()
         Me.TabPageUserProfile.SuspendLayout()
         Me.TabPageCurrentUser.SuspendLayout()
         Me.TabPageAllUsers.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         Me.CountryDataPg2TableLayoutPanel.SuspendLayout()
+        CType(Me.WebView, ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         ' 
         ' MenuStrip1
@@ -2620,7 +2620,7 @@ Partial Class Form1
         ' 
         ' WebView
         ' 
-        Me.WebView.AllowExternalDrop = True
+        Me.WebView.AllowExternalDrop = False
         Me.WebView.CreationProperties = Nothing
         Me.WebView.DefaultBackgroundColor = Color.White
         Me.WebView.Dock = DockStyle.Fill
@@ -2766,6 +2766,7 @@ Partial Class Form1
         Me.StatusStrip1.PerformLayout()
         Me.CountryDataPg2TableLayoutPanel.ResumeLayout(False)
         CType(Me.DgvCountryDataPg2, ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.WebView, ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
     End Sub

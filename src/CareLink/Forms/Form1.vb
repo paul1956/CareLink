@@ -798,7 +798,11 @@ Public Class Form1
         If dgv.Columns(e.ColumnIndex).HeaderText = "Value" Then
             Dim uriString As String = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()
             If Uri.IsWellFormedUriString(uriString, UriKind.Absolute) Then
-                Me.WebView.Source = New Uri(uriString)
+                Try
+                    Me.WebView.Source = New Uri(uriString)
+                Catch ex As Exception
+
+                End Try
             End If
         End If
     End Sub
