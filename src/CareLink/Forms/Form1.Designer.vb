@@ -203,6 +203,13 @@ Partial Class Form1
         Me.TableLayoutPanelTimeChangeTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
         Me.TabPageCountryDataPg1 = New TabPage()
         Me.TabPageCountryDataPg2 = New TabPage()
+        Me.CountryDataPg2TableLayoutPanel = New TableLayoutPanel()
+        Me.DgvCountryDataPg2 = New DataGridView()
+        Me.DgvCountryDataPg2RecordNumber = New DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg2Category = New DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg2Key = New DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg2Value = New DataGridViewTextBoxColumn()
+        Me.WebView = New Microsoft.Web.WebView2.WinForms.WebView2()
         Me.TabPageCountryDataPg3 = New TabPage()
         Me.TabPageUserProfile = New TabPage()
         Me.TabPageCurrentUser = New TabPage()
@@ -214,13 +221,6 @@ Partial Class Form1
         Me.LastUpdateTime = New ToolStripStatusLabel()
         Me.ToolStripSpacer = New ToolStripStatusLabel()
         Me.TimeZoneLabel = New ToolStripStatusLabel()
-        Me.CountryDataPg2TableLayoutPanel = New TableLayoutPanel()
-        Me.DgvCountryDataPg2 = New DataGridView()
-        Me.DgvCountryDataPg2RecordNumber = New DataGridViewTextBoxColumn()
-        Me.DgvCountryDataPg2Category = New DataGridViewTextBoxColumn()
-        Me.DgvCountryDataPg2Key = New DataGridViewTextBoxColumn()
-        Me.DgvCountryDataPg2Value = New DataGridViewTextBoxColumn()
-        Me.WebView = New Microsoft.Web.WebView2.WinForms.WebView2()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         Me.CalibrationShieldPanel.SuspendLayout()
@@ -297,13 +297,12 @@ Partial Class Form1
         Me.TabPageCountryDataPg2.SuspendLayout()
         Me.CountryDataPg2TableLayoutPanel.SuspendLayout()
         CType(Me.DgvCountryDataPg2, ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.WebView, ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPageCountryDataPg3.SuspendLayout()
         Me.TabPageUserProfile.SuspendLayout()
         Me.TabPageCurrentUser.SuspendLayout()
         Me.TabPageAllUsers.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
-        Me.CountryDataPg2TableLayoutPanel.SuspendLayout()
-        CType(Me.WebView, ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         ' 
         ' MenuStrip1
@@ -1548,10 +1547,10 @@ Partial Class Form1
         Me.TabControlPage1.Controls.Add(Me.TabPage13Basal)
         Me.TabControlPage1.Controls.Add(Me.TabPage14Markers)
         Me.TabControlPage1.Dock = DockStyle.Fill
-        Me.TabControlPage1.Location = New Point(0, 0)
+        Me.TabControlPage1.Location = New Point(0, 24)
         Me.TabControlPage1.Name = "TabControlPage1"
         Me.TabControlPage1.SelectedIndex = 0
-        Me.TabControlPage1.Size = New Size(1384, 716)
+        Me.TabControlPage1.Size = New Size(1384, 668)
         Me.TabControlPage1.TabIndex = 0
         ' 
         ' TabPage01HomePage
@@ -1664,11 +1663,17 @@ Partial Class Form1
         Me.TableLayoutPanelInsulinTop.ColumnCount = 2
         Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle())
         Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         Me.TableLayoutPanelInsulinTop.Dock = DockStyle.Fill
         Me.TableLayoutPanelInsulinTop.LabelText = "Insulin"
         Me.TableLayoutPanelInsulinTop.Location = New Point(6, 6)
         Me.TableLayoutPanelInsulinTop.Name = "TableLayoutPanelInsulinTop"
         Me.TableLayoutPanelInsulinTop.RowCount = 1
+        Me.TableLayoutPanelInsulinTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelInsulinTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelInsulinTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelInsulinTop.Size = New Size(1358, 37)
         Me.TableLayoutPanelInsulinTop.TabIndex = 1
@@ -1712,11 +1717,17 @@ Partial Class Form1
         Me.TableLayoutPanelMealTop.ColumnCount = 2
         Me.TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle())
         Me.TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         Me.TableLayoutPanelMealTop.Dock = DockStyle.Fill
         Me.TableLayoutPanelMealTop.LabelText = "Meal"
         Me.TableLayoutPanelMealTop.Location = New Point(6, 6)
         Me.TableLayoutPanelMealTop.Name = "TableLayoutPanelMealTop"
         Me.TableLayoutPanelMealTop.RowCount = 1
+        Me.TableLayoutPanelMealTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelMealTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelMealTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelMealTop.Size = New Size(1358, 37)
         Me.TableLayoutPanelMealTop.TabIndex = 1
@@ -1757,11 +1768,17 @@ Partial Class Form1
         Me.TableLayoutPanelActiveInsulinTop.ColumnCount = 2
         Me.TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
         Me.TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         Me.TableLayoutPanelActiveInsulinTop.Dock = DockStyle.Fill
         Me.TableLayoutPanelActiveInsulinTop.LabelText = "Active Insulin"
         Me.TableLayoutPanelActiveInsulinTop.Location = New Point(3, 3)
         Me.TableLayoutPanelActiveInsulinTop.Name = "TableLayoutPanelActiveInsulinTop"
         Me.TableLayoutPanelActiveInsulinTop.RowCount = 1
+        Me.TableLayoutPanelActiveInsulinTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelActiveInsulinTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelActiveInsulinTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelActiveInsulinTop.Size = New Size(1364, 37)
         Me.TableLayoutPanelActiveInsulinTop.TabIndex = 1
@@ -1803,11 +1820,17 @@ Partial Class Form1
         Me.TableLayoutPanelSgsTop.ColumnCount = 2
         Me.TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle())
         Me.TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         Me.TableLayoutPanelSgsTop.Dock = DockStyle.Fill
         Me.TableLayoutPanelSgsTop.LabelText = "SGs"
         Me.TableLayoutPanelSgsTop.Location = New Point(3, 3)
         Me.TableLayoutPanelSgsTop.Name = "TableLayoutPanelSgsTop"
         Me.TableLayoutPanelSgsTop.RowCount = 1
+        Me.TableLayoutPanelSgsTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelSgsTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelSgsTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelSgsTop.Size = New Size(1364, 37)
         Me.TableLayoutPanelSgsTop.TabIndex = 1
@@ -1848,11 +1871,17 @@ Partial Class Form1
         Me.TableLayoutPanelLimitsTop.ColumnCount = 2
         Me.TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle())
         Me.TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         Me.TableLayoutPanelLimitsTop.Dock = DockStyle.Fill
         Me.TableLayoutPanelLimitsTop.LabelText = "Limits"
         Me.TableLayoutPanelLimitsTop.Location = New Point(3, 3)
         Me.TableLayoutPanelLimitsTop.Name = "TableLayoutPanelLimitsTop"
         Me.TableLayoutPanelLimitsTop.RowCount = 1
+        Me.TableLayoutPanelLimitsTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelLimitsTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelLimitsTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelLimitsTop.Size = New Size(1364, 37)
         Me.TableLayoutPanelLimitsTop.TabIndex = 1
@@ -1894,11 +1923,17 @@ Partial Class Form1
         Me.TableLayoutPanelNotificationHistoryTop.ColumnCount = 2
         Me.TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New ColumnStyle())
         Me.TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         Me.TableLayoutPanelNotificationHistoryTop.Dock = DockStyle.Fill
         Me.TableLayoutPanelNotificationHistoryTop.LabelText = "Notification History"
         Me.TableLayoutPanelNotificationHistoryTop.Location = New Point(3, 3)
         Me.TableLayoutPanelNotificationHistoryTop.Name = "TableLayoutPanelNotificationHistoryTop"
         Me.TableLayoutPanelNotificationHistoryTop.RowCount = 1
+        Me.TableLayoutPanelNotificationHistoryTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelNotificationHistoryTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelNotificationHistoryTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelNotificationHistoryTop.Size = New Size(1364, 37)
         Me.TableLayoutPanelNotificationHistoryTop.TabIndex = 1
@@ -1939,11 +1974,17 @@ Partial Class Form1
         Me.TableLayoutPanelTherapyAlgorithmTop.ColumnCount = 2
         Me.TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New ColumnStyle())
         Me.TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         Me.TableLayoutPanelTherapyAlgorithmTop.Dock = DockStyle.Fill
         Me.TableLayoutPanelTherapyAlgorithmTop.LabelText = "Therapy Algorithm"
         Me.TableLayoutPanelTherapyAlgorithmTop.Location = New Point(3, 3)
         Me.TableLayoutPanelTherapyAlgorithmTop.Name = "TableLayoutPanelTherapyAlgorithmTop"
         Me.TableLayoutPanelTherapyAlgorithmTop.RowCount = 1
+        Me.TableLayoutPanelTherapyAlgorithmTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelTherapyAlgorithmTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelTherapyAlgorithmTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelTherapyAlgorithmTop.Size = New Size(1364, 37)
         Me.TableLayoutPanelTherapyAlgorithmTop.TabIndex = 1
@@ -1985,11 +2026,17 @@ Partial Class Form1
         Me.TableLayoutPanelBannerStateTop.ColumnCount = 2
         Me.TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle())
         Me.TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         Me.TableLayoutPanelBannerStateTop.Dock = DockStyle.Fill
         Me.TableLayoutPanelBannerStateTop.LabelText = "Banner State"
         Me.TableLayoutPanelBannerStateTop.Location = New Point(3, 3)
         Me.TableLayoutPanelBannerStateTop.Name = "TableLayoutPanelBannerStateTop"
         Me.TableLayoutPanelBannerStateTop.RowCount = 1
+        Me.TableLayoutPanelBannerStateTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelBannerStateTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelBannerStateTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelBannerStateTop.Size = New Size(1364, 37)
         Me.TableLayoutPanelBannerStateTop.TabIndex = 1
@@ -2030,11 +2077,17 @@ Partial Class Form1
         Me.TableLayoutPanelBasalTop.ColumnCount = 2
         Me.TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle())
         Me.TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         Me.TableLayoutPanelBasalTop.Dock = DockStyle.Fill
         Me.TableLayoutPanelBasalTop.LabelText = "Basal"
         Me.TableLayoutPanelBasalTop.Location = New Point(3, 3)
         Me.TableLayoutPanelBasalTop.Name = "TableLayoutPanelBasalTop"
         Me.TableLayoutPanelBasalTop.RowCount = 1
+        Me.TableLayoutPanelBasalTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelBasalTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelBasalTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelBasalTop.Size = New Size(1364, 37)
         Me.TableLayoutPanelBasalTop.TabIndex = 1
@@ -2085,11 +2138,17 @@ Partial Class Form1
         Me.TableLayoutPanelLastSgTop.ColumnCount = 2
         Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle())
         Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         Me.TableLayoutPanelLastSgTop.Dock = DockStyle.Fill
         Me.TableLayoutPanelLastSgTop.LabelText = "last SG"
         Me.TableLayoutPanelLastSgTop.Location = New Point(3, 3)
         Me.TableLayoutPanelLastSgTop.Name = "TableLayoutPanelLastSgTop"
         Me.TableLayoutPanelLastSgTop.RowCount = 1
+        Me.TableLayoutPanelLastSgTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelLastSgTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelLastSgTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelLastSgTop.Size = New Size(1364, 37)
         Me.TableLayoutPanelLastSgTop.TabIndex = 1
@@ -2131,11 +2190,17 @@ Partial Class Form1
         Me.TableLayoutPanelLastAlarmTop.ColumnCount = 2
         Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
         Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         Me.TableLayoutPanelLastAlarmTop.Dock = DockStyle.Fill
         Me.TableLayoutPanelLastAlarmTop.LabelText = "Last Alarm"
         Me.TableLayoutPanelLastAlarmTop.Location = New Point(3, 3)
         Me.TableLayoutPanelLastAlarmTop.Name = "TableLayoutPanelLastAlarmTop"
         Me.TableLayoutPanelLastAlarmTop.RowCount = 1
+        Me.TableLayoutPanelLastAlarmTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelLastAlarmTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelLastAlarmTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelLastAlarmTop.Size = New Size(1364, 37)
         Me.TableLayoutPanelLastAlarmTop.TabIndex = 1
@@ -2203,11 +2268,17 @@ Partial Class Form1
         Me.TableLayoutPanelAutoBasalDeliveryTop.ColumnCount = 2
         Me.TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
         Me.TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         Me.TableLayoutPanelAutoBasalDeliveryTop.Dock = DockStyle.Fill
         Me.TableLayoutPanelAutoBasalDeliveryTop.LabelText = "Basal"
         Me.TableLayoutPanelAutoBasalDeliveryTop.Location = New Point(6, 6)
         Me.TableLayoutPanelAutoBasalDeliveryTop.Name = "TableLayoutPanelAutoBasalDeliveryTop"
         Me.TableLayoutPanelAutoBasalDeliveryTop.RowCount = 1
+        Me.TableLayoutPanelAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelAutoBasalDeliveryTop.Size = New Size(1358, 37)
         Me.TableLayoutPanelAutoBasalDeliveryTop.TabIndex = 1
@@ -2250,11 +2321,17 @@ Partial Class Form1
         Me.TableLayoutPanelAutoModeStatusTop.ColumnCount = 2
         Me.TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
         Me.TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         Me.TableLayoutPanelAutoModeStatusTop.Dock = DockStyle.Fill
         Me.TableLayoutPanelAutoModeStatusTop.LabelText = "Auto Mode Status"
         Me.TableLayoutPanelAutoModeStatusTop.Location = New Point(6, 6)
         Me.TableLayoutPanelAutoModeStatusTop.Name = "TableLayoutPanelAutoModeStatusTop"
         Me.TableLayoutPanelAutoModeStatusTop.RowCount = 1
+        Me.TableLayoutPanelAutoModeStatusTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelAutoModeStatusTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelAutoModeStatusTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelAutoModeStatusTop.Size = New Size(1358, 37)
         Me.TableLayoutPanelAutoModeStatusTop.TabIndex = 1
@@ -2297,11 +2374,17 @@ Partial Class Form1
         Me.TableLayoutPanelBgReadingsTop.ColumnCount = 2
         Me.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
         Me.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         Me.TableLayoutPanelBgReadingsTop.Dock = DockStyle.Fill
         Me.TableLayoutPanelBgReadingsTop.LabelText = "BG Readings"
         Me.TableLayoutPanelBgReadingsTop.Location = New Point(6, 6)
         Me.TableLayoutPanelBgReadingsTop.Name = "TableLayoutPanelBgReadingsTop"
         Me.TableLayoutPanelBgReadingsTop.RowCount = 1
+        Me.TableLayoutPanelBgReadingsTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelBgReadingsTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelBgReadingsTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelBgReadingsTop.Size = New Size(1358, 37)
         Me.TableLayoutPanelBgReadingsTop.TabIndex = 1
@@ -2344,11 +2427,17 @@ Partial Class Form1
         Me.TableLayoutPanelCalibrationTop.ColumnCount = 2
         Me.TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle())
         Me.TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         Me.TableLayoutPanelCalibrationTop.Dock = DockStyle.Fill
         Me.TableLayoutPanelCalibrationTop.LabelText = "Calibration"
         Me.TableLayoutPanelCalibrationTop.Location = New Point(6, 6)
         Me.TableLayoutPanelCalibrationTop.Name = "TableLayoutPanelCalibrationTop"
         Me.TableLayoutPanelCalibrationTop.RowCount = 1
+        Me.TableLayoutPanelCalibrationTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelCalibrationTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelCalibrationTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelCalibrationTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelCalibrationTop.Size = New Size(1358, 37)
@@ -2392,11 +2481,17 @@ Partial Class Form1
         Me.TableLayoutPanelLowGlucoseSuspendedTop.ColumnCount = 2
         Me.TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
         Me.TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         Me.TableLayoutPanelLowGlucoseSuspendedTop.Dock = DockStyle.Fill
         Me.TableLayoutPanelLowGlucoseSuspendedTop.LabelText = "Low Glucose Suspended"
         Me.TableLayoutPanelLowGlucoseSuspendedTop.Location = New Point(6, 6)
         Me.TableLayoutPanelLowGlucoseSuspendedTop.Name = "TableLayoutPanelLowGlucoseSuspendedTop"
         Me.TableLayoutPanelLowGlucoseSuspendedTop.RowCount = 1
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelLowGlucoseSuspendedTop.Size = New Size(1358, 37)
         Me.TableLayoutPanelLowGlucoseSuspendedTop.TabIndex = 1
@@ -2439,11 +2534,17 @@ Partial Class Form1
         Me.TableLayoutPanelTimeChangeTop.ColumnCount = 2
         Me.TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
         Me.TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         Me.TableLayoutPanelTimeChangeTop.Dock = DockStyle.Fill
         Me.TableLayoutPanelTimeChangeTop.LabelText = "Time Change"
         Me.TableLayoutPanelTimeChangeTop.Location = New Point(6, 6)
         Me.TableLayoutPanelTimeChangeTop.Name = "TableLayoutPanelTimeChangeTop"
         Me.TableLayoutPanelTimeChangeTop.RowCount = 1
+        Me.TableLayoutPanelTimeChangeTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelTimeChangeTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelTimeChangeTop.RowStyles.Add(New RowStyle())
         Me.TableLayoutPanelTimeChangeTop.Size = New Size(1358, 37)
         Me.TableLayoutPanelTimeChangeTop.TabIndex = 1
@@ -2469,6 +2570,75 @@ Partial Class Form1
         Me.TabPageCountryDataPg2.TabIndex = 11
         Me.TabPageCountryDataPg2.Text = "Country Data Pg2"
         Me.TabPageCountryDataPg2.UseVisualStyleBackColor = True
+        ' 
+        ' CountryDataPg2TableLayoutPanel
+        ' 
+        Me.CountryDataPg2TableLayoutPanel.ColumnCount = 2
+        Me.CountryDataPg2TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 43.2116776F))
+        Me.CountryDataPg2TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 56.7883224F))
+        Me.CountryDataPg2TableLayoutPanel.Controls.Add(Me.DgvCountryDataPg2, 0, 0)
+        Me.CountryDataPg2TableLayoutPanel.Controls.Add(Me.WebView, 1, 0)
+        Me.CountryDataPg2TableLayoutPanel.Dock = DockStyle.Fill
+        Me.CountryDataPg2TableLayoutPanel.Location = New Point(3, 3)
+        Me.CountryDataPg2TableLayoutPanel.Name = "CountryDataPg2TableLayoutPanel"
+        Me.CountryDataPg2TableLayoutPanel.RowCount = 1
+        Me.CountryDataPg2TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 50.0F))
+        Me.CountryDataPg2TableLayoutPanel.Size = New Size(1370, 631)
+        Me.CountryDataPg2TableLayoutPanel.TabIndex = 2
+        ' 
+        ' DgvCountryDataPg2
+        ' 
+        Me.DgvCountryDataPg2.Columns.AddRange(New DataGridViewColumn() {Me.DgvCountryDataPg2RecordNumber, Me.DgvCountryDataPg2Category, Me.DgvCountryDataPg2Key, Me.DgvCountryDataPg2Value})
+        Me.DgvCountryDataPg2.Location = New Point(3, 3)
+        Me.DgvCountryDataPg2.Name = "DgvCountryDataPg2"
+        Me.DgvCountryDataPg2.ReadOnly = True
+        Me.DgvCountryDataPg2.RowTemplate.Height = 25
+        Me.DgvCountryDataPg2.Size = New Size(583, 612)
+        Me.DgvCountryDataPg2.TabIndex = 2
+        ' 
+        ' DgvCountryDataPg2RecordNumber
+        ' 
+        Me.DgvCountryDataPg2RecordNumber.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
+        Me.DgvCountryDataPg2RecordNumber.HeaderText = "Record Number"
+        Me.DgvCountryDataPg2RecordNumber.MinimumWidth = 60
+        Me.DgvCountryDataPg2RecordNumber.Name = "DgvCountryDataPg2RecordNumber"
+        Me.DgvCountryDataPg2RecordNumber.ReadOnly = True
+        Me.DgvCountryDataPg2RecordNumber.Width = 60
+        ' 
+        ' DgvCountryDataPg2Category
+        ' 
+        Me.DgvCountryDataPg2Category.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCountryDataPg2Category.HeaderText = "Category"
+        Me.DgvCountryDataPg2Category.Name = "DgvCountryDataPg2Category"
+        Me.DgvCountryDataPg2Category.ReadOnly = True
+        Me.DgvCountryDataPg2Category.Width = 80
+        ' 
+        ' DgvCountryDataPg2Key
+        ' 
+        Me.DgvCountryDataPg2Key.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCountryDataPg2Key.HeaderText = "Key"
+        Me.DgvCountryDataPg2Key.Name = "DgvCountryDataPg2Key"
+        Me.DgvCountryDataPg2Key.ReadOnly = True
+        Me.DgvCountryDataPg2Key.Width = 51
+        ' 
+        ' DgvCountryDataPg2Value
+        ' 
+        Me.DgvCountryDataPg2Value.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+        Me.DgvCountryDataPg2Value.HeaderText = "Value"
+        Me.DgvCountryDataPg2Value.Name = "DgvCountryDataPg2Value"
+        Me.DgvCountryDataPg2Value.ReadOnly = True
+        ' 
+        ' WebView
+        ' 
+        Me.WebView.AllowExternalDrop = False
+        Me.WebView.CreationProperties = Nothing
+        Me.WebView.DefaultBackgroundColor = Color.White
+        Me.WebView.Dock = DockStyle.Fill
+        Me.WebView.Location = New Point(595, 3)
+        Me.WebView.Name = "WebView"
+        Me.WebView.Size = New Size(772, 625)
+        Me.WebView.TabIndex = 3
+        Me.WebView.ZoomFactor = 1.0R
         ' 
         ' TabPageCountryDataPg3
         ' 
@@ -2560,75 +2730,6 @@ Partial Class Form1
         Me.TimeZoneLabel.Name = "TimeZoneLabel"
         Me.TimeZoneLabel.Size = New Size(60, 19)
         Me.TimeZoneLabel.Text = "TImeZone"
-        ' 
-        ' CountryDataPg2TableLayoutPanel
-        ' 
-        Me.CountryDataPg2TableLayoutPanel.ColumnCount = 2
-        Me.CountryDataPg2TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 43.2116776F))
-        Me.CountryDataPg2TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 56.7883224F))
-        Me.CountryDataPg2TableLayoutPanel.Controls.Add(Me.DgvCountryDataPg2, 0, 0)
-        Me.CountryDataPg2TableLayoutPanel.Controls.Add(Me.WebView, 1, 0)
-        Me.CountryDataPg2TableLayoutPanel.Dock = DockStyle.Fill
-        Me.CountryDataPg2TableLayoutPanel.Location = New Point(3, 3)
-        Me.CountryDataPg2TableLayoutPanel.Name = "CountryDataPg2TableLayoutPanel"
-        Me.CountryDataPg2TableLayoutPanel.RowCount = 1
-        Me.CountryDataPg2TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 50.0F))
-        Me.CountryDataPg2TableLayoutPanel.Size = New Size(1370, 631)
-        Me.CountryDataPg2TableLayoutPanel.TabIndex = 2
-        ' 
-        ' DgvCountryDataPg2
-        ' 
-        Me.DgvCountryDataPg2.Columns.AddRange(New DataGridViewColumn() {Me.DgvCountryDataPg2RecordNumber, Me.DgvCountryDataPg2Category, Me.DgvCountryDataPg2Key, Me.DgvCountryDataPg2Value})
-        Me.DgvCountryDataPg2.Location = New Point(3, 3)
-        Me.DgvCountryDataPg2.Name = "DgvCountryDataPg2"
-        Me.DgvCountryDataPg2.ReadOnly = True
-        Me.DgvCountryDataPg2.RowTemplate.Height = 25
-        Me.DgvCountryDataPg2.Size = New Size(583, 612)
-        Me.DgvCountryDataPg2.TabIndex = 2
-        ' 
-        ' DgvCountryDataPg2RecordNumber
-        ' 
-        Me.DgvCountryDataPg2RecordNumber.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
-        Me.DgvCountryDataPg2RecordNumber.HeaderText = "Record Number"
-        Me.DgvCountryDataPg2RecordNumber.MinimumWidth = 60
-        Me.DgvCountryDataPg2RecordNumber.Name = "DgvCountryDataPg2RecordNumber"
-        Me.DgvCountryDataPg2RecordNumber.ReadOnly = True
-        Me.DgvCountryDataPg2RecordNumber.Width = 60
-        ' 
-        ' DgvCountryDataPg2Category
-        ' 
-        Me.DgvCountryDataPg2Category.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.DgvCountryDataPg2Category.HeaderText = "Category"
-        Me.DgvCountryDataPg2Category.Name = "DgvCountryDataPg2Category"
-        Me.DgvCountryDataPg2Category.ReadOnly = True
-        Me.DgvCountryDataPg2Category.Width = 80
-        ' 
-        ' DgvCountryDataPg2Key
-        ' 
-        Me.DgvCountryDataPg2Key.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.DgvCountryDataPg2Key.HeaderText = "Key"
-        Me.DgvCountryDataPg2Key.Name = "DgvCountryDataPg2Key"
-        Me.DgvCountryDataPg2Key.ReadOnly = True
-        Me.DgvCountryDataPg2Key.Width = 51
-        ' 
-        ' DgvCountryDataPg2Value
-        ' 
-        Me.DgvCountryDataPg2Value.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-        Me.DgvCountryDataPg2Value.HeaderText = "Value"
-        Me.DgvCountryDataPg2Value.Name = "DgvCountryDataPg2Value"
-        Me.DgvCountryDataPg2Value.ReadOnly = True
-        ' 
-        ' WebView
-        ' 
-        Me.WebView.AllowExternalDrop = False
-        Me.WebView.CreationProperties = Nothing
-        Me.WebView.DefaultBackgroundColor = Color.White
-        Me.WebView.Dock = DockStyle.Fill
-        Me.WebView.Location = New Point(595, 3)
-        Me.WebView.Name = "WebView"
-        Me.WebView.Size = New Size(772, 625)
-        Me.WebView.TabIndex = 3
-        Me.WebView.ZoomFactor = 1.0R
         ' 
         ' Form1
         ' 
@@ -2758,15 +2859,15 @@ Partial Class Form1
         Me.TableLayoutPanelTimeChange.PerformLayout()
         Me.TabPageCountryDataPg1.ResumeLayout(False)
         Me.TabPageCountryDataPg2.ResumeLayout(False)
+        Me.CountryDataPg2TableLayoutPanel.ResumeLayout(False)
+        CType(Me.DgvCountryDataPg2, ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.WebView, ComponentModel.ISupportInitialize).EndInit()
         Me.TabPageCountryDataPg3.ResumeLayout(False)
         Me.TabPageUserProfile.ResumeLayout(False)
         Me.TabPageCurrentUser.ResumeLayout(False)
         Me.TabPageAllUsers.ResumeLayout(False)
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
-        Me.CountryDataPg2TableLayoutPanel.ResumeLayout(False)
-        CType(Me.DgvCountryDataPg2, ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.WebView, ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
     End Sub
