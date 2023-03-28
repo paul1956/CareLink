@@ -203,6 +203,13 @@ Partial Class Form1
         Me.TableLayoutPanelTimeChangeTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
         Me.TabPageCountryDataPg1 = New TabPage()
         Me.TabPageCountryDataPg2 = New TabPage()
+        Me.CountryDataPg2TableLayoutPanel = New TableLayoutPanel()
+        Me.DgvCountryDataPg2 = New DataGridView()
+        Me.DgvCountryDataPg2RecordNumber = New DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg2Category = New DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg2Key = New DataGridViewTextBoxColumn()
+        Me.DgvCountryDataPg2Value = New DataGridViewTextBoxColumn()
+        Me.WebView = New Microsoft.Web.WebView2.WinForms.WebView2()
         Me.TabPageCountryDataPg3 = New TabPage()
         Me.TabPageUserProfile = New TabPage()
         Me.TabPageCurrentUser = New TabPage()
@@ -214,13 +221,6 @@ Partial Class Form1
         Me.LastUpdateTime = New ToolStripStatusLabel()
         Me.ToolStripSpacer = New ToolStripStatusLabel()
         Me.TimeZoneLabel = New ToolStripStatusLabel()
-        Me.CountryDataPg2TableLayoutPanel = New TableLayoutPanel()
-        Me.DgvCountryDataPg2 = New DataGridView()
-        Me.DgvCountryDataPg2RecordNumber = New DataGridViewTextBoxColumn()
-        Me.DgvCountryDataPg2Category = New DataGridViewTextBoxColumn()
-        Me.DgvCountryDataPg2Key = New DataGridViewTextBoxColumn()
-        Me.DgvCountryDataPg2Value = New DataGridViewTextBoxColumn()
-        Me.WebView = New Microsoft.Web.WebView2.WinForms.WebView2()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         Me.CalibrationShieldPanel.SuspendLayout()
@@ -297,13 +297,12 @@ Partial Class Form1
         Me.TabPageCountryDataPg2.SuspendLayout()
         Me.CountryDataPg2TableLayoutPanel.SuspendLayout()
         CType(Me.DgvCountryDataPg2, ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.WebView, ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPageCountryDataPg3.SuspendLayout()
         Me.TabPageUserProfile.SuspendLayout()
         Me.TabPageCurrentUser.SuspendLayout()
         Me.TabPageAllUsers.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
-        Me.CountryDataPg2TableLayoutPanel.SuspendLayout()
-        CType(Me.WebView, ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         ' 
         ' MenuStrip1
@@ -1548,10 +1547,10 @@ Partial Class Form1
         Me.TabControlPage1.Controls.Add(Me.TabPage13Basal)
         Me.TabControlPage1.Controls.Add(Me.TabPage14Markers)
         Me.TabControlPage1.Dock = DockStyle.Fill
-        Me.TabControlPage1.Location = New Point(0, 0)
+        Me.TabControlPage1.Location = New Point(0, 24)
         Me.TabControlPage1.Name = "TabControlPage1"
         Me.TabControlPage1.SelectedIndex = 0
-        Me.TabControlPage1.Size = New Size(1384, 716)
+        Me.TabControlPage1.Size = New Size(1384, 668)
         Me.TabControlPage1.TabIndex = 0
         ' 
         ' TabPage01HomePage
@@ -2470,6 +2469,75 @@ Partial Class Form1
         Me.TabPageCountryDataPg2.Text = "Country Data Pg2"
         Me.TabPageCountryDataPg2.UseVisualStyleBackColor = True
         ' 
+        ' CountryDataPg2TableLayoutPanel
+        ' 
+        Me.CountryDataPg2TableLayoutPanel.ColumnCount = 2
+        Me.CountryDataPg2TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 43.2116776F))
+        Me.CountryDataPg2TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 56.7883224F))
+        Me.CountryDataPg2TableLayoutPanel.Controls.Add(Me.DgvCountryDataPg2, 0, 0)
+        Me.CountryDataPg2TableLayoutPanel.Controls.Add(Me.WebView, 1, 0)
+        Me.CountryDataPg2TableLayoutPanel.Dock = DockStyle.Fill
+        Me.CountryDataPg2TableLayoutPanel.Location = New Point(3, 3)
+        Me.CountryDataPg2TableLayoutPanel.Name = "CountryDataPg2TableLayoutPanel"
+        Me.CountryDataPg2TableLayoutPanel.RowCount = 1
+        Me.CountryDataPg2TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 50.0F))
+        Me.CountryDataPg2TableLayoutPanel.Size = New Size(1370, 631)
+        Me.CountryDataPg2TableLayoutPanel.TabIndex = 2
+        ' 
+        ' DgvCountryDataPg2
+        ' 
+        Me.DgvCountryDataPg2.Columns.AddRange(New DataGridViewColumn() {Me.DgvCountryDataPg2RecordNumber, Me.DgvCountryDataPg2Category, Me.DgvCountryDataPg2Key, Me.DgvCountryDataPg2Value})
+        Me.DgvCountryDataPg2.Location = New Point(3, 3)
+        Me.DgvCountryDataPg2.Name = "DgvCountryDataPg2"
+        Me.DgvCountryDataPg2.ReadOnly = True
+        Me.DgvCountryDataPg2.RowTemplate.Height = 25
+        Me.DgvCountryDataPg2.Size = New Size(583, 612)
+        Me.DgvCountryDataPg2.TabIndex = 2
+        ' 
+        ' DgvCountryDataPg2RecordNumber
+        ' 
+        Me.DgvCountryDataPg2RecordNumber.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
+        Me.DgvCountryDataPg2RecordNumber.HeaderText = "Record Number"
+        Me.DgvCountryDataPg2RecordNumber.MinimumWidth = 60
+        Me.DgvCountryDataPg2RecordNumber.Name = "DgvCountryDataPg2RecordNumber"
+        Me.DgvCountryDataPg2RecordNumber.ReadOnly = True
+        Me.DgvCountryDataPg2RecordNumber.Width = 60
+        ' 
+        ' DgvCountryDataPg2Category
+        ' 
+        Me.DgvCountryDataPg2Category.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCountryDataPg2Category.HeaderText = "Category"
+        Me.DgvCountryDataPg2Category.Name = "DgvCountryDataPg2Category"
+        Me.DgvCountryDataPg2Category.ReadOnly = True
+        Me.DgvCountryDataPg2Category.Width = 80
+        ' 
+        ' DgvCountryDataPg2Key
+        ' 
+        Me.DgvCountryDataPg2Key.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+        Me.DgvCountryDataPg2Key.HeaderText = "Key"
+        Me.DgvCountryDataPg2Key.Name = "DgvCountryDataPg2Key"
+        Me.DgvCountryDataPg2Key.ReadOnly = True
+        Me.DgvCountryDataPg2Key.Width = 51
+        ' 
+        ' DgvCountryDataPg2Value
+        ' 
+        Me.DgvCountryDataPg2Value.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+        Me.DgvCountryDataPg2Value.HeaderText = "Value"
+        Me.DgvCountryDataPg2Value.Name = "DgvCountryDataPg2Value"
+        Me.DgvCountryDataPg2Value.ReadOnly = True
+        ' 
+        ' WebView
+        ' 
+        Me.WebView.AllowExternalDrop = False
+        Me.WebView.CreationProperties = Nothing
+        Me.WebView.DefaultBackgroundColor = Color.White
+        Me.WebView.Dock = DockStyle.Fill
+        Me.WebView.Location = New Point(595, 3)
+        Me.WebView.Name = "WebView"
+        Me.WebView.Size = New Size(772, 625)
+        Me.WebView.TabIndex = 3
+        Me.WebView.ZoomFactor = 1.0R
+        ' 
         ' TabPageCountryDataPg3
         ' 
         Me.TabPageCountryDataPg3.Controls.Add(Me.DgvCountryDataPg3)
@@ -2560,75 +2628,6 @@ Partial Class Form1
         Me.TimeZoneLabel.Name = "TimeZoneLabel"
         Me.TimeZoneLabel.Size = New Size(60, 19)
         Me.TimeZoneLabel.Text = "TImeZone"
-        ' 
-        ' CountryDataPg2TableLayoutPanel
-        ' 
-        Me.CountryDataPg2TableLayoutPanel.ColumnCount = 2
-        Me.CountryDataPg2TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 43.2116776F))
-        Me.CountryDataPg2TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 56.7883224F))
-        Me.CountryDataPg2TableLayoutPanel.Controls.Add(Me.DgvCountryDataPg2, 0, 0)
-        Me.CountryDataPg2TableLayoutPanel.Controls.Add(Me.WebView, 1, 0)
-        Me.CountryDataPg2TableLayoutPanel.Dock = DockStyle.Fill
-        Me.CountryDataPg2TableLayoutPanel.Location = New Point(3, 3)
-        Me.CountryDataPg2TableLayoutPanel.Name = "CountryDataPg2TableLayoutPanel"
-        Me.CountryDataPg2TableLayoutPanel.RowCount = 1
-        Me.CountryDataPg2TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 50.0F))
-        Me.CountryDataPg2TableLayoutPanel.Size = New Size(1370, 631)
-        Me.CountryDataPg2TableLayoutPanel.TabIndex = 2
-        ' 
-        ' DgvCountryDataPg2
-        ' 
-        Me.DgvCountryDataPg2.Columns.AddRange(New DataGridViewColumn() {Me.DgvCountryDataPg2RecordNumber, Me.DgvCountryDataPg2Category, Me.DgvCountryDataPg2Key, Me.DgvCountryDataPg2Value})
-        Me.DgvCountryDataPg2.Location = New Point(3, 3)
-        Me.DgvCountryDataPg2.Name = "DgvCountryDataPg2"
-        Me.DgvCountryDataPg2.ReadOnly = True
-        Me.DgvCountryDataPg2.RowTemplate.Height = 25
-        Me.DgvCountryDataPg2.Size = New Size(583, 612)
-        Me.DgvCountryDataPg2.TabIndex = 2
-        ' 
-        ' DgvCountryDataPg2RecordNumber
-        ' 
-        Me.DgvCountryDataPg2RecordNumber.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
-        Me.DgvCountryDataPg2RecordNumber.HeaderText = "Record Number"
-        Me.DgvCountryDataPg2RecordNumber.MinimumWidth = 60
-        Me.DgvCountryDataPg2RecordNumber.Name = "DgvCountryDataPg2RecordNumber"
-        Me.DgvCountryDataPg2RecordNumber.ReadOnly = True
-        Me.DgvCountryDataPg2RecordNumber.Width = 60
-        ' 
-        ' DgvCountryDataPg2Category
-        ' 
-        Me.DgvCountryDataPg2Category.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.DgvCountryDataPg2Category.HeaderText = "Category"
-        Me.DgvCountryDataPg2Category.Name = "DgvCountryDataPg2Category"
-        Me.DgvCountryDataPg2Category.ReadOnly = True
-        Me.DgvCountryDataPg2Category.Width = 80
-        ' 
-        ' DgvCountryDataPg2Key
-        ' 
-        Me.DgvCountryDataPg2Key.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.DgvCountryDataPg2Key.HeaderText = "Key"
-        Me.DgvCountryDataPg2Key.Name = "DgvCountryDataPg2Key"
-        Me.DgvCountryDataPg2Key.ReadOnly = True
-        Me.DgvCountryDataPg2Key.Width = 51
-        ' 
-        ' DgvCountryDataPg2Value
-        ' 
-        Me.DgvCountryDataPg2Value.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-        Me.DgvCountryDataPg2Value.HeaderText = "Value"
-        Me.DgvCountryDataPg2Value.Name = "DgvCountryDataPg2Value"
-        Me.DgvCountryDataPg2Value.ReadOnly = True
-        ' 
-        ' WebView
-        ' 
-        Me.WebView.AllowExternalDrop = False
-        Me.WebView.CreationProperties = Nothing
-        Me.WebView.DefaultBackgroundColor = Color.White
-        Me.WebView.Dock = DockStyle.Fill
-        Me.WebView.Location = New Point(595, 3)
-        Me.WebView.Name = "WebView"
-        Me.WebView.Size = New Size(772, 625)
-        Me.WebView.TabIndex = 3
-        Me.WebView.ZoomFactor = 1.0R
         ' 
         ' Form1
         ' 
@@ -2758,15 +2757,15 @@ Partial Class Form1
         Me.TableLayoutPanelTimeChange.PerformLayout()
         Me.TabPageCountryDataPg1.ResumeLayout(False)
         Me.TabPageCountryDataPg2.ResumeLayout(False)
+        Me.CountryDataPg2TableLayoutPanel.ResumeLayout(False)
+        CType(Me.DgvCountryDataPg2, ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.WebView, ComponentModel.ISupportInitialize).EndInit()
         Me.TabPageCountryDataPg3.ResumeLayout(False)
         Me.TabPageUserProfile.ResumeLayout(False)
         Me.TabPageCurrentUser.ResumeLayout(False)
         Me.TabPageAllUsers.ResumeLayout(False)
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
-        Me.CountryDataPg2TableLayoutPanel.ResumeLayout(False)
-        CType(Me.DgvCountryDataPg2, ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.WebView, ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
     End Sub
