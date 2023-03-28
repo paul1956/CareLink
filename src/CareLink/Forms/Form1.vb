@@ -40,6 +40,8 @@ Public Class Form1
 
     Public Property Initialized As Boolean = False
 
+    Public ReadOnly Property LoginDialog As New LoginForm1
+
     Public Property Client As CareLinkClient
         Get
             Return Me.LoginDialog?.Client
@@ -48,8 +50,6 @@ Public Class Form1
             Me.LoginDialog.Client = value
         End Set
     End Property
-
-    Public ReadOnly Property LoginDialog As New LoginForm1
 
 #Region "Pump Data"
 
@@ -793,16 +793,43 @@ Public Class Form1
         e.Cancel = False
     End Sub
 
+    Private Sub DgvCountryDataPg2_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvCountryDataPg2.CellClick
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        If dgv.Columns(e.ColumnIndex).HeaderText = "Value" Then
+            Dim uriString As String = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()
+            If Uri.IsWellFormedUriString(uriString, UriKind.Absolute) Then
+                Me.WebView.Source = New Uri(uriString)
+            End If
+        End If
+    End Sub
+
+    Private Sub DgvCountryDataPg2_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvCountryDataPg2.CellFormatting
+        If e.RowIndex = -1 Then Exit Sub
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        If dgv.Columns(e.ColumnIndex).HeaderText = "Value" Then
+            Dim uriString As String = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()
+            If Uri.IsWellFormedUriString(uriString, UriKind.Absolute) Then
+                e.Value = uriString
+                If dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Equals(dgv.CurrentCell) Then
+                    e.CellStyle.ForeColor = Color.FromArgb(&HFF, &H0, &H0)
+                Else
+                    e.CellStyle.ForeColor = Color.FromArgb(&H0, &H66, &HCC)
+                End If
+                e.FormattingApplied = True
+            End If
+        End If
+    End Sub
+
+    Private Sub DgvExportToExcel(sender As Object, e As EventArgs)
+        GetDataGridView(sender).ExportToExcelWithFormatting()
+    End Sub
+
     Private Sub DgvCopyToClipBoardWithHeader(sender As Object, e As EventArgs)
         GetDataGridView(sender).CopyToClipboard(True)
     End Sub
 
     Private Sub DgvCopyToClipBoardWithoutHeader(sender As Object, e As EventArgs)
         GetDataGridView(sender).CopyToClipboard(False)
-    End Sub
-
-    Private Sub DgvExportToExcel(sender As Object, e As EventArgs)
-        GetDataGridView(sender).ExportToExcelWithFormatting()
     End Sub
 
 #Region "Dgv Summary Events"

@@ -10,8 +10,9 @@ Friend Module PlotMarkers
     <Extension>
     Private Sub AddBgReadingPoint(markerSeriesPoints As DataPointCollection, markerOADate As OADate, bgValueString As String, bgValue As Single)
         markerSeriesPoints.AddXY(markerOADate, bgValue)
+        markerSeriesPoints.Last.BorderWidth = 2
         markerSeriesPoints.Last.BorderColor = Color.DarkOrange
-        markerSeriesPoints.Last.Color = Color.FromArgb(5, Color.Gainsboro)
+        markerSeriesPoints.Last.Color = Color.DarkGray
         markerSeriesPoints.Last.MarkerSize = 10
         markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Circle
         If Not Single.IsNaN(bgValue) Then
