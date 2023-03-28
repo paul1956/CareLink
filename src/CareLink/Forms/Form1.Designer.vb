@@ -304,7 +304,6 @@ Partial Class Form1
         Me.TabPageAllUsers.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         Me.CountryDataPg2TableLayoutPanel.SuspendLayout()
-        CType(Me.DgvCountryDataPg2, ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         ' 
         ' MenuStrip1
