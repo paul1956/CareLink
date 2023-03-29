@@ -9,12 +9,7 @@ Friend Module PlotMarkers
 
     <Extension>
     Private Sub AddBgReadingPoint(markerSeriesPoints As DataPointCollection, markerOADate As OADate, bgValueString As String, bgValue As Single)
-        markerSeriesPoints.AddXY(markerOADate, bgValue)
-        markerSeriesPoints.Last.BorderWidth = 2
-        markerSeriesPoints.Last.BorderColor = Color.DarkOrange
-        markerSeriesPoints.Last.Color = Color.DarkGray
-        markerSeriesPoints.Last.MarkerSize = 10
-        markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Circle
+        AddMarkerPoint(markerSeriesPoints, markerOADate, bgValue, Color.DarkOrange)
         If Not Single.IsNaN(bgValue) Then
             markerSeriesPoints.Last.Tag = $"Blood Glucose: Not used for calibration: {bgValueString} {BgUnitsString}"
         End If
@@ -22,13 +17,17 @@ Friend Module PlotMarkers
 
     <Extension>
     Private Sub AddCalibrationPoint(markerSeriesPoints As DataPointCollection, markerOADate As OADate, bgValue As Single, entry As Dictionary(Of String, String))
-        markerSeriesPoints.AddXY(markerOADate, bgValue)
-        markerSeriesPoints.Last.BorderColor = Color.Red
-        markerSeriesPoints.Last.Color = Color.FromArgb(5, Color.Red)
-        markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Circle
-        markerSeriesPoints.Last.MarkerBorderWidth = 2
-        markerSeriesPoints.Last.MarkerSize = 8
+        AddMarkerPoint(markerSeriesPoints, markerOADate, bgValue, Color.Red)
         markerSeriesPoints.Last.Tag = $"Blood Glucose: Calibration {If(CBool(entry("calibrationSuccess")), "accepted", "not accepted")}: {entry("value")} {BgUnitsString}"
+    End Sub
+
+    Private Sub AddMarkerPoint(markerSeriesPoints As DataPointCollection, markerOADate As OADate, bgValue As Single, markerColor As Color)
+        markerSeriesPoints.AddXY(markerOADate, bgValue)
+        markerSeriesPoints.Last.BorderColor = markerColor
+        markerSeriesPoints.Last.Color = Color.FromArgb(5, markerColor)
+        markerSeriesPoints.Last.MarkerBorderWidth = 3
+        markerSeriesPoints.Last.MarkerSize = 8
+        markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Circle
     End Sub
 
     <Extension>
