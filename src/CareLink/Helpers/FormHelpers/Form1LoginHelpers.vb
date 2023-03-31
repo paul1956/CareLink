@@ -114,7 +114,7 @@ Friend Module Form1LoginHelpers
         UpdateHighLightInLastUpdateTime(mainForm.LastUpdateTime, highLight)
         mainForm.LastUpdateTime.Text = $"Last Update Time: {msg}"
         Dim timeZoneName As String = Nothing
-        mainForm.TimeZoneLabel.Text = If(mainForm.RecentData.TryGetValue(NameOf(ItemIndexes.clientTimeZoneName), timeZoneName),
+        mainForm.TimeZoneLabel.Text = If(mainForm.RecentData?.TryGetValue(NameOf(ItemIndexes.clientTimeZoneName), timeZoneName),
                                             CalculateTimeZone(timeZoneName).StandardName,
                                             "")
         mainForm.LastUpdateTime.Spring = True
