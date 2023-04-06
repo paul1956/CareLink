@@ -174,7 +174,8 @@ Partial Class LoginForm1
         Me.LoginStatus.Location = New Point(4, 230)
         Me.LoginStatus.Multiline = True
         Me.LoginStatus.Name = "LoginStatus"
-        Me.LoginStatus.Size = New Size(191, 80)
+        Me.LoginStatus.ScrollBars = ScrollBars.Vertical
+        Me.LoginStatus.Size = New Size(225, 80)
         Me.LoginStatus.TabIndex = 12
         Me.LoginStatus.Text = "Login Status: Unknown"
         ' 
