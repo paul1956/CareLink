@@ -7,6 +7,7 @@ Friend Module AutoBasalDeliveryRecordHelpers
     Private ReadOnly s_columnsToHide As New List(Of String) From {
             NameOf(AutoBasalDeliveryRecord.id),
             NameOf(AutoBasalDeliveryRecord.kind),
+            NameOf(AutoBasalDeliveryRecord.OA_dateTime),
             NameOf(AutoBasalDeliveryRecord.relativeOffset),
             NameOf(AutoBasalDeliveryRecord.version)
         }
