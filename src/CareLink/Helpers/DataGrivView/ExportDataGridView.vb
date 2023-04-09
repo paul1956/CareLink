@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Text
 Imports ClosedXML.Excel
@@ -42,21 +43,31 @@ Friend Module ExportDataGridView
 
     <Extension>
     Public Sub ExportToExcelWithFormatting(dgv As DataGridView)
-        Dim baseFileName As String = dgv.Name.Replace("dgv", "")
+        Dim baseFileName As String = dgv.Name.Replace("dgv", "", StringComparison.CurrentCultureIgnoreCase)
         Dim saveFileDialog1 As New SaveFileDialog With {
-            .Filter = "xls files (*.xlsx)|*.xlsx|All files (*.*)|*.*",
-            .Title = "To Excel",
-            .FileName = $"{baseFileName} ({Date.Now:yyyy-MM-dd})"
-        }
-        Dim excelColumn As Integer = 1
+                .CheckPathExists = True,
+                .FileName = $"{baseFileName} ({Date.Now:yyyy-MM-dd})",
+                .Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*",
+                .InitialDirectory = GetDirectoryForProjectData(),
+                .OverwritePrompt = True,
+                .Title = "To Excel"
+               }
 
-        If saveFileDialog1.ShowDialog() = Global.System.Windows.Forms.DialogResult.OK Then
+        If saveFileDialog1.ShowDialog() = DialogResult.OK Then
             Dim workbook As New XLWorkbook()
             Dim worksheet As IXLWorksheet = workbook.Worksheets.Add(baseFileName)
+            Dim excelColumn As Integer = 1
             For j As Integer = 0 To dgv.Columns.Count - 1
                 Dim dgvColumn As DataGridViewColumn = dgv.Columns(j)
                 If dgvColumn.Visible Then
-                    worksheet.Cell(1, excelColumn).Value = dgvColumn.Name
+                    If dgvColumn.Name.Equals("dateTime", StringComparison.OrdinalIgnoreCase) Then
+                        worksheet.Cell(1, excelColumn).Value = "Date"
+                        worksheet.Cell(1, excelColumn).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center
+                        excelColumn += 1
+                        worksheet.Cell(1, excelColumn).Value = "Time"
+                    Else
+                        worksheet.Cell(1, excelColumn).Value = dgvColumn.HeaderCell.Value.ToString
+                    End If
                     worksheet.Cell(1, excelColumn).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center
                     excelColumn += 1
                 End If
@@ -68,56 +79,104 @@ Friend Module ExportDataGridView
                     If Not dgv.Columns(j).Visible Then Continue For
                     Dim dgvCell As DataGridViewCell = dgv.Rows(i).Cells(j)
                     Dim value As Object = dgvCell.Value
-
-                    If value.ToString().Length = 0 Then
+                    Dim valueAsString As String = value?.ToString
+                    If String.IsNullOrWhiteSpace(valueAsString) Then
                         worksheet.Cell(i + 2, excelColumn).Value = ""
+                        With worksheet.Cell(i + 2, excelColumn).Style
+                            Dim cellStyle As DataGridViewCellStyle = dgvCell.GetFormattedStyle()
+                            .Fill.SetBackgroundColor(XLColor.FromColor(cellStyle.BackColor))
+                            .Font.SetFontColor(XLColor.FromColor(cellStyle.ForeColor))
+                            .Font.Bold = cellStyle.Font.Bold
+                            .Font.FontName = dgv.Font.Name
+                            .Font.FontSize = dgv.Font.Size
+                        End With
                     Else
                         Dim align As XLAlignmentHorizontalValues
                         With worksheet.Cell(i + 2, excelColumn)
                             Select Case dgvCell.ValueType.Name
                                 Case NameOf([Int32])
-                                    align = XLAlignmentHorizontalValues.Right
+                                    align = If(dgv.Columns(j).Name.Equals("RecordNumber", StringComparison.OrdinalIgnoreCase),
+                                                    XLAlignmentHorizontalValues.Center,
+                                                    XLAlignmentHorizontalValues.Right)
                                     .Value = CInt(value)
-                                Case NameOf([Single])
+                                Case NameOf(OADate)
+                                    align = XLAlignmentHorizontalValues.Left
+                                    Dim result As Double
+                                    If Double.TryParse(valueAsString, result) Then
+                                        .Value = result
+                                        .Style.NumberFormat.Format = $"0.{Strings.StrDup(37, "0"c)}"
+                                    Else
+                                        .Value = $"'{valueAsString}"
+                                    End If
+                                Case NameOf([Decimal]), NameOf([Double]), NameOf([Single])
                                     align = XLAlignmentHorizontalValues.Right
-                                    .Value = ParseSingle(value)
-                                Case NameOf([Double])
-                                    align = XLAlignmentHorizontalValues.Right
-                                    .Value = ParseSingle(value)
-                                Case NameOf([Decimal])
-                                    align = XLAlignmentHorizontalValues.Right
-                                    .Value = ParseSingle(value)
+                                    Dim decimalDigits As Integer = If(valueAsString.Contains("."c), 3, 0)
+
+                                    Dim singleValue As Single = ParseSingle(value, decimalDigits)
+                                    If Single.IsNaN(singleValue) Then
+                                        .Value = "'Infinity"
+                                        align = XLAlignmentHorizontalValues.Center
+                                    Else
+                                        .Value = singleValue
+                                        .Style.NumberFormat.Format = If(valueAsString.Contains("."c), "0.000", "0")
+                                        align = XLAlignmentHorizontalValues.Right
+                                    End If
                                 Case NameOf([Boolean])
                                     align = XLAlignmentHorizontalValues.Center
                                     .Value = CBool(value)
                                 Case NameOf([String])
                                     align = XLAlignmentHorizontalValues.Left
-                                    .Value = value.ToString
+                                    .Value = valueAsString
                                 Case NameOf([DateTime])
-                                    align = XLAlignmentHorizontalValues.Left
-                                    .Value = CDate(value)
+                                    .Value = CDate(value).Date
+                                    With .Style
+                                        Dim cellStyle As DataGridViewCellStyle = dgvCell.GetFormattedStyle()
+                                        .Alignment.Horizontal = XLAlignmentHorizontalValues.Left
+                                        .Fill.SetBackgroundColor(XLColor.FromColor(cellStyle.BackColor))
+                                        .Font.SetFontColor(XLColor.FromColor(cellStyle.ForeColor))
+                                        .Font.Bold = cellStyle.Font.Bold
+                                        .Font.FontName = dgv.Font.Name
+                                        .Font.FontSize = dgv.Font.Size
+                                    End With
+                                    excelColumn += 1
+                                    align = XLAlignmentHorizontalValues.Right
+                                    worksheet.Cell(i + 2, excelColumn).Value = CDate(value).TimeOfDay
                                 Case Else
                                     Stop
                                     align = XLAlignmentHorizontalValues.Left
-                                    .Value = value.ToString
+                                    .Value = valueAsString
                             End Select
-                            With .Style
-                                Dim cellStyle As DataGridViewCellStyle = dgvCell.GetFormattedStyle()
-                                .Alignment.Horizontal = align
-                                .Fill.SetBackgroundColor(XLColor.FromColor(cellStyle.BackColor))
-                                .Font.SetFontColor(XLColor.FromColor(cellStyle.ForeColor))
-                                .Font.Bold = cellStyle.Font.Bold
-                                .Font.FontName = dgv.Font.Name
-                                .Font.FontSize = dgv.Font.Size
-                            End With
-
                         End With
+
+                        With worksheet.Cell(i + 2, excelColumn).Style
+                            Dim cellStyle As DataGridViewCellStyle = dgvCell.GetFormattedStyle()
+                            .Alignment.Horizontal = align
+                            .Fill.SetBackgroundColor(XLColor.FromColor(cellStyle.BackColor))
+                            .Font.SetFontColor(XLColor.FromColor(cellStyle.ForeColor))
+                            .Font.Bold = cellStyle.Font.Bold
+                            .Font.FontName = dgv.Font.Name
+                            .Font.FontSize = dgv.Font.Size
+                        End With
+
                     End If
                     excelColumn += 1
                 Next j
             Next i
             worksheet.Columns().AdjustToContents()
-            workbook.SaveAs(saveFileDialog1.FileName)
+            Try
+                workbook.SaveAs(saveFileDialog1.FileName)
+                If File.Exists(saveFileDialog1.FileName) Then
+                    Dim result As Process = Process.Start(New ProcessStartInfo With {
+                                        .FileName = saveFileDialog1.FileName,
+                                        .UseShellExecute = True
+                                    }
+                                  )
+                End If
+            Catch ex As IOException
+                MsgBox(ex.Message, MsgBoxStyle.OkOnly)
+            Catch ex1 As Exception
+                Stop
+            End Try
         End If
     End Sub
 

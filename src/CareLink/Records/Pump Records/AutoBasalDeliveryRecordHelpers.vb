@@ -8,6 +8,7 @@ Friend Module AutoBasalDeliveryRecordHelpers
             NameOf(AutoBasalDeliveryRecord.id),
             NameOf(AutoBasalDeliveryRecord.kind),
             NameOf(AutoBasalDeliveryRecord.relativeOffset),
+            NameOf(AutoBasalDeliveryRecord.OA_dateTime),
             NameOf(AutoBasalDeliveryRecord.version)
         }
 
