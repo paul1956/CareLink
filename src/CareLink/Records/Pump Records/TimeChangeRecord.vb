@@ -65,7 +65,7 @@ Public Class TimeChangeRecord
     <Column(Order:=3, TypeName:=NameOf([Int32]))>
     Public Property kind As String
 
-    <DisplayName("OA_dateTime")>
+    <DisplayName("OAdateTime")>
     <Column(Order:=7, TypeName:=NameOf(OADate))>
     Public ReadOnly Property OaDateTime As OADate
         Get

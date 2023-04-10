@@ -7,7 +7,7 @@ Friend Module MealRecordHelpers
     Private ReadOnly columnsToHide As New List(Of String) From {
                                 NameOf(MealRecord.kind),
                                 NameOf(MealRecord.relativeOffset),
-                                NameOf(AutoBasalDeliveryRecord.OA_dateTime),
+                                NameOf(MealRecord.OAdateTime),
                                 NameOf(MealRecord.version)
                             }
 

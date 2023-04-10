@@ -109,16 +109,13 @@ Friend Module ExportDataGridView
                                         .Value = $"'{valueAsString}"
                                     End If
                                 Case NameOf([Decimal]), NameOf([Double]), NameOf([Single])
-                                    align = XLAlignmentHorizontalValues.Right
-                                    Dim decimalDigits As Integer = If(valueAsString.Contains("."c), 3, 0)
-
-                                    Dim singleValue As Single = ParseSingle(value, decimalDigits)
-                                    If Single.IsNaN(singleValue) Then
+                                    Dim valueASingle As Single = ParseSingle(value, 3)
+                                    If Single.IsNaN(valueASingle) Then
                                         .Value = "'Infinity"
                                         align = XLAlignmentHorizontalValues.Center
                                     Else
-                                        .Value = singleValue
-                                        .Style.NumberFormat.Format = If(valueAsString.Contains("."c), "0.000", "0")
+                                        .Value = valueASingle
+                                        .Style.NumberFormat.Format = "0.000"
                                         align = XLAlignmentHorizontalValues.Right
                                     End If
                                 Case NameOf([Boolean])
