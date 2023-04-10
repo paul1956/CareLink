@@ -58,9 +58,9 @@ Public Class AutoBasalDeliveryRecord
     <Column(Order:=6, TypeName:=NameOf([String]))>
     Public Property dateTimeAsString As String
 
-    <DisplayName(NameOf(OA_dateTime))>
+    <DisplayName(NameOf(OAdateTime))>
     <Column(Order:=7, TypeName:=NameOf(OADate))>
-    Public ReadOnly Property OA_dateTime As OADate
+    Public ReadOnly Property OAdateTime As OADate
         Get
             Return New OADate(_dateTime)
         End Get

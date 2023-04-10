@@ -47,7 +47,7 @@ Friend Module CollectMarkersHelper
                     s_markers.Add(markerEntry)
                     Dim item As AutoBasalDeliveryRecord = DictionaryToClass(Of AutoBasalDeliveryRecord)(markerEntry, s_listOfAutoBasalDeliveryMarkers.Count + 1)
                     s_listOfAutoBasalDeliveryMarkers.Add(item)
-                    basalDictionary.Add(item.OA_dateTime, item.bolusAmount)
+                    basalDictionary.Add(item.OAdateTime, item.bolusAmount)
                 Case "AUTO_MODE_STATUS"
                     s_listOfAutoModeStatusMarkers.Add(DictionaryToClass(Of AutoModeStatusRecord)(markerEntry, s_listOfAutoModeStatusMarkers.Count + 1))
                 Case "BG_READING"
