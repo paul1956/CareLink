@@ -67,27 +67,25 @@ Friend Module MathExtensions
     End Function
 
     <Extension>
-    Public Function RoundTo025(originalValue As Single) As Decimal
-        Return CDec(originalValue).RoundTo025()
+    Public Function RoundTo025(originalValue As Single) As Single
+        If Single.IsNaN(originalValue) Then
+            Return Double.NaN
+        End If
+        Return CSng(Math.Floor(Math.Round(originalValue, 3, MidpointRounding.ToZero) / 0.025D) * 0.025D)
     End Function
 
     <Extension>
-    Public Function RoundTo025(originalValue As Decimal) As Decimal
-        Return Math.Floor(Math.Round(originalValue, 3, MidpointRounding.ToZero) / 0.025D) * 0.025D
-    End Function
-
-    <Extension>
-    Public Function TryParseSingle(valueString As String, ByRef result As Single, Optional decimalDigits As Integer = 10, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Boolean
+    Public Function TryParseSingle(valueString As String, ByRef result As Single, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Boolean
         If valueString.Contains(","c) AndAlso valueString.Contains("."c) Then
             Throw New Exception($"{NameOf(valueString)} = {valueString}, and contains both comma and period in Line {sourceLineNumber} in {memberName}.")
         End If
 
         If Single.TryParse(valueString.Replace(",", "."), NumberStyles.Number, usDataCulture, result) Then
-            result = result.RoundSingle(decimalDigits)
+            result = result.RoundSingle(10)
             Return True
         End If
         If Single.TryParse(valueString, NumberStyles.Number, CurrentUICulture, result) Then
-            result = result.RoundSingle(decimalDigits)
+            result = result.RoundSingle(10)
             Return True
         End If
         result = Single.NaN

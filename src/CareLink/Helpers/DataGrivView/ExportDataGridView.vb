@@ -95,9 +95,11 @@ Friend Module ExportDataGridView
                         With worksheet.Cell(i + 2, excelColumn)
                             Select Case dgvCell.ValueType.Name
                                 Case NameOf([Int32])
-                                    align = If(dgv.Columns(j).Name.Equals("RecordNumber", StringComparison.OrdinalIgnoreCase),
-                                                    XLAlignmentHorizontalValues.Center,
-                                                    XLAlignmentHorizontalValues.Right)
+                                    If dgv.Columns(j).Name.Equals("RecordNumber", StringComparison.OrdinalIgnoreCase) Then
+                                        align = XLAlignmentHorizontalValues.Center
+                                    Else
+                                        align = XLAlignmentHorizontalValues.Right
+                                    End If
                                     .Value = CInt(value)
                                 Case NameOf(OADate)
                                     align = XLAlignmentHorizontalValues.Left
@@ -110,12 +112,23 @@ Friend Module ExportDataGridView
                                     End If
                                 Case NameOf([Decimal]), NameOf([Double]), NameOf([Single])
                                     Dim valueASingle As Single = ParseSingle(value, 3)
+
                                     If Single.IsNaN(valueASingle) Then
                                         .Value = "'Infinity"
                                         align = XLAlignmentHorizontalValues.Center
                                     Else
                                         .Value = valueASingle
-                                        .Style.NumberFormat.Format = "0.000"
+                                        If dgv.Columns(j).Name.Equals("sg", StringComparison.OrdinalIgnoreCase) Then
+                                            If valueASingle > 40 Then
+                                                .Value = CInt(valueASingle)
+                                                .Style.NumberFormat.Format = "0"
+                                            Else
+                                                .Style.NumberFormat.Format = "0.00"
+                                            End If
+                                        Else
+                                            .Style.NumberFormat.Format = "0.000"
+                                        End If
+
                                         align = XLAlignmentHorizontalValues.Right
                                     End If
                                 Case NameOf([Boolean])
@@ -136,8 +149,10 @@ Friend Module ExportDataGridView
                                         .Font.FontSize = dgv.Font.Size
                                     End With
                                     excelColumn += 1
+
                                     align = XLAlignmentHorizontalValues.Right
                                     worksheet.Cell(i + 2, excelColumn).Value = CDate(value).TimeOfDay
+                                    worksheet.Cell(i + 2, excelColumn).Style.DateFormat.SetFormat("[$-x-systime]h:mm:ss AM/PM")
                                 Case Else
                                     Stop
                                     align = XLAlignmentHorizontalValues.Left
