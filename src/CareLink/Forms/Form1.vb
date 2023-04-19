@@ -797,7 +797,7 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If dgv.Columns(e.ColumnIndex).HeaderText = "Value" Then
             Dim uriString As String = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()
-            If Uri.IsWellFormedUriString(uriString, UriKind.Absolute) Then
+            If uriString.StartsWith("https:", StringComparison.InvariantCultureIgnoreCase) AndAlso Uri.IsWellFormedUriString(uriString, UriKind.Absolute) Then
                 Try
                     Me.WebView.Source = New Uri(uriString)
                 Catch ex As Exception
@@ -812,7 +812,7 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If dgv.Columns(e.ColumnIndex).HeaderText = "Value" Then
             Dim uriString As String = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()
-            If Uri.IsWellFormedUriString(uriString, UriKind.Absolute) Then
+            If uriString.StartsWith("https:", StringComparison.InvariantCultureIgnoreCase) AndAlso Uri.IsWellFormedUriString(uriString, UriKind.Absolute) Then
                 e.Value = uriString
                 If dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Equals(dgv.CurrentCell) Then
                     e.CellStyle.ForeColor = Color.FromArgb(&HFF, &H0, &H0)
