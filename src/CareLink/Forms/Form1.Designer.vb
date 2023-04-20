@@ -967,7 +967,7 @@ Partial Class Form1
         ' DgvInsulin
         ' 
         DgvInsulin.Dock = DockStyle.Fill
-        DgvInsulin.Location = New Point(6, 52)
+        DgvInsulin.Location = New Point(3, 3)
         DgvInsulin.Name = "DgvInsulin"
         DgvInsulin.ReadOnly = True
         DgvInsulin.RowTemplate.Height = 25
@@ -978,14 +978,15 @@ Partial Class Form1
         ' DgvMeal
         ' 
         DgvMeal.Dock = DockStyle.Fill
-        DgvMeal.Location = New Point(6, 52)
+        DgvMeal.Location = New Point(3, 3)
         DgvMeal.Name = "DgvMeal"
         DgvMeal.Size = New Size(1358, 621)
         DgvMeal.TabIndex = 2
         ' 
         ' DgvSGs
-        ' 
-        DgvSGs.Location = New Point(3, 46)
+        '
+        DgvSGs.Dock = DockStyle.Fill
+        DgvSGs.Location = New Point(3, 3)
         DgvSGs.Name = "DgvSGs"
         DgvSGs.RowTemplate.Height = 25
         DgvSGs.Size = New Size(1358, 582)
