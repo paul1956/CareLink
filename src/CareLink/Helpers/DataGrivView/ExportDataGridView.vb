@@ -95,11 +95,9 @@ Friend Module ExportDataGridView
                         With worksheet.Cell(i + 2, excelColumn)
                             Select Case dgvCell.ValueType.Name
                                 Case NameOf([Int32])
-                                    If dgv.Columns(j).Name.Equals("RecordNumber", StringComparison.OrdinalIgnoreCase) Then
-                                        align = XLAlignmentHorizontalValues.Center
-                                    Else
-                                        align = XLAlignmentHorizontalValues.Right
-                                    End If
+                                    align = If(dgv.Columns(j).Name.Equals("RecordNumber", StringComparison.OrdinalIgnoreCase),
+                                                    XLAlignmentHorizontalValues.Center,
+                                                    XLAlignmentHorizontalValues.Right)
                                     .Value = CInt(value)
                                 Case NameOf(OADate)
                                     align = XLAlignmentHorizontalValues.Left
@@ -112,7 +110,6 @@ Friend Module ExportDataGridView
                                     End If
                                 Case NameOf([Decimal]), NameOf([Double]), NameOf([Single])
                                     Dim valueASingle As Single = ParseSingle(value, 3)
-
                                     If Single.IsNaN(valueASingle) Then
                                         .Value = "'Infinity"
                                         align = XLAlignmentHorizontalValues.Center

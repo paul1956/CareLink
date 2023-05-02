@@ -5,12 +5,11 @@
 Friend Module MealRecordHelpers
 
     Private ReadOnly columnsToHide As New List(Of String) From {
-        NameOf(MealRecord.kind),
-        NameOf(MealRecord.OAdateTime),
-        NameOf(MealRecord.relativeOffset),
-        NameOf(MealRecord.version)
-    }
-
+                                NameOf(MealRecord.kind),
+                                NameOf(MealRecord.relativeOffset),
+                                NameOf(MealRecord.OAdateTime),
+                                NameOf(MealRecord.version)
+                            }
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
