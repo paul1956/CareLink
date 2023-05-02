@@ -24,14 +24,14 @@ Public Module SystemConstants
 
     Friend ReadOnly s_environmentNewLine As String = Environment.NewLine
 
-    Friend ReadOnly s_insulinTypes As New Dictionary(Of String, InsulinActivationProperties) From
-            {
-                {$"Humalog{RegisteredTrademark}", New InsulinActivationProperties(8, 4)},
-                {$"Novolog{RegisteredTrademark}", New InsulinActivationProperties(8, 4)},
-                {$"Generic (Insulin Lispro)", New InsulinActivationProperties(9, 4)},
-                {$"FIASP{RegisteredTrademark}", New InsulinActivationProperties(4, 3)},
-                {$"Lyumjev{RegisteredTrademark}", New InsulinActivationProperties(3, 3)}
-            }
+    Friend ReadOnly s_insulinTypes As New Dictionary(Of String, InsulinActivationProperties) From {
+                        {$"Humalog{RegisteredTrademark}", New InsulinActivationProperties(8, 4)},
+                        {$"Novolog{RegisteredTrademark}", New InsulinActivationProperties(8, 4)},
+                        {$"Generic (Insulin Lispro)", New InsulinActivationProperties(9, 4)},
+                        {$"NovoRapid", New InsulinActivationProperties(7, 4)},
+                        {$"FIASP{RegisteredTrademark}", New InsulinActivationProperties(4, 3)},
+                        {$"Lyumjev{RegisteredTrademark}", New InsulinActivationProperties(3, 3)}
+                    }
 
     Public ReadOnly s_aitValues As New Dictionary(Of String, String) From {
                         {"AIT 2:00", "2:00"}, {"AIT 2:15", "2:15"},

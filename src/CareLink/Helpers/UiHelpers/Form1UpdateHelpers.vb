@@ -21,6 +21,8 @@ Friend Module Form1UpdateHelpers
         Select Case value
             Case "MMT-1880"
                 Return $"Medtronic MiniMed{TmChar} 770G"
+            Case "MMT-1885"
+                Return $"Medtronic MiniMed{TmChar} 780G"
             Case "MMT-1886"
                 Return $"Medtronic MiniMed{TmChar} 780G"
             Case Else

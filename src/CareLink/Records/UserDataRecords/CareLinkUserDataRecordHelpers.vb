@@ -7,7 +7,8 @@ Imports System.IO
 Public Module CareLinkUserDataRecordHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
-        NameOf(CareLinkUserDataRecord.ID)}
+            NameOf(CareLinkUserDataRecord.ID),
+            NameOf(CareLinkUserDataRecord.CareLinkPassword)}
 
     Friend ReadOnly s_headerColumns As New List(Of String) From {
             NameOf(My.Settings.CareLinkUserName),

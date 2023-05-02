@@ -79,9 +79,9 @@ Public Class InsulinRecord
                 Dim meal As MealRecord = Nothing
                 If TryGetMealRecord(Me.index, meal) Then
                     Dim cRatio As Single = CurrentUser.GetCarbRatio(TimeOnly.FromDateTime(meal.dateTime))
-                    Dim expectedBolus As Decimal = RoundTo025(meal.amount / cRatio)
+                    Dim expectedBolus As Single = (meal.amount / cRatio).RoundTo025
                     If expectedBolus > Value Then
-                        Me.SafeMealReduction = RoundTo025(expectedBolus - Value)
+                        Me.SafeMealReduction = (expectedBolus - Value).RoundTo025
                     End If
                 End If
             End If

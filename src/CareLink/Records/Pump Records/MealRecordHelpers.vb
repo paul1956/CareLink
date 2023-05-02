@@ -10,7 +10,6 @@ Friend Module MealRecordHelpers
                                 NameOf(MealRecord.OAdateTime),
                                 NameOf(MealRecord.version)
                             }
-
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
