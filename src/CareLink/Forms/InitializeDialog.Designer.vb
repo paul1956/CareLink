@@ -171,7 +171,7 @@ Partial Class InitializeDialog
         Me.ColumnNumericUpDown.DefaultCellStyle = DataGridViewCellStyle1
         Me.ColumnNumericUpDown.HeaderText = "Carb Ratio g/U"
         Me.ColumnNumericUpDown.Increment = New [Decimal](New Integer() {1, 0, 0, 65536})
-        Me.ColumnNumericUpDown.Maximum = New [Decimal](New Integer() {25, 0, 0, 0})
+        Me.ColumnNumericUpDown.Maximum = New [Decimal](New Integer() {99, 0, 0, 0})
         Me.ColumnNumericUpDown.Minimum = New [Decimal](New Integer() {1, 0, 0, 0})
         Me.ColumnNumericUpDown.Name = "ColumnNumericUpDown"
         Me.ColumnNumericUpDown.Width = 91

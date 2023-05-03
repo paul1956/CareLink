@@ -176,15 +176,15 @@ Public Class InitializeDialog
 
         With Me.TargetSgComboBox
 
-            If BgUnitsString = "mg/dl" Then
-                .DataSource = New BindingSource(_mgDlItems, Nothing)
-                If Me.CurrentUser.CurrentTarget = 0 Then
-                    Me.CurrentUser.CurrentTarget = _mgDlItems.Last.Value
-                End If
-            Else
+            If ScalingNeeded Then
                 .DataSource = New BindingSource(_mmolLItems, Nothing)
                 If Me.CurrentUser.CurrentTarget = 0 Then
                     Me.CurrentUser.CurrentTarget = _mmolLItems.Last.Value
+                End If
+            Else
+                .DataSource = New BindingSource(_mgDlItems, Nothing)
+                If Me.CurrentUser.CurrentTarget = 0 Then
+                    Me.CurrentUser.CurrentTarget = _mgDlItems.Last.Value
                 End If
             End If
             .Enabled = Not Is770G(Me.RecentData)

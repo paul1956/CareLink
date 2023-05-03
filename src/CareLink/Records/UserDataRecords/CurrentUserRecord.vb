@@ -8,7 +8,7 @@ Public Class CurrentUserRecord
     Public Sub New(userName As String)
         Me.UserName = userName
         Me.UseAdvancedAitDecay = CheckState.Indeterminate
-        Me.CurrentTarget = If(BgUnits.StartsWith("MG", StringComparison.InvariantCultureIgnoreCase), 120.0!, 6.7!)
+        Me.CurrentTarget = If(ScalingNeeded, 6.7!, 120.0!)
     End Sub
 
     Public Property CarbRatios As New List(Of CarbRatioRecord)

@@ -117,7 +117,7 @@ Friend Module PlotMarkers
                                 End With
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 If markerInsulinDictionary.TryAdd(markerOADateTime, CInt(GetInsulinYValue())) Then
-                                    markerSeriesPoints.AddXY(markerOADateTime, GetInsulinYValue() - 10)
+                                    markerSeriesPoints.AddXY(markerOADateTime, GetInsulinYValue() - If(ScalingNeeded, 0.555, 10))
                                     markerSeriesPoints.Last.MarkerBorderWidth = 2
                                     markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Black)
                                     markerSeriesPoints.Last.MarkerSize = 20

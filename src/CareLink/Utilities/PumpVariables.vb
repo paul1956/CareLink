@@ -82,7 +82,6 @@ Public Module PumpVariables
         End Set
     End Property
 
-    Friend Property BgUnits As String = "120"
     Friend Property BgUnitsString As String
     Friend Property InAutoMode As Boolean
 

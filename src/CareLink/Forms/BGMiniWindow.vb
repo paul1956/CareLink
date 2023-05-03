@@ -128,7 +128,7 @@ Public Class BGMiniWindow
         _currentBGValue = Value.ParseSingle(2)
         If Not Double.IsNaN(_currentBGValue) Then
             _normalizedBG = _currentBGValue
-            If BgUnitsString <> "mg/dl" Then
+            If ScalingNeeded Then
                 _normalizedBG *= 18
             End If
             Me.BGTextBox.ForeColor = SystemColors.ControlText

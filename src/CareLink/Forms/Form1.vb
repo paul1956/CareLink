@@ -2117,7 +2117,7 @@ Public Class Form1
         Dim averageSgStr As String = Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.averageSG))
         Me.AboveHighLimitValueLabel.Text = $"{s_aboveHyperLimit} %"
         Me.AverageSGMessageLabel.Text = $"Average SG in {BgUnitsString}"
-        Me.AverageSGValueLabel.Text = If(BgUnitsString = "mg/dl", averageSgStr, averageSgStr.TruncateSingleString(2))
+        Me.AverageSGValueLabel.Text = If(ScalingNeeded, averageSgStr.TruncateSingleString(2), averageSgStr)
         Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
         Me.SerialNumberLabel.Text = Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.medicalDeviceSerialNumber))
         Me.TimeInRangeChartLabel.Text = s_timeInRange.ToString
@@ -2423,9 +2423,9 @@ Public Class Form1
                             s_lastBGTime = Now
                             s_lastBGDiff = diffSg
                         End If
-                        Me.LabelTrendValue.Text = diffSg.ToString(If(BgUnits.StartsWith("MG", StringComparison.InvariantCultureIgnoreCase), "+0;-#", "+ 0.00;-#.00"), CultureInfo.InvariantCulture)
+                        Me.LabelTrendValue.Text = diffSg.ToString(If(ScalingNeeded, "+ 0.00;-#.00", "+0;-#"), CultureInfo.InvariantCulture)
                         Me.LabelTrendValue.ForeColor = bgColor
-                        notStr.Append(diffSg.ToString(If(BgUnits.StartsWith("MG", StringComparison.InvariantCultureIgnoreCase), "+0;-#", "+ 0.00;-#.00"), CultureInfo.InvariantCulture))
+                        notStr.Append(diffSg.ToString(If(ScalingNeeded, "+ 0.00;-#.00", "+0;-#"), CultureInfo.InvariantCulture))
                     End If
                     notStr.Append(s_environmentNewLine)
                     notStr.Append("Active ins. ")
