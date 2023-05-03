@@ -29,33 +29,35 @@ Friend Module SystemVariables
 
     Friend Property TreatmentInsulinRow As Single
 
-    Private Function ScaleValue(value As Integer) As Single
-        Return If(ScalingNeeded, CSng(Math.Round(value / MmolLUnitsDivisor, 2, MidpointRounding.ToZero)), value)
-    End Function
-
     Friend Function GetInsulinYValue() As Single
-        Dim maxYScaled As Single = s_listOfSGs.Max(Of Single)(Function(sgR As SgRecord) sgR.sg)
-        Dim maxY As Integer = CInt(Math.Max(If(ScalingNeeded, maxYScaled * MmolLUnitsDivisor, maxYScaled), 260))
-        If s_listOfSGs.Count = 0 OrElse maxY > 330 Then
-            Return ScaleValue(342)
+        Dim maxYScaled As Single = s_listOfSGs.Max(Of Single)(Function(sgR As SgRecord) sgR.sg) + 2
+        If ScalingNeeded Then
+            If s_listOfSGs.Count = 0 OrElse maxYScaled > (330 / MmolLUnitsDivisor) Then
+                Return 342 / MmolLUnitsDivisor
+            End If
+            Return Math.Max(maxYScaled, 260 / MmolLUnitsDivisor)
+        Else
+            If s_listOfSGs.Count = 0 Or maxYScaled > 330 Then
+                Return 342
+            End If
+            Return Math.Max(maxYScaled, 260)
         End If
-        Return ScaleValue(maxY)
     End Function
 
     Friend Function GetYMaxValue() As Single
-        Return ScaleValue(400)
+        Return If(ScalingNeeded, 22, 400)
     End Function
 
     Friend Function GetYMinValue() As Single
-        Return ScaleValue(50)
+        Return If(ScalingNeeded, 2, 50)
     End Function
 
     Friend Function TirHighLimit() As Single
-        Return ScaleValue(180)
+        Return If(ScalingNeeded, 10, 180)
     End Function
 
     Friend Function TirLowLimit() As Single
-        Return ScaleValue(70)
+        Return If(ScalingNeeded, CSng(3.89), 70)
     End Function
 
 End Module

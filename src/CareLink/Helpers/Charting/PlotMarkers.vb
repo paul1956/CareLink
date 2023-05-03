@@ -138,7 +138,7 @@ Friend Module PlotMarkers
                     Case "MEAL"
                         If markerMealDictionary Is Nothing Then Continue For
                         If markerMealDictionary.TryAdd(markerOADateTime, GetYMinValue()) Then
-                            markerSeriesPoints.AddXY(markerOADateTime, GetYMinValue() + (s_mealImage.Height / 2))
+                            markerSeriesPoints.AddXY(markerOADateTime, GetYMinValue() + If(ScalingNeeded, s_mealImage.Height / 2 / MmolLUnitsDivisor, s_mealImage.Height / 2))
                             markerSeriesPoints.Last.Color = Color.FromArgb(10, Color.Yellow)
                             markerSeriesPoints.Last.MarkerBorderWidth = 2
                             markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Yellow)

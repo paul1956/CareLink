@@ -60,4 +60,8 @@ Friend Module PainMarkerExtensions
         End If
     End Sub
 
+    Friend Function ScaleValue(value As Double) As Double
+        Return If(ScalingNeeded, CSng(Math.Round(value / MmolLUnitsDivisor, 2, MidpointRounding.ToZero)), value)
+    End Function
+
 End Module

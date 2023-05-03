@@ -27,9 +27,13 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-03/24/2023
+05/02/2023
 
 ## What's New in this release
+New in 3.7.0.0
+- Fixes for 780G Pump names
+- Export of important tables to Excel with formatting
+
 New in 3.6.2.1
 - Added discoverability to table Export features 
 

@@ -744,8 +744,8 @@ Public Class Form1
             e.PostPaintSupport(_treatmentMarkerAbsoluteRectangle,
                 s_treatmentMarkerInsulinDictionary,
                 s_treatmentMarkerMealDictionary,
-                offsetInsulinImage:=False,
-                paintOnY2:=False)
+                False,
+                False)
         End SyncLock
     End Sub
 
