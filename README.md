@@ -33,6 +33,7 @@ This update has a UI to show all the available data and a visual version that mi
 New in 3.7.0.0
 - Fixes for 780G Pump names
 - Export of important tables to Excel with formatting
+- Many fixes for mmol/L
 
 New in 3.6.2.1
 - Added discoverability to table Export features 
