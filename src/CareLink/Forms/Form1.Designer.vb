@@ -1083,9 +1083,9 @@ Partial Class Form1
         ' 
         LabelTrendArrows.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
         LabelTrendArrows.ForeColor = Color.White
-        LabelTrendArrows.Location = New Point(461, 106)
+        LabelTrendArrows.Location = New Point(461, 103)
         LabelTrendArrows.Name = "LabelTrendArrows"
-        LabelTrendArrows.Size = New Size(84, 21)
+        LabelTrendArrows.Size = New Size(84, 24)
         LabelTrendArrows.TabIndex = 62
         LabelTrendArrows.Text = "↑↔↓"
         LabelTrendArrows.TextAlign = ContentAlignment.MiddleCenter

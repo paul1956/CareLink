@@ -2224,9 +2224,13 @@ Public Class Form1
         Dim rowValue As String = Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastSGTrend))
         Dim arrows As String = Nothing
         If Trends.TryGetValue(rowValue, arrows) Then
+            Me.LabelTrendArrows.Font = If(rowValue = "NONE",
+                New Font("Segoe UI", 18.0F, FontStyle.Bold, GraphicsUnit.Point),
+                New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point))
             Me.LabelTrendArrows.Text = Trends(rowValue)
         Else
-            Me.LabelTrendArrows.Text = $"{rowValue}"
+            Me.LabelTrendArrows.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
+            Me.LabelTrendArrows.Text = rowValue
         End If
         UpdateSummaryTab(Me.DgvSummary)
         Me.UpdateActiveInsulinChart()
