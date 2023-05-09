@@ -15,7 +15,7 @@ Public Class SummaryRecord
     ''' <param name="row"></param>
     ''' <param name="messages"></param>
     ''' <param name="messageTableName"></param>
-    Protected Friend Sub New(recordNumber As Integer, row As KeyValuePair(Of String, String), messages As Dictionary(Of String, String), messageTableName As String)
+    Protected Friend Sub New(recordNumber As Single, row As KeyValuePair(Of String, String), messages As Dictionary(Of String, String), messageTableName As String)
         Me.New(recordNumber, row)
         Dim message As String = ""
         If Not String.IsNullOrWhiteSpace(row.Value) Then
@@ -36,7 +36,7 @@ Public Class SummaryRecord
     ''' <param name="recordNumber"></param>
     ''' <param name="row"></param>
     ''' <param name="message"></param>
-    Protected Friend Sub New(recordNumber As Integer, row As KeyValuePair(Of String, String), Optional message As String = "")
+    Protected Friend Sub New(recordNumber As Single, row As KeyValuePair(Of String, String), Optional message As String = "")
         Me.New(recordNumber, row.Key, row.Value, message)
     End Sub
 
@@ -45,7 +45,7 @@ Public Class SummaryRecord
     ''' </summary>
     ''' <param name="recordNumber"></param>
     ''' <param name="Value"></param>
-    Protected Friend Sub New(recordNumber As Integer, Value As String)
+    Protected Friend Sub New(recordNumber As Single, Value As String)
         Me.New(recordNumber, CType(recordNumber, ItemIndexes).ToString, Value, "")
     End Sub
 
@@ -55,7 +55,7 @@ Public Class SummaryRecord
     ''' <param name="recordNumber"></param>
     ''' <param name="value"></param>
     ''' <param name="message"></param>
-    Protected Friend Sub New(recordNumber As Integer, value As String, message As String)
+    Protected Friend Sub New(recordNumber As Single, value As String, message As String)
         Me.New(recordNumber, CType(recordNumber, ItemIndexes).ToString, value, message)
     End Sub
 
@@ -65,7 +65,7 @@ Public Class SummaryRecord
     ''' <param name="recordNumber"></param>
     ''' <param name="key"></param>
     ''' <param name="value"></param>
-    Protected Friend Sub New(recordNumber As Integer, key As String, value As String, message As String)
+    Protected Friend Sub New(recordNumber As Single, key As String, value As String, message As String)
         Me.RecordNumber = recordNumber
         Me.Key = key
         Me.Value = value
@@ -82,7 +82,7 @@ Public Class SummaryRecord
 
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
-    Public ReadOnly Property RecordNumber As Integer
+    Public ReadOnly Property RecordNumber As Single
 
     <DisplayName(NameOf(Value))>
     <Column(Order:=2, TypeName:=NameOf([String]))>

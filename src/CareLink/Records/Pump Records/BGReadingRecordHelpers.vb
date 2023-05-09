@@ -12,6 +12,24 @@ Friend Module BGReadingRecordHelpers
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
+    Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        dgv.dgvCellFormatting(e, NameOf(BGReadingRecord.dateTime))
+        If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(BGReadingRecord.value), StringComparison.OrdinalIgnoreCase) Then
+            Dim sensorValue As Single = ParseSingle(e.Value, 2)
+            With e.CellStyle
+                If Single.IsNaN(sensorValue) Then
+                    FormatCell(e, Color.Gray)
+                ElseIf sensorValue < TirLowLimit() Then
+                    FormatCell(e, Color.Red)
+                ElseIf sensorValue > TirHighLimit() Then
+                    FormatCell(e, Color.Yellow)
+                End If
+            End With
+        End If
+
+    End Sub
+
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         With e.Column
             If HideColumn(.Name) Then
@@ -30,24 +48,6 @@ Friend Module BGReadingRecordHelpers
         Stop
     End Sub
 
-    Private Sub DataGridViewView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.dgvCellFormatting(e, NameOf(BGReadingRecord.dateTime))
-        If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(BGReadingRecord.value), StringComparison.OrdinalIgnoreCase) Then
-            Dim sensorValue As Single = ParseSingle(e.Value, 2)
-            With e.CellStyle
-                If Single.IsNaN(sensorValue) Then
-                    FormatCell(e, Color.Gray)
-                ElseIf sensorValue < TirLowLimit() Then
-                    FormatCell(e, Color.Red)
-                ElseIf sensorValue > TirHighLimit() Then
-                    FormatCell(e, Color.Yellow)
-                End If
-            End With
-        End If
-
-    End Sub
-
     Private Function GetCellStyle(columnName As String) As DataGridViewCellStyle
         Return ClassPropertiesToColumnAlignment(Of BGReadingRecord)(s_alignmentTable, columnName)
     End Function
@@ -57,9 +57,12 @@ Friend Module BGReadingRecordHelpers
     End Function
 
     Friend Sub AttachHandlers(dgv As DataGridView)
+        RemoveHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
+        RemoveHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
+        RemoveHandler dgv.DataError, AddressOf DataGridView_DataError
+        AddHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
         AddHandler dgv.DataError, AddressOf DataGridView_DataError
-        AddHandler dgv.CellFormatting, AddressOf DataGridViewView_CellFormatting
     End Sub
 
 End Module

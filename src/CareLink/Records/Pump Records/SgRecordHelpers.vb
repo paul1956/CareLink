@@ -31,7 +31,7 @@ Friend Module SgRecordHelpers
         Stop
     End Sub
 
-    Private Sub DataGridViewView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
+    Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.dgvCellFormatting(e, NameOf(SgRecord.datetime))
     End Sub
@@ -45,9 +45,12 @@ Friend Module SgRecordHelpers
     End Function
 
     Public Sub AttachHandlers(dgv As DataGridView)
+        RemoveHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
+        RemoveHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
+        RemoveHandler dgv.DataError, AddressOf DataGridView_DataError
+        AddHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
         AddHandler dgv.DataError, AddressOf DataGridView_DataError
-        AddHandler dgv.CellFormatting, AddressOf DataGridViewView_CellFormatting
     End Sub
 
 End Module

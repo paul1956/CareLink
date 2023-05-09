@@ -857,30 +857,26 @@ Public Class Form1
                  ItemIndexes.calibStatus, ItemIndexes.bgUnits, ItemIndexes.timeFormat,
                  ItemIndexes.lastSensorTime, ItemIndexes.sLastSensorTime,
                  ItemIndexes.lastSGTrend, ItemIndexes.systemStatusMessage,
-                 ItemIndexes.lastConduitDateTime, ItemIndexes.clientTimeZoneName
+                 ItemIndexes.lastConduitDateTime, ItemIndexes.clientTimeZoneName,
+                 ItemIndexes.appModelType
                 e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
+
             Case ItemIndexes.version, ItemIndexes.conduitBatteryLevel,
                  ItemIndexes.reservoirLevelPercent, ItemIndexes.reservoirAmount,
                  ItemIndexes.reservoirRemainingUnits, ItemIndexes.medicalDeviceBatteryLevelPercent,
-                 ItemIndexes.sensorDurationHours, ItemIndexes.timeToNextCalibHours, ItemIndexes.averageSG,
-                 ItemIndexes.belowHypoLimit, ItemIndexes.aboveHyperLimit,
-                 ItemIndexes.timeInRange, ItemIndexes.gstBatteryLevel,
-                 ItemIndexes.maxAutoBasalRate, ItemIndexes.maxBolusAmount,
-                 ItemIndexes.sensorDurationMinutes,
+                 ItemIndexes.sensorDurationHours, ItemIndexes.timeToNextCalibHours,
+                 ItemIndexes.averageSG, ItemIndexes.belowHypoLimit,
+                 ItemIndexes.aboveHyperLimit, ItemIndexes.timeInRange,
+                 ItemIndexes.gstBatteryLevel, ItemIndexes.maxAutoBasalRate,
+                 ItemIndexes.maxBolusAmount, ItemIndexes.sensorDurationMinutes,
                  ItemIndexes.timeToNextCalibrationMinutes, ItemIndexes.sgBelowLimit,
-                 ItemIndexes.averageSGFloat,
-                 ItemIndexes.timeToNextCalibrationRecommendedMinutes
+                 ItemIndexes.averageSGFloat, ItemIndexes.timeToNextCalibrationRecommendedMinutes
                 e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
 
-            Case ItemIndexes.conduitInRange,
-                 ItemIndexes.conduitMedicalDeviceInRange,
-                 ItemIndexes.conduitSensorInRange,
-                 ItemIndexes.medicalDeviceSuspended,
-                 ItemIndexes.pumpCommunicationState,
-                 ItemIndexes.gstCommunicationState,
-                 ItemIndexes.appModelType,
-                 ItemIndexes.typeCast,
-                 ItemIndexes.calFreeSensor,
+            Case ItemIndexes.conduitInRange, ItemIndexes.conduitMedicalDeviceInRange,
+                 ItemIndexes.conduitSensorInRange, ItemIndexes.medicalDeviceSuspended,
+                 ItemIndexes.pumpCommunicationState, ItemIndexes.gstCommunicationState,
+                 ItemIndexes.typeCast, ItemIndexes.calFreeSensor,
                  ItemIndexes.finalCalibration
                 e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
 

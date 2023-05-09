@@ -101,9 +101,10 @@ Friend Module Form1UpdateHelpers
             If row.Value Is Nothing Then
                 row = KeyValuePair.Create(row.Key, "")
             End If
-            Dim rowIndex As ItemIndexes = GetItemIndex(row.Key)
+
+            Dim rowIndex As ItemIndexes = CType(c.Index, ItemIndexes)
             Dim summaryItem As SummaryRecord
-            Select Case rowIndex
+            Select Case GetItemIndex(row.Key)
                 Case ItemIndexes.lastSensorTS,
                      ItemIndexes.medicalDeviceTimeAsString,
                      ItemIndexes.lastSensorTSAsString,
@@ -317,8 +318,11 @@ Friend Module Form1UpdateHelpers
                     Dim value As String = Loads(row.Value).ToCsv.
                                                                  Replace("{", "").
                                                                  Replace("}", "")
-                    For Each s As String In value.Split(",")
-                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, s))
+                    For Each e As IndexClass(Of String) In value.Split(",").WithIndex
+                        Dim s As String = e.Value
+                        Dim key As String = s.Split(" = ")(0)
+                        Dim val As String = s.Split(" = ")(1)
+                        s_listOfSummaryRecords.Add(New SummaryRecord(CSng(CSng(rowIndex) + (e.Index / 10)), ItemIndexes.medicalDeviceInformation.ToString, key, val))
                     Next
 
                 Case ItemIndexes.typeCast

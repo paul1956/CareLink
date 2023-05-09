@@ -12,6 +12,23 @@ Friend Module CalibrationRecordHelpers
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
+    Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        dgv.dgvCellFormatting(e, NameOf(CalibrationRecord.dateTime))
+        If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(CalibrationRecord.value), StringComparison.OrdinalIgnoreCase) Then
+            Dim sensorValue As Single = ParseSingle(e.Value, 2)
+            If Single.IsNaN(sensorValue) Then
+                e.CellStyle.BackColor = Color.Gray
+            ElseIf sensorValue < TirLowLimit() Then
+                e.CellStyle.BackColor = Color.Red
+            ElseIf sensorValue > TirHighLimit() Then
+                e.CellStyle.BackColor = Color.Yellow
+            End If
+            e.CellStyle.ForeColor = e.CellStyle.BackColor.GetContrastingColor()
+        End If
+
+    End Sub
+
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         With e.Column
             If HideColumn(.Name) Then
@@ -30,23 +47,6 @@ Friend Module CalibrationRecordHelpers
         Stop
     End Sub
 
-    Private Sub DataGridViewView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.dgvCellFormatting(e, NameOf(CalibrationRecord.dateTime))
-        If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(CalibrationRecord.value), StringComparison.OrdinalIgnoreCase) Then
-            Dim sensorValue As Single = ParseSingle(e.Value, 2)
-            If Single.IsNaN(sensorValue) Then
-                e.CellStyle.BackColor = Color.Gray
-            ElseIf sensorValue < TirLowLimit() Then
-                e.CellStyle.BackColor = Color.Red
-            ElseIf sensorValue > TirHighLimit() Then
-                e.CellStyle.BackColor = Color.Yellow
-            End If
-            e.CellStyle.ForeColor = e.CellStyle.BackColor.GetContrastingColor()
-        End If
-
-    End Sub
-
     Private Function GetCellStyle(columnName As String) As DataGridViewCellStyle
         Return ClassPropertiesToColumnAlignment(Of CalibrationRecord)(s_alignmentTable, columnName)
     End Function
@@ -56,9 +56,12 @@ Friend Module CalibrationRecordHelpers
     End Function
 
     Friend Sub AttachHandlers(dgv As DataGridView)
+        RemoveHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
+        RemoveHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
+        RemoveHandler dgv.DataError, AddressOf DataGridView_DataError
+        AddHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
         AddHandler dgv.DataError, AddressOf DataGridView_DataError
-        AddHandler dgv.CellFormatting, AddressOf DataGridViewView_CellFormatting
     End Sub
 
 End Module

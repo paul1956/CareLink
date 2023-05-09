@@ -54,6 +54,8 @@ Friend Module LimitsRecordHelpers
     End Sub
 
     Friend Sub AttachHandlers(dgv As DataGridView)
+        RemoveHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
+        RemoveHandler dgv.DataError, AddressOf DataGridView_DataError
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
         AddHandler dgv.DataError, AddressOf DataGridView_DataError
     End Sub
