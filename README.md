@@ -27,9 +27,13 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-05/03/2023
+05/08/2023
 
 ## What's New in this release
+New in 3.8.0.0
+- Update to support new CareLink server protocol
+- Added additional summary records that provide pump information
+
 New in 3.7.0.1
 - Minor fix for carb ratio support of values larger then 25
 - Correction to Temp Basal for mmol/L

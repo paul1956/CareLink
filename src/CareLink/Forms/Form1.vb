@@ -844,7 +844,7 @@ Public Class Form1
         End If
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
-        Select Case CType([Enum].Parse(GetType(ItemIndexes), key), ItemIndexes)
+        Select Case GetItemIndex(key)
             Case ItemIndexes.lastSensorTS, ItemIndexes.medicalDeviceTimeAsString,
                  ItemIndexes.lastSensorTSAsString, ItemIndexes.kind,
                  ItemIndexes.pumpModelNumber, ItemIndexes.currentServerTime,
@@ -859,10 +859,10 @@ Public Class Form1
                  ItemIndexes.lastSGTrend, ItemIndexes.systemStatusMessage,
                  ItemIndexes.lastConduitDateTime, ItemIndexes.clientTimeZoneName
                 e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-            Case ItemIndexes.averageSG, ItemIndexes.version, ItemIndexes.conduitBatteryLevel,
+            Case ItemIndexes.version, ItemIndexes.conduitBatteryLevel,
                  ItemIndexes.reservoirLevelPercent, ItemIndexes.reservoirAmount,
                  ItemIndexes.reservoirRemainingUnits, ItemIndexes.medicalDeviceBatteryLevelPercent,
-                 ItemIndexes.sensorDurationHours, ItemIndexes.timeToNextCalibHours,
+                 ItemIndexes.sensorDurationHours, ItemIndexes.timeToNextCalibHours, ItemIndexes.averageSG,
                  ItemIndexes.belowHypoLimit, ItemIndexes.aboveHyperLimit,
                  ItemIndexes.timeInRange, ItemIndexes.gstBatteryLevel,
                  ItemIndexes.maxAutoBasalRate, ItemIndexes.maxBolusAmount,
@@ -871,6 +871,31 @@ Public Class Form1
                  ItemIndexes.averageSGFloat,
                  ItemIndexes.timeToNextCalibrationRecommendedMinutes
                 e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
+
+            Case ItemIndexes.conduitInRange,
+                 ItemIndexes.conduitMedicalDeviceInRange,
+                 ItemIndexes.conduitSensorInRange,
+                 ItemIndexes.medicalDeviceSuspended,
+                 ItemIndexes.pumpCommunicationState,
+                 ItemIndexes.gstCommunicationState,
+                 ItemIndexes.appModelType,
+                 ItemIndexes.typeCast,
+                 ItemIndexes.calFreeSensor,
+                 ItemIndexes.finalCalibration
+                e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
+
+            Case ItemIndexes.lastSG,
+                 ItemIndexes.lastAlarm,
+                 ItemIndexes.activeInsulin,
+                 ItemIndexes.sgs,
+                 ItemIndexes.limits,
+                 ItemIndexes.markers,
+                 ItemIndexes.notificationHistory,
+                 ItemIndexes.therapyAlgorithmState,
+                 ItemIndexes.pumpBannerState,
+                 ItemIndexes.basal,
+                 ItemIndexes.medicalDeviceInformation
+                Exit Select
             Case Else
                 e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
         End Select

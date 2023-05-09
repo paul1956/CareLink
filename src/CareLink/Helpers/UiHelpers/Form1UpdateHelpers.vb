@@ -310,6 +310,20 @@ Friend Module Form1UpdateHelpers
                         ItemIndexes.averageSGFloat
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
+                Case ItemIndexes.appModelType
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexes.medicalDeviceInformation
+                    Dim value As String = Loads(row.Value).ToCsv.
+                                                                 Replace("{", "").
+                                                                 Replace("}", "")
+                    For Each s As String In value.Split(",")
+                        s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, s))
+                    Next
+
+                Case ItemIndexes.typeCast
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
                 Case ItemIndexes.timeToNextCalibrationRecommendedMinutes
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 

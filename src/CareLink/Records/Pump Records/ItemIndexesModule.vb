@@ -70,14 +70,22 @@ Friend Module ItemIndexesModule
         clientTimeZoneName = 59
         sgBelowLimit = 60
         averageSGFloat = 61
-        timeToNextCalibrationRecommendedMinutes = 62
-        calFreeSensor = 63
-        finalCalibration = 64
+        appModelType = 62
+        medicalDeviceInformation = 63
+        typeCast = 64
+        timeToNextCalibrationRecommendedMinutes = 65
+        calFreeSensor = 66
+        finalCalibration = 67
     End Enum
 
     <Extension>
     Friend Function GetItemIndex(key As String) As ItemIndexes
-        Return CType([Enum].Parse(GetType(ItemIndexes), key), ItemIndexes)
+        Dim result As Object = Nothing
+        If [Enum].TryParse(GetType(ItemIndexes), key, result) Then
+            Return CType(result, ItemIndexes)
+        End If
+        Stop
+        Throw New ArgumentException($"{key} was not found in {NameOf(ItemIndexes)}")
     End Function
 
 End Module
