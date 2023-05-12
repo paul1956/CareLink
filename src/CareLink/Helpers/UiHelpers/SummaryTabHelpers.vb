@@ -9,8 +9,8 @@ Friend Module SummaryTabHelpers
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(SummaryRecord.RecordNumber), StringComparison.OrdinalIgnoreCase) Then
-            Dim value As Single = CSng(dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value)
-            If Math.Truncate(value) = ItemIndexes.medicalDeviceInformation Then
+            If dgv.Rows(e.RowIndex).Cells("key").Value.Equals(ItemIndexes.medicalDeviceInformation.ToString) Then
+                Dim value As Single = CSng(dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value)
                 e.Value = value.ToString("F1")
                 e.FormattingApplied = True
             End If

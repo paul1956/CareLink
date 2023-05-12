@@ -139,15 +139,6 @@ Friend Module DateTimeExtensions
     End Function
 
     <Extension>
-    Public Function CDateOrDefault(dateAsString As String, key As String, provider As IFormatProvider) As String
-        Dim resultDate As Date
-        If TryParseDate(dateAsString, resultDate, key) Then
-            Return resultDate.ToString(provider)
-        End If
-        Return dateAsString
-    End Function
-
-    <Extension>
     Public Function ParseDate(dateAsString As String, key As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Date
         Dim resultDate As Date
         If dateAsString.TryParseDate(resultDate, key) Then

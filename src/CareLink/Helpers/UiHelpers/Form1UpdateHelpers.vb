@@ -6,6 +6,15 @@ Imports System.Runtime.CompilerServices
 
 Friend Module Form1UpdateHelpers
 
+    <Extension>
+    Private Function CDateOrDefault(dateAsString As String, key As String, provider As IFormatProvider) As String
+        Dim resultDate As Date
+        If TryParseDate(dateAsString, resultDate, key) Then
+            Return resultDate.ToString(provider)
+        End If
+        Return ""
+    End Function
+
     Private Function ConvertPercent24HoursToDisplayValueString(rowValue As String) As String
         Dim val As Decimal = CDec(Convert.ToInt32(rowValue) * 0.24)
         Dim hours As Integer = Convert.ToInt32(val)
@@ -16,6 +25,14 @@ Friend Module Form1UpdateHelpers
             Return $"{hours} hours and {minutes} minutes, out of last 24 hours."
         End If
     End Function
+
+    Private Sub HandleObsoleteTimes(row As KeyValuePair(Of String, String), rowIndex As ItemIndexes)
+        If row.Value = "0" Then
+            s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, "", "Obsolete"))
+        Else
+            s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
+        End If
+    End Sub
 
     Friend Function GetPumpName(value As String) As String
         Select Case value
@@ -77,29 +94,35 @@ Friend Module Form1UpdateHelpers
             End If
 
             Dim rowIndex As ItemIndexes = CType(c.Index, ItemIndexes)
-            Dim summaryItem As SummaryRecord
+            'Dim summaryItem As SummaryRecord
             Select Case GetItemIndex(row.Key)
-                Case ItemIndexes.lastSensorTS,
-                     ItemIndexes.medicalDeviceTimeAsString,
-                     ItemIndexes.lastSensorTSAsString,
-                     ItemIndexes.kind,
-                     ItemIndexes.version
+                Case ItemIndexes.lastSensorTS
+                    HandleObsoleteTimes(row, rowIndex)
+
+                Case ItemIndexes.medicalDeviceTimeAsString,
+                       ItemIndexes.lastSensorTSAsString,
+                       ItemIndexes.kind,
+                       ItemIndexes.version
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexes.pumpModelNumber
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, GetPumpName(row.Value)))
-                Case ItemIndexes.currentServerTime,
-                     ItemIndexes.lastConduitTime,
-                     ItemIndexes.lastConduitUpdateServerTime
+
+                Case ItemIndexes.currentServerTime
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
+
+                Case ItemIndexes.lastConduitTime
+                    HandleObsoleteTimes(row, rowIndex)
+
+                Case ItemIndexes.lastConduitUpdateServerTime
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
 
                 Case ItemIndexes.lastMedicalDeviceDataUpdateServerTime
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
 
                 Case ItemIndexes.firstName
-                    summaryItem = New SummaryRecord(rowIndex, row.Value)
-                    s_listOfSummaryRecords.Add(summaryItem)
-                    s_firstName = summaryItem.Value
+                    s_firstName = row.Value
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, s_firstName))
 
                 Case ItemIndexes.lastName
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
@@ -114,41 +137,36 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Phone battery status is {row.Value}"))
 
                 Case ItemIndexes.conduitInRange
-                    summaryItem = New SummaryRecord(rowIndex, row, $"Phone {If(s_pumpInRangeOfPhone, "is", "is not")} in range of pump")
-                    s_listOfSummaryRecords.Add(summaryItem)
-                    s_pumpInRangeOfPhone = CBool(summaryItem.Value)
+                    s_pumpInRangeOfPhone = CBool(row.Value)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Phone {If(s_pumpInRangeOfPhone, "is", "is not")} in range of pump"))
 
                 Case ItemIndexes.conduitMedicalDeviceInRange
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Pump {If(CBool(row.Value), "is", "is not")} in range of phone"))
 
                 Case ItemIndexes.conduitSensorInRange
-                    summaryItem = New SummaryRecord(rowIndex, row, $"Transmitter {If(s_pumpInRangeOfTransmitter, "is", "is not")} in range of pump")
-                    s_listOfSummaryRecords.Add(summaryItem)
-                    s_pumpInRangeOfTransmitter = CBool(summaryItem.Value)
+                    s_pumpInRangeOfTransmitter = CBool(row.Value)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Transmitter {If(s_pumpInRangeOfTransmitter, "is", "is not")} in range of pump"))
 
                 Case ItemIndexes.medicalDeviceFamily
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexes.sensorState
-                    summaryItem = New SummaryRecord(rowIndex, row, s_sensorMessages, NameOf(s_sensorMessages))
-                    s_listOfSummaryRecords.Add(summaryItem)
-                    s_sensorState = summaryItem.Value
+                    s_sensorState = row.Value
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_sensorMessages, NameOf(s_sensorMessages)))
 
                 Case ItemIndexes.medicalDeviceSerialNumber
-                    summaryItem = New SummaryRecord(rowIndex, row, $"Pump serial number is {row.Value}.")
-                    s_listOfSummaryRecords.Add(summaryItem)
-                    mainForm.SerialNumberLabel.Text = summaryItem.Value
+                    mainForm.SerialNumberLabel.Text = row.Value
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Pump serial number is {row.Value}."))
 
                 Case ItemIndexes.medicalDeviceTime
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+                    HandleObsoleteTimes(row, rowIndex)
 
                 Case ItemIndexes.sMedicalDeviceTime
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexes.reservoirLevelPercent
-                    summaryItem = New SummaryRecord(rowIndex, row, $"Reservoir is {row.Value}%")
-                    s_listOfSummaryRecords.Add(summaryItem)
-                    s_reservoirLevelPercent = CInt(summaryItem.Value)
+                    s_reservoirLevelPercent = CInt(row.Value)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Reservoir is {row.Value}%"))
 
                 Case ItemIndexes.reservoirAmount
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Full reservoir holds {row.Value}U"))
@@ -160,24 +178,26 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Pump battery is at {row.Value}%"))
 
                 Case ItemIndexes.sensorDurationHours
-                    summaryItem = New SummaryRecord(rowIndex, row)
-                    s_listOfSummaryRecords.Add(summaryItem)
-                    s_sensorDurationHours = CInt(summaryItem.Value)
+                    s_sensorDurationHours = CInt(row.Value)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexes.timeToNextCalibHours
-                    summaryItem = New SummaryRecord(rowIndex, row)
-                    s_listOfSummaryRecords.Add(summaryItem)
-                    s_timeToNextCalibrationHours = CUShort(summaryItem.Value)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+                    s_timeToNextCalibrationHours = CUShort(row.Value)
 
                 Case ItemIndexes.calibStatus
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_calibrationMessages, NameOf(s_calibrationMessages)))
 
                 Case ItemIndexes.bgUnits,
-                     ItemIndexes.timeFormat,
-                     ItemIndexes.lastSensorTime,
-                     ItemIndexes.sLastSensorTime,
-                     ItemIndexes.medicalDeviceSuspended,
-                     ItemIndexes.lastSGTrend
+                     ItemIndexes.timeFormat
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexes.lastSensorTime
+                    HandleObsoleteTimes(row, rowIndex)
+
+                Case ItemIndexes.sLastSensorTime,
+                      ItemIndexes.medicalDeviceSuspended,
+                      ItemIndexes.lastSGTrend
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexes.lastSG
@@ -282,21 +302,22 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Value))
 
                 Case ItemIndexes.sgBelowLimit,
-                        ItemIndexes.averageSGFloat
+                     ItemIndexes.averageSGFloat
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexes.appModelType
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexes.medicalDeviceInformation
-                    Dim value As String = Loads(row.Value).ToCsv.
+                    Dim valueList As String() = Loads(row.Value).ToCsv.
                                                                  Replace("{", "").
-                                                                 Replace("}", "")
-                    For Each e As IndexClass(Of String) In value.Split(",").WithIndex
-                        Dim s As String = e.Value
-                        Dim key As String = s.Split(" = ")(0)
-                        Dim val As String = s.Split(" = ")(1)
-                        s_listOfSummaryRecords.Add(New SummaryRecord(CSng(CSng(rowIndex) + (e.Index / 10)), ItemIndexes.medicalDeviceInformation.ToString, key, val))
+                                                                 Replace("}", "").
+                                                                 Split(",")
+                    For Each e As IndexClass(Of String) In valueList.WithIndex
+                        s_listOfSummaryRecords.Add(New SummaryRecord(CSng(CSng(rowIndex) + (e.Index / 10)),
+                                                                          ItemIndexes.medicalDeviceInformation.ToString,
+                                                                          e.Value.Split(" = ")(0),
+                                                                          e.Value.Split(" = ")(1)))
                     Next
 
                 Case ItemIndexes.typeCast
@@ -306,7 +327,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexes.calFreeSensor,
-                         ItemIndexes.finalCalibration
+                     ItemIndexes.finalCalibration
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
             End Select
         Next
