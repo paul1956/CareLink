@@ -80,28 +80,4 @@ Public Module SystemConstants
 
     Public ReadOnly Property SavedTitle As String = $"{ProjectName} For Windows"
 
-#Region "All Culture Info"
-
-    Private _CurrentDateCulture As CultureInfo
-    Public ReadOnly s_cultureInfoArray As CultureInfo() = CultureInfo.GetCultures(CultureTypes.AllCultures)
-
-    Public Property CurrentDateCulture As CultureInfo
-        Get
-            If _CurrentDateCulture Is Nothing Then
-                Throw New ArgumentNullException(NameOf(_CurrentDateCulture))
-
-            End If
-            Return _CurrentDateCulture
-        End Get
-        Set
-            _CurrentDateCulture = Value
-        End Set
-    End Property
-
-    Public ReadOnly Property CurrentDataCulture As New CultureInfo("en-US")
-    Public Property CurrentUICulture As CultureInfo = CultureInfo.CurrentUICulture
-    Public ReadOnly Property usDataCulture As New CultureInfo("en-US")
-
-#End Region
-
 End Module

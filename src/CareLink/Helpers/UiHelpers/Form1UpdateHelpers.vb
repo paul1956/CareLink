@@ -30,32 +30,6 @@ Friend Module Form1UpdateHelpers
         End Select
     End Function
 
-    Friend Function Is770G(recentData As Dictionary(Of String, String)) As Boolean
-        Return recentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber)) = "MMT-1880"
-    End Function
-
-    Friend Sub SetCalloutVisibility(name As String)
-        With s_calloutAnnotations(name)
-            If .Visible Then
-                .Visible = False
-            End If
-        End With
-    End Sub
-
-    Friend Function SetTreatmentInsulinRow() As Single
-        Select Case MaxBasalPerDose
-            Case < 0.5
-                Return 0.5
-            Case < 1
-                Return 1
-            Case < 1.5
-                Return 1.5
-            Case < 2
-                Return 2
-        End Select
-        Return (MaxBasalPerDose + 0.025!).RoundTo025
-    End Function
-
     Friend Sub UpdateDataTables(mainForm As Form1, recentData As Dictionary(Of String, String))
 
         If recentData Is Nothing Then

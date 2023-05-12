@@ -187,7 +187,7 @@ Public Class InitializeDialog
                     Me.CurrentUser.CurrentTarget = _mgDlItems.Last.Value
                 End If
             End If
-            .Enabled = Not Is770G(Me.RecentData)
+            .Enabled = Not Me.Is770G(Me.RecentData)
             .DisplayMember = "Key"
             .ValueMember = "Value"
             .SelectedIndex = Me.TargetSgComboBox.Items.IndexOfValue(Of String, Single)(Me.CurrentUser.CurrentTarget)
@@ -306,6 +306,10 @@ Public Class InitializeDialog
         End If
 
     End Sub
+
+    Private Function Is770G(recentData As Dictionary(Of String, String)) As Boolean
+        Return recentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber)) = "MMT-1880"
+    End Function
 
     Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
         Dim cell As DataGridViewCell = Me.InitializeDataGridView.Rows(Me.InitializeDataGridView.RowCount - 1).Cells(NameOf(ColumnEnd))

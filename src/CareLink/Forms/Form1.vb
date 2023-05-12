@@ -542,8 +542,11 @@ Public Class Form1
     End Sub
 
     Private Sub Chart_MouseLeave(sender As Object, e As EventArgs) Handles SummaryChart.MouseLeave, ActiveInsulinChart.MouseLeave, TreatmentMarkersChart.MouseLeave
-        Dim name As String = CType(sender, Chart).Name
-        SetCalloutVisibility(name)
+        With s_calloutAnnotations(CType(sender, Chart).Name)
+            If .Visible Then
+                .Visible = False
+            End If
+        End With
     End Sub
 
     Private Sub Chart_MouseMove(sender As Object, e As MouseEventArgs) Handles SummaryChart.MouseMove, ActiveInsulinChart.MouseMove, TreatmentMarkersChart.MouseMove
@@ -1667,7 +1670,18 @@ Public Class Form1
         Me.TreatmentMarkersChart = CreateChart(NameOf(TreatmentMarkersChart))
         Dim treatmentMarkersChartArea As ChartArea = CreateChartArea(Me.TreatmentMarkersChart)
 
-        TreatmentInsulinRow = SetTreatmentInsulinRow()
+        Select Case MaxBasalPerDose
+            Case < 0.5
+                TreatmentInsulinRow = 0.5
+            Case < 1
+                TreatmentInsulinRow = 1
+            Case < 1.5
+                TreatmentInsulinRow = 1.5
+            Case < 2
+                TreatmentInsulinRow = 2
+            Case Else
+                TreatmentInsulinRow = (MaxBasalPerDose + 0.025!).RoundTo025
+        End Select
 
         Dim labelColor As Color = Me.TreatmentMarkersChart.BackColor.GetContrastingColor
         Dim labelFont As New Font("Trebuchet MS", 12.0F, FontStyle.Bold)

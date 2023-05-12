@@ -15,7 +15,7 @@ Friend Module DateTimeExtensions
             Dim fullDateTimeFormats As New List(Of String) From {
                 CurrentDateCulture.DateTimeFormat.FullDateTimePattern
             }
-            For Each oneCulture As CultureInfo In s_cultureInfoArray.ToList()
+            For Each oneCulture As CultureInfo In CultureInfoList
                 If fullDateTimeFormats.Contains(oneCulture.DateTimeFormat.FullDateTimePattern) OrElse
                                 String.IsNullOrWhiteSpace(oneCulture.Name) OrElse
                                 Not oneCulture.Name.Contains("-"c) Then
@@ -119,9 +119,9 @@ Friend Module DateTimeExtensions
 
     <Extension>
     Friend Function GetCurrentDateCulture(countryCode As String) As CultureInfo
-        Dim localDateCulture As List(Of CultureInfo) = s_cultureInfoArray.Where(Function(c As CultureInfo)
-                                                                                    Return c.Name = $"en-{countryCode}"
-                                                                                End Function)?.ToList
+        Dim localDateCulture As List(Of CultureInfo) = CultureInfoList.Where(Function(c As CultureInfo)
+                                                                                 Return c.Name = $"en-{countryCode}"
+                                                                             End Function)?.ToList
         If localDateCulture Is Nothing OrElse localDateCulture.Count = 0 Then
             Return New CultureInfo("en-US")
         End If
