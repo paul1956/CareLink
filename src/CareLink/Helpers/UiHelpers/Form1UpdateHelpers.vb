@@ -26,6 +26,19 @@ Friend Module Form1UpdateHelpers
         End If
     End Function
 
+    Private Sub HandleComplexItems(row As KeyValuePair(Of String, String), rowIndex As ItemIndexes, key As String)
+        Dim valueList As String() = Loads(row.Value).ToCsv.
+                                                     Replace("{", "").
+                                                     Replace("}", "").
+                                                     Split(",")
+        For Each e As IndexClass(Of String) In valueList.WithIndex
+            s_listOfSummaryRecords.Add(New SummaryRecord(CSng(CSng(rowIndex) + (e.Index / 10)),
+                                                              key,
+                                                              e.Value.Split(" = ")(0),
+                                                              e.Value.Split(" = ")(1)))
+        Next
+    End Sub
+
     Private Sub HandleObsoleteTimes(row As KeyValuePair(Of String, String), rowIndex As ItemIndexes)
         If row.Value = "0" Then
             s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, "", "Obsolete"))
@@ -308,18 +321,11 @@ Friend Module Form1UpdateHelpers
                 Case ItemIndexes.appModelType
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
-                Case ItemIndexes.medicalDeviceInformation
-                    Dim valueList As String() = Loads(row.Value).ToCsv.
-                                                                 Replace("{", "").
-                                                                 Replace("}", "").
-                                                                 Split(",")
-                    For Each e As IndexClass(Of String) In valueList.WithIndex
-                        s_listOfSummaryRecords.Add(New SummaryRecord(CSng(CSng(rowIndex) + (e.Index / 10)),
-                                                                          ItemIndexes.medicalDeviceInformation.ToString,
-                                                                          e.Value.Split(" = ")(0),
-                                                                          e.Value.Split(" = ")(1)))
-                    Next
+                Case ItemIndexes.cgmInfo
+                    HandleComplexItems(row, rowIndex, ItemIndexes.cgmInfo.ToString)
 
+                Case ItemIndexes.medicalDeviceInformation
+                    HandleComplexItems(row, rowIndex, ItemIndexes.medicalDeviceInformation.ToString)
                 Case ItemIndexes.typeCast
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 

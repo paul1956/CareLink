@@ -71,11 +71,12 @@ Friend Module ItemIndexesModule
         sgBelowLimit = 60
         averageSGFloat = 61
         appModelType = 62
-        medicalDeviceInformation = 63
-        typeCast = 64
-        timeToNextCalibrationRecommendedMinutes = 65
-        calFreeSensor = 66
-        finalCalibration = 67
+        cgmInfo = 63
+        medicalDeviceInformation = 64
+        typeCast = 65
+        timeToNextCalibrationRecommendedMinutes = 66
+        calFreeSensor = 67
+        finalCalibration = 68
     End Enum
 
     <Extension>

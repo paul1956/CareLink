@@ -893,6 +893,7 @@ Public Class Form1
                  ItemIndexes.therapyAlgorithmState,
                  ItemIndexes.pumpBannerState,
                  ItemIndexes.basal,
+                 ItemIndexes.cgmInfo,
                  ItemIndexes.medicalDeviceInformation
                 Exit Select
             Case Else

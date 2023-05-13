@@ -27,11 +27,12 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-05/11/2023
+05/12/2023
 
 ## What's New in this release
 
-New in 3.8.0.2
+New in 3.8.0.3
+- Add support for cgmInfo
 - Clean up formatting of medicalDeviceInformation
 - Add support for Obsolete values
 
