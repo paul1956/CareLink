@@ -30,6 +30,8 @@ This update has a UI to show all the available data and a visual version that mi
 05/12/2023
 
 ## What's New in this release
+New in 3.8.0.4
+- SG data is now available in 3 columns Native, mm/Dl and mmol/L
 
 New in 3.8.0.3
 - Add support for cgmInfo

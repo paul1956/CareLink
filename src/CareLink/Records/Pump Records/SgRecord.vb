@@ -40,19 +40,19 @@ Public Class SgRecord
     End Sub
 
     <DisplayName(NameOf(SgRecord.datetime))>
-    <Column(Order:=2, TypeName:="Date")>
+    <Column(Order:=4, TypeName:="Date")>
     Public Property [datetime] As Date
 
     <DisplayName("datetime As String")>
-    <Column(Order:=3, TypeName:=NameOf([String]))>
+    <Column(Order:=5, TypeName:=NameOf([String]))>
     Public Property datetimeAsString As String
 
     <DisplayName("Kind")>
-    <Column(Order:=8, TypeName:=NameOf([String]))>
+    <Column(Order:=10, TypeName:=NameOf([String]))>
     Public Property kind As String
 
     <DisplayName("Sensor Message")>
-    <Column(Order:=10, TypeName:=NameOf([String]))>
+    <Column(Order:=12, TypeName:=NameOf([String]))>
     Public ReadOnly Property Message As String
         Get
             _sensorState = If(_sensorState, "")
@@ -65,7 +65,7 @@ Public Class SgRecord
     End Property
 
     <DisplayName(NameOf(OaDateTime))>
-    <Column(Order:=4, TypeName:=NameOf([Double]))>
+    <Column(Order:=6, TypeName:=NameOf([Double]))>
     Public ReadOnly Property OaDateTime As OADate
         Get
             Return New OADate(_datetime)
@@ -77,11 +77,11 @@ Public Class SgRecord
     Public Property RecordNumber As Integer
 
     <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=7, TypeName:=NameOf([Int32]))>
+    <Column(Order:=9, TypeName:=NameOf([Int32]))>
     Public Property relativeOffset As Integer
 
     <DisplayName("Sensor State")>
-    <Column(Order:=9, TypeName:=NameOf([String]))>
+    <Column(Order:=11, TypeName:=NameOf([String]))>
     Public Property sensorState As String
         Get
             Return _sensorState
@@ -106,12 +106,30 @@ Public Class SgRecord
         End Set
     End Property
 
+    <DisplayName("Sensor Glucose (mm/Dl)")>
+    <Column(Order:=2, TypeName:=NameOf([Single]))>
+    Public ReadOnly Property sgMmDl As Single
+        Get
+            If Single.IsNaN(_sg) Then Return _sg
+            Return If(ScalingNeeded, CSng(Math.Round(_sg * MmolLUnitsDivisor)), _sg)
+        End Get
+    End Property
+
+    <DisplayName("Sensor Glucose (mmol/L)")>
+    <Column(Order:=3, TypeName:=NameOf([Single]))>
+    Public ReadOnly Property sgMmolL As Single
+        Get
+            If Single.IsNaN(_sg) Then Return _sg
+            Return If(ScalingNeeded, _sg, (_sg / MmolLUnitsDivisor).RoundSingle(2))
+        End Get
+    End Property
+
     <DisplayName("Time Change")>
-    <Column(Order:=5, TypeName:=NameOf([Boolean]))>
+    <Column(Order:=7, TypeName:=NameOf([Boolean]))>
     Public Property timeChange As Boolean
 
     <DisplayName("Version")>
-    <Column(Order:=6, TypeName:=NameOf([Int32]))>
+    <Column(Order:=8, TypeName:=NameOf([Int32]))>
     Public Property version As Integer
 
 End Class

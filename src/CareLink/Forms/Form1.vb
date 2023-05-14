@@ -982,18 +982,37 @@ Public Class Form1
                 If e.Value.ToString <> "NO_ERROR_MESSAGE" Then
                     FormatCell(e, Color.Red)
                 End If
+                Exit Sub
             End If
             dgv.dgvCellFormatting(e, NameOf(SgRecord.datetime))
-            If columnName.Equals(NameOf(SgRecord.sg), StringComparison.OrdinalIgnoreCase) Then
+            If columnName.StartsWith("sg", StringComparison.InvariantCultureIgnoreCase) Then
                 Dim sensorValue As Single = ParseSingle(e.Value, 2)
                 If Single.IsNaN(sensorValue) Then
                     FormatCell(e, Color.Gray)
-                ElseIf sensorValue < TirLowLimit() Then
-                    FormatCell(e, Color.Red)
-                ElseIf sensorValue > TirHighLimit() Then
-                    FormatCell(e, Color.Yellow)
+                ElseIf columnName.Equals(NameOf(SgRecord.sg), StringComparison.OrdinalIgnoreCase) Then
+                    e.Value = If(ScalingNeeded, sensorValue.ToString("F2", CurrentDataCulture), e.Value.ToString)
+                    If sensorValue < TirLowLimit(ScalingNeeded) Then
+                        FormatCell(e, Color.Red)
+                    ElseIf sensorValue > TirHighLimit(ScalingNeeded) Then
+                        FormatCell(e, Color.Yellow)
+                    End If
+                ElseIf columnName.Equals(NameOf(SgRecord.sgMmDl), StringComparison.OrdinalIgnoreCase) Then
+                    e.Value = e.Value.ToString
+                    If sensorValue < TirLowLimit(False) Then
+                        FormatCell(e, Color.Red)
+                    ElseIf sensorValue > TirHighLimit(False) Then
+                        FormatCell(e, Color.Yellow)
+                    End If
+                ElseIf columnName.Equals(NameOf(SgRecord.sgMmolL), StringComparison.OrdinalIgnoreCase) Then
+                    e.Value = sensorValue.RoundSingle(2).ToString("F2", CurrentDataCulture)
+                    If sensorValue < TirLowLimit(True) Then
+                        FormatCell(e, Color.Red)
+                    ElseIf sensorValue > TirHighLimit(True) Then
+                        FormatCell(e, Color.Yellow)
+                    End If
                 End If
             End If
+
         End With
 
     End Sub
@@ -2133,11 +2152,11 @@ Public Class Form1
         With Me.TimeInRangeChart
             With .Series(NameOf(TimeInRangeSeries)).Points
                 .Clear()
-                .AddXY($"{s_belowHypoLimit}% Below {TirLowLimit()} {BgUnitsString}", s_belowHypoLimit / 100)
+                .AddXY($"{s_belowHypoLimit}% Below {TirLowLimit(ScalingNeeded)} {BgUnitsString}", s_belowHypoLimit / 100)
                 .Last().Color = Color.Red
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
-                .AddXY($"{s_aboveHyperLimit}% Above {TirHighLimit()} {BgUnitsString}", s_aboveHyperLimit / 100)
+                .AddXY($"{s_aboveHyperLimit}% Above {TirHighLimit(ScalingNeeded)} {BgUnitsString}", s_aboveHyperLimit / 100)
                 .Last().Color = Color.Yellow
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
@@ -2281,8 +2300,8 @@ Public Class Form1
         Me.UpdateAllSummarySeries()
         Me.UpdateDosingAndCarbs()
 
-        Me.AboveHighLimitMessageLabel.Text = $"Above {TirHighLimit()} {BgUnitsString}"
-        Me.BelowLowLimitMessageLabel.Text = $"Below {TirLowLimit()} {BgUnitsString}"
+        Me.AboveHighLimitMessageLabel.Text = $"Above {TirHighLimit(ScalingNeeded)} {BgUnitsString}"
+        Me.BelowLowLimitMessageLabel.Text = $"Below {TirLowLimit(ScalingNeeded)} {BgUnitsString}"
         Me.FullNameLabel.Text = $"{s_firstName} {Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastName))}"
         Dim modelNumber As String = Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber))
         Me.ModelLabel.Text = modelNumber
@@ -2417,19 +2436,19 @@ Public Class Form1
             Using bitmapText As New Bitmap(16, 16)
                 Using g As Graphics = Graphics.FromImage(bitmapText)
                     Select Case sg
-                        Case <= TirLowLimit()
+                        Case <= TirLowLimit(ScalingNeeded)
                             bgColor = Color.Yellow
                             If _showBalloonTip Then
-                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}{TmChar} Alert", $"SG below {TirLowLimit()} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
+                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}{TmChar} Alert", $"SG below {TirLowLimit(ScalingNeeded)} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
-                        Case <= TirHighLimit()
+                        Case <= TirHighLimit(ScalingNeeded)
                             bgColor = Color.Green
                             _showBalloonTip = True
                         Case Else
                             bgColor = Color.Red
                             If _showBalloonTip Then
-                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}{TmChar} Alert", $"SG above {TirHighLimit()} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
+                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}{TmChar} Alert", $"SG above {TirHighLimit(ScalingNeeded)} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
                     End Select
