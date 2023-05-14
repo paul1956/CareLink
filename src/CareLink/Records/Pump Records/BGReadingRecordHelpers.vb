@@ -20,9 +20,9 @@ Friend Module BGReadingRecordHelpers
             With e.CellStyle
                 If Single.IsNaN(sensorValue) Then
                     FormatCell(e, Color.Gray)
-                ElseIf sensorValue < TirLowLimit() Then
+                ElseIf sensorValue < TirLowLimit(ScalingNeeded) Then
                     FormatCell(e, Color.Red)
-                ElseIf sensorValue > TirHighLimit() Then
+                ElseIf sensorValue > TirHighLimit(ScalingNeeded) Then
                     FormatCell(e, Color.Yellow)
                 End If
             End With

@@ -52,12 +52,12 @@ Friend Module SystemVariables
         Return If(ScalingNeeded, 2, 50)
     End Function
 
-    Friend Function TirHighLimit() As Single
-        Return If(ScalingNeeded, 10, 180)
+    Friend Function TirHighLimit(doScaling As Boolean) As Single
+        Return If(doScaling, 10, 180)
     End Function
 
-    Friend Function TirLowLimit() As Single
-        Return If(ScalingNeeded, CSng(3.89), 70)
+    Friend Function TirLowLimit(doScaling As Boolean) As Single
+        Return If(doScaling, CSng(3.89), 70)
     End Function
 
 End Module
