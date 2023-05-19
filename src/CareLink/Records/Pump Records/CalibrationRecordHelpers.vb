@@ -15,16 +15,33 @@ Friend Module CalibrationRecordHelpers
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.dgvCellFormatting(e, NameOf(CalibrationRecord.dateTime))
-        If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(CalibrationRecord.value), StringComparison.OrdinalIgnoreCase) Then
+        Dim columnName As String = dgv.Columns(e.ColumnIndex).Name
+        If columnName.StartsWith(NameOf(CalibrationRecord.value), StringComparison.InvariantCultureIgnoreCase) Then
             Dim sensorValue As Single = ParseSingle(e.Value, 2)
             If Single.IsNaN(sensorValue) Then
-                e.CellStyle.BackColor = Color.Gray
-            ElseIf sensorValue < TirLowLimit(ScalingNeeded) Then
-                e.CellStyle.BackColor = Color.Red
-            ElseIf sensorValue > TirHighLimit(ScalingNeeded) Then
-                e.CellStyle.BackColor = Color.Yellow
+                FormatCell(e, Color.Gray)
+            ElseIf columnName.Equals(NameOf(CalibrationRecord.value), StringComparison.OrdinalIgnoreCase) Then
+                e.Value = If(ScalingNeeded, sensorValue.ToString("F2", CurrentDataCulture), e.Value.ToString)
+                If sensorValue < TirLowLimit(ScalingNeeded) Then
+                    FormatCell(e, Color.Red)
+                ElseIf sensorValue > TirHighLimit(ScalingNeeded) Then
+                    FormatCell(e, Color.Yellow)
+                End If
+            ElseIf columnName.Equals(NameOf(CalibrationRecord.valueMmDl), StringComparison.OrdinalIgnoreCase) Then
+                e.Value = e.Value.ToString
+                If sensorValue < TirLowLimit(False) Then
+                    FormatCell(e, Color.Red)
+                ElseIf sensorValue > TirHighLimit(False) Then
+                    FormatCell(e, Color.Yellow)
+                End If
+            ElseIf columnName.Equals(NameOf(CalibrationRecord.valueMmolL), StringComparison.OrdinalIgnoreCase) Then
+                e.Value = sensorValue.RoundSingle(2).ToString("F2", CurrentDataCulture)
+                If sensorValue < TirLowLimit(True) Then
+                    FormatCell(e, Color.Red)
+                ElseIf sensorValue > TirHighLimit(True) Then
+                    FormatCell(e, Color.Yellow)
+                End If
             End If
-            e.CellStyle.ForeColor = e.CellStyle.BackColor.GetContrastingColor()
         End If
 
     End Sub

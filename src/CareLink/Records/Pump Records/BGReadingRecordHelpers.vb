@@ -15,17 +15,33 @@ Friend Module BGReadingRecordHelpers
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.dgvCellFormatting(e, NameOf(BGReadingRecord.dateTime))
-        If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(BGReadingRecord.value), StringComparison.OrdinalIgnoreCase) Then
+        Dim columnName As String = dgv.Columns(e.ColumnIndex).Name
+        If columnName.StartsWith(NameOf(BGReadingRecord.value), StringComparison.InvariantCultureIgnoreCase) Then
             Dim sensorValue As Single = ParseSingle(e.Value, 2)
-            With e.CellStyle
-                If Single.IsNaN(sensorValue) Then
-                    FormatCell(e, Color.Gray)
-                ElseIf sensorValue < TirLowLimit(ScalingNeeded) Then
+            If Single.IsNaN(sensorValue) Then
+                FormatCell(e, Color.Gray)
+            ElseIf columnName.Equals(NameOf(BGReadingRecord.value), StringComparison.OrdinalIgnoreCase) Then
+                e.Value = If(ScalingNeeded, sensorValue.ToString("F2", CurrentDataCulture), e.Value.ToString)
+                If sensorValue < TirLowLimit(ScalingNeeded) Then
                     FormatCell(e, Color.Red)
                 ElseIf sensorValue > TirHighLimit(ScalingNeeded) Then
                     FormatCell(e, Color.Yellow)
                 End If
-            End With
+            ElseIf columnName.Equals(NameOf(BGReadingRecord.valueMmDl), StringComparison.OrdinalIgnoreCase) Then
+                e.Value = e.Value.ToString
+                If sensorValue < TirLowLimit(False) Then
+                    FormatCell(e, Color.Red)
+                ElseIf sensorValue > TirHighLimit(False) Then
+                    FormatCell(e, Color.Yellow)
+                End If
+            ElseIf columnName.Equals(NameOf(BGReadingRecord.valueMmolL), StringComparison.OrdinalIgnoreCase) Then
+                e.Value = sensorValue.RoundSingle(2).ToString("F2", CurrentDataCulture)
+                If sensorValue < TirLowLimit(True) Then
+                    FormatCell(e, Color.Red)
+                ElseIf sensorValue > TirHighLimit(True) Then
+                    FormatCell(e, Color.Yellow)
+                End If
+            End If
         End If
 
     End Sub

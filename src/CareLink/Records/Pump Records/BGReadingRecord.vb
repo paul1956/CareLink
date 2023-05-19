@@ -7,9 +7,10 @@ Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class BGReadingRecord
     Private _dateTime As Date
+    Private _value As Single
 
     <DisplayName(NameOf([dateTime]))>
-    <Column(Order:=6, TypeName:="Date")>
+    <Column(Order:=8, TypeName:="Date")>
     Public Property [dateTime] As Date
         Get
             Return _dateTime
@@ -20,7 +21,7 @@ Public Class BGReadingRecord
     End Property
 
     <DisplayName("dateTime As String")>
-    <Column(Order:=7, TypeName:=NameOf([String]))>
+    <Column(Order:=9, TypeName:=NameOf([String]))>
     Public Property dateTimeAsString As String
 
     <DisplayName(NameOf(index))>
@@ -28,7 +29,7 @@ Public Class BGReadingRecord
     Public Property index As Integer
 
     <DisplayName("Kind")>
-    <Column(Order:=4, TypeName:=NameOf([String]))>
+    <Column(Order:=6, TypeName:=NameOf([String]))>
     Public Property kind As String
 
     <DisplayName("Record Number")>
@@ -36,7 +37,7 @@ Public Class BGReadingRecord
     Public Property RecordNumber As Integer
 
     <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=9, TypeName:=NameOf([Int32]))>
+    <Column(Order:=11, TypeName:=NameOf([Int32]))>
     Public Property relativeOffset As Integer
 
     <DisplayName("Type")>
@@ -46,9 +47,34 @@ Public Class BGReadingRecord
     <DisplayName("Value")>
     <Column(Order:=3, TypeName:=NameOf([Single]))>
     Public Property value As Single
+        Get
+            Return _value
+        End Get
+        Set
+            _value = Value
+        End Set
+    End Property
+
+    <DisplayName("Value (mm/Dl)")>
+    <Column(Order:=4, TypeName:=NameOf([Single]))>
+    Public ReadOnly Property valueMmDl As Single
+        Get
+            If Single.IsNaN(_value) Then Return _value
+            Return If(ScalingNeeded, CSng(Math.Round(_value * MmolLUnitsDivisor)), _value)
+        End Get
+    End Property
+
+    <DisplayName("Value (mmol/L)")>
+    <Column(Order:=5, TypeName:=NameOf([Single]))>
+    Public ReadOnly Property valueMmolL As Single
+        Get
+            If Single.IsNaN(_value) Then Return _value
+            Return If(ScalingNeeded, _value, (_value / MmolLUnitsDivisor).RoundSingle(2))
+        End Get
+    End Property
 
     <DisplayName("Version")>
-    <Column(Order:=5, TypeName:=NameOf([Int32]))>
+    <Column(Order:=7, TypeName:=NameOf([Int32]))>
     Public Property version As Integer
 
 End Class
