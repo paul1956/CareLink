@@ -27,9 +27,12 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-05/18/2023
+05/20/2023
 
 ## What's New in this release
+New in 3.8.0.6
+- Improve display of DataGridView values
+
 New in 3.8.0.5
 - Limits is now available in 3 columns Native, mm/Dl and mmol/L
 

@@ -44,17 +44,17 @@ Friend Module DataTableHelpers
             propertyOrder.Add(colAttribute.Order, [property])
         Next
         For Each [property] As PropertyInfo In propertyOrder.Values
-            Dim displayName As String = GetColumnDisplayName([property])
             Dim propertyType As Type = [property].PropertyType
             If propertyType = GetType(Boolean) Then
                 propertyType = GetType(String)
             End If
             Dim column As New DataColumn With {
                                 .ColumnName = [property].Name,
-                                .Caption = displayName,
+                                .Caption = GetColumnDisplayName([property]),
                                 .DataType = propertyType
                             }
-            If IsNullableType(column.DataType) AndAlso column.DataType.IsGenericType Then ' If Nullable<>, this is how we get the underlying Type...
+            If IsNullableType(column.DataType) AndAlso column.DataType.IsGenericType Then
+                ' If Nullable<>, this is how we get the underlying Type...
                 column.DataType = column.DataType.GenericTypeArguments.FirstOrDefault()
             Else ' True by default, so set it false
                 'column.AllowDBNull = False
