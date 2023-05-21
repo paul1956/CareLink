@@ -14,7 +14,7 @@ Friend Module LowGlucoseSuspendRecordHelpers
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.dgvCellFormatting(e, NameOf(LowGlucoseSuspendRecord.dateTime))
+        dgv.dateTimeCellFormatting(e, NameOf(LowGlucoseSuspendRecord.dateTime))
     End Sub
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)

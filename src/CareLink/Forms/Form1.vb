@@ -974,47 +974,18 @@ Public Class Form1
         If e.Value Is Nothing Then
             Return
         End If
-        With e.CellStyle
-            Dim dgv As DataGridView = CType(sender, DataGridView)
-            Dim columnName As String = dgv.Columns(e.ColumnIndex).Name
-            ' Set the background to red for negative values in the Balance column.
-            If columnName.Equals(NameOf(SgRecord.sensorState), StringComparison.OrdinalIgnoreCase) Then
-                If e.Value.ToString <> "NO_ERROR_MESSAGE" Then
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(SgRecord.sensorState)
+                ' Set the background to red for negative values in the Balance column.
+                If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
                     FormatCell(e, Color.Red)
                 End If
-                Exit Sub
-            End If
-            dgv.dgvCellFormatting(e, NameOf(SgRecord.datetime))
-            If columnName.StartsWith("sg", StringComparison.InvariantCultureIgnoreCase) Then
-                Dim sensorValue As Single = ParseSingle(e.Value, 2)
-                If Single.IsNaN(sensorValue) Then
-                    FormatCell(e, Color.Gray)
-                ElseIf columnName.Equals(NameOf(SgRecord.sg), StringComparison.OrdinalIgnoreCase) Then
-                    e.Value = If(ScalingNeeded, sensorValue.ToString("F2", CurrentDataCulture), e.Value.ToString)
-                    If sensorValue < TirLowLimit(ScalingNeeded) Then
-                        FormatCell(e, Color.Red)
-                    ElseIf sensorValue > TirHighLimit(ScalingNeeded) Then
-                        FormatCell(e, Color.Yellow)
-                    End If
-                ElseIf columnName.Equals(NameOf(SgRecord.sgMmDl), StringComparison.OrdinalIgnoreCase) Then
-                    e.Value = e.Value.ToString
-                    If sensorValue < TirLowLimit(False) Then
-                        FormatCell(e, Color.Red)
-                    ElseIf sensorValue > TirHighLimit(False) Then
-                        FormatCell(e, Color.Yellow)
-                    End If
-                ElseIf columnName.Equals(NameOf(SgRecord.sgMmolL), StringComparison.OrdinalIgnoreCase) Then
-                    e.Value = sensorValue.RoundSingle(2).ToString("F2", CurrentDataCulture)
-                    If sensorValue < TirLowLimit(True) Then
-                        FormatCell(e, Color.Red)
-                    ElseIf sensorValue > TirHighLimit(True) Then
-                        FormatCell(e, Color.Yellow)
-                    End If
-                End If
-            End If
-
-        End With
-
+            Case NameOf(SgRecord.datetime)
+                dgv.dateTimeCellFormatting(e, NameOf(SgRecord.datetime))
+            Case NameOf(SgRecord.sg), NameOf(SgRecord.sgMmolL), NameOf(SgRecord.sgMmDl)
+                dgv.bgValueCellFormatting(e, NameOf(SgRecord.sg))
+        End Select
     End Sub
 
     Private Sub DgvSGs_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSGs.ColumnAdded
@@ -1087,16 +1058,17 @@ Public Class Form1
             Return
         End If
         ' Set the background to red for negative values in the Balance column.
-        If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(AutoBasalDeliveryRecord.bolusAmount), StringComparison.OrdinalIgnoreCase) Then
-            Dim basalAmount As Single = ParseSingle(e.Value, 3)
-            e.Value = basalAmount.ToString("F3", CurrentUICulture)
-            If basalAmount.IsMinBasal Then
-                FormatCell(e, GetGraphLineColor("Min Basal"))
-            End If
-            e.FormattingApplied = True
-            Return
-        End If
-        dgv.dgvCellFormatting(e, NameOf(AutoBasalDeliveryRecord.dateTime))
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(AutoBasalDeliveryRecord.bolusAmount)
+                Dim basalAmount As Single = ParseSingle(e.Value, 3)
+                e.Value = basalAmount.ToString("F3", CurrentUICulture)
+                If basalAmount.IsMinBasal Then
+                    FormatCell(e, GetGraphLineColor("Min Basal"))
+                End If
+                e.FormattingApplied = True
+            Case NameOf(AutoBasalDeliveryRecord.dateTime)
+                dgv.dateTimeCellFormatting(e, NameOf(AutoBasalDeliveryRecord.dateTime))
+        End Select
     End Sub
 
     Private Sub DgvAutoBasalDelivery_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvAutoBasalDelivery.ColumnAdded
@@ -1119,16 +1091,19 @@ Public Class Form1
 
     Private Sub DgvInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvInsulin.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        If dgv.Columns(e.ColumnIndex).ValueType = GetType(Single) Then
-            Dim value As Single = ParseSingle(e.Value, 3)
-            e.Value = value.ToString("F3", CurrentDataCulture)
-            If value <> 0 AndAlso dgv.Columns(e.ColumnIndex).Name = NameOf(InsulinRecord.SafeMealReduction) Then
-                e.CellStyle.ForeColor = Color.OrangeRed
-            End If
-            e.FormattingApplied = True
-            Exit Sub
-        End If
-        dgv.dgvCellFormatting(e, NameOf(InsulinRecord.dateTime))
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(InsulinRecord.dateTime)
+                dgv.dateTimeCellFormatting(e, NameOf(InsulinRecord.dateTime))
+            Case Else
+                If dgv.Columns(e.ColumnIndex).ValueType = GetType(Single) Then
+                    Dim value As Single = ParseSingle(e.Value, 3)
+                    e.Value = value.ToString("F3", CurrentDataCulture)
+                    If value <> 0 AndAlso dgv.Columns(e.ColumnIndex).Name = NameOf(InsulinRecord.SafeMealReduction) Then
+                        e.CellStyle.ForeColor = Color.OrangeRed
+                    End If
+                    e.FormattingApplied = True
+                End If
+        End Select
     End Sub
 
     Private Sub DgvInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnAdded
@@ -1155,12 +1130,13 @@ Public Class Form1
 
     Private Sub DgvMeal_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvMeal.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        If dgv.Columns(e.ColumnIndex).Name = NameOf(MealRecord.amount) Then
-            e.Value = $"{e.Value} {s_sessionCountrySettings.carbDefaultUnit}"
-            e.FormattingApplied = True
-        Else
-            dgv.dgvCellFormatting(e, NameOf(MealRecord.dateTime))
-        End If
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(MealRecord.amount)
+                e.Value = $"{e.Value} {s_sessionCountrySettings.carbDefaultUnit}"
+                e.FormattingApplied = True
+            Case NameOf(MealRecord.dateTime)
+                dgv.dateTimeCellFormatting(e, NameOf(MealRecord.dateTime))
+        End Select
     End Sub
 
     Private Sub DgvMeal_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvMeal.ColumnAdded

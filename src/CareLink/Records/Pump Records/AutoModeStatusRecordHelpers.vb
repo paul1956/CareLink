@@ -14,7 +14,7 @@ Friend Module AutoModeStatusRecordHelpers
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.dgvCellFormatting(e, NameOf(AutoModeStatusRecord.dateTime))
+        dgv.dateTimeCellFormatting(e, NameOf(AutoModeStatusRecord.dateTime))
     End Sub
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)

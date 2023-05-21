@@ -31,9 +31,26 @@ Friend Module SgRecordHelpers
         Stop
     End Sub
 
+    ''' <summary>
+    ''' Used by LastSG ONLY
+    ''' </summary>
+    ''' <param columnName="sender"></param>
+    ''' <param columnName="e"></param>
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.dgvCellFormatting(e, NameOf(SgRecord.datetime))
+        Dim columnName As String = dgv.Columns(e.ColumnIndex).Name
+        Select Case columnName
+            Case NameOf(SgRecord.sensorState)
+                ' Set the background to red for negative values in the Balance column.
+                If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
+                    FormatCell(e, Color.Red)
+                End If
+            Case NameOf(SgRecord.datetime)
+                dgv.dateTimeCellFormatting(e, NameOf(SgRecord.datetime))
+            Case NameOf(SgRecord.sg), NameOf(SgRecord.sgMmolL), NameOf(SgRecord.sgMmDl)
+                dgv.bgValueCellFormatting(e, NameOf(SgRecord.sg))
+        End Select
+
     End Sub
 
     Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle

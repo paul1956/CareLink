@@ -7,6 +7,60 @@ Imports System.Runtime.CompilerServices
 Public Module DataGridViewExtensions
 
     <Extension>
+    Friend Sub bgValueCellFormatting(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, partialKey As String)
+        Dim bgColumnName As String = dgv.Columns(e.ColumnIndex).Name
+        If Not bgColumnName.StartsWith(partialKey, StringComparison.InvariantCultureIgnoreCase) Then
+            Return
+        End If
+
+        Dim sensorValue As Single = ParseSingle(e.Value, 2)
+        If Single.IsNaN(sensorValue) Then
+            FormatCell(e, Color.Gray)
+            Return
+        End If
+        Select Case bgColumnName
+            Case partialKey
+                e.Value = If(ScalingNeeded, sensorValue.ToString("F2", CurrentDataCulture), e.Value.ToString)
+                If sensorValue < TirLowLimit(ScalingNeeded) Then
+                    FormatCell(e, Color.Red)
+                ElseIf sensorValue > TirHighLimit(ScalingNeeded) Then
+                    FormatCell(e, Color.Yellow)
+                End If
+            Case partialKey & "MmDl"
+                e.Value = e.Value.ToString
+                If sensorValue < TirLowLimit(False) Then
+                    FormatCell(e, Color.Red)
+                ElseIf sensorValue > TirHighLimit(False) Then
+                    FormatCell(e, Color.Yellow)
+                End If
+            Case partialKey & "MmolL"
+                e.Value = sensorValue.RoundSingle(2).ToString("F2", CurrentDataCulture)
+                If sensorValue < TirLowLimit(True) Then
+                    FormatCell(e, Color.Red)
+                ElseIf sensorValue > TirHighLimit(True) Then
+                    FormatCell(e, Color.Yellow)
+                End If
+        End Select
+    End Sub
+
+    <Extension>
+    Friend Sub dateTimeCellFormatting(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, dateTimeKey As String)
+        If e.Value Is Nothing Then
+            Return
+        End If
+        If dgv.Columns(e.ColumnIndex).Name.Equals(dateTimeKey, StringComparison.Ordinal) Then
+            Try
+                Dim dateValue As Date
+                dateValue = e.Value.ToString.ParseDate("")
+                e.Value = dateValue.ToShortDateTimeString
+            Catch ex As Exception
+                e.Value = e.Value.ToString
+            End Try
+            e.FormattingApplied = True
+        End If
+    End Sub
+
+    <Extension>
     Friend Sub InitializeDgv(dGV As DataGridView)
         With dGV
             .AllowUserToAddRows = False
@@ -33,22 +87,6 @@ Public Module DataGridViewExtensions
             .SelectionMode = DataGridViewSelectionMode.CellSelect
             .TabIndex = 0
         End With
-    End Sub
-
-    <Extension>
-    Public Sub dgvCellFormatting(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, key As String)
-        If e.Value Is Nothing Then
-            Return
-        End If
-        If dgv.Columns(e.ColumnIndex).Name.Equals(key, StringComparison.Ordinal) Then
-            Try
-                Dim dateValue As Date
-                dateValue = e.Value.ToString.ParseDate("")
-                e.Value = dateValue.ToShortDateTimeString
-            Catch ex As Exception
-                e.Value = e.Value.ToString
-            End Try
-        End If
     End Sub
 
 End Module

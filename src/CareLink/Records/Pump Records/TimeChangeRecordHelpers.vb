@@ -13,7 +13,8 @@ Friend Module TimeChangeRecordHelpers
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
-        CType(sender, DataGridView).dgvCellFormatting(e, NameOf(TimeChangeRecord.dateTime))
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        dgv.dateTimeCellFormatting(e, NameOf(TimeChangeRecord.dateTime))
     End Sub
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
