@@ -430,13 +430,4 @@ Friend Module Form1UpdateHelpers
                               False)
     End Sub
 
-    <Extension>
-    Friend Sub UpdateSgsTab(mainForm As Form1)
-        DisplayDataTableInDGV(mainForm.TableLayoutPanelSgs,
-                              mainForm.DgvSGs,
-                              ClassCollectionToDataTable(s_listOfSGs.OrderByDescending(Function(x) x.RecordNumber).ToList()),
-                              ItemIndexes.sgs)
-        mainForm.DgvSGs.Columns(0).HeaderCell.SortGlyphDirection = SortOrder.Descending
-    End Sub
-
 End Module

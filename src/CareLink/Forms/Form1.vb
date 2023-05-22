@@ -762,8 +762,7 @@ Public Class Form1
 
     Private Shared Function GetDataGridView(sender As Object) As DataGridView
         Dim contextStrip As ContextMenuStrip = CType(CType(sender, ToolStripMenuItem).GetCurrentParent, ContextMenuStrip)
-        Dim dgv As DataGridView = CType(contextStrip.SourceControl, DataGridView)
-        Return dgv
+        Return CType(contextStrip.SourceControl, DataGridView)
     End Function
 
     Private Sub Dgv_CellContextMenuStripNeeded(sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs) Handles _
@@ -2305,7 +2304,11 @@ Public Class Form1
                               ItemIndexes.activeInsulin,
                               True)
 
-        Me.UpdateSgsTab()
+        Me.TableLayoutPanelSgs.DisplayDataTableInDGV(
+                              Me.DgvSGs,
+                              ClassCollectionToDataTable(s_listOfSGs.OrderByDescending(Function(x) x.RecordNumber).ToList()),
+                              ItemIndexes.sgs)
+        Me.DgvSGs.Columns(0).HeaderCell.SortGlyphDirection = SortOrder.Descending
 
         Me.TableLayoutPanelLimits.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(s_listOfLimitRecords),
