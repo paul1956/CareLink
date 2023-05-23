@@ -28,6 +28,7 @@ Public Module JsonExtensions
 
     <Extension>
     Public Function CleanUserData(cleanRecentData As Dictionary(Of String, String)) As String
+        If cleanRecentData Is Nothing Then Return ""
         cleanRecentData("firstName") = "First"
         cleanRecentData("lastName") = "Last"
         cleanRecentData("medicalDeviceSerialNumber") = "NG1234567H"

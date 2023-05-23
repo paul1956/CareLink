@@ -71,6 +71,10 @@ Friend Module PlotMarkers
 
                 If entry.TryGetValue("value", bgValueString) Then
                     bgValueString.TryParseSingle(bgValue)
+                    If Not Single.IsNaN(bgValue) Then
+                        bgValue = Math.Min(GetYMaxValue(), bgValue)
+                        bgValue = Math.Max(GetYMinValue, bgValue)
+                    End If
                 End If
                 Dim markerSeriesPoints As DataPointCollection = pageChart.Series(MarkerSeriesName).Points
                 Select Case entry("type")
