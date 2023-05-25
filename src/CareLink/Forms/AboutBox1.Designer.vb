@@ -18,14 +18,14 @@ Partial Class AboutBox1
         End Try
     End Sub
 
-    Friend WithEvents TableLayoutPanel As System.Windows.Forms.TableLayoutPanel
-    Friend WithEvents LogoPictureBox As System.Windows.Forms.PictureBox
-    Friend WithEvents LabelProductName As System.Windows.Forms.Label
-    Friend WithEvents LabelVersion As System.Windows.Forms.Label
-    Friend WithEvents LabelCompanyName As System.Windows.Forms.Label
-    Friend WithEvents TextBoxDescription As System.Windows.Forms.TextBox
-    Friend WithEvents OKButton As System.Windows.Forms.Button
-    Friend WithEvents LabelCopyright As System.Windows.Forms.Label
+    Friend WithEvents TableLayoutPanel As TableLayoutPanel
+    Friend WithEvents LogoPictureBox As PictureBox
+    Friend WithEvents LabelProductName As Label
+    Friend WithEvents LabelVersion As Label
+    Friend WithEvents LabelCompanyName As Label
+    Friend WithEvents TextBoxDescription As TextBox
+    Friend WithEvents OKButton As Button
+    Friend WithEvents LabelCopyright As Label
 
     'Required by the Windows Form Designer
     Private components As System.ComponentModel.IContainer
@@ -33,143 +33,143 @@ Partial Class AboutBox1
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As ComponentModel.ComponentResourceManager = New ComponentModel.ComponentResourceManager(GetType(AboutBox1))
-        Me.TableLayoutPanel = New TableLayoutPanel()
-        Me.LogoPictureBox = New PictureBox()
-        Me.LabelProductName = New Label()
-        Me.LabelVersion = New Label()
-        Me.LabelCopyright = New Label()
-        Me.LabelCompanyName = New Label()
-        Me.TextBoxDescription = New TextBox()
-        Me.OKButton = New Button()
-        Me.TableLayoutPanel.SuspendLayout()
-        CType(Me.LogoPictureBox, ComponentModel.ISupportInitialize).BeginInit()
+        TableLayoutPanel = New TableLayoutPanel()
+        LogoPictureBox = New PictureBox()
+        LabelProductName = New Label()
+        LabelVersion = New Label()
+        LabelCopyright = New Label()
+        LabelCompanyName = New Label()
+        TextBoxDescription = New TextBox()
+        OKButton = New Button()
+        TableLayoutPanel.SuspendLayout()
+        CType(LogoPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         ' 
         ' TableLayoutPanel
         ' 
-        Me.TableLayoutPanel.AutoSize = True
-        Me.TableLayoutPanel.ColumnCount = 2
-        Me.TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 33F))
-        Me.TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 67F))
-        Me.TableLayoutPanel.Controls.Add(Me.LogoPictureBox, 0, 0)
-        Me.TableLayoutPanel.Controls.Add(Me.LabelProductName, 1, 0)
-        Me.TableLayoutPanel.Controls.Add(Me.LabelVersion, 1, 1)
-        Me.TableLayoutPanel.Controls.Add(Me.LabelCopyright, 1, 2)
-        Me.TableLayoutPanel.Controls.Add(Me.LabelCompanyName, 1, 3)
-        Me.TableLayoutPanel.Controls.Add(Me.TextBoxDescription, 1, 4)
-        Me.TableLayoutPanel.Controls.Add(Me.OKButton, 1, 5)
-        Me.TableLayoutPanel.Dock = DockStyle.Fill
-        Me.TableLayoutPanel.Location = New Point(10, 10)
-        Me.TableLayoutPanel.Margin = New Padding(4, 3, 4, 3)
-        Me.TableLayoutPanel.Name = "TableLayoutPanel"
-        Me.TableLayoutPanel.RowCount = 6
-        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 15F))
-        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 5F))
-        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10F))
-        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10F))
-        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
-        Me.TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10F))
-        Me.TableLayoutPanel.Size = New Size(562, 311)
-        Me.TableLayoutPanel.TabIndex = 0
+        TableLayoutPanel.AutoSize = True
+        TableLayoutPanel.ColumnCount = 2
+        TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 33.0F))
+        TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 67.0F))
+        TableLayoutPanel.Controls.Add(LogoPictureBox, 0, 0)
+        TableLayoutPanel.Controls.Add(LabelProductName, 1, 0)
+        TableLayoutPanel.Controls.Add(LabelVersion, 1, 1)
+        TableLayoutPanel.Controls.Add(LabelCopyright, 1, 2)
+        TableLayoutPanel.Controls.Add(LabelCompanyName, 1, 3)
+        TableLayoutPanel.Controls.Add(TextBoxDescription, 1, 4)
+        TableLayoutPanel.Controls.Add(OKButton, 1, 5)
+        TableLayoutPanel.Dock = DockStyle.Fill
+        TableLayoutPanel.Location = New Point(10, 10)
+        TableLayoutPanel.Margin = New Padding(4, 3, 4, 3)
+        TableLayoutPanel.Name = "TableLayoutPanel"
+        TableLayoutPanel.RowCount = 6
+        TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 15.0F))
+        TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 5.0F))
+        TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10.0F))
+        TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10.0F))
+        TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 50.0F))
+        TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10.0F))
+        TableLayoutPanel.Size = New Size(562, 311)
+        TableLayoutPanel.TabIndex = 0
         ' 
         ' LogoPictureBox
         ' 
-        Me.LogoPictureBox.Anchor = AnchorStyles.None
-        Me.LogoPictureBox.BackColor = Color.Transparent
-        Me.LogoPictureBox.ErrorImage = Nothing
-        Me.LogoPictureBox.Image = CType(resources.GetObject("LogoPictureBox.Image"), Image)
-        Me.LogoPictureBox.Location = New Point(7, 31)
-        Me.LogoPictureBox.Margin = New Padding(4, 3, 4, 3)
-        Me.LogoPictureBox.Name = "LogoPictureBox"
-        Me.TableLayoutPanel.SetRowSpan(Me.LogoPictureBox, 6)
-        Me.LogoPictureBox.Size = New Size(171, 248)
-        Me.LogoPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
-        Me.LogoPictureBox.TabIndex = 0
-        Me.LogoPictureBox.TabStop = False
+        LogoPictureBox.Anchor = AnchorStyles.None
+        LogoPictureBox.BackColor = Color.Transparent
+        LogoPictureBox.ErrorImage = Nothing
+        LogoPictureBox.Image = CType(resources.GetObject("LogoPictureBox.Image"), Image)
+        LogoPictureBox.Location = New Point(7, 31)
+        LogoPictureBox.Margin = New Padding(4, 3, 4, 3)
+        LogoPictureBox.Name = "LogoPictureBox"
+        TableLayoutPanel.SetRowSpan(LogoPictureBox, 6)
+        LogoPictureBox.Size = New Size(171, 248)
+        LogoPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
+        LogoPictureBox.TabIndex = 0
+        LogoPictureBox.TabStop = False
         ' 
         ' LabelProductName
         ' 
-        Me.LabelProductName.Dock = DockStyle.Fill
-        Me.LabelProductName.Location = New Point(192, 0)
-        Me.LabelProductName.Margin = New Padding(7, 0, 4, 0)
-        Me.LabelProductName.MaximumSize = New Size(0, 20)
-        Me.LabelProductName.Name = "LabelProductName"
-        Me.LabelProductName.Size = New Size(366, 20)
-        Me.LabelProductName.TabIndex = 0
-        Me.LabelProductName.Text = "Product Name"
-        Me.LabelProductName.TextAlign = ContentAlignment.MiddleLeft
+        LabelProductName.Dock = DockStyle.Fill
+        LabelProductName.Location = New Point(192, 0)
+        LabelProductName.Margin = New Padding(7, 0, 4, 0)
+        LabelProductName.MaximumSize = New Size(0, 20)
+        LabelProductName.Name = "LabelProductName"
+        LabelProductName.Size = New Size(366, 20)
+        LabelProductName.TabIndex = 0
+        LabelProductName.Text = "Product Name"
+        LabelProductName.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' LabelVersion
         ' 
-        Me.LabelVersion.Dock = DockStyle.Fill
-        Me.LabelVersion.Location = New Point(192, 46)
-        Me.LabelVersion.Margin = New Padding(7, 0, 4, 0)
-        Me.LabelVersion.MaximumSize = New Size(0, 20)
-        Me.LabelVersion.Name = "LabelVersion"
-        Me.LabelVersion.Size = New Size(366, 15)
-        Me.LabelVersion.TabIndex = 0
-        Me.LabelVersion.Text = "Version"
-        Me.LabelVersion.TextAlign = ContentAlignment.MiddleLeft
+        LabelVersion.Dock = DockStyle.Fill
+        LabelVersion.Location = New Point(192, 46)
+        LabelVersion.Margin = New Padding(7, 0, 4, 0)
+        LabelVersion.MaximumSize = New Size(0, 20)
+        LabelVersion.Name = "LabelVersion"
+        LabelVersion.Size = New Size(366, 15)
+        LabelVersion.TabIndex = 0
+        LabelVersion.Text = "Version"
+        LabelVersion.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' LabelCopyright
         ' 
-        Me.LabelCopyright.Dock = DockStyle.Fill
-        Me.LabelCopyright.Location = New Point(192, 61)
-        Me.LabelCopyright.Margin = New Padding(7, 0, 4, 0)
-        Me.LabelCopyright.MaximumSize = New Size(0, 20)
-        Me.LabelCopyright.Name = "LabelCopyright"
-        Me.LabelCopyright.Size = New Size(366, 20)
-        Me.LabelCopyright.TabIndex = 0
-        Me.LabelCopyright.Text = "Copyright"
-        Me.LabelCopyright.TextAlign = ContentAlignment.MiddleLeft
+        LabelCopyright.Dock = DockStyle.Fill
+        LabelCopyright.Location = New Point(192, 61)
+        LabelCopyright.Margin = New Padding(7, 0, 4, 0)
+        LabelCopyright.MaximumSize = New Size(0, 20)
+        LabelCopyright.Name = "LabelCopyright"
+        LabelCopyright.Size = New Size(366, 20)
+        LabelCopyright.TabIndex = 0
+        LabelCopyright.Text = "Copyright"
+        LabelCopyright.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' LabelCompanyName
         ' 
-        Me.LabelCompanyName.Dock = DockStyle.Fill
-        Me.LabelCompanyName.Location = New Point(192, 92)
-        Me.LabelCompanyName.Margin = New Padding(7, 0, 4, 0)
-        Me.LabelCompanyName.MaximumSize = New Size(0, 20)
-        Me.LabelCompanyName.Name = "LabelCompanyName"
-        Me.LabelCompanyName.Size = New Size(366, 20)
-        Me.LabelCompanyName.TabIndex = 0
-        Me.LabelCompanyName.Text = "Company Name"
-        Me.LabelCompanyName.TextAlign = ContentAlignment.MiddleLeft
+        LabelCompanyName.Dock = DockStyle.Fill
+        LabelCompanyName.Location = New Point(192, 92)
+        LabelCompanyName.Margin = New Padding(7, 0, 4, 0)
+        LabelCompanyName.MaximumSize = New Size(0, 20)
+        LabelCompanyName.Name = "LabelCompanyName"
+        LabelCompanyName.Size = New Size(366, 20)
+        LabelCompanyName.TabIndex = 0
+        LabelCompanyName.Text = "Company Name"
+        LabelCompanyName.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' TextBoxDescription
         ' 
-        Me.TextBoxDescription.Dock = DockStyle.Fill
-        Me.TextBoxDescription.Location = New Point(192, 126)
-        Me.TextBoxDescription.Margin = New Padding(7, 3, 4, 3)
-        Me.TextBoxDescription.Multiline = True
-        Me.TextBoxDescription.Name = "TextBoxDescription"
-        Me.TextBoxDescription.ReadOnly = True
-        Me.TextBoxDescription.ScrollBars = ScrollBars.Both
-        Me.TextBoxDescription.Size = New Size(366, 149)
-        Me.TextBoxDescription.TabIndex = 0
-        Me.TextBoxDescription.TabStop = False
-        Me.TextBoxDescription.Text = resources.GetString("TextBoxDescription.Text")
+        TextBoxDescription.Dock = DockStyle.Fill
+        TextBoxDescription.Location = New Point(192, 126)
+        TextBoxDescription.Margin = New Padding(7, 3, 4, 3)
+        TextBoxDescription.Multiline = True
+        TextBoxDescription.Name = "TextBoxDescription"
+        TextBoxDescription.ReadOnly = True
+        TextBoxDescription.ScrollBars = ScrollBars.Both
+        TextBoxDescription.Size = New Size(366, 149)
+        TextBoxDescription.TabIndex = 0
+        TextBoxDescription.TabStop = False
+        TextBoxDescription.Text = resources.GetString("TextBoxDescription.Text")
         ' 
         ' OKButton
         ' 
-        Me.OKButton.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
-        Me.OKButton.DialogResult = DialogResult.Cancel
-        Me.OKButton.Location = New Point(470, 285)
-        Me.OKButton.Margin = New Padding(4, 3, 4, 3)
-        Me.OKButton.Name = "OKButton"
-        Me.OKButton.Size = New Size(88, 23)
-        Me.OKButton.TabIndex = 0
-        Me.OKButton.Text = "&OK"
+        OKButton.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
+        OKButton.DialogResult = DialogResult.Cancel
+        OKButton.Location = New Point(470, 285)
+        OKButton.Margin = New Padding(4, 3, 4, 3)
+        OKButton.Name = "OKButton"
+        OKButton.Size = New Size(88, 23)
+        OKButton.TabIndex = 0
+        OKButton.Text = "&OK"
         ' 
         ' AboutBox1
         ' 
-        Me.AutoScaleDimensions = New SizeF(7F, 15F)
+        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         Me.AutoScaleMode = AutoScaleMode.Font
-        Me.CancelButton = Me.OKButton
+        Me.CancelButton = OKButton
         Me.ClientSize = New Size(582, 331)
-        Me.Controls.Add(Me.TableLayoutPanel)
+        Me.Controls.Add(TableLayoutPanel)
         Me.FormBorderStyle = FormBorderStyle.FixedDialog
         Me.Margin = New Padding(4, 3, 4, 3)
         Me.MaximizeBox = False
@@ -179,9 +179,9 @@ Partial Class AboutBox1
         Me.ShowInTaskbar = False
         Me.StartPosition = FormStartPosition.CenterParent
         Me.Text = "About CareLink for Windows"
-        Me.TableLayoutPanel.ResumeLayout(False)
-        Me.TableLayoutPanel.PerformLayout()
-        CType(Me.LogoPictureBox, ComponentModel.ISupportInitialize).EndInit()
+        TableLayoutPanel.ResumeLayout(False)
+        TableLayoutPanel.PerformLayout()
+        CType(LogoPictureBox, ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
     End Sub
