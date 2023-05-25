@@ -12,6 +12,7 @@ Friend Module TimeZoneExtensions
             {"Central European Summer Time", "W. Europe Standard Time"},
             {"Eastern European Summer Time", "E. Europe Daylight Time"},
             {"Eastern European Standard Time", "E. Europe Standard Time"},
+            {"Irish Standard Time", "GMT Daylight Time"},
             {"Mitteleuropäische Zeit", "W. Europe Standard Time"}
         }
 
@@ -31,18 +32,18 @@ Friend Module TimeZoneExtensions
             id = Name
         End If
 
-        If s_systemTimeZones Is Nothing Then
-            s_systemTimeZones = TimeZoneInfo.GetSystemTimeZones.ToList
-        End If
-
-        Dim possibleTimeZone As TimeZoneInfo = Nothing
+        Dim possibleTimeZone As TimeZoneInfo
         Try
             possibleTimeZone = TimeZoneInfo.FindSystemTimeZoneById(id)
+            If possibleTimeZone IsNot Nothing Then
+                Return possibleTimeZone
+            End If
         Catch ex As Exception
 
         End Try
-        If possibleTimeZone IsNot Nothing Then
-            Return possibleTimeZone
+
+        If s_systemTimeZones Is Nothing Then
+            s_systemTimeZones = TimeZoneInfo.GetSystemTimeZones.ToList
         End If
 
         If id.Contains("Daylight") Then

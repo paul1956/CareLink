@@ -359,11 +359,19 @@ Public Class CareLinkClient
                 If (s_sessionCountrySettings.HasValue _
                         AndAlso Not String.IsNullOrWhiteSpace(Me.CareLinkCountry)) OrElse
                         _sessionMonitorData.deviceFamily?.Equals("BLE_X", StringComparison.Ordinal) Then
-                    Return Me.GetConnectDisplayMessage(
+                    If _careLinkPartnerType.Contains(_sessionUser.role, StringComparer.InvariantCultureIgnoreCase) Then
+                        Return Me.GetConnectDisplayMessage(
                         MainForm,
                         _sessionProfile.username,
-                        If(_careLinkPartnerType.Contains(_sessionUser.role, StringComparer.InvariantCultureIgnoreCase), "CarePartner", "patient"),
+                        "carepartner",
+                        s_sessionCountrySettings.blePereodicDataEndpoint.Replace("v6", "v5"))
+                    Else
+                        Return Me.GetConnectDisplayMessage(
+                        MainForm,
+                        _sessionProfile.username,
+                        "patient",
                         s_sessionCountrySettings.blePereodicDataEndpoint)
+                    End If
                 End If
             End If
         Catch ex As Exception
