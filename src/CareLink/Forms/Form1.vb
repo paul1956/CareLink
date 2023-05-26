@@ -202,7 +202,7 @@ Public Class Form1
         Me.SensorDaysLeftLabel.BackColor = Color.Transparent
         s_useLocalTimeZone = My.Settings.UseLocalTimeZone
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
-        CheckForUpdatesAsync(Me, False)
+        CheckForUpdatesAsync(False)
 
         If Me.DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
             Me.UpdateAllTabPages(False)
@@ -459,7 +459,7 @@ Public Class Form1
     End Sub
 
     Private Sub MenuHelpCheckForUpdates_Click(sender As Object, e As EventArgs) Handles MenuHelpCheckForUpdates.Click
-        CheckForUpdatesAsync(Me, reportResults:=True)
+        CheckForUpdatesAsync(True)
     End Sub
 
     Private Sub MenuHelpReportAnIssue_Click(sender As Object, e As EventArgs) Handles MenuHelpReportAnIssue.Click

@@ -75,45 +75,49 @@ Friend Module BrowserUtilities
     ''' Then look for version
     ''' <a href="/Paul1956/CareLink/releases/tag/3.4.0.3" data-view-component="true" class="Link--primary">CareLink Display 3.4.0.3 x64</a>
     ''' </summary>
-    ''' <param name="mainForm"></param>
-    ''' <param name="reportResults">Always report result when true</param>
-    Friend Async Sub CheckForUpdatesAsync(mainForm As Form1, reportResults As Boolean)
+    ''' <param name="reportSuccessfulResult">Always report result when true</param>
+    Friend Async Sub CheckForUpdatesAsync(reportSuccessfulResult As Boolean)
         Try
-            Dim responseBody As String = Await s_httpClient.GetStringAsync($"{GitHubCareLinkUrl}releases")
-            Dim index As Integer
-            Dim versionStr As String = "0.0.0.0"
-            For Each e As IndexClass(Of String) In responseBody.SplitLines().ToList().WithIndex()
-                Dim line As String = e.Value
-                If line.Contains(s_versionSearchKey, StringComparison.Ordinal) Then
-                    index = line.IndexOf(s_versionSearchKey, StringComparison.OrdinalIgnoreCase) + s_versionSearchKey.Length
-                    If index < 0 Then
-                        Exit Sub
-                    End If
-                    Dim versionLength As Integer = line.IndexOf("""", index) - index
-                    versionStr = line.Substring(index, versionLength)
-                    If versionStr.Contains("-"c) Then
-                        Continue For
-                    End If
-                    Exit For
-                End If
-            Next
-
-            Dim gitHubVersion As String = versionStr
+            Dim gitHubVersion As String = Await GetVersionString()
             If IsNewerVersion(gitHubVersion, My.Application.Info.Version) Then
                 If MsgBox("There is a newer version available, do you want to install now?", MsgBoxStyle.YesNo, "Updates Available") = MsgBoxResult.Yes Then
                     OpenUrlInBrowser($"{GitHubCareLinkUrl}releases/")
+                    End
                 End If
             Else
-                If reportResults Then
+                If reportSuccessfulResult Then
                     MsgBox("You are running latest version", MsgBoxStyle.OkOnly, "No Updates Available")
                 End If
             End If
         Catch ex As Exception
-            If reportResults Then
+            If reportSuccessfulResult Then
                 MsgBox($"Connection failed while checking for new version:{s_environmentNewLine}{s_environmentNewLine}{ex.DecodeException()}", MsgBoxStyle.Information, "Version Check Failed")
             End If
         End Try
     End Sub
+
+    Friend Async Function GetVersionString() As Task(Of String)
+        Dim versionStr As String = "0.0.0.0"
+        Dim responseBody As String = Await s_httpClient.GetStringAsync($"{GitHubCareLinkUrl}releases")
+        Dim index As Integer
+        For Each e As IndexClass(Of String) In responseBody.SplitLines().ToList().WithIndex()
+            Dim line As String = e.Value
+            If line.Contains(s_versionSearchKey, StringComparison.OrdinalIgnoreCase) Then
+                index = line.IndexOf(s_versionSearchKey, StringComparison.OrdinalIgnoreCase) + s_versionSearchKey.Length
+                If index < 0 Then
+                    Exit For
+                End If
+                Dim versionLength As Integer = line.IndexOf("""", index) - index
+                versionStr = line.Substring(index, versionLength)
+                If versionStr.Contains("-"c) Then
+                    Continue For
+                End If
+                Exit For
+            End If
+        Next
+
+        Return versionStr
+    End Function
 
     Friend Sub OpenUrlInBrowser(webAddress As String)
         Try
