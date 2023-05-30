@@ -27,9 +27,12 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-05/24/2023
+05/30/2023
 
 ## What's New in this release
+New in 3.8.0.8
+- Update to support new European server data format
+
 New in 3.8.0.7
 - Add support for Irish Standard Time
 - Hotfix for V6 CareLink caregiver Protocol

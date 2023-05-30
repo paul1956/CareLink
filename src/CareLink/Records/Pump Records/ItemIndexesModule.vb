@@ -70,13 +70,13 @@ Friend Module ItemIndexesModule
         clientTimeZoneName = 59
         sgBelowLimit = 60
         averageSGFloat = 61
-        appModelType = 62
-        cgmInfo = 63
-        medicalDeviceInformation = 64
-        typeCast = 65
-        timeToNextCalibrationRecommendedMinutes = 66
-        calFreeSensor = 67
-        finalCalibration = 68
+        timeToNextCalibrationRecommendedMinutes = 62
+        calFreeSensor = 63
+        finalCalibration = 64
+        appModelType = 65
+        cgmInfo = 66
+        medicalDeviceInformation = 67
+        typeCast = 68
     End Enum
 
     <Extension>

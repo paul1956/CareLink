@@ -2228,7 +2228,7 @@ Public Class Form1
             End If
         End If
 
-        If Me.RecentData.Count > ItemIndexes.finalCalibration + 1 Then
+        If Me.RecentData.Count > ItemIndexes.typeCast + 1 Then
             Stop
         End If
         SyncLock _updatingLock

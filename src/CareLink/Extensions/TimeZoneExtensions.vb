@@ -38,8 +38,9 @@ Friend Module TimeZoneExtensions
             If possibleTimeZone IsNot Nothing Then
                 Return possibleTimeZone
             End If
-        Catch ex As Exception
-
+        Catch ex As TimeZoneNotFoundException
+        Catch ex1 As Exception
+            Stop
         End Try
 
         If s_systemTimeZones Is Nothing Then
