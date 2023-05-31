@@ -36,8 +36,7 @@ Friend Module CollectMarkersHelper
         s_listOfTimeChangeMarkers.Clear()
         s_markers.Clear()
 
-        Dim basalDictionary As New Dictionary(Of OADate, Single)
-        MaxBasalPerHour = 0
+        Dim basalDictionary As New SortedDictionary(Of OADate, Single)
         MaxBasalPerDose = 0
 
         Dim markers As List(Of Dictionary(Of String, String)) = LoadList(jsonRow)
@@ -102,20 +101,21 @@ Friend Module CollectMarkersHelper
         End If
 
         Dim i As Integer = 0
+        Dim maxBasalPerHour As Single = 0
         While i < basalDictionary.Count ' AndAlso basalDictionary.Keys(i) <= endOADate
             Dim sum As Single = 0
             Dim j As Integer = i
-            Dim startOADate As OADate = basalDictionary.Keys(j)
+            Dim startOADate As OADate = basalDictionary.Keys(i)
             While j < basalDictionary.Count AndAlso basalDictionary.Keys(j) <= startOADate + s_hourAsOADate
                 sum += basalDictionary.Values(j)
                 j += 1
             End While
-            MaxBasalPerHour = Math.Max(MaxBasalPerHour, sum)
+            maxBasalPerHour = Math.Max(maxBasalPerHour, sum)
             MaxBasalPerDose = Math.Max(MaxBasalPerDose, basalDictionary.Values(i))
             MaxBasalPerDose = Math.Min(MaxBasalPerDose, 25)
             i += 1
         End While
-        Return $"Max Basal/Hr ~ {MaxBasalPerHour.RoundTo025} U"
+        Return $"Max Basal/Hr ~ {maxBasalPerHour.RoundTo025} U"
     End Function
 
 End Module

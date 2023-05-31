@@ -19,11 +19,7 @@ Friend Module SystemVariables
                         {"Time Change", KnownColor.White}
                     }
 
-    Friend Property LastServerUpdateTime As Date
-
     Friend Property MaxBasalPerDose As Single
-
-    Friend Property MaxBasalPerHour As Single
 
     Friend Property ScalingNeeded As Boolean = False
 

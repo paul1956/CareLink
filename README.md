@@ -31,6 +31,7 @@ This update has a UI to show all the available data and a visual version that mi
 
 ## What's New in this release
 New in 3.8.0.9
+- Fixed serious error in calculation for MaxBasal per hour for 780G
 - Check for updates more frequently in background.
 - Add additional messages for when pump gets soft error.
 - Update to support new European server data format

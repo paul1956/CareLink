@@ -1458,7 +1458,6 @@ Public Class Form1
                 Stop
             End If
         End If
-        LastServerUpdateTime = lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime
         Me.ServerUpdateTimer.Interval = CInt(s_1MinutesInMilliseconds)
         Me.ServerUpdateTimer.Start()
     End Sub
