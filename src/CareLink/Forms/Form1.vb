@@ -2240,6 +2240,7 @@ Public Class Form1
                 Me.LoginStatus.Text = "Login Status: N/A From Saved File"
             Else
                 Me.SetLastUpdateTime(PumpNow.ToShortDateTimeString, False)
+                CheckForUpdatesAsync(False)
             End If
             Me.CursorPanel.Visible = False
 

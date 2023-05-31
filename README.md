@@ -30,7 +30,9 @@ This update has a UI to show all the available data and a visual version that mi
 05/30/2023
 
 ## What's New in this release
-New in 3.8.0.8
+New in 3.8.0.9
+- Check for updates more frequently in background.
+- Add additional messages for when pump gets soft error.
 - Update to support new European server data format
 
 New in 3.8.0.7

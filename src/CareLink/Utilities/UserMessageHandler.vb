@@ -53,6 +53,7 @@ Friend Module UserMessageHandler
                         {"BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR_TO_RECEIVE", "Calibrate by (secondaryTime). Check BG and calibrate to continuing receiving sensor information."},
                         {"BC_SID_CHECK_BG_CONSIDER_TESTING_KETONES_CHANGE_RESERVOIR", "Check BG and consider testing ketones and changing reservoir."},
                         {"BC_SID_CHECK_BG_CONSIDER_TESTING_KETONES_0U", "Check BG and consider testing ketones and changing reservoir."},
+                        {"BC_SID_DELIVERY_STOPPED_AFTER_REWIND_COMPLETES", "Rewind Required(triggeredDateTime). Delivery stopped. Rewind was required due to pump error. Select OK to continue."},
                         {"BC_SID_DELIVERY_STOPPED_BATTERY_REPLACE", "Replace battery(triggeredDateTime). Delivery stopped."},
                         {"BC_SID_DELIVERY_STOPPED_INSERT_NEW_BATTERY", "Insert battery(triggeredDateTime). Delivery stopped. Insert a New battery now."},
                         {"BC_SID_DO_NOT_CALIBRATE_UNLESS_NOTIFIED", "Sensor updating, Do Not calibrate unless notified. This could take up to 3 hours"},
