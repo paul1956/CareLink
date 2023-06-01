@@ -31,7 +31,7 @@ This update has a UI to show all the available data and a visual version that mi
 
 ## What's New in this release
 New in 3.8.1.0
-- Added display of high and low deviations
+- Added display of high and low Standard Deviations
 
 New in 3.8.0.11
 - Fixed serious error in calculation for MaxBasal per hour for 780G
