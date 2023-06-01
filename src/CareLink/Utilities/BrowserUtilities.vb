@@ -9,6 +9,7 @@ Imports Microsoft.Win32
 Friend Module BrowserUtilities
     Private ReadOnly s_httpClient As New HttpClient()
     Private ReadOnly s_versionSearchKey As String = $"<a hRef=""/{GitOwnerName}/{ProjectName}/releases/tag/"
+    Private updateSleepCount As Integer = 0
 
     ''' <summary>
     ''' Compare version of executable with ReadMe.MkDir from GitHub
@@ -78,11 +79,19 @@ Friend Module BrowserUtilities
     ''' <param name="reportSuccessfulResult">Always report result when true</param>
     Friend Async Sub CheckForUpdatesAsync(reportSuccessfulResult As Boolean)
         Try
+            If reportSuccessfulResult Then
+                updateSleepCount = 0
+            End If
             Dim gitHubVersion As String = Await GetVersionString()
             If IsNewerVersion(gitHubVersion, My.Application.Info.Version) Then
-                If MsgBox("There is a newer version available, do you want to install now?", MsgBoxStyle.YesNo, "Updates Available") = MsgBoxResult.Yes Then
-                    OpenUrlInBrowser($"{GitHubCareLinkUrl}releases/")
-                    End
+                If updateSleepCount > 0 Then
+                    updateSleepCount -= 1
+                Else
+                    If MsgBox("There is a newer version available, do you want to install now?", MsgBoxStyle.YesNo, "Updates Available") = MsgBoxResult.Yes Then
+                        OpenUrlInBrowser($"{GitHubCareLinkUrl}releases/")
+                        End
+                    End If
+                    updateSleepCount = 288
                 End If
             Else
                 If reportSuccessfulResult Then
