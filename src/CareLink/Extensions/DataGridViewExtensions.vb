@@ -34,7 +34,7 @@ Public Module DataGridViewExtensions
                     FormatCell(e, Color.Yellow)
                 End If
             Case partialKey & "MmolL"
-                e.Value = sensorValue.RoundSingle(2).ToString("F2", CurrentDataCulture)
+                e.Value = sensorValue.RoundSingle(2, False).ToString("F2", CurrentDataCulture)
                 If sensorValue < TirLowLimit(True) Then
                     FormatCell(e, Color.Red)
                 ElseIf sensorValue > TirHighLimit(True) Then

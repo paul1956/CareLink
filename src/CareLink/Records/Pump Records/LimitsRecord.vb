@@ -32,7 +32,7 @@ Public Class LimitsRecord
     <Column(Order:=4, TypeName:=NameOf([Single]))>
     Public ReadOnly Property HighLimitMmolL As Single
         Get
-            Return If(ScalingNeeded, _highLimit, (_highLimit / MmolLUnitsDivisor).RoundSingle(2))
+            Return If(ScalingNeeded, _highLimit, (_highLimit / MmolLUnitsDivisor).RoundSingle(2, False))
         End Get
     End Property
 
@@ -71,7 +71,7 @@ Public Class LimitsRecord
     <Column(Order:=7, TypeName:=NameOf([Single]))>
     Public ReadOnly Property sgMmolL As Single
         Get
-            Return If(ScalingNeeded, _lowLimit, (_lowLimit / MmolLUnitsDivisor).RoundSingle(2))
+            Return If(ScalingNeeded, _lowLimit, (_lowLimit / MmolLUnitsDivisor).RoundSingle(2, False))
         End Get
     End Property
 

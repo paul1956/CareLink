@@ -251,7 +251,7 @@ Friend Module PlotMarkers
                                 Stop
                         End Select
                     Case "MEAL"
-                        Dim mealRow As Single = CSng(TreatmentInsulinRow * 0.95).RoundSingle(3)
+                        Dim mealRow As Single = CSng(TreatmentInsulinRow * 0.95).RoundSingle(3, False)
                         If s_treatmentMarkerMealDictionary.TryAdd(markerOADateTime, mealRow) Then
                             markerSeriesPoints.AddXY(markerOADateTime, mealRow)
                             CreateCallout(treatmentChart,

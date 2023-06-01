@@ -69,7 +69,7 @@ Public Class BGReadingRecord
     Public ReadOnly Property valueMmolL As Single
         Get
             If Single.IsNaN(_value) Then Return _value
-            Return If(ScalingNeeded, _value, (_value / MmolLUnitsDivisor).RoundSingle(2))
+            Return If(ScalingNeeded, _value, (_value / MmolLUnitsDivisor).RoundSingle(2, False))
         End Get
     End Property
 

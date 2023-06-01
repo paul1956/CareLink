@@ -1682,7 +1682,7 @@ Public Class Form1
         Dim labelFont As New Font("Trebuchet MS", 12.0F, FontStyle.Bold)
 
         With treatmentMarkersChartArea.AxisY
-            Dim interval As Single = (TreatmentInsulinRow / 10).RoundSingle(3)
+            Dim interval As Single = (TreatmentInsulinRow / 10).RoundSingle(3, False)
             .Interval = interval
             .IsInterlaced = False
             .IsMarginVisible = False
@@ -1991,26 +1991,26 @@ Public Class Form1
         Else
             totalPercent = $"{CInt(s_totalBasal / s_totalDailyDose * 100)}"
         End If
-        Me.Last24HourBasalLabel.Text = $"Basal {s_totalBasal.RoundSingle(1)} U | {totalPercent}%"
+        Me.Last24HourBasalLabel.Text = $"Basal {s_totalBasal.RoundSingle(1, False)} U | {totalPercent}%"
 
-        Me.Last24DailyDoseLabel.Text = $"Daily Dose {s_totalDailyDose.RoundSingle(1)} U"
+        Me.Last24DailyDoseLabel.Text = $"Daily Dose {s_totalDailyDose.RoundSingle(1, False)} U"
 
         If s_totalAutoCorrection > 0 Then
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalAutoCorrection / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24AutoCorrectionLabel.Text = $"Auto Correction {s_totalAutoCorrection.RoundSingle(1)} U | {totalPercent}%"
+            Me.Last24AutoCorrectionLabel.Text = $"Auto Correction {s_totalAutoCorrection.RoundSingle(1, False)} U | {totalPercent}%"
             Me.Last24AutoCorrectionLabel.Visible = True
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24ManualBolusLabel.Text = $"Manual Bolus {s_totalManualBolus.RoundSingle(1)} U | {totalPercent}%"
+            Me.Last24ManualBolusLabel.Text = $"Manual Bolus {s_totalManualBolus.RoundSingle(1, False)} U | {totalPercent}%"
         Else
             Me.Last24AutoCorrectionLabel.Visible = False
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24ManualBolusLabel.Text = $"Manual Bolus {s_totalManualBolus.RoundSingle(1)} U | {totalPercent}%"
+            Me.Last24ManualBolusLabel.Text = $"Manual Bolus {s_totalManualBolus.RoundSingle(1, False)} U | {totalPercent}%"
         End If
         Me.Last24CarbsValueLabel.Text = $"Carbs = {s_totalCarbs} {s_sessionCountrySettings.carbohydrateUnitsDefault.ToTitle}"
     End Sub
@@ -2197,32 +2197,46 @@ Public Class Form1
 
         ' Calculate deviations
         Dim highCount As Integer = 0
-        Dim highDeviations As Single = 0
+        Dim highDeviations As Double = 0
         Dim lowCount As Integer = 0
-        Dim lowDeviations As Single = 0
+        Dim lowDeviations As Double = 0
         Dim elements As Integer = 0
         For Each sg As SgRecord In s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg))
             elements += 1
             If sg.sgMmDl < 70 Then
                 lowCount += 1
-                lowDeviations += 70 - sg.sgMmDl
+                If ScalingNeeded Then
+                    lowDeviations += (TirLowLimit(True) - sg.sgMmolL) ^ 2
+                Else
+                    lowDeviations += (TirLowLimit(False) - sg.sgMmDl) ^ 2
+                End If
             ElseIf sg.sgMmDl > 180 Then
                 highCount += 1
-                highDeviations += sg.sgMmDl - 180
+                If ScalingNeeded Then
+                    highDeviations += (sg.sgMmolL - TirHighLimit(True)) ^ 2
+                Else
+                    highDeviations += (sg.sgMmDl - TirHighLimit(False)) ^ 2
+                End If
             End If
         Next
 
-        Me.DeviationsLabel.Text = "Deviation" & Environment.NewLine
-        If lowCount > 0 Then
-            Me.DeviationsLabel.Text &= $"{(lowDeviations / elements).RoundSingle(If(ScalingNeeded, 4, 2)).ToString(CurrentDataCulture)} Lo/"
+        Dim deviationMessage As New StringBuilder
+        deviationMessage.AppendLine("Standard Deviation")
+        If elements > 0 Then
+            If lowCount > 0 Then
+                deviationMessage.Append($"{CSng(Math.Sqrt(lowDeviations / (elements - highCount))).RoundSingle(If(ScalingNeeded, 1, 0), True).ToString(CurrentDataCulture)} Low  ")
+            Else
+                deviationMessage.Append("0 Low  ")
+            End If
+            If highCount > 0 Then
+                deviationMessage.Append($"{CSng(Math.Sqrt(highDeviations / (elements - lowCount))).RoundSingle(If(ScalingNeeded, 1, 0), True).ToString(CurrentDataCulture)} High")
+            Else
+                deviationMessage.Append("0 High")
+            End If
         Else
-            Me.DeviationsLabel.Text &= $"0 Low/"
+            deviationMessage.Append("Unknown")
         End If
-        If highCount > 0 Then
-            Me.DeviationsLabel.Text &= $"{(highDeviations / elements).RoundSingle(If(ScalingNeeded, 4, 2)).ToString(CurrentDataCulture)} Hi"
-        Else
-            Me.DeviationsLabel.Text &= $"0 High"
-        End If
+        Me.DeviationsLabel.Text = deviationMessage.ToString
 
         Dim splitPanelMidpoint As Integer = Me.SplitContainer3.Panel2.Width \ 2
         For Each control1 As Control In Me.SplitContainer3.Panel2.Controls
