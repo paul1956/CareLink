@@ -17,7 +17,7 @@ Public Class ActiveInsulinRecord
             Return _amount
         End Get
         Set
-            _amount = Value.RoundSingle(3)
+            _amount = Value.RoundSingle(3, False)
         End Set
     End Property
 

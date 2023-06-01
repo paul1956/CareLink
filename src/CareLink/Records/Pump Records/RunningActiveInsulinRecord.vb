@@ -37,7 +37,7 @@ Friend Class RunningActiveInsulinRecord
     End Function
 
     Public Overrides Function ToString() As String
-        Return $"{Me.EventDate.ToShortTimeString()} {Me.CurrentInsulinLevel.RoundSingle(3)}"
+        Return $"{Me.EventDate.ToShortTimeString()} {Me.CurrentInsulinLevel.RoundSingle(3, False)}"
     End Function
 
 End Class

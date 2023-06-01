@@ -1525,11 +1525,11 @@ Partial Class Form1
         DeviationsLabel.BackColor = Color.Transparent
         DeviationsLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
         DeviationsLabel.ForeColor = Color.Green
-        DeviationsLabel.Location = New Point(3, 413)
+        DeviationsLabel.Location = New Point(3, 415)
         DeviationsLabel.Name = "DeviationsLabel"
-        DeviationsLabel.Size = New Size(224, 21)
+        DeviationsLabel.Size = New Size(224, 45)
         DeviationsLabel.TabIndex = 35
-        DeviationsLabel.Text = "Deviation 10L/7H"
+        DeviationsLabel.Text = "Standard Deviation" & Environment.NewLine & "2 Low  3 High"
         DeviationsLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' SmartGuardLabel
@@ -1538,7 +1538,7 @@ Partial Class Form1
         SmartGuardLabel.BackColor = Color.Transparent
         SmartGuardLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
         SmartGuardLabel.ForeColor = Color.DodgerBlue
-        SmartGuardLabel.Location = New Point(3, 463)
+        SmartGuardLabel.Location = New Point(3, 465)
         SmartGuardLabel.Name = "SmartGuardLabel"
         SmartGuardLabel.Size = New Size(224, 21)
         SmartGuardLabel.TabIndex = 35

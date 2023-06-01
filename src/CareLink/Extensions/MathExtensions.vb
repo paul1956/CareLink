@@ -8,9 +8,9 @@ Imports System.Runtime.CompilerServices
 Friend Module MathExtensions
 
     <Extension>
-    Friend Function RoundSingle(singleValue As Single, decimalDigits As Integer) As Single
+    Friend Function RoundSingle(singleValue As Single, decimalDigits As Integer, considerValue As Boolean) As Single
 
-        Return CSng(Math.Round(singleValue, decimalDigits))
+        Return CSng(Math.Round(singleValue, If(considerValue AndAlso singleValue < 10, 1, decimalDigits)))
     End Function
 
     <Extension>
@@ -41,7 +41,7 @@ Friend Module MathExtensions
         Else
             Return Single.NaN
         End If
-        Return If(decimalDigits = 3, returnSingle.RoundTo025, returnSingle.RoundSingle(decimalDigits))
+        Return If(decimalDigits = 3, returnSingle.RoundTo025, returnSingle.RoundSingle(decimalDigits, False))
     End Function
 
     Public Function ParseSingle(valueObject As Object, Optional decimalDigits As Integer = -1) As Single
@@ -63,7 +63,7 @@ Friend Module MathExtensions
                 Throw UnreachableException($"{NameOf(valueObject)} of type {valueObject.GetType.Name} is unknown in ParseSingle")
         End Select
 
-        Return If(decimalDigits = 3, returnSingle.RoundTo025, returnSingle.RoundSingle(decimalDigits))
+        Return If(decimalDigits = 3, returnSingle.RoundTo025, returnSingle.RoundSingle(decimalDigits, False))
     End Function
 
     <Extension>
@@ -81,11 +81,11 @@ Friend Module MathExtensions
         End If
 
         If Single.TryParse(valueString.Replace(",", "."), NumberStyles.Number, usDataCulture, result) Then
-            result = result.RoundSingle(10)
+            result = result.RoundSingle(10, False)
             Return True
         End If
         If Single.TryParse(valueString, NumberStyles.Number, CurrentUICulture, result) Then
-            result = result.RoundSingle(10)
+            result = result.RoundSingle(10, False)
             Return True
         End If
         result = Single.NaN
