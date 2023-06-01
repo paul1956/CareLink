@@ -30,6 +30,9 @@ This update has a UI to show all the available data and a visual version that mi
 06/01/2023
 
 ## What's New in this release
+New in 3.8.1.0
+- Added display of high and low deviations
+
 New in 3.8.0.11
 - Fixed serious error in calculation for MaxBasal per hour for 780G
 - Check for updates more frequently in background. Pause a day between checks if user doesn't want to update immediate.

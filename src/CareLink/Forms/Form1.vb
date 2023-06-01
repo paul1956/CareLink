@@ -1537,12 +1537,13 @@ Public Class Form1
     End Sub
 
     Friend Sub InitializeTimeInRangeArea()
-        If Me.SplitContainer3.Panel2.Controls.Count > 13 Then
+        If Me.SplitContainer3.Panel2.Controls.Count > 14 Then
             Me.SplitContainer3.Panel2.Controls.RemoveAt(Me.SplitContainer3.Panel2.Controls.Count - 1)
         End If
-        Dim width1 As Integer = Me.SplitContainer3.Panel2.Width - 80
+        Dim width1 As Integer = Me.SplitContainer3.Panel2.Width - 94
         Dim splitPanelMidpoint As Integer = Me.SplitContainer3.Panel2.Width \ 2
         For Each control1 As Control In Me.SplitContainer3.Panel2.Controls
+            DirectCast(control1, Label).AutoSize = True
             control1.Left = splitPanelMidpoint - (control1.Width \ 2)
         Next
         Me.TimeInRangeChart = New Chart With {
@@ -2157,12 +2158,10 @@ Public Class Form1
         ' Calculate Time in AutoMode
         If s_listOfAutoModeStatusMarkers.Count = 0 Then
             Me.SmartGuardLabel.Text = "SmartGuard 0%"
-            Exit Sub
         ElseIf s_listOfAutoModeStatusMarkers.Count = 1 AndAlso s_listOfAutoModeStatusMarkers.First.autoModeOn = True Then
             Me.SmartGuardLabel.Text = "SmartGuard 100%"
         Else
             Try
-
                 ' need to figure out %
                 Dim autoModeStartTime As New Date
                 Dim timeInAutoMode As New TimeSpan(0)
@@ -2194,8 +2193,44 @@ Public Class Form1
             Catch ex As Exception
                 Me.SmartGuardLabel.Text = "SmartGuard ???%"
             End Try
-
         End If
+
+        ' Calculate deviations
+        Dim highCount As Integer = 0
+        Dim highDeviations As Single = 0
+        Dim lowCount As Integer = 0
+        Dim lowDeviations As Single = 0
+        Dim elements As Integer = 0
+        For Each sg As SgRecord In s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg))
+            elements += 1
+            If sg.sgMmDl < 70 Then
+                lowCount += 1
+                lowDeviations += 70 - sg.sgMmDl
+            ElseIf sg.sgMmDl > 180 Then
+                highCount += 1
+                highDeviations += sg.sgMmDl - 180
+            End If
+        Next
+
+        Me.DeviationsLabel.Text = "Deviation" & Environment.NewLine
+        If lowCount > 0 Then
+            Me.DeviationsLabel.Text &= $"{(lowDeviations / elements).RoundSingle(If(ScalingNeeded, 4, 2)).ToString(CurrentDataCulture)} Lo/"
+        Else
+            Me.DeviationsLabel.Text &= $"0 Low/"
+        End If
+        If highCount > 0 Then
+            Me.DeviationsLabel.Text &= $"{(highDeviations / elements).RoundSingle(If(ScalingNeeded, 4, 2)).ToString(CurrentDataCulture)} Hi"
+        Else
+            Me.DeviationsLabel.Text &= $"0 High"
+        End If
+
+        Dim splitPanelMidpoint As Integer = Me.SplitContainer3.Panel2.Width \ 2
+        For Each control1 As Control In Me.SplitContainer3.Panel2.Controls
+            If TypeOf control1 Is Label Then
+                DirectCast(control1, Label).AutoSize = True
+                control1.Left = splitPanelMidpoint - (control1.Width \ 2)
+            End If
+        Next
     End Sub
 
     Private Sub UpdateTreatmentChart()

@@ -141,6 +141,7 @@ Partial Class Form1
         TimeInRangeChartLabel = New Label()
         TimeInRangeValueLabel = New Label()
         SmartGuardLabel = New Label()
+        DeviationsLabel = New Label()
         TabControlPage1 = New TabControl()
         TabPage01HomePage = New TabPage()
         TabPage02RunningIOB = New TabPage()
@@ -509,7 +510,7 @@ Partial Class Form1
         AboveHighLimitMessageLabel.BackColor = Color.Transparent
         AboveHighLimitMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
         AboveHighLimitMessageLabel.ForeColor = Color.Yellow
-        AboveHighLimitMessageLabel.Location = New Point(30, 248)
+        AboveHighLimitMessageLabel.Location = New Point(30, 208)
         AboveHighLimitMessageLabel.Name = "AboveHighLimitMessageLabel"
         AboveHighLimitMessageLabel.Size = New Size(170, 21)
         AboveHighLimitMessageLabel.TabIndex = 28
@@ -522,7 +523,7 @@ Partial Class Form1
         AboveHighLimitValueLabel.BackColor = Color.Black
         AboveHighLimitValueLabel.Font = New Font("Microsoft Sans Serif", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         AboveHighLimitValueLabel.ForeColor = Color.White
-        AboveHighLimitValueLabel.Location = New Point(55, 215)
+        AboveHighLimitValueLabel.Location = New Point(55, 175)
         AboveHighLimitValueLabel.Name = "AboveHighLimitValueLabel"
         AboveHighLimitValueLabel.Size = New Size(120, 33)
         AboveHighLimitValueLabel.TabIndex = 22
@@ -561,7 +562,7 @@ Partial Class Form1
         AverageSGMessageLabel.BackColor = Color.Transparent
         AverageSGMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
         AverageSGMessageLabel.ForeColor = Color.White
-        AverageSGMessageLabel.Location = New Point(3, 433)
+        AverageSGMessageLabel.Location = New Point(3, 393)
         AverageSGMessageLabel.Name = "AverageSGMessageLabel"
         AverageSGMessageLabel.Size = New Size(224, 21)
         AverageSGMessageLabel.TabIndex = 0
@@ -574,7 +575,7 @@ Partial Class Form1
         AverageSGValueLabel.BackColor = Color.Black
         AverageSGValueLabel.Font = New Font("Microsoft Sans Serif", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         AverageSGValueLabel.ForeColor = Color.White
-        AverageSGValueLabel.Location = New Point(55, 398)
+        AverageSGValueLabel.Location = New Point(55, 358)
         AverageSGValueLabel.Margin = New Padding(0)
         AverageSGValueLabel.Name = "AverageSGValueLabel"
         AverageSGValueLabel.Size = New Size(120, 33)
@@ -630,7 +631,7 @@ Partial Class Form1
         BelowLowLimitMessageLabel.BackColor = Color.Transparent
         BelowLowLimitMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
         BelowLowLimitMessageLabel.ForeColor = Color.Red
-        BelowLowLimitMessageLabel.Location = New Point(30, 370)
+        BelowLowLimitMessageLabel.Location = New Point(30, 330)
         BelowLowLimitMessageLabel.Name = "BelowLowLimitMessageLabel"
         BelowLowLimitMessageLabel.Size = New Size(170, 21)
         BelowLowLimitMessageLabel.TabIndex = 32
@@ -643,7 +644,7 @@ Partial Class Form1
         BelowLowLimitValueLabel.BackColor = Color.Black
         BelowLowLimitValueLabel.Font = New Font("Microsoft Sans Serif", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         BelowLowLimitValueLabel.ForeColor = Color.White
-        BelowLowLimitValueLabel.Location = New Point(55, 337)
+        BelowLowLimitValueLabel.Location = New Point(55, 297)
         BelowLowLimitValueLabel.Name = "BelowLowLimitValueLabel"
         BelowLowLimitValueLabel.Size = New Size(120, 33)
         BelowLowLimitValueLabel.TabIndex = 26
@@ -1036,7 +1037,7 @@ Partial Class Form1
         InRangeMessageLabel.BackColor = Color.Transparent
         InRangeMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
         InRangeMessageLabel.ForeColor = Color.Lime
-        InRangeMessageLabel.Location = New Point(81, 309)
+        InRangeMessageLabel.Location = New Point(81, 269)
         InRangeMessageLabel.Name = "InRangeMessageLabel"
         InRangeMessageLabel.Size = New Size(73, 21)
         InRangeMessageLabel.TabIndex = 30
@@ -1451,16 +1452,17 @@ Partial Class Form1
         ' 
         SplitContainer3.Panel2.Controls.Add(TimeInRangeLabel)
         SplitContainer3.Panel2.Controls.Add(Last24HoursLabel)
-        SplitContainer3.Panel2.Controls.Add(InRangeMessageLabel)
         SplitContainer3.Panel2.Controls.Add(TimeInRangeChartLabel)
         SplitContainer3.Panel2.Controls.Add(TimeInRangeSummaryPercentCharLabel)
-        SplitContainer3.Panel2.Controls.Add(TimeInRangeValueLabel)
         SplitContainer3.Panel2.Controls.Add(AboveHighLimitValueLabel)
         SplitContainer3.Panel2.Controls.Add(AboveHighLimitMessageLabel)
+        SplitContainer3.Panel2.Controls.Add(TimeInRangeValueLabel)
+        SplitContainer3.Panel2.Controls.Add(InRangeMessageLabel)
         SplitContainer3.Panel2.Controls.Add(BelowLowLimitValueLabel)
         SplitContainer3.Panel2.Controls.Add(BelowLowLimitMessageLabel)
         SplitContainer3.Panel2.Controls.Add(AverageSGValueLabel)
         SplitContainer3.Panel2.Controls.Add(AverageSGMessageLabel)
+        SplitContainer3.Panel2.Controls.Add(DeviationsLabel)
         SplitContainer3.Panel2.Controls.Add(SmartGuardLabel)
         SplitContainer3.Size = New Size(1370, 498)
         SplitContainer3.SplitterDistance = 1136
@@ -1485,7 +1487,7 @@ Partial Class Form1
         TimeInRangeSummaryPercentCharLabel.BackColor = Color.Transparent
         TimeInRangeSummaryPercentCharLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         TimeInRangeSummaryPercentCharLabel.ForeColor = Color.White
-        TimeInRangeSummaryPercentCharLabel.Location = New Point(94, 133)
+        TimeInRangeSummaryPercentCharLabel.Location = New Point(94, 113)
         TimeInRangeSummaryPercentCharLabel.Name = "TimeInRangeSummaryPercentCharLabel"
         TimeInRangeSummaryPercentCharLabel.Size = New Size(42, 40)
         TimeInRangeSummaryPercentCharLabel.TabIndex = 3
@@ -1497,9 +1499,9 @@ Partial Class Form1
         TimeInRangeChartLabel.BackColor = Color.Black
         TimeInRangeChartLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         TimeInRangeChartLabel.ForeColor = Color.White
-        TimeInRangeChartLabel.Location = New Point(75, 94)
+        TimeInRangeChartLabel.Location = New Point(73, 74)
         TimeInRangeChartLabel.Name = "TimeInRangeChartLabel"
-        TimeInRangeChartLabel.Size = New Size(80, 47)
+        TimeInRangeChartLabel.Size = New Size(76, 47)
         TimeInRangeChartLabel.TabIndex = 2
         TimeInRangeChartLabel.Text = "100"
         TimeInRangeChartLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -1510,12 +1512,25 @@ Partial Class Form1
         TimeInRangeValueLabel.BackColor = Color.Black
         TimeInRangeValueLabel.Font = New Font("Microsoft Sans Serif", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         TimeInRangeValueLabel.ForeColor = Color.White
-        TimeInRangeValueLabel.Location = New Point(55, 276)
+        TimeInRangeValueLabel.Location = New Point(55, 236)
         TimeInRangeValueLabel.Name = "TimeInRangeValueLabel"
         TimeInRangeValueLabel.Size = New Size(120, 33)
         TimeInRangeValueLabel.TabIndex = 24
         TimeInRangeValueLabel.Text = "90 %"
         TimeInRangeValueLabel.TextAlign = ContentAlignment.MiddleCenter
+        ' 
+        ' DeviationsLabel
+        ' 
+        DeviationsLabel.Anchor = AnchorStyles.Top
+        DeviationsLabel.BackColor = Color.Transparent
+        DeviationsLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
+        DeviationsLabel.ForeColor = Color.Green
+        DeviationsLabel.Location = New Point(3, 413)
+        DeviationsLabel.Name = "DeviationsLabel"
+        DeviationsLabel.Size = New Size(224, 21)
+        DeviationsLabel.TabIndex = 35
+        DeviationsLabel.Text = "Deviation 10L/7H"
+        DeviationsLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' SmartGuardLabel
         ' 
@@ -2964,6 +2979,7 @@ Partial Class Form1
     Friend WithEvents SplitContainer1 As SplitContainer
     Friend WithEvents TemporaryUseAdvanceAITDecayCheckBox As CheckBox
     Friend WithEvents TimeZoneLabel As ToolStripStatusLabel
+    Friend WithEvents DeviationsLabel As Label
     Friend WithEvents SmartGuardLabel As Label
     Friend WithEvents CountryDataPg2TableLayoutPanel As TableLayoutPanel
     Friend WithEvents DgvCountryDataPg2 As DataGridView
