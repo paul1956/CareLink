@@ -27,10 +27,10 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-05/30/2023
+06/01/2023
 
 ## What's New in this release
-New in 3.8.0.10
+New in 3.8.0.11
 - Fixed serious error in calculation for MaxBasal per hour for 780G
 - Check for updates more frequently in background. Pause a day between checks if user doesn't want to update immediate.
 - Add additional messages for when pump gets soft error.

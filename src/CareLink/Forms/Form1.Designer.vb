@@ -1449,15 +1449,15 @@ Partial Class Form1
         ' 
         ' SplitContainer3.Panel2
         ' 
-        SplitContainer3.Panel2.Controls.Add(Last24HoursLabel)
         SplitContainer3.Panel2.Controls.Add(TimeInRangeLabel)
-        SplitContainer3.Panel2.Controls.Add(TimeInRangeSummaryPercentCharLabel)
-        SplitContainer3.Panel2.Controls.Add(TimeInRangeChartLabel)
+        SplitContainer3.Panel2.Controls.Add(Last24HoursLabel)
         SplitContainer3.Panel2.Controls.Add(InRangeMessageLabel)
-        SplitContainer3.Panel2.Controls.Add(AboveHighLimitMessageLabel)
-        SplitContainer3.Panel2.Controls.Add(BelowLowLimitValueLabel)
+        SplitContainer3.Panel2.Controls.Add(TimeInRangeChartLabel)
+        SplitContainer3.Panel2.Controls.Add(TimeInRangeSummaryPercentCharLabel)
         SplitContainer3.Panel2.Controls.Add(TimeInRangeValueLabel)
         SplitContainer3.Panel2.Controls.Add(AboveHighLimitValueLabel)
+        SplitContainer3.Panel2.Controls.Add(AboveHighLimitMessageLabel)
+        SplitContainer3.Panel2.Controls.Add(BelowLowLimitValueLabel)
         SplitContainer3.Panel2.Controls.Add(BelowLowLimitMessageLabel)
         SplitContainer3.Panel2.Controls.Add(AverageSGValueLabel)
         SplitContainer3.Panel2.Controls.Add(AverageSGMessageLabel)
@@ -1497,9 +1497,9 @@ Partial Class Form1
         TimeInRangeChartLabel.BackColor = Color.Black
         TimeInRangeChartLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         TimeInRangeChartLabel.ForeColor = Color.White
-        TimeInRangeChartLabel.Location = New Point(65, 94)
+        TimeInRangeChartLabel.Location = New Point(75, 94)
         TimeInRangeChartLabel.Name = "TimeInRangeChartLabel"
-        TimeInRangeChartLabel.Size = New Size(100, 47)
+        TimeInRangeChartLabel.Size = New Size(80, 47)
         TimeInRangeChartLabel.TabIndex = 2
         TimeInRangeChartLabel.Text = "100"
         TimeInRangeChartLabel.TextAlign = ContentAlignment.MiddleCenter

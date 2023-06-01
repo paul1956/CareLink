@@ -1540,7 +1540,7 @@ Public Class Form1
         If Me.SplitContainer3.Panel2.Controls.Count > 13 Then
             Me.SplitContainer3.Panel2.Controls.RemoveAt(Me.SplitContainer3.Panel2.Controls.Count - 1)
         End If
-        Dim width1 As Integer = Me.SplitContainer3.Panel2.Width - 65
+        Dim width1 As Integer = Me.SplitContainer3.Panel2.Width - 80
         Dim splitPanelMidpoint As Integer = Me.SplitContainer3.Panel2.Width \ 2
         For Each control1 As Control In Me.SplitContainer3.Panel2.Controls
             control1.Left = splitPanelMidpoint - (control1.Width \ 2)
@@ -2123,6 +2123,8 @@ Public Class Form1
             Stop
             Exit Sub
         End If
+
+        Me.TimeInRangeChartLabel.Text = s_timeInRange.ToString
         With Me.TimeInRangeChart
             With .Series(NameOf(TimeInRangeSeries)).Points
                 .Clear()
@@ -2143,14 +2145,14 @@ Public Class Form1
             .Series(NameOf(TimeInRangeSeries))("PieStartAngle") = "270"
         End With
 
-        Dim averageSgStr As String = Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.averageSG))
         Me.AboveHighLimitValueLabel.Text = $"{s_aboveHyperLimit} %"
-        Me.AverageSGMessageLabel.Text = $"Average SG in {BgUnitsString}"
-        Me.AverageSGValueLabel.Text = If(ScalingNeeded, averageSgStr.TruncateSingleString(2), averageSgStr)
-        Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
-        Me.SerialNumberLabel.Text = Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.medicalDeviceSerialNumber))
-        Me.TimeInRangeChartLabel.Text = s_timeInRange.ToString
+        Me.AboveHighLimitMessageLabel.Text = $"Above {TirHighLimit(ScalingNeeded)} {BgUnitsString}"
         Me.TimeInRangeValueLabel.Text = $"{s_timeInRange} %"
+        Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
+        Me.BelowLowLimitMessageLabel.Text = $"Below {TirLowLimit(ScalingNeeded)} {BgUnitsString}"
+        Dim averageSgStr As String = Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.averageSG))
+        Me.AverageSGValueLabel.Text = If(ScalingNeeded, averageSgStr.TruncateSingleString(2), averageSgStr)
+        Me.AverageSGMessageLabel.Text = $"Average SG in {BgUnitsString}"
 
         ' Calculate Time in AutoMode
         If s_listOfAutoModeStatusMarkers.Count = 0 Then
@@ -2275,12 +2277,11 @@ Public Class Form1
         Me.UpdateAllSummarySeries()
         Me.UpdateDosingAndCarbs()
 
-        Me.AboveHighLimitMessageLabel.Text = $"Above {TirHighLimit(ScalingNeeded)} {BgUnitsString}"
-        Me.BelowLowLimitMessageLabel.Text = $"Below {TirLowLimit(ScalingNeeded)} {BgUnitsString}"
         Me.FullNameLabel.Text = $"{s_firstName} {Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastName))}"
         Dim modelNumber As String = Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber))
         Me.ModelLabel.Text = modelNumber
         Me.PumpNameLabel.Text = GetPumpName(modelNumber)
+        Me.SerialNumberLabel.Text = Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.medicalDeviceSerialNumber))
         Me.ReadingsLabel.Text = $"{s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288 Readings"
 
         Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
