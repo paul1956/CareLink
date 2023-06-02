@@ -183,7 +183,7 @@ Public Class CareLinkClient
     End Function
 
     ' Periodic data from CareLink Cloud
-    Private Function GetConnectDisplayMessage(MainForm As Form1, username As String, role As String, endpointUrl As String) As Dictionary(Of String, String)
+    Private Function GetConnectDisplayMessage(MainForm As Form1, username As String, role As String, endpointUrl As String, Optional patient_user_name As String = "") As Dictionary(Of String, String)
 
         Debug.Print("__getConnectDisplayMessage()")
         ' Build user Json for request
@@ -194,6 +194,9 @@ Public Class CareLinkClient
             {
                 "role",
                 role}}
+        If role = "carepartner" Then
+            userJson.Add("patientId", patient_user_name)
+        End If
         Dim recentData As Dictionary(Of String, String) = Me.GetData(MainForm, endpointUrl, userJson)
         If recentData IsNot Nothing Then
             CorrectTimeInRecentData(recentData)
@@ -364,7 +367,7 @@ Public Class CareLinkClient
                         MainForm,
                         _sessionProfile.username,
                         "carepartner",
-                        s_sessionCountrySettings.blePereodicDataEndpoint.Replace("v6", "v5"))
+                        s_sessionCountrySettings.blePereodicDataEndpoint, My.Settings.CareLinkPatientUserID)
                     Else
                         Return Me.GetConnectDisplayMessage(
                         MainForm,

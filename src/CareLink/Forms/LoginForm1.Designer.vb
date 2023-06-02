@@ -14,13 +14,13 @@ Partial Class LoginForm1
             MyBase.Dispose(disposing)
         End Try
     End Sub
-    Friend WithEvents LogoPictureBox As System.Windows.Forms.PictureBox
-    Friend WithEvents UsernameLabel As System.Windows.Forms.Label
-    Friend WithEvents PasswordLabel As System.Windows.Forms.Label
-    Friend WithEvents UsernameTextBox As System.Windows.Forms.TextBox
-    Friend WithEvents PasswordTextBox As System.Windows.Forms.TextBox
-    Friend WithEvents Ok_Button As System.Windows.Forms.Button
-    Friend WithEvents Cancel_Button As System.Windows.Forms.Button
+    Friend WithEvents LogoPictureBox As PictureBox
+    Friend WithEvents UsernameLabel As Label
+    Friend WithEvents PasswordLabel As Label
+    Friend WithEvents UsernameTextBox As TextBox
+    Friend WithEvents PasswordTextBox As TextBox
+    Friend WithEvents Ok_Button As Button
+    Friend WithEvents Cancel_Button As Button
 
     'Required by the Windows Form Designer
     Private components As System.ComponentModel.IContainer
@@ -31,174 +31,217 @@ Partial Class LoginForm1
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As ComponentModel.ComponentResourceManager = New ComponentModel.ComponentResourceManager(GetType(LoginForm1))
-        Me.LogoPictureBox = New PictureBox()
-        Me.UsernameLabel = New Label()
-        Me.PasswordLabel = New Label()
-        Me.UsernameTextBox = New TextBox()
-        Me.PasswordTextBox = New TextBox()
-        Me.Ok_Button = New Button()
-        Me.Cancel_Button = New Button()
-        Me.CountryComboBox = New ComboBox()
-        Me.RegionComboBox = New ComboBox()
-        Me.SelectRegionLabel = New Label()
-        Me.SelectCountryLabel = New Label()
-        Me.ShowPasswordCheckBox = New CheckBox()
-        Me.LoginStatus = New TextBox()
-        CType(Me.LogoPictureBox, ComponentModel.ISupportInitialize).BeginInit()
+        LogoPictureBox = New PictureBox()
+        UsernameLabel = New Label()
+        PasswordLabel = New Label()
+        UsernameTextBox = New TextBox()
+        PasswordTextBox = New TextBox()
+        Ok_Button = New Button()
+        Cancel_Button = New Button()
+        CountryComboBox = New ComboBox()
+        RegionComboBox = New ComboBox()
+        SelectRegionLabel = New Label()
+        SelectCountryLabel = New Label()
+        ShowPasswordCheckBox = New CheckBox()
+        LoginStatus = New TextBox()
+        Panel1 = New Panel()
+        PatientUserIDLabel = New Label()
+        PatientUserIDTextBox = New TextBox()
+        CarePartnerCheckBox = New CheckBox()
+        CType(LogoPictureBox, ComponentModel.ISupportInitialize).BeginInit()
+        Panel1.SuspendLayout()
         Me.SuspendLayout()
         ' 
         ' LogoPictureBox
         ' 
-        Me.LogoPictureBox.BackColor = Color.FromArgb(CByte(12), CByte(36), CByte(82))
-        Me.LogoPictureBox.Image = CType(resources.GetObject("LogoPictureBox.Image"), Image)
-        Me.LogoPictureBox.Location = New Point(0, 0)
-        Me.LogoPictureBox.Name = "LogoPictureBox"
-        Me.LogoPictureBox.Size = New Size(195, 224)
-        Me.LogoPictureBox.SizeMode = PictureBoxSizeMode.Zoom
-        Me.LogoPictureBox.TabIndex = 0
-        Me.LogoPictureBox.TabStop = False
+        LogoPictureBox.BackColor = Color.FromArgb(CByte(12), CByte(36), CByte(82))
+        LogoPictureBox.Image = CType(resources.GetObject("LogoPictureBox.Image"), Image)
+        LogoPictureBox.Location = New Point(0, 0)
+        LogoPictureBox.Name = "LogoPictureBox"
+        LogoPictureBox.Size = New Size(195, 224)
+        LogoPictureBox.SizeMode = PictureBoxSizeMode.Zoom
+        LogoPictureBox.TabIndex = 0
+        LogoPictureBox.TabStop = False
         ' 
         ' UsernameLabel
         ' 
-        Me.UsernameLabel.Anchor = AnchorStyles.Left
-        Me.UsernameLabel.Location = New Point(201, 6)
-        Me.UsernameLabel.Name = "UsernameLabel"
-        Me.UsernameLabel.Size = New Size(220, 23)
-        Me.UsernameLabel.TabIndex = 2
-        Me.UsernameLabel.Text = "User Name"
-        Me.UsernameLabel.TextAlign = ContentAlignment.MiddleLeft
+        UsernameLabel.Anchor = AnchorStyles.Left
+        UsernameLabel.Location = New Point(201, 24)
+        UsernameLabel.Name = "UsernameLabel"
+        UsernameLabel.Size = New Size(220, 23)
+        UsernameLabel.TabIndex = 2
+        UsernameLabel.Text = "User Name"
+        UsernameLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' PasswordLabel
         ' 
-        Me.PasswordLabel.Anchor = AnchorStyles.Left
-        Me.PasswordLabel.Location = New Point(201, 57)
-        Me.PasswordLabel.Name = "PasswordLabel"
-        Me.PasswordLabel.Size = New Size(220, 23)
-        Me.PasswordLabel.TabIndex = 4
-        Me.PasswordLabel.Text = "Password"
-        Me.PasswordLabel.TextAlign = ContentAlignment.MiddleLeft
+        PasswordLabel.Anchor = AnchorStyles.Left
+        PasswordLabel.Location = New Point(201, 75)
+        PasswordLabel.Name = "PasswordLabel"
+        PasswordLabel.Size = New Size(220, 23)
+        PasswordLabel.TabIndex = 4
+        PasswordLabel.Text = "Password"
+        PasswordLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' UsernameTextBox
         ' 
-        Me.UsernameTextBox.Anchor = AnchorStyles.Left
-        Me.UsernameTextBox.AutoCompleteMode = AutoCompleteMode.Suggest
-        Me.UsernameTextBox.AutoCompleteSource = AutoCompleteSource.RecentlyUsedList
-        Me.UsernameTextBox.Location = New Point(201, 30)
-        Me.UsernameTextBox.Name = "UsernameTextBox"
-        Me.UsernameTextBox.Size = New Size(220, 23)
-        Me.UsernameTextBox.TabIndex = 3
+        UsernameTextBox.Anchor = AnchorStyles.Left
+        UsernameTextBox.AutoCompleteMode = AutoCompleteMode.Suggest
+        UsernameTextBox.AutoCompleteSource = AutoCompleteSource.RecentlyUsedList
+        UsernameTextBox.Location = New Point(201, 48)
+        UsernameTextBox.Name = "UsernameTextBox"
+        UsernameTextBox.Size = New Size(220, 23)
+        UsernameTextBox.TabIndex = 3
         ' 
         ' PasswordTextBox
         ' 
-        Me.PasswordTextBox.Anchor = AnchorStyles.Left
-        Me.PasswordTextBox.Location = New Point(201, 79)
-        Me.PasswordTextBox.Name = "PasswordTextBox"
-        Me.PasswordTextBox.PasswordChar = "*"c
-        Me.PasswordTextBox.Size = New Size(159, 23)
-        Me.PasswordTextBox.TabIndex = 5
+        PasswordTextBox.Anchor = AnchorStyles.Left
+        PasswordTextBox.Location = New Point(201, 97)
+        PasswordTextBox.Name = "PasswordTextBox"
+        PasswordTextBox.PasswordChar = "*"c
+        PasswordTextBox.Size = New Size(159, 23)
+        PasswordTextBox.TabIndex = 5
         ' 
         ' Ok_Button
         ' 
-        Me.Ok_Button.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
-        Me.Ok_Button.DialogResult = DialogResult.OK
-        Me.Ok_Button.Location = New Point(235, 277)
-        Me.Ok_Button.Name = "Ok_Button"
-        Me.Ok_Button.Size = New Size(94, 23)
-        Me.Ok_Button.TabIndex = 0
-        Me.Ok_Button.Text = "&OK"
+        Ok_Button.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
+        Ok_Button.DialogResult = DialogResult.OK
+        Ok_Button.Location = New Point(235, 312)
+        Ok_Button.Name = "Ok_Button"
+        Ok_Button.Size = New Size(94, 23)
+        Ok_Button.TabIndex = 0
+        Ok_Button.Text = "&OK"
         ' 
         ' Cancel_Button
         ' 
-        Me.Cancel_Button.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
-        Me.Cancel_Button.DialogResult = DialogResult.Cancel
-        Me.Cancel_Button.Location = New Point(338, 277)
-        Me.Cancel_Button.Name = "Cancel_Button"
-        Me.Cancel_Button.Size = New Size(94, 23)
-        Me.Cancel_Button.TabIndex = 1
-        Me.Cancel_Button.Text = "&Cancel"
+        Cancel_Button.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
+        Cancel_Button.DialogResult = DialogResult.Cancel
+        Cancel_Button.Location = New Point(338, 312)
+        Cancel_Button.Name = "Cancel_Button"
+        Cancel_Button.Size = New Size(94, 23)
+        Cancel_Button.TabIndex = 1
+        Cancel_Button.Text = "&Cancel"
         ' 
         ' CountryComboBox
         ' 
-        Me.CountryComboBox.Anchor = AnchorStyles.Left
-        Me.CountryComboBox.DropDownStyle = ComboBoxStyle.DropDownList
-        Me.CountryComboBox.Enabled = False
-        Me.CountryComboBox.FormattingEnabled = True
-        Me.CountryComboBox.Location = New Point(201, 177)
-        Me.CountryComboBox.Name = "CountryComboBox"
-        Me.CountryComboBox.Size = New Size(220, 23)
-        Me.CountryComboBox.TabIndex = 10
+        CountryComboBox.Anchor = AnchorStyles.Left
+        CountryComboBox.DropDownStyle = ComboBoxStyle.DropDownList
+        CountryComboBox.Enabled = False
+        CountryComboBox.FormattingEnabled = True
+        CountryComboBox.Location = New Point(201, 195)
+        CountryComboBox.Name = "CountryComboBox"
+        CountryComboBox.Size = New Size(220, 23)
+        CountryComboBox.TabIndex = 10
         ' 
         ' RegionComboBox
         ' 
-        Me.RegionComboBox.Anchor = AnchorStyles.Left
-        Me.RegionComboBox.DropDownStyle = ComboBoxStyle.DropDownList
-        Me.RegionComboBox.FormattingEnabled = True
-        Me.RegionComboBox.Location = New Point(201, 128)
-        Me.RegionComboBox.Name = "RegionComboBox"
-        Me.RegionComboBox.Size = New Size(220, 23)
-        Me.RegionComboBox.TabIndex = 8
+        RegionComboBox.Anchor = AnchorStyles.Left
+        RegionComboBox.DropDownStyle = ComboBoxStyle.DropDownList
+        RegionComboBox.FormattingEnabled = True
+        RegionComboBox.Location = New Point(201, 146)
+        RegionComboBox.Name = "RegionComboBox"
+        RegionComboBox.Size = New Size(220, 23)
+        RegionComboBox.TabIndex = 8
         ' 
         ' SelectRegionLabel
         ' 
-        Me.SelectRegionLabel.Anchor = AnchorStyles.Left
-        Me.SelectRegionLabel.AutoSize = True
-        Me.SelectRegionLabel.Location = New Point(201, 110)
-        Me.SelectRegionLabel.Name = "SelectRegionLabel"
-        Me.SelectRegionLabel.Size = New Size(78, 15)
-        Me.SelectRegionLabel.TabIndex = 7
-        Me.SelectRegionLabel.Text = "Select Region"
+        SelectRegionLabel.Anchor = AnchorStyles.Left
+        SelectRegionLabel.AutoSize = True
+        SelectRegionLabel.Location = New Point(201, 128)
+        SelectRegionLabel.Name = "SelectRegionLabel"
+        SelectRegionLabel.Size = New Size(78, 15)
+        SelectRegionLabel.TabIndex = 7
+        SelectRegionLabel.Text = "Select Region"
         ' 
         ' SelectCountryLabel
         ' 
-        Me.SelectCountryLabel.Anchor = AnchorStyles.Left
-        Me.SelectCountryLabel.AutoSize = True
-        Me.SelectCountryLabel.Location = New Point(201, 160)
-        Me.SelectCountryLabel.Name = "SelectCountryLabel"
-        Me.SelectCountryLabel.Size = New Size(84, 15)
-        Me.SelectCountryLabel.TabIndex = 9
-        Me.SelectCountryLabel.Text = "Select Country"
+        SelectCountryLabel.Anchor = AnchorStyles.Left
+        SelectCountryLabel.AutoSize = True
+        SelectCountryLabel.Location = New Point(201, 178)
+        SelectCountryLabel.Name = "SelectCountryLabel"
+        SelectCountryLabel.Size = New Size(84, 15)
+        SelectCountryLabel.TabIndex = 9
+        SelectCountryLabel.Text = "Select Country"
         ' 
         ' ShowPasswordCheckBox
         ' 
-        Me.ShowPasswordCheckBox.AutoSize = True
-        Me.ShowPasswordCheckBox.Location = New Point(366, 81)
-        Me.ShowPasswordCheckBox.Name = "ShowPasswordCheckBox"
-        Me.ShowPasswordCheckBox.Size = New Size(55, 19)
-        Me.ShowPasswordCheckBox.TabIndex = 6
-        Me.ShowPasswordCheckBox.Text = "Show"
-        Me.ShowPasswordCheckBox.UseVisualStyleBackColor = True
+        ShowPasswordCheckBox.AutoSize = True
+        ShowPasswordCheckBox.Location = New Point(366, 81)
+        ShowPasswordCheckBox.Name = "ShowPasswordCheckBox"
+        ShowPasswordCheckBox.Size = New Size(55, 19)
+        ShowPasswordCheckBox.TabIndex = 6
+        ShowPasswordCheckBox.Text = "Show"
+        ShowPasswordCheckBox.UseVisualStyleBackColor = True
         ' 
         ' LoginStatus
         ' 
-        Me.LoginStatus.BackColor = SystemColors.Control
-        Me.LoginStatus.Location = New Point(4, 230)
-        Me.LoginStatus.Multiline = True
-        Me.LoginStatus.Name = "LoginStatus"
-        Me.LoginStatus.ScrollBars = ScrollBars.Vertical
-        Me.LoginStatus.Size = New Size(225, 80)
-        Me.LoginStatus.TabIndex = 12
-        Me.LoginStatus.Text = "Login Status: Unknown"
+        LoginStatus.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
+        LoginStatus.BackColor = SystemColors.Control
+        LoginStatus.Location = New Point(4, 230)
+        LoginStatus.Multiline = True
+        LoginStatus.Name = "LoginStatus"
+        LoginStatus.ScrollBars = ScrollBars.Vertical
+        LoginStatus.Size = New Size(225, 115)
+        LoginStatus.TabIndex = 12
+        LoginStatus.Text = "Login Status: Unknown"
+        ' 
+        ' Panel1
+        ' 
+        Panel1.Controls.Add(PatientUserIDLabel)
+        Panel1.Controls.Add(PatientUserIDTextBox)
+        Panel1.Controls.Add(CarePartnerCheckBox)
+        Panel1.Location = New Point(235, 230)
+        Panel1.Name = "Panel1"
+        Panel1.Size = New Size(197, 76)
+        Panel1.TabIndex = 13
+        ' 
+        ' PatientUserIDLabel
+        ' 
+        PatientUserIDLabel.AutoSize = True
+        PatientUserIDLabel.Location = New Point(4, 31)
+        PatientUserIDLabel.Name = "PatientUserIDLabel"
+        PatientUserIDLabel.Size = New Size(81, 15)
+        PatientUserIDLabel.TabIndex = 18
+        PatientUserIDLabel.Text = "Patient UserID"
+        ' 
+        ' PatientUserIDTextBox
+        ' 
+        PatientUserIDTextBox.Location = New Point(4, 47)
+        PatientUserIDTextBox.Name = "PatientUserIDTextBox"
+        PatientUserIDTextBox.Size = New Size(190, 23)
+        PatientUserIDTextBox.TabIndex = 17
+        ' 
+        ' CarePartnerCheckBox
+        ' 
+        CarePartnerCheckBox.AutoSize = True
+        CarePartnerCheckBox.Location = New Point(55, 6)
+        CarePartnerCheckBox.Name = "CarePartnerCheckBox"
+        CarePartnerCheckBox.Size = New Size(88, 19)
+        CarePartnerCheckBox.TabIndex = 16
+        CarePartnerCheckBox.Text = "CarePartner"
+        CarePartnerCheckBox.UseVisualStyleBackColor = True
         ' 
         ' LoginForm1
         ' 
-        Me.AcceptButton = Me.Ok_Button
+        Me.AcceptButton = Ok_Button
         Me.AutoScaleDimensions = New SizeF(7F, 15F)
         Me.AutoScaleMode = AutoScaleMode.Font
-        Me.CancelButton = Me.Cancel_Button
-        Me.ClientSize = New Size(442, 313)
-        Me.Controls.Add(Me.LoginStatus)
-        Me.Controls.Add(Me.ShowPasswordCheckBox)
-        Me.Controls.Add(Me.SelectCountryLabel)
-        Me.Controls.Add(Me.SelectRegionLabel)
-        Me.Controls.Add(Me.RegionComboBox)
-        Me.Controls.Add(Me.CountryComboBox)
-        Me.Controls.Add(Me.Cancel_Button)
-        Me.Controls.Add(Me.Ok_Button)
-        Me.Controls.Add(Me.PasswordTextBox)
-        Me.Controls.Add(Me.UsernameTextBox)
-        Me.Controls.Add(Me.PasswordLabel)
-        Me.Controls.Add(Me.UsernameLabel)
-        Me.Controls.Add(Me.LogoPictureBox)
+        Me.CancelButton = Cancel_Button
+        Me.ClientSize = New Size(442, 348)
+        Me.Controls.Add(Panel1)
+        Me.Controls.Add(LoginStatus)
+        Me.Controls.Add(ShowPasswordCheckBox)
+        Me.Controls.Add(SelectCountryLabel)
+        Me.Controls.Add(SelectRegionLabel)
+        Me.Controls.Add(RegionComboBox)
+        Me.Controls.Add(CountryComboBox)
+        Me.Controls.Add(Cancel_Button)
+        Me.Controls.Add(Ok_Button)
+        Me.Controls.Add(PasswordTextBox)
+        Me.Controls.Add(UsernameTextBox)
+        Me.Controls.Add(PasswordLabel)
+        Me.Controls.Add(UsernameLabel)
+        Me.Controls.Add(LogoPictureBox)
         Me.FormBorderStyle = FormBorderStyle.FixedDialog
         Me.MaximizeBox = False
         Me.MinimizeBox = False
@@ -206,7 +249,9 @@ Partial Class LoginForm1
         Me.SizeGripStyle = SizeGripStyle.Hide
         Me.StartPosition = FormStartPosition.CenterParent
         Me.Text = "Login"
-        CType(Me.LogoPictureBox, ComponentModel.ISupportInitialize).EndInit()
+        CType(LogoPictureBox, ComponentModel.ISupportInitialize).EndInit()
+        Panel1.ResumeLayout(False)
+        Panel1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
     End Sub
@@ -219,4 +264,8 @@ Partial Class LoginForm1
     Friend WithEvents LoginStatus As TextBox
     Friend WithEvents SelectCultureLabel As Label
     Friend WithEvents CultureComboBox As ComboBox
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents PatientUserIDLabel As Label
+    Friend WithEvents PatientUserIDTextBox As TextBox
+    Friend WithEvents CarePartnerCheckBox As CheckBox
 End Class

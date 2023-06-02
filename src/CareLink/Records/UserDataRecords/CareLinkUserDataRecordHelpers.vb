@@ -15,8 +15,9 @@ Public Module CareLinkUserDataRecordHelpers
             NameOf(My.Settings.CareLinkPassword),
             NameOf(My.Settings.CountryCode),
             NameOf(My.Settings.UseLocalTimeZone),
-            NameOf(My.Settings.AutoLogin)
-         }
+            NameOf(My.Settings.AutoLogin),
+            NameOf(My.Settings.CarelinkPartner),
+            NameOf(My.Settings.CareLinkPatientUserID)}
 
     Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
         Dim cellStyle As New DataGridViewCellStyle
@@ -24,9 +25,11 @@ Public Module CareLinkUserDataRecordHelpers
         Select Case columnName
             Case NameOf(CareLinkUserDataRecord.ID),
                  NameOf(CareLinkUserDataRecord.CareLinkUserName),
-                 NameOf(CareLinkUserDataRecord.CareLinkPassword)
+                 NameOf(CareLinkUserDataRecord.CareLinkPassword),
+                 NameOf(CareLinkUserDataRecord.CareLinkPatientUserID)
                 cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
             Case NameOf(CareLinkUserDataRecord.AutoLogin),
+                 NameOf(CareLinkUserDataRecord.CareLinkPartner),
                  NameOf(CareLinkUserDataRecord.CountryCode),
                  NameOf(CareLinkUserDataRecord.UseLocalTimeZone),
                  "DeleteRow"

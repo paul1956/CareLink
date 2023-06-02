@@ -22,6 +22,8 @@ Public Class Form1
     Friend WithEvents DgvCareLinkUsersDeleteRow As DataGridViewDisableButtonColumn
     Friend WithEvents DgvCareLinkUsersUseLocalTimeZone As DataGridViewCheckBoxColumn
     Friend WithEvents DgvCareLinkUsersUserID As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCareLinkUsersCareLinkPartner As DataGridViewCheckBoxColumn
+    Friend WithEvents DgvCareLinkPatientUserID As DataGridViewTextBoxColumn
 
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
@@ -1340,7 +1342,23 @@ Public Class Form1
             .Width = 65
         }
 
-        dgv.Columns.AddRange(New DataGridViewColumn() {Me.DgvCareLinkUsersUserID, Me.DgvCareLinkUsersDeleteRow, Me.DgvCareLinkUsersCareLinkUserName, Me.DgvCareLinkUsersCareLinkPassword, Me.DgvCareLinkUsersCountryCode, Me.DgvCareLinkUsersUseLocalTimeZone, Me.DgvCareLinkUsersAutoLogin})
+        Me.DgvCareLinkUsersCareLinkPartner = New DataGridViewCheckBoxColumn With {
+            .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            .DataPropertyName = "CareLinkPartner",
+            .HeaderText = $"CareLink Partner",
+            .Name = "DgvCareLinkUsersCareLinkPartner",
+            .Width = 86
+        }
+
+        Me.DgvCareLinkPatientUserID = New DataGridViewTextBoxColumn With {
+            .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            .DataPropertyName = "CareLinkPatientUserID",
+            .HeaderText = "Carelink Patient UserID",
+            .Name = "DgvCareLinkPatientUserID",
+            .Width = 97
+        }
+
+        dgv.Columns.AddRange(New DataGridViewColumn() {Me.DgvCareLinkUsersUserID, Me.DgvCareLinkUsersDeleteRow, Me.DgvCareLinkUsersCareLinkUserName, Me.DgvCareLinkUsersCareLinkPassword, Me.DgvCareLinkUsersCountryCode, Me.DgvCareLinkUsersUseLocalTimeZone, Me.DgvCareLinkUsersAutoLogin, Me.DgvCareLinkUsersCareLinkPartner, Me.DgvCareLinkPatientUserID})
         dgv.DataSource = Me.CareLinkUserDataRecordBindingSource
     End Sub
 

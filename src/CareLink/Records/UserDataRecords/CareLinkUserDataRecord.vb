@@ -24,7 +24,9 @@ Public Class CareLinkUserDataRecord
             ._careLinkPassword = If(My.Settings.CareLinkPassword, ""),
             ._countryCode = If(My.Settings.CountryCode, ""),
              ._useLocalTimeZone = My.Settings.UseLocalTimeZone,
-            ._autoLogin = My.Settings.AutoLogin
+            ._autoLogin = My.Settings.AutoLogin,
+            ._careLinkPartner = My.Settings.CarelinkPartner,
+            ._careLinkPatientUserID = If(._careLinkPartner, My.Settings.CareLinkPatientUserID, "")
         }
     End Sub
 
@@ -50,6 +52,18 @@ Public Class CareLinkUserDataRecord
         End Set
     End Property
 
+    <DisplayName("CareLink Partner")>
+    <Column(Order:=6, TypeName:=NameOf([Boolean]))>
+    Public Property CareLinkPartner As Boolean
+        Get
+            Return _userData._careLinkPartner
+        End Get
+        Set
+            _userData._careLinkPartner = Value
+            Me.OnCareLinkUserChanged()
+        End Set
+    End Property
+
     <DisplayName("CareLink Password")>
     <Column(Order:=2, TypeName:=NameOf([String]))>
     Public Property CareLinkPassword As String
@@ -58,6 +72,18 @@ Public Class CareLinkUserDataRecord
         End Get
         Set
             _userData._careLinkPassword = Value
+            Me.OnCareLinkUserChanged()
+        End Set
+    End Property
+
+    <DisplayName("CareLink Patient UserID")>
+    <Column(Order:=7, TypeName:=NameOf([String]))>
+    Public Property CareLinkPatientUserID As String
+        Get
+            Return _userData._careLinkPatientUserID
+        End Get
+        Set
+            _userData._careLinkPatientUserID = Value
             Me.OnCareLinkUserChanged()
         End Set
     End Property
@@ -106,16 +132,8 @@ Public Class CareLinkUserDataRecord
         End Set
     End Property
 
-    Private Sub OnCareLinkUserChanged()
-        If Not _inTxn And (Parent IsNot Nothing) Then
-            Parent.CareLinkUserChanged(Me)
-        End If
-    End Sub
-
     Friend Function ToCsvString() As String
-        Return $"{Me.CareLinkUserName},{Me.CareLinkPassword}," &
-               $"{Me.CountryCode},{Me.UseLocalTimeZone}," &
-                $"{Me.AutoLogin}"
+        Return $"{Me.CareLinkUserName},{Me.CareLinkPassword},{Me.CountryCode},{Me.UseLocalTimeZone},{Me.AutoLogin},{Me.CareLinkPartner},{Me.CareLinkPatientUserID}"
     End Function
 
     Friend Sub UpdateSettings()
@@ -124,6 +142,8 @@ Public Class CareLinkUserDataRecord
         My.Settings.CountryCode = _userData._countryCode
         My.Settings.UseLocalTimeZone = _userData._useLocalTimeZone
         My.Settings.AutoLogin = _userData._autoLogin
+        My.Settings.CarelinkPartner = _userData._careLinkPartner
+        My.Settings.CareLinkPatientUserID = _userData._careLinkPatientUserID
     End Sub
 
     ''' <summary>
@@ -143,13 +163,26 @@ Public Class CareLinkUserDataRecord
                 Me.UseLocalTimeZone = CBool(value)
             Case NameOf(AutoLogin)
                 Me.AutoLogin = CBool(value)
+            Case NameOf(CareLinkPartner)
+                Me.CareLinkPartner = CBool(value)
+            Case NameOf(CareLinkPatientUserID)
+                Me.CareLinkPatientUserID = value
             Case Else
+                Stop
         End Select
+    End Sub
+
+    Private Sub OnCareLinkUserChanged()
+        If Not _inTxn And (Parent IsNot Nothing) Then
+            Parent.CareLinkUserChanged(Me)
+        End If
     End Sub
 
     Public Structure CareLinkUserData
         Friend _autoLogin As Boolean
+        Friend _careLinkPartner As Boolean
         Friend _careLinkPassword As String
+        Friend _careLinkPatientUserID As String
         Friend _careLinkUserName As String
         Friend _countryCode As String
         Friend _iD As Integer
@@ -195,7 +228,9 @@ Public Class CareLinkUserDataRecord
                Me.CareLinkPassword = record.CareLinkPassword AndAlso
                Me.CareLinkUserName = record.CareLinkUserName AndAlso
                Me.CountryCode = record.CountryCode AndAlso
-               Me.UseLocalTimeZone = record.UseLocalTimeZone
+               Me.UseLocalTimeZone = record.UseLocalTimeZone AndAlso
+               Me.CareLinkPartner = record.CareLinkPartner AndAlso
+               Me.CareLinkPatientUserID = record.CareLinkPatientUserID
     End Function
 
     Public Overrides Function GetHashCode() As Integer
