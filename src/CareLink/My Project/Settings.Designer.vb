@@ -129,12 +129,12 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
-        Public Property CarelinkPartner() As Boolean
+        Public Property CareLinkPartner() As Boolean
             Get
-                Return CType(Me("CarelinkPartner"),Boolean)
+                Return CType(Me("CareLinkPartner"), Boolean)
             End Get
             Set
-                Me("CarelinkPartner") = value
+                Me("CareLinkPartner") = Value
             End Set
         End Property
         

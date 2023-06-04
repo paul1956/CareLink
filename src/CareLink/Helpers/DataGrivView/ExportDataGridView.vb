@@ -10,35 +10,43 @@ Imports ClosedXML.Excel
 Friend Module ExportDataGridView
 
     <Extension>
-    Public Sub CopyToClipboard(dgv As DataGridView, copyHeader As Boolean)
-
-        Dim clipboard_string As New StringBuilder()
-        If copyHeader Then
-            For i As Integer = 0 To dgv.Columns.Count - 1
-                Dim dgvColumn As DataGridViewColumn = dgv.Columns(i)
-                If dgvColumn.Visible Then
-                    Dim value As String = dgvColumn.Name
-                    If i = (dgv.Columns.Count - 1) Then
-                        clipboard_string.Append($"{value}{s_environmentNewLine}")
-                    Else
-                        clipboard_string.Append($"{value}{vbTab}")
-                    End If
-                End If
-            Next i
-        End If
+    Private Function AnyCellSelected(dgv As DataGridView, col As Integer) As Boolean
+        Dim anySelected As Boolean = False
         For Each row As DataGridViewRow In dgv.Rows
-            For i As Integer = 0 To row.Cells.Count - 1
-                If Not dgv.Columns(i).Visible Then Continue For
-                Dim value As String = row.Cells(i).Value.ToString
-                If i = (row.Cells.Count - 1) Then
-                    clipboard_string.Append($"{value}{s_environmentNewLine}")
-                Else
-                    clipboard_string.Append($"{value}{vbTab}")
-                End If
-            Next i
-        Next row
+            If row.Cells(col).Selected Then
+                anySelected = True
+                Exit For
+            End If
+        Next
 
-        Clipboard.SetText(clipboard_string.ToString())
+        Return anySelected
+    End Function
+
+    <Extension>
+    Public Sub CopyToClipboard(dgv As DataGridView, copyHeaders As DataGridViewClipboardCopyMode, copyAll As Boolean)
+        If copyAll OrElse dgv.GetCellCount(DataGridViewElementStates.Selected) > 0 Then
+            Dim dataGridViewCells As List(Of DataGridViewCell) = dgv.SelectedCells.Cast(Of DataGridViewCell).ToList()
+            Dim colLow As Integer = If(copyAll, 0, dataGridViewCells.Min(Function(c As DataGridViewCell) c.ColumnIndex))
+            Dim colHigh As Integer = If(copyAll, dgv.Columns.Count - 1, dataGridViewCells.Max(Function(c As DataGridViewCell) c.ColumnIndex))
+            Dim rowLow As Integer = If(copyAll, 0, dataGridViewCells.Min(Function(c As DataGridViewCell) c.RowIndex))
+            Dim rowHigh As Integer = If(copyAll, dgv.RowCount - 1, dataGridViewCells.Max(Function(c As DataGridViewCell) c.RowIndex))
+            Dim clipboard_string As New StringBuilder()
+            If copyHeaders <> DataGridViewClipboardCopyMode.EnableWithoutHeaderText Then
+                For col As Integer = colLow To colHigh
+                    If Not (dgv.Columns(col).Visible AndAlso (copyAll OrElse dgv.AnyCellSelected(col))) Then Continue For
+                    clipboard_string.Append($"{dgv.Columns(col).HeaderText.Replace(Environment.NewLine, "")}{If(col = colHigh, s_environmentNewLine, vbTab)}")
+                Next col
+            End If
+            For rowIndex As Integer = rowLow To rowHigh
+                Dim row As DataGridViewRow = dgv.Rows(rowIndex)
+                For col As Integer = colLow To colHigh
+                    If Not (dgv.Columns(col).Visible AndAlso (copyAll OrElse dgv.AnyCellSelected(col))) Then Continue For
+                    Dim currentCell As DataGridViewCell = row.Cells(col)
+                    clipboard_string.Append($"{If(copyAll OrElse currentCell.Selected, currentCell.Value.ToString, "")}{If(col = colHigh, s_environmentNewLine, vbTab)}")
+                Next col
+            Next
+            Clipboard.SetText(clipboard_string.ToString())
+        End If
     End Sub
 
     <Extension>

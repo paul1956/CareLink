@@ -84,7 +84,6 @@ Public Module DataGridViewExtensions
             .Location = New Point(3, 3)
             .ReadOnly = True
             .RowTemplate.Height = 25
-            .SelectionMode = DataGridViewSelectionMode.CellSelect
             .TabIndex = 0
         End With
     End Sub

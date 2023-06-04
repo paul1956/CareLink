@@ -25,7 +25,7 @@ Public Class CareLinkUserDataRecord
             ._countryCode = If(My.Settings.CountryCode, ""),
              ._useLocalTimeZone = My.Settings.UseLocalTimeZone,
             ._autoLogin = My.Settings.AutoLogin,
-            ._careLinkPartner = My.Settings.CarelinkPartner,
+            ._careLinkPartner = My.Settings.CareLinkPartner,
             ._careLinkPatientUserID = If(._careLinkPartner, My.Settings.CareLinkPatientUserID, "")
         }
     End Sub
@@ -39,6 +39,64 @@ Public Class CareLinkUserDataRecord
             Me.UpdateValue(headerRow(e.Index), value)
         Next
     End Sub
+
+#If True Then
+
+    <DisplayName("Id")>
+    <Column(Order:=0, TypeName:=NameOf([Int32]))>
+    Public ReadOnly Property ID() As Integer
+        Get
+            Return _userData._iD
+        End Get
+    End Property
+
+    <DisplayName("CareLink UserName")>
+    <Column(Order:=1, TypeName:=NameOf([String]))>
+    Public Property CareLinkUserName As String
+        Get
+            Return _userData._careLinkUserName
+        End Get
+        Set
+            _userData._careLinkUserName = Value
+            Me.OnCareLinkUserChanged()
+        End Set
+    End Property
+
+    <DisplayName("CareLink Password")>
+    <Column(Order:=2, TypeName:=NameOf([String]))>
+    Public Property CareLinkPassword As String
+        Get
+            Return _userData._careLinkPassword
+        End Get
+        Set
+            _userData._careLinkPassword = Value
+            Me.OnCareLinkUserChanged()
+        End Set
+    End Property
+
+    <DisplayName("Country Code")>
+    <Column(Order:=3, TypeName:=NameOf([String]))>
+    Public Property CountryCode As String
+        Get
+            Return _userData._countryCode
+        End Get
+        Set
+            _userData._countryCode = Value
+            Me.OnCareLinkUserChanged()
+        End Set
+    End Property
+
+    <DisplayName("Use Local Time Zone")>
+    <Column(Order:=4, TypeName:=NameOf([Boolean]))>
+    Public Property UseLocalTimeZone As Boolean
+        Get
+            Return _userData._useLocalTimeZone
+        End Get
+        Set
+            _userData._useLocalTimeZone = Value
+            Me.OnCareLinkUserChanged()
+        End Set
+    End Property
 
     <DisplayName("Auto Login")>
     <Column(Order:=5, TypeName:=NameOf([Boolean]))>
@@ -64,18 +122,6 @@ Public Class CareLinkUserDataRecord
         End Set
     End Property
 
-    <DisplayName("CareLink Password")>
-    <Column(Order:=2, TypeName:=NameOf([String]))>
-    Public Property CareLinkPassword As String
-        Get
-            Return _userData._careLinkPassword
-        End Get
-        Set
-            _userData._careLinkPassword = Value
-            Me.OnCareLinkUserChanged()
-        End Set
-    End Property
-
     <DisplayName("CareLink Patient UserID")>
     <Column(Order:=7, TypeName:=NameOf([String]))>
     Public Property CareLinkPatientUserID As String
@@ -88,49 +134,13 @@ Public Class CareLinkUserDataRecord
         End Set
     End Property
 
-    <DisplayName("CareLink UserName")>
-    <Column(Order:=1, TypeName:=NameOf([String]))>
-    Public Property CareLinkUserName As String
-        Get
-            Return _userData._careLinkUserName
-        End Get
-        Set
-            _userData._careLinkUserName = Value
-            Me.OnCareLinkUserChanged()
-        End Set
-    End Property
+#End If
 
-    <DisplayName("Country Code")>
-    <Column(Order:=3, TypeName:=NameOf([String]))>
-    Public Property CountryCode As String
-        Get
-            Return _userData._countryCode
-        End Get
-        Set
-            _userData._countryCode = Value
-            Me.OnCareLinkUserChanged()
-        End Set
-    End Property
-
-    <DisplayName("Id")>
-    <Column(Order:=0, TypeName:=NameOf([Int32]))>
-    Public ReadOnly Property ID() As Integer
-        Get
-            Return _userData._iD
-        End Get
-    End Property
-
-    <DisplayName("Use Local Time Zone")>
-    <Column(Order:=4, TypeName:=NameOf([Boolean]))>
-    Public Property UseLocalTimeZone As Boolean
-        Get
-            Return _userData._useLocalTimeZone
-        End Get
-        Set
-            _userData._useLocalTimeZone = Value
-            Me.OnCareLinkUserChanged()
-        End Set
-    End Property
+    Private Sub OnCareLinkUserChanged()
+        If Not _inTxn And (Parent IsNot Nothing) Then
+            Parent.CareLinkUserChanged(Me)
+        End If
+    End Sub
 
     Friend Function ToCsvString() As String
         Return $"{Me.CareLinkUserName},{Me.CareLinkPassword},{Me.CountryCode},{Me.UseLocalTimeZone},{Me.AutoLogin},{Me.CareLinkPartner},{Me.CareLinkPatientUserID}"
@@ -142,7 +152,7 @@ Public Class CareLinkUserDataRecord
         My.Settings.CountryCode = _userData._countryCode
         My.Settings.UseLocalTimeZone = _userData._useLocalTimeZone
         My.Settings.AutoLogin = _userData._autoLogin
-        My.Settings.CarelinkPartner = _userData._careLinkPartner
+        My.Settings.CareLinkPartner = _userData._careLinkPartner
         My.Settings.CareLinkPatientUserID = _userData._careLinkPatientUserID
     End Sub
 
@@ -172,13 +182,7 @@ Public Class CareLinkUserDataRecord
         End Select
     End Sub
 
-    Private Sub OnCareLinkUserChanged()
-        If Not _inTxn And (Parent IsNot Nothing) Then
-            Parent.CareLinkUserChanged(Me)
-        End If
-    End Sub
-
-    Public Structure CareLinkUserData
+    Private Structure CareLinkUserData
         Friend _autoLogin As Boolean
         Friend _careLinkPartner As Boolean
         Friend _careLinkPassword As String

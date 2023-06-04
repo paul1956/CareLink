@@ -54,10 +54,12 @@ Friend Module LimitsRecordHelpers
     End Sub
 
     Friend Sub AttachHandlers(dgv As DataGridView)
+        RemoveHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithExcel
         RemoveHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
         RemoveHandler dgv.DataError, AddressOf DataGridView_DataError
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
         AddHandler dgv.DataError, AddressOf DataGridView_DataError
+        AddHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithExcel
     End Sub
 
 End Module

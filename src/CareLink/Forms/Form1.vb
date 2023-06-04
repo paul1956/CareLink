@@ -15,15 +15,15 @@ Imports DataGridViewColumnControls
 Imports TableLayputPanelTop
 
 Public Class Form1
+    Friend WithEvents DgvCareLinkPatientUserID As DataGridViewTextBoxColumn
     Friend WithEvents DgvCareLinkUsersAutoLogin As DataGridViewCheckBoxColumn
+    Friend WithEvents DgvCareLinkUsersCareLinkPartner As DataGridViewCheckBoxColumn
     Friend WithEvents DgvCareLinkUsersCareLinkPassword As DataGridViewTextBoxColumn
     Friend WithEvents DgvCareLinkUsersCareLinkUserName As DataGridViewTextBoxColumn
     Friend WithEvents DgvCareLinkUsersCountryCode As DataGridViewTextBoxColumn
     Friend WithEvents DgvCareLinkUsersDeleteRow As DataGridViewDisableButtonColumn
     Friend WithEvents DgvCareLinkUsersUseLocalTimeZone As DataGridViewCheckBoxColumn
     Friend WithEvents DgvCareLinkUsersUserID As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCareLinkUsersCareLinkPartner As DataGridViewCheckBoxColumn
-    Friend WithEvents DgvCareLinkPatientUserID As DataGridViewTextBoxColumn
 
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
@@ -760,42 +760,97 @@ Public Class Form1
 
 #Region "DataGridView Events"
 
-    Private WithEvents DgvCopyMenuStrip As New ContextMenuStrip
+#Region "Dgv Menu Events"
+
+    Private WithEvents DgvCopyWithExcelMenuStrip As New ContextMenuStrip
+    Private WithEvents DgvCopyWithoutExcelMenuStrip As New ContextMenuStrip
 
     Private Shared Function GetDataGridView(sender As Object) As DataGridView
         Dim contextStrip As ContextMenuStrip = CType(CType(sender, ToolStripMenuItem).GetCurrentParent, ContextMenuStrip)
         Return CType(contextStrip.SourceControl, DataGridView)
     End Function
 
-    Private Sub Dgv_CellContextMenuStripNeeded(sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs) Handles _
-                        DgvAutoBasalDelivery.CellContextMenuStripNeeded,
-                        DgvInsulin.CellContextMenuStripNeeded,
-                        DgvMeal.CellContextMenuStripNeeded,
-                        DgvSGs.CellContextMenuStripNeeded
-
-        If e.RowIndex >= 0 Then
-            e.ContextMenuStrip = Me.DgvCopyMenuStrip
-        End If
-
+    Private Sub DgvCopySelectedCellsToClipBoardWithHeaders(sender As Object, e As EventArgs)
+        GetDataGridView(sender).CopyToClipboard(DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText, False)
     End Sub
 
-    Private Sub DgvCopyMenuStrip_Opening(sender As Object, e As CancelEventArgs) Handles DgvCopyMenuStrip.Opening
-        ' Acquire references to the owning control and item.
+    Private Sub DgvCopySelectedCellsToClipBoardWithoutHeaders(sender As Object, e As EventArgs)
+        GetDataGridView(sender).CopyToClipboard(DataGridViewClipboardCopyMode.EnableWithoutHeaderText, False)
+    End Sub
 
-        Me.DgvCopyMenuStrip.Tag = CType(Me.DgvCopyMenuStrip.SourceControl, DataGridView)
+    Private Sub DgvCopyTableToClipBoardWithHeaders(sender As Object, e As EventArgs)
+        GetDataGridView(sender).CopyToClipboard(DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText, True)
+    End Sub
+
+    Private Sub DgvCopyTableToClipBoardWithoutHeaders(sender As Object, e As EventArgs)
+        GetDataGridView(sender).CopyToClipboard(DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText, False)
+    End Sub
+
+    Private Sub DgvCopyWithExcelMenuStrip_Opening(sender As Object, e As CancelEventArgs) Handles DgvCopyWithExcelMenuStrip.Opening
+        ' Acquire references to the owning control and item.
+        Dim mnuStrip As ContextMenuStrip = CType(sender, ContextMenuStrip)
+        mnuStrip.Tag = CType(mnuStrip.SourceControl, DataGridView)
 
         ' Clear the ContextMenuStrip control's Items collection.
-        Me.DgvCopyMenuStrip.Items.Clear()
+        mnuStrip.Items.Clear()
 
         ' Populate the ContextMenuStrip control with its default items.
-        Me.DgvCopyMenuStrip.Items.Add("Copy with Header", My.Resources.Copy, AddressOf Me.DgvCopyToClipBoardWithHeader)
-        Me.DgvCopyMenuStrip.Items.Add("Copy without Header", My.Resources.Copy, AddressOf Me.DgvCopyToClipBoardWithoutHeader)
-        Me.DgvCopyMenuStrip.Items.Add("Save To Excel", My.Resources.ExportData, AddressOf Me.DgvExportToExcel)
+        mnuStrip.Items.Add("Copy with Header", My.Resources.Copy, AddressOf Me.DgvCopyTableToClipBoardWithHeaders)
+        mnuStrip.Items.Add("Copy without Header", My.Resources.Copy, AddressOf Me.DgvCopyTableToClipBoardWithoutHeaders)
+        mnuStrip.Items.Add("Save To Excel", My.Resources.ExportData, AddressOf Me.DgvExportToExcel)
 
         ' Set Cancel to false.
         ' It is optimized to true based on empty entry.
         e.Cancel = False
     End Sub
+
+    Private Sub DgvCopyWithoutExcelMenuStrip_Opening(sender As Object, e As CancelEventArgs) Handles DgvCopyWithoutExcelMenuStrip.Opening
+        ' Acquire references to the owning control and item.
+        Dim mnuStrip As ContextMenuStrip = CType(sender, ContextMenuStrip)
+        mnuStrip.Tag = CType(Me.DgvCopyWithExcelMenuStrip.SourceControl, DataGridView)
+
+        ' Clear the ContextMenuStrip control's Items collection.
+        mnuStrip.Items.Clear()
+
+        ' Populate the ContextMenuStrip control with its default items.
+        mnuStrip.Items.Add("Copy Selected Cells with Header", My.Resources.Copy, AddressOf Me.DgvCopySelectedCellsToClipBoardWithHeaders)
+        mnuStrip.Items.Add("Copy Selected Cells without headers", My.Resources.Copy, AddressOf Me.DgvCopySelectedCellsToClipBoardWithoutHeaders)
+
+        ' Set Cancel to false.
+        ' It is optimized to true based on empty entry.
+        e.Cancel = False
+    End Sub
+
+    Private Sub DgvExportToExcel(sender As Object, e As EventArgs)
+        GetDataGridView(sender).ExportToExcelWithFormatting()
+    End Sub
+
+    Public Sub Dgv_CellContextMenuStripNeededWithExcel(sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs) Handles _
+                                                        DgvAutoBasalDelivery.CellContextMenuStripNeeded,
+                                                        DgvInsulin.CellContextMenuStripNeeded,
+                                                        DgvMeal.CellContextMenuStripNeeded,
+                                                        DgvSGs.CellContextMenuStripNeeded
+
+        If e.RowIndex >= 0 Then
+            e.ContextMenuStrip = Me.DgvCopyWithExcelMenuStrip
+        End If
+
+    End Sub
+
+    Public Sub Dgv_CellContextMenuStripNeededWithoutExcel(sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs) Handles _
+                                                            DgvCareLinkUsers.CellContextMenuStripNeeded,
+                                                            DgvSessionProfile.CellContextMenuStripNeeded,
+                                                            DgvSummary.CellContextMenuStripNeeded
+
+        If e.RowIndex >= 0 AndAlso CType(sender, DataGridView).SelectedCells.Count > 0 Then
+            e.ContextMenuStrip = Me.DgvCopyWithoutExcelMenuStrip
+        End If
+
+    End Sub
+
+#End Region 'Dgv Menu Events
+
+#Region "Dgv Country Pg2 Events"
 
     Private Sub DgvCountryDataPg2_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvCountryDataPg2.CellClick
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -828,17 +883,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub DgvExportToExcel(sender As Object, e As EventArgs)
-        GetDataGridView(sender).ExportToExcelWithFormatting()
-    End Sub
-
-    Private Sub DgvCopyToClipBoardWithHeader(sender As Object, e As EventArgs)
-        GetDataGridView(sender).CopyToClipboard(True)
-    End Sub
-
-    Private Sub DgvCopyToClipBoardWithoutHeader(sender As Object, e As EventArgs)
-        GetDataGridView(sender).CopyToClipboard(False)
-    End Sub
+#End Region ' Dgv Country Pg2 Events
 
 #Region "Dgv Summary Events"
 
@@ -1345,7 +1390,7 @@ Public Class Form1
         Me.DgvCareLinkUsersCareLinkPartner = New DataGridViewCheckBoxColumn With {
             .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
             .DataPropertyName = "CareLinkPartner",
-            .HeaderText = $"CareLink Partner",
+            .HeaderText = $"CareLink{TmChar} Partner",
             .Name = "DgvCareLinkUsersCareLinkPartner",
             .Width = 86
         }
@@ -1353,7 +1398,7 @@ Public Class Form1
         Me.DgvCareLinkPatientUserID = New DataGridViewTextBoxColumn With {
             .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
             .DataPropertyName = "CareLinkPatientUserID",
-            .HeaderText = "Carelink Patient UserID",
+            .HeaderText = $"CareLink{TmChar} Patient UserID",
             .Name = "DgvCareLinkPatientUserID",
             .Width = 97
         }

@@ -16,7 +16,7 @@ Public Module CareLinkUserDataRecordHelpers
             NameOf(My.Settings.CountryCode),
             NameOf(My.Settings.UseLocalTimeZone),
             NameOf(My.Settings.AutoLogin),
-            NameOf(My.Settings.CarelinkPartner),
+            NameOf(My.Settings.CareLinkPartner),
             NameOf(My.Settings.CareLinkPatientUserID)}
 
     Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle

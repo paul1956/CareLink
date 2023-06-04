@@ -23,9 +23,10 @@ Public Class LoginForm1
     End Sub
 
     Private Sub CarePartnerCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles CarePartnerCheckBox.CheckedChanged
-        Me.PatientUserIDLabel.Visible = Me.CarePartnerCheckBox.Checked
-        Me.PatientUserIDTextBox.Visible = Me.CarePartnerCheckBox.Checked
-        If Me.CarePartnerCheckBox.Checked AndAlso String.IsNullOrWhiteSpace(Me.PatientUserIDTextBox.Text) Then
+        Dim careLinkPartner As Boolean = Me.CarePartnerCheckBox.Checked
+        Me.PatientUserIDLabel.Visible = careLinkPartner
+        Me.PatientUserIDTextBox.Visible = careLinkPartner
+        If careLinkPartner AndAlso String.IsNullOrWhiteSpace(Me.PatientUserIDTextBox.Text) Then
             Me.PatientUserIDTextBox.Focus()
         End If
     End Sub
@@ -86,7 +87,10 @@ Public Class LoginForm1
         Me.CountryComboBox.Text = My.Settings.CountryCode.GetCountryFromCode
 
         Me.PatientUserIDTextBox.Text = My.Settings.CareLinkPatientUserID
-        Me.CarePartnerCheckBox.Checked = My.Settings.CarelinkPartner
+        Dim careLinkPartner As Boolean = My.Settings.CareLinkPartner
+        Me.PatientUserIDLabel.Visible = careLinkPartner
+        Me.PatientUserIDTextBox.Visible = careLinkPartner
+        Me.CarePartnerCheckBox.Checked = careLinkPartner
     End Sub
 
     Private Sub LoginForm1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
@@ -159,7 +163,7 @@ Public Class LoginForm1
                 My.Settings.CareLinkUserName = Me.UsernameTextBox.Text
                 My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
                 My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
-                My.Settings.CarelinkPartner = Me.CarePartnerCheckBox.Checked
+                My.Settings.CareLinkPartner = Me.CarePartnerCheckBox.Checked
                 My.Settings.Save()
                 If Not s_allUserSettingsData.TryGetValue(Me.UsernameTextBox.Text, Me.LoggedOnUser) Then
                     s_allUserSettingsData.SaveAllUserRecords(New CareLinkUserDataRecord(s_allUserSettingsData), NameOf(CareLinkUserDataRecord.CareLinkUserName), Me.UsernameTextBox.Text)

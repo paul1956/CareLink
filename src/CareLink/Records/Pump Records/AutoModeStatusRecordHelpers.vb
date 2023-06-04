@@ -31,10 +31,6 @@ Friend Module AutoModeStatusRecordHelpers
         End With
     End Sub
 
-    Private Sub DataGridView_ColumnHeaderCellChanged(sender As Object, e As DataGridViewColumnEventArgs)
-        Stop
-    End Sub
-
     Private Sub DataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs)
         Stop
     End Sub
@@ -42,11 +38,9 @@ Friend Module AutoModeStatusRecordHelpers
     Friend Sub AttachHandlers(dgv As DataGridView)
         RemoveHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
         RemoveHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
-        RemoveHandler dgv.ColumnHeaderCellChanged, AddressOf DataGridView_ColumnHeaderCellChanged
         RemoveHandler dgv.DataError, AddressOf DataGridView_DataError
         AddHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
-        AddHandler dgv.ColumnHeaderCellChanged, AddressOf DataGridView_ColumnHeaderCellChanged
         AddHandler dgv.DataError, AddressOf DataGridView_DataError
     End Sub
 

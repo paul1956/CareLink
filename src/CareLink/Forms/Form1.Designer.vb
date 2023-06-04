@@ -212,7 +212,7 @@ Partial Class Form1
         DgvCountryDataPg2Value = New DataGridViewTextBoxColumn()
         Me.WebView = New Microsoft.Web.WebView2.WinForms.WebView2()
         TabPageCountryDataPg3 = New TabPage()
-        TabPageUserProfile = New TabPage()
+        TabPageSessionProfile = New TabPage()
         TabPageCurrentUser = New TabPage()
         TabPageAllUsers = New TabPage()
         TabPageBackToHomePage = New TabPage()
@@ -300,7 +300,7 @@ Partial Class Form1
         CType(DgvCountryDataPg2, ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.WebView, ComponentModel.ISupportInitialize).BeginInit()
         TabPageCountryDataPg3.SuspendLayout()
-        TabPageUserProfile.SuspendLayout()
+        TabPageSessionProfile.SuspendLayout()
         TabPageCurrentUser.SuspendLayout()
         TabPageAllUsers.SuspendLayout()
         StatusStrip1.SuspendLayout()
@@ -2169,7 +2169,7 @@ Partial Class Form1
         TabControlPage2.Controls.Add(TabPageCountryDataPg1)
         TabControlPage2.Controls.Add(TabPageCountryDataPg2)
         TabControlPage2.Controls.Add(TabPageCountryDataPg3)
-        TabControlPage2.Controls.Add(TabPageUserProfile)
+        TabControlPage2.Controls.Add(TabPageSessionProfile)
         TabControlPage2.Controls.Add(TabPageCurrentUser)
         TabControlPage2.Controls.Add(TabPageAllUsers)
         TabControlPage2.Controls.Add(TabPageBackToHomePage)
@@ -2564,16 +2564,16 @@ Partial Class Form1
         TabPageCountryDataPg3.Text = "Country Data Pg3"
         TabPageCountryDataPg3.UseVisualStyleBackColor = True
         ' 
-        ' TabPageUserProfile
+        ' TabPageSessionProfile
         ' 
-        TabPageUserProfile.Controls.Add(DgvSessionProfile)
-        TabPageUserProfile.Location = New Point(4, 27)
-        TabPageUserProfile.Name = "TabPageUserProfile"
-        TabPageUserProfile.Padding = New Padding(3)
-        TabPageUserProfile.Size = New Size(1376, 685)
-        TabPageUserProfile.TabIndex = 12
-        TabPageUserProfile.Text = "User Profile"
-        TabPageUserProfile.UseVisualStyleBackColor = True
+        TabPageSessionProfile.Controls.Add(DgvSessionProfile)
+        TabPageSessionProfile.Location = New Point(4, 27)
+        TabPageSessionProfile.Name = "TabPageSessionProfile"
+        TabPageSessionProfile.Padding = New Padding(3)
+        TabPageSessionProfile.Size = New Size(1376, 685)
+        TabPageSessionProfile.TabIndex = 12
+        TabPageSessionProfile.Text = "Session Profile"
+        TabPageSessionProfile.UseVisualStyleBackColor = True
         ' 
         ' TabPageCurrentUser
         ' 
@@ -2776,7 +2776,7 @@ Partial Class Form1
         CType(DgvCountryDataPg2, ComponentModel.ISupportInitialize).EndInit()
         CType(Me.WebView, ComponentModel.ISupportInitialize).EndInit()
         TabPageCountryDataPg3.ResumeLayout(False)
-        TabPageUserProfile.ResumeLayout(False)
+        TabPageSessionProfile.ResumeLayout(False)
         TabPageCurrentUser.ResumeLayout(False)
         TabPageAllUsers.ResumeLayout(False)
         StatusStrip1.ResumeLayout(False)
@@ -2809,13 +2809,17 @@ Partial Class Form1
     Friend WithEvents CursorTimer As Timer
     Friend WithEvents DgvAutoBasalDelivery As DataGridView
     Friend WithEvents DgvCareLinkUsers As DataGridView
-    Friend WithEvents DgvCareLinkUsersOutGoingMailServer As DataGridViewTextBoxColumn
     Friend WithEvents DgvCareLinkUsersUserPassword As DataGridViewTextBoxColumn
     Friend WithEvents DgvCountryDataPg1 As DataGridView
     Friend WithEvents DgvCountryDataPg1Category As DataGridViewTextBoxColumn
     Friend WithEvents DgvCountryDataPg1Key As DataGridViewTextBoxColumn
     Friend WithEvents DgvCountryDataPg1RecordNumber As DataGridViewTextBoxColumn
     Friend WithEvents DgvCountryDataPg1Value As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCountryDataPg2 As DataGridView
+    Friend WithEvents DgvCountryDataPg2RecordNumber As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCountryDataPg2Category As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCountryDataPg2Key As DataGridViewTextBoxColumn
+    Friend WithEvents DgvCountryDataPg2Value As DataGridViewTextBoxColumn
     Friend WithEvents DgvCountryDataPg3 As DataGridView
     Friend WithEvents DgvCountryDataPg3Category As DataGridViewTextBoxColumn
     Friend WithEvents DgvCountryDataPg3Key As DataGridViewTextBoxColumn
@@ -2949,7 +2953,7 @@ Partial Class Form1
     Friend WithEvents TabPageLowGlucoseSuspended As TabPage
     Friend WithEvents TabPage06Meal As TabPage
     Friend WithEvents TabPageTimeChange As TabPage
-    Friend WithEvents TabPageUserProfile As TabPage
+    Friend WithEvents TabPageSessionProfile As TabPage
     Friend WithEvents TempTargetLabel As Label
     Friend WithEvents TimeInRangeChartLabel As Label
     Friend WithEvents TimeInRangeLabel As Label
@@ -2982,10 +2986,5 @@ Partial Class Form1
     Friend WithEvents DeviationsLabel As Label
     Friend WithEvents SmartGuardLabel As Label
     Friend WithEvents CountryDataPg2TableLayoutPanel As TableLayoutPanel
-    Friend WithEvents DgvCountryDataPg2 As DataGridView
-    Friend WithEvents DgvCountryDataPg2RecordNumber As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCountryDataPg2Category As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCountryDataPg2Key As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCountryDataPg2Value As DataGridViewTextBoxColumn
     Friend WithEvents WebView As Microsoft.Web.WebView2.WinForms.WebView2
 End Class
