@@ -122,7 +122,7 @@ Public Class CareLinkClient
             Dim authToken As String = Me.GetBearerToken(CareLinkServerURL(Me.CareLinkCountry))
 
             ' MUST BE FIRST DO NOT MOVE NEXT LINE
-            s_sessionCountrySettings = New CountrySettingsRecord(mainForm, Me.GetCountrySettings(authToken))
+            s_sessionCountrySettings = New CountrySettingsRecord(Me.GetCountrySettings(authToken))
             _sessionUser = Me.GetMyUser(mainForm, authToken)
             _sessionProfile = Me.GetMyProfile(authToken)
             _sessionMonitorData = Me.GetMonitorData(authToken)

@@ -839,6 +839,9 @@ Public Class Form1
 
     Public Sub Dgv_CellContextMenuStripNeededWithoutExcel(sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs) Handles _
                                                             DgvCareLinkUsers.CellContextMenuStripNeeded,
+                                                            DgvCountryDataPg1.CellContextMenuStripNeeded,
+                                                            DgvCountryDataPg2.CellContextMenuStripNeeded,
+                                                            DgvCountryDataPg3.CellContextMenuStripNeeded,
                                                             DgvCurrentUser.CellContextMenuStripNeeded,
                                                             DgvSessionProfile.CellContextMenuStripNeeded,
                                                             DgvSummary.CellContextMenuStripNeeded

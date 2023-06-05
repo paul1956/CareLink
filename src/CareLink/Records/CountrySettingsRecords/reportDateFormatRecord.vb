@@ -2,7 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Public Class reportDateFormatRecord
+Public Class ReportDateFormatRecord
     Private ReadOnly _asList As New List(Of KeyValuePair(Of String, String))
 
     Public dateSeparator As String
