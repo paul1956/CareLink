@@ -389,16 +389,10 @@ Partial Class Form1
         ' 
         ' MenuOptions
         ' 
-        MenuOptions.DropDownItems.AddRange(New ToolStripItem() {MenuOptionsColorPicker, MenuOptionsShowLegend, ToolStripSeparator5, MenuOptionsAutoLogin, ToolStripSeparator6, OptionsMenuAdvancedOptions, MenuOptionsFilterRawJSONData, MenuOptionsUseLocalTimeZone, ToolStripSeparator7, MenuOptionsEditPumpSettings})
+        MenuOptions.DropDownItems.AddRange(New ToolStripItem() {MenuOptionsShowLegend, ToolStripSeparator5, MenuOptionsAutoLogin, ToolStripSeparator6, OptionsMenuAdvancedOptions, MenuOptionsFilterRawJSONData, MenuOptionsUseLocalTimeZone, ToolStripSeparator7, MenuOptionsColorPicker, MenuOptionsEditPumpSettings})
         MenuOptions.Name = "MenuOptions"
         MenuOptions.Size = New Size(61, 20)
         MenuOptions.Text = "Options"
-        ' 
-        ' MenuOptionsColorPicker
-        ' 
-        MenuOptionsColorPicker.Name = "MenuOptionsColorPicker"
-        MenuOptionsColorPicker.Size = New Size(183, 22)
-        MenuOptionsColorPicker.Text = "Color Picker..."
         ' 
         ' MenuOptionsShowLegend
         ' 
@@ -456,11 +450,17 @@ Partial Class Form1
         ToolStripSeparator7.Name = "ToolStripSeparator7"
         ToolStripSeparator7.Size = New Size(180, 6)
         ' 
+        ' MenuOptionsColorPicker
+        ' 
+        MenuOptionsColorPicker.Name = "MenuOptionsColorPicker"
+        MenuOptionsColorPicker.Size = New Size(183, 22)
+        MenuOptionsColorPicker.Text = "Color Picker..."
+        ' 
         ' MenuOptionsEditPumpSettings
         ' 
         MenuOptionsEditPumpSettings.Name = "MenuOptionsEditPumpSettings"
         MenuOptionsEditPumpSettings.Size = New Size(183, 22)
-        MenuOptionsEditPumpSettings.Text = "Edit Pump Settings"
+        MenuOptionsEditPumpSettings.Text = "Edit Pump Settings..."
         ' 
         ' MenuHelp
         ' 
