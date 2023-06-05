@@ -18,8 +18,8 @@ Partial Class ExceptionHandlerForm
             MyBase.Dispose(disposing)
         End Try
     End Sub
-    Friend WithEvents Cancel As System.Windows.Forms.Button
-    Friend WithEvents OK As System.Windows.Forms.Button
+    Friend WithEvents Cancel As Button
+    Friend WithEvents OK As Button
 
     'Required by the Windows Form Designer
     Private components As System.ComponentModel.IContainer
@@ -29,90 +29,90 @@ Partial Class ExceptionHandlerForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.OK = New Button()
-        Me.Cancel = New Button()
-        Me.StackTraceTextBox = New TextBox()
-        Me.AutoModeStatusLabel = New Label()
-        Me.ExceptionTextBox = New TextBox()
-        Me.BgReadingLabel = New Label()
-        Me.InstructionsRichTextBox = New RichTextBox()
+        OK = New Button()
+        Cancel = New Button()
+        StackTraceTextBox = New TextBox()
+        AutoModeStatusLabel = New Label()
+        ExceptionTextBox = New TextBox()
+        BgReadingLabel = New Label()
+        InstructionsRichTextBox = New RichTextBox()
         Me.SuspendLayout()
         ' 
         ' OK
         ' 
-        Me.OK.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
-        Me.OK.DialogResult = DialogResult.OK
-        Me.OK.Location = New Point(1190, 348)
-        Me.OK.Name = "OK"
-        Me.OK.Size = New Size(94, 23)
-        Me.OK.TabIndex = 4
-        Me.OK.Text = "&OK"
+        OK.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
+        OK.DialogResult = DialogResult.OK
+        OK.Location = New Point(1190, 348)
+        OK.Name = "OK"
+        OK.Size = New Size(94, 23)
+        OK.TabIndex = 4
+        OK.Text = "&OK"
         ' 
         ' Cancel
         ' 
-        Me.Cancel.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
-        Me.Cancel.DialogResult = DialogResult.Cancel
-        Me.Cancel.Location = New Point(1311, 348)
-        Me.Cancel.Name = "Cancel"
-        Me.Cancel.Size = New Size(94, 23)
-        Me.Cancel.TabIndex = 4
-        Me.Cancel.Text = "&Cancel"
+        Cancel.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
+        Cancel.DialogResult = DialogResult.Cancel
+        Cancel.Location = New Point(1311, 348)
+        Cancel.Name = "Cancel"
+        Cancel.Size = New Size(94, 23)
+        Cancel.TabIndex = 4
+        Cancel.Text = "&Cancel"
         ' 
         ' StackTraceTextBox
         ' 
-        Me.StackTraceTextBox.Location = New Point(5, 63)
-        Me.StackTraceTextBox.Multiline = True
-        Me.StackTraceTextBox.Name = "StackTraceTextBox"
-        Me.StackTraceTextBox.Size = New Size(1136, 308)
-        Me.StackTraceTextBox.TabIndex = 6
+        StackTraceTextBox.Location = New Point(5, 63)
+        StackTraceTextBox.Multiline = True
+        StackTraceTextBox.Name = "StackTraceTextBox"
+        StackTraceTextBox.Size = New Size(1136, 308)
+        StackTraceTextBox.TabIndex = 6
         ' 
         ' AutoModeStatusLabel
         ' 
-        Me.AutoModeStatusLabel.AutoSize = True
-        Me.AutoModeStatusLabel.Location = New Point(7, 6)
-        Me.AutoModeStatusLabel.Name = "AutoModeStatusLabel"
-        Me.AutoModeStatusLabel.Size = New Size(62, 15)
-        Me.AutoModeStatusLabel.TabIndex = 7
-        Me.AutoModeStatusLabel.Text = "Exception:"
+        AutoModeStatusLabel.AutoSize = True
+        AutoModeStatusLabel.Location = New Point(7, 6)
+        AutoModeStatusLabel.Name = "AutoModeStatusLabel"
+        AutoModeStatusLabel.Size = New Size(62, 15)
+        AutoModeStatusLabel.TabIndex = 7
+        AutoModeStatusLabel.Text = "Exception:"
         ' 
         ' ExceptionTextBox
         ' 
-        Me.ExceptionTextBox.Location = New Point(75, 2)
-        Me.ExceptionTextBox.Name = "ExceptionTextBox"
-        Me.ExceptionTextBox.Size = New Size(1330, 23)
-        Me.ExceptionTextBox.TabIndex = 8
+        ExceptionTextBox.Location = New Point(75, 2)
+        ExceptionTextBox.Name = "ExceptionTextBox"
+        ExceptionTextBox.Size = New Size(1330, 23)
+        ExceptionTextBox.TabIndex = 8
         ' 
         ' BgReadingLabel
         ' 
-        Me.BgReadingLabel.AutoSize = True
-        Me.BgReadingLabel.Location = New Point(11, 39)
-        Me.BgReadingLabel.Name = "BgReadingLabel"
-        Me.BgReadingLabel.Size = New Size(68, 15)
-        Me.BgReadingLabel.TabIndex = 9
-        Me.BgReadingLabel.Text = "Stack Trace:"
+        BgReadingLabel.AutoSize = True
+        BgReadingLabel.Location = New Point(11, 39)
+        BgReadingLabel.Name = "BgReadingLabel"
+        BgReadingLabel.Size = New Size(68, 15)
+        BgReadingLabel.TabIndex = 9
+        BgReadingLabel.Text = "Stack Trace:"
         ' 
         ' InstructionsRichTextBox
         ' 
-        Me.InstructionsRichTextBox.Anchor = AnchorStyles.Top Or AnchorStyles.Right
-        Me.InstructionsRichTextBox.Location = New Point(1147, 60)
-        Me.InstructionsRichTextBox.Name = "InstructionsRichTextBox"
-        Me.InstructionsRichTextBox.Size = New Size(261, 282)
-        Me.InstructionsRichTextBox.TabIndex = 10
-        Me.InstructionsRichTextBox.Text = ""
+        InstructionsRichTextBox.Anchor = AnchorStyles.Top Or AnchorStyles.Right
+        InstructionsRichTextBox.Location = New Point(1147, 60)
+        InstructionsRichTextBox.Name = "InstructionsRichTextBox"
+        InstructionsRichTextBox.Size = New Size(261, 282)
+        InstructionsRichTextBox.TabIndex = 10
+        InstructionsRichTextBox.Text = ""
         ' 
         ' ExceptionHandlerForm
         ' 
-        Me.AcceptButton = Me.OK
-        Me.AutoScaleDimensions = New SizeF(7F, 15F)
+        Me.AcceptButton = OK
+        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.ClientSize = New Size(1417, 383)
-        Me.Controls.Add(Me.InstructionsRichTextBox)
-        Me.Controls.Add(Me.BgReadingLabel)
-        Me.Controls.Add(Me.ExceptionTextBox)
-        Me.Controls.Add(Me.AutoModeStatusLabel)
-        Me.Controls.Add(Me.StackTraceTextBox)
-        Me.Controls.Add(Me.OK)
-        Me.Controls.Add(Me.Cancel)
+        Me.Controls.Add(InstructionsRichTextBox)
+        Me.Controls.Add(BgReadingLabel)
+        Me.Controls.Add(ExceptionTextBox)
+        Me.Controls.Add(AutoModeStatusLabel)
+        Me.Controls.Add(StackTraceTextBox)
+        Me.Controls.Add(OK)
+        Me.Controls.Add(Cancel)
         Me.FormBorderStyle = FormBorderStyle.FixedDialog
         Me.MaximizeBox = False
         Me.MinimizeBox = False
