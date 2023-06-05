@@ -23,49 +23,49 @@ Partial Class OptionsDialog
     <Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As ComponentModel.ComponentResourceManager = New ComponentModel.ComponentResourceManager(GetType(OptionsDialog))
-        Me.TableLayoutPanel1 = New TableLayoutPanel()
-        Me.OK_Button = New Button()
-        Me.Cancel_Button = New Button()
+        TableLayoutPanel1 = New TableLayoutPanel()
+        OK_Button = New Button()
+        Cancel_Button = New Button()
         Me.ItemNameComboBox = New NameColorComboBox()
-        Me.UpdateForeground_Button = New Button()
-        Me.FontDialog1 = New FontDialog()
+        UpdateForeground_Button = New Button()
+        FontDialog1 = New FontDialog()
         Me.KnownColorsComboBox1 = New KnownColorComboBox()
-        Me.TableLayoutPanel1.SuspendLayout()
+        TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         ' 
         ' TableLayoutPanel1
         ' 
-        Me.TableLayoutPanel1.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
-        Me.TableLayoutPanel1.ColumnCount = 2
-        Me.TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
-        Me.TableLayoutPanel1.Controls.Add(Me.OK_Button, 0, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.Cancel_Button, 1, 0)
-        Me.TableLayoutPanel1.Location = New Point(303, 99)
-        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 1
-        Me.TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
-        Me.TableLayoutPanel1.Size = New Size(170, 33)
-        Me.TableLayoutPanel1.TabIndex = 0
+        TableLayoutPanel1.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
+        TableLayoutPanel1.ColumnCount = 2
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
+        TableLayoutPanel1.Controls.Add(OK_Button, 0, 0)
+        TableLayoutPanel1.Controls.Add(Cancel_Button, 1, 0)
+        TableLayoutPanel1.Location = New Point(303, 99)
+        TableLayoutPanel1.Name = "TableLayoutPanel1"
+        TableLayoutPanel1.RowCount = 1
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
+        TableLayoutPanel1.Size = New Size(170, 33)
+        TableLayoutPanel1.TabIndex = 0
         ' 
         ' OK_Button
         ' 
-        Me.OK_Button.Anchor = AnchorStyles.None
-        Me.OK_Button.Location = New Point(9, 5)
-        Me.OK_Button.Name = "OK_Button"
-        Me.OK_Button.Size = New Size(66, 23)
-        Me.OK_Button.TabIndex = 0
-        Me.OK_Button.Text = "OK"
+        OK_Button.Anchor = AnchorStyles.None
+        OK_Button.Location = New Point(9, 5)
+        OK_Button.Name = "OK_Button"
+        OK_Button.Size = New Size(66, 23)
+        OK_Button.TabIndex = 0
+        OK_Button.Text = "OK"
         ' 
         ' Cancel_Button
         ' 
-        Me.Cancel_Button.Anchor = AnchorStyles.None
-        Me.Cancel_Button.DialogResult = DialogResult.Cancel
-        Me.Cancel_Button.Location = New Point(94, 5)
-        Me.Cancel_Button.Name = "Cancel_Button"
-        Me.Cancel_Button.Size = New Size(66, 23)
-        Me.Cancel_Button.TabIndex = 1
-        Me.Cancel_Button.Text = "Cancel"
+        Cancel_Button.Anchor = AnchorStyles.None
+        Cancel_Button.DialogResult = DialogResult.Cancel
+        Cancel_Button.Location = New Point(94, 5)
+        Cancel_Button.Name = "Cancel_Button"
+        Cancel_Button.Size = New Size(66, 23)
+        Cancel_Button.TabIndex = 1
+        Cancel_Button.Text = "Cancel"
         ' 
         ' ItemNameComboBox
         ' 
@@ -84,12 +84,12 @@ Partial Class OptionsDialog
         ' 
         ' UpdateForeground_Button
         ' 
-        Me.UpdateForeground_Button.Location = New Point(314, 12)
-        Me.UpdateForeground_Button.Name = "UpdateForeground_Button"
-        Me.UpdateForeground_Button.Size = New Size(159, 27)
-        Me.UpdateForeground_Button.TabIndex = 5
-        Me.UpdateForeground_Button.Text = "Update Foreground Color"
-        Me.UpdateForeground_Button.UseVisualStyleBackColor = True
+        UpdateForeground_Button.Location = New Point(314, 12)
+        UpdateForeground_Button.Name = "UpdateForeground_Button"
+        UpdateForeground_Button.Size = New Size(159, 27)
+        UpdateForeground_Button.TabIndex = 5
+        UpdateForeground_Button.Text = "Update Foreground Color"
+        UpdateForeground_Button.UseVisualStyleBackColor = True
         ' 
         ' KnownColorsComboBox1
         ' 
@@ -106,16 +106,16 @@ Partial Class OptionsDialog
         ' 
         ' OptionsDialog
         ' 
-        Me.AcceptButton = Me.OK_Button
-        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
+        Me.AcceptButton = OK_Button
+        Me.AutoScaleDimensions = New SizeF(7F, 15F)
         Me.AutoScaleMode = AutoScaleMode.Font
-        Me.CancelButton = Me.Cancel_Button
+        Me.CancelButton = Cancel_Button
         Me.ClientSize = New Size(486, 143)
         Me.Controls.Add(Me.KnownColorsComboBox1)
-        Me.Controls.Add(Me.UpdateForeground_Button)
+        Me.Controls.Add(UpdateForeground_Button)
         Me.Controls.Add(Me.ItemNameComboBox)
-        Me.Controls.Add(Me.TableLayoutPanel1)
-        Me.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
+        Me.Controls.Add(TableLayoutPanel1)
+        Me.Font = New Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point)
         Me.FormBorderStyle = FormBorderStyle.FixedDialog
         Me.MaximizeBox = False
         Me.MinimizeBox = False
@@ -123,7 +123,7 @@ Partial Class OptionsDialog
         Me.ShowInTaskbar = False
         Me.StartPosition = FormStartPosition.CenterParent
         Me.Text = "Color Editor"
-        Me.TableLayoutPanel1.ResumeLayout(False)
+        TableLayoutPanel1.ResumeLayout(False)
         Me.ResumeLayout(False)
     End Sub
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
