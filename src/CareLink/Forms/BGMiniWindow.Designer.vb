@@ -26,78 +26,78 @@ Partial Class BGMiniWindow
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.BGTextBox = New TextBox()
-        Me.ActiveInsulinTextBox = New TextBox()
-        Me.HiddenTextBox = New TextBox()
-        Me.DeltaTextBox = New TextBox()
-        Me.CloseButton = New Button()
-        Me.ChkTopMost = New CheckBox()
+        BGTextBox = New TextBox()
+        ActiveInsulinTextBox = New TextBox()
+        HiddenTextBox = New TextBox()
+        DeltaTextBox = New TextBox()
+        CloseButton = New Button()
+        ChkTopMost = New CheckBox()
         Me.SuspendLayout()
         ' 
         ' BGTextBox
         ' 
-        Me.BGTextBox.BorderStyle = BorderStyle.None
-        Me.BGTextBox.Font = New Font("Segoe UI", 48F, FontStyle.Regular, GraphicsUnit.Point)
-        Me.BGTextBox.Location = New Point(4, 29)
-        Me.BGTextBox.Margin = New Padding(0)
-        Me.BGTextBox.Name = "BGTextBox"
-        Me.BGTextBox.Size = New Size(160, 86)
-        Me.BGTextBox.TabIndex = 1
-        Me.BGTextBox.Text = "999"
-        Me.BGTextBox.TextAlign = HorizontalAlignment.Center
+        BGTextBox.BorderStyle = BorderStyle.None
+        BGTextBox.Font = New Font("Segoe UI", 48F, FontStyle.Regular, GraphicsUnit.Point)
+        BGTextBox.Location = New Point(4, 29)
+        BGTextBox.Margin = New Padding(0)
+        BGTextBox.Name = "BGTextBox"
+        BGTextBox.Size = New Size(160, 86)
+        BGTextBox.TabIndex = 1
+        BGTextBox.Text = "999"
+        BGTextBox.TextAlign = HorizontalAlignment.Center
         ' 
         ' ActiveInsulinTextBox
         ' 
-        Me.ActiveInsulinTextBox.BorderStyle = BorderStyle.None
-        Me.ActiveInsulinTextBox.Dock = DockStyle.Top
-        Me.ActiveInsulinTextBox.Font = New Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point)
-        Me.ActiveInsulinTextBox.Location = New Point(0, 0)
-        Me.ActiveInsulinTextBox.Name = "ActiveInsulinTextBox"
-        Me.ActiveInsulinTextBox.Size = New Size(264, 26)
-        Me.ActiveInsulinTextBox.TabIndex = 0
-        Me.ActiveInsulinTextBox.Text = "Active Insulin: ???"
-        Me.ActiveInsulinTextBox.TextAlign = HorizontalAlignment.Center
+        ActiveInsulinTextBox.BorderStyle = BorderStyle.None
+        ActiveInsulinTextBox.Dock = DockStyle.Top
+        ActiveInsulinTextBox.Font = New Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point)
+        ActiveInsulinTextBox.Location = New Point(0, 0)
+        ActiveInsulinTextBox.Name = "ActiveInsulinTextBox"
+        ActiveInsulinTextBox.Size = New Size(264, 26)
+        ActiveInsulinTextBox.TabIndex = 0
+        ActiveInsulinTextBox.Text = "Active Insulin: ???"
+        ActiveInsulinTextBox.TextAlign = HorizontalAlignment.Center
         ' 
         ' HiddenTextBox
         ' 
-        Me.HiddenTextBox.Location = New Point(0, -1)
-        Me.HiddenTextBox.Name = "HiddenTextBox"
-        Me.HiddenTextBox.Size = New Size(100, 23)
-        Me.HiddenTextBox.TabIndex = 2
+        HiddenTextBox.Location = New Point(0, -1)
+        HiddenTextBox.Name = "HiddenTextBox"
+        HiddenTextBox.Size = New Size(100, 23)
+        HiddenTextBox.TabIndex = 2
         ' 
         ' DeltaTextBox
         ' 
-        Me.DeltaTextBox.Anchor = AnchorStyles.Top Or AnchorStyles.Right
-        Me.DeltaTextBox.BorderStyle = BorderStyle.None
-        Me.DeltaTextBox.Font = New Font("Segoe UI", 36F, FontStyle.Regular, GraphicsUnit.Point)
-        Me.DeltaTextBox.Location = New Point(143, 40)
-        Me.DeltaTextBox.Margin = New Padding(0)
-        Me.DeltaTextBox.Name = "DeltaTextBox"
-        Me.DeltaTextBox.Size = New Size(121, 64)
-        Me.DeltaTextBox.TabIndex = 2
-        Me.DeltaTextBox.Text = "+10"
+        DeltaTextBox.Anchor = AnchorStyles.Top Or AnchorStyles.Right
+        DeltaTextBox.BorderStyle = BorderStyle.None
+        DeltaTextBox.Font = New Font("Segoe UI", 36F, FontStyle.Regular, GraphicsUnit.Point)
+        DeltaTextBox.Location = New Point(143, 40)
+        DeltaTextBox.Margin = New Padding(0)
+        DeltaTextBox.Name = "DeltaTextBox"
+        DeltaTextBox.Size = New Size(121, 64)
+        DeltaTextBox.TabIndex = 2
+        DeltaTextBox.Text = "+10"
         ' 
         ' CloseButton
         ' 
-        Me.CloseButton.Anchor = AnchorStyles.Top Or AnchorStyles.Right
-        Me.CloseButton.Location = New Point(82, 99)
-        Me.CloseButton.Name = "CloseButton"
-        Me.CloseButton.Size = New Size(182, 23)
-        Me.CloseButton.TabIndex = 3
-        Me.CloseButton.Text = "Show Main Display ALT+W"
-        Me.CloseButton.UseVisualStyleBackColor = True
+        CloseButton.Anchor = AnchorStyles.Top Or AnchorStyles.Right
+        CloseButton.Location = New Point(82, 99)
+        CloseButton.Name = "CloseButton"
+        CloseButton.Size = New Size(182, 23)
+        CloseButton.TabIndex = 3
+        CloseButton.Text = "Show Main Display ALT+W"
+        CloseButton.UseVisualStyleBackColor = True
         ' 
         ' ChkTopMost
         ' 
-        Me.ChkTopMost.AutoSize = True
-        Me.ChkTopMost.Checked = True
-        Me.ChkTopMost.CheckState = CheckState.Checked
-        Me.ChkTopMost.Location = New Point(4, 103)
-        Me.ChkTopMost.Name = "ChkTopMost"
-        Me.ChkTopMost.Size = New Size(72, 19)
-        Me.ChkTopMost.TabIndex = 4
-        Me.ChkTopMost.Text = "Topmost"
-        Me.ChkTopMost.UseVisualStyleBackColor = True
+        ChkTopMost.AutoSize = True
+        ChkTopMost.Checked = True
+        ChkTopMost.CheckState = CheckState.Checked
+        ChkTopMost.Location = New Point(4, 103)
+        ChkTopMost.Name = "ChkTopMost"
+        ChkTopMost.Size = New Size(72, 19)
+        ChkTopMost.TabIndex = 4
+        ChkTopMost.Text = "Topmost"
+        ChkTopMost.UseVisualStyleBackColor = True
         ' 
         ' BGMiniWindow
         ' 
@@ -106,12 +106,12 @@ Partial Class BGMiniWindow
         Me.BackColor = SystemColors.Window
         Me.ClientSize = New Size(264, 123)
         Me.ControlBox = False
-        Me.Controls.Add(Me.ChkTopMost)
-        Me.Controls.Add(Me.CloseButton)
-        Me.Controls.Add(Me.DeltaTextBox)
-        Me.Controls.Add(Me.ActiveInsulinTextBox)
-        Me.Controls.Add(Me.BGTextBox)
-        Me.Controls.Add(Me.HiddenTextBox)
+        Me.Controls.Add(ChkTopMost)
+        Me.Controls.Add(CloseButton)
+        Me.Controls.Add(DeltaTextBox)
+        Me.Controls.Add(ActiveInsulinTextBox)
+        Me.Controls.Add(BGTextBox)
+        Me.Controls.Add(HiddenTextBox)
         Me.FormBorderStyle = FormBorderStyle.FixedDialog
         Me.KeyPreview = True
         Me.Margin = New Padding(4, 3, 4, 3)
