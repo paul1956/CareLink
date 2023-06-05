@@ -32,13 +32,13 @@ Friend Module DataGridViewColumnEventArgsExtensions
                     End If
                 Next
             Else
-                If titleInTitleCase.Contains(TmChar) Then
+                If titleInTitleCase.Contains("™"c) Then
                     title.Append(titleInTitleCase)
                 Else
-                    title.Append(titleInTitleCase.Replace("Care Link", $"{ProjectName}{TmChar}"))
+                    title.Append(titleInTitleCase.Replace("Care Link", $"{ProjectName}™"))
                 End If
             End If
-            .HeaderText = title.TrimEnd(s_environmentNewLine).ToString
+            .HeaderText = title.TrimEnd(vbCrLf).ToString
             .DefaultCellStyle = cellStyle
             If .HeaderText <> "Record Number" Then
                 .SortMode = DataGridViewColumnSortMode.NotSortable

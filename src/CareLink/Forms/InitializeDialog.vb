@@ -172,7 +172,7 @@ Public Class InitializeDialog
 
         Me.ColumnStart.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
         Me.ColumnEnd.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
-        Me.UseAITAdvancedDecayCheckBox.Text = $"Use Advanced Decay: Checking this box{s_environmentNewLine}decays AIT to more closely match body."
+        Me.UseAITAdvancedDecayCheckBox.Text = $"Use Advanced Decay: Checking this box{vbCrLf}decays AIT to more closely match body."
 
         With Me.TargetSgComboBox
 
@@ -193,7 +193,7 @@ Public Class InitializeDialog
             .SelectedIndex = Me.TargetSgComboBox.Items.IndexOfValue(Of String, Single)(Me.CurrentUser.CurrentTarget)
         End With
 
-        Me.Text = $"Initialize CareLink{TmChar} For {Me.CurrentUser.UserName}"
+        Me.Text = $"Initialize CareLink™ For {Me.CurrentUser.UserName}"
 
         With Me.PumpAitComboBox
             .DataSource = New BindingSource(_aitLengths, Nothing)

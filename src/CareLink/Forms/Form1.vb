@@ -166,7 +166,7 @@ Public Class Form1
                 lastError = $"Moving {SavedSnapshotBaseName} files!"
                 MoveFiles(GetDirectoryForMyDocuments, GetDirectoryForProjectData, $"{SavedSnapshotBaseName}*.json")
             Catch ex As Exception
-                MsgBox($"{lastError}{s_environmentNewLine}{ex.Message}", MsgBoxStyle.Critical, "Fatal Error")
+                MsgBox($"{lastError}{vbCrLf}{ex.Message}", MsgBoxStyle.Critical, "Fatal Error")
                 End
             End Try
         End If
@@ -235,7 +235,7 @@ Public Class Form1
             .ReadOnlyChecked = True,
             .RestoreDirectory = True,
             .SupportMultiDottedExtensions = False,
-            .Title = $"Select {ProjectName}{TmChar} saved snapshot to load",
+            .Title = $"Select {ProjectName}™ saved snapshot to load",
             .ValidateNames = True
         }
 
@@ -295,7 +295,7 @@ Public Class Form1
             .ReadOnlyChecked = True,
             .RestoreDirectory = True,
             .SupportMultiDottedExtensions = False,
-            .Title = $"Select CareLink{TmChar} saved snapshot to load",
+            .Title = $"Select CareLink™ saved snapshot to load",
             .ValidateNames = True
         }
 
@@ -1350,7 +1350,7 @@ Public Class Form1
         Me.DgvCareLinkUsersCareLinkUserName = New DataGridViewTextBoxColumn With {
             .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
             .DataPropertyName = "CareLinkUserName",
-            .HeaderText = $"CareLink{TmChar} UserName",
+            .HeaderText = $"CareLink™ UserName",
             .MinimumWidth = 125,
             .Name = "DgvCareLinkUsersCareLinkUserName",
             .Width = 125
@@ -1359,7 +1359,7 @@ Public Class Form1
         Me.DgvCareLinkUsersCareLinkPassword = New DataGridViewTextBoxColumn With {
             .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
             .DataPropertyName = "CareLinkPassword",
-            .HeaderText = $"CareLink{TmChar} Password",
+            .HeaderText = $"CareLink™ Password",
             .Name = "DgvCareLinkUsersCareLinkPassword",
             .Width = 120
         }
@@ -1375,7 +1375,7 @@ Public Class Form1
         Me.DgvCareLinkUsersUseLocalTimeZone = New DataGridViewCheckBoxColumn With {
             .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
             .DataPropertyName = "UseLocalTimeZone",
-            .HeaderText = $"Use Local{Environment.NewLine} Time Zone",
+            .HeaderText = $"Use Local{vbCrLf} Time Zone",
             .Name = "DgvCareLinkUsersUseLocalTimeZone",
             .Width = 86
         }
@@ -1391,7 +1391,7 @@ Public Class Form1
         Me.DgvCareLinkUsersCareLinkPartner = New DataGridViewCheckBoxColumn With {
             .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
             .DataPropertyName = "CareLinkPartner",
-            .HeaderText = $"CareLink{TmChar} Partner",
+            .HeaderText = $"CareLink™ Partner",
             .Name = "DgvCareLinkUsersCareLinkPartner",
             .Width = 86
         }
@@ -1399,7 +1399,7 @@ Public Class Form1
         Me.DgvCareLinkPatientUserID = New DataGridViewTextBoxColumn With {
             .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
             .DataPropertyName = "CareLinkPatientUserID",
-            .HeaderText = $"CareLink{TmChar} Patient UserID",
+            .HeaderText = $"CareLink™ Patient UserID",
             .Name = "DgvCareLinkPatientUserID",
             .Width = 97
         }
@@ -1819,7 +1819,7 @@ Public Class Form1
     Private Sub UpdateActiveInsulin()
         Try
             Dim activeInsulinStr As String = $"{s_activeInsulin.amount:N3}"
-            Me.ActiveInsulinValue.Text = $"Active Insulin{s_environmentNewLine}{activeInsulinStr} U"
+            Me.ActiveInsulinValue.Text = $"Active Insulin{vbCrLf}{activeInsulinStr} U"
             _sgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
         Catch ex As Exception
             Stop
@@ -2532,7 +2532,7 @@ Public Class Form1
                         Case <= TirLowLimit(ScalingNeeded)
                             bgColor = Color.Yellow
                             If _showBalloonTip Then
-                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}{TmChar} Alert", $"SG below {TirLowLimit(ScalingNeeded)} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
+                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}™ Alert", $"SG below {TirLowLimit(ScalingNeeded)} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
                         Case <= TirHighLimit(ScalingNeeded)
@@ -2541,7 +2541,7 @@ Public Class Form1
                         Case Else
                             bgColor = Color.Red
                             If _showBalloonTip Then
-                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}{TmChar} Alert", $"SG above {TirHighLimit(ScalingNeeded)} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
+                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}™ Alert", $"SG above {TirHighLimit(ScalingNeeded)} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
                     End Select
@@ -2556,12 +2556,12 @@ Public Class Form1
                     Dim hIcon As IntPtr = bitmapText.GetHicon()
                     Me.NotifyIcon1.Icon = Icon.FromHandle(hIcon)
                     notStr.Append(Date.Now().ToShortDateTimeString.Replace($"{CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator}{Now.Year}", ""))
-                    notStr.Append(s_environmentNewLine)
+                    notStr.Append(vbCrLf)
                     notStr.Append($"Last SG {str} {BgUnitsString}")
                     If s_lastBGValue = 0 Then
                         Me.LabelTrendValue.Text = ""
                     Else
-                        notStr.Append(s_environmentNewLine)
+                        notStr.Append(vbCrLf)
                         Dim diffSg As Double = sg - s_lastBGValue
                         notStr.Append("SG Trend ")
                         If Math.Abs(diffSg) < Single.Epsilon Then
@@ -2579,7 +2579,7 @@ Public Class Form1
                         Me.LabelTrendValue.ForeColor = bgColor
                         notStr.Append(diffSg.ToString(If(ScalingNeeded, "+ 0.00;-#.00", "+0;-#"), CultureInfo.InvariantCulture))
                     End If
-                    notStr.Append(s_environmentNewLine)
+                    notStr.Append(vbCrLf)
                     notStr.Append("Active ins. ")
                     notStr.Append($"{s_activeInsulin.amount:N3}")
                     notStr.Append("U"c)

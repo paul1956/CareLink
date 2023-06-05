@@ -100,7 +100,7 @@ Friend Module BrowserUtilities
             End If
         Catch ex As Exception
             If reportSuccessfulResult Then
-                MsgBox($"Connection failed while checking for new version:{s_environmentNewLine}{s_environmentNewLine}{ex.DecodeException()}", MsgBoxStyle.Information, "Version Check Failed")
+                MsgBox($"Connection failed while checking for new version:{vbCrLf}{vbCrLf}{ex.DecodeException()}", MsgBoxStyle.Information, "Version Check Failed")
             End If
         End Try
     End Sub

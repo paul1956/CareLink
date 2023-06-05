@@ -34,7 +34,7 @@ Friend Module ExportDataGridView
             If copyHeaders <> DataGridViewClipboardCopyMode.EnableWithoutHeaderText Then
                 For col As Integer = colLow To colHigh
                     If Not (dgv.Columns(col).Visible AndAlso (copyAll OrElse dgv.AnyCellSelected(col))) Then Continue For
-                    clipboard_string.Append($"{dgv.Columns(col).HeaderText.Replace(Environment.NewLine, "")}{If(col = colHigh, s_environmentNewLine, vbTab)}")
+                    clipboard_string.Append($"{dgv.Columns(col).HeaderText.Replace(vbCrLf, "")}{If(col = colHigh, vbCrLf, vbTab)}")
                 Next col
             End If
             For rowIndex As Integer = rowLow To rowHigh
@@ -42,7 +42,7 @@ Friend Module ExportDataGridView
                 For col As Integer = colLow To colHigh
                     If Not (dgv.Columns(col).Visible AndAlso (copyAll OrElse dgv.AnyCellSelected(col))) Then Continue For
                     Dim currentCell As DataGridViewCell = row.Cells(col)
-                    clipboard_string.Append($"{If(copyAll OrElse currentCell.Selected, currentCell.Value.ToString, "")}{If(col = colHigh, s_environmentNewLine, vbTab)}")
+                    clipboard_string.Append($"{If(copyAll OrElse currentCell.Selected, currentCell.Value.ToString, "")}{If(col = colHigh, vbCrLf, vbTab)}")
                 Next col
             Next
             Clipboard.SetText(clipboard_string.ToString())

@@ -20,9 +20,6 @@ Public Module SystemConstants
     Friend Const TimeFormatMilitaryWithoutMinutes As String = "HH"
     Friend Const TimeFormatTwelveHourWithMinutes As String = "h:mm tt"
     Friend Const TimeFormatTwelveHourWithoutMinutes As String = "h tt"
-    Friend Const TmChar As String = ChrW(&H2122)
-
-    Friend ReadOnly s_environmentNewLine As String = Environment.NewLine
 
     Friend ReadOnly s_insulinTypes As New Dictionary(Of String, InsulinActivationProperties) From {
                         {$"Humalog{RegisteredTrademark}", New InsulinActivationProperties(8, 4)},
@@ -77,7 +74,6 @@ Public Module SystemConstants
 
     Public ReadOnly Property GitHubCareLinkUrl As String = $"https://GitHub.com/{GitOwnerName}/{ProjectName}/"
     Public ReadOnly Property JsonFormattingOptions As New JsonSerializerOptions With {.WriteIndented = True}
-
-    Public ReadOnly Property SavedTitle As String = $"{ProjectName} For Windows"
+    Public ReadOnly Property SavedTitle As String = $"{ProjectName}™ For Windows"
 
 End Module

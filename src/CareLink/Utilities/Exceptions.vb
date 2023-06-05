@@ -23,7 +23,7 @@ Friend Module Exceptions
             If innerExMessage.Contains(InnerExceptionMessage) Then
                 errorMsg = DecodeException(ex.InnerException)
             Else
-                errorMsg = $"{errorMsg.Replace(InnerExceptionMessage, ".")}{s_environmentNewLine}{innerExMessage}"
+                errorMsg = $"{errorMsg.Replace(InnerExceptionMessage, ".")}{vbCrLf}{innerExMessage}"
             End If
         End If
 

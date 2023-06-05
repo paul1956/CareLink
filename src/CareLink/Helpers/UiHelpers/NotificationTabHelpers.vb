@@ -39,7 +39,7 @@ Friend Module NotificationTabHelpers
             tableLevel1Blue.Controls.Add(New Label With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                                                                 .AutoSize = True,
                                                                 .TextAlign = ContentAlignment.MiddleLeft,
-                                                                .Text = notificationType.Key.ToTitleCase.Replace(" ", s_environmentNewLine)
+                                                                .Text = notificationType.Key.ToTitleCase.Replace(" ", vbCrLf)
                                                                },
                                          0,
                                          c.Index)

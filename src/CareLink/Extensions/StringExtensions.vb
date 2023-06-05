@@ -68,7 +68,7 @@ Public Module StringExtensions
                 lastWasNumeric = False
             End If
         Next
-        result = result.Replace("Care Link", $"CareLink{TmChar}")
+        result = result.Replace("Care Link", $"CareLink™")
         Return result.ToString().Replace("time", " Time", False, CurrentUICulture)
     End Function
 
@@ -80,10 +80,10 @@ Public Module StringExtensions
     <Extension>
     Public Function CleanCsvString(value As String) As String
         Return $"{value?.ToString _
-                                  .Replace("""", """""") _
-                                  .Replace(",", "\,") _
-                                  .Replace(s_environmentNewLine, $"\{s_environmentNewLine}") _
-                                  .Replace("\", "\\")},"
+                        .Replace("""", """""") _
+                        .Replace(",", "\,") _
+                        .Replace(vbCrLf, $"\{vbCrLf}") _
+                        .Replace("\", "\\")},"
     End Function
 
     <Extension>

@@ -13,7 +13,7 @@ Friend Module RichTextBoxExtensions
         If newColor IsNot Nothing Then
             rtb.SelectionColor = CType(newColor, Color)
         End If
-        rtb.SelectedText = $"{newText}{If(appendNewLine, s_environmentNewLine, "")}"
+        rtb.SelectedText = $"{newText}{If(appendNewLine, vbCrLf, "")}"
     End Sub
 
 End Module

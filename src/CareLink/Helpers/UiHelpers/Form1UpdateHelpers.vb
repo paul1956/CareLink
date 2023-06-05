@@ -50,11 +50,11 @@ Friend Module Form1UpdateHelpers
     Friend Function GetPumpName(value As String) As String
         Select Case value
             Case "MMT-1880"
-                Return $"Medtronic MiniMed{TmChar} 770G"
+                Return "Medtronic MiniMed™ 770G"
             Case "MMT-1885"
-                Return $"Medtronic MiniMed{TmChar} 780G"
+                Return "Medtronic MiniMed™ 780G"
             Case "MMT-1886"
-                Return $"Medtronic MiniMed{TmChar} 780G"
+                Return "Medtronic MiniMed™ 780G"
             Case Else
                 Return "Unknown"
         End Select
