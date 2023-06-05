@@ -87,7 +87,7 @@ Public Class CountrySettingsRecord
                     Me.region = rowValue.Value
                     dgvCountryItems(0).Rows.Add(itemIndex, "", rowValue.Key, rowValue.Value)
                 Case NameOf(pathDocs)
-                    Me.pathDocs = New pathDocsRecord(rowValue.Value)
+                    Me.pathDocs = New PathDocsRecord(rowValue.Value)
                     For Each member As IndexClass(Of KeyValuePair(Of String, String)) In Me.pathDocs.pathDoc.WithIndex
                         Dim itemIndex1 As String = $"{row.Index + 1}.{member.Index + 1}"
                         dgvCountryItems(1).Rows.Add(itemIndex1, rowValue.Key, member.Value.Key, member.Value.Value)
@@ -117,13 +117,13 @@ Public Class CountrySettingsRecord
                     Me.carbExchangeRatioDefault = rowValue.Value
                     dgvCountryItems(1).Rows.Add(itemIndex, "", rowValue.Key, rowValue.Value)
                 Case NameOf(reportDateFormat)
-                    Me.reportDateFormat = New reportDateFormatRecord(rowValue.Value)
+                    Me.reportDateFormat = New ReportDateFormatRecord(rowValue.Value)
                     For Each member As IndexClass(Of KeyValuePair(Of String, String)) In Me.reportDateFormat.ToList.WithIndex
                         dgvCountryItems(1).Rows.Add($"{row.Index + 1}.{member.Index + 1}", rowValue.Key, member.Value.Key, member.Value.Value)
                     Next
 
                 Case NameOf(mfa)
-                    Me.mfa = New mfaRecord(rowValue.Value)
+                    Me.mfa = New MfaRecord(rowValue.Value)
                     For Each member As IndexClass(Of KeyValuePair(Of String, String)) In Me.mfa.ToList.WithIndex
                         dgvCountryItems(2).Rows.Add($"{row.Index + 1}.{member.Index + 1}", rowValue.Key, member.Value.Key, member.Value.Value)
                     Next
@@ -131,7 +131,7 @@ Public Class CountrySettingsRecord
                 Case NameOf(supportedReports)
                     supportedReports.Clear()
                     For Each dic As IndexClass(Of Dictionary(Of String, String)) In LoadList(rowValue.Value).WithIndex
-                        supportedReports.Add(New supportedReportRecord(dic.Value, dic.Index + 1))
+                        supportedReports.Add(New SupportedReportRecord(dic.Value, dic.Index + 1))
                         With supportedReports.Last
                             dgvCountryItems(2).Rows.Add($"{row.Index + 1}.{dic.Index + 1}", rowValue.Key, dic.Value.Keys(0), .report, .onlyFor, .notFor)
                         End With
@@ -140,13 +140,13 @@ Public Class CountrySettingsRecord
                     Me.smsSendingAllowed = rowValue.Value
                     dgvCountryItems(2).Rows.Add(itemIndex, "", rowValue.Key, rowValue.Value)
                 Case NameOf(postal)
-                    Me.postal = New postalRecord(rowValue.Value)
+                    Me.postal = New PostalRecord(rowValue.Value)
                     For Each member As IndexClass(Of KeyValuePair(Of String, String)) In Me.postal.ToList.WithIndex
                         dgvCountryItems(2).Rows.Add($"{row.Index + 1}.{member.Index + 1}", rowValue.Key, member.Value.Key, member.Value.Value)
                     Next
 
                 Case NameOf(numberFormat)
-                    Me.numberFormat = New numberFormatRecord(rowValue.Value)
+                    Me.numberFormat = New NumberFormatRecord(rowValue.Value)
                     For Each member As IndexClass(Of KeyValuePair(Of String, String)) In Me.numberFormat.ToList.WithIndex
                         dgvCountryItems(2).Rows.Add(itemIndex, rowValue.Key, member.Value.Key, member.Value.Value)
                     Next
@@ -172,19 +172,14 @@ Public Class CountrySettingsRecord
     Public Property glucoseUnitsDefault As String
     Public Property legalAge As String
     Public Property mediaHost As String
-    Public Property mfa As mfaRecord
+    Public Property mfa As MfaRecord
     Public Property name As String
-    Public Property numberFormat As numberFormatRecord
-
-    Public Property pathDocs As pathDocsRecord
-
-    Public Property postal As postalRecord
-
+    Public Property numberFormat As NumberFormatRecord
+    Public Property pathDocs As PathDocsRecord
+    Public Property postal As PostalRecord
     Public Property recordSeparator As String
     Public Property region As String
-
-    Public Property reportDateFormat As reportDateFormatRecord
-
+    Public Property reportDateFormat As ReportDateFormatRecord
     Public Property shortDateFormat As String
     Public Property shortTimeFormat As String
     Public Property smsSendingAllowed As String
@@ -199,7 +194,7 @@ Public Class CountrySettingsRecord
 
     Private _hasValue As Boolean
     Public languages As New List(Of LanguageRecord)                 ' "[{""name"":""English"",""code"":""EN""}]"
-    Public supportedReports As New List(Of supportedReportRecord)   ' "[{""report"":""ADHERENCE"",""onlyFor"":[],""notFor"":[]},{""report"":""ASSESSMENT_AND_PROGRESS"",""onlyFor"":[],""notFor"":[]},{""report"":""BOLUS_WIZARD_FOOD_BOLUS"",""onlyFor"":[],""notFor"":[]},{""report"":""DAILY_DETAILS"",""onlyFor"":[],""notFor"":[]},{""report"":""DASHBOARD"",""onlyFor"":[],""notFor"":[]},{""report"":""DEVICE_SETTINGS"",""onlyFor"":[],""notFor"":[]},{""report"":""EPISODE_SUMMARY"",""onlyFor"":[],""notFor"":[]},{""report"":""LOGBOOK"",""onlyFor"":[],""notFor"":[]},{""report"":""OVERVIEW"",""onlyFor"":[],""notFor"":[]},{""report"":""WEEKLY_REVIEW"",""onlyFor"":[],""notFor"":[]}]"
+    Public supportedReports As New List(Of SupportedReportRecord)   ' "[{""report"":""ADHERENCE"",""onlyFor"":[],""notFor"":[]},{""report"":""ASSESSMENT_AND_PROGRESS"",""onlyFor"":[],""notFor"":[]},{""report"":""BOLUS_WIZARD_FOOD_BOLUS"",""onlyFor"":[],""notFor"":[]},{""report"":""DAILY_DETAILS"",""onlyFor"":[],""notFor"":[]},{""report"":""DASHBOARD"",""onlyFor"":[],""notFor"":[]},{""report"":""DEVICE_SETTINGS"",""onlyFor"":[],""notFor"":[]},{""report"":""EPISODE_SUMMARY"",""onlyFor"":[],""notFor"":[]},{""report"":""LOGBOOK"",""onlyFor"":[],""notFor"":[]},{""report"":""OVERVIEW"",""onlyFor"":[],""notFor"":[]},{""report"":""WEEKLY_REVIEW"",""onlyFor"":[],""notFor"":[]}]"
 
 #End Region
 

@@ -187,7 +187,9 @@ Friend Module SummaryRecordHelpers
     End Function
 
     Public Sub AttachHandlers(dgv As DataGridView)
+        RemoveHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithoutExcel
         RemoveHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
+        AddHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithoutExcel
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
     End Sub
 

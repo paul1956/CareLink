@@ -2,7 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Public Class pathDocsRecord
+Public Class PathDocsRecord
     Public pathDoc As New Dictionary(Of String, String)
 
     Public Sub New(jsonData As String)

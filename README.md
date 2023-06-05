@@ -27,11 +27,12 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-06/01/2023
+06/04/2023
 
 ## What's New in this release
 New in 3.8.1.0
 - Added display of high and low Standard Deviations
+- All tables except the 3 country pages now support exporting data to clipboard and many to Excel with formatting
 - Add support for CareLink v6 for Care partners
 
 New in 3.8.0.11

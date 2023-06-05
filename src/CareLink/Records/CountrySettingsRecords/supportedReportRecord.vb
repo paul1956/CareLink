@@ -7,11 +7,11 @@ Imports System.ComponentModel.DataAnnotations.Schema
 Imports System.Text
 
 <DebuggerDisplay("{GetDebuggerDisplay(),nq}")>
-Public Class supportedReportRecord
+Public Class SupportedReportRecord
 
     Public Sub New(Values As Dictionary(Of String, String), recordNumber As Integer)
         If Values.Count <> 3 Then
-            Throw New Exception($"{NameOf(supportedReportRecord)}({Values}) contains {Values.Count} entries, 3 expected.")
+            Throw New Exception($"{NameOf(SupportedReportRecord)}({Values}) contains {Values.Count} entries, 3 expected.")
         End If
         Me.recordNumber = recordNumber
         Me.report = Values(NameOf(report))

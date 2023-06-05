@@ -3,7 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 <DebuggerDisplay("{GetDebuggerDisplay(),nq}")>
-Public Class numberFormatRecord
+Public Class NumberFormatRecord
     Private ReadOnly _asList As New Dictionary(Of String, String)
 
     Public decimalSeparator As String
@@ -13,7 +13,7 @@ Public Class numberFormatRecord
     Public Sub New(jsonData As String)
         _asList = Loads(jsonData)
         If _asList.Count <> 2 Then
-            Throw New Exception($"{NameOf(numberFormatRecord)}({NameOf(jsonData)}) contains {jsonData.Length} entries.")
+            Throw New Exception($"{NameOf(NumberFormatRecord)}({NameOf(jsonData)}) contains {jsonData.Length} entries.")
         End If
         decimalSeparator = _asList(NameOf(decimalSeparator))
         groupsSeparator = _asList(NameOf(groupsSeparator))

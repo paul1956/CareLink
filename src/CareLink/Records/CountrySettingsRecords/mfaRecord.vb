@@ -2,13 +2,13 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Public Class mfaRecord
+Public Class MfaRecord
     Private ReadOnly _asList As New Dictionary(Of String, String)
 
     Public Sub New(jsonData As String)
         _asList = Loads(jsonData)
         If _asList.Keys.Count <> 6 Then
-            Throw New Exception($"{NameOf(mfaRecord)}({NameOf(jsonData)}) contains {_asList.Count} entries, 6 expected.")
+            Throw New Exception($"{NameOf(MfaRecord)}({NameOf(jsonData)}) contains {_asList.Count} entries, 6 expected.")
         End If
         Me.status = _asList(NameOf(status))
         Me.fromDate = _asList(NameOf(fromDate))

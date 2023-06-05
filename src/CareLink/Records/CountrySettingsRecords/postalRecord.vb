@@ -5,7 +5,7 @@
 Imports System.Diagnostics.CodeAnalysis
 
 <DebuggerDisplay("{GetDebuggerDisplay(),nq}")>
-Public Class postalRecord
+Public Class PostalRecord
     Private ReadOnly _asList As New Dictionary(Of String, String)
 
     Public postalFormat As String
@@ -16,7 +16,7 @@ Public Class postalRecord
     Public Sub New(<StringSyntax(StringSyntaxAttribute.Json)> jsonData As String)
         _asList = Loads(jsonData)
         If _asList.Keys.Count <> 2 Then
-            Throw New Exception($"{NameOf(postalRecord)}({NameOf(jsonData)}) contains {jsonData.Length} entries, 2 expected.")
+            Throw New Exception($"{NameOf(PostalRecord)}({NameOf(jsonData)}) contains {jsonData.Length} entries, 2 expected.")
         End If
 
         postalFormat = _asList(NameOf(postalFormat))
