@@ -29,112 +29,112 @@ Partial Class InitializeDialog
         components = New ComponentModel.Container()
         Dim DataGridViewCellStyle1 As DataGridViewCellStyle = New DataGridViewCellStyle()
         Dim resources As ComponentModel.ComponentResourceManager = New ComponentModel.ComponentResourceManager(GetType(InitializeDialog))
-        Me.TableLayoutPanel1 = New TableLayoutPanel()
-        Me.OK_Button = New Button()
-        Me.Cancel_Button = New Button()
-        Me.PumpAitComboBox = New ComboBox()
-        Me.SelectAITLabel = New Label()
-        Me.UseAITAdvancedDecayCheckBox = New CheckBox()
-        Me.InitializeDataGridView = New DataGridView()
+        TableLayoutPanel1 = New TableLayoutPanel()
+        OK_Button = New Button()
+        Cancel_Button = New Button()
+        PumpAitComboBox = New ComboBox()
+        SelectAITLabel = New Label()
+        UseAITAdvancedDecayCheckBox = New CheckBox()
+        InitializeDataGridView = New DataGridView()
         Me.ColumnDeleteRow = New DataGridViewColumnControls.DataGridViewDisableButtonColumn()
-        Me.ColumnStart = New DataGridViewComboBoxColumn()
-        Me.ColumnEnd = New DataGridViewComboBoxColumn()
+        ColumnStart = New DataGridViewComboBoxColumn()
+        ColumnEnd = New DataGridViewComboBoxColumn()
         Me.ColumnNumericUpDown = New DataGridViewNumericUpDownColumn()
         Me.ColumnSave = New DataGridViewColumnControls.DataGridViewDisableButtonColumn()
-        Me.ErrorProvider1 = New ErrorProvider(components)
-        Me.InsulinTypeComboBox = New ComboBox()
-        Me.InsulinTypeLabel = New Label()
-        Me.InstructionsLabel = New Label()
-        Me.TargetSgComboBox = New ComboBox()
-        Me.TargetSgValueLabel = New Label()
-        Me.TableLayoutPanel1.SuspendLayout()
-        CType(Me.InitializeDataGridView, ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ErrorProvider1, ComponentModel.ISupportInitialize).BeginInit()
+        ErrorProvider1 = New ErrorProvider(components)
+        InsulinTypeComboBox = New ComboBox()
+        InsulinTypeLabel = New Label()
+        InstructionsLabel = New Label()
+        TargetSgComboBox = New ComboBox()
+        TargetSgValueLabel = New Label()
+        TableLayoutPanel1.SuspendLayout()
+        CType(InitializeDataGridView, ComponentModel.ISupportInitialize).BeginInit()
+        CType(ErrorProvider1, ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         ' 
         ' TableLayoutPanel1
         ' 
-        Me.TableLayoutPanel1.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
-        Me.TableLayoutPanel1.ColumnCount = 2
-        Me.TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
-        Me.TableLayoutPanel1.Controls.Add(Me.OK_Button, 0, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.Cancel_Button, 1, 0)
-        Me.TableLayoutPanel1.Location = New Point(224, 383)
-        Me.TableLayoutPanel1.Margin = New Padding(4, 3, 4, 3)
-        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 1
-        Me.TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
-        Me.TableLayoutPanel1.Size = New Size(265, 33)
-        Me.TableLayoutPanel1.TabIndex = 0
+        TableLayoutPanel1.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
+        TableLayoutPanel1.ColumnCount = 2
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
+        TableLayoutPanel1.Controls.Add(OK_Button, 0, 0)
+        TableLayoutPanel1.Controls.Add(Cancel_Button, 1, 0)
+        TableLayoutPanel1.Location = New Point(224, 383)
+        TableLayoutPanel1.Margin = New Padding(4, 3, 4, 3)
+        TableLayoutPanel1.Name = "TableLayoutPanel1"
+        TableLayoutPanel1.RowCount = 1
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50.0F))
+        TableLayoutPanel1.Size = New Size(265, 33)
+        TableLayoutPanel1.TabIndex = 0
         ' 
         ' OK_Button
         ' 
-        Me.OK_Button.Anchor = AnchorStyles.None
-        Me.OK_Button.Enabled = False
-        Me.OK_Button.Location = New Point(6, 3)
-        Me.OK_Button.Margin = New Padding(4, 3, 4, 3)
-        Me.OK_Button.Name = "OK_Button"
-        Me.OK_Button.Size = New Size(119, 27)
-        Me.OK_Button.TabIndex = 0
-        Me.OK_Button.Text = "OK"
+        OK_Button.Anchor = AnchorStyles.None
+        OK_Button.Enabled = False
+        OK_Button.Location = New Point(6, 3)
+        OK_Button.Margin = New Padding(4, 3, 4, 3)
+        OK_Button.Name = "OK_Button"
+        OK_Button.Size = New Size(119, 27)
+        OK_Button.TabIndex = 0
+        OK_Button.Text = "OK"
         ' 
         ' Cancel_Button
         ' 
-        Me.Cancel_Button.Anchor = AnchorStyles.None
-        Me.Cancel_Button.Location = New Point(139, 3)
-        Me.Cancel_Button.Margin = New Padding(4, 3, 4, 3)
-        Me.Cancel_Button.Name = "Cancel_Button"
-        Me.Cancel_Button.Size = New Size(119, 27)
-        Me.Cancel_Button.TabIndex = 1
-        Me.Cancel_Button.Text = "Cancel"
+        Cancel_Button.Anchor = AnchorStyles.None
+        Cancel_Button.Location = New Point(139, 3)
+        Cancel_Button.Margin = New Padding(4, 3, 4, 3)
+        Cancel_Button.Name = "Cancel_Button"
+        Cancel_Button.Size = New Size(119, 27)
+        Cancel_Button.TabIndex = 1
+        Cancel_Button.Text = "Cancel"
         ' 
         ' PumpAitComboBox
         ' 
-        Me.PumpAitComboBox.DropDownStyle = ComboBoxStyle.DropDownList
-        Me.PumpAitComboBox.FormattingEnabled = True
-        Me.PumpAitComboBox.Location = New Point(111, 5)
-        Me.PumpAitComboBox.Name = "PumpAitComboBox"
-        Me.PumpAitComboBox.Size = New Size(78, 23)
-        Me.PumpAitComboBox.TabIndex = 0
+        PumpAitComboBox.DropDownStyle = ComboBoxStyle.DropDownList
+        PumpAitComboBox.FormattingEnabled = True
+        PumpAitComboBox.Location = New Point(111, 5)
+        PumpAitComboBox.Name = "PumpAitComboBox"
+        PumpAitComboBox.Size = New Size(78, 23)
+        PumpAitComboBox.TabIndex = 0
         ' 
         ' SelectAITLabel
         ' 
-        Me.SelectAITLabel.AutoSize = True
-        Me.SelectAITLabel.Location = New Point(11, 9)
-        Me.SelectAITLabel.Name = "SelectAITLabel"
-        Me.SelectAITLabel.Size = New Size(96, 15)
-        Me.SelectAITLabel.TabIndex = 2
-        Me.SelectAITLabel.Text = "Select Pump AIT:"
+        SelectAITLabel.AutoSize = True
+        SelectAITLabel.Location = New Point(11, 9)
+        SelectAITLabel.Name = "SelectAITLabel"
+        SelectAITLabel.Size = New Size(96, 15)
+        SelectAITLabel.TabIndex = 2
+        SelectAITLabel.Text = "Select Pump AIT:"
         ' 
         ' UseAITAdvancedDecayCheckBox
         ' 
-        Me.UseAITAdvancedDecayCheckBox.AutoCheck = False
-        Me.UseAITAdvancedDecayCheckBox.AutoSize = True
-        Me.UseAITAdvancedDecayCheckBox.Checked = True
-        Me.UseAITAdvancedDecayCheckBox.CheckState = CheckState.Indeterminate
-        Me.UseAITAdvancedDecayCheckBox.Enabled = False
-        Me.UseAITAdvancedDecayCheckBox.Location = New Point(11, 34)
-        Me.UseAITAdvancedDecayCheckBox.Name = "UseAITAdvancedDecayCheckBox"
-        Me.UseAITAdvancedDecayCheckBox.Size = New Size(145, 19)
-        Me.UseAITAdvancedDecayCheckBox.TabIndex = 2
-        Me.UseAITAdvancedDecayCheckBox.Text = "Use Advanced Decay..."
-        Me.UseAITAdvancedDecayCheckBox.UseVisualStyleBackColor = True
+        UseAITAdvancedDecayCheckBox.AutoCheck = False
+        UseAITAdvancedDecayCheckBox.AutoSize = True
+        UseAITAdvancedDecayCheckBox.Checked = True
+        UseAITAdvancedDecayCheckBox.CheckState = CheckState.Indeterminate
+        UseAITAdvancedDecayCheckBox.Enabled = False
+        UseAITAdvancedDecayCheckBox.Location = New Point(11, 34)
+        UseAITAdvancedDecayCheckBox.Name = "UseAITAdvancedDecayCheckBox"
+        UseAITAdvancedDecayCheckBox.Size = New Size(145, 19)
+        UseAITAdvancedDecayCheckBox.TabIndex = 2
+        UseAITAdvancedDecayCheckBox.Text = "Use Advanced Decay..."
+        UseAITAdvancedDecayCheckBox.UseVisualStyleBackColor = True
         ' 
         ' InitializeDataGridView
         ' 
-        Me.InitializeDataGridView.AllowUserToAddRows = False
-        Me.InitializeDataGridView.AllowUserToResizeColumns = False
-        Me.InitializeDataGridView.AllowUserToResizeRows = False
-        Me.InitializeDataGridView.CausesValidation = False
-        Me.InitializeDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.InitializeDataGridView.Columns.AddRange(New DataGridViewColumn() {Me.ColumnDeleteRow, Me.ColumnStart, Me.ColumnEnd, Me.ColumnNumericUpDown, Me.ColumnSave})
-        Me.InitializeDataGridView.Enabled = False
-        Me.InitializeDataGridView.Location = New Point(14, 153)
-        Me.InitializeDataGridView.Name = "InitializeDataGridView"
-        Me.InitializeDataGridView.RowTemplate.Height = 25
-        Me.InitializeDataGridView.Size = New Size(481, 220)
-        Me.InitializeDataGridView.TabIndex = 3
+        InitializeDataGridView.AllowUserToAddRows = False
+        InitializeDataGridView.AllowUserToResizeColumns = False
+        InitializeDataGridView.AllowUserToResizeRows = False
+        InitializeDataGridView.CausesValidation = False
+        InitializeDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        InitializeDataGridView.Columns.AddRange(New DataGridViewColumn() {Me.ColumnDeleteRow, ColumnStart, ColumnEnd, Me.ColumnNumericUpDown, Me.ColumnSave})
+        InitializeDataGridView.Enabled = False
+        InitializeDataGridView.Location = New Point(14, 153)
+        InitializeDataGridView.Name = "InitializeDataGridView"
+        InitializeDataGridView.RowTemplate.Height = 25
+        InitializeDataGridView.Size = New Size(481, 220)
+        InitializeDataGridView.TabIndex = 3
         ' 
         ' ColumnDeleteRow
         ' 
@@ -147,21 +147,21 @@ Partial Class InitializeDialog
         ' 
         ' ColumnStart
         ' 
-        Me.ColumnStart.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.ColumnStart.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
-        Me.ColumnStart.HeaderText = "Start"
-        Me.ColumnStart.Name = "ColumnStart"
-        Me.ColumnStart.Resizable = DataGridViewTriState.False
-        Me.ColumnStart.Width = 37
+        ColumnStart.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+        ColumnStart.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
+        ColumnStart.HeaderText = "Start"
+        ColumnStart.Name = "ColumnStart"
+        ColumnStart.Resizable = DataGridViewTriState.False
+        ColumnStart.Width = 37
         ' 
         ' ColumnEnd
         ' 
-        Me.ColumnEnd.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Me.ColumnEnd.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
-        Me.ColumnEnd.HeaderText = "End"
-        Me.ColumnEnd.Name = "ColumnEnd"
-        Me.ColumnEnd.Resizable = DataGridViewTriState.False
-        Me.ColumnEnd.Width = 33
+        ColumnEnd.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+        ColumnEnd.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
+        ColumnEnd.HeaderText = "End"
+        ColumnEnd.Name = "ColumnEnd"
+        ColumnEnd.Resizable = DataGridViewTriState.False
+        ColumnEnd.Width = 33
         ' 
         ' ColumnNumericUpDown
         ' 
@@ -170,9 +170,9 @@ Partial Class InitializeDialog
         DataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter
         Me.ColumnNumericUpDown.DefaultCellStyle = DataGridViewCellStyle1
         Me.ColumnNumericUpDown.HeaderText = "Carb Ratio g/U"
-        Me.ColumnNumericUpDown.Increment = New [Decimal](New Integer() {1, 0, 0, 65536})
-        Me.ColumnNumericUpDown.Maximum = New [Decimal](New Integer() {99, 0, 0, 0})
-        Me.ColumnNumericUpDown.Minimum = New [Decimal](New Integer() {1, 0, 0, 0})
+        Me.ColumnNumericUpDown.Increment = New Decimal(New Integer() {1, 0, 0, 65536})
+        Me.ColumnNumericUpDown.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
+        Me.ColumnNumericUpDown.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.ColumnNumericUpDown.Name = "ColumnNumericUpDown"
         Me.ColumnNumericUpDown.Width = 91
         ' 
@@ -188,73 +188,73 @@ Partial Class InitializeDialog
         ' 
         ' ErrorProvider1
         ' 
-        Me.ErrorProvider1.ContainerControl = Me
+        ErrorProvider1.ContainerControl = Me
         ' 
         ' InsulinTypeComboBox
         ' 
-        Me.InsulinTypeComboBox.CausesValidation = False
-        Me.InsulinTypeComboBox.DropDownStyle = ComboBoxStyle.DropDownList
-        Me.InsulinTypeComboBox.Enabled = False
-        Me.InsulinTypeComboBox.FormattingEnabled = True
-        Me.InsulinTypeComboBox.Location = New Point(363, 5)
-        Me.InsulinTypeComboBox.Name = "InsulinTypeComboBox"
-        Me.InsulinTypeComboBox.Size = New Size(132, 23)
-        Me.InsulinTypeComboBox.TabIndex = 1
+        InsulinTypeComboBox.CausesValidation = False
+        InsulinTypeComboBox.DropDownStyle = ComboBoxStyle.DropDownList
+        InsulinTypeComboBox.Enabled = False
+        InsulinTypeComboBox.FormattingEnabled = True
+        InsulinTypeComboBox.Location = New Point(363, 5)
+        InsulinTypeComboBox.Name = "InsulinTypeComboBox"
+        InsulinTypeComboBox.Size = New Size(132, 23)
+        InsulinTypeComboBox.TabIndex = 1
         ' 
         ' InsulinTypeLabel
         ' 
-        Me.InsulinTypeLabel.AutoSize = True
-        Me.InsulinTypeLabel.Location = New Point(266, 9)
-        Me.InsulinTypeLabel.Name = "InsulinTypeLabel"
-        Me.InsulinTypeLabel.Size = New Size(72, 15)
-        Me.InsulinTypeLabel.TabIndex = 6
-        Me.InsulinTypeLabel.Text = "Insulin Type:"
+        InsulinTypeLabel.AutoSize = True
+        InsulinTypeLabel.Location = New Point(266, 9)
+        InsulinTypeLabel.Name = "InsulinTypeLabel"
+        InsulinTypeLabel.Size = New Size(72, 15)
+        InsulinTypeLabel.TabIndex = 6
+        InsulinTypeLabel.Text = "Insulin Type:"
         ' 
         ' InstructionsLabel
         ' 
-        Me.InstructionsLabel.AutoSize = True
-        Me.InstructionsLabel.Location = New Point(7, 75)
-        Me.InstructionsLabel.Name = "InstructionsLabel"
-        Me.InstructionsLabel.Size = New Size(489, 75)
-        Me.InstructionsLabel.TabIndex = 7
-        Me.InstructionsLabel.Text = resources.GetString("InstructionsLabel.Text")
+        InstructionsLabel.AutoSize = True
+        InstructionsLabel.Location = New Point(7, 75)
+        InstructionsLabel.Name = "InstructionsLabel"
+        InstructionsLabel.Size = New Size(489, 75)
+        InstructionsLabel.TabIndex = 7
+        InstructionsLabel.Text = resources.GetString("InstructionsLabel.Text")
         ' 
         ' TargetSgComboBox
         ' 
-        Me.TargetSgComboBox.FormattingEnabled = True
-        Me.TargetSgComboBox.Location = New Point(363, 40)
-        Me.TargetSgComboBox.Name = "TargetSgComboBox"
-        Me.TargetSgComboBox.Size = New Size(132, 23)
-        Me.TargetSgComboBox.TabIndex = 8
-        Me.TargetSgComboBox.Text = "120"
+        TargetSgComboBox.FormattingEnabled = True
+        TargetSgComboBox.Location = New Point(363, 40)
+        TargetSgComboBox.Name = "TargetSgComboBox"
+        TargetSgComboBox.Size = New Size(132, 23)
+        TargetSgComboBox.TabIndex = 8
+        TargetSgComboBox.Text = "120"
         ' 
         ' TargetSgValueLabel
         ' 
-        Me.TargetSgValueLabel.AutoSize = True
-        Me.TargetSgValueLabel.Location = New Point(266, 44)
-        Me.TargetSgValueLabel.Name = "TargetSgValueLabel"
-        Me.TargetSgValueLabel.Size = New Size(90, 15)
-        Me.TargetSgValueLabel.TabIndex = 9
-        Me.TargetSgValueLabel.Text = "Target SG Value:"
+        TargetSgValueLabel.AutoSize = True
+        TargetSgValueLabel.Location = New Point(266, 44)
+        TargetSgValueLabel.Name = "TargetSgValueLabel"
+        TargetSgValueLabel.Size = New Size(90, 15)
+        TargetSgValueLabel.TabIndex = 9
+        TargetSgValueLabel.Text = "Target SG Value:"
         ' 
         ' InitializeDialog
         ' 
-        Me.AcceptButton = Me.OK_Button
-        Me.AutoScaleDimensions = New SizeF(7F, 15F)
+        Me.AcceptButton = OK_Button
+        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.AutoValidate = AutoValidate.EnableAllowFocusChange
-        Me.CancelButton = Me.Cancel_Button
+        Me.CancelButton = Cancel_Button
         Me.ClientSize = New Size(503, 430)
-        Me.Controls.Add(Me.TargetSgValueLabel)
-        Me.Controls.Add(Me.TargetSgComboBox)
-        Me.Controls.Add(Me.InstructionsLabel)
-        Me.Controls.Add(Me.InsulinTypeLabel)
-        Me.Controls.Add(Me.InsulinTypeComboBox)
-        Me.Controls.Add(Me.InitializeDataGridView)
-        Me.Controls.Add(Me.UseAITAdvancedDecayCheckBox)
-        Me.Controls.Add(Me.SelectAITLabel)
-        Me.Controls.Add(Me.PumpAitComboBox)
-        Me.Controls.Add(Me.TableLayoutPanel1)
+        Me.Controls.Add(TargetSgValueLabel)
+        Me.Controls.Add(TargetSgComboBox)
+        Me.Controls.Add(InstructionsLabel)
+        Me.Controls.Add(InsulinTypeLabel)
+        Me.Controls.Add(InsulinTypeComboBox)
+        Me.Controls.Add(InitializeDataGridView)
+        Me.Controls.Add(UseAITAdvancedDecayCheckBox)
+        Me.Controls.Add(SelectAITLabel)
+        Me.Controls.Add(PumpAitComboBox)
+        Me.Controls.Add(TableLayoutPanel1)
         Me.FormBorderStyle = FormBorderStyle.FixedDialog
         Me.Margin = New Padding(4, 3, 4, 3)
         Me.MaximizeBox = False
@@ -263,15 +263,15 @@ Partial Class InitializeDialog
         Me.ShowInTaskbar = False
         Me.StartPosition = FormStartPosition.CenterParent
         Me.Text = "Initialize Pump Settings"
-        Me.TableLayoutPanel1.ResumeLayout(False)
-        CType(Me.InitializeDataGridView, ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ErrorProvider1, ComponentModel.ISupportInitialize).EndInit()
+        TableLayoutPanel1.ResumeLayout(False)
+        CType(InitializeDataGridView, ComponentModel.ISupportInitialize).EndInit()
+        CType(ErrorProvider1, ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
     End Sub
-    Friend WithEvents TableLayoutPanel1 As System.Windows.Forms.TableLayoutPanel
-    Friend WithEvents OK_Button As System.Windows.Forms.Button
-    Friend WithEvents Cancel_Button As System.Windows.Forms.Button
+    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
+    Friend WithEvents OK_Button As Button
+    Friend WithEvents Cancel_Button As Button
     Friend WithEvents PumpAitComboBox As ComboBox
     Friend WithEvents InsulinTypeLabel As Label
     Friend WithEvents UseAITAdvancedDecayCheckBox As CheckBox
