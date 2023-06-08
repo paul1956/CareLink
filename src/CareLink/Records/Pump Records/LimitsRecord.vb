@@ -20,7 +20,7 @@ Public Class LimitsRecord
         End Set
     End Property
 
-    <DisplayName("High Limit (mm/dL)")>
+    <DisplayName("High Limit (mg/dL)")>
     <Column(Order:=3, TypeName:=NameOf([Single]))>
     Public ReadOnly Property HighLimitMmDl As Single
         Get
@@ -59,7 +59,7 @@ Public Class LimitsRecord
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public Property RecordNumber As Integer
 
-    <DisplayName("Low Limit (mm/dL)")>
+    <DisplayName("Low Limit (mg/dL)")>
     <Column(Order:=6, TypeName:=NameOf([Single]))>
     Public ReadOnly Property sgMmDl As Single
         Get

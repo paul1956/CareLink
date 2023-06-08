@@ -121,7 +121,7 @@ Friend Module UserMessageHandler
                         {"SEARCHING_FOR_SENSOR_SIGNAL", "Searching for sensor signal."},
                         {"SENSOR_DISCONNECTED", "Sensor disconnected."},
                         {"SENSOR_OFF", "Sensor off."},
-                        {"SG_BELOW_40_MGDL", "SG below 40 mg/dl."},
+                        {"SG_BELOW_40_MGDL", "SG below 40 mg/dL."},
                         {"SUSPENDED_BEFORE_LOW", "Suspended before low."},
                         {"TEMP_BASAL", "Temp Basal"},
                         {"TEMP_TARGET", "Temp Target"},

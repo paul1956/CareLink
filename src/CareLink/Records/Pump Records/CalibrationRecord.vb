@@ -59,7 +59,7 @@ Public Class CalibrationRecord
         End Set
     End Property
 
-    <DisplayName("Value (mm/dL)")>
+    <DisplayName("Value (mg/dL)")>
     <Column(Order:=4, TypeName:=NameOf([Single]))>
     Public ReadOnly Property valueMmDl As Single
         Get

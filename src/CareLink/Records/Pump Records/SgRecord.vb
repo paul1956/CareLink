@@ -106,7 +106,7 @@ Public Class SgRecord
         End Set
     End Property
 
-    <DisplayName("Sensor Glucose (mm/dL)")>
+    <DisplayName("Sensor Glucose (mg/dL)")>
     <Column(Order:=2, TypeName:=NameOf([Single]))>
     Public ReadOnly Property sgMmDl As Single
         Get

@@ -654,7 +654,7 @@ Public Class Form1
                                 Dim sgValue As Single = markerTag(2).Trim.Split(" ")(0).Trim.ParseSingle(2)
                                 Me.CursorMessage3Label.Text = markerTag(2).Trim
                                 Me.CursorMessage3Label.Visible = True
-                                Me.CursorMessage4Label.Text = If(ScalingNeeded, $"{CInt(sgValue * 18)} mm/dL", $"{sgValue / 18:F2} mmol/L")
+                                Me.CursorMessage4Label.Text = If(ScalingNeeded, $"{CInt(sgValue * 18)} mg/dL", $"{sgValue / 18:F2} mmol/L")
                                 Me.CursorMessage4Label.Visible = True
                                 Me.CursorPanel.Visible = True
                             Case Else
@@ -669,7 +669,7 @@ Public Class Form1
                     Me.CursorMessage1Label.Visible = True
                     Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(3)} {BgUnitsString}"
                     Me.CursorMessage2Label.Visible = True
-                    Me.CursorMessage3Label.Text = If(ScalingNeeded, $"{CInt(currentDataPoint.YValues(0) * 18)} mm/dL", $"{(currentDataPoint.YValues(0) / 18).RoundToSingle(3)} mmol/L")
+                    Me.CursorMessage3Label.Text = If(ScalingNeeded, $"{CInt(currentDataPoint.YValues(0) * 18)} mg/dL", $"{(currentDataPoint.YValues(0) / 18).RoundToSingle(3)} mmol/L")
                     Me.CursorMessage3Label.Visible = True
                     Me.CursorMessage4Label.Text = Date.FromOADate(currentDataPoint.XValue).ToString(s_timeWithMinuteFormat)
                     Me.CursorMessage4Label.Visible = True
