@@ -34,6 +34,7 @@ New in 3.8.1.0
 - Added display of high and low Standard Deviations
 - All tables except the 3 country pages now support exporting data to clipboard and many to Excel with formatting
 - Add support for CareLink v6 for Care partners
+- Support display of summary graph values in in mm/dl and mmol/L with image
 
 New in 3.8.0.11
 - Fixed serious error in calculation for MaxBasal per hour for 780G

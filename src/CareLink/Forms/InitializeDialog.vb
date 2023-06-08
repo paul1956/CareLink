@@ -23,9 +23,9 @@ Public Class InitializeDialog
 
     Private ReadOnly _mgDlItems As New Dictionary(Of String, Single) From
             {
-                {$"100 mg/dl", 100.0},
-                {$"110 mg/dl", 110.0},
-                {$"120 mg/dl", 120.0}
+                {$"100 mg/dL", 100.0},
+                {$"110 mg/dL", 110.0},
+                {$"120 mg/dL", 120.0}
             }
 
     Private ReadOnly _midday As String = New TimeOnly(12, 0).ToString(CurrentDateCulture)

@@ -49,8 +49,8 @@ Public Module SystemConstants
                     }
 
     Public ReadOnly s_unitsStrings As New Dictionary(Of String, String) From {
-                        {"MG_DL", "mg/dl"},
-                        {"MGDL", "mg/dl"},
+                        {"MG_DL", "mg/dL"},
+                        {"MGDL", "mg/dL"},
                         {"MMOL_L", "mmol/L"},
                         {"MMOLL", "mmol/L"}
                     }

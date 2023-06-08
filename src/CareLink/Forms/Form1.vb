@@ -617,6 +617,7 @@ Public Class Form1
                                 Me.CursorMessage2Label.Visible = True
                                 Me.CursorMessage3Label.Text = Date.FromOADate(currentDataPoint.XValue).ToString(s_timeWithMinuteFormat)
                                 Me.CursorMessage3Label.Visible = True
+                                Me.CursorMessage4Label.Visible = False
                                 Select Case markerTag(0)
                                     Case "Auto Correction",
                                          "Auto Basal",
@@ -631,6 +632,7 @@ Public Class Form1
                                         Stop
                                         Me.CursorMessage1Label.Visible = False
                                         Me.CursorMessage2Label.Visible = False
+                                        Me.CursorMessage3Label.Visible = False
                                         Me.CursorPictureBox.Image = Nothing
                                 End Select
                                 Me.CursorPanel.Visible = True
@@ -645,12 +647,15 @@ Public Class Form1
                                     Case Else
                                         Stop
                                 End Select
-                                Me.CursorMessage1Label.Text = markerTag(0)
+                                Me.CursorMessage1Label.Text = $"{markerTag(0)}@{xValue.ToString(s_timeWithMinuteFormat)}"
                                 Me.CursorMessage1Label.Visible = True
                                 Me.CursorMessage2Label.Text = markerTag(1).Trim
                                 Me.CursorMessage2Label.Visible = True
-                                Me.CursorMessage3Label.Text = $"{markerTag(2).Trim}@{xValue.ToString(s_timeWithMinuteFormat)}"
+                                Dim sgValue As Single = markerTag(2).Trim.Split(" ")(0).Trim.ParseSingle(2)
+                                Me.CursorMessage3Label.Text = markerTag(2).Trim
                                 Me.CursorMessage3Label.Visible = True
+                                Me.CursorMessage4Label.Text = If(ScalingNeeded, $"{CInt(sgValue * 18)} mm/dL", $"{sgValue / 18:F2} mmol/L")
+                                Me.CursorMessage4Label.Visible = True
                                 Me.CursorPanel.Visible = True
                             Case Else
                                 Stop
@@ -664,8 +669,10 @@ Public Class Form1
                     Me.CursorMessage1Label.Visible = True
                     Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(3)} {BgUnitsString}"
                     Me.CursorMessage2Label.Visible = True
-                    Me.CursorMessage3Label.Text = Date.FromOADate(currentDataPoint.XValue).ToString(s_timeWithMinuteFormat)
+                    Me.CursorMessage3Label.Text = If(ScalingNeeded, $"{CInt(currentDataPoint.YValues(0) * 18)} mm/dL", $"{(currentDataPoint.YValues(0) / 18).RoundToSingle(3)} mmol/L")
                     Me.CursorMessage3Label.Visible = True
+                    Me.CursorMessage4Label.Text = Date.FromOADate(currentDataPoint.XValue).ToString(s_timeWithMinuteFormat)
+                    Me.CursorMessage4Label.Visible = True
                     Me.CursorPictureBox.Image = Nothing
                     Me.CursorPanel.Visible = True
                     chart1.SetupCallout(currentDataPoint, $"Blood Glucose {Me.CursorMessage2Label.Text}")
@@ -673,8 +680,9 @@ Public Class Form1
                     Me.CursorMessage1Label.Visible = False
                     Me.CursorMessage1Label.Visible = False
                     Me.CursorMessage2Label.Visible = False
-                    Me.CursorPictureBox.Image = Nothing
                     Me.CursorMessage3Label.Visible = False
+                    Me.CursorMessage4Label.Visible = False
+                    Me.CursorPictureBox.Image = Nothing
                     Me.CursorPanel.Visible = False
                 Case ActiveInsulinSeriesName
                     chart1.SetupCallout(currentDataPoint, $"Theoretical Active Insulin {currentDataPoint.YValues.FirstOrDefault:F3} U")
@@ -2273,14 +2281,14 @@ Public Class Form1
             If sg.sgMmDl < 70 Then
                 lowCount += 1
                 If ScalingNeeded Then
-                    lowDeviations += (TirLowLimit(True) - sg.sgMmolL) ^ 2
+                    lowDeviations += ((TirLowLimit(True) - sg.sgMmolL) * 18) ^ 2
                 Else
                     lowDeviations += (TirLowLimit(False) - sg.sgMmDl) ^ 2
                 End If
             ElseIf sg.sgMmDl > 180 Then
                 highCount += 1
                 If ScalingNeeded Then
-                    highDeviations += (sg.sgMmolL - TirHighLimit(True)) ^ 2
+                    highDeviations += ((sg.sgMmolL - TirHighLimit(True)) * 18) ^ 2
                 Else
                     highDeviations += (sg.sgMmDl - TirHighLimit(False)) ^ 2
                 End If
@@ -2291,12 +2299,12 @@ Public Class Form1
         deviationMessage.AppendLine("Standard Deviation")
         If elements > 0 Then
             If lowCount > 0 Then
-                deviationMessage.Append($"{CSng(Math.Sqrt(lowDeviations / (elements - highCount))).RoundSingle(If(ScalingNeeded, 1, 0), True).ToString(CurrentDataCulture)} Low  ")
+                deviationMessage.Append($"{CSng(Math.Sqrt(lowDeviations / (elements - highCount))).RoundSingle(0, True).ToString(CurrentDataCulture)} Low  ")
             Else
                 deviationMessage.Append("0 Low  ")
             End If
             If highCount > 0 Then
-                deviationMessage.Append($"{CSng(Math.Sqrt(highDeviations / (elements - lowCount))).RoundSingle(If(ScalingNeeded, 1, 0), True).ToString(CurrentDataCulture)} High")
+                deviationMessage.Append($"{CSng(Math.Sqrt(highDeviations / (elements - lowCount))).RoundSingle(0, True).ToString(CurrentDataCulture)} High")
             Else
                 deviationMessage.Append("0 High")
             End If

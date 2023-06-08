@@ -76,6 +76,7 @@ Partial Class Form1
         CursorMessage1Label = New Label()
         CursorMessage2Label = New Label()
         CursorMessage3Label = New Label()
+        CursorMessage4Label = New Label()
         CursorPanel = New Panel()
         CursorPictureBox = New PictureBox()
         CursorTimer = New Timer(components)
@@ -754,7 +755,7 @@ Partial Class Form1
         CursorMessage1Label.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         CursorMessage1Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
         CursorMessage1Label.ForeColor = Color.White
-        CursorMessage1Label.Location = New Point(0, 63)
+        CursorMessage1Label.Location = New Point(0, 43)
         CursorMessage1Label.Name = "CursorMessage1Label"
         CursorMessage1Label.Size = New Size(178, 21)
         CursorMessage1Label.TabIndex = 39
@@ -766,7 +767,7 @@ Partial Class Form1
         CursorMessage2Label.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         CursorMessage2Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
         CursorMessage2Label.ForeColor = Color.White
-        CursorMessage2Label.Location = New Point(0, 84)
+        CursorMessage2Label.Location = New Point(0, 65)
         CursorMessage2Label.Name = "CursorMessage2Label"
         CursorMessage2Label.Size = New Size(178, 21)
         CursorMessage2Label.TabIndex = 40
@@ -777,12 +778,23 @@ Partial Class Form1
         ' 
         CursorMessage3Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
         CursorMessage3Label.ForeColor = Color.White
-        CursorMessage3Label.Location = New Point(0, 105)
+        CursorMessage3Label.Location = New Point(0, 86)
         CursorMessage3Label.Name = "CursorMessage3Label"
         CursorMessage3Label.Size = New Size(178, 21)
         CursorMessage3Label.TabIndex = 41
         CursorMessage3Label.Text = "156 ml/dl"
         CursorMessage3Label.TextAlign = ContentAlignment.MiddleCenter
+        ' 
+        ' CursorMessage4Label
+        ' 
+        CursorMessage4Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        CursorMessage4Label.ForeColor = Color.White
+        CursorMessage4Label.Location = New Point(0, 107)
+        CursorMessage4Label.Name = "CursorMessage4Label"
+        CursorMessage4Label.Size = New Size(178, 21)
+        CursorMessage4Label.TabIndex = 41
+        CursorMessage4Label.Text = "156 ml/dl"
+        CursorMessage4Label.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' CursorPanel
         ' 
@@ -790,6 +802,7 @@ Partial Class Form1
         CursorPanel.Controls.Add(CursorMessage1Label)
         CursorPanel.Controls.Add(CursorMessage2Label)
         CursorPanel.Controls.Add(CursorMessage3Label)
+        CursorPanel.Controls.Add(CursorMessage4Label)
         CursorPanel.Location = New Point(284, 0)
         CursorPanel.Margin = New Padding(0)
         CursorPanel.Name = "CursorPanel"
@@ -801,9 +814,9 @@ Partial Class Form1
         CursorPictureBox.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         CursorPictureBox.Image = CType(resources.GetObject("CursorPictureBox.Image"), Image)
         CursorPictureBox.InitialImage = Nothing
-        CursorPictureBox.Location = New Point(68, 0)
+        CursorPictureBox.Location = New Point(72, 0)
         CursorPictureBox.Name = "CursorPictureBox"
-        CursorPictureBox.Size = New Size(42, 56)
+        CursorPictureBox.Size = New Size(34, 43)
         CursorPictureBox.SizeMode = PictureBoxSizeMode.CenterImage
         CursorPictureBox.TabIndex = 42
         CursorPictureBox.TabStop = False
@@ -1523,7 +1536,7 @@ Partial Class Form1
         DeviationsLabel.Name = "DeviationsLabel"
         DeviationsLabel.Size = New Size(224, 45)
         DeviationsLabel.TabIndex = 35
-        DeviationsLabel.Text = "Standard Deviation" & vbCrLf & "2 Low  3 High"
+        DeviationsLabel.Text = "Standard Deviation" + vbCrLf + "2 Low  3 High"
         DeviationsLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' SmartGuardLabel
@@ -2799,6 +2812,7 @@ Partial Class Form1
     Friend WithEvents CursorMessage1Label As Label
     Friend WithEvents CursorMessage2Label As Label
     Friend WithEvents CursorMessage3Label As Label
+    Friend WithEvents CursorMessage4Label As Label
     Friend WithEvents CursorPanel As Panel
     Friend WithEvents CursorPictureBox As PictureBox
     Friend WithEvents CursorTimer As Timer
