@@ -42,8 +42,6 @@ Public Class Form1
 
     Public Property Initialized As Boolean = False
 
-    Public ReadOnly Property LoginDialog As New LoginForm1
-
     Public Property Client As CareLinkClient
         Get
             Return Me.LoginDialog?.Client
@@ -52,6 +50,8 @@ Public Class Form1
             Me.LoginDialog.Client = value
         End Set
     End Property
+
+    Public ReadOnly Property LoginDialog As New LoginForm1
 
 #Region "Pump Data"
 
@@ -862,6 +862,29 @@ Public Class Form1
 
 #End Region 'Dgv Menu Events
 
+#Region "Dgv Country Events"
+
+    Private Sub DgvCountryData_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles _
+            DgvCountryDataPg1.CellMouseClick,
+            DgvCountryDataPg2.CellMouseClick,
+            DgvCountryDataPg3.CellMouseClick
+
+        If e.Button = MouseButtons.Right Then
+            Dim dgv As DataGridView = CType(sender, DataGridView)
+            dgv.ContextMenuStrip = Me.DgvCopyWithoutExcelMenuStrip
+        End If
+    End Sub
+
+    Private Sub DgvCountryData_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles _
+            DgvCountryDataPg1.CellMouseDown,
+            DgvCountryDataPg2.CellMouseDown,
+            DgvCountryDataPg3.CellMouseDown
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        If dgv.SelectedCells.Count <= 1 Then
+            dgv.CurrentCell = dgv(e.ColumnIndex, e.RowIndex)
+        End If
+    End Sub
+
 #Region "Dgv Country Pg2 Events"
 
     Private Sub DgvCountryDataPg2_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvCountryDataPg2.CellClick
@@ -896,6 +919,8 @@ Public Class Form1
     End Sub
 
 #End Region ' Dgv Country Pg2 Events
+
+#End Region ' Dgv Country Events
 
 #Region "Dgv Summary Events"
 

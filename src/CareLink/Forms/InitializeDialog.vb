@@ -187,7 +187,7 @@ Public Class InitializeDialog
                     Me.CurrentUser.CurrentTarget = _mgDlItems.Last.Value
                 End If
             End If
-            .Enabled = Not Me.Is770G(Me.RecentData)
+            .Enabled = Not Is770G(Me.RecentData)
             .DisplayMember = "Key"
             .ValueMember = "Value"
             .SelectedIndex = Me.TargetSgComboBox.Items.IndexOfValue(Of String, Single)(Me.CurrentUser.CurrentTarget)
@@ -307,7 +307,7 @@ Public Class InitializeDialog
 
     End Sub
 
-    Private Function Is770G(recentData As Dictionary(Of String, String)) As Boolean
+    Private Shared Function Is770G(recentData As Dictionary(Of String, String)) As Boolean
         Return recentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber)) = "MMT-1880"
     End Function
 

@@ -14,21 +14,12 @@ Public Class CountrySettingsRecord
             Exit Sub
         End If
         With Form1
-
-            .DgvCountryDataPg1.Rows.Clear()
-            .DgvCountryDataPg1.RowHeadersVisible = False
-            .DgvCountryDataPg1.SelectionMode = DataGridViewSelectionMode.CellSelect
-            .DgvCountryDataPg1.InitializeDgv()
-
-            .DgvCountryDataPg2.Rows.Clear()
-            .DgvCountryDataPg2.RowHeadersVisible = False
-            .DgvCountryDataPg2.SelectionMode = DataGridViewSelectionMode.CellSelect
-            .DgvCountryDataPg2.InitializeDgv()
-
-            .DgvCountryDataPg3.Rows.Clear()
-            .DgvCountryDataPg3.RowHeadersVisible = False
-            .DgvCountryDataPg3.SelectionMode = DataGridViewSelectionMode.CellSelect
-            .DgvCountryDataPg3.InitializeDgv()
+            For Each dgv As DataGridView In { .DgvCountryDataPg1, .DgvCountryDataPg2, .DgvCountryDataPg3}
+                dgv.Rows.Clear()
+                dgv.RowHeadersVisible = False
+                dgv.SelectionMode = DataGridViewSelectionMode.CellSelect
+                dgv.InitializeDgv()
+            Next
 
             Dim currentLeftRow As Integer = 0
             Dim currentRightRow As Integer = 0
