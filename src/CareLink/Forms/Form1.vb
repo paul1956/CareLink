@@ -771,7 +771,7 @@ Public Class Form1
 #Region "Dgv Menu Events"
 
     Private WithEvents DgvCopyWithExcelMenuStrip As New ContextMenuStrip
-    Private WithEvents DgvCopyWithoutExcelMenuStrip As New ContextMenuStrip
+    Friend WithEvents DgvCopyWithoutExcelMenuStrip As New ContextMenuStrip
 
     Private Shared Function GetDataGridView(sender As Object) As DataGridView
         Dim contextStrip As ContextMenuStrip = CType(CType(sender, ToolStripMenuItem).GetCurrentParent, ContextMenuStrip)
@@ -847,9 +847,6 @@ Public Class Form1
 
     Public Sub Dgv_CellContextMenuStripNeededWithoutExcel(sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs) Handles _
                                                             DgvCareLinkUsers.CellContextMenuStripNeeded,
-                                                            DgvCountryDataPg1.CellContextMenuStripNeeded,
-                                                            DgvCountryDataPg2.CellContextMenuStripNeeded,
-                                                            DgvCountryDataPg3.CellContextMenuStripNeeded,
                                                             DgvCurrentUser.CellContextMenuStripNeeded,
                                                             DgvSessionProfile.CellContextMenuStripNeeded,
                                                             DgvSummary.CellContextMenuStripNeeded
@@ -861,29 +858,6 @@ Public Class Form1
     End Sub
 
 #End Region 'Dgv Menu Events
-
-#Region "Dgv Country Events"
-
-    Private Sub DgvCountryData_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles _
-            DgvCountryDataPg1.CellMouseClick,
-            DgvCountryDataPg2.CellMouseClick,
-            DgvCountryDataPg3.CellMouseClick
-
-        If e.Button = MouseButtons.Right Then
-            Dim dgv As DataGridView = CType(sender, DataGridView)
-            dgv.ContextMenuStrip = Me.DgvCopyWithoutExcelMenuStrip
-        End If
-    End Sub
-
-    Private Sub DgvCountryData_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles _
-            DgvCountryDataPg1.CellMouseDown,
-            DgvCountryDataPg2.CellMouseDown,
-            DgvCountryDataPg3.CellMouseDown
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        If dgv.SelectedCells.Count <= 1 Then
-            dgv.CurrentCell = dgv(e.ColumnIndex, e.RowIndex)
-        End If
-    End Sub
 
 #Region "Dgv Country Pg2 Events"
 
@@ -919,8 +893,6 @@ Public Class Form1
     End Sub
 
 #End Region ' Dgv Country Pg2 Events
-
-#End Region ' Dgv Country Events
 
 #Region "Dgv Summary Events"
 

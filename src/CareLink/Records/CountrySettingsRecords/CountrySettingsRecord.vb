@@ -19,6 +19,7 @@ Public Class CountrySettingsRecord
                 dgv.RowHeadersVisible = False
                 dgv.SelectionMode = DataGridViewSelectionMode.CellSelect
                 dgv.InitializeDgv()
+                dgv.ContextMenuStrip = Form1.DgvCopyWithoutExcelMenuStrip
             Next
 
             Dim currentLeftRow As Integer = 0
