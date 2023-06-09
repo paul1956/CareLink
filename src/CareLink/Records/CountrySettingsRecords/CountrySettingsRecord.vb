@@ -165,12 +165,6 @@ Public Class CountrySettingsRecord
                         Stop
                 End Select
             Next
-            RemoveHandler .DgvCountryDataPg1.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithExcel
-            RemoveHandler .DgvCountryDataPg2.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithExcel
-            RemoveHandler .DgvCountryDataPg3.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithExcel
-            AddHandler .DgvCountryDataPg1.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithExcel
-            AddHandler .DgvCountryDataPg2.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithExcel
-            AddHandler .DgvCountryDataPg3.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithExcel
             Application.DoEvents()
         End With
         _hasValue = True
