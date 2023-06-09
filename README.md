@@ -30,7 +30,8 @@ This update has a UI to show all the available data and a visual version that mi
 06/04/2023
 
 ## What's New in this release
-New in 3.8.1.0
+
+New in 3.8.1.1
 - Added display of high and low Standard Deviations
 - All tables except the 3 country pages now support exporting data to clipboard and many to Excel with formatting
 - Add support for CareLink v6 for Care partners
