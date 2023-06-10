@@ -31,6 +31,9 @@ This update has a UI to show all the available data and a visual version that mi
 
 ## What's New in this release
 
+New in 3.8.1.2
+- Fix for repeated checks for update while waiting for user interaction
+
 New in 3.8.1.1
 - Added display of high and low Standard Deviations
 - All tables except the 3 country pages now support exporting data to clipboard and many to Excel with formatting
