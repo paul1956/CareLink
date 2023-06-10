@@ -90,7 +90,7 @@ Friend Module BrowserUtilities
                     If updateSleepCount > 0 Then
                         updateSleepCount -= 1
                     Else
-                        If MsgBox("There is a newer version available, do you want to install now?", MsgBoxStyle.YesNo, "Updates Available") = MsgBoxResult.Yes Then
+                        If MsgBox($"There is a newer version available, do you want to install now?{vbCrLf}Current version {My.Application.Info.Version}{vbCrLf}New version {gitHubVersion}", MsgBoxStyle.YesNo, "Updates Available") = MsgBoxResult.Yes Then
                             OpenUrlInBrowser($"{GitHubCareLinkUrl}releases/")
                             End
                         End If

@@ -31,6 +31,9 @@ This update has a UI to show all the available data and a visual version that mi
 
 ## What's New in this release
 
+New in 3.8.1.3
+- Display old and new version information 
+
 New in 3.8.1.2
 - Fix for repeated checks for update while waiting for user interaction
 
