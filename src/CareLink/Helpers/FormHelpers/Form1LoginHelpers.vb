@@ -8,6 +8,7 @@ Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 
 Friend Module Form1LoginHelpers
+    Public ReadOnly Property LoginDialog As New LoginForm1
 
     <Extension>
     Friend Function DoOptionalLoginAndUpdateData(MainForm As Form1, UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
@@ -20,7 +21,7 @@ Friend Module Form1LoginHelpers
             Case FileToLoadOptions.LastSaved
                 MainForm.Text = $"{SavedTitle} Using Last Saved Data"
                 CurrentDateCulture = GetPathToLastDownloadFile().ExtractCultureFromFileName(SavedLastDownloadBaseName)
-                MainForm.RecentData = Loads(File.ReadAllText(GetPathToLastDownloadFile()))
+                RecentData = Loads(File.ReadAllText(GetPathToLastDownloadFile()))
                 MainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 MainForm.SetLastUpdateTime($"{File.GetLastWriteTime(GetPathToLastDownloadFile()).ToShortDateTimeString} from file", False)
                 SetUpCareLinkUser(MainForm, GetPathToTestSettingsFile())
@@ -28,14 +29,14 @@ Friend Module Form1LoginHelpers
             Case FileToLoadOptions.TestData
                 MainForm.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
-                MainForm.RecentData = Loads(File.ReadAllText(GetPathToTestData()))
+                RecentData = Loads(File.ReadAllText(GetPathToTestData()))
                 MainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 MainForm.SetLastUpdateTime($"{File.GetLastWriteTime(GetPathToTestData()).ToShortDateTimeString} from file", False)
                 SetUpCareLinkUser(MainForm, GetPathToTestSettingsFile)
                 fromFile = True
             Case FileToLoadOptions.Login
                 MainForm.Text = SavedTitle
-                Do Until MainForm.LoginDialog.ShowDialog() <> DialogResult.Retry
+                Do Until LoginDialog.ShowDialog() <> DialogResult.Retry
                 Loop
 
                 If MainForm.Client Is Nothing OrElse Not MainForm.Client.LoggedIn Then
@@ -52,7 +53,7 @@ Friend Module Form1LoginHelpers
                 End If
 
                 Dim userSettingsPath As String = GetPathToUserSettingsFile(My.Settings.CareLinkUserName)
-                MainForm.RecentData = MainForm.Client.GetRecentData(MainForm)
+                RecentData = MainForm.Client.GetRecentData(MainForm)
                 SetUpCareLinkUser(MainForm, userSettingsPath)
                 MainForm.ServerUpdateTimer.Interval = CInt(s_1MinutesInMilliseconds)
                 MainForm.ServerUpdateTimer.Start()
@@ -63,7 +64,7 @@ Friend Module Form1LoginHelpers
                     Return False
                 End If
 
-                ReportLoginStatus(MainForm.LoginStatus, MainForm.RecentData Is Nothing OrElse MainForm.RecentData.Count = 0, MainForm.Client.GetLastErrorMessage)
+                ReportLoginStatus(MainForm.LoginStatus, RecentData Is Nothing OrElse RecentData.Count = 0, MainForm.Client.GetLastErrorMessage)
 
                 MainForm.MenuShowMiniDisplay.Visible = True
                 fromFile = False
@@ -95,7 +96,7 @@ Friend Module Form1LoginHelpers
         MainForm.InitializeActiveInsulinTabChart()
         MainForm.InitializeTimeInRangeArea()
 
-        MainForm.Initialized = True
+        ProgramInitialized = True
     End Sub
 
     <Extension>
@@ -114,7 +115,7 @@ Friend Module Form1LoginHelpers
         UpdateHighLightInLastUpdateTime(mainForm.LastUpdateTime, highLight)
         mainForm.LastUpdateTime.Text = $"Last Update Time: {msg}"
         Dim timeZoneName As String = Nothing
-        mainForm.TimeZoneLabel.Text = If(mainForm.RecentData?.TryGetValue(NameOf(ItemIndexes.clientTimeZoneName), timeZoneName),
+        mainForm.TimeZoneLabel.Text = If(RecentData?.TryGetValue(NameOf(ItemIndexes.clientTimeZoneName), timeZoneName),
                                             CalculateTimeZone(timeZoneName).StandardName,
                                             "")
         mainForm.LastUpdateTime.Spring = True
@@ -130,7 +131,7 @@ Friend Module Form1LoginHelpers
             CurrentUser = New CurrentUserRecord(My.Settings.CareLinkUserName)
             Dim f As New InitializeDialog With {
                 .CurrentUser = CurrentUser,
-                .RecentData = mainForm.RecentData
+                .InitializeDialogRecentData = RecentData
             }
             f.ShowDialog()
             CurrentUser = f.CurrentUser

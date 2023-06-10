@@ -84,6 +84,8 @@ Public Module PumpVariables
 
     Friend Property BgUnitsString As String
     Friend Property InAutoMode As Boolean
+    Public Property ProgramInitialized As Boolean = False
+    Public Property RecentData As New Dictionary(Of String, String)
 
 #End Region
 

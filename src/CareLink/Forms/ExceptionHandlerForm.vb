@@ -39,7 +39,7 @@ Public Class ExceptionHandlerForm
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "You can review what is being stored and then attach it to a new issue at", fontNormal)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, $"{_gitClient.Repository.Get(GitOwnerName, ProjectName).Result.HtmlUrl}/issues.", fontNormal)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "This will help me isolate issues quickly.", fontNormal)
-            CreateReportFile(Me.ExceptionTextBox.Text, Me.StackTraceTextBox.Text, uniqueFileNameResult.withPath, My.Forms.Form1.RecentData)
+            CreateReportFile(Me.ExceptionTextBox.Text, Me.StackTraceTextBox.Text, uniqueFileNameResult.withPath, RecentData)
         Else
             CurrentDateCulture = Me.ReportFileNameWithPath.ExtractCultureFromFileName(SavedErrorReportBaseName)
             If CurrentDateCulture Is Nothing Then

@@ -31,19 +31,14 @@ Public Class Form1
     Private _treatmentMarkerAbsoluteRectangle As RectangleF
     Private _updating As Boolean
 
-    Public Property Initialized As Boolean = False
-    Public Property RecentData As New Dictionary(Of String, String)
-
     Public Property Client As CareLinkClient
         Get
-            Return Me.LoginDialog?.Client
+            Return LoginDialog?.Client
         End Get
         Set(value As CareLinkClient)
-            Me.LoginDialog.Client = value
+            LoginDialog.Client = value
         End Set
     End Property
-
-    Public ReadOnly Property LoginDialog As New LoginForm1
 
 #Region "Chart Objects"
 
@@ -110,7 +105,7 @@ Public Class Form1
                         ActiveInsulinChart.CursorPositionChanging,
                         SummaryChart.CursorPositionChanging
 
-        If Not _Initialized Then Exit Sub
+        If Not ProgramInitialized Then Exit Sub
 
         Me.CursorTimer.Interval = CInt(s_30SecondInMilliseconds)
         Me.CursorTimer.Start()
@@ -133,7 +128,7 @@ Public Class Form1
                         ActiveInsulinChart.MouseMove,
                         TreatmentMarkersChart.MouseMove
 
-        If Not _Initialized Then
+        If Not ProgramInitialized Then
             Exit Sub
         End If
         If e.Button <> MouseButtons.None OrElse e.Clicks > 0 OrElse e.Location = _previousLoc Then
@@ -291,7 +286,7 @@ Public Class Form1
     <DebuggerNonUserCode()>
     Private Sub ActiveInsulinChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles ActiveInsulinChart.PostPaint
 
-        If Not _Initialized OrElse _inMouseMove Then
+        If Not ProgramInitialized OrElse _inMouseMove Then
             Exit Sub
         End If
         SyncLock _updatingLock
@@ -309,7 +304,7 @@ Public Class Form1
     <DebuggerNonUserCode()>
     Private Sub SummaryChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles SummaryChart.PostPaint
 
-        If Not _Initialized OrElse _inMouseMove Then
+        If Not ProgramInitialized OrElse _inMouseMove Then
             Exit Sub
         End If
         SyncLock _updatingLock
@@ -327,7 +322,7 @@ Public Class Form1
     <DebuggerNonUserCode()>
     Private Sub TreatmentMarkersChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles TreatmentMarkersChart.PostPaint
 
-        If Not _Initialized OrElse _inMouseMove Then
+        If Not ProgramInitialized OrElse _inMouseMove Then
             Exit Sub
         End If
         SyncLock _updatingLock
@@ -537,7 +532,7 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         For i As Integer = e.RowIndex To e.RowIndex + (e.RowCount - 1)
             Dim disableButtonCell As DataGridViewDisableButtonCell = CType(dgv.Rows(i).Cells("DgvCareLinkUsersDeleteRow"), DataGridViewDisableButtonCell)
-            disableButtonCell.Enabled = s_allUserSettingsData(i).CareLinkUserName <> _LoginDialog.LoggedOnUser.CareLinkUserName
+            disableButtonCell.Enabled = s_allUserSettingsData(i).CareLinkUserName <> LoginDialog.LoggedOnUser.CareLinkUserName
         Next
     End Sub
 
@@ -1069,7 +1064,7 @@ Public Class Form1
 
     Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpening
         Me.MenuStartHereLoadSavedDataFile.Enabled = AnyMatchingFiles($"{ProjectName}*.json")
-        Me.MenuStartHereSnapshotSave.Enabled = Me.RecentData IsNot Nothing AndAlso Me.RecentData.Count > 0
+        Me.MenuStartHereSnapshotSave.Enabled = RecentData IsNot Nothing AndAlso RecentData.Count > 0
         Me.MenuStartHereExceptionReportLoad.Visible = AnyMatchingFiles($"{SavedErrorReportBaseName}*.txt")
     End Sub
 
@@ -1095,12 +1090,12 @@ Public Class Form1
                 Me.ServerUpdateTimer.Stop()
                 Debug.Print($"In {NameOf(MenuStartHereExceptionReportLoad_Click)}, {NameOf(Me.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
                 If File.Exists(fileNameWithPath) Then
-                    Me.RecentData?.Clear()
+                    RecentData?.Clear()
                     ExceptionHandlerForm.ReportFileNameWithPath = fileNameWithPath
                     If ExceptionHandlerForm.ShowDialog() = DialogResult.OK Then
                         ExceptionHandlerForm.ReportFileNameWithPath = ""
                         Try
-                            Me.RecentData = Loads(ExceptionHandlerForm.LocalRawData)
+                            RecentData = Loads(ExceptionHandlerForm.LocalRawData)
                         Catch ex As Exception
                             MessageBox.Show($"Error reading date file. Original error: {ex.DecodeException()}")
                         End Try
@@ -1158,7 +1153,7 @@ Public Class Form1
                     CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{ProjectName}", True)
                     CurrentUICulture = CurrentDateCulture
 
-                    Me.RecentData = Loads(File.ReadAllText(openFileDialog1.FileName))
+                    RecentData = Loads(File.ReadAllText(openFileDialog1.FileName))
                     Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                     Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
                     Me.SetLastUpdateTime(File.GetLastWriteTime(openFileDialog1.FileName).ToShortDateTimeString, False)
@@ -1176,7 +1171,7 @@ Public Class Form1
     End Sub
 
     Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotSave.Click
-        Using jd As JsonDocument = JsonDocument.Parse(Me.RecentData.CleanUserData(), New JsonDocumentOptions)
+        Using jd As JsonDocument = JsonDocument.Parse(RecentData.CleanUserData(), New JsonDocumentOptions)
             File.WriteAllText(GetDataFileName(SavedSnapshotBaseName, CurrentDateCulture.Name, "json", True).withPath, JsonSerializer.Serialize(jd, JsonFormattingOptions))
         End Using
     End Sub
@@ -1214,7 +1209,7 @@ Public Class Form1
         CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
         Dim f As New InitializeDialog With {
             .CurrentUser = CurrentUser,
-            .RecentData = Me.RecentData
+            .InitializeDialogRecentData = RecentData
             }
         If f.ShowDialog() = DialogResult.OK Then
             CurrentUser = f.CurrentUser
@@ -1267,7 +1262,7 @@ Public Class Form1
     End Sub
 
     Private Sub MenuOptionsShowLegend_CheckStateChanged(sender As Object, e As EventArgs) Handles MenuOptionsShowLegend.CheckStateChanged
-        If Not Me.Initialized Then Exit Sub
+        If Not ProgramInitialized Then Exit Sub
         If Me.MenuOptionsShowLegend.Checked Then
             File.Create(GetPathToShowLegendFile(True))
             _activeInsulinChartLegend.Enabled = True
@@ -1287,7 +1282,7 @@ Public Class Form1
             PumpTimeZoneInfo = TimeZoneInfo.Local
             My.Settings.UseLocalTimeZone = True
         Else
-            PumpTimeZoneInfo = CalculateTimeZone(Me.RecentData(NameOf(ItemIndexes.clientTimeZoneName)))
+            PumpTimeZoneInfo = CalculateTimeZone(RecentData(NameOf(ItemIndexes.clientTimeZoneName)))
             My.Settings.UseLocalTimeZone = False
         End If
         If saveRequired Then My.Settings.Save()
@@ -1331,7 +1326,7 @@ Public Class Form1
         End If
         If e.SettingName = "CareLinkUserName" Then
             If s_allUserSettingsData?.ContainsKey(e.NewValue.ToString) Then
-                _LoginDialog.LoggedOnUser = s_allUserSettingsData(e.NewValue.ToString)
+                LoginDialog.LoggedOnUser = s_allUserSettingsData(e.NewValue.ToString)
                 Exit Sub
             Else
                 Dim userSettings As New CareLinkUserDataRecord(s_allUserSettingsData)
@@ -1339,7 +1334,7 @@ Public Class Form1
                 s_allUserSettingsData.Add(userSettings)
             End If
         End If
-        s_allUserSettingsData.SaveAllUserRecords(_LoginDialog.LoggedOnUser, e.SettingName, e.NewValue?.ToString)
+        s_allUserSettingsData.SaveAllUserRecords(LoginDialog.LoggedOnUser, e.SettingName, e.NewValue?.ToString)
     End Sub
 
 #End Region ' Settings Events
@@ -1456,14 +1451,14 @@ Public Class Form1
         SyncLock _updatingLock
             If Not _updating Then
                 _updating = True
-                Me.RecentData = Me.Client?.GetRecentData(Me)
-                If Me.RecentData Is Nothing Then
+                RecentData = Me.Client?.GetRecentData(Me)
+                If RecentData Is Nothing Then
                     If Me.Client Is Nothing OrElse Me.Client.HasErrors Then
                         Me.Client = New CareLinkClient(My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
                     End If
-                    Me.RecentData = Me.Client.GetRecentData(Me)
+                    RecentData = Me.Client.GetRecentData(Me)
                 End If
-                ReportLoginStatus(Me.LoginStatus, Me.RecentData Is Nothing OrElse Me.RecentData.Count = 0, Me.Client.GetLastErrorMessage)
+                ReportLoginStatus(Me.LoginStatus, RecentData Is Nothing OrElse RecentData.Count = 0, Me.Client.GetLastErrorMessage)
 
                 Me.Cursor = Cursors.Default
                 Application.DoEvents()
@@ -1472,12 +1467,12 @@ Public Class Form1
         End SyncLock
 
         Dim lastMedicalDeviceDataUpdateServerEpochString As String = ""
-        If Me.RecentData Is Nothing OrElse Me.RecentData.Count = 0 Then
+        If RecentData Is Nothing OrElse RecentData.Count = 0 Then
             ReportLoginStatus(Me.LoginStatus, True, Me.Client.GetLastErrorMessage)
 
             _sgMiniDisplay.SetCurrentBGString("---")
         Else
-            If Me.RecentData?.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
+            If RecentData?.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
                     If lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime + s_5MinuteSpan < Now() Then
                         Me.LastUpdateTime.UpdateHighLightInLastUpdateTime(True)
@@ -1486,7 +1481,7 @@ Public Class Form1
                         Me.LastUpdateTime.UpdateHighLightInLastUpdateTime(False)
                         _sgMiniDisplay.SetCurrentBGString(s_lastSgRecord?.sg.ToString)
                     End If
-                    Me.RecentData = Nothing
+                    RecentData = Nothing
                 Else
                     Me.UpdateAllTabPages(False)
                 End If
@@ -1932,7 +1927,7 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateActiveInsulinChart()
-        If Not Me.Initialized Then
+        If Not ProgramInitialized Then
             Exit Sub
         End If
 
@@ -2319,7 +2314,7 @@ Public Class Form1
         Me.TimeInRangeValueLabel.Text = $"{s_timeInRange} %"
         Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
         Me.BelowLowLimitMessageLabel.Text = $"Below {TirLowLimit(ScalingNeeded)} {BgUnitsString}"
-        Dim averageSgStr As String = Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.averageSG))
+        Dim averageSgStr As String = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.averageSG))
         Me.AverageSGValueLabel.Text = If(ScalingNeeded, averageSgStr.TruncateSingleString(2), averageSgStr)
         Me.AverageSGMessageLabel.Text = $"Average SG in {BgUnitsString}"
 
@@ -2416,7 +2411,7 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateTreatmentChart()
-        If Not _Initialized Then
+        If Not ProgramInitialized Then
             Exit Sub
         End If
         Try
@@ -2434,19 +2429,19 @@ Public Class Form1
     End Sub
 
     Friend Sub UpdateAllTabPages(fromFile As Boolean)
-        If Me.RecentData Is Nothing Then
+        If RecentData Is Nothing Then
             Debug.Print($"Exiting {NameOf(UpdateAllTabPages)}, {NameOf(RecentData)} has no data!")
             Exit Sub
         End If
         Dim lastMedicalDeviceDataUpdateServerTimeEpoch As String = ""
-        If Me.RecentData?.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerTimeEpoch) Then
+        If RecentData?.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerTimeEpoch) Then
             If CLng(lastMedicalDeviceDataUpdateServerTimeEpoch) = s_lastMedicalDeviceDataUpdateServerEpoch Then
-                Me.RecentData = Nothing
+                RecentData = Nothing
                 Exit Sub
             End If
         End If
 
-        If Me.RecentData.Count > ItemIndexes.typeCast + 1 Then
+        If RecentData.Count > ItemIndexes.typeCast + 1 Then
             Stop
         End If
         SyncLock _updatingLock
@@ -2464,13 +2459,13 @@ Public Class Form1
 
             Me.Cursor = Cursors.WaitCursor
             Application.DoEvents()
-            UpdateDataTables(Me, Me.RecentData)
+            UpdateDataTables(Me, RecentData)
             Application.DoEvents()
             Me.Cursor = Cursors.Default
             _updating = False
         End SyncLock
 
-        Dim rowValue As String = Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastSGTrend))
+        Dim rowValue As String = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastSGTrend))
         Dim arrows As String = Nothing
         If Trends.TryGetValue(rowValue, arrows) Then
             Me.LabelTrendArrows.Font = If(rowValue = "NONE",
@@ -2494,11 +2489,11 @@ Public Class Form1
         Me.UpdateAllSummarySeries()
         Me.UpdateDosingAndCarbs()
 
-        Me.FullNameLabel.Text = $"{s_firstName} {Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastName))}"
-        Dim modelNumber As String = Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber))
+        Me.FullNameLabel.Text = $"{s_firstName} {RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastName))}"
+        Dim modelNumber As String = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber))
         Me.ModelLabel.Text = modelNumber
         Me.PumpNameLabel.Text = GetPumpName(modelNumber)
-        Me.SerialNumberLabel.Text = Me.RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.medicalDeviceSerialNumber))
+        Me.SerialNumberLabel.Text = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.medicalDeviceSerialNumber))
         Me.ReadingsLabel.Text = $"{s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288 Readings"
 
         Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
@@ -2555,7 +2550,7 @@ Public Class Form1
                               ItemIndexes.basal,
                               True)
 
-        s_previousRecentData = Me.RecentData
+        s_previousRecentData = RecentData
         Me.MenuStartHere.Enabled = True
         Me.UpdateTreatmentChart()
         If s_totalAutoCorrection > 0 Then
