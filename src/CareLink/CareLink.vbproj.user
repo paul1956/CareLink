@@ -4,7 +4,7 @@
     <ShowAllFiles>true</ShowAllFiles>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Update="CustomControls\DataGridViewCNumericUpDown\DataGridViewNumericUpDownEditingControl.vb">
+    <Compile Update="CustomControls\DataGridViewNumericUpDown\DataGridViewNumericUpDownEditingControl.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Update="CustomControls\KnownColorComboBox.vb">

@@ -23,7 +23,7 @@ Friend Module ExportDataGridView
     End Function
 
     <Extension>
-    Public Sub CopyToClipboard(dgv As DataGridView, copyHeaders As DataGridViewClipboardCopyMode, copyAll As Boolean)
+    Private Sub CopyToClipboard(dgv As DataGridView, copyHeaders As DataGridViewClipboardCopyMode, copyAll As Boolean)
         If copyAll OrElse dgv.GetCellCount(DataGridViewElementStates.Selected) > 0 Then
             Dim dataGridViewCells As List(Of DataGridViewCell) = dgv.SelectedCells.Cast(Of DataGridViewCell).ToList()
             Dim colLow As Integer = If(copyAll, 0, dataGridViewCells.Min(Function(c As DataGridViewCell) c.ColumnIndex))
@@ -50,7 +50,7 @@ Friend Module ExportDataGridView
     End Sub
 
     <Extension>
-    Public Sub ExportToExcelWithFormatting(dgv As DataGridView)
+    Private Sub ExportToExcelWithFormatting(dgv As DataGridView)
         Dim baseFileName As String = dgv.Name.Replace("dgv", "", StringComparison.CurrentCultureIgnoreCase)
         Dim saveFileDialog1 As New SaveFileDialog With {
                 .CheckPathExists = True,
@@ -195,6 +195,31 @@ Friend Module ExportDataGridView
                 Stop
             End Try
         End If
+    End Sub
+
+    Private Function GetDgvFromToolStripMenuItem(sender As Object) As DataGridView
+        Dim contextStrip As ContextMenuStrip = CType(CType(sender, ToolStripMenuItem).GetCurrentParent, ContextMenuStrip)
+        Return CType(contextStrip.SourceControl, DataGridView)
+    End Function
+
+    Public Sub DgvCopySelectedCellsToClipBoardWithHeaders(sender As Object, e As EventArgs)
+        GetDgvFromToolStripMenuItem(sender).CopyToClipboard(DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText, False)
+    End Sub
+
+    Public Sub DgvCopySelectedCellsToClipBoardWithoutHeaders(sender As Object, e As EventArgs)
+        GetDgvFromToolStripMenuItem(sender).CopyToClipboard(DataGridViewClipboardCopyMode.EnableWithoutHeaderText, False)
+    End Sub
+
+    Public Sub DgvExportToClipBoardWithHeaders(sender As Object, e As EventArgs)
+        GetDgvFromToolStripMenuItem(sender).CopyToClipboard(DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText, True)
+    End Sub
+
+    Public Sub DgvExportToClipBoardWithoutHeaders(sender As Object, e As EventArgs)
+        GetDgvFromToolStripMenuItem(sender).CopyToClipboard(DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText, False)
+    End Sub
+
+    Public Sub DgvExportToExcel(sender As Object, e As EventArgs)
+        GetDgvFromToolStripMenuItem(sender).ExportToExcelWithFormatting()
     End Sub
 
 End Module
