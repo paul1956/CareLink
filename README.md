@@ -27,9 +27,12 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-06/04/2023
+06/10/2023
 
 ## What's New in this release
+New in 3.8.1.5
+- Fix reporting new version available multiple times
+
 New in 3.8.1.4
 - Fix crash when no CGM data received from pump in 24 hours
 

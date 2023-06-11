@@ -2444,6 +2444,9 @@ Public Class Form1
         If RecentData.Count > ItemIndexes.typeCast + 1 Then
             Stop
         End If
+
+        CheckForUpdatesAsync(False)
+
         SyncLock _updatingLock
             _updating = True ' prevent paint
             _summaryChartAbsoluteRectangle = RectangleF.Empty
@@ -2453,7 +2456,6 @@ Public Class Form1
                 Me.LoginStatus.Text = "Login Status: N/A From Saved File"
             Else
                 Me.SetLastUpdateTime(PumpNow.ToShortDateTimeString, False)
-                CheckForUpdatesAsync(False)
             End If
             Me.CursorPanel.Visible = False
 

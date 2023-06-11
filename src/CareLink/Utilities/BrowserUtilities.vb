@@ -81,33 +81,32 @@ Friend Module BrowserUtilities
     ''' <param name="reportSuccessfulResult">Always report result when true</param>
     Friend Async Sub CheckForUpdatesAsync(reportSuccessfulResult As Boolean)
         Try
-            If Interlocked.Exchange(inCheckForUpdate, 1) = 0 Then
-                If reportSuccessfulResult Then
-                    updateSleepCount = 0
-                End If
-                Dim gitHubVersion As String = Await GetVersionString()
-                If IsNewerVersion(gitHubVersion, My.Application.Info.Version) Then
-                    If updateSleepCount > 0 Then
-                        updateSleepCount -= 1
-                    Else
+            If reportSuccessfulResult Then
+                updateSleepCount = 0
+            End If
+            Dim gitHubVersion As String = Await GetVersionString()
+            If IsNewerVersion(gitHubVersion, My.Application.Info.Version) Then
+                If updateSleepCount > 0 Then
+                    updateSleepCount -= 1
+                Else
+                    If Interlocked.Exchange(inCheckForUpdate, 1) = 0 Then
                         If MsgBox($"There is a newer version available, do you want to install now?{vbCrLf}Current version {My.Application.Info.Version}{vbCrLf}New version {gitHubVersion}", MsgBoxStyle.YesNo, "Updates Available") = MsgBoxResult.Yes Then
                             OpenUrlInBrowser($"{GitHubCareLinkUrl}releases/")
                             End
                         End If
+                        inCheckForUpdate = 0
                         updateSleepCount = 288
                     End If
-                Else
-                    If reportSuccessfulResult Then
-                        MsgBox("You are running latest version", MsgBoxStyle.OkOnly, "No Updates Available")
-                    End If
+                End If
+            Else
+                If reportSuccessfulResult Then
+                    MsgBox("You are running latest version", MsgBoxStyle.OkOnly, "No Updates Available")
                 End If
             End If
         Catch ex As Exception
             If reportSuccessfulResult Then
                 MsgBox($"Connection failed while checking for new version:{vbCrLf}{vbCrLf}{ex.DecodeException()}", MsgBoxStyle.Information, "Version Check Failed")
             End If
-        Finally
-            inCheckForUpdate = 0
         End Try
 
     End Sub
