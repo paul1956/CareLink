@@ -27,16 +27,20 @@ Friend Module SystemVariables
 
     Friend Function GetInsulinYValue() As Single
         Dim maxYScaled As Single = s_listOfSGs.Max(Of Single)(Function(sgR As SgRecord) sgR.sg) + 2
-        If ScalingNeeded Then
-            If s_listOfSGs.Count = 0 OrElse maxYScaled > (330 / MmolLUnitsDivisor) Then
-                Return 342 / MmolLUnitsDivisor
-            End If
-            Return Math.Max(maxYScaled, 260 / MmolLUnitsDivisor)
+        If Single.IsNaN(maxYScaled) Then
+            Return If(ScalingNeeded, 330 / MmolLUnitsDivisor, 330)
         Else
-            If s_listOfSGs.Count = 0 Or maxYScaled > 330 Then
-                Return 342
+            If ScalingNeeded Then
+                If s_listOfSGs.Count = 0 OrElse maxYScaled > (330 / MmolLUnitsDivisor) Then
+                    Return 342 / MmolLUnitsDivisor
+                End If
+                Return Math.Max(maxYScaled, 260 / MmolLUnitsDivisor)
+            Else
+                If s_listOfSGs.Count = 0 OrElse maxYScaled > 330 Then
+                    Return 342
+                End If
+                Return Math.Max(maxYScaled, 260)
             End If
-            Return Math.Max(maxYScaled, 260)
         End If
     End Function
 
