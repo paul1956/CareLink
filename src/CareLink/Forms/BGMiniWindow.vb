@@ -56,7 +56,7 @@ Public Class BGMiniWindow
 
     Private Sub BGTextBox_TextChanged(sender As Object, e As EventArgs) Handles BGTextBox.TextChanged
         Me.Text = GetLastUpdateMessage()
-        If Me.BGTextBox.Text.Length = 0 OrElse Me.BGTextBox.Text = "---" OrElse Me.BGTextBox.Text = "999" Then
+        If Me.BGTextBox.Text.Length = 0 OrElse Me.BGTextBox.Text = "---" OrElse Me.BGTextBox.Text = "9999" Then
             _currentBGValue = Double.NaN
             Me.DeltaTextBox.Text = ""
         Else
@@ -64,7 +64,7 @@ Public Class BGMiniWindow
                 Me.DeltaTextBox.Text = ""
             Else
                 Dim delta As Double = _currentBGValue - _lastBGValue
-                Me.DeltaTextBox.Text = delta.ToString("+0;-#")
+                Me.DeltaTextBox.Text = delta.ToString(If(ScalingNeeded, "+0.00;-#.00", "F0"), CurrentDataCulture)
                 Select Case delta
                     Case Is = 0
                         Me.DeltaTextBox.Text = ""
@@ -132,11 +132,12 @@ Public Class BGMiniWindow
                 _normalizedBG *= 18
             End If
             Me.BGTextBox.ForeColor = SystemColors.ControlText
+            Me.BGTextBox.Text = If(ScalingNeeded, Value.ParseSingle(1).ToString, CInt(_currentBGValue).ToString)
         Else
             Me.BGTextBox.ForeColor = Color.Red
+            Me.BGTextBox.Text = Value
         End If
         Me.Text = GetLastUpdateMessage()
-        Me.BGTextBox.Text = Value
     End Sub
 
 End Class

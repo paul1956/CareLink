@@ -37,13 +37,13 @@ Partial Class BGMiniWindow
         ' BGTextBox
         ' 
         BGTextBox.BorderStyle = BorderStyle.None
-        BGTextBox.Font = New Font("Segoe UI", 48F, FontStyle.Regular, GraphicsUnit.Point)
+        BGTextBox.Font = New Font("Segoe UI", 36F, FontStyle.Regular, GraphicsUnit.Point)
         BGTextBox.Location = New Point(4, 29)
         BGTextBox.Margin = New Padding(0)
         BGTextBox.Name = "BGTextBox"
-        BGTextBox.Size = New Size(160, 86)
+        BGTextBox.Size = New Size(139, 64)
         BGTextBox.TabIndex = 1
-        BGTextBox.Text = "999"
+        BGTextBox.Text = "9999"
         BGTextBox.TextAlign = HorizontalAlignment.Center
         ' 
         ' ActiveInsulinTextBox
@@ -70,12 +70,12 @@ Partial Class BGMiniWindow
         DeltaTextBox.Anchor = AnchorStyles.Top Or AnchorStyles.Right
         DeltaTextBox.BorderStyle = BorderStyle.None
         DeltaTextBox.Font = New Font("Segoe UI", 36F, FontStyle.Regular, GraphicsUnit.Point)
-        DeltaTextBox.Location = New Point(143, 40)
+        DeltaTextBox.Location = New Point(135, 40)
         DeltaTextBox.Margin = New Padding(0)
         DeltaTextBox.Name = "DeltaTextBox"
         DeltaTextBox.Size = New Size(121, 64)
         DeltaTextBox.TabIndex = 2
-        DeltaTextBox.Text = "+10"
+        DeltaTextBox.Text = "+10.0"
         ' 
         ' CloseButton
         ' 
