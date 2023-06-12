@@ -64,7 +64,7 @@ Public Class BGMiniWindow
                 Me.DeltaTextBox.Text = ""
             Else
                 Dim delta As Double = _currentBGValue - _lastBGValue
-                Me.DeltaTextBox.Text = delta.ToString(If(ScalingNeeded, "+0.00;-#.00", "F0"), CurrentDataCulture)
+                Me.DeltaTextBox.Text = delta.ToString(If(ScalingNeeded, "+0.00;-#.00", "+0;-#0"), CurrentDataCulture)
                 Select Case delta
                     Case Is = 0
                         Me.DeltaTextBox.Text = ""
