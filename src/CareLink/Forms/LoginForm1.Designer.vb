@@ -17,7 +17,7 @@ Partial Class LoginForm1
     Friend WithEvents LogoPictureBox As PictureBox
     Friend WithEvents UsernameLabel As Label
     Friend WithEvents PasswordLabel As Label
-    Friend WithEvents UsernameTextBox As TextBox
+    Friend WithEvents UsernameComboBox As ComboBox
     Friend WithEvents PasswordTextBox As TextBox
     Friend WithEvents Ok_Button As Button
     Friend WithEvents Cancel_Button As Button
@@ -28,13 +28,13 @@ Partial Class LoginForm1
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As ComponentModel.ComponentResourceManager = New ComponentModel.ComponentResourceManager(GetType(LoginForm1))
         LogoPictureBox = New PictureBox()
         UsernameLabel = New Label()
         PasswordLabel = New Label()
-        UsernameTextBox = New TextBox()
+        UsernameComboBox = New ComboBox()
         PasswordTextBox = New TextBox()
         Ok_Button = New Button()
         Cancel_Button = New Button()
@@ -83,15 +83,15 @@ Partial Class LoginForm1
         PasswordLabel.Text = "Password"
         PasswordLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
-        ' UsernameTextBox
+        ' UsernameComboBox
         ' 
-        UsernameTextBox.Anchor = AnchorStyles.Left
-        UsernameTextBox.AutoCompleteMode = AutoCompleteMode.Suggest
-        UsernameTextBox.AutoCompleteSource = AutoCompleteSource.RecentlyUsedList
-        UsernameTextBox.Location = New Point(201, 48)
-        UsernameTextBox.Name = "UsernameTextBox"
-        UsernameTextBox.Size = New Size(220, 23)
-        UsernameTextBox.TabIndex = 3
+        UsernameComboBox.Anchor = AnchorStyles.Left
+        UsernameComboBox.AutoCompleteMode = AutoCompleteMode.Suggest
+        UsernameComboBox.AutoCompleteSource = AutoCompleteSource.RecentlyUsedList
+        UsernameComboBox.Location = New Point(201, 48)
+        UsernameComboBox.Name = "UsernameComboBox"
+        UsernameComboBox.Size = New Size(220, 23)
+        UsernameComboBox.TabIndex = 3
         ' 
         ' PasswordTextBox
         ' 
@@ -224,7 +224,7 @@ Partial Class LoginForm1
         ' LoginForm1
         ' 
         Me.AcceptButton = Ok_Button
-        Me.AutoScaleDimensions = New SizeF(7F, 15F)
+        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.CancelButton = Cancel_Button
         Me.ClientSize = New Size(442, 348)
@@ -238,7 +238,7 @@ Partial Class LoginForm1
         Me.Controls.Add(Cancel_Button)
         Me.Controls.Add(Ok_Button)
         Me.Controls.Add(PasswordTextBox)
-        Me.Controls.Add(UsernameTextBox)
+        Me.Controls.Add(UsernameComboBox)
         Me.Controls.Add(PasswordLabel)
         Me.Controls.Add(UsernameLabel)
         Me.Controls.Add(LogoPictureBox)
