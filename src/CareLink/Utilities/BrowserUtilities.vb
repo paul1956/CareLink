@@ -89,16 +89,22 @@ Friend Module BrowserUtilities
                 If updateSleepCount > 0 Then
                     updateSleepCount -= 1
                 Else
-                    If Interlocked.Exchange(inCheckForUpdate, 1) = 0 Then
-                        If MsgBox($"There is a newer version available, do you want to install now?{vbCrLf}Current version {My.Application.Info.Version}{vbCrLf}New version {gitHubVersion}", MsgBoxStyle.YesNo, "Updates Available") = MsgBoxResult.Yes Then
-                            OpenUrlInBrowser($"{GitHubCareLinkUrl}releases/")
-                            End
+                    Form1.UpdateAvailableLabel.Text = $"Update {gitHubVersion} available"
+                    Form1.UpdateAvailableLabel.ForeColor = Color.Red
+                    If reportSuccessfulResult Then
+                        If Interlocked.Exchange(inCheckForUpdate, 1) = 0 Then
+                            If MsgBox($"There is a newer version available, do you want to install now?{vbCrLf}Current version {My.Application.Info.Version}{vbCrLf}New version {gitHubVersion}", MsgBoxStyle.YesNo, "Updates Available") = MsgBoxResult.Yes Then
+                                OpenUrlInBrowser($"{GitHubCareLinkUrl}releases/")
+                                End
+                            End If
+                            inCheckForUpdate = 0
+                            updateSleepCount = 288
                         End If
-                        inCheckForUpdate = 0
-                        updateSleepCount = 288
                     End If
                 End If
             Else
+                Form1.UpdateAvailableLabel.Text = $"Current version {gitHubVersion}"
+                Form1.UpdateAvailableLabel.ForeColor = Color.Black
                 If reportSuccessfulResult Then
                     MsgBox("You are running latest version", MsgBoxStyle.OkOnly, "No Updates Available")
                 End If

@@ -116,10 +116,8 @@ Friend Module Form1LoginHelpers
         mainForm.LastUpdateTime.Text = $"Last Update Time: {msg}"
         Dim timeZoneName As String = Nothing
         mainForm.TimeZoneLabel.Text = If(RecentData?.TryGetValue(NameOf(ItemIndexes.clientTimeZoneName), timeZoneName),
-                                            CalculateTimeZone(timeZoneName).StandardName,
-                                            "")
-        mainForm.LastUpdateTime.Spring = True
-
+                                         $"{CalculateTimeZone(timeZoneName).StandardName}",
+                                         "")
     End Sub
 
     Friend Sub SetUpCareLinkUser(mainForm As Form1, userSettingsPath As String)

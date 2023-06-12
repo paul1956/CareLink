@@ -27,9 +27,12 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-06/10/2023
+06/11/2023
 
 ## What's New in this release
+New in 3.8.2.0
+- Add current version to StatusStrip
+
 New in 3.8.1.5
 - Fix reporting new version available multiple times
 
