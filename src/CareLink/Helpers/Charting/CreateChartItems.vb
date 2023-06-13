@@ -149,15 +149,11 @@ Friend Module CreateChartItems
                 End With
                 Dim interval As Single = TirLowLimit(nativeMmolL)
                 For i As Double = 0 To GetYMaxValue(nativeMmolL) Step interval
-                    Dim newLabel As New CustomLabel(i,
-                                                    i + (GetYMinValue(nativeMmolL) * 2),
-                                                    $"{If(nativeMmolL, ((i + 2) * MmolLUnitsDivisor).ToString("F0", CurrentUICulture), ((i + 50) / MmolLUnitsDivisor).ToString("F1", CurrentUICulture))}",
-                                                    1,
-                                                    LabelMarkStyle.None,
-                                                    GridTickTypes.None) With {
-                        .ForeColor = labelColor
-                                                    }
-                    .CustomLabels.Add(newLabel)
+                    .CustomLabels.Add(New CustomLabel(i,
+                                                           i + (GetYMinValue(nativeMmolL) * 2),
+                                                           $"{If(nativeMmolL, ((i + 2) * MmolLUnitsDivisor).ToString("F0", CurrentUICulture), ((i + 50) / MmolLUnitsDivisor).ToString("F1", CurrentUICulture))}",
+                                                           1,
+                                                           LabelMarkStyle.None) With {.ForeColor = labelColor})
                 Next
 
                 .Maximum = Math.Round(GetYMaxValue(nativeMmolL), 0, MidpointRounding.AwayFromZero)
