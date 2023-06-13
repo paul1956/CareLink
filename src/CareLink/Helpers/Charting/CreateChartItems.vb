@@ -8,15 +8,18 @@ Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module CreateChartItems
 
+    Private ReadOnly mgdLValues As New List(Of Single) From {50, 100, 150, 200, 250, 300, 350, 400}
+    Private ReadOnly mmolLValues As New List(Of Single) From {2.8, 5, 8, 11, 14, 17, 20, 22.2}
+
     Friend Const ActiveInsulinSeriesName As String = NameOf(ActiveInsulinSeriesName)
     Friend Const AutoCorrectionSeriesName As String = NameOf(AutoCorrectionSeriesName)
     Friend Const BasalSeriesNameName As String = NameOf(BasalSeriesNameName)
     Friend Const HighLimitSeriesName As String = NameOf(HighLimitSeriesName)
-    Friend Const TargetSgSeriesName As String = NameOf(TargetSgSeriesName)
     Friend Const LowLimitSeriesName As String = NameOf(LowLimitSeriesName)
     Friend Const MarkerSeriesName As String = NameOf(MarkerSeriesName)
     Friend Const MinBasalSeriesName As String = NameOf(MinBasalSeriesName)
     Friend Const SgSeriesName As String = NameOf(SgSeriesName)
+    Friend Const TargetSgSeriesName As String = NameOf(TargetSgSeriesName)
     Friend Const TimeChangeSeriesName As String = NameOf(TimeChangeSeriesName)
 
     Private Function CreateSeriesBase(seriesName As String, legendText As String, borderWidth As Integer, yAxisType As AxisType) As Series
@@ -127,37 +130,53 @@ Friend Module CreateChartItems
                 End With
                 .ScaleView.Zoomable = False
             End With
+            Dim firstAxis As List(Of Single)
+            Dim secondAxis As List(Of Single)
+            If nativeMmolL Then
+                firstAxis = mmolLValues
+                secondAxis = mgdLValues
+            Else
+                firstAxis = mgdLValues
+                secondAxis = mmolLValues
+            End If
+
             With .AxisY2
+                .Maximum = firstAxis.Last
+                .Minimum = firstAxis.First
+
                 .IsMarginVisible = False
                 .IsStartedFromZero = False
                 With .LabelStyle
                     .Font = labelFont
                     .ForeColor = labelColor
-                    .Format = "{0}"
+                    .Format = If(nativeMmolL, "{0.0}", "{0}")
                 End With
                 .LineColor = Color.FromArgb(64, labelColor)
-                Dim mealRowRounded As Double = Math.Round(GetYMinValue(nativeMmolL), 0, MidpointRounding.ToZero)
 
                 With .MajorGrid
-                    .Interval = mealRowRounded
+                    .Interval = firstAxis(0)
                     .LineColor = Color.FromArgb(64, labelColor)
                 End With
                 With .MajorTickMark
                     .Enabled = True
-                    .Interval = mealRowRounded
+                    .Interval = firstAxis(0)
                     .LineColor = Color.FromArgb(64, labelColor)
                 End With
-                Dim interval As Single = TirLowLimit(nativeMmolL)
-                For i As Double = 0 To GetYMaxValue(nativeMmolL) Step interval
-                    .CustomLabels.Add(New CustomLabel(i,
-                                                           i + (GetYMinValue(nativeMmolL) * 2),
-                                                           $"{If(nativeMmolL, ((i + 2) * MmolLUnitsDivisor).ToString("F0", CurrentUICulture), ((i + 50) / MmolLUnitsDivisor).ToString("F1", CurrentUICulture))}",
+
+                For i As Integer = 0 To mmolLValues.Count - 1
+                    Dim yMin As Single = GetYMinValue(nativeMmolL)
+                    .CustomLabels.Add(New CustomLabel(firstAxis(i) - yMin,
+                                                           firstAxis(i) + yMin,
+                                                           $"{firstAxis(i).ToString(If(nativeMmolL, "F1", "F0"), CurrentUICulture)}",
+                                                           0,
+                                                           LabelMarkStyle.None) With {.ForeColor = labelColor})
+                    .CustomLabels.Add(New CustomLabel(firstAxis(i) - yMin,
+                                                           firstAxis(i) + yMin,
+                                                           $"{secondAxis(i).ToString(If(nativeMmolL, "F0", "F1"), CurrentUICulture)}",
                                                            1,
                                                            LabelMarkStyle.None) With {.ForeColor = labelColor})
                 Next
 
-                .Maximum = Math.Round(GetYMaxValue(nativeMmolL), 0, MidpointRounding.AwayFromZero)
-                .Minimum = mealRowRounded
                 .Title = "Blood Glucose Value"
                 .TitleFont = New Font(labelFont.FontFamily, 14)
                 .TitleForeColor = labelColor
@@ -226,14 +245,6 @@ Friend Module CreateChartItems
         Return s
     End Function
 
-    Friend Function CreateSeriesSg(bgLegend As Legend) As Series
-        Const legendText As String = "SG Series"
-        Dim s As Series = CreateSeriesBase(SgSeriesName, legendText, 4, AxisType.Secondary)
-        s.IsVisibleInLegend = False
-        bgLegend.CustomItems.Add(New LegendItem(legendText, GetGraphLineColor(legendText), ""))
-        Return s
-    End Function
-
     Friend Function CreateSeriesLimitsAndTarget(limitsLegend As Legend, seriesName As String) As Series
         Dim legendText As String
         Dim lineColor As Color
@@ -255,6 +266,14 @@ Friend Module CreateChartItems
         s.IsVisibleInLegend = False
         s.EmptyPointStyle.Color = Color.Transparent
         limitsLegend.CustomItems.Add(New LegendItem(legendText, GetGraphLineColor(legendText), ""))
+        Return s
+    End Function
+
+    Friend Function CreateSeriesSg(bgLegend As Legend) As Series
+        Const legendText As String = "SG Series"
+        Dim s As Series = CreateSeriesBase(SgSeriesName, legendText, 4, AxisType.Secondary)
+        s.IsVisibleInLegend = False
+        bgLegend.CustomItems.Add(New LegendItem(legendText, GetGraphLineColor(legendText), ""))
         Return s
     End Function
 
