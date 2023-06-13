@@ -136,7 +136,7 @@ Friend Module CreateChartItems
                     .Format = "{0}"
                 End With
                 .LineColor = Color.FromArgb(64, labelColor)
-                Dim mealRowRounded As Double = Math.Round(GetYMinValue(), 0, MidpointRounding.ToZero)
+                Dim mealRowRounded As Double = Math.Round(GetYMinValue(nativeMmolL), 0, MidpointRounding.ToZero)
 
                 With .MajorGrid
                     .Interval = mealRowRounded
@@ -147,8 +147,20 @@ Friend Module CreateChartItems
                     .Interval = mealRowRounded
                     .LineColor = Color.FromArgb(64, labelColor)
                 End With
+                Dim interval As Single = TirLowLimit(nativeMmolL)
+                For i As Double = 0 To GetYMaxValue(nativeMmolL) Step interval
+                    Dim newLabel As New CustomLabel(i,
+                                                    i + (GetYMinValue(nativeMmolL) * 2),
+                                                    $"{If(nativeMmolL, ((i + 2) * MmolLUnitsDivisor).ToString("F0", CurrentUICulture), ((i + 50) / MmolLUnitsDivisor).ToString("F1", CurrentUICulture))}",
+                                                    1,
+                                                    LabelMarkStyle.None,
+                                                    GridTickTypes.None) With {
+                        .ForeColor = labelColor
+                                                    }
+                    .CustomLabels.Add(newLabel)
+                Next
 
-                .Maximum = Math.Round(GetYMaxValue(), 0, MidpointRounding.AwayFromZero)
+                .Maximum = Math.Round(GetYMaxValue(nativeMmolL), 0, MidpointRounding.AwayFromZero)
                 .Minimum = mealRowRounded
                 .Title = "Blood Glucose Value"
                 .TitleFont = New Font(labelFont.FontFamily, 14)

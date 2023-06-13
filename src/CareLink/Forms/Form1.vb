@@ -229,7 +229,7 @@ Public Class Form1
                                 Dim sgValue As Single = markerTag(2).Trim.Split(" ")(0).Trim.ParseSingle(2)
                                 Me.CursorMessage3Label.Text = markerTag(2).Trim
                                 Me.CursorMessage3Label.Visible = True
-                                Me.CursorMessage4Label.Text = If(ScalingNeeded, $"{CInt(sgValue * 18)} mg/dL", $"{sgValue / 18:F2} mmol/L")
+                                Me.CursorMessage4Label.Text = If(nativeMmolL, $"{CInt(sgValue * MmolLUnitsDivisor)} mg/dL", $"{sgValue / MmolLUnitsDivisor:F2} mmol/L")
                                 Me.CursorMessage4Label.Visible = True
                                 Me.CursorPanel.Visible = True
                             Case Else
@@ -242,9 +242,9 @@ Public Class Form1
                 Case SgSeriesName
                     Me.CursorMessage1Label.Text = "Blood Glucose"
                     Me.CursorMessage1Label.Visible = True
-                    Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(3)} {BgUnitsString}"
+                    Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(3)} {BgUnitsNativeString}"
                     Me.CursorMessage2Label.Visible = True
-                    Me.CursorMessage3Label.Text = If(ScalingNeeded, $"{CInt(currentDataPoint.YValues(0) * 18)} mg/dL", $"{(currentDataPoint.YValues(0) / 18).RoundToSingle(3)} mmol/L")
+                    Me.CursorMessage3Label.Text = If(nativeMmolL, $"{CInt(currentDataPoint.YValues(0) * MmolLUnitsDivisor)} mg/dL", $"{(currentDataPoint.YValues(0) / MmolLUnitsDivisor).RoundToSingle(3)} mmol/L")
                     Me.CursorMessage3Label.Visible = True
                     Me.CursorMessage4Label.Text = Date.FromOADate(currentDataPoint.XValue).ToString(s_timeWithMinuteFormat)
                     Me.CursorMessage4Label.Visible = True
@@ -1811,19 +1811,19 @@ Public Class Form1
             Using bitmapText As New Bitmap(16, 16)
                 Using g As Graphics = Graphics.FromImage(bitmapText)
                     Select Case sg
-                        Case <= TirLowLimit(ScalingNeeded)
+                        Case <= TirLowLimit(nativeMmolL)
                             bgColor = Color.Yellow
                             If _showBalloonTip Then
-                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}™ Alert", $"SG below {TirLowLimit(ScalingNeeded)} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
+                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}™ Alert", $"SG below {TirLowLimit(nativeMmolL)} {BgUnitsNativeString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
-                        Case <= TirHighLimit(ScalingNeeded)
+                        Case <= TirHighLimit(nativeMmolL)
                             bgColor = Color.Green
                             _showBalloonTip = True
                         Case Else
                             bgColor = Color.Red
                             If _showBalloonTip Then
-                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}™ Alert", $"SG above {TirHighLimit(ScalingNeeded)} {BgUnitsString}", Me.ToolTip1.ToolTipIcon)
+                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}™ Alert", $"SG above {TirHighLimit(nativeMmolL)} {BgUnitsNativeString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
                     End Select
@@ -1839,7 +1839,7 @@ Public Class Form1
                     Me.NotifyIcon1.Icon = Icon.FromHandle(hIcon)
                     notStr.Append(Date.Now().ToShortDateTimeString.Replace($"{CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator}{Now.Year}", ""))
                     notStr.Append(vbCrLf)
-                    notStr.Append($"Last SG {str} {BgUnitsString}")
+                    notStr.Append($"Last SG {str} {BgUnitsNativeString}")
                     If s_lastBGValue = 0 Then
                         Me.LabelTrendValue.Text = ""
                     Else
@@ -1857,9 +1857,9 @@ Public Class Form1
                             s_lastBGTime = Now
                             s_lastBGDiff = diffSg
                         End If
-                        Me.LabelTrendValue.Text = diffSg.ToString(If(ScalingNeeded, "+ 0.00;-#.00", "+0;-#"), CultureInfo.InvariantCulture)
+                        Me.LabelTrendValue.Text = diffSg.ToString(If(nativeMmolL, "+ 0.00;-#.00", "+0;-#"), CultureInfo.InvariantCulture)
                         Me.LabelTrendValue.ForeColor = bgColor
-                        notStr.Append(diffSg.ToString(If(ScalingNeeded, "+ 0.00;-#.00", "+0;-#"), CultureInfo.InvariantCulture))
+                        notStr.Append(diffSg.ToString(If(nativeMmolL, "+ 0.00;-#.00", "+0;-#"), CultureInfo.InvariantCulture))
                     End If
                     notStr.Append(vbCrLf)
                     notStr.Append("Active ins. ")
@@ -1992,7 +1992,7 @@ Public Class Form1
                     remainingInsulinList.Add(New RunningActiveInsulinRecord(firstNotSkippedOaTime, initialBolus, CurrentUser))
                 Next
 
-                .ChartAreas(NameOf(ChartArea)).AxisY2.Maximum = GetYMaxValue()
+                .ChartAreas(NameOf(ChartArea)).AxisY2.Maximum = GetYMaxValue(nativeMmolL)
                 ' walk all markers, adjust active insulin and then add new marker
                 Dim maxActiveInsulin As Double = 0
                 For i As Integer = 0 To remainingInsulinList.Count - 1
@@ -2018,7 +2018,7 @@ Public Class Form1
                              _summaryChartAbsoluteRectangle,
                              s_activeInsulinMarkerInsulinDictionary,
                              Nothing)
-                .PlotSgSeries(GetYMinValue())
+                .PlotSgSeries(GetYMinValue(nativeMmolL))
                 .PlotHighLowLimitsAndTargetSg(True)
             End With
         Catch ex As Exception
@@ -2041,7 +2041,7 @@ Public Class Form1
                              _summaryChartAbsoluteRectangle,
                              s_summaryMarkerInsulinDictionary,
                              s_summaryMarkerMealDictionary)
-                .PlotSgSeries(GetYMinValue())
+                .PlotSgSeries(GetYMinValue(nativeMmolL))
                 .PlotHighLowLimitsAndTargetSg(False)
                 Application.DoEvents()
             End With
@@ -2056,7 +2056,7 @@ Public Class Form1
         Try
             Me.LastSGTimeLabel.Text = s_lastSgRecord.datetime.ToShortTimeString
             Me.ShieldUnitsLabel.BackColor = Color.Transparent
-            Me.ShieldUnitsLabel.Text = BgUnitsString
+            Me.ShieldUnitsLabel.Text = BgUnitsNativeString
             If Not Single.IsNaN(s_lastSgRecord.sg) Then
                 Me.CurrentBGLabel.Visible = True
                 Me.CurrentBGLabel.Text = s_lastSgRecord.sg.ToString
@@ -2292,11 +2292,11 @@ Public Class Form1
         With Me.TimeInRangeChart
             With .Series(NameOf(TimeInRangeSeries)).Points
                 .Clear()
-                .AddXY($"{s_belowHypoLimit}% Below {TirLowLimit(ScalingNeeded)} {BgUnitsString}", s_belowHypoLimit / 100)
+                .AddXY($"{s_belowHypoLimit}% Below {TirLowLimit(nativeMmolL)} {BgUnitsNativeString}", s_belowHypoLimit / 100)
                 .Last().Color = Color.Red
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
-                .AddXY($"{s_aboveHyperLimit}% Above {TirHighLimit(ScalingNeeded)} {BgUnitsString}", s_aboveHyperLimit / 100)
+                .AddXY($"{s_aboveHyperLimit}% Above {TirHighLimit(nativeMmolL)} {BgUnitsNativeString}", s_aboveHyperLimit / 100)
                 .Last().Color = Color.Yellow
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
@@ -2310,13 +2310,13 @@ Public Class Form1
         End With
 
         Me.AboveHighLimitValueLabel.Text = $"{s_aboveHyperLimit} %"
-        Me.AboveHighLimitMessageLabel.Text = $"Above {TirHighLimit(ScalingNeeded)} {BgUnitsString}"
+        Me.AboveHighLimitMessageLabel.Text = $"Above {TirHighLimit(nativeMmolL)} {BgUnitsNativeString}"
         Me.TimeInRangeValueLabel.Text = $"{s_timeInRange} %"
         Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
-        Me.BelowLowLimitMessageLabel.Text = $"Below {TirLowLimit(ScalingNeeded)} {BgUnitsString}"
+        Me.BelowLowLimitMessageLabel.Text = $"Below {TirLowLimit(nativeMmolL)} {BgUnitsNativeString}"
         Dim averageSgStr As String = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.averageSG))
-        Me.AverageSGValueLabel.Text = If(ScalingNeeded, averageSgStr.TruncateSingleString(2), averageSgStr)
-        Me.AverageSGMessageLabel.Text = $"Average SG in {BgUnitsString}"
+        Me.AverageSGValueLabel.Text = If(nativeMmolL, averageSgStr.TruncateSingleString(2), averageSgStr)
+        Me.AverageSGMessageLabel.Text = $"Average SG in {BgUnitsNativeString}"
 
         ' Calculate Time in AutoMode
         If s_listOfAutoModeStatusMarkers.Count = 0 Then
@@ -2368,15 +2368,15 @@ Public Class Form1
             elements += 1
             If sg.sgMmDl < 70 Then
                 lowCount += 1
-                If ScalingNeeded Then
-                    lowDeviations += ((TirLowLimit(True) - sg.sgMmolL) * 18) ^ 2
+                If nativeMmolL Then
+                    lowDeviations += ((TirLowLimit(True) - sg.sgMmolL) * MmolLUnitsDivisor) ^ 2
                 Else
                     lowDeviations += (TirLowLimit(False) - sg.sgMmDl) ^ 2
                 End If
             ElseIf sg.sgMmDl > 180 Then
                 highCount += 1
-                If ScalingNeeded Then
-                    highDeviations += ((sg.sgMmolL - TirHighLimit(True)) * 18) ^ 2
+                If nativeMmolL Then
+                    highDeviations += ((sg.sgMmolL - TirHighLimit(True)) * MmolLUnitsDivisor) ^ 2
                 Else
                     highDeviations += (sg.sgMmDl - TirHighLimit(False)) ^ 2
                 End If
@@ -2419,7 +2419,7 @@ Public Class Form1
             Me.TreatmentMarkersChart.Titles(NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details - {s_listOfManualBasal.GetSubTitle}"
             Me.TreatmentMarkersChart.ChartAreas(NameOf(ChartArea)).UpdateChartAreaSgAxisX()
             Me.TreatmentMarkersChart.PlotTreatmentMarkers(TreatmentMarkerTimeChangeSeries)
-            Me.TreatmentMarkersChart.PlotSgSeries(GetYMinValue())
+            Me.TreatmentMarkersChart.PlotSgSeries(GetYMinValue(nativeMmolL))
             Me.TreatmentMarkersChart.PlotHighLowLimitsAndTargetSg(True)
         Catch ex As Exception
             Stop

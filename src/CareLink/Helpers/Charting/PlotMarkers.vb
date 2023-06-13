@@ -11,14 +11,14 @@ Friend Module PlotMarkers
     Private Sub AddBgReadingPoint(markerSeriesPoints As DataPointCollection, markerOADate As OADate, bgValueString As String, bgValue As Single)
         AddMarkerPoint(markerSeriesPoints, markerOADate, bgValue, Color.DarkOrange)
         If Not Single.IsNaN(bgValue) Then
-            markerSeriesPoints.Last.Tag = $"Blood Glucose: Not used for calibration: {bgValueString} {BgUnitsString}"
+            markerSeriesPoints.Last.Tag = $"Blood Glucose: Not used for calibration: {bgValueString} {BgUnitsNativeString}"
         End If
     End Sub
 
     <Extension>
     Private Sub AddCalibrationPoint(markerSeriesPoints As DataPointCollection, markerOADate As OADate, bgValue As Single, entry As Dictionary(Of String, String))
         AddMarkerPoint(markerSeriesPoints, markerOADate, bgValue, Color.Red)
-        markerSeriesPoints.Last.Tag = $"Blood Glucose: Calibration {If(CBool(entry("calibrationSuccess")), "accepted", "not accepted")}: {entry("value")} {BgUnitsString}"
+        markerSeriesPoints.Last.Tag = $"Blood Glucose: Calibration {If(CBool(entry("calibrationSuccess")), "accepted", "not accepted")}: {entry("value")} {BgUnitsNativeString}"
     End Sub
 
     Private Sub AddMarkerPoint(markerSeriesPoints As DataPointCollection, markerOADate As OADate, bgValue As Single, markerColor As Color)
@@ -72,8 +72,8 @@ Friend Module PlotMarkers
                 If entry.TryGetValue("value", bgValueString) Then
                     bgValueString.TryParseSingle(bgValue)
                     If Not Single.IsNaN(bgValue) Then
-                        bgValue = Math.Min(GetYMaxValue(), bgValue)
-                        bgValue = Math.Max(GetYMinValue, bgValue)
+                        bgValue = Math.Min(GetYMaxValue(nativeMmolL), bgValue)
+                        bgValue = Math.Max(GetYMinValue(nativeMmolL), bgValue)
                     End If
                 End If
                 Dim markerSeriesPoints As DataPointCollection = pageChart.Series(MarkerSeriesName).Points
@@ -89,7 +89,7 @@ Friend Module PlotMarkers
                         With pageChart.Series(BasalSeriesNameName)
                             .PlotBasalSeries(markerOADateTime,
                                              amount,
-                                             GetYMaxValue(),
+                                             GetYMaxValue(nativeMmolL),
                                              GetInsulinYValue(),
                                              GetGraphLineColor("Basal Series"),
                                              False,
@@ -100,7 +100,7 @@ Friend Module PlotMarkers
                         With pageChart.Series(BasalSeriesNameName)
                             .PlotBasalSeries(markerOADateTime,
                                              amount,
-                                             GetYMaxValue(),
+                                             GetYMaxValue(nativeMmolL),
                                              GetInsulinYValue(),
                                              GetGraphLineColor("Basal Series"),
                                              False,
@@ -113,7 +113,7 @@ Friend Module PlotMarkers
                                 With pageChart.Series(BasalSeriesNameName)
                                     .PlotBasalSeries(markerOADateTime,
                                                      autoCorrection.ParseSingle(3),
-                                                     GetYMaxValue(),
+                                                     GetYMaxValue(nativeMmolL),
                                                      GetInsulinYValue(),
                                                      GetGraphLineColor("Auto Correction"),
                                                      False,
@@ -121,7 +121,7 @@ Friend Module PlotMarkers
                                 End With
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 If markerInsulinDictionary.TryAdd(markerOADateTime, CInt(GetInsulinYValue())) Then
-                                    markerSeriesPoints.AddXY(markerOADateTime, GetInsulinYValue() - If(ScalingNeeded, 0.555, 10))
+                                    markerSeriesPoints.AddXY(markerOADateTime, GetInsulinYValue() - If(nativeMmolL, 0.555, 10))
                                     markerSeriesPoints.Last.MarkerBorderWidth = 2
                                     markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Black)
                                     markerSeriesPoints.Last.MarkerSize = 20
@@ -141,8 +141,8 @@ Friend Module PlotMarkers
                         End Select
                     Case "MEAL"
                         If markerMealDictionary Is Nothing Then Continue For
-                        If markerMealDictionary.TryAdd(markerOADateTime, GetYMinValue()) Then
-                            markerSeriesPoints.AddXY(markerOADateTime, GetYMinValue() + If(ScalingNeeded, s_mealImage.Height / 2 / MmolLUnitsDivisor, s_mealImage.Height / 2))
+                        If markerMealDictionary.TryAdd(markerOADateTime, GetYMinValue(nativeMmolL)) Then
+                            markerSeriesPoints.AddXY(markerOADateTime, GetYMinValue(nativeMmolL) + If(nativeMmolL, s_mealImage.Height / 2 / MmolLUnitsDivisor, s_mealImage.Height / 2))
                             markerSeriesPoints.Last.Color = Color.FromArgb(10, Color.Yellow)
                             markerSeriesPoints.Last.MarkerBorderWidth = 2
                             markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Yellow)
@@ -155,7 +155,7 @@ Friend Module PlotMarkers
                             lastTimeChangeRecord = New TimeChangeRecord(entry)
                             markerOADateTime = New OADate(lastTimeChangeRecord.GetLatestTime)
                             Call .AddXY(markerOADateTime, 0)
-                            Call .AddXY(markerOADateTime, GetYMaxValue())
+                            Call .AddXY(markerOADateTime, GetYMaxValue(nativeMmolL))
                             Call .AddXY(markerOADateTime, Double.NaN)
                         End With
                     Case Else

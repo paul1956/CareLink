@@ -24,7 +24,7 @@ Public Class LimitsRecord
     <Column(Order:=3, TypeName:=NameOf([Single]))>
     Public ReadOnly Property HighLimitMmDl As Single
         Get
-            Return If(ScalingNeeded, CSng(Math.Round(_highLimit * MmolLUnitsDivisor)), _highLimit)
+            Return If(nativeMmolL, CSng(Math.Round(_highLimit * MmolLUnitsDivisor)), _highLimit)
         End Get
     End Property
 
@@ -32,7 +32,7 @@ Public Class LimitsRecord
     <Column(Order:=4, TypeName:=NameOf([Single]))>
     Public ReadOnly Property HighLimitMmolL As Single
         Get
-            Return If(ScalingNeeded, _highLimit, (_highLimit / MmolLUnitsDivisor).RoundSingle(2, False))
+            Return If(nativeMmolL, _highLimit, (_highLimit / MmolLUnitsDivisor).RoundSingle(2, False))
         End Get
     End Property
 
@@ -63,7 +63,7 @@ Public Class LimitsRecord
     <Column(Order:=6, TypeName:=NameOf([Single]))>
     Public ReadOnly Property sgMmDl As Single
         Get
-            Return If(ScalingNeeded, CSng(Math.Round(_lowLimit * MmolLUnitsDivisor)), _lowLimit)
+            Return If(nativeMmolL, CSng(Math.Round(_lowLimit * MmolLUnitsDivisor)), _lowLimit)
         End Get
     End Property
 
@@ -71,7 +71,7 @@ Public Class LimitsRecord
     <Column(Order:=7, TypeName:=NameOf([Single]))>
     Public ReadOnly Property sgMmolL As Single
         Get
-            Return If(ScalingNeeded, _lowLimit, (_lowLimit / MmolLUnitsDivisor).RoundSingle(2, False))
+            Return If(nativeMmolL, _lowLimit, (_lowLimit / MmolLUnitsDivisor).RoundSingle(2, False))
         End Get
     End Property
 

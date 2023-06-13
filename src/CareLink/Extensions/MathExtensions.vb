@@ -10,7 +10,7 @@ Friend Module MathExtensions
     <Extension>
     Friend Function RoundSingle(singleValue As Single, decimalDigits As Integer, considerValue As Boolean) As Single
 
-        Return CSng(Math.Round(singleValue, If(considerValue AndAlso singleValue < 10, 1, decimalDigits)))
+        Return CSng(Math.Round(singleValue, If(considerValue AndAlso singleValue < 10, 2, decimalDigits)))
     End Function
 
     <Extension>

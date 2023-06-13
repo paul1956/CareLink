@@ -111,7 +111,7 @@ Public Class SgRecord
     Public ReadOnly Property sgMmDl As Single
         Get
             If Single.IsNaN(_sg) Then Return _sg
-            Return If(ScalingNeeded, CSng(Math.Round(_sg * MmolLUnitsDivisor)), _sg)
+            Return If(nativeMmolL, CSng(Math.Round(_sg * MmolLUnitsDivisor)), _sg)
         End Get
     End Property
 
@@ -120,7 +120,7 @@ Public Class SgRecord
     Public ReadOnly Property sgMmolL As Single
         Get
             If Single.IsNaN(_sg) Then Return _sg
-            Return If(ScalingNeeded, _sg, (_sg / MmolLUnitsDivisor).RoundSingle(2, False))
+            Return If(nativeMmolL, _sg, (_sg / MmolLUnitsDivisor).RoundSingle(2, False))
         End Get
     End Property
 

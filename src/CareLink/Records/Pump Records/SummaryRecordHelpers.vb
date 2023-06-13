@@ -82,7 +82,7 @@ Friend Module SummaryRecordHelpers
                 .Replace($"({NameOf(notDeliveredAmount)})", notDeliveredAmount) _
                 .Replace($"({NameOf(ClearedNotificationsRecord.secondaryTime)})", secondaryTime) _
                 .Replace("(triggeredDateTime)", $", happened at {triggeredDateTime}") _
-                .Replace("(units)", BgUnitsString)
+                .Replace("(units)", BgUnitsNativeString)
             Else
                 If Debugger.IsAttached Then
                     MsgBox($"Unknown Notification Message '{entryValue}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Unknown Notification Message")

@@ -64,7 +64,7 @@ Public Class BGMiniWindow
                 Me.DeltaTextBox.Text = ""
             Else
                 Dim delta As Double = _currentBGValue - _lastBGValue
-                Me.DeltaTextBox.Text = delta.ToString(If(ScalingNeeded, $"+0.00;-#.00", "+0;-#0"), CurrentUICulture)
+                Me.DeltaTextBox.Text = delta.ToString(If(nativeMmolL, $"+0.00;-#.00", "+0;-#0"), CurrentUICulture)
                 Select Case delta
                     Case Is = 0
                         Me.DeltaTextBox.Text = ""
@@ -128,11 +128,11 @@ Public Class BGMiniWindow
         _currentBGValue = Value.ParseSingle(2)
         If Not Double.IsNaN(_currentBGValue) Then
             _normalizedBG = _currentBGValue
-            If ScalingNeeded Then
-                _normalizedBG *= 18
+            If nativeMmolL Then
+                _normalizedBG *= MmolLUnitsDivisor
             End If
             Me.BGTextBox.ForeColor = SystemColors.ControlText
-            Me.BGTextBox.Text = If(ScalingNeeded, Value.ParseSingle(1).ToString, CInt(_currentBGValue).ToString)
+            Me.BGTextBox.Text = If(nativeMmolL, Value.ParseSingle(1).ToString(CurrentUICulture), CInt(_currentBGValue).ToString)
         Else
             Me.BGTextBox.ForeColor = Color.Red
             Me.BGTextBox.Text = Value

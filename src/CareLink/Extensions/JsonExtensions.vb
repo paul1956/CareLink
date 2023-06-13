@@ -82,15 +82,17 @@ Public Module JsonExtensions
                     Select Case item.Key
                         Case NameOf(ItemIndexes.bgUnits)
                             Dim bgUnits As String = item.Value.ToString()
-                            If Not s_unitsStrings.TryGetValue(bgUnits, BgUnitsString) Then
+                            If Not s_unitsStrings.TryGetValue(bgUnits, BgUnitsNativeString) Then
                                 Dim averageSGFloatAsString As String = rawJsonData(ItemIndexes.averageSGFloat).jsonItemAsString
                                 If averageSGFloatAsString.ParseSingle(1) > 40 Then
-                                    BgUnitsString = "mg/dl"
+                                    BgUnitsNativeString = "mg/dl"
+                                    BgUnitsAlternativeString = "mmol/L"
                                 Else
-                                    BgUnitsString = "mmol/L"
+                                    BgUnitsNativeString = "mmol/L"
+                                    BgUnitsAlternativeString = "mg/dL"
                                 End If
                             End If
-                            ScalingNeeded = BgUnitsString <> "mg/dl"
+                            nativeMmolL = BgUnitsNativeString <> "mg/dl"
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
                         Case NameOf(ItemIndexes.clientTimeZoneName)
                             If s_useLocalTimeZone Then

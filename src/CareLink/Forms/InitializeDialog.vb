@@ -176,7 +176,7 @@ Public Class InitializeDialog
 
         With Me.TargetSgComboBox
 
-            If ScalingNeeded Then
+            If nativeMmolL Then
                 .DataSource = New BindingSource(_mmolLItems, Nothing)
                 If Me.CurrentUser.CurrentTarget = 0 Then
                     Me.CurrentUser.CurrentTarget = _mmolLItems.Last.Value

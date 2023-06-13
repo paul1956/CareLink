@@ -5,6 +5,7 @@
 Friend Module SystemVariables
     Friend s_useLocalTimeZone As Boolean
     Public s_allUserSettingsData As New CareLinkUserDataList
+
     Friend Property CurrentUser As CurrentUserRecord
 
     Friend Property GraphColorDictionary As New Dictionary(Of String, KnownColor) From {
@@ -21,16 +22,16 @@ Friend Module SystemVariables
 
     Friend Property MaxBasalPerDose As Single
 
-    Friend Property ScalingNeeded As Boolean = False
+    Friend Property nativeMmolL As Boolean = False
 
     Friend Property TreatmentInsulinRow As Single
 
     Friend Function GetInsulinYValue() As Single
         Dim maxYScaled As Single = s_listOfSGs.Max(Of Single)(Function(sgR As SgRecord) sgR.sg) + 2
         If Single.IsNaN(maxYScaled) Then
-            Return If(ScalingNeeded, 330 / MmolLUnitsDivisor, 330)
+            Return If(nativeMmolL, 330 / MmolLUnitsDivisor, 330)
         Else
-            If ScalingNeeded Then
+            If nativeMmolL Then
                 If s_listOfSGs.Count = 0 OrElse maxYScaled > (330 / MmolLUnitsDivisor) Then
                     Return 342 / MmolLUnitsDivisor
                 End If
@@ -44,20 +45,20 @@ Friend Module SystemVariables
         End If
     End Function
 
-    Friend Function GetYMaxValue() As Single
-        Return If(ScalingNeeded, 22, 400)
+    Friend Function GetYMaxValue(asMmolL As Boolean) As Single
+        Return If(asMmolL, 22, 400)
     End Function
 
-    Friend Function GetYMinValue() As Single
-        Return If(ScalingNeeded, 2, 50)
+    Friend Function GetYMinValue(asMmolL As Boolean) As Single
+        Return If(asMmolL, 2, 50)
     End Function
 
-    Friend Function TirHighLimit(doScaling As Boolean) As Single
-        Return If(doScaling, 10, 180)
+    Friend Function TirHighLimit(asMmolL As Boolean) As Single
+        Return If(asMmolL, 10, 180)
     End Function
 
-    Friend Function TirLowLimit(doScaling As Boolean) As Single
-        Return If(doScaling, CSng(3.89), 70)
+    Friend Function TirLowLimit(asMmolL As Boolean) As Single
+        Return If(asMmolL, CSng(3.89), 70)
     End Function
 
 End Module

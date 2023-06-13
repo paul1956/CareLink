@@ -60,7 +60,7 @@ Public Class BGReadingRecord
     Public ReadOnly Property valueMmDl As Single
         Get
             If Single.IsNaN(_value) Then Return _value
-            Return If(ScalingNeeded, CSng(Math.Round(_value * MmolLUnitsDivisor)), _value)
+            Return If(nativeMmolL, CSng(Math.Round(_value * MmolLUnitsDivisor)), _value)
         End Get
     End Property
 
@@ -69,7 +69,7 @@ Public Class BGReadingRecord
     Public ReadOnly Property valueMmolL As Single
         Get
             If Single.IsNaN(_value) Then Return _value
-            Return If(ScalingNeeded, _value, (_value / MmolLUnitsDivisor).RoundSingle(2, False))
+            Return If(nativeMmolL, _value, (_value / MmolLUnitsDivisor).RoundSingle(2, False))
         End Get
     End Property
 
