@@ -26,15 +26,15 @@ Friend Module CreateChartItems
         Dim lineColor As Color = GetGraphLineColor(legendText)
         Dim tmpSeries As New Series(seriesName) With {
                             .BorderColor = Color.FromArgb(180, lineColor),
-                            .borderWidth = borderWidth,
+                            .BorderWidth = borderWidth,
                             .ChartArea = NameOf(ChartArea),
                             .ChartType = SeriesChartType.Line,
                             .Color = lineColor,
                             .IsValueShownAsLabel = False,
-                            .legendText = legendText,
+                            .LegendText = legendText,
                             .ShadowColor = lineColor.GetContrastingColor,
                             .XValueType = ChartValueType.DateTime,
-                            .yAxisType = yAxisType
+                            .YAxisType = yAxisType
                         }
         Return tmpSeries
     End Function
@@ -167,12 +167,12 @@ Friend Module CreateChartItems
                     Dim yMin As Single = GetYMinValue(nativeMmolL)
                     .CustomLabels.Add(New CustomLabel(firstAxis(i) - yMin,
                                                            firstAxis(i) + yMin,
-                                                           $"{firstAxis(i).ToString(If(nativeMmolL, "F1", "F0"), CurrentUICulture).Replace(".0", "")}",
+                                                           $"{firstAxis(i).ToString(If(nativeMmolL, "F1", "F0"), CurrentUICulture).Replace(",0", "")}",
                                                            0,
                                                            LabelMarkStyle.None) With {.ForeColor = labelColor})
                     .CustomLabels.Add(New CustomLabel(firstAxis(i) - yMin,
                                                            firstAxis(i) + yMin,
-                                                           $"{secondAxis(i).ToString(If(nativeMmolL, "F0", "F1"), CurrentUICulture).Replace(".0", "")}",
+                                                           $"{secondAxis(i).ToString(If(nativeMmolL, "F0", "F1"), CurrentUICulture).Replace(".0", "").Replace(",0", "")}",
                                                            1,
                                                            LabelMarkStyle.None) With {.ForeColor = labelColor})
                 Next
@@ -319,8 +319,8 @@ Friend Module CreateChartItems
         Return New Title With {
                         .BackColor = foreColor.GetContrastingColor(),
                         .Font = New Font("Trebuchet MS", 14.0F, FontStyle.Bold),
-                        .foreColor = foreColor,
-                        .name = name,
+                        .ForeColor = foreColor,
+                        .Name = name,
                         .ShadowColor = Color.FromArgb(32, Color.Black),
                         .ShadowOffset = 3,
                         .Text = chartTitle
