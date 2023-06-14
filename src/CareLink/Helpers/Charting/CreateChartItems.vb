@@ -26,15 +26,15 @@ Friend Module CreateChartItems
         Dim lineColor As Color = GetGraphLineColor(legendText)
         Dim tmpSeries As New Series(seriesName) With {
                             .BorderColor = Color.FromArgb(180, lineColor),
-                            .BorderWidth = borderWidth,
+                            .borderWidth = borderWidth,
                             .ChartArea = NameOf(ChartArea),
                             .ChartType = SeriesChartType.Line,
                             .Color = lineColor,
                             .IsValueShownAsLabel = False,
-                            .LegendText = legendText,
+                            .legendText = legendText,
                             .ShadowColor = lineColor.GetContrastingColor,
                             .XValueType = ChartValueType.DateTime,
-                            .YAxisType = yAxisType
+                            .yAxisType = yAxisType
                         }
         Return tmpSeries
     End Function
@@ -319,8 +319,8 @@ Friend Module CreateChartItems
         Return New Title With {
                         .BackColor = foreColor.GetContrastingColor(),
                         .Font = New Font("Trebuchet MS", 14.0F, FontStyle.Bold),
-                        .ForeColor = foreColor,
-                        .Name = name,
+                        .foreColor = foreColor,
+                        .name = name,
                         .ShadowColor = Color.FromArgb(32, Color.Black),
                         .ShadowOffset = 3,
                         .Text = chartTitle
