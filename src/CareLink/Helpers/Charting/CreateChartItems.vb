@@ -167,12 +167,12 @@ Friend Module CreateChartItems
                     Dim yMin As Single = GetYMinValue(nativeMmolL)
                     .CustomLabels.Add(New CustomLabel(firstAxis(i) - yMin,
                                                            firstAxis(i) + yMin,
-                                                           $"{firstAxis(i).ToString(If(nativeMmolL, "F1", "F0"), CurrentUICulture)}",
+                                                           $"{firstAxis(i).ToString(If(nativeMmolL, "F1", "F0"), CurrentUICulture).Replace(".0", "")}",
                                                            0,
                                                            LabelMarkStyle.None) With {.ForeColor = labelColor})
                     .CustomLabels.Add(New CustomLabel(firstAxis(i) - yMin,
                                                            firstAxis(i) + yMin,
-                                                           $"{secondAxis(i).ToString(If(nativeMmolL, "F0", "F1"), CurrentUICulture)}",
+                                                           $"{secondAxis(i).ToString(If(nativeMmolL, "F0", "F1"), CurrentUICulture).Replace(".0", "")}",
                                                            1,
                                                            LabelMarkStyle.None) With {.ForeColor = labelColor})
                 Next
