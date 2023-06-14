@@ -27,11 +27,12 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-06/11/2023
+06/13/2023
 
 ## What's New in this release
 New in 3.8.2.0
 - Add current version to StatusStrip
+- Add dual units (mg/dL and mmol/L) to graphs plus summary tips
 
 New in 3.8.1.5
 - Fix reporting new version available multiple times
