@@ -2077,7 +2077,9 @@ Public Class Form1
                     message = If(message.Contains("..."), $"{splitMessage}...", splitMessage)
                 Else
                     If Debugger.IsAttached Then
-                        MsgBox($"{s_sensorState} is unknown sensor message", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
+                        Stop
+                        Dim stackFrame As New StackFrame(0, True)
+                        MsgBox($"{s_sensorState} is unknown sensor message", MsgBoxStyle.OkOnly, $"{stackFrame.GetFileName} line:{stackFrame.GetFileLineNumber()}")
                     End If
 
                     message = message.ToTitle
@@ -2288,7 +2290,7 @@ Public Class Form1
             Exit Sub
         End If
 
-        Me.TimeInRangeChartLabel.Text = s_timeInRange.ToString
+        Me.TimeInRangeChartLabel.Text = GetTIR.ToString
         With Me.TimeInRangeChart
             With .Series(NameOf(TimeInRangeSeries)).Points
                 .Clear()
@@ -2300,7 +2302,7 @@ Public Class Form1
                 .Last().Color = Color.Yellow
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
-                .AddXY($"{s_timeInRange}% In Range", s_timeInRange / 100)
+                .AddXY($"{GetTIR()}% In Range", GetTIR() / 100)
                 .Last().Color = Color.LimeGreen
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
@@ -2311,7 +2313,7 @@ Public Class Form1
 
         Me.AboveHighLimitValueLabel.Text = $"{s_aboveHyperLimit} %"
         Me.AboveHighLimitMessageLabel.Text = $"Above {TirHighLimit(nativeMmolL)} {BgUnitsNativeString}"
-        Me.TimeInRangeValueLabel.Text = $"{s_timeInRange} %"
+        Me.TimeInRangeValueLabel.Text = $"{GetTIR()} %"
         Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
         Me.BelowLowLimitMessageLabel.Text = $"Below {TirLowLimit(nativeMmolL)} {BgUnitsNativeString}"
         Dim averageSgStr As String = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.averageSG))

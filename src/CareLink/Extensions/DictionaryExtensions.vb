@@ -90,10 +90,9 @@ Public Module DictionaryExtensions
                     End Try
                 End If
             Else
-                If Not Debugger.IsAttached Then
-                    Stop
-                    MsgBox($"{row.Key} is unknown Property, please open a GitHub issue", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
-                End If
+                Stop
+                Dim stackFrame As New StackFrame(0, True)
+                MsgBox($"'{row.Key}' is unknown Property, please open a GitHub issue", MsgBoxStyle.OkOnly, $"{stackFrame.GetFileName} line:{stackFrame.GetFileLineNumber()}")
             End If
         Next row
 

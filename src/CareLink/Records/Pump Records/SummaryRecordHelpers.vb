@@ -85,7 +85,9 @@ Friend Module SummaryRecordHelpers
                 .Replace("(units)", BgUnitsNativeString)
             Else
                 If Debugger.IsAttached Then
-                    MsgBox($"Unknown Notification Message '{entryValue}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, "Unknown Notification Message")
+                    Stop
+                    Dim stackFrame As New StackFrame(0, True)
+                    MsgBox($"Unknown Notification Message '{entryValue}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, $"{stackFrame.GetFileName} line:{stackFrame.GetFileLineNumber()}")
                 End If
                 formattedMessage = entryValue.Replace("_", " ")
             End If
@@ -169,7 +171,8 @@ Friend Module SummaryRecordHelpers
             Return CAnyType(Of T)(UShort.MaxValue)
         Else
             If Debugger.IsAttached Then
-                MsgBox($"{tReturnType} type is not yet defined.")
+                Dim stackFrame As New StackFrame(0, True)
+                MsgBox($"{tReturnType} type is not yet defined.", MsgBoxStyle.OkOnly, $"{stackFrame.GetFileName} line:{stackFrame.GetFileLineNumber()}")
             End If
             Return Nothing
         End If

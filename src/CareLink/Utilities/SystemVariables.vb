@@ -45,6 +45,13 @@ Friend Module SystemVariables
         End If
     End Function
 
+    Friend Function GetTIR() As UInteger
+        If s_timeInRange > 0 Then
+            Return CUInt(s_timeInRange)
+        End If
+        Return CUInt(100 - (s_aboveHyperLimit + s_belowHypoLimit))
+    End Function
+
     Friend Function GetYMaxValue(asMmolL As Boolean) As Single
         Return If(asMmolL, CSng(22.2), 400)
     End Function
@@ -58,7 +65,7 @@ Friend Module SystemVariables
     End Function
 
     Friend Function TirLowLimit(asMmolL As Boolean) As Single
-        Return If(asMmolL, CSng(70 / MmolLUnitsDivisor), 70)
+        Return If(asMmolL, CSng(3.9), 70)
     End Function
 
 End Module

@@ -21,7 +21,9 @@ Public Class SummaryRecord
         If Not String.IsNullOrWhiteSpace(row.Value) Then
             If Not messages.TryGetValue(row.Value, message) Then
                 If Debugger.IsAttached Then
-                    MsgBox($"{row.Value} is unknown message for {messageTableName}")
+                    Stop
+                    Dim stackFrame As New StackFrame(0, True)
+                    MsgBox($"{row.Value} is unknown message for {messageTableName}", MsgBoxStyle.OkOnly, $"{stackFrame.GetFileName} line:{stackFrame.GetFileLineNumber()}")
                 End If
                 message = row.Value.ToTitleCase
             End If
