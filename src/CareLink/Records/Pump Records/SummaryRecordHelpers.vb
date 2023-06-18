@@ -19,6 +19,9 @@ Friend Module SummaryRecordHelpers
                              False,
                              True,
                              CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+            If .Name = "value" Then
+                e.Column.MinimumWidth = 300
+            End If
         End With
     End Sub
 

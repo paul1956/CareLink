@@ -6,6 +6,18 @@ Imports System.Runtime.CompilerServices
 
 Friend Module NotificationTabHelpers
 
+    Private ReadOnly s_rowsToHide As New List(Of String) From {
+            NameOf(ActiveNotificationsRecord.GUID),
+            NameOf(ActiveNotificationsRecord.instanceId),
+            NameOf(ActiveNotificationsRecord.kind),
+            NameOf(ActiveNotificationsRecord.relativeOffset),
+            NameOf(ActiveNotificationsRecord.version),
+            NameOf(ClearedNotificationsRecord.faultId),
+            NameOf(ClearedNotificationsRecord.pnpId),
+            NameOf(ClearedNotificationsRecord.RecordNumber),
+            NameOf(ClearedNotificationsRecord.referenceGUID)
+        }
+
     Private Sub CreateNotificationTables(notificationDictionary As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexes, filterJsonData As Boolean)
         tableLevel1Blue.AutoScroll = True
         tableLevel1Blue.AutoSize = True
@@ -50,7 +62,7 @@ Friend Module NotificationTabHelpers
                     innerJson.Reverse()
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
                         tableLayoutPanel2.DisplayDataTableInDGV(
-                            ClassCollectionToDataTable(GetSummaryRecords(innerDictionary.Value, NotificationsRecordHelpers.s_rowsToHide)),
+                            ClassCollectionToDataTable(GetSummaryRecords(innerDictionary.Value, s_rowsToHide)),
                             NameOf(SummaryRecord),
                             AddressOf SummaryRecordHelpers.AttachHandlers,
                             innerDictionary.Index)
@@ -59,7 +71,7 @@ Friend Module NotificationTabHelpers
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
                         tableLayoutPanel2.BackColor = Color.PaleVioletRed
                         tableLayoutPanel2.DisplayDataTableInDGV(
-                            ClassCollectionToDataTable(GetSummaryRecords(innerDictionary.Value, NotificationsRecordHelpers.s_rowsToHide)),
+                            ClassCollectionToDataTable(GetSummaryRecords(innerDictionary.Value, s_rowsToHide)),
                             NameOf(SummaryRecord),
                             AddressOf SummaryRecordHelpers.AttachHandlers,
                             innerDictionary.Index)

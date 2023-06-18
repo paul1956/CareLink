@@ -40,7 +40,7 @@ Friend Module DisplayDataTableInDgvHelpers
         dGV.DataSource = table
         dGV.RowHeadersVisible = False
         If hideRecordNumberColumn AndAlso dGV.Columns(0).Name = "RecordNumber" Then
-            dGV.Columns(0).Visible = False
+            dGV.Columns("RecordNumber").Visible = False
         End If
     End Sub
 
