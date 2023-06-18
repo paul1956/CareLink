@@ -9,6 +9,7 @@ Friend Module TimeZoneExtensions
             {"Argentina Standard Time", "Argentina Standard Time"},
             {"Bolivia Time", "SA Western Standard Time"},
             {"Brasilia Standard Time", "Central Brazilian Standard Time"},
+            {"British Summer Time", "GMT Daylight Time"},
             {"Central European Summer Time", "W. Europe Standard Time"},
             {"Eastern European Summer Time", "E. Europe Daylight Time"},
             {"Eastern European Standard Time", "E. Europe Standard Time"},
