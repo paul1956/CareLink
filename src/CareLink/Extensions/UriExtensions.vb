@@ -10,7 +10,7 @@ Friend Module UriExtensions
     Private ReadOnly reservedCharacters As String = "!*'();:@&=+$,/?%#[]"
 
     <Extension>
-    Public Function UrlParameterEncode(value As String) As String
+    Public Function UriParameterEncode(value As String) As String
         If String.IsNullOrEmpty(value) Then
             Return String.Empty
         End If
