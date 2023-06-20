@@ -5,9 +5,9 @@
 Public Class CurrentUserRecord
     Implements IEquatable(Of CurrentUserRecord)
 
-    Public Sub New(userName As String)
+    Public Sub New(userName As String, useAdvancedAitDecay As CheckState)
         Me.UserName = userName
-        Me.UseAdvancedAitDecay = CheckState.Indeterminate
+        Me.UseAdvancedAitDecay = useAdvancedAitDecay
         Me.CurrentTarget = If(nativeMmolL, 6.7!, 120.0!)
     End Sub
 
@@ -21,7 +21,7 @@ Public Class CurrentUserRecord
 
     Friend Function Clone() As CurrentUserRecord
 
-        Return New CurrentUserRecord(Me.UserName) With {
+        Return New CurrentUserRecord(Me.UserName, Nothing) With {
                 .CarbRatios = Me.CarbRatios,
                 .CurrentTarget = Me.CurrentTarget,
                 .InsulinRealAit = Me.InsulinRealAit,

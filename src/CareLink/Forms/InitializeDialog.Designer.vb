@@ -112,13 +112,13 @@ Partial Class InitializeDialog
         UseAITAdvancedDecayCheckBox.AutoCheck = False
         UseAITAdvancedDecayCheckBox.AutoSize = True
         UseAITAdvancedDecayCheckBox.Checked = True
-        UseAITAdvancedDecayCheckBox.CheckState = CheckState.Indeterminate
+        UseAITAdvancedDecayCheckBox.CheckState = CheckState.Checked
         UseAITAdvancedDecayCheckBox.Enabled = False
         UseAITAdvancedDecayCheckBox.Location = New Point(11, 34)
         UseAITAdvancedDecayCheckBox.Name = "UseAITAdvancedDecayCheckBox"
-        UseAITAdvancedDecayCheckBox.Size = New Size(145, 19)
+        UseAITAdvancedDecayCheckBox.Size = New Size(237, 34)
         UseAITAdvancedDecayCheckBox.TabIndex = 2
-        UseAITAdvancedDecayCheckBox.Text = "Use Advanced Decay..."
+        UseAITAdvancedDecayCheckBox.Text = "Use Advanced Decay: Checking this box" & vbCrLf & "decays AIT to more closely match body"
         UseAITAdvancedDecayCheckBox.UseVisualStyleBackColor = True
         ' 
         ' InitializeDataGridView

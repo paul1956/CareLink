@@ -116,6 +116,13 @@ Friend Module SummaryRecordHelpers
                     Dim message As String = ""
                     If s_NotificationMessages.TryGetValue(row.Value, message) Then
                         message = TranslateNotificationMessageId(dic, row.Value)
+                        If row.Value = "BC_SID_MAX_FILL_DROPS_QUESITION" Then
+                            If dic("deliveredAmount").StartsWith("3") Then
+                                message &= "Did you see drops at the end of the tubing?"
+                            Else
+                                message &= "Remove reservoir and select Rewind restart New reservoir procedure."
+                            End If
+                        End If
                     Else
                         If Debugger.IsAttached AndAlso Not String.IsNullOrWhiteSpace(row.Value) Then
                             MsgBox($"{row.Value} is unknown Notification Messages", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")

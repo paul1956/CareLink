@@ -126,7 +126,7 @@ Friend Module Form1LoginHelpers
             contents = File.ReadAllText(userSettingsPath)
             CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
         Else
-            CurrentUser = New CurrentUserRecord(My.Settings.CareLinkUserName)
+            CurrentUser = New CurrentUserRecord(My.Settings.CareLinkUserName, If(Not (RecentData?.Is770G), CheckState.Checked, CheckState.Indeterminate))
             Dim f As New InitializeDialog With {
                 .CurrentUser = CurrentUser,
                 .InitializeDialogRecentData = RecentData

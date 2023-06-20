@@ -107,6 +107,11 @@ Public Module DictionaryExtensions
     End Function
 
     <Extension>
+    Public Function Is770G(recentData As Dictionary(Of String, String)) As Boolean
+        Return recentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber)) = "MMT-1880"
+    End Function
+
+    <Extension>
     Public Function ToCsv(Of T)(dic As Dictionary(Of String, T)) As String
         If dic Is Nothing Then
             Return "{}"

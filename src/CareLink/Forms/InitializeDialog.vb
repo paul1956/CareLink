@@ -172,7 +172,6 @@ Public Class InitializeDialog
 
         Me.ColumnStart.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
         Me.ColumnEnd.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
-        Me.UseAITAdvancedDecayCheckBox.Text = $"Use Advanced Decay: Checking this box{vbCrLf}decays AIT to more closely match body."
 
         With Me.TargetSgComboBox
 
@@ -222,8 +221,13 @@ Public Class InitializeDialog
             End If
         End With
 
-        Me.UseAITAdvancedDecayCheckBox.CheckState = Me.CurrentUser.UseAdvancedAitDecay
-        Me.UseAITAdvancedDecayCheckBox.Enabled = True
+        If Me.InitializeDialogRecentData.Is770G Then
+            Me.UseAITAdvancedDecayCheckBox.CheckState = Me.CurrentUser.UseAdvancedAitDecay
+            Me.UseAITAdvancedDecayCheckBox.Enabled = True
+        Else
+            Me.UseAITAdvancedDecayCheckBox.CheckState = CheckState.Checked
+            Me.UseAITAdvancedDecayCheckBox.Enabled = False
+        End If
 
         With Me.InitializeDataGridView
             .Rows.Clear()
@@ -289,11 +293,16 @@ Public Class InitializeDialog
     Private Sub InsulinTypeComboBox_Leave(sender As Object, e As EventArgs) Handles InsulinTypeComboBox.Leave
         Dim c As ComboBox = CType(sender, ComboBox)
         c.Enabled = False
+
     End Sub
 
     Private Sub InsulinTypeComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles InsulinTypeComboBox.SelectedIndexChanged
         Dim c As ComboBox = CType(sender, ComboBox)
-        Me.UseAITAdvancedDecayCheckBox.Enabled = c.SelectedIndex > -1
+        If Me.InitializeDialogRecentData.Is770G Then
+            Me.UseAITAdvancedDecayCheckBox.Enabled = c.SelectedIndex > -1
+        Else
+            Me.InitializeDataGridView.Enabled = True
+        End If
     End Sub
 
     Private Sub InsulinTypeComboBox_Validating(sender As Object, e As CancelEventArgs) Handles InsulinTypeComboBox.Validating
@@ -306,10 +315,6 @@ Public Class InitializeDialog
         End If
 
     End Sub
-
-    Private Shared Function Is770G(recentData As Dictionary(Of String, String)) As Boolean
-        Return recentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber)) = "MMT-1880"
-    End Function
 
     Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
         Dim cell As DataGridViewCell = Me.InitializeDataGridView.Rows(Me.InitializeDataGridView.RowCount - 1).Cells(NameOf(ColumnEnd))
@@ -375,6 +380,7 @@ Public Class InitializeDialog
             Case CheckState.Checked
                 chkBox.CheckState = CheckState.Unchecked
         End Select
+        chkBox.Enabled = chkBox.CheckState = CheckState.Checked
         Dim dgv As DataGridView = Me.InitializeDataGridView
         Dim cell As DataGridViewCell = dgv.Rows(Me.InitializeDataGridView.RowCount - 1).Cells(NameOf(ColumnEnd))
         cell.Value = _midnight
