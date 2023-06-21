@@ -30,6 +30,10 @@ This update has a UI to show all the available data and a visual version that mi
 06/18/2023
 
 ## What's New in this release
+New in 3.8.2.2
+- Update help messages for copy of table
+- Handle CareLink Partners without Patient ID
+
 New in 3.8.2.1
 - Fix TIR calculation when CareLink is providing bad data
 - Fix TIR display for mmol/L

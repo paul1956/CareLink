@@ -195,7 +195,11 @@ Public Class CareLinkClient
                 "role",
                 role}}
         If role = "carepartner" Then
-            userJson.Add("patientId", patient_user_name)
+            If String.IsNullOrWhiteSpace(patient_user_name) Then
+                endpointUrl = endpointUrl.Replace("v6", "v5")
+            Else
+                userJson.Add("patientId", patient_user_name)
+            End If
         End If
         Dim recentData As Dictionary(Of String, String) = Me.GetData(MainForm, endpointUrl, userJson)
         If recentData IsNot Nothing Then
