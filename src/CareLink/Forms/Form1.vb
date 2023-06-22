@@ -1477,12 +1477,11 @@ Public Class Form1
             If RecentData?.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
                     Dim epochDateTime As Date = lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime
-
                     If epochDateTime + s_5MinuteSpan < Now() Then
-                        SetLastUpdateTime(Nothing, "", True, Nothing)
+                        SetLastUpdateTime(Nothing, "", True, epochDateTime.IsDaylightSavingTime)
                         _sgMiniDisplay.SetCurrentBGString("---")
                     Else
-                        SetLastUpdateTime(Nothing, "", False, Nothing)
+                        SetLastUpdateTime(Nothing, "", False, epochDateTime.IsDaylightSavingTime)
                         _sgMiniDisplay.SetCurrentBGString(s_lastSgRecord?.sg.ToString)
                     End If
                     RecentData = Nothing

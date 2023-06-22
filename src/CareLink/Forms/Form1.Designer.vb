@@ -223,7 +223,7 @@ Partial Class Form1
         LastUpdateTimeToolStripStatusLabel = New ToolStripStatusLabel()
         TimeZoneToolStripStatusLabel = New ToolStripStatusLabel()
         StatusStripSpacerRight = New ToolStripStatusLabel()
-        UpdateAvailableLabel = New ToolStripStatusLabel()
+        UpdateAvailableStatusStripLabel = New ToolStripStatusLabel()
         MenuStrip1.SuspendLayout()
         CType(CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         CalibrationShieldPanel.SuspendLayout()
@@ -2617,7 +2617,7 @@ Partial Class Form1
         ' 
         ' StatusStrip1
         ' 
-        StatusStrip1.Items.AddRange(New ToolStripItem() {LoginStatus, StatusStripSpacerLeft, LastUpdateTimeToolStripStatusLabel, TimeZoneToolStripStatusLabel, StatusStripSpacerRight, UpdateAvailableLabel})
+        StatusStrip1.Items.AddRange(New ToolStripItem() {LoginStatus, StatusStripSpacerLeft, LastUpdateTimeToolStripStatusLabel, TimeZoneToolStripStatusLabel, StatusStripSpacerRight, UpdateAvailableStatusStripLabel})
         StatusStrip1.Location = New Point(0, 692)
         StatusStrip1.Name = "StatusStrip1"
         StatusStrip1.Size = New Size(1384, 24)
@@ -2665,15 +2665,15 @@ Partial Class Form1
         TimeZoneToolStripStatusLabel.Size = New Size(60, 19)
         TimeZoneToolStripStatusLabel.Text = "TimeZone Unknown"
         ' 
-        ' UpdateAvailableLabel
+        ' UpdateAvailableStatusStripLabel
         '
-        UpdateAvailableLabel.BorderSides = ToolStripStatusLabelBorderSides.Left Or ToolStripStatusLabelBorderSides.Right
-        UpdateAvailableLabel.BorderStyle = Border3DStyle.RaisedOuter
-        UpdateAvailableLabel.DisplayStyle = ToolStripItemDisplayStyle.Text
-        UpdateAvailableLabel.ForeColor = Color.Red
-        UpdateAvailableLabel.Name = "UpdateAvailableLabel"
-        UpdateAvailableLabel.Size = New Size(60, 19)
-        UpdateAvailableLabel.Text = "Update Available"
+        UpdateAvailableStatusStripLabel.BorderSides = ToolStripStatusLabelBorderSides.Left Or ToolStripStatusLabelBorderSides.Right
+        UpdateAvailableStatusStripLabel.BorderStyle = Border3DStyle.RaisedOuter
+        UpdateAvailableStatusStripLabel.DisplayStyle = ToolStripItemDisplayStyle.Text
+        UpdateAvailableStatusStripLabel.ForeColor = Color.Red
+        UpdateAvailableStatusStripLabel.Name = "UpdateAvailableStatusStripLabel"
+        UpdateAvailableStatusStripLabel.Size = New Size(60, 19)
+        UpdateAvailableStatusStripLabel.Text = "Update Available"
         ' 
         ' Form1
         ' 
@@ -3018,6 +3018,6 @@ Partial Class Form1
     Friend WithEvents ToolTip1 As ToolTip
     Friend WithEvents TransmitterBatteryPercentLabel As Label
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
-    Friend WithEvents UpdateAvailableLabel As ToolStripStatusLabel
+    Friend WithEvents UpdateAvailableStatusStripLabel As ToolStripStatusLabel
     Friend WithEvents WebView As Microsoft.Web.WebView2.WinForms.WebView2
 End Class
