@@ -23,7 +23,8 @@ Friend Module Form1LoginHelpers
                 CurrentDateCulture = GetPathToLastDownloadFile().ExtractCultureFromFileName(SavedLastDownloadBaseName)
                 RecentData = Loads(File.ReadAllText(GetPathToLastDownloadFile()))
                 MainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                MainForm.SetLastUpdateTime($"{File.GetLastWriteTime(GetPathToLastDownloadFile()).ToShortDateTimeString} from file", False)
+                Dim fileDate As Date = File.GetLastWriteTime(GetPathToLastDownloadFile())
+                SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
                 SetUpCareLinkUser(MainForm, GetPathToTestSettingsFile())
                 fromFile = True
             Case FileToLoadOptions.TestData
@@ -31,7 +32,8 @@ Friend Module Form1LoginHelpers
                 CurrentDateCulture = New CultureInfo("en-US")
                 RecentData = Loads(File.ReadAllText(GetPathToTestData()))
                 MainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                MainForm.SetLastUpdateTime($"{File.GetLastWriteTime(GetPathToTestData()).ToShortDateTimeString} from file", False)
+                Dim fileDate As Date = File.GetLastWriteTime(GetPathToTestData())
+                SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
                 SetUpCareLinkUser(MainForm, GetPathToTestSettingsFile)
                 fromFile = True
             Case FileToLoadOptions.Login
@@ -48,7 +50,7 @@ Friend Module Form1LoginHelpers
                         Return False
                     End If
 
-                    MainForm.SetLastUpdateTime("Unknown", True)
+                    SetLastUpdateTime("Last Update time is unknown!", "", True, Nothing)
                     Return False
                 End If
 
@@ -100,24 +102,42 @@ Friend Module Form1LoginHelpers
     End Sub
 
     <Extension>
-    Friend Sub UpdateHighLightInLastUpdateTime(statusLabel As ToolStripStatusLabel, highLight As Boolean)
-        If highLight = True Then
-            statusLabel.ForeColor = GetGraphLineColor("High Limit")
-            statusLabel.BackColor = statusLabel.ForeColor.GetContrastingColor
-        Else
-            statusLabel.ForeColor = SystemColors.ControlText
-            statusLabel.BackColor = SystemColors.Control
-        End If
-    End Sub
+    Friend Sub SetLastUpdateTime(msg As String, suffixMessage As String, highLight As Boolean, isDaylightSavingTime? As Boolean)
+        Dim foreColor As Color
+        Dim backColor As Color
 
-    <Extension>
-    Friend Sub SetLastUpdateTime(mainForm As Form1, msg As String, highLight As Boolean)
-        UpdateHighLightInLastUpdateTime(mainForm.LastUpdateTime, highLight)
-        mainForm.LastUpdateTime.Text = $"Last Update Time: {msg}"
-        Dim timeZoneName As String = Nothing
-        mainForm.TimeZoneLabel.Text = If(RecentData?.TryGetValue(NameOf(ItemIndexes.clientTimeZoneName), timeZoneName),
-                                         $"{CalculateTimeZone(timeZoneName).StandardName}",
-                                         "")
+        If highLight = True Then
+            foreColor = GetGraphLineColor("High Limit")
+            backColor = foreColor.GetContrastingColor
+        Else
+            foreColor = SystemColors.ControlText
+            backColor = SystemColors.Control
+        End If
+
+        With Form1.LastUpdateTimeToolStripStatusLabel
+            If Not String.IsNullOrWhiteSpace(msg) Then
+                .Text = $"{msg}"
+            End If
+            .ForeColor = foreColor
+            .BackColor = backColor
+        End With
+
+        With Form1.TimeZoneToolStripStatusLabel
+            If isDaylightSavingTime Is Nothing Then
+                .Text = ""
+            Else
+                Dim timeZoneName As String = Nothing
+                If RecentData?.TryGetValue(NameOf(ItemIndexes.clientTimeZoneName), timeZoneName) Then
+                    Dim timeZoneInfo As TimeZoneInfo = CalculateTimeZone(timeZoneName)
+                    .Text = $"{If(isDaylightSavingTime, timeZoneInfo.DaylightName, timeZoneInfo.StandardName)} {suffixMessage}".Trim
+                Else
+                    .Text = ""
+                End If
+            End If
+            .ForeColor = foreColor
+            .BackColor = backColor
+        End With
+
     End Sub
 
     Friend Sub SetUpCareLinkUser(mainForm As Form1, userSettingsPath As String)

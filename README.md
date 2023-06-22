@@ -27,12 +27,14 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-06/18/2023
+06/25/2023
 
 ## What's New in this release
 New in 3.8.2.2
-- Update help messages for copy of table
+- Update help messages for copy of tables in DataGridViews
 - Handle CareLink Partners without Patient ID
+- Fix highlighting in StatusBar Time fields
+- Fix TimeZone display is status bar to provide additional information and handle Daylight Savings Time
 
 New in 3.8.2.1
 - Fix TIR calculation when CareLink is providing bad data

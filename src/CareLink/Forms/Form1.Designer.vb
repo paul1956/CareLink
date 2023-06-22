@@ -220,8 +220,8 @@ Partial Class Form1
         StatusStrip1 = New StatusStrip()
         StatusStripSpacerLeft = New ToolStripStatusLabel()
         LoginStatus = New ToolStripStatusLabel()
-        LastUpdateTime = New ToolStripStatusLabel()
-        TimeZoneLabel = New ToolStripStatusLabel()
+        LastUpdateTimeToolStripStatusLabel = New ToolStripStatusLabel()
+        TimeZoneToolStripStatusLabel = New ToolStripStatusLabel()
         StatusStripSpacerRight = New ToolStripStatusLabel()
         UpdateAvailableLabel = New ToolStripStatusLabel()
         MenuStrip1.SuspendLayout()
@@ -2617,7 +2617,7 @@ Partial Class Form1
         ' 
         ' StatusStrip1
         ' 
-        StatusStrip1.Items.AddRange(New ToolStripItem() {LoginStatus, StatusStripSpacerLeft, LastUpdateTime, TimeZoneLabel, StatusStripSpacerRight, UpdateAvailableLabel})
+        StatusStrip1.Items.AddRange(New ToolStripItem() {LoginStatus, StatusStripSpacerLeft, LastUpdateTimeToolStripStatusLabel, TimeZoneToolStripStatusLabel, StatusStripSpacerRight, UpdateAvailableLabel})
         StatusStrip1.Location = New Point(0, 692)
         StatusStrip1.Name = "StatusStrip1"
         StatusStrip1.Size = New Size(1384, 24)
@@ -2642,13 +2642,13 @@ Partial Class Form1
         StatusStripSpacerLeft.Spring = True
         StatusStripSpacerLeft.Text = " "
         ' 
-        ' LastUpdateTime
+        ' LastUpdateTimeToolStripStatusLabel
         ' 
-        LastUpdateTime.BorderSides = ToolStripStatusLabelBorderSides.Left
-        LastUpdateTime.BorderStyle = Border3DStyle.RaisedOuter
-        LastUpdateTime.Name = "LastUpdateTime"
-        LastUpdateTime.Size = New Size(1176, 19)
-        LastUpdateTime.Text = "Last Update Time: Unknown"
+        LastUpdateTimeToolStripStatusLabel.BorderSides = ToolStripStatusLabelBorderSides.Left
+        LastUpdateTimeToolStripStatusLabel.BorderStyle = Border3DStyle.RaisedOuter
+        LastUpdateTimeToolStripStatusLabel.Name = "LastUpdateTimeToolStripStatusLabel"
+        LastUpdateTimeToolStripStatusLabel.Size = New Size(1176, 19)
+        LastUpdateTimeToolStripStatusLabel.Text = "Last Update Time: Unknown"
         ' 
         ' StatusStripSpacerRight
         ' 
@@ -2659,11 +2659,11 @@ Partial Class Form1
         StatusStripSpacerRight.Spring = True
         StatusStripSpacerRight.Text = " "
         ' 
-        ' TimeZoneLabel
+        ' TimeZoneToolStripStatusLabel
         '
-        TimeZoneLabel.Name = "TimeZoneLabel"
-        TimeZoneLabel.Size = New Size(60, 19)
-        TimeZoneLabel.Text = "TimeZone"
+        TimeZoneToolStripStatusLabel.Name = "TimeZoneToolStripStatusLabel"
+        TimeZoneToolStripStatusLabel.Size = New Size(60, 19)
+        TimeZoneToolStripStatusLabel.Text = "TimeZone Unknown"
         ' 
         ' UpdateAvailableLabel
         '
@@ -2885,7 +2885,7 @@ Partial Class Form1
     Friend WithEvents Last24ManualBolusLabel As Label
     Friend WithEvents Last24TotalsLabel As Label
     Friend WithEvents LastSGTimeLabel As Label
-    Friend WithEvents LastUpdateTime As ToolStripStatusLabel
+    Friend WithEvents LastUpdateTimeToolStripStatusLabel As ToolStripStatusLabel
     Friend WithEvents ListView1 As ListView
     Friend WithEvents LoginStatus As ToolStripStatusLabel
     Friend WithEvents MaxBasalPerHourLabel As Label
@@ -3006,7 +3006,7 @@ Partial Class Form1
     Friend WithEvents TimeInRangeLabel As Label
     Friend WithEvents TimeInRangeSummaryPercentCharLabel As Label
     Friend WithEvents TimeInRangeValueLabel As Label
-    Friend WithEvents TimeZoneLabel As ToolStripStatusLabel
+    Friend WithEvents TimeZoneToolStripStatusLabel As ToolStripStatusLabel
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
     Friend WithEvents ToolStripSeparator3 As ToolStripSeparator

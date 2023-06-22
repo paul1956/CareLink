@@ -1102,7 +1102,8 @@ Public Class Form1
                         CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{ProjectName}", True)
                         Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
-                        Me.SetLastUpdateTime($"{s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime.ToShortDateTimeString} from file", False)
+                        Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime
+                        SetLastUpdateTime(epochDateTime.ToShortDateTimeString, "from file", False, epochDateTime.IsDaylightSavingTime)
                         SetUpCareLinkUser(Me, GetPathToTestSettingsFile())
 
                         Try
@@ -1156,7 +1157,8 @@ Public Class Form1
                     RecentData = Loads(File.ReadAllText(openFileDialog1.FileName))
                     Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                     Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
-                    Me.SetLastUpdateTime(File.GetLastWriteTime(openFileDialog1.FileName).ToShortDateTimeString, False)
+                    Dim fileDate As Date = File.GetLastWriteTime(openFileDialog1.FileName)
+                    SetLastUpdateTime(fileDate.ToShortDateTimeString, " from file", False, fileDate.IsDaylightSavingTime)
                     Me.FinishInitialization()
                     Me.UpdateAllTabPages(True)
                 End If
@@ -1475,10 +1477,10 @@ Public Class Form1
             If RecentData?.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
                     If lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime + s_5MinuteSpan < Now() Then
-                        Me.LastUpdateTime.UpdateHighLightInLastUpdateTime(True)
+                        SetLastUpdateTime(Nothing, "", True, Nothing)
                         _sgMiniDisplay.SetCurrentBGString("---")
                     Else
-                        Me.LastUpdateTime.UpdateHighLightInLastUpdateTime(False)
+                        SetLastUpdateTime(Nothing, "", False, Nothing)
                         _sgMiniDisplay.SetCurrentBGString(s_lastSgRecord?.sg.ToString)
                     End If
                     RecentData = Nothing
@@ -1497,9 +1499,9 @@ Public Class Form1
         Select Case e.Mode
             Case Microsoft.Win32.PowerModes.Suspend
                 Me.ServerUpdateTimer.Stop()
-                Me.SetLastUpdateTime("Sleeping", True)
+                SetLastUpdateTime("System Sleeping", "", True, Nothing)
             Case Microsoft.Win32.PowerModes.Resume
-                Me.SetLastUpdateTime("Awake", True)
+                SetLastUpdateTime("System Awake", "", True, Nothing)
                 Me.ServerUpdateTimer.Interval = CInt(s_30SecondInMilliseconds) \ 3
                 Me.ServerUpdateTimer.Start()
                 Debug.Print($"In {NameOf(PowerModeChanged)}, restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
@@ -2219,28 +2221,24 @@ Public Class Form1
         End If
 
         Dim batteryLeftPercent As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexes.medicalDeviceBatteryLevelPercent))
+        Me.PumpBatteryRemaining2Label.Text = $"{Math.Abs(batteryLeftPercent)}%"
         Select Case batteryLeftPercent
             Case > 90
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryFull
                 Me.PumpBatteryRemainingLabel.Text = "Full"
-                Me.PumpBatteryRemaining2Label.Text = $"{batteryLeftPercent}%"
             Case > 50
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryHigh
                 Me.PumpBatteryRemainingLabel.Text = "High"
-                Me.PumpBatteryRemaining2Label.Text = $"{batteryLeftPercent}%"
             Case > 25
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryMedium
                 Me.PumpBatteryRemainingLabel.Text = $"Medium"
-                Me.PumpBatteryRemaining2Label.Text = $"{batteryLeftPercent}%"
             Case > 10
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryLow
                 Me.PumpBatteryRemainingLabel.Text = "Low"
-                Me.PumpBatteryRemaining2Label.Text = $"{batteryLeftPercent}%"
 
             Case Else
                 Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryCritical
                 Me.PumpBatteryRemainingLabel.Text = "Critical"
-                Me.PumpBatteryRemaining2Label.Text = $"{batteryLeftPercent}%"
         End Select
     End Sub
 
@@ -2457,7 +2455,7 @@ Public Class Form1
             If fromFile Then
                 Me.LoginStatus.Text = "Login Status: N/A From Saved File"
             Else
-                Me.SetLastUpdateTime(PumpNow.ToShortDateTimeString, False)
+                SetLastUpdateTime($"Last Update Time: {PumpNow.ToShortDateTimeString}", "", False, PumpNow.IsDaylightSavingTime)
             End If
             Me.CursorPanel.Visible = False
 
