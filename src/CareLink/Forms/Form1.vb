@@ -1476,7 +1476,9 @@ Public Class Form1
         Else
             If RecentData?.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
-                    If lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime + s_5MinuteSpan < Now() Then
+                    Dim epochDateTime As Date = lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime
+
+                    If epochDateTime + s_5MinuteSpan < Now() Then
                         SetLastUpdateTime(Nothing, "", True, Nothing)
                         _sgMiniDisplay.SetCurrentBGString("---")
                     Else
