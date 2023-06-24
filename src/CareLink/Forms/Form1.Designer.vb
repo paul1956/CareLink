@@ -110,11 +110,11 @@ Partial Class Form1
         Last24AutoCorrectionLabel = New Label()
         Last24CarbsValueLabel = New Label()
         Last24DailyDoseLabel = New Label()
-        Last24HourBasalLabel = New Label()
-        Last24HoursLabel = New Label()
+        Last24BasalLabel = New Label()
+        Last24HoursGraphLabel = New Label()
         Last24HTotalsPanel = New Panel()
-        Last24TotalsLabel = New Label()
         Last24ManualBolusLabel = New Label()
+        Last24TotalsLabel = New Label()
         MaxBasalPerHourLabel = New Label()
         ModelLabel = New Label()
         PumpNameLabel = New Label()
@@ -218,8 +218,8 @@ Partial Class Form1
         TabPageBackToHomePage = New TabPage()
         ToolTip1 = New ToolTip(components)
         StatusStrip1 = New StatusStrip()
-        StatusStripSpacerLeft = New ToolStripStatusLabel()
         LoginStatus = New ToolStripStatusLabel()
+        StatusStripSpacerLeft = New ToolStripStatusLabel()
         LastUpdateTimeToolStripStatusLabel = New ToolStripStatusLabel()
         TimeZoneToolStripStatusLabel = New ToolStripStatusLabel()
         StatusStripSpacerRight = New ToolStripStatusLabel()
@@ -537,7 +537,7 @@ Partial Class Form1
         ActiveInsulinValue.Name = "ActiveInsulinValue"
         ActiveInsulinValue.Size = New Size(128, 48)
         ActiveInsulinValue.TabIndex = 0
-        ActiveInsulinValue.Text = "Active Insulin 0.000 U"
+        ActiveInsulinValue.Text = "Active Insulin 0.000U"
         ActiveInsulinValue.TextAlign = ContentAlignment.TopCenter
         ' 
         ' FullNameLabel
@@ -545,7 +545,7 @@ Partial Class Form1
         FullNameLabel.BackColor = Color.Transparent
         FullNameLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         FullNameLabel.ForeColor = Color.White
-        FullNameLabel.Location = New Point(1140, 3)
+        FullNameLabel.Location = New Point(1140, 0)
         FullNameLabel.Margin = New Padding(0)
         FullNameLabel.Name = "FullNameLabel"
         FullNameLabel.Size = New Size(230, 21)
@@ -1120,7 +1120,7 @@ Partial Class Form1
         Last24AutoCorrectionLabel.Name = "Last24AutoCorrectionLabel"
         Last24AutoCorrectionLabel.Size = New Size(235, 21)
         Last24AutoCorrectionLabel.TabIndex = 64
-        Last24AutoCorrectionLabel.Text = "Auto Correction 20 U | 20%"
+        Last24AutoCorrectionLabel.Text = "Auto Correction 20U | 20%"
         Last24AutoCorrectionLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' Last24CarbsValueLabel
@@ -1140,63 +1140,50 @@ Partial Class Form1
         Last24DailyDoseLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Last24DailyDoseLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Last24DailyDoseLabel.ForeColor = Color.White
-        Last24DailyDoseLabel.Location = New Point(0, 21)
+        Last24DailyDoseLabel.Location = New Point(0, 23)
         Last24DailyDoseLabel.Name = "Last24DailyDoseLabel"
         Last24DailyDoseLabel.Size = New Size(235, 21)
         Last24DailyDoseLabel.TabIndex = 61
-        Last24DailyDoseLabel.Text = "Dose 100 U"
+        Last24DailyDoseLabel.Text = "Insulin Dose 100U"
         Last24DailyDoseLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
-        ' Last24HourBasalLabel
+        ' Last24BasalLabel
         ' 
-        Last24HourBasalLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24HourBasalLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
-        Last24HourBasalLabel.ForeColor = Color.White
-        Last24HourBasalLabel.Location = New Point(0, 42)
-        Last24HourBasalLabel.Name = "Last24HourBasalLabel"
-        Last24HourBasalLabel.Size = New Size(235, 21)
-        Last24HourBasalLabel.TabIndex = 62
-        Last24HourBasalLabel.Text = "Basal 50 U | 50%"
-        Last24HourBasalLabel.TextAlign = ContentAlignment.MiddleLeft
+        Last24BasalLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24BasalLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24BasalLabel.ForeColor = Color.White
+        Last24BasalLabel.Location = New Point(0, 42)
+        Last24BasalLabel.Name = "Last24BasalLabel"
+        Last24BasalLabel.Size = New Size(235, 21)
+        Last24BasalLabel.TabIndex = 62
+        Last24BasalLabel.Text = "Basal 50U | 50%"
+        Last24BasalLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
-        ' Last24HoursLabel
+        ' Last24HoursGraphLabel
         ' 
-        Last24HoursLabel.Anchor = AnchorStyles.Top
-        Last24HoursLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
-        Last24HoursLabel.ForeColor = Color.White
-        Last24HoursLabel.Location = New Point(30, 26)
-        Last24HoursLabel.Name = "Last24HoursLabel"
-        Last24HoursLabel.Size = New Size(170, 21)
-        Last24HoursLabel.TabIndex = 34
-        Last24HoursLabel.Text = "Last 24 hours"
-        Last24HoursLabel.TextAlign = ContentAlignment.MiddleCenter
+        Last24HoursGraphLabel.Anchor = AnchorStyles.Top
+        Last24HoursGraphLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24HoursGraphLabel.ForeColor = Color.White
+        Last24HoursGraphLabel.Location = New Point(30, 26)
+        Last24HoursGraphLabel.Name = "Last24HoursGraphLabel"
+        Last24HoursGraphLabel.Size = New Size(170, 21)
+        Last24HoursGraphLabel.TabIndex = 34
+        Last24HoursGraphLabel.Text = "Last 24 hours"
+        Last24HoursGraphLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' Last24HTotalsPanel
         ' 
-        Last24HTotalsPanel.BorderStyle = BorderStyle.FixedSingle
+        Last24HTotalsPanel.BorderStyle = BorderStyle.Fixed3D
         Last24HTotalsPanel.Controls.Add(Last24CarbsValueLabel)
-        Last24HTotalsPanel.Controls.Add(Last24TotalsLabel)
         Last24HTotalsPanel.Controls.Add(Last24AutoCorrectionLabel)
         Last24HTotalsPanel.Controls.Add(Last24ManualBolusLabel)
-        Last24HTotalsPanel.Controls.Add(Last24HourBasalLabel)
+        Last24HTotalsPanel.Controls.Add(Last24BasalLabel)
         Last24HTotalsPanel.Controls.Add(Last24DailyDoseLabel)
+        Last24HTotalsPanel.Controls.Add(Last24TotalsLabel)
         Last24HTotalsPanel.Location = New Point(740, 0)
         Last24HTotalsPanel.Name = "Last24HTotalsPanel"
         Last24HTotalsPanel.Size = New Size(237, 129)
         Last24HTotalsPanel.TabIndex = 66
-        ' 
-        ' Last24TotalsLabel
-        ' 
-        Last24TotalsLabel.BorderStyle = BorderStyle.FixedSingle
-        Last24TotalsLabel.Dock = DockStyle.Top
-        Last24TotalsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
-        Last24TotalsLabel.ForeColor = Color.White
-        Last24TotalsLabel.Location = New Point(0, 0)
-        Last24TotalsLabel.Name = "Last24TotalsLabel"
-        Last24TotalsLabel.Size = New Size(235, 23)
-        Last24TotalsLabel.TabIndex = 65
-        Last24TotalsLabel.Text = "Last 24 Hr Totals"
-        Last24TotalsLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' Last24ManualBolusLabel
         ' 
@@ -1205,26 +1192,41 @@ Partial Class Form1
         Last24ManualBolusLabel.ForeColor = Color.White
         Last24ManualBolusLabel.Location = New Point(0, 63)
         Last24ManualBolusLabel.Name = "Last24ManualBolusLabel"
-        Last24ManualBolusLabel.Size = New Size(235, 21)
+        Last24ManualBolusLabel.Size = New Size(233, 21)
         Last24ManualBolusLabel.TabIndex = 63
-        Last24ManualBolusLabel.Text = "Manual Bolus 30 U | 30%"
+        Last24ManualBolusLabel.Text = "Manual Bolus 30U | 30%"
         Last24ManualBolusLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
-        ' MaxBasalPerHourLabel
+        ' Last24TotalsLabel
         ' 
+        Last24TotalsLabel.BackColor = Color.White
+        Last24TotalsLabel.Dock = DockStyle.Top
+        Last24TotalsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24TotalsLabel.ForeColor = Color.Black
+        Last24TotalsLabel.Location = New Point(0, 0)
+        Last24TotalsLabel.Name = "Last24TotalsLabel"
+        Last24TotalsLabel.Size = New Size(233, 23)
+        Last24TotalsLabel.TabIndex = 65
+        Last24TotalsLabel.Text = "Last 24 Hr Totals"
+        Last24TotalsLabel.TextAlign = ContentAlignment.MiddleCenter
+        ' 
+        ' MaxBasalPerHourLabel
+        '
+        MaxBasalPerHourLabel.TextAlign = ContentAlignment.MiddleLeft
+        MaxBasalPerHourLabel.AutoSize = True
         MaxBasalPerHourLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         MaxBasalPerHourLabel.ForeColor = Color.White
-        MaxBasalPerHourLabel.Location = New Point(1140, 106)
+        MaxBasalPerHourLabel.Location = New Point(977, 106)
         MaxBasalPerHourLabel.Name = "MaxBasalPerHourLabel"
         MaxBasalPerHourLabel.Size = New Size(230, 21)
         MaxBasalPerHourLabel.TabIndex = 67
-        MaxBasalPerHourLabel.Text = "Max Basal/Hr ~ 2.0 U"
+        MaxBasalPerHourLabel.Text = "Max Basal/Hr ~2.0U"
         ' 
         ' ModelLabel
         ' 
         ModelLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         ModelLabel.ForeColor = Color.White
-        ModelLabel.Location = New Point(1140, 28)
+        ModelLabel.Location = New Point(1140, 26)
         ModelLabel.Name = "ModelLabel"
         ModelLabel.Size = New Size(230, 21)
         ModelLabel.TabIndex = 57
@@ -1234,7 +1236,7 @@ Partial Class Form1
         ' 
         PumpNameLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         PumpNameLabel.ForeColor = Color.White
-        PumpNameLabel.Location = New Point(1140, 53)
+        PumpNameLabel.Location = New Point(1140, 52)
         PumpNameLabel.Name = "PumpNameLabel"
         PumpNameLabel.Size = New Size(230, 21)
         PumpNameLabel.TabIndex = 70
@@ -1283,11 +1285,11 @@ Partial Class Form1
         ' 
         ReadingsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         ReadingsLabel.ForeColor = Color.White
-        ReadingsLabel.Location = New Point(977, 106)
+        ReadingsLabel.Location = New Point(1140, 106)
         ReadingsLabel.Name = "ReadingsLabel"
-        ReadingsLabel.Size = New Size(165, 21)
+        ReadingsLabel.Size = New Size(235, 21)
         ReadingsLabel.TabIndex = 53
-        ReadingsLabel.Text = "280/288 Readings"
+        ReadingsLabel.Text = "280/288 SG Readings"
         ReadingsLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' RemainingInsulinUnits
@@ -1299,7 +1301,7 @@ Partial Class Form1
         RemainingInsulinUnits.Name = "RemainingInsulinUnits"
         RemainingInsulinUnits.Size = New Size(80, 21)
         RemainingInsulinUnits.TabIndex = 12
-        RemainingInsulinUnits.Text = "000.0 U"
+        RemainingInsulinUnits.Text = "000.0U"
         RemainingInsulinUnits.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' SensorDaysLeftLabel
@@ -1460,7 +1462,7 @@ Partial Class Form1
         ' SplitContainer3.Panel2
         ' 
         SplitContainer3.Panel2.Controls.Add(TimeInRangeLabel)
-        SplitContainer3.Panel2.Controls.Add(Last24HoursLabel)
+        SplitContainer3.Panel2.Controls.Add(Last24HoursGraphLabel)
         SplitContainer3.Panel2.Controls.Add(TimeInRangeChartLabel)
         SplitContainer3.Panel2.Controls.Add(TimeInRangeSummaryPercentCharLabel)
         SplitContainer3.Panel2.Controls.Add(AboveHighLimitValueLabel)
@@ -2638,7 +2640,7 @@ Partial Class Form1
         StatusStripSpacerLeft.BorderSides = ToolStripStatusLabelBorderSides.Left
         StatusStripSpacerLeft.BorderStyle = Border3DStyle.RaisedOuter
         StatusStripSpacerLeft.Name = "StatusStripSpacerLeft"
-        StatusStripSpacerLeft.Size = New Size(0, 19)
+        StatusStripSpacerLeft.Size = New Size(431, 19)
         StatusStripSpacerLeft.Spring = True
         StatusStripSpacerLeft.Text = " "
         ' 
@@ -2647,32 +2649,32 @@ Partial Class Form1
         LastUpdateTimeToolStripStatusLabel.BorderSides = ToolStripStatusLabelBorderSides.Left
         LastUpdateTimeToolStripStatusLabel.BorderStyle = Border3DStyle.RaisedOuter
         LastUpdateTimeToolStripStatusLabel.Name = "LastUpdateTimeToolStripStatusLabel"
-        LastUpdateTimeToolStripStatusLabel.Size = New Size(1176, 19)
+        LastUpdateTimeToolStripStatusLabel.Size = New Size(159, 19)
         LastUpdateTimeToolStripStatusLabel.Text = "Last Update Time: Unknown"
+        ' 
+        ' TimeZoneToolStripStatusLabel
+        ' 
+        TimeZoneToolStripStatusLabel.Name = "TimeZoneToolStripStatusLabel"
+        TimeZoneToolStripStatusLabel.Size = New Size(114, 19)
+        TimeZoneToolStripStatusLabel.Text = "TimeZone Unknown"
         ' 
         ' StatusStripSpacerRight
         ' 
         StatusStripSpacerRight.BorderSides = ToolStripStatusLabelBorderSides.Right
         StatusStripSpacerRight.BorderStyle = Border3DStyle.RaisedOuter
         StatusStripSpacerRight.Name = "StatusStripSpacerRight"
-        StatusStripSpacerRight.Size = New Size(0, 19)
+        StatusStripSpacerRight.Size = New Size(431, 19)
         StatusStripSpacerRight.Spring = True
         StatusStripSpacerRight.Text = " "
         ' 
-        ' TimeZoneToolStripStatusLabel
-        '
-        TimeZoneToolStripStatusLabel.Name = "TimeZoneToolStripStatusLabel"
-        TimeZoneToolStripStatusLabel.Size = New Size(60, 19)
-        TimeZoneToolStripStatusLabel.Text = "TimeZone Unknown"
-        ' 
         ' UpdateAvailableStatusStripLabel
-        '
+        ' 
         UpdateAvailableStatusStripLabel.BorderSides = ToolStripStatusLabelBorderSides.Left Or ToolStripStatusLabelBorderSides.Right
         UpdateAvailableStatusStripLabel.BorderStyle = Border3DStyle.RaisedOuter
         UpdateAvailableStatusStripLabel.DisplayStyle = ToolStripItemDisplayStyle.Text
         UpdateAvailableStatusStripLabel.ForeColor = Color.Red
         UpdateAvailableStatusStripLabel.Name = "UpdateAvailableStatusStripLabel"
-        UpdateAvailableStatusStripLabel.Size = New Size(60, 19)
+        UpdateAvailableStatusStripLabel.Size = New Size(100, 19)
         UpdateAvailableStatusStripLabel.Text = "Update Available"
         ' 
         ' Form1
@@ -2879,8 +2881,8 @@ Partial Class Form1
     Friend WithEvents Last24AutoCorrectionLabel As Label
     Friend WithEvents Last24CarbsValueLabel As Label
     Friend WithEvents Last24DailyDoseLabel As Label
-    Friend WithEvents Last24HourBasalLabel As Label
-    Friend WithEvents Last24HoursLabel As Label
+    Friend WithEvents Last24BasalLabel As Label
+    Friend WithEvents Last24HoursGraphLabel As Label
     Friend WithEvents Last24HTotalsPanel As Panel
     Friend WithEvents Last24ManualBolusLabel As Label
     Friend WithEvents Last24TotalsLabel As Label

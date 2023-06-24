@@ -115,7 +115,7 @@ Friend Module CollectMarkersHelper
             MaxBasalPerDose = Math.Min(MaxBasalPerDose, 25)
             i += 1
         End While
-        Return $"Max Basal/Hr ~ {maxBasalPerHour.RoundTo025} U"
+        Return $"Max Basal/Hr ~{maxBasalPerHour.RoundTo025}U"
     End Function
 
 End Module

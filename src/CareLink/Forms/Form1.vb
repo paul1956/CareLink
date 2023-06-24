@@ -196,6 +196,7 @@ Public Class Form1
                                 Select Case markerTag(0)
                                     Case "Auto Correction",
                                          "Auto Basal",
+                                         "Manual Basal",
                                          "Basal",
                                          "Min Auto Basal"
                                         Me.CursorPictureBox.Image = My.Resources.InsulinVial
@@ -260,7 +261,7 @@ Public Class Form1
                     Me.CursorPictureBox.Image = Nothing
                     Me.CursorPanel.Visible = False
                 Case ActiveInsulinSeriesName
-                    chart1.SetupCallout(currentDataPoint, $"Theoretical Active Insulin {currentDataPoint.YValues.FirstOrDefault:F3} U")
+                    chart1.SetupCallout(currentDataPoint, $"Theoretical Active Insulin {currentDataPoint.YValues.FirstOrDefault:F3}U")
                 Case Else
                     Stop
             End Select
@@ -1921,7 +1922,7 @@ Public Class Form1
     Private Sub UpdateActiveInsulin()
         Try
             Dim activeInsulinStr As String = $"{s_activeInsulin.amount:N3}"
-            Me.ActiveInsulinValue.Text = $"Active Insulin{vbCrLf}{activeInsulinStr} U"
+            Me.ActiveInsulinValue.Text = $"Active Insulin{vbCrLf}{activeInsulinStr}U"
             _sgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
         Catch ex As Exception
             Stop
@@ -2159,26 +2160,26 @@ Public Class Form1
         Else
             totalPercent = $"{CInt(s_totalBasal / s_totalDailyDose * 100)}"
         End If
-        Me.Last24HourBasalLabel.Text = $"Basal {s_totalBasal.RoundSingle(1, False)} U | {totalPercent}%"
+        Me.Last24BasalLabel.Text = $"Basal {s_totalBasal.RoundSingle(1, False)}U | {totalPercent}%"
 
-        Me.Last24DailyDoseLabel.Text = $"Daily Dose {s_totalDailyDose.RoundSingle(1, False)} U"
+        Me.Last24DailyDoseLabel.Text = $"Insulin Dose {s_totalDailyDose.RoundSingle(1, False)}U"
 
         If s_totalAutoCorrection > 0 Then
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalAutoCorrection / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24AutoCorrectionLabel.Text = $"Auto Correction {s_totalAutoCorrection.RoundSingle(1, False)} U | {totalPercent}%"
+            Me.Last24AutoCorrectionLabel.Text = $"Auto Correction {s_totalAutoCorrection.RoundSingle(1, False)}U | {totalPercent}%"
             Me.Last24AutoCorrectionLabel.Visible = True
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24ManualBolusLabel.Text = $"Manual Bolus {s_totalManualBolus.RoundSingle(1, False)} U | {totalPercent}%"
+            Me.Last24ManualBolusLabel.Text = $"Manual Bolus {s_totalManualBolus.RoundSingle(1, False)}U | {totalPercent}%"
         Else
             Me.Last24AutoCorrectionLabel.Visible = False
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24ManualBolusLabel.Text = $"Manual Bolus {s_totalManualBolus.RoundSingle(1, False)} U | {totalPercent}%"
+            Me.Last24ManualBolusLabel.Text = $"Manual Bolus {s_totalManualBolus.RoundSingle(1, False)}U | {totalPercent}%"
         End If
         Me.Last24CarbsValueLabel.Text = $"Carbs = {s_totalCarbs} {s_sessionCountrySettings.carbohydrateUnitsDefault.ToTitle}"
     End Sub
@@ -2190,7 +2191,7 @@ Public Class Form1
             Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(8)
             Me.RemainingInsulinUnits.Text = "???U"
         Else
-            Me.RemainingInsulinUnits.Text = $"{s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.reservoirRemainingUnits)).ParseSingle(1):N1} U"
+            Me.RemainingInsulinUnits.Text = $"{s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.reservoirRemainingUnits)).ParseSingle(1):N1}U"
             Select Case s_reservoirLevelPercent
                 Case >= 85
                     Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(7)
@@ -2497,7 +2498,7 @@ Public Class Form1
         Me.ModelLabel.Text = modelNumber
         Me.PumpNameLabel.Text = GetPumpName(modelNumber)
         Me.SerialNumberLabel.Text = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.medicalDeviceSerialNumber))
-        Me.ReadingsLabel.Text = $"{s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288 Readings"
+        Me.ReadingsLabel.Text = $"{s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288 SG Readings"
 
         Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
                               ClassCollectionToDataTable({s_lastSgRecord}.ToList),

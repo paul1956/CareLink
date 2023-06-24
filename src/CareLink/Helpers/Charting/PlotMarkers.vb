@@ -46,12 +46,12 @@ Friend Module PlotMarkers
 
         Select Case type
             Case "AUTO_BASAL_DELIVERY"
-                Return $"{minBasalMsg}Auto Basal: {amount} U"
+                Return $"{minBasalMsg}Auto Basal: {amount}U"
             Case "MANUAL_BASAL_DELIVERY"
-                Return $"{minBasalMsg}Manual Basal: {amount} U"
+                Return $"{minBasalMsg}Manual Basal: {amount}U"
             Case Else
                 Stop
-                Return $"{minBasalMsg}Basal: {amount} U"
+                Return $"{minBasalMsg}Basal: {amount}U"
         End Select
     End Function
 
@@ -117,7 +117,7 @@ Friend Module PlotMarkers
                                                      GetInsulinYValue(),
                                                      GetGraphLineColor("Auto Correction"),
                                                      False,
-                                                     $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
+                                                     $"Auto Correction: {autoCorrection.TruncateSingleString(3)}U")
                                 End With
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 If markerInsulinDictionary.TryAdd(markerOADateTime, CInt(GetInsulinYValue())) Then
@@ -131,7 +131,7 @@ Friend Module PlotMarkers
                                         markerSeriesPoints.Last.MarkerSize = 0
                                     Else
                                         markerSeriesPoints.Last.Color = Color.FromArgb(30, Color.LightBlue)
-                                        markerSeriesPoints.Last.Tag = $"Bolus: {entry(NameOf(InsulinRecord.deliveredFastAmount))} U"
+                                        markerSeriesPoints.Last.Tag = $"Bolus: {entry(NameOf(InsulinRecord.deliveredFastAmount))}U"
                                     End If
                                 Else
                                     Stop
@@ -228,7 +228,7 @@ Friend Module PlotMarkers
                                                      TreatmentInsulinRow,
                                                      GetGraphLineColor("Auto Correction"),
                                                      True,
-                                                     $"Auto Correction: {autoCorrection.TruncateSingleString(3)} U")
+                                                     $"Auto Correction: {autoCorrection.TruncateSingleString(3)}U")
                                 End With
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 If s_treatmentMarkerInsulinDictionary.TryAdd(markerOADateTime, TreatmentInsulinRow) Then
@@ -242,7 +242,7 @@ Friend Module PlotMarkers
                                         CreateCallout(treatmentChart,
                                                       lastDataPoint,
                                                       Color.FromArgb(10, Color.Black),
-                                                      $"Bolus {entry(NameOf(InsulinRecord.deliveredFastAmount))} U")
+                                                      $"Bolus {entry(NameOf(InsulinRecord.deliveredFastAmount))}U")
                                     End If
                                 Else
                                     Stop
