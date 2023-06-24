@@ -1022,6 +1022,8 @@ Public Class Form1
 
         If File.Exists(currentAllUserLoginFile) Then
             s_allUserSettingsData.LoadUserRecords(currentAllUserLoginFile)
+        Else
+            My.Settings.AutoLogin = False
         End If
 
         Me.InitializeDgvCareLinkUsers(Me.DgvCareLinkUsers)

@@ -13,6 +13,7 @@ Public Class LoginForm1
         If hasErrors Then
             loginStatus.ForeColor = Color.Red
             loginStatus.Text = lastErrorMessage
+            My.Settings.AutoLogin = False
         Else
             loginStatus.ForeColor = Color.Black
             loginStatus.Text = "OK"
