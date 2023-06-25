@@ -46,17 +46,18 @@ Public Class LoginForm1
         Dim commandLineArguments As String() = Environment.GetCommandLineArgs()
 
         If commandLineArguments.Length > 1 Then
-            Dim arg As String() = commandLineArguments(1).Split("=")
             Dim userRecord As CareLinkUserDataRecord = Nothing
-            If s_allUserSettingsData.TryGetValue(arg(1), userRecord) Then
-                Select Case arg.Length
-                    Case 1 ' /Safe
-                        My.Settings.AutoLogin = False
-                        userRecord.AutoLogin = False
-                    Case 2 ' username=name
+            Dim param As String = commandLineArguments(1)
+            Select Case True
+                Case param.StartsWith("/Safe")
+                    My.Settings.AutoLogin = False
+                    My.Settings.Save()
+                Case param.StartsWith("UserName", StringComparison.InvariantCultureIgnoreCase) ' username=name
+                    Dim arg As String() = param.Split("=")
+                    If arg.Length = 2 AndAlso s_allUserSettingsData.TryGetValue(arg(1), userRecord) Then
                         userRecord.UpdateSettings()
-                End Select
-            End If
+                    End If
+            End Select
         End If
 
         If AllUserLoginInfoFileExists() Then
