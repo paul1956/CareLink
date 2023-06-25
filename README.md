@@ -30,12 +30,15 @@ This update has a UI to show all the available data and a visual version that mi
 06/25/2023
 
 ## What's New in this release
-New in 3.8.2.2
+New in 3.8.3.0
 - Correct application version display
 - Update help messages for copy of tables in DataGridViews
 - Handle CareLink Partners without Patient ID
 - Fix highlighting in StatusBar TimeZone field
 - Fix TimeZone display in status bar to provide additional information and handle Daylight Savings Time
+- Temp Target display for mmol/L
+- Fix parsing of command line parameters /Safe will clear Auto Login
+- Update formatting on home page for easier viewing
 
 New in 3.8.2.1
 - Fix TIR calculation when CareLink is providing bad data
