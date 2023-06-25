@@ -49,7 +49,7 @@ Public Class LoginForm1
             Dim userRecord As CareLinkUserDataRecord = Nothing
             Dim param As String = commandLineArguments(1)
             Select Case True
-                Case param.StartsWith("/Safe")
+                Case param.StartsWith("/Safe", StringComparison.InvariantCultureIgnoreCase)
                     My.Settings.AutoLogin = False
                     My.Settings.Save()
                 Case param.StartsWith("UserName", StringComparison.InvariantCultureIgnoreCase) ' username=name
@@ -150,12 +150,17 @@ Public Class LoginForm1
         End If
 
         Dim networkDownMessage As String = If(NetworkDown, "due to network being down", Me.Client.GetLastErrorMessage)
-        If MsgBox($"Login Unsuccessful {networkDownMessage}. try again? If no program will exit!", Buttons:=MsgBoxStyle.YesNo, Title:="Login Failed") = MsgBoxResult.No Then
-            End
-        End If
+        Dim result As MsgBoxResult = MsgBox($"Login Unsuccessful {networkDownMessage}. try again? If 'Abort' program will exit!", MsgBoxStyle.AbortRetryIgnore, Title:="Login Failed")
+        Select Case result
+            Case MsgBoxResult.Abort
+                End
+            Case MsgBoxResult.Ignore
+                Me.DialogResult = DialogResult.Ignore
+            Case MsgBoxResult.Retry
+                Me.DialogResult = DialogResult.Retry
+        End Select
         Me.Ok_Button.Enabled = True
         Me.Cancel_Button.Enabled = True
-        Me.DialogResult = DialogResult.Retry
     End Sub
 
     Private Sub RegionComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles RegionComboBox.SelectedIndexChanged
