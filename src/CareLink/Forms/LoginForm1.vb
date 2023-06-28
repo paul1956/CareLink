@@ -121,6 +121,8 @@ Public Class LoginForm1
         My.Settings.CountryCode = countryCode
         Me.Client = New CareLinkClient(Me.UsernameComboBox.Text, Me.PasswordTextBox.Text, countryCode)
         If Not Me.Client.LoggedIn Then
+            Dim savePatientID As String = My.Settings.CareLinkPatientUserID
+            My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
             Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData(My.Forms.Form1)
             If recentData?.Count > 0 Then
                 ReportLoginStatus(Me.LoginStatus, False)
@@ -130,7 +132,7 @@ Public Class LoginForm1
                 My.Settings.CareLinkUserName = Me.UsernameComboBox.Text
                 My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
                 My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
-                My.Settings.CareLinkPartner = Me.CarePartnerCheckBox.Checked
+                My.Settings.CareLinkPartner = Me.CarePartnerCheckBox.Checked OrElse Not String.IsNullOrWhiteSpace(Me.PatientUserIDTextBox.Text)
                 My.Settings.Save()
                 If Not s_allUserSettingsData.TryGetValue(Me.UsernameComboBox.Text, Me.LoggedOnUser) Then
                     s_allUserSettingsData.SaveAllUserRecords(New CareLinkUserDataRecord(s_allUserSettingsData), NameOf(CareLinkUserDataRecord.CareLinkUserName), Me.UsernameComboBox.Text)
@@ -139,6 +141,7 @@ Public Class LoginForm1
                 Me.Hide()
                 Exit Sub
             Else
+                My.Settings.CareLinkPatientUserID = savePatientID
                 ReportLoginStatus(Me.LoginStatus, True, Me.Client.GetLastErrorMessage)
             End If
         Else
@@ -149,8 +152,8 @@ Public Class LoginForm1
             Exit Sub
         End If
 
-        Dim networkDownMessage As String = If(NetworkDown, "due to network being down", Me.Client.GetLastErrorMessage)
-        Dim result As MsgBoxResult = MsgBox($"Login Unsuccessful {networkDownMessage}. try again? If 'Abort' program will exit!", MsgBoxStyle.AbortRetryIgnore, Title:="Login Failed")
+        Dim networkDownMessage As String = If(NetworkDown, "due to network being down", $"'{Me.Client.GetLastErrorMessage}'")
+        Dim result As MsgBoxResult = MsgBox($"Login Unsuccessful, {networkDownMessage}. try again? If 'Abort' program will exit!", MsgBoxStyle.AbortRetryIgnore, Title:="Login Failed")
         Select Case result
             Case MsgBoxResult.Abort
                 End

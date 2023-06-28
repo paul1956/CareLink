@@ -83,6 +83,7 @@ Public Class CareLinkClient
             ' Open login(get SessionId And SessionData)
             Using loginSessionResponse As HttpResponseMessage = Me.GetLoginSession(host)
                 If Not loginSessionResponse.IsSuccessStatusCode Then
+                    _lastErrorMessage = loginSessionResponse.ReasonPhrase
                     Return lastLoginSuccess
                 End If
                 _lastResponseCode = loginSessionResponse.StatusCode
@@ -93,8 +94,10 @@ Public Class CareLinkClient
                         If doLoginResponse Is Nothing Then
                             _lastErrorMessage = "Login Failure"
                             Return lastLoginSuccess
-                        Else
+                        ElseIf doLoginResponse.IsSuccessStatusCode Then
                             _lastErrorMessage = Nothing
+                        Else
+                            _lastErrorMessage = doLoginResponse.ReasonPhrase
                         End If
                     Catch ex As Exception
                         _lastErrorMessage = $"Login Failure {ex.DecodeException()}, in {NameOf(ExecuteLoginProcedure)}."
@@ -112,7 +115,8 @@ Public Class CareLinkClient
                         _lastResponseCode = consentResponse?.StatusCode
                         If consentResponse?.IsSuccessStatusCode Then
                         Else
-                            _lastErrorMessage = "Login Failure"
+                            _lastErrorMessage = doLoginResponse.ReasonPhrase
+                            _lastResponseCode = doLoginResponse.StatusCode
                             Return lastLoginSuccess
                         End If
                     End Using
@@ -307,9 +311,6 @@ Public Class CareLinkClient
 
         Try
             response = _httpClient.Get(url, _lastErrorMessage, s_commonHeaders, payload)
-            If Not response.IsSuccessStatusCode Then
-                Throw New Exception($"session response is not OK, {response.ReasonPhrase}")
-            End If
         Catch ex As Exception
             If NetworkDown Then
                 _lastErrorMessage = "No Internet Connection!"
@@ -320,18 +321,19 @@ Public Class CareLinkClient
             Return response
         End Try
 
-        Debug.Print("__getLoginSession() success")
         Return response
     End Function
 
     Private Function GetMonitorData(authToken As String) As SessionMonitorDataRecord
         Debug.Print("__getMonitorData()")
-        Return New SessionMonitorDataRecord(Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/monitor/data", Nothing, Nothing))
+        Dim sessionMonitorData As New SessionMonitorDataRecord(Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/monitor/data", Nothing, Nothing))
+        Return sessionMonitorData
     End Function
 
     Private Function GetMyProfile(authToken As String) As SessionProfileRecord
         Debug.Print("__getMyProfile()")
-        Return New SessionProfileRecord(Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/users/me/profile", Nothing, Nothing))
+        Dim sessionProfile As New SessionProfileRecord(Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/users/me/profile", Nothing, Nothing))
+        Return sessionProfile
     End Function
 
     Private Function GetMyUser(MainForm As Form1, authToken As String) As SessionUserRecord

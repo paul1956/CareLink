@@ -142,7 +142,7 @@ Public Module CareLinkClientHelpers
     Friend Function DoLogin(ByRef httpClient As HttpClient, loginSessionResponse As HttpResponseMessage, userName As String, password As String, country As String, ByRef lastErrorMessage As String) As HttpResponseMessage
 
         Dim queryParameters As Dictionary(Of String, String) = ParseQsl(loginSessionResponse)
-        Dim url As New StringBuilder("https://mdtLogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login")
+        Dim url As New StringBuilder($"https://{loginSessionResponse.RequestMessage.RequestUri.Authority}/mmcl/auth/oauth/v2/authorize/login")
 
         Dim webForm As New Dictionary(Of String, String) From {
             {
@@ -176,7 +176,7 @@ Public Module CareLinkClientHelpers
         Dim response As HttpResponseMessage = Nothing
         Try
             response = httpClient.Post(url, s_commonHeaders, params:=payload, data:=webForm)
-            If response?.IsSuccessStatusCode Then
+            If response IsNot Nothing Then
                 Return DecodeResponse(response, lastErrorMessage)
             End If
         Catch ex As Exception
