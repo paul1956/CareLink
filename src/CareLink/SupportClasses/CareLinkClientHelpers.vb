@@ -143,12 +143,12 @@ Public Module CareLinkClientHelpers
         End Try
     End Function
 
-    Friend Function DoLogin(ByRef httpClient As HttpClient, loginSessionResponse As HttpResponseMessage, userName As String, password As String, country As String, ByRef lastErrorMessage As String) As HttpResponseMessage
+    Friend Function DoLogin(ByRef httpClient As HttpClient, loginSessionResponse As HttpResponseMessage, userName As String, password As String, ByRef lastErrorMessage As String) As HttpResponseMessage
 
         Dim queryParameters As Dictionary(Of String, String) = ParseQsl(loginSessionResponse)
         Dim url As StringBuilder
         With loginSessionResponse.RequestMessage.RequestUri
-            url = New StringBuilder($"{ .Scheme}://{ .Authority}{Strings.Join(loginSessionResponse.RequestMessage.RequestUri.Segments, "")}")
+            url = New StringBuilder($"{ .Scheme}://{ .Host}{Join(loginSessionResponse.RequestMessage.RequestUri.Segments, "")}")
         End With
 
         Dim webForm As New Dictionary(Of String, String) From {
@@ -176,7 +176,7 @@ Public Module CareLinkClientHelpers
         Dim payload As New Dictionary(Of String, String) From {
             {
                 "country",
-                country},
+                queryParameters.GetValueOrDefault("countrycode")},
             {
                 "locale",
                 "en"}}

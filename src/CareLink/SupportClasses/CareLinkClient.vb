@@ -60,16 +60,22 @@ Public Class CareLinkClient
         Return recentData IsNot Nothing
     End Function
 
+    ''' <summary>
+    ''' Logs in user and collects Records with User, Profile, CountrySettings and Device Family
+    ''' </summary>
+    ''' <param name="mainForm"></param>
+    ''' <param name="host"></param>
+    ''' <returns>True is login successful</returns>
     Private Function ExecuteLoginProcedure(mainForm As Form1, host As String) As Boolean
-        Dim lastLoginSuccess As Boolean = False
         If NetworkUnavailable() Then
             _lastErrorMessage = "No Internet Connection!"
             ReportLoginStatus(mainForm.LoginStatus)
-            Return lastLoginSuccess
+            Return False
         End If
         _inLoginInProcess = True
         _lastErrorMessage = Nothing
         Dim message As String
+        Dim lastLoginSuccess As Boolean = False
         Try
             ' Clear cookies
             _httpClient.DefaultRequestHeaders.Clear()
@@ -85,11 +91,11 @@ Public Class CareLinkClient
                 _lastResponseCode = loginSessionResponse.StatusCode
                 If Not loginSessionResponse.IsSuccessStatusCode Then
                     _lastErrorMessage = loginSessionResponse.ReasonPhrase
-                    Return lastLoginSuccess
+                    Return False
                 End If
 
                 ' Login
-                Using doLoginResponse As HttpResponseMessage = DoLogin(_httpClient, loginSessionResponse, Me.CareLinkUsername, Me.CareLinkPassword, Me.CareLinkCountry, _lastErrorMessage)
+                Using doLoginResponse As HttpResponseMessage = DoLogin(_httpClient, loginSessionResponse, Me.CareLinkUsername, Me.CareLinkPassword, _lastErrorMessage)
                     Try
                         If doLoginResponse Is Nothing Then
                             _lastErrorMessage = "Login Failure with reason unknown"
@@ -99,7 +105,7 @@ Public Class CareLinkClient
                         End If
                     Catch ex As Exception
                         _lastErrorMessage = $"Login Failure {ex.DecodeException()}, in {NameOf(ExecuteLoginProcedure)}."
-                        Return lastLoginSuccess
+                        Return False
                     Finally
                         If doLoginResponse Is Nothing Then
                             _lastResponseCode = HttpStatusCode.NoContent
@@ -120,7 +126,7 @@ Public Class CareLinkClient
                         Else
                             _lastErrorMessage = doLoginResponse.ReasonPhrase
                             _lastResponseCode = doLoginResponse.StatusCode
-                            Return lastLoginSuccess
+                            Return False
                         End If
                     End Using
                 End Using
