@@ -15,10 +15,6 @@ Namespace My
     ' NetworkAvailabilityChanged: Raised when the network connection is connected or disconnected.
     Partial Friend Class MyApplication
 
-        Private Sub MyApplication_NetworkAvailabilityChanged(sender As Object, e As NetworkAvailableEventArgs) Handles Me.NetworkAvailabilityChanged
-            NetworkDown = Not e.IsNetworkAvailable
-        End Sub
-
         Private Sub MyApplication_UnhandledException(sender As Object, e As UnhandledExceptionEventArgs) Handles Me.UnhandledException
             ExceptionHandlerForm.UnhandledException = e
             ExceptionHandlerForm.ShowDialog()

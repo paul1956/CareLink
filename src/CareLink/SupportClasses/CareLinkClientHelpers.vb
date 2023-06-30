@@ -13,9 +13,7 @@ Public Module CareLinkClientHelpers
     Private Const CareLinkConnectServerEu As String = "CareLink.MiniMed.eu"
     Private Const CareLinkConnectServerOther As String = "CareLink.MiniMed.eu"
     Private Const CareLinkConnectServerUs As String = "CareLink.MiniMed.com"
-#Disable Warning IDE0051 ' Remove unused private members
     Private Const CareLinkConnectServerReports As String = "/app/reports"
-#Enable Warning IDE0051 ' Remove unused private members
 
     Friend ReadOnly s_commonHeaders As New Dictionary(Of String, String) From {
                         {
@@ -41,7 +39,9 @@ Public Module CareLinkClientHelpers
         OK
     End Enum
 
-    Public Property NetworkDown As Boolean = False
+    Public Function NetworkUnavailable() As Boolean
+        Return Not My.Computer.Network.IsAvailable
+    End Function
 
     <Extension>
     Private Function ExtractResponseData(responseBody As String, startStr As String, endStr As String) As String
@@ -50,6 +50,9 @@ Public Module CareLinkClientHelpers
             Return ""
         End If
         Dim endIndex As Integer = responseBody.IndexOf(endStr, startIndex, StringComparison.Ordinal)
+        If endIndex = -1 Then
+            Return ""
+        End If
         Return responseBody.Substring(startIndex, endIndex - startIndex).Replace("""", "")
     End Function
 
@@ -102,7 +105,7 @@ Public Module CareLinkClientHelpers
     Friend Function DoConsent(ByRef httpClient As HttpClient, doLoginResponse As HttpResponseMessage, ByRef lastErrorMessage As String) As HttpResponseMessage
 
         ' Extract data for consent
-        Dim doLoginRespBody As String = doLoginResponse.Text
+        Dim doLoginRespBody As String = doLoginResponse.ResultText
         Dim url As New StringBuilder(doLoginRespBody.ExtractResponseData("<form action=", " "))
         Dim sessionId As String = doLoginRespBody.ExtractResponseData("<input type=""hidden"" name=""sessionID"" value=", ">")
         Dim sessionData As String = doLoginRespBody.ExtractResponseData("<input type=""hidden"" name=""sessionData"" value=", ">")
@@ -134,7 +137,7 @@ Public Module CareLinkClientHelpers
         Catch ex As Exception
             Dim message As String = $"__doConsent() failed with {ex.DecodeException()}"
             lastErrorMessage = message
-            Debug.Print(message.Replace(vbCrLf, ""))
+            Debug.Print(message.Replace(vbCrLf, " "))
             Return New HttpResponseMessage(HttpStatusCode.Ambiguous)
         End Try
     End Function
@@ -142,7 +145,10 @@ Public Module CareLinkClientHelpers
     Friend Function DoLogin(ByRef httpClient As HttpClient, loginSessionResponse As HttpResponseMessage, userName As String, password As String, country As String, ByRef lastErrorMessage As String) As HttpResponseMessage
 
         Dim queryParameters As Dictionary(Of String, String) = ParseQsl(loginSessionResponse)
-        Dim url As New StringBuilder($"https://{loginSessionResponse.RequestMessage.RequestUri.Authority}/mmcl/auth/oauth/v2/authorize/login")
+        Dim url As StringBuilder
+        With loginSessionResponse.RequestMessage.RequestUri
+            url = New StringBuilder($"{ .Scheme}://{ .Authority}{Strings.Join(loginSessionResponse.RequestMessage.RequestUri.Segments, "")}")
+        End With
 
         Dim webForm As New Dictionary(Of String, String) From {
             {

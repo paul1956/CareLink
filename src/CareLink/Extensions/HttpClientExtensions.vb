@@ -59,9 +59,8 @@ Friend Module HttpClientExtensions
     End Function
 
     <Extension>
-    Public Function Text(client As HttpResponseMessage) As String
-        Dim result As String = client.Content.ReadAsStringAsync().Result
-        Return result
+    Public Function ResultText(client As HttpResponseMessage) As String
+        Return client.Content.ReadAsStringAsync().Result
     End Function
 
 End Module

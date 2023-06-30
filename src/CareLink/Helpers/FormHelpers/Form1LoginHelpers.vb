@@ -45,7 +45,7 @@ Friend Module Form1LoginHelpers
                     MainForm.ServerUpdateTimer.Interval = CInt(s_5MinutesInMilliseconds)
                     MainForm.ServerUpdateTimer.Start()
                     Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
-                    If NetworkDown Then
+                    If NetworkUnavailable() Then
                         ReportLoginStatus(MainForm.LoginStatus)
                         Return False
                     End If
@@ -61,7 +61,7 @@ Friend Module Form1LoginHelpers
                 MainForm.ServerUpdateTimer.Start()
                 Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
 
-                If NetworkDown Then
+                If NetworkUnavailable() Then
                     ReportLoginStatus(MainForm.LoginStatus)
                     Return False
                 End If

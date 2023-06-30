@@ -152,9 +152,8 @@ Public Class LoginForm1
             Exit Sub
         End If
 
-        Dim networkDownMessage As String = If(NetworkDown, "due to network being down", $"'{Me.Client.GetLastErrorMessage}'")
-        Dim result As MsgBoxResult = MsgBox($"Login Unsuccessful, {networkDownMessage}. try again? If 'Abort' program will exit!", MsgBoxStyle.AbortRetryIgnore, Title:="Login Failed")
-        Select Case result
+        Dim networkDownMessage As String = If(NetworkUnavailable(), "due to network being unavailable", $"'{Me.Client.GetLastErrorMessage}'")
+        Select Case MsgBox($"Login Unsuccessful, {networkDownMessage}. try again? If 'Abort' program will exit!", MsgBoxStyle.AbortRetryIgnore, Title:="Login Failed")
             Case MsgBoxResult.Abort
                 End
             Case MsgBoxResult.Ignore

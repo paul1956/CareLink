@@ -62,7 +62,7 @@ Public Class CareLinkClient
 
     Private Function ExecuteLoginProcedure(mainForm As Form1, host As String) As Boolean
         Dim lastLoginSuccess As Boolean = False
-        If NetworkDown Then
+        If NetworkUnavailable() Then
             _lastErrorMessage = "No Internet Connection!"
             ReportLoginStatus(mainForm.LoginStatus)
             Return lastLoginSuccess
@@ -82,33 +82,36 @@ Public Class CareLinkClient
 
             ' Open login(get SessionId And SessionData)
             Using loginSessionResponse As HttpResponseMessage = Me.GetLoginSession(host)
+                _lastResponseCode = loginSessionResponse.StatusCode
                 If Not loginSessionResponse.IsSuccessStatusCode Then
                     _lastErrorMessage = loginSessionResponse.ReasonPhrase
                     Return lastLoginSuccess
                 End If
-                _lastResponseCode = loginSessionResponse.StatusCode
 
                 ' Login
                 Using doLoginResponse As HttpResponseMessage = DoLogin(_httpClient, loginSessionResponse, Me.CareLinkUsername, Me.CareLinkPassword, Me.CareLinkCountry, _lastErrorMessage)
                     Try
                         If doLoginResponse Is Nothing Then
-                            _lastErrorMessage = "Login Failure"
-                            Return lastLoginSuccess
-                        ElseIf doLoginResponse.IsSuccessStatusCode Then
-                            _lastErrorMessage = Nothing
-                        Else
+                            _lastErrorMessage = "Login Failure with reason unknown"
+                            Return False
+                        ElseIf Not doLoginResponse.IsSuccessStatusCode Then
                             _lastErrorMessage = doLoginResponse.ReasonPhrase
                         End If
                     Catch ex As Exception
                         _lastErrorMessage = $"Login Failure {ex.DecodeException()}, in {NameOf(ExecuteLoginProcedure)}."
                         Return lastLoginSuccess
                     Finally
-                        If doLoginResponse IsNot Nothing Then
-                            _lastResponseCode = doLoginResponse.StatusCode
-                        Else
+                        If doLoginResponse Is Nothing Then
                             _lastResponseCode = HttpStatusCode.NoContent
+                        Else
+                            _lastResponseCode = doLoginResponse.StatusCode
                         End If
                     End Try
+                    If _lastErrorMessage IsNot Nothing Then
+                        Return False
+                    End If
+
+                    ' If we are here we at least were successful logging in
 
                     ' Consent
                     Using consentResponse As HttpResponseMessage = DoConsent(_httpClient, doLoginResponse, _lastErrorMessage)
@@ -151,7 +154,7 @@ Public Class CareLinkClient
     End Function
 
     Private Function GetAuthorizationToken(MainForm As Form1, ByRef authToken As String) As GetAuthorizationTokenResult
-        If NetworkDown Then
+        If NetworkUnavailable() Then
             _lastErrorMessage = "No Internet Connection!"
             Return GetAuthorizationTokenResult.NetworkDown
         End If
@@ -171,7 +174,7 @@ Public Class CareLinkClient
                 Return GetAuthorizationTokenResult.InLoginProcess
             End If
             If Not Me.ExecuteLoginProcedure(MainForm, url) Then
-                If NetworkDown Then
+                If NetworkUnavailable() Then
                     _lastErrorMessage = "No Internet Connection!"
                     Debug.Print("No Internet Connection!")
                     Return GetAuthorizationTokenResult.NetworkDown
@@ -270,7 +273,7 @@ Public Class CareLinkClient
                     _lastResponseCode = response.StatusCode
                 End If
                 If response?.IsSuccessStatusCode Then
-                    jsonData = Loads(response.Text)
+                    jsonData = Loads(response.ResultText)
                     If jsonData.Count > 61 Then
 
                         Dim contents As String = JsonSerializer.Serialize(jsonData, New JsonSerializerOptions)
@@ -312,7 +315,7 @@ Public Class CareLinkClient
         Try
             response = _httpClient.Get(url, _lastErrorMessage, s_commonHeaders, payload)
         Catch ex As Exception
-            If NetworkDown Then
+            If NetworkUnavailable() Then
                 _lastErrorMessage = "No Internet Connection!"
                 Debug.Print("No Internet Connection!")
                 Return response
@@ -354,7 +357,7 @@ Public Class CareLinkClient
 
     ' Wrapper for data retrieval methods
     Public Overridable Function GetRecentData(MainForm As Form1) As Dictionary(Of String, String)
-        If NetworkDown Then
+        If NetworkUnavailable() Then
             _lastErrorMessage = "No Internet Connection!"
             ReportLoginStatus(MainForm.LoginStatus)
             Debug.Print("No Internet Connection!")
