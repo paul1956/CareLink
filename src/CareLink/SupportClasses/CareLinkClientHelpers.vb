@@ -45,10 +45,11 @@ Public Module CareLinkClientHelpers
 
     <Extension>
     Private Function ExtractResponseData(responseBody As String, startStr As String, endStr As String) As String
-        Dim startIndex As Integer = responseBody.IndexOf(startStr, StringComparison.Ordinal) + startStr.Length
-        If startStr.Length = startIndex + 1 Then
+        Dim startIndex As Integer = responseBody.IndexOf(startStr, StringComparison.Ordinal)
+        If startIndex = -1 Then
             Return ""
         End If
+        startIndex += startStr.Length
         Dim endIndex As Integer = responseBody.IndexOf(endStr, startIndex, StringComparison.Ordinal)
         If endIndex = -1 Then
             Return ""
@@ -90,12 +91,12 @@ Public Module CareLinkClientHelpers
             Debug.Print($"{NameOf(DecodeResponse)} success from {memberName}, line {sourceLineNumber}.")
             Return response
         ElseIf response?.StatusCode = HttpStatusCode.BadRequest Then
-            message = $"{NameOf(DecodeResponse)} failed with HttpStatusCode.BadRequest"
+            message = $"{NameOf(DecodeResponse)} failed with {HttpStatusCode.BadRequest}"
             lastErrorMessage = $"Login Failure {message}"
             Debug.Print($"{message} from {memberName}, line {sourceLineNumber}")
             Return response
         Else
-            message = $"{NameOf(DecodeResponse)} failed, session response is {response?.StatusCode}"
+            message = $"{NameOf(DecodeResponse)} failed, session response is {response?.StatusCode.ToString}"
             lastErrorMessage = message
             Debug.Print($"{message} from {memberName}, line {sourceLineNumber}")
             Return response
@@ -138,7 +139,7 @@ Public Module CareLinkClientHelpers
             Dim message As String = $"__doConsent() failed with {ex.DecodeException()}"
             lastErrorMessage = message
             Debug.Print(message.Replace(vbCrLf, " "))
-            Return New HttpResponseMessage(HttpStatusCode.Ambiguous)
+            Return New HttpResponseMessage(HttpStatusCode.NotImplemented)
         End Try
     End Function
 

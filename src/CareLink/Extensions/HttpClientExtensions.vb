@@ -31,7 +31,7 @@ Friend Module HttpClientExtensions
             Return client.GetAsync(url.ToString).Result
         Catch ex As Exception
             lastError = ex.DecodeException()
-            Return New HttpResponseMessage(Net.HttpStatusCode.Ambiguous)
+            Return New HttpResponseMessage(Net.HttpStatusCode.NotImplemented)
         End Try
     End Function
 
