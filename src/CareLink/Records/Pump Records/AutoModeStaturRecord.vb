@@ -6,18 +6,9 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class AutoModeStatusRecord
-    Private _dateTime As Date
-
     <DisplayName(NameOf([dateTime]))>
     <Column(Order:=5, TypeName:="Date")>
     Public Property [dateTime] As Date
-        Get
-            Return _dateTime
-        End Get
-        Set
-            _dateTime = Value
-        End Set
-    End Property
 
     <DisplayName("Auto Mode On")>
     <Column(Order:=9, TypeName:=NameOf([Boolean]))>

@@ -134,11 +134,10 @@ Friend Module DataTableHelpers
             Next
         End If
         If Not alignmentTable.TryGetValue(columnName, cellStyle) Then
-            If columnName = NameOf(SummaryRecord.RecordNumber) Then
-                cellStyle = (New DataGridViewCellStyle).SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
-            Else
-                cellStyle = (New DataGridViewCellStyle).SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
-            End If
+            cellStyle = If(columnName = NameOf(SummaryRecord.RecordNumber),
+                           (New DataGridViewCellStyle).SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0)),
+                           (New DataGridViewCellStyle).SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
+                          )
         End If
         Return cellStyle
     End Function
@@ -150,16 +149,9 @@ Friend Module DataTableHelpers
     ''' <param name="IgnoreRows">When set to true, the function will return true even if the table's row count is equal to zero.</param>
     ''' <returns>False if the specified DataTable null, has zero columns, or zero rows, otherwise true.</returns>
     Public Function IsValidDataTable(Table As DataTable, Optional IgnoreRows As Boolean = False) As Boolean
-        If Table Is Nothing Then
-            Return False
-        End If
-        If Table.Columns.Count = 0 Then
-            Return False
-        End If
-        If Not IgnoreRows AndAlso Table.Rows.Count = 0 Then
-            Return False
-        End If
-        Return True
+        Return Table IsNot Nothing AndAlso
+               Table.Columns.Count <> 0 AndAlso
+               (IgnoreRows OrElse Table.Rows.Count <> 0)
     End Function
 
 End Module

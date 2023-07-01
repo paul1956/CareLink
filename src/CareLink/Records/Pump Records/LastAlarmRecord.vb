@@ -6,18 +6,9 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class LastAlarmRecord
-    Private _datetime As Date
-
     <DisplayName(NameOf([datetime]))>
     <Column(Order:=2, TypeName:="Date")>
     Public Property [datetime] As Date
-        Get
-            Return _datetime
-        End Get
-        Set
-            _datetime = Value
-        End Set
-    End Property
 
     <DisplayName(NameOf(basalName))>
     <Column(Order:=15, TypeName:=NameOf([String]))>

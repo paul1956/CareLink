@@ -21,7 +21,6 @@ Public Class CareLinkClient
     Private _lastErrorMessage As String
     Private _lastResponseCode? As HttpStatusCode
     Private _sessionMonitorData As New SessionMonitorDataRecord
-    Private _sessionProfile As New SessionProfileRecord
     Private _sessionUser As New SessionUserRecord
 
     Public Sub New(username As String, password As String, country As String)
@@ -43,14 +42,7 @@ Public Class CareLinkClient
     Private Property ClientHandler As HttpClientHandler
     Public Property LoggedIn As Boolean
 
-    Public Property SessionProfile As SessionProfileRecord
-        Get
-            Return _sessionProfile
-        End Get
-        Set(value As SessionProfileRecord)
-            _sessionProfile = value
-        End Set
-    End Property
+    Public Property SessionProfile As New SessionProfileRecord
 
     Private ReadOnly Property CareLinkPassword As String
     Private ReadOnly Property CareLinkUsername As String
@@ -82,7 +74,7 @@ Public Class CareLinkClient
 
             ' Clear basic session records
             _sessionUser.Clear()
-            _sessionProfile.Clear()
+            Me.SessionProfile.Clear()
             s_sessionCountrySettings.Clear()
             _sessionMonitorData.Clear()
 
@@ -107,12 +99,12 @@ Public Class CareLinkClient
                         _lastErrorMessage = $"Login Failure {ex.DecodeException()}, in {NameOf(ExecuteLoginProcedure)}."
                         Return False
                     Finally
-                        If doLoginResponse Is Nothing Then
-                            _lastResponseCode = HttpStatusCode.NoContent
-                        Else
-                            _lastResponseCode = doLoginResponse.StatusCode
-                        End If
+                        _lastResponseCode = If(doLoginResponse Is Nothing,
+                                               HttpStatusCode.NoContent,
+                                               doLoginResponse.StatusCode
+                                              )
                     End Try
+
                     If _lastErrorMessage IsNot Nothing Then
                         Return False
                     End If
@@ -137,12 +129,12 @@ Public Class CareLinkClient
             ' MUST BE FIRST DO NOT MOVE NEXT LINE
             s_sessionCountrySettings = New CountrySettingsRecord(Me.GetCountrySettings(authToken))
             _sessionUser = Me.GetMyUser(authToken)
-            _sessionProfile = Me.GetMyProfile(authToken)
+            Me.SessionProfile = Me.GetMyProfile(authToken)
             _sessionMonitorData = Me.GetMonitorData(authToken)
 
             ' Set login success if everything was OK:
             If _sessionUser.HasValue _
-               AndAlso _sessionProfile.HasValue _
+               AndAlso Me.SessionProfile.HasValue _
                AndAlso s_sessionCountrySettings.HasValue _
                AndAlso _sessionMonitorData.HasValue Then
                 lastLoginSuccess = True
@@ -223,10 +215,10 @@ Public Class CareLinkClient
     End Function
 
     Private Function GetCookies(url As String) As CookieCollection
-        If String.IsNullOrWhiteSpace(url) Then
-            Return Nothing
-        End If
-        Return Me.ClientHandler.CookieContainer.GetCookies(New Uri($"https://{url}"))
+        Return If(String.IsNullOrWhiteSpace(url),
+                  Nothing,
+                  Me.ClientHandler.CookieContainer.GetCookies(New Uri($"https://{url}"))
+                 )
     End Function
 
     Private Function GetCookieValue(url As String, cookieName As String) As String
@@ -335,17 +327,17 @@ Public Class CareLinkClient
             If Me.GetAuthorizationToken(authToken) = GetAuthorizationTokenResult.OK AndAlso
                ((s_sessionCountrySettings.HasValue AndAlso Not String.IsNullOrWhiteSpace(Me.CareLinkCountry)) OrElse
                _sessionMonitorData.deviceFamily?.Equals("BLE_X", StringComparison.Ordinal)) Then
-                If _careLinkPartnerType.Contains(_sessionUser.role, StringComparer.InvariantCultureIgnoreCase) Then
-                    Return Me.GetConnectDisplayMessage(
-                                _sessionProfile.username,
-                                "carepartner",
-                                s_sessionCountrySettings.blePereodicDataEndpoint,
-                                My.Settings.CareLinkPatientUserID)
-                End If
-                Return Me.GetConnectDisplayMessage(
-                                _sessionProfile.username,
-                                "patient",
-                                s_sessionCountrySettings.blePereodicDataEndpoint)
+                Return If(_careLinkPartnerType.Contains(_sessionUser.role, StringComparer.InvariantCultureIgnoreCase),
+                          Me.GetConnectDisplayMessage(
+                                        Me.SessionProfile.username,
+                                        "carepartner",
+                                        s_sessionCountrySettings.blePereodicDataEndpoint,
+                                        My.Settings.CareLinkPatientUserID),
+                          Me.GetConnectDisplayMessage(
+                                        Me.SessionProfile.username,
+                                        "patient",
+                                        s_sessionCountrySettings.blePereodicDataEndpoint)
+                                       )
             End If
         Catch ex As Exception
             Stop

@@ -6,8 +6,6 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class AutoBasalDeliveryRecord
-    Private _dateTime As Date
-
     Public Sub New()
     End Sub
 
@@ -16,11 +14,11 @@ Public Class AutoBasalDeliveryRecord
         Me.index = index
         Me.kind = "Marker"
         Me.version = 1
-        _dateTime = Date.FromOADate(r.GetOaGetTime)
+        Me.dateTime = Date.FromOADate(r.GetOaGetTime)
         Me.id = 13
         Me.RecordNumber = recordNumber
         Me.bolusAmount = r.GetBasal
-        Me.dateTimeAsString = _dateTime.ToShortDateTimeString
+        Me.dateTimeAsString = Me.dateTime.ToShortDateTimeString
     End Sub
 
     <DisplayName("Record Number")>
@@ -46,13 +44,6 @@ Public Class AutoBasalDeliveryRecord
     <DisplayName(NameOf([dateTime]))>
     <Column(Order:=5, TypeName:="Date")>
     Public Property [dateTime] As Date
-        Get
-            Return _dateTime
-        End Get
-        Set
-            _dateTime = Value
-        End Set
-    End Property
 
     <DisplayName("dateTime As String")>
     <Column(Order:=6, TypeName:=NameOf([String]))>
@@ -62,7 +53,7 @@ Public Class AutoBasalDeliveryRecord
     <Column(Order:=7, TypeName:=NameOf(OADate))>
     Public ReadOnly Property OAdateTime As OADate
         Get
-            Return New OADate(_dateTime)
+            Return New OADate(Me.dateTime)
         End Get
     End Property
 

@@ -273,11 +273,9 @@ Public Class Form1
     End Sub
 
     Private Sub TemporaryUseAdvanceAITDecayCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles TemporaryUseAdvanceAITDecayCheckBox.CheckedChanged
-        If Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState = CheckState.Checked Then
-            Me.TemporaryUseAdvanceAITDecayCheckBox.Text = $"Advanced Decay, AIT will decay over {CurrentUser.InsulinRealAit} hours while using {CurrentUser.InsulinTypeName}"
-        Else
-            Me.TemporaryUseAdvanceAITDecayCheckBox.Text = $"AIT will decay over {CurrentUser.PumpAit.ToHoursMinutes} while using {CurrentUser.InsulinTypeName}"
-        End If
+        Me.TemporaryUseAdvanceAITDecayCheckBox.Text = If(Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState = CheckState.Checked,
+            $"Advanced Decay, AIT will decay over {CurrentUser.InsulinRealAit} hours while using {CurrentUser.InsulinTypeName}",
+            $"AIT will decay over {CurrentUser.PumpAit.ToHoursMinutes} while using {CurrentUser.InsulinTypeName}")
         CurrentUser.UseAdvancedAitDecay = Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState
         Me.UpdateActiveInsulinChart()
     End Sub
@@ -643,11 +641,9 @@ Public Class Form1
             Dim uriString As String = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()
             If uriString.StartsWith("https:", StringComparison.InvariantCultureIgnoreCase) AndAlso Uri.IsWellFormedUriString(uriString, UriKind.Absolute) Then
                 e.Value = uriString
-                If dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Equals(dgv.CurrentCell) Then
-                    e.CellStyle.ForeColor = Color.FromArgb(&HFF, &H0, &H0)
-                Else
-                    e.CellStyle.ForeColor = Color.FromArgb(&H0, &H66, &HCC)
-                End If
+                e.CellStyle.ForeColor = If(dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Equals(dgv.CurrentCell),
+                    Color.FromArgb(&HFF, &H0, &H0),
+                    Color.FromArgb(&H0, &H66, &HCC))
                 e.FormattingApplied = True
             End If
         End If
@@ -934,11 +930,10 @@ Public Class Form1
                             End If
                             Me.TabControlPage1.SelectedIndex = _lastMarkerTabIndex.tab
                         Else
-                            If 5 < tab Then
-                                Me.TabControlPage2.SelectedIndex = 0
-                            Else
-                                Me.TabControlPage2.SelectedIndex = _lastMarkerTabIndex.tab
-                            End If
+                            Me.TabControlPage2.SelectedIndex = If(5 < tab,
+                                                                  0,
+                                                                  _lastMarkerTabIndex.tab
+                                                                 )
                             .Visible = False
                         End If
                     Case ItemIndexes.notificationHistory
@@ -1371,11 +1366,10 @@ Public Class Form1
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
                     c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
                 Next
-                If _lastMarkerTabIndex.page = 0 Then
-                    Me.TabControlPage2.SelectedIndex = 0
-                Else
-                    Me.TabControlPage2.SelectedIndex = _lastMarkerTabIndex.tab
-                End If
+                Me.TabControlPage2.SelectedIndex = If(_lastMarkerTabIndex.page = 0,
+                                                      0,
+                                                      _lastMarkerTabIndex.tab
+                                                     )
                 Me.TabControlPage1.Visible = False
                 Exit Sub
             Case NameOf(TabPage05Insulin)
@@ -2156,12 +2150,10 @@ Public Class Form1
             End Select
         Next
 
-        Dim totalPercent As String
-        If s_totalDailyDose = 0 Then
-            totalPercent = "???"
-        Else
-            totalPercent = $"{CInt(s_totalBasal / s_totalDailyDose * 100)}"
-        End If
+        Dim totalPercent As String = If(s_totalDailyDose = 0,
+                                        "???",
+                                        $"{CInt(s_totalBasal / s_totalDailyDose * 100)}"
+                                       )
         Me.Last24BasalLabel.Text = $"Basal {s_totalBasal.RoundSingle(1, False)}U | {totalPercent}%"
 
         Me.Last24DailyDoseLabel.Text = $"Insulin Dose {s_totalDailyDose.RoundSingle(1, False)}U"
@@ -2352,11 +2344,10 @@ Public Class Form1
                         End If
                     End If
                 Next
-                If timeInAutoMode >= s_OneDay Then
-                    Me.SmartGuardLabel.Text = "SmartGuard 100%"
-                Else
-                    Me.SmartGuardLabel.Text = $"SmartGuard {CInt(timeInAutoMode / s_OneDay * 100)}%"
-                End If
+                Me.SmartGuardLabel.Text = If(timeInAutoMode >= s_OneDay,
+                                             "SmartGuard 100%",
+                                             $"SmartGuard {CInt(timeInAutoMode / s_OneDay * 100)}%"
+                                            )
             Catch ex As Exception
                 Me.SmartGuardLabel.Text = "SmartGuard ???%"
             End Try

@@ -11,10 +11,9 @@ Friend Module DataTableExtensions
     ''' </summary>
     <Extension>
     Public Function GetColumns(Input As DataTable) As IEnumerable(Of DataColumn)
-        If IsValidDataTable(Input) Then
-            Return New List(Of DataColumn)()
-        End If
-        Return Input.Columns.OfType(Of DataColumn)().ToList()
+        Return If(IsValidDataTable(Input),
+                  New List(Of DataColumn)(),
+                  Input.Columns.OfType(Of DataColumn)().ToList())
     End Function
 
     ''' <summary>
@@ -22,10 +21,9 @@ Friend Module DataTableExtensions
     ''' </summary>
     <Extension>
     Public Function GetRows(Input As DataTable) As IEnumerable(Of DataRow)
-        If Not IsValidDataTable(Input) Then
-            Return New List(Of DataRow)()
-        End If
-        Return Input.Rows.OfType(Of DataRow)().ToList()
+        Return If(Not IsValidDataTable(Input),
+                  New List(Of DataRow)(),
+                  Input.Rows.OfType(Of DataRow)().ToList())
     End Function
 
 End Module

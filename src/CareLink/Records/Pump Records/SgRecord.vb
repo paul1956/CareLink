@@ -28,11 +28,10 @@ Public Class SgRecord
             Me.kind = innerJson(NameOf(kind))
             Me.RecordNumber = index + 1
             Dim offset As String = Nothing
-            If innerJson.TryGetValue(NameOf(relativeOffset), offset) Then
-                Me.relativeOffset = CInt(offset)
-            Else
-                Me.relativeOffset = -1
-            End If
+            Me.relativeOffset = If(innerJson.TryGetValue(NameOf(relativeOffset), offset),
+                                   CInt(offset),
+                                   -1
+                                  )
             Me.version = CInt(innerJson(NameOf(version)))
         Catch ex As Exception
             Stop
@@ -57,10 +56,10 @@ Public Class SgRecord
         Get
             _sensorState = If(_sensorState, "")
             Dim resultMessage As String = Nothing
-            If s_sensorMessages.TryGetValue(_sensorState, resultMessage) Then
-                Return resultMessage
-            End If
-            Return _sensorState?.ToTitle
+            Return If(s_sensorMessages.TryGetValue(_sensorState, resultMessage),
+                      resultMessage,
+                      _sensorState?.ToTitle
+                    )
         End Get
     End Property
 
@@ -98,11 +97,10 @@ Public Class SgRecord
             Return _sg
         End Get
         Set
-            If Value = 0 Then
-                _sg = Single.NaN
-            Else
-                _sg = Value
-            End If
+            _sg = If(Value = 0,
+                     Single.NaN,
+                     Value
+                    )
         End Set
     End Property
 

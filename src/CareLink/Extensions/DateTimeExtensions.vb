@@ -54,11 +54,9 @@ Friend Module DateTimeExtensions
     <Extension>
     Private Function FromUnixTime(unixTime As String) As Date
         Dim epoch As New DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Local)
-        If String.IsNullOrWhiteSpace(unixTime) Then
-            Return epoch
-        End If
-
-        Return Double.Parse(unixTime).FromUnixTime
+        Return If(String.IsNullOrWhiteSpace(unixTime),
+                  epoch,
+                  Double.Parse(unixTime).FromUnixTime)
     End Function
 
     ''' <summary>
@@ -111,10 +109,9 @@ Friend Module DateTimeExtensions
     ''' <returns>DateTime String in UTC</returns>
     <Extension>
     Friend Function Epoch2DateTimeString(epoch As String) As String
-        If epoch = "0" Then
-            Return ""
-        End If
-        Return $"{epoch.FromUnixTime.ToShortDateTimeString} UTC"
+        Return If(epoch = "0",
+                  "",
+                  $"{epoch.FromUnixTime.ToShortDateTimeString} UTC")
     End Function
 
     <Extension>
@@ -122,10 +119,9 @@ Friend Module DateTimeExtensions
         Dim localDateCulture As List(Of CultureInfo) = CultureInfoList.Where(Function(c As CultureInfo)
                                                                                  Return c.Name = $"en-{countryCode}"
                                                                              End Function)?.ToList
-        If localDateCulture Is Nothing OrElse localDateCulture.Count = 0 Then
-            Return New CultureInfo("en-US")
-        End If
-        Return localDateCulture(0)
+        Return If(localDateCulture Is Nothing OrElse localDateCulture.Count = 0,
+                  New CultureInfo("en-US"),
+                  localDateCulture(0))
     End Function
 
     <Extension>

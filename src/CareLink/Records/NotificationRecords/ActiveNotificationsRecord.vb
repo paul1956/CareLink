@@ -6,7 +6,6 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class ActiveNotificationsRecord
-    Private _dateTime As Date
 
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
@@ -15,13 +14,6 @@ Public Class ActiveNotificationsRecord
     <DisplayName(NameOf(ClearedNotificationsRecord.dateTime))>
     <Column(Order:=1, TypeName:=NameOf(ClearedNotificationsRecord.dateTime))>
     Public Property [dateTime] As Date
-        Get
-            Return _dateTime
-        End Get
-        Set
-            _dateTime = Value
-        End Set
-    End Property
 
     <DisplayName("dateTime As String")>
     <Column(Order:=2, TypeName:=NameOf([String]))>

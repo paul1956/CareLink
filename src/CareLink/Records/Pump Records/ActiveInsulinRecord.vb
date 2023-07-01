@@ -6,8 +6,6 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class ActiveInsulinRecord
-
-    Private _datetime As Date
     Private _amount As Single
 
     <DisplayName("Amount")>
@@ -24,14 +22,6 @@ Public Class ActiveInsulinRecord
     <DisplayName(NameOf(ActiveInsulinRecord.datetime))>
     <Column(Order:=1, TypeName:="Date")>
     Public Property datetime As Date
-        Get
-            Return _datetime
-        End Get
-        Set
-            _datetime = Value
-
-        End Set
-    End Property
 
     <DisplayName("datetime As String")>
     <Column(Order:=2, TypeName:=NameOf([String]))>
@@ -41,7 +31,7 @@ Public Class ActiveInsulinRecord
     <Column(Order:=3, TypeName:=NameOf(OADate))>
     Public ReadOnly Property OAdatetime As OADate
         Get
-            Return New OADate(_datetime)
+            Return New OADate(Me.datetime)
         End Get
     End Property
 

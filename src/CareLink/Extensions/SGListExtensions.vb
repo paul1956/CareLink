@@ -12,11 +12,10 @@ Public Module SGListExtensions
         For i As Integer = 0 To innerJson.Count - 1
             sGs.Add(New SgRecord(innerJson(i), i))
             If sGs.Last.datetimeAsString = "" Then
-                If i = 0 Then
-                    sGs.Last.datetime = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime.RoundTimeDown(RoundTo.Minute)
-                Else
-                    sGs.Last.datetime = sGs(0).datetime + (s_5MinuteSpan * i)
-                End If
+                sGs.Last.datetime = If(i = 0,
+                                       s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime.RoundTimeDown(RoundTo.Minute),
+                                       sGs(0).datetime + (s_5MinuteSpan * i)
+                                       )
             End If
         Next
         Return sGs

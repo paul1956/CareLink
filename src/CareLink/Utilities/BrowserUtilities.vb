@@ -22,10 +22,9 @@ Friend Module BrowserUtilities
     ''' <returns>True if application version or converter version is different</returns>
     ''' <remarks>Uses equality is comparison to allow testing before upload to GitHub</remarks>
     Private Function IsNewerVersion(gitHubVersions As String, appVersion As Version) As Boolean
-        If gitHubVersions Is Nothing OrElse String.IsNullOrWhiteSpace(gitHubVersions) Then
-            Return False
-        End If
-        Return Version.Parse(gitHubVersions) > Version.Parse(appVersion.ToString)
+        Return gitHubVersions IsNot Nothing AndAlso
+               Not String.IsNullOrWhiteSpace(gitHubVersions) AndAlso
+               Version.Parse(gitHubVersions) > Version.Parse(appVersion.ToString)
     End Function
 
     Private Function LaunchBrowser(url As String) As Boolean
@@ -45,19 +44,17 @@ Friend Module BrowserUtilities
             Dim programFilesX86 As String = Environment.ExpandEnvironmentVariables("%ProgramFiles(x86)%")
             Dim browserPath As String = Nothing
             If progIdValue.Contains("chrome", StringComparison.OrdinalIgnoreCase) Then
-                If File.Exists($"{programFiles}\Google\Chrome\Application\chrome.exe") Then
-                    browserPath = $"{programFiles}\Google\Chrome\Application\chrome.exe"
-                Else
-                    browserPath = $"{programFilesX86}\Google\Chrome\Application\chrome.exe"
-                End If
+                browserPath = If(File.Exists($"{programFiles}\Google\Chrome\Application\chrome.exe"),
+                                 $"{programFiles}\Google\Chrome\Application\chrome.exe",
+                                 $"{programFilesX86}\Google\Chrome\Application\chrome.exe"
+                                )
             ElseIf progIdValue.Contains("Firefox", StringComparison.OrdinalIgnoreCase) Then
                 browserPath = $"{programFiles}\Mozilla Firefox\Firefox.exe"
             ElseIf progIdValue.Contains("msEdgeHtm", StringComparison.OrdinalIgnoreCase) Then
-                If File.Exists($"{programFiles}\Microsoft\Edge\Application\msEdge.exe") Then
-                    browserPath = $"{programFiles}\Microsoft\Edge\Application\msEdge.exe"
-                Else
-                    browserPath = $"{programFilesX86}\Microsoft\Edge\Application\msEdge.exe"
-                End If
+                browserPath = If(File.Exists($"{programFiles}\Microsoft\Edge\Application\msEdge.exe"),
+                                 $"{programFiles}\Microsoft\Edge\Application\msEdge.exe",
+                                 $"{programFilesX86}\Microsoft\Edge\Application\msEdge.exe"
+                                )
             End If
 
             If Not String.IsNullOrWhiteSpace(browserPath) Then

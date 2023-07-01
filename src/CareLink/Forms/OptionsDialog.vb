@@ -12,11 +12,10 @@ Public Class OptionsDialog
         Dim clrBase As Color = knownClrBase.ToColor
         ' Y is the "brightness"
         Dim y As Double = (0.299 * clrBase.R) + (0.587 * clrBase.G) + (0.114 * clrBase.B)
-        If y < 140 Then
-            Return KnownColor.White
-        Else
-            Return KnownColor.Black
-        End If
+        Return If(y < 140,
+                  KnownColor.White,
+                  KnownColor.Black
+                 )
     End Function
 
     Public Shared Sub WriteColorDictionaryToFile()

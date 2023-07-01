@@ -28,28 +28,20 @@ Friend Module SystemVariables
 
     Friend Function GetInsulinYValue() As Single
         Dim maxYScaled As Single = s_listOfSGs.Max(Of Single)(Function(sgR As SgRecord) sgR.sg) + 2
-        If Single.IsNaN(maxYScaled) Then
-            Return If(nativeMmolL, 330 / MmolLUnitsDivisor, 330)
-        Else
-            If nativeMmolL Then
-                If s_listOfSGs.Count = 0 OrElse maxYScaled > (330 / MmolLUnitsDivisor) Then
-                    Return 342 / MmolLUnitsDivisor
-                End If
-                Return Math.Max(maxYScaled, 260 / MmolLUnitsDivisor)
-            Else
-                If s_listOfSGs.Count = 0 OrElse maxYScaled > 330 Then
-                    Return 342
-                End If
-                Return Math.Max(maxYScaled, 260)
-            End If
-        End If
+        Return If(Single.IsNaN(maxYScaled),
+            If(nativeMmolL, 330 / MmolLUnitsDivisor, 330),
+            If(nativeMmolL,
+                If(s_listOfSGs.Count = 0 OrElse maxYScaled > (330 / MmolLUnitsDivisor),
+                    342 / MmolLUnitsDivisor,
+                    Math.Max(maxYScaled, 260 / MmolLUnitsDivisor)),
+                If(s_listOfSGs.Count = 0 OrElse maxYScaled > 330, 342, Math.Max(maxYScaled, 260))))
     End Function
 
     Friend Function GetTIR() As UInteger
-        If s_timeInRange > 0 Then
-            Return CUInt(s_timeInRange)
-        End If
-        Return CUInt(100 - (s_aboveHyperLimit + s_belowHypoLimit))
+        Return If(s_timeInRange > 0,
+                  CUInt(s_timeInRange),
+                  CUInt(100 - (s_aboveHyperLimit + s_belowHypoLimit))
+                 )
     End Function
 
     Friend Function GetYMaxValue(asMmolL As Boolean) As Single

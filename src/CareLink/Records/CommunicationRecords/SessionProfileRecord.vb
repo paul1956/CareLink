@@ -8,7 +8,6 @@ Imports System.ComponentModel.DataAnnotations.Schema
 Public Class SessionProfileRecord
     Private ReadOnly _profileDictionary As New Dictionary(Of String, String)
     Private _hasValue As Boolean
-    Private _insulinType As String
 
     Public Sub New(jsonData As Dictionary(Of String, String))
         If jsonData Is Nothing OrElse jsonData.Count = 0 Then
@@ -180,13 +179,6 @@ Public Class SessionProfileRecord
     <DisplayName("Insulin Type")>
     <Column(Order:=20, TypeName:=NameOf([String]))>
     Public Property insulinType As String
-        Get
-            Return _insulinType
-        End Get
-        Set
-            _insulinType = Value
-        End Set
-    End Property
 
     <DisplayName("Patient Nickname")>
     <Column(Order:=21, TypeName:=NameOf([String]))>

@@ -58,11 +58,10 @@ Public Class BasalRecord
             Case "BASAL1", "BASAL2"
                 Return Me.basalRate
             Case Else
-                If Me.tempBasalPercentage > 0 Then
-                    Return Math.Max(Me.basalRate, Me.tempBasalRate)
-                Else
-                    Return Math.Min(Me.basalRate, Me.tempBasalRate)
-                End If
+                Return If(Me.tempBasalPercentage > 0,
+                          Math.Max(Me.basalRate, Me.tempBasalRate),
+                          Math.Min(Me.basalRate, Me.tempBasalRate)
+                         )
         End Select
     End Function
 

@@ -9,21 +9,20 @@ Friend Module Form1UpdateHelpers
     <Extension>
     Private Function CDateOrDefault(dateAsString As String, key As String, provider As IFormatProvider) As String
         Dim resultDate As Date
-        If TryParseDate(dateAsString, resultDate, key) Then
-            Return resultDate.ToString(provider)
-        End If
-        Return ""
+        Return If(TryParseDate(dateAsString, resultDate, key),
+                  resultDate.ToString(provider),
+                  ""
+                 )
     End Function
 
     Private Function ConvertPercent24HoursToDisplayValueString(rowValue As String) As String
         Dim val As Decimal = CDec(Convert.ToInt32(rowValue) * 0.24)
         Dim hours As Integer = Convert.ToInt32(val)
         Dim minutes As Integer = CInt((val Mod 1) * 60)
-        If minutes = 0 Then
-            Return $"{hours} hours, out of last 24 hours."
-        Else
-            Return $"{hours} hours and {minutes} minutes, out of last 24 hours."
-        End If
+        Return If(minutes = 0,
+                  $"{hours} hours, out of last 24 hours.",
+                  $"{hours} hours and {minutes} minutes, out of last 24 hours."
+                 )
     End Function
 
     Private Sub HandleComplexItems(row As KeyValuePair(Of String, String), rowIndex As ItemIndexes, key As String)
@@ -91,11 +90,10 @@ Friend Module Form1UpdateHelpers
             item.OaDateTime(s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime)
             s_listOfManualBasal.Add(item)
         End If
-        If recentData.TryGetValue(ItemIndexes.markers.ToString, markerRowString) Then
-            Form1.MaxBasalPerHourLabel.Text = CollectMarkers(markerRowString)
-        Else
-            Form1.MaxBasalPerHourLabel.Text = ""
-        End If
+        Form1.MaxBasalPerHourLabel.Text = If(recentData.TryGetValue(ItemIndexes.markers.ToString, markerRowString),
+                                             CollectMarkers(markerRowString),
+                                             ""
+                                            )
 
 #End Region ' Update all Markers
 

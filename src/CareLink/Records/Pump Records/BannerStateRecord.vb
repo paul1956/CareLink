@@ -6,7 +6,6 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class BannerStateRecord
-    Private _type As String
 
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
@@ -15,26 +14,19 @@ Public Class BannerStateRecord
     <DisplayName("Type")>
     <Column(Order:=1, TypeName:=NameOf([String]))>
     Public Property type As String
-        Get
-            Return _type
-        End Get
-        Set
-            _type = Value
-        End Set
-    End Property
 
     <DisplayName("Message")>
     <Column(Order:=2, TypeName:=NameOf([String]))>
     Public ReadOnly Property message As String
         Get
             Dim formattedMessage As String = Nothing
-            If s_sensorMessages.TryGetValue(_type, formattedMessage) Then
+            If s_sensorMessages.TryGetValue(Me.type, formattedMessage) Then
                 Return formattedMessage
             Else
                 Stop
             End If
 
-            Return _type.ToTitle
+            Return Me.type.ToTitle
         End Get
     End Property
 

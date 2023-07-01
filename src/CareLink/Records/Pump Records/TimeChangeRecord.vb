@@ -6,9 +6,6 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class TimeChangeRecord
-    Private _dateTime As Date
-    Private _previousDateTime As Date
-
     Public Sub New(timeChangeItem As Dictionary(Of String, String))
         For Each kvp As KeyValuePair(Of String, String) In timeChangeItem
             Select Case kvp.Key
@@ -37,13 +34,6 @@ Public Class TimeChangeRecord
     <DisplayName(NameOf([dateTime]))>
     <Column(Order:=5, TypeName:="Date")>
     Public Property [dateTime] As Date
-        Get
-            Return _dateTime
-        End Get
-        Set
-            _dateTime = Value
-        End Set
-    End Property
 
     <DisplayName("dateTime As String")>
     <Column(Order:=6, TypeName:=NameOf([String]))>
@@ -53,7 +43,7 @@ Public Class TimeChangeRecord
     <Column(Order:=12, TypeName:="TimeSpan")>
     Public ReadOnly Property deltaTimeSpan As TimeSpan
         Get
-            Return _previousDateTime - _dateTime
+            Return Me.previousDateTime - Me.dateTime
         End Get
     End Property
 
@@ -69,20 +59,13 @@ Public Class TimeChangeRecord
     <Column(Order:=7, TypeName:=NameOf(OADate))>
     Public ReadOnly Property OaDateTime As OADate
         Get
-            Return New OADate(_dateTime)
+            Return New OADate(Me.dateTime)
         End Get
     End Property
 
     <DisplayName("Previous DateTime")>
     <Column(Order:=9, TypeName:="Date")>
     Public Property previousDateTime As Date
-        Get
-            Return _previousDateTime
-        End Get
-        Set
-            _previousDateTime = Value
-        End Set
-    End Property
 
     <DisplayName("Previous DateTime As String")>
     <Column(Order:=10, TypeName:=NameOf([String]))>
@@ -92,7 +75,7 @@ Public Class TimeChangeRecord
     <Column(Order:=11, TypeName:=NameOf(OADate))>
     Public ReadOnly Property previousOADateTime As OADate
         Get
-            Return New OADate(_previousDateTime)
+            Return New OADate(Me.previousDateTime)
         End Get
     End Property
 

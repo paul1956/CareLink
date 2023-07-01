@@ -93,12 +93,10 @@ Friend Module CollectMarkersHelper
             End If
         Next
 
-        Dim endOADate As OADate
-        If basalDictionary.Count = 0 Then
-            endOADate = New OADate(s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime)
-        Else
-            endOADate = basalDictionary.Last.Key
-        End If
+        Dim endOADate As OADate = If(basalDictionary.Count = 0,
+                                     New OADate(s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime),
+                                     basalDictionary.Last.Key
+                                    )
 
         Dim i As Integer = 0
         Dim maxBasalPerHour As Single = 0

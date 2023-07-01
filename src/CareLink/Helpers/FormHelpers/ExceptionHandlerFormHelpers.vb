@@ -79,10 +79,10 @@ Public Module ExceptionHandlerFormHelpers
 
     Friend Function TrimmedStackTrace(stackTrace As String) As String
         Dim index As Integer = stackTrace.IndexOf(StackTraceTerminatingStr)
-        If index < 0 Then
-            Return stackTrace
-        End If
-        Return stackTrace.Substring(0, index - 1)
+        Return If(index < 0,
+                  stackTrace,
+                  stackTrace.Substring(0, index - 1)
+                 )
     End Function
 
 End Module

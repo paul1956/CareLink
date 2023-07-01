@@ -20,11 +20,10 @@ Friend Module Exceptions
         Dim errorMsg As String = ex.Message
         If errorMsg.Contains(InnerExceptionMessage) Then
             Dim innerExMessage As String = ex.InnerException.Message
-            If innerExMessage.Contains(InnerExceptionMessage) Then
-                errorMsg = DecodeException(ex.InnerException)
-            Else
-                errorMsg = $"{errorMsg.Replace(InnerExceptionMessage, ".")}{vbCrLf}{innerExMessage}"
-            End If
+            errorMsg = If(innerExMessage.Contains(InnerExceptionMessage),
+                          DecodeException(ex.InnerException),
+                          $"{errorMsg.Replace(InnerExceptionMessage, ".")}{vbCrLf}{innerExMessage}"
+                         )
         End If
 
         Return errorMsg

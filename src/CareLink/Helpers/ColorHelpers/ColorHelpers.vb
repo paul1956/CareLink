@@ -10,11 +10,10 @@ Friend Module ColorHelpers
     Public Function GetContrastingColor(baseColor As Color) As Color
         ' Y is the "brightness"
         Dim y As Double = (0.299 * baseColor.R) + (0.587 * baseColor.G) + (0.114 * baseColor.B)
-        If y < 140 Then
-            Return Color.White
-        Else
-            Return Color.Black
-        End If
+        Return If(y < 140,
+                  Color.White,
+                  Color.Black
+                 )
     End Function
 
 End Module

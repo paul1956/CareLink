@@ -47,11 +47,7 @@ Public Class CurrentUserRecord
     End Function
 
     Public Function GetActiveInsulinIncrements() As Integer
-        If Me.UseAdvancedAitDecay = CheckState.Checked Then
-            Return CInt(Me.InsulinRealAit * 12)
-        Else
-            Return CInt(Me.PumpAit * 12)
-        End If
+        Return If(Me.UseAdvancedAitDecay = CheckState.Checked, CInt(Me.InsulinRealAit * 12), CInt(Me.PumpAit * 12))
 
     End Function
 

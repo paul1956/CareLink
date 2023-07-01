@@ -51,11 +51,10 @@ Friend Module SummaryRecordHelpers
                 End If
 
                 Dim secondaryTime As String = Nothing
-                If jsonDictionary.TryGetValue(NameOf(ClearedNotificationsRecord.secondaryTime), secondaryTime) Then
-                    secondaryTime = secondaryTime.FormatTimeOnly(s_timeWithMinuteFormat)
-                Else
-                    secondaryTime = ""
-                End If
+                secondaryTime = If(jsonDictionary.TryGetValue(NameOf(ClearedNotificationsRecord.secondaryTime), secondaryTime),
+                                   secondaryTime.FormatTimeOnly(s_timeWithMinuteFormat),
+                                   ""
+                                  )
 
                 Dim deliveredAmount As String = ""
                 If jsonDictionary.TryGetValue("deliveredAmount", deliveredAmount) Then

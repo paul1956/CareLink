@@ -6,18 +6,9 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class MealRecord
-    Private _dateTime As Date
-
     <DisplayName(NameOf(MealRecord.dateTime))>
     <Column(Order:=5, TypeName:="Date")>
     Public Property [dateTime] As Date
-        Get
-            Return _dateTime
-        End Get
-        Set
-            _dateTime = Value
-        End Set
-    End Property
 
     <DisplayName("Carbs (amount)")>
     <Column(Order:=9, TypeName:=NameOf([Int32]))>
@@ -39,7 +30,7 @@ Public Class MealRecord
     <Column(Order:=7, TypeName:=NameOf(OADate))>
     Public ReadOnly Property OAdateTime As OADate
         Get
-            Return New OADate(_dateTime)
+            Return New OADate(Me.dateTime)
         End Get
     End Property
 

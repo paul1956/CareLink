@@ -47,10 +47,10 @@ Public Module CareLinkClientHelpers
         End If
         startIndex += startStr.Length
         Dim endIndex As Integer = responseBody.IndexOf(endStr, startIndex, StringComparison.Ordinal)
-        If endIndex = -1 Then
-            Return ""
-        End If
-        Return responseBody.Substring(startIndex, endIndex - startIndex).Replace("""", "")
+        Return If(endIndex = -1,
+                  "",
+                  responseBody.Substring(startIndex, endIndex - startIndex).Replace("""", "")
+                 )
     End Function
 
     Private Function ParseQsl(loginSessionResponse As HttpResponseMessage) As Dictionary(Of String, String)

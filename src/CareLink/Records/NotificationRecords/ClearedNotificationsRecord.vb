@@ -15,18 +15,9 @@ Public Class ClearedNotificationsRecord
     <Column(Order:=1, TypeName:=NameOf([String]))>
     Public Property referenceGUID As String
 
-    Private _dateTime As Date
-
     <DisplayName(NameOf(ClearedNotificationsRecord.dateTime))>
     <Column(Order:=2, TypeName:="Date")>
     Public Property [dateTime] As Date
-        Get
-            Return _dateTime
-        End Get
-        Set
-            _dateTime = Value
-        End Set
-    End Property
 
     <DisplayName("dateTime As String")>
     <Column(Order:=3, TypeName:=NameOf([String]))>

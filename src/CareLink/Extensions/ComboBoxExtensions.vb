@@ -8,12 +8,12 @@ Public Module ComboBoxExtensions
 
     <Extension>
     Public Function GetKey(Of Tk, Tv)(kvp As KeyValuePair(Of Tk, Tv)) As Tk
-        Return CType(kvp.Key, Tk)
+        Return kvp.Key
     End Function
 
     <Extension>
     Public Function GetValue(Of Tk, Tv)(kvp As KeyValuePair(Of Tk, Tv)) As Tv
-        Return CType(kvp.Value, Tv)
+        Return kvp.Value
     End Function
 
     <Extension>

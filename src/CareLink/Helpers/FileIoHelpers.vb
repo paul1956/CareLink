@@ -39,18 +39,17 @@ Friend Module FileIoHelpers
     End Function
 
     Friend Function GetPathToAllUserLoginInfo(current As Boolean) As String
-        If current Then
-            Return Path.Combine(GetDirectoryForProjectData(), AllUserLoginInfoFileName)
-        End If
-
-        Return Path.Combine(GetDirectoryForMyDocuments(), AllUserLoginInfoFileName)
+        Return If(current,
+                  Path.Combine(GetDirectoryForProjectData(), AllUserLoginInfoFileName),
+                  Path.Combine(GetDirectoryForMyDocuments(), AllUserLoginInfoFileName)
+                 )
     End Function
 
     Friend Function GetPathToGraphColorsFile(current As Boolean) As String
-        If current Then
-            Return Path.Combine(GetDirectoryForProjectData(), "GraphColors.Csv")
-        End If
-        Return Path.Combine(GetDirectoryForMyDocuments(), $"{ProjectName}GraphColors.Csv")
+        Return If(current,
+                  Path.Combine(GetDirectoryForProjectData(), "GraphColors.Csv"),
+                  Path.Combine(GetDirectoryForMyDocuments(), $"{ProjectName}GraphColors.Csv")
+                 )
     End Function
 
     Friend Function GetPathToLastDownloadFile() As String
@@ -58,10 +57,10 @@ Friend Module FileIoHelpers
     End Function
 
     Friend Function GetPathToShowLegendFile(current As Boolean) As String
-        If current Then
-            Return Path.Combine(GetDirectoryForProjectData(), "ShowLegend.txt")
-        End If
-        Return Path.Combine(GetDirectoryForMyDocuments(), $"{ProjectName}ShowLegend.txt")
+        Return If(current,
+                  Path.Combine(GetDirectoryForProjectData(), "ShowLegend.txt"),
+                  Path.Combine(GetDirectoryForMyDocuments(), $"{ProjectName}ShowLegend.txt")
+                 )
     End Function
 
     Friend Function GetPathToTestData() As String

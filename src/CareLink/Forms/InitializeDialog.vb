@@ -203,7 +203,7 @@ Public Class InitializeDialog
             Else
                 _currentUserBackup = Me.CurrentUser.Clone
                 .Enabled = True
-                .SelectedIndex = .Items.IndexOfValue(Of String, Single)(CType(Me.CurrentUser.PumpAit, Single))
+                .SelectedIndex = .Items.IndexOfValue(Of String, Single)(Me.CurrentUser.PumpAit)
             End If
             .Enabled = True
             .Focus()
@@ -246,11 +246,8 @@ Public Class InitializeDialog
                         c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
                         Me.InitializeComboList(c.Items, CInt((New TimeSpan(value.StartTime.Hour, value.StartTime.Minute, 0) / s_30MinuteSpan) + 1))
                         c.Value = value.EndTime.ToString(CurrentDateCulture)
-                        If i.Index < 11 Then
-                            c.ReadOnly = i.IsLast AndAlso Not i.IsFirst
-                        Else
-                            c.ReadOnly = True
-                        End If
+                        c.ReadOnly = i.Index >= 11 OrElse
+                                     (i.IsLast AndAlso Not i.IsFirst)
                         Dim numericCell As DataGridViewNumericUpDownCell = CType(.Cells(NameOf(ColumnNumericUpDown)), DataGridViewNumericUpDownCell)
                         numericCell.Value = value.CarbRatio
                         numericCell.ReadOnly = False

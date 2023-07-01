@@ -35,11 +35,10 @@ Public Class LoginForm1
     End Sub
 
     Private Sub CountryComboBox_SelectedValueChanged(sender As Object, e As EventArgs) Handles CountryComboBox.SelectedValueChanged
-        If TypeOf Me.CountryComboBox.SelectedValue Is String Then
-            CurrentDateCulture = Me.CountryComboBox.SelectedValue.ToString.GetCurrentDateCulture
-        Else
-            CurrentDateCulture = CType(Me.CountryComboBox.SelectedValue, KeyValuePair(Of String, String)).Value.GetCurrentDateCulture
-        End If
+        CurrentDateCulture = If(TypeOf Me.CountryComboBox.SelectedValue Is String,
+                                Me.CountryComboBox.SelectedValue.ToString.GetCurrentDateCulture,
+                                CType(Me.CountryComboBox.SelectedValue, KeyValuePair(Of String, String)).Value.GetCurrentDateCulture
+                               )
     End Sub
 
     Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -78,11 +77,10 @@ Public Class LoginForm1
             .Text = My.Settings.CareLinkUserName
         End With
 
-        If s_allUserSettingsData?.ContainsKey(My.Settings.CareLinkUserName) Then
-            Me.PasswordTextBox.Text = s_allUserSettingsData(My.Settings.CareLinkUserName).CareLinkPassword
-        Else
-            Me.PasswordTextBox.Text = My.Settings.CareLinkPassword
-        End If
+        Me.PasswordTextBox.Text = If(s_allUserSettingsData?.ContainsKey(My.Settings.CareLinkUserName),
+                                     s_allUserSettingsData(My.Settings.CareLinkUserName).CareLinkPassword,
+                                     My.Settings.CareLinkPassword
+                                    )
 
         Me.RegionComboBox.DataSource = New BindingSource(s_regionList, Nothing)
         Me.RegionComboBox.DisplayMember = "Key"
@@ -126,11 +124,10 @@ Public Class LoginForm1
     End Sub
 
     Private Sub ShowPasswordCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ShowPasswordCheckBox.CheckedChanged
-        If Me.ShowPasswordCheckBox.Checked Then
-            Me.PasswordTextBox.PasswordChar = Nothing
-        Else
-            Me.PasswordTextBox.PasswordChar = "*"c
-        End If
+        Me.PasswordTextBox.PasswordChar = If(Me.ShowPasswordCheckBox.Checked,
+                                             Nothing,
+                                             "*"c
+                                            )
     End Sub
 
     Private Sub UsernameComboBox_Leave(sender As Object, e As EventArgs) Handles UsernameComboBox.Leave

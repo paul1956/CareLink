@@ -6,19 +6,10 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class BGReadingRecord
-    Private _dateTime As Date
-    Private _value As Single
 
     <DisplayName(NameOf([dateTime]))>
     <Column(Order:=8, TypeName:="Date")>
     Public Property [dateTime] As Date
-        Get
-            Return _dateTime
-        End Get
-        Set
-            _dateTime = Value
-        End Set
-    End Property
 
     <DisplayName("dateTime As String")>
     <Column(Order:=9, TypeName:=NameOf([String]))>
@@ -47,20 +38,16 @@ Public Class BGReadingRecord
     <DisplayName("Value")>
     <Column(Order:=3, TypeName:=NameOf([Single]))>
     Public Property value As Single
-        Get
-            Return _value
-        End Get
-        Set
-            _value = Value
-        End Set
-    End Property
 
     <DisplayName("Value (mg/dL)")>
     <Column(Order:=4, TypeName:=NameOf([Single]))>
     Public ReadOnly Property valueMmDl As Single
         Get
-            If Single.IsNaN(_value) Then Return _value
-            Return If(nativeMmolL, CSng(Math.Round(_value * MmolLUnitsDivisor)), _value)
+            If Single.IsNaN(Me.value) Then Return Me.value
+            Return If(nativeMmolL,
+                      CSng(Math.Round(Me.value * MmolLUnitsDivisor)),
+                      Me.value
+                     )
         End Get
     End Property
 
@@ -68,8 +55,11 @@ Public Class BGReadingRecord
     <Column(Order:=5, TypeName:=NameOf([Single]))>
     Public ReadOnly Property valueMmolL As Single
         Get
-            If Single.IsNaN(_value) Then Return _value
-            Return If(nativeMmolL, _value, (_value / MmolLUnitsDivisor).RoundSingle(2, False))
+            If Single.IsNaN(Me.value) Then Return Me.value
+            Return If(nativeMmolL,
+                      Me.value,
+                      (Me.value / MmolLUnitsDivisor).RoundSingle(2, False)
+                     )
         End Get
     End Property
 

@@ -15,11 +15,10 @@ Friend Module PainMarkerExtensions
         For Each markerKvp As KeyValuePair(Of OADate, Single) In markerDictionary
             Dim imagePosition As RectangleF = RectangleF.Empty
             imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, markerKvp.Key))
-            If paintOnY2 Then
-                imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, markerKvp.Value))
-            Else
-                imagePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y, markerKvp.Value))
-            End If
+            imagePosition.Y = If(paintOnY2,
+                                 CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, markerKvp.Value)),
+                                 CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y, markerKvp.Value))
+                                )
             imagePosition.Width = markerImage.Width
             imagePosition.Height = markerImage.Height
             imagePosition = e.ChartGraphics.GetAbsoluteRectangle(imagePosition)

@@ -72,10 +72,7 @@ Public Module PumpVariables
 
     Friend Property PumpTimeZoneInfo As TimeZoneInfo
         Get
-            If _pumpTimeZoneInfo Is Nothing Then
-                Return TimeZoneInfo.Local
-            End If
-            Return _pumpTimeZoneInfo
+            Return If(_pumpTimeZoneInfo, TimeZoneInfo.Local)
         End Get
         Set
             _pumpTimeZoneInfo = Value

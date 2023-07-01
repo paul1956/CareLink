@@ -44,10 +44,10 @@ Public Module CareLinkUserDataRecordHelpers
     End Function
 
     Friend Function HideColumn(dataPropertyName As String) As Boolean
-        If String.IsNullOrWhiteSpace(dataPropertyName) Then
-            Return False
-        End If
-        Return Not (Debugger.IsAttached AndAlso Not s_filterJsonData) AndAlso s_columnsToHide.Contains(dataPropertyName)
+        Return Not String.IsNullOrWhiteSpace(dataPropertyName) AndAlso
+               Not (Debugger.IsAttached AndAlso
+               Not s_filterJsonData) AndAlso
+               s_columnsToHide.Contains(dataPropertyName)
     End Function
 
     Public Function AllUserLoginInfoFileExists() As Boolean
