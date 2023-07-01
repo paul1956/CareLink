@@ -25,7 +25,7 @@ Public Class SummaryRecord
                     Dim stackFrame As New StackFrame(0, True)
                     MsgBox($"{row.Value} is unknown message for {messageTableName}", MsgBoxStyle.OkOnly, $"{stackFrame.GetFileName} line:{stackFrame.GetFileLineNumber()}")
                 End If
-                message = row.Value.ToTitleCase
+                message = row.Value.ToTitle
             End If
         End If
 

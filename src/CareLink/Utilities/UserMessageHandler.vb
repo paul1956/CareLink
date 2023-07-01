@@ -118,6 +118,7 @@ Friend Module UserMessageHandler
                         {"NO_ERROR_MESSAGE", "---"},
                         {"NO_SENSOR_SIGNAL", "Lost sensor signal. Move pump closer to transmitter. May take 15 minutes to find signal"},
                         {"PROCESSING_BG", "Processing BG."},
+                        {"PUMP_PAIRING_LOST", "Pump pairing lost."},
                         {"RECONNECTING_TO_PUMP", "Reconnecting to pump."},
                         {"SEARCHING_FOR_SENSOR_SIGNAL", "Searching for sensor signal."},
                         {"SENSOR_DISCONNECTED", "Sensor disconnected."},
