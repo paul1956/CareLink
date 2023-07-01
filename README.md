@@ -27,10 +27,11 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-06/25/2023
+07/01/2023
 
 ## What's New in this release
 New in 3.8.3.0
+- Correctly handle CareLink Authorization Server redirect
 - Correct application version display
 - Update help messages for copy of tables in DataGridViews
 - Handle CareLink Partners without Patient ID
@@ -39,6 +40,7 @@ New in 3.8.3.0
 - Temp Target display for mmol/L
 - Fix parsing of command line parameters /Safe will clear Auto Login
 - Update formatting on home page for easier viewing
+- Improve Sensor error message display when missing and add missing messages
 
 New in 3.8.2.1
 - Fix TIR calculation when CareLink is providing bad data
