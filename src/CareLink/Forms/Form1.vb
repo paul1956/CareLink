@@ -1918,6 +1918,9 @@ Public Class Form1
     Private Sub UpdateActiveInsulin()
         Try
             Dim activeInsulinStr As String = $"{s_activeInsulin.amount:N3}"
+            If activeInsulinStr.ToCharArray.Last = "0" Then
+                activeInsulinStr = $"{s_activeInsulin.amount:N2}"
+            End If
             Me.ActiveInsulinValue.Text = $"Active Insulin{vbCrLf}{activeInsulinStr}U"
             _sgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
         Catch ex As Exception
