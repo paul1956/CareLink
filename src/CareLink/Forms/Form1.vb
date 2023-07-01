@@ -1054,7 +1054,7 @@ Public Class Form1
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
         CheckForUpdatesAsync(False)
 
-        If Me.DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
+        If DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
             Me.UpdateAllTabPages(False)
         End If
     End Sub
@@ -1107,10 +1107,10 @@ Public Class Form1
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                         Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime
                         SetLastUpdateTime(epochDateTime.ToShortDateTimeString, "from file", False, epochDateTime.IsDaylightSavingTime)
-                        SetUpCareLinkUser(Me, GetPathToTestSettingsFile())
+                        SetUpCareLinkUser(GetPathToTestSettingsFile())
 
                         Try
-                            Me.FinishInitialization()
+                            FinishInitialization()
                             Try
                                 Me.UpdateAllTabPages(True)
                             Catch ex As ArgumentException
@@ -1152,7 +1152,7 @@ Public Class Form1
             Try
                 If File.Exists(openFileDialog1.FileName) Then
                     Me.ServerUpdateTimer.Stop()
-                    SetUpCareLinkUser(Me, GetPathToTestSettingsFile())
+                    SetUpCareLinkUser(GetPathToTestSettingsFile())
                     Debug.Print($"In {NameOf(MenuStartHereLoadSavedDataFile_Click)}, {NameOf(Me.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
                     CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{ProjectName}", True)
                     CurrentUICulture = CurrentDateCulture
@@ -1162,7 +1162,7 @@ Public Class Form1
                     Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
                     Dim fileDate As Date = File.GetLastWriteTime(openFileDialog1.FileName)
                     SetLastUpdateTime(fileDate.ToShortDateTimeString, " from file", False, fileDate.IsDaylightSavingTime)
-                    Me.FinishInitialization()
+                    FinishInitialization()
                     Me.UpdateAllTabPages(True)
                 End If
             Catch ex As Exception
@@ -1172,7 +1172,7 @@ Public Class Form1
     End Sub
 
     Private Sub MenuStartHereLogin_Click(sender As Object, e As EventArgs) Handles MenuStartHereLogin.Click
-        Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.Login)
+        DoOptionalLoginAndUpdateData(UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.Login)
     End Sub
 
     Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotSave.Click
@@ -1182,12 +1182,12 @@ Public Class Form1
     End Sub
 
     Private Sub MenuStartHereUseLastSavedFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseLastSavedFile.Click
-        Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.LastSaved)
+        DoOptionalLoginAndUpdateData(UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.LastSaved)
         Me.MenuStartHereSnapshotSave.Enabled = False
     End Sub
 
     Private Sub MenuStartHereUseTestData_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseTestData.Click
-        Me.DoOptionalLoginAndUpdateData(UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.TestData)
+        DoOptionalLoginAndUpdateData(UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.TestData)
         Me.MenuStartHereSnapshotSave.Enabled = False
     End Sub
 
@@ -1456,12 +1456,12 @@ Public Class Form1
         SyncLock _updatingLock
             If Not _updating Then
                 _updating = True
-                RecentData = Me.Client?.GetRecentData(Me)
+                RecentData = Me.Client?.GetRecentData()
                 If RecentData Is Nothing Then
                     If Me.Client Is Nothing OrElse Me.Client.HasErrors Then
                         Me.Client = New CareLinkClient(My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
                     End If
-                    RecentData = Me.Client.GetRecentData(Me)
+                    RecentData = Me.Client.GetRecentData()
                 End If
                 ReportLoginStatus(Me.LoginStatus, RecentData Is Nothing OrElse RecentData.Count = 0, Me.Client.GetLastErrorMessage)
 
@@ -2465,7 +2465,7 @@ Public Class Form1
 
             Me.Cursor = Cursors.WaitCursor
             Application.DoEvents()
-            UpdateDataTables(Me, RecentData)
+            UpdateDataTables(RecentData)
             Application.DoEvents()
             Me.Cursor = Cursors.Default
             _updating = False
@@ -2491,7 +2491,7 @@ Public Class Form1
         Me.UpdatePumpBattery()
         Me.UpdateSensorLife()
         Me.UpdateTimeInRange()
-        Me.UpdateTransmitterBattery()
+        UpdateTransmitterBattery()
         Me.UpdateAllSummarySeries()
         Me.UpdateDosingAndCarbs()
 
@@ -2536,9 +2536,9 @@ Public Class Form1
                               ItemIndexes.limits,
                               False)
 
-        Me.UpdateMarkerTabs()
+        UpdateMarkerTabs()
 
-        Me.UpdateNotificationTab()
+        UpdateNotificationTab()
 
         Me.TableLayoutPanelTherapyAlgorithm.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(GetSummaryRecords(s_therapyAlgorithmStateValue)),
@@ -2547,7 +2547,7 @@ Public Class Form1
                               ItemIndexes.therapyAlgorithmState,
                               True)
 
-        Me.UpdatePumpBannerStateTab()
+        UpdatePumpBannerStateTab()
 
         Me.TableLayoutPanelBasal.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(s_listOfManualBasal.ToList),

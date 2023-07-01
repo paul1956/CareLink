@@ -2,8 +2,6 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Runtime.CompilerServices
-
 Friend Module NotificationTabHelpers
 
     Private ReadOnly s_rowsToHide As New List(Of String) From {
@@ -82,11 +80,10 @@ Friend Module NotificationTabHelpers
         Next
     End Sub
 
-    <Extension>
-    Friend Sub UpdateNotificationTab(mainForm As Form1)
+    Friend Sub UpdateNotificationTab()
         Try
-            mainForm.TableLayoutPanelNotificationHistory.AutoScroll = True
-            mainForm.TableLayoutPanelNotificationHistory.SetTabName(ItemIndexes.notificationHistory)
+            Form1.TableLayoutPanelNotificationHistory.AutoScroll = True
+            Form1.TableLayoutPanelNotificationHistory.SetTabName(ItemIndexes.notificationHistory)
             Dim innerTableBlue As New TableLayoutPanel With {
                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                     .AutoScroll = True,
@@ -101,10 +98,10 @@ Friend Module NotificationTabHelpers
                     .Padding = New Padding(3),
                     .RowCount = 0
                 }
-            For i As Integer = mainForm.TableLayoutPanelNotificationHistory.Controls.Count - 1 To 1 Step -1
-                mainForm.TableLayoutPanelNotificationHistory.Controls.RemoveAt(i)
+            For i As Integer = Form1.TableLayoutPanelNotificationHistory.Controls.Count - 1 To 1 Step -1
+                Form1.TableLayoutPanelNotificationHistory.Controls.RemoveAt(i)
             Next
-            mainForm.TableLayoutPanelNotificationHistory.Controls.Add(innerTableBlue, 0, 1)
+            Form1.TableLayoutPanelNotificationHistory.Controls.Add(innerTableBlue, 0, 1)
             CreateNotificationTables(s_notificationHistoryValue,
                                      innerTableBlue,
                                      ItemIndexes.notificationHistory,

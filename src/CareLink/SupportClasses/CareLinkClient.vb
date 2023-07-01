@@ -17,7 +17,6 @@ Public Class CareLinkClient
                         "CARE_PARTNER_OUS"}
 
     Private _httpClient As HttpClient
-    Private _httpClientHandler As HttpClientHandler
     Private _inLoginInProcess As Boolean
     Private _lastErrorMessage As String
     Private _lastResponseCode? As HttpStatusCode
@@ -40,6 +39,8 @@ Public Class CareLinkClient
         _httpClient = Me.NewHttpClientWithCookieContainer
     End Sub
 
+    Private ReadOnly Property CareLinkCountry As String = Nothing
+    Private Property ClientHandler As HttpClientHandler
     Public Property LoggedIn As Boolean
 
     Public Property SessionProfile As SessionProfileRecord
@@ -51,7 +52,6 @@ Public Class CareLinkClient
         End Set
     End Property
 
-    Private ReadOnly Property CareLinkCountry As String = Nothing
     Private ReadOnly Property CareLinkPassword As String
     Private ReadOnly Property CareLinkUsername As String
 
@@ -63,13 +63,13 @@ Public Class CareLinkClient
     ''' <summary>
     ''' Logs in user and collects Records with User, Profile, CountrySettings and Device Family
     ''' </summary>
-    ''' <param name="mainForm"></param>
     ''' <param name="host"></param>
+    '''
     ''' <returns>True is login successful</returns>
-    Private Function ExecuteLoginProcedure(mainForm As Form1, host As String) As Boolean
+    Private Function ExecuteLoginProcedure(host As String) As Boolean
         If NetworkUnavailable() Then
             _lastErrorMessage = "No Internet Connection!"
-            ReportLoginStatus(mainForm.LoginStatus)
+            ReportLoginStatus(Form1.LoginStatus)
             Return False
         End If
         _inLoginInProcess = True
@@ -132,11 +132,11 @@ Public Class CareLinkClient
                 End Using
             End Using
 
-            Dim authToken As String = Me.GetBearerToken(CareLinkServerURL(Me.CareLinkCountry))
+            Dim authToken As String = Me.GetBearerToken(GetServerURL(Me.CareLinkCountry))
 
             ' MUST BE FIRST DO NOT MOVE NEXT LINE
             s_sessionCountrySettings = New CountrySettingsRecord(Me.GetCountrySettings(authToken))
-            _sessionUser = Me.GetMyUser(mainForm, authToken)
+            _sessionUser = Me.GetMyUser(authToken)
             _sessionProfile = Me.GetMyProfile(authToken)
             _sessionMonitorData = Me.GetMonitorData(authToken)
 
@@ -159,13 +159,13 @@ Public Class CareLinkClient
 
     End Function
 
-    Private Function GetAuthorizationToken(MainForm As Form1, ByRef authToken As String) As GetAuthorizationTokenResult
+    Private Function GetAuthorizationToken(ByRef authToken As String) As GetAuthorizationTokenResult
         If NetworkUnavailable() Then
             _lastErrorMessage = "No Internet Connection!"
             Return GetAuthorizationTokenResult.NetworkDown
         End If
 
-        Dim url As String = CareLinkServerURL(Me.CareLinkCountry)
+        Dim url As String = GetServerURL(Me.CareLinkCountry)
         ' New token is needed:
         ' a) no token or about to expire => execute authentication
         ' b) last response 401
@@ -179,7 +179,7 @@ Public Class CareLinkClient
                 Debug.Print("Already In login Process")
                 Return GetAuthorizationTokenResult.InLoginProcess
             End If
-            If Not Me.ExecuteLoginProcedure(MainForm, url) Then
+            If Not Me.ExecuteLoginProcedure(url) Then
                 If NetworkUnavailable() Then
                     _lastErrorMessage = "No Internet Connection!"
                     Debug.Print("No Internet Connection!")
@@ -195,26 +195,27 @@ Public Class CareLinkClient
         Return GetAuthorizationTokenResult.OK
     End Function
 
+    Private Function GetBearerToken(url As String) As String
+        Return $"Bearer {Me.GetCookieValue(url, CareLinkAuthTokenCookieName)}"
+    End Function
+
     ' Periodic data from CareLink Cloud
-    Private Function GetConnectDisplayMessage(MainForm As Form1, username As String, role As String, endpointUrl As String, Optional patient_user_name As String = "") As Dictionary(Of String, String)
+    Private Function GetConnectDisplayMessage(username As String, role As String, endpointUrl As String, Optional patientUserName As String = "") As Dictionary(Of String, String)
 
         Debug.Print("__getConnectDisplayMessage()")
         ' Build user Json for request
         Dim userJson As New Dictionary(Of String, String) From {
-            {
-                "username",
-                username},
-            {
-                "role",
-                role}}
+            {"username", username},
+            {"role", role}}
+
         If role = "carepartner" Then
-            If String.IsNullOrWhiteSpace(patient_user_name) Then
+            If String.IsNullOrWhiteSpace(patientUserName) Then
                 endpointUrl = endpointUrl.Replace("v6", "v5")
             Else
-                userJson.Add("patientId", patient_user_name)
+                userJson.Add("patientId", patientUserName)
             End If
         End If
-        Dim recentData As Dictionary(Of String, String) = Me.GetData(MainForm, endpointUrl, userJson)
+        Dim recentData As Dictionary(Of String, String) = Me.GetData(endpointUrl, userJson)
         If recentData IsNot Nothing Then
             CorrectTimeInRecentData(recentData)
         End If
@@ -225,31 +226,139 @@ Public Class CareLinkClient
         If String.IsNullOrWhiteSpace(url) Then
             Return Nothing
         End If
-        Return _httpClientHandler.CookieContainer.GetCookies(New Uri($"https://{url}"))
+        Return Me.ClientHandler.CookieContainer.GetCookies(New Uri($"https://{url}"))
     End Function
 
     Private Function GetCookieValue(url As String, cookieName As String) As String
         If String.IsNullOrWhiteSpace(url) Then
             Return Nothing
         End If
-        Dim cookie As Cookie = _httpClientHandler.CookieContainer.GetCookies(New Uri($"https://{url}")).Cast(Of Cookie)().FirstOrDefault(Function(c As Cookie) c.Name = cookieName)
+        Dim cookie As Cookie = Me.ClientHandler.CookieContainer.GetCookies(New Uri($"https://{url}")).Cast(Of Cookie)().FirstOrDefault(Function(c As Cookie) c.Name = cookieName)
         Return cookie?.Value
     End Function
 
     Private Function GetCountrySettings(authToken As String) As Dictionary(Of String, String)
         Debug.Print("__getCountrySettings()")
         Dim queryParams As New Dictionary(Of String, String) From {
-            {
-                "countryCode",
-                Me.CareLinkCountry},
-            {
-                "language",
-                "en"}}
-        Return Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/countries/settings", queryParams, Nothing)
+            {"countryCode", Me.CareLinkCountry},
+            {"language", "en"}}
+
+        Return Me.GetData(authToken, GetServerURL(Me.CareLinkCountry), "patient/countries/settings", queryParams, Nothing)
+    End Function
+
+    Private Function GetData(endPointPath As String, requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
+        Debug.Print($"GetData(Form1 = {Form1.Name}, endPointPath = {endPointPath}, requestBody = {requestBody.ToCsv}")
+        ' Get authorization token
+        Dim authToken As String = Nothing
+        Select Case Me.GetAuthorizationToken(authToken)
+            Case GetAuthorizationTokenResult.OK
+                Dim jsonDictionary As Dictionary(Of String, String) = Me.GetData(authToken, Nothing, endPointPath, Nothing, requestBody)
+                If _lastResponseCode <> HttpStatusCode.OK Then
+                    ReportLoginStatus(Form1.LoginStatus)
+                    _httpClient = Me.NewHttpClientWithCookieContainer
+                End If
+                Return jsonDictionary
+            Case GetAuthorizationTokenResult.NetworkDown
+                ReportLoginStatus(Form1.LoginStatus)
+            Case GetAuthorizationTokenResult.InLoginProcess
+                Exit Select
+            Case GetAuthorizationTokenResult.LoginFailed
+                ReportLoginStatus(Form1.LoginStatus, True, _lastErrorMessage)
+        End Select
+        Return Nothing
+    End Function
+
+    Private Function GetLoginSession(host As String) As HttpResponseMessage
+        ' https://CareLink.MiniMed.com/patient/sso/login?country=us&lang=en
+        Dim url As New StringBuilder($"https://{host}/patient/sso/login")
+        Dim payload As New Dictionary(Of String, String) From {
+                            {"country", Me.CareLinkCountry},
+                            {"lang", "en"}
+                        }
+        Dim response As HttpResponseMessage = Nothing
+
+        Try
+            response = _httpClient.Get(url, _lastErrorMessage, s_commonHeaders, payload)
+        Catch ex As Exception
+            If NetworkUnavailable() Then
+                _lastErrorMessage = "No Internet Connection!"
+                Debug.Print("No Internet Connection!")
+                Return response
+            End If
+            Debug.Print($"__getLoginSession() failed {ex.DecodeException().Replace(vbCrLf, "")}")
+            Return response
+        End Try
+
+        Return response
+    End Function
+
+    Private Function GetMonitorData(authToken As String) As SessionMonitorDataRecord
+        Debug.Print("__getMonitorData()")
+        Dim sessionMonitorData As New SessionMonitorDataRecord(Me.GetData(authToken, GetServerURL(Me.CareLinkCountry), "patient/monitor/data", Nothing, Nothing))
+        Return sessionMonitorData
+    End Function
+
+    Private Function GetMyProfile(authToken As String) As SessionProfileRecord
+        Debug.Print("__getMyProfile()")
+        Dim sessionProfile As New SessionProfileRecord(Me.GetData(authToken, GetServerURL(Me.CareLinkCountry), "patient/users/me/profile", Nothing, Nothing))
+        Return sessionProfile
+    End Function
+
+    Private Function GetMyUser(authToken As String) As SessionUserRecord
+        Debug.Print("__getMyUser()")
+        Dim myUserRecord As New SessionUserRecord(Form1.DgvCurrentUser, Me.GetData(authToken, GetServerURL(Me.CareLinkCountry), "patient/users/me", Nothing, Nothing))
+        Return myUserRecord
+    End Function
+
+    Private Function NewHttpClientWithCookieContainer() As HttpClient
+        Dim cookieContainer As New CookieContainer()
+        Me.ClientHandler = New HttpClientHandler With {.CookieContainer = cookieContainer}
+        Return New HttpClient(Me.ClientHandler)
+    End Function
+
+    Public Overridable Function GetLastErrorMessage() As String
+        Return If(_lastErrorMessage, "OK")
+    End Function
+
+    ' Wrapper for data retrieval methods
+    Public Overridable Function GetRecentData() As Dictionary(Of String, String)
+        If NetworkUnavailable() Then
+            _lastErrorMessage = "No Internet Connection!"
+            ReportLoginStatus(Form1.LoginStatus)
+            Debug.Print("No Internet Connection!")
+            Return Nothing
+        End If
+
+        ' Force login to get basic info
+        Try
+            Dim authToken As String = Nothing
+            If Me.GetAuthorizationToken(authToken) = GetAuthorizationTokenResult.OK AndAlso
+               ((s_sessionCountrySettings.HasValue AndAlso Not String.IsNullOrWhiteSpace(Me.CareLinkCountry)) OrElse
+               _sessionMonitorData.deviceFamily?.Equals("BLE_X", StringComparison.Ordinal)) Then
+                If _careLinkPartnerType.Contains(_sessionUser.role, StringComparer.InvariantCultureIgnoreCase) Then
+                    Return Me.GetConnectDisplayMessage(
+                                _sessionProfile.username,
+                                "carepartner",
+                                s_sessionCountrySettings.blePereodicDataEndpoint,
+                                My.Settings.CareLinkPatientUserID)
+                End If
+                Return Me.GetConnectDisplayMessage(
+                                _sessionProfile.username,
+                                "patient",
+                                s_sessionCountrySettings.blePereodicDataEndpoint)
+            End If
+        Catch ex As Exception
+            Stop
+        End Try
+        Return Nothing
+    End Function
+
+    Public Overridable Function HasErrors() As Boolean
+        Return Not (String.IsNullOrWhiteSpace(_lastErrorMessage) OrElse _lastErrorMessage = "OK")
     End Function
 
     Private Function GetData(authToken As String, host As String, endPointPath As String, queryParams As Dictionary(Of String, String), requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
-        Debug.Print($"GetData(mainForm As {NameOf(Form1)},host = {host}, endPointPath = {endPointPath}, queryParams = {queryParams.ToCsv}, requestBody = {requestBody.ToCsv}")
+        Debug.Print($"GetData(host = {host}, endPointPath = {endPointPath}, queryParams = {queryParams.ToCsv}, requestBody = {requestBody.ToCsv}")
         Dim jsonData As Dictionary(Of String, String) = Nothing
         If authToken IsNot Nothing Then
             Dim response As New HttpResponseMessage
@@ -303,129 +412,6 @@ Public Class CareLinkClient
             End Try
         End If
         Return jsonData
-    End Function
-
-    Private Function GetLoginSession(host As String) As HttpResponseMessage
-        ' https://CareLink.MiniMed.com/patient/sso/login?country=us&lang=en
-        Dim url As New StringBuilder($"https://{host}/patient/sso/login")
-        Dim payload As New Dictionary(Of String, String) From {
-            {
-                "country",
-                Me.CareLinkCountry},
-            {
-                "lang",
-                "en"}
-                }
-        Dim response As HttpResponseMessage = Nothing
-
-        Try
-            response = _httpClient.Get(url, _lastErrorMessage, s_commonHeaders, payload)
-        Catch ex As Exception
-            If NetworkUnavailable() Then
-                _lastErrorMessage = "No Internet Connection!"
-                Debug.Print("No Internet Connection!")
-                Return response
-            End If
-            Debug.Print($"__getLoginSession() failed {ex.DecodeException().Replace(vbCrLf, "")}")
-            Return response
-        End Try
-
-        Return response
-    End Function
-
-    Private Function GetMonitorData(authToken As String) As SessionMonitorDataRecord
-        Debug.Print("__getMonitorData()")
-        Dim sessionMonitorData As New SessionMonitorDataRecord(Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/monitor/data", Nothing, Nothing))
-        Return sessionMonitorData
-    End Function
-
-    Private Function GetMyProfile(authToken As String) As SessionProfileRecord
-        Debug.Print("__getMyProfile()")
-        Dim sessionProfile As New SessionProfileRecord(Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/users/me/profile", Nothing, Nothing))
-        Return sessionProfile
-    End Function
-
-    Private Function GetMyUser(MainForm As Form1, authToken As String) As SessionUserRecord
-        Debug.Print("__getMyUser()")
-        Dim myUserRecord As New SessionUserRecord(MainForm.DgvCurrentUser, Me.GetData(authToken, CareLinkServerURL(Me.CareLinkCountry), "patient/users/me", Nothing, Nothing))
-        Return myUserRecord
-    End Function
-
-    Private Function NewHttpClientWithCookieContainer() As HttpClient
-        Dim cookieContainer As New CookieContainer()
-        _httpClientHandler = New HttpClientHandler With {.CookieContainer = cookieContainer}
-        Return New HttpClient(_httpClientHandler)
-    End Function
-
-    Public Overridable Function GetLastErrorMessage() As String
-        Return If(_lastErrorMessage, "OK")
-    End Function
-
-    ' Wrapper for data retrieval methods
-    Public Overridable Function GetRecentData(MainForm As Form1) As Dictionary(Of String, String)
-        If NetworkUnavailable() Then
-            _lastErrorMessage = "No Internet Connection!"
-            ReportLoginStatus(MainForm.LoginStatus)
-            Debug.Print("No Internet Connection!")
-            Return Nothing
-        End If
-
-        ' Force login to get basic info
-        Try
-            Dim authToken As String = Nothing
-            If Me.GetAuthorizationToken(MainForm, authToken) = GetAuthorizationTokenResult.OK Then
-                If (s_sessionCountrySettings.HasValue _
-                        AndAlso Not String.IsNullOrWhiteSpace(Me.CareLinkCountry)) OrElse
-                        _sessionMonitorData.deviceFamily?.Equals("BLE_X", StringComparison.Ordinal) Then
-                    If _careLinkPartnerType.Contains(_sessionUser.role, StringComparer.InvariantCultureIgnoreCase) Then
-                        Return Me.GetConnectDisplayMessage(
-                        MainForm,
-                        _sessionProfile.username,
-                        "carepartner",
-                        s_sessionCountrySettings.blePereodicDataEndpoint, My.Settings.CareLinkPatientUserID)
-                    Else
-                        Return Me.GetConnectDisplayMessage(
-                        MainForm,
-                        _sessionProfile.username,
-                        "patient",
-                        s_sessionCountrySettings.blePereodicDataEndpoint)
-                    End If
-                End If
-            End If
-        Catch ex As Exception
-            Stop
-        End Try
-        Return Nothing
-    End Function
-
-    Public Overridable Function HasErrors() As Boolean
-        Return Not (String.IsNullOrWhiteSpace(_lastErrorMessage) OrElse _lastErrorMessage = "OK")
-    End Function
-
-    Private Function GetBearerToken(url As String) As String
-        Return $"Bearer {Me.GetCookieValue(url, CareLinkAuthTokenCookieName)}"
-    End Function
-
-    Private Function GetData(MainForm As Form1, endPointPath As String, requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
-        Debug.Print($"GetData(mainForm = {MainForm.Name}, endPointPath = {endPointPath}, requestBody = {requestBody.ToCsv}")
-        ' Get authorization token
-        Dim authToken As String = Nothing
-        Select Case Me.GetAuthorizationToken(MainForm, authToken)
-            Case GetAuthorizationTokenResult.OK
-                Dim jsonDictionary As Dictionary(Of String, String) = Me.GetData(authToken, Nothing, endPointPath, Nothing, requestBody)
-                If _lastResponseCode <> HttpStatusCode.OK Then
-                    ReportLoginStatus(MainForm.LoginStatus)
-                    _httpClient = Me.NewHttpClientWithCookieContainer
-                End If
-                Return jsonDictionary
-            Case GetAuthorizationTokenResult.NetworkDown
-                ReportLoginStatus(MainForm.LoginStatus)
-            Case GetAuthorizationTokenResult.InLoginProcess
-                Exit Select
-            Case GetAuthorizationTokenResult.LoginFailed
-                ReportLoginStatus(MainForm.LoginStatus, True, _lastErrorMessage)
-        End Select
-        Return Nothing
     End Function
 
 End Class

@@ -2,8 +2,6 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Runtime.CompilerServices
-
 Friend Module TransmitterBatteryHelper
 
     Private Function GetBatteryImage(gstBatteryLevel As Integer) As Image
@@ -21,15 +19,14 @@ Friend Module TransmitterBatteryHelper
         End Select
     End Function
 
-    <Extension>
-    Friend Sub UpdateTransmitterBattery(MainForm As Form1)
+    Friend Sub UpdateTransmitterBattery()
         If s_pumpInRangeOfTransmitter Then
             Dim gstBatteryLevel As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexes.gstBatteryLevel), False)
-            MainForm.TransmitterBatteryPictureBox.Image = GetBatteryImage(gstBatteryLevel)
-            MainForm.TransmitterBatteryPercentLabel.Text = $"{gstBatteryLevel}%"
+            Form1.TransmitterBatteryPictureBox.Image = GetBatteryImage(gstBatteryLevel)
+            Form1.TransmitterBatteryPercentLabel.Text = $"{gstBatteryLevel}%"
         Else
-            MainForm.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToTransmitterNotOK
-            MainForm.TransmitterBatteryPercentLabel.Text = $"???"
+            Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToTransmitterNotOK
+            Form1.TransmitterBatteryPercentLabel.Text = $"???"
         End If
 
     End Sub

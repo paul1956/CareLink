@@ -10,10 +10,6 @@ Imports System.Text
 Imports CareLink
 
 Public Module CareLinkClientHelpers
-    Private Const CareLinkConnectServerEu As String = "CareLink.MiniMed.eu"
-    Private Const CareLinkConnectServerOther As String = "CareLink.MiniMed.eu"
-    Private Const CareLinkConnectServerUs As String = "CareLink.MiniMed.com"
-    Private Const CareLinkConnectServerReports As String = "/app/reports"
 
     Friend ReadOnly s_commonHeaders As New Dictionary(Of String, String) From {
                         {
@@ -39,12 +35,12 @@ Public Module CareLinkClientHelpers
         OK
     End Enum
 
-    Public Function NetworkUnavailable() As Boolean
-        Return Not My.Computer.Network.IsAvailable
-    End Function
-
     <Extension>
     Private Function ExtractResponseData(responseBody As String, startStr As String, endStr As String) As String
+        If String.IsNullOrWhiteSpace(responseBody) Then
+            Return ""
+        End If
+
         Dim startIndex As Integer = responseBody.IndexOf(startStr, StringComparison.Ordinal)
         If startIndex = -1 Then
             Return ""
@@ -70,18 +66,6 @@ Public Module CareLinkClientHelpers
             result.Add(splitItem(0), splitItem(1))
         Next
         Return result
-    End Function
-
-    ' Get server URL
-    Friend Function CareLinkServerURL(country As String) As String
-        Select Case country.GetRegionFromCode
-            Case "North America"
-                Return CareLinkConnectServerUs
-            Case "Europe"
-                Return CareLinkConnectServerEu
-            Case Else
-                Return CareLinkConnectServerOther
-        End Select
     End Function
 
     Friend Function DecodeResponse(response As HttpResponseMessage, ByRef lastErrorMessage As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As HttpResponseMessage
@@ -111,23 +95,14 @@ Public Module CareLinkClientHelpers
         Dim sessionId As String = doLoginRespBody.ExtractResponseData("<input type=""hidden"" name=""sessionID"" value=", ">")
         Dim sessionData As String = doLoginRespBody.ExtractResponseData("<input type=""hidden"" name=""sessionData"" value=", ">")
         lastErrorMessage = doLoginRespBody.ExtractResponseData("LoginFailed"">", "</p>")
+
         ' Send consent
         Dim form As New Dictionary(Of String, String) From {
-            {
-                "action",
-                "consent"},
-            {
-                "sessionID",
-                sessionId},
-            {
-                "sessionData",
-                sessionData},
-            {
-                "response_type",
-                "code"},
-            {
-                "response_mode",
-                "query"}}
+            {"action", "consent"},
+            {"sessionID", sessionId},
+            {"sessionData", sessionData},
+            {"response_type", "code"},
+            {"response_mode", "query"}}
         ' Add header
         Dim consentHeaders As Dictionary(Of String, String) = s_commonHeaders.Clone()
         consentHeaders("Content-Type") = "application/x-www-form-urlencoded"
@@ -139,8 +114,8 @@ Public Module CareLinkClientHelpers
             Dim message As String = $"__doConsent() failed with {ex.DecodeException()}"
             lastErrorMessage = message
             Debug.Print(message.Replace(vbCrLf, " "))
-            Return New HttpResponseMessage(HttpStatusCode.NotImplemented)
         End Try
+        Return New HttpResponseMessage(HttpStatusCode.NotImplemented)
     End Function
 
     Friend Function DoLogin(ByRef httpClient As HttpClient, loginSessionResponse As HttpResponseMessage, userName As String, password As String, ByRef lastErrorMessage As String) As HttpResponseMessage
@@ -152,45 +127,42 @@ Public Module CareLinkClientHelpers
         End With
 
         Dim webForm As New Dictionary(Of String, String) From {
-            {
-                "sessionID",
-                queryParameters.GetValueOrDefault("sessionID")},
-            {
-                "sessionData",
-                queryParameters.GetValueOrDefault("sessionData")},
-            {
-                "locale",
-                "en"},
-            {
-                "action",
-                "login"},
-            {
-                "username",
-                userName},
-            {
-                "password",
-                password},
-            {
-                "actionButton",
-                "Log in"}}
+            {"sessionID", queryParameters.GetValueOrDefault("sessionID")},
+            {"sessionData", queryParameters.GetValueOrDefault("sessionData")},
+            {"locale", "en"},
+            {"action", "login"},
+            {"username", userName},
+            {"password", password},
+            {"actionButton", "Log in"}}
+
         Dim payload As New Dictionary(Of String, String) From {
-            {
-                "country",
-                queryParameters.GetValueOrDefault("countrycode")},
-            {
-                "locale",
-                "en"}}
+            {"country", queryParameters.GetValueOrDefault("countrycode")},
+            {"locale", "en"}}
+
         Dim response As HttpResponseMessage = Nothing
         Try
             response = httpClient.Post(url, s_commonHeaders, params:=payload, data:=webForm)
-            If response IsNot Nothing Then
-                Return DecodeResponse(response, lastErrorMessage)
-            End If
         Catch ex As Exception
             Stop
-            Throw New Exception($"HTTP Response is not OK, {response?.StatusCode}")
+            lastErrorMessage = $"HTTP Response is not OK, {response?.StatusCode}"
         End Try
-        Return Nothing
+        Return If(response Is Nothing, Nothing, DecodeResponse(response, lastErrorMessage))
+    End Function
+
+    ' Get server URL
+    Friend Function GetServerURL(country As String) As String
+        Select Case country.GetRegionFromCode
+            Case "North America"
+                Return "CareLink.MiniMed.com"
+            Case "Europe"
+                Return "CareLink.MiniMed.eu"
+            Case Else
+                Return "CareLink.MiniMed.eu"
+        End Select
+    End Function
+
+    Friend Function NetworkUnavailable() As Boolean
+        Return Not My.Computer.Network.IsAvailable
     End Function
 
 End Module

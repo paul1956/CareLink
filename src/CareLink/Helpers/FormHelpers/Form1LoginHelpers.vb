@@ -10,43 +10,42 @@ Imports System.Text.Json
 Friend Module Form1LoginHelpers
     Public ReadOnly Property LoginDialog As New LoginForm1
 
-    <Extension>
-    Friend Function DoOptionalLoginAndUpdateData(MainForm As Form1, UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
-        MainForm.ServerUpdateTimer.Stop()
-        Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
+    Friend Function DoOptionalLoginAndUpdateData(UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
+        Form1.ServerUpdateTimer.Stop()
+        Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(Form1.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
         s_listOfAutoBasalDeliveryMarkers.Clear()
         s_listOfManualBasal.Clear()
         Dim fromFile As Boolean
         Select Case fileToLoad
             Case FileToLoadOptions.LastSaved
-                MainForm.Text = $"{SavedTitle} Using Last Saved Data"
+                Form1.Text = $"{SavedTitle} Using Last Saved Data"
                 CurrentDateCulture = GetPathToLastDownloadFile().ExtractCultureFromFileName(SavedLastDownloadBaseName)
                 RecentData = Loads(File.ReadAllText(GetPathToLastDownloadFile()))
-                MainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
+                Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(GetPathToLastDownloadFile())
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
-                SetUpCareLinkUser(MainForm, GetPathToTestSettingsFile())
+                SetUpCareLinkUser(GetPathToTestSettingsFile())
                 fromFile = True
             Case FileToLoadOptions.TestData
-                MainForm.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
+                Form1.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
                 RecentData = Loads(File.ReadAllText(GetPathToTestData()))
-                MainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
+                Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(GetPathToTestData())
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
-                SetUpCareLinkUser(MainForm, GetPathToTestSettingsFile)
+                SetUpCareLinkUser(GetPathToTestSettingsFile)
                 fromFile = True
             Case FileToLoadOptions.Login
-                MainForm.Text = SavedTitle
+                Form1.Text = SavedTitle
                 Do Until LoginDialog.ShowDialog() <> DialogResult.Retry
                 Loop
 
-                If MainForm.Client Is Nothing OrElse Not MainForm.Client.LoggedIn Then
-                    MainForm.ServerUpdateTimer.Interval = CInt(s_5MinutesInMilliseconds)
-                    MainForm.ServerUpdateTimer.Start()
-                    Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
+                If Form1.Client Is Nothing OrElse Not Form1.Client.LoggedIn Then
+                    Form1.ServerUpdateTimer.Interval = CInt(s_5MinutesInMilliseconds)
+                    Form1.ServerUpdateTimer.Start()
+                    Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(Form1.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
                     If NetworkUnavailable() Then
-                        ReportLoginStatus(MainForm.LoginStatus)
+                        ReportLoginStatus(Form1.LoginStatus)
                         Return False
                     End If
 
@@ -55,48 +54,47 @@ Friend Module Form1LoginHelpers
                 End If
 
                 Dim userSettingsPath As String = GetPathToUserSettingsFile(My.Settings.CareLinkUserName)
-                RecentData = MainForm.Client.GetRecentData(MainForm)
-                SetUpCareLinkUser(MainForm, userSettingsPath)
-                MainForm.ServerUpdateTimer.Interval = CInt(s_1MinutesInMilliseconds)
-                MainForm.ServerUpdateTimer.Start()
-                Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(MainForm.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
+                RecentData = Form1.Client.GetRecentData()
+                SetUpCareLinkUser(userSettingsPath)
+                Form1.ServerUpdateTimer.Interval = CInt(s_1MinutesInMilliseconds)
+                Form1.ServerUpdateTimer.Start()
+                Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(Form1.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
 
                 If NetworkUnavailable() Then
-                    ReportLoginStatus(MainForm.LoginStatus)
+                    ReportLoginStatus(Form1.LoginStatus)
                     Return False
                 End If
 
-                ReportLoginStatus(MainForm.LoginStatus, RecentData Is Nothing OrElse RecentData.Count = 0, MainForm.Client.GetLastErrorMessage)
+                ReportLoginStatus(Form1.LoginStatus, RecentData Is Nothing OrElse RecentData.Count = 0, Form1.Client.GetLastErrorMessage)
 
-                MainForm.MenuShowMiniDisplay.Visible = True
+                Form1.MenuShowMiniDisplay.Visible = True
                 fromFile = False
         End Select
 
-        If MainForm.Client IsNot Nothing Then
-            MainForm.Client.SessionProfile?.SetInsulinType(CurrentUser.InsulinTypeName)
-            With MainForm.DgvSessionProfile
+        If Form1.Client IsNot Nothing Then
+            Form1.Client.SessionProfile?.SetInsulinType(CurrentUser.InsulinTypeName)
+            With Form1.DgvSessionProfile
                 .InitializeDgv()
-                .DataSource = MainForm.Client.SessionProfile.ToDataSource
+                .DataSource = Form1.Client.SessionProfile.ToDataSource
             End With
         End If
 
-        MainForm.PumpAITLabel.Text = CurrentUser.GetPumpAitString
-        MainForm.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName
-        MainForm.FinishInitialization()
+        Form1.PumpAITLabel.Text = CurrentUser.GetPumpAitString
+        Form1.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName
+        FinishInitialization()
         If UpdateAllTabs Then
-            MainForm.UpdateAllTabPages(fromFile)
+            Form1.UpdateAllTabPages(fromFile)
         End If
         Return True
     End Function
 
-    <Extension>
-    Friend Sub FinishInitialization(MainForm As Form1)
-        MainForm.Cursor = Cursors.Default
+    Friend Sub FinishInitialization()
+        Form1.Cursor = Cursors.Default
         Application.DoEvents()
 
-        MainForm.InitializeSummaryTabCharts()
-        MainForm.InitializeActiveInsulinTabChart()
-        MainForm.InitializeTimeInRangeArea()
+        Form1.InitializeSummaryTabCharts()
+        Form1.InitializeActiveInsulinTabChart()
+        Form1.InitializeTimeInRangeArea()
 
         ProgramInitialized = True
     End Sub
@@ -140,7 +138,7 @@ Friend Module Form1LoginHelpers
 
     End Sub
 
-    Friend Sub SetUpCareLinkUser(mainForm As Form1, userSettingsPath As String)
+    Friend Sub SetUpCareLinkUser(userSettingsPath As String)
         Dim contents As String
         If Path.Exists(userSettingsPath) Then
             contents = File.ReadAllText(userSettingsPath)

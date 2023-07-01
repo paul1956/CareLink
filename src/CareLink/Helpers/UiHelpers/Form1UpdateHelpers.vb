@@ -60,7 +60,7 @@ Friend Module Form1UpdateHelpers
         End Select
     End Function
 
-    Friend Sub UpdateDataTables(mainForm As Form1, recentData As Dictionary(Of String, String))
+    Friend Sub UpdateDataTables(recentData As Dictionary(Of String, String))
 
         If recentData Is Nothing Then
             Debug.Print($"Exiting {NameOf(UpdateDataTables)}, {NameOf(recentData)} has no data!")
@@ -92,9 +92,9 @@ Friend Module Form1UpdateHelpers
             s_listOfManualBasal.Add(item)
         End If
         If recentData.TryGetValue(ItemIndexes.markers.ToString, markerRowString) Then
-            mainForm.MaxBasalPerHourLabel.Text = CollectMarkers(markerRowString)
+            Form1.MaxBasalPerHourLabel.Text = CollectMarkers(markerRowString)
         Else
-            mainForm.MaxBasalPerHourLabel.Text = ""
+            Form1.MaxBasalPerHourLabel.Text = ""
         End If
 
 #End Region ' Update all Markers
@@ -168,7 +168,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_sensorMessages, NameOf(s_sensorMessages)))
 
                 Case ItemIndexes.medicalDeviceSerialNumber
-                    mainForm.SerialNumberLabel.Text = row.Value
+                    Form1.SerialNumberLabel.Text = row.Value
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Pump serial number is {row.Value}."))
 
                 Case ItemIndexes.medicalDeviceTime
@@ -248,7 +248,7 @@ Friend Module Form1UpdateHelpers
                 Case ItemIndexes.pumpBannerState
                     s_pumpBannerStateValue = LoadList(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-                    mainForm.TempTargetLabel.Visible = False
+                    Form1.TempTargetLabel.Visible = False
 
                 Case ItemIndexes.basal
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
@@ -340,9 +340,8 @@ Friend Module Form1UpdateHelpers
 
     End Sub
 
-    <Extension>
-    Friend Sub UpdateMarkerTabs(MainForm As Form1)
-        With MainForm
+    Friend Sub UpdateMarkerTabs()
+        With Form1
             .TableLayoutPanelAutoBasalDelivery.DisplayDataTableInDGV(
                               .DgvAutoBasalDelivery,
                               ClassCollectionToDataTable(s_listOfAutoBasalDeliveryMarkers),
@@ -393,8 +392,7 @@ Friend Module Form1UpdateHelpers
 
     End Sub
 
-    <Extension>
-    Friend Sub UpdatePumpBannerStateTab(mainForm As Form1)
+    Friend Sub UpdatePumpBannerStateTab()
         Dim listOfPumpBannerState As New List(Of BannerStateRecord)
         For Each dic As Dictionary(Of String, String) In s_pumpBannerStateValue
             Dim typeValue As String = ""
@@ -404,8 +402,8 @@ Friend Module Form1UpdateHelpers
                 Select Case typeValue
                     Case "TEMP_TARGET"
                         Dim minutes As Integer = bannerStateRecord1.timeRemaining
-                        mainForm.TempTargetLabel.Text = $"Target {If(nativeMmolL, "8.3", "150")}  {minutes.ToHours} hr"
-                        mainForm.TempTargetLabel.Visible = True
+                        Form1.TempTargetLabel.Text = $"Target {If(nativeMmolL, "8.3", "150")}  {minutes.ToHours} hr"
+                        Form1.TempTargetLabel.Visible = True
                     Case "BG_REQUIRED"
                     Case "DELIVERY_SUSPEND"
                     Case "LOAD_RESERVOIR"
@@ -423,7 +421,7 @@ Friend Module Form1UpdateHelpers
                 Stop
             End If
         Next
-        mainForm.TableLayoutPanelBannerState.DisplayDataTableInDGV(
+        Form1.TableLayoutPanelBannerState.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(listOfPumpBannerState),
                               NameOf(BannerStateRecord),
                               AddressOf BannerStateRecordHelpers.AttachHandlers,
