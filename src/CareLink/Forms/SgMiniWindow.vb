@@ -5,13 +5,13 @@
 Imports System.ComponentModel
 Imports System.Media
 
-Public Class BGMiniWindow
+Public Class SgMiniWindow
     Private ReadOnly _form1 As Form1
     Private _alarmPlayedHigh As Boolean
     Private _alarmPlayedLow As Boolean
-    Private _currentBGValue As Single = Double.NaN
-    Private _lastBGValue As Single
-    Private _normalizedBG As Single
+    Private _currentSgValue As Single = Double.NaN
+    Private _lastSgValue As Single
+    Private _normalizedSg As Single
 
     Public Sub New()
         MyBase.New
@@ -35,71 +35,6 @@ Public Class BGMiniWindow
         Me.HiddenTextBox.Focus()
     End Sub
 
-    Private Sub BGMiniWindow_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
-        _form1.Visible = True
-    End Sub
-
-    Private Sub BGMiniWindow_GotFocus(sender As Object, e As EventArgs) Handles MyBase.GotFocus
-        Me.HiddenTextBox.Focus()
-    End Sub
-
-    Private Sub BGMiniWindow_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
-        If e.Modifiers = Keys.Alt AndAlso e.KeyCode = Keys.W Then
-            _form1.Visible = True
-            Me.Hide()
-        End If
-    End Sub
-
-    Private Sub BGTextBox_GotFocus(sender As Object, e As EventArgs) Handles BGTextBox.GotFocus
-        Me.HiddenTextBox.Focus()
-    End Sub
-
-    Private Sub BGTextBox_TextChanged(sender As Object, e As EventArgs) Handles BGTextBox.TextChanged
-        Me.Text = GetLastUpdateMessage()
-        If Me.BGTextBox.Text.Length = 0 OrElse Me.BGTextBox.Text = "---" OrElse Me.BGTextBox.Text = "9999" Then
-            _currentBGValue = Double.NaN
-            Me.DeltaTextBox.Text = ""
-        Else
-            If Double.IsNaN(_currentBGValue) OrElse _currentBGValue = 0 OrElse Double.IsNaN(_lastBGValue) OrElse _lastBGValue = 0 Then
-                Me.DeltaTextBox.Text = ""
-            Else
-                Dim delta As Double = _currentBGValue - _lastBGValue
-                Me.DeltaTextBox.Text = delta.ToString(If(nativeMmolL, $"+0.00;-#.00", "+0;-#0"), CurrentUICulture)
-                Select Case delta
-                    Case Is = 0
-                        Me.DeltaTextBox.Text = ""
-                    Case Is > 0
-                        Me.DeltaTextBox.ForeColor = Color.Blue
-                    Case Is < 0
-                        Me.DeltaTextBox.ForeColor = Color.Orange
-                End Select
-            End If
-            Select Case _normalizedBG
-                Case = 0
-                    Me.BGTextBox.ForeColor = Color.Black
-                Case <= 70
-                    Me.BGTextBox.ForeColor = Color.Red
-                    If Not _alarmPlayedLow Then
-                        Me.playSoundFromResource("Low Alarm")
-                        _alarmPlayedLow = True
-                        _alarmPlayedHigh = False
-                    End If
-                Case <= 180
-                    Me.BGTextBox.ForeColor = Color.Green
-                    _alarmPlayedLow = False
-                    _alarmPlayedHigh = False
-                Case Else
-                    Me.BGTextBox.ForeColor = Color.Yellow
-                    If Not _alarmPlayedHigh Then
-                        Me.playSoundFromResource("High Alarm")
-                        _alarmPlayedLow = False
-                        _alarmPlayedHigh = True
-                    End If
-            End Select
-        End If
-
-    End Sub
-
     Private Sub ChkTopMost_CheckedChanged(sender As Object, e As EventArgs) Handles ChkTopMost.CheckedChanged
         If Me.ChkTopMost.Checked Then
             Me.TopMost = True
@@ -113,29 +48,94 @@ Public Class BGMiniWindow
         Me.Hide()
     End Sub
 
-    Private Sub playSoundFromResource(SoundName As String)
+    Private Sub PlaySoundFromResource(SoundName As String)
         Using player As New SoundPlayer(My.Resources.ResourceManager.GetStream(SoundName, CurrentUICulture))
             player.Play()
         End Using
     End Sub
 
-    Public Sub SetCurrentBGString(Value As String)
+    Private Sub SgMiniWindow_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
+        _form1.Visible = True
+    End Sub
+
+    Private Sub SgMiniWindow_GotFocus(sender As Object, e As EventArgs) Handles MyBase.GotFocus
+        Me.HiddenTextBox.Focus()
+    End Sub
+
+    Private Sub SgMiniWindow_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.Modifiers = Keys.Alt AndAlso e.KeyCode = Keys.W Then
+            _form1.Visible = True
+            Me.Hide()
+        End If
+    End Sub
+
+    Private Sub SgTextBox_GotFocus(sender As Object, e As EventArgs) Handles SgTextBox.GotFocus
+        Me.HiddenTextBox.Focus()
+    End Sub
+
+    Private Sub SgTextBox_TextChanged(sender As Object, e As EventArgs) Handles SgTextBox.TextChanged
+        Me.Text = GetLastUpdateMessage()
+        If Me.SgTextBox.Text.Length = 0 OrElse Me.SgTextBox.Text = "---" OrElse Me.SgTextBox.Text = "9999" Then
+            _currentSgValue = Double.NaN
+            Me.DeltaTextBox.Text = ""
+        Else
+            If Double.IsNaN(_currentSgValue) OrElse _currentSgValue = 0 OrElse Double.IsNaN(_lastSgValue) OrElse _lastSgValue = 0 Then
+                Me.DeltaTextBox.Text = ""
+            Else
+                Dim delta As Double = _currentSgValue - _lastSgValue
+                Me.DeltaTextBox.Text = delta.ToString(If(nativeMmolL, $"+0.00;-#.00", "+0;-#0"), CurrentUICulture)
+                Select Case delta
+                    Case Is = 0
+                        Me.DeltaTextBox.Text = ""
+                    Case Is > 0
+                        Me.DeltaTextBox.ForeColor = Color.Blue
+                    Case Is < 0
+                        Me.DeltaTextBox.ForeColor = Color.Orange
+                End Select
+            End If
+            Select Case _normalizedSg
+                Case = 0
+                    Me.SgTextBox.ForeColor = Color.Black
+                Case <= 70
+                    Me.SgTextBox.ForeColor = Color.Red
+                    If Not _alarmPlayedLow Then
+                        Me.PlaySoundFromResource("Low Alarm")
+                        _alarmPlayedLow = True
+                        _alarmPlayedHigh = False
+                    End If
+                Case <= 180
+                    Me.SgTextBox.ForeColor = Color.Green
+                    _alarmPlayedLow = False
+                    _alarmPlayedHigh = False
+                Case Else
+                    Me.SgTextBox.ForeColor = Color.Yellow
+                    If Not _alarmPlayedHigh Then
+                        Me.PlaySoundFromResource("High Alarm")
+                        _alarmPlayedLow = False
+                        _alarmPlayedHigh = True
+                    End If
+            End Select
+        End If
+
+    End Sub
+
+    Public Sub SetCurrentSgString(Value As String)
         If String.IsNullOrEmpty(Value) Then
             Value = "---"
         End If
 
-        _lastBGValue = _currentBGValue
-        _currentBGValue = Value.ParseSingle(2)
-        If Not Double.IsNaN(_currentBGValue) Then
-            _normalizedBG = _currentBGValue
+        _lastSgValue = _currentSgValue
+        _currentSgValue = Value.ParseSingle(2)
+        If Not Double.IsNaN(_currentSgValue) Then
+            _normalizedSg = _currentSgValue
             If nativeMmolL Then
-                _normalizedBG *= MmolLUnitsDivisor
+                _normalizedSg *= MmolLUnitsDivisor
             End If
-            Me.BGTextBox.ForeColor = SystemColors.ControlText
-            Me.BGTextBox.Text = If(nativeMmolL, Value.ParseSingle(1).ToString(CurrentUICulture), CInt(_currentBGValue).ToString)
+            Me.SgTextBox.ForeColor = SystemColors.ControlText
+            Me.SgTextBox.Text = If(nativeMmolL, Value.ParseSingle(1).ToString(CurrentUICulture), CInt(_currentSgValue).ToString)
         Else
-            Me.BGTextBox.ForeColor = Color.Red
-            Me.BGTextBox.Text = Value
+            Me.SgTextBox.ForeColor = Color.Red
+            Me.SgTextBox.Text = Value
         End If
         Me.Text = GetLastUpdateMessage()
     End Sub

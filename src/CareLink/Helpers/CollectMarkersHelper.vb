@@ -28,7 +28,7 @@ Friend Module CollectMarkersHelper
     Friend Function CollectMarkers(jsonRow As String) As String
         s_listOfAutoBasalDeliveryMarkers.Clear()
         s_listOfAutoModeStatusMarkers.Clear()
-        s_listOfBgReadingMarkers.Clear()
+        s_listOfSgReadingMarkers.Clear()
         s_listOfCalibrationMarkers.Clear()
         s_listOfInsulinMarkers.Clear()
         s_listOfLowGlucoseSuspendedMarkers.Clear()
@@ -51,7 +51,7 @@ Friend Module CollectMarkersHelper
                     s_listOfAutoModeStatusMarkers.Add(DictionaryToClass(Of AutoModeStatusRecord)(markerEntry, s_listOfAutoModeStatusMarkers.Count + 1))
                 Case "BG_READING"
                     s_markers.Add(markerEntry.ScaleMarker)
-                    s_listOfBgReadingMarkers.Add(DictionaryToClass(Of BGReadingRecord)(markerEntry.ScaleMarker(), s_listOfBgReadingMarkers.Count + 1))
+                    s_listOfSgReadingMarkers.Add(DictionaryToClass(Of SgReadingRecord)(markerEntry.ScaleMarker(), s_listOfSgReadingMarkers.Count + 1))
                 Case "CALIBRATION"
                     s_markers.Add(markerEntry.ScaleMarker)
                     s_listOfCalibrationMarkers.Add(DictionaryToClass(Of CalibrationRecord)(markerEntry.ScaleMarker(), s_listOfCalibrationMarkers.Count + 1))

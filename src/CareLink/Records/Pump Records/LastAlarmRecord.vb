@@ -6,6 +6,7 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class LastAlarmRecord
+
     <DisplayName(NameOf([datetime]))>
     <Column(Order:=2, TypeName:="Date")>
     Public Property [datetime] As Date
@@ -14,6 +15,7 @@ Public Class LastAlarmRecord
     <Column(Order:=15, TypeName:=NameOf([String]))>
     Public Property basalName As String = Nothing
 
+    ' DO NOT RENAME
     <DisplayName(NameOf(bgValue))>
     <Column(Order:=16, TypeName:=NameOf([Single]))>
     Public Property bgValue As Single = Nothing

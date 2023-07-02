@@ -2,8 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class BGMiniWindow
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+Partial Class SgMiniWindow
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -24,9 +24,9 @@ Partial Class BGMiniWindow
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        BGTextBox = New TextBox()
+        SgTextBox = New TextBox()
         ActiveInsulinTextBox = New TextBox()
         HiddenTextBox = New TextBox()
         DeltaTextBox = New TextBox()
@@ -34,17 +34,17 @@ Partial Class BGMiniWindow
         ChkTopMost = New CheckBox()
         Me.SuspendLayout()
         ' 
-        ' BGTextBox
+        ' SgTextBox
         ' 
-        BGTextBox.BorderStyle = BorderStyle.None
-        BGTextBox.Font = New Font("Segoe UI", 36F, FontStyle.Regular, GraphicsUnit.Point)
-        BGTextBox.Location = New Point(4, 29)
-        BGTextBox.Margin = New Padding(0)
-        BGTextBox.Name = "BGTextBox"
-        BGTextBox.Size = New Size(139, 64)
-        BGTextBox.TabIndex = 1
-        BGTextBox.Text = "9999"
-        BGTextBox.TextAlign = HorizontalAlignment.Center
+        SgTextBox.BorderStyle = BorderStyle.None
+        SgTextBox.Font = New Font("Segoe UI", 36.0F, FontStyle.Regular, GraphicsUnit.Point)
+        SgTextBox.Location = New Point(4, 29)
+        SgTextBox.Margin = New Padding(0)
+        SgTextBox.Name = "SgTextBox"
+        SgTextBox.Size = New Size(139, 64)
+        SgTextBox.TabIndex = 1
+        SgTextBox.Text = "9999"
+        SgTextBox.TextAlign = HorizontalAlignment.Center
         ' 
         ' ActiveInsulinTextBox
         ' 
@@ -69,7 +69,7 @@ Partial Class BGMiniWindow
         ' 
         DeltaTextBox.Anchor = AnchorStyles.Top Or AnchorStyles.Right
         DeltaTextBox.BorderStyle = BorderStyle.None
-        DeltaTextBox.Font = New Font("Segoe UI", 36F, FontStyle.Regular, GraphicsUnit.Point)
+        DeltaTextBox.Font = New Font("Segoe UI", 36.0F, FontStyle.Regular, GraphicsUnit.Point)
         DeltaTextBox.Location = New Point(135, 40)
         DeltaTextBox.Margin = New Padding(0)
         DeltaTextBox.Name = "DeltaTextBox"
@@ -99,9 +99,9 @@ Partial Class BGMiniWindow
         ChkTopMost.Text = "Topmost"
         ChkTopMost.UseVisualStyleBackColor = True
         ' 
-        ' BGMiniWindow
+        ' SgMiniWindow
         ' 
-        Me.AutoScaleDimensions = New SizeF(7F, 15F)
+        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.BackColor = SystemColors.Window
         Me.ClientSize = New Size(264, 123)
@@ -110,14 +110,14 @@ Partial Class BGMiniWindow
         Me.Controls.Add(CloseButton)
         Me.Controls.Add(DeltaTextBox)
         Me.Controls.Add(ActiveInsulinTextBox)
-        Me.Controls.Add(BGTextBox)
+        Me.Controls.Add(SgTextBox)
         Me.Controls.Add(HiddenTextBox)
         Me.FormBorderStyle = FormBorderStyle.FixedDialog
         Me.KeyPreview = True
         Me.Margin = New Padding(4, 3, 4, 3)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        Me.Name = "BGMiniWindow"
+        Me.Name = "SgMiniWindow"
         Me.ShowInTaskbar = False
         Me.Text = "Current Glucose Value"
         Me.TopMost = True
@@ -125,10 +125,10 @@ Partial Class BGMiniWindow
         Me.PerformLayout()
     End Sub
 
-    Friend WithEvents BGTextBox As TextBox
     Friend WithEvents ActiveInsulinTextBox As TextBox
-    Friend WithEvents HiddenTextBox As TextBox
-    Friend WithEvents DeltaTextBox As TextBox
-    Friend WithEvents CloseButton As Button
     Friend WithEvents ChkTopMost As CheckBox
+    Friend WithEvents CloseButton As Button
+    Friend WithEvents DeltaTextBox As TextBox
+    Friend WithEvents HiddenTextBox As TextBox
+    Friend WithEvents SgTextBox As TextBox
 End Class

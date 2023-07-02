@@ -84,7 +84,7 @@ Friend Module SummaryRecordHelpers
                 .Replace($"({NameOf(notDeliveredAmount)})", notDeliveredAmount) _
                 .Replace($"({NameOf(ClearedNotificationsRecord.secondaryTime)})", secondaryTime) _
                 .Replace("(triggeredDateTime)", $", happened at {triggeredDateTime}") _
-                .Replace("(units)", BgUnitsNativeString)
+                .Replace("(units)", SgUnitsNativeString)
             Else
                 If Debugger.IsAttached Then
                     Stop

@@ -269,11 +269,11 @@ Friend Module CreateChartItems
         Return s
     End Function
 
-    Friend Function CreateSeriesSg(bgLegend As Legend) As Series
+    Friend Function CreateSeriesSg(sgLegend As Legend) As Series
         Const legendText As String = "SG Series"
         Dim s As Series = CreateSeriesBase(SgSeriesName, legendText, 4, AxisType.Secondary)
         s.IsVisibleInLegend = False
-        bgLegend.CustomItems.Add(New LegendItem(legendText, GetGraphLineColor(legendText), ""))
+        sgLegend.CustomItems.Add(New LegendItem(legendText, GetGraphLineColor(legendText), ""))
         Return s
     End Function
 
@@ -338,8 +338,13 @@ Friend Module CreateChartItems
                     .IntervalOffsetType = DateTimeIntervalType.Hours
                     .IntervalType = DateTimeIntervalType.Hours
                 End With
-                .Maximum = s_listOfSGs.Last.OaDateTime
-                .Minimum = s_listOfSGs(0).OaDateTime
+                If s_listOfSgRecords.Any Then
+                    .Maximum = s_listOfSgRecords.LastOrDefault.OaDateTime
+                    .Minimum = s_listOfSgRecords.FirstOrDefault.OaDateTime
+                Else
+                    .Maximum = New OADate(Now)
+                    .Minimum = New OADate(Now.AddDays(-1))
+                End If
             End With
         End With
     End Sub

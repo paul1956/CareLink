@@ -48,7 +48,7 @@ Friend Module SgRecordHelpers
             Case NameOf(SgRecord.datetime)
                 dgv.dateTimeCellFormatting(e, NameOf(SgRecord.datetime))
             Case NameOf(SgRecord.sg), NameOf(SgRecord.sgMmolL), NameOf(SgRecord.sgMmDl)
-                dgv.bgValueCellFormatting(e, NameOf(SgRecord.sg))
+                dgv.SgValueCellFormatting(e, NameOf(SgRecord.sg))
         End Select
 
     End Sub

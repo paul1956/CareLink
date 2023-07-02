@@ -130,4 +130,8 @@ Public Class SgRecord
     <Column(Order:=8, TypeName:=NameOf([Int32]))>
     Public Property version As Integer
 
+    Public Overrides Function ToString() As String
+        Return If(nativeMmolL, Me.sg.ToString("F2", CurrentDataCulture), Me.sg.ToString("F0"))
+    End Function
+
 End Class

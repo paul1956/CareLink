@@ -27,9 +27,12 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-07/01/2023
+07/07/2023
 
 ## What's New in this release
+New in 3.8.3.1
+- Improve display of Sg values in mmol/M
+
 New in 3.8.3.0
 - Correctly handle CareLink Authorization Server redirect
 - Correct application version display

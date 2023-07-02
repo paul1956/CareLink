@@ -29,12 +29,12 @@ Public Module PumpVariables
     Friend ReadOnly s_insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
     Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDeliveryRecord)
     Friend ReadOnly s_listOfAutoModeStatusMarkers As New List(Of AutoModeStatusRecord)
-    Friend ReadOnly s_listOfBgReadingMarkers As New List(Of BGReadingRecord)
     Friend ReadOnly s_listOfCalibrationMarkers As New List(Of CalibrationRecord)
     Friend ReadOnly s_listOfInsulinMarkers As New List(Of InsulinRecord)
     Friend ReadOnly s_listOfLimitRecords As New List(Of LimitsRecord)
     Friend ReadOnly s_listOfLowGlucoseSuspendedMarkers As New List(Of LowGlucoseSuspendRecord)
     Friend ReadOnly s_listOfMealMarkers As New List(Of MealRecord)
+    Friend ReadOnly s_listOfSgReadingMarkers As New List(Of SgReadingRecord)
     Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
     Friend ReadOnly s_mealImage As Bitmap = My.Resources.MealImage
     Friend s_aboveHyperLimit As Single
@@ -44,13 +44,13 @@ Public Module PumpVariables
     Friend s_firstName As String = ""
     Friend s_gstCommunicationState As Boolean
     Friend s_lastAlarmValue As Dictionary(Of String, String)
-    Friend s_lastBGDiff As Double = 0
-    Friend s_lastBGTime As Date
-    Friend s_lastBGValue As Single = 0
     Friend s_lastMedicalDeviceDataUpdateServerEpoch As Long
+    Friend s_lastSgDiff As Double = 0
     Friend s_lastSgRecord As New SgRecord
+    Friend s_lastSgTime As Date
+    Friend s_lastSgValue As Single = 0
     Friend s_listOfManualBasal As New BasalRecords(288)
-    Friend s_listOfSGs As New List(Of SgRecord)
+    Friend s_listOfSgRecords As New List(Of SgRecord)
     Friend s_listOfTimeChangeMarkers As New List(Of TimeChangeRecord)
     Friend s_markers As New List(Of Dictionary(Of String, String))
     Friend s_notificationHistoryValue As Dictionary(Of String, String)
@@ -79,9 +79,8 @@ Public Module PumpVariables
         End Set
     End Property
 
-    Friend Property BgUnitsAlternativeString As String
-    Friend Property BgUnitsNativeString As String
     Friend Property InAutoMode As Boolean
+    Friend Property SgUnitsNativeString As String
     Public Property ProgramInitialized As Boolean = False
     Public Property RecentData As New Dictionary(Of String, String)
 

@@ -27,14 +27,14 @@ Friend Module SystemVariables
     Friend Property TreatmentInsulinRow As Single
 
     Friend Function GetInsulinYValue() As Single
-        Dim maxYScaled As Single = s_listOfSGs.Max(Of Single)(Function(sgR As SgRecord) sgR.sg) + 2
+        Dim maxYScaled As Single = s_listOfSgRecords.Max(Of Single)(Function(sgR As SgRecord) sgR.sg) + 2
         Return If(Single.IsNaN(maxYScaled),
             If(nativeMmolL, 330 / MmolLUnitsDivisor, 330),
             If(nativeMmolL,
-                If(s_listOfSGs.Count = 0 OrElse maxYScaled > (330 / MmolLUnitsDivisor),
+                If(s_listOfSgRecords.Count = 0 OrElse maxYScaled > (330 / MmolLUnitsDivisor),
                     342 / MmolLUnitsDivisor,
                     Math.Max(maxYScaled, 260 / MmolLUnitsDivisor)),
-                If(s_listOfSGs.Count = 0 OrElse maxYScaled > 330, 342, Math.Max(maxYScaled, 260))))
+                If(s_listOfSgRecords.Count = 0 OrElse maxYScaled > 330, 342, Math.Max(maxYScaled, 260))))
     End Function
 
     Friend Function GetTIR() As UInteger

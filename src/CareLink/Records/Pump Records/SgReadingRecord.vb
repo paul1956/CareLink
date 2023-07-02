@@ -5,7 +5,7 @@
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
-Public Class BGReadingRecord
+Public Class SgReadingRecord
 
     <DisplayName(NameOf([dateTime]))>
     <Column(Order:=8, TypeName:="Date")>

@@ -29,7 +29,7 @@ Friend Module UserMessageHandler
                         {"BC_MESSAGE_BASAL_STARTED", "Auto Mode exit(triggeredDateTime). (0) started. Would you Like to review Auto Mode Readiness Screen?:basalName"},
                         {"BC_MESSAGE_CONFIRM_SENSOR_SIGNAL_CALIBRATE", "No calibration occurred(triggeredDateTime). Confirm sensor signal. Calibrate by (secondaryTime)."},
                         {"BC_MESSAGE_CONFIRM_SENSOR_SIGNAL_CHECK_BG", "No calibration occurred(triggeredDateTime). Confirm sensor signal. Check BG again to calibrate sensor."},
-                        {"BC_MESSAGE_CORRECTION_BOLUS_RECOMMENDATION", "Bolus recommended(triggeredDateTime). For (0) (units) entered, a correction bolus is recommended. Select Bolus to program a bolus.:bgValue"},
+                        {"BC_MESSAGE_CORRECTION_BOLUS_RECOMMENDATION", "Bolus recommended(triggeredDateTime). For (0) (units) entered, a correction bolus is recommended. Select Bolus to program a bolus.:bgValue"}, ' DO NOT RENAME
                         {"BC_MESSAGE_DELIVERY_STOPPED_SG_APPROACHILG_LOW_LIMIT_CHECK_BG", "Suspend before low. Delivery stopped. Sensor glucose approaching Low Limit. Check BG."},
                         {"BC_MESSAGE_DELIVERY_STOPPED_SG_X_CHECK_BG", "Suspend on low(triggeredDateTime). Delivery stopped. Sensor glucose (0) (units). Check BG.:sg"},
                         {"BC_MESSAGE_MONITOR_BG", "BG Required(triggeredDateTime). Enter a new BG for AutoMode."},

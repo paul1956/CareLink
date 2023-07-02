@@ -8,21 +8,21 @@ Imports System.Windows.Forms.DataVisualization.Charting
 Friend Module PlotMarkers
 
     <Extension>
-    Private Sub AddBgReadingPoint(markerSeriesPoints As DataPointCollection, markerOADate As OADate, bgValueString As String, bgValue As Single)
-        AddMarkerPoint(markerSeriesPoints, markerOADate, bgValue, Color.DarkOrange)
-        If Not Single.IsNaN(bgValue) Then
-            markerSeriesPoints.Last.Tag = $"Blood Glucose: Not used for calibration: {bgValueString} {BgUnitsNativeString}"
+    Private Sub AddSgReadingPoint(markerSeriesPoints As DataPointCollection, markerOADate As OADate, sgValueString As String, sgValue As Single)
+        AddMarkerPoint(markerSeriesPoints, markerOADate, sgValue, Color.DarkOrange)
+        If Not Single.IsNaN(sgValue) Then
+            markerSeriesPoints.Last.Tag = $"Blood Glucose: Not used for calibration: {sgValueString} {SgUnitsNativeString}"
         End If
     End Sub
 
     <Extension>
-    Private Sub AddCalibrationPoint(markerSeriesPoints As DataPointCollection, markerOADate As OADate, bgValue As Single, entry As Dictionary(Of String, String))
-        AddMarkerPoint(markerSeriesPoints, markerOADate, bgValue, Color.Red)
-        markerSeriesPoints.Last.Tag = $"Blood Glucose: Calibration {If(CBool(entry("calibrationSuccess")), "accepted", "not accepted")}: {entry("value")} {BgUnitsNativeString}"
+    Private Sub AddCalibrationPoint(markerSeriesPoints As DataPointCollection, markerOADate As OADate, sgValue As Single, entry As Dictionary(Of String, String))
+        AddMarkerPoint(markerSeriesPoints, markerOADate, sgValue, Color.Red)
+        markerSeriesPoints.Last.Tag = $"Blood Glucose: Calibration {If(CBool(entry("calibrationSuccess")), "accepted", "not accepted")}: {entry("value")} {SgUnitsNativeString}"
     End Sub
 
-    Private Sub AddMarkerPoint(markerSeriesPoints As DataPointCollection, markerOADate As OADate, bgValue As Single, markerColor As Color)
-        markerSeriesPoints.AddXY(markerOADate, bgValue)
+    Private Sub AddMarkerPoint(markerSeriesPoints As DataPointCollection, markerOADate As OADate, sgValue As Single, markerColor As Color)
+        markerSeriesPoints.AddXY(markerOADate, sgValue)
         markerSeriesPoints.Last.BorderColor = markerColor
         markerSeriesPoints.Last.Color = Color.FromArgb(5, markerColor)
         markerSeriesPoints.Last.MarkerBorderWidth = 3
@@ -33,7 +33,7 @@ Friend Module PlotMarkers
     <Extension>
     Private Sub AdjustXAxisStartTime(ByRef axisX As Axis, lastTimeChangeRecord As TimeChangeRecord)
         Dim latestTime As Date = If(lastTimeChangeRecord.previousDateTime > lastTimeChangeRecord.dateTime, lastTimeChangeRecord.previousDateTime, lastTimeChangeRecord.dateTime)
-        Dim timeOffset As Double = (latestTime - s_listOfSGs(0).datetime).TotalMinutes
+        Dim timeOffset As Double = (latestTime - s_listOfSgRecords(0).datetime).TotalMinutes
         axisX.IntervalOffset = timeOffset
         axisX.IntervalOffsetType = DateTimeIntervalType.Minutes
     End Sub
@@ -65,25 +65,25 @@ Friend Module PlotMarkers
             Try
                 Dim markerDateTime As Date = markerWithIndex.Value.GetMarkerDateTime
                 Dim markerOADateTime As New OADate(markerDateTime)
-                Dim bgValueString As String = ""
-                Dim bgValue As Single
+                Dim sgValueString As String = ""
+                Dim sgValue As Single
                 Dim entry As Dictionary(Of String, String) = markerWithIndex.Value
 
-                If entry.TryGetValue("value", bgValueString) Then
-                    bgValueString.TryParseSingle(bgValue)
-                    If Not Single.IsNaN(bgValue) Then
-                        bgValue = Math.Min(GetYMaxValue(nativeMmolL), bgValue)
-                        bgValue = Math.Max(GetYMinValue(nativeMmolL), bgValue)
+                If entry.TryGetValue("value", sgValueString) Then
+                    sgValueString.TryParseSingle(sgValue)
+                    If Not Single.IsNaN(sgValue) Then
+                        sgValue = Math.Min(GetYMaxValue(nativeMmolL), sgValue)
+                        sgValue = Math.Max(GetYMinValue(nativeMmolL), sgValue)
                     End If
                 End If
                 Dim markerSeriesPoints As DataPointCollection = pageChart.Series(MarkerSeriesName).Points
                 Select Case entry("type")
                     Case "BG_READING"
-                        If Not String.IsNullOrWhiteSpace(bgValueString) Then
-                            markerSeriesPoints.AddBgReadingPoint(markerOADateTime, bgValueString, bgValue)
+                        If Not String.IsNullOrWhiteSpace(sgValueString) Then
+                            markerSeriesPoints.AddSgReadingPoint(markerOADateTime, sgValueString, sgValue)
                         End If
                     Case "CALIBRATION"
-                        markerSeriesPoints.AddCalibrationPoint(markerOADateTime, bgValue, entry)
+                        markerSeriesPoints.AddCalibrationPoint(markerOADateTime, sgValue, entry)
                     Case "AUTO_BASAL_DELIVERY"
                         Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
                         With pageChart.Series(BasalSeriesNameName)
@@ -184,12 +184,12 @@ Friend Module PlotMarkers
         For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             Try
                 Dim markerOADateTime As New OADate(markerWithIndex.Value.GetMarkerDateTime())
-                Dim bgValue As Single
-                Dim bgValueString As String = ""
+                Dim sgValue As Single
+                Dim sgValueString As String = ""
                 Dim entry As Dictionary(Of String, String) = markerWithIndex.Value
 
-                If entry.TryGetValue("value", bgValueString) Then
-                    bgValueString.TryParseSingle(bgValue)
+                If entry.TryGetValue("value", sgValueString) Then
+                    sgValueString.TryParseSingle(sgValue)
                 End If
                 Dim markerSeriesPoints As DataPointCollection = treatmentChart.Series(MarkerSeriesName).Points
                 Select Case entry("type")

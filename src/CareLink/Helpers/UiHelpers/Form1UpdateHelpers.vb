@@ -82,7 +82,7 @@ Friend Module Form1UpdateHelpers
 #Region "Update all Markers"
 
         If recentData.TryGetValue(ItemIndexes.sgs.ToString, markerRowString) Then
-            s_listOfSGs = LoadList(markerRowString).ToSgList()
+            s_listOfSgRecords = LoadList(markerRowString).ToSgList()
         End If
 
         If recentData.TryGetValue(ItemIndexes.basal.ToString, markerRowString) Then
@@ -225,8 +225,8 @@ Friend Module Form1UpdateHelpers
 
                 Case ItemIndexes.sgs
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-                    If s_listOfSGs.Count > 2 Then
-                        s_lastBGValue = s_listOfSGs.Item(s_listOfSGs.Count - 2).sg
+                    If s_listOfSgRecords.Count > 2 Then
+                        s_lastSgValue = s_listOfSgRecords.Item(s_listOfSgRecords.Count - 2).sg
                     End If
 
                 Case ItemIndexes.limits
@@ -350,10 +350,10 @@ Friend Module Form1UpdateHelpers
                               AddressOf AutoModeStatusRecordHelpers.AttachHandlers,
                               ItemIndexes.markers,
                               False)
-            .TableLayoutPanelBgReadings.DisplayDataTableInDGV(
-                              ClassCollectionToDataTable(s_listOfBgReadingMarkers),
-                              NameOf(BGReadingRecord),
-                              AddressOf BGReadingRecordHelpers.AttachHandlers,
+            .TableLayoutPanelSgReadings.DisplayDataTableInDGV(
+                              ClassCollectionToDataTable(s_listOfSgReadingMarkers),
+                              NameOf(SgReadingRecord),
+                              AddressOf SgReadingRecordHelpers.AttachHandlers,
                               ItemIndexes.markers,
                               False)
             .TableLayoutPanelInsulin.DisplayDataTableInDGV(

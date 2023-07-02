@@ -56,7 +56,7 @@ Public Class ExceptionHandlerForm
     End Sub
 
     Private Sub ExceptionHandlerForm_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
-        My.Forms.BGMiniWindow.Hide()
+        My.Forms.SgMiniWindow.Hide()
         My.Forms.Form1.Show()
         Me.TopMost = True
     End Sub

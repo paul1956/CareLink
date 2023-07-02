@@ -18,7 +18,7 @@ Public Class Form1
 
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
-    Private ReadOnly _sgMiniDisplay As New BGMiniWindow(Me)
+    Private ReadOnly _sgMiniDisplay As New SgMiniWindow(Me)
     Private ReadOnly _updatingLock As New Object
     Private _activeInsulinChartAbsoluteRectangle As RectangleF = RectangleF.Empty
     Private _formScale As New SizeF(1.0F, 1.0F)
@@ -243,7 +243,7 @@ Public Class Form1
                 Case SgSeriesName
                     Me.CursorMessage1Label.Text = "Blood Glucose"
                     Me.CursorMessage1Label.Visible = True
-                    Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(3)} {BgUnitsNativeString}"
+                    Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(3)} {SgUnitsNativeString}"
                     Me.CursorMessage2Label.Visible = True
                     Me.CursorMessage3Label.Text = If(nativeMmolL, $"{CInt(currentDataPoint.YValues(0) * MmolLUnitsDivisor)} mg/dL", $"{(currentDataPoint.YValues(0) / MmolLUnitsDivisor).RoundToSingle(3)} mmol/L")
                     Me.CursorMessage3Label.Visible = True
@@ -771,7 +771,7 @@ Public Class Form1
             Case NameOf(SgRecord.datetime)
                 dgv.dateTimeCellFormatting(e, NameOf(SgRecord.datetime))
             Case NameOf(SgRecord.sg), NameOf(SgRecord.sgMmolL), NameOf(SgRecord.sgMmDl)
-                dgv.bgValueCellFormatting(e, NameOf(SgRecord.sg))
+                dgv.SgValueCellFormatting(e, NameOf(SgRecord.sg))
         End Select
     End Sub
 
@@ -1039,7 +1039,7 @@ Public Class Form1
     Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         Me.Fix(Me)
 
-        Me.CurrentBGLabel.Parent = Me.CalibrationShieldPictureBox
+        Me.CurrentSgLabel.Parent = Me.CalibrationShieldPictureBox
         Me.ShieldUnitsLabel.Parent = Me.CalibrationShieldPictureBox
         Me.ShieldUnitsLabel.BackColor = Color.Transparent
         Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLeftPictureBox
@@ -1408,7 +1408,6 @@ Public Class Form1
                     TableLayoutPanelAutoModeStatusTop.ButtonClick,
                     TableLayoutPanelBannerStateTop.ButtonClick,
                     TableLayoutPanelBasalTop.ButtonClick,
-                    TableLayoutPanelBgReadingsTop.ButtonClick,
                     TableLayoutPanelCalibrationTop.ButtonClick,
                     TableLayoutPanelInsulinTop.ButtonClick,
                     TableLayoutPanelLastAlarmTop.ButtonClick,
@@ -1417,6 +1416,7 @@ Public Class Form1
                     TableLayoutPanelLowGlucoseSuspendedTop.ButtonClick,
                     TableLayoutPanelMealTop.ButtonClick,
                     TableLayoutPanelNotificationHistoryTop.ButtonClick,
+                    TableLayoutPanelSgReadingsTop.ButtonClick,
                     TableLayoutPanelSgsTop.ButtonClick,
                     TableLayoutPanelTherapyAlgorithmTop.ButtonClick,
                     TableLayoutPanelTimeChangeTop.ButtonClick
@@ -1469,17 +1469,17 @@ Public Class Form1
         If RecentData Is Nothing OrElse RecentData.Count = 0 Then
             ReportLoginStatus(Me.LoginStatus, True, Me.Client.GetLastErrorMessage)
 
-            _sgMiniDisplay.SetCurrentBGString("---")
+            _sgMiniDisplay.SetCurrentSgString("---")
         Else
             If RecentData?.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
                     Dim epochDateTime As Date = lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime
                     If epochDateTime + s_5MinuteSpan < Now() Then
                         SetLastUpdateTime(Nothing, "", True, epochDateTime.IsDaylightSavingTime)
-                        _sgMiniDisplay.SetCurrentBGString("---")
+                        _sgMiniDisplay.SetCurrentSgString("---")
                     Else
                         SetLastUpdateTime(Nothing, "", False, epochDateTime.IsDaylightSavingTime)
-                        _sgMiniDisplay.SetCurrentBGString(s_lastSgRecord?.sg.ToString)
+                        _sgMiniDisplay.SetCurrentSgString(s_lastSgRecord?.ToString)
                     End If
                     RecentData = Nothing
                 Else
@@ -1799,66 +1799,65 @@ Public Class Form1
         Me.MenuOptionsEditPumpSettings.Enabled = Not String.IsNullOrWhiteSpace(CurrentUser?.UserName)
     End Sub
 
-    Private Sub UpdateNotifyIcon()
+    Private Sub UpdateNotifyIcon(lastSgString As String)
         Try
             Dim sg As Single = s_lastSgRecord.sg
-            Dim str As String = s_lastSgRecord.sg.ToString
             Dim fontToUse As New Font("Trebuchet MS", 10, FontStyle.Regular, GraphicsUnit.Pixel)
             Dim color As Color = Color.White
-            Dim bgColor As Color
+            Dim backColor As Color
             Dim notStr As New StringBuilder
 
             Using bitmapText As New Bitmap(16, 16)
                 Using g As Graphics = Graphics.FromImage(bitmapText)
                     Select Case sg
                         Case <= TirLowLimit(nativeMmolL)
-                            bgColor = Color.Yellow
+                            backColor = Color.Yellow
                             If _showBalloonTip Then
-                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}™ Alert", $"SG below {TirLowLimit(nativeMmolL)} {BgUnitsNativeString}", Me.ToolTip1.ToolTipIcon)
+                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}™ Alert", $"SG below {TirLowLimit(nativeMmolL)} {SgUnitsNativeString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
                         Case <= TirHighLimit(nativeMmolL)
-                            bgColor = Color.Green
+                            backColor = Color.Green
                             _showBalloonTip = True
                         Case Else
-                            bgColor = Color.Red
+                            backColor = Color.Red
                             If _showBalloonTip Then
-                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}™ Alert", $"SG above {TirHighLimit(nativeMmolL)} {BgUnitsNativeString}", Me.ToolTip1.ToolTipIcon)
+                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}™ Alert", $"SG above {TirHighLimit(nativeMmolL)} {SgUnitsNativeString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
                     End Select
                     Dim brushToUse As New SolidBrush(color)
-                    g.Clear(bgColor)
+                    g.Clear(backColor)
                     g.TextRenderingHint = Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit
                     If Math.Floor(Math.Log10(sg) + 1) = 3 Then
-                        g.DrawString(str, fontToUse, brushToUse, -2, 0)
+                        g.DrawString(lastSgString, fontToUse, brushToUse, -2, 0)
                     Else
-                        g.DrawString(str, fontToUse, brushToUse, 1.5, 0)
+                        g.DrawString(lastSgString, fontToUse, brushToUse, 1.5, 0)
                     End If
                     Dim hIcon As IntPtr = bitmapText.GetHicon()
                     Me.NotifyIcon1.Icon = Icon.FromHandle(hIcon)
                     notStr.Append(Date.Now().ToShortDateTimeString.Replace($"{CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator}{Now.Year}", ""))
                     notStr.Append(vbCrLf)
-                    notStr.Append($"Last SG {str} {BgUnitsNativeString}")
-                    If s_lastBGValue = 0 Then
+                    notStr.Append($"Last SG {lastSgString} {SgUnitsNativeString}")
+                    If s_lastSgValue = 0 Then
                         Me.LabelTrendValue.Text = ""
                     Else
                         notStr.Append(vbCrLf)
-                        Dim diffSg As Double = sg - s_lastBGValue
+                        Dim diffSg As Double = sg - s_lastSgValue
                         notStr.Append("SG Trend ")
                         If Math.Abs(diffSg) < Single.Epsilon Then
-                            If (Now - s_lastBGTime) < s_5MinuteSpan Then
-                                diffSg = s_lastBGDiff
+                            If (Now - s_lastSgTime) < s_5MinuteSpan Then
+                                diffSg = s_lastSgDiff
                             Else
-                                s_lastBGDiff = diffSg
-                                s_lastBGTime = Now
+                                s_lastSgDiff = diffSg
+                                s_lastSgTime = Now
                             End If
                         Else
-                            s_lastBGTime = Now
-                            s_lastBGDiff = diffSg
+                            s_lastSgTime = Now
+                            s_lastSgDiff = diffSg
                         End If
                         Me.LabelTrendValue.Text = diffSg.ToString(If(nativeMmolL, "+ 0.00;-#.00", "+0;-#"), CultureInfo.InvariantCulture)
-                        Me.LabelTrendValue.ForeColor = bgColor
+                        Me.LabelTrendValue.ForeColor = backColor
                         notStr.Append(diffSg.ToString(If(nativeMmolL, "+ 0.00;-#.00", "+0;-#"), CultureInfo.InvariantCulture))
                     End If
                     notStr.Append(vbCrLf)
@@ -1866,7 +1865,7 @@ Public Class Form1
                     notStr.Append($"{s_activeInsulin.amount:N3}")
                     notStr.Append("U"c)
                     Me.NotifyIcon1.Text = notStr.ToString
-                    s_lastBGValue = sg
+                    s_lastSgValue = sg
                 End Using
             End Using
         Catch ex As Exception
@@ -1987,7 +1986,7 @@ Public Class Form1
 
                 For i As Integer = 0 To 287
                     Dim initialBolus As Single = 0
-                    Dim firstNotSkippedOaTime As New OADate((s_listOfSGs(0).datetime + (s_5MinuteSpan * i)).RoundTimeDown(RoundTo.Minute))
+                    Dim firstNotSkippedOaTime As New OADate((s_listOfSgRecords(0).datetime + (s_5MinuteSpan * i)).RoundTimeDown(RoundTo.Minute))
                     While currentMarker < timeOrderedMarkers.Count AndAlso timeOrderedMarkers.Keys(currentMarker) <= firstNotSkippedOaTime
                         initialBolus += timeOrderedMarkers.Values(currentMarker)
                         currentMarker += 1
@@ -2059,18 +2058,19 @@ Public Class Form1
         Try
             Me.LastSGTimeLabel.Text = s_lastSgRecord.datetime.ToShortTimeString
             Me.ShieldUnitsLabel.BackColor = Color.Transparent
-            Me.ShieldUnitsLabel.Text = BgUnitsNativeString
+            Me.ShieldUnitsLabel.Text = SgUnitsNativeString
             If Not Single.IsNaN(s_lastSgRecord.sg) Then
-                Me.CurrentBGLabel.Visible = True
-                Me.CurrentBGLabel.Text = s_lastSgRecord.sg.ToString
-                Me.UpdateNotifyIcon()
-                _sgMiniDisplay.SetCurrentBGString(s_lastSgRecord.sg.ToString)
+                Me.CurrentSgLabel.Visible = True
+                Dim sgString As String = s_lastSgRecord.ToString
+                Me.CurrentSgLabel.Text = sgString
+                Me.UpdateNotifyIcon(sgString)
+                _sgMiniDisplay.SetCurrentSgString(sgString)
                 Me.SensorMessage.Visible = False
                 Me.CalibrationShieldPictureBox.Image = My.Resources.Shield
                 Me.ShieldUnitsLabel.Visible = True
             Else
-                _sgMiniDisplay.SetCurrentBGString("---")
-                Me.CurrentBGLabel.Visible = False
+                _sgMiniDisplay.SetCurrentSgString("---")
+                Me.CurrentSgLabel.Visible = False
                 Me.CalibrationShieldPictureBox.Image = My.Resources.Shield_Disabled
                 Me.SensorMessage.Visible = True
                 Me.SensorMessage.BackColor = Color.Transparent
@@ -2093,7 +2093,7 @@ Public Class Form1
                 Application.DoEvents()
             End If
             If _sgMiniDisplay.Visible Then
-                _sgMiniDisplay.BGTextBox.SelectionLength = 0
+                _sgMiniDisplay.SgTextBox.SelectionLength = 0
             End If
         Catch ex As Exception
             Stop
@@ -2291,11 +2291,11 @@ Public Class Form1
         With Me.TimeInRangeChart
             With .Series(NameOf(TimeInRangeSeries)).Points
                 .Clear()
-                .AddXY($"{s_belowHypoLimit}% Below {TirLowLimit(nativeMmolL)} {BgUnitsNativeString}", s_belowHypoLimit / 100)
+                .AddXY($"{s_belowHypoLimit}% Below {TirLowLimit(nativeMmolL)} {SgUnitsNativeString}", s_belowHypoLimit / 100)
                 .Last().Color = Color.Red
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
-                .AddXY($"{s_aboveHyperLimit}% Above {TirHighLimit(nativeMmolL)} {BgUnitsNativeString}", s_aboveHyperLimit / 100)
+                .AddXY($"{s_aboveHyperLimit}% Above {TirHighLimit(nativeMmolL)} {SgUnitsNativeString}", s_aboveHyperLimit / 100)
                 .Last().Color = Color.Yellow
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
@@ -2309,13 +2309,13 @@ Public Class Form1
         End With
 
         Me.AboveHighLimitValueLabel.Text = $"{s_aboveHyperLimit} %"
-        Me.AboveHighLimitMessageLabel.Text = $"Above {TirHighLimit(nativeMmolL)} {BgUnitsNativeString}"
+        Me.AboveHighLimitMessageLabel.Text = $"Above {TirHighLimit(nativeMmolL)} {SgUnitsNativeString}"
         Me.TimeInRangeValueLabel.Text = $"{GetTIR()} %"
         Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
-        Me.BelowLowLimitMessageLabel.Text = $"Below {TirLowLimit(nativeMmolL)} {BgUnitsNativeString}"
+        Me.BelowLowLimitMessageLabel.Text = $"Below {TirLowLimit(nativeMmolL)} {SgUnitsNativeString}"
         Dim averageSgStr As String = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.averageSG))
         Me.AverageSGValueLabel.Text = If(nativeMmolL, averageSgStr.TruncateSingleString(2), averageSgStr)
-        Me.AverageSGMessageLabel.Text = $"Average SG in {BgUnitsNativeString}"
+        Me.AverageSGMessageLabel.Text = $"Average SG in {SgUnitsNativeString}"
 
         ' Calculate Time in AutoMode
         If s_listOfAutoModeStatusMarkers.Count = 0 Then
@@ -2362,7 +2362,7 @@ Public Class Form1
         Dim lowCount As Integer = 0
         Dim lowDeviations As Double = 0
         Dim elements As Integer = 0
-        For Each sg As SgRecord In s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg))
+        For Each sg As SgRecord In s_listOfSgRecords.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg))
             elements += 1
             If sg.sgMmDl < 70 Then
                 lowCount += 1
@@ -2494,7 +2494,7 @@ Public Class Form1
         Me.ModelLabel.Text = modelNumber
         Me.PumpNameLabel.Text = GetPumpName(modelNumber)
         Me.SerialNumberLabel.Text = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.medicalDeviceSerialNumber))
-        Me.ReadingsLabel.Text = $"{s_listOfSGs.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288 SG Readings"
+        Me.ReadingsLabel.Text = $"{s_listOfSgRecords.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288 SG Readings"
 
         Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
                               ClassCollectionToDataTable({s_lastSgRecord}.ToList),
@@ -2519,7 +2519,7 @@ Public Class Form1
 
         Me.TableLayoutPanelSgs.DisplayDataTableInDGV(
                               Me.DgvSGs,
-                              ClassCollectionToDataTable(s_listOfSGs.OrderByDescending(Function(x) x.RecordNumber).ToList()),
+                              ClassCollectionToDataTable(s_listOfSgRecords.OrderByDescending(Function(x) x.RecordNumber).ToList()),
                               ItemIndexes.sgs)
         Me.DgvSGs.Columns(0).HeaderCell.SortGlyphDirection = SortOrder.Descending
 

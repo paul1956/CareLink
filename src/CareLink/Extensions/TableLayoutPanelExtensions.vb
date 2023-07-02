@@ -9,7 +9,7 @@ Friend Module TableLayoutPanelExtensions
     Private ReadOnly tablesSupportingExportToExcel As New List(Of String) From {
                 NameOf(Form1.TableLayoutPanelAutoBasalDelivery),
                 NameOf(Form1.TableLayoutPanelAutoModeStatus),
-                NameOf(Form1.TableLayoutPanelBgReadings),
+                NameOf(Form1.TableLayoutPanelSgReadings),
                 NameOf(Form1.TableLayoutPanelBasal),
                 NameOf(Form1.TableLayoutPanelCalibration),
                 NameOf(Form1.TableLayoutPanelInsulin),
@@ -22,7 +22,7 @@ Friend Module TableLayoutPanelExtensions
     Private ReadOnly tablesSupportingCopyToClipboard As New List(Of String) From {
                NameOf(Form1.TableLayoutPanelActiveInsulin),
                NameOf(Form1.TableLayoutPanelAutoBasalDelivery),
-               NameOf(Form1.TableLayoutPanelBgReadings),
+               NameOf(Form1.TableLayoutPanelSgReadings),
                NameOf(Form1.TableLayoutPanelBannerState),
                NameOf(Form1.TableLayoutPanelBasal),
                NameOf(Form1.TableLayoutPanelCalibration),

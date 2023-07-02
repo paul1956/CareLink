@@ -69,7 +69,7 @@ Partial Class Form1
         TempTargetLabel = New Label()
         ShieldUnitsLabel = New Label()
         LastSGTimeLabel = New Label()
-        CurrentBGLabel = New Label()
+        CurrentSgLabel = New Label()
         SensorMessage = New Label()
         CalibrationShieldPictureBox = New PictureBox()
         CareLinkUserDataRecordBindingSource = New BindingSource(components)
@@ -190,9 +190,9 @@ Partial Class Form1
         TabPageAutoModeStatus = New TabPage()
         TableLayoutPanelAutoModeStatus = New TableLayoutPanel()
         Me.TableLayoutPanelAutoModeStatusTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
-        TabPageBgReadings = New TabPage()
-        TableLayoutPanelBgReadings = New TableLayoutPanel()
-        Me.TableLayoutPanelBgReadingsTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
+        TabPageSgReadings = New TabPage()
+        TableLayoutPanelSgReadings = New TableLayoutPanel()
+        Me.TableLayoutPanelSgReadingsTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
         TabPageCalibration = New TabPage()
         TableLayoutPanelCalibration = New TableLayoutPanel()
         Me.TableLayoutPanelCalibrationTop = New TableLayputPanelTop.TableLayoutPanelTopEx()
@@ -288,8 +288,8 @@ Partial Class Form1
         TableLayoutPanelAutoBasalDelivery.SuspendLayout()
         TabPageAutoModeStatus.SuspendLayout()
         TableLayoutPanelAutoModeStatus.SuspendLayout()
-        TabPageBgReadings.SuspendLayout()
-        TableLayoutPanelBgReadings.SuspendLayout()
+        TabPageSgReadings.SuspendLayout()
+        TableLayoutPanelSgReadings.SuspendLayout()
         TabPageCalibration.SuspendLayout()
         TableLayoutPanelCalibration.SuspendLayout()
         TabPageLowGlucoseSuspended.SuspendLayout()
@@ -664,7 +664,7 @@ Partial Class Form1
         CalibrationShieldPanel.Controls.Add(TempTargetLabel)
         CalibrationShieldPanel.Controls.Add(ShieldUnitsLabel)
         CalibrationShieldPanel.Controls.Add(LastSGTimeLabel)
-        CalibrationShieldPanel.Controls.Add(CurrentBGLabel)
+        CalibrationShieldPanel.Controls.Add(CurrentSgLabel)
         CalibrationShieldPanel.Controls.Add(SensorMessage)
         CalibrationShieldPanel.Controls.Add(CalibrationShieldPictureBox)
         CalibrationShieldPanel.Dock = DockStyle.Left
@@ -712,18 +712,18 @@ Partial Class Form1
         LastSGTimeLabel.Text = "Time"
         LastSGTimeLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
-        ' CurrentBGLabel
+        ' CurrentSgLabel
         ' 
-        CurrentBGLabel.BackColor = Color.Transparent
-        CurrentBGLabel.Font = New Font("Segoe UI", 18.0F, FontStyle.Bold, GraphicsUnit.Point)
-        CurrentBGLabel.ForeColor = Color.White
-        CurrentBGLabel.Location = New Point(22, 35)
-        CurrentBGLabel.Name = "CurrentBGLabel"
-        CurrentBGLabel.Size = New Size(72, 32)
-        CurrentBGLabel.TabIndex = 9
-        CurrentBGLabel.Text = "---"
-        CurrentBGLabel.TextAlign = ContentAlignment.MiddleCenter
-        CurrentBGLabel.Visible = False
+        CurrentSgLabel.BackColor = Color.Transparent
+        CurrentSgLabel.Font = New Font("Segoe UI", 18.0F, FontStyle.Bold, GraphicsUnit.Point)
+        CurrentSgLabel.ForeColor = Color.White
+        CurrentSgLabel.Location = New Point(22, 35)
+        CurrentSgLabel.Name = "CurrentSgLabel"
+        CurrentSgLabel.Size = New Size(72, 32)
+        CurrentSgLabel.TabIndex = 9
+        CurrentSgLabel.Text = "---"
+        CurrentSgLabel.TextAlign = ContentAlignment.MiddleCenter
+        CurrentSgLabel.Visible = False
         ' 
         ' SensorMessage
         ' 
@@ -2171,7 +2171,7 @@ Partial Class Form1
         TabControlPage2.Appearance = TabAppearance.Buttons
         TabControlPage2.Controls.Add(TabPageAutoBasalDelivery)
         TabControlPage2.Controls.Add(TabPageAutoModeStatus)
-        TabControlPage2.Controls.Add(TabPageBgReadings)
+        TabControlPage2.Controls.Add(TabPageSgReadings)
         TabControlPage2.Controls.Add(TabPageCalibration)
         TabControlPage2.Controls.Add(TabPageLowGlucoseSuspended)
         TabControlPage2.Controls.Add(TabPageTimeChange)
@@ -2285,52 +2285,52 @@ Partial Class Form1
         Me.TableLayoutPanelAutoModeStatusTop.Size = New Size(1358, 37)
         Me.TableLayoutPanelAutoModeStatusTop.TabIndex = 1
         ' 
-        ' TabPageBgReadings
+        ' TabPageSgReadings
         ' 
-        TabPageBgReadings.Controls.Add(TableLayoutPanelBgReadings)
-        TabPageBgReadings.Location = New Point(4, 27)
-        TabPageBgReadings.Name = "TabPageBgReadings"
-        TabPageBgReadings.Padding = New Padding(3)
-        TabPageBgReadings.Size = New Size(1376, 637)
-        TabPageBgReadings.TabIndex = 2
-        TabPageBgReadings.Text = "BG Readings"
-        TabPageBgReadings.UseVisualStyleBackColor = True
+        TabPageSgReadings.Controls.Add(TableLayoutPanelSgReadings)
+        TabPageSgReadings.Location = New Point(4, 27)
+        TabPageSgReadings.Name = "TabPageSgReadings"
+        TabPageSgReadings.Padding = New Padding(3)
+        TabPageSgReadings.Size = New Size(1376, 637)
+        TabPageSgReadings.TabIndex = 2
+        TabPageSgReadings.Text = "Sg Readings"
+        TabPageSgReadings.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelBgReadings
+        ' TableLayoutPanelSgReadings
         ' 
-        TableLayoutPanelBgReadings.AutoScroll = True
-        TableLayoutPanelBgReadings.AutoSize = True
-        TableLayoutPanelBgReadings.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelBgReadings.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelBgReadings.ColumnCount = 1
-        TableLayoutPanelBgReadings.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBgReadings.Controls.Add(Me.TableLayoutPanelBgReadingsTop, 0, 0)
-        TableLayoutPanelBgReadings.Dock = DockStyle.Fill
-        TableLayoutPanelBgReadings.Location = New Point(3, 3)
-        TableLayoutPanelBgReadings.Name = "TableLayoutPanelBgReadings"
-        TableLayoutPanelBgReadings.RowCount = 2
-        TableLayoutPanelBgReadings.RowStyles.Add(New RowStyle())
-        TableLayoutPanelBgReadings.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBgReadings.Size = New Size(1370, 631)
-        TableLayoutPanelBgReadings.TabIndex = 1
+        TableLayoutPanelSgReadings.AutoScroll = True
+        TableLayoutPanelSgReadings.AutoSize = True
+        TableLayoutPanelSgReadings.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelSgReadings.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TableLayoutPanelSgReadings.ColumnCount = 1
+        TableLayoutPanelSgReadings.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelSgReadings.Controls.Add(Me.TableLayoutPanelSgReadingsTop, 0, 0)
+        TableLayoutPanelSgReadings.Dock = DockStyle.Fill
+        TableLayoutPanelSgReadings.Location = New Point(3, 3)
+        TableLayoutPanelSgReadings.Name = "TableLayoutPanelSgReadings"
+        TableLayoutPanelSgReadings.RowCount = 2
+        TableLayoutPanelSgReadings.RowStyles.Add(New RowStyle())
+        TableLayoutPanelSgReadings.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelSgReadings.Size = New Size(1370, 631)
+        TableLayoutPanelSgReadings.TabIndex = 1
         ' 
-        ' TableLayoutPanelBgReadingsTop
+        ' TableLayoutPanelSgReadingsTop
         ' 
-        Me.TableLayoutPanelBgReadingsTop.AutoSize = True
-        Me.TableLayoutPanelBgReadingsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        Me.TableLayoutPanelBgReadingsTop.ButtonText = "Return To 'Summary Data' Tab"
-        Me.TableLayoutPanelBgReadingsTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        Me.TableLayoutPanelBgReadingsTop.ColumnCount = 2
-        Me.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
-        Me.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        Me.TableLayoutPanelBgReadingsTop.Dock = DockStyle.Fill
-        Me.TableLayoutPanelBgReadingsTop.LabelText = "BG Readings"
-        Me.TableLayoutPanelBgReadingsTop.Location = New Point(6, 6)
-        Me.TableLayoutPanelBgReadingsTop.Name = "TableLayoutPanelBgReadingsTop"
-        Me.TableLayoutPanelBgReadingsTop.RowCount = 1
-        Me.TableLayoutPanelBgReadingsTop.RowStyles.Add(New RowStyle())
-        Me.TableLayoutPanelBgReadingsTop.Size = New Size(1358, 37)
-        Me.TableLayoutPanelBgReadingsTop.TabIndex = 1
+        Me.TableLayoutPanelSgReadingsTop.AutoSize = True
+        Me.TableLayoutPanelSgReadingsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        Me.TableLayoutPanelSgReadingsTop.ButtonText = "Return To 'Summary Data' Tab"
+        Me.TableLayoutPanelSgReadingsTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        Me.TableLayoutPanelSgReadingsTop.ColumnCount = 2
+        Me.TableLayoutPanelSgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        Me.TableLayoutPanelSgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        Me.TableLayoutPanelSgReadingsTop.Dock = DockStyle.Fill
+        Me.TableLayoutPanelSgReadingsTop.LabelText = "Sg Readings"
+        Me.TableLayoutPanelSgReadingsTop.Location = New Point(6, 6)
+        Me.TableLayoutPanelSgReadingsTop.Name = "TableLayoutPanelSgReadingsTop"
+        Me.TableLayoutPanelSgReadingsTop.RowCount = 1
+        Me.TableLayoutPanelSgReadingsTop.RowStyles.Add(New RowStyle())
+        Me.TableLayoutPanelSgReadingsTop.Size = New Size(1358, 37)
+        Me.TableLayoutPanelSgReadingsTop.TabIndex = 1
         ' 
         ' TabPageCalibration
         ' 
@@ -2787,10 +2787,10 @@ Partial Class Form1
         TabPageAutoModeStatus.PerformLayout()
         TableLayoutPanelAutoModeStatus.ResumeLayout(False)
         TableLayoutPanelAutoModeStatus.PerformLayout()
-        TabPageBgReadings.ResumeLayout(False)
-        TabPageBgReadings.PerformLayout()
-        TableLayoutPanelBgReadings.ResumeLayout(False)
-        TableLayoutPanelBgReadings.PerformLayout()
+        TabPageSgReadings.ResumeLayout(False)
+        TabPageSgReadings.PerformLayout()
+        TableLayoutPanelSgReadings.ResumeLayout(False)
+        TableLayoutPanelSgReadings.PerformLayout()
         TabPageCalibration.ResumeLayout(False)
         TabPageCalibration.PerformLayout()
         TableLayoutPanelCalibration.ResumeLayout(False)
@@ -2834,7 +2834,7 @@ Partial Class Form1
     Friend WithEvents CalibrationShieldPictureBox As PictureBox
     Friend WithEvents CareLinkUserDataRecordBindingSource As BindingSource
     Friend WithEvents CountryDataPg2TableLayoutPanel As TableLayoutPanel
-    Friend WithEvents CurrentBGLabel As Label
+    Friend WithEvents CurrentSgLabel As Label
     Friend WithEvents CursorMessage1Label As Label
     Friend WithEvents CursorMessage2Label As Label
     Friend WithEvents CursorMessage3Label As Label
@@ -2949,8 +2949,6 @@ Partial Class Form1
     Friend WithEvents TableLayoutPanelBannerStateTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelBasal As TableLayoutPanel
     Friend WithEvents TableLayoutPanelBasalTop As TableLayputPanelTop.TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelBgReadings As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelBgReadingsTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelCalibration As TableLayoutPanel
     Friend WithEvents TableLayoutPanelCalibrationTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelInsulin As TableLayoutPanel
@@ -2967,6 +2965,8 @@ Partial Class Form1
     Friend WithEvents TableLayoutPanelMealTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelNotificationHistory As TableLayoutPanel
     Friend WithEvents TableLayoutPanelNotificationHistoryTop As TableLayputPanelTop.TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelSgReadings As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelSgReadingsTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelSgs As TableLayoutPanel
     Friend WithEvents TableLayoutPanelSgsTop As TableLayputPanelTop.TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelTherapyAlgorithm As TableLayoutPanel
@@ -2991,7 +2991,7 @@ Partial Class Form1
     Friend WithEvents TabPageAutoBasalDelivery As TabPage
     Friend WithEvents TabPageAutoModeStatus As TabPage
     Friend WithEvents TabPageBackToHomePage As TabPage
-    Friend WithEvents TabPageBgReadings As TabPage
+    Friend WithEvents TabPageSgReadings As TabPage
     Friend WithEvents TabPageCalibration As TabPage
     Friend WithEvents TabPageCountryDataPg1 As TabPage
     Friend WithEvents TabPageCountryDataPg2 As TabPage

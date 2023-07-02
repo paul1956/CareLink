@@ -2,20 +2,20 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Friend Module BGReadingRecordHelpers
+Friend Module SgReadingRecordHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
-             NameOf(BGReadingRecord.kind),
-             NameOf(BGReadingRecord.relativeOffset),
-             NameOf(BGReadingRecord.version)
+             NameOf(SgReadingRecord.kind),
+             NameOf(SgReadingRecord.relativeOffset),
+             NameOf(SgReadingRecord.version)
         }
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.dateTimeCellFormatting(e, NameOf(BGReadingRecord.dateTime))
-        dgv.bgValueCellFormatting(e, NameOf(BGReadingRecord.value))
+        dgv.dateTimeCellFormatting(e, NameOf(SgReadingRecord.dateTime))
+        dgv.SgValueCellFormatting(e, NameOf(SgReadingRecord.value))
 
     End Sub
 
@@ -38,7 +38,7 @@ Friend Module BGReadingRecordHelpers
     End Sub
 
     Private Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToColumnAlignment(Of BGReadingRecord)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of SgReadingRecord)(s_alignmentTable, columnName)
     End Function
 
     Private Function HideColumn(columnName As String) As Boolean

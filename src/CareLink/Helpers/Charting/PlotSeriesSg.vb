@@ -9,12 +9,12 @@ Friend Module PlotSeriesSg
 
     <Extension>
     Friend Sub PlotSgSeries(chart As Chart, HomePageMealRow As Double)
-        For Each sgListIndex As IndexClass(Of SgRecord) In s_listOfSGs.WithIndex()
+        For Each sgListIndex As IndexClass(Of SgRecord) In s_listOfSgRecords.WithIndex()
             Try
                 With chart.Series(SgSeriesName).Points
                     Dim sgOADateTime As OADate = sgListIndex.Value.OaDateTime()
-                    Dim bgValue As Single = sgListIndex.Value.sg
-                    If Single.IsNaN(bgValue) OrElse Math.Abs(bgValue - 0) < Single.Epsilon Then
+                    Dim sgValue As Single = sgListIndex.Value.sg
+                    If Single.IsNaN(sgValue) OrElse Math.Abs(sgValue) < Single.Epsilon Then
                         .AddXY(sgOADateTime, HomePageMealRow)
                         .Last().Color = Color.Transparent
                         .Last().IsEmpty = True
@@ -24,10 +24,10 @@ Friend Module PlotSeriesSg
                             .Last().Color = Color.Transparent
                             .Last().IsEmpty = True
                         End If
-                        .AddXY(sgOADateTime, bgValue)
-                        If bgValue > TirHighLimit(nativeMmolL) Then
+                        .AddXY(sgOADateTime, sgValue)
+                        If sgValue > TirHighLimit(nativeMmolL) Then
                             .Last.Color = Color.Yellow
-                        ElseIf bgValue < TirLowLimit(nativeMmolL) Then
+                        ElseIf sgValue < TirLowLimit(nativeMmolL) Then
                             .Last.Color = Color.Red
                         Else
                             .Last.Color = Color.White

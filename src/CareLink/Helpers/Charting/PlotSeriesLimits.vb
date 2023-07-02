@@ -22,14 +22,14 @@ Friend Module PlotSeriesLimits
     <Extension>
     Friend Sub PlotHighLowLimitsAndTargetSg(chart As Chart, targetSsOnly As Boolean)
         If s_listOfLimitRecords.Count = 0 Then Exit Sub
-        Dim limitsIndexList() As Integer = GetLimitsList(s_listOfSGs.Count - 1)
+        Dim limitsIndexList() As Integer = GetLimitsList(s_listOfSgRecords.Count - 1)
         Dim targetSG As Single = CurrentUser.CurrentTarget
         If targetSG <> 0 Then
-            chart.Series(TargetSgSeriesName).Points.AddXY(s_listOfSGs(0).OaDateTime(), targetSG)
-            chart.Series(TargetSgSeriesName).Points.AddXY(s_listOfSGs.Last.OaDateTime(), targetSG)
+            chart.Series(TargetSgSeriesName).Points.AddXY(s_listOfSgRecords(0).OaDateTime(), targetSG)
+            chart.Series(TargetSgSeriesName).Points.AddXY(s_listOfSgRecords.Last.OaDateTime(), targetSG)
         End If
         If targetSsOnly Then Exit Sub
-        For Each sgListIndex As IndexClass(Of SgRecord) In s_listOfSGs.WithIndex()
+        For Each sgListIndex As IndexClass(Of SgRecord) In s_listOfSgRecords.WithIndex()
             Dim sgOADateTime As OADate = sgListIndex.Value.OaDateTime()
             Try
                 Dim limitsLowValue As Single = s_listOfLimitRecords(limitsIndexList(sgListIndex.Index)).lowLimit
