@@ -89,21 +89,13 @@ Public Module StringExtensions
                         .Replace("\", "\\")},"
     End Function
 
-    <Extension>
-    Public Function TrimEnd(source As String, trimString As String) As String
-        If Not source.EndsWith(trimString) Then
-            Return source
-        End If
-        Return source.Substring(0, source.Length - trimString.Length)
-    End Function
-
     ''' <summary>
     ''' Convert all multiple " " with one " "
     ''' </summary>
     ''' <param name="Value"></param>
     ''' <returns></returns>
     <Extension>
-    Public Function TrimWhiteSpace(Value As String) As String
+    Public Function RemoveExtraSpaces(Value As String) As String
         Dim sbOut As New StringBuilder()
         If Not String.IsNullOrEmpty(Value) Then
             Dim isWhiteSpace As Boolean = False

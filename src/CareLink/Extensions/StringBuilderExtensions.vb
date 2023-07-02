@@ -9,7 +9,10 @@ Friend Module StringBuilderExtensions
 
     <Extension>
     Public Function TrimEnd(sb As StringBuilder, trimString As String) As StringBuilder
-        Dim value As String = sb.ToString.TrimEnd(trimString)
+        Dim value As String = sb.ToString
+        If value.EndsWith(trimString) Then
+            value = value.Substring(0, value.Length - trimString.Length)
+        End If
         sb.Clear()
         Return sb.Append(value)
     End Function
