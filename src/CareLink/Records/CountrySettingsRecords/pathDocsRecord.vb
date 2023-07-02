@@ -3,11 +3,11 @@
 ' See the LICENSE file in the project root for more information.
 
 Public Class PathDocsRecord
-    Public pathDoc As New Dictionary(Of String, String)
+    Public Property pathDoc As New Dictionary(Of String, String)
 
     Public Sub New(jsonData As String)
         If Not String.IsNullOrWhiteSpace(jsonData) Then
-            pathDoc = Loads(jsonData)
+            Me.pathDoc = Loads(jsonData)
         End If
     End Sub
 

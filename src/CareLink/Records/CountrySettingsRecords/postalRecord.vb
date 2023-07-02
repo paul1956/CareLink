@@ -8,24 +8,24 @@ Imports System.Diagnostics.CodeAnalysis
 Public Class PostalRecord
     Private ReadOnly _asList As New Dictionary(Of String, String)
 
-    Public postalFormat As String
-
-    <StringSyntax(StringSyntaxAttribute.Regex)>
-    Public regExpStr As String
-
     Public Sub New(<StringSyntax(StringSyntaxAttribute.Json)> jsonData As String)
         _asList = Loads(jsonData)
         If _asList.Keys.Count <> 2 Then
             Throw New Exception($"{NameOf(PostalRecord)}({NameOf(jsonData)}) contains {jsonData.Length} entries, 2 expected.")
         End If
 
-        postalFormat = _asList(NameOf(postalFormat))
-        regExpStr = _asList(NameOf(regExpStr))
+        Me.postalFormat = _asList(NameOf(postalFormat))
+        Me.regExpStr = _asList(NameOf(regExpStr))
 
     End Sub
 
+    <StringSyntax(StringSyntaxAttribute.Regex)>
+    Private ReadOnly Property regExpStr As String
+
+    Public Property postalFormat As String
+
     Private Function GetDebuggerDisplay() As String
-        Return $"{NameOf(postalFormat)} = {postalFormat}, {NameOf(regExpStr)} = {regExpStr}"
+        Return $"{NameOf(postalFormat)} = {Me.postalFormat}, {NameOf(regExpStr)} = {Me.regExpStr}"
     End Function
 
     Public Function ToList() As Dictionary(Of String, String)

@@ -5,6 +5,7 @@
 Imports System.ComponentModel
 Imports System.IO
 Imports System.Text.Json
+
 Imports DataGridViewColumnControls
 
 Public Class InitializeDialog
@@ -217,7 +218,7 @@ Public Class InitializeDialog
                 .SelectedIndex = -1
             Else
                 .Enabled = True
-                .SelectedIndex = .Items.IndexOfKey(Of String, InsulinActivationProperties)(Me.CurrentUser.InsulinTypeName)
+                .SelectedIndex = .Items.IndexOfKey(Of String, InsulinActivationRecord)(Me.CurrentUser.InsulinTypeName)
             End If
         End With
 
@@ -321,7 +322,7 @@ Public Class InitializeDialog
         Me.CurrentUser.PumpAit = ParseSingle(Me.PumpAitComboBox.SelectedValue, 2)
 
         Me.CurrentUser.InsulinTypeName = Me.InsulinTypeComboBox.Text
-        Me.CurrentUser.InsulinRealAit = CType(Me.InsulinTypeComboBox.SelectedValue, InsulinActivationProperties).AitHours
+        Me.CurrentUser.InsulinRealAit = CType(Me.InsulinTypeComboBox.SelectedValue, InsulinActivationRecord).AitHours
 
         Me.CurrentUser.UseAdvancedAitDecay = Me.UseAITAdvancedDecayCheckBox.CheckState
         Me.CurrentUser.CurrentTarget = CType(Me.TargetSgComboBox.SelectedItem, KeyValuePair(Of String, Single)).Value

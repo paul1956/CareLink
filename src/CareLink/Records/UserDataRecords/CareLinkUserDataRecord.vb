@@ -14,7 +14,7 @@ Public Class CareLinkUserDataRecord
 
     Private _userData As CareLinkUserData
 
-    Public Parent As CareLinkUserDataList
+    Public Property Parent As CareLinkUserDataList
 
     Public Sub New(parent As CareLinkUserDataList)
         Me.Parent = parent
@@ -137,8 +137,8 @@ Public Class CareLinkUserDataRecord
 #End If
 
     Private Sub OnCareLinkUserChanged()
-        If Not _inTxn And (Parent IsNot Nothing) Then
-            Parent.CareLinkUserChanged(Me)
+        If Not _inTxn And (Me.Parent IsNot Nothing) Then
+            Me.Parent.CareLinkUserChanged(Me)
         End If
     End Sub
 

@@ -5,34 +5,34 @@
 Public Class ReportDateFormatRecord
     Private ReadOnly _asList As New List(Of KeyValuePair(Of String, String))
 
-    Public dateSeparator As String
+    Public Property dateSeparator As String
 
-    Public longTimePattern12 As String
+    Public Property longTimePattern12 As String
 
-    Public longTimePattern24 As String
+    Public Property longTimePattern24 As String
 
-    Public shortTimePattern12 As String
+    Public Property shortTimePattern12 As String
 
-    Public shortTimePattern24 As String
+    Public Property shortTimePattern24 As String
 
-    Public timeSeparator As String
+    Public Property timeSeparator As String
 
     Public Sub New(jsonValue As String)
         For Each kvp As KeyValuePair(Of String, String) In Loads(jsonValue)
             _asList.Add(KeyValuePair.Create(kvp.Key, kvp.Value))
             Select Case kvp.Key
                 Case NameOf(longTimePattern12)
-                    longTimePattern12 = kvp.Value
+                    Me.longTimePattern12 = kvp.Value
                 Case NameOf(longTimePattern24)
-                    longTimePattern24 = kvp.Value
+                    Me.longTimePattern24 = kvp.Value
                 Case NameOf(shortTimePattern12)
-                    shortTimePattern12 = kvp.Value
+                    Me.shortTimePattern12 = kvp.Value
                 Case NameOf(shortTimePattern24)
-                    shortTimePattern24 = kvp.Value
+                    Me.shortTimePattern24 = kvp.Value
                 Case NameOf(dateSeparator)
-                    dateSeparator = kvp.Value
+                    Me.dateSeparator = kvp.Value
                 Case NameOf(timeSeparator)
-                    timeSeparator = kvp.Value
+                    Me.timeSeparator = kvp.Value
             End Select
         Next
     End Sub

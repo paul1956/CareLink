@@ -33,10 +33,10 @@ Public Class CountrySettingsRecord
                         Me.name = rowValue.Value
                         .DgvCountryDataPg1.Rows.Add(itemIndex, "", rowValue.Key, rowValue.Value)
                     Case NameOf(languages)
-                        languages.Clear()
+                        Me.languages.Clear()
                         For Each dic As IndexClass(Of Dictionary(Of String, String)) In LoadList(rowValue.Value).WithIndex
-                            languages.Add(New LanguageRecord(dic.Value))
-                            .DgvCountryDataPg1.Rows.Add($"{row.Index + 1}.{dic.Index + 1}", rowValue.Key, languages.Last.GetCsvKeys, languages.Last.GetCsvValues)
+                            Me.languages.Add(New LanguageRecord(dic.Value))
+                            .DgvCountryDataPg1.Rows.Add($"{row.Index + 1}.{dic.Index + 1}", rowValue.Key, Me.languages.Last.GetCsvKeys, Me.languages.Last.GetCsvValues)
                         Next
 
                     Case NameOf(defaultLanguage)
@@ -130,10 +130,10 @@ Public Class CountrySettingsRecord
                         Next
 
                     Case NameOf(supportedReports)
-                        supportedReports.Clear()
+                        Me.supportedReports.Clear()
                         For Each dic As IndexClass(Of Dictionary(Of String, String)) In LoadList(rowValue.Value).WithIndex
-                            supportedReports.Add(New SupportedReportRecord(dic.Value, dic.Index + 1))
-                            With supportedReports.Last
+                            Me.supportedReports.Add(New SupportedReportRecord(dic.Value, dic.Index + 1))
+                            With Me.supportedReports.Last
                                 Form1.DgvCountryDataPg3.Rows.Add($"{row.Index + 1}.{dic.Index + 1}", rowValue.Key, dic.Value.Keys(0), .report, .onlyFor, .notFor)
                             End With
                         Next
@@ -195,8 +195,8 @@ Public Class CountrySettingsRecord
 #Region "Lists"
 
     Private _hasValue As Boolean
-    Public languages As New List(Of LanguageRecord)                 ' "[{""name"":""English"",""code"":""EN""}]"
-    Public supportedReports As New List(Of SupportedReportRecord)   ' "[{""report"":""ADHERENCE"",""onlyFor"":[],""notFor"":[]},{""report"":""ASSESSMENT_AND_PROGRESS"",""onlyFor"":[],""notFor"":[]},{""report"":""BOLUS_WIZARD_FOOD_BOLUS"",""onlyFor"":[],""notFor"":[]},{""report"":""DAILY_DETAILS"",""onlyFor"":[],""notFor"":[]},{""report"":""DASHBOARD"",""onlyFor"":[],""notFor"":[]},{""report"":""DEVICE_SETTINGS"",""onlyFor"":[],""notFor"":[]},{""report"":""EPISODE_SUMMARY"",""onlyFor"":[],""notFor"":[]},{""report"":""LOGBOOK"",""onlyFor"":[],""notFor"":[]},{""report"":""OVERVIEW"",""onlyFor"":[],""notFor"":[]},{""report"":""WEEKLY_REVIEW"",""onlyFor"":[],""notFor"":[]}]"
+    Private Property languages As New List(Of LanguageRecord)                 ' "[{""name"":""English"",""code"":""EN""}]"
+    Private Property supportedReports As New List(Of SupportedReportRecord)   ' "[{""report"":""ADHERENCE"",""onlyFor"":[],""notFor"":[]},{""report"":""ASSESSMENT_AND_PROGRESS"",""onlyFor"":[],""notFor"":[]},{""report"":""BOLUS_WIZARD_FOOD_BOLUS"",""onlyFor"":[],""notFor"":[]},{""report"":""DAILY_DETAILS"",""onlyFor"":[],""notFor"":[]},{""report"":""DASHBOARD"",""onlyFor"":[],""notFor"":[]},{""report"":""DEVICE_SETTINGS"",""onlyFor"":[],""notFor"":[]},{""report"":""EPISODE_SUMMARY"",""onlyFor"":[],""notFor"":[]},{""report"":""LOGBOOK"",""onlyFor"":[],""notFor"":[]},{""report"":""OVERVIEW"",""onlyFor"":[],""notFor"":[]},{""report"":""WEEKLY_REVIEW"",""onlyFor"":[],""notFor"":[]}]"
 
 #End Region
 
