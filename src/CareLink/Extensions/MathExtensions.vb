@@ -31,11 +31,10 @@ Friend Module MathExtensions
         Dim returnSingle As Single
         If decimalDigits = -1 Then
             Dim index As Integer = valueString.IndexOf(".")
-            If index = -1 Then
-                decimalDigits = 0
-            Else
-                decimalDigits = valueString.Substring(index).Length
-            End If
+            decimalDigits = If(index = -1,
+                               0,
+                               valueString.Substring(index).Length
+                              )
         End If
         If Single.TryParse(valueString, NumberStyles.Number, usDataCulture, returnSingle) Then
         Else
@@ -68,10 +67,9 @@ Friend Module MathExtensions
 
     <Extension>
     Public Function RoundTo025(originalValue As Single) As Single
-        If Single.IsNaN(originalValue) Then
-            Return Single.NaN
-        End If
-        Return CSng(Math.Floor(Math.Round(originalValue, 3, MidpointRounding.ToZero) / 0.025D) * 0.025D)
+        Return If(Single.IsNaN(originalValue),
+            Single.NaN,
+            CSng(Math.Floor(Math.Round(originalValue, 3, MidpointRounding.ToZero) / 0.025D) * 0.025D))
     End Function
 
     <Extension>

@@ -211,11 +211,7 @@ Public Class DataGridViewNumericUpDownCell
     ''' </summary>
     Public Overrides ReadOnly Property ValueType As Type
         Get
-            If MyBase.ValueType IsNot Nothing Then
-                Return MyBase.ValueType
-            End If
-
-            Return defaultValueType
+            Return If(MyBase.ValueType, defaultValueType)
         End Get
     End Property
 
@@ -303,11 +299,7 @@ Public Class DataGridViewNumericUpDownCell
         Const buttonsWidth As Integer = 16
 
         Dim errorIconBounds As Rectangle = MyBase.GetErrorIconBounds(graphics, cellStyle, rowIndex)
-        If Me.DataGridView.RightToLeft = RightToLeft.Yes Then
-            errorIconBounds.X = errorIconBounds.Left + buttonsWidth
-        Else
-            errorIconBounds.X = errorIconBounds.Left - buttonsWidth
-        End If
+        errorIconBounds.X = If(Me.DataGridView.RightToLeft = RightToLeft.Yes, errorIconBounds.Left + buttonsWidth, errorIconBounds.Left - buttonsWidth)
         Return errorIconBounds
     End Function
 
@@ -372,11 +364,7 @@ Public Class DataGridViewNumericUpDownCell
             numericUpDown.Minimum = Me.Minimum
             numericUpDown.ThousandsSeparator = Me.ThousandsSeparator
             Dim initialFormattedValueStr As String = TryCast(initialFormattedValue, String)
-            If initialFormattedValueStr Is Nothing Then
-                numericUpDown.Text = String.Empty
-            Else
-                numericUpDown.Text = initialFormattedValueStr
-            End If
+            numericUpDown.Text = If(initialFormattedValueStr, String.Empty)
         End If
     End Sub
 
@@ -393,14 +381,11 @@ Public Class DataGridViewNumericUpDownCell
             negativeSignKey = CType(VkKeyScan(negativeSignStr(0)), Keys)
         End If
 
-        If (Char.IsDigit(ChrW(e.KeyCode)) OrElse
+        Return (Char.IsDigit(ChrW(e.KeyCode)) OrElse
             (e.KeyCode >= Keys.NumPad0 AndAlso e.KeyCode <= Keys.NumPad9) OrElse
              negativeSignKey = e.KeyCode OrElse
              Keys.Subtract = e.KeyCode) AndAlso
-            Not e.Shift AndAlso Not e.Alt AndAlso Not e.Control Then
-            Return True
-        End If
-        Return False
+            Not e.Shift AndAlso Not e.Alt AndAlso Not e.Control
     End Function
 
     ''' <summary>
@@ -463,7 +448,7 @@ Public Class DataGridViewNumericUpDownCell
 
         ' If the cell is in editing mode, there is nothing else to paint
         If Not cellEdited Then
-            If PartPainted(paintParts, DataGridViewPaintParts.ContentForeground) Then
+            If (paintParts And DataGridViewPaintParts.ContentForeground) <> 0 Then
                 ' Paint a NumericUpDown control
                 ' Take the borders into account
                 Dim borderWidths As Rectangle = Me.BorderWidths(advancedBorderStyle)
@@ -507,13 +492,12 @@ Public Class DataGridViewNumericUpDownCell
                 paintingNumericUpDown.Location = New Point(0, -paintingNumericUpDown.Height - 100)
                 paintingNumericUpDown.Text = TryCast(formattedValue, String)
 
-                Dim backColor As Color
-                If PartPainted(paintParts, DataGridViewPaintParts.SelectionBackground) AndAlso cellSelected Then
-                    backColor = cellStyle.SelectionBackColor
-                Else
-                    backColor = cellStyle.BackColor
-                End If
-                If PartPainted(paintParts, DataGridViewPaintParts.Background) Then
+                Dim backColor As Color = If((paintParts And DataGridViewPaintParts.SelectionBackground) <> 0 AndAlso cellSelected,
+                                            cellStyle.SelectionBackColor,
+                                            cellStyle.BackColor
+                                           )
+
+                If (paintParts And DataGridViewPaintParts.Background) <> 0 Then
                     If backColor.A < 255 Then
                         ' The NumericUpDown control does not support transparent back colors
                         backColor = Color.FromArgb(255, backColor)
@@ -528,20 +512,13 @@ Public Class DataGridViewNumericUpDownCell
                                        srcRect, GraphicsUnit.Pixel)
                 End If
             End If
-            If PartPainted(paintParts, DataGridViewPaintParts.ErrorIcon) Then
+            If (paintParts And DataGridViewPaintParts.ErrorIcon) <> 0 Then
                 ' Paint the potential error icon on top of the NumericUpDown control
                 MyBase.Paint(graphics, clipBounds, cellBounds, rowIndex, cellState, value, formattedValue, errorText,
                            cellStyle, advancedBorderStyle, DataGridViewPaintParts.ErrorIcon)
             End If
         End If
     End Sub
-
-    ''' <summary>
-    ''' Little utility function called by the Paint function to see if a particular part needs to be painted.
-    ''' </summary>
-    Private Shared Function PartPainted(paintParts As DataGridViewPaintParts, paintPart As DataGridViewPaintParts) As Boolean
-        Return (paintParts And paintPart) <> 0
-    End Function
 
     ''' <summary>
     ''' Custom implementation of the PositionEditingControl method called by the DataGridView control when it

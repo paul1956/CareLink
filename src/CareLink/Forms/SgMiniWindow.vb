@@ -25,10 +25,10 @@ Public Class SgMiniWindow
     End Sub
 
     Private Shared Function GetLastUpdateMessage() As String
-        If s_lastMedicalDeviceDataUpdateServerEpoch = 0 Then
-            Return $"{s_firstName}'s Last Update Unknown"
-        End If
-        Return $"{s_firstName}'s Updated {CInt((PumpNow() - s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime).TotalMinutes)} minutes ago"
+        Return If(s_lastMedicalDeviceDataUpdateServerEpoch = 0,
+                  $"{s_firstName}'s Last Update Unknown",
+                  $"{s_firstName}'s Updated {CInt((PumpNow() - s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime).TotalMinutes)} minutes ago"
+                 )
     End Function
 
     Private Sub ActiveInsulinTextBox_GotFocus(sender As Object, e As EventArgs) Handles ActiveInsulinTextBox.GotFocus

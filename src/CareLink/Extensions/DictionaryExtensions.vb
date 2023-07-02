@@ -11,10 +11,10 @@ Public Module DictionaryExtensions
     <Extension>
     Friend Function GetSingleValue(item As Dictionary(Of String, String), key As String) As Single
         Dim ret As String = ""
-        If item.TryGetValue(key, ret) Then
-            Return ret.ParseSingle(3)
-        End If
-        Return Single.NaN
+        Return If(item.TryGetValue(key, ret),
+                  ret.ParseSingle(3),
+                  Single.NaN
+                 )
     End Function
 
     <Extension>
@@ -23,10 +23,10 @@ Public Module DictionaryExtensions
             Return ""
         End If
         Dim returnString As String = ""
-        If item.TryGetValue(Key, returnString) Then
-            Return returnString
-        End If
-        Return ""
+        Return If(item.TryGetValue(Key, returnString),
+                  returnString,
+                  ""
+                 )
     End Function
 
     <Extension>

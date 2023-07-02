@@ -66,11 +66,9 @@ Friend Module TimeZoneExtensions
         possibleTimeZone = s_systemTimeZones.Where(Function(t As TimeZoneInfo)
                                                        Return t.Id = id
                                                    End Function).FirstOrDefault
-        If possibleTimeZone IsNot Nothing Then
-            Return possibleTimeZone
-        End If
-
-        Return TimeZoneInfo.Local
+        Return If(possibleTimeZone,
+                  TimeZoneInfo.Local
+                 )
     End Function
 
     Public Enum TimeZoneNameFormat

@@ -83,11 +83,10 @@ Public Module JsonExtensions
                         Case NameOf(ItemIndexes.bgUnits)
                             If Not s_unitsStrings.TryGetValue(item.Value.ToString(), SgUnitsNativeString) Then
                                 Dim averageSGFloatAsString As String = rawJsonData(ItemIndexes.averageSGFloat).jsonItemAsString
-                                If averageSGFloatAsString.ParseSingle(1) > 40 Then
-                                    SgUnitsNativeString = "mg/dl"
-                                Else
-                                    SgUnitsNativeString = "mmol/L"
-                                End If
+                                SgUnitsNativeString = If(averageSGFloatAsString.ParseSingle(1) > 40,
+                                                         "mg/dl",
+                                                         "mmol/L"
+                                                         )
                             End If
                             nativeMmolL = SgUnitsNativeString <> "mg/dl"
                             resultDictionary.Add(item.Key, item.jsonItemAsString)

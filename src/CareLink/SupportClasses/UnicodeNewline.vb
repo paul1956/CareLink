@@ -97,17 +97,13 @@ Public Module NewLine
     ''' <param name="curChar">The current character.</param>
     ''' <param name="nextChar">The next character (if != LF then length will always be 0 or 1).</param>
     Public Function GetDelimiterLength(curChar As Char, nextChar As Char) As Integer
-        If curChar = Cr Then
-            If nextChar = Lf Then
-                Return 2
-            End If
-            Return 1
-        End If
-
-        If curChar = Lf OrElse curChar = Nel OrElse curChar = Vt OrElse curChar = Ff OrElse curChar = Ls OrElse curChar = Ps Then
-            Return 1
-        End If
-        Return 0
+        Return If(curChar = Cr,
+                  If(nextChar = Lf, 2, 1),
+                  If(curChar = Lf OrElse curChar = Nel OrElse curChar = Vt OrElse curChar = Ff OrElse curChar = Ls OrElse curChar = Ps,
+                     1,
+                     0
+                    )
+                 )
     End Function
 
     ''' <summary>
