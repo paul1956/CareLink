@@ -63,7 +63,6 @@ Friend Module CollectMarkersHelper
                         Case "AUTOCORRECTION"
                             basalDictionary.Add(lastInsulinRecord.OAdateTime, lastInsulinRecord.deliveredFastAmount)
                         Case "MANUAL"
-                            Stop
                         Case "UNDETERMINED"
                         Case "RECOMMENDED"
                         Case Else

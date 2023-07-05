@@ -59,6 +59,17 @@ Friend Module DrawingExtensions
         Return targetImage
     End Function
 
+    Public Function CreateTextIcon(str As String, backColor As Color) As Icon
+        Dim fontToUse As New Font("Trebuchet MS", 10, FontStyle.Regular, GraphicsUnit.Pixel)
+        Dim brushToUse As Brush = New SolidBrush(Color.White)
+        Dim bitmapText As New Bitmap(16, 16)
+        Dim g As Graphics = System.Drawing.Graphics.FromImage(bitmapText)
+        g.Clear(backColor)
+        g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit
+        g.DrawString(str, fontToUse, brushToUse, -2, 0)
+        Return Icon.FromHandle(bitmapText.GetHicon())
+    End Function
+
     <Extension()>
     Public Function Split(collection As IEnumerable(Of Integer), parts As Integer) As IEnumerable(Of IEnumerable(Of Integer))
         If collection Is Nothing Then Throw New ArgumentNullException(NameOf(collection))

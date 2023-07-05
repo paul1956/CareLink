@@ -1036,6 +1036,15 @@ Public Class Form1
         AddHandler Microsoft.Win32.SystemEvents.PowerModeChanged, AddressOf Me.PowerModeChanged
     End Sub
 
+    Private Sub Form1_Reseize(sender As Object, e As EventArgs) Handles MyBase.Resize
+        If Me.WindowState = FormWindowState.Minimized Then
+            Me.NotifyIcon1.Visible = True
+            If Me.NotifyIcon1.BalloonTipText.Length > 0 Then
+                Me.NotifyIcon1.ShowBalloonTip(1000)
+            End If
+        End If
+    End Sub
+
     Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         Me.Fix(Me)
 
@@ -1052,6 +1061,10 @@ Public Class Form1
         If DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
             Me.UpdateAllTabPages(False)
         End If
+        Me.NotifyIcon1.Visible = False
+        Application.DoEvents()
+        Me.NotifyIcon1.Visible = True
+        Application.DoEvents()
     End Sub
 
 #End Region ' Form Events
@@ -1316,6 +1329,15 @@ Public Class Form1
 #End Region ' Help Menu Events
 
 #End Region 'Form Menu Events
+
+#Region "NotifyIcon Events"
+
+    Private Sub NotifyIcon1_DoubleClick(sender As Object, e As EventArgs) Handles NotifyIcon1.DoubleClick
+        Me.ShowInTaskbar = True
+        Me.WindowState = FormWindowState.Normal
+    End Sub
+
+#End Region
 
 #Region "Settings Events"
 
@@ -1802,13 +1824,11 @@ Public Class Form1
     Private Sub UpdateNotifyIcon(lastSgString As String)
         Try
             Dim sg As Single = s_lastSgRecord.sg
-            Dim fontToUse As New Font("Trebuchet MS", 10, FontStyle.Regular, GraphicsUnit.Pixel)
-            Dim color As Color = Color.White
-            Dim backColor As Color
             Dim notStr As New StringBuilder
 
             Using bitmapText As New Bitmap(16, 16)
                 Using g As Graphics = Graphics.FromImage(bitmapText)
+                    Dim backColor As Color
                     Select Case sg
                         Case <= TirLowLimit(nativeMmolL)
                             backColor = Color.Yellow
@@ -1826,16 +1846,8 @@ Public Class Form1
                             End If
                             _showBalloonTip = False
                     End Select
-                    Dim brushToUse As New SolidBrush(color)
-                    g.Clear(backColor)
-                    g.TextRenderingHint = Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit
-                    If Math.Floor(Math.Log10(sg) + 1) = 3 Then
-                        g.DrawString(lastSgString, fontToUse, brushToUse, -2, 0)
-                    Else
-                        g.DrawString(lastSgString, fontToUse, brushToUse, 1.5, 0)
-                    End If
-                    Dim hIcon As IntPtr = bitmapText.GetHicon()
-                    Me.NotifyIcon1.Icon = Icon.FromHandle(hIcon)
+
+                    Me.NotifyIcon1.Icon = CreateTextIcon(lastSgString.PadRight(3).Substring(0, 3).Trim.PadLeft(3), backColor)
                     notStr.Append(Date.Now().ToShortDateTimeString.Replace($"{CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator}{Now.Year}", ""))
                     notStr.Append(vbCrLf)
                     notStr.Append($"Last SG {lastSgString} {SgUnitsNativeString}")
