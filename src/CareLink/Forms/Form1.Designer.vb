@@ -2671,8 +2671,9 @@ Partial Class Form1
         ' 
         UpdateAvailableStatusStripLabel.BorderSides = ToolStripStatusLabelBorderSides.Left Or ToolStripStatusLabelBorderSides.Right
         UpdateAvailableStatusStripLabel.BorderStyle = Border3DStyle.RaisedOuter
-        UpdateAvailableStatusStripLabel.DisplayStyle = ToolStripItemDisplayStyle.Text
+        UpdateAvailableStatusStripLabel.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
         UpdateAvailableStatusStripLabel.ForeColor = Color.Red
+        UpdateAvailableStatusStripLabel.Image = My.Resources.Resources.NotificationAlertRed_16x
         UpdateAvailableStatusStripLabel.Name = "UpdateAvailableStatusStripLabel"
         UpdateAvailableStatusStripLabel.Size = New Size(100, 19)
         UpdateAvailableStatusStripLabel.Text = "Update Available"

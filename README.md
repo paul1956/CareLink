@@ -32,6 +32,8 @@ This update has a UI to show all the available data and a visual version that mi
 ## What's New in this release
 New in 3.8.3.1
 - Improve display of Sg values in mmol/M
+- Make Tray Icon larger
+- Add Icon to Update Message in StatusBar
 
 New in 3.8.3.0
 - Correctly handle CareLink Authorization Server redirect

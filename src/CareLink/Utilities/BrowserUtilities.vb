@@ -87,6 +87,9 @@ Friend Module BrowserUtilities
                     updateSleepCount -= 1
                 Else
                     Form1.UpdateAvailableStatusStripLabel.Text = $"Update {gitHubVersion} available"
+                    Form1.UpdateAvailableStatusStripLabel.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
+                    Form1.UpdateAvailableStatusStripLabel.Image = My.Resources.NotificationAlertRed_16x
+                    Form1.UpdateAvailableStatusStripLabel.ImageAlign = ContentAlignment.MiddleLeft
                     Form1.UpdateAvailableStatusStripLabel.ForeColor = Color.Red
                     If reportSuccessfulResult Then
                         If Interlocked.Exchange(inCheckForUpdate, 1) = 0 Then
@@ -100,7 +103,9 @@ Friend Module BrowserUtilities
                     End If
                 End If
             Else
+                Form1.UpdateAvailableStatusStripLabel.DisplayStyle = ToolStripItemDisplayStyle.Text
                 Form1.UpdateAvailableStatusStripLabel.Text = $"Current version {My.Application.Info.Version}"
+                Form1.UpdateAvailableStatusStripLabel.ImageAlign = ContentAlignment.MiddleLeft
                 Form1.UpdateAvailableStatusStripLabel.ForeColor = Color.Black
                 If reportSuccessfulResult Then
                     MsgBox("You are running latest version", MsgBoxStyle.OkOnly, "No Updates Available")
