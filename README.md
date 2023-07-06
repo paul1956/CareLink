@@ -34,6 +34,8 @@ New in 3.8.3.1
 - Improve display of Sg values in mmol/M
 - Make Tray Icon larger
 - Add Icon to Update Message in StatusBar
+- Add additional messages
+- Correct spelling errors in variable names
 
 New in 3.8.3.0
 - Correctly handle CareLink Authorization Server redirect

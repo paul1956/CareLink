@@ -200,7 +200,7 @@ Public Class CareLinkClient
             {"username", username},
             {"role", role}}
 
-        If role = "carepartner" Then
+        If role.Equals("CarePartner", StringComparison.InvariantCultureIgnoreCase) Then
             If String.IsNullOrWhiteSpace(patientUserName) Then
                 endpointUrl = endpointUrl.Replace("v6", "v5")
             Else
@@ -330,7 +330,7 @@ Public Class CareLinkClient
                 Return If(_careLinkPartnerType.Contains(_sessionUser.role, StringComparer.InvariantCultureIgnoreCase),
                           Me.GetConnectDisplayMessage(
                                         Me.SessionProfile.username,
-                                        "carepartner",
+                                        "CarePartner".ToLower,
                                         s_sessionCountrySettings.blePereodicDataEndpoint,
                                         My.Settings.CareLinkPatientUserID),
                           Me.GetConnectDisplayMessage(
