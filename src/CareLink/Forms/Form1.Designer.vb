@@ -730,9 +730,9 @@ Partial Class Form1
         SensorMessage.BackColor = Color.Transparent
         SensorMessage.Font = New Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point)
         SensorMessage.ForeColor = Color.White
-        SensorMessage.Location = New Point(2, 15)
+        SensorMessage.Location = New Point(0, 15)
         SensorMessage.Name = "SensorMessage"
-        SensorMessage.Size = New Size(112, 57)
+        SensorMessage.Size = New Size(116, 57)
         SensorMessage.TabIndex = 1
         SensorMessage.Text = "Calibration Required"
         SensorMessage.TextAlign = ContentAlignment.MiddleCenter

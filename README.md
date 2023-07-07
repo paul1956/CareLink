@@ -36,6 +36,7 @@ New in 3.8.3.1
 - Add Icon to Update Message in StatusBar
 - Add additional messages
 - Correct spelling errors in variable names
+- Align Sensor messages
 
 New in 3.8.3.0
 - Correctly handle CareLink Authorization Server redirect
