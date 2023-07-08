@@ -224,6 +224,8 @@ Partial Class Form1
         TimeZoneToolStripStatusLabel = New ToolStripStatusLabel()
         StatusStripSpacerRight = New ToolStripStatusLabel()
         UpdateAvailableStatusStripLabel = New ToolStripStatusLabel()
+        LowDeviationLabel = New Label()
+        HighDeviationLabel = New Label()
         MenuStrip1.SuspendLayout()
         CType(CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         CalibrationShieldPanel.SuspendLayout()
@@ -1473,6 +1475,8 @@ Partial Class Form1
         SplitContainer3.Panel2.Controls.Add(AverageSGValueLabel)
         SplitContainer3.Panel2.Controls.Add(AverageSGMessageLabel)
         SplitContainer3.Panel2.Controls.Add(DeviationsLabel)
+        SplitContainer3.Panel2.Controls.Add(HighDeviationLabel)
+        SplitContainer3.Panel2.Controls.Add(LowDeviationLabel)
         SplitContainer3.Panel2.Controls.Add(SmartGuardLabel)
         SplitContainer3.Size = New Size(1370, 498)
         SplitContainer3.SplitterDistance = 1136
@@ -1529,31 +1533,55 @@ Partial Class Form1
         TimeInRangeValueLabel.Text = "90 %"
         TimeInRangeValueLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
-        ' DeviationsLabel
-        ' 
-        DeviationsLabel.Anchor = AnchorStyles.Top
-        DeviationsLabel.BackColor = Color.Transparent
-        DeviationsLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
-        DeviationsLabel.ForeColor = Color.Green
-        DeviationsLabel.Location = New Point(3, 415)
-        DeviationsLabel.Name = "DeviationsLabel"
-        DeviationsLabel.Size = New Size(224, 45)
-        DeviationsLabel.TabIndex = 35
-        DeviationsLabel.Text = "Standard Deviation" & vbCrLf & "2 Low  3 High"
-        DeviationsLabel.TextAlign = ContentAlignment.MiddleCenter
-        ' 
         ' SmartGuardLabel
         ' 
         SmartGuardLabel.Anchor = AnchorStyles.Top
         SmartGuardLabel.BackColor = Color.Transparent
         SmartGuardLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
         SmartGuardLabel.ForeColor = Color.DodgerBlue
-        SmartGuardLabel.Location = New Point(3, 465)
+        SmartGuardLabel.Location = New Point(3, 415)
         SmartGuardLabel.Name = "SmartGuardLabel"
         SmartGuardLabel.Size = New Size(224, 21)
         SmartGuardLabel.TabIndex = 35
         SmartGuardLabel.Text = "SmartGuard 100%"
         SmartGuardLabel.TextAlign = ContentAlignment.MiddleCenter
+        ' 
+        ' DeviationsLabel
+        ' 
+        DeviationsLabel.Anchor = AnchorStyles.Top
+        DeviationsLabel.BackColor = Color.Transparent
+        DeviationsLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
+        DeviationsLabel.ForeColor = Color.White
+        DeviationsLabel.Location = New Point(3, 442)
+        DeviationsLabel.Name = "DeviationsLabel"
+        DeviationsLabel.Size = New Size(226, 25)
+        DeviationsLabel.TabIndex = 35
+        DeviationsLabel.Text = "TIR Standard Deviations"
+        DeviationsLabel.TextAlign = ContentAlignment.MiddleCenter
+        ' 
+        ' LowDeviationLabel
+        ' 
+        LowDeviationLabel.AutoSize = False
+        LowDeviationLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
+        LowDeviationLabel.ForeColor = Color.Red
+        LowDeviationLabel.Location = New Point(3, 468)
+        LowDeviationLabel.Name = "LowDeviationLabel"
+        LowDeviationLabel.Size = New Size(112, 25)
+        LowDeviationLabel.TabIndex = 36
+        LowDeviationLabel.Text = "2.1 Low"
+        LowDeviationLabel.TextAlign = ContentAlignment.MiddleCenter
+        ' 
+        ' HighDeviationLabel
+        '
+        HighDeviationLabel.AutoSize = False
+        HighDeviationLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
+        HighDeviationLabel.ForeColor = Color.LimeGreen
+        HighDeviationLabel.Location = New Point(115, 468)
+        HighDeviationLabel.Name = "HighDeviationLabel"
+        HighDeviationLabel.Size = New Size(112, 25)
+        HighDeviationLabel.TabIndex = 37
+        HighDeviationLabel.Text = "5.0 High"
+        HighDeviationLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' TabControlPage1
         ' 
@@ -3022,4 +3050,6 @@ Partial Class Form1
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
     Friend WithEvents UpdateAvailableStatusStripLabel As ToolStripStatusLabel
     Friend WithEvents WebView As Microsoft.Web.WebView2.WinForms.WebView2
+    Friend WithEvents LowDeviationLabel As Label
+    Friend WithEvents HighDeviationLabel As Label
 End Class

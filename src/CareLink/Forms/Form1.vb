@@ -1591,14 +1591,21 @@ Public Class Form1
     End Sub
 
     Friend Sub InitializeTimeInRangeArea()
-        If Me.SplitContainer3.Panel2.Controls.Count > 14 Then
+        If Me.SplitContainer3.Panel2.Controls.Count > 16 Then
             Me.SplitContainer3.Panel2.Controls.RemoveAt(Me.SplitContainer3.Panel2.Controls.Count - 1)
         End If
         Dim width1 As Integer = Me.SplitContainer3.Panel2.Width - 94
         Dim splitPanelMidpoint As Integer = Me.SplitContainer3.Panel2.Width \ 2
         For Each control1 As Control In Me.SplitContainer3.Panel2.Controls
-            DirectCast(control1, Label).AutoSize = True
-            control1.Left = splitPanelMidpoint - (control1.Width \ 2)
+            Select Case control1.Name
+                Case NameOf(Me.LowDeviationLabel)
+                    Me.LowDeviationLabel.Left = splitPanelMidpoint - Me.LowDeviationLabel.Width
+                Case NameOf(Me.HighDeviationLabel)
+                    Me.HighDeviationLabel.Left = splitPanelMidpoint
+                Case Else
+                    DirectCast(control1, Label).AutoSize = True
+                    control1.Left = splitPanelMidpoint - (control1.Width \ 2)
+            End Select
         Next
         Me.TimeInRangeChart = New Chart With {
             .Anchor = AnchorStyles.Top,
@@ -2389,29 +2396,34 @@ Public Class Form1
             End If
         Next
 
-        Dim deviationMessage As New StringBuilder
-        deviationMessage.AppendLine("Standard Deviation")
-        If elements > 0 Then
-            If lowCount > 0 Then
-                deviationMessage.Append($"{CSng(Math.Sqrt(lowDeviations / (elements - highCount))).RoundSingle(0, True).ToString(CurrentDataCulture)} Low  ")
-            Else
-                deviationMessage.Append("0 Low  ")
-            End If
-            If highCount > 0 Then
-                deviationMessage.Append($"{CSng(Math.Sqrt(highDeviations / (elements - lowCount))).RoundSingle(0, True).ToString(CurrentDataCulture)} High")
-            Else
-                deviationMessage.Append("0 High")
-            End If
+        If elements = 0 Then
+            Me.LowDeviationLabel.Text = ""
+            Me.HighDeviationLabel.Text = ""
         Else
-            deviationMessage.Append("Unknown")
+            Dim lowDeviation As Single = CSng(Math.Sqrt(lowDeviations / (elements - highCount))).RoundSingle(1, False)
+            Me.LowDeviationLabel.Text = If(lowCount > 0,
+                $"{lowDeviation.ToString(CurrentDataCulture)} Low",
+                "0 Low")
+            Me.LowDeviationLabel.ForeColor = If(lowDeviation < 2, Color.LimeGreen, Color.Red)
+            Dim highDeviation As Single = CSng(Math.Sqrt(highDeviations / (elements - lowCount))).RoundSingle(1, False)
+            Me.HighDeviationLabel.Text = If(highCount > 0,
+                $"{highDeviation.ToString(CurrentDataCulture)} High",
+                "0 High")
+            Me.HighDeviationLabel.ForeColor = If(highDeviation < 10, Color.LimeGreen, Color.Red)
         End If
-        Me.DeviationsLabel.Text = deviationMessage.ToString
 
         Dim splitPanelMidpoint As Integer = Me.SplitContainer3.Panel2.Width \ 2
         For Each control1 As Control In Me.SplitContainer3.Panel2.Controls
             If TypeOf control1 Is Label Then
-                DirectCast(control1, Label).AutoSize = True
-                control1.Left = splitPanelMidpoint - (control1.Width \ 2)
+                Select Case control1.Name
+                    Case NameOf(Me.LowDeviationLabel)
+                        Me.LowDeviationLabel.Left = splitPanelMidpoint - Me.LowDeviationLabel.Width
+                    Case NameOf(Me.HighDeviationLabel)
+                        Me.HighDeviationLabel.Left = splitPanelMidpoint
+                    Case Else
+                        DirectCast(control1, Label).AutoSize = True
+                        control1.Left = splitPanelMidpoint - (control1.Width \ 2)
+                End Select
             End If
         Next
     End Sub
