@@ -136,7 +136,7 @@ Public Module CareLinkClientHelpers
             {"actionButton", "Log in"}}
 
         Dim payload As New Dictionary(Of String, String) From {
-            {"country", queryParameters.GetValueOrDefault("countrycode")},
+            {"country", queryParameters.GetValueOrDefault("CountryCode".ToLower)},
             {"locale", "en"}}
 
         Dim response As HttpResponseMessage = Nothing
