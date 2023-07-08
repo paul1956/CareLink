@@ -27,7 +27,7 @@ This update has a UI to show all the available data and a visual version that mi
 - Medtronic CareLink data display
 
 ## Updated
-07/07/2023
+07/08/2023
 
 ## What's New in this release
 New in 3.8.3.1
@@ -37,6 +37,7 @@ New in 3.8.3.1
 - Add additional messages
 - Correct spelling errors in variable names
 - Align Sensor messages
+- Redo Standard Deviations Handling
 
 New in 3.8.3.0
 - Correctly handle CareLink Authorization Server redirect
