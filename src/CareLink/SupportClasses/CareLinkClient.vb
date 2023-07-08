@@ -82,7 +82,9 @@ Public Class CareLinkClient
             Using loginSessionResponse As HttpResponseMessage = Me.GetLoginSession(host)
                 _lastResponseCode = loginSessionResponse.StatusCode
                 If Not loginSessionResponse.IsSuccessStatusCode Then
-                    _lastErrorMessage = loginSessionResponse.ReasonPhrase
+                    If Not loginSessionResponse.ReasonPhrase = "Not Implemented" Then
+                        _lastErrorMessage = loginSessionResponse.ReasonPhrase
+                    End If
                     Return False
                 End If
 

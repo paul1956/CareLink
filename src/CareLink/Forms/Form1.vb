@@ -1058,13 +1058,14 @@ Public Class Form1
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
         CheckForUpdatesAsync(False)
 
+        Me.NotifyIcon1.Visible = True
+        Application.DoEvents()
+        Me.NotifyIcon1.Visible = False
+        Application.DoEvents()
+
         If DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
             Me.UpdateAllTabPages(False)
         End If
-        Me.NotifyIcon1.Visible = False
-        Application.DoEvents()
-        Me.NotifyIcon1.Visible = True
-        Application.DoEvents()
     End Sub
 
 #End Region ' Form Events
@@ -1824,7 +1825,6 @@ Public Class Form1
     Private Sub UpdateNotifyIcon(lastSgString As String)
         Try
             Dim sg As Single = s_lastSgRecord.sg
-            Dim notStr As New StringBuilder
 
             Using bitmapText As New Bitmap(16, 16)
                 Using g As Graphics = Graphics.FromImage(bitmapText)
@@ -1848,15 +1848,13 @@ Public Class Form1
                     End Select
 
                     Me.NotifyIcon1.Icon = CreateTextIcon(lastSgString.PadRight(3).Substring(0, 3).Trim.PadLeft(3), backColor)
-                    notStr.Append(Date.Now().ToShortDateTimeString.Replace($"{CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator}{Now.Year}", ""))
-                    notStr.Append(vbCrLf)
-                    notStr.Append($"Last SG {lastSgString} {SgUnitsNativeString}")
+                    Dim notStr As New StringBuilder(100)
+                    notStr.AppendLine(Date.Now().ToShortDateTimeString.Replace($"{CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator}{Now.Year}", ""))
+                    notStr.AppendLine($"Last SG {lastSgString} {SgUnitsNativeString}")
                     If s_lastSgValue = 0 Then
                         Me.LabelTrendValue.Text = ""
                     Else
-                        notStr.Append(vbCrLf)
                         Dim diffSg As Double = sg - s_lastSgValue
-                        notStr.Append("SG Trend ")
                         If Math.Abs(diffSg) < Single.Epsilon Then
                             If (Now - s_lastSgTime) < s_5MinuteSpan Then
                                 diffSg = s_lastSgDiff
@@ -1870,13 +1868,11 @@ Public Class Form1
                         End If
                         Me.LabelTrendValue.Text = diffSg.ToString(If(nativeMmolL, "+ 0.00;-#.00", "+0;-#"), CultureInfo.InvariantCulture)
                         Me.LabelTrendValue.ForeColor = backColor
-                        notStr.Append(diffSg.ToString(If(nativeMmolL, "+ 0.00;-#.00", "+0;-#"), CultureInfo.InvariantCulture))
+                        notStr.AppendLine($"SG Trend { diffSg.ToString(If(nativeMmolL, "+ 0.00;-#.00", "+0;-#"), CultureInfo.InvariantCulture)}")
                     End If
-                    notStr.Append(vbCrLf)
-                    notStr.Append("Active ins. ")
-                    notStr.Append($"{s_activeInsulin.amount:N3}")
-                    notStr.Append("U"c)
+                    notStr.Append($"Active ins. {s_activeInsulin.amount:N3}U")
                     Me.NotifyIcon1.Text = notStr.ToString
+                    Me.NotifyIcon1.Visible = True
                     s_lastSgValue = sg
                 End Using
             End Using
