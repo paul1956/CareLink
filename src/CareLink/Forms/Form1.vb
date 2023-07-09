@@ -1598,10 +1598,10 @@ Public Class Form1
         Dim splitPanelMidpoint As Integer = Me.SplitContainer3.Panel2.Width \ 2
         For Each control1 As Control In Me.SplitContainer3.Panel2.Controls
             Select Case control1.Name
-                Case NameOf(Me.LowDeviationLabel)
-                    Me.LowDeviationLabel.Left = splitPanelMidpoint - Me.LowDeviationLabel.Width
-                Case NameOf(Me.HighDeviationLabel)
-                    Me.HighDeviationLabel.Left = splitPanelMidpoint
+                Case NameOf(Me.LowTirComplianceLabel)
+                    Me.LowTirComplianceLabel.Left = splitPanelMidpoint - Me.LowTirComplianceLabel.Width
+                Case NameOf(Me.HighTirComplianceLabel)
+                    Me.HighTirComplianceLabel.Left = splitPanelMidpoint
                 Case Else
                     DirectCast(control1, Label).AutoSize = True
                     control1.Left = splitPanelMidpoint - (control1.Width \ 2)
@@ -2377,6 +2377,7 @@ Public Class Form1
         Dim lowCount As Integer = 0
         Dim lowDeviations As Double = 0
         Dim elements As Integer = 0
+        Dim highScale As Single = (GetYMaxValue(False) - TirHighLimit(False)) / (TirLowLimit(False) - GetYMinValue(False))
         For Each sg As SgRecord In s_listOfSgRecords.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg))
             elements += 1
             If sg.sgMmDl < 70 Then
@@ -2395,31 +2396,34 @@ Public Class Form1
                 End If
             End If
         Next
+        highDeviations /= 11
 
         If elements = 0 Then
-            Me.LowDeviationLabel.Text = ""
-            Me.HighDeviationLabel.Text = ""
+            Me.LowTirComplianceLabel.Text = ""
+            Me.HighTirComplianceLabel.Text = ""
         Else
             Dim lowDeviation As Single = CSng(Math.Sqrt(lowDeviations / (elements - highCount))).RoundSingle(1, False)
-            Me.LowDeviationLabel.Text = If(lowCount > 0,
-                $"{lowDeviation.ToString(CurrentDataCulture)} Low",
-                "0 Low")
-            Me.LowDeviationLabel.ForeColor = If(lowDeviation < 2, Color.LimeGreen, Color.Red)
+            Me.LowTirComplianceLabel.Text = If(lowCount > 0,
+                                           $"{lowDeviation.ToString(CurrentDataCulture)} Low",
+                                           "0 Low"
+                                          )
+            Me.LowTirComplianceLabel.ForeColor = If(lowDeviation < 2, Color.LimeGreen, Color.Red)
             Dim highDeviation As Single = CSng(Math.Sqrt(highDeviations / (elements - lowCount))).RoundSingle(1, False)
-            Me.HighDeviationLabel.Text = If(highCount > 0,
-                $"{highDeviation.ToString(CurrentDataCulture)} High",
-                "0 High")
-            Me.HighDeviationLabel.ForeColor = If(highDeviation < 10, Color.LimeGreen, Color.Red)
+            Me.HighTirComplianceLabel.Text = If(highCount > 0,
+                                            $"{highDeviation.ToString(CurrentDataCulture)} High",
+                                            "0 High"
+                                           )
+            Me.HighTirComplianceLabel.ForeColor = If(highDeviation < 2, Color.LimeGreen, Color.Red)
         End If
 
         Dim splitPanelMidpoint As Integer = Me.SplitContainer3.Panel2.Width \ 2
         For Each control1 As Control In Me.SplitContainer3.Panel2.Controls
             If TypeOf control1 Is Label Then
                 Select Case control1.Name
-                    Case NameOf(Me.LowDeviationLabel)
-                        Me.LowDeviationLabel.Left = splitPanelMidpoint - Me.LowDeviationLabel.Width
-                    Case NameOf(Me.HighDeviationLabel)
-                        Me.HighDeviationLabel.Left = splitPanelMidpoint
+                    Case NameOf(Me.LowTirComplianceLabel)
+                        Me.LowTirComplianceLabel.Left = splitPanelMidpoint - Me.LowTirComplianceLabel.Width
+                    Case NameOf(Me.HighTirComplianceLabel)
+                        Me.HighTirComplianceLabel.Left = splitPanelMidpoint
                     Case Else
                         DirectCast(control1, Label).AutoSize = True
                         control1.Left = splitPanelMidpoint - (control1.Width \ 2)

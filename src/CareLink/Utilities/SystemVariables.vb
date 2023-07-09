@@ -22,6 +22,18 @@ Friend Module SystemVariables
 
     Friend Property MaxBasalPerDose As Single
 
+    Friend ReadOnly Property MgDlItems As New Dictionary(Of String, Single) From {
+                            {$"100 mg/dL", 100.0},
+                            {$"110 mg/dL", 110.0},
+                            {$"120 mg/dL", 120.0}
+                        }
+
+    Friend ReadOnly Property MmolLItems As New Dictionary(Of String, Single) From {
+                            {$"5.6 mmol/L", 5.6},
+                            {$"6.1 mmol/L", 6.1},
+                            {$"6.7 mmol/L", 6.7}
+                        }
+
     Friend Property nativeMmolL As Boolean = False
 
     Friend Property TreatmentInsulinRow As Single
@@ -35,6 +47,15 @@ Friend Module SystemVariables
                     342 / MmolLUnitsDivisor,
                     Math.Max(maxYScaled, 260 / MmolLUnitsDivisor)),
                 If(s_listOfSgRecords.Count = 0 OrElse maxYScaled > 330, 342, Math.Max(maxYScaled, 260))))
+    End Function
+
+    Friend Function GetSgTarget() As Single
+        Return If(CurrentUser.CurrentTarget <> 0,
+                  CurrentUser.CurrentTarget,
+                  If(nativeMmolL,
+                     MmolLItems.Last.Value,
+                     MgDlItems.Last.Value)
+                    )
     End Function
 
     Friend Function GetTIR() As UInteger

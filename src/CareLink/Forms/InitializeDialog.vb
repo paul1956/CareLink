@@ -22,25 +22,12 @@ Public Class InitializeDialog
     Private ReadOnly _insulinTypesBindingSource As New BindingSource(
                 s_insulinTypes, Nothing)
 
-    Private ReadOnly _mgDlItems As New Dictionary(Of String, Single) From
-            {
-                {$"100 mg/dL", 100.0},
-                {$"110 mg/dL", 110.0},
-                {$"120 mg/dL", 120.0}
-            }
-
     Private ReadOnly _midday As String = New TimeOnly(12, 0).ToString(CurrentDateCulture)
 
     Private ReadOnly _midnight As String = New TimeOnly(0, 0).ToString(CurrentDateCulture)
 
-    Private ReadOnly _mmolLItems As New Dictionary(Of String, Single) From
-            {
-                {$"5.6 mmol/L", 5.6},
-                {$"6.1 mmol/L", 6.1},
-                {$"6.7 mmol/L", 6.7}
-            }
-
     Private _currentUserBackup As CurrentUserRecord = Nothing
+
     Public Property InitializeDialogRecentData As Dictionary(Of String, String)
     Public Property CurrentUser As CurrentUserRecord
 
@@ -176,17 +163,12 @@ Public Class InitializeDialog
 
         With Me.TargetSgComboBox
 
-            If nativeMmolL Then
-                .DataSource = New BindingSource(_mmolLItems, Nothing)
-                If Me.CurrentUser.CurrentTarget = 0 Then
-                    Me.CurrentUser.CurrentTarget = _mmolLItems.Last.Value
-                End If
-            Else
-                .DataSource = New BindingSource(_mgDlItems, Nothing)
-                If Me.CurrentUser.CurrentTarget = 0 Then
-                    Me.CurrentUser.CurrentTarget = _mgDlItems.Last.Value
-                End If
-            End If
+            .DataSource = If(nativeMmolL,
+                             New BindingSource(MmolLItems, Nothing),
+                             New BindingSource(MgDlItems, Nothing)
+                            )
+            Me.CurrentUser.CurrentTarget = GetSgTarget()
+
             .Enabled = Not Is770G(Me.InitializeDialogRecentData)
             .DisplayMember = "Key"
             .ValueMember = "Value"

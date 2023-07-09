@@ -45,9 +45,13 @@ Try it out and send feedback.
 - Medtronic CareLink™ data display
 
 # Updated
-07/08/2023
+07/15/2023
 
 ## What's New
+New in 3.8.3.2
+- Improve label and calculation for TIR Compliance measurement
+
+
 New in 3.8.3.1
 - Improve display of Sg values in mmol/M
 - Make Tray Icon larger

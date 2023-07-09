@@ -140,7 +140,7 @@ Partial Class Form1
         TimeInRangeChartLabel = New Label()
         TimeInRangeSummaryPercentCharLabel = New Label()
         TimeInRangeValueLabel = New Label()
-        DeviationsLabel = New Label()
+        TirComplianceLabel = New Label()
         SmartGuardLabel = New Label()
         TabControlPage1 = New TabControl()
         TabPage01HomePage = New TabPage()
@@ -224,8 +224,8 @@ Partial Class Form1
         TimeZoneToolStripStatusLabel = New ToolStripStatusLabel()
         StatusStripSpacerRight = New ToolStripStatusLabel()
         UpdateAvailableStatusStripLabel = New ToolStripStatusLabel()
-        LowDeviationLabel = New Label()
-        HighDeviationLabel = New Label()
+        LowTirComplianceLabel = New Label()
+        HighTirComplianceLabel = New Label()
         MenuStrip1.SuspendLayout()
         CType(CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         CalibrationShieldPanel.SuspendLayout()
@@ -1474,9 +1474,9 @@ Partial Class Form1
         SplitContainer3.Panel2.Controls.Add(BelowLowLimitMessageLabel)
         SplitContainer3.Panel2.Controls.Add(AverageSGValueLabel)
         SplitContainer3.Panel2.Controls.Add(AverageSGMessageLabel)
-        SplitContainer3.Panel2.Controls.Add(DeviationsLabel)
-        SplitContainer3.Panel2.Controls.Add(HighDeviationLabel)
-        SplitContainer3.Panel2.Controls.Add(LowDeviationLabel)
+        SplitContainer3.Panel2.Controls.Add(TirComplianceLabel)
+        SplitContainer3.Panel2.Controls.Add(HighTirComplianceLabel)
+        SplitContainer3.Panel2.Controls.Add(LowTirComplianceLabel)
         SplitContainer3.Panel2.Controls.Add(SmartGuardLabel)
         SplitContainer3.Size = New Size(1370, 498)
         SplitContainer3.SplitterDistance = 1136
@@ -1546,42 +1546,42 @@ Partial Class Form1
         SmartGuardLabel.Text = "SmartGuard 100%"
         SmartGuardLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
-        ' DeviationsLabel
+        ' TirComplianceLabel
         ' 
-        DeviationsLabel.Anchor = AnchorStyles.Top
-        DeviationsLabel.BackColor = Color.Transparent
-        DeviationsLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
-        DeviationsLabel.ForeColor = Color.White
-        DeviationsLabel.Location = New Point(3, 442)
-        DeviationsLabel.Name = "DeviationsLabel"
-        DeviationsLabel.Size = New Size(226, 25)
-        DeviationsLabel.TabIndex = 35
-        DeviationsLabel.Text = "TIR Standard Deviations"
-        DeviationsLabel.TextAlign = ContentAlignment.MiddleCenter
+        TirComplianceLabel.Anchor = AnchorStyles.Top
+        TirComplianceLabel.BackColor = Color.Transparent
+        TirComplianceLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
+        TirComplianceLabel.ForeColor = Color.White
+        TirComplianceLabel.Location = New Point(3, 442)
+        TirComplianceLabel.Name = "TirComplianceLabel"
+        TirComplianceLabel.Size = New Size(226, 25)
+        TirComplianceLabel.TabIndex = 35
+        TirComplianceLabel.Text = "TIR Compliance"
+        TirComplianceLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
-        ' LowDeviationLabel
+        ' LowTirComplianceLabel
         ' 
-        LowDeviationLabel.AutoSize = False
-        LowDeviationLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
-        LowDeviationLabel.ForeColor = Color.Red
-        LowDeviationLabel.Location = New Point(3, 468)
-        LowDeviationLabel.Name = "LowDeviationLabel"
-        LowDeviationLabel.Size = New Size(112, 25)
-        LowDeviationLabel.TabIndex = 36
-        LowDeviationLabel.Text = "2.1 Low"
-        LowDeviationLabel.TextAlign = ContentAlignment.MiddleCenter
+        LowTirComplianceLabel.AutoSize = False
+        LowTirComplianceLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
+        LowTirComplianceLabel.ForeColor = Color.Red
+        LowTirComplianceLabel.Location = New Point(3, 468)
+        LowTirComplianceLabel.Name = "LowTirComplianceLabel"
+        LowTirComplianceLabel.Size = New Size(112, 25)
+        LowTirComplianceLabel.TabIndex = 36
+        LowTirComplianceLabel.Text = "2.1 Low"
+        LowTirComplianceLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
-        ' HighDeviationLabel
+        ' HighTirComplianceLabel
         '
-        HighDeviationLabel.AutoSize = False
-        HighDeviationLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
-        HighDeviationLabel.ForeColor = Color.LimeGreen
-        HighDeviationLabel.Location = New Point(115, 468)
-        HighDeviationLabel.Name = "HighDeviationLabel"
-        HighDeviationLabel.Size = New Size(112, 25)
-        HighDeviationLabel.TabIndex = 37
-        HighDeviationLabel.Text = "5.0 High"
-        HighDeviationLabel.TextAlign = ContentAlignment.MiddleCenter
+        HighTirComplianceLabel.AutoSize = False
+        HighTirComplianceLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
+        HighTirComplianceLabel.ForeColor = Color.LimeGreen
+        HighTirComplianceLabel.Location = New Point(115, 468)
+        HighTirComplianceLabel.Name = "HighTirComplianceLabel"
+        HighTirComplianceLabel.Size = New Size(112, 25)
+        HighTirComplianceLabel.TabIndex = 37
+        HighTirComplianceLabel.Text = "5.0 High"
+        HighTirComplianceLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' TabControlPage1
         ' 
@@ -2870,7 +2870,7 @@ Partial Class Form1
     Friend WithEvents CursorPanel As Panel
     Friend WithEvents CursorPictureBox As PictureBox
     Friend WithEvents CursorTimer As Timer
-    Friend WithEvents DeviationsLabel As Label
+    Friend WithEvents TirComplianceLabel As Label
     Friend WithEvents DgvAutoBasalDelivery As DataGridView
     Friend WithEvents DgvCareLinkUsers As DataGridView
     Friend WithEvents DgvCareLinkUsersUserPassword As DataGridViewTextBoxColumn
@@ -3050,6 +3050,6 @@ Partial Class Form1
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
     Friend WithEvents UpdateAvailableStatusStripLabel As ToolStripStatusLabel
     Friend WithEvents WebView As Microsoft.Web.WebView2.WinForms.WebView2
-    Friend WithEvents LowDeviationLabel As Label
-    Friend WithEvents HighDeviationLabel As Label
+    Friend WithEvents LowTirComplianceLabel As Label
+    Friend WithEvents HighTirComplianceLabel As Label
 End Class
