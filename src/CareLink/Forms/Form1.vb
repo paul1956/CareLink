@@ -1058,6 +1058,10 @@ Public Class Form1
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
         CheckForUpdatesAsync(False)
 
+        Dim caption As String = $"TIR Compliance, value in (){vbCrLf}Values<2 is Excellent and not shown{vbCrLf}Value<4 are considered OK, it is possible to improve{vbCrLf}Values>4 implies improvement needed{vbCrLf}"
+        Me.ToolTip1.SetToolTip(Me.LowTirComplianceLabel, caption)
+        Me.ToolTip1.SetToolTip(Me.HighTirComplianceLabel, caption)
+
         Me.NotifyIcon1.Visible = True
         Application.DoEvents()
         Me.NotifyIcon1.Visible = False
