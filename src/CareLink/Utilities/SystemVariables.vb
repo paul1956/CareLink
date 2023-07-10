@@ -3,10 +3,10 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Module SystemVariables
+    Friend s_allUserSettingsData As New CareLinkUserDataList
     Friend s_useLocalTimeZone As Boolean
-    Public s_allUserSettingsData As New CareLinkUserDataList
-
     Friend Property CurrentUser As CurrentUserRecord
+    Friend Property DecimalSeparator As String = "."
 
     Friend Property GraphColorDictionary As New Dictionary(Of String, KnownColor) From {
                         {"Active Insulin", KnownColor.Lime},
@@ -28,8 +28,14 @@ Friend Module SystemVariables
                             {$"120 mg/dL", 120.0}
                         }
 
-    Friend ReadOnly Property MmolLItems As New Dictionary(Of String, Single) From {
-                            {$"5.6 mmol/L", 5.6},
+    Friend ReadOnly Property MmolLItemsComma As New Dictionary(Of String, Single) From {
+                            {$"5,6 mmol/L", 5.6},
+                            {$"6,1 mmol/L", 6.1},
+                            {$"6,7 mmol/L", 6.7}
+                        }
+
+    Friend ReadOnly Property MmolLItemsPeriod As New Dictionary(Of String, Single) From {
+                                {$"5.6 mmol/L", 5.6},
                             {$"6.1 mmol/L", 6.1},
                             {$"6.7 mmol/L", 6.7}
                         }
@@ -53,7 +59,7 @@ Friend Module SystemVariables
         Return If(CurrentUser.CurrentTarget <> 0,
                   CurrentUser.CurrentTarget,
                   If(nativeMmolL,
-                     MmolLItems.Last.Value,
+                     MmolLItemsPeriod.Last.Value,
                      MgDlItems.Last.Value)
                     )
     End Function
@@ -77,8 +83,16 @@ Friend Module SystemVariables
         Return If(asMmolL, 10, 180)
     End Function
 
+    Friend Function TirHighLimitAsString(asMmolL As Boolean) As String
+        Return If(asMmolL, "10", "180")
+    End Function
+
     Friend Function TirLowLimit(asMmolL As Boolean) As Single
         Return If(asMmolL, CSng(3.9), 70)
+    End Function
+
+    Friend Function TirLowLimitAsString(asMmolL As Boolean) As String
+        Return If(asMmolL, "3.9", "70").Replace(".", CurrentUICulture.NumberFormat.NumberDecimalSeparator)
     End Function
 
 End Module

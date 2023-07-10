@@ -34,7 +34,7 @@ Friend Module DateTimeExtensions
         Date.TryParse(dateAsString, CurrentUICulture, styles, resultDate) Then
             Return resultDate
         End If
-        If Date.TryParse(dateAsString, CurrentDataCulture, styles, resultDate) Then
+        If Date.TryParse(dateAsString, usDataCulture, styles, resultDate) Then
             Return resultDate
         End If
         For Each c As CultureInfo In s_dateTimeFormatUniqueCultures

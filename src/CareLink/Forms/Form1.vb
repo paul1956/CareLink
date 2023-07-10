@@ -677,7 +677,7 @@ Public Class Form1
             Case Else
                 If dgv.Columns(e.ColumnIndex).ValueType = GetType(Single) Then
                     Dim value As Single = ParseSingle(e.Value, 3)
-                    e.Value = value.ToString("F3", CurrentDataCulture)
+                    e.Value = value.ToString("F3", CurrentUICulture)
                     If value <> 0 AndAlso dgv.Columns(e.ColumnIndex).Name = NameOf(InsulinRecord.SafeMealReduction) Then
                         e.CellStyle.ForeColor = Color.OrangeRed
                     End If
@@ -1840,7 +1840,7 @@ Public Class Form1
                         Case <= TirLowLimit(nativeMmolL)
                             backColor = Color.Yellow
                             If _showBalloonTip Then
-                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}™ Alert", $"SG below {TirLowLimit(nativeMmolL)} {SgUnitsNativeString}", Me.ToolTip1.ToolTipIcon)
+                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}™ Alert", $"SG below {TirLowLimitAsString(nativeMmolL)} {SgUnitsNativeString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
                         Case <= TirHighLimit(nativeMmolL)
@@ -1849,7 +1849,7 @@ Public Class Form1
                         Case Else
                             backColor = Color.Red
                             If _showBalloonTip Then
-                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}™ Alert", $"SG above {TirHighLimit(nativeMmolL)} {SgUnitsNativeString}", Me.ToolTip1.ToolTipIcon)
+                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}™ Alert", $"SG above {TirHighLimitAsString(nativeMmolL)} {SgUnitsNativeString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
                     End Select
@@ -2306,11 +2306,11 @@ Public Class Form1
         With Me.TimeInRangeChart
             With .Series(NameOf(TimeInRangeSeries)).Points
                 .Clear()
-                .AddXY($"{s_belowHypoLimit}% Below {TirLowLimit(nativeMmolL)} {SgUnitsNativeString}", s_belowHypoLimit / 100)
+                .AddXY($"{s_belowHypoLimit}% Below {TirLowLimitAsString(nativeMmolL)} {SgUnitsNativeString}", s_belowHypoLimit / 100)
                 .Last().Color = Color.Red
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
-                .AddXY($"{s_aboveHyperLimit}% Above {TirHighLimit(nativeMmolL)} {SgUnitsNativeString}", s_aboveHyperLimit / 100)
+                .AddXY($"{s_aboveHyperLimit}% Above {TirHighLimitAsString(nativeMmolL)} {SgUnitsNativeString}", s_aboveHyperLimit / 100)
                 .Last().Color = Color.Yellow
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
@@ -2324,10 +2324,10 @@ Public Class Form1
         End With
 
         Me.AboveHighLimitValueLabel.Text = $"{s_aboveHyperLimit} %"
-        Me.AboveHighLimitMessageLabel.Text = $"Above {TirHighLimit(nativeMmolL)} {SgUnitsNativeString}"
+        Me.AboveHighLimitMessageLabel.Text = $"Above {TirHighLimitAsString(nativeMmolL)} {SgUnitsNativeString}"
         Me.TimeInRangeValueLabel.Text = $"{GetTIR()} %"
         Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
-        Me.BelowLowLimitMessageLabel.Text = $"Below {TirLowLimit(nativeMmolL)} {SgUnitsNativeString}"
+        Me.BelowLowLimitMessageLabel.Text = $"Below {TirLowLimitAsString(nativeMmolL)} {SgUnitsNativeString}"
         Dim averageSgStr As String = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.averageSG))
         Me.AverageSGValueLabel.Text = If(nativeMmolL, averageSgStr.TruncateSingleString(2), averageSgStr)
         Me.AverageSGMessageLabel.Text = $"Average SG in {SgUnitsNativeString}"
@@ -2403,17 +2403,30 @@ Public Class Form1
             Me.HighTirComplianceLabel.Text = ""
         Else
             Dim lowDeviation As Single = CSng(Math.Sqrt(lowDeviations / (elements - highCount))).RoundSingle(1, False)
-            Me.LowTirComplianceLabel.Text = If(lowCount > 0,
-                                           $"{lowDeviation.ToString(CurrentDataCulture)} Low",
-                                           "0 Low"
-                                          )
-            Me.LowTirComplianceLabel.ForeColor = If(lowDeviation < 2, Color.LimeGreen, Color.Red)
+            Select Case True
+                Case lowDeviation <= 2
+                    Me.LowTirComplianceLabel.Text = $"<{TirLowLimitAsString(nativeMmolL)}{vbCrLf}Excellent"
+                    Me.LowTirComplianceLabel.ForeColor = Color.LimeGreen
+                Case lowDeviation <= 4
+                    Me.LowTirComplianceLabel.Text = $"<{TirLowLimitAsString(nativeMmolL)}{vbCrLf}({lowDeviation}) OK"
+                    Me.LowTirComplianceLabel.ForeColor = Color.Yellow
+                Case Else
+                    Me.LowTirComplianceLabel.Text = $"<{TirLowLimitAsString(nativeMmolL)}{vbCrLf}({lowDeviation}) Needs{vbCrLf}Improvement"
+                    Me.LowTirComplianceLabel.ForeColor = Color.Red
+            End Select
+
             Dim highDeviation As Single = CSng(Math.Sqrt(highDeviations / (elements - lowCount))).RoundSingle(1, False)
-            Me.HighTirComplianceLabel.Text = If(highCount > 0,
-                                            $"{highDeviation.ToString(CurrentDataCulture)} High",
-                                            "0 High"
-                                           )
-            Me.HighTirComplianceLabel.ForeColor = If(highDeviation < 2, Color.LimeGreen, Color.Red)
+            Select Case True
+                Case highDeviation <= 2
+                    Me.HighTirComplianceLabel.Text = $">{TirHighLimitAsString(nativeMmolL)}{vbCrLf}Excellent"
+                    Me.HighTirComplianceLabel.ForeColor = Color.LimeGreen
+                Case highDeviation <= 4
+                    Me.HighTirComplianceLabel.Text = $">{TirHighLimitAsString(nativeMmolL)}{vbCrLf}({highDeviation}) OK"
+                    Me.HighTirComplianceLabel.ForeColor = Color.Yellow
+                Case Else
+                    Me.HighTirComplianceLabel.Text = $">{TirHighLimitAsString(nativeMmolL)}{vbCrLf}({highDeviation}) Needs{vbCrLf}Improvement "
+                    Me.HighTirComplianceLabel.ForeColor = Color.Red
+            End Select
         End If
 
         Dim splitPanelMidpoint As Integer = Me.SplitContainer3.Panel2.Width \ 2

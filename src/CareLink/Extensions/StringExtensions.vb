@@ -122,7 +122,7 @@ Public Module StringExtensions
                 Return s
             End If
             i = s.Length
-            s &= CurrentDataCulture.NumberFormat.NumberDecimalSeparator
+            s &= CurrentUICulture.NumberFormat.NumberDecimalSeparator
         End If
         s &= New String("0"c, decimalDigits + 1)
         Return s.Substring(0, i + decimalDigits + 1)

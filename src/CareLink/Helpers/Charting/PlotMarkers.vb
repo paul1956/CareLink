@@ -154,9 +154,9 @@ Friend Module PlotMarkers
                         With pageChart.Series(CreateChartItems.TimeChangeSeriesName).Points
                             lastTimeChangeRecord = New TimeChangeRecord(entry)
                             markerOADateTime = New OADate(lastTimeChangeRecord.GetLatestTime)
-                            Call .AddXY(markerOADateTime, 0)
-                            Call .AddXY(markerOADateTime, GetYMaxValue(nativeMmolL))
-                            Call .AddXY(markerOADateTime, Double.NaN)
+                            .AddXY(markerOADateTime, 0)
+                            .AddXY(markerOADateTime, GetYMaxValue(nativeMmolL))
+                            .AddXY(markerOADateTime, Double.NaN)
                         End With
                     Case Else
                         Stop

@@ -15,8 +15,8 @@ Friend Module KeyValuePairExtensions
     <Extension>
     Private Function ScaleSgToString(value As Single) As String
         Return If(nativeMmolL,
-                  (value / MmolLUnitsDivisor).RoundSingle(If(nativeMmolL, 2, 0), False).ToString(CurrentDataCulture),
-                  value.ToString(CurrentDataCulture)
+                  (value / MmolLUnitsDivisor).RoundSingle(If(nativeMmolL, 2, 0), False).ToString(CurrentUICulture),
+                  value.ToString(CurrentUICulture)
                  )
     End Function
 

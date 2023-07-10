@@ -160,14 +160,17 @@ Public Class InitializeDialog
 
         Me.ColumnStart.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
         Me.ColumnEnd.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
+        ' New BindingSource(MmolLItems, Nothing),
 
+        Me.CurrentUser.CurrentTarget = GetSgTarget()
         With Me.TargetSgComboBox
-
             .DataSource = If(nativeMmolL,
-                             New BindingSource(MmolLItems, Nothing),
+                             If(CurrentUICulture.NumberFormat.NumberDecimalSeparator = ".",
+                                New BindingSource(MmolLItemsPeriod, Nothing),
+                                New BindingSource(MmolLItemsComma, Nothing)
+                               ),
                              New BindingSource(MgDlItems, Nothing)
                             )
-            Me.CurrentUser.CurrentTarget = GetSgTarget()
 
             .Enabled = Not Is770G(Me.InitializeDialogRecentData)
             .DisplayMember = "Key"

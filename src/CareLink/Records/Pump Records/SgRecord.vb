@@ -131,7 +131,7 @@ Public Class SgRecord
     Public Property version As Integer
 
     Public Overrides Function ToString() As String
-        Return If(nativeMmolL, Me.sg.ToString("F2", CurrentDataCulture), Me.sg.ToString("F0"))
+        Return If(nativeMmolL, Me.sg.ToString("F2", CurrentUICulture), Me.sg.ToString("F0"))
     End Function
 
 End Class
