@@ -95,8 +95,10 @@ Public Class SgMiniWindow
             End If
             Select Case _normalizedSg
                 Case = 0
+                    Me.SgTextBox.BackColor = SystemColors.Window
                     Me.SgTextBox.ForeColor = Color.Black
                 Case <= 70
+                    Me.SgTextBox.BackColor = SystemColors.Window
                     Me.SgTextBox.ForeColor = Color.Red
                     If Not _alarmPlayedLow Then
                         Me.PlaySoundFromResource("Low Alarm")
@@ -104,10 +106,12 @@ Public Class SgMiniWindow
                         _alarmPlayedHigh = False
                     End If
                 Case <= 180
+                    Me.SgTextBox.BackColor = SystemColors.Window
                     Me.SgTextBox.ForeColor = Color.Green
                     _alarmPlayedLow = False
                     _alarmPlayedHigh = False
                 Case Else
+                    Me.SgTextBox.BackColor = GetContrastingColor(Color.Yellow)
                     Me.SgTextBox.ForeColor = Color.Yellow
                     If Not _alarmPlayedHigh Then
                         Me.PlaySoundFromResource("High Alarm")

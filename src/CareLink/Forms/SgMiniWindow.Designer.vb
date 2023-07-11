@@ -38,10 +38,10 @@ Partial Class SgMiniWindow
         ' 
         SgTextBox.BorderStyle = BorderStyle.None
         SgTextBox.Font = New Font("Segoe UI", 36.0F, FontStyle.Regular, GraphicsUnit.Point)
-        SgTextBox.Location = New Point(4, 29)
+        SgTextBox.Location = New Point(1, 29)
         SgTextBox.Margin = New Padding(0)
         SgTextBox.Name = "SgTextBox"
-        SgTextBox.Size = New Size(139, 64)
+        SgTextBox.Size = New Size(134, 64)
         SgTextBox.TabIndex = 1
         SgTextBox.Text = "9999"
         SgTextBox.TextAlign = HorizontalAlignment.Center

@@ -31,7 +31,7 @@ Public Class Form1
     Private _treatmentMarkerAbsoluteRectangle As RectangleF
     Private _updating As Boolean
 
-    Public Property Client As CareLinkClient
+    Public Shared Property Client As CareLinkClient
         Get
             Return LoginDialog?.Client
         End Get
@@ -1477,14 +1477,14 @@ Public Class Form1
         SyncLock _updatingLock
             If Not _updating Then
                 _updating = True
-                RecentData = Me.Client?.GetRecentData()
+                RecentData = Client?.GetRecentData()
                 If RecentData Is Nothing Then
-                    If Me.Client Is Nothing OrElse Me.Client.HasErrors Then
-                        Me.Client = New CareLinkClient(My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
+                    If Client Is Nothing OrElse Client.HasErrors Then
+                        Client = New CareLinkClient(My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
                     End If
-                    RecentData = Me.Client.GetRecentData()
+                    RecentData = Client.GetRecentData()
                 End If
-                ReportLoginStatus(Me.LoginStatus, RecentData Is Nothing OrElse RecentData.Count = 0, Me.Client.GetLastErrorMessage)
+                ReportLoginStatus(Me.LoginStatus, RecentData Is Nothing OrElse RecentData.Count = 0, Client.GetLastErrorMessage)
 
                 Me.Cursor = Cursors.Default
                 Application.DoEvents()
@@ -1494,7 +1494,7 @@ Public Class Form1
 
         Dim lastMedicalDeviceDataUpdateServerEpochString As String = ""
         If RecentData Is Nothing OrElse RecentData.Count = 0 Then
-            ReportLoginStatus(Me.LoginStatus, True, Me.Client.GetLastErrorMessage)
+            ReportLoginStatus(Me.LoginStatus, True, Client.GetLastErrorMessage)
 
             _sgMiniDisplay.SetCurrentSgString("---")
         Else
