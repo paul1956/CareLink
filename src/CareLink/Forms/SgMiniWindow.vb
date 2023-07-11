@@ -97,7 +97,7 @@ Public Class SgMiniWindow
                 Case = 0
                     Me.SgTextBox.BackColor = SystemColors.Window
                     Me.SgTextBox.ForeColor = Color.Black
-                Case <= 70
+                Case < 70
                     Me.SgTextBox.BackColor = SystemColors.Window
                     Me.SgTextBox.ForeColor = Color.Red
                     If Not _alarmPlayedLow Then
