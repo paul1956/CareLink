@@ -59,11 +59,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.101.0" />
+    <PackageReference Include="ClosedXML" Version="0.102.0" />
     <PackageReference Include="DataGridViewDisableButtonColumnEx" Version="1.0.0.1" />
-    <PackageReference Include="Microsoft.Exchange.WebServices.NETStandard" Version="2.0.0-beta3" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1823.32" />
-    <PackageReference Include="Octokit" Version="6.0.0" />
+    <PackageReference Include="Octokit" Version="7.0.1" />
     <PackageReference Include="TableLayputPanelTop" Version="1.0.0.2" />
     <PackageReference Include="ToolStripComboBoxEx" Version="1.0.0.2" />
     <PackageReference Include="WinForms.DataVisualization" Version="1.8.0" />
