@@ -1744,7 +1744,7 @@ Public Class Form1
         End Select
 
         Dim labelColor As Color = Me.TreatmentMarkersChart.BackColor.GetContrastingColor
-        Dim labelFont As New Font("Trebuchet MS", 12.0F, FontStyle.Bold)
+        Dim labelFont As New Font("Segoe UI", 12.0F, FontStyle.Bold)
 
         With treatmentMarkersChartArea.AxisY
             Dim interval As Single = (TreatmentInsulinRow / 10).RoundSingle(3, False)

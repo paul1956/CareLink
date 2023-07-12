@@ -28,7 +28,6 @@ Partial Class OptionsDialog
         Cancel_Button = New Button()
         Me.ItemNameComboBox = New NameColorComboBox()
         UpdateForeground_Button = New Button()
-        FontDialog1 = New FontDialog()
         Me.KnownColorsComboBox1 = New KnownColorComboBox()
         TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
@@ -132,6 +131,5 @@ Partial Class OptionsDialog
     Friend WithEvents ItemNameComboBox As NameColorComboBox
     Friend WithEvents UpdateForeground_Button As Button
     Friend WithEvents OptionsBindingSource As BindingSource
-    Friend WithEvents FontDialog1 As FontDialog
     Friend WithEvents KnownColorsComboBox1 As KnownColorComboBox
 End Class
