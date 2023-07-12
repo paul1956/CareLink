@@ -60,7 +60,7 @@ Friend Module DrawingExtensions
     End Function
 
     Public Function CreateTextIcon(str As String, backColor As Color) As Icon
-        Dim fontToUse As New Font("Trebuchet MS", 10, FontStyle.Regular, GraphicsUnit.Pixel)
+        Dim fontToUse As New Font("Segoe UI", 10, FontStyle.Regular, GraphicsUnit.Pixel)
         Dim brushToUse As Brush = New SolidBrush(Color.White)
         Dim bitmapText As New Bitmap(16, 16)
         Dim g As Graphics = System.Drawing.Graphics.FromImage(bitmapText)

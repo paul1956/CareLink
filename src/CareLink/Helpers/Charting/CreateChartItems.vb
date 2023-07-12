@@ -83,7 +83,7 @@ Friend Module CreateChartItems
                  }
         With tmpChartArea
             Dim labelColor As Color = containingChart.BackColor.GetContrastingColor
-            Dim labelFont As New Font("Trebuchet MS", 12.0F, FontStyle.Bold)
+            Dim labelFont As New Font("Segoe UI", 12.0F, FontStyle.Bold)
 
             With .AxisX
                 .Interval = 2
@@ -208,7 +208,7 @@ Friend Module CreateChartItems
                         .BorderWidth = 0,
                         .Docking = Docking.Bottom,
                         .Enabled = File.Exists(GetPathToShowLegendFile(True)),
-                        .Font = New Font("Trebuchet MS", 20.0F, FontStyle.Bold),
+                        .Font = New Font("Segoe UI", 20.0F, FontStyle.Bold),
                         .ForeColor = .BackColor.GetContrastingColor,
                         .IsTextAutoFit = True
                     }
@@ -318,7 +318,7 @@ Friend Module CreateChartItems
     Friend Function CreateTitle(chartTitle As String, name As String, foreColor As Color) As Title
         Return New Title With {
                         .BackColor = foreColor.GetContrastingColor(),
-                        .Font = New Font("Trebuchet MS", 14.0F, FontStyle.Bold),
+                        .Font = New Font("Segoe UI", 14.0F, FontStyle.Bold),
                         .ForeColor = foreColor,
                         .Name = name,
                         .ShadowColor = Color.FromArgb(32, Color.Black),

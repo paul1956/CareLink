@@ -1657,7 +1657,7 @@ Public Class Form1
         Me.ActiveInsulinChart = CreateChart(NameOf(ActiveInsulinChart))
         Dim activeInsulinChartArea As ChartArea = CreateChartArea(Me.ActiveInsulinChart)
         Dim labelColor As Color = Me.ActiveInsulinChart.BackColor.GetContrastingColor
-        Dim labelFont As New Font("Trebuchet MS", 12.0F, FontStyle.Bold)
+        Dim labelFont As New Font("Segoe UI", 12.0F, FontStyle.Bold)
 
         With activeInsulinChartArea.AxisY
             .Interval = 2

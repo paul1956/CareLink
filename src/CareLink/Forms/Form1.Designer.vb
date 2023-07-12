@@ -520,7 +520,7 @@ Partial Class Form1
         ' 
         AboveHighLimitValueLabel.Anchor = AnchorStyles.Top
         AboveHighLimitValueLabel.BackColor = Color.Black
-        AboveHighLimitValueLabel.Font = New Font("Microsoft Sans Serif", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
+        AboveHighLimitValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         AboveHighLimitValueLabel.ForeColor = Color.White
         AboveHighLimitValueLabel.Location = New Point(55, 175)
         AboveHighLimitValueLabel.Name = "AboveHighLimitValueLabel"
@@ -572,7 +572,7 @@ Partial Class Form1
         ' 
         AverageSGValueLabel.Anchor = AnchorStyles.Top
         AverageSGValueLabel.BackColor = Color.Black
-        AverageSGValueLabel.Font = New Font("Microsoft Sans Serif", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
+        AverageSGValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         AverageSGValueLabel.ForeColor = Color.White
         AverageSGValueLabel.Location = New Point(55, 356)
         AverageSGValueLabel.Margin = New Padding(0)
@@ -641,7 +641,7 @@ Partial Class Form1
         ' 
         BelowLowLimitValueLabel.Anchor = AnchorStyles.Top
         BelowLowLimitValueLabel.BackColor = Color.Black
-        BelowLowLimitValueLabel.Font = New Font("Microsoft Sans Serif", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
+        BelowLowLimitValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         BelowLowLimitValueLabel.ForeColor = Color.White
         BelowLowLimitValueLabel.Location = New Point(55, 297)
         BelowLowLimitValueLabel.Name = "BelowLowLimitValueLabel"
@@ -1524,7 +1524,7 @@ Partial Class Form1
         ' 
         TimeInRangeValueLabel.Anchor = AnchorStyles.Top
         TimeInRangeValueLabel.BackColor = Color.Black
-        TimeInRangeValueLabel.Font = New Font("Microsoft Sans Serif", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
+        TimeInRangeValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
         TimeInRangeValueLabel.ForeColor = Color.White
         TimeInRangeValueLabel.Location = New Point(55, 236)
         TimeInRangeValueLabel.Name = "TimeInRangeValueLabel"
