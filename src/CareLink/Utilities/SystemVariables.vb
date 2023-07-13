@@ -2,8 +2,15 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Speech.Recognition
+Imports System.Speech.Synthesis
+
 Friend Module SystemVariables
     Friend s_allUserSettingsData As New CareLinkUserDataList
+    Friend s_speechDone As Boolean = False
+    Friend s_speechOn As Boolean = True
+    Friend s_sre As SpeechRecognitionEngine
+    Friend s_ss As New SpeechSynthesizer()
     Friend s_useLocalTimeZone As Boolean
     Friend Property CurrentUser As CurrentUserRecord
     Friend Property DecimalSeparator As String = "."

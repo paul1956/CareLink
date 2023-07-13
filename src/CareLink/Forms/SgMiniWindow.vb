@@ -4,6 +4,7 @@
 
 Imports System.ComponentModel
 Imports System.Media
+Imports System.Speech.Synthesis
 
 Public Class SgMiniWindow
     Private ReadOnly _form1 As Form1
@@ -54,6 +55,12 @@ Public Class SgMiniWindow
         End Using
     End Sub
 
+    Private Sub PlayText(text As String)
+        Dim synth As New SpeechSynthesizer
+        synth.SetOutputToDefaultAudioDevice()
+        synth.Speak(text)
+    End Sub
+
     Private Sub SgMiniWindow_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
         _form1.Visible = True
     End Sub
@@ -101,7 +108,11 @@ Public Class SgMiniWindow
                     Me.SgTextBox.BackColor = SystemColors.Window
                     Me.SgTextBox.ForeColor = Color.Red
                     If Not _alarmPlayedLow Then
-                        Me.PlaySoundFromResource("Low Alarm")
+                        If s_speechOn Then
+                            Me.PlayText($"Low Alarm current blood glucose {_normalizedSg}")
+                        Else
+                            Me.PlaySoundFromResource("Low Alarm")
+                        End If
                         _alarmPlayedLow = True
                         _alarmPlayedHigh = False
                     End If
@@ -114,7 +125,11 @@ Public Class SgMiniWindow
                     Me.SgTextBox.BackColor = GetContrastingColor(Color.Yellow)
                     Me.SgTextBox.ForeColor = Color.Yellow
                     If Not _alarmPlayedHigh Then
-                        Me.PlaySoundFromResource("High Alarm")
+                        If s_speechOn Then
+                            Me.PlayText($"High alarm current blood glucose {_normalizedSg}")
+                        Else
+                            Me.PlaySoundFromResource("High Alarm")
+                        End If
                         _alarmPlayedLow = False
                         _alarmPlayedHigh = True
                     End If

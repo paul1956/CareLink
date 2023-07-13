@@ -66,7 +66,7 @@ Friend Module Form1LoginHelpers
                 End If
 
                 ReportLoginStatus(Form1.LoginStatus, RecentData Is Nothing OrElse RecentData.Count = 0, Form1.Client.GetLastErrorMessage)
-
+                s_ss.Speak("Ask me what is my BG")
                 Form1.MenuShowMiniDisplay.Visible = True
                 fromFile = False
         End Select

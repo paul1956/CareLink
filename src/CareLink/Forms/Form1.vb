@@ -6,6 +6,7 @@ Imports System.ComponentModel
 Imports System.Configuration
 Imports System.Globalization
 Imports System.IO
+Imports System.Speech.Recognition
 Imports System.Text
 Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
@@ -15,7 +16,6 @@ Imports DataGridViewColumnControls
 Imports TableLayputPanelTop
 
 Public Class Form1
-
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
     Private ReadOnly _sgMiniDisplay As New SgMiniWindow(Me)
@@ -1067,8 +1067,72 @@ Public Class Form1
         Me.NotifyIcon1.Visible = False
         Application.DoEvents()
 
+#Region "Speech Recognation"
+
+        Dim ch_StartStopCommands As New Choices()
+        ch_StartStopCommands.Add("CareLink off")
+        ch_StartStopCommands.Add("CareLink on")
+        ch_StartStopCommands.Add("Speech off")
+        ch_StartStopCommands.Add("Speech on")
+        Dim gb_StartStop As New GrammarBuilder()
+        gb_StartStop.Append(ch_StartStopCommands)
+        Dim g_StartStop As New Grammar(gb_StartStop)
+        Try
+            s_ss.SetOutputToDefaultAudioDevice()
+            s_sre = New SpeechRecognitionEngine(New CultureInfo("en-us"))
+            s_sre.SetInputToDefaultAudioDevice()
+            AddHandler s_sre.SpeechRecognized, AddressOf Me.sre_SpeechRecognized
+            Dim ch_Blood As New Choices()
+            ch_Blood.Add("BG")
+            ch_Blood.Add("Blood Sugar")
+            ch_Blood.Add("Blood Glucose")
+            Dim gb_WhatIsMyBG As New GrammarBuilder()
+            gb_WhatIsMyBG.Append("What is my")
+            gb_WhatIsMyBG.Append(ch_Blood)
+            Dim g_WhatIsMyBG As New Grammar(gb_WhatIsMyBG)
+            s_sre.LoadGrammarAsync(g_StartStop)
+            s_sre.LoadGrammarAsync(g_WhatIsMyBG)
+            s_sre.RecognizeAsync(RecognizeMode.Multiple)
+        Catch ex As Exception
+            Debug.WriteLine(ex.Message)
+            Stop
+        End Try
+
+#End Region
+
         If DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
             Me.UpdateAllTabPages(False)
+        End If
+    End Sub
+
+    Private Sub sre_SpeechRecognized(sender As Object, e As SpeechRecognizedEventArgs)
+        Dim txt As String = e.Result.Text
+        Dim confidence As Single = e.Result.Confidence
+        Debug.WriteLine(vbLf & "Recognized: " & txt)
+        If confidence < 0.6 Then
+            Return
+        End If
+        If txt.Contains("speech on", StringComparison.CurrentCultureIgnoreCase) Then
+            Debug.WriteLine("Speech is now ON")
+            s_speechOn = True
+        End If
+        If txt.Contains("speech off", StringComparison.CurrentCultureIgnoreCase) Then
+            Debug.WriteLine("Speech is now OFF")
+            s_speechOn = False
+        End If
+        If s_speechOn = False Then
+            Return
+        End If
+        If txt.Contains("CareLink Off", StringComparison.CurrentCultureIgnoreCase) Then
+            CType(sender, SpeechRecognitionEngine).RecognizeAsyncCancel()
+            s_speechDone = True
+            Return
+        End If
+        If txt.Contains("what is my", StringComparison.CurrentCultureIgnoreCase) AndAlso
+                (txt.Contains("BG", StringComparison.CurrentCultureIgnoreCase) OrElse
+                txt.Contains("Blood Glucose", StringComparison.CurrentCultureIgnoreCase) OrElse
+                txt.Contains("Blood Sugar", StringComparison.CurrentCultureIgnoreCase)) Then
+            s_ss.SpeakAsync($"Current Blood Glucose is {Me.CurrentSgLabel.Text}")
         End If
     End Sub
 
