@@ -68,9 +68,9 @@ Public Module StringExtensions
                 lastWasNumeric = False
             End If
         Next
-        Dim resultString As String = result.Replace("Care Link", $"CareLink").ToString
+        Dim resultString As String = result.Replace("Care Link", ProjectName).ToString
         If Not resultString.Contains("™"c) Then
-            resultString = resultString.Replace("CareLink", $"CareLink™")
+            resultString = resultString.Replace(ProjectName, $"{ProjectName}™")
         End If
         Return resultString.Replace("time", " Time", False, CurrentUICulture)
     End Function

@@ -56,9 +56,7 @@ Public Class SgMiniWindow
     End Sub
 
     Private Sub PlayText(text As String)
-        Dim synth As New SpeechSynthesizer
-        synth.SetOutputToDefaultAudioDevice()
-        synth.Speak(text)
+        s_ss.Speak(text)
     End Sub
 
     Private Sub SgMiniWindow_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing

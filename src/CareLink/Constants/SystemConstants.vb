@@ -30,7 +30,7 @@ Public Module SystemConstants
                     }
 
     Public ReadOnly s_aitValues As New Dictionary(Of String, String) From {
-                        {"AIT 2:00", "2:00"}, {"AIT 2:15", "2:15"},
+                                {"AIT 2:00", "2:00"}, {"AIT 2:15", "2:15"},
                         {"AIT 2:30", "2:30"}, {"AIT 2:45", "2:45"},
                         {"AIT 3:00", "3:00"}, {"AIT 3:15", "3:15"},
                         {"AIT 3:30", "3:30"}, {"AIT 3:45", "3:45"},
@@ -40,6 +40,8 @@ Public Module SystemConstants
                         {"AIT 5:30", "5:30"}, {"AIT 5:45", "5:45"},
                         {"AIT 6:00", "6:00"}
                     }
+
+    Public ReadOnly s_careLinkLower As String = ProjectName.ToLower
 
     Public ReadOnly s_oneToNineteen As New List(Of String) From {
                         "zero", "one", "two", "three", "four", "five",
