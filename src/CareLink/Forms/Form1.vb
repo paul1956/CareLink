@@ -1069,30 +1069,36 @@ Public Class Form1
 
 #Region "Speech Recognation"
 
-        Dim ch_StartStopCommands As New Choices()
-        ch_StartStopCommands.Add("CareLink off")
-        ch_StartStopCommands.Add("CareLink on")
-        ch_StartStopCommands.Add("Speech off")
-        ch_StartStopCommands.Add("Speech on")
-        Dim gb_StartStop As New GrammarBuilder()
-        gb_StartStop.Append(ch_StartStopCommands)
-        Dim g_StartStop As New Grammar(gb_StartStop)
         Try
             s_ss.SetOutputToDefaultAudioDevice()
             s_sre = New SpeechRecognitionEngine(New CultureInfo("en-us"))
             s_sre.SetInputToDefaultAudioDevice()
-            AddHandler s_sre.SpeechRecognized, AddressOf Me.sre_SpeechRecognized
-            Dim ch_Blood As New Choices()
-            ch_Blood.Add("BG")
-            ch_Blood.Add("Blood Sugar")
-            ch_Blood.Add("Blood Glucose")
-            Dim gb_WhatIsMyBG As New GrammarBuilder()
-            gb_WhatIsMyBG.Append("What is my")
-            gb_WhatIsMyBG.Append(ch_Blood)
-            Dim g_WhatIsMyBG As New Grammar(gb_WhatIsMyBG)
-            s_sre.LoadGrammarAsync(g_StartStop)
-            s_sre.LoadGrammarAsync(g_WhatIsMyBG)
+            Dim gb_StartStop As New GrammarBuilder()
+            gb_StartStop.Append("Speech")
+            gb_StartStop.Append(New Choices("off", "on"))
+            s_sre.LoadGrammarAsync(New Grammar(gb_StartStop))
+
+            Dim gb_what As New GrammarBuilder()
+            gb_what.Append("What")
+            gb_what.Append(New Choices("can I say", "is my BG", "is my Blood Sugar", "Blood Glucose"))
+            s_sre.LoadGrammarAsync(New Grammar(gb_what))
+
+            Dim gb_showTab As New GrammarBuilder()
+            gb_showTab.Append("Show")
+            Dim showChoices As New Choices()
+            For Each tab As TabPage In Me.TabControlPage1.TabPages
+                showChoices.Add(tab.Text.TrimEnd("."c))
+            Next
+            For Each tab As TabPage In Me.TabControlPage2.TabPages
+                showChoices.Add(tab.Text.TrimEnd("."c))
+            Next
+
+            gb_showTab.Append(showChoices)
+            Dim g_showTab As New Grammar(gb_showTab)
+            s_sre.LoadGrammarAsync(g_showTab)
+
             s_sre.RecognizeAsync(RecognizeMode.Multiple)
+            AddHandler s_sre.SpeechRecognized, AddressOf Me.sre_SpeechRecognized
         Catch ex As Exception
             Debug.WriteLine(ex.Message)
             Stop
@@ -1106,34 +1112,56 @@ Public Class Form1
     End Sub
 
     Private Sub sre_SpeechRecognized(sender As Object, e As SpeechRecognizedEventArgs)
-        Dim txt As String = e.Result.Text
+        Dim txt As String = e.Result.Text.ToLower
         Dim confidence As Single = e.Result.Confidence
         Debug.WriteLine(vbLf & "Recognized: " & txt)
-        If confidence < 0.6 Then
+        If confidence < 0.8 Then
             Return
         End If
-        If txt.Contains("speech on", StringComparison.CurrentCultureIgnoreCase) Then
-            Debug.WriteLine("Speech is now ON")
-            s_speechOn = True
-        End If
-        If txt.Contains("speech off", StringComparison.CurrentCultureIgnoreCase) Then
-            Debug.WriteLine("Speech is now OFF")
-            s_speechOn = False
-        End If
-        If s_speechOn = False Then
-            Return
-        End If
-        If txt.Contains("CareLink Off", StringComparison.CurrentCultureIgnoreCase) Then
-            CType(sender, SpeechRecognitionEngine).RecognizeAsyncCancel()
-            s_speechDone = True
-            Return
-        End If
-        If txt.Contains("what is my", StringComparison.CurrentCultureIgnoreCase) AndAlso
-                (txt.Contains("BG", StringComparison.CurrentCultureIgnoreCase) OrElse
-                txt.Contains("Blood Glucose", StringComparison.CurrentCultureIgnoreCase) OrElse
-                txt.Contains("Blood Sugar", StringComparison.CurrentCultureIgnoreCase)) Then
-            s_ss.SpeakAsync($"Current Blood Glucose is {Me.CurrentSgLabel.Text}")
-        End If
+        Me.StatusStripSpacerLeft.Text = txt
+        Application.DoEvents()
+        Dim recognizedText As String = txt.ToLower
+        Select Case True
+            Case recognizedText = "speech on"
+                Debug.WriteLine("Speech is now ON")
+                s_speechOn = True
+            Case recognizedText = "speech off"
+                Debug.WriteLine("Speech is now OFF")
+                s_speechOn = False
+            Case recognizedText.StartsWith("what is my", StringComparison.CurrentCultureIgnoreCase)
+                If txt.Contains("BG", StringComparison.CurrentCultureIgnoreCase) OrElse
+                    txt.Contains("Blood Glucose", StringComparison.CurrentCultureIgnoreCase) OrElse
+                    txt.Contains("Blood Sugar", StringComparison.CurrentCultureIgnoreCase) Then
+                    s_ss.SpeakAsync($"{s_firstName}'s Current Blood Glucose is {If(IsNumeric(Me.CurrentSgLabel.Text), Me.CurrentSgLabel.Text, "Unknown")}")
+                End If
+            Case recognizedText = "what can I say"
+                Dim prompt As New StringBuilder
+                prompt.AppendLine($"Speech On: Enables audio Alerts")
+                prompt.AppendLine($"Speech Off: Disables audio Alerts")
+                prompt.AppendLine($"What is my BG/Blood Glucose/Blood Sugar: Your current BG will be spoken")
+                prompt.AppendLine($"What can I say: This message will be displayed")
+                prompt.AppendLine($"Show [any tab name]: Will make that tab have focus")
+                prompt.AppendLine($"     Example ""Show Treatment Details""")
+
+                MsgBox(prompt.ToString, MsgBoxStyle.OkOnly, "Voice Help")
+            Case recognizedText.StartsWith("show", StringComparison.CurrentCultureIgnoreCase)
+                Dim tabText As String = txt.Substring("show ".Length).ToLower.TrimEnd("."c)
+                For Each tab As TabPage In Me.TabControlPage1.TabPages
+                    If tab.Text.ToLower.TrimEnd("."c) = tabText Then
+                        Me.TabControlPage1.Visible = True
+                        Me.TabControlPage1.SelectedTab = tab
+                        Exit Select
+                    End If
+                Next
+                For Each tab As TabPage In Me.TabControlPage2.TabPages
+                    If tab.Text.ToLower.TrimEnd("."c) = tabText Then
+                        Me.TabControlPage1.Visible = False
+                        Me.TabControlPage2.SelectedTab = tab
+                        Exit Select
+                    End If
+                Next
+        End Select
+        Me.StatusStripSpacerLeft.Text = "Listening"
     End Sub
 
 #End Region ' Form Events
@@ -2661,7 +2689,11 @@ Public Class Form1
         If s_totalAutoCorrection > 0 Then
             AddAutoCorrectionLegend(_activeInsulinChartLegend, _summaryChartLegend, _treatmentMarkersChartLegend)
         End If
-
+        If SpeechSupportReported = False Then
+            s_ss.Speak("Speech recognition enabled, for a list of commands say what can I say")
+            Me.StatusStripSpacerLeft.Text = "Listening"
+            SpeechSupportReported = True
+        End If
         Application.DoEvents()
     End Sub
 

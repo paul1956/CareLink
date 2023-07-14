@@ -12,6 +12,8 @@ This application is designed to show all the available pump data in a visual ver
 This application is not in any way supported by Medtronic, it was created from publicly available data.
 Some data is filtered out by default because I could not see any use for it. You can turn off filters from Options Menu. but performance will suffer.
 
+Try it out and send feedback.
+
 # Required Settings
 
 A directory MyDocuments/CareLink/Settings contains a Settings File which is initially blank it will contain information about your pump that is not available from CareLink™.
@@ -22,35 +24,15 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 - For MiniMed™ 780G it allows setting you pump Target SG for MiniMed™ 770G its fixed at 120
 - Lastly is an area where you can enter your Carb Ratio by time.
 
-
-# Requires for running
-- .NET Core 7.0.7 or later
-- Windows 10 or later
-
-Try it out and send feedback.
-
-# Requires for development
-- Visual Studio 2022 Version 17.6.4 later
-- .NET Core 7.0.7 or later
-- Windows 10 or later
-
-# License
-- MIT
-
-# Technologies
-  - Windows Forms
-  - dotnet-core
-
-# Topics
-- Medtronic CareLink™ data display
-
-# Updated
+## Updated
 07/15/2023
 
 ## What's New
 New in 3.8.3.2
+- Voice recognition and speech
+- You can now ask "What is my BG" using your voice
 - Improve label and calculation for TIR Compliance measurement
-
+- Improved fonts and images
 
 New in 3.8.3.1
 - Improve display of Sg values in mmol/M
@@ -72,6 +54,25 @@ New in 3.8.3.0
 - Fix parsing of command line parameters /Safe will clear Auto Login
 - Update formatting on home page for easier viewing
 - Improve Sensor error message display when missing and add missing messages
+
+# Requires for running
+- .NET Core 7.0.7 or later
+- Windows 10 or later
+
+# Requires for development
+- Visual Studio 2022 Version 17.6.4 later
+- .NET Core 7.0.7 or later
+- Windows 10 or later
+
+# License
+- MIT
+
+# Technologies
+  - Windows Forms
+  - dotnet-core
+
+# Topics
+- Medtronic CareLink™ data display
 
 ## Known Issue for developers only
 

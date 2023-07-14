@@ -48,7 +48,7 @@ Friend Module SystemVariables
                         }
 
     Friend Property nativeMmolL As Boolean = False
-
+    Friend Property SpeechSupportReported As Boolean = True
     Friend Property TreatmentInsulinRow As Single
 
     Friend Function GetInsulinYValue() As Single

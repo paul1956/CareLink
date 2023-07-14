@@ -29,6 +29,7 @@ Friend Module PainMarkerExtensions
         Next
     End Sub
 
+    <DebuggerNonUserCode()>
     <Extension>
     Friend Sub PostPaintSupport(e As ChartPaintEventArgs, ByRef chartRelativePosition As RectangleF, insulinDictionary As Dictionary(Of OADate, Single), mealDictionary As Dictionary(Of OADate, Single), offsetInsulinImage As Boolean, paintOnY2 As Boolean)
         If Not s_listOfSgRecords.Any Then Exit Sub
