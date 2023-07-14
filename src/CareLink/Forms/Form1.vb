@@ -1109,7 +1109,7 @@ Public Class Form1
                 prompt.AppendLine($"Speech On: Enables audio Alerts")
                 prompt.AppendLine($"Speech Off: Disables audio Alerts")
                 prompt.AppendLine($"What is my BG/Blood Glucose/Blood Sugar: Your current BG will be spoken")
-                prompt.AppendLine($"Tell me 'name's BG/Blood Glucose/Blood Sugar: use when you support more that 1 user")
+                prompt.AppendLine($"Tell me 'name's BG/Blood Glucose/Blood Sugar: use when you support more than 1 user")
                 prompt.AppendLine($"     Example ""Tell me John's BG""")
                 prompt.AppendLine($"What can I say: This message will be displayed")
                 prompt.AppendLine($"Show [any tab name]: Will make that tab have focus")
