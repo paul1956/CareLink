@@ -1067,45 +1067,6 @@ Public Class Form1
         Me.NotifyIcon1.Visible = False
         Application.DoEvents()
 
-#Region "Speech Recognation"
-
-        Try
-            s_ss.SetOutputToDefaultAudioDevice()
-            s_sre = New SpeechRecognitionEngine(New CultureInfo("en-us"))
-            s_sre.SetInputToDefaultAudioDevice()
-            Dim gb_StartStop As New GrammarBuilder()
-            gb_StartStop.Append("Speech")
-            gb_StartStop.Append(New Choices("off", "on"))
-            s_sre.LoadGrammarAsync(New Grammar(gb_StartStop))
-
-            Dim gb_what As New GrammarBuilder()
-            gb_what.Append("What")
-            gb_what.Append(New Choices("can I say", "is my BG", "is my Blood Sugar", "Blood Glucose"))
-            s_sre.LoadGrammarAsync(New Grammar(gb_what))
-
-            Dim gb_showTab As New GrammarBuilder()
-            gb_showTab.Append("Show")
-            Dim showChoices As New Choices()
-            For Each tab As TabPage In Me.TabControlPage1.TabPages
-                showChoices.Add(tab.Text.TrimEnd("."c))
-            Next
-            For Each tab As TabPage In Me.TabControlPage2.TabPages
-                showChoices.Add(tab.Text.TrimEnd("."c))
-            Next
-
-            gb_showTab.Append(showChoices)
-            Dim g_showTab As New Grammar(gb_showTab)
-            s_sre.LoadGrammarAsync(g_showTab)
-
-            s_sre.RecognizeAsync(RecognizeMode.Multiple)
-            AddHandler s_sre.SpeechRecognized, AddressOf Me.sre_SpeechRecognized
-        Catch ex As Exception
-            Debug.WriteLine(ex.Message)
-            Stop
-        End Try
-
-#End Region
-
         If DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
             Me.UpdateAllTabPages(False)
         End If
@@ -1134,11 +1095,22 @@ Public Class Form1
                     txt.Contains("Blood Sugar", StringComparison.CurrentCultureIgnoreCase) Then
                     s_ss.SpeakAsync($"{s_firstName}'s Current Blood Glucose is {If(IsNumeric(Me.CurrentSgLabel.Text), Me.CurrentSgLabel.Text, "Unknown")}")
                 End If
+            Case recognizedText.StartsWith("tell me", StringComparison.CurrentCultureIgnoreCase)
+                If Not recognizedText.Contains(s_firstName.ToLower) Then
+                    Return
+                End If
+                If txt.Contains("BG", StringComparison.CurrentCultureIgnoreCase) OrElse
+                    txt.Contains("Blood Glucose", StringComparison.CurrentCultureIgnoreCase) OrElse
+                    txt.Contains("Blood Sugar", StringComparison.CurrentCultureIgnoreCase) Then
+                    s_ss.SpeakAsync($"{s_firstName}'s Current Blood Glucose is {If(IsNumeric(Me.CurrentSgLabel.Text), Me.CurrentSgLabel.Text, "Unknown")}")
+                End If
             Case recognizedText = "what can I say"
                 Dim prompt As New StringBuilder
                 prompt.AppendLine($"Speech On: Enables audio Alerts")
                 prompt.AppendLine($"Speech Off: Disables audio Alerts")
                 prompt.AppendLine($"What is my BG/Blood Glucose/Blood Sugar: Your current BG will be spoken")
+                prompt.AppendLine($"Tell me 'name's BG/Blood Glucose/Blood Sugar: use when you support more that 1 user")
+                prompt.AppendLine($"     Example ""Tell me John's BG""")
                 prompt.AppendLine($"What can I say: This message will be displayed")
                 prompt.AppendLine($"Show [any tab name]: Will make that tab have focus")
                 prompt.AppendLine($"     Example ""Show Treatment Details""")
@@ -2690,6 +2662,52 @@ Public Class Form1
             AddAutoCorrectionLegend(_activeInsulinChartLegend, _summaryChartLegend, _treatmentMarkersChartLegend)
         End If
         If SpeechSupportReported = False Then
+
+#Region "Speech Recognation"
+
+            Try
+                s_ss.SetOutputToDefaultAudioDevice()
+                s_sre = New SpeechRecognitionEngine(New CultureInfo("en-us"))
+                s_sre.SetInputToDefaultAudioDevice()
+                Dim gb_StartStop As New GrammarBuilder()
+                gb_StartStop.Append("Speech")
+                gb_StartStop.Append(New Choices("off", "on"))
+                s_sre.LoadGrammarAsync(New Grammar(gb_StartStop))
+
+                Dim gb_what As New GrammarBuilder()
+                gb_what.Append("What")
+                gb_what.Append(New Choices("can I say", "is my BG", "is my Blood Sugar", "is my Blood Glucose"))
+                s_sre.LoadGrammarAsync(New Grammar(gb_what))
+
+                Dim gb_tellMe As New GrammarBuilder()
+                gb_tellMe.Append("Tell me")
+                gb_tellMe.Append($"{s_firstName}'s")
+                gb_tellMe.Append(New Choices("BG", "Blood Sugar", "Blood Glucose"))
+                s_sre.LoadGrammarAsync(New Grammar(gb_tellMe))
+
+                Dim gb_showTab As New GrammarBuilder()
+                gb_showTab.Append("Show")
+                Dim showChoices As New Choices()
+                For Each tab As TabPage In Me.TabControlPage1.TabPages
+                    showChoices.Add(tab.Text.TrimEnd("."c))
+                Next
+                For Each tab As TabPage In Me.TabControlPage2.TabPages
+                    showChoices.Add(tab.Text.TrimEnd("."c))
+                Next
+
+                gb_showTab.Append(showChoices)
+                Dim g_showTab As New Grammar(gb_showTab)
+                s_sre.LoadGrammarAsync(g_showTab)
+
+                s_sre.RecognizeAsync(RecognizeMode.Multiple)
+                AddHandler s_sre.SpeechRecognized, AddressOf Me.sre_SpeechRecognized
+            Catch ex As Exception
+                Debug.WriteLine(ex.Message)
+                Stop
+            End Try
+
+#End Region
+
             s_ss.Speak("Speech recognition enabled, for a list of commands say what can I say")
             Me.StatusStripSpacerLeft.Text = "Listening"
             SpeechSupportReported = True
