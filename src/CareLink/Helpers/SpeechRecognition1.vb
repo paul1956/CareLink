@@ -92,18 +92,18 @@ Friend Module SpeechRecognition
         If confidence < 0.6 Then
             Exit Sub
         End If
-        Form1.StatusStripSpacerLeft.Text = $"Heard: {recognizedText}"
-        Application.DoEvents()
 
-        Debug.WriteLine(recognizedText)
         If SpeechWakeWordFound Then
+            Form1.StatusStripSpacerLeft.Text = $"Heard: {recognizedText}"
+            Debug.WriteLine(recognizedText)
+            Application.DoEvents()
             recognizedText = recognizedText.Replace(s_careLinkLower, "")
             Select Case True
-                Case recognizedText = "speech on"
-                    Debug.WriteLine("Speech is now ON")
+                Case recognizedText = "alerts on"
+                    Debug.WriteLine("alerts are now ON")
                     s_speechOn = True
-                Case recognizedText = "speech off"
-                    Debug.WriteLine("Speech is now OFF")
+                Case recognizedText = "alerts off"
+                    Debug.WriteLine("alerts are now OFF")
                     s_speechOn = False
                 Case recognizedText.StartsWith("what is my", StringComparison.CurrentCultureIgnoreCase)
                     If recognizedText.Contains("BG", StringComparison.CurrentCultureIgnoreCase) OrElse
