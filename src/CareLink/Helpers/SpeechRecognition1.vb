@@ -29,7 +29,7 @@ Friend Module SpeechRecognition
             s_sre.LoadGrammarAsync(New Grammar(gb_Attention))
 
             Dim gb_StartStop As New GrammarBuilder()
-            gb_StartStop.Append("Alert")
+            gb_StartStop.Append("alerts")
             gb_StartStop.Append(New Choices("off", "on"))
             s_sre.LoadGrammarAsync(New Grammar(gb_StartStop))
 
