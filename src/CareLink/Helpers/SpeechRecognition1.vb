@@ -123,8 +123,8 @@ Friend Module SpeechRecognition
                 Case recognizedText = "what can I say"
                     Dim prompt As New StringBuilder
                     prompt.AppendLine($"{ProjectName}: All commands state with this, a pause is allowed after saying {ProjectName}.")
-                    prompt.AppendLine($"Speech On: Enables audio Alerts")
-                    prompt.AppendLine($"Speech Off: Disables audio Alerts")
+                    prompt.AppendLine($"Alerts On: Enables audio Alerts")
+                    prompt.AppendLine($"Alerts Off: Disables audio Alerts")
                     prompt.AppendLine($"What is my BG/Blood Glucose/Blood Sugar: Your current BG will be spoken")
                     prompt.AppendLine($"What can I say: This message will be displayed")
                     prompt.AppendLine($"Show [any tab name]: Will make that tab have focus")
