@@ -8,40 +8,101 @@ Imports System.Speech.Synthesis
 Imports System.Text
 
 Friend Module SpeechRecognition
-    Private currentUserFirstName As String = Nothing
-    Friend s_speechDone As Boolean = False
+    Private s_speechErrorReported As Boolean = False
+    Private s_speechWakeWordFound As Boolean = False
+    Private s_sre As SpeechRecognitionEngine
+    Private s_ss As New SpeechSynthesizer()
     Friend s_speechOn As Boolean = True
-    Friend s_sre As SpeechRecognitionEngine
-    Friend s_ss As New SpeechSynthesizer()
     Friend Property SpeechSupportReported As Boolean = True
-    Friend Property SpeechWakeWordFound As Boolean = False
+
+    Private Sub AnnounceBG(recognizedText As String)
+        Dim bgName As String
+        Select Case True
+            Case recognizedText.Contains("bg")
+                bgName = "bg"
+            Case recognizedText.Contains("blood glucose")
+                bgName = "blood glucose"
+            Case recognizedText.Contains("blood sugar")
+                bgName = "blood sugar"
+            Case Else
+                Exit Sub
+        End Select
+
+        Dim bg As String
+        Dim trend As String = ""
+        If IsNumeric(Form1.CurrentSgLabel.Text) Then
+            bg = $"current {bgName} is { Form1.CurrentSgLabel.Text}"
+            Select Case True
+                Case Form1.LabelTrendArrows.Text.Contains("↓"c)
+                    trend = $" and is trending down with { Form1.LabelTrendArrows.Text.Count("↓"c)} Arrows"
+                Case Form1.LabelTrendArrows.Text.Contains("↑"c)
+                    trend = $" and is trending up with { Form1.LabelTrendArrows.Text.Count("↑"c)} Arrows"
+                Case Else
+                    trend = $" with no trend"
+            End Select
+        Else
+            bg = $"current {bgName} and trend are Unknown"
+        End If
+        s_ss.SpeakAsync($"{s_firstName}'s {bg}{trend}")
+    End Sub
+
+    Private Sub sre_AudioSignalProblemOccurred(sender As Object, e As AudioSignalProblemOccurredEventArgs)
+        If s_speechErrorReported Then
+            Exit Sub
+        End If
+        Select Case e.AudioSignalProblem
+            Case AudioSignalProblem.None, AudioSignalProblem.TooSoft
+                Exit Select
+            Case AudioSignalProblem.NoSignal
+                Dim details As New StringBuilder()
+                details.AppendLine("Audio signal problem information:")
+                details.AppendLine($"    Audio level:               {e.AudioLevel}")
+                details.AppendLine($"    Audio position:            {e.AudioPosition}")
+                details.AppendLine($"    Audio signal problem:      {e.AudioSignalProblem}")
+                details.AppendLine($"    Recognizer audio position: {e.RecognizerAudioPosition}")
+                details.AppendLine($"Do you want to continue getting this message?")
+                s_speechErrorReported = MsgBox(details.ToString, MsgBoxStyle.YesNo, "Audio Error") <> MsgBoxResult.Yes
+            Case AudioSignalProblem.TooNoisy
+                Form1.StatusStripSpacerLeft.Text = "There is too much noise to understand you"
+            Case AudioSignalProblem.TooLoud
+                Form1.StatusStripSpacerLeft.Text = "You are speaking too loud"
+            Case AudioSignalProblem.TooFast
+                Form1.StatusStripSpacerLeft.Text = "Please speak slower"
+            Case AudioSignalProblem.TooSlow
+                Form1.StatusStripSpacerLeft.Text = "Please speak faster"
+        End Select
+
+    End Sub
 
     Friend Sub InitializeSpeechRecognition()
-        If SpeechSupportReported AndAlso currentUserFirstName = s_firstName Then Return
-
+        If SpeechSupportReported AndAlso s_firstName = s_firstName Then Return
+        SpeechSupportReported = True
         Try
+            s_speechWakeWordFound = False
             s_ss = New SpeechSynthesizer()
             s_ss.SetOutputToDefaultAudioDevice()
-            s_sre = New SpeechRecognitionEngine(New CultureInfo("en-us"))
+
+            Dim culture As New CultureInfo("en-us")
+            s_sre = New SpeechRecognitionEngine(culture)
             s_sre.SetInputToDefaultAudioDevice()
-            Dim gb_Attention As New GrammarBuilder
+
+            Dim gb_Attention As New GrammarBuilder With {.Culture = culture}
             gb_Attention.Append(s_careLinkLower)
             s_sre.LoadGrammarAsync(New Grammar(gb_Attention))
 
-            Dim gb_StartStop As New GrammarBuilder()
+            Dim gb_StartStop As New GrammarBuilder With {.Culture = culture}
             gb_StartStop.Append("alerts")
             gb_StartStop.Append(New Choices("off", "on"))
             s_sre.LoadGrammarAsync(New Grammar(gb_StartStop))
 
-            Dim gb_what As New GrammarBuilder()
+            Dim gb_what As New GrammarBuilder With {.Culture = culture}
             gb_what.Append("What")
             gb_what.Append(New Choices("can I say", "is my BG", "is my Blood Sugar", "is my Blood Glucose"))
             s_sre.LoadGrammarAsync(New Grammar(gb_what))
 
-            Dim gb_tellMe As New GrammarBuilder()
-            currentUserFirstName = s_firstName
+            Dim gb_tellMe As New GrammarBuilder With {.Culture = culture}
             gb_tellMe.Append("Tell me")
-            gb_tellMe.Append($"{currentUserFirstName}'s")
+            gb_tellMe.Append($"{s_firstName}'s")
             gb_tellMe.Append(New Choices("BG", "Blood Sugar", "Blood Glucose"))
             s_sre.LoadGrammarAsync(New Grammar(gb_tellMe))
 
@@ -56,15 +117,14 @@ Friend Module SpeechRecognition
             Next
 
             gb_showTab.Append(showChoices)
-            Dim g_showTab As New Grammar(gb_showTab)
-            s_sre.LoadGrammarAsync(g_showTab)
 
-            s_sre.RecognizeAsync(RecognizeMode.Multiple)
-            s_ss.Speak($"Speech recognition enabled for {currentUserFirstName}, for a list of commands say {ProjectName} what can I say")
+            s_ss.Speak($"Speech recognition enabled for {s_firstName}, for a list of commands say, {ProjectName} what can I say")
+            s_sre.LoadGrammarAsync(New Grammar(gb_showTab))
             Form1.StatusStripSpacerLeft.Text = "Listening"
-            SpeechSupportReported = True
-            SpeechWakeWordFound = False
+            s_sre.RecognizeAsync(RecognizeMode.Multiple)
             AddHandler s_sre.SpeechRecognized, AddressOf sre_SpeechRecognized
+            Threading.Thread.Sleep(1000)
+            AddHandler s_sre.AudioSignalProblemOccurred, AddressOf sre_AudioSignalProblemOccurred
         Catch ex As Exception
             Debug.WriteLine(ex.Message)
             Stop
@@ -72,55 +132,58 @@ Friend Module SpeechRecognition
 
     End Sub
 
-    Friend Sub sre_SpeechRecognized(sender As Object, e As SpeechRecognizedEventArgs)
-        Dim recognizedText As String = e.Result.Text.ToLower
-        Dim confidence As Single = e.Result.Confidence
-        Debug.WriteLine(vbLf & "Recognized: " & recognizedText)
-        If recognizedText.StartsWith(s_careLinkLower) Then
-            If confidence < 0.6 Then
-                SpeechWakeWordFound = False
-                Exit Sub
-            End If
-            If recognizedText = s_careLinkLower Then
-                Form1.StatusStripSpacerLeft.Text = "Heard: 'CareLink' waiting..."
-                Application.DoEvents()
-                SpeechWakeWordFound = True
-                Exit Sub
+    Friend Sub PlayText(text As String)
+        s_ss.Speak(text)
+    End Sub
 
-            End If
-        End If
+    Friend Sub sre_SpeechRecognized(sender As Object, e As SpeechRecognizedEventArgs)
+        Dim recognizedTextLower As String = e.Result.Text.ToLower
+        Dim confidence As Single = e.Result.Confidence
         If confidence < 0.6 Then
+            Debug.WriteLine($"Heard: {recognizedTextLower} with confidence({confidence})")
+            Form1.StatusStripSpacerLeft.Text = $"Rejected: '{recognizedTextLower}', Listening"
             Exit Sub
         End If
 
-        If SpeechWakeWordFound Then
-            Form1.StatusStripSpacerLeft.Text = $"Heard: {recognizedText}"
-            Debug.WriteLine(recognizedText)
+        If recognizedTextLower.StartsWith(s_careLinkLower) Then
+            If recognizedTextLower = s_careLinkLower Then
+                Debug.WriteLine($"Recognized: Wake word {recognizedTextLower} with confidence({confidence})")
+                Form1.StatusStripSpacerLeft.Text = $"Heard: '{s_careLinkLower}' waiting..."
+                Application.DoEvents()
+                s_speechWakeWordFound = True
+                Exit Sub
+            End If
+        End If
+        If s_speechWakeWordFound Then
+            Debug.WriteLine($"Heard: {recognizedTextLower} with confidence({confidence})")
+            If confidence < 0.8 Then
+                Exit Sub
+            End If
+            s_speechWakeWordFound = False
+            Form1.StatusStripSpacerLeft.Text = $"Heard: {recognizedTextLower}"
             Application.DoEvents()
-            recognizedText = recognizedText.Replace(s_careLinkLower, "")
+            recognizedTextLower = recognizedTextLower.Replace(s_careLinkLower, "").TrimEnd
             Select Case True
-                Case recognizedText = "alerts on"
-                    Debug.WriteLine("alerts are now ON")
+                Case recognizedTextLower = "alerts on"
+                    Debug.WriteLine("Audible alerts are now ON")
                     s_speechOn = True
-                Case recognizedText = "alerts off"
-                    Debug.WriteLine("alerts are now OFF")
+                    s_ss.SpeakAsync("Audible alerts are now ON")
+
+                Case recognizedTextLower = "alerts off"
+                    Debug.WriteLine("Audible alerts are now OFF")
                     s_speechOn = False
-                Case recognizedText.StartsWith("what is my", StringComparison.CurrentCultureIgnoreCase)
-                    If recognizedText.Contains("BG", StringComparison.CurrentCultureIgnoreCase) OrElse
-                        recognizedText.Contains("Blood Glucose", StringComparison.CurrentCultureIgnoreCase) OrElse
-                        recognizedText.Contains("Blood Sugar", StringComparison.CurrentCultureIgnoreCase) Then
-                        s_ss.SpeakAsync($"{s_firstName}'s Current Blood Glucose is {If(IsNumeric(Form1.CurrentSgLabel.Text), Form1.CurrentSgLabel.Text, "Unknown")}")
-                    End If
-                Case recognizedText.StartsWith("tell me", StringComparison.CurrentCultureIgnoreCase)
-                    If Not recognizedText.Contains(s_firstName.ToLower) Then
+                    s_ss.SpeakAsync("Audible alerts are now Off")
+
+                Case recognizedTextLower.StartsWith("what is my", StringComparison.CurrentCultureIgnoreCase)
+                    AnnounceBG(recognizedTextLower)
+
+                Case recognizedTextLower.StartsWith("tell me", StringComparison.CurrentCultureIgnoreCase)
+                    If Not recognizedTextLower.Contains(s_firstName.ToLower) Then
                         Return
                     End If
-                    If recognizedText.Contains("BG", StringComparison.CurrentCultureIgnoreCase) OrElse
-                        recognizedText.Contains("Blood Glucose", StringComparison.CurrentCultureIgnoreCase) OrElse
-                        recognizedText.Contains("Blood Sugar", StringComparison.CurrentCultureIgnoreCase) Then
-                        s_ss.SpeakAsync($"{s_firstName}'s Current Blood Glucose is {If(IsNumeric(Form1.CurrentSgLabel.Text), Form1.CurrentSgLabel.Text, "Unknown")}")
-                    End If
-                Case recognizedText = "what can I say"
+                    AnnounceBG(recognizedTextLower)
+
+                Case recognizedTextLower = "what can I say"
                     Dim prompt As New StringBuilder
                     prompt.AppendLine($"{ProjectName}: All commands state with this, a pause is allowed after saying {ProjectName}.")
                     prompt.AppendLine($"Alerts On: Enables audio Alerts")
@@ -131,10 +194,10 @@ Friend Module SpeechRecognition
                     prompt.AppendLine($"     Example ""Show Treatment Details""")
                     prompt.AppendLine($"Tell me name's BG/Blood Glucose/Blood Sugar: use when you support more than 1 user")
                     prompt.AppendLine($"     Example ""Tell me John's BG""")
+                    MsgBox(prompt.ToString, MsgBoxStyle.OkOnly, "Speech Help")
 
-                    MsgBox(prompt.ToString, MsgBoxStyle.OkOnly, "Voice Help")
-                Case recognizedText.StartsWith("show", StringComparison.CurrentCultureIgnoreCase)
-                    Dim tabText As String = recognizedText.Substring("show ".Length).ToLower.TrimEnd("."c)
+                Case recognizedTextLower.StartsWith("show", StringComparison.CurrentCultureIgnoreCase)
+                    Dim tabText As String = recognizedTextLower.Substring("show ".Length).ToLower.TrimEnd("."c)
                     For Each tab As TabPage In Form1.TabControlPage1.TabPages
                         If tab.Text.ToLower.TrimEnd("."c) = tabText Then
                             Form1.TabControlPage1.Visible = True
@@ -150,10 +213,9 @@ Friend Module SpeechRecognition
                         End If
                     Next
                 Case Else
-
+                    Stop
             End Select
-
-            SpeechWakeWordFound = False
+            s_speechWakeWordFound = False
         End If
         Form1.StatusStripSpacerLeft.Text = "Listening"
     End Sub

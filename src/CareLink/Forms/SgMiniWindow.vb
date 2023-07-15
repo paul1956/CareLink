@@ -55,10 +55,6 @@ Public Class SgMiniWindow
         End Using
     End Sub
 
-    Private Sub PlayText(text As String)
-        s_ss.Speak(text)
-    End Sub
-
     Private Sub SgMiniWindow_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
         _form1.Visible = True
     End Sub
@@ -107,7 +103,7 @@ Public Class SgMiniWindow
                     Me.SgTextBox.ForeColor = Color.Red
                     If Not _alarmPlayedLow Then
                         If s_speechOn Then
-                            Me.PlayText($"Low Alarm current blood glucose {_normalizedSg}")
+                            PlayText($"Low Alarm current blood glucose {_normalizedSg}")
                         Else
                             Me.PlaySoundFromResource("Low Alarm")
                         End If
@@ -124,7 +120,7 @@ Public Class SgMiniWindow
                     Me.SgTextBox.ForeColor = Color.Yellow
                     If Not _alarmPlayedHigh Then
                         If s_speechOn Then
-                            Me.PlayText($"High alarm current blood glucose {_normalizedSg}")
+                            PlayText($"High alarm current blood glucose {_normalizedSg}")
                         Else
                             Me.PlaySoundFromResource("High Alarm")
                         End If
