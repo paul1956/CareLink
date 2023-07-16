@@ -32,14 +32,21 @@ Friend Module SpeechRecognition
         Dim trend As String = ""
         If IsNumeric(Form1.CurrentSgLabel.Text) Then
             bg = $"current {bgName} is { Form1.CurrentSgLabel.Text}"
+            Dim arrows As String = Form1.LabelTrendArrows.Text
+            Dim arrowCount As Integer = 0
             Select Case True
                 Case Form1.LabelTrendArrows.Text.Contains("↓"c)
-                    trend = $" and is trending down with { Form1.LabelTrendArrows.Text.Count("↓"c)} Arrows"
+                    arrowCount = arrows.Count("↓"c)
+                    trend = $" and is trending down with { arrowCount} Arrow"
                 Case Form1.LabelTrendArrows.Text.Contains("↑"c)
-                    trend = $" and is trending up with { Form1.LabelTrendArrows.Text.Count("↑"c)} Arrows"
+                    arrowCount = arrows.Count("↑"c)
+                    trend = $" and is trending up with { arrowCount} Arrow"
                 Case Else
-                    trend = $" with no trend"
+                    trend = $" with no trend arrows"
             End Select
+            If arrowCount > 1 Then
+                trend &= "s"
+            End If
         Else
             bg = $"current {bgName} and trend are Unknown"
         End If
