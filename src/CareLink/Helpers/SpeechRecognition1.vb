@@ -12,8 +12,9 @@ Friend Module SpeechRecognition
     Private s_speechWakeWordFound As Boolean = False
     Private s_sre As SpeechRecognitionEngine
     Private s_ss As New SpeechSynthesizer()
+    Friend s_shuttingDown As Boolean = False
     Friend s_speechOn As Boolean = True
-    Friend Property SpeechSupportReported As Boolean = True
+    Friend Property SpeechOutputSupport As Boolean = True
 
     Private Sub AnnounceBG(recognizedText As String)
         Dim bgName As String
@@ -54,12 +55,13 @@ Friend Module SpeechRecognition
     End Sub
 
     Private Sub sre_AudioSignalProblemOccurred(sender As Object, e As AudioSignalProblemOccurredEventArgs)
-        If s_speechErrorReported Then
+        If s_speechErrorReported OrElse
+            s_shuttingDown OrElse
+            e.AudioSignalProblem = AudioSignalProblem.None OrElse
+            e.AudioSignalProblem = AudioSignalProblem.TooSoft Then
             Exit Sub
         End If
         Select Case e.AudioSignalProblem
-            Case AudioSignalProblem.None, AudioSignalProblem.TooSoft
-                Exit Select
             Case AudioSignalProblem.NoSignal
                 Dim details As New StringBuilder()
                 details.AppendLine("Audio signal problem information:")
@@ -82,8 +84,8 @@ Friend Module SpeechRecognition
     End Sub
 
     Friend Sub InitializeSpeechRecognition()
-        If SpeechSupportReported AndAlso s_firstName = s_firstName Then Return
-        SpeechSupportReported = True
+        If SpeechOutputSupport AndAlso s_firstName = s_firstName Then Return
+        SpeechOutputSupport = True
         Try
             s_speechWakeWordFound = False
             s_ss = New SpeechSynthesizer()

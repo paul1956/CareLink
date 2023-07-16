@@ -1520,15 +1520,19 @@ Public Class Form1
     End Sub
 
     Public Sub PowerModeChanged(sender As Object, e As Microsoft.Win32.PowerModeChangedEventArgs)
+        Debug.WriteLine($"PowerModeChange {e.Mode}")
         Select Case e.Mode
             Case Microsoft.Win32.PowerModes.Suspend
                 Me.ServerUpdateTimer.Stop()
+                s_shuttingDown = True
                 SetLastUpdateTime("System Sleeping", "", True, Nothing)
             Case Microsoft.Win32.PowerModes.Resume
                 SetLastUpdateTime("System Awake", "", True, Nothing)
                 Me.ServerUpdateTimer.Interval = CInt(s_30SecondInMilliseconds) \ 3
+                s_shuttingDown = False
                 Me.ServerUpdateTimer.Start()
                 Debug.Print($"In {NameOf(PowerModeChanged)}, restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
+            Case Microsoft.Win32.PowerModes.StatusChange
         End Select
 
     End Sub
