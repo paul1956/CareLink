@@ -55,22 +55,21 @@ Friend Module SpeechRecognition
     End Sub
 
     Private Sub sre_AudioSignalProblemOccurred(sender As Object, e As AudioSignalProblemOccurredEventArgs)
-        If s_speechErrorReported OrElse
-            s_shuttingDown OrElse
-            e.AudioSignalProblem = AudioSignalProblem.None OrElse
-            e.AudioSignalProblem = AudioSignalProblem.TooSoft Then
-            Exit Sub
-        End If
+        If s_shuttingDown Then Exit Sub
+
         Select Case e.AudioSignalProblem
             Case AudioSignalProblem.NoSignal
-                Dim details As New StringBuilder()
-                details.AppendLine("Audio signal problem information:")
-                details.AppendLine($"    Audio level:               {e.AudioLevel}")
-                details.AppendLine($"    Audio position:            {e.AudioPosition}")
-                details.AppendLine($"    Audio signal problem:      {e.AudioSignalProblem}")
-                details.AppendLine($"    Recognizer audio position: {e.RecognizerAudioPosition}")
-                details.AppendLine($"Do you want to continue getting this message?")
-                s_speechErrorReported = MsgBox(details.ToString, MsgBoxStyle.YesNo, "Audio Error") <> MsgBoxResult.Yes
+                If Not s_speechErrorReported Then
+                    Dim details As New StringBuilder()
+                    details.AppendLine("Audio signal problem information:")
+                    details.AppendLine($"    Audio level:               {e.AudioLevel}")
+                    details.AppendLine($"    Audio position:            {e.AudioPosition}")
+                    details.AppendLine($"    Audio signal problem:      {e.AudioSignalProblem}")
+                    details.AppendLine($"    Recognizer audio position: {e.RecognizerAudioPosition}")
+                    details.AppendLine($"Do you want to continue getting this message?")
+                    s_speechErrorReported = MsgBox(details.ToString, MsgBoxStyle.YesNo, "Audio Error") <> MsgBoxResult.Yes
+                End If
+                Form1.StatusStripSpacerLeft.Text = $"Speech signal issue {e.AudioSignalProblem}"
             Case AudioSignalProblem.TooNoisy
                 Form1.StatusStripSpacerLeft.Text = "There is too much noise to understand you"
             Case AudioSignalProblem.TooLoud
@@ -79,6 +78,8 @@ Friend Module SpeechRecognition
                 Form1.StatusStripSpacerLeft.Text = "Please speak slower"
             Case AudioSignalProblem.TooSlow
                 Form1.StatusStripSpacerLeft.Text = "Please speak faster"
+            Case AudioSignalProblem.None, AudioSignalProblem.TooSoft
+                Form1.StatusStripSpacerLeft.Text = "Listening"
         End Select
 
     End Sub
@@ -99,10 +100,10 @@ Friend Module SpeechRecognition
             gb_Attention.Append(s_careLinkLower)
             s_sre.LoadGrammarAsync(New Grammar(gb_Attention))
 
-            Dim gb_StartStop As New GrammarBuilder With {.Culture = culture}
-            gb_StartStop.Append("alerts")
-            gb_StartStop.Append(New Choices("off", "on"))
-            s_sre.LoadGrammarAsync(New Grammar(gb_StartStop))
+            'Dim gb_StartStop As New GrammarBuilder With {.Culture = culture}
+            'gb_StartStop.Append("alerts")
+            'gb_StartStop.Append(New Choices("off", "on"))
+            's_sre.LoadGrammarAsync(New Grammar(gb_StartStop))
 
             Dim gb_what As New GrammarBuilder With {.Culture = culture}
             gb_what.Append("What")
@@ -115,20 +116,20 @@ Friend Module SpeechRecognition
             gb_tellMe.Append(New Choices("BG", "Blood Sugar", "Blood Glucose"))
             s_sre.LoadGrammarAsync(New Grammar(gb_tellMe))
 
-            Dim gb_showTab As New GrammarBuilder()
-            gb_showTab.Append("Show")
-            Dim showChoices As New Choices()
-            For Each tab As TabPage In Form1.TabControlPage1.TabPages
-                showChoices.Add(tab.Text.TrimEnd("."c))
-            Next
-            For Each tab As TabPage In Form1.TabControlPage2.TabPages
-                showChoices.Add(tab.Text.TrimEnd("."c))
-            Next
+            'Dim gb_showTab As New GrammarBuilder()
+            'gb_showTab.Append("Show")
+            'Dim showChoices As New Choices()
+            'For Each tab As TabPage In Form1.TabControlPage1.TabPages
+            '    showChoices.Add(tab.Text.TrimEnd("."c))
+            'Next
+            'For Each tab As TabPage In Form1.TabControlPage2.TabPages
+            '    showChoices.Add(tab.Text.TrimEnd("."c))
+            'Next
 
-            gb_showTab.Append(showChoices)
+            'gb_showTab.Append(showChoices)
+            's_sre.LoadGrammarAsync(New Grammar(gb_showTab))
 
             s_ss.Speak($"Speech recognition enabled for {s_firstName}, for a list of commands say, {ProjectName} what can I say")
-            s_sre.LoadGrammarAsync(New Grammar(gb_showTab))
             Form1.StatusStripSpacerLeft.Text = "Listening"
             s_sre.RecognizeAsync(RecognizeMode.Multiple)
             AddHandler s_sre.SpeechRecognized, AddressOf sre_SpeechRecognized
@@ -173,15 +174,15 @@ Friend Module SpeechRecognition
             Application.DoEvents()
             recognizedTextLower = recognizedTextLower.Replace(s_careLinkLower, "").TrimEnd
             Select Case True
-                Case recognizedTextLower = "alerts on"
-                    Debug.WriteLine("Audible alerts are now ON")
-                    s_speechOn = True
-                    s_ss.SpeakAsync("Audible alerts are now ON")
+                'Case recognizedTextLower = "alerts on"
+                '    Debug.WriteLine("Audible alerts are now ON")
+                '    s_speechOn = True
+                '    s_ss.SpeakAsync("Audible alerts are now ON")
 
-                Case recognizedTextLower = "alerts off"
-                    Debug.WriteLine("Audible alerts are now OFF")
-                    s_speechOn = False
-                    s_ss.SpeakAsync("Audible alerts are now Off")
+                'Case recognizedTextLower = "alerts off"
+                '    Debug.WriteLine("Audible alerts are now OFF")
+                '    s_speechOn = False
+                '    s_ss.SpeakAsync("Audible alerts are now Off")
 
                 Case recognizedTextLower.StartsWith("what is my", StringComparison.CurrentCultureIgnoreCase)
                     AnnounceBG(recognizedTextLower)
@@ -194,33 +195,34 @@ Friend Module SpeechRecognition
 
                 Case recognizedTextLower = "what can I say"
                     Dim prompt As New StringBuilder
-                    prompt.AppendLine($"{ProjectName}: All commands state with this, a pause is allowed after saying {ProjectName}.")
-                    prompt.AppendLine($"Alerts On: Enables audio Alerts")
-                    prompt.AppendLine($"Alerts Off: Disables audio Alerts")
-                    prompt.AppendLine($"What is my BG/Blood Glucose/Blood Sugar: Your current BG will be spoken")
+                    prompt.AppendLine($"{ProjectName}: All commands start with this, a pause is allowed after saying {ProjectName}.")
                     prompt.AppendLine($"What can I say: This message will be displayed")
-                    prompt.AppendLine($"Show [any tab name]: Will make that tab have focus")
-                    prompt.AppendLine($"     Example ""Show Treatment Details""")
+                    prompt.AppendLine()
+                    prompt.AppendLine($"What is my BG/Blood Glucose/Blood Sugar: Your current BG will be spoken")
                     prompt.AppendLine($"Tell me name's BG/Blood Glucose/Blood Sugar: use when you support more than 1 user")
                     prompt.AppendLine($"     Example ""Tell me John's BG""")
+                    'prompt.AppendLine($"Alerts On: Enables audio Alerts")
+                    'prompt.AppendLine($"Alerts Off: Disables audio Alerts")
+                    'prompt.AppendLine($"Show [any tab name]: Will make that tab have focus")
+                    'prompt.AppendLine($"     Example ""Show Treatment Details""")
                     MsgBox(prompt.ToString, MsgBoxStyle.OkOnly, "Speech Help")
 
-                Case recognizedTextLower.StartsWith("show", StringComparison.CurrentCultureIgnoreCase)
-                    Dim tabText As String = recognizedTextLower.Substring("show ".Length).ToLower.TrimEnd("."c)
-                    For Each tab As TabPage In Form1.TabControlPage1.TabPages
-                        If tab.Text.ToLower.TrimEnd("."c) = tabText Then
-                            Form1.TabControlPage1.Visible = True
-                            Form1.TabControlPage1.SelectedTab = tab
-                            Exit Select
-                        End If
-                    Next
-                    For Each tab As TabPage In Form1.TabControlPage2.TabPages
-                        If tab.Text.ToLower.TrimEnd("."c) = tabText Then
-                            Form1.TabControlPage1.Visible = False
-                            Form1.TabControlPage2.SelectedTab = tab
-                            Exit Select
-                        End If
-                    Next
+                    'Case recognizedTextLower.StartsWith("show", StringComparison.CurrentCultureIgnoreCase)
+                    '    Dim tabText As String = recognizedTextLower.Substring("show ".Length).ToLower.TrimEnd("."c)
+                    '    For Each tab As TabPage In Form1.TabControlPage1.TabPages
+                    '        If tab.Text.ToLower.TrimEnd("."c) = tabText Then
+                    '            Form1.TabControlPage1.Visible = True
+                    '            Form1.TabControlPage1.SelectedTab = tab
+                    '            Exit Select
+                    '        End If
+                    '    Next
+                    '    For Each tab As TabPage In Form1.TabControlPage2.TabPages
+                    '        If tab.Text.ToLower.TrimEnd("."c) = tabText Then
+                    '            Form1.TabControlPage1.Visible = False
+                    '            Form1.TabControlPage2.SelectedTab = tab
+                    '            Exit Select
+                    '        End If
+                    '    Next
                 Case Else
                     Stop
             End Select

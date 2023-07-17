@@ -88,18 +88,22 @@ Public Class SgMiniWindow
                 Select Case delta
                     Case Is = 0
                         Me.DeltaTextBox.Text = ""
+                        Me.DeltaTextBox.ForeColor = SystemColors.Control
+                        Me.DeltaTextBox.BackColor = SystemColors.Control
                     Case Is > 0
                         Me.DeltaTextBox.ForeColor = Color.Blue
+                        Me.DeltaTextBox.BackColor = GetContrastingColor(Color.Blue)
                     Case Is < 0
                         Me.DeltaTextBox.ForeColor = Color.Orange
+                        Me.DeltaTextBox.BackColor = GetContrastingColor(Color.Orange)
                 End Select
             End If
             Select Case _normalizedSg
                 Case = 0
-                    Me.SgTextBox.BackColor = SystemColors.Window
+                    Me.SgTextBox.BackColor = GetContrastingColor(Color.Black)
                     Me.SgTextBox.ForeColor = Color.Black
                 Case < 70
-                    Me.SgTextBox.BackColor = SystemColors.Window
+                    Me.SgTextBox.BackColor = GetContrastingColor(Color.Red)
                     Me.SgTextBox.ForeColor = Color.Red
                     If Not _alarmPlayedLow Then
                         If s_speechOn Then
@@ -111,7 +115,7 @@ Public Class SgMiniWindow
                         _alarmPlayedHigh = False
                     End If
                 Case <= 180
-                    Me.SgTextBox.BackColor = SystemColors.Window
+                    Me.SgTextBox.BackColor = GetContrastingColor(Color.Green)
                     Me.SgTextBox.ForeColor = Color.Green
                     _alarmPlayedLow = False
                     _alarmPlayedHigh = False
