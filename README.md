@@ -34,6 +34,8 @@ New in 3.8.3.2
 - Tab navigation is voice enabled say "Show [tab name]" for example "Show Treatment Details"
 - Improve label and calculations for TIR Compliance measurement
 - Improved fonts and images
+- Fix announcement for out of range blood glucose in mmol/L
+- Add support for US 780G new features
 
 New in 3.8.3.1
 - Improve display of Sg values in mmol/M

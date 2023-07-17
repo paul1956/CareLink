@@ -50,6 +50,8 @@ Friend Module Form1UpdateHelpers
         Select Case value
             Case "MMT-1880"
                 Return "Medtronic MiniMed™ 770G"
+            Case "MMT-1884"
+                Return "Medtronic MiniMed™ 780G (US Upgrade)"
             Case "MMT-1885"
                 Return "Medtronic MiniMed™ 780G"
             Case "MMT-1886"
