@@ -132,7 +132,7 @@ Friend Module UserMessageHandler
                         {"SEARCHING_FOR_SENSOR_SIGNAL", $"Searching For{vbCrLf}Sensor Signal"},
                         {"SENSOR_DISCONNECTED", $"Sensor{vbCrLf}Disconnected"},
                         {"SENSOR_OFF", $"Sensor{vbCrLf}Off"},
-                        {"SG_BELOW_40_MGDL", $"SG Below{vbCrLf}40 mg/dL"},
+                        {"SG_BELOW_40_MGDL", $"SG Below{vbCrLf}50 mg/dL"},
                         {"SUSPENDED_BEFORE_LOW", $"Suspended{vbCrLf}Before Low"},
                         {"TEMP_BASAL", $"Temp{vbCrLf}Basal"},
                         {"TEMP_TARGET", $"Temp{vbCrLf}Target"},
