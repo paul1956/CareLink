@@ -333,6 +333,12 @@ Friend Module Form1UpdateHelpers
                 Case ItemIndexes.calFreeSensor,
                      ItemIndexes.finalCalibration
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+                Case ItemIndexes.timeToNextEarlyCalibrationMinutes
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+                Case ItemIndexes.calibrationIcon
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_calibrationIconMessages, NameOf(s_calibrationIconMessages)))
+                Case Else
+                    Stop
             End Select
         Next
 

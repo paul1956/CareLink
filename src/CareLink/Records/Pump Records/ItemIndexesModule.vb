@@ -76,7 +76,9 @@ Friend Module ItemIndexesModule
         appModelType = 65
         cgmInfo = 66
         medicalDeviceInformation = 67
-        typeCast = 68
+        timeToNextEarlyCalibrationMinutes = 68
+        calibrationIcon = 69
+        typeCast = 70
     End Enum
 
     <Extension>

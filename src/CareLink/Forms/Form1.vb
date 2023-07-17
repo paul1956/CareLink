@@ -858,7 +858,7 @@ Public Class Form1
                  ItemIndexes.lastSensorTime, ItemIndexes.sLastSensorTime,
                  ItemIndexes.lastSGTrend, ItemIndexes.systemStatusMessage,
                  ItemIndexes.lastConduitDateTime, ItemIndexes.clientTimeZoneName,
-                 ItemIndexes.appModelType
+                 ItemIndexes.appModelType, ItemIndexes.calibrationIcon
                 e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
 
             Case ItemIndexes.version, ItemIndexes.conduitBatteryLevel,
@@ -870,14 +870,14 @@ Public Class Form1
                  ItemIndexes.gstBatteryLevel, ItemIndexes.maxAutoBasalRate,
                  ItemIndexes.maxBolusAmount, ItemIndexes.sensorDurationMinutes,
                  ItemIndexes.timeToNextCalibrationMinutes, ItemIndexes.sgBelowLimit,
-                 ItemIndexes.averageSGFloat, ItemIndexes.timeToNextCalibrationRecommendedMinutes
+                 ItemIndexes.averageSGFloat, ItemIndexes.timeToNextCalibrationRecommendedMinutes,
+                 ItemIndexes.timeToNextEarlyCalibrationMinutes
                 e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
 
             Case ItemIndexes.conduitInRange, ItemIndexes.conduitMedicalDeviceInRange,
                  ItemIndexes.conduitSensorInRange, ItemIndexes.medicalDeviceSuspended,
                  ItemIndexes.pumpCommunicationState, ItemIndexes.gstCommunicationState,
-                 ItemIndexes.typeCast, ItemIndexes.calFreeSensor,
-                 ItemIndexes.finalCalibration
+                 ItemIndexes.calFreeSensor, ItemIndexes.finalCalibration, ItemIndexes.typeCast
                 e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
 
             Case ItemIndexes.lastSG,
