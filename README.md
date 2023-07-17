@@ -31,7 +31,6 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 New in 3.8.3.2
 - Voice recognition and speech
 - You can now ask "What is my BG" and other questions using your voice
-- Tab navigation is voice enabled say "Show [tab name]" for example "Show Treatment Details"
 - Improve label and calculations for TIR Compliance measurement
 - Improved fonts and images
 - Fix announcement for out of range blood glucose in mmol/L
