@@ -107,7 +107,7 @@ Public Class SgMiniWindow
                     Me.SgTextBox.ForeColor = Color.Red
                     If Not _alarmPlayedLow Then
                         If s_speechOn Then
-                            PlayText($"Low Alarm for {s_firstName}, current blood glucose {_currentSgValue}")
+                            PlayText($"Low Alarm for {s_firstName}, current sensor glucose {_currentSgValue}")
                         Else
                             Me.PlaySoundFromResource("Low Alarm")
                         End If
@@ -124,7 +124,7 @@ Public Class SgMiniWindow
                     Me.SgTextBox.ForeColor = Color.Yellow
                     If Not _alarmPlayedHigh Then
                         If s_speechOn Then
-                            PlayText($"High alarm for {s_firstName}, current blood glucose {_currentSgValue}")
+                            PlayText($"High alarm for {s_firstName}, current sensor glucose {_currentSgValue}")
                         Else
                             Me.PlaySoundFromResource("High Alarm")
                         End If
