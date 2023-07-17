@@ -107,8 +107,11 @@ Friend Module UserMessageHandler
                     }
 
     Friend ReadOnly s_calibrationIconMessages As New Dictionary(Of String, String) From {
-                        {"HOURS_10", "Hours 10"}
-                    }
+                        {"HOURS_10", "Hours 10"},
+                        {"INIT", "Initializing"},
+                        {"NO_ICON", ""},
+                        {"UNDEFINED", ""}
+                   }
 
     Friend ReadOnly s_sensorMessages As New Dictionary(Of String, String) From {
                         {"BG_RECOMMENDED", $"BG{vbCrLf}Recommended"},

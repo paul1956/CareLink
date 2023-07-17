@@ -871,7 +871,7 @@ Public Class Form1
                  ItemIndexes.maxBolusAmount, ItemIndexes.sensorDurationMinutes,
                  ItemIndexes.timeToNextCalibrationMinutes, ItemIndexes.sgBelowLimit,
                  ItemIndexes.averageSGFloat, ItemIndexes.timeToNextCalibrationRecommendedMinutes,
-                 ItemIndexes.timeToNextEarlyCalibrationMinutes
+                 ItemIndexes.systemStatusTimeRemaining, ItemIndexes.timeToNextEarlyCalibrationMinutes
                 e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
 
             Case ItemIndexes.conduitInRange, ItemIndexes.conduitMedicalDeviceInRange,
@@ -2109,7 +2109,22 @@ Public Class Form1
 
                     message = message.ToTitle
                 End If
-                Me.SensorMessage.Text = message
+
+                If s_sensorState = "WARM_UP" AndAlso Me.SensorMessage IsNot Nothing Then
+                    Dim timeRemaining As String = ""
+                    If Me.SensorMessage IsNot Nothing Then
+                        If s_systemStatusTimeRemaining.Hours > 1 Then
+                            timeRemaining = $"{s_systemStatusTimeRemaining.Hours} hrs"
+                        ElseIf s_systemStatusTimeRemaining.Hours > 0 Then
+                            timeRemaining = $"{s_systemStatusTimeRemaining.Hours} hr"
+                        Else
+                            timeRemaining = $"{s_systemStatusTimeRemaining.Minutes} min"
+                        End If
+                    End If
+                    Me.SensorMessage.Text = $"{message}{timeRemaining}"
+                Else
+                    Me.SensorMessage.Text = message
+                End If
                 Me.SensorMessage.Visible = True
                 Me.ShieldUnitsLabel.Visible = False
                 Application.DoEvents()
@@ -2534,9 +2549,8 @@ Public Class Form1
         Me.UpdateDosingAndCarbs()
 
         Me.FullNameLabel.Text = $"{s_firstName} {RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastName))}"
-        Dim modelNumber As String = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber))
-        Me.ModelLabel.Text = modelNumber
-        Me.PumpNameLabel.Text = GetPumpName(modelNumber)
+        Me.ModelLabel.Text = $"{s_pumpModelNumber} HW Version = {s_pumpHardwareRevision}"
+        Me.PumpNameLabel.Text = GetPumpName(s_pumpModelNumber)
         Me.SerialNumberLabel.Text = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.medicalDeviceSerialNumber))
         Me.ReadingsLabel.Text = $"{s_listOfSgRecords.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288 SG Readings"
 

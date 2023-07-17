@@ -56,13 +56,16 @@ Public Module PumpVariables
     Friend s_notificationHistoryValue As Dictionary(Of String, String)
     Friend s_previousRecentData As Dictionary(Of String, String)
     Friend s_pumpBannerStateValue As New List(Of Dictionary(Of String, String))
+    Friend s_pumpHardwareRevision As String
     Friend s_pumpInRangeOfPhone As Boolean
     Friend s_pumpInRangeOfTransmitter As Boolean
+    Friend s_pumpModelNumber As String
     Friend s_reservoirLevelPercent As Integer
     Friend s_sensorDurationHours As Integer
     Friend s_sensorState As String
     Friend s_sessionCountrySettings As New CountrySettingsRecord
     Friend s_systemStatusMessage As String
+    Friend s_systemStatusTimeRemaining As TimeSpan
     Friend s_therapyAlgorithmStateValue As Dictionary(Of String, String)
     Friend s_timeInRange As Integer
     Friend s_timeToNextCalibrationHours As UShort

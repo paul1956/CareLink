@@ -1226,7 +1226,7 @@ Partial Class Form1
         ' 
         ' ModelLabel
         ' 
-        ModelLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        ModelLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
         ModelLabel.ForeColor = Color.White
         ModelLabel.Location = New Point(1140, 26)
         ModelLabel.Name = "ModelLabel"
@@ -1236,7 +1236,7 @@ Partial Class Form1
         ' 
         ' PumpNameLabel
         ' 
-        PumpNameLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        PumpNameLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
         PumpNameLabel.ForeColor = Color.White
         PumpNameLabel.Location = New Point(1140, 52)
         PumpNameLabel.Name = "PumpNameLabel"

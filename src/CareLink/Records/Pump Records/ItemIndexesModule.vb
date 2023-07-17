@@ -75,10 +75,11 @@ Friend Module ItemIndexesModule
         finalCalibration = 64
         appModelType = 65
         cgmInfo = 66
-        medicalDeviceInformation = 67
-        timeToNextEarlyCalibrationMinutes = 68
-        calibrationIcon = 69
-        typeCast = 70
+        systemStatusTimeRemaining = 67
+        medicalDeviceInformation = 68
+        timeToNextEarlyCalibrationMinutes = 69
+        calibrationIcon = 70
+        typeCast = 71
     End Enum
 
     <Extension>

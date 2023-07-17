@@ -31,10 +31,15 @@ Friend Module Form1UpdateHelpers
                                                      Replace("}", "").
                                                      Split(",")
         For Each e As IndexClass(Of String) In valueList.WithIndex
-            s_listOfSummaryRecords.Add(New SummaryRecord(CSng(CSng(rowIndex) + (e.Index / 10)),
-                                                              key,
-                                                              e.Value.Split(" = ")(0),
-                                                              e.Value.Split(" = ")(1)))
+            Dim item As New SummaryRecord(CSng(CSng(rowIndex) + (e.Index / 10)),
+                                          key,
+                                          e.Value.Split(" = ")(0).Trim,
+                                          e.Value.Split(" = ")(1).Trim)
+            s_listOfSummaryRecords.Add(item)
+            If item.Value = "hardwareRevision" Then
+                s_pumpHardwareRevision = item.Message
+            End If
+
         Next
     End Sub
 
@@ -51,11 +56,11 @@ Friend Module Form1UpdateHelpers
             Case "MMT-1880"
                 Return "Medtronic MiniMed™ 770G"
             Case "MMT-1884"
-                Return "Medtronic MiniMed™ 780G (US Upgrade)"
+                Return "Medtronic MiniMed™ 780G-US Update"
             Case "MMT-1885"
-                Return "Medtronic MiniMed™ 780G"
+                Return "Medtronic MiniMed™ 780G-mmol/L"
             Case "MMT-1886"
-                Return "Medtronic MiniMed™ 780G"
+                Return "Medtronic MiniMed™ 780G-mg/dL"
             Case Else
                 Return "Unknown"
         End Select
@@ -99,6 +104,7 @@ Friend Module Form1UpdateHelpers
 
 #End Region ' Update all Markers
 
+        s_systemStatusTimeRemaining = Nothing
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In recentData.WithIndex()
 
             Dim row As KeyValuePair(Of String, String) = c.Value
@@ -107,7 +113,6 @@ Friend Module Form1UpdateHelpers
             End If
 
             Dim rowIndex As ItemIndexes = CType(c.Index, ItemIndexes)
-            'Dim summaryItem As SummaryRecord
             Select Case GetItemIndex(row.Key)
                 Case ItemIndexes.lastSensorTS
                     HandleObsoleteTimes(row, rowIndex)
@@ -119,7 +124,8 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexes.pumpModelNumber
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, GetPumpName(row.Value)))
+                    s_pumpModelNumber = row.Value
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, GetPumpName(s_pumpModelNumber)))
 
                 Case ItemIndexes.currentServerTime
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
@@ -318,27 +324,35 @@ Friend Module Form1UpdateHelpers
                      ItemIndexes.averageSGFloat
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
-                Case ItemIndexes.appModelType
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
-
-                Case ItemIndexes.cgmInfo
-                    HandleComplexItems(row, rowIndex, ItemIndexes.cgmInfo.ToString)
-
-                Case ItemIndexes.medicalDeviceInformation
-                    HandleComplexItems(row, rowIndex, ItemIndexes.medicalDeviceInformation.ToString)
-                Case ItemIndexes.typeCast
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
-
                 Case ItemIndexes.timeToNextCalibrationRecommendedMinutes
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case ItemIndexes.calFreeSensor,
                      ItemIndexes.finalCalibration
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexes.appModelType
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexes.cgmInfo
+                    HandleComplexItems(row, rowIndex, ItemIndexes.cgmInfo.ToString)
+
+                Case ItemIndexes.systemStatusTimeRemaining
+                    s_systemStatusTimeRemaining = New TimeSpan(0, CInt(row.Value), 0)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ItemIndexes.medicalDeviceInformation
+                    HandleComplexItems(row, rowIndex, ItemIndexes.medicalDeviceInformation.ToString)
+
                 Case ItemIndexes.timeToNextEarlyCalibrationMinutes
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
                 Case ItemIndexes.calibrationIcon
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_calibrationIconMessages, NameOf(s_calibrationIconMessages)))
+
+                Case ItemIndexes.typeCast
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
                 Case Else
                     Stop
             End Select
