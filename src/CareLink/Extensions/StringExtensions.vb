@@ -37,7 +37,7 @@ Public Module StringExtensions
                 result.Append(Char.ToLowerInvariant(c))
             End If
         Next
-        Return result.ToString.Replace("Bg ", "BG ")
+        Return result.ToString.Replace("Bg ", "BG ").Replace("Sg ", "SG ")
     End Function
 
     ''' <summary>

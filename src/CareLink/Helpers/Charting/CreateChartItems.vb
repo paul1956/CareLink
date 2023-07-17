@@ -177,7 +177,7 @@ Friend Module CreateChartItems
                                                            LabelMarkStyle.None) With {.ForeColor = labelColor})
                 Next
 
-                .Title = "Blood Glucose Value"
+                .Title = "Sensor Glucose Value"
                 .TitleFont = New Font(labelFont.FontFamily, 14)
                 .TitleForeColor = labelColor
             End With

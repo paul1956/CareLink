@@ -240,7 +240,7 @@ Public Class Form1
                     chart1.SetUpCallout(currentDataPoint, markerTag)
 
                 Case SgSeriesName
-                    Me.CursorMessage1Label.Text = "Blood Glucose"
+                    Me.CursorMessage1Label.Text = "Sensor Glucose"
                     Me.CursorMessage1Label.Visible = True
                     Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(3)} {SgUnitsNativeString}"
                     Me.CursorMessage2Label.Visible = True
@@ -250,7 +250,7 @@ Public Class Form1
                     Me.CursorMessage4Label.Visible = True
                     Me.CursorPictureBox.Image = Nothing
                     Me.CursorPanel.Visible = True
-                    chart1.SetupCallout(currentDataPoint, $"Blood Glucose {Me.CursorMessage2Label.Text}")
+                    chart1.SetupCallout(currentDataPoint, $"Sensor Glucose {Me.CursorMessage2Label.Text}")
                 Case TimeChangeSeriesName
                     Me.CursorMessage1Label.Visible = False
                     Me.CursorMessage1Label.Visible = False

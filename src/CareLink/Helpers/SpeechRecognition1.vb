@@ -16,11 +16,13 @@ Friend Module SpeechRecognition
     Friend s_speechOn As Boolean = True
     Friend Property SpeechOutputSupport As Boolean = True
 
-    Private Sub AnnounceBG(recognizedText As String)
+    Private Sub AnnouncSG(recognizedText As String)
         Dim bgName As String
         Select Case True
-            Case recognizedText.Contains("bg")
-                bgName = "bg"
+            Case recognizedText.Contains("sg")
+                bgName = "sg"
+            Case recognizedText.Contains("sg")
+                bgName = "sg"
             Case recognizedText.Contains("blood glucose")
                 bgName = "blood glucose"
             Case recognizedText.Contains("blood sugar")
@@ -29,10 +31,10 @@ Friend Module SpeechRecognition
                 Exit Sub
         End Select
 
-        Dim bg As String
+        Dim sg As String
         Dim trend As String = ""
         If IsNumeric(Form1.CurrentSgLabel.Text) Then
-            bg = $"current {bgName} is { Form1.CurrentSgLabel.Text}"
+            sg = $"current {bgName} is { Form1.CurrentSgLabel.Text}"
             Dim arrows As String = Form1.LabelTrendArrows.Text
             Dim arrowCount As Integer = 0
             Select Case True
@@ -49,9 +51,9 @@ Friend Module SpeechRecognition
                 trend &= "s"
             End If
         Else
-            bg = $"current {bgName} and trend are Unknown"
+            sg = $"current {bgName} and trend are Unknown"
         End If
-        s_ss.SpeakAsync($"{s_firstName}'s {bg}{trend}")
+        s_ss.SpeakAsync($"{s_firstName}'s {sg}{trend}")
     End Sub
 
     Private Sub sre_AudioSignalProblemOccurred(sender As Object, e As AudioSignalProblemOccurredEventArgs)
@@ -107,13 +109,13 @@ Friend Module SpeechRecognition
 
             Dim gb_what As New GrammarBuilder With {.Culture = culture}
             gb_what.Append("What")
-            gb_what.Append(New Choices("can I say", "is my BG", "is my Blood Sugar", "is my Blood Glucose"))
+            gb_what.Append(New Choices("can I say", "is my SG", "is my BG", "is my Blood Sugar", "is my Blood Glucose"))
             s_sre.LoadGrammarAsync(New Grammar(gb_what))
 
             Dim gb_tellMe As New GrammarBuilder With {.Culture = culture}
             gb_tellMe.Append("Tell me")
             gb_tellMe.Append($"{s_firstName}'s")
-            gb_tellMe.Append(New Choices("BG", "Blood Sugar", "Blood Glucose"))
+            gb_tellMe.Append(New Choices("SG", "BG", "Blood Sugar", "Blood Glucose"))
             s_sre.LoadGrammarAsync(New Grammar(gb_tellMe))
 
             'Dim gb_showTab As New GrammarBuilder()
@@ -185,22 +187,22 @@ Friend Module SpeechRecognition
                 '    s_ss.SpeakAsync("Audible alerts are now Off")
 
                 Case recognizedTextLower.StartsWith("what is my", StringComparison.CurrentCultureIgnoreCase)
-                    AnnounceBG(recognizedTextLower)
+                    AnnouncSG(recognizedTextLower)
 
                 Case recognizedTextLower.StartsWith("tell me", StringComparison.CurrentCultureIgnoreCase)
                     If Not recognizedTextLower.Contains(s_firstName.ToLower) Then
                         Return
                     End If
-                    AnnounceBG(recognizedTextLower)
+                    AnnouncSG(recognizedTextLower)
 
                 Case recognizedTextLower = "what can I say"
                     Dim prompt As New StringBuilder
                     prompt.AppendLine($"{ProjectName}: All commands start with this, a pause is allowed after saying {ProjectName}.")
                     prompt.AppendLine($"What can I say: This message will be displayed")
                     prompt.AppendLine()
-                    prompt.AppendLine($"What is my BG/Blood Glucose/Blood Sugar: Your current BG will be spoken")
-                    prompt.AppendLine($"Tell me name's BG/Blood Glucose/Blood Sugar: use when you support more than 1 user")
-                    prompt.AppendLine($"     Example ""Tell me John's BG""")
+                    prompt.AppendLine($"What is my SG/BG/Blood Glucose/Blood Sugar: Your current sensor Glucose will be spoken")
+                    prompt.AppendLine($"Tell me name's SG/BG/Blood Glucose/Blood Sugar: use when you support more than 1 user")
+                    prompt.AppendLine($"     Example ""Tell me John's Sensor Glucose""")
                     'prompt.AppendLine($"Alerts On: Enables audio Alerts")
                     'prompt.AppendLine($"Alerts Off: Disables audio Alerts")
                     'prompt.AppendLine($"Show [any tab name]: Will make that tab have focus")
