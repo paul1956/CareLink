@@ -224,7 +224,7 @@ Public Class Form1
                                 End Select
                                 Me.CursorMessage1Label.Text = $"{markerTag(0)}@{xValue.ToString(s_timeWithMinuteFormat)}"
                                 Me.CursorMessage1Label.Visible = True
-                                Me.CursorMessage2Label.Text = markerTag(1).Trim
+                                Me.CursorMessage2Label.Text = markerTag(1).Replace("Calibration not", "Cal. not").Trim
                                 Me.CursorMessage2Label.Visible = True
                                 Dim sgValue As Single = markerTag(2).Trim.Split(" ")(0).Trim.ParseSingle(2)
                                 Me.CursorMessage3Label.Text = markerTag(2).Trim
