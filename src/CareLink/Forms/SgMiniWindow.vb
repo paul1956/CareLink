@@ -79,6 +79,8 @@ Public Class SgMiniWindow
         If Me.SgTextBox.Text.Length = 0 OrElse Me.SgTextBox.Text = "---" OrElse Me.SgTextBox.Text = "9999" Then
             _currentSgValue = Double.NaN
             Me.DeltaTextBox.Text = ""
+            Me.SgTextBox.BackColor = GetContrastingColor(Color.Red)
+            Me.SgTextBox.ForeColor = Color.Red
         Else
             If Double.IsNaN(_currentSgValue) OrElse _currentSgValue = 0 OrElse Double.IsNaN(_lastSgValue) OrElse _lastSgValue = 0 Then
                 Me.DeltaTextBox.Text = ""
@@ -148,10 +150,8 @@ Public Class SgMiniWindow
             If nativeMmolL Then
                 _normalizedSg *= MmolLUnitsDivisor
             End If
-            Me.SgTextBox.ForeColor = SystemColors.ControlText
             Me.SgTextBox.Text = If(nativeMmolL, Value.ParseSingle(1).ToString(CurrentUICulture), CInt(_currentSgValue).ToString)
         Else
-            Me.SgTextBox.ForeColor = Color.Red
             Me.SgTextBox.Text = Value
         End If
         Me.Text = GetLastUpdateMessage()
