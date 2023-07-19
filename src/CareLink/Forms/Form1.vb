@@ -1025,7 +1025,7 @@ Public Class Form1
 
         If File.Exists(GetPathToGraphColorsFile(True)) Then
             OptionsDialog.GetColorDictionaryFromFile()
-            Me.MenuOptionsShowLegend.Checked = File.Exists(GetPathToShowLegendFile(True))
+            Me.MenuOptionsAudioAlerts.Checked = Not File.Exists(GetPathToAudioAlertsDisabledFile())
         Else
             OptionsDialog.WriteColorDictionaryToFile()
             File.Create(GetPathToShowLegendFile(True))
@@ -1278,18 +1278,12 @@ Public Class Form1
         Next
     End Sub
 
-    Private Sub MenuOptionsShowLegend_CheckStateChanged(sender As Object, e As EventArgs) Handles MenuOptionsShowLegend.CheckStateChanged
+    Private Sub MenuOptionsAudioAlerts_CheckStateChanged(sender As Object, e As EventArgs) Handles MenuOptionsAudioAlerts.CheckStateChanged
         If Not ProgramInitialized Then Exit Sub
-        If Me.MenuOptionsShowLegend.Checked Then
-            File.Create(GetPathToShowLegendFile(True))
-            _activeInsulinChartLegend.Enabled = True
-            _summaryChartLegend.Enabled = True
-            _treatmentMarkersChartLegend.Enabled = True
+        If Me.MenuOptionsAudioAlerts.Checked Then
+            File.Delete(GetPathToAudioAlertsDisabledFile())
         Else
-            File.Delete(GetPathToShowLegendFile(True))
-            _activeInsulinChartLegend.Enabled = False
-            _summaryChartLegend.Enabled = False
-            _treatmentMarkersChartLegend.Enabled = False
+            File.Create(GetPathToAudioAlertsDisabledFile())
         End If
     End Sub
 

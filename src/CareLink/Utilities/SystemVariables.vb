@@ -9,16 +9,16 @@ Friend Module SystemVariables
     Friend Property DecimalSeparator As String = "."
 
     Friend Property GraphColorDictionary As New Dictionary(Of String, KnownColor) From {
-                        {"Active Insulin", KnownColor.Lime},
-                        {"Auto Correction", KnownColor.Aqua},
-                        {"Basal Series", KnownColor.HotPink},
-                        {"High Limit", KnownColor.Yellow},
-                        {"Low Limit", KnownColor.Red},
-                        {"Min Basal", KnownColor.LightYellow},
-                        {"SG Series", KnownColor.White},
-                        {"SG Target", KnownColor.Green},
-                        {"Time Change", KnownColor.White}
-                    }
+                            {"Active Insulin", KnownColor.Lime},
+                            {"Auto Correction", KnownColor.Aqua},
+                            {"Basal Series", KnownColor.HotPink},
+                            {"High Limit", KnownColor.Yellow},
+                            {"Low Limit", KnownColor.Red},
+                            {"Min Basal", KnownColor.LightYellow},
+                            {"SG Series", KnownColor.White},
+                            {"SG Target", KnownColor.Green},
+                            {"Time Change", KnownColor.White}
+                        }
 
     Friend Property MaxBasalPerDose As Single
 
@@ -35,9 +35,9 @@ Friend Module SystemVariables
                         }
 
     Friend ReadOnly Property MmolLItemsPeriod As New Dictionary(Of String, Single) From {
-                                {$"5.6 mmol/L", 5.6},
-                            {$"6.1 mmol/L", 6.1},
-                            {$"6.7 mmol/L", 6.7}
+                           {$"5.6 mmol/L", 5.6},
+                           {$"6.1 mmol/L", 6.1},
+                           {$"6.7 mmol/L", 6.7}
                         }
 
     Friend Property nativeMmolL As Boolean = False

@@ -38,7 +38,7 @@ Partial Class Form1
         ToolStripSeparator3 = New ToolStripSeparator()
         StartHereExit = New ToolStripMenuItem()
         MenuOptions = New ToolStripMenuItem()
-        MenuOptionsShowLegend = New ToolStripMenuItem()
+        MenuOptionsAudioAlerts = New ToolStripMenuItem()
         MenuOptionsAutoLogin = New ToolStripMenuItem()
         ToolStripSeparator6 = New ToolStripSeparator()
         OptionsMenuAdvancedOptions = New ToolStripMenuItem()
@@ -393,19 +393,19 @@ Partial Class Form1
         ' 
         ' MenuOptions
         ' 
-        MenuOptions.DropDownItems.AddRange(New ToolStripItem() {MenuOptionsShowLegend, MenuOptionsAutoLogin, ToolStripSeparator6, OptionsMenuAdvancedOptions, MenuOptionsFilterRawJSONData, MenuOptionsUseLocalTimeZone, ToolStripSeparator7, MenuOptionsColorPicker, MenuOptionsEditPumpSettings})
+        MenuOptions.DropDownItems.AddRange(New ToolStripItem() {MenuOptionsAudioAlerts, MenuOptionsAutoLogin, ToolStripSeparator6, OptionsMenuAdvancedOptions, MenuOptionsFilterRawJSONData, MenuOptionsUseLocalTimeZone, ToolStripSeparator7, MenuOptionsColorPicker, MenuOptionsEditPumpSettings})
         MenuOptions.Name = "MenuOptions"
         MenuOptions.Size = New Size(61, 20)
         MenuOptions.Text = "Options"
         ' 
-        ' MenuOptionsShowLegend
+        ' MenuOptionsAudioAlerts
         ' 
-        MenuOptionsShowLegend.Checked = True
-        MenuOptionsShowLegend.CheckOnClick = True
-        MenuOptionsShowLegend.CheckState = CheckState.Checked
-        MenuOptionsShowLegend.Name = "MenuOptionsShowLegend"
-        MenuOptionsShowLegend.Size = New Size(183, 22)
-        MenuOptionsShowLegend.Text = "Show Legend"
+        MenuOptionsAudioAlerts.Checked = True
+        MenuOptionsAudioAlerts.CheckOnClick = True
+        MenuOptionsAudioAlerts.CheckState = CheckState.Checked
+        MenuOptionsAudioAlerts.Name = "MenuOptionsAudioAlerts"
+        MenuOptionsAudioAlerts.Size = New Size(183, 22)
+        MenuOptionsAudioAlerts.Text = "Audio Alerts Enabled"
         ' 
         ' MenuOptionsAutoLogin
         ' 
@@ -2926,7 +2926,7 @@ Partial Class Form1
     Friend WithEvents MenuOptionsColorPicker As ToolStripMenuItem
     Friend WithEvents MenuOptionsEditPumpSettings As ToolStripMenuItem
     Friend WithEvents MenuOptionsFilterRawJSONData As ToolStripMenuItem
-    Friend WithEvents MenuOptionsShowLegend As ToolStripMenuItem
+    Friend WithEvents MenuOptionsAudioAlerts As ToolStripMenuItem
     Friend WithEvents MenuOptionsUseLocalTimeZone As ToolStripMenuItem
     Friend WithEvents MenuShowMiniDisplay As ToolStripMenuItem
     Friend WithEvents MenuStartHere As ToolStripMenuItem

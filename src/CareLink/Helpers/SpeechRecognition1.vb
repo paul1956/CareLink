@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Globalization
+Imports System.IO
 Imports System.Speech.Recognition
 Imports System.Speech.Synthesis
 Imports System.Text
@@ -13,7 +14,6 @@ Friend Module SpeechRecognition
     Private s_sre As SpeechRecognitionEngine
     Private s_ss As New SpeechSynthesizer()
     Friend s_shuttingDown As Boolean = False
-    Friend s_speechOn As Boolean = True
     Friend Property SpeechOutputSupport As Boolean = True
 
     Private Sub AnnounceSG(recognizedText As String)
@@ -53,7 +53,7 @@ Friend Module SpeechRecognition
         Else
             sgMessage = $"current {sgName} and trend are Unknown"
         End If
-        s_ss.SpeakAsync($"{s_firstName}'s {sgMessage}{trend}")
+        PlayText($"{s_firstName}'s {sgMessage}{trend}")
     End Sub
 
     Private Sub sre_AudioSignalProblemOccurred(sender As Object, e As AudioSignalProblemOccurredEventArgs)
@@ -130,7 +130,7 @@ Friend Module SpeechRecognition
             'gb_showTab.Append(showChoices)
             's_sre.LoadGrammarAsync(New Grammar(gb_showTab))
 
-            s_ss.Speak($"Speech recognition enabled for {s_firstName}, for a list of commands say, {ProjectName} what can I say")
+            PlayText($"Speech recognition enabled for {s_firstName}, for a list of commands say, {ProjectName} what can I say")
             Form1.StatusStripSpacerLeft.Text = "Listening"
             s_sre.RecognizeAsync(RecognizeMode.Multiple)
             AddHandler s_sre.SpeechRecognized, AddressOf sre_SpeechRecognized
@@ -144,13 +144,19 @@ Friend Module SpeechRecognition
     End Sub
 
     Friend Sub PlayText(text As String)
-        s_ss.Speak(text)
+        If Not File.Exists(GetPathToAudioAlertsDisabledFile) Then
+            s_ss.SpeakAsync(text)
+        End If
     End Sub
 
     Friend Sub sre_SpeechRecognized(sender As Object, e As SpeechRecognizedEventArgs)
+        If File.Exists(GetPathToAudioAlertsDisabledFile) Then
+            Form1.StatusStripSpacerLeft.Text = ""
+            Exit Sub
+        End If
         Dim recognizedTextLower As String = e.Result.Text.ToLower
         Dim confidence As Single = e.Result.Confidence
-        If confidence < 0.6 Then
+        If confidence < 0.8 Then
             Debug.WriteLine($"Heard: {recognizedTextLower} with confidence({confidence})")
             Form1.StatusStripSpacerLeft.Text = $"Rejected: '{recognizedTextLower}', Listening"
             Exit Sub
@@ -177,13 +183,11 @@ Friend Module SpeechRecognition
             Select Case True
                 'Case recognizedTextLower = "alerts on"
                 '    Debug.WriteLine("Audible alerts are now ON")
-                '    s_speechOn = True
-                '    s_ss.SpeakAsync("Audible alerts are now ON")
+                '    PlayText("Audible alerts are now ON")
 
                 'Case recognizedTextLower = "alerts off"
                 '    Debug.WriteLine("Audible alerts are now OFF")
-                '    s_speechOn = False
-                '    s_ss.SpeakAsync("Audible alerts are now Off")
+                '    PlayText("Audible alerts are now Off")
 
                 Case recognizedTextLower.StartsWith("what is my", StringComparison.CurrentCultureIgnoreCase)
                     AnnounceSG(recognizedTextLower)

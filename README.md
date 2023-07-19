@@ -28,13 +28,17 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 07/15/2023
 
 ## What's New
-New in 3.8.3.2
+New in 3.8.4.0
+- Add support for 780G US new features
 - Voice recognition and speech
-- You can now ask "What is my BG" and other questions using your voice
+      
+    - You can now ask "What is my SG" and other questions using your voice
+    - Audio Alerts and Speech Commands can be disabled by unchecking "Audio Alerts Enabled" under Options menu
+    - Announcement for out of range blood glucose in mmol/L
+
 - Improve label and calculations for TIR Compliance measurement
 - Improved fonts and images
-- Fix announcement for out of range blood glucose in mmol/L
-- Add support for US 780G new features
+- Legends are no longer abled to be disabled
 
 New in 3.8.3.1
 - Improve display of Sg values in mmol/M

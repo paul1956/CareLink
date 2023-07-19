@@ -63,6 +63,10 @@ Friend Module FileIoHelpers
                  )
     End Function
 
+    Friend Function GetPathToAudioAlertsDisabledFile() As String
+        Return Path.Combine(GetDirectoryForProjectData(), "AudioAlerts.txt")
+    End Function
+
     Friend Function GetPathToTestData() As String
         Return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")
     End Function
