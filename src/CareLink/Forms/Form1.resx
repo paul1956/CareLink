@@ -18,7 +18,7 @@
     <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
     <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
     <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing"">Blue</data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
         <value>[base64 mime encoded serialized .NET Framework object]</value>
     </data>
@@ -174,7 +174,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAEZTeXN0ZW0uV2luZG93cy5Gb3JtcywgQ3VsdHVyZT1uZXV0cmFs
         LCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5BQEAAAAmU3lzdGVtLldpbmRvd3MuRm9ybXMu
         SW1hZ2VMaXN0U3RyZWFtZXIBAAAABERhdGEHAgIAAAAJAwAAAA8DAAAA2hwBAAJNU0Z0AUkBTAIBAQkB
-        AAEwARYBMAEWAR8BAAEvAQAE/wEhAQAI/wFCAU0BNgcAATYDAAEoAwABfAMAAY0DAAEBAQABIAUAATAB
+        AAFAARYBQAEWAR8BAAEvAQAE/wEhAQAI/wFCAU0BNgcAATYDAAEoAwABfAMAAY0DAAEBAQABIAUAATAB
         EQEBIQADNQFVAUkBOAEjAf8BUgE+ASMB/wFSAT4BIwH/AVIBPgEjAf8BUgE+ASMB/wFSAT4BIwH/AVIB
         PgEjAf8BUgE+ASMB/wFSAT4BIwH/AVIBPgEjAf8BUgE+ASMB/wFSAT4BIwH/AVIBPgEjAf8BUgE+ASMB
         /wFSAT4BIwH/AVIBPgEjAf8BUgE+ASMB/wFSAT4BIwH/AVIBPgEjAf8BUgE+ASMB/wFSAT4BIwH/AU8B
@@ -4344,11 +4344,11 @@
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
 </value>
   </data>
-  <metadata name="ServerUpdateTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>397, 17</value>
-  </metadata>
   <metadata name="ToolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>896, 17</value>
+  </metadata>
+  <metadata name="ServerUpdateTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>397, 17</value>
   </metadata>
   <metadata name="StatusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>995, 17</value>

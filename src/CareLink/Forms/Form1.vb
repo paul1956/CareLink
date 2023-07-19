@@ -976,6 +976,7 @@ Public Class Form1
         Me.TabControlPage1.SelectedIndex = 3
         Me.TabControlPage1.Visible = True
         Dim dgv As DataGridView = CType(Me.TabControlPage1.TabPages(3).Controls(0), DataGridView)
+        dgv.FirstDisplayedScrollingRowIndex = dgv.RowCount - 1
         For Each row As DataGridViewRow In dgv.Rows
             If row.Cells(1).FormattedValue.ToString = "medicalDeviceInformation" Then
                 dgv.CurrentCell = row.Cells(2)
@@ -2557,7 +2558,6 @@ Public Class Form1
         Me.FullNameLabel.Text = $"{s_firstName} {RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastName))}"
         Me.ModelLabel.Text = $"{s_pumpModelNumber} HW Version = {s_pumpHardwareRevision}"
         Me.PumpNameLabel.Text = GetPumpName(s_pumpModelNumber)
-        Me.SerialNumberButton.Text = $"{RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.medicalDeviceSerialNumber))} Details"
         Me.ReadingsLabel.Text = $"{s_listOfSgRecords.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288 SG Readings"
 
         Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(

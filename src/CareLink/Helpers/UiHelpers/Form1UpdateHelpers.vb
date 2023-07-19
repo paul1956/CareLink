@@ -174,7 +174,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_sensorMessages, NameOf(s_sensorMessages)))
 
                 Case ItemIndexes.medicalDeviceSerialNumber
-                    Form1.SerialNumberButton.Text = row.Value
+                    Form1.SerialNumberButton.Text = $"{row.Value} Details..."
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Pump serial number is {row.Value}."))
 
                 Case ItemIndexes.medicalDeviceTime
