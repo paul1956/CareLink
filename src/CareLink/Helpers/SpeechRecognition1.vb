@@ -53,7 +53,7 @@ Friend Module SpeechRecognition
         Else
             sgMessage = $"current {sgName} and trend are Unknown"
         End If
-        PlayText($"{s_firstName}'s {sgMessage}{trend}")
+        PlayText($"{s_firstName}'s {sgMessage}{trend}", False)
     End Sub
 
     Private Sub sre_AudioSignalProblemOccurred(sender As Object, e As AudioSignalProblemOccurredEventArgs)
@@ -130,11 +130,14 @@ Friend Module SpeechRecognition
             'gb_showTab.Append(showChoices)
             's_sre.LoadGrammarAsync(New Grammar(gb_showTab))
 
-            PlayText($"Speech recognition enabled for {s_firstName}, for a list of commands say, {ProjectName} what can I say")
+            PlayText($"Speech recognition enabled for {s_firstName}, for a list of commands say, {ProjectName} what can I say", True)
             Form1.StatusStripSpacerLeft.Text = "Listening"
             s_sre.RecognizeAsync(RecognizeMode.Multiple)
             AddHandler s_sre.SpeechRecognized, AddressOf sre_SpeechRecognized
-            Threading.Thread.Sleep(1000)
+            For i As Integer = 1 To 40 ' sleep 2 seconds
+                Threading.Thread.Sleep(50)
+            Next
+
             AddHandler s_sre.AudioSignalProblemOccurred, AddressOf sre_AudioSignalProblemOccurred
         Catch ex As Exception
             Debug.WriteLine(ex.Message)
@@ -143,9 +146,13 @@ Friend Module SpeechRecognition
 
     End Sub
 
-    Friend Sub PlayText(text As String)
+    Friend Sub PlayText(text As String, sync As Boolean)
         If Not File.Exists(GetPathToAudioAlertsDisabledFile) Then
-            s_ss.SpeakAsync(text)
+            If sync OrElse Not s_speechErrorReported Then
+                s_ss.Speak(text)
+            Else
+                s_ss.SpeakAsync(text)
+            End If
         End If
     End Sub
 

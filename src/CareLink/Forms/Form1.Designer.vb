@@ -128,7 +128,7 @@ Partial Class Form1
         SensorTimeLeftLabel = New Label()
         SensorTimeLeftPanel = New Panel()
         SensorTimeLeftPictureBox = New PictureBox()
-        SerialNumberLabel = New Label()
+        SerialNumberButton = New Button()
         ServerUpdateTimer = New Timer(components)
         SplitContainer2 = New SplitContainer()
         PumpAITLabel = New Label()
@@ -1350,15 +1350,15 @@ Partial Class Form1
         SensorTimeLeftPictureBox.TabIndex = 47
         SensorTimeLeftPictureBox.TabStop = False
         ' 
-        ' SerialNumberLabel
+        ' SerialNumberButton
         ' 
-        SerialNumberLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
-        SerialNumberLabel.ForeColor = Color.White
-        SerialNumberLabel.Location = New Point(1140, 78)
-        SerialNumberLabel.Name = "SerialNumberLabel"
-        SerialNumberLabel.Size = New Size(230, 21)
-        SerialNumberLabel.TabIndex = 56
-        SerialNumberLabel.Text = "Serial Number"
+        SerialNumberButton.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        SerialNumberButton.ForeColor = Color.White
+        SerialNumberButton.Location = New Point(1140, 74)
+        SerialNumberButton.Name = "SerialNumberButton"
+        SerialNumberButton.Size = New Size(230, 29)
+        SerialNumberButton.TabIndex = 56
+        SerialNumberButton.Text = "Serial Number Details"
         ' 
         ' ServerUpdateTimer
         ' 
@@ -1383,7 +1383,7 @@ Partial Class Form1
         SplitContainer2.Panel1.Controls.Add(LabelSgTrend)
         SplitContainer2.Panel1.Controls.Add(ModelLabel)
         SplitContainer2.Panel1.Controls.Add(PumpNameLabel)
-        SplitContainer2.Panel1.Controls.Add(SerialNumberLabel)
+        SplitContainer2.Panel1.Controls.Add(SerialNumberButton)
         SplitContainer2.Panel1.Controls.Add(InsulinTypeLabel)
         SplitContainer2.Panel1.Controls.Add(ReadingsLabel)
         SplitContainer2.Panel1.Controls.Add(PumpBatteryRemainingLabel)
@@ -2952,7 +2952,7 @@ Partial Class Form1
     Friend WithEvents SensorTimeLeftLabel As Label
     Friend WithEvents SensorTimeLeftPanel As Panel
     Friend WithEvents SensorTimeLeftPictureBox As PictureBox
-    Friend WithEvents SerialNumberLabel As Label
+    Friend WithEvents SerialNumberButton As Button
     Friend WithEvents ServerUpdateTimer As Timer
     Friend WithEvents ShieldUnitsLabel As Label
     Friend WithEvents SmartGuardLabel As Label

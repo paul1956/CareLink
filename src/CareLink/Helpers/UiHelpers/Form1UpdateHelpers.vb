@@ -174,7 +174,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_sensorMessages, NameOf(s_sensorMessages)))
 
                 Case ItemIndexes.medicalDeviceSerialNumber
-                    Form1.SerialNumberLabel.Text = row.Value
+                    Form1.SerialNumberButton.Text = row.Value
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Pump serial number is {row.Value}."))
 
                 Case ItemIndexes.medicalDeviceTime
@@ -422,7 +422,7 @@ Friend Module Form1UpdateHelpers
                 Select Case typeValue
                     Case "TEMP_TARGET"
                         Dim minutes As Integer = bannerStateRecord1.timeRemaining
-                        Form1.TempTargetLabel.Text = $"Target {If(nativeMmolL, "8.3", "150")}  {minutes.ToHours} hr"
+                        Form1.TempTargetLabel.Text = $"Target {If(NativeMmolL, "8.3", "150")}  {minutes.ToHours} hr"
                         Form1.TempTargetLabel.Visible = True
                     Case "BG_REQUIRED"
                     Case "DELIVERY_SUSPEND"

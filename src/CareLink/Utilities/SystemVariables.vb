@@ -40,14 +40,14 @@ Friend Module SystemVariables
                            {$"6.7 mmol/L", 6.7}
                         }
 
-    Friend Property nativeMmolL As Boolean = False
+    Friend Property NativeMmolL As Boolean = False
     Friend Property TreatmentInsulinRow As Single
 
     Friend Function GetInsulinYValue() As Single
         Dim maxYScaled As Single = s_listOfSgRecords.Max(Of Single)(Function(sgR As SgRecord) sgR.sg) + 2
         Return If(Single.IsNaN(maxYScaled),
-            If(nativeMmolL, 330 / MmolLUnitsDivisor, 330),
-            If(nativeMmolL,
+            If(NativeMmolL, 330 / MmolLUnitsDivisor, 330),
+            If(NativeMmolL,
                 If(s_listOfSgRecords.Count = 0 OrElse maxYScaled > (330 / MmolLUnitsDivisor),
                     342 / MmolLUnitsDivisor,
                     Math.Max(maxYScaled, 260 / MmolLUnitsDivisor)),
@@ -57,7 +57,7 @@ Friend Module SystemVariables
     Friend Function GetSgTarget() As Single
         Return If(CurrentUser.CurrentTarget <> 0,
                   CurrentUser.CurrentTarget,
-                  If(nativeMmolL,
+                  If(NativeMmolL,
                      MmolLItemsPeriod.Last.Value,
                      MgDlItems.Last.Value)
                     )
