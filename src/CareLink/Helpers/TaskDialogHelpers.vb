@@ -2,60 +2,126 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Runtime.CompilerServices
+
 Friend Module TaskDialogHelpers
 
-    Public Function ShowAutoClosingTaskDialog(parentForm As Form, prompt As String, title As String) As TaskDialogButton
-        Const textFormat As String = "Closing in {0} seconds..."
-        Dim remainingTenthSeconds As Integer = 50
+    Private Function GetPrompt(prompt As String, autoCloseTimeOut As Integer, remainingTenthSeconds As Integer) As String
+        If autoCloseTimeOut < 0 Then Return prompt
+        Return String.Format($"{prompt}{vbCrLf}{"Closing in {0} seconds..."}", (remainingTenthSeconds + 9) \ 10)
+    End Function
 
-        Dim closeButton As New TaskDialogButton("&Close now")
-        Dim cancelButton As TaskDialogButton = TaskDialogButton.Cancel
+    <Extension>
+    Public Function MsgBoxTest(prompt As String, buttonStyle As MsgBoxStyle, title As String, Optional autoCloseTimeOut As Integer = -1) As MsgBoxResult
+        Dim remainingTenthSeconds As Integer = autoCloseTimeOut
 
-        ' Display the form's icon in the task dialog.
-        ' Note however that the task dialog will not scale the icon.
         Dim page As New TaskDialogPage() With
         {
             .Heading = title,
-            .Text = String.Format($"{prompt}{vbCrLf}{textFormat}", (remainingTenthSeconds + 9) \ 10),
-            .Icon = New TaskDialogIcon(parentForm.Icon),
-            .ProgressBar = New TaskDialogProgressBar() With
+            .Text = GetPrompt(prompt, autoCloseTimeOut, remainingTenthSeconds),
+            .Icon = New TaskDialogIcon(Form1.Icon)
+         }
+        If autoCloseTimeOut > -1 Then
+            page.ProgressBar = New TaskDialogProgressBar() With
             {
                 .State = TaskDialogProgressBarState.Paused
-            },
-            .Buttons = New TaskDialogButtonCollection() From
-            {
-                closeButton,
-                cancelButton
             }
-        }
+        End If
+        Dim buttonCollection As New TaskDialogButtonCollection
+        Select Case buttonStyle And &H7
+            Case MsgBoxStyle.OkOnly
+                buttonCollection.Add(TaskDialogButton.OK)
+
+            Case MsgBoxStyle.OkCancel
+                buttonCollection.Add(TaskDialogButton.OK)
+                buttonCollection.Add(TaskDialogButton.Cancel)
+
+            Case MsgBoxStyle.AbortRetryIgnore
+                buttonCollection.Add(TaskDialogButton.Abort)
+                buttonCollection.Add(TaskDialogButton.Retry)
+                buttonCollection.Add(TaskDialogButton.Ignore)
+
+            Case MsgBoxStyle.YesNoCancel
+                buttonCollection.Add(TaskDialogButton.Yes)
+                buttonCollection.Add(TaskDialogButton.No)
+                buttonCollection.Add(TaskDialogButton.Cancel)
+
+            Case MsgBoxStyle.YesNo
+                buttonCollection.Add(TaskDialogButton.Yes)
+                buttonCollection.Add(TaskDialogButton.No)
+
+            Case MsgBoxStyle.RetryCancel
+                buttonCollection.Add(TaskDialogButton.Retry)
+                buttonCollection.Add(TaskDialogButton.Cancel)
+            Case Else
+                Stop
+        End Select
+
+        Select Case buttonStyle And &H30
+            Case 0
+            Case MsgBoxStyle.Critical
+                Exit Select
+            Case MsgBoxStyle.Question
+                Exit Select
+            Case MsgBoxStyle.Exclamation
+                Exit Select
+            Case MsgBoxStyle.Information
+                Exit Select
+            Case Else
+                Stop
+        End Select
+
+        Select Case buttonStyle And &H300
+            Case MsgBoxStyle.DefaultButton1
+                page.DefaultButton = buttonCollection(0)
+            Case MsgBoxStyle.DefaultButton2
+                page.DefaultButton = buttonCollection(1)
+            Case MsgBoxStyle.DefaultButton3
+                page.DefaultButton = buttonCollection(2)
+            Case Else
+                Exit Select
+        End Select
+
+        Select Case buttonStyle And &H15000
+            Case 0
+            Case MsgBoxStyle.SystemModal
+                Exit Select
+            Case MsgBoxStyle.MsgBoxHelp
+                ' To be implemented
+            Case MsgBoxStyle.MsgBoxSetForeground
+                Exit Select
+            Case Else
+                Stop
+        End Select
+        page.Buttons = buttonCollection
+
+        ' Display the form's icon in the task dialog.
+        ' Note however that the task dialog will not scale the icon.
 
         ' Create a WinForms timer that raises the Tick event every tenth second.
         Using timer As New Timer() With {
             .Enabled = True,
             .Interval = 100
         }
-            AddHandler timer.Tick,
-                Sub(s, e)
-                    remainingTenthSeconds -= 1
-                    If remainingTenthSeconds > 0 Then
-                        ' Update the remaining time and progress bar.
-                        page.Text = String.Format($"{prompt}{vbCrLf}{textFormat}", (remainingTenthSeconds + 9) \ 10)
-                        page.ProgressBar.Value = 100 - (remainingTenthSeconds * 2)
-                    Else
-                        ' Stop the timer and click the "Reconnect" button - this will
-                        ' close the dialog.
-                        timer.Enabled = False
-                        closeButton.PerformClick()
-                    End If
-                End Sub
-
-            Dim result As TaskDialogButton = TaskDialog.ShowDialog(parentForm, page)
-            If result = closeButton Then
-                Console.WriteLine("Reconnecting.")
-            Else
-                Console.WriteLine("Not reconnecting.")
+            If autoCloseTimeOut > -1 Then
+                AddHandler timer.Tick,
+                    Sub(s, e)
+                        remainingTenthSeconds -= 1
+                        If remainingTenthSeconds > 0 Then
+                            ' Update the remaining time and progress bar.
+                            page.Text = GetPrompt(prompt, autoCloseTimeOut, remainingTenthSeconds)
+                            page.ProgressBar.Value = 100 - (remainingTenthSeconds * 2)
+                        Else
+                            ' Stop the timer and click the "Reconnect" button - this will
+                            ' close the dialog.
+                            timer.Enabled = False
+                            page.DefaultButton.PerformClick()
+                        End If
+                    End Sub
             End If
-            Return result
+
+            Dim result As TaskDialogButton = TaskDialog.ShowDialog(Form1, page)
+            Return CType([Enum].Parse(GetType(MsgBoxResult), result.ToString), MsgBoxResult)
         End Using
     End Function
 

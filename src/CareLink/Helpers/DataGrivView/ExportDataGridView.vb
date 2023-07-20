@@ -190,7 +190,7 @@ Friend Module ExportDataGridView
                                   )
                 End If
             Catch ex As IOException
-                MsgBox(ex.Message, MsgBoxStyle.OkOnly)
+                MsgBox(ex.Message, MsgBoxStyle.OkOnly, "I/O Error")
             Catch ex1 As Exception
                 Stop
             End Try

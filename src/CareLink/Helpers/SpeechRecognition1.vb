@@ -61,6 +61,7 @@ Friend Module SpeechRecognition
         Select Case e.AudioSignalProblem
             Case AudioSignalProblem.NoSignal
                 If Not s_speechErrorReported Then
+                    s_speechErrorReported = True
                     Dim details As New StringBuilder()
                     details.AppendLine("Audio signal problem information:")
                     details.AppendLine($"    Audio level:               {e.AudioLevel}")
@@ -68,7 +69,7 @@ Friend Module SpeechRecognition
                     details.AppendLine($"    Audio signal problem:      {e.AudioSignalProblem}")
                     details.AppendLine($"    Recognizer audio position: {e.RecognizerAudioPosition}")
                     details.AppendLine($"Do you want to continue getting this message?")
-                    s_speechErrorReported = MsgBox(details.ToString, MsgBoxStyle.YesNo, "Audio Error") <> MsgBoxResult.Yes
+                    s_speechErrorReported = MsgBox(details.ToString, MsgBoxStyle.YesNo Or MsgBoxStyle.DefaultButton2, "Audio Error") <> MsgBoxResult.Yes
                 End If
                 Form1.StatusStripSpacerLeft.Text = $"Speech signal issue {e.AudioSignalProblem}"
             Case AudioSignalProblem.TooNoisy
