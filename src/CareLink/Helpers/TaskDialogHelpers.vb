@@ -28,12 +28,13 @@ Friend Module TaskDialogHelpers
             }
         End If
         Dim buttonCollection As New TaskDialogButtonCollection
+        Dim okButton As New TaskDialogButton("Ok")
         Select Case buttonStyle And &H7
             Case MsgBoxStyle.OkOnly
-                buttonCollection.Add(TaskDialogButton.OK)
+                buttonCollection.Add(okButton)
 
             Case MsgBoxStyle.OkCancel
-                buttonCollection.Add(TaskDialogButton.OK)
+                buttonCollection.Add(okButton)
                 buttonCollection.Add(TaskDialogButton.Cancel)
 
             Case MsgBoxStyle.AbortRetryIgnore

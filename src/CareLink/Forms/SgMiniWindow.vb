@@ -84,14 +84,16 @@ Public Class SgMiniWindow
         Else
             If Double.IsNaN(_currentSgValue) OrElse _currentSgValue = 0 OrElse Double.IsNaN(_lastSgValue) OrElse _lastSgValue = 0 Then
                 Me.DeltaTextBox.Text = ""
+                Me.DeltaTextBox.ForeColor = Me.BackColor
+                Me.DeltaTextBox.BackColor = Me.BackColor
             Else
                 Dim delta As Double = _currentSgValue - _lastSgValue
-                Me.DeltaTextBox.Text = delta.ToString(If(nativeMmolL, $"+0.00;-#.00", "+0;-#0"), CurrentUICulture)
+                Me.DeltaTextBox.Text = delta.ToString(If(NativeMmolL, $"+0.00;-#.00", "+0;-#0"), CurrentUICulture)
                 Select Case delta
                     Case Is = 0
                         Me.DeltaTextBox.Text = ""
-                        Me.DeltaTextBox.ForeColor = SystemColors.Control
-                        Me.DeltaTextBox.BackColor = SystemColors.Control
+                        Me.DeltaTextBox.ForeColor = Me.BackColor
+                        Me.DeltaTextBox.BackColor = Me.BackColor
                     Case Is > 0
                         Me.DeltaTextBox.ForeColor = Color.Blue
                         Me.DeltaTextBox.BackColor = GetContrastingColor(Color.Blue)
@@ -139,10 +141,10 @@ Public Class SgMiniWindow
         _currentSgValue = Value.ParseSingle(2)
         If Not Double.IsNaN(_currentSgValue) Then
             _normalizedSg = _currentSgValue
-            If nativeMmolL Then
+            If NativeMmolL Then
                 _normalizedSg *= MmolLUnitsDivisor
             End If
-            Me.SgTextBox.Text = If(nativeMmolL, Value.ParseSingle(1).ToString(CurrentUICulture), CInt(_currentSgValue).ToString)
+            Me.SgTextBox.Text = If(NativeMmolL, Value.ParseSingle(1).ToString(CurrentUICulture), CInt(_currentSgValue).ToString)
         Else
             Me.SgTextBox.Text = Value
         End If

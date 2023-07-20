@@ -131,6 +131,8 @@ Friend Module SpeechRecognition
             'gb_showTab.Append(showChoices)
             's_sre.LoadGrammarAsync(New Grammar(gb_showTab))
 
+            Form1.Cursor = Cursors.WaitCursor
+            Application.DoEvents()
             PlayText($"Speech recognition enabled for {s_firstName}, for a list of commands say, {ProjectName} what can I say", True)
             Form1.StatusStripSpacerLeft.Text = "Listening"
             s_sre.RecognizeAsync(RecognizeMode.Multiple)
@@ -139,6 +141,7 @@ Friend Module SpeechRecognition
                 Threading.Thread.Sleep(50)
             Next
 
+            Form1.Cursor = Cursors.Default
             AddHandler s_sre.AudioSignalProblemOccurred, AddressOf sre_AudioSignalProblemOccurred
         Catch ex As Exception
             Debug.WriteLine(ex.Message)
