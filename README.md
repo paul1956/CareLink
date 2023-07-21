@@ -33,12 +33,12 @@ New in 3.8.4.0
 - Voice recognition and speech
       
     - You can now ask "What is my SG" and other questions using your voice
-    - Audio Alerts and Speech Commands can be disabled by unchecking "Audio Alerts Enabled" under Options menu
+    - Audio Alerts can be disabled by unchecking "Audio Alerts Enabled" under Options menu, this also disables speech recognition
+    - Speech recognition also can be disabled by unchecking "Speech Recognition enabled" in Options menu
     - Announcement for out of range blood glucose in mmol/L
 
 - Improve label and calculations for TIR Compliance measurement
 - Improved fonts and images
-- Legends are no longer abled to be disabled
 
 New in 3.8.3.1
 - Improve display of Sg values in mmol/M
