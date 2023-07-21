@@ -132,7 +132,7 @@ Friend Module CreateChartItems
             End With
             Dim firstAxis As List(Of Single)
             Dim secondAxis As List(Of Single)
-            If nativeMmolL Then
+            If NativeMmolL Then
                 firstAxis = mmolLValues
                 secondAxis = mgdLValues
             Else
@@ -149,7 +149,7 @@ Friend Module CreateChartItems
                 With .LabelStyle
                     .Font = labelFont
                     .ForeColor = labelColor
-                    .Format = If(nativeMmolL, "{0.0}", "{0}")
+                    .Format = If(NativeMmolL, "{0.0}", "{0}")
                 End With
                 .LineColor = Color.FromArgb(64, labelColor)
 
@@ -164,15 +164,15 @@ Friend Module CreateChartItems
                 End With
 
                 For i As Integer = 0 To mmolLValues.Count - 1
-                    Dim yMin As Single = GetYMinValue(nativeMmolL)
+                    Dim yMin As Single = GetYMinValue(NativeMmolL)
                     .CustomLabels.Add(New CustomLabel(firstAxis(i) - yMin,
                                                            firstAxis(i) + yMin,
-                                                           $"{firstAxis(i).ToString(If(nativeMmolL, "F1", "F0"), CurrentUICulture).Replace(",0", "")}",
+                                                           $"{firstAxis(i).ToString(If(NativeMmolL, "F1", "F0"), CurrentUICulture).Replace(",0", "")}",
                                                            0,
                                                            LabelMarkStyle.None) With {.ForeColor = labelColor})
                     .CustomLabels.Add(New CustomLabel(firstAxis(i) - yMin,
                                                            firstAxis(i) + yMin,
-                                                           $"{secondAxis(i).ToString(If(nativeMmolL, "F0", "F1"), CurrentUICulture).Replace(".0", "").Replace(",0", "")}",
+                                                           $"{secondAxis(i).ToString(If(NativeMmolL, "F0", "F1"), CurrentUICulture).Replace(".0", "").Replace(",0", "")}",
                                                            1,
                                                            LabelMarkStyle.None) With {.ForeColor = labelColor})
                 Next
@@ -207,7 +207,7 @@ Friend Module CreateChartItems
                         .BackColor = Color.Gray,
                         .BorderWidth = 0,
                         .Docking = Docking.Bottom,
-                        .Enabled = File.Exists(GetPathToShowLegendFile(True)),
+                        .Enabled = Form1.MenuOptionsShowChartLegends.Checked,
                         .Font = New Font("Segoe UI", 20.0F, FontStyle.Bold),
                         .ForeColor = .BackColor.GetContrastingColor,
                         .IsTextAutoFit = True

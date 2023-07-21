@@ -621,7 +621,7 @@ Public Class Form1
 
     Private Sub DgvCountryDataPg2_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvCountryDataPg2.CellClick
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        If dgv.Columns(e.ColumnIndex).HeaderText = ProjectName Then
+        If dgv.Columns(e.ColumnIndex).HeaderText = "Value" Then
             Dim uriString As String = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()
             If uriString.StartsWith("https:", StringComparison.InvariantCultureIgnoreCase) AndAlso Uri.IsWellFormedUriString(uriString, UriKind.Absolute) Then
                 Try
@@ -636,7 +636,7 @@ Public Class Form1
     Private Sub DgvCountryDataPg2_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvCountryDataPg2.CellFormatting
         If e.RowIndex = -1 Then Exit Sub
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        If dgv.Columns(e.ColumnIndex).HeaderText = ProjectName Then
+        If dgv.Columns(e.ColumnIndex).HeaderText = "Value" Then
             Dim uriString As String = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()
             If uriString.StartsWith("https:", StringComparison.InvariantCultureIgnoreCase) AndAlso Uri.IsWellFormedUriString(uriString, UriKind.Absolute) Then
                 e.Value = uriString
@@ -972,19 +972,6 @@ Public Class Form1
         ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.LimeGreen, ButtonBorderStyle.Solid)
     End Sub
 
-    Private Sub SerialNumberButton_Click(sender As Object, e As EventArgs) Handles SerialNumberButton.Click
-        Me.TabControlPage1.SelectedIndex = 3
-        Me.TabControlPage1.Visible = True
-        Dim dgv As DataGridView = CType(Me.TabControlPage1.TabPages(3).Controls(0), DataGridView)
-        dgv.FirstDisplayedScrollingRowIndex = dgv.RowCount - 1
-        For Each row As DataGridViewRow In dgv.Rows
-            If row.Cells(1).FormattedValue.ToString = "medicalDeviceInformation" Then
-                dgv.CurrentCell = row.Cells(2)
-                Exit For
-            End If
-        Next
-    End Sub
-
     Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
         Me.CleanUpNotificationIcon()
     End Sub
@@ -1008,7 +995,6 @@ Public Class Form1
             Try
                 MoveIfExists(GetPathToAllUserLoginInfo(False), currentAllUserLoginFile, lastError)
                 MoveIfExists(GetPathToGraphColorsFile(False), GetPathToGraphColorsFile(True), lastError)
-                MoveIfExists(GetPathToShowLegendFile(False), GetPathToShowLegendFile(True), lastError)
 
                 ' Move files with unique/variable names
                 ' Error Reports
@@ -1034,14 +1020,15 @@ Public Class Form1
         End If
 
         Me.InitializeDgvCareLinkUsers(Me.DgvCareLinkUsers)
+        Me.MenuOptionsAudioAlerts.Checked = My.Settings.SystemAudioAlertsEnabled
+        Me.MenuOptionsShowChartLegends.Checked = My.Settings.SystemShowLegends
+        Me.MenuOptionsSpeechRecognitionEnabled.Checked = My.Settings.SystemSpeechRecognitationEnabled
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
         If File.Exists(GetPathToGraphColorsFile(True)) Then
             OptionsDialog.GetColorDictionaryFromFile()
-            Me.MenuOptionsAudioAlerts.Checked = Not File.Exists(GetPathToAudioAlertsDisabledFile())
         Else
             OptionsDialog.WriteColorDictionaryToFile()
-            File.Create(GetPathToShowLegendFile(True))
         End If
 
         Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(1)
@@ -1082,6 +1069,19 @@ Public Class Form1
         If DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
             Me.UpdateAllTabPages(False)
         End If
+    End Sub
+
+    Private Sub SerialNumberButton_Click(sender As Object, e As EventArgs) Handles SerialNumberButton.Click
+        Me.TabControlPage1.SelectedIndex = 3
+        Me.TabControlPage1.Visible = True
+        Dim dgv As DataGridView = CType(Me.TabControlPage1.TabPages(3).Controls(0), DataGridView)
+        dgv.FirstDisplayedScrollingRowIndex = dgv.RowCount - 1
+        For Each row As DataGridViewRow In dgv.Rows
+            If row.Cells(1).FormattedValue.ToString = "medicalDeviceInformation" Then
+                dgv.CurrentCell = row.Cells(2)
+                Exit For
+            End If
+        Next
     End Sub
 
 #End Region ' Form Events
@@ -1224,6 +1224,22 @@ Public Class Form1
 
 #Region "Option Menus"
 
+    Private Sub MenuOptionsAudioAlerts_Click(sender As Object, e As EventArgs) Handles MenuOptionsAudioAlerts.Click
+        Dim playAudioAlerts As Boolean = Me.MenuOptionsAudioAlerts.Checked
+        My.Settings.SystemAudioAlertsEnabled = playAudioAlerts
+        My.Settings.Save()
+        If playAudioAlerts Then
+            If My.Settings.SystemSpeechRecognitationEnabled Then
+                Me.MenuOptionsSpeechRecognitionEnabled.PerformClick()
+                Me.MenuOptionsSpeechRecognitionEnabled.Enabled = True
+            End If
+        Else
+            Me.MenuOptionsSpeechRecognitionEnabled.Enabled = False
+            Me.MenuOptionsSpeechRecognitionEnabled.Checked = False
+            CancelSpeechRecognition()
+        End If
+    End Sub
+
     Private Sub MenuOptionsAutoLogin_CheckedChanged(sender As Object, e As EventArgs) Handles MenuOptionsAutoLogin.CheckedChanged
         My.Settings.AutoLogin = Me.MenuOptionsAutoLogin.Checked
     End Sub
@@ -1291,12 +1307,24 @@ Public Class Form1
         Next
     End Sub
 
-    Private Sub MenuOptionsAudioAlerts_CheckStateChanged(sender As Object, e As EventArgs) Handles MenuOptionsAudioAlerts.CheckStateChanged
-        If Not ProgramInitialized Then Exit Sub
-        If Me.MenuOptionsAudioAlerts.Checked Then
-            File.Delete(GetPathToAudioAlertsDisabledFile())
+    Private Sub MenuOptionsShowChartLegends_Click(sender As Object, e As EventArgs) Handles MenuOptionsShowChartLegends.Click
+        Dim showLegend As Boolean = Me.MenuOptionsShowChartLegends.Checked
+        _activeInsulinChartLegend.Enabled = showLegend
+        _summaryChartLegend.Enabled = showLegend
+        _treatmentMarkersChartLegend.Enabled = showLegend
+        My.Settings.SystemShowLegends = showLegend
+        My.Settings.Save()
+    End Sub
+
+    Private Sub MenuOptionsSpeechRecognitionEnabled_Click(sender As Object, e As EventArgs) Handles MenuOptionsSpeechRecognitionEnabled.Click
+        If Me.MenuOptionsSpeechRecognitionEnabled.Checked Then
+            InitializeSpeechRecognition()
         Else
-            File.Create(GetPathToAudioAlertsDisabledFile())
+            CancelSpeechRecognition()
+        End If
+        If My.Settings.SystemAudioAlertsEnabled Then
+            My.Settings.SystemSpeechRecognitationEnabled = Me.MenuOptionsSpeechRecognitionEnabled.Checked
+            My.Settings.Save()
         End If
     End Sub
 
@@ -1353,6 +1381,8 @@ Public Class Form1
 #Region "Settings Events"
 
     Private Sub MySettings_SettingChanging(sender As Object, e As SettingChangingEventArgs)
+        If e.SettingName.StartsWith("System") Then Exit Sub
+
         Dim newValue As String = If(IsNothing(e.NewValue), "", e.NewValue.ToString)
         If My.Settings(e.SettingName).ToString.ToUpperInvariant.Equals(newValue.ToString.ToUpperInvariant, StringComparison.Ordinal) Then
             Exit Sub
@@ -1839,6 +1869,7 @@ Public Class Form1
         End
     End Sub
 
+    <DebuggerNonUserCode()>
     Private Sub MenuOptions_DropDownOpening(sender As Object, e As EventArgs) Handles MenuOptions.DropDownOpening
         Me.MenuOptionsEditPumpSettings.Enabled = Not String.IsNullOrWhiteSpace(CurrentUser?.UserName)
     End Sub
@@ -1949,7 +1980,7 @@ Public Class Form1
             If activeInsulinStr.ToCharArray.Last = "0" Then
                 activeInsulinStr = $"{s_activeInsulin.amount:N2}"
             End If
-            Me.ActiveInsulinValue.Text = $"Active Insulin{vbCrLf}{activeInsulinStr}U"
+            Me.ActiveInsulinValue.Text = $"Active Insulin {activeInsulinStr}U"
             _sgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
         Catch ex As Exception
             Stop
@@ -2558,7 +2589,8 @@ Public Class Form1
         Me.FullNameLabel.Text = $"{s_firstName} {RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastName))}"
         Me.ModelLabel.Text = $"{s_pumpModelNumber} HW Version = {s_pumpHardwareRevision}"
         Me.PumpNameLabel.Text = GetPumpName(s_pumpModelNumber)
-        Me.ReadingsLabel.Text = $"{s_listOfSgRecords.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg)).Count}/288 SG Readings"
+        Dim nonZeroRecords As IEnumerable(Of SgRecord) = s_listOfSgRecords.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg))
+        Me.ReadingsLabel.Text = $"{nonZeroRecords.Count()}/288 SG Readings"
 
         Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
                               ClassCollectionToDataTable({s_lastSgRecord}.ToList),
@@ -2620,7 +2652,15 @@ Public Class Form1
         If s_totalAutoCorrection > 0 Then
             AddAutoCorrectionLegend(_activeInsulinChartLegend, _summaryChartLegend, _treatmentMarkersChartLegend)
         End If
-        InitializeSpeechRecognition()
+
+        If My.Settings.SystemAudioAlertsEnabled Then
+            InitializeAudioAlerts()
+            If My.Settings.SystemSpeechRecognitationEnabled Then
+                InitializeSpeechRecognition()
+            End If
+        Else
+            CancelSpeechRecognition()
+        End If
         Application.DoEvents()
     End Sub
 

@@ -3,18 +3,17 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Globalization
-Imports System.IO
 Imports System.Speech.Recognition
 Imports System.Speech.Synthesis
 Imports System.Text
 
-Friend Module SpeechRecognition
+Friend Module SpeechSupport
     Private s_speechErrorReported As Boolean = False
+    Private s_speechUserName As String = ""
     Private s_speechWakeWordFound As Boolean = False
     Private s_sre As SpeechRecognitionEngine
-    Private s_ss As New SpeechSynthesizer()
+    Private s_ss As SpeechSynthesizer
     Friend s_shuttingDown As Boolean = False
-    Friend Property SpeechOutputSupport As Boolean = True
 
     Private Sub AnnounceSG(recognizedText As String)
         Dim sgName As String
@@ -57,7 +56,7 @@ Friend Module SpeechRecognition
     End Sub
 
     Private Sub sre_AudioSignalProblemOccurred(sender As Object, e As AudioSignalProblemOccurredEventArgs)
-        If s_shuttingDown OrElse s_speechErrorReported Then Exit Sub
+        If s_shuttingDown OrElse s_speechErrorReported Or s_sre Is Nothing Then Exit Sub
         Select Case e.AudioSignalProblem
             Case AudioSignalProblem.NoSignal
                 If Not s_speechErrorReported Then
@@ -71,28 +70,49 @@ Friend Module SpeechRecognition
                     details.AppendLine($"Do you want to continue getting this message?")
                     s_speechErrorReported = MsgBox(details.ToString, MsgBoxStyle.YesNo Or MsgBoxStyle.DefaultButton2, "Audio Error") <> MsgBoxResult.Yes
                 End If
-                Form1.StatusStripSpacerLeft.Text = $"Speech signal issue {e.AudioSignalProblem}"
+                Form1.StatusStripSpeech.Text = $"Speech signal issue {e.AudioSignalProblem}"
             Case AudioSignalProblem.TooNoisy
-                Form1.StatusStripSpacerLeft.Text = "There is too much noise to understand you"
+                Form1.StatusStripSpeech.Text = "There is too much noise to understand you"
             Case AudioSignalProblem.TooLoud
-                Form1.StatusStripSpacerLeft.Text = "You are speaking too loud"
+                Form1.StatusStripSpeech.Text = "You are speaking too loud"
             Case AudioSignalProblem.TooFast
-                Form1.StatusStripSpacerLeft.Text = "Please speak slower"
+                Form1.StatusStripSpeech.Text = "Please speak slower"
             Case AudioSignalProblem.TooSlow
-                Form1.StatusStripSpacerLeft.Text = "Please speak faster"
+                Form1.StatusStripSpeech.Text = "Please speak faster"
             Case AudioSignalProblem.None, AudioSignalProblem.TooSoft
-                Form1.StatusStripSpacerLeft.Text = "Listening"
+                Form1.StatusStripSpeech.Text = "Listening"
         End Select
 
     End Sub
 
-    Friend Sub InitializeSpeechRecognition()
-        If SpeechOutputSupport AndAlso s_firstName = s_firstName Then Return
-        SpeechOutputSupport = True
-        Try
-            s_speechWakeWordFound = False
+    Friend Sub CancelSpeechRecognition()
+        If s_sre IsNot Nothing Then
+            RemoveHandler s_sre.AudioSignalProblemOccurred, AddressOf sre_AudioSignalProblemOccurred
+            RemoveHandler s_sre.SpeechRecognized, AddressOf sre_SpeechRecognized
+            s_sre.RecognizeAsyncCancel()
+            s_sre.Dispose()
+            s_sre = Nothing
+            s_speechUserName = ""
+            Form1.StatusStripSpeech.Text = ""
+        End If
+    End Sub
+
+    Friend Sub InitializeAudioAlerts()
+        If s_ss Is Nothing Then
             s_ss = New SpeechSynthesizer()
             s_ss.SetOutputToDefaultAudioDevice()
+        End If
+
+    End Sub
+
+    Friend Sub InitializeSpeechRecognition()
+        If s_speechUserName = s_firstName AndAlso s_sre IsNot Nothing Then
+            Exit Sub
+        End If
+        CancelSpeechRecognition()
+
+        Try
+            s_speechWakeWordFound = False
 
             Dim culture As New CultureInfo("en-us")
             s_sre = New SpeechRecognitionEngine(culture)
@@ -133,8 +153,11 @@ Friend Module SpeechRecognition
 
             Form1.Cursor = Cursors.WaitCursor
             Application.DoEvents()
-            PlayText($"Speech recognition enabled for {s_firstName}, for a list of commands say, {ProjectName} what can I say", True)
-            Form1.StatusStripSpacerLeft.Text = "Listening"
+            If String.IsNullOrWhiteSpace(s_speechUserName) Then
+                PlayText($"Speech recognition enabled for {s_firstName}, for a list of commands say, {ProjectName} what can I say", True)
+            End If
+            s_speechUserName = s_firstName
+            Form1.StatusStripSpeech.Text = "Listening"
             s_sre.RecognizeAsync(RecognizeMode.Multiple)
             AddHandler s_sre.SpeechRecognized, AddressOf sre_SpeechRecognized
             For i As Integer = 1 To 40 ' sleep 2 seconds
@@ -151,8 +174,11 @@ Friend Module SpeechRecognition
     End Sub
 
     Friend Sub PlayText(text As String, sync As Boolean)
-        If Not File.Exists(GetPathToAudioAlertsDisabledFile) Then
+        If My.Settings.SystemAudioAlertsEnabled Then
             If sync OrElse Not s_speechErrorReported Then
+                If s_ss Is Nothing Then
+                    InitializeAudioAlerts()
+                End If
                 s_ss.Speak(text)
             Else
                 s_ss.SpeakAsync(text)
@@ -161,22 +187,22 @@ Friend Module SpeechRecognition
     End Sub
 
     Friend Sub sre_SpeechRecognized(sender As Object, e As SpeechRecognizedEventArgs)
-        If File.Exists(GetPathToAudioAlertsDisabledFile) Then
-            Form1.StatusStripSpacerLeft.Text = ""
+        If Not My.Settings.SystemSpeechRecognitationEnabled Then
+            Form1.StatusStripSpeech.Text = ""
             Exit Sub
         End If
         Dim recognizedTextLower As String = e.Result.Text.ToLower
         Dim confidence As Single = e.Result.Confidence
         If confidence < 0.8 Then
             Debug.WriteLine($"Heard: {recognizedTextLower} with confidence({confidence})")
-            Form1.StatusStripSpacerLeft.Text = $"Rejected: '{recognizedTextLower}', Listening"
+            Form1.StatusStripSpeech.Text = $"Rejected: '{recognizedTextLower}', Listening"
             Exit Sub
         End If
 
         If recognizedTextLower.StartsWith(s_careLinkLower) Then
             If recognizedTextLower = s_careLinkLower Then
                 Debug.WriteLine($"Recognized: Wake word {recognizedTextLower} with confidence({confidence})")
-                Form1.StatusStripSpacerLeft.Text = $"Heard: '{s_careLinkLower}' waiting..."
+                Form1.StatusStripSpeech.Text = $"Heard: '{s_careLinkLower}' waiting..."
                 Application.DoEvents()
                 s_speechWakeWordFound = True
                 Exit Sub
@@ -188,7 +214,7 @@ Friend Module SpeechRecognition
                 Exit Sub
             End If
             s_speechWakeWordFound = False
-            Form1.StatusStripSpacerLeft.Text = $"Heard: {recognizedTextLower}"
+            Form1.StatusStripSpeech.Text = $"Heard: {recognizedTextLower}"
             Application.DoEvents()
             recognizedTextLower = recognizedTextLower.Replace(s_careLinkLower, "").TrimEnd
             Select Case True
@@ -244,7 +270,7 @@ Friend Module SpeechRecognition
             End Select
             s_speechWakeWordFound = False
         End If
-        Form1.StatusStripSpacerLeft.Text = "Listening"
+        Form1.StatusStripSpeech.Text = "Listening"
     End Sub
 
 End Module

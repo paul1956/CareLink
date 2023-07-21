@@ -131,10 +131,10 @@ Namespace My
          Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
         Public Property CareLinkPartner() As Boolean
             Get
-                Return CType(Me("CareLinkPartner"), Boolean)
+                Return CType(Me("CareLinkPartner"),Boolean)
             End Get
             Set
-                Me("CareLinkPartner") = Value
+                Me("CareLinkPartner") = value
             End Set
         End Property
         
@@ -147,6 +147,42 @@ Namespace My
             End Get
             Set
                 Me("CareLinkPatientUserID") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property SystemAudioAlertsEnabled() As Boolean
+            Get
+                Return CType(Me("SystemAudioAlertsEnabled"),Boolean)
+            End Get
+            Set
+                Me("SystemAudioAlertsEnabled") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property SystemSpeechRecognitationEnabled() As Boolean
+            Get
+                Return CType(Me("SystemSpeechRecognitationEnabled"),Boolean)
+            End Get
+            Set
+                Me("SystemSpeechRecognitationEnabled") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property SystemShowLegends() As Boolean
+            Get
+                Return CType(Me("SystemShowLegends"),Boolean)
+            End Get
+            Set
+                Me("SystemShowLegends") = value
             End Set
         End Property
     End Class

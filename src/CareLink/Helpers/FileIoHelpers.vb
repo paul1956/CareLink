@@ -56,17 +56,6 @@ Friend Module FileIoHelpers
         Return GetDataFileName(SavedLastDownloadBaseName, CultureInfo.CurrentUICulture.Name, "json", False).withPath
     End Function
 
-    Friend Function GetPathToShowLegendFile(current As Boolean) As String
-        Return If(current,
-                  Path.Combine(GetDirectoryForProjectData(), "ShowLegend.txt"),
-                  Path.Combine(GetDirectoryForMyDocuments(), $"{ProjectName}ShowLegend.txt")
-                 )
-    End Function
-
-    Friend Function GetPathToAudioAlertsDisabledFile() As String
-        Return Path.Combine(GetDirectoryForProjectData(), "AudioAlertsDisabled.txt")
-    End Function
-
     Friend Function GetPathToTestData() As String
         Return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")
     End Function
