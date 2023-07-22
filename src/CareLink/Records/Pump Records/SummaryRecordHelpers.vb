@@ -89,7 +89,7 @@ Friend Module SummaryRecordHelpers
                 If Debugger.IsAttached Then
                     Stop
                     Dim stackFrame As New StackFrame(0, True)
-                    MsgBox($"Unknown Notification Message '{entryValue}'", MsgBoxStyle.Exclamation Or MsgBoxStyle.OkOnly, $"{stackFrame.GetFileName} line:{stackFrame.GetFileLineNumber()}")
+                    MsgBox($"Unknown Notification Message '{entryValue}'", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, $"{stackFrame.GetFileName} line:{stackFrame.GetFileLineNumber()}")
                 End If
                 formattedMessage = entryValue.Replace("_", " ")
             End If
@@ -124,7 +124,7 @@ Friend Module SummaryRecordHelpers
                         End If
                     Else
                         If Debugger.IsAttached AndAlso Not String.IsNullOrWhiteSpace(row.Value) Then
-                            MsgBox($"{row.Value} is unknown Notification Messages", MsgBoxStyle.OkOnly, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
+                            MsgBox($"{row.Value} is unknown Notification Messages", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, $"Form 1 line:{New StackFrame(0, True).GetFileLineNumber()}")
                         End If
                         message = row.Value.ToTitle
                     End If
@@ -181,7 +181,7 @@ Friend Module SummaryRecordHelpers
         Else
             If Debugger.IsAttached Then
                 Dim stackFrame As New StackFrame(0, True)
-                MsgBox($"{tReturnType} type is not yet defined.", MsgBoxStyle.OkOnly, $"{stackFrame.GetFileName} line:{stackFrame.GetFileLineNumber()}")
+                MsgBox($"{tReturnType} type is not yet defined.", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, $"{stackFrame.GetFileName} line:{stackFrame.GetFileLineNumber()}")
             End If
             Return Nothing
         End If

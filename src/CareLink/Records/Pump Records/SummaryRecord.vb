@@ -23,7 +23,7 @@ Public Class SummaryRecord
                 If Debugger.IsAttached Then
                     Stop
                     Dim stackFrame As New StackFrame(0, True)
-                    MsgBox($"{row.Value} is unknown message for {messageTableName}", MsgBoxStyle.OkOnly, $"{stackFrame.GetFileName} line:{stackFrame.GetFileLineNumber()}")
+                    MsgBox($"{row.Value} is unknown message for {messageTableName}", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, $"{stackFrame.GetFileName} line:{stackFrame.GetFileLineNumber()}")
                 End If
                 message = row.Value.ToTitle
             End If

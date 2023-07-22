@@ -8,11 +8,14 @@ Imports System.Speech.Synthesis
 Imports System.Text
 
 Friend Module SpeechSupport
+    Private s_lastSpokenMessage As String
     Private s_speechErrorReported As Boolean = False
     Private s_speechUserName As String = ""
     Private s_speechWakeWordFound As Boolean = False
     Private s_sre As SpeechRecognitionEngine
     Private s_ss As SpeechSynthesizer
+    Private s_StatusStripSpeechText As String = ""
+    Private s_timeOfLastAlert As Date
     Friend s_shuttingDown As Boolean = False
 
     Private Sub AnnounceSG(recognizedText As String)
@@ -68,7 +71,7 @@ Friend Module SpeechSupport
                     details.AppendLine($"    Audio signal problem:      {e.AudioSignalProblem}")
                     details.AppendLine($"    Recognizer audio position: {e.RecognizerAudioPosition}")
                     details.AppendLine($"Do you want to continue getting this message?")
-                    s_speechErrorReported = MsgBox(details.ToString, MsgBoxStyle.YesNo Or MsgBoxStyle.DefaultButton2, "Audio Error") <> MsgBoxResult.Yes
+                    s_speechErrorReported = MsgBox(details.ToString, MsgBoxStyle.YesNo Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Question, "Audio Error") <> MsgBoxResult.Yes
                 End If
                 Form1.StatusStripSpeech.Text = $"Speech signal issue {e.AudioSignalProblem}"
             Case AudioSignalProblem.TooNoisy
@@ -160,9 +163,6 @@ Friend Module SpeechSupport
             Form1.StatusStripSpeech.Text = "Listening"
             s_sre.RecognizeAsync(RecognizeMode.Multiple)
             AddHandler s_sre.SpeechRecognized, AddressOf sre_SpeechRecognized
-            For i As Integer = 1 To 40 ' sleep 2 seconds
-                Threading.Thread.Sleep(50)
-            Next
 
             Form1.Cursor = Cursors.Default
             AddHandler s_sre.AudioSignalProblemOccurred, AddressOf sre_AudioSignalProblemOccurred
@@ -174,6 +174,16 @@ Friend Module SpeechSupport
     End Sub
 
     Friend Sub PlayText(text As String, sync As Boolean)
+        If s_lastSpokenMessage = text AndAlso DateDiff(DateInterval.Minute, Now, s_timeOfLastAlert) < s_30SecondInMilliseconds Then
+            Form1.StatusStripSpeech.Text = $"Rejected: '{text}' too soon, Listening"
+            s_StatusStripSpeechText = Form1.StatusStripSpeech.Text
+            Exit Sub
+        End If
+        If Form1.StatusStripSpeech.Text.Contains("too soon") Then
+            Form1.StatusStripSpeech.Text = s_StatusStripSpeechText
+        End If
+        s_timeOfLastAlert = Now
+        s_lastSpokenMessage = text
         If My.Settings.SystemAudioAlertsEnabled Then
             If sync OrElse Not s_speechErrorReported Then
                 If s_ss Is Nothing Then
@@ -247,9 +257,9 @@ Friend Module SpeechSupport
                     'prompt.AppendLine($"Alerts Off: Disables audio Alerts")
                     'prompt.AppendLine($"Show [any tab name]: Will make that tab have focus")
                     'prompt.AppendLine($"     Example ""Show Treatment Details""")
-                    MsgBox(prompt.ToString, MsgBoxStyle.OkOnly, "Speech Help")
+                    MsgBox(prompt.ToString, MsgBoxStyle.OkOnly Or MsgBoxStyle.Information, "Speech Help")
 
-                    'Case recognizedTextLower.StartsWith("show", StringComparison.CurrentCultureIgnoreCase)
+                    'Case recognizedTextLower.StartsWith("show", StringCo parison.CurrentCultureIgnoreCase)
                     '    Dim tabText As String = recognizedTextLower.Substring("show ".Length).ToLower.TrimEnd("."c)
                     '    For Each tab As TabPage In Form1.TabControlPage1.TabPages
                     '        If tab.Text.ToLower.TrimEnd("."c) = tabText Then
@@ -270,7 +280,9 @@ Friend Module SpeechSupport
             End Select
             s_speechWakeWordFound = False
         End If
-        Form1.StatusStripSpeech.Text = "Listening"
+        If Not Form1.StatusStripSpeech.Text.Contains("too soon") Then
+            Form1.StatusStripSpeech.Text = "Listening"
+        End If
     End Sub
 
 End Module

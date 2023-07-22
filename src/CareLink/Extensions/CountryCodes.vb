@@ -264,42 +264,42 @@ Public Module RegionCountryLists
         Dim filenameWithoutExtension As String = Path.GetFileNameWithoutExtension(ReportFileNameWithPath)
 
         If filenameWithoutExtension.Count("("c) <> 1 Then
-            MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain exactly one '('.", MsgBoxStyle.OkOnly, "Malformed Error Report Filename")
+            MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain exactly one '('.", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, "Malformed Error Report Filename")
             Return Nothing
         End If
 
         If filenameWithoutExtension.Count(")"c) <> 1 Then
-            MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain exactly one ')'.", MsgBoxStyle.OkOnly, "Malformed Error Report Filename")
+            MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain exactly one ')'.", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, "Malformed Error Report Filename")
             Return Nothing
         End If
 
         If Not filenameWithoutExtension.StartsWith(FixedPart) Then
-            MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must start with '{FixedPart}'.", MsgBoxStyle.OkOnly, "Malformed Error Report Filename")
+            MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must start with '{FixedPart}'.", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, "Malformed Error Report Filename")
             Return Nothing
         End If
 
         Dim indexOfOpenParenthesis As Integer = filenameWithoutExtension.IndexOf("("c)
         If fuzzy Then
             If indexOfOpenParenthesis < FixedPart.Length Then
-                MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain '(' after '{FixedPart}.", MsgBoxStyle.OkOnly, "Malformed Error Report Filename")
+                MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain '(' after '{FixedPart}.", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, "Malformed Error Report Filename")
                 Return Nothing
             End If
         Else
             If indexOfOpenParenthesis <> FixedPart.Length Then
-                MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain '(' immediately after '{FixedPart}.", MsgBoxStyle.OkOnly, "Malformed Error Report Filename")
+                MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain '(' immediately after '{FixedPart}.", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, "Malformed Error Report Filename")
                 Return Nothing
             End If
         End If
 
         Dim indexOfClosedParenthesis As Integer = filenameWithoutExtension.IndexOf(")"c)
         If indexOfClosedParenthesis < 0 Then
-            MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain ')'.", MsgBoxStyle.OkOnly, "Malformed Error Report Filename")
+            MsgBox($"Error Report Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain ')'.", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, "Malformed Error Report Filename")
             Return Nothing
         End If
 
         Dim cultureName As String = filenameWithoutExtension.Substring(indexOfOpenParenthesis + 1, indexOfClosedParenthesis - indexOfOpenParenthesis - 1)
         If Not CultureInfoList.Where(Function(c As CultureInfo) c.Name = cultureName).Any Then
-            MsgBox($"Culture name '{cultureName}' is not a valid culture name.", MsgBoxStyle.OkOnly, "Invalid Culture Name")
+            MsgBox($"Culture name '{cultureName}' is not a valid culture name.", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, "Invalid Culture Name")
             Return CultureInfo.CurrentCulture
         End If
         Return CultureInfo.GetCultureInfo(cultureName)

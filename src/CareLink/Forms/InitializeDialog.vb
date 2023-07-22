@@ -33,7 +33,7 @@ Public Class InitializeDialog
 
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         If _currentUserBackup Is Nothing Then
-            If MsgBox("If you select Cancel, the program will exit, Retry will allow editing.", MsgBoxStyle.RetryCancel, "Exit Or Retry") = MsgBoxResult.Cancel Then
+            If MsgBox("If you select Cancel, the program will exit, Retry will allow editing.", MsgBoxStyle.RetryCancel Or MsgBoxStyle.Exclamation, "Exit Or Retry") = MsgBoxResult.Cancel Then
                 End
             End If
             Me.PumpAitComboBox.Enabled = True
@@ -164,7 +164,7 @@ Public Class InitializeDialog
 
         Me.CurrentUser.CurrentTarget = GetSgTarget()
         With Me.TargetSgComboBox
-            .DataSource = If(nativeMmolL,
+            .DataSource = If(NativeMmolL,
                              If(CurrentUICulture.NumberFormat.NumberDecimalSeparator = ".",
                                 New BindingSource(MmolLItemsPeriod, Nothing),
                                 New BindingSource(MmolLItemsComma, Nothing)

@@ -12,16 +12,15 @@ Friend Module TaskDialogHelpers
     End Function
 
     <Extension>
-    Public Function MsgBoxTest(prompt As String, buttonStyle As MsgBoxStyle, title As String, Optional autoCloseTimeOut As Integer = -1) As MsgBoxResult
-        Dim remainingTenthSeconds As Integer = autoCloseTimeOut
+    Public Function MsgBoxTest(prompt As String, buttonStyle As MsgBoxStyle, title As String, Optional autoCloseTimeOutSeconds As Integer = -1) As MsgBoxResult
+        Dim remainingTenthSeconds As Integer = autoCloseTimeOutSeconds * 10
 
         Dim page As New TaskDialogPage() With
         {
             .Heading = title,
-            .Text = GetPrompt(prompt, autoCloseTimeOut, remainingTenthSeconds),
-            .Icon = New TaskDialogIcon(Form1.Icon)
+            .Text = GetPrompt(prompt, autoCloseTimeOutSeconds, remainingTenthSeconds)
          }
-        If autoCloseTimeOut > -1 Then
+        If autoCloseTimeOutSeconds > -1 Then
             page.ProgressBar = New TaskDialogProgressBar() With
             {
                 .State = TaskDialogProgressBarState.Paused
@@ -61,13 +60,13 @@ Friend Module TaskDialogHelpers
         Select Case buttonStyle And &H30
             Case 0
             Case MsgBoxStyle.Critical
-                Exit Select
-            Case MsgBoxStyle.Question
-                Exit Select
+                page.Icon = TaskDialogIcon.Error
             Case MsgBoxStyle.Exclamation
-                Exit Select
+                page.Icon = TaskDialogIcon.Warning
             Case MsgBoxStyle.Information
-                Exit Select
+                page.Icon = TaskDialogIcon.Information
+            Case MsgBoxStyle.Question
+                page.Icon = New TaskDialogIcon(My.Resources.QuestionMark)
             Case Else
                 Stop
         End Select
@@ -104,14 +103,18 @@ Friend Module TaskDialogHelpers
             .Enabled = True,
             .Interval = 100
         }
-            If autoCloseTimeOut > -1 Then
+            If autoCloseTimeOutSeconds > -1 Then
                 AddHandler timer.Tick,
                     Sub(s, e)
                         remainingTenthSeconds -= 1
                         If remainingTenthSeconds > 0 Then
                             ' Update the remaining time and progress bar.
-                            page.Text = GetPrompt(prompt, autoCloseTimeOut, remainingTenthSeconds)
-                            page.ProgressBar.Value = 100 - (remainingTenthSeconds * 2)
+                            page.Text = GetPrompt(prompt, autoCloseTimeOutSeconds, remainingTenthSeconds)
+                            Dim barPercent As Integer = 100 - (100 * (remainingTenthSeconds \ (autoCloseTimeOutSeconds * 10)))
+                            If barPercent < 0 Then
+                                barPercent = 0
+                            End If
+                            page.ProgressBar.Value = barPercent
                         Else
                             ' Stop the timer and click the "Reconnect" button - this will
                             ' close the dialog.

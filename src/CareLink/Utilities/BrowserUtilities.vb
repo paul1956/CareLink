@@ -93,7 +93,7 @@ Friend Module BrowserUtilities
                     Form1.UpdateAvailableStatusStripLabel.ForeColor = Color.Red
                     If reportSuccessfulResult Then
                         If Interlocked.Exchange(inCheckForUpdate, 1) = 0 Then
-                            If MsgBox($"There is a newer version available, do you want to install now?{vbCrLf}Current version {My.Application.Info.Version}{vbCrLf}New version {gitHubVersion}", MsgBoxStyle.YesNo, "Updates Available") = MsgBoxResult.Yes Then
+                            If MsgBox($"There is a newer version available, do you want to install now?{vbCrLf}Current version {My.Application.Info.Version}{vbCrLf}New version {gitHubVersion}", MsgBoxStyle.YesNo Or MsgBoxStyle.Information, "Updates Available") = MsgBoxResult.Yes Then
                                 OpenUrlInBrowser($"{GitHubCareLinkUrl}releases/")
                                 End
                             End If
@@ -108,12 +108,12 @@ Friend Module BrowserUtilities
                 Form1.UpdateAvailableStatusStripLabel.ImageAlign = ContentAlignment.MiddleLeft
                 Form1.UpdateAvailableStatusStripLabel.ForeColor = Color.Black
                 If reportSuccessfulResult Then
-                    MsgBox("You are running latest version", MsgBoxStyle.OkOnly, "No Updates Available")
+                    MsgBox("You are running latest version", MsgBoxStyle.OkOnly Or MsgBoxStyle.Information, "No Updates Available")
                 End If
             End If
         Catch ex As Exception
             If reportSuccessfulResult Then
-                MsgBox($"Connection failed while checking for new version:{vbCrLf}{vbCrLf}{ex.DecodeException()}", MsgBoxStyle.Information, "Version Check Failed")
+                MsgBox($"Connection failed while checking for new version:{vbCrLf}{vbCrLf}{ex.DecodeException()}", MsgBoxStyle.OkOnly Or MsgBoxStyle.Information, "Version Check Failed")
             End If
         End Try
 

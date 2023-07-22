@@ -92,7 +92,7 @@ Public Module DictionaryExtensions
             Else
                 Stop
                 Dim stackFrame As New StackFrame(0, True)
-                MsgBox($"'{row.Key}' is unknown Property, please open a GitHub issue", MsgBoxStyle.OkOnly, $"{stackFrame.GetFileName} line:{stackFrame.GetFileLineNumber()}")
+                MsgBox($"'{row.Key}' is unknown Property, please open a GitHub issue", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, $"{stackFrame.GetFileName} line:{stackFrame.GetFileLineNumber()}")
             End If
         Next row
 
