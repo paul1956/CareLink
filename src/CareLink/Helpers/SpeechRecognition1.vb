@@ -65,13 +65,15 @@ Friend Module SpeechSupport
                 If Not s_speechErrorReported Then
                     s_speechErrorReported = True
                     Dim details As New StringBuilder()
-                    details.AppendLine("Audio signal problem information:")
+                    details.AppendLine("Details:")
                     details.AppendLine($"    Audio level:               {e.AudioLevel}")
                     details.AppendLine($"    Audio position:            {e.AudioPosition}")
                     details.AppendLine($"    Audio signal problem:      {e.AudioSignalProblem}")
                     details.AppendLine($"    Recognizer audio position: {e.RecognizerAudioPosition}")
-                    details.AppendLine($"Do you want to continue getting this message?")
-                    s_speechErrorReported = MsgBox(details.ToString, MsgBoxStyle.YesNo Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Question, "Audio Error") <> MsgBoxResult.Yes
+
+                    Dim page As New TaskDialogPage
+                    MsgBox("Audio signal problem", details.ToString, MsgBoxStyle.OkOnly Or MsgBoxStyle.Information, "Audio Error", 15, page)
+                    s_speechErrorReported = page.Verification.Checked
                 End If
                 Form1.StatusStripSpeech.Text = $"Speech signal issue {e.AudioSignalProblem}"
             Case AudioSignalProblem.TooNoisy
@@ -246,18 +248,25 @@ Friend Module SpeechSupport
                     AnnounceSG(recognizedTextLower)
 
                 Case recognizedTextLower = "what can I say"
-                    Dim prompt As New StringBuilder
-                    prompt.AppendLine($"{ProjectName}: All commands start with this, a pause is allowed after saying {ProjectName}.")
-                    prompt.AppendLine($"What can I say: This message will be displayed")
-                    prompt.AppendLine()
-                    prompt.AppendLine($"What is my SG/BG/Blood Glucose/Blood Sugar: Your current Sensor Glucose will be spoken")
-                    prompt.AppendLine($"Tell me name's SG/BG/Blood Glucose/Blood Sugar: use when you support more than 1 user")
-                    prompt.AppendLine($"     Example ""Tell me John's Sensor Glucose""")
-                    'prompt.AppendLine($"Alerts On: Enables audio Alerts")
-                    'prompt.AppendLine($"Alerts Off: Disables audio Alerts")
-                    'prompt.AppendLine($"Show [any tab name]: Will make that tab have focus")
-                    'prompt.AppendLine($"     Example ""Show Treatment Details""")
-                    MsgBox(prompt.ToString, MsgBoxStyle.OkOnly Or MsgBoxStyle.Information, "Speech Help")
+                    Dim text As New StringBuilder
+                    text.AppendLine($"{ProjectName}:")
+                    text.AppendLine($"     All commands start with this")
+                    text.AppendLine($"     A pause is allowed after saying {ProjectName}.")
+                    text.AppendLine()
+                    text.AppendLine($"What can I say:")
+                    text.AppendLine($"     This message will be displayed")
+                    text.AppendLine()
+                    text.AppendLine($"What is my SG/BG/Blood Glucose/Blood Sugar:")
+                    text.AppendLine($"     Your current Sensor Glucose will be spoken")
+                    text.AppendLine()
+                    text.AppendLine($"Tell me name's SG/BG/Blood Glucose/Blood Sugar:")
+                    text.AppendLine($"     Used when you support more than 1 user")
+                    text.AppendLine($"     Example ""Tell me John's Sensor Glucose""")
+                    'text.AppendLine($"Alerts On: Enables audio Alerts")
+                    'text.AppendLine($"Alerts Off: Disables audio Alerts")
+                    'text.AppendLine($"Show [any tab name]: Will make that tab have focus")
+                    'text.AppendLine($"     Example ""Show Treatment Details""")
+                    MsgBox("", text.ToString, MsgBoxStyle.OkOnly Or MsgBoxStyle.Information, "Speech Recognition Help")
 
                     'Case recognizedTextLower.StartsWith("show", StringCo parison.CurrentCultureIgnoreCase)
                     '    Dim tabText As String = recognizedTextLower.Substring("show ".Length).ToLower.TrimEnd("."c)

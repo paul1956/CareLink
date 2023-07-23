@@ -2,24 +2,26 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Runtime.CompilerServices
-
 Friend Module TaskDialogHelpers
 
     Private Function GetPrompt(prompt As String, autoCloseTimeOut As Integer, remainingTenthSeconds As Integer) As String
         If autoCloseTimeOut < 0 Then Return prompt
-        Return String.Format($"{prompt}{vbCrLf}{"Closing in {0} seconds..."}", (remainingTenthSeconds + 9) \ 10)
+        Return $"{prompt}{vbCrLf}Closing in { (remainingTenthSeconds + 9) \ 10} seconds..."
     End Function
 
-    <Extension>
-    Public Function MsgBoxTest(prompt As String, buttonStyle As MsgBoxStyle, title As String, Optional autoCloseTimeOutSeconds As Integer = -1) As MsgBoxResult
+    Private Function MsgBox(heading As String, text As String, buttonStyle As MsgBoxStyle, title As String, autoCloseTimeOutSeconds As Integer, page As TaskDialogPage, checkBoxPrompt As String) As MsgBoxResult
         Dim remainingTenthSeconds As Integer = autoCloseTimeOutSeconds * 10
+        page.Caption = title
+        page.Heading = heading
+        page.Text = GetPrompt(text, autoCloseTimeOutSeconds, remainingTenthSeconds)
+        If Not String.IsNullOrWhiteSpace(checkBoxPrompt) Then
+            page.Verification = New TaskDialogVerificationCheckBox() With
+            {
+                .Text = checkBoxPrompt,
+                .Checked = True
+            }
+        End If
 
-        Dim page As New TaskDialogPage() With
-        {
-            .Heading = title,
-            .Text = GetPrompt(prompt, autoCloseTimeOutSeconds, remainingTenthSeconds)
-         }
         If autoCloseTimeOutSeconds > -1 Then
             page.ProgressBar = New TaskDialogProgressBar() With
             {
@@ -57,7 +59,7 @@ Friend Module TaskDialogHelpers
                 Stop
         End Select
 
-        Select Case buttonStyle And &H30
+        Select Case buttonStyle And &H70
             Case 0
             Case MsgBoxStyle.Critical
                 page.Icon = TaskDialogIcon.Error
@@ -109,12 +111,9 @@ Friend Module TaskDialogHelpers
                         remainingTenthSeconds -= 1
                         If remainingTenthSeconds > 0 Then
                             ' Update the remaining time and progress bar.
-                            page.Text = GetPrompt(prompt, autoCloseTimeOutSeconds, remainingTenthSeconds)
-                            Dim barPercent As Integer = 100 - (100 * (remainingTenthSeconds \ (autoCloseTimeOutSeconds * 10)))
-                            If barPercent < 0 Then
-                                barPercent = 0
-                            End If
-                            page.ProgressBar.Value = barPercent
+                            page.Text = GetPrompt(text, autoCloseTimeOutSeconds, remainingTenthSeconds)
+                            Dim autoCloseTimeoutTenthSeconds As Integer = autoCloseTimeOutSeconds * 10
+                            page.ProgressBar.Value = CInt(100 * (remainingTenthSeconds / autoCloseTimeoutTenthSeconds))
                         Else
                             ' Stop the timer and click the "Reconnect" button - this will
                             ' close the dialog.
@@ -127,6 +126,14 @@ Friend Module TaskDialogHelpers
             Dim result As TaskDialogButton = TaskDialog.ShowDialog(Form1, page)
             Return CType([Enum].Parse(GetType(MsgBoxResult), result.ToString), MsgBoxResult)
         End Using
+    End Function
+
+    Public Function MsgBox(heading As String, text As String, buttonStyle As MsgBoxStyle, title As String, autoCloseTimeOutSeconds As Integer, page As TaskDialogPage) As MsgBoxResult
+        Return MsgBox(heading, text, buttonStyle, title, autoCloseTimeOutSeconds, page, "Do not show again")
+    End Function
+
+    Public Function MsgBox(heading As String, text As String, buttonStyle As MsgBoxStyle, title As String) As MsgBoxResult
+        Return MsgBox(heading, text, buttonStyle, title, -1, New TaskDialogPage, "")
     End Function
 
 End Module

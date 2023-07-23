@@ -433,8 +433,7 @@ Friend Module Form1UpdateHelpers
                     Case "WAIT_TO_ENTER_BG"
                     Case Else
                         If Debugger.IsAttached Then
-                            Dim stackFrame As New StackFrame(0, True)
-                            MsgBox($"{typeValue} is unknown banner message", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, $"{stackFrame.GetFileName} line:{stackFrame.GetFileLineNumber()}")
+                            MsgBox($"{typeValue} is unknown banner message!", "", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, GetTitleFromStack(New StackFrame(0, True)))
                         End If
                 End Select
             Else

@@ -1005,7 +1005,7 @@ Public Class Form1
                 lastError = $"Moving {SavedSnapshotBaseName} files!"
                 MoveFiles(GetDirectoryForMyDocuments, GetDirectoryForProjectData, $"{SavedSnapshotBaseName}*.json")
             Catch ex As Exception
-                MsgBox($"{lastError}{vbCrLf}{ex.Message}", MsgBoxStyle.OkOnly Or MsgBoxStyle.Critical, "Fatal Error")
+                MsgBox($"Last error: {lastError}", ex.Message, MsgBoxStyle.OkOnly Or MsgBoxStyle.Critical, "Fatal Error")
                 End
             End Try
         End If
@@ -2141,8 +2141,7 @@ Public Class Form1
                 Else
                     If Debugger.IsAttached Then
                         Stop
-                        Dim stackFrame As New StackFrame(0, True)
-                        MsgBox($"{s_sensorState} is unknown sensor message", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, $"{stackFrame.GetFileName} line:{stackFrame.GetFileLineNumber()}")
+                        MsgBox($"{s_sensorState} is unknown sensor message", "", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, GetTitleFromStack(New StackFrame(0, True)))
                     End If
 
                     message = message.ToTitle

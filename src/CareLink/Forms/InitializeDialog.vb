@@ -33,7 +33,7 @@ Public Class InitializeDialog
 
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         If _currentUserBackup Is Nothing Then
-            If MsgBox("If you select Cancel, the program will exit, Retry will allow editing.", MsgBoxStyle.RetryCancel Or MsgBoxStyle.Exclamation, "Exit Or Retry") = MsgBoxResult.Cancel Then
+            If MsgBox("If you cancel, the program will exit", "Retry will allow editing.", MsgBoxStyle.RetryCancel Or MsgBoxStyle.Exclamation, "Exit Or Retry") = MsgBoxResult.Cancel Then
                 End
             End If
             Me.PumpAitComboBox.Enabled = True
