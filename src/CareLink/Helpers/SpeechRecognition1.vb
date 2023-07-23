@@ -55,7 +55,7 @@ Friend Module SpeechSupport
         Else
             sgMessage = $"current {sgName} and trend are Unknown"
         End If
-        PlayText($"{s_firstName}'s {sgMessage}{trend}", False)
+        PlayText($"{s_firstName}'s {sgMessage}{trend}")
     End Sub
 
     Private Sub sre_AudioSignalProblemOccurred(sender As Object, e As AudioSignalProblemOccurredEventArgs)
@@ -159,7 +159,11 @@ Friend Module SpeechSupport
             Form1.Cursor = Cursors.WaitCursor
             Application.DoEvents()
             If String.IsNullOrWhiteSpace(s_speechUserName) Then
-                PlayText($"Speech recognition enabled for {s_firstName}, for a list of commands say, {ProjectName} what can I say", True)
+                Dim p As Prompt = PlayText($"Speech recognition enabled for {s_firstName}, for a list of commands say, {ProjectName} what can I say")
+                While p IsNot Nothing AndAlso Not p.IsCompleted
+                    Threading.Thread.Sleep(10)
+                End While
+                p = Nothing
             End If
             s_speechUserName = s_firstName
             Form1.StatusStripSpeech.Text = "Listening"
@@ -175,28 +179,28 @@ Friend Module SpeechSupport
 
     End Sub
 
-    Friend Sub PlayText(text As String, sync As Boolean)
+    Friend Function PlayText(text As String) As Prompt
+        If Not My.Settings.SystemAudioAlertsEnabled Then
+            Form1.StatusStripSpeech.Text = ""
+            Return Nothing
+        End If
         If s_lastSpokenMessage = text AndAlso DateDiff(DateInterval.Minute, Now, s_timeOfLastAlert) < s_30SecondInMilliseconds Then
             Form1.StatusStripSpeech.Text = $"Rejected: '{text}' too soon, Listening"
-            s_StatusStripSpeechText = Form1.StatusStripSpeech.Text
-            Exit Sub
+            s_StatusStripSpeechText = text
+            Return Nothing
         End If
         If Form1.StatusStripSpeech.Text.Contains("too soon") Then
-            Form1.StatusStripSpeech.Text = s_StatusStripSpeechText
+            Form1.StatusStripSpeech.Text = "Listening"
         End If
         s_timeOfLastAlert = Now
         s_lastSpokenMessage = text
-        If My.Settings.SystemAudioAlertsEnabled Then
-            If sync OrElse Not s_speechErrorReported Then
-                If s_ss Is Nothing Then
-                    InitializeAudioAlerts()
-                End If
-                s_ss.Speak(text)
-            Else
-                s_ss.SpeakAsync(text)
+        If Not s_speechErrorReported Then
+            If s_ss Is Nothing Then
+                InitializeAudioAlerts()
             End If
         End If
-    End Sub
+        Return s_ss.SpeakAsync(text)
+    End Function
 
     Friend Sub sre_SpeechRecognized(sender As Object, e As SpeechRecognizedEventArgs)
         If Not My.Settings.SystemSpeechRecognitationEnabled Then

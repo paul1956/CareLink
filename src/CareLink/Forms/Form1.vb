@@ -2464,26 +2464,26 @@ Public Class Form1
             Dim lowDeviation As Single = CSng(Math.Sqrt(lowDeviations / (elements - highCount))).RoundSingle(1, False)
             Select Case True
                 Case lowDeviation <= 2
-                    Me.LowTirComplianceLabel.Text = $"<{TirLowLimitAsString(NativeMmolL)}{vbCrLf}Excellent"
+                    Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}Excellent"
                     Me.LowTirComplianceLabel.ForeColor = Color.LimeGreen
                 Case lowDeviation <= 4
-                    Me.LowTirComplianceLabel.Text = $"<{TirLowLimitAsString(NativeMmolL)}{vbCrLf}({lowDeviation}) OK"
+                    Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}({lowDeviation}) OK"
                     Me.LowTirComplianceLabel.ForeColor = Color.Yellow
                 Case Else
-                    Me.LowTirComplianceLabel.Text = $"<{TirLowLimitAsString(NativeMmolL)}{vbCrLf}({lowDeviation}) Needs{vbCrLf}Improvement"
+                    Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}({lowDeviation}) Needs{vbCrLf}Improvement"
                     Me.LowTirComplianceLabel.ForeColor = Color.Red
             End Select
 
             Dim highDeviation As Single = CSng(Math.Sqrt(highDeviations / (elements - lowCount))).RoundSingle(1, False)
             Select Case True
                 Case highDeviation <= 2
-                    Me.HighTirComplianceLabel.Text = $">{TirHighLimitAsString(NativeMmolL)}{vbCrLf}Excellent"
+                    Me.HighTirComplianceLabel.Text = $"High{vbCrLf}Excellent"
                     Me.HighTirComplianceLabel.ForeColor = Color.LimeGreen
                 Case highDeviation <= 4
-                    Me.HighTirComplianceLabel.Text = $">{TirHighLimitAsString(NativeMmolL)}{vbCrLf}({highDeviation}) OK"
+                    Me.HighTirComplianceLabel.Text = $"High{vbCrLf}({highDeviation}) OK"
                     Me.HighTirComplianceLabel.ForeColor = Color.Yellow
                 Case Else
-                    Me.HighTirComplianceLabel.Text = $">{TirHighLimitAsString(NativeMmolL)}{vbCrLf}({highDeviation}) Needs{vbCrLf}Improvement "
+                    Me.HighTirComplianceLabel.Text = $"High{vbCrLf}({highDeviation}) Needs{vbCrLf}Improvement "
                     Me.HighTirComplianceLabel.ForeColor = Color.Red
             End Select
         End If
