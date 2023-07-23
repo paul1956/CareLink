@@ -823,7 +823,7 @@ Partial Class Form1
         CursorMessage4Label.Name = "CursorMessage4Label"
         CursorMessage4Label.Size = New Size(178, 21)
         CursorMessage4Label.TabIndex = 41
-        CursorMessage4Label.Text = "7.667 mmol/L"
+        CursorMessage4Label.Text = "7.6 mmol/L"
         CursorMessage4Label.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' CursorPanel

@@ -109,7 +109,7 @@ Public Class SgRecord
     Public ReadOnly Property sgMmDl As Single
         Get
             If Single.IsNaN(_sg) Then Return _sg
-            Return If(nativeMmolL, CSng(Math.Round(_sg * MmolLUnitsDivisor)), _sg)
+            Return If(NativeMmolL, CSng(Math.Round(_sg * MmolLUnitsDivisor)), _sg)
         End Get
     End Property
 
@@ -118,7 +118,7 @@ Public Class SgRecord
     Public ReadOnly Property sgMmolL As Single
         Get
             If Single.IsNaN(_sg) Then Return _sg
-            Return If(nativeMmolL, _sg, (_sg / MmolLUnitsDivisor).RoundSingle(2, False))
+            Return If(NativeMmolL, _sg, (_sg / MmolLUnitsDivisor).RoundSingle(2, False))
         End Get
     End Property
 
@@ -131,7 +131,7 @@ Public Class SgRecord
     Public Property version As Integer
 
     Public Overrides Function ToString() As String
-        Return If(nativeMmolL, Me.sg.ToString("F2", CurrentUICulture), Me.sg.ToString("F0"))
+        Return If(NativeMmolL, Me.sg.ToString("F1", CurrentUICulture), Me.sg.ToString("F0"))
     End Function
 
 End Class
