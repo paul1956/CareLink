@@ -6,6 +6,7 @@ Imports System.Globalization
 Imports System.Speech.Recognition
 Imports System.Speech.Synthesis
 Imports System.Text
+Imports System.Threading
 
 Friend Module SpeechSupport
     Private s_lastSpokenMessage As String
@@ -111,6 +112,7 @@ Friend Module SpeechSupport
     End Sub
 
     Friend Sub InitializeSpeechRecognition()
+        Dim oldUserName As String = s_speechUserName
         If s_speechUserName = s_firstName AndAlso s_sre IsNot Nothing Then
             Exit Sub
         End If
@@ -159,7 +161,14 @@ Friend Module SpeechSupport
             Form1.Cursor = Cursors.WaitCursor
             Application.DoEvents()
             If String.IsNullOrWhiteSpace(s_speechUserName) Then
-                Dim p As Prompt = PlayText($"Speech recognition enabled for {s_firstName}, for a list of commands say, {ProjectName} what can I say")
+                Dim msg As String = ""
+                msg = $"Speech recognition enabled for {s_firstName}"
+
+                If String.IsNullOrWhiteSpace(oldUserName) Then
+                    msg &= $" for a list of commands say, {ProjectName} what can I say"
+                End If
+
+                Dim p As Prompt = PlayText(msg)
                 While p IsNot Nothing AndAlso Not p.IsCompleted
                     Threading.Thread.Sleep(10)
                 End While
@@ -216,19 +225,17 @@ Friend Module SpeechSupport
         End If
 
         If recognizedTextLower.StartsWith(s_careLinkLower) Then
+            s_speechWakeWordFound = True
             If recognizedTextLower = s_careLinkLower Then
                 Debug.WriteLine($"Recognized: Wake word {recognizedTextLower} with confidence({confidence})")
                 Form1.StatusStripSpeech.Text = $"Heard: '{s_careLinkLower}' waiting..."
                 Application.DoEvents()
-                s_speechWakeWordFound = True
                 Exit Sub
             End If
         End If
+
         If s_speechWakeWordFound Then
             Debug.WriteLine($"Heard: {recognizedTextLower} with confidence({confidence})")
-            If confidence < 0.8 Then
-                Exit Sub
-            End If
             s_speechWakeWordFound = False
             Form1.StatusStripSpeech.Text = $"Heard: {recognizedTextLower}"
             Application.DoEvents()
@@ -252,6 +259,10 @@ Friend Module SpeechSupport
                     AnnounceSG(recognizedTextLower)
 
                 Case recognizedTextLower = "what can I say"
+                    If My.Settings.SystemSpeechHelpShown Then
+                        s_speechWakeWordFound = False
+                        Exit Select
+                    End If
                     Dim text As New StringBuilder
                     text.AppendLine($"{ProjectName}:")
                     text.AppendLine($"     All commands start with this")
@@ -270,8 +281,9 @@ Friend Module SpeechSupport
                     'text.AppendLine($"Alerts Off: Disables audio Alerts")
                     'text.AppendLine($"Show [any tab name]: Will make that tab have focus")
                     'text.AppendLine($"     Example ""Show Treatment Details""")
-                    MsgBox("", text.ToString, MsgBoxStyle.OkOnly Or MsgBoxStyle.Information, "Speech Recognition Help")
-
+                    Dim page As New TaskDialogPage
+                    MsgBox("", text.ToString, MsgBoxStyle.OkOnly Or MsgBoxStyle.Information, "Speech Recognition Help", 30, page)
+                    My.Settings.SystemSpeechHelpShown = page.Verification.Checked
                     'Case recognizedTextLower.StartsWith("show", StringCo parison.CurrentCultureIgnoreCase)
                     '    Dim tabText As String = recognizedTextLower.Substring("show ".Length).ToLower.TrimEnd("."c)
                     '    For Each tab As TabPage In Form1.TabControlPage1.TabPages
@@ -291,7 +303,6 @@ Friend Module SpeechSupport
                 Case Else
                     Stop
             End Select
-            s_speechWakeWordFound = False
         End If
         If Not Form1.StatusStripSpeech.Text.Contains("too soon") Then
             Form1.StatusStripSpeech.Text = "Listening"

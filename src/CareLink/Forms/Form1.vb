@@ -1023,6 +1023,7 @@ Public Class Form1
         Me.MenuOptionsAudioAlerts.Checked = My.Settings.SystemAudioAlertsEnabled
         Me.MenuOptionsShowChartLegends.Checked = My.Settings.SystemShowLegends
         Me.MenuOptionsSpeechRecognitionEnabled.Checked = My.Settings.SystemSpeechRecognitationEnabled
+        Me.MenuOptionsSpeechHelpShown.Checked = My.Settings.SystemSpeechHelpShown
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
         If File.Exists(GetPathToGraphColorsFile(True)) Then
@@ -1313,6 +1314,14 @@ Public Class Form1
         _summaryChartLegend.Enabled = showLegend
         _treatmentMarkersChartLegend.Enabled = showLegend
         My.Settings.SystemShowLegends = showLegend
+        My.Settings.Save()
+    End Sub
+
+    Private Sub MenuOptionsSpeechHelpShown_Click(sender As Object, e As EventArgs) Handles MenuOptionsSpeechHelpShown.Click
+        If Me.MenuOptionsSpeechHelpShown.Checked Then
+
+        End If
+        My.Settings.SystemSpeechHelpShown = Me.MenuOptionsSpeechHelpShown.Checked
         My.Settings.Save()
     End Sub
 

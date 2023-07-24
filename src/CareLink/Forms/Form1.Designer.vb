@@ -44,8 +44,9 @@ Partial Class Form1
         ToolStripSeparator5 = New ToolStripSeparator()
         MenuOptionsAutoLogin = New ToolStripMenuItem()
         ToolStripSeparator6 = New ToolStripSeparator()
-        OptionsMenuAdvancedOptions = New ToolStripMenuItem()
+        MenuOptionsAdvancedOptions = New ToolStripMenuItem()
         MenuOptionsFilterRawJSONData = New ToolStripMenuItem()
+        MenuOptionsSpeechHelpShown = New ToolStripMenuItem()
         MenuOptionsUseLocalTimeZone = New ToolStripMenuItem()
         ToolStripSeparator7 = New ToolStripSeparator()
         MenuOptionsColorPicker = New ToolStripMenuItem()
@@ -396,7 +397,7 @@ Partial Class Form1
         ' 
         ' MenuOptions
         ' 
-        MenuOptions.DropDownItems.AddRange(New ToolStripItem() {MenuOptionsAudioAlerts, MenuOptionsSpeechRecognitionEnabled, MenuOptionsShowChartLegends, ToolStripSeparator5, MenuOptionsAutoLogin, ToolStripSeparator6, OptionsMenuAdvancedOptions, MenuOptionsFilterRawJSONData, MenuOptionsUseLocalTimeZone, ToolStripSeparator7, MenuOptionsColorPicker, MenuOptionsEditPumpSettings})
+        MenuOptions.DropDownItems.AddRange(New ToolStripItem() {MenuOptionsAudioAlerts, MenuOptionsSpeechRecognitionEnabled, MenuOptionsShowChartLegends, MenuOptionsSpeechHelpShown, ToolStripSeparator5, MenuOptionsAutoLogin, ToolStripSeparator6, MenuOptionsAdvancedOptions, MenuOptionsFilterRawJSONData, MenuOptionsUseLocalTimeZone, ToolStripSeparator7, MenuOptionsColorPicker, MenuOptionsEditPumpSettings})
         MenuOptions.Name = "MenuOptions"
         MenuOptions.Size = New Size(61, 20)
         MenuOptions.Text = "Options"
@@ -428,6 +429,15 @@ Partial Class Form1
         MenuOptionsShowChartLegends.Size = New Size(224, 22)
         MenuOptionsShowChartLegends.Text = "Show Chart Legends"
         ' 
+        ' MenuOptionsSpeechHelpShown
+        ' 
+        MenuOptionsSpeechHelpShown.Checked = True
+        MenuOptionsSpeechHelpShown.CheckOnClick = True
+        MenuOptionsSpeechHelpShown.CheckState = CheckState.Checked
+        MenuOptionsSpeechHelpShown.Name = "MenuOptionsSpeechHelpShown"
+        MenuOptionsSpeechHelpShown.Size = New Size(224, 22)
+        MenuOptionsSpeechHelpShown.Text = "Disable Speech Help"
+        ' 
         ' ToolStripSeparator5
         ' 
         ToolStripSeparator5.Name = "ToolStripSeparator5"
@@ -445,12 +455,12 @@ Partial Class Form1
         ToolStripSeparator6.Name = "ToolStripSeparator6"
         ToolStripSeparator6.Size = New Size(221, 6)
         ' 
-        ' OptionsMenuAdvancedOptions
+        ' MenuOptionsAdvancedOptions
         ' 
-        OptionsMenuAdvancedOptions.Enabled = False
-        OptionsMenuAdvancedOptions.Name = "OptionsMenuAdvancedOptions"
-        OptionsMenuAdvancedOptions.Size = New Size(224, 22)
-        OptionsMenuAdvancedOptions.Text = "Advanced Options"
+        MenuOptionsAdvancedOptions.Enabled = False
+        MenuOptionsAdvancedOptions.Name = "MenuOptionsAdvancedOptions"
+        MenuOptionsAdvancedOptions.Size = New Size(224, 22)
+        MenuOptionsAdvancedOptions.Text = "Advanced Options"
         ' 
         ' MenuOptionsFilterRawJSONData
         ' 
@@ -2950,12 +2960,14 @@ Partial Class Form1
     Friend WithEvents MenuHelpCheckForUpdates As ToolStripMenuItem
     Friend WithEvents MenuHelpReportAnIssue As ToolStripMenuItem
     Friend WithEvents MenuOptions As ToolStripMenuItem
+    Friend WithEvents MenuOptionsAdvancedOptions As ToolStripMenuItem
     Friend WithEvents MenuOptionsAudioAlerts As ToolStripMenuItem
     Friend WithEvents MenuOptionsAutoLogin As ToolStripMenuItem
     Friend WithEvents MenuOptionsColorPicker As ToolStripMenuItem
     Friend WithEvents MenuOptionsEditPumpSettings As ToolStripMenuItem
     Friend WithEvents MenuOptionsFilterRawJSONData As ToolStripMenuItem
     Friend WithEvents MenuOptionsShowChartLegends As ToolStripMenuItem
+    Friend WithEvents MenuOptionsSpeechHelpShown As ToolStripMenuItem
     Friend WithEvents MenuOptionsSpeechRecognitionEnabled As ToolStripMenuItem
     Friend WithEvents MenuOptionsUseLocalTimeZone As ToolStripMenuItem
     Friend WithEvents MenuShowMiniDisplay As ToolStripMenuItem
@@ -2969,7 +2981,6 @@ Partial Class Form1
     Friend WithEvents MenuStrip1 As MenuStrip
     Friend WithEvents ModelLabel As Label
     Friend WithEvents NotifyIcon1 As NotifyIcon
-    Friend WithEvents OptionsMenuAdvancedOptions As ToolStripMenuItem
     Friend WithEvents PumpAITLabel As Label
     Friend WithEvents PumpBatteryPictureBox As PictureBox
     Friend WithEvents PumpBatteryRemaining2Label As Label
