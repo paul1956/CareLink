@@ -80,7 +80,7 @@ Friend Module UserMessageHandler
                         {"BC_SID_RECHARGE_MINILINK_WITHIN_24_HR", "Recharge transmitter within 24 hours(triggeredDateTime)."},
                         {"BC_SID_REMOVE_RESERVOIR_SELECT_REWIND", "Loading incomplete(triggeredDateTime). Remove reservoir and select Rewind to restart loading."},
                         {"BC_SID_REPLACE_BATTERY_SOON", "Battery low pump(triggeredDateTime). Replace battery soon."},
-                        {"BC_SID_REWIND_BEFORE_LOADING", "Rewind before loading."},
+                        {"BC_SID_REWIND_BEFORE_LOADING", "No reservoir detected(triggeredDateTime). Rewind before loading reservoir."},
                         {"BC_SID_SECOND_CALIBRATION_NOT_ACCEPT", "Change Sensor(triggeredDateTime). Second calibration not accepted. Insert new sensor."},
                         {"BC_SID_SENSOR_INFO_UNAVAILABLE_FOR_UP_TO_TWO_HOURS", "Sensor info unavailable for up to two hours(triggeredDateTime)."},
                         {"BC_SID_SENSOR_RELATED_ISSUE_INSERT_NEW", "Sensor failure at(triggeredDateTime), Insert new sensor."},
