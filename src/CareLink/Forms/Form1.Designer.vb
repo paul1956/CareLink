@@ -41,12 +41,12 @@ Partial Class Form1
         MenuOptionsAudioAlerts = New ToolStripMenuItem()
         MenuOptionsSpeechRecognitionEnabled = New ToolStripMenuItem()
         MenuOptionsShowChartLegends = New ToolStripMenuItem()
+        MenuOptionsSpeechHelpShown = New ToolStripMenuItem()
         ToolStripSeparator5 = New ToolStripSeparator()
         MenuOptionsAutoLogin = New ToolStripMenuItem()
         ToolStripSeparator6 = New ToolStripSeparator()
         MenuOptionsAdvancedOptions = New ToolStripMenuItem()
         MenuOptionsFilterRawJSONData = New ToolStripMenuItem()
-        MenuOptionsSpeechHelpShown = New ToolStripMenuItem()
         MenuOptionsUseLocalTimeZone = New ToolStripMenuItem()
         ToolStripSeparator7 = New ToolStripSeparator()
         MenuOptionsColorPicker = New ToolStripMenuItem()
@@ -569,7 +569,7 @@ Partial Class Form1
         ' 
         ActiveInsulinValue.BackColor = Color.Transparent
         ActiveInsulinValue.BorderStyle = BorderStyle.FixedSingle
-        ActiveInsulinValue.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        ActiveInsulinValue.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
         ActiveInsulinValue.ForeColor = Color.White
         ActiveInsulinValue.Location = New Point(995, 53)
         ActiveInsulinValue.Name = "ActiveInsulinValue"
