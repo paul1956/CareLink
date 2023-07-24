@@ -216,30 +216,36 @@ Friend Module SpeechSupport
             Form1.StatusStripSpeech.Text = ""
             Exit Sub
         End If
+        Dim message As String = ""
         Dim recognizedTextLower As String = e.Result.Text.ToLower
-        Dim confidence As Single = e.Result.Confidence
+        Dim confidence As Single = e.Result.Confidence.RoundSingle(2, False)
         If confidence < 0.8 Then
-            Debug.WriteLine($"Heard: {recognizedTextLower} with confidence({confidence})")
-            Form1.StatusStripSpeech.Text = $"Rejected: '{recognizedTextLower}', Listening"
+            message = $"Rejected: {recognizedTextLower} with confidence {confidence}%"
+            Debug.WriteLine(message)
+            Form1.StatusStripSpeech.Text = message
             Exit Sub
         End If
 
         If recognizedTextLower.StartsWith(s_careLinkLower) Then
             s_speechWakeWordFound = True
             If recognizedTextLower = s_careLinkLower Then
-                Debug.WriteLine($"Recognized: Wake word {recognizedTextLower} with confidence({confidence})")
-                Form1.StatusStripSpeech.Text = $"Heard: '{s_careLinkLower}' waiting..."
+                message = $"Heard: Wake word {recognizedTextLower} with confidence {confidence}%), waiting.."
+                Debug.WriteLine(message)
+                Form1.StatusStripSpeech.Text = message
                 Application.DoEvents()
                 Exit Sub
             End If
         End If
 
         If s_speechWakeWordFound Then
-            Debug.WriteLine($"Heard: {recognizedTextLower} with confidence({confidence})")
             s_speechWakeWordFound = False
-            Form1.StatusStripSpeech.Text = $"Heard: {recognizedTextLower}"
+            message = $"Heard: {recognizedTextLower} with confidence {confidence}%"
+            Debug.WriteLine(message)
+            s_speechWakeWordFound = False
+            Form1.StatusStripSpeech.Text = message
             Application.DoEvents()
             recognizedTextLower = recognizedTextLower.Replace(s_careLinkLower, "").TrimEnd
+            message = $"Heard: {recognizedTextLower} with confidence {confidence}%, waiting.."
             Select Case True
                 'Case recognizedTextLower = "alerts on"
                 '    Debug.WriteLine("Audible alerts are now ON")
@@ -250,12 +256,14 @@ Friend Module SpeechSupport
                 '    PlayText("Audible alerts are now Off")
 
                 Case recognizedTextLower.StartsWith("what is my", StringComparison.CurrentCultureIgnoreCase)
+                    Form1.StatusStripSpeech.Text = message
                     AnnounceSG(recognizedTextLower)
 
                 Case recognizedTextLower.StartsWith("tell me", StringComparison.CurrentCultureIgnoreCase)
                     If Not recognizedTextLower.Contains(s_firstName.ToLower) Then
                         Return
                     End If
+                    Form1.StatusStripSpeech.Text = message
                     AnnounceSG(recognizedTextLower)
 
                 Case recognizedTextLower = "what can I say"
@@ -305,7 +313,8 @@ Friend Module SpeechSupport
             End Select
         End If
         If Not Form1.StatusStripSpeech.Text.Contains("too soon") Then
-            Form1.StatusStripSpeech.Text = "Listening"
+            If message.Length > 0 Then message &= ", "
+            Form1.StatusStripSpeech.Text = $"{message}Listening..."
         End If
     End Sub
 
