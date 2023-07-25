@@ -280,8 +280,6 @@ Friend Module SpeechSupport
                     text.AppendLine($"Tell me name's SG/BG/Blood Glucose/Blood Sugar:")
                     text.AppendLine($"     Used when you support more than 1 user")
                     text.AppendLine($"     Example ""Tell me John's Sensor Glucose""")
-                    'currentSgStr.AppendLine($"Alerts On: Enables audio Alerts")
-                    'currentSgStr.AppendLine($"Alerts Off: Disables audio Alerts")
                     'currentSgStr.AppendLine($"Show [any tab name]: Will make that tab have focus")
                     'currentSgStr.AppendLine($"     Example ""Show Treatment Details""")
                     Dim page As New TaskDialogPage
