@@ -6,7 +6,6 @@ Imports System.Globalization
 Imports System.Speech.Recognition
 Imports System.Speech.Synthesis
 Imports System.Text
-Imports System.Threading
 
 Friend Module SpeechSupport
     Private s_lastSpokenMessage As String
@@ -34,30 +33,29 @@ Friend Module SpeechSupport
                 Exit Sub
         End Select
 
-        Dim sgMessage As String
-        Dim trend As String = ""
-        If IsNumeric(Form1.CurrentSgLabel.Text) Then
-            sgMessage = $"current {sgName} is { Form1.CurrentSgLabel.Text}"
-            Dim arrows As String = Form1.LabelTrendArrows.Text
-            Dim arrowCount As Integer = 0
-            Select Case True
-                Case Form1.LabelTrendArrows.Text.Contains("↓"c)
-                    arrowCount = arrows.Count("↓"c)
-                    trend = $" and is trending down with { arrowCount} Arrow"
-                Case Form1.LabelTrendArrows.Text.Contains("↑"c)
-                    arrowCount = arrows.Count("↑"c)
-                    trend = $" and is trending up with { arrowCount} Arrow"
-                Case Else
-                    trend = $" with no trend arrows"
-            End Select
-            If arrowCount > 1 Then
-                trend &= "s"
-            End If
+        Dim currentSgStr As String = Form1.CurrentSgLabel.Text
+        If IsNumeric(currentSgStr) Then
+            Dim sgMessage As String = $"current {sgName} is {currentSgStr}"
+            PlayText($"{s_firstName}'s {sgMessage}{GetTrendText()}")
         Else
-            sgMessage = $"current {sgName} and trend are Unknown"
+            PlayText($"{s_firstName}'s current {sgName} and trend are Unknown")
         End If
-        PlayText($"{s_firstName}'s {sgMessage}{trend}")
     End Sub
+
+    Private Function GetTrendText() As String
+        Dim arrows As String = Form1.LabelTrendArrows.Text
+        Dim arrowCount As Integer
+        Select Case True
+            Case arrows.Contains("↓"c)
+                arrowCount = arrows.Count("↓"c)
+                Return $" and is trending down with {arrowCount} Arrow{If(arrowCount > 1, "s", "")}"
+            Case arrows.Contains("↑"c)
+                arrowCount = arrows.Count("↑"c)
+                Return $" and is trending up with {arrowCount} Arrow{If(arrowCount > 1, "s", "")}"
+            Case Else
+                Return " with no trend arrows"
+        End Select
+    End Function
 
     Private Sub sre_AudioSignalProblemOccurred(sender As Object, e As AudioSignalProblemOccurredEventArgs)
         If s_shuttingDown OrElse s_speechErrorReported Or s_sre Is Nothing Then Exit Sub
@@ -227,12 +225,19 @@ Friend Module SpeechSupport
         End If
 
         If recognizedTextLower.StartsWith(s_careLinkLower) Then
-            s_speechWakeWordFound = True
-            If recognizedTextLower = s_careLinkLower Then
-                message = $"Heard: Wake word {recognizedTextLower} with confidence {confidence}%), waiting.."
+            If confidence > 0.9 Then
+                s_speechWakeWordFound = True
+                If recognizedTextLower = s_careLinkLower Then
+                    message = $"Heard: Wake word {recognizedTextLower} with confidence {confidence}%), waiting.."
+                    Debug.WriteLine(message)
+                    Form1.StatusStripSpeech.Text = message
+                    Application.DoEvents()
+                    Exit Sub
+                End If
+            Else
+                message = $"Rejected: {recognizedTextLower} with confidence {confidence}%"
                 Debug.WriteLine(message)
                 Form1.StatusStripSpeech.Text = message
-                Application.DoEvents()
                 Exit Sub
             End If
         End If
@@ -285,10 +290,10 @@ Friend Module SpeechSupport
                     text.AppendLine($"Tell me name's SG/BG/Blood Glucose/Blood Sugar:")
                     text.AppendLine($"     Used when you support more than 1 user")
                     text.AppendLine($"     Example ""Tell me John's Sensor Glucose""")
-                    'text.AppendLine($"Alerts On: Enables audio Alerts")
-                    'text.AppendLine($"Alerts Off: Disables audio Alerts")
-                    'text.AppendLine($"Show [any tab name]: Will make that tab have focus")
-                    'text.AppendLine($"     Example ""Show Treatment Details""")
+                    'currentSgStr.AppendLine($"Alerts On: Enables audio Alerts")
+                    'currentSgStr.AppendLine($"Alerts Off: Disables audio Alerts")
+                    'currentSgStr.AppendLine($"Show [any tab name]: Will make that tab have focus")
+                    'currentSgStr.AppendLine($"     Example ""Show Treatment Details""")
                     Dim page As New TaskDialogPage
                     MsgBox("", text.ToString, MsgBoxStyle.OkOnly Or MsgBoxStyle.Information, "Speech Recognition Help", 30, page)
                     My.Settings.SystemSpeechHelpShown = page.Verification.Checked
