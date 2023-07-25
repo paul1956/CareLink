@@ -227,13 +227,14 @@ Friend Module SpeechSupport
         If recognizedTextLower.StartsWith(s_careLinkLower) Then
             If confidence > 0.9 Then
                 s_speechWakeWordFound = True
+                message = $"Heard: Wake word {recognizedTextLower} with confidence {confidence}%), waiting.."
+                Debug.WriteLine(message)
+                Form1.StatusStripSpeech.Text = message
+                Application.DoEvents()
                 If recognizedTextLower = s_careLinkLower Then
-                    message = $"Heard: Wake word {recognizedTextLower} with confidence {confidence}%), waiting.."
-                    Debug.WriteLine(message)
-                    Form1.StatusStripSpeech.Text = message
-                    Application.DoEvents()
                     Exit Sub
                 End If
+                recognizedTextLower = recognizedTextLower.Replace(s_careLinkLower, "").TrimEnd
             Else
                 message = $"Rejected: {recognizedTextLower} with confidence {confidence}%"
                 Debug.WriteLine(message)
@@ -242,24 +243,13 @@ Friend Module SpeechSupport
             End If
         End If
 
+        message = $"Heard: {e.Result.Text.ToLower} with confidence {confidence}%."
+        Debug.WriteLine(message)
+        Form1.StatusStripSpeech.Text = message
+        Application.DoEvents()
         If s_speechWakeWordFound Then
             s_speechWakeWordFound = False
-            message = $"Heard: {recognizedTextLower} with confidence {confidence}%"
-            Debug.WriteLine(message)
-            s_speechWakeWordFound = False
-            Form1.StatusStripSpeech.Text = message
-            Application.DoEvents()
-            recognizedTextLower = recognizedTextLower.Replace(s_careLinkLower, "").TrimEnd
-            message = $"Heard: {recognizedTextLower} with confidence {confidence}%, waiting.."
             Select Case True
-                'Case recognizedTextLower = "alerts on"
-                '    Debug.WriteLine("Audible alerts are now ON")
-                '    PlayText("Audible alerts are now ON")
-
-                'Case recognizedTextLower = "alerts off"
-                '    Debug.WriteLine("Audible alerts are now OFF")
-                '    PlayText("Audible alerts are now Off")
-
                 Case recognizedTextLower.StartsWith("what is my", StringComparison.CurrentCultureIgnoreCase)
                     Form1.StatusStripSpeech.Text = message
                     AnnounceSG(recognizedTextLower)
