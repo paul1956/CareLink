@@ -125,7 +125,7 @@ Friend Module SpeechSupport
             s_sre = New SpeechRecognitionEngine(culture)
             s_sre.SetInputToDefaultAudioDevice()
 
-            Dim gb_Attention As New GrammarBuilder With {.Culture = culture}
+            Dim gb_Attention As New GrammarBuilder With {.culture = culture}
             gb_Attention.Append(s_careLinkLower)
             s_sre.LoadGrammarAsync(New Grammar(gb_Attention))
 
@@ -134,12 +134,12 @@ Friend Module SpeechSupport
             'gb_StartStop.Append(New Choices("off", "on"))
             's_sre.LoadGrammarAsync(New Grammar(gb_StartStop))
 
-            Dim gb_what As New GrammarBuilder With {.Culture = culture}
+            Dim gb_what As New GrammarBuilder With {.culture = culture}
             gb_what.Append("What")
             gb_what.Append(New Choices("can I say", "is my SG", "is my BG", "is my Blood Sugar", "is my Blood Glucose"))
             s_sre.LoadGrammarAsync(New Grammar(gb_what))
 
-            Dim gb_tellMe As New GrammarBuilder With {.Culture = culture}
+            Dim gb_tellMe As New GrammarBuilder With {.culture = culture}
             gb_tellMe.Append("Tell me")
             gb_tellMe.Append($"{s_firstName}'s")
             gb_tellMe.Append(New Choices("SG", "BG", "Blood Sugar", "Blood Glucose"))
