@@ -29,14 +29,17 @@
     <Setting Name="SystemAudioAlertsEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="SystemSpeechRecognitationEnabled" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+    <Setting Name="SystemSpeechRecognitionThreshold" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.9</Value>
     </Setting>
     <Setting Name="SystemShowLegends" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="SystemSpeechHelpShown" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="SystemSpeechRecognitionEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

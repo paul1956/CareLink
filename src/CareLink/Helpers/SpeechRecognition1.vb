@@ -210,7 +210,7 @@ Friend Module SpeechSupport
     End Function
 
     Friend Sub sre_SpeechRecognized(sender As Object, e As SpeechRecognizedEventArgs)
-        If Not My.Settings.SystemSpeechRecognitationEnabled Then
+        If Not My.Settings.SystemSpeechRecognitionEnabled Then
             Form1.StatusStripSpeech.Text = ""
             Exit Sub
         End If
@@ -225,7 +225,7 @@ Friend Module SpeechSupport
         End If
 
         If recognizedTextLower.StartsWith(s_careLinkLower) Then
-            If confidence > 0.9 Then
+            If confidence >= My.Settings.SystemSpeechRecognitionThreshold Then
                 s_speechWakeWordFound = True
                 message = $"Heard: Wake word {recognizedTextLower} with confidence {confidence}%), waiting.."
                 Debug.WriteLine(message)
@@ -249,6 +249,13 @@ Friend Module SpeechSupport
         Application.DoEvents()
         If s_speechWakeWordFound Then
             s_speechWakeWordFound = False
+            If confidence < My.Settings.SystemSpeechRecognitionThreshold Then
+                message = $"Rejected: {recognizedTextLower} with confidence {confidence}%"
+                Debug.WriteLine(message)
+                Form1.StatusStripSpeech.Text = message
+                Exit Sub
+            End If
+
             Select Case True
                 Case recognizedTextLower.StartsWith("what is my", StringComparison.CurrentCultureIgnoreCase)
                     Form1.StatusStripSpeech.Text = message

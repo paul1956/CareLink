@@ -1022,7 +1022,8 @@ Public Class Form1
         Me.InitializeDgvCareLinkUsers(Me.DgvCareLinkUsers)
         Me.MenuOptionsAudioAlerts.Checked = My.Settings.SystemAudioAlertsEnabled
         Me.MenuOptionsShowChartLegends.Checked = My.Settings.SystemShowLegends
-        Me.MenuOptionsSpeechRecognitionEnabled.Checked = My.Settings.SystemSpeechRecognitationEnabled
+        Me.MenuOptionsSpeechRecognitionEnabled.Checked = My.Settings.SystemSpeechRecognitionEnabled
+        Me.SetSpeechRecognitionConfidenceThreshold()
         Me.MenuOptionsSpeechHelpShown.Checked = My.Settings.SystemSpeechHelpShown
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
@@ -1225,12 +1226,21 @@ Public Class Form1
 
 #Region "Option Menus"
 
+    Private Function GetSpeechConfidenceValue() As Double
+        For Each item As ToolStripMenuItem In Me.MenuOptionsSpeechRecognitionEnabled.DropDownItems
+            If IsNumeric(item.Text) AndAlso item.Checked Then
+                Return CDbl(item.Text)
+            End If
+        Next
+        Return 100
+    End Function
+
     Private Sub MenuOptionsAudioAlerts_Click(sender As Object, e As EventArgs) Handles MenuOptionsAudioAlerts.Click
         Dim playAudioAlerts As Boolean = Me.MenuOptionsAudioAlerts.Checked
         My.Settings.SystemAudioAlertsEnabled = playAudioAlerts
         My.Settings.Save()
         If playAudioAlerts Then
-            If My.Settings.SystemSpeechRecognitationEnabled Then
+            If My.Settings.SystemSpeechRecognitionEnabled Then
                 Me.MenuOptionsSpeechRecognitionEnabled.PerformClick()
                 Me.MenuOptionsSpeechRecognitionEnabled.Enabled = True
             End If
@@ -1326,14 +1336,70 @@ Public Class Form1
     End Sub
 
     Private Sub MenuOptionsSpeechRecognitionEnabled_Click(sender As Object, e As EventArgs) Handles MenuOptionsSpeechRecognitionEnabled.Click
+        If My.Settings.SystemAudioAlertsEnabled Then
+            If My.Settings.SystemSpeechRecognitionThreshold < 1 Then
+                My.Settings.SystemSpeechRecognitionEnabled = True
+                Me.SetSpeechRecognitionConfidenceThreshold()
+            Else
+                My.Settings.SystemSpeechRecognitionThreshold = 0.9
+                Me.MenuOptionsSpeechRecognition90.PerformClick()
+            End If
+            My.Settings.Save()
+        End If
         If Me.MenuOptionsSpeechRecognitionEnabled.Checked Then
             InitializeSpeechRecognition()
         Else
             CancelSpeechRecognition()
         End If
-        If My.Settings.SystemAudioAlertsEnabled Then
-            My.Settings.SystemSpeechRecognitationEnabled = Me.MenuOptionsSpeechRecognitionEnabled.Checked
-            My.Settings.Save()
+    End Sub
+
+    Private Sub MenuOptionsSpeechRecognition80_Click(sender As Object, e As EventArgs) Handles MenuOptionsSpeechRecognition80.Click
+        My.Settings.SystemSpeechRecognitionThreshold = 0.8
+        Me.SetSpeechRecognitionConfidenceThreshold()
+        If Me.MenuOptionsSpeechRecognitionEnabled.Checked Then
+            InitializeSpeechRecognition()
+        Else
+            CancelSpeechRecognition()
+        End If
+    End Sub
+
+    Private Sub MenuOptionsSpeechRecognition85_Click(sender As Object, e As EventArgs) Handles MenuOptionsSpeechRecognition85.Click
+        My.Settings.SystemSpeechRecognitionThreshold = 0.85
+        Me.SetSpeechRecognitionConfidenceThreshold()
+        If Me.MenuOptionsSpeechRecognitionEnabled.Checked Then
+            InitializeSpeechRecognition()
+        Else
+            CancelSpeechRecognition()
+        End If
+    End Sub
+
+    Private Sub MenuOptionsSpeechRecognition90_Click(sender As Object, e As EventArgs) Handles MenuOptionsSpeechRecognition90.Click
+        My.Settings.SystemSpeechRecognitionThreshold = 0.9
+        Me.SetSpeechRecognitionConfidenceThreshold()
+        If Me.MenuOptionsSpeechRecognitionEnabled.Checked Then
+            InitializeSpeechRecognition()
+        Else
+            CancelSpeechRecognition()
+        End If
+    End Sub
+
+    Private Sub MenuOptionsSpeechRecognition95_Click(sender As Object, e As EventArgs) Handles MenuOptionsSpeechRecognition95.Click
+        My.Settings.SystemSpeechRecognitionThreshold = 0.95
+        Me.SetSpeechRecognitionConfidenceThreshold()
+        If Me.MenuOptionsSpeechRecognitionEnabled.Checked Then
+            InitializeSpeechRecognition()
+        Else
+            CancelSpeechRecognition()
+        End If
+    End Sub
+
+    Private Sub MenuOptionsSpeechRecognitionDisabled_Click(sender As Object, e As EventArgs) Handles MenuOptionsSpeechRecognitionDisabled.Click
+        My.Settings.SystemSpeechRecognitionThreshold = 1
+        Me.SetSpeechRecognitionConfidenceThreshold()
+        If Me.MenuOptionsSpeechRecognitionEnabled.Checked Then
+            InitializeSpeechRecognition()
+        Else
+            CancelSpeechRecognition()
         End If
     End Sub
 
@@ -1347,6 +1413,42 @@ Public Class Form1
             My.Settings.UseLocalTimeZone = False
         End If
         If saveRequired Then My.Settings.Save()
+    End Sub
+
+    Private Sub SetSpeechRecognitionConfidenceThreshold()
+        Select Case My.Settings.SystemSpeechRecognitionThreshold
+            Case 1
+                Me.MenuOptionsSpeechRecognitionDisabled.Checked = True
+                Me.MenuOptionsSpeechRecognition80.Checked = False
+                Me.MenuOptionsSpeechRecognition85.Checked = False
+                Me.MenuOptionsSpeechRecognition90.Checked = False
+                Me.MenuOptionsSpeechRecognition95.Checked = False
+            Case 0.8
+                Me.MenuOptionsSpeechRecognitionDisabled.Checked = False
+                Me.MenuOptionsSpeechRecognition80.Checked = True
+                Me.MenuOptionsSpeechRecognition85.Checked = False
+                Me.MenuOptionsSpeechRecognition90.Checked = False
+                Me.MenuOptionsSpeechRecognition95.Checked = False
+            Case 0.85
+                Me.MenuOptionsSpeechRecognitionDisabled.Checked = False
+                Me.MenuOptionsSpeechRecognition80.Checked = False
+                Me.MenuOptionsSpeechRecognition85.Checked = True
+                Me.MenuOptionsSpeechRecognition90.Checked = False
+                Me.MenuOptionsSpeechRecognition95.Checked = False
+            Case 0.9
+                Me.MenuOptionsSpeechRecognitionDisabled.Checked = False
+                Me.MenuOptionsSpeechRecognition80.Checked = False
+                Me.MenuOptionsSpeechRecognition85.Checked = False
+                Me.MenuOptionsSpeechRecognition90.Checked = True
+                Me.MenuOptionsSpeechRecognition95.Checked = False
+            Case 0.95
+                Me.MenuOptionsSpeechRecognitionDisabled.Checked = False
+                Me.MenuOptionsSpeechRecognition80.Checked = False
+                Me.MenuOptionsSpeechRecognition85.Checked = False
+                Me.MenuOptionsSpeechRecognition90.Checked = False
+                Me.MenuOptionsSpeechRecognition95.Checked = True
+        End Select
+        Me.MenuOptionsSpeechRecognitionEnabled.Checked = Me.MenuOptionsSpeechRecognitionDisabled.Checked = False
     End Sub
 
 #End Region ' Option Menus
@@ -2662,8 +2764,7 @@ Public Class Form1
         End If
 
         If My.Settings.SystemAudioAlertsEnabled Then
-            InitializeAudioAlerts()
-            If My.Settings.SystemSpeechRecognitationEnabled Then
+            If My.Settings.SystemSpeechRecognitionThreshold >= 0.8 Then
                 InitializeSpeechRecognition()
             End If
         Else
