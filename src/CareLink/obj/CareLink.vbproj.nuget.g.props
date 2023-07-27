@@ -44,6 +44,6 @@
     </Content>
   </ItemGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <PkgMicrosoft_Web_WebView2 Condition=" '$(PkgMicrosoft_Web_WebView2)' == '' ">C:\Users\PaulM\.nuget\packages\microsoft.web.webview2\1.0.1823.32</PkgMicrosoft_Web_WebView2>
+    <PkgMicrosoft_Web_WebView2 Condition=" '$(PkgMicrosoft_Web_WebView2)' == '' ">C:\Users\PaulM\.nuget\packages\microsoft.web.webview2\1.0.1901.177</PkgMicrosoft_Web_WebView2>
   </PropertyGroup>
 </Project>
