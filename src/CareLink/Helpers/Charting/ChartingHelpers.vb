@@ -15,9 +15,4 @@ Friend Module ChartingHelpers
         Return Math.Abs(amount - 0.025!) < 0.005
     End Function
 
-    <Extension>
-    Friend Function IsMinBasal(amount As String) As Boolean
-        Return amount = "0.025"
-    End Function
-
 End Module

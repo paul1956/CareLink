@@ -6,6 +6,7 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class AutoModeStatusRecord
+
     <DisplayName(NameOf([dateTime]))>
     <Column(Order:=5, TypeName:="Date")>
     Public Property [dateTime] As Date

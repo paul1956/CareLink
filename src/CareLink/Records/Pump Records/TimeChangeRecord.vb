@@ -6,6 +6,7 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class TimeChangeRecord
+
     Public Sub New(timeChangeItem As Dictionary(Of String, String))
         For Each kvp As KeyValuePair(Of String, String) In timeChangeItem
             Select Case kvp.Key

@@ -6,6 +6,7 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class AutoBasalDeliveryRecord
+
     Public Sub New()
     End Sub
 
