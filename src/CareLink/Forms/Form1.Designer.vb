@@ -1657,6 +1657,7 @@ Partial Class Form1
         TabControlPage1.Controls.Add(TabPage13Basal)
         TabControlPage1.Controls.Add(TabPage14Markers)
         TabControlPage1.Dock = DockStyle.Fill
+        TabControlPage1.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
         TabControlPage1.Location = New Point(0, 24)
         TabControlPage1.Name = "TabControlPage1"
         TabControlPage1.SelectedIndex = 0
@@ -1831,9 +1832,9 @@ Partial Class Form1
         ' 
         TableLayoutPanelSgs.AutoSize = True
         TableLayoutPanelSgs.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelSgs.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelSgs.ColumnCount = 1
         TableLayoutPanelSgs.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelSgs.Controls.Add(DgvSGs, 0, 1)
         TableLayoutPanelSgs.Dock = DockStyle.Fill
         TableLayoutPanelSgs.Location = New Point(3, 3)
         TableLayoutPanelSgs.Name = "TableLayoutPanelSgs"
@@ -1858,6 +1859,7 @@ Partial Class Form1
         ' 
         TableLayoutPanelLimits.AutoSize = True
         TableLayoutPanelLimits.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelLimits.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelLimits.ColumnCount = 1
         TableLayoutPanelLimits.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelLimits.Dock = DockStyle.Fill
@@ -1885,6 +1887,7 @@ Partial Class Form1
         TableLayoutPanelNotificationHistory.AutoScroll = True
         TableLayoutPanelNotificationHistory.AutoSize = True
         TableLayoutPanelNotificationHistory.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelNotificationHistory.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelNotificationHistory.ColumnCount = 1
         TableLayoutPanelNotificationHistory.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelNotificationHistory.Dock = DockStyle.Fill
@@ -1911,6 +1914,7 @@ Partial Class Form1
         ' 
         TableLayoutPanelTherapyAlgorithm.AutoSize = True
         TableLayoutPanelTherapyAlgorithm.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelTherapyAlgorithm.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelTherapyAlgorithm.ColumnCount = 1
         TableLayoutPanelTherapyAlgorithm.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelTherapyAlgorithm.Dock = DockStyle.Fill
@@ -1937,6 +1941,7 @@ Partial Class Form1
         ' 
         TableLayoutPanelBannerState.AutoSize = True
         TableLayoutPanelBannerState.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelBannerState.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelBannerState.ColumnCount = 1
         TableLayoutPanelBannerState.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelBannerState.Dock = DockStyle.Fill
@@ -1964,6 +1969,7 @@ Partial Class Form1
         ' 
         TableLayoutPanelBasal.AutoScroll = True
         TableLayoutPanelBasal.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelBasal.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelBasal.ColumnCount = 1
         TableLayoutPanelBasal.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelBasal.Dock = DockStyle.Fill
@@ -2000,6 +2006,7 @@ Partial Class Form1
         ' 
         TableLayoutPanelLastSG.AutoSize = True
         TableLayoutPanelLastSG.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelLastSG.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelLastSG.ColumnCount = 1
         TableLayoutPanelLastSG.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelLastSG.Dock = DockStyle.Fill
@@ -2026,6 +2033,7 @@ Partial Class Form1
         ' 
         TableLayoutPanelLastAlarm.AutoSize = True
         TableLayoutPanelLastAlarm.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelLastAlarm.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelLastAlarm.ColumnCount = 1
         TableLayoutPanelLastAlarm.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelLastAlarm.Dock = DockStyle.Fill
@@ -2057,6 +2065,7 @@ Partial Class Form1
         TabControlPage2.Controls.Add(TabPageAllUsers)
         TabControlPage2.Controls.Add(TabPageBackToHomePage)
         TabControlPage2.Dock = DockStyle.Fill
+        TabControlPage2.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
         TabControlPage2.Location = New Point(0, 24)
         TabControlPage2.Name = "TabControlPage2"
         TabControlPage2.SelectedIndex = 0
@@ -2221,7 +2230,7 @@ Partial Class Form1
         TableLayoutPanelTimeChange.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelTimeChange.ColumnCount = 1
         TableLayoutPanelTimeChange.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelTimeChange.Dock = DockStyle.Top
+        TableLayoutPanelTimeChange.Dock = DockStyle.Fill
         TableLayoutPanelTimeChange.Location = New Point(3, 3)
         TableLayoutPanelTimeChange.Name = "TableLayoutPanelTimeChange"
         TableLayoutPanelTimeChange.RowCount = 2
@@ -2254,6 +2263,7 @@ Partial Class Form1
         ' 
         ' CountryDataPg2TableLayoutPanel
         ' 
+        CountryDataPg2TableLayoutPanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         CountryDataPg2TableLayoutPanel.ColumnCount = 2
         CountryDataPg2TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 43.2116776F))
         CountryDataPg2TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 56.7883224F))

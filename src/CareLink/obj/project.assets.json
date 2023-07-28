@@ -211,7 +211,7 @@
           "System.Xml.XDocument": "4.3.0"
         }
       },
-      "Octokit/7.0.1": {
+      "Octokit/7.1.0": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/Octokit.dll": {
@@ -1475,7 +1475,7 @@
           "lib/netstandard1.3/System.Xml.XDocument.dll": {}
         }
       },
-      "TableLayputPanelTop/1.0.0.2": {
+      "TableLayputPanelTop/1.0.0.3": {
         "type": "package",
         "compile": {
           "lib/net7.0-windows7.0/TableLayputPanelTop.dll": {}
@@ -1806,16 +1806,16 @@
         "netstandard.library.nuspec"
       ]
     },
-    "Octokit/7.0.1": {
-      "sha512": "LS0xXFj94I1RL/m54ris9Yp5A8qCoJ2WyLOggSld6z9qH6B2JKoEwdizzqIRPPBQQ2Y2HvRXNYo8ZSPcx6emEA==",
+    "Octokit/7.1.0": {
+      "sha512": "v2qhKBe1Zlssa4XOmpOXNDFBrOAMw2tBmr8L8YMSrEi+PlF/L/PboZcXHSkZuhIxIeOGxEFiwkuJLkvG4aHNHQ==",
       "type": "package",
-      "path": "octokit/7.0.1",
+      "path": "octokit/7.1.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Octokit.dll",
         "lib/netstandard2.0/Octokit.xml",
-        "octokit.7.0.1.nupkg.sha512",
+        "octokit.7.1.0.nupkg.sha512",
         "octokit.nuspec",
         "octokit.png"
       ]
@@ -5013,10 +5013,10 @@
         "system.xml.xdocument.nuspec"
       ]
     },
-    "TableLayputPanelTop/1.0.0.2": {
-      "sha512": "dbRSy+2+ur8bNu8aMGms6WRS/HLNfBqT1q6MKF4KnmNTlxb0Q9GRVg1eMCj8Y6f3v2F7v8NINZKKrIwMbXhY0g==",
+    "TableLayputPanelTop/1.0.0.3": {
+      "sha512": "kTXOKxx2vwGuSa/53gYPcwUw3Efnv2RLX+WuI0aO8qmNn/ZlPsD3C9EVbjhnX1MC7C1xlyfwXkonDt+k17uXTw==",
       "type": "package",
-      "path": "tablelayputpaneltop/1.0.0.2",
+      "path": "tablelayputpaneltop/1.0.0.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -5024,11 +5024,9 @@
         "LayoutPanel.png",
         "ReadMe.MD",
         "content/LayoutPanel.ico",
-        "contentFiles/any/net6.0-windows7.0/LayoutPanel.ico",
         "contentFiles/any/net7.0-windows7.0/LayoutPanel.ico",
-        "lib/net6.0-windows7.0/TableLayputPanelTop.dll",
         "lib/net7.0-windows7.0/TableLayputPanelTop.dll",
-        "tablelayputpaneltop.1.0.0.2.nupkg.sha512",
+        "tablelayputpaneltop.1.0.0.3.nupkg.sha512",
         "tablelayputpaneltop.nuspec"
       ]
     },
@@ -5108,9 +5106,9 @@
       "ClosedXML >= 0.102.0",
       "DataGridViewDisableButtonColumnEx >= 1.0.0.1",
       "Microsoft.Web.WebView2 >= 1.0.1901.177",
-      "Octokit >= 7.0.1",
+      "Octokit >= 7.1.0",
       "System.Speech >= 7.0.0",
-      "TableLayputPanelTop >= 1.0.0.2",
+      "TableLayputPanelTop >= 1.0.0.3",
       "ToolStripComboBoxEx >= 1.0.0.2",
       "WinForms.DataVisualization >= 1.8.0"
     ]
@@ -5168,7 +5166,7 @@
           },
           "Octokit": {
             "target": "Package",
-            "version": "[7.0.1, )"
+            "version": "[7.1.0, )"
           },
           "System.Speech": {
             "target": "Package",
@@ -5176,7 +5174,7 @@
           },
           "TableLayputPanelTop": {
             "target": "Package",
-            "version": "[1.0.0.2, )"
+            "version": "[1.0.0.3, )"
           },
           "ToolStripComboBoxEx": {
             "target": "Package",

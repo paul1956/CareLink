@@ -30,7 +30,6 @@ Friend Module InitializeTableLayoutPanelsTops
         Form1.TableLayoutPanelInsulinTop.AutoSize = True
         Form1.TableLayoutPanelInsulinTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
         Form1.TableLayoutPanelInsulinTop.ButtonText = "Return To 'Summary Data' Tab"
-        Form1.TableLayoutPanelInsulinTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Form1.TableLayoutPanelInsulinTop.ColumnCount = 2
         Form1.TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle())
         Form1.TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
@@ -49,7 +48,6 @@ Friend Module InitializeTableLayoutPanelsTops
         Form1.TableLayoutPanelMealTop.AutoSize = True
         Form1.TableLayoutPanelMealTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
         Form1.TableLayoutPanelMealTop.ButtonText = "Return To 'Summary Data' Tab"
-        Form1.TableLayoutPanelMealTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Form1.TableLayoutPanelMealTop.ColumnCount = 2
         Form1.TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle())
         Form1.TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
@@ -68,7 +66,6 @@ Friend Module InitializeTableLayoutPanelsTops
         Form1.TableLayoutPanelActiveInsulinTop.AutoSize = True
         Form1.TableLayoutPanelActiveInsulinTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
         Form1.TableLayoutPanelActiveInsulinTop.ButtonText = "Return To 'Summary Data' Tab"
-        Form1.TableLayoutPanelActiveInsulinTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Form1.TableLayoutPanelActiveInsulinTop.ColumnCount = 2
         Form1.TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
         Form1.TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
@@ -87,7 +84,6 @@ Friend Module InitializeTableLayoutPanelsTops
         Form1.TableLayoutPanelSgsTop.AutoSize = True
         Form1.TableLayoutPanelSgsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
         Form1.TableLayoutPanelSgsTop.ButtonText = "Return To 'Summary Data' Tab"
-        Form1.TableLayoutPanelSgsTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Form1.TableLayoutPanelSgsTop.ColumnCount = 2
         Form1.TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle())
         Form1.TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
@@ -100,13 +96,13 @@ Friend Module InitializeTableLayoutPanelsTops
         Form1.TableLayoutPanelSgsTop.Size = New Size(1364, 37)
         Form1.TableLayoutPanelSgsTop.TabIndex = 1
         Form1.TableLayoutPanelSgs.Controls.Add(Form1.TableLayoutPanelSgsTop, 0, 0)
+        Form1.TableLayoutPanelSgs.Controls.Add(Form1.DgvSGs, 0, 1)
         '
         ' TableLayoutPanelLimitsTop
         '
         Form1.TableLayoutPanelLimitsTop.AutoSize = True
         Form1.TableLayoutPanelLimitsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
         Form1.TableLayoutPanelLimitsTop.ButtonText = "Return To 'Summary Data' Tab"
-        Form1.TableLayoutPanelLimitsTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Form1.TableLayoutPanelLimitsTop.ColumnCount = 2
         Form1.TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle())
         Form1.TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
@@ -125,7 +121,6 @@ Friend Module InitializeTableLayoutPanelsTops
         Form1.TableLayoutPanelNotificationHistoryTop.AutoSize = True
         Form1.TableLayoutPanelNotificationHistoryTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
         Form1.TableLayoutPanelNotificationHistoryTop.ButtonText = "Return To 'Summary Data' Tab"
-        Form1.TableLayoutPanelNotificationHistoryTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Form1.TableLayoutPanelNotificationHistoryTop.ColumnCount = 2
         Form1.TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New ColumnStyle())
         Form1.TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
@@ -144,7 +139,6 @@ Friend Module InitializeTableLayoutPanelsTops
         Form1.TableLayoutPanelTherapyAlgorithmTop.AutoSize = True
         Form1.TableLayoutPanelTherapyAlgorithmTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
         Form1.TableLayoutPanelTherapyAlgorithmTop.ButtonText = "Return To 'Summary Data' Tab"
-        Form1.TableLayoutPanelTherapyAlgorithmTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Form1.TableLayoutPanelTherapyAlgorithmTop.ColumnCount = 2
         Form1.TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New ColumnStyle())
         Form1.TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
@@ -163,7 +157,6 @@ Friend Module InitializeTableLayoutPanelsTops
         Form1.TableLayoutPanelBannerStateTop.AutoSize = True
         Form1.TableLayoutPanelBannerStateTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
         Form1.TableLayoutPanelBannerStateTop.ButtonText = "Return To 'Summary Data' Tab"
-        Form1.TableLayoutPanelBannerStateTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Form1.TableLayoutPanelBannerStateTop.ColumnCount = 2
         Form1.TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle())
         Form1.TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
@@ -182,7 +175,6 @@ Friend Module InitializeTableLayoutPanelsTops
         Form1.TableLayoutPanelBasalTop.AutoSize = True
         Form1.TableLayoutPanelBasalTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
         Form1.TableLayoutPanelBasalTop.ButtonText = "Return To 'Summary Data' Tab"
-        Form1.TableLayoutPanelBasalTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Form1.TableLayoutPanelBasalTop.ColumnCount = 2
         Form1.TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle())
         Form1.TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
@@ -201,7 +193,6 @@ Friend Module InitializeTableLayoutPanelsTops
         Form1.TableLayoutPanelLastSgTop.AutoSize = True
         Form1.TableLayoutPanelLastSgTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
         Form1.TableLayoutPanelLastSgTop.ButtonText = "Return To 'Summary Data' Tab"
-        Form1.TableLayoutPanelLastSgTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Form1.TableLayoutPanelLastSgTop.ColumnCount = 2
         Form1.TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle())
         Form1.TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
@@ -220,7 +211,6 @@ Friend Module InitializeTableLayoutPanelsTops
         Form1.TableLayoutPanelLastAlarmTop.AutoSize = True
         Form1.TableLayoutPanelLastAlarmTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
         Form1.TableLayoutPanelLastAlarmTop.ButtonText = "Return To 'Summary Data' Tab"
-        Form1.TableLayoutPanelLastAlarmTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Form1.TableLayoutPanelLastAlarmTop.ColumnCount = 2
         Form1.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
         Form1.TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
@@ -239,7 +229,6 @@ Friend Module InitializeTableLayoutPanelsTops
         Form1.TableLayoutPanelAutoBasalDeliveryTop.AutoSize = True
         Form1.TableLayoutPanelAutoBasalDeliveryTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
         Form1.TableLayoutPanelAutoBasalDeliveryTop.ButtonText = "Return To 'Summary Data' Tab"
-        Form1.TableLayoutPanelAutoBasalDeliveryTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Form1.TableLayoutPanelAutoBasalDeliveryTop.ColumnCount = 2
         Form1.TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
         Form1.TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
@@ -252,13 +241,13 @@ Friend Module InitializeTableLayoutPanelsTops
         Form1.TableLayoutPanelAutoBasalDeliveryTop.Size = New Size(1358, 37)
         Form1.TableLayoutPanelAutoBasalDeliveryTop.TabIndex = 1
         Form1.TableLayoutPanelAutoBasalDelivery.Controls.Add(Form1.TableLayoutPanelAutoBasalDeliveryTop, 0, 0)
+        Form1.TableLayoutPanelAutoBasalDelivery.Controls.Add(Form1.DgvAutoBasalDelivery, 0, 1)
         '
         ' TableLayoutPanelAutoModeStatusTop
         '
         Form1.TableLayoutPanelAutoModeStatusTop.AutoSize = True
         Form1.TableLayoutPanelAutoModeStatusTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
         Form1.TableLayoutPanelAutoModeStatusTop.ButtonText = "Return To 'Summary Data' Tab"
-        Form1.TableLayoutPanelAutoModeStatusTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Form1.TableLayoutPanelAutoModeStatusTop.ColumnCount = 2
         Form1.TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
         Form1.TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
@@ -277,7 +266,6 @@ Friend Module InitializeTableLayoutPanelsTops
         Form1.TableLayoutPanelBgReadingsTop.AutoSize = True
         Form1.TableLayoutPanelBgReadingsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
         Form1.TableLayoutPanelBgReadingsTop.ButtonText = "Return To 'Summary Data' Tab"
-        Form1.TableLayoutPanelBgReadingsTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Form1.TableLayoutPanelBgReadingsTop.ColumnCount = 2
         Form1.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
         Form1.TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
@@ -296,7 +284,6 @@ Friend Module InitializeTableLayoutPanelsTops
         Form1.TableLayoutPanelCalibrationTop.AutoSize = True
         Form1.TableLayoutPanelCalibrationTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
         Form1.TableLayoutPanelCalibrationTop.ButtonText = "Return To 'Summary Data' Tab"
-        Form1.TableLayoutPanelCalibrationTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Form1.TableLayoutPanelCalibrationTop.ColumnCount = 2
         Form1.TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle())
         Form1.TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
@@ -315,7 +302,6 @@ Friend Module InitializeTableLayoutPanelsTops
         Form1.TableLayoutPanelLowGlucoseSuspendedTop.AutoSize = True
         Form1.TableLayoutPanelLowGlucoseSuspendedTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
         Form1.TableLayoutPanelLowGlucoseSuspendedTop.ButtonText = "Return To 'Summary Data' Tab"
-        Form1.TableLayoutPanelLowGlucoseSuspendedTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Form1.TableLayoutPanelLowGlucoseSuspendedTop.ColumnCount = 2
         Form1.TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
         Form1.TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
@@ -334,7 +320,6 @@ Friend Module InitializeTableLayoutPanelsTops
         Form1.TableLayoutPanelTimeChangeTop.AutoSize = True
         Form1.TableLayoutPanelTimeChangeTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
         Form1.TableLayoutPanelTimeChangeTop.ButtonText = "Return To 'Summary Data' Tab"
-        Form1.TableLayoutPanelTimeChangeTop.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         Form1.TableLayoutPanelTimeChangeTop.ColumnCount = 2
         Form1.TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
         Form1.TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))

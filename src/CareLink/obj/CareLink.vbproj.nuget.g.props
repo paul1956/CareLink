@@ -24,9 +24,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <Content Include="$(NuGetPackageRoot)tablelayputpaneltop\1.0.0.2\contentFiles\any\net7.0-windows7.0\LayoutPanel.ico" Condition="Exists('$(NuGetPackageRoot)tablelayputpaneltop\1.0.0.2\contentFiles\any\net7.0-windows7.0\LayoutPanel.ico')">
+    <Content Include="$(NuGetPackageRoot)tablelayputpaneltop\1.0.0.3\contentFiles\any\net7.0-windows7.0\LayoutPanel.ico" Condition="Exists('$(NuGetPackageRoot)tablelayputpaneltop\1.0.0.3\contentFiles\any\net7.0-windows7.0\LayoutPanel.ico')">
       <NuGetPackageId>TableLayputPanelTop</NuGetPackageId>
-      <NuGetPackageVersion>1.0.0.2</NuGetPackageVersion>
+      <NuGetPackageVersion>1.0.0.3</NuGetPackageVersion>
       <NuGetItemType>Content</NuGetItemType>
       <Pack>false</Pack>
       <Private>False</Private>

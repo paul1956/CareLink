@@ -43,7 +43,7 @@ Friend Module TableLayoutPanelExtensions
                         Dim helpString As String
 
                         If tablesSupportingExportToExcel.Contains(table.Name) Then
-                            helpString = ": Right Click on Table for for table Export Options including Excel"
+                            helpString = ": Right Click on Table for Export Options including Excel"
                         ElseIf tablesSupportingCopyToClipboard.Contains(table.Name) Then
                             helpString = ": Right Click on Table for cell(s) Export Options"
                         Else
