@@ -24,6 +24,14 @@ Partial Class Form1
     Private Sub InitializeComponent()
         components = New ComponentModel.Container()
         Dim resources As ComponentModel.ComponentResourceManager = New ComponentModel.ComponentResourceManager(GetType(Form1))
+        Dim DataGridViewCellStyle1 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As DataGridViewCellStyle = New DataGridViewCellStyle()
         MenuStrip1 = New MenuStrip()
         MenuStartHere = New ToolStripMenuItem()
         MenuStartHereLogin = New ToolStripMenuItem()
@@ -260,7 +268,6 @@ Partial Class Form1
         TabPage06Meal.SuspendLayout()
         TabPage07ActiveInsulin.SuspendLayout()
         TabPage08SensorGlucose.SuspendLayout()
-        TableLayoutPanelSgs.SuspendLayout()
         TabPage09Limits.SuspendLayout()
         TabPage10NotificationHistory.SuspendLayout()
         TabPage11TherapyAlgorithm.SuspendLayout()
@@ -898,8 +905,24 @@ Partial Class Form1
         ' 
         ' DgvCountryDataPg1
         ' 
+        DataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = SystemColors.Control
+        DataGridViewCellStyle1.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
+        DataGridViewCellStyle1.ForeColor = SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = DataGridViewTriState.True
+        DgvCountryDataPg1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         DgvCountryDataPg1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         DgvCountryDataPg1.Columns.AddRange(New DataGridViewColumn() {DgvCountryDataPg1RecordNumber, DgvCountryDataPg1Category, DgvCountryDataPg1Key, DgvCountryDataPg1Value})
+        DataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = SystemColors.Window
+        DataGridViewCellStyle2.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
+        DataGridViewCellStyle2.ForeColor = SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = DataGridViewTriState.False
+        DgvCountryDataPg1.DefaultCellStyle = DataGridViewCellStyle2
         DgvCountryDataPg1.Dock = DockStyle.Fill
         DgvCountryDataPg1.Location = New Point(3, 3)
         DgvCountryDataPg1.Name = "DgvCountryDataPg1"
@@ -947,7 +970,23 @@ Partial Class Form1
         DgvCareLinkUsers.AllowUserToResizeRows = False
         DgvCareLinkUsers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
         DgvCareLinkUsers.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
+        DataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = SystemColors.Control
+        DataGridViewCellStyle3.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
+        DataGridViewCellStyle3.ForeColor = SystemColors.WindowText
+        DataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText
+        DataGridViewCellStyle3.WrapMode = DataGridViewTriState.True
+        DgvCareLinkUsers.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
         DgvCareLinkUsers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        DataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = SystemColors.Window
+        DataGridViewCellStyle4.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
+        DataGridViewCellStyle4.ForeColor = SystemColors.ControlText
+        DataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText
+        DataGridViewCellStyle4.WrapMode = DataGridViewTriState.False
+        DgvCareLinkUsers.DefaultCellStyle = DataGridViewCellStyle4
         DgvCareLinkUsers.Dock = DockStyle.Fill
         DgvCareLinkUsers.EditMode = DataGridViewEditMode.EditOnEnter
         DgvCareLinkUsers.Location = New Point(3, 3)
@@ -959,8 +998,24 @@ Partial Class Form1
         ' 
         ' DgvCountryDataPg3
         ' 
+        DataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle5.BackColor = SystemColors.Control
+        DataGridViewCellStyle5.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
+        DataGridViewCellStyle5.ForeColor = SystemColors.WindowText
+        DataGridViewCellStyle5.SelectionBackColor = SystemColors.Highlight
+        DataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText
+        DataGridViewCellStyle5.WrapMode = DataGridViewTriState.True
+        DgvCountryDataPg3.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle5
         DgvCountryDataPg3.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         DgvCountryDataPg3.Columns.AddRange(New DataGridViewColumn() {DgvCountryDataPg3RecordNumber, DgvCountryDataPg3Category, DgvCountryDataPg3Key, DgvCountryDataPg3Value, DgvCountryDataPg3OnlyFor, DgvCountryDataPg3NotFor})
+        DataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle6.BackColor = SystemColors.Window
+        DataGridViewCellStyle6.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
+        DataGridViewCellStyle6.ForeColor = SystemColors.ControlText
+        DataGridViewCellStyle6.SelectionBackColor = SystemColors.Highlight
+        DataGridViewCellStyle6.SelectionForeColor = SystemColors.HighlightText
+        DataGridViewCellStyle6.WrapMode = DataGridViewTriState.False
+        DgvCountryDataPg3.DefaultCellStyle = DataGridViewCellStyle6
         DgvCountryDataPg3.Dock = DockStyle.Fill
         DgvCountryDataPg3.Location = New Point(3, 3)
         DgvCountryDataPg3.Name = "DgvCountryDataPg3"
@@ -2236,7 +2291,7 @@ Partial Class Form1
         TableLayoutPanelTimeChange.RowCount = 2
         TableLayoutPanelTimeChange.RowStyles.Add(New RowStyle())
         TableLayoutPanelTimeChange.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelTimeChange.Size = New Size(1370, 9)
+        TableLayoutPanelTimeChange.Size = New Size(1370, 655)
         TableLayoutPanelTimeChange.TabIndex = 1
         ' 
         ' TabPageCountryDataPg1
@@ -2279,12 +2334,28 @@ Partial Class Form1
         ' 
         ' DgvCountryDataPg2
         ' 
+        DataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle7.BackColor = SystemColors.Control
+        DataGridViewCellStyle7.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
+        DataGridViewCellStyle7.ForeColor = SystemColors.WindowText
+        DataGridViewCellStyle7.SelectionBackColor = SystemColors.Highlight
+        DataGridViewCellStyle7.SelectionForeColor = SystemColors.HighlightText
+        DataGridViewCellStyle7.WrapMode = DataGridViewTriState.True
+        DgvCountryDataPg2.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle7
         DgvCountryDataPg2.Columns.AddRange(New DataGridViewColumn() {DgvCountryDataPg2RecordNumber, DgvCountryDataPg2Category, DgvCountryDataPg2Key, DgvCountryDataPg2Value})
-        DgvCountryDataPg2.Location = New Point(3, 3)
+        DataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle8.BackColor = SystemColors.Window
+        DataGridViewCellStyle8.Font = New Font("Segoe UI", 9.0F, FontStyle.Regular, GraphicsUnit.Point)
+        DataGridViewCellStyle8.ForeColor = SystemColors.ControlText
+        DataGridViewCellStyle8.SelectionBackColor = SystemColors.Highlight
+        DataGridViewCellStyle8.SelectionForeColor = SystemColors.HighlightText
+        DataGridViewCellStyle8.WrapMode = DataGridViewTriState.False
+        DgvCountryDataPg2.DefaultCellStyle = DataGridViewCellStyle8
+        DgvCountryDataPg2.Location = New Point(6, 6)
         DgvCountryDataPg2.Name = "DgvCountryDataPg2"
         DgvCountryDataPg2.ReadOnly = True
         DgvCountryDataPg2.RowTemplate.Height = 25
-        DgvCountryDataPg2.Size = New Size(583, 612)
+        DgvCountryDataPg2.Size = New Size(582, 612)
         DgvCountryDataPg2.TabIndex = 2
         ' 
         ' DgvCountryDataPg2RecordNumber
@@ -2325,9 +2396,9 @@ Partial Class Form1
         Me.WebView.CreationProperties = Nothing
         Me.WebView.DefaultBackgroundColor = Color.White
         Me.WebView.Dock = DockStyle.Fill
-        Me.WebView.Location = New Point(595, 3)
+        Me.WebView.Location = New Point(597, 6)
         Me.WebView.Name = "WebView"
-        Me.WebView.Size = New Size(772, 649)
+        Me.WebView.Size = New Size(767, 643)
         Me.WebView.TabIndex = 3
         Me.WebView.ZoomFactor = 1.0R
         ' 
@@ -2511,7 +2582,6 @@ Partial Class Form1
         TabPage07ActiveInsulin.PerformLayout()
         TabPage08SensorGlucose.ResumeLayout(False)
         TabPage08SensorGlucose.PerformLayout()
-        TableLayoutPanelSgs.ResumeLayout(False)
         TabPage09Limits.ResumeLayout(False)
         TabPage09Limits.PerformLayout()
         TabPage10NotificationHistory.ResumeLayout(False)
