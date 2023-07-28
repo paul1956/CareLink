@@ -257,40 +257,24 @@ Partial Class Form1
         SplitContainer1.SuspendLayout()
         TabPage04SummaryData.SuspendLayout()
         TabPage05Insulin.SuspendLayout()
-        TableLayoutPanelInsulin.SuspendLayout()
         TabPage06Meal.SuspendLayout()
-        TableLayoutPanelMeal.SuspendLayout()
         TabPage07ActiveInsulin.SuspendLayout()
-        TableLayoutPanelActiveInsulin.SuspendLayout()
         TabPage08SensorGlucose.SuspendLayout()
         TableLayoutPanelSgs.SuspendLayout()
         TabPage09Limits.SuspendLayout()
-        TableLayoutPanelLimits.SuspendLayout()
         TabPage10NotificationHistory.SuspendLayout()
-        TableLayoutPanelNotificationHistory.SuspendLayout()
         TabPage11TherapyAlgorithm.SuspendLayout()
-        TableLayoutPanelTherapyAlgorithm.SuspendLayout()
         TabPage12BannerState.SuspendLayout()
-        TableLayoutPanelBannerState.SuspendLayout()
         TabPage13Basal.SuspendLayout()
-        TableLayoutPanelBasal.SuspendLayout()
         TabPageLastSG.SuspendLayout()
-        TableLayoutPanelLastSG.SuspendLayout()
         TabPageLastAlarm.SuspendLayout()
-        TableLayoutPanelLastAlarm.SuspendLayout()
         TabControlPage2.SuspendLayout()
         TabPageAutoBasalDelivery.SuspendLayout()
-        TableLayoutPanelAutoBasalDelivery.SuspendLayout()
         TabPageAutoModeStatus.SuspendLayout()
-        TableLayoutPanelAutoModeStatus.SuspendLayout()
         TabPageBgReadings.SuspendLayout()
-        TableLayoutPanelSgReadings.SuspendLayout()
         TabPageCalibration.SuspendLayout()
-        TableLayoutPanelCalibration.SuspendLayout()
         TabPageLowGlucoseSuspended.SuspendLayout()
-        TableLayoutPanelLowGlucoseSuspended.SuspendLayout()
         TabPageTimeChange.SuspendLayout()
-        TableLayoutPanelTimeChange.SuspendLayout()
         TabPageCountryDataPg1.SuspendLayout()
         TabPageCountryDataPg2.SuspendLayout()
         CountryDataPg2TableLayoutPanel.SuspendLayout()
@@ -414,21 +398,21 @@ Partial Class Form1
         ' MenuOptionsSpeechRecognitionDisabled
         ' 
         MenuOptionsSpeechRecognitionDisabled.Name = "MenuOptionsSpeechRecognitionDisabled"
-        MenuOptionsSpeechRecognitionDisabled.Size = New Size(180, 22)
+        MenuOptionsSpeechRecognitionDisabled.Size = New Size(135, 22)
         MenuOptionsSpeechRecognitionDisabled.Text = "Disabled"
         ' 
         ' MenuOptionsSpeechRecognitionConfidence
         ' 
         MenuOptionsSpeechRecognitionConfidence.Enabled = False
         MenuOptionsSpeechRecognitionConfidence.Name = "MenuOptionsSpeechRecognitionConfidence"
-        MenuOptionsSpeechRecognitionConfidence.Size = New Size(180, 22)
+        MenuOptionsSpeechRecognitionConfidence.Size = New Size(135, 22)
         MenuOptionsSpeechRecognitionConfidence.Text = "Confidence"
         ' 
         ' MenuOptionsSpeechRecognition95
         ' 
         MenuOptionsSpeechRecognition95.CheckOnClick = True
         MenuOptionsSpeechRecognition95.Name = "MenuOptionsSpeechRecognition95"
-        MenuOptionsSpeechRecognition95.Size = New Size(180, 22)
+        MenuOptionsSpeechRecognition95.Size = New Size(135, 22)
         MenuOptionsSpeechRecognition95.Text = "95%"
         MenuOptionsSpeechRecognition95.TextAlign = ContentAlignment.MiddleRight
         ' 
@@ -436,7 +420,7 @@ Partial Class Form1
         ' 
         MenuOptionsSpeechRecognition90.CheckOnClick = True
         MenuOptionsSpeechRecognition90.Name = "MenuOptionsSpeechRecognition90"
-        MenuOptionsSpeechRecognition90.Size = New Size(180, 22)
+        MenuOptionsSpeechRecognition90.Size = New Size(135, 22)
         MenuOptionsSpeechRecognition90.Text = "90%"
         MenuOptionsSpeechRecognition90.TextAlign = ContentAlignment.MiddleRight
         ' 
@@ -444,7 +428,7 @@ Partial Class Form1
         ' 
         MenuOptionsSpeechRecognition85.CheckOnClick = True
         MenuOptionsSpeechRecognition85.Name = "MenuOptionsSpeechRecognition85"
-        MenuOptionsSpeechRecognition85.Size = New Size(180, 22)
+        MenuOptionsSpeechRecognition85.Size = New Size(135, 22)
         MenuOptionsSpeechRecognition85.Text = "85%"
         MenuOptionsSpeechRecognition85.TextAlign = ContentAlignment.MiddleRight
         ' 
@@ -454,7 +438,7 @@ Partial Class Form1
         MenuOptionsSpeechRecognition80.CheckOnClick = True
         MenuOptionsSpeechRecognition80.CheckState = CheckState.Checked
         MenuOptionsSpeechRecognition80.Name = "MenuOptionsSpeechRecognition80"
-        MenuOptionsSpeechRecognition80.Size = New Size(180, 22)
+        MenuOptionsSpeechRecognition80.Size = New Size(135, 22)
         MenuOptionsSpeechRecognition80.Text = "80%"
         ' 
         ' MenuOptionsShowChartLegends
@@ -905,11 +889,11 @@ Partial Class Form1
         ' DgvAutoBasalDelivery
         ' 
         DgvAutoBasalDelivery.Dock = DockStyle.Fill
-        DgvAutoBasalDelivery.Location = New Point(6, 52)
+        DgvAutoBasalDelivery.Location = New Point(6, 9)
         DgvAutoBasalDelivery.Name = "DgvAutoBasalDelivery"
         DgvAutoBasalDelivery.ReadOnly = True
         DgvAutoBasalDelivery.RowTemplate.Height = 25
-        DgvAutoBasalDelivery.Size = New Size(1358, 597)
+        DgvAutoBasalDelivery.Size = New Size(1358, 640)
         DgvAutoBasalDelivery.TabIndex = 0
         ' 
         ' DgvCountryDataPg1
@@ -1071,10 +1055,10 @@ Partial Class Form1
         ' DgvSGs
         ' 
         DgvSGs.Dock = DockStyle.Fill
-        DgvSGs.Location = New Point(3, 46)
+        DgvSGs.Location = New Point(3, 3)
         DgvSGs.Name = "DgvSGs"
         DgvSGs.RowTemplate.Height = 25
-        DgvSGs.Size = New Size(1364, 606)
+        DgvSGs.Size = New Size(1364, 649)
         DgvSGs.TabIndex = 1
         ' 
         ' DgvSummary
@@ -2097,7 +2081,6 @@ Partial Class Form1
         TableLayoutPanelAutoBasalDelivery.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelAutoBasalDelivery.ColumnCount = 1
         TableLayoutPanelAutoBasalDelivery.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelAutoBasalDelivery.Controls.Add(DgvAutoBasalDelivery, 0, 1)
         TableLayoutPanelAutoBasalDelivery.Dock = DockStyle.Fill
         TableLayoutPanelAutoBasalDelivery.Location = New Point(3, 3)
         TableLayoutPanelAutoBasalDelivery.Name = "TableLayoutPanelAutoBasalDelivery"
@@ -2244,7 +2227,7 @@ Partial Class Form1
         TableLayoutPanelTimeChange.RowCount = 2
         TableLayoutPanelTimeChange.RowStyles.Add(New RowStyle())
         TableLayoutPanelTimeChange.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelTimeChange.Size = New Size(1370, 52)
+        TableLayoutPanelTimeChange.Size = New Size(1370, 9)
         TableLayoutPanelTimeChange.TabIndex = 1
         ' 
         ' TabPageCountryDataPg1
@@ -2512,72 +2495,39 @@ Partial Class Form1
         TabPage04SummaryData.ResumeLayout(False)
         TabPage05Insulin.ResumeLayout(False)
         TabPage05Insulin.PerformLayout()
-        TableLayoutPanelInsulin.ResumeLayout(False)
-        TableLayoutPanelInsulin.PerformLayout()
         TabPage06Meal.ResumeLayout(False)
         TabPage06Meal.PerformLayout()
-        TableLayoutPanelMeal.ResumeLayout(False)
-        TableLayoutPanelMeal.PerformLayout()
         TabPage07ActiveInsulin.ResumeLayout(False)
         TabPage07ActiveInsulin.PerformLayout()
-        TableLayoutPanelActiveInsulin.ResumeLayout(False)
-        TableLayoutPanelActiveInsulin.PerformLayout()
         TabPage08SensorGlucose.ResumeLayout(False)
         TabPage08SensorGlucose.PerformLayout()
         TableLayoutPanelSgs.ResumeLayout(False)
-        TableLayoutPanelSgs.PerformLayout()
         TabPage09Limits.ResumeLayout(False)
         TabPage09Limits.PerformLayout()
-        TableLayoutPanelLimits.ResumeLayout(False)
-        TableLayoutPanelLimits.PerformLayout()
         TabPage10NotificationHistory.ResumeLayout(False)
         TabPage10NotificationHistory.PerformLayout()
-        TableLayoutPanelNotificationHistory.ResumeLayout(False)
-        TableLayoutPanelNotificationHistory.PerformLayout()
         TabPage11TherapyAlgorithm.ResumeLayout(False)
         TabPage11TherapyAlgorithm.PerformLayout()
-        TableLayoutPanelTherapyAlgorithm.ResumeLayout(False)
-        TableLayoutPanelTherapyAlgorithm.PerformLayout()
         TabPage12BannerState.ResumeLayout(False)
         TabPage12BannerState.PerformLayout()
-        TableLayoutPanelBannerState.ResumeLayout(False)
-        TableLayoutPanelBannerState.PerformLayout()
         TabPage13Basal.ResumeLayout(False)
-        TableLayoutPanelBasal.ResumeLayout(False)
-        TableLayoutPanelBasal.PerformLayout()
         TabPageLastSG.ResumeLayout(False)
         TabPageLastSG.PerformLayout()
-        TableLayoutPanelLastSG.ResumeLayout(False)
-        TableLayoutPanelLastSG.PerformLayout()
         TabPageLastAlarm.ResumeLayout(False)
         TabPageLastAlarm.PerformLayout()
-        TableLayoutPanelLastAlarm.ResumeLayout(False)
-        TableLayoutPanelLastAlarm.PerformLayout()
         TabControlPage2.ResumeLayout(False)
         TabPageAutoBasalDelivery.ResumeLayout(False)
         TabPageAutoBasalDelivery.PerformLayout()
-        TableLayoutPanelAutoBasalDelivery.ResumeLayout(False)
-        TableLayoutPanelAutoBasalDelivery.PerformLayout()
         TabPageAutoModeStatus.ResumeLayout(False)
         TabPageAutoModeStatus.PerformLayout()
-        TableLayoutPanelAutoModeStatus.ResumeLayout(False)
-        TableLayoutPanelAutoModeStatus.PerformLayout()
         TabPageBgReadings.ResumeLayout(False)
         TabPageBgReadings.PerformLayout()
-        TableLayoutPanelSgReadings.ResumeLayout(False)
-        TableLayoutPanelSgReadings.PerformLayout()
         TabPageCalibration.ResumeLayout(False)
         TabPageCalibration.PerformLayout()
-        TableLayoutPanelCalibration.ResumeLayout(False)
-        TableLayoutPanelCalibration.PerformLayout()
         TabPageLowGlucoseSuspended.ResumeLayout(False)
         TabPageLowGlucoseSuspended.PerformLayout()
-        TableLayoutPanelLowGlucoseSuspended.ResumeLayout(False)
-        TableLayoutPanelLowGlucoseSuspended.PerformLayout()
         TabPageTimeChange.ResumeLayout(False)
         TabPageTimeChange.PerformLayout()
-        TableLayoutPanelTimeChange.ResumeLayout(False)
-        TableLayoutPanelTimeChange.PerformLayout()
         TabPageCountryDataPg1.ResumeLayout(False)
         TabPageCountryDataPg2.ResumeLayout(False)
         CountryDataPg2TableLayoutPanel.ResumeLayout(False)
