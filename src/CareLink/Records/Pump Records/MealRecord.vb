@@ -6,6 +6,7 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class MealRecord
+
     <DisplayName(NameOf(MealRecord.dateTime))>
     <Column(Order:=5, TypeName:="Date")>
     Public Property [dateTime] As Date
@@ -49,5 +50,9 @@ Public Class MealRecord
     <DisplayName("Version")>
     <Column(Order:=4, TypeName:=NameOf([Int32]))>
     Public Property version As Integer
+
+    Friend Shared Sub AttachHandlers(dgv As DataGridView)
+        Throw New NotImplementedException()
+    End Sub
 
 End Class

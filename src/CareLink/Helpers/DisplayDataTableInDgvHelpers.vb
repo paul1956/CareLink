@@ -28,15 +28,9 @@ Friend Module DisplayDataTableInDgvHelpers
     Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As ItemIndexes, hideRecordNumberColumn As Boolean)
         realPanel.SetTabName(rowIndex)
         Dim dGVIndex As Integer = realPanel.Controls.Count - 1
-        Dim dGV As DataGridView = TryCast(realPanel.Controls(dGVIndex), DataGridView)
-
-        If dGV Is Nothing Then
-            dGV = CreateDefaultDataGridView($"DataGridView{className}")
-            realPanel.Controls.Add(dGV, 0, 1)
-            attachHandlers(dGV)
-        Else
-            dGV.InitializeDgv()
-        End If
+        Dim dGV As DataGridView = CreateDefaultDataGridView($"DataGridView{className}")
+        realPanel.Controls.Add(dGV, 0, 1)
+        attachHandlers?(dGV)
         dGV.DataSource = table
         dGV.RowHeadersVisible = False
         If hideRecordNumberColumn AndAlso dGV.Columns(0).Name = "RecordNumber" Then

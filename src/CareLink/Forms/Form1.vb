@@ -15,6 +15,24 @@ Imports DataGridViewColumnControls
 Imports TableLayputPanelTop
 
 Public Class Form1
+    Friend WithEvents TableLayoutPanelActiveInsulinTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelAutoBasalDeliveryTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelAutoModeStatusTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelBannerStateTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelBasalTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelCalibrationTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelInsulinTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelLastAlarmTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelLastSgTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelLimitsTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelLowGlucoseSuspendedTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelMealTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelNotificationHistoryTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelBgReadingsTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelSgsTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelTherapyAlgorithmTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelTimeChangeTop As TableLayoutPanelTopEx
+
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
     Private ReadOnly _sgMiniDisplay As New SgMiniWindow(Me)
@@ -1020,6 +1038,7 @@ Public Class Form1
         End If
 
         Me.InitializeDgvCareLinkUsers(Me.DgvCareLinkUsers)
+        InitializeTableLayoutPanelTops()
         Me.MenuOptionsAudioAlerts.Checked = My.Settings.SystemAudioAlertsEnabled
         Me.MenuOptionsShowChartLegends.Checked = My.Settings.SystemShowLegends
         Me.MenuOptionsSpeechRecognitionEnabled.Checked = My.Settings.SystemSpeechRecognitionEnabled
@@ -1590,7 +1609,7 @@ Public Class Form1
                     TableLayoutPanelLowGlucoseSuspendedTop.ButtonClick,
                     TableLayoutPanelMealTop.ButtonClick,
                     TableLayoutPanelNotificationHistoryTop.ButtonClick,
-                    TableLayoutPanelSgReadingsTop.ButtonClick,
+                    TableLayoutPanelBgReadingsTop.ButtonClick,
                     TableLayoutPanelSgsTop.ButtonClick,
                     TableLayoutPanelTherapyAlgorithmTop.ButtonClick,
                     TableLayoutPanelTimeChangeTop.ButtonClick
