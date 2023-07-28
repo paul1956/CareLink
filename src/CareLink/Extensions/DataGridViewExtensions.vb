@@ -65,10 +65,10 @@ Public Module DataGridViewExtensions
         End If
         Select Case sgColumnName
             Case partialKey
-                e.Value = If(nativeMmolL, sensorValue.ToString("F2", CurrentUICulture), e.Value.ToString)
-                If sensorValue < TirLowLimit(nativeMmolL) Then
+                e.Value = If(NativeMmolL, sensorValue.ToString("F2", CurrentUICulture), e.Value.ToString)
+                If sensorValue < TirLowLimit(NativeMmolL) Then
                     FormatCell(e, Color.Red)
-                ElseIf sensorValue > TirHighLimit(nativeMmolL) Then
+                ElseIf sensorValue > TirHighLimit(NativeMmolL) Then
                     FormatCell(e, Color.Yellow)
                 End If
             Case partialKey & "MmDl"

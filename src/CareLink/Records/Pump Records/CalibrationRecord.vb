@@ -48,7 +48,7 @@ Public Class CalibrationRecord
     Public ReadOnly Property valueMmDl As Single
         Get
             If Single.IsNaN(Me.value) Then Return Me.value
-            Return If(nativeMmolL,
+            Return If(NativeMmolL,
                       CSng(Math.Round(Me.value * MmolLUnitsDivisor)),
                       Me.value
                      )
@@ -60,7 +60,7 @@ Public Class CalibrationRecord
     Public ReadOnly Property valueMmolL As Single
         Get
             If Single.IsNaN(Me.value) Then Return Me.value
-            Return If(nativeMmolL,
+            Return If(NativeMmolL,
                       Me.value,
                       RoundSingle(Me.value / MmolLUnitsDivisor, 2, False)
                      )

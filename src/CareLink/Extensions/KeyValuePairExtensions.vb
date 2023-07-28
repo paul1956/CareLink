@@ -14,8 +14,8 @@ Friend Module KeyValuePairExtensions
 
     <Extension>
     Private Function ScaleSgToString(value As Single) As String
-        Return If(nativeMmolL,
-                  (value / MmolLUnitsDivisor).RoundSingle(If(nativeMmolL, 2, 0), False).ToString(CurrentUICulture),
+        Return If(NativeMmolL,
+                  (value / MmolLUnitsDivisor).RoundSingle(If(NativeMmolL, 2, 0), False).ToString(CurrentUICulture),
                   value.ToString(CurrentUICulture)
                  )
     End Function
@@ -28,7 +28,7 @@ Friend Module KeyValuePairExtensions
 
     <Extension>
     Public Function ScaleSgToString(item As KeyValuePair(Of String, String)) As String
-        Return item.Value.ParseSingle(If(nativeMmolL, 2, 0)).ScaleSgToString()
+        Return item.Value.ParseSingle(If(NativeMmolL, 2, 0)).ScaleSgToString()
     End Function
 
 End Module

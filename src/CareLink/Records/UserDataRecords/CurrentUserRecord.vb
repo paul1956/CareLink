@@ -8,7 +8,7 @@ Public Class CurrentUserRecord
     Public Sub New(userName As String, useAdvancedAitDecay As CheckState)
         Me.UserName = userName
         Me.UseAdvancedAitDecay = useAdvancedAitDecay
-        Me.CurrentTarget = If(nativeMmolL, 6.7!, 120.0!)
+        Me.CurrentTarget = If(NativeMmolL, 6.7!, 120.0!)
     End Sub
 
     Public Property CarbRatios As New List(Of CarbRatioRecord)

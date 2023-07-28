@@ -25,9 +25,9 @@ Friend Module PlotSeriesSg
                             .Last().IsEmpty = True
                         End If
                         .AddXY(sgOADateTime, sgValue)
-                        If sgValue > TirHighLimit(nativeMmolL) Then
+                        If sgValue > TirHighLimit(NativeMmolL) Then
                             .Last.Color = Color.Yellow
-                        ElseIf sgValue < TirLowLimit(nativeMmolL) Then
+                        ElseIf sgValue < TirLowLimit(NativeMmolL) Then
                             .Last.Color = Color.Red
                         Else
                             .Last.Color = Color.White

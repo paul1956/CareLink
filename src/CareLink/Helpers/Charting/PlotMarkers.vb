@@ -72,8 +72,8 @@ Friend Module PlotMarkers
                 If entry.TryGetValue("value", sgValueString) Then
                     sgValueString.TryParseSingle(sgValue)
                     If Not Single.IsNaN(sgValue) Then
-                        sgValue = Math.Min(GetYMaxValue(nativeMmolL), sgValue)
-                        sgValue = Math.Max(GetYMinValue(nativeMmolL), sgValue)
+                        sgValue = Math.Min(GetYMaxValue(NativeMmolL), sgValue)
+                        sgValue = Math.Max(GetYMinValue(NativeMmolL), sgValue)
                     End If
                 End If
                 Dim markerSeriesPoints As DataPointCollection = pageChart.Series(MarkerSeriesName).Points
@@ -89,7 +89,7 @@ Friend Module PlotMarkers
                         With pageChart.Series(BasalSeriesNameName)
                             .PlotBasalSeries(markerOADateTime,
                                              amount,
-                                             GetYMaxValue(nativeMmolL),
+                                             GetYMaxValue(NativeMmolL),
                                              GetInsulinYValue(),
                                              GetGraphLineColor("Basal Series"),
                                              False,
@@ -100,7 +100,7 @@ Friend Module PlotMarkers
                         With pageChart.Series(BasalSeriesNameName)
                             .PlotBasalSeries(markerOADateTime,
                                              amount,
-                                             GetYMaxValue(nativeMmolL),
+                                             GetYMaxValue(NativeMmolL),
                                              GetInsulinYValue(),
                                              GetGraphLineColor("Basal Series"),
                                              False,
@@ -113,7 +113,7 @@ Friend Module PlotMarkers
                                 With pageChart.Series(BasalSeriesNameName)
                                     .PlotBasalSeries(markerOADateTime,
                                                      autoCorrection.ParseSingle(3),
-                                                     GetYMaxValue(nativeMmolL),
+                                                     GetYMaxValue(NativeMmolL),
                                                      GetInsulinYValue(),
                                                      GetGraphLineColor("Auto Correction"),
                                                      False,
@@ -121,7 +121,7 @@ Friend Module PlotMarkers
                                 End With
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 If markerInsulinDictionary.TryAdd(markerOADateTime, CInt(GetInsulinYValue())) Then
-                                    markerSeriesPoints.AddXY(markerOADateTime, GetInsulinYValue() - If(nativeMmolL, 0.555, 10))
+                                    markerSeriesPoints.AddXY(markerOADateTime, GetInsulinYValue() - If(NativeMmolL, 0.555, 10))
                                     markerSeriesPoints.Last.MarkerBorderWidth = 2
                                     markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Black)
                                     markerSeriesPoints.Last.MarkerSize = 20
@@ -141,8 +141,8 @@ Friend Module PlotMarkers
                         End Select
                     Case "MEAL"
                         If markerMealDictionary Is Nothing Then Continue For
-                        If markerMealDictionary.TryAdd(markerOADateTime, GetYMinValue(nativeMmolL)) Then
-                            markerSeriesPoints.AddXY(markerOADateTime, GetYMinValue(nativeMmolL) + If(nativeMmolL, s_mealImage.Height / 2 / MmolLUnitsDivisor, s_mealImage.Height / 2))
+                        If markerMealDictionary.TryAdd(markerOADateTime, GetYMinValue(NativeMmolL)) Then
+                            markerSeriesPoints.AddXY(markerOADateTime, GetYMinValue(NativeMmolL) + If(NativeMmolL, s_mealImage.Height / 2 / MmolLUnitsDivisor, s_mealImage.Height / 2))
                             markerSeriesPoints.Last.Color = Color.FromArgb(10, Color.Yellow)
                             markerSeriesPoints.Last.MarkerBorderWidth = 2
                             markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Yellow)
@@ -155,7 +155,7 @@ Friend Module PlotMarkers
                             lastTimeChangeRecord = New TimeChangeRecord(entry)
                             markerOADateTime = New OADate(lastTimeChangeRecord.GetLatestTime)
                             .AddXY(markerOADateTime, 0)
-                            .AddXY(markerOADateTime, GetYMaxValue(nativeMmolL))
+                            .AddXY(markerOADateTime, GetYMaxValue(NativeMmolL))
                             .AddXY(markerOADateTime, Double.NaN)
                         End With
                     Case Else

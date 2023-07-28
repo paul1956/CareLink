@@ -88,7 +88,7 @@ Public Module JsonExtensions
                                                          "mmol/L"
                                                          )
                             End If
-                            nativeMmolL = SgUnitsNativeString <> "mg/dl"
+                            NativeMmolL = SgUnitsNativeString <> "mg/dl"
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
                         Case NameOf(ItemIndexes.clientTimeZoneName)
                             If s_useLocalTimeZone Then
