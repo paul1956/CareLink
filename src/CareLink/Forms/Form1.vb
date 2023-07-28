@@ -2279,16 +2279,20 @@ Public Class Form1
 
                 If s_sensorState = "WARM_UP" AndAlso Me.SensorMessage IsNot Nothing Then
                     Dim timeRemaining As String = ""
-                    If Me.SensorMessage IsNot Nothing Then
+                    If s_systemStatusTimeRemaining > New TimeSpan(0) Then
                         If s_systemStatusTimeRemaining.Hours > 1 Then
                             timeRemaining = $"{s_systemStatusTimeRemaining.Hours} hrs"
                         ElseIf s_systemStatusTimeRemaining.Hours > 0 Then
                             timeRemaining = $"{s_systemStatusTimeRemaining.Hours} hr"
-                        Else
+                        ElseIf s_systemStatusTimeRemaining > New TimeSpan(0, 1, 0) Then
+                            timeRemaining = $"{s_systemStatusTimeRemaining.Minutes} mins"
+                        ElseIf s_systemStatusTimeRemaining > New TimeSpan(0) Then
                             timeRemaining = $"{s_systemStatusTimeRemaining.Minutes} min"
                         End If
+                        Me.SensorMessage.Text = $"{message.Replace("...", "")}{vbCrLf}{timeRemaining}"
+                    Else
+                        Me.SensorMessage.Text = message
                     End If
-                    Me.SensorMessage.Text = $"{message}{timeRemaining}"
                 Else
                     Me.SensorMessage.Text = message
                 End If
