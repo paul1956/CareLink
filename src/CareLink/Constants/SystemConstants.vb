@@ -57,7 +57,7 @@ Public Module SystemConstants
                         {"MMOLL", "mmol/L"}
                     }
 
-    Public ReadOnly Trends As New Dictionary(Of String, String) From {
+    Public ReadOnly s_trends As New Dictionary(Of String, String) From {
                         {"DOWN", "↓"},
                         {"DOWN_DOUBLE", "↓↓"},
                         {"DOWN_TRIPLE", "↓↓↓"},

@@ -62,13 +62,12 @@ Public Class KnownColorComboBox
 
         Dim item As KeyValuePair(Of String, KnownColor) = CType(Me.Items(e.Index), KeyValuePair(Of String, KnownColor))
         Dim key As String = item.Key
-        Dim itemColor As Color = Color.FromKnownColor(item.Value)
-        Dim fClr As Color = GetContrastingColor(itemColor)
+        Dim backColor As Color = Color.FromKnownColor(item.Value)
         Dim eBounds As Rectangle = e.Bounds
-        Using b As Brush = New SolidBrush(itemColor)
+        Using b As Brush = New SolidBrush(backColor)
             Dim pt As New Point(eBounds.X, eBounds.Top)
             e.Graphics.FillRectangle(b, eBounds.X, eBounds.Y, eBounds.Width, eBounds.Height)
-            TextRenderer.DrawText(e.Graphics, key, Me.Font, pt, fClr, itemColor)
+            TextRenderer.DrawText(e.Graphics, key, Me.Font, pt, backColor.GetContrastingColor(), backColor)
         End Using
         e.DrawFocusRectangle()
     End Sub

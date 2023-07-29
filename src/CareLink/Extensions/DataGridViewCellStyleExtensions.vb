@@ -12,9 +12,10 @@ Friend Module DataGridViewCellStyleExtensions
         With e.CellStyle
             If e.RowIndex Mod 2 = 0 Then
                 .BackColor = highlightColor
-                .ForeColor = highlightColor.GetContrastingColor
+                .ForeColor = highlightColor.GetContrastingColor()
             Else
                 .ForeColor = highlightColor
+                .BackColor = highlightColor.GetContrastingColor()
             End If
             .Font = New Font(.Font, FontStyle.Bold)
         End With

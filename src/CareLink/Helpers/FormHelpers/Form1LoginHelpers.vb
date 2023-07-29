@@ -105,7 +105,7 @@ Friend Module Form1LoginHelpers
 
         If highLight = True Then
             foreColor = GetGraphLineColor("High Limit")
-            backColor = foreColor.GetContrastingColor
+            backColor = foreColor.GetContrastingColor()
         Else
             foreColor = SystemColors.ControlText
             backColor = SystemColors.Control

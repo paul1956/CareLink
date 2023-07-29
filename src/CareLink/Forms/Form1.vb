@@ -1717,7 +1717,7 @@ Public Class Form1
         Me.SummaryChart = CreateChart(NameOf(SummaryChart))
         Dim summaryTitle As Title = CreateTitle("Summary",
                                                 NameOf(summaryTitle),
-                                                Me.SummaryChart.BackColor.GetContrastingColor)
+                                                Me.SummaryChart.BackColor.GetContrastingColor())
 
         Dim summaryChartArea As ChartArea = CreateChartArea(Me.SummaryChart)
         Me.SummaryChart.ChartAreas.Add(summaryChartArea)
@@ -1826,7 +1826,7 @@ Public Class Form1
 
         Me.ActiveInsulinChart = CreateChart(NameOf(ActiveInsulinChart))
         Dim activeInsulinChartArea As ChartArea = CreateChartArea(Me.ActiveInsulinChart)
-        Dim labelColor As Color = Me.ActiveInsulinChart.BackColor.GetContrastingColor
+        Dim labelColor As Color = Me.ActiveInsulinChart.BackColor.GetContrastingColor()
         Dim labelFont As New Font("Segoe UI", 12.0F, FontStyle.Bold)
 
         With activeInsulinChartArea.AxisY
@@ -1913,7 +1913,7 @@ Public Class Form1
                 TreatmentInsulinRow = (MaxBasalPerDose + 0.025!).RoundTo025
         End Select
 
-        Dim labelColor As Color = Me.TreatmentMarkersChart.BackColor.GetContrastingColor
+        Dim labelColor As Color = Me.TreatmentMarkersChart.BackColor.GetContrastingColor()
         Dim labelFont As New Font("Segoe UI", 12.0F, FontStyle.Bold)
 
         With treatmentMarkersChartArea.AxisY
@@ -1942,7 +1942,7 @@ Public Class Form1
         Me.TreatmentMarkersChart.ChartAreas.Add(treatmentMarkersChartArea)
         _treatmentMarkersChartLegend = CreateChartLegend(NameOf(_treatmentMarkersChartLegend))
 
-        Me.TreatmentMarkersChartTitle = CreateTitle("Treatment Details", NameOf(TreatmentMarkersChartTitle), Me.TreatmentMarkersChart.BackColor.GetContrastingColor)
+        Me.TreatmentMarkersChartTitle = CreateTitle("Treatment Details", NameOf(TreatmentMarkersChartTitle), Me.TreatmentMarkersChart.BackColor.GetContrastingColor())
         Me.TreatmentTargetSeries = CreateSeriesLimitsAndTarget(_treatmentMarkersChartLegend, TargetSgSeriesName)
         Me.TreatmentMarkerAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeriesName, _treatmentMarkersChartLegend, "Auto Correction", AxisType.Primary)
         Me.TreatmentMarkerBasalSeries = CreateSeriesBasal(BasalSeriesNameName, _treatmentMarkersChartLegend, "Basal Series", AxisType.Primary)
@@ -2555,9 +2555,9 @@ Public Class Form1
                         End If
                     End If
                 Next
-                Me.SmartGuardLabel.Text = If(timeInAutoMode >= s_OneDay,
+                Me.SmartGuardLabel.Text = If(timeInAutoMode >= s_oneDay,
                                              "SmartGuard 100%",
-                                             $"SmartGuard {CInt(timeInAutoMode / s_OneDay * 100)}%"
+                                             $"SmartGuard {CInt(timeInAutoMode / s_oneDay * 100)}%"
                                             )
             Catch ex As Exception
                 Me.SmartGuardLabel.Text = "SmartGuard ???%"
@@ -2697,11 +2697,11 @@ Public Class Form1
 
         Dim rowValue As String = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastSGTrend))
         Dim arrows As String = Nothing
-        If Trends.TryGetValue(rowValue, arrows) Then
+        If s_trends.TryGetValue(rowValue, arrows) Then
             Me.LabelTrendArrows.Font = If(rowValue = "NONE",
                 New Font("Segoe UI", 18.0F, FontStyle.Bold, GraphicsUnit.Point),
                 New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point))
-            Me.LabelTrendArrows.Text = Trends(rowValue)
+            Me.LabelTrendArrows.Text = s_trends(rowValue)
         Else
             Me.LabelTrendArrows.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
             Me.LabelTrendArrows.Text = rowValue

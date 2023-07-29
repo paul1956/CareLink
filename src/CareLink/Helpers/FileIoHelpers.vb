@@ -7,7 +7,7 @@ Imports System.IO
 
 Friend Module FileIoHelpers
     Private s_myDocuments As String = Nothing
-    Private s_ProjectData As String = Nothing
+    Private s_projectData As String = Nothing
     Public ReadOnly Property AllUserLoginInfoFileName As String = $"{ProjectName}.Csv"
 
     Public ReadOnly Property SavedErrorReportBaseName As String = $"{ProjectName}ErrorReport"
@@ -28,10 +28,10 @@ Friend Module FileIoHelpers
     End Function
 
     Friend Function GetDirectoryForProjectData() As String
-        If s_ProjectData Is Nothing Then
-            s_ProjectData = Path.Combine(GetDirectoryForMyDocuments, ProjectName)
+        If s_projectData Is Nothing Then
+            s_projectData = Path.Combine(GetDirectoryForMyDocuments, ProjectName)
         End If
-        Return s_ProjectData
+        Return s_projectData
     End Function
 
     Friend Function GetDirectoryForSettings() As String

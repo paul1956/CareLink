@@ -17,11 +17,11 @@ Public Class DataGridViewNumericUpDownCell
     End Function
 
     ' Used in TranslateAlignment function
-    Private Shared ReadOnly anyRight As DataGridViewContentAlignment = DataGridViewContentAlignment.TopRight Or
+    Private Shared ReadOnly s_anyRight As DataGridViewContentAlignment = DataGridViewContentAlignment.TopRight Or
                                                                     DataGridViewContentAlignment.MiddleRight Or
                                                                     DataGridViewContentAlignment.BottomRight
 
-    Private Shared ReadOnly anyCenter As DataGridViewContentAlignment = DataGridViewContentAlignment.TopCenter Or
+    Private Shared ReadOnly s_anyCenter As DataGridViewContentAlignment = DataGridViewContentAlignment.TopCenter Or
                                                                      DataGridViewContentAlignment.MiddleCenter Or
                                                                      DataGridViewContentAlignment.BottomCenter
 
@@ -46,18 +46,18 @@ Public Class DataGridViewNumericUpDownCell
     Friend Const DATAGRIDVIEWNUMERICUPDOWNCELL_defaultThousandsSeparator As Boolean = False
 
     ' Type of this cell's editing control
-    Private Shared ReadOnly defaultEditType As Type = GetType(DataGridViewNumericUpDownEditingControl)
+    Private Shared ReadOnly s_defaultEditType As Type = GetType(DataGridViewNumericUpDownEditingControl)
 
     ' Type of this cell's value. The formatted value type is string, the same as the base class DataGridViewTextBoxCell
-    Private Shared ReadOnly defaultValueType As Type = GetType(Decimal)
+    Private Shared ReadOnly s_defaultValueType As Type = GetType(Decimal)
 
     ' The bitmap used to paint the non-edited cells via a call to NumericUpDown.DrawToBitmap
     <ThreadStatic>
-    Private Shared renderingBitmap As Bitmap
+    Private Shared s_renderingBitmap As Bitmap
 
     ' The NumericUpDown control used to paint the non-edited cells via a call to NumericUpDown.DrawToBitmap
     <ThreadStatic>
-    Private Shared paintingNumericUpDown As NumericUpDown
+    Private Shared s_paintingNumericUpDown As NumericUpDown
 
     Private _decimalPlaces As Integer       ' Caches the value of the DecimalPlaces property
     Private _increment As Decimal       ' Caches the value of the Increment property
@@ -70,14 +70,14 @@ Public Class DataGridViewNumericUpDownCell
     ''' </summary>
     Public Sub New()
         ' Create a thread specific bitmap used for the painting of the non-edited cells
-        If renderingBitmap Is Nothing Then
-            renderingBitmap = New Bitmap(DATAGRIDVIEWNUMERICUPDOWNCELL_defaultRenderingBitmapWidth, DATAGRIDVIEWNUMERICUPDOWNCELL_defaultRenderingBitmapHeight)
+        If s_renderingBitmap Is Nothing Then
+            s_renderingBitmap = New Bitmap(DATAGRIDVIEWNUMERICUPDOWNCELL_defaultRenderingBitmapWidth, DATAGRIDVIEWNUMERICUPDOWNCELL_defaultRenderingBitmapHeight)
         End If
 
         ' Create a thread specific NumericUpDown control used for the painting of the non-edited cells
-        If paintingNumericUpDown Is Nothing Then
+        If s_paintingNumericUpDown Is Nothing Then
             ' Some properties only need to be set once for the lifetime of the control:
-            paintingNumericUpDown = New NumericUpDown With {
+            s_paintingNumericUpDown = New NumericUpDown With {
                 .BorderStyle = BorderStyle.None,
                 .Maximum = Decimal.MaxValue / 10,
                 .Minimum = Decimal.MinValue / 10
@@ -130,7 +130,7 @@ Public Class DataGridViewNumericUpDownCell
     ''' </summary>
     Public Overrides ReadOnly Property EditType As Type
         Get
-            Return defaultEditType ' the type is DataGridViewNumericUpDownEditingControl
+            Return s_defaultEditType ' the type is DataGridViewNumericUpDownEditingControl
         End Get
     End Property
 
@@ -211,7 +211,7 @@ Public Class DataGridViewNumericUpDownCell
     ''' </summary>
     Public Overrides ReadOnly Property ValueType As Type
         Get
-            Return If(MyBase.ValueType, defaultValueType)
+            Return If(MyBase.ValueType, s_defaultValueType)
         End Get
     End Property
 
@@ -471,26 +471,26 @@ Public Class DataGridViewNumericUpDownCell
 
                 Dim cellSelected As Boolean = (cellState And DataGridViewElementStates.Selected) <> 0
 
-                If renderingBitmap.Width < valBounds.Width OrElse
-                    renderingBitmap.Height < valBounds.Height Then
+                If s_renderingBitmap.Width < valBounds.Width OrElse
+                    s_renderingBitmap.Height < valBounds.Height Then
                     ' The static bitmap is too small, a bigger one needs to be allocated.
-                    renderingBitmap.Dispose()
-                    renderingBitmap = New Bitmap(valBounds.Width, valBounds.Height)
+                    s_renderingBitmap.Dispose()
+                    s_renderingBitmap = New Bitmap(valBounds.Width, valBounds.Height)
                 End If
                 ' Make sure the NumericUpDown control is parented to a visible control
-                If paintingNumericUpDown.Parent Is Nothing OrElse Not paintingNumericUpDown.Parent.Visible Then
-                    paintingNumericUpDown.Parent = Me.DataGridView
+                If s_paintingNumericUpDown.Parent Is Nothing OrElse Not s_paintingNumericUpDown.Parent.Visible Then
+                    s_paintingNumericUpDown.Parent = Me.DataGridView
                 End If
                 ' Set all the relevant properties
-                paintingNumericUpDown.TextAlign = DataGridViewNumericUpDownCell.TranslateAlignment(cellStyle.Alignment)
-                paintingNumericUpDown.DecimalPlaces = Me.DecimalPlaces
-                paintingNumericUpDown.ThousandsSeparator = Me.ThousandsSeparator
-                paintingNumericUpDown.Font = cellStyle.Font
-                paintingNumericUpDown.Width = valBounds.Width
-                paintingNumericUpDown.Height = valBounds.Height
-                paintingNumericUpDown.RightToLeft = Me.DataGridView.RightToLeft
-                paintingNumericUpDown.Location = New Point(0, -paintingNumericUpDown.Height - 100)
-                paintingNumericUpDown.Text = TryCast(formattedValue, String)
+                s_paintingNumericUpDown.TextAlign = DataGridViewNumericUpDownCell.TranslateAlignment(cellStyle.Alignment)
+                s_paintingNumericUpDown.DecimalPlaces = Me.DecimalPlaces
+                s_paintingNumericUpDown.ThousandsSeparator = Me.ThousandsSeparator
+                s_paintingNumericUpDown.Font = cellStyle.Font
+                s_paintingNumericUpDown.Width = valBounds.Width
+                s_paintingNumericUpDown.Height = valBounds.Height
+                s_paintingNumericUpDown.RightToLeft = Me.DataGridView.RightToLeft
+                s_paintingNumericUpDown.Location = New Point(0, -s_paintingNumericUpDown.Height - 100)
+                s_paintingNumericUpDown.Text = TryCast(formattedValue, String)
 
                 Dim backColor As Color = If((paintParts And DataGridViewPaintParts.SelectionBackground) <> 0 AndAlso cellSelected,
                                             cellStyle.SelectionBackColor,
@@ -502,13 +502,13 @@ Public Class DataGridViewNumericUpDownCell
                         ' The NumericUpDown control does not support transparent back colors
                         backColor = Color.FromArgb(255, backColor)
                     End If
-                    paintingNumericUpDown.BackColor = backColor
+                    s_paintingNumericUpDown.BackColor = backColor
                 End If
                 ' Finally paint the NumericUpDown control
                 Dim srcRect As New Rectangle(0, 0, valBounds.Width, valBounds.Height)
                 If srcRect.Width > 0 AndAlso srcRect.Height > 0 Then
-                    paintingNumericUpDown.DrawToBitmap(renderingBitmap, srcRect)
-                    graphics.DrawImage(renderingBitmap, New Rectangle(valBounds.Location, valBounds.Size),
+                    s_paintingNumericUpDown.DrawToBitmap(s_renderingBitmap, srcRect)
+                    graphics.DrawImage(s_renderingBitmap, New Rectangle(valBounds.Location, valBounds.Size),
                                        srcRect, GraphicsUnit.Pixel)
                 End If
             End If
@@ -643,9 +643,9 @@ Public Class DataGridViewNumericUpDownCell
     ''' a HorizontalAlignment value.
     ''' </summary>
     Friend Shared Function TranslateAlignment(align As DataGridViewContentAlignment) As HorizontalAlignment
-        If (align And anyRight) <> 0 Then
+        If (align And s_anyRight) <> 0 Then
             Return HorizontalAlignment.Right
-        ElseIf (align And anyCenter) <> 0 Then
+        ElseIf (align And s_anyCenter) <> 0 Then
             Return HorizontalAlignment.Center
         Else
             Return HorizontalAlignment.Left

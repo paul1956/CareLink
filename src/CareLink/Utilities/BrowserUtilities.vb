@@ -10,8 +10,8 @@ Imports Microsoft.Win32
 Friend Module BrowserUtilities
     Private ReadOnly s_httpClient As New HttpClient()
     Private ReadOnly s_versionSearchKey As String = $"<a hRef=""/{GitOwnerName}/{ProjectName}/releases/tag/"
-    Private updateSleepCount As Integer = 0
-    Private inCheckForUpdate As Integer = 0
+    Private s_inCheckForUpdate As Integer = 0
+    Private s_updateSleepCount As Integer = 0
 
     ''' <summary>
     ''' Compare version of executable with ReadMe.MkDir from GitHub
@@ -79,12 +79,12 @@ Friend Module BrowserUtilities
     Friend Async Sub CheckForUpdatesAsync(reportSuccessfulResult As Boolean)
         Try
             If reportSuccessfulResult Then
-                updateSleepCount = 0
+                s_updateSleepCount = 0
             End If
             Dim gitHubVersion As String = Await GetVersionString()
             If IsNewerVersion(gitHubVersion, My.Application.Info.Version) Then
-                If updateSleepCount > 0 Then
-                    updateSleepCount -= 1
+                If s_updateSleepCount > 0 Then
+                    s_updateSleepCount -= 1
                 Else
                     Form1.UpdateAvailableStatusStripLabel.Text = $"Update {gitHubVersion} available"
                     Form1.UpdateAvailableStatusStripLabel.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
@@ -92,13 +92,13 @@ Friend Module BrowserUtilities
                     Form1.UpdateAvailableStatusStripLabel.ImageAlign = ContentAlignment.MiddleLeft
                     Form1.UpdateAvailableStatusStripLabel.ForeColor = Color.Red
                     If reportSuccessfulResult Then
-                        If Interlocked.Exchange(inCheckForUpdate, 1) = 0 Then
+                        If Interlocked.Exchange(s_inCheckForUpdate, 1) = 0 Then
                             If MsgBox($"There is a newer version available, do you want to install now?", $"Current version {My.Application.Info.Version}{vbCrLf}New version {gitHubVersion}", MsgBoxStyle.YesNo Or MsgBoxStyle.Question, "Updates Available") = MsgBoxResult.Yes Then
                                 OpenUrlInBrowser($"{GitHubCareLinkUrl}releases/")
                                 End
                             End If
-                            inCheckForUpdate = 0
-                            updateSleepCount = 288
+                            s_inCheckForUpdate = 0
+                            s_updateSleepCount = 288
                         End If
                     End If
                 End If

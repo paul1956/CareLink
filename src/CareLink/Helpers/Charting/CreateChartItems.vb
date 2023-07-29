@@ -7,8 +7,8 @@ Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module CreateChartItems
 
-    Private ReadOnly mgdLValues As New List(Of Single) From {50, 100, 150, 200, 250, 300, 350, 400}
-    Private ReadOnly mmolLValues As New List(Of Single) From {2.8, 5, 8, 11, 14, 17, 20, 22.2}
+    Private ReadOnly s_mgdLValues As New List(Of Single) From {50, 100, 150, 200, 250, 300, 350, 400}
+    Private ReadOnly s_mmolLValues As New List(Of Single) From {2.8, 5, 8, 11, 14, 17, 20, 22.2}
 
     Friend Const ActiveInsulinSeriesName As String = NameOf(ActiveInsulinSeriesName)
     Friend Const AutoCorrectionSeriesName As String = NameOf(AutoCorrectionSeriesName)
@@ -31,7 +31,7 @@ Friend Module CreateChartItems
                             .Color = lineColor,
                             .IsValueShownAsLabel = False,
                             .LegendText = legendText,
-                            .ShadowColor = lineColor.GetContrastingColor,
+                            .ShadowColor = lineColor.GetContrastingColor(),
                             .XValueType = ChartValueType.DateTime,
                             .YAxisType = yAxisType
                         }
@@ -81,7 +81,7 @@ Friend Module CreateChartItems
                      .ShadowColor = Color.Transparent
                  }
         With tmpChartArea
-            Dim labelColor As Color = containingChart.BackColor.GetContrastingColor
+            Dim labelColor As Color = containingChart.BackColor.GetContrastingColor()
             Dim labelFont As New Font("Segoe UI", 12.0F, FontStyle.Bold)
 
             With .AxisX
@@ -132,11 +132,11 @@ Friend Module CreateChartItems
             Dim firstAxis As List(Of Single)
             Dim secondAxis As List(Of Single)
             If NativeMmolL Then
-                firstAxis = mmolLValues
-                secondAxis = mgdLValues
+                firstAxis = s_mmolLValues
+                secondAxis = s_mgdLValues
             Else
-                firstAxis = mgdLValues
-                secondAxis = mmolLValues
+                firstAxis = s_mgdLValues
+                secondAxis = s_mmolLValues
             End If
 
             With .AxisY2
@@ -162,7 +162,7 @@ Friend Module CreateChartItems
                     .LineColor = Color.FromArgb(64, labelColor)
                 End With
 
-                For i As Integer = 0 To mmolLValues.Count - 1
+                For i As Integer = 0 To s_mmolLValues.Count - 1
                     Dim yMin As Single = GetYMinValue(NativeMmolL)
                     .CustomLabels.Add(New CustomLabel(firstAxis(i) - yMin,
                                                            firstAxis(i) + yMin,
@@ -208,7 +208,7 @@ Friend Module CreateChartItems
                         .Docking = Docking.Bottom,
                         .Enabled = Form1.MenuOptionsShowChartLegends.Checked,
                         .Font = New Font("Segoe UI", 20.0F, FontStyle.Bold),
-                        .ForeColor = .BackColor.GetContrastingColor,
+                        .ForeColor = .BackColor.GetContrastingColor(),
                         .IsTextAutoFit = True
                     }
     End Function

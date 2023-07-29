@@ -6,7 +6,7 @@ Imports System.Runtime.CompilerServices
 
 Friend Module TableLayoutPanelExtensions
 
-    Private ReadOnly tablesSupportingExportToExcel As New List(Of String) From {
+    Private ReadOnly s_tablesSupportingExportToExcel As New List(Of String) From {
                 NameOf(Form1.TableLayoutPanelAutoBasalDelivery),
                 NameOf(Form1.TableLayoutPanelAutoModeStatus),
                 NameOf(Form1.TableLayoutPanelSgReadings),
@@ -19,7 +19,7 @@ Friend Module TableLayoutPanelExtensions
                 NameOf(Form1.TableLayoutPanelTimeChange)
             }
 
-    Private ReadOnly tablesSupportingCopyToClipboard As New List(Of String) From {
+    Private ReadOnly s_tablesSupportingCopyToClipboard As New List(Of String) From {
                NameOf(Form1.TableLayoutPanelActiveInsulin),
                NameOf(Form1.TableLayoutPanelAutoBasalDelivery),
                NameOf(Form1.TableLayoutPanelSgReadings),
@@ -42,9 +42,9 @@ Friend Module TableLayoutPanelExtensions
 
                         Dim helpString As String
 
-                        If tablesSupportingExportToExcel.Contains(table.Name) Then
+                        If s_tablesSupportingExportToExcel.Contains(table.Name) Then
                             helpString = ": Right Click on Table for Export Options including Excel"
-                        ElseIf tablesSupportingCopyToClipboard.Contains(table.Name) Then
+                        ElseIf s_tablesSupportingCopyToClipboard.Contains(table.Name) Then
                             helpString = ": Right Click on Table for cell(s) Export Options"
                         Else
                             helpString = ""

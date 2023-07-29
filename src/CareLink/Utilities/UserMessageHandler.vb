@@ -10,6 +10,13 @@ Friend Module UserMessageHandler
                         {"SAFE_BASAL", "Safe Basal"}
                     }
 
+    Friend ReadOnly s_calibrationIconMessages As New Dictionary(Of String, String) From {
+                        {"HOURS_10", "Hours 10"},
+                        {"INIT", "Initializing"},
+                        {"NO_ICON", ""},
+                        {"UNDEFINED", ""}
+                   }
+
     Friend ReadOnly s_calibrationMessages As New Dictionary(Of String, String) From {
                         {"DUENOW", "Due now"},
                         {"LESS_THAN_THREE_HRS", "Less then 3 hours"},
@@ -25,7 +32,7 @@ Friend Module UserMessageHandler
     ''' Everything before the : is the message, the text after the : is the key in the dictionary that
     ''' will replace (0). (units) will be replace by localized units.
     ''' </summary>
-    Friend ReadOnly s_NotificationMessages As New Dictionary(Of String, String) From {
+    Friend ReadOnly s_notificationMessages As New Dictionary(Of String, String) From {
                         {"BC_MESSAGE_BASAL_STARTED", "Auto Mode exit(triggeredDateTime). (0) started. Would you Like to review Auto Mode Readiness Screen?:basalName"},
                         {"BC_MESSAGE_CONFIRM_SENSOR_SIGNAL_CALIBRATE", "No calibration occurred(triggeredDateTime). Confirm sensor signal. Calibrate by (secondaryTime)."},
                         {"BC_MESSAGE_CONFIRM_SENSOR_SIGNAL_CHECK_BG", "No calibration occurred(triggeredDateTime). Confirm sensor signal. Check BG again to calibrate sensor."},
@@ -44,7 +51,7 @@ Friend Module UserMessageHandler
                         {"BC_SID_BASAL_STARTED_SMART_GUARD", "SmartGuard started(triggeredDateTime)."},
                         {"BC_SID_BATTERY_LIFE_LESS_30_MINUTES", "Battery life less than 30 minutes(triggeredDateTime), replace battery now."},
                         {"BC_SID_BATTERY_REMOVED_RE_ENTER_TIME_AND_DATE", "Insert battery(triggeredDateTime). Delivery stopped. Insert a new battery now."},
-                        {"BC_SID_BG_REQUIRED_CONTENT", "BG required. Enter a New BG for Auto Mode."},
+                        {"BC_SID_BG_REQUIRED_CONTENT", "BG required(triggeredDateTime). Enter a New BG for Auto Mode."},
                         {"BC_SID_BOLUS_ENTRY_TIMED_OUT", "Bolus Not delivered. Bolus entry timed out before delivery. If bolus was intended, enter values again."},
                         {"BC_SID_BUTTON_PRESSED_FOR_MOR_THAN_3_MIN", "Stuck button(triggeredDateTime). Button pressed for more then 3 minutes."},
                         {"BC_SID_CALL_FOR_EMERGENCY", "Call for emergency(triggeredDateTime)."},
@@ -105,13 +112,6 @@ Friend Module UserMessageHandler
                         {"SUSPEND_FIRED_LGS", "Suspend Fired due to low-glucose management"},
                         {"SUSPEND_FIRED_PLGM", "Suspend Fired due to predictive low-glucose management"}
                     }
-
-    Friend ReadOnly s_calibrationIconMessages As New Dictionary(Of String, String) From {
-                        {"HOURS_10", "Hours 10"},
-                        {"INIT", "Initializing"},
-                        {"NO_ICON", ""},
-                        {"UNDEFINED", ""}
-                   }
 
     Friend ReadOnly s_sensorMessages As New Dictionary(Of String, String) From {
                         {"BG_RECOMMENDED", $"BG{vbCrLf}Recommended"},

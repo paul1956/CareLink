@@ -14,7 +14,7 @@ Friend Module SpeechSupport
     Private s_speechWakeWordFound As Boolean = False
     Private s_sre As SpeechRecognitionEngine
     Private s_ss As SpeechSynthesizer
-    Private s_StatusStripSpeechText As String = ""
+    Private s_statusStripSpeechText As String = ""
     Private s_timeOfLastAlert As Date
     Friend s_shuttingDown As Boolean = False
 
@@ -307,7 +307,7 @@ Friend Module SpeechSupport
         End If
         If s_lastSpokenMessage = text AndAlso DateDiff(DateInterval.Minute, Now, s_timeOfLastAlert) < s_30SecondInMilliseconds Then
             Form1.StatusStripSpeech.Text = $"Rejected: '{text}' too soon, Listening"
-            s_StatusStripSpeechText = text
+            s_statusStripSpeechText = text
             Return Nothing
         End If
         If Form1.StatusStripSpeech.Text.Contains("too soon") Then

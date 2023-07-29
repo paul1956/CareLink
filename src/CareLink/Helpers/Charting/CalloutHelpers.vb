@@ -13,10 +13,6 @@ Friend Module CalloutHelpers
             {"TreatmentMarkersChart", New CalloutAnnotation}
        }
 
-    Friend calloutBounds As New Dictionary(Of Double, Rectangle)
-
-    Friend s_treatmentCalloutAnnotations As New Dictionary(Of Double, CalloutAnnotation)
-
     <Extension>
     Private Sub AddOrUpdateAnnotation(treatmentChart As Chart, lastDataPoint As DataPoint, tagText As String)
         Dim annotation As CalloutAnnotation = treatmentChart.FindAnnotation(lastDataPoint)

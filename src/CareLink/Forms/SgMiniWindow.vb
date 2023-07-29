@@ -79,7 +79,7 @@ Public Class SgMiniWindow
         If Me.SgTextBox.Text.Length = 0 OrElse Me.SgTextBox.Text = "---" OrElse Me.SgTextBox.Text = "9999" Then
             _currentSgValue = Double.NaN
             Me.DeltaTextBox.Text = ""
-            Me.SgTextBox.BackColor = GetContrastingColor(Color.Red)
+            Me.SgTextBox.BackColor = Color.Red.GetContrastingColor()
             Me.SgTextBox.ForeColor = Color.Red
         Else
             If Double.IsNaN(_currentSgValue) OrElse _currentSgValue = 0 OrElse Double.IsNaN(_lastSgValue) OrElse _lastSgValue = 0 Then
@@ -96,18 +96,18 @@ Public Class SgMiniWindow
                         Me.DeltaTextBox.BackColor = Me.BackColor
                     Case Is > 0
                         Me.DeltaTextBox.ForeColor = Color.Blue
-                        Me.DeltaTextBox.BackColor = GetContrastingColor(Color.Blue)
+                        Me.DeltaTextBox.BackColor = Color.Blue.GetContrastingColor()
                     Case Is < 0
                         Me.DeltaTextBox.ForeColor = Color.Orange
-                        Me.DeltaTextBox.BackColor = GetContrastingColor(Color.Orange)
+                        Me.DeltaTextBox.BackColor = Color.Orange.GetContrastingColor()
                 End Select
             End If
             Select Case _normalizedSg
                 Case = 0
-                    Me.SgTextBox.BackColor = GetContrastingColor(Color.Black)
+                    Me.SgTextBox.BackColor = Color.Black.GetContrastingColor()
                     Me.SgTextBox.ForeColor = Color.Black
                 Case < 70
-                    Me.SgTextBox.BackColor = GetContrastingColor(Color.Red)
+                    Me.SgTextBox.BackColor = Color.Red.GetContrastingColor()
                     Me.SgTextBox.ForeColor = Color.Red
                     If Not _alarmPlayedLow Then
                         Dim p As Prompt = PlayText($"Low Alarm for {s_firstName}, current sensor glucose {_currentSgValue}")
@@ -118,12 +118,12 @@ Public Class SgMiniWindow
                         _alarmPlayedHigh = False
                     End If
                 Case <= 180
-                    Me.SgTextBox.BackColor = GetContrastingColor(Color.Green)
+                    Me.SgTextBox.BackColor = Color.Green.GetContrastingColor()
                     Me.SgTextBox.ForeColor = Color.Green
                     _alarmPlayedLow = False
                     _alarmPlayedHigh = False
                 Case Else
-                    Me.SgTextBox.BackColor = GetContrastingColor(Color.Yellow)
+                    Me.SgTextBox.BackColor = Color.Yellow.GetContrastingColor()
                     Me.SgTextBox.ForeColor = Color.Yellow
                     If Not _alarmPlayedHigh Then
                         Dim p As Prompt = PlayText($"High alarm for {s_firstName}, current sensor glucose {_currentSgValue}")

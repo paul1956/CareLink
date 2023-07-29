@@ -4,14 +4,14 @@
 
 Friend Module MealRecordHelpers
 
-    Private ReadOnly columnsToHide As New List(Of String) From {
-                                NameOf(MealRecord.kind),
+    Private ReadOnly s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
+
+    Private ReadOnly s_columnsToHide As New List(Of String) From {
+                                    NameOf(MealRecord.kind),
                                 NameOf(MealRecord.relativeOffset),
                                 NameOf(MealRecord.OAdateTime),
                                 NameOf(MealRecord.version)
                             }
-
-    Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -53,7 +53,7 @@ Friend Module MealRecordHelpers
     End Function
 
     Friend Function HideColumn(dataPropertyName As String) As Boolean
-        Return s_filterJsonData AndAlso columnsToHide.Contains(dataPropertyName)
+        Return s_filterJsonData AndAlso s_columnsToHide.Contains(dataPropertyName)
     End Function
 
     Public Function TryGetMealRecord(index As Integer, ByRef meal As MealRecord) As Boolean

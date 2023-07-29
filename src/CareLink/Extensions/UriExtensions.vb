@@ -7,7 +7,7 @@ Imports System.Text
 
 Friend Module UriExtensions
 
-    Private ReadOnly reservedCharacters As String = "!*'();:@&=+$,/?%#[]"
+    Private ReadOnly s_reservedCharacters As String = "!*'();:@&=+$,/?%#[]"
 
     <Extension>
     Public Function UriParameterEncode(value As String) As String
@@ -18,7 +18,7 @@ Friend Module UriExtensions
         Dim sb As New StringBuilder()
 
         For Each c As Char In value
-            If Not reservedCharacters.Contains(c) Then
+            If Not s_reservedCharacters.Contains(c) Then
                 sb.Append(c)
             Else
                 sb.AppendFormat("%{0:X2}", AscW(c))
