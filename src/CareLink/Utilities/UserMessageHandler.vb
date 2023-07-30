@@ -76,6 +76,7 @@ Friend Module UserMessageHandler
                         {"BC_SID_INSERT_AND_START_NEW_SENSOR", "Sensor expired(triggeredDateTime). Insert New sensor and Start New'."},
                         {"BC_SID_INSERT_NEW_AA_BATTERY", "Battery failed(triggeredDateTime). Insert a new AA battery."},
                         {"BC_SID_INSERT_NEW_SENSOR", "Sensor expired(triggeredDateTime). Insert New sensor."},
+                        {"BC_SID_INSULIN_DELIVERY_SUSPENDED", "Auto suspend(triggeredDateTime). Insulin delivery suspended. No buttons pressed within time set in Auto Suspend"},
                         {"BC_SID_LOW_SD_CHECK_BG", "Alert on low (0) (units)(triggeredDateTime). Check BG.:sg"},
                         {"BC_SID_LOW_SG_CHECK_BG", "Alert on low (0) (units)(triggeredDateTime). Insulin delivery suspended since (secondaryTime). Check BG.:sg"},
                         {"BC_SID_LOW_SG_INSULIN_DELIVERY_SUSPENDED_SINCE_X_CHECK_BG", "Alert on low (0) (units)(triggeredDateTime). Insulin delivery suspended since (secondaryTime). Check BG.:sg"},
