@@ -42,6 +42,7 @@ Friend Module SpeechSupport
         End If
     End Sub
 
+    <DebuggerStepThrough()>
     Private Sub AudioSignalProblemOccurred(sender As Object, e As AudioSignalProblemOccurredEventArgs)
         If s_shuttingDown OrElse s_speechErrorReported Or s_sre Is Nothing Then Exit Sub
         Dim errorMsg As String = "Listening"
@@ -95,10 +96,11 @@ Friend Module SpeechSupport
     End Function
 
     Private Sub SpeechRecognized(sender As Object, e As SpeechRecognizedEventArgs)
-        If Not My.Settings.SystemSpeechRecognitionEnabled Then
+        If My.Settings.SystemSpeechRecognitionThreshold >= 1 Then
             Form1.StatusStripSpeech.Text = ""
             Exit Sub
         End If
+
         Dim message As String = ""
         Dim recognizedTextLower As String = e.Result.Text.ToLower
         Dim confidence As Single = e.Result.Confidence.RoundSingle(2, False)
@@ -134,7 +136,7 @@ Friend Module SpeechSupport
         Application.DoEvents()
         If s_speechWakeWordFound Then
             s_speechWakeWordFound = False
-            If confidence < My.Settings.SystemSpeechRecognitionThreshold Then
+            If confidence < My.Settings.SystemSpeechRecognitionThreshold - 0.05 Then
                 message = $"Rejected: {recognizedTextLower} with confidence {confidence}%"
                 Debug.WriteLine(message)
                 Form1.StatusStripSpeech.Text = message
@@ -212,6 +214,7 @@ Friend Module SpeechSupport
             s_sre = Nothing
             s_speechUserName = ""
             Form1.StatusStripSpeech.Text = ""
+            Form1.MenuOptionsSpeechRecognitionEnabled.Checked = False
         End If
     End Sub
 
@@ -293,6 +296,7 @@ Friend Module SpeechSupport
 
             Form1.Cursor = Cursors.Default
             AddHandler s_sre.AudioSignalProblemOccurred, AddressOf AudioSignalProblemOccurred
+            Form1.MenuOptionsSpeechRecognitionEnabled.Checked = True
         Catch ex As Exception
             Debug.WriteLine(ex.Message)
             Stop

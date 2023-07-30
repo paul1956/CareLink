@@ -105,9 +105,9 @@ Public Module DictionaryExtensions
         Return dic.Values.ToList.IndexOf(item)
     End Function
 
-    <Extension>
-    Public Function Is770G(recentData As Dictionary(Of String, String)) As Boolean
-        Return recentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber)) = "MMT-1880"
+    Public Function Is770G() As Boolean
+        If RecentDataEmpty() Then Return False
+        Return RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber)) = "MMT-1880"
     End Function
 
     <Extension>

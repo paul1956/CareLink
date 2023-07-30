@@ -393,9 +393,6 @@ Partial Class Form1
         ' 
         ' MenuOptionsSpeechRecognitionEnabled
         ' 
-        MenuOptionsSpeechRecognitionEnabled.Checked = True
-        MenuOptionsSpeechRecognitionEnabled.CheckOnClick = True
-        MenuOptionsSpeechRecognitionEnabled.CheckState = CheckState.Checked
         MenuOptionsSpeechRecognitionEnabled.DropDownItems.AddRange(New ToolStripItem() {MenuOptionsSpeechRecognitionDisabled, MenuOptionsSpeechRecognitionConfidence, MenuOptionsSpeechRecognition95, MenuOptionsSpeechRecognition90, MenuOptionsSpeechRecognition85, MenuOptionsSpeechRecognition80})
         MenuOptionsSpeechRecognitionEnabled.Name = "MenuOptionsSpeechRecognitionEnabled"
         MenuOptionsSpeechRecognitionEnabled.Size = New Size(184, 22)
@@ -405,21 +402,21 @@ Partial Class Form1
         ' MenuOptionsSpeechRecognitionDisabled
         ' 
         MenuOptionsSpeechRecognitionDisabled.Name = "MenuOptionsSpeechRecognitionDisabled"
-        MenuOptionsSpeechRecognitionDisabled.Size = New Size(135, 22)
+        MenuOptionsSpeechRecognitionDisabled.Size = New Size(180, 22)
         MenuOptionsSpeechRecognitionDisabled.Text = "Disabled"
         ' 
         ' MenuOptionsSpeechRecognitionConfidence
         ' 
         MenuOptionsSpeechRecognitionConfidence.Enabled = False
         MenuOptionsSpeechRecognitionConfidence.Name = "MenuOptionsSpeechRecognitionConfidence"
-        MenuOptionsSpeechRecognitionConfidence.Size = New Size(135, 22)
+        MenuOptionsSpeechRecognitionConfidence.Size = New Size(180, 22)
         MenuOptionsSpeechRecognitionConfidence.Text = "Confidence"
         ' 
         ' MenuOptionsSpeechRecognition95
         ' 
         MenuOptionsSpeechRecognition95.CheckOnClick = True
         MenuOptionsSpeechRecognition95.Name = "MenuOptionsSpeechRecognition95"
-        MenuOptionsSpeechRecognition95.Size = New Size(135, 22)
+        MenuOptionsSpeechRecognition95.Size = New Size(180, 22)
         MenuOptionsSpeechRecognition95.Text = "95%"
         MenuOptionsSpeechRecognition95.TextAlign = ContentAlignment.MiddleRight
         ' 
@@ -427,7 +424,7 @@ Partial Class Form1
         ' 
         MenuOptionsSpeechRecognition90.CheckOnClick = True
         MenuOptionsSpeechRecognition90.Name = "MenuOptionsSpeechRecognition90"
-        MenuOptionsSpeechRecognition90.Size = New Size(135, 22)
+        MenuOptionsSpeechRecognition90.Size = New Size(180, 22)
         MenuOptionsSpeechRecognition90.Text = "90%"
         MenuOptionsSpeechRecognition90.TextAlign = ContentAlignment.MiddleRight
         ' 
@@ -435,7 +432,7 @@ Partial Class Form1
         ' 
         MenuOptionsSpeechRecognition85.CheckOnClick = True
         MenuOptionsSpeechRecognition85.Name = "MenuOptionsSpeechRecognition85"
-        MenuOptionsSpeechRecognition85.Size = New Size(135, 22)
+        MenuOptionsSpeechRecognition85.Size = New Size(180, 22)
         MenuOptionsSpeechRecognition85.Text = "85%"
         MenuOptionsSpeechRecognition85.TextAlign = ContentAlignment.MiddleRight
         ' 
@@ -445,7 +442,7 @@ Partial Class Form1
         MenuOptionsSpeechRecognition80.CheckOnClick = True
         MenuOptionsSpeechRecognition80.CheckState = CheckState.Checked
         MenuOptionsSpeechRecognition80.Name = "MenuOptionsSpeechRecognition80"
-        MenuOptionsSpeechRecognition80.Size = New Size(135, 22)
+        MenuOptionsSpeechRecognition80.Size = New Size(180, 22)
         MenuOptionsSpeechRecognition80.Text = "80%"
         ' 
         ' MenuOptionsShowChartLegends

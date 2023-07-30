@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Runtime.CompilerServices
+Imports DocumentFormat.OpenXml.Spreadsheet
 
 Friend Module SummaryTabHelpers
 
@@ -25,6 +26,9 @@ Friend Module SummaryTabHelpers
         dgvSummary.DataSource = ClassCollectionToDataTable(s_listOfSummaryRecords)
         dgvSummary.Columns(0).HeaderCell.SortGlyphDirection = SortOrder.Ascending
         dgvSummary.RowHeadersVisible = False
+        If s_currentSummaryRow <> 0 Then
+            dgvSummary.CurrentCell = dgvSummary.Rows(s_currentSummaryRow).Cells(2)
+        End If
         RemoveHandler dgvSummary.CellFormatting, AddressOf DataGridView_CellFormatting
         AddHandler dgvSummary.CellFormatting, AddressOf DataGridView_CellFormatting
     End Sub

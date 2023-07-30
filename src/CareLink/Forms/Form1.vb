@@ -20,6 +20,7 @@ Public Class Form1
     Friend WithEvents TableLayoutPanelAutoModeStatusTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelBannerStateTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelBasalTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelBgReadingsTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelCalibrationTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelInsulinTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelLastAlarmTop As TableLayoutPanelTopEx
@@ -28,7 +29,6 @@ Public Class Form1
     Friend WithEvents TableLayoutPanelLowGlucoseSuspendedTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelMealTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelNotificationHistoryTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelBgReadingsTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelSgsTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelTherapyAlgorithmTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelTimeChangeTop As TableLayoutPanelTopEx
@@ -1039,10 +1039,11 @@ Public Class Form1
 
         Me.InitializeDgvCareLinkUsers(Me.DgvCareLinkUsers)
         InitializeTableLayoutPanelTops()
+        s_formLoaded = True
         Me.MenuOptionsAudioAlerts.Checked = My.Settings.SystemAudioAlertsEnabled
-        Me.MenuOptionsShowChartLegends.Checked = My.Settings.SystemShowLegends
-        Me.MenuOptionsSpeechRecognitionEnabled.Checked = My.Settings.SystemSpeechRecognitionEnabled
+        Me.MenuOptionsSpeechRecognitionEnabled.Checked = My.Settings.SystemSpeechRecognitionThreshold < 1
         Me.SetSpeechRecognitionConfidenceThreshold()
+        Me.MenuOptionsShowChartLegends.Checked = My.Settings.SystemShowLegends
         Me.MenuOptionsSpeechHelpShown.Checked = My.Settings.SystemSpeechHelpShown
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
@@ -1113,7 +1114,7 @@ Public Class Form1
 
     Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpening
         Me.MenuStartHereLoadSavedDataFile.Enabled = AnyMatchingFiles($"{ProjectName}*.json")
-        Me.MenuStartHereSnapshotSave.Enabled = RecentData IsNot Nothing AndAlso RecentData.Count > 0
+        Me.MenuStartHereSnapshotSave.Enabled = Not RecentDataEmpty()
         Me.MenuStartHereExceptionReportLoad.Visible = AnyMatchingFiles($"{SavedErrorReportBaseName}*.txt")
     End Sub
 
@@ -1222,6 +1223,7 @@ Public Class Form1
     End Sub
 
     Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotSave.Click
+        If RecentDataEmpty() Then Exit Sub
         Using jd As JsonDocument = JsonDocument.Parse(RecentData.CleanUserData(), New JsonDocumentOptions)
             File.WriteAllText(GetDataFileName(SavedSnapshotBaseName, CurrentDateCulture.Name, "json", True).withPath, JsonSerializer.Serialize(jd, JsonFormattingOptions))
         End Using
@@ -1259,13 +1261,14 @@ Public Class Form1
         My.Settings.SystemAudioAlertsEnabled = playAudioAlerts
         My.Settings.Save()
         If playAudioAlerts Then
-            If My.Settings.SystemSpeechRecognitionEnabled Then
-                Me.MenuOptionsSpeechRecognitionEnabled.PerformClick()
-                Me.MenuOptionsSpeechRecognitionEnabled.Enabled = True
+            Me.MenuOptionsSpeechRecognitionEnabled.Enabled = True
+            Me.SetSpeechRecognitionConfidenceThreshold()
+            If Not Me.MenuOptionsSpeechRecognitionDisabled.Checked Then
+                InitializeSpeechRecognition()
             End If
         Else
+            Me.MenuOptionsSpeechRecognitionEnabled.Checked = My.Settings.SystemSpeechRecognitionThreshold < 1
             Me.MenuOptionsSpeechRecognitionEnabled.Enabled = False
-            Me.MenuOptionsSpeechRecognitionEnabled.Checked = False
             CancelSpeechRecognition()
         End If
     End Sub
@@ -1283,10 +1286,7 @@ Public Class Form1
     Private Sub MenuOptionsEditPumpSettings_Click(sender As Object, e As EventArgs) Handles MenuOptionsEditPumpSettings.Click
         Dim contents As String = File.ReadAllText(GetPathToUserSettingsFile(My.Settings.CareLinkUserName))
         CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
-        Dim f As New InitializeDialog With {
-            .CurrentUser = CurrentUser,
-            .InitializeDialogRecentData = RecentData
-            }
+        Dim f As New InitializeDialog(CurrentUser)
         If f.ShowDialog() = DialogResult.OK Then
             CurrentUser = f.CurrentUser
         End If
@@ -1354,24 +1354,6 @@ Public Class Form1
         My.Settings.Save()
     End Sub
 
-    Private Sub MenuOptionsSpeechRecognitionEnabled_Click(sender As Object, e As EventArgs) Handles MenuOptionsSpeechRecognitionEnabled.Click
-        If My.Settings.SystemAudioAlertsEnabled Then
-            If My.Settings.SystemSpeechRecognitionThreshold < 1 Then
-                My.Settings.SystemSpeechRecognitionEnabled = True
-                Me.SetSpeechRecognitionConfidenceThreshold()
-            Else
-                My.Settings.SystemSpeechRecognitionThreshold = 0.9
-                Me.MenuOptionsSpeechRecognition90.PerformClick()
-            End If
-            My.Settings.Save()
-        End If
-        If Me.MenuOptionsSpeechRecognitionEnabled.Checked Then
-            InitializeSpeechRecognition()
-        Else
-            CancelSpeechRecognition()
-        End If
-    End Sub
-
     Private Sub MenuOptionsSpeechRecognition80_Click(sender As Object, e As EventArgs) Handles MenuOptionsSpeechRecognition80.Click
         My.Settings.SystemSpeechRecognitionThreshold = 0.8
         Me.SetSpeechRecognitionConfidenceThreshold()
@@ -1414,6 +1396,7 @@ Public Class Form1
 
     Private Sub MenuOptionsSpeechRecognitionDisabled_Click(sender As Object, e As EventArgs) Handles MenuOptionsSpeechRecognitionDisabled.Click
         My.Settings.SystemSpeechRecognitionThreshold = 1
+        My.Settings.Save()
         Me.SetSpeechRecognitionConfidenceThreshold()
         If Me.MenuOptionsSpeechRecognitionEnabled.Checked Then
             InitializeSpeechRecognition()
@@ -1613,18 +1596,22 @@ Public Class Form1
                     TableLayoutPanelSgsTop.ButtonClick,
                     TableLayoutPanelTherapyAlgorithmTop.ButtonClick,
                     TableLayoutPanelTimeChangeTop.ButtonClick
-        Me.TabControlPage1.SelectedIndex = 3
         Me.TabControlPage1.Visible = True
         Dim topTable As TableLayoutPanelTopEx = CType(CType(sender, Button).Parent, TableLayoutPanelTopEx)
         Dim dgv As DataGridView = CType(Me.TabControlPage1.TabPages(3).Controls(0), DataGridView)
-        Dim tabName As String = topTable.LabelText.Substring(3)
+        Dim tabName As String = topTable.LabelText.Split(":")(0).Replace(" ", "")
+        If tabName.Contains("Markers") Then
+            tabName = "Markers"
+        End If
         For Each row As DataGridViewRow In dgv.Rows
-            If row.Cells(1).FormattedValue.ToString = tabName Then
+            If row.Cells(1).FormattedValue.ToString.Equals(tabName, StringComparison.OrdinalIgnoreCase) Then
+                Me.TabControlPage1.SelectedIndex = 3
                 dgv.CurrentCell = row.Cells(2)
-                Exit For
+                s_currentSummaryRow = row.Index
+                Exit Sub
             End If
         Next
-
+        Stop
     End Sub
 
 #End Region ' TableLayoutPanelTop Button Events
@@ -1644,13 +1631,13 @@ Public Class Form1
             If Not _updating Then
                 _updating = True
                 RecentData = Client?.GetRecentData()
-                If RecentData Is Nothing Then
+                If RecentDataEmpty() Then
                     If Client Is Nothing OrElse Client.HasErrors Then
                         Client = New CareLinkClient(My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
                     End If
                     RecentData = Client.GetRecentData()
                 End If
-                ReportLoginStatus(Me.LoginStatus, RecentData Is Nothing OrElse RecentData.Count = 0, Client.GetLastErrorMessage)
+                ReportLoginStatus(Me.LoginStatus, RecentDataEmpty, Client.GetLastErrorMessage)
 
                 Me.Cursor = Cursors.Default
                 Application.DoEvents()
@@ -1659,12 +1646,8 @@ Public Class Form1
         End SyncLock
 
         Dim lastMedicalDeviceDataUpdateServerEpochString As String = ""
-        If RecentData Is Nothing OrElse RecentData.Count = 0 Then
-            ReportLoginStatus(Me.LoginStatus, True, Client.GetLastErrorMessage)
-
-            _sgMiniDisplay.SetCurrentSgString("---")
-        Else
-            If RecentData?.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
+        If Not RecentDataEmpty() Then
+            If RecentData.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
                     Dim epochDateTime As Date = lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime
                     If epochDateTime + s_5MinuteSpan < Now() Then
@@ -1674,13 +1657,15 @@ Public Class Form1
                         SetLastUpdateTime(Nothing, "", False, epochDateTime.IsDaylightSavingTime)
                         _sgMiniDisplay.SetCurrentSgString(s_lastSgRecord?.ToString)
                     End If
-                    RecentData = Nothing
                 Else
                     Me.UpdateAllTabPages(False)
                 End If
             Else
                 Stop
             End If
+        Else
+            ReportLoginStatus(Me.LoginStatus, True, Client.GetLastErrorMessage)
+            _sgMiniDisplay.SetCurrentSgString("---")
         End If
         Me.ServerUpdateTimer.Interval = CInt(s_1MinutesInMilliseconds)
         Me.ServerUpdateTimer.Start()
@@ -2657,14 +2642,13 @@ Public Class Form1
     End Sub
 
     Friend Sub UpdateAllTabPages(fromFile As Boolean)
-        If RecentData Is Nothing Then
+        If RecentDataEmpty() Then
             Debug.Print($"Exiting {NameOf(UpdateAllTabPages)}, {NameOf(RecentData)} has no data!")
             Exit Sub
         End If
         Dim lastMedicalDeviceDataUpdateServerTimeEpoch As String = ""
-        If RecentData?.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerTimeEpoch) Then
+        If RecentData.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerTimeEpoch) Then
             If CLng(lastMedicalDeviceDataUpdateServerTimeEpoch) = s_lastMedicalDeviceDataUpdateServerEpoch Then
-                RecentData = Nothing
                 Exit Sub
             End If
         End If
@@ -2689,7 +2673,7 @@ Public Class Form1
 
             Me.Cursor = Cursors.WaitCursor
             Application.DoEvents()
-            UpdateDataTables(RecentData)
+            UpdateDataTables()
             Application.DoEvents()
             Me.Cursor = Cursors.Default
             _updating = False
@@ -2779,17 +2763,14 @@ Public Class Form1
                               ItemIndexes.basal,
                               True)
 
-        s_previousRecentData = RecentData
         Me.MenuStartHere.Enabled = True
         Me.UpdateTreatmentChart()
         If s_totalAutoCorrection > 0 Then
             AddAutoCorrectionLegend(_activeInsulinChartLegend, _summaryChartLegend, _treatmentMarkersChartLegend)
         End If
 
-        If My.Settings.SystemAudioAlertsEnabled Then
-            If My.Settings.SystemSpeechRecognitionThreshold >= 0.8 Then
-                InitializeSpeechRecognition()
-            End If
+        If My.Settings.SystemAudioAlertsEnabled AndAlso My.Settings.SystemSpeechRecognitionThreshold <> 1 Then
+            InitializeSpeechRecognition()
         Else
             CancelSpeechRecognition()
         End If

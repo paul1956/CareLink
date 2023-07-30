@@ -72,6 +72,7 @@ Public Module StringExtensions
         If Not resultString.Contains("™"c) Then
             resultString = resultString.Replace(ProjectName, $"{ProjectName}™")
         End If
+        resultString = resultString.Replace("S G", "SG", StringComparison.InvariantCulture)
         Return resultString.Replace("time", " Time", False, CurrentUICulture)
     End Function
 

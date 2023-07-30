@@ -161,52 +161,40 @@ Namespace My
                 Me("SystemAudioAlertsEnabled") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("0.9")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0.9")>  _
         Public Property SystemSpeechRecognitionThreshold() As Double
             Get
-                Return CType(Me("SystemSpeechRecognitionThreshold"), Double)
+                Return CType(Me("SystemSpeechRecognitionThreshold"),Double)
             End Get
             Set
-                Me("SystemSpeechRecognitionThreshold") = Value
+                Me("SystemSpeechRecognitionThreshold") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public Property SystemShowLegends() As Boolean
             Get
-                Return CType(Me("SystemShowLegends"), Boolean)
+                Return CType(Me("SystemShowLegends"),Boolean)
             End Get
             Set
-                Me("SystemShowLegends") = Value
+                Me("SystemShowLegends") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("False")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
         Public Property SystemSpeechHelpShown() As Boolean
             Get
-                Return CType(Me("SystemSpeechHelpShown"), Boolean)
+                Return CType(Me("SystemSpeechHelpShown"),Boolean)
             End Get
             Set
-                Me("SystemSpeechHelpShown") = Value
-            End Set
-        End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>
-        Public Property SystemSpeechRecognitionEnabled() As Boolean
-            Get
-                Return CType(Me("SystemSpeechRecognitionEnabled"), Boolean)
-            End Get
-            Set
-                Me("SystemSpeechRecognitionEnabled") = Value
+                Me("SystemSpeechHelpShown") = value
             End Set
         End Property
     End Class

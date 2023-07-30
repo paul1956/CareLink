@@ -28,7 +28,10 @@ Public Class InitializeDialog
 
     Private _currentUserBackup As CurrentUserRecord = Nothing
 
-    Public Property InitializeDialogRecentData As Dictionary(Of String, String)
+    Public Sub New(currentUser As CurrentUserRecord)
+        Me.CurrentUser = currentUser
+    End Sub
+
     Public Property CurrentUser As CurrentUserRecord
 
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
@@ -172,7 +175,7 @@ Public Class InitializeDialog
                              New BindingSource(MgDlItems, Nothing)
                             )
 
-            .Enabled = Not Is770G(Me.InitializeDialogRecentData)
+            .Enabled = Not Is770G()
             .DisplayMember = "Key"
             .ValueMember = "Value"
             .SelectedIndex = Me.TargetSgComboBox.Items.IndexOfValue(Of String, Single)(Me.CurrentUser.CurrentTarget)
@@ -207,7 +210,7 @@ Public Class InitializeDialog
             End If
         End With
 
-        If Me.InitializeDialogRecentData.Is770G Then
+        If Is770G() Then
             Me.UseAITAdvancedDecayCheckBox.CheckState = Me.CurrentUser.UseAdvancedAitDecay
             Me.UseAITAdvancedDecayCheckBox.Enabled = True
         Else
@@ -281,7 +284,7 @@ Public Class InitializeDialog
 
     Private Sub InsulinTypeComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles InsulinTypeComboBox.SelectedIndexChanged
         Dim c As ComboBox = CType(sender, ComboBox)
-        If Me.InitializeDialogRecentData.Is770G Then
+        If Is770G() Then
             Me.UseAITAdvancedDecayCheckBox.Enabled = c.SelectedIndex > -1
         Else
             Me.InitializeDataGridView.Enabled = True

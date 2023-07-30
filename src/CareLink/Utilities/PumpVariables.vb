@@ -54,7 +54,6 @@ Public Module PumpVariables
     Friend s_listOfTimeChangeMarkers As New List(Of TimeChangeRecord)
     Friend s_markers As New List(Of Dictionary(Of String, String))
     Friend s_notificationHistoryValue As Dictionary(Of String, String)
-    Friend s_previousRecentData As Dictionary(Of String, String)
     Friend s_pumpBannerStateValue As New List(Of Dictionary(Of String, String))
     Friend s_pumpHardwareRevision As String
     Friend s_pumpInRangeOfPhone As Boolean

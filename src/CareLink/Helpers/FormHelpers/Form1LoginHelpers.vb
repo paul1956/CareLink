@@ -65,7 +65,7 @@ Friend Module Form1LoginHelpers
                     Return False
                 End If
 
-                ReportLoginStatus(Form1.LoginStatus, RecentData Is Nothing OrElse RecentData.Count = 0, Form1.Client.GetLastErrorMessage)
+                ReportLoginStatus(Form1.LoginStatus, RecentDataEmpty, Form1.Client.GetLastErrorMessage)
                 Form1.MenuShowMiniDisplay.Visible = True
                 fromFile = False
         End Select
@@ -143,11 +143,8 @@ Friend Module Form1LoginHelpers
             contents = File.ReadAllText(userSettingsPath)
             CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
         Else
-            CurrentUser = New CurrentUserRecord(My.Settings.CareLinkUserName, If(Not (RecentData?.Is770G), CheckState.Checked, CheckState.Indeterminate))
-            Dim f As New InitializeDialog With {
-                .CurrentUser = CurrentUser,
-                .InitializeDialogRecentData = RecentData
-            }
+            CurrentUser = New CurrentUserRecord(My.Settings.CareLinkUserName, If(Not Is770G(), CheckState.Checked, CheckState.Indeterminate))
+            Dim f As New InitializeDialog(CurrentUser)
             f.ShowDialog()
             CurrentUser = f.CurrentUser
         End If

@@ -35,13 +35,13 @@ Friend Module TableLayoutPanelExtensions
 
     <Extension>
     Friend Sub SetTabName(table As TableLayoutPanel, rowIndex As ItemIndexes)
+        Dim tableName As String = rowIndex.ToString.ToTitleCase
         Select Case True
             Case TypeOf table.Controls(0) Is TableLayoutPanel
                 Select Case True
                     Case TypeOf CType(table.Controls(0), TableLayoutPanel).Controls(0) Is Button
 
                         Dim helpString As String
-
                         If s_tablesSupportingExportToExcel.Contains(table.Name) Then
                             helpString = ": Right Click on Table for Export Options including Excel"
                         ElseIf s_tablesSupportingCopyToClipboard.Contains(table.Name) Then
@@ -49,10 +49,12 @@ Friend Module TableLayoutPanelExtensions
                         Else
                             helpString = ""
                         End If
-
-                        CType(table.Controls(0), TableLayoutPanel).Controls(1).Text = $"{CInt(rowIndex)} {rowIndex}{helpString}"
+                        If tableName = "Markers" Then
+                            tableName = $"{CType(table.Parent, TabPage).Text} Markers"
+                        End If
+                        CType(table.Controls(0), TableLayoutPanel).Controls(1).Text = $"{tableName}{helpString}"
                     Case TypeOf CType(table.Controls(0), TableLayoutPanel).Controls(0) Is Label
-                        CType(table.Controls(0), TableLayoutPanel).Controls(0).Text = $"{CInt(rowIndex)} {rowIndex}"
+                        CType(table.Controls(0), TableLayoutPanel).Controls(0).Text = tableName
                 End Select
 
             Case TypeOf table.Controls(0) Is Button

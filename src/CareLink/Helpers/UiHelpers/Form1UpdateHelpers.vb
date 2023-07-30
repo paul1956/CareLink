@@ -66,38 +66,42 @@ Friend Module Form1UpdateHelpers
         End Select
     End Function
 
-    Friend Sub UpdateDataTables(recentData As Dictionary(Of String, String))
+    Friend Function RecentDataEmpty() As Boolean
+        Return RecentData Is Nothing OrElse RecentData.Count = 0
+    End Function
 
-        If recentData Is Nothing Then
-            Debug.Print($"Exiting {NameOf(UpdateDataTables)}, {NameOf(recentData)} has no data!")
+    Friend Sub UpdateDataTables()
+
+        If RecentDataEmpty() Then
+            Debug.Print($"Exiting {NameOf(UpdateDataTables)}, {NameOf(RecentData)} has no data!")
             Exit Sub
         End If
 
         s_listOfSummaryRecords.Clear()
 
         Dim markerRowString As String = ""
-        If recentData.TryGetValue(ItemIndexes.clientTimeZoneName.ToString, markerRowString) Then
+        If RecentData.TryGetValue(ItemIndexes.clientTimeZoneName.ToString, markerRowString) Then
             PumpTimeZoneInfo = CalculateTimeZone(markerRowString)
         End If
 
-        s_lastMedicalDeviceDataUpdateServerEpoch = CLng(recentData(ItemIndexes.lastMedicalDeviceDataUpdateServerTime.ToString))
-        If recentData.TryGetValue(ItemIndexes.therapyAlgorithmState.ToString, markerRowString) Then
+        s_lastMedicalDeviceDataUpdateServerEpoch = CLng(RecentData(ItemIndexes.lastMedicalDeviceDataUpdateServerTime.ToString))
+        If RecentData.TryGetValue(ItemIndexes.therapyAlgorithmState.ToString, markerRowString) Then
             s_therapyAlgorithmStateValue = Loads(markerRowString)
             InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso {"AUTO_BASAL", "SAFE_BASAL"}.Contains(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.autoModeShieldState)))
         End If
 
 #Region "Update all Markers"
 
-        If recentData.TryGetValue(ItemIndexes.sgs.ToString, markerRowString) Then
+        If RecentData.TryGetValue(ItemIndexes.sgs.ToString, markerRowString) Then
             s_listOfSgRecords = LoadList(markerRowString).ToSgList()
         End If
 
-        If recentData.TryGetValue(ItemIndexes.basal.ToString, markerRowString) Then
+        If RecentData.TryGetValue(ItemIndexes.basal.ToString, markerRowString) Then
             Dim item As BasalRecord = DictionaryToClass(Of BasalRecord)(Loads(markerRowString), recordNumber:=0)
             item.OaDateTime(s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime)
             s_listOfManualBasal.Add(item)
         End If
-        Form1.MaxBasalPerHourLabel.Text = If(recentData.TryGetValue(ItemIndexes.markers.ToString, markerRowString),
+        Form1.MaxBasalPerHourLabel.Text = If(RecentData.TryGetValue(ItemIndexes.markers.ToString, markerRowString),
                                              CollectMarkers(markerRowString),
                                              ""
                                             )
@@ -105,7 +109,7 @@ Friend Module Form1UpdateHelpers
 #End Region ' Update all Markers
 
         s_systemStatusTimeRemaining = Nothing
-        For Each c As IndexClass(Of KeyValuePair(Of String, String)) In recentData.WithIndex()
+        For Each c As IndexClass(Of KeyValuePair(Of String, String)) In RecentData.WithIndex()
 
             Dim row As KeyValuePair(Of String, String) = c.Value
             If row.Value Is Nothing Then
@@ -285,7 +289,7 @@ Friend Module Form1UpdateHelpers
                     s_gstCommunicationState = Boolean.Parse(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
                     Dim gstBatteryLevel As String = Nothing
-                    If recentData.TryGetValue(NameOf(ItemIndexes.gstBatteryLevel), gstBatteryLevel) Then
+                    If RecentData.TryGetValue(NameOf(ItemIndexes.gstBatteryLevel), gstBatteryLevel) Then
                         Continue For
                     End If
                     s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexes.gstBatteryLevel, "-1", "No data from pump"))
@@ -302,10 +306,10 @@ Friend Module Form1UpdateHelpers
                 Case ItemIndexes.maxBolusAmount
                     s_listOfSummaryRecords.Add(New SummaryRecord(GetItemIndex(c.Value.Key), row))
                     Dim tempStr As String = Nothing
-                    If Not recentData.TryGetValue(NameOf(ItemIndexes.sensorDurationMinutes), tempStr) Then
+                    If Not RecentData.TryGetValue(NameOf(ItemIndexes.sensorDurationMinutes), tempStr) Then
                         s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexes.sensorDurationMinutes, "-1", "No data from pump"))
                     End If
-                    If Not recentData.TryGetValue(NameOf(ItemIndexes.timeToNextCalibrationMinutes), tempStr) Then
+                    If Not RecentData.TryGetValue(NameOf(ItemIndexes.timeToNextCalibrationMinutes), tempStr) Then
                         s_timeToNextCalibrationMinutes = UShort.MaxValue
                         s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexes.timeToNextCalibrationMinutes, s_timeToNextCalibrationMinutes.ToString, "No data from pump"))
                     End If
