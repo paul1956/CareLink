@@ -148,7 +148,7 @@ Friend Module CreateChartItems
                 With .LabelStyle
                     .Font = labelFont
                     .ForeColor = labelColor
-                    .Format = If(NativeMmolL, "{0.0}", "{0}")
+                    .Format = GetSgFormat(False)
                 End With
                 .LineColor = Color.FromArgb(64, labelColor)
 

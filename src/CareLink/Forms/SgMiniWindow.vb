@@ -88,7 +88,7 @@ Public Class SgMiniWindow
                 Me.DeltaTextBox.BackColor = Me.BackColor
             Else
                 Dim delta As Double = _currentSgValue - _lastSgValue
-                Me.DeltaTextBox.Text = delta.ToString(If(NativeMmolL, $"+0.00;-#.00", "+0;-#0"), CurrentUICulture)
+                Me.DeltaTextBox.Text = delta.ToString(If(NativeMmolL, $"+0{CurrentUICulture.NumberFormat.NumberDecimalSeparator}0;-#.0", "+0;-#0"), CurrentUICulture)
                 Select Case delta
                     Case Is = 0
                         Me.DeltaTextBox.Text = ""

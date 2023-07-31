@@ -45,6 +45,12 @@ Friend Module SystemVariables
     Friend Property NativeMmolL As Boolean = False
     Friend Property TreatmentInsulinRow As Single
 
+    Friend Function GetSgFormat(withSign As Boolean) As String
+        Return If(withSign,
+            If(NativeMmolL, $"+0{CurrentUICulture.NumberFormat.NumberDecimalSeparator}0;-#{CurrentUICulture.NumberFormat.NumberDecimalSeparator}0", "+0;-#"),
+            If(NativeMmolL, $"0{CurrentUICulture.NumberFormat.NumberDecimalSeparator}0", "0"))
+    End Function
+
     Friend Function GetInsulinYValue() As Single
         Dim maxYScaled As Single = s_listOfSgRecords.Max(Of Single)(Function(sgR As SgRecord) sgR.sg) + 2
         Return If(Single.IsNaN(maxYScaled),

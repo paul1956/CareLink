@@ -112,7 +112,7 @@ Friend Module ExportDataGridView
                                     Dim result As Double
                                     If Double.TryParse(valueAsString, result) Then
                                         .Value = result
-                                        .Style.NumberFormat.Format = $"0.{Strings.StrDup(37, "0"c)}"
+                                        .Style.NumberFormat.Format = $"0{CurrentUICulture.NumberFormat.NumberDecimalSeparator}{Strings.StrDup(37, "0"c)}"
                                     Else
                                         .Value = $"'{valueAsString}"
                                     End If
@@ -123,16 +123,10 @@ Friend Module ExportDataGridView
                                         align = XLAlignmentHorizontalValues.Center
                                     Else
                                         .Value = valueASingle
-                                        If dgv.Columns(j).Name.Equals("sg", StringComparison.OrdinalIgnoreCase) Then
-                                            If valueASingle > 40 Then
-                                                .Value = CInt(valueASingle)
-                                                .Style.NumberFormat.Format = "0"
-                                            Else
-                                                .Style.NumberFormat.Format = "0.00"
-                                            End If
-                                        Else
-                                            .Style.NumberFormat.Format = "0.000"
-                                        End If
+                                        .Style.NumberFormat.Format = If(dgv.Columns(j).Name.Equals("sg", StringComparison.OrdinalIgnoreCase),
+                                                                        GetSgFormat(False),
+                                                                        $"0{CurrentUICulture.NumberFormat.NumberDecimalSeparator}000"
+                                                                       )
 
                                         align = XLAlignmentHorizontalValues.Right
                                     End If

@@ -1909,7 +1909,7 @@ Public Class Form1
             With .LabelStyle
                 .Font = labelFont
                 .ForeColor = labelColor
-                .Format = "{0.00}"
+                .Format = $"{{0{CurrentUICulture.NumberFormat.NumberDecimalSeparator}00}}"
             End With
             .LineColor = Color.FromArgb(64, labelColor)
             With .MajorTickMark
@@ -2033,9 +2033,9 @@ Public Class Form1
                             s_lastSgTime = Now
                             s_lastSgDiff = diffSg
                         End If
-                        Me.LabelTrendValue.Text = diffSg.ToString(If(NativeMmolL, "+ 0.00;-#.00", "+0;-#"), CultureInfo.InvariantCulture)
+                        Me.LabelTrendValue.Text = diffSg.ToString(GetSgFormat(True), CultureInfo.InvariantCulture)
                         Me.LabelTrendValue.ForeColor = backColor
-                        notStr.AppendLine($"SG Trend { diffSg.ToString(If(NativeMmolL, "+ 0.00;-#.00", "+0;-#"), CultureInfo.InvariantCulture)}")
+                        notStr.AppendLine($"SG Trend { diffSg.ToString(GetSgFormat(True), CultureInfo.InvariantCulture)}")
                     End If
                     notStr.Append($"Active ins. {s_activeInsulin.amount:N3}U")
                     Me.NotifyIcon1.Text = notStr.ToString
