@@ -151,11 +151,12 @@ Public Module CareLinkClientHelpers
 
     ' Get server URL
     Friend Function GetServerURL(country As String) As String
-        Select Case country.GetRegionFromCode
-            Case "North America"
+        Dim countryCode As String = If(String.IsNullOrWhiteSpace(country), "US", country)
+        Dim countryFromCode As String = GetCountryFromCode(countryCode)
+
+        Select Case countryFromCode
+            Case "US"
                 Return "CareLink.MiniMed.com"
-            Case "Europe"
-                Return "CareLink.MiniMed.eu"
             Case Else
                 Return "CareLink.MiniMed.eu"
         End Select
