@@ -149,13 +149,15 @@ Public Module CareLinkClientHelpers
         Return If(response Is Nothing, Nothing, DecodeResponse(response, lastErrorMessage))
     End Function
 
-    ' Get server URL
-    Friend Function GetServerURL(country As String) As String
-        Dim countryCode As String = If(String.IsNullOrWhiteSpace(country), "US", country)
-        Dim countryFromCode As String = GetCountryFromCode(countryCode)
+    ''' <summary>
+    ''' Get server URL from Country Code, only US today has a special server
+    ''' </summary>
+    ''' <param name="countryCode"></param>
+    ''' <returns>Server URL</returns>
+    Friend Function GetServerURL(countryCode As String) As String
 
-        Select Case countryFromCode
-            Case "United States"
+        Select Case If(String.IsNullOrWhiteSpace(countryCode), "US", countryCode)
+            Case "US"
                 Return "CareLink.MiniMed.com"
             Case Else
                 Return "CareLink.MiniMed.eu"
