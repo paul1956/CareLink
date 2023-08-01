@@ -88,19 +88,20 @@ Public Class SgMiniWindow
                 Me.DeltaTextBox.BackColor = Me.BackColor
             Else
                 Dim delta As Double = _currentSgValue - _lastSgValue
-                Me.DeltaTextBox.Text = delta.ToString(If(NativeMmolL, $"+0{CurrentUICulture.NumberFormat.NumberDecimalSeparator}0;-#.0", "+0;-#0"), CurrentUICulture)
-                Select Case delta
-                    Case Is = 0
-                        Me.DeltaTextBox.Text = ""
-                        Me.DeltaTextBox.ForeColor = Me.BackColor
-                        Me.DeltaTextBox.BackColor = Me.BackColor
-                    Case Is > 0
+                If Math.Abs(delta) < 0.001 Then
+                    Me.DeltaTextBox.Text = ""
+                    Me.DeltaTextBox.ForeColor = Me.BackColor
+                    Me.DeltaTextBox.BackColor = Me.BackColor
+                Else
+                    Me.DeltaTextBox.Text = delta.ToString(GetSgFormat(True), CurrentUICulture)
+                    If delta > 0 Then
                         Me.DeltaTextBox.ForeColor = Color.Blue
                         Me.DeltaTextBox.BackColor = Color.Blue.GetContrastingColor()
-                    Case Is < 0
+                    Else
                         Me.DeltaTextBox.ForeColor = Color.Orange
                         Me.DeltaTextBox.BackColor = Color.Orange.GetContrastingColor()
-                End Select
+                    End If
+                End If
             End If
             Select Case _normalizedSg
                 Case = 0

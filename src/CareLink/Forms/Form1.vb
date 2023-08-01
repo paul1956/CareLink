@@ -2022,18 +2022,11 @@ Public Class Form1
                         Me.LabelTrendValue.Text = ""
                     Else
                         Dim diffSg As Double = sg - s_lastSgValue
-                        If Math.Abs(diffSg) < Single.Epsilon Then
-                            If (Now - s_lastSgTime) < s_5MinuteSpan Then
-                                diffSg = s_lastSgDiff
-                            Else
-                                s_lastSgDiff = diffSg
-                                s_lastSgTime = Now
-                            End If
-                        Else
-                            s_lastSgTime = Now
-                            s_lastSgDiff = diffSg
-                        End If
-                        Me.LabelTrendValue.Text = diffSg.ToString(GetSgFormat(True), CultureInfo.InvariantCulture)
+                        Me.LabelTrendValue.Text = If(Math.Abs(diffSg) < 0.001,
+                            0.ToString(GetSgFormat(False), CultureInfo.InvariantCulture),
+                            diffSg.ToString(GetSgFormat(True), CultureInfo.InvariantCulture)
+                           )
+                        'End If
                         Me.LabelTrendValue.ForeColor = backColor
                         notStr.AppendLine($"SG Trend { diffSg.ToString(GetSgFormat(True), CultureInfo.InvariantCulture)}")
                     End If

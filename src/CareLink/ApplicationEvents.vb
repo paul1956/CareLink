@@ -16,7 +16,7 @@ Namespace My
         Private Sub MyApplication_ApplyApplicationDefaults(sender As Object, e As ApplyApplicationDefaultsEventArgs) Handles Me.ApplyApplicationDefaults
 
             ' Setting the application-wide default Font:
-            e.Font = New Font(FontFamily.GenericSansSerif, 9, FontStyle.Regular)
+            ' e.Font = New Font(FontFamily.GenericSansSerif, 9, FontStyle.Regular)
 
             ' Setting the HighDpiMode for the Application:
             e.HighDpiMode = HighDpiMode.PerMonitorV2

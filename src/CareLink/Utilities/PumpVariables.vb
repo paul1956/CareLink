@@ -45,9 +45,7 @@ Public Module PumpVariables
     Friend s_gstCommunicationState As Boolean
     Friend s_lastAlarmValue As Dictionary(Of String, String)
     Friend s_lastMedicalDeviceDataUpdateServerEpoch As Long
-    Friend s_lastSgDiff As Double = 0
     Friend s_lastSgRecord As New SgRecord
-    Friend s_lastSgTime As Date
     Friend s_lastSgValue As Single = 0
     Friend s_listOfManualBasal As New BasalRecords(288)
     Friend s_listOfSgRecords As New List(Of SgRecord)
