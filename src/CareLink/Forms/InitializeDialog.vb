@@ -29,6 +29,7 @@ Public Class InitializeDialog
     Private _currentUserBackup As CurrentUserRecord = Nothing
 
     Public Sub New(currentUser As CurrentUserRecord)
+        Me.InitializeComponent()
         Me.CurrentUser = currentUser
     End Sub
 

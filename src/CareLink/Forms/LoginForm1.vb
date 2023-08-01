@@ -197,6 +197,7 @@ Public Class LoginForm1
         Me.Client = New CareLinkClient(Me.UsernameComboBox.Text, Me.PasswordTextBox.Text, countryCode)
         If Not Me.Client.LoggedIn Then
             Dim savePatientID As String = My.Settings.CareLinkPatientUserID
+            Dim savePatientPassword As String = My.Settings.CareLinkPassword
             My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
             Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData()
             If recentData?.Count > 0 Then
@@ -217,6 +218,7 @@ Public Class LoginForm1
                 Exit Sub
             Else
                 My.Settings.CareLinkPatientUserID = savePatientID
+                My.Settings.CareLinkPassword = savePatientPassword
                 ReportLoginStatus(Me.LoginStatus, True, Me.Client.GetLastErrorMessage)
             End If
         Else

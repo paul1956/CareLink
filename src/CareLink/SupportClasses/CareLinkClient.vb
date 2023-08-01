@@ -117,8 +117,8 @@ Public Class CareLinkClient
                     Using consentResponse As HttpResponseMessage = DoConsent(_httpClient, doLoginResponse, _lastErrorMessage)
                         _lastResponseCode = consentResponse?.StatusCode
                         If Not (consentResponse?.IsSuccessStatusCode) Then
-                            _lastErrorMessage = doLoginResponse.ReasonPhrase
-                            _lastResponseCode = doLoginResponse.StatusCode
+                            _lastErrorMessage = consentResponse.ReasonPhrase
+                            _lastResponseCode = consentResponse.StatusCode
                             Return False
                         End If
                     End Using
