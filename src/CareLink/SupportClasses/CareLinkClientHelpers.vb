@@ -155,7 +155,7 @@ Public Module CareLinkClientHelpers
         Dim countryFromCode As String = GetCountryFromCode(countryCode)
 
         Select Case countryFromCode
-            Case "US"
+            Case "United States"
                 Return "CareLink.MiniMed.com"
             Case Else
                 Return "CareLink.MiniMed.eu"
