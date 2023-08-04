@@ -17,18 +17,17 @@ Public Class CurrentUserRecord
     Public Property InsulinTypeName As String
     Public Property PumpAit As Single
     Public Property UseAdvancedAitDecay As CheckState
-    Public Property UserName As String
+    Public ReadOnly Property UserName As String
 
     Friend Function Clone() As CurrentUserRecord
 
-        Return New CurrentUserRecord(Me.UserName, Nothing) With {
+        Return New CurrentUserRecord(Me.UserName, Me.UseAdvancedAitDecay) With {
                 .CarbRatios = Me.CarbRatios,
                 .CurrentTarget = Me.CurrentTarget,
                 .InsulinRealAit = Me.InsulinRealAit,
                 .InsulinTypeName = Me.InsulinTypeName,
-                .PumpAit = Me.PumpAit,
-                .UseAdvancedAitDecay = Me.UseAdvancedAitDecay
-            }
+                .PumpAit = Me.PumpAit
+                }
     End Function
 
     Public Overrides Function Equals(obj As Object) As Boolean
@@ -38,6 +37,7 @@ Public Class CurrentUserRecord
     Public Overloads Function Equals(other As CurrentUserRecord) As Boolean Implements IEquatable(Of CurrentUserRecord).Equals
         Return other IsNot Nothing AndAlso
                EqualityComparer(Of List(Of CarbRatioRecord)).Default.Equals(Me.CarbRatios, other.CarbRatios) AndAlso
+               Me.CarbRatios.Equals(other.CarbRatios) AndAlso
                Me.CurrentTarget.Equals(other.CurrentTarget) AndAlso
                Me.InsulinRealAit.Equals(other.InsulinRealAit) AndAlso
                Me.InsulinTypeName = other.InsulinTypeName AndAlso
@@ -67,7 +67,6 @@ Public Class CurrentUserRecord
     End Function
 
     Public Function GetPumpAitString() As String
-        Dim hours As Integer = CInt(Me.PumpAit)
         Return $"Pump AIT {Me.PumpAit.ToHoursMinutes}"
     End Function
 
