@@ -71,9 +71,14 @@ Public Module CareLinkClientHelpers
     Friend Function DecodeResponse(response As HttpResponseMessage, ByRef lastErrorMessage As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As HttpResponseMessage
         Dim message As String
         If response?.IsSuccessStatusCode Then
-            lastErrorMessage = Nothing
-            Debug.Print($"{NameOf(DecodeResponse)} success from {memberName}, line {sourceLineNumber}.")
-            Return response
+            Dim resultText As String = response.ResultText
+            lastErrorMessage = ExtractResponseData(resultText, "login_page.error.LoginFailed"">", "<")
+            If lastErrorMessage = "" Then
+                Debug.Print($"{NameOf(DecodeResponse)} success from {memberName}, line {sourceLineNumber}.")
+                Return response
+            End If
+            Debug.Print($"{NameOf(DecodeResponse)} failed from {memberName}, line {sourceLineNumber}.")
+            Return New HttpResponseMessage(HttpStatusCode.NetworkAuthenticationRequired)
         ElseIf response?.StatusCode = HttpStatusCode.BadRequest Then
             message = $"{NameOf(DecodeResponse)} failed with {HttpStatusCode.BadRequest}"
             lastErrorMessage = $"Login Failure {message}"
