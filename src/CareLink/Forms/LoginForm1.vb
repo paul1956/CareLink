@@ -195,39 +195,30 @@ Public Class LoginForm1
         Dim countryCode As String = Me.CountryComboBox.SelectedValue.ToString
         My.Settings.CountryCode = countryCode
         Me.Client = New CareLinkClient(Me.UsernameComboBox.Text, Me.PasswordTextBox.Text, countryCode)
-        If Not Me.Client.LoggedIn Then
-            Dim savePatientID As String = My.Settings.CareLinkPatientUserID
-            Dim savePatientPassword As String = My.Settings.CareLinkPassword
-            My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
-            Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData()
-            If recentData?.Count > 0 Then
-                ReportLoginStatus(Me.LoginStatus, False)
+        Dim savePatientID As String = My.Settings.CareLinkPatientUserID
+        Dim savePatientPassword As String = My.Settings.CareLinkPassword
+        My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
+        Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData()
+        If recentData?.Count > 0 Then
+            ReportLoginStatus(Me.LoginStatus, False)
 
-                Me.Ok_Button.Enabled = True
-                Me.Cancel_Button.Enabled = True
-                My.Settings.CareLinkUserName = Me.UsernameComboBox.Text
-                My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
-                My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
-                My.Settings.CareLinkPartner = Me.CarePartnerCheckBox.Checked OrElse Not String.IsNullOrWhiteSpace(Me.PatientUserIDTextBox.Text)
-                My.Settings.Save()
-                If Not s_allUserSettingsData.TryGetValue(Me.UsernameComboBox.Text, Me.LoggedOnUser) Then
-                    s_allUserSettingsData.SaveAllUserRecords(New CareLinkUserDataRecord(s_allUserSettingsData), NameOf(CareLinkUserDataRecord.CareLinkUserName), Me.UsernameComboBox.Text)
-                End If
-                Me.DialogResult = DialogResult.OK
-                Me.Hide()
-                Exit Sub
-            Else
-                My.Settings.CareLinkPatientUserID = savePatientID
-                My.Settings.CareLinkPassword = savePatientPassword
-                ReportLoginStatus(Me.LoginStatus, True, Me.Client.GetLastErrorMessage)
-            End If
-        Else
             Me.Ok_Button.Enabled = True
             Me.Cancel_Button.Enabled = True
+            My.Settings.CareLinkUserName = Me.UsernameComboBox.Text
+            My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
+            My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
+            My.Settings.CareLinkPartner = Me.CarePartnerCheckBox.Checked OrElse Not String.IsNullOrWhiteSpace(Me.PatientUserIDTextBox.Text)
+            My.Settings.Save()
+            If Not s_allUserSettingsData.TryGetValue(Me.UsernameComboBox.Text, Me.LoggedOnUser) Then
+                s_allUserSettingsData.SaveAllUserRecords(New CareLinkUserDataRecord(s_allUserSettingsData), NameOf(CareLinkUserDataRecord.CareLinkUserName), Me.UsernameComboBox.Text)
+            End If
             Me.DialogResult = DialogResult.OK
             Me.Hide()
             Exit Sub
         End If
+        My.Settings.CareLinkPatientUserID = savePatientID
+        My.Settings.CareLinkPassword = savePatientPassword
+        ReportLoginStatus(Me.LoginStatus, True, Me.Client.GetLastErrorMessage)
 
         Dim networkDownMessage As String = If(NetworkUnavailable(), "due to network being unavailable", $"'{Me.Client.GetLastErrorMessage}'")
         Select Case MsgBox($"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!", networkDownMessage, MsgBoxStyle.AbortRetryIgnore Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Question, "Login Failed")

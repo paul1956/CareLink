@@ -95,7 +95,7 @@ Public Class CareLinkClient
                             _lastErrorMessage = "Login Failure with reason unknown"
                             Return False
                         ElseIf Not doLoginResponse.IsSuccessStatusCode Then
-                            If doLoginResponse.ReasonPhrase <> HttpStatusCode.NetworkAuthenticationRequired.ToString Then
+                            If doLoginResponse.ReasonPhrase.Replace(" ", "") <> HttpStatusCode.NetworkAuthenticationRequired.ToString Then
                                 _lastErrorMessage = doLoginResponse.ReasonPhrase
                             End If
                         End If
@@ -109,7 +109,7 @@ Public Class CareLinkClient
                                               )
                     End Try
 
-                    If _lastErrorMessage IsNot Nothing Then
+                    If Not String.IsNullOrWhiteSpace(_lastErrorMessage) Then
                         Return False
                     End If
 
