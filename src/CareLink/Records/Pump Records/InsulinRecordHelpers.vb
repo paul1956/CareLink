@@ -20,7 +20,25 @@ Friend Module InsulinRecordHelpers
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.dateTimeCellFormatting(e, NameOf(CalibrationRecord.dateTime))
-        dgv.SgValueCellFormatting(e, NameOf(CalibrationRecord.value))
+        Dim value As String = e.Value.ToString
+        Select Case value
+            Case "AUTOCORRECTION"
+                e.Value = "Auto Correction"
+                FormatCell(e, GetGraphLineColor("Auto Correction"))
+                Exit Sub
+            Case "FAST"
+                e.Value = "Fast"
+                e.FormattingApplied = True
+                Exit Sub
+            Case "RECOMMENDED"
+                e.Value = "Recommended"
+                e.FormattingApplied = True
+                Exit Sub
+            Case "UNDETERMINED"
+                e.Value = "Undetermined"
+                e.FormattingApplied = True
+                Exit Sub
+        End Select
     End Sub
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)

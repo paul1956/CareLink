@@ -16,7 +16,6 @@ Friend Module MealRecordHelpers
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.dateTimeCellFormatting(e, NameOf(CalibrationRecord.dateTime))
-        dgv.SgValueCellFormatting(e, NameOf(CalibrationRecord.value))
     End Sub
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
