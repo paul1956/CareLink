@@ -11,6 +11,7 @@ Friend Module InsulinRecordHelpers
             NameOf(InsulinRecord.kind),
             NameOf(InsulinRecord.OAdateTime),
             NameOf(InsulinRecord.relativeOffset),
+            NameOf(InsulinRecord.type),
             NameOf(InsulinRecord.version)
         }
 
@@ -33,6 +34,7 @@ Friend Module InsulinRecordHelpers
                          True,
                          True,
                          CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+            e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
         End With
     End Sub
 
