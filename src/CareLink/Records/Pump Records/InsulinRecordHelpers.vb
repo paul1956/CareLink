@@ -24,7 +24,7 @@ Friend Module InsulinRecordHelpers
         Select Case value
             Case "AUTOCORRECTION"
                 e.Value = "Auto Correction"
-                FormatCell(e, GetGraphLineColor("Auto Correction"))
+                FormatCell(e, GetGraphLineColor("Auto Correction"), 0)
                 Exit Sub
             Case "FAST"
                 e.Value = "Fast"

@@ -7,10 +7,10 @@ Imports System.Runtime.CompilerServices
 
 Friend Module DataGridViewCellStyleExtensions
 
-    Friend Sub FormatCell(ByRef e As DataGridViewCellFormattingEventArgs, highlightColor As Color)
+    Friend Sub FormatCell(ByRef e As DataGridViewCellFormattingEventArgs, highlightColor As Color, AlternateIndex As Integer)
         e.Value = e.Value.ToString
         With e.CellStyle
-            If e.RowIndex Mod 2 = 0 Then
+            If e.RowIndex Mod 2 = AlternateIndex Then
                 .BackColor = highlightColor
                 .ForeColor = highlightColor.GetContrastingColor()
             Else

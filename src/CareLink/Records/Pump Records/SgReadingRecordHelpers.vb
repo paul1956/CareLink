@@ -14,8 +14,12 @@ Friend Module SgReadingRecordHelpers
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.dateTimeCellFormatting(e, NameOf(SgReadingRecord.dateTime))
-        dgv.SgValueCellFormatting(e, NameOf(SgReadingRecord.value))
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(SgRecord.datetime)
+                dgv.dateTimeCellFormatting(e, NameOf(SgReadingRecord.dateTime))
+            Case NameOf(SgReadingRecord.value), NameOf(SgReadingRecord.valueMmolL), NameOf(SgReadingRecord.valueMmDl)
+                dgv.SgValueCellFormatting(e, NameOf(SgReadingRecord.value), If(dgv.Rows(0).Cells(0).Value.ToString = "1", 0, 1))
+        End Select
 
     End Sub
 

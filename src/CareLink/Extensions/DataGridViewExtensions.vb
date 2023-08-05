@@ -52,7 +52,7 @@ Public Module DataGridViewExtensions
     End Sub
 
     <Extension>
-    Friend Sub SgValueCellFormatting(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, partialKey As String)
+    Friend Sub SgValueCellFormatting(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, partialKey As String, AlternativeRowIndex As Integer)
         Dim sgColumnName As String = dgv.Columns(e.ColumnIndex).Name
         If Not sgColumnName.StartsWith(partialKey, StringComparison.InvariantCultureIgnoreCase) Then
             Return
@@ -60,30 +60,30 @@ Public Module DataGridViewExtensions
 
         Dim sensorValue As Single = ParseSingle(e.Value, 2)
         If Single.IsNaN(sensorValue) Then
-            FormatCell(e, Color.Gray)
+            FormatCell(e, Color.Gray, 1 - AlternativeRowIndex)
             Return
         End If
         Select Case sgColumnName
             Case partialKey
-                e.Value = If(NativeMmolL, sensorValue.ToString("F2", CurrentUICulture), e.Value.ToString)
+                e.Value = If(NativeMmolL, sensorValue.ToString("F2", CurrentUICulture), sensorValue.ToString)
                 If sensorValue < TirLowLimit(NativeMmolL) Then
-                    FormatCell(e, Color.Red)
+                    FormatCell(e, Color.Red, 1 - AlternativeRowIndex)
                 ElseIf sensorValue > TirHighLimit(NativeMmolL) Then
-                    FormatCell(e, Color.Yellow)
+                    FormatCell(e, Color.Yellow, AlternativeRowIndex)
                 End If
             Case partialKey & "MmDl"
                 e.Value = e.Value.ToString
                 If sensorValue < TirLowLimit(False) Then
-                    FormatCell(e, Color.Red)
+                    FormatCell(e, Color.Red, 1 - AlternativeRowIndex)
                 ElseIf sensorValue > TirHighLimit(False) Then
-                    FormatCell(e, Color.Yellow)
+                    FormatCell(e, Color.Yellow, AlternativeRowIndex)
                 End If
             Case partialKey & "MmolL"
                 e.Value = sensorValue.RoundSingle(2, False).ToString("F2", CurrentUICulture)
                 If sensorValue < TirLowLimit(True) Then
-                    FormatCell(e, Color.Red)
+                    FormatCell(e, Color.Red, 1 - AlternativeRowIndex)
                 ElseIf sensorValue > TirHighLimit(True) Then
-                    FormatCell(e, Color.Yellow)
+                    FormatCell(e, Color.Yellow, AlternativeRowIndex)
                 End If
         End Select
     End Sub

@@ -39,16 +39,19 @@ Friend Module SgRecordHelpers
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim columnName As String = dgv.Columns(e.ColumnIndex).Name
+        Dim alternateIndex As Integer = If(dgv.Rows(0).Cells(0).Value.ToString = "1", 0, 1)
         Select Case columnName
             Case NameOf(SgRecord.sensorState)
                 ' Set the background to red for negative values in the Balance column.
                 If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
-                    FormatCell(e, Color.Red)
+                    FormatCell(e, Color.Red, alternateIndex)
                 End If
+                e.Value = e.Value.ToString.ToTitle
+                e.FormattingApplied = True
             Case NameOf(SgRecord.datetime)
                 dgv.dateTimeCellFormatting(e, NameOf(SgRecord.datetime))
             Case NameOf(SgRecord.sg), NameOf(SgRecord.sgMmolL), NameOf(SgRecord.sgMmDl)
-                dgv.SgValueCellFormatting(e, NameOf(SgRecord.sg))
+                dgv.SgValueCellFormatting(e, NameOf(SgRecord.sg), alternateIndex)
         End Select
 
     End Sub

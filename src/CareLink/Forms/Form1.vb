@@ -438,7 +438,7 @@ Public Class Form1
                 Dim basalAmount As Single = ParseSingle(e.Value, 3)
                 e.Value = basalAmount.ToString("F3", CurrentUICulture)
                 If basalAmount.IsMinBasal Then
-                    FormatCell(e, GetGraphLineColor("Min Basal"))
+                    FormatCell(e, GetGraphLineColor("Min Basal"), 0)
                 End If
                 e.FormattingApplied = True
             Case NameOf(AutoBasalDeliveryRecord.dateTime)
@@ -779,16 +779,19 @@ Public Class Form1
             Return
         End If
         Dim dgv As DataGridView = CType(sender, DataGridView)
+        Dim alternateIndex As Integer = If(dgv.Rows(0).Cells(0).Value.ToString <> "0", 0, 1)
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(SgRecord.sensorState)
                 ' Set the background to red for negative values in the Balance column.
                 If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
-                    FormatCell(e, Color.Red)
+                    FormatCell(e, Color.Red, 1 - alternateIndex)
                 End If
+                e.Value = e.Value.ToString.ToTitle
+                e.FormattingApplied = True
             Case NameOf(SgRecord.datetime)
                 dgv.dateTimeCellFormatting(e, NameOf(SgRecord.datetime))
             Case NameOf(SgRecord.sg), NameOf(SgRecord.sgMmolL), NameOf(SgRecord.sgMmDl)
-                dgv.SgValueCellFormatting(e, NameOf(SgRecord.sg))
+                dgv.SgValueCellFormatting(e, NameOf(SgRecord.sg), alternateIndex)
         End Select
     End Sub
 
