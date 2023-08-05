@@ -69,18 +69,21 @@ Public Class LoginForm1
             _mySource.Clear()
             Me.UsernameComboBox.Text = ""
         End If
-
         With Me.UsernameComboBox
             .AutoCompleteCustomSource = _mySource
             .AutoCompleteMode = AutoCompleteMode.SuggestAppend
             .AutoCompleteSource = AutoCompleteSource.CustomSource
-            .Text = My.Settings.CareLinkUserName
+            If s_userName = "" Then
+                .Text = My.Settings.CareLinkUserName
+            Else
+                .SelectedIndex = -1
+                .Text = s_userName
+            End If
+            Me.PasswordTextBox.Text = If(s_allUserSettingsData?.ContainsKey(.Text),
+                                         s_allUserSettingsData(.Text).CareLinkPassword,
+                                         ""
+                                        )
         End With
-
-        Me.PasswordTextBox.Text = If(s_allUserSettingsData?.ContainsKey(My.Settings.CareLinkUserName),
-                                     s_allUserSettingsData(My.Settings.CareLinkUserName).CareLinkPassword,
-                                     My.Settings.CareLinkPassword
-                                    )
 
         Me.RegionComboBox.DataSource = New BindingSource(s_regionList, Nothing)
         Me.RegionComboBox.DisplayMember = "Key"
@@ -102,6 +105,74 @@ Public Class LoginForm1
         If My.Settings.AutoLogin Then
             Me.OK_Button_Click(Me.Ok_Button, Nothing)
         End If
+    End Sub
+
+    Private Sub OK_Button_Click(sender As Object, e As System.EventArgs) Handles Ok_Button.Click
+        If Me.UsernameComboBox.Text.Length = 0 Then
+            Me.UsernameComboBox.Focus()
+            Exit Sub
+        End If
+        If Me.PasswordTextBox.Text.Length = 0 Then
+            Me.PasswordTextBox.Focus()
+            Exit Sub
+        End If
+        s_userName = Me.UsernameComboBox.Text
+        Me.Ok_Button.Enabled = False
+        Me.Cancel_Button.Enabled = False
+        Dim countryCode As String = Me.CountryComboBox.SelectedValue.ToString
+        My.Settings.CountryCode = countryCode
+        Me.Client = New CareLinkClient(s_userName, Me.PasswordTextBox.Text, countryCode)
+        Dim savePatientID As String = My.Settings.CareLinkPatientUserID
+        My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
+        Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData()
+        If recentData?.Count > 0 Then
+            ReportLoginStatus(Me.LoginStatus, False)
+
+            Me.Ok_Button.Enabled = True
+            Me.Cancel_Button.Enabled = True
+            My.Settings.CareLinkUserName = s_userName
+            My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
+            My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
+            My.Settings.CareLinkPartner = Me.CarePartnerCheckBox.Checked OrElse Not String.IsNullOrWhiteSpace(Me.PatientUserIDTextBox.Text)
+            My.Settings.Save()
+            If Not s_allUserSettingsData.TryGetValue(s_userName, Me.LoggedOnUser) Then
+                s_allUserSettingsData.SaveAllUserRecords(New CareLinkUserDataRecord(s_allUserSettingsData), NameOf(CareLinkUserDataRecord.CareLinkUserName), s_userName)
+            End If
+            Me.DialogResult = DialogResult.OK
+            Me.Hide()
+        Else
+            Me.PasswordTextBox.Text = ""
+            Dim userRecord As CareLinkUserDataRecord = Nothing
+            If s_allUserSettingsData.TryGetValue(s_userName, userRecord) Then
+                s_allUserSettingsData.Remove(userRecord)
+            End If
+            ReportLoginStatus(Me.LoginStatus, True, Me.Client.GetLastErrorMessage)
+
+            Dim networkDownMessage As String = If(NetworkUnavailable(), "due to network being unavailable", $"'{Me.Client.GetLastErrorMessage}'")
+            Select Case MsgBox($"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!", networkDownMessage, MsgBoxStyle.AbortRetryIgnore Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Question, "Login Failed")
+                Case MsgBoxResult.Abort
+                    End
+                Case MsgBoxResult.Ignore
+                    Me.DialogResult = DialogResult.Ignore
+                Case MsgBoxResult.Retry
+                    Me.DialogResult = DialogResult.Retry
+            End Select
+        End If
+        Me.Cancel_Button.Enabled = True
+    End Sub
+
+    Private Sub PasswordTextBox_Validating(sender As Object, e As CancelEventArgs) Handles PasswordTextBox.Validating
+        If String.IsNullOrWhiteSpace(Me.PasswordTextBox.Text) Then
+            e.Cancel = True
+            Me.PasswordTextBox.Focus()
+        Else
+            If Me.UsernameComboBox.Text.Length > 0 Then
+                Me.Ok_Button.Enabled = True
+            Else
+                Me.UsernameComboBox.Focus()
+            End If
+        End If
+
     End Sub
 
     Private Sub RegionComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles RegionComboBox.SelectedIndexChanged
@@ -178,59 +249,13 @@ Public Class LoginForm1
         If String.IsNullOrWhiteSpace(Me.UsernameComboBox.Text) Then
             e.Cancel = True
             Me.UsernameComboBox.Focus()
-        End If
-    End Sub
-
-    Private Sub OK_Button_Click(sender As Object, e As System.EventArgs) Handles Ok_Button.Click
-        If Me.UsernameComboBox.Text.Length = 0 Then
-            Me.UsernameComboBox.Focus()
-            Exit Sub
-        End If
-        If Me.PasswordTextBox.Text.Length = 0 Then
-            Me.PasswordTextBox.Focus()
-            Exit Sub
-        End If
-        Me.Ok_Button.Enabled = False
-        Me.Cancel_Button.Enabled = False
-        Dim countryCode As String = Me.CountryComboBox.SelectedValue.ToString
-        My.Settings.CountryCode = countryCode
-        Me.Client = New CareLinkClient(Me.UsernameComboBox.Text, Me.PasswordTextBox.Text, countryCode)
-        Dim savePatientID As String = My.Settings.CareLinkPatientUserID
-        Dim savePatientPassword As String = My.Settings.CareLinkPassword
-        My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
-        Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData()
-        If recentData?.Count > 0 Then
-            ReportLoginStatus(Me.LoginStatus, False)
-
-            Me.Ok_Button.Enabled = True
-            Me.Cancel_Button.Enabled = True
-            My.Settings.CareLinkUserName = Me.UsernameComboBox.Text
-            My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
-            My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
-            My.Settings.CareLinkPartner = Me.CarePartnerCheckBox.Checked OrElse Not String.IsNullOrWhiteSpace(Me.PatientUserIDTextBox.Text)
-            My.Settings.Save()
-            If Not s_allUserSettingsData.TryGetValue(Me.UsernameComboBox.Text, Me.LoggedOnUser) Then
-                s_allUserSettingsData.SaveAllUserRecords(New CareLinkUserDataRecord(s_allUserSettingsData), NameOf(CareLinkUserDataRecord.CareLinkUserName), Me.UsernameComboBox.Text)
+        Else
+            If Me.PasswordTextBox.Text.Length > 0 Then
+                Me.Ok_Button.Enabled = True
+            Else
+                Me.PasswordTextBox.Focus()
             End If
-            Me.DialogResult = DialogResult.OK
-            Me.Hide()
-            Exit Sub
         End If
-        My.Settings.CareLinkPatientUserID = savePatientID
-        My.Settings.CareLinkPassword = savePatientPassword
-        ReportLoginStatus(Me.LoginStatus, True, Me.Client.GetLastErrorMessage)
-
-        Dim networkDownMessage As String = If(NetworkUnavailable(), "due to network being unavailable", $"'{Me.Client.GetLastErrorMessage}'")
-        Select Case MsgBox($"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!", networkDownMessage, MsgBoxStyle.AbortRetryIgnore Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Question, "Login Failed")
-            Case MsgBoxResult.Abort
-                End
-            Case MsgBoxResult.Ignore
-                Me.DialogResult = DialogResult.Ignore
-            Case MsgBoxResult.Retry
-                Me.DialogResult = DialogResult.Retry
-        End Select
-        Me.Ok_Button.Enabled = True
-        Me.Cancel_Button.Enabled = True
     End Sub
 
 End Class

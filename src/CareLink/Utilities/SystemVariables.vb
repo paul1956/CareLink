@@ -7,6 +7,7 @@ Friend Module SystemVariables
     Friend s_currentSummaryRow As Integer = 0
     Friend s_formLoaded As Boolean = False
     Friend s_useLocalTimeZone As Boolean
+    Friend s_userName As String = ""
     Friend Property CurrentUser As CurrentUserRecord
     Friend Property DecimalSeparator As String = "."
 

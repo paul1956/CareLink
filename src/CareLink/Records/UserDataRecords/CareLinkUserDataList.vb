@@ -34,25 +34,6 @@ Public Class CareLinkUserDataList
         End Get
     End Property
 
-    ' Unsupported properties.
-    Public ReadOnly Property IsSorted() As Boolean Implements IBindingList.IsSorted
-        Get
-            Throw New NotSupportedException()
-        End Get
-    End Property
-
-    Public ReadOnly Property SortDirection() As ListSortDirection Implements IBindingList.SortDirection
-        Get
-            Throw New NotSupportedException()
-        End Get
-    End Property
-
-    Public ReadOnly Property SortProperty() As PropertyDescriptor Implements IBindingList.SortProperty
-        Get
-            Throw New NotSupportedException()
-        End Get
-    End Property
-
     Public ReadOnly Property SupportsChangeNotification() As Boolean Implements IBindingList.SupportsChangeNotification
         Get
             Return True
@@ -177,6 +158,57 @@ Public Class CareLinkUserDataList
         Return result
     End Function
 
+    Friend Sub LoadUserRecords(userSettingsCsvFileWithPath As String)
+
+        Dim l As IList = Me
+        Using myReader As New FileIO.TextFieldParser(userSettingsCsvFileWithPath)
+            myReader.TextFieldType = FileIO.FieldType.Delimited
+            myReader.Delimiters = New String() {","}
+            Dim currentRow As String()
+            'Loop through all of the fields in the file.
+            'If any lines are corrupt, report an error and continue parsing.
+            Dim rowIndex As Integer = 0
+            Dim headerRow As String() = Nothing
+            While Not myReader.EndOfData
+                Try
+                    currentRow = myReader.ReadFields()
+                    ' Include code here to handle the row.
+                    If rowIndex = 0 Then
+                        headerRow = currentRow
+                    Else
+                        l.Add(New CareLinkUserDataRecord(Me, headerRow, currentRow))
+                    End If
+                    rowIndex += 1
+                Catch ex As FileIO.MalformedLineException
+                    MsgBox("Malformed Line Exception", $"Line {ex.Message} is invalid.  Skipping", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, "Load User Records")
+                End Try
+            End While
+        End Using
+
+        Me.OnListChanged(_resetEvent)
+    End Sub
+
+    Friend Sub SaveAllUserRecords(loggedOnUser As CareLinkUserDataRecord, Key As String, Value As String)
+        If Not Key.Equals(NameOf(My.Settings.CareLinkUserName).ToString, StringComparison.OrdinalIgnoreCase) Then
+            ' We are changing something other than the user name
+            ' Update logged on user and the saved file
+            loggedOnUser.UpdateValue(Key, Value)
+            If Not Me.TryAdd(loggedOnUser) Then
+                Me(loggedOnUser.CareLinkUserName) = loggedOnUser
+            End If
+        Else
+            ' We are changing the user name, first try to load it
+            If Me.ContainsKey(Value) Then
+                loggedOnUser = Me(Value)
+            Else
+                ' We have a new user
+                Me.Add(loggedOnUser)
+            End If
+        End If
+
+        Me.SaveAllUserRecords()
+    End Sub
+
     Friend Function TryAdd(loggedOnUser As CareLinkUserDataRecord) As Boolean
         If Me.ContainsKey(loggedOnUser.CareLinkUserName) Then
             Return False
@@ -199,12 +231,6 @@ Public Class CareLinkUserDataList
         Return Me.List.Add(value)
     End Function
 
-    ' Unsupported Methods.
-    Public Sub AddIndex(prop As PropertyDescriptor) Implements IBindingList.AddIndex
-        Throw New NotSupportedException()
-    End Sub
-
-    ' Methods.
     Public Function AddNew() As Object Implements IBindingList.AddNew
         Dim c As New CareLinkUserDataRecord(Me)
         Me.List.Add(c)
@@ -215,77 +241,8 @@ Public Class CareLinkUserDataList
         Return CType(CType(Me, IBindingList).AddNew(), CareLinkUserDataRecord)
     End Function
 
-    Public Sub ApplySort(prop As PropertyDescriptor, direction As ListSortDirection) Implements IBindingList.ApplySort
-        Throw New NotSupportedException()
-    End Sub
-
-    Public Function Find(prop As PropertyDescriptor, key As Object) As Integer Implements IBindingList.Find
-        Throw New NotSupportedException()
-    End Function
-
-    Public Sub LoadUserRecords(userSettingsCsvFileWithPath As String)
-        Dim l As IList = Me
-
-        If SavedUsersFileExists(userSettingsCsvFileWithPath) Then
-            Using myReader As New FileIO.TextFieldParser(userSettingsCsvFileWithPath)
-                myReader.TextFieldType = FileIO.FieldType.Delimited
-                myReader.Delimiters = New String() {","}
-                Dim currentRow As String()
-                'Loop through all of the fields in the file.
-                'If any lines are corrupt, report an error and continue parsing.
-                Dim rowIndex As Integer = 0
-                Dim headerRow As String() = Nothing
-                While Not myReader.EndOfData
-                    Try
-                        currentRow = myReader.ReadFields()
-                        ' Include code here to handle the row.
-                        If rowIndex = 0 Then
-                            headerRow = currentRow
-                        Else
-                            l.Add(New CareLinkUserDataRecord(Me, headerRow, currentRow))
-                        End If
-                        rowIndex += 1
-                    Catch ex As FileIO.MalformedLineException
-                        MsgBox("Malformed Line Exception", $"Line {ex.Message} is invalid.  Skipping", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, "Load User Records")
-                    End Try
-                End While
-            End Using
-        End If
-
-        Me.OnListChanged(_resetEvent)
-    End Sub
-
     Public Sub Remove(value As CareLinkUserDataRecord)
         Me.List.Remove(value)
-    End Sub
-
-    Public Sub RemoveIndex(prop As PropertyDescriptor) Implements IBindingList.RemoveIndex
-        Throw New NotSupportedException()
-    End Sub
-
-    Public Sub RemoveSort() Implements IBindingList.RemoveSort
-        Throw New NotSupportedException()
-    End Sub
-
-    Public Sub SaveAllUserRecords(loggedOnUser As CareLinkUserDataRecord, Key As String, Value As String)
-        If Not Key.Equals(NameOf(My.Settings.CareLinkUserName).ToString, StringComparison.OrdinalIgnoreCase) Then
-            ' We are changing something other than the user name
-            ' Update logged on user and the saved file
-            loggedOnUser.UpdateValue(Key, Value)
-            If Not Me.TryAdd(loggedOnUser) Then
-                Me(loggedOnUser.CareLinkUserName) = loggedOnUser
-            End If
-        Else
-            ' We are changing the user name, first try to load it
-            If Me.ContainsKey(Value) Then
-                loggedOnUser = Me(Value)
-            Else
-                ' We have a new user
-                Me.Add(loggedOnUser)
-            End If
-        End If
-
-        Me.SaveAllUserRecords()
     End Sub
 
     Public Sub SaveAllUserRecords()
@@ -296,5 +253,51 @@ Public Class CareLinkUserDataList
         Next
         My.Computer.FileSystem.WriteAllText(GetPathToAllUserLoginInfo(True), sb.ToString, False)
     End Sub
+
+#Region "Unsupported Methods"     ' Unsupported Methods.
+
+    Public ReadOnly Property SortProperty() As PropertyDescriptor Implements IBindingList.SortProperty
+        Get
+            Throw New NotSupportedException()
+        End Get
+    End Property
+
+    Public Sub AddIndex(prop As PropertyDescriptor) Implements IBindingList.AddIndex
+        Throw New NotSupportedException()
+    End Sub
+
+    Public Sub ApplySort(prop As PropertyDescriptor, direction As ListSortDirection) Implements IBindingList.ApplySort
+        Throw New NotSupportedException()
+    End Sub
+
+    Public Function Find(prop As PropertyDescriptor, key As Object) As Integer Implements IBindingList.Find
+        Throw New NotSupportedException()
+    End Function
+
+    Public Sub RemoveIndex(prop As PropertyDescriptor) Implements IBindingList.RemoveIndex
+        Throw New NotSupportedException()
+    End Sub
+
+    Public Sub RemoveSort() Implements IBindingList.RemoveSort
+        Throw New NotSupportedException()
+    End Sub
+
+#End Region
+
+#Region "Unsupported properties"     ' Unsupported properties
+
+    Public ReadOnly Property IsSorted() As Boolean Implements IBindingList.IsSorted
+        Get
+            Throw New NotSupportedException()
+        End Get
+    End Property
+
+    Public ReadOnly Property SortDirection() As ListSortDirection Implements IBindingList.SortDirection
+        Get
+            Throw New NotSupportedException()
+        End Get
+    End Property
+
+#End Region
 
 End Class
