@@ -31,6 +31,8 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 New in 3.8.4.2
 - Improve login logic for new CareLink servers
 - Add support for new 780G unknownIncompletedFlag
+- Add new error messages
+- Cleanup sorting and display of Record Number
 
 New in 3.8.4.1
 - Fixed support for Canada
