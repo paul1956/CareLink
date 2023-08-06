@@ -2,6 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.IO
+
 Friend Module SystemVariables
     Friend s_allUserSettingsData As New CareLinkUserDataList
     Friend s_currentSummaryRow As Integer = 0
@@ -10,18 +12,6 @@ Friend Module SystemVariables
     Friend s_userName As String = ""
     Friend Property CurrentUser As CurrentUserRecord
     Friend Property DecimalSeparator As String = "."
-
-    Friend Property GraphColorDictionary As New Dictionary(Of String, KnownColor) From {
-                            {"Active Insulin", KnownColor.Lime},
-                            {"Auto Correction", KnownColor.Aqua},
-                            {"Basal Series", KnownColor.HotPink},
-                            {"High Limit", KnownColor.Yellow},
-                            {"Low Limit", KnownColor.Red},
-                            {"Min Basal", KnownColor.LightYellow},
-                            {"SG Series", KnownColor.White},
-                            {"SG Target", KnownColor.Green},
-                            {"Time Change", KnownColor.White}
-                        }
 
     Friend Property MaxBasalPerDose As Single
 
@@ -46,12 +36,6 @@ Friend Module SystemVariables
     Friend Property NativeMmolL As Boolean = False
     Friend Property TreatmentInsulinRow As Single
 
-    Friend Function GetSgFormat(withSign As Boolean) As String
-        Return If(withSign,
-            If(NativeMmolL, $"+0{CurrentUICulture.NumberFormat.NumberDecimalSeparator}0;-#{CurrentUICulture.NumberFormat.NumberDecimalSeparator}0", "+0;-#"),
-            If(NativeMmolL, $"0{CurrentUICulture.NumberFormat.NumberDecimalSeparator}0", "0"))
-    End Function
-
     Friend Function GetInsulinYValue() As Single
         Dim maxYScaled As Single = s_listOfSgRecords.Max(Of Single)(Function(sgR As SgRecord) sgR.sg) + 2
         Return If(Single.IsNaN(maxYScaled),
@@ -61,6 +45,12 @@ Friend Module SystemVariables
                     342 / MmolLUnitsDivisor,
                     Math.Max(maxYScaled, 260 / MmolLUnitsDivisor)),
                 If(s_listOfSgRecords.Count = 0 OrElse maxYScaled > 330, 342, Math.Max(maxYScaled, 260))))
+    End Function
+
+    Friend Function GetSgFormat(withSign As Boolean) As String
+        Return If(withSign,
+            If(NativeMmolL, $"+0{CurrentUICulture.NumberFormat.NumberDecimalSeparator}0;-#{CurrentUICulture.NumberFormat.NumberDecimalSeparator}0", "+0;-#"),
+            If(NativeMmolL, $"0{CurrentUICulture.NumberFormat.NumberDecimalSeparator}0", "0"))
     End Function
 
     Friend Function GetSgTarget() As Single

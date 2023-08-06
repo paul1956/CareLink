@@ -449,14 +449,15 @@ Public Class Form1
     Private Sub DgvAutoBasalDelivery_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvAutoBasalDelivery.ColumnAdded
         With e.Column
             If AutoBasalDeliveryRecordHelpers.HideColumn(.Name) Then
+                .SortMode = DataGridViewColumnSortMode.NotSortable
                 .Visible = False
                 Exit Sub
             End If
-            Dim dgv As DataGridView = CType(sender, DataGridView)
             e.DgvColumnAdded(AutoBasalDeliveryRecordHelpers.GetCellStyle(.Name),
                              False,
                              True,
-                             CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                             CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+            .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
     End Sub
 
@@ -536,6 +537,7 @@ Public Class Form1
                                  caption)
 
             End If
+            .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
     End Sub
 
@@ -706,14 +708,15 @@ Public Class Form1
     Private Sub DgvInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnAdded
         With e.Column
             If InsulinRecordHelpers.HideColumn(.Name) Then
+                .SortMode = DataGridViewColumnSortMode.NotSortable
                 .Visible = False
                 Exit Sub
             End If
-            Dim dgv As DataGridView = CType(sender, DataGridView)
             e.DgvColumnAdded(InsulinRecordHelpers.GetCellStyle(.Name),
                              True,
                              True,
-                             CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                             CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+            .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
     End Sub
 
@@ -739,6 +742,7 @@ Public Class Form1
     Private Sub DgvMeal_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvMeal.ColumnAdded
         With e.Column
             If MealRecordHelpers.HideColumn(.Name) Then
+                .SortMode = DataGridViewColumnSortMode.NotSortable
                 .Visible = False
                 Exit Sub
             End If
@@ -747,6 +751,7 @@ Public Class Form1
                             True,
                             True,
                             CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+            .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
     End Sub
 
@@ -798,6 +803,7 @@ Public Class Form1
     Private Sub DgvSGs_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSGs.ColumnAdded
         With e.Column
             If SgRecordHelpers.HideColumn(.Name) Then
+                .SortMode = DataGridViewColumnSortMode.NotSortable
                 .Visible = False
                 Exit Sub
             End If
@@ -970,13 +976,14 @@ Public Class Form1
     End Sub
 
     Private Sub DgvSummary_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSummary.ColumnAdded
-        Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
             e.DgvColumnAdded(SummaryRecordHelpers.GetCellStyle(.Name),
                              False,
                              True,
-                             CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                             CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+            .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
+
     End Sub
 
     Private Sub DgvSummary_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvSummary.DataError
@@ -1051,9 +1058,9 @@ Public Class Form1
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
         If File.Exists(GetPathToGraphColorsFile(True)) Then
-            OptionsDialog.GetColorDictionaryFromFile()
+            GetColorDictionaryFromFile()
         Else
-            OptionsDialog.WriteColorDictionaryToFile()
+            WriteColorDictionaryToFile()
         End If
 
         Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(1)

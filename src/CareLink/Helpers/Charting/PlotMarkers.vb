@@ -91,7 +91,7 @@ Friend Module PlotMarkers
                                              amount,
                                              GetYMaxValue(NativeMmolL),
                                              GetInsulinYValue(),
-                                             GetGraphLineColor("Basal Series"),
+                                             "Basal Series",
                                              False,
                                              GetToolTip(entry("type"), amount))
                         End With
@@ -102,7 +102,7 @@ Friend Module PlotMarkers
                                              amount,
                                              GetYMaxValue(NativeMmolL),
                                              GetInsulinYValue(),
-                                             GetGraphLineColor("Basal Series"),
+                                             "Basal Series",
                                              False,
                                              GetToolTip(entry("type"), amount))
                         End With
@@ -115,7 +115,7 @@ Friend Module PlotMarkers
                                                      autoCorrection.ParseSingle(3),
                                                      GetYMaxValue(NativeMmolL),
                                                      GetInsulinYValue(),
-                                                     GetGraphLineColor("Auto Correction"),
+                                                     "Auto Correction",
                                                      False,
                                                      $"Auto Correction: {autoCorrection.TruncateSingleString(3)}U")
                                 End With
@@ -200,7 +200,7 @@ Friend Module PlotMarkers
                                              amount,
                                              MaxBasalPerDose,
                                              TreatmentInsulinRow,
-                                             GetGraphLineColor("Basal Series"),
+                                             "Basal Series",
                                              True,
                                              GetToolTip(entry("type"), amount))
 
@@ -212,7 +212,7 @@ Friend Module PlotMarkers
                                              amount,
                                              MaxBasalPerDose,
                                              TreatmentInsulinRow,
-                                             GetGraphLineColor("Basal Series"),
+                                             "Basal Series",
                                              True,
                                              GetToolTip(entry("type"), amount))
 
@@ -226,7 +226,7 @@ Friend Module PlotMarkers
                                                      autoCorrection.ParseSingle(3),
                                                      MaxBasalPerDose,
                                                      TreatmentInsulinRow,
-                                                     GetGraphLineColor("Auto Correction"),
+                                                     "Auto Correction",
                                                      True,
                                                      $"Auto Correction: {autoCorrection.TruncateSingleString(3)}U")
                                 End With

@@ -11,6 +11,7 @@ Friend Module UserMessageHandler
                     }
 
     Friend ReadOnly s_calibrationIconMessages As New Dictionary(Of String, String) From {
+                        {"HCL_REQUIRES_BG_LEGACY", "BG Required"},
                         {"HOURS_10", "Hours 10"},
                         {"INIT", "Initializing"},
                         {"NO_ICON", ""},
@@ -134,6 +135,7 @@ Friend Module UserMessageHandler
                         {"SEARCHING_FOR_SENSOR_SIGNAL", $"Searching For{vbCrLf}Sensor Signal"},
                         {"SENSOR_DISCONNECTED", $"Sensor{vbCrLf}Disconnected"},
                         {"SENSOR_OFF", $"Sensor{vbCrLf}Off"},
+                        {"SG_ABOVE_400_MGDL", $"SG Above{vbCrLf}400 mg/dL"},
                         {"SG_BELOW_40_MGDL", $"SG Below{vbCrLf}50 mg/dL"},
                         {"SUSPENDED_BEFORE_LOW", $"Suspended{vbCrLf}Before Low"},
                         {"TEMP_BASAL", $"Temp{vbCrLf}Basal"},

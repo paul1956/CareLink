@@ -67,7 +67,7 @@ Public Class SummaryRecord
     ''' <param name="key"></param>
     ''' <param name="value"></param>
     Protected Friend Sub New(recordNumber As Single, key As String, value As String, message As String)
-        Me.RecordNumber = recordNumber
+        Me.RecordNumber = recordNumber + 1
         Me.Key = key
         Me.Value = value
         Me.Message = message

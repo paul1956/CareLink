@@ -17,13 +17,12 @@ Friend Module SgRecordHelpers
         With e.Column
             If HideColumn(.Name) Then
                 .Visible = False
-                Exit Sub
+            Else
+                e.DgvColumnAdded(GetCellStyle(.Name),
+                             True,
+                             True,
+                             CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
             End If
-            Dim dgv As DataGridView = CType(sender, DataGridView)
-            e.DgvColumnAdded(GetCellStyle(.Name),
-                             True,
-                             True,
-                             CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
     End Sub
 

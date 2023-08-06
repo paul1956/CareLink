@@ -31,7 +31,7 @@ Friend Module Form1UpdateHelpers
                                                      Replace("}", "").
                                                      Split(",")
         For Each e As IndexClass(Of String) In valueList.WithIndex
-            Dim item As New SummaryRecord(CSng(CSng(rowIndex) + (e.Index / 10)),
+            Dim item As New SummaryRecord(CSng(CSng(rowIndex) + ((e.Index + 1) / 10)),
                                           key,
                                           e.Value.Split(" = ")(0).Trim,
                                           e.Value.Split(" = ")(1).Trim)

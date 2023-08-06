@@ -121,11 +121,11 @@ Friend Module DataTableHelpers
             For Each [property] As PropertyInfo In classType.GetProperties()
                 cellStyle = New DataGridViewCellStyle
                 Select Case [property].GetCustomAttributes(GetType(ColumnAttribute), True).Cast(Of ColumnAttribute)().SingleOrDefault().TypeName
-                    Case "Date", NameOf(OADate), NameOf([String])
+                    Case "Date", NameOf(OADate), NameOf([String]), NameOf(SummaryRecord.RecordNumber)
                         cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
                     Case NameOf([Decimal]), NameOf([Double]), NameOf([Int32]), NameOf([Single]), NameOf([TimeSpan])
                         cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
-                    Case NameOf([Boolean]), NameOf(SummaryRecord.RecordNumber)
+                    Case NameOf([Boolean])
                         cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
                     Case Else
                         Throw UnreachableException($"{NameOf(DataTableHelpers)}.{NameOf(ClassPropertiesToColumnAlignment)} [property].PropertyType.Name = {[property].PropertyType.Name}")

@@ -13,20 +13,23 @@ Friend Module ActiveInsulinRecordHelpers
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.dateTimeCellFormatting(e, NameOf(ActiveInsulinRecord.datetime))
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(ActiveInsulinRecord.datetime)
+                dgv.dateTimeCellFormatting(e, NameOf(ActiveInsulinRecord.datetime))
+        End Select
     End Sub
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         With e.Column
             If HideColumn(.Name) Then
                 .Visible = False
-                Exit Sub
+            Else
+                e.DgvColumnAdded(GetCellStyle(.Name),
+                             True,
+                             True,
+                             CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
             End If
-            Dim dgv As DataGridView = CType(sender, DataGridView)
-            e.DgvColumnAdded(GetCellStyle(.Name),
-                             True,
-                             True,
-                             CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+            .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
     End Sub
 

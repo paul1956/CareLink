@@ -8,24 +8,22 @@ Friend Module BannerStateRecordHelpers
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        If e.Value Is Nothing Then
-            Return
-        End If
-        Dim columnName As String = dgv.Columns(e.ColumnIndex).Name
-        If columnName.Equals(NameOf(BannerStateRecord.timeRemaining), StringComparison.Ordinal) Then
-            If e.Value IsNot Nothing AndAlso e.Value.ToString = "0" Then
-                e.Value = ""
-            End If
-        End If
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(BannerStateRecord.timeRemaining)
+                If e.Value Is Nothing OrElse e.Value.ToString = "0" Then
+                    e.Value = ""
+                    e.FormattingApplied = True
+                End If
+        End Select
     End Sub
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         With e.Column
-            Dim dgv As DataGridView = CType(sender, DataGridView)
             e.DgvColumnAdded(GetCellStyle(.Name),
                              True,
                              True,
-                             CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                             CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+            .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
     End Sub
 

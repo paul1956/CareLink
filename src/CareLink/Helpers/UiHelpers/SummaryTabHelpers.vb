@@ -9,13 +9,13 @@ Friend Module SummaryTabHelpers
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(SummaryRecord.RecordNumber), StringComparison.OrdinalIgnoreCase) Then
-            If dgv.Rows(e.RowIndex).Cells("key").Value.Equals(ItemIndexes.medicalDeviceInformation.ToString) Then
-                Dim value As Single = CSng(dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value)
-                e.Value = value.ToString("F1")
-                e.FormattingApplied = True
-            End If
-        End If
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(SummaryRecord.RecordNumber)
+                If dgv.Rows(e.RowIndex).Cells("key").Value.Equals(ItemIndexes.medicalDeviceInformation.ToString) Then
+                    e.Value = CSng(dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value).ToString("F1")
+                    e.FormattingApplied = True
+                End If
+        End Select
 
     End Sub
 
@@ -24,7 +24,6 @@ Friend Module SummaryTabHelpers
         s_listOfSummaryRecords.Sort()
         dgvSummary.InitializeDgv()
         dgvSummary.DataSource = ClassCollectionToDataTable(s_listOfSummaryRecords)
-        dgvSummary.Columns(0).HeaderCell.SortGlyphDirection = SortOrder.Ascending
         dgvSummary.RowHeadersVisible = False
         If s_currentSummaryRow <> 0 Then
             dgvSummary.CurrentCell = dgvSummary.Rows(s_currentSummaryRow).Cells(2)

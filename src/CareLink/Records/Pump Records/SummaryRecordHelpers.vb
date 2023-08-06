@@ -14,14 +14,14 @@ Friend Module SummaryRecordHelpers
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         With e.Column
-            Dim dgv As DataGridView = CType(sender, DataGridView)
             e.DgvColumnAdded(GetCellStyle(.Name),
                              False,
                              True,
-                             CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                             CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
             If .Name = "value" Then
                 e.Column.MinimumWidth = 300
             End If
+            .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
     End Sub
 
@@ -33,7 +33,7 @@ Friend Module SummaryRecordHelpers
     Private Function TranslateNotificationMessageId(jsonDictionary As Dictionary(Of String, String), entryValue As String) As String
         Dim formattedMessage As String = ""
         Try
-            If s_NotificationMessages.TryGetValue(entryValue, formattedMessage) Then
+            If s_notificationMessages.TryGetValue(entryValue, formattedMessage) Then
                 Dim splitMessageValue As String() = formattedMessage.Split(":")
                 Dim key As String = ""
                 Dim replacementValue As String = ""
@@ -112,7 +112,7 @@ Friend Module SummaryRecordHelpers
             Select Case row.Key
                 Case "messageId"
                     Dim message As String = ""
-                    If s_NotificationMessages.TryGetValue(row.Value, message) Then
+                    If s_notificationMessages.TryGetValue(row.Value, message) Then
                         message = TranslateNotificationMessageId(dic, row.Value)
                         If row.Value = "BC_SID_MAX_FILL_DROPS_QUESITION" Then
                             If dic("deliveredAmount").StartsWith("3") Then
@@ -127,15 +127,15 @@ Friend Module SummaryRecordHelpers
                         End If
                         message = row.Value.ToTitle
                     End If
-                    summaryList.Add(New SummaryRecord(summaryList.Count + 1, row, message))
+                    summaryList.Add(New SummaryRecord(summaryList.Count, row, message))
                 Case "autoModeReadinessState"
-                    summaryList.Add(New SummaryRecord(summaryList.Count + 1, row, s_sensorMessages, NameOf(s_sensorMessages)))
+                    summaryList.Add(New SummaryRecord(summaryList.Count, row, s_sensorMessages, NameOf(s_sensorMessages)))
                 Case "autoModeShieldState"
-                    summaryList.Add(New SummaryRecord(summaryList.Count + 1, row, s_autoModeShieldMessages, NameOf(s_autoModeShieldMessages)))
+                    summaryList.Add(New SummaryRecord(summaryList.Count, row, s_autoModeShieldMessages, NameOf(s_autoModeShieldMessages)))
                 Case "plgmLgsState"
-                    summaryList.Add(New SummaryRecord(summaryList.Count + 1, row, s_plgmLgsMessages, NameOf(s_plgmLgsMessages)))
+                    summaryList.Add(New SummaryRecord(summaryList.Count, row, s_plgmLgsMessages, NameOf(s_plgmLgsMessages)))
                 Case Else
-                    summaryList.Add(New SummaryRecord(summaryList.Count + 1, row))
+                    summaryList.Add(New SummaryRecord(summaryList.Count, row))
             End Select
         Next
         Return summaryList

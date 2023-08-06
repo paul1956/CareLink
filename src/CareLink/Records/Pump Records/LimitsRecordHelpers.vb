@@ -15,13 +15,14 @@ Friend Module LimitsRecordHelpers
         With e.Column
             If HideColumn(.Name) Then
                 .Visible = False
-                Exit Sub
-            End If
-            Dim dgv As DataGridView = CType(sender, DataGridView)
-            e.DgvColumnAdded(GetCellStyle(.Name),
+            Else
+                Dim dgv As DataGridView = CType(sender, DataGridView)
+                e.DgvColumnAdded(GetCellStyle(.Name),
                              True,
                              True,
                              CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+            End If
+            .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
     End Sub
 

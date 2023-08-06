@@ -18,11 +18,11 @@ Friend Module BasalRecordHelpers
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         With e.Column
-            Dim dgv As DataGridView = CType(sender, DataGridView)
             e.DgvColumnAdded(GetCellStyle(.Name),
                              True,
                              True,
-                             CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                             CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+            .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
     End Sub
 
