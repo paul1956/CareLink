@@ -42,7 +42,7 @@ Public Class SessionProfileRecord
                 Case NameOf(country)
                     Me.country = row.Value
                 Case NameOf(dateOfBirth)
-                    Me.dateOfBirth = row.Value.Epoch2DateString
+                    Me.dateOfBirth = row.Value.FromUnixTime.ToLongDateString
                     _profileDictionary(key) = Me.dateOfBirth
                 Case NameOf(phone)
                     Me.phone = row.Value

@@ -28,7 +28,7 @@ Public Class SgMiniWindow
     Private Shared Function GetLastUpdateMessage() As String
         Return If(s_lastMedicalDeviceDataUpdateServerEpoch = 0,
                   $"{s_firstName}'s Last Update Unknown",
-                  $"{s_firstName}'s Updated {CInt((PumpNow() - s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime).TotalMinutes)} minutes ago"
+                  $"{s_firstName}'s Updated {CInt((PumpNow() - s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime).TotalMinutes)} minutes ago"
                  )
     End Function
 

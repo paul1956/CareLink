@@ -98,7 +98,7 @@ Friend Module Form1UpdateHelpers
 
         If RecentData.TryGetValue(ItemIndexes.basal.ToString, markerRowString) Then
             Dim item As BasalRecord = DictionaryToClass(Of BasalRecord)(Loads(markerRowString), recordNumber:=0)
-            item.OaDateTime(s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime)
+            item.OaDateTime(s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime)
             s_listOfManualBasal.Add(item)
         End If
         Form1.MaxBasalPerHourLabel.Text = If(RecentData.TryGetValue(ItemIndexes.markers.ToString, markerRowString),

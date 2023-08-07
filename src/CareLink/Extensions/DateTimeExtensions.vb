@@ -49,19 +49,6 @@ Friend Module DateTimeExtensions
     ''' <summary>
     ''' Converts a Unix Milliseconds TimeSpan to UTC Date
     ''' </summary>
-    ''' <param name="unixTime" kind="String"></param>
-    ''' <returns>UTC Date</returns>
-    <Extension>
-    Private Function FromUnixTime(unixTime As String) As Date
-        Dim epoch As New DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Local)
-        Return If(String.IsNullOrWhiteSpace(unixTime),
-                  epoch,
-                  Double.Parse(unixTime).FromUnixTime)
-    End Function
-
-    ''' <summary>
-    ''' Converts a Unix Milliseconds TimeSpan to UTC Date
-    ''' </summary>
     ''' <param name="unixTime" kind="Double">TimeSpan in Milliseconds</param>
     ''' <returns>UTC Date</returns>
     <Extension>
@@ -71,47 +58,50 @@ Friend Module DateTimeExtensions
     End Function
 
     ''' <summary>
-    ''' Converts a Unix Milliseconds TimeSpan to local date
-    ''' </summary>
-    ''' <param name="epoch"></param>
-    ''' <returns>Local Date as string</returns>
-    <Extension>
-    Friend Function Epoch2DateString(epoch As String) As String
-        Return epoch.FromUnixTime.ToLongDateString
-    End Function
-
-    ''' <summary>
-    ''' Converts a Unix Milliseconds TimeSpan to local DateTime
-    ''' </summary>
-    ''' <param name="epoch"></param>
-    ''' <returns>Local DateTime</returns>
-    <Extension>
-    Friend Function Epoch2DateTime(epoch As Long) As Date
-        Dim timeUtc As Date = epoch.ToString.FromUnixTime
-        Dim localTime As Date = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, PumpTimeZoneInfo)
-        Return localTime
-    End Function
-
-    ''' <summary>
-    ''' Converts a Unix Milliseconds TimeSpan to local DateTime
-    ''' </summary>
-    ''' <param name="epoch"></param>
-    ''' <returns>Local DateTime</returns>
-    <Extension>
-    Friend Function Epoch2DateTime(epoch As String) As Date
-        Return epoch.FromUnixTime.ToLocalTime
-    End Function
-
-    ''' <summary>
     ''' Converts a UNIX Timespan string to UTC DateTime
     ''' </summary>
     ''' <param name="epoch">In Milliseconds As String</param>
-    ''' <returns>DateTime String in UTC</returns>
+    ''' <returns>DateTime String in UTC and local Times</returns>
     <Extension>
     Friend Function Epoch2DateTimeString(epoch As String) As String
-        Return If(epoch = "0",
-                  "",
-                  $"{epoch.FromUnixTime.ToShortDateTimeString} UTC")
+        If epoch = "0" Then
+            Return ""
+        End If
+        Dim unixTime As Date = epoch.FromUnixTime
+        Return $"{unixTime.ToShortDateTimeString} UTC          {unixTime.ToLocalTime} Local Time          {epoch.Epoch2PumpDateTime} Pump Time"
+    End Function
+
+    ''' <summary>
+    ''' Converts a Unix Milliseconds TimeSpan to Pump DateTime
+    ''' </summary>
+    ''' <param name="epoch"></param>
+    ''' <returns>Local DateTime</returns>
+    <Extension>
+    Friend Function Epoch2PumpDateTime(epoch As Long) As Date
+        Return epoch.ToString.Epoch2PumpDateTime
+    End Function
+
+    ''' <summary>
+    ''' Converts a Unix Milliseconds TimeSpan to Pump DateTime
+    ''' </summary>
+    ''' <param name="epoch"></param>
+    ''' <returns>Local DateTime</returns>
+    <Extension>
+    Friend Function Epoch2PumpDateTime(epoch As String) As Date
+        Return TimeZoneInfo.ConvertTimeFromUtc(epoch.FromUnixTime(), PumpTimeZoneInfo)
+    End Function
+
+    ''' <summary>
+    ''' Converts a Unix Milliseconds TimeSpan to UTC Date
+    ''' </summary>
+    ''' <param name="unixTime" kind="String"></param>
+    ''' <returns>UTC Date</returns>
+    <Extension>
+    Friend Function FromUnixTime(unixTime As String) As Date
+        Dim epoch As New DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Local)
+        Return If(String.IsNullOrWhiteSpace(unixTime),
+                  epoch,
+                  Double.Parse(unixTime).FromUnixTime)
     End Function
 
     <Extension>

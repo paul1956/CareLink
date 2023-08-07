@@ -1162,7 +1162,7 @@ Public Class Form1
                         CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{ProjectName}", True)
                         Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
-                        Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2DateTime
+                        Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
                         SetLastUpdateTime(epochDateTime.ToShortDateTimeString, "from file", False, epochDateTime.IsDaylightSavingTime)
                         SetUpCareLinkUser(GetPathToTestSettingsFile())
 
@@ -1659,7 +1659,7 @@ Public Class Form1
         If Not RecentDataEmpty() Then
             If RecentData.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
-                    Dim epochDateTime As Date = lastMedicalDeviceDataUpdateServerEpochString.Epoch2DateTime
+                    Dim epochDateTime As Date = lastMedicalDeviceDataUpdateServerEpochString.FromUnixTime.ToLocalTime
                     If epochDateTime + s_5MinuteSpan < Now() Then
                         SetLastUpdateTime(Nothing, "", True, epochDateTime.IsDaylightSavingTime)
                         _sgMiniDisplay.SetCurrentSgString("---")
