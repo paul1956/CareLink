@@ -25,7 +25,7 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-08/05/2023
+08/07/2023
 
 ## What's New
 New in 3.8.4.2
@@ -33,6 +33,7 @@ New in 3.8.4.2
 - Add support for new 780G unknownIncompletedFlag
 - Add new error messages
 - Cleanup sorting and display of Record Number
+- More support for Pump, Local and UTC time zones
 
 New in 3.8.4.1
 - Fixed support for Canada
