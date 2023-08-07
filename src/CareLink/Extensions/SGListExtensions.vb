@@ -13,7 +13,7 @@ Public Module SGListExtensions
             sGs.Add(New SgRecord(innerJson(i), i))
             If sGs.Last.datetimeAsString = "" Then
                 sGs.Last.datetime = If(i = 0,
-                                       s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime.RoundTimeDown(RoundTo.Minute),
+                                       s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime.RoundDownToMinute(),
                                        sGs(0).datetime + (s_5MinuteSpan * i)
                                        )
             End If

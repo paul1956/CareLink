@@ -91,7 +91,7 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    ''' Convert all multiple " " with one " "
+    ''' Convert all multiple spaces with one space
     ''' </summary>
     ''' <param name="Value"></param>
     ''' <returns></returns>

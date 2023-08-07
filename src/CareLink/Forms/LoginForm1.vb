@@ -126,6 +126,7 @@ Public Class LoginForm1
         My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
         Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData()
         If recentData?.Count > 0 Then
+            s_lastMedicalDeviceDataUpdateServerEpoch = 0
             ReportLoginStatus(Me.LoginStatus, False)
 
             Me.Ok_Button.Enabled = True

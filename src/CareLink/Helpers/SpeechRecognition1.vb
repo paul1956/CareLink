@@ -9,6 +9,7 @@ Imports System.Text
 
 Friend Module SpeechSupport
     Private s_lastSpokenMessage As String
+    Private s_promptBusy As Prompt = Nothing
     Private s_speechErrorReported As Boolean = False
     Private s_speechUserName As String = ""
     Private s_speechWakeWordFound As Boolean = False
@@ -52,10 +53,10 @@ Friend Module SpeechSupport
                     s_speechErrorReported = True
                     Dim details As New StringBuilder()
                     details.AppendLine("Details:")
-                    details.AppendLine($"    Audio level:               {e.AudioLevel}")
-                    details.AppendLine($"    Audio position:            {e.AudioPosition}")
-                    details.AppendLine($"    Audio signal problem:      {e.AudioSignalProblem}")
-                    details.AppendLine($"    Recognizer audio position: {e.RecognizerAudioPosition}")
+                    details.AppendLine($"{s_4Spaces}Audio level:               {e.AudioLevel}")
+                    details.AppendLine($"{s_4Spaces}Audio position:            {e.AudioPosition}")
+                    details.AppendLine($"{s_4Spaces}Audio signal problem:      {e.AudioSignalProblem}")
+                    details.AppendLine($"{s_4Spaces}Recognizer audio position: {e.RecognizerAudioPosition}")
 
                     Dim page As New TaskDialogPage
                     MsgBox("Audio signal problem", details.ToString, MsgBoxStyle.OkOnly Or MsgBoxStyle.Information, "Audio Error", 15, page)
@@ -162,20 +163,20 @@ Friend Module SpeechSupport
                     End If
                     Dim text As New StringBuilder
                     text.AppendLine($"{ProjectName}:")
-                    text.AppendLine($"     All commands start with this")
-                    text.AppendLine($"     A pause is allowed after saying {ProjectName}.")
+                    text.AppendLine($"{s_4Spaces}All commands start with this")
+                    text.AppendLine($"{s_4Spaces}A pause is allowed after saying {ProjectName}.")
                     text.AppendLine()
                     text.AppendLine($"What can I say:")
-                    text.AppendLine($"     This message will be displayed")
+                    text.AppendLine($"{s_4Spaces}This message will be displayed")
                     text.AppendLine()
                     text.AppendLine($"What is my SG/BG/Blood Glucose/Blood Sugar:")
-                    text.AppendLine($"     Your current Sensor Glucose will be spoken")
+                    text.AppendLine($"{s_4Spaces}Your current Sensor Glucose will be spoken")
                     text.AppendLine()
                     text.AppendLine($"Tell me name's SG/BG/Blood Glucose/Blood Sugar:")
-                    text.AppendLine($"     Used when you support more than 1 user")
-                    text.AppendLine($"     Example ""Tell me John's Sensor Glucose""")
+                    text.AppendLine($"{s_4Spaces}Used when you support more than 1 user")
+                    text.AppendLine($"{s_4Spaces}Example ""Tell me John's Sensor Glucose""")
                     'currentSgStr.AppendLine($"Show [any tab name]: Will make that tab have focus")
-                    'currentSgStr.AppendLine($"     Example ""Show Treatment Details""")
+                    'currentSgStr.AppendLine($"{s_4Spaces}Example ""Show Treatment Details""")
                     Dim page As New TaskDialogPage
                     MsgBox("", text.ToString, MsgBoxStyle.OkOnly Or MsgBoxStyle.Information, "Speech Recognition Help", 30, page)
                     My.Settings.SystemSpeechHelpShown = page.Verification.Checked
@@ -283,11 +284,7 @@ Friend Module SpeechSupport
                     msg &= $" for a list of commands say, {ProjectName} what can I say"
                 End If
 
-                Dim p As Prompt = PlayText(msg)
-                While p IsNot Nothing AndAlso Not p.IsCompleted
-                    Threading.Thread.Sleep(10)
-                End While
-                p = Nothing
+                PlayText(msg)
             End If
             s_speechUserName = s_firstName
             Form1.StatusStripSpeech.Text = "Listening"
@@ -304,15 +301,13 @@ Friend Module SpeechSupport
 
     End Sub
 
-    Friend Function PlayText(text As String) As Prompt
+    Friend Sub PlayText(text As String)
         If Not My.Settings.SystemAudioAlertsEnabled Then
             Form1.StatusStripSpeech.Text = ""
-            Return Nothing
         End If
         If s_lastSpokenMessage = text AndAlso DateDiff(DateInterval.Minute, Now, s_timeOfLastAlert) < s_30SecondInMilliseconds Then
             Form1.StatusStripSpeech.Text = $"Rejected: '{text}' too soon, Listening"
             s_statusStripSpeechText = text
-            Return Nothing
         End If
         If Form1.StatusStripSpeech.Text.Contains("too soon") Then
             Form1.StatusStripSpeech.Text = "Listening"
@@ -324,7 +319,10 @@ Friend Module SpeechSupport
                 InitializeAudioAlerts()
             End If
         End If
-        Return s_ss.SpeakAsync(text)
-    End Function
+        While s_promptBusy IsNot Nothing AndAlso Not s_promptBusy.IsCompleted
+            Threading.Thread.Sleep(10)
+        End While
+        s_promptBusy = s_ss.SpeakAsync(text)
+    End Sub
 
 End Module

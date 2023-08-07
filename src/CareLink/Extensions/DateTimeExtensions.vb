@@ -68,7 +68,9 @@ Friend Module DateTimeExtensions
             Return ""
         End If
         Dim unixTime As Date = epoch.FromUnixTime
-        Return $"{unixTime.ToShortDateTimeString} UTC          {unixTime.ToLocalTime} Local Time          {epoch.Epoch2PumpDateTime} Pump Time"
+        Dim localTime As Date = unixTime.ToLocalTime
+        Dim pumpTime As Date = epoch.Epoch2PumpDateTime
+        Return $"{unixTime.ToShortDateTimeString} UTC{If(pumpTime.ToString = localTime.ToString, $"{s_15Spaces}{localTime}Local & Pump Time", $"{s_15Spaces}{localTime}Local Time{s_15Spaces}{pumpTime}Pump Time")}"
     End Function
 
     ''' <summary>
@@ -117,7 +119,7 @@ Friend Module DateTimeExtensions
     <Extension>
     Friend Function GetMarkerDateTime(marker As Dictionary(Of String, String)) As Date
         Try
-            Return marker.ParseDate(NameOf(MealRecord.dateTime)).RoundTimeDown(RoundTo.Minute)
+            Return marker.ParseDate(NameOf(MealRecord.dateTime)).RoundDownToMinute()
         Catch ex As Exception
             Stop
         End Try
@@ -146,21 +148,8 @@ Friend Module DateTimeExtensions
     End Function
 
     <Extension>
-    Public Function RoundTimeDown(d As Date, rt As RoundTo) As Date
-        Dim dtRounded As New DateTime()
-
-        Select Case rt
-            Case RoundTo.Second
-                dtRounded = New DateTime(d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second)
-            Case RoundTo.Minute
-                dtRounded = New DateTime(d.Year, d.Month, d.Day, d.Hour, d.Minute, 0)
-            Case RoundTo.Hour
-                dtRounded = New DateTime(d.Year, d.Month, d.Day, d.Hour, 0, 0)
-            Case RoundTo.Day
-                dtRounded = New DateTime(d.Year, d.Month, d.Day, 0, 0, 0)
-        End Select
-
-        Return dtRounded
+    Public Function RoundDownToMinute(d As Date) As Date
+        Return New DateTime(d.Year, d.Month, d.Day, d.Hour, d.Minute, 0)
     End Function
 
     <Extension>

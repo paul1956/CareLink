@@ -111,10 +111,7 @@ Public Class SgMiniWindow
                     Me.SgTextBox.BackColor = Color.Red.GetContrastingColor()
                     Me.SgTextBox.ForeColor = Color.Red
                     If Not _alarmPlayedLow Then
-                        Dim p As Prompt = PlayText($"Low Alarm for {s_firstName}, current sensor glucose {_currentSgValue}")
-                        While p IsNot Nothing AndAlso Not p.IsCompleted
-                            Threading.Thread.Sleep(10)
-                        End While
+                        PlayText($"Low Alarm for {s_firstName}, current sensor glucose {_currentSgValue}")
                         _alarmPlayedLow = True
                         _alarmPlayedHigh = False
                     End If
@@ -127,11 +124,7 @@ Public Class SgMiniWindow
                     Me.SgTextBox.BackColor = Color.Yellow.GetContrastingColor()
                     Me.SgTextBox.ForeColor = Color.Yellow
                     If Not _alarmPlayedHigh Then
-                        Dim p As Prompt = PlayText($"High alarm for {s_firstName}, current sensor glucose {_currentSgValue}")
-                        While p IsNot Nothing AndAlso Not p.IsCompleted
-                            Threading.Thread.Sleep(10)
-                        End While
-
+                        PlayText($"High alarm for {s_firstName}, current sensor glucose {_currentSgValue}")
                         _alarmPlayedLow = False
                         _alarmPlayedHigh = True
                     End If

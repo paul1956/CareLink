@@ -254,13 +254,7 @@ Public Class CareLinkUserDataList
         My.Computer.FileSystem.WriteAllText(GetPathToAllUserLoginInfo(True), sb.ToString, False)
     End Sub
 
-#Region "Unsupported Methods"     ' Unsupported Methods.
-
-    Public ReadOnly Property SortProperty() As PropertyDescriptor Implements IBindingList.SortProperty
-        Get
-            Throw New NotSupportedException()
-        End Get
-    End Property
+#Region "Unsupported Methods"
 
     Public Sub AddIndex(prop As PropertyDescriptor) Implements IBindingList.AddIndex
         Throw New NotSupportedException()
@@ -282,9 +276,15 @@ Public Class CareLinkUserDataList
         Throw New NotSupportedException()
     End Sub
 
-#End Region
+#End Region' Unsupported Methods
 
-#Region "Unsupported properties"     ' Unsupported properties
+#Region "Unsupported Properties"
+
+    Public ReadOnly Property SortProperty() As PropertyDescriptor Implements IBindingList.SortProperty
+        Get
+            Throw New NotSupportedException()
+        End Get
+    End Property
 
     Public ReadOnly Property IsSorted() As Boolean Implements IBindingList.IsSorted
         Get
@@ -298,6 +298,6 @@ Public Class CareLinkUserDataList
         End Get
     End Property
 
-#End Region
+#End Region ' Unsupported Properties
 
 End Class

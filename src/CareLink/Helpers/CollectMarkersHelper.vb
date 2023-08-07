@@ -103,7 +103,7 @@ Friend Module CollectMarkersHelper
             Dim sum As Single = 0
             Dim j As Integer = i
             Dim startOADate As OADate = basalDictionary.Keys(i)
-            While j < basalDictionary.Count AndAlso basalDictionary.Keys(j) <= startOADate + s_hourAsOADate
+            While j < basalDictionary.Count AndAlso basalDictionary.Keys(j) <= startOADate + s_1hourAsOADate
                 sum += basalDictionary.Values(j)
                 j += 1
             End While

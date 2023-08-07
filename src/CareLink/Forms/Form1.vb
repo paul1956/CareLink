@@ -2164,7 +2164,7 @@ Public Class Form1
 
                 For i As Integer = 0 To 287
                     Dim initialBolus As Single = 0
-                    Dim firstNotSkippedOaTime As New OADate((s_listOfSgRecords(0).datetime + (s_5MinuteSpan * i)).RoundTimeDown(RoundTo.Minute))
+                    Dim firstNotSkippedOaTime As New OADate((s_listOfSgRecords(0).datetime + (s_5MinuteSpan * i)).RoundDownToMinute())
                     While currentMarker < timeOrderedMarkers.Count AndAlso timeOrderedMarkers.Keys(currentMarker) <= firstNotSkippedOaTime
                         initialBolus += timeOrderedMarkers.Values(currentMarker)
                         currentMarker += 1

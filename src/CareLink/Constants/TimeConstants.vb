@@ -24,18 +24,11 @@ Friend Module TimeConstants
 
 #Region "OaDateTime Constants"
 
-    Public ReadOnly s_fiveMinuteOADate As New OADate(Date.MinValue + s_5MinuteSpan)
-    Public ReadOnly s_hourAsOADate As New OADate(Date.MinValue + New TimeSpan(hours:=1, minutes:=0, seconds:=0))
-    Public ReadOnly s_sixMinuteOADate As New OADate(Date.MinValue + New TimeSpan(hours:=0, minutes:=6, seconds:=0))
-    Public ReadOnly s_twoHalfMinuteOADate As New OADate(Date.MinValue + New TimeSpan(hours:=0, minutes:=2, seconds:=30))
+    Public ReadOnly s_5MinuteOADate As New OADate(Date.MinValue + s_5MinuteSpan)
+    Public ReadOnly s_1HourAsOADate As New OADate(Date.MinValue + New TimeSpan(hours:=1, minutes:=0, seconds:=0))
+    Public ReadOnly s_6MinuteOADate As New OADate(Date.MinValue + New TimeSpan(hours:=0, minutes:=6, seconds:=0))
+    Public ReadOnly s_150SecondsOADate As New OADate(Date.MinValue + New TimeSpan(hours:=0, minutes:=2, seconds:=30))
 
 #End Region ' OaDateTime Constants
-
-    Public Enum RoundTo
-        Second
-        Minute
-        Hour
-        Day
-    End Enum
 
 End Module

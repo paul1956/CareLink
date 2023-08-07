@@ -21,51 +21,55 @@ Public Module SystemConstants
     Friend Const TimeFormatTwelveHourWithoutMinutes As String = "h tt"
 
     Friend ReadOnly s_insulinTypes As New Dictionary(Of String, InsulinActivationRecord) From {
-                        {$"Humalog{RegisteredTrademark}", New InsulinActivationRecord(8, 4)},
-                        {$"Novolog{RegisteredTrademark}", New InsulinActivationRecord(8, 4)},
-                        {$"Generic (Insulin Lispro)", New InsulinActivationRecord(9, 4)},
-                        {$"NovoRapid", New InsulinActivationRecord(7, 4)},
-                        {$"FIASP{RegisteredTrademark}", New InsulinActivationRecord(4, 3)},
-                        {$"Lyumjev{RegisteredTrademark}", New InsulinActivationRecord(3, 3)}
-                    }
+            {$"Humalog{RegisteredTrademark}", New InsulinActivationRecord(8, 4)},
+            {$"Novolog{RegisteredTrademark}", New InsulinActivationRecord(8, 4)},
+            {$"Generic (Insulin Lispro)", New InsulinActivationRecord(9, 4)},
+            {$"NovoRapid", New InsulinActivationRecord(7, 4)},
+            {$"FIASP{RegisteredTrademark}", New InsulinActivationRecord(4, 3)},
+            {$"Lyumjev{RegisteredTrademark}", New InsulinActivationRecord(3, 3)}
+        }
 
     Public ReadOnly s_aitValues As New Dictionary(Of String, String) From {
-                                {"AIT 2:00", "2:00"}, {"AIT 2:15", "2:15"},
-                        {"AIT 2:30", "2:30"}, {"AIT 2:45", "2:45"},
-                        {"AIT 3:00", "3:00"}, {"AIT 3:15", "3:15"},
-                        {"AIT 3:30", "3:30"}, {"AIT 3:45", "3:45"},
-                        {"AIT 4:00", "4:00"}, {"AIT 4:15", "4:15"},
-                        {"AIT 4:30", "4:30"}, {"AIT 4:45", "4:45"},
-                        {"AIT 5:00", "5:00"}, {"AIT 5:15", "5:15"},
-                        {"AIT 5:30", "5:30"}, {"AIT 5:45", "5:45"},
-                        {"AIT 6:00", "6:00"}
-                    }
+            {"AIT 2:00", "2:00"}, {"AIT 2:15", "2:15"},
+            {"AIT 2:30", "2:30"}, {"AIT 2:45", "2:45"},
+            {"AIT 3:00", "3:00"}, {"AIT 3:15", "3:15"},
+            {"AIT 3:30", "3:30"}, {"AIT 3:45", "3:45"},
+            {"AIT 4:00", "4:00"}, {"AIT 4:15", "4:15"},
+            {"AIT 4:30", "4:30"}, {"AIT 4:45", "4:45"},
+            {"AIT 5:00", "5:00"}, {"AIT 5:15", "5:15"},
+            {"AIT 5:30", "5:30"}, {"AIT 5:45", "5:45"},
+            {"AIT 6:00", "6:00"}
+        }
 
     Public ReadOnly s_careLinkLower As String = ProjectName.ToLower
 
     Public ReadOnly s_oneToNineteen As New List(Of String) From {
-                        "zero", "one", "two", "three", "four", "five",
-                        "six", "seven", "eight", "nine", "ten", "eleven",
-                        "twelve", "thirteen", "fourteen", "fifteen",
-                        "sixteen", "seventeen", "eighteen", "nineteen"
-                    }
+            "zero",
+            "one", "two", "three", "four", "five",
+            "six", "seven", "eight", "nine", "ten",
+            "eleven", "twelve", "thirteen", "fourteen", "fifteen",
+            "sixteen", "seventeen", "eighteen", "nineteen"
+        }
 
-    Public ReadOnly s_unitsStrings As New Dictionary(Of String, String) From {
-                        {"MG_DL", "mg/dL"},
-                        {"MGDL", "mg/dL"},
-                        {"MMOL_L", "mmol/L"},
-                        {"MMOLL", "mmol/L"}
-                    }
+    Public ReadOnly s_4Spaces As String = Space(4)
+    Public ReadOnly s_15Spaces As String = Space(15)
 
     Public ReadOnly s_trends As New Dictionary(Of String, String) From {
-                        {"DOWN", "↓"},
-                        {"DOWN_DOUBLE", "↓↓"},
-                        {"DOWN_TRIPLE", "↓↓↓"},
-                        {"UP", "↑"},
-                        {"UP_DOUBLE", "↑↑"},
-                        {"UP_TRIPLE", "↑↑↑"},
-                        {"NONE", "↔"}
-                    }
+            {"DOWN", "↓"},
+            {"DOWN_DOUBLE", "↓↓"},
+            {"DOWN_TRIPLE", "↓↓↓"},
+            {"UP", "↑"},
+            {"UP_DOUBLE", "↑↑"},
+            {"UP_TRIPLE", "↑↑↑"},
+            {"NONE", "↔"}
+        }
+
+    Public ReadOnly s_unitsStrings As New Dictionary(Of String, String) From {
+            {"MG_DL", "mg/dL"},
+            {"MGDL", "mg/dL"},
+            {"MMOL_L", "mmol/L"},
+            {"MMOLL", "mmol/L"}
+       }
 
     Public Enum FileToLoadOptions As Integer
         LastSaved = 0
