@@ -72,7 +72,7 @@ Friend Module DrawingExtensions
 
     <Extension()>
     Public Function Split(collection As IEnumerable(Of Integer), parts As Integer) As IEnumerable(Of IEnumerable(Of Integer))
-        If collection Is Nothing Then Throw New ArgumentNullException(NameOf(collection))
+        ArgumentNullException.ThrowIfNull(collection)
         If parts < 1 Then Throw New ArgumentOutOfRangeException(NameOf(parts))
         Dim count As Integer = collection.Count()
         If count = 0 Then Return Array.Empty(Of IEnumerable(Of Integer))()

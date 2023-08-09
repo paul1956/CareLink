@@ -59,7 +59,7 @@ Public Module CareLinkClientHelpers
         Dim splitAbsoluteUri() As String = absoluteUri.Split("&")
         For Each item As String In splitAbsoluteUri
             Dim splitItem() As String
-            If Not result.Any Then
+            If result.Count = 0 Then
                 item = item.Split("?")(1)
             End If
             splitItem = item.Split("=")

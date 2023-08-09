@@ -166,7 +166,7 @@ Friend Module PlotMarkers
                 '      Throw New Exception($"{ex.DecodeException()} exception in {memberName} at {sourceLineNumber}")
             End Try
         Next
-        If s_listOfTimeChangeMarkers.Any Then
+        If s_listOfTimeChangeMarkers.Count > 0 Then
             timeChangeSeries.IsVisibleInLegend = True
             pageChart.ChartAreas(NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
             pageChart.Legends(0).CustomItems.Last.Enabled = True
@@ -279,7 +279,7 @@ Friend Module PlotMarkers
         Next
         treatmentChart.Annotations.Last.BringToFront()
 
-        If s_listOfTimeChangeMarkers.Any Then
+        If s_listOfTimeChangeMarkers.Count <> 0 Then
             treatmentMarkerTimeChangeSeries.IsVisibleInLegend = True
             treatmentChart.ChartAreas(NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
             treatmentChart.Legends(0).CustomItems.Last.Enabled = True

@@ -98,13 +98,11 @@ Friend Module DataTableHelpers
         If Not IsValidDataTable(result, IgnoreRows:=True) Then
             Return New DataTable()
         End If
-        If classCollection Is Nothing OrElse Not classCollection.Any() Then
-            Return result
+        If classCollection?.Count > 0 Then
+            For Each classObject As T In classCollection
+                result.Add(classObject)
+            Next classObject
         End If
-
-        For Each classObject As T In classCollection
-            result.Add(classObject)
-        Next classObject
 
         Return result
     End Function
@@ -117,7 +115,7 @@ Friend Module DataTableHelpers
     Public Function ClassPropertiesToColumnAlignment(Of T As Class)(ByRef alignmentTable As Dictionary(Of String, DataGridViewCellStyle), columnName As String) As DataGridViewCellStyle
         Dim classType As Type = GetType(T)
         Dim cellStyle As New DataGridViewCellStyle
-        If Not alignmentTable.Any Then
+        If alignmentTable.Count = 0 Then
             For Each [property] As PropertyInfo In classType.GetProperties()
                 cellStyle = New DataGridViewCellStyle
                 Select Case [property].GetCustomAttributes(GetType(ColumnAttribute), True).Cast(Of ColumnAttribute)().SingleOrDefault().TypeName

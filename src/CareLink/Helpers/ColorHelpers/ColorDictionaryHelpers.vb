@@ -44,7 +44,7 @@ Friend Module ColorDictionaryHelpers
                 sr.ReadLine()
                 While sr.Peek() <> -1
                     Dim line As String = sr.ReadLine()
-                    If Not line.Any Then
+                    If line.Length = 0 Then
                         Continue While
                     End If
                     Dim splitLine() As String = line.Split(","c)

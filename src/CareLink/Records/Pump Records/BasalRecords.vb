@@ -14,7 +14,7 @@ Public Class BasalRecords
         If _buffer.Any(Function(r As BasalRecord) r.GetOaGetTime = item.GetOaGetTime) Then
             Exit Sub
         End If
-        If _buffer.Any Then
+        If _buffer.Count <> 0 Then
             If item.Equals(_buffer.Last) Then
                 _buffer.Last.OaDateTime(Date.FromOADate(item.GetOaGetTime))
                 Exit Sub
@@ -50,7 +50,7 @@ Public Class BasalRecords
                     End If
             End Select
         Else
-            If _buffer.Any Then
+            If _buffer.Count <> 0 Then
                 Return $"{_buffer.Last().activeBasalPattern} rate = {_buffer.Last().GetBasalPerHour}U Per Hour".RemoveExtraSpaces
             End If
         End If

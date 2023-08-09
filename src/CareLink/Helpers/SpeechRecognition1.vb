@@ -150,7 +150,7 @@ Friend Module SpeechSupport
                     AnnounceSG(recognizedTextLower)
 
                 Case recognizedTextLower.StartsWith("tell me", StringComparison.CurrentCultureIgnoreCase)
-                    If Not recognizedTextLower.Contains(s_firstName.ToLower) Then
+                    If Not recognizedTextLower.Contains(s_firstName, StringComparison.CurrentCultureIgnoreCase) Then
                         Return
                     End If
                     Form1.StatusStripSpeech.Text = message

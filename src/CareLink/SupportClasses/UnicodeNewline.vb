@@ -227,9 +227,7 @@ Public Module NewLine
     ''' <returns>String with Unicode NewLines replaced with SubstituteChar</returns>
     <Extension>
     Public Function WithoutNewLines(text As String, Optional substituteChar As Char = ControlChars.NullChar) As String
-        If text Is Nothing Then
-            Throw New ArgumentNullException(NameOf(text))
-        End If
+        ArgumentNullException.ThrowIfNull(text)
 
         Dim sb As New StringBuilder()
         Dim length As Integer = Nothing

@@ -7,6 +7,8 @@ Imports System.Text
 
 Public Module StringExtensions
 
+    Private ReadOnly s_commaOrPeriod As Char() = {"."c, ","c}
+
     <Extension()>
     Friend Function Count(s As String, c As Char) As Integer
         Return s.Count(Function(c1 As Char) c1 = c)
@@ -117,7 +119,7 @@ Public Module StringExtensions
 
     <Extension>
     Public Function TruncateSingleString(s As String, decimalDigits As Integer) As String
-        Dim i As Integer = s.IndexOfAny({"."c, ","c})
+        Dim i As Integer = s.IndexOfAny(s_commaOrPeriod)
         If i < 0 Then
             If Not IsNumeric(s) Then
                 Return s

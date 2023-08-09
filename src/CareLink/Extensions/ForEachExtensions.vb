@@ -10,9 +10,7 @@ Public Module ForEachExtensions
     Public Iterator Function WithIndex(Of T)(
                                          source As IEnumerable(Of T)
                                          ) As IEnumerable(Of IndexClass(Of T))
-        If source Is Nothing Then
-            Throw New ArgumentNullException(NameOf(source))
-        End If
+        ArgumentNullException.ThrowIfNull(source)
 
         Using enumerator As IEnumerator(Of T) = source.GetEnumerator
             Dim hasNext As Boolean = enumerator.MoveNext

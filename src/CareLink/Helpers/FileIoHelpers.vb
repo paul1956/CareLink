@@ -17,7 +17,7 @@ Friend Module FileIoHelpers
     Public ReadOnly Property SavedSnapshotBaseName As String = $"{ProjectName}Snapshot"
 
     Friend Function AnyMatchingFiles(matchPattern As String) As Boolean
-        Return Directory.GetFiles(GetDirectoryForProjectData(), matchPattern).Any
+        Return Directory.GetFiles(GetDirectoryForProjectData(), matchPattern).Length > 0
     End Function
 
     Friend Function GetDirectoryForMyDocuments() As String
