@@ -13,6 +13,14 @@ Friend Module UserMessageHandler
     Friend ReadOnly s_calibrationIconMessages As New Dictionary(Of String, String) From {
                         {"HCL_REQUIRES_BG_LEGACY", "BG Required"},
                         {"HOURS_10", "Hours 10"},
+                        {"HOURS_9", "Hours 9"},
+                        {"HOURS_8", "Hours 8"},
+                        {"HOURS_7", "Hours 7"},
+                        {"HOURS_5", "Hours 5"},
+                        {"HOURS_4", "Hours 4"},
+                        {"HOURS_3", "Hours 3"},
+                        {"HOURS_2", "Hours 2"},
+                        {"HOURS_1", "Hours 1"},
                         {"INIT", "Initializing"},
                         {"NO_ICON", ""},
                         {"UNDEFINED", ""}
@@ -105,7 +113,8 @@ Friend Module UserMessageHandler
                         {"BC_SID_UMIN_ALERT_INFO", "Auto Mode min delivery. Auto Mode has been at minimum delivery for 2 hours. Enter BG to continue in Auto Mode."},
                         {"BC_SID_UPDATING_CAN_TAKE_UP_TO_NINETY_MINUTES", "Sensor updating(triggeredDateTime), it can take up to 90 minutes."},
                         {"BC_SID_UPDATING_CAN_TAKE_UP_TO_THREE_HOURS", "Sensor updating(triggeredDateTime), it can take up to 3 hours."},
-                        {"BC_SID_WAIT_AT_LEAST_15_MINUTES", "Calibration Not accepted.Wait at least 15 minutes. Wash hands, test BG again And calibrate."}
+                        {"BC_SID_WAIT_AT_LEAST_15_MINUTES", "Calibration Not accepted.Wait at least 15 minutes. Wash hands, test BG again And calibrate."},
+                        {"BC_TITLE_NEW_UNKNOWN_NOTIFICATION", "Enter BG Now (triggeredDateTime). Enter BG to calibrate sensor. Sensor information is no longer available."}
                     }
 
     Friend ReadOnly s_plgmLgsMessages As New Dictionary(Of String, String) From {
