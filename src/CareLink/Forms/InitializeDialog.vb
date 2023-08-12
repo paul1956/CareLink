@@ -10,31 +10,37 @@ Imports DataGridViewColumnControls
 
 Public Class InitializeDialog
 
-    Private ReadOnly _aitLengths As New Dictionary(Of String, Single) From
-            {
-                {"2:00", 2}, {"2:15", 2.25}, {"2:30", 2.5}, {"2:45", 2.75},
-                {"3:00", 3}, {"3:15", 3.25}, {"3:30", 3.5}, {"3:45", 3.75},
-                {"4:00", 4}, {"4:15", 4.25}, {"4:30", 4.5}, {"4:45", 4.75},
-                {"5:00", 5}, {"5:15", 5.25}, {"5:30", 5.5}, {"5:45", 5.45},
-                {"6:00", 6}
-            }
-
     Private ReadOnly _insulinTypesBindingSource As New BindingSource(
                 s_insulinTypes, Nothing)
 
     Private ReadOnly _midday As String = New TimeOnly(12, 0).ToString(CurrentDateCulture)
-
-    Private ReadOnly _midnight As String = New TimeOnly(0, 0).ToString(CurrentDateCulture)
 
     Private _currentUserBackup As CurrentUserRecord = Nothing
 
     Public Sub New(currentUser As CurrentUserRecord)
         MyBase.New
         Me.InitializeComponent()
+        _CurrentUser = currentUser
+    End Sub
+
+    Public Sub New(currentUser As CurrentUserRecord, ait As Single, CarbRatios As List(Of CarbRatioRecord))
+        MyBase.New
+        Me.InitializeComponent()
         Me.CurrentUser = currentUser
+        Me.CurrentUser.PumpAit = ait
+        Me.CurrentUser.CarbRatios = CarbRatios
     End Sub
 
     Public Property CurrentUser As CurrentUserRecord
+
+    Private Shared Sub InitializeComboList(items As DataGridViewComboBoxCell.ObjectCollection, start As Integer)
+        For i As Integer = start To 47
+            Dim t As New TimeOnly(i \ 2, (i Mod 2) * 30)
+            items.Add(t.ToString(CurrentDateCulture))
+        Next
+        items.Add(s_midnight)
+
+    End Sub
 
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         If _currentUserBackup Is Nothing Then
@@ -52,15 +58,6 @@ Public Class InitializeDialog
         End If
     End Sub
 
-    Private Sub InitializeComboList(items As DataGridViewComboBoxCell.ObjectCollection, start As Integer)
-        For i As Integer = start To 47
-            Dim t As New TimeOnly(i \ 2, (i Mod 2) * 30)
-            items.Add(t.ToString(CurrentDateCulture))
-        Next
-        items.Add(_midnight)
-
-    End Sub
-
     Private Sub InitializeDataGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles InitializeDataGridView.CellContentClick
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim cell As DataGridViewCell = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex)
@@ -76,8 +73,8 @@ Public Class InitializeDialog
                     Dim c As DataGridViewComboBoxCell = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
                     Dim startTime As TimeOnly = TimeOnly.Parse(Me.InitializeDataGridView.Rows(currentRow).Cells(NameOf(ColumnEnd)).Value.ToString)
                     Dim value As String = startTime.ToString
-                    Me.InitializeComboList(c.Items, CInt(startTime.ToTimeSpan.TotalMinutes / 30))
-                    c.Value = _midnight
+                    InitializeComboList(c.Items, CInt(startTime.ToTimeSpan.TotalMinutes / 30))
+                    c.Value = s_midnight
                     c.ReadOnly = False
                     buttonCell = CType(.Cells(NameOf(ColumnSave)), DataGridViewDisableButtonCell)
                     buttonCell.ReadOnly = False
@@ -92,7 +89,7 @@ Public Class InitializeDialog
 
             Case NameOf(ColumnSave)
                 With Me.InitializeDataGridView
-                    If .Rows(e.RowIndex).Cells(NameOf(ColumnEnd)).Value.ToString = _midnight OrElse .RowCount = 12 Then
+                    If .Rows(e.RowIndex).Cells(NameOf(ColumnEnd)).Value.ToString = s_midnight OrElse .RowCount = 12 Then
                         Me.OK_Button.Enabled = True
                         Dim buttonCell As DataGridViewDisableButtonCell = CType(.Rows(.RowCount - 1).Cells(NameOf(ColumnSave)), DataGridViewDisableButtonCell)
                         buttonCell.ReadOnly = True
@@ -119,8 +116,8 @@ Public Class InitializeDialog
                         c.Items.Add(value)
                         c.Value = value
                         c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
-                        Me.InitializeComboList(c.Items, CInt(timeOnly.ToTimeSpan.TotalMinutes / 30) + 1)
-                        c.Value = _midnight
+                        InitializeComboList(c.Items, CInt(timeOnly.ToTimeSpan.TotalMinutes / 30) + 1)
+                        c.Value = s_midnight
                         .Cells(NameOf(ColumnNumericUpDown)).Value = 15.0
                         CType(.Cells(NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell).Enabled = True
                     End With
@@ -140,12 +137,12 @@ Public Class InitializeDialog
 
     Private Sub InitializeDataGridView_Validating(sender As Object, e As CancelEventArgs) Handles InitializeDataGridView.Validating
         Dim cell As DataGridViewCell = Me.InitializeDataGridView.Rows(Me.InitializeDataGridView.RowCount - 1).Cells(NameOf(ColumnEnd))
-        If cell.Value.ToString = _midnight Then
+        If cell.Value.ToString = s_midnight Then
             cell.ErrorText = ""
         Else
             With Me.InitializeDataGridView
                 If .RowCount = 12 Then
-                    cell.Value = _midnight
+                    cell.Value = s_midnight
                     cell.ErrorText = ""
                     Dim buttonCell As DataGridViewDisableButtonCell = CType(.Rows(.RowCount - 1).Cells(NameOf(ColumnSave)), DataGridViewDisableButtonCell)
                     buttonCell.ReadOnly = True
@@ -153,7 +150,7 @@ Public Class InitializeDialog
                     .Enabled = False
                     Me.OK_Button.Focus()
                 Else
-                    cell.ErrorText = $"Value must be {_midnight}"
+                    cell.ErrorText = $"Value must be {s_midnight}"
                     .CurrentCell = cell
                     Me.DialogResult = DialogResult.None
                 End If
@@ -186,7 +183,7 @@ Public Class InitializeDialog
         Me.Text = $"Initialize CareLink™ For {Me.CurrentUser.UserName}"
 
         With Me.PumpAitComboBox
-            .DataSource = New BindingSource(_aitLengths, Nothing)
+            .DataSource = New BindingSource(s_aitLengths, Nothing)
             .DisplayMember = "Key"
             .ValueMember = "Value"
             If Me.CurrentUser.PumpAit = 0 Then
@@ -235,7 +232,7 @@ Public Class InitializeDialog
                         c.Value = value.StartTime.ToString(CurrentDateCulture)
                         c.ReadOnly = True
                         c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
-                        Me.InitializeComboList(c.Items, CInt((New TimeSpan(value.StartTime.Hour, value.StartTime.Minute, 0) / s_30MinuteSpan) + 1))
+                        InitializeComboList(c.Items, CInt((New TimeSpan(value.StartTime.Hour, value.StartTime.Minute, 0) / s_30MinuteSpan) + 1))
                         c.Value = value.EndTime.ToString(CurrentDateCulture)
                         c.ReadOnly = i.Index >= 11 OrElse
                                      (i.IsLast AndAlso Not i.IsFirst)
@@ -254,12 +251,12 @@ Public Class InitializeDialog
                     Dim buttonCell As DataGridViewDisableButtonCell = CType(.Cells(NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell)
                     buttonCell.Enabled = False
                     Dim c As DataGridViewComboBoxCell = CType(.Cells(NameOf(ColumnStart)), DataGridViewComboBoxCell)
-                    c.Items.Add(_midnight)
-                    c.Value = _midnight
+                    c.Items.Add(s_midnight)
+                    c.Value = s_midnight
                     c.ReadOnly = True
 
                     c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
-                    Me.InitializeComboList(c.Items, 1)
+                    InitializeComboList(c.Items, 1)
                     c.Value = _midday
                     Dim numericCell As DataGridViewNumericUpDownCell = CType(.Cells(NameOf(ColumnNumericUpDown)), DataGridViewNumericUpDownCell)
                     numericCell.Value = 15.0
@@ -298,7 +295,7 @@ Public Class InitializeDialog
         If c.SelectedIndex > -1 Then
             Me.ErrorProvider1.SetError(c, "")
         Else
-            Me.ErrorProvider1.SetError(c, $"Value must be {_midnight}")
+            Me.ErrorProvider1.SetError(c, $"Value must be {s_midnight}")
             e.Cancel = True
         End If
 
@@ -371,7 +368,7 @@ Public Class InitializeDialog
         chkBox.Enabled = chkBox.CheckState = CheckState.Checked
         Dim dgv As DataGridView = Me.InitializeDataGridView
         Dim cell As DataGridViewCell = dgv.Rows(Me.InitializeDataGridView.RowCount - 1).Cells(NameOf(ColumnEnd))
-        cell.Value = _midnight
+        cell.Value = s_midnight
         Me.InitializeDataGridView.Enabled = True
     End Sub
 

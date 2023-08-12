@@ -33,6 +33,7 @@
     <Title>CareLink For Windows</Title>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <ImportedNamespaces>System.Data=True,System.Drawing=True,System.Windows.Forms=True,System.Windows.Forms.DataVisualization.Charting=True,Microsoft.VisualBasic=True,System=True,System.Collections=True,System.Collections.Generic=True,System.Diagnostics=True,System.Linq=True,System.Xml.Linq=True,System.Threading.Tasks=True,CareLink=True</ImportedNamespaces>
+    <GenerateResourceWarnOnBinaryFormatterUse>false</GenerateResourceWarnOnBinaryFormatterUse>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -49,6 +50,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Extensions\UriExtensions.vb" />
     <Compile Remove="Records\CountrySettingsRecords\SupportedReportRecordHelpers.vb" />
   </ItemGroup>
 
@@ -61,8 +63,10 @@
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.102.0" />
     <PackageReference Include="DataGridViewDisableButtonColumnEx" Version="1.0.0.1" />
+    <PackageReference Include="FreeSpire.PDF" Version="8.6.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1901.177" />
     <PackageReference Include="Octokit" Version="7.1.0" />
+    <PackageReference Include="Spire.PDF" Version="9.8.5" />
     <PackageReference Include="System.Speech" Version="7.0.0" />
     <PackageReference Include="TableLayputPanelTop" Version="1.0.0.3" />
     <PackageReference Include="ToolStripComboBoxEx" Version="1.0.0.2" />

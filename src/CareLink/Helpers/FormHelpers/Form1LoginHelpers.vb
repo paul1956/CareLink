@@ -6,6 +6,7 @@ Imports System.Globalization
 Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
+Imports Spire.Pdf.Utilities
 
 Friend Module Form1LoginHelpers
     Public ReadOnly Property LoginDialog As New LoginForm1
@@ -138,13 +139,60 @@ Friend Module Form1LoginHelpers
     End Sub
 
     Friend Sub SetUpCareLinkUser(userSettingsPath As String)
-        Dim contents As String
+        Dim ait As Single = 2
+        Dim carbRatios As List(Of CarbRatioRecord) = Nothing
         If Path.Exists(userSettingsPath) Then
-            contents = File.ReadAllText(userSettingsPath)
+            Dim contents As String = File.ReadAllText(userSettingsPath)
             CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
         Else
+            If MsgBox($"Would you like to upload a {ProjectName}™ Device Settings PDF File", "", MsgBoxStyle.YesNo, $"Use {ProjectName}™ Settings File") = MsgBoxResult.Yes Then
+                Dim openFileDialog1 As New OpenFileDialog With {
+                            .AddToRecent = True,
+                            .CheckFileExists = True,
+                            .CheckPathExists = True,
+                            .Filter = $"Settings file (*.pdf)|*.pdf",
+                            .InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                            .Multiselect = False,
+                            .ReadOnlyChecked = True,
+                            .RestoreDirectory = True,
+                            .SupportMultiDottedExtensions = False,
+                            .Title = $"Select downloaded {ProjectName}™ Settings file.",
+                            .ValidateNames = True
+                        }
+                If openFileDialog1.ShowDialog() = DialogResult.OK Then
+                    Dim tables As List(Of PdfTable) = GetTableList(openFileDialog1.FileName, 0)
+                    Dim aitTableLines As List(Of String) = ExtractPdfTableLines(tables, "Bolus Wizard On")
+                    For Each e As IndexClass(Of String) In aitTableLines.WithIndex
+                        If e.IsFirst Then Continue For
+                        If String.IsNullOrWhiteSpace(e.Value) Then Exit For
+                        Dim lineParts() As String = e.Value.Split(" ")
+                        If lineParts(0) = "(h:mm)" Then
+                            ait = s_aitLengths(lineParts(1))
+                            Exit For
+                        End If
+                    Next
+                    Dim carbRatioLines As List(Of String) = ExtractPdfTableLines(tables, "Time Ratio")
+                    For Each e As IndexClass(Of String) In carbRatioLines.WithIndex
+                        If e.IsFirst Then Continue For
+                        If String.IsNullOrWhiteSpace(e.Value) Then Exit For
+                        Dim lineParts() As String = e.Value.Split(" ")
+                        Dim startTimeString As String = lineParts(0)
+                        Dim item As New CarbRatioRecord With {
+                            .StartTime = TimeOnly.Parse(lineParts(0)),
+                            .CarbRatio = lineParts(1).ParseSingle(2),
+                            .EndTime = If(e.IsLast OrElse carbRatioLines(e.Index + 1).Trim.Length = 0,
+                                          TimeOnly.Parse(s_midnight),
+                                          TimeOnly.Parse(carbRatioLines(e.Index + 1).Split(" ")(0))
+                                         )
+                        }
+                        carbRatios.Add(item)
+                    Next
+                    Stop
+                End If
+
+            End If
             CurrentUser = New CurrentUserRecord(My.Settings.CareLinkUserName, If(Not Is770G(), CheckState.Checked, CheckState.Indeterminate))
-            Dim f As New InitializeDialog(CurrentUser)
+            Dim f As New InitializeDialog(CurrentUser, ait, carbRatios)
             f.ShowDialog()
             CurrentUser = f.CurrentUser
         End If

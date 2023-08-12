@@ -20,6 +20,15 @@ Public Module SystemConstants
     Friend Const TimeFormatTwelveHourWithMinutes As String = "h:mm tt"
     Friend Const TimeFormatTwelveHourWithoutMinutes As String = "h tt"
 
+    Friend ReadOnly s_aitLengths As New Dictionary(Of String, Single) From
+            {
+                {"2:00", 2}, {"2:15", 2.25}, {"2:30", 2.5}, {"2:45", 2.75},
+                {"3:00", 3}, {"3:15", 3.25}, {"3:30", 3.5}, {"3:45", 3.75},
+                {"4:00", 4}, {"4:15", 4.25}, {"4:30", 4.5}, {"4:45", 4.75},
+                {"5:00", 5}, {"5:15", 5.25}, {"5:30", 5.5}, {"5:45", 5.45},
+                {"6:00", 6}
+            }
+
     Friend ReadOnly s_insulinTypes As New Dictionary(Of String, InsulinActivationRecord) From {
             {$"Humalog{RegisteredTrademark}", New InsulinActivationRecord(8, 4)},
             {$"Novolog{RegisteredTrademark}", New InsulinActivationRecord(8, 4)},
@@ -29,8 +38,12 @@ Public Module SystemConstants
             {$"Lyumjev{RegisteredTrademark}", New InsulinActivationRecord(3, 3)}
         }
 
+    Public ReadOnly s_15Spaces As String = Space(15)
+
+    Public ReadOnly s_4Spaces As String = Space(4)
+
     Public ReadOnly s_aitValues As New Dictionary(Of String, String) From {
-            {"AIT 2:00", "2:00"}, {"AIT 2:15", "2:15"},
+                    {"AIT 2:00", "2:00"}, {"AIT 2:15", "2:15"},
             {"AIT 2:30", "2:30"}, {"AIT 2:45", "2:45"},
             {"AIT 3:00", "3:00"}, {"AIT 3:15", "3:15"},
             {"AIT 3:30", "3:30"}, {"AIT 3:45", "3:45"},
@@ -50,9 +63,6 @@ Public Module SystemConstants
             "eleven", "twelve", "thirteen", "fourteen", "fifteen",
             "sixteen", "seventeen", "eighteen", "nineteen"
         }
-
-    Public ReadOnly s_4Spaces As String = Space(4)
-    Public ReadOnly s_15Spaces As String = Space(15)
 
     Public ReadOnly s_trends As New Dictionary(Of String, String) From {
             {"DOWN", "↓"},

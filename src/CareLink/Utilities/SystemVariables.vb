@@ -2,9 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.IO
-
 Friend Module SystemVariables
+    Friend ReadOnly s_midnight As String = New TimeOnly(0, 0).ToString
     Friend s_allUserSettingsData As New CareLinkUserDataList
     Friend s_currentSummaryRow As Integer = 0
     Friend s_formLoaded As Boolean = False

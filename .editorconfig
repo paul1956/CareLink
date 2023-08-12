@@ -11,9 +11,6 @@ indent_style = space
 indent_size = 4
 file_header_template = Licensed to the .NET Foundation under one or more agreements.\nThe .NET Foundation licenses this file to you under the MIT license.\nSee the LICENSE file in the project root for more information.
 
-# ReSharper properties
-resharper_vb_prefer_qualified_reference = true
-
 [*.json]
 indent_size = 2
 
@@ -220,6 +217,10 @@ dotnet_diagnostic.ca1308.severity = suggestion
 
 # CA1826: Do not use Enumerable methods on indexable collections. Instead use the collection directly
 dotnet_diagnostic.ca1826.severity = suggestion
+
+
+# CA2224: Override Equals on overloading operator equals
+dotnet_diagnostic.CA2224.severity = none
 
 # Xml project files
 [*.{csproj,vcxproj,vcxproj.filters,proj,nativeproj,locproj,vbproj}]
