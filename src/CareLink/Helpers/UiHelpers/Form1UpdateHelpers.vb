@@ -258,7 +258,7 @@ Friend Module Form1UpdateHelpers
                 Case ItemIndexes.pumpBannerState
                     s_pumpBannerStateValue = LoadList(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-                    Form1.TempTargetLabel.Visible = False
+                    Form1.PumpBannerStateLabel.Visible = False
 
                 Case ItemIndexes.basal
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
@@ -426,13 +426,31 @@ Friend Module Form1UpdateHelpers
                 Select Case typeValue
                     Case "TEMP_TARGET"
                         Dim minutes As Integer = bannerStateRecord1.timeRemaining
-                        Form1.TempTargetLabel.Text = $"Target {If(NativeMmolL, "8.3", "150")}  {minutes.ToHours} hr"
-                        Form1.TempTargetLabel.Visible = True
+                        Form1.PumpBannerStateLabel.BackColor = Color.Lime
+                        Form1.PumpBannerStateLabel.Text = $"Target {If(NativeMmolL, "8.3", "150")}  {minutes.ToHours} hr"
+                        Form1.PumpBannerStateLabel.Visible = True
+                        Form1.PumpBannerStateLabel.Dock = DockStyle.Top
                     Case "BG_REQUIRED"
+                        Form1.PumpBannerStateLabel.BackColor = Color.CadetBlue
+                        Form1.PumpBannerStateLabel.Text = "Enter BG"
+                        Form1.PumpBannerStateLabel.Visible = True
+                        Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
+                        Dim safeBasalDuration As UInteger = CUInt(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.safeBasalDuration)))
+                        If safeBasalDuration > 0 Then
+                            Form1.LastSGTimeLabel.Text = $"Exit in {TimeSpan.FromMinutes(safeBasalDuration):h\:mm}"
+                        End If
                     Case "DELIVERY_SUSPEND"
+                        Form1.PumpBannerStateLabel.BackColor = Color.IndianRed
+                        Form1.PumpBannerStateLabel.Text = "Delivery Suspended"
+                        Form1.PumpBannerStateLabel.Visible = True
+                        Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
                     Case "LOAD_RESERVOIR"
                     Case "PROCESSING_BG"
                     Case "SUSPENDED_BEFORE_LOW"
+                        Form1.PumpBannerStateLabel.BackColor = Color.IndianRed
+                        Form1.PumpBannerStateLabel.Text = "Suspended before low"
+                        Form1.PumpBannerStateLabel.Visible = True
+                        Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
                     Case "TEMP_BASAL"
                     Case "WAIT_TO_ENTER_BG"
                     Case Else

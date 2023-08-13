@@ -5,20 +5,21 @@
 Friend Module SgReadingRecordHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
+             NameOf(SgReadingRecord.dateTimeAsString),
              NameOf(SgReadingRecord.kind),
              NameOf(SgReadingRecord.relativeOffset),
+             NameOf(SgReadingRecord.type),
              NameOf(SgReadingRecord.version)
         }
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(SgRecord.datetime)
-                dgv.dateTimeCellFormatting(e, NameOf(SgReadingRecord.dateTime))
+        Select Case CType(sender, DataGridView).Columns(e.ColumnIndex).Name
+            Case NameOf(SgReadingRecord.dateTime)
+                CellFormattingDateTime(e)
             Case NameOf(SgReadingRecord.value), NameOf(SgReadingRecord.valueMmolL), NameOf(SgReadingRecord.valueMmDl)
-                dgv.SgValueCellFormatting(e, NameOf(SgReadingRecord.value), If(dgv.Rows(0).Cells(0).Value.ToString = "1", 0, 1))
+                CType(sender, DataGridView).CellFormattingSgValue(e, NameOf(SgReadingRecord.value), If(CType(sender, DataGridView).Rows(0).Cells(0).Value.ToString = "1", 0, 1))
         End Select
 
     End Sub

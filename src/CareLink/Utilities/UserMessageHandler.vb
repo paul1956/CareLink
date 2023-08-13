@@ -12,7 +12,19 @@ Friend Module UserMessageHandler
 
     Friend ReadOnly s_calibrationIconMessages As New Dictionary(Of String, String) From {
                         {"HCL_REQUIRES_BG_LEGACY", "BG Required"},
-                        {"HOURS_10", "Hours 10"},
+                        {"HOURS_12", "Calibration due 12 hours"},
+                        {"HOURS_11", "Calibration due 11 hours"},
+                        {"HOURS_10", "Calibration due 10 hours"},
+                        {"HOURS_9", "Calibration due 9 hours"},
+                        {"HOURS_8", "Calibration due 8 hours"},
+                        {"HOURS_7", "Calibration due 7 hours"},
+                        {"HOURS_6", "Calibration due 6 hours"},
+                        {"HOURS_5", "Calibration due 5 hours"},
+                        {"HOURS_4", "Calibration due 4 hours"},
+                        {"HOURS_3", "Calibration due 3 hours"},
+                        {"HOURS_2", "Calibration due 2 hours"},
+                        {"HOURS_1", "Calibration due 1 hour"},
+                        {"HOURS_0", "Calibration due <1 Hour"},
                         {"INIT", "Initializing"},
                         {"NO_ICON", ""},
                         {"UNDEFINED", ""}
@@ -105,7 +117,8 @@ Friend Module UserMessageHandler
                         {"BC_SID_UMIN_ALERT_INFO", "Auto Mode min delivery. Auto Mode has been at minimum delivery for 2 hours. Enter BG to continue in Auto Mode."},
                         {"BC_SID_UPDATING_CAN_TAKE_UP_TO_NINETY_MINUTES", "Sensor updating(triggeredDateTime), it can take up to 90 minutes."},
                         {"BC_SID_UPDATING_CAN_TAKE_UP_TO_THREE_HOURS", "Sensor updating(triggeredDateTime), it can take up to 3 hours."},
-                        {"BC_SID_WAIT_AT_LEAST_15_MINUTES", "Calibration Not accepted.Wait at least 15 minutes. Wash hands, test BG again And calibrate."}
+                        {"BC_SID_WAIT_AT_LEAST_15_MINUTES", "Calibration Not accepted.Wait at least 15 minutes. Wash hands, test BG again And calibrate."},
+                        {"BC_TITLE_NEW_UNKNOWN_NOTIFICATION", "Enter BG Now (triggeredDateTime). Enter BG to calibrate sensor. Sensor information is no longer available."}
                     }
 
     Friend ReadOnly s_plgmLgsMessages As New Dictionary(Of String, String) From {
@@ -125,8 +138,8 @@ Friend Module UserMessageHandler
                         {"DELIVERY_SUSPEND", $"Delivery{vbCrLf}Suspended"},
                         {"DO_NOT_CALIBRATE", $"Do Not{vbCrLf}Calibrate"},
                         {"LOAD_RESERVOIR", $"Load{vbCrLf}Reservoir"},
-                        {"NO_DATA_FROM_PUMP", $"No Data{vbCrLf}From Pump"},
                         {"NO_ACTION_REQUIRED", $"No Action{vbCrLf}Required"},
+                        {"NO_DATA_FROM_PUMP", $"No Data{vbCrLf}From Pump"},
                         {"NO_ERROR_MESSAGE", "---"},
                         {"NO_SENSOR_SIGNAL", "Lost Sensor Signal... Move pump closer to transmitter. May take 15 minutes to find signal"},
                         {"PROCESSING_BG", $"Processing{vbCrLf}BG"},

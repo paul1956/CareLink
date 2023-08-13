@@ -7,21 +7,6 @@ Imports System.Runtime.CompilerServices
 
 Friend Module DataGridViewCellStyleExtensions
 
-    Friend Sub FormatCell(ByRef e As DataGridViewCellFormattingEventArgs, highlightColor As Color, AlternateIndex As Integer)
-        e.Value = e.Value.ToString
-        With e.CellStyle
-            If e.RowIndex Mod 2 = AlternateIndex Then
-                .BackColor = highlightColor
-                .ForeColor = highlightColor.GetContrastingColor()
-            Else
-                .ForeColor = highlightColor
-                .BackColor = highlightColor.GetContrastingColor()
-            End If
-            .Font = New Font(.Font, FontStyle.Bold)
-        End With
-        e.FormattingApplied = True
-    End Sub
-
     <Extension>
     Public Function GetFormattedStyle(cell As DataGridViewCell) As DataGridViewCellStyle
         Dim dgv As DataGridView = cell.DataGridView

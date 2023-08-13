@@ -435,14 +435,12 @@ Public Class Form1
         ' Set the background to red for negative values in the Balance column.
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(AutoBasalDeliveryRecord.bolusAmount)
-                Dim basalAmount As Single = ParseSingle(e.Value, 3)
-                e.Value = basalAmount.ToString("F3", CurrentUICulture)
-                If basalAmount.IsMinBasal Then
-                    FormatCell(e, GetGraphLineColor("Min Basal"), 0)
+                CellFormattingSingleValue(e, 3)
+                If CellFormattingSingleValue(e, 3).IsMinBasal Then
+                    CellFormattingApplyColor(e, GetGraphLineColor("Min Basal"), 0, False)
                 End If
-                e.FormattingApplied = True
             Case NameOf(AutoBasalDeliveryRecord.dateTime)
-                dgv.dateTimeCellFormatting(e, NameOf(AutoBasalDeliveryRecord.dateTime))
+                CellFormattingDateTime(e)
         End Select
     End Sub
 
@@ -657,13 +655,9 @@ Public Class Form1
         If e.RowIndex = -1 Then Exit Sub
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If dgv.Columns(e.ColumnIndex).HeaderText = "Value" Then
-            Dim uriString As String = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()
+            Dim uriString As String = e.Value.ToString()
             If uriString.StartsWith("https:", StringComparison.InvariantCultureIgnoreCase) AndAlso Uri.IsWellFormedUriString(uriString, UriKind.Absolute) Then
-                e.Value = uriString
-                e.CellStyle.ForeColor = If(dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Equals(dgv.CurrentCell),
-                    Color.FromArgb(&HFF, &H0, &H0),
-                    Color.FromArgb(&H0, &H66, &HCC))
-                e.FormattingApplied = True
+                dgv.CellFormattingUrl(e)
             End If
         End If
     End Sub
@@ -688,38 +682,6 @@ Public Class Form1
 
 #Region "Dgv Insulin Events"
 
-    Private Sub DgvInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvInsulin.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(InsulinRecord.dateTime)
-                dgv.dateTimeCellFormatting(e, NameOf(InsulinRecord.dateTime))
-            Case Else
-                If dgv.Columns(e.ColumnIndex).ValueType = GetType(Single) Then
-                    Dim value As Single = ParseSingle(e.Value, 3)
-                    e.Value = value.ToString("F3", CurrentUICulture)
-                    If value <> 0 AndAlso dgv.Columns(e.ColumnIndex).Name = NameOf(InsulinRecord.SafeMealReduction) Then
-                        e.CellStyle.ForeColor = Color.OrangeRed
-                    End If
-                    e.FormattingApplied = True
-                End If
-        End Select
-    End Sub
-
-    Private Sub DgvInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnAdded
-        With e.Column
-            If InsulinRecordHelpers.HideColumn(.Name) Then
-                .SortMode = DataGridViewColumnSortMode.NotSortable
-                .Visible = False
-                Exit Sub
-            End If
-            e.DgvColumnAdded(InsulinRecordHelpers.GetCellStyle(.Name),
-                             True,
-                             True,
-                             CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-        End With
-    End Sub
-
     Private Sub DgvInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvInsulin.DataError
         Stop
     End Sub
@@ -732,27 +694,10 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(MealRecord.amount)
-                e.Value = $"{e.Value} {s_sessionCountrySettings.carbDefaultUnit}"
-                e.FormattingApplied = True
+                CellFormattingInteger(e, s_sessionCountrySettings.carbDefaultUnit)
             Case NameOf(MealRecord.dateTime)
-                dgv.dateTimeCellFormatting(e, NameOf(MealRecord.dateTime))
+                CellFormattingDateTime(e)
         End Select
-    End Sub
-
-    Private Sub DgvMeal_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvMeal.ColumnAdded
-        With e.Column
-            If MealRecordHelpers.HideColumn(.Name) Then
-                .SortMode = DataGridViewColumnSortMode.NotSortable
-                .Visible = False
-                Exit Sub
-            End If
-            Dim dgv As DataGridView = CType(sender, DataGridView)
-            e.DgvColumnAdded(MealRecordHelpers.GetCellStyle(.Name),
-                            True,
-                            True,
-                            CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-        End With
     End Sub
 
     Private Sub DgvMeal_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvMeal.DataError
@@ -789,14 +734,13 @@ Public Class Form1
             Case NameOf(SgRecord.sensorState)
                 ' Set the background to red for negative values in the Balance column.
                 If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
-                    FormatCell(e, Color.Red, 1 - alternateIndex)
+                    CellFormattingApplyColor(e, Color.Red, 1 - alternateIndex, False)
                 End If
-                e.Value = e.Value.ToString.ToTitle
-                e.FormattingApplied = True
+                CellFormattingToTitle(e)
             Case NameOf(SgRecord.datetime)
-                dgv.dateTimeCellFormatting(e, NameOf(SgRecord.datetime))
+                CellFormattingDateTime(e)
             Case NameOf(SgRecord.sg), NameOf(SgRecord.sgMmolL), NameOf(SgRecord.sgMmDl)
-                dgv.SgValueCellFormatting(e, NameOf(SgRecord.sg), alternateIndex)
+                dgv.CellFormattingSgValue(e, NameOf(SgRecord.sg), alternateIndex)
         End Select
     End Sub
 
@@ -1079,11 +1023,11 @@ Public Class Form1
     Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         Me.Fix(Me)
 
-        Me.CurrentSgLabel.Parent = Me.CalibrationShieldPictureBox
-        Me.ShieldUnitsLabel.Parent = Me.CalibrationShieldPictureBox
+        Me.CurrentSgLabel.Parent = Me.SmartGuardShieldPictureBox
+        Me.ShieldUnitsLabel.Parent = Me.SmartGuardShieldPictureBox
         Me.ShieldUnitsLabel.BackColor = Color.Transparent
         Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLeftPictureBox
-        Me.SensorMessage.Parent = Me.CalibrationShieldPictureBox
+        Me.SensorMessage.Parent = Me.SmartGuardShieldPictureBox
         Me.SensorDaysLeftLabel.BackColor = Color.Transparent
         s_useLocalTimeZone = My.Settings.UseLocalTimeZone
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
@@ -2235,6 +2179,7 @@ Public Class Form1
     Private Sub UpdateAutoModeShield()
         Try
             Me.LastSGTimeLabel.Text = s_lastSgRecord.datetime.ToShortTimeString
+            Me.LastSGTimeLabel.BackColor = Color.Transparent
             Me.ShieldUnitsLabel.BackColor = Color.Transparent
             Me.ShieldUnitsLabel.Text = SgUnitsNativeString
             If Not Single.IsNaN(s_lastSgRecord.sg) Then
@@ -2244,12 +2189,19 @@ Public Class Form1
                 Me.UpdateNotifyIcon(sgString)
                 _sgMiniDisplay.SetCurrentSgString(sgString)
                 Me.SensorMessage.Visible = False
-                Me.CalibrationShieldPictureBox.Image = My.Resources.Shield
+                If InAutoMode Then
+                    Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield
+                    Me.LastSGTimeLabel.Visible = True
+                Else
+                    Me.SmartGuardShieldPictureBox.Image = Nothing
+                    Me.LastSGTimeLabel.Visible = False
+                End If
                 Me.ShieldUnitsLabel.Visible = True
             Else
                 _sgMiniDisplay.SetCurrentSgString("---")
                 Me.CurrentSgLabel.Visible = False
-                Me.CalibrationShieldPictureBox.Image = My.Resources.Shield_Disabled
+                Me.SmartGuardShieldPictureBox.Image = Nothing
+                Me.LastSGTimeLabel.Visible = False
                 Me.SensorMessage.Visible = True
                 Me.SensorMessage.BackColor = Color.Transparent
                 Dim message As String = ""

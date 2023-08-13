@@ -77,7 +77,9 @@ Friend Module DrawingExtensions
         If parts < 1 Then Throw New ArgumentOutOfRangeException(NameOf(parts))
 #Else
         ArgumentOutOfRangeException.ThrowIfLessThan(parts, 1)
+
 #End If
+
         Dim count As Integer = collection.Count()
         If count = 0 Then Return Array.Empty(Of IEnumerable(Of Integer))()
         If parts >= count Then Return {collection}

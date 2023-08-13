@@ -5,9 +5,11 @@
 Friend Module ActiveInsulinRecordHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
-         NameOf(ActiveInsulinRecord.OAdatetime),
-         NameOf(ActiveInsulinRecord.version)
-    }
+                         NameOf(ActiveInsulinRecord.datetimeAsString),
+                         NameOf(ActiveInsulinRecord.kind),
+                         NameOf(ActiveInsulinRecord.OAdatetime),
+                         NameOf(ActiveInsulinRecord.version)
+                    }
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
@@ -15,7 +17,11 @@ Friend Module ActiveInsulinRecordHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(ActiveInsulinRecord.datetime)
-                dgv.dateTimeCellFormatting(e, NameOf(ActiveInsulinRecord.datetime))
+                CellFormattingDateTime(e)
+            Case NameOf(ActiveInsulinRecord.amount)
+                CellFormattingSingleValue(e, 3)
+            Case NameOf(ActiveInsulinRecord.precision)
+                CellFormattingToTitle(e)
         End Select
     End Sub
 
