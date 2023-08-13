@@ -437,7 +437,8 @@ Friend Module Form1UpdateHelpers
                         Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
                         Dim safeBasalDuration As UInteger = CUInt(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.safeBasalDuration)))
                         If safeBasalDuration > 0 Then
-                            Form1.LastSGTimeLabel.Text = $"Exit in {TimeSpan.FromMinutes(safeBasalDuration):h\:mm}"
+                            Form1.LastSgOrExitTimeLabel.Text = $"Exit in {TimeSpan.FromMinutes(safeBasalDuration):h\:mm} hr"
+                            Form1.LastSgOrExitTimeLabel.Visible = True
                         End If
                     Case "DELIVERY_SUSPEND"
                         Form1.PumpBannerStateLabel.BackColor = Color.IndianRed

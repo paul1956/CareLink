@@ -134,7 +134,7 @@ Public Class CareLinkClient
             _sessionUser = Me.GetMyUser(authToken)
             Me.SessionProfile = Me.GetMyProfile(authToken)
             _sessionMonitorData = Me.GetMonitorData(authToken)
-
+            'Dim reports As Object = Me.GetReports(authToken)
             ' Set login success if everything was OK:
             If _sessionUser.HasValue _
                AndAlso Me.SessionProfile.HasValue _
@@ -241,8 +241,15 @@ Public Class CareLinkClient
         Return Me.GetData(authToken, GetServerURL(Me.CareLinkCountry), "patient/countries/settings", queryParams, Nothing)
     End Function
 
+    Private Function GetReports(authToken As String) As Dictionary(Of String, String)
+        Dim queryParams As New Dictionary(Of String, String) From {
+            {"countryCode", Me.CareLinkCountry},
+            {"language", "en"}}
+
+        Return Me.GetData(authToken, GetServerURL(Me.CareLinkCountry), "app/reports", queryParams, Nothing)
+    End Function
+
     Private Function GetData(endPointPath As String, requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
-        Debug.Print($"GetData(Form1 = {Form1.Name}, endPointPath = {endPointPath}, requestBody = {requestBody.ToCsv}")
         ' Get authorization token
         Dim authToken As String = Nothing
         Select Case Me.GetAuthorizationToken(authToken)

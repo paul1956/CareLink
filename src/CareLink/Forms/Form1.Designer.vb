@@ -84,7 +84,7 @@ Partial Class Form1
         BelowLowLimitValueLabel = New Label()
         CalibrationDueImage = New PictureBox()
         CalibrationShieldPanel = New Panel()
-        LastSGTimeLabel = New Label()
+        LastSgOrExitTimeLabel = New Label()
         PumpBannerStateLabel = New Label()
         ShieldUnitsLabel = New Label()
         CurrentSgLabel = New Label()
@@ -724,7 +724,7 @@ Partial Class Form1
         ' 
         ' CalibrationShieldPanel
         ' 
-        CalibrationShieldPanel.Controls.Add(LastSGTimeLabel)
+        CalibrationShieldPanel.Controls.Add(LastSgOrExitTimeLabel)
         CalibrationShieldPanel.Controls.Add(PumpBannerStateLabel)
         CalibrationShieldPanel.Controls.Add(ShieldUnitsLabel)
         CalibrationShieldPanel.Controls.Add(CurrentSgLabel)
@@ -737,18 +737,18 @@ Partial Class Form1
         CalibrationShieldPanel.Size = New Size(116, 134)
         CalibrationShieldPanel.TabIndex = 64
         ' 
-        ' LastSGTimeLabel
+        ' LastSgOrExitTimeLabel
         ' 
-        LastSGTimeLabel.BackColor = Color.Transparent
-        LastSGTimeLabel.Dock = DockStyle.Bottom
-        LastSGTimeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
-        LastSGTimeLabel.ForeColor = Color.White
-        LastSGTimeLabel.Location = New Point(0, 113)
-        LastSGTimeLabel.Name = "LastSGTimeLabel"
-        LastSGTimeLabel.Size = New Size(116, 21)
-        LastSGTimeLabel.TabIndex = 55
-        LastSGTimeLabel.Text = "Exit in 4:27"
-        LastSGTimeLabel.TextAlign = ContentAlignment.MiddleCenter
+        LastSgOrExitTimeLabel.BackColor = Color.Transparent
+        LastSgOrExitTimeLabel.Dock = DockStyle.Bottom
+        LastSgOrExitTimeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        LastSgOrExitTimeLabel.ForeColor = Color.White
+        LastSgOrExitTimeLabel.Location = New Point(0, 113)
+        LastSgOrExitTimeLabel.Name = "LastSgOrExitTimeLabel"
+        LastSgOrExitTimeLabel.Size = New Size(116, 21)
+        LastSgOrExitTimeLabel.TabIndex = 55
+        LastSgOrExitTimeLabel.Text = "Exit in 4:27"
+        LastSgOrExitTimeLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' PumpBannerStateLabel
         ' 
@@ -2688,7 +2688,7 @@ Partial Class Form1
     Friend WithEvents Last24HTotalsPanel As Panel
     Friend WithEvents Last24ManualBolusLabel As Label
     Friend WithEvents Last24TotalsLabel As Label
-    Friend WithEvents LastSGTimeLabel As Label
+    Friend WithEvents LastSgOrExitTimeLabel As Label
     Friend WithEvents LastUpdateTimeToolStripStatusLabel As ToolStripStatusLabel
     Friend WithEvents ListView1 As ListView
     Friend WithEvents LoginStatus As ToolStripStatusLabel
