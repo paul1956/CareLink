@@ -40,13 +40,12 @@ Public Class BasalRecords
             Dim automodeState As String = s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.autoModeShieldState))
             Select Case automodeState
                 Case "AUTO_BASAL"
-                    title = "AutoMode"
+                    title = If(Is770G(), "AutoMode", "SmartGuard")
                 Case "SAFE_BASAL"
                     title = automodeState.ToTitle
                     Dim safeBasalDuration As UInteger = CUInt(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.safeBasalDuration)))
                     If safeBasalDuration > 0 Then
-                        Dim spWorkMin As TimeSpan = TimeSpan.FromMinutes(safeBasalDuration)
-                        title &= $", {spWorkMin:h\:mm} left."
+                        title &= $", {TimeSpan.FromMinutes(safeBasalDuration):h\:mm} left."
                     End If
             End Select
         Else

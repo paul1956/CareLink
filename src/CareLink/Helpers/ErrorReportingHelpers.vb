@@ -5,7 +5,10 @@
 Friend Module ErrorReportingHelpers
 
     Public Function GetTitleFromStack(stackFrame As StackFrame) As String
-        Return $"{stackFrame.GetFileName.Split("\").Last} line:{stackFrame.GetFileLineNumber()}"
+        Return If(stackFrame?.GetFileName Is Nothing,
+                  "Error Location External Code",
+                  $"{stackFrame.GetFileName.Split("\").Last} line:{stackFrame.GetFileLineNumber()}"
+                 )
     End Function
 
 End Module

@@ -5,6 +5,7 @@
 Friend Module SgRecordHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
+                        NameOf(SgRecord.datetimeAsString),
                         NameOf(SgRecord.kind),
                         NameOf(SgRecord.OaDateTime),
                         NameOf(SgRecord.relativeOffset),
@@ -43,14 +44,13 @@ Friend Module SgRecordHelpers
             Case NameOf(SgRecord.sensorState)
                 ' Set the background to red for negative values in the Balance column.
                 If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
-                    FormatCell(e, Color.Red, alternateIndex)
+                    CellFormattingApplyColor(e, Color.Red, alternateIndex, False)
                 End If
-                e.Value = e.Value.ToString.ToTitle
-                e.FormattingApplied = True
+                CellFormattingToTitle(e)
             Case NameOf(SgRecord.datetime)
-                dgv.dateTimeCellFormatting(e, NameOf(SgRecord.datetime))
+                CellFormattingDateTime(e)
             Case NameOf(SgRecord.sg), NameOf(SgRecord.sgMmolL), NameOf(SgRecord.sgMmDl)
-                dgv.SgValueCellFormatting(e, NameOf(SgRecord.sg), alternateIndex)
+                dgv.CellFormattingSgValue(e, NameOf(SgRecord.sg), alternateIndex)
         End Select
 
     End Sub

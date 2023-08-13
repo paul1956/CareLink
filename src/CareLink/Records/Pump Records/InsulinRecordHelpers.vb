@@ -19,25 +19,29 @@ Friend Module InsulinRecordHelpers
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.dateTimeCellFormatting(e, NameOf(CalibrationRecord.dateTime))
-        Dim value As String = e.Value.ToString
-        Select Case value
-            Case "AUTOCORRECTION"
-                e.Value = "Auto Correction"
-                FormatCell(e, GetGraphLineColor("Auto Correction"), 0)
-                Exit Sub
-            Case "FAST"
-                e.Value = "Fast"
-                e.FormattingApplied = True
-                Exit Sub
-            Case "RECOMMENDED"
-                e.Value = "Recommended"
-                e.FormattingApplied = True
-                Exit Sub
-            Case "UNDETERMINED"
-                e.Value = "Undetermined"
-                e.FormattingApplied = True
-                Exit Sub
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(InsulinRecord.dateTime)
+                CellFormattingDateTime(e)
+            Case NameOf(InsulinRecord.SafeMealReduction)
+                If CellFormattingSingleValue(e, 3) > Single.Epsilon Then
+                    CellFormattingApplyColor(e, Color.OrangeRed, 1, False)
+                End If
+            Case NameOf(InsulinRecord.activationType)
+                Dim value As String = e.Value.ToString
+                Select Case value
+                    Case "AUTOCORRECTION"
+                        e.Value = "Auto Correction"
+                        CellFormattingApplyColor(e, GetGraphLineColor("Auto Correction"), 0, False)
+                    Case "FAST", "RECOMMENDED", "UNDETERMINED"
+                        CellFormattingToTitle(e)
+                End Select
+            Case NameOf(InsulinRecord.bolusType)
+                CellFormattingToTitle(e)
+            Case Else
+                If dgv.Columns(e.ColumnIndex).ValueType = GetType(Single) Then
+                    CellFormattingSingleValue(e, 3)
+                End If
+
         End Select
     End Sub
 

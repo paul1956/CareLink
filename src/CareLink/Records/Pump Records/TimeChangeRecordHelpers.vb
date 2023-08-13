@@ -14,7 +14,11 @@ Friend Module TimeChangeRecordHelpers
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.dateTimeCellFormatting(e, NameOf(TimeChangeRecord.dateTime))
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(TimeChangeRecord.dateTime), NameOf(TimeChangeRecord.previousDateTime)
+                CellFormattingDateTime(e)
+        End Select
+
     End Sub
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)

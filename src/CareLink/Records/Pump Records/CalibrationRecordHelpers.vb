@@ -5,8 +5,10 @@
 Friend Module CalibrationRecordHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
+                         NameOf(CalibrationRecord.dateTimeAsString),
                          NameOf(CalibrationRecord.kind),
                          NameOf(CalibrationRecord.relativeOffset),
+                         NameOf(CalibrationRecord.type),
                          NameOf(CalibrationRecord.version)
                     }
 
@@ -14,8 +16,13 @@ Friend Module CalibrationRecordHelpers
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.dateTimeCellFormatting(e, NameOf(CalibrationRecord.dateTime))
-        dgv.SgValueCellFormatting(e, NameOf(CalibrationRecord.value), 0)
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(CalibrationRecord.dateTime)
+                CellFormattingDateTime(e)
+            Case NameOf(CalibrationRecord.value), NameOf(CalibrationRecord.valueMmolL), NameOf(CalibrationRecord.valueMmDl)
+                dgv.CellFormattingSgValue(e, NameOf(CalibrationRecord.value), 0)
+        End Select
+
     End Sub
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)

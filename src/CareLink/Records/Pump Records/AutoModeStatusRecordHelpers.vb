@@ -5,8 +5,10 @@
 Friend Module AutoModeStatusRecordHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
+             NameOf(AutoModeStatusRecord.dateTimeAsString),
              NameOf(AutoModeStatusRecord.kind),
              NameOf(AutoModeStatusRecord.relativeOffset),
+             NameOf(AutoModeStatusRecord.type),
              NameOf(AutoModeStatusRecord.version)
         }
 
@@ -14,7 +16,10 @@ Friend Module AutoModeStatusRecordHelpers
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.dateTimeCellFormatting(e, NameOf(AutoModeStatusRecord.dateTime))
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(AutoModeStatusRecord.dateTime)
+                CellFormattingDateTime(e)
+        End Select
     End Sub
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)

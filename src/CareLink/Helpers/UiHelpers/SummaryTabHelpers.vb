@@ -12,8 +12,7 @@ Friend Module SummaryTabHelpers
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(SummaryRecord.RecordNumber)
                 If dgv.Rows(e.RowIndex).Cells("key").Value.Equals(ItemIndexes.medicalDeviceInformation.ToString) Then
-                    e.Value = CSng(dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value).ToString("F1")
-                    e.FormattingApplied = True
+                    CellFormattingSingleValue(e, 1)
                 End If
         End Select
 

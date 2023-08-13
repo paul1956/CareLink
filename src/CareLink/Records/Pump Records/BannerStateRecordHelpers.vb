@@ -10,10 +10,7 @@ Friend Module BannerStateRecordHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(BannerStateRecord.timeRemaining)
-                If e.Value Is Nothing OrElse e.Value.ToString = "0" Then
-                    e.Value = ""
-                    e.FormattingApplied = True
-                End If
+                CellFormatting0Value(e)
         End Select
     End Sub
 

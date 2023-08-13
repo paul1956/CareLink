@@ -5,8 +5,10 @@
 Friend Module LowGlucoseSuspendRecordHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
+            NameOf(LowGlucoseSuspendRecord.dateTimeAsString),
             NameOf(LowGlucoseSuspendRecord.kind),
             NameOf(LowGlucoseSuspendRecord.relativeOffset),
+            NameOf(LowGlucoseSuspendRecord.type),
             NameOf(LowGlucoseSuspendRecord.version)
         }
 
@@ -14,7 +16,10 @@ Friend Module LowGlucoseSuspendRecordHelpers
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.dateTimeCellFormatting(e, NameOf(LowGlucoseSuspendRecord.dateTime))
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(LowGlucoseSuspendRecord.dateTime)
+                CellFormattingDateTime(e)
+        End Select
     End Sub
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)

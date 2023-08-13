@@ -84,12 +84,12 @@ Partial Class Form1
         BelowLowLimitValueLabel = New Label()
         CalibrationDueImage = New PictureBox()
         CalibrationShieldPanel = New Panel()
-        TempTargetLabel = New Label()
-        ShieldUnitsLabel = New Label()
         LastSGTimeLabel = New Label()
+        PumpBannerStateLabel = New Label()
+        ShieldUnitsLabel = New Label()
         CurrentSgLabel = New Label()
         SensorMessage = New Label()
-        CalibrationShieldPictureBox = New PictureBox()
+        SmartGuardShieldPictureBox = New PictureBox()
         CareLinkUserDataRecordBindingSource = New BindingSource(components)
         CursorMessage1Label = New Label()
         CursorMessage2Label = New Label()
@@ -230,7 +230,7 @@ Partial Class Form1
         MenuStrip1.SuspendLayout()
         CType(CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         CalibrationShieldPanel.SuspendLayout()
-        CType(CalibrationShieldPictureBox, ComponentModel.ISupportInitialize).BeginInit()
+        CType(SmartGuardShieldPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(CareLinkUserDataRecordBindingSource, ComponentModel.ISupportInitialize).BeginInit()
         CursorPanel.SuspendLayout()
         CType(CursorPictureBox, ComponentModel.ISupportInitialize).BeginInit()
@@ -402,21 +402,21 @@ Partial Class Form1
         ' MenuOptionsSpeechRecognitionDisabled
         ' 
         MenuOptionsSpeechRecognitionDisabled.Name = "MenuOptionsSpeechRecognitionDisabled"
-        MenuOptionsSpeechRecognitionDisabled.Size = New Size(180, 22)
+        MenuOptionsSpeechRecognitionDisabled.Size = New Size(135, 22)
         MenuOptionsSpeechRecognitionDisabled.Text = "Disabled"
         ' 
         ' MenuOptionsSpeechRecognitionConfidence
         ' 
         MenuOptionsSpeechRecognitionConfidence.Enabled = False
         MenuOptionsSpeechRecognitionConfidence.Name = "MenuOptionsSpeechRecognitionConfidence"
-        MenuOptionsSpeechRecognitionConfidence.Size = New Size(180, 22)
+        MenuOptionsSpeechRecognitionConfidence.Size = New Size(135, 22)
         MenuOptionsSpeechRecognitionConfidence.Text = "Confidence"
         ' 
         ' MenuOptionsSpeechRecognition95
         ' 
         MenuOptionsSpeechRecognition95.CheckOnClick = True
         MenuOptionsSpeechRecognition95.Name = "MenuOptionsSpeechRecognition95"
-        MenuOptionsSpeechRecognition95.Size = New Size(180, 22)
+        MenuOptionsSpeechRecognition95.Size = New Size(135, 22)
         MenuOptionsSpeechRecognition95.Text = "95%"
         MenuOptionsSpeechRecognition95.TextAlign = ContentAlignment.MiddleRight
         ' 
@@ -424,7 +424,7 @@ Partial Class Form1
         ' 
         MenuOptionsSpeechRecognition90.CheckOnClick = True
         MenuOptionsSpeechRecognition90.Name = "MenuOptionsSpeechRecognition90"
-        MenuOptionsSpeechRecognition90.Size = New Size(180, 22)
+        MenuOptionsSpeechRecognition90.Size = New Size(135, 22)
         MenuOptionsSpeechRecognition90.Text = "90%"
         MenuOptionsSpeechRecognition90.TextAlign = ContentAlignment.MiddleRight
         ' 
@@ -432,7 +432,7 @@ Partial Class Form1
         ' 
         MenuOptionsSpeechRecognition85.CheckOnClick = True
         MenuOptionsSpeechRecognition85.Name = "MenuOptionsSpeechRecognition85"
-        MenuOptionsSpeechRecognition85.Size = New Size(180, 22)
+        MenuOptionsSpeechRecognition85.Size = New Size(135, 22)
         MenuOptionsSpeechRecognition85.Text = "85%"
         MenuOptionsSpeechRecognition85.TextAlign = ContentAlignment.MiddleRight
         ' 
@@ -442,7 +442,7 @@ Partial Class Form1
         MenuOptionsSpeechRecognition80.CheckOnClick = True
         MenuOptionsSpeechRecognition80.CheckState = CheckState.Checked
         MenuOptionsSpeechRecognition80.Name = "MenuOptionsSpeechRecognition80"
-        MenuOptionsSpeechRecognition80.Size = New Size(180, 22)
+        MenuOptionsSpeechRecognition80.Size = New Size(135, 22)
         MenuOptionsSpeechRecognition80.Text = "80%"
         ' 
         ' MenuOptionsShowChartLegends
@@ -724,12 +724,12 @@ Partial Class Form1
         ' 
         ' CalibrationShieldPanel
         ' 
-        CalibrationShieldPanel.Controls.Add(TempTargetLabel)
-        CalibrationShieldPanel.Controls.Add(ShieldUnitsLabel)
         CalibrationShieldPanel.Controls.Add(LastSGTimeLabel)
+        CalibrationShieldPanel.Controls.Add(PumpBannerStateLabel)
+        CalibrationShieldPanel.Controls.Add(ShieldUnitsLabel)
         CalibrationShieldPanel.Controls.Add(CurrentSgLabel)
         CalibrationShieldPanel.Controls.Add(SensorMessage)
-        CalibrationShieldPanel.Controls.Add(CalibrationShieldPictureBox)
+        CalibrationShieldPanel.Controls.Add(SmartGuardShieldPictureBox)
         CalibrationShieldPanel.Dock = DockStyle.Left
         CalibrationShieldPanel.Location = New Point(0, 0)
         CalibrationShieldPanel.Margin = New Padding(0)
@@ -737,18 +737,31 @@ Partial Class Form1
         CalibrationShieldPanel.Size = New Size(116, 134)
         CalibrationShieldPanel.TabIndex = 64
         ' 
-        ' TempTargetLabel
+        ' LastSGTimeLabel
         ' 
-        TempTargetLabel.BackColor = Color.Lime
-        TempTargetLabel.Dock = DockStyle.Top
-        TempTargetLabel.Font = New Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point)
-        TempTargetLabel.ForeColor = Color.Black
-        TempTargetLabel.Location = New Point(0, 0)
-        TempTargetLabel.Name = "TempTargetLabel"
-        TempTargetLabel.Size = New Size(116, 21)
-        TempTargetLabel.TabIndex = 56
-        TempTargetLabel.Text = "Target 150 2:00 Hr"
-        TempTargetLabel.TextAlign = ContentAlignment.MiddleCenter
+        LastSGTimeLabel.BackColor = Color.Transparent
+        LastSGTimeLabel.Dock = DockStyle.Bottom
+        LastSGTimeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        LastSGTimeLabel.ForeColor = Color.White
+        LastSGTimeLabel.Location = New Point(0, 113)
+        LastSGTimeLabel.Name = "LastSGTimeLabel"
+        LastSGTimeLabel.Size = New Size(116, 21)
+        LastSGTimeLabel.TabIndex = 55
+        LastSGTimeLabel.Text = "Exit in 4:27"
+        LastSGTimeLabel.TextAlign = ContentAlignment.MiddleCenter
+        ' 
+        ' PumpBannerStateLabel
+        ' 
+        PumpBannerStateLabel.BackColor = Color.Lime
+        PumpBannerStateLabel.Dock = DockStyle.Top
+        PumpBannerStateLabel.Font = New Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point)
+        PumpBannerStateLabel.ForeColor = Color.Black
+        PumpBannerStateLabel.Location = New Point(0, 0)
+        PumpBannerStateLabel.Name = "PumpBannerStateLabel"
+        PumpBannerStateLabel.Size = New Size(116, 13)
+        PumpBannerStateLabel.TabIndex = 56
+        PumpBannerStateLabel.Text = "Target 150 2:00 Hr"
+        PumpBannerStateLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' ShieldUnitsLabel
         ' 
@@ -761,19 +774,6 @@ Partial Class Form1
         ShieldUnitsLabel.Size = New Size(40, 13)
         ShieldUnitsLabel.TabIndex = 8
         ShieldUnitsLabel.Text = "XX/XX"
-        ' 
-        ' LastSGTimeLabel
-        ' 
-        LastSGTimeLabel.BackColor = Color.Transparent
-        LastSGTimeLabel.Dock = DockStyle.Bottom
-        LastSGTimeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
-        LastSGTimeLabel.ForeColor = Color.White
-        LastSGTimeLabel.Location = New Point(0, 113)
-        LastSGTimeLabel.Name = "LastSGTimeLabel"
-        LastSGTimeLabel.Size = New Size(116, 21)
-        LastSGTimeLabel.TabIndex = 55
-        LastSGTimeLabel.Text = "Time"
-        LastSGTimeLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' CurrentSgLabel
         ' 
@@ -800,16 +800,16 @@ Partial Class Form1
         SensorMessage.Text = "Calibration Required"
         SensorMessage.TextAlign = ContentAlignment.MiddleCenter
         ' 
-        ' CalibrationShieldPictureBox
+        ' SmartGuardShieldPictureBox
         ' 
-        CalibrationShieldPictureBox.Image = My.Resources.Resources.Shield
-        CalibrationShieldPictureBox.Location = New Point(0, 0)
-        CalibrationShieldPictureBox.Margin = New Padding(5)
-        CalibrationShieldPictureBox.Name = "CalibrationShieldPictureBox"
-        CalibrationShieldPictureBox.Size = New Size(116, 116)
-        CalibrationShieldPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
-        CalibrationShieldPictureBox.TabIndex = 5
-        CalibrationShieldPictureBox.TabStop = False
+        SmartGuardShieldPictureBox.Image = My.Resources.Resources.Shield
+        SmartGuardShieldPictureBox.Location = New Point(0, 0)
+        SmartGuardShieldPictureBox.Margin = New Padding(5)
+        SmartGuardShieldPictureBox.Name = "SmartGuardShieldPictureBox"
+        SmartGuardShieldPictureBox.Size = New Size(119, 116)
+        SmartGuardShieldPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
+        SmartGuardShieldPictureBox.TabIndex = 5
+        SmartGuardShieldPictureBox.TabStop = False
         ' 
         ' CareLinkUserDataRecordBindingSource
         ' 
@@ -1168,7 +1168,7 @@ Partial Class Form1
         ' 
         InsulinLevelPictureBox.Image = CType(resources.GetObject("InsulinLevelPictureBox.Image"), Image)
         InsulinLevelPictureBox.InitialImage = Nothing
-        InsulinLevelPictureBox.Location = New Point(221, 0)
+        InsulinLevelPictureBox.Location = New Point(224, 0)
         InsulinLevelPictureBox.Name = "InsulinLevelPictureBox"
         InsulinLevelPictureBox.Padding = New Padding(10)
         InsulinLevelPictureBox.Size = New Size(51, 67)
@@ -1362,7 +1362,7 @@ Partial Class Form1
         ' 
         PumpBatteryPictureBox.ErrorImage = Nothing
         PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryFull
-        PumpBatteryPictureBox.Location = New Point(124, 0)
+        PumpBatteryPictureBox.Location = New Point(127, 0)
         PumpBatteryPictureBox.Name = "PumpBatteryPictureBox"
         PumpBatteryPictureBox.Size = New Size(74, 84)
         PumpBatteryPictureBox.TabIndex = 43
@@ -1373,7 +1373,7 @@ Partial Class Form1
         PumpBatteryRemainingLabel.BackColor = Color.Transparent
         PumpBatteryRemainingLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         PumpBatteryRemainingLabel.ForeColor = Color.White
-        PumpBatteryRemainingLabel.Location = New Point(119, 89)
+        PumpBatteryRemainingLabel.Location = New Point(122, 89)
         PumpBatteryRemainingLabel.Name = "PumpBatteryRemainingLabel"
         PumpBatteryRemainingLabel.Size = New Size(84, 21)
         PumpBatteryRemainingLabel.TabIndex = 11
@@ -1407,7 +1407,7 @@ Partial Class Form1
         RemainingInsulinUnits.BackColor = Color.Transparent
         RemainingInsulinUnits.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         RemainingInsulinUnits.ForeColor = Color.White
-        RemainingInsulinUnits.Location = New Point(206, 90)
+        RemainingInsulinUnits.Location = New Point(209, 90)
         RemainingInsulinUnits.Name = "RemainingInsulinUnits"
         RemainingInsulinUnits.Size = New Size(80, 21)
         RemainingInsulinUnits.TabIndex = 12
@@ -2534,7 +2534,7 @@ Partial Class Form1
         CType(CalibrationDueImage, ComponentModel.ISupportInitialize).EndInit()
         CalibrationShieldPanel.ResumeLayout(False)
         CalibrationShieldPanel.PerformLayout()
-        CType(CalibrationShieldPictureBox, ComponentModel.ISupportInitialize).EndInit()
+        CType(SmartGuardShieldPictureBox, ComponentModel.ISupportInitialize).EndInit()
         CType(CareLinkUserDataRecordBindingSource, ComponentModel.ISupportInitialize).EndInit()
         CursorPanel.ResumeLayout(False)
         CType(CursorPictureBox, ComponentModel.ISupportInitialize).EndInit()
@@ -2633,7 +2633,7 @@ Partial Class Form1
     Friend WithEvents BelowLowLimitValueLabel As Label
     Friend WithEvents CalibrationDueImage As PictureBox
     Friend WithEvents CalibrationShieldPanel As Panel
-    Friend WithEvents CalibrationShieldPictureBox As PictureBox
+    Friend WithEvents SmartGuardShieldPictureBox As PictureBox
     Friend WithEvents CareLinkUserDataRecordBindingSource As BindingSource
     Friend WithEvents CountryDataPg2TableLayoutPanel As TableLayoutPanel
     Friend WithEvents CurrentSgLabel As Label
@@ -2792,7 +2792,7 @@ Partial Class Form1
     Friend WithEvents TabPageBgReadings As TabPage
     Friend WithEvents TabPageTimeChange As TabPage
     Friend WithEvents TemporaryUseAdvanceAITDecayCheckBox As CheckBox
-    Friend WithEvents TempTargetLabel As Label
+    Friend WithEvents PumpBannerStateLabel As Label
     Friend WithEvents TimeInRangeChartLabel As Label
     Friend WithEvents TimeInRangeLabel As Label
     Friend WithEvents TimeInRangeSummaryPercentCharLabel As Label
