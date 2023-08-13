@@ -12,6 +12,7 @@ Friend Module Form1LoginHelpers
     Public ReadOnly Property LoginDialog As New LoginForm1
 
     Friend Function DoOptionalLoginAndUpdateData(UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
+        Dim serverTimerEnabled As Boolean = Form1.ServerUpdateTimer.Enabled
         Form1.ServerUpdateTimer.Stop()
         Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(Form1.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
         s_listOfAutoBasalDeliveryMarkers.Clear()
@@ -38,7 +39,18 @@ Friend Module Form1LoginHelpers
                 fromFile = True
             Case FileToLoadOptions.Login
                 Form1.Text = SavedTitle
-                Do Until LoginDialog.ShowDialog() <> DialogResult.Retry
+                Do While True
+                    Dim result As DialogResult = LoginDialog.ShowDialog
+                    Select Case result
+                        Case DialogResult.OK
+                            Exit Do
+                        Case DialogResult.Cancel
+                            If serverTimerEnabled Then
+                                Form1.ServerUpdateTimer.Start()
+                            End If
+                            Return False
+                        Case DialogResult.Retry
+                    End Select
                 Loop
 
                 If Form1.Client Is Nothing OrElse Not Form1.Client.LoggedIn Then
