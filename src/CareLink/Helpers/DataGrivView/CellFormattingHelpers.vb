@@ -20,14 +20,14 @@ Friend Module CellFormattingHelpers
                 .BackColor = highlightColor
                 .ForeColor = highlightColor.GetContrastingColor()
                 If isUri Then
-                    .SelectionBackColor = Color.Purple
-                    .SelectionForeColor = Color.Purple.GetContrastingColor()
+                    .SelectionForeColor = Color.Purple
+                    .SelectionBackColor = Color.Purple.GetContrastingColor()
                 End If
             Else
                 .ForeColor = highlightColor
                 .BackColor = highlightColor.GetContrastingColor()
                 If isUri Then
-                    .SelectionForeColor = Color.Purple
+                    .SelectionBackColor = Color.Purple
                     .SelectionForeColor = Color.Purple.GetContrastingColor()
                 End If
             End If
@@ -105,9 +105,9 @@ Friend Module CellFormattingHelpers
     Friend Sub CellFormattingUrl(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
         e.Value = e.Value.ToString
         If dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Equals(dgv.CurrentCell) Then
-            CellFormattingApplyColor(e, Color.White, 0, False)
+            CellFormattingApplyColor(e, Color.Purple, 0, True)
         Else
-            CellFormattingApplyColor(e, Color.FromArgb(&H0, &H66, &HCC), 1, False)
+            CellFormattingApplyColor(e, Color.FromArgb(&H0, &H66, &HCC), 1, True)
         End If
         e.FormattingApplied = True
 
