@@ -10,15 +10,6 @@ Imports DataGridViewColumnControls
 
 Public Class InitializeDialog
 
-    Private ReadOnly _aitLengths As New Dictionary(Of String, Single) From
-            {
-                {"2:00", 2}, {"2:15", 2.25}, {"2:30", 2.5}, {"2:45", 2.75},
-                {"3:00", 3}, {"3:15", 3.25}, {"3:30", 3.5}, {"3:45", 3.75},
-                {"4:00", 4}, {"4:15", 4.25}, {"4:30", 4.5}, {"4:45", 4.75},
-                {"5:00", 5}, {"5:15", 5.25}, {"5:30", 5.5}, {"5:45", 5.45},
-                {"6:00", 6}
-            }
-
     Private ReadOnly _insulinTypesBindingSource As New BindingSource(
                 s_insulinTypes, Nothing)
 
@@ -182,7 +173,7 @@ Public Class InitializeDialog
         Me.Text = $"Initialize CareLink™ For {Me.CurrentUser.UserName}"
 
         With Me.PumpAitComboBox
-            .DataSource = New BindingSource(_aitLengths, Nothing)
+            .DataSource = New BindingSource(s_aitLengths, Nothing)
             .DisplayMember = "Key"
             .ValueMember = "Value"
             If Me.CurrentUser.PumpAit = 0 Then
