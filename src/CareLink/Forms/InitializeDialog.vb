@@ -56,15 +56,6 @@ Public Class InitializeDialog
         End If
     End Sub
 
-    Private Sub InitializeComboList(items As DataGridViewComboBoxCell.ObjectCollection, start As Integer)
-        For i As Integer = start To 47
-            Dim t As New TimeOnly(i \ 2, (i Mod 2) * 30)
-            items.Add(t.ToString(CurrentDateCulture))
-        Next
-        items.Add(s_midnight)
-
-    End Sub
-
     Private Sub InitializeDataGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles InitializeDataGridView.CellContentClick
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim cell As DataGridViewCell = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex)
@@ -123,7 +114,7 @@ Public Class InitializeDialog
                         c.Items.Add(value)
                         c.Value = value
                         c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
-                        Me.InitializeComboList(c.Items, CInt(timeOnly.ToTimeSpan.TotalMinutes / 30) + 1)
+                        InitializeComboList(c.Items, CInt(timeOnly.ToTimeSpan.TotalMinutes / 30) + 1)
                         c.Value = s_midnight
                         .Cells(NameOf(ColumnNumericUpDown)).Value = 15.0
                         CType(.Cells(NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell).Enabled = True
@@ -263,8 +254,8 @@ Public Class InitializeDialog
                     c.ReadOnly = True
 
                     c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
-                    Me.InitializeComboList(c.Items, 1)
-                    c.Value = _midday
+                    InitializeComboList(c.Items, 1)
+                    c.Value = New TimeOnly(12, 0).ToString(CurrentDateCulture)
                     Dim numericCell As DataGridViewNumericUpDownCell = CType(.Cells(NameOf(ColumnNumericUpDown)), DataGridViewNumericUpDownCell)
                     numericCell.Value = 15.0
                 End With
