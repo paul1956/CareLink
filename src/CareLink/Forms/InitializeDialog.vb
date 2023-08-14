@@ -31,15 +31,6 @@ Public Class InitializeDialog
 
     Public Property CurrentUser As CurrentUserRecord
 
-    Private Shared Sub InitializeComboList(items As DataGridViewComboBoxCell.ObjectCollection, start As Integer)
-        For i As Integer = start To 47
-            Dim t As New TimeOnly(i \ 2, (i Mod 2) * 30)
-            items.Add(t.ToString(CurrentDateCulture))
-        Next
-        items.Add(s_midnight)
-
-    End Sub
-
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         If _currentUserBackup Is Nothing Then
             If MsgBox("If you cancel, the program will exit", "Retry will allow editing.", MsgBoxStyle.RetryCancel Or MsgBoxStyle.Exclamation, "Exit Or Retry") = MsgBoxResult.Cancel Then
@@ -54,6 +45,15 @@ Public Class InitializeDialog
             End If
             Me.DialogResult = DialogResult.OK
         End If
+    End Sub
+
+    Private Sub InitializeComboList(items As DataGridViewComboBoxCell.ObjectCollection, start As Integer)
+        For i As Integer = start To 47
+            Dim t As New TimeOnly(i \ 2, (i Mod 2) * 30)
+            items.Add(t.ToString(CurrentDateCulture))
+        Next
+        items.Add(s_midnight)
+
     End Sub
 
     Private Sub InitializeDataGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles InitializeDataGridView.CellContentClick
@@ -71,7 +71,7 @@ Public Class InitializeDialog
                     Dim c As DataGridViewComboBoxCell = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
                     Dim startTime As TimeOnly = TimeOnly.Parse(Me.InitializeDataGridView.Rows(currentRow).Cells(NameOf(ColumnEnd)).Value.ToString)
                     Dim value As String = startTime.ToString
-                    InitializeComboList(c.Items, CInt(startTime.ToTimeSpan.TotalMinutes / 30))
+                    Me.InitializeComboList(c.Items, CInt(startTime.ToTimeSpan.TotalMinutes / 30))
                     c.Value = s_midnight
                     c.ReadOnly = False
                     buttonCell = CType(.Cells(NameOf(ColumnSave)), DataGridViewDisableButtonCell)
@@ -114,7 +114,7 @@ Public Class InitializeDialog
                         c.Items.Add(value)
                         c.Value = value
                         c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
-                        InitializeComboList(c.Items, CInt(timeOnly.ToTimeSpan.TotalMinutes / 30) + 1)
+                        Me.InitializeComboList(c.Items, CInt(timeOnly.ToTimeSpan.TotalMinutes / 30) + 1)
                         c.Value = s_midnight
                         .Cells(NameOf(ColumnNumericUpDown)).Value = 15.0
                         CType(.Cells(NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell).Enabled = True
@@ -230,7 +230,7 @@ Public Class InitializeDialog
                         c.Value = value.StartTime.ToString(CurrentDateCulture)
                         c.ReadOnly = True
                         c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
-                        InitializeComboList(c.Items, CInt((New TimeSpan(value.StartTime.Hour, value.StartTime.Minute, 0) / s_30MinuteSpan) + 1))
+                        Me.InitializeComboList(c.Items, CInt((New TimeSpan(value.StartTime.Hour, value.StartTime.Minute, 0) / s_30MinuteSpan) + 1))
                         c.Value = value.EndTime.ToString(CurrentDateCulture)
                         c.ReadOnly = i.Index >= 11 OrElse
                                      (i.IsLast AndAlso Not i.IsFirst)
@@ -254,7 +254,7 @@ Public Class InitializeDialog
                     c.ReadOnly = True
 
                     c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
-                    InitializeComboList(c.Items, 1)
+                    Me.InitializeComboList(c.Items, 1)
                     c.Value = New TimeOnly(12, 0).ToString(CurrentDateCulture)
                     Dim numericCell As DataGridViewNumericUpDownCell = CType(.Cells(NameOf(ColumnNumericUpDown)), DataGridViewNumericUpDownCell)
                     numericCell.Value = 15.0
