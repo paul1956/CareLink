@@ -13,8 +13,6 @@ Public Class InitializeDialog
     Private ReadOnly _insulinTypesBindingSource As New BindingSource(
                 s_insulinTypes, Nothing)
 
-    Private ReadOnly _midday As String = New TimeOnly(12, 0).ToString(CurrentDateCulture)
-
     Private _currentUserBackup As CurrentUserRecord = Nothing
 
     Public Sub New(currentUser As CurrentUserRecord)
@@ -257,7 +255,7 @@ Public Class InitializeDialog
 
                     c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
                     InitializeComboList(c.Items, 1)
-                    c.Value = _midday
+                    c.Value = New TimeOnly(12, 0).ToString(CurrentDateCulture)
                     Dim numericCell As DataGridViewNumericUpDownCell = CType(.Cells(NameOf(ColumnNumericUpDown)), DataGridViewNumericUpDownCell)
                     numericCell.Value = 15.0
                 End With

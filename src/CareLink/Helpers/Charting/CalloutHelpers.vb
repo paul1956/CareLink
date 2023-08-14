@@ -7,12 +7,6 @@ Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module CalloutHelpers
 
-    Friend ReadOnly s_calloutAnnotations As New Dictionary(Of String, CalloutAnnotation) From {
-            {"SummaryChart", New CalloutAnnotation},
-            {"ActiveInsulinChart", New CalloutAnnotation},
-            {"TreatmentMarkersChart", New CalloutAnnotation}
-       }
-
     <Extension>
     Private Sub AddOrUpdateAnnotation(treatmentChart As Chart, lastDataPoint As DataPoint, tagText As String)
         Dim annotation As CalloutAnnotation = treatmentChart.FindAnnotation(lastDataPoint)

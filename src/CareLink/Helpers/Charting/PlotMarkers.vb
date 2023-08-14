@@ -151,7 +151,7 @@ Friend Module PlotMarkers
                             markerSeriesPoints.Last.Tag = $"Meal:{entry("amount")} grams"
                         End If
                     Case "TIME_CHANGE"
-                        With pageChart.Series(CreateChartItems.TimeChangeSeriesName).Points
+                        With pageChart.Series(TimeChangeSeriesName).Points
                             lastTimeChangeRecord = New TimeChangeRecord(entry)
                             markerOADateTime = New OADate(lastTimeChangeRecord.GetLatestTime)
                             .AddXY(markerOADateTime, 0)

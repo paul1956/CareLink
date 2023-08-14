@@ -14,29 +14,6 @@ Public Module PumpVariables
 
 #Region "Global variables to hold pump values"
 
-#Region "Used for painting"
-
-    Friend ReadOnly s_activeInsulinMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
-    Friend ReadOnly s_summaryMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
-    Friend ReadOnly s_summaryMarkerMealDictionary As New Dictionary(Of OADate, Single)
-    Friend ReadOnly s_treatmentMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
-    Friend ReadOnly s_treatmentMarkerMealDictionary As New Dictionary(Of OADate, Single)
-
-#End Region ' Used for painting
-
-    Private s_pumpTimeZoneInfo As TimeZoneInfo
-
-    Friend ReadOnly s_insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
-    Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDeliveryRecord)
-    Friend ReadOnly s_listOfAutoModeStatusMarkers As New List(Of AutoModeStatusRecord)
-    Friend ReadOnly s_listOfCalibrationMarkers As New List(Of CalibrationRecord)
-    Friend ReadOnly s_listOfInsulinMarkers As New List(Of InsulinRecord)
-    Friend ReadOnly s_listOfLimitRecords As New List(Of LimitsRecord)
-    Friend ReadOnly s_listOfLowGlucoseSuspendedMarkers As New List(Of LowGlucoseSuspendRecord)
-    Friend ReadOnly s_listOfMealMarkers As New List(Of MealRecord)
-    Friend ReadOnly s_listOfSgReadingMarkers As New List(Of SgReadingRecord)
-    Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
-    Friend ReadOnly s_mealImage As Bitmap = My.Resources.MealImage
     Friend s_aboveHyperLimit As Single
     Friend s_activeInsulin As ActiveInsulinRecord
     Friend s_belowHypoLimit As Single
@@ -70,19 +47,24 @@ Public Module PumpVariables
     Friend s_timeWithMinuteFormat As String
     Friend s_timeWithoutMinuteFormat As String
 
-    Friend Property PumpTimeZoneInfo As TimeZoneInfo
-        Get
-            Return If(s_pumpTimeZoneInfo, TimeZoneInfo.Local)
-        End Get
-        Set
-            s_pumpTimeZoneInfo = Value
-        End Set
-    End Property
-
     Friend Property InAutoMode As Boolean
     Friend Property SgUnitsNativeString As String
     Public Property ProgramInitialized As Boolean = False
     Public Property RecentData As New Dictionary(Of String, String)
+
+#End Region
+
+#Region "Lists of pump records"
+
+    Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDeliveryRecord)
+    Friend ReadOnly s_listOfAutoModeStatusMarkers As New List(Of AutoModeStatusRecord)
+    Friend ReadOnly s_listOfCalibrationMarkers As New List(Of CalibrationRecord)
+    Friend ReadOnly s_listOfInsulinMarkers As New List(Of InsulinRecord)
+    Friend ReadOnly s_listOfLimitRecords As New List(Of LimitsRecord)
+    Friend ReadOnly s_listOfLowGlucoseSuspendedMarkers As New List(Of LowGlucoseSuspendRecord)
+    Friend ReadOnly s_listOfMealMarkers As New List(Of MealRecord)
+    Friend ReadOnly s_listOfSgReadingMarkers As New List(Of SgReadingRecord)
+    Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
 
 #End Region
 

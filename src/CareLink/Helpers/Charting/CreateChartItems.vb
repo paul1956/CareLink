@@ -8,18 +8,8 @@ Imports System.Windows.Forms.DataVisualization.Charting
 Friend Module CreateChartItems
 
     Private ReadOnly s_mgdLValues As New List(Of Single) From {50, 100, 150, 200, 250, 300, 350, 400}
-    Private ReadOnly s_mmolLValues As New List(Of Single) From {2.8, 5, 8, 11, 14, 17, 20, 22.2}
 
-    Friend Const ActiveInsulinSeriesName As String = NameOf(ActiveInsulinSeriesName)
-    Friend Const AutoCorrectionSeriesName As String = NameOf(AutoCorrectionSeriesName)
-    Friend Const BasalSeriesNameName As String = NameOf(BasalSeriesNameName)
-    Friend Const HighLimitSeriesName As String = NameOf(HighLimitSeriesName)
-    Friend Const LowLimitSeriesName As String = NameOf(LowLimitSeriesName)
-    Friend Const MarkerSeriesName As String = NameOf(MarkerSeriesName)
-    Friend Const MinBasalSeriesName As String = NameOf(MinBasalSeriesName)
-    Friend Const SgSeriesName As String = NameOf(SgSeriesName)
-    Friend Const TargetSgSeriesName As String = NameOf(TargetSgSeriesName)
-    Friend Const TimeChangeSeriesName As String = NameOf(TimeChangeSeriesName)
+    Private ReadOnly s_mmolLValues As New List(Of Single) From {2.8, 5, 8, 11, 14, 17, 20, 22.2}
 
     Private Function CreateSeriesBase(seriesName As String, legendText As String, borderWidth As Integer, yAxisType As AxisType) As Series
         Dim lineColor As Color = GetGraphLineColor(legendText)
