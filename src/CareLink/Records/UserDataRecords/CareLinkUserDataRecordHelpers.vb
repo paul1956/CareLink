@@ -10,15 +10,6 @@ Public Module CareLinkUserDataRecordHelpers
             NameOf(CareLinkUserDataRecord.ID),
             NameOf(CareLinkUserDataRecord.CareLinkPassword)}
 
-    Friend ReadOnly s_headerColumns As New List(Of String) From {
-            NameOf(My.Settings.CareLinkUserName),
-            NameOf(My.Settings.CareLinkPassword),
-            NameOf(My.Settings.CountryCode),
-            NameOf(My.Settings.UseLocalTimeZone),
-            NameOf(My.Settings.AutoLogin),
-            NameOf(My.Settings.CareLinkPartner),
-            NameOf(My.Settings.CareLinkPatientUserID)}
-
     Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
         Dim cellStyle As New DataGridViewCellStyle
 

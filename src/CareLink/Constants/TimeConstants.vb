@@ -4,6 +4,8 @@
 
 Friend Module TimeConstants
 
+    Friend ReadOnly s_midnight As String = New TimeOnly(0, 0).ToString
+
 #Region "TimeSpan Constants"
 
     Public ReadOnly s_1MinuteSpan As New TimeSpan(0, 1, 0)

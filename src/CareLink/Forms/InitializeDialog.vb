@@ -22,10 +22,6 @@ Public Class InitializeDialog
     Private ReadOnly _insulinTypesBindingSource As New BindingSource(
                 s_insulinTypes, Nothing)
 
-    Private ReadOnly _midday As String = New TimeOnly(12, 0).ToString(CurrentDateCulture)
-
-    Private ReadOnly _midnight As String = New TimeOnly(0, 0).ToString(CurrentDateCulture)
-
     Private _currentUserBackup As CurrentUserRecord = Nothing
 
     Public Sub New(currentUser As CurrentUserRecord)
@@ -114,7 +110,7 @@ Public Class InitializeDialog
                         Dim c As DataGridViewComboBoxCell = CType(.Cells(NameOf(ColumnStart)), DataGridViewComboBoxCell)
                         Dim columnEndCell As DataGridViewCell = Me.InitializeDataGridView.Rows(e.RowIndex).Cells(NameOf(ColumnEnd))
                         columnEndCell.ErrorText = ""
-                        Dim timeOnly As TimeOnly = TimeOnly.Parse(columnEndCell.Value.ToString)
+                        Dim timeOnly As TimeOnly = timeOnly.Parse(columnEndCell.Value.ToString)
                         Dim value As String = timeOnly.ToString
                         c.Items.Add(value)
                         c.Value = value
@@ -259,7 +255,7 @@ Public Class InitializeDialog
                     c.ReadOnly = True
 
                     c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
-                    Me.InitializeComboList(c.Items, 1)
+                    InitializeComboList(c.Items, 1)
                     c.Value = _midday
                     Dim numericCell As DataGridViewNumericUpDownCell = CType(.Cells(NameOf(ColumnNumericUpDown)), DataGridViewNumericUpDownCell)
                     numericCell.Value = 15.0

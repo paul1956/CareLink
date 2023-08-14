@@ -5,6 +5,27 @@
 Imports System.IO
 
 Friend Module SystemVariables
+
+#Region "Used for painting"
+
+    Friend ReadOnly s_activeInsulinMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
+    Friend ReadOnly s_summaryMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
+    Friend ReadOnly s_summaryMarkerMealDictionary As New Dictionary(Of OADate, Single)
+    Friend ReadOnly s_treatmentMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
+    Friend ReadOnly s_treatmentMarkerMealDictionary As New Dictionary(Of OADate, Single)
+
+#End Region ' Used for painting
+
+#Region "Used for painting"
+
+    Friend ReadOnly s_activeInsulinMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
+    Friend ReadOnly s_summaryMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
+    Friend ReadOnly s_summaryMarkerMealDictionary As New Dictionary(Of OADate, Single)
+    Friend ReadOnly s_treatmentMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
+    Friend ReadOnly s_treatmentMarkerMealDictionary As New Dictionary(Of OADate, Single)
+
+#End Region ' Used for painting
+
     Friend s_allUserSettingsData As New CareLinkUserDataList
     Friend s_currentSummaryRow As Integer = 0
     Friend s_formLoaded As Boolean = False
@@ -14,24 +35,6 @@ Friend Module SystemVariables
     Friend Property DecimalSeparator As String = "."
 
     Friend Property MaxBasalPerDose As Single
-
-    Friend ReadOnly Property MgDlItems As New Dictionary(Of String, Single) From {
-                            {$"100 mg/dL", 100.0},
-                            {$"110 mg/dL", 110.0},
-                            {$"120 mg/dL", 120.0}
-                        }
-
-    Friend ReadOnly Property MmolLItemsComma As New Dictionary(Of String, Single) From {
-                            {$"5,6 mmol/L", 5.6},
-                            {$"6,1 mmol/L", 6.1},
-                            {$"6,7 mmol/L", 6.7}
-                        }
-
-    Friend ReadOnly Property MmolLItemsPeriod As New Dictionary(Of String, Single) From {
-                           {$"5.6 mmol/L", 5.6},
-                           {$"6.1 mmol/L", 6.1},
-                           {$"6.7 mmol/L", 6.7}
-                        }
 
     Friend Property NativeMmolL As Boolean = False
     Friend Property TreatmentInsulinRow As Single

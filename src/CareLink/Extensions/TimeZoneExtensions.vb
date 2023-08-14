@@ -4,6 +4,21 @@
 
 Friend Module TimeZoneExtensions
 
+#Region "Time Zone Helper"
+
+    Private s_pumpTimeZoneInfo As TimeZoneInfo
+
+    Friend Property PumpTimeZoneInfo As TimeZoneInfo
+        Get
+            Return If(s_pumpTimeZoneInfo, TimeZoneInfo.Local)
+        End Get
+        Set
+            s_pumpTimeZoneInfo = Value
+        End Set
+    End Property
+
+#End Region
+
     Private ReadOnly s_specialKnownTimeZones As New Dictionary(Of String, String) From {
             {"Amazon Standard Time", "Central Brazilian Standard Time"},
             {"Argentina Standard Time", "Argentina Standard Time"},

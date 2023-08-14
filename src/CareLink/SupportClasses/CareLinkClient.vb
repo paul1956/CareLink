@@ -13,8 +13,9 @@ Public Class CareLinkClient
     Private Const CareLinkTokenValidToCookieName As String = "c_token_valid_to"
 
     Private ReadOnly _careLinkPartnerType As New List(Of String) From {
-                        "CARE_PARTNER",
-                        "CARE_PARTNER_OUS"}
+            "CARE_PARTNER",
+            "CARE_PARTNER_OUS"
+        }
 
     Private _httpClient As HttpClient
     Private _inLoginInProcess As Boolean
