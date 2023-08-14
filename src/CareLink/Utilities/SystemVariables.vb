@@ -2,19 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.IO
-
 Friend Module SystemVariables
-
-#Region "Used for painting"
-
-    Friend ReadOnly s_activeInsulinMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
-    Friend ReadOnly s_summaryMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
-    Friend ReadOnly s_summaryMarkerMealDictionary As New Dictionary(Of OADate, Single)
-    Friend ReadOnly s_treatmentMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
-    Friend ReadOnly s_treatmentMarkerMealDictionary As New Dictionary(Of OADate, Single)
-
-#End Region ' Used for painting
 
 #Region "Used for painting"
 

@@ -57,9 +57,6 @@ Public Module SystemConstants
             "sixteen", "seventeen", "eighteen", "nineteen"
         }
 
-    Public ReadOnly s_4Spaces As String = Space(4)
-    Public ReadOnly s_15Spaces As String = Space(15)
-
     Public ReadOnly s_trends As New Dictionary(Of String, String) From {
             {"DOWN", "↓"},
             {"DOWN_DOUBLE", "↓↓"},
