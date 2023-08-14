@@ -2178,10 +2178,23 @@ Public Class Form1
 
     Private Sub UpdateAutoModeShield()
         Try
-            Me.LastSGTimeLabel.Text = s_lastSgRecord.datetime.ToShortTimeString
-            Me.LastSGTimeLabel.BackColor = Color.Transparent
+            Me.LastSgOrExitTimeLabel.Text = s_lastSgRecord.datetime.ToShortTimeString
+            Me.LastSgOrExitTimeLabel.BackColor = Color.Transparent
             Me.ShieldUnitsLabel.BackColor = Color.Transparent
             Me.ShieldUnitsLabel.Text = SgUnitsNativeString
+
+            If InAutoMode Then
+                Me.SmartGuardShieldPictureBox.Image = If(s_sensorState = "CALIBRATION_REQUIRED",
+                                                             My.Resources.Shield_Disabled,
+                                                             My.Resources.Shield
+                                                            )
+                Me.ShieldUnitsLabel.Visible = True
+                Me.LastSgOrExitTimeLabel.Visible = True
+            Else
+                Me.SmartGuardShieldPictureBox.Image = Nothing
+                Me.ShieldUnitsLabel.Visible = False
+                Me.LastSgOrExitTimeLabel.Visible = False
+            End If
             If Not Single.IsNaN(s_lastSgRecord.sg) Then
                 Me.CurrentSgLabel.Visible = True
                 Dim sgString As String = s_lastSgRecord.ToString
@@ -2189,19 +2202,10 @@ Public Class Form1
                 Me.UpdateNotifyIcon(sgString)
                 _sgMiniDisplay.SetCurrentSgString(sgString)
                 Me.SensorMessage.Visible = False
-                If InAutoMode Then
-                    Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield
-                    Me.LastSGTimeLabel.Visible = True
-                Else
-                    Me.SmartGuardShieldPictureBox.Image = Nothing
-                    Me.LastSGTimeLabel.Visible = False
-                End If
-                Me.ShieldUnitsLabel.Visible = True
             Else
                 _sgMiniDisplay.SetCurrentSgString("---")
                 Me.CurrentSgLabel.Visible = False
-                Me.SmartGuardShieldPictureBox.Image = Nothing
-                Me.LastSGTimeLabel.Visible = False
+                Me.LastSgOrExitTimeLabel.Visible = False
                 Me.SensorMessage.Visible = True
                 Me.SensorMessage.BackColor = Color.Transparent
                 Dim message As String = ""

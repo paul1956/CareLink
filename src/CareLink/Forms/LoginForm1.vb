@@ -142,12 +142,14 @@ Public Class LoginForm1
             Me.DialogResult = DialogResult.OK
             Me.Hide()
         Else
-            Me.PasswordTextBox.Text = ""
-            Dim userRecord As CareLinkUserDataRecord = Nothing
-            If s_allUserSettingsData.TryGetValue(s_userName, userRecord) Then
-                s_allUserSettingsData.Remove(userRecord)
-            End If
             ReportLoginStatus(Me.LoginStatus, True, Me.Client.GetLastErrorMessage)
+            If Me.Client.GetLastErrorMessage = "Invalid username or password" Then
+                Me.PasswordTextBox.Text = ""
+                Dim userRecord As CareLinkUserDataRecord = Nothing
+                If s_allUserSettingsData.TryGetValue(s_userName, userRecord) Then
+                    s_allUserSettingsData.Remove(userRecord)
+                End If
+            End If
 
             Dim networkDownMessage As String = If(NetworkUnavailable(), "due to network being unavailable", $"'{Me.Client.GetLastErrorMessage}'")
             Select Case MsgBox($"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!", networkDownMessage, MsgBoxStyle.AbortRetryIgnore Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Question, "Login Failed")
