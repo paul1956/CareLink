@@ -5,7 +5,7 @@
 Imports System.Diagnostics.CodeAnalysis
 Imports System.Runtime.CompilerServices
 
-Friend Module Exceptions
+Friend Module ExceptionHelpers
     Private Const InnerExceptionMessage As String = ", see inner exception."
 
     <ExcludeFromCodeCoverage>
