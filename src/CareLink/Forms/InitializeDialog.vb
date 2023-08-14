@@ -256,7 +256,7 @@ Public Class InitializeDialog
 
                     c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
                     Me.InitializeComboList(c.Items, 1)
-                    c.Value = New TimeOnly(12, 0).ToString
+                    c.Value = New TimeOnly(12, 0).ToString(CurrentDateCulture)
                     Dim numericCell As DataGridViewNumericUpDownCell = CType(.Cells(NameOf(ColumnNumericUpDown)), DataGridViewNumericUpDownCell)
                     numericCell.Value = 15.0
                 End With
