@@ -8,13 +8,6 @@ Imports System.Net.Http
 Imports System.Text
 Imports System.Text.Json
 
-Friend Enum GetAuthorizationTokenResult
-    InLoginProcess
-    LoginFailed
-    NetworkDown
-    OK
-End Enum
-
 Public Class CareLinkClient
     Private Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
 
@@ -52,13 +45,24 @@ Public Class CareLinkClient
         _httpClient = Me.NewHttpClientWithCookieContainer
     End Sub
 
-    Private ReadOnly Property CareLinkCountry As String = Nothing
-    Private Property ClientHandler As HttpClientHandler
-    Public Property LoggedIn As Boolean
+    Private Enum GetAuthorizationTokenResult
+        InLoginProcess
+        LoginFailed
+        NetworkDown
+        OK
+    End Enum
 
+#Region "Current CareLink User Information"
+
+    Private ReadOnly Property CareLinkCountry As String
     Private ReadOnly Property CareLinkPassword As String
     Private ReadOnly Property CareLinkUsername As String
-    Public Property SessionProfile As New SessionProfileRecord
+
+#End Region
+
+    Private Property ClientHandler As HttpClientHandler
+    Friend Property LoggedIn As Boolean
+    Friend Property SessionProfile As New SessionProfileRecord
 
     ''' <summary>
     ''' Logs in user and collects Records with User, Profile, CountrySettings and Device Family

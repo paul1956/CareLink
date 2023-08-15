@@ -2,7 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Friend Module TaskDialogHelpers
+Friend Module NewMessageBox
 
     Private Function GetPrompt(prompt As String, autoCloseTimeOut As Integer, remainingTenthSeconds As Integer) As String
         If autoCloseTimeOut < 0 Then Return prompt
