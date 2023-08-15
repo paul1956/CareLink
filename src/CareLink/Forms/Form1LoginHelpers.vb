@@ -8,6 +8,12 @@ Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 Imports Spire.Pdf.Utilities
 
+Friend Enum FileToLoadOptions As Integer
+    LastSaved = 0
+    TestData = 1
+    Login = 2
+End Enum
+
 Friend Module Form1LoginHelpers
     Public ReadOnly Property LoginDialog As New LoginForm1
 

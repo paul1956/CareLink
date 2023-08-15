@@ -4,7 +4,6 @@
 
 Imports System.ComponentModel
 Imports System.Media
-Imports System.Speech.Synthesis
 
 Public Class SgMiniWindow
     Private ReadOnly _form1 As Form1

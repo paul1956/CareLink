@@ -6,89 +6,7 @@ Imports System.Runtime.CompilerServices
 Imports System.Runtime.InteropServices
 Imports System.Text
 
-Public Enum UnicodeNewline
-    Unknown
-
-    ''' <summary>
-    ''' Line Feed, U+000A
-    ''' </summary>
-    Lf = &HA
-
-    CrLf = &HD0A
-
-    ''' <summary>
-    ''' Carriage Return, U+000D
-    ''' </summary>
-    Cr = &HD
-
-    ''' <summary>
-    ''' Next Line, U+0085
-    ''' </summary>
-    Nel = &H85
-
-    ''' <summary>
-    ''' Vertical Tab, U+000B
-    ''' </summary>
-    Vt = &HB
-
-    ''' <summary>
-    ''' Form Feed, U+000C
-    ''' </summary>
-    Ff = &HC
-
-    ''' <summary>
-    ''' Line Separator, U+2028
-    ''' </summary>
-    Ls = &H2028
-
-    ''' <summary>
-    ''' Paragraph Separator, U+2029
-    ''' </summary>
-    Ps = &H2029
-
-End Enum
-
-''' <summary>
-''' Defines Unicode new lines according to Unicode Technical Report #13
-''' http://www.Unicode.org/standard/reports/tr13/tr13-5.html
-''' </summary>
-
-Public Module NewLine
-
-    ''' <summary>
-    ''' Carriage Return, U+000D
-    ''' </summary>
-    Public Const Cr As Char = ChrW(&HD)
-
-    ''' <summary>
-    ''' Line Feed, U+000A
-    ''' </summary>
-    Public Const Lf As Char = ChrW(&HA)
-
-    ''' <summary>
-    ''' Next Line, U+0085
-    ''' </summary>
-    Public Const Nel As Char = ChrW(&H85)
-
-    ''' <summary>
-    ''' Vertical Tab, U+000B
-    ''' </summary>
-    Public Const Vt As Char = ChrW(&HB)
-
-    ''' <summary>
-    ''' Form Feed, U+000C
-    ''' </summary>
-    Public Const Ff As Char = ChrW(&HC)
-
-    ''' <summary>
-    ''' Line Separator, U+2028
-    ''' </summary>
-    Public Const Ls As Char = ChrW(&H2028)
-
-    ''' <summary>
-    ''' Paragraph Separator, U+2029
-    ''' </summary>
-    Public Const Ps As Char = ChrW(&H2029)
+Public Module UnicodeNewline
 
     ''' <summary>
     ''' Determines if a char is a new line delimiter.
@@ -114,14 +32,14 @@ Public Module NewLine
     ''' <param name = "length">The length of the delimiter</param>
     ''' <param name = "type">The type of the delimiter</param>
     ''' <param name="nextChar">A callback getting the next character (may be null).</param>
-    Friend Function TryGetDelimiterLengthAndType(curChar As Char, <Out()> ByRef length As Integer, <Out()> ByRef type As UnicodeNewline, Optional nextChar As Func(Of Char) = Nothing) As Boolean
+    Friend Function TryGetDelimiterLengthAndType(curChar As Char, <Out()> ByRef length As Integer, <Out()> ByRef type As UnicodeNewlines, Optional nextChar As Func(Of Char) = Nothing) As Boolean
         If curChar = Cr Then
             If nextChar IsNot Nothing AndAlso nextChar() = Lf Then
                 length = 2
-                type = UnicodeNewline.CrLf
+                type = UnicodeNewlines.CrLf
             Else
                 length = 1
-                type = UnicodeNewline.Cr
+                type = UnicodeNewlines.Cr
 
             End If
             Return True
@@ -129,32 +47,32 @@ Public Module NewLine
 
         Select Case curChar
             Case Lf
-                type = UnicodeNewline.Lf
+                type = UnicodeNewlines.Lf
                 length = 1
                 Return True
             Case Nel
-                type = UnicodeNewline.Nel
+                type = UnicodeNewlines.Nel
                 length = 1
                 Return True
             Case Vt
-                type = UnicodeNewline.Vt
+                type = UnicodeNewlines.Vt
                 length = 1
                 Return True
             Case Ff
-                type = UnicodeNewline.Ff
+                type = UnicodeNewlines.Ff
                 length = 1
                 Return True
             Case Ls
-                type = UnicodeNewline.Ls
+                type = UnicodeNewlines.Ls
                 length = 1
                 Return True
             Case Ps
-                type = UnicodeNewline.Ps
+                type = UnicodeNewlines.Ps
                 length = 1
                 Return True
         End Select
         length = -1
-        type = UnicodeNewline.Unknown
+        type = UnicodeNewlines.Unknown
         Return False
     End Function
 
@@ -188,7 +106,7 @@ Public Module NewLine
         Dim sb As New StringBuilder()
 
         Dim length As Integer = Nothing
-        Dim type As UnicodeNewline = Nothing
+        Dim type As UnicodeNewlines = Nothing
 
         For index As Integer = 0 To text.Length - 1
             Dim ch As Char = text.Chars(index)
@@ -231,7 +149,7 @@ Public Module NewLine
 
         Dim sb As New StringBuilder()
         Dim length As Integer = Nothing
-        Dim type As UnicodeNewline = Nothing
+        Dim type As UnicodeNewlines = Nothing
 
         For index As Integer = 0 To text.Length - 1
             Dim ch As Char = text.Chars(index)

@@ -3,7 +3,9 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.IO
+
 Imports Microsoft.VisualBasic.ApplicationServices
+
 Imports Octokit
 
 Public Class ExceptionHandlerForm

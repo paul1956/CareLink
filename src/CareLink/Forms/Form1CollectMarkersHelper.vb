@@ -4,7 +4,7 @@
 
 Imports System.Runtime.CompilerServices
 
-Friend Module CollectMarkersHelper
+Friend Module Form1CollectMarkersHelper
 
     <Extension>
     Private Function ScaleMarker(innerDictionary As Dictionary(Of String, String)) As Dictionary(Of String, String)
@@ -103,7 +103,7 @@ Friend Module CollectMarkersHelper
             Dim sum As Single = 0
             Dim j As Integer = i
             Dim startOADate As OADate = basalDictionary.Keys(i)
-            While j < basalDictionary.Count AndAlso basalDictionary.Keys(j) <= startOADate + s_1hourAsOADate
+            While j < basalDictionary.Count AndAlso basalDictionary.Keys(j) <= startOADate + s_1HourAsOADate
                 sum += basalDictionary.Values(j)
                 j += 1
             End While

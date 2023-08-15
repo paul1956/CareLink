@@ -10,6 +10,7 @@ Imports System.Text.Json
 
 Public Class CareLinkClient
     Private Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
+
     Private Const CareLinkTokenValidToCookieName As String = "c_token_valid_to"
 
     Private ReadOnly _careLinkPartnerType As New List(Of String) From {
@@ -18,10 +19,15 @@ Public Class CareLinkClient
         }
 
     Private _httpClient As HttpClient
+
     Private _inLoginInProcess As Boolean
+
     Private _lastErrorMessage As String
+
     Private _lastResponseCode? As HttpStatusCode
+
     Private _sessionMonitorData As New SessionMonitorDataRecord
+
     Private _sessionUser As New SessionUserRecord
 
     Public Sub New(username As String, password As String, country As String)
@@ -39,19 +45,24 @@ Public Class CareLinkClient
         _httpClient = Me.NewHttpClientWithCookieContainer
     End Sub
 
-    Private ReadOnly Property CareLinkCountry As String = Nothing
-    Private Property ClientHandler As HttpClientHandler
-    Public Property LoggedIn As Boolean
+    Private Enum GetAuthorizationTokenResult
+        InLoginProcess
+        LoginFailed
+        NetworkDown
+        OK
+    End Enum
 
-    Public Property SessionProfile As New SessionProfileRecord
+#Region "Current CareLink User Information"
 
+    Private ReadOnly Property CareLinkCountry As String
     Private ReadOnly Property CareLinkPassword As String
     Private ReadOnly Property CareLinkUsername As String
 
-    Private Shared Function CorrectTimeInRecentData(recentData As Dictionary(Of String, String)) As Boolean
-        ' TODO
-        Return recentData IsNot Nothing
-    End Function
+#End Region
+
+    Private Property ClientHandler As HttpClientHandler
+    Friend Property LoggedIn As Boolean
+    Friend Property SessionProfile As New SessionProfileRecord
 
     ''' <summary>
     ''' Logs in user and collects Records with User, Profile, CountrySettings and Device Family
@@ -211,11 +222,7 @@ Public Class CareLinkClient
                 userJson.Add("patientId", patientUserName)
             End If
         End If
-        Dim recentData As Dictionary(Of String, String) = Me.GetData(endpointUrl, userJson)
-        If recentData IsNot Nothing Then
-            CorrectTimeInRecentData(recentData)
-        End If
-        Return recentData
+        Return Me.GetData(endpointUrl, userJson)
     End Function
 
     Private Function GetCookies(url As String) As CookieCollection
@@ -240,14 +247,6 @@ Public Class CareLinkClient
             {"language", "en"}}
 
         Return Me.GetData(authToken, GetServerURL(Me.CareLinkCountry), "patient/countries/settings", queryParams, Nothing)
-    End Function
-
-    Private Function GetReports(authToken As String) As Dictionary(Of String, String)
-        Dim queryParams As New Dictionary(Of String, String) From {
-            {"countryCode", Me.CareLinkCountry},
-            {"language", "en"}}
-
-        Return Me.GetData(authToken, GetServerURL(Me.CareLinkCountry), "app/reports", queryParams, Nothing)
     End Function
 
     Private Function GetData(endPointPath As String, requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
@@ -311,6 +310,14 @@ Public Class CareLinkClient
         Debug.Print("__getMyUser()")
         Dim myUserRecord As New SessionUserRecord(Form1.DgvCurrentUser, Me.GetData(authToken, GetServerURL(Me.CareLinkCountry), "patient/users/me", Nothing, Nothing))
         Return myUserRecord
+    End Function
+
+    Private Function GetReports(authToken As String) As Dictionary(Of String, String)
+        Dim queryParams As New Dictionary(Of String, String) From {
+            {"countryCode", Me.CareLinkCountry},
+            {"language", "en"}}
+
+        Return Me.GetData(authToken, GetServerURL(Me.CareLinkCountry), "app/reports", queryParams, Nothing)
     End Function
 
     Private Function NewHttpClientWithCookieContainer() As HttpClient

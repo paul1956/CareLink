@@ -3,9 +3,8 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Runtime.CompilerServices
-Imports DocumentFormat.OpenXml.Spreadsheet
 
-Friend Module SummaryTabHelpers
+Friend Module Form1SummaryTabHelpers
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)

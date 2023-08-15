@@ -7,14 +7,11 @@ Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class CareLinkUserDataRecord
     Implements IEditableObject
-
     Private _backupData As CareLinkUserData
 
     Private _inTxn As Boolean = False
 
     Private _userData As CareLinkUserData
-
-    Public Property Parent As CareLinkUserDataList
 
     Public Sub New(parent As CareLinkUserDataList)
         Me.Parent = parent
@@ -135,6 +132,8 @@ Public Class CareLinkUserDataRecord
     End Property
 
 #End If
+
+    Public Property Parent As CareLinkUserDataList
 
     Private Sub OnCareLinkUserChanged()
         If Not _inTxn And (Me.Parent IsNot Nothing) Then
