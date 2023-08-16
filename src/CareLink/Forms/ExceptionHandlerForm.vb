@@ -23,7 +23,7 @@ Public Class ExceptionHandlerForm
     End Sub
 
     Private Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        My.Forms.Form1.ServerUpdateTimer.Stop()
+        StartOrStopServerUpdateTimer(False)
         Dim fontBold As New Font(Me.InstructionsRichTextBox.Font, FontStyle.Bold)
         Dim fontNormal As Font = Me.InstructionsRichTextBox.Font
         _gitClient = New GitHubClient(New ProductHeaderValue($"{ProjectName}.Issues"), New Uri(GitHubCareLinkUrl))

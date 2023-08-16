@@ -32,21 +32,21 @@ Public Class OptionsDialog
         Me.DialogResult = DialogResult.OK
         Me.Cursor = Cursors.WaitCursor
         Application.DoEvents()
-        If MsgBox("Are you sure yiu want to continue?", $"Yes will save changes and application will restart{vbCrLf}If you select ""No"" changes will be lost.", MsgBoxStyle.YesNo Or MsgBoxStyle.Exclamation, "Color Options") = MsgBoxResult.Yes Then
+        If MsgBox("Are you sure you want to continue?", $"Yes will save changes and application will restart{vbCrLf}If you select ""No"" changes will be lost.", MsgBoxStyle.YesNo Or MsgBoxStyle.Exclamation, "Color Options") = MsgBoxResult.Yes Then
             WriteColorDictionaryToFile()
             Application.Restart()
         Else
             GraphColorDictionary = Me.SaveGraphColorDictionary.Clone
         End If
 
-        Form1.ServerUpdateTimer.Start()
+        StartOrStopServerUpdateTimer(True)
         Me.Cursor = Cursors.Default
         Application.DoEvents()
         Me.Close()
     End Sub
 
     Private Sub OptionsDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Form1.ServerUpdateTimer.Stop()
+        StartOrStopServerUpdateTimer(False)
         Me.SaveGraphColorDictionary = GraphColorDictionary.Clone
         Me.ItemNameComboBox.DataSource = GetColorDictionaryBindingSource()
         Me.ItemNameComboBox.DisplayMember = "Key"

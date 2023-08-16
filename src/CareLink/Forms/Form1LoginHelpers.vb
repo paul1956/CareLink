@@ -17,9 +17,7 @@ Friend Module Form1LoginHelpers
     Public ReadOnly Property LoginDialog As New LoginForm1
 
     Friend Function DoOptionalLoginAndUpdateData(UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
-        Dim serverTimerEnabled As Boolean = Form1.ServerUpdateTimer.Enabled
-        Form1.ServerUpdateTimer.Stop()
-        Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(Form1.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
+        Dim serverTimerEnabled As Boolean = StartOrStopServerUpdateTimer(False)
         s_listOfAutoBasalDeliveryMarkers.Clear()
         s_listOfManualBasal.Clear()
         Dim fromFile As Boolean
@@ -50,18 +48,15 @@ Friend Module Form1LoginHelpers
                         Case DialogResult.OK
                             Exit Do
                         Case DialogResult.Cancel
-                            If serverTimerEnabled Then
-                                Form1.ServerUpdateTimer.Start()
-                            End If
+                            StartOrStopServerUpdateTimer(serverTimerEnabled)
                             Return False
                         Case DialogResult.Retry
                     End Select
                 Loop
 
                 If Form1.Client Is Nothing OrElse Not Form1.Client.LoggedIn Then
-                    Form1.ServerUpdateTimer.Interval = CInt(s_5MinutesInMilliseconds)
-                    Form1.ServerUpdateTimer.Start()
-                    Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(Form1.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
+                    StartOrStopServerUpdateTimer(True, s_5MinutesInMilliseconds)
+
                     If NetworkUnavailable() Then
                         ReportLoginStatus(Form1.LoginStatus)
                         Return False
@@ -74,9 +69,7 @@ Friend Module Form1LoginHelpers
                 Dim userSettingsPath As String = GetPathToUserSettingsFile(My.Settings.CareLinkUserName)
                 RecentData = Form1.Client.GetRecentData()
                 SetUpCareLinkUser(userSettingsPath)
-                Form1.ServerUpdateTimer.Interval = CInt(s_1MinutesInMilliseconds)
-                Form1.ServerUpdateTimer.Start()
-                Debug.Print($"In {NameOf(DoOptionalLoginAndUpdateData)}, {NameOf(Form1.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
+                StartOrStopServerUpdateTimer(True, s_1MinutesInMilliseconds)
 
                 If NetworkUnavailable() Then
                     ReportLoginStatus(Form1.LoginStatus)
@@ -168,5 +161,31 @@ Friend Module Form1LoginHelpers
         End If
 
     End Sub
+
+    ''' <summary>
+    '''Starts or stops ServerUpdateTimer
+    ''' </summary>
+    ''' <param name="Start"></param>
+    ''' <param name="interval">Timer interval in milliseconds</param>
+    ''' <param name="memberName"></param>
+    ''' <param name="sourceLineNumber"></param>
+    ''' <returns>State of Timer before function was called</returns>
+    Friend Function StartOrStopServerUpdateTimer(Start As Boolean, Optional interval As Integer = -1, <CallerMemberName> Optional memberName As String = "", <CallerLineNumber> Optional sourceLineNumber As Integer = 0) As Boolean
+        If Start Then
+            If interval > -1 Then
+                Form1.ServerUpdateTimer.Interval = interval
+            End If
+            Form1.ServerUpdateTimer.Start()
+            Debug.Print($"In {memberName} line {sourceLineNumber}, {NameOf(Form1.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
+            Return True
+        Else
+            If Form1.ServerUpdateTimer.Enabled Then
+                Form1.ServerUpdateTimer.Stop()
+                Debug.Print($"In {memberName} line {sourceLineNumber}, {NameOf(Form1.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
+                Return True
+            End If
+        End If
+        Return False
+    End Function
 
 End Module
