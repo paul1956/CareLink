@@ -9,7 +9,7 @@ Friend Module PlotSeriesBasal
 
     <Extension>
     Private Sub AddBasalPoint(basalSeries As Series, startX As OADate, StartY As Double, lineColor As Color, tagString As String)
-        If basalSeries.Points.Count > 0 AndAlso (Not basalSeries.Points.Last.IsEmpty) AndAlso New OADate(basalSeries.Points.Last.XValue).Within10Minutes(startX) Then
+        If basalSeries.Points.Count > 0 AndAlso (Not basalSeries.Points.Last.IsEmpty) AndAlso New OADate(basalSeries.Points.Last.XValue).Within06Minutes(startX) Then
             basalSeries.Points.AddXY(basalSeries.Points.Last, Double.NaN)
             basalSeries.Points.Last().Color = Color.Transparent
             basalSeries.Points.Last().IsEmpty = True
@@ -36,14 +36,14 @@ Friend Module PlotSeriesBasal
                                     )
 
         If DrawFromBottom Then
-            startX = markerOADate + s_150SecondsOADate
+            startX = markerOADate + s_02Minutes30SecondsOADate
             startY = amount.RoundTo025
             basalSeries.AddBasalPoint(startX, 0, lineColor, tag)
             basalSeries.AddBasalPoint(startX, startY, lineColor, tag)
             basalSeries.AddBasalPoint(startX, 0, lineColor, tag)
             basalSeries.AddBasalPoint(startX, Double.NaN, Color.Transparent, tag)
         Else
-            startX = markerOADate + s_150SecondsOADate
+            startX = markerOADate + s_02Minutes30SecondsOADate
             startY = bolusRow - ((bolusRow - insulinRow) * (amount / MaxBasalPerDose))
             basalSeries.AddBasalPoint(startX, bolusRow, lineColor, tag)
             basalSeries.AddBasalPoint(startX, startY, lineColor, tag)

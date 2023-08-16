@@ -159,11 +159,19 @@ Friend Module Form1LoginHelpers
     Friend Sub SetUpCareLinkUser(userSettingsPath As String)
         Dim ait As Single = 2
         Dim carbRatios As List(Of CarbRatioRecord) = Nothing
+        Dim page As New TaskDialogPage
         If Path.Exists(userSettingsPath) Then
+            Dim lastUpdateTime As Date = File.GetLastAccessTime(userSettingsPath)
+
+            If lastUpdateTime < Now - s_30DaysSpan Then
+                If MsgBox($"Would you like to update a new Device Settings PDF File", "Your Last Update was {}", MsgBoxStyle.YesNo, $"Use {ProjectName}™ Settings File", -1, page) = MsgBoxResult.Yes Then
+
+                End If
+            End If
             Dim contents As String = File.ReadAllText(userSettingsPath)
             CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
         Else
-            If MsgBox($"Would you like to upload a {ProjectName}™ Device Settings PDF File", "", MsgBoxStyle.YesNo, $"Use {ProjectName}™ Settings File") = MsgBoxResult.Yes Then
+            If MsgBox($"Would you like to upload a {ProjectName}™ Device Settings PDF File", "", MsgBoxStyle.YesNo, $"Use {ProjectName}™ Settings File", -1, page) = MsgBoxResult.Yes Then
                 Dim openFileDialog1 As New OpenFileDialog With {
                             .AddToRecent = True,
                             .CheckFileExists = True,
@@ -177,6 +185,11 @@ Friend Module Form1LoginHelpers
                             .Title = $"Select downloaded {ProjectName}™ Settings file.",
                             .ValidateNames = True
                         }
+                If page.Verification.Checked Then
+                    ' Don't show again needs implementation
+                    ' TODO
+                End If
+
                 If openFileDialog1.ShowDialog() = DialogResult.OK Then
                     Dim tables As List(Of PdfTable) = GetTableList(openFileDialog1.FileName, 0)
                     Dim aitTableLines As List(Of String) = ExtractPdfTableLines(tables, "Bolus Wizard On")

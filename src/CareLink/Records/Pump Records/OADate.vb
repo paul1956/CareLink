@@ -80,9 +80,9 @@ Public Class OADate
         Return _oADate.ToString("F37", CurrentUICulture)
     End Function
 
-    Public Function Within10Minutes(currentOADate As OADate) As Boolean
+    Public Function Within06Minutes(currentOADate As OADate) As Boolean
 
-        Return ((Me + s_6MinuteOADate) <= currentOADate) OrElse currentOADate < Me
+        Return ((Me + s_06MinuteOADate) <= currentOADate) OrElse currentOADate < Me
     End Function
 
 End Class

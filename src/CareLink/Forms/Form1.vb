@@ -1604,7 +1604,7 @@ Public Class Form1
             If RecentData.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
                     Dim epochDateTime As Date = lastMedicalDeviceDataUpdateServerEpochString.FromUnixTime.ToLocalTime
-                    If epochDateTime + s_5MinuteSpan < Now() Then
+                    If epochDateTime + s_05MinuteSpan < Now() Then
                         SetLastUpdateTime(Nothing, "", True, epochDateTime.IsDaylightSavingTime)
                         _sgMiniDisplay.SetCurrentSgString("---")
                     Else
@@ -2108,7 +2108,7 @@ Public Class Form1
 
                 For i As Integer = 0 To 287
                     Dim initialBolus As Single = 0
-                    Dim firstNotSkippedOaTime As New OADate((s_listOfSgRecords(0).datetime + (s_5MinuteSpan * i)).RoundDownToMinute())
+                    Dim firstNotSkippedOaTime As New OADate((s_listOfSgRecords(0).datetime + (s_05MinuteSpan * i)).RoundDownToMinute())
                     While currentMarker < timeOrderedMarkers.Count AndAlso timeOrderedMarkers.Keys(currentMarker) <= firstNotSkippedOaTime
                         initialBolus += timeOrderedMarkers.Values(currentMarker)
                         currentMarker += 1
@@ -2223,14 +2223,14 @@ Public Class Form1
 
                 If s_sensorState = "WARM_UP" AndAlso Me.SensorMessage IsNot Nothing Then
                     Dim timeRemaining As String = ""
-                    If s_systemStatusTimeRemaining > New TimeSpan(0) Then
+                    If s_systemStatusTimeRemaining.Milliseconds > 0 Then
                         If s_systemStatusTimeRemaining.Hours > 1 Then
                             timeRemaining = $"{s_systemStatusTimeRemaining.Hours} hrs"
                         ElseIf s_systemStatusTimeRemaining.Hours > 0 Then
                             timeRemaining = $"{s_systemStatusTimeRemaining.Hours} hr"
-                        ElseIf s_systemStatusTimeRemaining > New TimeSpan(0, 1, 0) Then
+                        ElseIf s_systemStatusTimeRemaining.Minutes > 1 Then
                             timeRemaining = $"{s_systemStatusTimeRemaining.Minutes} mins"
-                        ElseIf s_systemStatusTimeRemaining > New TimeSpan(0) Then
+                        Else
                             timeRemaining = $"{s_systemStatusTimeRemaining.Minutes} min"
                         End If
                         Me.SensorMessage.Text = $"{message.Replace("...", "")}{vbCrLf}{timeRemaining}"
@@ -2478,7 +2478,7 @@ Public Class Form1
             Try
                 ' need to figure out %
                 Dim autoModeStartTime As New Date
-                Dim timeInAutoMode As New TimeSpan(0)
+                Dim timeInAutoMode As TimeSpan = s_0TicksSpan
                 For Each r As IndexClass(Of AutoModeStatusRecord) In s_listOfAutoModeStatusMarkers.WithIndex
                     If r.IsFirst Then
                         If r.Value.autoModeOn Then
@@ -2499,9 +2499,9 @@ Public Class Form1
                         End If
                     End If
                 Next
-                Me.SmartGuardLabel.Text = If(timeInAutoMode >= s_oneDay,
+                Me.SmartGuardLabel.Text = If(timeInAutoMode >= s_01DaySpan,
                                              "SmartGuard 100%",
-                                             $"SmartGuard {CInt(timeInAutoMode / s_oneDay * 100)}%"
+                                             $"SmartGuard {CInt(timeInAutoMode / s_01DaySpan * 100)}%"
                                             )
             Catch ex As Exception
                 Me.SmartGuardLabel.Text = "SmartGuard ???%"
