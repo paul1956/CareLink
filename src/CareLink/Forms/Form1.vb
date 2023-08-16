@@ -2223,14 +2223,14 @@ Public Class Form1
 
                 If s_sensorState = "WARM_UP" AndAlso Me.SensorMessage IsNot Nothing Then
                     Dim timeRemaining As String = ""
-                    If s_systemStatusTimeRemaining > New TimeSpan(0) Then
+                    If s_systemStatusTimeRemaining.Milliseconds > 0 Then
                         If s_systemStatusTimeRemaining.Hours > 1 Then
                             timeRemaining = $"{s_systemStatusTimeRemaining.Hours} hrs"
                         ElseIf s_systemStatusTimeRemaining.Hours > 0 Then
                             timeRemaining = $"{s_systemStatusTimeRemaining.Hours} hr"
-                        ElseIf s_systemStatusTimeRemaining > New TimeSpan(0, 1, 0) Then
+                        ElseIf s_systemStatusTimeRemaining.Minutes > 1 Then
                             timeRemaining = $"{s_systemStatusTimeRemaining.Minutes} mins"
-                        ElseIf s_systemStatusTimeRemaining > New TimeSpan(0) Then
+                        Else
                             timeRemaining = $"{s_systemStatusTimeRemaining.Minutes} min"
                         End If
                         Me.SensorMessage.Text = $"{message.Replace("...", "")}{vbCrLf}{timeRemaining}"
@@ -2478,7 +2478,7 @@ Public Class Form1
             Try
                 ' need to figure out %
                 Dim autoModeStartTime As New Date
-                Dim timeInAutoMode As New TimeSpan(0)
+                Dim timeInAutoMode As TimeSpan = s_0TicksSpan
                 For Each r As IndexClass(Of AutoModeStatusRecord) In s_listOfAutoModeStatusMarkers.WithIndex
                     If r.IsFirst Then
                         If r.Value.autoModeOn Then
