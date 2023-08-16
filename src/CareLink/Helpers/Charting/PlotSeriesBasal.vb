@@ -9,7 +9,7 @@ Friend Module PlotSeriesBasal
 
     <Extension>
     Private Sub AddBasalPoint(basalSeries As Series, startX As OADate, StartY As Double, lineColor As Color, tagString As String)
-        If basalSeries.Points.Count > 0 AndAlso (Not basalSeries.Points.Last.IsEmpty) AndAlso New OADate(basalSeries.Points.Last.XValue).Within06Minutes(startX) Then
+        If basalSeries.Points.Count > 0 AndAlso (Not basalSeries.Points.Last.IsEmpty) AndAlso New OADate(basalSeries.Points.Last.XValue).Within6Minutes(startX) Then
             basalSeries.Points.AddXY(basalSeries.Points.Last, Double.NaN)
             basalSeries.Points.Last().Color = Color.Transparent
             basalSeries.Points.Last().IsEmpty = True
