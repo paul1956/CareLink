@@ -26,7 +26,7 @@ Public Module StringExtensions
             Return ""
         End If
 
-        Dim result As New Text.StringBuilder(Char.ToUpperInvariant(inStr(0)))
+        Dim result As New StringBuilder(Char.ToUpperInvariant(inStr(0)))
         Dim firstLetterOfWord As Boolean = False
         For Each c As Char In inStr.Substring(1)
             If c = " "c Or c = "_"c Then
@@ -56,7 +56,7 @@ Public Module StringExtensions
             Return ""
         End If
 
-        Dim result As New Text.StringBuilder(Char.ToUpperInvariant(inStr(0)))
+        Dim result As New StringBuilder(Char.ToUpperInvariant(inStr(0)))
         Dim lastWasNumeric As Boolean = Char.IsNumber(inStr(0))
         For Each c As Char In inStr.Substring(1)
             If Char.IsLower(c) OrElse lastWasNumeric Then

@@ -107,7 +107,7 @@ Public Class LoginForm1
         End If
     End Sub
 
-    Private Sub OK_Button_Click(sender As Object, e As System.EventArgs) Handles Ok_Button.Click
+    Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles Ok_Button.Click
         If Me.UsernameComboBox.Text.Length = 0 Then
             Me.UsernameComboBox.Focus()
             Exit Sub
