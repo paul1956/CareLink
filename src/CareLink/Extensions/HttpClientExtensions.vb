@@ -9,7 +9,7 @@ Imports System.Text
 Friend Module HttpClientExtensions
 
     <Extension>
-    Public Function [Get](client As HttpClient, url As StringBuilder, ByRef lastError As String, Optional headers As Dictionary(Of String, String) = Nothing, Optional params As Dictionary(Of String, String) = Nothing) As HttpResponseMessage
+    Public Function [Get](client As HttpClient, requestUri As StringBuilder, ByRef lastError As String, Optional headers As Dictionary(Of String, String) = Nothing, Optional params As Dictionary(Of String, String) = Nothing, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As HttpResponseMessage
         If headers IsNot Nothing Then
             client.DefaultRequestHeaders.Clear()
             For Each header As KeyValuePair(Of String, String) In headers
@@ -19,16 +19,18 @@ Friend Module HttpClientExtensions
             Next
         End If
         If params IsNot Nothing Then
-            url.Append("?"c)
+            requestUri.Append("?"c)
             For Each param As KeyValuePair(Of String, String) In params
-                url.Append($"{param.Key}={param.Value}&")
+                requestUri.Append($"{param.Key}={param.Value}&")
             Next
-            url = url.TrimEnd("&"c)
+            requestUri = requestUri.TrimEnd("&"c)
         End If
 
         Try
             lastError = Nothing
-            Return client.GetAsync(url.ToString).Result
+            Dim requestUriString As String = requestUri.ToString
+            Debug.Print($"{NameOf([Get])} uri={requestUriString} from {memberName}, line {sourceLineNumber}.")
+            Return client.GetAsync(requestUriString).Result
         Catch ex As Exception
             lastError = ex.DecodeException()
             Return New HttpResponseMessage(Net.HttpStatusCode.NotImplemented)

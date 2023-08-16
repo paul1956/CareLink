@@ -9,9 +9,14 @@ This application is designed to show all the available pump data in a visual ver
 
 ![Same display](https://GitHub.com/paul1956/CareLink/blob/master/Screenshot%202022-10-08%20203350.png?raw=true)
 
-This application is not in any way supported by Medtronic, it was created from publicly available data.
 Some data is filtered out by default because I could not see any use for it. You can turn off filters from Options Menu. but performance will suffer.
 
+# Disclaimer And Warning
+This project is intended for educational and informational purposes only.
+It relies on a series of fragile components and assumptions, any of which may break at any time.
+It is not FDA approved and should not be used to make medical decisions.
+It is neither affiliated with nor endorsed by Medtronic, and may violate their Terms of Service.
+Use of this code is without warranty or formal support of any kind.
 Try it out and send feedback.
 
 # Required Settings
