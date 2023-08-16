@@ -14,7 +14,7 @@ Public Module SGListExtensions
             If sGs.Last.datetimeAsString = "" Then
                 sGs.Last.datetime = If(i = 0,
                                        s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime.RoundDownToMinute(),
-                                       sGs(0).datetime + (s_5MinuteSpan * i)
+                                       sGs(0).datetime + (s_05MinuteSpan * i)
                                        )
             End If
         Next

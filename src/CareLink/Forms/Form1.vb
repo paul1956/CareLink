@@ -1604,7 +1604,7 @@ Public Class Form1
             If RecentData.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
                     Dim epochDateTime As Date = lastMedicalDeviceDataUpdateServerEpochString.FromUnixTime.ToLocalTime
-                    If epochDateTime + s_5MinuteSpan < Now() Then
+                    If epochDateTime + s_05MinuteSpan < Now() Then
                         SetLastUpdateTime(Nothing, "", True, epochDateTime.IsDaylightSavingTime)
                         _sgMiniDisplay.SetCurrentSgString("---")
                     Else
@@ -2108,7 +2108,7 @@ Public Class Form1
 
                 For i As Integer = 0 To 287
                     Dim initialBolus As Single = 0
-                    Dim firstNotSkippedOaTime As New OADate((s_listOfSgRecords(0).datetime + (s_5MinuteSpan * i)).RoundDownToMinute())
+                    Dim firstNotSkippedOaTime As New OADate((s_listOfSgRecords(0).datetime + (s_05MinuteSpan * i)).RoundDownToMinute())
                     While currentMarker < timeOrderedMarkers.Count AndAlso timeOrderedMarkers.Keys(currentMarker) <= firstNotSkippedOaTime
                         initialBolus += timeOrderedMarkers.Values(currentMarker)
                         currentMarker += 1
@@ -2499,9 +2499,9 @@ Public Class Form1
                         End If
                     End If
                 Next
-                Me.SmartGuardLabel.Text = If(timeInAutoMode >= s_oneDay,
+                Me.SmartGuardLabel.Text = If(timeInAutoMode >= s_01DaySpan,
                                              "SmartGuard 100%",
-                                             $"SmartGuard {CInt(timeInAutoMode / s_oneDay * 100)}%"
+                                             $"SmartGuard {CInt(timeInAutoMode / s_01DaySpan * 100)}%"
                                             )
             Catch ex As Exception
                 Me.SmartGuardLabel.Text = "SmartGuard ???%"

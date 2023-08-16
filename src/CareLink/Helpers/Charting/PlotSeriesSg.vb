@@ -19,7 +19,7 @@ Friend Module PlotSeriesSg
                         .Last().Color = Color.Transparent
                         .Last().IsEmpty = True
                     Else
-                        If .Count > 0 AndAlso (Not .Last.IsEmpty) AndAlso New OADate(.Last.XValue).Within10Minutes(sgOADateTime) Then
+                        If .Count > 0 AndAlso (Not .Last.IsEmpty) AndAlso New OADate(.Last.XValue).Within6Minutes(sgOADateTime) Then
                             .AddXY(.Last.XValue, Double.NaN)
                             .Last().Color = Color.Transparent
                             .Last().IsEmpty = True

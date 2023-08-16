@@ -8,28 +8,40 @@ Friend Module TimeConstants
 
 #Region "TimeSpan Constants"
 
-    Public ReadOnly s_1MinuteSpan As New TimeSpan(0, 1, 0)
-    Public ReadOnly s_5MinuteSpan As New TimeSpan(0, 5, 0)
-    Public ReadOnly s_30MinuteSpan As New TimeSpan(0, 30, 0)
+    Public ReadOnly s_0TicksSpan As New TimeSpan(0)
     Public ReadOnly s_minus1TickSpan As New TimeSpan(-1)
-    Public ReadOnly s_oneDay As New TimeSpan(24, 0, 0)
+
+#Region "Minute Spans"
+
+    Public ReadOnly s_01MinuteSpan As New TimeSpan(0, 1, 0)
+    Public ReadOnly s_05MinuteSpan As New TimeSpan(0, 5, 0)
+    Public ReadOnly s_30MinuteSpan As New TimeSpan(0, 30, 0)
+
+#End Region
+
+#Region "Day Spans"
+
+    Public ReadOnly s_01DaySpan As New TimeSpan(1, 0, 0, 0)
+    Public ReadOnly s_30DaysSpan As New TimeSpan(30, 0, 0, 0)
+
+#End Region
 
 #End Region ' TimeSpan Constants
 
 #Region "Millisecond Constants"
 
-    Public ReadOnly s_30SecondInMilliseconds As Double = New TimeSpan(0, 0, seconds:=30).TotalMilliseconds
-    Public ReadOnly s_1MinutesInMilliseconds As Double = s_1MinuteSpan.TotalMilliseconds
-    Public ReadOnly s_5MinutesInMilliseconds As Double = s_5MinuteSpan.TotalMilliseconds
+    Public ReadOnly s_30SecondInMilliseconds As Double = New TimeSpan(0, 0, 30).TotalMilliseconds
+    Public ReadOnly s_1MinutesInMilliseconds As Double = s_01MinuteSpan.TotalMilliseconds
+    Public ReadOnly s_5MinutesInMilliseconds As Double = s_05MinuteSpan.TotalMilliseconds
 
 #End Region ' Millisecond Constants
 
 #Region "OaDateTime Constants"
 
-    Public ReadOnly s_5MinuteOADate As New OADate(Date.MinValue + s_5MinuteSpan)
-    Public ReadOnly s_1HourAsOADate As New OADate(Date.MinValue + New TimeSpan(hours:=1, minutes:=0, seconds:=0))
-    Public ReadOnly s_6MinuteOADate As New OADate(Date.MinValue + New TimeSpan(hours:=0, minutes:=6, seconds:=0))
-    Public ReadOnly s_150SecondsOADate As New OADate(Date.MinValue + New TimeSpan(hours:=0, minutes:=2, seconds:=30))
+    Public ReadOnly s_02Minutes30SecondsOADate As New OADate(Date.MinValue + New TimeSpan(0, 2, 30))
+    Public ReadOnly s_05MinuteOADate As New OADate(Date.MinValue + s_05MinuteSpan)
+    Public ReadOnly s_06MinuteOADate As New OADate(Date.MinValue + New TimeSpan(0, 6, 0))
+    Public ReadOnly s_1HourAsOADate As New OADate(Date.MinValue + New TimeSpan(1, 0, 0))
 
 #End Region ' OaDateTime Constants
 
