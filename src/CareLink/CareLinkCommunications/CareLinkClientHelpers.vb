@@ -11,6 +11,30 @@ Imports CareLink
 
 Public Module CareLinkClientHelpers
 
+    Private Function DecodeResponse(response As HttpResponseMessage, ByRef lastErrorMessage As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As HttpResponseMessage
+        Dim message As String
+        If response?.IsSuccessStatusCode Then
+            Dim resultText As String = response.ResultText
+            lastErrorMessage = ExtractResponseData(resultText, "login_page.error.LoginFailed"">", "<")
+            If lastErrorMessage = "" Then
+                Debug.Print($"{NameOf(DecodeResponse)} success from {memberName}, line {sourceLineNumber}.")
+                Return response
+            End If
+            Debug.Print($"{NameOf(DecodeResponse)} failed from {memberName}, line {sourceLineNumber}.")
+            Return New HttpResponseMessage(HttpStatusCode.NetworkAuthenticationRequired)
+        ElseIf response?.StatusCode = HttpStatusCode.BadRequest Then
+            message = $"{NameOf(DecodeResponse)} failed with {HttpStatusCode.BadRequest}"
+            lastErrorMessage = $"Login Failure {message}"
+            Debug.Print($"{message} from {memberName}, line {sourceLineNumber}")
+            Return response
+        Else
+            message = $"{NameOf(DecodeResponse)} failed, session response is {response?.StatusCode.ToString}"
+            lastErrorMessage = message
+            Debug.Print($"{message} from {memberName}, line {sourceLineNumber}")
+            Return response
+        End If
+    End Function
+
     <Extension>
     Private Function ExtractResponseData(responseBody As String, startStr As String, endStr As String) As String
         If String.IsNullOrWhiteSpace(responseBody) Then
@@ -42,30 +66,6 @@ Public Module CareLinkClientHelpers
             result.Add(splitItem(0), splitItem(1))
         Next
         Return result
-    End Function
-
-    Friend Function DecodeResponse(response As HttpResponseMessage, ByRef lastErrorMessage As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As HttpResponseMessage
-        Dim message As String
-        If response?.IsSuccessStatusCode Then
-            Dim resultText As String = response.ResultText
-            lastErrorMessage = ExtractResponseData(resultText, "login_page.error.LoginFailed"">", "<")
-            If lastErrorMessage = "" Then
-                Debug.Print($"{NameOf(DecodeResponse)} success from {memberName}, line {sourceLineNumber}.")
-                Return response
-            End If
-            Debug.Print($"{NameOf(DecodeResponse)} failed from {memberName}, line {sourceLineNumber}.")
-            Return New HttpResponseMessage(HttpStatusCode.NetworkAuthenticationRequired)
-        ElseIf response?.StatusCode = HttpStatusCode.BadRequest Then
-            message = $"{NameOf(DecodeResponse)} failed with {HttpStatusCode.BadRequest}"
-            lastErrorMessage = $"Login Failure {message}"
-            Debug.Print($"{message} from {memberName}, line {sourceLineNumber}")
-            Return response
-        Else
-            message = $"{NameOf(DecodeResponse)} failed, session response is {response?.StatusCode.ToString}"
-            lastErrorMessage = message
-            Debug.Print($"{message} from {memberName}, line {sourceLineNumber}")
-            Return response
-        End If
     End Function
 
     Friend Function DoConsent(ByRef httpClient As HttpClient, doLoginResponse As HttpResponseMessage, ByRef lastErrorMessage As String) As HttpResponseMessage
@@ -128,21 +128,6 @@ Public Module CareLinkClientHelpers
             lastErrorMessage = $"HTTP Response is not OK, {response?.StatusCode}"
         End Try
         Return If(response Is Nothing, Nothing, DecodeResponse(response, lastErrorMessage))
-    End Function
-
-    ''' <summary>
-    ''' Get server URL from Country Code, only US today has a special server
-    ''' </summary>
-    ''' <param name="countryCode"></param>
-    ''' <returns>Server URL</returns>
-    Friend Function GetServerURL(countryCode As String) As String
-
-        Select Case If(String.IsNullOrWhiteSpace(countryCode), "US", countryCode)
-            Case "US"
-                Return "CareLink.MiniMed.com"
-            Case Else
-                Return "CareLink.MiniMed.eu"
-        End Select
     End Function
 
     Friend Function NetworkUnavailable() As Boolean

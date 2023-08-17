@@ -124,7 +124,7 @@ Public Class Form1
 
         If Not ProgramInitialized Then Exit Sub
 
-        Me.CursorTimer.Interval = CInt(s_30SecondInMilliseconds)
+        Me.CursorTimer.Interval = s_30SecondInMilliseconds
         Me.CursorTimer.Start()
     End Sub
 
@@ -1091,8 +1091,7 @@ Public Class Form1
         If openFileDialog1.ShowDialog() = DialogResult.OK Then
             Try
                 Dim fileNameWithPath As String = openFileDialog1.FileName
-                Me.ServerUpdateTimer.Stop()
-                Debug.Print($"In {NameOf(MenuStartHereExceptionReportLoad_Click)}, {NameOf(Me.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
+                StartOrStopServerUpdateTimer(False)
                 If File.Exists(fileNameWithPath) Then
                     RecentData?.Clear()
                     ExceptionHandlerForm.ReportFileNameWithPath = fileNameWithPath
@@ -1152,9 +1151,8 @@ Public Class Form1
         If openFileDialog1.ShowDialog() = DialogResult.OK Then
             Try
                 If File.Exists(openFileDialog1.FileName) Then
-                    Me.ServerUpdateTimer.Stop()
+                    StartOrStopServerUpdateTimer(False)
                     SetUpCareLinkUser(GetPathToTestSettingsFile())
-                    Debug.Print($"In {NameOf(MenuStartHereLoadSavedDataFile_Click)}, {NameOf(Me.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
                     CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{ProjectName}", True)
                     CurrentUICulture = CurrentDateCulture
 
@@ -1580,7 +1578,7 @@ Public Class Form1
     End Sub
 
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
-        Me.ServerUpdateTimer.Stop()
+        StartOrStopServerUpdateTimer(False)
         SyncLock _updatingLock
             If Not _updating Then
                 _updating = True
@@ -1621,22 +1619,20 @@ Public Class Form1
             ReportLoginStatus(Me.LoginStatus, True, Client.GetLastErrorMessage)
             _sgMiniDisplay.SetCurrentSgString("---")
         End If
-        Me.ServerUpdateTimer.Interval = CInt(s_1MinutesInMilliseconds)
-        Me.ServerUpdateTimer.Start()
+        StartOrStopServerUpdateTimer(True, s_1MinutesInMilliseconds)
     End Sub
 
     Public Sub PowerModeChanged(sender As Object, e As Microsoft.Win32.PowerModeChangedEventArgs)
         Debug.WriteLine($"PowerModeChange {e.Mode}")
         Select Case e.Mode
             Case Microsoft.Win32.PowerModes.Suspend
-                Me.ServerUpdateTimer.Stop()
+                StartOrStopServerUpdateTimer(False)
                 s_shuttingDown = True
                 SetLastUpdateTime("System Sleeping", "", True, Nothing)
             Case Microsoft.Win32.PowerModes.Resume
                 SetLastUpdateTime("System Awake", "", True, Nothing)
-                Me.ServerUpdateTimer.Interval = CInt(s_30SecondInMilliseconds) \ 3
                 s_shuttingDown = False
-                Me.ServerUpdateTimer.Start()
+                StartOrStopServerUpdateTimer(True, s_30SecondInMilliseconds \ 3)
                 Debug.Print($"In {NameOf(PowerModeChanged)}, restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
             Case Microsoft.Win32.PowerModes.StatusChange
         End Select

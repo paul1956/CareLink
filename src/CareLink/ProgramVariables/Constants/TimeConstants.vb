@@ -30,9 +30,9 @@ Friend Module TimeConstants
 
 #Region "Millisecond Constants"
 
-    Public ReadOnly s_30SecondInMilliseconds As Double = New TimeSpan(0, 0, 30).TotalMilliseconds
-    Public ReadOnly s_1MinutesInMilliseconds As Double = s_01MinuteSpan.TotalMilliseconds
-    Public ReadOnly s_5MinutesInMilliseconds As Double = s_05MinuteSpan.TotalMilliseconds
+    Public ReadOnly s_30SecondInMilliseconds As Integer = CInt(s_01MinuteSpan.TotalMilliseconds / 2)
+    Public ReadOnly s_1MinutesInMilliseconds As Integer = CInt(s_01MinuteSpan.TotalMilliseconds)
+    Public ReadOnly s_5MinutesInMilliseconds As Integer = CInt(s_05MinuteSpan.TotalMilliseconds)
 
 #End Region ' Millisecond Constants
 
