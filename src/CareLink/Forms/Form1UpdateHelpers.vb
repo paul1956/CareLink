@@ -463,11 +463,6 @@ Friend Module Form1UpdateHelpers
                         Form1.PumpBannerStateLabel.Text = "Enter BG"
                         Form1.PumpBannerStateLabel.Visible = True
                         Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
-                        Dim safeBasalDuration As UInteger = CUInt(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.safeBasalDuration)))
-                        If safeBasalDuration > 0 Then
-                            Form1.LastSgOrExitTimeLabel.Text = $"Exit in {TimeSpan.FromMinutes(safeBasalDuration):h\:mm} hr"
-                            Form1.LastSgOrExitTimeLabel.Visible = True
-                        End If
                     Case "DELIVERY_SUSPEND"
                         Form1.PumpBannerStateLabel.BackColor = Color.IndianRed
                         Form1.PumpBannerStateLabel.Text = "Delivery Suspended"
@@ -491,6 +486,14 @@ Friend Module Form1UpdateHelpers
                 Stop
             End If
         Next
+        Dim safeBasalDurationStr As String = ""
+        If s_therapyAlgorithmStateValue.TryGetValue(NameOf(TherapyAlgorithmStateRecord.safeBasalDuration), safeBasalDurationStr) Then
+            Dim safeBasalDuration As UInteger = CUInt(safeBasalDurationStr)
+            If safeBasalDuration > 0 Then
+                Form1.LastSgOrExitTimeLabel.Text = $"Exit in {TimeSpan.FromMinutes(safeBasalDuration):h\:mm} hr"
+                Form1.LastSgOrExitTimeLabel.Visible = True
+            End If
+        End If
         Form1.TableLayoutPanelBannerState.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(listOfPumpBannerState),
                               NameOf(BannerStateRecord),
