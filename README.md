@@ -33,6 +33,9 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 08/16/2023
 
 ## What's New
+New in 3.8.5.1
+- Fix G4 Sensor life calculation and Warmup time
+
 New in 3.8.5.0
 - Improve login logic for new CareLink servers including fix for EU Security upgrades
 - Add support for new 780G unknownIncompletedFlag

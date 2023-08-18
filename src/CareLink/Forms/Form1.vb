@@ -2219,12 +2219,12 @@ Public Class Form1
 
                 If s_sensorState = "WARM_UP" AndAlso Me.SensorMessage IsNot Nothing Then
                     Dim timeRemaining As String = ""
-                    If s_systemStatusTimeRemaining.Milliseconds > 0 Then
-                        If s_systemStatusTimeRemaining.Hours > 1 Then
-                            timeRemaining = $"{s_systemStatusTimeRemaining.Hours} hrs"
-                        ElseIf s_systemStatusTimeRemaining.Hours > 0 Then
-                            timeRemaining = $"{s_systemStatusTimeRemaining.Hours} hr"
-                        ElseIf s_systemStatusTimeRemaining.Minutes > 1 Then
+                    If s_systemStatusTimeRemaining.TotalMilliseconds > 0 Then
+                        If s_systemStatusTimeRemaining.TotalHours > 1 Then
+                            timeRemaining = $"{s_systemStatusTimeRemaining.Hours}:{s_systemStatusTimeRemaining.Minutes:D2} hrs"
+                        ElseIf s_systemStatusTimeRemaining.TotalHours > 0 Then
+                            timeRemaining = $"{s_systemStatusTimeRemaining.Hours}:{s_systemStatusTimeRemaining.Minutes:D2} hr"
+                        ElseIf s_systemStatusTimeRemaining.TotalMinutes > 1 Then
                             timeRemaining = $"{s_systemStatusTimeRemaining.Minutes} mins"
                         Else
                             timeRemaining = $"{s_systemStatusTimeRemaining.Minutes} min"
@@ -2396,6 +2396,11 @@ Public Class Form1
                 Me.SensorDaysLeftLabel.Text = ""
                 Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
                 Me.SensorTimeLeftLabel.Text = "Unknown"
+            Case Is >= 168
+                Me.SensorDaysLeftLabel.Text = "~7"
+                Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
+                Me.SensorTimeLeftLabel.Text = "7 Days"
+
             Case Is >= 24
                 Me.SensorDaysLeftLabel.Text = Math.Ceiling(s_sensorDurationHours / 24).ToString()
                 Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
