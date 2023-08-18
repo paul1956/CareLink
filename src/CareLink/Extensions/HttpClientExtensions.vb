@@ -46,11 +46,14 @@ Friend Module HttpClientExtensions
             Next
             url = url.TrimEnd("&"c)
         End If
-        Dim formData As New FormUrlEncodedContent(data.ToList())
+        Dim formData As FormUrlEncodedContent = Nothing
+        If data IsNot Nothing Then
+            formData = New FormUrlEncodedContent(data.ToList())
+        End If
         If headers IsNot Nothing Then
             client.DefaultRequestHeaders.Clear()
             For Each header As KeyValuePair(Of String, String) In headers
-                If header.Key = "Content-Type" Then
+                If header.Key = "Content-Type" AndAlso formData IsNot Nothing Then
                     formData.Headers.ContentType.MediaType = header.Value
                 Else
                     client.DefaultRequestHeaders.Add(header.Key, header.Value)

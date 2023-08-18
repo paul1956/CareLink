@@ -7,6 +7,7 @@ Imports System.Net
 Imports System.Net.Http
 Imports System.Text
 Imports System.Text.Json
+Imports Octokit
 
 Public Class CareLinkClient
     Private Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
@@ -27,8 +28,6 @@ Public Class CareLinkClient
     Private _lastResponseCode? As HttpStatusCode
 
     Private _sessionMonitorData As New SessionMonitorDataRecord
-
-    Private _sessionUser As New SessionUserRecord
 
     Public Sub New(username As String, password As String, country As String)
         ' User info
@@ -63,6 +62,7 @@ Public Class CareLinkClient
     Private Property ClientHandler As HttpClientHandler
     Friend Property LoggedIn As Boolean
     Friend Property SessionProfile As New SessionProfileRecord
+    Friend Property SessionUser As New SessionUserRecord
 
     ''' <summary>
     ''' Get server URL from Country Code, only US today has a special server
@@ -99,7 +99,7 @@ Public Class CareLinkClient
             _httpClient.DefaultRequestHeaders.Clear()
 
             ' Clear basic session records
-            _sessionUser.Clear()
+            Me.SessionUser.Clear()
             Me.SessionProfile.Clear()
             s_sessionCountrySettings.Clear()
             _sessionMonitorData.Clear()
@@ -157,12 +157,12 @@ Public Class CareLinkClient
 
             ' MUST BE FIRST DO NOT MOVE NEXT LINE
             s_sessionCountrySettings = New CountrySettingsRecord(Me.GetCountrySettings(authToken))
-            _sessionUser = Me.GetMyUser(authToken)
+            Me.SessionUser = Me.GetMyUser(authToken)
             Me.SessionProfile = Me.GetMyProfile(authToken)
             _sessionMonitorData = Me.GetMonitorData(authToken)
             'Dim reports As Object = Me.GetReports(authToken)
             ' Set login success if everything was OK:
-            If _sessionUser.HasValue _
+            If Me.SessionUser.HasValue _
                AndAlso Me.SessionProfile.HasValue _
                AndAlso s_sessionCountrySettings.HasValue _
                AndAlso _sessionMonitorData.HasValue Then
@@ -372,6 +372,74 @@ Public Class CareLinkClient
         Return New HttpClient(Me.ClientHandler)
     End Function
 
+    Friend Function GetDeviceSettings() As HttpResponseMessage
+        Dim response As HttpResponseMessage = Nothing
+        Dim authToken As String = Me.GetBearerToken(GetServerUrl(Me.CareLinkCountry))
+        Using httpClient As HttpClient = Me.NewHttpClientWithCookieContainer()
+
+            Dim requestPayload As New Dictionary(Of String, String) From {
+                {"clientTime", s_medicalDeviceTimeAsString},
+                {"dailyDetailReportDays", ""},
+                {"patientId", Form1.Client.SessionUser.id},
+                {"reportFileFormat", "PDF"},
+                {"startDate", $"{Now.Year}-{Now.Month:D2}-{Now.Day:D2}"},
+                {"endDate", $"{Now.Year}-{Now.Month:D2}-{Now.Day:D2}"},
+                {"reportShowAssessmentAndProgress", "False"},
+                {"reportShowWeeklyReview", "False"},
+                {"reportShowDashBoard", "False"},
+                {"reportShowBolusWizardFoodBolus", "False"},
+                {"reportShowAdherence", "False"},
+                {"reportShowOverview", "False"},
+                {"reportShowLogbook", "False"},
+                {"reportShowDeviceSettings", "True"},
+                {"reportShowEpisodeSummary", "False"},
+                {"reportShowDataTable", "False"}
+            }
+            Dim downloadPayload As New Dictionary(Of String, String) From {
+                {"saveFileName", ""}
+                }
+
+            ' https://carelink.minimed.com/app/reports
+            Dim requestUri As New StringBuilder($"https://{GetServerUrl(Me.CareLinkCountry)}/app/reports")
+            Try
+                Dim headers As Dictionary(Of String, String) = s_commonHeaders.Clone
+                headers("Authorization") = authToken
+                headers("Accept") = "application/json, text/plain, */*"
+                response = httpClient.Post(requestUri, headers, requestPayload)
+
+                requestUri = New StringBuilder($"https://{GetServerUrl(Me.CareLinkCountry)}/app/reports/ReportStatus")
+                Dim lastError As String = Nothing
+                Dim saveFileNameJson As String = ""
+                While True
+                    response = httpClient.Get(requestUri, lastError, headers, downloadPayload)
+                    If response.Headers.Contains("Content-Disposition") Then
+                        For Each header As KeyValuePair(Of String, IEnumerable(Of String)) In response.Headers.AsEnumerable
+                            If header.Key = "Content-Disposition" Then
+                                saveFileNameJson = header.Value.First
+                                Exit While
+                            End If
+                        Next
+                    End If
+                End While
+                Dim fileContents As Byte() = response.Content.ReadAsByteArrayAsync.Result
+                Dim tmpPath As String = Path.GetTempPath
+                Dim fileName As String = Loads(saveFileNameJson)("filename").Replace("%20", " ")
+                ByteArrayToFile($"{tmpPath}{fileName}", fileContents)
+                Stop
+            Catch ex As Exception
+                If NetworkUnavailable() Then
+                    Debug.Print($"{NameOf(GetDeviceSettings)} has no Internet Connection!")
+                    Return response
+                End If
+                Debug.Print($"{NameOf(GetDeviceSettings)} failed {ex.DecodeException().Replace(vbCrLf, "")}")
+                Return response
+            End Try
+        End Using
+        Stop
+        Return response
+
+    End Function
+
     Public Overridable Function GetLastErrorMessage() As String
         Return If(_lastErrorMessage, "OK")
     End Function
@@ -391,7 +459,7 @@ Public Class CareLinkClient
             If Me.GetAuthorizationToken(authToken) = GetAuthorizationTokenResult.OK AndAlso
                ((s_sessionCountrySettings.HasValue AndAlso Not String.IsNullOrWhiteSpace(Me.CareLinkCountry)) OrElse
                _sessionMonitorData.deviceFamily?.Equals("BLE_X", StringComparison.Ordinal)) Then
-                Return If(_careLinkPartnerType.Contains(_sessionUser.role, StringComparer.InvariantCultureIgnoreCase),
+                Return If(_careLinkPartnerType.Contains(Me.SessionUser.role, StringComparer.InvariantCultureIgnoreCase),
                           Me.GetConnectDisplayMessage(
                                         Me.SessionProfile.username,
                                         "CarePartner".ToLower,

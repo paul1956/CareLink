@@ -147,8 +147,10 @@ Friend Module Form1UpdateHelpers
                 Case ItemIndexes.lastSensorTS
                     HandleObsoleteTimes(row, rowIndex)
 
-                Case ItemIndexes.medicalDeviceTimeAsString,
-                       ItemIndexes.lastSensorTSAsString,
+                Case ItemIndexes.medicalDeviceTimeAsString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+                    s_medicalDeviceTimeAsString = row.Value
+                Case ItemIndexes.lastSensorTSAsString,
                        ItemIndexes.kind,
                        ItemIndexes.version
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))

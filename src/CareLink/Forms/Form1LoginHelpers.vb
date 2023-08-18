@@ -154,11 +154,11 @@ Friend Module Form1LoginHelpers
         Dim carbRatios As List(Of CarbRatioRecord) = Nothing
         Dim page As New TaskDialogPage
         If Path.Exists(userSettingsPath) Then
-            Dim lastUpdateTime As Date = File.GetLastAccessTime(userSettingsPath)
+            Dim lastUpdateTime As Date = File.GetLastWriteTime(userSettingsPath)
 
             If lastUpdateTime < Now - s_30DaysSpan Then
                 If MsgBox($"Would you like to update a new Device Settings PDF File", "Your Last Update was {}", MsgBoxStyle.YesNo, $"Use {ProjectName}™ Settings File", -1, page) = MsgBoxResult.Yes Then
-
+                    Form1.Client.GetDeviceSettings()
                 End If
             End If
             Dim contents As String = File.ReadAllText(userSettingsPath)
