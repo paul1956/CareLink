@@ -2,12 +2,12 @@
   "version": 3,
   "targets": {
     "net7.0-windows7.0": {
-      "ClosedXML/0.102.0": {
+      "ClosedXML/0.102.1": {
         "type": "package",
         "dependencies": {
           "DocumentFormat.OpenXml": "2.16.0",
           "ExcelNumberFormat": "1.1.0",
-          "SixLabors.Fonts": "1.0.0-beta19",
+          "SixLabors.Fonts": "1.0.0",
           "System.IO.Packaging": "6.0.0",
           "System.Net.Http": "4.3.4",
           "System.Text.RegularExpressions": "4.3.1",
@@ -434,7 +434,7 @@
           }
         }
       },
-      "SixLabors.Fonts/1.0.0-beta19": {
+      "SixLabors.Fonts/1.0.0": {
         "type": "package",
         "compile": {
           "lib/netcoreapp3.1/SixLabors.Fonts.dll": {
@@ -1674,14 +1674,14 @@
     }
   },
   "libraries": {
-    "ClosedXML/0.102.0": {
-      "sha512": "y4AiOq/XwJxbTV8wb9h32Ze9zme7oN6Qa7mpgzlCTK847d6P8BC3NDuqBj3X9RnC/CXmSwsmRS/vrIz7aHwijQ==",
+    "ClosedXML/0.102.1": {
+      "sha512": "Zb0/SgczPKLqlCHpSZzMG2qzaT3HpdkFrYJU8TTFRMfC0NLTSlp8gw26tZAtJp+Do0szAhPrWjkTp9flH9Or0A==",
       "type": "package",
-      "path": "closedxml/0.102.0",
+      "path": "closedxml/0.102.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "closedxml.0.102.0.nupkg.sha512",
+        "closedxml.0.102.1.nupkg.sha512",
         "closedxml.nuspec",
         "lib/netstandard2.0/ClosedXML.dll",
         "lib/netstandard2.0/ClosedXML.xml",
@@ -2212,10 +2212,10 @@
         "runtimes/ubuntu.16.10-x64/native/System.Security.Cryptography.Native.OpenSsl.so"
       ]
     },
-    "SixLabors.Fonts/1.0.0-beta19": {
-      "sha512": "ECJoayRT54VkJNoKBwZZllGvBIvxmnUFXsUCqHU8uAjAFrcdtxNpQ5Auyzw3d4+B+Q3KivKIrd7uO0qiNx/glg==",
+    "SixLabors.Fonts/1.0.0": {
+      "sha512": "LFQsCZlV0xlUyXAOMUo5kkSl+8zAQXXbbdwWchtk0B4o7zotZhQsQOcJUELGHdfPfm/xDAsz6hONAuV25bJaAg==",
       "type": "package",
-      "path": "sixlabors.fonts/1.0.0-beta19",
+      "path": "sixlabors.fonts/1.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2225,7 +2225,7 @@
         "lib/netstandard2.0/SixLabors.Fonts.xml",
         "lib/netstandard2.1/SixLabors.Fonts.dll",
         "lib/netstandard2.1/SixLabors.Fonts.xml",
-        "sixlabors.fonts.1.0.0-beta19.nupkg.sha512",
+        "sixlabors.fonts.1.0.0.nupkg.sha512",
         "sixlabors.fonts.128.png",
         "sixlabors.fonts.nuspec"
       ]
@@ -5405,7 +5405,7 @@
   },
   "projectFileDependencyGroups": {
     "net7.0-windows7.0": [
-      "ClosedXML >= 0.102.0",
+      "ClosedXML >= 0.102.1",
       "DataGridViewDisableButtonColumnEx >= 1.0.0.1",
       "FreeSpire.PDF >= 8.6.0",
       "Microsoft.Web.WebView2 >= 1.0.1901.177",
@@ -5458,7 +5458,7 @@
         "dependencies": {
           "ClosedXML": {
             "target": "Package",
-            "version": "[0.102.0, )"
+            "version": "[0.102.1, )"
           },
           "DataGridViewDisableButtonColumnEx": {
             "target": "Package",
