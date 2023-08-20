@@ -2305,28 +2305,36 @@ Public Class Form1
                                         "???",
                                         $"{CInt(s_totalBasal / s_totalDailyDose * 100)}"
                                        )
-        Me.Last24BasalLabel.Text = $"Basal {s_totalBasal.RoundSingle(1, False)}U | {totalPercent}%"
+        Me.Last24BasalUnitsLabel.Text = $"{s_totalBasal.RoundSingle(1, False):F1}U"
+        Me.Last24BasalPercentLabel.Text = $"{totalPercent}%"
 
-        Me.Last24DailyDoseLabel.Text = $"Insulin Dose {s_totalDailyDose.RoundSingle(1, False)}U"
+        Me.Last24TotalInsulinUnitsLabel.Text = $"{s_totalDailyDose.RoundSingle(1, False):F1}U"
 
         If s_totalAutoCorrection > 0 Then
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalAutoCorrection / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24AutoCorrectionLabel.Text = $"Auto Correction {s_totalAutoCorrection.RoundSingle(1, False)}U | {totalPercent}%"
             Me.Last24AutoCorrectionLabel.Visible = True
+            Me.Last24AutoCorrectionUnitsLabel.Text = $"{s_totalAutoCorrection.RoundSingle(1, False):F1}U"
+            Me.Last24AutoCorrectionUnitsLabel.Visible = True
+            Me.Last24AutoCorrectionPercentLabel.Text = $"{totalPercent}%"
+            Me.Last24AutoCorrectionPercentLabel.Visible = True
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24ManualBolusLabel.Text = $"Manual Bolus {s_totalManualBolus.RoundSingle(1, False)}U | {totalPercent}%"
+            Me.Last24ManualBolusUnitsLabel.Text = $"{s_totalManualBolus.RoundSingle(1, False):F1}U"
+            Me.Last24ManualBolusPercentLabel.Text = $"{totalPercent}%"
         Else
             Me.Last24AutoCorrectionLabel.Visible = False
+            Me.Last24AutoCorrectionUnitsLabel.Visible = False
+            Me.Last24AutoCorrectionPercentLabel.Visible = False
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24ManualBolusLabel.Text = $"Manual Bolus {s_totalManualBolus.RoundSingle(1, False)}U | {totalPercent}%"
+            Me.Last24ManualBolusUnitsLabel.Text = $"{s_totalManualBolus.RoundSingle(1, False):F1}U"
+            Me.Last24ManualBolusPercentLabel.Text = $"{totalPercent}%"
         End If
-        Me.Last24CarbsValueLabel.Text = $"Carbs = {s_totalCarbs} {s_sessionCountrySettings.carbohydrateUnitsDefault.ToTitle}"
+        Me.Last24CarbsValueLabel.Text = $"{s_totalCarbs} {s_sessionCountrySettings.carbohydrateUnitsDefault.ToTitle}"
     End Sub
 
     Private Sub UpdateInsulinLevel()

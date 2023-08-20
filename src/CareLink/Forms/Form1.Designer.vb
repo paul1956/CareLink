@@ -115,22 +115,30 @@ Partial Class Form1
         DgvCurrentUser = New DataGridView()
         DgvInsulin = New DataGridView()
         DgvMeal = New DataGridView()
+        DgvSessionProfile = New DataGridView()
         DgvSGs = New DataGridView()
         DgvSummary = New DataGridView()
-        DgvSessionProfile = New DataGridView()
         ImageList1 = New ImageList(components)
         InRangeMessageLabel = New Label()
+        Last24TotalInsulinUnitsLabel = New Label()
         InsulinLevelPictureBox = New PictureBox()
         LabelSgTrend = New Label()
         LabelTimeChange = New Label()
         LabelTrendArrows = New Label()
         LabelTrendValue = New Label()
         Last24AutoCorrectionLabel = New Label()
-        Last24CarbsValueLabel = New Label()
-        Last24DailyDoseLabel = New Label()
+        Last24AutoCorrectionPercentLabel = New Label()
+        Last24AutoCorrectionUnitsLabel = New Label()
         Last24BasalLabel = New Label()
+        Last24BasalPercentLabel = New Label()
+        Last24BasalUnitsLabel = New Label()
+        Last24CarbsValueLabel = New Label()
+        Last24CarbsLabel = New Label()
         Last24HoursGraphLabel = New Label()
         Last24HTotalsPanel = New Panel()
+        Last24TotalInsulinLabel = New Label()
+        Last24ManualBolusPercentLabel = New Label()
+        Last24ManualBolusUnitsLabel = New Label()
         Last24ManualBolusLabel = New Label()
         Last24TotalsLabel = New Label()
         MaxBasalPerHourLabel = New Label()
@@ -241,9 +249,9 @@ Partial Class Form1
         CType(DgvCurrentUser, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvInsulin, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvMeal, ComponentModel.ISupportInitialize).BeginInit()
+        CType(DgvSessionProfile, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvSGs, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvSummary, ComponentModel.ISupportInitialize).BeginInit()
-        CType(DgvSessionProfile, ComponentModel.ISupportInitialize).BeginInit()
         CType(InsulinLevelPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         Last24HTotalsPanel.SuspendLayout()
         CType(PumpBatteryPictureBox, ComponentModel.ISupportInitialize).BeginInit()
@@ -1104,6 +1112,17 @@ Partial Class Form1
         DgvMeal.Size = New Size(1358, 597)
         DgvMeal.TabIndex = 2
         ' 
+        ' DgvSessionProfile
+        ' 
+        DgvSessionProfile.Dock = DockStyle.Fill
+        DgvSessionProfile.Location = New Point(3, 3)
+        DgvSessionProfile.Name = "DgvSessionProfile"
+        DgvSessionProfile.ReadOnly = True
+        DgvSessionProfile.RowHeadersVisible = False
+        DgvSessionProfile.RowTemplate.Height = 25
+        DgvSessionProfile.Size = New Size(1370, 655)
+        DgvSessionProfile.TabIndex = 0
+        ' 
         ' DgvSGs
         ' 
         DgvSGs.Dock = DockStyle.Fill
@@ -1123,17 +1142,6 @@ Partial Class Form1
         DgvSummary.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvSummary.Size = New Size(1370, 655)
         DgvSummary.TabIndex = 0
-        ' 
-        ' DgvSessionProfile
-        ' 
-        DgvSessionProfile.Dock = DockStyle.Fill
-        DgvSessionProfile.Location = New Point(3, 3)
-        DgvSessionProfile.Name = "DgvSessionProfile"
-        DgvSessionProfile.ReadOnly = True
-        DgvSessionProfile.RowHeadersVisible = False
-        DgvSessionProfile.RowTemplate.Height = 25
-        DgvSessionProfile.Size = New Size(1370, 655)
-        DgvSessionProfile.TabIndex = 0
         ' 
         ' ImageList1
         ' 
@@ -1163,6 +1171,17 @@ Partial Class Form1
         InRangeMessageLabel.TabIndex = 30
         InRangeMessageLabel.Text = "In range"
         InRangeMessageLabel.TextAlign = ContentAlignment.MiddleCenter
+        ' 
+        ' Last24TotalInsulinUnitsLabel
+        ' 
+        Last24TotalInsulinUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24TotalInsulinUnitsLabel.ForeColor = Color.White
+        Last24TotalInsulinUnitsLabel.Location = New Point(131, 103)
+        Last24TotalInsulinUnitsLabel.Name = "Last24TotalInsulinUnitsLabel"
+        Last24TotalInsulinUnitsLabel.Size = New Size(70, 21)
+        Last24TotalInsulinUnitsLabel.TabIndex = 67
+        Last24TotalInsulinUnitsLabel.Text = " 100.0U"
+        Last24TotalInsulinUnitsLabel.TextAlign = ContentAlignment.MiddleRight
         ' 
         ' InsulinLevelPictureBox
         ' 
@@ -1227,48 +1246,95 @@ Partial Class Form1
         Last24AutoCorrectionLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Last24AutoCorrectionLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Last24AutoCorrectionLabel.ForeColor = Color.White
-        Last24AutoCorrectionLabel.Location = New Point(0, 84)
+        Last24AutoCorrectionLabel.Location = New Point(0, 86)
         Last24AutoCorrectionLabel.Name = "Last24AutoCorrectionLabel"
-        Last24AutoCorrectionLabel.Size = New Size(235, 21)
+        Last24AutoCorrectionLabel.Size = New Size(131, 21)
         Last24AutoCorrectionLabel.TabIndex = 64
-        Last24AutoCorrectionLabel.Text = "Auto Correction 20U | 20%"
+        Last24AutoCorrectionLabel.Text = "Auto Correction"
         Last24AutoCorrectionLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
-        ' Last24CarbsValueLabel
+        ' Last24AutoCorrectionPercentLabel
         ' 
-        Last24CarbsValueLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24CarbsValueLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
-        Last24CarbsValueLabel.ForeColor = Color.White
-        Last24CarbsValueLabel.Location = New Point(0, 105)
-        Last24CarbsValueLabel.Name = "Last24CarbsValueLabel"
-        Last24CarbsValueLabel.Size = New Size(218, 21)
-        Last24CarbsValueLabel.TabIndex = 66
-        Last24CarbsValueLabel.Text = "Carbs 100 Grams"
-        Last24CarbsValueLabel.TextAlign = ContentAlignment.MiddleLeft
+        Last24AutoCorrectionPercentLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24AutoCorrectionPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24AutoCorrectionPercentLabel.ForeColor = Color.White
+        Last24AutoCorrectionPercentLabel.Location = New Point(200, 86)
+        Last24AutoCorrectionPercentLabel.Name = "Last24AutoCorrectionPercentLabel"
+        Last24AutoCorrectionPercentLabel.Size = New Size(46, 21)
+        Last24AutoCorrectionPercentLabel.TabIndex = 73
+        Last24AutoCorrectionPercentLabel.Text = "20%"
+        Last24AutoCorrectionPercentLabel.TextAlign = ContentAlignment.MiddleRight
         ' 
-        ' Last24DailyDoseLabel
+        ' Last24AutoCorrectionUnitsLabel
         ' 
-        Last24DailyDoseLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24DailyDoseLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
-        Last24DailyDoseLabel.ForeColor = Color.White
-        Last24DailyDoseLabel.Location = New Point(0, 23)
-        Last24DailyDoseLabel.Name = "Last24DailyDoseLabel"
-        Last24DailyDoseLabel.Size = New Size(235, 21)
-        Last24DailyDoseLabel.TabIndex = 61
-        Last24DailyDoseLabel.Text = "Insulin Dose 100U"
-        Last24DailyDoseLabel.TextAlign = ContentAlignment.MiddleLeft
+        Last24AutoCorrectionUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24AutoCorrectionUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24AutoCorrectionUnitsLabel.ForeColor = Color.White
+        Last24AutoCorrectionUnitsLabel.Location = New Point(131, 86)
+        Last24AutoCorrectionUnitsLabel.Name = "Last24AutoCorrectionUnitsLabel"
+        Last24AutoCorrectionUnitsLabel.Size = New Size(70, 21)
+        Last24AutoCorrectionUnitsLabel.TabIndex = 72
+        Last24AutoCorrectionUnitsLabel.Text = "20.0U"
+        Last24AutoCorrectionUnitsLabel.TextAlign = ContentAlignment.MiddleRight
         ' 
         ' Last24BasalLabel
         ' 
         Last24BasalLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Last24BasalLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Last24BasalLabel.ForeColor = Color.White
-        Last24BasalLabel.Location = New Point(0, 42)
+        Last24BasalLabel.Location = New Point(0, 45)
         Last24BasalLabel.Name = "Last24BasalLabel"
-        Last24BasalLabel.Size = New Size(235, 21)
+        Last24BasalLabel.Size = New Size(131, 21)
         Last24BasalLabel.TabIndex = 62
-        Last24BasalLabel.Text = "Basal 50U | 50%"
+        Last24BasalLabel.Text = "Basal"
         Last24BasalLabel.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' Last24BasalPercentLabel
+        ' 
+        Last24BasalPercentLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24BasalPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24BasalPercentLabel.ForeColor = Color.White
+        Last24BasalPercentLabel.Location = New Point(200, 45)
+        Last24BasalPercentLabel.Name = "Last24BasalPercentLabel"
+        Last24BasalPercentLabel.Size = New Size(46, 21)
+        Last24BasalPercentLabel.TabIndex = 69
+        Last24BasalPercentLabel.Text = "50%"
+        Last24BasalPercentLabel.TextAlign = ContentAlignment.MiddleRight
+        ' 
+        ' Last24BasalUnitsLabel
+        ' 
+        Last24BasalUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24BasalUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24BasalUnitsLabel.ForeColor = Color.White
+        Last24BasalUnitsLabel.Location = New Point(131, 45)
+        Last24BasalUnitsLabel.Name = "Last24BasalUnitsLabel"
+        Last24BasalUnitsLabel.Size = New Size(70, 21)
+        Last24BasalUnitsLabel.TabIndex = 68
+        Last24BasalUnitsLabel.Text = "50.0U"
+        Last24BasalUnitsLabel.TextAlign = ContentAlignment.MiddleRight
+        ' 
+        ' Last24CarbsValueLabel
+        ' 
+        Last24CarbsValueLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24CarbsValueLabel.ForeColor = Color.White
+        Last24CarbsValueLabel.Location = New Point(0, 21)
+        Last24CarbsValueLabel.Name = "Last24CarbsValueLabel"
+        Last24CarbsValueLabel.Size = New Size(249, 21)
+        Last24CarbsValueLabel.TabIndex = 74
+        Last24CarbsValueLabel.Text = " 100 Grams"
+        Last24CarbsValueLabel.TextAlign = ContentAlignment.MiddleCenter
+        ' 
+        ' Last24CarbsLabel
+        ' 
+        Last24CarbsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24CarbsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24CarbsLabel.ForeColor = Color.White
+        Last24CarbsLabel.Location = New Point(0, 21)
+        Last24CarbsLabel.Name = "Last24CarbsLabel"
+        Last24CarbsLabel.Size = New Size(70, 21)
+        Last24CarbsLabel.TabIndex = 66
+        Last24CarbsLabel.Text = "Carbs"
+        Last24CarbsLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' Last24HoursGraphLabel
         ' 
@@ -1285,27 +1351,71 @@ Partial Class Form1
         ' Last24HTotalsPanel
         ' 
         Last24HTotalsPanel.BorderStyle = BorderStyle.Fixed3D
+        Last24HTotalsPanel.Controls.Add(Last24TotalInsulinUnitsLabel)
+        Last24HTotalsPanel.Controls.Add(Last24AutoCorrectionUnitsLabel)
+        Last24HTotalsPanel.Controls.Add(Last24ManualBolusUnitsLabel)
+        Last24HTotalsPanel.Controls.Add(Last24BasalUnitsLabel)
+        Last24HTotalsPanel.Controls.Add(Last24TotalInsulinLabel)
+        Last24HTotalsPanel.Controls.Add(Last24CarbsLabel)
         Last24HTotalsPanel.Controls.Add(Last24CarbsValueLabel)
+        Last24HTotalsPanel.Controls.Add(Last24AutoCorrectionPercentLabel)
         Last24HTotalsPanel.Controls.Add(Last24AutoCorrectionLabel)
+        Last24HTotalsPanel.Controls.Add(Last24ManualBolusPercentLabel)
         Last24HTotalsPanel.Controls.Add(Last24ManualBolusLabel)
+        Last24HTotalsPanel.Controls.Add(Last24BasalPercentLabel)
         Last24HTotalsPanel.Controls.Add(Last24BasalLabel)
-        Last24HTotalsPanel.Controls.Add(Last24DailyDoseLabel)
         Last24HTotalsPanel.Controls.Add(Last24TotalsLabel)
-        Last24HTotalsPanel.Location = New Point(740, 0)
+        Last24HTotalsPanel.Location = New Point(724, 0)
         Last24HTotalsPanel.Name = "Last24HTotalsPanel"
-        Last24HTotalsPanel.Size = New Size(237, 129)
+        Last24HTotalsPanel.Size = New Size(253, 129)
         Last24HTotalsPanel.TabIndex = 66
+        ' 
+        ' Last24TotalInsulinLabel
+        ' 
+        Last24TotalInsulinLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24TotalInsulinLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24TotalInsulinLabel.ForeColor = Color.White
+        Last24TotalInsulinLabel.Location = New Point(0, 103)
+        Last24TotalInsulinLabel.Name = "Last24TotalInsulinLabel"
+        Last24TotalInsulinLabel.Size = New Size(131, 21)
+        Last24TotalInsulinLabel.TabIndex = 61
+        Last24TotalInsulinLabel.Text = "Total Insulin"
+        Last24TotalInsulinLabel.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' Last24ManualBolusPercentLabel
+        ' 
+        Last24ManualBolusPercentLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24ManualBolusPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24ManualBolusPercentLabel.ForeColor = Color.White
+        Last24ManualBolusPercentLabel.Location = New Point(200, 66)
+        Last24ManualBolusPercentLabel.Name = "Last24ManualBolusPercentLabel"
+        Last24ManualBolusPercentLabel.Size = New Size(46, 21)
+        Last24ManualBolusPercentLabel.TabIndex = 71
+        Last24ManualBolusPercentLabel.Text = "30%"
+        Last24ManualBolusPercentLabel.TextAlign = ContentAlignment.MiddleRight
+        ' 
+        ' Last24ManualBolusUnitsLabel
+        ' 
+        Last24ManualBolusUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24ManualBolusUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24ManualBolusUnitsLabel.ForeColor = Color.White
+        Last24ManualBolusUnitsLabel.Location = New Point(131, 66)
+        Last24ManualBolusUnitsLabel.Name = "Last24ManualBolusUnitsLabel"
+        Last24ManualBolusUnitsLabel.Size = New Size(70, 21)
+        Last24ManualBolusUnitsLabel.TabIndex = 70
+        Last24ManualBolusUnitsLabel.Text = "30.0U"
+        Last24ManualBolusUnitsLabel.TextAlign = ContentAlignment.MiddleRight
         ' 
         ' Last24ManualBolusLabel
         ' 
         Last24ManualBolusLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Last24ManualBolusLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         Last24ManualBolusLabel.ForeColor = Color.White
-        Last24ManualBolusLabel.Location = New Point(0, 63)
+        Last24ManualBolusLabel.Location = New Point(0, 66)
         Last24ManualBolusLabel.Name = "Last24ManualBolusLabel"
-        Last24ManualBolusLabel.Size = New Size(233, 21)
+        Last24ManualBolusLabel.Size = New Size(131, 21)
         Last24ManualBolusLabel.TabIndex = 63
-        Last24ManualBolusLabel.Text = "Manual Bolus 30U | 30%"
+        Last24ManualBolusLabel.Text = "Manual Bolus"
         Last24ManualBolusLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' Last24TotalsLabel
@@ -1316,7 +1426,7 @@ Partial Class Form1
         Last24TotalsLabel.ForeColor = Color.Black
         Last24TotalsLabel.Location = New Point(0, 0)
         Last24TotalsLabel.Name = "Last24TotalsLabel"
-        Last24TotalsLabel.Size = New Size(233, 23)
+        Last24TotalsLabel.Size = New Size(249, 23)
         Last24TotalsLabel.TabIndex = 65
         Last24TotalsLabel.Text = "Last 24 Hr Totals"
         Last24TotalsLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -1444,7 +1554,7 @@ Partial Class Form1
         SensorTimeLeftPanel.Controls.Add(SensorDaysLeftLabel)
         SensorTimeLeftPanel.Controls.Add(SensorTimeLeftLabel)
         SensorTimeLeftPanel.Controls.Add(SensorTimeLeftPictureBox)
-        SensorTimeLeftPanel.Location = New Point(638, 0)
+        SensorTimeLeftPanel.Location = New Point(636, 0)
         SensorTimeLeftPanel.Name = "SensorTimeLeftPanel"
         SensorTimeLeftPanel.Size = New Size(94, 129)
         SensorTimeLeftPanel.TabIndex = 65
@@ -2545,9 +2655,9 @@ Partial Class Form1
         CType(DgvCurrentUser, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvInsulin, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvMeal, ComponentModel.ISupportInitialize).EndInit()
+        CType(DgvSessionProfile, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvSGs, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvSummary, ComponentModel.ISupportInitialize).EndInit()
-        CType(DgvSessionProfile, ComponentModel.ISupportInitialize).EndInit()
         CType(InsulinLevelPictureBox, ComponentModel.ISupportInitialize).EndInit()
         Last24HTotalsPanel.ResumeLayout(False)
         CType(PumpBatteryPictureBox, ComponentModel.ISupportInitialize).EndInit()
@@ -2633,7 +2743,6 @@ Partial Class Form1
     Friend WithEvents BelowLowLimitValueLabel As Label
     Friend WithEvents CalibrationDueImage As PictureBox
     Friend WithEvents CalibrationShieldPanel As Panel
-    Friend WithEvents SmartGuardShieldPictureBox As PictureBox
     Friend WithEvents CareLinkUserDataRecordBindingSource As BindingSource
     Friend WithEvents CountryDataPg2TableLayoutPanel As TableLayoutPanel
     Friend WithEvents CurrentSgLabel As Label
@@ -2681,12 +2790,20 @@ Partial Class Form1
     Friend WithEvents LabelTrendArrows As Label
     Friend WithEvents LabelTrendValue As Label
     Friend WithEvents Last24AutoCorrectionLabel As Label
+    Friend WithEvents Last24AutoCorrectionPercentLabel As Label
+    Friend WithEvents Last24AutoCorrectionUnitsLabel As Label
     Friend WithEvents Last24BasalLabel As Label
+    Friend WithEvents Last24BasalPercentLabel As Label
+    Friend WithEvents Last24BasalUnitsLabel As Label
+    Friend WithEvents Last24CarbsLabel As Label
     Friend WithEvents Last24CarbsValueLabel As Label
-    Friend WithEvents Last24DailyDoseLabel As Label
     Friend WithEvents Last24HoursGraphLabel As Label
     Friend WithEvents Last24HTotalsPanel As Panel
     Friend WithEvents Last24ManualBolusLabel As Label
+    Friend WithEvents Last24ManualBolusPercentLabel As Label
+    Friend WithEvents Last24ManualBolusUnitsLabel As Label
+    Friend WithEvents Last24TotalInsulinLabel As Label
+    Friend WithEvents Last24TotalInsulinUnitsLabel As Label
     Friend WithEvents Last24TotalsLabel As Label
     Friend WithEvents LastSgOrExitTimeLabel As Label
     Friend WithEvents LastUpdateTimeToolStripStatusLabel As ToolStripStatusLabel
@@ -2707,6 +2824,12 @@ Partial Class Form1
     Friend WithEvents MenuOptionsFilterRawJSONData As ToolStripMenuItem
     Friend WithEvents MenuOptionsShowChartLegends As ToolStripMenuItem
     Friend WithEvents MenuOptionsSpeechHelpShown As ToolStripMenuItem
+    Friend WithEvents MenuOptionsSpeechRecognition80 As ToolStripMenuItem
+    Friend WithEvents MenuOptionsSpeechRecognition85 As ToolStripMenuItem
+    Friend WithEvents MenuOptionsSpeechRecognition90 As ToolStripMenuItem
+    Friend WithEvents MenuOptionsSpeechRecognition95 As ToolStripMenuItem
+    Friend WithEvents MenuOptionsSpeechRecognitionConfidence As ToolStripMenuItem
+    Friend WithEvents MenuOptionsSpeechRecognitionDisabled As ToolStripMenuItem
     Friend WithEvents MenuOptionsSpeechRecognitionEnabled As ToolStripMenuItem
     Friend WithEvents MenuOptionsUseLocalTimeZone As ToolStripMenuItem
     Friend WithEvents MenuShowMiniDisplay As ToolStripMenuItem
@@ -2721,6 +2844,7 @@ Partial Class Form1
     Friend WithEvents ModelLabel As Label
     Friend WithEvents NotifyIcon1 As NotifyIcon
     Friend WithEvents PumpAITLabel As Label
+    Friend WithEvents PumpBannerStateLabel As Label
     Friend WithEvents PumpBatteryPictureBox As PictureBox
     Friend WithEvents PumpBatteryRemaining2Label As Label
     Friend WithEvents PumpBatteryRemainingLabel As Label
@@ -2736,6 +2860,7 @@ Partial Class Form1
     Friend WithEvents ServerUpdateTimer As Timer
     Friend WithEvents ShieldUnitsLabel As Label
     Friend WithEvents SmartGuardLabel As Label
+    Friend WithEvents SmartGuardShieldPictureBox As PictureBox
     Friend WithEvents SplitContainer1 As SplitContainer
     Friend WithEvents SplitContainer2 As SplitContainer
     Friend WithEvents SplitContainer3 As SplitContainer
@@ -2780,6 +2905,7 @@ Partial Class Form1
     Friend WithEvents TabPageAutoBasalDelivery As TabPage
     Friend WithEvents TabPageAutoModeStatus As TabPage
     Friend WithEvents TabPageBackToHomePage As TabPage
+    Friend WithEvents TabPageBgReadings As TabPage
     Friend WithEvents TabPageCalibration As TabPage
     Friend WithEvents TabPageCountryDataPg1 As TabPage
     Friend WithEvents TabPageCountryDataPg2 As TabPage
@@ -2789,10 +2915,8 @@ Partial Class Form1
     Friend WithEvents TabPageLastSG As TabPage
     Friend WithEvents TabPageLowGlucoseSuspended As TabPage
     Friend WithEvents TabPageSessionProfile As TabPage
-    Friend WithEvents TabPageBgReadings As TabPage
     Friend WithEvents TabPageTimeChange As TabPage
     Friend WithEvents TemporaryUseAdvanceAITDecayCheckBox As CheckBox
-    Friend WithEvents PumpBannerStateLabel As Label
     Friend WithEvents TimeInRangeChartLabel As Label
     Friend WithEvents TimeInRangeLabel As Label
     Friend WithEvents TimeInRangeSummaryPercentCharLabel As Label
@@ -2813,10 +2937,4 @@ Partial Class Form1
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
     Friend WithEvents UpdateAvailableStatusStripLabel As ToolStripStatusLabel
     Friend WithEvents WebView As Microsoft.Web.WebView2.WinForms.WebView2
-    Friend WithEvents MenuOptionsSpeechRecognitionDisabled As ToolStripMenuItem
-    Friend WithEvents MenuOptionsSpeechRecognitionConfidence As ToolStripMenuItem
-    Friend WithEvents MenuOptionsSpeechRecognition95 As ToolStripMenuItem
-    Friend WithEvents MenuOptionsSpeechRecognition90 As ToolStripMenuItem
-    Friend WithEvents MenuOptionsSpeechRecognition85 As ToolStripMenuItem
-    Friend WithEvents MenuOptionsSpeechRecognition80 As ToolStripMenuItem
 End Class

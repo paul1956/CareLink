@@ -467,14 +467,18 @@ Friend Module Form1UpdateHelpers
                         Form1.PumpBannerStateLabel.Visible = True
                         Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
                     Case "LOAD_RESERVOIR"
+                        Stop
                     Case "PROCESSING_BG"
+                        Stop
                     Case "SUSPENDED_BEFORE_LOW"
                         Form1.PumpBannerStateLabel.BackColor = Color.IndianRed
                         Form1.PumpBannerStateLabel.Text = "Suspended before low"
                         Form1.PumpBannerStateLabel.Visible = True
                         Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
                     Case "TEMP_BASAL"
+                        Stop
                     Case "WAIT_TO_ENTER_BG"
+                        Stop
                     Case Else
                         If Debugger.IsAttached Then
                             MsgBox($"{typeValue} is unknown banner message!", "", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, GetTitleFromStack(New StackFrame(0, True)))
