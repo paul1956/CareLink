@@ -545,6 +545,7 @@ Friend Module Form1UpdateHelpers
 
             Return New FileNameStruct(fileNameWithPath, baseWithCultureAndExtension)
         Catch ex As Exception
+            Stop
         End Try
         Return New FileNameStruct
 
