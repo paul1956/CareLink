@@ -8,7 +8,6 @@ Imports System.Runtime.CompilerServices
 Imports System.Text
 
 Imports CareLink
-Imports Octokit.Internal
 
 Public Module CareLinkClientHelpers
 

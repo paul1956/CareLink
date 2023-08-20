@@ -6,6 +6,7 @@ Imports System.Globalization
 Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
+
 Imports Spire.Pdf.Utilities
 
 Friend Enum FileToLoadOptions As Integer
