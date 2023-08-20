@@ -645,7 +645,7 @@ Public Class Form1
                 Try
                     Me.WebView.Source = New Uri(uriString)
                 Catch ex As Exception
-
+                    Stop
                 End Try
             End If
         End If
@@ -1111,13 +1111,13 @@ Public Class Form1
 
                         Try
                             FinishInitialization()
-                            Try
-                                Me.UpdateAllTabPages(True)
-                            Catch ex As ArgumentException
-                                MessageBox.Show($"Error in {NameOf(UpdateAllTabPages)}. Original error: {ex.Message}")
-                            End Try
-                        Catch ex As ArgumentException
+                        Catch ex As Exception
                             MessageBox.Show($"Error in {NameOf(FinishInitialization)}. Original error: {ex.Message}")
+                        End Try
+                        Try
+                            Me.UpdateAllTabPages(True)
+                        Catch ex As Exception
+                            MessageBox.Show($"Error in {NameOf(UpdateAllTabPages)}. Original error: {ex.Message}")
                         End Try
                     End If
                 End If
@@ -2040,9 +2040,12 @@ Public Class Form1
             End If
             Me.ActiveInsulinValue.Text = $"Active Insulin {activeInsulinStr}U"
             _sgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
-        Catch ex As Exception
+        Catch ex As ArithmeticException
             Stop
             Throw New ArithmeticException($"{ex.DecodeException()} exception in {NameOf(UpdateActiveInsulin)}")
+        Catch ex1 As Exception
+            Stop
+            Throw New Exception($"{ex1.DecodeException()} exception in {NameOf(UpdateActiveInsulin)}")
         End Try
     End Sub
 
@@ -2143,7 +2146,7 @@ Public Class Form1
             End With
         Catch ex As Exception
             Stop
-            Throw New ArithmeticException($"{ex.DecodeException()} exception in {NameOf(UpdateActiveInsulinChart)}")
+            Throw New Exception($"{ex.DecodeException()} exception in {NameOf(UpdateActiveInsulinChart)}")
         End Try
         Application.DoEvents()
     End Sub
@@ -2245,7 +2248,7 @@ Public Class Form1
             End If
         Catch ex As Exception
             Stop
-            Throw New ArithmeticException($"{ex.DecodeException()} exception in {NameOf(UpdateAutoModeShield)}")
+            Throw New Exception($"{ex.DecodeException()} exception in {NameOf(UpdateAutoModeShield)}")
         End Try
         Application.DoEvents()
     End Sub
@@ -2263,7 +2266,7 @@ Public Class Form1
             End If
         Catch ex As Exception
             Stop
-            Throw New ArithmeticException($"{ex.DecodeException()} exception in {NameOf(UpdateCalibrationTimeRemaining)}")
+            Throw New Exception($"{ex.DecodeException()} exception in {NameOf(UpdateCalibrationTimeRemaining)}")
         End Try
 
         Application.DoEvents()
@@ -2604,7 +2607,7 @@ Public Class Form1
             Me.TreatmentMarkersChart.PlotHighLowLimitsAndTargetSg(True)
         Catch ex As Exception
             Stop
-            Throw New ArithmeticException($"{ex.DecodeException()} exception in {NameOf(InitializeTreatmentMarkersChart)}")
+            Throw New Exception($"{ex.DecodeException()} exception in {NameOf(InitializeTreatmentMarkersChart)}")
         End Try
         Application.DoEvents()
     End Sub

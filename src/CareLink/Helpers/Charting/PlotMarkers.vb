@@ -274,7 +274,6 @@ Friend Module PlotMarkers
                 End Select
             Catch ex As Exception
                 Stop
-                '      Throw New Exception($"{ex.DecodeException()} exception in {memberName} at {sourceLineNumber}")
             End Try
         Next
         treatmentChart.Annotations.Last.BringToFront()
