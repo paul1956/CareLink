@@ -408,25 +408,30 @@ Public Class CareLinkClient
                 ' Add header
                 Dim headers As Dictionary(Of String, String) = s_commonHeaders.Clone
                 headers("Authorization") = authToken
-
-                ' https://carelink.minimed.com/app/reports
-                Dim requestUri As New StringBuilder($"https://{GetServerUrl(Me.CareLinkCountry)}/app/reports")
+                headers.Add("Origin", "https://carelink.minimed.com")
+                headers.Add("Host", "carelink.minimed.com")
                 headers("Accept") = "application/json, text/plain, */*"
-                headers("Content-Type") = "application/json; charset=utf-8"
+                headers.Add("Accept-Encoding", "gzip, deflate, br")
+                headers("Content-Type") = "application/json"
                 _httpClient.DefaultRequestHeaders.Clear()
-                For Each header As KeyValuePair(Of String, String) In headers
+                For Each header As KeyValuePair(Of String, String) In headers.Sort
                     If header.Key <> "Content-Type" Then
                         _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
                     End If
                 Next
+                _httpClient.DefaultRequestHeaders.Referrer = New Uri("https://carelink.minimed.com/app/reports")
+
                 Dim jsonContent As Json.JsonContent = Json.JsonContent.Create(requestPayload)
+
+                ' https://carelink.minimed.com/patient/reports/generateReport"
+                Dim requestUri As String = $"https://{GetServerUrl(Me.CareLinkCountry)}/patient/reports/generateReport"
                 Dim postRequest As New HttpRequestMessage(HttpMethod.Post, New Uri(requestUri.ToString)) With {.Content = jsonContent}
+                ' Bad Request !!!
                 response = _httpClient.SendAsync(postRequest).Result
 
                 _lastResponseCode = response.StatusCode
                 If response?.IsSuccessStatusCode Then
                     Dim resultText As String = response.ResultText
-                    ' CRASH HERE!!! result is not json
                     jsonData = Loads(resultText)
                     response.Dispose()
                 Else

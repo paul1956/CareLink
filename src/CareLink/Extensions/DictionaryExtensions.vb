@@ -111,6 +111,15 @@ Public Module DictionaryExtensions
     End Function
 
     <Extension>
+    Public Function Sort(Of T)(dic As Dictionary(Of String, T)) As Dictionary(Of String, T)
+        Dim sortDic As New SortedDictionary(Of String, T)
+        For Each kvp As KeyValuePair(Of String, T) In dic
+            sortDic.Add(kvp.Key, kvp.Value)
+        Next
+        Return (From x In sortDic Select x).ToDictionary(Function(p) p.Key, Function(p) p.Value)
+    End Function
+
+    <Extension>
     Public Function ToCsv(Of T)(dic As Dictionary(Of String, T)) As String
         If dic Is Nothing Then
             Return "{}"
