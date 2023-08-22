@@ -304,7 +304,7 @@ Public Class CareLinkClient
 
     Private Function NewHttpClientWithCookieContainer() As HttpClient
         Dim cookieContainer As New CookieContainer()
-        Me.ClientHandler = New HttpClientHandler With {.cookieContainer = cookieContainer}
+        Me.ClientHandler = New HttpClientHandler With {.CookieContainer = cookieContainer}
         Return New HttpClient(Me.ClientHandler)
     End Function
 
@@ -373,16 +373,16 @@ Public Class CareLinkClient
                 {"endDate", $"""{Now.Year}-{Now.Month:D2}-{Now.Day:D2}"""},
                 {"patientId", $"""{Form1.Client.SessionUser.id}"""},
                 {"reportFileFormat", """PDF"""},
-                {"reportShowAdherence", "False"},
-                {"reportShowAssessmentAndProgress", "False"},
-                {"reportShowBolusWizardFoodBolus", "False"},
-                {"reportShowDashBoard", "False"},
-                {"reportShowDataTable", "False"},
-                {"reportShowDeviceSettings", "True"},
-                {"reportShowEpisodeSummary", "False"},
-                {"reportShowLogbook", "False"},
-                {"reportShowOverview", "False"},
-                {"reportShowWeeklyReview", "False"},
+                {"reportShowAdherence", False},
+                {"reportShowAssessmentAndProgress", False},
+                {"reportShowBolusWizardFoodBolus", False},
+                {"reportShowDashBoard", False},
+                {"reportShowDataTable", False},
+                {"reportShowDeviceSettings", True},
+                {"reportShowEpisodeSummary", False},
+                {"reportShowLogbook", False},
+                {"reportShowOverview", False},
+                {"reportShowWeeklyReview", False},
                 {"startDate", $"""{Now.Year}-{Now.Month:D2}-{Now.Day:D2}"""}
             }
         Dim authToken As String = ""
