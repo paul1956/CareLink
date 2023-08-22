@@ -149,7 +149,6 @@ Friend Module Form1UpdateHelpers
 
                 Case ItemIndexes.medicalDeviceTimeAsString
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
-                    s_medicalDeviceTimeAsString = row.Value
                 Case ItemIndexes.lastSensorTSAsString,
                        ItemIndexes.kind,
                        ItemIndexes.version

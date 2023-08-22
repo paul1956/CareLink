@@ -302,14 +302,6 @@ Public Class CareLinkClient
         Return myUserRecord
     End Function
 
-    Private Function GetReports(authToken As String) As Dictionary(Of String, String)
-        Dim queryParams As New Dictionary(Of String, String) From {
-            {"countryCode", Me.CareLinkCountry},
-            {"language", "en"}}
-
-        Return Me.GetData(authToken, GetServerUrl(Me.CareLinkCountry), "app/reports", queryParams, Nothing)
-    End Function
-
     Private Function NewHttpClientWithCookieContainer() As HttpClient
         Dim cookieContainer As New CookieContainer()
         Me.ClientHandler = New HttpClientHandler With {.CookieContainer = cookieContainer}
@@ -375,30 +367,24 @@ Public Class CareLinkClient
     End Function
 
     Friend Function GetDeviceSettings() As String
-        If RecentData Is Nothing Then
-            Stop
-        Else
-            s_medicalDeviceTimeAsString = RecentData(ItemIndexes.medicalDeviceTimeAsString.ToString)
-        End If
-        Dim requestPayload As New SortedDictionary(Of String, String) From {
-                {"clientTime", $"""{s_medicalDeviceTimeAsString}"""},
+        Dim requestPayload As New Dictionary(Of String, Object) From {
+            {"clientTime", $"""{Now:O}"""},
                 {"dailyDetailReportDays", "[]"},
                 {"endDate", $"""{Now.Year}-{Now.Month:D2}-{Now.Day:D2}"""},
                 {"patientId", $"""{Form1.Client.SessionUser.id}"""},
                 {"reportFileFormat", """PDF"""},
-                {"reportShowAdherence", "False"},
-                {"reportShowAssessmentAndProgress", "False"},
-                {"reportShowBolusWizardFoodBolus", "False"},
-                {"reportShowDashBoard", "False"},
-                {"reportShowDataTable", "False"},
-                {"reportShowDeviceSettings", "True"},
-                {"reportShowEpisodeSummary", "False"},
-                {"reportShowLogbook", "False"},
-                {"reportShowOverview", "False"},
-                {"reportShowWeeklyReview", "False"},
-                {"startDate", $"""{Now.Year}-{Now.Month:D2}-{Now.Day:D2}"""}
+                {"reportShowAdherence", False},
+                {"reportShowAssessmentAndProgress", False},
+                {"reportShowBolusWizardFoodBolus", False},
+                {"reportShowDashBoard", False},
+                {"reportShowDataTable", False},
+                {"reportShowDeviceSettings", True},
+                {"reportShowEpisodeSummary", False},
+                {"reportShowLogbook", False},
+                {"reportShowOverview", False},
+                {"reportShowWeeklyReview", False},
+                {"startDate", $"""{Now.Year}-{Now.Month:D2}-{Now.Day:D2}"""},
             }
-
         Dim authToken As String = ""
         Dim deviceSettings As String = ""
         Dim jsonData As Dictionary(Of String, String)
@@ -412,7 +398,6 @@ Public Class CareLinkClient
                 headers.Add("Host", "carelink.minimed.com")
                 headers("Accept") = "application/json, text/plain, */*"
                 headers.Add("Accept-Encoding", "gzip, deflate, br")
-                headers("Content-Type") = "application/json"
                 _httpClient.DefaultRequestHeaders.Clear()
                 For Each header As KeyValuePair(Of String, String) In headers.Sort
                     If header.Key <> "Content-Type" Then
@@ -422,10 +407,8 @@ Public Class CareLinkClient
                 _httpClient.DefaultRequestHeaders.Referrer = New Uri("https://carelink.minimed.com/app/reports")
 
                 Dim jsonContent As Json.JsonContent = Json.JsonContent.Create(requestPayload)
-
-                ' https://carelink.minimed.com/patient/reports/generateReport"
-                Dim requestUri As String = $"https://{GetServerUrl(Me.CareLinkCountry)}/patient/reports/generateReport"
-                Dim postRequest As New HttpRequestMessage(HttpMethod.Post, New Uri(requestUri.ToString)) With {.Content = jsonContent}
+                Dim requestUri As New Uri($"https://{GetServerUrl(Me.CareLinkCountry)}/patient/reports/generateReport")
+                Dim postRequest As New HttpRequestMessage(HttpMethod.Post, requestUri) With {.Content = jsonContent}
                 ' Bad Request !!!
                 response = _httpClient.SendAsync(postRequest).Result
 
