@@ -447,23 +447,6 @@
           }
         }
       },
-      "Spire.PDF/9.8.5": {
-        "type": "package",
-        "dependencies": {
-          "System.Drawing.Common": "6.0.0",
-          "System.Text.Encoding.CodePages": "6.0.0"
-        },
-        "compile": {
-          "lib/net6.0/Spire.Pdf.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net6.0/Spire.Pdf.dll": {
-            "related": ".xml"
-          }
-        }
-      },
       "System.AppContext/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -2228,28 +2211,6 @@
         "sixlabors.fonts.1.0.0.nupkg.sha512",
         "sixlabors.fonts.128.png",
         "sixlabors.fonts.nuspec"
-      ]
-    },
-    "Spire.PDF/9.8.5": {
-      "sha512": "PZtzewfyaCVuWmnPfF3XNUagsDTnDwFYzpxQGHq+uYOXQiqd11YFZ0ReQ/PSj/bdIL83ScE0fUpAwNaBiQVi1Q==",
-      "type": "package",
-      "path": "spire.pdf/9.8.5",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/MonoAndroid/Spire.Pdf.dll",
-        "lib/MonoAndroid/Spire.Pdf.xml",
-        "lib/net40/Spire.Pdf.XML",
-        "lib/net40/Spire.Pdf.dll",
-        "lib/net6.0/Spire.Pdf.dll",
-        "lib/net6.0/Spire.Pdf.xml",
-        "lib/netcoreapp2.0/Spire.Pdf.dll",
-        "lib/netcoreapp2.0/Spire.Pdf.xml",
-        "lib/xamarinios/Spire.Pdf.dll",
-        "lib/xamarinios/Spire.Pdf.xml",
-        "license.txt",
-        "spire.pdf.9.8.5.nupkg.sha512",
-        "spire.pdf.nuspec"
       ]
     },
     "System.AppContext/4.3.0": {
@@ -5410,7 +5371,6 @@
       "FreeSpire.PDF >= 8.6.0",
       "Microsoft.Web.WebView2 >= 1.0.1901.177",
       "Octokit >= 7.1.0",
-      "Spire.PDF >= 9.8.5",
       "System.Speech >= 7.0.0",
       "TableLayputPanelTop >= 1.0.0.3",
       "ToolStripComboBoxEx >= 1.0.0.2",
@@ -5475,10 +5435,6 @@
           "Octokit": {
             "target": "Package",
             "version": "[7.1.0, )"
-          },
-          "Spire.PDF": {
-            "target": "Package",
-            "version": "[9.8.5, )"
           },
           "System.Speech": {
             "target": "Package",
