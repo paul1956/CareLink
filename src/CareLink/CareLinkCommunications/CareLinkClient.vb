@@ -488,7 +488,7 @@ Public Class CareLinkClient
                         Dim fileName As String = fileNameOrDefault.Split("=")(1).Replace("%20", " ")
                         Dim fileNameSplit() As String = fileName.Split(" ")
                         Dim fileContents As Byte() = response.Content.ReadAsByteArrayAsync.Result
-                        ByteArrayToFile(Path.Combine(GetDirectoryForSettings(), $"{fileNameSplit(0)} {fileNameSplit(1)} Settings.PDF"), fileContents)
+                        ByteArrayToFile(GetUserSettingsFile("PDF"), fileContents)
                         deviceSettings = Encoding.UTF8.GetString(fileContents)
                     End If
                 End If

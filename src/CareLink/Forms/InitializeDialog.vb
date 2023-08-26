@@ -327,7 +327,7 @@ Public Class InitializeDialog
             Me.CurrentUser.CarbRatios.Add(carbRecord)
         Next
 
-        File.WriteAllText(GetPathToUserSettingsFile(My.Settings.CareLinkUserName),
+        File.WriteAllText(GetUserSettingsFile("json"),
                           JsonSerializer.Serialize(Me.CurrentUser, JsonFormattingOptions))
 
         Me.Close()

@@ -1236,7 +1236,7 @@ Public Class Form1
     End Sub
 
     Private Sub MenuOptionsEditPumpSettings_Click(sender As Object, e As EventArgs) Handles MenuOptionsEditPumpSettings.Click
-        Dim contents As String = File.ReadAllText(GetPathToUserSettingsFile(My.Settings.CareLinkUserName))
+        Dim contents As String = File.ReadAllText(GetUserSettingsFile("json"))
         CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
         Dim f As New InitializeDialog(CurrentUser)
         If f.ShowDialog() = DialogResult.OK Then

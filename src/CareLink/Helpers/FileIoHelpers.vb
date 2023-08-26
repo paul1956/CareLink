@@ -64,9 +64,8 @@ Friend Module FileIoHelpers
         Return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestFileSettings.json")
     End Function
 
-    Friend Function GetPathToUserSettingsFile(careLinkUserName As String) As String
-        Dim currentUserSettingsFileName As String = $"{careLinkUserName}Settings.json"
-        Return Path.Combine(GetDirectoryForSettings(), currentUserSettingsFileName)
+    Friend Function GetUserSettingsFile(extension As String) As String
+        Return Path.Combine(GetDirectoryForSettings(), $"{My.Settings.CareLinkUserName}Settings.{extension}")
     End Function
 
     Friend Sub MoveFiles(previousDirectory As String, currentDirectory As String, searchPattern As String)
