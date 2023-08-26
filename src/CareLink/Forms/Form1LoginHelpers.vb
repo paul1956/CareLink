@@ -7,8 +7,6 @@ Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 
-Imports Spire.Pdf.Utilities
-
 Friend Enum FileToLoadOptions As Integer
     LastSaved = 0
     TestData = 1
@@ -151,9 +149,9 @@ Friend Module Form1LoginHelpers
     End Sub
 
     Friend Sub SetUpCareLinkUser(userSettingsPath As String)
+        Dim page As New TaskDialogPage
         Dim ait As Single = 2
         Dim carbRatios As List(Of CarbRatioRecord) = Nothing
-        Dim page As New TaskDialogPage
         If Path.Exists(userSettingsPath) Then
             Dim lastUpdateTime As Date = File.GetLastWriteTime(userSettingsPath)
 
@@ -167,52 +165,27 @@ Friend Module Form1LoginHelpers
         Else
             If MsgBox($"Would you like to upload a {ProjectName}™ Device Settings PDF File", "", MsgBoxStyle.YesNo, $"Use {ProjectName}™ Settings File", -1, page) = MsgBoxResult.Yes Then
                 Dim openFileDialog1 As New OpenFileDialog With {
-                            .AddToRecent = True,
-                            .CheckFileExists = True,
-                            .CheckPathExists = True,
-                            .Filter = $"Settings file (*.pdf)|*.pdf",
-                            .InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                            .Multiselect = False,
-                            .ReadOnlyChecked = True,
-                            .RestoreDirectory = True,
-                            .SupportMultiDottedExtensions = False,
-                            .Title = $"Select downloaded {ProjectName}™ Settings file.",
-                            .ValidateNames = True
-                        }
+                        .AddToRecent = True,
+                        .CheckFileExists = True,
+                        .CheckPathExists = True,
+                        .Filter = $"Settings file (*.pdf)|*.pdf",
+                        .InitialDirectory = GetDirectoryForSettings(),
+                        .Multiselect = False,
+                        .ReadOnlyChecked = True,
+                        .RestoreDirectory = True,
+                        .SupportMultiDottedExtensions = False,
+                        .Title = $"Select downloaded {ProjectName}™ Settings file.",
+                        .ValidateNames = True
+                    }
                 If page.Verification.Checked Then
                     ' Don't show again needs implementation
                     ' TODO
                 End If
 
                 If openFileDialog1.ShowDialog() = DialogResult.OK Then
-                    Dim tables As List(Of PdfTable) = GetTableList(openFileDialog1.FileName, 0)
-                    Dim aitTableLines As List(Of String) = ExtractPdfTableLines(tables, "Bolus Wizard On")
-                    For Each e As IndexClass(Of String) In aitTableLines.WithIndex
-                        If e.IsFirst Then Continue For
-                        If String.IsNullOrWhiteSpace(e.Value) Then Exit For
-                        Dim lineParts() As String = e.Value.Split(" ")
-                        If lineParts(0) = "(h:mm)" Then
-                            ait = s_aitLengths(lineParts(1))
-                            Exit For
-                        End If
-                    Next
-                    Dim carbRatioLines As List(Of String) = ExtractPdfTableLines(tables, "Time Ratio")
-                    For Each e As IndexClass(Of String) In carbRatioLines.WithIndex
-                        If e.IsFirst Then Continue For
-                        If String.IsNullOrWhiteSpace(e.Value) Then Exit For
-                        Dim lineParts() As String = e.Value.Split(" ")
-                        Dim startTimeString As String = lineParts(0)
-                        Dim item As New CarbRatioRecord With {
-                            .StartTime = TimeOnly.Parse(lineParts(0)),
-                            .CarbRatio = lineParts(1).ParseSingle(2),
-                            .EndTime = If(e.IsLast OrElse carbRatioLines(e.Index + 1).Trim.Length = 0,
-                                          TimeOnly.Parse(s_midnight),
-                                          TimeOnly.Parse(carbRatioLines(e.Index + 1).Split(" ")(0))
-                                         )
-                        }
-                        carbRatios.Add(item)
-                    Next
-                    Stop
+                    Dim pdf As New PdfSettingsRecord(openFileDialog1.FileName)
+                    ait = pdf.Bolus.BolusWizard.ActiveInsulinTime
+                    carbRatios = pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
                 End If
 
             End If

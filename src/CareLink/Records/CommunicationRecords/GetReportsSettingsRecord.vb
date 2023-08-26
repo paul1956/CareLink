@@ -2,7 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Public Class SettingsRecord
+Public Class GetReportsSettingsRecord
     Public Property clientTime As String = $"{Now:O}"
     Public Property dailyDetailReportDays As New List(Of String)
     Public Property endDate As String = $"{Now.Year}-{Now.Month:D2}-{Now.Day:D2}"

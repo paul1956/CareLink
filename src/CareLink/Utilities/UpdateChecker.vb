@@ -15,7 +15,7 @@ Friend Module UpdateChecker
         Dim versionStr As String = "0.0.0.0"
         Dim responseBody As String = Await s_httpClient.GetStringAsync($"{GitHubCareLinkUrl}releases")
         Dim index As Integer
-        For Each e As IndexClass(Of String) In responseBody.SplitLines().ToList().WithIndex()
+        For Each e As IndexClass(Of String) In responseBody.SplitLines().WithIndex()
             Dim line As String = e.Value
             If line.Contains(s_versionSearchKey, StringComparison.OrdinalIgnoreCase) Then
                 index = line.IndexOf(s_versionSearchKey, StringComparison.OrdinalIgnoreCase) + s_versionSearchKey.Length

@@ -8,19 +8,24 @@ Imports System.Text
 
 Friend Module HttpClientExtensions
 
-    <Extension>
-    Public Function [Get](client As HttpClient, requestUri As StringBuilder, ByRef lastError As String, Optional headers As Dictionary(Of String, String) = Nothing, Optional params As Dictionary(Of String, String) = Nothing, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As HttpResponseMessage
-        If headers IsNot Nothing Then
-            client.DefaultRequestHeaders.Clear()
-            For Each header As KeyValuePair(Of String, String) In headers
-                If header.Key <> "Content-Type" Then
-                    client.DefaultRequestHeaders.Add(header.Key, header.Value)
-                End If
-            Next
+    Friend Sub SetDefaultRequesHeaders(ByRef client As HttpClient, headers As Dictionary(Of String, String), referrerUri As Uri)
+        client.DefaultRequestHeaders.Clear()
+        For Each header As KeyValuePair(Of String, String) In headers.Sort
+            If header.Key <> "Content-Type" Then
+                client.DefaultRequestHeaders.Add(header.Key, header.Value)
+            End If
+        Next
+        If referrerUri IsNot Nothing Then
+            client.DefaultRequestHeaders.Referrer = referrerUri
         End If
-        If params IsNot Nothing Then
+    End Sub
+
+    <Extension>
+    Public Function [Get](client As HttpClient, requestUri As StringBuilder, ByRef lastError As String, Optional headers As Dictionary(Of String, String) = Nothing, Optional queryParams As Dictionary(Of String, String) = Nothing, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As HttpResponseMessage
+        SetDefaultRequesHeaders(client, headers, Nothing)
+        If queryParams IsNot Nothing Then
             requestUri.Append("?"c)
-            For Each param As KeyValuePair(Of String, String) In params
+            For Each param As KeyValuePair(Of String, String) In queryParams
                 requestUri.Append($"{param.Key}={param.Value}&")
             Next
             requestUri = requestUri.TrimEnd("&"c)
