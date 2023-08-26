@@ -61,7 +61,7 @@ Friend Module UserMessageConstants
             {"BC_REMINDER_TIME", "Reminder time to take (0).:reminderName"},
             {"BC_SID_AUTO_MODE_HIGH_SG_CONTENT", "High SG(triggeredDateTime). BG has been high over 1 hour. Change infusion set. Check Ketones. Monitor BG."},
             {"BC_SID_BASAL_DELIVERY_RESUMED_AT_X_AFTER_LOW_SUSPEND", "Basal delivery resumed at (secondaryTime) after suspend by sensor, Check BG."},
-            {"BC_SID_BASAL_STARTED_SMART_GUARD", "SmartGuard exit at(triggeredDateTime). (0) started. Would you like to review the SmartGuard checklist?:basalName"},
+            {"BC_SID_BASAL_STARTED_SMART_GUARD", "SmartGuard exit (triggeredDateTime). (0) started. Would you like to review the SmartGuard checklist?:basalName"},
             {"BC_SID_BATTERY_LIFE_LESS_30_MINUTES", "Battery life less than 30 minutes(triggeredDateTime), replace battery now."},
             {"BC_SID_BATTERY_REMOVED_RE_ENTER_TIME_AND_DATE", "Insert battery(triggeredDateTime). Delivery stopped. Insert a new battery now."},
             {"BC_SID_BG_REQUIRED_CONTENT", "BG required(triggeredDateTime). Enter a New BG for Auto Mode."},

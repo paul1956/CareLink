@@ -68,11 +68,11 @@ Friend Module SummaryRecordHelpers
 
                 Dim triggeredDateTime As String = ""
                 If jsonDictionary.TryGetValue(NameOf(ClearedNotificationsRecord.triggeredDateTime), triggeredDateTime) Then
-                    triggeredDateTime = $" { triggeredDateTime.ParseDate("triggeredDateTime")}"
+                    triggeredDateTime = $" { triggeredDateTime.ParseDate("triggeredDateTime").ToShortTimeString}"
                 ElseIf jsonDictionary.TryGetValue(NameOf(SgRecord.datetime), triggeredDateTime) Then
-                    triggeredDateTime = $" {triggeredDateTime.ParseDate(NameOf(SgRecord.datetime))}"
+                    triggeredDateTime = $" {triggeredDateTime.ParseDate(NameOf(SgRecord.datetime)).ToShortTimeString}"
                 ElseIf jsonDictionary.TryGetValue(NameOf(TimeChangeRecord.dateTime), triggeredDateTime) Then
-                    triggeredDateTime = $" {triggeredDateTime.ParseDate("dateTime")}"
+                    triggeredDateTime = $" {triggeredDateTime.ParseDate("dateTime").ToShortTimeString}"
                 Else
                     Stop
                 End If
