@@ -9,6 +9,12 @@ Public Module StringExtensions
 
     Private ReadOnly s_commaOrPeriod As Char() = {"."c, ","c}
 
+    <Extension>
+    Public Function CleanSpaces(val As String) As String
+        If String.IsNullOrWhiteSpace(val) Then Return ""
+        Return val.Replace("  ", " ").Replace("  ", " ").Trim
+    End Function
+
     <Extension()>
     Friend Function Count(s As String, c As Char) As Integer
         Return s.Count(Function(c1 As Char) c1 = c)

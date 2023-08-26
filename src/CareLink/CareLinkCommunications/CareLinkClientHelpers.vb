@@ -122,7 +122,7 @@ Public Module CareLinkClientHelpers
 
         Dim response As HttpResponseMessage = Nothing
         Try
-            response = httpClient.Post(url, s_commonHeaders, params:=payload, data:=webForm)
+            response = httpClient.Post(url, s_commonHeaders, payload, webForm)
         Catch ex As Exception
             Stop
             lastErrorMessage = $"HTTP Response is not OK, {response?.StatusCode}"

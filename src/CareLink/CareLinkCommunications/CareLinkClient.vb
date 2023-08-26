@@ -28,8 +28,6 @@ Public Class CareLinkClient
 
     Private _sessionMonitorData As New SessionMonitorDataRecord
 
-    Private _sessionUser As New SessionUserRecord
-
     Public Sub New(username As String, password As String, country As String)
         ' User info
         Me.CareLinkUsername = username
@@ -63,6 +61,7 @@ Public Class CareLinkClient
     Private Property ClientHandler As HttpClientHandler
     Friend Property LoggedIn As Boolean
     Friend Property SessionProfile As New SessionProfileRecord
+    Friend Property SessionUser As New SessionUserRecord
 
     ''' <summary>
     ''' Get server URL from Country Code, only US today has a special server
@@ -99,7 +98,7 @@ Public Class CareLinkClient
             _httpClient.DefaultRequestHeaders.Clear()
 
             ' Clear basic session records
-            _sessionUser.Clear()
+            Me.SessionUser.Clear()
             Me.SessionProfile.Clear()
             s_sessionCountrySettings.Clear()
             _sessionMonitorData.Clear()
@@ -157,12 +156,12 @@ Public Class CareLinkClient
 
             ' MUST BE FIRST DO NOT MOVE NEXT LINE
             s_sessionCountrySettings = New CountrySettingsRecord(Me.GetCountrySettings(authToken))
-            _sessionUser = Me.GetMyUser(authToken)
+            Me.SessionUser = Me.GetMyUser(authToken)
             Me.SessionProfile = Me.GetMyProfile(authToken)
             _sessionMonitorData = Me.GetMonitorData(authToken)
             'Dim reports As Object = Me.GetReports(authToken)
             ' Set login success if everything was OK:
-            If _sessionUser.HasValue _
+            If Me.SessionUser.HasValue _
                AndAlso Me.SessionProfile.HasValue _
                AndAlso s_sessionCountrySettings.HasValue _
                AndAlso _sessionMonitorData.HasValue Then
@@ -217,22 +216,22 @@ Public Class CareLinkClient
     End Function
 
     ' Periodic data from CareLink Cloud
-    Private Function GetConnectDisplayMessage(username As String, role As String, endpointUrl As String, Optional patientUserName As String = "") As Dictionary(Of String, String)
+    Private Function GetConnectDisplayMessage(username As String, role As String, endPointPath As String, Optional patientUserName As String = "") As Dictionary(Of String, String)
 
         Debug.Print("__getConnectDisplayMessage()")
         ' Build user Json for request
-        Dim userJson As New Dictionary(Of String, String) From {
+        Dim requestBody As New Dictionary(Of String, String) From {
             {"username", username},
             {"role", role}}
 
         If role.Equals("CarePartner", StringComparison.InvariantCultureIgnoreCase) Then
             If String.IsNullOrWhiteSpace(patientUserName) Then
-                endpointUrl = endpointUrl.Replace("v6", "v5")
+                endPointPath = endPointPath.Replace("v6", "v5")
             Else
-                userJson.Add("patientId", patientUserName)
+                requestBody.Add("patientId", patientUserName)
             End If
         End If
-        Return Me.GetData(endpointUrl, userJson)
+        Return Me.GetData(endPointPath, requestBody)
     End Function
 
     Private Function GetCookies(url As String) As CookieCollection
@@ -391,7 +390,7 @@ Public Class CareLinkClient
             If Me.GetAuthorizationToken(authToken) = GetAuthorizationTokenResult.OK AndAlso
                ((s_sessionCountrySettings.HasValue AndAlso Not String.IsNullOrWhiteSpace(Me.CareLinkCountry)) OrElse
                _sessionMonitorData.deviceFamily?.Equals("BLE_X", StringComparison.Ordinal)) Then
-                Return If(_careLinkPartnerType.Contains(_sessionUser.role, StringComparer.InvariantCultureIgnoreCase),
+                Return If(_careLinkPartnerType.Contains(Me.SessionUser.role, StringComparer.InvariantCultureIgnoreCase),
                           Me.GetConnectDisplayMessage(
                                         Me.SessionProfile.username,
                                         "CarePartner".ToLower,

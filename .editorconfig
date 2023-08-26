@@ -218,6 +218,10 @@ dotnet_diagnostic.ca1308.severity = suggestion
 # CA1826: Do not use Enumerable methods on indexable collections. Instead use the collection directly
 dotnet_diagnostic.ca1826.severity = suggestion
 
+
+# CA2224: Override Equals on overloading operator equals
+dotnet_diagnostic.CA2224.severity = none
+
 # Xml project files
 [*.{csproj,vcxproj,vcxproj.filters,proj,nativeproj,locproj,vbproj}]
 indent_size = 2

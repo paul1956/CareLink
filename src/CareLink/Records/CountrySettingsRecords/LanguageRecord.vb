@@ -5,9 +5,6 @@
 <DebuggerDisplay("{GetDebuggerDisplay(),nq}")>
 Public Class LanguageRecord
 
-    Public Property code As String
-    Public Property name As String
-
     Public Sub New(values As Dictionary(Of String, String))
         If values.Count <> 2 Then
             Throw New Exception($"{NameOf(LanguageRecord)}({values}) contains {values.Count} entries.")
@@ -15,6 +12,9 @@ Public Class LanguageRecord
         Me.name = values(NameOf(name))
         Me.code = values(NameOf(code))
     End Sub
+
+    Public Property code As String
+    Public Property name As String
 
     Private Function GetDebuggerDisplay() As String
         Return $"{NameOf(name)} = {Me.name}, {NameOf(code)} = {Me.code}"

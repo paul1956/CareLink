@@ -98,10 +98,10 @@ Public Module UnicodeNewline
     End Function
 
     <Extension>
-    Public Function SplitLines(text As String) As String()
+    Public Function SplitLines(text As String, Optional Trim As Boolean = False) As List(Of String)
         Dim result As New List(Of String)()
         If text Is Nothing Then
-            Return result.ToArray
+            Return result
         End If
         Dim sb As New StringBuilder()
 
@@ -113,7 +113,11 @@ Public Module UnicodeNewline
             ' Do not delete the next line
             Dim j As Integer = index
             If TryGetDelimiterLengthAndType(ch, length, type, Function() If(j < text.Length - 1, text.Chars(j + 1), ControlChars.NullChar)) Then
-                result.Add(sb.ToString)
+                If Trim Then
+                    result.Add(sb.ToString.Trim)
+                Else
+                    result.Add(sb.ToString)
+                End If
                 sb.Length = 0
                 index += length - 1
                 Continue For
@@ -121,10 +125,14 @@ Public Module UnicodeNewline
             sb.Append(ch)
         Next index
         If sb.Length > 0 Then
-            result.Add(sb.ToString)
+            If Trim Then
+                result.Add(sb.ToString.Trim)
+            Else
+                result.Add(sb.ToString)
+            End If
         End If
 
-        Return result.ToArray
+        Return result
     End Function
 
     <Extension>
@@ -134,7 +142,7 @@ Public Module UnicodeNewline
 
     <Extension>
     Friend Function NormalizeLineEndings(lines As String, Optional delimiter As String = vbCrLf) As String
-        Return lines.SplitLines.JoinLines(delimiter)
+        Return lines.SplitLines.ToArray.JoinLines(delimiter)
     End Function
 
     ''' <summary>

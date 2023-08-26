@@ -183,7 +183,6 @@ Friend Module DateTimeExtensions
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
             Case "loginDateUTC"
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal)
-                Stop
             Case NameOf(SgRecord.datetime)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
             Case NameOf(TimeChangeRecord.dateTime)
