@@ -1,8 +1,8 @@
 ﻿' Licensed to the .NET Foundation under one or more agreements.
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
-' Do not rename these name are matched used in case sensitive matching
 
+' Do not rename these name are matched used in case sensitive matching
 Friend Enum ItemIndexes As Integer
     lastSensorTS = 0
     medicalDeviceTimeAsString = 1
