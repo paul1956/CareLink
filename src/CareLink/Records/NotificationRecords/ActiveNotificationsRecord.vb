@@ -11,8 +11,8 @@ Public Class ActiveNotificationsRecord
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public Property RecordNumber As Integer
 
-    <DisplayName(NameOf(ClearedNotificationsRecord.dateTime))>
-    <Column(Order:=1, TypeName:=NameOf(ClearedNotificationsRecord.dateTime))>
+    <DisplayName(NameOf(ActiveNotificationsRecord.dateTime))>
+    <Column(Order:=1, TypeName:=NameOf(ActiveNotificationsRecord.dateTime))>
     Public Property [dateTime] As Date
 
     <DisplayName("dateTime As String")>
