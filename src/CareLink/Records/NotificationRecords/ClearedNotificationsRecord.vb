@@ -67,7 +67,7 @@ Public Class ClearedNotificationsRecord
     <Column(Order:=16, TypeName:=NameOf([Int32]))>
     Public Property relativeOffset As Integer = Nothing
 
-    <DisplayName("Triggered DateTime")>
+    <DisplayName(NameOf(ClearedNotificationsRecord.triggeredDateTime))>
     <Column(Order:=17, TypeName:="Date")>
     Public Property triggeredDateTime As Date = Nothing
 

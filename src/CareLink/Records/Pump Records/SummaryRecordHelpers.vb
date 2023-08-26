@@ -68,11 +68,11 @@ Friend Module SummaryRecordHelpers
 
                 Dim triggeredDateTime As String = ""
                 If jsonDictionary.TryGetValue(NameOf(ClearedNotificationsRecord.triggeredDateTime), triggeredDateTime) Then
-                    triggeredDateTime = $" { triggeredDateTime.ParseDate("triggeredDateTime").ToShortTimeString}"
+                    triggeredDateTime = $" { triggeredDateTime.ParseDate(NameOf(ClearedNotificationsRecord.triggeredDateTime)).ToShortTimeString}"
                 ElseIf jsonDictionary.TryGetValue(NameOf(SgRecord.datetime), triggeredDateTime) Then
                     triggeredDateTime = $" {triggeredDateTime.ParseDate(NameOf(SgRecord.datetime)).ToShortTimeString}"
                 ElseIf jsonDictionary.TryGetValue(NameOf(TimeChangeRecord.dateTime), triggeredDateTime) Then
-                    triggeredDateTime = $" {triggeredDateTime.ParseDate("dateTime").ToShortTimeString}"
+                    triggeredDateTime = $" {triggeredDateTime.ParseDate(NameOf(TimeChangeRecord.dateTime)).ToShortTimeString}"
                 Else
                     Stop
                 End If
@@ -84,7 +84,8 @@ Friend Module SummaryRecordHelpers
                 .Replace($"({NameOf(notDeliveredAmount)})", notDeliveredAmount) _
                 .Replace($"({NameOf(ClearedNotificationsRecord.secondaryTime)})", secondaryTime) _
                 .Replace("(triggeredDateTime)", $", happened at {triggeredDateTime}") _
-                .Replace("(units)", SgUnitsNativeString)
+                .Replace("(units)", SgUnitsNativeString) _
+                .Replace("{vbCrLf}", vbCrLf)
             Else
                 If Debugger.IsAttached Then
                     Stop
@@ -134,6 +135,8 @@ Friend Module SummaryRecordHelpers
                     summaryList.Add(New SummaryRecord(summaryList.Count, row, s_autoModeShieldMessages, NameOf(s_autoModeShieldMessages)))
                 Case "plgmLgsState"
                     summaryList.Add(New SummaryRecord(summaryList.Count, row, s_plgmLgsMessages, NameOf(s_plgmLgsMessages)))
+                Case NameOf(ClearedNotificationsRecord.dateTime), NameOf(ClearedNotificationsRecord.triggeredDateTime)
+                    summaryList.Add(New SummaryRecord(summaryList.Count, row, row.Value.ParseDate(NameOf(ClearedNotificationsRecord.dateTime)).ToShortDateTimeString))
                 Case Else
                     summaryList.Add(New SummaryRecord(summaryList.Count, row))
             End Select
