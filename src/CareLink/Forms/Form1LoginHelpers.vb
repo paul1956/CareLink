@@ -66,9 +66,9 @@ Friend Module Form1LoginHelpers
                     Return False
                 End If
 
-                Dim userSettingsPath As String = GetPathToUserSettingsFile(My.Settings.CareLinkUserName)
                 RecentData = Form1.Client.GetRecentData()
-                SetUpCareLinkUser(userSettingsPath)
+
+                SetUpCareLinkUser(GetUserSettingsFile("json"))
                 StartOrStopServerUpdateTimer(True, s_1MinutesInMilliseconds)
 
                 If NetworkUnavailable() Then
