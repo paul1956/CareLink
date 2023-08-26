@@ -32,7 +32,7 @@ Friend Module DeviceSettingsExtensions
                     Dim timeOnly As TimeOnly = Nothing
                     Return If(TimeOnly.TryParse(value, timeOnly),
                               CType(CObj(timeOnly), T),
-                              CType(CObj(False), T)
+                              CType(CObj(New TimeOnly(0, 0)), T)
                              )
                 End If
                 If typeOfT Is GetType(Boolean) Then
@@ -70,14 +70,14 @@ Friend Module DeviceSettingsExtensions
         Dim carbRatios As New List(Of CarbRatioRecord)
         For Each e As IndexClass(Of DeviceCarbRatioRecord) In deviceCarbRatios.WithIndex
             Dim deviceCarbRatio As DeviceCarbRatioRecord = e.Value
-            Dim c As New CarbRatioRecord With {
-                .StartTime = deviceCarbRatio.Time,
-                .CarbRatio = deviceCarbRatio.Ratio,
-                .EndTime = If(e.IsLast,
-                              New TimeOnly(0, 0),
-                              deviceCarbRatios(e.Index + 1).Time
-                             )
-            }
+            carbRatios.Add(New CarbRatioRecord With {
+                            .StartTime = deviceCarbRatio.Time,
+                            .CarbRatio = deviceCarbRatio.Ratio,
+                            .EndTime = If(e.IsLast,
+                                            New TimeOnly(0, 0),
+                                            deviceCarbRatios(e.Index + 1).Time
+                                            )
+            })
         Next
         Return carbRatios
     End Function

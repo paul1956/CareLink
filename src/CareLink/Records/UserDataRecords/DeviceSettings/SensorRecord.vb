@@ -11,10 +11,10 @@ Public Class SensorRecord
             Exit Sub
         End If
         Me.CalibrationReminder = lines.GetSingleLineValue(Of String)("Calibration Reminder ")
-        Me.CalibrationReminderTime = lines.GetSingleLineValue(Of TimeOnly)("Calibration Reminder Time ")
+        Me.CalibrationReminderTime = lines.GetSingleLineValue(Of String)("Calibration Reminder Time ")
     End Sub
 
     Public Property SensorOn As String
     Public Property CalibrationReminder As String
-    Public Property CalibrationReminderTime As TimeOnly
+    Public Property CalibrationReminderTime As String
 End Class
