@@ -959,14 +959,14 @@ Public Class Form1
             My.Settings.Save()
         End If
 
-        Dim currentAllUserLoginFile As String = GetPathToAllUserLoginInfo(True)
+        Dim currentAllUserLoginFile As String = GetUsersLoginInfoFileWithPath(True)
         If Not Directory.Exists(GetDirectoryForProjectData()) Then
             Dim lastError As String = $"Can't create required project directories!"
             Directory.CreateDirectory(GetDirectoryForProjectData())
-            Directory.CreateDirectory(GetDirectoryForSettings())
+            Directory.CreateDirectory(GetSettingsDirectory())
             Try
-                MoveIfExists(GetPathToAllUserLoginInfo(False), currentAllUserLoginFile, lastError)
-                MoveIfExists(GetPathToGraphColorsFile(False), GetPathToGraphColorsFile(True), lastError)
+                MoveIfExists(GetUsersLoginInfoFileWithPath(False), currentAllUserLoginFile, lastError)
+                MoveIfExists(GetGraphColorsFileNameWithPath(False), GetGraphColorsFileNameWithPath(True), lastError)
 
                 ' Move files with unique/variable names
                 ' Error Reports
@@ -981,8 +981,8 @@ Public Class Form1
                 End
             End Try
         End If
-        If Not Directory.Exists(GetDirectoryForSettings) Then
-            Directory.CreateDirectory(GetDirectoryForSettings())
+        If Not Directory.Exists(GetSettingsDirectory) Then
+            Directory.CreateDirectory(GetSettingsDirectory())
         End If
 
         If File.Exists(currentAllUserLoginFile) Then
@@ -1001,7 +1001,7 @@ Public Class Form1
         Me.MenuOptionsSpeechHelpShown.Checked = My.Settings.SystemSpeechHelpShown
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
-        If File.Exists(GetPathToGraphColorsFile(True)) Then
+        If File.Exists(GetGraphColorsFileNameWithPath(True)) Then
             GetColorDictionaryFromFile()
         Else
             WriteColorDictionaryToFile()
@@ -1107,7 +1107,7 @@ Public Class Form1
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                         Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
                         SetLastUpdateTime(epochDateTime.ToShortDateTimeString, "from file", False, epochDateTime.IsDaylightSavingTime)
-                        SetUpCareLinkUser(GetPathToTestSettingsFile())
+                        SetUpCareLinkUser(GetTestSettingsFileNameWihtPath())
 
                         Try
                             FinishInitialization()
@@ -1152,7 +1152,7 @@ Public Class Form1
             Try
                 If File.Exists(openFileDialog1.FileName) Then
                     StartOrStopServerUpdateTimer(False)
-                    SetUpCareLinkUser(GetPathToTestSettingsFile())
+                    SetUpCareLinkUser(GetTestSettingsFileNameWihtPath())
                     CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{ProjectName}", True)
                     CurrentUICulture = CurrentDateCulture
 
@@ -1236,7 +1236,7 @@ Public Class Form1
     End Sub
 
     Private Sub MenuOptionsEditPumpSettings_Click(sender As Object, e As EventArgs) Handles MenuOptionsEditPumpSettings.Click
-        Dim contents As String = File.ReadAllText(GetUserSettingsFile("json"))
+        Dim contents As String = File.ReadAllText(GetUserSettingsFileNameWithPath("json"))
         CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
         Dim f As New InitializeDialog(CurrentUser)
         If f.ShowDialog() = DialogResult.OK Then

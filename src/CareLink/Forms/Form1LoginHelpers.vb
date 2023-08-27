@@ -24,21 +24,21 @@ Friend Module Form1LoginHelpers
         Select Case fileToLoad
             Case FileToLoadOptions.LastSaved
                 Form1.Text = $"{SavedTitle} Using Last Saved Data"
-                CurrentDateCulture = GetPathToLastDownloadFile().ExtractCultureFromFileName(SavedLastDownloadBaseName)
-                RecentData = Loads(File.ReadAllText(GetPathToLastDownloadFile()))
+                CurrentDateCulture = GetLastDownloadFileWithPath().ExtractCultureFromFileName(SavedLastDownloadBaseName)
+                RecentData = Loads(File.ReadAllText(GetLastDownloadFileWithPath()))
                 Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                Dim fileDate As Date = File.GetLastWriteTime(GetPathToLastDownloadFile())
+                Dim fileDate As Date = File.GetLastWriteTime(GetLastDownloadFileWithPath())
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
-                SetUpCareLinkUser(GetPathToTestSettingsFile())
+                SetUpCareLinkUser(GetTestSettingsFileNameWihtPath())
                 fromFile = True
             Case FileToLoadOptions.TestData
                 Form1.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
-                RecentData = Loads(File.ReadAllText(GetPathToTestData()))
+                RecentData = Loads(File.ReadAllText(GetTestDataFileNameWithPath()))
                 Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                Dim fileDate As Date = File.GetLastWriteTime(GetPathToTestData())
+                Dim fileDate As Date = File.GetLastWriteTime(GetTestDataFileNameWithPath())
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
-                SetUpCareLinkUser(GetPathToTestSettingsFile)
+                SetUpCareLinkUser(GetTestSettingsFileNameWihtPath)
                 fromFile = True
             Case FileToLoadOptions.Login
                 Form1.Text = SavedTitle
@@ -68,7 +68,7 @@ Friend Module Form1LoginHelpers
 
                 RecentData = Form1.Client.GetRecentData()
 
-                SetUpCareLinkUser(GetUserSettingsFile("json"))
+                SetUpCareLinkUser(GetUserSettingsFileNameWithPath("json"))
                 StartOrStopServerUpdateTimer(True, s_1MinutesInMilliseconds)
 
                 If NetworkUnavailable() Then
@@ -148,28 +148,45 @@ Friend Module Form1LoginHelpers
 
     End Sub
 
-    Friend Sub SetUpCareLinkUser(userSettingsPath As String)
+    Friend Sub SetUpCareLinkUser(userSettingsFileWithPath As String)
         Dim page As New TaskDialogPage
         Dim ait As Single = 2
         Dim carbRatios As List(Of CarbRatioRecord) = Nothing
-        If Path.Exists(userSettingsPath) Then
-            Dim lastUpdateTime As Date = File.GetLastWriteTime(userSettingsPath)
+        If File.Exists(userSettingsFileWithPath) Then
+            Dim lastUpdateTime As Date = File.GetLastWriteTime(userSettingsFileWithPath)
+
+            Dim contents As String = File.ReadAllText(userSettingsFileWithPath)
+            CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
 
             If lastUpdateTime < Now - s_30DaysSpan Then
-                If MsgBox($"Would you like to update a new Device Settings PDF File", "Your Last Update was {}", MsgBoxStyle.YesNo, $"Use {ProjectName}™ Settings File", -1, page) = MsgBoxResult.Yes Then
-                    Form1.Client.GetDeviceSettings()
+                If MsgBox($"Would you like to update from latest {ProjectName}™ Device Settings PDF File", $"Your Last Update was {lastUpdateTime.ToShortDateString}", MsgBoxStyle.YesNo, $"Use {ProjectName}™ Settings File", -1, page) = MsgBoxResult.Yes Then
+                    Dim pdfFileNamepdfFileName As String = ""
+                    If Form1.Client.TryGetDeviceSettingsPdfFile(pdfFileNamepdfFileName) Then
+                        Dim pdf As New PdfSettingsRecord(pdfFileNamepdfFileName)
+                        Dim currentUserUpdateNeeded As Boolean = False
+                        If CurrentUser.PumpAit <> pdf.Bolus.BolusWizard.ActiveInsulinTime Then
+                            CurrentUser.PumpAit = pdf.Bolus.BolusWizard.ActiveInsulinTime
+                            currentUserUpdateNeeded = True
+                        End If
+                        If pdf.Bolus.DeviceCarbohydrateRatios.CompareToCarbRatios(CurrentUser.CarbRatios) Then
+                            CurrentUser.CarbRatios = pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
+                            currentUserUpdateNeeded = True
+                        End If
+                        If currentUserUpdateNeeded Then
+                            File.WriteAllText(GetUserSettingsFileNameWithPath("json"),
+                          JsonSerializer.Serialize(CurrentUser, JsonFormattingOptions))
+                        End If
+                    End If
                 End If
             End If
-            Dim contents As String = File.ReadAllText(userSettingsPath)
-            CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
         Else
-            If MsgBox($"Would you like to upload a {ProjectName}™ Device Settings PDF File", "", MsgBoxStyle.YesNo, $"Use {ProjectName}™ Settings File", -1, page) = MsgBoxResult.Yes Then
+            If MsgBox($"Would you like to use a downloaded {ProjectName}™ Device Settings PDF File", "", MsgBoxStyle.YesNo, $"Use {ProjectName}™ Settings File", -1, page) = MsgBoxResult.Yes Then
                 Dim openFileDialog1 As New OpenFileDialog With {
                         .AddToRecent = True,
                         .CheckFileExists = True,
                         .CheckPathExists = True,
                         .Filter = $"Settings file (*.pdf)|*.pdf",
-                        .InitialDirectory = GetDirectoryForSettings(),
+                        .InitialDirectory = GetSettingsDirectory(),
                         .Multiselect = False,
                         .ReadOnlyChecked = True,
                         .RestoreDirectory = True,

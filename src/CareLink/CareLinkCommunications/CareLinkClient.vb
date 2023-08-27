@@ -350,7 +350,7 @@ Public Class CareLinkClient
                 If jsonData.Count > 61 Then
                     Dim contents As String = JsonSerializer.Serialize(jsonData, New JsonSerializerOptions)
                     Using jDocument As JsonDocument = JsonDocument.Parse(contents, New JsonDocumentOptions)
-                        File.WriteAllText(GetPathToLastDownloadFile(), JsonSerializer.Serialize(jDocument, JsonFormattingOptions))
+                        File.WriteAllText(GetLastDownloadFileWithPath(), JsonSerializer.Serialize(jDocument, JsonFormattingOptions))
                     End Using
                 End If
                 Return jsonData
@@ -396,7 +396,7 @@ Public Class CareLinkClient
 
                     Dim contents As String = JsonSerializer.Serialize(jsonData, New JsonSerializerOptions)
                     Using jDocument As JsonDocument = JsonDocument.Parse(contents, New JsonDocumentOptions)
-                        File.WriteAllText(GetPathToLastDownloadFile(), JsonSerializer.Serialize(jDocument, JsonFormattingOptions))
+                        File.WriteAllText(GetLastDownloadFileWithPath(), JsonSerializer.Serialize(jDocument, JsonFormattingOptions))
                     End Using
                 End If
             ElseIf response?.StatusCode = HttpStatusCode.Unauthorized Then
@@ -416,9 +416,8 @@ Public Class CareLinkClient
         Return jsonData
     End Function
 
-    Friend Function GetDeviceSettings() As String
+    Friend Function TryGetDeviceSettingsPdfFile(ByRef pdfFileName As String) As Boolean
         Dim authToken As String = ""
-        Dim deviceSettings As String = ""
         Dim jsonData As New Dictionary(Of String, String)
         If Me.GetAuthorizationToken(authToken) = GetAuthorizationTokenResult.OK Then
             Dim response As HttpResponseMessage = Nothing
@@ -440,11 +439,11 @@ Public Class CareLinkClient
                     Dim resultText As String = response.ResultText
                     jsonData = Loads(resultText)
                 Else
-                    Return ""
+                    Return False
                 End If
             Catch ex As Exception
                 _lastErrorMessage = ex.DecodeException()
-                Debug.Print($"{NameOf(GetDeviceSettings)} {_lastErrorMessage.Replace(vbCrLf, "")}, status {response?.StatusCode}")
+                Debug.Print($"{NameOf(TryGetDeviceSettingsPdfFile)} {_lastErrorMessage.Replace(vbCrLf, "")}, status {response?.StatusCode}")
             End Try
             Try
                 Dim lastError As String = ""
@@ -475,7 +474,7 @@ Public Class CareLinkClient
                                 Stop
                         End Select
                     Else
-                        Return ""
+                        Return False
                     End If
                 End While
                 requestUri = New Uri($"https://{serverUrl}/patient/reports/reportPdf?{uuidString}")
@@ -488,22 +487,21 @@ Public Class CareLinkClient
                         Dim fileName As String = fileNameOrDefault.Split("=")(1).Replace("%20", " ")
                         Dim fileNameSplit() As String = fileName.Split(" ")
                         Dim fileContents As Byte() = response.Content.ReadAsByteArrayAsync.Result
-                        ByteArrayToFile(GetUserSettingsFile("PDF"), fileContents)
-                        deviceSettings = Encoding.UTF8.GetString(fileContents)
+                        pdfFileName = GetUserSettingsFileNameWithPath("PDF")
+                        ByteArrayToFile(pdfFileName, fileContents)
                     End If
                 End If
                 Stop
+                Return True
             Catch ex As Exception
                 If NetworkUnavailable() Then
-                    Debug.Print($"{NameOf(GetDeviceSettings)} has no Internet Connection!")
-                    Return ""
+                    Debug.Print($"{NameOf(TryGetDeviceSettingsPdfFile)} has no Internet Connection!")
                 End If
-                Debug.Print($"{NameOf(GetDeviceSettings)} failed {ex.DecodeException().Replace(vbCrLf, "")}")
-                Return ""
+                Debug.Print($"{NameOf(TryGetDeviceSettingsPdfFile)} failed {ex.DecodeException().Replace(vbCrLf, "")}")
             End Try
         End If
         Stop
-        Return deviceSettings
+        Return False
     End Function
 
     Public Overridable Function GetLastErrorMessage() As String

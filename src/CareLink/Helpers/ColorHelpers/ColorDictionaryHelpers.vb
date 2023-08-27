@@ -39,7 +39,7 @@ Friend Module ColorDictionaryHelpers
 
     Public Sub GetColorDictionaryFromFile()
 
-        Using fileStream As FileStream = File.OpenRead(GetPathToGraphColorsFile(True))
+        Using fileStream As FileStream = File.OpenRead(GetGraphColorsFileNameWithPath(True))
             Using sr As New StreamReader(fileStream)
                 sr.ReadLine()
                 While sr.Peek() <> -1
@@ -75,7 +75,7 @@ Friend Module ColorDictionaryHelpers
     End Sub
 
     Public Sub WriteColorDictionaryToFile()
-        Using fileStream As FileStream = File.OpenWrite(GetPathToGraphColorsFile(True))
+        Using fileStream As FileStream = File.OpenWrite(GetGraphColorsFileNameWithPath(True))
             Using sw As New StreamWriter(fileStream)
                 sw.WriteLine($"Key,ForegroundColor,BackgroundColor")
                 For Each kvp As KeyValuePair(Of String, KnownColor) In GraphColorDictionary
