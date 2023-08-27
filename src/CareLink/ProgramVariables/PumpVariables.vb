@@ -16,6 +16,7 @@ Public Module PumpVariables
 
     Friend s_aboveHyperLimit As Single
     Friend s_activeInsulin As ActiveInsulinRecord
+    Friend s_autoModeReadinessState As SummaryRecord
     Friend s_belowHypoLimit As Single
     Friend s_filterJsonData As Boolean = True
     Friend s_firstName As String = ""

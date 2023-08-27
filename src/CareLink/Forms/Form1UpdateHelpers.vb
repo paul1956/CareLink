@@ -461,7 +461,7 @@ Friend Module Form1UpdateHelpers
                         Form1.PumpBannerStateLabel.BackColor = Color.CadetBlue
                         Form1.PumpBannerStateLabel.Text = "Enter BG"
                         Form1.PumpBannerStateLabel.Visible = True
-                        Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
+                        Form1.PumpBannerStateLabel.Dock = DockStyle.Top
                     Case "DELIVERY_SUSPEND"
                         Form1.PumpBannerStateLabel.BackColor = Color.IndianRed
                         Form1.PumpBannerStateLabel.Text = "Delivery Suspended"

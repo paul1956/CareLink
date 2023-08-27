@@ -1027,7 +1027,7 @@ Public Class Form1
         Me.ShieldUnitsLabel.Parent = Me.SmartGuardShieldPictureBox
         Me.ShieldUnitsLabel.BackColor = Color.Transparent
         Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLeftPictureBox
-        Me.SensorMessage.Parent = Me.SmartGuardShieldPictureBox
+        Me.SensorMessageLabel.Parent = Me.SmartGuardShieldPictureBox
         Me.SensorDaysLeftLabel.BackColor = Color.Transparent
         s_useLocalTimeZone = My.Settings.UseLocalTimeZone
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
@@ -1968,18 +1968,21 @@ Public Class Form1
                     Dim notStr As New StringBuilder(100)
                     notStr.AppendLine(Date.Now().ToShortDateTimeString.Replace($"{CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator}{Now.Year}", ""))
                     notStr.AppendLine($"Last SG {lastSgString} {SgUnitsNativeString}")
-                    If s_lastSgValue = 0 Then
-                        Me.LabelTrendValue.Text = ""
-                    Else
-                        Dim diffSg As Double = sg - s_lastSgValue
-                        Me.LabelTrendValue.Text = If(Math.Abs(diffSg) < 0.001,
-                            0.ToString(GetSgFormat(False), CultureInfo.InvariantCulture),
-                            diffSg.ToString(GetSgFormat(True), CultureInfo.InvariantCulture)
-                           )
-                        'End If
-                        Me.LabelTrendValue.ForeColor = backColor
-                        notStr.AppendLine($"SG Trend { diffSg.ToString(GetSgFormat(True), CultureInfo.InvariantCulture)}")
+                    If s_pumpInRangeOfPhone Then
+                        If s_lastSgValue = 0 Then
+                            Me.LabelTrendValue.Text = ""
+                        Else
+                            Dim diffSg As Double = sg - s_lastSgValue
+                            Me.LabelTrendValue.Text = If(Math.Abs(diffSg) < 0.001,
+                                0.ToString(GetSgFormat(False), CultureInfo.InvariantCulture),
+                                diffSg.ToString(GetSgFormat(True), CultureInfo.InvariantCulture)
+                               )
+                            'End If
+                            Me.LabelTrendValue.ForeColor = backColor
+                            notStr.AppendLine($"SG Trend { diffSg.ToString(GetSgFormat(True), CultureInfo.InvariantCulture)}")
+                        End If
                     End If
+                    Me.LabelTrendValue.Visible = s_pumpInRangeOfPhone
                     notStr.Append($"Active ins. {s_activeInsulin.amount:N3}U")
                     Me.NotifyIcon1.Text = notStr.ToString
                     Me.NotifyIcon1.Visible = True
@@ -2183,10 +2186,18 @@ Public Class Form1
             Me.ShieldUnitsLabel.Text = SgUnitsNativeString
 
             If InAutoMode Then
-                Me.SmartGuardShieldPictureBox.Image = If(s_sensorState = "CALIBRATION_REQUIRED",
-                                                             My.Resources.Shield_Disabled,
-                                                             My.Resources.Shield
-                                                            )
+                Select Case s_sensorState
+                    Case "CALIBRATING"
+                        Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield
+                    Case "CALIBRATION_REQUIRED"
+                        Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield_Disabled
+                    Case "NO_ERROR_MESSAGE"
+                        Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield
+                    Case "UNKNOWN"
+                        Stop
+                    Case Else
+                        Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield
+                End Select
                 Me.ShieldUnitsLabel.Visible = True
                 Me.LastSgOrExitTimeLabel.Visible = True
             Else
@@ -2194,20 +2205,32 @@ Public Class Form1
                 Me.ShieldUnitsLabel.Visible = False
                 Me.LastSgOrExitTimeLabel.Visible = False
             End If
+
+            Dim message As String = ""
             If Not Single.IsNaN(s_lastSgRecord.sg) Then
                 Me.CurrentSgLabel.Visible = True
-                Dim sgString As String = s_lastSgRecord.ToString
-                Me.CurrentSgLabel.Text = sgString
+                Dim sgString As String
+                If s_autoModeReadinessState?.Value = "CALIBRATING" Then
+                    ' TODO
+                    sgString = s_lastSgRecord.ToString
+                    Me.CurrentSgLabel.Text = sgString
+                Else
+                    sgString = s_lastSgRecord.ToString
+                    Me.CurrentSgLabel.Text = sgString
+                End If
                 Me.UpdateNotifyIcon(sgString)
                 _sgMiniDisplay.SetCurrentSgString(sgString)
-                Me.SensorMessage.Visible = False
+                Me.SensorMessageLabel.Visible = False
+                If s_sensorMessages.TryGetValue(s_sensorState, message) Then
+                    Dim splitMessage As String = message.Split(".")(0)
+                    message = If(message.Contains("..."), $"{splitMessage}...", splitMessage)
+                End If
             Else
                 _sgMiniDisplay.SetCurrentSgString("---")
                 Me.CurrentSgLabel.Visible = False
                 Me.LastSgOrExitTimeLabel.Visible = False
-                Me.SensorMessage.Visible = True
-                Me.SensorMessage.BackColor = Color.Transparent
-                Dim message As String = ""
+                Me.SensorMessageLabel.Visible = True
+                Me.SensorMessageLabel.BackColor = Color.Transparent
                 If s_sensorMessages.TryGetValue(s_sensorState, message) Then
                     Dim splitMessage As String = message.Split(".")(0)
                     message = If(message.Contains("..."), $"{splitMessage}...", splitMessage)
@@ -2220,26 +2243,30 @@ Public Class Form1
                     message = message.ToTitle
                 End If
 
-                If s_sensorState = "WARM_UP" AndAlso Me.SensorMessage IsNot Nothing Then
-                    Dim timeRemaining As String = ""
-                    If s_systemStatusTimeRemaining.TotalMilliseconds > 0 Then
-                        If s_systemStatusTimeRemaining.TotalHours > 1 Then
-                            timeRemaining = $"{s_systemStatusTimeRemaining.Hours}:{s_systemStatusTimeRemaining.Minutes:D2} hrs"
-                        ElseIf s_systemStatusTimeRemaining.TotalHours > 0 Then
-                            timeRemaining = $"{s_systemStatusTimeRemaining.Hours}:{s_systemStatusTimeRemaining.Minutes:D2} hr"
-                        ElseIf s_systemStatusTimeRemaining.TotalMinutes > 1 Then
-                            timeRemaining = $"{s_systemStatusTimeRemaining.Minutes} mins"
+                Select Case s_sensorState
+                    Case "UNKNOWN"
+                        Me.SensorMessageLabel.Text = message
+                    Case "WARM_UP"
+                        Dim timeRemaining As String = ""
+                        If s_systemStatusTimeRemaining.TotalMilliseconds > 0 Then
+                            If s_systemStatusTimeRemaining.TotalHours > 1 Then
+                                timeRemaining = $"{s_systemStatusTimeRemaining.Hours}:{s_systemStatusTimeRemaining.Minutes:D2} hrs"
+                            ElseIf s_systemStatusTimeRemaining.TotalHours > 0 Then
+                                timeRemaining = $"{s_systemStatusTimeRemaining.Hours}:{s_systemStatusTimeRemaining.Minutes:D2} hr"
+                            ElseIf s_systemStatusTimeRemaining.TotalMinutes > 1 Then
+                                timeRemaining = $"{s_systemStatusTimeRemaining.Minutes} mins"
+                            Else
+                                timeRemaining = $"{s_systemStatusTimeRemaining.Minutes} min"
+                            End If
+                            Me.SensorMessageLabel.Text = $"{message.Replace("...", "")}{vbCrLf}{timeRemaining}"
                         Else
-                            timeRemaining = $"{s_systemStatusTimeRemaining.Minutes} min"
+                            Me.SensorMessageLabel.Text = message
                         End If
-                        Me.SensorMessage.Text = $"{message.Replace("...", "")}{vbCrLf}{timeRemaining}"
-                    Else
-                        Me.SensorMessage.Text = message
-                    End If
-                Else
-                    Me.SensorMessage.Text = message
-                End If
-                Me.SensorMessage.Visible = True
+                    Case "CALIBRATION_REQUIRED"
+                    Case Else
+                        Me.SensorMessageLabel.Text = message
+                End Select
+                Me.SensorMessageLabel.Visible = True
                 Me.ShieldUnitsLabel.Visible = False
                 Application.DoEvents()
             End If
@@ -2255,15 +2282,18 @@ Public Class Form1
 
     Private Sub UpdateCalibrationTimeRemaining()
         Try
-            If s_timeToNextCalibrationHours > Byte.MaxValue Then
-                Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(720)
-            ElseIf s_timeToNextCalibrationHours = 0 Then
-                Me.CalibrationDueImage.Image = If(s_systemStatusMessage = "WAIT_TO_CALIBRATE" OrElse s_sensorState = "WARM_UP" OrElse s_sensorState = "CHANGE_SENSOR",
-                My.Resources.CalibrationNotReady,
-                My.Resources.CalibrationDotRed.DrawCenteredArc(s_timeToNextCalibrationMinutes))
-            Else
-                Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(s_timeToNextCalibrationMinutes)
+            If s_pumpInRangeOfPhone Then
+                If s_timeToNextCalibrationHours > Byte.MaxValue Then
+                    Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(720)
+                ElseIf s_timeToNextCalibrationHours = 0 Then
+                    Me.CalibrationDueImage.Image = If(s_systemStatusMessage = "WAIT_TO_CALIBRATE" OrElse s_sensorState = "WARM_UP" OrElse s_sensorState = "CHANGE_SENSOR",
+                    My.Resources.CalibrationNotReady,
+                    My.Resources.CalibrationDotRed.DrawCenteredArc(s_timeToNextCalibrationMinutes))
+                Else
+                    Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(s_timeToNextCalibrationMinutes)
+                End If
             End If
+            Me.CalibrationDueImage.Visible = s_pumpInRangeOfPhone
         Catch ex As Exception
             Stop
             Throw New Exception($"{ex.DecodeException()} exception in {NameOf(UpdateCalibrationTimeRemaining)}")
@@ -2401,48 +2431,51 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateSensorLife()
+        If s_pumpInRangeOfPhone Then
 
-        Select Case s_sensorDurationHours
-            Case Is >= 255
-                Me.SensorDaysLeftLabel.Text = ""
-                Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
-                Me.SensorTimeLeftLabel.Text = "Unknown"
-            Case Is >= 168
-                Me.SensorDaysLeftLabel.Text = "~7"
-                Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
-                Me.SensorTimeLeftLabel.Text = "7 Days"
+            Select Case s_sensorDurationHours
+                Case Is >= 255
+                    Me.SensorDaysLeftLabel.Text = ""
+                    Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
+                    Me.SensorTimeLeftLabel.Text = "Unknown"
+                Case Is >= 168
+                    Me.SensorDaysLeftLabel.Text = "~7"
+                    Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
+                    Me.SensorTimeLeftLabel.Text = "7 Days"
 
-            Case Is >= 24
-                Me.SensorDaysLeftLabel.Text = Math.Ceiling(s_sensorDurationHours / 24).ToString()
-                Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
-                Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
-            Case > 0
-                Me.SensorDaysLeftLabel.Text = $"<{Math.Ceiling(s_sensorDurationHours / 24)}"
-                Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
-                Me.SensorTimeLeftLabel.Text = $"{s_sensorDurationHours} Hours"
-            Case 0
-                Dim sensorDurationMinutes As Integer = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexes.sensorDurationMinutes), False, -1)
-                Select Case sensorDurationMinutes
-                    Case > 0
-                        Me.SensorDaysLeftLabel.Text = "0"
-                        Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
-                        Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes} minutes"
-                    Case 0
-                        Me.SensorDaysLeftLabel.Text = ""
-                        Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpired
-                        Me.SensorTimeLeftLabel.Text = "Expired"
-                    Case Else
-                        Me.SensorDaysLeftLabel.Text = ""
-                        Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
-                        Me.SensorTimeLeftLabel.Text = "Unknown"
-                End Select
+                Case Is >= 24
+                    Me.SensorDaysLeftLabel.Text = Math.Ceiling(s_sensorDurationHours / 24).ToString()
+                    Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
+                    Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
+                Case > 0
+                    Me.SensorDaysLeftLabel.Text = $"<{Math.Ceiling(s_sensorDurationHours / 24)}"
+                    Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
+                    Me.SensorTimeLeftLabel.Text = $"{s_sensorDurationHours} Hours"
+                Case 0
+                    Dim sensorDurationMinutes As Integer = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexes.sensorDurationMinutes), False, -1)
+                    Select Case sensorDurationMinutes
+                        Case > 0
+                            Me.SensorDaysLeftLabel.Text = "0"
+                            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
+                            Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes} minutes"
+                        Case 0
+                            Me.SensorDaysLeftLabel.Text = ""
+                            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpired
+                            Me.SensorTimeLeftLabel.Text = "Expired"
+                        Case Else
+                            Me.SensorDaysLeftLabel.Text = ""
+                            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
+                            Me.SensorTimeLeftLabel.Text = "Unknown"
+                    End Select
 
-            Case Else
-                Me.SensorDaysLeftLabel.Text = ""
-                Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
-                Me.SensorTimeLeftLabel.Text = "Unknown"
-        End Select
-        Me.SensorDaysLeftLabel.Visible = True
+                Case Else
+                    Me.SensorDaysLeftLabel.Text = ""
+                    Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
+                    Me.SensorTimeLeftLabel.Text = "Unknown"
+            End Select
+            Me.SensorDaysLeftLabel.Visible = True
+        End If
+        Me.SensorTimeLeftPanel.Visible = s_pumpInRangeOfPhone
     End Sub
 
     Private Sub UpdateTimeInRange()
@@ -2650,17 +2683,7 @@ Public Class Form1
             _updating = False
         End SyncLock
 
-        Dim rowValue As String = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastSGTrend))
-        Dim arrows As String = Nothing
-        If s_trends.TryGetValue(rowValue, arrows) Then
-            Me.LabelTrendArrows.Font = If(rowValue = "NONE",
-                New Font("Segoe UI", 18.0F, FontStyle.Bold, GraphicsUnit.Point),
-                New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point))
-            Me.LabelTrendArrows.Text = s_trends(rowValue)
-        Else
-            Me.LabelTrendArrows.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
-            Me.LabelTrendArrows.Text = rowValue
-        End If
+        Me.UpdateTrend()
         UpdateSummaryTab(Me.DgvSummary)
         Me.UpdateActiveInsulinChart()
         Me.UpdateActiveInsulin()
@@ -2746,6 +2769,25 @@ Public Class Form1
             CancelSpeechRecognition()
         End If
         Application.DoEvents()
+    End Sub
+
+    Private Sub UpdateTrend()
+        Dim rowValue As String = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastSGTrend))
+        If s_pumpInRangeOfPhone Then
+            Dim arrows As String = Nothing
+            If s_trends.TryGetValue(rowValue, arrows) Then
+                Me.LabelTrendArrows.Font = If(rowValue = "NONE",
+                    New Font("Segoe UI", 18.0F, FontStyle.Bold, GraphicsUnit.Point),
+                    New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point))
+                Me.LabelTrendArrows.Text = s_trends(rowValue)
+            Else
+                Me.LabelTrendArrows.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
+                Me.LabelTrendArrows.Text = rowValue
+            End If
+        End If
+        Me.LabelSgTrend.Visible = s_pumpInRangeOfPhone
+        Me.LabelTrendValue.Visible = s_pumpInRangeOfPhone
+        Me.LabelTrendArrows.Visible = s_pumpInRangeOfPhone
     End Sub
 
 #End Region ' Update Home Tab
