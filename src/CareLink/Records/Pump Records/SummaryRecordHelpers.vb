@@ -130,7 +130,8 @@ Friend Module SummaryRecordHelpers
                     End If
                     summaryList.Add(New SummaryRecord(summaryList.Count, row, message))
                 Case "autoModeReadinessState"
-                    summaryList.Add(New SummaryRecord(summaryList.Count, row, s_sensorMessages, NameOf(s_sensorMessages)))
+                    s_autoModeReadinessState = New SummaryRecord(summaryList.Count, row, s_sensorMessages, NameOf(s_sensorMessages))
+                    summaryList.Add(s_autoModeReadinessState)
                 Case "autoModeShieldState"
                     summaryList.Add(New SummaryRecord(summaryList.Count, row, s_autoModeShieldMessages, NameOf(s_autoModeShieldMessages)))
                 Case "plgmLgsState"

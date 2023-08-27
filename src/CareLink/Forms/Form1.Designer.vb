@@ -88,7 +88,7 @@ Partial Class Form1
         PumpBannerStateLabel = New Label()
         ShieldUnitsLabel = New Label()
         CurrentSgLabel = New Label()
-        SensorMessage = New Label()
+        SensorMessageLabel = New Label()
         SmartGuardShieldPictureBox = New PictureBox()
         CareLinkUserDataRecordBindingSource = New BindingSource(components)
         CursorMessage1Label = New Label()
@@ -736,7 +736,7 @@ Partial Class Form1
         CalibrationShieldPanel.Controls.Add(PumpBannerStateLabel)
         CalibrationShieldPanel.Controls.Add(ShieldUnitsLabel)
         CalibrationShieldPanel.Controls.Add(CurrentSgLabel)
-        CalibrationShieldPanel.Controls.Add(SensorMessage)
+        CalibrationShieldPanel.Controls.Add(SensorMessageLabel)
         CalibrationShieldPanel.Controls.Add(SmartGuardShieldPictureBox)
         CalibrationShieldPanel.Dock = DockStyle.Left
         CalibrationShieldPanel.Location = New Point(0, 0)
@@ -798,15 +798,15 @@ Partial Class Form1
         ' 
         ' SensorMessage
         ' 
-        SensorMessage.BackColor = Color.Transparent
-        SensorMessage.Font = New Font("Segoe UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point)
-        SensorMessage.ForeColor = Color.White
-        SensorMessage.Location = New Point(0, 13)
-        SensorMessage.Name = "SensorMessage"
-        SensorMessage.Size = New Size(116, 57)
-        SensorMessage.TabIndex = 1
-        SensorMessage.Text = "Calibration Required"
-        SensorMessage.TextAlign = ContentAlignment.MiddleCenter
+        SensorMessageLabel.BackColor = Color.Transparent
+        SensorMessageLabel.Font = New Font("Segoe UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point)
+        SensorMessageLabel.ForeColor = Color.White
+        SensorMessageLabel.Location = New Point(0, 13)
+        SensorMessageLabel.Name = "SensorMessageLabel"
+        SensorMessageLabel.Size = New Size(116, 57)
+        SensorMessageLabel.TabIndex = 1
+        SensorMessageLabel.Text = "Calibration Required"
+        SensorMessageLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' SmartGuardShieldPictureBox
         ' 
@@ -1483,12 +1483,23 @@ Partial Class Form1
         PumpBatteryRemainingLabel.BackColor = Color.Transparent
         PumpBatteryRemainingLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
         PumpBatteryRemainingLabel.ForeColor = Color.White
-        PumpBatteryRemainingLabel.Location = New Point(122, 89)
+        PumpBatteryRemainingLabel.Location = New Point(119, 89)
         PumpBatteryRemainingLabel.Name = "PumpBatteryRemainingLabel"
-        PumpBatteryRemainingLabel.Size = New Size(84, 21)
+        PumpBatteryRemainingLabel.Size = New Size(87, 21)
         PumpBatteryRemainingLabel.TabIndex = 11
         PumpBatteryRemainingLabel.Text = "Unknown"
         PumpBatteryRemainingLabel.TextAlign = ContentAlignment.MiddleCenter
+        ' 
+        ' PumpBatteryRemaining2Label
+        ' 
+        PumpBatteryRemaining2Label.BackColor = Color.Transparent
+        PumpBatteryRemaining2Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        PumpBatteryRemaining2Label.ForeColor = Color.White
+        PumpBatteryRemaining2Label.Location = New Point(119, 106)
+        PumpBatteryRemaining2Label.Name = "PumpBatteryRemaining2Label"
+        PumpBatteryRemaining2Label.Size = New Size(87, 21)
+        PumpBatteryRemaining2Label.TabIndex = 69
+        PumpBatteryRemaining2Label.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' InsulinTypeLabel
         ' 
@@ -1636,17 +1647,6 @@ Partial Class Form1
         PumpAITLabel.TabIndex = 71
         PumpAITLabel.Text = "Pump AIT 3:00"
         PumpAITLabel.TextAlign = ContentAlignment.MiddleLeft
-        ' 
-        ' PumpBatteryRemaining2Label
-        ' 
-        PumpBatteryRemaining2Label.BackColor = Color.Transparent
-        PumpBatteryRemaining2Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
-        PumpBatteryRemaining2Label.ForeColor = Color.White
-        PumpBatteryRemaining2Label.Location = New Point(119, 106)
-        PumpBatteryRemaining2Label.Name = "PumpBatteryRemaining2Label"
-        PumpBatteryRemaining2Label.Size = New Size(84, 21)
-        PumpBatteryRemaining2Label.TabIndex = 69
-        PumpBatteryRemaining2Label.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' TransmitterBatteryPercentLabel
         ' 
@@ -2852,7 +2852,7 @@ Partial Class Form1
     Friend WithEvents ReadingsLabel As Label
     Friend WithEvents RemainingInsulinUnits As Label
     Friend WithEvents SensorDaysLeftLabel As Label
-    Friend WithEvents SensorMessage As Label
+    Friend WithEvents SensorMessageLabel As Label
     Friend WithEvents SensorTimeLeftLabel As Label
     Friend WithEvents SensorTimeLeftPanel As Panel
     Friend WithEvents SensorTimeLeftPictureBox As PictureBox
