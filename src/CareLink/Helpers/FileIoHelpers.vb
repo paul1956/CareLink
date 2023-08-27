@@ -34,38 +34,38 @@ Friend Module FileIoHelpers
         Return s_projectData
     End Function
 
-    Friend Function GetDirectoryForSettings() As String
-        Return Path.Combine(GetDirectoryForProjectData(), "Settings")
-    End Function
-
-    Friend Function GetPathToAllUserLoginInfo(current As Boolean) As String
-        Return If(current,
-                  Path.Combine(GetDirectoryForProjectData(), AllUserLoginInfoFileName),
-                  Path.Combine(GetDirectoryForMyDocuments(), AllUserLoginInfoFileName)
-                 )
-    End Function
-
-    Friend Function GetPathToGraphColorsFile(current As Boolean) As String
+    Friend Function GetGraphColorsFileNameWithPath(current As Boolean) As String
         Return If(current,
                   Path.Combine(GetDirectoryForProjectData(), "GraphColors.Csv"),
                   Path.Combine(GetDirectoryForMyDocuments(), $"{ProjectName}GraphColors.Csv")
                  )
     End Function
 
-    Friend Function GetPathToLastDownloadFile() As String
+    Friend Function GetLastDownloadFileWithPath() As String
         Return GetDataFileName(SavedLastDownloadBaseName, CultureInfo.CurrentUICulture.Name, "json", False).withPath
     End Function
 
-    Friend Function GetPathToTestData() As String
+    Friend Function GetSettingsDirectory() As String
+        Return Path.Combine(GetDirectoryForProjectData(), "Settings")
+    End Function
+
+    Friend Function GetTestDataFileNameWithPath() As String
         Return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")
     End Function
 
-    Friend Function GetPathToTestSettingsFile() As String
+    Friend Function GetTestSettingsFileNameWihtPath() As String
         Return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestFileSettings.json")
     End Function
 
-    Friend Function GetUserSettingsFile(extension As String) As String
-        Return Path.Combine(GetDirectoryForSettings(), $"{My.Settings.CareLinkUserName}Settings.{extension}")
+    Friend Function GetUserSettingsFileNameWithPath(extension As String) As String
+        Return Path.Combine(GetSettingsDirectory(), $"{My.Settings.CareLinkUserName}Settings.{extension}")
+    End Function
+
+    Friend Function GetUsersLoginInfoFileWithPath(current As Boolean) As String
+        Return If(current,
+                  Path.Combine(GetDirectoryForProjectData(), AllUserLoginInfoFileName),
+                  Path.Combine(GetDirectoryForMyDocuments(), AllUserLoginInfoFileName)
+                 )
     End Function
 
     Friend Sub MoveFiles(previousDirectory As String, currentDirectory As String, searchPattern As String)

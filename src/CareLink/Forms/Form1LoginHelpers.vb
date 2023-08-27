@@ -24,21 +24,21 @@ Friend Module Form1LoginHelpers
         Select Case fileToLoad
             Case FileToLoadOptions.LastSaved
                 Form1.Text = $"{SavedTitle} Using Last Saved Data"
-                CurrentDateCulture = GetPathToLastDownloadFile().ExtractCultureFromFileName(SavedLastDownloadBaseName)
-                RecentData = Loads(File.ReadAllText(GetPathToLastDownloadFile()))
+                CurrentDateCulture = GetLastDownloadFileWithPath().ExtractCultureFromFileName(SavedLastDownloadBaseName)
+                RecentData = Loads(File.ReadAllText(GetLastDownloadFileWithPath()))
                 Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                Dim fileDate As Date = File.GetLastWriteTime(GetPathToLastDownloadFile())
+                Dim fileDate As Date = File.GetLastWriteTime(GetLastDownloadFileWithPath())
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
-                SetUpCareLinkUser(GetPathToTestSettingsFile())
+                SetUpCareLinkUser(GetTestSettingsFileNameWihtPath())
                 fromFile = True
             Case FileToLoadOptions.TestData
                 Form1.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
-                RecentData = Loads(File.ReadAllText(GetPathToTestData()))
+                RecentData = Loads(File.ReadAllText(GetTestDataFileNameWithPath()))
                 Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                Dim fileDate As Date = File.GetLastWriteTime(GetPathToTestData())
+                Dim fileDate As Date = File.GetLastWriteTime(GetTestDataFileNameWithPath())
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
-                SetUpCareLinkUser(GetPathToTestSettingsFile)
+                SetUpCareLinkUser(GetTestSettingsFileNameWihtPath)
                 fromFile = True
             Case FileToLoadOptions.Login
                 Form1.Text = SavedTitle
@@ -68,7 +68,7 @@ Friend Module Form1LoginHelpers
 
                 RecentData = Form1.Client.GetRecentData()
 
-                SetUpCareLinkUser(GetUserSettingsFile("json"))
+                SetUpCareLinkUser(GetUserSettingsFileNameWithPath("json"))
                 StartOrStopServerUpdateTimer(True, s_1MinutesInMilliseconds)
 
                 If NetworkUnavailable() Then
