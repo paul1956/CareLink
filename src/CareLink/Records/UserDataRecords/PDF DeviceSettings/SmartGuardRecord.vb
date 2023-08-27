@@ -4,8 +4,8 @@
 
 Public Class SmartGuardRecord
 
-    Public Sub New(lines As List(Of String))
-        Me.SmartGuard = lines.GetSingleLineValue(Of String)("SmartGuard ")
+    Public Sub New(lines As List(Of String), smartGuard As String)
+        Me.SmartGuard = smartGuard
         Me.Target = lines.GetSingleLineValue(Of Single)("Target ")
         Me.AutoCorrection = lines.GetSingleLineValue(Of String)("Auto Correction ")
     End Sub

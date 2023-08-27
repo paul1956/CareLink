@@ -89,7 +89,21 @@ Public Class PdfSettingsRecord
             Next
         Next
 
-        Me.SmartGuard = New SmartGuardRecord(ExtractPdfTableLines(tables(15), "SmartGuard"))
+        lines = ExtractPdfTableLines(tables(15), "")
+        If lines.Count = 3 Then
+            Me.SmartGuard = New SmartGuardRecord(lines, lines.GetSingleLineValue(Of String)("SmartGuard "))
+        Else
+            Dim smartGuard As String = "Off"
+            For Each s As IndexClass(Of String) In allText.SplitLines(True).WithIndex
+                If s.Value.StartsWith("SmartGuard") Then
+                    s.MoveNext()
+                    smartGuard = s.Value.CleanSpaces.Split(" ").ToList(1)
+                    Exit For
+                End If
+            Next
+            Me.SmartGuard = New SmartGuardRecord(lines, smartGuard)
+        End If
+
         Me.Reminders = New RemindersRecord(ExtractPdfTableLines(tables(16), "Low Reservoir Warning "))
         ' 17 Ignore its titles in odd format
 
