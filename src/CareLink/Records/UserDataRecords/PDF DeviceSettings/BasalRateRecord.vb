@@ -11,7 +11,11 @@ Public Class BasalRateRecord
                 Me.[Time] = TimeOnly.Parse(lineParts(0))
                 Me.UnitsPerHr = CSng(lineParts(1))
                 Me.IsValid = True
+            Else
+                Stop
             End If
+        Else
+            Stop
         End If
     End Sub
 

@@ -14,6 +14,8 @@ Public Class BloodGlucoseTargetRecord
             Me.Low = ParseSingle(lineSplit(1))
             Me.High = ParseSingle(lineSplit(2))
             Me.IsValid = True
+        Else
+            Stop
         End If
 
     End Sub
