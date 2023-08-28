@@ -181,11 +181,11 @@ Friend Module Form1LoginHelpers
             If Form1.Client.TryGetDeviceSettingsPdfFile(pdfFileNamepdfFileName) Then
                 Dim pdf As New PdfSettingsRecord(pdfFileNamepdfFileName)
                 If CurrentUser.PumpAit <> pdf.Bolus.BolusWizard.ActiveInsulinTime Then
-                    CurrentUser.PumpAit = pdf.Bolus.BolusWizard.ActiveInsulinTime
+                    ait = pdf.Bolus.BolusWizard.ActiveInsulinTime
                     currentUserUpdateNeeded = True
                 End If
                 If pdf.Bolus.DeviceCarbohydrateRatios.CompareToCarbRatios(CurrentUser.CarbRatios) Then
-                    CurrentUser.CarbRatios = pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
+                    carbRatios = pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
                     currentUserUpdateNeeded = True
                 End If
             Else
@@ -195,16 +195,16 @@ Friend Module Form1LoginHelpers
                 End If
             End If
         End If
-        Form1.Cursor = Cursors.Default
-        Application.DoEvents()
         If currentUserUpdateNeeded Then
-            File.WriteAllText(GetUserSettingsFileNameWithPath("json"),
-                  JsonSerializer.Serialize(CurrentUser, JsonFormattingOptions))
             Dim f As New InitializeDialog(CurrentUser, ait, carbRatios)
             f.ShowDialog()
-            CurrentUser = f.CurrentUser
+            CurrentUser = f.CurrentUser.Clone
         End If
+        File.WriteAllText(GetUserSettingsFileNameWithPath("json"),
+                  JsonSerializer.Serialize(CurrentUser, JsonFormattingOptions))
 
+        Form1.Cursor = Cursors.Default
+        Application.DoEvents()
     End Sub
 
     ''' <summary>
