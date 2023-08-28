@@ -12,25 +12,15 @@ Public Class PresetBolusRecord
             Exit Sub
         End If
         Stop
-        'Me.Normal = Normal
-        'Me.Square = Square
+        ' TBD
+        ' Me.Normal = Normal
+        ' Me.Square = Square
         Me.IsValid = True
     End Sub
 
-    Private Shared ReadOnly Property ColumnTitles As New List(Of String) From {
-                        {"Name"},
-                        {NameOf(Normal)},
-                        {NameOf(Square)}
-                    }
-
     Public Property IsValid As Boolean = False
-
-    Public Property Normal As String = ""
-
-    Public Property Square As String = ""
-
-    Public Shared Function GetColumnTitle() As String
-        Return ColumnTitles.ToArray.JoinLines(" ")
-    End Function
+    Public Property Bolus As Single
+    Public Property Duration As TimeSpan
+    Public Property BolusType As BolusTypeRecord
 
 End Class

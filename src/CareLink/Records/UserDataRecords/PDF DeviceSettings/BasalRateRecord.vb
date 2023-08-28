@@ -5,6 +5,9 @@
 Public Class BasalRateRecord
 
     Public Sub New(value As String)
+        If value.Trim = "-- --" Then
+            Exit Sub
+        End If
         If value.Trim.Length > 0 Then
             Dim lineParts() As String = value.Split(" ")
             If lineParts.Length >= 2 AndAlso IsNumeric(lineParts(1)) Then
@@ -14,8 +17,6 @@ Public Class BasalRateRecord
             Else
                 Stop
             End If
-        Else
-            Stop
         End If
     End Sub
 

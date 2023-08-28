@@ -15,18 +15,8 @@ Public Class PresetTempRecord
         Me.IsValid = True
     End Sub
 
-    Private Shared ReadOnly Property ColumnTitles As New List(Of String) From {
-                        {"Name"},
-                        {NameOf(Rate)},
-                        {NameOf(Duration)}
-                    }
-
-    Public Property Duration As TimeSpan
     Public Property IsValid As Boolean = False
-    Public Property Rate As Single
-
-    Public Shared Function GetColumnTitle() As String
-        Return ColumnTitles.ToArray.JoinLines(" ")
-    End Function
+    Public Property Duration As TimeSpan
+    Public Property Type As PresetTypeRecord
 
 End Class

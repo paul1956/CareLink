@@ -468,7 +468,10 @@ Friend Module Form1UpdateHelpers
                         Form1.PumpBannerStateLabel.Visible = True
                         Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
                     Case "LOAD_RESERVOIR"
-                        Stop
+                        Form1.PumpBannerStateLabel.BackColor = Color.Yellow
+                        Form1.PumpBannerStateLabel.Text = "Load Reservoir"
+                        Form1.PumpBannerStateLabel.Visible = True
+                        Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
                     Case "PROCESSING_BG"
                         Stop
                     Case "SUSPENDED_BEFORE_LOW"

@@ -61,7 +61,7 @@ Public Class PdfSettingsRecord
         Next
 
         ' 9 Preset Bolus
-        lines = ExtractPdfTableLines(tables(9), PresetBolusRecord.GetColumnTitle)
+        lines = ExtractPdfTableLines(tables(9), "")
         For Each e As IndexClass(Of String) In lines.WithIndex
             If e.IsFirst Then Continue For
             Dim line As String = e.Value
@@ -76,7 +76,7 @@ Public Class PdfSettingsRecord
 
         ' 13-14 Preset Temp
         For i As Integer = 13 To 14
-            lines = ExtractPdfTableLines(tables(i), PresetTempRecord.GetColumnTitle)
+            lines = ExtractPdfTableLines(tables(i), "")
             For Each e As IndexClass(Of String) In lines.WithIndex
                 If e.IsFirst Then Continue For
                 Dim line As String = e.Value
