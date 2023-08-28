@@ -18,7 +18,15 @@ Public Class InitializeDialog
     Public Sub New(currentUser As CurrentUserRecord)
         MyBase.New
         Me.InitializeComponent()
+        _CurrentUser = currentUser
+    End Sub
+
+    Public Sub New(currentUser As CurrentUserRecord, ait As Single, CarbRatios As List(Of CarbRatioRecord))
+        MyBase.New
+        Me.InitializeComponent()
         Me.CurrentUser = currentUser
+        Me.CurrentUser.PumpAit = ait
+        Me.CurrentUser.CarbRatios = CarbRatios
     End Sub
 
     Public Property CurrentUser As CurrentUserRecord

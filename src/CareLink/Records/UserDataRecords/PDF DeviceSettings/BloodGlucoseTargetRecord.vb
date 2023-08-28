@@ -17,7 +17,6 @@ Public Class BloodGlucoseTargetRecord
         Else
             Stop
         End If
-
     End Sub
 
     Private Shared ReadOnly Property ColumnTitles As New List(Of String) From {
