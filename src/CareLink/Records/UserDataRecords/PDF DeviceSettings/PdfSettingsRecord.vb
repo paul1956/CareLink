@@ -8,6 +8,7 @@ Public Class PdfSettingsRecord
 
     Public Sub New(filename As String)
         Dim tables As List(Of PdfTable) = GetTableList(filename, 0, 1)
+        If tables.Count <> 28 Then Stop
         Dim allText As String = ExtractTextFromPage(filename, 0, 1)
         Dim lines As List(Of String)
 
@@ -50,7 +51,7 @@ Public Class PdfSettingsRecord
         Next
 
         ' 8 Blood Glucose Target
-        lines = ExtractPdfTableLines(tables(8), BloodGlucoseTargetRecord.GetColumnTitle)
+        lines = ExtractPdfTableLines(tables(8), "")
         Me.Bolus.BloodGlucoseTarget.Clear()
         For Each e As IndexClass(Of String) In lines.WithIndex
             If e.IsFirst Then Continue For
@@ -162,8 +163,6 @@ Public Class PdfSettingsRecord
         '27
         lines = ExtractPdfTableLines(tables(27), "Block Mode ")
         Me.Utilities = New UtilitiesRecord(lines)
-
-        Stop
     End Sub
 
     Public Property Basal As New PumpBasalRecord

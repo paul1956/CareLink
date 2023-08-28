@@ -7,6 +7,12 @@ Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 
+Friend Enum CheckForUpdate As Integer
+    Always = 0
+    Never = 1
+    Ask = 2
+End Enum
+
 Friend Enum FileToLoadOptions As Integer
     LastSaved = 0
     TestData = 1
@@ -29,7 +35,7 @@ Friend Module Form1LoginHelpers
                 Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(GetLastDownloadFileWithPath())
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
-                SetUpCareLinkUser(GetTestSettingsFileNameWihtPath())
+                SetUpCareLinkUser(GetTestSettingsFileNameWihtPath(), CheckForUpdate.Never)
                 fromFile = True
             Case FileToLoadOptions.TestData
                 Form1.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
@@ -38,7 +44,7 @@ Friend Module Form1LoginHelpers
                 Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(GetTestDataFileNameWithPath())
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
-                SetUpCareLinkUser(GetTestSettingsFileNameWihtPath)
+                SetUpCareLinkUser(GetTestSettingsFileNameWihtPath, CheckForUpdate.Never)
                 fromFile = True
             Case FileToLoadOptions.Login
                 Form1.Text = SavedTitle
@@ -68,7 +74,7 @@ Friend Module Form1LoginHelpers
 
                 RecentData = Form1.Client.GetRecentData()
 
-                SetUpCareLinkUser(GetUserSettingsFileNameWithPath("json"))
+                SetUpCareLinkUser(GetUserSettingsFileNameWithPath("json"), CheckForUpdate.Always)
                 StartOrStopServerUpdateTimer(True, s_1MinutesInMilliseconds)
 
                 If NetworkUnavailable() Then
@@ -148,65 +154,52 @@ Friend Module Form1LoginHelpers
 
     End Sub
 
-    Friend Sub SetUpCareLinkUser(userSettingsFileWithPath As String)
+    Friend Sub SetUpCareLinkUser(userSettingsFileWithPath As String, checkForUpdate As CheckForUpdate)
         Dim page As New TaskDialogPage
         Dim ait As Single = 2
-        Dim carbRatios As List(Of CarbRatioRecord) = Nothing
+        Dim carbRatios As New List(Of CarbRatioRecord)
+        Dim lastUpdateTimeString As String = "Your devive setting file has never been downloaded!"
+        Dim currentUserUpdateNeeded As Boolean = False
         If File.Exists(userSettingsFileWithPath) Then
             Dim lastUpdateTime As Date = File.GetLastWriteTime(userSettingsFileWithPath)
-
+            lastUpdateTimeString = $"Your Last Update was {lastUpdateTime.ToShortDateString}"
             Dim contents As String = File.ReadAllText(userSettingsFileWithPath)
             CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
 
-            If lastUpdateTime < Now - s_30DaysSpan Then
-                If MsgBox($"Would you like to update from latest {ProjectName}™ Device Settings PDF File", $"Your Last Update was {lastUpdateTime.ToShortDateString}", MsgBoxStyle.YesNo, $"Use {ProjectName}™ Settings File", -1, page) = MsgBoxResult.Yes Then
-                    Dim pdfFileNamepdfFileName As String = ""
-                    If Form1.Client.TryGetDeviceSettingsPdfFile(pdfFileNamepdfFileName) Then
-                        Dim pdf As New PdfSettingsRecord(pdfFileNamepdfFileName)
-                        Dim currentUserUpdateNeeded As Boolean = False
-                        If CurrentUser.PumpAit <> pdf.Bolus.BolusWizard.ActiveInsulinTime Then
-                            CurrentUser.PumpAit = pdf.Bolus.BolusWizard.ActiveInsulinTime
-                            currentUserUpdateNeeded = True
-                        End If
-                        If pdf.Bolus.DeviceCarbohydrateRatios.CompareToCarbRatios(CurrentUser.CarbRatios) Then
-                            CurrentUser.CarbRatios = pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
-                            currentUserUpdateNeeded = True
-                        End If
-                        If currentUserUpdateNeeded Then
-                            File.WriteAllText(GetUserSettingsFileNameWithPath("json"),
-                          JsonSerializer.Serialize(CurrentUser, JsonFormattingOptions))
-                        End If
-                    End If
-                End If
+            If checkForUpdate = CheckForUpdate.Never OrElse lastUpdateTime > Now - s_30DaysSpan Then
+                Exit Sub
             End If
         Else
-            If MsgBox($"Would you like to use a downloaded {ProjectName}™ Device Settings PDF File", "", MsgBoxStyle.YesNo, $"Use {ProjectName}™ Settings File", -1, page) = MsgBoxResult.Yes Then
-                Dim openFileDialog1 As New OpenFileDialog With {
-                        .AddToRecent = True,
-                        .CheckFileExists = True,
-                        .CheckPathExists = True,
-                        .Filter = $"Settings file (*.pdf)|*.pdf",
-                        .InitialDirectory = GetSettingsDirectory(),
-                        .Multiselect = False,
-                        .ReadOnlyChecked = True,
-                        .RestoreDirectory = True,
-                        .SupportMultiDottedExtensions = False,
-                        .Title = $"Select downloaded {ProjectName}™ Settings file.",
-                        .ValidateNames = True
-                    }
-                If page.Verification.Checked Then
-                    ' Don't show again needs implementation
-                    ' TODO
-                End If
-
-                If openFileDialog1.ShowDialog() = DialogResult.OK Then
-                    Dim pdf As New PdfSettingsRecord(openFileDialog1.FileName)
-                    ait = pdf.Bolus.BolusWizard.ActiveInsulinTime
-                    carbRatios = pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
-                End If
-
-            End If
             CurrentUser = New CurrentUserRecord(My.Settings.CareLinkUserName, If(Not Is770G(), CheckState.Checked, CheckState.Indeterminate))
+            currentUserUpdateNeeded = True
+        End If
+
+        If checkForUpdate = CheckForUpdate.Always OrElse MsgBox($"Would you like to update from latest {ProjectName}™ Device Settings PDF File", lastUpdateTimeString, MsgBoxStyle.YesNo, $"Use {ProjectName}™ Settings File", -1, page) = MsgBoxResult.Yes Then
+            Dim pdfFileNamepdfFileName As String = ""
+            Form1.Cursor = Cursors.WaitCursor
+            Application.DoEvents()
+            If Form1.Client.TryGetDeviceSettingsPdfFile(pdfFileNamepdfFileName) Then
+                Dim pdf As New PdfSettingsRecord(pdfFileNamepdfFileName)
+                If CurrentUser.PumpAit <> pdf.Bolus.BolusWizard.ActiveInsulinTime Then
+                    CurrentUser.PumpAit = pdf.Bolus.BolusWizard.ActiveInsulinTime
+                    currentUserUpdateNeeded = True
+                End If
+                If pdf.Bolus.DeviceCarbohydrateRatios.CompareToCarbRatios(CurrentUser.CarbRatios) Then
+                    CurrentUser.CarbRatios = pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
+                    currentUserUpdateNeeded = True
+                End If
+            Else
+                If currentUserUpdateNeeded Then
+                    CurrentUser = New CurrentUserRecord(My.Settings.CareLinkUserName, If(Not Is770G(), CheckState.Checked, CheckState.Indeterminate))
+                    currentUserUpdateNeeded = True
+                End If
+            End If
+        End If
+        Form1.Cursor = Cursors.Default
+        Application.DoEvents()
+        If currentUserUpdateNeeded Then
+            File.WriteAllText(GetUserSettingsFileNameWithPath("json"),
+                  JsonSerializer.Serialize(CurrentUser, JsonFormattingOptions))
             Dim f As New InitializeDialog(CurrentUser, ait, carbRatios)
             f.ShowDialog()
             CurrentUser = f.CurrentUser

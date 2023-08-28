@@ -28,7 +28,7 @@ Public Module PDFParser
 
     Public Function ExtractPdfTableLines(table As PdfTable, tableHeader As String) As List(Of String)
         Dim txt As String = ExtractTableText(table)
-        Return If(txt.StartsWith(tableHeader) OrElse tableHeader = "", txt.SplitLines(), New List(Of String))
+        Return If(txt.StartsWith(tableHeader) OrElse String.IsNullOrWhiteSpace(tableHeader), txt.SplitLines(), New List(Of String))
     End Function
 
     Public Function ExtractPdfTableLines(tableList As List(Of PdfTable), tableHeader As String) As List(Of String)

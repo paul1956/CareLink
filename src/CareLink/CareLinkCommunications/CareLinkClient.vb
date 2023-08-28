@@ -491,7 +491,6 @@ Public Class CareLinkClient
                         ByteArrayToFile(pdfFileName, fileContents)
                     End If
                 End If
-                Stop
                 Return True
             Catch ex As Exception
                 If NetworkUnavailable() Then

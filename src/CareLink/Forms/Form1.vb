@@ -1107,7 +1107,7 @@ Public Class Form1
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                         Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
                         SetLastUpdateTime(epochDateTime.ToShortDateTimeString, "from file", False, epochDateTime.IsDaylightSavingTime)
-                        SetUpCareLinkUser(GetTestSettingsFileNameWihtPath())
+                        SetUpCareLinkUser(GetTestSettingsFileNameWihtPath(), CheckForUpdate.Never)
 
                         Try
                             FinishInitialization()
@@ -1152,7 +1152,7 @@ Public Class Form1
             Try
                 If File.Exists(openFileDialog1.FileName) Then
                     StartOrStopServerUpdateTimer(False)
-                    SetUpCareLinkUser(GetTestSettingsFileNameWihtPath())
+                    SetUpCareLinkUser(GetTestSettingsFileNameWihtPath(), CheckForUpdate.Never)
                     CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{ProjectName}", True)
                     CurrentUICulture = CurrentDateCulture
 
