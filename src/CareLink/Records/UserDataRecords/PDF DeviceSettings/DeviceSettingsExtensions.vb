@@ -39,7 +39,7 @@ Friend Module DeviceSettingsExtensions
                     Dim timeSpan As TimeSpan = Nothing
                     Return If(TimeSpan.TryParse(value, timeSpan),
                               CType(CObj(timeSpan), T),
-                              CType(CObj(New TimeOnly(0, 0)), T)
+                              CType(CObj(New TimeSpan(0)), T)
                              )
                 End If
                 If typeOfT Is GetType(Boolean) Then
