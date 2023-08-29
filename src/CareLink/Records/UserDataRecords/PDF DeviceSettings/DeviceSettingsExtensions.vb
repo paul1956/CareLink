@@ -62,14 +62,14 @@ Friend Module DeviceSettingsExtensions
         If typeOfT Is GetType(Integer) Then
             Return CType(CObj(0), T)
         End If
-        If typeOfT Is GetType(Boolean) Then
-            Return CType(CObj(False), T)
-        End If
         If typeOfT Is GetType(TimeOnly) Then
             Return Nothing
         End If
         If typeOfT Is GetType(TimeSpan) Then
             Return Nothing
+        End If
+        If typeOfT Is GetType(Boolean) Then
+            Return CType(CObj(False), T)
         End If
         Stop
         Return Nothing
