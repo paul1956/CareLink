@@ -20,7 +20,8 @@ Public Class UtilitiesRecord
         End If
         Me.AudioOptions = lines.GetSingleLineValue(Of String)("Audio Options ")
         Me.AlarmVolume = lines.GetSingleLineValue(Of String)("Alarm Volume ")
-        Me.AutoSuspend = lines.GetSingleLineValue(Of String)("Auto Suspend ")
+
+        Me.AutoSuspend = New AutoSuspendRecord(lines)
 
     End Sub
 
@@ -31,6 +32,6 @@ Public Class UtilitiesRecord
     Public Property BackLightTimeout As TimeSpan
     Public Property AudioOptions As String
     Public Property AlarmVolume As String
-    Public Property AutoSuspend As String = "Off"
+    Public Property AutoSuspend As AutoSuspendRecord
 
 End Class
