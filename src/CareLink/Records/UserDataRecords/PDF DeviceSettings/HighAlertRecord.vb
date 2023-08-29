@@ -3,10 +3,10 @@
 ' See the LICENSE file in the project root for more information.
 
 Public Class HighAlertRecord
-    Public Property StartTime As TimeOnly
-    Public Property High As Single
-    Public Property AlertOnHigh As Boolean
+    Public Property HighLimit As DeviceLimitRecord
     Public Property AlertBeforeHigh As Boolean
-    Public Property RiseAlertLimit As Single
-
+    Public Property TimeBeforeHigh As TimeOnly
+    Public Property AlertOnHigh As Boolean
+    Public Property RiseAlert As Boolean
+    Public Property RaiseLimit As String
 End Class

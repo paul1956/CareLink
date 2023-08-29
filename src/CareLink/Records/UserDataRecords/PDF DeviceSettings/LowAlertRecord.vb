@@ -3,11 +3,10 @@
 ' See the LICENSE file in the project root for more information.
 
 Public Class LowAlertRecord
-    Public Property StartTime As TimeOnly
-    Public Property Low As Single
-    Public Property Suspend As Boolean
-    Public Property AlertOnLow As Boolean
+    Public Property LowLimit As DeviceLimitRecord
     Public Property AlertBeforeLow As Boolean
-    Public Property ResumeBasalAlert As Boolean
-
+    Public Property AlertOnLow As Boolean
+    Public Property SuspendBeforelow As Boolean
+    Public Property SuspendOnlow As Boolean
+    Public Property ResumeBasalAlertt As Boolean
 End Class
