@@ -6,7 +6,7 @@ Public Class AutoSuspendRecord
 
     Public Sub New(lines As List(Of String))
         Me.Alarm = lines.GetSingleLineValue(Of String)("Auto Suspend ")
-        Me.Alarm = lines.GetSingleLineValue(Of String)("Time ")
+        Me.Time = lines.GetSingleLineValue(Of TimeSpan)("Time ")
 
     End Sub
 
