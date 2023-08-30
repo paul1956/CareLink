@@ -4,14 +4,14 @@
 
 Public Class SensorRecord
 
-    Public Sub New(sensorOn As String, lines As List(Of String))
+    Public Sub New(sensorOn As String, sTable As StringTable)
         _SensorOn = sensorOn
-        If lines.Count <> 2 Then
+        If sTable.IsValid Then
             Stop
             Exit Sub
         End If
-        Me.CalibrationReminder = lines.GetSingleLineValue(Of String)("Calibration Reminder ")
-        Me.CalibrationReminderTime = lines.GetSingleLineValue(Of String)("Calibration Reminder Time ")
+        Me.CalibrationReminder = sTable.GetSingleLineValue(Of String)("Calibration Reminder ")
+        Me.CalibrationReminderTime = sTable.GetSingleLineValue(Of String)("Calibration Reminder Time ")
     End Sub
 
     Public Property SensorOn As String

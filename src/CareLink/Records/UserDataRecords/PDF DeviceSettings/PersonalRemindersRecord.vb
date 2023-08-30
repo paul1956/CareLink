@@ -7,14 +7,14 @@ Public Class PersonalRemindersRecord
     Public Sub New()
     End Sub
 
-    Public Sub New(line As String)
-        If String.IsNullOrWhiteSpace(line) Then
-            Stop
+    Public Sub New(r As StringTable.Row)
+        Dim stringSplit As String() = r.Columns(0).Split(" ")
+        If stringSplit.Length = 2 Then
+            Me.Time = stringSplit(1)
             Exit Sub
         End If
-        Dim split() As String = line.CleanSpaces.Split(" ")
-        Me.Start = split(0)
+        Stop
     End Sub
 
-    Public Property Start As String
+    Public Property Time As String = "Off"
 End Class

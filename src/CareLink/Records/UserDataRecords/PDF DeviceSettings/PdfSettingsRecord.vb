@@ -10,11 +10,12 @@ Public Class PdfSettingsRecord
         Dim tables As List(Of PdfTable) = GetTableList(filename, 0, 1)
         If tables.Count <> 28 Then Stop
         Dim allText As String = ExtractTextFromPage(filename, 0, 1)
-        Dim lines As List(Of String)
+        Dim listOfAallTextLines As List(Of String) = allText.SplitLines(True)
+        Dim sTable As StringTable
 
         ' 0
-        lines = ExtractPdfTableLines(tables(0), "Maximum Basal Rate ")
-        Me.Basal.MaximumBasalRate = lines.GetSingleLineValue(Of Single)("Maximum Basal Rate ")
+        sTable = ConvertPdfTableToStringTable(tables(0), "Maximum Basal Rate")
+        Me.Basal.MaximumBasalRate = sTable.GetSingleLineValue(Of Single)("Maximum Basal Rate")
 
         '1, 2, 3 (10,11,12)
         For i As Integer = 1 To 3
@@ -23,136 +24,121 @@ Public Class PdfSettingsRecord
         Next
 
         ' 4 Bolus Wizard
-        lines = ExtractPdfTableLines(tables(4), "Bolus Wizard")
-        Me.Bolus.BolusWizard = New BolusWizardRecord(lines)
+        sTable = ConvertPdfTableToStringTable(tables(4), "Bolus Wizard")
+        Me.Bolus.BolusWizard = New BolusWizardRecord(sTable)
 
         ' 5 Easy Bolus
-        lines = ExtractPdfTableLines(tables(5), "Easy Bolus")
-        Me.Bolus.EasyBolus = New EasyBolusRecord(lines)
+        sTable = ConvertPdfTableToStringTable(tables(5), "Easy Bolus")
+        Me.Bolus.EasyBolus = New EasyBolusRecord(sTable)
 
         ' 6 Carb Ratio
-        lines = ExtractPdfTableLines(tables(6), DeviceCarbRatioRecord.GetColumnTitle)
+        sTable = ConvertPdfTableToStringTable(tables(6), DeviceCarbRatioRecord.GetColumnTitle)
         Me.Bolus.DeviceCarbohydrateRatios.Clear()
-        For Each e As IndexClass(Of String) In lines.WithIndex
+        For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
             If e.IsFirst Then Continue For
-            Dim item As New DeviceCarbRatioRecord(e.Value.CleanSpaces)
+            Dim item As New DeviceCarbRatioRecord(e.Value)
             If Not item.IsValid Then Exit For
             Me.Bolus.DeviceCarbohydrateRatios.Add(item)
         Next
 
         ' 7 Time Sensitivity
-        lines = ExtractPdfTableLines(tables(7), InsulinSensivityRecord.GetColumnTitle)
+        sTable = ConvertPdfTableToStringTable(tables(7), InsulinSensivityRecord.GetColumnTitle)
         Me.Bolus.InsulinSensivity.Clear()
-        For Each e As IndexClass(Of String) In lines.WithIndex
+        For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
             If e.IsFirst Then Continue For
-            Dim item As New InsulinSensivityRecord(e.Value.CleanSpaces)
+            Dim item As New InsulinSensivityRecord(e.Value)
             If Not item.IsValid Then Exit For
             Me.Bolus.InsulinSensivity.Add(item)
         Next
 
         ' 8 Blood Glucose Target
-        lines = ExtractPdfTableLines(tables(8), "")
         Me.Bolus.BloodGlucoseTarget.Clear()
-        For Each e As IndexClass(Of String) In lines.WithIndex
+        sTable = ConvertPdfTableToStringTable(tables(8), "Time Low")
+        For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
             If e.IsFirst Then Continue For
-            Dim item As New BloodGlucoseTargetRecord(e.Value.CleanSpaces)
+            Dim item As New BloodGlucoseTargetRecord(e.Value)
             If Not item.IsValid Then Exit For
             Me.Bolus.BloodGlucoseTarget.Add(item)
         Next
 
         ' 9 Preset Bolus
-        lines = ExtractPdfTableLines(tables(9), "")
-        For Each e As IndexClass(Of String) In lines.WithIndex
+        sTable = ConvertPdfTableToStringTable(tables(9), "")
+        For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
             If e.IsFirst Then Continue For
-            Dim line As String = e.Value
-            For Each p As KeyValuePair(Of String, PresetBolusRecord) In Me.PresetBolus
-                If line.StartsWith(p.Key) Then
-                    line = line.Replace($"{p.Key} ", " ")
-                    Me.PresetBolus(p.Key) = New PresetBolusRecord(line)
-                    Exit For
-                End If
-            Next
+            Me.PresetBolus(e.Value.Columns(0)) = New PresetBolusRecord(e.Value)
         Next
 
         ' 13-14 Preset Temp
         For i As Integer = 13 To 14
-            lines = ExtractPdfTableLines(tables(i), "")
-            For Each e As IndexClass(Of String) In lines.WithIndex
+            sTable = ConvertPdfTableToStringTable(tables(i), "")
+            For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
                 If e.IsFirst Then Continue For
-                Dim line As String = e.Value
-                For Each p As KeyValuePair(Of String, PresetTempRecord) In Me.PresetTemp
-                    If line.StartsWith(p.Key) Then
-                        line = line.Replace($"{p.Key} ", " ")
-                        Me.PresetTemp(p.Key) = New PresetTempRecord(line)
-                        Exit For
-                    End If
-                Next
+                Dim columnName As String = Me.Reminders.MissedMealBolus.Keys(e.Index - 1)
+                Me.PresetTemp(columnName) = New PresetTempRecord(e.Value)
             Next
         Next
 
-        lines = ExtractPdfTableLines(tables(15), "")
-        If lines.Count = 3 Then
-            Me.SmartGuard = New SmartGuardRecord(lines, lines.GetSingleLineValue(Of String)("SmartGuard "))
+        sTable = ConvertPdfTableToStringTable(tables(15), "")
+
+        If sTable.Rows.Count = 3 Then
+            Me.SmartGuard = New SmartGuardRecord(sTable, sTable.GetSingleLineValue(Of String)("SmartGuard"))
         Else
             Dim smartGuard As String = "Off"
-            For Each s As IndexClass(Of String) In allText.SplitLines(True).WithIndex
+            For Each s As IndexClass(Of String) In listOfAallTextLines.WithIndex
                 If s.Value.StartsWith("SmartGuard") Then
                     s.MoveNext()
                     smartGuard = s.Value.CleanSpaces.Split(" ").ToList(1)
                     Exit For
                 End If
             Next
-            Me.SmartGuard = New SmartGuardRecord(lines, smartGuard)
+            Me.SmartGuard = New SmartGuardRecord(sTable, smartGuard)
         End If
 
-        Me.Reminders = New RemindersRecord(ExtractPdfTableLines(tables(16), "Low Reservoir Warning "))
-        ' 17 Ignore its titles in odd format
+        Me.Reminders = New RemindersRecord(ConvertPdfTableToStringTable(tables(16), "Low Reservoir Warning"))
+
+        ' 17 High Alerts
+        Dim snoozeTime As New TimeSpan(1, 0, 0)
+        Dim snoozeOn As String = Nothing
+        GetSnoozeInfo(listOfAallTextLines, "High Alerts", snoozeOn, snoozeTime)
+        sTable = ConvertPdfTableToStringTable(tables(17), "")
+        Me.HighAlerts = New HighAlertsRecord(snoozeOn, snoozeTime, sTable)
 
         ' 18
-        lines = ExtractPdfTableLines(tables(18), "")
-        For Each e As IndexClass(Of String) In lines.WithIndex
+        sTable = ConvertPdfTableToStringTable(tables(18), "Name Start")
+        For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
             If e.IsFirst Then Continue For
-            Dim line As String = e.Value
-            For Each p As KeyValuePair(Of String, MealStartEndRecord) In Me.Reminders.MissedMealBolus
-                If line.StartsWith(p.Key) Then
-                    line = line.Replace($"{p.Key} ", " ")
-                    Me.Reminders.MissedMealBolus(p.Key) = New MealStartEndRecord(line)
-                    Exit For
-                End If
-            Next
+            Dim columnName As String = Me.Reminders.MissedMealBolus.Keys(e.Index - 1)
+            Me.Reminders.MissedMealBolus(columnName) = New MealStartEndRecord(e.Value)
         Next
 
-        ' 19 Ignore its titles in odd format
+        ' 19 Low Alerts
+        snoozeTime = New TimeSpan(0, 20, 0)
+        GetSnoozeInfo(listOfAallTextLines, "Low Alerts", snoozeOn, snoozeTime)
+        Me.LowAlerts = New LowAlertsRecord(snoozeOn, snoozeTime, sTable)
 
         ' 20
-        lines = ExtractPdfTableLines(tables(20), "")
-        For Each e As IndexClass(Of String) In lines.WithIndex
+        sTable = ConvertPdfTableToStringTable(tables(20), "")
+        For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
             If e.IsFirst Then Continue For
-            Dim line As String = e.Value
-            For Each p As KeyValuePair(Of String, PersonalRemindersRecord) In Me.Reminders.PersonalReminders
-                If line.StartsWith(p.Key) Then
-                    line = line.Replace($"{p.Key} ", " ")
-                    Me.Reminders.PersonalReminders(p.Key) = New PersonalRemindersRecord(line)
-                    Exit For
-                End If
-            Next
+            Dim columnName As String = Me.Reminders.MissedMealBolus.Keys(e.Index - 1)
+            Me.Reminders.PersonalReminders(columnName) = New PersonalRemindersRecord(e.Value)
         Next
 
         ' Get Sensor
         Dim sensorOn As String = "Off"
         Dim basal4Line As String = ""
-        For Each s As IndexClass(Of String) In allText.SplitLines(True).WithIndex
+        For Each s As IndexClass(Of String) In listOfAallTextLines.WithIndex
             If s.Value.StartsWith("Sensor") Then
                 s.MoveNext()
-                lines = s.Value.CleanSpaces.Split(" ").ToList
+                Dim lines As List(Of String) = s.Value.CleanSpaces.Split(" ").ToList
                 sensorOn = lines(1)
                 Exit For
             ElseIf s.Value.StartsWith("Basal 4") Then
                 basal4Line = s.Value
             End If
         Next
-        lines = ExtractPdfTableLines(tables(21), "Calibration Reminder")
-        Me.Sensor = New SensorRecord(sensorOn, lines)
+        sTable = ConvertPdfTableToStringTable(tables(21), "Calibration Reminder")
+        Me.Sensor = New SensorRecord(sensorOn, sTable)
 
         '22, 23, 24 25, 26
         For i As Integer = 22 To 26
@@ -161,12 +147,19 @@ Public Class PdfSettingsRecord
         Next
 
         '27
-        lines = ExtractPdfTableLines(tables(27), "Block Mode ")
-        Me.Utilities = New UtilitiesRecord(lines)
+        sTable = ConvertPdfTableToStringTable(tables(27), "Block Mode")
+        Me.Utilities = New UtilitiesRecord(sTable)
     End Sub
 
     Public Property Basal As New PumpBasalRecord
+
     Public Property Bolus As New DeviceBolusRecord
+
+    Public Property HighAlerts As New HighAlertsRecord
+
+    Public Property LowAlerts As New LowAlertsRecord
+
+    Public Property Notes As New NotesRecord
 
     Public Property PresetBolus As New Dictionary(Of String, PresetBolusRecord) From {
                 {"Bolus 1", New PresetBolusRecord},
@@ -190,11 +183,29 @@ Public Class PdfSettingsRecord
             {"Temp 4", New PresetTempRecord}
         }
 
-    Public Property SmartGuard As SmartGuardRecord
-    Public Property HighAlerts As New HighAlertsRecord
-    Public Property LowAlerts As New LowAlertsRecord
-    Public Property Sensor As SensorRecord
-    Public Property Notes As New NotesRecord
     Public Property Reminders As New RemindersRecord()
+
+    Public Property Sensor As SensorRecord
+
+    Public Property SmartGuard As SmartGuardRecord
+
     Public Property Utilities As UtilitiesRecord
+
+    Private Shared Sub GetSnoozeInfo(listOfAallTextLines As List(Of String), target As String, ByRef snoozeOn As String, ByRef snoozeTime As TimeSpan)
+        Dim snoozeLine As String
+        snoozeOn = "Off"
+        snoozeLine = listOfAallTextLines.FindLineContaining(target)
+        Dim index As Integer = snoozeLine.IndexOf(")")
+        If index >= 0 Then
+            snoozeLine = snoozeLine.Substring(0, index + 1)
+            index = snoozeLine.IndexOf("Snooze ")
+            snoozeLine = snoozeLine.Substring(index).Trim(")"c)
+            Dim splitSnoozeLine As String() = snoozeLine.Split(" ")
+            If splitSnoozeLine.Length = 2 Then
+                snoozeOn = "On"
+                snoozeTime = TimeSpan.Parse(splitSnoozeLine(1))
+            End If
+        End If
+    End Sub
+
 End Class

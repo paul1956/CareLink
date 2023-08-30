@@ -7,11 +7,11 @@ Public Class RemindersRecord
     Public Sub New()
     End Sub
 
-    Public Sub New(lines As List(Of String))
-        Me.LowReserviorWarning = lines.GetSingleLineValue(Of String)("Low Reservoir Warning ")
-        Me.Amount = lines.GetSingleLineValue(Of Single)("Amount ")
-        Me.BolusBgCheck = lines.GetSingleLineValue(Of String)("Bolus BG Check ")
-        Me.SetChange = lines.GetSingleLineValue(Of String)("Set Change ")
+    Public Sub New(sTable As StringTable)
+        Me.LowReserviorWarning = sTable.GetSingleLineValue(Of String)("Low Reservoir Warning ")
+        Me.Amount = sTable.GetSingleLineValue(Of Single)("Amount ")
+        Me.BolusBgCheck = sTable.GetSingleLineValue(Of String)("Bolus BG Check ")
+        Me.SetChange = sTable.GetSingleLineValue(Of String)("Set Change ")
     End Sub
 
     Public Property LowReserviorWarning As String

@@ -4,15 +4,15 @@
 
 Public Class BolusWizardRecord
 
-    Public Sub New(lines As List(Of String))
-        Me.BolusWizard = lines.GetSingleLineValue(Of String)("Bolus Wizard ")
-        Me.Units = New DeviceUnitsRecord(lines.GetSingleLineValue(Of String)("Units "))
-        Dim value As String = lines.GetSingleLineValue(Of String)("(h:mm) ")
+    Public Sub New(sTables As StringTable)
+        Me.BolusWizard = sTables.GetSingleLineValue(Of String)("Bolus Wizard")
+        Me.Units = New DeviceUnitsRecord(sTables.GetSingleLineValue(Of String)("Units"))
+        Dim value As String = sTables.GetSingleLineValue(Of String)("Active Insulin Time (h:mm)")
         Me.ActiveInsulinTime = If(value = "",
                                   2,
                                   s_aitLengths(value)
                                  )
-        Me.MaximumBolus = lines.GetSingleLineValue(Of Single)("Maximum Bolus ")
+        Me.MaximumBolus = sTables.GetSingleLineValue(Of Single)("Maximum Bolus")
     End Sub
 
     Public Property BolusWizard As String = "Off"
