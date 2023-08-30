@@ -4,11 +4,11 @@
 
 Public Class EasyBolusRecord
 
-    Public Sub New(lines As List(Of String))
-        Me.EasyBolus = lines.GetSingleLineValue(Of String)("Easy Bolus ")
-        Me.BolusIncrement = lines.GetSingleLineValue(Of Single)("Bolus Increment ")
-        Me.BolusSpeed = lines.GetSingleLineValue(Of String)("Bolus Speed ")
-        Me.DualSquare = New DualSquareRecord(lines.GetSingleLineValue(Of String)("Dual/Square "))
+    Public Sub New(sTable As StringTable)
+        Me.EasyBolus = sTable.GetSingleLineValue(Of String)("Easy Bolus")
+        Me.BolusIncrement = sTable.GetSingleLineValue(Of Single)("Bolus Increment")
+        Me.BolusSpeed = sTable.GetSingleLineValue(Of String)("Bolus Speed ")
+        Me.DualSquare = New DualSquareRecord(sTable.GetSingleLineValue(Of String)("Dual/Square"))
     End Sub
 
     Public Sub New()
