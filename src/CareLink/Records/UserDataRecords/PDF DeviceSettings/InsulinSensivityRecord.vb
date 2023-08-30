@@ -4,15 +4,16 @@
 
 Public Class InsulinSensivityRecord
 
-    Public Sub New(line As String)
-        If String.IsNullOrWhiteSpace(line) Then
+    Public Sub New(r As StringTable.Row)
+        Dim s() As String = r.Columns(0).Split(" ")
+        If s.Length <> 2 Then
             Exit Sub
         End If
-        Dim lineSplit As String() = line.Split(" ")
-        If lineSplit.Length = 2 Then
-            Me.Time = TimeOnly.Parse(lineSplit(0))
-            Me.Sensitivity = ParseSingle(lineSplit(1))
+        If TimeOnly.TryParse(s(0), Me.Time) Then
+            Me.Sensitivity = ParseSingle(s(1))
             Me.IsValid = True
+        Else
+            Stop
         End If
     End Sub
 
