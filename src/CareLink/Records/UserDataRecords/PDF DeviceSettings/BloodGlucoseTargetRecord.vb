@@ -4,13 +4,21 @@
 
 Public Class BloodGlucoseTargetRecord
 
-    Public Sub New(line As String)
-        Dim lineSplit As String() = line.Split(" ")
-        If lineSplit.Length = 3 Then
-            Me.Time = TimeOnly.Parse(lineSplit(0))
-            Me.Low = ParseSingle(lineSplit(1))
-            Me.High = ParseSingle(lineSplit(2))
+    Public Sub New(r As StringTable.Row)
+        Dim s() As String = r.Columns(0).Split(" ")
+        If s.Length <> 4 Then
+            If r.Columns(0) = "" Then
+                Exit Sub
+            End If
+            Stop
+            Exit Sub
+        End If
+        If TimeOnly.TryParse(s(0), Me.Time) Then
+            Me.Low = ParseSingle(s(3))
+            Me.High = ParseSingle(r.Columns(1))
             Me.IsValid = True
+        Else
+            Stop
         End If
     End Sub
 
