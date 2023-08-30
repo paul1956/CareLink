@@ -6,6 +6,5 @@ Public Class DeviceLimitRecord
     Public Property Start As TimeOnly
     Public Property [End] As TimeOnly
     Public Property Value As Single
-    Public Property ValueUnits As String
 
 End Class

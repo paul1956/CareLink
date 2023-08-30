@@ -4,24 +4,24 @@
 
 Public Class UtilitiesRecord
 
-    Public Sub New(lines As List(Of String))
-        If lines.Count = 0 Then
+    Public Sub New(sTable As StringTable)
+        If Not sTable.IsValid Then
             Stop
             Exit Sub
         End If
-        Me.BlockMode = lines.GetSingleLineValue(Of String)("Block Mode ")
-        Me.TimeFormat = lines.GetSingleLineValue(Of String)("Time Format ")
-        Me.Brightness = lines.GetSingleLineValue(Of String)("Brightness ")
-        Dim s As String = lines.GetSingleLineValue(Of String)("Backlight Timeout ")
+        Me.BlockMode = sTable.GetSingleLineValue(Of String)("Block Mode ")
+        Me.TimeFormat = sTable.GetSingleLineValue(Of String)("Time Format ")
+        Me.Brightness = sTable.GetSingleLineValue(Of String)("Brightness ")
+        Dim s As String = sTable.GetSingleLineValue(Of String)("Backlight Timeout ")
         If s.EndsWith("s") Then
             Me.BackLightTimeout = New TimeSpan(0, 0, CInt(s.Split(" ")(0)))
         Else
             Stop
         End If
-        Me.AudioOptions = lines.GetSingleLineValue(Of String)("Audio Options ")
-        Me.AlarmVolume = lines.GetSingleLineValue(Of String)("Alarm Volume ")
+        Me.AudioOptions = sTable.GetSingleLineValue(Of String)("Audio Options ")
+        Me.AlarmVolume = sTable.GetSingleLineValue(Of String)("Alarm Volume ")
 
-        Me.AutoSuspend = New AutoSuspendRecord(lines)
+        Me.AutoSuspend = New AutoSuspendRecord(sTable)
 
     End Sub
 

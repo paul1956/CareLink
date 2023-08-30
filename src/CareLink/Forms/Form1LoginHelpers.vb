@@ -7,6 +7,12 @@ Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 
+Friend Enum CheckForUpdate As Integer
+    Always = 0
+    Never = 1
+    Ask = 2
+End Enum
+
 Friend Enum FileToLoadOptions As Integer
     LastSaved = 0
     TestData = 1
