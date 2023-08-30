@@ -4,7 +4,7 @@
 
 Public Class AutoSuspendRecord
 
-    Public Sub New(lines As List(Of String))
+    Public Sub New(lines As StringTable)
         Me.Alarm = lines.GetSingleLineValue(Of String)("Auto Suspend ")
         Me.Time = lines.GetSingleLineValue(Of TimeSpan)("Time ")
 
