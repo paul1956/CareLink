@@ -2,71 +2,32 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Text
 Imports Spire.Pdf
 Imports Spire.Pdf.Texts
 Imports Spire.Pdf.Utilities
 
 Public Module PDFParser
 
-    Friend Function ExtractTableText(table As PdfTable) As String
+    Friend Function ExtractTableText(table As PdfTable) As StringTable
         'Get row number and column number of a certain table
 
-        'Create a StringBuilder object
-        Dim builder As New StringBuilder()
+        Dim builder As New StringTable
         'Loop though the row and colunm
         For i As Integer = 0 To table.GetRowCount() - 1
+            Dim columns As New List(Of String)
             For j As Integer = 0 To table.GetColumnCount() - 1
                 'Get text from the specific cell
                 'Add text to the string builder
-                builder.Append($"{table.GetText(i, j)} ")
+                columns.Add(table.GetText(i, j).Replace(vbLf, " "))
             Next
-            builder.AppendLine()
+            builder.Rows.Add(New StringTable.Row(columns))
         Next
-        Return builder.ToString()
+        Return builder
     End Function
 
-    Public Function ExtractPdfTableLines(table As PdfTable, tableHeader As String) As List(Of String)
-        Dim txt As String = ExtractTableText(table)
-        Return If(txt.StartsWith(tableHeader) OrElse String.IsNullOrWhiteSpace(tableHeader), txt.SplitLines(), New List(Of String))
-    End Function
-
-    Public Function ExtractPdfTableLines(tableList As List(Of PdfTable), tableHeader As String) As List(Of String)
-        'Determine if the table list is null
-        Dim lines As New List(Of String)
-        If tableList.Count > 0 Then
-            'Loop through the table in the list
-            For Each t As PdfTable In tableList
-                lines = ExtractPdfTableLines(t, tableHeader)
-                If lines IsNot Nothing Then
-                    Return lines
-                End If
-            Next
-        End If
-        Return lines
-    End Function
-
-    Public Function GetPdfExtractor(filename As String) As PdfTableExtractor
-        'Create a PdfDocument object
-        Dim doc As New PdfDocument()
-
-        'Load the sample PDF file
-        doc.LoadFromFile(filename)
-
-        'Initialize an instance of PdfTableExtractor class
-        Dim extractor As New PdfTableExtractor(doc)
-        Return extractor
-    End Function
-
-    Public Function GetTableList(filename As String, startPageNumber As Integer, Optional endPageNumber As Integer = 0) As List(Of PdfTable)
-        Dim extractor As PdfTableExtractor = GetPdfExtractor(filename)
-        'Declare a PdfTable array
-        'Extract tableList from a specific page
-        Dim results As New List(Of PdfTable)
-        For i As Integer = startPageNumber To endPageNumber
-            results.AddRange(extractor.ExtractTable(i).ToList)
-        Next
-        Return results
+    Public Function ConvertPdfTableToStringTable(table As PdfTable, tableHeader As String) As StringTable
+        Dim sTable As StringTable = ExtractTableText(table)
+        Return If(sTable.IsValid AndAlso sTable.Rows(0).Columns(0).StartsWith(tableHeader), sTable, New StringTable)
     End Function
 
     Public Function ExtractTextFromPage(filename As String, startPageNumber As Integer, Optional endPageNumber As Integer = 0) As String
@@ -92,6 +53,29 @@ Public Module PDFParser
             text &= textExtractor.ExtractText(extractOptions)
         Next
         Return text
+    End Function
+
+    Public Function GetPdfExtractor(filename As String) As PdfTableExtractor
+        'Create a PdfDocument object
+        Dim doc As New PdfDocument()
+
+        'Load the sample PDF file
+        doc.LoadFromFile(filename)
+
+        'Initialize an instance of PdfTableExtractor class
+        Dim extractor As New PdfTableExtractor(doc)
+        Return extractor
+    End Function
+
+    Public Function GetTableList(filename As String, startPageNumber As Integer, Optional endPageNumber As Integer = 0) As List(Of PdfTable)
+        Dim extractor As PdfTableExtractor = GetPdfExtractor(filename)
+        'Declare a PdfTable array
+        'Extract tableList from a specific page
+        Dim results As New List(Of PdfTable)
+        For i As Integer = startPageNumber To endPageNumber
+            results.AddRange(extractor.ExtractTable(i).ToList)
+        Next
+        Return results
     End Function
 
     'Public Function ExtractTextFromRectangleArea(fileName As String, startPageNumber As Integer, x As Integer, y As Integer, Width As Integer, Height As Integer) As String
