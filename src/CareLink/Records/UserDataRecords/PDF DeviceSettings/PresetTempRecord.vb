@@ -7,12 +7,12 @@ Public Class PresetTempRecord
     Public Sub New()
     End Sub
 
-    Public Sub New(line As String)
-        If String.IsNullOrWhiteSpace(line) Then
+    Public Sub New(r As StringTable.Row)
+        If r.Columns(1) = "" Then
+            Me.IsValid = True
             Exit Sub
         End If
         Stop
-        Me.IsValid = True
     End Sub
 
     Public Property IsValid As Boolean = False
