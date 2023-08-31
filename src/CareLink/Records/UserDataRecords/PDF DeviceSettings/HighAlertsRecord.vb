@@ -16,10 +16,22 @@ Public Class HighAlertsRecord
         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
             Dim s As StringTable.Row = e.Value
             If e.IsFirst Then
-                ' get value units
+                valueUnits = s.Columns(0).Replace("Start High Time (", "").Trim(")"c)
                 Continue For
             End If
-            Me.HighAlert.Add(New HighAlertRecord(s, valueUnits))
+
+            Dim item As New HighAlertRecord(s, valueUnits) With {
+                .End = If(e.IsLast OrElse sTable.Rows(e.Index + 1).Columns(0).CleanSpaces.Length = 0,
+                          New TimeOnly(0, 0),
+                          TimeOnly.Parse(sTable.Rows(e.Index + 1).Columns(0).CleanSpaces.Split(" ")(0))
+                         )
+            }
+            If item.IsValid Then
+                Me.HighAlert.Add(item)
+            Else
+                Exit For
+            End If
+
         Next
     End Sub
 
@@ -37,7 +49,7 @@ Public Class HighAlertsRecord
     Public Property SnoozeOn As String = "Off"
 
     Public Overrides Function ToString() As String
-        Return If(Me.SnoozeOn = "On", $"{_snoozeTime.Hours} hr", "Off")
+        Return If(Me.SnoozeOn = "On", $"{_snoozeTime.Hours}:{_snoozeTime.Seconds:D2} hr", "Off")
     End Function
 
 End Class

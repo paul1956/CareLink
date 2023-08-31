@@ -7,6 +7,10 @@ Public Class PresetTypeRecord
     Private _percent As Single
     Private _typeIsRate As Boolean
 
+    Public Sub New(s As String)
+        Stop
+    End Sub
+
     Public WriteOnly Property Rate As Single
         Set(value As Single)
             _rate = value

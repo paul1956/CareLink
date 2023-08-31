@@ -5,25 +5,51 @@
 Public Class HighAlertRecord
 
     Public Sub New(s As StringTable.Row, valueUnits As String)
-        Me.ValueUnits = valueUnits
-        Stop
-        Dim s1() As String = s.Columns(0).Split(" ")
-        If Not s.Columns(0) = "" Then
-            Stop
-            Exit Sub
-        End If
-        If TimeOnly.TryParse(s1(0), Me.TimeBeforeHigh) Then
+        Dim s1() As String = s.Columns(0).CleanSpaces.Split(" ")
+        Select Case s1.Length
+            Case 0
+                Exit Sub
+            Case 1
+                If s1(0).Length = 0 Then
+                    Exit Sub
+                End If
+                Stop
+                Exit Sub
+            Case 2
+            Case Else
+                Stop
+        End Select
 
+        Me.ValueUnits = valueUnits
+        If Not TimeOnly.TryParse(s1(0), Me.Start) Then
+            Stop
         End If
+
+        Me.HighLimit = Single.Parse(s1(1))
+        If Not String.IsNullOrWhiteSpace(s.Columns(1)) Then
+            Stop
+            Me.AlertBeforeHigh = True
+            Me.TimeBeforeHigh = "TBD"
+        End If
+        Me.AlertOnHigh = Not String.IsNullOrWhiteSpace(s.Columns(2))
+        If String.IsNullOrWhiteSpace(s.Columns(3)) Then
+            Me.RiseAlert = False
+        Else
+            Me.RiseAlert = True
+            Me.RaiseLimit = s.Columns(3)
+        End If
+
+        Me.IsValid = True
     End Sub
 
+    Public ReadOnly Property Start As TimeOnly
+    Public Property [End] As TimeOnly
+    Public ReadOnly Property HighLimit As Single
     Public Property ValueUnits As String
-    Public Property HighLimit As DeviceLimitRecord
-    Public Property AlertBeforeHigh As Boolean
-    Public Property TimeBeforeHigh As TimeOnly
-    Public Property AlertOnHigh As Boolean
-    Public Property RiseAlert As Boolean
-    Public Property RaiseLimit As String
-
-    Public Property IsValid As Boolean = False
+    Public ReadOnly Property AlertBeforeHigh As Boolean = False
+    Public ReadOnly Property TimeBeforeHigh As String = "15* Min"
+    Public ReadOnly Property AlertOnHigh As Boolean
+    Public ReadOnly Property RiseAlert As Boolean
+    Public ReadOnly Property RaiseLimit As String
+    Public ReadOnly Property IsValid As Boolean = False
 End Class

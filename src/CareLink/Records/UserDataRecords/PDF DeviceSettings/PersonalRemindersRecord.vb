@@ -7,13 +7,8 @@ Public Class PersonalRemindersRecord
     Public Sub New()
     End Sub
 
-    Public Sub New(r As StringTable.Row)
-        Dim stringSplit As String() = r.Columns(0).Split(" ")
-        If stringSplit.Length = 2 Then
-            Me.Time = stringSplit(1)
-            Exit Sub
-        End If
-        Stop
+    Public Sub New(r As StringTable.Row, key As String)
+        Me.Time = r.Columns(0).Replace(key, "").CleanSpaces
     End Sub
 
     Public Property Time As String = "Off"
