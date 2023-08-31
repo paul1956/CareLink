@@ -7,8 +7,8 @@ Public Class MealStartEndRecord
     Public Sub New()
     End Sub
 
-    Public Sub New(r As StringTable.Row)
-        Me.Start = r.Columns(0).Split(" ")(1)
+    Public Sub New(r As StringTable.Row, key As String)
+        Me.Start = r.Columns(0).Replace(key, "").CleanSpaces
         Me.End = r.Columns(1)
     End Sub
 

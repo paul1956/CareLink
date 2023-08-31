@@ -7,17 +7,32 @@ Public Class PresetBolusRecord
     Public Sub New()
     End Sub
 
-    Public Sub New(r As StringTable.Row)
-        If r.Columns(1) = "" Then
-            Me.IsValid = True
+    Public Sub New(r As StringTable.Row, key As String)
+        If r.Columns.Count <> 3 OrElse r.Columns(0).Length = 0 Then
             Exit Sub
         End If
-        Stop
+        Dim column0Trim As String = r.Columns(0).Replace(key, "").Trim
+        If column0Trim.Length = 0 Then
+            If r.Columns(1).Length = 0 AndAlso r.Columns(1).Length = 0 Then
+                Exit Sub
+            End If
+            If r.Columns(1).Contains("-"c) Then
+                Me.BolusTypeNormal = True
+                Me.Bolus = column0Trim
+            Else
+                Me.BolusTypeNormal = False
+                Dim squareSplit() As String = r.Columns(1).Split("-")
+                Me.Bolus = squareSplit(0)
+                Me.Duration = squareSplit(1)
+            End If
+            Me.IsValid = True
+        End If
+
     End Sub
 
     Public Property IsValid As Boolean = False
-    Public Property Bolus As Single
-    Public Property Duration As TimeSpan
-    Public Property BolusType As BolusTypeRecord
+    Public Property BolusTypeNormal As Boolean
+    Public Property Bolus As String
+    Public Property Duration As String
 
 End Class

@@ -6,7 +6,7 @@ Public Class SensorRecord
 
     Public Sub New(sensorOn As String, sTable As StringTable)
         _SensorOn = sensorOn
-        If sTable.IsValid Then
+        If Not sTable.IsValid Then
             Stop
             Exit Sub
         End If

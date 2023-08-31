@@ -65,16 +65,19 @@ Public Class PdfSettingsRecord
         sTable = ConvertPdfTableToStringTable(tables(9), "")
         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
             If e.IsFirst Then Continue For
-            Me.PresetBolus(e.Value.Columns(0)) = New PresetBolusRecord(e.Value)
+            Dim key As String = Me.PresetBolus.Keys(e.Index - 1)
+            Me.PresetBolus(key) = New PresetBolusRecord(e.Value, key)
         Next
 
         ' 13-14 Preset Temp
+        Dim keyIndex As Integer = 0
         For i As Integer = 13 To 14
             sTable = ConvertPdfTableToStringTable(tables(i), "")
             For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
                 If e.IsFirst Then Continue For
-                Dim columnName As String = Me.Reminders.MissedMealBolus.Keys(e.Index - 1)
-                Me.PresetTemp(columnName) = New PresetTempRecord(e.Value)
+                Dim key As String = Me.PresetTemp.Keys(keyIndex)
+                keyIndex += 1
+                Me.PresetTemp(key) = New PresetTempRecord(e.Value, key)
             Next
         Next
 
@@ -103,25 +106,26 @@ Public Class PdfSettingsRecord
         sTable = ConvertPdfTableToStringTable(tables(17), "")
         Me.HighAlerts = New HighAlertsRecord(snoozeOn, snoozeTime, sTable)
 
-        ' 18
+        ' 18 Meal Start End Record
         sTable = ConvertPdfTableToStringTable(tables(18), "Name Start")
         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
             If e.IsFirst Then Continue For
-            Dim columnName As String = Me.Reminders.MissedMealBolus.Keys(e.Index - 1)
-            Me.Reminders.MissedMealBolus(columnName) = New MealStartEndRecord(e.Value)
+            Dim key As String = Me.Reminders.MissedMealBolus.Keys(e.Index - 1)
+            Me.Reminders.MissedMealBolus(key) = New MealStartEndRecord(e.Value, key)
         Next
 
         ' 19 Low Alerts
         snoozeTime = New TimeSpan(0, 20, 0)
         GetSnoozeInfo(listOfAallTextLines, "Low Alerts", snoozeOn, snoozeTime)
+        sTable = ConvertPdfTableToStringTable(tables(19), "")
         Me.LowAlerts = New LowAlertsRecord(snoozeOn, snoozeTime, sTable)
 
-        ' 20
+        ' 20 Personal Reminders Record
         sTable = ConvertPdfTableToStringTable(tables(20), "")
         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
             If e.IsFirst Then Continue For
-            Dim columnName As String = Me.Reminders.MissedMealBolus.Keys(e.Index - 1)
-            Me.Reminders.PersonalReminders(columnName) = New PersonalRemindersRecord(e.Value)
+            Dim key As String = Me.Reminders.PersonalReminders.Keys(e.Index - 1)
+            Me.Reminders.PersonalReminders(key) = New PersonalRemindersRecord(e.Value, key)
         Next
 
         ' Get Sensor
@@ -137,13 +141,14 @@ Public Class PdfSettingsRecord
                 basal4Line = s.Value
             End If
         Next
+
         sTable = ConvertPdfTableToStringTable(tables(21), "Calibration Reminder")
         Me.Sensor = New SensorRecord(sensorOn, sTable)
 
         '22, 23, 24 25, 26
         For i As Integer = 22 To 26
-            Dim name As String = Me.Basal.NamedBasals.Keys(i - 19)
-            Me.Basal.NamedBasals(name) = New NamedBasalRecord(tables, i, basal4Line, name)
+            Dim key As String = Me.Basal.NamedBasals.Keys(i - 19)
+            Me.Basal.NamedBasals(key) = New NamedBasalRecord(tables, i, basal4Line, key)
         Next
 
         '27
@@ -203,8 +208,14 @@ Public Class PdfSettingsRecord
             Dim splitSnoozeLine As String() = snoozeLine.Split(" ")
             If splitSnoozeLine.Length = 2 Then
                 snoozeOn = "On"
-                snoozeTime = TimeSpan.Parse(splitSnoozeLine(1))
+                If Not TimeSpan.TryParse(splitSnoozeLine(1), snoozeTime) Then
+                    Stop
+                End If
+            Else
+                Stop
             End If
+        Else
+            Stop
         End If
     End Sub
 

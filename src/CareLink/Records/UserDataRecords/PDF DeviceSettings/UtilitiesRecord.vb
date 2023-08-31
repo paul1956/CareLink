@@ -29,7 +29,7 @@ Public Class UtilitiesRecord
     Public Property TimeFormat As String
 
     Public Property Brightness As String
-    Public Property BackLightTimeout As TimeSpan
+    Public Property BackLightTimeout As New TimeSpan
     Public Property AudioOptions As String
     Public Property AlarmVolume As String
     Public Property AutoSuspend As AutoSuspendRecord
