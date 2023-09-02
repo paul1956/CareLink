@@ -120,9 +120,9 @@ Public Module JsonExtensions
                             End If
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
                         Case NameOf(ItemIndexes.timeFormat)
-                            Dim internalTimeFormat As String = item.Value.ToString
-                            s_timeWithMinuteFormat = If(internalTimeFormat = "HR_12", TimeFormatTwelveHourWithMinutes, TimeFormatMilitaryWithMinutes)
-                            s_timeWithoutMinuteFormat = If(internalTimeFormat = "HR_12", TimeFormatTwelveHourWithoutMinutes, TimeFormatMilitaryWithoutMinutes)
+                            s_timeFormat = item.Value.ToString
+                            s_timeWithMinuteFormat = If(s_timeFormat = "HR_12", TimeFormatTwelveHourWithMinutes, TimeFormatMilitaryWithMinutes)
+                            s_timeWithoutMinuteFormat = If(s_timeFormat = "HR_12", TimeFormatTwelveHourWithoutMinutes, TimeFormatMilitaryWithoutMinutes)
                             resultDictionary.Add(item.Key, item.jsonItemAsString)
                         Case "Sg", "sg", NameOf(ItemIndexes.averageSGFloat), NameOf(ItemIndexes.averageSG), NameOf(ItemIndexes.sgBelowLimit)
                             resultDictionary.Add(item.Key, item.ScaleSgToString())

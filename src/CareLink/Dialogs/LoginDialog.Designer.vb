@@ -1,6 +1,6 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 <Global.System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726")> _
-Partial Class LoginForm1
+Partial Class LoginDialog
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -30,7 +30,7 @@ Partial Class LoginForm1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim resources As ComponentModel.ComponentResourceManager = New ComponentModel.ComponentResourceManager(GetType(LoginForm1))
+        Dim resources As ComponentModel.ComponentResourceManager = New ComponentModel.ComponentResourceManager(GetType(LoginDialog))
         LogoPictureBox = New PictureBox()
         UsernameLabel = New Label()
         PasswordLabel = New Label()
@@ -221,7 +221,7 @@ Partial Class LoginForm1
         CarePartnerCheckBox.Text = "CarePartner"
         CarePartnerCheckBox.UseVisualStyleBackColor = True
         ' 
-        ' LoginForm1
+        ' LoginDialog
         ' 
         Me.AcceptButton = Ok_Button
         Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
@@ -245,7 +245,7 @@ Partial Class LoginForm1
         Me.FormBorderStyle = FormBorderStyle.FixedDialog
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        Me.Name = "LoginForm1"
+        Me.Name = "LoginDialog"
         Me.SizeGripStyle = SizeGripStyle.Hide
         Me.StartPosition = FormStartPosition.CenterParent
         Me.Text = "Login"

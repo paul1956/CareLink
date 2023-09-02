@@ -8,8 +8,6 @@ Imports System.Net.Http
 Imports System.Text
 Imports System.Text.Json
 
-Imports Octokit
-
 Public Class CareLinkClient
     Private Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
 

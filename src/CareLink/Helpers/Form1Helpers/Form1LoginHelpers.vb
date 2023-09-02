@@ -20,7 +20,7 @@ Friend Enum FileToLoadOptions As Integer
 End Enum
 
 Friend Module Form1LoginHelpers
-    Public ReadOnly Property LoginDialog As New LoginForm1
+    Public ReadOnly Property LoginDialog As New LoginDialog
 
     Friend Function DoOptionalLoginAndUpdateData(UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
         Dim serverTimerEnabled As Boolean = StartOrStopServerUpdateTimer(False)
@@ -158,7 +158,7 @@ Friend Module Form1LoginHelpers
         Dim page As New TaskDialogPage
         Dim ait As Single = 2
         Dim carbRatios As New List(Of CarbRatioRecord)
-        Dim lastUpdateTimeString As String = "Your devive setting file has never been downloaded!"
+        Dim lastUpdateTimeString As String = "Your device setting file has never been downloaded!"
         Dim currentUserUpdateNeeded As Boolean = False
         If File.Exists(userSettingsFileWithPath) Then
             Dim lastUpdateTime As Date = File.GetLastWriteTime(userSettingsFileWithPath)
@@ -197,12 +197,17 @@ Friend Module Form1LoginHelpers
         End If
         If currentUserUpdateNeeded Then
             Dim f As New InitializeDialog(CurrentUser, ait, carbRatios)
-            f.ShowDialog()
-            CurrentUser = f.CurrentUser.Clone
+            Dim result As DialogResult = f.ShowDialog()
+            If result = DialogResult.OK Then
+                currentUserUpdateNeeded = Not CurrentUser.Equals(f.CurrentUser)
+                CurrentUser = f.CurrentUser.Clone
+            End If
         End If
-        File.WriteAllText(GetUserSettingsFileNameWithPath("json"),
-                  JsonSerializer.Serialize(CurrentUser, JsonFormattingOptions))
+        If currentUserUpdateNeeded Then
+            File.WriteAllTextAsync(GetUserSettingsFileNameWithPath("json"),
+                      JsonSerializer.Serialize(CurrentUser, JsonFormattingOptions))
 
+        End If
         Form1.Cursor = Cursors.Default
         Application.DoEvents()
     End Sub

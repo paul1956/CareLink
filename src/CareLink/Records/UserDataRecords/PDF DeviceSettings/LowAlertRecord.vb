@@ -8,7 +8,7 @@ Public Class LowAlertRecord
         If s.Columns.Count <> 5 Then
             Stop
         End If
-        Dim s1() As String = s.Columns(0).CleanSpaces.Split(" ")
+        Dim s1() As String = s.Columns(0).CleanSpaces.Split(" ", StringSplitOptions.RemoveEmptyEntries)
         Select Case s1.Length
             Case 0
                 Exit Sub
@@ -29,16 +29,7 @@ Public Class LowAlertRecord
         End If
 
         Me.LowLimit = Single.Parse(s1(1))
-        Select Case s.Columns(1)
-            Case "Before Low"
-                Me.SuspendBeforelow = True
-                Me.SuspendOnlow = False
-            Case "On Low"
-                Me.SuspendBeforelow = False
-                Me.SuspendOnlow = True
-            Case Else
-                Stop
-        End Select
+        Me.Suspend = s.Columns(1)
         Me.AlertOnLow = s.Columns(2) = "x"
         Me.AlertBeforeLow = s.Columns(3) = "x"
         Me.ResumeBasalAlert = s.Columns(4) = "x"
@@ -51,7 +42,7 @@ Public Class LowAlertRecord
     Public Property ValueUnits As String
     Public Property AlertBeforeLow As Boolean
     Public Property AlertOnLow As Boolean
-    Public Property SuspendBeforelow As Boolean
+    Public Property Suspend As String
     Public Property SuspendOnlow As Boolean
     Public Property ResumeBasalAlert As Boolean
     Public Property IsValid As Boolean = False

@@ -25,8 +25,12 @@ Public Class PresetBolusRecord
                 Me.Bolus = squareSplit(0)
                 Me.Duration = squareSplit(1)
             End If
-            Me.IsValid = True
+        Else
+            Me.BolusTypeNormal = True
+            Me.Bolus = column0Trim
+            Me.Square = r.Columns(1)
         End If
+        Me.IsValid = True
 
     End Sub
 
@@ -34,5 +38,6 @@ Public Class PresetBolusRecord
     Public Property BolusTypeNormal As Boolean
     Public Property Bolus As String
     Public Property Duration As String
+    Public Property Square As String
 
 End Class

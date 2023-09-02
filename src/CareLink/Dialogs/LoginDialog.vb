@@ -4,7 +4,7 @@
 
 Imports System.ComponentModel
 
-Public Class LoginForm1
+Public Class LoginDialog
     Private ReadOnly _mySource As New AutoCompleteStringCollection()
     Public Property Client As CareLinkClient
     Public Property LoggedOnUser As New CareLinkUserDataRecord(s_allUserSettingsData)

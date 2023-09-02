@@ -26,8 +26,8 @@ Namespace My
         End Sub
 
         Private Sub MyApplication_UnhandledException(sender As Object, e As UnhandledExceptionEventArgs) Handles Me.UnhandledException
-            ExceptionHandlerForm.UnhandledException = e
-            ExceptionHandlerForm.ShowDialog()
+            ExceptionHandlerDialog.UnhandledException = e
+            ExceptionHandlerDialog.ShowDialog()
         End Sub
 
     End Class

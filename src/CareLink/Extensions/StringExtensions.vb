@@ -10,9 +10,9 @@ Public Module StringExtensions
     Private ReadOnly s_commaOrPeriod As Char() = {"."c, ","c}
 
     <Extension>
-    Public Function CleanSpaces(val As String) As String
-        If String.IsNullOrWhiteSpace(val) Then Return ""
-        Return val.Replace("  ", " ").Replace("  ", " ").Trim
+    Public Function CleanSpaces(value As String) As String
+        If String.IsNullOrWhiteSpace(value) Then Return ""
+        Return value.Replace("  ", " ").Replace("  ", " ").Trim
     End Function
 
     <Extension()>

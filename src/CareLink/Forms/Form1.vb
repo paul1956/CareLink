@@ -35,7 +35,7 @@ Public Class Form1
 
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
-    Private ReadOnly _sgMiniDisplay As New SgMiniWindow(Me)
+    Private ReadOnly _sgMiniDisplay As New SgMiniForm(Me)
     Private ReadOnly _updatingLock As New Object
     Private _activeInsulinChartAbsoluteRectangle As RectangleF = RectangleF.Empty
     Private _formScale As New SizeF(1.0F, 1.0F)
@@ -50,10 +50,10 @@ Public Class Form1
 
     Public Shared Property Client As CareLinkClient
         Get
-            Return LoginDialog?.Client
+            Return Form1LoginHelpers.LoginDialog?.Client
         End Get
         Set(value As CareLinkClient)
-            LoginDialog.Client = value
+            Form1LoginHelpers.LoginDialog.Client = value
         End Set
     End Property
 
@@ -278,7 +278,7 @@ Public Class Form1
                     Me.CursorPictureBox.Image = Nothing
                     Me.CursorPanel.Visible = False
                 Case ActiveInsulinSeriesName
-                    chart1.SetupCallout(currentDataPoint, $"Theoretical Active Insulin {currentDataPoint.YValues.FirstOrDefault:F3}U")
+                    chart1.SetupCallout(currentDataPoint, $"Theoretical Active Insulin {currentDataPoint.YValues.FirstOrDefault:F3} U")
                 Case Else
                     Stop
             End Select
@@ -548,7 +548,7 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         For i As Integer = e.RowIndex To e.RowIndex + (e.RowCount - 1)
             Dim disableButtonCell As DataGridViewDisableButtonCell = CType(dgv.Rows(i).Cells("DgvCareLinkUsersDeleteRow"), DataGridViewDisableButtonCell)
-            disableButtonCell.Enabled = s_allUserSettingsData(i).CareLinkUserName <> LoginDialog.LoggedOnUser.CareLinkUserName
+            disableButtonCell.Enabled = s_allUserSettingsData(i).CareLinkUserName <> Form1LoginHelpers.LoginDialog.LoggedOnUser.CareLinkUserName
         Next
     End Sub
 
@@ -1067,9 +1067,10 @@ Public Class Form1
 #Region "Start Here Menu Events"
 
     Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpening
-        Me.MenuStartHereLoadSavedDataFile.Enabled = AnyMatchingFiles($"{ProjectName}*.json")
+        Me.MenuStartHereLoadSavedDataFile.Enabled = AnyMatchingFiles(GetDirectoryForProjectData(), $"{ProjectName}*.json")
         Me.MenuStartHereSnapshotSave.Enabled = Not RecentDataEmpty()
-        Me.MenuStartHereExceptionReportLoad.Visible = AnyMatchingFiles($"{SavedErrorReportBaseName}*.txt")
+        Me.MenuStartHereExceptionReportLoad.Visible = AnyMatchingFiles(GetDirectoryForProjectData(), $"{SavedErrorReportBaseName}*.txt")
+        Me.MenuStartHereShowPumpSetup.Enabled = AnyMatchingFiles(GetSettingsDirectory(), $"{My.Settings.CareLinkUserName}Settings.pdf")
     End Sub
 
     Private Sub MenuStartHereExceptionReportLoad_Click(sender As Object, e As EventArgs) Handles MenuStartHereExceptionReportLoad.Click
@@ -1094,11 +1095,11 @@ Public Class Form1
                 StartOrStopServerUpdateTimer(False)
                 If File.Exists(fileNameWithPath) Then
                     RecentData?.Clear()
-                    ExceptionHandlerForm.ReportFileNameWithPath = fileNameWithPath
-                    If ExceptionHandlerForm.ShowDialog() = DialogResult.OK Then
-                        ExceptionHandlerForm.ReportFileNameWithPath = ""
+                    ExceptionHandlerDialog.ReportFileNameWithPath = fileNameWithPath
+                    If ExceptionHandlerDialog.ShowDialog() = DialogResult.OK Then
+                        ExceptionHandlerDialog.ReportFileNameWithPath = ""
                         Try
-                            RecentData = Loads(ExceptionHandlerForm.LocalRawData)
+                            RecentData = Loads(ExceptionHandlerDialog.LocalRawData)
                         Catch ex As Exception
                             MessageBox.Show($"Error reading date file. Original error: {ex.DecodeException()}")
                         End Try
@@ -1172,6 +1173,19 @@ Public Class Form1
 
     Private Sub MenuStartHereLogin_Click(sender As Object, e As EventArgs) Handles MenuStartHereLogin.Click
         DoOptionalLoginAndUpdateData(UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.Login)
+    End Sub
+
+    Private Sub MenuStartHereShowPumpSetup_Click(sender As Object, e As EventArgs) Handles MenuStartHereShowPumpSetup.Click
+        Dim userSettingsPdfFile As String = Path.Combine(GetSettingsDirectory(), $"{My.Settings.CareLinkUserName}Settings.pdf")
+
+        If File.Exists(userSettingsPdfFile) Then
+            Dim pdf As New PdfSettingsRecord(userSettingsPdfFile)
+            Using dialog As New PumpSetupDialog
+                dialog.Pdf = pdf
+                dialog.ShowDialog()
+            End Using
+        End If
+
     End Sub
 
     Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotSave.Click
@@ -1455,7 +1469,7 @@ Public Class Form1
         End If
         If e.SettingName = "CareLinkUserName" Then
             If s_allUserSettingsData?.ContainsKey(e.NewValue.ToString) Then
-                LoginDialog.LoggedOnUser = s_allUserSettingsData(e.NewValue.ToString)
+                Form1LoginHelpers.LoginDialog.LoggedOnUser = s_allUserSettingsData(e.NewValue.ToString)
                 Exit Sub
             Else
                 Dim userSettings As New CareLinkUserDataRecord(s_allUserSettingsData)
@@ -1463,7 +1477,7 @@ Public Class Form1
                 s_allUserSettingsData.Add(userSettings)
             End If
         End If
-        s_allUserSettingsData.SaveAllUserRecords(LoginDialog.LoggedOnUser, e.SettingName, e.NewValue?.ToString)
+        s_allUserSettingsData.SaveAllUserRecords(Form1LoginHelpers.LoginDialog.LoggedOnUser, e.SettingName, (e.NewValue?.ToString))
     End Sub
 
 #End Region ' Settings Events
@@ -1984,7 +1998,7 @@ Public Class Form1
                         End If
                     End If
                     Me.LabelTrendValue.Visible = s_pumpInRangeOfPhone
-                    notStr.Append($"Active ins. {s_activeInsulin.amount:N3}U")
+                    notStr.Append($"Active ins. {s_activeInsulin.amount:N3} U")
                     Me.NotifyIcon1.Text = notStr.ToString
                     Me.NotifyIcon1.Visible = True
                     s_lastSgValue = sg
@@ -2042,8 +2056,8 @@ Public Class Form1
             If activeInsulinStr.ToCharArray.Last = "0" Then
                 activeInsulinStr = $"{s_activeInsulin.amount:N2}"
             End If
-            Me.ActiveInsulinValue.Text = $"Active Insulin {activeInsulinStr}U"
-            _sgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr}U"
+            Me.ActiveInsulinValue.Text = $"Active Insulin {activeInsulinStr} U"
+            _sgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr} U"
         Catch ex As ArithmeticException
             Stop
             Throw New ArithmeticException($"{ex.DecodeException()} exception in {NameOf(UpdateActiveInsulin)}")
@@ -2339,24 +2353,24 @@ Public Class Form1
                                         "???",
                                         $"{CInt(s_totalBasal / s_totalDailyDose * 100)}"
                                        )
-        Me.Last24BasalUnitsLabel.Text = $"{s_totalBasal.RoundSingle(1, False):F1}U"
+        Me.Last24BasalUnitsLabel.Text = $"{s_totalBasal:F1} U"
         Me.Last24BasalPercentLabel.Text = $"{totalPercent}%"
 
-        Me.Last24TotalInsulinUnitsLabel.Text = $"{s_totalDailyDose.RoundSingle(1, False):F1}U"
+        Me.Last24TotalInsulinUnitsLabel.Text = $"{s_totalDailyDose:F1} U"
 
         If s_totalAutoCorrection > 0 Then
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalAutoCorrection / s_totalDailyDose * 100).ToString
             End If
             Me.Last24AutoCorrectionLabel.Visible = True
-            Me.Last24AutoCorrectionUnitsLabel.Text = $"{s_totalAutoCorrection.RoundSingle(1, False):F1}U"
+            Me.Last24AutoCorrectionUnitsLabel.Text = $"{s_totalAutoCorrection:F1} U"
             Me.Last24AutoCorrectionUnitsLabel.Visible = True
             Me.Last24AutoCorrectionPercentLabel.Text = $"{totalPercent}%"
             Me.Last24AutoCorrectionPercentLabel.Visible = True
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24ManualBolusUnitsLabel.Text = $"{s_totalManualBolus.RoundSingle(1, False):F1}U"
+            Me.Last24ManualBolusUnitsLabel.Text = $"{s_totalManualBolus:F1} U"
             Me.Last24ManualBolusPercentLabel.Text = $"{totalPercent}%"
         Else
             Me.Last24AutoCorrectionLabel.Visible = False
@@ -2365,7 +2379,7 @@ Public Class Form1
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24ManualBolusUnitsLabel.Text = $"{s_totalManualBolus.RoundSingle(1, False):F1}U"
+            Me.Last24ManualBolusUnitsLabel.Text = $"{s_totalManualBolus:F1} U"
             Me.Last24ManualBolusPercentLabel.Text = $"{totalPercent}%"
         End If
         Me.Last24CarbsValueLabel.Text = $"{s_totalCarbs} {s_sessionCountrySettings.carbohydrateUnitsDefault.ToTitle}"
@@ -2378,7 +2392,7 @@ Public Class Form1
             Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(8)
             Me.RemainingInsulinUnits.Text = "???U"
         Else
-            Me.RemainingInsulinUnits.Text = $"{s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.reservoirRemainingUnits)).ParseSingle(1):N1}U"
+            Me.RemainingInsulinUnits.Text = $"{s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.reservoirRemainingUnits)).ParseSingle(1):N1} U"
             Select Case s_reservoirLevelPercent
                 Case >= 85
                     Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(7)
@@ -2646,6 +2660,25 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
+    Private Sub UpdateTrend()
+        Dim rowValue As String = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastSGTrend))
+        If s_pumpInRangeOfPhone Then
+            Dim arrows As String = Nothing
+            If s_trends.TryGetValue(rowValue, arrows) Then
+                Me.LabelTrendArrows.Font = If(rowValue = "NONE",
+                    New Font("Segoe UI", 18.0F, FontStyle.Bold, GraphicsUnit.Point),
+                    New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point))
+                Me.LabelTrendArrows.Text = s_trends(rowValue)
+            Else
+                Me.LabelTrendArrows.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
+                Me.LabelTrendArrows.Text = rowValue
+            End If
+        End If
+        Me.LabelSgTrend.Visible = s_pumpInRangeOfPhone
+        Me.LabelTrendValue.Visible = s_pumpInRangeOfPhone
+        Me.LabelTrendArrows.Visible = s_pumpInRangeOfPhone
+    End Sub
+
     Friend Sub UpdateAllTabPages(fromFile As Boolean)
         If RecentDataEmpty() Then
             Debug.Print($"Exiting {NameOf(UpdateAllTabPages)}, {NameOf(RecentData)} has no data!")
@@ -2770,25 +2803,6 @@ Public Class Form1
             CancelSpeechRecognition()
         End If
         Application.DoEvents()
-    End Sub
-
-    Private Sub UpdateTrend()
-        Dim rowValue As String = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastSGTrend))
-        If s_pumpInRangeOfPhone Then
-            Dim arrows As String = Nothing
-            If s_trends.TryGetValue(rowValue, arrows) Then
-                Me.LabelTrendArrows.Font = If(rowValue = "NONE",
-                    New Font("Segoe UI", 18.0F, FontStyle.Bold, GraphicsUnit.Point),
-                    New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point))
-                Me.LabelTrendArrows.Text = s_trends(rowValue)
-            Else
-                Me.LabelTrendArrows.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
-                Me.LabelTrendArrows.Text = rowValue
-            End If
-        End If
-        Me.LabelSgTrend.Visible = s_pumpInRangeOfPhone
-        Me.LabelTrendValue.Visible = s_pumpInRangeOfPhone
-        Me.LabelTrendArrows.Visible = s_pumpInRangeOfPhone
     End Sub
 
 #End Region ' Update Home Tab

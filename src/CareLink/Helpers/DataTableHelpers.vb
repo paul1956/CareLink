@@ -126,7 +126,7 @@ Friend Module DataTableHelpers
                     Case NameOf([Boolean])
                         cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
                     Case Else
-                        Throw UnreachableException($"{NameOf(DataTableHelpers)}.{NameOf(ClassPropertiesToColumnAlignment)} [property].PropertyType.Name = {[property].PropertyType.Name}")
+                        Throw UnreachableException([property].PropertyType.Name)
                 End Select
                 alignmentTable.Add([property].Name, cellStyle)
             Next

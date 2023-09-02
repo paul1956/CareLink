@@ -5,13 +5,9 @@
 Public Class HighAlertsRecord
     Private _snoozeTime As New TimeSpan(1, 0, 0)
 
-    Public Sub New(snoozeOn As String, snoozeTime As TimeSpan, sTable As StringTable)
-        If snoozeOn = "Off" Then
-            Me.SnoozeOn = "Off"
-        Else
-            Me.SnoozeTime = snoozeTime
-            Me.SnoozeOn = snoozeOn
-        End If
+    Public Sub New(sTable As StringTable, listOfAallTextLines As List(Of String))
+        _snoozeTime = New TimeSpan(1, 0, 0)
+        PdfSettingsRecord.GetSnoozeInfo(listOfAallTextLines, "High Alerts", Me.SnoozeOn, _snoozeTime)
         Dim valueUnits As String = ""
         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
             Dim s As StringTable.Row = e.Value
@@ -23,7 +19,7 @@ Public Class HighAlertsRecord
             Dim item As New HighAlertRecord(s, valueUnits) With {
                 .End = If(e.IsLast OrElse sTable.Rows(e.Index + 1).Columns(0).CleanSpaces.Length = 0,
                           New TimeOnly(0, 0),
-                          TimeOnly.Parse(sTable.Rows(e.Index + 1).Columns(0).CleanSpaces.Split(" ")(0))
+                          TimeOnly.Parse(sTable.Rows(e.Index + 1).Columns(0).CleanSpaces.Split(" ", StringSplitOptions.RemoveEmptyEntries)(0))
                          )
             }
             If item.IsValid Then

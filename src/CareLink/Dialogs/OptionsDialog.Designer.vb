@@ -32,16 +32,16 @@ Partial Class OptionsDialog
         TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         ' 
-        ' TableLayoutPanel1
+        ' TableLayoutPanel2
         ' 
         TableLayoutPanel1.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         TableLayoutPanel1.ColumnCount = 2
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
         TableLayoutPanel1.Controls.Add(OK_Button, 0, 0)
         TableLayoutPanel1.Controls.Add(Cancel_Button, 1, 0)
         TableLayoutPanel1.Location = New Point(303, 99)
-        TableLayoutPanel1.Name = "TableLayoutPanel1"
+        TableLayoutPanel1.Name = "TableLayoutPanel2"
         TableLayoutPanel1.RowCount = 1
         TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
         TableLayoutPanel1.Size = New Size(170, 33)

@@ -4,7 +4,7 @@
 
 <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 <Global.System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726")> _
-Partial Class ExceptionHandlerForm
+Partial Class ExceptionHandlerDialog
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.

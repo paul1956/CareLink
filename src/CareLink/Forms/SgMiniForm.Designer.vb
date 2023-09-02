@@ -3,7 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-Partial Class SgMiniWindow
+Partial Class SgMiniForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.

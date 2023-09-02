@@ -5,8 +5,13 @@
 Public Class InsulinSensivityRecord
 
     Public Sub New(r As StringTable.Row)
-        Dim s() As String = r.Columns(0).Split(" ")
+        Dim cleaned As String = r.Columns(0).CleanSpaces
+        If cleaned.Length = 0 Then
+            Exit Sub
+        End If
+        Dim s() As String = cleaned.Split(" ", StringSplitOptions.RemoveEmptyEntries)
         If s.Length <> 2 Then
+            Stop
             Exit Sub
         End If
         If TimeOnly.TryParse(s(0), Me.Time) Then
@@ -17,17 +22,8 @@ Public Class InsulinSensivityRecord
         End If
     End Sub
 
-    Private Shared ReadOnly Property ColumnTitles As New List(Of String) From {
-                    {NameOf(Time)},
-                    {NameOf(Sensitivity)}
-                }
-
     Public Property IsValid As Boolean = False
     Public Property [Time] As TimeOnly
     Public Property Sensitivity As Single
-
-    Friend Shared Function GetColumnTitle() As String
-        Return ColumnTitles.ToArray.JoinLines(" ")
-    End Function
 
 End Class

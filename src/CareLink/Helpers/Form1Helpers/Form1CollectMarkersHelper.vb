@@ -67,7 +67,7 @@ Friend Module Form1CollectMarkersHelper
                         Case "RECOMMENDED"
                         Case Else
                             Stop
-                            Throw UnreachableException(NameOf(CollectMarkers))
+                            Throw UnreachableException(markerEntry("type"))
                     End Select
                 Case "LOW_GLUCOSE_SUSPENDED"
                     s_listOfLowGlucoseSuspendedMarkers.Add(DictionaryToClass(Of LowGlucoseSuspendRecord)(markerEntry, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
@@ -79,7 +79,7 @@ Friend Module Form1CollectMarkersHelper
                     s_listOfTimeChangeMarkers.Add(New TimeChangeRecord(markerEntry))
                 Case Else
                     Stop
-                    Throw UnreachableException(NameOf(CollectMarkers))
+                    Throw UnreachableException(markerEntry("type"))
             End Select
         Next
 

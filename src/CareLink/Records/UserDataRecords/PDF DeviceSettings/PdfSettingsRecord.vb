@@ -8,10 +8,33 @@ Public Class PdfSettingsRecord
 
     Public Sub New(filename As String)
         Dim tables As List(Of PdfTable) = GetTableList(filename, 0, 1)
-        If tables.Count <> 28 Then Stop
+        Dim smartGuardTableOffset As Integer = 0
+        Select Case tables.Count
+            Case 27
+                smartGuardTableOffset = -1
+            Case 28
+                smartGuardTableOffset = 0
+            Case Else
+                Stop
+        End Select
+
         Dim allText As String = ExtractTextFromPage(filename, 0, 1)
         Dim listOfAallTextLines As List(Of String) = allText.SplitLines(True)
         Dim sTable As StringTable
+
+        ' Get Sensor and Basal 4 Line to determain Active Basal later
+        Dim sensorOn As String = "Off"
+        Dim basal4Line As String = ""
+        For Each s As IndexClass(Of String) In listOfAallTextLines.WithIndex
+            If s.Value.StartsWith("Sensor") Then
+                s.MoveNext()
+                Dim lines As List(Of String) = s.Value.CleanSpaces.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList
+                sensorOn = lines(1)
+                Exit For
+            ElseIf s.Value.Contains("Basal 4") Then
+                basal4Line = s.Value
+            End If
+        Next
 
         ' 0
         sTable = ConvertPdfTableToStringTable(tables(0), "Maximum Basal Rate")
@@ -42,7 +65,7 @@ Public Class PdfSettingsRecord
         Next
 
         ' 7 Time Sensitivity
-        sTable = ConvertPdfTableToStringTable(tables(7), InsulinSensivityRecord.GetColumnTitle)
+        sTable = ConvertPdfTableToStringTable(tables(7), "Time Sensitivity")
         Me.Bolus.InsulinSensivity.Clear()
         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
             If e.IsFirst Then Continue For
@@ -62,7 +85,7 @@ Public Class PdfSettingsRecord
         Next
 
         ' 9 Preset Bolus
-        sTable = ConvertPdfTableToStringTable(tables(9), "")
+        sTable = ConvertPdfTableToStringTable(tables(9), "Name Normal")
         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
             If e.IsFirst Then Continue For
             Dim key As String = Me.PresetBolus.Keys(e.Index - 1)
@@ -72,7 +95,7 @@ Public Class PdfSettingsRecord
         ' 13-14 Preset Temp
         Dim keyIndex As Integer = 0
         For i As Integer = 13 To 14
-            sTable = ConvertPdfTableToStringTable(tables(i), "")
+            sTable = ConvertPdfTableToStringTable(tables(i), "Name Rate")
             For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
                 If e.IsFirst Then Continue For
                 Dim key As String = Me.PresetTemp.Keys(keyIndex)
@@ -81,78 +104,74 @@ Public Class PdfSettingsRecord
             Next
         Next
 
-        sTable = ConvertPdfTableToStringTable(tables(15), "")
-
-        If sTable.Rows.Count = 3 Then
-            Me.SmartGuard = New SmartGuardRecord(sTable, sTable.GetSingleLineValue(Of String)("SmartGuard"))
+        ' 15 optional SmartGuard
+        If smartGuardTableOffset = 0 Then
+            sTable = ConvertPdfTableToStringTable(tables(15), "")
+            If sTable.Rows.Count = 3 Then
+                Me.SmartGuard = New SmartGuardRecord(sTable, sTable.GetSingleLineValue(Of String)("SmartGuard"))
+            Else
+                Dim smartGuard As String = "Off"
+                For Each s As IndexClass(Of String) In listOfAallTextLines.WithIndex
+                    If s.Value.StartsWith("SmartGuard") Then
+                        s.MoveNext()
+                        smartGuard = s.Value.CleanSpaces.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList(1)
+                        Exit For
+                    End If
+                Next
+                Me.SmartGuard = New SmartGuardRecord(sTable, smartGuard)
+            End If
         Else
-            Dim smartGuard As String = "Off"
-            For Each s As IndexClass(Of String) In listOfAallTextLines.WithIndex
-                If s.Value.StartsWith("SmartGuard") Then
-                    s.MoveNext()
-                    smartGuard = s.Value.CleanSpaces.Split(" ").ToList(1)
-                    Exit For
-                End If
-            Next
-            Me.SmartGuard = New SmartGuardRecord(sTable, smartGuard)
+            Me.SmartGuard = New SmartGuardRecord()
         End If
 
-        Me.Reminders = New RemindersRecord(ConvertPdfTableToStringTable(tables(16), "Low Reservoir Warning"))
+        ' 16- Reminders Record
+        sTable = ConvertPdfTableToStringTable(tables(16 + smartGuardTableOffset), "Low Reservoir Warning")
+        Me.Reminders = New RemindersRecord(sTable)
 
-        ' 17 High Alerts
-        Dim snoozeTime As New TimeSpan(1, 0, 0)
-        Dim snoozeOn As String = Nothing
-        GetSnoozeInfo(listOfAallTextLines, "High Alerts", snoozeOn, snoozeTime)
-        sTable = ConvertPdfTableToStringTable(tables(17), "")
-        Me.HighAlerts = New HighAlertsRecord(snoozeOn, snoozeTime, sTable)
+        ' 17- High Alerts
+        sTable = ConvertPdfTableToStringTable(tables(17 + smartGuardTableOffset), "Start High")
+        Me.HighAlerts = New HighAlertsRecord(sTable, listOfAallTextLines)
 
-        ' 18 Meal Start End Record
-        sTable = ConvertPdfTableToStringTable(tables(18), "Name Start")
+        ' 18- Meal Start End Record
+        sTable = ConvertPdfTableToStringTable(tables(18 + smartGuardTableOffset), "Name Start")
         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
             If e.IsFirst Then Continue For
             Dim key As String = Me.Reminders.MissedMealBolus.Keys(e.Index - 1)
             Me.Reminders.MissedMealBolus(key) = New MealStartEndRecord(e.Value, key)
         Next
 
-        ' 19 Low Alerts
-        snoozeTime = New TimeSpan(0, 20, 0)
-        GetSnoozeInfo(listOfAallTextLines, "Low Alerts", snoozeOn, snoozeTime)
-        sTable = ConvertPdfTableToStringTable(tables(19), "")
-        Me.LowAlerts = New LowAlertsRecord(snoozeOn, snoozeTime, sTable)
+        ' 19- Low Alerts
+        sTable = ConvertPdfTableToStringTable(tables(19 + smartGuardTableOffset), "Start Low")
+        Me.LowAlerts = New LowAlertsRecord(sTable, listOfAallTextLines)
 
-        ' 20 Personal Reminders Record
-        sTable = ConvertPdfTableToStringTable(tables(20), "")
-        For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
+        ' 20, 21 - Personal Reminders Or Sensor
+        Dim personalRemindersTable As StringTable
+        Dim sensorTable As StringTable
+        personalRemindersTable = ConvertPdfTableToStringTable(tables(20 + smartGuardTableOffset), "")
+
+        If personalRemindersTable.Rows(0).Columns(0).StartsWith("Name Time") Then
+            sensorTable = ConvertPdfTableToStringTable(tables(21 + smartGuardTableOffset), "")
+        Else
+            sensorTable = personalRemindersTable
+            personalRemindersTable = ConvertPdfTableToStringTable(tables(21 + smartGuardTableOffset), "")
+        End If
+
+        For Each e As IndexClass(Of StringTable.Row) In personalRemindersTable.Rows.WithIndex
             If e.IsFirst Then Continue For
             Dim key As String = Me.Reminders.PersonalReminders.Keys(e.Index - 1)
             Me.Reminders.PersonalReminders(key) = New PersonalRemindersRecord(e.Value, key)
         Next
 
-        ' Get Sensor
-        Dim sensorOn As String = "Off"
-        Dim basal4Line As String = ""
-        For Each s As IndexClass(Of String) In listOfAallTextLines.WithIndex
-            If s.Value.StartsWith("Sensor") Then
-                s.MoveNext()
-                Dim lines As List(Of String) = s.Value.CleanSpaces.Split(" ").ToList
-                sensorOn = lines(1)
-                Exit For
-            ElseIf s.Value.StartsWith("Basal 4") Then
-                basal4Line = s.Value
-            End If
-        Next
+        Me.Sensor = New SensorRecord(sensorOn, sensorTable)
 
-        sTable = ConvertPdfTableToStringTable(tables(21), "Calibration Reminder")
-        Me.Sensor = New SensorRecord(sensorOn, sTable)
-
-        '22, 23, 24 25, 26
-        For i As Integer = 22 To 26
+        '22-, 23-, 24+- 25-, 26-
+        For i As Integer = 22 + smartGuardTableOffset To 26 + smartGuardTableOffset
             Dim key As String = Me.Basal.NamedBasals.Keys(i - 19)
             Me.Basal.NamedBasals(key) = New NamedBasalRecord(tables, i, basal4Line, key)
         Next
 
-        '27
-        sTable = ConvertPdfTableToStringTable(tables(27), "Block Mode")
+        '27-
+        sTable = ConvertPdfTableToStringTable(tables(27 + smartGuardTableOffset), "Block Mode")
         Me.Utilities = New UtilitiesRecord(sTable)
     End Sub
 
@@ -196,7 +215,7 @@ Public Class PdfSettingsRecord
 
     Public Property Utilities As UtilitiesRecord
 
-    Private Shared Sub GetSnoozeInfo(listOfAallTextLines As List(Of String), target As String, ByRef snoozeOn As String, ByRef snoozeTime As TimeSpan)
+    Public Shared Sub GetSnoozeInfo(listOfAallTextLines As List(Of String), target As String, ByRef snoozeOn As String, ByRef snoozeTime As TimeSpan)
         Dim snoozeLine As String
         snoozeOn = "Off"
         snoozeLine = listOfAallTextLines.FindLineContaining(target)

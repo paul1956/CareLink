@@ -8,12 +8,19 @@ Public Module StringListExtensions
 
     <Extension>
     Public Function FindLineContaining(lines As List(Of String), target As String) As String
-        For Each line As String In lines
+        Dim index As Integer = FindLineNumberContaining(lines, target)
+        Return If(index >= 0, lines(index), "")
+    End Function
+
+    <Extension>
+    Public Function FindLineNumberContaining(lines As List(Of String), target As String) As Integer
+        For Each e As IndexClass(Of String) In lines.WithIndex
+            Dim line As String = e.Value
             If line.Contains(target) Then
-                Return line
+                Return e.Index
             End If
         Next
-        Return ""
+        Return -1
     End Function
 
 End Module

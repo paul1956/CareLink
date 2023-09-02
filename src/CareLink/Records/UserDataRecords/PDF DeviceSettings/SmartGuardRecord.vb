@@ -4,14 +4,17 @@
 
 Public Class SmartGuardRecord
 
+    Public Sub New()
+    End Sub
+
     Public Sub New(sTable As StringTable, smartGuard As String)
         Me.SmartGuard = smartGuard
-        Me.Target = sTable.GetSingleLineValue(Of Single)("Target ")
+        Me.Target = sTable.GetSingleLineValue(Of String)("Target ")
         Me.AutoCorrection = sTable.GetSingleLineValue(Of String)("Auto Correction ")
     End Sub
 
-    Public Property SmartGuard As String
-    Public Property Target As Single
-    Public Property AutoCorrection As String
+    Public Property SmartGuard As String = "Off"
+    Public Property Target As String = "Known"
+    Public Property AutoCorrection As String = "Off"
 
 End Class

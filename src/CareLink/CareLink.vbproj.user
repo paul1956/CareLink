@@ -13,25 +13,28 @@
     <Compile Update="CustomControls\NameColorComboBox.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="Dialogs\PumpSetupDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\AboutBox1.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Forms\SgMiniWindow.vb">
+    <Compile Update="Dialogs\LoginDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Forms\ExceptionHandlerForm.vb">
+    <Compile Update="Forms\SgMiniForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\ExceptionHandlerDialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Forms\Form1.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Forms\InitializeDialog.vb">
+    <Compile Update="Dialogs\InitializeDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Forms\LoginForm1.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="Forms\OptionsDialog.vb">
+    <Compile Update="Dialogs\OptionsDialog.vb">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
@@ -39,22 +42,22 @@
     <EmbeddedResource Update="Forms\AboutBox1.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Update="Forms\SgMiniWindow.resx">
+    <EmbeddedResource Update="Forms\SgMiniForm.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Update="Forms\ExceptionHandlerForm.resx">
+    <EmbeddedResource Update="Dialogs\ExceptionHandlerDialog.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Update="Forms\Form1.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Update="Forms\InitializeDialog.resx">
+    <EmbeddedResource Update="Dialogs\InitializeDialog.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Update="Forms\LoginForm1.resx">
+    <EmbeddedResource Update="Dialogs\LoginDialog.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Update="Forms\OptionsDialog.resx">
+    <EmbeddedResource Update="Dialogs\OptionsDialog.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Update="My Project\Resources.resx">

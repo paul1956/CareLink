@@ -9,6 +9,7 @@ Imports System.Text.Json
 Imports DataGridViewColumnControls
 
 Public Class InitializeDialog
+    Private _fromPdf As Boolean = False
 
     Private ReadOnly _insulinTypesBindingSource As New BindingSource(
                 s_insulinTypes, Nothing)
@@ -27,6 +28,7 @@ Public Class InitializeDialog
         Me.CurrentUser = currentUser
         Me.CurrentUser.PumpAit = ait
         Me.CurrentUser.CarbRatios = CarbRatios
+        _fromPdf = True
     End Sub
 
     Public Property CurrentUser As CurrentUserRecord
@@ -34,7 +36,7 @@ Public Class InitializeDialog
     Private Shared Sub InitializeComboList(items As DataGridViewComboBoxCell.ObjectCollection, start As Integer)
         For i As Integer = start To 47
             Dim t As New TimeOnly(i \ 2, (i Mod 2) * 30)
-            items.Add(t.ToString(CurrentDateCulture))
+            items.Add(t.ToHoursMinutes)
         Next
         items.Add(s_midnight)
 
@@ -70,7 +72,7 @@ Public Class InitializeDialog
                     buttonCell.ReadOnly = True
                     Dim c As DataGridViewComboBoxCell = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
                     Dim startTime As TimeOnly = TimeOnly.Parse(Me.InitializeDataGridView.Rows(currentRow).Cells(NameOf(ColumnEnd)).Value.ToString)
-                    Dim value As String = startTime.ToString
+                    Dim value As String = startTime.ToHoursMinutes
                     InitializeComboList(c.Items, CInt(startTime.ToTimeSpan.TotalMinutes / 30))
                     c.Value = s_midnight
                     c.ReadOnly = False
@@ -110,7 +112,7 @@ Public Class InitializeDialog
                         Dim columnEndCell As DataGridViewCell = Me.InitializeDataGridView.Rows(e.RowIndex).Cells(NameOf(ColumnEnd))
                         columnEndCell.ErrorText = ""
                         Dim timeOnly As TimeOnly = TimeOnly.Parse(columnEndCell.Value.ToString)
-                        Dim value As String = timeOnly.ToString
+                        Dim value As String = timeOnly.ToHoursMinutes
                         c.Items.Add(value)
                         c.Value = value
                         c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
@@ -160,7 +162,6 @@ Public Class InitializeDialog
 
         Me.ColumnStart.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
         Me.ColumnEnd.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
-        ' New BindingSource(MmolLItems, Nothing),
 
         Me.CurrentUser.CurrentTarget = GetSgTarget()
         With Me.TargetSgComboBox
@@ -176,6 +177,7 @@ Public Class InitializeDialog
             .DisplayMember = "Key"
             .ValueMember = "Value"
             .SelectedIndex = Me.TargetSgComboBox.Items.IndexOfValue(Of String, Single)(Me.CurrentUser.CurrentTarget)
+            .Enabled = Not _fromPdf
         End With
 
         Me.Text = $"Initialize CareLink™ For {Me.CurrentUser.UserName}"
@@ -191,8 +193,12 @@ Public Class InitializeDialog
                 .Enabled = True
                 .SelectedIndex = .Items.IndexOfValue(Of String, Single)(Me.CurrentUser.PumpAit)
             End If
-            .Enabled = True
-            .Focus()
+            If _fromPdf Then
+                .Enabled = False
+            Else
+                .Enabled = True
+                .Focus()
+            End If
         End With
 
         With Me.InsulinTypeComboBox
@@ -201,9 +207,13 @@ Public Class InitializeDialog
             .ValueMember = "Value"
             If String.IsNullOrWhiteSpace(Me.CurrentUser.InsulinTypeName) Then
                 .SelectedIndex = -1
-            Else
                 .Enabled = True
+                If _fromPdf Then
+                    .Focus()
+                End If
+            Else
                 .SelectedIndex = .Items.IndexOfKey(Of String, InsulinActivationRecord)(Me.CurrentUser.InsulinTypeName)
+                .Focus()
             End If
         End With
 
@@ -217,7 +227,7 @@ Public Class InitializeDialog
 
         With Me.InitializeDataGridView
             .Rows.Clear()
-            .Enabled = True
+            .Enabled = Not _fromPdf
             If Me.CurrentUser.CarbRatios.Count > 0 Then
                 For Each i As IndexClass(Of CarbRatioRecord) In Me.CurrentUser.CarbRatios.WithIndex
                     Dim value As CarbRatioRecord = i.Value
@@ -242,7 +252,7 @@ Public Class InitializeDialog
                         buttonCell.Enabled = i.IsLast
                     End With
                 Next
-                Me.InitializeDataGridView.Enabled = True
+                Me.InitializeDataGridView.Enabled = Not _fromPdf
             Else
                 .Rows.Add()
                 With .Rows(0)
@@ -255,7 +265,7 @@ Public Class InitializeDialog
 
                     c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
                     InitializeComboList(c.Items, 1)
-                    c.Value = New TimeOnly(12, 0).ToString(CurrentDateCulture)
+                    c.Value = New TimeOnly(12, 0).ToHoursMinutes
                     Dim numericCell As DataGridViewNumericUpDownCell = CType(.Cells(NameOf(ColumnNumericUpDown)), DataGridViewNumericUpDownCell)
                     numericCell.Value = 15.0
                 End With
@@ -266,7 +276,9 @@ Public Class InitializeDialog
                 col.SortMode = DataGridViewColumnSortMode.NotSortable
             Next
         End With
-
+        If _fromPdf Then
+            Me.OK_Button.Enabled = True
+        End If
     End Sub
 
     Private Sub InsulinTypeComboBox_Enter(sender As Object, e As EventArgs) Handles InsulinTypeComboBox.Enter

@@ -5,7 +5,7 @@
 Imports System.ComponentModel
 Imports System.Media
 
-Public Class SgMiniWindow
+Public Class SgMiniForm
     Private ReadOnly _form1 As Form1
     Private _alarmPlayedHigh As Boolean
     Private _alarmPlayedLow As Boolean

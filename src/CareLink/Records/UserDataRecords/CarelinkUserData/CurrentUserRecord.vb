@@ -67,7 +67,7 @@ Public Class CurrentUserRecord
     End Function
 
     Public Function GetPumpAitString() As String
-        Return $"Pump AIT {Me.PumpAit.ToHoursMinutes}"
+        Return $"Pump AIT {Me.PumpAit.ToHoursMinutes}".CleanSpaces
     End Function
 
 End Class

@@ -81,7 +81,7 @@ Public Module DictionaryExtensions
                                  NameOf([String])
                                 propertyValue = Convert.ChangeType(row.Value, [property].PropertyType)
                             Case Else
-                                Throw UnreachableException($"{NameOf(SummaryRecordHelpers)}.{NameOf(SummaryRecordHelpers.GetCellStyle)} [property].PropertyType.Name = {[property].PropertyType.Name}")
+                                Throw UnreachableException([property].PropertyType.Name)
                         End Select
 
                         classObject.GetType.GetProperty([property].Name).SetValue(classObject, propertyValue, Nothing)

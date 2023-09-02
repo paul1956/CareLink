@@ -27,7 +27,12 @@ Public Module PDFParser
 
     Public Function ConvertPdfTableToStringTable(table As PdfTable, tableHeader As String) As StringTable
         Dim sTable As StringTable = ExtractTableText(table)
-        Return If(sTable.IsValid AndAlso sTable.Rows(0).Columns(0).StartsWith(tableHeader), sTable, New StringTable)
+        If sTable.IsValid AndAlso sTable.Rows(0).Columns(0).StartsWith(tableHeader) Then
+            Return sTable
+        Else
+            Stop
+            Return New StringTable
+        End If
     End Function
 
     Public Function ExtractTextFromPage(filename As String, startPageNumber As Integer, Optional endPageNumber As Integer = 0) As String

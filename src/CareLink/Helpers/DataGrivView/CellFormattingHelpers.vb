@@ -79,8 +79,8 @@ Friend Module CellFormattingHelpers
                         CellFormattingApplyColor(e, Color.Yellow, AlternativeRowIndex, False)
                     End If
                 Case $"{partialKey}MmolL"
-                    e.Value = sensorValue.RoundSingle(2, False).ToString("F2", CurrentUICulture)
-                    If sensorValue < TirLowLimit(True) Then
+                    e.Value = sensorValue.ToString("F2", CurrentUICulture)
+                    If sensorValue.RoundSingle(1, False) < TirLowLimit(True) Then
                         CellFormattingApplyColor(e, Color.Red, 1 - AlternativeRowIndex, False)
                     ElseIf sensorValue > TirHighLimit(True) Then
                         CellFormattingApplyColor(e, Color.Yellow, AlternativeRowIndex, False)

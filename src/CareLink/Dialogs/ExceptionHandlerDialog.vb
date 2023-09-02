@@ -3,12 +3,12 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.IO
-
+Imports System.Text
 Imports Microsoft.VisualBasic.ApplicationServices
 
 Imports Octokit
 
-Public Class ExceptionHandlerForm
+Public Class ExceptionHandlerDialog
     Private _gitClient As GitHubClient
     Public Property LocalRawData As String
     Public Property UnhandledException As UnhandledExceptionEventArgs
@@ -53,12 +53,12 @@ Public Class ExceptionHandlerForm
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, fileLink, fontBold)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "and stored in", fontNormal)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, GetDirectoryForProjectData(), fontBold)
-            Me.LocalRawData = DecomposeReportFile(Me.ExceptionTextBox, Me.StackTraceTextBox, Me.ReportFileNameWithPath)
+            Me.LocalRawData = Me.DecomposeReportFile(Me.ExceptionTextBox, Me.StackTraceTextBox, Me.ReportFileNameWithPath)
         End If
     End Sub
 
     Private Sub ExceptionHandlerForm_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
-        My.Forms.SgMiniWindow.Hide()
+        My.Forms.SgMiniForm.Hide()
         My.Forms.Form1.Show()
         Me.TopMost = True
     End Sub
@@ -88,5 +88,52 @@ Public Class ExceptionHandlerForm
         Me.Cancel.Enabled = True
         Me.Close()
     End Sub
+
+    Private Sub ReportInvalidErrorFile(currentLine As String, exceptionStartingString As String)
+        Throw New NotImplementedException()
+    End Sub
+
+    Friend Function DecomposeReportFile(ExceptionTextBox As TextBox, stackTraceTextBox As TextBox, ReportFileNameWithPath As String) As String
+
+        Using stream As StreamReader = File.OpenText(ReportFileNameWithPath)
+            ' read exception header
+            Dim currentLine As String = stream.ReadLine()
+            If currentLine <> ExceptionStartingString Then
+                Me.ReportInvalidErrorFile(currentLine, ExceptionStartingString)
+            End If
+
+            ' read exception
+            ExceptionTextBox.Text = stream.ReadLine
+
+            ' read exception trailer
+            currentLine = stream.ReadLine
+            If currentLine <> ExceptionTerminatingString Then
+                Me.ReportInvalidErrorFile(currentLine, ExceptionTerminatingString)
+            End If
+
+            ' read stack trace header
+            currentLine = stream.ReadLine
+            If currentLine <> StackTraceStartingStr Then
+                Me.ReportInvalidErrorFile(currentLine, StackTraceStartingStr)
+            End If
+
+            ' read stack trace
+            Dim sb As New StringBuilder
+            While stream.Peek > 0
+                currentLine = stream.ReadLine
+                If currentLine <> StackTraceTerminatingStr Then
+                    sb.AppendLine(currentLine)
+                Else
+                    Exit While
+                End If
+                currentLine = ""
+            End While
+            If currentLine <> StackTraceTerminatingStr Then
+                Me.ReportInvalidErrorFile(currentLine, StackTraceTerminatingStr)
+            End If
+            stackTraceTextBox.Text = sb.ToString
+            Return stream.ReadToEnd
+        End Using
+    End Function
 
 End Class

@@ -6,13 +6,9 @@
 Public Class LowAlertsRecord
     Private _snoozeTime As TimeSpan
 
-    Public Sub New(snoozeOn As String, snoozeTime As TimeSpan, sTable As StringTable)
-        If snoozeOn = "Off" Then
-            Me.SnoozeOn = "Off"
-        Else
-            _snoozeTime = snoozeTime
-            Me.SnoozeOn = snoozeOn
-        End If
+    Public Sub New(sTable As StringTable, listOfAallTextLines As List(Of String))
+        _snoozeTime = New TimeSpan(0, 20, 0)
+        PdfSettingsRecord.GetSnoozeInfo(listOfAallTextLines, "Low Alerts", Me.SnoozeOn, _snoozeTime)
 
         Dim valueUnits As String = ""
         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex

@@ -45,6 +45,7 @@ Public Module PumpVariables
     Friend s_timeInRange As Integer
     Friend s_timeToNextCalibrationHours As UShort
     Friend s_timeToNextCalibrationMinutes As UShort
+    Friend s_timeFormat As String
     Friend s_timeWithMinuteFormat As String
     Friend s_timeWithoutMinuteFormat As String
 

@@ -165,6 +165,16 @@ Friend Module DateTimeExtensions
     End Function
 
     <Extension>
+    Public Function ToHoursMinutes(timeOnly As TimeOnly) As String
+        Dim rawTimeOnly As String = $" {timeOnly.ToString(CurrentDateCulture)}"
+        Return If(rawTimeOnly.Split(":")(0).Length = 1,
+                  $" {rawTimeOnly}",
+                  rawTimeOnly
+                 )
+
+    End Function
+
+    <Extension>
     Public Function ToShortDateTimeString(dateValue As Date) As String
         Return $"{dateValue.ToShortDateString()} {dateValue.ToLongTimeString()}"
     End Function

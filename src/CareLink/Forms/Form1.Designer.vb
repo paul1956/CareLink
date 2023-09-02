@@ -35,6 +35,7 @@ Partial Class Form1
         MenuStrip1 = New MenuStrip()
         MenuStartHere = New ToolStripMenuItem()
         MenuStartHereLogin = New ToolStripMenuItem()
+        MenuStartHereShowPumpSetup = New ToolStripMenuItem()
         ToolStripSeparator1 = New ToolStripSeparator()
         MenuStartHereLoadSavedDataFile = New ToolStripMenuItem()
         MenuStartHereExceptionReportLoad = New ToolStripMenuItem()
@@ -313,7 +314,7 @@ Partial Class Form1
         ' 
         ' MenuStartHere
         ' 
-        MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {MenuStartHereLogin, ToolStripSeparator1, MenuStartHereLoadSavedDataFile, MenuStartHereExceptionReportLoad, ToolStripSeparator4, MenuStartHereUseLastSavedFile, MenuStartHereUseTestData, ToolStripSeparator2, MenuStartHereSnapshotSave, ToolStripSeparator3, StartHereExit})
+        MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {MenuStartHereLogin, MenuStartHereShowPumpSetup, ToolStripSeparator1, MenuStartHereLoadSavedDataFile, MenuStartHereExceptionReportLoad, ToolStripSeparator4, MenuStartHereUseLastSavedFile, MenuStartHereUseTestData, ToolStripSeparator2, MenuStartHereSnapshotSave, ToolStripSeparator3, StartHereExit})
         MenuStartHere.Name = "MenuStartHere"
         MenuStartHere.Size = New Size(71, 20)
         MenuStartHere.Text = "Start Here"
@@ -323,6 +324,13 @@ Partial Class Form1
         MenuStartHereLogin.Name = "MenuStartHereLogin"
         MenuStartHereLogin.Size = New Size(211, 22)
         MenuStartHereLogin.Text = "Login"
+        ' 
+        ' MenuStartHereShowPumpSetup
+        ' 
+        MenuStartHereShowPumpSetup.Enabled = False
+        MenuStartHereShowPumpSetup.Name = "MenuStartHereShowPumpSetup"
+        MenuStartHereShowPumpSetup.Size = New Size(211, 22)
+        MenuStartHereShowPumpSetup.Text = "Show Pump Setup"
         ' 
         ' ToolStripSeparator1
         ' 
@@ -2837,6 +2845,7 @@ Partial Class Form1
     Friend WithEvents MenuStartHereExceptionReportLoad As ToolStripMenuItem
     Friend WithEvents MenuStartHereLoadSavedDataFile As ToolStripMenuItem
     Friend WithEvents MenuStartHereLogin As ToolStripMenuItem
+    Friend WithEvents MenuStartHereShowPumpSetup As ToolStripMenuItem
     Friend WithEvents MenuStartHereSnapshotSave As ToolStripMenuItem
     Friend WithEvents MenuStartHereUseLastSavedFile As ToolStripMenuItem
     Friend WithEvents MenuStartHereUseTestData As ToolStripMenuItem

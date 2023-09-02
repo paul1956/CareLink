@@ -18,8 +18,8 @@ Public Module SystemConstants
     Friend Const StackTraceTerminatingStr As String = "--- End of stack trace from previous location ---"
     Friend Const TimeFormatMilitaryWithMinutes As String = "HH:mm"
     Friend Const TimeFormatMilitaryWithoutMinutes As String = "HH"
-    Friend Const TimeFormatTwelveHourWithMinutes As String = "h:mm tt"
-    Friend Const TimeFormatTwelveHourWithoutMinutes As String = "h tt"
+    Friend Const TimeFormatTwelveHourWithMinutes As String = " h:mm tt"
+    Friend Const TimeFormatTwelveHourWithoutMinutes As String = " h tt"
 
     Friend ReadOnly s_15Spaces As String = Space(15)
     Friend ReadOnly s_4Spaces As String = Space(4)
