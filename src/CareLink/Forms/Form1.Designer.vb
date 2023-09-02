@@ -136,9 +136,9 @@ Partial Class Form1
         Last24CarbsLabel = New Label()
         Last24HoursGraphLabel = New Label()
         Last24HTotalsPanel = New Panel()
+        Last24ManualBolusUnitsLabel = New Label()
         Last24TotalInsulinLabel = New Label()
         Last24ManualBolusPercentLabel = New Label()
-        Last24ManualBolusUnitsLabel = New Label()
         Last24ManualBolusLabel = New Label()
         Last24TotalsLabel = New Label()
         MaxBasalPerHourLabel = New Label()
@@ -796,7 +796,7 @@ Partial Class Form1
         CurrentSgLabel.TextAlign = ContentAlignment.MiddleCenter
         CurrentSgLabel.Visible = False
         ' 
-        ' SensorMessage
+        ' SensorMessageLabel
         ' 
         SensorMessageLabel.BackColor = Color.Transparent
         SensorMessageLabel.Font = New Font("Segoe UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point)
@@ -1370,6 +1370,18 @@ Partial Class Form1
         Last24HTotalsPanel.Size = New Size(253, 129)
         Last24HTotalsPanel.TabIndex = 66
         ' 
+        ' Last24ManualBolusUnitsLabel
+        ' 
+        Last24ManualBolusUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24ManualBolusUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24ManualBolusUnitsLabel.ForeColor = Color.White
+        Last24ManualBolusUnitsLabel.Location = New Point(131, 66)
+        Last24ManualBolusUnitsLabel.Name = "Last24ManualBolusUnitsLabel"
+        Last24ManualBolusUnitsLabel.Size = New Size(70, 21)
+        Last24ManualBolusUnitsLabel.TabIndex = 70
+        Last24ManualBolusUnitsLabel.Text = "30.0U"
+        Last24ManualBolusUnitsLabel.TextAlign = ContentAlignment.MiddleRight
+        ' 
         ' Last24TotalInsulinLabel
         ' 
         Last24TotalInsulinLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
@@ -1393,18 +1405,6 @@ Partial Class Form1
         Last24ManualBolusPercentLabel.TabIndex = 71
         Last24ManualBolusPercentLabel.Text = "30%"
         Last24ManualBolusPercentLabel.TextAlign = ContentAlignment.MiddleRight
-        ' 
-        ' Last24ManualBolusUnitsLabel
-        ' 
-        Last24ManualBolusUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24ManualBolusUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
-        Last24ManualBolusUnitsLabel.ForeColor = Color.White
-        Last24ManualBolusUnitsLabel.Location = New Point(131, 66)
-        Last24ManualBolusUnitsLabel.Name = "Last24ManualBolusUnitsLabel"
-        Last24ManualBolusUnitsLabel.Size = New Size(70, 21)
-        Last24ManualBolusUnitsLabel.TabIndex = 70
-        Last24ManualBolusUnitsLabel.Text = "30.0U"
-        Last24ManualBolusUnitsLabel.TextAlign = ContentAlignment.MiddleRight
         ' 
         ' Last24ManualBolusLabel
         ' 
@@ -1489,17 +1489,6 @@ Partial Class Form1
         PumpBatteryRemainingLabel.TabIndex = 11
         PumpBatteryRemainingLabel.Text = "Unknown"
         PumpBatteryRemainingLabel.TextAlign = ContentAlignment.MiddleCenter
-        ' 
-        ' PumpBatteryRemaining2Label
-        ' 
-        PumpBatteryRemaining2Label.BackColor = Color.Transparent
-        PumpBatteryRemaining2Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
-        PumpBatteryRemaining2Label.ForeColor = Color.White
-        PumpBatteryRemaining2Label.Location = New Point(119, 106)
-        PumpBatteryRemaining2Label.Name = "PumpBatteryRemaining2Label"
-        PumpBatteryRemaining2Label.Size = New Size(87, 21)
-        PumpBatteryRemaining2Label.TabIndex = 69
-        PumpBatteryRemaining2Label.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' InsulinTypeLabel
         ' 
@@ -1647,6 +1636,17 @@ Partial Class Form1
         PumpAITLabel.TabIndex = 71
         PumpAITLabel.Text = "Pump AIT 3:00"
         PumpAITLabel.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' PumpBatteryRemaining2Label
+        ' 
+        PumpBatteryRemaining2Label.BackColor = Color.Transparent
+        PumpBatteryRemaining2Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+        PumpBatteryRemaining2Label.ForeColor = Color.White
+        PumpBatteryRemaining2Label.Location = New Point(119, 106)
+        PumpBatteryRemaining2Label.Name = "PumpBatteryRemaining2Label"
+        PumpBatteryRemaining2Label.Size = New Size(87, 21)
+        PumpBatteryRemaining2Label.TabIndex = 69
+        PumpBatteryRemaining2Label.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' TransmitterBatteryPercentLabel
         ' 
