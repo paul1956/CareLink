@@ -1070,12 +1070,16 @@ Public Class Form1
         Me.MenuStartHereLoadSavedDataFile.Enabled = AnyMatchingFiles(GetDirectoryForProjectData(), $"{ProjectName}*.json")
         Me.MenuStartHereSnapshotSave.Enabled = Not RecentDataEmpty()
         Me.MenuStartHereExceptionReportLoad.Visible = AnyMatchingFiles(GetDirectoryForProjectData(), $"{SavedErrorReportBaseName}*.txt")
-        Me.MenuStartHereShowPumpSetup.Enabled = AnyMatchingFiles(GetSettingsDirectory(), $"{My.Settings.CareLinkUserName}Settings.pdf")
+
+        Dim careLinkUserName As String = My.Settings.CareLinkUserName
+        Dim userPdfExists As Boolean = Not (String.IsNullOrWhiteSpace(careLinkUserName) OrElse Not AnyMatchingFiles(GetSettingsDirectory(), $"{careLinkUserName}Settings.pdf"))
+        Me.MenuStartHereShowPumpSetup.Enabled = userPdfExists
+        Me.MenuStartHereManuallyImportDeviceSettings.Enabled = Not userPdfExists
     End Sub
 
     Private Sub MenuStartHereExceptionReportLoad_Click(sender As Object, e As EventArgs) Handles MenuStartHereExceptionReportLoad.Click
         Dim fileList As String() = Directory.GetFiles(GetDirectoryForProjectData(), $"{SavedErrorReportBaseName}*.txt")
-        Dim openFileDialog1 As New OpenFileDialog With {
+        Using openFileDialog1 As New OpenFileDialog With {
             .CheckFileExists = True,
             .CheckPathExists = True,
             .FileName = If(fileList.Length > 0, Path.GetFileName(fileList(0)), ProjectName),
@@ -1089,44 +1093,44 @@ Public Class Form1
             .ValidateNames = True
         }
 
-        If openFileDialog1.ShowDialog() = DialogResult.OK Then
-            Try
-                Dim fileNameWithPath As String = openFileDialog1.FileName
-                StartOrStopServerUpdateTimer(False)
-                If File.Exists(fileNameWithPath) Then
-                    RecentData?.Clear()
-                    ExceptionHandlerDialog.ReportFileNameWithPath = fileNameWithPath
-                    If ExceptionHandlerDialog.ShowDialog() = DialogResult.OK Then
-                        ExceptionHandlerDialog.ReportFileNameWithPath = ""
-                        Try
-                            RecentData = Loads(ExceptionHandlerDialog.LocalRawData)
-                        Catch ex As Exception
-                            MessageBox.Show($"Error reading date file. Original error: {ex.DecodeException()}")
-                        End Try
-                        CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{ProjectName}", True)
-                        Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                        Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
-                        Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
-                        SetLastUpdateTime(epochDateTime.ToShortDateTimeString, "from file", False, epochDateTime.IsDaylightSavingTime)
-                        SetUpCareLinkUser(GetTestSettingsFileNameWihtPath(), CheckForUpdate.Never)
+            If openFileDialog1.ShowDialog() = DialogResult.OK Then
+                Try
+                    Dim fileNameWithPath As String = openFileDialog1.FileName
+                    StartOrStopServerUpdateTimer(False)
+                    If File.Exists(fileNameWithPath) Then
+                        RecentData?.Clear()
+                        ExceptionHandlerDialog.ReportFileNameWithPath = fileNameWithPath
+                        If ExceptionHandlerDialog.ShowDialog() = DialogResult.OK Then
+                            ExceptionHandlerDialog.ReportFileNameWithPath = ""
+                            Try
+                                RecentData = Loads(ExceptionHandlerDialog.LocalRawData)
+                            Catch ex As Exception
+                                MessageBox.Show($"Error reading date file. Original error: {ex.DecodeException()}")
+                            End Try
+                            CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{ProjectName}", True)
+                            Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
+                            Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
+                            Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
+                            SetLastUpdateTime(epochDateTime.ToShortDateTimeString, "from file", False, epochDateTime.IsDaylightSavingTime)
+                            SetUpCareLinkUser(GetTestSettingsFileNameWihtPath(), CheckForUpdate.Never)
 
-                        Try
-                            FinishInitialization()
-                        Catch ex As Exception
-                            MessageBox.Show($"Error in {NameOf(FinishInitialization)}. Original error: {ex.Message}")
-                        End Try
-                        Try
-                            Me.UpdateAllTabPages(True)
-                        Catch ex As Exception
-                            MessageBox.Show($"Error in {NameOf(UpdateAllTabPages)}. Original error: {ex.Message}")
-                        End Try
+                            Try
+                                FinishInitialization()
+                            Catch ex As Exception
+                                MessageBox.Show($"Error in {NameOf(FinishInitialization)}. Original error: {ex.Message}")
+                            End Try
+                            Try
+                                Me.UpdateAllTabPages(True)
+                            Catch ex As Exception
+                                MessageBox.Show($"Error in {NameOf(UpdateAllTabPages)}. Original error: {ex.Message}")
+                            End Try
+                        End If
                     End If
-                End If
-            Catch ex As Exception
-                MessageBox.Show($"Cannot read file from disk. Original error: {ex.DecodeException()}")
-            End Try
-        End If
-
+                Catch ex As Exception
+                    MessageBox.Show($"Cannot read file from disk. Original error: {ex.DecodeException()}")
+                End Try
+            End If
+        End Using
     End Sub
 
     Private Sub MenuStartHereLoadSavedDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereLoadSavedDataFile.Click
@@ -1135,7 +1139,7 @@ Public Class Form1
                                         EnumerateFiles($"{ProjectName}*.json").
                                         OrderBy(Function(f As FileInfo) f.LastWriteTime).
                                         Select(Function(f As FileInfo) f.Name).ToArray
-        Dim openFileDialog1 As New OpenFileDialog With {
+        Using openFileDialog1 As New OpenFileDialog With {
             .CheckFileExists = True,
             .CheckPathExists = True,
             .FileName = If(fileList.Length > 0, fileList.Last, ProjectName),
@@ -1149,30 +1153,54 @@ Public Class Form1
             .ValidateNames = True
         }
 
-        If openFileDialog1.ShowDialog() = DialogResult.OK Then
-            Try
-                If File.Exists(openFileDialog1.FileName) Then
-                    StartOrStopServerUpdateTimer(False)
-                    SetUpCareLinkUser(GetTestSettingsFileNameWihtPath(), CheckForUpdate.Never)
-                    CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{ProjectName}", True)
-                    CurrentUICulture = CurrentDateCulture
+            If openFileDialog1.ShowDialog() = DialogResult.OK Then
+                Try
+                    If File.Exists(openFileDialog1.FileName) Then
+                        StartOrStopServerUpdateTimer(False)
+                        SetUpCareLinkUser(GetTestSettingsFileNameWihtPath(), CheckForUpdate.Never)
+                        CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{ProjectName}", True)
+                        CurrentUICulture = CurrentDateCulture
 
-                    RecentData = Loads(File.ReadAllText(openFileDialog1.FileName))
-                    Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                    Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
-                    Dim fileDate As Date = File.GetLastWriteTime(openFileDialog1.FileName)
-                    SetLastUpdateTime(fileDate.ToShortDateTimeString, " from file", False, fileDate.IsDaylightSavingTime)
-                    FinishInitialization()
-                    Me.UpdateAllTabPages(True)
-                End If
-            Catch ex As Exception
-                MessageBox.Show($"Cannot read file from disk. Original error: {ex.DecodeException()}")
-            End Try
-        End If
+                        RecentData = Loads(File.ReadAllText(openFileDialog1.FileName))
+                        Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
+                        Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
+                        Dim fileDate As Date = File.GetLastWriteTime(openFileDialog1.FileName)
+                        SetLastUpdateTime(fileDate.ToShortDateTimeString, " from file", False, fileDate.IsDaylightSavingTime)
+                        FinishInitialization()
+                        Me.UpdateAllTabPages(True)
+                    End If
+                Catch ex As Exception
+                    MessageBox.Show($"Cannot read file from disk. Original error: {ex.DecodeException()}")
+                End Try
+            End If
+        End Using
     End Sub
 
     Private Sub MenuStartHereLogin_Click(sender As Object, e As EventArgs) Handles MenuStartHereLogin.Click
         DoOptionalLoginAndUpdateData(UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.Login)
+    End Sub
+
+    Private Sub MenuStartHereManuallyImportDeviceSettings_Click(sender As Object, e As EventArgs) Handles MenuStartHereManuallyImportDeviceSettings.Click
+        Dim downloadsPath As String = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) & "\Downloads\"
+        Dim openFileDialog1 As New OpenFileDialog With {
+                        .AddToRecent = False,
+                        .CheckFileExists = True,
+                        .CheckPathExists = True,
+                        .Filter = $"Settings file (*.pdf)|*.pdf",
+                        .InitialDirectory = downloadsPath,
+                        .Multiselect = False,
+                        .ReadOnlyChecked = True,
+                        .RestoreDirectory = True,
+                        .SupportMultiDottedExtensions = False,
+                        .Title = $"Select downloaded CareLink™ Settings file.",
+                        .ValidateNames = True
+                    }
+        If openFileDialog1.ShowDialog() = Global.System.Windows.Forms.DialogResult.OK Then
+            My.Computer.FileSystem.MoveFile(openFileDialog1.FileName,
+                                            GetUserSettingsFileNameWithPath("pdf"),
+                                            FileIO.UIOption.AllDialogs,
+                                            FileIO.UICancelOption.DoNothing)
+        End If
     End Sub
 
     Private Sub MenuStartHereShowPumpSetup_Click(sender As Object, e As EventArgs) Handles MenuStartHereShowPumpSetup.Click

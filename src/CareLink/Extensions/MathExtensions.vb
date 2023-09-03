@@ -59,7 +59,7 @@ Friend Module MathExtensions
             Case TypeOf valueObject Is Decimal
                 returnSingle = CSng(valueObject)
             Case Else
-                Throw UnreachableException($"{NameOf(valueObject)} of type {valueObject.GetType.Name}")
+                Throw UnreachableException(valueObject.GetType.Name)
         End Select
 
         Return If(decimalDigits = 3, returnSingle.RoundTo025, returnSingle.RoundSingle(decimalDigits, False))

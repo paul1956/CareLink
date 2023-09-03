@@ -34,6 +34,10 @@ Friend Module FileIoHelpers
         Return s_projectData
     End Function
 
+    Friend Function GetDirectoryForSettings() As String
+        Return Path.Combine(GetDirectoryForProjectData(), "Settings")
+    End Function
+
     Friend Function GetGraphColorsFileNameWithPath(current As Boolean) As String
         Return If(current,
                   Path.Combine(GetDirectoryForProjectData(), "GraphColors.Csv"),

@@ -4,6 +4,7 @@
 
 Imports System.IO
 Imports System.Text
+Imports System.Text.Json
 Imports Microsoft.VisualBasic.ApplicationServices
 
 Imports Octokit
@@ -13,6 +14,35 @@ Public Class ExceptionHandlerDialog
     Public Property LocalRawData As String
     Public Property UnhandledException As UnhandledExceptionEventArgs
     Public Property ReportFileNameWithPath As String
+
+    Private Shared Sub CreateReportFile(exceptionText As String, stackTraceText As String, UniqueFileNameWithPath As String, jsonData As Dictionary(Of String, String))
+        Using stream As StreamWriter = File.CreateText(UniqueFileNameWithPath)
+            ' write exception header
+            stream.WriteLine(ExceptionStartingString)
+            ' write exception
+            stream.WriteLine(exceptionText)
+            ' write exception trailer
+            stream.WriteLine(ExceptionTerminatingString)
+            ' write stack trace header
+            stream.WriteLine(StackTraceStartingStr)
+            ' write stack trace
+            stream.WriteLine(stackTraceText)
+            ' write stack trace trailer
+            stream.WriteLine(StackTraceTerminatingStr)
+            ' write out data file
+            Using jd As JsonDocument = JsonDocument.Parse(jsonData.CleanUserData(), New JsonDocumentOptions)
+                stream.Write(JsonSerializer.Serialize(jd, JsonFormattingOptions))
+            End Using
+        End Using
+    End Sub
+
+    Private Shared Function TrimmedStackTrace(stackTrace As String) As String
+        Dim index As Integer = stackTrace.IndexOf(StackTraceTerminatingStr)
+        Return If(index < 0,
+                  stackTrace,
+                  stackTrace.Substring(0, index - 1)
+                 )
+    End Function
 
     Private Sub Cancel_Click(sender As Object, e As EventArgs) Handles Cancel.Click
         If Not String.IsNullOrWhiteSpace(Me.ReportFileNameWithPath) Then
