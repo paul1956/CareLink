@@ -1112,7 +1112,7 @@ Public Class Form1
                             Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                             Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
                             SetLastUpdateTime(epochDateTime.ToShortDateTimeString, "from file", False, epochDateTime.IsDaylightSavingTime)
-                            SetUpCareLinkUser(GetTestSettingsFileNameWihtPath(), CheckForUpdate.Never)
+                            SetUpCareLinkUser(GetTestSettingsFileNameWihtPath(), CheckForUpdate.Never, False)
 
                             Try
                                 FinishInitialization()
@@ -1157,7 +1157,7 @@ Public Class Form1
                 Try
                     If File.Exists(openFileDialog1.FileName) Then
                         StartOrStopServerUpdateTimer(False)
-                        SetUpCareLinkUser(GetTestSettingsFileNameWihtPath(), CheckForUpdate.Never)
+                        SetUpCareLinkUser(GetTestSettingsFileNameWihtPath(), CheckForUpdate.Never, False)
                         CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{ProjectName}", True)
                         CurrentUICulture = CurrentDateCulture
 
@@ -1278,14 +1278,9 @@ Public Class Form1
     End Sub
 
     Private Sub MenuOptionsEditPumpSettings_Click(sender As Object, e As EventArgs) Handles MenuOptionsEditPumpSettings.Click
-        SetUpCareLinkUser(GetUserSettingsFileNameWithPath("json"), CheckForUpdate.Always)
+        SetUpCareLinkUser(GetUserSettingsFileNameWithPath("json"), CheckForUpdate.Always, True)
         Dim contents As String = File.ReadAllText(GetUserSettingsFileNameWithPath("json"))
         CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
-        Dim f As New InitializeDialog(CurrentUser)
-        If f.ShowDialog() = DialogResult.OK Then
-            CurrentUser = f.CurrentUser
-        End If
-
     End Sub
 
     Private Sub MenuOptionsFilterRawJSONData_Click(sender As Object, e As EventArgs) Handles MenuOptionsFilterRawJSONData.Click

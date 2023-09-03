@@ -9,7 +9,7 @@ Imports System.Text.Json
 Imports DataGridViewColumnControls
 
 Public Class InitializeDialog
-    Private _fromPdf As Boolean = False
+    Private _fromPdf As Boolean
 
     Private ReadOnly _insulinTypesBindingSource As New BindingSource(
                 s_insulinTypes, Nothing)
@@ -20,6 +20,7 @@ Public Class InitializeDialog
         MyBase.New
         Me.InitializeComponent()
         _CurrentUser = currentUser
+        _fromPdf = False
     End Sub
 
     Public Sub New(currentUser As CurrentUserRecord, ait As Single, CarbRatios As List(Of CarbRatioRecord))
@@ -276,9 +277,9 @@ Public Class InitializeDialog
                 col.SortMode = DataGridViewColumnSortMode.NotSortable
             Next
         End With
-        If _fromPdf Then
-            Me.OK_Button.Enabled = True
-        End If
+
+        Me.OK_Button.Enabled = _fromPdf AndAlso Me.InsulinTypeComboBox.SelectedIndex >= 0
+
     End Sub
 
     Private Sub InsulinTypeComboBox_Enter(sender As Object, e As EventArgs) Handles InsulinTypeComboBox.Enter
@@ -296,7 +297,11 @@ Public Class InitializeDialog
         If Is770G() Then
             Me.UseAITAdvancedDecayCheckBox.Enabled = c.SelectedIndex > -1
         Else
-            Me.InitializeDataGridView.Enabled = True
+            If _fromPdf Then
+                Me.OK_Button.Enabled = True
+            Else
+                Me.InitializeDataGridView.Enabled = True
+            End If
         End If
     End Sub
 

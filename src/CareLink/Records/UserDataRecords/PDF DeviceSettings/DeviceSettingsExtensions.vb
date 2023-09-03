@@ -80,7 +80,7 @@ Friend Module DeviceSettingsExtensions
     End Function
 
     <Extension>
-    Public Function CompareToCarbRatios(deviceCarbRatios As List(Of DeviceCarbRatioRecord), carbRatios As List(Of CarbRatioRecord)) As Boolean
+    Public Function EqualCarbRatios(deviceCarbRatios As List(Of DeviceCarbRatioRecord), carbRatios As List(Of CarbRatioRecord)) As Boolean
 
         Dim toCarbRatioList As List(Of CarbRatioRecord) = deviceCarbRatios.ToCarbRatioList
         If toCarbRatioList.Count <> carbRatios.Count Then

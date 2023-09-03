@@ -35,7 +35,7 @@ Friend Module Form1LoginHelpers
                 Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(GetLastDownloadFileWithPath())
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
-                SetUpCareLinkUser(GetTestSettingsFileNameWihtPath(), CheckForUpdate.Never)
+                SetUpCareLinkUser(GetTestSettingsFileNameWihtPath(), CheckForUpdate.Never, False)
                 fromFile = True
             Case FileToLoadOptions.TestData
                 Form1.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
@@ -44,7 +44,7 @@ Friend Module Form1LoginHelpers
                 Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(GetTestDataFileNameWithPath())
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
-                SetUpCareLinkUser(GetTestSettingsFileNameWihtPath, CheckForUpdate.Never)
+                SetUpCareLinkUser(GetTestSettingsFileNameWihtPath, CheckForUpdate.Never, False)
                 fromFile = True
             Case FileToLoadOptions.Login
                 Form1.Text = SavedTitle
@@ -74,7 +74,7 @@ Friend Module Form1LoginHelpers
 
                 RecentData = Form1.Client.GetRecentData()
 
-                SetUpCareLinkUser(GetUserSettingsFileNameWithPath("json"), CheckForUpdate.Always)
+                SetUpCareLinkUser(GetUserSettingsFileNameWithPath("json"), CheckForUpdate.Always, False)
                 StartOrStopServerUpdateTimer(True, s_1MinutesInMilliseconds)
 
                 If NetworkUnavailable() Then
@@ -154,12 +154,12 @@ Friend Module Form1LoginHelpers
 
     End Sub
 
-    Friend Sub SetUpCareLinkUser(userSettingsFileWithPath As String, checkForUpdate As CheckForUpdate)
+    Friend Sub SetUpCareLinkUser(userSettingsFileWithPath As String, checkForUpdate As CheckForUpdate, forceUI As Boolean)
         Dim page As New TaskDialogPage
         Dim ait As Single = 2
         Dim carbRatios As New List(Of CarbRatioRecord)
         Dim lastUpdateTimeString As String = "Your device setting file has never been downloaded!"
-        Dim currentUserUpdateNeeded As Boolean = False
+        Dim currentUserUpdateNeeded As Boolean = forceUI
         If File.Exists(userSettingsFileWithPath) Then
             Dim lastUpdateTime As Date = File.GetLastWriteTime(userSettingsFileWithPath)
             lastUpdateTimeString = $"Your Last Update was {lastUpdateTime.ToShortDateString}"
@@ -167,7 +167,9 @@ Friend Module Form1LoginHelpers
             CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
 
             If checkForUpdate = CheckForUpdate.Never Then Exit Sub
-            If lastUpdateTime > Now - s_30DaysSpan AndAlso File.GetLastWriteTime(GetUserSettingsFileNameWithPath("pdf")) < lastUpdateTime Then
+            Dim pdfFileNameWithPath As String = GetUserSettingsFileNameWithPath("pdf")
+
+            If Not forceUI AndAlso lastUpdateTime > Now - s_30DaysSpan AndAlso File.Exists(pdfFileNameWithPath) AndAlso File.GetLastWriteTime(pdfFileNameWithPath) < lastUpdateTime Then
                 Exit Sub
             End If
         Else
@@ -185,7 +187,7 @@ Friend Module Form1LoginHelpers
                     ait = pdf.Bolus.BolusWizard.ActiveInsulinTime
                     currentUserUpdateNeeded = True
                 End If
-                If pdf.Bolus.DeviceCarbohydrateRatios.CompareToCarbRatios(CurrentUser.CarbRatios) Then
+                If Not pdf.Bolus.DeviceCarbohydrateRatios.EqualCarbRatios(CurrentUser.CarbRatios) Then
                     carbRatios = pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
                     currentUserUpdateNeeded = True
                 End If
@@ -200,7 +202,7 @@ Friend Module Form1LoginHelpers
             Dim f As New InitializeDialog(CurrentUser, ait, carbRatios)
             Dim result As DialogResult = f.ShowDialog()
             If result = DialogResult.OK Then
-                currentUserUpdateNeeded = Not CurrentUser.Equals(f.CurrentUser)
+                currentUserUpdateNeeded = currentUserUpdateNeeded Or Not CurrentUser.Equals(f.CurrentUser)
                 CurrentUser = f.CurrentUser.Clone
             End If
         End If
