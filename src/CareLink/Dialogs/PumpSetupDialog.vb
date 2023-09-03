@@ -81,7 +81,7 @@ Public Class PumpSetupDialog
                     Exit For
                 End If
                 Dim endTime As String = If(e.IsLast, s_midnight, StandardTimeOnlyWidth(_pdf.Bolus.BloodGlucoseTarget(e.Index + 1).Time))
-                .AppendLine($"{StandardTimeOnlyWidth(item.Time)} - {endTime,9}{vbTab}{item.Low}-{item.High} {_pdf.Bolus.BolusWizard.Units.CarbUnits}", defaultFont)
+                .AppendLine($"{StandardTimeOnlyWidth(item.Time)} - {endTime,9}{vbTab}{item.Low}-{item.High} {_pdf.Bolus.BolusWizard.Units.BgUnits}", defaultFont)
             Next
             .AppendLine
 

@@ -166,7 +166,8 @@ Friend Module Form1LoginHelpers
             Dim contents As String = File.ReadAllText(userSettingsFileWithPath)
             CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
 
-            If checkForUpdate = CheckForUpdate.Never OrElse lastUpdateTime > Now - s_30DaysSpan Then
+            If checkForUpdate = CheckForUpdate.Never Then Exit Sub
+            If lastUpdateTime > Now - s_30DaysSpan AndAlso File.GetLastWriteTime(GetUserSettingsFileNameWithPath("pdf")) < lastUpdateTime Then
                 Exit Sub
             End If
         Else
