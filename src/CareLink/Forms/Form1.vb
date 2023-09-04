@@ -960,29 +960,30 @@ Public Class Form1
         End If
 
         Dim currentAllUserLoginFile As String = GetUsersLoginInfoFileWithPath(True)
-        If Not Directory.Exists(GetDirectoryForProjectData()) Then
+        If Not Directory.Exists(DirectoryForProjectData) Then
             Dim lastError As String = $"Can't create required project directories!"
-            Directory.CreateDirectory(GetDirectoryForProjectData())
-            Directory.CreateDirectory(GetSettingsDirectory())
+            Directory.CreateDirectory(DirectoryForProjectData)
+            Directory.CreateDirectory(SettingsDirectory)
             Try
                 MoveIfExists(GetUsersLoginInfoFileWithPath(False), currentAllUserLoginFile, lastError)
                 MoveIfExists(GetGraphColorsFileNameWithPath(False), GetGraphColorsFileNameWithPath(True), lastError)
 
                 ' Move files with unique/variable names
                 ' Error Reports
-                lastError = $"Moving {SavedErrorReportBaseName} files!"
-                MoveFiles(GetDirectoryForMyDocuments, GetDirectoryForProjectData, $"{SavedErrorReportBaseName}*.txt")
-                lastError = $"Moving {SavedLastDownloadBaseName} files!"
-                MoveFiles(GetDirectoryForMyDocuments, GetDirectoryForProjectData, $"{SavedLastDownloadBaseName}*.json")
-                lastError = $"Moving {SavedSnapshotBaseName} files!"
-                MoveFiles(GetDirectoryForMyDocuments, GetDirectoryForProjectData, $"{SavedSnapshotBaseName}*.json")
+                lastError = $"Moving {BaseNameSavedErrorReport} files!"
+                MoveFiles(MyDocuments, DirectoryForProjectData, $"{BaseNameSavedErrorReport}*.txt")
+                lastError = $"Moving {BaseNameSavedLastDownload} files!"
+                MoveFiles(MyDocuments, DirectoryForProjectData, $"{BaseNameSavedLastDownload}*.json")
+                lastError = $"Moving {BaseNameSavedSnapshot} files!"
+                MoveFiles(MyDocuments, DirectoryForProjectData, $"{BaseNameSavedSnapshot}*.json")
             Catch ex As Exception
                 MsgBox($"Last error: {lastError}", ex.Message, MsgBoxStyle.OkOnly Or MsgBoxStyle.Critical, "Fatal Error")
                 End
             End Try
         End If
-        If Not Directory.Exists(GetSettingsDirectory) Then
-            Directory.CreateDirectory(GetSettingsDirectory())
+
+        If Not Directory.Exists(SettingsDirectory) Then
+            Directory.CreateDirectory(SettingsDirectory)
         End If
 
         If File.Exists(currentAllUserLoginFile) Then
@@ -1067,29 +1068,29 @@ Public Class Form1
 #Region "Start Here Menu Events"
 
     Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpening
-        Me.MenuStartHereLoadSavedDataFile.Enabled = AnyMatchingFiles(GetDirectoryForProjectData(), $"{ProjectName}*.json")
+        Me.MenuStartHereLoadSavedDataFile.Enabled = AnyMatchingFiles(DirectoryForProjectData, $"CareLink*.json")
         Me.MenuStartHereSnapshotSave.Enabled = Not RecentDataEmpty()
-        Me.MenuStartHereExceptionReportLoad.Visible = AnyMatchingFiles(GetDirectoryForProjectData(), $"{SavedErrorReportBaseName}*.txt")
+        Me.MenuStartHereExceptionReportLoad.Visible = AnyMatchingFiles(DirectoryForProjectData, $"{BaseNameSavedErrorReport}*.txt")
 
         Dim careLinkUserName As String = My.Settings.CareLinkUserName
-        Dim userPdfExists As Boolean = Not (String.IsNullOrWhiteSpace(careLinkUserName) OrElse Not AnyMatchingFiles(GetSettingsDirectory(), $"{careLinkUserName}Settings.pdf"))
+        Dim userPdfExists As Boolean = Not (String.IsNullOrWhiteSpace(careLinkUserName) OrElse Not AnyMatchingFiles(SettingsDirectory, $"{careLinkUserName}Settings.pdf"))
         Me.MenuStartHereShowPumpSetup.Enabled = userPdfExists
         Me.MenuStartHereManuallyImportDeviceSettings.Enabled = Not userPdfExists
     End Sub
 
     Private Sub MenuStartHereExceptionReportLoad_Click(sender As Object, e As EventArgs) Handles MenuStartHereExceptionReportLoad.Click
-        Dim fileList As String() = Directory.GetFiles(GetDirectoryForProjectData(), $"{SavedErrorReportBaseName}*.txt")
+        Dim fileList As String() = Directory.GetFiles(DirectoryForProjectData, $"{BaseNameSavedErrorReport}*.txt")
         Using openFileDialog1 As New OpenFileDialog With {
             .CheckFileExists = True,
             .CheckPathExists = True,
-            .FileName = If(fileList.Length > 0, Path.GetFileName(fileList(0)), ProjectName),
-            .Filter = $"Error files (*.txt)|{SavedErrorReportBaseName}*.txt",
-            .InitialDirectory = GetDirectoryForProjectData(),
+            .FileName = If(fileList.Length > 0, Path.GetFileName(fileList(0)), "CareLink"),
+            .Filter = $"Error files (*.txt)|{BaseNameSavedErrorReport}*.txt",
+            .InitialDirectory = DirectoryForProjectData,
             .Multiselect = False,
             .ReadOnlyChecked = True,
             .RestoreDirectory = True,
             .SupportMultiDottedExtensions = False,
-            .Title = $"Select {ProjectName}™ saved snapshot to load",
+            .Title = $"Select CareLink™ saved snapshot to load",
             .ValidateNames = True
         }
 
@@ -1103,16 +1104,16 @@ Public Class Form1
                         If ExceptionHandlerDialog.ShowDialog() = DialogResult.OK Then
                             ExceptionHandlerDialog.ReportFileNameWithPath = ""
                             Try
-                                RecentData = Loads(ExceptionHandlerDialog.LocalRawData)
+                                RecentData = LoadIndexedItems(ExceptionHandlerDialog.LocalRawData)
                             Catch ex As Exception
                                 MessageBox.Show($"Error reading date file. Original error: {ex.DecodeException()}")
                             End Try
-                            CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{ProjectName}", True)
+                            CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"CareLink", True)
                             Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                             Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                             Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
                             SetLastUpdateTime(epochDateTime.ToShortDateTimeString, "from file", False, epochDateTime.IsDaylightSavingTime)
-                            SetUpCareLinkUser(GetTestSettingsFileNameWihtPath(), CheckForUpdate.Never, False)
+                            SetUpCareLinkUser(TestSettingsFileNameWihtPath)
 
                             Try
                                 FinishInitialization()
@@ -1134,17 +1135,17 @@ Public Class Form1
     End Sub
 
     Private Sub MenuStartHereLoadSavedDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereLoadSavedDataFile.Click
-        Dim di As New DirectoryInfo(GetDirectoryForProjectData())
-        Dim fileList As String() = New DirectoryInfo(GetDirectoryForProjectData()).
-                                        EnumerateFiles($"{ProjectName}*.json").
+        Dim di As New DirectoryInfo(DirectoryForProjectData)
+        Dim fileList As String() = New DirectoryInfo(DirectoryForProjectData).
+                                        EnumerateFiles($"CareLink*.json").
                                         OrderBy(Function(f As FileInfo) f.LastWriteTime).
                                         Select(Function(f As FileInfo) f.Name).ToArray
         Using openFileDialog1 As New OpenFileDialog With {
             .CheckFileExists = True,
             .CheckPathExists = True,
-            .FileName = If(fileList.Length > 0, fileList.Last, ProjectName),
-            .Filter = $"json files (*.json)|{ProjectName}*.json",
-            .InitialDirectory = GetDirectoryForProjectData(),
+            .FileName = If(fileList.Length > 0, fileList.Last, "CareLink"),
+            .Filter = $"json files (*.json)|CareLink*.json",
+            .InitialDirectory = DirectoryForProjectData,
             .Multiselect = False,
             .ReadOnlyChecked = True,
             .RestoreDirectory = True,
@@ -1157,11 +1158,11 @@ Public Class Form1
                 Try
                     If File.Exists(openFileDialog1.FileName) Then
                         StartOrStopServerUpdateTimer(False)
-                        SetUpCareLinkUser(GetTestSettingsFileNameWihtPath(), CheckForUpdate.Never, False)
-                        CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"{ProjectName}", True)
+                        SetUpCareLinkUser(TestSettingsFileNameWihtPath)
+                        CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"CareLink", True)
                         CurrentUICulture = CurrentDateCulture
 
-                        RecentData = Loads(File.ReadAllText(openFileDialog1.FileName))
+                        RecentData = LoadIndexedItems(File.ReadAllText(openFileDialog1.FileName))
                         Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
                         Dim fileDate As Date = File.GetLastWriteTime(openFileDialog1.FileName)
@@ -1197,14 +1198,14 @@ Public Class Form1
                     }
         If openFileDialog1.ShowDialog() = Global.System.Windows.Forms.DialogResult.OK Then
             My.Computer.FileSystem.MoveFile(openFileDialog1.FileName,
-                                            GetUserSettingsFileNameWithPath("pdf"),
+                                            GetUserSettingsPdfFileNameWithPath(),
                                             FileIO.UIOption.AllDialogs,
                                             FileIO.UICancelOption.DoNothing)
         End If
     End Sub
 
     Private Sub MenuStartHereShowPumpSetup_Click(sender As Object, e As EventArgs) Handles MenuStartHereShowPumpSetup.Click
-        Dim userSettingsPdfFile As String = Path.Combine(GetSettingsDirectory(), $"{My.Settings.CareLinkUserName}Settings.pdf")
+        Dim userSettingsPdfFile As String = Path.Combine(SettingsDirectory, $"{My.Settings.CareLinkUserName}Settings.pdf")
 
         If File.Exists(userSettingsPdfFile) Then
             Dim pdf As New PdfSettingsRecord(userSettingsPdfFile)
@@ -1219,7 +1220,7 @@ Public Class Form1
     Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotSave.Click
         If RecentDataEmpty() Then Exit Sub
         Using jd As JsonDocument = JsonDocument.Parse(RecentData.CleanUserData(), New JsonDocumentOptions)
-            File.WriteAllText(GetDataFileName(SavedSnapshotBaseName, CurrentDateCulture.Name, "json", True).withPath, JsonSerializer.Serialize(jd, JsonFormattingOptions))
+            File.WriteAllTextAsync(GetUniqueDataFileName(BaseNameSavedSnapshot, CurrentDateCulture.Name, "json", True).withPath, JsonSerializer.Serialize(jd, JsonFormattingOptions))
         End Using
     End Sub
 
@@ -1278,8 +1279,8 @@ Public Class Form1
     End Sub
 
     Private Sub MenuOptionsEditPumpSettings_Click(sender As Object, e As EventArgs) Handles MenuOptionsEditPumpSettings.Click
-        SetUpCareLinkUser(GetUserSettingsFileNameWithPath("json"), CheckForUpdate.Always, True)
-        Dim contents As String = File.ReadAllText(GetUserSettingsFileNameWithPath("json"))
+        SetUpCareLinkUser(GetUserSettingsJsonFileNameWithPath, True)
+        Dim contents As String = File.ReadAllText(GetUserSettingsJsonFileNameWithPath)
         CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
     End Sub
 
@@ -1988,7 +1989,7 @@ Public Class Form1
                         Case <= TirLowLimit(NativeMmolL)
                             backColor = Color.Yellow
                             If _showBalloonTip Then
-                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}™ Alert", $"SG below {TirLowLimitAsString(NativeMmolL)} {SgUnitsNativeString}", Me.ToolTip1.ToolTipIcon)
+                                Me.NotifyIcon1.ShowBalloonTip(10000, $"CareLink™ Alert", $"SG below {TirLowLimitAsString(NativeMmolL)} {SgUnitsNativeString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
                         Case <= TirHighLimit(NativeMmolL)
@@ -1997,7 +1998,7 @@ Public Class Form1
                         Case Else
                             backColor = Color.Red
                             If _showBalloonTip Then
-                                Me.NotifyIcon1.ShowBalloonTip(10000, $"{ProjectName}™ Alert", $"SG above {TirHighLimitAsString(NativeMmolL)} {SgUnitsNativeString}", Me.ToolTip1.ToolTipIcon)
+                                Me.NotifyIcon1.ShowBalloonTip(10000, $"CareLink™ Alert", $"SG above {TirHighLimitAsString(NativeMmolL)} {SgUnitsNativeString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
                     End Select

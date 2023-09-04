@@ -61,11 +61,11 @@ Friend Module SystemVariables
     End Function
 
     Friend Function GetYMaxValue(asMmolL As Boolean) As Single
-        Return If(asMmolL, CSng(22.2), 400)
+        Return If(asMmolL, ParseSingle(22.2), 400)
     End Function
 
     Friend Function GetYMinValue(asMmolL As Boolean) As Single
-        Return If(asMmolL, CSng(2.8), 50)
+        Return If(asMmolL, ParseSingle(2.8), 50)
     End Function
 
     Friend Function TirHighLimit(asMmolL As Boolean) As Single
@@ -77,7 +77,7 @@ Friend Module SystemVariables
     End Function
 
     Friend Function TirLowLimit(asMmolL As Boolean) As Single
-        Return If(asMmolL, CSng(3.9), 70)
+        Return If(asMmolL, ParseSingle(3.9), 70)
     End Function
 
     Friend Function TirLowLimitAsString(asMmolL As Boolean) As String

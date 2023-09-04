@@ -11,10 +11,11 @@ Public Class PumpSetupDialog
         End Set
     End Property
 
-    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
-        Me.DialogResult = DialogResult.Cancel
-        Me.Close()
-    End Sub
+    Private Shared Function StandardTimeOnlyWidth(tOnly As TimeOnly) As String
+        Dim tAsString As String = tOnly.ToString
+        If tAsString.Length < 7 Then Return tAsString
+        Return tAsString.PadLeft(9)
+    End Function
 
     Private Sub DataGridView_Paint(sender As Object, e As PaintEventArgs) Handles DataGridViewHighAlert.Paint, DataGridViewLowAlert.Paint
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -27,20 +28,25 @@ Public Class PumpSetupDialog
 
     End Sub
 
+    Private Sub DataGridViewHighAlert_SelectionChanged(sender As Object, e As EventArgs) Handles DataGridViewHighAlert.SelectionChanged, DataGridViewLowAlert.SelectionChanged
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        dgv.ClearSelection()
+    End Sub
+
     Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
         Me.DialogResult = DialogResult.OK
         Me.Close()
     End Sub
 
-    Private Sub PumpSetupDialog_Shown(sender As Object, e1 As EventArgs) Handles Me.Shown
+    Private Sub PumpSetupDialog_Shown(sender As Object, e1 As EventArgs) Handles MyBase.Shown
         If _pdf Is Nothing Then
             Throw New NullReferenceException(NameOf(_pdf))
         End If
 
-        Dim defaultFont As New Font(Me.RtbMainLeft.Font.FontFamily, 12, FontStyle.Regular)
-        Dim defaultBoldFont As New Font(Me.RtbMainLeft.Font.FontFamily, 12, FontStyle.Bold)
-        Dim tahomaBoldFont As New Font("Tahoma", 14, FontStyle.Bold)
-        Dim tahomaFont As New Font("Tahoma", 14, FontStyle.Regular)
+        Dim defaultFont As New Font(Me.RtbMainLeft.Font.FontFamily, 14, FontStyle.Regular)
+        Dim defaultBoldFont As New Font(Me.RtbMainLeft.Font.FontFamily, 14, FontStyle.Bold)
+        Dim tahomaBoldFont As New Font("Tahoma", 16, FontStyle.Bold)
+        Dim tahomaFont As New Font("Tahoma", 16, FontStyle.Regular)
         Me.RtbMainLeft.Clear()
         Me.RtbMainRight.Clear()
         With Me.RtbMainLeft
@@ -57,7 +63,7 @@ Public Class PumpSetupDialog
 
             .AppendLine($"Carb Ratio:", defaultBoldFont)
             For Each item As CarbRatioRecord In _pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
-                .AppendLine($"{StandardTimeOnlyWidth(item.StartTime)} - {StandardTimeOnlyWidth(item.EndTime)}{vbTab}{item.CarbRatio} g/U", defaultBoldFont)
+                .AppendLine($"{StandardTimeOnlyWidth(item.StartTime)}{vbTab}-{vbTab}{StandardTimeOnlyWidth(item.EndTime)}{vbTab}{item.CarbRatio} g/U", defaultBoldFont)
             Next
             .AppendLine
 
@@ -69,7 +75,7 @@ Public Class PumpSetupDialog
                     Exit For
                 End If
                 Dim endTime As String = If(e.IsLast, s_midnight, StandardTimeOnlyWidth(_pdf.Bolus.InsulinSensivity(e.Index + 1).Time))
-                .AppendLine($"{StandardTimeOnlyWidth(item.Time)} - {endTime}{vbTab}{item.Sensitivity.RoundTo025:F1} {_pdf.Bolus.BolusWizard.Units.CarbUnits}/U", defaultFont)
+                .AppendLine($"{StandardTimeOnlyWidth(item.Time)}{vbTab}-{vbTab}{endTime}{vbTab}{item.Sensitivity.RoundTo025:F1} {_pdf.Bolus.BolusWizard.Units.CarbUnits}/U", defaultFont)
             Next
             .AppendLine
 
@@ -81,7 +87,7 @@ Public Class PumpSetupDialog
                     Exit For
                 End If
                 Dim endTime As String = If(e.IsLast, s_midnight, StandardTimeOnlyWidth(_pdf.Bolus.BloodGlucoseTarget(e.Index + 1).Time))
-                .AppendLine($"{StandardTimeOnlyWidth(item.Time)} - {endTime,9}{vbTab}{item.Low}-{item.High} {_pdf.Bolus.BolusWizard.Units.BgUnits}", defaultFont)
+                .AppendLine($"{StandardTimeOnlyWidth(item.Time)}{vbTab}-{vbTab}{endTime}{vbTab}{item.Low}-{item.High} {_pdf.Bolus.BolusWizard.Units.BgUnits}", defaultFont)
             Next
             .AppendLine
 
@@ -99,7 +105,7 @@ Public Class PumpSetupDialog
                         Exit For
                     End If
                     Dim endTime As String = If(e.IsLast, s_midnight, StandardTimeOnlyWidth(item.Value.basalRates(e.Index + 1).Time))
-                    .AppendLine($"{StandardTimeOnlyWidth(basalRate.Time)} - {endTime,9}{vbTab}{basalRate.UnitsPerHr:F3} U/hr", defaultFont)
+                    .AppendLine($"{StandardTimeOnlyWidth(basalRate.Time)}{vbTab}-{vbTab}{endTime,9}{vbTab}{basalRate.UnitsPerHr:F3} U/hr", defaultFont)
                 Next
                 .AppendLine
             Next
@@ -209,34 +215,45 @@ Public Class PumpSetupDialog
         End With
 
         With Me.RtbHighAlertMenu
-            .AppendLine($"Menu > {ChrW(&H2699)} > Alert Settings > High Alert", defaultBoldFont, ChrW(&H2699), tahomaBoldFont)
+            .Text = ""
+            .AppendLine($"Menu > {ChrW(&H2699)} > Alert Settings > High Alert", defaultBoldFont, ChrW(&H2699), tahomaBoldFont, False)
             .ReadOnly = True
             .SelectionStart = 0
         End With
         With Me.RtbHighSnoozeMenu
-            .AppendLine($"Menu > {ChrW(&H2699)} > Snooze Menu > Snooze High & Low > High Snooze: {_pdf.HighAlerts}", defaultBoldFont, ChrW(&H2699), tahomaBoldFont)
+            .Text = ""
+            .AppendLine($"Menu > {ChrW(&H2699)} > Snooze Menu > Snooze High & Low > High Snooze: {_pdf.HighAlerts}", defaultBoldFont, ChrW(&H2699), tahomaBoldFont, False)
             .ReadOnly = True
             .SelectionStart = 0
         End With
 
-        With Me.RtbLowAlertMenu
-            .AppendLine($"Menu > {ChrW(&H2699)} > Alert Settings > Snooze High & Low > Low Snooze:", defaultBoldFont, ChrW(&H2699), tahomaBoldFont)
-            .ReadOnly = True
-            .SelectionStart = 0
-        End With
-        With Me.RtbLowSnoozeMenu
-            .AppendLine($"Menu > {ChrW(&H2699)} > Snooze Menu > Snooze High & Low > Low Snooze: {_pdf.LowAlerts}", defaultBoldFont, ChrW(&H2699), tahomaBoldFont)
-            .ReadOnly = True
-            .SelectionStart = 0
-        End With
         With Me.DataGridViewHighAlert
+            .ColumnHeadersDefaultCellStyle.Font = New Font(.Font, FontStyle.Bold)
+            .Rows.Clear()
+            For Each c As DataGridViewColumn In .Columns
+                c.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
+            Next
+
             For Each h As HighAlertRecord In _pdf.HighAlerts.HighAlert
                 .Rows.Add(h.Start, h.End, $"{h.HighLimit} {h.ValueUnits}", h.AlertBeforeHigh, h.TimeBeforeHigh, h.AlertOnHigh, h.RiseAlert, h.RaiseLimit)
                 .Columns(NameOf(ColumnTimeBeforeHighText)).Visible = h.AlertBeforeHigh
             Next
         End With
 
+        With Me.RtbLowAlertMenu
+            .Text = ""
+            .AppendLine($"Menu > {ChrW(&H2699)} > Alert Settings > Snooze High & Low > Low Snooze:", defaultBoldFont, ChrW(&H2699), tahomaBoldFont, False)
+            .ReadOnly = True
+            .SelectionStart = 0
+        End With
+
         With Me.DataGridViewLowAlert
+            .Rows.Clear()
+            .ColumnHeadersDefaultCellStyle.Font = New Font(.Font, FontStyle.Bold)
+            For Each c As DataGridViewColumn In .Columns
+                c.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
+
+            Next
             For Each l As LowAlertRecord In _pdf.LowAlerts.LowAlert
                 .Rows.Add(l.Start, l.End, $"{l.LowLimit} {l.ValueUnits}", l.Suspend, l.AlertOnLow, l.AlertBeforeLow, l.ResumeBasalAlert)
                 .Columns("ColumnResumeBasalAlert").Visible = String.IsNullOrWhiteSpace(l.Suspend)
@@ -244,12 +261,13 @@ Public Class PumpSetupDialog
 
         End With
 
-    End Sub
+        With Me.RtbLowSnoozeMenu
+            .Text = ""
+            .AppendLine($"Menu > {ChrW(&H2699)} > Snooze Menu > Snooze High & Low > Low Snooze: {_pdf.LowAlerts}", defaultBoldFont, ChrW(&H2699), tahomaBoldFont, False)
+            .ReadOnly = True
+            .SelectionStart = 0
+        End With
 
-    Private Shared Function StandardTimeOnlyWidth(tOnly As TimeOnly) As String
-        Dim tAsString As String = tOnly.ToString
-        If tAsString.Length < 7 Then Return tAsString
-        Return tAsString.PadLeft(8)
-    End Function
+    End Sub
 
 End Class

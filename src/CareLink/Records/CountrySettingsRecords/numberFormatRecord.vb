@@ -7,7 +7,7 @@ Public Class NumberFormatRecord
     Private ReadOnly _asList As New Dictionary(Of String, String)
 
     Public Sub New(jsonData As String)
-        _asList = Loads(jsonData)
+        _asList = JsonToDictionary(jsonData)
         If _asList.Count <> 2 Then
             Throw New Exception($"{NameOf(NumberFormatRecord)}({NameOf(jsonData)}) contains {jsonData.Length} entries.")
         End If

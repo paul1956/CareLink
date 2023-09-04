@@ -40,7 +40,7 @@ Friend Module LimitsRecordHelpers
 
     Friend Sub UpdateListOfLimitRecords(row As KeyValuePair(Of String, String))
         s_listOfLimitRecords.Clear()
-        For Each e As IndexClass(Of Dictionary(Of String, String)) In LoadList(row.Value).WithIndex
+        For Each e As IndexClass(Of Dictionary(Of String, String)) In JsonToLisOfDictionary(row.Value).WithIndex
             Dim newLimit As New Dictionary(Of String, String)
             For Each kvp As KeyValuePair(Of String, String) In e.Value
                 Select Case kvp.Key

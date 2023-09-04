@@ -174,11 +174,10 @@ Public Class InitializeDialog
                              New BindingSource(MgDlItems, Nothing)
                             )
 
-            .Enabled = Not Is770G()
             .DisplayMember = "Key"
             .ValueMember = "Value"
             .SelectedIndex = Me.TargetSgComboBox.Items.IndexOfValue(Of String, Single)(Me.CurrentUser.CurrentTarget)
-            .Enabled = Not _fromPdf
+            .Enabled = Not (Is770G() OrElse _fromPdf)
         End With
 
         Me.Text = $"Initialize CareLink™ For {Me.CurrentUser.UserName}"
@@ -191,7 +190,6 @@ Public Class InitializeDialog
                 .SelectedIndex = -1
             Else
                 _currentUserBackup = Me.CurrentUser.Clone
-                .Enabled = True
                 .SelectedIndex = .Items.IndexOfValue(Of String, Single)(Me.CurrentUser.PumpAit)
             End If
             If _fromPdf Then
@@ -206,14 +204,12 @@ Public Class InitializeDialog
             .DataSource = _insulinTypesBindingSource
             .DisplayMember = "Key"
             .ValueMember = "Value"
-            If String.IsNullOrWhiteSpace(Me.CurrentUser.InsulinTypeName) Then
-                .SelectedIndex = -1
-                .Enabled = True
-                If _fromPdf Then
-                    .Focus()
-                End If
-            Else
-                .SelectedIndex = .Items.IndexOfKey(Of String, InsulinActivationRecord)(Me.CurrentUser.InsulinTypeName)
+            .Enabled = True
+            .SelectedIndex = If(String.IsNullOrWhiteSpace(Me.CurrentUser.InsulinTypeName),
+                                -1,
+                                .Items.IndexOfKey(Of String, InsulinActivationRecord)(Me.CurrentUser.InsulinTypeName)
+                               )
+            If _fromPdf Then
                 .Focus()
             End If
         End With
@@ -237,12 +233,12 @@ Public Class InitializeDialog
                         Dim buttonCell As DataGridViewDisableButtonCell = CType(.Cells(NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell)
                         buttonCell.Enabled = i.IsLast
                         Dim c As DataGridViewComboBoxCell = CType(.Cells(NameOf(ColumnStart)), DataGridViewComboBoxCell)
-                        c.Items.Add(value.StartTime.ToString(CurrentDateCulture))
-                        c.Value = value.StartTime.ToString(CurrentDateCulture)
+                        c.Items.Add(value.StartTime.ToString)
+                        c.Value = value.StartTime.ToString()
                         c.ReadOnly = True
                         c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
                         InitializeComboList(c.Items, CInt((New TimeSpan(value.StartTime.Hour, value.StartTime.Minute, 0) / s_30MinuteSpan) + 1))
-                        c.Value = value.EndTime.ToString(CurrentDateCulture)
+                        c.Value = value.EndTime.ToString()
                         c.ReadOnly = i.Index >= 11 OrElse
                                      (i.IsLast AndAlso Not i.IsFirst)
                         Dim numericCell As DataGridViewNumericUpDownCell = CType(.Cells(NameOf(ColumnNumericUpDown)), DataGridViewNumericUpDownCell)
@@ -344,7 +340,7 @@ Public Class InitializeDialog
             Me.CurrentUser.CarbRatios.Add(carbRecord)
         Next
 
-        File.WriteAllText(GetUserSettingsFileNameWithPath("json"),
+        File.WriteAllTextAsync(GetUserSettingsJsonFileNameWithPath,
                           JsonSerializer.Serialize(Me.CurrentUser, JsonFormattingOptions))
 
         Me.Close()

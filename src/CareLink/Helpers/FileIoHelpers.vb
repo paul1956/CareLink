@@ -6,70 +6,80 @@ Imports System.Globalization
 Imports System.IO
 
 Friend Module FileIoHelpers
-    Private s_myDocuments As String = Nothing
-    Private s_projectData As String = Nothing
-    Public ReadOnly Property AllUserLoginInfoFileName As String = $"{ProjectName}.Csv"
+    Private Const AllUsersLoginInfoFileName As String = "CareLink.Csv"
+    Private ReadOnly s_myDocuments As String = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+    Private ReadOnly s_projectData As String = Path.Combine(MyDocuments, "CareLink")
+    Private ReadOnly s_settingsDirectory As String = Path.Combine(MyDocuments, "CareLink", "Settings")
+    Private ReadOnly s_testDataFileNameWithPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")
+    Private ReadOnly s_testSettingFileNameWithPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestFileSettings.json")
 
-    Public ReadOnly Property SavedErrorReportBaseName As String = $"{ProjectName}ErrorReport"
+    Friend ReadOnly Property DirectoryForProjectData As String
+        Get
+            Return s_projectData
+        End Get
+    End Property
 
-    Public ReadOnly Property SavedLastDownloadBaseName As String = $"{ProjectName}LastDownload"
+    Friend ReadOnly Property TestDataFileNameWithPath As String
+        Get
+            Return s_testDataFileNameWithPath
+        End Get
+    End Property
 
-    Public ReadOnly Property SavedSnapshotBaseName As String = $"{ProjectName}Snapshot"
+    Friend ReadOnly Property TestSettingsFileNameWihtPath As String
+        Get
+            Return s_testSettingFileNameWithPath
+        End Get
+    End Property
+
+    Public ReadOnly Property MyDocuments As String
+        Get
+            Return s_myDocuments
+        End Get
+    End Property
+
+    Public ReadOnly Property SettingsDirectory As String
+        Get
+            Return s_settingsDirectory
+        End Get
+    End Property
 
     Friend Function AnyMatchingFiles(path As String, matchPattern As String) As Boolean
         Return Directory.GetFiles(path, matchPattern).Length > 0
     End Function
 
-    Friend Function GetDirectoryForMyDocuments() As String
-        If s_myDocuments Is Nothing Then
-            s_myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-        End If
-        Return s_myDocuments
-    End Function
-
-    Friend Function GetDirectoryForProjectData() As String
-        If s_projectData Is Nothing Then
-            s_projectData = Path.Combine(GetDirectoryForMyDocuments, ProjectName)
-        End If
-        Return s_projectData
-    End Function
-
-    Friend Function GetDirectoryForSettings() As String
-        Return Path.Combine(GetDirectoryForProjectData(), "Settings")
-    End Function
-
     Friend Function GetGraphColorsFileNameWithPath(current As Boolean) As String
         Return If(current,
-                  Path.Combine(GetDirectoryForProjectData(), "GraphColors.Csv"),
-                  Path.Combine(GetDirectoryForMyDocuments(), $"{ProjectName}GraphColors.Csv")
+                  Path.Combine(DirectoryForProjectData, "GraphColors.Csv"),
+                  Path.Combine(MyDocuments, "CareLinkGraphColors.Csv")
                  )
     End Function
 
     Friend Function GetLastDownloadFileWithPath() As String
-        Return GetDataFileName(SavedLastDownloadBaseName, CultureInfo.CurrentUICulture.Name, "json", False).withPath
+        Return GetUniqueDataFileName(BaseNameSavedLastDownload, CultureInfo.CurrentUICulture.Name, "json", False).withPath
     End Function
 
-    Friend Function GetSettingsDirectory() As String
-        Return Path.Combine(GetDirectoryForProjectData(), "Settings")
+    Friend Function GetUserSettingsJsonFileNameWithPath() As String
+        Return Path.Combine(SettingsDirectory, $"{My.Settings.CareLinkUserName}Settings.json")
     End Function
 
-    Friend Function GetTestDataFileNameWithPath() As String
-        Return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")
-    End Function
-
-    Friend Function GetTestSettingsFileNameWihtPath() As String
-        Return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestFileSettings.json")
-    End Function
-
-    Friend Function GetUserSettingsFileNameWithPath(extension As String) As String
-        Return Path.Combine(GetSettingsDirectory(), $"{My.Settings.CareLinkUserName}Settings.{extension}")
+    Friend Function GetUserSettingsPdfFileNameWithPath() As String
+        Return Path.Combine(SettingsDirectory, $"{My.Settings.CareLinkUserName}Settings.pdf")
     End Function
 
     Friend Function GetUsersLoginInfoFileWithPath(current As Boolean) As String
         Return If(current,
-                  Path.Combine(GetDirectoryForProjectData(), AllUserLoginInfoFileName),
-                  Path.Combine(GetDirectoryForMyDocuments(), AllUserLoginInfoFileName)
+                  Path.Combine(DirectoryForProjectData, AllUsersLoginInfoFileName),
+                  Path.Combine(MyDocuments, AllUsersLoginInfoFileName)
                  )
+    End Function
+
+    ''' <summary>
+    ''' File hasn.t been touched for at least 30 days
+    ''' </summary>
+    ''' <param name="userSettingsFileWithPath"></param>
+    ''' <returns>True if Stale</returns>
+    Friend Function IsFileStale(userSettingsFileWithPath As String) As Boolean
+        Return File.GetLastWriteTime(userSettingsFileWithPath) < Now - s_30DaysSpan
     End Function
 
     Friend Sub MoveFiles(previousDirectory As String, currentDirectory As String, searchPattern As String)
@@ -84,6 +94,25 @@ Friend Module FileIoHelpers
             lastError = $"Can't move {previousFile} to {currentFile}"
             File.Move(previousFile, currentFile)
         End If
+    End Sub
+
+    Public Sub TouchFile(fileNameWithPath As String)
+        Try
+            If String.IsNullOrWhiteSpace(fileNameWithPath) Then
+                Throw New ArgumentException($"'{NameOf(fileNameWithPath)}' cannot be null or whitespace.", NameOf(fileNameWithPath))
+            End If
+
+            ' Update the CreationTime, LastWriteTime and LastAccessTime.
+            Dim fsi As FileSystemInfo = New FileInfo(fileNameWithPath) With {
+                .CreationTime = Date.Now,
+                .LastAccessTime = Date.Now,
+                .LastWriteTime = Date.Now
+            }
+        Catch e As Exception
+            Stop
+            Console.WriteLine("Error: {0}", e.Message)
+        End Try
+
     End Sub
 
 End Module

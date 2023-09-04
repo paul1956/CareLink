@@ -36,7 +36,7 @@ Friend Module Form1NotificationTabHelpers
 
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In notificationDictionary.WithIndex()
             Dim notificationType As KeyValuePair(Of String, String) = c.Value
-            Dim innerJson As List(Of Dictionary(Of String, String)) = LoadList(notificationType.Value)
+            Dim innerJson As List(Of Dictionary(Of String, String)) = JsonToLisOfDictionary(notificationType.Value)
             Dim tableLayoutPanel2 As New TableLayoutPanel With {
              .AutoScroll = False,
              .AutoSize = True,

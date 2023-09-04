@@ -7,7 +7,7 @@ Public Class PathDocsRecord
 
     Public Sub New(jsonData As String)
         If Not String.IsNullOrWhiteSpace(jsonData) Then
-            Me.pathDoc = Loads(jsonData)
+            Me.pathDoc = JsonToDictionary(jsonData)
         End If
     End Sub
 

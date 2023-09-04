@@ -56,24 +56,24 @@ Public Class ExceptionHandlerDialog
         StartOrStopServerUpdateTimer(False)
         Dim fontBold As New Font(Me.InstructionsRichTextBox.Font, FontStyle.Bold)
         Dim fontNormal As Font = Me.InstructionsRichTextBox.Font
-        _gitClient = New GitHubClient(New ProductHeaderValue($"{ProjectName}.Issues"), New Uri(GitHubCareLinkUrl))
+        _gitClient = New GitHubClient(New ProductHeaderValue($"CareLink.Issues"), New Uri(GitHubCareLinkUrl))
         If String.IsNullOrWhiteSpace(Me.ReportFileNameWithPath) Then
             ' Create error report and issue
             Me.ExceptionTextBox.Text = Me.UnhandledException.Exception.Message
             Me.StackTraceTextBox.Text = TrimmedStackTrace(Me.UnhandledException.Exception.StackTrace)
 
             Me.InstructionsRichTextBox.Text = $"By clicking OK, the Stack Trace, Exception and the CareLink™ data that caused the error will be package as a text file called{vbCrLf}"
-            Dim uniqueFileNameResult As FileNameStruct = GetDataFileName(SavedErrorReportBaseName, CurrentDateCulture.Name, "txt", True)
+            Dim uniqueFileNameResult As FileNameStruct = GetUniqueDataFileName(BaseNameSavedErrorReport, CurrentDateCulture.Name, "txt", True)
             Dim fileLink As String = $"{uniqueFileNameResult.withoutPath}: file://{uniqueFileNameResult.withPath}"
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, fileLink, fontBold)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "and stored in", fontNormal)
-            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, GetDirectoryForProjectData(), fontBold)
+            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, DirectoryForProjectData, fontBold)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "You can review what is being stored and then attach it to a new issue at", fontNormal)
-            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, $"{_gitClient.Repository.Get(GitOwnerName, ProjectName).Result.HtmlUrl}/issues.", fontNormal)
+            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, $"{_gitClient.Repository.Get(GitOwnerName, "CareLink").Result.HtmlUrl}/issues.", fontNormal)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "This will help me isolate issues quickly.", fontNormal)
             CreateReportFile(Me.ExceptionTextBox.Text, Me.StackTraceTextBox.Text, uniqueFileNameResult.withPath, RecentData)
         Else
-            CurrentDateCulture = Me.ReportFileNameWithPath.ExtractCultureFromFileName(SavedErrorReportBaseName)
+            CurrentDateCulture = Me.ReportFileNameWithPath.ExtractCultureFromFileName(BaseNameSavedErrorReport)
             If CurrentDateCulture Is Nothing Then
                 Me.Close()
                 Exit Sub
@@ -82,7 +82,7 @@ Public Class ExceptionHandlerDialog
             Dim fileLink As String = $"{Path.GetFileName(Me.ReportFileNameWithPath)}: file://{Me.ReportFileNameWithPath}"
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, fileLink, fontBold)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "and stored in", fontNormal)
-            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, GetDirectoryForProjectData(), fontBold)
+            AppendTextWithFontAndColor(Me.InstructionsRichTextBox, DirectoryForProjectData, fontBold)
             Me.LocalRawData = Me.DecomposeReportFile(Me.ExceptionTextBox, Me.StackTraceTextBox, Me.ReportFileNameWithPath)
         End If
     End Sub

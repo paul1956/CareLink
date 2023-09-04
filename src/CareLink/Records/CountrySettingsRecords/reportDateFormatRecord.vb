@@ -18,7 +18,7 @@ Public Class ReportDateFormatRecord
     Public Property timeSeparator As String
 
     Public Sub New(jsonValue As String)
-        For Each kvp As KeyValuePair(Of String, String) In Loads(jsonValue)
+        For Each kvp As KeyValuePair(Of String, String) In JsonToDictionary(jsonValue)
             _asList.Add(KeyValuePair.Create(kvp.Key, kvp.Value))
             Select Case kvp.Key
                 Case NameOf(longTimePattern12)

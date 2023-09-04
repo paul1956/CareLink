@@ -39,7 +39,7 @@ Friend Module Form1CollectMarkersHelper
         Dim basalDictionary As New SortedDictionary(Of OADate, Single)
         MaxBasalPerDose = 0
 
-        Dim markers As List(Of Dictionary(Of String, String)) = LoadList(jsonRow)
+        Dim markers As List(Of Dictionary(Of String, String)) = JsonToLisOfDictionary(jsonRow)
         For Each markerEntry As Dictionary(Of String, String) In markers
             Select Case markerEntry("type")
                 Case "AUTO_BASAL_DELIVERY"

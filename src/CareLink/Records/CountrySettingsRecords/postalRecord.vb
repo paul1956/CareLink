@@ -9,7 +9,7 @@ Public Class PostalRecord
     Private ReadOnly _asList As New Dictionary(Of String, String)
 
     Public Sub New(<StringSyntax(StringSyntaxAttribute.Json)> jsonData As String)
-        _asList = Loads(jsonData)
+        _asList = JsonToDictionary(jsonData)
         If _asList.Keys.Count <> 2 Then
             Throw New Exception($"{NameOf(PostalRecord)}({NameOf(jsonData)}) contains {jsonData.Length} entries, 2 expected.")
         End If

@@ -6,13 +6,14 @@ Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Module SystemConstants
-
+    Friend Const BaseNameSavedErrorReport As String = "CareLinkErrorReport"
+    Friend Const BaseNameSavedLastDownload As String = "CareLinkLastDownload"
+    Friend Const BaseNameSavedSnapshot As String = "CareLinkSnapshot"
     Friend Const ClickToShowDetails As String = "Click To Show Details"
     Friend Const ExceptionStartingString As String = "--- Start of Exception ---"
     Friend Const ExceptionTerminatingString As String = "--- End of Exception ---"
     Friend Const GitOwnerName As String = "Paul1956"
     Friend Const MmolLUnitsDivisor As Single = 18
-    Friend Const ProjectName As String = "CareLink"
     Friend Const RegisteredTrademark As String = ChrW(&HAE)
     Friend Const StackTraceStartingStr As String = "--- Start of stack trace ---"
     Friend Const StackTraceTerminatingStr As String = "--- End of stack trace from previous location ---"
@@ -20,9 +21,6 @@ Public Module SystemConstants
     Friend Const TimeFormatMilitaryWithoutMinutes As String = "HH"
     Friend Const TimeFormatTwelveHourWithMinutes As String = " h:mm tt"
     Friend Const TimeFormatTwelveHourWithoutMinutes As String = " h tt"
-
-    Friend ReadOnly s_15Spaces As String = Space(15)
-    Friend ReadOnly s_4Spaces As String = Space(4)
 
     Friend ReadOnly s_calloutAnnotations As New Dictionary(Of String, CalloutAnnotation) From {
             {"SummaryChart", New CalloutAnnotation},
@@ -47,8 +45,6 @@ Public Module SystemConstants
             {$"Lyumjev{RegisteredTrademark}", New InsulinActivationRecord(3, 3)}
         }
 
-    Public ReadOnly s_careLinkLower As String = ProjectName.ToLower
-
     Public ReadOnly s_oneToNineteen As New List(Of String) From {
             "zero",
             "one", "two", "three", "four", "five",
@@ -67,9 +63,9 @@ Public Module SystemConstants
             {"NONE", "↔"}
         }
 
-    Friend ReadOnly Property GitHubCareLinkUrl As String = $"https://GitHub.com/{GitOwnerName}/{ProjectName}/"
+    Friend ReadOnly Property GitHubCareLinkUrl As String = $"https://GitHub.com/{GitOwnerName}/CareLink/"
     Friend ReadOnly Property JsonFormattingOptions As New JsonSerializerOptions With {.WriteIndented = True}
-    Friend ReadOnly Property SavedTitle As String = $"{ProjectName}™ For Windows"
+    Friend ReadOnly Property SavedTitle As String = "CareLink™ For Windows"
 
 #Region "AIT Constants"
 
@@ -98,21 +94,21 @@ Public Module SystemConstants
 #Region "BG Constant Lists"
 
     Friend ReadOnly Property MgDlItems As New Dictionary(Of String, Single) From {
-            {$"100 mg/dL", 100.0},
-            {$"110 mg/dL", 110.0},
-            {$"120 mg/dL", 120.0}
+            {"100 mg/dL", 100.0},
+            {"110 mg/dL", 110.0},
+            {"120 mg/dL", 120.0}
         }
 
     Friend ReadOnly Property MmolLItemsComma As New Dictionary(Of String, Single) From {
-            {$"5,6 mmol/L", 5.6},
-            {$"6,1 mmol/L", 6.1},
-            {$"6,7 mmol/L", 6.7}
+            {"5,6 mmol/L", 5.6},
+            {"6,1 mmol/L", 6.1},
+            {"6,7 mmol/L", 6.7}
         }
 
     Friend ReadOnly Property MmolLItemsPeriod As New Dictionary(Of String, Single) From {
-            {$"5.6 mmol/L", 5.6},
-            {$"6.1 mmol/L", 6.1},
-            {$"6.7 mmol/L", 6.7}
+            {"5.6 mmol/L", 5.6},
+            {"6.1 mmol/L", 6.1},
+            {"6.7 mmol/L", 6.7}
         }
 
     Friend ReadOnly Property UnitsStrings As New Dictionary(Of String, String) From {

@@ -35,6 +35,8 @@ Partial Class Form1
         MenuStrip1 = New MenuStrip()
         MenuStartHere = New ToolStripMenuItem()
         MenuStartHereLogin = New ToolStripMenuItem()
+        ToolStripSeparator8 = New ToolStripSeparator()
+        MenuStartHereManuallyImportDeviceSettings = New ToolStripMenuItem()
         MenuStartHereShowPumpSetup = New ToolStripMenuItem()
         ToolStripSeparator1 = New ToolStripSeparator()
         MenuStartHereLoadSavedDataFile = New ToolStripMenuItem()
@@ -236,8 +238,6 @@ Partial Class Form1
         TimeZoneToolStripStatusLabel = New ToolStripStatusLabel()
         StatusStripSpacerRight = New ToolStripStatusLabel()
         UpdateAvailableStatusStripLabel = New ToolStripStatusLabel()
-        ToolStripSeparator8 = New ToolStripSeparator()
-        MenuStartHereManuallyImportDeviceSettings = New ToolStripMenuItem()
         MenuStrip1.SuspendLayout()
         CType(CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         CalibrationShieldPanel.SuspendLayout()
@@ -326,6 +326,17 @@ Partial Class Form1
         MenuStartHereLogin.Name = "MenuStartHereLogin"
         MenuStartHereLogin.Size = New Size(249, 22)
         MenuStartHereLogin.Text = "Login"
+        ' 
+        ' ToolStripSeparator8
+        ' 
+        ToolStripSeparator8.Name = "ToolStripSeparator8"
+        ToolStripSeparator8.Size = New Size(246, 6)
+        ' 
+        ' MenuStartHereManuallyImportDeviceSettings
+        ' 
+        MenuStartHereManuallyImportDeviceSettings.Name = "MenuStartHereManuallyImportDeviceSettings"
+        MenuStartHereManuallyImportDeviceSettings.Size = New Size(249, 22)
+        MenuStartHereManuallyImportDeviceSettings.Text = "Manually Import Device Serrtings"
         ' 
         ' MenuStartHereShowPumpSetup
         ' 
@@ -2631,17 +2642,6 @@ Partial Class Form1
         UpdateAvailableStatusStripLabel.Name = "UpdateAvailableStatusStripLabel"
         UpdateAvailableStatusStripLabel.Size = New Size(116, 20)
         UpdateAvailableStatusStripLabel.Text = "Update Available"
-        ' 
-        ' ToolStripSeparator8
-        ' 
-        ToolStripSeparator8.Name = "ToolStripSeparator8"
-        ToolStripSeparator8.Size = New Size(246, 6)
-        ' 
-        ' MenuStartHereManuallyImportDeviceSettings
-        ' 
-        MenuStartHereManuallyImportDeviceSettings.Name = "MenuStartHereManuallyImportDeviceSettings"
-        MenuStartHereManuallyImportDeviceSettings.Size = New Size(249, 22)
-        MenuStartHereManuallyImportDeviceSettings.Text = "Manually Import Device Serrtings"
         ' 
         ' Form1
         ' 

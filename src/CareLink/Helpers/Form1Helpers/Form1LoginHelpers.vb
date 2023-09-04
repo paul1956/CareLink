@@ -7,12 +7,6 @@ Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 
-Friend Enum CheckForUpdate As Integer
-    Always = 0
-    Never = 1
-    Ask = 2
-End Enum
-
 Friend Enum FileToLoadOptions As Integer
     LastSaved = 0
     TestData = 1
@@ -30,21 +24,21 @@ Friend Module Form1LoginHelpers
         Select Case fileToLoad
             Case FileToLoadOptions.LastSaved
                 Form1.Text = $"{SavedTitle} Using Last Saved Data"
-                CurrentDateCulture = GetLastDownloadFileWithPath().ExtractCultureFromFileName(SavedLastDownloadBaseName)
-                RecentData = Loads(File.ReadAllText(GetLastDownloadFileWithPath()))
+                CurrentDateCulture = GetLastDownloadFileWithPath().ExtractCultureFromFileName(BaseNameSavedLastDownload)
+                RecentData = LoadIndexedItems(File.ReadAllText(GetLastDownloadFileWithPath()))
                 Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(GetLastDownloadFileWithPath())
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
-                SetUpCareLinkUser(GetTestSettingsFileNameWihtPath(), CheckForUpdate.Never, False)
+                SetUpCareLinkUser(TestSettingsFileNameWihtPath)
                 fromFile = True
             Case FileToLoadOptions.TestData
                 Form1.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
-                RecentData = Loads(File.ReadAllText(GetTestDataFileNameWithPath()))
+                RecentData = LoadIndexedItems(File.ReadAllText(TestDataFileNameWithPath))
                 Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                Dim fileDate As Date = File.GetLastWriteTime(GetTestDataFileNameWithPath())
+                Dim fileDate As Date = File.GetLastWriteTime(TestDataFileNameWithPath)
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
-                SetUpCareLinkUser(GetTestSettingsFileNameWihtPath, CheckForUpdate.Never, False)
+                SetUpCareLinkUser(TestSettingsFileNameWihtPath)
                 fromFile = True
             Case FileToLoadOptions.Login
                 Form1.Text = SavedTitle
@@ -74,7 +68,7 @@ Friend Module Form1LoginHelpers
 
                 RecentData = Form1.Client.GetRecentData()
 
-                SetUpCareLinkUser(GetUserSettingsFileNameWithPath("json"), CheckForUpdate.Always, False)
+                SetUpCareLinkUser(GetUserSettingsJsonFileNameWithPath, False)
                 StartOrStopServerUpdateTimer(True, s_1MinutesInMilliseconds)
 
                 If NetworkUnavailable() Then
@@ -154,22 +148,23 @@ Friend Module Form1LoginHelpers
 
     End Sub
 
-    Friend Sub SetUpCareLinkUser(userSettingsFileWithPath As String, checkForUpdate As CheckForUpdate, forceUI As Boolean)
-        Dim page As New TaskDialogPage
-        Dim ait As Single = 2
-        Dim carbRatios As New List(Of CarbRatioRecord)
-        Dim lastUpdateTimeString As String = "Your device setting file has never been downloaded!"
-        Dim currentUserUpdateNeeded As Boolean = forceUI
+    Friend Sub SetUpCareLinkUser(userSettingsFileWithPath As String)
+        Dim userSettingsJson As String = File.ReadAllText(userSettingsFileWithPath)
+        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(userSettingsJson, JsonFormattingOptions)
+    End Sub
+
+    Friend Sub SetUpCareLinkUser(userSettingsFileWithPath As String, forceUI As Boolean)
+        Dim currentUserUpdateNeeded As Boolean = False
+        Dim pdfNewerThanUserJson As Boolean = False
+        Dim pdfFileNameWithPath As String = GetUserSettingsPdfFileNameWithPath()
+
         If File.Exists(userSettingsFileWithPath) Then
-            Dim lastUpdateTime As Date = File.GetLastWriteTime(userSettingsFileWithPath)
-            lastUpdateTimeString = $"Your Last Update was {lastUpdateTime.ToShortDateString}"
-            Dim contents As String = File.ReadAllText(userSettingsFileWithPath)
-            CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
+            Dim userSettingsJson As String = File.ReadAllText(userSettingsFileWithPath)
+            CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(userSettingsJson, JsonFormattingOptions)
 
-            If checkForUpdate = CheckForUpdate.Never Then Exit Sub
-            Dim pdfFileNameWithPath As String = GetUserSettingsFileNameWithPath("pdf")
+            pdfNewerThanUserJson = File.Exists(pdfFileNameWithPath) AndAlso File.GetLastWriteTime(pdfFileNameWithPath) > File.GetLastWriteTime(userSettingsFileWithPath)
 
-            If Not forceUI AndAlso lastUpdateTime > Now - s_30DaysSpan AndAlso File.Exists(pdfFileNameWithPath) AndAlso File.GetLastWriteTime(pdfFileNameWithPath) < lastUpdateTime Then
+            If Not (forceUI OrElse pdfNewerThanUserJson OrElse IsFileStale(userSettingsFileWithPath)) Then
                 Exit Sub
             End If
         Else
@@ -177,39 +172,35 @@ Friend Module Form1LoginHelpers
             currentUserUpdateNeeded = True
         End If
 
-        If checkForUpdate = CheckForUpdate.Always OrElse MsgBox($"Would you like to update from latest {ProjectName}™ Device Settings PDF File", lastUpdateTimeString, MsgBoxStyle.YesNo, $"Use {ProjectName}™ Settings File", -1, page) = MsgBoxResult.Yes Then
-            Dim pdfFileNamepdfFileName As String = ""
-            Form1.Cursor = Cursors.WaitCursor
-            Application.DoEvents()
-            If Form1.Client.TryGetDeviceSettingsPdfFile(pdfFileNamepdfFileName) Then
-                Dim pdf As New PdfSettingsRecord(pdfFileNamepdfFileName)
-                If CurrentUser.PumpAit <> pdf.Bolus.BolusWizard.ActiveInsulinTime Then
-                    ait = pdf.Bolus.BolusWizard.ActiveInsulinTime
-                    currentUserUpdateNeeded = True
-                End If
-                If Not pdf.Bolus.DeviceCarbohydrateRatios.EqualCarbRatios(CurrentUser.CarbRatios) Then
-                    carbRatios = pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
-                    currentUserUpdateNeeded = True
-                End If
-            Else
-                If currentUserUpdateNeeded Then
-                    CurrentUser = New CurrentUserRecord(My.Settings.CareLinkUserName, If(Not Is770G(), CheckState.Checked, CheckState.Indeterminate))
-                    currentUserUpdateNeeded = True
-                End If
+        Dim ait As Single = 2
+        Dim carbRatios As New List(Of CarbRatioRecord)
+        Form1.Cursor = Cursors.WaitCursor
+        Application.DoEvents()
+        pdfNewerThanUserJson = Form1.Client.TryGetDeviceSettingsPdfFile(pdfFileNameWithPath) Or pdfNewerThanUserJson
+        If pdfNewerThanUserJson Then
+            Dim pdf As New PdfSettingsRecord(pdfFileNameWithPath)
+            If CurrentUser.PumpAit <> pdf.Bolus.BolusWizard.ActiveInsulinTime Then
+                ait = pdf.Bolus.BolusWizard.ActiveInsulinTime
+                currentUserUpdateNeeded = True
+            End If
+            If Not pdf.Bolus.DeviceCarbohydrateRatios.EqualCarbRatios(CurrentUser.CarbRatios) Then
+                carbRatios = pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
+                currentUserUpdateNeeded = True
             End If
         End If
-        If currentUserUpdateNeeded Then
+        If currentUserUpdateNeeded OrElse forceUI Then
             Dim f As New InitializeDialog(CurrentUser, ait, carbRatios)
             Dim result As DialogResult = f.ShowDialog()
             If result = DialogResult.OK Then
-                currentUserUpdateNeeded = currentUserUpdateNeeded Or Not CurrentUser.Equals(f.CurrentUser)
+                currentUserUpdateNeeded = currentUserUpdateNeeded OrElse Not CurrentUser.Equals(f.CurrentUser)
                 CurrentUser = f.CurrentUser.Clone
             End If
         End If
         If currentUserUpdateNeeded Then
-            File.WriteAllTextAsync(GetUserSettingsFileNameWithPath("json"),
+            File.WriteAllTextAsync(userSettingsFileWithPath,
                       JsonSerializer.Serialize(CurrentUser, JsonFormattingOptions))
-
+        Else
+            TouchFile(userSettingsFileWithPath)
         End If
         Form1.Cursor = Cursors.Default
         Application.DoEvents()

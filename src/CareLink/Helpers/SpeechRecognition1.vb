@@ -53,10 +53,10 @@ Friend Module SpeechSupport
                     s_speechErrorReported = True
                     Dim details As New StringBuilder()
                     details.AppendLine("Details:")
-                    details.AppendLine($"{s_4Spaces}Audio level:               {e.AudioLevel}")
-                    details.AppendLine($"{s_4Spaces}Audio position:            {e.AudioPosition}")
-                    details.AppendLine($"{s_4Spaces}Audio signal problem:      {e.AudioSignalProblem}")
-                    details.AppendLine($"{s_4Spaces}Recognizer audio position: {e.RecognizerAudioPosition}")
+                    details.AppendLine($"    Audio level:               {e.AudioLevel}")
+                    details.AppendLine($"    Audio position:            {e.AudioPosition}")
+                    details.AppendLine($"    Audio signal problem:      {e.AudioSignalProblem}")
+                    details.AppendLine($"    Recognizer audio position: {e.RecognizerAudioPosition}")
 
                     Dim page As New TaskDialogPage
                     MsgBox("Audio signal problem", details.ToString, MsgBoxStyle.OkOnly Or MsgBoxStyle.Information, "Audio Error", 15, page)
@@ -112,17 +112,17 @@ Friend Module SpeechSupport
             Exit Sub
         End If
 
-        If recognizedTextLower.StartsWith(s_careLinkLower) Then
+        If recognizedTextLower.StartsWith("carelink") Then
             If confidence >= My.Settings.SystemSpeechRecognitionThreshold Then
                 s_speechWakeWordFound = True
                 message = $"Heard: Wake word {recognizedTextLower} with confidence {confidence}%), waiting.."
                 Debug.WriteLine(message)
                 Form1.StatusStripSpeech.Text = message
                 Application.DoEvents()
-                If recognizedTextLower = s_careLinkLower Then
+                If recognizedTextLower = "carelink" Then
                     Exit Sub
                 End If
-                recognizedTextLower = recognizedTextLower.Replace(s_careLinkLower, "").TrimEnd
+                recognizedTextLower = recognizedTextLower.Replace("carelink", "").TrimEnd
             Else
                 message = $"Rejected: {recognizedTextLower} with confidence {confidence}%"
                 Debug.WriteLine(message)
@@ -162,40 +162,22 @@ Friend Module SpeechSupport
                         Exit Select
                     End If
                     Dim text As New StringBuilder
-                    text.AppendLine($"{ProjectName}:")
-                    text.AppendLine($"{s_4Spaces}All commands start with this")
-                    text.AppendLine($"{s_4Spaces}A pause is allowed after saying {ProjectName}.")
+                    text.AppendLine("CareLink:")
+                    text.AppendLine("    All commands start with this")
+                    text.AppendLine("    A pause is allowed after saying CareLink.")
                     text.AppendLine()
-                    text.AppendLine($"What can I say:")
-                    text.AppendLine($"{s_4Spaces}This message will be displayed")
+                    text.AppendLine("What can I say:")
+                    text.AppendLine("    This message will be displayed")
                     text.AppendLine()
-                    text.AppendLine($"What is my SG/BG/Blood Glucose/Blood Sugar:")
-                    text.AppendLine($"{s_4Spaces}Your current Sensor Glucose will be spoken")
+                    text.AppendLine("What is my SG/BG/Blood Glucose/Blood Sugar:")
+                    text.AppendLine("    Your current Sensor Glucose will be spoken")
                     text.AppendLine()
-                    text.AppendLine($"Tell me name's SG/BG/Blood Glucose/Blood Sugar:")
-                    text.AppendLine($"{s_4Spaces}Used when you support more than 1 user")
-                    text.AppendLine($"{s_4Spaces}Example ""Tell me John's Sensor Glucose""")
-                    'currentSgStr.AppendLine($"Show [any tab name]: Will make that tab have focus")
-                    'currentSgStr.AppendLine($"{s_4Spaces}Example ""Show Treatment Details""")
+                    text.AppendLine("Tell me name's SG/BG/Blood Glucose/Blood Sugar:")
+                    text.AppendLine("    Used when you support more than 1 user")
+                    text.AppendLine("    Example ""Tell me John's Sensor Glucose""")
                     Dim page As New TaskDialogPage
                     MsgBox("", text.ToString, MsgBoxStyle.OkOnly Or MsgBoxStyle.Information, "Speech Recognition Help", 30, page)
                     My.Settings.SystemSpeechHelpShown = page.Verification.Checked
-                    'Case recognizedTextLower.StartsWith("show", StringCo parison.CurrentCultureIgnoreCase)
-                    '    Dim tabText As String = recognizedTextLower.Substring("show ".Length).ToLower.TrimEnd("."c)
-                    '    For Each tab As TabPage In Form1.TabControlPage1.TabPages
-                    '        If tab.Text.ToLower.TrimEnd("."c) = tabText Then
-                    '            Form1.TabControlPage1.Visible = True
-                    '            Form1.TabControlPage1.SelectedTab = tab
-                    '            Exit Select
-                    '        End If
-                    '    Next
-                    '    For Each tab As TabPage In Form1.TabControlPage2.TabPages
-                    '        If tab.Text.ToLower.TrimEnd("."c) = tabText Then
-                    '            Form1.TabControlPage1.Visible = False
-                    '            Form1.TabControlPage2.SelectedTab = tab
-                    '            Exit Select
-                    '        End If
-                    '    Next
                 Case Else
                     Stop
             End Select
@@ -242,7 +224,7 @@ Friend Module SpeechSupport
             s_sre.SetInputToDefaultAudioDevice()
 
             Dim gb_Attention As New GrammarBuilder With {.Culture = culture}
-            gb_Attention.Append(s_careLinkLower)
+            gb_Attention.Append("carelink")
             s_sre.LoadGrammarAsync(New Grammar(gb_Attention))
 
             'Dim gb_StartStop As New GrammarBuilder With {.Culture = culture}
@@ -281,7 +263,7 @@ Friend Module SpeechSupport
                 msg = $"Speech recognition enabled for {s_firstName}"
 
                 If String.IsNullOrWhiteSpace(oldUserName) Then
-                    msg &= $" for a list of commands say, {ProjectName} what can I say"
+                    msg &= " for a list of commands say, CareLink what can I say"
                 End If
 
                 PlayText(msg)

@@ -88,7 +88,7 @@ Friend Module DeviceSettingsExtensions
         End If
         For Each e As IndexClass(Of CarbRatioRecord) In toCarbRatioList.WithIndex
             Dim deviceCarbRatio As CarbRatioRecord = e.Value
-            If Not deviceCarbRatio.Equals(carbRatios) Then
+            If Not deviceCarbRatio.Equals(carbRatios(e.Index)) Then
                 Return False
             End If
         Next

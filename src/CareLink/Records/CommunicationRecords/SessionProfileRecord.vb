@@ -53,7 +53,7 @@ Public Class SessionProfileRecord
                 Case NameOf(gender)
                     Me.gender = row.Value
                 Case NameOf(race)
-                    Dim raceRecord As New RaceRecord(Loads(row.Value))
+                    Dim raceRecord As New RaceRecord(JsonToDictionary(row.Value))
                     Me.race = raceRecord.ToString
                     _profileDictionary(key) = Me.race
                 Case NameOf(diabetesType)

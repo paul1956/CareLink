@@ -15,8 +15,8 @@ Public Class SupportedReportRecord
         End If
         Me.recordNumber = recordNumber
         Me.report = Values(NameOf(report))
-        Me.onlyFor = kvpToString(LoadList(Values(NameOf(onlyFor)))).ToString.TrimStart(" "c).TrimEnd(","c)
-        Me.notFor = kvpToString(LoadList(Values(NameOf(notFor)))).ToString.TrimStart(" "c).TrimEnd(","c)
+        Me.onlyFor = kvpToString(JsonToLisOfDictionary(Values(NameOf(onlyFor)))).ToString.TrimStart(" "c).TrimEnd(","c)
+        Me.notFor = kvpToString(JsonToLisOfDictionary(Values(NameOf(notFor)))).ToString.TrimStart(" "c).TrimEnd(","c)
 
     End Sub
 

@@ -6,7 +6,7 @@ Public Class MfaRecord
     Private ReadOnly _asList As New Dictionary(Of String, String)
 
     Public Sub New(jsonData As String)
-        _asList = Loads(jsonData)
+        _asList = JsonToDictionary(jsonData)
         If _asList.Keys.Count <> 6 Then
             Throw New Exception($"{NameOf(MfaRecord)}({NameOf(jsonData)}) contains {_asList.Count} entries, 6 expected.")
         End If

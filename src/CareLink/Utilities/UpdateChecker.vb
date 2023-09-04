@@ -7,7 +7,7 @@ Imports System.Threading
 
 Friend Module UpdateChecker
     Private ReadOnly s_httpClient As New HttpClient()
-    Private ReadOnly s_versionSearchKey As String = $"<a hRef=""/{GitOwnerName}/{ProjectName}/releases/tag/"
+    Private ReadOnly s_versionSearchKey As String = $"<a hRef=""/{GitOwnerName}/CareLink/releases/tag/"
     Private s_inCheckForUpdate As Integer = 0
     Private s_updateSleepCount As Integer = 0
 

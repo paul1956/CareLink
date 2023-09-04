@@ -56,7 +56,7 @@ Friend Module ExportDataGridView
                 .CheckPathExists = True,
                 .FileName = $"{baseFileName} ({Date.Now:yyyy-MM-dd})",
                 .Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*",
-                .InitialDirectory = GetDirectoryForProjectData(),
+                .InitialDirectory = DirectoryForProjectData,
                 .OverwritePrompt = True,
                 .Title = "To Excel"
                }

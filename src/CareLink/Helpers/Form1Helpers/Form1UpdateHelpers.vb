@@ -52,7 +52,7 @@ Friend Module Form1UpdateHelpers
     End Function
 
     Private Sub HandleComplexItems(row As KeyValuePair(Of String, String), rowIndex As ItemIndexes, key As String)
-        Dim valueList As String() = Loads(row.Value).ToCsv.
+        Dim valueList As String() = JsonToDictionary(row.Value).ToCsv.
                                                      Replace("{", "").
                                                      Replace("}", "").
                                                      Split(",")
@@ -112,18 +112,18 @@ Friend Module Form1UpdateHelpers
 
         s_lastMedicalDeviceDataUpdateServerEpoch = CLng(RecentData(ItemIndexes.lastMedicalDeviceDataUpdateServerTime.ToString))
         If RecentData.TryGetValue(ItemIndexes.therapyAlgorithmState.ToString, markerRowString) Then
-            s_therapyAlgorithmStateValue = Loads(markerRowString)
+            s_therapyAlgorithmStateValue = LoadIndexedItems(markerRowString)
             InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso {"AUTO_BASAL", "SAFE_BASAL"}.Contains(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.autoModeShieldState)))
         End If
 
 #Region "Update all Markers"
 
         If RecentData.TryGetValue(ItemIndexes.sgs.ToString, markerRowString) Then
-            s_listOfSgRecords = LoadList(markerRowString).ToSgList()
+            s_listOfSgRecords = JsonToLisOfDictionary(markerRowString).ToSgList()
         End If
 
         If RecentData.TryGetValue(ItemIndexes.basal.ToString, markerRowString) Then
-            Dim item As BasalRecord = DictionaryToClass(Of BasalRecord)(Loads(markerRowString), recordNumber:=0)
+            Dim item As BasalRecord = DictionaryToClass(Of BasalRecord)(LoadIndexedItems(markerRowString), recordNumber:=0)
             item.OaDateTime(s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime)
             s_listOfManualBasal.Add(item)
         End If
@@ -252,15 +252,15 @@ Friend Module Form1UpdateHelpers
 
                 Case ItemIndexes.lastSG
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-                    s_lastSgRecord = New SgRecord(Loads(row.Value), 0)
+                    s_lastSgRecord = New SgRecord(LoadIndexedItems(row.Value), 0)
 
                 Case ItemIndexes.lastAlarm
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-                    s_lastAlarmValue = Loads(row.Value)
+                    s_lastAlarmValue = LoadIndexedItems(row.Value)
 
                 Case ItemIndexes.activeInsulin
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-                    s_activeInsulin = DictionaryToClass(Of ActiveInsulinRecord)(Loads(row.Value), 0)
+                    s_activeInsulin = DictionaryToClass(Of ActiveInsulinRecord)(LoadIndexedItems(row.Value), 0)
 
                 Case ItemIndexes.sgs
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
@@ -277,13 +277,13 @@ Friend Module Form1UpdateHelpers
 
                 Case ItemIndexes.notificationHistory
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-                    s_notificationHistoryValue = Loads(row.Value)
+                    s_notificationHistoryValue = LoadIndexedItems(row.Value)
 
                 Case ItemIndexes.therapyAlgorithmState
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
 
                 Case ItemIndexes.pumpBannerState
-                    s_pumpBannerStateValue = LoadList(row.Value)
+                    s_pumpBannerStateValue = JsonToLisOfDictionary(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
                     Form1.PumpBannerStateLabel.Visible = False
 
@@ -520,7 +520,7 @@ Friend Module Form1UpdateHelpers
     ''' An empty file name on error.
     ''' </returns>
     ''' <param Name="MustBeUnique"></param>
-    Public Function GetDataFileName(baseName As String, cultureName As String, extension As String, MustBeUnique As Boolean) As FileNameStruct
+    Public Function GetUniqueDataFileName(baseName As String, cultureName As String, extension As String, MustBeUnique As Boolean) As FileNameStruct
         If String.IsNullOrWhiteSpace(baseName) Then
             Throw New ArgumentException($"'{NameOf(baseName)}' cannot be null or whitespace.", NameOf(baseName))
         End If
@@ -535,14 +535,14 @@ Friend Module Form1UpdateHelpers
 
         Try
             Dim baseWithCultureAndExtension As String = $"{baseName}({cultureName}).{extension}"
-            Dim fileNameWithPath As String = Path.Combine(GetDirectoryForProjectData(), baseWithCultureAndExtension)
+            Dim fileNameWithPath As String = Path.Combine(DirectoryForProjectData, baseWithCultureAndExtension)
 
             If MustBeUnique AndAlso File.Exists(fileNameWithPath) Then
                 'Get unique file name
                 Dim count As Long
                 Do
                     count += 1
-                    fileNameWithPath = Path.Combine(GetDirectoryForProjectData(), $"{baseName}({cultureName}){count}.{extension}")
+                    fileNameWithPath = Path.Combine(DirectoryForProjectData, $"{baseName}({cultureName}){count}.{extension}")
                     baseWithCultureAndExtension = Path.GetFileName(fileNameWithPath)
                 Loop While File.Exists(fileNameWithPath)
             End If

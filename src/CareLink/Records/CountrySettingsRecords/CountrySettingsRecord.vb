@@ -34,7 +34,7 @@ Public Class CountrySettingsRecord
                         .DgvCountryDataPg1.Rows.Add(itemIndex, "", rowValue.Key, rowValue.Value)
                     Case NameOf(languages)
                         Me.languages.Clear()
-                        For Each dic As IndexClass(Of Dictionary(Of String, String)) In LoadList(rowValue.Value).WithIndex
+                        For Each dic As IndexClass(Of Dictionary(Of String, String)) In JsonToLisOfDictionary(rowValue.Value).WithIndex
                             Me.languages.Add(New LanguageRecord(dic.Value))
                             .DgvCountryDataPg1.Rows.Add($"{row.Index + 1}.{dic.Index + 1}", rowValue.Key, Me.languages.Last.GetCsvKeys, Me.languages.Last.GetCsvValues)
                         Next
@@ -131,7 +131,7 @@ Public Class CountrySettingsRecord
 
                     Case NameOf(supportedReports)
                         Me.supportedReports.Clear()
-                        For Each dic As IndexClass(Of Dictionary(Of String, String)) In LoadList(rowValue.Value).WithIndex
+                        For Each dic As IndexClass(Of Dictionary(Of String, String)) In JsonToLisOfDictionary(rowValue.Value).WithIndex
                             Me.supportedReports.Add(New SupportedReportRecord(dic.Value, dic.Index + 1))
                             With Me.supportedReports.Last
                                 Form1.DgvCountryDataPg3.Rows.Add($"{row.Index + 1}.{dic.Index + 1}", rowValue.Key, dic.Value.Keys(0), .report, .onlyFor, .notFor)

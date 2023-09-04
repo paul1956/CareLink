@@ -35,7 +35,7 @@ Friend Module DataGridViewColumnEventArgsExtensions
                 If titleInTitleCase.Contains("™"c) Then
                     title.Append(titleInTitleCase)
                 Else
-                    title.Append(titleInTitleCase.Replace("Care Link", $"{ProjectName}™"))
+                    title.Append(titleInTitleCase.Replace("Care Link", $"CareLink™"))
                 End If
             End If
             .HeaderText = title.TrimEnd(vbCrLf).ToString
