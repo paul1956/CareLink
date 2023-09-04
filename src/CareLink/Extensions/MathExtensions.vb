@@ -43,7 +43,7 @@ Friend Module MathExtensions
         Return If(decimalDigits = 3, returnSingle.RoundTo025, returnSingle.RoundSingle(decimalDigits, False))
     End Function
 
-    Public Function ParseSingle(valueObject As Object, Optional decimalDigits As Integer = -1) As Single
+    Public Function ParseSingle(valueObject As Object, decimalDigits As Integer) As Single
         If valueObject Is Nothing Then
             Return Single.NaN
         End If

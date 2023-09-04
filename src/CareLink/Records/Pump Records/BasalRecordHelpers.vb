@@ -12,7 +12,7 @@ Friend Module BasalRecordHelpers
         End If
         ' Set the background to red for negative values in the Balance column.
         If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(BasalRecord.basalRate), StringComparison.OrdinalIgnoreCase) Then
-            e.Value = $"{ParseSingle(e.Value).ToString("F2", CurrentUICulture)}U"
+            e.Value = $"{ParseSingle(e.Value, 2).ToString("F2", CurrentUICulture)}U"
         End If
     End Sub
 
