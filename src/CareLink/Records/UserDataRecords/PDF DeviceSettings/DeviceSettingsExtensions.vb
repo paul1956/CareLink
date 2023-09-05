@@ -21,6 +21,7 @@ Friend Module DeviceSettingsExtensions
                 End If
                 value = value.Trim.Split(" ")(0)
                 If typeOfT Is GetType(Single) Then
+                    value = value.Replace(",", ".")
                     Return If(IsNumeric(value),
                               CType(CObj(value), T),
                               CType(CObj(Single.NaN), T)

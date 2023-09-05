@@ -177,8 +177,7 @@ Friend Module Form1LoginHelpers
         Dim carbRatios As New List(Of CarbRatioRecord)
         Form1.Cursor = Cursors.WaitCursor
         Application.DoEvents()
-        pdfNewerThanUserJson = Form1.Client.TryGetDeviceSettingsPdfFile(pdfFileNameWithPath) Or pdfNewerThanUserJson
-        If pdfNewerThanUserJson Then
+        If Form1.Client.TryGetDeviceSettingsPdfFile(pdfFileNameWithPath) OrElse pdfNewerThanUserJson Then
             Dim pdf As New PdfSettingsRecord(pdfFileNameWithPath)
             If CurrentUser.PumpAit <> pdf.Bolus.BolusWizard.ActiveInsulinTime Then
                 ait = pdf.Bolus.BolusWizard.ActiveInsulinTime

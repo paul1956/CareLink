@@ -7,8 +7,13 @@ Imports Spire.Pdf.Utilities
 Public Class PdfSettingsRecord
 
     Public Sub New(filename As String)
-        Dim tables As List(Of PdfTable) = GetTableList(filename, 0, 1)
-        Dim smartGuardTableOffset As Integer = 0
+        Dim tables As New List(Of PdfTable)
+        Try
+            tables = GetTableList(filename, 0, 1)
+        Catch ex As Exception
+            Stop
+        End Try
+        Dim smartGuardTableOffset As Integer
         Select Case tables.Count
             Case 27
                 smartGuardTableOffset = -1
@@ -16,6 +21,7 @@ Public Class PdfSettingsRecord
                 smartGuardTableOffset = 0
             Case Else
                 Stop
+                Exit Sub
         End Select
 
         Dim allText As String = ExtractTextFromPage(filename, 0, 1)
