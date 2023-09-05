@@ -23,12 +23,13 @@ Public Class InitializeDialog
         _fromPdf = False
     End Sub
 
-    Public Sub New(currentUser As CurrentUserRecord, ait As Single, CarbRatios As List(Of CarbRatioRecord))
+    Public Sub New(currentUser As CurrentUserRecord, ait As Single, currentTarget As Single, CarbRatios As List(Of CarbRatioRecord))
         MyBase.New
         Me.InitializeComponent()
         Me.CurrentUser = currentUser
         Me.CurrentUser.PumpAit = ait
         Me.CurrentUser.CarbRatios = CarbRatios
+        Me.CurrentUser.CurrentTarget = currentTarget
         _fromPdf = True
     End Sub
 

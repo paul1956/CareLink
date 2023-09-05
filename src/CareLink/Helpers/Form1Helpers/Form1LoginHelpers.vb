@@ -173,6 +173,7 @@ Friend Module Form1LoginHelpers
         End If
 
         Dim ait As Single = 2
+        Dim currentTarget As Single = 120
         Dim carbRatios As New List(Of CarbRatioRecord)
         Form1.Cursor = Cursors.WaitCursor
         Application.DoEvents()
@@ -183,13 +184,17 @@ Friend Module Form1LoginHelpers
                 ait = pdf.Bolus.BolusWizard.ActiveInsulinTime
                 currentUserUpdateNeeded = True
             End If
+            If CurrentUser.CurrentTarget <> pdf.SmartGuard.Target Then
+                currentTarget = pdf.SmartGuard.Target
+                currentUserUpdateNeeded = True
+            End If
             If Not pdf.Bolus.DeviceCarbohydrateRatios.EqualCarbRatios(CurrentUser.CarbRatios) Then
                 carbRatios = pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
                 currentUserUpdateNeeded = True
             End If
         End If
         If currentUserUpdateNeeded OrElse forceUI Then
-            Dim f As New InitializeDialog(CurrentUser, ait, carbRatios)
+            Dim f As New InitializeDialog(CurrentUser, ait, currentTarget, carbRatios)
             Dim result As DialogResult = f.ShowDialog()
             If result = DialogResult.OK Then
                 currentUserUpdateNeeded = currentUserUpdateNeeded OrElse Not CurrentUser.Equals(f.CurrentUser)
