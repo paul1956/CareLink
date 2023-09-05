@@ -208,7 +208,7 @@ Public Class CareLinkClient
                 Debug.Print($"{NameOf(GetAuthorizationToken)}  failed")
                 Return GetAuthorizationTokenResult.LoginFailed
             End If
-            Debug.Print($"{NameOf(CareLinkTokenValidToCookieName)} = {Me.GetCookies(serverUrl).Item(CareLinkTokenValidToCookieName).Value}")
+            Debug.Print($"{CareLinkTokenValidToCookieName} = {Me.GetCookies(serverUrl).Item(CareLinkTokenValidToCookieName).Value}")
         End If
         ' there can be only one
         authToken = Me.GetBearerToken(serverUrl)
@@ -285,7 +285,7 @@ Public Class CareLinkClient
             headers("Authorization") = authToken
             headers("Accept") = "application/json, text/plain, */*"
             headers("Content-Type") = "application/json; charset=utf-8"
-            SetDefaultRequesHeaders(_httpClient, headers, Nothing)
+            _httpClient.SetDefaultRequesHeaders(headers, Nothing)
 
             Dim jsonContent As Json.JsonContent = Json.JsonContent.Create(requestBody)
             Dim postRequest As New HttpRequestMessage(HttpMethod.Post, New Uri(endPointPath)) With {.Content = jsonContent}
@@ -377,7 +377,7 @@ Public Class CareLinkClient
             headers.Add("Origin", $"https://{serverUrl}")
             Dim jsonData As Dictionary(Of String, String)
             Try
-                SetDefaultRequesHeaders(_httpClient, headers, referrerUri)
+                _httpClient.SetDefaultRequesHeaders(headers, referrerUri)
                 Dim requestUri As New Uri($"https://{serverUrl}/patient/reports/generateReport")
                 Dim postRequest As New HttpRequestMessage(HttpMethod.Post, requestUri) With {.Content = Json.JsonContent.Create(New GetReportsSettingsRecord)}
                 response = _httpClient.SendAsync(postRequest).Result
@@ -397,7 +397,7 @@ Public Class CareLinkClient
                 Dim delay As Integer = 250
                 While True
                     Debug.Print($"{NameOf(TryGetDeviceSettingsPdfFile)} {NameOf(requestUri)} = {requestUri}")
-                    SetDefaultRequesHeaders(_httpClient, headers, referrerUri)
+                    _httpClient.SetDefaultRequesHeaders(headers, referrerUri)
                     Dim t As Task(Of HttpResponseMessage) = _httpClient.SendAsync(New HttpRequestMessage(HttpMethod.Get, requestUri))
                     Debug.Print($"{NameOf(TryGetDeviceSettingsPdfFile)} Waiting {delay * 10 } msec")
                     For i As Integer = 0 To delay
@@ -426,7 +426,7 @@ Public Class CareLinkClient
                     End If
                 End While
                 requestUri = New Uri($"https://{serverUrl}/patient/reports/reportPdf?{uuidString}")
-                SetDefaultRequesHeaders(_httpClient, headers, referrerUri)
+                _httpClient.SetDefaultRequesHeaders(headers, referrerUri)
                 response = _httpClient.SendAsync(New HttpRequestMessage(HttpMethod.Get, requestUri)).Result
                 _lastResponseCode = response.StatusCode
                 If response?.IsSuccessStatusCode Then

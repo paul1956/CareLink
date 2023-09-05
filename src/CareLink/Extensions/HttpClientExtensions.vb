@@ -8,6 +8,7 @@ Imports System.Text
 
 Friend Module HttpClientExtensions
 
+    <Extension>
     Friend Sub SetDefaultRequesHeaders(ByRef client As HttpClient, headers As Dictionary(Of String, String), referrerUri As Uri)
         client.DefaultRequestHeaders.Clear()
         For Each header As KeyValuePair(Of String, String) In headers.Sort
@@ -22,7 +23,7 @@ Friend Module HttpClientExtensions
 
     <Extension>
     Public Function [Get](client As HttpClient, requestUri As StringBuilder, ByRef lastError As String, Optional headers As Dictionary(Of String, String) = Nothing, Optional queryParams As Dictionary(Of String, String) = Nothing, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As HttpResponseMessage
-        SetDefaultRequesHeaders(client, headers, Nothing)
+        client.SetDefaultRequesHeaders(headers, Nothing)
         If queryParams IsNot Nothing Then
             requestUri.Append("?"c)
             For Each param As KeyValuePair(Of String, String) In queryParams
