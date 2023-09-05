@@ -496,7 +496,7 @@ Friend Module Form1UpdateHelpers
         If s_therapyAlgorithmStateValue.TryGetValue(NameOf(TherapyAlgorithmStateRecord.safeBasalDuration), safeBasalDurationStr) Then
             Dim safeBasalDuration As UInteger = CUInt(safeBasalDurationStr)
             If safeBasalDuration > 0 Then
-                Form1.LastSgOrExitTimeLabel.Text = $"Exit in {TimeSpan.FromMinutes(safeBasalDuration):h\:mm} hr"
+                Form1.LastSgOrExitTimeLabel.Text = $"Exit in { TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan("hr")}"
                 Form1.LastSgOrExitTimeLabel.Visible = True
             End If
         End If

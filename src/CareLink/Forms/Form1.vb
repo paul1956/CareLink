@@ -2233,7 +2233,6 @@ Public Class Form1
                     Case "NO_ERROR_MESSAGE"
                         Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield
                     Case "UNKNOWN"
-                        Stop
                     Case Else
                         Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield
                 End Select

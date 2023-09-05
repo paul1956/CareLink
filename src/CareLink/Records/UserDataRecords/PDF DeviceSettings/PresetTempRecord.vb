@@ -24,12 +24,11 @@ Public Class PresetTempRecord
             Me.Duration = TimeSpan.Parse(r.Columns(1))
             Me.IsValid = True
         End If
-
-        Stop
     End Sub
 
     Public Property IsValid As Boolean = False
     Public Property Duration As TimeSpan
+    Public Property DurationUnits As String
     Public Property Type As PresetTypeRecord
 
 End Class

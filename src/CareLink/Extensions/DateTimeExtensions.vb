@@ -153,6 +153,40 @@ Friend Module DateTimeExtensions
     End Function
 
     <Extension>
+    Public Function ToFormattedTimeSpan(tSpan As TimeSpan, Optional units As String = "") As String
+        Dim r As String = ""
+        If units.Contains("hr") Then
+            units = If(tSpan.Hours = 0,
+                       units,
+                       units.Replace("hr", "hrs")
+                      )
+            r = $"{tSpan.Hours,2}:"
+        End If
+        If tSpan.Seconds > 0 AndAlso tSpan.Minutes > 0 Then
+            r &= $"{tSpan.Minutes}:{tSpan.Seconds:D2}"
+            units = If(tSpan.Minutes = 0,
+                       "min",
+                       "mins"
+                      )
+        ElseIf tSpan.Seconds > 0 Then
+            r &= $"{tSpan.Seconds:D2}"
+            units = If(tSpan.Minutes = 0,
+                       "sec",
+                       "sec"
+                      )
+        Else
+            r &= $"{tSpan.Minutes:D2}"
+            If Not units.Contains("hr") Then
+                units = If(tSpan.Minutes = 0,
+                           "min",
+                           "mins"
+                          )
+            End If
+        End If
+        Return $"{r} {units}".TrimEnd
+    End Function
+
+    <Extension>
     Public Function ToHours(minutes As Integer) As String
         Return New TimeSpan(0, minutes \ 60, minutes Mod 60).ToString.Substring(4)
     End Function

@@ -46,7 +46,7 @@ Public Class LowAlertsRecord
     Public Property SnoozeOn As String = "Off"
 
     Public Overrides Function ToString() As String
-        Return If(Me.SnoozeOn = "On", $"{_snoozeTime.Hours}:{_snoozeTime.Minutes:D2} hr", "Off")
+        Return If(Me.SnoozeOn = "On", _snoozeTime.ToFormattedTimeSpan("hr"), "Off")
     End Function
 
     Private Function GetDebuggerDisplay() As String
