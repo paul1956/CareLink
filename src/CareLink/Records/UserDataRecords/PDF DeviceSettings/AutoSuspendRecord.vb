@@ -4,6 +4,9 @@
 
 Public Class AutoSuspendRecord
 
+    Public Sub New()
+    End Sub
+
     Public Sub New(sTable As StringTable)
         Me.Alarm = sTable.GetSingleLineValue(Of String)("Auto Suspend ")
         If Me.Alarm <> "Off" Then
@@ -12,6 +15,6 @@ Public Class AutoSuspendRecord
 
     End Sub
 
-    Public Property Alarm As String
+    Public Property Alarm As String = "Unknown"
     Public Property Time As New TimeSpan
 End Class

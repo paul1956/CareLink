@@ -24,8 +24,8 @@ Public Class BloodGlucoseTargetRecord
                 }
 
     Public Property IsValid As Boolean = False
-    Public Property [Time] As TimeOnly
-    Public Property Low As Single
-    Public Property High As Single
+    Public Property [Time] As New TimeOnly
+    Public Property Low As Single = 70
+    Public Property High As Single = 180
 
 End Class

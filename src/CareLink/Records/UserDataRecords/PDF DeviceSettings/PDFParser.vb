@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.IO
 Imports Spire.Pdf
 Imports Spire.Pdf.Texts
 Imports Spire.Pdf.Utilities
@@ -73,10 +74,14 @@ Public Module PDFParser
     End Function
 
     Public Function GetTableList(filename As String, startPageNumber As Integer, Optional endPageNumber As Integer = 0) As List(Of PdfTable)
+        Dim results As New List(Of PdfTable)
+        If Not File.Exists(filename) Then
+            Return results
+        End If
+
         Dim extractor As PdfTableExtractor = GetPdfExtractor(filename)
         'Declare a PdfTable array
         'Extract tableList from a specific page
-        Dim results As New List(Of PdfTable)
         For i As Integer = startPageNumber To endPageNumber
             results.AddRange(extractor.ExtractTable(i).ToList)
         Next

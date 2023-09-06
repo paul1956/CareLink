@@ -4,6 +4,9 @@
 
 Public Class SensorRecord
 
+    Public Sub New()
+    End Sub
+
     Public Sub New(sensorOn As String, sTable As StringTable)
         _SensorOn = sensorOn
         If Not sTable.IsValid Then
@@ -14,7 +17,7 @@ Public Class SensorRecord
         Me.CalibrationReminderTime = sTable.GetSingleLineValue(Of String)("Calibration Reminder Time ")
     End Sub
 
-    Public Property SensorOn As String
-    Public Property CalibrationReminder As String
-    Public Property CalibrationReminderTime As String
+    Public Property SensorOn As String = "Off"
+    Public Property CalibrationReminder As String = "Off"
+    Public Property CalibrationReminderTime As String = "Off"
 End Class

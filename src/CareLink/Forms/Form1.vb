@@ -1205,16 +1205,22 @@ Public Class Form1
     End Sub
 
     Private Sub MenuStartHereShowPumpSetup_Click(sender As Object, e As EventArgs) Handles MenuStartHereShowPumpSetup.Click
-        Dim userSettingsPdfFile As String = Path.Combine(SettingsDirectory, $"{My.Settings.CareLinkUserName}Settings.pdf")
+        Dim userSettingsPdfFile As String = GetUserSettingsPdfFileNameWithPath()
 
         If File.Exists(userSettingsPdfFile) Then
             Dim pdf As New PdfSettingsRecord(userSettingsPdfFile)
-            Using dialog As New PumpSetupDialog
-                dialog.Pdf = pdf
-                dialog.ShowDialog()
-            End Using
+            If pdf.IsValid Then
+                Using dialog As New PumpSetupDialog
+                    dialog.Pdf = pdf
+                    dialog.ShowDialog()
+                End Using
+            End If
+            If Not pdf.IsValid Then
+                MsgBox($"Device Setting PDF file is invalid", userSettingsPdfFile, MsgBoxStyle.OkOnly, "Invalid Settings PDF File")
+            End If
+        Else
+            MsgBox($"Device Setting PDF file is missing!", userSettingsPdfFile, MsgBoxStyle.OkOnly, "Missing Settings PDF File")
         End If
-
     End Sub
 
     Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotSave.Click

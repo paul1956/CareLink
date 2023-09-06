@@ -179,17 +179,19 @@ Friend Module Form1LoginHelpers
         Application.DoEvents()
         If Form1.Client.TryGetDeviceSettingsPdfFile(pdfFileNameWithPath) OrElse pdfNewerThanUserJson Then
             Dim pdf As New PdfSettingsRecord(pdfFileNameWithPath)
-            If CurrentUser.PumpAit <> pdf.Bolus.BolusWizard.ActiveInsulinTime Then
-                ait = pdf.Bolus.BolusWizard.ActiveInsulinTime
-                currentUserUpdateNeeded = True
-            End If
-            If CurrentUser.CurrentTarget <> pdf.SmartGuard.Target Then
-                currentTarget = pdf.SmartGuard.Target
-                currentUserUpdateNeeded = True
-            End If
-            If Not pdf.Bolus.DeviceCarbohydrateRatios.EqualCarbRatios(CurrentUser.CarbRatios) Then
-                carbRatios = pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
-                currentUserUpdateNeeded = True
+            If pdf.IsValid Then
+                If CurrentUser.PumpAit <> pdf.Bolus.BolusWizard.ActiveInsulinTime Then
+                    ait = pdf.Bolus.BolusWizard.ActiveInsulinTime
+                    currentUserUpdateNeeded = True
+                End If
+                If CurrentUser.CurrentTarget <> pdf.SmartGuard.Target Then
+                    currentTarget = pdf.SmartGuard.Target
+                    currentUserUpdateNeeded = True
+                End If
+                If Not pdf.Bolus.DeviceCarbohydrateRatios.EqualCarbRatios(CurrentUser.CarbRatios) Then
+                    carbRatios = pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
+                    currentUserUpdateNeeded = True
+                End If
             End If
         End If
         If currentUserUpdateNeeded OrElse forceUI Then

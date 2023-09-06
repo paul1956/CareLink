@@ -19,6 +19,8 @@ Public Class PdfSettingsRecord
                 smartGuardTableOffset = -1
             Case 28
                 smartGuardTableOffset = 0
+            Case 0
+                Exit Sub
             Case Else
                 Stop
                 Exit Sub
@@ -179,6 +181,7 @@ Public Class PdfSettingsRecord
         '27-
         sTable = ConvertPdfTableToStringTable(tables(27 + smartGuardTableOffset), "Block Mode")
         Me.Utilities = New UtilitiesRecord(sTable)
+        Me.IsValid = True
     End Sub
 
     Public Property Basal As New PumpBasalRecord
@@ -215,11 +218,12 @@ Public Class PdfSettingsRecord
 
     Public Property Reminders As New RemindersRecord()
 
-    Public Property Sensor As SensorRecord
+    Public Property Sensor As New SensorRecord
 
-    Public Property SmartGuard As SmartGuardRecord
+    Public Property SmartGuard As New SmartGuardRecord
 
-    Public Property Utilities As UtilitiesRecord
+    Public Property Utilities As New UtilitiesRecord
+    Public ReadOnly Property IsValid As Boolean = False
 
     Public Shared Sub GetSnoozeInfo(listOfAallTextLines As List(Of String), target As String, ByRef snoozeOn As String, ByRef snoozeTime As TimeSpan)
         Dim snoozeLine As String

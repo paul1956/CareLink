@@ -4,6 +4,9 @@
 
 Public Class UtilitiesRecord
 
+    Public Sub New()
+    End Sub
+
     Public Sub New(sTable As StringTable)
         If Not sTable.IsValid Then
             Stop
@@ -25,13 +28,13 @@ Public Class UtilitiesRecord
 
     End Sub
 
-    Public Property BlockMode As String
-    Public Property TimeFormat As String
+    Public Property BlockMode As String = "Off"
+    Public Property TimeFormat As String = ""
 
-    Public Property Brightness As String
+    Public Property Brightness As String = "Unknown"
     Public Property BackLightTimeout As New TimeSpan
-    Public Property AudioOptions As String
-    Public Property AlarmVolume As String
-    Public Property AutoSuspend As AutoSuspendRecord
+    Public Property AudioOptions As String = "Unknown"
+    Public Property AlarmVolume As String = "Unknown"
+    Public Property AutoSuspend As New AutoSuspendRecord
 
 End Class

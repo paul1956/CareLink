@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
 Imports System.IO
 Imports System.Net
 Imports System.Net.Http
@@ -14,9 +15,14 @@ Public Class CareLinkClient
     Private Const CareLinkTokenValidToCookieName As String = "c_token_valid_to"
 
     Private ReadOnly _careLinkPartnerType As New List(Of String) From {
-            "CARE_PARTNER",
-            "CARE_PARTNER_OUS"
-        }
+                            "CARE_PARTNER",
+                            "CARE_PARTNER_OUS"
+                        }
+
+    Private ReadOnly _httpStatusBadCodes As New List(Of HttpStatusCode) From {
+                            HttpStatusCode.Unauthorized,
+                            HttpStatusCode.Forbidden
+                        }
 
     Private _httpClient As HttpClient
 
@@ -62,6 +68,28 @@ Public Class CareLinkClient
     Friend Property LoggedIn As Boolean
     Friend Property SessionProfile As New SessionProfileRecord
     Friend Property SessionUser As New SessionUserRecord
+
+    ''' <summary>
+    ''' Parse d in this for "ddd MMM dd HH:mm:ss zzz yyyy"
+    ''' where zzz=UTC
+    ''' </summary>
+    ''' <param name="dateString"></param>
+    ''' <returns></returns>
+    Private Shared Function ExpirationTokenAsDate(dateString As String) As Date
+        Dim d As Date = Now + New TimeSpan(1, 0, 0, 0, 0)
+        Try
+            Dim year As Integer = CInt(dateString.Substring(24, 4))
+            Dim month As Integer = Date.ParseExact(dateString.Substring(4, 3), "MMM", CultureInfo.InvariantCulture).Month
+            Dim day As Integer = CInt(dateString.Substring(8, 2))
+            Dim hour As Integer = CInt(dateString.Substring(11, 2))
+            Dim minutes As Integer = CInt(dateString.Substring(14, 2))
+            Dim seconds As Integer = CInt(dateString.Substring(17, 2))
+            d = New DateTime(year, month, day, hour, minutes, seconds)
+        Catch ex As Exception
+            Stop
+        End Try
+        Return d
+    End Function
 
     ''' <summary>
     ''' Get server URL from Country Code, only US today has a special server
@@ -186,13 +214,16 @@ Public Class CareLinkClient
         End If
 
         Dim serverUrl As String = GetServerUrl(Me.CareLinkCountry)
+
         ' New token is needed:
         ' a) no token or about to expire => execute authentication
-        ' b) last response 401
+        ' b) _lastResponse in httpStatusBadCodes
+
+        Dim expirationToken As String = Me.GetCookies(serverUrl)?.Item(CareLinkTokenValidToCookieName)?.Value
         If Me.GetCookieValue(serverUrl, CareLinkAuthTokenCookieName) Is Nothing OrElse
-            Me.GetCookies(serverUrl)?.Item(CareLinkTokenValidToCookieName)?.Value Is Nothing OrElse
-            New List(Of Object)() From {401, 403}.Contains(_lastResponseCode) Then
-            ' TODO: add check for expired token
+            _httpStatusBadCodes.Contains(CType(_lastResponseCode, HttpStatusCode)) OrElse
+            expirationToken Is Nothing OrElse
+            ExpirationTokenAsDate(expirationToken) < TimeZoneInfo.ConvertTime(Now, TimeZoneInfo.Utc) Then
             ' execute new login process | null, if error OR already doing login
             'if loginInProcess or not executeLoginProcedure():
             If _inLoginInProcess Then
@@ -449,12 +480,12 @@ Public Class CareLinkClient
         Return False
     End Function
 
-    Public Overridable Function GetLastErrorMessage() As String
+    Public Function GetLastErrorMessage() As String
         Return If(_lastErrorMessage, "OK")
     End Function
 
     ' Wrapper for data retrieval methods
-    Public Overridable Function GetRecentData() As Dictionary(Of String, String)
+    Public Function GetRecentData() As Dictionary(Of String, String)
         If NetworkUnavailable() Then
             _lastErrorMessage = "No Internet Connection!"
             ReportLoginStatus(Form1.LoginStatus)
@@ -486,7 +517,7 @@ Public Class CareLinkClient
         Return Nothing
     End Function
 
-    Public Overridable Function HasErrors() As Boolean
+    Public Function HasErrors() As Boolean
         Return Not (String.IsNullOrWhiteSpace(_lastErrorMessage) OrElse _lastErrorMessage = "OK")
     End Function
 
