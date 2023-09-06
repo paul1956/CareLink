@@ -11,7 +11,6 @@ Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Imports DataGridViewColumnControls
-
 Imports TableLayputPanelTop
 
 Public Class Form1
@@ -1081,18 +1080,22 @@ Public Class Form1
     Private Sub MenuStartHereExceptionReportLoad_Click(sender As Object, e As EventArgs) Handles MenuStartHereExceptionReportLoad.Click
         Dim fileList As String() = Directory.GetFiles(DirectoryForProjectData, $"{BaseNameSavedErrorReport}*.txt")
         Using openFileDialog1 As New OpenFileDialog With {
-            .CheckFileExists = True,
-            .CheckPathExists = True,
-            .FileName = If(fileList.Length > 0, Path.GetFileName(fileList(0)), "CareLink"),
-            .Filter = $"Error files (*.txt)|{BaseNameSavedErrorReport}*.txt",
-            .InitialDirectory = DirectoryForProjectData,
-            .Multiselect = False,
-            .ReadOnlyChecked = True,
-            .RestoreDirectory = True,
-            .SupportMultiDottedExtensions = False,
-            .Title = $"Select CareLink™ saved snapshot to load",
-            .ValidateNames = True
-        }
+                        .AddExtension = True,
+                        .AddToRecent = False,
+                        .CheckFileExists = True,
+                        .CheckPathExists = True,
+                        .DefaultExt = "txt",
+                        .FileName = If(fileList.Length > 0, Path.GetFileName(fileList(0)), "CareLink"),
+                        .Filter = $"Error files (*.txt)|{BaseNameSavedErrorReport}*.txt",
+                        .InitialDirectory = DirectoryForProjectData,
+                        .Multiselect = False,
+                        .ReadOnlyChecked = True,
+                        .RestoreDirectory = True,
+                        .ShowPreview = False,
+                        .SupportMultiDottedExtensions = False,
+                        .Title = $"Select CareLink™ saved snapshot to load",
+                        .ValidateNames = True
+                    }
 
             If openFileDialog1.ShowDialog() = DialogResult.OK Then
                 Try
@@ -1141,18 +1144,26 @@ Public Class Form1
                                         OrderBy(Function(f As FileInfo) f.LastWriteTime).
                                         Select(Function(f As FileInfo) f.Name).ToArray
         Using openFileDialog1 As New OpenFileDialog With {
-            .CheckFileExists = True,
-            .CheckPathExists = True,
-            .FileName = If(fileList.Length > 0, fileList.Last, "CareLink"),
-            .Filter = $"json files (*.json)|CareLink*.json",
-            .InitialDirectory = DirectoryForProjectData,
-            .Multiselect = False,
-            .ReadOnlyChecked = True,
-            .RestoreDirectory = True,
-            .SupportMultiDottedExtensions = False,
-            .Title = $"Select CareLink™ saved snapshot to load",
-            .ValidateNames = True
-        }
+                        .AddExtension = True,
+                        .AddToRecent = False,
+                        .CheckFileExists = True,
+                        .CheckPathExists = True,
+                        .DefaultExt = "json",
+                        .FileName = If(fileList.Length > 0,
+                                       If(fileList.Contains($"{My.Settings.CareLinkUserName}Settings.json"),
+                                       $"{My.Settings.CareLinkUserName}Settings.json", ""),
+                                       "CareLink"
+                                      ),
+                        .Filter = $"json files (*.json)|CareLink*.json",
+                        .InitialDirectory = DirectoryForProjectData,
+                        .Multiselect = False,
+                        .ReadOnlyChecked = True,
+                        .RestoreDirectory = True,
+                        .ShowPreview = False,
+                        .SupportMultiDottedExtensions = False,
+                        .Title = $"Select CareLink™ saved snapshot to load",
+                        .ValidateNames = True
+                    }
 
             If openFileDialog1.ShowDialog() = DialogResult.OK Then
                 Try
@@ -1183,25 +1194,29 @@ Public Class Form1
 
     Private Sub MenuStartHereManuallyImportDeviceSettings_Click(sender As Object, e As EventArgs) Handles MenuStartHereManuallyImportDeviceSettings.Click
         Dim downloadsPath As String = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) & "\Downloads\"
-        Dim openFileDialog1 As New OpenFileDialog With {
+        Using openFileDialog1 As New OpenFileDialog With {
+                        .AddExtension = True,
                         .AddToRecent = False,
                         .CheckFileExists = True,
                         .CheckPathExists = True,
+                        .DefaultExt = "pdf",
                         .Filter = $"Settings file (*.pdf)|*.pdf",
                         .InitialDirectory = downloadsPath,
                         .Multiselect = False,
                         .ReadOnlyChecked = True,
                         .RestoreDirectory = True,
+                        .ShowPreview = False,
                         .SupportMultiDottedExtensions = False,
                         .Title = $"Select downloaded CareLink™ Settings file.",
                         .ValidateNames = True
                     }
-        If openFileDialog1.ShowDialog() = Global.System.Windows.Forms.DialogResult.OK Then
-            My.Computer.FileSystem.MoveFile(openFileDialog1.FileName,
-                                            GetUserSettingsPdfFileNameWithPath(),
-                                            FileIO.UIOption.AllDialogs,
-                                            FileIO.UICancelOption.DoNothing)
-        End If
+            If openFileDialog1.ShowDialog() = DialogResult.OK Then
+                My.Computer.FileSystem.MoveFile(openFileDialog1.FileName,
+                                                GetUserSettingsPdfFileNameWithPath(),
+                                                FileIO.UIOption.AllDialogs,
+                                                FileIO.UICancelOption.DoNothing)
+            End If
+        End Using
     End Sub
 
     Private Sub MenuStartHereShowPumpSetup_Click(sender As Object, e As EventArgs) Handles MenuStartHereShowPumpSetup.Click

@@ -396,6 +396,8 @@ Public Class CareLinkClient
     Friend Function TryGetDeviceSettingsPdfFile(pdfFileName As String) As Boolean
         Dim authToken As String = ""
 
+        ' CareLink Partners do not support download
+        If My.Settings.CareLinkPartner Then Return False
         If Me.GetAuthorizationToken(authToken) = GetAuthorizationTokenResult.OK Then
             Dim response As HttpResponseMessage = Nothing
             Dim serverUrl As String = GetServerUrl(Me.CareLinkCountry)

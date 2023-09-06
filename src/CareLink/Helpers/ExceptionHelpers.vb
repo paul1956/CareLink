@@ -3,9 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Diagnostics.CodeAnalysis
-Imports System.IO
 Imports System.Runtime.CompilerServices
-Imports System.Text.Json
 
 Friend Module ExceptionHelpers
     Private Const InnerExceptionMessage As String = ", see inner exception."
