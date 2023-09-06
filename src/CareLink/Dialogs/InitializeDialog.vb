@@ -9,7 +9,7 @@ Imports System.Text.Json
 Imports DataGridViewColumnControls
 
 Public Class InitializeDialog
-    Private _fromPdf As Boolean
+    Private ReadOnly _fromPdf As Boolean
 
     Private ReadOnly _insulinTypesBindingSource As New BindingSource(
                 s_insulinTypes, Nothing)
