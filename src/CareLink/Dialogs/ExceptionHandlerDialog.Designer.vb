@@ -100,7 +100,7 @@ Partial Class ExceptionHandlerDialog
         InstructionsRichTextBox.TabIndex = 10
         InstructionsRichTextBox.Text = ""
         ' 
-        ' ExceptionHandlerForm
+        ' ExceptionHandlerDialog
         ' 
         Me.AcceptButton = OK
         Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
@@ -116,7 +116,7 @@ Partial Class ExceptionHandlerDialog
         Me.FormBorderStyle = FormBorderStyle.FixedDialog
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        Me.Name = "ExceptionHandlerForm"
+        Me.Name = "ExceptionHandlerDialog"
         Me.SizeGripStyle = SizeGripStyle.Hide
         Me.StartPosition = FormStartPosition.CenterParent
         Me.Text = "Unhandled Exception"

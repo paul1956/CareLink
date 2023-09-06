@@ -9,8 +9,8 @@ Public Class SgMiniForm
     Private ReadOnly _form1 As Form1
     Private _alarmPlayedHigh As Boolean
     Private _alarmPlayedLow As Boolean
+    Private _currentDelta As Single
     Private _currentSgValue As Single = Double.NaN
-    Private _lastSgValue As Single
     Private _normalizedSg As Single
 
     Public Sub New()
@@ -48,10 +48,39 @@ Public Class SgMiniForm
         Me.Hide()
     End Sub
 
+    Private Sub DeltaTextBox_TextChanged(sender As Object, e As EventArgs) Handles DeltaTextBox.TextChanged
+        Select Case True
+            Case Me.DeltaTextBox.Text = ""
+                Me.DeltaTextBox.ForeColor = SystemColors.Window
+                Me.DeltaTextBox.BackColor = SystemColors.Window
+
+            Case Math.Abs(_currentDelta) < 0.001
+                Me.DeltaTextBox.Text = ""
+                Me.DeltaTextBox.ForeColor = SystemColors.Window
+                Me.DeltaTextBox.BackColor = SystemColors.Window
+
+            Case _currentDelta > 0
+                Me.DeltaTextBox.ForeColor = Color.Blue
+                Me.DeltaTextBox.BackColor = Color.Blue.GetContrastingColor()
+
+            Case Else
+                Me.DeltaTextBox.ForeColor = Color.Orange
+                Me.DeltaTextBox.BackColor = Color.Orange.GetContrastingColor()
+
+        End Select
+    End Sub
+
     Private Sub PlaySoundFromResource(SoundName As String)
         Using player As New SoundPlayer(My.Resources.ResourceManager.GetStream(SoundName, CurrentUICulture))
             player.Play()
         End Using
+    End Sub
+
+    Private Sub SgMiniForm_VisibleChanged(sender As Object, e As EventArgs) Handles MyBase.VisibleChanged
+        If Me.Visible Then
+            Me.SgTextBox.SelectionLength = 0
+        End If
+
     End Sub
 
     Private Sub SgMiniWindow_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
@@ -74,34 +103,10 @@ Public Class SgMiniForm
     End Sub
 
     Private Sub SgTextBox_TextChanged(sender As Object, e As EventArgs) Handles SgTextBox.TextChanged
-        Me.Text = GetLastUpdateMessage()
         If Me.SgTextBox.Text.Length = 0 OrElse Me.SgTextBox.Text = "---" OrElse Me.SgTextBox.Text = "9999" Then
-            _currentSgValue = Double.NaN
-            Me.DeltaTextBox.Text = ""
             Me.SgTextBox.BackColor = Color.Red.GetContrastingColor()
             Me.SgTextBox.ForeColor = Color.Red
         Else
-            If Double.IsNaN(_currentSgValue) OrElse _currentSgValue = 0 OrElse Double.IsNaN(_lastSgValue) OrElse _lastSgValue = 0 Then
-                Me.DeltaTextBox.Text = ""
-                Me.DeltaTextBox.ForeColor = Me.BackColor
-                Me.DeltaTextBox.BackColor = Me.BackColor
-            Else
-                Dim delta As Double = _currentSgValue - _lastSgValue
-                If Math.Abs(delta) < 0.001 Then
-                    Me.DeltaTextBox.Text = ""
-                    Me.DeltaTextBox.ForeColor = Me.BackColor
-                    Me.DeltaTextBox.BackColor = Me.BackColor
-                Else
-                    Me.DeltaTextBox.Text = delta.ToString(GetSgFormat(True), CurrentUICulture)
-                    If delta > 0 Then
-                        Me.DeltaTextBox.ForeColor = Color.Blue
-                        Me.DeltaTextBox.BackColor = Color.Blue.GetContrastingColor()
-                    Else
-                        Me.DeltaTextBox.ForeColor = Color.Orange
-                        Me.DeltaTextBox.BackColor = Color.Orange.GetContrastingColor()
-                    End If
-                End If
-            End If
             Select Case _normalizedSg
                 Case = 0
                     Me.SgTextBox.BackColor = Color.Black.GetContrastingColor()
@@ -129,25 +134,27 @@ Public Class SgMiniForm
                     End If
             End Select
         End If
-
+        Me.Text = GetLastUpdateMessage()
     End Sub
 
-    Public Sub SetCurrentSgString(Value As String)
-        If String.IsNullOrEmpty(Value) Then
-            Value = "---"
+    Public Sub SetCurrentDeltaValue(deltaString As String, delta As Single)
+        Me.DeltaTextBox.Text = If(Math.Abs(delta) < 0.001,
+                                  "",
+                                  deltaString
+                                 )
+        _currentDelta = delta
+    End Sub
+
+    Public Sub SetCurrentSgString(sgString As String, sgValue As Single)
+        Me.SgTextBox.Text = If(String.IsNullOrEmpty(sgString),
+                               "---",
+                               sgString)
+        _currentSgValue = sgValue
+        _normalizedSg = sgValue
+        If NativeMmolL Then
+            _normalizedSg *= MmolLUnitsDivisor
         End If
 
-        _lastSgValue = _currentSgValue
-        _currentSgValue = Value.ParseSingle(2)
-        If Not Double.IsNaN(_currentSgValue) Then
-            _normalizedSg = _currentSgValue
-            If NativeMmolL Then
-                _normalizedSg *= MmolLUnitsDivisor
-            End If
-            Me.SgTextBox.Text = If(NativeMmolL, Value.ParseSingle(1).ToString(CurrentUICulture), CInt(_currentSgValue).ToString)
-        Else
-            Me.SgTextBox.Text = Value
-        End If
         Me.Text = GetLastUpdateMessage()
     End Sub
 

@@ -1664,10 +1664,10 @@ Public Class Form1
                     Dim epochDateTime As Date = lastMedicalDeviceDataUpdateServerEpochString.FromUnixTime.ToLocalTime
                     If epochDateTime + s_05MinuteSpan < Now() Then
                         SetLastUpdateTime(Nothing, "", True, epochDateTime.IsDaylightSavingTime)
-                        _sgMiniDisplay.SetCurrentSgString("---")
+                        _sgMiniDisplay.SetCurrentSgString("---", Single.NaN)
                     Else
                         SetLastUpdateTime(Nothing, "", False, epochDateTime.IsDaylightSavingTime)
-                        _sgMiniDisplay.SetCurrentSgString(s_lastSgRecord?.ToString)
+                        _sgMiniDisplay.SetCurrentSgString(s_lastSgRecord?.ToString, s_lastSgRecord.sg)
                     End If
                 Else
                     Me.UpdateAllTabPages(False)
@@ -1677,7 +1677,7 @@ Public Class Form1
             End If
         Else
             ReportLoginStatus(Me.LoginStatus, True, Client.GetLastErrorMessage)
-            _sgMiniDisplay.SetCurrentSgString("---")
+            _sgMiniDisplay.SetCurrentSgString("---", 0)
         End If
         StartOrStopServerUpdateTimer(True, s_1MinutesInMilliseconds)
     End Sub
@@ -2031,18 +2031,22 @@ Public Class Form1
                     If s_pumpInRangeOfPhone Then
                         If s_lastSgValue = 0 Then
                             Me.LabelTrendValue.Text = ""
+                            Me.LabelTrendValue.Visible = False
+                            _sgMiniDisplay.SetCurrentDeltaValue("", 0)
                         Else
-                            Dim diffSg As Double = sg - s_lastSgValue
+                            Dim diffSg As Single = sg - s_lastSgValue
                             Me.LabelTrendValue.Text = If(Math.Abs(diffSg) < 0.001,
-                                0.ToString(GetSgFormat(False), CultureInfo.InvariantCulture),
-                                diffSg.ToString(GetSgFormat(True), CultureInfo.InvariantCulture)
-                               )
-                            'End If
+                                                         "0",
+                                                         diffSg.ToString(GetSgFormat(True), CultureInfo.InvariantCulture)
+                                                        )
+                            _sgMiniDisplay.SetCurrentDeltaValue(Me.LabelTrendValue.Text, diffSg)
                             Me.LabelTrendValue.ForeColor = backColor
                             notStr.AppendLine($"SG Trend { diffSg.ToString(GetSgFormat(True), CultureInfo.InvariantCulture)}")
+                            Me.LabelTrendValue.Visible = True
                         End If
+                    Else
+                        Me.LabelTrendValue.Visible = False
                     End If
-                    Me.LabelTrendValue.Visible = s_pumpInRangeOfPhone
                     notStr.Append($"Active ins. {s_activeInsulin.amount:N3} U")
                     Me.NotifyIcon1.Text = notStr.ToString
                     Me.NotifyIcon1.Visible = True
@@ -2278,14 +2282,14 @@ Public Class Form1
                     Me.CurrentSgLabel.Text = sgString
                 End If
                 Me.UpdateNotifyIcon(sgString)
-                _sgMiniDisplay.SetCurrentSgString(sgString)
+                _sgMiniDisplay.SetCurrentSgString(sgString, s_lastSgRecord.sg)
                 Me.SensorMessageLabel.Visible = False
                 If s_sensorMessages.TryGetValue(s_sensorState, message) Then
                     Dim splitMessage As String = message.Split(".")(0)
                     message = If(message.Contains("..."), $"{splitMessage}...", splitMessage)
                 End If
             Else
-                _sgMiniDisplay.SetCurrentSgString("---")
+                _sgMiniDisplay.SetCurrentSgString("---", s_lastSgRecord.sg)
                 Me.CurrentSgLabel.Visible = False
                 Me.LastSgOrExitTimeLabel.Visible = False
                 Me.SensorMessageLabel.Visible = True
@@ -2328,9 +2332,6 @@ Public Class Form1
                 Me.SensorMessageLabel.Visible = True
                 Me.ShieldUnitsLabel.Visible = False
                 Application.DoEvents()
-            End If
-            If _sgMiniDisplay.Visible Then
-                _sgMiniDisplay.SgTextBox.SelectionLength = 0
             End If
         Catch ex As Exception
             Stop
@@ -2704,7 +2705,7 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
-    Private Sub UpdateTrend()
+    Private Sub UpdateTrendArrows()
         Dim rowValue As String = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastSGTrend))
         If s_pumpInRangeOfPhone Then
             Dim arrows As String = Nothing
@@ -2761,7 +2762,7 @@ Public Class Form1
             _updating = False
         End SyncLock
 
-        Me.UpdateTrend()
+        Me.UpdateTrendArrows()
         UpdateSummaryTab(Me.DgvSummary)
         Me.UpdateActiveInsulinChart()
         Me.UpdateActiveInsulin()

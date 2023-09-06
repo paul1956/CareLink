@@ -65,7 +65,6 @@ Friend Module Form1LoginHelpers
                     SetLastUpdateTime("Last Update time is unknown!", "", True, Nothing)
                     Return False
                 End If
-
                 RecentData = Form1.Client.GetRecentData()
 
                 SetUpCareLinkUser(GetUserSettingsJsonFileNameWithPath, False)

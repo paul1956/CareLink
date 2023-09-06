@@ -76,6 +76,7 @@ Partial Class SgMiniForm
         DeltaTextBox.Size = New Size(121, 64)
         DeltaTextBox.TabIndex = 2
         DeltaTextBox.Text = "+10.0"
+        DeltaTextBox.TextAlign = HorizontalAlignment.Center
         ' 
         ' CloseButton
         ' 
@@ -99,7 +100,7 @@ Partial Class SgMiniForm
         ChkTopMost.Text = "Topmost"
         ChkTopMost.UseVisualStyleBackColor = True
         ' 
-        ' SgMiniWindow
+        ' SgMiniForm
         ' 
         Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         Me.AutoScaleMode = AutoScaleMode.Font
@@ -117,7 +118,7 @@ Partial Class SgMiniForm
         Me.Margin = New Padding(4, 3, 4, 3)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        Me.Name = "SgMiniWindow"
+        Me.Name = "SgMiniForm"
         Me.ShowInTaskbar = False
         Me.Text = "Current Glucose Value"
         Me.TopMost = True
