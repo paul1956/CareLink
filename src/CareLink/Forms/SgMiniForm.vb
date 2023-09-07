@@ -103,37 +103,32 @@ Public Class SgMiniForm
     End Sub
 
     Private Sub SgTextBox_TextChanged(sender As Object, e As EventArgs) Handles SgTextBox.TextChanged
-        If Me.SgTextBox.Text.Length = 0 OrElse Me.SgTextBox.Text = "---" OrElse Me.SgTextBox.Text = "9999" Then
-            Me.SgTextBox.BackColor = Color.Red.GetContrastingColor()
-            Me.SgTextBox.ForeColor = Color.Red
-        Else
-            Select Case _normalizedSg
-                Case = 0
-                    Me.SgTextBox.BackColor = Color.Black.GetContrastingColor()
-                    Me.SgTextBox.ForeColor = Color.Black
-                Case < 70
-                    Me.SgTextBox.BackColor = Color.Red.GetContrastingColor()
-                    Me.SgTextBox.ForeColor = Color.Red
-                    If Not _alarmPlayedLow Then
-                        PlayText($"Low Alarm for {s_firstName}, current sensor glucose {_currentSgValue}")
-                        _alarmPlayedLow = True
-                        _alarmPlayedHigh = False
-                    End If
-                Case <= 180
-                    Me.SgTextBox.BackColor = Color.Green.GetContrastingColor()
-                    Me.SgTextBox.ForeColor = Color.Green
-                    _alarmPlayedLow = False
+        Select Case True
+            Case Single.IsNaN(_normalizedSg), _normalizedSg = 0
+                Me.SgTextBox.BackColor = Color.Black.GetContrastingColor()
+                Me.SgTextBox.ForeColor = Color.Black
+            Case _normalizedSg < 70
+                Me.SgTextBox.BackColor = Color.Red.GetContrastingColor()
+                Me.SgTextBox.ForeColor = Color.Red
+                If Not _alarmPlayedLow Then
+                    PlayText($"Low Alarm for {s_firstName}, current sensor glucose {_currentSgValue}")
+                    _alarmPlayedLow = True
                     _alarmPlayedHigh = False
-                Case Else
-                    Me.SgTextBox.BackColor = Color.Yellow.GetContrastingColor()
-                    Me.SgTextBox.ForeColor = Color.Yellow
-                    If Not _alarmPlayedHigh Then
-                        PlayText($"High alarm for {s_firstName}, current sensor glucose {_currentSgValue}")
-                        _alarmPlayedLow = False
-                        _alarmPlayedHigh = True
-                    End If
-            End Select
-        End If
+                End If
+            Case _normalizedSg <= 180
+                Me.SgTextBox.BackColor = Color.Green.GetContrastingColor()
+                Me.SgTextBox.ForeColor = Color.Green
+                _alarmPlayedLow = False
+                _alarmPlayedHigh = False
+            Case Else
+                Me.SgTextBox.BackColor = Color.Yellow.GetContrastingColor()
+                Me.SgTextBox.ForeColor = Color.Yellow
+                If Not _alarmPlayedHigh Then
+                    PlayText($"High alarm for {s_firstName}, current sensor glucose {_currentSgValue}")
+                    _alarmPlayedLow = False
+                    _alarmPlayedHigh = True
+                End If
+        End Select
         Me.Text = GetLastUpdateMessage()
     End Sub
 
@@ -146,9 +141,10 @@ Public Class SgMiniForm
     End Sub
 
     Public Sub SetCurrentSgString(sgString As String, sgValue As Single)
-        Me.SgTextBox.Text = If(String.IsNullOrEmpty(sgString),
+        Me.SgTextBox.Text = If(Single.IsNaN(sgValue) OrElse (Not IsNumeric(sgString)),
                                "---",
-                               sgString)
+                               sgString
+                              )
         _currentSgValue = sgValue
         _normalizedSg = sgValue
         If NativeMmolL Then

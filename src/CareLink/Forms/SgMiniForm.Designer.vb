@@ -43,7 +43,7 @@ Partial Class SgMiniForm
         SgTextBox.Name = "SgTextBox"
         SgTextBox.Size = New Size(134, 64)
         SgTextBox.TabIndex = 1
-        SgTextBox.Text = "9999"
+        SgTextBox.Text = "---"
         SgTextBox.TextAlign = HorizontalAlignment.Center
         ' 
         ' ActiveInsulinTextBox
