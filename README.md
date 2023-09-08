@@ -33,7 +33,7 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 09/04/2023
 
 ## What's New
-New in 3.9.0.1
+New in 3.9.0.2
 - Program will attempt to automatically download your CareLink Device Settings Report
   - If successful it will update pump settings data from CareLink Report
   - If it fails you can manually download report to you computers download directory and under Start Here menu you can manually upload it.
