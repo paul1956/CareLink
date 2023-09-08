@@ -142,7 +142,7 @@ Partial Class Form1
         Last24ManualBolusUnitsLabel = New Label()
         Last24TotalInsulinLabel = New Label()
         Last24ManualBolusPercentLabel = New Label()
-        Last24ManualBolusLabel = New Label()
+        Last24MealBolusLabel = New Label()
         Last24TotalsLabel = New Label()
         MaxBasalPerHourLabel = New Label()
         ModelLabel = New Label()
@@ -1382,7 +1382,7 @@ Partial Class Form1
         Last24HTotalsPanel.Controls.Add(Last24AutoCorrectionPercentLabel)
         Last24HTotalsPanel.Controls.Add(Last24AutoCorrectionLabel)
         Last24HTotalsPanel.Controls.Add(Last24ManualBolusPercentLabel)
-        Last24HTotalsPanel.Controls.Add(Last24ManualBolusLabel)
+        Last24HTotalsPanel.Controls.Add(Last24MealBolusLabel)
         Last24HTotalsPanel.Controls.Add(Last24BasalPercentLabel)
         Last24HTotalsPanel.Controls.Add(Last24BasalLabel)
         Last24HTotalsPanel.Controls.Add(Last24TotalsLabel)
@@ -1427,17 +1427,17 @@ Partial Class Form1
         Last24ManualBolusPercentLabel.Text = "30%"
         Last24ManualBolusPercentLabel.TextAlign = ContentAlignment.MiddleRight
         ' 
-        ' Last24ManualBolusLabel
+        ' Last24MealBolusLabel
         ' 
-        Last24ManualBolusLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24ManualBolusLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
-        Last24ManualBolusLabel.ForeColor = Color.White
-        Last24ManualBolusLabel.Location = New Point(0, 66)
-        Last24ManualBolusLabel.Name = "Last24ManualBolusLabel"
-        Last24ManualBolusLabel.Size = New Size(131, 21)
-        Last24ManualBolusLabel.TabIndex = 63
-        Last24ManualBolusLabel.Text = "Manual Bolus"
-        Last24ManualBolusLabel.TextAlign = ContentAlignment.MiddleLeft
+        Last24MealBolusLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24MealBolusLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24MealBolusLabel.ForeColor = Color.White
+        Last24MealBolusLabel.Location = New Point(0, 66)
+        Last24MealBolusLabel.Name = "Last24MealBolusLabel"
+        Last24MealBolusLabel.Size = New Size(131, 21)
+        Last24MealBolusLabel.TabIndex = 63
+        Last24MealBolusLabel.Text = "Meal Bolus"
+        Last24MealBolusLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' Last24TotalsLabel
         ' 
@@ -2820,7 +2820,7 @@ Partial Class Form1
     Friend WithEvents Last24CarbsValueLabel As Label
     Friend WithEvents Last24HoursGraphLabel As Label
     Friend WithEvents Last24HTotalsPanel As Panel
-    Friend WithEvents Last24ManualBolusLabel As Label
+    Friend WithEvents Last24MealBolusLabel As Label
     Friend WithEvents Last24ManualBolusPercentLabel As Label
     Friend WithEvents Last24ManualBolusUnitsLabel As Label
     Friend WithEvents Last24TotalInsulinLabel As Label
