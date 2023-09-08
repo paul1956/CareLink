@@ -2257,6 +2257,8 @@ Public Class Form1
                         Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield_Disabled
                     Case "NO_ERROR_MESSAGE"
                         Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield
+                    Case "WARM_UP"
+                        Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield_Disabled
                     Case "UNKNOWN"
                     Case Else
                         Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield
@@ -2312,11 +2314,11 @@ Public Class Form1
                     Case "WARM_UP"
                         Dim timeRemaining As String = ""
                         If s_systemStatusTimeRemaining.TotalMilliseconds > 0 Then
-                            If s_systemStatusTimeRemaining.TotalHours > 1 Then
+                            If s_systemStatusTimeRemaining.Hours > 1 Then
                                 timeRemaining = $"{s_systemStatusTimeRemaining.Hours}:{s_systemStatusTimeRemaining.Minutes:D2} hrs"
-                            ElseIf s_systemStatusTimeRemaining.TotalHours > 0 Then
+                            ElseIf s_systemStatusTimeRemaining.Hours > 0 Then
                                 timeRemaining = $"{s_systemStatusTimeRemaining.Hours}:{s_systemStatusTimeRemaining.Minutes:D2} hr"
-                            ElseIf s_systemStatusTimeRemaining.TotalMinutes > 1 Then
+                            ElseIf s_systemStatusTimeRemaining.Minutes > 1 Then
                                 timeRemaining = $"{s_systemStatusTimeRemaining.Minutes} mins"
                             Else
                                 timeRemaining = $"{s_systemStatusTimeRemaining.Minutes} min"
