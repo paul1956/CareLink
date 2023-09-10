@@ -30,14 +30,17 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-09/08/2023
+09/10/2023
 
 ## What's New
 New in 3.9.0.2
+New in 3.9.0.2
 - Program will attempt to automatically download your CareLink Device Settings Report
+![image](https://github.com/paul1956/CareLink/assets/12789369/0331882e-68ca-42ab-9963-670e6c200b55)
   - If successful it will update pump settings data from CareLink Report
-  - If it fails you can manually download report to you computers download directory and under Start Here menu you can manually upload it.
-- Many fixes for 780G, the Shield on home screen should closely match the pump.
+  - If it fails you can manually download report to your computers download directory and under "Start Here" menu there is a option to manually import your settings. It will only be enabled if the program was unable to do in manually. The program checks every 30 days automatically.
+  - The second option is to show your settings in a way that maps to pump setup (**experimental**). Please report any issue with your CareLink report. Not every possible pump setting is in the PDF file on CareLink and I have not tested every possible report.
+  - All settings and reports are stored in your MyDocuments\CareLink\Settings folder.
 
 New in 3.8.5.1
 - Fix G4 Sensor life calculation and Warmup time
