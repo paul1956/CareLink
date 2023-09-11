@@ -4,7 +4,8 @@
 
 Friend Module TimeConstants
 
-    Friend ReadOnly s_midnight As String = New TimeOnly(0, 0).ToString()
+    Friend ReadOnly s_midnight As New TimeOnly(0, 0)
+    Friend ReadOnly s_midnightStr As String = s_midnight.ToString()
 
 #Region "TimeSpan Constants"
 
@@ -30,8 +31,8 @@ Friend Module TimeConstants
 
 #Region "Millisecond Constants"
 
-    Public ReadOnly s_30SecondInMilliseconds As Integer = CInt(s_01MinuteSpan.TotalMilliseconds / 2)
     Public ReadOnly s_1MinutesInMilliseconds As Integer = CInt(s_01MinuteSpan.TotalMilliseconds)
+    Public ReadOnly s_30SecondInMilliseconds As Integer = CInt(s_01MinuteSpan.TotalMilliseconds / 2)
     Public ReadOnly s_5MinutesInMilliseconds As Integer = CInt(s_05MinuteSpan.TotalMilliseconds)
 
 #End Region ' Millisecond Constants

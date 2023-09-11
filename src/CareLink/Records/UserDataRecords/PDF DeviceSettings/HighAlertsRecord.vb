@@ -18,7 +18,7 @@ Public Class HighAlertsRecord
 
             Dim item As New HighAlertRecord(s, valueUnits) With {
                 .End = If(e.IsLast OrElse sTable.Rows(e.Index + 1).Columns(0).CleanSpaces.Length = 0,
-                          New TimeOnly(0, 0),
+                          s_midnight,
                           TimeOnly.Parse(sTable.Rows(e.Index + 1).Columns(0).CleanSpaces.Split(" ", StringSplitOptions.RemoveEmptyEntries)(0))
                          )
             }

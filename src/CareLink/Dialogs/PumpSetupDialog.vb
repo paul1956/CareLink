@@ -75,7 +75,7 @@ Public Class PumpSetupDialog
                     .AppendLine
                     Exit For
                 End If
-                Dim endTime As String = If(e.IsLast, s_midnight, StandardTimeOnlyWidth(_pdf.Bolus.InsulinSensivity(e.Index + 1).Time))
+                Dim endTime As String = If(e.IsLast, s_midnightStr, StandardTimeOnlyWidth(_pdf.Bolus.InsulinSensivity(e.Index + 1).Time))
                 .AppendLine($"{vbTab}{StandardTimeOnlyWidth(item.Time)}{vbTab}-{vbTab}{endTime}{vbTab}{item.Sensitivity.RoundTo025:F1} {_pdf.Bolus.BolusWizard.Units.CarbUnits}/U", defaultFont)
             Next
             .AppendLine
@@ -88,7 +88,7 @@ Public Class PumpSetupDialog
                     .AppendLine
                     Exit For
                 End If
-                Dim endTime As String = If(e.IsLast, s_midnight, StandardTimeOnlyWidth(_pdf.Bolus.BloodGlucoseTarget(e.Index + 1).Time))
+                Dim endTime As String = If(e.IsLast, s_midnightStr, StandardTimeOnlyWidth(_pdf.Bolus.BloodGlucoseTarget(e.Index + 1).Time))
                 .AppendLine($"{vbTab}{StandardTimeOnlyWidth(item.Time)}{vbTab}-{vbTab}{endTime}{vbTab}{item.Low}-{item.High} {_pdf.Bolus.BolusWizard.Units.BgUnits}", defaultFont)
             Next
             .AppendLine
@@ -105,7 +105,7 @@ Public Class PumpSetupDialog
                         .AppendLine
                         Exit For
                     End If
-                    Dim endTime As String = If(e.IsLast, s_midnight, StandardTimeOnlyWidth(item.Value.basalRates(e.Index + 1).Time))
+                    Dim endTime As String = If(e.IsLast, s_midnightStr, StandardTimeOnlyWidth(item.Value.basalRates(e.Index + 1).Time))
                     .AppendLine($"{vbTab}{StandardTimeOnlyWidth(basalRate.Time)}{vbTab}-{vbTab}{endTime,9}{vbTab}{basalRate.UnitsPerHr:F3} U/hr", defaultFont)
                 Next
                 .AppendLine
