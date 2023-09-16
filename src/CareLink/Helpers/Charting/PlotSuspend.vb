@@ -4,12 +4,15 @@
 
 Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
-Imports Octokit
 
 Friend Module PlotSuspend
 
     <Extension>
     Friend Sub PlotSuspendArea(pageChart As Chart, SuspendSeries As Series)
+        If s_listOfLowGlucoseSuspendedMarkers.Count = 1 AndAlso s_listOfLowGlucoseSuspendedMarkers(0).deliverySuspended = False Then
+            Exit Sub
+        End If
+
         Dim lineColor As Color = GetGraphLineColor("Suspend")
         With pageChart.Series(SuspendSeriesName).Points
             Dim suspended As Boolean = False
@@ -20,12 +23,12 @@ Friend Module PlotSuspend
                     .AddXY(suspendRecord.dateTime, 0)
                     .Last.Color = lineColor
                     .AddXY(suspendRecord.dateTime, GetYMaxValue(NativeMmolL))
-                    Dim stopTimeSpan As TimeSpan
-                    If Not e.IsLast Then
-                        stopTimeSpan = s_listOfLowGlucoseSuspendedMarkers(e.Index + 1).dateTime - suspendRecord.dateTime
-                    Else
-                        stopTimeSpan = Now - suspendRecord.dateTime
-                    End If
+                    Dim stopTimeSpan As TimeSpan =
+                                      If(Not e.IsLast,
+                                         s_listOfLowGlucoseSuspendedMarkers(e.Index + 1).dateTime - suspendRecord.dateTime,
+                                         Now - suspendRecord.dateTime
+                                        )
+
                     For i As Long = 1 To CInt(Math.Ceiling(stopTimeSpan.TotalMinutes / 5)) - 1
                         .AddXY(suspendRecord.dateTime.AddMinutes(i * 5), 0)
                         .Last.Color = lineColor
