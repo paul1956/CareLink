@@ -9,15 +9,16 @@ Friend Module ColorDictionaryHelpers
 
     Friend Property GraphColorDictionary As New Dictionary(Of String, KnownColor) From {
                                 {"Active Insulin", KnownColor.Lime},
-                            {"Auto Correction", KnownColor.Aqua},
-                            {"Basal Series", KnownColor.HotPink},
-                            {"High Limit", KnownColor.Yellow},
-                            {"Low Limit", KnownColor.Red},
-                            {"Min Basal", KnownColor.LightYellow},
-                            {"SG Series", KnownColor.White},
-                            {"SG Target", KnownColor.Green},
-                            {"Time Change", KnownColor.White}
-                        }
+                                {"Auto Correction", KnownColor.Aqua},
+                                {"Basal Series", KnownColor.HotPink},
+                                {"High Limit", KnownColor.Yellow},
+                                {"Low Limit", KnownColor.Red},
+                                {"Min Basal", KnownColor.LightYellow},
+                                {"SG Series", KnownColor.White},
+                                {"SG Target", KnownColor.Green},
+                                {"Suspend", KnownColor.Red},
+                                {"Time Change", KnownColor.White}
+                            }
 
     Private Function GetContrastingKnownColor(knownClrBase As KnownColor) As KnownColor
         Dim clrBase As Color = knownClrBase.ToColor
@@ -30,7 +31,11 @@ Friend Module ColorDictionaryHelpers
     End Function
 
     Friend Function GetGraphLineColor(lineName As String) As Color
-        Return GraphColorDictionary(lineName).ToColor
+        Dim toColor As Color = GraphColorDictionary(lineName).ToColor
+        Return If(lineName = "Suspend",
+                  Color.FromArgb(128, toColor),
+                  toColor
+                 )
     End Function
 
     Public Function GetColorDictionaryBindingSource() As BindingSource

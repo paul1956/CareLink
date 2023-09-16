@@ -266,6 +266,18 @@ Friend Module CreateChartItems
         Return s
     End Function
 
+    Friend Function CreateSeriesSuspend(basalLegend As Legend) As Series
+        Const legendText As String = "Suspend"
+        Dim s As Series = CreateSeriesBase(SuspendSeriesName, legendText, 1, AxisType.Primary)
+        s.IsVisibleInLegend = False
+        basalLegend.CustomItems.Add(New LegendItem(legendText, Color.FromArgb(128, Color.Red), ""))
+        With s.EmptyPointStyle
+            .BorderWidth = 4
+            .Color = Color.Transparent
+        End With
+        Return s
+    End Function
+
     Friend Function CreateSeriesTimeChange(basalLegend As Legend) As Series
         Const legendText As String = "Time Change"
         Dim s As Series = CreateSeriesBase(TimeChangeSeriesName, legendText, 1, AxisType.Primary)
