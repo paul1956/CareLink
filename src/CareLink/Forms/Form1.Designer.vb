@@ -336,7 +336,7 @@ Partial Class Form1
         ' 
         MenuStartHereManuallyImportDeviceSettings.Name = "MenuStartHereManuallyImportDeviceSettings"
         MenuStartHereManuallyImportDeviceSettings.Size = New Size(249, 22)
-        MenuStartHereManuallyImportDeviceSettings.Text = "Manually Import Device Serrtings"
+        MenuStartHereManuallyImportDeviceSettings.Text = "Manually Import Device Settings"
         ' 
         ' MenuStartHereShowPumpSetup
         ' 
@@ -783,7 +783,7 @@ Partial Class Form1
         ' 
         PumpBannerStateLabel.BackColor = Color.Lime
         PumpBannerStateLabel.Dock = DockStyle.Top
-        PumpBannerStateLabel.Font = New Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point)
+        PumpBannerStateLabel.Font = New Font("Segoe UI", 8.0F, FontStyle.Regular, GraphicsUnit.Point)
         PumpBannerStateLabel.ForeColor = Color.Black
         PumpBannerStateLabel.Location = New Point(0, 0)
         PumpBannerStateLabel.Name = "PumpBannerStateLabel"

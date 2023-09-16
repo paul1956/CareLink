@@ -8,6 +8,8 @@ Imports System.ComponentModel.DataAnnotations.Schema
 Public Class CarbRatioRecord
     Implements IEquatable(Of CarbRatioRecord)
 
+    Private _endTime As TimeOnly
+
     <DisplayName(NameOf(StartTime))>
     <Column(Order:=0, TypeName:=NameOf(TimeOnly))>
     Public Property StartTime As TimeOnly
@@ -15,6 +17,13 @@ Public Class CarbRatioRecord
     <DisplayName(NameOf(EndTime))>
     <Column(Order:=1, TypeName:=NameOf(TimeOnly))>
     Public Property EndTime As TimeOnly
+        Get
+            Return _endTime
+        End Get
+        Set
+            _endTime = If(Value = s_midnight, s_eleven59, Value)
+        End Set
+    End Property
 
     <Column(Order:=2, TypeName:=NameOf(System.Single))>
     Public Property CarbRatio As Single
@@ -25,9 +34,10 @@ Public Class CarbRatioRecord
 
     Public Overloads Function Equals(other As CarbRatioRecord) As Boolean Implements IEquatable(Of CarbRatioRecord).Equals
         Return other IsNot Nothing AndAlso
+               Me.CarbRatio = other.CarbRatio AndAlso
                Me.StartTime.Equals(other.StartTime) AndAlso
-               Me.EndTime.Equals(other.EndTime) AndAlso
-               Me.CarbRatio = other.CarbRatio
+               ((other.EndTime - other.EndTime).Duration > New TimeSpan(23, 30, 0) OrElse
+               (other.EndTime - other.EndTime).Duration < New TimeSpan(0, 30, 0))
     End Function
 
     Public Overrides Function GetHashCode() As Integer

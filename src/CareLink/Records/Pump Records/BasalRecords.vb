@@ -40,7 +40,7 @@ Public Class BasalRecords
             Dim automodeState As String = s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.autoModeShieldState))
             Select Case automodeState
                 Case "AUTO_BASAL"
-                    title = If(Is770G(), "AutoMode", "SmartGuard")
+                    title = If(Is700Series(), "AutoMode", "SmartGuard")
                 Case "SAFE_BASAL"
                     title = automodeState.ToTitle
                     Dim safeBasalDuration As UInteger = CUInt(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.safeBasalDuration)))

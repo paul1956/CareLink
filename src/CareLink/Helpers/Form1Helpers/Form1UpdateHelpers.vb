@@ -79,6 +79,8 @@ Friend Module Form1UpdateHelpers
 
     Friend Function GetPumpName(value As String) As String
         Select Case value
+            Case "MMT-1812"
+                Return "Medtronic MiniMed™ 740G--mg/dL"
             Case "MMT-1880"
                 Return "Medtronic MiniMed™ 770G"
             Case "MMT-1884"
@@ -450,6 +452,7 @@ Friend Module Form1UpdateHelpers
             If dic.TryGetValue("type", typeValue) Then
                 Dim bannerStateRecord1 As BannerStateRecord = DictionaryToClass(Of BannerStateRecord)(dic, listOfPumpBannerState.Count + 1)
                 listOfPumpBannerState.Add(bannerStateRecord1)
+                Form1.PumpBannerStateLabel.Font = New Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point)
                 Select Case typeValue
                     Case "TEMP_TARGET"
                         Dim minutes As Integer = bannerStateRecord1.timeRemaining
@@ -479,6 +482,7 @@ Friend Module Form1UpdateHelpers
                         Form1.PumpBannerStateLabel.Text = "Suspended before low"
                         Form1.PumpBannerStateLabel.Visible = True
                         Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
+                        Form1.PumpBannerStateLabel.Font = New Font("Segoe UI", 7.0F, FontStyle.Bold, GraphicsUnit.Point)
                     Case "TEMP_BASAL"
                         Stop
                     Case "WAIT_TO_ENTER_BG"
@@ -488,6 +492,7 @@ Friend Module Form1UpdateHelpers
                             MsgBox($"{typeValue} is unknown banner message!", "", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, GetTitleFromStack(New StackFrame(0, True)))
                         End If
                 End Select
+                Form1.PumpBannerStateLabel.ForeColor = GetContrastingColor(Form1.PumpBannerStateLabel.BackColor)
             Else
                 Stop
             End If

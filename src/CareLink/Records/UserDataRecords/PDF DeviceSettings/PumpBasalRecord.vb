@@ -6,7 +6,7 @@ Public Class PumpBasalRecord
 
     Public Property MaximumBasalRate As Single
 
-    Public Property NamedBasals As New Dictionary(Of String, NamedBasalRecord) From {
+    Public Property NamedBasal As New Dictionary(Of String, NamedBasalRecord) From {
                 {"Basal 1", New NamedBasalRecord},
                 {"Basal 2", New NamedBasalRecord},
                 {"Basal 3", New NamedBasalRecord},

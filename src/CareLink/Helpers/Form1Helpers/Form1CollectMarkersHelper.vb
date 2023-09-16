@@ -86,10 +86,8 @@ Friend Module Form1CollectMarkersHelper
         For Each e As IndexClass(Of BasalRecord) In s_listOfManualBasal.ToList.WithIndex
             Dim r As BasalRecord = e.Value
             basalDictionary.Add(r.GetOaGetTime, r.GetBasal)
-            If r.basalRate > 0 Then
-                s_listOfAutoBasalDeliveryMarkers.Add(New AutoBasalDeliveryRecord(r, basalDictionary.Count, 288 - e.Index))
-                s_markers.Add(r.ToDictionary)
-            End If
+            s_listOfAutoBasalDeliveryMarkers.Add(New AutoBasalDeliveryRecord(r, basalDictionary.Count, 288 - e.Index))
+            s_markers.Add(r.ToDictionary)
         Next
 
         Dim endOADate As OADate = If(basalDictionary.Count = 0,

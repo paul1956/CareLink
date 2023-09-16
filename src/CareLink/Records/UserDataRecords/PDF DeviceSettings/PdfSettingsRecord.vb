@@ -27,13 +27,13 @@ Public Class PdfSettingsRecord
         End Select
 
         Dim allText As String = ExtractTextFromPage(filename, 0, 1)
-        Dim listOfAallTextLines As List(Of String) = allText.SplitLines(True)
+        Dim listOfAllTextLines As List(Of String) = allText.SplitLines(True)
         Dim sTable As StringTable
 
-        ' Get Sensor and Basal 4 Line to determain Active Basal later
+        ' Get Sensor and Basal 4 Line to determine Active Basal later
         Dim sensorOn As String = "Off"
-        Dim basal4Line As String = ""
-        For Each s As IndexClass(Of String) In listOfAallTextLines.WithIndex
+        Dim basal4Line As String
+        For Each s As IndexClass(Of String) In listOfAllTextLines.WithIndex
             If s.Value.StartsWith("Sensor") Then
                 s.MoveNext()
                 Dim lines As List(Of String) = s.Value.CleanSpaces.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList
@@ -50,8 +50,10 @@ Public Class PdfSettingsRecord
 
         '1, 2, 3 (10,11,12)
         For i As Integer = 1 To 3
-            Dim name As String = Me.Basal.NamedBasals.Keys(i - 1)
-            Me.Basal.NamedBasals(name) = New NamedBasalRecord(tables, i, allText, name)
+            Dim key As String = Me.Basal.NamedBasal.Keys(i - 1)
+            Dim index As Integer = allText.IndexOf(key)
+            Dim isActive As Boolean = allText.Substring(index + key.Length + 2, 1) = "("c
+            Me.Basal.NamedBasal(key) = New NamedBasalRecord(tables, i, isActive)
         Next
 
         ' 4 Bolus Wizard
@@ -74,12 +76,12 @@ Public Class PdfSettingsRecord
 
         ' 7 Time Sensitivity
         sTable = ConvertPdfTableToStringTable(tables(7), "Time Sensitivity")
-        Me.Bolus.InsulinSensivity.Clear()
+        Me.Bolus.InsulinSensitivity.Clear()
         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
             If e.IsFirst Then Continue For
-            Dim item As New InsulinSensivityRecord(e.Value)
+            Dim item As New InsulinSensitivityRecord(e.Value)
             If Not item.IsValid Then Exit For
-            Me.Bolus.InsulinSensivity.Add(item)
+            Me.Bolus.InsulinSensitivity.Add(item)
         Next
 
         ' 8 Blood Glucose Target
@@ -119,7 +121,7 @@ Public Class PdfSettingsRecord
                 Me.SmartGuard = New SmartGuardRecord(sTable, sTable.GetSingleLineValue(Of String)("SmartGuard"))
             Else
                 Dim smartGuard As String = "Off"
-                For Each s As IndexClass(Of String) In listOfAallTextLines.WithIndex
+                For Each s As IndexClass(Of String) In listOfAllTextLines.WithIndex
                     If s.Value.StartsWith("SmartGuard") Then
                         s.MoveNext()
                         smartGuard = s.Value.CleanSpaces.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList(1)
@@ -138,7 +140,7 @@ Public Class PdfSettingsRecord
 
         ' 17- High Alerts
         sTable = ConvertPdfTableToStringTable(tables(17 + smartGuardTableOffset), "Start High")
-        Me.HighAlerts = New HighAlertsRecord(sTable, listOfAallTextLines)
+        Me.HighAlerts = New HighAlertsRecord(sTable, listOfAllTextLines)
 
         ' 18- Meal Start End Record
         sTable = ConvertPdfTableToStringTable(tables(18 + smartGuardTableOffset), "Name Start")
@@ -150,7 +152,7 @@ Public Class PdfSettingsRecord
 
         ' 19- Low Alerts
         sTable = ConvertPdfTableToStringTable(tables(19 + smartGuardTableOffset), "Start Low")
-        Me.LowAlerts = New LowAlertsRecord(sTable, listOfAallTextLines)
+        Me.LowAlerts = New LowAlertsRecord(sTable, listOfAllTextLines)
 
         ' 20, 21 - Personal Reminders Or Sensor
         Dim personalRemindersTable As StringTable
@@ -174,8 +176,10 @@ Public Class PdfSettingsRecord
 
         '22-, 23-, 24+- 25-, 26-
         For i As Integer = 22 + smartGuardTableOffset To 26 + smartGuardTableOffset
-            Dim key As String = Me.Basal.NamedBasals.Keys(i - 19)
-            Me.Basal.NamedBasals(key) = New NamedBasalRecord(tables, i, basal4Line, key)
+            Dim key As String = Me.Basal.NamedBasal.Keys(i - 19)
+            Dim index As Integer = allText.IndexOf(key)
+            Dim isActive As Boolean = allText.Substring(index + key.Length + 2, 1) = "("c
+            Me.Basal.NamedBasal(key) = New NamedBasalRecord(tables, i, isActive)
         Next
 
         '27-
@@ -225,10 +229,10 @@ Public Class PdfSettingsRecord
     Public Property Utilities As New UtilitiesRecord
     Public ReadOnly Property IsValid As Boolean = False
 
-    Public Shared Sub GetSnoozeInfo(listOfAallTextLines As List(Of String), target As String, ByRef snoozeOn As String, ByRef snoozeTime As TimeSpan)
+    Public Shared Sub GetSnoozeInfo(listOfAllTextLines As List(Of String), target As String, ByRef snoozeOn As String, ByRef snoozeTime As TimeSpan)
         Dim snoozeLine As String
         snoozeOn = "Off"
-        snoozeLine = listOfAallTextLines.FindLineContaining(target)
+        snoozeLine = listOfAllTextLines.FindLineContaining(target)
         Dim index As Integer = snoozeLine.IndexOf(")")
         If index >= 0 Then
             snoozeLine = snoozeLine.Substring(0, index + 1)

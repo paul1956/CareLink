@@ -50,18 +50,31 @@ Public Class BasalRecord
     End Function
 
     Public Function GetBasal() As Single
-        Return (Me.GetBasalPerHour / 12).RoundTo025
+        Return Me.GetBasalPerHour / 12
     End Function
 
     Public Function GetBasalPerHour() As Single
         Select Case Me.activeBasalPattern
-            Case "BASAL1", "BASAL2"
+            Case "BASAL1", "BASAL2", "BASAL3", "BASAL4", "BASAL5", "WORKDAY", "DAYOFF", "SICKDAY"
                 Return Me.basalRate
             Case Else
                 Return If(Me.tempBasalPercentage > 0,
                           Math.Max(Me.basalRate, Me.tempBasalRate),
                           Math.Min(Me.basalRate, Me.tempBasalRate)
                          )
+        End Select
+    End Function
+
+    Public Function GetBasalType() As String
+        Select Case True
+            Case Not String.IsNullOrWhiteSpace(Me.activeBasalPattern)
+                Return Me.activeBasalPattern
+            Case Not String.IsNullOrWhiteSpace(Me.presetTempName)
+                Return Me.presetTempName
+            Case Not String.IsNullOrWhiteSpace(Me.presetTempName)
+                Return Me.tempBasalType
+            Case Else
+                Return "MANUAL_BASAL_DELIVERY"
         End Select
     End Function
 

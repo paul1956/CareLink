@@ -103,7 +103,7 @@ Friend Module UserMessageConstants
             {"BC_SID_REPLACE_BATTERY_SOON", "Battery low pump(triggeredDateTime). Replace battery soon."},
             {"BC_SID_REWIND_BEFORE_LOADING", "No reservoir detected(triggeredDateTime). Rewind before loading reservoir."},
             {"BC_SID_SECOND_CALIBRATION_NOT_ACCEPT", "Change Sensor(triggeredDateTime). Second calibration not accepted. Insert new sensor."},
-            {"BC_SID_SENSOR_INFO_UNAVAILABLE_FOR_UP_TO_TWO_HOURS", "Cabibration not accepted(triggeredDateTime). Sensor information is unavailable for up to 2 hours.{vbCrLf}Entered BGs may not calibrate the sensor but can be used for therapy."},
+            {"BC_SID_SENSOR_INFO_UNAVAILABLE_FOR_UP_TO_TWO_HOURS", "Calibration not accepted(triggeredDateTime). Sensor information is unavailable for up to 2 hours.{vbCrLf}Entered BGs may not calibrate the sensor but can be used for therapy."},
             {"BC_SID_SENSOR_RELATED_ISSUE_INSERT_NEW", "Sensor failure(triggeredDateTime), Insert new sensor."},
             {"BC_SID_SEVEN_DAYS_SINCE_LAST_SET_CHANGE", "Set change reminder(triggeredDateTime), Seven days since the last infusion set change. Time to change the infusion set."},
             {"BC_SID_SG_APPROACH_HIGH_LIMIT_CHECK_BG", "Alert before high(triggeredDateTime). Sensor glucose approaching High Limit. Check BG."},

@@ -13,7 +13,7 @@ Public Module PDFParser
         'Get row number and column number of a certain table
 
         Dim builder As New StringTable
-        'Loop though the row and colunm
+        'Loop though the row and column
         For i As Integer = 0 To table.GetRowCount() - 1
             Dim columns As New List(Of String)
             For j As Integer = 0 To table.GetColumnCount() - 1

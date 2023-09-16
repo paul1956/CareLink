@@ -15,6 +15,7 @@ End Enum
 
 Friend Module Form1LoginHelpers
     Public ReadOnly Property LoginDialog As New LoginDialog
+    Public Property CurrentPdf As PdfSettingsRecord
 
     Friend Function DoOptionalLoginAndUpdateData(UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
         Dim serverTimerEnabled As Boolean = StartOrStopServerUpdateTimer(False)
@@ -29,7 +30,7 @@ Friend Module Form1LoginHelpers
                 Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(GetLastDownloadFileWithPath())
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
-                SetUpCareLinkUser(TestSettingsFileNameWihtPath)
+                SetUpCareLinkUser(TestSettingsFileNameWithPath)
                 fromFile = True
             Case FileToLoadOptions.TestData
                 Form1.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
@@ -38,12 +39,12 @@ Friend Module Form1LoginHelpers
                 Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(TestDataFileNameWithPath)
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
-                SetUpCareLinkUser(TestSettingsFileNameWihtPath)
+                SetUpCareLinkUser(TestSettingsFileNameWithPath)
                 fromFile = True
             Case FileToLoadOptions.Login
                 Form1.Text = SavedTitle
                 Do While True
-                    Dim result As DialogResult = LoginDialog.ShowDialog
+                    Dim result As DialogResult = LoginDialog.ShowDialog(My.Forms.Form1)
                     Select Case result
                         Case DialogResult.OK
                             Exit Do
@@ -113,7 +114,7 @@ Friend Module Form1LoginHelpers
         Dim foreColor As Color
         Dim backColor As Color
 
-        If highLight = True Then
+        If highLight Then
             foreColor = GetGraphLineColor("High Limit")
             backColor = foreColor.GetContrastingColor()
         Else
@@ -164,10 +165,11 @@ Friend Module Form1LoginHelpers
             pdfNewerThanUserJson = (Not File.Exists(pdfFileNameWithPath)) OrElse File.GetLastWriteTime(pdfFileNameWithPath) > File.GetLastWriteTime(userSettingsFileWithPath)
 
             If Not (forceUI OrElse pdfNewerThanUserJson OrElse IsFileStale(userSettingsFileWithPath)) Then
+                CurrentPdf = New PdfSettingsRecord(pdfFileNameWithPath)
                 Exit Sub
             End If
         Else
-            CurrentUser = New CurrentUserRecord(My.Settings.CareLinkUserName, If(Not Is770G(), CheckState.Checked, CheckState.Indeterminate))
+            CurrentUser = New CurrentUserRecord(My.Settings.CareLinkUserName, If(Not Is700Series(), CheckState.Checked, CheckState.Indeterminate))
             currentUserUpdateNeeded = True
         End If
 
@@ -177,25 +179,25 @@ Friend Module Form1LoginHelpers
         Form1.Cursor = Cursors.WaitCursor
         Application.DoEvents()
         If Form1.Client.TryGetDeviceSettingsPdfFile(pdfFileNameWithPath) OrElse pdfNewerThanUserJson Then
-            Dim pdf As New PdfSettingsRecord(pdfFileNameWithPath)
-            If pdf.IsValid Then
-                If CurrentUser.PumpAit <> pdf.Bolus.BolusWizard.ActiveInsulinTime Then
-                    ait = pdf.Bolus.BolusWizard.ActiveInsulinTime
+            CurrentPdf = New PdfSettingsRecord(pdfFileNameWithPath)
+            If CurrentPdf.IsValid Then
+                If CurrentUser.PumpAit <> CurrentPdf.Bolus.BolusWizard.ActiveInsulinTime Then
                     currentUserUpdateNeeded = True
                 End If
-                If CurrentUser.CurrentTarget <> pdf.SmartGuard.Target Then
-                    currentTarget = pdf.SmartGuard.Target
+                ait = CurrentPdf.Bolus.BolusWizard.ActiveInsulinTime
+                If CurrentUser.CurrentTarget <> CurrentPdf.SmartGuard.Target Then
                     currentUserUpdateNeeded = True
                 End If
-                If Not pdf.Bolus.DeviceCarbohydrateRatios.EqualCarbRatios(CurrentUser.CarbRatios) Then
-                    carbRatios = pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
+                currentTarget = CurrentPdf.SmartGuard.Target
+                If Not CurrentPdf.Bolus.DeviceCarbohydrateRatios.EqualCarbRatios(CurrentUser.CarbRatios) Then
                     currentUserUpdateNeeded = True
                 End If
+                carbRatios = CurrentPdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
             End If
         End If
         If currentUserUpdateNeeded OrElse forceUI Then
             Dim f As New InitializeDialog(CurrentUser, ait, currentTarget, carbRatios)
-            Dim result As DialogResult = f.ShowDialog()
+            Dim result As DialogResult = f.ShowDialog(My.Forms.Form1)
             If result = DialogResult.OK Then
                 currentUserUpdateNeeded = currentUserUpdateNeeded OrElse Not CurrentUser.Equals(f.CurrentUser)
                 CurrentUser = f.CurrentUser.Clone

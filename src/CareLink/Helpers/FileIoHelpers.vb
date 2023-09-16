@@ -25,7 +25,7 @@ Friend Module FileIoHelpers
         End Get
     End Property
 
-    Friend ReadOnly Property TestSettingsFileNameWihtPath As String
+    Friend ReadOnly Property TestSettingsFileNameWithPath As String
         Get
             Return s_testSettingFileNameWithPath
         End Get
@@ -74,7 +74,7 @@ Friend Module FileIoHelpers
     End Function
 
     ''' <summary>
-    ''' File hasn.t been touched for at least 30 days
+    ''' File hasn't been touched for at least 30 days
     ''' </summary>
     ''' <param name="userSettingsFileWithPath"></param>
     ''' <returns>True if Stale</returns>

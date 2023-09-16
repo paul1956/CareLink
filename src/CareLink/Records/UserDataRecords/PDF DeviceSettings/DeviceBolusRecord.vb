@@ -8,7 +8,7 @@ Public Class DeviceBolusRecord
     Public Property EasyBolus As New EasyBolusRecord
 
     Public Property DeviceCarbohydrateRatios As New List(Of DeviceCarbRatioRecord)
-    Public Property InsulinSensivity As New List(Of InsulinSensivityRecord)
+    Public Property InsulinSensitivity As New List(Of InsulinSensitivityRecord)
     Public Property BloodGlucoseTarget As New List(Of BloodGlucoseTargetRecord)
 
 End Class

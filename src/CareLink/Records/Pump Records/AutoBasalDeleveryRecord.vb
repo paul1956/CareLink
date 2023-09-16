@@ -11,7 +11,7 @@ Public Class AutoBasalDeliveryRecord
     End Sub
 
     Public Sub New(r As BasalRecord, recordNumber As Integer, index As Integer)
-        Me.type = "MANUAL_BASAL_DELIVERY"
+        Me.type = r.GetBasalType
         Me.index = index
         Me.kind = "Marker"
         Me.version = 1
@@ -66,7 +66,7 @@ Public Class AutoBasalDeliveryRecord
     <Column(Order:=9, TypeName:=NameOf([Int32]))>
     Public Property id As Integer
 
-    <DisplayName("Bolus Amount")>
+    <DisplayName("Basal Rate")>
     <Column(Order:=10, TypeName:=NameOf([Single]))>
     Public Property bolusAmount As Single
 

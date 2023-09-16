@@ -33,8 +33,11 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 09/10/2023
 
 ## What's New
-New in 3.9.0.2
-New in 3.9.0.2
+New in 3.9.2.0
+ - Add support for 740G Pump
+ - Fix Pump Settings for Military Time
+
+New in 3.9.1.0
 - Program will attempt to automatically download your CareLink Device Settings Report
 ![image](https://github.com/paul1956/CareLink/assets/12789369/0331882e-68ca-42ab-9963-670e6c200b55)
   - If successful it will update pump settings data from CareLink Report

@@ -61,7 +61,7 @@ Friend Module ExportDataGridView
                 .Title = "To Excel"
                }
 
-        If saveFileDialog1.ShowDialog() = DialogResult.OK Then
+        If saveFileDialog1.ShowDialog(My.Forms.Form1) = DialogResult.OK Then
             Dim workbook As New XLWorkbook()
             Dim worksheet As IXLWorksheet = workbook.Worksheets.Add(baseFileName)
             Dim excelColumn As Integer = 1

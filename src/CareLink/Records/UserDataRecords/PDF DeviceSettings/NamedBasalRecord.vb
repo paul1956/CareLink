@@ -6,7 +6,7 @@ Imports Spire.Pdf.Utilities
 
 Public Class NamedBasalRecord
 
-    Public Sub New(tables As List(Of PdfTable), i As Integer, allText As String, key As String)
+    Public Sub New(tables As List(Of PdfTable), i As Integer, isActive As Boolean)
         Dim sTable As StringTable
         Dim tableNumber As Integer
         If i >= 1 AndAlso i <= 3 Then
@@ -17,8 +17,7 @@ Public Class NamedBasalRecord
             tableNumber = i
         End If
 
-        Dim index As Integer = allText.IndexOf(key)
-        Me.Active = allText.Substring(index + key.Length + 2, 1) = "("c
+        Me.Active = isActive
 
         sTable = ConvertPdfTableToStringTable(tables(tableNumber), Me.GetColumnTitle)
         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex

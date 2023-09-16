@@ -2,7 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Public Class InsulinSensivityRecord
+Public Class InsulinSensitivityRecord
 
     Public Sub New(r As StringTable.Row)
         Dim cleaned As String = r.Columns(0).CleanSpaces

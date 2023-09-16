@@ -4,8 +4,10 @@
 
 Friend Module TimeConstants
 
+    Friend ReadOnly s_eleven59 As TimeOnly = TimeOnly.FromTimeSpan(New TimeSpan(23, 59, 59))
+    Friend ReadOnly s_eleven59Str As String = TimeOnly.FromTimeSpan(New TimeSpan(23, 59, 59)).ToHoursMinutes
     Friend ReadOnly s_midnight As New TimeOnly(0, 0)
-    Friend ReadOnly s_midnightStr As String = s_midnight.ToString()
+    Friend ReadOnly s_midnightStr As String = s_midnight.ToHoursMinutes()
 
 #Region "TimeSpan Constants"
 
@@ -36,14 +38,5 @@ Friend Module TimeConstants
     Public ReadOnly s_5MinutesInMilliseconds As Integer = CInt(s_05MinuteSpan.TotalMilliseconds)
 
 #End Region ' Millisecond Constants
-
-#Region "OaDateTime Constants"
-
-    Public ReadOnly s_02Minutes30SecondsOADate As New OADate(Date.MinValue + New TimeSpan(0, 2, 30))
-    Public ReadOnly s_05MinuteOADate As New OADate(Date.MinValue + s_05MinuteSpan)
-    Public ReadOnly s_06MinuteOADate As New OADate(Date.MinValue + New TimeSpan(0, 6, 0))
-    Public ReadOnly s_1HourAsOADate As New OADate(Date.MinValue + New TimeSpan(1, 0, 0))
-
-#End Region ' OaDateTime Constants
 
 End Module

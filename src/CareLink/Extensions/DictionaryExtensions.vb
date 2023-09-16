@@ -8,6 +8,10 @@ Imports System.Text
 
 Public Module DictionaryExtensions
 
+    Private ReadOnly s_700Models As New List(Of String) From {
+                            "MMT-1812",
+                            "MMT-1880"}
+
     <Extension>
     Friend Function GetSingleValue(item As Dictionary(Of String, String), key As String) As Single
         Dim ret As String = ""
@@ -105,9 +109,9 @@ Public Module DictionaryExtensions
         Return dic.Values.ToList.IndexOf(item)
     End Function
 
-    Public Function Is770G() As Boolean
+    Public Function Is700Series() As Boolean
         If RecentDataEmpty() Then Return False
-        Return RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber)) = "MMT-1880"
+        Return s_700Models.Contains(RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber)))
     End Function
 
     <Extension>

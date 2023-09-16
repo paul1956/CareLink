@@ -1097,14 +1097,14 @@ Public Class Form1
                         .ValidateNames = True
                     }
 
-            If openFileDialog1.ShowDialog() = DialogResult.OK Then
+            If openFileDialog1.ShowDialog(Me) = DialogResult.OK Then
                 Try
                     Dim fileNameWithPath As String = openFileDialog1.FileName
                     StartOrStopServerUpdateTimer(False)
                     If File.Exists(fileNameWithPath) Then
                         RecentData?.Clear()
                         ExceptionHandlerDialog.ReportFileNameWithPath = fileNameWithPath
-                        If ExceptionHandlerDialog.ShowDialog() = DialogResult.OK Then
+                        If ExceptionHandlerDialog.ShowDialog(Me) = DialogResult.OK Then
                             ExceptionHandlerDialog.ReportFileNameWithPath = ""
                             Try
                                 RecentData = LoadIndexedItems(ExceptionHandlerDialog.LocalRawData)
@@ -1116,7 +1116,7 @@ Public Class Form1
                             Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                             Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
                             SetLastUpdateTime(epochDateTime.ToShortDateTimeString, "from file", False, epochDateTime.IsDaylightSavingTime)
-                            SetUpCareLinkUser(TestSettingsFileNameWihtPath)
+                            SetUpCareLinkUser(TestSettingsFileNameWithPath)
 
                             Try
                                 FinishInitialization()
@@ -1165,11 +1165,11 @@ Public Class Form1
                         .ValidateNames = True
                     }
 
-            If openFileDialog1.ShowDialog() = DialogResult.OK Then
+            If openFileDialog1.ShowDialog(Me) = DialogResult.OK Then
                 Try
                     If File.Exists(openFileDialog1.FileName) Then
                         StartOrStopServerUpdateTimer(False)
-                        SetUpCareLinkUser(TestSettingsFileNameWihtPath)
+                        SetUpCareLinkUser(TestSettingsFileNameWithPath)
                         CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"CareLink", True)
                         CurrentUICulture = CurrentDateCulture
 
@@ -1210,7 +1210,7 @@ Public Class Form1
                         .Title = $"Select downloaded CareLink™ Settings file.",
                         .ValidateNames = True
                     }
-            If openFileDialog1.ShowDialog() = DialogResult.OK Then
+            If openFileDialog1.ShowDialog(Me) = DialogResult.OK Then
                 My.Computer.FileSystem.MoveFile(openFileDialog1.FileName,
                                                 GetUserSettingsPdfFileNameWithPath(),
                                                 FileIO.UIOption.AllDialogs,
@@ -1223,19 +1223,20 @@ Public Class Form1
         Dim userSettingsPdfFile As String = GetUserSettingsPdfFileNameWithPath()
 
         If File.Exists(userSettingsPdfFile) Then
-            Dim pdf As New PdfSettingsRecord(userSettingsPdfFile)
-            If pdf.IsValid Then
+            If CurrentPdf.IsValid Then
                 Using dialog As New PumpSetupDialog
-                    dialog.Pdf = pdf
-                    dialog.ShowDialog()
+                    StartOrStopServerUpdateTimer(False)
+                    dialog.Pdf = CurrentPdf
+                    dialog.ShowDialog(Me)
                 End Using
             End If
-            If Not pdf.IsValid Then
+            If Not CurrentPdf.IsValid Then
                 MsgBox($"Device Setting PDF file is invalid", userSettingsPdfFile, MsgBoxStyle.OkOnly, "Invalid Settings PDF File")
             End If
         Else
             MsgBox($"Device Setting PDF file is missing!", userSettingsPdfFile, MsgBoxStyle.OkOnly, "Missing Settings PDF File")
         End If
+        StartOrStopServerUpdateTimer(True)
     End Sub
 
     Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotSave.Click
@@ -1479,7 +1480,7 @@ Public Class Form1
 #Region "Help Menu Events"
 
     Private Sub MenuHelpAbout_Click(sender As Object, e As EventArgs) Handles MenuHelpAbout.Click
-        AboutBox1.ShowDialog()
+        AboutBox1.ShowDialog(Me)
     End Sub
 
     Private Sub MenuHelpCheckForUpdates_Click(sender As Object, e As EventArgs) Handles MenuHelpCheckForUpdates.Click
@@ -2267,7 +2268,7 @@ Public Class Form1
                 Me.LastSgOrExitTimeLabel.Visible = True
             Else
                 Me.SmartGuardShieldPictureBox.Image = Nothing
-                Me.ShieldUnitsLabel.Visible = False
+                Me.ShieldUnitsLabel.Visible = s_sensorState = "NO_ERROR_MESSAGE"
                 Me.LastSgOrExitTimeLabel.Visible = False
             End If
 
@@ -2393,8 +2394,45 @@ Public Class Form1
                     s_totalDailyDose += amount
                 Case "MEAL"
                     s_totalCarbs += CInt(marker.Value("amount"))
+                Case "CALIBRATION"
+                    ' IGNORE HERE
+                Case "BG_READING"
+                    ' IGNORE HERE
+                Case Else
+                    Stop
             End Select
         Next
+
+        If s_totalBasal = 0 AndAlso CurrentPdf.IsValid Then
+            Dim activeBasalRecords As New List(Of BasalRateRecord)
+            For Each namedBasal As KeyValuePair(Of String, NamedBasalRecord) In CurrentPdf.Basal.NamedBasal
+                If namedBasal.Value.Active Then
+                    activeBasalRecords = namedBasal.Value.basalRates
+                    Exit For
+                End If
+            Next
+            If activeBasalRecords.Count > 0 Then
+                Dim startTime As TimeOnly
+                Dim endTime As TimeOnly
+                If activeBasalRecords.Count = 1 Then
+                    s_totalBasal = activeBasalRecords(0).UnitsPerHr * 24
+                    s_totalDailyDose += s_totalBasal
+                Else
+                    For Each e As IndexClass(Of BasalRateRecord) In activeBasalRecords.WithIndex
+                        Dim basalRate As BasalRateRecord = e.Value
+                        startTime = basalRate.Time
+                        endTime = If(e.IsLast,
+                                     TimeOnly.FromTimeSpan(New TimeSpan(23, 59, 59)),
+                                     activeBasalRecords(e.Index + 1).Time
+                                    )
+                        Dim theTimeSpan As TimeSpan = endTime - startTime
+                        s_totalBasal += CSng((theTimeSpan.Hours + (theTimeSpan.Minutes / 60) + (theTimeSpan.Seconds / 3600)) * basalRate.UnitsPerHr)
+                    Next
+                    s_totalDailyDose += s_totalBasal.RoundSingle(0, False)
+                End If
+
+            End If
+        End If
 
         Dim totalPercent As String = If(s_totalDailyDose = 0,
                                         "???",
@@ -2579,7 +2617,7 @@ Public Class Form1
         ' Calculate Time in AutoMode
         If s_listOfAutoModeStatusMarkers.Count = 0 Then
             Me.SmartGuardLabel.Text = "SmartGuard 0%"
-        ElseIf s_listOfAutoModeStatusMarkers.Count = 1 AndAlso s_listOfAutoModeStatusMarkers.First.autoModeOn = True Then
+        ElseIf s_listOfAutoModeStatusMarkers.Count = 1 AndAlso s_listOfAutoModeStatusMarkers.First.autoModeOn Then
             Me.SmartGuardLabel.Text = "SmartGuard 100%"
         Else
             Try

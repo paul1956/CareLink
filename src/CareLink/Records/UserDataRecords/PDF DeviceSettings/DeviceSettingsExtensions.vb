@@ -37,7 +37,7 @@ Friend Module DeviceSettingsExtensions
                     Dim timeOnly As TimeOnly = Nothing
                     Return If(TimeOnly.TryParse(value, timeOnly),
                               CType(CObj(timeOnly), T),
-                              CType(CObj(s_midnight), T)
+                              CType(CObj(s_eleven59), T)
                              )
                 End If
                 If typeOfT Is GetType(TimeSpan) Then
@@ -105,9 +105,9 @@ Friend Module DeviceSettingsExtensions
                             .StartTime = deviceCarbRatio.Time,
                             .CarbRatio = deviceCarbRatio.Ratio,
                             .EndTime = If(e.IsLast,
-                                            s_midnight,
-                                            deviceCarbRatios(e.Index + 1).Time
-                                            )
+                                          s_eleven59,
+                                          deviceCarbRatios(e.Index + 1).Time
+                                         )
             })
         Next
         Return carbRatios
