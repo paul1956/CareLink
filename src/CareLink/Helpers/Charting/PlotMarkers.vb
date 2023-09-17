@@ -4,6 +4,7 @@
 
 Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
+Imports Octokit
 
 Friend Module PlotMarkers
 
@@ -158,6 +159,21 @@ Friend Module PlotMarkers
                             .AddXY(markerOADateTime, GetYMaxValue(NativeMmolL))
                             .AddXY(markerOADateTime, Double.NaN)
                         End With
+                    Case "LOW_GLUCOSE_SUSPENDED"
+                        If s_pumpInRangeOfTransmitter Then
+                            Dim timeOrderedMarkers As SortedDictionary(Of OADate, Single) = GetManualBasalValues(markerWithIndex)
+                            For Each kvp As KeyValuePair(Of OADate, Single) In timeOrderedMarkers
+                                With pageChart.Series(BasalSeriesNameName)
+                                    .PlotBasalSeries(kvp.Key,
+                                                     kvp.Value,
+                                                     GetYMaxValue(NativeMmolL),
+                                                     GetInsulinYValue,
+                                                     seriesName:="Basal Series",
+                                                     False,
+                                                     $"Manual Basal: {kvp.Value.ToString.TruncateSingleString(3)}U")
+                                End With
+                            Next
+                        End If
                     Case Else
                         Stop
                 End Select
@@ -269,6 +285,21 @@ Friend Module PlotMarkers
                             .AddXY(markerOADateTime, TreatmentInsulinRow)
                             .AddXY(markerOADateTime, Double.NaN)
                         End With
+                    Case "LOW_GLUCOSE_SUSPENDED"
+                        If s_pumpInRangeOfTransmitter Then
+                            Dim timeOrderedMarkers As SortedDictionary(Of OADate, Single) = GetManualBasalValues(markerWithIndex)
+                            For Each kvp As KeyValuePair(Of OADate, Single) In timeOrderedMarkers
+                                With treatmentChart.Series(BasalSeriesNameName)
+                                    .PlotBasalSeries(kvp.Key,
+                                                         kvp.Value,
+                                                         MaxBasalPerDose,
+                                                         TreatmentInsulinRow,
+                                                         "Basal Series",
+                                                         True,
+                                                         $"Manual Basal: {kvp.Value.ToString.TruncateSingleString(3)}U")
+                                End With
+                            Next
+                        End If
                     Case Else
                         Stop
                 End Select

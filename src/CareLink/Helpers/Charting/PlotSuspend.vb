@@ -26,7 +26,7 @@ Friend Module PlotSuspend
                     Dim stopTimeSpan As TimeSpan =
                                       If(Not e.IsLast,
                                          s_listOfLowGlucoseSuspendedMarkers(e.Index + 1).dateTime - suspendRecord.dateTime,
-                                         Now - suspendRecord.dateTime
+                                         PumpNow() - suspendRecord.dateTime
                                         )
 
                     For i As Long = 1 To CInt(Math.Ceiling(stopTimeSpan.TotalMinutes / 5)) - 1

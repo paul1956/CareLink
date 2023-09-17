@@ -271,13 +271,7 @@ Public Class Form1
                     Me.CursorPictureBox.Image = Nothing
                     Me.CursorPanel.Visible = True
                     chart1.SetupCallout(currentDataPoint, $"Sensor Glucose {Me.CursorMessage2Label.Text}")
-                Case TimeChangeSeriesName
-                    Me.CursorMessage1Label.Visible = False
-                    Me.CursorMessage1Label.Visible = False
-                    Me.CursorMessage2Label.Visible = False
-                    Me.CursorMessage3Label.Visible = False
-                    Me.CursorMessage4Label.Visible = False
-                    Me.CursorPictureBox.Image = Nothing
+                Case SuspendSeriesName, TimeChangeSeriesName
                     Me.CursorPanel.Visible = False
                 Case ActiveInsulinSeriesName
                     chart1.SetupCallout(currentDataPoint, $"Theoretical Active Insulin {currentDataPoint.YValues.FirstOrDefault:F3} U")
@@ -1665,12 +1659,12 @@ Public Class Form1
         If Not RecentDataEmpty() Then
             If RecentData.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
-                    Dim epochDateTime As Date = lastMedicalDeviceDataUpdateServerEpochString.FromUnixTime.ToLocalTime
-                    If epochDateTime + s_05MinuteSpan < Now() Then
-                        SetLastUpdateTime(Nothing, "", True, epochDateTime.IsDaylightSavingTime)
+                    Dim epochAsLocalDate As Date = lastMedicalDeviceDataUpdateServerEpochString.FromUnixTime.ToLocalTime
+                    If epochAsLocalDate + s_05MinuteSpan < Now() Then
+                        SetLastUpdateTime(Nothing, "", True, epochAsLocalDate.IsDaylightSavingTime)
                         _sgMiniDisplay.SetCurrentSgString("---", Single.NaN)
                     Else
-                        SetLastUpdateTime(Nothing, "", False, epochDateTime.IsDaylightSavingTime)
+                        SetLastUpdateTime(Nothing, "", False, epochAsLocalDate.IsDaylightSavingTime)
                         _sgMiniDisplay.SetCurrentSgString(s_lastSgRecord?.ToString, s_lastSgRecord.sg)
                     End If
                 Else
@@ -1871,10 +1865,6 @@ Public Class Form1
 
         With Me.ActiveInsulinChart
             With .Series
-                If s_listOfLowGlucoseSuspendedMarkers.Count > 0 Then
-                    .Add(Me.ActiveInsulinSuspendSeries)
-                End If
-
                 .Add(Me.ActiveInsulinTargetSeries)
                 .Add(Me.ActiveInsulinTimeChangeSeries)
 
@@ -2150,32 +2140,46 @@ Public Class Form1
 
                 ' Order all markers by time
                 Dim timeOrderedMarkers As New SortedDictionary(Of OADate, Single)
-                Dim markerOADateTime As OADate
 
                 Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
-                For Each marker As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
-                    markerOADateTime = New OADate(s_markers(marker.Index).GetMarkerDateTime)
-                    Select Case marker.Value(NameOf(InsulinRecord.type)).ToString
+                If Not s_markers.Any Then
+                    Exit Sub
+                End If
+
+                For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
+                    Dim markerEntry As Dictionary(Of String, String) = markerWithIndex.Value
+                    Dim markerOADateTime As New OADate(markerEntry.GetMarkerDateTime)
+                    Select Case markerEntry(NameOf(InsulinRecord.type))
                         Case "AUTO_BASAL_DELIVERY"
-                            Dim bolusAmount As Single = marker.Value.GetSingleValue(NameOf(AutoBasalDeliveryRecord.bolusAmount))
+                            Dim bolusAmount As Single = markerEntry.GetSingleValue(NameOf(AutoBasalDeliveryRecord.bolusAmount))
                             If timeOrderedMarkers.ContainsKey(markerOADateTime) Then
                                 timeOrderedMarkers(markerOADateTime) += bolusAmount
                             Else
                                 timeOrderedMarkers.Add(markerOADateTime, bolusAmount)
                             End If
                         Case "MANUAL_BASAL_DELIVERY"
-                            Dim bolusAmount As Single = marker.Value.GetSingleValue(NameOf(AutoBasalDeliveryRecord.bolusAmount))
+                            Dim bolusAmount As Single = markerEntry.GetSingleValue(NameOf(AutoBasalDeliveryRecord.bolusAmount))
                             If timeOrderedMarkers.ContainsKey(markerOADateTime) Then
                                 timeOrderedMarkers(markerOADateTime) += bolusAmount
                             Else
                                 timeOrderedMarkers.Add(markerOADateTime, bolusAmount)
                             End If
                         Case "INSULIN"
-                            Dim bolusAmount As Single = marker.Value.GetSingleValue(NameOf(InsulinRecord.deliveredFastAmount))
+                            Dim bolusAmount As Single = markerEntry.GetSingleValue(NameOf(InsulinRecord.deliveredFastAmount))
                             If timeOrderedMarkers.ContainsKey(markerOADateTime) Then
                                 timeOrderedMarkers(markerOADateTime) += bolusAmount
                             Else
                                 timeOrderedMarkers.Add(markerOADateTime, bolusAmount)
+                            End If
+                        Case "LOW_GLUCOSE_SUSPENDED"
+                            If s_pumpInRangeOfTransmitter Then
+                                For Each kvp As KeyValuePair(Of OADate, Single) In GetManualBasalValues(markerWithIndex)
+                                    If timeOrderedMarkers.ContainsKey(kvp.Key) Then
+                                        timeOrderedMarkers(kvp.Key) += kvp.Value
+                                    Else
+                                        timeOrderedMarkers.Add(kvp.Key, kvp.Value)
+                                    End If
+                                Next
                             End If
                         Case "BG_READING"
                         Case "CALIBRATION"
@@ -2200,7 +2204,7 @@ Public Class Form1
                 Next
 
                 .ChartAreas(NameOf(ChartArea)).AxisY2.Maximum = GetYMaxValue(NativeMmolL)
-                ' walk all markers, adjust active insulin and then add new marker
+                ' walk all markers, adjust active insulin and then add new markerWithIndex
                 Dim maxActiveInsulin As Double = 0
                 For i As Integer = 0 To remainingInsulinList.Count - 1
                     If i < CurrentUser.GetActiveInsulinIncrements Then
@@ -2416,19 +2420,16 @@ Public Class Form1
                     ' IGNORE HERE
                 Case "BG_READING"
                     ' IGNORE HERE
+                Case "LOW_GLUCOSE_SUSPENDED"
+                    ' IGNORE HERE
                 Case Else
                     Stop
             End Select
         Next
 
         If s_totalBasal = 0 AndAlso CurrentPdf.IsValid Then
-            Dim activeBasalRecords As New List(Of BasalRateRecord)
-            For Each namedBasal As KeyValuePair(Of String, NamedBasalRecord) In CurrentPdf.Basal.NamedBasal
-                If namedBasal.Value.Active Then
-                    activeBasalRecords = namedBasal.Value.basalRates
-                    Exit For
-                End If
-            Next
+            Dim activeBasalRecords As List(Of BasalRateRecord) = GetActiveBasalRateRecords()
+
             If activeBasalRecords.Count > 0 Then
                 Dim startTime As TimeOnly
                 Dim endTime As TimeOnly

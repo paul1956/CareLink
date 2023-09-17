@@ -13,6 +13,12 @@ Public Module DictionaryExtensions
                             "MMT-1880"}
 
     <Extension>
+    Friend Function GetBooleanValue(item As Dictionary(Of String, String), key As String) As Boolean
+        Dim ret As String = ""
+        Return item.TryGetValue(key, ret) AndAlso Boolean.Parse(ret)
+    End Function
+
+    <Extension>
     Friend Function GetSingleValue(item As Dictionary(Of String, String), key As String) As Single
         Dim ret As String = ""
         Return If(item.TryGetValue(key, ret),

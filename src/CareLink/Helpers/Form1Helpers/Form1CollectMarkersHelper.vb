@@ -71,6 +71,7 @@ Friend Module Form1CollectMarkersHelper
                     End Select
                 Case "LOW_GLUCOSE_SUSPENDED"
                     s_listOfLowGlucoseSuspendedMarkers.Add(DictionaryToClass(Of LowGlucoseSuspendRecord)(markerEntry, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
+                    s_markers.Add(markerEntry)
                 Case "MEAL"
                     s_listOfMealMarkers.Add(DictionaryToClass(Of MealRecord)(markerEntry, s_listOfMealMarkers.Count + 1))
                     s_markers.Add(markerEntry)
@@ -97,19 +98,35 @@ Friend Module Form1CollectMarkersHelper
 
         Dim i As Integer = 0
         Dim maxBasalPerHour As Single = 0
-        While i < basalDictionary.Count ' AndAlso basalDictionary.Keys(i) <= endOADate
-            Dim sum As Single = 0
-            Dim j As Integer = i
-            Dim startOADate As OADate = basalDictionary.Keys(i)
-            While j < basalDictionary.Count AndAlso basalDictionary.Keys(j) <= startOADate + s_1HourAsOADate
-                sum += basalDictionary.Values(j)
-                j += 1
+
+        If basalDictionary.Count > 2 Then
+            While i < basalDictionary.Count ' AndAlso basalDictionary.Keys(i) <= endOADate
+                Dim sum As Single = 0
+                Dim j As Integer = i
+                Dim startOADate As OADate = basalDictionary.Keys(i)
+                While j < basalDictionary.Count AndAlso basalDictionary.Keys(j) <= startOADate + s_1HourAsOADate
+                    sum += basalDictionary.Values(j)
+                    j += 1
+                End While
+                maxBasalPerHour = Math.Max(maxBasalPerHour, sum)
+                MaxBasalPerDose = Math.Max(MaxBasalPerDose, basalDictionary.Values(i))
+                MaxBasalPerDose = Math.Min(MaxBasalPerDose, 25)
+                i += 1
             End While
-            maxBasalPerHour = Math.Max(maxBasalPerHour, sum)
-            MaxBasalPerDose = Math.Max(MaxBasalPerDose, basalDictionary.Values(i))
-            MaxBasalPerDose = Math.Min(MaxBasalPerDose, 25)
-            i += 1
-        End While
+        Else
+            If CurrentPdf.IsValid Then
+                Dim basalRateRecords As List(Of BasalRateRecord) = GetActiveBasalRateRecords()
+                For Each basalRate As BasalRateRecord In basalRateRecords
+                    maxBasalPerHour = Math.Max(maxBasalPerHour, basalRate.UnitsPerHr)
+                    MaxBasalPerDose = Math.Max(MaxBasalPerDose, basalRate.UnitsPerHr / 12)
+                    MaxBasalPerDose = Math.Min(MaxBasalPerDose, 25)
+                    MaxBasalPerDose = Math.Max(MaxBasalPerDose, 0.25!)
+                Next
+            Else
+                MaxBasalPerDose = 0.5
+                maxBasalPerHour = 4
+            End If
+        End If
         Return $"Max Basal/Hr ~{maxBasalPerHour.RoundTo025}U"
     End Function
 

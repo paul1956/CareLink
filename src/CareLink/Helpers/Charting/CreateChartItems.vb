@@ -340,8 +340,8 @@ Friend Module CreateChartItems
                     .IntervalType = DateTimeIntervalType.Hours
                 End With
                 If s_listOfSgRecords.Count = 0 Then
-                    .Maximum = New OADate(Now)
-                    .Minimum = New OADate(Now.AddDays(-1))
+                    .Maximum = New OADate(PumpNow)
+                    .Minimum = New OADate(PumpNow.AddDays(-1))
                 Else
                     .Maximum = s_listOfSgRecords.LastOrDefault.OaDateTime
                     .Minimum = s_listOfSgRecords.FirstOrDefault.OaDateTime
