@@ -2441,19 +2441,14 @@ Public Class Form1
                         Dim basalRate As BasalRateRecord = e.Value
                         startTime = basalRate.Time
                         endTime = If(e.IsLast,
-                                     TimeOnly.FromTimeSpan(New TimeSpan(23, 59, 59)),
+                                     New TimeOnly(23, 59, 59, 999),
                                      activeBasalRecords(e.Index + 1).Time
                                     )
                         Dim theTimeSpan As TimeSpan = endTime - startTime
                         s_totalBasal += CSng((theTimeSpan.Hours + (theTimeSpan.Minutes / 60) + (theTimeSpan.Seconds / 3600)) * basalRate.UnitsPerHr)
                     Next
-                    s_totalDailyDose += s_totalBasal.RoundSingle(0, False)
-                    For Each e As IndexClass(Of LowGlucoseSuspendRecord) In s_listOfLowGlucoseSuspendedMarkers.WithIndex
-                        Dim suspendRecord As LowGlucoseSuspendRecord = e.Value
-                        ' Stop
-                    Next
+                    s_totalDailyDose += s_totalBasal
                 End If
-
             End If
         End If
 
