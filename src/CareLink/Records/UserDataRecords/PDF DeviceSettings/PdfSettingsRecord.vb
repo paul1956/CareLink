@@ -22,6 +22,7 @@ Public Class PdfSettingsRecord
             Case 0
                 Exit Sub
             Case Else
+                MsgBox("The format of the CareLink Report is not understood!", "Most likely it is not in English, you can manually download the English version and import it into the program using ""Manually Import Device Settings""", MsgBoxStyle.Information Or MsgBoxStyle.OkOnly, "Error importing Device Settings PDF")
                 Stop
                 Exit Sub
         End Select

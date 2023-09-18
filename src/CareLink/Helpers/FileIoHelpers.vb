@@ -96,23 +96,33 @@ Friend Module FileIoHelpers
         End If
     End Sub
 
-    Public Sub TouchFile(fileNameWithPath As String)
-        Try
-            If String.IsNullOrWhiteSpace(fileNameWithPath) Then
-                Throw New ArgumentException($"'{NameOf(fileNameWithPath)}' cannot be null or whitespace.", NameOf(fileNameWithPath))
-            End If
+    Public Function IsFileReadOnly(fileNameWithPath As String) As Boolean
+        If String.IsNullOrWhiteSpace(fileNameWithPath) Then
+            Throw New ArgumentException($"'{NameOf(fileNameWithPath)}' cannot be null or whitespace.", NameOf(fileNameWithPath))
+        End If
 
-            ' Update the CreationTime, LastWriteTime and LastAccessTime.
-            Dim fsi As FileSystemInfo = New FileInfo(fileNameWithPath) With {
-                .CreationTime = Date.Now,
-                .LastAccessTime = Date.Now,
-                .LastWriteTime = Date.Now
-            }
+        Try
+            If File.Exists(fileNameWithPath) Then
+                Dim attributes As FileAttributes = File.GetAttributes(fileNameWithPath)
+                Return attributes.HasFlag(FileAttributes.ReadOnly)
+            End If
         Catch e As Exception
             Stop
             Console.WriteLine("Error: {0}", e.Message)
         End Try
+        Return False
+    End Function
 
+    Public Sub TouchFile(fileNameWithPath As String)
+        If String.IsNullOrWhiteSpace(fileNameWithPath) Then
+            Throw New ArgumentException($"'{NameOf(fileNameWithPath)}' cannot be null or whitespace.", NameOf(fileNameWithPath))
+        End If
+        If File.Exists(fileNameWithPath) Then
+            Dim myFileStream As FileStream = File.Open(fileNameWithPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite)
+            myFileStream.Close()
+            myFileStream.Dispose()
+            File.SetLastWriteTimeUtc(fileNameWithPath, Date.UtcNow)
+        End If
     End Sub
 
 End Module

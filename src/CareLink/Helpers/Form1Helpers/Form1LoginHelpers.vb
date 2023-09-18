@@ -155,7 +155,7 @@ Friend Module Form1LoginHelpers
 
     Friend Sub SetUpCareLinkUser(userSettingsFileWithPath As String, forceUI As Boolean)
         Dim currentUserUpdateNeeded As Boolean = False
-        Dim pdfNewerThanUserJson As Boolean = False
+        Dim pdfNewerThanUserSettings As Boolean = False
         Dim pdfFileNameWithPath As String = GetUserSettingsPdfFileNameWithPath()
 
         If File.Exists(userSettingsFileWithPath) Then
@@ -169,9 +169,9 @@ Friend Module Form1LoginHelpers
                 CurrentUser.InsulinTypeName = s_insulinTypes.Keys(0)
             End If
 
-            pdfNewerThanUserJson = (Not File.Exists(pdfFileNameWithPath)) OrElse File.GetLastWriteTime(pdfFileNameWithPath) > File.GetLastWriteTime(userSettingsFileWithPath)
+            pdfNewerThanUserSettings = IsFileReadOnly(pdfFileNameWithPath) OrElse (File.Exists(pdfFileNameWithPath) AndAlso File.GetLastWriteTime(pdfFileNameWithPath) > File.GetLastWriteTime(userSettingsFileWithPath))
 
-            If Not (forceUI OrElse pdfNewerThanUserJson OrElse IsFileStale(userSettingsFileWithPath)) Then
+            If pdfNewerThanUserSettings OrElse Not (forceUI OrElse IsFileStale(userSettingsFileWithPath)) Then
                 CurrentPdf = New PdfSettingsRecord(pdfFileNameWithPath)
                 Exit Sub
             End If
@@ -180,12 +180,14 @@ Friend Module Form1LoginHelpers
             currentUserUpdateNeeded = True
         End If
 
-        Dim ait As Single = 2
-        Dim currentTarget As Single = 120
-        Dim carbRatios As New List(Of CarbRatioRecord)
         Form1.Cursor = Cursors.WaitCursor
         Application.DoEvents()
-        If Form1.Client.TryGetDeviceSettingsPdfFile(pdfFileNameWithPath) OrElse pdfNewerThanUserJson Then
+
+        Dim ait As Single = 2
+        Dim carbRatios As New List(Of CarbRatioRecord)
+        Dim currentTarget As Single = 120
+
+        If pdfNewerThanUserSettings OrElse Form1.Client.TryGetDeviceSettingsPdfFile(pdfFileNameWithPath) OrElse File.Exists(pdfFileNameWithPath) Then
             CurrentPdf = New PdfSettingsRecord(pdfFileNameWithPath)
             If CurrentPdf.IsValid Then
                 If CurrentUser.PumpAit <> CurrentPdf.Bolus.BolusWizard.ActiveInsulinTime Then
@@ -213,8 +215,6 @@ Friend Module Form1LoginHelpers
         If currentUserUpdateNeeded Then
             File.WriteAllTextAsync(userSettingsFileWithPath,
                       JsonSerializer.Serialize(CurrentUser, JsonFormattingOptions))
-        Else
-            TouchFile(userSettingsFileWithPath)
         End If
         Form1.Cursor = Cursors.Default
         Application.DoEvents()
