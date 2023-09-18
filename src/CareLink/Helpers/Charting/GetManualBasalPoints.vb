@@ -12,14 +12,24 @@ Friend Module GetManualBasalPoints
             Return timeOrderedMarkers
         End If
         Dim nextPumpSuspendTime As OADate
+        Dim markerDateTime? As Date
         If s_markers.Count > 1 AndAlso markerWithIndex.Index = s_markers.Count - 2 Then
             Dim activationType As String = ""
-            nextPumpSuspendTime = If(s_markers.Last().TryGetValue("activationType", activationType) AndAlso activationType = "MANUAL",
-                                     New OADate(s_markers.Last().GetMarkerDateTime),
-                                     New OADate(PumpNow)
-                                    )
+            If s_markers.Last().TryGetValue("activationType", activationType) AndAlso activationType = "MANUAL" Then
+                markerDateTime = s_markers.Last().GetMarkerDateTime
+                If markerDateTime Is Nothing Then
+                    Return timeOrderedMarkers
+                End If
+                nextPumpSuspendTime = New OADate(markerDateTime.Value)
+            Else
+                nextPumpSuspendTime = New OADate(PumpNow)
+            End If
         Else
-            nextPumpSuspendTime = New OADate(s_markers(markerWithIndex.Index + 1).GetMarkerDateTime)
+            markerDateTime = s_markers(markerWithIndex.Index + 1).GetMarkerDateTime
+            If markerDateTime Is Nothing Then
+                Return timeOrderedMarkers
+            End If
+            nextPumpSuspendTime = New OADate(markerDateTime.Value)
         End If
 
         Dim lowGlucoseSuspend As LowGlucoseSuspendRecord = DictionaryToClass(Of LowGlucoseSuspendRecord)(markerEntry, 0)
@@ -32,7 +42,11 @@ Friend Module GetManualBasalPoints
             Return timeOrderedMarkers
         End If
 
-        Dim currentMarkerTime As New OADate(markerEntry.GetMarkerDateTime)
+        markerDateTime = markerEntry.GetMarkerDateTime
+        If markerDateTime Is Nothing Then
+            Return timeOrderedMarkers
+        End If
+        Dim currentMarkerTime As New OADate(markerDateTime.Value)
 
         While nextPumpSuspendTime > currentMarkerTime
             For Each e As IndexClass(Of BasalRateRecord) In basalRateRecords.WithIndex
