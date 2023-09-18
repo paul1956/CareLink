@@ -124,7 +124,7 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "Microsoft.Web.WebView2/1.0.1938.49": {
+      "Microsoft.Web.WebView2/1.0.2045.28": {
         "type": "package",
         "compile": {
           "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.dll": {
@@ -1798,10 +1798,10 @@
         "runtime.json"
       ]
     },
-    "Microsoft.Web.WebView2/1.0.1938.49": {
-      "sha512": "z8KnFnaTYzhA/ZnyRX0qGfS1NU5ZBJeClAH64F0fVDvdDJTvME7xl6zTJ0Jlfe1BtL3C0NH9xTy64shg2baKdw==",
+    "Microsoft.Web.WebView2/1.0.2045.28": {
+      "sha512": "QDsR/HCNjzqYZrIuNLxyfmOIqVfMq1iGyoBR3OVVlFl4NZ12T8jRC0MNpOReKfgwtO5zh8g+eBYR6RAXFltcVA==",
       "type": "package",
-      "path": "microsoft.web.webview2/1.0.1938.49",
+      "path": "microsoft.web.webview2/1.0.2045.28",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -1842,7 +1842,7 @@
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.xml",
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll",
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.xml",
-        "microsoft.web.webview2.1.0.1938.49.nupkg.sha512",
+        "microsoft.web.webview2.1.0.2045.28.nupkg.sha512",
         "microsoft.web.webview2.nuspec",
         "runtimes/win-arm64/native/WebView2Loader.dll",
         "runtimes/win-arm64/native_uap/Microsoft.Web.WebView2.Core.dll",
@@ -1860,6 +1860,7 @@
         "tools/wv2winrt/System.Memory.dll",
         "tools/wv2winrt/System.Numerics.Vectors.dll",
         "tools/wv2winrt/System.Runtime.CompilerServices.Unsafe.dll",
+        "tools/wv2winrt/codegen_util.dll",
         "tools/wv2winrt/concrt140_app.dll",
         "tools/wv2winrt/cs/System.CommandLine.resources.dll",
         "tools/wv2winrt/de/System.CommandLine.resources.dll",
@@ -1875,6 +1876,7 @@
         "tools/wv2winrt/pt-BR/System.CommandLine.resources.dll",
         "tools/wv2winrt/ru/System.CommandLine.resources.dll",
         "tools/wv2winrt/tr/System.CommandLine.resources.dll",
+        "tools/wv2winrt/type_hierarchy.dll",
         "tools/wv2winrt/vcamp140_app.dll",
         "tools/wv2winrt/vccorlib140_app.dll",
         "tools/wv2winrt/vcomp140_app.dll",
@@ -5369,7 +5371,7 @@
       "ClosedXML >= 0.102.1",
       "DataGridViewDisableButtonColumnEx >= 1.0.0.1",
       "FreeSpire.PDF >= 8.6.0",
-      "Microsoft.Web.WebView2 >= 1.0.1938.49",
+      "Microsoft.Web.WebView2 >= 1.0.2045.28",
       "Octokit >= 7.1.0",
       "System.Speech >= 7.0.0",
       "TableLayputPanelTop >= 1.0.0.3",
@@ -5430,7 +5432,7 @@
           },
           "Microsoft.Web.WebView2": {
             "target": "Package",
-            "version": "[1.0.1938.49, )"
+            "version": "[1.0.2045.28, )"
           },
           "Octokit": {
             "target": "Package",
