@@ -2172,7 +2172,7 @@ Public Class Form1
                                 timeOrderedMarkers.Add(markerOADateTime, bolusAmount)
                             End If
                         Case "LOW_GLUCOSE_SUSPENDED"
-                            If s_pumpInRangeOfTransmitter Then
+                            If s_pumpInRangeOfTransmitter AndAlso CurrentPdf.IsValid AndAlso Not InAutoMode Then
                                 For Each kvp As KeyValuePair(Of OADate, Single) In GetManualBasalValues(markerWithIndex)
                                     If timeOrderedMarkers.ContainsKey(kvp.Key) Then
                                         timeOrderedMarkers(kvp.Key) += kvp.Value

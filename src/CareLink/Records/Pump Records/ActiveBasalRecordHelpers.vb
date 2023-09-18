@@ -5,15 +5,13 @@
 Friend Module ActiveBasalRecordHelpers
 
     Public Function GetActiveBasalRateRecords() As List(Of BasalRateRecord)
-        Dim activeBasalRecords As New List(Of BasalRateRecord)
+        Debug.Assert(CurrentPdf.IsValid)
         For Each namedBasal As KeyValuePair(Of String, NamedBasalRecord) In CurrentPdf.Basal.NamedBasal
             If namedBasal.Value.Active Then
-                activeBasalRecords = namedBasal.Value.basalRates
-                Exit For
+                Return namedBasal.Value.basalRates
             End If
         Next
-
-        Return activeBasalRecords
+        Return New List(Of BasalRateRecord)
     End Function
 
 End Module

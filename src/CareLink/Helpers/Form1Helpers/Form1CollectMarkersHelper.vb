@@ -119,12 +119,13 @@ Friend Module Form1CollectMarkersHelper
                 For Each basalRate As BasalRateRecord In basalRateRecords
                     maxBasalPerHour = Math.Max(maxBasalPerHour, basalRate.UnitsPerHr)
                     MaxBasalPerDose = Math.Max(MaxBasalPerDose, basalRate.UnitsPerHr / 12)
-                    MaxBasalPerDose = Math.Min(MaxBasalPerDose, 25)
+                    MaxBasalPerDose = Math.Min(MaxBasalPerDose, 10.0!)
                     MaxBasalPerDose = Math.Max(MaxBasalPerDose, 0.25!)
                 Next
-            Else
-                MaxBasalPerDose = 0.5
-                maxBasalPerHour = 4
+            End If
+            If maxBasalPerHour = 0 Then
+                MaxBasalPerDose = 1
+                maxBasalPerHour = 10
             End If
         End If
         Return $"Max Basal/Hr ~{maxBasalPerHour.RoundTo025}U"

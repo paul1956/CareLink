@@ -36,7 +36,9 @@ Friend Module PlotSuspend
                         .Last.Color = lineColor
                     Next
 
-                    .AddXY(s_listOfLowGlucoseSuspendedMarkers(e.Index + 1).dateTime, Double.NaN)
+                    If Not e.IsLast Then
+                        .AddXY(s_listOfLowGlucoseSuspendedMarkers(e.Index + 1).dateTime, Double.NaN)
+                    End If
                     .Last.Color = Color.Transparent
                 Else
                     .AddXY(suspendRecord.dateTime, Double.NaN)
