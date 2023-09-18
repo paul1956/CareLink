@@ -162,6 +162,13 @@ Friend Module Form1LoginHelpers
             Dim userSettingsJson As String = File.ReadAllText(userSettingsFileWithPath)
             CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(userSettingsJson, JsonFormattingOptions)
 
+            If CurrentUser.InsulinRealAit = 0 Then
+                CurrentUser.InsulinRealAit = s_insulinTypes.Values(0).AitHours
+            End If
+            If String.IsNullOrEmpty(CurrentUser.InsulinTypeName) Then
+                CurrentUser.InsulinTypeName = s_insulinTypes.Keys(0)
+            End If
+
             pdfNewerThanUserJson = (Not File.Exists(pdfFileNameWithPath)) OrElse File.GetLastWriteTime(pdfFileNameWithPath) > File.GetLastWriteTime(userSettingsFileWithPath)
 
             If Not (forceUI OrElse pdfNewerThanUserJson OrElse IsFileStale(userSettingsFileWithPath)) Then
