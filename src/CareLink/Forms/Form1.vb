@@ -2897,8 +2897,21 @@ Public Class Form1
 
         Me.MenuStartHere.Enabled = True
         Me.UpdateTreatmentChart()
-        If s_totalAutoCorrection > 0 Then
-            AddAutoCorrectionLegend(_activeInsulinChartLegend, _summaryChartLegend, _treatmentMarkersChartLegend)
+
+        Dim showLegend As Boolean = s_totalAutoCorrection > 0
+        ShowHideLegendItem(showLegend,
+                           "Auto Correction",
+                           _activeInsulinChartLegend, _summaryChartLegend, _treatmentMarkersChartLegend)
+
+        showLegend = s_listOfLowGlucoseSuspendedMarkers.Count > 0 AndAlso
+                     Not (s_listOfLowGlucoseSuspendedMarkers.Count = 1 AndAlso
+                     s_listOfLowGlucoseSuspendedMarkers(0).deliverySuspended = False)
+        ShowHideLegendItem(showLegend,
+                           "Suspend",
+                           _activeInsulinChartLegend, _summaryChartLegend, _treatmentMarkersChartLegend)
+
+        If s_listOfLowGlucoseSuspendedMarkers.Count = 1 AndAlso s_listOfLowGlucoseSuspendedMarkers(0).deliverySuspended = False Then
+            Exit Sub
         End If
 
         If My.Settings.SystemAudioAlertsEnabled AndAlso My.Settings.SystemSpeechRecognitionThreshold <> 1 Then

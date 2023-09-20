@@ -29,9 +29,9 @@ Friend Module CreateChartItems
     End Function
 
     <Extension>
-    Private Function IndexOfAutoCorrection(customItems As LegendItemsCollection) As Integer
+    Private Function IndexOfLabel(customItems As LegendItemsCollection, legendString As String) As Integer
         For Each item As IndexClass(Of LegendItem) In customItems.WithIndex
-            If item.Value.Name = "Auto Correction" Then
+            If item.Value.Name = legendString Then
                 Return item.Index
             End If
         Next
@@ -39,13 +39,13 @@ Friend Module CreateChartItems
         Return -1
     End Function
 
-    Friend Sub AddAutoCorrectionLegend(activeInsulinChartLegend As Legend, homeChartLegend As Legend, treatmentMarkersChartLegend As Legend)
-        Dim i As Integer = activeInsulinChartLegend.CustomItems.IndexOfAutoCorrection()
-        activeInsulinChartLegend.CustomItems(i).Enabled = True
-        i = homeChartLegend.CustomItems.IndexOfAutoCorrection()
-        homeChartLegend.CustomItems(i).Enabled = True
-        i = treatmentMarkersChartLegend.CustomItems.IndexOfAutoCorrection()
-        treatmentMarkersChartLegend.CustomItems(i).Enabled = True
+    Friend Sub ShowHideLegendItem(showOnLegend As Boolean, legendString As String, activeInsulinChartLegend As Legend, homeChartLegend As Legend, treatmentMarkersChartLegend As Legend)
+        Dim i As Integer = activeInsulinChartLegend.CustomItems.IndexOfLabel(legendString)
+        activeInsulinChartLegend.CustomItems(i).Enabled = showOnLegend
+        i = homeChartLegend.CustomItems.IndexOfLabel(legendString)
+        homeChartLegend.CustomItems(i).Enabled = showOnLegend
+        i = treatmentMarkersChartLegend.CustomItems.IndexOfLabel(legendString)
+        treatmentMarkersChartLegend.CustomItems(i).Enabled = showOnLegend
     End Sub
 
     Friend Function CreateChart(chartName As String) As Chart
