@@ -54,6 +54,9 @@ Public Class BasalRecord
     End Function
 
     Public Function GetBasalPerHour() As Single
+        If Me.activeBasalPattern Is Nothing Then
+            Return Single.NaN
+        End If
         Select Case Me.activeBasalPattern
             Case "BASAL1", "BASAL2", "BASAL3", "BASAL4", "BASAL5", "WORKDAY", "DAYOFF", "SICKDAY"
                 Return Me.basalRate

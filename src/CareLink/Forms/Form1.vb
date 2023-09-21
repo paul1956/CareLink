@@ -2109,12 +2109,17 @@ Public Class Form1
 
     Private Sub UpdateActiveInsulin()
         Try
-            Dim activeInsulinStr As String = $"{s_activeInsulin.amount:N3}"
-            If activeInsulinStr.ToCharArray.Last = "0" Then
-                activeInsulinStr = $"{s_activeInsulin.amount:N2}"
+            If s_activeInsulin.amount >= 0 Then
+                Dim activeInsulinStr As String = $"{s_activeInsulin.amount:N3}"
+                If activeInsulinStr.ToCharArray.Last = "0" Then
+                    activeInsulinStr = $"{s_activeInsulin.amount:N2}"
+                End If
+                Me.ActiveInsulinValue.Text = $"Active Insulin {activeInsulinStr} U"
+                _sgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr} U"
+            Else
+                Me.ActiveInsulinValue.Text = $"Active Insulin Unknown"
+                _sgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin --- U"
             End If
-            Me.ActiveInsulinValue.Text = $"Active Insulin {activeInsulinStr} U"
-            _sgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr} U"
         Catch ex As ArithmeticException
             Stop
             Throw New ArithmeticException($"{ex.DecodeException()} exception in {NameOf(UpdateActiveInsulin)}")

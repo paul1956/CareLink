@@ -86,6 +86,9 @@ Friend Module Form1CollectMarkersHelper
 
         For Each e As IndexClass(Of BasalRecord) In s_listOfManualBasal.ToList.WithIndex
             Dim r As BasalRecord = e.Value
+            If Single.IsNaN(r.GetBasal) Then
+                Continue For
+            End If
             basalDictionary.Add(r.GetOaGetTime, r.GetBasal)
             s_listOfAutoBasalDeliveryMarkers.Add(New AutoBasalDeliveryRecord(r, basalDictionary.Count, 288 - e.Index))
             s_markers.Add(r.ToDictionary)
