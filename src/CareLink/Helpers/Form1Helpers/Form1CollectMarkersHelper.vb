@@ -46,7 +46,9 @@ Friend Module Form1CollectMarkersHelper
                     s_markers.Add(markerEntry)
                     Dim item As AutoBasalDeliveryRecord = DictionaryToClass(Of AutoBasalDeliveryRecord)(markerEntry, s_listOfAutoBasalDeliveryMarkers.Count + 1)
                     s_listOfAutoBasalDeliveryMarkers.Add(item)
-                    basalDictionary.Add(item.OAdateTime, item.bolusAmount)
+                    If Not basalDictionary.TryAdd(item.OAdateTime, item.bolusAmount) Then
+                        basalDictionary(item.OAdateTime) += item.bolusAmount
+                    End If
                 Case "AUTO_MODE_STATUS"
                     s_listOfAutoModeStatusMarkers.Add(DictionaryToClass(Of AutoModeStatusRecord)(markerEntry, s_listOfAutoModeStatusMarkers.Count + 1))
                 Case "BG_READING"
@@ -61,7 +63,9 @@ Friend Module Form1CollectMarkersHelper
                     s_listOfInsulinMarkers.Add(lastInsulinRecord)
                     Select Case markerEntry(NameOf(InsulinRecord.activationType))
                         Case "AUTOCORRECTION"
-                            basalDictionary.Add(lastInsulinRecord.OAdateTime, lastInsulinRecord.deliveredFastAmount)
+                            If Not basalDictionary.TryAdd(lastInsulinRecord.OAdateTime, lastInsulinRecord.deliveredFastAmount) Then
+                                basalDictionary(lastInsulinRecord.OAdateTime) += lastInsulinRecord.deliveredFastAmount
+                            End If
                         Case "MANUAL"
                         Case "UNDETERMINED"
                         Case "RECOMMENDED"

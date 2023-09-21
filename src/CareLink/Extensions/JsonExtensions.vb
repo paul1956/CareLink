@@ -5,6 +5,7 @@
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 Imports System.Text.Json.Serialization
+Imports System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock
 
 Public Module JsonExtensions
 
@@ -67,11 +68,25 @@ Public Module JsonExtensions
 
         For Each e As IndexClass(Of Dictionary(Of String, Object)) In JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(value, options).WithIndex
             Dim resultDictionary As New Dictionary(Of String, String)
+            Dim defaultTime As Date = PumpNow() - New TimeSpan(23, 55, 0)
             For Each item As KeyValuePair(Of String, Object) In e.Value
                 If item.Value Is Nothing Then
                     resultDictionary.Add(item.Key, Nothing)
                 ElseIf item.Key = "sg" Then
                     resultDictionary.Add(item.Key, item.ScaleSgToString)
+                ElseIf item.Key = "dateTime" Then
+                    Dim d As Date = item.Value.ToString.ParseDate(item.Key)
+                    ' Prevent Crash but not valid data
+                    If d.Year < 2001 Then
+                        Dim jsonItemAsString As String = item.jsonItemAsString
+                        Dim indexOfT As Integer = jsonItemAsString.IndexOf("T")
+                        Dim replaceItem As String = jsonItemAsString.Substring(indexOfT, 6)
+                        Dim tSpan As TimeSpan = TimeSpan.FromMinutes(e.Index * 5)
+                        jsonItemAsString = jsonItemAsString.Replace(replaceItem, $"T{tSpan.TotalHours:00}:{tSpan.Minutes:00}")
+                        resultDictionary.Add(item.Key, jsonItemAsString.Replace("2000-12-31", $"{defaultTime.Year}-{defaultTime.Month}-{defaultTime.Day}"))
+                    Else
+                        resultDictionary.Add(item.Key, item.jsonItemAsString)
+                    End If
                 Else
                     resultDictionary.Add(item.Key, item.jsonItemAsString)
                 End If
@@ -118,7 +133,7 @@ Public Module JsonExtensions
                             Dim messageButtons As MessageBoxButtons
                             If PumpTimeZoneInfo Is Nothing Then
                                 If String.IsNullOrWhiteSpace(item.Value.ToString) Then
-                                    message = $"Your pump appears to be off-line, some values will be wrong do you want to continue? If you select OK '{TimeZoneInfo.Local.Id}' will be used as you local time and you will not be prompted further. Cancel will Exit."
+                                    message = $"Your pump appears To be off-line, some values will be wrong do you want to continue? If you select OK '{TimeZoneInfo.Local.Id}' will be used as you local time and you will not be prompted further. Cancel will Exit."
                                     messageButtons = MessageBoxButtons.OKCancel
                                 Else
                                     message = $"Your pump TimeZone '{item.Value}' is not recognized, do you want to exit? If you select No permanently use '{TimeZoneInfo.Local.Id}''? If you select Yes '{TimeZoneInfo.Local.Id}' will be used and you will not be prompted further. No will use '{TimeZoneInfo.Local.Id}' until you restart program. Cancel will exit program. Please open an issue and provide the name '{item.Value}'. After selecting 'Yes' you can change the behavior under the Options Menu."
