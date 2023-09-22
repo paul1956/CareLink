@@ -121,7 +121,7 @@ Friend Module Form1UpdateHelpers
 #Region "Update all Markers"
 
         If RecentData.TryGetValue(ItemIndexes.sgs.ToString, markerRowString) Then
-            s_listOfSgRecords = JsonToLisOfDictionary(markerRowString).ToSgList()
+            s_listOfSgRecords = JsonToLisOfSgs(markerRowString)
         End If
 
         If RecentData.TryGetValue(ItemIndexes.basal.ToString, markerRowString) Then
