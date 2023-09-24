@@ -102,7 +102,7 @@ Public Module JsonExtensions
                 ElseIf item.Key = "dateTime" Then
                     Dim d As Date = item.Value.ToString.ParseDate(item.Key)
                     ' Prevent Crash but not valid data
-                    If d.Year < 2001 Then
+                    If d.Year <= 2001 Then
                         resultDictionary.Add(item.Key, s_listOfSgRecords(recordIndex).datetimeAsString)
                     Else
                         resultDictionary.Add(item.Key, item.jsonItemAsString)
