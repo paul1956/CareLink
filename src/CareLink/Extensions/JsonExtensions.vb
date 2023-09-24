@@ -13,17 +13,23 @@ Public Module JsonExtensions
         Dim sGs As New List(Of SgRecord)
         For i As Integer = 0 To innerJson.Count - 1
             sGs.Add(New SgRecord(innerJson(i), i))
-            If sGs.Last.datetimeAsString = "" OrElse sGs.Last.datetimeAsString.StartsWith("20") Then
-                Dim jsonItemAsString As String = sGs.Last.datetimeAsString
-                Dim indexOfT As Integer = jsonItemAsString.IndexOf("T")
-                sGs.Last.datetime = If(i = 0,
-                                       (s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime - New TimeSpan(23, 54, 59)).RoundDownToMinute(),
-                                       sGs(0).datetime + (s_05MinuteSpan * i)
-                                       )
-                Dim replaceDate As String = jsonItemAsString.Substring(0, indexOfT)
-                Dim replaceTime As String = jsonItemAsString.Substring(indexOfT, 6)
-                sGs.Last.datetimeAsString = sGs.Last.datetimeAsString.Replace(replaceDate, $"{sGs.Last.datetime.Year:0000}-{sGs.Last.datetime.Month:00}-{sGs.Last.datetime.Day:00}").Replace(replaceTime, $"T{sGs.Last.datetime.Hour:00}:{sGs.Last.datetime.Minute:00}")
-            End If
+            With sGs.Last
+                If .datetimeAsString = "" OrElse .datetimeAsString.StartsWith("200") Then
+                    .datetime = If(i = 0,
+                                           (s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime - New TimeSpan(23, 54, 59)).RoundDownToMinute(),
+                                           sGs(0).datetime + (s_05MinuteSpan * i)
+                                           )
+                    If Not Single.IsNaN(.sg) Then
+                        Dim jsonItemAsString As String = .datetimeAsString
+                        Dim indexOfT As Integer = jsonItemAsString.IndexOf("T")
+                        Dim replaceDate As String = jsonItemAsString.Substring(0, indexOfT)
+                        Dim replaceTime As String = jsonItemAsString.Substring(indexOfT, 6)
+                        .datetimeAsString = .datetimeAsString.
+                            Replace(replaceDate, $"{ .datetime.Year:0000}-{ .datetime.Month:00}-{ .datetime.Day:00}").
+                            Replace(replaceTime, $"T{ .datetime.Hour:00}:{ .datetime.Minute:00}")
+                    End If
+                End If
+            End With
         Next
         Return sGs
     End Function
@@ -102,7 +108,7 @@ Public Module JsonExtensions
                 ElseIf item.Key = "dateTime" Then
                     Dim d As Date = item.Value.ToString.ParseDate(item.Key)
                     ' Prevent Crash but not valid data
-                    If d.Year <= 2001 Then
+                    If d.Year <= 2001 AndAlso recordIndex >= 0 Then
                         resultDictionary.Add(item.Key, s_listOfSgRecords(recordIndex).datetimeAsString)
                     Else
                         resultDictionary.Add(item.Key, item.jsonItemAsString)
