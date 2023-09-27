@@ -1068,8 +1068,7 @@ Public Class Form1
         Me.MenuStartHereSnapshotSave.Enabled = Not RecentDataEmpty()
         Me.MenuStartHereExceptionReportLoad.Visible = AnyMatchingFiles(DirectoryForProjectData, $"{BaseNameSavedErrorReport}*.txt")
 
-        Dim careLinkUserName As String = My.Settings.CareLinkUserName
-        Dim userPdfExists As Boolean = Not (String.IsNullOrWhiteSpace(careLinkUserName) OrElse Not AnyMatchingFiles(SettingsDirectory, $"{careLinkUserName}Settings.pdf"))
+        Dim userPdfExists As Boolean = Not (String.IsNullOrWhiteSpace(s_userName) OrElse Not AnyMatchingFiles(SettingsDirectory, $"{s_userName}Settings.pdf"))
         Me.MenuStartHereShowPumpSetup.Enabled = userPdfExists
         Me.MenuStartHereManuallyImportDeviceSettings.Enabled = Not userPdfExists
     End Sub
@@ -1146,11 +1145,7 @@ Public Class Form1
                         .CheckFileExists = True,
                         .CheckPathExists = True,
                         .DefaultExt = "json",
-                        .FileName = If(fileList.Length > 0,
-                                       If(fileList.Contains($"{My.Settings.CareLinkUserName}Settings.json"),
-                                       $"{My.Settings.CareLinkUserName}Settings.json", ""),
-                                       "CareLink"
-                                      ),
+                        .FileName = $"{s_userName}Settings.json",
                         .Filter = $"json files (*.json)|CareLink*.json",
                         .InitialDirectory = DirectoryForProjectData,
                         .Multiselect = False,
@@ -1643,7 +1638,7 @@ Public Class Form1
                 RecentData = Client?.GetRecentData()
                 If RecentDataEmpty() Then
                     If Client Is Nothing OrElse Client.HasErrors Then
-                        Client = New CareLinkClient(My.Settings.CareLinkUserName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
+                        Client = New CareLinkClient(s_userName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
                     End If
                     RecentData = Client.GetRecentData()
                 End If

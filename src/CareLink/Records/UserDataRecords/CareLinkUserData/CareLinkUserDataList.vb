@@ -189,7 +189,7 @@ Public Class CareLinkUserDataList
     End Sub
 
     Friend Sub SaveAllUserRecords(loggedOnUser As CareLinkUserDataRecord, Key As String, Value As String)
-        If Not Key.Equals(NameOf(My.Settings.CareLinkUserName).ToString, StringComparison.OrdinalIgnoreCase) Then
+        If Not Key.Equals(NameOf(My.Settings.CareLinkUserName), StringComparison.OrdinalIgnoreCase) Then
             ' We are changing something other than the user name
             ' Update logged on user and the saved file
             loggedOnUser.UpdateValue(Key, Value)
