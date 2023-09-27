@@ -212,7 +212,7 @@ Public Class LoginDialog
                 If userSettings.CareLinkUserName.Equals(Me.UsernameComboBox.Text, StringComparison.OrdinalIgnoreCase) Then
                     Me.UsernameComboBox.Text = userSettings.CareLinkUserName
                 End If
-                My.Settings.CareLinkUserName = Me.UsernameComboBox.Text
+                s_userName = Me.UsernameComboBox.Text
                 Me.PasswordTextBox.Text = userSettings.CareLinkPassword
                 Me.RegionComboBox.SelectedValue = userSettings.CountryCode.GetRegionFromCode
                 Me.PatientUserIDTextBox.Text = userSettings.CareLinkPatientUserID

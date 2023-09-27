@@ -176,7 +176,7 @@ Friend Module Form1LoginHelpers
                 Exit Sub
             End If
         Else
-            CurrentUser = New CurrentUserRecord(My.Settings.CareLinkUserName, If(Not Is700Series(), CheckState.Checked, CheckState.Indeterminate))
+            CurrentUser = New CurrentUserRecord(s_userName, If(Not Is700Series(), CheckState.Checked, CheckState.Indeterminate))
             currentUserUpdateNeeded = True
         End If
 

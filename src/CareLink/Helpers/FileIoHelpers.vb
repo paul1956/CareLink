@@ -59,11 +59,11 @@ Friend Module FileIoHelpers
     End Function
 
     Friend Function GetUserSettingsJsonFileNameWithPath() As String
-        Return Path.Combine(SettingsDirectory, $"{My.Settings.CareLinkUserName}Settings.json")
+        Return Path.Combine(SettingsDirectory, $"{s_userName}Settings.json")
     End Function
 
     Friend Function GetUserSettingsPdfFileNameWithPath() As String
-        Return Path.Combine(SettingsDirectory, $"{My.Settings.CareLinkUserName}Settings.pdf")
+        Return Path.Combine(SettingsDirectory, $"{s_userName}Settings.pdf")
     End Function
 
     Friend Function GetUsersLoginInfoFileWithPath(current As Boolean) As String
