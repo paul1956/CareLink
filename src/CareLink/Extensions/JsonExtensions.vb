@@ -16,9 +16,9 @@ Public Module JsonExtensions
             With sGs.Last
                 If .datetimeAsString = "" OrElse .datetimeAsString.StartsWith("200") Then
                     .datetime = If(i = 0,
-                                           (s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime - New TimeSpan(23, 54, 59)).RoundDownToMinute(),
-                                           sGs(0).datetime + (s_05MinuteSpan * i)
-                                           )
+                                   (s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime - New TimeSpan(23, 55, 0)).RoundDownToMinute(),
+                                   sGs(0).datetime + (s_05MinuteSpan * i)
+                                  )
                     If Not Single.IsNaN(.sg) Then
                         Dim jsonItemAsString As String = .datetimeAsString
                         Dim indexOfT As Integer = jsonItemAsString.IndexOf("T")
