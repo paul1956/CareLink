@@ -266,6 +266,7 @@ Friend Module Form1UpdateHelpers
 
                 Case ItemIndexes.sgs
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
+                    s_lastSgValue = 0
                     If s_listOfSgRecords.Count > 2 Then
                         s_lastSgValue = s_listOfSgRecords.Item(s_listOfSgRecords.Count - 2).sg
                     End If

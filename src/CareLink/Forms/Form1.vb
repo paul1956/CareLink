@@ -2422,6 +2422,8 @@ Public Class Form1
                     ' IGNORE HERE
                 Case "LOW_GLUCOSE_SUSPENDED"
                     ' IGNORE HERE
+                Case "TIME_CHANGE"
+                    ' IGNORE HERE
                 Case Else
                     Stop
             End Select
