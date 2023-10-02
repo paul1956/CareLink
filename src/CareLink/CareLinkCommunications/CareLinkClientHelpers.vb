@@ -118,7 +118,9 @@ Public Module CareLinkClientHelpers
 
         Dim payload As New Dictionary(Of String, String) From {
             {"country", queryParameters.GetValueOrDefault("CountryCode".ToLower)},
-            {"locale", "en"}}
+            {"locale", "en"},
+            {"g-recaptcha-response", "abc"}
+        }
 
         Dim response As HttpResponseMessage = Nothing
         Try

@@ -30,10 +30,10 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-09/18/2023
+10/01/2023
 
 ## What's New
-New in 3.9.2.4
+New in 3.9.2.5
  - Add support for 740G Pump
  - Fix Pump Settings for Military Time
  - Add support for Manual Basal
