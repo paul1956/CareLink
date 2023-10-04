@@ -141,7 +141,7 @@ Public Class SgMiniForm
     End Sub
 
     Public Sub SetCurrentSgString(sgString As String, sgValue As Single)
-        Me.SgTextBox.Text = If(Single.IsNaN(sgValue) OrElse (Not IsNumeric(sgString)),
+        Me.SgTextBox.Text = If(Single.IsNaN(sgValue),
                                "---",
                                sgString
                               )
