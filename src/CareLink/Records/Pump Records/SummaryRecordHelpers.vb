@@ -18,8 +18,8 @@ Friend Module SummaryRecordHelpers
                              False,
                              True,
                              CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
-            If .Name = "value" Then
-                e.Column.MinimumWidth = 300
+            If .Name = "Value" Then
+                e.Column.MinimumWidth = 350
             End If
             .SortMode = DataGridViewColumnSortMode.NotSortable
         End With

@@ -59,25 +59,43 @@ Friend Module Form1NotificationTabHelpers
                     tableLayoutPanel2.BackColor = Color.Green
                     innerJson.Reverse()
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
-                        tableLayoutPanel2.DisplayDataTableInDGV(
-                            ClassCollectionToDataTable(GetSummaryRecords(innerDictionary.Value, s_rowsToHide)),
-                            NameOf(SummaryRecord),
-                            AddressOf SummaryRecordHelpers.AttachHandlers,
-                            innerDictionary.Index)
+                        DisplayDataTableInDGV(tableLayoutPanel2,
+                                              ClassCollectionToDataTable(GetSummaryRecords(innerDictionary.Value, s_rowsToHide)),
+                                              NameOf(SummaryRecord),
+                                              AddressOf SummaryRecordHelpers.AttachHandlers,
+                                              innerDictionary.Index
+                                             )
                     Next
                 Else
+                    tableLayoutPanel2.BackColor = Color.PaleVioletRed
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
-                        tableLayoutPanel2.BackColor = Color.PaleVioletRed
-                        tableLayoutPanel2.DisplayDataTableInDGV(
-                            ClassCollectionToDataTable(GetSummaryRecords(innerDictionary.Value, s_rowsToHide)),
-                            NameOf(SummaryRecord),
-                            AddressOf SummaryRecordHelpers.AttachHandlers,
-                            innerDictionary.Index)
+                        DisplayDataTableInDGV(tableLayoutPanel2,
+                                              ClassCollectionToDataTable(GetSummaryRecords(innerDictionary.Value, s_rowsToHide)),
+                                              NameOf(SummaryRecord),
+                                              AddressOf SummaryRecordHelpers.AttachHandlers,
+                                              innerDictionary.Index
+                                             )
                     Next
                 End If
                 tableLevel1Blue.Controls.Add(tableLayoutPanel2, 1, c.Index)
             End If
         Next
+    End Sub
+
+    Private Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As Integer)
+        Dim dGV As New DataGridView With {
+            .AutoSize = False,
+            .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells,
+            .ColumnHeadersVisible = False,
+            .Height = table.Rows.Count * 30,
+            .Name = $"DataGridView{className}",
+            .RowHeadersVisible = False
+        }
+        dGV.DefaultCellStyle.WrapMode = DataGridViewTriState.True
+        dGV.InitializeDgv()
+        realPanel.Controls.Add(dGV, 0, rowIndex)
+        attachHandlers(dGV)
+        dGV.DataSource = table
     End Sub
 
     Friend Sub UpdateNotificationTab()

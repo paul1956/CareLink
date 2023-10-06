@@ -1159,6 +1159,7 @@ Partial Class Form1
         DgvSummary.Location = New Point(3, 3)
         DgvSummary.Name = "DgvSummary"
         DgvSummary.ReadOnly = True
+        DgvSummary.RowsDefaultCellStyle.WrapMode = DataGridViewTriState.True
         DgvSummary.RowTemplate.Height = 25
         DgvSummary.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvSummary.Size = New Size(1370, 655)

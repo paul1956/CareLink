@@ -8,14 +8,6 @@ Friend Module DisplayDataTableInDgvHelpers
 
     Friend Delegate Sub attachHandlers(dgv As DataGridView)
 
-    Private Function CreateDefaultDataGridView(dgvName As String) As DataGridView
-        Dim dGV As New DataGridView With {
-            .Name = dgvName
-        }
-        dGV.InitializeDgv()
-        Return dGV
-    End Function
-
     <Extension>
     Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, dGV As DataGridView, table As DataTable, rowIndex As ItemIndexes)
         realPanel.SetTabName(rowIndex)
@@ -31,7 +23,8 @@ Friend Module DisplayDataTableInDgvHelpers
         Dim dGV As DataGridView = TryCast(realPanel.Controls(dGVIndex), DataGridView)
 
         If dGV Is Nothing Then
-            dGV = CreateDefaultDataGridView($"DataGridView{className}")
+            dGV = New DataGridView With {.Name = $"DataGridView{className}"}
+            dGV.InitializeDgv()
             realPanel.Controls.Add(dGV, 0, 1)
             attachHandlers?(dGV)
         Else
@@ -44,18 +37,6 @@ Friend Module DisplayDataTableInDgvHelpers
         If hideRecordNumberColumn AndAlso dGV.Columns(0).Name = "RecordNumber" Then
             dGV.Columns("RecordNumber").Visible = False
         End If
-    End Sub
-
-    <Extension>
-    Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As Integer)
-        Dim dGV As DataGridView = CreateDefaultDataGridView($"DataGridView{className}")
-        dGV.AutoSize = False
-        dGV.ColumnHeadersVisible = False
-        realPanel.Controls.Add(dGV, 0, rowIndex)
-        attachHandlers(dGV)
-        dGV.DataSource = table
-        dGV.RowHeadersVisible = False
-        dGV.Height = table.Rows.Count * 30
     End Sub
 
 End Module
