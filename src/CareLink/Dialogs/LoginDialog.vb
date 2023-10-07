@@ -3,11 +3,18 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.ComponentModel
-Imports System.Security.Policy
+Imports System.Net
 Imports Microsoft.Web.WebView2.Core
 
 Public Class LoginDialog
+    Private Shared s_cookieContainer As List(Of CoreWebView2Cookie)
+
     Private ReadOnly _mySource As New AutoCompleteStringCollection()
+    Private _authTokenValue As String
+    Private _lastUrl As String
+
+    Public Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
+
     Public Property Client As CareLinkClient
     Public Property LoggedOnUser As New CareLinkUserDataRecord(s_allUserSettingsData)
 
@@ -207,37 +214,32 @@ Public Class LoginDialog
         End If
     End Sub
 
-    'Private Sub WebView_DOMContentLoaded(sender As Object, arg As CoreWebView2DOMContentLoadedEventArgs)
-    '    Dim jScript As String = $"document.getElementById(""sessionID"").value;"
-    '    Dim sessionId As String = Me.WebView21.CoreWebView2.ExecuteScriptAsync(jScript).Result
-    '    Debug.Print(sessionId)
+    Private Async Sub WebView21_NavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs) Handles WebView21.NavigationCompleted
+        Dim foundAuthToken As Boolean = False
+        Dim cookies As New CookieContainer()
 
-    '    jScript = $"document.getElementById(""username"").value;"
-    '    Dim username As String = Me.WebView21.CoreWebView2.ExecuteScriptAsync(jScript).Result
-    '    Debug.Print(username)
-
-    '    ' click the "Microsoft 365" tab
-    '    jScript = "document.getElementById(''login_page.login').click();"
-    '    Dim result As String = Me.WebView21.CoreWebView2.ExecuteScriptAsync(jScript).Result
-    '    Debug.Print(result)
-    '    Stop
-
-    'End Sub
-
-    Private Sub WebView21_NavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs) Handles WebView21.NavigationCompleted
-        Stop
         If e.IsSuccess Then
-            If Me.WebView21.CoreWebView2.Source.Contains("sessionID") Then
-                Stop
-            End If
+            Dim cookieList As List(Of CoreWebView2Cookie) = Await Me.WebView21.CoreWebView2.CookieManager.GetCookiesAsync(_lastUrl)
+            For i As Integer = 0 To cookieList.Count - 1
+                Dim cookie As CoreWebView2Cookie = Me.WebView21.CoreWebView2.CookieManager.CreateCookieWithSystemNetCookie(cookieList(i).ToSystemNetCookie())
+
+                If cookie.Name.StartsWith("auth") Then
+                    foundAuthToken = True
+                    _authTokenValue = cookie.Value
+                End If
+                cookies.Add(New Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain))
+            Next i
+            'MessageBox.Show(Me, cookieResult.ToString(), "GetCookiesAsync")
         Else
             ' LOG ERROR HERE
+        End If
+        If foundAuthToken Then
+            Me.Client = New CareLinkClient(cookies, s_userName, Me.PasswordTextBox.Text, Me.CountryComboBox.SelectedValue.ToString)
         End If
     End Sub
 
     Private Sub WebView21_NavigationStarting(sender As Object, e As CoreWebView2NavigationStartingEventArgs) Handles WebView21.NavigationStarting
-        Dim x As Object = Me.WebView21.CoreWebView2.CookieManager.GetCookiesAsync(e.Uri).Result
-        Stop
+        _lastUrl = e.Uri
     End Sub
 
     Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles Ok_Button.Click
@@ -266,16 +268,14 @@ Public Class LoginDialog
         Me.WebView21.Visible = True
         Me.WebView21.BringToFront()
         Application.DoEvents()
-        'AddHandler Me.WebView21.CoreWebView2.DOMContentLoaded, AddressOf Me.WebView_DOMContentLoaded
+        _authTokenValue = ""
         Me.WebView21.CoreWebView2.Navigate($"https://{serverUrl}/patient/sso/login?country={countryCode}&lang=en")
         Dim savePatientID As String = My.Settings.CareLinkPatientUserID
         My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
-        Me.Client = New CareLinkClient(s_userName, Me.PasswordTextBox.Text, countryCode)
-        While True
+        While _authTokenValue.Length = 0
             Threading.Thread.Sleep(100)
             Application.DoEvents()
         End While
-        'RemoveHandler Me.WebView21.CoreWebView2.DOMContentLoaded, AddressOf Me.WebView_DOMContentLoaded
 
         Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData()
         If recentData?.Count > 0 Then

@@ -34,7 +34,7 @@ Public Class CareLinkClient
 
     Private _sessionMonitorData As New SessionMonitorDataRecord
 
-    Public Sub New(username As String, password As String, country As String)
+    Public Sub New(cookies As CookieContainer, username As String, password As String, country As String)
         ' User info
         Me.CareLinkUsername = username
         Me.CareLinkPassword = password
@@ -46,7 +46,7 @@ Public Class CareLinkClient
         _lastErrorMessage = Nothing
         _lastResponseCode = Nothing
 
-        _httpClient = Me.NewHttpClientWithCookieContainer
+        _httpClient = Me.NewHttpClientWithCookieContainer(cookies)
     End Sub
 
     Private Enum GetAuthorizationTokenResult
@@ -220,8 +220,8 @@ Public Class CareLinkClient
         ' b) _lastResponse in httpStatusBadCodes
 
         Dim expirationToken As String = Me.GetCookies(serverUrl)?.Item(CareLinkTokenValidToCookieName)?.Value
-        If Me.GetCookieValue(serverUrl, CareLinkAuthTokenCookieName) Is Nothing OrElse
-            _httpStatusBadCodes.Contains(CType(_lastResponseCode, HttpStatusCode)) OrElse
+        authToken = Me.GetCookieValue(serverUrl, CareLinkAuthTokenCookieName)
+        If String.IsNullOrWhiteSpace(authToken) OrElse
             expirationToken Is Nothing OrElse
             ExpirationTokenAsDate(expirationToken) < TimeZoneInfo.ConvertTime(Now, TimeZoneInfo.Utc) Then
             ' execute new login process | null, if error OR already doing login
@@ -240,6 +240,20 @@ Public Class CareLinkClient
                 Return GetAuthorizationTokenResult.LoginFailed
             End If
             Debug.Print($"{CareLinkTokenValidToCookieName} = {Me.GetCookies(serverUrl).Item(CareLinkTokenValidToCookieName).Value}")
+        Else
+            ' MUST BE FIRST DO NOT MOVE NEXT LINE
+            s_sessionCountrySettings = New CountrySettingsRecord(Me.GetCountrySettings(authToken))
+            Me.SessionUser = Me.GetSessionUser(authToken)
+            Me.SessionProfile = Me.GetSessionProfile(authToken)
+            _sessionMonitorData = Me.GetSessionMonitorData(authToken)
+            'Dim reports As Object = Me.GetReports(authToken)
+            ' Set login success if everything was OK:
+            If Me.SessionUser.HasValue _
+               AndAlso Me.SessionProfile.HasValue _
+               AndAlso s_sessionCountrySettings.HasValue _
+               AndAlso _sessionMonitorData.HasValue Then
+            End If
+
         End If
         ' there can be only one
         authToken = Me.GetBearerToken(serverUrl)
@@ -269,7 +283,6 @@ Public Class CareLinkClient
                 Dim jsonDictionary As Dictionary(Of String, String) = Me.GetDataItems(authToken, endPointPath, requestBody)
                 If _lastResponseCode <> HttpStatusCode.OK Then
                     ReportLoginStatus(Form1.LoginStatus)
-                    _httpClient = Me.NewHttpClientWithCookieContainer
                 End If
                 Return jsonDictionary
             Case GetAuthorizationTokenResult.NetworkDown
@@ -388,8 +401,8 @@ Public Class CareLinkClient
         Return New SessionUserRecord(Me.GetData(authToken, GetServerUrl(Me.CareLinkCountry), "patient/users/me", Nothing), Form1.DgvCurrentUser)
     End Function
 
-    Private Function NewHttpClientWithCookieContainer() As HttpClient
-        Me.ClientHandler = New HttpClientHandler With {.CookieContainer = New CookieContainer()}
+    Private Function NewHttpClientWithCookieContainer(cookieContainer As CookieContainer) As HttpClient
+        Me.ClientHandler = New HttpClientHandler With {.CookieContainer = cookieContainer}
         Return New HttpClient(Me.ClientHandler)
     End Function
 

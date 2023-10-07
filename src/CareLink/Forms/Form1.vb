@@ -1638,7 +1638,19 @@ Public Class Form1
                 RecentData = Client?.GetRecentData()
                 If RecentDataEmpty() Then
                     If Client Is Nothing OrElse Client.HasErrors Then
-                        Client = New CareLinkClient(s_userName, My.Settings.CareLinkPassword, My.Settings.CountryCode)
+                        Do While True
+                            Dim result As DialogResult = LoginDialog.ShowDialog(My.Forms.Form1)
+                            Select Case result
+                                Case DialogResult.OK
+                                    Exit Do
+                                Case DialogResult.Cancel
+                                    StartOrStopServerUpdateTimer(False)
+                                    Return
+                                Case DialogResult.Retry
+                            End Select
+                        Loop
+
+                        Client = LoginDialog.Client
                     End If
                     RecentData = Client.GetRecentData()
                 End If
