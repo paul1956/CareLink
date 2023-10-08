@@ -286,7 +286,7 @@ Friend Module PlotMarkers
                             .AddXY(markerOADateTime, Double.NaN)
                         End With
                     Case "LOW_GLUCOSE_SUSPENDED"
-                        If s_pumpInRangeOfTransmitter AndAlso CurrentPdf.IsValid AndAlso Not InAutoMode Then
+                        If s_pumpInRangeOfTransmitter AndAlso CurrentPdf?.IsValid AndAlso Not InAutoMode Then
                             Dim timeOrderedMarkers As SortedDictionary(Of OADate, Single) = GetManualBasalValues(markerWithIndex)
                             For Each kvp As KeyValuePair(Of OADate, Single) In timeOrderedMarkers
                                 With treatmentChart.Series(BasalSeriesNameName)
