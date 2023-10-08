@@ -7,8 +7,6 @@ Imports System.Net
 Imports Microsoft.Web.WebView2.Core
 
 Public Class LoginDialog
-    Private Shared s_cookieContainer As List(Of CoreWebView2Cookie)
-
     Private ReadOnly _mySource As New AutoCompleteStringCollection()
     Private _authTokenValue As String
     Private _doCancel As Boolean
