@@ -11,8 +11,8 @@ Public Class LoginDialog
 
     Private ReadOnly _mySource As New AutoCompleteStringCollection()
     Private _authTokenValue As String
+    Private _doCancel As Boolean
     Private _lastUrl As String
-
     Public Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
 
     Public Property Client As CareLinkClient
@@ -30,6 +30,7 @@ Public Class LoginDialog
     End Sub
 
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
+        _doCancel = True
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub
@@ -52,6 +53,7 @@ Public Class LoginDialog
 
     Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.WebView21.EnsureCoreWebView2Async()
+        Me.WebView21.Hide()
         Dim commandLineArguments As String() = Environment.GetCommandLineArgs()
 
         If commandLineArguments.Length > 1 Then
@@ -109,7 +111,6 @@ Public Class LoginDialog
         Me.PatientUserIDLabel.Visible = careLinkPartner
         Me.PatientUserIDTextBox.Visible = careLinkPartner
         Me.CarePartnerCheckBox.Checked = careLinkPartner
-        Me.Height = 400
     End Sub
 
     Private Sub LoginForm1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
@@ -256,7 +257,6 @@ Public Class LoginDialog
         End If
         s_userName = Me.UsernameComboBox.Text
         Me.Ok_Button.Enabled = False
-        Me.Cancel_Button.Enabled = False
         Dim countryCode As String = Me.CountryComboBox.SelectedValue.ToString
         My.Settings.CountryCode = countryCode
         ' https://CareLink.MiniMed.com/patient/sso/login?country=us&lang=en
@@ -269,14 +269,15 @@ Public Class LoginDialog
         End Select
 
         Me.WebView21.Visible = True
-        Me.Height = 657
+        Me.Height = CInt(Me.Height * 1.7)
         Me.WebView21.BringToFront()
         Application.DoEvents()
         _authTokenValue = ""
+        _doCancel = False
         Me.WebView21.CoreWebView2.Navigate($"https://{serverUrl}/patient/sso/login?country={countryCode}&lang=en")
         Dim savePatientID As String = My.Settings.CareLinkPatientUserID
         My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
-        While _authTokenValue.Length = 0
+        While _authTokenValue.Length = 0 OrElse _doCancel
             Threading.Thread.Sleep(100)
             Application.DoEvents()
         End While
