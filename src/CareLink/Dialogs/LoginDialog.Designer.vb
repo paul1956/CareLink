@@ -69,7 +69,7 @@ Partial Class LoginDialog
         ' UsernameLabel
         ' 
         UsernameLabel.Anchor = AnchorStyles.Left
-        UsernameLabel.Location = New Point(201, 29)
+        UsernameLabel.Location = New Point(201, 4)
         UsernameLabel.Margin = New Padding(9, 0, 9, 0)
         UsernameLabel.Name = "UsernameLabel"
         UsernameLabel.Size = New Size(220, 23)
@@ -80,7 +80,7 @@ Partial Class LoginDialog
         ' PasswordLabel
         ' 
         PasswordLabel.Anchor = AnchorStyles.Left
-        PasswordLabel.Location = New Point(201, 80)
+        PasswordLabel.Location = New Point(201, 55)
         PasswordLabel.Name = "PasswordLabel"
         PasswordLabel.Size = New Size(220, 23)
         PasswordLabel.TabIndex = 4
@@ -92,7 +92,7 @@ Partial Class LoginDialog
         UsernameComboBox.Anchor = AnchorStyles.Left
         UsernameComboBox.AutoCompleteMode = AutoCompleteMode.Suggest
         UsernameComboBox.AutoCompleteSource = AutoCompleteSource.RecentlyUsedList
-        UsernameComboBox.Location = New Point(201, 53)
+        UsernameComboBox.Location = New Point(201, 28)
         UsernameComboBox.Margin = New Padding(9, 10, 9, 10)
         UsernameComboBox.Name = "UsernameComboBox"
         UsernameComboBox.Size = New Size(220, 23)
@@ -101,7 +101,7 @@ Partial Class LoginDialog
         ' PasswordTextBox
         ' 
         PasswordTextBox.Anchor = AnchorStyles.Left
-        PasswordTextBox.Location = New Point(201, 102)
+        PasswordTextBox.Location = New Point(201, 77)
         PasswordTextBox.Margin = New Padding(9, 10, 9, 10)
         PasswordTextBox.Name = "PasswordTextBox"
         PasswordTextBox.PasswordChar = "*"c
@@ -136,7 +136,7 @@ Partial Class LoginDialog
         CountryComboBox.DropDownStyle = ComboBoxStyle.DropDownList
         CountryComboBox.Enabled = False
         CountryComboBox.FormattingEnabled = True
-        CountryComboBox.Location = New Point(201, -50)
+        CountryComboBox.Location = New Point(201, 179)
         CountryComboBox.Margin = New Padding(9, 10, 9, 10)
         CountryComboBox.Name = "CountryComboBox"
         CountryComboBox.Size = New Size(220, 23)
@@ -147,7 +147,7 @@ Partial Class LoginDialog
         RegionComboBox.Anchor = AnchorStyles.Left
         RegionComboBox.DropDownStyle = ComboBoxStyle.DropDownList
         RegionComboBox.FormattingEnabled = True
-        RegionComboBox.Location = New Point(201, -99)
+        RegionComboBox.Location = New Point(201, 130)
         RegionComboBox.Margin = New Padding(9, 10, 9, 10)
         RegionComboBox.Name = "RegionComboBox"
         RegionComboBox.Size = New Size(220, 23)
@@ -157,7 +157,7 @@ Partial Class LoginDialog
         ' 
         SelectRegionLabel.Anchor = AnchorStyles.Left
         SelectRegionLabel.AutoSize = True
-        SelectRegionLabel.Location = New Point(201, -117)
+        SelectRegionLabel.Location = New Point(201, 112)
         SelectRegionLabel.Margin = New Padding(9, 0, 9, 0)
         SelectRegionLabel.Name = "SelectRegionLabel"
         SelectRegionLabel.Size = New Size(78, 15)
@@ -168,7 +168,7 @@ Partial Class LoginDialog
         ' 
         SelectCountryLabel.Anchor = AnchorStyles.Left
         SelectCountryLabel.AutoSize = True
-        SelectCountryLabel.Location = New Point(201, -67)
+        SelectCountryLabel.Location = New Point(201, 162)
         SelectCountryLabel.Margin = New Padding(9, 0, 9, 0)
         SelectCountryLabel.Name = "SelectCountryLabel"
         SelectCountryLabel.Size = New Size(84, 15)
@@ -204,7 +204,7 @@ Partial Class LoginDialog
         Panel1.Controls.Add(PatientUserIDLabel)
         Panel1.Controls.Add(PatientUserIDTextBox)
         Panel1.Controls.Add(CarePartnerCheckBox)
-        Panel1.Location = New Point(220, 122)
+        Panel1.Location = New Point(220, 236)
         Panel1.Margin = New Padding(9, 10, 9, 10)
         Panel1.Name = "Panel1"
         Panel1.Size = New Size(197, 76)
@@ -268,13 +268,13 @@ Partial Class LoginDialog
         Me.Controls.Add(CountryComboBox)
         Me.Controls.Add(Cancel_Button)
         Me.Controls.Add(Ok_Button)
-        Me.Controls.Add(WebView21)
         Me.Controls.Add(ShowPasswordCheckBox)
         Me.Controls.Add(PasswordTextBox)
         Me.Controls.Add(UsernameComboBox)
         Me.Controls.Add(PasswordLabel)
         Me.Controls.Add(UsernameLabel)
         Me.Controls.Add(LogoPictureBox)
+        Me.Controls.Add(WebView21)
         Me.Margin = New Padding(9, 10, 9, 10)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
