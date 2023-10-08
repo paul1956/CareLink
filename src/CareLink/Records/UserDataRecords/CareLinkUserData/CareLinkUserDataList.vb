@@ -251,7 +251,11 @@ Public Class CareLinkUserDataList
         For Each r As CareLinkUserDataRecord In Me
             sb.AppendLine(r.ToCsvString)
         Next
-        My.Computer.FileSystem.WriteAllText(GetUsersLoginInfoFileWithPath(True), sb.ToString, False)
+        Try
+            My.Computer.FileSystem.WriteAllText(GetUsersLoginInfoFileWithPath(True), sb.ToString, False)
+        Catch ex As Exception
+
+        End Try
     End Sub
 
 #Region "Unsupported Methods"

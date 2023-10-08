@@ -195,7 +195,7 @@ Partial Class LoginDialog
         LoginStatus.Multiline = True
         LoginStatus.Name = "LoginStatus"
         LoginStatus.ScrollBars = ScrollBars.Vertical
-        LoginStatus.Size = New Size(225, 115)
+        LoginStatus.Size = New Size(225, 71)
         LoginStatus.TabIndex = 12
         LoginStatus.Text = "Login Status: Unknown"
         ' 
@@ -248,7 +248,7 @@ Partial Class LoginDialog
         WebView21.Location = New Point(0, 0)
         WebView21.Margin = New Padding(9, 10, 9, 10)
         WebView21.Name = "WebView21"
-        WebView21.Size = New Size(442, 979)
+        WebView21.Size = New Size(442, 583)
         WebView21.TabIndex = 14
         WebView21.Visible = False
         WebView21.ZoomFactor = 1R
