@@ -241,12 +241,12 @@ Public Class CareLinkClient
             End If
             Debug.Print($"{CareLinkTokenValidToCookieName} = {Me.GetCookies(serverUrl).Item(CareLinkTokenValidToCookieName).Value}")
         Else
+            Me.LoggedIn = True
             ' MUST BE FIRST DO NOT MOVE NEXT LINE
             s_sessionCountrySettings = New CountrySettingsRecord(Me.GetCountrySettings(authToken))
             Me.SessionUser = Me.GetSessionUser(authToken)
             Me.SessionProfile = Me.GetSessionProfile(authToken)
             _sessionMonitorData = Me.GetSessionMonitorData(authToken)
-            'Dim reports As Object = Me.GetReports(authToken)
             ' Set login success if everything was OK:
             If Me.SessionUser.HasValue _
                AndAlso Me.SessionProfile.HasValue _
@@ -393,7 +393,11 @@ Public Class CareLinkClient
 
     Private Function GetSessionProfile(authToken As String) As SessionProfileRecord
         Debug.Print(NameOf(GetSessionProfile))
-        Return New SessionProfileRecord(Me.GetData(authToken, GetServerUrl(Me.CareLinkCountry), "patient/users/me/profile", Nothing))
+        Dim sessionProfile As New SessionProfileRecord(Me.GetData(authToken, GetServerUrl(Me.CareLinkCountry), "patient/users/me/profile", Nothing))
+        If Not sessionProfile.HasValue Then
+            sessionProfile.username = s_userName
+        End If
+        Return sessionProfile
     End Function
 
     Private Function GetSessionUser(authToken As String) As SessionUserRecord
@@ -513,9 +517,9 @@ Public Class CareLinkClient
         Try
             Dim authToken As String = Nothing
             If Me.GetAuthorizationToken(authToken) = GetAuthorizationTokenResult.OK AndAlso
-               ((s_sessionCountrySettings.HasValue AndAlso Not String.IsNullOrWhiteSpace(Me.CareLinkCountry)) OrElse
-               _sessionMonitorData.deviceFamily?.Equals("BLE_X", StringComparison.Ordinal)) Then
-                Return If(_careLinkPartnerType.Contains(Me.SessionUser.role, StringComparer.InvariantCultureIgnoreCase),
+               s_sessionCountrySettings.HasValue AndAlso
+               Not String.IsNullOrWhiteSpace(Me.CareLinkCountry) Then
+                Return If(My.Settings.CareLinkPartner,
                           Me.GetConnectDisplayMessage(
                                         Me.SessionProfile.username,
                                         "CarePartner".ToLower,

@@ -69,7 +69,7 @@ Partial Class LoginDialog
         ' UsernameLabel
         ' 
         UsernameLabel.Anchor = AnchorStyles.Left
-        UsernameLabel.Location = New Point(201, 159)
+        UsernameLabel.Location = New Point(201, 29)
         UsernameLabel.Margin = New Padding(9, 0, 9, 0)
         UsernameLabel.Name = "UsernameLabel"
         UsernameLabel.Size = New Size(220, 23)
@@ -80,7 +80,7 @@ Partial Class LoginDialog
         ' PasswordLabel
         ' 
         PasswordLabel.Anchor = AnchorStyles.Left
-        PasswordLabel.Location = New Point(201, 210)
+        PasswordLabel.Location = New Point(201, 80)
         PasswordLabel.Name = "PasswordLabel"
         PasswordLabel.Size = New Size(220, 23)
         PasswordLabel.TabIndex = 4
@@ -92,7 +92,7 @@ Partial Class LoginDialog
         UsernameComboBox.Anchor = AnchorStyles.Left
         UsernameComboBox.AutoCompleteMode = AutoCompleteMode.Suggest
         UsernameComboBox.AutoCompleteSource = AutoCompleteSource.RecentlyUsedList
-        UsernameComboBox.Location = New Point(201, 183)
+        UsernameComboBox.Location = New Point(201, 53)
         UsernameComboBox.Margin = New Padding(9, 10, 9, 10)
         UsernameComboBox.Name = "UsernameComboBox"
         UsernameComboBox.Size = New Size(220, 23)
@@ -101,7 +101,7 @@ Partial Class LoginDialog
         ' PasswordTextBox
         ' 
         PasswordTextBox.Anchor = AnchorStyles.Left
-        PasswordTextBox.Location = New Point(201, 232)
+        PasswordTextBox.Location = New Point(201, 102)
         PasswordTextBox.Margin = New Padding(9, 10, 9, 10)
         PasswordTextBox.Name = "PasswordTextBox"
         PasswordTextBox.PasswordChar = "*"c
@@ -112,7 +112,7 @@ Partial Class LoginDialog
         ' 
         Ok_Button.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         Ok_Button.DialogResult = DialogResult.OK
-        Ok_Button.Location = New Point(235, 582)
+        Ok_Button.Location = New Point(235, 323)
         Ok_Button.Margin = New Padding(9, 10, 9, 10)
         Ok_Button.Name = "Ok_Button"
         Ok_Button.Size = New Size(94, 23)
@@ -123,7 +123,7 @@ Partial Class LoginDialog
         ' 
         Cancel_Button.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         Cancel_Button.DialogResult = DialogResult.Cancel
-        Cancel_Button.Location = New Point(338, 582)
+        Cancel_Button.Location = New Point(338, 323)
         Cancel_Button.Margin = New Padding(9, 10, 9, 10)
         Cancel_Button.Name = "Cancel_Button"
         Cancel_Button.Size = New Size(94, 23)
@@ -136,7 +136,7 @@ Partial Class LoginDialog
         CountryComboBox.DropDownStyle = ComboBoxStyle.DropDownList
         CountryComboBox.Enabled = False
         CountryComboBox.FormattingEnabled = True
-        CountryComboBox.Location = New Point(201, 330)
+        CountryComboBox.Location = New Point(201, -50)
         CountryComboBox.Margin = New Padding(9, 10, 9, 10)
         CountryComboBox.Name = "CountryComboBox"
         CountryComboBox.Size = New Size(220, 23)
@@ -147,7 +147,7 @@ Partial Class LoginDialog
         RegionComboBox.Anchor = AnchorStyles.Left
         RegionComboBox.DropDownStyle = ComboBoxStyle.DropDownList
         RegionComboBox.FormattingEnabled = True
-        RegionComboBox.Location = New Point(201, 281)
+        RegionComboBox.Location = New Point(201, -99)
         RegionComboBox.Margin = New Padding(9, 10, 9, 10)
         RegionComboBox.Name = "RegionComboBox"
         RegionComboBox.Size = New Size(220, 23)
@@ -157,7 +157,7 @@ Partial Class LoginDialog
         ' 
         SelectRegionLabel.Anchor = AnchorStyles.Left
         SelectRegionLabel.AutoSize = True
-        SelectRegionLabel.Location = New Point(201, 263)
+        SelectRegionLabel.Location = New Point(201, -117)
         SelectRegionLabel.Margin = New Padding(9, 0, 9, 0)
         SelectRegionLabel.Name = "SelectRegionLabel"
         SelectRegionLabel.Size = New Size(78, 15)
@@ -168,7 +168,7 @@ Partial Class LoginDialog
         ' 
         SelectCountryLabel.Anchor = AnchorStyles.Left
         SelectCountryLabel.AutoSize = True
-        SelectCountryLabel.Location = New Point(201, 313)
+        SelectCountryLabel.Location = New Point(201, -67)
         SelectCountryLabel.Margin = New Padding(9, 0, 9, 0)
         SelectCountryLabel.Name = "SelectCountryLabel"
         SelectCountryLabel.Size = New Size(84, 15)
@@ -190,7 +190,7 @@ Partial Class LoginDialog
         ' 
         LoginStatus.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
         LoginStatus.BackColor = SystemColors.Control
-        LoginStatus.Location = New Point(4, 500)
+        LoginStatus.Location = New Point(4, 241)
         LoginStatus.Margin = New Padding(9, 10, 9, 10)
         LoginStatus.Multiline = True
         LoginStatus.Name = "LoginStatus"
@@ -204,7 +204,7 @@ Partial Class LoginDialog
         Panel1.Controls.Add(PatientUserIDLabel)
         Panel1.Controls.Add(PatientUserIDTextBox)
         Panel1.Controls.Add(CarePartnerCheckBox)
-        Panel1.Location = New Point(235, 230)
+        Panel1.Location = New Point(220, 122)
         Panel1.Margin = New Padding(9, 10, 9, 10)
         Panel1.Name = "Panel1"
         Panel1.Size = New Size(197, 76)
@@ -251,15 +251,15 @@ Partial Class LoginDialog
         WebView21.Size = New Size(442, 979)
         WebView21.TabIndex = 14
         WebView21.Visible = False
-        WebView21.ZoomFactor = 1.0R
+        WebView21.ZoomFactor = 1R
         ' 
         ' LoginDialog
         ' 
         Me.AcceptButton = Ok_Button
-        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
+        Me.AutoScaleDimensions = New SizeF(7F, 15F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.CancelButton = Cancel_Button
-        Me.ClientSize = New Size(442, 618)
+        Me.ClientSize = New Size(442, 359)
         Me.Controls.Add(Panel1)
         Me.Controls.Add(LoginStatus)
         Me.Controls.Add(SelectCountryLabel)

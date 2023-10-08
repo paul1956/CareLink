@@ -109,12 +109,13 @@ Public Class LoginDialog
         Me.PatientUserIDLabel.Visible = careLinkPartner
         Me.PatientUserIDTextBox.Visible = careLinkPartner
         Me.CarePartnerCheckBox.Checked = careLinkPartner
+        Me.Height = 400
     End Sub
 
     Private Sub LoginForm1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
-        If My.Settings.AutoLogin Then
-            Me.OK_Button_Click(Me.Ok_Button, Nothing)
-        End If
+        'If My.Settings.AutoLogin Then
+        '    Me.OK_Button_Click(Me.Ok_Button, Nothing)
+        'End If
     End Sub
 
     Private Sub PasswordTextBox_Validating(sender As Object, e As CancelEventArgs) Handles PasswordTextBox.Validating
@@ -266,6 +267,7 @@ Public Class LoginDialog
         End Select
 
         Me.WebView21.Visible = True
+        Me.Height = 657
         Me.WebView21.BringToFront()
         Application.DoEvents()
         _authTokenValue = ""
