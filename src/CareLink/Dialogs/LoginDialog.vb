@@ -113,9 +113,7 @@ Public Class LoginDialog
     End Sub
 
     Private Sub LoginForm1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
-        'If My.Settings.AutoLogin Then
-        '    Me.OK_Button_Click(Me.Ok_Button, Nothing)
-        'End If
+        Me.Visible = True
     End Sub
 
     Private Sub PasswordTextBox_Validating(sender As Object, e As CancelEventArgs) Handles PasswordTextBox.Validating
@@ -227,6 +225,7 @@ Public Class LoginDialog
                 If cookie.Name.StartsWith("auth") Then
                     foundAuthToken = True
                     _authTokenValue = cookie.Value
+                    Me.Visible = False
                 End If
                 cookies.Add(New Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain))
             Next i
@@ -236,6 +235,9 @@ Public Class LoginDialog
         End If
         If foundAuthToken Then
             Me.Client = New CareLinkClient(cookies, s_userName, Me.PasswordTextBox.Text, Me.CountryComboBox.SelectedValue.ToString)
+        Else
+            Dim t As Task(Of String) = Me.WebView21.ExecuteScriptAsync($"document.getElementById('username').value = '{Me.UsernameComboBox.SelectedText}';")
+            t = Me.WebView21.ExecuteScriptAsync($"document.getElementById('password').value = '{Me.PasswordTextBox.Text}';")
         End If
     End Sub
 
