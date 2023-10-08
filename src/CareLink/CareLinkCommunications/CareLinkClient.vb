@@ -124,7 +124,6 @@ Public Class CareLinkClient
         Try
             ' Clear cookies
             _httpClient.DefaultRequestHeaders.Clear()
-
             ' Clear basic session records
             Me.SessionUser.Clear()
             Me.SessionProfile.Clear()
@@ -225,7 +224,6 @@ Public Class CareLinkClient
             expirationToken Is Nothing OrElse
             ExpirationTokenAsDate(expirationToken) < TimeZoneInfo.ConvertTime(Now, TimeZoneInfo.Utc) Then
             ' execute new login process | null, if error OR already doing login
-            'if loginInProcess or not executeLoginProcedure():
             If _inLoginInProcess Then
                 Debug.Print($"{NameOf(GetAuthorizationToken)} already In login Process")
                 Return GetAuthorizationTokenResult.InLoginProcess
@@ -241,7 +239,12 @@ Public Class CareLinkClient
             End If
             Debug.Print($"{CareLinkTokenValidToCookieName} = {Me.GetCookies(serverUrl).Item(CareLinkTokenValidToCookieName).Value}")
         Else
-            Me.LoggedIn = True
+            If _inLoginInProcess Then
+                Debug.Print($"{NameOf(GetAuthorizationToken)} already In login Process")
+                Return GetAuthorizationTokenResult.InLoginProcess
+            End If
+            _inLoginInProcess = True
+            _lastErrorMessage = Nothing
             ' MUST BE FIRST DO NOT MOVE NEXT LINE
             s_sessionCountrySettings = New CountrySettingsRecord(Me.GetCountrySettings(authToken))
             Me.SessionUser = Me.GetSessionUser(authToken)
@@ -255,7 +258,7 @@ Public Class CareLinkClient
             End If
 
         End If
-        ' there can be only one
+        Me.LoggedIn = True
         authToken = Me.GetBearerToken(serverUrl)
         Return GetAuthorizationTokenResult.OK
     End Function
