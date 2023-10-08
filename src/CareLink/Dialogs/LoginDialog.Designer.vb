@@ -275,7 +275,6 @@ Partial Class LoginDialog
         Me.Controls.Add(PasswordLabel)
         Me.Controls.Add(UsernameLabel)
         Me.Controls.Add(LogoPictureBox)
-        Me.FormBorderStyle = FormBorderStyle.FixedDialog
         Me.Margin = New Padding(9, 10, 9, 10)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
