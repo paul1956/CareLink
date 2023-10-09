@@ -10,6 +10,7 @@ Public Class LoginDialog
     Private ReadOnly _mySource As New AutoCompleteStringCollection()
     Private _authTokenValue As String
     Private _doCancel As Boolean
+    Private _initialHeight As Integer = 0
     Private _lastUrl As String
     Public Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
 
@@ -52,6 +53,9 @@ Public Class LoginDialog
     Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.WebView21.EnsureCoreWebView2Async()
         Me.WebView21.Hide()
+        If _initialHeight = 0 Then
+            _initialHeight = Me.Height
+        End If
         Dim commandLineArguments As String() = Environment.GetCommandLineArgs()
 
         If commandLineArguments.Length > 1 Then
@@ -113,6 +117,7 @@ Public Class LoginDialog
 
     Private Sub LoginForm1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         Me.Visible = True
+        Me.Height = _initialHeight
     End Sub
 
     Private Sub PasswordTextBox_Validating(sender As Object, e As CancelEventArgs) Handles PasswordTextBox.Validating
