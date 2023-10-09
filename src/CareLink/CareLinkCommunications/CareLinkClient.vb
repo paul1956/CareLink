@@ -69,6 +69,15 @@ Public Class CareLinkClient
     Friend Property SessionProfile As New SessionProfileRecord
     Friend Property SessionUser As New SessionUserRecord
 
+    Public Property InLoginInProcess As Boolean
+        Get
+            Return _inLoginInProcess
+        End Get
+        Set(value As Boolean)
+            _inLoginInProcess = value
+        End Set
+    End Property
+
     ''' <summary>
     ''' Parse d in this for "ddd MMM dd HH:mm:ss zzz yyyy"
     ''' where zzz=UTC
@@ -117,7 +126,7 @@ Public Class CareLinkClient
             ReportLoginStatus(Form1.LoginStatus)
             Return False
         End If
-        _inLoginInProcess = True
+        InLoginInProcess = True
         _lastErrorMessage = Nothing
         Dim message As String
         Dim lastLoginSuccess As Boolean = False
@@ -199,7 +208,7 @@ Public Class CareLinkClient
             Debug.Print(message.Replace(vbCrLf, " "))
             _lastErrorMessage = ex.DecodeException()
         Finally
-            _inLoginInProcess = False
+            InLoginInProcess = False
             Me.LoggedIn = lastLoginSuccess
         End Try
         Return lastLoginSuccess
@@ -224,7 +233,7 @@ Public Class CareLinkClient
             expirationToken Is Nothing OrElse
             ExpirationTokenAsDate(expirationToken) < TimeZoneInfo.ConvertTime(Now, TimeZoneInfo.Utc) Then
             ' execute new login process | null, if error OR already doing login
-            If _inLoginInProcess Then
+            If InLoginInProcess Then
                 Debug.Print($"{NameOf(GetAuthorizationToken)} already In login Process")
                 Return GetAuthorizationTokenResult.InLoginProcess
             End If
@@ -239,11 +248,11 @@ Public Class CareLinkClient
             End If
             Debug.Print($"{CareLinkTokenValidToCookieName} = {Me.GetCookies(serverUrl).Item(CareLinkTokenValidToCookieName).Value}")
         Else
-            If _inLoginInProcess Then
+            If Me.InLoginInProcess Then
                 Debug.Print($"{NameOf(GetAuthorizationToken)} already In login Process")
                 Return GetAuthorizationTokenResult.InLoginProcess
             End If
-            _inLoginInProcess = True
+            Me.InLoginInProcess = True
             _lastErrorMessage = Nothing
             ' MUST BE FIRST DO NOT MOVE NEXT LINE
             s_sessionCountrySettings = New CountrySettingsRecord(Me.GetCountrySettings(authToken))
@@ -258,6 +267,7 @@ Public Class CareLinkClient
             End If
 
         End If
+        Me.InLoginInProcess = False
         Me.LoggedIn = True
         authToken = Me.GetBearerToken(serverUrl)
         Return GetAuthorizationTokenResult.OK
