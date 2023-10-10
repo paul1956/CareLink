@@ -126,7 +126,7 @@ Public Class CareLinkClient
             ReportLoginStatus(Form1.LoginStatus)
             Return False
         End If
-        InLoginInProcess = True
+        Me.InLoginInProcess = True
         _lastErrorMessage = Nothing
         Dim message As String
         Dim lastLoginSuccess As Boolean = False
@@ -208,7 +208,7 @@ Public Class CareLinkClient
             Debug.Print(message.Replace(vbCrLf, " "))
             _lastErrorMessage = ex.DecodeException()
         Finally
-            InLoginInProcess = False
+            Me.InLoginInProcess = False
             Me.LoggedIn = lastLoginSuccess
         End Try
         Return lastLoginSuccess
@@ -233,7 +233,7 @@ Public Class CareLinkClient
             expirationToken Is Nothing OrElse
             ExpirationTokenAsDate(expirationToken) < TimeZoneInfo.ConvertTime(Now, TimeZoneInfo.Utc) Then
             ' execute new login process | null, if error OR already doing login
-            If InLoginInProcess Then
+            If Me.InLoginInProcess Then
                 Debug.Print($"{NameOf(GetAuthorizationToken)} already In login Process")
                 Return GetAuthorizationTokenResult.InLoginProcess
             End If
