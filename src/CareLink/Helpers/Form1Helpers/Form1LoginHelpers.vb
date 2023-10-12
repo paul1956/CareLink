@@ -7,10 +7,11 @@ Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 
-Friend Enum FileToLoadOptions As Integer
+Public Enum FileToLoadOptions As Integer
     LastSaved = 0
     TestData = 1
     Login = 2
+    NewUser = 3
 End Enum
 
 Friend Module Form1LoginHelpers
@@ -41,9 +42,10 @@ Friend Module Form1LoginHelpers
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
                 SetUpCareLinkUser(TestSettingsFileNameWithPath)
                 fromFile = True
-            Case FileToLoadOptions.Login
+            Case FileToLoadOptions.Login, FileToLoadOptions.NewUser
                 Form1.Text = SavedTitle
                 Do While True
+                    LoginDialog.LoginSourceAutomatic = fileToLoad
                     Dim result As DialogResult = LoginDialog.ShowDialog(My.Forms.Form1)
                     Select Case result
                         Case DialogResult.OK

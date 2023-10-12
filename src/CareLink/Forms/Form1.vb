@@ -1039,7 +1039,7 @@ Public Class Form1
         Me.NotifyIcon1.Visible = False
         Application.DoEvents()
 
-        If DoOptionalLoginAndUpdateData(False, FileToLoadOptions.Login) Then
+        If DoOptionalLoginAndUpdateData(False, FileToLoadOptions.NewUser) Then
             Me.UpdateAllTabPages(False)
         End If
     End Sub
@@ -1181,7 +1181,7 @@ Public Class Form1
     End Sub
 
     Private Sub MenuStartHereLogin_Click(sender As Object, e As EventArgs) Handles MenuStartHereLogin.Click
-        DoOptionalLoginAndUpdateData(UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.Login)
+        DoOptionalLoginAndUpdateData(UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.NewUser)
     End Sub
 
     Private Sub MenuStartHereManuallyImportDeviceSettings_Click(sender As Object, e As EventArgs) Handles MenuStartHereManuallyImportDeviceSettings.Click
@@ -1639,6 +1639,7 @@ Public Class Form1
                 If RecentDataEmpty() Then
                     If Client Is Nothing OrElse Client.HasErrors Then
                         Do While True
+                            LoginDialog.LoginSourceAutomatic = FileToLoadOptions.Login
                             Dim result As DialogResult = LoginDialog.ShowDialog(My.Forms.Form1)
                             Select Case result
                                 Case DialogResult.OK

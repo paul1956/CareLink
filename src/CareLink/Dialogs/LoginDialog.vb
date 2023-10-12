@@ -13,10 +13,20 @@ Public Class LoginDialog
     Private _doCancel As Boolean
     Private _initialHeight As Integer = 0
     Private _lastUrl As String
+    Private _loginSourceAutomatic As FileToLoadOptions = FileToLoadOptions.NewUser
     Public Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
 
     Public Property Client As CareLinkClient
     Public Property LoggedOnUser As New CareLinkUserDataRecord(s_allUserSettingsData)
+
+    Public Property LoginSourceAutomatic As FileToLoadOptions
+        Get
+            Return _loginSourceAutomatic
+        End Get
+        Set
+            _loginSourceAutomatic = Value
+        End Set
+    End Property
 
     Private Shared Sub ReportLoginStatus(loginStatus As TextBox, hasErrors As Boolean, Optional lastErrorMessage As String = "")
         If hasErrors Then
@@ -117,8 +127,11 @@ Public Class LoginDialog
     End Sub
 
     Private Sub LoginForm1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
-        Me.Visible = True
         Me.Height = _initialHeight
+        Me.Visible = True
+        If Me.LoginSourceAutomatic = FileToLoadOptions.Login Then
+            Me.OK_Button_Click(Nothing, Nothing)
+        End If
     End Sub
 
     Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles Ok_Button.Click
