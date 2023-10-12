@@ -9,6 +9,7 @@ Imports Microsoft.Web.WebView2.Core
 Public Class LoginDialog
     Private ReadOnly _mySource As New AutoCompleteStringCollection()
     Private _authTokenValue As String
+    Private _autoClick As Boolean = True
     Private _doCancel As Boolean
     Private _initialHeight As Integer = 0
     Private _lastUrl As String
@@ -118,6 +119,82 @@ Public Class LoginDialog
     Private Sub LoginForm1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         Me.Visible = True
         Me.Height = _initialHeight
+    End Sub
+
+    Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles Ok_Button.Click
+        If Me.UsernameComboBox.Text.Length = 0 Then
+            Me.UsernameComboBox.Focus()
+            Exit Sub
+        End If
+        If Me.PasswordTextBox.Text.Length = 0 Then
+            Me.PasswordTextBox.Focus()
+            Exit Sub
+        End If
+        s_userName = Me.UsernameComboBox.Text
+        Me.Ok_Button.Enabled = False
+        Dim countryCode As String = Me.CountryComboBox.SelectedValue.ToString
+        My.Settings.CountryCode = countryCode
+        ' https://CareLink.MiniMed.com/patient/sso/login?country=us&lang=en
+        Dim serverUrl As String
+        Select Case If(String.IsNullOrWhiteSpace(countryCode), "US", countryCode)
+            Case "US"
+                serverUrl = "CareLink.MiniMed.com"
+            Case Else
+                serverUrl = "CareLink.MiniMed.eu"
+        End Select
+
+        Me.WebView21.Visible = True
+        Me.Height = CInt(Me.Height * 1.7)
+        Me.WebView21.BringToFront()
+        Application.DoEvents()
+        _authTokenValue = ""
+        _doCancel = False
+        Me.WebView21.CoreWebView2.Navigate($"https://{serverUrl}/patient/sso/login?country={countryCode}&lang=en")
+        Dim savePatientID As String = My.Settings.CareLinkPatientUserID
+        My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
+        While _authTokenValue.Length = 0 OrElse _doCancel
+            Threading.Thread.Sleep(100)
+            Application.DoEvents()
+        End While
+
+        Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData()
+        If recentData?.Count > 0 Then
+            s_lastMedicalDeviceDataUpdateServerEpoch = 0
+            ReportLoginStatus(Me.LoginStatus, False)
+
+            Me.Ok_Button.Enabled = True
+            Me.Cancel_Button.Enabled = True
+            My.Settings.CareLinkUserName = s_userName
+            My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
+            My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
+            My.Settings.CareLinkPartner = Me.CarePartnerCheckBox.Checked OrElse Not String.IsNullOrWhiteSpace(Me.PatientUserIDTextBox.Text)
+            My.Settings.Save()
+            If Not s_allUserSettingsData.TryGetValue(s_userName, Me.LoggedOnUser) Then
+                s_allUserSettingsData.SaveAllUserRecords(New CareLinkUserDataRecord(s_allUserSettingsData), NameOf(CareLinkUserDataRecord.CareLinkUserName), s_userName)
+            End If
+            Me.DialogResult = DialogResult.OK
+            Me.Hide()
+        Else
+            ReportLoginStatus(Me.LoginStatus, True, Me.Client.GetLastErrorMessage)
+            If Me.Client.GetLastErrorMessage = "Invalid username or password" Then
+                Me.PasswordTextBox.Text = ""
+                Dim userRecord As CareLinkUserDataRecord = Nothing
+                If s_allUserSettingsData.TryGetValue(s_userName, userRecord) Then
+                    s_allUserSettingsData.Remove(userRecord)
+                End If
+            End If
+
+            Dim networkDownMessage As String = If(NetworkUnavailable(), "due to network being unavailable", $"'{Me.Client.GetLastErrorMessage}'")
+            Select Case MsgBox($"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!", networkDownMessage, MsgBoxStyle.AbortRetryIgnore Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Question, "Login Failed")
+                Case MsgBoxResult.Abort
+                    End
+                Case MsgBoxResult.Ignore
+                    Me.DialogResult = DialogResult.Ignore
+                Case MsgBoxResult.Retry
+                    Me.DialogResult = DialogResult.Retry
+            End Select
+        End If
+        Me.Cancel_Button.Enabled = True
     End Sub
 
     Private Sub PasswordTextBox_Validating(sender As Object, e As CancelEventArgs) Handles PasswordTextBox.Validating
@@ -230,6 +307,7 @@ Public Class LoginDialog
                     foundAuthToken = True
                     _authTokenValue = cookie.Value
                     Me.Visible = False
+                    _autoClick = True
                 End If
                 cookies.Add(New Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain))
             Next i
@@ -240,89 +318,17 @@ Public Class LoginDialog
         If foundAuthToken Then
             Me.Client = New CareLinkClient(cookies, s_userName, Me.PasswordTextBox.Text, Me.CountryComboBox.SelectedValue.ToString)
         Else
-            Dim t As Task(Of String) = Me.WebView21.ExecuteScriptAsync($"document.getElementById('username').value = '{Me.UsernameComboBox.SelectedText}';")
+            Dim t As Task(Of String) = Me.WebView21.ExecuteScriptAsync($"document.getElementById('username').value = '{Me.UsernameComboBox.Text}';")
             t = Me.WebView21.ExecuteScriptAsync($"document.getElementById('password').value = '{Me.PasswordTextBox.Text}';")
+            If _autoClick Then
+                t = Me.WebView21.ExecuteScriptAsync("document.getElementsByName('actionButton')[0].click();")
+                _autoClick = False
+            End If
         End If
     End Sub
 
     Private Sub WebView21_NavigationStarting(sender As Object, e As CoreWebView2NavigationStartingEventArgs) Handles WebView21.NavigationStarting
         _lastUrl = e.Uri
-    End Sub
-
-    Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles Ok_Button.Click
-        If Me.UsernameComboBox.Text.Length = 0 Then
-            Me.UsernameComboBox.Focus()
-            Exit Sub
-        End If
-        If Me.PasswordTextBox.Text.Length = 0 Then
-            Me.PasswordTextBox.Focus()
-            Exit Sub
-        End If
-        s_userName = Me.UsernameComboBox.Text
-        Me.Ok_Button.Enabled = False
-        Dim countryCode As String = Me.CountryComboBox.SelectedValue.ToString
-        My.Settings.CountryCode = countryCode
-        ' https://CareLink.MiniMed.com/patient/sso/login?country=us&lang=en
-        Dim serverUrl As String
-        Select Case If(String.IsNullOrWhiteSpace(countryCode), "US", countryCode)
-            Case "US"
-                serverUrl = "CareLink.MiniMed.com"
-            Case Else
-                serverUrl = "CareLink.MiniMed.eu"
-        End Select
-
-        Me.WebView21.Visible = True
-        Me.Height = CInt(Me.Height * 1.7)
-        Me.WebView21.BringToFront()
-        Application.DoEvents()
-        _authTokenValue = ""
-        _doCancel = False
-        Me.WebView21.CoreWebView2.Navigate($"https://{serverUrl}/patient/sso/login?country={countryCode}&lang=en")
-        Dim savePatientID As String = My.Settings.CareLinkPatientUserID
-        My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
-        While _authTokenValue.Length = 0 OrElse _doCancel
-            Threading.Thread.Sleep(100)
-            Application.DoEvents()
-        End While
-
-        Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData()
-        If recentData?.Count > 0 Then
-            s_lastMedicalDeviceDataUpdateServerEpoch = 0
-            ReportLoginStatus(Me.LoginStatus, False)
-
-            Me.Ok_Button.Enabled = True
-            Me.Cancel_Button.Enabled = True
-            My.Settings.CareLinkUserName = s_userName
-            My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
-            My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
-            My.Settings.CareLinkPartner = Me.CarePartnerCheckBox.Checked OrElse Not String.IsNullOrWhiteSpace(Me.PatientUserIDTextBox.Text)
-            My.Settings.Save()
-            If Not s_allUserSettingsData.TryGetValue(s_userName, Me.LoggedOnUser) Then
-                s_allUserSettingsData.SaveAllUserRecords(New CareLinkUserDataRecord(s_allUserSettingsData), NameOf(CareLinkUserDataRecord.CareLinkUserName), s_userName)
-            End If
-            Me.DialogResult = DialogResult.OK
-            Me.Hide()
-        Else
-            ReportLoginStatus(Me.LoginStatus, True, Me.Client.GetLastErrorMessage)
-            If Me.Client.GetLastErrorMessage = "Invalid username or password" Then
-                Me.PasswordTextBox.Text = ""
-                Dim userRecord As CareLinkUserDataRecord = Nothing
-                If s_allUserSettingsData.TryGetValue(s_userName, userRecord) Then
-                    s_allUserSettingsData.Remove(userRecord)
-                End If
-            End If
-
-            Dim networkDownMessage As String = If(NetworkUnavailable(), "due to network being unavailable", $"'{Me.Client.GetLastErrorMessage}'")
-            Select Case MsgBox($"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!", networkDownMessage, MsgBoxStyle.AbortRetryIgnore Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Question, "Login Failed")
-                Case MsgBoxResult.Abort
-                    End
-                Case MsgBoxResult.Ignore
-                    Me.DialogResult = DialogResult.Ignore
-                Case MsgBoxResult.Retry
-                    Me.DialogResult = DialogResult.Retry
-            End Select
-        End If
-        Me.Cancel_Button.Enabled = True
     End Sub
 
 End Class
