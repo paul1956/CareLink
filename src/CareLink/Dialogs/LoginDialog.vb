@@ -334,6 +334,8 @@ Public Class LoginDialog
             Dim t As Task(Of String) = Me.WebView21.ExecuteScriptAsync($"document.getElementById('username').value = '{Me.UsernameComboBox.Text}';")
             t = Me.WebView21.ExecuteScriptAsync($"document.getElementById('password').value = '{Me.PasswordTextBox.Text}';")
             If _autoClick Then
+                Dim script As String = "var mClick=new MouseEvent('click',{bubbles:true,cancelable:true,view:window});document.getElementsByClassName('recaptcha-checkbox-border')[0].dispatchEvent(mClick)"
+                t = Me.WebView21.ExecuteScriptAsync(script)
                 t = Me.WebView21.ExecuteScriptAsync("document.getElementsByName('actionButton')[0].click();")
                 _autoClick = False
             End If
