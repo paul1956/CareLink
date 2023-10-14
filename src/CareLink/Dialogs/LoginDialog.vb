@@ -365,7 +365,7 @@ Public Class LoginDialog
                 End While
                 Await loginButtonElement.ClickElementAsync
             Else
-                Stop
+                ' Stop
             End If
             ' LOG ERROR HERE
         End If
