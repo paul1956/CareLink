@@ -95,6 +95,7 @@ dotnet_style_allow_statement_immediately_after_block_experimental = true:suggest
 dotnet_code_quality_unused_parameters = all:suggestion
 dotnet_style_qualification_for_method = true:warning
 dotnet_diagnostic.CA1051.severity = suggestion
+dotnet_style_prefer_collection_expression = true:suggestion
 
 # C# files
 [*.cs]

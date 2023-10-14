@@ -5,6 +5,7 @@
 Imports System.ComponentModel
 Imports System.Net
 Imports Microsoft.Web.WebView2.Core
+Imports WebView2.DevTools.Dom
 
 Public Class LoginDialog
     Private ReadOnly _mySource As New AutoCompleteStringCollection()
@@ -15,6 +16,7 @@ Public Class LoginDialog
     Private _lastUrl As String
     Private _loginSourceAutomatic As FileToLoadOptions = FileToLoadOptions.NewUser
     Public Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
+    Private WithEvents DevContext As WebView2DevToolsContext
 
     Public Property Client As CareLinkClient
     Public Property LoggedOnUser As New CareLinkUserDataRecord(s_allUserSettingsData)
@@ -61,13 +63,14 @@ Public Class LoginDialog
                                )
     End Sub
 
-    Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Me.WebView21.EnsureCoreWebView2Async()
+    Private Async Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
         Me.WebView21.Hide()
         If _initialHeight = 0 Then
             _initialHeight = Me.Height
         End If
-        Dim commandLineArguments As String() = Environment.GetCommandLineArgs()
+
+        Dim commandLineArguments As String() = System.Environment.GetCommandLineArgs()
 
         If commandLineArguments.Length > 1 Then
             Dim userRecord As CareLinkUserDataRecord = Nothing
@@ -124,6 +127,8 @@ Public Class LoginDialog
         Me.PatientUserIDLabel.Visible = careLinkPartner
         Me.PatientUserIDTextBox.Visible = careLinkPartner
         Me.CarePartnerCheckBox.Checked = careLinkPartner
+        Await Me.WebView21.EnsureCoreWebView2Async()
+        Me.DevContext = Await Me.WebView21.CoreWebView2.CreateDevToolsContextAsync()
     End Sub
 
     Private Sub LoginForm1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
@@ -311,7 +316,9 @@ Public Class LoginDialog
         Dim foundAuthToken As Boolean = False
         Dim cookies As New CookieContainer()
 
-        If e.IsSuccess Then
+        If Not e.IsSuccess Then
+            Exit Sub
+        Else
             Dim cookieList As List(Of CoreWebView2Cookie) = Await Me.WebView21.CoreWebView2.CookieManager.GetCookiesAsync(_lastUrl)
             For i As Integer = 0 To cookieList.Count - 1
                 Dim cookie As CoreWebView2Cookie = Me.WebView21.CoreWebView2.CookieManager.CreateCookieWithSystemNetCookie(cookieList(i).ToSystemNetCookie())
@@ -324,26 +331,49 @@ Public Class LoginDialog
                 End If
                 cookies.Add(New Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain))
             Next i
-            'MessageBox.Show(Me, cookieResult.ToString(), "GetCookiesAsync")
-        Else
-            ' LOG ERROR HERE
-        End If
-        If foundAuthToken Then
-            Me.Client = New CareLinkClient(cookies, s_userName, Me.PasswordTextBox.Text, Me.CountryComboBox.SelectedValue.ToString)
-        Else
-            Dim t As Task(Of String) = Me.WebView21.ExecuteScriptAsync($"document.getElementById('username').value = '{Me.UsernameComboBox.Text}';")
-            t = Me.WebView21.ExecuteScriptAsync($"document.getElementById('password').value = '{Me.PasswordTextBox.Text}';")
-            If _autoClick Then
-                Dim script As String = "var mClick=new MouseEvent('click',{bubbles:true,cancelable:true,view:window});document.getElementsByClassName('recaptcha-checkbox-border')[0].dispatchEvent(mClick)"
-                t = Me.WebView21.ExecuteScriptAsync(script)
-                t = Me.WebView21.ExecuteScriptAsync("document.getElementsByName('actionButton')[0].click();")
-                _autoClick = False
+            Debug.Print(_lastUrl)
+            Dim ignoredUrl As New List(Of String) From {
+                 "https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/consent"}
+            If ignoredUrl.Contains(_lastUrl) Then
+                Exit Sub
             End If
+
+            If foundAuthToken Then
+                Me.Client = New CareLinkClient(cookies, s_userName, Me.PasswordTextBox.Text, Me.CountryComboBox.SelectedValue.ToString)
+            ElseIf Me.WebView21.Source.ToString.StartsWith("https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login") Then
+                Await Task.Delay(2000)
+                Dim userNameInputElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#username")
+                Dim passwordInputElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#password")
+                Dim loginButtonElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("[name=""actionButton""]")
+
+                Await userNameInputElement.SetValueAsync(s_userName)
+                Await passwordInputElement.SetValueAsync(Me.PasswordTextBox.Text)
+
+                Dim captchaFrame As HtmlInlineFrameElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInlineFrameElement)("[title=""reCAPTCHA""]")
+                Await captchaFrame.PressAsync("Enter")
+                Await Task.Delay(2000)
+
+                Dim isCaptchaOpen As Boolean = True
+
+                While isCaptchaOpen
+                    If _doCancel Then Exit Sub
+                    Await Task.Delay(250)
+                    Dim captchaPopupElement() As Element = Await Me.DevContext.XPathAsync("/html/body/div[2]")
+                    Dim captchaPopupStyleAttributes As String = Await captchaPopupElement(0).GetAttributeAsync("style")
+                    captchaPopupStyleAttributes = captchaPopupStyleAttributes.ToLower.Replace(" ", "")
+                    isCaptchaOpen = captchaPopupStyleAttributes.Contains("visibility:visible")
+                End While
+                Await loginButtonElement.ClickElementAsync
+            Else
+                Stop
+            End If
+            ' LOG ERROR HERE
         End If
     End Sub
 
     Private Sub WebView21_NavigationStarting(sender As Object, e As CoreWebView2NavigationStartingEventArgs) Handles WebView21.NavigationStarting
         _lastUrl = e.Uri
+        DebugPrint.DebugPrintUrl($"In {NameOf(WebView21_NavigationStarting)} URL", e.Uri, 100)
     End Sub
 
 End Class

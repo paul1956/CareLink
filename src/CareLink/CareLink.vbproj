@@ -60,10 +60,11 @@
     <PackageReference Include="DataGridViewDisableButtonColumnEx" Version="1.0.0.1" />
     <PackageReference Include="FreeSpire.PDF" Version="8.6.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2045.28" />
-    <PackageReference Include="Octokit" Version="8.0.1" />
+    <PackageReference Include="Octokit" Version="8.1.1" />
     <PackageReference Include="System.Speech" Version="7.0.0" />
     <PackageReference Include="TableLayputPanelTop" Version="1.0.0.3" />
     <PackageReference Include="ToolStripComboBoxEx" Version="1.0.0.2" />
+    <PackageReference Include="WebView2.DevTools.Dom" Version="3.0.1" />
     <PackageReference Include="WinForms.DataVisualization" Version="1.8.0" />
   </ItemGroup>
 
