@@ -11,6 +11,7 @@ Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Imports DataGridViewColumnControls
+Imports Microsoft.Win32
 Imports TableLayputPanelTop
 
 Public Class Form1
@@ -46,6 +47,72 @@ Public Class Form1
     Private _summaryChartAbsoluteRectangle As RectangleF
     Private _treatmentMarkerAbsoluteRectangle As RectangleF
     Private _updating As Boolean
+
+    '' <summary>
+    '' Overloaded System Windows Handler.
+    '' </summary>
+    '' <param name="m">Message <see cref="Message"/> structure</param>
+    Protected Overrides Sub WndProc(ByRef m As Message)
+        Select Case m.Msg
+            Case WM_POWERBROADCAST
+                Select Case m.WParam.ToInt32()
+                    'value passed when system is going on standby / suspended
+                    Case PBT_APMQUERYSUSPEND
+                        Me.PowerModeChanged(Nothing, New PowerModeChangedEventArgs(PowerModes.Suspend))
+
+                        'value passed when system is resumed after suspension.
+                    Case PBT_APMRESUMESUSPEND
+                        Me.PowerModeChanged(Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
+
+                    'value passed when system Suspend Failed
+                    Case PBT_APMQUERYSUSPENDFAILED
+                        Me.PowerModeChanged(Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
+
+                    'value passed when system is suspended
+                    Case PBT_APMSUSPEND
+                        Me.PowerModeChanged(Nothing, New PowerModeChangedEventArgs(PowerModes.Suspend))
+
+                    'value passed when system is in standby
+                    Case PBT_APMSTANDBY
+                        Me.PowerModeChanged(Nothing, New PowerModeChangedEventArgs(PowerModes.Suspend))
+
+                        'value passed when system resumes from standby
+                    Case PBT_APMRESUMESTANDBY
+                        Me.PowerModeChanged(Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
+
+                        'value passed when system resumes from suspend
+                    Case PBT_APMRESUMESUSPEND
+                        Me.PowerModeChanged(Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
+
+                    'value passed when system is resumed automatically
+                    Case PBT_APMRESUMEAUTOMATIC
+                        Me.PowerModeChanged(Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
+
+                    'value passed when system is resumed from critical
+                    'suspension possibly due to battery failure
+                    Case PBT_APMRESUMECRITICAL
+                        Stop
+
+                    'value passed when system is low on battery
+                    Case PBT_APMBATTERYLOW
+                        Stop
+
+                    'value passed when system power status changed
+                    'from battery to AC power or vice-a-versa
+                    Case PBT_APMPOWERSTATUSCHANGE
+                        Stop
+
+                    'value passed when OEM Event is fired. Not sure what that is??
+                    Case PBT_APMOEMEVENT
+                        Stop
+
+                    Case Else
+                        Stop
+                End Select
+            Case Else
+        End Select
+        MyBase.WndProc(m)
+    End Sub
 
     Public Shared Property Client As CareLinkClient
         Get
@@ -1005,7 +1072,7 @@ Public Class Form1
         End If
 
         Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(1)
-        AddHandler Microsoft.Win32.SystemEvents.PowerModeChanged, AddressOf Me.PowerModeChanged
+        'AddHandler Microsoft.Win32.SystemEvents.PowerModeChanged, AddressOf Me.PowerModeChanged
     End Sub
 
     Private Sub Form1_Reseize(sender As Object, e As EventArgs) Handles MyBase.Resize
@@ -1630,6 +1697,22 @@ Public Class Form1
         End If
     End Sub
 
+    Private Sub PowerModeChanged(sender As Object, e As PowerModeChangedEventArgs)
+        Debug.WriteLine($"PowerModeChange {e.Mode}")
+        Select Case e.Mode
+            Case PowerModes.Suspend
+                StartOrStopServerUpdateTimer(False)
+                s_shuttingDown = True
+                SetLastUpdateTime("System Sleeping", "", True, Nothing)
+            Case PowerModes.Resume
+                SetLastUpdateTime("System Awake", "", True, Nothing)
+                s_shuttingDown = False
+                StartOrStopServerUpdateTimer(True, s_30SecondInMilliseconds \ 3)
+                Debug.Print($"In {NameOf(PowerModeChanged)}, restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
+        End Select
+
+    End Sub
+
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
         StartOrStopServerUpdateTimer(False)
         SyncLock _updatingLock
@@ -1686,23 +1769,6 @@ Public Class Form1
             _sgMiniDisplay.SetCurrentSgString("---", 0)
         End If
         StartOrStopServerUpdateTimer(True, s_1MinutesInMilliseconds)
-    End Sub
-
-    Public Sub PowerModeChanged(sender As Object, e As Microsoft.Win32.PowerModeChangedEventArgs)
-        Debug.WriteLine($"PowerModeChange {e.Mode}")
-        Select Case e.Mode
-            Case Microsoft.Win32.PowerModes.Suspend
-                StartOrStopServerUpdateTimer(False)
-                s_shuttingDown = True
-                SetLastUpdateTime("System Sleeping", "", True, Nothing)
-            Case Microsoft.Win32.PowerModes.Resume
-                SetLastUpdateTime("System Awake", "", True, Nothing)
-                s_shuttingDown = False
-                StartOrStopServerUpdateTimer(True, s_30SecondInMilliseconds \ 3)
-                Debug.Print($"In {NameOf(PowerModeChanged)}, restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
-            Case Microsoft.Win32.PowerModes.StatusChange
-        End Select
-
     End Sub
 
 #End Region ' Timer Events

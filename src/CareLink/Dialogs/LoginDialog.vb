@@ -170,7 +170,10 @@ Public Class LoginDialog
         Me.WebView21.CoreWebView2.Navigate($"https://{serverUrl}/patient/sso/login?country={countryCode}&lang=en")
         Dim savePatientID As String = My.Settings.CareLinkPatientUserID
         My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
-        While _authTokenValue.Length = 0 OrElse _doCancel
+        While _authTokenValue.Length = 0
+            If _doCancel Then
+                Exit Sub
+            End If
             Threading.Thread.Sleep(100)
             Application.DoEvents()
         End While

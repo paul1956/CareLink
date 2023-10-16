@@ -128,10 +128,12 @@ Friend Module NewMessageBox
         End Using
     End Function
 
+    <System.Diagnostics.DebuggerNonUserCode()>
     Public Function MsgBox(heading As String, text As String, buttonStyle As MsgBoxStyle, title As String, autoCloseTimeOutSeconds As Integer, page As TaskDialogPage) As MsgBoxResult
         Return MsgBox(heading, text, buttonStyle, title, autoCloseTimeOutSeconds, page, "Do not show again")
     End Function
 
+    <System.Diagnostics.DebuggerNonUserCode()>
     Public Function MsgBox(heading As String, text As String, buttonStyle As MsgBoxStyle, title As String) As MsgBoxResult
         Return MsgBox(heading, text, buttonStyle, title, -1, New TaskDialogPage, "")
     End Function
