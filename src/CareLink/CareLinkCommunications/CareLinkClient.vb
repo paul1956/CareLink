@@ -14,8 +14,10 @@ Public Class CareLinkClient
 
     Private Const CareLinkTokenValidToCookieName As String = "c_token_valid_to"
 
+    Private ReadOnly _careLinkCountry As String
+
     Private ReadOnly _careLinkPartnerType As New List(Of String) From {
-                            "CARE_PARTNER",
+                                "CARE_PARTNER",
                             "CARE_PARTNER_OUS"
                         }
 
@@ -38,7 +40,7 @@ Public Class CareLinkClient
         ' User info
         Me.CareLinkUsername = username
         Me.CareLinkPassword = password
-        Me.CareLinkCountry = country
+        _careLinkCountry = country
 
         ' State info
         _inLoginInProcess = False
@@ -59,6 +61,14 @@ Public Class CareLinkClient
 #Region "Current CareLink User Information"
 
     Private ReadOnly Property CareLinkCountry As String
+        Get
+            If String.IsNullOrWhiteSpace(_careLinkCountry) Then
+                Stop
+            End If
+            Return _careLinkCountry
+        End Get
+    End Property
+
     Private ReadOnly Property CareLinkPassword As String
     Private ReadOnly Property CareLinkUsername As String
 
@@ -66,8 +76,6 @@ Public Class CareLinkClient
 
     Private Property ClientHandler As HttpClientHandler
     Friend Property LoggedIn As Boolean
-    Friend Property SessionProfile As New SessionProfileRecord
-    Friend Property SessionUser As New SessionUserRecord
 
     Public Property InLoginInProcess As Boolean
         Get
@@ -77,6 +85,9 @@ Public Class CareLinkClient
             _inLoginInProcess = value
         End Set
     End Property
+
+    Friend Property SessionProfile As New SessionProfileRecord
+    Friend Property SessionUser As New SessionUserRecord
 
     ''' <summary>
     ''' Parse d in this for "ddd MMM dd HH:mm:ss zzz yyyy"
@@ -98,20 +109,6 @@ Public Class CareLinkClient
             Stop
         End Try
         Return d
-    End Function
-
-    ''' <summary>
-    ''' Get server URL from Country Code, only US today has a special server
-    ''' </summary>
-    ''' <param name="countryCode"></param>
-    ''' <returns>Server URL</returns>
-    Private Shared Function GetServerUrl(countryCode As String) As String
-        Select Case If(String.IsNullOrWhiteSpace(countryCode), "US", countryCode)
-            Case "US"
-                Return "CareLink.MiniMed.com"
-            Case Else
-                Return "CareLink.MiniMed.eu"
-        End Select
     End Function
 
     ''' <summary>
@@ -511,6 +508,20 @@ Public Class CareLinkClient
         End If
         Stop
         Return False
+    End Function
+
+    ''' <summary>
+    ''' Get server URL from Country Code, only US today has a special server
+    ''' </summary>
+    ''' <param name="countryCode"></param>
+    ''' <returns>Server URL</returns>
+    Public Shared Function GetServerUrl(countryCode As String) As String
+        Select Case If(String.IsNullOrWhiteSpace(countryCode), "US", countryCode)
+            Case "US"
+                Return "CareLink.MiniMed.com"
+            Case Else
+                Return "CareLink.MiniMed.eu"
+        End Select
     End Function
 
     Public Function GetLastErrorMessage() As String

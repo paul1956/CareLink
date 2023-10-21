@@ -150,23 +150,18 @@ Public Class LoginDialog
         End If
         s_userName = Me.UsernameComboBox.Text
         Me.Ok_Button.Enabled = False
-        Dim countryCode As String = Me.CountryComboBox.SelectedValue.ToString
-        My.Settings.CountryCode = countryCode
-        ' https://CareLink.MiniMed.com/patient/sso/login?country=us&lang=en
-        Dim serverUrl As String
-        Select Case If(String.IsNullOrWhiteSpace(countryCode), "US", countryCode)
-            Case "US"
-                serverUrl = "CareLink.MiniMed.com"
-            Case Else
-                serverUrl = "CareLink.MiniMed.eu"
-        End Select
-
         Me.WebView21.Visible = True
         Me.Height = CInt(Me.Height * 1.7)
         Me.WebView21.BringToFront()
         Application.DoEvents()
         _authTokenValue = ""
         _doCancel = False
+        ' https://CareLink.MiniMed.com/patient/sso/login?country=us&lang=en
+        Dim countryCode As String = Me.CountryComboBox.SelectedValue.ToString
+        If countryCode.Length = 0 Then
+            Stop
+        End If
+        Dim serverUrl As String = CareLinkClient.GetServerUrl(countryCode)
         Me.WebView21.CoreWebView2.Navigate($"https://{serverUrl}/patient/sso/login?country={countryCode}&lang=en")
         Dim savePatientID As String = My.Settings.CareLinkPatientUserID
         My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
@@ -185,6 +180,7 @@ Public Class LoginDialog
 
             Me.Ok_Button.Enabled = True
             Me.Cancel_Button.Enabled = True
+            My.Settings.CountryCode = countryCode
             My.Settings.CareLinkUserName = s_userName
             My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
             My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
@@ -367,8 +363,10 @@ Public Class LoginDialog
                     isCaptchaOpen = captchaPopupStyleAttributes.Contains("visibility:visible")
                 End While
                 Await loginButtonElement.ClickElementAsync
+            ElseIf Me.WebView21.Source.ToString.Contains("CareLink.MiniMed.", StringComparison.InvariantCultureIgnoreCase) Then
+                Debug.Print($" Me.WebView21.Source.ToString={ Me.WebView21.Source}")
             Else
-                ' Stop
+                Stop
             End If
             ' LOG ERROR HERE
         End If

@@ -107,7 +107,7 @@ Public Class Form1
                         Stop
 
                     Case Else
-                        Stop
+                        'Stop
                 End Select
             Case Else
         End Select
