@@ -390,3 +390,5 @@ FodyWeavers.xsd
 *.cache
 
 /src/CareLink/obj/CareLink.vbproj.nuget.dgspec.json
+/src/CareLink/obj/CareLink.vbproj.nuget.g.props
+/src/CareLink/obj/project.assets.json

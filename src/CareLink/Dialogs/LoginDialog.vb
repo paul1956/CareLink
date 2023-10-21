@@ -365,12 +365,17 @@ Public Class LoginDialog
                     isCaptchaOpen = captchaPopupStyleAttributes.Contains("visibility:visible")
                 End While
                 Await loginButtonElement.ClickElementAsync
+                Exit Sub
             ElseIf Me.WebView21.Source.ToString.Contains("CareLink.MiniMed.", StringComparison.InvariantCultureIgnoreCase) Then
                 Debug.Print($" Me.WebView21.Source.ToString={ Me.WebView21.Source}")
             Else
                 Stop
                 Debug.Print($" Me.WebView21.Source.ToString={ Me.WebView21.Source}")
             End If
+
+            Dim errorElement As HtmlBodyElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlBodyElement)(".generic-error")
+            If errorElement IsNot Nothing Then Me.OK_Button_Click(Nothing, Nothing)
+
             ' LOG ERROR HERE
         End If
     End Sub
