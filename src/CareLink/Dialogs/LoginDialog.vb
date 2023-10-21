@@ -339,12 +339,14 @@ Public Class LoginDialog
 
             If foundAuthToken Then
                 Me.Client = New CareLinkClient(cookies, s_userName, Me.PasswordTextBox.Text, Me.CountryComboBox.SelectedValue.ToString)
-            ElseIf Me.WebView21.Source.ToString.StartsWith("https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login") Then
+            ElseIf Me.WebView21.Source.ToString.StartsWith("https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login") OrElse Me.WebView21.Source.ToString.StartsWith("https://mdtlogin-ocl.medtronic.com/mmcl/auth/oauth/v2/authorize/login") Then
                 Await Task.Delay(2000)
                 Dim userNameInputElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#username")
                 Dim passwordInputElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#password")
                 Dim loginButtonElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("[name=""actionButton""]")
-
+                If userNameInputElement Is Nothing OrElse passwordInputElement Is Nothing OrElse loginButtonElement Is Nothing Then
+                    Exit Sub
+                End If
                 Await userNameInputElement.SetValueAsync(s_userName)
                 Await passwordInputElement.SetValueAsync(Me.PasswordTextBox.Text)
 
@@ -367,6 +369,7 @@ Public Class LoginDialog
                 Debug.Print($" Me.WebView21.Source.ToString={ Me.WebView21.Source}")
             Else
                 Stop
+                Debug.Print($" Me.WebView21.Source.ToString={ Me.WebView21.Source}")
             End If
             ' LOG ERROR HERE
         End If
