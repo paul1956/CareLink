@@ -319,6 +319,9 @@ Public Class LoginDialog
         Dim cookies As New CookieContainer()
 
         If Not e.IsSuccess Then
+            If Me.DevContext Is Nothing Then
+                Me.DevContext = Await Me.WebView21.CoreWebView2.CreateDevToolsContextAsync()
+            End If
             Dim errorBodyElement As HtmlBodyElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlBodyElement)(".generic-error")
             If errorBodyElement IsNot Nothing Then
                 Dim t As Task = Task.Run(Async Function()
@@ -355,7 +358,14 @@ Public Class LoginDialog
             Exit Sub
         End If
         If Me.WebView21.Source.ToString.StartsWith("https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login") OrElse Me.WebView21.Source.ToString.StartsWith("https://mdtlogin-ocl.medtronic.com/mmcl/auth/oauth/v2/authorize/login") Then
+            Dim t As Task(Of WebView2DevToolsContext) = Nothing
+            If Me.DevContext Is Nothing Then
+                t = Me.WebView21.CoreWebView2.CreateDevToolsContextAsync()
+            End If
             Await Task.Delay(2000)
+            If t IsNot Nothing Then
+                Me.DevContext = t.Result
+            End If
             Dim userNameInputElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#username")
             Dim passwordInputElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#password")
             Dim loginButtonElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("[name=""actionButton""]")
