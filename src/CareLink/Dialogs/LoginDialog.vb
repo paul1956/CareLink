@@ -320,62 +320,63 @@ Public Class LoginDialog
 
         If Not e.IsSuccess Then
             Exit Sub
-        Else
-            Dim cookieList As List(Of CoreWebView2Cookie) = Await Me.WebView21.CoreWebView2.CookieManager.GetCookiesAsync(_lastUrl)
-            For i As Integer = 0 To cookieList.Count - 1
-                Dim cookie As CoreWebView2Cookie = Me.WebView21.CoreWebView2.CookieManager.CreateCookieWithSystemNetCookie(cookieList(i).ToSystemNetCookie())
-
-                If cookie.Name.StartsWith("auth") Then
-                    foundAuthToken = True
-                    _authTokenValue = cookie.Value
-                    Me.Visible = False
-                    _autoClick = True
-                End If
-                cookies.Add(New Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain))
-            Next i
-            Debug.Print(_lastUrl)
-            If _ignoredURLs.Contains(_lastUrl) Then
-                Exit Sub
-            End If
-
-            If foundAuthToken Then
-                Me.Client = New CareLinkClient(cookies, s_userName, Me.PasswordTextBox.Text, Me.CountryComboBox.SelectedValue.ToString)
-                Exit Sub
-            End If
-            If Me.WebView21.Source.ToString.StartsWith("https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login") OrElse Me.WebView21.Source.ToString.StartsWith("https://mdtlogin-ocl.medtronic.com/mmcl/auth/oauth/v2/authorize/login") Then
-                Await Task.Delay(2000)
-                Dim userNameInputElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#username")
-                Dim passwordInputElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#password")
-                Dim loginButtonElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("[name=""actionButton""]")
-                If userNameInputElement Is Nothing OrElse passwordInputElement Is Nothing OrElse loginButtonElement Is Nothing Then
-                    Exit Sub
-                End If
-                Await userNameInputElement.SetValueAsync(s_userName)
-                Await passwordInputElement.SetValueAsync(Me.PasswordTextBox.Text)
-
-                Dim captchaFrame As HtmlInlineFrameElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInlineFrameElement)("[title=""reCAPTCHA""]")
-                Await captchaFrame.PressAsync("Enter")
-                Await Task.Delay(2000)
-
-                Dim isCaptchaOpen As Boolean = True
-
-                While isCaptchaOpen
-                    If _doCancel Then Exit Sub
-                    Await Task.Delay(250)
-                    Dim captchaPopupElement() As Element = Await Me.DevContext.XPathAsync("/html/body/div[2]")
-                    Dim captchaPopupStyleAttributes As String = Await captchaPopupElement(0).GetAttributeAsync("style")
-                    captchaPopupStyleAttributes = captchaPopupStyleAttributes.ToLower.Replace(" ", "")
-                    isCaptchaOpen = captchaPopupStyleAttributes.Contains("visibility:visible")
-                End While
-                Await loginButtonElement.ClickElementAsync
-                Exit Sub
-            End If
-            Debug.Print($" Me.WebView21.Source.ToString={ Me.WebView21.Source}")
-            If Me.WebView21.Source.ToString.Contains("CareLink.MiniMed.", StringComparison.InvariantCultureIgnoreCase) Then
-                Exit Sub
-            End If
-            Stop
         End If
+        Dim cookieList As List(Of CoreWebView2Cookie) = Await Me.WebView21.CoreWebView2.CookieManager.GetCookiesAsync(_lastUrl)
+        For i As Integer = 0 To cookieList.Count - 1
+            Dim cookie As CoreWebView2Cookie = Me.WebView21.CoreWebView2.CookieManager.CreateCookieWithSystemNetCookie(cookieList(i).ToSystemNetCookie())
+
+            If cookie.Name.StartsWith("auth") Then
+                foundAuthToken = True
+                _authTokenValue = cookie.Value
+                Me.Visible = False
+                _autoClick = True
+            End If
+            cookies.Add(New Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain))
+        Next i
+        Debug.Print(_lastUrl)
+        If _ignoredURLs.Contains(_lastUrl) Then
+            Exit Sub
+        End If
+
+        If foundAuthToken Then
+            Me.Client = New CareLinkClient(cookies, s_userName, Me.PasswordTextBox.Text, Me.CountryComboBox.SelectedValue.ToString)
+            Exit Sub
+        End If
+        If Me.WebView21.Source.ToString.StartsWith("https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login") OrElse Me.WebView21.Source.ToString.StartsWith("https://mdtlogin-ocl.medtronic.com/mmcl/auth/oauth/v2/authorize/login") Then
+            Await Task.Delay(2000)
+            Dim userNameInputElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#username")
+            Dim passwordInputElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#password")
+            Dim loginButtonElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("[name=""actionButton""]")
+            If userNameInputElement Is Nothing OrElse passwordInputElement Is Nothing OrElse loginButtonElement Is Nothing Then
+                Exit Sub
+            End If
+            Await userNameInputElement.SetValueAsync(s_userName)
+            Await passwordInputElement.SetValueAsync(Me.PasswordTextBox.Text)
+
+            Dim captchaFrame As HtmlInlineFrameElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInlineFrameElement)("[title=""reCAPTCHA""]")
+            Await captchaFrame.PressAsync("Enter")
+            Await Task.Delay(2000)
+
+            Dim isCaptchaOpen As Boolean = True
+
+            While isCaptchaOpen
+                If _doCancel Then Exit Sub
+                Await Task.Delay(250)
+                Dim captchaPopupElement() As Element = Await Me.DevContext.XPathAsync("/html/body/div[2]")
+                Dim captchaPopupStyleAttributes As String = Await captchaPopupElement(0).GetAttributeAsync("style")
+                captchaPopupStyleAttributes = captchaPopupStyleAttributes.ToLower.Replace(" ", "")
+                isCaptchaOpen = captchaPopupStyleAttributes.Contains("visibility:visible")
+            End While
+            Await loginButtonElement.ClickElementAsync
+            Exit Sub
+        End If
+        Debug.Print($" Me.WebView21.Source.ToString={ Me.WebView21.Source}")
+        If Me.WebView21.Source.ToString.Contains("CareLink.MiniMed.", StringComparison.InvariantCultureIgnoreCase) Then
+            Exit Sub
+        End If
+
+        Dim errorElement As HtmlBodyElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlBodyElement)(".generic-error")
+        If errorElement IsNot Nothing Then Me.OK_Button_Click(Nothing, Nothing)
     End Sub
 
     Private Sub WebView21_NavigationStarting(sender As Object, e As CoreWebView2NavigationStartingEventArgs) Handles WebView21.NavigationStarting
