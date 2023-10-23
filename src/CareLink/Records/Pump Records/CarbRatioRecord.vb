@@ -25,7 +25,7 @@ Public Class CarbRatioRecord
         End Set
     End Property
 
-    <Column(Order:=2, TypeName:=NameOf(System.Single))>
+    <Column(Order:=2, TypeName:=NameOf([Single]))>
     Public Property CarbRatio As Single
 
     Public Overrides Function Equals(obj As Object) As Boolean

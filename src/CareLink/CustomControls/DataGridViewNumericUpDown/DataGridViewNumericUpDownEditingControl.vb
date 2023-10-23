@@ -247,7 +247,7 @@ Friend Class DataGridViewNumericUpDownEditingControl
         If Char.IsDigit(e.KeyChar) Then
             notifyValueChange = True
         Else
-            Dim numberFormatInfo As Globalization.NumberFormatInfo = System.Globalization.CultureInfo.CurrentCulture.NumberFormat
+            Dim numberFormatInfo As Globalization.NumberFormatInfo = Globalization.CultureInfo.CurrentCulture.NumberFormat
             Dim decimalSeparatorStr As String = numberFormatInfo.NumberDecimalSeparator
             Dim groupSeparatorStr As String = numberFormatInfo.NumberGroupSeparator
             Dim negativeSignStr As String = numberFormatInfo.NegativeSign

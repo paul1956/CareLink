@@ -374,7 +374,7 @@ Public Class DataGridViewNumericUpDownCell
     ''' a digit or negative sign key is hit.
     ''' </summary>
     Public Overrides Function KeyEntersEditMode(e As KeyEventArgs) As Boolean
-        Dim numberFormatInfo As NumberFormatInfo = System.Globalization.CultureInfo.CurrentCulture.NumberFormat
+        Dim numberFormatInfo As NumberFormatInfo = CultureInfo.CurrentCulture.NumberFormat
         Dim negativeSignKey As Keys = Keys.None
         Dim negativeSignStr As String = numberFormatInfo.NegativeSign
         If Not String.IsNullOrEmpty(negativeSignStr) AndAlso negativeSignStr.Length = 1 Then
@@ -482,7 +482,7 @@ Public Class DataGridViewNumericUpDownCell
                     s_paintingNumericUpDown.Parent = Me.DataGridView
                 End If
                 ' Set all the relevant properties
-                s_paintingNumericUpDown.TextAlign = DataGridViewNumericUpDownCell.TranslateAlignment(cellStyle.Alignment)
+                s_paintingNumericUpDown.TextAlign = TranslateAlignment(cellStyle.Alignment)
                 s_paintingNumericUpDown.DecimalPlaces = Me.DecimalPlaces
                 s_paintingNumericUpDown.ThousandsSeparator = Me.ThousandsSeparator
                 s_paintingNumericUpDown.Font = cellStyle.Font

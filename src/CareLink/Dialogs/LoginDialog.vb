@@ -70,7 +70,7 @@ Public Class LoginDialog
             _initialHeight = Me.Height
         End If
 
-        Dim commandLineArguments As String() = System.Environment.GetCommandLineArgs()
+        Dim commandLineArguments As String() = Environment.GetCommandLineArgs()
 
         If commandLineArguments.Length > 1 Then
             Dim userRecord As CareLinkUserDataRecord = Nothing
@@ -377,7 +377,7 @@ Public Class LoginDialog
 
     Private Sub WebView21_NavigationStarting(sender As Object, e As CoreWebView2NavigationStartingEventArgs) Handles WebView21.NavigationStarting
         _lastUrl = e.Uri
-        DebugPrint.DebugPrintUrl($"In {NameOf(WebView21_NavigationStarting)} URL", e.Uri, 100)
+        DebugPrintUrl($"In {NameOf(WebView21_NavigationStarting)} URL", e.Uri, 100)
     End Sub
 
 End Class

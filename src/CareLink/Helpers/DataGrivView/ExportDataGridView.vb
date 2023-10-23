@@ -112,7 +112,7 @@ Friend Module ExportDataGridView
                                     Dim result As Double
                                     If Double.TryParse(valueAsString, result) Then
                                         .Value = result
-                                        .Style.NumberFormat.Format = $"0{CurrentUICulture.NumberFormat.NumberDecimalSeparator}{Strings.StrDup(37, "0"c)}"
+                                        .Style.NumberFormat.Format = $"0{CurrentUICulture.NumberFormat.NumberDecimalSeparator}{StrDup(37, "0"c)}"
                                     Else
                                         .Value = $"'{valueAsString}"
                                     End If

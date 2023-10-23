@@ -543,7 +543,7 @@ Public Class CareLinkClient
             If Me.GetAuthorizationToken(authToken) = GetAuthorizationTokenResult.OK AndAlso
                s_sessionCountrySettings.HasValue AndAlso
                Not String.IsNullOrWhiteSpace(Me.CareLinkCountry) Then
-                Return If(My.Settings.CareLinkPartner,
+                Return If(Form1LoginHelpers.LoginDialog.CarePartnerCheckBox.Checked,
                           Me.GetConnectDisplayMessage(
                                         Me.SessionProfile.username,
                                         "CarePartner".ToLower,
