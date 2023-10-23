@@ -319,6 +319,18 @@ Public Class LoginDialog
         Dim cookies As New CookieContainer()
 
         If Not e.IsSuccess Then
+            Dim errorBodyElement As HtmlBodyElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlBodyElement)(".generic-error")
+            If errorBodyElement IsNot Nothing Then
+                Dim t As Task = Task.Run(Async Function()
+                                             Await Task.Delay(2000)
+                                             Me.Invoke(Sub()
+                                                           _doCancel = True
+                                                           Me.OK_Button_Click(Nothing, Nothing)
+                                                       End Sub
+                                             )
+                                         End Function
+                    )
+            End If
             Exit Sub
         End If
         Dim cookieList As List(Of CoreWebView2Cookie) = Await Me.WebView21.CoreWebView2.CookieManager.GetCookiesAsync(_lastUrl)
@@ -375,16 +387,6 @@ Public Class LoginDialog
             Exit Sub
         End If
 
-        Dim errorBodyElement As HtmlBodyElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlBodyElement)(".generic-error")
-        If errorBodyElement IsNot Nothing Then
-            Me.OK_Button_Click(Nothing, Nothing)
-            Exit Sub
-        End If
-        Dim errorElement As HtmlElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlElement)(".generic-error")
-        If errorElement IsNot Nothing Then
-            Me.OK_Button_Click(Nothing, Nothing)
-            Exit Sub
-        End If
         Stop
     End Sub
 
