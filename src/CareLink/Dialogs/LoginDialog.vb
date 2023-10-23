@@ -375,8 +375,17 @@ Public Class LoginDialog
             Exit Sub
         End If
 
-        Dim errorElement As HtmlBodyElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlBodyElement)(".generic-error")
-        If errorElement IsNot Nothing Then Me.OK_Button_Click(Nothing, Nothing)
+        Dim errorBodyElement As HtmlBodyElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlBodyElement)(".generic-error")
+        If errorBodyElement IsNot Nothing Then
+            Me.OK_Button_Click(Nothing, Nothing)
+            Exit Sub
+        End If
+        Dim errorElement As HtmlElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlElement)(".generic-error")
+        If errorElement IsNot Nothing Then
+            Me.OK_Button_Click(Nothing, Nothing)
+            Exit Sub
+        End If
+        Stop
     End Sub
 
     Private Sub WebView21_NavigationStarting(sender As Object, e As CoreWebView2NavigationStartingEventArgs) Handles WebView21.NavigationStarting
