@@ -142,7 +142,7 @@ Public Class LoginDialog
         End If
     End Sub
 
-    Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles Ok_Button.Click
+    Private Async Sub OK_Button_Click(sender As Object, e As EventArgs) Handles Ok_Button.Click
         If Me.UsernameComboBox.Text.Length = 0 Then
             Me.UsernameComboBox.Focus()
             Exit Sub
@@ -165,6 +165,11 @@ Public Class LoginDialog
             Stop
         End If
         Dim serverUrl As String = CareLinkClient.GetServerUrl(countryCode)
+        If Me.WebView21 Is Nothing Then
+            Me.WebView21 = New Microsoft.Web.WebView2.WinForms.WebView2
+            Await Me.WebView21.EnsureCoreWebView2Async()
+            Me.DevContext = Await Me.WebView21.CoreWebView2.CreateDevToolsContextAsync()
+        End If
         Me.WebView21.CoreWebView2.Navigate($"https://{serverUrl}/patient/sso/login?country={countryCode}&lang=en")
         Dim savePatientID As String = My.Settings.CareLinkPatientUserID
         My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
