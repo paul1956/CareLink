@@ -8,18 +8,21 @@ Imports Microsoft.Web.WebView2.Core
 Imports WebView2.DevTools.Dom
 
 Public Class LoginDialog
+    Private WithEvents DevContext As WebView2DevToolsContext
     Private ReadOnly _mySource As New AutoCompleteStringCollection()
     Private _authTokenValue As String
     Private _autoClick As Boolean = True
     Private _doCancel As Boolean
+
+    Private _ignoredURLs As New List(Of String) From {
+                 "https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/consent"}
+
     Private _initialHeight As Integer = 0
     Private _lastUrl As String
     Private _loginSourceAutomatic As FileToLoadOptions = FileToLoadOptions.NewUser
     Public Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
-    Private WithEvents DevContext As WebView2DevToolsContext
-
-    Public Property Client As CareLinkClient
     Public Property LoggedOnUser As New CareLinkUserDataRecord(s_allUserSettingsData)
+    Public Property Client As CareLinkClient
 
     Public Property LoginSourceAutomatic As FileToLoadOptions
         Get
@@ -331,15 +334,15 @@ Public Class LoginDialog
                 cookies.Add(New Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain))
             Next i
             Debug.Print(_lastUrl)
-            Dim ignoredUrl As New List(Of String) From {
-                 "https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/consent"}
-            If ignoredUrl.Contains(_lastUrl) Then
+            If _ignoredURLs.Contains(_lastUrl) Then
                 Exit Sub
             End If
 
             If foundAuthToken Then
                 Me.Client = New CareLinkClient(cookies, s_userName, Me.PasswordTextBox.Text, Me.CountryComboBox.SelectedValue.ToString)
-            ElseIf Me.WebView21.Source.ToString.StartsWith("https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login") OrElse Me.WebView21.Source.ToString.StartsWith("https://mdtlogin-ocl.medtronic.com/mmcl/auth/oauth/v2/authorize/login") Then
+                Exit Sub
+            End If
+            If Me.WebView21.Source.ToString.StartsWith("https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login") OrElse Me.WebView21.Source.ToString.StartsWith("https://mdtlogin-ocl.medtronic.com/mmcl/auth/oauth/v2/authorize/login") Then
                 Await Task.Delay(2000)
                 Dim userNameInputElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#username")
                 Dim passwordInputElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#password")
@@ -365,13 +368,13 @@ Public Class LoginDialog
                     isCaptchaOpen = captchaPopupStyleAttributes.Contains("visibility:visible")
                 End While
                 Await loginButtonElement.ClickElementAsync
-            ElseIf Me.WebView21.Source.ToString.Contains("CareLink.MiniMed.", StringComparison.InvariantCultureIgnoreCase) Then
-                Debug.Print($" Me.WebView21.Source.ToString={ Me.WebView21.Source}")
-            Else
-                Stop
-                Debug.Print($" Me.WebView21.Source.ToString={ Me.WebView21.Source}")
+                Exit Sub
             End If
-            ' LOG ERROR HERE
+            Debug.Print($" Me.WebView21.Source.ToString={ Me.WebView21.Source}")
+            If Me.WebView21.Source.ToString.Contains("CareLink.MiniMed.", StringComparison.InvariantCultureIgnoreCase) Then
+                Exit Sub
+            End If
+            Stop
         End If
     End Sub
 
