@@ -2,6 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Threading
+
 Public Class IndexClass(Of T)
     Public Property Value As T
     Public Property Index As Integer                                                           ' first element has index = 0
@@ -19,7 +21,7 @@ Public Class IndexClass(Of T)
         Me.Value = Me.Enumerator.Current
         Me.IsLast = Not Me.Enumerator.MoveNext()
         ' may be called with .AsParallel
-        Threading.Interlocked.Increment(Me.Index)
+        Interlocked.Increment(Me.Index)
     End Sub
 
 End Class
