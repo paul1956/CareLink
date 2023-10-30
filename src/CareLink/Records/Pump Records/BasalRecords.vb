@@ -50,7 +50,7 @@ Public Class BasalRecords
             End Select
         Else
             If _buffer.Count <> 0 Then
-                Return $"{_buffer.Last().activeBasalPattern} rate = {_buffer.Last().GetBasalPerHour} U Per Hour".RemoveExtraSpaces
+                Return $"{_buffer.Last().activeBasalPattern} rate = {_buffer.Last().GetBasalPerHour} U Per Hour".CleanSpaces
             End If
         End If
         Return title

@@ -4,15 +4,21 @@
 
 Imports System.Runtime.CompilerServices
 Imports System.Text
+Imports System.Text.RegularExpressions
 
 Public Module StringExtensions
 
     Private ReadOnly s_commaOrPeriod As Char() = {"."c, ","c}
 
+    ''' <summary>
+    ''' Replace multiple spaces with 1 and trim the ends
+    ''' </summary>
+    ''' <param name="value">String</param>
+    ''' <returns>String</returns>
     <Extension>
     Public Function CleanSpaces(value As String) As String
         If String.IsNullOrWhiteSpace(value) Then Return ""
-        Return value.Replace("  ", " ").Replace("  ", " ").Trim
+        Return Regex.Replace(value, "\s+", " ").Trim
     End Function
 
     <Extension()>
@@ -84,44 +90,6 @@ Public Module StringExtensions
         Return resultString.Replace("time", " Time", False, CurrentUICulture)
     End Function
 
-    ''' <summary>
-    ''' Escape characters not allowed in CSV data
-    ''' </summary>
-    ''' <param name="value"></param>
-    ''' <returns>Translates String</returns>
-    <Extension>
-    Public Function CleanCsvString(value As String) As String
-        Return $"{value?.ToString _
-                        .Replace("""", """""") _
-                        .Replace(",", "\,") _
-                        .Replace(vbCrLf, $"\{vbCrLf}") _
-                        .Replace("\", "\\")},"
-    End Function
-
-    ''' <summary>
-    ''' Convert all multiple spaces with one space
-    ''' </summary>
-    ''' <param name="Value"></param>
-    ''' <returns></returns>
-    <Extension>
-    Public Function RemoveExtraSpaces(Value As String) As String
-        Dim sbOut As New StringBuilder()
-        If Not String.IsNullOrEmpty(Value) Then
-            Dim isWhiteSpace As Boolean = False
-            For i As Integer = 0 To Value.Length - 1
-                If Char.IsWhiteSpace(Value.Chars(i)) Then 'Comparison with WhiteSpace
-                    If Not isWhiteSpace Then 'Comparison with previous Char
-                        sbOut.Append(Value.Chars(i))
-                        isWhiteSpace = True
-                    End If
-                Else
-                    isWhiteSpace = False
-                    sbOut.Append(Value.Chars(i))
-                End If
-            Next i
-        End If
-        Return sbOut.ToString()
-    End Function
 
     <Extension>
     Public Function TruncateSingleString(s As String, decimalDigits As Integer) As String
