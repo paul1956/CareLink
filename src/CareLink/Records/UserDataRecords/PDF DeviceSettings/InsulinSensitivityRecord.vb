@@ -5,11 +5,10 @@
 Public Class InsulinSensitivityRecord
 
     Public Sub New(r As StringTable.Row)
-        Dim cleaned As String = r.Columns(0).CleanSpaces
-        If cleaned.Length = 0 Then
+        If String.IsNullOrWhiteSpace(r.Columns(0)) Then
             Exit Sub
         End If
-        Dim s() As String = cleaned.Split(" ", StringSplitOptions.RemoveEmptyEntries)
+        Dim s() As String = r.Columns(0).Split(" ", StringSplitOptions.RemoveEmptyEntries)
         If s.Length <> 2 Then
             Stop
             Exit Sub

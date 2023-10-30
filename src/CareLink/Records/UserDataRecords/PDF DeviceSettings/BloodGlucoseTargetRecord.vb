@@ -5,7 +5,7 @@
 Public Class BloodGlucoseTargetRecord
 
     Public Sub New(r As StringTable.Row)
-        Dim s() As String = r.Columns(0).CleanSpaces.Split(" ", StringSplitOptions.RemoveEmptyEntries)
+        Dim s() As String = r.Columns(0).Split(" ", StringSplitOptions.RemoveEmptyEntries)
         If s.Length = 2 Then
             If TimeOnly.TryParse(s(0), Me.Time) Then
                 Me.Low = ParseSingle(s(1))

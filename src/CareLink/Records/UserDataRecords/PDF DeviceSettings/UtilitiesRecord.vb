@@ -17,7 +17,7 @@ Public Class UtilitiesRecord
         Me.Brightness = sTable.GetSingleLineValue(Of String)("Brightness ")
         Dim s As String = sTable.GetSingleLineValue(Of String)("Backlight Timeout ")
         If s.EndsWith("s") Then
-            Me.BackLightTimeout = New TimeSpan(0, 0, CInt(s.Split(" ")(0)))
+            Me.BackLightTimeout = New TimeSpan(0, 0, CInt(s.Split(" ", StringSplitOptions.RemoveEmptyEntries)(0)))
         Else
             Stop
         End If

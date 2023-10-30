@@ -37,7 +37,7 @@ Public Class PdfSettingsRecord
         For Each s As IndexClass(Of String) In listOfAllTextLines.WithIndex
             If s.Value.StartsWith("Sensor") Then
                 s.MoveNext()
-                Dim lines As List(Of String) = s.Value.CleanSpaces.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList
+                Dim lines As List(Of String) = s.Value.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList
                 sensorOn = lines(1)
                 Exit For
             ElseIf s.Value.Contains("Basal 4") Then
@@ -125,7 +125,7 @@ Public Class PdfSettingsRecord
                 For Each s As IndexClass(Of String) In listOfAllTextLines.WithIndex
                     If s.Value.StartsWith("SmartGuard") Then
                         s.MoveNext()
-                        smartGuard = s.Value.CleanSpaces.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList(1)
+                        smartGuard = s.Value.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList(1)
                         Exit For
                     End If
                 Next
@@ -239,7 +239,7 @@ Public Class PdfSettingsRecord
             snoozeLine = snoozeLine.Substring(0, index + 1)
             index = snoozeLine.IndexOf("Snooze ")
             snoozeLine = snoozeLine.Substring(index).Trim(")"c)
-            Dim splitSnoozeLine As String() = snoozeLine.Split(" ")
+            Dim splitSnoozeLine As String() = snoozeLine.Split(" ", StringSplitOptions.RemoveEmptyEntries)
             If splitSnoozeLine.Length = 2 Then
                 snoozeOn = "On"
                 If Not TimeSpan.TryParse(splitSnoozeLine(1), snoozeTime) Then

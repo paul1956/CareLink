@@ -18,9 +18,9 @@ Public Class LowAlertsRecord
                 Continue For
             End If
             Dim item As New LowAlertRecord(s, valueUnits) With {
-                .End = If(e.IsLast OrElse sTable.Rows(e.Index + 1).Columns(0).CleanSpaces.Length = 0,
+                .End = If(e.IsLast OrElse String.IsNullOrWhiteSpace(sTable.Rows(e.Index + 1).Columns(0)),
                           s_midnight,
-                          TimeOnly.Parse(sTable.Rows(e.Index + 1).Columns(0).CleanSpaces.Split(" ")(0))
+                          TimeOnly.Parse(sTable.Rows(e.Index + 1).Columns(0).Split(" ", StringSplitOptions.RemoveEmptyEntries)(0))
                          )
             }
             If item.IsValid Then

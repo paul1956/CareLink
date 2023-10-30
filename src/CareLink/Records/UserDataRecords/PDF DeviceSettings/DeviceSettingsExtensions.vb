@@ -19,7 +19,7 @@ Friend Module DeviceSettingsExtensions
                 If typeOfT Is GetType(String) Then
                     Return CType(CObj(value), T)
                 End If
-                value = value.Trim.Split(" ")(0)
+                value = value.Split(" ", StringSplitOptions.RemoveEmptyEntries)(0)
                 If typeOfT Is GetType(Single) Then
                     value = value.Replace(",", ".")
                     Return If(IsNumeric(value),

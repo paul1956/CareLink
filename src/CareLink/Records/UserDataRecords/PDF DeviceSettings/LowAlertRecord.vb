@@ -8,7 +8,7 @@ Public Class LowAlertRecord
         If s.Columns.Count <> 5 Then
             Stop
         End If
-        Dim s1() As String = s.Columns(0).CleanSpaces.Split(" ", StringSplitOptions.RemoveEmptyEntries)
+        Dim s1() As String = s.Columns(0).Split(" ", StringSplitOptions.RemoveEmptyEntries)
         Select Case s1.Length
             Case 0
                 Exit Sub
