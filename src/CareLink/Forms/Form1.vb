@@ -2065,15 +2065,7 @@ Public Class Form1
 #Region "NotifyIcon Support"
 
     Private Sub CleanUpNotificationIcon()
-        If Me.NotifyIcon1 IsNot Nothing Then
-            Me.NotifyIcon1.Visible = False
-            Me.NotifyIcon1.Icon?.Dispose()
-            Me.NotifyIcon1.Icon = Nothing
-            Me.NotifyIcon1.Visible = False
-            Me.NotifyIcon1.Dispose()
-            Application.DoEvents()
-        End If
-        End
+        Me.NotifyIcon1?.Dispose()
     End Sub
 
     <DebuggerNonUserCode()>
