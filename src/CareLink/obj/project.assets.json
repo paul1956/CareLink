@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "net7.0-windows7.0": {
+    "net8.0-windows10.0.17763": {
       "ClosedXML/0.102.1": {
         "type": "package",
         "dependencies": {
@@ -210,7 +210,7 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "Microsoft.Web.WebView2/1.0.2045.28": {
+      "Microsoft.Web.WebView2/1.0.2151.40": {
         "type": "package",
         "compile": {
           "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.dll": {
@@ -354,7 +354,7 @@
           "System.Xml.XDocument": "4.3.0"
         }
       },
-      "Octokit/8.1.1": {
+      "Octokit/9.0.0": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/Octokit.dll": {
@@ -1490,23 +1490,19 @@
           }
         }
       },
-      "System.Speech/7.0.0": {
+      "System.Speech/8.0.0": {
         "type": "package",
         "compile": {
-          "lib/net7.0/System.Speech.dll": {
-            "related": ".xml"
-          }
+          "lib/net8.0/System.Speech.dll": {}
         },
         "runtime": {
-          "lib/net7.0/System.Speech.dll": {
-            "related": ".xml"
-          }
+          "lib/net8.0/System.Speech.dll": {}
         },
         "build": {
           "buildTransitive/net6.0/_._": {}
         },
         "runtimeTargets": {
-          "runtimes/win/lib/net7.0/System.Speech.dll": {
+          "runtimes/win/lib/net8.0/System.Speech.dll": {
             "assetType": "runtime",
             "rid": "win"
           }
@@ -1756,7 +1752,7 @@
           }
         }
       },
-      "WinForms.DataVisualization/1.8.0": {
+      "WinForms.DataVisualization/1.9.1": {
         "type": "package",
         "compile": {
           "lib/net7.0-windows7.0/WinForms.DataVisualization.Utilities.dll": {
@@ -2066,10 +2062,10 @@
         "runtime.json"
       ]
     },
-    "Microsoft.Web.WebView2/1.0.2045.28": {
-      "sha512": "QDsR/HCNjzqYZrIuNLxyfmOIqVfMq1iGyoBR3OVVlFl4NZ12T8jRC0MNpOReKfgwtO5zh8g+eBYR6RAXFltcVA==",
+    "Microsoft.Web.WebView2/1.0.2151.40": {
+      "sha512": "OPWjZVJvYhDm4Jq+7QdsQfEgv2QHrkaqUkdk4i9FahatsOJ4cIaVLfnDHGsKjcxGqCVX+Lo4mi4Lqh5hcgfsdw==",
       "type": "package",
-      "path": "microsoft.web.webview2/1.0.2045.28",
+      "path": "microsoft.web.webview2/1.0.2151.40",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -2110,7 +2106,7 @@
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.xml",
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll",
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.xml",
-        "microsoft.web.webview2.1.0.2045.28.nupkg.sha512",
+        "microsoft.web.webview2.1.0.2151.40.nupkg.sha512",
         "microsoft.web.webview2.nuspec",
         "runtimes/win-arm64/native/WebView2Loader.dll",
         "runtimes/win-arm64/native_uap/Microsoft.Web.WebView2.Core.dll",
@@ -2252,16 +2248,16 @@
         "netstandard.library.nuspec"
       ]
     },
-    "Octokit/8.1.1": {
-      "sha512": "qrRUuJSkmCht+kG4Gf01jtbzNhYbUssy99VsUYlk9d/Z3vFCRpLn7Iulh3V3OWhpWaeHfHUKTMx9VbOB1uoo/A==",
+    "Octokit/9.0.0": {
+      "sha512": "mQZMCTZavxd9IzTkRaRLxJtFE5uTOJ2Uia5KDwnHiBBFjvnG4BJf56RV1aPZsVdqiKlqRmxbLrkU8DVlmRDrSA==",
       "type": "package",
-      "path": "octokit/8.1.1",
+      "path": "octokit/9.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Octokit.dll",
         "lib/netstandard2.0/Octokit.xml",
-        "octokit.8.1.1.nupkg.sha512",
+        "octokit.9.0.0.nupkg.sha512",
         "octokit.nuspec",
         "octokit.png"
       ]
@@ -4923,30 +4919,28 @@
         "system.security.cryptography.x509certificates.nuspec"
       ]
     },
-    "System.Speech/7.0.0": {
-      "sha512": "7E0uB92Cx2sXR67HW9rMKJqDACdLuz9t3I3OwZUFDzAgwKXWuY6CYeRT/NiypHcyZO2be9+0H0w0M6fn7HQtgQ==",
+    "System.Speech/8.0.0": {
+      "sha512": "CNuiA6vb95Oe5PRjClZEBiaju31vwB8OIeCgeSBXyZL6+MS4RVVB2X/C11z0xCkooHE3Vy91nM2z76emIzR+sg==",
       "type": "package",
-      "path": "system.speech/7.0.0",
+      "path": "system.speech/8.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "LICENSE.TXT",
+        "PACKAGE.md",
         "THIRD-PARTY-NOTICES.TXT",
         "buildTransitive/net6.0/_._",
         "buildTransitive/netcoreapp2.0/System.Speech.targets",
         "lib/net462/_._",
         "lib/net6.0/System.Speech.dll",
-        "lib/net6.0/System.Speech.xml",
         "lib/net7.0/System.Speech.dll",
-        "lib/net7.0/System.Speech.xml",
+        "lib/net8.0/System.Speech.dll",
         "lib/netstandard2.0/System.Speech.dll",
-        "lib/netstandard2.0/System.Speech.xml",
         "runtimes/win/lib/net6.0/System.Speech.dll",
-        "runtimes/win/lib/net6.0/System.Speech.xml",
         "runtimes/win/lib/net7.0/System.Speech.dll",
-        "runtimes/win/lib/net7.0/System.Speech.xml",
-        "system.speech.7.0.0.nupkg.sha512",
+        "runtimes/win/lib/net8.0/System.Speech.dll",
+        "system.speech.8.0.0.nupkg.sha512",
         "system.speech.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -5638,10 +5632,10 @@
         "webview2.devtools.dom.nuspec"
       ]
     },
-    "WinForms.DataVisualization/1.8.0": {
-      "sha512": "+L0hJaW1kq78Z4HQlIhq8Jmsuz8n9rRaJgTdwLwzYItgiL6U9zNgM+RWRBsD3pSUw1QRMy7GlpZI/+XMmnXCmA==",
+    "WinForms.DataVisualization/1.9.1": {
+      "sha512": "/mKuUVwHYg0EpcjJbuvU5eGY8QGFB4iUMVEl0inHE5iF1fG/NK1dRR2sL26QDnv1wG0dnpuhE3jO5ktKQlvEGg==",
       "type": "package",
-      "path": "winforms.datavisualization/1.8.0",
+      "path": "winforms.datavisualization/1.9.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -5671,7 +5665,7 @@
         "lib/net7.0-windows7.0/WinForms.DataVisualization.dll",
         "lib/net7.0-windows7.0/WinForms.DataVisualization.pdb",
         "lib/net7.0-windows7.0/WinForms.DataVisualization.xml",
-        "winforms.datavisualization.1.8.0.nupkg.sha512",
+        "winforms.datavisualization.1.9.1.nupkg.sha512",
         "winforms.datavisualization.nuspec"
       ]
     },
@@ -5691,17 +5685,17 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net7.0-windows7.0": [
+    "net8.0-windows10.0.17763": [
       "ClosedXML >= 0.102.1",
       "DataGridViewDisableButtonColumnEx >= 1.0.0.1",
       "FreeSpire.PDF >= 8.6.0",
-      "Microsoft.Web.WebView2 >= 1.0.2045.28",
-      "Octokit >= 8.1.1",
-      "System.Speech >= 7.0.0",
+      "Microsoft.Web.WebView2 >= 1.0.2151.40",
+      "Octokit >= 9.0.0",
+      "System.Speech >= 8.0.0",
       "TableLayputPanelTop >= 1.0.0.3",
       "ToolStripComboBoxEx >= 1.0.0.2",
       "WebView2.DevTools.Dom >= 3.0.1",
-      "WinForms.DataVisualization >= 1.8.0"
+      "WinForms.DataVisualization >= 1.9.1"
     ]
   },
   "packageFolders": {
@@ -5725,7 +5719,7 @@
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net7.0-windows"
+        "net8.0-windows10.0.17763.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
@@ -5733,15 +5727,15 @@
         "https://www.myget.org/F/modvb/api/v3/index.json": {}
       },
       "frameworks": {
-        "net7.0-windows7.0": {
-          "targetAlias": "net7.0-windows",
+        "net8.0-windows10.0.17763": {
+          "targetAlias": "net8.0-windows10.0.17763.0",
           "projectReferences": {}
         }
       }
     },
     "frameworks": {
-      "net7.0-windows7.0": {
-        "targetAlias": "net7.0-windows",
+      "net8.0-windows10.0.17763": {
+        "targetAlias": "net8.0-windows10.0.17763.0",
         "dependencies": {
           "ClosedXML": {
             "target": "Package",
@@ -5757,15 +5751,15 @@
           },
           "Microsoft.Web.WebView2": {
             "target": "Package",
-            "version": "[1.0.2045.28, )"
+            "version": "[1.0.2151.40, )"
           },
           "Octokit": {
             "target": "Package",
-            "version": "[8.1.1, )"
+            "version": "[9.0.0, )"
           },
           "System.Speech": {
             "target": "Package",
-            "version": "[7.0.0, )"
+            "version": "[8.0.0, )"
           },
           "TableLayputPanelTop": {
             "target": "Package",
@@ -5781,7 +5775,7 @@
           },
           "WinForms.DataVisualization": {
             "target": "Package",
-            "version": "[1.8.0, )"
+            "version": "[1.9.1, )"
           }
         },
         "imports": [
@@ -5795,15 +5789,24 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.Windows.SDK.NET.Ref",
+            "version": "[10.0.17763.31, 10.0.17763.31]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          },
+          "Microsoft.Windows.SDK.NET.Ref": {
             "privateAssets": "all"
           },
           "Microsoft.WindowsDesktop.App.WindowsForms": {
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100-rc.2.23502.2\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
