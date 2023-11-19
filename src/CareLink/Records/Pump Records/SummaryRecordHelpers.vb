@@ -116,7 +116,7 @@ Friend Module SummaryRecordHelpers
                     If s_notificationMessages.TryGetValue(row.Value, message) Then
                         message = TranslateNotificationMessageId(dic, row.Value)
                         If row.Value = "BC_SID_MAX_FILL_DROPS_QUESITION" Then
-                            If dic("deliveredAmount").StartsWith("3") Then
+                            If dic("deliveredAmount").StartsWith("3"c) Then
                                 message &= "Did you see drops at the end of the tubing?"
                             Else
                                 message &= "Remove reservoir and select Rewind restart New reservoir procedure."

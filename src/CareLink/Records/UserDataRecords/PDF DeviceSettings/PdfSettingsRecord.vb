@@ -234,7 +234,7 @@ Public Class PdfSettingsRecord
         Dim snoozeLine As String
         snoozeOn = "Off"
         snoozeLine = listOfAllTextLines.FindLineContaining(target)
-        Dim index As Integer = snoozeLine.IndexOf(")")
+        Dim index As Integer = snoozeLine.IndexOf(")"c)
         If index >= 0 Then
             snoozeLine = snoozeLine.Substring(0, index + 1)
             index = snoozeLine.IndexOf("Snooze ")

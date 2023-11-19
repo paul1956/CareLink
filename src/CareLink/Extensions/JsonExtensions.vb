@@ -8,6 +8,12 @@ Imports System.Text.Json.Serialization
 
 Public Module JsonExtensions
 
+    Private ReadOnly s_jsonDeserializerOptions As New JsonSerializerOptions() With {
+                .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                .NumberHandling = JsonNumberHandling.WriteAsString}
+
+    Public ReadOnly s_jsonSerializerOptions As New JsonSerializerOptions
+
     <Extension>
     Private Function ToSgList(innerJson As List(Of Dictionary(Of String, String))) As List(Of SgRecord)
         Dim sGs As New List(Of SgRecord)
@@ -21,7 +27,7 @@ Public Module JsonExtensions
                                   )
                     If Not Single.IsNaN(.sg) Then
                         Dim jsonItemAsString As String = .datetimeAsString
-                        Dim indexOfT As Integer = jsonItemAsString.IndexOf("T")
+                        Dim indexOfT As Integer = jsonItemAsString.IndexOf("T"c)
                         Dim replaceDate As String = jsonItemAsString.Substring(0, indexOfT)
                         Dim replaceTime As String = jsonItemAsString.Substring(indexOfT, 6)
                         .datetimeAsString = .datetimeAsString.
@@ -40,7 +46,7 @@ Public Module JsonExtensions
         cleanRecentData("firstName") = "First"
         cleanRecentData("lastName") = "Last"
         cleanRecentData("medicalDeviceSerialNumber") = "NG1234567H"
-        Return JsonSerializer.Serialize(cleanRecentData, New JsonSerializerOptions)
+        Return JsonSerializer.Serialize(cleanRecentData, s_jsonSerializerOptions)
     End Function
 
     <Extension>
@@ -66,11 +72,9 @@ Public Module JsonExtensions
         If String.IsNullOrWhiteSpace(jsonString) Then
             Return resultDictionary
         End If
-        Dim options As New JsonSerializerOptions() With {
-                .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                .NumberHandling = JsonNumberHandling.WriteAsString}
+
         Dim item As KeyValuePair(Of String, Object)
-        Dim rawJsonData As List(Of KeyValuePair(Of String, Object)) = JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(jsonString, options).ToList()
+        Dim rawJsonData As List(Of KeyValuePair(Of String, Object)) = JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(jsonString, s_jsonDeserializerOptions).ToList()
         For Each item In rawJsonData
             If item.Value Is Nothing Then
                 resultDictionary.Add(item.Key, Nothing)
@@ -87,11 +91,7 @@ Public Module JsonExtensions
             Return resultDictionaryArray
         End If
 
-        Dim options As New JsonSerializerOptions() With {
-                .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                .NumberHandling = JsonNumberHandling.WriteAsString}
-
-        Dim jsonList As List(Of Dictionary(Of String, Object)) = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(value, options)
+        Dim jsonList As List(Of Dictionary(Of String, Object)) = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(value, s_jsonDeserializerOptions)
         For Each e As IndexClass(Of Dictionary(Of String, Object)) In jsonList.WithIndex
             Dim resultDictionary As New Dictionary(Of String, String)
             Dim defaultTime As Date = PumpNow() - New TimeSpan(23, 55, 0)
@@ -128,11 +128,7 @@ Public Module JsonExtensions
             Return New List(Of SgRecord)
         End If
 
-        Dim options As New JsonSerializerOptions() With {
-                .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                .NumberHandling = JsonNumberHandling.WriteAsString}
-
-        Dim jsonList As List(Of Dictionary(Of String, Object)) = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(value, options)
+        Dim jsonList As List(Of Dictionary(Of String, Object)) = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(value, s_jsonDeserializerOptions)
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
         For Each e As IndexClass(Of Dictionary(Of String, Object)) In jsonList.WithIndex
             Dim resultDictionary As New Dictionary(Of String, String)
@@ -157,11 +153,8 @@ Public Module JsonExtensions
         If String.IsNullOrWhiteSpace(jsonString) Then
             Return resultDictionary
         End If
-        Dim options As New JsonSerializerOptions() With {
-                    .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                    .NumberHandling = JsonNumberHandling.WriteAsString}
         Dim item As KeyValuePair(Of String, Object)
-        Dim rawJsonData As List(Of KeyValuePair(Of String, Object)) = JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(jsonString, options).ToList()
+        Dim rawJsonData As List(Of KeyValuePair(Of String, Object)) = JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(jsonString, s_jsonDeserializerOptions).ToList()
         For Each item In rawJsonData
             If item.Value Is Nothing Then
                 resultDictionary.Add(item.Key, Nothing)

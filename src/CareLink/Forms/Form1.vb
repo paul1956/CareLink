@@ -2213,7 +2213,7 @@ Public Class Form1
                 Dim timeOrderedMarkers As New SortedDictionary(Of OADate, Single)
 
                 Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
-                If Not s_markers.Any Then
+                If s_markers.Count = 0 Then
                     Exit Sub
                 End If
 

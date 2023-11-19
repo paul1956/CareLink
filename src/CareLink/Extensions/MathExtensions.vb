@@ -30,7 +30,7 @@ Friend Module MathExtensions
         valueString = valueString.Replace(",", ".")
         Dim returnSingle As Single
         If decimalDigits = -1 Then
-            Dim index As Integer = valueString.IndexOf(".")
+            Dim index As Integer = valueString.IndexOf("."c)
             decimalDigits = If(index = -1,
                                0,
                                valueString.Substring(index).Length

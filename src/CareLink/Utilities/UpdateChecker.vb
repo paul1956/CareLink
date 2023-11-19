@@ -22,7 +22,7 @@ Friend Module UpdateChecker
                 If index < 0 Then
                     Exit For
                 End If
-                Dim versionLength As Integer = line.IndexOf("""", index) - index
+                Dim versionLength As Integer = line.IndexOf(""""c, index) - index
                 versionStr = line.Substring(index, versionLength)
                 If versionStr.Contains("-"c) Then
                     Continue For

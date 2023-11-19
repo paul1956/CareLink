@@ -350,7 +350,7 @@ Public Class CareLinkClient
                 jsonData = LoadIndexedItems(resultText)
                 If jsonData.Count > 61 Then
 
-                    Dim contents As String = JsonSerializer.Serialize(jsonData, New JsonSerializerOptions)
+                    Dim contents As String = JsonSerializer.Serialize(jsonData, s_jsonSerializerOptions)
                     Using jDocument As JsonDocument = JsonDocument.Parse(contents, New JsonDocumentOptions)
                         File.WriteAllTextAsync(GetLastDownloadFileWithPath(), JsonSerializer.Serialize(jDocument, JsonFormattingOptions))
                     End Using
@@ -593,7 +593,7 @@ Public Class CareLinkClient
             If response.IsSuccessStatusCode Then
                 jsonData = LoadIndexedItems(response.ResultText())
                 If jsonData.Count > 61 Then
-                    Dim contents As String = JsonSerializer.Serialize(jsonData, New JsonSerializerOptions)
+                    Dim contents As String = JsonSerializer.Serialize(jsonData, s_jsonSerializerOptions)
                     Using jDocument As JsonDocument = JsonDocument.Parse(contents, New JsonDocumentOptions)
                         File.WriteAllTextAsync(GetLastDownloadFileWithPath(), JsonSerializer.Serialize(jDocument, JsonFormattingOptions))
                     End Using
