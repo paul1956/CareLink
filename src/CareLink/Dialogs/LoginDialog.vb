@@ -372,12 +372,12 @@ Public Class LoginDialog
             Dim t As Task(Of WebView2DevToolsContext) = Nothing
             If Me.DevContext Is Nothing Then
                 t = Me.WebView21.CoreWebView2.CreateDevToolsContextAsync()
+                Await Task.Delay(2000)
+                If t Is Nothing OrElse t.IsFaulted Then
+                    Exit Sub
+                End If
+                Me.DevContext = t.Result
             End If
-            Await Task.Delay(2000)
-            If t Is Nothing OrElse t.IsFaulted Then
-                Exit Sub
-            End If
-            Me.DevContext = t.Result
             Dim userNameInputElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#username")
             Dim passwordInputElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#password")
             Dim loginButtonElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("[name=""actionButton""]")
