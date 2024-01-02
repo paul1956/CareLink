@@ -16,7 +16,7 @@ Friend Module Form1NotificationTabHelpers
             NameOf(ClearedNotificationsRecord.referenceGUID)
         }
 
-    Private Sub CreateNotificationTables(notificationDictionary As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel, itemIndex As ItemIndexes, filterJsonData As Boolean)
+    Private Sub CreateNotificationTables(notificationDictionary As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel)
         tableLevel1Blue.AutoScroll = True
         tableLevel1Blue.AutoSize = True
         tableLevel1Blue.BorderStyle = BorderStyle.FixedSingle
@@ -121,9 +121,7 @@ Friend Module Form1NotificationTabHelpers
             Next
             Form1.TableLayoutPanelNotificationHistory.Controls.Add(innerTableBlue, 0, 1)
             CreateNotificationTables(s_notificationHistoryValue,
-                                     innerTableBlue,
-                                     ItemIndexes.notificationHistory,
-                                     s_filterJsonData)
+                innerTableBlue)
         Catch ex As Exception
             Stop
             Throw

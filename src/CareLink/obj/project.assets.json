@@ -210,7 +210,7 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "Microsoft.Web.WebView2/1.0.2151.40": {
+      "Microsoft.Web.WebView2/1.0.2210.55": {
         "type": "package",
         "compile": {
           "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.dll": {
@@ -2062,10 +2062,10 @@
         "runtime.json"
       ]
     },
-    "Microsoft.Web.WebView2/1.0.2151.40": {
-      "sha512": "OPWjZVJvYhDm4Jq+7QdsQfEgv2QHrkaqUkdk4i9FahatsOJ4cIaVLfnDHGsKjcxGqCVX+Lo4mi4Lqh5hcgfsdw==",
+    "Microsoft.Web.WebView2/1.0.2210.55": {
+      "sha512": "pb5kuzl8TQm+ztzOnOm/qX75DXXjOQMdKlcs2hyizbZobiGzJcMcIhpmMmgg1cTGYwof2fVhlC809YScvDbm3w==",
       "type": "package",
-      "path": "microsoft.web.webview2/1.0.2151.40",
+      "path": "microsoft.web.webview2/1.0.2210.55",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -2106,7 +2106,7 @@
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.xml",
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll",
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.xml",
-        "microsoft.web.webview2.1.0.2151.40.nupkg.sha512",
+        "microsoft.web.webview2.1.0.2210.55.nupkg.sha512",
         "microsoft.web.webview2.nuspec",
         "runtimes/win-arm64/native/WebView2Loader.dll",
         "runtimes/win-arm64/native_uap/Microsoft.Web.WebView2.Core.dll",
@@ -5689,7 +5689,7 @@
       "ClosedXML >= 0.102.1",
       "DataGridViewDisableButtonColumnEx >= 1.0.0.1",
       "FreeSpire.PDF >= 8.6.0",
-      "Microsoft.Web.WebView2 >= 1.0.2151.40",
+      "Microsoft.Web.WebView2 >= 1.0.2210.55",
       "Octokit >= 9.0.0",
       "System.Speech >= 8.0.0",
       "TableLayputPanelTop >= 1.0.0.3",
@@ -5731,6 +5731,11 @@
           "targetAlias": "net8.0-windows10.0.17763.0",
           "projectReferences": {}
         }
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -5751,7 +5756,7 @@
           },
           "Microsoft.Web.WebView2": {
             "target": "Package",
-            "version": "[1.0.2151.40, )"
+            "version": "[1.0.2210.55, )"
           },
           "Octokit": {
             "target": "Package",

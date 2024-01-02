@@ -57,7 +57,7 @@ Friend Module PlotMarkers
     End Function
 
     <Extension>
-    Friend Sub PlotMarkers(pageChart As Chart, timeChangeSeries As Series, chartRelativePosition As RectangleF, markerInsulinDictionary As Dictionary(Of OADate, Single), markerMealDictionary As Dictionary(Of OADate, Single), <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+    Friend Sub PlotMarkers(pageChart As Chart, timeChangeSeries As Series, markerInsulinDictionary As Dictionary(Of OADate, Single), markerMealDictionary As Dictionary(Of OADate, Single))
         Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
         markerInsulinDictionary.Clear()
         markerMealDictionary?.Clear()

@@ -2298,9 +2298,8 @@ Public Class Form1
                 .ChartAreas(NameOf(ChartArea)).AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1
                 .PlotSuspendArea(Me.ActiveInsulinSuspendSeries)
                 .PlotMarkers(Me.ActiveInsulinTimeChangeSeries,
-                             _summaryChartAbsoluteRectangle,
-                             s_activeInsulinMarkerInsulinDictionary,
-                             Nothing)
+                    s_activeInsulinMarkerInsulinDictionary,
+                    Nothing)
                 .PlotSgSeries(GetYMinValue(NativeMmolL))
                 .PlotHighLowLimitsAndTargetSg(True)
             End With
@@ -2322,9 +2321,8 @@ Public Class Form1
                 .Titles(0).Text = $"Status - {s_listOfManualBasal.GetSubTitle}"
                 .PlotSuspendArea(Me.SummarySuspendSeries)
                 .PlotMarkers(Me.SummaryTimeChangeSeries,
-                             _summaryChartAbsoluteRectangle,
-                             s_summaryMarkerInsulinDictionary,
-                             s_summaryMarkerMealDictionary)
+                    s_summaryMarkerInsulinDictionary,
+                    s_summaryMarkerMealDictionary)
                 .PlotSgSeries(GetYMinValue(NativeMmolL))
                 .PlotHighLowLimitsAndTargetSg(False)
                 Application.DoEvents()
