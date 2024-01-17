@@ -121,7 +121,7 @@ Friend Module Form1CollectMarkersHelper
                 i += 1
             End While
         Else
-            If CurrentPdf.IsValid Then
+            If CurrentPdf?.IsValid Then
                 Dim basalRateRecords As List(Of BasalRateRecord) = GetActiveBasalRateRecords()
                 For Each basalRate As BasalRateRecord In basalRateRecords
                     maxBasalPerHour = Math.Max(maxBasalPerHour, basalRate.UnitsPerHr)

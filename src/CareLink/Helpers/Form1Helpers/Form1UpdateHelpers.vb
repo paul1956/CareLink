@@ -485,7 +485,11 @@ Friend Module Form1UpdateHelpers
                         Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
                         Form1.PumpBannerStateLabel.Font = New Font("Segoe UI", 7.0F, FontStyle.Bold, GraphicsUnit.Point)
                     Case "TEMP_BASAL"
-                        Stop
+                        Form1.PumpBannerStateLabel.BackColor = Color.IndianRed
+                        Form1.PumpBannerStateLabel.Text = "Temp Basal"
+                        Form1.PumpBannerStateLabel.Visible = True
+                        Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
+                        Form1.PumpBannerStateLabel.Font = New Font("Segoe UI", 7.0F, FontStyle.Bold, GraphicsUnit.Point)
                     Case "WAIT_TO_ENTER_BG"
                         Stop
                     Case Else

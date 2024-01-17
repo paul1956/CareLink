@@ -2498,7 +2498,7 @@ Public Class Form1
             End Select
         Next
 
-        If s_totalBasal = 0 AndAlso CurrentPdf.IsValid Then
+        If s_totalBasal = 0 AndAlso CurrentPdf?.IsValid Then
             Dim activeBasalRecords As List(Of BasalRateRecord) = GetActiveBasalRateRecords()
 
             If activeBasalRecords.Count > 0 Then
