@@ -354,7 +354,7 @@
           "System.Xml.XDocument": "4.3.0"
         }
       },
-      "Octokit/9.1.0": {
+      "Octokit/9.1.1": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/Octokit.dll": {
@@ -2248,16 +2248,16 @@
         "netstandard.library.nuspec"
       ]
     },
-    "Octokit/9.1.0": {
-      "sha512": "aIxATAhMWn3IquZsoho8yK12MDU81YhexLWLGDoCp1vhJP7Z23Pu5JBEkNaTIkl9KqALJPqGLN1an7YfA7BhvA==",
+    "Octokit/9.1.1": {
+      "sha512": "I9vbat7rmMnlpcxeTMiLyBrDlb4RC3t94qCkjf0HIjQhrwq+pt3dkwUyYt/Wl+v27WMbc718CJjMFO+Iw1et7g==",
       "type": "package",
-      "path": "octokit/9.1.0",
+      "path": "octokit/9.1.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Octokit.dll",
         "lib/netstandard2.0/Octokit.xml",
-        "octokit.9.1.0.nupkg.sha512",
+        "octokit.9.1.1.nupkg.sha512",
         "octokit.nuspec",
         "octokit.png"
       ]
@@ -5690,7 +5690,7 @@
       "DataGridViewDisableButtonColumnEx >= 1.0.0.1",
       "FreeSpire.PDF >= 8.6.0",
       "Microsoft.Web.WebView2 >= 1.0.2210.55",
-      "Octokit >= 9.1.0",
+      "Octokit >= 9.1.1",
       "System.Speech >= 8.0.0",
       "TableLayputPanelTop >= 1.0.0.3",
       "ToolStripComboBoxEx >= 1.0.0.2",
@@ -5760,7 +5760,7 @@
           },
           "Octokit": {
             "target": "Package",
-            "version": "[9.1.0, )"
+            "version": "[9.1.1, )"
           },
           "System.Speech": {
             "target": "Package",
@@ -5811,7 +5811,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200-preview.23624.5/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

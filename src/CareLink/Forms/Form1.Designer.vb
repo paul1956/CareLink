@@ -23,7 +23,7 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         components = New ComponentModel.Container()
-        Dim resources As ComponentModel.ComponentResourceManager = New ComponentModel.ComponentResourceManager(GetType(Form1))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Dim DataGridViewCellStyle1 As DataGridViewCellStyle = New DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As DataGridViewCellStyle = New DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As DataGridViewCellStyle = New DataGridViewCellStyle()
@@ -32,6 +32,7 @@ Partial Class Form1
         Dim DataGridViewCellStyle6 As DataGridViewCellStyle = New DataGridViewCellStyle()
         Dim DataGridViewCellStyle7 As DataGridViewCellStyle = New DataGridViewCellStyle()
         Dim DataGridViewCellStyle8 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As DataGridViewCellStyle = New DataGridViewCellStyle()
         MenuStrip1 = New MenuStrip()
         MenuStartHere = New ToolStripMenuItem()
         MenuStartHereLogin = New ToolStripMenuItem()
@@ -224,7 +225,7 @@ Partial Class Form1
         DgvCountryDataPg2Category = New DataGridViewTextBoxColumn()
         DgvCountryDataPg2Key = New DataGridViewTextBoxColumn()
         DgvCountryDataPg2Value = New DataGridViewTextBoxColumn()
-        Me.WebView = New Microsoft.Web.WebView2.WinForms.WebView2()
+        WebView = New Microsoft.Web.WebView2.WinForms.WebView2()
         TabPageCountryDataPg3 = New TabPage()
         TabPageSessionProfile = New TabPage()
         TabPageCurrentUser = New TabPage()
@@ -297,7 +298,7 @@ Partial Class Form1
         TabPageCountryDataPg2.SuspendLayout()
         CountryDataPg2TableLayoutPanel.SuspendLayout()
         CType(DgvCountryDataPg2, ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.WebView, ComponentModel.ISupportInitialize).BeginInit()
+        CType(WebView, ComponentModel.ISupportInitialize).BeginInit()
         TabPageCountryDataPg3.SuspendLayout()
         TabPageSessionProfile.SuspendLayout()
         TabPageCurrentUser.SuspendLayout()
@@ -324,84 +325,84 @@ Partial Class Form1
         ' MenuStartHereLogin
         ' 
         MenuStartHereLogin.Name = "MenuStartHereLogin"
-        MenuStartHereLogin.Size = New Size(249, 22)
+        MenuStartHereLogin.Size = New Size(245, 22)
         MenuStartHereLogin.Text = "Login"
         ' 
         ' ToolStripSeparator8
         ' 
         ToolStripSeparator8.Name = "ToolStripSeparator8"
-        ToolStripSeparator8.Size = New Size(246, 6)
+        ToolStripSeparator8.Size = New Size(242, 6)
         ' 
         ' MenuStartHereManuallyImportDeviceSettings
         ' 
         MenuStartHereManuallyImportDeviceSettings.Name = "MenuStartHereManuallyImportDeviceSettings"
-        MenuStartHereManuallyImportDeviceSettings.Size = New Size(249, 22)
+        MenuStartHereManuallyImportDeviceSettings.Size = New Size(245, 22)
         MenuStartHereManuallyImportDeviceSettings.Text = "Manually Import Device Settings"
         ' 
         ' MenuStartHereShowPumpSetup
         ' 
         MenuStartHereShowPumpSetup.Enabled = False
         MenuStartHereShowPumpSetup.Name = "MenuStartHereShowPumpSetup"
-        MenuStartHereShowPumpSetup.Size = New Size(249, 22)
+        MenuStartHereShowPumpSetup.Size = New Size(245, 22)
         MenuStartHereShowPumpSetup.Text = "Show Pump Setup"
         ' 
         ' ToolStripSeparator1
         ' 
         ToolStripSeparator1.Name = "ToolStripSeparator1"
-        ToolStripSeparator1.Size = New Size(246, 6)
+        ToolStripSeparator1.Size = New Size(242, 6)
         ' 
         ' MenuStartHereLoadSavedDataFile
         ' 
         MenuStartHereLoadSavedDataFile.Name = "MenuStartHereLoadSavedDataFile"
-        MenuStartHereLoadSavedDataFile.Size = New Size(249, 22)
+        MenuStartHereLoadSavedDataFile.Size = New Size(245, 22)
         MenuStartHereLoadSavedDataFile.Text = "Load A Saved Data File"
         ' 
         ' MenuStartHereExceptionReportLoad
         ' 
         MenuStartHereExceptionReportLoad.Name = "MenuStartHereExceptionReportLoad"
-        MenuStartHereExceptionReportLoad.Size = New Size(249, 22)
+        MenuStartHereExceptionReportLoad.Size = New Size(245, 22)
         MenuStartHereExceptionReportLoad.Text = "Load An Exception Report"
         ' 
         ' ToolStripSeparator4
         ' 
         ToolStripSeparator4.Name = "ToolStripSeparator4"
-        ToolStripSeparator4.Size = New Size(246, 6)
+        ToolStripSeparator4.Size = New Size(242, 6)
         ' 
         ' MenuStartHereUseLastSavedFile
         ' 
         MenuStartHereUseLastSavedFile.Name = "MenuStartHereUseLastSavedFile"
-        MenuStartHereUseLastSavedFile.Size = New Size(249, 22)
+        MenuStartHereUseLastSavedFile.Size = New Size(245, 22)
         MenuStartHereUseLastSavedFile.Text = "Use Last Data File"
         ' 
         ' MenuStartHereUseTestData
         ' 
         MenuStartHereUseTestData.Name = "MenuStartHereUseTestData"
-        MenuStartHereUseTestData.Size = New Size(249, 22)
+        MenuStartHereUseTestData.Size = New Size(245, 22)
         MenuStartHereUseTestData.Text = "Use Test Data"
         ' 
         ' ToolStripSeparator2
         ' 
         ToolStripSeparator2.Name = "ToolStripSeparator2"
-        ToolStripSeparator2.Size = New Size(246, 6)
+        ToolStripSeparator2.Size = New Size(242, 6)
         ' 
         ' MenuStartHereSnapshotSave
         ' 
         MenuStartHereSnapshotSave.Name = "MenuStartHereSnapshotSave"
         MenuStartHereSnapshotSave.ShortcutKeys = Keys.Control Or Keys.S
-        MenuStartHereSnapshotSave.Size = New Size(249, 22)
+        MenuStartHereSnapshotSave.Size = New Size(245, 22)
         MenuStartHereSnapshotSave.Text = "Snapshot &Save"
         ' 
         ' ToolStripSeparator3
         ' 
         ToolStripSeparator3.Name = "ToolStripSeparator3"
-        ToolStripSeparator3.Size = New Size(246, 6)
+        ToolStripSeparator3.Size = New Size(242, 6)
         ' 
         ' StartHereExit
         ' 
         StartHereExit.Image = My.Resources.Resources.AboutBox
         StartHereExit.Name = "StartHereExit"
         StartHereExit.ShortcutKeys = Keys.Alt Or Keys.X
-        StartHereExit.Size = New Size(249, 22)
+        StartHereExit.Size = New Size(245, 22)
         StartHereExit.Text = "E&xit"
         ' 
         ' MenuOptions
@@ -597,7 +598,7 @@ Partial Class Form1
         ' 
         AboveHighLimitMessageLabel.Anchor = AnchorStyles.Top
         AboveHighLimitMessageLabel.BackColor = Color.Transparent
-        AboveHighLimitMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        AboveHighLimitMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         AboveHighLimitMessageLabel.ForeColor = Color.Yellow
         AboveHighLimitMessageLabel.Location = New Point(30, 208)
         AboveHighLimitMessageLabel.Name = "AboveHighLimitMessageLabel"
@@ -610,7 +611,7 @@ Partial Class Form1
         ' 
         AboveHighLimitValueLabel.Anchor = AnchorStyles.Top
         AboveHighLimitValueLabel.BackColor = Color.Black
-        AboveHighLimitValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
+        AboveHighLimitValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         AboveHighLimitValueLabel.ForeColor = Color.White
         AboveHighLimitValueLabel.Location = New Point(55, 175)
         AboveHighLimitValueLabel.Name = "AboveHighLimitValueLabel"
@@ -623,7 +624,7 @@ Partial Class Form1
         ' 
         ActiveInsulinValue.BackColor = Color.Transparent
         ActiveInsulinValue.BorderStyle = BorderStyle.FixedSingle
-        ActiveInsulinValue.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        ActiveInsulinValue.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         ActiveInsulinValue.ForeColor = Color.White
         ActiveInsulinValue.Location = New Point(995, 53)
         ActiveInsulinValue.Name = "ActiveInsulinValue"
@@ -635,7 +636,7 @@ Partial Class Form1
         ' FullNameLabel
         ' 
         FullNameLabel.BackColor = Color.Transparent
-        FullNameLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        FullNameLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         FullNameLabel.ForeColor = Color.White
         FullNameLabel.Location = New Point(1140, 0)
         FullNameLabel.Margin = New Padding(0)
@@ -649,7 +650,7 @@ Partial Class Form1
         ' 
         AverageSGMessageLabel.Anchor = AnchorStyles.Top
         AverageSGMessageLabel.BackColor = Color.Transparent
-        AverageSGMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        AverageSGMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         AverageSGMessageLabel.ForeColor = Color.White
         AverageSGMessageLabel.Location = New Point(3, 393)
         AverageSGMessageLabel.Name = "AverageSGMessageLabel"
@@ -662,7 +663,7 @@ Partial Class Form1
         ' 
         AverageSGValueLabel.Anchor = AnchorStyles.Top
         AverageSGValueLabel.BackColor = Color.Black
-        AverageSGValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
+        AverageSGValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         AverageSGValueLabel.ForeColor = Color.White
         AverageSGValueLabel.Location = New Point(55, 356)
         AverageSGValueLabel.Margin = New Padding(0)
@@ -718,7 +719,7 @@ Partial Class Form1
         ' 
         BelowLowLimitMessageLabel.Anchor = AnchorStyles.Top
         BelowLowLimitMessageLabel.BackColor = Color.Transparent
-        BelowLowLimitMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        BelowLowLimitMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         BelowLowLimitMessageLabel.ForeColor = Color.Red
         BelowLowLimitMessageLabel.Location = New Point(30, 330)
         BelowLowLimitMessageLabel.Name = "BelowLowLimitMessageLabel"
@@ -731,7 +732,7 @@ Partial Class Form1
         ' 
         BelowLowLimitValueLabel.Anchor = AnchorStyles.Top
         BelowLowLimitValueLabel.BackColor = Color.Black
-        BelowLowLimitValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
+        BelowLowLimitValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         BelowLowLimitValueLabel.ForeColor = Color.White
         BelowLowLimitValueLabel.Location = New Point(55, 297)
         BelowLowLimitValueLabel.Name = "BelowLowLimitValueLabel"
@@ -770,7 +771,7 @@ Partial Class Form1
         ' 
         LastSgOrExitTimeLabel.BackColor = Color.Transparent
         LastSgOrExitTimeLabel.Dock = DockStyle.Bottom
-        LastSgOrExitTimeLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        LastSgOrExitTimeLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         LastSgOrExitTimeLabel.ForeColor = Color.White
         LastSgOrExitTimeLabel.Location = New Point(0, 113)
         LastSgOrExitTimeLabel.Name = "LastSgOrExitTimeLabel"
@@ -783,7 +784,7 @@ Partial Class Form1
         ' 
         PumpBannerStateLabel.BackColor = Color.Lime
         PumpBannerStateLabel.Dock = DockStyle.Top
-        PumpBannerStateLabel.Font = New Font("Segoe UI", 8.0F, FontStyle.Regular, GraphicsUnit.Point)
+        PumpBannerStateLabel.Font = New Font("Segoe UI", 8F)
         PumpBannerStateLabel.ForeColor = Color.Black
         PumpBannerStateLabel.Location = New Point(0, 0)
         PumpBannerStateLabel.Name = "PumpBannerStateLabel"
@@ -796,7 +797,7 @@ Partial Class Form1
         ' 
         ShieldUnitsLabel.AutoSize = True
         ShieldUnitsLabel.BackColor = Color.Transparent
-        ShieldUnitsLabel.Font = New Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point)
+        ShieldUnitsLabel.Font = New Font("Segoe UI", 8.25F, FontStyle.Bold)
         ShieldUnitsLabel.ForeColor = Color.White
         ShieldUnitsLabel.Location = New Point(38, 76)
         ShieldUnitsLabel.Name = "ShieldUnitsLabel"
@@ -807,7 +808,7 @@ Partial Class Form1
         ' CurrentSgLabel
         ' 
         CurrentSgLabel.BackColor = Color.Transparent
-        CurrentSgLabel.Font = New Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point)
+        CurrentSgLabel.Font = New Font("Segoe UI", 18F, FontStyle.Bold)
         CurrentSgLabel.ForeColor = Color.White
         CurrentSgLabel.Location = New Point(22, 35)
         CurrentSgLabel.Name = "CurrentSgLabel"
@@ -820,7 +821,7 @@ Partial Class Form1
         ' SensorMessageLabel
         ' 
         SensorMessageLabel.BackColor = Color.Transparent
-        SensorMessageLabel.Font = New Font("Segoe UI", 9.5F, FontStyle.Bold, GraphicsUnit.Point)
+        SensorMessageLabel.Font = New Font("Segoe UI", 9.5F, FontStyle.Bold)
         SensorMessageLabel.ForeColor = Color.White
         SensorMessageLabel.Location = New Point(0, 13)
         SensorMessageLabel.Name = "SensorMessageLabel"
@@ -847,7 +848,7 @@ Partial Class Form1
         ' CursorMessage1Label
         ' 
         CursorMessage1Label.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        CursorMessage1Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        CursorMessage1Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         CursorMessage1Label.ForeColor = Color.White
         CursorMessage1Label.Location = New Point(0, 43)
         CursorMessage1Label.Name = "CursorMessage1Label"
@@ -859,7 +860,7 @@ Partial Class Form1
         ' CursorMessage2Label
         ' 
         CursorMessage2Label.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        CursorMessage2Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        CursorMessage2Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         CursorMessage2Label.ForeColor = Color.White
         CursorMessage2Label.Location = New Point(0, 65)
         CursorMessage2Label.Name = "CursorMessage2Label"
@@ -870,7 +871,7 @@ Partial Class Form1
         ' 
         ' CursorMessage3Label
         ' 
-        CursorMessage3Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        CursorMessage3Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         CursorMessage3Label.ForeColor = Color.White
         CursorMessage3Label.Location = New Point(0, 86)
         CursorMessage3Label.Name = "CursorMessage3Label"
@@ -881,7 +882,7 @@ Partial Class Form1
         ' 
         ' CursorMessage4Label
         ' 
-        CursorMessage4Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        CursorMessage4Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         CursorMessage4Label.ForeColor = Color.White
         CursorMessage4Label.Location = New Point(0, 107)
         CursorMessage4Label.Name = "CursorMessage4Label"
@@ -925,7 +926,6 @@ Partial Class Form1
         DgvAutoBasalDelivery.Location = New Point(6, 9)
         DgvAutoBasalDelivery.Name = "DgvAutoBasalDelivery"
         DgvAutoBasalDelivery.ReadOnly = True
-        DgvAutoBasalDelivery.RowTemplate.Height = 25
         DgvAutoBasalDelivery.Size = New Size(1358, 640)
         DgvAutoBasalDelivery.TabIndex = 0
         ' 
@@ -933,7 +933,7 @@ Partial Class Form1
         ' 
         DataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = SystemColors.Control
-        DataGridViewCellStyle1.Font = New Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point)
+        DataGridViewCellStyle1.Font = New Font("Segoe UI", 9F)
         DataGridViewCellStyle1.ForeColor = SystemColors.WindowText
         DataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight
         DataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText
@@ -943,7 +943,7 @@ Partial Class Form1
         DgvCountryDataPg1.Columns.AddRange(New DataGridViewColumn() {DgvCountryDataPg1RecordNumber, DgvCountryDataPg1Category, DgvCountryDataPg1Key, DgvCountryDataPg1Value})
         DataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle2.BackColor = SystemColors.Window
-        DataGridViewCellStyle2.Font = New Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point)
+        DataGridViewCellStyle2.Font = New Font("Segoe UI", 9F)
         DataGridViewCellStyle2.ForeColor = SystemColors.ControlText
         DataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight
         DataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText
@@ -953,7 +953,6 @@ Partial Class Form1
         DgvCountryDataPg1.Location = New Point(3, 3)
         DgvCountryDataPg1.Name = "DgvCountryDataPg1"
         DgvCountryDataPg1.ReadOnly = True
-        DgvCountryDataPg1.RowTemplate.Height = 25
         DgvCountryDataPg1.Size = New Size(1370, 655)
         DgvCountryDataPg1.TabIndex = 1
         ' 
@@ -998,7 +997,7 @@ Partial Class Form1
         DgvCareLinkUsers.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
         DataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = SystemColors.Control
-        DataGridViewCellStyle3.Font = New Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point)
+        DataGridViewCellStyle3.Font = New Font("Segoe UI", 9F)
         DataGridViewCellStyle3.ForeColor = SystemColors.WindowText
         DataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight
         DataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText
@@ -1007,7 +1006,7 @@ Partial Class Form1
         DgvCareLinkUsers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         DataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle4.BackColor = SystemColors.Window
-        DataGridViewCellStyle4.Font = New Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point)
+        DataGridViewCellStyle4.Font = New Font("Segoe UI", 9F)
         DataGridViewCellStyle4.ForeColor = SystemColors.ControlText
         DataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight
         DataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText
@@ -1017,7 +1016,6 @@ Partial Class Form1
         DgvCareLinkUsers.EditMode = DataGridViewEditMode.EditOnEnter
         DgvCareLinkUsers.Location = New Point(3, 3)
         DgvCareLinkUsers.Name = "DgvCareLinkUsers"
-        DgvCareLinkUsers.RowTemplate.Height = 25
         DgvCareLinkUsers.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvCareLinkUsers.Size = New Size(1370, 655)
         DgvCareLinkUsers.TabIndex = 0
@@ -1026,7 +1024,7 @@ Partial Class Form1
         ' 
         DataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle5.BackColor = SystemColors.Control
-        DataGridViewCellStyle5.Font = New Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point)
+        DataGridViewCellStyle5.Font = New Font("Segoe UI", 9F)
         DataGridViewCellStyle5.ForeColor = SystemColors.WindowText
         DataGridViewCellStyle5.SelectionBackColor = SystemColors.Highlight
         DataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText
@@ -1036,7 +1034,7 @@ Partial Class Form1
         DgvCountryDataPg3.Columns.AddRange(New DataGridViewColumn() {DgvCountryDataPg3RecordNumber, DgvCountryDataPg3Category, DgvCountryDataPg3Key, DgvCountryDataPg3Value, DgvCountryDataPg3OnlyFor, DgvCountryDataPg3NotFor})
         DataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle6.BackColor = SystemColors.Window
-        DataGridViewCellStyle6.Font = New Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point)
+        DataGridViewCellStyle6.Font = New Font("Segoe UI", 9F)
         DataGridViewCellStyle6.ForeColor = SystemColors.ControlText
         DataGridViewCellStyle6.SelectionBackColor = SystemColors.Highlight
         DataGridViewCellStyle6.SelectionForeColor = SystemColors.HighlightText
@@ -1046,7 +1044,6 @@ Partial Class Form1
         DgvCountryDataPg3.Location = New Point(3, 3)
         DgvCountryDataPg3.Name = "DgvCountryDataPg3"
         DgvCountryDataPg3.ReadOnly = True
-        DgvCountryDataPg3.RowTemplate.Height = 25
         DgvCountryDataPg3.Size = New Size(1370, 655)
         DgvCountryDataPg3.TabIndex = 1
         ' 
@@ -1110,7 +1107,6 @@ Partial Class Form1
         DgvCurrentUser.Name = "DgvCurrentUser"
         DgvCurrentUser.ReadOnly = True
         DgvCurrentUser.RowHeadersVisible = False
-        DgvCurrentUser.RowTemplate.Height = 25
         DgvCurrentUser.Size = New Size(1376, 661)
         DgvCurrentUser.TabIndex = 0
         ' 
@@ -1120,7 +1116,6 @@ Partial Class Form1
         DgvInsulin.Location = New Point(6, 52)
         DgvInsulin.Name = "DgvInsulin"
         DgvInsulin.ReadOnly = True
-        DgvInsulin.RowTemplate.Height = 25
         DgvInsulin.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvInsulin.Size = New Size(1358, 597)
         DgvInsulin.TabIndex = 0
@@ -1140,7 +1135,6 @@ Partial Class Form1
         DgvSessionProfile.Name = "DgvSessionProfile"
         DgvSessionProfile.ReadOnly = True
         DgvSessionProfile.RowHeadersVisible = False
-        DgvSessionProfile.RowTemplate.Height = 25
         DgvSessionProfile.Size = New Size(1370, 655)
         DgvSessionProfile.TabIndex = 0
         ' 
@@ -1149,7 +1143,6 @@ Partial Class Form1
         DgvSGs.Dock = DockStyle.Fill
         DgvSGs.Location = New Point(3, 3)
         DgvSGs.Name = "DgvSGs"
-        DgvSGs.RowTemplate.Height = 25
         DgvSGs.Size = New Size(1364, 649)
         DgvSGs.TabIndex = 1
         ' 
@@ -1159,8 +1152,8 @@ Partial Class Form1
         DgvSummary.Location = New Point(3, 3)
         DgvSummary.Name = "DgvSummary"
         DgvSummary.ReadOnly = True
-        DgvSummary.RowsDefaultCellStyle.WrapMode = DataGridViewTriState.True
-        DgvSummary.RowTemplate.Height = 25
+        DataGridViewCellStyle7.WrapMode = DataGridViewTriState.True
+        DgvSummary.RowsDefaultCellStyle = DataGridViewCellStyle7
         DgvSummary.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvSummary.Size = New Size(1370, 655)
         DgvSummary.TabIndex = 0
@@ -1185,7 +1178,7 @@ Partial Class Form1
         InRangeMessageLabel.Anchor = AnchorStyles.Top
         InRangeMessageLabel.AutoSize = True
         InRangeMessageLabel.BackColor = Color.Transparent
-        InRangeMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        InRangeMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         InRangeMessageLabel.ForeColor = Color.Lime
         InRangeMessageLabel.Location = New Point(81, 269)
         InRangeMessageLabel.Name = "InRangeMessageLabel"
@@ -1196,7 +1189,7 @@ Partial Class Form1
         ' 
         ' Last24TotalInsulinUnitsLabel
         ' 
-        Last24TotalInsulinUnitsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24TotalInsulinUnitsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         Last24TotalInsulinUnitsLabel.ForeColor = Color.White
         Last24TotalInsulinUnitsLabel.Location = New Point(131, 103)
         Last24TotalInsulinUnitsLabel.Name = "Last24TotalInsulinUnitsLabel"
@@ -1220,7 +1213,7 @@ Partial Class Form1
         ' LabelSgTrend
         ' 
         LabelSgTrend.BackColor = Color.Black
-        LabelSgTrend.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        LabelSgTrend.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         LabelSgTrend.ForeColor = Color.White
         LabelSgTrend.Location = New Point(461, 64)
         LabelSgTrend.Name = "LabelSgTrend"
@@ -1243,7 +1236,7 @@ Partial Class Form1
         ' 
         ' LabelTrendArrows
         ' 
-        LabelTrendArrows.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
+        LabelTrendArrows.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold)
         LabelTrendArrows.ForeColor = Color.White
         LabelTrendArrows.Location = New Point(461, 103)
         LabelTrendArrows.Name = "LabelTrendArrows"
@@ -1254,7 +1247,7 @@ Partial Class Form1
         ' 
         ' LabelTrendValue
         ' 
-        LabelTrendValue.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        LabelTrendValue.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         LabelTrendValue.ForeColor = Color.White
         LabelTrendValue.Location = New Point(461, 89)
         LabelTrendValue.Name = "LabelTrendValue"
@@ -1266,7 +1259,7 @@ Partial Class Form1
         ' Last24AutoCorrectionLabel
         ' 
         Last24AutoCorrectionLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24AutoCorrectionLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24AutoCorrectionLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         Last24AutoCorrectionLabel.ForeColor = Color.White
         Last24AutoCorrectionLabel.Location = New Point(0, 86)
         Last24AutoCorrectionLabel.Name = "Last24AutoCorrectionLabel"
@@ -1278,7 +1271,7 @@ Partial Class Form1
         ' Last24AutoCorrectionPercentLabel
         ' 
         Last24AutoCorrectionPercentLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24AutoCorrectionPercentLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24AutoCorrectionPercentLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         Last24AutoCorrectionPercentLabel.ForeColor = Color.White
         Last24AutoCorrectionPercentLabel.Location = New Point(200, 86)
         Last24AutoCorrectionPercentLabel.Name = "Last24AutoCorrectionPercentLabel"
@@ -1290,7 +1283,7 @@ Partial Class Form1
         ' Last24AutoCorrectionUnitsLabel
         ' 
         Last24AutoCorrectionUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24AutoCorrectionUnitsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24AutoCorrectionUnitsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         Last24AutoCorrectionUnitsLabel.ForeColor = Color.White
         Last24AutoCorrectionUnitsLabel.Location = New Point(131, 86)
         Last24AutoCorrectionUnitsLabel.Name = "Last24AutoCorrectionUnitsLabel"
@@ -1302,7 +1295,7 @@ Partial Class Form1
         ' Last24BasalLabel
         ' 
         Last24BasalLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24BasalLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24BasalLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         Last24BasalLabel.ForeColor = Color.White
         Last24BasalLabel.Location = New Point(0, 45)
         Last24BasalLabel.Name = "Last24BasalLabel"
@@ -1314,7 +1307,7 @@ Partial Class Form1
         ' Last24BasalPercentLabel
         ' 
         Last24BasalPercentLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24BasalPercentLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24BasalPercentLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         Last24BasalPercentLabel.ForeColor = Color.White
         Last24BasalPercentLabel.Location = New Point(200, 45)
         Last24BasalPercentLabel.Name = "Last24BasalPercentLabel"
@@ -1326,7 +1319,7 @@ Partial Class Form1
         ' Last24BasalUnitsLabel
         ' 
         Last24BasalUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24BasalUnitsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24BasalUnitsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         Last24BasalUnitsLabel.ForeColor = Color.White
         Last24BasalUnitsLabel.Location = New Point(131, 45)
         Last24BasalUnitsLabel.Name = "Last24BasalUnitsLabel"
@@ -1337,7 +1330,7 @@ Partial Class Form1
         ' 
         ' Last24CarbsValueLabel
         ' 
-        Last24CarbsValueLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24CarbsValueLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         Last24CarbsValueLabel.ForeColor = Color.White
         Last24CarbsValueLabel.Location = New Point(0, 21)
         Last24CarbsValueLabel.Name = "Last24CarbsValueLabel"
@@ -1349,7 +1342,7 @@ Partial Class Form1
         ' Last24CarbsLabel
         ' 
         Last24CarbsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24CarbsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24CarbsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         Last24CarbsLabel.ForeColor = Color.White
         Last24CarbsLabel.Location = New Point(0, 21)
         Last24CarbsLabel.Name = "Last24CarbsLabel"
@@ -1361,7 +1354,7 @@ Partial Class Form1
         ' Last24HoursGraphLabel
         ' 
         Last24HoursGraphLabel.Anchor = AnchorStyles.Top
-        Last24HoursGraphLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24HoursGraphLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         Last24HoursGraphLabel.ForeColor = Color.White
         Last24HoursGraphLabel.Location = New Point(30, 26)
         Last24HoursGraphLabel.Name = "Last24HoursGraphLabel"
@@ -1395,7 +1388,7 @@ Partial Class Form1
         ' Last24ManualBolusUnitsLabel
         ' 
         Last24ManualBolusUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24ManualBolusUnitsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24ManualBolusUnitsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         Last24ManualBolusUnitsLabel.ForeColor = Color.White
         Last24ManualBolusUnitsLabel.Location = New Point(131, 66)
         Last24ManualBolusUnitsLabel.Name = "Last24ManualBolusUnitsLabel"
@@ -1407,7 +1400,7 @@ Partial Class Form1
         ' Last24TotalInsulinLabel
         ' 
         Last24TotalInsulinLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24TotalInsulinLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24TotalInsulinLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         Last24TotalInsulinLabel.ForeColor = Color.White
         Last24TotalInsulinLabel.Location = New Point(0, 103)
         Last24TotalInsulinLabel.Name = "Last24TotalInsulinLabel"
@@ -1419,7 +1412,7 @@ Partial Class Form1
         ' Last24ManualBolusPercentLabel
         ' 
         Last24ManualBolusPercentLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24ManualBolusPercentLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24ManualBolusPercentLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         Last24ManualBolusPercentLabel.ForeColor = Color.White
         Last24ManualBolusPercentLabel.Location = New Point(200, 66)
         Last24ManualBolusPercentLabel.Name = "Last24ManualBolusPercentLabel"
@@ -1431,7 +1424,7 @@ Partial Class Form1
         ' Last24MealBolusLabel
         ' 
         Last24MealBolusLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24MealBolusLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24MealBolusLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         Last24MealBolusLabel.ForeColor = Color.White
         Last24MealBolusLabel.Location = New Point(0, 66)
         Last24MealBolusLabel.Name = "Last24MealBolusLabel"
@@ -1444,7 +1437,7 @@ Partial Class Form1
         ' 
         Last24TotalsLabel.BackColor = Color.White
         Last24TotalsLabel.Dock = DockStyle.Top
-        Last24TotalsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        Last24TotalsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         Last24TotalsLabel.ForeColor = Color.Black
         Last24TotalsLabel.Location = New Point(0, 0)
         Last24TotalsLabel.Name = "Last24TotalsLabel"
@@ -1456,7 +1449,7 @@ Partial Class Form1
         ' MaxBasalPerHourLabel
         ' 
         MaxBasalPerHourLabel.AutoSize = True
-        MaxBasalPerHourLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        MaxBasalPerHourLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         MaxBasalPerHourLabel.ForeColor = Color.White
         MaxBasalPerHourLabel.Location = New Point(978, 108)
         MaxBasalPerHourLabel.Name = "MaxBasalPerHourLabel"
@@ -1467,7 +1460,7 @@ Partial Class Form1
         ' 
         ' ModelLabel
         ' 
-        ModelLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
+        ModelLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
         ModelLabel.ForeColor = Color.White
         ModelLabel.Location = New Point(1140, 26)
         ModelLabel.Name = "ModelLabel"
@@ -1477,7 +1470,7 @@ Partial Class Form1
         ' 
         ' PumpNameLabel
         ' 
-        PumpNameLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
+        PumpNameLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
         PumpNameLabel.ForeColor = Color.White
         PumpNameLabel.Location = New Point(1140, 52)
         PumpNameLabel.Name = "PumpNameLabel"
@@ -1503,7 +1496,7 @@ Partial Class Form1
         ' PumpBatteryRemainingLabel
         ' 
         PumpBatteryRemainingLabel.BackColor = Color.Transparent
-        PumpBatteryRemainingLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        PumpBatteryRemainingLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         PumpBatteryRemainingLabel.ForeColor = Color.White
         PumpBatteryRemainingLabel.Location = New Point(119, 89)
         PumpBatteryRemainingLabel.Name = "PumpBatteryRemainingLabel"
@@ -1514,7 +1507,7 @@ Partial Class Form1
         ' 
         ' InsulinTypeLabel
         ' 
-        InsulinTypeLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        InsulinTypeLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         InsulinTypeLabel.ForeColor = Color.White
         InsulinTypeLabel.Location = New Point(978, 3)
         InsulinTypeLabel.Name = "InsulinTypeLabel"
@@ -1525,7 +1518,7 @@ Partial Class Form1
         ' 
         ' ReadingsLabel
         ' 
-        ReadingsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        ReadingsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         ReadingsLabel.ForeColor = Color.White
         ReadingsLabel.Location = New Point(1140, 106)
         ReadingsLabel.Name = "ReadingsLabel"
@@ -1537,7 +1530,7 @@ Partial Class Form1
         ' RemainingInsulinUnits
         ' 
         RemainingInsulinUnits.BackColor = Color.Transparent
-        RemainingInsulinUnits.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        RemainingInsulinUnits.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         RemainingInsulinUnits.ForeColor = Color.White
         RemainingInsulinUnits.Location = New Point(209, 90)
         RemainingInsulinUnits.Name = "RemainingInsulinUnits"
@@ -1549,7 +1542,7 @@ Partial Class Form1
         ' SensorDaysLeftLabel
         ' 
         SensorDaysLeftLabel.BackColor = Color.Transparent
-        SensorDaysLeftLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
+        SensorDaysLeftLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         SensorDaysLeftLabel.ForeColor = Color.White
         SensorDaysLeftLabel.Location = New Point(0, 16)
         SensorDaysLeftLabel.Name = "SensorDaysLeftLabel"
@@ -1562,7 +1555,7 @@ Partial Class Form1
         ' SensorTimeLeftLabel
         ' 
         SensorTimeLeftLabel.BackColor = Color.Transparent
-        SensorTimeLeftLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        SensorTimeLeftLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         SensorTimeLeftLabel.ForeColor = Color.White
         SensorTimeLeftLabel.Location = New Point(0, 89)
         SensorTimeLeftLabel.Name = "SensorTimeLeftLabel"
@@ -1593,7 +1586,7 @@ Partial Class Form1
         ' 
         ' SerialNumberButton
         ' 
-        SerialNumberButton.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        SerialNumberButton.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         SerialNumberButton.ForeColor = Color.White
         SerialNumberButton.Location = New Point(1140, 74)
         SerialNumberButton.Name = "SerialNumberButton"
@@ -1650,7 +1643,7 @@ Partial Class Form1
         ' 
         ' PumpAITLabel
         ' 
-        PumpAITLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        PumpAITLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         PumpAITLabel.ForeColor = Color.White
         PumpAITLabel.Location = New Point(978, 28)
         PumpAITLabel.Name = "PumpAITLabel"
@@ -1662,7 +1655,7 @@ Partial Class Form1
         ' PumpBatteryRemaining2Label
         ' 
         PumpBatteryRemaining2Label.BackColor = Color.Transparent
-        PumpBatteryRemaining2Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        PumpBatteryRemaining2Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         PumpBatteryRemaining2Label.ForeColor = Color.White
         PumpBatteryRemaining2Label.Location = New Point(119, 106)
         PumpBatteryRemaining2Label.Name = "PumpBatteryRemaining2Label"
@@ -1673,7 +1666,7 @@ Partial Class Form1
         ' TransmitterBatteryPercentLabel
         ' 
         TransmitterBatteryPercentLabel.BackColor = Color.Transparent
-        TransmitterBatteryPercentLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point)
+        TransmitterBatteryPercentLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
         TransmitterBatteryPercentLabel.ForeColor = Color.White
         TransmitterBatteryPercentLabel.Location = New Point(549, 89)
         TransmitterBatteryPercentLabel.Name = "TransmitterBatteryPercentLabel"
@@ -1727,7 +1720,7 @@ Partial Class Form1
         ' TimeInRangeLabel
         ' 
         TimeInRangeLabel.Anchor = AnchorStyles.Top
-        TimeInRangeLabel.Font = New Font("Segoe UI", 14F, FontStyle.Bold, GraphicsUnit.Point)
+        TimeInRangeLabel.Font = New Font("Segoe UI", 14F, FontStyle.Bold)
         TimeInRangeLabel.ForeColor = Color.White
         TimeInRangeLabel.Location = New Point(30, 0)
         TimeInRangeLabel.Name = "TimeInRangeLabel"
@@ -1740,7 +1733,7 @@ Partial Class Form1
         ' 
         TimeInRangeChartLabel.Anchor = AnchorStyles.Top
         TimeInRangeChartLabel.BackColor = Color.Black
-        TimeInRangeChartLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
+        TimeInRangeChartLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         TimeInRangeChartLabel.ForeColor = Color.White
         TimeInRangeChartLabel.Location = New Point(73, 74)
         TimeInRangeChartLabel.Name = "TimeInRangeChartLabel"
@@ -1754,7 +1747,7 @@ Partial Class Form1
         TimeInRangeSummaryPercentCharLabel.Anchor = AnchorStyles.Top
         TimeInRangeSummaryPercentCharLabel.AutoSize = True
         TimeInRangeSummaryPercentCharLabel.BackColor = Color.Transparent
-        TimeInRangeSummaryPercentCharLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
+        TimeInRangeSummaryPercentCharLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         TimeInRangeSummaryPercentCharLabel.ForeColor = Color.White
         TimeInRangeSummaryPercentCharLabel.Location = New Point(94, 113)
         TimeInRangeSummaryPercentCharLabel.Name = "TimeInRangeSummaryPercentCharLabel"
@@ -1766,7 +1759,7 @@ Partial Class Form1
         ' 
         TimeInRangeValueLabel.Anchor = AnchorStyles.Top
         TimeInRangeValueLabel.BackColor = Color.Black
-        TimeInRangeValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point)
+        TimeInRangeValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         TimeInRangeValueLabel.ForeColor = Color.White
         TimeInRangeValueLabel.Location = New Point(55, 236)
         TimeInRangeValueLabel.Name = "TimeInRangeValueLabel"
@@ -1779,7 +1772,7 @@ Partial Class Form1
         ' 
         TirComplianceLabel.Anchor = AnchorStyles.Top
         TirComplianceLabel.BackColor = Color.Transparent
-        TirComplianceLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
+        TirComplianceLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold)
         TirComplianceLabel.ForeColor = Color.White
         TirComplianceLabel.Location = New Point(3, 438)
         TirComplianceLabel.Name = "TirComplianceLabel"
@@ -1790,7 +1783,7 @@ Partial Class Form1
         ' 
         ' HighTirComplianceLabel
         ' 
-        HighTirComplianceLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
+        HighTirComplianceLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
         HighTirComplianceLabel.ForeColor = Color.LimeGreen
         HighTirComplianceLabel.Location = New Point(115, 460)
         HighTirComplianceLabel.Name = "HighTirComplianceLabel"
@@ -1801,7 +1794,7 @@ Partial Class Form1
         ' 
         ' LowTirComplianceLabel
         ' 
-        LowTirComplianceLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
+        LowTirComplianceLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
         LowTirComplianceLabel.ForeColor = Color.Red
         LowTirComplianceLabel.Location = New Point(3, 460)
         LowTirComplianceLabel.Name = "LowTirComplianceLabel"
@@ -1814,7 +1807,7 @@ Partial Class Form1
         ' 
         SmartGuardLabel.Anchor = AnchorStyles.Top
         SmartGuardLabel.BackColor = Color.Transparent
-        SmartGuardLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
+        SmartGuardLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold)
         SmartGuardLabel.ForeColor = Color.DodgerBlue
         SmartGuardLabel.Location = New Point(3, 413)
         SmartGuardLabel.Name = "SmartGuardLabel"
@@ -1841,7 +1834,7 @@ Partial Class Form1
         TabControlPage1.Controls.Add(TabPage13Basal)
         TabControlPage1.Controls.Add(TabPage14Markers)
         TabControlPage1.Dock = DockStyle.Fill
-        TabControlPage1.Font = New Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point)
+        TabControlPage1.Font = New Font("Segoe UI", 9F)
         TabControlPage1.Location = New Point(0, 24)
         TabControlPage1.Name = "TabControlPage1"
         TabControlPage1.SelectedIndex = 0
@@ -2249,7 +2242,7 @@ Partial Class Form1
         TabControlPage2.Controls.Add(TabPageAllUsers)
         TabControlPage2.Controls.Add(TabPageBackToHomePage)
         TabControlPage2.Dock = DockStyle.Fill
-        TabControlPage2.Font = New Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point)
+        TabControlPage2.Font = New Font("Segoe UI", 9F)
         TabControlPage2.Location = New Point(0, 24)
         TabControlPage2.Name = "TabControlPage2"
         TabControlPage2.SelectedIndex = 0
@@ -2452,7 +2445,7 @@ Partial Class Form1
         CountryDataPg2TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 43.2116776F))
         CountryDataPg2TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 56.7883224F))
         CountryDataPg2TableLayoutPanel.Controls.Add(DgvCountryDataPg2, 0, 0)
-        CountryDataPg2TableLayoutPanel.Controls.Add(Me.WebView, 1, 0)
+        CountryDataPg2TableLayoutPanel.Controls.Add(WebView, 1, 0)
         CountryDataPg2TableLayoutPanel.Dock = DockStyle.Fill
         CountryDataPg2TableLayoutPanel.Location = New Point(3, 3)
         CountryDataPg2TableLayoutPanel.Name = "CountryDataPg2TableLayoutPanel"
@@ -2463,27 +2456,26 @@ Partial Class Form1
         ' 
         ' DgvCountryDataPg2
         ' 
-        DataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle7.BackColor = SystemColors.Control
-        DataGridViewCellStyle7.Font = New Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point)
-        DataGridViewCellStyle7.ForeColor = SystemColors.WindowText
-        DataGridViewCellStyle7.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle7.SelectionForeColor = SystemColors.HighlightText
-        DataGridViewCellStyle7.WrapMode = DataGridViewTriState.True
-        DgvCountryDataPg2.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle7
-        DgvCountryDataPg2.Columns.AddRange(New DataGridViewColumn() {DgvCountryDataPg2RecordNumber, DgvCountryDataPg2Category, DgvCountryDataPg2Key, DgvCountryDataPg2Value})
         DataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle8.BackColor = SystemColors.Window
-        DataGridViewCellStyle8.Font = New Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point)
-        DataGridViewCellStyle8.ForeColor = SystemColors.ControlText
+        DataGridViewCellStyle8.BackColor = SystemColors.Control
+        DataGridViewCellStyle8.Font = New Font("Segoe UI", 9F)
+        DataGridViewCellStyle8.ForeColor = SystemColors.WindowText
         DataGridViewCellStyle8.SelectionBackColor = SystemColors.Highlight
         DataGridViewCellStyle8.SelectionForeColor = SystemColors.HighlightText
-        DataGridViewCellStyle8.WrapMode = DataGridViewTriState.False
-        DgvCountryDataPg2.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle8.WrapMode = DataGridViewTriState.True
+        DgvCountryDataPg2.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle8
+        DgvCountryDataPg2.Columns.AddRange(New DataGridViewColumn() {DgvCountryDataPg2RecordNumber, DgvCountryDataPg2Category, DgvCountryDataPg2Key, DgvCountryDataPg2Value})
+        DataGridViewCellStyle9.Alignment = DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle9.BackColor = SystemColors.Window
+        DataGridViewCellStyle9.Font = New Font("Segoe UI", 9F)
+        DataGridViewCellStyle9.ForeColor = SystemColors.ControlText
+        DataGridViewCellStyle9.SelectionBackColor = SystemColors.Highlight
+        DataGridViewCellStyle9.SelectionForeColor = SystemColors.HighlightText
+        DataGridViewCellStyle9.WrapMode = DataGridViewTriState.False
+        DgvCountryDataPg2.DefaultCellStyle = DataGridViewCellStyle9
         DgvCountryDataPg2.Location = New Point(6, 6)
         DgvCountryDataPg2.Name = "DgvCountryDataPg2"
         DgvCountryDataPg2.ReadOnly = True
-        DgvCountryDataPg2.RowTemplate.Height = 25
         DgvCountryDataPg2.Size = New Size(582, 612)
         DgvCountryDataPg2.TabIndex = 2
         ' 
@@ -2521,15 +2513,15 @@ Partial Class Form1
         ' 
         ' WebView
         ' 
-        Me.WebView.AllowExternalDrop = False
-        Me.WebView.CreationProperties = Nothing
-        Me.WebView.DefaultBackgroundColor = Color.White
-        Me.WebView.Dock = DockStyle.Fill
-        Me.WebView.Location = New Point(597, 6)
-        Me.WebView.Name = "WebView"
-        Me.WebView.Size = New Size(767, 643)
-        Me.WebView.TabIndex = 3
-        Me.WebView.ZoomFactor = 1R
+        WebView.AllowExternalDrop = False
+        WebView.CreationProperties = Nothing
+        WebView.DefaultBackgroundColor = Color.White
+        WebView.Dock = DockStyle.Fill
+        WebView.Location = New Point(597, 6)
+        WebView.Name = "WebView"
+        WebView.Size = New Size(767, 643)
+        WebView.TabIndex = 3
+        WebView.ZoomFactor = 1R
         ' 
         ' TabPageCountryDataPg3
         ' 
@@ -2741,7 +2733,7 @@ Partial Class Form1
         TabPageCountryDataPg2.ResumeLayout(False)
         CountryDataPg2TableLayoutPanel.ResumeLayout(False)
         CType(DgvCountryDataPg2, ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.WebView, ComponentModel.ISupportInitialize).EndInit()
+        CType(WebView, ComponentModel.ISupportInitialize).EndInit()
         TabPageCountryDataPg3.ResumeLayout(False)
         TabPageSessionProfile.ResumeLayout(False)
         TabPageCurrentUser.ResumeLayout(False)

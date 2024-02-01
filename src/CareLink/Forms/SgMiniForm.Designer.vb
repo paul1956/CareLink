@@ -37,7 +37,7 @@ Partial Class SgMiniForm
         ' SgTextBox
         ' 
         SgTextBox.BorderStyle = BorderStyle.None
-        SgTextBox.Font = New Font("Segoe UI", 36.0F, FontStyle.Regular, GraphicsUnit.Point)
+        SgTextBox.Font = New Font("Segoe UI", 36F)
         SgTextBox.Location = New Point(1, 29)
         SgTextBox.Margin = New Padding(0)
         SgTextBox.Name = "SgTextBox"
@@ -50,7 +50,7 @@ Partial Class SgMiniForm
         ' 
         ActiveInsulinTextBox.BorderStyle = BorderStyle.None
         ActiveInsulinTextBox.Dock = DockStyle.Top
-        ActiveInsulinTextBox.Font = New Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point)
+        ActiveInsulinTextBox.Font = New Font("Segoe UI", 14.25F)
         ActiveInsulinTextBox.Location = New Point(0, 0)
         ActiveInsulinTextBox.Name = "ActiveInsulinTextBox"
         ActiveInsulinTextBox.Size = New Size(264, 26)
@@ -69,7 +69,7 @@ Partial Class SgMiniForm
         ' 
         DeltaTextBox.Anchor = AnchorStyles.Top Or AnchorStyles.Right
         DeltaTextBox.BorderStyle = BorderStyle.None
-        DeltaTextBox.Font = New Font("Segoe UI", 36.0F, FontStyle.Regular, GraphicsUnit.Point)
+        DeltaTextBox.Font = New Font("Segoe UI", 36F)
         DeltaTextBox.Location = New Point(135, 40)
         DeltaTextBox.Margin = New Padding(0)
         DeltaTextBox.Name = "DeltaTextBox"
@@ -102,7 +102,7 @@ Partial Class SgMiniForm
         ' 
         ' SgMiniForm
         ' 
-        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
+        Me.AutoScaleDimensions = New SizeF(7F, 15F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.BackColor = SystemColors.Window
         Me.ClientSize = New Size(264, 123)
