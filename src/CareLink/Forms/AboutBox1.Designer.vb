@@ -35,7 +35,7 @@ Partial Class AboutBox1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim resources As ComponentModel.ComponentResourceManager = New ComponentModel.ComponentResourceManager(GetType(AboutBox1))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(AboutBox1))
         TableLayoutPanel = New TableLayoutPanel()
         LogoPictureBox = New PictureBox()
         LabelProductName = New Label()

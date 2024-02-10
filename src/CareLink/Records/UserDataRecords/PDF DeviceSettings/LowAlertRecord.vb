@@ -30,6 +30,7 @@ Public Class LowAlertRecord
 
         Me.LowLimit = Single.Parse(s1(1))
         Me.Suspend = s.Columns(1)
+        Me.SuspendOnLow = Me.Suspend.Contains("On", StringComparison.InvariantCultureIgnoreCase)
         Me.AlertOnLow = s.Columns(2) = "x"
         Me.AlertBeforeLow = s.Columns(3) = "x"
         Me.ResumeBasalAlert = s.Columns(4) = "x"
@@ -43,7 +44,7 @@ Public Class LowAlertRecord
     Public Property AlertBeforeLow As Boolean
     Public Property AlertOnLow As Boolean
     Public Property Suspend As String
-    Public Property SuspendOnlow As Boolean
+    Public Property SuspendOnLow As Boolean
     Public Property ResumeBasalAlert As Boolean
     Public Property IsValid As Boolean = False
 End Class

@@ -21,9 +21,9 @@
     <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
     <RepositoryUrl>https://github.com/paul1956/CareLink</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>4.0.0.8</Version>
-    <AssemblyVersion>4.0.0.8</AssemblyVersion>
-    <FileVersion>4.0.0.8</FileVersion>
+    <Version>4.0.0.9</Version>
+    <AssemblyVersion>4.0.0.9</AssemblyVersion>
+    <FileVersion>4.0.0.9</FileVersion>
     <PackageIcon>IconImage.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/paul1956/CareLink</PackageProjectUrl>
@@ -60,8 +60,8 @@
     <PackageReference Include="ClosedXML" Version="0.102.2" />
     <PackageReference Include="DataGridViewDisableButtonColumnEx" Version="1.0.0.1" />
     <PackageReference Include="FreeSpire.PDF" Version="8.6.0" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2210.55" />
-    <PackageReference Include="Octokit" Version="9.1.1" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2277.86" />
+    <PackageReference Include="Octokit" Version="9.1.2" />
     <PackageReference Include="System.Speech" Version="8.0.0" />
     <PackageReference Include="TableLayputPanelTop" Version="1.0.0.3" />
     <PackageReference Include="ToolStripComboBoxEx" Version="1.0.0.2" />
