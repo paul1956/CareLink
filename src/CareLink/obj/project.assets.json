@@ -1752,21 +1752,21 @@
           }
         }
       },
-      "WinForms.DataVisualization/1.9.1": {
+      "WinForms.DataVisualization/1.9.2": {
         "type": "package",
         "compile": {
-          "lib/net7.0-windows7.0/WinForms.DataVisualization.Utilities.dll": {
+          "lib/net8.0-windows7.0/WinForms.DataVisualization.Utilities.dll": {
             "related": ".pdb;.xml"
           },
-          "lib/net7.0-windows7.0/WinForms.DataVisualization.dll": {
+          "lib/net8.0-windows7.0/WinForms.DataVisualization.dll": {
             "related": ".pdb;.Utilities.pdb;.Utilities.xml;.xml"
           }
         },
         "runtime": {
-          "lib/net7.0-windows7.0/WinForms.DataVisualization.Utilities.dll": {
+          "lib/net8.0-windows7.0/WinForms.DataVisualization.Utilities.dll": {
             "related": ".pdb;.xml"
           },
-          "lib/net7.0-windows7.0/WinForms.DataVisualization.dll": {
+          "lib/net8.0-windows7.0/WinForms.DataVisualization.dll": {
             "related": ".pdb;.Utilities.pdb;.Utilities.xml;.xml"
           }
         }
@@ -5632,10 +5632,10 @@
         "webview2.devtools.dom.nuspec"
       ]
     },
-    "WinForms.DataVisualization/1.9.1": {
-      "sha512": "/mKuUVwHYg0EpcjJbuvU5eGY8QGFB4iUMVEl0inHE5iF1fG/NK1dRR2sL26QDnv1wG0dnpuhE3jO5ktKQlvEGg==",
+    "WinForms.DataVisualization/1.9.2": {
+      "sha512": "e1aPoWqPS1GThTK2ZpI4GkIhteorW7smNQ5SP3y5EaODL7W2u21nX0hlHtmkerBWi9gpy6Rw8I53jvo5CF+4rA==",
       "type": "package",
-      "path": "winforms.datavisualization/1.9.1",
+      "path": "winforms.datavisualization/1.9.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -5665,7 +5665,19 @@
         "lib/net7.0-windows7.0/WinForms.DataVisualization.dll",
         "lib/net7.0-windows7.0/WinForms.DataVisualization.pdb",
         "lib/net7.0-windows7.0/WinForms.DataVisualization.xml",
-        "winforms.datavisualization.1.9.1.nupkg.sha512",
+        "lib/net8.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Designer.ClientServerProtocol.dll",
+        "lib/net8.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Designer.Server.dll",
+        "lib/net8.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Utilities.dll",
+        "lib/net8.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Designer.Client.dll",
+        "lib/net8.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Designer.ClientServerProtocol.dll",
+        "lib/net8.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Utilities.dll",
+        "lib/net8.0-windows7.0/WinForms.DataVisualization.Utilities.dll",
+        "lib/net8.0-windows7.0/WinForms.DataVisualization.Utilities.pdb",
+        "lib/net8.0-windows7.0/WinForms.DataVisualization.Utilities.xml",
+        "lib/net8.0-windows7.0/WinForms.DataVisualization.dll",
+        "lib/net8.0-windows7.0/WinForms.DataVisualization.pdb",
+        "lib/net8.0-windows7.0/WinForms.DataVisualization.xml",
+        "winforms.datavisualization.1.9.2.nupkg.sha512",
         "winforms.datavisualization.nuspec"
       ]
     },
@@ -5695,7 +5707,7 @@
       "TableLayputPanelTop >= 1.0.0.3",
       "ToolStripComboBoxEx >= 1.0.0.2",
       "WebView2.DevTools.Dom >= 3.0.1",
-      "WinForms.DataVisualization >= 1.9.1"
+      "WinForms.DataVisualization >= 1.9.2"
     ]
   },
   "packageFolders": {
@@ -5703,7 +5715,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "4.0.0.9",
+    "version": "4.0.0.10",
     "restore": {
       "projectUniqueName": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\CareLink\\CareLink.vbproj",
       "projectName": "CareLink",
@@ -5780,7 +5792,7 @@
           },
           "WinForms.DataVisualization": {
             "target": "Package",
-            "version": "[1.9.1, )"
+            "version": "[1.9.2, )"
           }
         },
         "imports": [
@@ -5811,7 +5823,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200-preview.23624.5/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

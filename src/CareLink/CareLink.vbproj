@@ -21,9 +21,9 @@
     <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
     <RepositoryUrl>https://github.com/paul1956/CareLink</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>4.0.0.9</Version>
-    <AssemblyVersion>4.0.0.9</AssemblyVersion>
-    <FileVersion>4.0.0.9</FileVersion>
+    <Version>4.0.0.10</Version>
+    <AssemblyVersion>4.0.0.10</AssemblyVersion>
+    <FileVersion>4.0.0.10</FileVersion>
     <PackageIcon>IconImage.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/paul1956/CareLink</PackageProjectUrl>
@@ -66,7 +66,7 @@
     <PackageReference Include="TableLayputPanelTop" Version="1.0.0.3" />
     <PackageReference Include="ToolStripComboBoxEx" Version="1.0.0.2" />
     <PackageReference Include="WebView2.DevTools.Dom" Version="3.0.1" />
-    <PackageReference Include="WinForms.DataVisualization" Version="1.9.1" />
+    <PackageReference Include="WinForms.DataVisualization" Version="1.9.2" />
   </ItemGroup>
 
   <ItemGroup>
