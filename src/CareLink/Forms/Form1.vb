@@ -48,6 +48,30 @@ Public Class Form1
     Private _treatmentMarkerAbsoluteRectangle As RectangleF
     Private _updating As Boolean
 
+    Private _webViewCacheDirectory As String
+    Private _webViewProcessId As Integer = -1
+
+    Public ReadOnly Property WebViewCacheDirectory As String
+        Get
+            Return _webViewCacheDirectory
+        End Get
+    End Property
+
+    Public WriteOnly Property WebViewProcessId As Integer
+        Set
+            _webViewProcessId = Value
+        End Set
+    End Property
+
+    Public Shared Property Client As CareLinkClient
+        Get
+            Return Form1LoginHelpers.LoginDialog?.Client
+        End Get
+        Set(value As CareLinkClient)
+            Form1LoginHelpers.LoginDialog.Client = value
+        End Set
+    End Property
+
     '' <summary>
     '' Overloaded System Windows Handler.
     '' </summary>
@@ -113,15 +137,6 @@ Public Class Form1
         End Select
         MyBase.WndProc(m)
     End Sub
-
-    Public Shared Property Client As CareLinkClient
-        Get
-            Return Form1LoginHelpers.LoginDialog?.Client
-        End Get
-        Set(value As CareLinkClient)
-            Form1LoginHelpers.LoginDialog.Client = value
-        End Set
-    End Property
 
 #Region "Chart Objects"
 
@@ -1009,6 +1024,16 @@ Public Class Form1
 
     Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
         Me.CleanUpNotificationIcon()
+        If _webViewProcessId > 0 Then
+            Dim webViewProcess As Process = Process.GetProcessById(_webViewProcessId)
+            LoginDialog.WebView21.Dispose()
+            webViewProcess.Kill()
+            webViewProcess.WaitForExit(3_000)
+
+            If Directory.Exists(_webViewCacheDirectory) Then
+                Directory.Delete(_webViewCacheDirectory, True)
+            End If
+        End If
     End Sub
 
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
@@ -1072,7 +1097,8 @@ Public Class Form1
         End If
 
         Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(1)
-        'AddHandler Microsoft.Win32.SystemEvents.PowerModeChanged, AddressOf Me.PowerModeChanged
+        _webViewCacheDirectory = Path.Combine(s_projectWebCache, Guid.NewGuid().ToString)
+        Directory.CreateDirectory(_webViewCacheDirectory)
     End Sub
 
     Private Sub Form1_Reseize(sender As Object, e As EventArgs) Handles MyBase.Resize
@@ -1316,7 +1342,7 @@ Public Class Form1
     End Sub
 
     Private Sub StartHereExit_Click(sender As Object, e As EventArgs) Handles StartHereExit.Click
-        Me.CleanUpNotificationIcon()
+        Me.Close()
     End Sub
 
 #End Region ' Start Here Menu Events

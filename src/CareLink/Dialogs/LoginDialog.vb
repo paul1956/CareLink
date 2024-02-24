@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.ComponentModel
+Imports System.IO
 Imports System.Net
 Imports System.Threading
 Imports Microsoft.Web.WebView2.Core
@@ -23,6 +24,7 @@ Public Class LoginDialog
     Private _loginSourceAutomatic As FileToLoadOptions = FileToLoadOptions.NewUser
     Public Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
     Public Property LoggedOnUser As New CareLinkUserDataRecord(s_allUserSettingsData)
+
     Public Property Client As CareLinkClient
 
     Public Property LoginSourceAutomatic As FileToLoadOptions
@@ -48,7 +50,7 @@ Public Class LoginDialog
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         _doCancel = True
         Me.DialogResult = DialogResult.Cancel
-        Me.Close()
+        Me.Hide()
     End Sub
 
     Private Sub CarePartnerCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles CarePartnerCheckBox.CheckedChanged
@@ -131,10 +133,15 @@ Public Class LoginDialog
         Me.PatientUserIDLabel.Visible = careLinkPartner
         Me.PatientUserIDTextBox.Visible = careLinkPartner
         Me.CarePartnerCheckBox.Checked = careLinkPartner
-        Await Me.WebView21.EnsureCoreWebView2Async()
-        Await Me.WebView21.CoreWebView2.Profile.ClearBrowsingDataAsync()
-        Me.DevContext = Await Me.WebView21.CoreWebView2.CreateDevToolsContextAsync()
+        Await Me.EnsureCoreWebView2()
+        Form1.WebViewProcessId = Convert.ToInt32(Me.WebView21.CoreWebView2?.BrowserProcessId)
     End Sub
+
+    Private Async Function EnsureCoreWebView2() As Task
+        Dim task As Task(Of CoreWebView2Environment) = CoreWebView2Environment.CreateAsync(Nothing, Form1.WebViewCacheDirectory, Nothing)
+        Await Me.WebView21.EnsureCoreWebView2Async((Await task))
+        Me.DevContext = Await Me.WebView21.CoreWebView2.CreateDevToolsContextAsync()
+    End Function
 
     Private Sub LoginForm1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         Me.Height = _initialHeight
@@ -167,14 +174,8 @@ Public Class LoginDialog
             Stop
         End If
         Dim serverUrl As String = CareLinkClient.GetServerUrl(countryCode)
-        If Me.WebView21 Is Nothing Then
-            Me.WebView21 = New Microsoft.Web.WebView2.WinForms.WebView2
-            Await Me.WebView21.EnsureCoreWebView2Async()
-            Me.DevContext = Await Me.WebView21.CoreWebView2.CreateDevToolsContextAsync()
-        End If
         If Me.WebView21.CoreWebView2 Is Nothing Then
-            Await Me.WebView21.EnsureCoreWebView2Async()
-            Me.DevContext = Await Me.WebView21.CoreWebView2.CreateDevToolsContextAsync()
+            Await Me.EnsureCoreWebView2()
         End If
         Me.WebView21.CoreWebView2.Navigate($"https://{serverUrl}/patient/sso/login?country={countryCode}&lang=en")
         Dim savePatientID As String = My.Settings.CareLinkPatientUserID

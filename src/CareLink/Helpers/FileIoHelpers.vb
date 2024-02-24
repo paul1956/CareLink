@@ -12,6 +12,7 @@ Friend Module FileIoHelpers
     Private ReadOnly s_settingsDirectory As String = Path.Combine(MyDocuments, "CareLink", "Settings")
     Private ReadOnly s_testDataFileNameWithPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")
     Private ReadOnly s_testSettingFileNameWithPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestFileSettings.json")
+    Friend ReadOnly s_projectWebCache As String = Path.Combine(MyDocuments, "CareLink", "WebCache")
 
     Friend ReadOnly Property DirectoryForProjectData As String
         Get

@@ -13,7 +13,12 @@ Friend Module UpdateChecker
 
     Private Async Function GetVersionString() As Task(Of String)
         Dim versionStr As String = "0.0.0.0"
-        Dim responseBody As String = Await s_httpClient.GetStringAsync($"{GitHubCareLinkUrl}releases")
+        Dim responseBody As String
+        Try
+            responseBody = Await s_httpClient.GetStringAsync($"{GitHubCareLinkUrl}releases")
+        Catch ex As Exception
+            Return versionStr
+        End Try
         Dim index As Integer
         For Each e As IndexClass(Of String) In responseBody.SplitLines().WithIndex()
             Dim line As String = e.Value

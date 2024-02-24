@@ -128,14 +128,6 @@ Public Class CareLinkClient
         Dim message As String
         Dim lastLoginSuccess As Boolean = False
         Try
-            ' Clear cookies
-            _httpClient.DefaultRequestHeaders.Clear()
-            ' Clear basic session records
-            Me.SessionUser.Clear()
-            Me.SessionProfile.Clear()
-            s_sessionCountrySettings.Clear()
-            _sessionMonitorData.Clear()
-
             ' Open login(get SessionId And SessionData)
             Using loginSessionResponse As HttpResponseMessage = Me.GetLoginSession(serverUrl)
                 _lastResponseCode = loginSessionResponse.StatusCode

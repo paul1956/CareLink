@@ -2634,7 +2634,7 @@ Partial Class Form1
         UpdateAvailableStatusStripLabel.Image = My.Resources.Resources.NotificationAlertRed_16x
         UpdateAvailableStatusStripLabel.Name = "UpdateAvailableStatusStripLabel"
         UpdateAvailableStatusStripLabel.Size = New Size(116, 20)
-        UpdateAvailableStatusStripLabel.Text = "Update Available"
+        UpdateAvailableStatusStripLabel.Text = "Update Status Unknown"
         ' 
         ' Form1
         ' 
