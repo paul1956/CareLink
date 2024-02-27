@@ -33,9 +33,10 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 02/26/2024
 
 ## What's New
- New in 4.0.0.12
+ New in 4.0.0.14
  - More crash prevention
  - There is a change if Login FLow outside US that I have not been able to fix yet. After successfully logging in the code is redirected to log in again.
+ - Improve Debug Display
 
  New in 4.0.0.11
  - Update reCaptcha handling with code from marcindanek85

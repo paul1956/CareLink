@@ -230,7 +230,7 @@ Friend Module Form1LoginHelpers
     ''' <param name="memberName"></param>
     ''' <param name="sourceLineNumber"></param>
     ''' <returns>State of Timer before function was called</returns>
-    Friend Function StartOrStopServerUpdateTimer(Start As Boolean, Optional interval As Integer = -1, <CallerMemberName> Optional memberName As String = "", <CallerLineNumber> Optional sourceLineNumber As Integer = 0) As Boolean
+    Friend Function StartOrStopServerUpdateTimer(Start As Boolean, Optional interval As Integer = -1) As Boolean
         If Start Then
             If interval > -1 Then
                 Form1.ServerUpdateTimer.Interval = interval
