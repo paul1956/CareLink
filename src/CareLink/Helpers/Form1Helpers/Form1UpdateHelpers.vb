@@ -101,7 +101,7 @@ Friend Module Form1UpdateHelpers
     Friend Sub UpdateDataTables()
 
         If RecentDataEmpty() Then
-            Debug.Print($"Exiting {NameOf(UpdateDataTables)}, {NameOf(RecentData)} has no data!")
+            DebugPrint($"exiting, {NameOf(RecentData)} has no data!")
             Exit Sub
         End If
 

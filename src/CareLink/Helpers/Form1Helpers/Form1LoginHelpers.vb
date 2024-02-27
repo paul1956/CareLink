@@ -236,12 +236,12 @@ Friend Module Form1LoginHelpers
                 Form1.ServerUpdateTimer.Interval = interval
             End If
             Form1.ServerUpdateTimer.Start()
-            Debug.Print($"In {memberName} line {sourceLineNumber}, {NameOf(Form1.ServerUpdateTimer)} started at {Now.ToLongTimeString}")
+            DebugPrint($"started at {Now.ToLongTimeString}")
             Return True
         Else
             If Form1.ServerUpdateTimer.Enabled Then
                 Form1.ServerUpdateTimer.Stop()
-                Debug.Print($"In {memberName} line {sourceLineNumber}, {NameOf(Form1.ServerUpdateTimer)} stopped at {Now.ToLongTimeString}")
+                DebugPrint($"stopped at {Now.ToLongTimeString}")
                 Return True
             End If
         End If

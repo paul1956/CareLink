@@ -1104,7 +1104,6 @@ Public Class Form1
         Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(1)
         If String.IsNullOrWhiteSpace(WebViewCacheDirectory) Then
             s_webViewCacheDirectory = Path.Combine(s_projectWebCache, Guid.NewGuid().ToString)
-            Debug.Print($"webViewCacheDirectory = {WebViewCacheDirectory}")
             Directory.CreateDirectory(WebViewCacheDirectory)
         End If
     End Sub
@@ -1747,7 +1746,7 @@ Public Class Form1
                 SetLastUpdateTime("System Awake", "", True, Nothing)
                 s_shuttingDown = False
                 StartOrStopServerUpdateTimer(True, s_30SecondInMilliseconds \ 3)
-                Debug.Print($"In {NameOf(PowerModeChanged)}, restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
+                DebugPrint($"restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
         End Select
 
     End Sub
@@ -2895,7 +2894,7 @@ Public Class Form1
 
     Friend Sub UpdateAllTabPages(fromFile As Boolean)
         If RecentDataEmpty() Then
-            Debug.Print($"Exiting {NameOf(UpdateAllTabPages)}, {NameOf(RecentData)} has no data!")
+            DebugPrint($"exiting, {NameOf(RecentData)} has no data!")
             Exit Sub
         End If
         Dim lastMedicalDeviceDataUpdateServerTimeEpoch As String = ""

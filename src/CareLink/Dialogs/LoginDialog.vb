@@ -133,14 +133,11 @@ Public Class LoginDialog
         Me.PatientUserIDLabel.Visible = careLinkPartner
         Me.PatientUserIDTextBox.Visible = careLinkPartner
         Me.CarePartnerCheckBox.Checked = careLinkPartner
-        Debug.Print($"webViewCacheDirectory = {Form1.WebViewCacheDirectory}")
         Await Me.EnsureCoreWebView2(Form1.WebViewCacheDirectory)
         Form1.WebViewProcessId = Convert.ToInt32(Me.WebView21.CoreWebView2?.BrowserProcessId)
     End Sub
 
     Private Async Function EnsureCoreWebView2(webViewCacheDirectory As String) As Task
-        Debug.Print($"webViewCacheDirectory = {webViewCacheDirectory}")
-        Debug.Print($"webView21.Source = {Me.WebView21.Source}")
         If Me.WebView21.Source Is Nothing Then
             Dim task As Task(Of CoreWebView2Environment) = CoreWebView2Environment.CreateAsync(Nothing, webViewCacheDirectory, Nothing)
             Await Me.WebView21.EnsureCoreWebView2Async((Await task))
@@ -180,7 +177,6 @@ Public Class LoginDialog
         End If
         Dim serverUrl As String = CareLinkClient.GetServerUrl(countryCode)
         If Me.WebView21.CoreWebView2 Is Nothing Then
-            Debug.Print($"webViewCacheDirectory = {Form1.WebViewCacheDirectory}")
             Await Me.EnsureCoreWebView2(Form1.WebViewCacheDirectory)
         End If
         Me.WebView21.CoreWebView2.Navigate($"https://{serverUrl}/patient/sso/login?country={countryCode}&lang=en")
@@ -366,7 +362,7 @@ Public Class LoginDialog
             End If
             cookies.Add(New Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain))
         Next i
-        Debug.Print(_lastUrl)
+        DebugPrint(_lastUrl)
         If _ignoredURLs.Contains(_lastUrl) Then
             Exit Sub
         End If
@@ -421,7 +417,7 @@ Public Class LoginDialog
             Await loginButtonElement.ClickElementAsync
             Exit Sub
         End If
-        Debug.Print($" Me.WebView21.Source.ToString={ Me.WebView21.Source}")
+        DebugPrint($"Me.WebView21.Source.ToString={ Me.WebView21.Source}")
         If Me.WebView21.Source.ToString.Contains("CareLink.MiniMed.", StringComparison.InvariantCultureIgnoreCase) Then
             Exit Sub
         End If

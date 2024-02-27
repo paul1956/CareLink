@@ -2,9 +2,18 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Runtime.CompilerServices
 Imports System.Text.RegularExpressions
 
-Friend Module DebugPrint
+Friend Module DebugSupport
+
+    Public Sub DebugPrint(message As String, <CallerMemberName> Optional memberName As String = "", <CallerLineNumber> Optional sourceLineNumber As Integer = 0)
+        If message.StartsWith("("c) Then
+            Debug.Print($"{memberName}{message}")
+        Else
+            Debug.Print($"Function:{memberName} Line:{sourceLineNumber,4} {message}")
+        End If
+    End Sub
 
     Public Sub DebugPrintUrl(label As String, s As String, width As Integer)
         Dim lines() As String = s.Split("?"(0))

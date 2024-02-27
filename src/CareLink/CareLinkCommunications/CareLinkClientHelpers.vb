@@ -17,20 +17,20 @@ Public Module CareLinkClientHelpers
             Dim resultText As String = response.ResultText
             lastErrorMessage = ExtractResponseData(resultText, "login_page.error.LoginFailed"">", "<")
             If lastErrorMessage = "" Then
-                Debug.Print($"{NameOf(DecodeResponse)} success from {memberName}, line {sourceLineNumber}.")
+                DebugPrint($"success from {memberName}, line {sourceLineNumber}.")
                 Return response
             End If
-            Debug.Print($"{NameOf(DecodeResponse)} failed from {memberName}, line {sourceLineNumber}.")
+            DebugPrint($"failed from {memberName}, line {sourceLineNumber}.")
             Return New HttpResponseMessage(HttpStatusCode.NetworkAuthenticationRequired)
         ElseIf response?.StatusCode = HttpStatusCode.BadRequest Then
             message = $"{NameOf(DecodeResponse)} failed with {HttpStatusCode.BadRequest}"
             lastErrorMessage = $"Login Failure {message}"
-            Debug.Print($"{message} from {memberName}, line {sourceLineNumber}")
+            DebugPrint($"{message} from {memberName}, line {sourceLineNumber}")
             Return response
         Else
             message = $"{NameOf(DecodeResponse)} failed, session response is {response?.StatusCode.ToString}"
             lastErrorMessage = message
-            Debug.Print($"{message} from {memberName}, line {sourceLineNumber}")
+            DebugPrint($"{message} from {memberName}, line {sourceLineNumber}")
             Return response
         End If
     End Function
@@ -92,9 +92,9 @@ Public Module CareLinkClientHelpers
             Dim response As HttpResponseMessage = httpClient.Post(url, headers:=consentHeaders, data:=form)
             Return DecodeResponse(response, lastErrorMessage)
         Catch ex As Exception
-            Dim message As String = $"__doConsent() failed with {ex.DecodeException()}"
+            Dim message As String = $"failed with {ex.DecodeException()}"
             lastErrorMessage = message
-            Debug.Print(message.Replace(vbCrLf, " "))
+            DebugPrint(message.Replace(vbCrLf, " "))
         End Try
         Return New HttpResponseMessage(HttpStatusCode.NotImplemented)
     End Function

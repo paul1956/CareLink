@@ -35,7 +35,7 @@ Friend Module HttpClientExtensions
         Try
             lastError = Nothing
             Dim requestUriString As String = requestUri.ToString
-            Debug.Print($"{NameOf([Get])} uri={requestUriString} from {memberName}, line {sourceLineNumber}.")
+            DebugPrint($"uri={requestUriString} from {memberName}, line {sourceLineNumber}.")
             Return client.GetAsync(requestUriString).Result
         Catch ex As Exception
             lastError = ex.DecodeException()

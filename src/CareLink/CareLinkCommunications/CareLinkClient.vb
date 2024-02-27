@@ -125,7 +125,6 @@ Public Class CareLinkClient
         End If
         Me.InLoginInProcess = True
         _lastErrorMessage = Nothing
-        Dim message As String
         Dim lastLoginSuccess As Boolean = False
         Try
             ' Open login(get SessionId And SessionData)
@@ -193,8 +192,7 @@ Public Class CareLinkClient
                 lastLoginSuccess = True
             End If
         Catch ex As Exception
-            message = $"{NameOf(ExecuteLoginProcedure)} failed with {ex.DecodeException()}"
-            Debug.Print(message.Replace(vbCrLf, " "))
+            DebugPrint($"failed with {ex.DecodeException()}".Replace(vbCrLf, " "))
             _lastErrorMessage = ex.DecodeException()
         Finally
             Me.InLoginInProcess = False
@@ -223,22 +221,22 @@ Public Class CareLinkClient
             ExpirationTokenAsDate(expirationToken) < TimeZoneInfo.ConvertTime(Now, TimeZoneInfo.Utc) Then
             ' execute new login process | null, if error OR already doing login
             If Me.InLoginInProcess Then
-                Debug.Print($"{NameOf(GetAuthorizationToken)} already In login Process")
+                DebugPrint("already in login Process")
                 Return GetAuthorizationTokenResult.InLoginProcess
             End If
             If Not Me.ExecuteLoginProcedure(serverUrl) Then
                 If NetworkUnavailable() Then
                     _lastErrorMessage = "No Internet Connection!"
-                    Debug.Print($"{NameOf(GetAuthorizationToken)} No Internet Connection!")
+                    DebugPrint(_lastErrorMessage)
                     Return GetAuthorizationTokenResult.NetworkDown
                 End If
-                Debug.Print($"{NameOf(GetAuthorizationToken)}  failed")
+                DebugPrint("failed")
                 Return GetAuthorizationTokenResult.LoginFailed
             End If
-            Debug.Print($"{CareLinkTokenValidToCookieName} = {Me.GetCookies(serverUrl).Item(CareLinkTokenValidToCookieName).Value}")
+            DebugPrint($"{CareLinkTokenValidToCookieName} = {Me.GetCookies(serverUrl).Item(CareLinkTokenValidToCookieName).Value}")
         Else
             If Me.InLoginInProcess Then
-                Debug.Print($"{NameOf(GetAuthorizationToken)} already In login Process")
+                DebugPrint("already In login Process")
                 Return GetAuthorizationTokenResult.InLoginProcess
             End If
             Me.InLoginInProcess = True
@@ -265,7 +263,7 @@ Public Class CareLinkClient
     ' Periodic data from CareLink Cloud
     Private Function GetConnectDisplayMessage(username As String, role As String, endPointPath As String, Optional patientUserName As String = "") As Dictionary(Of String, String)
 
-        Debug.Print($"{NameOf(GetConnectDisplayMessage)}")
+        DebugPrint("started")
         ' Build user Json for request
         Dim requestBody As New Dictionary(Of String, String) From {
             {"username", username},
@@ -313,7 +311,7 @@ Public Class CareLinkClient
     End Function
 
     Private Function GetCountrySettings(authToken As String) As Dictionary(Of String, String)
-        Debug.Print(NameOf(GetCountrySettings))
+        DebugPrint("started")
         Dim queryParams As New Dictionary(Of String, String) From {
             {"countryCode", Me.CareLinkCountry},
             {"language", "en"}}
@@ -322,7 +320,7 @@ Public Class CareLinkClient
     End Function
 
     Private Function GetDataItems(authToken As String, endPointPath As String, requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
-        Debug.Print($"GetDataItems(serverUrl = {endPointPath}, requestBody = {requestBody.ToCsv}")
+        DebugPrint($"(serverUrl = {endPointPath}, requestBody = {requestBody.ToCsv}")
         Dim jsonData As Dictionary(Of String, String) = Nothing
         Dim response As New HttpResponseMessage
         Try
@@ -359,7 +357,7 @@ Public Class CareLinkClient
             response.Dispose()
         Catch ex As Exception
             _lastErrorMessage = ex.DecodeException()
-            Debug.Print($"{NameOf(GetDataItems)} failed {_lastErrorMessage.Replace(vbCrLf, "")}, status {response?.StatusCode}")
+            DebugPrint($"failed {_lastErrorMessage.Replace(vbCrLf, "")}, status {response?.StatusCode}")
         End Try
         Return jsonData
     End Function
@@ -378,10 +376,10 @@ Public Class CareLinkClient
         Catch ex As Exception
             If NetworkUnavailable() Then
                 _lastErrorMessage = "No Internet Connection!"
-                Debug.Print($"{NameOf(GetLoginSession)} No Internet Connection!")
+                DebugPrint(_lastErrorMessage)
                 Return response
             End If
-            Debug.Print($"{NameOf(GetLoginSession)} failed {ex.DecodeException().Replace(vbCrLf, "")}")
+            DebugPrint($"failed {ex.DecodeException().Replace(vbCrLf, "")}")
             Return response
         End Try
 
@@ -389,12 +387,12 @@ Public Class CareLinkClient
     End Function
 
     Private Function GetSessionMonitorData(authToken As String) As SessionMonitorDataRecord
-        Debug.Print(NameOf(GetSessionMonitorData))
+        DebugPrint("started")
         Return New SessionMonitorDataRecord(Me.GetData(authToken, GetServerUrl(Me.CareLinkCountry), "patient/monitor/data", Nothing))
     End Function
 
     Private Function GetSessionProfile(authToken As String) As SessionProfileRecord
-        Debug.Print(NameOf(GetSessionProfile))
+        DebugPrint("started")
         Dim sessionProfile As New SessionProfileRecord(Me.GetData(authToken, GetServerUrl(Me.CareLinkCountry), "patient/users/me/profile", Nothing))
         If Not sessionProfile.HasValue Then
             sessionProfile.username = s_userName
@@ -403,7 +401,7 @@ Public Class CareLinkClient
     End Function
 
     Private Function GetSessionUser(authToken As String) As SessionUserRecord
-        Debug.Print(NameOf(GetSessionUser))
+        DebugPrint("started")
         Return New SessionUserRecord(Me.GetData(authToken, GetServerUrl(Me.CareLinkCountry), "patient/users/me", Nothing), Form1.DgvCurrentUser)
     End Function
 
@@ -440,7 +438,7 @@ Public Class CareLinkClient
                 End If
             Catch ex As Exception
                 _lastErrorMessage = ex.DecodeException()
-                Debug.Print($"{NameOf(TryGetDeviceSettingsPdfFile)} {_lastErrorMessage.Replace(vbCrLf, "")}, status {response?.StatusCode}")
+                DebugPrint($"{_lastErrorMessage.Replace(vbCrLf, "")}, status {response?.StatusCode}")
                 Return False
             End Try
             Try
@@ -448,11 +446,10 @@ Public Class CareLinkClient
                 Dim uuidString As String = $"{jsonData.Keys(0)}={jsonData.Values(0)}"
                 Dim requestUri As New Uri($"https://{serverUrl}/patient/reports/reportStatus?{uuidString}")
                 Dim delay As Integer = 250
+                DebugPrint($"{NameOf(requestUri)} = {requestUri}")
                 While True
-                    Debug.Print($"{NameOf(TryGetDeviceSettingsPdfFile)} {NameOf(requestUri)} = {requestUri}")
                     _httpClient.SetDefaultRequestHeaders(headers, referrerUri)
                     Dim t As Task(Of HttpResponseMessage) = _httpClient.SendAsync(New HttpRequestMessage(HttpMethod.Get, requestUri))
-                    Debug.Print($"{NameOf(TryGetDeviceSettingsPdfFile)} Waiting {delay * 10 } msec")
                     For i As Integer = 0 To delay
                         If t.IsCompleted Then
                             Exit For
@@ -461,16 +458,16 @@ Public Class CareLinkClient
                     Next
                     response = t.Result
                     _lastResponseCode = response.StatusCode
-                    Debug.Print($"{NameOf(TryGetDeviceSettingsPdfFile)} {NameOf(response)}?.IsSuccessStatusCode={response?.IsSuccessStatusCode}")
+                    DebugPrint($"{NameOf(response)}?.IsSuccessStatusCode={response?.IsSuccessStatusCode}")
                     If response?.IsSuccessStatusCode Then
                         Dim resultText As String = response.ResultText
-                        Debug.Print($"{NameOf(TryGetDeviceSettingsPdfFile)} {resultText}")
+                        DebugPrint($"resultText={resultText}")
                         Select Case JsonToDictionary(resultText)("status")
                             Case "READY"
-                                Debug.Print("READY")
+                                DebugPrint("READY")
                                 Exit While
                             Case "NOT_READY"
-                                Debug.Print("NOT_READY")
+                                DebugPrint("NOT_READY")
                             Case Else
                                 Stop
                         End Select
@@ -493,9 +490,9 @@ Public Class CareLinkClient
                 Return True
             Catch ex As Exception
                 If NetworkUnavailable() Then
-                    Debug.Print($"{NameOf(TryGetDeviceSettingsPdfFile)} has no Internet Connection!")
+                    DebugPrint($"has no Internet Connection!")
                 End If
-                Debug.Print($"{NameOf(TryGetDeviceSettingsPdfFile)} failed {ex.DecodeException().Replace(vbCrLf, "")}")
+                DebugPrint($"failed {ex.DecodeException().Replace(vbCrLf, "")}")
             End Try
         End If
         Stop
@@ -525,7 +522,7 @@ Public Class CareLinkClient
         If NetworkUnavailable() Then
             _lastErrorMessage = "No Internet Connection!"
             ReportLoginStatus(Form1.LoginStatus)
-            Debug.Print("No Internet Connection!")
+            DebugPrint("No Internet Connection!")
             Return Nothing
         End If
 
@@ -570,7 +567,7 @@ Public Class CareLinkClient
             Throw New ArgumentException($"'{NameOf(host)}' cannot be null or empty.", NameOf(host))
         End If
 
-        Debug.Print($"GetDataItems(serverUrl = {host}, endPointPath = {endPointPath}, queryParams = {queryParams.ToCsv}")
+        DebugPrint($"(serverUrl = {host}, endPointPath = {endPointPath}, queryParams = {queryParams.ToCsv}")
         Dim jsonData As Dictionary(Of String, String)
         Dim response As New HttpResponseMessage
         Try
@@ -605,7 +602,7 @@ Public Class CareLinkClient
             response.Dispose()
         Catch ex As Exception
             _lastErrorMessage = ex.DecodeException()
-            Debug.Print($"__getData() failed {_lastErrorMessage.Replace(vbCrLf, "")}, status {response?.StatusCode}")
+            DebugPrint($"failed {_lastErrorMessage.Replace(vbCrLf, "")}, status {response?.StatusCode}")
         End Try
         Return Nothing
     End Function
