@@ -19,12 +19,17 @@ Friend Module PlotSeriesLimits
         Return limitsIndexList
     End Function
 
+    ''' <summary>
+    ''' Plot Sg and optionally High and Low Limits
+    ''' </summary>
+    ''' <param name="chart">The Chart to plot onto</param>
+    ''' <param name="targetSsOnly">Only plot Limits if True</param>
     <Extension>
     Friend Sub PlotHighLowLimitsAndTargetSg(chart As Chart, targetSsOnly As Boolean)
         If s_listOfLimitRecords.Count = 0 Then Exit Sub
         Dim limitsIndexList() As Integer = GetLimitsList(s_listOfSgRecords.Count - 1)
-        Dim targetSG As Single = CurrentUser.CurrentTarget
-        If targetSG <> 0 Then
+        Dim targetSG As Single = If(CurrentUser Is Nothing, 0, CurrentUser.CurrentTarget)
+        If Not targetSG.AlmostZero() Then
             chart.Series(TargetSgSeriesName).Points.AddXY(s_listOfSgRecords(0).OaDateTime(), targetSG)
             chart.Series(TargetSgSeriesName).Points.AddXY(s_listOfSgRecords.Last.OaDateTime(), targetSG)
         End If

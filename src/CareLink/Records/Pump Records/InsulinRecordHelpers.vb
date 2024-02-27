@@ -23,7 +23,7 @@ Friend Module InsulinRecordHelpers
             Case NameOf(InsulinRecord.dateTime)
                 CellFormattingDateTime(e)
             Case NameOf(InsulinRecord.SafeMealReduction)
-                If CellFormattingSingleValue(e, 3) > Single.Epsilon Then
+                If CellFormattingSingleValue(e, 3) >= 0.0025 Then
                     CellFormattingApplyColor(e, Color.OrangeRed, 1, False)
                 End If
             Case NameOf(InsulinRecord.activationType)

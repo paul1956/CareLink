@@ -14,7 +14,7 @@ Friend Module PlotSeriesSg
                 With chart.Series(SgSeriesName).Points
                     Dim sgOADateTime As OADate = sgListIndex.Value.OaDateTime()
                     Dim sgValue As Single = sgListIndex.Value.sg
-                    If Single.IsNaN(sgValue) OrElse Math.Abs(sgValue) < Single.Epsilon Then
+                    If Single.IsNaN(sgValue) OrElse sgValue.AlmostZero Then
                         .AddXY(sgOADateTime, HomePageMealRow)
                         .Last().Color = Color.Transparent
                         .Last().IsEmpty = True

@@ -20,6 +20,11 @@ Friend Module MathExtensions
     End Function
 
     <Extension>
+    Public Function AlmostZero(single1 As Single) As Boolean
+        Return single1 >= 0 - Single.Epsilon And single1 <= 0 + Single.Epsilon
+    End Function
+
+    <Extension>
     Public Function ParseSingle(valueString As String, Optional decimalDigits As Integer = -1) As Single
         If valueString Is Nothing Then
             Return Single.NaN

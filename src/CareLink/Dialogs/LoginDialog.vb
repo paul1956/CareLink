@@ -133,13 +133,18 @@ Public Class LoginDialog
         Me.PatientUserIDLabel.Visible = careLinkPartner
         Me.PatientUserIDTextBox.Visible = careLinkPartner
         Me.CarePartnerCheckBox.Checked = careLinkPartner
-        Await Me.EnsureCoreWebView2()
+        Debug.Print($"webViewCacheDirectory = {Form1.WebViewCacheDirectory}")
+        Await Me.EnsureCoreWebView2(Form1.WebViewCacheDirectory)
         Form1.WebViewProcessId = Convert.ToInt32(Me.WebView21.CoreWebView2?.BrowserProcessId)
     End Sub
 
-    Private Async Function EnsureCoreWebView2() As Task
-        Dim task As Task(Of CoreWebView2Environment) = CoreWebView2Environment.CreateAsync(Nothing, Form1.WebViewCacheDirectory, Nothing)
-        Await Me.WebView21.EnsureCoreWebView2Async((Await task))
+    Private Async Function EnsureCoreWebView2(webViewCacheDirectory As String) As Task
+        Debug.Print($"webViewCacheDirectory = {webViewCacheDirectory}")
+        Debug.Print($"webView21.Source = {Me.WebView21.Source}")
+        If Me.WebView21.Source Is Nothing Then
+            Dim task As Task(Of CoreWebView2Environment) = CoreWebView2Environment.CreateAsync(Nothing, webViewCacheDirectory, Nothing)
+            Await Me.WebView21.EnsureCoreWebView2Async((Await task))
+        End If
         Me.DevContext = Await Me.WebView21.CoreWebView2.CreateDevToolsContextAsync()
     End Function
 
@@ -175,7 +180,8 @@ Public Class LoginDialog
         End If
         Dim serverUrl As String = CareLinkClient.GetServerUrl(countryCode)
         If Me.WebView21.CoreWebView2 Is Nothing Then
-            Await Me.EnsureCoreWebView2()
+            Debug.Print($"webViewCacheDirectory = {Form1.WebViewCacheDirectory}")
+            Await Me.EnsureCoreWebView2(Form1.WebViewCacheDirectory)
         End If
         Me.WebView21.CoreWebView2.Navigate($"https://{serverUrl}/patient/sso/login?country={countryCode}&lang=en")
         Dim savePatientID As String = My.Settings.CareLinkPatientUserID
@@ -379,9 +385,15 @@ Public Class LoginDialog
                 End If
                 Me.DevContext = t.Result
             End If
-            Dim userNameInputElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#username")
-            Dim passwordInputElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#password")
-            Dim loginButtonElement As HtmlInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("[name=""actionButton""]")
+            Dim userNameInputElement As HtmlInputElement = Nothing
+            Dim passwordInputElement As HtmlInputElement = Nothing
+            Dim loginButtonElement As HtmlInputElement = Nothing
+            Try
+                userNameInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#username")
+                passwordInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#password")
+                loginButtonElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("[name=""actionButton""]")
+            Catch ex As Exception
+            End Try
             If userNameInputElement Is Nothing OrElse passwordInputElement Is Nothing OrElse loginButtonElement Is Nothing Then
                 Exit Sub
             End If

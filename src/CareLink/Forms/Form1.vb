@@ -33,7 +33,9 @@ Public Class Form1
     Friend WithEvents TableLayoutPanelTherapyAlgorithmTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelTimeChangeTop As TableLayoutPanelTopEx
 
+    Private Shared s_webViewCacheDirectory As String
     Private ReadOnly _calibrationToolTip As New ToolTip()
+    Private ReadOnly _processName As String = Process.GetCurrentProcess().ProcessName
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
     Private ReadOnly _sgMiniDisplay As New SgMiniForm(Me)
     Private ReadOnly _updatingLock As New Object
@@ -47,13 +49,11 @@ Public Class Form1
     Private _summaryChartAbsoluteRectangle As RectangleF
     Private _treatmentMarkerAbsoluteRectangle As RectangleF
     Private _updating As Boolean
-
-    Private _webViewCacheDirectory As String
     Private _webViewProcessId As Integer = -1
 
-    Public ReadOnly Property WebViewCacheDirectory As String
+    Public Shared ReadOnly Property WebViewCacheDirectory As String
         Get
-            Return _webViewCacheDirectory
+            Return s_webViewCacheDirectory
         End Get
     End Property
 
@@ -76,6 +76,7 @@ Public Class Form1
     '' Overloaded System Windows Handler.
     '' </summary>
     '' <param name="m">Message <see cref="Message"/> structure</param>
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub WndProc(ByRef m As Message)
         Select Case m.Msg
             Case WM_POWERBROADCAST
@@ -1030,8 +1031,12 @@ Public Class Form1
             webViewProcess.Kill()
             webViewProcess.WaitForExit(3_000)
 
-            If Directory.Exists(_webViewCacheDirectory) Then
-                Directory.Delete(_webViewCacheDirectory, True)
+            If Directory.Exists(WebViewCacheDirectory) Then
+                Try
+                    Directory.Delete(WebViewCacheDirectory, True)
+                Catch
+                    ' Ignore errors here
+                End Try
             End If
         End If
     End Sub
@@ -1097,8 +1102,11 @@ Public Class Form1
         End If
 
         Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(1)
-        _webViewCacheDirectory = Path.Combine(s_projectWebCache, Guid.NewGuid().ToString)
-        Directory.CreateDirectory(_webViewCacheDirectory)
+        If String.IsNullOrWhiteSpace(WebViewCacheDirectory) Then
+            s_webViewCacheDirectory = Path.Combine(s_projectWebCache, Guid.NewGuid().ToString)
+            Debug.Print($"webViewCacheDirectory = {WebViewCacheDirectory}")
+            Directory.CreateDirectory(WebViewCacheDirectory)
+        End If
     End Sub
 
     Private Sub Form1_Reseize(sender As Object, e As EventArgs) Handles MyBase.Resize
@@ -1164,6 +1172,11 @@ Public Class Form1
         Dim userPdfExists As Boolean = Not (String.IsNullOrWhiteSpace(s_userName) OrElse Not AnyMatchingFiles(SettingsDirectory, $"{s_userName}Settings.pdf"))
         Me.MenuStartHereShowPumpSetup.Enabled = userPdfExists
         Me.MenuStartHereManuallyImportDeviceSettings.Enabled = Not userPdfExists
+        Me.MenuStartHereCleanUpObsoleteFiles.Enabled = Process.GetProcessesByName(_processName).Length = 1
+    End Sub
+
+    Private Sub MenuStartHereCleanUpObsoleteFiles_Click(sender As Object, e As EventArgs) Handles MenuStartHereCleanUpObsoleteFiles.Click
+        CleanupStaleFilesDialog.ShowDialog()
     End Sub
 
     Private Sub MenuStartHereExceptionReportLoad_Click(sender As Object, e As EventArgs) Handles MenuStartHereExceptionReportLoad.Click
@@ -1224,6 +1237,10 @@ Public Class Form1
                 End Try
             End If
         End Using
+    End Sub
+
+    Private Sub MenuStartHereExit_Click(sender As Object, e As EventArgs) Handles MenuStartHereExit.Click
+        Me.Close()
     End Sub
 
     Private Sub MenuStartHereLoadSavedDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereLoadSavedDataFile.Click
@@ -1339,10 +1356,6 @@ Public Class Form1
     Private Sub MenuStartHereUseTestData_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseTestData.Click
         DoOptionalLoginAndUpdateData(UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.TestData)
         Me.MenuStartHereSnapshotSave.Enabled = False
-    End Sub
-
-    Private Sub StartHereExit_Click(sender As Object, e As EventArgs) Handles StartHereExit.Click
-        Me.Close()
     End Sub
 
 #End Region ' Start Here Menu Events
@@ -2228,7 +2241,7 @@ Public Class Form1
 
         Try
             Me.TemporaryUseAdvanceAITDecayCheckBox.Checked = CurrentUser.UseAdvancedAitDecay = CheckState.Checked
-            For Each s As Series In Me.ActiveInsulinChart.Series
+            For Each s As Series In Me.ActiveInsulinChart?.Series
                 s.Points.Clear()
             Next
             With Me.ActiveInsulinChart
