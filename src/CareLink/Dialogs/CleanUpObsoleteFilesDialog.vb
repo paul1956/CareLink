@@ -25,6 +25,42 @@ Public Class CleanupStaleFilesDialog
         Next
     End Sub
 
+    Private Function OptionalConfirmFileDelete(confirm As Boolean) As DialogResult
+        Dim result As DialogResult = DialogResult.OK
+        With Me.TreeView1
+            For Each node As TreeNode In .Nodes(0).Nodes
+                Dim msgBoxResult As MsgBoxResult = MsgBoxResult.Yes
+                If node.Checked Then
+                    If confirm Then
+                        msgBoxResult = MsgBox("", $"File {node.Text} will be deleted are you sure?", MsgBoxStyle.YesNoCancel, "File Deletion")
+                    End If
+                    Select Case msgBoxResult
+                        Case MsgBoxResult.Yes
+                            My.Computer.FileSystem.DeleteFile(Path.Combine(DirectoryForProjectData, node.Text), FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.SendToRecycleBin)
+                        Case MsgBoxResult.Cancel
+                            result = DialogResult.Cancel
+                            Exit For
+                        Case MsgBoxResult.No
+                            result = DialogResult.Ignore
+                    End Select
+                End If
+            Next
+            For Each node As TreeNode In .Nodes(1).Nodes
+                If node.Checked Then
+                    Try
+                        Directory.Delete(Path.Combine(DirectoryForProjectData, "WebCache", node.Text), True)
+                    Catch ex As Exception
+                        Stop
+                        ' Ignore ones I can't delete
+                    End Try
+                End If
+            Next
+        End With
+        Return result
+    End Function
+
+#Region "Events"
+
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         Me.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.Close()
@@ -55,37 +91,6 @@ Public Class CleanupStaleFilesDialog
 
     End Sub
 
-    Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
-        With Me.TreeView1
-            For Each node As TreeNode In .Nodes(0).Nodes
-                If node.Checked Then
-                    Dim msgBoxResult As MsgBoxResult = MsgBox("Warning permanent file deletion!", $"File {node.Text} will be deleted are you sure?", MsgBoxStyle.YesNoCancel, "File Deletion")
-                    Select Case msgBoxResult
-                        Case MsgBoxResult.Yes
-                            Stop
-                            ' File.Delete(Path.Combine(DirectoryForProjectData, node.Text))
-                        Case MsgBoxResult.Cancel
-                            Exit For
-                        Case MsgBoxResult.No
-                    End Select
-                End If
-            Next
-            For Each node As TreeNode In .Nodes(1).Nodes
-                If node.Checked Then
-                    Try
-                        Directory.Delete(Path.Combine(DirectoryForProjectData, "WebCache", node.Text), True)
-                    Catch ex As Exception
-                        Stop
-                        ' Ignore ones I can't delete
-                    End Try
-                End If
-            Next
-        End With
-
-        Me.DialogResult = DialogResult.OK
-        Me.Close()
-    End Sub
-
     Private Sub TreeView1_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles TreeView1.AfterCheck
         If e.Action <> TreeViewAction.Unknown Then
             If e.Node.Text = "Error Files" Then
@@ -94,6 +99,16 @@ Public Class CleanupStaleFilesDialog
                 e.Node.Parent.Checked = HasCheckChileNodes(e.Node.Parent)
             End If
         End If
+    End Sub
+
+    Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
+        Me.DialogResult = Me.OptionalConfirmFileDelete(True)
+        Me.Close()
+    End Sub
+
+    Private Sub OkDoNotConfirm_Button_Click(sender As Object, e As EventArgs) Handles OkDoNotConfirm_Button.Click
+        Me.DialogResult = Me.OptionalConfirmFileDelete(False)
+        Me.Close()
     End Sub
 
     Private Sub TreeView1_BeforeCheck(sender As Object, e As TreeViewCancelEventArgs) Handles TreeView1.BeforeCheck
@@ -120,5 +135,7 @@ Public Class CleanupStaleFilesDialog
         End If
         e.Cancel = True
     End Sub
+
+#End Region ' Events
 
 End Class

@@ -431,6 +431,7 @@ Public Class DataGridViewNumericUpDownCell
     ''' an easy solution for painting controls but it's not necessarily the most performant. An alternative would be to paint
     ''' the NumericUpDown control piece by piece (text and up/down buttons).
     ''' </summary>
+    <DebuggerNonUserCode()>
     Protected Overrides Sub Paint(graphics As Graphics, clipBounds As Rectangle, cellBounds As Rectangle, rowIndex As Integer, cellState As DataGridViewElementStates,
                                   value As Object, formattedValue As Object, errorText As String, cellStyle As DataGridViewCellStyle,
                                   advancedBorderStyle As DataGridViewAdvancedBorderStyle, paintParts As DataGridViewPaintParts)

@@ -3,8 +3,8 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.ComponentModel
-Imports System.IO
 Imports System.Net
+Imports System.Text.RegularExpressions
 Imports System.Threading
 Imports Microsoft.Web.WebView2.Core
 Imports WebView2.DevTools.Dom
@@ -384,6 +384,14 @@ Public Class LoginDialog
             Dim userNameInputElement As HtmlInputElement = Nothing
             Dim passwordInputElement As HtmlInputElement = Nothing
             Dim loginButtonElement As HtmlInputElement = Nothing
+            Dim html As String
+            html = Await Me.WebView21.ExecuteScriptAsync("document.documentElement.outerHTML;")
+
+            ' The Html comes back with Unicode character codes, other escaped characters, and
+            ' wrapped in double quotes, so I'm using this code to clean it up for what I'm doing.
+            html = Regex.Unescape(html)
+            html = html.Remove(0, 1)
+            html = html.Remove(html.Length - 1, 1)
             Try
                 userNameInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#username")
                 passwordInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#password")

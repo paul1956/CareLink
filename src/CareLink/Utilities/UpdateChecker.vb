@@ -16,6 +16,9 @@ Friend Module UpdateChecker
         Dim responseBody As String
         Try
             responseBody = Await s_httpClient.GetStringAsync($"{GitHubCareLinkUrl}releases")
+        Catch ex1 As HttpRequestException
+            ' GitHub not reachable
+            Return versionStr
         Catch ex As Exception
             Return versionStr
         End Try

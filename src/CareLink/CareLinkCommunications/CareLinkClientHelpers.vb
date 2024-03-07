@@ -73,8 +73,8 @@ Public Module CareLinkClientHelpers
         ' Extract data for consent
         Dim doLoginRespBody As String = doLoginResponse.ResultText
         Dim url As New StringBuilder(doLoginRespBody.ExtractResponseData("<form action=", " "))
-        Dim sessionId As String = doLoginRespBody.ExtractResponseData("<input type=""hidden"" name=""sessionID"" value=", ">")
-        Dim sessionData As String = doLoginRespBody.ExtractResponseData("<input type=""hidden"" name=""sessionData"" value=", ">")
+        Dim sessionId As String = doLoginRespBody.ExtractResponseData("<input type=""hidden"" name=""sessionID"" value=", "/>")
+        Dim sessionData As String = doLoginRespBody.ExtractResponseData("<input type=""hidden"" name=""sessionData"" value=", "/>")
         lastErrorMessage = doLoginRespBody.ExtractResponseData("LoginFailed"">", "</p>")
 
         ' Send consent

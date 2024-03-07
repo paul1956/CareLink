@@ -17,7 +17,7 @@ Public Class CareLinkClient
     Private ReadOnly _careLinkCountry As String
 
     Private ReadOnly _careLinkPartnerType As New List(Of String) From {
-                                "CARE_PARTNER",
+                            "CARE_PARTNER",
                             "CARE_PARTNER_OUS"
                         }
 
