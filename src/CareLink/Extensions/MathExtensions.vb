@@ -72,16 +72,25 @@ Friend Module MathExtensions
 
     <Extension>
     Public Function RoundTo025(originalValue As Single) As Single
-        Return If(Single.IsNaN(originalValue),
-            Single.NaN,
-            CSng(Math.Floor(Math.Round(originalValue, 3, MidpointRounding.ToZero) / 0.025D) * 0.025D))
+
+        If Single.IsNaN(originalValue) Then
+            Return Single.NaN
+        Else
+            Return CDbl(originalValue).RoundTo025
+        End If
+
     End Function
 
     <Extension>
     Public Function RoundTo025(originalValue As Double) As Single
-        Return If(Double.IsNaN(originalValue),
-            Single.NaN,
-            CSng(Math.Floor(Math.Round(originalValue, 3, MidpointRounding.ToZero) / 0.025D) * 0.025D))
+        If Double.IsNaN(originalValue) Then
+            Return Single.NaN
+        Else
+            Dim inverse As Single = 1 / 0.025
+            Dim dividend As Double = originalValue * inverse
+            dividend = Math.Round(dividend)
+            Return CSng(dividend / inverse)
+        End If
     End Function
 
     <Extension>
