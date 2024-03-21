@@ -73,11 +73,7 @@ Friend Module MathExtensions
     <Extension>
     Public Function RoundTo025(originalValue As Single) As Single
 
-        If Single.IsNaN(originalValue) Then
-            Return Single.NaN
-        Else
-            Return CDbl(originalValue).RoundTo025
-        End If
+        Return If(Single.IsNaN(originalValue), Single.NaN, CDbl(originalValue).RoundTo025)
 
     End Function
 
