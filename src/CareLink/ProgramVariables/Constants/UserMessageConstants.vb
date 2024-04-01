@@ -110,6 +110,7 @@ Friend Module UserMessageConstants
             {"BC_SID_SG_APPROACH_LOW_LIMIT_CHECK_BG", "Alert before low(triggeredDateTime). Sensor glucose approaching Low Limit. Check BG."},
             {"BC_SID_SG_RISE_RAPID", "Raise Alert(triggeredDateTime). Sensor glucose raising rapidly."},
             {"BC_SID_SMART_GUARD_MINIMUM_DELIVERY", "SmartGuard minimum delivery."},
+            {"BC_SID_SMART_GUARD_MAXIMUM_DELIVERY", "SmartGuard maximum delivery. Auto Mode has been at maximum delivery for 4 hours. Enter BG to continue in SmartGuard."},
             {"BC_SID_START_NEW_SENSOR", "Start New sensor."},
             {"BC_SID_THREE_DAYS_SINCE_LAST_SET_CHANGE", "Set change reminder(triggeredDateTime). (0) days since last set change. Time to change reservoir and infusion set.:lastSetChange"},
             {"BC_SID_THREE_DAYS_SINCE_LAST_SET_CHANGE1", "Set change reminder. changer reservoir and infusion set."},

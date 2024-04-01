@@ -98,6 +98,7 @@ Public Class CareLinkClient
     Private Shared Function ExpirationTokenAsDate(dateString As String) As Date
         Dim d As Date = Now + New TimeSpan(1, 0, 0, 0, 0)
         Try
+            dateString = dateString.Replace("""", "")
             Dim year As Integer = CInt(dateString.Substring(24, 4))
             Dim month As Integer = Date.ParseExact(dateString.Substring(4, 3), "MMM", CultureInfo.InvariantCulture).Month
             Dim day As Integer = CInt(dateString.Substring(8, 2))
