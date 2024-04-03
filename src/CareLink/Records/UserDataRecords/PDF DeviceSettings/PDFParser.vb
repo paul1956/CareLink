@@ -73,8 +73,8 @@ Public Module PDFParser
         Return extractor
     End Function
 
-    Public Function GetTableList(filename As String, startPageNumber As Integer, Optional endPageNumber As Integer = 0) As List(Of PdfTable)
-        Dim results As New List(Of PdfTable)
+    Public Function GetTableList(filename As String, startPageNumber As Integer, Optional endPageNumber As Integer = 0) As Dictionary(Of String, PdfTable)
+        Dim results As New Dictionary(Of String, PdfTable)
         If Not File.Exists(filename) Then
             Return results
         End If
@@ -82,8 +82,65 @@ Public Module PDFParser
         Dim extractor As PdfTableExtractor = GetPdfExtractor(filename)
         'Declare a PdfTable array
         'Extract tableList from a specific page
+        Dim sub24HourTotal As Integer = 0
+        Dim subTime As Integer = 0
+        Dim subNameRate As Integer = 0
         For i As Integer = startPageNumber To endPageNumber
-            results.AddRange(extractor.ExtractTable(i).ToList)
+            For Each table As PdfTable In extractor.ExtractTable(i).ToList()
+                Dim sTable As StringTable = ExtractTableText(table)
+                Dim item As String = sTable.Rows(0).Columns(0)
+                Dim itemTitle As String
+                Select Case True
+                    Case item.StartsWith("Maximum Basal Rate")
+                        itemTitle = "Maximum Basal Rate"
+                    Case item.StartsWith("24-Hour Total")
+                        sub24HourTotal += 1
+                        itemTitle = $"24 Hour Total({sub24HourTotal})"
+                    Case item.StartsWith("Bolus Wizard")
+                        itemTitle = "Bolus Wizard"
+                    Case item.StartsWith("Easy Bolus")
+                        itemTitle = "Easy Bolus"
+                    Case item.StartsWith("Time Ratio")
+                        itemTitle = "Time Ratio"
+                    Case item.StartsWith("Time Sensitivity")
+                        itemTitle = "Time Sensitivity"
+                    Case item.StartsWith("Time Low")
+                        itemTitle = "Time Low"
+                    Case item.StartsWith("Name Normal")
+                        itemTitle = "Name Normal"
+                    Case item.StartsWith("Time U/Hr")
+                        subTime += 1
+                        itemTitle = $"Time U/Hr({subTime})"
+                    Case item.StartsWith("Name Rate")
+                        subNameRate += 1
+                        itemTitle = $"Name Rate({subNameRate})"
+                    Case item.StartsWith("Sensor")
+                        itemTitle = "Sensor"
+                    Case item.StartsWith("SmartGuard")
+                        itemTitle = "SmartGuard"
+                    Case item.StartsWith("Low Reservoir")
+                        itemTitle = "Low Reservoir"
+                    Case item.StartsWith("Start High")
+                        itemTitle = "Start High"
+                    Case item.StartsWith("Start Low")
+                        itemTitle = "Start Low"
+                    Case item.StartsWith("Auto Calibration")
+                        itemTitle = "Auto Calibration"
+                    Case item.StartsWith("Name Start")
+                        itemTitle = "Name Start"
+                    Case item.StartsWith("Name Time")
+                        itemTitle = "Name Time"
+                    Case item.StartsWith("Calibration Reminder")
+                        itemTitle = "Calibration Reminder"
+                    Case item.StartsWith("Block Mode")
+                        itemTitle = "Block Mode"
+                    Case String.IsNullOrWhiteSpace(item)
+                        Continue For
+                    Case Else
+                        itemTitle = item
+                End Select
+                results.Add(itemTitle, table)
+            Next
         Next
         Return results
     End Function

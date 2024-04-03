@@ -8,16 +8,15 @@ Public Class RemindersRecord
     End Sub
 
     Public Sub New(sTable As StringTable)
-        Me.LowReserviorWarning = sTable.GetSingleLineValue(Of String)("Low Reservoir Warning ")
+        Me.LowReservoirWarning = sTable.GetSingleLineValue(Of String)("Low Reservoir Warning ")
         Me.Amount = sTable.GetSingleLineValue(Of Single)("Amount ")
         Me.BolusBgCheck = sTable.GetSingleLineValue(Of String)("Bolus BG Check ")
         Me.SetChange = sTable.GetSingleLineValue(Of String)("Set Change ")
     End Sub
 
-    Public Property LowReserviorWarning As String
     Public Property Amount As Single
     Public Property BolusBgCheck As String
-    Public Property SetChange As String
+    Public Property LowReservoirWarning As String
 
     Public Property MissedMealBolus As New Dictionary(Of String, MealStartEndRecord) From {
                 {"Meal 1", New MealStartEndRecord()},
@@ -41,4 +40,5 @@ Public Class RemindersRecord
                 {"Medication", New PersonalRemindersRecord()}
             }
 
+    Public Property SetChange As String
 End Class

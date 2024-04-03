@@ -2108,7 +2108,7 @@ Public Class Form1
 
     <DebuggerNonUserCode()>
     Private Sub MenuOptions_DropDownOpening(sender As Object, e As EventArgs) Handles MenuOptions.DropDownOpening
-        Me.MenuOptionsEditPumpSettings.Enabled = Not String.IsNullOrWhiteSpace(CurrentUser?.UserName)
+        Me.MenuOptionsEditPumpSettings.Enabled = Debugger.IsAttached OrElse Not String.IsNullOrWhiteSpace(CurrentUser?.UserName)
     End Sub
 
     Private Sub UpdateNotifyIcon(lastSgString As String)

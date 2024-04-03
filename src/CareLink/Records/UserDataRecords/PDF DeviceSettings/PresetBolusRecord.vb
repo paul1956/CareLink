@@ -34,10 +34,10 @@ Public Class PresetBolusRecord
 
     End Sub
 
-    Public Property IsValid As Boolean = False
-    Public Property BolusTypeNormal As Boolean
     Public Property Bolus As String
+    Public Property BolusTypeNormal As Boolean
     Public Property Duration As String
+    Public Property IsValid As Boolean = False
     Public Property Square As String
 
 End Class

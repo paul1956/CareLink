@@ -151,6 +151,8 @@ Public Class CountrySettingsRecord
                         For Each member As IndexClass(Of KeyValuePair(Of String, String)) In Me.numberFormat.ToList.WithIndex
                             .DgvCountryDataPg3.Rows.Add(itemIndex, rowValue.Key, member.Value.Key, member.Value.Value)
                         Next
+                    Case NameOf(stateCodes)
+                        ' TBD
                     Case Else
                         Stop
                 End Select
@@ -184,6 +186,7 @@ Public Class CountrySettingsRecord
     Public Property reportDateFormat As ReportDateFormatRecord
     Public Property shortDateFormat As String
     Public Property shortTimeFormat As String
+    Public Property stateCodes As Object
     Public Property smsSendingAllowed As String
     Public Property techDays As String
     Public Property techHours As String

@@ -16,19 +16,19 @@ Public Class PresetTempRecord
             If r.Columns(1).Length = 0 AndAlso r.Columns(1).Length = 0 Then
                 Exit Sub
             End If
-            Me.Type = New PresetTypeRecord(r.Columns(1))
+            Me.PresetAmount = New PresetAmountRecord(r.Columns(1))
             Me.Duration = TimeSpan.Parse(r.Columns(2))
             Me.IsValid = True
         Else
-            Me.Type = New PresetTypeRecord(column0Trim)
+            Me.PresetAmount = New PresetAmountRecord(column0Trim)
             Me.Duration = TimeSpan.Parse(r.Columns(1))
             Me.IsValid = True
         End If
     End Sub
 
-    Public Property IsValid As Boolean = False
     Public Property Duration As TimeSpan
     Public Property DurationUnits As String
-    Public Property Type As PresetTypeRecord
+    Public Property IsValid As Boolean = False
+    Public Property PresetAmount As PresetAmountRecord
 
 End Class

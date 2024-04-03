@@ -10,7 +10,7 @@ Friend Module CultureHelpers
     Public Property CurrentDateCulture As CultureInfo
         Get
             If s_currentDateCulture Is Nothing Then
-                Throw New ArgumentNullException(NameOf(s_currentDateCulture))
+                s_currentDateCulture = CultureInfo.CurrentUICulture
             End If
             Return s_currentDateCulture
         End Get

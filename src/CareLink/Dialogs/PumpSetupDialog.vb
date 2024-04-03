@@ -119,7 +119,7 @@ Public Class PumpSetupDialog
                 Dim presetTempRecord As PresetTempRecord = item.Value
 
                 If presetTempRecord.IsValid Then
-                    .AppendLine($"{vbTab}{presetTempRecord.Type}", defaultFont)
+                    .AppendLine($"{vbTab}{presetTempRecord.PresetAmount}", defaultFont)
                     .AppendLine($"{vbTab}Duration:{vbTab}{presetTempRecord.Duration.ToFormattedTimeSpan("U/hr").Trim}", defaultFont)
                 Else
                     .AppendLine
@@ -181,9 +181,9 @@ Public Class PumpSetupDialog
             .AppendLine
 
             .AppendLine($"Menu > {ChrW(&H2699)} > Delivery Settings > Display Options", defaultBoldFont, ChrW(&H2699), subheadingBoldtFont)
-            Call .AppendLine($"{vbTab}Brightness: {_pdf.Utilities.Brightness}", defaultFont)
-            Call .AppendLine($"{vbTab}Backlight:  {_pdf.Utilities.BackLightTimeout.ToFormattedTimeSpan("min").TrimStart("0"c)}", defaultFont)
-            Call .AppendLine
+            .AppendLine($"{vbTab}Brightness: {_pdf.Utilities.Brightness}", defaultFont)
+            .AppendLine($"{vbTab}Backlight:  {_pdf.Utilities.BackLightTimeout.ToFormattedTimeSpan("min").TrimStart("0"c)}", defaultFont)
+            .AppendLine
 
             .AppendLine($"Menu > {ChrW(&H2699)}", defaultBoldFont, ChrW(&H2699), subheadingBoldtFont)
             .AppendLine($"{vbTab}SmartGuard: {_pdf.SmartGuard.SmartGuard}", defaultFont)
@@ -216,16 +216,10 @@ Public Class PumpSetupDialog
             Next
         End With
 
-        With Me.RtbHighSnoozeMenu
-            .Text = ""
-            .AppendLine($"Menu > {ChrW(&H2699)} > Snooze Menu > Snooze High & Low > High Snooze: {_pdf.HighAlerts}", defaultBoldFont, ChrW(&H2699), subheadingBoldtFont, False)
-            .ReadOnly = True
-            .SelectionStart = 0
-        End With
 
         With Me.RtbLowAlertMenu
             .Text = ""
-            .AppendLine($"Menu > {ChrW(&H2699)} > Alert Settings > Snooze High & Low > Low Snooze:", defaultBoldFont, ChrW(&H2699), subheadingBoldtFont, False)
+            .AppendLine($"Menu > {ChrW(&H2699)} > Alert Settings > Low Alert", defaultBoldFont, ChrW(&H2699), subheadingBoldtFont, False)
             .ReadOnly = True
             .SelectionStart = 0
         End With
@@ -242,6 +236,13 @@ Public Class PumpSetupDialog
                 .Columns("ColumnResumeBasalAlert").Visible = String.IsNullOrWhiteSpace(l.Suspend)
             Next
 
+        End With
+
+        With Me.RtbHighSnoozeMenu
+            .Text = ""
+            .AppendLine($"Menu > {ChrW(&H2699)} > Snooze Menu > Snooze High & Low > High Snooze: {_pdf.HighAlerts}", defaultBoldFont, ChrW(&H2699), subheadingBoldtFont, False)
+            .ReadOnly = True
+            .SelectionStart = 0
         End With
 
         With Me.RtbLowSnoozeMenu

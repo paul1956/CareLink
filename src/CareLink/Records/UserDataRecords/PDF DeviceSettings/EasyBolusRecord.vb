@@ -14,9 +14,8 @@ Public Class EasyBolusRecord
     Public Sub New()
     End Sub
 
-    Public Property EasyBolus As String = "Off"
     Public Property BolusIncrement As Single
     Public Property BolusSpeed As String
     Public Property DualSquare As New DualSquareRecord("")
-
+    Public Property EasyBolus As String = "Off"
 End Class

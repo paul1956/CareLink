@@ -2,7 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Public Class PresetTypeRecord
+Public Class PresetAmountRecord
     Private ReadOnly _units As String
     Private ReadOnly _rate As Single
     Private ReadOnly _percent As Single

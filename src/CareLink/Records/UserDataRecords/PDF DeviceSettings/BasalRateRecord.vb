@@ -20,9 +20,9 @@ Public Class BasalRateRecord
         End If
     End Sub
 
-    Public Property IsValid As Boolean = False
     Public Property [Time] As TimeOnly
     Public Property UnitsPerHr As Single
+    Public Property IsValid As Boolean = False
 
     Public Overrides Function ToString() As String
         Return If(Me.IsValid, $"{Me.Time} {Me.UnitsPerHr}", $" ")

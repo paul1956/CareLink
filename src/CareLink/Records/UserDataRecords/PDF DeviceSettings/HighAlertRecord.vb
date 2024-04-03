@@ -41,14 +41,14 @@ Public Class HighAlertRecord
         Me.IsValid = True
     End Sub
 
-    Public ReadOnly Property Start As TimeOnly
     Public Property [End] As TimeOnly
-    Public ReadOnly Property HighLimit As Single
-    Public Property ValueUnits As String
     Public ReadOnly Property AlertBeforeHigh As Boolean = False
-    Public ReadOnly Property TimeBeforeHigh As String = "15* Min"
     Public ReadOnly Property AlertOnHigh As Boolean
-    Public ReadOnly Property RiseAlert As Boolean
-    Public ReadOnly Property RaiseLimit As String
+    Public ReadOnly Property HighLimit As Single
     Public ReadOnly Property IsValid As Boolean = False
+    Public ReadOnly Property RaiseLimit As String
+    Public ReadOnly Property RiseAlert As Boolean
+    Public ReadOnly Property Start As TimeOnly
+    Public ReadOnly Property TimeBeforeHigh As String = "15* Min"
+    Public Property ValueUnits As String
 End Class

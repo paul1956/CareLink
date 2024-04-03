@@ -15,8 +15,8 @@ Public Class DeviceUnitsRecord
         End If
     End Sub
 
-    Public Property CarbUnits As String
     Public Property BgUnits As String
+    Public Property CarbUnits As String
 
     Private Function GetDebuggerDisplay() As String
         Return Me.ToString()

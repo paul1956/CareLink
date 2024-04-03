@@ -13,8 +13,7 @@ Public Class SmartGuardRecord
         Me.AutoCorrection = sTable.GetSingleLineValue(Of String)("Auto Correction ")
     End Sub
 
+    Public Property AutoCorrection As String = "Off"
     Public Property SmartGuard As String = "Off"
     Public Property Target As Single = 120
-    Public Property AutoCorrection As String = "Off"
-
 End Class

@@ -15,12 +15,8 @@ Public Class BolusWizardRecord
         Me.MaximumBolus = sTables.GetSingleLineValue(Of Single)("Maximum Bolus")
     End Sub
 
-    Public Property BolusWizard As String = "Off"
-    Public Property Units As DeviceUnitsRecord
-
-    ' Pump Ait
     Public Property ActiveInsulinTime As Single
-
+    Public Property BolusWizard As String = "Off"
     Public Property MaximumBolus As Single
-
+    Public Property Units As DeviceUnitsRecord
 End Class

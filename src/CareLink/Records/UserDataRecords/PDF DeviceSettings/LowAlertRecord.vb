@@ -37,14 +37,14 @@ Public Class LowAlertRecord
         Me.IsValid = True
     End Sub
 
-    Public Property Start As TimeOnly
     Public Property [End] As TimeOnly
-    Public Property LowLimit As Single
-    Public Property ValueUnits As String
     Public Property AlertBeforeLow As Boolean
     Public Property AlertOnLow As Boolean
+    Public Property IsValid As Boolean = False
+    Public Property LowLimit As Single
+    Public Property ResumeBasalAlert As Boolean
+    Public Property Start As TimeOnly
     Public Property Suspend As String
     Public Property SuspendOnLow As Boolean
-    Public Property ResumeBasalAlert As Boolean
-    Public Property IsValid As Boolean = False
+    Public Property ValueUnits As String
 End Class

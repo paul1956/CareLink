@@ -21,8 +21,8 @@ Public Class InsulinSensitivityRecord
         End If
     End Sub
 
-    Public Property IsValid As Boolean = False
     Public Property [Time] As TimeOnly
+    Public Property IsValid As Boolean = False
     Public Property Sensitivity As Single
 
 End Class

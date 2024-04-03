@@ -17,17 +17,8 @@ Public Class DeviceCarbRatioRecord
         End If
     End Sub
 
-    Private Shared ReadOnly Property ColumnTitles As New List(Of String) From {
-                        {NameOf(Time)},
-                        {NameOf(Ratio)}
-                    }
-
-    Public Property IsValid As Boolean = False
     Public Property [Time] As TimeOnly
+    Public Property IsValid As Boolean = False
     Public Property Ratio As Single
-
-    Friend Shared Function GetColumnTitle() As String
-        Return ColumnTitles.ToArray.JoinLines(" ")
-    End Function
 
 End Class

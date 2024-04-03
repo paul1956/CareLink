@@ -9,6 +9,7 @@ Friend Module NewMessageBox
         Return $"{prompt}{vbCrLf}Closing in { (remainingTenthSeconds + 9) \ 10} seconds..."
     End Function
 
+    <DebuggerNonUserCode>
     Private Function MsgBox(heading As String, text As String, buttonStyle As MsgBoxStyle, title As String, autoCloseTimeOutSeconds As Integer, page As TaskDialogPage, checkBoxPrompt As String) As MsgBoxResult
         Dim remainingTenthSeconds As Integer = autoCloseTimeOutSeconds * 10
         page.Caption = title
@@ -128,12 +129,12 @@ Friend Module NewMessageBox
         End Using
     End Function
 
-    <System.Diagnostics.DebuggerNonUserCode()>
+    <DebuggerNonUserCode()>
     Public Function MsgBox(heading As String, text As String, buttonStyle As MsgBoxStyle, title As String, autoCloseTimeOutSeconds As Integer, page As TaskDialogPage) As MsgBoxResult
         Return MsgBox(heading, text, buttonStyle, title, autoCloseTimeOutSeconds, page, "Do not show again")
     End Function
 
-    <System.Diagnostics.DebuggerNonUserCode()>
+    <DebuggerNonUserCode()>
     Public Function MsgBox(heading As String, text As String, buttonStyle As MsgBoxStyle, title As String) As MsgBoxResult
         Return MsgBox(heading, text, buttonStyle, title, -1, New TaskDialogPage, "")
     End Function

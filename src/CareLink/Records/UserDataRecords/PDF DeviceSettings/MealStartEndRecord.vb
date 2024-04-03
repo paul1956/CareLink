@@ -12,7 +12,6 @@ Public Class MealStartEndRecord
         Me.End = r.Columns(1)
     End Sub
 
-    Public Property Start As String = "Off"
     Public Property [End] As String = "Off"
-
+    Public Property Start As String = "Off"
 End Class

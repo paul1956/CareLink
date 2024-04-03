@@ -37,20 +37,20 @@ Public Class LowAlertsRecord
 
     Public Property LowAlert As New List(Of LowAlertRecord)
 
+    Public Property SnoozeOn As String = "Off"
+
     Public WriteOnly Property SnoozeTime As TimeSpan
         Set
             _snoozeTime = Value
         End Set
     End Property
 
-    Public Property SnoozeOn As String = "Off"
+    Private Function GetDebuggerDisplay() As String
+        Return Me.ToString()
+    End Function
 
     Public Overrides Function ToString() As String
         Return If(Me.SnoozeOn = "On", _snoozeTime.ToFormattedTimeSpan("hr"), "Off")
-    End Function
-
-    Private Function GetDebuggerDisplay() As String
-        Return Me.ToString()
     End Function
 
 End Class

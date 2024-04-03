@@ -6,20 +6,20 @@ Imports Spire.Pdf.Utilities
 
 Public Class NamedBasalRecord
 
-    Public Sub New(tables As List(Of PdfTable), i As Integer, isActive As Boolean)
-        Dim sTable As StringTable
-        Dim tableNumber As Integer
-        If i >= 1 AndAlso i <= 3 Then
-            sTable = ConvertPdfTableToStringTable(tables(i), "24-Hour")
-            Me.Total24Hour = sTable.GetSingleLineValue(Of String)("24-Hour Total")
-            tableNumber = i + 9
-        Else
-            tableNumber = i
-        End If
-
+    Public Sub New(table As PdfTable, isActive As Boolean)
+        Dim sTable As StringTable = ConvertPdfTableToStringTable(table, "24-Hour")
+        Me.Total24Hour = sTable.GetSingleLineValue(Of String)("24-Hour Total")
         Me.Active = isActive
+    End Sub
 
-        sTable = ConvertPdfTableToStringTable(tables(tableNumber), Me.GetColumnTitle)
+    Public Sub New()
+    End Sub
+
+    Public Property Active As Boolean = False
+    Public Property basalRates As New List(Of BasalRateRecord)
+    Public Property Total24Hour As String = ""
+
+    Public Sub UpdateBasalRates(sTable As StringTable)
         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
             If e.IsFirst Then Continue For
             Dim line As String = e.Value.Columns(0)
@@ -28,21 +28,5 @@ Public Class NamedBasalRecord
             Me.basalRates.Add(item)
         Next
     End Sub
-
-    Public Sub New()
-    End Sub
-
-    Private ReadOnly Property ColumnTitles() As New List(Of String) From {
-                    {"Time"},
-                    {"U/Hr"}
-                }
-
-    Public Property Active As Boolean
-    Public Property Total24Hour As String
-    Public Property basalRates As New List(Of BasalRateRecord)
-
-    Private Function GetColumnTitle() As String
-        Return Me.ColumnTitles.ToArray.JoinLines(" ")
-    End Function
 
 End Class

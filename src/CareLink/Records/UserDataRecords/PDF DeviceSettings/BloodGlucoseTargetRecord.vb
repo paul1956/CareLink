@@ -17,15 +17,8 @@ Public Class BloodGlucoseTargetRecord
         End If
     End Sub
 
-    Private Shared ReadOnly Property ColumnTitles As New List(Of String) From {
-                    {NameOf(Time)},
-                    {NameOf(Low)},
-                    {NameOf(High)}
-                }
-
-    Public Property IsValid As Boolean = False
     Public Property [Time] As New TimeOnly
-    Public Property Low As Single = 70
     Public Property High As Single = 180
-
+    Public Property IsValid As Boolean = False
+    Public Property Low As Single = 70
 End Class

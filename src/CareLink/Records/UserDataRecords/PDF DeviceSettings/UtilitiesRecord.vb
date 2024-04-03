@@ -28,13 +28,11 @@ Public Class UtilitiesRecord
 
     End Sub
 
-    Public Property BlockMode As String = "Off"
-    Public Property TimeFormat As String = ""
-
-    Public Property Brightness As String = "Unknown"
-    Public Property BackLightTimeout As New TimeSpan
-    Public Property AudioOptions As String = "Unknown"
     Public Property AlarmVolume As String = "Unknown"
+    Public Property AudioOptions As String = "Unknown"
     Public Property AutoSuspend As New AutoSuspendRecord
-
+    Public Property BackLightTimeout As New TimeSpan
+    Public Property BlockMode As String = "Off"
+    Public Property Brightness As String = "Unknown"
+    Public Property TimeFormat As String = ""
 End Class

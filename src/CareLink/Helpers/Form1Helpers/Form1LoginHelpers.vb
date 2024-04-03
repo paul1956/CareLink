@@ -171,9 +171,9 @@ Friend Module Form1LoginHelpers
                 CurrentUser.InsulinTypeName = s_insulinTypes.Keys(0)
             End If
 
-            pdfNewerThanUserSettings = IsFileReadOnly(pdfFileNameWithPath) OrElse (File.Exists(pdfFileNameWithPath) AndAlso File.GetLastWriteTime(pdfFileNameWithPath) > File.GetLastWriteTime(userSettingsFileWithPath))
+            pdfNewerThanUserSettings = (File.Exists(pdfFileNameWithPath) AndAlso File.GetLastWriteTime(pdfFileNameWithPath) > File.GetLastWriteTime(userSettingsFileWithPath)) OrElse IsFileReadOnly(pdfFileNameWithPath)
 
-            If pdfNewerThanUserSettings OrElse Not (forceUI OrElse IsFileStale(userSettingsFileWithPath)) Then
+            If Not pdfNewerThanUserSettings OrElse (Not forceUI AndAlso Not IsFileStale(userSettingsFileWithPath)) Then
                 CurrentPdf = New PdfSettingsRecord(pdfFileNameWithPath)
                 Exit Sub
             End If
@@ -189,7 +189,7 @@ Friend Module Form1LoginHelpers
         Dim carbRatios As New List(Of CarbRatioRecord)
         Dim currentTarget As Single = 120
 
-        If pdfNewerThanUserSettings OrElse Form1.Client.TryGetDeviceSettingsPdfFile(pdfFileNameWithPath) OrElse File.Exists(pdfFileNameWithPath) Then
+        If pdfNewerThanUserSettings OrElse Form1.Client?.TryGetDeviceSettingsPdfFile(pdfFileNameWithPath) OrElse File.Exists(pdfFileNameWithPath) Then
             CurrentPdf = New PdfSettingsRecord(pdfFileNameWithPath)
             If CurrentPdf.IsValid Then
                 If CurrentUser.PumpAit <> CurrentPdf.Bolus.BolusWizard.ActiveInsulinTime Then
