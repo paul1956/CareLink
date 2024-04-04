@@ -33,7 +33,7 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 04/03/2024
 
 ## What's New
- New in 4.0.1.1
+ New in 4.0.1.2
  - Fix issue Session expires after 35 minutes #58
 
  -  New in 4.0.1.0
