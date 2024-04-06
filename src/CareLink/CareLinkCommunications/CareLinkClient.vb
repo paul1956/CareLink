@@ -282,7 +282,12 @@ Public Class CareLinkClient
         Select Case Me.GetAuthorizationToken(authToken)
             Case GetAuthorizationTokenResult.OK
                 Dim jsonDictionary As Dictionary(Of String, String) = Me.GetDataItems(authToken, endPointPath, requestBody)
-                If _lastResponseCode <> HttpStatusCode.OK Then
+                If _lastResponseCode = HttpStatusCode.OK Then
+                    Return jsonDictionary
+                End If
+                If _lastResponseCode = HttpStatusCode.NoContent Then
+                    ReportLoginStatus(Form1.LoginStatus, True, _lastErrorMessage)
+                Else
                     ReportLoginStatus(Form1.LoginStatus)
                 End If
                 Return jsonDictionary
