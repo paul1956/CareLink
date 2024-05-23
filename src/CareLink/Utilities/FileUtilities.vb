@@ -6,16 +6,6 @@ Imports System.IO
 
 Friend Module FileUtilities
 
-    Public Sub ByteArrayFromFile(fileName As String, byteArray() As Byte)
-        Try
-            Using fs As New FileStream(fileName, FileMode.Open, FileAccess.Read)
-                fs.Read(byteArray, 0, byteArray.Length)
-            End Using
-        Catch ex As Exception
-            Stop
-        End Try
-    End Sub
-
     Public Sub ByteArrayToFile(fileName As String, byteArray() As Byte)
         Try
             Using fs As New FileStream(fileName, FileMode.Create, FileAccess.Write)

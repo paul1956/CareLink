@@ -10,7 +10,7 @@ Public Class KnownColorComboBox
     Public Sub New()
         MyBase.New
         Dim kColor As Color
-        For Each known As KnownColor In [Enum].GetValues(GetType(KnownColor))
+        For Each known As KnownColor In [Enum].GetValues(Of KnownColor)()
             If known = KnownColor.Transparent Then Continue For
             kColor = Color.FromKnownColor(known)
             If kColor.IsSystemColor OrElse _allKnownColors.ContainsValue(known) Then

@@ -26,7 +26,7 @@ Public Module NearestKnownColor
     Public Function GetNearestKnownColor(col As Color, Optional excludeSystemColors As Boolean = True) As KnownColor
         Dim rgbList As New SortedList(Of Long, KnownColor)
         Dim rgb As Integer, hsb As Single, kColor As Color
-        For Each known As KnownColor In [Enum].GetValues(GetType(KnownColor))
+        For Each known As KnownColor In [Enum].GetValues(Of KnownColor)
             kColor = Color.FromKnownColor(known)
             If Not excludeSystemColors OrElse Not kColor.IsSystemColor Then
                 rgb = RgbDifference(kColor, col)

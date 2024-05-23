@@ -125,7 +125,7 @@ Friend Module NewMessageBox
             End If
 
             Dim result As TaskDialogButton = TaskDialog.ShowDialog(Form1, page)
-            Return CType([Enum].Parse(GetType(MsgBoxResult), result.ToString), MsgBoxResult)
+            Return CType([Enum].Parse(Of MsgBoxResult)(result.ToString), MsgBoxResult)
         End Using
     End Function
 

@@ -11,7 +11,7 @@ Friend Module KnownColors
 
         If s_allKnownColors.Count = 0 Then
             Dim kColor As Color
-            For Each known As KnownColor In [Enum].GetValues(GetType(KnownColor))
+            For Each known As KnownColor In [Enum].GetValues(Of KnownColor)
                 If known = KnownColor.Transparent Then Continue For
                 kColor = Color.FromKnownColor(known)
                 If kColor.IsSystemColor OrElse s_allKnownColors.ContainsValue(known) Then
