@@ -256,7 +256,7 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "Microsoft.Web.WebView2/1.0.2478.35": {
+      "Microsoft.Web.WebView2/1.0.2535.41": {
         "type": "package",
         "compile": {
           "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.dll": {
@@ -1719,10 +1719,10 @@
         "runtime.json"
       ]
     },
-    "Microsoft.Web.WebView2/1.0.2478.35": {
-      "sha512": "iDlxm6Gv4CU64ch4nc4DZXLbb5VRYNJb3IjGC+zJdEVIHjqt8Fed3JeThXIhpIwf49ke4e/CULYJXfNiG0sNhg==",
+    "Microsoft.Web.WebView2/1.0.2535.41": {
+      "sha512": "E3rAxpp2GVtg99wlRBjIM5YeCXFvhPQuHGn/rfxjAJLNbKfiflliljtY/aJBkMmCzf/KmDhTTmU1hoOsEtuW+Q==",
       "type": "package",
-      "path": "microsoft.web.webview2/1.0.2478.35",
+      "path": "microsoft.web.webview2/1.0.2535.41",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -1751,19 +1751,19 @@
         "build/native/x86/WebView2LoaderStatic.lib",
         "build/wv2winrt.targets",
         "lib/Microsoft.Web.WebView2.Core.winmd",
-        "lib/net45/Microsoft.Web.WebView2.Core.dll",
-        "lib/net45/Microsoft.Web.WebView2.Core.xml",
-        "lib/net45/Microsoft.Web.WebView2.WinForms.dll",
-        "lib/net45/Microsoft.Web.WebView2.WinForms.xml",
-        "lib/net45/Microsoft.Web.WebView2.Wpf.dll",
-        "lib/net45/Microsoft.Web.WebView2.Wpf.xml",
+        "lib/net462/Microsoft.Web.WebView2.Core.dll",
+        "lib/net462/Microsoft.Web.WebView2.Core.xml",
+        "lib/net462/Microsoft.Web.WebView2.WinForms.dll",
+        "lib/net462/Microsoft.Web.WebView2.WinForms.xml",
+        "lib/net462/Microsoft.Web.WebView2.Wpf.dll",
+        "lib/net462/Microsoft.Web.WebView2.Wpf.xml",
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.dll",
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.xml",
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.dll",
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.xml",
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll",
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.xml",
-        "microsoft.web.webview2.1.0.2478.35.nupkg.sha512",
+        "microsoft.web.webview2.1.0.2535.41.nupkg.sha512",
         "microsoft.web.webview2.nuspec",
         "runtimes/win-arm64/native/WebView2Loader.dll",
         "runtimes/win-arm64/native_uap/Microsoft.Web.WebView2.Core.dll",
@@ -4393,7 +4393,7 @@
       "ClosedXML >= 0.104.0-preview2",
       "DataGridViewDisableButtonColumnEx >= 1.0.0.1",
       "FreeSpire.PDF >= 10.2.0",
-      "Microsoft.Web.WebView2 >= 1.0.2478.35",
+      "Microsoft.Web.WebView2 >= 1.0.2535.41",
       "Octokit >= 11.0.1",
       "System.Speech >= 9.0.0-preview.2.24128.5",
       "TableLayputPanelTop >= 1.0.0.3",
@@ -4460,7 +4460,7 @@
           },
           "Microsoft.Web.WebView2": {
             "target": "Package",
-            "version": "[1.0.2478.35, )"
+            "version": "[1.0.2535.41, )"
           },
           "Octokit": {
             "target": "Package",

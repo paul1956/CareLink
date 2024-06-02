@@ -397,7 +397,7 @@ Partial Class Form1
         ' 
         MenuStartHereCleanUpObsoleteFiles.Name = "MenuStartHereCleanUpObsoleteFiles"
         MenuStartHereCleanUpObsoleteFiles.Size = New Size(245, 22)
-        MenuStartHereCleanUpObsoleteFiles.Text = "Clean Up Obsolute Files"
+        MenuStartHereCleanUpObsoleteFiles.Text = "Clean Up Obsolete Files"
         ' 
         ' ToolStripSeparator3
         ' 
