@@ -2341,11 +2341,11 @@ Public Class Form1
                 .PlotSgSeries(GetYMinValue(NativeMmolL))
                 .PlotHighLowLimitsAndTargetSg(True)
             End With
+            Application.DoEvents()
         Catch ex As Exception
             Stop
             Throw New Exception($"{ex.DecodeException()} exception in {NameOf(UpdateActiveInsulinChart)}")
         End Try
-        Application.DoEvents()
     End Sub
 
     Private Sub UpdateAllSummarySeries()

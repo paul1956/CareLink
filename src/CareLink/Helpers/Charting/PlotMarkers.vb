@@ -4,7 +4,6 @@
 
 Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
-Imports Octokit
 
 Friend Module PlotMarkers
 

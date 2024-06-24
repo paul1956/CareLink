@@ -256,7 +256,7 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "Microsoft.Web.WebView2/1.0.2535.41": {
+      "Microsoft.Web.WebView2/1.0.2592.51": {
         "type": "package",
         "compile": {
           "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.dll": {
@@ -316,7 +316,7 @@
           }
         }
       },
-      "Octokit/11.0.1": {
+      "Octokit/12.0.0": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/Octokit.dll": {
@@ -1719,10 +1719,10 @@
         "runtime.json"
       ]
     },
-    "Microsoft.Web.WebView2/1.0.2535.41": {
-      "sha512": "E3rAxpp2GVtg99wlRBjIM5YeCXFvhPQuHGn/rfxjAJLNbKfiflliljtY/aJBkMmCzf/KmDhTTmU1hoOsEtuW+Q==",
+    "Microsoft.Web.WebView2/1.0.2592.51": {
+      "sha512": "AC9aWCthS2JvddYA1jl4dFpLBW3GsLRInhp5dkcBzaFXsRehfoUN9olIUsrH41eNaNYd7z9NRvmy81aUA5aD1g==",
       "type": "package",
-      "path": "microsoft.web.webview2/1.0.2535.41",
+      "path": "microsoft.web.webview2/1.0.2592.51",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -1763,7 +1763,7 @@
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.xml",
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll",
         "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.xml",
-        "microsoft.web.webview2.1.0.2535.41.nupkg.sha512",
+        "microsoft.web.webview2.1.0.2592.51.nupkg.sha512",
         "microsoft.web.webview2.nuspec",
         "runtimes/win-arm64/native/WebView2Loader.dll",
         "runtimes/win-arm64/native_uap/Microsoft.Web.WebView2.Core.dll",
@@ -1827,16 +1827,16 @@
         "microsoft.web.webview2.devtoolsprotocolextension.nuspec"
       ]
     },
-    "Octokit/11.0.1": {
-      "sha512": "fpwF/DxMJyGS+pIXDKQozx0wCIpOfG8VDr10ls+m9Gn9Lz8GslhhApxkKD9JCNO60HRUeMJsedsAS24gCjTD7Q==",
+    "Octokit/12.0.0": {
+      "sha512": "7LAFFcirR/IaC84Uy+L1L+yqlYHxaMjHPt5GeLkB/GG0ujl7IgWWcL3VHMwMB3Y76Spsz0lMnPKub4EeosSljg==",
       "type": "package",
-      "path": "octokit/11.0.1",
+      "path": "octokit/12.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Octokit.dll",
         "lib/netstandard2.0/Octokit.xml",
-        "octokit.11.0.1.nupkg.sha512",
+        "octokit.12.0.0.nupkg.sha512",
         "octokit.nuspec",
         "octokit.png"
       ]
@@ -4393,8 +4393,8 @@
       "ClosedXML >= 0.104.0-preview2",
       "DataGridViewDisableButtonColumnEx >= 1.0.0.1",
       "FreeSpire.PDF >= 10.2.0",
-      "Microsoft.Web.WebView2 >= 1.0.2535.41",
-      "Octokit >= 11.0.1",
+      "Microsoft.Web.WebView2 >= 1.0.2592.51",
+      "Octokit >= 12.0.0",
       "System.Speech >= 9.0.0-preview.2.24128.5",
       "TableLayputPanelTop >= 1.0.0.3",
       "ToolStripComboBoxEx >= 1.0.0.2",
@@ -4460,11 +4460,11 @@
           },
           "Microsoft.Web.WebView2": {
             "target": "Package",
-            "version": "[1.0.2535.41, )"
+            "version": "[1.0.2592.51, )"
           },
           "Octokit": {
             "target": "Package",
-            "version": "[11.0.1, )"
+            "version": "[12.0.0, )"
           },
           "System.Speech": {
             "target": "Package",

@@ -343,8 +343,8 @@ Friend Module CreateChartItems
                     .Maximum = New OADate(PumpNow)
                     .Minimum = New OADate(PumpNow.AddDays(-1))
                 Else
-                    .Maximum = s_listOfSgRecords.LastOrDefault.OaDateTime
-                    .Minimum = s_listOfSgRecords.FirstOrDefault.OaDateTime
+                    .Maximum = s_listOfSgRecords.Aggregate(Function(i1, i2) If(i1.OaDateTime > i2.OaDateTime, i1, i2)).OaDateTime
+                    .Minimum = s_listOfSgRecords.Aggregate(Function(i1, i2) If(i1.OaDateTime < i2.OaDateTime, i1, i2)).OaDateTime
                 End If
             End With
         End With
