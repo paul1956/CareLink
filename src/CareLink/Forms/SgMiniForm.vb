@@ -83,7 +83,7 @@ Public Class SgMiniForm
 
     End Sub
 
-    Private Sub SgMiniWindow_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
+    Private Sub SgMiniForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         _form1.Visible = True
     End Sub
 

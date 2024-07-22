@@ -76,7 +76,7 @@ Public Class Form1
     '' Overloaded System Windows Handler.
     '' </summary>
     '' <param name="m">Message <see cref="Message"/> structure</param>
-    <System.Diagnostics.DebuggerNonUserCode()>
+    <DebuggerNonUserCode()>
     Protected Overrides Sub WndProc(ByRef m As Message)
         Select Case m.Msg
             Case WM_POWERBROADCAST
@@ -1023,7 +1023,7 @@ Public Class Form1
         ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.LimeGreen, ButtonBorderStyle.Solid)
     End Sub
 
-    Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles MyBase.Closing
+    Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         Me.CleanUpNotificationIcon()
         If _webViewProcessId > 0 Then
             Dim webViewProcess As Process = Process.GetProcessById(_webViewProcessId)
@@ -1039,10 +1039,6 @@ Public Class Form1
                 End Try
             End If
         End If
-    End Sub
-
-    Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-        Me.CleanUpNotificationIcon()
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
