@@ -173,9 +173,11 @@ Friend Module Form1LoginHelpers
 
             pdfNewerThanUserSettings = (File.Exists(pdfFileNameWithPath) AndAlso File.GetLastWriteTime(pdfFileNameWithPath) > File.GetLastWriteTime(userSettingsFileWithPath)) OrElse IsFileReadOnly(pdfFileNameWithPath)
 
-            If Not pdfNewerThanUserSettings OrElse (Not forceUI AndAlso Not IsFileStale(userSettingsFileWithPath)) Then
-                CurrentPdf = New PdfSettingsRecord(pdfFileNameWithPath)
-                Exit Sub
+            If Not forceUI Then
+                If Not (pdfNewerThanUserSettings AndAlso IsFileStale(userSettingsFileWithPath)) Then
+                    CurrentPdf = New PdfSettingsRecord(pdfFileNameWithPath)
+                    Exit Sub
+                End If
             End If
         Else
             CurrentUser = New CurrentUserRecord(s_userName, If(Not Is700Series(), CheckState.Checked, CheckState.Indeterminate))
