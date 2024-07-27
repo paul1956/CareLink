@@ -256,30 +256,8 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "Microsoft.Web.WebView2/1.0.2592.51": {
+      "Microsoft.Web.WebView2/1.0.2646-prerelease": {
         "type": "package",
-        "compile": {
-          "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.dll": {
-            "related": ".xml"
-          },
-          "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.dll": {
-            "related": ".xml"
-          },
-          "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.dll": {
-            "related": ".xml"
-          },
-          "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.dll": {
-            "related": ".xml"
-          },
-          "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll": {
-            "related": ".xml"
-          }
-        },
         "build": {
           "build/Microsoft.Web.WebView2.targets": {}
         },
@@ -1189,7 +1167,7 @@
           }
         }
       },
-      "System.Speech/9.0.0-preview.2.24128.5": {
+      "System.Speech/9.0.0-preview.6.24327.7": {
         "type": "package",
         "compile": {
           "lib/net8.0/System.Speech.dll": {
@@ -1719,10 +1697,10 @@
         "runtime.json"
       ]
     },
-    "Microsoft.Web.WebView2/1.0.2592.51": {
-      "sha512": "AC9aWCthS2JvddYA1jl4dFpLBW3GsLRInhp5dkcBzaFXsRehfoUN9olIUsrH41eNaNYd7z9NRvmy81aUA5aD1g==",
+    "Microsoft.Web.WebView2/1.0.2646-prerelease": {
+      "sha512": "p7dSntKAk5egOtIVRP6ZDEUHy3/mqfubTrlLZm5UKvRSJJc39h4SHSorcw+UbxE9lsqt4A9U6NByrgpSZQ+xBw==",
       "type": "package",
-      "path": "microsoft.web.webview2/1.0.2592.51",
+      "path": "microsoft.web.webview2/1.0.2646-prerelease",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -1731,6 +1709,8 @@
         "NOTICE.txt",
         "WebView2.idl",
         "WebView2.tlb",
+        "WebView2Experimental.idl",
+        "WebView2Experimental.tlb",
         "build/Common.targets",
         "build/Microsoft.Web.WebView2.targets",
         "build/WebView2Rules.Project.xml",
@@ -1743,6 +1723,8 @@
         "build/native/include-winrt/WebView2Interop.tlb",
         "build/native/include/WebView2.h",
         "build/native/include/WebView2EnvironmentOptions.h",
+        "build/native/include/WebView2Experimental.h",
+        "build/native/include/WebView2ExperimentalEnvironmentOptions.h",
         "build/native/x64/WebView2Loader.dll",
         "build/native/x64/WebView2Loader.dll.lib",
         "build/native/x64/WebView2LoaderStatic.lib",
@@ -1757,13 +1739,14 @@
         "lib/net462/Microsoft.Web.WebView2.WinForms.xml",
         "lib/net462/Microsoft.Web.WebView2.Wpf.dll",
         "lib/net462/Microsoft.Web.WebView2.Wpf.xml",
-        "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.dll",
-        "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.xml",
-        "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.dll",
-        "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.xml",
-        "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll",
-        "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.xml",
-        "microsoft.web.webview2.1.0.2592.51.nupkg.sha512",
+        "lib_manual/net6.0-windows10.0.17763.0/Microsoft.Web.WebView2.Core.Projection.dll",
+        "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Core.dll",
+        "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Core.xml",
+        "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.dll",
+        "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.xml",
+        "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll",
+        "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.xml",
+        "microsoft.web.webview2.1.0.2646-prerelease.nupkg.sha512",
         "microsoft.web.webview2.nuspec",
         "runtimes/win-arm64/native/WebView2Loader.dll",
         "runtimes/win-arm64/native_uap/Microsoft.Web.WebView2.Core.dll",
@@ -3835,10 +3818,10 @@
         "system.security.cryptography.x509certificates.nuspec"
       ]
     },
-    "System.Speech/9.0.0-preview.2.24128.5": {
-      "sha512": "KlZuTRYKP+v47VQuDLngMDEBjCNjAGu1aFJz5DVt3IrqKQNZage1OQq61JzxmulYLvZS6BOQ6m4lN045ZGESVw==",
+    "System.Speech/9.0.0-preview.6.24327.7": {
+      "sha512": "Gl1VKtX4mU0kFm13gW0/df4rfRchyzfzXCdk+zZgJ1Ozih6J66H+mO5a+Ecp7sCnD6NNWdjni1khVJDUftKM1A==",
       "type": "package",
-      "path": "system.speech/9.0.0-preview.2.24128.5",
+      "path": "system.speech/9.0.0-preview.6.24327.7",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3859,7 +3842,7 @@
         "runtimes/win/lib/net8.0/System.Speech.xml",
         "runtimes/win/lib/net9.0/System.Speech.dll",
         "runtimes/win/lib/net9.0/System.Speech.xml",
-        "system.speech.9.0.0-preview.2.24128.5.nupkg.sha512",
+        "system.speech.9.0.0-preview.6.24327.7.nupkg.sha512",
         "system.speech.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -4393,9 +4376,9 @@
       "ClosedXML >= 0.104.0-preview2",
       "DataGridViewDisableButtonColumnEx >= 1.0.0.1",
       "FreeSpire.PDF >= 10.2.0",
-      "Microsoft.Web.WebView2 >= 1.0.2592.51",
+      "Microsoft.Web.WebView2 >= 1.0.2646-prerelease",
       "Octokit >= 13.0.1",
-      "System.Speech >= 9.0.0-preview.2.24128.5",
+      "System.Speech >= 9.0.0-preview.6.24327.7",
       "TableLayputPanelTop >= 1.0.0.3",
       "ToolStripComboBoxEx >= 1.0.0.2",
       "WebView2.DevTools.Dom >= 4.0.1",
@@ -4460,7 +4443,7 @@
           },
           "Microsoft.Web.WebView2": {
             "target": "Package",
-            "version": "[1.0.2592.51, )"
+            "version": "[1.0.2646-prerelease, )"
           },
           "Octokit": {
             "target": "Package",
@@ -4468,7 +4451,7 @@
           },
           "System.Speech": {
             "target": "Package",
-            "version": "[9.0.0-preview.2.24128.5, )"
+            "version": "[9.0.0-preview.6.24327.7, )"
           },
           "TableLayputPanelTop": {
             "target": "Package",

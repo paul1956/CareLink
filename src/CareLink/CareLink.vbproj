@@ -61,9 +61,9 @@
     <PackageReference Include="ClosedXML" Version="0.104.0-preview2" />
     <PackageReference Include="DataGridViewDisableButtonColumnEx" Version="1.0.0.1" />
     <PackageReference Include="FreeSpire.PDF" Version="10.2.0" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2592.51" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2646-prerelease" />
     <PackageReference Include="Octokit" Version="13.0.1" />
-    <PackageReference Include="System.Speech" Version="9.0.0-preview.2.24128.5" />
+    <PackageReference Include="System.Speech" Version="9.0.0-preview.6.24327.7" />
     <PackageReference Include="TableLayputPanelTop" Version="1.0.0.3" />
     <PackageReference Include="ToolStripComboBoxEx" Version="1.0.0.2" />
     <PackageReference Include="WebView2.DevTools.Dom" Version="4.0.1" />
