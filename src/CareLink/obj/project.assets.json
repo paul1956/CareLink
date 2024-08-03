@@ -4392,11 +4392,11 @@
   "project": {
     "version": "4.0.1.5",
     "restore": {
-      "projectUniqueName": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\CareLink\\CareLink.vbproj",
+      "projectUniqueName": "C:\\Repos\\CareLink\\src\\CareLink\\CareLink.vbproj",
       "projectName": "CareLink",
-      "projectPath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\CareLink\\CareLink.vbproj",
+      "projectPath": "C:\\Repos\\CareLink\\src\\CareLink\\CareLink.vbproj",
       "packagesPath": "C:\\Users\\PaulM\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\PaulM\\Source\\Repos\\CareLink\\src\\CareLink\\obj\\",
+      "outputPath": "C:\\Repos\\CareLink\\src\\CareLink\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

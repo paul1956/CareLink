@@ -216,7 +216,6 @@ Public Class PumpSetupDialog
             Next
         End With
 
-
         With Me.RtbLowAlertMenu
             .Text = ""
             .AppendLine($"Menu > {ChrW(&H2699)} > Alert Settings > Low Alert", defaultBoldFont, ChrW(&H2699), subheadingBoldtFont, False)
