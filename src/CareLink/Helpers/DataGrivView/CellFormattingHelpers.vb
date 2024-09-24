@@ -6,29 +6,63 @@ Imports System.Runtime.CompilerServices
 
 Friend Module CellFormattingHelpers
 
-    Friend Sub CellFormatting0Value(e As DataGridViewCellFormattingEventArgs)
+    <Extension>
+    Private Function InvertColor(myColor As Color) As Color
+        Return Color.FromArgb(myColor.ToArgb() Xor &HFFFFFF)
+    End Function
+
+    Private Function IsDarkMode() As Boolean
+#Disable Warning WFO5001 ' Type is for evaluation purposes only and is subject to change or removal in future updates.
+        Return Application.ColorMode = SystemColorMode.Dark
+#Enable Warning WFO5001
+
+    End Function
+
+    Private Function IsDarkRow(rowIndex As Integer) As Boolean
+        Dim rowMod2 As Integer = rowIndex Mod 2
+        Return If(IsDarkMode(), rowMod2 = 1, rowMod2 = 0)
+
+    End Function
+
+    Friend Sub CellFormatting0Value(ByRef e As DataGridViewCellFormattingEventArgs)
         If e.Value Is Nothing OrElse e.Value.ToString = "0" Then
             e.Value = ""
             e.FormattingApplied = True
         End If
     End Sub
 
-    Friend Sub CellFormattingApplyColor(ByRef e As DataGridViewCellFormattingEventArgs, highlightColor As Color, AlternateIndex As Integer, isUri As Boolean)
+    Friend Sub CellFormattingApplyColor(ByRef e As DataGridViewCellFormattingEventArgs, highlightColor As Color, isUri As Boolean)
         e.Value = e.Value.ToString
         With e.CellStyle
-            If e.RowIndex Mod 2 = AlternateIndex Then
-                .BackColor = highlightColor
-                .ForeColor = highlightColor.GetContrastingColor()
-                If isUri Then
-                    .SelectionForeColor = Color.Purple
-                    .SelectionBackColor = Color.Purple.GetContrastingColor()
+            If IsDarkMode() Then
+                If IsDarkRow(e.RowIndex) Then
+                    .ForeColor = highlightColor.InvertColor
+
+                    If isUri Then
+                        .SelectionForeColor = Color.Purple
+                        .SelectionBackColor = Color.Purple.GetContrastingColor()
+                    End If
+                Else
+                    .ForeColor = highlightColor
+                    If isUri Then
+                        .SelectionBackColor = Color.Purple
+                        .SelectionForeColor = Color.Purple.GetContrastingColor()
+                    End If
                 End If
             Else
-                .ForeColor = highlightColor
-                .BackColor = highlightColor.GetContrastingColor()
-                If isUri Then
-                    .SelectionBackColor = Color.Purple
-                    .SelectionForeColor = Color.Purple.GetContrastingColor()
+                If IsDarkRow(e.RowIndex) Then
+                    .ForeColor = highlightColor
+                    If isUri Then
+                        .SelectionForeColor = Color.Purple
+                        .SelectionBackColor = Color.Purple.GetContrastingColor()
+                    End If
+                Else
+                    .ForeColor = highlightColor.InvertColor
+                    If isUri Then
+                        .SelectionBackColor = Color.Purple
+                        .SelectionForeColor = Color.Purple.GetContrastingColor()
+
+                    End If
                 End If
             End If
             .Font = New Font(.Font, FontStyle.Bold)
@@ -36,81 +70,103 @@ Friend Module CellFormattingHelpers
         e.FormattingApplied = True
     End Sub
 
-    Friend Sub CellFormattingDateTime(ByRef e As DataGridViewCellFormattingEventArgs)
+    <Extension>
+    Friend Sub CellFormattingDateTime(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
         If e.Value Is Nothing Then
             e.Value = ""
-            e.FormattingApplied = True
+        Else
+            Try
+                Dim dateValue As Date
+                dateValue = e.Value.ToString.ParseDate("")
+                e.Value = dateValue.ToShortDateTimeString
+            Catch ex As Exception
+                e.Value = e.Value.ToString
+            End Try
         End If
-        Try
-            Dim dateValue As Date
-            dateValue = e.Value.ToString.ParseDate("")
-            e.Value = dateValue.ToShortDateTimeString
-        Catch ex As Exception
-            e.Value = e.Value.ToString
-        End Try
-        e.FormattingApplied = True
-    End Sub
-
-    Friend Sub CellFormattingInteger(ByRef e As DataGridViewCellFormattingEventArgs, message As String)
-        e.Value = $"{e.Value} {message}"
-        e.FormattingApplied = True
+        dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
     <Extension>
-    Friend Sub CellFormattingSgValue(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, partialKey As String, AlternativeRowIndex As Integer)
+    Friend Sub CellFormattingInteger(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, message As String)
+        e.Value = $"{e.Value} {message}"
+        dgv.CellFormattingSetForegroundColor(e)
+    End Sub
+
+    <Extension>
+    Friend Sub CellFormattingSetForegroundColor(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+        Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
+        If col IsNot Nothing Then
+            e.Value = $"{e.Value}"
+            e.CellStyle.ForeColor = If(IsDarkMode(), If(IsDarkRow(e.RowIndex), Color.Black, Color.White), Color.Black)
+            e.FormattingApplied = True
+        End If
+    End Sub
+
+    <Extension>
+    Friend Sub CellFormattingSgValue(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, partialKey As String)
         Dim sgColumnName As String = dgv.Columns(e.ColumnIndex).Name
         Dim sensorValue As Single = ParseSingle(e.Value, 2)
         If Single.IsNaN(sensorValue) Then
-            CellFormattingApplyColor(e, Color.Gray, 1 - AlternativeRowIndex, False)
+            CellFormattingApplyColor(e, Color.Gray, isUri:=False)
         Else
             Select Case sgColumnName
                 Case partialKey
                     e.Value = If(NativeMmolL, sensorValue.ToString("F2", CurrentUICulture), sensorValue.ToString)
                     If sensorValue < TirLowLimit(NativeMmolL) Then
-                        CellFormattingApplyColor(e, Color.Red, 1 - AlternativeRowIndex, False)
+                        CellFormattingApplyColor(e, Color.Red, isUri:=False)
                     ElseIf sensorValue > TirHighLimit(NativeMmolL) Then
-                        CellFormattingApplyColor(e, Color.Yellow, AlternativeRowIndex, False)
+                        CellFormattingApplyColor(e, Color.Yellow, isUri:=False)
+                    Else
+                        dgv.CellFormattingSetForegroundColor(e)
                     End If
                 Case $"{partialKey}MmDl"
                     e.Value = e.Value.ToString
                     If sensorValue < TirLowLimit(False) Then
-                        CellFormattingApplyColor(e, Color.Red, 1 - AlternativeRowIndex, False)
+                        CellFormattingApplyColor(e, Color.Red, isUri:=False)
                     ElseIf sensorValue > TirHighLimit(False) Then
-                        CellFormattingApplyColor(e, Color.Yellow, AlternativeRowIndex, False)
+                        CellFormattingApplyColor(e, Color.Yellow, isUri:=False)
+                    Else
+                        dgv.CellFormattingSetForegroundColor(e)
                     End If
                 Case $"{partialKey}MmolL"
                     e.Value = sensorValue.ToString("F2", CurrentUICulture)
                     If sensorValue.RoundSingle(1, False) < TirLowLimit(True) Then
-                        CellFormattingApplyColor(e, Color.Red, 1 - AlternativeRowIndex, False)
+                        CellFormattingApplyColor(e, Color.Red, isUri:=False)
                     ElseIf sensorValue > TirHighLimit(True) Then
-                        CellFormattingApplyColor(e, Color.Yellow, AlternativeRowIndex, False)
+                        CellFormattingApplyColor(e, Color.Yellow, isUri:=False)
+                    Else
+                        dgv.CellFormattingSetForegroundColor(e)
                     End If
+                Case Else
+                    Stop
             End Select
         End If
     End Sub
 
-    Friend Function CellFormattingSingleValue(ByRef e As DataGridViewCellFormattingEventArgs, digits As Integer) As Single
+    <Extension>
+    Friend Function CellFormattingSingleValue(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, digits As Integer) As Single
         Dim amount As Single = ParseSingle(e.Value, digits)
         e.Value = amount.ToString($"F{digits}", CurrentUICulture)
-        e.FormattingApplied = True
+        dgv.CellFormattingSetForegroundColor(e)
         Return amount
     End Function
 
-    Friend Sub CellFormattingToTitle(ByRef e As DataGridViewCellFormattingEventArgs)
+    <Extension>
+    Friend Sub CellFormattingToTitle(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+
         e.Value = e.Value.ToString.ToTitle
-        e.FormattingApplied = True
+        dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
     <Extension>
     Friend Sub CellFormattingUrl(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
         e.Value = e.Value.ToString
         If dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Equals(dgv.CurrentCell) Then
-            CellFormattingApplyColor(e, Color.Purple, 0, True)
+            CellFormattingApplyColor(e, Color.Purple, isUri:=True)
         Else
-            CellFormattingApplyColor(e, Color.FromArgb(&H0, &H66, &HCC), 1, True)
+            CellFormattingApplyColor(e, Color.FromArgb(&H0, &H66, &HCC), isUri:=True)
         End If
         e.FormattingApplied = True
-
     End Sub
 
 End Module

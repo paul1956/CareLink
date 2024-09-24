@@ -42,6 +42,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Update="Dialogs\CleanUpObsoleteFilesDialog.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Update="Forms\AboutBox1.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>

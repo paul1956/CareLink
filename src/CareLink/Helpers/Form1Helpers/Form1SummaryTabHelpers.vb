@@ -11,8 +11,10 @@ Friend Module Form1SummaryTabHelpers
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(SummaryRecord.RecordNumber)
                 If dgv.Rows(e.RowIndex).Cells("key").Value.Equals(ItemIndexes.medicalDeviceInformation.ToString) Then
-                    CellFormattingSingleValue(e, 1)
+                    dgv.CellFormattingSingleValue(e, 1)
                 End If
+            Case Else
+                dgv.CellFormattingSetForegroundColor(e)
         End Select
 
     End Sub

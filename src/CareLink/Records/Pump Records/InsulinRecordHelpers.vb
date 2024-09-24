@@ -21,27 +21,32 @@ Friend Module InsulinRecordHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(InsulinRecord.dateTime)
-                CellFormattingDateTime(e)
+                dgv.CellFormattingDateTime(e)
             Case NameOf(InsulinRecord.SafeMealReduction)
-                If CellFormattingSingleValue(e, 3) >= 0.0025 Then
-                    CellFormattingApplyColor(e, Color.OrangeRed, 1, False)
+                If dgv.CellFormattingSingleValue(e, 3) >= 0.0025 Then
+                    CellFormattingApplyColor(e, Color.OrangeRed, isUri:=False)
+                Else
+                    dgv.CellFormattingSetForegroundColor(e)
                 End If
             Case NameOf(InsulinRecord.activationType)
                 Dim value As String = e.Value.ToString
                 Select Case value
                     Case "AUTOCORRECTION"
                         e.Value = "Auto Correction"
-                        CellFormattingApplyColor(e, GetGraphLineColor("Auto Correction"), 0, False)
+                        CellFormattingApplyColor(e, GetGraphLineColor("Auto Correction"), isUri:=False)
                     Case "FAST", "RECOMMENDED", "UNDETERMINED"
-                        CellFormattingToTitle(e)
+                        dgv.CellFormattingToTitle(e)
+                    Case Else
+                        dgv.CellFormattingSetForegroundColor(e)
                 End Select
             Case NameOf(InsulinRecord.bolusType)
-                CellFormattingToTitle(e)
+                dgv.CellFormattingToTitle(e)
             Case Else
                 If dgv.Columns(e.ColumnIndex).ValueType = GetType(Single) Then
-                    CellFormattingSingleValue(e, 3)
+                    dgv.CellFormattingSingleValue(e, 3)
+                Else
+                    dgv.CellFormattingSetForegroundColor(e)
                 End If
-
         End Select
     End Sub
 

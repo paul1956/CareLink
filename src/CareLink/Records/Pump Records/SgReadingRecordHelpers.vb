@@ -15,11 +15,14 @@ Friend Module SgReadingRecordHelpers
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
-        Select Case CType(sender, DataGridView).Columns(e.ColumnIndex).Name
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(SgReadingRecord.dateTime)
-                CellFormattingDateTime(e)
+                dgv.CellFormattingDateTime(e)
             Case NameOf(SgReadingRecord.value), NameOf(SgReadingRecord.valueMmolL), NameOf(SgReadingRecord.valueMmDl)
-                CType(sender, DataGridView).CellFormattingSgValue(e, NameOf(SgReadingRecord.value), If(CType(sender, DataGridView).Rows(0).Cells(0).Value.ToString = "1", 0, 1))
+                dgv.CellFormattingSgValue(e, NameOf(SgReadingRecord.value))
+            Case Else
+                dgv.CellFormattingSetForegroundColor(e)
         End Select
 
     End Sub

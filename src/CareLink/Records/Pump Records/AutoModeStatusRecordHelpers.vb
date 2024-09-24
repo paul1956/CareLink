@@ -18,7 +18,9 @@ Friend Module AutoModeStatusRecordHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(AutoModeStatusRecord.dateTime)
-                CellFormattingDateTime(e)
+                dgv.CellFormattingDateTime(e)
+            Case Else
+                dgv.CellFormattingSetForegroundColor(e)
         End Select
     End Sub
 

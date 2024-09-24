@@ -12,6 +12,11 @@ Friend Module SummaryRecordHelpers
         Return CType(UTO, T)
     End Function
 
+    Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        dgv.CellFormattingSetForegroundColor(e)
+    End Sub
+
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         With e.Column
             e.DgvColumnAdded(GetCellStyle(.Name),
@@ -202,8 +207,10 @@ Friend Module SummaryRecordHelpers
 
     Public Sub AttachHandlers(dgv As DataGridView)
         RemoveHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithoutExcel
+        RemoveHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
         RemoveHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
         AddHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithoutExcel
+        AddHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
     End Sub
 

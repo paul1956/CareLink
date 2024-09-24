@@ -9,7 +9,12 @@ Friend Module DisplayDataTableInDgvHelpers
     Friend Delegate Sub attachHandlers(dgv As DataGridView)
 
     <Extension>
-    Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, dGV As DataGridView, table As DataTable, rowIndex As ItemIndexes)
+    Friend Sub DisplayDataTableInDGV(
+        realPanel As TableLayoutPanel,
+        dGV As DataGridView,
+        table As DataTable,
+        rowIndex As ItemIndexes)
+
         realPanel.SetTabName(rowIndex)
         dGV.InitializeDgv()
         dGV.DataSource = table
@@ -17,7 +22,14 @@ Friend Module DisplayDataTableInDgvHelpers
     End Sub
 
     <Extension>
-    Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As ItemIndexes, hideRecordNumberColumn As Boolean)
+    Friend Sub DisplayDataTableInDGV(
+        realPanel As TableLayoutPanel,
+        table As DataTable,
+        className As String,
+        attachHandlers As attachHandlers,
+        rowIndex As ItemIndexes,
+        hideRecordNumberColumn As Boolean)
+
         realPanel.SetTabName(rowIndex)
         Dim dGVIndex As Integer = realPanel.Controls.Count - 1
         Dim dGV As DataGridView = TryCast(realPanel.Controls(dGVIndex), DataGridView)

@@ -10,9 +10,16 @@ Friend Module BasalRecordHelpers
         If e.Value Is Nothing Then
             Return
         End If
-        ' Set the background to red for negative values in the Balance column.
         If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(BasalRecord.basalRate), StringComparison.OrdinalIgnoreCase) Then
-            e.Value = $"{ParseSingle(e.Value, 2).ToString("F3", CurrentUICulture)}U"
+            Dim v As Single = ParseSingle(e.Value, 2)
+            e.Value = $"{v.ToString("F3", CurrentUICulture)}U"
+            If v < 0 Then
+                ' Set the background to red for negative values in the Balance column.
+                e.CellStyle.BackColor = Color.Red
+            End If
+            e.FormattingApplied = True
+        Else
+            dgv.CellFormattingSetForegroundColor(e)
         End If
     End Sub
 

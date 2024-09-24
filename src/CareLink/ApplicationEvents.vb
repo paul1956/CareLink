@@ -20,7 +20,9 @@ Namespace My
 
             ' Setting the HighDpiMode for the Application:
             e.HighDpiMode = HighDpiMode.PerMonitorV2
-
+#Disable Warning WFO5001 ' Type is for evaluation purposes only and is subject to change or removal in future updates.
+            e.ColorMode = SystemColorMode.Dark
+#Enable Warning WFO5001 ' Type is for evaluation purposes only and is subject to change or removal in future updates.
             '    ' If a splash dialog is used, this sets the minimum display time:
             '    e.MinimumSplashScreenDisplayTime = 4000
         End Sub

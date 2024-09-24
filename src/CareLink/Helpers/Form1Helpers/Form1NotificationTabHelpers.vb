@@ -46,13 +46,13 @@ Friend Module Form1NotificationTabHelpers
              .RowCount = 1,
              .TabIndex = 0
          }
-            tableLevel1Blue.Controls.Add(New Label With {.Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                                                                .AutoSize = True,
-                                                                .TextAlign = ContentAlignment.MiddleLeft,
-                                                                .Text = notificationType.Key.ToTitleCase.Replace(" ", vbCrLf)
-                                                               },
-                                         0,
-                                         c.Index)
+            Dim control As New Label With {
+                .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
+                .AutoSize = True,
+                .TextAlign = ContentAlignment.MiddleLeft,
+                .Text = notificationType.Key.ToTitleCase.Replace(" ", vbCrLf)}
+
+            tableLevel1Blue.Controls.Add(control, 0, c.Index)
             If innerJson.Count > 0 Then
                 tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22))
                 If notificationType.Key = "clearedNotifications" Then
@@ -102,7 +102,7 @@ Friend Module Form1NotificationTabHelpers
         Try
             Form1.TableLayoutPanelNotificationHistory.AutoScroll = True
             Form1.TableLayoutPanelNotificationHistory.SetTabName(ItemIndexes.notificationHistory)
-            Dim innerTableBlue As New TableLayoutPanel With {
+            Dim tableLevel1Blue As New TableLayoutPanel With {
                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                     .AutoScroll = True,
                     .AutoSize = True,
@@ -112,16 +112,17 @@ Friend Module Form1NotificationTabHelpers
                     .ColumnCount = 2,
                     .Dock = DockStyle.Fill,
                     .Margin = New Padding(3),
-                    .Name = NameOf(innerTableBlue),
+                    .Name = NameOf(tableLevel1Blue),
                     .Padding = New Padding(3),
                     .RowCount = 0
                 }
             For i As Integer = Form1.TableLayoutPanelNotificationHistory.Controls.Count - 1 To 1 Step -1
                 Form1.TableLayoutPanelNotificationHistory.Controls.RemoveAt(i)
             Next
-            Form1.TableLayoutPanelNotificationHistory.Controls.Add(innerTableBlue, 0, 1)
-            CreateNotificationTables(s_notificationHistoryValue,
-                innerTableBlue)
+            Form1.TableLayoutPanelNotificationHistory.Controls.Add(tableLevel1Blue, 0, 1)
+            CreateNotificationTables(
+                notificationDictionary:=s_notificationHistoryValue,
+                tableLevel1Blue)
         Catch ex As Exception
             Stop
             Throw

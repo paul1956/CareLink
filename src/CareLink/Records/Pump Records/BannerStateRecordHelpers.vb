@@ -11,6 +11,8 @@ Friend Module BannerStateRecordHelpers
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(BannerStateRecord.timeRemaining)
                 CellFormatting0Value(e)
+            Case Else
+                dgv.CellFormattingSetForegroundColor(e)
         End Select
     End Sub
 

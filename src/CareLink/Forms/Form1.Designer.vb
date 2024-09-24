@@ -1,4 +1,6 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+﻿Imports TableLayputPanelTop
+
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Form1
     Inherits System.Windows.Forms.Form
 
@@ -33,52 +35,9 @@ Partial Class Form1
         Dim DataGridViewCellStyle7 As DataGridViewCellStyle = New DataGridViewCellStyle()
         Dim DataGridViewCellStyle8 As DataGridViewCellStyle = New DataGridViewCellStyle()
         Dim DataGridViewCellStyle9 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        MenuStrip1 = New MenuStrip()
-        MenuStartHere = New ToolStripMenuItem()
-        MenuStartHereLogin = New ToolStripMenuItem()
-        ToolStripSeparator8 = New ToolStripSeparator()
-        MenuStartHereManuallyImportDeviceSettings = New ToolStripMenuItem()
-        MenuStartHereShowPumpSetup = New ToolStripMenuItem()
-        ToolStripSeparator1 = New ToolStripSeparator()
-        MenuStartHereLoadSavedDataFile = New ToolStripMenuItem()
-        MenuStartHereExceptionReportLoad = New ToolStripMenuItem()
-        ToolStripSeparator4 = New ToolStripSeparator()
-        MenuStartHereUseLastSavedFile = New ToolStripMenuItem()
-        MenuStartHereUseTestData = New ToolStripMenuItem()
-        ToolStripSeparator2 = New ToolStripSeparator()
-        MenuStartHereSnapshotSave = New ToolStripMenuItem()
-        MenuStartHereCleanUpObsoleteFiles = New ToolStripMenuItem()
-        ToolStripSeparator3 = New ToolStripSeparator()
-        MenuStartHereExit = New ToolStripMenuItem()
-        MenuOptions = New ToolStripMenuItem()
-        MenuOptionsAudioAlerts = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognitionEnabled = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognitionDisabled = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognitionConfidence = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognition95 = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognition90 = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognition85 = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognition80 = New ToolStripMenuItem()
-        MenuOptionsShowChartLegends = New ToolStripMenuItem()
-        MenuOptionsSpeechHelpShown = New ToolStripMenuItem()
-        ToolStripSeparator5 = New ToolStripSeparator()
-        MenuOptionsAutoLogin = New ToolStripMenuItem()
-        ToolStripSeparator6 = New ToolStripSeparator()
-        MenuOptionsAdvancedOptions = New ToolStripMenuItem()
-        MenuOptionsFilterRawJSONData = New ToolStripMenuItem()
-        MenuOptionsUseLocalTimeZone = New ToolStripMenuItem()
-        ToolStripSeparator7 = New ToolStripSeparator()
-        MenuOptionsColorPicker = New ToolStripMenuItem()
-        MenuOptionsEditPumpSettings = New ToolStripMenuItem()
-        MenuHelp = New ToolStripMenuItem()
-        MenuHelpReportAnIssue = New ToolStripMenuItem()
-        MenuHelpCheckForUpdates = New ToolStripMenuItem()
-        MenuHelpAbout = New ToolStripMenuItem()
-        MenuShowMiniDisplay = New ToolStripMenuItem()
         AboveHighLimitMessageLabel = New Label()
         AboveHighLimitValueLabel = New Label()
         ActiveInsulinValue = New Label()
-        FullNameLabel = New Label()
         AverageSGMessageLabel = New Label()
         AverageSGValueLabel = New Label()
         BannerStateButton = New Button()
@@ -89,13 +48,9 @@ Partial Class Form1
         BelowLowLimitValueLabel = New Label()
         CalibrationDueImage = New PictureBox()
         CalibrationShieldPanel = New Panel()
-        LastSgOrExitTimeLabel = New Label()
-        PumpBannerStateLabel = New Label()
-        ShieldUnitsLabel = New Label()
-        CurrentSgLabel = New Label()
-        SensorMessageLabel = New Label()
-        SmartGuardShieldPictureBox = New PictureBox()
         CareLinkUserDataRecordBindingSource = New BindingSource(components)
+        CountryDataPg2TableLayoutPanel = New TableLayoutPanel()
+        CurrentSgLabel = New Label()
         CursorMessage1Label = New Label()
         CursorMessage2Label = New Label()
         CursorMessage3Label = New Label()
@@ -104,29 +59,36 @@ Partial Class Form1
         CursorPictureBox = New PictureBox()
         CursorTimer = New Timer(components)
         DgvAutoBasalDelivery = New DataGridView()
+        DgvCareLinkUsers = New DataGridView()
         DgvCountryDataPg1 = New DataGridView()
-        DgvCountryDataPg1RecordNumber = New DataGridViewTextBoxColumn()
         DgvCountryDataPg1Category = New DataGridViewTextBoxColumn()
         DgvCountryDataPg1Key = New DataGridViewTextBoxColumn()
+        DgvCountryDataPg1RecordNumber = New DataGridViewTextBoxColumn()
         DgvCountryDataPg1Value = New DataGridViewTextBoxColumn()
-        DgvCareLinkUsers = New DataGridView()
+        DgvCountryDataPg2 = New DataGridView()
+        DgvCountryDataPg2Category = New DataGridViewTextBoxColumn()
+        DgvCountryDataPg2Key = New DataGridViewTextBoxColumn()
+        DgvCountryDataPg2RecordNumber = New DataGridViewTextBoxColumn()
+        DgvCountryDataPg2Value = New DataGridViewTextBoxColumn()
         DgvCountryDataPg3 = New DataGridView()
-        DgvCountryDataPg3RecordNumber = New DataGridViewTextBoxColumn()
         DgvCountryDataPg3Category = New DataGridViewTextBoxColumn()
         DgvCountryDataPg3Key = New DataGridViewTextBoxColumn()
-        DgvCountryDataPg3Value = New DataGridViewTextBoxColumn()
-        DgvCountryDataPg3OnlyFor = New DataGridViewTextBoxColumn()
         DgvCountryDataPg3NotFor = New DataGridViewTextBoxColumn()
+        DgvCountryDataPg3OnlyFor = New DataGridViewTextBoxColumn()
+        DgvCountryDataPg3RecordNumber = New DataGridViewTextBoxColumn()
+        DgvCountryDataPg3Value = New DataGridViewTextBoxColumn()
         DgvCurrentUser = New DataGridView()
         DgvInsulin = New DataGridView()
         DgvMeal = New DataGridView()
         DgvSessionProfile = New DataGridView()
         DgvSGs = New DataGridView()
         DgvSummary = New DataGridView()
+        FullNameLabel = New Label()
+        HighTirComplianceLabel = New Label()
         ImageList1 = New ImageList(components)
         InRangeMessageLabel = New Label()
-        Last24TotalInsulinUnitsLabel = New Label()
         InsulinLevelPictureBox = New PictureBox()
+        InsulinTypeLabel = New Label()
         LabelSgTrend = New Label()
         LabelTimeChange = New Label()
         LabelTrendArrows = New Label()
@@ -137,109 +99,166 @@ Partial Class Form1
         Last24BasalLabel = New Label()
         Last24BasalPercentLabel = New Label()
         Last24BasalUnitsLabel = New Label()
-        Last24CarbsValueLabel = New Label()
         Last24CarbsLabel = New Label()
+        Last24CarbsValueLabel = New Label()
         Last24HoursGraphLabel = New Label()
         Last24HTotalsPanel = New Panel()
-        Last24ManualBolusUnitsLabel = New Label()
-        Last24TotalInsulinLabel = New Label()
         Last24ManualBolusPercentLabel = New Label()
+        Last24ManualBolusUnitsLabel = New Label()
         Last24MealBolusLabel = New Label()
+        Last24TotalInsulinLabel = New Label()
+        Last24TotalInsulinUnitsLabel = New Label()
         Last24TotalsLabel = New Label()
+        LastSgOrExitTimeLabel = New Label()
+        LastUpdateTimeToolStripStatusLabel = New ToolStripStatusLabel()
+        LoginStatus = New ToolStripStatusLabel()
+        LowTirComplianceLabel = New Label()
         MaxBasalPerHourLabel = New Label()
+        MenuHelp = New ToolStripMenuItem()
+        MenuHelpAbout = New ToolStripMenuItem()
+        MenuHelpCheckForUpdates = New ToolStripMenuItem()
+        MenuHelpReportAnIssue = New ToolStripMenuItem()
+        MenuOptions = New ToolStripMenuItem()
+        MenuOptionsAdvancedOptions = New ToolStripMenuItem()
+        MenuOptionsAudioAlerts = New ToolStripMenuItem()
+        MenuOptionsAutoLogin = New ToolStripMenuItem()
+        MenuOptionsColorPicker = New ToolStripMenuItem()
+        MenuOptionsEditPumpSettings = New ToolStripMenuItem()
+        MenuOptionsFilterRawJSONData = New ToolStripMenuItem()
+        MenuOptionsShowChartLegends = New ToolStripMenuItem()
+        MenuOptionsSpeechHelpShown = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognition80 = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognition85 = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognition90 = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognition95 = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognitionConfidence = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognitionDisabled = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognitionEnabled = New ToolStripMenuItem()
+        MenuOptionsUseLocalTimeZone = New ToolStripMenuItem()
+        MenuShowMiniDisplay = New ToolStripMenuItem()
+        MenuStartHere = New ToolStripMenuItem()
+        MenuStartHereCleanUpObsoleteFiles = New ToolStripMenuItem()
+        MenuStartHereExceptionReportLoad = New ToolStripMenuItem()
+        MenuStartHereExit = New ToolStripMenuItem()
+        MenuStartHereLoadSavedDataFile = New ToolStripMenuItem()
+        MenuStartHereLogin = New ToolStripMenuItem()
+        MenuStartHereManuallyImportDeviceSettings = New ToolStripMenuItem()
+        MenuStartHereShowPumpSetup = New ToolStripMenuItem()
+        MenuStartHereSnapshotSave = New ToolStripMenuItem()
+        MenuStartHereUseLastSavedFile = New ToolStripMenuItem()
+        MenuStartHereUseTestData = New ToolStripMenuItem()
+        MenuStrip1 = New MenuStrip()
         ModelLabel = New Label()
-        PumpNameLabel = New Label()
         NotifyIcon1 = New NotifyIcon(components)
+        PumpAITLabel = New Label()
+        PumpBannerStateLabel = New Label()
         PumpBatteryPictureBox = New PictureBox()
+        PumpBatteryRemaining2Label = New Label()
         PumpBatteryRemainingLabel = New Label()
-        InsulinTypeLabel = New Label()
+        PumpNameLabel = New Label()
         ReadingsLabel = New Label()
         RemainingInsulinUnits = New Label()
         SensorDaysLeftLabel = New Label()
+        SensorMessageLabel = New Label()
         SensorTimeLeftLabel = New Label()
         SensorTimeLeftPanel = New Panel()
         SensorTimeLeftPictureBox = New PictureBox()
         SerialNumberButton = New Button()
         ServerUpdateTimer = New Timer(components)
-        SplitContainer2 = New SplitContainer()
-        PumpAITLabel = New Label()
-        PumpBatteryRemaining2Label = New Label()
-        TransmitterBatteryPercentLabel = New Label()
-        TransmitterBatteryPictureBox = New PictureBox()
-        SplitContainer3 = New SplitContainer()
-        TimeInRangeLabel = New Label()
-        TimeInRangeChartLabel = New Label()
-        TimeInRangeSummaryPercentCharLabel = New Label()
-        TimeInRangeValueLabel = New Label()
-        TirComplianceLabel = New Label()
-        HighTirComplianceLabel = New Label()
-        LowTirComplianceLabel = New Label()
+        ShieldUnitsLabel = New Label()
         SmartGuardLabel = New Label()
+        SmartGuardShieldPictureBox = New PictureBox()
+        SplitContainer1 = New SplitContainer()
+        SplitContainer2 = New SplitContainer()
+        SplitContainer3 = New SplitContainer()
+        StatusStrip1 = New StatusStrip()
+        StatusStripSpacerRight = New ToolStripStatusLabel()
+        StatusStripSpeech = New ToolStripStatusLabel()
         TabControlPage1 = New TabControl()
+        TabControlPage2 = New TabControl()
+        TableLayoutPanelActiveInsulin = New TableLayoutPanel()
+        TableLayoutPanelActiveInsulinTop = New TableLayoutPanelTopEx()
+        TableLayoutPanelAutoBasalDelivery = New TableLayoutPanel()
+        TableLayoutPanelAutoBasalDeliveryTop = New TableLayoutPanelTopEx()
+        TableLayoutPanelAutoModeStatus = New TableLayoutPanel()
+        TableLayoutPanelAutoModeStatusTop = New TableLayoutPanelTopEx()
+        TableLayoutPanelBannerState = New TableLayoutPanel()
+        TableLayoutPanelBannerStateTop = New TableLayoutPanelTopEx()
+        TableLayoutPanelBasal = New TableLayoutPanel()
+        TableLayoutPanelBasalTop = New TableLayoutPanelTopEx()
+        TableLayoutPanelBgReadingsTop = New TableLayoutPanelTopEx()
+        TableLayoutPanelCalibration = New TableLayoutPanel()
+        TableLayoutPanelCalibrationTop = New TableLayoutPanelTopEx()
+        TableLayoutPanelInsulin = New TableLayoutPanel()
+        TableLayoutPanelInsulinTop = New TableLayoutPanelTopEx()
+        TableLayoutPanelLastAlarm = New TableLayoutPanel()
+        TableLayoutPanelLastAlarmTop = New TableLayoutPanelTopEx()
+        TableLayoutPanelLastSG = New TableLayoutPanel()
+        TableLayoutPanelLastSgTop = New TableLayoutPanelTopEx()
+        TableLayoutPanelLimits = New TableLayoutPanel()
+        TableLayoutPanelLimitsTop = New TableLayoutPanelTopEx()
+        TableLayoutPanelLowGlucoseSuspended = New TableLayoutPanel()
+        TableLayoutPanelLowGlucoseSuspendedTop = New TableLayoutPanelTopEx()
+        TableLayoutPanelMeal = New TableLayoutPanel()
+        TableLayoutPanelMealTop = New TableLayoutPanelTopEx()
+        TableLayoutPanelNotificationHistory = New TableLayoutPanel()
+        TableLayoutPanelNotificationHistoryTop = New TableLayoutPanelTopEx()
+        TableLayoutPanelSgReadings = New TableLayoutPanel()
+        TableLayoutPanelSgs = New TableLayoutPanel()
+        TableLayoutPanelSgsTop = New TableLayoutPanelTopEx()
+        TableLayoutPanelTherapyAlgorithm = New TableLayoutPanel()
+        TableLayoutPanelTherapyAlgorithmTop = New TableLayoutPanelTopEx()
+        TableLayoutPanelTimeChange = New TableLayoutPanel()
+        TableLayoutPanelTimeChangeTop = New TableLayoutPanelTopEx()
         TabPage01HomePage = New TabPage()
         TabPage02RunningIOB = New TabPage()
-        SplitContainer1 = New SplitContainer()
-        TemporaryUseAdvanceAITDecayCheckBox = New CheckBox()
         TabPage03TreatmentDetails = New TabPage()
         TabPage04SummaryData = New TabPage()
         TabPage05Insulin = New TabPage()
-        TableLayoutPanelInsulin = New TableLayoutPanel()
         TabPage06Meal = New TabPage()
-        TableLayoutPanelMeal = New TableLayoutPanel()
         TabPage07ActiveInsulin = New TabPage()
-        TableLayoutPanelActiveInsulin = New TableLayoutPanel()
         TabPage08SensorGlucose = New TabPage()
-        TableLayoutPanelSgs = New TableLayoutPanel()
         TabPage09Limits = New TabPage()
-        TableLayoutPanelLimits = New TableLayoutPanel()
         TabPage10NotificationHistory = New TabPage()
-        TableLayoutPanelNotificationHistory = New TableLayoutPanel()
         TabPage11TherapyAlgorithm = New TabPage()
-        TableLayoutPanelTherapyAlgorithm = New TableLayoutPanel()
         TabPage12BannerState = New TabPage()
-        TableLayoutPanelBannerState = New TableLayoutPanel()
         TabPage13Basal = New TabPage()
-        TableLayoutPanelBasal = New TableLayoutPanel()
         TabPage14Markers = New TabPage()
-        TabPageLastSG = New TabPage()
-        TableLayoutPanelLastSG = New TableLayoutPanel()
-        TabPageLastAlarm = New TabPage()
-        TableLayoutPanelLastAlarm = New TableLayoutPanel()
-        TabControlPage2 = New TabControl()
+        TabPageAllUsers = New TabPage()
         TabPageAutoBasalDelivery = New TabPage()
-        TableLayoutPanelAutoBasalDelivery = New TableLayoutPanel()
         TabPageAutoModeStatus = New TabPage()
-        TableLayoutPanelAutoModeStatus = New TableLayoutPanel()
+        TabPageBackToHomePage = New TabPage()
         TabPageBgReadings = New TabPage()
-        TableLayoutPanelSgReadings = New TableLayoutPanel()
         TabPageCalibration = New TabPage()
-        TableLayoutPanelCalibration = New TableLayoutPanel()
-        TabPageLowGlucoseSuspended = New TabPage()
-        TableLayoutPanelLowGlucoseSuspended = New TableLayoutPanel()
-        TabPageTimeChange = New TabPage()
-        TableLayoutPanelTimeChange = New TableLayoutPanel()
         TabPageCountryDataPg1 = New TabPage()
         TabPageCountryDataPg2 = New TabPage()
-        CountryDataPg2TableLayoutPanel = New TableLayoutPanel()
-        DgvCountryDataPg2 = New DataGridView()
-        DgvCountryDataPg2RecordNumber = New DataGridViewTextBoxColumn()
-        DgvCountryDataPg2Category = New DataGridViewTextBoxColumn()
-        DgvCountryDataPg2Key = New DataGridViewTextBoxColumn()
-        DgvCountryDataPg2Value = New DataGridViewTextBoxColumn()
-        WebView = New Microsoft.Web.WebView2.WinForms.WebView2()
         TabPageCountryDataPg3 = New TabPage()
-        TabPageSessionProfile = New TabPage()
         TabPageCurrentUser = New TabPage()
-        TabPageAllUsers = New TabPage()
-        TabPageBackToHomePage = New TabPage()
-        ToolTip1 = New ToolTip(components)
-        StatusStrip1 = New StatusStrip()
-        LoginStatus = New ToolStripStatusLabel()
-        StatusStripSpeech = New ToolStripStatusLabel()
-        LastUpdateTimeToolStripStatusLabel = New ToolStripStatusLabel()
+        TabPageLastAlarm = New TabPage()
+        TabPageLastSG = New TabPage()
+        TabPageLowGlucoseSuspended = New TabPage()
+        TabPageSessionProfile = New TabPage()
+        TabPageTimeChange = New TabPage()
+        TemporaryUseAdvanceAITDecayCheckBox = New CheckBox()
+        TimeInRangeChartLabel = New Label()
+        TimeInRangeLabel = New Label()
+        TimeInRangeSummaryPercentCharLabel = New Label()
+        TimeInRangeValueLabel = New Label()
         TimeZoneToolStripStatusLabel = New ToolStripStatusLabel()
-        StatusStripSpacerRight = New ToolStripStatusLabel()
+        TirComplianceLabel = New Label()
+        ToolStripSeparator1 = New ToolStripSeparator()
+        ToolStripSeparator2 = New ToolStripSeparator()
+        ToolStripSeparator3 = New ToolStripSeparator()
+        ToolStripSeparator4 = New ToolStripSeparator()
+        ToolStripSeparator5 = New ToolStripSeparator()
+        ToolStripSeparator6 = New ToolStripSeparator()
+        ToolStripSeparator7 = New ToolStripSeparator()
+        ToolStripSeparator8 = New ToolStripSeparator()
+        ToolTip1 = New ToolTip(components)
+        TransmitterBatteryPercentLabel = New Label()
+        TransmitterBatteryPictureBox = New PictureBox()
         UpdateAvailableStatusStripLabel = New ToolStripStatusLabel()
+        WebView = New Microsoft.Web.WebView2.WinForms.WebView2()
         MenuStrip1.SuspendLayout()
         CType(CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         CalibrationShieldPanel.SuspendLayout()
@@ -499,6 +518,314 @@ Partial Class Form1
         MenuOptionsSpeechHelpShown.Name = "MenuOptionsSpeechHelpShown"
         MenuOptionsSpeechHelpShown.Size = New Size(184, 22)
         MenuOptionsSpeechHelpShown.Text = "Disable Speech Help"
+        '
+        ' TableLayoutPanelInsulinTop
+        '
+        TableLayoutPanelInsulinTop.AutoSize = True
+        TableLayoutPanelInsulinTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelInsulinTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelInsulinTop.ColumnCount = 2
+        TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelInsulinTop.Dock = DockStyle.Fill
+        TableLayoutPanelInsulinTop.LabelText = "Insulin"
+        TableLayoutPanelInsulinTop.Location = New Point(6, 6)
+        TableLayoutPanelInsulinTop.Name = "TableLayoutPanelInsulinTop"
+        TableLayoutPanelInsulinTop.RowCount = 1
+        TableLayoutPanelInsulinTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelInsulinTop.Size = New Size(1358, 37)
+        TableLayoutPanelInsulinTop.TabIndex = 1
+        TableLayoutPanelInsulin.Controls.Add(TableLayoutPanelInsulinTop, 0, 0)
+        '
+        ' TableLayoutPanelMealTop
+        '
+        TableLayoutPanelMealTop.AutoSize = True
+        TableLayoutPanelMealTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelMealTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelMealTop.ColumnCount = 2
+        TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelMealTop.Dock = DockStyle.Fill
+        TableLayoutPanelMealTop.LabelText = "Meal"
+        TableLayoutPanelMealTop.Location = New Point(6, 6)
+        TableLayoutPanelMealTop.Name = "TableLayoutPanelMealTop"
+        TableLayoutPanelMealTop.RowCount = 1
+        TableLayoutPanelMealTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelMealTop.Size = New Size(1358, 37)
+        TableLayoutPanelMealTop.TabIndex = 1
+        TableLayoutPanelMeal.Controls.Add(TableLayoutPanelMealTop, 0, 0)
+        '
+        ' TableLayoutPanelActiveInsulinTop
+        '
+        TableLayoutPanelActiveInsulinTop.AutoSize = True
+        TableLayoutPanelActiveInsulinTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelActiveInsulinTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelActiveInsulinTop.ColumnCount = 2
+        TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelActiveInsulinTop.Dock = DockStyle.Fill
+        TableLayoutPanelActiveInsulinTop.LabelText = "Active Insulin"
+        TableLayoutPanelActiveInsulinTop.Location = New Point(3, 3)
+        TableLayoutPanelActiveInsulinTop.Name = "TableLayoutPanelActiveInsulinTop"
+        TableLayoutPanelActiveInsulinTop.RowCount = 1
+        TableLayoutPanelActiveInsulinTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelActiveInsulinTop.Size = New Size(1364, 37)
+        TableLayoutPanelActiveInsulinTop.TabIndex = 1
+        TableLayoutPanelActiveInsulin.Controls.Add(TableLayoutPanelActiveInsulinTop, 0, 0)
+        '
+        ' TableLayoutPanelSgsTop
+        '
+        TableLayoutPanelSgsTop.AutoSize = True
+        TableLayoutPanelSgsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelSgsTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelSgsTop.ColumnCount = 2
+        TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelSgsTop.Dock = DockStyle.Fill
+        TableLayoutPanelSgsTop.LabelText = "SGs"
+        TableLayoutPanelSgsTop.Location = New Point(3, 3)
+        TableLayoutPanelSgsTop.Name = "TableLayoutPanelSgsTop"
+        TableLayoutPanelSgsTop.RowCount = 1
+        TableLayoutPanelSgsTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelSgsTop.Size = New Size(1364, 37)
+        TableLayoutPanelSgsTop.TabIndex = 1
+        TableLayoutPanelSgs.Controls.Add(TableLayoutPanelSgsTop, 0, 0)
+        TableLayoutPanelSgs.Controls.Add(DgvSGs, 0, 1)
+        '
+        ' TableLayoutPanelLimitsTop
+        '
+        TableLayoutPanelLimitsTop.AutoSize = True
+        TableLayoutPanelLimitsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelLimitsTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelLimitsTop.ColumnCount = 2
+        TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelLimitsTop.Dock = DockStyle.Fill
+        TableLayoutPanelLimitsTop.LabelText = "Limits"
+        TableLayoutPanelLimitsTop.Location = New Point(3, 3)
+        TableLayoutPanelLimitsTop.Name = "TableLayoutPanelLimitsTop"
+        TableLayoutPanelLimitsTop.RowCount = 1
+        TableLayoutPanelLimitsTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelLimitsTop.Size = New Size(1364, 37)
+        TableLayoutPanelLimitsTop.TabIndex = 1
+        TableLayoutPanelLimits.Controls.Add(TableLayoutPanelLimitsTop, 0, 0)
+        '
+        ' TableLayoutPanelNotificationHistoryTop
+        '
+        TableLayoutPanelNotificationHistoryTop.AutoSize = True
+        TableLayoutPanelNotificationHistoryTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelNotificationHistoryTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelNotificationHistoryTop.ColumnCount = 2
+        TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelNotificationHistoryTop.Dock = DockStyle.Fill
+        TableLayoutPanelNotificationHistoryTop.LabelText = "Notification History"
+        TableLayoutPanelNotificationHistoryTop.Location = New Point(3, 3)
+        TableLayoutPanelNotificationHistoryTop.Name = "TableLayoutPanelNotificationHistoryTop"
+        TableLayoutPanelNotificationHistoryTop.RowCount = 1
+        TableLayoutPanelNotificationHistoryTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelNotificationHistoryTop.Size = New Size(1364, 37)
+        TableLayoutPanelNotificationHistoryTop.TabIndex = 1
+        TableLayoutPanelNotificationHistory.Controls.Add(TableLayoutPanelNotificationHistoryTop, 1, 0)
+        '
+        ' TableLayoutPanelTherapyAlgorithmTop
+        '
+        TableLayoutPanelTherapyAlgorithmTop.AutoSize = True
+        TableLayoutPanelTherapyAlgorithmTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelTherapyAlgorithmTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelTherapyAlgorithmTop.ColumnCount = 2
+        TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelTherapyAlgorithmTop.Dock = DockStyle.Fill
+        TableLayoutPanelTherapyAlgorithmTop.LabelText = "Therapy Algorithm"
+        TableLayoutPanelTherapyAlgorithmTop.Location = New Point(3, 3)
+        TableLayoutPanelTherapyAlgorithmTop.Name = "TableLayoutPanelTherapyAlgorithmTop"
+        TableLayoutPanelTherapyAlgorithmTop.RowCount = 1
+        TableLayoutPanelTherapyAlgorithmTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelTherapyAlgorithmTop.Size = New Size(1364, 37)
+        TableLayoutPanelTherapyAlgorithmTop.TabIndex = 1
+        TableLayoutPanelTherapyAlgorithm.Controls.Add(TableLayoutPanelTherapyAlgorithmTop, 0, 0)
+        '
+        ' TableLayoutPanelBannerStateTop
+        '
+        TableLayoutPanelBannerStateTop.AutoSize = True
+        TableLayoutPanelBannerStateTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelBannerStateTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelBannerStateTop.ColumnCount = 2
+        TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelBannerStateTop.Dock = DockStyle.Fill
+        TableLayoutPanelBannerStateTop.LabelText = "Banner State"
+        TableLayoutPanelBannerStateTop.Location = New Point(3, 3)
+        TableLayoutPanelBannerStateTop.Name = "TableLayoutPanelBannerStateTop"
+        TableLayoutPanelBannerStateTop.RowCount = 1
+        TableLayoutPanelBannerStateTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelBannerStateTop.Size = New Size(1364, 37)
+        TableLayoutPanelBannerStateTop.TabIndex = 1
+        TableLayoutPanelBannerState.Controls.Add(TableLayoutPanelBannerStateTop, 0, 0)
+        '
+        ' TableLayoutPanelBasalTop
+        '
+        TableLayoutPanelBasalTop.AutoSize = True
+        TableLayoutPanelBasalTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelBasalTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelBasalTop.ColumnCount = 2
+        TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelBasalTop.Dock = DockStyle.Fill
+        TableLayoutPanelBasalTop.LabelText = "Basal"
+        TableLayoutPanelBasalTop.Location = New Point(3, 3)
+        TableLayoutPanelBasalTop.Name = "TableLayoutPanelBasalTop"
+        TableLayoutPanelBasalTop.RowCount = 1
+        TableLayoutPanelBasalTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelBasalTop.Size = New Size(1364, 37)
+        TableLayoutPanelBasalTop.TabIndex = 1
+        TableLayoutPanelBasal.Controls.Add(TableLayoutPanelBasalTop, 0, 0)
+        '
+        ' TableLayoutPanelLastSgTop
+        '
+        TableLayoutPanelLastSgTop.AutoSize = True
+        TableLayoutPanelLastSgTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelLastSgTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelLastSgTop.ColumnCount = 2
+        TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelLastSgTop.Dock = DockStyle.Fill
+        TableLayoutPanelLastSgTop.LabelText = "last SG"
+        TableLayoutPanelLastSgTop.Location = New Point(3, 3)
+        TableLayoutPanelLastSgTop.Name = "TableLayoutPanelLastSgTop"
+        TableLayoutPanelLastSgTop.RowCount = 1
+        TableLayoutPanelLastSgTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelLastSgTop.Size = New Size(1364, 37)
+        TableLayoutPanelLastSgTop.TabIndex = 1
+        TableLayoutPanelLastSG.Controls.Add(TableLayoutPanelLastSgTop, 0, 0)
+        '
+        ' TableLayoutPanelLastAlarmTop
+        '
+        TableLayoutPanelLastAlarmTop.AutoSize = True
+        TableLayoutPanelLastAlarmTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelLastAlarmTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelLastAlarmTop.ColumnCount = 2
+        TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelLastAlarmTop.Dock = DockStyle.Fill
+        TableLayoutPanelLastAlarmTop.LabelText = "Last Alarm"
+        TableLayoutPanelLastAlarmTop.Location = New Point(3, 3)
+        TableLayoutPanelLastAlarmTop.Name = "TableLayoutPanelLastAlarmTop"
+        TableLayoutPanelLastAlarmTop.RowCount = 1
+        TableLayoutPanelLastAlarmTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelLastAlarmTop.Size = New Size(1364, 37)
+        TableLayoutPanelLastAlarmTop.TabIndex = 1
+        TableLayoutPanelLastAlarm.Controls.Add(TableLayoutPanelLastAlarmTop, 0, 0)
+        '
+        ' TableLayoutPanelAutoBasalDeliveryTop
+        '
+        TableLayoutPanelAutoBasalDeliveryTop.AutoSize = True
+        TableLayoutPanelAutoBasalDeliveryTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelAutoBasalDeliveryTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelAutoBasalDeliveryTop.ColumnCount = 2
+        TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelAutoBasalDeliveryTop.Dock = DockStyle.Fill
+        TableLayoutPanelAutoBasalDeliveryTop.LabelText = "Basal"
+        TableLayoutPanelAutoBasalDeliveryTop.Location = New Point(6, 6)
+        TableLayoutPanelAutoBasalDeliveryTop.Name = "TableLayoutPanelAutoBasalDeliveryTop"
+        TableLayoutPanelAutoBasalDeliveryTop.RowCount = 1
+        TableLayoutPanelAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelAutoBasalDeliveryTop.Size = New Size(1358, 37)
+        TableLayoutPanelAutoBasalDeliveryTop.TabIndex = 1
+        TableLayoutPanelAutoBasalDelivery.Controls.Add(TableLayoutPanelAutoBasalDeliveryTop, 0, 0)
+        TableLayoutPanelAutoBasalDelivery.Controls.Add(DgvAutoBasalDelivery, 0, 1)
+        '
+        ' TableLayoutPanelAutoModeStatusTop
+        '
+        TableLayoutPanelAutoModeStatusTop.AutoSize = True
+        TableLayoutPanelAutoModeStatusTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelAutoModeStatusTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelAutoModeStatusTop.ColumnCount = 2
+        TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelAutoModeStatusTop.Dock = DockStyle.Fill
+        TableLayoutPanelAutoModeStatusTop.LabelText = "Auto Mode Status"
+        TableLayoutPanelAutoModeStatusTop.Location = New Point(6, 6)
+        TableLayoutPanelAutoModeStatusTop.Name = "TableLayoutPanelAutoModeStatusTop"
+        TableLayoutPanelAutoModeStatusTop.RowCount = 1
+        TableLayoutPanelAutoModeStatusTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelAutoModeStatusTop.Size = New Size(1358, 37)
+        TableLayoutPanelAutoModeStatusTop.TabIndex = 1
+        TableLayoutPanelAutoModeStatus.Controls.Add(TableLayoutPanelAutoModeStatusTop, 0, 0)
+        '
+        ' TableLayoutPanelBgReadingsTop
+        '
+        TableLayoutPanelBgReadingsTop.AutoSize = True
+        TableLayoutPanelBgReadingsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelBgReadingsTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelBgReadingsTop.ColumnCount = 2
+        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelBgReadingsTop.Dock = DockStyle.Fill
+        TableLayoutPanelBgReadingsTop.LabelText = "Sg Readings"
+        TableLayoutPanelBgReadingsTop.Location = New Point(6, 6)
+        TableLayoutPanelBgReadingsTop.Name = "TableLayoutPanelBgReadingsTop"
+        TableLayoutPanelBgReadingsTop.RowCount = 1
+        TableLayoutPanelBgReadingsTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelBgReadingsTop.Size = New Size(1358, 37)
+        TableLayoutPanelBgReadingsTop.TabIndex = 1
+        TableLayoutPanelSgReadings.Controls.Add(TableLayoutPanelBgReadingsTop, 0, 0)
+        '
+        ' TableLayoutPanelCalibrationTop
+        '
+        TableLayoutPanelCalibrationTop.AutoSize = True
+        TableLayoutPanelCalibrationTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelCalibrationTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelCalibrationTop.ColumnCount = 2
+        TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelCalibrationTop.Dock = DockStyle.Fill
+        TableLayoutPanelCalibrationTop.LabelText = "Calibration"
+        TableLayoutPanelCalibrationTop.Location = New Point(6, 6)
+        TableLayoutPanelCalibrationTop.Name = "TableLayoutPanelCalibrationTop"
+        TableLayoutPanelCalibrationTop.RowCount = 1
+        TableLayoutPanelCalibrationTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelCalibrationTop.Size = New Size(1358, 37)
+        TableLayoutPanelCalibrationTop.TabIndex = 1
+        TableLayoutPanelCalibration.Controls.Add(TableLayoutPanelCalibrationTop, 0, 0)
+        '
+        ' TableLayoutPanelLowGlucoseSuspendedTop
+        '
+        TableLayoutPanelLowGlucoseSuspendedTop.AutoSize = True
+        TableLayoutPanelLowGlucoseSuspendedTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelLowGlucoseSuspendedTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelLowGlucoseSuspendedTop.ColumnCount = 2
+        TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelLowGlucoseSuspendedTop.Dock = DockStyle.Fill
+        TableLayoutPanelLowGlucoseSuspendedTop.LabelText = "Low Glucose Suspended"
+        TableLayoutPanelLowGlucoseSuspendedTop.Location = New Point(6, 6)
+        TableLayoutPanelLowGlucoseSuspendedTop.Name = "TableLayoutPanelLowGlucoseSuspendedTop"
+        TableLayoutPanelLowGlucoseSuspendedTop.RowCount = 1
+        TableLayoutPanelLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelLowGlucoseSuspendedTop.Size = New Size(1358, 37)
+        TableLayoutPanelLowGlucoseSuspendedTop.TabIndex = 1
+        TableLayoutPanelLowGlucoseSuspended.Controls.Add(TableLayoutPanelLowGlucoseSuspendedTop, 0, 0)
+        '
+        ' TableLayoutPanelTimeChangeTop
+        '
+        TableLayoutPanelTimeChangeTop.AutoSize = True
+        TableLayoutPanelTimeChangeTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelTimeChangeTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelTimeChangeTop.ColumnCount = 2
+        TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelTimeChangeTop.Dock = DockStyle.Fill
+        TableLayoutPanelTimeChangeTop.LabelText = "Time Change"
+        TableLayoutPanelTimeChangeTop.Location = New Point(6, 6)
+        TableLayoutPanelTimeChangeTop.Name = "TableLayoutPanelTimeChangeTop"
+        TableLayoutPanelTimeChangeTop.RowCount = 1
+        TableLayoutPanelTimeChangeTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelTimeChangeTop.Size = New Size(1358, 37)
+        TableLayoutPanelTimeChangeTop.TabIndex = 1
+        TableLayoutPanelTimeChange.Controls.Add(TableLayoutPanelTimeChangeTop, 0, 0)
         ' 
         ' ToolStripSeparator5
         ' 
@@ -549,6 +876,7 @@ Partial Class Form1
         ' 
         ' MenuOptionsColorPicker
         ' 
+        MenuOptionsColorPicker.Image = CType(resources.GetObject("MenuOptionsColorPicker.Image"), Image)
         MenuOptionsColorPicker.Name = "MenuOptionsColorPicker"
         MenuOptionsColorPicker.Size = New Size(184, 22)
         MenuOptionsColorPicker.Text = "Color Picker..."
@@ -2855,6 +3183,7 @@ Partial Class Form1
     Friend WithEvents MenuOptionsUseLocalTimeZone As ToolStripMenuItem
     Friend WithEvents MenuShowMiniDisplay As ToolStripMenuItem
     Friend WithEvents MenuStartHere As ToolStripMenuItem
+    Friend WithEvents MenuStartHereCleanUpObsoleteFiles As ToolStripMenuItem
     Friend WithEvents MenuStartHereExceptionReportLoad As ToolStripMenuItem
     Friend WithEvents MenuStartHereExit As ToolStripMenuItem
     Friend WithEvents MenuStartHereLoadSavedDataFile As ToolStripMenuItem
@@ -2894,22 +3223,39 @@ Partial Class Form1
     Friend WithEvents TabControlPage1 As TabControl
     Friend WithEvents TabControlPage2 As TabControl
     Friend WithEvents TableLayoutPanelActiveInsulin As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelActiveInsulinTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelAutoBasalDelivery As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelAutoBasalDeliveryTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelAutoModeStatus As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelAutoModeStatusTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelBannerState As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelBannerStateTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelBasal As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelBasalTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelBgReadingsTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelCalibration As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelCalibrationTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelInsulin As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelInsulinTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelLastAlarm As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelLastAlarmTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelLastSG As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelLastSgTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelLimits As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelLimitsTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelLowGlucoseSuspended As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelLowGlucoseSuspendedTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelMeal As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelMealTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelNotificationHistory As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelNotificationHistoryTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelSgReadings As TableLayoutPanel
     Friend WithEvents TableLayoutPanelSgs As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelSgsTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelTherapyAlgorithm As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelTherapyAlgorithmTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelTimeChange As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelTimeChangeTop As TableLayoutPanelTopEx
     Friend WithEvents TabPage01HomePage As TabPage
     Friend WithEvents TabPage02RunningIOB As TabPage
     Friend WithEvents TabPage03TreatmentDetails As TabPage
@@ -2961,5 +3307,4 @@ Partial Class Form1
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
     Friend WithEvents UpdateAvailableStatusStripLabel As ToolStripStatusLabel
     Friend WithEvents WebView As Microsoft.Web.WebView2.WinForms.WebView2
-    Friend WithEvents MenuStartHereCleanUpObsoleteFiles As ToolStripMenuItem
 End Class

@@ -190,12 +190,12 @@ Partial Class LoginDialog
         ' 
         LoginStatus.Anchor = AnchorStyles.Bottom Or AnchorStyles.Left
         LoginStatus.BackColor = SystemColors.Control
-        LoginStatus.Location = New Point(4, 241)
+        LoginStatus.Location = New Point(4, 233)
         LoginStatus.Margin = New Padding(9, 10, 9, 10)
         LoginStatus.Multiline = True
         LoginStatus.Name = "LoginStatus"
         LoginStatus.ScrollBars = ScrollBars.Vertical
-        LoginStatus.Size = New Size(225, 71)
+        LoginStatus.Size = New Size(214, 76)
         LoginStatus.TabIndex = 12
         LoginStatus.Text = "Login Status: Unknown"
         ' 
@@ -204,7 +204,7 @@ Partial Class LoginDialog
         Panel1.Controls.Add(PatientUserIDLabel)
         Panel1.Controls.Add(PatientUserIDTextBox)
         Panel1.Controls.Add(CarePartnerCheckBox)
-        Panel1.Location = New Point(220, 236)
+        Panel1.Location = New Point(219, 233)
         Panel1.Margin = New Padding(9, 10, 9, 10)
         Panel1.Name = "Panel1"
         Panel1.Size = New Size(197, 76)

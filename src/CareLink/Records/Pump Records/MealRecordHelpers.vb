@@ -15,13 +15,14 @@ Friend Module MealRecordHelpers
                             }
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
+        Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case CType(sender, DataGridView).Columns(e.ColumnIndex).Name
             Case NameOf(MealRecord.dateTime)
-                CellFormattingDateTime(e)
+                dgv.CellFormattingDateTime(e)
             Case NameOf(MealRecord.amount)
-                CellFormattingInteger(e, s_sessionCountrySettings.carbDefaultUnit.ToTitle)
+                dgv.CellFormattingInteger(e, s_sessionCountrySettings.carbDefaultUnit.ToTitle)
             Case Else
-                Exit Select
+                dgv.CellFormattingSetForegroundColor(e)
         End Select
 
     End Sub

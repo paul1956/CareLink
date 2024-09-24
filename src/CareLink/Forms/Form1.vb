@@ -15,23 +15,6 @@ Imports Microsoft.Win32
 Imports TableLayputPanelTop
 
 Public Class Form1
-    Friend WithEvents TableLayoutPanelActiveInsulinTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelAutoBasalDeliveryTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelAutoModeStatusTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelBannerStateTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelBasalTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelBgReadingsTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelCalibrationTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelInsulinTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelLastAlarmTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelLastSgTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelLimitsTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelLowGlucoseSuspendedTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelMealTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelNotificationHistoryTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelSgsTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelTherapyAlgorithmTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelTimeChangeTop As TableLayoutPanelTopEx
 
     Private Shared s_webViewCacheDirectory As String
     Private ReadOnly _calibrationToolTip As New ToolTip()
@@ -509,17 +492,22 @@ Public Class Form1
     Private Sub DgvAutoBasalDelivery_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvAutoBasalDelivery.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If e.Value Is Nothing Then
+            e.Value = String.Empty
             Return
         End If
         ' Set the background to red for negative values in the Balance column.
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(AutoBasalDeliveryRecord.bolusAmount)
-                CellFormattingSingleValue(e, 3)
-                If CellFormattingSingleValue(e, 3).IsMinBasal Then
-                    CellFormattingApplyColor(e, GetGraphLineColor("Min Basal"), 0, False)
+                dgv.CellFormattingSingleValue(e, 3)
+                If dgv.CellFormattingSingleValue(e, 3).IsMinBasal Then
+                    CellFormattingApplyColor(e, Color.DarkRed, isUri:=False)
+                Else
+                    dgv.CellFormattingSetForegroundColor(e)
                 End If
             Case NameOf(AutoBasalDeliveryRecord.dateTime)
-                CellFormattingDateTime(e)
+                dgv.CellFormattingDateTime(e)
+            Case Else
+                dgv.CellFormattingSetForegroundColor(e)
         End Select
     End Sub
 
@@ -577,6 +565,14 @@ Public Class Form1
             MessageBox.Show(ex.DecodeException())
         End Try
 
+    End Sub
+
+    Private Sub DgvCareLinkUsers_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvCareLinkUsers.CellFormatting
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
+        If col IsNot Nothing Then
+            dgv.CellFormattingSetForegroundColor(e)
+        End If
     End Sub
 
     Private Sub DgvCareLinkUsers_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles DgvCareLinkUsers.CellValidating
@@ -714,6 +710,16 @@ Public Class Form1
 
 #End Region ' Dgv CareLink Users Events
 
+#Region "Dgv Country Pg1 Events" ' Dgv Country Pg1 Events
+
+    Private Sub DgvCountryDataPg1_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvCountryDataPg1.CellFormatting
+        If e.RowIndex = -1 Then Exit Sub
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        dgv.CellFormattingSetForegroundColor(e)
+    End Sub
+
+#End Region ' Dgv Country Pg1 Events
+
 #Region "Dgv Country Pg2 Events"
 
     Private Sub DgvCountryDataPg2_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvCountryDataPg2.CellClick
@@ -734,14 +740,36 @@ Public Class Form1
         If e.RowIndex = -1 Then Exit Sub
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If dgv.Columns(e.ColumnIndex).HeaderText = "Value" Then
-            Dim uriString As String = e.Value.ToString()
+            Dim uriString As String = $"{e.Value}"
             If uriString.StartsWith("https:", StringComparison.InvariantCultureIgnoreCase) AndAlso Uri.IsWellFormedUriString(uriString, UriKind.Absolute) Then
                 dgv.CellFormattingUrl(e)
+            Else
+                dgv.CellFormattingSetForegroundColor(e)
             End If
+        Else
+            dgv.CellFormattingSetForegroundColor(e)
         End If
     End Sub
 
 #End Region ' Dgv Country Pg2 Events
+
+#Region "Dgv Country Pg3 Events" ' Dgv Country Pg3 Events
+    Private Sub DgvCountryDataPg3_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvCountryDataPg3.CellFormatting
+        If e.RowIndex = -1 Then Exit Sub
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        If dgv.Columns(e.ColumnIndex).HeaderText = "Value" Then
+            Dim uriString As String = $"{e.Value}"
+            If uriString.StartsWith("https:", StringComparison.InvariantCultureIgnoreCase) AndAlso Uri.IsWellFormedUriString(uriString, UriKind.Absolute) Then
+                dgv.CellFormattingUrl(e)
+            Else
+                dgv.CellFormattingSetForegroundColor(e)
+            End If
+        Else
+            dgv.CellFormattingSetForegroundColor(e)
+        End If
+    End Sub
+
+#End Region ' Dgv Country Pg3 Events
 
 #Region "Dgv Current User Events"
 
@@ -773,9 +801,9 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(MealRecord.amount)
-                CellFormattingInteger(e, s_sessionCountrySettings.carbDefaultUnit)
+                dgv.CellFormattingInteger(e, s_sessionCountrySettings.carbDefaultUnit)
             Case NameOf(MealRecord.dateTime)
-                CellFormattingDateTime(e)
+                dgv.CellFormattingDateTime(e)
         End Select
     End Sub
 
@@ -813,13 +841,15 @@ Public Class Form1
             Case NameOf(SgRecord.sensorState)
                 ' Set the background to red for negative values in the Balance column.
                 If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
-                    CellFormattingApplyColor(e, Color.Red, 1 - alternateIndex, False)
+                    CellFormattingApplyColor(e, Color.Red, isUri:=False)
                 End If
-                CellFormattingToTitle(e)
+                dgv.CellFormattingToTitle(e)
             Case NameOf(SgRecord.datetime)
-                CellFormattingDateTime(e)
+                dgv.CellFormattingDateTime(e)
             Case NameOf(SgRecord.sg), NameOf(SgRecord.sgMmolL), NameOf(SgRecord.sgMmDl)
-                dgv.CellFormattingSgValue(e, NameOf(SgRecord.sg), alternateIndex)
+                dgv.CellFormattingSgValue(e, NameOf(SgRecord.sg))
+            Case Else
+                dgv.CellFormattingSetForegroundColor(e)
         End Select
     End Sub
 
@@ -1082,7 +1112,6 @@ Public Class Form1
         End If
 
         Me.InitializeDgvCareLinkUsers(Me.DgvCareLinkUsers)
-        InitializeTableLayoutPanelTops()
         s_formLoaded = True
         Me.MenuOptionsAudioAlerts.Checked = My.Settings.SystemAudioAlertsEnabled
         Me.MenuOptionsSpeechRecognitionEnabled.Checked = My.Settings.SystemSpeechRecognitionThreshold < 1
@@ -2969,7 +2998,8 @@ Public Class Form1
 
         Me.TableLayoutPanelSgs.DisplayDataTableInDGV(
                               Me.DgvSGs,
-                              ClassCollectionToDataTable(s_listOfSgRecords.OrderByDescending(Function(x) x.RecordNumber).ToList()),
+                              ClassCollectionToDataTable(
+                              classCollection:=s_listOfSgRecords.OrderByDescending(Function(x) x.RecordNumber).ToList()),
                               ItemIndexes.sgs)
         Me.DgvSGs.Columns(0).HeaderCell.SortGlyphDirection = SortOrder.Descending
 

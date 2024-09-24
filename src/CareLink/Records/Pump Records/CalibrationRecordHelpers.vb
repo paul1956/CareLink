@@ -18,9 +18,11 @@ Friend Module CalibrationRecordHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(CalibrationRecord.dateTime)
-                CellFormattingDateTime(e)
+                dgv.CellFormattingDateTime(e)
             Case NameOf(CalibrationRecord.value), NameOf(CalibrationRecord.valueMmolL), NameOf(CalibrationRecord.valueMmDl)
-                dgv.CellFormattingSgValue(e, NameOf(CalibrationRecord.value), 0)
+                dgv.CellFormattingSgValue(e, NameOf(CalibrationRecord.value))
+            Case Else
+                dgv.CellFormattingSetForegroundColor(e)
         End Select
 
     End Sub

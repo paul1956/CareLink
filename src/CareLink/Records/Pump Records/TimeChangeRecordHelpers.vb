@@ -16,7 +16,9 @@ Friend Module TimeChangeRecordHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(TimeChangeRecord.dateTime), NameOf(TimeChangeRecord.previousDateTime)
-                CellFormattingDateTime(e)
+                dgv.CellFormattingDateTime(e)
+            Case Else
+                dgv.CellFormattingSetForegroundColor(e)
         End Select
 
     End Sub
