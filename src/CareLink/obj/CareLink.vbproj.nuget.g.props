@@ -7,7 +7,7 @@
     <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">$(UserProfile)\.nuget\packages\</NuGetPackageRoot>
     <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">C:\Users\PaulM\.nuget\packages\;C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages;C:\Program Files\dotnet\sdk\NuGetFallbackFolder</NuGetPackageFolders>
     <NuGetProjectStyle Condition=" '$(NuGetProjectStyle)' == '' ">PackageReference</NuGetProjectStyle>
-    <NuGetToolVersion Condition=" '$(NuGetToolVersion)' == '' ">6.12.0</NuGetToolVersion>
+    <NuGetToolVersion Condition=" '$(NuGetToolVersion)' == '' ">6.13.0</NuGetToolVersion>
   </PropertyGroup>
   <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <SourceRoot Include="C:\Users\PaulM\.nuget\packages\" />
@@ -15,9 +15,9 @@
     <SourceRoot Include="C:\Program Files\dotnet\sdk\NuGetFallbackFolder\" />
   </ItemGroup>
   <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <Content Include="$(NuGetPackageRoot)toolstripcomboboxex\1.0.0.2\contentFiles\any\net7.0-windows7.0\ComboBox.ico" Condition="Exists('$(NuGetPackageRoot)toolstripcomboboxex\1.0.0.2\contentFiles\any\net7.0-windows7.0\ComboBox.ico')">
+    <Content Include="$(NuGetPackageRoot)toolstripcomboboxex\1.0.8\contentFiles\any\net8.0-windows10.0.17763\ComboBox.ico" Condition="Exists('$(NuGetPackageRoot)toolstripcomboboxex\1.0.8\contentFiles\any\net8.0-windows10.0.17763\ComboBox.ico')">
       <NuGetPackageId>ToolStripComboBoxEx</NuGetPackageId>
-      <NuGetPackageVersion>1.0.0.2</NuGetPackageVersion>
+      <NuGetPackageVersion>1.0.8</NuGetPackageVersion>
       <NuGetItemType>Content</NuGetItemType>
       <Pack>false</Pack>
       <Private>False</Private>
@@ -35,9 +35,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <Content Include="$(NuGetPackageRoot)datagridviewdisablebuttoncolumnex\1.0.0.1\contentFiles\any\net7.0-windows7.0\ColumnButton.ico" Condition="Exists('$(NuGetPackageRoot)datagridviewdisablebuttoncolumnex\1.0.0.1\contentFiles\any\net7.0-windows7.0\ColumnButton.ico')">
+    <Content Include="$(NuGetPackageRoot)datagridviewdisablebuttoncolumnex\1.0.8\contentFiles\any\net8.0-windows10.0.17763\ColumnButton.ico" Condition="Exists('$(NuGetPackageRoot)datagridviewdisablebuttoncolumnex\1.0.8\contentFiles\any\net8.0-windows10.0.17763\ColumnButton.ico')">
       <NuGetPackageId>DataGridViewDisableButtonColumnEx</NuGetPackageId>
-      <NuGetPackageVersion>1.0.0.1</NuGetPackageVersion>
+      <NuGetPackageVersion>1.0.8</NuGetPackageVersion>
       <NuGetItemType>Content</NuGetItemType>
       <Pack>false</Pack>
       <Private>False</Private>
@@ -45,6 +45,6 @@
     </Content>
   </ItemGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <PkgMicrosoft_Web_WebView2 Condition=" '$(PkgMicrosoft_Web_WebView2)' == '' ">C:\Users\PaulM\.nuget\packages\microsoft.web.webview2\1.0.2646-prerelease</PkgMicrosoft_Web_WebView2>
+    <PkgMicrosoft_Web_WebView2 Condition=" '$(PkgMicrosoft_Web_WebView2)' == '' ">C:\Users\PaulM\.nuget\packages\microsoft.web.webview2\1.0.2950-prerelease</PkgMicrosoft_Web_WebView2>
   </PropertyGroup>
 </Project>
