@@ -264,7 +264,7 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "Microsoft.Web.WebView2/1.0.2950-prerelease": {
+      "Microsoft.Web.WebView2/1.0.2903.40": {
         "type": "package",
         "build": {
           "buildTransitive/Microsoft.Web.WebView2.targets": {}
@@ -882,10 +882,10 @@
         "version.txt"
       ]
     },
-    "Microsoft.Web.WebView2/1.0.2950-prerelease": {
-      "sha512": "15GH8uTwpzNi8PH5MFS5cnjJj7LxCMJXD3gfMVEiTqniKrABb8u8B8d2fLXIvnl/YlATrtkX1M+fXF2wokIiUA==",
+    "Microsoft.Web.WebView2/1.0.2903.40": {
+      "sha512": "THrzYAnJgE3+cNH+9Epr44XjoZoRELdVpXlWGPs6K9C9G6TqyDfVCeVAR/Er8ljLitIUX5gaSkPsy9wRhD1sgQ==",
       "type": "package",
-      "path": "microsoft.web.webview2/1.0.2950-prerelease",
+      "path": "microsoft.web.webview2/1.0.2903.40",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -894,8 +894,6 @@
         "NOTICE.txt",
         "WebView2.idl",
         "WebView2.tlb",
-        "WebView2Experimental.idl",
-        "WebView2Experimental.tlb",
         "build/Common.targets",
         "build/Microsoft.Web.WebView2.targets",
         "build/WebView2Rules.Project.xml",
@@ -908,8 +906,6 @@
         "build/native/include-winrt/WebView2Interop.tlb",
         "build/native/include/WebView2.h",
         "build/native/include/WebView2EnvironmentOptions.h",
-        "build/native/include/WebView2Experimental.h",
-        "build/native/include/WebView2ExperimentalEnvironmentOptions.h",
         "build/native/x64/WebView2Loader.dll",
         "build/native/x64/WebView2Loader.dll.lib",
         "build/native/x64/WebView2LoaderStatic.lib",
@@ -935,7 +931,7 @@
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.xml",
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll",
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.xml",
-        "microsoft.web.webview2.1.0.2950-prerelease.nupkg.sha512",
+        "microsoft.web.webview2.1.0.2903.40.nupkg.sha512",
         "microsoft.web.webview2.nuspec",
         "runtimes/win-arm64/native/WebView2Loader.dll",
         "runtimes/win-arm64/native_uap/Microsoft.Web.WebView2.Core.dll",
@@ -1470,7 +1466,7 @@
       "ClosedXML >= 0.104.2",
       "DataGridViewDisableButtonColumnEx >= 1.0.8",
       "FreeSpire.PDF >= 10.2.0",
-      "Microsoft.Web.WebView2 >= 1.0.2950-prerelease",
+      "Microsoft.Web.WebView2 >= 1.0.2903.40",
       "Octokit >= 13.0.1",
       "System.IO.Packaging >= 9.0.0",
       "System.Speech >= 9.0.0",
@@ -1487,7 +1483,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "4.0.1.5",
+    "version": "4.0.2",
     "restore": {
       "projectUniqueName": "C:\\Repos\\CareLink\\src\\CareLink\\CareLink.vbproj",
       "projectName": "CareLink",
@@ -1523,7 +1519,7 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "9.0.100"
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net9.0-windows10.0.17763": {
@@ -1543,7 +1539,7 @@
           },
           "Microsoft.Web.WebView2": {
             "target": "Package",
-            "version": "[1.0.2950-prerelease, )"
+            "version": "[1.0.2903.40, )"
           },
           "Octokit": {
             "target": "Package",
@@ -1592,7 +1588,7 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.Windows.SDK.NET.Ref",
-            "version": "[10.0.17763.54, 10.0.17763.54]"
+            "version": "[10.0.17763.57, 10.0.17763.57]"
           }
         ],
         "frameworkReferences": {
@@ -1606,7 +1602,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200-preview.0.24575.35/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
