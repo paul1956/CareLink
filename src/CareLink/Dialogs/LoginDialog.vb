@@ -25,7 +25,9 @@ Public Class LoginDialog
     Public Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
     Public Property LoggedOnUser As New CareLinkUserDataRecord(s_allUserSettingsData)
 
-    Public Property Client As CareLinkClient
+    Public Property Client As CareLinkClient1
+
+    Public Property ClientDiscover As Discover
 
     Public Property LoginSourceAutomatic As FileToLoadOptions
         Get
@@ -70,7 +72,7 @@ Public Class LoginDialog
     End Sub
 
     Private Async Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        Me.ClientDiscover = Discover.GetDiscoveryData()
         Me.WebView21.Hide()
         If _initialHeight = 0 Then
             _initialHeight = Me.Height
@@ -135,6 +137,7 @@ Public Class LoginDialog
         Me.CarePartnerCheckBox.Checked = careLinkPartner
         Await Me.EnsureCoreWebView2(Form1.WebViewCacheDirectory)
         Form1.WebViewProcessId = Convert.ToInt32(Me.WebView21.CoreWebView2?.BrowserProcessId)
+
     End Sub
 
     Private Async Function EnsureCoreWebView2(webViewCacheDirectory As String) As Task
@@ -175,10 +178,11 @@ Public Class LoginDialog
         If countryCode.Length = 0 Then
             Stop
         End If
-        Dim serverUrl As String = CareLinkClient.GetServerUrl(countryCode)
+
         If Me.WebView21.CoreWebView2 Is Nothing Then
             Await Me.EnsureCoreWebView2(Form1.WebViewCacheDirectory)
         End If
+        Dim serverUrl As String = CareLinkClient1.GetServerUrl(countryCode)
         Me.WebView21.CoreWebView2.Navigate($"https://{serverUrl}/patient/sso/login?country={countryCode}&lang=en")
         Dim savePatientID As String = My.Settings.CareLinkPatientUserID
         My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
@@ -368,7 +372,7 @@ Public Class LoginDialog
         End If
 
         If foundAuthToken Then
-            Me.Client = New CareLinkClient(cookies, s_userName, Me.PasswordTextBox.Text, Me.CountryComboBox.SelectedValue.ToString)
+            Me.Client = New CareLinkClient1(cookies, s_userName, Me.PasswordTextBox.Text, Me.CountryComboBox.SelectedValue.ToString)
             Exit Sub
         End If
         If Me.WebView21.Source.ToString.StartsWith("https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login") OrElse Me.WebView21.Source.ToString.StartsWith("https://mdtlogin-ocl.medtronic.com/mmcl/auth/oauth/v2/authorize/login") Then

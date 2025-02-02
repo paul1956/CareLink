@@ -264,7 +264,7 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "Microsoft.Web.WebView2/1.0.2903.40": {
+      "Microsoft.Web.WebView2/1.0.2957.106": {
         "type": "package",
         "build": {
           "buildTransitive/Microsoft.Web.WebView2.targets": {}
@@ -302,7 +302,7 @@
           }
         }
       },
-      "Octokit/13.0.1": {
+      "Octokit/14.0.0": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/Octokit.dll": {
@@ -385,7 +385,7 @@
           "lib/netcoreapp2.0/_._": {}
         }
       },
-      "System.IO.Packaging/9.0.0": {
+      "System.IO.Packaging/9.0.1": {
         "type": "package",
         "compile": {
           "lib/net9.0/System.IO.Packaging.dll": {
@@ -423,7 +423,7 @@
           }
         }
       },
-      "System.Speech/9.0.0": {
+      "System.Speech/9.0.1": {
         "type": "package",
         "compile": {
           "lib/net9.0/System.Speech.dll": {
@@ -466,7 +466,7 @@
           }
         }
       },
-      "System.Text.Json/9.0.0": {
+      "System.Text.Json/9.0.1": {
         "type": "package",
         "compile": {
           "lib/net9.0/System.Text.Json.dll": {
@@ -537,7 +537,7 @@
           }
         }
       },
-      "WinForms.DataVisualization/1.10.0-pr2": {
+      "WinForms.DataVisualization/1.10.0": {
         "type": "package",
         "compile": {
           "lib/net9.0-windows7.0/WinForms.DataVisualization.Utilities.dll": {
@@ -882,10 +882,10 @@
         "version.txt"
       ]
     },
-    "Microsoft.Web.WebView2/1.0.2903.40": {
-      "sha512": "THrzYAnJgE3+cNH+9Epr44XjoZoRELdVpXlWGPs6K9C9G6TqyDfVCeVAR/Er8ljLitIUX5gaSkPsy9wRhD1sgQ==",
+    "Microsoft.Web.WebView2/1.0.2957.106": {
+      "sha512": "eHc2yKD//d1a6Razu6jl373RGKdzLhxDBk/wc/i//tC9+nEVXcO38pvjZwR2s0C34y+0trzKvbGHffrEx7vyVw==",
       "type": "package",
-      "path": "microsoft.web.webview2/1.0.2903.40",
+      "path": "microsoft.web.webview2/1.0.2957.106",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -931,7 +931,7 @@
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.xml",
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll",
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.xml",
-        "microsoft.web.webview2.1.0.2903.40.nupkg.sha512",
+        "microsoft.web.webview2.1.0.2957.106.nupkg.sha512",
         "microsoft.web.webview2.nuspec",
         "runtimes/win-arm64/native/WebView2Loader.dll",
         "runtimes/win-arm64/native_uap/Microsoft.Web.WebView2.Core.dll",
@@ -995,16 +995,16 @@
         "microsoft.web.webview2.devtoolsprotocolextension.nuspec"
       ]
     },
-    "Octokit/13.0.1": {
-      "sha512": "tjXTa2FXzbd3n17VWpi8UXe05EIJqHcWJW8C2kukftIve00duWiZL8x4i1vlZQ0zQ4RbRANbRc7J5K7Co/1spQ==",
+    "Octokit/14.0.0": {
+      "sha512": "jGOuTH1l+TCpJH+fwYOp7USzHDuGfN1jKbLz3J2COwyn+wL08eynvpnM6rY2qkzIEXum3PN2p2QkP3BW/p9Qcw==",
       "type": "package",
-      "path": "octokit/13.0.1",
+      "path": "octokit/14.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Octokit.dll",
         "lib/netstandard2.0/Octokit.xml",
-        "octokit.13.0.1.nupkg.sha512",
+        "octokit.14.0.0.nupkg.sha512",
         "octokit.nuspec",
         "octokit.png"
       ]
@@ -1122,10 +1122,10 @@
         "version.txt"
       ]
     },
-    "System.IO.Packaging/9.0.0": {
-      "sha512": "9OT/DurX/4rW4UA6SaWsYfmfYddykKZaG9aQmzg19qoiDYbEDTrziSwhgp00KDBmRA+FRbb2u5c7cxnLm4klKw==",
+    "System.IO.Packaging/9.0.1": {
+      "sha512": "VN0wku8wvyIT7u3ieFKt4fJCVdTjOFEtIqa4DGehz+NH7xJM1pnI+NA5/VELtISVDIZPY/zOAySjmhTTwfGMWA==",
       "type": "package",
-      "path": "system.io.packaging/9.0.0",
+      "path": "system.io.packaging/9.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1144,7 +1144,7 @@
         "lib/net9.0/System.IO.Packaging.xml",
         "lib/netstandard2.0/System.IO.Packaging.dll",
         "lib/netstandard2.0/System.IO.Packaging.xml",
-        "system.io.packaging.9.0.0.nupkg.sha512",
+        "system.io.packaging.9.0.1.nupkg.sha512",
         "system.io.packaging.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -1199,10 +1199,10 @@
         "version.txt"
       ]
     },
-    "System.Speech/9.0.0": {
-      "sha512": "z8mvEVBfWSi0692vPOra8MougSEJCDzlaLj4g0aA87XDZpJoJD3BJTcJ0MuFbbN1fOT9Cr2ZFqXhZc+zzX0Gwg==",
+    "System.Speech/9.0.1": {
+      "sha512": "/iIJryPoMQNiVzNwM94MzUq7YT/Gpjdf5iejKU5odt7NfJIqv4H7e/2FUno7irCJ1iKXjhSDo7dAOq7PDoZgyQ==",
       "type": "package",
-      "path": "system.speech/9.0.0",
+      "path": "system.speech/9.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1223,7 +1223,7 @@
         "runtimes/win/lib/net8.0/System.Speech.xml",
         "runtimes/win/lib/net9.0/System.Speech.dll",
         "runtimes/win/lib/net9.0/System.Speech.xml",
-        "system.speech.9.0.0.nupkg.sha512",
+        "system.speech.9.0.1.nupkg.sha512",
         "system.speech.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -1276,10 +1276,10 @@
         "version.txt"
       ]
     },
-    "System.Text.Json/9.0.0": {
-      "sha512": "js7+qAu/9mQvnhA4EfGMZNEzXtJCDxgkgj8ohuxq/Qxv+R56G+ljefhiJHOxTNiw54q8vmABCWUwkMulNdlZ4A==",
+    "System.Text.Json/9.0.1": {
+      "sha512": "eqWHDZqYPv1PvuvoIIx5pF74plL3iEOZOl/0kQP+Y0TEbtgNnM2W6k8h8EPYs+LTJZsXuWa92n5W5sHTWvE3VA==",
       "type": "package",
-      "path": "system.text.json/9.0.0",
+      "path": "system.text.json/9.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1342,7 +1342,7 @@
         "lib/net9.0/System.Text.Json.xml",
         "lib/netstandard2.0/System.Text.Json.dll",
         "lib/netstandard2.0/System.Text.Json.xml",
-        "system.text.json.9.0.0.nupkg.sha512",
+        "system.text.json.9.0.1.nupkg.sha512",
         "system.text.json.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -1399,10 +1399,10 @@
         "webview2.devtools.dom.nuspec"
       ]
     },
-    "WinForms.DataVisualization/1.10.0-pr2": {
-      "sha512": "000gq+PSTBjHiB1JNlIHfZCCN3/az5oNmKCX/L14qLS1SBSrooRReN4hFYGiZC8rJgNwCrw1xjIafX6P9GO4Sg==",
+    "WinForms.DataVisualization/1.10.0": {
+      "sha512": "QKFQUf6xnsseiRsWfIeKvbWRJWvOKOvkoec/pWxEjwYrr4Vix4xmAWmvTpJGxoeWRXOzV7Pprm5SCFqzXzBA4g==",
       "type": "package",
-      "path": "winforms.datavisualization/1.10.0-pr2",
+      "path": "winforms.datavisualization/1.10.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1420,30 +1420,6 @@
         "lib/net6.0-windows7.0/WinForms.DataVisualization.dll",
         "lib/net6.0-windows7.0/WinForms.DataVisualization.pdb",
         "lib/net6.0-windows7.0/WinForms.DataVisualization.xml",
-        "lib/net7.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Designer.ClientServerProtocol.dll",
-        "lib/net7.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Designer.Server.dll",
-        "lib/net7.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Utilities.dll",
-        "lib/net7.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Designer.Client.dll",
-        "lib/net7.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Designer.ClientServerProtocol.dll",
-        "lib/net7.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Utilities.dll",
-        "lib/net7.0-windows7.0/WinForms.DataVisualization.Utilities.dll",
-        "lib/net7.0-windows7.0/WinForms.DataVisualization.Utilities.pdb",
-        "lib/net7.0-windows7.0/WinForms.DataVisualization.Utilities.xml",
-        "lib/net7.0-windows7.0/WinForms.DataVisualization.dll",
-        "lib/net7.0-windows7.0/WinForms.DataVisualization.pdb",
-        "lib/net7.0-windows7.0/WinForms.DataVisualization.xml",
-        "lib/net8.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Designer.ClientServerProtocol.dll",
-        "lib/net8.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Designer.Server.dll",
-        "lib/net8.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Utilities.dll",
-        "lib/net8.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Designer.Client.dll",
-        "lib/net8.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Designer.ClientServerProtocol.dll",
-        "lib/net8.0-windows7.0/Design/WinForms/WinForms.DataVisualization.Utilities.dll",
-        "lib/net8.0-windows7.0/WinForms.DataVisualization.Utilities.dll",
-        "lib/net8.0-windows7.0/WinForms.DataVisualization.Utilities.pdb",
-        "lib/net8.0-windows7.0/WinForms.DataVisualization.Utilities.xml",
-        "lib/net8.0-windows7.0/WinForms.DataVisualization.dll",
-        "lib/net8.0-windows7.0/WinForms.DataVisualization.pdb",
-        "lib/net8.0-windows7.0/WinForms.DataVisualization.xml",
         "lib/net9.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Designer.ClientServerProtocol.dll",
         "lib/net9.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Designer.Server.dll",
         "lib/net9.0-windows7.0/Design/WinForms/Server/WinForms.DataVisualization.Utilities.dll",
@@ -1456,7 +1432,7 @@
         "lib/net9.0-windows7.0/WinForms.DataVisualization.dll",
         "lib/net9.0-windows7.0/WinForms.DataVisualization.pdb",
         "lib/net9.0-windows7.0/WinForms.DataVisualization.xml",
-        "winforms.datavisualization.1.10.0-pr2.nupkg.sha512",
+        "winforms.datavisualization.1.10.0.nupkg.sha512",
         "winforms.datavisualization.nuspec"
       ]
     }
@@ -1466,15 +1442,15 @@
       "ClosedXML >= 0.104.2",
       "DataGridViewDisableButtonColumnEx >= 1.0.8",
       "FreeSpire.PDF >= 10.2.0",
-      "Microsoft.Web.WebView2 >= 1.0.2903.40",
-      "Octokit >= 13.0.1",
-      "System.IO.Packaging >= 9.0.0",
-      "System.Speech >= 9.0.0",
-      "System.Text.Json >= 9.0.0",
+      "Microsoft.Web.WebView2 >= 1.0.2957.106",
+      "Octokit >= 14.0.0",
+      "System.IO.Packaging >= 9.0.1",
+      "System.Speech >= 9.0.1",
+      "System.Text.Json >= 9.0.1",
       "TableLayputPanelTop >= 1.0.0.3",
       "ToolStripComboBoxEx >= 1.0.8",
       "WebView2.DevTools.Dom >= 4.0.1",
-      "WinForms.DataVisualization >= 1.10.0-pr2"
+      "WinForms.DataVisualization >= 1.10.0"
     ]
   },
   "packageFolders": {
@@ -1517,7 +1493,7 @@
       "restoreAuditProperties": {
         "enableAudit": "true",
         "auditLevel": "low",
-        "auditMode": "all"
+        "auditMode": "direct"
       },
       "SdkAnalysisLevel": "9.0.200"
     },
@@ -1539,23 +1515,23 @@
           },
           "Microsoft.Web.WebView2": {
             "target": "Package",
-            "version": "[1.0.2903.40, )"
+            "version": "[1.0.2957.106, )"
           },
           "Octokit": {
             "target": "Package",
-            "version": "[13.0.1, )"
+            "version": "[14.0.0, )"
           },
           "System.IO.Packaging": {
             "target": "Package",
-            "version": "[9.0.0, )"
+            "version": "[9.0.1, )"
           },
           "System.Speech": {
             "target": "Package",
-            "version": "[9.0.0, )"
+            "version": "[9.0.1, )"
           },
           "System.Text.Json": {
             "target": "Package",
-            "version": "[9.0.0, )"
+            "version": "[9.0.1, )"
           },
           "TableLayputPanelTop": {
             "target": "Package",
@@ -1571,7 +1547,7 @@
           },
           "WinForms.DataVisualization": {
             "target": "Package",
-            "version": "[1.10.0-pr2, )"
+            "version": "[1.10.0, )"
           }
         },
         "imports": [
@@ -1602,7 +1578,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200-preview.0.24575.35/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200-preview.0.25057.12/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

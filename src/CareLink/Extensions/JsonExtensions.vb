@@ -50,6 +50,83 @@ Public Module JsonExtensions
     End Function
 
     <Extension>
+    Public Function ConvertJsonArrayToList(jsonElement As JsonElement) As List(Of Object)
+        Dim result As New List(Of Object)()
+        For Each element As JsonElement In jsonElement.EnumerateArray()
+            Select Case element.ValueKind
+                Case JsonValueKind.Object
+                    result.Add(ConvertJsonElementToDictionary(element))
+                Case JsonValueKind.Array
+                    result.Add(ConvertJsonArrayToList(element))
+                Case Else
+                    result.Add(ConvertJsonValue(element))
+            End Select
+        Next
+
+        Return result
+    End Function
+
+    <Extension>
+    Public Function ConvertJsonElementToDictionary(jsonElement As JsonElement) As Dictionary(Of String, Object)
+        Dim result As New Dictionary(Of String, Object)()
+
+        If jsonElement.ValueKind = JsonValueKind.Object Then
+            For Each [property] As JsonProperty In jsonElement.EnumerateObject()
+                Select Case [property].Value.ValueKind
+                    Case JsonValueKind.Object
+                        result.Add([property].Name, ConvertJsonElementToDictionary([property].Value))
+                    Case JsonValueKind.Array
+                        result.Add([property].Name, ConvertJsonArrayToList([property].Value))
+                    Case Else
+                        result.Add([property].Name, ConvertJsonValue([property].Value))
+                End Select
+            Next
+        End If
+
+        Return result
+    End Function
+
+    <Extension>
+    Public Function ConvertJsonElementToStringDictionary(jsonElement As JsonElement) As Dictionary(Of String, String)
+        Dim result As New Dictionary(Of String, String)()
+
+        If jsonElement.ValueKind = JsonValueKind.Object Then
+            For Each [property] As JsonProperty In jsonElement.EnumerateObject()
+                Select Case [property].Value.ValueKind
+                    Case JsonValueKind.String
+                        result.Add([property].Name, [property].Value.ToString)
+                    Case JsonValueKind.Object
+                        result.Add([property].Name, ConvertJsonElementToDictionary([property].Value).ToString)
+                    Case JsonValueKind.Array
+                        result.Add([property].Name, ConvertJsonArrayToList([property].Value).ToString)
+                    Case Else
+                        result.Add([property].Name, ConvertJsonValue([property].Value).ToString)
+                End Select
+            Next
+        End If
+
+        Return result
+    End Function
+
+    <Extension>
+    Public Function ConvertJsonValue(jsonElement As JsonElement) As Object
+        Select Case jsonElement.ValueKind
+            Case JsonValueKind.String
+                Return jsonElement.GetString()
+            Case JsonValueKind.Number
+                Return jsonElement.GetDecimal()
+            Case JsonValueKind.True
+                Return True
+            Case JsonValueKind.False
+                Return False
+            Case JsonValueKind.Null
+                Return Nothing
+            Case Else
+                Return jsonElement.GetRawText()
+        End Select
+    End Function
+
+    <Extension>
     Public Function jsonItemAsString(item As KeyValuePair(Of String, Object)) As String
         Dim itemValue As JsonElement = CType(item.Value, JsonElement)
         Dim valueAsString As String = itemValue.ToString

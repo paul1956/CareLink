@@ -46,11 +46,11 @@ Public Class Form1
         End Set
     End Property
 
-    Public Shared Property Client As CareLinkClient
+    Public Shared Property Client As CareLinkClient1
         Get
             Return Form1LoginHelpers.LoginDialog?.Client
         End Get
-        Set(value As CareLinkClient)
+        Set(value As CareLinkClient1)
             Form1LoginHelpers.LoginDialog.Client = value
         End Set
     End Property

@@ -1,616 +1,438 @@
-﻿' Licensed to the .NET Foundation under one or more agreements.
-' The .NET Foundation licenses this file to you under the MIT license.
-' See the LICENSE file in the project root for more information.
-
-Imports System.Globalization
+﻿Imports System
 Imports System.IO
-Imports System.Net
 Imports System.Net.Http
 Imports System.Text
 Imports System.Text.Json
+Imports System.Security.Cryptography
+Imports Microsoft.VisualBasic.Logging
 
 Public Class CareLinkClient
-    Private Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
 
-    Private Const CareLinkTokenValidToCookieName As String = "c_token_valid_to"
+    ' Constants
+    Private Const VERSION As String = "1.2"
 
-    Private ReadOnly _careLinkCountry As String
+    Private Const DEFAULT_FILENAME As String = "logindata.json"
+    Private Const CARELINK_CONFIG_URL As String = "https://clcloud.minimed.eu/connect/carepartner/v11/discover/android/3.2"
 
-    Private ReadOnly _careLinkPartnerType As New List(Of String) From {
-                            "CARE_PARTNER",
-                            "CARE_PARTNER_OUS"
-                        }
+    Private ReadOnly _common_Headers As New Dictionary(Of String, String) From {
+        {"Accept", "application/json"},
+        {"Content-Type", "application/json"},
+        {"User-Agent", "Dalvik/2.1.0 (Linux; U; Android 10; Nexus 5X Build/QQ3A.200805.001)"}
+}
 
-    Private ReadOnly _httpStatusBadCodes As New List(Of HttpStatusCode) From {
-                            HttpStatusCode.Unauthorized,
-                            HttpStatusCode.Forbidden
-                        }
+    Private Shared ReadOnly s_serializerOptions As New JsonSerializerOptions With {.WriteIndented = True}
+    Private ReadOnly _auth_Error_Codes As Integer() = {401, 403}
+    Private ReadOnly _tokenFile As String
+    Private ReadOnly _version As String
+    Private _accessTokenPayload As Dictionary(Of String, Object)
+    Private _config As Dictionary(Of String, Object)
+    Private _country As String
+    Private _lastApiStatus As Integer
+    Private _patient As Dictionary(Of String, String)
+    Private _tokenDataElement As JsonElement
+    Private _user As Dictionary(Of String, Object)
+    Private _username As String
 
-    Private _httpClient As HttpClient
+    Public Sub New(Optional tokenFile As String = DEFAULT_FILENAME)
+        _version = VERSION
 
-    Private _inLoginInProcess As Boolean
+        ' Authorization
+        _tokenFile = tokenFile
+        _tokenDataElement = Nothing
+        _accessTokenPayload = Nothing
 
-    Private _lastErrorMessage As String
+        ' API config
+        _config = Nothing
 
-    Private _lastResponseCode? As HttpStatusCode
-
-    Private _sessionMonitorData As New SessionMonitorDataRecord
-
-    Public Sub New(cookies As CookieContainer, username As String, password As String, country As String)
         ' User info
-        Me.CareLinkUsername = username
-        Me.CareLinkPassword = password
-        _careLinkCountry = country
+        _username = Nothing
+        _user = Nothing
+        _patient = Nothing
+        _country = Nothing
 
-        ' State info
-        _inLoginInProcess = False
-        Me.LoggedIn = False
-        _lastErrorMessage = Nothing
-        _lastResponseCode = Nothing
-
-        _httpClient = Me.NewHttpClientWithCookieContainer(cookies)
+        ' API status
+        _lastApiStatus = Nothing
     End Sub
 
-    Private Enum GetAuthorizationTokenResult
-        InLoginProcess
-        LoginFailed
-        NetworkDown
-        OK
-    End Enum
-
-#Region "Current CareLink User Information"
-
-    Private ReadOnly Property CareLinkCountry As String
-        Get
-            If String.IsNullOrWhiteSpace(_careLinkCountry) Then
-                Stop
-            End If
-            Return _careLinkCountry
-        End Get
-    End Property
-
-    Private ReadOnly Property CareLinkPassword As String
-    Private ReadOnly Property CareLinkUsername As String
-
-#End Region
-
-    Private Property ClientHandler As HttpClientHandler
-    Friend Property LoggedIn As Boolean
-
-    Public Property InLoginInProcess As Boolean
-        Get
-            Return _inLoginInProcess
-        End Get
-        Set(value As Boolean)
-            _inLoginInProcess = value
-        End Set
-    End Property
-
-    Friend Property SessionProfile As New SessionProfileRecord
-    Friend Property SessionUser As New SessionUserRecord
-
-    ''' <summary>
-    ''' Parse d in this for "ddd MMM dd HH:mm:ss zzz yyyy"
-    ''' where zzz=UTC
-    ''' </summary>
-    ''' <param name="dateString"></param>
-    ''' <returns></returns>
-    Private Shared Function ExpirationTokenAsDate(dateString As String) As Date
-        Dim d As Date = Now + New TimeSpan(1, 0, 0, 0, 0)
-        Try
-            dateString = dateString.Replace("""", "")
-            Dim year As Integer = CInt(dateString.Substring(24, 4))
-            Dim month As Integer = Date.ParseExact(dateString.Substring(4, 3), "MMM", CultureInfo.InvariantCulture).Month
-            Dim day As Integer = CInt(dateString.Substring(8, 2))
-            Dim hour As Integer = CInt(dateString.Substring(11, 2))
-            Dim minutes As Integer = CInt(dateString.Substring(14, 2))
-            Dim seconds As Integer = CInt(dateString.Substring(17, 2))
-            d = New DateTime(year, month, day, hour, minutes, seconds)
-        Catch ex As Exception
-            Stop
-        End Try
-        Return d
+    Private Shared Function ReadTokenFile(filename As String) As JsonElement
+        Console.WriteLine(NameOf(ReadTokenFile))
+        If File.Exists(filename) Then
+            Try
+                Dim jsonString As String = File.ReadAllText(filename)
+                Dim tokenData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(jsonString)
+                Dim requiredFields As String() = {"access_token", "refresh_token", "scope", "client_id", "client_secret", "mag-identifier"}
+                For Each field As String In requiredFields
+                    If Not tokenData.TryGetProperty(field, Nothing) Then
+                        Console.WriteLine($"ERROR: field {field} is missing from token file")
+                        Return Nothing
+                    End If
+                Next
+                Return tokenData
+            Catch ex As JsonException
+                Console.WriteLine($"ERROR: failed parsing token file {filename}")
+            End Try
+        Else
+            Console.WriteLine($"ERROR: token file {filename} not found")
+        End If
+        Return Nothing
     End Function
 
-    ''' <summary>
-    ''' Logs in user and collects Records with User, Profile, CountrySettings and Device Family
-    ''' </summary>
-    ''' <param name="serverUrl"></param>
-    '''
-    ''' <returns>True is login successful</returns>
-    Private Function ExecuteLoginProcedure(serverUrl As String) As Boolean
-        If NetworkUnavailable() Then
-            _lastErrorMessage = "No Internet Connection!"
-            ReportLoginStatus(Form1.LoginStatus)
+    Private Shared Sub WriteTokenFile(obj As JsonElement, filename As String)
+        Console.WriteLine(NameOf(WriteTokenFile))
+        File.WriteAllText(filename, JsonSerializer.Serialize(obj, s_serializerOptions))
+    End Sub
+
+    Private Shared Function GetConfig(discoveryUrl As String, country As String) As JsonElement
+        Console.WriteLine(NameOf(GetConfig))
+        Using client As New HttpClient()
+            Dim response As String = client.GetStringAsync(discoveryUrl).Result
+            Dim data As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(response)
+            Dim region As JsonElement = Nothing
+            Dim config As JsonElement
+
+            For Each c As JsonElement In data.GetProperty("supportedCountries").EnumerateArray()
+                If c.TryGetProperty(country.ToUpper(), region) Then
+                    Exit For
+                End If
+            Next
+
+            If region.ValueKind = JsonValueKind.Null Then
+                Throw New Exception($"ERROR: country code {country} is not supported")
+            End If
+            Console.WriteLine($"   region: {region}")
+
+            For Each c As JsonElement In data.GetProperty("CP").EnumerateArray()
+                If region.ValueEquals(c.GetProperty("region").GetString()) Then
+                    config = c
+                    Exit For
+                End If
+            Next
+
+            If config.ValueKind = JsonValueKind.Undefined Then
+                Throw New Exception($"ERROR: failed to get config base URLs for region {region}")
+            End If
+
+            Dim ssoConfigResponse As String = client.GetStringAsync(config.GetProperty("SSOConfiguration").GetString()).Result
+            Dim ssoConfig As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(ssoConfigResponse)
+            Dim ssoBaseUrl As String = $"https://{ssoConfig.GetProperty("server").GetProperty("hostname").GetString()}:{ssoConfig.GetProperty("server").GetProperty("port").GetString()}/{ssoConfig.GetProperty("server").GetProperty("prefix").GetString()}"
+            Dim tokenUrl As String = ssoBaseUrl & ssoConfig.GetProperty("oauth").GetProperty("system_endpoints").GetProperty("token_endpoint_path").GetString()
+
+            Dim mutableConfig As Dictionary(Of String, JsonElement) = JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(config.GetRawText())
+            mutableConfig("token_url") = JsonSerializer.Deserialize(Of JsonElement)($"""{tokenUrl}""")
+            Return JsonSerializer.Deserialize(Of JsonElement)(JsonSerializer.Serialize(mutableConfig))
+        End Using
+    End Function
+
+    Private Function GetUser(config As JsonElement, tokenData As JsonElement) As JsonElement
+        Console.WriteLine(NameOf(GetUser))
+        Dim url As String = config.GetProperty("baseUrlCareLink").GetString() & "/users/me"
+        Dim headers As New Dictionary(Of String, String)(_common_Headers)
+        headers("mag-identifier") = tokenData.GetProperty("mag-identifier").GetString()
+        headers("Authorization") = "Bearer " & tokenData.GetProperty("access_token").GetString()
+
+        Using client As New HttpClient()
+            For Each header As KeyValuePair(Of String, String) In headers
+                client.DefaultRequestHeaders.Add(header.Key, header.Value)
+            Next
+
+            Dim response As HttpResponseMessage = client.GetAsync(url).Result
+            _lastApiStatus = CInt(response.StatusCode)
+            Console.WriteLine($"   status: {_lastApiStatus}")
+
+            If response.IsSuccessStatusCode Then
+                Return JsonSerializer.Deserialize(Of JsonElement)(response.Content.ReadAsStringAsync().Result)
+            End If
+        End Using
+        Return Nothing
+    End Function
+
+    Private Async Function GetPatient(config As JsonElement, token_data As JsonElement) As Task(Of Dictionary(Of String, String))
+        Console.WriteLine(NameOf(GetPatient))
+        Dim url As String = $"{CStr(config.ConvertJsonElementToDictionary("baseUrlCareLink"))}/links/patients"
+        Dim headers As New Dictionary(Of String, String)(_common_Headers)
+        headers("mag-identifier") = CStr(token_data.ConvertJsonElementToDictionary("mag-identifier"))
+        headers("Authorization") = $"Bearer {CStr(token_data.ConvertJsonElementToDictionary("access_token"))}"
+
+        _lastApiStatus = Nothing
+
+        Using client As New HttpClient()
+            For Each header As KeyValuePair(Of String, String) In headers
+                client.DefaultRequestHeaders.Add(header.Key, header.Value)
+            Next
+
+            Dim response As HttpResponseMessage = Await client.GetAsync(url)
+            _lastApiStatus = CInt(response.StatusCode)
+            Console.WriteLine($"   status: {_lastApiStatus}")
+
+            If response.IsSuccessStatusCode Then
+                Dim content As String = Await response.Content.ReadAsStringAsync()
+                Dim patients As List(Of Dictionary(Of String, String)) = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, String)))(content)
+                If patients.Count > 0 Then
+                    Return patients(0)
+                End If
+            End If
+        End Using
+
+        Return Nothing
+    End Function
+
+    Private Function GetData(config As Dictionary(Of String, Object), tokenDataElement As JsonElement, username As String, role As String, patientId As String) As Dictionary(Of String, Object)
+        Console.WriteLine("_get_data()")
+        Dim url As String = $"{CStr(config("baseUrlCumulus"))}/display/message"
+        Dim headers As New Dictionary(Of String, String)(_common_Headers)
+        Dim tokenData As Dictionary(Of String, String) = tokenDataElement.ConvertJsonElementToStringDictionary
+        headers("mag-identifier") = tokenData("mag-identifier")
+        headers("Authorization") = $"Bearer {tokenData("access_token")}"
+
+        Dim data As New Dictionary(Of String, Object) From {
+            {"username", username}
+        }
+
+        If role = "CARE_PARTNER" OrElse role = "CARE_PARTNER_OUS" Then
+            data("role") = "carepartner"
+            data("patientId") = patientId
+        Else
+            data("role") = "patient"
+        End If
+
+        _lastApiStatus = Nothing
+
+        Using client As New HttpClient()
+            For Each header As KeyValuePair(Of String, String) In headers
+                client.DefaultRequestHeaders.Add(header.Key, header.Value)
+            Next
+
+            Dim jsonContent As New StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json")
+            Dim response As HttpResponseMessage = client.PostAsync(url, jsonContent).Result
+            _lastApiStatus = CInt(response.StatusCode)
+            Console.WriteLine($"   status: {_lastApiStatus}")
+
+            If response.IsSuccessStatusCode Then
+                Dim content As String = response.Content.ReadAsStringAsync().Result
+                Return JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(content)
+            End If
+        End Using
+        Return Nothing
+    End Function
+
+    Private Shared Function DoRefresh(config As Dictionary(Of String, Object), tokenDataElement As JsonElement) As JsonElement
+        Console.WriteLine(NameOf(DoRefresh))
+        Dim tokenUrl As String = CStr(config("token_url"))
+
+        Dim tokenData As Dictionary(Of String, String) = tokenDataElement.ConvertJsonElementToStringDictionary
+
+        Dim data As New Dictionary(Of String, String) From {
+        {"refresh_token", tokenData("refresh_token")},
+        {"client_id", tokenData("client_id")},
+        {"client_secret", tokenData("client_secret")},
+        {"grant_type", "refresh_token"}
+    }
+
+        Dim headers As New Dictionary(Of String, String) From {
+        {"mag-identifier", tokenData("mag-identifier")}
+    }
+
+        Using httpClient As New HttpClient()
+            For Each header As KeyValuePair(Of String, String) In headers
+                httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
+            Next
+
+            Dim content As New FormUrlEncodedContent(data)
+            Dim response As HttpResponseMessage = httpClient.PostAsync(tokenUrl, content).Result
+
+            Console.WriteLine($"   status: {response.StatusCode}")
+
+            If response.StatusCode <> Net.HttpStatusCode.OK Then
+                Throw New Exception("ERROR: failed to refresh token")
+            End If
+
+            Dim responseBody As String = response.Content.ReadAsStringAsync().Result
+            Dim newData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(responseBody)
+
+            tokenData("access_token") = newData.GetProperty("access_token").GetString()
+            tokenData("refresh_token") = newData.GetProperty("refresh_token").GetString()
+
+            Return JsonSerializer.Deserialize(Of JsonElement)(JsonSerializer.Serialize(tokenData))
+        End Using
+    End Function
+
+    Private Shared Function GetAccessTokenPayload(token_data As JsonElement) As Dictionary(Of String, Object)
+        Console.WriteLine(NameOf(GetAccessTokenPayload))
+        Try
+            Dim token As String = CStr(token_data.ConvertJsonElementToDictionary("access_token"))
+            Dim payload_b64 As String = token.Split("."c)(1)
+            Dim payload_b64_bytes As Byte() = Encoding.UTF8.GetBytes(payload_b64)
+            Dim missing_padding As Integer = (4 - (payload_b64_bytes.Length Mod 4)) Mod 4
+            If missing_padding > 0 Then
+                payload_b64 &= New String("="c, missing_padding)
+            End If
+            Dim payload_bytes As Byte() = Convert.FromBase64String(payload_b64)
+            Dim payload As String = Encoding.UTF8.GetString(payload_bytes)
+            Return JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(payload)
+        Catch ex As Exception
+            Console.WriteLine("   no access token found or malformed access token")
+            Return Nothing
+        End Try
+    End Function
+
+    Private Shared Function IsTokenValid(access_token_payload As Dictionary(Of String, Object)) As Boolean
+        Console.WriteLine(NameOf(IsTokenValid))
+        Try
+            ' Get expiration time stamp
+            Dim tokenValidTo As Long = CType(access_token_payload("exp"), JsonElement).GetInt64()
+
+            ' Check expiration time stamp
+            Dim currentTime As Long = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+            Dim tDiff As Long = tokenValidTo - currentTime
+
+            If tDiff < 0 Then
+                Console.WriteLine($"   access token has expired {Math.Abs(tDiff)}s ago")
+                Return False
+            End If
+
+            If tDiff < 600 Then
+                Console.WriteLine($"   access token is about to expire in {tDiff}s")
+                Return False
+            End If
+
+            ' Token is valid
+            Dim authTokenValidTo As String = DateTimeOffset.FromUnixTimeSeconds(tokenValidTo).ToString("ddd MMM dd HH:mm:ss UTC yyyy")
+            Console.WriteLine($"   access token expires in {tDiff}s ({authTokenValidTo})")
+            Return True
+        Catch ex As Exception
+            Console.WriteLine("   missing data in access token")
+            Return False
+        End Try
+    End Function
+
+    Private Function _init() As Boolean
+        _tokenDataElement = ReadTokenFile(_tokenFile)
+        If _tokenDataElement.ValueKind = JsonValueKind.Null Then
             Return False
         End If
-        Me.InLoginInProcess = True
-        _lastErrorMessage = Nothing
-        Dim lastLoginSuccess As Boolean = False
+
+        _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
+        If _accessTokenPayload Is Nothing Then
+            Return False
+        End If
+        Dim jsonConfigElement As JsonElement
         Try
-            ' Open login(get SessionId And SessionData)
-            Using loginSessionResponse As HttpResponseMessage = Me.GetLoginSession(serverUrl)
-                _lastResponseCode = loginSessionResponse.StatusCode
-                If Not loginSessionResponse.IsSuccessStatusCode Then
-                    If Not loginSessionResponse.ReasonPhrase = "Not Implemented" Then
-                        _lastErrorMessage = loginSessionResponse.ReasonPhrase
-                    End If
-                    Return False
-                End If
-
-                ' Login
-                Using doLoginResponse As HttpResponseMessage = DoLogin(_httpClient, loginSessionResponse, Me.CareLinkUsername, Me.CareLinkPassword, _lastErrorMessage)
-                    Try
-                        If doLoginResponse Is Nothing Then
-                            _lastErrorMessage = "Login Failure with reason unknown"
-                            Return False
-                        ElseIf Not doLoginResponse.IsSuccessStatusCode Then
-                            If doLoginResponse.ReasonPhrase.Replace(" ", "") <> HttpStatusCode.NetworkAuthenticationRequired.ToString Then
-                                _lastErrorMessage = doLoginResponse.ReasonPhrase
-                            End If
-                        End If
-                    Catch ex As Exception
-                        _lastErrorMessage = $"Login Failure {ex.DecodeException()}, in {NameOf(ExecuteLoginProcedure)}."
-                        Return False
-                    Finally
-                        _lastResponseCode = If(doLoginResponse Is Nothing,
-                                               HttpStatusCode.NoContent,
-                                               doLoginResponse.StatusCode
-                                              )
-                    End Try
-
-                    If Not String.IsNullOrWhiteSpace(_lastErrorMessage) Then
-                        Return False
-                    End If
-
-                    ' If we are here we at least were successful logging in
-
-                    ' Consent
-                    Using consentResponse As HttpResponseMessage = DoConsent(_httpClient, doLoginResponse, _lastErrorMessage)
-                        _lastResponseCode = consentResponse?.StatusCode
-                        If Not (consentResponse?.IsSuccessStatusCode) Then
-                            _lastErrorMessage = consentResponse.StatusCode.ToString
-                            _lastResponseCode = consentResponse.StatusCode
-                            Return False
-                        End If
-                    End Using
-                End Using
-            End Using
-
-            Dim authToken As String = Me.GetBearerToken(GetServerUrl(Me.CareLinkCountry))
-
-            ' MUST BE FIRST DO NOT MOVE NEXT LINE
-            s_sessionCountrySettings = New CountrySettingsRecord(Me.GetCountrySettings(authToken))
-            Me.SessionUser = Me.GetSessionUser(authToken)
-            Me.SessionProfile = Me.GetSessionProfile(authToken)
-            _sessionMonitorData = Me.GetSessionMonitorData(authToken)
-            'Dim reports As Object = Me.GetReports(authToken)
-            ' Set login success if everything was OK:
-            If Me.SessionUser.HasValue _
-               AndAlso Me.SessionProfile.HasValue _
-               AndAlso s_sessionCountrySettings.HasValue _
-               AndAlso _sessionMonitorData.HasValue Then
-                lastLoginSuccess = True
+            Dim payload As Dictionary(Of String, String) = CType(_accessTokenPayload("token_details"), Dictionary(Of String, String))
+            _country = CStr(payload("country"))
+            jsonConfigElement = GetConfig(CARELINK_CONFIG_URL, _country)
+            _config = jsonConfigElement.ConvertJsonElementToDictionary
+            _username = CStr(payload("preferred_username"))
+            _user = Me.GetUser(jsonConfigElement, _tokenDataElement).ConvertJsonElementToDictionary
+            Dim role As String = CStr(_user("role"))
+            If role = "CARE_PARTNER" OrElse role = "CARE_PARTNER_OUS" Then
+                _patient = Me.GetPatient(jsonConfigElement, _tokenDataElement).Result
             End If
         Catch ex As Exception
-            DebugPrint($"failed with {ex.DecodeException()}".Replace(vbCrLf, " "))
-            _lastErrorMessage = ex.DecodeException()
-        Finally
-            Me.InLoginInProcess = False
-            Me.LoggedIn = lastLoginSuccess
-        End Try
-        Return lastLoginSuccess
+            Console.WriteLine(ex.ToString())
 
-    End Function
-
-    Private Function GetAuthorizationToken(ByRef authToken As String) As GetAuthorizationTokenResult
-        If NetworkUnavailable() Then
-            _lastErrorMessage = "No Internet Connection!"
-            Return GetAuthorizationTokenResult.NetworkDown
-        End If
-
-        Dim serverUrl As String = GetServerUrl(Me.CareLinkCountry)
-
-        ' New token is needed:
-        ' a) no token or about to expire => execute authentication
-        ' b) _lastResponse in httpStatusBadCodes
-
-        Dim expirationToken As String = Me.GetCookies(serverUrl)?.Item(CareLinkTokenValidToCookieName)?.Value
-        authToken = Me.GetCookieValue(serverUrl, CareLinkAuthTokenCookieName)
-        If String.IsNullOrWhiteSpace(authToken) OrElse
-            expirationToken Is Nothing OrElse
-            ExpirationTokenAsDate(expirationToken) < TimeZoneInfo.ConvertTime(Now, TimeZoneInfo.Utc) Then
-            ' execute new login process | null, if error OR already doing login
-            If Me.InLoginInProcess Then
-                DebugPrint("already in login Process")
-                Return GetAuthorizationTokenResult.InLoginProcess
-            End If
-            If Not Me.ExecuteLoginProcedure(serverUrl) Then
-                If NetworkUnavailable() Then
-                    _lastErrorMessage = "No Internet Connection!"
-                    DebugPrint(_lastErrorMessage)
-                    Return GetAuthorizationTokenResult.NetworkDown
-                End If
-                DebugPrint("failed")
-                Return GetAuthorizationTokenResult.LoginFailed
-            End If
-            DebugPrint($"{CareLinkTokenValidToCookieName} = {Me.GetCookies(serverUrl).Item(CareLinkTokenValidToCookieName).Value}")
-        Else
-            If Me.InLoginInProcess Then
-                DebugPrint("already In login Process")
-                Return GetAuthorizationTokenResult.InLoginProcess
-            End If
-            Me.InLoginInProcess = True
-            _lastErrorMessage = Nothing
-            ' MUST BE FIRST DO NOT MOVE NEXT LINE
-            s_sessionCountrySettings = New CountrySettingsRecord(Me.GetCountrySettings(authToken))
-            Me.SessionUser = Me.GetSessionUser(authToken)
-            Me.SessionProfile = Me.GetSessionProfile(authToken)
-            _sessionMonitorData = Me.GetSessionMonitorData(authToken)
-            ' Set login success if everything was OK:
-            If Me.SessionUser.HasValue _
-               AndAlso Me.SessionProfile.HasValue _
-               AndAlso s_sessionCountrySettings.HasValue _
-               AndAlso _sessionMonitorData.HasValue Then
+            If _aUTH_ERROR_CODES.Contains(CInt(_lastApiStatus)) Then
+                Try
+                    _tokenDataElement = DoRefresh(jsonConfigElement.ConvertJsonElementToDictionary, _tokenDataElement)
+                    _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
+                    WriteTokenFile(_tokenDataElement, _tokenFile)
+                Catch refreshEx As Exception
+                    Console.WriteLine(refreshEx.ToString())
+                End Try
             End If
 
-        End If
-        Me.InLoginInProcess = False
-        Me.LoggedIn = True
-        authToken = Me.GetBearerToken(serverUrl)
-        Return GetAuthorizationTokenResult.OK
-    End Function
-
-    ' Periodic data from CareLink Cloud
-    Private Function GetConnectDisplayMessage(username As String, role As String, endPointPath As String, Optional patientUserName As String = "") As Dictionary(Of String, String)
-
-        DebugPrint("started")
-        ' Build user Json for request
-        Dim requestBody As New Dictionary(Of String, String) From {
-            {"username", username},
-            {"role", role}}
-
-        If role.Equals("CarePartner", StringComparison.InvariantCultureIgnoreCase) Then
-            If String.IsNullOrWhiteSpace(patientUserName) Then
-                endPointPath = endPointPath.Replace("v6", "v5")
-            Else
-                requestBody.Add("patientId", patientUserName)
-            End If
-        End If
-        ' Get authorization token
-        Dim authToken As String = Nothing
-        Select Case Me.GetAuthorizationToken(authToken)
-            Case GetAuthorizationTokenResult.OK
-                Dim jsonDictionary As Dictionary(Of String, String) = Me.GetDataItems(authToken, endPointPath, requestBody)
-                If _lastResponseCode = HttpStatusCode.OK Then
-                    Return jsonDictionary
-                End If
-                If _lastResponseCode = HttpStatusCode.NoContent Then
-                    ReportLoginStatus(Form1.LoginStatus, True, _lastErrorMessage)
-                Else
-                    ReportLoginStatus(Form1.LoginStatus)
-                End If
-                Return jsonDictionary
-            Case GetAuthorizationTokenResult.NetworkDown
-                ReportLoginStatus(Form1.LoginStatus)
-            Case GetAuthorizationTokenResult.InLoginProcess
-                ' Do nothing
-            Case GetAuthorizationTokenResult.LoginFailed
-                ReportLoginStatus(Form1.LoginStatus, True, _lastErrorMessage)
-        End Select
-        Return Nothing
-    End Function
-
-    Private Function GetCookies(url As String) As CookieCollection
-        Return If(String.IsNullOrWhiteSpace(url),
-                  Nothing,
-                  Me.ClientHandler.CookieContainer.GetCookies(New Uri($"https://{url}"))
-                 )
-    End Function
-
-    Private Function GetCookieValue(serverUrl As String, cookieName As String) As String
-        If String.IsNullOrWhiteSpace(serverUrl) Then
-            Return Nothing
-        End If
-        Dim cookie As Cookie = Me.ClientHandler.CookieContainer.GetCookies(New Uri($"https://{serverUrl}")).Cast(Of Cookie)().FirstOrDefault(Function(c As Cookie) c.Name = cookieName)
-        Return cookie?.Value
-    End Function
-
-    Private Function GetCountrySettings(authToken As String) As Dictionary(Of String, String)
-        DebugPrint("started")
-        Dim queryParams As New Dictionary(Of String, String) From {
-            {"countryCode", Me.CareLinkCountry},
-            {"language", "en"}}
-
-        Return Me.GetData(authToken, GetServerUrl(Me.CareLinkCountry), "patient/countries/settings", queryParams)
-    End Function
-
-    Private Function GetDataItems(authToken As String, endPointPath As String, requestBody As Dictionary(Of String, String)) As Dictionary(Of String, String)
-        DebugPrint($"(serverUrl = {endPointPath}, requestBody = {requestBody.ToCsv}")
-        Dim jsonData As Dictionary(Of String, String) = Nothing
-        Dim response As New HttpResponseMessage
-        Try
-            ' Add header
-            Dim headers As Dictionary(Of String, String) = s_commonHeaders.Clone
-            headers("Authorization") = authToken
-            headers("Accept") = "application/json, text/plain, */*"
-            headers("Content-Type") = "application/json; charset=utf-8"
-            _httpClient.SetDefaultRequestHeaders(headers, Nothing)
-
-            Dim jsonContent As Json.JsonContent = Json.JsonContent.Create(requestBody)
-            Dim postRequest As New HttpRequestMessage(HttpMethod.Post, New Uri(endPointPath)) With {.Content = jsonContent}
-            response = _httpClient.SendAsync(postRequest).Result
-            _lastResponseCode = response.StatusCode
-            If response?.IsSuccessStatusCode Then
-                Dim resultText As String = response.ResultText
-                jsonData = LoadIndexedItems(resultText)
-                If jsonData.Count > 61 Then
-
-                    Dim contents As String = JsonSerializer.Serialize(jsonData, s_jsonSerializerOptions)
-                    Using jDocument As JsonDocument = JsonDocument.Parse(contents, New JsonDocumentOptions)
-                        File.WriteAllTextAsync(GetLastDownloadFileWithPath(), JsonSerializer.Serialize(jDocument, JsonFormattingOptions))
-                    End Using
-                End If
-            ElseIf response?.StatusCode = HttpStatusCode.Unauthorized Then
-                _lastResponseCode = response?.StatusCode
-                _lastErrorMessage = "Unauthorized"
-            ElseIf response?.StatusCode = HttpStatusCode.InternalServerError Then
-                _lastResponseCode = response?.StatusCode
-                _lastErrorMessage = $"CareLink Server Down"
-            Else
-                Throw New Exception($"session get response is not OK, last error = {_lastErrorMessage}")
-            End If
-            response.Dispose()
-        Catch ex As Exception
-            _lastErrorMessage = ex.DecodeException()
-            DebugPrint($"failed {_lastErrorMessage.Replace(vbCrLf, "")}, status {response?.StatusCode}")
-        End Try
-        Return jsonData
-    End Function
-
-    Private Function GetLoginSession(serverUrl As String) As HttpResponseMessage
-        ' https://CareLink.MiniMed.com/patient/sso/login?country=us&lang=en
-        Dim requestUri As New StringBuilder($"https://{serverUrl}/patient/sso/login")
-        Dim queryParams As New Dictionary(Of String, String) From {
-                            {"country", Me.CareLinkCountry},
-                            {"lang", "en"}
-                        }
-        Dim response As HttpResponseMessage = Nothing
-
-        Try
-            response = _httpClient.Get(requestUri, _lastErrorMessage, s_commonHeaders, queryParams)
-        Catch ex As Exception
-            If NetworkUnavailable() Then
-                _lastErrorMessage = "No Internet Connection!"
-                DebugPrint(_lastErrorMessage)
-                Return response
-            End If
-            DebugPrint($"failed {ex.DecodeException().Replace(vbCrLf, "")}")
-            Return response
+            Return False
         End Try
 
-        Return response
+        Return True
     End Function
 
-    Private Function GetSessionMonitorData(authToken As String) As SessionMonitorDataRecord
-        DebugPrint("started")
-        Return New SessionMonitorDataRecord(Me.GetData(authToken, GetServerUrl(Me.CareLinkCountry), "patient/monitor/data", Nothing))
-    End Function
-
-    Private Function GetSessionProfile(authToken As String) As SessionProfileRecord
-        DebugPrint("started")
-        Dim sessionProfile As New SessionProfileRecord(Me.GetData(authToken, GetServerUrl(Me.CareLinkCountry), "patient/users/me/profile", Nothing))
-        If Not sessionProfile.HasValue Then
-            sessionProfile.username = s_userName
-        End If
-        Return sessionProfile
-    End Function
-
-    Private Function GetSessionUser(authToken As String) As SessionUserRecord
-        DebugPrint("started")
-        Return New SessionUserRecord(Me.GetData(authToken, GetServerUrl(Me.CareLinkCountry), "patient/users/me", Nothing), Form1.DgvCurrentUser)
-    End Function
-
-    Private Function NewHttpClientWithCookieContainer(cookieContainer As CookieContainer) As HttpClient
-        Me.ClientHandler = New HttpClientHandler With {.CookieContainer = cookieContainer}
-        Return New HttpClient(Me.ClientHandler)
-    End Function
-
-    Friend Function TryGetDeviceSettingsPdfFile(pdfFileName As String) As Boolean
-        Dim authToken As String = ""
-
-        ' CareLink Partners do not support download
-        If My.Settings.CareLinkPartner Then Return False
-        If Me.GetAuthorizationToken(authToken) = GetAuthorizationTokenResult.OK Then
-            Dim response As HttpResponseMessage = Nothing
-            Dim serverUrl As String = GetServerUrl(Me.CareLinkCountry)
-            Dim referrerUri As New Uri($"https://{serverUrl}/app/reports")
-            Dim headers As Dictionary(Of String, String) = s_commonHeaders.Clone
-            headers("Accept") = "application/json, text/plain, */*"
-            headers("Authorization") = authToken
-            headers("application_language") = "en"
-            headers.Add("Accept-Encoding", "gzip, deflate, br")
-            headers.Add("Host", serverUrl)
-            headers.Add("Origin", $"https://{serverUrl}")
-            Dim jsonData As Dictionary(Of String, String)
-            Try
-                _httpClient.SetDefaultRequestHeaders(headers, referrerUri)
-                Dim requestUri As New Uri($"https://{serverUrl}/patient/reports/generateReport")
-                Dim postRequest As New HttpRequestMessage(HttpMethod.Post, requestUri) With {.Content = Json.JsonContent.Create(New GetReportsSettingsRecord)}
-                response = _httpClient.SendAsync(postRequest).Result
-                _lastResponseCode = response.StatusCode
-                If Not (response?.IsSuccessStatusCode) Then
-                    Return False
-                End If
-            Catch ex As Exception
-                _lastErrorMessage = ex.DecodeException()
-                DebugPrint($"{_lastErrorMessage.Replace(vbCrLf, "")}, status {response?.StatusCode}")
+    Public Function Init() As Boolean
+        ' First try
+        If Not Me._init() Then
+            ' Second try (after token refresh)
+            If Not Me._init() Then
+                ' Failed permanently
+                'Log.Error("ERROR: unable to initialize")
                 Return False
-            End Try
-            Try
-                jsonData = JsonToDictionary(response.ResultText)
-                Dim uuidString As String = $"{jsonData.Keys(0)}={jsonData.Values(0)}"
-                Dim requestUri As New Uri($"https://{serverUrl}/patient/reports/reportStatus?{uuidString}")
-                Dim delay As Integer = 250
-                DebugPrint($"{NameOf(requestUri)} = {requestUri}")
-                While True
-                    _httpClient.SetDefaultRequestHeaders(headers, referrerUri)
-                    Dim t As Task(Of HttpResponseMessage) = _httpClient.SendAsync(New HttpRequestMessage(HttpMethod.Get, requestUri))
-                    For i As Integer = 0 To delay
-                        If t.IsCompleted Then
-                            Exit For
-                        End If
-                        Threading.Thread.Sleep(10)
-                    Next
-                    response = t.Result
-                    _lastResponseCode = response.StatusCode
-                    DebugPrint($"{NameOf(response)}?.IsSuccessStatusCode={response?.IsSuccessStatusCode}")
-                    If response?.IsSuccessStatusCode Then
-                        Dim resultText As String = response.ResultText
-                        DebugPrint($"resultText={resultText}")
-                        Select Case JsonToDictionary(resultText)("status")
-                            Case "READY"
-                                DebugPrint("READY")
-                                Exit While
-                            Case "NOT_READY"
-                                DebugPrint("NOT_READY")
-                            Case Else
-                                Stop
-                        End Select
-                    Else
-                        Return False
-                    End If
-                End While
-                requestUri = New Uri($"https://{serverUrl}/patient/reports/reportPdf?{uuidString}")
-                _httpClient.SetDefaultRequestHeaders(headers, referrerUri)
-                response = _httpClient.SendAsync(New HttpRequestMessage(HttpMethod.Get, requestUri)).Result
-                _lastResponseCode = response.StatusCode
-                If response?.IsSuccessStatusCode Then
-                    Dim fileNameOrDefault As String = response.Content.Headers.GetValues("Content-Disposition").FirstOrDefault
-                    If fileNameOrDefault.StartsWith("filename=") Then
-                        Dim fileContents As Byte() = response.Content.ReadAsByteArrayAsync.Result
-                        ByteArrayToFile(pdfFileName, fileContents)
-
-                    End If
-                End If
-                Return True
-            Catch ex As Exception
-                If NetworkUnavailable() Then
-                    DebugPrint($"has no Internet Connection!")
-                End If
-                DebugPrint($"failed {ex.DecodeException().Replace(vbCrLf, "")}")
-            End Try
+            End If
         End If
-        Stop
-        Return False
+        Return True
+    End Function
+
+    Public Sub PrintUserInfo()
+        Console.WriteLine("User Info:")
+        Console.WriteLine($"   user:     {_username} ({_user("firstName")} {_user("lastName")})")
+        Console.WriteLine($"   role:     {_user("role")}")
+        Console.WriteLine($"   country:  {_country}")
+        If _patient IsNot Nothing Then
+            Console.WriteLine($"   patient:  {_patient("username")} ({_patient("firstName")} {_patient("lastName")})")
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Get recent periodic pump data
+    ''' </summary>
+    Public Function GetRecentData() As Dictionary(Of String, Object)
+        ' Check if access token is valid
+        If Not IsTokenValid(_accessTokenPayload) Then
+            _tokenDataElement = DoRefresh(_config, _tokenDataElement)
+            _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
+            WriteTokenFile(_tokenDataElement, _tokenFile)
+            If Not IsTokenValid(_accessTokenPayload) Then
+                Console.Error.WriteLine("ERROR: unable to get valid access token")
+                Return Nothing
+            End If
+        End If
+
+        Dim patientId As String = Nothing
+        If _patient IsNot Nothing Then
+            patientId = _patient("username")
+        End If
+
+        ' Get data: first try
+        Dim data As Dictionary(Of String, Object) = Me.GetData(config:=_config,
+                                           tokenDataElement:=_tokenDataElement,
+                                           username:=_username,
+                                           role:=CStr(_user("role")),
+                                           patientId:=patientId)
+
+        ' Check API response
+        If _auth_Error_Codes.Contains(_lastApiStatus) Then
+            ' Try to refresh token
+            _tokenDataElement = DoRefresh(_config, _tokenDataElement)
+            _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
+            WriteTokenFile(_tokenDataElement, _tokenFile)
+
+            ' Get data: second try
+            data = Me.GetData(config:=_config,
+                           _tokenDataElement,
+                           _username,
+                           CStr(_user("role")),
+                           patientId)
+
+            ' Check API response
+            If _auth_Error_Codes.Contains(_lastApiStatus) Then
+                ' Failed permanently
+                Console.Error.WriteLine("ERROR: unable to get data")
+                Return Nothing
+            End If
+        End If
+
+        Return data
     End Function
 
     ''' <summary>
-    ''' Get server URL from Country Code, only US today has a special server
+    ''' Get last API response code
     ''' </summary>
-    ''' <param name="countryCode"></param>
-    ''' <returns>Server URL</returns>
-    Public Shared Function GetServerUrl(countryCode As String) As String
-        Select Case If(String.IsNullOrWhiteSpace(countryCode), "US", countryCode)
-            Case "US"
-                Return "CareLink.MiniMed.com"
-            Case Else
-                Return "CareLink.MiniMed.eu"
-        End Select
+    Public Function GetLastResponseCode() As Integer
+        Return _lastApiStatus
     End Function
 
-    Public Function GetLastErrorMessage() As String
-        Return If(_lastErrorMessage, "OK")
-    End Function
-
-    ' Wrapper for data retrieval methods
-    Public Function GetRecentData() As Dictionary(Of String, String)
-        If NetworkUnavailable() Then
-            _lastErrorMessage = "No Internet Connection!"
-            ReportLoginStatus(Form1.LoginStatus)
-            DebugPrint("No Internet Connection!")
-            Return Nothing
-        End If
-
-        ' Force login to get basic info
-        Try
-            Dim authToken As String = Nothing
-            If Me.GetAuthorizationToken(authToken) = GetAuthorizationTokenResult.OK AndAlso
-               s_sessionCountrySettings.HasValue AndAlso
-               Not String.IsNullOrWhiteSpace(Me.CareLinkCountry) Then
-                Return If(Form1LoginHelpers.LoginDialog.CarePartnerCheckBox.Checked,
-                          Me.GetConnectDisplayMessage(
-                                        Me.SessionProfile.username,
-                                        "CarePartner".ToLower,
-                                        s_sessionCountrySettings.blePereodicDataEndpoint,
-                                        My.Settings.CareLinkPatientUserID),
-                          Me.GetConnectDisplayMessage(
-                                        Me.SessionProfile.username,
-                                        "patient",
-                                        s_sessionCountrySettings.blePereodicDataEndpoint)
-                                       )
-            End If
-        Catch ex As Exception
-            Stop
-        End Try
-        Return Nothing
-    End Function
-
-    Public Function HasErrors() As Boolean
-        Return Not (String.IsNullOrWhiteSpace(_lastErrorMessage) OrElse _lastErrorMessage = "OK")
-    End Function
-
-    Private Function GetBearerToken(url As String) As String
-        Return $"Bearer {Me.GetCookieValue(url, CareLinkAuthTokenCookieName)}"
-    End Function
-
-    Private Function GetData(authToken As String, host As String, endPointPath As String, queryParams As Dictionary(Of String, String)) As Dictionary(Of String, String)
-        If String.IsNullOrEmpty(endPointPath) Then
-            Throw New ArgumentException($"'{NameOf(endPointPath)}' cannot be null or empty.", NameOf(endPointPath))
-        End If
-
-        If String.IsNullOrEmpty(host) Then
-            Throw New ArgumentException($"'{NameOf(host)}' cannot be null or empty.", NameOf(host))
-        End If
-
-        DebugPrint($"(serverUrl = {host}, endPointPath = {endPointPath}, queryParams = {queryParams.ToCsv}")
-        Dim jsonData As Dictionary(Of String, String)
-        Dim response As New HttpResponseMessage
-        Try
-            ' Add header
-            Dim headers As Dictionary(Of String, String) = s_commonHeaders.Clone
-            headers("Authorization") = authToken
-            headers("Accept") = "application/json, text/plain, */*"
-
-            Dim requestUri As New StringBuilder($"https://{host}/{endPointPath}")
-            response = _httpClient.Get(requestUri, _lastErrorMessage, headers, queryParams)
-            _lastResponseCode = response.StatusCode
-            If response.IsSuccessStatusCode Then
-                jsonData = LoadIndexedItems(response.ResultText())
-                If jsonData.Count > 61 Then
-                    Dim contents As String = JsonSerializer.Serialize(jsonData, s_jsonSerializerOptions)
-                    Using jDocument As JsonDocument = JsonDocument.Parse(contents, New JsonDocumentOptions)
-                        File.WriteAllTextAsync(GetLastDownloadFileWithPath(), JsonSerializer.Serialize(jDocument, JsonFormattingOptions))
-                    End Using
-                End If
-                Return jsonData
-            End If
-            Select Case response.StatusCode
-                Case HttpStatusCode.Unauthorized
-                    _lastResponseCode = response?.StatusCode
-                    _lastErrorMessage = "Unauthorized"
-                Case HttpStatusCode.InternalServerError
-                    _lastResponseCode = response?.StatusCode
-                    _lastErrorMessage = $"CareLink Server Down"
-                Case Else
-                    Throw New Exception($"session get response is not OK, last error = {_lastErrorMessage}")
-            End Select
-            response.Dispose()
-        Catch ex As Exception
-            _lastErrorMessage = ex.DecodeException()
-            DebugPrint($"failed {_lastErrorMessage.Replace(vbCrLf, "")}, status {response?.StatusCode}")
-        End Try
-        Return Nothing
+    ''' <summary>
+    ''' Get Client library version
+    ''' </summary>
+    Public Function GetClientVersion() As String
+        Return _version
     End Function
 
 End Class
