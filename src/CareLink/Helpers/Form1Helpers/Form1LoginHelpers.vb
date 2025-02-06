@@ -152,7 +152,7 @@ Friend Module Form1LoginHelpers
 
     Friend Sub SetUpCareLinkUser(userSettingsFileWithPath As String)
         Dim userSettingsJson As String = File.ReadAllText(userSettingsFileWithPath)
-        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(userSettingsJson, JsonFormattingOptions)
+        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(userSettingsJson, s_jsonDeserializerOptions)
     End Sub
 
     Friend Sub SetUpCareLinkUser(userSettingsFileWithPath As String, forceUI As Boolean)
@@ -162,7 +162,7 @@ Friend Module Form1LoginHelpers
 
         If File.Exists(userSettingsFileWithPath) Then
             Dim userSettingsJson As String = File.ReadAllText(userSettingsFileWithPath)
-            CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(userSettingsJson, JsonFormattingOptions)
+            CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(userSettingsJson, s_jsonSerializerOptions)
 
             If CurrentUser.InsulinRealAit = 0 Then
                 CurrentUser.InsulinRealAit = s_insulinTypes.Values(0).AitHours
@@ -218,7 +218,7 @@ Friend Module Form1LoginHelpers
         End If
         If currentUserUpdateNeeded Then
             File.WriteAllTextAsync(userSettingsFileWithPath,
-                      JsonSerializer.Serialize(CurrentUser, JsonFormattingOptions))
+                      JsonSerializer.Serialize(CurrentUser, s_jsonSerializerOptions))
         End If
         Form1.Cursor = Cursors.Default
         Application.DoEvents()

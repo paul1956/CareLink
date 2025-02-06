@@ -8,11 +8,12 @@ Imports System.Text.Json.Serialization
 
 Public Module JsonExtensions
 
-    Private ReadOnly s_jsonDeserializerOptions As New JsonSerializerOptions() With {
+    Public ReadOnly s_jsonDeserializerOptions As New JsonSerializerOptions() With {
                 .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                .NumberHandling = JsonNumberHandling.WriteAsString}
+                .NumberHandling = JsonNumberHandling.WriteAsString,
+                .PropertyNameCaseInsensitive = True}
 
-    Public ReadOnly s_jsonSerializerOptions As New JsonSerializerOptions
+    Public ReadOnly s_jsonSerializerOptions As New JsonSerializerOptions With {.WriteIndented = True}
 
     <Extension>
     Private Function ToSgList(innerJson As List(Of Dictionary(Of String, String))) As List(Of SgRecord)

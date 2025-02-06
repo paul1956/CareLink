@@ -1,0 +1,181 @@
+
+{
+  "server": {
+    "hostname": "mdtlogin.medtronic.com",
+    "port": 443,
+    "prefix": "mmcl",
+    "server_certs": [
+      [
+        "-----BEGIN CERTIFICATE-----",
+        "MIIG/TCCBeWgAwIBAgIQCKdAyE0MX0gU2sn0ubdk2jANBgkqhkiG9w0BAQsFADBZ",
+        "MQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMTMwMQYDVQQDEypE",
+        "aWdpQ2VydCBHbG9iYWwgRzIgVExTIFJTQSBTSEEyNTYgMjAyMCBDQTEwHhcNMjQw",
+        "MjE1MDAwMDAwWhcNMjUwMzA2MjM1OTU5WjBvMQswCQYDVQQGEwJVUzESMBAGA1UE",
+        "CBMJTWlubmVzb3RhMRQwEgYDVQQHEwtNaW5uZWFwb2xpczEXMBUGA1UEChMOTWVk",
+        "dHJvbmljLCBJbmMxHTAbBgNVBAMTFG1kdHN0cy5tZWR0cm9uaWMuY29tMIIBIjAN",
+        "BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtaLEE7p8mauMzVcuKxSj6ZMMfzDp",
+        "jB9fP4G6XqUkJ2JnQ87LqwVJv6pFQLy3NaxfDSDJ+cVu+mawe4d9wsZKLwKjO6tK",
+        "Q8+D/R2YXM9p1NHZ9JVlRQkpcx7YRKrS3enlMB9kXkH/W7ETUPY5DGnUMV9Vy6K0",
+        "HSVcbtS82dSiDJJj+V4Bs5MmmJUlgIolxBqAHw/u+bCly5vKiYAOfRaSi1rF/OaZ",
+        "ckkLaEimLHQBjQSOI1VUSWBSVGeeOSWd8OuzPSbS+bAoqUwd3ht0H22FPpuus1VG",
+        "WPSjq95RRLUCbjCCncLhQBGrQJbC4HkJMBd1zziP80y5s/mPUV+bkwyYhwIDAQAB",
+        "o4IDqTCCA6UwHwYDVR0jBBgwFoAUdIWAwGbH3zfez70pN6oDHb7tzRcwHQYDVR0O",
+        "BBYEFG/4MvRyw0AjYy+nbmH93O71jYREMDcGA1UdEQQwMC6CFG1kdHN0cy5tZWR0",
+        "cm9uaWMuY29tghZtZHRsb2dpbi5tZWR0cm9uaWMuY29tMD4GA1UdIAQ3MDUwMwYG",
+        "Z4EMAQICMCkwJwYIKwYBBQUHAgEWG2h0dHA6Ly93d3cuZGlnaWNlcnQuY29tL0NQ",
+        "UzAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMC",
+        "MIGfBgNVHR8EgZcwgZQwSKBGoESGQmh0dHA6Ly9jcmwzLmRpZ2ljZXJ0LmNvbS9E",
+        "aWdpQ2VydEdsb2JhbEcyVExTUlNBU0hBMjU2MjAyMENBMS0xLmNybDBIoEagRIZC",
+        "aHR0cDovL2NybDQuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0R2xvYmFsRzJUTFNSU0FT",
+        "SEEyNTYyMDIwQ0ExLTEuY3JsMIGHBggrBgEFBQcBAQR7MHkwJAYIKwYBBQUHMAGG",
+        "GGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBRBggrBgEFBQcwAoZFaHR0cDovL2Nh",
+        "Y2VydHMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0R2xvYmFsRzJUTFNSU0FTSEEyNTYy",
+        "MDIwQ0ExLTEuY3J0MAwGA1UdEwEB/wQCMAAwggF/BgorBgEEAdZ5AgQCBIIBbwSC",
+        "AWsBaQB2AE51oydcmhDDOFts1N8/Uusd8OCOG41pwLH6ZLFimjnfAAABja40CGkA",
+        "AAQDAEcwRQIgCjilBLs09XJeglh8oAmzkSOn9iSGK6GIzo/sXcPlGIYCIQD4IxLa",
+        "vojDJZM1KHhEu55G7W5RXTYoMVBWHWo/RRinYQB3AH1ZHhLheCp7HGFnfF79+NCH",
+        "XBSgTpWeuQMv2Q6MLnm4AAABja40CLQAAAQDAEgwRgIhAPel+sv2W8zQsLs0pxLr",
+        "SvGmIizUsZGi5VCrsHZ6AaYzAiEA6gk3445T91y6cl3A7Zq0aU9ZyR2Z8sSCYwZq",
+        "YvQWhiIAdgDm0jFjQHeMwRBBBtdxuc7B0kD2loSG+7qHMh39HjeOUAAAAY2uNAh9",
+        "AAAEAwBHMEUCIACEuOKxS3fFwk7Q2Oc8jdA8PLh004DtXZkcekcprSYyAiEAly+9",
+        "PoiIXFESx7S4rZvRvJbx9b3e3tKouoWenltUTtkwDQYJKoZIhvcNAQELBQADggEB",
+        "AMxnt1HZLMRLKtG2dsg0BLQTjDnDDBOZYawu57cEywhHlxKQnc14BWlIZ0dwK1p8",
+        "VS6Rdi32h1WUPBQcrMxQSwZyqiwZXSItcqSseBonl9icM9RoUlyiaSONY+UOUiKe",
+        "1rzmFyyY6p1R69Zsz7uHOYC675mXK1lnhqSUxt0DoxvrhGroaQbvzNn3ldUAOVKp",
+        "73aXY2SeC7SnrK2IOZBJk8vJiU/zBSHiaXVQ/CTknTYYu1/cNRGl5e2nH8YYfsZn",
+        "Eax2dlkh/sNp2iv99LpIAxX3nlHOpw0Pr8LiaXC6Ocw59+cWBzteXZ2mFszKHCF0",
+        "bVSQsYRKRuQKiKOfpHmujOI=",
+        "-----END CERTIFICATE-----"
+      ],
+      [
+        "-----BEGIN CERTIFICATE-----",
+        "MIIEyDCCA7CgAwIBAgIQDPW9BitWAvR6uFAsI8zwZjANBgkqhkiG9w0BAQsFADBh",
+        "MQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYDVQQLExB3",
+        "d3cuZGlnaWNlcnQuY29tMSAwHgYDVQQDExdEaWdpQ2VydCBHbG9iYWwgUm9vdCBH",
+        "MjAeFw0yMTAzMzAwMDAwMDBaFw0zMTAzMjkyMzU5NTlaMFkxCzAJBgNVBAYTAlVT",
+        "MRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxMzAxBgNVBAMTKkRpZ2lDZXJ0IEdsb2Jh",
+        "bCBHMiBUTFMgUlNBIFNIQTI1NiAyMDIwIENBMTCCASIwDQYJKoZIhvcNAQEBBQAD",
+        "ggEPADCCAQoCggEBAMz3EGJPprtjb+2QUlbFbSd7ehJWivH0+dbn4Y+9lavyYEEV",
+        "cNsSAPonCrVXOFt9slGTcZUOakGUWzUb+nv6u8W+JDD+Vu/E832X4xT1FE3LpxDy",
+        "FuqrIvAxIhFhaZAmunjZlx/jfWardUSVc8is/+9dCopZQ+GssjoP80j812s3wWPc",
+        "3kbW20X+fSP9kOhRBx5Ro1/tSUZUfyyIxfQTnJcVPAPooTncaQwywa8WV0yUR0J8",
+        "osicfebUTVSvQpmowQTCd5zWSOTOEeAqgJnwQ3DPP3Zr0UxJqyRewg2C/Uaoq2yT",
+        "zGJSQnWS+Jr6Xl6ysGHlHx+5fwmY6D36g39HaaECAwEAAaOCAYIwggF+MBIGA1Ud",
+        "EwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHSFgMBmx9833s+9KTeqAx2+7c0XMB8G",
+        "A1UdIwQYMBaAFE4iVCAYlebjbuYP+vq5Eu0GF485MA4GA1UdDwEB/wQEAwIBhjAd",
+        "BgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwdgYIKwYBBQUHAQEEajBoMCQG",
+        "CCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQAYIKwYBBQUHMAKG",
+        "NGh0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEdsb2JhbFJvb3RH",
+        "Mi5jcnQwQgYDVR0fBDswOTA3oDWgM4YxaHR0cDovL2NybDMuZGlnaWNlcnQuY29t",
+        "L0RpZ2lDZXJ0R2xvYmFsUm9vdEcyLmNybDA9BgNVHSAENjA0MAsGCWCGSAGG/WwC",
+        "ATAHBgVngQwBATAIBgZngQwBAgEwCAYGZ4EMAQICMAgGBmeBDAECAzANBgkqhkiG",
+        "9w0BAQsFAAOCAQEAkPFwyyiXaZd8dP3A+iZ7U6utzWX9upwGnIrXWkOH7U1MVl+t",
+        "wcW1BSAuWdH/SvWgKtiwla3JLko716f2b4gp/DA/JIS7w7d7kwcsr4drdjPtAFVS",
+        "slme5LnQ89/nD/7d+MS5EHKBCQRfz5eeLjJ1js+aWNJXMX43AYGyZm0pGrFmCW3R",
+        "bpD0ufovARTFXFZkAdl9h6g4U5+LXUZtXMYnhIHUfoyMo5tS58aI7Dd8KvvwVVo4",
+        "chDYABPPTHPbqjc1qCmBaZx2vN4Ye5DUys/vZwP9BFohFrH/6j/f3IL16/RZkiMN",
+        "JCqVJUzKoZHm1Lesh3Sz8W2jmdv51b2EQJ8HmA==",
+        "-----END CERTIFICATE-----"
+      ],
+      [
+        "-----BEGIN CERTIFICATE-----",
+        "MIIDjjCCAnagAwIBAgIQAzrx5qcRqaC7KGSxHQn65TANBgkqhkiG9w0BAQsFADBh",
+        "MQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYDVQQLExB3",
+        "d3cuZGlnaWNlcnQuY29tMSAwHgYDVQQDExdEaWdpQ2VydCBHbG9iYWwgUm9vdCBH",
+        "MjAeFw0xMzA4MDExMjAwMDBaFw0zODAxMTUxMjAwMDBaMGExCzAJBgNVBAYTAlVT",
+        "MRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5j",
+        "b20xIDAeBgNVBAMTF0RpZ2lDZXJ0IEdsb2JhbCBSb290IEcyMIIBIjANBgkqhkiG",
+        "9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuzfNNNx7a8myaJCtSnX/RrohCgiN9RlUyfuI",
+        "2/Ou8jqJkTx65qsGGmvPrC3oXgkkRLpimn7Wo6h+4FR1IAWsULecYxpsMNzaHxmx",
+        "1x7e/dfgy5SDN67sH0NO3Xss0r0upS/kqbitOtSZpLYl6ZtrAGCSYP9PIUkY92eQ",
+        "q2EGnI/yuum06ZIya7XzV+hdG82MHauVBJVJ8zUtluNJbd134/tJS7SsVQepj5Wz",
+        "tCO7TG1F8PapspUwtP1MVYwnSlcUfIKdzXOS0xZKBgyMUNGPHgm+F6HmIcr9g+UQ",
+        "vIOlCsRnKPZzFBQ9RnbDhxSJITRNrw9FDKZJobq7nMWxM4MphQIDAQABo0IwQDAP",
+        "BgNVHRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwIBhjAdBgNVHQ4EFgQUTiJUIBiV",
+        "5uNu5g/6+rkS7QYXjzkwDQYJKoZIhvcNAQELBQADggEBAGBnKJRvDkhj6zHd6mcY",
+        "1Yl9PMWLSn/pvtsrF9+wX3N3KjITOYFnQoQj8kVnNeyIv/iPsGEMNKSuIEyExtv4",
+        "NeF22d+mQrvHRAiGfzZ0JFrabA0UWTW98kndth/Jsw1HKj2ZL7tcu7XUIOGZX1NG",
+        "Fdtom/DzMNU+MeKNhJ7jitralj41E6Vf8PlwUHBHQRFXGU7Aj64GxJUTFy8bJZ91",
+        "8rGOmaFvE7FBcf6IKshPECBV1/MUReXgRPTqh5Uykw7+U0b6LJ3/iyK5S9kJRaTe",
+        "pLiaWN0bfVKfjllDiIGknibVb63dDcY3fe0Dkhvld1927jyNxF1WW6LZZm6zNTfl",
+        "MrY=",
+        "-----END CERTIFICATE-----"
+      ]
+    ]
+  },
+  "oauth": {
+    "client": {
+      "organization": "Medtronic",
+      "description": "US Carepartner mobile app",
+      "client_name": "OCL-CarePartnerApp-US",
+      "client_type": "confidential",
+      "registered_by": "dhanek2!",
+      "client_custom": {},
+      "client_ids": [
+        {
+          "client_id": "b990c49e-5977-47af-92a6-a17771b2a01e",
+          "client_secret": "",
+          "scope": "profile openid roles country msso msso_register msso_client_register",
+          "redirect_uri": "com.medtronic.carepartner:/sso",
+          "environment": "ALL",
+          "status": "ENABLED",
+          "registered_by": "dhanek2!",
+          "service_ids": "",
+          "account_plan_mapping_ids": "",
+          "client_key_custom": {
+            "lifetimes": {
+              "oauth2_access_token_lifetime_sec": 10800,
+              "oauth2_refresh_token_lifetime_sec": 604800,
+              "id_token_lifetime_s": 604800
+            },
+            "appname": "us-ocl"
+          }
+        }
+      ]
+    },
+    "system_endpoints": {
+      "authorization_endpoint_path": "/auth/oauth/v2/authorize",
+      "token_endpoint_path": "/auth/oauth/v2/token",
+      "token_revocation_endpoint_path": "/auth/oauth/v2/token/revoke",
+      "usersession_logout_endpoint_path": "/connect/session/logout",
+      "usersession_status_endpoint_path": "/connect/session/status"
+    },
+    "oauth_protected_endpoints": {
+      "userinfo_endpoint_path": "/openid/connect/v1/userinfo"
+    }
+  },
+  "mag": {
+    "system_endpoints": {
+      "device_register_endpoint_path": "/connect/device/register",
+      "device_renew_endpoint_path": "/connect/device/renew",
+      "device_client_register_endpoint_path": "/connect/device/register/client",
+      "device_remove_endpoint_path": "/connect/device/remove",
+      "client_credential_init_endpoint_path": "/connect/client/initialize",
+      "authenticate_otp_endpoint_path": "/auth/generateOTP"
+    },
+    "oauth_protected_endpoints": {
+      "enterprise_browser_endpoint_path": "/connect/enterprise/browser",
+      "device_list_endpoint_path": "/connect/device/list",
+      "device_metadata_endpoint_path": "/connect/device/metadata"
+    },
+    "mobile_sdk": {
+      "sso_enabled": true,
+      "location_enabled": false,
+      "location_provider": "network",
+      "msisdn_enabled": true,
+      "enable_public_key_pinning": false,
+      "trusted_public_pki": false,
+      "trusted_cert_pinned_public_key_hashes": [],
+      "client_cert_rsa_keybits": 1024
+    },
+    "ble": {
+      "msso_ble_service_uuid": "980c2f36-bde3-11e4-8dfc-aa07a5b093db",
+      "msso_ble_characteristic_uuid": "980c34cc-bde3-11e4-8dfc-aa07a5b093db",
+      "msso_ble_rssi": -80
+    }
+  },
+  "custom": {
+    "oauth_demo_protected_api_endpoint_path": "/oauth/v2/protectedapi/foo",
+    "mag_demo_products_endpoint_path": "/protected/resource/products"
+  }
+}

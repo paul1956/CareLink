@@ -1368,7 +1368,7 @@ Public Class Form1
     Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotSave.Click
         If RecentDataEmpty() Then Exit Sub
         Using jd As JsonDocument = JsonDocument.Parse(RecentData.CleanUserData(), New JsonDocumentOptions)
-            File.WriteAllTextAsync(GetUniqueDataFileName(BaseNameSavedSnapshot, CurrentDateCulture.Name, "json", True).withPath, JsonSerializer.Serialize(jd, JsonFormattingOptions))
+            File.WriteAllTextAsync(GetUniqueDataFileName(BaseNameSavedSnapshot, CurrentDateCulture.Name, "json", True).withPath, JsonSerializer.Serialize(jd, s_jsonSerializerOptions))
         End Using
     End Sub
 
@@ -1425,7 +1425,7 @@ Public Class Form1
     Private Sub MenuOptionsEditPumpSettings_Click(sender As Object, e As EventArgs) Handles MenuOptionsEditPumpSettings.Click
         SetUpCareLinkUser(GetUserSettingsJsonFileNameWithPath, True)
         Dim contents As String = File.ReadAllText(GetUserSettingsJsonFileNameWithPath)
-        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, JsonFormattingOptions)
+        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, s_jsonSerializerOptions)
     End Sub
 
     Private Sub MenuOptionsFilterRawJSONData_Click(sender As Object, e As EventArgs) Handles MenuOptionsFilterRawJSONData.Click

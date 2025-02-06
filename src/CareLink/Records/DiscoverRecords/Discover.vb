@@ -5,20 +5,25 @@
 Imports System.Net
 Imports System.Net.Http
 Imports System.Text.Json
+Imports System.Text.Json.Serialization
 
 Public Class Discover
     Private Shared ReadOnly s_discoverUrl As String = "https://clcloud.minimed.com/connect/carepartner/v11/discover/android/3.2"
+
+    <JsonPropertyName("config")>
     Public Property Config As String
-    Public Property SupportedCountries As List(Of CountryRecord)
-    Public Property CP As List(Of CPs)
-    Public Property Certificates As List(Of Certificate)
+
+    <JsonPropertyName("supportedCountries")>
+    Public Property SupportedCountries As List(Of Dictionary(Of String, CountryInfo))
+    <JsonPropertyName("CP")>
+    Public Property CP As List(Of CPInfo)
+
+    <JsonPropertyName("certificates")>
+    Public Property Certificates As List(Of CertificateInfo)
 
     Public Shared Function GetDiscoveryData() As Discover
-        Dim decoder As New JsonDecoder()
-
         Try
-            Return JsonDecoder.DownloadAndDecodeJson(Of Discover)(s_discoverUrl)
-
+            Return DownloadAndDecodeJson(Of Discover)(s_discoverUrl)
         Catch ex As HttpRequestException
             Console.WriteLine($"Error downloading JSON: {ex.Message}")
         Catch ex As JsonException

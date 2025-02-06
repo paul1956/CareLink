@@ -349,7 +349,7 @@ Public Class CareLinkClient1
 
                     Dim contents As String = JsonSerializer.Serialize(jsonData, s_jsonSerializerOptions)
                     Using jDocument As JsonDocument = JsonDocument.Parse(contents, New JsonDocumentOptions)
-                        File.WriteAllTextAsync(GetLastDownloadFileWithPath(), JsonSerializer.Serialize(jDocument, JsonFormattingOptions))
+                        File.WriteAllTextAsync(GetLastDownloadFileWithPath(), JsonSerializer.Serialize(jDocument, s_jsonSerializerOptions))
                     End Using
                 End If
             ElseIf response?.StatusCode = HttpStatusCode.Unauthorized Then
@@ -605,7 +605,7 @@ Public Class CareLinkClient1
                 If jsonData.Count > 61 Then
                     Dim contents As String = JsonSerializer.Serialize(jsonData, s_jsonSerializerOptions)
                     Using jDocument As JsonDocument = JsonDocument.Parse(contents, New JsonDocumentOptions)
-                        File.WriteAllTextAsync(GetLastDownloadFileWithPath(), JsonSerializer.Serialize(jDocument, JsonFormattingOptions))
+                        File.WriteAllTextAsync(GetLastDownloadFileWithPath(), JsonSerializer.Serialize(jDocument, s_jsonSerializerOptions))
                     End Using
                 End If
                 Return jsonData

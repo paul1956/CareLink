@@ -31,7 +31,7 @@ Public Class ExceptionHandlerDialog
             stream.WriteLine(StackTraceTerminatingStr)
             ' write out data file
             Using jd As JsonDocument = JsonDocument.Parse(jsonData.CleanUserData(), New JsonDocumentOptions)
-                stream.Write(JsonSerializer.Serialize(jd, JsonFormattingOptions))
+                stream.Write(JsonSerializer.Serialize(jd, s_jsonSerializerOptions))
             End Using
         End Using
     End Sub

@@ -3,11 +3,19 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Net.Http
+Imports System.Text.Json
 
-Public Class JsonDownloader
-    Public Shared Function DownloadJson(url As String) As String
+Public Module JsonDownloader
+
+    Public Function DownloadAndDecodeJson(Of T)(url As String) As T
+
+        Dim jsonContent As String = DownloadJson(url)
+        Return JsonSerializer.Deserialize(Of T)(jsonContent, s_jsonDeserializerOptions)
+    End Function
+
+    Public Function DownloadJson(url As String) As String
         Using client As New HttpClient()
             Return client.GetStringAsync(url).Result
         End Using
     End Function
-End Class
+End Module

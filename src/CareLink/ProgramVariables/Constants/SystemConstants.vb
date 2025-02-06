@@ -6,6 +6,10 @@ Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Module SystemConstants
+    Friend Const LoginDataFile As String = "loginData.json"
+    Friend Const DiscoveryUrl As String = "https://clcloud.minimed.eu/connect/carepartner/v11/discover/android/3.2"
+    Friend Const RsaKeySize As Integer = 2048
+
     Friend Const BaseNameSavedErrorReport As String = "CareLinkErrorReport"
     Friend Const BaseNameSavedLastDownload As String = "CareLinkLastDownload"
     Friend Const BaseNameSavedSnapshot As String = "CareLinkSnapshot"
@@ -64,7 +68,6 @@ Public Module SystemConstants
         }
 
     Friend ReadOnly Property GitHubCareLinkUrl As String = $"https://GitHub.com/{GitOwnerName}/CareLink/"
-    Friend ReadOnly Property JsonFormattingOptions As New JsonSerializerOptions With {.WriteIndented = True}
     Friend ReadOnly Property SavedTitle As String = "CareLink™ For Windows"
 
 #Region "AIT Constants"

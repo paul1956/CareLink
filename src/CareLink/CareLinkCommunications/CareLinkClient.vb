@@ -14,13 +14,12 @@ Public Class CareLinkClient
     Private Const DEFAULT_FILENAME As String = "logindata.json"
     Private Const CARELINK_CONFIG_URL As String = "https://clcloud.minimed.eu/connect/carepartner/v11/discover/android/3.2"
 
-    Private ReadOnly _common_Headers As New Dictionary(Of String, String) From {
+    Public Shared ReadOnly s_common_Headers As New Dictionary(Of String, String) From {
         {"Accept", "application/json"},
         {"Content-Type", "application/json"},
         {"User-Agent", "Dalvik/2.1.0 (Linux; U; Android 10; Nexus 5X Build/QQ3A.200805.001)"}
 }
 
-    Private Shared ReadOnly s_serializerOptions As New JsonSerializerOptions With {.WriteIndented = True}
     Private ReadOnly _auth_Error_Codes As Integer() = {401, 403}
     Private ReadOnly _tokenFile As String
     Private ReadOnly _version As String
@@ -79,7 +78,7 @@ Public Class CareLinkClient
 
     Private Shared Sub WriteTokenFile(obj As JsonElement, filename As String)
         Console.WriteLine(NameOf(WriteTokenFile))
-        File.WriteAllText(filename, JsonSerializer.Serialize(obj, s_serializerOptions))
+        File.WriteAllText(filename, JsonSerializer.Serialize(obj, s_jsonSerializerOptions))
     End Sub
 
     Private Shared Function GetConfig(discoveryUrl As String, country As String) As JsonElement
@@ -119,14 +118,14 @@ Public Class CareLinkClient
 
             Dim mutableConfig As Dictionary(Of String, JsonElement) = JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(config.GetRawText())
             mutableConfig("token_url") = JsonSerializer.Deserialize(Of JsonElement)($"""{tokenUrl}""")
-            Return JsonSerializer.Deserialize(Of JsonElement)(JsonSerializer.Serialize(mutableConfig))
+            Return JsonSerializer.Deserialize(Of JsonElement)(JsonSerializer.Serialize(mutableConfig, s_jsonSerializerOptions))
         End Using
     End Function
 
     Private Function GetUser(config As JsonElement, tokenData As JsonElement) As JsonElement
         Console.WriteLine(NameOf(GetUser))
         Dim url As String = config.GetProperty("baseUrlCareLink").GetString() & "/users/me"
-        Dim headers As New Dictionary(Of String, String)(_common_Headers)
+        Dim headers As New Dictionary(Of String, String)(s_common_Headers)
         headers("mag-identifier") = tokenData.GetProperty("mag-identifier").GetString()
         headers("Authorization") = "Bearer " & tokenData.GetProperty("access_token").GetString()
 
@@ -149,7 +148,7 @@ Public Class CareLinkClient
     Private Async Function GetPatient(config As JsonElement, token_data As JsonElement) As Task(Of Dictionary(Of String, String))
         Console.WriteLine(NameOf(GetPatient))
         Dim url As String = $"{CStr(config.ConvertJsonElementToDictionary("baseUrlCareLink"))}/links/patients"
-        Dim headers As New Dictionary(Of String, String)(_common_Headers)
+        Dim headers As New Dictionary(Of String, String)(s_common_Headers)
         headers("mag-identifier") = CStr(token_data.ConvertJsonElementToDictionary("mag-identifier"))
         headers("Authorization") = $"Bearer {CStr(token_data.ConvertJsonElementToDictionary("access_token"))}"
 
@@ -179,7 +178,7 @@ Public Class CareLinkClient
     Private Function GetData(config As Dictionary(Of String, Object), tokenDataElement As JsonElement, username As String, role As String, patientId As String) As Dictionary(Of String, Object)
         Console.WriteLine("_get_data()")
         Dim url As String = $"{CStr(config("baseUrlCumulus"))}/display/message"
-        Dim headers As New Dictionary(Of String, String)(_common_Headers)
+        Dim headers As New Dictionary(Of String, String)(s_common_Headers)
         Dim tokenData As Dictionary(Of String, String) = tokenDataElement.ConvertJsonElementToStringDictionary
         headers("mag-identifier") = tokenData("mag-identifier")
         headers("Authorization") = $"Bearer {tokenData("access_token")}"
@@ -252,7 +251,7 @@ Public Class CareLinkClient
             tokenData("access_token") = newData.GetProperty("access_token").GetString()
             tokenData("refresh_token") = newData.GetProperty("refresh_token").GetString()
 
-            Return JsonSerializer.Deserialize(Of JsonElement)(JsonSerializer.Serialize(tokenData))
+            Return JsonSerializer.Deserialize(Of JsonElement)(JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions))
         End Using
     End Function
 
