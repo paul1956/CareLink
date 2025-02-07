@@ -117,17 +117,17 @@ Public Module CareLinkClientHelpers
         Dim tokenData As Dictionary(Of String, JsonElement) = Nothing
         ' Add headers to the HttpClient
 
-        client.SetDefaultRequestHeaders(s_commonHeaders, Nothing)
-        client.DefaultRequestHeaders.Add("device-id", Convert.ToBase64String(Encoding.UTF8.GetBytes(RandomDeviceId())))
         ' Create the content for the POST request
         Dim content As New StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json")
-
-            ' Send the POST request
-            Dim response As HttpResponseMessage = client.PostAsync(clientInitUrl, content).Result
-            ' Read the response content
-            Dim responseContent As String = response.Content.ReadAsStringAsync().Result
-            ' Deserialize the JSON response
-            Dim clientInitResponse As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(responseContent)
+        content.Headers.Add("device-id", "NWQ1MzNkZjg4ZWU0OWMxMTI3OGE3NDc0ZWNhZTY3YTcwNDQ2NmNjOTIyNmM1NTljMzZjYTk1MDUwZmZkNzk3NA==")
+        ' Send the POST request
+        Dim response As HttpResponseMessage = client.PostAsync(clientInitUrl, content).Result
+        Dim lastErrorMessage As String = Nothing
+        DecodeResponse(response, lastErrorMessage)
+        ' Read the response content
+        Dim responseContent As String = response.Content.ReadAsStringAsync().Result
+        ' Deserialize the JSON response
+        Dim clientInitResponse As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(responseContent)
 
 
         Dim clientInitResponseObj As Dictionary(Of String, JsonElement) = JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(clientInitResponse)
@@ -135,26 +135,26 @@ Public Module CareLinkClientHelpers
         ' Step 2: Authorize
         ' Generate client_code_verifier
         Dim clientCodeVerifier As String = GenerateRandomBase64String(40)
-            clientCodeVerifier = Regex.Replace(clientCodeVerifier, "[^a-zA-Z0-9]+", "")
-            ' Generate client_code_challenge
-            Dim challengeBytes As Byte() = SHA256.HashData(Encoding.UTF8.GetBytes(clientCodeVerifier))
-            Dim clientCodeChallenge As String = Convert.ToBase64String(challengeBytes).Replace("+", "-").Replace("/", "_").TrimEnd("="c)
-            Dim clientState As String = GenerateRandomBase64String(22)
-            Dim authParams As New Dictionary(Of String, String) From {
-                {"client_id", clientInitResponseObj("client_id").GetString()},
-                {"response_type", "code"},
-                {"display", "social_login"},
-                {"scope", SsoConfig.OAuth.Client.ClientIds(0).Scope},
-                {"redirect_uri", SsoConfig.OAuth.Client.ClientIds(0).RedirectUri},
-                {"code_challenge", clientCodeChallenge},
-                {"code_challenge_method", "S256"},
-                {"state", clientState}
-            }
+        clientCodeVerifier = Regex.Replace(clientCodeVerifier, "[^a-zA-Z0-9]+", "")
+        ' Generate client_code_challenge
+        Dim challengeBytes As Byte() = SHA256.HashData(Encoding.UTF8.GetBytes(clientCodeVerifier))
+        Dim clientCodeChallenge As String = Convert.ToBase64String(challengeBytes).Replace("+", "-").Replace("/", "_").TrimEnd("="c)
+        Dim clientState As String = GenerateRandomBase64String(22)
+        Dim authParams As New Dictionary(Of String, String) From {
+            {"client_id", clientInitResponseObj("client_id").GetString()},
+            {"response_type", "code"},
+            {"display", "social_login"},
+            {"scope", SsoConfig.OAuth.Client.ClientIds(0).Scope},
+            {"redirect_uri", SsoConfig.OAuth.Client.ClientIds(0).RedirectUri},
+            {"code_challenge", clientCodeChallenge},
+            {"code_challenge_method", "S256"},
+            {"state", clientState}
+        }
 
-            Dim authorizeUrl As String = ApiBaseUrl & SsoConfig.OAuth.SystemEndpoints.AuthorizationEndpointPath
-            Dim providersResponse As JsonElement = GetRequestAsync(authorizeUrl, authParams).Result
-            Dim providers As Dictionary(Of String, JsonElement) = JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(providersResponse)
-            Stop
+        Dim authorizeUrl As String = ApiBaseUrl & SsoConfig.OAuth.SystemEndpoints.AuthorizationEndpointPath
+        Dim providersResponse As JsonElement = GetRequestAsync(authorizeUrl, authParams).Result
+        Dim providers As Dictionary(Of String, JsonElement) = JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(providersResponse)
+        Stop
 #If False Then
 
             Dim captchaUrl As Dictionary(Of String, String) = providers("providers")(0).provider.auth_url

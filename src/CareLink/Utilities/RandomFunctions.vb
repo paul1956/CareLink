@@ -23,7 +23,7 @@ Public Module RandomFunctions
     End Function
 
     Public Function RandomDeviceId() As String
-        Dim bytes(39) As Byte
+        Dim bytes(63) As Byte
         Dim rng As New Random()
         rng.NextBytes(bytes)
         Return Convert.ToHexStringLower(bytes)
