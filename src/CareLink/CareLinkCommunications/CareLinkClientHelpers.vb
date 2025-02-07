@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.IO
 Imports System.Net
 Imports System.Net.Http
 Imports System.Runtime.CompilerServices
@@ -104,8 +105,7 @@ Public Module CareLinkClientHelpers
         Return New HttpResponseMessage(HttpStatusCode.NotImplemented)
     End Function
 
-    Public Async Function DoLoginAsync(client As HttpClient, SsoConfig As RootConfig, ApiBaseUrl As String) As Task(Of JsonElement)
-
+    Public Function GetAuthorizeUrl(client As HttpClient, SsoConfig As RootConfig, ApiBaseUrl As String) As String
         ' Step 1: Initialize
         Dim data As New Dictionary(Of String, String) From {
             {"client_id", SsoConfig.OAuth.Client.ClientIds(0).ClientId},
@@ -114,23 +114,18 @@ Public Module CareLinkClientHelpers
 
         Dim clientInitUrl As String = $"{ApiBaseUrl}{SsoConfig.Mag.SystemEndpoints.ClientCredentialInitEndpointPath}"
 
-        Dim tokenData As Dictionary(Of String, JsonElement) = Nothing
         ' Add headers to the HttpClient
 
         ' Create the content for the POST request
-        Dim content As New StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json")
-        content.Headers.Add("device-id", "NWQ1MzNkZjg4ZWU0OWMxMTI3OGE3NDc0ZWNhZTY3YTcwNDQ2NmNjOTIyNmM1NTljMzZjYTk1MDUwZmZkNzk3NA==")
+        Dim content As New FormUrlEncodedContent(data)
+        content.Headers.Add("device-id", "MDg5ODAxMGQ4NTc3ODZmNDQ3MTdiZTI4YmZmMGU5ZWNkYzk1Y2JiYjA4OTFmODhiY2I0ZmI2ZjVhYmU5YjRkNw==")
+        'content.Headers.Add("device-id", RandomDeviceId)
         ' Send the POST request
         Dim response As HttpResponseMessage = client.PostAsync(clientInitUrl, content).Result
-        Dim lastErrorMessage As String = Nothing
-        DecodeResponse(response, lastErrorMessage)
         ' Read the response content
         Dim responseContent As String = response.Content.ReadAsStringAsync().Result
         ' Deserialize the JSON response
-        Dim clientInitResponse As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(responseContent)
-
-
-        Dim clientInitResponseObj As Dictionary(Of String, JsonElement) = JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(clientInitResponse)
+        Dim clientInitResponse As ClientInitData = JsonSerializer.Deserialize(Of ClientInitData)(responseContent)
 
         ' Step 2: Authorize
         ' Generate client_code_verifier
@@ -141,7 +136,7 @@ Public Module CareLinkClientHelpers
         Dim clientCodeChallenge As String = Convert.ToBase64String(challengeBytes).Replace("+", "-").Replace("/", "_").TrimEnd("="c)
         Dim clientState As String = GenerateRandomBase64String(22)
         Dim authParams As New Dictionary(Of String, String) From {
-            {"client_id", clientInitResponseObj("client_id").GetString()},
+            {"client_id", clientInitResponse.client_id},
             {"response_type", "code"},
             {"display", "social_login"},
             {"scope", SsoConfig.OAuth.Client.ClientIds(0).Scope},
@@ -151,81 +146,14 @@ Public Module CareLinkClientHelpers
             {"state", clientState}
         }
 
-        Dim authorizeUrl As String = ApiBaseUrl & SsoConfig.OAuth.SystemEndpoints.AuthorizationEndpointPath
+        Dim authorizeUrl As String = $"{ApiBaseUrl}{SsoConfig.OAuth.SystemEndpoints.AuthorizationEndpointPath}"
         Dim providersResponse As JsonElement = GetRequestAsync(authorizeUrl, authParams).Result
-        Dim providers As Dictionary(Of String, JsonElement) = JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(providersResponse)
-        Stop
-#If False Then
+        Dim authorize As Authorize = JsonSerializer.Deserialize(Of Authorize)(providersResponse)
 
-            Dim captchaUrl As Dictionary(Of String, String) = providers("providers")(0).provider.auth_url
+        Dim captchaUrl As String = authorize.Providers(0).Provider.AuthUrl
 
-                ' Step 3: Captcha login and consent
-                Console.WriteLine($"captcha url: {captchaUrl}")
-                ' TODO: Implement DoCaptcha function
-                ' Dim (captchaCode, captchaSsoState) = DoCaptcha(captchaUrl, ssoConfig("oauth")("client")("client_ids")(0)("redirect_uri"))
-                ' Console.WriteLine($"sso state after captcha: {captchaSsoState}")
-
-                ' Step 4: Registration
-                Dim registerDeviceId As String = RandomDeviceId()
-                Dim clientAuthStr As String = $"{clientInitResponseObj("client_id").GetString()}:{clientInitResponseObj("client_secret").GetString()}"
-
-                Dim androidModel As String = RandomAndroidModel()
-                Dim androidModelSafe As String = Regex.Replace(androidModel, "[^a-zA-Z0-9]", "")
-
-                ' TODO: Implement CSR creation using BouncyCastle or other cryptography library
-                ' Dim csr = CreateCSR(keypair, "socialLogin", registerDeviceId, androidModelSafe, ssoConfig("oauth")("client")("organization"))
-
-                Dim regHeaders As New Dictionary(Of String, String) From {
-                {"device-name", Convert.ToBase64String(Encoding.UTF8.GetBytes(androidModel))},
-                {"authorization", $"Bearer {captchaCode}"},
-                {"cert-format", "pem"},
-                {"client-authorization", $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes(clientAuthStr))}"},
-                {"create-session", "true"},
-                {"code-verifier", clientCodeVerifier},
-                {"device-id", Convert.ToBase64String(Encoding.UTF8.GetBytes(registerDeviceId))},
-                {"redirect-uri", SsoConfig.OAuth.Client.ClientIds(0).RedirectUri}
-            }
-
-                ' TODO: Implement ReformatCSR function
-                ' csr = ReformatCSR(csr)
-
-                Dim regUrl As String = $"{ApiBaseUrl}{SsoConfig.Mag.SystemEndpoints.DeviceRegisterEndpointPath}"
-                Dim regResponse As HttpResponseMessage = PostRequestWithHeadersAsync(regUrl, regHeaders, csr)
-
-                If regResponse.StatusCode <> HttpStatusCode.OK Then
-                    Throw New Exception($"Could not register: {JsonSerializer.Deserialize(Of Dictionary(Of String, String))(regResponse.Content.ReadAsStringAsync().Result)("error_description")}")
-                End If
-
-                ' Step 5: Token
-                Dim tokenReqUrl As String = ApiBaseUrl & SsoConfig.OAuth.SystemEndpoints.TokenEndpointPath
-                Dim tokenReqData As New Dictionary(Of String, String) From {
-                {"assertion", regResponse.Headers.GetValues("id-token").FirstOrDefault()},
-                {"client_id", clientInitResponseObj("client_id").GetString()},
-                {"client_secret", clientInitResponseObj("client_secret").GetString()},
-                {"scope", SsoConfig.OAuth.Client.ClientIds(0).Scope},
-                {"grant_type", regResponse.Headers.GetValues("id-token-type").FirstOrDefault()}
-            }
-
-                Dim tokenReqHeaders As New Dictionary(Of String, String) From {
-                {"mag-identifier", regResponse.Headers.GetValues("mag-identifier").FirstOrDefault()}
-            }
-
-                Dim tokenResponse As String = Await PostRequestAsync(tokenReqUrl, tokenReqData, tokenReqHeaders)
-                tokenData = JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(tokenResponse)
-
-                Console.WriteLine("got token data from server")
-
-                tokenData("client_id") = tokenReqData("client_id")
-                tokenData("client_secret") = tokenReqData("client_secret")
-                tokenData.Remove("expires_in")
-                tokenData.Remove("token_type")
-                tokenData("mag-identifier") = regResponse.Headers.GetValues("mag-identifier").FirstOrDefault()
-
-                WriteDataFile(tokenData, logindata_file)
-            End If
-#End If
-        Return Nothing
-        'Return tokenData
+        Debug.WriteLine($"captcha url: {captchaUrl}")
+        Return captchaUrl
     End Function
 
     Public Function PostRequest(url As String, data As Dictionary(Of String, String), headers As Dictionary(Of String, String)) As String
@@ -251,47 +179,123 @@ Public Module CareLinkClientHelpers
 
     End Function
 
-    Friend Function DoLogin(ByRef client As HttpClient, loginSessionResponse As HttpResponseMessage, userName As String, password As String, ByRef lastErrorMessage As String) As HttpResponseMessage
-        Dim tokenData As JsonElement? = ReadTokenDataFile(LoginDataFile)
+    Friend Function DoLogin(ByRef client As HttpClient, loginSessionResponse As HttpResponseMessage, userName As String, password As String, ByRef lastErrorMessage As String) As JsonElement?
+        Dim tokenData As JsonElement? = ReadTokenDataFile(GetLoginDataFileName(userName))
 
-        If tokenData Is Nothing Then
-            Try
-                Dim endpointConfig As (SsoConfig As RootConfig, ApiBaseUri As String) = ResolveEndpointConfigAsync(DiscoveryUrl, isUsRegion:=True)
-                tokenData = DoLoginAsync(client, endpointConfig.SsoConfig, endpointConfig.ApiBaseUri).Result
-            Catch ex As Exception
-
-            End Try
+        If tokenData IsNot Nothing Then
+            Return tokenData
         End If
 
-        Dim queryParameters As Dictionary(Of String, String) = ParseQsl(loginSessionResponse)
-        Dim url As StringBuilder
-        With loginSessionResponse.RequestMessage.RequestUri
-            url = New StringBuilder($"{ .Scheme}://{ .Host}{Join(loginSessionResponse.RequestMessage.RequestUri.Segments, "")}")
-        End With
-
-        Dim webForm As New Dictionary(Of String, String) From {
-            {"sessionID", queryParameters.GetValueOrDefault("sessionID")},
-            {"sessionData", queryParameters.GetValueOrDefault("sessionData")},
-            {"locale", "en"},
-            {"action", "login"},
-            {"username", userName},
-            {"password", password},
-            {"actionButton", "Log in"}}
-
-        Dim payload As New Dictionary(Of String, String) From {
-            {"country", queryParameters.GetValueOrDefault("CountryCode".ToLower)},
-            {"locale", "en"},
-            {"g-recaptcha-response", "abc"}
-        }
-
-        Dim response As HttpResponseMessage = Nothing
         Try
-            response = client.Post(url, s_commonHeaders, payload, webForm)
+            Dim endpointConfig As (SsoConfig As RootConfig, ApiBaseUri As String) = ResolveEndpointConfigAsync(DiscoveryUrl, isUsRegion:=True)
+            Dim authorizeUrl As String = GetAuthorizeUrl(client, endpointConfig.SsoConfig, endpointConfig.ApiBaseUri)
         Catch ex As Exception
-            Stop
-            lastErrorMessage = $"HTTP Response is not OK, {response?.StatusCode}"
+
         End Try
-        Return If(response Is Nothing, Nothing, DecodeResponse(response, lastErrorMessage))
+
+        ' RICHARD I thing this is where WebView2 should be used
+
+
+        'Dim queryParameters As Dictionary(Of String, String) = ParseQsl(loginSessionResponse)
+        'Dim url As StringBuilder
+        'With loginSessionResponse.RequestMessage.RequestUri
+        '    url = New StringBuilder($"{ .Scheme}://{ .Host}{Join(loginSessionResponse.RequestMessage.RequestUri.Segments, "")}")
+        'End With
+
+        'Dim webForm As New Dictionary(Of String, String) From {
+        '    {"sessionID", queryParameters.GetValueOrDefault("sessionID")},
+        '    {"sessionData", queryParameters.GetValueOrDefault("sessionData")},
+        '    {"locale", "en"},
+        '    {"action", "login"},
+        '    {"username", userName},
+        '    {"password", password},
+        '    {"actionButton", "Log in"}}
+
+        'Dim payload As New Dictionary(Of String, String) From {
+        '    {"country", queryParameters.GetValueOrDefault("CountryCode".ToLower)},
+        '    {"locale", "en"},
+        '    {"g-recaptcha-response", "abc"}
+        '}
+
+        'Dim response As HttpResponseMessage = Nothing
+        'Try
+        '    response = client.Post(url, s_commonHeaders, payload, webForm)
+        'Catch ex As Exception
+        '    Stop
+        '    lastErrorMessage = $"HTTP Response is not OK, {response?.StatusCode}"
+        'End Try
+
+#If False Then
+        ' Step 3: Captcha login and consent
+        Dim tokenData As Dictionary(Of String, JsonElement) = Nothing
+        ' TODO: Implement DoCaptcha function
+        ' Dim (captchaCode, captchaSsoState) = DoCaptcha(captchaUrl, ssoConfig("oauth")("client")("client_ids")(0)("redirect_uri"))
+        ' Console.WriteLine($"sso state after captcha: {captchaSsoState}")
+
+        ' Step 4: Registration
+        Dim registerDeviceId As String = RandomDeviceId()
+        Dim clientAuthStr As String = $"{clientInitResponseObj("client_id").GetString()}:{clientInitResponseObj("client_secret").GetString()}"
+
+        Dim androidModel As String = RandomAndroidModel()
+        Dim androidModelSafe As String = Regex.Replace(androidModel, "[^a-zA-Z0-9]", "")
+
+        ' TODO: Implement CSR creation using BouncyCastle or other cryptography library
+        ' Dim csr = CreateCSR(keypair, "socialLogin", registerDeviceId, androidModelSafe, ssoConfig("oauth")("client")("organization"))
+
+        Dim regHeaders As New Dictionary(Of String, String) From {
+        {"device-name", Convert.ToBase64String(Encoding.UTF8.GetBytes(androidModel))},
+        {"authorization", $"Bearer {captchaCode}"},
+        {"cert-format", "pem"},
+        {"client-authorization", $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes(clientAuthStr))}"},
+        {"create-session", "true"},
+        {"code-verifier", clientCodeVerifier},
+        {"device-id", Convert.ToBase64String(Encoding.UTF8.GetBytes(registerDeviceId))},
+        {"redirect-uri", SsoConfig.OAuth.Client.ClientIds(0).RedirectUri}
+    }
+
+        ' TODO: Implement ReformatCSR function
+        ' csr = ReformatCSR(csr)
+
+        Dim regUrl As String = $"{ApiBaseUrl}{SsoConfig.Mag.SystemEndpoints.DeviceRegisterEndpointPath}"
+        Dim regResponse As HttpResponseMessage = PostRequestWithHeadersAsync(regUrl, regHeaders, csr)
+
+        If regResponse.StatusCode <> HttpStatusCode.OK Then
+            Throw New Exception($"Could not register: {JsonSerializer.Deserialize(Of Dictionary(Of String, String))(regResponse.Content.ReadAsStringAsync().Result)("error_description")}")
+        End If
+
+        ' Step 5: Token
+        Dim tokenReqUrl As String = ApiBaseUrl & SsoConfig.OAuth.SystemEndpoints.TokenEndpointPath
+        Dim tokenReqData As New Dictionary(Of String, String) From {
+        {"assertion", regResponse.Headers.GetValues("id-token").FirstOrDefault()},
+        {"client_id", clientInitResponseObj("client_id").GetString()},
+        {"client_secret", clientInitResponseObj("client_secret").GetString()},
+        {"scope", SsoConfig.OAuth.Client.ClientIds(0).Scope},
+        {"grant_type", regResponse.Headers.GetValues("id-token-type").FirstOrDefault()}
+    }
+
+        Dim tokenReqHeaders As New Dictionary(Of String, String) From {
+        {"mag-identifier", regResponse.Headers.GetValues("mag-identifier").FirstOrDefault()}
+    }
+
+        Dim tokenResponse As String = Await PostRequestAsync(tokenReqUrl, tokenReqData, tokenReqHeaders)
+        tokenData = JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(tokenResponse)
+
+        Debug.WriteLine("got token data from server")
+
+        tokenData("client_id") = tokenReqData("client_id")
+        tokenData("client_secret") = tokenReqData("client_secret")
+        tokenData.Remove("expires_in")
+        tokenData.Remove("token_type")
+        tokenData("mag-identifier") = regResponse.Headers.GetValues("mag-identifier").FirstOrDefault()
+#End If
+
+        WriteTokenDataFile(tokenData, GetLoginDataFileName(userName))
+        Return tokenData
+
+    End Function
+
+    Private Function GetLoginDataFileName(userName As String) As String
+        Return Path.Combine(SettingsDirectory, $"{userName}loginData.json")
     End Function
 
     Friend Function NetworkUnavailable() As Boolean

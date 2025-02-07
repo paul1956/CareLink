@@ -137,7 +137,6 @@ Public Class LoginDialog
         Me.CarePartnerCheckBox.Checked = careLinkPartner
         Await Me.EnsureCoreWebView2(Form1.WebViewCacheDirectory)
         Form1.WebViewProcessId = Convert.ToInt32(Me.WebView21.CoreWebView2?.BrowserProcessId)
-
     End Sub
 
     Private Async Function EnsureCoreWebView2(webViewCacheDirectory As String) As Task
@@ -156,7 +155,7 @@ Public Class LoginDialog
         End If
     End Sub
 
-    Private Async Sub OK_Button_Click(sender As Object, e As EventArgs) Handles Ok_Button.Click
+    Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles Ok_Button.Click
         If Me.UsernameComboBox.Text.Length = 0 Then
             Me.UsernameComboBox.Focus()
             Exit Sub
@@ -165,34 +164,13 @@ Public Class LoginDialog
             Me.PasswordTextBox.Focus()
             Exit Sub
         End If
-        s_userName = Me.UsernameComboBox.Text
-        Me.Ok_Button.Enabled = False
-        Me.WebView21.Visible = True
-        Me.Height = CInt(Me.Height * 1.7)
-        Me.WebView21.BringToFront()
-        Application.DoEvents()
-        _authTokenValue = ""
-        _doCancel = False
-        ' https://CareLink.MiniMed.com/patient/sso/login?country=us&lang=en
-        Dim countryCode As String = Me.CountryComboBox.SelectedValue.ToString
-        If countryCode.Length = 0 Then
-            Stop
-        End If
 
-        If Me.WebView21.CoreWebView2 Is Nothing Then
-            Await Me.EnsureCoreWebView2(Form1.WebViewCacheDirectory)
-        End If
-        Dim serverUrl As String = CareLinkClient1.GetServerUrl(countryCode)
-        Me.WebView21.CoreWebView2.Navigate($"https://{serverUrl}/patient/sso/login?country={countryCode}&lang=en")
-        Dim savePatientID As String = My.Settings.CareLinkPatientUserID
-        My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
-        While _authTokenValue.Length = 0
-            If _doCancel Then
-                Exit Sub
-            End If
-            Thread.Sleep(100)
-            Application.DoEvents()
-        End While
+        s_userName = Me.UsernameComboBox.Text
+        Dim loginSessionResponse As Http.HttpResponseMessage = Nothing
+        Dim lastErrorMessage As String = ""
+
+        DoLogin(New Http.HttpClient, loginSessionResponse, s_userName, Me.PasswordTextBox.Text, lastErrorMessage)
+        Me.Ok_Button.Enabled = False
 
         Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData()
         If recentData?.Count > 0 Then
@@ -201,7 +179,8 @@ Public Class LoginDialog
 
             Me.Ok_Button.Enabled = True
             Me.Cancel_Button.Enabled = True
-            My.Settings.CountryCode = countryCode
+
+            My.Settings.CountryCode = Me.CountryComboBox.SelectedValue.ToString
             My.Settings.CareLinkUserName = s_userName
             My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
             My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text

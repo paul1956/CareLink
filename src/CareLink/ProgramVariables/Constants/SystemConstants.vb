@@ -6,7 +6,6 @@ Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Module SystemConstants
-    Friend Const LoginDataFile As String = "loginData.json"
     Friend Const DiscoveryUrl As String = "https://clcloud.minimed.eu/connect/carepartner/v11/discover/android/3.2"
     Friend Const RsaKeySize As Integer = 2048
 
@@ -27,45 +26,40 @@ Public Module SystemConstants
     Friend Const TimeFormatTwelveHourWithoutMinutes As String = " h tt"
 
     Friend ReadOnly s_calloutAnnotations As New Dictionary(Of String, CalloutAnnotation) From {
-            {"SummaryChart", New CalloutAnnotation},
-            {"ActiveInsulinChart", New CalloutAnnotation},
-            {"TreatmentMarkersChart", New CalloutAnnotation}
-       }
+        {"SummaryChart", New CalloutAnnotation},
+        {"ActiveInsulinChart", New CalloutAnnotation},
+        {"TreatmentMarkersChart", New CalloutAnnotation}}
 
     Friend ReadOnly s_commonHeaders As New Dictionary(Of String, String) From {
-            {"Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;deviceFamily=b3;q=0.9"},
-            {"Accept-Language", "en-US,en;q=0.9"},
-            {"Connection", "keep-alive"},
-            {"sec-ch-ua", """Not/A)Brand"";v=""99"", ""Microsoft Edge"";v=""115"", ""Chromium"";v=""115"""},
-            {"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.203"}
-        }
+        {"Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;deviceFamily=b3;q=0.9"},
+        {"Accept-Language", "en-US,en;q=0.9"},
+        {"Connection", "keep-alive"},
+        {"sec-ch-ua", """Not/A)Brand"";v=""99"", ""Microsoft Edge"";v=""115"", ""Chromium"";v=""115"""},
+        {"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.203"}}
 
     Friend ReadOnly s_insulinTypes As New Dictionary(Of String, InsulinActivationRecord) From {
-            {$"Humalog{RegisteredTrademark}", New InsulinActivationRecord(8, 4)},
-            {$"Novolog{RegisteredTrademark}", New InsulinActivationRecord(8, 4)},
-            {$"Generic (Insulin Lispro)", New InsulinActivationRecord(9, 4)},
-            {$"NovoRapid", New InsulinActivationRecord(7, 4)},
-            {$"FIASP{RegisteredTrademark}", New InsulinActivationRecord(4, 3)},
-            {$"Lyumjev{RegisteredTrademark}", New InsulinActivationRecord(3, 3)}
-        }
+        {$"Humalog{RegisteredTrademark}", New InsulinActivationRecord(8, 4)},
+        {$"Novolog{RegisteredTrademark}", New InsulinActivationRecord(8, 4)},
+        {$"Generic (Insulin Lispro)", New InsulinActivationRecord(9, 4)},
+        {$"NovoRapid", New InsulinActivationRecord(7, 4)},
+        {$"FIASP{RegisteredTrademark}", New InsulinActivationRecord(4, 3)},
+        {$"Lyumjev{RegisteredTrademark}", New InsulinActivationRecord(3, 3)}}
 
     Public ReadOnly s_oneToNineteen As New List(Of String) From {
-            "zero",
-            "one", "two", "three", "four", "five",
-            "six", "seven", "eight", "nine", "ten",
-            "eleven", "twelve", "thirteen", "fourteen", "fifteen",
-            "sixteen", "seventeen", "eighteen", "nineteen"
-        }
+        "zero",
+        "one", "two", "three", "four", "five",
+        "six", "seven", "eight", "nine", "ten",
+        "eleven", "twelve", "thirteen", "fourteen", "fifteen",
+        "sixteen", "seventeen", "eighteen", "nineteen"}
 
     Public ReadOnly s_trends As New Dictionary(Of String, String) From {
-            {"DOWN", "↓"},
-            {"DOWN_DOUBLE", "↓↓"},
-            {"DOWN_TRIPLE", "↓↓↓"},
-            {"UP", "↑"},
-            {"UP_DOUBLE", "↑↑"},
-            {"UP_TRIPLE", "↑↑↑"},
-            {"NONE", "↔"}
-        }
+        {"DOWN", "↓"},
+        {"DOWN_DOUBLE", "↓↓"},
+        {"DOWN_TRIPLE", "↓↓↓"},
+        {"UP", "↑"},
+        {"UP_DOUBLE", "↑↑"},
+        {"UP_TRIPLE", "↑↑↑"},
+        {"NONE", "↔"}}
 
     Friend ReadOnly Property GitHubCareLinkUrl As String = $"https://GitHub.com/{GitOwnerName}/CareLink/"
     Friend ReadOnly Property SavedTitle As String = "CareLink™ For Windows"

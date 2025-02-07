@@ -118,63 +118,63 @@ Public Class CareLinkClient1
     '''
     ''' <returns>True is login successful</returns>
     Private Function ExecuteLoginProcedure(serverUrl As String) As Boolean
-        If NetworkUnavailable() Then
-            _lastErrorMessage = "No Internet Connection!"
-            ReportLoginStatus(Form1.LoginStatus)
-            Return False
-        End If
-        Me.InLoginInProcess = True
-        _lastErrorMessage = Nothing
+        'If NetworkUnavailable() Then
+        '    _lastErrorMessage = "No Internet Connection!"
+        '    ReportLoginStatus(Form1.LoginStatus)
+        '    Return False
+        'End If
+        'Me.InLoginInProcess = True
+        '_lastErrorMessage = Nothing
         Dim lastLoginSuccess As Boolean = False
         Try
-            ' Open login(get SessionId And SessionData)
-            Using loginSessionResponse As HttpResponseMessage = Me.GetLoginSession(serverUrl)
-                _lastResponseCode = loginSessionResponse.StatusCode
-                If Not loginSessionResponse.IsSuccessStatusCode Then
-                    If Not loginSessionResponse.ReasonPhrase = "Not Implemented" Then
-                        _lastErrorMessage = loginSessionResponse.ReasonPhrase
-                    End If
-                    Return False
-                End If
+            '    ' Open login(get SessionId And SessionData)
+            '    Using loginSessionResponse As HttpResponseMessage = Me.GetLoginSession(serverUrl)
+            '        _lastResponseCode = loginSessionResponse.StatusCode
+            '        If Not loginSessionResponse.IsSuccessStatusCode Then
+            '            If Not loginSessionResponse.ReasonPhrase = "Not Implemented" Then
+            '                _lastErrorMessage = loginSessionResponse.ReasonPhrase
+            '            End If
+            '            Return False
+            '        End If
 
-                ' Login
-                Using doLoginResponse As HttpResponseMessage = DoLogin(_httpClient, loginSessionResponse, Me.CareLinkUsername, Me.CareLinkPassword, _lastErrorMessage)
-                    Try
-                        If doLoginResponse Is Nothing Then
-                            _lastErrorMessage = "Login Failure with reason unknown"
-                            Return False
-                        ElseIf Not doLoginResponse.IsSuccessStatusCode Then
-                            If doLoginResponse.ReasonPhrase.Replace(" ", "") <> HttpStatusCode.NetworkAuthenticationRequired.ToString Then
-                                _lastErrorMessage = doLoginResponse.ReasonPhrase
-                            End If
-                        End If
-                    Catch ex As Exception
-                        _lastErrorMessage = $"Login Failure {ex.DecodeException()}, in {NameOf(ExecuteLoginProcedure)}."
-                        Return False
-                    Finally
-                        _lastResponseCode = If(doLoginResponse Is Nothing,
-                                               HttpStatusCode.NoContent,
-                                               doLoginResponse.StatusCode
-                                              )
-                    End Try
+            '        ' Login
+            '        Dim doLoginResponse As JsonElement? = DoLogin(_httpClient, loginSessionResponse, Me.CareLinkUsername, Me.CareLinkPassword, _lastErrorMessage)
+            '        Try
+            '                If doLoginResponse Is Nothing Then
+            '                    _lastErrorMessage = "Login Failure With reason unknown"
+            '                    Return False
+            '                ElseIf Not doLoginResponse.IsSuccessStatusCode Then
+            '                    If doLoginResponse.ReasonPhrase.Replace(" ", "") <> HttpStatusCode.NetworkAuthenticationRequired.ToString Then
+            '                        _lastErrorMessage = doLoginResponse.ReasonPhrase
+            '                    End If
+            '                End If
+            '            Catch ex As Exception
+            '                _lastErrorMessage = $"Login Failure {ex.DecodeException()}, In {NameOf(ExecuteLoginProcedure)}."
+            '                Return False
+            '            Finally
+            '                _lastResponseCode = If(doLoginResponse Is Nothing,
+            '                                       HttpStatusCode.NoContent,
+            '                                       doLoginResponse.StatusCode
+            '                                      )
+            '            End Try
 
-                    If Not String.IsNullOrWhiteSpace(_lastErrorMessage) Then
-                        Return False
-                    End If
+            '            If Not String.IsNullOrWhiteSpace(_lastErrorMessage) Then
+            '                Return False
+            '            End If
 
-                    ' If we are here we at least were successful logging in
+            '            ' If we are here we at least were successful logging in
 
-                    ' Consent
-                    Using consentResponse As HttpResponseMessage = DoConsent(_httpClient, doLoginResponse, _lastErrorMessage)
-                        _lastResponseCode = consentResponse?.StatusCode
-                        If Not (consentResponse?.IsSuccessStatusCode) Then
-                            _lastErrorMessage = consentResponse.StatusCode.ToString
-                            _lastResponseCode = consentResponse.StatusCode
-                            Return False
-                        End If
-                    End Using
-                End Using
-            End Using
+            '            ' Consent
+            '            Using consentResponse As HttpResponseMessage = DoConsent(_httpClient, doLoginResponse, _lastErrorMessage)
+            '                _lastResponseCode = consentResponse?.StatusCode
+            '                If Not (consentResponse?.IsSuccessStatusCode) Then
+            '                    _lastErrorMessage = consentResponse.StatusCode.ToString
+            '                    _lastResponseCode = consentResponse.StatusCode
+            '                    Return False
+            '                End If
+            '            End Using
+            '        End Using
+            '    End Using
 
             Dim authToken As String = Me.GetBearerToken(GetServerUrl(Me.CareLinkCountry))
 
@@ -192,7 +192,7 @@ Public Class CareLinkClient1
                 lastLoginSuccess = True
             End If
         Catch ex As Exception
-            DebugPrint($"failed with {ex.DecodeException()}".Replace(vbCrLf, " "))
+            DebugPrint($"failed With {ex.DecodeException()}".Replace(vbCrLf, " "))
             _lastErrorMessage = ex.DecodeException()
         Finally
             Me.InLoginInProcess = False
