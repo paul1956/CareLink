@@ -193,6 +193,7 @@ Public Module CareLinkClientHelpers
 
         End Try
 
+
         ' RICHARD I thing this is where WebView2 should be used
 
 

@@ -13,6 +13,9 @@
     <Compile Update="CustomControls\NameColorComboBox.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="Dialogs\Captcha.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Dialogs\CleanUpObsoleteFilesDialog.vb">
       <SubType>Form</SubType>
     </Compile>
