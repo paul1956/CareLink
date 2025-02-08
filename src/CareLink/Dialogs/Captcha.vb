@@ -179,19 +179,18 @@ Public Class Captcha
         'End If
 #End If
         Me.WebView21.Visible = True
-        'Me.Height = CInt(Me.Height * 1.7)
-        Me.WebView21.BringToFront()
+        Me.BringToFront()
         Application.DoEvents()
         _authTokenValue = ""
         _doCancel = False
-        Me.WebView21.CoreWebView2.Navigate(captchaUrl)
+        Me.WebView21.Source = New Uri(captchaUrl)
         ' RICHARD Need to fill in username and password
         Dim userNameInputElement As HtmlInputElement = Nothing
         Dim passwordInputElement As HtmlInputElement = Nothing
         Dim loginButtonElement As HtmlButtonElement = Nothing
         Dim html As String
-        html = Await Me.WebView21.ExecuteScriptAsync("document.documentElement.outerHTML;")
-
+        html = Await Me.WebView21.CoreWebView2.ExecuteScriptAsync("document.documentElement.outerHTML;")
+        html = System.Text.Json.JsonSerializer.Deserialize(Of String)(html)
         ' The Html comes back with Unicode character codes, other escaped characters, and
         ' wrapped in double quotes, so I'm using this code to clean it up for what I'm doing.
         html = Regex.Unescape(html)
