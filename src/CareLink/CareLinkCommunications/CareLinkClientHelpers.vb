@@ -198,8 +198,6 @@ Public Module CareLinkClientHelpers
             Stop
         End Try
 
-        ' RICHARD I thing this is where WebView2 should be used
-
         ' Step 3: Captcha login and consent
         ' TODO: Implement DoCaptcha function
         Dim captcha As (captchaCode As String, captchaSsoState As String) = DoLoginWithCaptcha(authorizeUrl, ssoConfig.OAuth.Client.ClientIds(0).RedirectUri)

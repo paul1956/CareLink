@@ -147,9 +147,11 @@ Public Class Captcha
 
             Dim isCaptchaOpen As Boolean = True
 
+            ' RICHARD: Up to here works.  The code below is not working.  I'm trying to detect when the captcha popup is closed.
+
             While isCaptchaOpen
                 If _doCancel Then Exit Sub
-                Await Task.Delay(250)
+                Await Task.Delay(2000)
                 Dim captchaPopupElement() As Element = Await Me.DevContext.XPathAsync("/html/body/div[2]")
                 If captchaPopupElement?.Length > 0 Then
                     Dim captchaPopupStyleAttributes As String = Await captchaPopupElement(0).GetAttributeAsync("style")
@@ -206,7 +208,6 @@ Public Class Captcha
         _authTokenValue = ""
         _doCancel = False
 
-        ' RICHARD Need to fill in username and password
         Dim userNameInputElement As HtmlInputElement = Nothing
         Dim passwordInputElement As HtmlInputElement = Nothing
         Dim loginButtonElement As HtmlButtonElement = Nothing
