@@ -154,6 +154,7 @@ Public Class Captcha
     End Sub
 
     Friend Async Function Execute(captchaUrl As String, redirectUri As String) As Task(Of (captchaCode As String, captchaSsoState As String))
+#If False Then
         'Dim cookies As New CookieContainer()
         'Dim cookieList As List(Of CoreWebView2Cookie) = Await Me.WebView21.CoreWebView2.CookieManager.GetCookiesAsync(captchaUrl)
         'Dim foundAuthToken As Boolean
@@ -172,6 +173,7 @@ Public Class Captcha
         'If _ignoredURLs.Contains(_lastUrl) Then
         '    Return (Nothing, Nothing)
         'End If
+#End If
         Me.WebView21.Visible = True
         'Me.Height = CInt(Me.Height * 1.7)
         Me.WebView21.BringToFront()
@@ -183,6 +185,7 @@ Public Class Captcha
         End If
         Me.WebView21.CoreWebView2.Navigate(captchaUrl)
         Dim loginButtonElement As HtmlButtonElement  ' its now a button element
+        ' RICHARD Need to fill in username and password
         loginButtonElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlButtonElement)("[name=""action""]") ' DIFFERENT NAME And TYPE
         Await loginButtonElement.ClickAsync ' Different method To click since it's a button now
     End Function
