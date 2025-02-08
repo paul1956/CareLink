@@ -105,7 +105,7 @@ Public Module CareLinkClientHelpers
         Return New HttpResponseMessage(HttpStatusCode.NotImplemented)
     End Function
 
-    Public Function GetAuthorizeUrl(client As HttpClient, SsoConfig As RootConfig, ApiBaseUrl As String) As String
+    Public Function GetAuthorizeUrlData(client As HttpClient, SsoConfig As RootConfig, ApiBaseUrl As String) As (String, clientInitResponse As ClientInitData)
         ' Step 1: Initialize
         Dim data As New Dictionary(Of String, String) From {
             {"client_id", SsoConfig.OAuth.Client.ClientIds(0).ClientId},
@@ -124,8 +124,6 @@ Public Module CareLinkClientHelpers
         Dim response As HttpResponseMessage = client.PostAsync(clientInitUrl, content).Result
         ' Read the response content
         Dim responseContent As String = response.Content.ReadAsStringAsync().Result
-        ' Deserialize the JSON response
-        Dim clientInitResponse As ClientInitData = JsonSerializer.Deserialize(Of ClientInitData)(responseContent)
 
         ' Step 2: Authorize
         ' Generate client_code_verifier
@@ -135,6 +133,8 @@ Public Module CareLinkClientHelpers
         Dim challengeBytes As Byte() = SHA256.HashData(Encoding.UTF8.GetBytes(clientCodeVerifier))
         Dim clientCodeChallenge As String = Convert.ToBase64String(challengeBytes).Replace("+", "-").Replace("/", "_").TrimEnd("="c)
         Dim clientState As String = GenerateRandomBase64String(22)
+        ' Deserialize the JSON response
+        Dim clientInitResponse As ClientInitData = JsonSerializer.Deserialize(Of ClientInitData)(responseContent)
         Dim authParams As New Dictionary(Of String, String) From {
             {"client_id", clientInitResponse.client_id},
             {"response_type", "code"},
@@ -149,11 +149,10 @@ Public Module CareLinkClientHelpers
         Dim authorizeUrl As String = $"{ApiBaseUrl}{SsoConfig.OAuth.SystemEndpoints.AuthorizationEndpointPath}"
         Dim providersResponse As JsonElement = GetRequestAsync(authorizeUrl, authParams).Result
         Dim authorize As Authorize = JsonSerializer.Deserialize(Of Authorize)(providersResponse)
-
         Dim captchaUrl As String = authorize.Providers(0).Provider.AuthUrl
 
         Debug.WriteLine($"captcha url: {captchaUrl}")
-        Return captchaUrl
+        Return (captchaUrl, clientInitResponse)
     End Function
 
     Public Function PostRequest(url As String, data As Dictionary(Of String, String), headers As Dictionary(Of String, String)) As String
@@ -186,58 +185,34 @@ Public Module CareLinkClientHelpers
             Return tokenData
         End If
 
+        Dim endpointConfig As (SsoConfig As RootConfig, ApiBaseUri As String) = Nothing
+        Dim authorizeUrl As String = Nothing
+        Dim ssoConfig As RootConfig = Nothing
+        Dim authorizeUrlData As (authorizeUrl As String, clientInitData As ClientInitData) = Nothing
         Try
-            Dim endpointConfig As (SsoConfig As RootConfig, ApiBaseUri As String) = ResolveEndpointConfigAsync(DiscoveryUrl, isUsRegion:=True)
-            Dim authorizeUrl As String = GetAuthorizeUrl(client, endpointConfig.SsoConfig, endpointConfig.ApiBaseUri)
+            'TODO : Implement isUsRegion
+            endpointConfig = ResolveEndpointConfigAsync(DiscoveryUrl, isUsRegion:=True)
+            ssoConfig = endpointConfig.SsoConfig
+            authorizeUrlData = GetAuthorizeUrlData(client, ssoConfig, endpointConfig.ApiBaseUri)
+            authorizeUrl = authorizeUrlData.authorizeUrl
         Catch ex As Exception
-
+            Stop
         End Try
-
 
         ' RICHARD I thing this is where WebView2 should be used
 
-
-        'Dim queryParameters As Dictionary(Of String, String) = ParseQsl(loginSessionResponse)
-        'Dim url As StringBuilder
-        'With loginSessionResponse.RequestMessage.RequestUri
-        '    url = New StringBuilder($"{ .Scheme}://{ .Host}{Join(loginSessionResponse.RequestMessage.RequestUri.Segments, "")}")
-        'End With
-
-        'Dim webForm As New Dictionary(Of String, String) From {
-        '    {"sessionID", queryParameters.GetValueOrDefault("sessionID")},
-        '    {"sessionData", queryParameters.GetValueOrDefault("sessionData")},
-        '    {"locale", "en"},
-        '    {"action", "login"},
-        '    {"username", userName},
-        '    {"password", password},
-        '    {"actionButton", "Log in"}}
-
-        'Dim payload As New Dictionary(Of String, String) From {
-        '    {"country", queryParameters.GetValueOrDefault("CountryCode".ToLower)},
-        '    {"locale", "en"},
-        '    {"g-recaptcha-response", "abc"}
-        '}
-
-        'Dim response As HttpResponseMessage = Nothing
-        'Try
-        '    response = client.Post(url, s_commonHeaders, payload, webForm)
-        'Catch ex As Exception
-        '    Stop
-        '    lastErrorMessage = $"HTTP Response is not OK, {response?.StatusCode}"
-        'End Try
-
-#If False Then
         ' Step 3: Captcha login and consent
-        Dim tokenData As Dictionary(Of String, JsonElement) = Nothing
         ' TODO: Implement DoCaptcha function
-        ' Dim (captchaCode, captchaSsoState) = DoCaptcha(captchaUrl, ssoConfig("oauth")("client")("client_ids")(0)("redirect_uri"))
-        ' Console.WriteLine($"sso state after captcha: {captchaSsoState}")
+        Dim captcha As (captchaCode As String, captchaSsoState As String) = DoLoginWithCaptcha(authorizeUrl, ssoConfig.OAuth.Client.ClientIds(0).RedirectUri)
+        Debug.WriteLine($"sso state after captcha: {captcha.captchaSsoState}")
+
 
         ' Step 4: Registration
         Dim registerDeviceId As String = RandomDeviceId()
-        Dim clientAuthStr As String = $"{clientInitResponseObj("client_id").GetString()}:{clientInitResponseObj("client_secret").GetString()}"
+        Dim clientAuthStr As String = $"{endpointConfig.SsoConfig.OAuth.Client.ClientIds(0).ClientId}:{authorizeUrlData.clientInitData.client_secret}"
 
-        Dim androidModel As String = RandomAndroidModel()
+#If False Then
+       Dim androidModel As String = RandomAndroidModel()
         Dim androidModelSafe As String = Regex.Replace(androidModel, "[^a-zA-Z0-9]", "")
 
         ' TODO: Implement CSR creation using BouncyCastle or other cryptography library
@@ -289,10 +264,43 @@ Public Module CareLinkClientHelpers
         tokenData.Remove("token_type")
         tokenData("mag-identifier") = regResponse.Headers.GetValues("mag-identifier").FirstOrDefault()
 #End If
+        'Dim queryParameters As Dictionary(Of String, String) = ParseQsl(loginSessionResponse)
+        'Dim url As StringBuilder
+        'With loginSessionResponse.RequestMessage.RequestUri
+        '    url = New StringBuilder($"{ .Scheme}://{ .Host}{Join(loginSessionResponse.RequestMessage.RequestUri.Segments, "")}")
+        'End With
+
+        'Dim webForm As New Dictionary(Of String, String) From {
+        '    {"sessionID", queryParameters.GetValueOrDefault("sessionID")},
+        '    {"sessionData", queryParameters.GetValueOrDefault("sessionData")},
+        '    {"locale", "en"},
+        '    {"action", "login"},
+        '    {"username", userName},
+        '    {"password", password},
+        '    {"actionButton", "Log in"}}
+
+        'Dim payload As New Dictionary(Of String, String) From {
+        '    {"country", queryParameters.GetValueOrDefault("CountryCode".ToLower)},
+        '    {"locale", "en"},
+        '    {"g-recaptcha-response", "abc"}
+        '}
+
+        'Dim response As HttpResponseMessage = Nothing
+        'Try
+        '    response = client.Post(url, s_commonHeaders, payload, webForm)
+        'Catch ex As Exception
+        '    Stop
+        '    lastErrorMessage = $"HTTP Response is not OK, {response?.StatusCode}"
+        'End Try
 
         WriteTokenDataFile(tokenData, GetLoginDataFileName(userName))
         Return tokenData
 
+    End Function
+
+    Private Function DoLoginWithCaptcha(captchaUrl As String, redirectUri As String) As (captchaCode As String, captchaSsoState As String)
+        Dim captchaWindow As New Captcha(s_countryCode, s_password, s_userName)
+        Return captchaWindow.Execute(captchaUrl, redirectUri).Result
     End Function
 
     Private Function GetLoginDataFileName(userName As String) As String

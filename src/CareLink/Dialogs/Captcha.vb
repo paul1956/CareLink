@@ -2,26 +2,27 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports Microsoft.Web.WebView2.Core
 Imports System.Net
 Imports System.Text.RegularExpressions
-Imports Microsoft.Web.WebView2.Core
 Imports WebView2.DevTools.Dom
 
 Public Class Captcha
     Private WithEvents DevContext As WebView2DevToolsContext
 
     Private ReadOnly _ignoredURLs As New List(Of String) From {
-        "https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/consent"}
+            "https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/consent"}
 
     Private _authTokenValue As String
     Private _autoClick As Boolean
     Private _doCancel As Boolean
     Private _lastUrl As String
-
     Public Sub New(countryCode As String, password As String, userName As String)
+        Me.InitializeComponent()
         Me._countryCode = countryCode
         Me._password = password
         Me._userName = userName
+        Me.Captcha_Load(Nothing, Nothing)
     End Sub
 
     Private Property _countryCode As String
@@ -30,6 +31,7 @@ Public Class Captcha
     Public Property Client As CareLinkClient1
 
     Private Async Sub Captcha_Load(sender As Object, e As EventArgs) Handles Me.Load
+        Me.Visible = True
         Await Me.EnsureCoreWebView2(Form1.WebViewCacheDirectory)
         Form1.WebViewProcessId = Convert.ToInt32(Me.WebView21.CoreWebView2?.BrowserProcessId)
     End Sub
@@ -74,7 +76,7 @@ Public Class Captcha
                 Me.Visible = False
                 _autoClick = True
             End If
-            cookies.Add(New Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain))
+            cookies.Add(New Net.Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain))
         Next i
         DebugPrint(_lastUrl)
         If _ignoredURLs.Contains(_lastUrl) Then
@@ -151,4 +153,37 @@ Public Class Captcha
         DebugPrintUrl($"In {NameOf(WebView21_NavigationStarting)} URL", e.Uri, 100)
     End Sub
 
+    Friend Async Function Execute(captchaUrl As String, redirectUri As String) As Task(Of (captchaCode As String, captchaSsoState As String))
+        'Dim cookies As New CookieContainer()
+        'Dim cookieList As List(Of CoreWebView2Cookie) = Await Me.WebView21.CoreWebView2.CookieManager.GetCookiesAsync(captchaUrl)
+        'Dim foundAuthToken As Boolean
+        'For i As Integer = 0 To cookieList.Count - 1
+        '    Dim cookie As CoreWebView2Cookie = Me.WebView21.CoreWebView2.CookieManager.CreateCookieWithSystemNetCookie(cookieList(i).ToSystemNetCookie())
+
+        '    If cookie.Name.StartsWith("auth") Then   ' THIS Is ALWAYS TRUE EVEN BEFORE COMPLETING THE LOGIN FORM, Not SURE WHY Or IF THERE Is A DIFFERENT STRATEDGY OF DOING THIS
+        '        foundAuthToken = True
+        '        _authTokenValue = cookie.Value
+        '        Me.Visible = False
+        '        _autoClick = True
+        '    End If
+        '    cookies.Add(New Net.Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain))
+        'Next i
+        'DebugPrint(_lastUrl)
+        'If _ignoredURLs.Contains(_lastUrl) Then
+        '    Return (Nothing, Nothing)
+        'End If
+        Me.WebView21.Visible = True
+        'Me.Height = CInt(Me.Height * 1.7)
+        Me.WebView21.BringToFront()
+        Application.DoEvents()
+        _authTokenValue = ""
+        _doCancel = False
+        If Me.WebView21.CoreWebView2 Is Nothing Then
+            Await Me.EnsureCoreWebView2(Form1.WebViewCacheDirectory)
+        End If
+        Me.WebView21.CoreWebView2.Navigate(captchaUrl)
+        Dim loginButtonElement As HtmlButtonElement  ' its now a button element
+        loginButtonElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlButtonElement)("[name=""action""]") ' DIFFERENT NAME And TYPE
+        Await loginButtonElement.ClickAsync ' Different method To click since it's a button now
+    End Function
 End Class

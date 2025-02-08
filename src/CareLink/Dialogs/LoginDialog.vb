@@ -168,8 +168,10 @@ Public Class LoginDialog
         s_userName = Me.UsernameComboBox.Text
         Dim loginSessionResponse As Http.HttpResponseMessage = Nothing
         Dim lastErrorMessage As String = ""
+        s_password = Me.PasswordTextBox.Text
+        s_countryCode = Me.CountryComboBox.SelectedValue.ToString
 
-        DoLogin(New Http.HttpClient, loginSessionResponse, s_userName, Me.PasswordTextBox.Text, lastErrorMessage)
+        DoLogin(New Http.HttpClient, loginSessionResponse, s_userName, s_password, lastErrorMessage)
         Me.Ok_Button.Enabled = False
 
         Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData()
