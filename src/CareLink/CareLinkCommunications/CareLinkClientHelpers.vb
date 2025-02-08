@@ -13,7 +13,6 @@ Imports System.Text.RegularExpressions
 
 Imports CareLink
 Imports Microsoft.Web.WebView2.Core.DevToolsProtocolExtension
-Imports Octokit
 
 Public Module CareLinkClientHelpers
 
@@ -300,6 +299,12 @@ Public Module CareLinkClientHelpers
 
     Private Function DoLoginWithCaptcha(captchaUrl As String, redirectUri As String) As (captchaCode As String, captchaSsoState As String)
         Dim captchaWindow As New Captcha(s_countryCode, s_password, s_userName)
+        Dim t As Task = captchaWindow.Captcha_Load()
+        While t.IsCompleted = False
+            Task.Delay(10).Wait()
+            Application.DoEvents()
+        End While
+        t.Wait()
         Return captchaWindow.Execute(captchaUrl, redirectUri).Result
     End Function
 

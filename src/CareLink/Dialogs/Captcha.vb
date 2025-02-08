@@ -4,10 +4,19 @@
 
 Imports Microsoft.Web.WebView2.Core
 Imports System.Net
+Imports System.Text.Json
 Imports System.Text.RegularExpressions
 Imports WebView2.DevTools.Dom
 
 Public Class Captcha
+
+    Private Enum CaptchaStatus
+        NotStarted
+        InProgress
+        Completed
+        Failed
+    End Enum
+
     Private WithEvents DevContext As WebView2DevToolsContext
 
     Private ReadOnly _ignoredURLs As New List(Of String) From {
@@ -17,12 +26,12 @@ Public Class Captcha
     Private _autoClick As Boolean
     Private _doCancel As Boolean
     Private _lastUrl As String
+    Private _status As CaptchaStatus = CaptchaStatus.NotStarted
     Public Sub New(countryCode As String, password As String, userName As String)
         Me.InitializeComponent()
         Me._countryCode = countryCode
         Me._password = password
         Me._userName = userName
-        Me.Captcha_Load()
     End Sub
 
     Private Property _countryCode As String
@@ -30,23 +39,30 @@ Public Class Captcha
     Private Property _userName As String
     Public Property Client As CareLinkClient1
 
-    Private Async Sub Captcha_Load()
+    Public Async Function Captcha_Load() As Task
         Me.Visible = True
         Await Me.EnsureCoreWebView2(Form1.WebViewCacheDirectory)
         Form1.WebViewProcessId = Convert.ToInt32(Me.WebView21.CoreWebView2?.BrowserProcessId)
-    End Sub
+    End Function
 
-    Private Async Function EnsureCoreWebView2(webViewCacheDirectory As String) As Task
+    Private Async Function EnsureCoreWebView2(webViewCacheDirectory As String) As Task(Of String)
         If Me.WebView21.Source Is Nothing Then
             Dim task As Task(Of CoreWebView2Environment) = CoreWebView2Environment.CreateAsync(Nothing, webViewCacheDirectory, Nothing)
-            Try
-                Await Me.WebView21.EnsureCoreWebView2Async((Await task))
-            Catch ex As Exception
-                Stop
-            End Try
+            Await Me.WebView21.EnsureCoreWebView2Async((Await task))
         End If
         Me.DevContext = Await Me.WebView21.CoreWebView2.CreateDevToolsContextAsync()
+        Return ""
     End Function
+
+    Private Sub WebView21_ContentLoading(sender As Object, e As CoreWebView2ContentLoadingEventArgs) Handles WebView21.ContentLoading
+        Stop
+    End Sub
+
+    Private Sub WebView21_CoreWebView2InitializationCompleted(sender As Object, e As CoreWebView2InitializationCompletedEventArgs) Handles WebView21.CoreWebView2InitializationCompleted
+        If Not e.IsSuccess Then
+            Stop
+        End If
+    End Sub
 
     Private Async Sub WebView21_NavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs) Handles WebView21.NavigationCompleted
         Dim foundAuthToken As Boolean = False
@@ -92,6 +108,7 @@ Public Class Captcha
             Exit Sub
         End If
         If Me.WebView21.Source.ToString.StartsWith("https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login") OrElse Me.WebView21.Source.ToString.StartsWith("https://mdtlogin-ocl.medtronic.com/mmcl/auth/oauth/v2/authorize/login") Then
+            _status = CaptchaStatus.InProgress
             Dim t As Task(Of WebView2DevToolsContext) = Nothing
             If Me.DevContext Is Nothing Then
                 t = Me.WebView21.CoreWebView2.CreateDevToolsContextAsync()
@@ -157,8 +174,13 @@ Public Class Captcha
         DebugPrintUrl($"In {NameOf(WebView21_NavigationStarting)} URL", e.Uri, 100)
     End Sub
 
+    Private Sub WebView21_WebMessageReceived(sender As Object, e As CoreWebView2WebMessageReceivedEventArgs) Handles WebView21.WebMessageReceived
+        Stop
+    End Sub
+
     Friend Async Function Execute(captchaUrl As String, redirectUri As String) As Task(Of (captchaCode As String, captchaSsoState As String))
 #If False Then
+
         'Dim cookies As New CookieContainer()
         'Dim cookieList As List(Of CoreWebView2Cookie) = Await Me.WebView21.CoreWebView2.CookieManager.GetCookiesAsync(captchaUrl)
         'Dim foundAuthToken As Boolean
@@ -183,33 +205,41 @@ Public Class Captcha
         Application.DoEvents()
         _authTokenValue = ""
         _doCancel = False
-        Me.WebView21.Source = New Uri(captchaUrl)
+
         ' RICHARD Need to fill in username and password
         Dim userNameInputElement As HtmlInputElement = Nothing
         Dim passwordInputElement As HtmlInputElement = Nothing
         Dim loginButtonElement As HtmlButtonElement = Nothing
         Dim html As String
-        html = Await Me.WebView21.CoreWebView2.ExecuteScriptAsync("document.documentElement.outerHTML;")
-        html = System.Text.Json.JsonSerializer.Deserialize(Of String)(html)
-        ' The Html comes back with Unicode character codes, other escaped characters, and
-        ' wrapped in double quotes, so I'm using this code to clean it up for what I'm doing.
-        html = Regex.Unescape(html)
-        html = html.Remove(0, 1)
-        html = html.Remove(html.Length - 1, 1)
         Try
-            userNameInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#username")
-            passwordInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#password")
-            loginButtonElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlButtonElement)("[name=""action""]") ' DIFFERENT NAME And TYPE
-        Catch ex As Exception
-        End Try
-        If userNameInputElement Is Nothing OrElse passwordInputElement Is Nothing OrElse loginButtonElement Is Nothing Then
-            Return Nothing
-        End If
-        Await userNameInputElement.SetValueAsync(s_userName)
-        Await passwordInputElement.SetValueAsync(s_password)
+            Me.WebView21.CoreWebView2.Navigate(captchaUrl)
 
-        Dim captchaFrame As HtmlInlineFrameElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInlineFrameElement)("[title=""reCAPTCHA""]")
-        Await loginButtonElement.ClickAsync ' Different method To click since it's a button now
-        Stop
+            While _status <> CaptchaStatus.Completed
+                Task.Delay(10).Wait()
+                Application.DoEvents()
+            End While
+        Catch ex As Exception
+            Stop
+        End Try
+
     End Function
+
+    Private Function GetHtmlButtonElement(querySelector As String) As HtmlButtonElement
+        Dim t As Task(Of HtmlButtonElement) = Me.DevContext.QuerySelectorAsync(Of HtmlButtonElement)(querySelector)
+        While t.IsCompleted = False
+            Task.Delay(10).Wait()
+            Application.DoEvents()
+        End While
+        Return t.Result
+    End Function
+
+    Private Function GetHtmlInputElement(querySelector As String) As HtmlInputElement
+        Dim t As Task(Of HtmlInputElement) = Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)(querySelector)
+        While t.IsCompleted = False
+            Task.Delay(10).Wait()
+            Application.DoEvents()
+        End While
+        Return t.Result
+    End Function
+
 End Class
