@@ -35,9 +35,10 @@ Partial Class Captcha
         WebView21.AllowExternalDrop = True
         WebView21.CreationProperties = Nothing
         WebView21.DefaultBackgroundColor = Color.White
-        WebView21.Location = New Point(3, 4)
+        WebView21.Dock = DockStyle.Fill
+        WebView21.Location = New Point(0, 0)
         WebView21.Name = "WebView21"
-        WebView21.Size = New Size(752, 408)
+        WebView21.Size = New Size(1308, 661)
         WebView21.TabIndex = 0
         WebView21.ZoomFactor = 1R
         ' 
@@ -45,7 +46,7 @@ Partial Class Captcha
         ' 
         Me.AutoScaleDimensions = New SizeF(7F, 15F)
         Me.AutoScaleMode = AutoScaleMode.Font
-        Me.ClientSize = New Size(800, 450)
+        Me.ClientSize = New Size(1308, 661)
         Me.Controls.Add(WebView21)
         Me.Name = "Captcha"
         Me.Text = "Captcha"

@@ -1,10 +1,10 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-<Global.System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726")> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726")>
 Partial Class LoginDialog
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -48,10 +48,8 @@ Partial Class LoginDialog
         PatientUserIDLabel = New Label()
         PatientUserIDTextBox = New TextBox()
         CarePartnerCheckBox = New CheckBox()
-        WebView21 = New Microsoft.Web.WebView2.WinForms.WebView2()
         CType(LogoPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         Panel1.SuspendLayout()
-        CType(WebView21, ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         ' 
         ' LogoPictureBox
@@ -239,24 +237,10 @@ Partial Class LoginDialog
         CarePartnerCheckBox.Text = "CarePartner"
         CarePartnerCheckBox.UseVisualStyleBackColor = True
         ' 
-        ' WebView21
-        ' 
-        WebView21.AllowExternalDrop = True
-        WebView21.CreationProperties = Nothing
-        WebView21.DefaultBackgroundColor = Color.White
-        WebView21.Dock = DockStyle.Top
-        WebView21.Location = New Point(0, 0)
-        WebView21.Margin = New Padding(9, 10, 9, 10)
-        WebView21.Name = "WebView21"
-        WebView21.Size = New Size(442, 583)
-        WebView21.TabIndex = 14
-        WebView21.Visible = False
-        WebView21.ZoomFactor = 1R
-        ' 
         ' LoginDialog
         ' 
         Me.AcceptButton = Ok_Button
-        Me.AutoScaleDimensions = New SizeF(7F, 15F)
+        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.CancelButton = Cancel_Button
         Me.ClientSize = New Size(442, 359)
@@ -274,7 +258,6 @@ Partial Class LoginDialog
         Me.Controls.Add(PasswordLabel)
         Me.Controls.Add(UsernameLabel)
         Me.Controls.Add(LogoPictureBox)
-        Me.Controls.Add(WebView21)
         Me.Margin = New Padding(9, 10, 9, 10)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
@@ -285,7 +268,6 @@ Partial Class LoginDialog
         CType(LogoPictureBox, ComponentModel.ISupportInitialize).EndInit()
         Panel1.ResumeLayout(False)
         Panel1.PerformLayout()
-        CType(WebView21, ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
     End Sub
@@ -302,5 +284,4 @@ Partial Class LoginDialog
     Friend WithEvents PatientUserIDLabel As Label
     Friend WithEvents PatientUserIDTextBox As TextBox
     Friend WithEvents CarePartnerCheckBox As CheckBox
-    Friend WithEvents WebView21 As Microsoft.Web.WebView2.WinForms.WebView2
 End Class

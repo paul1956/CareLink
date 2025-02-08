@@ -22,7 +22,7 @@ Public Class Captcha
         Me._countryCode = countryCode
         Me._password = password
         Me._userName = userName
-        Me.Captcha_Load(Nothing, Nothing)
+        Me.Captcha_Load()
     End Sub
 
     Private Property _countryCode As String
@@ -30,7 +30,7 @@ Public Class Captcha
     Private Property _userName As String
     Public Property Client As CareLinkClient1
 
-    Private Async Sub Captcha_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Private Async Sub Captcha_Load()
         Me.Visible = True
         Await Me.EnsureCoreWebView2(Form1.WebViewCacheDirectory)
         Form1.WebViewProcessId = Convert.ToInt32(Me.WebView21.CoreWebView2?.BrowserProcessId)
@@ -39,7 +39,11 @@ Public Class Captcha
     Private Async Function EnsureCoreWebView2(webViewCacheDirectory As String) As Task
         If Me.WebView21.Source Is Nothing Then
             Dim task As Task(Of CoreWebView2Environment) = CoreWebView2Environment.CreateAsync(Nothing, webViewCacheDirectory, Nothing)
-            Await Me.WebView21.EnsureCoreWebView2Async((Await task))
+            Try
+                Await Me.WebView21.EnsureCoreWebView2Async((Await task))
+            Catch ex As Exception
+                Stop
+            End Try
         End If
         Me.DevContext = Await Me.WebView21.CoreWebView2.CreateDevToolsContextAsync()
     End Function
@@ -180,13 +184,33 @@ Public Class Captcha
         Application.DoEvents()
         _authTokenValue = ""
         _doCancel = False
-        If Me.WebView21.CoreWebView2 Is Nothing Then
-            Await Me.EnsureCoreWebView2(Form1.WebViewCacheDirectory)
-        End If
         Me.WebView21.CoreWebView2.Navigate(captchaUrl)
-        Dim loginButtonElement As HtmlButtonElement  ' its now a button element
         ' RICHARD Need to fill in username and password
-        loginButtonElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlButtonElement)("[name=""action""]") ' DIFFERENT NAME And TYPE
+        Dim userNameInputElement As HtmlInputElement = Nothing
+        Dim passwordInputElement As HtmlInputElement = Nothing
+        Dim loginButtonElement As HtmlButtonElement = Nothing
+        Dim html As String
+        html = Await Me.WebView21.ExecuteScriptAsync("document.documentElement.outerHTML;")
+
+        ' The Html comes back with Unicode character codes, other escaped characters, and
+        ' wrapped in double quotes, so I'm using this code to clean it up for what I'm doing.
+        html = Regex.Unescape(html)
+        html = html.Remove(0, 1)
+        html = html.Remove(html.Length - 1, 1)
+        Try
+            userNameInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#username")
+            passwordInputElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)("#password")
+            loginButtonElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlButtonElement)("[name=""action""]") ' DIFFERENT NAME And TYPE
+        Catch ex As Exception
+        End Try
+        If userNameInputElement Is Nothing OrElse passwordInputElement Is Nothing OrElse loginButtonElement Is Nothing Then
+            Return Nothing
+        End If
+        Await userNameInputElement.SetValueAsync(s_userName)
+        Await passwordInputElement.SetValueAsync(s_password)
+
+        Dim captchaFrame As HtmlInlineFrameElement = Await Me.DevContext.QuerySelectorAsync(Of HtmlInlineFrameElement)("[title=""reCAPTCHA""]")
         Await loginButtonElement.ClickAsync ' Different method To click since it's a button now
+        Stop
     End Function
 End Class

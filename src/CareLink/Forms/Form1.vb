@@ -1057,7 +1057,8 @@ Public Class Form1
         Me.CleanUpNotificationIcon()
         If _webViewProcessId > 0 Then
             Dim webViewProcess As Process = Process.GetProcessById(_webViewProcessId)
-            LoginDialog.WebView21.Dispose()
+            ' TODO: dispose of the WebView2 control
+            'LoginDialog.WebView21.Dispose()
             webViewProcess.Kill()
             webViewProcess.WaitForExit(3_000)
 
