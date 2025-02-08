@@ -182,36 +182,12 @@ Public Class Captcha
     End Sub
 
     Friend Async Function Execute(captchaUrl As String, redirectUri As String) As Task(Of (captchaCode As String, captchaSsoState As String))
-#If False Then
-
-        'Dim cookies As New CookieContainer()
-        'Dim cookieList As List(Of CoreWebView2Cookie) = Await Me.WebView21.CoreWebView2.CookieManager.GetCookiesAsync(captchaUrl)
-        'Dim foundAuthToken As Boolean
-        'For i As Integer = 0 To cookieList.Count - 1
-        '    Dim cookie As CoreWebView2Cookie = Me.WebView21.CoreWebView2.CookieManager.CreateCookieWithSystemNetCookie(cookieList(i).ToSystemNetCookie())
-
-        '    If cookie.Name.StartsWith("auth") Then   ' THIS Is ALWAYS TRUE EVEN BEFORE COMPLETING THE LOGIN FORM, Not SURE WHY Or IF THERE Is A DIFFERENT STRATEDGY OF DOING THIS
-        '        foundAuthToken = True
-        '        _authTokenValue = cookie.Value
-        '        Me.Visible = False
-        '        _autoClick = True
-        '    End If
-        '    cookies.Add(New Net.Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain))
-        'Next i
-        'DebugPrint(_lastUrl)
-        'If _ignoredURLs.Contains(_lastUrl) Then
-        '    Return (Nothing, Nothing)
-        'End If
-#End If
         Me.WebView21.Visible = True
         Me.BringToFront()
         Application.DoEvents()
         _authTokenValue = ""
         _doCancel = False
 
-        Dim userNameInputElement As HtmlInputElement = Nothing
-        Dim passwordInputElement As HtmlInputElement = Nothing
-        Dim loginButtonElement As HtmlButtonElement = Nothing
         Try
             Me.WebView21.CoreWebView2.Navigate(captchaUrl)
 
@@ -222,7 +198,8 @@ Public Class Captcha
         Catch ex As Exception
             Stop
         End Try
-
+        ' RICHARD : this needs to return the captcha code and the sso state as a Tuple
+        ' Sso state is a cookie value
     End Function
 
 End Class
