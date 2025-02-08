@@ -12,9 +12,12 @@ Imports System.Text.Json
 Imports System.Text.RegularExpressions
 
 Imports CareLink
-Imports Microsoft.Web.WebView2.Core.DevToolsProtocolExtension
+Imports Org.BouncyCastle.Crypto
+Imports Org.BouncyCastle.Crypto.Generators
+Imports Org.BouncyCastle.Security
 
 Public Module CareLinkClientHelpers
+    Private s_clientCodeVerifier As String
 
     Private Function DecodeResponse(response As HttpResponseMessage, ByRef lastErrorMessage As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As HttpResponseMessage
         Dim message As String
@@ -126,10 +129,10 @@ Public Module CareLinkClientHelpers
 
         ' Step 2: Authorize
         ' Generate client_code_verifier
-        Dim clientCodeVerifier As String = GenerateRandomBase64String(40)
-        clientCodeVerifier = Regex.Replace(clientCodeVerifier, "[^a-zA-Z0-9]+", "")
+        s_clientCodeVerifier = GenerateRandomBase64String(40)
+        s_clientCodeVerifier = Regex.Replace(s_clientCodeVerifier, "[^a-zA-Z0-9]+", "")
         ' Generate client_code_challenge
-        Dim challengeBytes As Byte() = SHA256.HashData(Encoding.UTF8.GetBytes(clientCodeVerifier))
+        Dim challengeBytes As Byte() = SHA256.HashData(Encoding.UTF8.GetBytes(s_clientCodeVerifier))
         Dim clientCodeChallenge As String = Convert.ToBase64String(challengeBytes).Replace("+", "-").Replace("/", "_").TrimEnd("="c)
         Dim clientState As String = GenerateRandomBase64String(22)
         ' Deserialize the JSON response
@@ -184,7 +187,7 @@ Public Module CareLinkClientHelpers
             Return tokenData
         End If
 
-        Dim endpointConfig As (SsoConfig As RootConfig, ApiBaseUri As String) = Nothing
+        Dim endpointConfig As (SsoConfig As RootConfig, ApiBaseUrl As String) = Nothing
         Dim authorizeUrl As String = Nothing
         Dim ssoConfig As RootConfig = Nothing
         Dim authorizeUrlData As (authorizeUrl As String, clientInitData As ClientInitData) = Nothing
@@ -192,7 +195,7 @@ Public Module CareLinkClientHelpers
             'TODO : Implement isUsRegion
             endpointConfig = ResolveEndpointConfigAsync(DiscoveryUrl, isUsRegion:=True)
             ssoConfig = endpointConfig.SsoConfig
-            authorizeUrlData = GetAuthorizeUrlData(client, ssoConfig, endpointConfig.ApiBaseUri)
+            authorizeUrlData = GetAuthorizeUrlData(client, ssoConfig, endpointConfig.ApiBaseUrl)
             authorizeUrl = authorizeUrlData.authorizeUrl
         Catch ex As Exception
             Stop
@@ -208,41 +211,62 @@ Public Module CareLinkClientHelpers
         Dim registerDeviceId As String = RandomDeviceId()
         Dim clientAuthStr As String = $"{endpointConfig.SsoConfig.OAuth.Client.ClientIds(0).ClientId}:{authorizeUrlData.clientInitData.client_secret}"
 
-#If False Then
-       Dim androidModel As String = RandomAndroidModel()
+        Dim androidModel As String = RandomAndroidModel()
         Dim androidModelSafe As String = Regex.Replace(androidModel, "[^a-zA-Z0-9]", "")
 
-        ' TODO: Implement CSR creation using BouncyCastle or other cryptography library
-        ' Dim csr = CreateCSR(keypair, "socialLogin", registerDeviceId, androidModelSafe, ssoConfig("oauth")("client")("organization"))
+        ' Generate key pair
+        Dim generator As New RsaKeyPairGenerator()
+        generator.Init(New KeyGenerationParameters(New SecureRandom(), 2048))
 
+        Dim keypair As AsymmetricCipherKeyPair = generator.GenerateKeyPair()
+        ' Create CSR
+
+        Dim csr As String = CreateCSR(keypair, "socialLogin", registerDeviceId, androidModelSafe, ssoConfig.OAuth.Client.Organization)
+
+        ' Prepare headers
         Dim regHeaders As New Dictionary(Of String, String) From {
-        {"device-name", Convert.ToBase64String(Encoding.UTF8.GetBytes(androidModel))},
-        {"authorization", $"Bearer {captchaCode}"},
-        {"cert-format", "pem"},
-        {"client-authorization", $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes(clientAuthStr))}"},
-        {"create-session", "true"},
-        {"code-verifier", clientCodeVerifier},
-        {"device-id", Convert.ToBase64String(Encoding.UTF8.GetBytes(registerDeviceId))},
-        {"redirect-uri", SsoConfig.OAuth.Client.ClientIds(0).RedirectUri}
-    }
+            {"device-name", Convert.ToBase64String(Encoding.UTF8.GetBytes(androidModel))},
+            {"authorization", $"Bearer {CaptchaCode}"},
+            {"cert-format", "pem"},
+            {"client-authorization", "Basic " & Convert.ToBase64String(Encoding.UTF8.GetBytes(clientAuthStr))},
+            {"create-session", "true"},
+            {"code-verifier", s_clientCodeVerifier},
+            {"device-id", Convert.ToBase64String(Encoding.UTF8.GetBytes(registerDeviceId))},
+            {"redirect-uri", ssoConfig.OAuth.Client.ClientIds(0).RedirectUri}
+        }
 
-        ' TODO: Implement ReformatCSR function
-        ' csr = ReformatCSR(csr)
+        ' Reformat CSR (implement this function as needed)
+        csr = ReformatCSR(csr)
 
-        Dim regUrl As String = $"{ApiBaseUrl}{SsoConfig.Mag.SystemEndpoints.DeviceRegisterEndpointPath}"
-        Dim regResponse As HttpResponseMessage = PostRequestWithHeadersAsync(regUrl, regHeaders, csr)
+        ' Prepare URL
+        Dim regUrl As String = $"{endpointConfig.ApiBaseUrl}{ssoConfig.Mag.SystemEndpoints.DeviceRegisterEndpointPath}"
+
+        ' Send POST request
+        For Each header As KeyValuePair(Of String, String) In regHeaders
+            client.DefaultRequestHeaders.Add(header.Key, header.Value)
+        Next
+
+        Dim content As New StringContent(csr, Encoding.UTF8, "application/x-www-form-urlencoded")
+        Dim regResponse As HttpResponseMessage = client.PostAsync(regUrl, content).Result
+
+        If Not regResponse.IsSuccessStatusCode Then
+            Dim errorContent As String = regResponse.Content.ReadAsStringAsync().Result
+            Dim errorJson As JsonDocument = JsonDocument.Parse(errorContent)
+            Dim errorDescription As String = errorJson.RootElement.GetProperty("error_description").GetString()
+            Throw New Exception($"Could not register: {errorDescription}")
+        End If
 
         If regResponse.StatusCode <> HttpStatusCode.OK Then
             Throw New Exception($"Could not register: {JsonSerializer.Deserialize(Of Dictionary(Of String, String))(regResponse.Content.ReadAsStringAsync().Result)("error_description")}")
         End If
 
         ' Step 5: Token
-        Dim tokenReqUrl As String = ApiBaseUrl & SsoConfig.OAuth.SystemEndpoints.TokenEndpointPath
+        Dim tokenReqUrl As String = endpointConfig.ApiBaseUrl & ssoConfig.OAuth.SystemEndpoints.TokenEndpointPath
         Dim tokenReqData As New Dictionary(Of String, String) From {
         {"assertion", regResponse.Headers.GetValues("id-token").FirstOrDefault()},
-        {"client_id", clientInitResponseObj("client_id").GetString()},
-        {"client_secret", clientInitResponseObj("client_secret").GetString()},
-        {"scope", SsoConfig.OAuth.Client.ClientIds(0).Scope},
+        {"client_id", authorizeUrlData.clientInitData.client_id},
+        {"client_secret", authorizeUrlData.clientInitData.client_secret},
+        {"scope", ssoConfig.OAuth.Client.ClientIds(0).Scope},
         {"grant_type", regResponse.Headers.GetValues("id-token-type").FirstOrDefault()}
     }
 
@@ -250,8 +274,9 @@ Public Module CareLinkClientHelpers
         {"mag-identifier", regResponse.Headers.GetValues("mag-identifier").FirstOrDefault()}
     }
 
-        Dim tokenResponse As String = Await PostRequestAsync(tokenReqUrl, tokenReqData, tokenReqHeaders)
-        tokenData = JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(tokenResponse)
+#If False Then
+        Dim tokenResponse As String = PostRequestAsync(tokenReqUrl, tokenReqData, tokenReqHeaders).result
+        tokenData = JsonSerializer.Deserialize(Of JsonElement)(tokenResponse)
 
         Debug.WriteLine("got token data from server")
 
@@ -261,6 +286,7 @@ Public Module CareLinkClientHelpers
         tokenData.Remove("token_type")
         tokenData("mag-identifier") = regResponse.Headers.GetValues("mag-identifier").FirstOrDefault()
 #End If
+
         'Dim queryParameters As Dictionary(Of String, String) = ParseQsl(loginSessionResponse)
         'Dim url As StringBuilder
         'With loginSessionResponse.RequestMessage.RequestUri

@@ -23,10 +23,11 @@ Public Class Captcha
             "https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/consent"}
 
     Private _authTokenValue As String
-    Private _autoClick As Boolean
     Private _doCancel As Boolean
     Private _lastUrl As String
     Private _status As CaptchaStatus = CaptchaStatus.NotStarted
+    Private _ssoCookie As String
+
     Public Sub New(countryCode As String, password As String, userName As String)
         Me.InitializeComponent()
         Me._countryCode = countryCode
@@ -90,16 +91,16 @@ Public Class Captcha
         For i As Integer = 0 To cookieList.Count - 1
             Dim cookie As CoreWebView2Cookie = Me.WebView21.CoreWebView2.CookieManager.CreateCookieWithSystemNetCookie(cookieList(i).ToSystemNetCookie())
 
-            If cookie.Name.StartsWith("auth") Then
+            If cookie.Name = "ssoCookie" Then
                 foundAuthToken = True
-                _authTokenValue = cookie.Value
+                _ssoCookie = cookie.Value
                 Me.Visible = False
-                _autoClick = True
             End If
             cookies.Add(New Net.Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain))
         Next i
         DebugPrint(_lastUrl)
         If _ignoredURLs.Contains(_lastUrl) Then
+            _status = CaptchaStatus.Completed
             Exit Sub
         End If
 
@@ -151,7 +152,7 @@ Public Class Captcha
 
             While isCaptchaOpen
                 If _doCancel Then Exit Sub
-                Await Task.Delay(2000)
+                Await Task.Delay(250)
                 Dim captchaPopupElement() As Element = Await Me.DevContext.XPathAsync("/html/body/div[2]")
                 If captchaPopupElement?.Length > 0 Then
                     Dim captchaPopupStyleAttributes As String = Await captchaPopupElement(0).GetAttributeAsync("style")
@@ -211,7 +212,6 @@ Public Class Captcha
         Dim userNameInputElement As HtmlInputElement = Nothing
         Dim passwordInputElement As HtmlInputElement = Nothing
         Dim loginButtonElement As HtmlButtonElement = Nothing
-        Dim html As String
         Try
             Me.WebView21.CoreWebView2.Navigate(captchaUrl)
 
@@ -223,24 +223,6 @@ Public Class Captcha
             Stop
         End Try
 
-    End Function
-
-    Private Function GetHtmlButtonElement(querySelector As String) As HtmlButtonElement
-        Dim t As Task(Of HtmlButtonElement) = Me.DevContext.QuerySelectorAsync(Of HtmlButtonElement)(querySelector)
-        While t.IsCompleted = False
-            Task.Delay(10).Wait()
-            Application.DoEvents()
-        End While
-        Return t.Result
-    End Function
-
-    Private Function GetHtmlInputElement(querySelector As String) As HtmlInputElement
-        Dim t As Task(Of HtmlInputElement) = Me.DevContext.QuerySelectorAsync(Of HtmlInputElement)(querySelector)
-        While t.IsCompleted = False
-            Task.Delay(10).Wait()
-            Application.DoEvents()
-        End While
-        Return t.Result
     End Function
 
 End Class
