@@ -2,20 +2,12 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports Microsoft.Web.WebView2.Core
 Imports System.Net
-Imports System.Text.Json
 Imports System.Text.RegularExpressions
+Imports Microsoft.Web.WebView2.Core
 Imports WebView2.DevTools.Dom
 
 Public Class Captcha
-
-    Private Enum CaptchaStatus
-        NotStarted
-        InProgress
-        Completed
-        Failed
-    End Enum
 
     Private WithEvents DevContext As WebView2DevToolsContext
 
@@ -25,8 +17,8 @@ Public Class Captcha
     Private _authTokenValue As String
     Private _doCancel As Boolean
     Private _lastUrl As String
-    Private _status As CaptchaStatus = CaptchaStatus.NotStarted
     Private _ssoCookie As String
+    Private _status As CaptchaStatus = CaptchaStatus.NotStarted
 
     Public Sub New(countryCode As String, password As String, userName As String)
         Me.InitializeComponent()
@@ -35,16 +27,17 @@ Public Class Captcha
         Me._userName = userName
     End Sub
 
+    Private Enum CaptchaStatus
+        NotStarted
+        InProgress
+        Completed
+        Failed
+    End Enum
+
     Private Property _countryCode As String
     Private Property _password As String
     Private Property _userName As String
     Public Property Client As CareLinkClient1
-
-    Public Async Function Captcha_Load() As Task
-        Me.Visible = True
-        Await Me.EnsureCoreWebView2(Form1.WebViewCacheDirectory)
-        Form1.WebViewProcessId = Convert.ToInt32(Me.WebView21.CoreWebView2?.BrowserProcessId)
-    End Function
 
     Private Async Function EnsureCoreWebView2(webViewCacheDirectory As String) As Task(Of String)
         If Me.WebView21.Source Is Nothing Then
@@ -87,6 +80,7 @@ Public Class Captcha
             End If
             Exit Sub
         End If
+
         Dim cookieList As List(Of CoreWebView2Cookie) = Await Me.WebView21.CoreWebView2.CookieManager.GetCookiesAsync(_lastUrl)
         For i As Integer = 0 To cookieList.Count - 1
             Dim cookie As CoreWebView2Cookie = Me.WebView21.CoreWebView2.CookieManager.CreateCookieWithSystemNetCookie(cookieList(i).ToSystemNetCookie())
@@ -200,6 +194,12 @@ Public Class Captcha
         End Try
         ' RICHARD : this needs to return the captcha code and the sso state as a Tuple
         ' Sso state is a cookie value
+    End Function
+
+    Public Async Function Captcha_Load() As Task
+        Me.Visible = True
+        Await Me.EnsureCoreWebView2(Form1.WebViewCacheDirectory)
+        Form1.WebViewProcessId = Convert.ToInt32(Me.WebView21.CoreWebView2?.BrowserProcessId)
     End Function
 
 End Class

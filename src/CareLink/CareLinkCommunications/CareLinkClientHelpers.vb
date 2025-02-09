@@ -226,7 +226,7 @@ Public Module CareLinkClientHelpers
         ' Prepare headers
         Dim regHeaders As New Dictionary(Of String, String) From {
             {"device-name", Convert.ToBase64String(Encoding.UTF8.GetBytes(androidModel))},
-            {"authorization", $"Bearer {CaptchaCode}"},
+            {"authorization", $"Bearer {captcha.captchaCode}"},
             {"cert-format", "pem"},
             {"client-authorization", "Basic " & Convert.ToBase64String(Encoding.UTF8.GetBytes(clientAuthStr))},
             {"create-session", "true"},
