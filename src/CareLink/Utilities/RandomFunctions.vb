@@ -23,12 +23,14 @@ Public Module RandomFunctions
     End Function
 
     Public Function RandomDeviceId() As String
-        Dim rng As RandomNumberGenerator = RandomNumberGenerator.Create()
         Dim randomBytes(39) As Byte
-        rng.GetBytes(randomBytes)
-        Dim hashBytes() As Byte = SHA256.HashData(randomBytes)
-        Return "NzgxMjQwY2Q2NjNmOGJiYTZjN2I4ZDk4ZWVlMWE1NmM0NDc1Y2M4MGYxMWE2YmU4MmYxODYyNGFmMDJmMWVhYg=="
-        Return Convert.ToHexStringLower(hashBytes)
-    End Function
+        Using rng As RandomNumberGenerator = RandomNumberGenerator.Create()
+            rng.GetBytes(randomBytes)
+        End Using
 
+        Using sha256 As SHA256 = SHA256.Create()
+            Dim hashBytes As Byte() = sha256.ComputeHash(randomBytes)
+            Return Convert.ToHexStringLower(hashBytes)
+        End Using
+    End Function
 End Module

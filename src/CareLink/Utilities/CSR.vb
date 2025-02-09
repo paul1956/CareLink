@@ -12,8 +12,27 @@ Imports Org.BouncyCastle.X509
 
 Public Module CSR
 
+    Private Function EscapeDNComponent(component As String) As String
+        Dim escapedComponent As String = component
+        escapedComponent = escapedComponent.Replace("\", "\\")
+        escapedComponent = escapedComponent.Replace(",", "\,")
+        escapedComponent = escapedComponent.Replace("+", "\+")
+        escapedComponent = escapedComponent.Replace("""", "\""")
+        escapedComponent = escapedComponent.Replace("<", "\<")
+        escapedComponent = escapedComponent.Replace(">", "\>")
+        escapedComponent = escapedComponent.Replace(";", "\;")
+        If escapedComponent.StartsWith(" "c) OrElse escapedComponent.EndsWith(" "c) Then
+            escapedComponent = escapedComponent.Replace(" ", "\ ")
+        End If
+        Return escapedComponent
+    End Function
+
     Public Function CreateCSR(keypair As AsymmetricCipherKeyPair, cn As String, ou As String, dc As String, o As String) As String
-        Dim subject As New X509Name($"CN={cn}, OU={ou}, DC={dc}, O={o}")
+        Dim escapedCn As String = EscapeDNComponent(cn)
+        Dim escapedOu As String = EscapeDNComponent(ou)
+        Dim escapedDc As String = EscapeDNComponent(dc)
+        Dim escapedO As String = EscapeDNComponent(o)
+        Dim subject As New X509Name($"CN={escapedCn}, OU={escapedOu}, DC={escapedDc}, O={escapedO}")
         Dim csr As New Pkcs10CertificationRequest(
             "SHA256WITHRSA",
             subject,
@@ -41,4 +60,5 @@ Public Module CSR
 
         Return csr
     End Function
+
 End Module

@@ -10,6 +10,7 @@ Imports WebView2.DevTools.Dom
 Public Class Captcha
 
     Private WithEvents DevContext As WebView2DevToolsContext
+    'Private WithEvents receiver As CoreWebView2DevToolsProtocolEventReceiver
 
     Private ReadOnly _ignoredURLs As New List(Of String) From {
             "https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/consent"}
@@ -17,6 +18,9 @@ Public Class Captcha
     Private _authTokenValue As String
     Private _doCancel As Boolean
     Private _lastUrl As String
+    Private _redirectUri As String
+    Private _responseData As New List(Of String)
+    Private _returnValue As (captchaCode As String, captchaSsoState As String)
     Private _ssoCookie As String
     Private _status As CaptchaStatus = CaptchaStatus.NotStarted
 
@@ -35,9 +39,23 @@ Public Class Captcha
     End Enum
 
     Private Property _countryCode As String
+
     Private Property _password As String
+
     Private Property _userName As String
+
     Public Property Client As CareLinkClient1
+
+    Private Shared Function ExtractValueFromUrl(parameterObjectAsJson As String, key As String) As String
+        key &= "="
+        Dim startIndex As Integer = parameterObjectAsJson.IndexOf(key) + key.Length
+        Dim value As String = parameterObjectAsJson.Substring(startIndex)
+        Dim endIndex As Integer = value.IndexOf("&"c)
+        If endIndex <> -1 Then
+            value = value.Substring(0, endIndex)
+        End If
+        Return value
+    End Function
 
     Private Async Function EnsureCoreWebView2(webViewCacheDirectory As String) As Task(Of String)
         If Me.WebView21.Source Is Nothing Then
@@ -45,12 +63,11 @@ Public Class Captcha
             Await Me.WebView21.EnsureCoreWebView2Async((Await task))
         End If
         Me.DevContext = Await Me.WebView21.CoreWebView2.CreateDevToolsContextAsync()
+        'Me.receiver = Me.WebView21.CoreWebView2.GetDevToolsProtocolEventReceiver("Network.responseReceived")
+        'AddHandler Me.receiver.DevToolsProtocolEventReceived, AddressOf Me.OnResponseReceived
+        'Await Me.WebView21.CoreWebView2.CallDevToolsProtocolMethodAsync("Network.enable", "{}")
         Return ""
     End Function
-
-    Private Sub WebView21_ContentLoading(sender As Object, e As CoreWebView2ContentLoadingEventArgs) Handles WebView21.ContentLoading
-        Stop
-    End Sub
 
     Private Sub WebView21_CoreWebView2InitializationCompleted(sender As Object, e As CoreWebView2InitializationCompletedEventArgs) Handles WebView21.CoreWebView2InitializationCompleted
         If Not e.IsSuccess Then
@@ -94,7 +111,6 @@ Public Class Captcha
         Next i
         DebugPrint(_lastUrl)
         If _ignoredURLs.Contains(_lastUrl) Then
-            _status = CaptchaStatus.Completed
             Exit Sub
         End If
 
@@ -142,8 +158,6 @@ Public Class Captcha
 
             Dim isCaptchaOpen As Boolean = True
 
-            ' RICHARD: Up to here works.  The code below is not working.  I'm trying to detect when the captcha popup is closed.
-
             While isCaptchaOpen
                 If _doCancel Then Exit Sub
                 Await Task.Delay(250)
@@ -156,6 +170,7 @@ Public Class Captcha
                     Exit Sub
                 End If
             End While
+
             Await loginButtonElement.ClickElementAsync
             Exit Sub
         End If
@@ -169,13 +184,21 @@ Public Class Captcha
     Private Sub WebView21_NavigationStarting(sender As Object, e As CoreWebView2NavigationStartingEventArgs) Handles WebView21.NavigationStarting
         _lastUrl = e.Uri
         DebugPrintUrl($"In {NameOf(WebView21_NavigationStarting)} URL", e.Uri, 100)
+        If e.IsRedirected AndAlso e.Uri.Contains("?action=login") Then
+            Dim captchaCode As String = ExtractValueFromUrl(_lastUrl, "code")
+            Dim captchaSsoState As String = ExtractValueFromUrl(_lastUrl, "state")
+            _returnValue = (captchaCode, captchaSsoState)
+            _status = CaptchaStatus.Completed
+        End If
+
     End Sub
 
     Private Sub WebView21_WebMessageReceived(sender As Object, e As CoreWebView2WebMessageReceivedEventArgs) Handles WebView21.WebMessageReceived
         Stop
     End Sub
 
-    Friend Async Function Execute(captchaUrl As String, redirectUri As String) As Task(Of (captchaCode As String, captchaSsoState As String))
+    Friend Function Execute(captchaUrl As String, redirectUri As String) As (captchaCode As String, captchaSsoState As String)
+        _redirectUri = redirectUri
         Me.WebView21.Visible = True
         Me.BringToFront()
         Application.DoEvents()
@@ -192,8 +215,7 @@ Public Class Captcha
         Catch ex As Exception
             Stop
         End Try
-        ' RICHARD : this needs to return the captcha code and the sso state as a Tuple
-        ' Sso state is a cookie value
+        Return _returnValue
     End Function
 
     Public Async Function Captcha_Load() As Task

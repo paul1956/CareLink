@@ -219,6 +219,7 @@ Public Module CareLinkClientHelpers
         generator.Init(New KeyGenerationParameters(New SecureRandom(), 2048))
 
         Dim keypair As AsymmetricCipherKeyPair = generator.GenerateKeyPair()
+
         ' Create CSR
 
         Dim csr As String = CreateCSR(keypair, "socialLogin", registerDeviceId, androidModelSafe, ssoConfig.OAuth.Client.Organization)
@@ -242,12 +243,19 @@ Public Module CareLinkClientHelpers
         Dim regUrl As String = $"{endpointConfig.ApiBaseUrl}{ssoConfig.Mag.SystemEndpoints.DeviceRegisterEndpointPath}"
 
         ' Send POST request
+        Dim content As New StringContent(csr, Encoding.UTF8, "application/x-www-form-urlencoded")
+
         For Each header As KeyValuePair(Of String, String) In regHeaders
-            client.DefaultRequestHeaders.Add(header.Key, header.Value)
+            content.Headers.Add(header.Key, header.Value)
         Next
 
-        Dim content As New StringContent(csr, Encoding.UTF8, "application/x-www-form-urlencoded")
-        Dim regResponse As HttpResponseMessage = client.PostAsync(regUrl, content).Result
+        Dim regResponse As HttpResponseMessage = Nothing
+        Try
+            ' Richard: Next line is a problem
+            regResponse = client.PostAsync(regUrl, content).Result
+        Catch ex As Exception
+            Stop
+        End Try
 
         If Not regResponse.IsSuccessStatusCode Then
             Dim errorContent As String = regResponse.Content.ReadAsStringAsync().Result
@@ -261,7 +269,7 @@ Public Module CareLinkClientHelpers
         End If
 
         ' Step 5: Token
-        Dim tokenReqUrl As String = endpointConfig.ApiBaseUrl & ssoConfig.OAuth.SystemEndpoints.TokenEndpointPath
+        Dim tokenReqUrl As String = $"{endpointConfig.ApiBaseUrl}{ssoConfig.OAuth.SystemEndpoints.TokenEndpointPath}"
         Dim tokenReqData As New Dictionary(Of String, String) From {
         {"assertion", regResponse.Headers.GetValues("id-token").FirstOrDefault()},
         {"client_id", authorizeUrlData.clientInitData.client_id},
@@ -329,7 +337,7 @@ Public Module CareLinkClientHelpers
             Application.DoEvents()
         End While
         t.Wait()
-        Return captchaWindow.Execute(captchaUrl, redirectUri).Result
+        Return captchaWindow.Execute(captchaUrl, redirectUri)
     End Function
 
     Private Function GetLoginDataFileName(userName As String) As String
