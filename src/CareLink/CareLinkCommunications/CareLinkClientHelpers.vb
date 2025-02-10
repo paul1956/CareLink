@@ -202,7 +202,6 @@ Public Module CareLinkClientHelpers
         End Try
 
         ' Step 3: Captcha login and consent
-        ' TODO: Implement DoCaptcha function
         Dim captcha As (captchaCode As String, captchaSsoState As String) = DoLoginWithCaptcha(authorizeUrl, ssoConfig.OAuth.Client.ClientIds(0).RedirectUri)
         Debug.WriteLine($"sso state after captcha: {captcha.captchaSsoState}")
 
