@@ -229,7 +229,7 @@ Public Module CareLinkClientHelpers
             {"device-name", Convert.ToBase64String(Encoding.UTF8.GetBytes(androidModel))},
             {"authorization", $"Bearer {captcha.captchaCode}"},
             {"cert-format", "pem"},
-            {"client-authorization", "Basic " & Convert.ToBase64String(Encoding.UTF8.GetBytes(clientAuthStr))},
+            {"client-authorization", $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes(clientAuthStr))}"},
             {"create-session", "true"},
             {"code-verifier", s_clientCodeVerifier},
             {"device-id", Convert.ToBase64String(Encoding.UTF8.GetBytes(registerDeviceId))},
@@ -237,7 +237,7 @@ Public Module CareLinkClientHelpers
         }
 
         ' Reformat CSR (implement this function as needed)
-        csr = ReformatCSR(csr)
+        csr = ReformatCsr(csr)
 
         ' Prepare URL
         Dim regUrl As String = $"{endpointConfig.ApiBaseUrl}{ssoConfig.Mag.SystemEndpoints.DeviceRegisterEndpointPath}"
@@ -246,12 +246,12 @@ Public Module CareLinkClientHelpers
         Dim content As New StringContent(csr, Encoding.UTF8, "application/x-www-form-urlencoded")
 
         For Each header As KeyValuePair(Of String, String) In regHeaders
-            content.Headers.Add(header.Key, header.Value)
+            client.DefaultRequestHeaders.Add(header.Key, header.Value)
         Next
 
         Dim regResponse As HttpResponseMessage = Nothing
         Try
-            ' Richard: Next line is a problem
+            ' Richard: Next line is a problem it returns Bad Request
             regResponse = client.PostAsync(regUrl, content).Result
         Catch ex As Exception
             Stop
@@ -281,7 +281,7 @@ Public Module CareLinkClientHelpers
         Dim tokenReqHeaders As New Dictionary(Of String, String) From {
         {"mag-identifier", regResponse.Headers.GetValues("mag-identifier").FirstOrDefault()}
     }
-
+        Stop
 #If False Then
         Dim tokenResponse As String = PostRequestAsync(tokenReqUrl, tokenReqData, tokenReqHeaders).result
         tokenData = JsonSerializer.Deserialize(Of JsonElement)(tokenResponse)
