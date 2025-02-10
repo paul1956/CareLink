@@ -251,7 +251,7 @@ Public Module CareLinkClientHelpers
 
         Dim regResponse As HttpResponseMessage = Nothing
         Try
-            ' Richard: Next line is a problem it returns Bad Request
+            ' Richard: Next line is a problem it returns Status 400 details are in the response
             regResponse = client.PostAsync(regUrl, content).Result
         Catch ex As Exception
             Stop
