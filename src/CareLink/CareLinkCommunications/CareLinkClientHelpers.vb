@@ -123,7 +123,6 @@ Public Module CareLinkClientHelpers
         ' Create the content for the POST request
         Dim content As New FormUrlEncodedContent(data)
         content.Headers.Add("device-id", Convert.ToBase64String(Encoding.UTF8.GetBytes(RandomDeviceId())))
-        'content.Headers.Add("device-id", RandomDeviceId)
         ' Send the POST request
         Dim response As HttpResponseMessage = client.PostAsync(clientInitUrl, content).Result
         ' Read the response content

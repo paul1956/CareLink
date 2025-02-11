@@ -27,10 +27,7 @@ Public Module RandomFunctions
         Using rng As RandomNumberGenerator = RandomNumberGenerator.Create()
             rng.GetBytes(randomBytes)
         End Using
-
-        Using sha256 As SHA256 = SHA256.Create()
-            Dim hashBytes As Byte() = sha256.ComputeHash(randomBytes)
-            Return Convert.ToHexStringLower(hashBytes)
-        End Using
+        Dim hashBytes As Byte() = SHA256.HashData(randomBytes)
+        Return Convert.ToHexStringLower(hashBytes)
     End Function
 End Module

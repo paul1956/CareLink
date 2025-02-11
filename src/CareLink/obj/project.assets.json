@@ -277,7 +277,7 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "Microsoft.Web.WebView2/1.0.2957.106": {
+      "Microsoft.Web.WebView2/1.0.3065.39": {
         "type": "package",
         "build": {
           "buildTransitive/Microsoft.Web.WebView2.targets": {}
@@ -915,10 +915,10 @@
         "version.txt"
       ]
     },
-    "Microsoft.Web.WebView2/1.0.2957.106": {
-      "sha512": "eHc2yKD//d1a6Razu6jl373RGKdzLhxDBk/wc/i//tC9+nEVXcO38pvjZwR2s0C34y+0trzKvbGHffrEx7vyVw==",
+    "Microsoft.Web.WebView2/1.0.3065.39": {
+      "sha512": "ww6ToZ2jpHyP4k3DCQJETjKcdVS1cha9pS8dV2NetyfafItxz08wcAyQV0Yl86W7euhI02UJWEaC5sM8WLr0tQ==",
       "type": "package",
-      "path": "microsoft.web.webview2/1.0.2957.106",
+      "path": "microsoft.web.webview2/1.0.3065.39",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -964,7 +964,7 @@
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.xml",
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll",
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.xml",
-        "microsoft.web.webview2.1.0.2957.106.nupkg.sha512",
+        "microsoft.web.webview2.1.0.3065.39.nupkg.sha512",
         "microsoft.web.webview2.nuspec",
         "runtimes/win-arm64/native/WebView2Loader.dll",
         "runtimes/win-arm64/native_uap/Microsoft.Web.WebView2.Core.dll",
@@ -1476,7 +1476,7 @@
       "ClosedXML >= 0.104.2",
       "DataGridViewDisableButtonColumnEx >= 1.0.8",
       "FreeSpire.PDF >= 10.2.0",
-      "Microsoft.Web.WebView2 >= 1.0.2957.106",
+      "Microsoft.Web.WebView2 >= 1.0.3065.39",
       "Octokit >= 14.0.0",
       "System.IO.Packaging >= 9.0.1",
       "System.Speech >= 9.0.1",
@@ -1553,7 +1553,7 @@
           },
           "Microsoft.Web.WebView2": {
             "target": "Package",
-            "version": "[1.0.2957.106, )"
+            "version": "[1.0.3065.39, )"
           },
           "Octokit": {
             "target": "Package",
