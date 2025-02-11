@@ -27,7 +27,7 @@ Public Class CareLinkClient1
                             HttpStatusCode.Forbidden
                         }
 
-    Private _httpClient As HttpClient
+    Private ReadOnly _httpClient As HttpClient
 
     Private _inLoginInProcess As Boolean
 

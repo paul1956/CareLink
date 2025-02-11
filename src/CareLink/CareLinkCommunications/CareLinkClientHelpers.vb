@@ -12,9 +12,11 @@ Imports System.Text.Json
 Imports System.Text.RegularExpressions
 
 Imports CareLink
+Imports DocumentFormat.OpenXml.Math
 Imports Org.BouncyCastle.Crypto
 Imports Org.BouncyCastle.Crypto.Generators
 Imports Org.BouncyCastle.Security
+Imports Spire.AI
 
 Public Module CareLinkClientHelpers
     Private s_clientCodeVerifier As String
@@ -107,7 +109,7 @@ Public Module CareLinkClientHelpers
         Return New HttpResponseMessage(HttpStatusCode.NotImplemented)
     End Function
 
-    Public Function GetAuthorizeUrlData(client As HttpClient, SsoConfig As RootConfig, ApiBaseUrl As String) As (String, clientInitResponse As ClientInitData)
+    Public Function GetAuthorizeUrlData(client As HttpClient, SsoConfig As SsoConfig, ApiBaseUrl As String) As (String, clientInitResponse As ClientInitData)
         ' Step 1: Initialize
         Dim data As New Dictionary(Of String, String) From {
             {"client_id", SsoConfig.OAuth.Client.ClientIds(0).ClientId},
@@ -180,16 +182,17 @@ Public Module CareLinkClientHelpers
 
     End Function
 
-    Friend Function DoLogin(ByRef client As HttpClient, loginSessionResponse As HttpResponseMessage, userName As String, password As String, ByRef lastErrorMessage As String) As JsonElement?
-        Dim tokenData As JsonElement? = ReadTokenDataFile(GetLoginDataFileName(userName))
+    Friend Function DoLogin(ByRef client As HttpClient, userName As String, ByRef lastErrorMessage As String) As JsonElement?
+        Dim fileWithPath As String = GetLoginDataFileName(userName)
+        Dim tokenData As JsonElement? = ReadTokenDataFile(fileWithPath)
 
         If tokenData IsNot Nothing Then
             Return tokenData
         End If
 
-        Dim endpointConfig As (SsoConfig As RootConfig, ApiBaseUrl As String) = Nothing
+        Dim endpointConfig As (SsoConfig As SsoConfig, ApiBaseUrl As String) = Nothing
         Dim authorizeUrl As String = Nothing
-        Dim ssoConfig As RootConfig = Nothing
+        Dim ssoConfig As SsoConfig = Nothing
         Dim authorizeUrlData As (authorizeUrl As String, clientInitData As ClientInitData) = Nothing
         Try
             'TODO : Implement isUsRegion
@@ -268,64 +271,9 @@ Public Module CareLinkClientHelpers
         End If
 
         ' Step 5: Token
-        Dim tokenReqUrl As String = $"{endpointConfig.ApiBaseUrl}{ssoConfig.OAuth.SystemEndpoints.TokenEndpointPath}"
-        Dim tokenReqData As New Dictionary(Of String, String) From {
-        {"assertion", regResponse.Headers.GetValues("id-token").FirstOrDefault()},
-        {"client_id", authorizeUrlData.clientInitData.client_id},
-        {"client_secret", authorizeUrlData.clientInitData.client_secret},
-        {"scope", ssoConfig.OAuth.Client.ClientIds(0).Scope},
-        {"grant_type", regResponse.Headers.GetValues("id-token-type").FirstOrDefault()}
-    }
-
-        Dim tokenReqHeaders As New Dictionary(Of String, String) From {
-        {"mag-identifier", regResponse.Headers.GetValues("mag-identifier").FirstOrDefault()}
-    }
         Stop
-#If False Then
-        Dim tokenResponse As String = PostRequestAsync(tokenReqUrl, tokenReqData, tokenReqHeaders).result
-        tokenData = JsonSerializer.Deserialize(Of JsonElement)(tokenResponse)
-
-        Debug.WriteLine("got token data from server")
-
-        tokenData("client_id") = tokenReqData("client_id")
-        tokenData("client_secret") = tokenReqData("client_secret")
-        tokenData.Remove("expires_in")
-        tokenData.Remove("token_type")
-        tokenData("mag-identifier") = regResponse.Headers.GetValues("mag-identifier").FirstOrDefault()
-#End If
-
-        'Dim queryParameters As Dictionary(Of String, String) = ParseQsl(loginSessionResponse)
-        'Dim url As StringBuilder
-        'With loginSessionResponse.RequestMessage.RequestUri
-        '    url = New StringBuilder($"{ .Scheme}://{ .Host}{Join(loginSessionResponse.RequestMessage.RequestUri.Segments, "")}")
-        'End With
-
-        'Dim webForm As New Dictionary(Of String, String) From {
-        '    {"sessionID", queryParameters.GetValueOrDefault("sessionID")},
-        '    {"sessionData", queryParameters.GetValueOrDefault("sessionData")},
-        '    {"locale", "en"},
-        '    {"action", "login"},
-        '    {"username", userName},
-        '    {"password", password},
-        '    {"actionButton", "Log in"}}
-
-        'Dim payload As New Dictionary(Of String, String) From {
-        '    {"country", queryParameters.GetValueOrDefault("CountryCode".ToLower)},
-        '    {"locale", "en"},
-        '    {"g-recaptcha-response", "abc"}
-        '}
-
-        'Dim response As HttpResponseMessage = Nothing
-        'Try
-        '    response = client.Post(url, s_commonHeaders, payload, webForm)
-        'Catch ex As Exception
-        '    Stop
-        '    lastErrorMessage = $"HTTP Response is not OK, {response?.StatusCode}"
-        'End Try
-
-        WriteTokenDataFile(tokenData, GetLoginDataFileName(userName))
+        tokenData = GetTokenDataAsync(client, endpointConfig.ApiBaseUrl, ssoConfig, regResponse, authorizeUrlData.clientInitData, GetLoginDataFileName(userName)).Result
         Return tokenData
-
     End Function
 
     Private Function DoLoginWithCaptcha(captchaUrl As String, redirectUri As String) As (captchaCode As String, captchaSsoState As String)
@@ -339,6 +287,53 @@ Public Module CareLinkClientHelpers
         Return captchaWindow.Execute(captchaUrl, redirectUri)
     End Function
 
+    Private Async Function GetTokenDataAsync(
+        client As HttpClient,
+        apiBaseUrl As String,
+        ssoConfig As SsoConfig,
+        regReq As HttpResponseMessage,
+        clientInitResponse As ClientInitData,
+        logindataFile As String) As Task(Of JsonElement)
+
+        Dim tokenReqUrl As String = $"{apiBaseUrl}{ssoConfig.OAuth.SystemEndpoints.TokenEndpointPath}"
+        Dim tokenReqData As New Dictionary(Of String, String) From {
+            {"assertion", regReq.Headers.GetValues("id-token").FirstOrDefault()},
+            {"client_id", clientInitResponse.client_id},
+            {"client_secret", clientInitResponse.client_secret},
+            {"scope", ssoConfig.OAuth.Client.ClientIds(0).Scope},
+            {"grant_type", regReq.Headers.GetValues("id-token-type").FirstOrDefault()}
+        }
+
+        Dim tokenReq As New HttpRequestMessage(HttpMethod.Post, tokenReqUrl)
+        tokenReq.Headers.Add("mag-identifier", regReq.Headers.GetValues("mag-identifier").FirstOrDefault())
+        tokenReq.Content = New FormUrlEncodedContent(tokenReqData)
+
+        Dim tokenResp As HttpResponseMessage = Await client.SendAsync(tokenReq)
+
+        If Not tokenResp.IsSuccessStatusCode Then
+            'Console.WriteLine($"{Environment.NewLine}{Environment.NewLine}{ToCurl(tokenReq)}")
+            Throw New Exception("Could not get token data")
+        End If
+
+        Dim tokenDataStr As String = Await tokenResp.Content.ReadAsStringAsync()
+        Dim tokenData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(tokenDataStr)
+        Console.WriteLine("got token data from server")
+
+        Dim tokenDataToSave As New Dictionary(Of String, JsonElement)
+        For Each prop As JsonProperty In tokenData.EnumerateObject()
+            If prop.Name <> "expires_in" AndAlso prop.Name <> "token_type" Then
+                tokenDataToSave.Add(prop.Name, prop.Value)
+            End If
+        Next
+
+        tokenDataToSave.Add("client_id", JsonSerializer.SerializeToElement(tokenReqData("client_id")))
+        tokenDataToSave.Add("client_secret", JsonSerializer.SerializeToElement(tokenReqData("client_secret")))
+        tokenDataToSave.Add("mag-identifier", JsonSerializer.SerializeToElement(regReq.Headers.GetValues("mag-identifier").FirstOrDefault()))
+
+        WriteTokenDataFile(tokenDataToSave, logindataFile)
+        Return tokenData
+    End Function
+
     Private Function GetLoginDataFileName(userName As String) As String
         Return Path.Combine(SettingsDirectory, $"{userName}loginData.json")
     End Function
@@ -347,7 +342,7 @@ Public Module CareLinkClientHelpers
         Return Not My.Computer.Network.IsAvailable
     End Function
 
-    Public Function ResolveEndpointConfigAsync(discoveryUrl As String, isUsRegion As Boolean) As (SsoConfig As RootConfig, ApiBaseUrl As String)
+    Public Function ResolveEndpointConfigAsync(discoveryUrl As String, isUsRegion As Boolean) As (SsoConfig As SsoConfig, ApiBaseUrl As String)
         Using client As New HttpClient()
             Dim discoverResp As String = client.GetStringAsync(discoveryUrl).Result
             Dim discover As Discover = JsonSerializer.Deserialize(Of Discover)(discoverResp, s_jsonDeserializerOptions)
@@ -366,7 +361,7 @@ Public Module CareLinkClientHelpers
             End If
 
             Dim jsonString As String = client.GetStringAsync(ssoUrl).Result
-            Dim ssoConfig As RootConfig = JsonSerializer.Deserialize(Of RootConfig)(jsonString)
+            Dim ssoConfig As SsoConfig = JsonSerializer.Deserialize(Of SsoConfig)(jsonString)
             Dim apiBaseUrl As String = $"https://{ssoConfig.Server.Hostname}:{ssoConfig.Server.Port}/{ssoConfig.Server.Prefix}"
 
             Return (ssoConfig, apiBaseUrl)

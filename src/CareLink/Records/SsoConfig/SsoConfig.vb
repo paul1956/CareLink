@@ -4,7 +4,7 @@
 
 Imports System.Text.Json.Serialization
 
-Public Class RootConfig
+Public Class SsoConfig
     <JsonPropertyName("server")>
     Public Property Server As ServerConfig
 
