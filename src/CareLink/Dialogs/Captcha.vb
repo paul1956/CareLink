@@ -10,7 +10,6 @@ Imports WebView2.DevTools.Dom
 Public Class Captcha
 
     Private WithEvents DevContext As WebView2DevToolsContext
-    'Private WithEvents receiver As CoreWebView2DevToolsProtocolEventReceiver
 
     Private ReadOnly _ignoredURLs As New List(Of String) From {
             "https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/consent"}
@@ -18,7 +17,6 @@ Public Class Captcha
     Private _doCancel As Boolean
     Private _lastUrl As String
     Private _redirectUri As String
-    Private _responseData As New List(Of String)
     Private _returnValue As (captchaCode As String, captchaSsoState As String)
     Private _ssoCookie As String
     Private _status As CaptchaStatus = CaptchaStatus.NotStarted
@@ -38,11 +36,8 @@ Public Class Captcha
     End Enum
 
     Private Property _countryCode As String
-
     Private Property _password As String
-
     Private Property _userName As String
-
     Public Property Client As Client2
 
     Private Shared Function ExtractValueFromUrl(parameterObjectAsJson As String, key As String) As String
@@ -62,9 +57,6 @@ Public Class Captcha
             Await Me.WebView21.EnsureCoreWebView2Async((Await task))
         End If
         Me.DevContext = Await Me.WebView21.CoreWebView2.CreateDevToolsContextAsync()
-        'Me.receiver = Me.WebView21.CoreWebView2.GetDevToolsProtocolEventReceiver("Network.responseReceived")
-        'AddHandler Me.receiver.DevToolsProtocolEventReceived, AddressOf Me.OnResponseReceived
-        'Await Me.WebView21.CoreWebView2.CallDevToolsProtocolMethodAsync("Network.enable", "{}")
         Return ""
     End Function
 

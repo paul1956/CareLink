@@ -9,14 +9,14 @@ Imports System.Text.Json
 
 Public Class Client2
 
-    Private Const CARELINK_CONFIG_URL As String = "https://clcloud.minimed.eu/connect/carepartner/v11/discover/android/3.2"
 
-    Private Const DEFAULT_FILENAME As String = "logindata.json"
 
     ' Constants
+    Private Const CARELINK_CONFIG_URL As String = "https://clcloud.minimed.eu/connect/carepartner/v11/discover/android/3.2"
+    Private Const DEFAULT_FILENAME As String = "logindata.json"
     Private Const VERSION As String = "1.2"
 
-    Private ReadOnly _tokenFile As String
+    Private ReadOnly _tokenBaseFileName As String
     Private ReadOnly _version As String
     Private _accessTokenPayload As Dictionary(Of String, Object)
     Private _config As Dictionary(Of String, Object)
@@ -38,7 +38,7 @@ Public Class Client2
         _version = VERSION
 
         ' Authorization
-        _tokenFile = tokenFile
+        _tokenBaseFileName = tokenFile
         _tokenDataElement = Nothing
         _accessTokenPayload = Nothing
 
@@ -56,7 +56,7 @@ Public Class Client2
     End Sub
 
     Public Shared ReadOnly Property Auth_Error_Codes As Integer() = {401, 403}
-
+    Public Property SessionUser As SessionUserRecord
     Private Shared Function DoRefresh(config As Dictionary(Of String, Object), tokenDataElement As JsonElement) As JsonElement
         Console.WriteLine(NameOf(DoRefresh))
         Dim tokenUrl As String = CStr(config("token_url"))
@@ -99,7 +99,7 @@ Public Class Client2
     End Function
 
     Private Shared Function GetAccessTokenPayload(token_data As JsonElement) As Dictionary(Of String, Object)
-        Console.WriteLine(NameOf(GetAccessTokenPayload))
+        Debug.WriteLine(NameOf(GetAccessTokenPayload))
         Try
             Dim token As String = CStr(token_data.ConvertJsonElementToDictionary("access_token"))
             Dim payload_b64 As String = token.Split("."c)(1)
@@ -209,47 +209,6 @@ Public Class Client2
         Return False
     End Function
 
-    Private Shared Function GetConfig(discoveryUrl As String, country As String) As JsonElement
-        Console.WriteLine(NameOf(GetConfig))
-        Using client As New HttpClient()
-            Dim response As String = client.GetStringAsync(discoveryUrl).Result
-            Dim data As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(response)
-            Dim region As JsonElement = Nothing
-            Dim config As JsonElement
-
-            For Each c As JsonElement In data.GetProperty("supportedCountries").EnumerateArray()
-                If c.TryGetProperty(country.ToUpper(), region) Then
-                    Exit For
-                End If
-            Next
-
-            If region.ValueKind = JsonValueKind.Null Then
-                Throw New Exception($"ERROR: country code {country} is not supported")
-            End If
-            Console.WriteLine($"   region: {region}")
-
-            For Each c As JsonElement In data.GetProperty("CP").EnumerateArray()
-                If region.ValueEquals(c.GetProperty("region").GetString()) Then
-                    config = c
-                    Exit For
-                End If
-            Next
-
-            If config.ValueKind = JsonValueKind.Undefined Then
-                Throw New Exception($"ERROR: failed to get config base URLs for region {region}")
-            End If
-
-            Dim ssoConfigResponse As String = client.GetStringAsync(config.GetProperty("SSOConfiguration").GetString()).Result
-            Dim ssoConfig As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(ssoConfigResponse)
-            Dim ssoBaseUrl As String = $"https://{ssoConfig.GetProperty("server").GetProperty("hostname").GetString()}:{ssoConfig.GetProperty("server").GetProperty("port").GetString()}/{ssoConfig.GetProperty("server").GetProperty("prefix").GetString()}"
-            Dim tokenUrl As String = ssoBaseUrl & ssoConfig.GetProperty("oauth").GetProperty("system_endpoints").GetProperty("token_endpoint_path").GetString()
-
-            Dim mutableConfig As Dictionary(Of String, JsonElement) = JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(config.GetRawText())
-            mutableConfig("token_url") = JsonSerializer.Deserialize(Of JsonElement)($"""{tokenUrl}""")
-            Return JsonSerializer.Deserialize(Of JsonElement)(JsonSerializer.Serialize(mutableConfig, s_jsonSerializerOptions))
-        End Using
-    End Function
-
     Private Shared Function IsTokenValid(access_token_payload As Dictionary(Of String, Object)) As Boolean
         Console.WriteLine(NameOf(IsTokenValid))
         Try
@@ -280,36 +239,8 @@ Public Class Client2
         End Try
     End Function
 
-    Private Shared Function ReadTokenFile(filename As String) As JsonElement
-        Console.WriteLine(NameOf(ReadTokenFile))
-        If File.Exists(filename) Then
-            Try
-                Dim jsonString As String = File.ReadAllText(filename)
-                Dim tokenData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(jsonString)
-                Dim requiredFields As String() = {"access_token", "refresh_token", "scope", "client_id", "client_secret", "mag-identifier"}
-                For Each field As String In requiredFields
-                    If Not tokenData.TryGetProperty(field, Nothing) Then
-                        Console.WriteLine($"ERROR: field {field} is missing from token file")
-                        Return Nothing
-                    End If
-                Next
-                Return tokenData
-            Catch ex As JsonException
-                Console.WriteLine($"ERROR: failed parsing token file {filename}")
-            End Try
-        Else
-            Console.WriteLine($"ERROR: token file {filename} not found")
-        End If
-        Return Nothing
-    End Function
-
-    Private Shared Sub WriteTokenFile(obj As JsonElement, filename As String)
-        Console.WriteLine(NameOf(WriteTokenFile))
-        File.WriteAllText(filename, JsonSerializer.Serialize(obj, s_jsonSerializerOptions))
-    End Sub
-
     Private Function _init() As Boolean
-        _tokenDataElement = ReadTokenFile(_tokenFile)
+        _tokenDataElement = ReadTokenFile(s_userName, _tokenBaseFileName)
         If _tokenDataElement.ValueKind = JsonValueKind.Null Then
             Me.LoggedIn = False
             Return False
@@ -321,11 +252,13 @@ Public Class Client2
         End If
         Dim jsonConfigElement As JsonElement
         Try
-            Dim payload As Dictionary(Of String, String) = CType(_accessTokenPayload("token_details"), Dictionary(Of String, String))
-            _country = CStr(payload("country"))
-            jsonConfigElement = GetConfig(CARELINK_CONFIG_URL, _country)
+            'Richard Headers are not being handled correctly
+            Dim element As JsonElement = CType(_accessTokenPayload("token_details"), JsonElement)
+            Dim payload As AccessTokenDetails = JsonSerializer.Deserialize(Of AccessTokenDetails)(element, s_jsonDeserializerOptions)
+            _country = payload.Country
+            jsonConfigElement = GetConfigElement(CARELINK_CONFIG_URL, _country)
             _config = jsonConfigElement.ConvertJsonElementToDictionary
-            _username = CStr(payload("preferred_username"))
+            _username = payload.Name
             _user = Me.GetUser(jsonConfigElement, _tokenDataElement).ConvertJsonElementToDictionary
             Dim role As String = CStr(_user("role"))
             If role = "CARE_PARTNER" OrElse role = "CARE_PARTNER_OUS" Then
@@ -338,7 +271,7 @@ Public Class Client2
                 Try
                     _tokenDataElement = DoRefresh(jsonConfigElement.ConvertJsonElementToDictionary, _tokenDataElement)
                     _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
-                    WriteTokenFile(_tokenDataElement, _tokenFile)
+                    WriteTokenFile(_tokenDataElement, s_userName)
                 Catch refreshEx As Exception
                     Console.WriteLine(refreshEx.ToString())
                 End Try
@@ -424,7 +357,8 @@ Public Class Client2
     Private Function GetUser(config As JsonElement, tokenData As JsonElement) As JsonElement
         Console.WriteLine(NameOf(GetUser))
         Dim url As String = config.GetProperty("baseUrlCareLink").GetString() & "/users/me"
-        Dim headers As New Dictionary(Of String, String)(s_common_Headers)
+        'Dim headers As New Dictionary(Of String, String)(s_common_Headers)
+        Dim headers As New Dictionary(Of String, String)
         headers("mag-identifier") = tokenData.GetProperty("mag-identifier").GetString()
         headers("Authorization") = "Bearer " & tokenData.GetProperty("access_token").GetString()
 
@@ -466,7 +400,7 @@ Public Class Client2
         If Not IsTokenValid(_accessTokenPayload) Then
             _tokenDataElement = DoRefresh(_config, _tokenDataElement)
             _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
-            WriteTokenFile(_tokenDataElement, _tokenFile)
+            WriteTokenFile(_tokenDataElement, s_userName)
             If Not IsTokenValid(_accessTokenPayload) Then
                 Console.Error.WriteLine("ERROR: unable to get valid access token")
                 Return Nothing
@@ -490,7 +424,7 @@ Public Class Client2
             ' Try to refresh token
             _tokenDataElement = DoRefresh(_config, _tokenDataElement)
             _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
-            WriteTokenFile(_tokenDataElement, _tokenFile)
+            WriteTokenFile(_tokenDataElement, s_userName)
 
             ' Get data: second try
             data = Me.GetData(config:=_config,

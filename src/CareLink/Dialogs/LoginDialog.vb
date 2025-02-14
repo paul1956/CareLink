@@ -12,7 +12,7 @@ Imports WebView2.DevTools.Dom
 
 Public Class LoginDialog
     Private ReadOnly _ignoredURLs As New List(Of String) From {
-                 "https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/consent"}
+        "https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/consent"}
 
     Private ReadOnly _mySource As New AutoCompleteStringCollection()
     Private _accessToken As AccessToken
@@ -26,7 +26,7 @@ Public Class LoginDialog
 
     Public Property Client As Client2
 
-    Public Property ClientDiscover As Discover
+    Public Property ClientDiscover As ConfigRecord
 
     Public Property LoginSourceAutomatic As FileToLoadOptions
         Get
@@ -169,6 +169,7 @@ Public Class LoginDialog
         Dim accessToken As AccessToken = DoLogin(New Http.HttpClient, s_userName)
         Me.Client = New Client2()
         Me.Ok_Button.Enabled = False
+        Me.Client.Init()
 
         Dim recentData As Dictionary(Of String, Object) = Me.Client.GetRecentData()
         If recentData?.Count > 0 Then

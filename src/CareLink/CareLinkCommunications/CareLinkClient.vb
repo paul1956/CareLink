@@ -127,47 +127,6 @@ Public Class CareLinkClient
         End Try
     End Function
 
-    Private Shared Function GetConfig(discoveryUrl As String, country As String) As JsonElement
-        Console.WriteLine(NameOf(GetConfig))
-        Using client As New HttpClient()
-            Dim response As String = client.GetStringAsync(discoveryUrl).Result
-            Dim data As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(response)
-            Dim region As JsonElement = Nothing
-            Dim config As JsonElement
-
-            For Each c As JsonElement In data.GetProperty("supportedCountries").EnumerateArray()
-                If c.TryGetProperty(country.ToUpper(), region) Then
-                    Exit For
-                End If
-            Next
-
-            If region.ValueKind = JsonValueKind.Null Then
-                Throw New Exception($"ERROR: country code {country} is not supported")
-            End If
-            Console.WriteLine($"   region: {region}")
-
-            For Each c As JsonElement In data.GetProperty("CP").EnumerateArray()
-                If region.ValueEquals(c.GetProperty("region").GetString()) Then
-                    config = c
-                    Exit For
-                End If
-            Next
-
-            If config.ValueKind = JsonValueKind.Undefined Then
-                Throw New Exception($"ERROR: failed to get config base URLs for region {region}")
-            End If
-
-            Dim ssoConfigResponse As String = client.GetStringAsync(config.GetProperty("SSOConfiguration").GetString()).Result
-            Dim ssoConfig As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(ssoConfigResponse)
-            Dim ssoBaseUrl As String = $"https://{ssoConfig.GetProperty("server").GetProperty("hostname").GetString()}:{ssoConfig.GetProperty("server").GetProperty("port").GetString()}/{ssoConfig.GetProperty("server").GetProperty("prefix").GetString()}"
-            Dim tokenUrl As String = ssoBaseUrl & ssoConfig.GetProperty("oauth").GetProperty("system_endpoints").GetProperty("token_endpoint_path").GetString()
-
-            Dim mutableConfig As Dictionary(Of String, JsonElement) = JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(config.GetRawText())
-            mutableConfig("token_url") = JsonSerializer.Deserialize(Of JsonElement)($"""{tokenUrl}""")
-            Return JsonSerializer.Deserialize(Of JsonElement)(JsonSerializer.Serialize(mutableConfig, s_jsonSerializerOptions))
-        End Using
-    End Function
-
     Private Shared Function IsTokenValid(access_token_payload As Dictionary(Of String, Object)) As Boolean
         Console.WriteLine(NameOf(IsTokenValid))
         Try
@@ -240,7 +199,7 @@ Public Class CareLinkClient
         Try
             Dim payload As Dictionary(Of String, String) = CType(_accessTokenPayload("token_details"), Dictionary(Of String, String))
             _country = CStr(payload("country"))
-            jsonConfigElement = GetConfig(CARELINK_CONFIG_URL, _country)
+            jsonConfigElement = GetConfigElement(CARELINK_CONFIG_URL, _country)
             _config = jsonConfigElement.ConvertJsonElementToDictionary
             _username = CStr(payload("preferred_username"))
             _user = Me.GetUser(jsonConfigElement, _tokenDataElement).ConvertJsonElementToDictionary

@@ -75,7 +75,7 @@ Friend Module Form1LoginHelpers
 #If False Then ' ToDo
                 RecentData = Form1.Client.GetRecentData()
 #End If
-                Dim RecentData1 As Dictionary(Of String, Object) = Form1.Client.GetRecentData()
+                Dim recentData1 As Dictionary(Of String, Object) = Form1.Client.GetRecentData()
                 Stop
 
                 SetUpCareLinkUser(GetUserSettingsJsonFileNameWithPath, False)

@@ -182,8 +182,7 @@ Public Module CareLinkClientHelpers
     End Function
 
     Friend Function DoLogin(ByRef client As HttpClient, userName As String) As AccessToken
-        Dim fileWithPath As String = GetLoginDataFileName(userName)
-        Dim tokenData As AccessToken = ReadTokenDataFile(fileWithPath)
+        Dim tokenData As AccessToken = ReadTokenDataFile(userName)
 
         If tokenData IsNot Nothing Then
             Return tokenData
@@ -271,7 +270,7 @@ Public Module CareLinkClientHelpers
 
         ' Step 5: Token
         Stop
-        tokenData = GetTokenDataAsync(client, endpointConfig.ApiBaseUrl, ssoConfig, regResponse, authorizeUrlData.clientInitData, GetLoginDataFileName(userName)).Result
+        tokenData = GetTokenDataAsync(client, endpointConfig.ApiBaseUrl, ssoConfig, regResponse, authorizeUrlData.clientInitData, userName).Result
         Return tokenData
     End Function
 
@@ -292,7 +291,7 @@ Public Module CareLinkClientHelpers
         ssoConfig As SsoConfig,
         regReq As HttpResponseMessage,
         clientInitResponse As ClientInitData,
-        logindataFile As String) As Task(Of AccessToken)
+        userName As String) As Task(Of AccessToken)
 
         Dim tokenReqUrl As String = $"{apiBaseUrl}{ssoConfig.OAuth.SystemEndpoints.TokenEndpointPath}"
         Dim tokenReqData As New Dictionary(Of String, String) From {
@@ -331,12 +330,8 @@ Public Module CareLinkClientHelpers
 
         Dim tokenDataToSave As AccessToken = JsonSerializer.Deserialize(Of AccessToken)(tokenDataStr)
 
-        WriteTokenDataFile(tokenDataToSave, logindataFile)
+        WriteTokenDataFile(tokenDataToSave, userName)
         Return tokenDataToSave
-    End Function
-
-    Private Function GetLoginDataFileName(userName As String) As String
-        Return Path.Combine(Directory.GetParent(SettingsDirectory).FullName, $"{userName}LoginData.json")
     End Function
 
     Friend Function NetworkUnavailable() As Boolean
@@ -346,7 +341,7 @@ Public Module CareLinkClientHelpers
     Public Function ResolveEndpointConfigAsync(discoveryUrl As String, isUsRegion As Boolean) As (SsoConfig As SsoConfig, ApiBaseUrl As String)
         Using client As New HttpClient()
             Dim discoverResp As String = client.GetStringAsync(discoveryUrl).Result
-            Dim discover As Discover = JsonSerializer.Deserialize(Of Discover)(discoverResp, s_jsonDeserializerOptions)
+            Dim discover As ConfigRecord = JsonSerializer.Deserialize(Of ConfigRecord)(discoverResp, s_jsonDeserializerOptions)
 
             Dim ssoUrl As String = Nothing
             For Each cp As CPInfo In discover.CP
