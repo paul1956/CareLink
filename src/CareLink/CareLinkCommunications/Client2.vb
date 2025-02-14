@@ -58,7 +58,7 @@ Public Class Client2
     Public Shared ReadOnly Property Auth_Error_Codes As Integer() = {401, 403}
     Public Property SessionUser As SessionUserRecord
     Private Function DoRefresh(config As Dictionary(Of String, Object), tokenDataElement As JsonElement) As JsonElement
-        Console.WriteLine(NameOf(DoRefresh))
+        Debug.WriteLine(NameOf(DoRefresh))
         Dim tokenUrl As String = CStr(config("token_url"))
 
         Dim tokenData As Dictionary(Of String, String) = tokenDataElement.ConvertJsonElementToStringDictionary
@@ -81,7 +81,7 @@ Public Class Client2
         Dim content As New FormUrlEncodedContent(data)
         Dim response As HttpResponseMessage = _httpClient.PostAsync(tokenUrl, content).Result
 
-        Console.WriteLine($"   status: {response.StatusCode}")
+        Debug.WriteLine($"   status: {response.StatusCode}")
 
         If response.StatusCode <> Net.HttpStatusCode.OK Then
             Throw New Exception("ERROR: failed to refresh token")
@@ -110,7 +110,7 @@ Public Class Client2
             Dim payload As String = Encoding.UTF8.GetString(payload_bytes)
             Return JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(payload)
         Catch ex As Exception
-            Console.WriteLine("   no access token found or malformed access token")
+            Debug.WriteLine("   no access token found or malformed access token")
             Return Nothing
         End Try
     End Function
@@ -208,7 +208,7 @@ Public Class Client2
     End Function
 
     Private Shared Function IsTokenValid(access_token_payload As Dictionary(Of String, Object)) As Boolean
-        Console.WriteLine(NameOf(IsTokenValid))
+        Debug.WriteLine(NameOf(IsTokenValid))
         Try
             ' Get expiration time stamp
             Dim tokenValidTo As Long = CType(access_token_payload("exp"), JsonElement).GetInt64()
@@ -218,21 +218,21 @@ Public Class Client2
             Dim tDiff As Long = tokenValidTo - currentTime
 
             If tDiff < 0 Then
-                Console.WriteLine($"   access token has expired {Math.Abs(tDiff)}s ago")
+                Debug.WriteLine($"   access token has expired {Math.Abs(tDiff)}s ago")
                 Return False
             End If
 
             If tDiff < 600 Then
-                Console.WriteLine($"   access token is about to expire in {tDiff}s")
+                Debug.WriteLine($"   access token is about to expire in {tDiff}s")
                 Return False
             End If
 
             ' Token is valid
             Dim authTokenValidTo As String = DateTimeOffset.FromUnixTimeSeconds(tokenValidTo).ToString("ddd MMM dd HH:mm:ss UTC yyyy")
-            Console.WriteLine($"   access token expires in {tDiff}s ({authTokenValidTo})")
+            Debug.WriteLine($"   access token expires in {tDiff}s ({authTokenValidTo})")
             Return True
         Catch ex As Exception
-            Console.WriteLine("   missing data in access token")
+            Debug.WriteLine("   missing data in access token")
             Return False
         End Try
     End Function
@@ -250,7 +250,6 @@ Public Class Client2
         End If
         Dim jsonConfigElement As JsonElement
         Try
-            'Richard Headers are not being handled correctly
             Dim element As JsonElement = CType(_accessTokenPayload("token_details"), JsonElement)
             Dim payload As AccessTokenDetails = JsonSerializer.Deserialize(Of AccessTokenDetails)(element, s_jsonDeserializerOptions)
             _country = payload.Country
@@ -263,7 +262,7 @@ Public Class Client2
                 _patient = Me.GetPatient(jsonConfigElement, _tokenDataElement).Result
             End If
         Catch ex As Exception
-            Console.WriteLine(ex.ToString())
+            Debug.WriteLine(ex.ToString())
 
             If Auth_Error_Codes.Contains(CInt(_lastApiStatus)) Then
                 Try
@@ -271,7 +270,7 @@ Public Class Client2
                     _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
                     WriteTokenFile(_tokenDataElement, s_userName)
                 Catch refreshEx As Exception
-                    Console.WriteLine(refreshEx.ToString())
+                    Debug.WriteLine(refreshEx.ToString())
                 End Try
             End If
 
@@ -284,7 +283,7 @@ Public Class Client2
     End Function
 
     Private Function GetData(config As Dictionary(Of String, Object), tokenDataElement As JsonElement, username As String, role As String, patientId As String) As Dictionary(Of String, Object)
-        Console.WriteLine("_get_data()")
+        Debug.WriteLine("_get_data()")
         Dim url As String = $"{CStr(config("baseUrlCumulus"))}/display/message"
         Dim headers As New Dictionary(Of String, String)(s_common_Headers)
         Dim tokenData As Dictionary(Of String, String) = tokenDataElement.ConvertJsonElementToStringDictionary
@@ -311,7 +310,7 @@ Public Class Client2
         Dim jsonContent As New StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json")
         Dim response As HttpResponseMessage = _httpClient.PostAsync(url, jsonContent).Result
         _lastApiStatus = CInt(response.StatusCode)
-        Console.WriteLine($"   status: {_lastApiStatus}")
+        Debug.WriteLine($"   status: {_lastApiStatus}")
 
         If response.IsSuccessStatusCode Then
             Dim content As String = response.Content.ReadAsStringAsync().Result
@@ -321,7 +320,7 @@ Public Class Client2
     End Function
 
     Private Async Function GetPatient(config As JsonElement, token_data As JsonElement) As Task(Of Dictionary(Of String, String))
-        Console.WriteLine(NameOf(GetPatient))
+        Debug.WriteLine(NameOf(GetPatient))
         Dim url As String = $"{CStr(config.ConvertJsonElementToDictionary("baseUrlCareLink"))}/links/patients"
         Dim headers As New Dictionary(Of String, String)(s_common_Headers)
         headers("mag-identifier") = CStr(token_data.ConvertJsonElementToDictionary("mag-identifier"))
@@ -335,7 +334,7 @@ Public Class Client2
 
         Dim response As HttpResponseMessage = Await _httpClient.GetAsync(url)
         _lastApiStatus = CInt(response.StatusCode)
-        Console.WriteLine($"   status: {_lastApiStatus}")
+        Debug.WriteLine($"   status: {_lastApiStatus}")
 
         If response.IsSuccessStatusCode Then
             Dim content As String = Await response.Content.ReadAsStringAsync()
@@ -349,7 +348,7 @@ Public Class Client2
     End Function
 
     Private Function GetUser(config As JsonElement, tokenData As JsonElement) As JsonElement
-        Console.WriteLine(NameOf(GetUser))
+        Debug.WriteLine(NameOf(GetUser))
         Dim url As String = config.GetProperty("baseUrlCareLink").GetString() & "/users/me"
         'Dim headers As New Dictionary(Of String, String)(s_common_Headers)
         Dim headers As New Dictionary(Of String, String)
@@ -362,7 +361,7 @@ Public Class Client2
 
         Dim response As HttpResponseMessage = _httpClient.GetAsync(url).Result
             _lastApiStatus = CInt(response.StatusCode)
-            Console.WriteLine($"   status: {_lastApiStatus}")
+        Debug.WriteLine($"   status: {_lastApiStatus}")
 
         Return If(response.IsSuccessStatusCode,
             JsonSerializer.Deserialize(Of JsonElement)(response.Content.ReadAsStringAsync().Result),
@@ -389,11 +388,11 @@ Public Class Client2
     Public Function GetRecentData() As Dictionary(Of String, Object)
         ' Check if access token is valid
         If Not IsTokenValid(_accessTokenPayload) Then
-            _tokenDataElement = DoRefresh(_config, _tokenDataElement)
+            _tokenDataElement = Me.DoRefresh(_config, _tokenDataElement)
             _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
             WriteTokenFile(_tokenDataElement, s_userName)
             If Not IsTokenValid(_accessTokenPayload) Then
-                Console.Error.WriteLine("ERROR: unable to get valid access token")
+                Debug.WriteLine("ERROR: unable to get valid access token")
                 Return Nothing
             End If
         End If
@@ -427,7 +426,7 @@ Public Class Client2
             ' Check API response
             If Auth_Error_Codes.Contains(_lastApiStatus) Then
                 ' Failed permanently
-                Console.Error.WriteLine("ERROR: unable to get data")
+                Debug.WriteLine("ERROR: unable to get data")
                 Return Nothing
             End If
         End If
@@ -449,12 +448,12 @@ Public Class Client2
     End Function
 
     Public Sub PrintUserInfo()
-        Console.WriteLine("User Info:")
-        Console.WriteLine($"   user:     {_username} ({_user("firstName")} {_user("lastName")})")
-        Console.WriteLine($"   role:     {_user("role")}")
-        Console.WriteLine($"   country:  {_country}")
+        Debug.WriteLine("User Info:")
+        Debug.WriteLine($"   user:     {_username} ({_user("firstName")} {_user("lastName")})")
+        Debug.WriteLine($"   role:     {_user("role")}")
+        Debug.WriteLine($"   country:  {_country}")
         If _patient IsNot Nothing Then
-            Console.WriteLine($"   patient:  {_patient("username")} ({_patient("firstName")} {_patient("lastName")})")
+            Debug.WriteLine($"   patient:  {_patient("username")} ({_patient("firstName")} {_patient("lastName")})")
         End If
     End Sub
 

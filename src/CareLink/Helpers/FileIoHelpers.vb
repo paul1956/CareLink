@@ -109,7 +109,7 @@ Friend Module FileIoHelpers
             End If
         Catch e As Exception
             Stop
-            Console.WriteLine("Error: {0}", e.Message)
+            Debug.WriteLine("Error: {0}", e.Message)
         End Try
         Return False
     End Function

@@ -18,9 +18,13 @@ Friend Module FileUtilities
         "mag-identifier"}
 
     Private Function GetLoginDataFileName(userName As String, tokenBaseFileName As String) As String
-        Return If(tokenBaseFileName <> DEFAULT_FILENAME,
-            tokenBaseFileName,
-            Path.Combine(Directory.GetParent(SettingsDirectory).FullName, $"{userName}{DEFAULT_FILENAME}"))
+        If String.IsNullOrWhiteSpace(tokenBaseFileName) Then
+            Throw New ArgumentException($"'{NameOf(tokenBaseFileName)}' cannot be null or whitespace.", NameOf(tokenBaseFileName))
+        End If
+
+        Return If(tokenBaseFileName.Equals(DEFAULT_FILENAME, StringComparison.InvariantCultureIgnoreCase),
+            Path.Combine(Directory.GetParent(SettingsDirectory).FullName, $"{userName}{DEFAULT_FILENAME.Substring(0, 1).ToUpper}{DEFAULT_FILENAME.Substring(1)}"),
+            tokenBaseFileName)
     End Function
 
     Public Sub ByteArrayToFile(fileName As String, byteArray() As Byte)
@@ -41,13 +45,13 @@ Friend Module FileUtilities
                 Dim tempData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(jsonAsText)
                 For Each field As String In s_requiredFields
                     If Not tempData.TryGetProperty(field, Nothing) Then
-                        Console.WriteLine($"Field {field} is missing from data file")
+                        Debug.WriteLine($"Field {field} is missing from data file")
                         Return Nothing
                     End If
                 Next
                 Return JsonSerializer.Deserialize(Of AccessToken)(jsonAsText)
             Catch ex As JsonException
-                Console.WriteLine("Failed parsing JSON")
+                Debug.WriteLine("Failed parsing JSON")
             End Try
         End If
         Return Nothing
@@ -62,29 +66,29 @@ Friend Module FileUtilities
                 Dim tokenData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(jsonAsText)
                 For Each field As String In s_requiredFields
                     If Not tokenData.TryGetProperty(field, Nothing) Then
-                        Console.WriteLine($"ERROR: field {field} is missing from token file")
+                        Debug.WriteLine($"ERROR: field {field} is missing from token file")
                         Return Nothing
                     End If
                 Next
                 Return tokenData
             Catch ex As JsonException
-                Console.WriteLine($"ERROR: failed parsing token file {fileWithPath}")
+                Debug.WriteLine($"ERROR: failed parsing token file {fileWithPath}")
             End Try
         Else
-            Console.WriteLine($"ERROR: token file {fileWithPath} not found")
+            Debug.WriteLine($"ERROR: token file {fileWithPath} not found")
         End If
         Return Nothing
     End Function
 
     Public Sub WriteTokenDataFile(tokenData As AccessToken, userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME)
         Dim fileWithPath As String = GetLoginDataFileName(userName, tokenBaseFileName)
-        Console.WriteLine("Wrote data file")
+        Debug.WriteLine("Wrote data file")
         File.WriteAllText(fileWithPath, JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions))
     End Sub
 
     Public Sub WriteTokenFile(obj As JsonElement, userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME)
         Dim fileWithPath As String = GetLoginDataFileName(userName, tokenBaseFileName)
-        Console.WriteLine(NameOf(WriteTokenFile))
+        Debug.WriteLine(NameOf(WriteTokenFile))
         File.WriteAllText(fileWithPath, JsonSerializer.Serialize(obj, s_jsonSerializerOptions))
     End Sub
 

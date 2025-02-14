@@ -25,11 +25,11 @@
 '        Dim tokenData As JsonElement? = ReadDataFile(LoginDataFile)
 
 '        If tokenData Is Nothing Then
-'            Console.WriteLine("Performing login...")
+'            Debug.WriteLine("Performing login...")
 '            Dim endpointConfig As (SsoConfig As JsonElement, ApiBaseUri As String) = Await ResolveEndpointConfigAsync(DiscoveryUrl, isUsRegion)
 '            tokenData = Await DoLogin(endpointConfig.SsoConfig, endpointConfig.ApiBaseUri)
 '        Else
-'            Console.WriteLine("Token data file already exists")
+'            Debug.WriteLine("Token data file already exists")
 '        End If
 '    End Function
 
@@ -37,7 +37,7 @@
 '        ' VB.NET doesn't have a direct equivalent to Python's HTTPConnection.debugLevel
 '        ' You might need to use a different logging mechanism or library for HTTP debugging
 '        ' For now, we'll just set up basic console logging
-'        Console.SetError(Console.Out)
+'        Debug.SetError(Debug.Out)
 '    End Sub
 
 

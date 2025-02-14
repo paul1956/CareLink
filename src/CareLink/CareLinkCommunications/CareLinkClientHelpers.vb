@@ -240,7 +240,7 @@ Public Module CareLinkClientHelpers
         Dim tokenResp As HttpResponseMessage = Await httpClient.SendAsync(tokenReq)
 
         If Not tokenResp.IsSuccessStatusCode Then
-            'Console.WriteLine($"{Environment.NewLine}{Environment.NewLine}{ToCurl(tokenReq)}")
+            'Debug.WriteLine($"{Environment.NewLine}{Environment.NewLine}{ToCurl(tokenReq)}")
             Throw New Exception("Could not get token data")
         End If
 

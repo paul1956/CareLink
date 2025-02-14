@@ -12,11 +12,7 @@ Imports Microsoft.Web.WebView2.Core.DevToolsProtocolExtension.Network
 Imports WebView2.DevTools.Dom
 
 Public Class LoginDialog
-    Private ReadOnly _ignoredURLs As New List(Of String) From {
-        "https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/consent"}
-
     Private ReadOnly _mySource As New AutoCompleteStringCollection()
-    Private _autoClick As Boolean = True
     Private _doCancel As Boolean
     Private _httpClient As HttpClient
     Private _initialHeight As Integer = 0
@@ -24,11 +20,8 @@ Public Class LoginDialog
     Private _loginSourceAutomatic As FileToLoadOptions = FileToLoadOptions.NewUser
     Public Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
     Public Property LoggedOnUser As New CareLinkUserDataRecord(s_allUserSettingsData)
-
     Public Property Client As Client2
-
     Public Property ClientDiscover As ConfigRecord
-
     Public Property LoginSourceAutomatic As FileToLoadOptions
         Get
             Return _loginSourceAutomatic

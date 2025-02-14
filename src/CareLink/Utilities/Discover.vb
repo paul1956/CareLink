@@ -41,7 +41,7 @@ Public Module Discover
     End Function
 
     Public Function GetConfigElement(httpClient As HttpClient, discoveryUrl As String, country As String) As JsonElement
-        Console.WriteLine(NameOf(GetConfigElement))
+        Debug.WriteLine(NameOf(GetConfigElement))
         Dim response As String = httpClient.GetStringAsync(discoveryUrl).Result
         Dim jsonElementData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(response)
         Dim configurationData As ConfigRecord = JsonSerializer.Deserialize(Of ConfigRecord)(response)
@@ -61,9 +61,9 @@ Public Module Discover
         Try
             Return DownloadAndDecodeJson(Of ConfigRecord)(s_discoverUrl)
         Catch ex As HttpRequestException
-            Console.WriteLine($"Error downloading JSON: {ex.Message}")
+            Debug.WriteLine($"Error downloading JSON: {ex.Message}")
         Catch ex As JsonException
-            Console.WriteLine($"Error decoding JSON: {ex.Message}")
+            Debug.WriteLine($"Error decoding JSON: {ex.Message}")
         End Try
         Return Nothing
     End Function
