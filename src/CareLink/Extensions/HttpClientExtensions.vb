@@ -5,25 +5,35 @@
 Imports System.Net.Http
 Imports System.Runtime.CompilerServices
 Imports System.Text
+Imports System.Text.Json
 
 Friend Module HttpClientExtensions
 
     <Extension>
-    Friend Sub SetDefaultRequestHeaders(ByRef client As HttpClient, headers As Dictionary(Of String, String), referrerUri As Uri)
-        client.DefaultRequestHeaders.Clear()
+    Friend Async Function GetRequestAsync(httpClient As HttpClient, authorizeUrl As String, authParams As Dictionary(Of String, String)) As Task(Of JsonElement)
+        Dim response As HttpResponseMessage = httpClient.GetAsync(authorizeUrl & "?" & String.Join("&", authParams.Select(Function(kvp) kvp.Key & "=" & Uri.EscapeDataString(kvp.Value)))).Result
+        ' This will handle the redirect automatically
+        Dim responseContent As String = Await response.Content.ReadAsStringAsync()
+        Dim providers As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(responseContent)
+        Return providers
+    End Function
+
+    <Extension>
+    Friend Sub SetDefaultRequestHeaders(ByRef httpClient As HttpClient, headers As Dictionary(Of String, String), referrerUri As Uri)
+        httpClient.DefaultRequestHeaders.Clear()
         For Each header As KeyValuePair(Of String, String) In headers.Sort
             If header.Key <> "Content-Type" Then
-                client.DefaultRequestHeaders.Add(header.Key, header.Value)
+                httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
             End If
         Next
         If referrerUri IsNot Nothing Then
-            client.DefaultRequestHeaders.Referrer = referrerUri
+            httpClient.DefaultRequestHeaders.Referrer = referrerUri
         End If
     End Sub
 
     <Extension>
-    Public Function [Get](client As HttpClient, requestUri As StringBuilder, ByRef lastError As String, Optional headers As Dictionary(Of String, String) = Nothing, Optional queryParams As Dictionary(Of String, String) = Nothing, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As HttpResponseMessage
-        client.SetDefaultRequestHeaders(headers, Nothing)
+    Public Function [Get](httpClient As HttpClient, requestUri As StringBuilder, ByRef lastError As String, Optional headers As Dictionary(Of String, String) = Nothing, Optional queryParams As Dictionary(Of String, String) = Nothing, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As HttpResponseMessage
+        httpClient.SetDefaultRequestHeaders(headers, Nothing)
         If queryParams IsNot Nothing Then
             requestUri.Append("?"c)
             For Each param As KeyValuePair(Of String, String) In queryParams
@@ -36,7 +46,7 @@ Friend Module HttpClientExtensions
             lastError = Nothing
             Dim requestUriString As String = requestUri.ToString
             DebugPrint($"uri={requestUriString} from {memberName}, line {sourceLineNumber}.")
-            Return client.GetAsync(requestUriString).Result
+            Return httpClient.GetAsync(requestUriString).Result
         Catch ex As Exception
             lastError = ex.DecodeException()
             Return New HttpResponseMessage(Net.HttpStatusCode.NotImplemented)
@@ -44,7 +54,7 @@ Friend Module HttpClientExtensions
     End Function
 
     <Extension>
-    Public Function Post(client As HttpClient, url As StringBuilder, Optional headers As Dictionary(Of String, String) = Nothing, Optional params As Dictionary(Of String, String) = Nothing, Optional data As Dictionary(Of String, String) = Nothing) As HttpResponseMessage
+    Public Function Post(httpClient As HttpClient, url As StringBuilder, Optional headers As Dictionary(Of String, String) = Nothing, Optional params As Dictionary(Of String, String) = Nothing, Optional data As Dictionary(Of String, String) = Nothing) As HttpResponseMessage
         If params IsNot Nothing Then
             url.Append("?"c)
             For Each header As KeyValuePair(Of String, String) In params
@@ -57,16 +67,27 @@ Friend Module HttpClientExtensions
             formData = New FormUrlEncodedContent(data.ToList())
         End If
         If headers IsNot Nothing Then
-            client.DefaultRequestHeaders.Clear()
+            httpClient.DefaultRequestHeaders.Clear()
             For Each header As KeyValuePair(Of String, String) In headers
                 If header.Key = "Content-Type" AndAlso formData IsNot Nothing Then
                     formData.Headers.ContentType.MediaType = header.Value
                 Else
-                    client.DefaultRequestHeaders.Add(header.Key, header.Value)
+                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
                 End If
             Next
         End If
-        Return client.PostAsync(url.ToString, formData).Result
+        Return httpClient.PostAsync(url.ToString, formData).Result
+    End Function
+
+    <Extension>
+    Public Function PostRequest(ByRef httpClient As HttpClient, url As String, data As Dictionary(Of String, String), headers As Dictionary(Of String, String)) As String
+        For Each header As KeyValuePair(Of String, String) In headers
+            httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
+        Next
+
+        Dim content As New FormUrlEncodedContent(data)
+        Dim response As HttpResponseMessage = httpClient.PostAsync(url, content).Result
+        Return response.Content.ReadAsStringAsync().Result
     End Function
 
     <Extension>

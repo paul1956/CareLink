@@ -6,7 +6,6 @@ Imports System.Net.Http
 Imports System.Threading
 
 Friend Module UpdateChecker
-    Private ReadOnly s_httpClient As New HttpClient()
     Private ReadOnly s_versionSearchKey As String = $"<a hRef=""/{GitOwnerName}/CareLink/releases/tag/"
     Private s_inCheckForUpdate As Integer = 0
     Private s_updateSleepCount As Integer = 0
@@ -15,7 +14,9 @@ Friend Module UpdateChecker
         Dim versionStr As String = "0.0.0.0"
         Dim responseBody As String
         Try
-            responseBody = Await s_httpClient.GetStringAsync($"{GitHubCareLinkUrl}releases")
+            Using httpClient As New HttpClient()
+                responseBody = Await httpClient.GetStringAsync($"{GitHubCareLinkUrl}releases")
+            End Using
         Catch ex1 As HttpRequestException
             ' GitHub not reachable
             Return versionStr

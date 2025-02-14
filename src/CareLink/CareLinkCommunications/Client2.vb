@@ -8,9 +8,6 @@ Imports System.Text
 Imports System.Text.Json
 
 Public Class Client2
-
-
-
     ' Constants
     Private Const CARELINK_CONFIG_URL As String = "https://clcloud.minimed.eu/connect/carepartner/v11/discover/android/3.2"
     Private Const DEFAULT_FILENAME As String = "logindata.json"
@@ -21,6 +18,7 @@ Public Class Client2
     Private _accessTokenPayload As Dictionary(Of String, Object)
     Private _config As Dictionary(Of String, Object)
     Private _country As String
+    Private ReadOnly _httpClient As HttpClient
     Private _lastApiStatus As Integer
     Private _patient As Dictionary(Of String, String)
     Private _tokenDataElement As JsonElement
@@ -53,11 +51,13 @@ Public Class Client2
 
         ' API status
         _lastApiStatus = Nothing
+
+        _httpClient = New HttpClient
     End Sub
 
     Public Shared ReadOnly Property Auth_Error_Codes As Integer() = {401, 403}
     Public Property SessionUser As SessionUserRecord
-    Private Shared Function DoRefresh(config As Dictionary(Of String, Object), tokenDataElement As JsonElement) As JsonElement
+    Private Function DoRefresh(config As Dictionary(Of String, Object), tokenDataElement As JsonElement) As JsonElement
         Console.WriteLine(NameOf(DoRefresh))
         Dim tokenUrl As String = CStr(config("token_url"))
 
@@ -74,28 +74,26 @@ Public Class Client2
         {"mag-identifier", tokenData("mag-identifier")}
     }
 
-        Using httpClient As New HttpClient()
-            For Each header As KeyValuePair(Of String, String) In headers
-                httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
-            Next
+        For Each header As KeyValuePair(Of String, String) In headers
+            _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
+        Next
 
-            Dim content As New FormUrlEncodedContent(data)
-            Dim response As HttpResponseMessage = httpClient.PostAsync(tokenUrl, content).Result
+        Dim content As New FormUrlEncodedContent(data)
+        Dim response As HttpResponseMessage = _httpClient.PostAsync(tokenUrl, content).Result
 
-            Console.WriteLine($"   status: {response.StatusCode}")
+        Console.WriteLine($"   status: {response.StatusCode}")
 
-            If response.StatusCode <> Net.HttpStatusCode.OK Then
-                Throw New Exception("ERROR: failed to refresh token")
-            End If
+        If response.StatusCode <> Net.HttpStatusCode.OK Then
+            Throw New Exception("ERROR: failed to refresh token")
+        End If
 
-            Dim responseBody As String = response.Content.ReadAsStringAsync().Result
-            Dim newData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(responseBody)
+        Dim responseBody As String = response.Content.ReadAsStringAsync().Result
+        Dim newData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(responseBody)
 
-            tokenData("access_token") = newData.GetProperty("access_token").GetString()
-            tokenData("refresh_token") = newData.GetProperty("refresh_token").GetString()
+        tokenData("access_token") = newData.GetProperty("access_token").GetString()
+        tokenData("refresh_token") = newData.GetProperty("refresh_token").GetString()
 
-            Return JsonSerializer.Deserialize(Of JsonElement)(JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions))
-        End Using
+        Return JsonSerializer.Deserialize(Of JsonElement)(JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions))
     End Function
 
     Private Shared Function GetAccessTokenPayload(token_data As JsonElement) As Dictionary(Of String, Object)
@@ -118,12 +116,12 @@ Public Class Client2
     End Function
 
     Friend Function TryGetDeviceSettingsPdfFile(pdfFileName As String) As Boolean
-#If False Then
-
         Dim authToken As String = ""
 
         ' CareLink Partners do not support download
         If My.Settings.CareLinkPartner Then Return False
+#If False Then ' ToDo: Implement
+
         If Me.GetAuthorizationToken(authToken) = GetAuthorizationTokenResult.OK Then
             Dim response As HttpResponseMessage = Nothing
             Dim serverUrl As String = GetServerUrl(Me.CareLinkCountry)
@@ -256,7 +254,7 @@ Public Class Client2
             Dim element As JsonElement = CType(_accessTokenPayload("token_details"), JsonElement)
             Dim payload As AccessTokenDetails = JsonSerializer.Deserialize(Of AccessTokenDetails)(element, s_jsonDeserializerOptions)
             _country = payload.Country
-            jsonConfigElement = GetConfigElement(CARELINK_CONFIG_URL, _country)
+            jsonConfigElement = GetConfigElement(_httpClient, CARELINK_CONFIG_URL, _country)
             _config = jsonConfigElement.ConvertJsonElementToDictionary
             _username = payload.Name
             _user = Me.GetUser(jsonConfigElement, _tokenDataElement).ConvertJsonElementToDictionary
@@ -306,21 +304,19 @@ Public Class Client2
 
         _lastApiStatus = Nothing
 
-        Using client As New HttpClient()
-            For Each header As KeyValuePair(Of String, String) In headers
-                client.DefaultRequestHeaders.Add(header.Key, header.Value)
-            Next
+        For Each header As KeyValuePair(Of String, String) In headers
+            _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
+        Next
 
-            Dim jsonContent As New StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json")
-            Dim response As HttpResponseMessage = client.PostAsync(url, jsonContent).Result
-            _lastApiStatus = CInt(response.StatusCode)
-            Console.WriteLine($"   status: {_lastApiStatus}")
+        Dim jsonContent As New StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json")
+        Dim response As HttpResponseMessage = _httpClient.PostAsync(url, jsonContent).Result
+        _lastApiStatus = CInt(response.StatusCode)
+        Console.WriteLine($"   status: {_lastApiStatus}")
 
-            If response.IsSuccessStatusCode Then
-                Dim content As String = response.Content.ReadAsStringAsync().Result
-                Return JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(content)
-            End If
-        End Using
+        If response.IsSuccessStatusCode Then
+            Dim content As String = response.Content.ReadAsStringAsync().Result
+            Return JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(content)
+        End If
         Return Nothing
     End Function
 
@@ -333,23 +329,21 @@ Public Class Client2
 
         _lastApiStatus = Nothing
 
-        Using client As New HttpClient()
-            For Each header As KeyValuePair(Of String, String) In headers
-                client.DefaultRequestHeaders.Add(header.Key, header.Value)
-            Next
+        For Each header As KeyValuePair(Of String, String) In headers
+            _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
+        Next
 
-            Dim response As HttpResponseMessage = Await client.GetAsync(url)
-            _lastApiStatus = CInt(response.StatusCode)
-            Console.WriteLine($"   status: {_lastApiStatus}")
+        Dim response As HttpResponseMessage = Await _httpClient.GetAsync(url)
+        _lastApiStatus = CInt(response.StatusCode)
+        Console.WriteLine($"   status: {_lastApiStatus}")
 
-            If response.IsSuccessStatusCode Then
-                Dim content As String = Await response.Content.ReadAsStringAsync()
-                Dim patients As List(Of Dictionary(Of String, String)) = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, String)))(content)
-                If patients.Count > 0 Then
-                    Return patients(0)
-                End If
+        If response.IsSuccessStatusCode Then
+            Dim content As String = Await response.Content.ReadAsStringAsync()
+            Dim patients As List(Of Dictionary(Of String, String)) = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, String)))(content)
+            If patients.Count > 0 Then
+                Return patients(0)
             End If
-        End Using
+        End If
 
         Return Nothing
     End Function
@@ -362,20 +356,17 @@ Public Class Client2
         headers("mag-identifier") = tokenData.GetProperty("mag-identifier").GetString()
         headers("Authorization") = "Bearer " & tokenData.GetProperty("access_token").GetString()
 
-        Using client As New HttpClient()
-            For Each header As KeyValuePair(Of String, String) In headers
-                client.DefaultRequestHeaders.Add(header.Key, header.Value)
-            Next
+        For Each header As KeyValuePair(Of String, String) In headers
+            _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
+        Next
 
-            Dim response As HttpResponseMessage = client.GetAsync(url).Result
+        Dim response As HttpResponseMessage = _httpClient.GetAsync(url).Result
             _lastApiStatus = CInt(response.StatusCode)
             Console.WriteLine($"   status: {_lastApiStatus}")
 
-            If response.IsSuccessStatusCode Then
-                Return JsonSerializer.Deserialize(Of JsonElement)(response.Content.ReadAsStringAsync().Result)
-            End If
-        End Using
-        Return Nothing
+        Return If(response.IsSuccessStatusCode,
+            JsonSerializer.Deserialize(Of JsonElement)(response.Content.ReadAsStringAsync().Result),
+            Nothing)
     End Function
 
     ''' <summary>

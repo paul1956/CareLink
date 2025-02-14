@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.IO
+Imports System.Net.Http
 Imports System.Text.Json
 
 Friend Module FileUtilities

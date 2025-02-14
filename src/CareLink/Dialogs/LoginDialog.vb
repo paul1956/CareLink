@@ -4,6 +4,7 @@
 
 Imports System.ComponentModel
 Imports System.Net
+Imports System.Net.Http
 Imports System.Text.RegularExpressions
 Imports System.Threading
 Imports Microsoft.Web.WebView2.Core
@@ -15,9 +16,9 @@ Public Class LoginDialog
         "https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/consent"}
 
     Private ReadOnly _mySource As New AutoCompleteStringCollection()
-    Private _accessToken As AccessToken
     Private _autoClick As Boolean = True
     Private _doCancel As Boolean
+    Private _httpClient As HttpClient
     Private _initialHeight As Integer = 0
     Private _lastUrl As String
     Private _loginSourceAutomatic As FileToLoadOptions = FileToLoadOptions.NewUser
@@ -78,6 +79,7 @@ Public Class LoginDialog
     End Sub
 
     Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        _httpClient = New HttpClient()
         Me.ClientDiscover = Discover.GetDiscoveryData()
         If _initialHeight = 0 Then
             _initialHeight = Me.Height
@@ -166,7 +168,7 @@ Public Class LoginDialog
         s_password = Me.PasswordTextBox.Text
         s_countryCode = Me.CountryComboBox.SelectedValue.ToString
 
-        Dim accessToken As AccessToken = DoLogin(New Http.HttpClient, s_userName)
+        Dim accessToken As AccessToken = DoLogin(_httpClient, s_userName)
         Me.Client = New Client2()
         Me.Ok_Button.Enabled = False
         Me.Client.Init()

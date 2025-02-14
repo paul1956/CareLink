@@ -63,53 +63,7 @@ Public Module CareLinkClientHelpers
                  )
     End Function
 
-    Private Function ParseQsl(loginSessionResponse As HttpResponseMessage) As Dictionary(Of String, String)
-        Dim result As New Dictionary(Of String, String)
-        Dim absoluteUri As String = loginSessionResponse.RequestMessage.RequestUri.AbsoluteUri
-        Dim splitAbsoluteUri() As String = absoluteUri.Split("&")
-        For Each item As String In splitAbsoluteUri
-            Dim splitItem() As String
-            If result.Count = 0 Then
-                item = item.Split("?")(1)
-            End If
-            splitItem = item.Split("=")
-            result.Add(splitItem(0), splitItem(1))
-        Next
-        Return result
-    End Function
-
-    Friend Function DoConsent(ByRef httpClient As HttpClient, doLoginResponse As HttpResponseMessage, ByRef lastErrorMessage As String) As HttpResponseMessage
-
-        ' Extract data for consent
-        Dim doLoginRespBody As String = doLoginResponse.ResultText
-        Dim url As New StringBuilder(doLoginRespBody.ExtractResponseData("<form action=", " "))
-        Dim sessionId As String = doLoginRespBody.ExtractResponseData("<input type=""hidden"" name=""sessionID"" value=", "/>")
-        Dim sessionData As String = doLoginRespBody.ExtractResponseData("<input type=""hidden"" name=""sessionData"" value=", "/>")
-        lastErrorMessage = doLoginRespBody.ExtractResponseData("LoginFailed"">", "</p>")
-
-        ' Send consent
-        Dim form As New Dictionary(Of String, String) From {
-            {"action", "consent"},
-            {"sessionID", sessionId},
-            {"sessionData", sessionData},
-            {"response_type", "code"},
-            {"response_mode", "query"}}
-        ' Add header
-        Dim consentHeaders As Dictionary(Of String, String) = s_commonHeaders.Clone()
-        consentHeaders("Content-Type") = "application/x-www-form-urlencoded"
-
-        Try
-            Dim response As HttpResponseMessage = httpClient.Post(url, headers:=consentHeaders, data:=form)
-            Return DecodeResponse(response, lastErrorMessage)
-        Catch ex As Exception
-            Dim message As String = $"failed with {ex.DecodeException()}"
-            lastErrorMessage = message
-            DebugPrint(message.Replace(vbCrLf, " "))
-        End Try
-        Return New HttpResponseMessage(HttpStatusCode.NotImplemented)
-    End Function
-
-    Public Function GetAuthorizeUrlData(client As HttpClient, SsoConfig As SsoConfig, ApiBaseUrl As String) As (String, clientInitResponse As ClientInitData)
+    Public Function GetAuthorizeUrlData(httpClient As HttpClient, SsoConfig As SsoConfig, ApiBaseUrl As String) As (String, clientInitResponse As ClientInitData)
         ' Step 1: Initialize
         Dim data As New Dictionary(Of String, String) From {
             {"client_id", SsoConfig.OAuth.Client.ClientIds(0).ClientId},
@@ -124,7 +78,7 @@ Public Module CareLinkClientHelpers
         Dim content As New FormUrlEncodedContent(data)
         content.Headers.Add("device-id", Convert.ToBase64String(Encoding.UTF8.GetBytes(RandomDeviceId())))
         ' Send the POST request
-        Dim response As HttpResponseMessage = client.PostAsync(clientInitUrl, content).Result
+        Dim response As HttpResponseMessage = httpClient.PostAsync(clientInitUrl, content).Result
         ' Read the response content
         Dim responseContent As String = response.Content.ReadAsStringAsync().Result
 
@@ -150,7 +104,7 @@ Public Module CareLinkClientHelpers
         }
 
         Dim authorizeUrl As String = $"{ApiBaseUrl}{SsoConfig.OAuth.SystemEndpoints.AuthorizationEndpointPath}"
-        Dim providersResponse As JsonElement = GetRequestAsync(authorizeUrl, authParams).Result
+        Dim providersResponse As JsonElement = httpClient.GetRequestAsync(authorizeUrl, authParams).Result
         Dim authorize As Authorize = JsonSerializer.Deserialize(Of Authorize)(providersResponse)
         Dim captchaUrl As String = authorize.Providers(0).Provider.AuthUrl
 
@@ -158,30 +112,7 @@ Public Module CareLinkClientHelpers
         Return (captchaUrl, clientInitResponse)
     End Function
 
-    Public Function PostRequest(url As String, data As Dictionary(Of String, String), headers As Dictionary(Of String, String)) As String
-        Using client As New HttpClient()
-            For Each header As KeyValuePair(Of String, String) In headers
-                client.DefaultRequestHeaders.Add(header.Key, header.Value)
-            Next
-
-            Dim content As New FormUrlEncodedContent(data)
-            Dim response As HttpResponseMessage = client.PostAsync(url, content).Result
-            Return response.Content.ReadAsStringAsync().Result
-        End Using
-    End Function
-
-    Private Async Function GetRequestAsync(authorizeUrl As String, authParams As Dictionary(Of String, String)) As Task(Of JsonElement)
-        Using client As New HttpClient()
-            Dim response As HttpResponseMessage = client.GetAsync(authorizeUrl & "?" & String.Join("&", authParams.Select(Function(kvp) kvp.Key & "=" & Uri.EscapeDataString(kvp.Value)))).Result
-            ' This will handle the redirect automatically
-            Dim responseContent As String = Await response.Content.ReadAsStringAsync()
-            Dim providers As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(responseContent)
-            Return providers
-        End Using
-
-    End Function
-
-    Friend Function DoLogin(ByRef client As HttpClient, userName As String) As AccessToken
+    Friend Function DoLogin(ByRef httpClient As HttpClient, userName As String) As AccessToken
         Dim tokenData As AccessToken = ReadTokenDataFile(userName)
 
         If tokenData IsNot Nothing Then
@@ -194,9 +125,9 @@ Public Module CareLinkClientHelpers
         Dim authorizeUrlData As (authorizeUrl As String, clientInitData As ClientInitData) = Nothing
         Try
             'TODO : Implement isUsRegion
-            endpointConfig = ResolveEndpointConfigAsync(DiscoveryUrl, isUsRegion:=True)
+            endpointConfig = ResolveEndpointConfigAsync(httpClient, DiscoveryUrl, isUsRegion:=True)
             ssoConfig = endpointConfig.SsoConfig
-            authorizeUrlData = GetAuthorizeUrlData(client, ssoConfig, endpointConfig.ApiBaseUrl)
+            authorizeUrlData = GetAuthorizeUrlData(httpClient, ssoConfig, endpointConfig.ApiBaseUrl)
             authorizeUrl = authorizeUrlData.authorizeUrl
         Catch ex As Exception
             Stop
@@ -246,13 +177,13 @@ Public Module CareLinkClientHelpers
         Dim content As New StringContent(csr, Encoding.UTF8, "application/x-www-form-urlencoded")
 
         For Each header As KeyValuePair(Of String, String) In regHeaders
-            client.DefaultRequestHeaders.Add(header.Key, header.Value)
+            httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
         Next
 
         Dim regResponse As HttpResponseMessage = Nothing
         Try
             ' Richard: Next line is a problem it returns Status 401 details are in the response
-            regResponse = client.PostAsync(regUrl, content).Result
+            regResponse = httpClient.PostAsync(regUrl, content).Result
         Catch ex As Exception
             Stop
         End Try
@@ -270,7 +201,7 @@ Public Module CareLinkClientHelpers
 
         ' Step 5: Token
         Stop
-        tokenData = GetTokenDataAsync(client, endpointConfig.ApiBaseUrl, ssoConfig, regResponse, authorizeUrlData.clientInitData, userName).Result
+        tokenData = GetTokenDataAsync(httpClient, endpointConfig.ApiBaseUrl, ssoConfig, regResponse, authorizeUrlData.clientInitData, userName).Result
         Return tokenData
     End Function
 
@@ -286,7 +217,7 @@ Public Module CareLinkClientHelpers
     End Function
 
     Private Async Function GetTokenDataAsync(
-        client As HttpClient,
+        httpClient As HttpClient,
         apiBaseUrl As String,
         ssoConfig As SsoConfig,
         regReq As HttpResponseMessage,
@@ -306,7 +237,7 @@ Public Module CareLinkClientHelpers
         tokenReq.Headers.Add("mag-identifier", regReq.Headers.GetValues("mag-identifier").FirstOrDefault())
         tokenReq.Content = New FormUrlEncodedContent(tokenReqData)
 
-        Dim tokenResp As HttpResponseMessage = Await client.SendAsync(tokenReq)
+        Dim tokenResp As HttpResponseMessage = Await httpClient.SendAsync(tokenReq)
 
         If Not tokenResp.IsSuccessStatusCode Then
             'Console.WriteLine($"{Environment.NewLine}{Environment.NewLine}{ToCurl(tokenReq)}")
@@ -338,30 +269,28 @@ Public Module CareLinkClientHelpers
         Return Not My.Computer.Network.IsAvailable
     End Function
 
-    Public Function ResolveEndpointConfigAsync(discoveryUrl As String, isUsRegion As Boolean) As (SsoConfig As SsoConfig, ApiBaseUrl As String)
-        Using client As New HttpClient()
-            Dim discoverResp As String = client.GetStringAsync(discoveryUrl).Result
-            Dim discover As ConfigRecord = JsonSerializer.Deserialize(Of ConfigRecord)(discoverResp, s_jsonDeserializerOptions)
+    Public Function ResolveEndpointConfigAsync(httpClient As HttpClient, discoveryUrl As String, isUsRegion As Boolean) As (SsoConfig As SsoConfig, ApiBaseUrl As String)
+        Dim discoverResp As String = httpClient.GetStringAsync(discoveryUrl).Result
+        Dim discover As ConfigRecord = JsonSerializer.Deserialize(Of ConfigRecord)(discoverResp, s_jsonDeserializerOptions)
 
-            Dim ssoUrl As String = Nothing
-            For Each cp As CPInfo In discover.CP
-                If (cp.Region.Equals("us", StringComparison.CurrentCultureIgnoreCase) AndAlso isUsRegion) OrElse
+        Dim ssoUrl As String = Nothing
+        For Each cp As CPInfo In discover.CP
+            If (cp.Region.Equals("us", StringComparison.CurrentCultureIgnoreCase) AndAlso isUsRegion) OrElse
                    (cp.Region.Equals("eu", StringComparison.CurrentCultureIgnoreCase) AndAlso Not isUsRegion) Then
-                    ssoUrl = cp.SSOConfiguration
-                    Exit For
-                End If
-            Next
-
-            If ssoUrl Is Nothing Then
-                Throw New Exception("Could not get SSO config url")
+                ssoUrl = cp.SSOConfiguration
+                Exit For
             End If
+        Next
 
-            Dim jsonString As String = client.GetStringAsync(ssoUrl).Result
-            Dim ssoConfig As SsoConfig = JsonSerializer.Deserialize(Of SsoConfig)(jsonString)
-            Dim apiBaseUrl As String = $"https://{ssoConfig.Server.Hostname}:{ssoConfig.Server.Port}/{ssoConfig.Server.Prefix}"
+        If ssoUrl Is Nothing Then
+            Throw New Exception("Could not get SSO config url")
+        End If
 
-            Return (ssoConfig, apiBaseUrl)
-        End Using
+        Dim jsonString As String = httpClient.GetStringAsync(ssoUrl).Result
+        Dim ssoConfig As SsoConfig = JsonSerializer.Deserialize(Of SsoConfig)(jsonString)
+        Dim apiBaseUrl As String = $"https://{ssoConfig.Server.Hostname}:{ssoConfig.Server.Port}/{ssoConfig.Server.Prefix}"
+
+        Return (ssoConfig, apiBaseUrl)
     End Function
 
 
