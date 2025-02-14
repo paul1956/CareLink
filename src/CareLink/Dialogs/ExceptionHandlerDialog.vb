@@ -15,7 +15,7 @@ Public Class ExceptionHandlerDialog
     Public Property UnhandledException As UnhandledExceptionEventArgs
     Public Property ReportFileNameWithPath As String
 
-    Private Shared Sub CreateReportFile(exceptionText As String, stackTraceText As String, UniqueFileNameWithPath As String, jsonData As Dictionary(Of String, String))
+    Private Shared Sub CreateReportFile(exceptionText As String, stackTraceText As String, UniqueFileNameWithPath As String, jsonData As Dictionary(Of String, Object))
         Using stream As StreamWriter = File.CreateText(UniqueFileNameWithPath)
             ' write exception header
             stream.WriteLine(ExceptionStartingString)
@@ -53,6 +53,7 @@ Public Class ExceptionHandlerDialog
     End Sub
 
     Private Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+#If False Then ' ToDo
         StartOrStopServerUpdateTimer(False)
         Dim fontBold As New Font(Me.InstructionsRichTextBox.Font, FontStyle.Bold)
         Dim fontNormal As Font = Me.InstructionsRichTextBox.Font
@@ -85,6 +86,7 @@ Public Class ExceptionHandlerDialog
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, DirectoryForProjectData, fontBold)
             Me.LocalRawData = Me.DecomposeReportFile(Me.ExceptionTextBox, Me.StackTraceTextBox, Me.ReportFileNameWithPath)
         End If
+#End If
     End Sub
 
     Private Sub ExceptionHandlerForm_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown

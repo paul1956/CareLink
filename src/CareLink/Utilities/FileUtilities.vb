@@ -17,10 +17,11 @@ Friend Module FileUtilities
         End Try
     End Sub
 
-    Public Function ReadTokenDataFile(fileWithPath As String) As JsonElement?
+    Public Function ReadTokenDataFile(fileWithPath As String) As AccessToken
         If File.Exists(fileWithPath) Then
             Try
-                Dim tokenData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(File.ReadAllText(fileWithPath))
+                Dim jsonAsText As String = File.ReadAllText(fileWithPath)
+                Dim tempData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(jsonAsText)
                 Dim requiredFields() As String = {
                     "access_token",
                     "refresh_token",
@@ -30,12 +31,12 @@ Friend Module FileUtilities
                     "mag-identifier"}
 
                 For Each field As String In requiredFields
-                    If Not tokenData.TryGetProperty(field, Nothing) Then
+                    If Not tempData.TryGetProperty(field, Nothing) Then
                         Console.WriteLine($"Field {field} is missing from data file")
                         Return Nothing
                     End If
                 Next
-                Return tokenData
+                Return JsonSerializer.Deserialize(Of AccessToken)(jsonAsText)
             Catch ex As JsonException
                 Console.WriteLine("Failed parsing JSON")
             End Try
@@ -43,9 +44,9 @@ Friend Module FileUtilities
         Return Nothing
     End Function
 
-    Public Sub WriteTokenDataFile(obj As Object, filename As String)
+    Public Sub WriteTokenDataFile(tokenData As AccessToken, filename As String)
         Console.WriteLine("Wrote data file")
-        File.WriteAllText(filename, JsonSerializer.Serialize(obj, s_jsonSerializerOptions))
+        File.WriteAllText(filename, JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions))
     End Sub
 
 End Module

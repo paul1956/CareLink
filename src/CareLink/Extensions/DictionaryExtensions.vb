@@ -117,7 +117,10 @@ Public Module DictionaryExtensions
 
     Public Function Is700Series() As Boolean
         If RecentDataEmpty() Then Return False
+#If False Then ' ToDo
         Return s_700Models.Contains(RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber)))
+#End If
+        Return False
     End Function
 
     <Extension>

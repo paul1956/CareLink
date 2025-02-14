@@ -25,6 +25,7 @@ Friend Module Form1LoginHelpers
         Dim fromFile As Boolean
         Select Case fileToLoad
             Case FileToLoadOptions.LastSaved
+#If False Then ' ToDo
                 Form1.Text = $"{SavedTitle} Using Last Saved Data"
                 CurrentDateCulture = GetLastDownloadFileWithPath().ExtractCultureFromFileName(BaseNameSavedLastDownload)
                 RecentData = LoadIndexedItems(File.ReadAllText(GetLastDownloadFileWithPath()))
@@ -33,7 +34,9 @@ Friend Module Form1LoginHelpers
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
                 SetUpCareLinkUser(TestSettingsFileNameWithPath)
                 fromFile = True
+#End If
             Case FileToLoadOptions.TestData
+#If False Then ' ToDo
                 Form1.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
                 RecentData = LoadIndexedItems(File.ReadAllText(TestDataFileNameWithPath))
@@ -42,6 +45,7 @@ Friend Module Form1LoginHelpers
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
                 SetUpCareLinkUser(TestSettingsFileNameWithPath)
                 fromFile = True
+#End If
             Case FileToLoadOptions.Login, FileToLoadOptions.NewUser
                 Form1.Text = SavedTitle
                 Do While True
@@ -61,14 +65,18 @@ Friend Module Form1LoginHelpers
                     StartOrStopServerUpdateTimer(True, s_5MinutesInMilliseconds)
 
                     If NetworkUnavailable() Then
-                        ReportLoginStatus(Form1.LoginStatus)
+                        ReportLoginStatus(Form1.LoginStatus, True, "Network Unavailable")
                         Return False
                     End If
 
                     SetLastUpdateTime("Last Update time is unknown!", "", True, Nothing)
                     Return False
                 End If
+#If False Then ' ToDo
                 RecentData = Form1.Client.GetRecentData()
+#End If
+                Dim RecentData1 As Dictionary(Of String, Object) = Form1.Client.GetRecentData()
+                Stop
 
                 SetUpCareLinkUser(GetUserSettingsJsonFileNameWithPath, False)
                 StartOrStopServerUpdateTimer(True, s_1MinutesInMilliseconds)
@@ -77,12 +85,13 @@ Friend Module Form1LoginHelpers
                     ReportLoginStatus(Form1.LoginStatus)
                     Return False
                 End If
-
-                ReportLoginStatus(Form1.LoginStatus, RecentDataEmpty, Form1.Client.GetLastErrorMessage)
+#If False Then ' ToDo
+                ErrorReportingHelpers.ReportLoginStatus(Form1.LoginStatus, RecentDataEmpty, Form1.Client.GetLastResponseCode)
+#End If
                 Form1.MenuShowMiniDisplay.Visible = True
                 fromFile = False
         End Select
-
+#If False Then ' ToDo
         If Form1.Client IsNot Nothing Then
             Form1.Client.SessionProfile?.SetInsulinType(CurrentUser.InsulinTypeName)
             With Form1.DgvSessionProfile
@@ -90,6 +99,7 @@ Friend Module Form1LoginHelpers
                 .DataSource = Form1.Client.SessionProfile.ToDataSource
             End With
         End If
+#End If
 
         Form1.PumpAITLabel.Text = CurrentUser.GetPumpAitString
         Form1.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName

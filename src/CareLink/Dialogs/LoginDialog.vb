@@ -7,6 +7,7 @@ Imports System.Net
 Imports System.Text.RegularExpressions
 Imports System.Threading
 Imports Microsoft.Web.WebView2.Core
+Imports Microsoft.Web.WebView2.Core.DevToolsProtocolExtension.Network
 Imports WebView2.DevTools.Dom
 
 Public Class LoginDialog
@@ -14,7 +15,7 @@ Public Class LoginDialog
                  "https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/consent"}
 
     Private ReadOnly _mySource As New AutoCompleteStringCollection()
-    Private _authTokenValue As String
+    Private _accessToken As AccessToken
     Private _autoClick As Boolean = True
     Private _doCancel As Boolean
     Private _initialHeight As Integer = 0
@@ -23,7 +24,7 @@ Public Class LoginDialog
     Public Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
     Public Property LoggedOnUser As New CareLinkUserDataRecord(s_allUserSettingsData)
 
-    Public Property Client As CareLinkClient1
+    Public Property Client As Client2
 
     Public Property ClientDiscover As Discover
 
@@ -36,10 +37,17 @@ Public Class LoginDialog
         End Set
     End Property
 
-    Private Shared Sub ReportLoginStatus(loginStatus As TextBox, hasErrors As Boolean, Optional lastErrorMessage As String = "")
+    Private Shared Sub ReportLoginStatus(loginStatus As TextBox, hasErrors As Boolean, Optional LastResponseCode As Integer = 0)
+        If Client2.Auth_Error_Codes.Contains(LastResponseCode) Then
+            loginStatus.ForeColor = Color.Red
+            loginStatus.Text = "Invalid Login Credentials"
+            My.Settings.AutoLogin = False
+            Exit Sub
+        End If
+
         If hasErrors Then
             loginStatus.ForeColor = Color.Red
-            loginStatus.Text = lastErrorMessage
+            loginStatus.Text = "Unknown Login Issue"
             My.Settings.AutoLogin = False
         Else
             loginStatus.ForeColor = Color.Black
@@ -158,10 +166,11 @@ Public Class LoginDialog
         s_password = Me.PasswordTextBox.Text
         s_countryCode = Me.CountryComboBox.SelectedValue.ToString
 
-        DoLogin(New Http.HttpClient, s_userName, lastErrorMessage)
+        Dim accessToken As AccessToken = DoLogin(New Http.HttpClient, s_userName)
+        Me.Client = New Client2()
         Me.Ok_Button.Enabled = False
 
-        Dim recentData As Dictionary(Of String, String) = Me.Client.GetRecentData()
+        Dim recentData As Dictionary(Of String, Object) = Me.Client.GetRecentData()
         If recentData?.Count > 0 Then
             s_lastMedicalDeviceDataUpdateServerEpoch = 0
             ReportLoginStatus(Me.LoginStatus, False)
@@ -181,8 +190,8 @@ Public Class LoginDialog
             Me.DialogResult = DialogResult.OK
             Me.Hide()
         Else
-            ReportLoginStatus(Me.LoginStatus, True, Me.Client.GetLastErrorMessage)
-            If Me.Client.GetLastErrorMessage = "Invalid username or password" Then
+            ReportLoginStatus(Me.LoginStatus, True, Me.Client.GetLastResponseCode)
+            If Client2.Auth_Error_Codes.Contains(Me.Client.GetLastResponseCode) Then
                 Me.PasswordTextBox.Text = ""
                 Dim userRecord As CareLinkUserDataRecord = Nothing
                 If s_allUserSettingsData.TryGetValue(s_userName, userRecord) Then
@@ -190,7 +199,7 @@ Public Class LoginDialog
                 End If
             End If
 
-            Dim networkDownMessage As String = If(NetworkUnavailable(), "due to network being unavailable", $"'{Me.Client.GetLastErrorMessage}'")
+            Dim networkDownMessage As String = If(NetworkUnavailable(), "due to network being unavailable", $"Response Code = {Me.Client.GetLastResponseCode}")
             Select Case MsgBox($"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!", networkDownMessage, MsgBoxStyle.AbortRetryIgnore Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Question, "Login Failed")
                 Case MsgBoxResult.Abort
                     End

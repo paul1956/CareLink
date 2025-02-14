@@ -46,11 +46,11 @@ Public Class Form1
         End Set
     End Property
 
-    Public Shared Property Client As CareLinkClient1
+    Public Shared Property Client As Client2
         Get
             Return Form1LoginHelpers.LoginDialog?.Client
         End Get
-        Set(value As CareLinkClient1)
+        Set(value As Client2)
             Form1LoginHelpers.LoginDialog.Client = value
         End Set
     End Property
@@ -1234,7 +1234,10 @@ Public Class Form1
                         If ExceptionHandlerDialog.ShowDialog(Me) = DialogResult.OK Then
                             ExceptionHandlerDialog.ReportFileNameWithPath = ""
                             Try
+#If False Then ' ToDo
                                 RecentData = LoadIndexedItems(ExceptionHandlerDialog.LocalRawData)
+#End If
+
                             Catch ex As Exception
                                 MessageBox.Show($"Error reading date file. Original error: {ex.DecodeException()}")
                             End Try
@@ -1299,8 +1302,9 @@ Public Class Form1
                         SetUpCareLinkUser(TestSettingsFileNameWithPath)
                         CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"CareLink", True)
                         CurrentUICulture = CurrentDateCulture
-
+#If False Then ' ToDo
                         RecentData = LoadIndexedItems(File.ReadAllText(openFileDialog1.FileName))
+#End If
                         Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                         Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
                         Dim fileDate As Date = File.GetLastWriteTime(openFileDialog1.FileName)
@@ -1367,10 +1371,13 @@ Public Class Form1
     End Sub
 
     Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotSave.Click
+#If False Then ' ToDo
         If RecentDataEmpty() Then Exit Sub
         Using jd As JsonDocument = JsonDocument.Parse(RecentData.CleanUserData(), New JsonDocumentOptions)
             File.WriteAllTextAsync(GetUniqueDataFileName(BaseNameSavedSnapshot, CurrentDateCulture.Name, "json", True).withPath, JsonSerializer.Serialize(jd, s_jsonSerializerOptions))
         End Using
+#End If
+
     End Sub
 
     Private Sub MenuStartHereUseLastSavedFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseLastSavedFile.Click
@@ -1547,8 +1554,11 @@ Public Class Form1
             PumpTimeZoneInfo = TimeZoneInfo.Local
             My.Settings.UseLocalTimeZone = True
         Else
+#If False Then ' ToDo
             PumpTimeZoneInfo = CalculateTimeZone(RecentData(NameOf(ItemIndexes.clientTimeZoneName)))
             My.Settings.UseLocalTimeZone = False
+#End If
+
         End If
         If saveRequired Then My.Settings.Save()
     End Sub
@@ -1778,13 +1788,14 @@ Public Class Form1
     End Sub
 
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
+#If False Then ' ToDo
         StartOrStopServerUpdateTimer(False)
         SyncLock _updatingLock
             If Not _updating Then
                 _updating = True
                 RecentData = Client?.GetRecentData()
                 If RecentDataEmpty() Then
-                    If Client Is Nothing OrElse Client.HasErrors Then
+                    If Client Is Nothing Then
                         Do While True
                             LoginDialog.LoginSourceAutomatic = FileToLoadOptions.Login
                             Dim result As DialogResult = LoginDialog.ShowDialog(My.Forms.Form1)
@@ -1829,10 +1840,11 @@ Public Class Form1
                 Stop
             End If
         Else
-            ReportLoginStatus(Me.LoginStatus, True, Client.GetLastErrorMessage)
+            ReportLoginStatus(Me.LoginStatus, True, Client.GetLastResponseCode)
             _sgMiniDisplay.SetCurrentSgString("---", 0)
         End If
         StartOrStopServerUpdateTimer(True, s_1MinutesInMilliseconds)
+#End If
     End Sub
 
 #End Region ' Timer Events

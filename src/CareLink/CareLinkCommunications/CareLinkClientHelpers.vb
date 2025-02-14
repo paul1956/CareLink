@@ -181,9 +181,9 @@ Public Module CareLinkClientHelpers
 
     End Function
 
-    Friend Function DoLogin(ByRef client As HttpClient, userName As String, ByRef lastErrorMessage As String) As JsonElement?
+    Friend Function DoLogin(ByRef client As HttpClient, userName As String) As AccessToken
         Dim fileWithPath As String = GetLoginDataFileName(userName)
-        Dim tokenData As JsonElement? = ReadTokenDataFile(fileWithPath)
+        Dim tokenData As AccessToken = ReadTokenDataFile(fileWithPath)
 
         If tokenData IsNot Nothing Then
             Return tokenData
@@ -292,7 +292,7 @@ Public Module CareLinkClientHelpers
         ssoConfig As SsoConfig,
         regReq As HttpResponseMessage,
         clientInitResponse As ClientInitData,
-        logindataFile As String) As Task(Of JsonElement)
+        logindataFile As String) As Task(Of AccessToken)
 
         Dim tokenReqUrl As String = $"{apiBaseUrl}{ssoConfig.OAuth.SystemEndpoints.TokenEndpointPath}"
         Dim tokenReqData As New Dictionary(Of String, String) From {
@@ -315,26 +315,28 @@ Public Module CareLinkClientHelpers
         End If
 
         Dim tokenDataStr As String = Await tokenResp.Content.ReadAsStringAsync()
-        Dim tokenData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(tokenDataStr)
-        Console.WriteLine("got token data from server")
+        'Dim tokenData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(tokenDataStr)
+        Debug.WriteLine("got token data from server")
 
-        Dim tokenDataToSave As New Dictionary(Of String, JsonElement)
-        For Each prop As JsonProperty In tokenData.EnumerateObject()
-            If prop.Name <> "expires_in" AndAlso prop.Name <> "token_type" Then
-                tokenDataToSave.Add(prop.Name, prop.Value)
-            End If
-        Next
+        'Dim tokenDataToSave As New Dictionary(Of String, JsonElement)
+        'For Each prop As JsonProperty In tokenData.EnumerateObject()
+        '    If prop.Name <> "expires_in" AndAlso prop.Name <> "token_type" Then
+        '        tokenDataToSave.Add(prop.Name, prop.Value)
+        '    End If
+        'Next
 
-        tokenDataToSave.Add("client_id", JsonSerializer.SerializeToElement(tokenReqData("client_id")))
-        tokenDataToSave.Add("client_secret", JsonSerializer.SerializeToElement(tokenReqData("client_secret")))
-        tokenDataToSave.Add("mag-identifier", JsonSerializer.SerializeToElement(regReq.Headers.GetValues("mag-identifier").FirstOrDefault()))
+        'tokenDataToSave.Add("client_id", JsonSerializer.SerializeToElement(tokenReqData("client_id")))
+        'tokenDataToSave.Add("client_secret", JsonSerializer.SerializeToElement(tokenReqData("client_secret")))
+        'tokenDataToSave.Add("mag-identifier", JsonSerializer.SerializeToElement(regReq.Headers.GetValues("mag-identifier").FirstOrDefault()))
+
+        Dim tokenDataToSave As AccessToken = JsonSerializer.Deserialize(Of AccessToken)(tokenDataStr)
 
         WriteTokenDataFile(tokenDataToSave, logindataFile)
-        Return tokenData
+        Return tokenDataToSave
     End Function
 
     Private Function GetLoginDataFileName(userName As String) As String
-        Return Path.Combine(SettingsDirectory, $"{userName}loginData.json")
+        Return Path.Combine(Directory.GetParent(SettingsDirectory).FullName, $"{userName}LoginData.json")
     End Function
 
     Friend Function NetworkUnavailable() As Boolean

@@ -42,7 +42,7 @@ Public Module JsonExtensions
     End Function
 
     <Extension>
-    Public Function CleanUserData(cleanRecentData As Dictionary(Of String, String)) As String
+    Public Function CleanUserData(cleanRecentData As Dictionary(Of String, Object)) As String
         If cleanRecentData Is Nothing Then Return ""
         cleanRecentData("firstName") = "First"
         cleanRecentData("lastName") = "Last"
@@ -226,8 +226,8 @@ Public Module JsonExtensions
         Return resultDictionaryArray.ToSgList()
     End Function
 
-    Public Function LoadIndexedItems(jsonString As String) As Dictionary(Of String, String)
-        Dim resultDictionary As New Dictionary(Of String, String)
+    Public Function LoadIndexedItems(jsonString As String) As Dictionary(Of String, Object)
+        Dim resultDictionary As New Dictionary(Of String, Object)
         If String.IsNullOrWhiteSpace(jsonString) Then
             Return resultDictionary
         End If

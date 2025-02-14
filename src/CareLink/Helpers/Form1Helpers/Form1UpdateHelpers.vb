@@ -113,16 +113,21 @@ Friend Module Form1UpdateHelpers
         End If
 
         s_lastMedicalDeviceDataUpdateServerEpoch = CLng(RecentData(ItemIndexes.lastMedicalDeviceDataUpdateServerTime.ToString))
+
+#If False Then ' ToDo
         If RecentData.TryGetValue(ItemIndexes.therapyAlgorithmState.ToString, markerRowString) Then
             s_therapyAlgorithmStateValue = LoadIndexedItems(markerRowString)
             InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso {"AUTO_BASAL", "SAFE_BASAL"}.Contains(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.autoModeShieldState)))
         End If
+#End If
 
 #Region "Update all Markers"
 
         If RecentData.TryGetValue(ItemIndexes.sgs.ToString, markerRowString) Then
             s_listOfSgRecords = JsonToLisOfSgs(markerRowString)
         End If
+
+#If False Then ' ToDo
 
         If RecentData.TryGetValue(ItemIndexes.basal.ToString, markerRowString) Then
             Dim item As BasalRecord = DictionaryToClass(Of BasalRecord)(LoadIndexedItems(markerRowString), recordNumber:=0)
@@ -133,6 +138,7 @@ Friend Module Form1UpdateHelpers
                                              CollectMarkers(markerRowString),
                                              ""
                                             )
+#End If
 
 #End Region ' Update all Markers
 
@@ -252,6 +258,7 @@ Friend Module Form1UpdateHelpers
                       ItemIndexes.lastSGTrend
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
+#If False Then ' ToDo
                 Case ItemIndexes.lastSG
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
                     s_lastSgRecord = New SgRecord(LoadIndexedItems(row.Value), 0)
@@ -263,6 +270,7 @@ Friend Module Form1UpdateHelpers
                 Case ItemIndexes.activeInsulin
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
                     s_activeInsulin = DictionaryToClass(Of ActiveInsulinRecord)(LoadIndexedItems(row.Value), 0)
+#End If
 
                 Case ItemIndexes.sgs
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
@@ -280,7 +288,9 @@ Friend Module Form1UpdateHelpers
 
                 Case ItemIndexes.notificationHistory
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
+#If False Then ' ToDo
                     s_notificationHistoryValue = LoadIndexedItems(row.Value)
+#End If
 
                 Case ItemIndexes.therapyAlgorithmState
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))

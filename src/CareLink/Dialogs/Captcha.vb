@@ -15,7 +15,6 @@ Public Class Captcha
     Private ReadOnly _ignoredURLs As New List(Of String) From {
             "https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/consent"}
 
-    Private _authTokenValue As String
     Private _doCancel As Boolean
     Private _lastUrl As String
     Private _redirectUri As String
@@ -44,7 +43,7 @@ Public Class Captcha
 
     Private Property _userName As String
 
-    Public Property Client As CareLinkClient1
+    Public Property Client As Client2
 
     Private Shared Function ExtractValueFromUrl(parameterObjectAsJson As String, key As String) As String
         key &= "="
@@ -115,7 +114,6 @@ Public Class Captcha
         End If
 
         If foundAuthToken Then
-            Me.Client = New CareLinkClient1(cookies, s_userName, s_password, s_countryCode)
             Exit Sub
         End If
         If Me.WebView21.Source.ToString.StartsWith("https://mdtlogin.medtronic.com/mmcl/auth/oauth/v2/authorize/login") OrElse Me.WebView21.Source.ToString.StartsWith("https://mdtlogin-ocl.medtronic.com/mmcl/auth/oauth/v2/authorize/login") Then
@@ -202,7 +200,6 @@ Public Class Captcha
         Me.WebView21.Visible = True
         Me.BringToFront()
         Application.DoEvents()
-        _authTokenValue = ""
         _doCancel = False
 
         Try
