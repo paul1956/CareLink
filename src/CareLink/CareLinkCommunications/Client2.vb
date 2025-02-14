@@ -266,7 +266,7 @@ Public Class Client2
 
             If Auth_Error_Codes.Contains(CInt(_lastApiStatus)) Then
                 Try
-                    _tokenDataElement = DoRefresh(jsonConfigElement.ConvertJsonElementToDictionary, _tokenDataElement)
+                    _tokenDataElement = Me.DoRefresh(jsonConfigElement.ConvertJsonElementToDictionary, _tokenDataElement)
                     _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
                     WriteTokenFile(_tokenDataElement, s_userName)
                 Catch refreshEx As Exception
@@ -412,7 +412,7 @@ Public Class Client2
         ' Check API response
         If Auth_Error_Codes.Contains(_lastApiStatus) Then
             ' Try to refresh token
-            _tokenDataElement = DoRefresh(_config, _tokenDataElement)
+            _tokenDataElement = Me.DoRefresh(_config, _tokenDataElement)
             _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
             WriteTokenFile(_tokenDataElement, s_userName)
 
