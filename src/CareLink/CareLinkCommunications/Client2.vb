@@ -26,12 +26,6 @@ Public Class Client2
     Private _username As String
     Public Property LoggedIn As Boolean
 
-    Public Shared ReadOnly s_common_Headers As New Dictionary(Of String, String) From {
-        {"Accept", "application/json"},
-        {"Content-Type", "application/json"},
-        {"sec-ch-ua", """Not/A)Brand"";v=""99"", ""Microsoft Edge"";v=""115"", ""Chromium"";v=""115"""},
-        {"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.203"}}
-
     Public Sub New(Optional tokenFile As String = DEFAULT_FILENAME)
         _version = VERSION
 
@@ -53,6 +47,7 @@ Public Class Client2
         _lastApiStatus = Nothing
 
         _httpClient = New HttpClient
+        _httpClient.SetDefaultRequestHeaders(s_common_Headers, referrerUri:=Nothing)
     End Sub
 
     Public Shared ReadOnly Property Auth_Error_Codes As Integer() = {401, 403}
@@ -349,11 +344,10 @@ Public Class Client2
 
     Private Function GetUser(config As JsonElement, tokenData As JsonElement) As JsonElement
         Debug.WriteLine(NameOf(GetUser))
-        Dim url As String = config.GetProperty("baseUrlCareLink").GetString() & "/users/me"
-        'Dim headers As New Dictionary(Of String, String)(s_common_Headers)
+        Dim url As String = $"{config.GetProperty("baseUrlCareLink").GetString()}/users/me"
         Dim headers As New Dictionary(Of String, String)
         headers("mag-identifier") = tokenData.GetProperty("mag-identifier").GetString()
-        headers("Authorization") = "Bearer " & tokenData.GetProperty("access_token").GetString()
+        headers("Authorization") = $"Bearer {tokenData.GetProperty("access_token").GetString()}"
 
         For Each header As KeyValuePair(Of String, String) In headers
             _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)

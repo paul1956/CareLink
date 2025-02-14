@@ -73,6 +73,7 @@ Public Class LoginDialog
 
     Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         _httpClient = New HttpClient()
+        _httpClient.SetDefaultRequestHeaders(s_common_Headers, referrerUri:=Nothing)
         Me.ClientDiscover = Discover.GetDiscoveryData()
         If _initialHeight = 0 Then
             _initialHeight = Me.Height
