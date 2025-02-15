@@ -352,7 +352,7 @@ Public Class Client2
         For Each header As KeyValuePair(Of String, String) In headers
             _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
         Next
-
+        ' Richard next line fails
         Dim response As HttpResponseMessage = _httpClient.GetAsync(url).Result
             _lastApiStatus = CInt(response.StatusCode)
         Debug.WriteLine($"   status: {_lastApiStatus}")
