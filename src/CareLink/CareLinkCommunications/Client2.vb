@@ -47,7 +47,7 @@ Public Class Client2
         _lastApiStatus = Nothing
 
         _httpClient = New HttpClient
-        _httpClient.SetDefaultRequestHeaders(s_common_Headers, referrerUri:=Nothing)
+        _httpClient.SetDefaultRequestHeaders(referrerUri:=Nothing)
     End Sub
 
     Public Shared ReadOnly Property Auth_Error_Codes As Integer() = {401, 403}
@@ -178,7 +178,7 @@ Public Class Client2
                     End If
                 End While
                 requestUri = New Uri($"https://{serverUrl}/patient/reports/reportPdf?{uuidString}")
-                _httpClient.SetDefaultRequestHeaders(headers, referrerUri)
+                (_httpClient.SetDefaultRequestHeadersheaders, referrerUri)
                 response = _httpClient.SendAsync(New HttpRequestMessage(HttpMethod.Get, requestUri)).Result
                 _lastResponseCode = response.StatusCode
                 If response?.IsSuccessStatusCode Then

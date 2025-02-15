@@ -31,7 +31,7 @@ Public Module SystemConstants
         {"TreatmentMarkersChart", New CalloutAnnotation}}
 
     Friend ReadOnly s_common_Headers As New Dictionary(Of String, String) From {
-        {"Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;deviceFamily=b3;q=0.9"},
+        {"Accept", "application/json,text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;deviceFamily=b3;q=0.9"},
         {"Accept-Language", "en-US,en;q=0.9"},
         {"Connection", "keep-alive"},
         {"sec-ch-ua", """Not/A)Brand"";v=""99"", ""Microsoft Edge"";v=""115"", ""Chromium"";v=""115"""},

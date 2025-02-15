@@ -19,12 +19,10 @@ Friend Module HttpClientExtensions
     End Function
 
     <Extension>
-    Friend Sub SetDefaultRequestHeaders(ByRef httpClient As HttpClient, headers As Dictionary(Of String, String), referrerUri As Uri)
+    Friend Sub SetDefaultRequestHeaders(ByRef httpClient As HttpClient, referrerUri As Uri)
         httpClient.DefaultRequestHeaders.Clear()
-        For Each header As KeyValuePair(Of String, String) In headers.Sort
-            If header.Key <> "Content-Type" Then
-                httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
-            End If
+        For Each header As KeyValuePair(Of String, String) In s_common_Headers.Sort
+            httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
         Next
         If referrerUri IsNot Nothing Then
             httpClient.DefaultRequestHeaders.Referrer = referrerUri
@@ -32,8 +30,8 @@ Friend Module HttpClientExtensions
     End Sub
 
     <Extension>
-    Public Function [Get](httpClient As HttpClient, requestUri As StringBuilder, ByRef lastError As String, Optional headers As Dictionary(Of String, String) = Nothing, Optional queryParams As Dictionary(Of String, String) = Nothing, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As HttpResponseMessage
-        httpClient.SetDefaultRequestHeaders(headers, Nothing)
+    Public Function [Get](httpClient As HttpClient, requestUri As StringBuilder, ByRef lastError As String, Optional queryParams As Dictionary(Of String, String) = Nothing, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As HttpResponseMessage
+        httpClient.SetDefaultRequestHeaders(Nothing)
         If queryParams IsNot Nothing Then
             requestUri.Append("?"c)
             For Each param As KeyValuePair(Of String, String) In queryParams
