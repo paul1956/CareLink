@@ -41,7 +41,7 @@ Public Module Discover
 
     Public Function GetConfigElement(httpClient As HttpClient, country As String) As JsonElement
         Debug.WriteLine(NameOf(GetConfigElement))
-        Dim isUsRegion As Boolean = Nothing
+        Dim isUsRegion As Boolean = True
         Dim discoveryUrl As String = If(isUsRegion, s_discoverUrl("US"), s_discoverUrl("EU"))
         Dim response As String = httpClient.GetStringAsync(discoveryUrl).Result
         Dim jsonElementData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(response)
