@@ -112,7 +112,7 @@ Public Module CareLinkClientHelpers
         Return (captchaUrl, clientInitResponse)
     End Function
 
-    Friend Function DoLogin(ByRef httpClient As HttpClient, userName As String) As AccessToken
+    Friend Function DoLogin(ByRef httpClient As HttpClient, userName As String, isUsRegion As Boolean) As AccessToken
         Dim tokenData As AccessToken = ReadTokenDataFile(userName)
 
         If tokenData IsNot Nothing Then
@@ -124,8 +124,7 @@ Public Module CareLinkClientHelpers
         Dim ssoConfig As SsoConfig = Nothing
         Dim authorizeUrlData As (authorizeUrl As String, clientInitData As ClientInitData) = Nothing
         Try
-            'TODO : Implement isUsRegion
-            endpointConfig = ResolveEndpointConfigAsync(httpClient, DiscoveryUrl, isUsRegion:=True)
+            endpointConfig = ResolveEndpointConfigAsync(httpClient, DiscoveryUrl, isUsRegion)
             ssoConfig = endpointConfig.SsoConfig
             authorizeUrlData = GetAuthorizeUrlData(httpClient, ssoConfig, endpointConfig.ApiBaseUrl)
             authorizeUrl = authorizeUrlData.authorizeUrl
@@ -173,15 +172,16 @@ Public Module CareLinkClientHelpers
         ' Prepare URL
         Dim regUrl As String = $"{endpointConfig.ApiBaseUrl}{ssoConfig.Mag.SystemEndpoints.DeviceRegisterEndpointPath}"
 
-        ' Send POST request
-        Dim content As New StringContent(csr, Encoding.UTF8, "application/x-www-form-urlencoded")
-
         For Each header As KeyValuePair(Of String, String) In regHeaders
-            httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
+            Dim value As String = header.Value
+            httpClient.DefaultRequestHeaders.Add(header.Key, value)
         Next
 
         Dim regResponse As HttpResponseMessage = Nothing
         Try
+
+            ' Send POST request
+            Dim content As New StringContent(csr, Encoding.UTF8, "application/x-www-form-urlencoded")
             ' Richard: Next line is a problem it returns Status 401 details are in the response
             regResponse = httpClient.PostAsync(regUrl, content).Result
         Catch ex As Exception

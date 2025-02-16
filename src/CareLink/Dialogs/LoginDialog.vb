@@ -162,7 +162,7 @@ Public Class LoginDialog
         s_password = Me.PasswordTextBox.Text
         s_countryCode = Me.CountryComboBox.SelectedValue.ToString
 
-        Dim accessToken As AccessToken = DoLogin(_httpClient, s_userName)
+        Dim accessToken As AccessToken = DoLogin(_httpClient, s_userName, Me.RegionComboBox.SelectedValue.ToString = "North America")
         Me.Client = New Client2()
         Me.Ok_Button.Enabled = False
         Me.Client.Init()
