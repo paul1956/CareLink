@@ -16,7 +16,6 @@ Public Class LoginDialog
     Private _doCancel As Boolean
     Private _httpClient As HttpClient
     Private _initialHeight As Integer = 0
-    Private _lastUrl As String
     Private _loginSourceAutomatic As FileToLoadOptions = FileToLoadOptions.NewUser
     Public Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
     Public Property LoggedOnUser As New CareLinkUserDataRecord(s_allUserSettingsData)
