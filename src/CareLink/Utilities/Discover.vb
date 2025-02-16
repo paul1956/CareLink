@@ -7,7 +7,6 @@ Imports System.Text.Json
 Imports WebView2.DevTools.Dom
 
 Public Module Discover
-    Private ReadOnly s_discoverUrl As String = "https://clcloud.minimed.com/connect/carepartner/v11/discover/android/3.2"
 
     Private Function GetConfigJson(country As String, jsonElementData As JsonElement) As JsonElement
         Dim config As JsonElement
@@ -40,8 +39,10 @@ Public Module Discover
         Return config
     End Function
 
-    Public Function GetConfigElement(httpClient As HttpClient, discoveryUrl As String, country As String) As JsonElement
+    Public Function GetConfigElement(httpClient As HttpClient, country As String) As JsonElement
         Debug.WriteLine(NameOf(GetConfigElement))
+        Dim isUsRegion As Boolean = Nothing
+        Dim discoveryUrl As String = If(isUsRegion, s_discoverUrl("US"), s_discoverUrl("EU"))
         Dim response As String = httpClient.GetStringAsync(discoveryUrl).Result
         Dim jsonElementData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(response)
         Dim configurationData As ConfigRecord = JsonSerializer.Deserialize(Of ConfigRecord)(response)
@@ -57,9 +58,10 @@ Public Module Discover
         Return JsonSerializer.Deserialize(Of JsonElement)(JsonSerializer.Serialize(mutableConfig, s_jsonSerializerOptions))
     End Function
 
-    Public Function GetDiscoveryData() As ConfigRecord
+    Public Function GetDiscoveryData(country As String) As ConfigRecord
         Try
-            Return DownloadAndDecodeJson(Of ConfigRecord)(s_discoverUrl)
+            Dim region As String = If(country.Equals("US", StringComparison.InvariantCultureIgnoreCase), "US", "EU")
+            Return DownloadAndDecodeJson(Of ConfigRecord)(s_discoverUrl(Region))
         Catch ex As HttpRequestException
             Debug.WriteLine($"Error downloading JSON: {ex.Message}")
         Catch ex As JsonException

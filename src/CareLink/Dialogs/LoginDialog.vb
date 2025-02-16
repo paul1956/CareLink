@@ -74,7 +74,6 @@ Public Class LoginDialog
     Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         _httpClient = New HttpClient()
         _httpClient.SetDefaultRequestHeaders(referrerUri:=Nothing)
-        Me.ClientDiscover = Discover.GetDiscoveryData()
         If _initialHeight = 0 Then
             _initialHeight = Me.Height
         End If
@@ -162,6 +161,7 @@ Public Class LoginDialog
         s_password = Me.PasswordTextBox.Text
         s_countryCode = Me.CountryComboBox.SelectedValue.ToString
 
+        Me.ClientDiscover = Discover.GetDiscoveryData(s_countryCode)
         Dim accessToken As AccessToken = DoLogin(_httpClient, s_userName, Me.RegionComboBox.SelectedValue.ToString = "North America")
         Me.Client = New Client2()
         Me.Ok_Button.Enabled = False

@@ -9,7 +9,6 @@ Imports System.Text.Json
 
 Public Class Client2
     ' Constants
-    Private Const CARELINK_CONFIG_URL As String = "https://clcloud.minimed.eu/connect/carepartner/v11/discover/android/3.2"
     Private Const DEFAULT_FILENAME As String = "logindata.json"
     Private Const VERSION As String = "1.2"
 
@@ -248,7 +247,7 @@ Public Class Client2
             Dim element As JsonElement = CType(_accessTokenPayload("token_details"), JsonElement)
             Dim payload As AccessTokenDetails = JsonSerializer.Deserialize(Of AccessTokenDetails)(element, s_jsonDeserializerOptions)
             _country = payload.Country
-            jsonConfigElement = GetConfigElement(_httpClient, CARELINK_CONFIG_URL, _country)
+            jsonConfigElement = GetConfigElement(_httpClient, _country)
             _config = jsonConfigElement.ConvertJsonElementToDictionary
             _username = payload.Name
             _user = Me.GetUser(jsonConfigElement, _tokenDataElement).ConvertJsonElementToDictionary
@@ -349,7 +348,7 @@ Public Class Client2
         headers("mag-identifier") = tokenData.GetProperty("mag-identifier").GetString()
         headers("Authorization") = $"Bearer {tokenData.GetProperty("access_token").GetString()}"
 
-        For Each header As KeyValuePair(Of String, String) In headers
+        For Each header As KeyValuePair(Of String, String) In headers.Sort
             _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
         Next
         ' Richard next line fails

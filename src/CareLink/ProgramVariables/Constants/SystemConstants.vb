@@ -6,7 +6,6 @@ Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Module SystemConstants
-    Friend Const DiscoveryUrl As String = "https://clcloud.minimed.eu/connect/carepartner/v11/discover/android/3.2"
     Friend Const RsaKeySize As Integer = 2048
 
     Friend Const BaseNameSavedErrorReport As String = "CareLinkErrorReport"
@@ -36,6 +35,10 @@ Public Module SystemConstants
         {"Connection", "keep-alive"},
         {"sec-ch-ua", """Not/A)Brand"";v=""99"", ""Microsoft Edge"";v=""115"", ""Chromium"";v=""115"""},
         {"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.203"}}
+
+    Friend ReadOnly s_discoverUrl As New Dictionary(Of String, String) From {
+        {"EU", "https://clcloud.minimed.eu/connect/carepartner/v11/discover/android/3.2"},
+        {"US", "https://clcloud.minimed.com/connect/carepartner/v11/discover/android/3.2"}}
 
     Friend ReadOnly s_insulinTypes As New Dictionary(Of String, InsulinActivationRecord) From {
         {$"Humalog{RegisteredTrademark}", New InsulinActivationRecord(8, 4)},

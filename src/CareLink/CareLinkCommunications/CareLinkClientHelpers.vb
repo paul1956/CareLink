@@ -124,7 +124,8 @@ Public Module CareLinkClientHelpers
         Dim ssoConfig As SsoConfig = Nothing
         Dim authorizeUrlData As (authorizeUrl As String, clientInitData As ClientInitData) = Nothing
         Try
-            endpointConfig = ResolveEndpointConfigAsync(httpClient, DiscoveryUrl, isUsRegion)
+            Dim discoveryUrl As String = If(isUsRegion, s_discoverUrl("US"), s_discoverUrl("EU"))
+            endpointConfig = ResolveEndpointConfigAsync(httpClient, discoveryUrl, isUsRegion)
             ssoConfig = endpointConfig.SsoConfig
             authorizeUrlData = GetAuthorizeUrlData(httpClient, ssoConfig, endpointConfig.ApiBaseUrl)
             authorizeUrl = authorizeUrlData.authorizeUrl
