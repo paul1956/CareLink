@@ -18,7 +18,7 @@ Public Module Discover
             End If
         Next
 
-        If region.ValueKind = JsonValueKind.Null Then
+        If region.ValueKind.IsNullOrUndefined Then
             Throw New Exception($"ERROR: country code {country} is not supported")
         End If
         Debug.WriteLine($"   region: {region}")
@@ -34,7 +34,7 @@ Public Module Discover
         Catch ex As Exception
             Stop
         End Try
-        If config.ValueKind = JsonValueKind.Undefined Then
+        If config.ValueKind.IsNullOrUndefined Then
             Throw New Exception($"ERROR: failed to get config base URLs for region {region}")
         End If
         Return config

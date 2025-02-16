@@ -128,6 +128,11 @@ Public Module JsonExtensions
     End Function
 
     <Extension>
+    Public Function IsNullOrUndefined(kind As JsonValueKind) As Boolean
+        Return kind = JsonValueKind.Null OrElse kind = JsonValueKind.Undefined
+    End Function
+
+    <Extension>
     Public Function jsonItemAsString(item As KeyValuePair(Of String, Object)) As String
         Dim itemValue As JsonElement = CType(item.Value, JsonElement)
         Dim valueAsString As String = itemValue.ToString

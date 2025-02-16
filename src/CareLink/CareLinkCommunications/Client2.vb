@@ -234,7 +234,7 @@ Public Class Client2
 
     Private Function _init() As Boolean
         _tokenDataElement = ReadTokenFile(s_userName, _tokenBaseFileName)
-        If _tokenDataElement.ValueKind = JsonValueKind.Null Then
+        If _tokenDataElement.ValueKind.IsNullOrUndefined Then
             Me.LoggedIn = False
             Return False
         End If
@@ -345,7 +345,7 @@ Public Class Client2
     Private Function GetUser(config As JsonElement, tokenData As JsonElement) As JsonElement
         Debug.WriteLine(NameOf(GetUser))
         Dim url As String = $"{config.GetProperty("baseUrlCareLink").GetString()}/users/me"
-        Dim headers As New Dictionary(Of String, String)
+        Dim headers As New Dictionary(Of String, String)(s_common_Headers)
         headers("mag-identifier") = tokenData.GetProperty("mag-identifier").GetString()
         headers("Authorization") = $"Bearer {tokenData.GetProperty("access_token").GetString()}"
 
@@ -354,7 +354,7 @@ Public Class Client2
         Next
         ' Richard next line fails
         Dim response As HttpResponseMessage = _httpClient.GetAsync(url).Result
-            _lastApiStatus = CInt(response.StatusCode)
+        _lastApiStatus = CInt(response.StatusCode)
         Debug.WriteLine($"   status: {_lastApiStatus}")
 
         Return If(response.IsSuccessStatusCode,
