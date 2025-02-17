@@ -10,13 +10,8 @@ Imports System.Security.Cryptography
 Imports System.Text
 Imports System.Text.Json
 Imports System.Text.RegularExpressions
-
+Imports System.Security.Cryptography.OpenSsl
 Imports CareLink
-Imports DocumentFormat.OpenXml.Math
-Imports Org.BouncyCastle.Crypto
-Imports Org.BouncyCastle.Crypto.Generators
-Imports Org.BouncyCastle.Security
-Imports Spire.AI
 
 Public Module CareLinkClientHelpers
     Private s_clientCodeVerifier As String
@@ -146,63 +141,60 @@ Public Module CareLinkClientHelpers
         Dim androidModelSafe As String = Regex.Replace(androidModel, "[^a-zA-Z0-9]", "")
 
         ' Generate key pair
-        Dim generator As New RsaKeyPairGenerator()
-        generator.Init(New KeyGenerationParameters(New SecureRandom(), 2048))
+        Using rsa As RSA = RSA.Create(2048)
+            ' Create CSR
+            Dim csr As String = CreateCSR(rsa, "socialLogin", registerDeviceId, androidModelSafe, ssoConfig.OAuth.Client.Organization)
 
-        Dim keypair As AsymmetricCipherKeyPair = generator.GenerateKeyPair()
+            ' Prepare headers
+            Dim regHeaders As New Dictionary(Of String, String) From {
+                {"device-name", Convert.ToBase64String(Encoding.UTF8.GetBytes(androidModel))},
+                {"authorization", $"Bearer {captcha.captchaCode}"},
+                {"cert-format", "pem"},
+                {"client-authorization", $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes(clientAuthStr))}"},
+                {"create-session", "true"},
+                {"code-verifier", s_clientCodeVerifier},
+                {"device-id", Convert.ToBase64String(Encoding.UTF8.GetBytes(registerDeviceId))},
+                {"redirect-uri", ssoConfig.OAuth.Client.ClientIds(0).RedirectUri}
+            }
 
-        ' Create CSR
+            ' Reformat CSR (implement this function as needed)
+            csr = ReformatCsr(csr)
 
-        Dim csr As String = CreateCSR(keypair, "socialLogin", registerDeviceId, androidModelSafe, ssoConfig.OAuth.Client.Organization)
+            ' Prepare URL
+            Dim regUrl As String = $"{endpointConfig.ApiBaseUrl}{ssoConfig.Mag.SystemEndpoints.DeviceRegisterEndpointPath}"
 
-        ' Prepare headers
-        Dim regHeaders As New Dictionary(Of String, String) From {
-            {"device-name", Convert.ToBase64String(Encoding.UTF8.GetBytes(androidModel))},
-            {"authorization", $"Bearer {captcha.captchaCode}"},
-            {"cert-format", "pem"},
-            {"client-authorization", $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes(clientAuthStr))}"},
-            {"create-session", "true"},
-            {"code-verifier", s_clientCodeVerifier},
-            {"device-id", Convert.ToBase64String(Encoding.UTF8.GetBytes(registerDeviceId))},
-            {"redirect-uri", ssoConfig.OAuth.Client.ClientIds(0).RedirectUri}
-        }
+            For Each header As KeyValuePair(Of String, String) In regHeaders
+                Dim value As String = header.Value
+                httpClient.DefaultRequestHeaders.Add(header.Key, value)
+            Next
 
-        ' Reformat CSR (implement this function as needed)
-        csr = ReformatCsr(csr)
+            Dim regResponse As HttpResponseMessage = Nothing
+            Try
 
-        ' Prepare URL
-        Dim regUrl As String = $"{endpointConfig.ApiBaseUrl}{ssoConfig.Mag.SystemEndpoints.DeviceRegisterEndpointPath}"
+                ' Send POST request
+                Dim content As New StringContent(csr, Encoding.UTF8, "application/x-www-form-urlencoded")
+                ' Richard: Next line is a problem it returns Status 401 details are in the response
+                regResponse = httpClient.PostAsync(regUrl, content).Result
+            Catch ex As Exception
+                Stop
+            End Try
 
-        For Each header As KeyValuePair(Of String, String) In regHeaders
-            Dim value As String = header.Value
-            httpClient.DefaultRequestHeaders.Add(header.Key, value)
-        Next
+            If Not regResponse.IsSuccessStatusCode Then
+                Dim errorContent As String = regResponse.Content.ReadAsStringAsync().Result
+                Dim errorJson As JsonDocument = JsonDocument.Parse(errorContent)
+                Dim errorDescription As String = errorJson.RootElement.GetProperty("error_description").GetString()
+                Throw New Exception($"Could not register: {errorDescription}")
+            End If
 
-        Dim regResponse As HttpResponseMessage = Nothing
-        Try
+            If regResponse.StatusCode <> HttpStatusCode.OK Then
+                Throw New Exception($"Could not register: {JsonSerializer.Deserialize(Of Dictionary(Of String, String))(regResponse.Content.ReadAsStringAsync().Result)("error_description")}")
+            End If
 
-            ' Send POST request
-            Dim content As New StringContent(csr, Encoding.UTF8, "application/x-www-form-urlencoded")
-            ' Richard: Next line is a problem it returns Status 401 details are in the response
-            regResponse = httpClient.PostAsync(regUrl, content).Result
-        Catch ex As Exception
+            ' Step 5: Token
             Stop
-        End Try
+            tokenData = GetTokenDataAsync(httpClient, endpointConfig.ApiBaseUrl, ssoConfig, regResponse, authorizeUrlData.clientInitData, userName).Result
+        End Using
 
-        If Not regResponse.IsSuccessStatusCode Then
-            Dim errorContent As String = regResponse.Content.ReadAsStringAsync().Result
-            Dim errorJson As JsonDocument = JsonDocument.Parse(errorContent)
-            Dim errorDescription As String = errorJson.RootElement.GetProperty("error_description").GetString()
-            Throw New Exception($"Could not register: {errorDescription}")
-        End If
-
-        If regResponse.StatusCode <> HttpStatusCode.OK Then
-            Throw New Exception($"Could not register: {JsonSerializer.Deserialize(Of Dictionary(Of String, String))(regResponse.Content.ReadAsStringAsync().Result)("error_description")}")
-        End If
-
-        ' Step 5: Token
-        Stop
-        tokenData = GetTokenDataAsync(httpClient, endpointConfig.ApiBaseUrl, ssoConfig, regResponse, authorizeUrlData.clientInitData, userName).Result
         Return tokenData
     End Function
 

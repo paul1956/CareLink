@@ -2,30 +2,24 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports Org.BouncyCastle.Asn1.X509
-Imports Org.BouncyCastle.Crypto
-Imports Org.BouncyCastle.Crypto.Generators
-Imports Org.BouncyCastle.Pkcs
-Imports Org.BouncyCastle.Security
+Imports System.Security.Cryptography
+Imports System.Security.Cryptography.X509Certificates
+Imports System.Text
 
 Public Module CSR
 
-    Public Function CreateCSR(keypair As AsymmetricCipherKeyPair, cn As String, ou As String, dc As String, o As String) As String
-        Dim subject As New X509Name($"CN={cn}, OU={ou}, DC={dc}, O={o}")
-        Dim csr As New Pkcs10CertificationRequest(
-            "SHA256WITHRSA",
-            subject,
-            keypair.Public,
-            Nothing,
-            keypair.Private
-        )
-        Return Convert.ToBase64String(csr.GetEncoded())
-    End Function
+    Public Function CreateCSR(keypair As RSA, cn As String, ou As String, dc As String, o As String) As String
+        Dim subject As New X500DistinguishedName($"CN={cn}, OU={ou}, DC={dc}, O={o}")
+        Dim request As New CertificateRequest(subject, keypair, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1)
+        Dim csr As Byte() = request.CreateSigningRequest()
 
-    Public Function GenerateKeyPair() As AsymmetricCipherKeyPair
-        Dim generator As New RsaKeyPairGenerator()
-        generator.Init(New KeyGenerationParameters(New SecureRandom(), 2048))
-        Return generator.GenerateKeyPair()
+        ' Convert the CSR to PEM format
+        Dim pem As New StringBuilder()
+        pem.AppendLine("-----BEGIN CERTIFICATE REQUEST-----")
+        pem.AppendLine(Convert.ToBase64String(csr, Base64FormattingOptions.InsertLineBreaks))
+        pem.AppendLine("-----END CERTIFICATE REQUEST-----")
+
+        Return pem.ToString()
     End Function
 
     Public Function ReformatCsr(csr As String) As String
