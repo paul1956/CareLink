@@ -34,7 +34,7 @@ Public Module SystemConstants
         {"Accept-Language", "en-US,en;q=0.9"},
         {"Connection", "keep-alive"},
         {"sec-ch-ua", """Not/A)Brand"";v=""99"", ""Microsoft Edge"";v=""115"", ""Chromium"";v=""115"""},
-        {"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.203"}}
+        {"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/120.0.0.0"}}
 
     Friend ReadOnly s_discoverUrl As New Dictionary(Of String, String) From {
         {"EU", "https://clcloud.minimed.eu/connect/carepartner/v11/discover/android/3.2"},
