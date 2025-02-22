@@ -2,15 +2,16 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Formats
 Imports System.IO
 Imports System.Net
 Imports System.Net.Http
 Imports System.Runtime.CompilerServices
 Imports System.Security.Cryptography
+Imports System.Security.Cryptography.OpenSsl
 Imports System.Text
 Imports System.Text.Json
 Imports System.Text.RegularExpressions
-Imports System.Security.Cryptography.OpenSsl
 Imports CareLink
 
 Public Module CareLinkClientHelpers
@@ -107,7 +108,7 @@ Public Module CareLinkClientHelpers
         Return (captchaUrl, clientInitResponse)
     End Function
 
-    Friend Function DoLogin(ByRef httpClient As HttpClient, userName As String, isUsRegion As Boolean) As AccessToken
+    Friend Async Function DoLogin(httpClient As HttpClient, userName As String, isUsRegion As Boolean) As Task(Of AccessToken)
         Dim tokenData As AccessToken = ReadTokenDataFile(userName)
 
         If tokenData IsNot Nothing Then
@@ -163,22 +164,19 @@ Public Module CareLinkClientHelpers
             ' Prepare URL
             Dim regUrl As String = $"{endpointConfig.ApiBaseUrl}{ssoConfig.Mag.SystemEndpoints.DeviceRegisterEndpointPath}"
 
-            For Each header As KeyValuePair(Of String, String) In regHeaders
-                Dim value As String = header.Value
-                httpClient.DefaultRequestHeaders.Add(header.Key, value)
-            Next
-
             Dim regResponse As HttpResponseMessage = Nothing
             Try
-
-                ' Send POST request
+                Dim regRequest As New HttpRequestMessage(HttpMethod.Post, regUrl)
+                For Each header As KeyValuePair(Of String, String) In regHeaders
+                    regRequest.Headers.Add(header.Key, header.Value)
+                Next
                 Dim content As New StringContent(csr, Encoding.UTF8, "application/x-www-form-urlencoded")
-                ' Richard: Next line is a problem it returns Status 401 details are in the response
+                regRequest.Content = content
+                ' Send POST request
                 regResponse = httpClient.PostAsync(regUrl, content).Result
             Catch ex As Exception
                 Stop
             End Try
-
             If Not regResponse.IsSuccessStatusCode Then
                 Dim errorContent As String = regResponse.Content.ReadAsStringAsync().Result
                 Dim errorJson As JsonDocument = JsonDocument.Parse(errorContent)
