@@ -4,6 +4,7 @@
 
 Imports System.IO
 Imports System.Net.Http
+Imports System.Net.Http.Headers
 Imports System.Text
 Imports System.Text.Json
 
@@ -344,15 +345,19 @@ Public Class Client2
     Private Function GetUser(config As JsonElement, tokenData As JsonElement) As JsonElement
         Debug.WriteLine(NameOf(GetUser))
         Dim url As String = $"{config.GetProperty("baseUrlCareLink").GetString()}/users/me"
-        Dim headers As New Dictionary(Of String, String)(s_common_Headers)
+        Dim headers As New Dictionary(Of String, String)
         headers("mag-identifier") = tokenData.GetProperty("mag-identifier").GetString()
         headers("Authorization") = $"Bearer {tokenData.GetProperty("access_token").GetString()}"
 
-        For Each header As KeyValuePair(Of String, String) In headers.Sort
-            _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
-        Next
         ' Richard next line fails
-        Dim response As HttpResponseMessage = _httpClient.GetAsync(url).Result
+        Dim request As New HttpRequestMessage(HttpMethod.Get, url)
+        request.Headers.Accept.Add(New MediaTypeWithQualityHeaderValue("application/json"))
+        For Each header As KeyValuePair(Of String, String) In headers.Sort
+            request.Headers.Add(header.Key, header.Value)
+        Next
+
+        ' Send the request
+        Dim response As HttpResponseMessage = _httpClient.SendAsync(request).Result
         _lastApiStatus = CInt(response.StatusCode)
         Debug.WriteLine($"   status: {_lastApiStatus}")
 
