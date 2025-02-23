@@ -173,7 +173,7 @@ Public Module CareLinkClientHelpers
                 Dim content As New StringContent(csr, Encoding.UTF8, "application/x-www-form-urlencoded")
                 regRequest.Content = content
                 ' Send POST request
-                regResponse = httpClient.PostAsync(regUrl, content).Result
+                regResponse = httpClient.SendAsync(regRequest).Result
             Catch ex As Exception
                 Stop
             End Try
