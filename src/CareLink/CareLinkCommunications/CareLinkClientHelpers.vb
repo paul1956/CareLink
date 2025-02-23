@@ -12,6 +12,7 @@ Imports System.Security.Cryptography.OpenSsl
 Imports System.Text
 Imports System.Text.Json
 Imports System.Text.RegularExpressions
+Imports System.Threading
 Imports CareLink
 
 Public Module CareLinkClientHelpers
@@ -173,7 +174,8 @@ Public Module CareLinkClientHelpers
                 Dim content As New StringContent(csr, Encoding.UTF8, "application/x-www-form-urlencoded")
                 regRequest.Content = content
                 ' Send POST request
-                regResponse = httpClient.SendAsync(regRequest).Result
+                regResponse = Await httpClient.SendAsync(regRequest).ConfigureAwait(False)
+                regResponse.EnsureSuccessStatusCode()
             Catch ex As Exception
                 Stop
             End Try
