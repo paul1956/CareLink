@@ -8,6 +8,32 @@ Imports System.ComponentModel.DataAnnotations.Schema
 Public Class InsulinRecord
     Private _programmedFastAmount As Single
 
+    Public Sub New(markerEntry As Marker, recordNumber As Integer)
+        Me.RecordNumber = recordNumber
+        Me.type = markerEntry.Type
+        Me.timestamp = markerEntry.Timestamp
+#If alse Then ' TODO
+
+        Me.index = markerEntry.index
+        Me.kind = markerEntry.kind
+        Me.version = markerEntry.version
+        Me.programmedFastAmount = markerEntry programmedFastAmount
+        Me.unknownIncompletedFlag = markerEntry.unknownIncompletedFlag
+        Me.relativeOffset = markerEntry.relativeOffset
+        Me.programmedExtendedAmount = markerEntry.programmedExtendedAmount
+        Me.activationType = markerEntry.activationType
+        Me.deliveredExtendedAmount = markerEntry.deliveredExtendedAmount
+        Me.programmedFastAmount = markerEntry.programmedFastAmount
+        Me.programmedDuration = markerEntry.programmedDuration
+        Me.deliveredFastAmount = markerEntry.deliveredFastAmount
+        Me.id = markerEntry.id
+        Me.effectiveDuration = markerEntry.effectiveDuration
+        Me.SafeMealReduction = markerEntry.SafeMealReduction
+        Me.completed = markerEntry.completed
+        Me.bolusType = markerEntry.bolusType
+#End If
+    End Sub
+
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public Property RecordNumber As Integer
@@ -28,44 +54,40 @@ Public Class InsulinRecord
     <Column(Order:=4, TypeName:=NameOf([Int32]))>
     Public Property version As Integer
 
-    <DisplayName(NameOf([dateTime]))>
+    <DisplayName(NameOf(timestamp))>
     <Column(Order:=5, TypeName:="Date")>
-    Public Property [dateTime] As Date
-
-    <DisplayName("dateTime As String")>
-    <Column(Order:=6, TypeName:=NameOf([String]))>
-    Public Property dateTimeAsString As String
+    Public Property timestamp As Date
 
     <DisplayName("Unknown Incompleted Flag")>
-    <Column(Order:=7, TypeName:=NameOf([Boolean]))>
+    <Column(Order:=6, TypeName:=NameOf([Boolean]))>
     Public Property unknownIncompletedFlag As Boolean
 
     <DisplayName("OA Date Time")>
-    <Column(Order:=8, TypeName:=NameOf([Double]))>
+    <Column(Order:=7, TypeName:=NameOf([Double]))>
     Public ReadOnly Property OAdateTime As OADate
         Get
-            Return New OADate(Me.dateTime)
+            Return New OADate(Me.timestamp)
         End Get
     End Property
 
     <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=9, TypeName:=NameOf([Int32]))>
+    <Column(Order:=8, TypeName:=NameOf([Int32]))>
     Public Property relativeOffset As Integer
 
     <DisplayName("Programmed Extended Amount")>
-    <Column(Order:=10, TypeName:=NameOf([Single]))>
+    <Column(Order:=9, TypeName:=NameOf([Single]))>
     Public Property programmedExtendedAmount As Single
 
     <DisplayName("Activation Type")>
-    <Column(Order:=11, TypeName:="String", TypeName:=NameOf([String]))>
+    <Column(Order:=10, TypeName:="String", TypeName:=NameOf([String]))>
     Public Property activationType As String
 
     <DisplayName("Delivered Extended Amount")>
-    <Column(Order:=12, TypeName:=NameOf([Single]))>
+    <Column(Order:=11, TypeName:=NameOf([Single]))>
     Public Property deliveredExtendedAmount As Single
 
     <DisplayName("Programmed Fast Amount")>
-    <Column(Order:=13, TypeName:=NameOf([Single]))>
+    <Column(Order:=12, TypeName:=NameOf([Single]))>
     Public Property programmedFastAmount As Single
         Get
             Return _programmedFastAmount
@@ -74,7 +96,7 @@ Public Class InsulinRecord
             If {"RECOMMENDED", "UNDETERMINED"}.Contains(Me.activationType) Then
                 Dim meal As MealRecord = Nothing
                 If TryGetMealRecord(Me.index, meal) Then
-                    Dim cRatio As Single = CurrentUser.GetCarbRatio(TimeOnly.FromDateTime(meal.dateTime))
+                    Dim cRatio As Single = CurrentUser.GetCarbRatio(TimeOnly.FromDateTime(meal.timestamp))
                     Dim expectedBolus As Single = (meal.amount / cRatio).RoundTo025
                     If expectedBolus > Value Then
                         Me.SafeMealReduction = (expectedBolus - Value).RoundTo025
@@ -86,31 +108,31 @@ Public Class InsulinRecord
     End Property
 
     <DisplayName("Programmed Duration")>
-    <Column(Order:=14, TypeName:=NameOf([Int32]))>
+    <Column(Order:=13, TypeName:=NameOf([Int32]))>
     Public Property programmedDuration As Integer
 
     <DisplayName("Delivered Fast Amount")>
-    <Column(Order:=15, TypeName:=NameOf([Single]))>
+    <Column(Order:=14, TypeName:=NameOf([Single]))>
     Public Property deliveredFastAmount As Single
 
     <DisplayName(NameOf(id))>
-    <Column(Order:=16, TypeName:=NameOf([Int32]))>
+    <Column(Order:=15, TypeName:=NameOf([Int32]))>
     Public Property id As Integer
 
     <DisplayName("Effective Duration")>
-    <Column(Order:=17, TypeName:=NameOf([Int32]))>
+    <Column(Order:=16, TypeName:=NameOf([Int32]))>
     Public Property effectiveDuration As Integer
 
     <DisplayName("Safe Meal Reduction")>
-    <Column(Order:=18, TypeName:=NameOf([Single]))>
+    <Column(Order:=17, TypeName:=NameOf([Single]))>
     Public Property SafeMealReduction As Single
 
     <DisplayName("Completed")>
-    <Column(Order:=19, TypeName:=NameOf([Boolean]))>
+    <Column(Order:=18, TypeName:=NameOf([Boolean]))>
     Public Property completed As Boolean
 
     <DisplayName("Bolus Type")>
-    <Column(Order:=20, TypeName:=NameOf([String]))>
+    <Column(Order:=19, TypeName:=NameOf([String]))>
     Public Property bolusType As String
 
 End Class

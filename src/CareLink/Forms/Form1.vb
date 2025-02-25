@@ -497,14 +497,14 @@ Public Class Form1
         End If
         ' Set the background to red for negative values in the Balance column.
         Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(AutoBasalDeliveryRecord.bolusAmount)
+            Case NameOf(AutoBasalDelivery.bolusAmount)
                 dgv.CellFormattingSingleValue(e, 3)
                 If dgv.CellFormattingSingleValue(e, 3).IsMinBasal Then
                     CellFormattingApplyColor(e, Color.DarkRed, isUri:=False)
                 Else
                     dgv.CellFormattingSetForegroundColor(e)
                 End If
-            Case NameOf(AutoBasalDeliveryRecord.dateTime)
+            Case NameOf(AutoBasalDelivery.timestamp)
                 dgv.CellFormattingDateTime(e)
             Case Else
                 dgv.CellFormattingSetForegroundColor(e)
@@ -802,7 +802,7 @@ Public Class Form1
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(MealRecord.amount)
                 dgv.CellFormattingInteger(e, s_sessionCountrySettings.carbDefaultUnit)
-            Case NameOf(MealRecord.dateTime)
+            Case NameOf(MealRecord.timestamp)
                 dgv.CellFormattingDateTime(e)
         End Select
     End Sub
@@ -838,16 +838,16 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim alternateIndex As Integer = If(dgv.Rows(0).Cells(0).Value.ToString <> "0", 0, 1)
         Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(SgRecord.sensorState)
+            Case NameOf(SG.sensorState)
                 ' Set the background to red for negative values in the Balance column.
                 If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
                     CellFormattingApplyColor(e, Color.Red, isUri:=False)
                 End If
                 dgv.CellFormattingToTitle(e)
-            Case NameOf(SgRecord.datetime)
+            Case NameOf(SG.timestamp)
                 dgv.CellFormattingDateTime(e)
-            Case NameOf(SgRecord.sg), NameOf(SgRecord.sgMmolL), NameOf(SgRecord.sgMmDl)
-                dgv.CellFormattingSgValue(e, NameOf(SgRecord.sg))
+            Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMmDl)
+                dgv.CellFormattingSgValue(e, NameOf(SG.sg))
             Case Else
                 dgv.CellFormattingSetForegroundColor(e)
         End Select
@@ -1234,7 +1234,7 @@ Public Class Form1
                         If ExceptionHandlerDialog.ShowDialog(Me) = DialogResult.OK Then
                             ExceptionHandlerDialog.ReportFileNameWithPath = ""
                             Try
-#If False Then ' ToDo
+#If False Then ' TODO
                                 RecentData = LoadIndexedItems(ExceptionHandlerDialog.LocalRawData)
 #End If
 
@@ -1302,7 +1302,7 @@ Public Class Form1
                         SetUpCareLinkUser(TestSettingsFileNameWithPath)
                         CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"CareLink", True)
                         CurrentUICulture = CurrentDateCulture
-#If False Then ' ToDo
+#If False Then ' TODO
                         RecentData = LoadIndexedItems(File.ReadAllText(openFileDialog1.FileName))
 #End If
                         Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
@@ -1371,7 +1371,7 @@ Public Class Form1
     End Sub
 
     Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotSave.Click
-#If False Then ' ToDo
+#If False Then ' TODO
         If RecentDataEmpty() Then Exit Sub
         Using jd As JsonDocument = JsonDocument.Parse(RecentData.CleanUserData(), New JsonDocumentOptions)
             File.WriteAllTextAsync(GetUniqueDataFileName(BaseNameSavedSnapshot, CurrentDateCulture.Name, "json", True).withPath, JsonSerializer.Serialize(jd, s_jsonSerializerOptions))
@@ -1554,7 +1554,7 @@ Public Class Form1
             PumpTimeZoneInfo = TimeZoneInfo.Local
             My.Settings.UseLocalTimeZone = True
         Else
-#If False Then ' ToDo
+#If False Then ' TODO
             PumpTimeZoneInfo = CalculateTimeZone(RecentData(NameOf(ItemIndexes.clientTimeZoneName)))
             My.Settings.UseLocalTimeZone = False
 #End If
@@ -1788,7 +1788,7 @@ Public Class Form1
     End Sub
 
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
-#If False Then ' ToDo
+#If False Then ' TODO
         StartOrStopServerUpdateTimer(False)
         SyncLock _updatingLock
             If Not _updating Then
@@ -2276,6 +2276,7 @@ Public Class Form1
             Exit Sub
         End If
 
+#If False Then ' TODO
         Try
             Me.TemporaryUseAdvanceAITDecayCheckBox.Checked = CurrentUser.UseAdvancedAitDecay = CheckState.Checked
             For Each s As Series In Me.ActiveInsulinChart?.Series
@@ -2298,14 +2299,14 @@ Public Class Form1
                     Dim markerOADateTime As New OADate(markerEntry.GetMarkerDateTime)
                     Select Case markerEntry(NameOf(InsulinRecord.type))
                         Case "AUTO_BASAL_DELIVERY"
-                            Dim bolusAmount As Single = markerEntry.GetSingleValue(NameOf(AutoBasalDeliveryRecord.bolusAmount))
+                            Dim bolusAmount As Single = markerEntry.GetSingleValue(NameOf(AutoBasalDelivery.bolusAmount))
                             If timeOrderedMarkers.ContainsKey(markerOADateTime) Then
                                 timeOrderedMarkers(markerOADateTime) += bolusAmount
                             Else
                                 timeOrderedMarkers.Add(markerOADateTime, bolusAmount)
                             End If
                         Case "MANUAL_BASAL_DELIVERY"
-                            Dim bolusAmount As Single = markerEntry.GetSingleValue(NameOf(AutoBasalDeliveryRecord.bolusAmount))
+                            Dim bolusAmount As Single = markerEntry.GetSingleValue(NameOf(AutoBasalDelivery.bolusAmount))
                             If timeOrderedMarkers.ContainsKey(markerOADateTime) Then
                                 timeOrderedMarkers(markerOADateTime) += bolusAmount
                             Else
@@ -2337,18 +2338,19 @@ Public Class Form1
                     End Select
                 Next
                 ' set up table that holds active insulin for every 5 minutes
-                Dim remainingInsulinList As New List(Of RunningActiveInsulinRecord)
+                Dim remainingInsulinList As New List(Of RunningActiveInsulin)
                 Dim currentMarker As Integer = 0
 
                 For i As Integer = 0 To 287
                     Dim initialBolus As Single = 0
-                    Dim firstNotSkippedOaTime As New OADate((s_listOfSgRecords(0).datetime + (s_05MinuteSpan * i)).RoundDownToMinute())
+
+                    Dim firstNotSkippedOaTime As New OADate((s_listOfSgRecords(0).timestamp + (s_05MinuteSpan * i)).RoundDownToMinute())
                     While currentMarker < timeOrderedMarkers.Count AndAlso timeOrderedMarkers.Keys(currentMarker) <= firstNotSkippedOaTime
                         initialBolus += timeOrderedMarkers.Values(currentMarker)
                         currentMarker += 1
                     End While
-                    remainingInsulinList.Add(New RunningActiveInsulinRecord(firstNotSkippedOaTime, initialBolus, CurrentUser))
-                Next
+                    remainingInsulinList.Add(New RunningActiveInsulin(firstNotSkippedOaTime, initialBolus, CurrentUser))
+        Next
 
                 .ChartAreas(NameOf(ChartArea)).AxisY2.Maximum = GetYMaxValue(NativeMmolL)
                 ' walk all markers, adjust active insulin and then add new markerWithIndex
@@ -2379,11 +2381,12 @@ Public Class Form1
                 .PlotSgSeries(GetYMinValue(NativeMmolL))
                 .PlotHighLowLimitsAndTargetSg(True)
             End With
-            Application.DoEvents()
+        Application.DoEvents()
         Catch ex As Exception
             Stop
             Throw New Exception($"{ex.DecodeException()} exception in {NameOf(UpdateActiveInsulinChart)}")
         End Try
+#End If
     End Sub
 
     Private Sub UpdateAllSummarySeries()
@@ -2412,7 +2415,9 @@ Public Class Form1
 
     Private Sub UpdateAutoModeShield()
         Try
-            Me.LastSgOrExitTimeLabel.Text = s_lastSgRecord.datetime.ToShortTimeString
+#If False Then  ' TODO
+            Me.LastSgOrExitTimeLabel.Text = s_lastSgRecord.Timestamp.ToShortTimeString
+#End If
             Me.LastSgOrExitTimeLabel.BackColor = Color.Transparent
             Me.ShieldUnitsLabel.BackColor = Color.Transparent
             Me.ShieldUnitsLabel.Text = SgUnitsNativeString
@@ -2538,6 +2543,7 @@ Public Class Form1
         s_totalCarbs = 0
         s_totalDailyDose = 0
         s_totalManualBolus = 0
+#If False Then ' TODO
 
         For Each marker As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             Select Case marker.Value(NameOf(InsulinRecord.type))
@@ -2552,11 +2558,11 @@ Public Class Form1
                     End Select
 
                 Case "AUTO_BASAL_DELIVERY"
-                    Dim amount As Single = marker.Value(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
+                    Dim amount As Single = marker.Value(NameOf(AutoBasalDelivery.bolusAmount)).ParseSingle(3)
                     s_totalBasal += amount
                     s_totalDailyDose += amount
                 Case "MANUAL_BASAL_DELIVERY"
-                    Dim amount As Single = marker.Value(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
+                    Dim amount As Single = marker.Value(NameOf(AutoBasalDelivery.bolusAmount)).ParseSingle(3)
                     s_totalBasal += amount
                     s_totalDailyDose += amount
                 Case "MEAL"
@@ -2633,6 +2639,7 @@ Public Class Form1
             Me.Last24ManualBolusPercentLabel.Text = $"{totalPercent}%"
         End If
         Me.Last24CarbsValueLabel.Text = $"{s_totalCarbs} {s_sessionCountrySettings.carbohydrateUnitsDefault.ToTitle}"
+#End If
     End Sub
 
     Private Sub UpdateInsulinLevel()
@@ -2789,23 +2796,23 @@ Public Class Form1
                 ' need to figure out %
                 Dim autoModeStartTime As New Date
                 Dim timeInAutoMode As TimeSpan = s_0TicksSpan
-                For Each r As IndexClass(Of AutoModeStatusRecord) In s_listOfAutoModeStatusMarkers.WithIndex
+                For Each r As IndexClass(Of AutoModeStatus) In s_listOfAutoModeStatusMarkers.WithIndex
                     If r.IsFirst Then
                         If r.Value.autoModeOn Then
-                            autoModeStartTime = r.Value.dateTime
+                            autoModeStartTime = r.Value.Timestamp
                         Else
 
                         End If
                     Else
                         If r.Value.autoModeOn Then
                             If r.IsLast Then
-                                timeInAutoMode += s_listOfAutoModeStatusMarkers.First.dateTime.AddDays(1) - r.Value.dateTime
+                                timeInAutoMode += s_listOfAutoModeStatusMarkers.First.timestamp.AddDays(1) - r.Value.timestamp
                             Else
-                                autoModeStartTime = r.Value.dateTime
+                                autoModeStartTime = r.Value.Timestamp
                             End If
                         Else
-                            timeInAutoMode += r.Value.dateTime - autoModeStartTime
-                            autoModeStartTime = r.Value.dateTime
+                            timeInAutoMode += r.Value.timestamp - autoModeStartTime
+                            autoModeStartTime = r.Value.timestamp
                         End If
                     End If
                 Next
@@ -2825,7 +2832,7 @@ Public Class Form1
         Dim lowDeviations As Double = 0
         Dim elements As Integer = 0
         Dim highScale As Single = (GetYMaxValue(False) - TirHighLimit(False)) / (TirLowLimit(False) - GetYMinValue(False))
-        For Each sg As SgRecord In s_listOfSgRecords.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg))
+        For Each sg As SG In s_listOfSgRecords.Where(Function(entry As SG) Not Single.IsNaN(entry.sg))
             elements += 1
             If sg.sgMmDl < 70 Then
                 lowCount += 1
@@ -2985,12 +2992,12 @@ Public Class Form1
         Me.FullNameLabel.Text = $"{s_firstName} {RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastName))}"
         Me.ModelLabel.Text = $"{s_pumpModelNumber} HW Version = {s_pumpHardwareRevision}"
         Me.PumpNameLabel.Text = GetPumpName(s_pumpModelNumber)
-        Dim nonZeroRecords As IEnumerable(Of SgRecord) = s_listOfSgRecords.Where(Function(entry As SgRecord) Not Single.IsNaN(entry.sg))
+        Dim nonZeroRecords As IEnumerable(Of SG) = s_listOfSgRecords.Where(Function(entry As SG) Not Single.IsNaN(entry.sg))
         Me.ReadingsLabel.Text = $"{nonZeroRecords.Count()}/288 SG Readings"
 
         Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
                               ClassCollectionToDataTable({s_lastSgRecord}.ToList),
-                              NameOf(SgRecord),
+                              NameOf(SG),
                               AddressOf SgRecordHelpers.AttachHandlers,
                               ItemIndexes.lastSG,
                               True)
@@ -3004,7 +3011,7 @@ Public Class Form1
 
         Me.TableLayoutPanelActiveInsulin.DisplayDataTableInDGV(
                               ClassCollectionToDataTable({s_activeInsulin}.ToList),
-                              NameOf(ActiveInsulinRecord),
+                              NameOf(ActiveInsulin),
                               AddressOf ActiveInsulinRecordHelpers.AttachHandlers,
                               ItemIndexes.activeInsulin,
                               True)
@@ -3017,8 +3024,8 @@ Public Class Form1
         Me.DgvSGs.Columns(0).HeaderCell.SortGlyphDirection = SortOrder.Descending
 
         Me.TableLayoutPanelLimits.DisplayDataTableInDGV(
-                              ClassCollectionToDataTable(s_listOfLimitRecords),
-                              NameOf(LimitsRecord),
+                              ClassCollectionToDataTable(classCollection:=s_listOfLimitRecords),
+                              NameOf(Limit),
                               AddressOf LimitsRecordHelpers.AttachHandlers,
                               ItemIndexes.limits,
                               False)
@@ -3038,7 +3045,7 @@ Public Class Form1
 
         Me.TableLayoutPanelBasal.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(s_listOfManualBasal.ToList),
-                              NameOf(BasalRecord),
+                              NameOf(Basal),
                               AddressOf BasalRecordHelpers.AttachHandlers,
                               ItemIndexes.basal,
                               True)

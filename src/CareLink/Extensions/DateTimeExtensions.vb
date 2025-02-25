@@ -119,7 +119,7 @@ Friend Module DateTimeExtensions
     <Extension>
     Friend Function GetMarkerDateTime(marker As Dictionary(Of String, String)) As Date
         Try
-            Return marker.ParseDate(NameOf(MealRecord.dateTime)).RoundDownToMinute()
+            Return marker.ParseDate(NameOf(MealRecord.timestamp)).RoundDownToMinute()
         Catch ex As Exception
             Stop
         End Try
@@ -193,11 +193,11 @@ Friend Module DateTimeExtensions
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
             Case "loginDateUTC"
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal)
-            Case NameOf(SgRecord.datetime)
+            Case NameOf(SG.timestamp)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
-            Case NameOf(TimeChangeRecord.dateTime)
+            Case NameOf(TimeChangeRecord.timestamp)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
-            Case NameOf(TimeChangeRecord.previousDateTime)
+            Case NameOf(TimeChangeRecord.previousTimeStamp)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal)
             Case NameOf(ClearedNotificationsRecord.secondaryTime)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.NoCurrentDateDefault)

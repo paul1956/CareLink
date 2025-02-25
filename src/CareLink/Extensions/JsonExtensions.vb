@@ -9,32 +9,24 @@ Imports System.Text.Json.Serialization
 Public Module JsonExtensions
 
     Public ReadOnly s_jsonDeserializerOptions As New JsonSerializerOptions() With {
-                .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                .NumberHandling = JsonNumberHandling.WriteAsString,
-                .PropertyNameCaseInsensitive = True}
+        .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        .NumberHandling = JsonNumberHandling.WriteAsString,
+        .PropertyNameCaseInsensitive = True,
+        .UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow}
 
     Public ReadOnly s_jsonSerializerOptions As New JsonSerializerOptions With {.WriteIndented = True}
 
     <Extension>
-    Private Function ToSgList(innerJson As List(Of Dictionary(Of String, String))) As List(Of SgRecord)
-        Dim sGs As New List(Of SgRecord)
+    Private Function ToSgList(innerJson As List(Of Dictionary(Of String, String))) As List(Of SG)
+        Dim sGs As New List(Of SG)
         For i As Integer = 0 To innerJson.Count - 1
-            sGs.Add(New SgRecord(innerJson(i), i))
+            sGs.Add(New SG(innerJson(i), i))
             With sGs.Last
-                If .datetimeAsString = "" OrElse .datetimeAsString.StartsWith("200") Then
-                    .datetime = If(i = 0,
+                If .Timestamp.Equals(New DateTime) Then
+                    .Timestamp = If(i = 0,
                                    (s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime - New TimeSpan(23, 55, 0)).RoundDownToMinute(),
-                                   sGs(0).datetime + (s_05MinuteSpan * i)
+                                   sGs(0).Timestamp + (s_05MinuteSpan * i)
                                   )
-                    If Not Single.IsNaN(.sg) Then
-                        Dim jsonItemAsString As String = .datetimeAsString
-                        Dim indexOfT As Integer = jsonItemAsString.IndexOf("T"c)
-                        Dim replaceDate As String = jsonItemAsString.Substring(0, indexOfT)
-                        Dim replaceTime As String = jsonItemAsString.Substring(indexOfT, 6)
-                        .datetimeAsString = .datetimeAsString.
-                            Replace(replaceDate, $"{ .datetime.Year:0000}-{ .datetime.Month:00}-{ .datetime.Day:00}").
-                            Replace(replaceTime, $"T{ .datetime.Hour:00}:{ .datetime.Minute:00}")
-                    End If
                 End If
             End With
         Next
@@ -69,7 +61,7 @@ Public Module JsonExtensions
 
     <Extension>
     Public Function ConvertJsonElementToDictionary(jsonElement As JsonElement) As Dictionary(Of String, Object)
-        Dim result As New Dictionary(Of String, Object)()
+        Dim result As New Dictionary(Of String, Object)(StringComparer.OrdinalIgnoreCase)
 
         If jsonElement.ValueKind = JsonValueKind.Object Then
             For Each [property] As JsonProperty In jsonElement.EnumerateObject()
@@ -88,8 +80,8 @@ Public Module JsonExtensions
     End Function
 
     <Extension>
-    Public Function ConvertJsonElementToStringDictionary(jsonElement As JsonElement) As Dictionary(Of String, String)
-        Dim result As New Dictionary(Of String, String)()
+    Public Function ConvertJsonElementToStringDictionary(jsonElement As JsonElement, expandSubElements As Boolean) As Dictionary(Of String, String)
+        Dim result As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
 
         If jsonElement.ValueKind = JsonValueKind.Object Then
             For Each [property] As JsonProperty In jsonElement.EnumerateObject()
@@ -97,9 +89,28 @@ Public Module JsonExtensions
                     Case JsonValueKind.String
                         result.Add([property].Name, [property].Value.ToString)
                     Case JsonValueKind.Object
-                        result.Add([property].Name, ConvertJsonElementToDictionary([property].Value).ToString)
+                        If expandSubElements Then
+                            result.Add([property].Name, ConvertJsonElementToDictionary([property].Value).ToString)
+                        Else
+                            result.Add([property].Name, [property].Value.ToString)
+                        End If
                     Case JsonValueKind.Array
-                        result.Add([property].Name, ConvertJsonArrayToList([property].Value).ToString)
+                        If expandSubElements Then
+                            result.Add([property].Name, ConvertJsonArrayToList([property].Value).ToString)
+                        Else
+                            result.Add([property].Name, [property].Value.ToString)
+                        End If
+                    Case JsonValueKind.Null
+                        result.Add([property].Name, "")
+                    Case JsonValueKind.Undefined
+                        Stop
+                        Exit Select
+                    Case JsonValueKind.Number
+                        result.Add([property].Name, [property].Value.ToString)
+                    Case JsonValueKind.True
+                        result.Add([property].Name, "True")
+                    Case JsonValueKind.False
+                        result.Add([property].Name, "False")
                     Case Else
                         result.Add([property].Name, ConvertJsonValue([property].Value).ToString)
                 End Select
@@ -151,7 +162,7 @@ Public Module JsonExtensions
     End Function
 
     Public Function JsonToDictionary(jsonString As String) As Dictionary(Of String, String)
-        Dim resultDictionary As New Dictionary(Of String, String)
+        Dim resultDictionary As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
         If String.IsNullOrWhiteSpace(jsonString) Then
             Return resultDictionary
         End If
@@ -176,7 +187,7 @@ Public Module JsonExtensions
 
         Dim jsonList As List(Of Dictionary(Of String, Object)) = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(value, s_jsonDeserializerOptions)
         For Each e As IndexClass(Of Dictionary(Of String, Object)) In jsonList.WithIndex
-            Dim resultDictionary As New Dictionary(Of String, String)
+            Dim resultDictionary As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
             Dim defaultTime As Date = PumpNow() - New TimeSpan(23, 55, 0)
             Dim recordIndex As Integer = -1
             For Each e1 As IndexClass(Of KeyValuePair(Of String, Object)) In e.Value.WithIndex
@@ -190,12 +201,15 @@ Public Module JsonExtensions
                     resultDictionary.Add(item.Key, item.ScaleSgToString)
                 ElseIf item.Key = "dateTime" Then
                     Dim d As Date = item.Value.ToString.ParseDate(item.Key)
+#If False Then ' TODO
+
                     ' Prevent Crash but not valid data
                     If d.Year <= 2001 AndAlso recordIndex >= 0 Then
                         resultDictionary.Add(item.Key, s_listOfSgRecords(recordIndex).datetimeAsString)
                     Else
                         resultDictionary.Add(item.Key, item.jsonItemAsString)
                     End If
+#End If
                 Else
                     resultDictionary.Add(item.Key, item.jsonItemAsString)
                 End If
@@ -206,15 +220,15 @@ Public Module JsonExtensions
         Return resultDictionaryArray
     End Function
 
-    Public Function JsonToLisOfSgs(value As String) As List(Of SgRecord)
+    Public Function JsonToLisOfSgs(value As String) As List(Of SG)
         If String.IsNullOrWhiteSpace(value) Then
-            Return New List(Of SgRecord)
+            Return New List(Of SG)
         End If
 
         Dim jsonList As List(Of Dictionary(Of String, Object)) = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(value, s_jsonDeserializerOptions)
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
         For Each e As IndexClass(Of Dictionary(Of String, Object)) In jsonList.WithIndex
-            Dim resultDictionary As New Dictionary(Of String, String)
+            Dim resultDictionary As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
             Dim defaultTime As Date = PumpNow() - New TimeSpan(23, 55, 0)
             For Each item As KeyValuePair(Of String, Object) In e.Value
                 If item.Value Is Nothing Then
@@ -231,8 +245,8 @@ Public Module JsonExtensions
         Return resultDictionaryArray.ToSgList()
     End Function
 
-    Public Function LoadIndexedItems(jsonString As String) As Dictionary(Of String, Object)
-        Dim resultDictionary As New Dictionary(Of String, Object)
+    Public Function LoadIndexedItems(jsonString As String) As Dictionary(Of String, String)
+        Dim resultDictionary As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
         If String.IsNullOrWhiteSpace(jsonString) Then
             Return resultDictionary
         End If
@@ -249,9 +263,9 @@ Public Module JsonExtensions
                         If Not UnitsStrings.TryGetValue(item.Value.ToString(), SgUnitsNativeString) Then
                             Dim averageSGFloatAsString As String = rawJsonData(ItemIndexes.averageSGFloat).jsonItemAsString
                             SgUnitsNativeString = If(averageSGFloatAsString.ParseSingle(1) > 40,
-                                                             "mg/dl",
-                                                             "mmol/L"
-                                                             )
+                                                    "mg/dl",
+                                                    "mmol/L"
+                                                    )
                         End If
                         NativeMmolL = SgUnitsNativeString <> "mg/dl"
                         resultDictionary.Add(item.Key, item.jsonItemAsString)

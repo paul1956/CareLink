@@ -34,11 +34,11 @@ Friend Module PlotSeriesLimits
             chart.Series(TargetSgSeriesName).Points.AddXY(s_listOfSgRecords.Last.OaDateTime(), targetSG)
         End If
         If targetSsOnly Then Exit Sub
-        For Each sgListIndex As IndexClass(Of SgRecord) In s_listOfSgRecords.WithIndex()
+        For Each sgListIndex As IndexClass(Of SG) In s_listOfSgRecords.WithIndex()
             Dim sgOADateTime As OADate = sgListIndex.Value.OaDateTime()
             Try
-                Dim limitsLowValue As Single = s_listOfLimitRecords(limitsIndexList(sgListIndex.Index)).lowLimit
-                Dim limitsHighValue As Single = s_listOfLimitRecords(limitsIndexList(sgListIndex.Index)).highLimit
+                Dim limitsLowValue As Single = s_listOfLimitRecords(limitsIndexList(sgListIndex.Index)).LowLimit
+                Dim limitsHighValue As Single = s_listOfLimitRecords(limitsIndexList(sgListIndex.Index)).HighLimit
                 If limitsHighValue <> 0 Then
                     chart.Series(HighLimitSeriesName).Points.AddXY(sgOADateTime, limitsHighValue)
                 End If

@@ -3,12 +3,14 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Runtime.CompilerServices
+Imports System.Text.Json
 
 Friend Module Form1CollectMarkersHelper
 
     <Extension>
-    Private Function ScaleMarker(innerDictionary As Dictionary(Of String, String)) As Dictionary(Of String, String)
-        Dim newMarker As New Dictionary(Of String, String)
+    Private Function ScaleMarker(marker As Marker) As Marker
+        Dim newMarker As Marker = marker
+#If False Then ' TODO
         For Each kvp As KeyValuePair(Of String, String) In innerDictionary
             Select Case kvp.Key
                 Case "value"
@@ -17,6 +19,7 @@ Friend Module Form1CollectMarkersHelper
                     newMarker.Add(kvp.Key, kvp.Value)
             End Select
         Next
+#End If
         Return newMarker
     End Function
 
@@ -25,7 +28,7 @@ Friend Module Form1CollectMarkersHelper
     ''' </summary>
     ''' <param name="jsonRow">JSON Marker Row</param>
     ''' <returns>Max Basal/Hr</returns>
-    Friend Function CollectMarkers(jsonRow As String) As String
+    Friend Function CollectMarkers() As String
         s_listOfAutoBasalDeliveryMarkers.Clear()
         s_listOfAutoModeStatusMarkers.Clear()
         s_listOfSgReadingMarkers.Clear()
@@ -39,29 +42,30 @@ Friend Module Form1CollectMarkersHelper
         Dim basalDictionary As New SortedDictionary(Of OADate, Single)
         MaxBasalPerDose = 0
 
-        Dim markers As List(Of Dictionary(Of String, String)) = JsonToLisOfDictionary(jsonRow)
-        For Each markerEntry As Dictionary(Of String, String) In markers
-            Select Case markerEntry("type")
+        Dim markers As List(Of Marker) = PatientData.Markers
+        For Each e As IndexClass(Of Marker) In markers.WithIndex
+            Dim markerEntry As Marker = e.Value
+            Select Case markerEntry.Type
                 Case "AUTO_BASAL_DELIVERY"
                     s_markers.Add(markerEntry)
-                    Dim item As AutoBasalDeliveryRecord = DictionaryToClass(Of AutoBasalDeliveryRecord)(markerEntry, s_listOfAutoBasalDeliveryMarkers.Count + 1)
+                    Dim item As New AutoBasalDelivery(markerEntry, s_listOfAutoBasalDeliveryMarkers.Count + 1)
                     s_listOfAutoBasalDeliveryMarkers.Add(item)
                     If Not basalDictionary.TryAdd(item.OAdateTime, item.bolusAmount) Then
                         basalDictionary(item.OAdateTime) += item.bolusAmount
                     End If
                 Case "AUTO_MODE_STATUS"
-                    s_listOfAutoModeStatusMarkers.Add(DictionaryToClass(Of AutoModeStatusRecord)(markerEntry, s_listOfAutoModeStatusMarkers.Count + 1))
+                    s_listOfAutoModeStatusMarkers.Add(New AutoModeStatus(markerEntry, s_listOfAutoModeStatusMarkers.Count + 1))
                 Case "BG_READING"
                     s_markers.Add(markerEntry.ScaleMarker)
-                    s_listOfSgReadingMarkers.Add(DictionaryToClass(Of SgReadingRecord)(markerEntry.ScaleMarker(), s_listOfSgReadingMarkers.Count + 1))
+                    s_listOfSgReadingMarkers.Add(New SgReadingRecord(markerEntry.ScaleMarker(), s_listOfSgReadingMarkers.Count + 1))
                 Case "CALIBRATION"
                     s_markers.Add(markerEntry.ScaleMarker)
-                    s_listOfCalibrationMarkers.Add(DictionaryToClass(Of CalibrationRecord)(markerEntry.ScaleMarker(), s_listOfCalibrationMarkers.Count + 1))
+                    s_listOfCalibrationMarkers.Add(New CalibrationRecord(markerEntry.ScaleMarker(), s_listOfCalibrationMarkers.Count + 1))
                 Case "INSULIN"
                     s_markers.Add(markerEntry)
-                    Dim lastInsulinRecord As InsulinRecord = DictionaryToClass(Of InsulinRecord)(markerEntry, s_listOfInsulinMarkers.Count + 1)
+                    Dim lastInsulinRecord As New InsulinRecord(markerEntry, s_listOfInsulinMarkers.Count + 1)
                     s_listOfInsulinMarkers.Add(lastInsulinRecord)
-                    Select Case markerEntry(NameOf(InsulinRecord.activationType))
+                    Select Case markerEntry.Data.DataValues(NameOf(InsulinRecord.activationType)).ToString
                         Case "AUTOCORRECTION"
                             If Not basalDictionary.TryAdd(lastInsulinRecord.OAdateTime, lastInsulinRecord.deliveredFastAmount) Then
                                 basalDictionary(lastInsulinRecord.OAdateTime) += lastInsulinRecord.deliveredFastAmount
@@ -71,31 +75,32 @@ Friend Module Form1CollectMarkersHelper
                         Case "RECOMMENDED"
                         Case Else
                             Stop
-                            Throw UnreachableException(markerEntry("type"))
+                            Throw UnreachableException(markerEntry.Type)
                     End Select
                 Case "LOW_GLUCOSE_SUSPENDED"
-                    s_listOfLowGlucoseSuspendedMarkers.Add(DictionaryToClass(Of LowGlucoseSuspendRecord)(markerEntry, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
+                    s_listOfLowGlucoseSuspendedMarkers.Add(New LowGlucoseSuspendRecord(markerEntry, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
                     s_markers.Add(markerEntry)
                 Case "MEAL"
-                    s_listOfMealMarkers.Add(DictionaryToClass(Of MealRecord)(markerEntry, s_listOfMealMarkers.Count + 1))
+                    s_listOfMealMarkers.Add(New MealRecord(markerEntry, s_listOfMealMarkers.Count + 1))
                     s_markers.Add(markerEntry)
                 Case "TIME_CHANGE"
                     s_markers.Add(markerEntry)
                     s_listOfTimeChangeMarkers.Add(New TimeChangeRecord(markerEntry))
                 Case Else
                     Stop
-                    Throw UnreachableException(markerEntry("type"))
+                    Throw UnreachableException(markerEntry.Type)
             End Select
         Next
 
-        For Each e As IndexClass(Of BasalRecord) In s_listOfManualBasal.ToList.WithIndex
-            Dim r As BasalRecord = e.Value
+        For Each e As IndexClass(Of Basal) In s_listOfManualBasal.ToList.WithIndex
+            Dim r As Basal = e.Value
             If Single.IsNaN(r.GetBasal) Then
                 Continue For
             End If
             basalDictionary.Add(r.GetOaGetTime, r.GetBasal)
-            s_listOfAutoBasalDeliveryMarkers.Add(New AutoBasalDeliveryRecord(r, basalDictionary.Count, 288 - e.Index))
-            s_markers.Add(r.ToDictionary)
+            s_listOfAutoBasalDeliveryMarkers.Add(New AutoBasalDelivery(r, basalDictionary.Count, 288 - e.Index))
+            Dim basalMarker As New Marker
+            s_markers.Add(Marker.Convert(r))
         Next
 
         Dim endOADate As OADate = If(basalDictionary.Count = 0,

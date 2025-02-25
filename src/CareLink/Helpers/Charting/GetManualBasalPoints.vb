@@ -7,7 +7,8 @@ Friend Module GetManualBasalPoints
     Friend Function GetManualBasalValues(markerWithIndex As IndexClass(Of Dictionary(Of String, String))) As SortedDictionary(Of OADate, Single)
         Debug.Assert(CurrentPdf.IsValid)
         Dim timeOrderedMarkers As New SortedDictionary(Of OADate, Single)
-        Dim markerEntry As Dictionary(Of String, String) = markerWithIndex.Value
+#If False Then ' TODO: Implement this Function
+       Dim markerEntry As Dictionary(Of String, String) = markerWithIndex.Value
         If markerEntry.GetBooleanValue(NameOf(LowGlucoseSuspendRecord.deliverySuspended)) Then
             Return timeOrderedMarkers
         End If
@@ -80,6 +81,7 @@ Friend Module GetManualBasalPoints
                 End If
             Next
         End While
+#End If
         Return timeOrderedMarkers
     End Function
 

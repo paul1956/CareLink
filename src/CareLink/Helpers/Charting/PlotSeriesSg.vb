@@ -9,7 +9,7 @@ Friend Module PlotSeriesSg
 
     <Extension>
     Friend Sub PlotSgSeries(chart As Chart, HomePageMealRow As Double)
-        For Each sgListIndex As IndexClass(Of SgRecord) In s_listOfSgRecords.WithIndex()
+        For Each sgListIndex As IndexClass(Of SG) In s_listOfSgRecords.WithIndex()
             Try
                 With chart.Series(SgSeriesName).Points
                     Dim sgOADateTime As OADate = sgListIndex.Value.OaDateTime()

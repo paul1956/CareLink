@@ -2,15 +2,17 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.IO
 Imports System.Net.Http
 Imports System.Net.Http.Headers
+Imports System.Security.Policy
 Imports System.Text
 Imports System.Text.Json
 
 Public Class Client2
+
     ' Constants
     Private Const DEFAULT_FILENAME As String = "logindata.json"
+
     Private Const VERSION As String = "1.2"
 
     Private ReadOnly _tokenBaseFileName As String
@@ -20,11 +22,14 @@ Public Class Client2
     Private _country As String
     Private ReadOnly _httpClient As HttpClient
     Private _lastApiStatus As Integer
-    Private _patient As Dictionary(Of String, String)
+    Private _patientElement As Dictionary(Of String, String)
     Private _tokenDataElement As JsonElement
-    Private _user As Dictionary(Of String, Object)
+    Private _userElement As Dictionary(Of String, Object)
+    Private _userInfoRecord As UserInfo
     Private _username As String
     Public Property LoggedIn As Boolean
+
+    Public Property SessionProfile As New SessionProfileRecord
 
     Public Sub New(Optional tokenFile As String = DEFAULT_FILENAME)
         _version = VERSION
@@ -39,44 +44,45 @@ Public Class Client2
 
         ' User info
         _username = Nothing
-        _user = Nothing
-        _patient = Nothing
+        _userElement = Nothing
+        _patientElement = Nothing
         _country = Nothing
 
         ' API status
         _lastApiStatus = Nothing
 
         _httpClient = New HttpClient
-        _httpClient.SetDefaultRequestHeaders(referrerUri:=Nothing)
+        _httpClient.SetDefaultRequestHeaders()
     End Sub
 
     Public Shared ReadOnly Property Auth_Error_Codes As Integer() = {401, 403}
     Public Property SessionUser As SessionUserRecord
+
     Private Function DoRefresh(config As Dictionary(Of String, Object), tokenDataElement As JsonElement) As JsonElement
         Debug.WriteLine(NameOf(DoRefresh))
+        _httpClient.SetDefaultRequestHeaders()
         Dim tokenUrl As String = CStr(config("token_url"))
-
-        Dim tokenData As Dictionary(Of String, String) = tokenDataElement.ConvertJsonElementToStringDictionary
+        Dim tokenData As Dictionary(Of String, String) = tokenDataElement.ConvertJsonElementToStringDictionary(expandSubElements:=True)
 
         Dim data As New Dictionary(Of String, String) From {
-        {"refresh_token", tokenData("refresh_token")},
-        {"client_id", tokenData("client_id")},
-        {"client_secret", tokenData("client_secret")},
-        {"grant_type", "refresh_token"}
-    }
+            {"refresh_token", tokenData("refresh_token")},
+            {"client_id", tokenData("client_id")},
+            {"client_secret", tokenData("client_secret")},
+            {"grant_type", "refresh_token"}}
 
         Dim headers As New Dictionary(Of String, String) From {
-        {"mag-identifier", tokenData("mag-identifier")}
-    }
+            {"mag-identifier", tokenData("mag-identifier")}}
 
-        For Each header As KeyValuePair(Of String, String) In headers
-            _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
+        Dim request As New HttpRequestMessage(HttpMethod.Get, tokenUrl)
+        request.Headers.Accept.Add(New MediaTypeWithQualityHeaderValue("application/json"))
+        For Each header As KeyValuePair(Of String, String) In headers.Sort
+            request.Headers.Add(header.Key, header.Value)
         Next
 
-        Dim content As New FormUrlEncodedContent(data)
-        Dim response As HttpResponseMessage = _httpClient.PostAsync(tokenUrl, content).Result
-
-        Debug.WriteLine($"   status: {response.StatusCode}")
+        Dim jsonContent As New StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json")
+        Dim response As HttpResponseMessage = _httpClient.PostAsync(tokenUrl, jsonContent).Result
+        _lastApiStatus = CInt(response.StatusCode)
+        Debug.WriteLine($"   status: {_lastApiStatus}")
 
         If response.StatusCode <> Net.HttpStatusCode.OK Then
             Throw New Exception("ERROR: failed to refresh token")
@@ -115,7 +121,7 @@ Public Class Client2
 
         ' CareLink Partners do not support download
         If My.Settings.CareLinkPartner Then Return False
-#If False Then ' ToDo: Implement
+#If False Then ' TODO: Implement
 
         If Me.GetAuthorizationToken(authToken) = GetAuthorizationTokenResult.OK Then
             Dim response As HttpResponseMessage = Nothing
@@ -246,15 +252,24 @@ Public Class Client2
         Dim jsonConfigElement As JsonElement
         Try
             Dim element As JsonElement = CType(_accessTokenPayload("token_details"), JsonElement)
+            Application.DoEvents()
             Dim payload As AccessTokenDetails = JsonSerializer.Deserialize(Of AccessTokenDetails)(element, s_jsonDeserializerOptions)
             _country = payload.Country
             jsonConfigElement = GetConfigElement(_httpClient, _country)
             _config = jsonConfigElement.ConvertJsonElementToDictionary
-            _username = payload.Name
-            _user = Me.GetUser(jsonConfigElement, _tokenDataElement).ConvertJsonElementToDictionary
-            Dim role As String = CStr(_user("role"))
-            If role = "CARE_PARTNER" OrElse role = "CARE_PARTNER_OUS" Then
-                _patient = Me.GetPatient(jsonConfigElement, _tokenDataElement).Result
+            _username = s_userName
+            Dim userString As String = Me.GetUserString(jsonConfigElement, _tokenDataElement)
+            If String.IsNullOrWhiteSpace(userString) Then
+                Me.LoggedIn = False
+                Return False
+            End If
+            _userElement = If(String.IsNullOrWhiteSpace(userString),
+                Nothing,
+                JsonSerializer.Deserialize(Of JsonElement)(userString).ConvertJsonElementToDictionary)
+            _userInfoRecord = JsonSerializer.Deserialize(Of UserInfo)(userString)
+            Dim role As String = _userInfoRecord.Role
+            If role.Contains("Partner", StringComparison.InvariantCultureIgnoreCase) Then
+                _patientElement = Me.GetPatient(jsonConfigElement, _tokenDataElement).Result
             End If
         Catch ex As Exception
             Debug.WriteLine(ex.ToString())
@@ -278,18 +293,16 @@ Public Class Client2
     End Function
 
     Private Function GetData(config As Dictionary(Of String, Object), tokenDataElement As JsonElement, username As String, role As String, patientId As String) As Dictionary(Of String, Object)
-        Debug.WriteLine("_get_data()")
+        Debug.WriteLine(NameOf(GetData))
+        _httpClient.SetDefaultRequestHeaders()
         Dim url As String = $"{CStr(config("baseUrlCumulus"))}/display/message"
-        Dim headers As New Dictionary(Of String, String)(s_common_Headers)
-        Dim tokenData As Dictionary(Of String, String) = tokenDataElement.ConvertJsonElementToStringDictionary
-        headers("mag-identifier") = tokenData("mag-identifier")
-        headers("Authorization") = $"Bearer {tokenData("access_token")}"
+        Dim tokenData As Dictionary(Of String, String) = tokenDataElement.ConvertJsonElementToStringDictionary(expandSubElements:=True)
 
         Dim data As New Dictionary(Of String, Object) From {
             {"username", username}
         }
 
-        If role = "CARE_PARTNER" OrElse role = "CARE_PARTNER_OUS" Then
+        If role.Contains("Partner", StringComparison.InvariantCultureIgnoreCase) Then
             data("role") = "carepartner"
             data("patientId") = patientId
         Else
@@ -298,6 +311,9 @@ Public Class Client2
 
         _lastApiStatus = Nothing
 
+        Dim headers As New Dictionary(Of String, String)
+        headers("mag-identifier") = tokenData("mag-identifier")
+        headers("Authorization") = $"Bearer {tokenData("access_token")}"
         For Each header As KeyValuePair(Of String, String) In headers
             _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
         Next
@@ -342,14 +358,13 @@ Public Class Client2
         Return Nothing
     End Function
 
-    Private Function GetUser(config As JsonElement, tokenData As JsonElement) As JsonElement
-        Debug.WriteLine(NameOf(GetUser))
+    Private Function GetUserString(config As JsonElement, tokenData As JsonElement) As String
+        Debug.WriteLine(NameOf(GetUserString))
         Dim url As String = $"{config.GetProperty("baseUrlCareLink").GetString()}/users/me"
         Dim headers As New Dictionary(Of String, String)
         headers("mag-identifier") = tokenData.GetProperty("mag-identifier").GetString()
         headers("Authorization") = $"Bearer {tokenData.GetProperty("access_token").GetString()}"
 
-        ' Richard next line fails
         Dim request As New HttpRequestMessage(HttpMethod.Get, url)
         request.Headers.Accept.Add(New MediaTypeWithQualityHeaderValue("application/json"))
         For Each header As KeyValuePair(Of String, String) In headers.Sort
@@ -362,7 +377,7 @@ Public Class Client2
         Debug.WriteLine($"   status: {_lastApiStatus}")
 
         Return If(response.IsSuccessStatusCode,
-            JsonSerializer.Deserialize(Of JsonElement)(response.Content.ReadAsStringAsync().Result),
+            response.Content.ReadAsStringAsync().Result,
             Nothing)
     End Function
 
@@ -394,18 +409,12 @@ Public Class Client2
                 Return Nothing
             End If
         End If
-
-        Dim patientId As String = Nothing
-        If _patient IsNot Nothing Then
-            patientId = _patient("username")
-        End If
-
-        ' Get data: first try
-        Dim data As Dictionary(Of String, Object) = Me.GetData(config:=_config,
-                                           tokenDataElement:=_tokenDataElement,
-                                           username:=_username,
-                                           role:=CStr(_user("role")),
-                                           patientId:=patientId)
+        Dim data As New Dictionary(Of String, Object)(StringComparer.OrdinalIgnoreCase)
+        Try
+            data = Me.GetData(_config, _tokenDataElement, _username, CStr(_userElement("role")), "")
+        Catch ex As Exception
+            Stop
+        End Try
 
         ' Check API response
         If Auth_Error_Codes.Contains(_lastApiStatus) Then
@@ -413,20 +422,6 @@ Public Class Client2
             _tokenDataElement = Me.DoRefresh(_config, _tokenDataElement)
             _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
             WriteTokenFile(_tokenDataElement, s_userName)
-
-            ' Get data: second try
-            data = Me.GetData(config:=_config,
-                           _tokenDataElement,
-                           _username,
-                           CStr(_user("role")),
-                           patientId)
-
-            ' Check API response
-            If Auth_Error_Codes.Contains(_lastApiStatus) Then
-                ' Failed permanently
-                Debug.WriteLine("ERROR: unable to get data")
-                Return Nothing
-            End If
         End If
 
         Return data
@@ -447,11 +442,11 @@ Public Class Client2
 
     Public Sub PrintUserInfo()
         Debug.WriteLine("User Info:")
-        Debug.WriteLine($"   user:     {_username} ({_user("firstName")} {_user("lastName")})")
-        Debug.WriteLine($"   role:     {_user("role")}")
+        Debug.WriteLine($"   user:     {_username} ({_userElement("firstName")} {_userElement("lastName")})")
+        Debug.WriteLine($"   role:     {_userElement("role")}")
         Debug.WriteLine($"   country:  {_country}")
-        If _patient IsNot Nothing Then
-            Debug.WriteLine($"   patient:  {_patient("username")} ({_patient("firstName")} {_patient("lastName")})")
+        If _patientElement IsNot Nothing Then
+            Debug.WriteLine($"   patient:  {_patientElement("username")} ({_patientElement("firstName")} {_patientElement("lastName")})")
         End If
     End Sub
 

@@ -2,17 +2,13 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Formats
-Imports System.IO
 Imports System.Net
 Imports System.Net.Http
 Imports System.Runtime.CompilerServices
 Imports System.Security.Cryptography
-Imports System.Security.Cryptography.OpenSsl
 Imports System.Text
 Imports System.Text.Json
 Imports System.Text.RegularExpressions
-Imports System.Threading
 Imports CareLink
 
 Public Module CareLinkClientHelpers
@@ -133,7 +129,6 @@ Public Module CareLinkClientHelpers
         ' Step 3: Captcha login and consent
         Dim captcha As (captchaCode As String, captchaSsoState As String) = DoLoginWithCaptcha(authorizeUrl, ssoConfig.OAuth.Client.ClientIds(0).RedirectUri)
         Debug.WriteLine($"sso state after captcha: {captcha.captchaSsoState}")
-
 
         ' Step 4: Registration
         Dim registerDeviceId As String = RandomDeviceId()
@@ -285,6 +280,5 @@ Public Module CareLinkClientHelpers
 
         Return (ssoConfig, apiBaseUrl)
     End Function
-
 
 End Module

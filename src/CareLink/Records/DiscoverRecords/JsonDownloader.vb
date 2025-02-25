@@ -13,7 +13,7 @@ Public Module JsonDownloader
         Return JsonSerializer.Deserialize(Of T)(jsonContent, s_jsonDeserializerOptions)
     End Function
 
-    Public Function DownloadJson(url As String) As String
+    Private Function DownloadJson(url As String) As String
         Using client As New HttpClient()
             Return client.GetStringAsync(url).Result
         End Using

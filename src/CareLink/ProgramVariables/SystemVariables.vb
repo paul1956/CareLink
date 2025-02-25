@@ -30,7 +30,7 @@ Friend Module SystemVariables
     Friend Property TreatmentInsulinRow As Single
 
     Friend Function GetInsulinYValue() As Single
-        Dim maxYScaled As Single = s_listOfSgRecords.Max(Of Single)(Function(sgR As SgRecord) sgR.sg) + 2
+        Dim maxYScaled As Single = s_listOfSgRecords.Max(Of Single)(Function(sgR As SG) sgR.Sg) + 2
         Return If(Single.IsNaN(maxYScaled),
             If(NativeMmolL, 330 / MmolLUnitsDivisor, 330),
             If(NativeMmolL,

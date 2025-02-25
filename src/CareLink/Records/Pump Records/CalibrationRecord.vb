@@ -6,38 +6,34 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class CalibrationRecord
+    Private _marker As Marker
 
-    <DisplayName(NameOf([dateTime]))>
-    <Column(Order:=8, TypeName:="Date")>
-    Public Property [dateTime] As Date
+    Public Sub New(marker As Marker, recordNumber As Integer)
+        Me.RecordNumber = recordNumber
+        Me.type = marker.Type
+        Me.timestamp = marker.Timestamp
+#If False Then ' TODO
+        Me.index = marker index
+        Me.value = marker.value
+        Me.kind = marker.kind
+        Me.version = marker.version
+        Me.relativeOffset = marker relativeOffset
+        Me.calibrationSuccess = marker calibrationSuccess
+#End If
+    End Sub
 
-    <DisplayName("Calibration Success")>
-    <Column(Order:=11, TypeName:=NameOf([Boolean]))>
-    Public Property calibrationSuccess As Boolean
-
-    <DisplayName("dateTime As String")>
-    <Column(Order:=9, TypeName:=NameOf([String]))>
-    Public Property dateTimeAsString As String
-
-    <DisplayName(NameOf(index))>
-    <Column(Order:=2, TypeName:=NameOf([Int32]))>
-    Public Property index As Integer
-
-    <DisplayName("Kind")>
-    <Column(Order:=6, TypeName:=NameOf([String]))>
-    Public Property kind As String
 
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public Property RecordNumber As Integer
 
-    <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=10, TypeName:=NameOf([Int32]))>
-    Public Property relativeOffset As Integer
-
     <DisplayName("Type")>
     <Column(Order:=1, TypeName:=NameOf([Int32]))>
     Public Property type As String
+
+    <DisplayName(NameOf(index))>
+    <Column(Order:=2, TypeName:=NameOf([Int32]))>
+    Public Property index As Integer
 
     <DisplayName("Value")>
     <Column(Order:=3, TypeName:=NameOf([Single]))>
@@ -67,8 +63,24 @@ Public Class CalibrationRecord
         End Get
     End Property
 
+    <DisplayName("Kind")>
+    <Column(Order:=6, TypeName:=NameOf([String]))>
+    Public Property kind As String
+
     <DisplayName("Version")>
     <Column(Order:=7, TypeName:=NameOf([Int32]))>
     Public Property version As Integer
+
+    <DisplayName(NameOf(timestamp))>
+    <Column(Order:=8, TypeName:="Date")>
+    Public Property timestamp As Date
+
+    <DisplayName(NameOf(relativeOffset))>
+    <Column(Order:=10, TypeName:=NameOf([Int32]))>
+    Public Property relativeOffset As Integer
+
+    <DisplayName("Calibration Success")>
+    <Column(Order:=11, TypeName:=NameOf([Boolean]))>
+    Public Property calibrationSuccess As Boolean
 
 End Class

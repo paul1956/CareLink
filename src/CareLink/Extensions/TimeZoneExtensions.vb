@@ -19,7 +19,8 @@ Friend Module TimeZoneExtensions
 
 #End Region
 
-    Private ReadOnly s_specialKnownTimeZones As New Dictionary(Of String, String) From {
+    Private ReadOnly s_specialKnownTimeZones As New Dictionary(Of String, String) _
+        (StringComparer.OrdinalIgnoreCase) From {
             {"Amazon Standard Time", "Central Brazilian Standard Time"},
             {"Argentina Standard Time", "Argentina Standard Time"},
             {"Bolivia Time", "SA Western Standard Time"},

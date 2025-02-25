@@ -15,7 +15,7 @@ Public Module PumpVariables
 #Region "Global variables to hold pump values"
 
     Friend s_aboveHyperLimit As Single
-    Friend s_activeInsulin As ActiveInsulinRecord
+    Friend s_activeInsulin As ActiveInsulin
     Friend s_autoModeReadinessState As SummaryRecord
     Friend s_belowHypoLimit As Single
     Friend s_filterJsonData As Boolean = True
@@ -23,12 +23,12 @@ Public Module PumpVariables
     Friend s_gstCommunicationState As Boolean
     Friend s_lastAlarmValue As Dictionary(Of String, String)
     Friend s_lastMedicalDeviceDataUpdateServerEpoch As Long
-    Friend s_lastSgRecord As New SgRecord
+    Friend s_lastSgRecord As New SG
     Friend s_lastSgValue As Single = 0
     Friend s_listOfManualBasal As New BasalRecords(288)
-    Friend s_listOfSgRecords As New List(Of SgRecord)
+    Friend s_listOfSgRecords As New List(Of SG)
     Friend s_listOfTimeChangeMarkers As New List(Of TimeChangeRecord)
-    Friend s_markers As New List(Of Dictionary(Of String, String))
+    Friend s_markers As New List(Of Marker)
     Friend s_notificationHistoryValue As Dictionary(Of String, String)
     Friend s_pumpBannerStateValue As New List(Of Dictionary(Of String, String))
     Friend s_pumpHardwareRevision As String
@@ -52,17 +52,18 @@ Public Module PumpVariables
     Friend Property InAutoMode As Boolean
     Friend Property SgUnitsNativeString As String
     Public Property ProgramInitialized As Boolean = False
-    Public Property RecentData As New Dictionary(Of String, String)
+    Public Property RecentData As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
 
+    Public Property PatientData As PatientDataInfo
 #End Region
 
 #Region "Lists of pump records"
 
-    Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDeliveryRecord)
-    Friend ReadOnly s_listOfAutoModeStatusMarkers As New List(Of AutoModeStatusRecord)
+    Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDelivery)
+    Friend ReadOnly s_listOfAutoModeStatusMarkers As New List(Of AutoModeStatus)
     Friend ReadOnly s_listOfCalibrationMarkers As New List(Of CalibrationRecord)
     Friend ReadOnly s_listOfInsulinMarkers As New List(Of InsulinRecord)
-    Friend ReadOnly s_listOfLimitRecords As New List(Of LimitsRecord)
+    Friend ReadOnly s_listOfLimitRecords As New List(Of Limit)
     Friend ReadOnly s_listOfLowGlucoseSuspendedMarkers As New List(Of LowGlucoseSuspendRecord)
     Friend ReadOnly s_listOfMealMarkers As New List(Of MealRecord)
     Friend ReadOnly s_listOfSgReadingMarkers As New List(Of SgReadingRecord)

@@ -114,32 +114,27 @@ Friend Module Form1UpdateHelpers
 
         s_lastMedicalDeviceDataUpdateServerEpoch = CLng(RecentData(ItemIndexes.lastMedicalDeviceDataUpdateServerTime.ToString))
 
-#If False Then ' ToDo
         If RecentData.TryGetValue(ItemIndexes.therapyAlgorithmState.ToString, markerRowString) Then
             s_therapyAlgorithmStateValue = LoadIndexedItems(markerRowString)
             InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso {"AUTO_BASAL", "SAFE_BASAL"}.Contains(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.autoModeShieldState)))
         End If
-#End If
 
 #Region "Update all Markers"
 
-        If RecentData.TryGetValue(ItemIndexes.sgs.ToString, markerRowString) Then
+        If RecentData.TryGetValue(NameOf(ItemIndexes.sgs), markerRowString) Then
             s_listOfSgRecords = JsonToLisOfSgs(markerRowString)
         End If
 
-#If False Then ' ToDo
 
-        If RecentData.TryGetValue(ItemIndexes.basal.ToString, markerRowString) Then
-            Dim item As BasalRecord = DictionaryToClass(Of BasalRecord)(LoadIndexedItems(markerRowString), recordNumber:=0)
+        If RecentData.TryGetValue(NameOf(ItemIndexes.basal), markerRowString) Then
+            Dim item As Basal = DictionaryToClass(Of Basal)(LoadIndexedItems(markerRowString), recordNumber:=0)
             item.OaDateTime(s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime)
             s_listOfManualBasal.Add(item)
         End If
         Form1.MaxBasalPerHourLabel.Text = If(RecentData.TryGetValue(ItemIndexes.markers.ToString, markerRowString),
-                                             CollectMarkers(markerRowString),
+                                             CollectMarkers(),
                                              ""
                                             )
-#End If
-
 #End Region ' Update all Markers
 
         s_systemStatusTimeRemaining = Nothing
@@ -258,10 +253,10 @@ Friend Module Form1UpdateHelpers
                       ItemIndexes.lastSGTrend
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
-#If False Then ' ToDo
+#If False Then ' TODO
                 Case ItemIndexes.lastSG
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-                    s_lastSgRecord = New SgRecord(LoadIndexedItems(row.Value), 0)
+                    s_lastSgRecord = New SG(LoadIndexedItems(row.Value), 0)
 
                 Case ItemIndexes.lastAlarm
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
@@ -288,7 +283,7 @@ Friend Module Form1UpdateHelpers
 
                 Case ItemIndexes.notificationHistory
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-#If False Then ' ToDo
+#If False Then ' TODO
                     s_notificationHistoryValue = LoadIndexedItems(row.Value)
 #End If
 
@@ -412,7 +407,7 @@ Friend Module Form1UpdateHelpers
                               ItemIndexes.markers)
             .TableLayoutPanelAutoModeStatus.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(s_listOfAutoModeStatusMarkers),
-                              NameOf(AutoModeStatusRecord),
+                              NameOf(AutoModeStatus),
                               AddressOf AutoModeStatusRecordHelpers.AttachHandlers,
                               ItemIndexes.markers,
                               False)
@@ -457,11 +452,11 @@ Friend Module Form1UpdateHelpers
     End Sub
 
     Friend Sub UpdatePumpBannerStateTab()
-        Dim listOfPumpBannerState As New List(Of BannerStateRecord)
+        Dim listOfPumpBannerState As New List(Of BannerState)
         For Each dic As Dictionary(Of String, String) In s_pumpBannerStateValue
             Dim typeValue As String = ""
             If dic.TryGetValue("type", typeValue) Then
-                Dim bannerStateRecord1 As BannerStateRecord = DictionaryToClass(Of BannerStateRecord)(dic, listOfPumpBannerState.Count + 1)
+                Dim bannerStateRecord1 As BannerState = DictionaryToClass(Of BannerState)(dic, listOfPumpBannerState.Count + 1)
                 listOfPumpBannerState.Add(bannerStateRecord1)
                 Form1.PumpBannerStateLabel.Font = New Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point)
                 Select Case typeValue
@@ -522,7 +517,7 @@ Friend Module Form1UpdateHelpers
         End If
         Form1.TableLayoutPanelBannerState.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(listOfPumpBannerState),
-                              NameOf(BannerStateRecord),
+                              NameOf(BannerState),
                               AddressOf BannerStateRecordHelpers.AttachHandlers,
                               ItemIndexes.pumpBannerState,
                               False)

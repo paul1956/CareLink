@@ -72,7 +72,7 @@ Public Class LoginDialog
 
     Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         _httpClient = New HttpClient()
-        _httpClient.SetDefaultRequestHeaders(referrerUri:=Nothing)
+        _httpClient.SetDefaultRequestHeaders()
         If _initialHeight = 0 Then
             _initialHeight = Me.Height
         End If
@@ -166,8 +166,18 @@ Public Class LoginDialog
         Me.Ok_Button.Enabled = False
         Me.Client.Init()
 
-        Dim recentData As Dictionary(Of String, Object) = Me.Client.GetRecentData()
-        If recentData?.Count > 0 Then
+        Dim recentDataBlob As Dictionary(Of String, Object) = Me.Client.GetRecentData()
+        Select Case recentDataBlob.Keys.Count
+            Case 0
+                lastErrorMessage = "No Data Found"
+            Case 1
+                lastErrorMessage = "No Data Found for " & recentDataBlob.Keys(0)
+            Case 2
+
+            Case Else
+                lastErrorMessage = "No Data Found for " & String.Join(", ", recentDataBlob.Keys)
+        End Select
+        If recentDataBlob?.Count = 2 Then
             s_lastMedicalDeviceDataUpdateServerEpoch = 0
             ReportLoginStatus(Me.LoginStatus, False)
 

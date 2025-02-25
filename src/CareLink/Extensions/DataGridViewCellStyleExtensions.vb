@@ -14,7 +14,7 @@ Friend Module DataGridViewCellStyleExtensions
             Return cell.InheritedStyle
         End If
         Dim e As New DataGridViewCellFormattingEventArgs(cell.ColumnIndex, cell.RowIndex, cell.Value, cell.FormattedValueType, cell.InheritedStyle)
-        Dim m As MethodInfo = dgv.GetType().GetMethod("OnCellFormatting", BindingFlags.Instance Or BindingFlags.NonPublic, Nothing, New Type() {GetType(DataGridViewCellFormattingEventArgs)}, Nothing)
+        Dim m As MethodInfo = dgv.GetType().GetMethod("OnCellFormatting", BindingFlags.Instance Or BindingFlags.NonPublic Or BindingFlags.IgnoreCase, Nothing, New Type() {GetType(DataGridViewCellFormattingEventArgs)}, Nothing)
         m.Invoke(dgv, New Object() {e})
         Return e.CellStyle
     End Function

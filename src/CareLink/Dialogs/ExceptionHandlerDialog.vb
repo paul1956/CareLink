@@ -53,7 +53,7 @@ Public Class ExceptionHandlerDialog
     End Sub
 
     Private Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-#If False Then ' ToDo
+#If False Then ' TODO
         StartOrStopServerUpdateTimer(False)
         Dim fontBold As New Font(Me.InstructionsRichTextBox.Font, FontStyle.Bold)
         Dim fontNormal As Font = Me.InstructionsRichTextBox.Font

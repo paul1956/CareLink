@@ -25,7 +25,7 @@ Friend Module Form1LoginHelpers
         Dim fromFile As Boolean
         Select Case fileToLoad
             Case FileToLoadOptions.LastSaved
-#If False Then ' ToDo
+#If False Then ' TODO
                 Form1.Text = $"{SavedTitle} Using Last Saved Data"
                 CurrentDateCulture = GetLastDownloadFileWithPath().ExtractCultureFromFileName(BaseNameSavedLastDownload)
                 RecentData = LoadIndexedItems(File.ReadAllText(GetLastDownloadFileWithPath()))
@@ -36,7 +36,7 @@ Friend Module Form1LoginHelpers
                 fromFile = True
 #End If
             Case FileToLoadOptions.TestData
-#If False Then ' ToDo
+#If False Then ' TODO
                 Form1.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
                 RecentData = LoadIndexedItems(File.ReadAllText(TestDataFileNameWithPath))
@@ -72,11 +72,17 @@ Friend Module Form1LoginHelpers
                     SetLastUpdateTime("Last Update time is unknown!", "", True, Nothing)
                     Return False
                 End If
-#If False Then ' ToDo
-                RecentData = Form1.Client.GetRecentData()
-#End If
-                Dim recentData1 As Dictionary(Of String, Object) = Form1.Client.GetRecentData()
-                Stop
+                Dim recentDataBlob As Dictionary(Of String, Object) = LoginDialog.Client.GetRecentData()
+                Dim metaData As JsonElement = CType(recentDataBlob.Values(0), JsonElement)
+                Dim patientDataElement As JsonElement = CType(recentDataBlob.Values(1), JsonElement)
+                Try
+                    Dim patientDataElementAsText As String = patientDataElement.GetRawText()
+                    Stop
+                    Dim patientData As PatientDataInfo = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
+                    RecentData = patientDataElement.ConvertJsonElementToStringDictionary(expandSubElements:=False)
+                Catch ex As Exception
+                    Stop
+                End Try
 
                 SetUpCareLinkUser(GetUserSettingsJsonFileNameWithPath, False)
                 StartOrStopServerUpdateTimer(True, s_1MinutesInMilliseconds)
@@ -85,13 +91,10 @@ Friend Module Form1LoginHelpers
                     ReportLoginStatus(Form1.LoginStatus)
                     Return False
                 End If
-#If False Then ' ToDo
-                ErrorReportingHelpers.ReportLoginStatus(Form1.LoginStatus, RecentDataEmpty, Form1.Client.GetLastResponseCode)
-#End If
+                ErrorReportingHelpers.ReportLoginStatus(Form1.LoginStatus, RecentDataEmpty, Form1.Client.GetLastResponseCode.ToString)
                 Form1.MenuShowMiniDisplay.Visible = True
                 fromFile = False
         End Select
-#If False Then ' ToDo
         If Form1.Client IsNot Nothing Then
             Form1.Client.SessionProfile?.SetInsulinType(CurrentUser.InsulinTypeName)
             With Form1.DgvSessionProfile
@@ -99,7 +102,6 @@ Friend Module Form1LoginHelpers
                 .DataSource = Form1.Client.SessionProfile.ToDataSource
             End With
         End If
-#End If
 
         Form1.PumpAITLabel.Text = CurrentUser.GetPumpAitString
         Form1.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName

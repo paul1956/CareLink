@@ -5,11 +5,11 @@
 Friend Module Form1NotificationTabHelpers
 
     Private ReadOnly s_rowsToHide As New List(Of String) From {
-            NameOf(ActiveNotificationsRecord.GUID),
-            NameOf(ActiveNotificationsRecord.instanceId),
-            NameOf(ActiveNotificationsRecord.kind),
-            NameOf(ActiveNotificationsRecord.relativeOffset),
-            NameOf(ActiveNotificationsRecord.version),
+            NameOf(ActiveNotification.GUID),
+            NameOf(ActiveNotification.instanceId),
+            NameOf(ActiveNotification.kind),
+            NameOf(ActiveNotification.relativeOffset),
+            NameOf(ActiveNotification.version),
             NameOf(ClearedNotificationsRecord.faultId),
             NameOf(ClearedNotificationsRecord.pnpId),
             NameOf(ClearedNotificationsRecord.RecordNumber),

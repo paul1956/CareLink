@@ -7,6 +7,19 @@ Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class LowGlucoseSuspendRecord
 
+    Public Sub New(markerEntry As Marker, recordNumber As Integer)
+        Me.RecordNumber = recordNumber
+        Me.type = markerEntry.Type
+        Me.timestamp = markerEntry.Timestamp
+#If False Then ' TODO
+        Me.kind = markerEntry.kind
+        Me.index = markerEntry.index
+        Me.version = markerEntry.version
+        Me.relativeOffset = markerEntry.relativeOffset
+        Me.deliverySuspended = markerEntry.deliverySuspended
+#End If
+    End Sub
+
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public Property RecordNumber As Integer
@@ -27,20 +40,16 @@ Public Class LowGlucoseSuspendRecord
     <Column(Order:=4, TypeName:=NameOf([Int32]))>
     Public Property version As Integer
 
-    <DisplayName(NameOf([dateTime]))>
+    <DisplayName(NameOf(timestamp))>
     <Column(Order:=5, TypeName:="Date")>
-    Public Property [dateTime] As Date
-
-    <DisplayName("dateTime As String")>
-    <Column(Order:=6, TypeName:=NameOf([String]))>
-    Public Property dateTimeAsString As String
+    Public Property timestamp As Date
 
     <DisplayName(NameOf(relativeOffset))>
     <Column(Order:=7, TypeName:=NameOf([Int32]))>
     Public Property relativeOffset As Integer
 
     <DisplayName("Delivery Suspended")>
-    <Column(Order:=8, TypeName:=NameOf([Boolean]))>
+    <Column(Order:=7, TypeName:=NameOf([Boolean]))>
     Public Property deliverySuspended As Boolean
 
 End Class

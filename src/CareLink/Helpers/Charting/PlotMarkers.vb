@@ -32,10 +32,12 @@ Friend Module PlotMarkers
 
     <Extension>
     Private Sub AdjustXAxisStartTime(ByRef axisX As Axis, lastTimeChangeRecord As TimeChangeRecord)
-        Dim latestTime As Date = If(lastTimeChangeRecord.previousDateTime > lastTimeChangeRecord.dateTime, lastTimeChangeRecord.previousDateTime, lastTimeChangeRecord.dateTime)
-        Dim timeOffset As Double = (latestTime - s_listOfSgRecords(0).datetime).TotalMinutes
+#If False Then 'TODO: Remove this directive
+        Dim latestTime As Date = If(lastTimeChangeRecord.previousTimeStamp > lastTimeChangeRecord.timestamp, lastTimeChangeRecord.previousTimeStamp, lastTimeChangeRecord.timestamp)
+        Dim timeOffset As Double = (latestTime - s_listOfSgRecords(0).timestamp).TotalMinutes
         axisX.IntervalOffset = timeOffset
         axisX.IntervalOffsetType = DateTimeIntervalType.Minutes
+#End If
     End Sub
 
     Private Function GetToolTip(type As String, amount As Single) As String
@@ -60,6 +62,7 @@ Friend Module PlotMarkers
         Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
         markerInsulinDictionary.Clear()
         markerMealDictionary?.Clear()
+#If False Then 'TODO: Remove this directive
 
         For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             Try
@@ -85,7 +88,7 @@ Friend Module PlotMarkers
                     Case "CALIBRATION"
                         markerSeriesPoints.AddCalibrationPoint(markerOADateTime, sgValue, entry)
                     Case "AUTO_BASAL_DELIVERY"
-                        Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
+                        Dim amount As Single = entry(NameOf(AutoBasalDelivery.bolusAmount)).ParseSingle(3)
                         With pageChart.Series(BasalSeriesNameName)
                             .PlotBasalSeries(markerOADateTime,
                                              amount,
@@ -96,7 +99,7 @@ Friend Module PlotMarkers
                                              GetToolTip(entry("type"), amount))
                         End With
                     Case "MANUAL_BASAL_DELIVERY"
-                        Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
+                        Dim amount As Single = entry(NameOf(AutoBasalDelivery.bolusAmount)).ParseSingle(3)
                         With pageChart.Series(BasalSeriesNameName)
                             .PlotBasalSeries(markerOADateTime,
                                              amount,
@@ -189,6 +192,7 @@ Friend Module PlotMarkers
             timeChangeSeries.IsVisibleInLegend = False
             pageChart.Legends(0).CustomItems.Last.Enabled = False
         End If
+#End If
     End Sub
 
     <Extension>
@@ -196,6 +200,8 @@ Friend Module PlotMarkers
         Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
         s_treatmentMarkerInsulinDictionary.Clear()
         s_treatmentMarkerMealDictionary.Clear()
+#If False Then 'TODO: Remove this directive
+
         For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
             Try
                 Dim markerOADateTime As New OADate(markerWithIndex.Value.GetMarkerDateTime())
@@ -209,7 +215,7 @@ Friend Module PlotMarkers
                 Dim markerSeriesPoints As DataPointCollection = treatmentChart.Series(MarkerSeriesName).Points
                 Select Case entry("type")
                     Case "AUTO_BASAL_DELIVERY"
-                        Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
+                        Dim amount As Single = entry(NameOf(AutoBasalDelivery.bolusAmount)).ParseSingle(3)
                         With treatmentChart.Series(BasalSeriesNameName)
                             .PlotBasalSeries(markerOADateTime,
                                              amount,
@@ -221,7 +227,7 @@ Friend Module PlotMarkers
 
                         End With
                     Case "MANUAL_BASAL_DELIVERY"
-                        Dim amount As Single = entry(NameOf(AutoBasalDeliveryRecord.bolusAmount)).ParseSingle(3)
+                        Dim amount As Single = entry(NameOf(AutoBasalDelivery.bolusAmount)).ParseSingle(3)
                         With treatmentChart.Series(BasalSeriesNameName)
                             .PlotBasalSeries(markerOADateTime,
                                              amount,
@@ -316,6 +322,7 @@ Friend Module PlotMarkers
             treatmentMarkerTimeChangeSeries.IsVisibleInLegend = False
             treatmentChart.Legends(0).CustomItems.Last.Enabled = False
         End If
+#End If
 
     End Sub
 

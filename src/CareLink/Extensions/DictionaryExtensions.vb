@@ -67,19 +67,16 @@ Public Module DictionaryExtensions
         Dim columnNames As List(Of String) = dic.Keys.ToList()
         Dim classObject As New T
         For Each row As KeyValuePair(Of String, String) In dic
-            Dim [property] As PropertyInfo = classType.GetProperty(row.Key, BindingFlags.Public Or BindingFlags.Instance)
+            Dim [property] As PropertyInfo = classType.GetProperty(row.Key, BindingFlags.Public Or BindingFlags.Instance Or BindingFlags.IgnoreCase)
             If [property] IsNot Nothing Then
                 If [property].CanWrite Then ' Make sure property isn't read only
 
                     Try
                         Dim propertyValue As Object
                         Select Case [property].PropertyType.Name
-                            Case NameOf(TimeChangeRecord.dateTime)
-                                propertyValue = row.Value.ParseDate([property].Name)
-                                classObject.GetType.GetProperty($"{[property].Name}AsString").SetValue(classObject, row.Value, Nothing)
-                            Case NameOf(TimeChangeRecord.previousDateTime)
-                                propertyValue = row.Value.ParseDate($"{[property].Name}AsString")
-                                classObject.GetType.GetProperty([property].Name).SetValue(classObject, row.Value, Nothing)
+                            Case "DateTime"
+                                SetDateProperty(classObject, row, [property])
+                                Continue For
                             Case NameOf([Single])
                                 propertyValue = row.Value.ParseSingle(10)
                             Case NameOf([Double])
@@ -90,6 +87,8 @@ Public Module DictionaryExtensions
                                  NameOf([Int32]),
                                  NameOf([String])
                                 propertyValue = Convert.ChangeType(row.Value, [property].PropertyType)
+                            Case "MarkerData"
+                                Stop
                             Case Else
                                 Throw UnreachableException([property].PropertyType.Name)
                         End Select
@@ -110,6 +109,18 @@ Public Module DictionaryExtensions
         Return classObject
     End Function
 
+    Private Sub SetDateProperty(Of T As {Class, New})(classObject As T, row As KeyValuePair(Of String, String), [property] As PropertyInfo)
+        Try
+            Dim propertyInfo As PropertyInfo = classObject.GetType.GetProperty($"{[property].Name}AsString")
+            If propertyInfo Is Nothing Then
+                Stop
+            End If
+            propertyInfo.SetValue(classObject, row.Value, Nothing)
+        Catch ex As Exception
+            Stop
+        End Try
+    End Sub
+
     <Extension>
     Public Function IndexOfValue(dic As SortedDictionary(Of String, KnownColor), item As KnownColor) As Integer
         Return dic.Values.ToList.IndexOf(item)
@@ -117,7 +128,7 @@ Public Module DictionaryExtensions
 
     Public Function Is700Series() As Boolean
         If RecentDataEmpty() Then Return False
-#If False Then ' ToDo
+#If False Then ' TODO
         Return s_700Models.Contains(RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber)))
 #End If
         Return False
