@@ -6,7 +6,6 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 Public Class CalibrationRecord
-    Private _marker As Marker
 
     Public Sub New(marker As Marker, recordNumber As Integer)
         Me.RecordNumber = recordNumber

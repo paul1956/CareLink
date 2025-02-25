@@ -58,7 +58,7 @@ Public Class Client2
     Public Shared ReadOnly Property Auth_Error_Codes As Integer() = {401, 403}
     Public Property SessionUser As SessionUserRecord
 
-    Private Function DoRefresh(config As Dictionary(Of String, Object), tokenDataElement As JsonElement) As JsonElement
+    Private Function DoRefresh(config As Dictionary(Of String, Object), tokenDataElement As JsonElement) As Task(Of JsonElement)
         Debug.WriteLine(NameOf(DoRefresh))
         _httpClient.SetDefaultRequestHeaders()
         Dim tokenUrl As String = CStr(config("token_url"))
@@ -70,17 +70,17 @@ Public Class Client2
             {"client_secret", tokenData("client_secret")},
             {"grant_type", "refresh_token"}}
 
+        Dim content As New FormUrlEncodedContent(data)
+
         Dim headers As New Dictionary(Of String, String) From {
             {"mag-identifier", tokenData("mag-identifier")}}
 
-        Dim request As New HttpRequestMessage(HttpMethod.Get, tokenUrl)
-        request.Headers.Accept.Add(New MediaTypeWithQualityHeaderValue("application/json"))
-        For Each header As KeyValuePair(Of String, String) In headers.Sort
-            request.Headers.Add(header.Key, header.Value)
+        For Each header As KeyValuePair(Of String, String) In headers
+            _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
         Next
 
-        Dim jsonContent As New StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json")
-        Dim response As HttpResponseMessage = _httpClient.PostAsync(tokenUrl, jsonContent).Result
+        Dim response As HttpResponseMessage = _httpClient.PostAsync(tokenUrl, content).Result
+
         _lastApiStatus = CInt(response.StatusCode)
         Debug.WriteLine($"   status: {_lastApiStatus}")
 
@@ -94,7 +94,7 @@ Public Class Client2
         tokenData("access_token") = newData.GetProperty("access_token").GetString()
         tokenData("refresh_token") = newData.GetProperty("refresh_token").GetString()
 
-        Return JsonSerializer.Deserialize(Of JsonElement)(JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions))
+        Return Task.FromResult(JsonSerializer.Deserialize(Of JsonElement)(JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions)))
     End Function
 
     Private Shared Function GetAccessTokenPayload(token_data As JsonElement) As Dictionary(Of String, Object)
@@ -276,7 +276,7 @@ Public Class Client2
 
             If Auth_Error_Codes.Contains(CInt(_lastApiStatus)) Then
                 Try
-                    _tokenDataElement = Me.DoRefresh(jsonConfigElement.ConvertJsonElementToDictionary, _tokenDataElement)
+                    _tokenDataElement = Me.DoRefresh(jsonConfigElement.ConvertJsonElementToDictionary, _tokenDataElement).Result
                     _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
                     WriteTokenFile(_tokenDataElement, s_userName)
                 Catch refreshEx As Exception
@@ -401,7 +401,7 @@ Public Class Client2
     Public Function GetRecentData() As Dictionary(Of String, Object)
         ' Check if access token is valid
         If Not IsTokenValid(_accessTokenPayload) Then
-            _tokenDataElement = Me.DoRefresh(_config, _tokenDataElement)
+            _tokenDataElement = Me.DoRefresh(_config, _tokenDataElement).Result
             _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
             WriteTokenFile(_tokenDataElement, s_userName)
             If Not IsTokenValid(_accessTokenPayload) Then
@@ -411,7 +411,12 @@ Public Class Client2
         End If
         Dim data As New Dictionary(Of String, Object)(StringComparer.OrdinalIgnoreCase)
         Try
-            data = Me.GetData(_config, _tokenDataElement, _username, CStr(_userElement("role")), "")
+            data = Me.GetData(
+                config:=_config,
+                tokenDataElement:=_tokenDataElement,
+                username:=_username,
+                role:=CStr(_userElement("role")),
+                patientId:="")
         Catch ex As Exception
             Stop
         End Try
@@ -419,7 +424,7 @@ Public Class Client2
         ' Check API response
         If Auth_Error_Codes.Contains(_lastApiStatus) Then
             ' Try to refresh token
-            _tokenDataElement = Me.DoRefresh(_config, _tokenDataElement)
+            _tokenDataElement = Me.DoRefresh(_config, _tokenDataElement).Result
             _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
             WriteTokenFile(_tokenDataElement, s_userName)
         End If
@@ -439,15 +444,5 @@ Public Class Client2
         End If
         Return True
     End Function
-
-    Public Sub PrintUserInfo()
-        Debug.WriteLine("User Info:")
-        Debug.WriteLine($"   user:     {_username} ({_userElement("firstName")} {_userElement("lastName")})")
-        Debug.WriteLine($"   role:     {_userElement("role")}")
-        Debug.WriteLine($"   country:  {_country}")
-        If _patientElement IsNot Nothing Then
-            Debug.WriteLine($"   patient:  {_patientElement("username")} ({_patientElement("firstName")} {_patientElement("lastName")})")
-        End If
-    End Sub
 
 End Class

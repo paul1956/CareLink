@@ -4,6 +4,7 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Text.Json
 
 Public Class InsulinRecord
     Private _programmedFastAmount As Single
@@ -12,25 +13,24 @@ Public Class InsulinRecord
         Me.RecordNumber = recordNumber
         Me.type = markerEntry.Type
         Me.timestamp = markerEntry.Timestamp
-#If alse Then ' TODO
-
+        Me.programmedFastAmount = markerEntry.GetSingleValueFromJson(NameOf(programmedFastAmount), decimalDigits:=3)
+        Me.deliveredFastAmount = markerEntry.GetSingleValueFromJson(NameOf(deliveredFastAmount), decimalDigits:=3)
+        Me.activationType = markerEntry.Data.DataValues(NameOf(activationType)).ToString
+        Me.completed = markerEntry.GetBooleanValueFromJson(NameOf(completed))
+        Me.bolusType = markerEntry.GetStringValueFromJson(NameOf(bolusType))
+        Me.deliveredExtendedAmount = markerEntry.GetSingleValueFromJson(NameOf(deliveredExtendedAmount), decimalDigits:=3)
+        Me.programmedExtendedAmount = markerEntry.GetSingleValueFromJson(NameOf(programmedExtendedAmount), decimalDigits:=3)
+        Me.programmedFastAmount = markerEntry.GetSingleValueFromJson(NameOf(programmedFastAmount), decimalDigits:=3)
+        Me.safeMealReduction = markerEntry.GetSingleValueFromJson(NameOf(safeMealReduction), decimalDigits:=3)
+        Me.unknownIncompletedFlag = markerEntry.GetBooleanValueFromJson(NameOf(unknownIncompletedFlag))
+        Me.effectiveDuration = markerEntry.GetIntegerValueFromJson(NameOf(effectiveDuration))
+        Me.programmedDuration = markerEntry.GetIntegerValueFromJson(NameOf(programmedDuration))
+#If False Then ' TODO
+        Me.relativeOffset = markerEntry.relativeOffset
+        Me.id = markerEntry.id
         Me.index = markerEntry.index
         Me.kind = markerEntry.kind
         Me.version = markerEntry.version
-        Me.programmedFastAmount = markerEntry programmedFastAmount
-        Me.unknownIncompletedFlag = markerEntry.unknownIncompletedFlag
-        Me.relativeOffset = markerEntry.relativeOffset
-        Me.programmedExtendedAmount = markerEntry.programmedExtendedAmount
-        Me.activationType = markerEntry.activationType
-        Me.deliveredExtendedAmount = markerEntry.deliveredExtendedAmount
-        Me.programmedFastAmount = markerEntry.programmedFastAmount
-        Me.programmedDuration = markerEntry.programmedDuration
-        Me.deliveredFastAmount = markerEntry.deliveredFastAmount
-        Me.id = markerEntry.id
-        Me.effectiveDuration = markerEntry.effectiveDuration
-        Me.SafeMealReduction = markerEntry.SafeMealReduction
-        Me.completed = markerEntry.completed
-        Me.bolusType = markerEntry.bolusType
 #End If
     End Sub
 
@@ -99,7 +99,7 @@ Public Class InsulinRecord
                     Dim cRatio As Single = CurrentUser.GetCarbRatio(TimeOnly.FromDateTime(meal.timestamp))
                     Dim expectedBolus As Single = (meal.amount / cRatio).RoundTo025
                     If expectedBolus > Value Then
-                        Me.SafeMealReduction = (expectedBolus - Value).RoundTo025
+                        Me.safeMealReduction = (expectedBolus - Value).RoundTo025
                     End If
                 End If
             End If
@@ -125,7 +125,7 @@ Public Class InsulinRecord
 
     <DisplayName("Safe Meal Reduction")>
     <Column(Order:=17, TypeName:=NameOf([Single]))>
-    Public Property SafeMealReduction As Single
+    Public Property safeMealReduction As Single
 
     <DisplayName("Completed")>
     <Column(Order:=18, TypeName:=NameOf([Boolean]))>

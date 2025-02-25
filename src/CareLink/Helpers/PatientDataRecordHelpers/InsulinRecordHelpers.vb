@@ -21,7 +21,7 @@ Friend Module InsulinRecordHelpers
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(InsulinRecord.timestamp)
                 dgv.CellFormattingDateTime(e)
-            Case NameOf(InsulinRecord.SafeMealReduction)
+            Case NameOf(InsulinRecord.safeMealReduction)
                 If dgv.CellFormattingSingleValue(e, 3) >= 0.0025 Then
                     CellFormattingApplyColor(e, Color.OrangeRed, isUri:=False)
                 Else

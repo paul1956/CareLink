@@ -65,7 +65,7 @@ Friend Module Form1CollectMarkersHelper
                     s_markers.Add(markerEntry)
                     Dim lastInsulinRecord As New InsulinRecord(markerEntry, s_listOfInsulinMarkers.Count + 1)
                     s_listOfInsulinMarkers.Add(lastInsulinRecord)
-                    Select Case markerEntry.Data.DataValues(NameOf(InsulinRecord.activationType)).ToString
+                    Select Case markerEntry.GetStringValueFromJson(NameOf(InsulinRecord.activationType))
                         Case "AUTOCORRECTION"
                             If Not basalDictionary.TryAdd(lastInsulinRecord.OAdateTime, lastInsulinRecord.deliveredFastAmount) Then
                                 basalDictionary(lastInsulinRecord.OAdateTime) += lastInsulinRecord.deliveredFastAmount

@@ -10,13 +10,14 @@ Public Class MealRecord
     Public Sub New(markerEntry As Marker, recordNumber As Integer)
         Me.RecordNumber = recordNumber
         Me.type = markerEntry.Type
+        Const fieldName As String = "amount"
+        Me.amount = CInt(markerEntry.GetSingleValueFromJson(fieldName, decimalDigits:=0))
 #If False Then ' TODO
         Me.index = markerEntry.index
         Me.kind = markerEntry.kind
         Me.version = markerEntry.version
         Me.timestamp = markerEntry.Timestamp
         Me.relativeOffset = markerEntry.relativeOffset
-        Me.amount = markerEntry.amount
 #End If
     End Sub
 

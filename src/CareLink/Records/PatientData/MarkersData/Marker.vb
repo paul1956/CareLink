@@ -39,10 +39,11 @@ Public Class Marker
     End Property
 
     Friend Shared Function Convert(r As Basal) As Marker
-        Dim convertedMarker As New Marker
-        convertedMarker.RecordNumber = -1
-        convertedMarker.Type = r.tempBasalType
-        convertedMarker.TimestampAsString = Date.FromOADate(r.GetOaGetTime).ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+        Dim convertedMarker As New Marker With {
+            .RecordNumber = -1,
+            .Type = r.tempBasalType,
+            .TimestampAsString = Date.FromOADate(r.GetOaGetTime).ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+        }
         convertedMarker.DisplayTimeAsString = convertedMarker.TimestampAsString
 
 

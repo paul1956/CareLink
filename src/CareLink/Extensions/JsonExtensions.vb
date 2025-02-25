@@ -2,9 +2,11 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 Imports System.Text.Json.Serialization
+Imports DocumentFormat.OpenXml
 
 Public Module JsonExtensions
 
@@ -139,6 +141,95 @@ Public Module JsonExtensions
     End Function
 
     <Extension>
+    Public Function GetBooleanValueFromJson(markerEntry As Marker, fieldName As String) As Boolean
+        Dim obj As Object = Nothing
+        Dim value As Boolean = False
+        If markerEntry.Data.DataValues.TryGetValue(fieldName, obj) Then
+            Dim element As JsonElement = CType(obj, JsonElement)
+            Select Case element.ValueKind
+                Case JsonValueKind.True
+                    Return True
+                Case JsonValueKind.False
+                    Return False
+                Case Else
+                    Stop
+            End Select
+        End If
+        Return value
+    End Function
+
+    <Extension>
+    Public Function GetDoubleValueFromJson(markerEntry As Marker, fieldName As String) As Double
+        Dim obj As Object = Nothing
+        Dim value As Double = Double.NaN
+        If markerEntry.Data.DataValues.TryGetValue(fieldName, obj) Then
+            Dim element As JsonElement = CType(obj, JsonElement)
+            Select Case element.ValueKind
+                Case JsonValueKind.String
+                    value = Double.Parse(element.GetString)
+                Case JsonValueKind.Number
+                    value = element.GetDouble
+                Case Else
+                    Stop
+            End Select
+        End If
+        Return value
+    End Function
+
+    <Extension>
+    Public Function GetIntegerValueFromJson(markerEntry As Marker, fieldName As String) As Integer
+        Dim obj As Object = Nothing
+        Dim value As Integer = 0
+        If markerEntry.Data.DataValues.TryGetValue(fieldName, obj) Then
+            Dim element As JsonElement = CType(obj, JsonElement)
+            Select Case element.ValueKind
+                Case JsonValueKind.String
+                    value = Integer.Parse(element.GetString)
+                Case JsonValueKind.Number
+                    value = element.GetInt32
+                Case Else
+                    Stop
+            End Select
+        End If
+        Return value
+    End Function
+
+    <Extension>
+    Public Function GetSingleValueFromJson(markerEntry As Marker, fieldName As String, Optional decimalDigits As Integer = -1) As Single
+        Dim obj As Object = Nothing
+        Dim value As Single = Single.NaN
+        If markerEntry.Data.DataValues.TryGetValue(fieldName, obj) Then
+            Dim element As JsonElement = CType(obj, JsonElement)
+            Select Case element.ValueKind
+                Case JsonValueKind.String
+                    value = Single.Parse(element.GetString)
+                Case JsonValueKind.Number
+                    value = element.GetSingle
+                Case Else
+                    Stop
+                    Return value
+            End Select
+            Return If(decimalDigits = 3, value.RoundTo025, value.RoundSingle(decimalDigits, False))
+        Else
+            Return Single.NaN
+        End If
+    End Function
+
+    <Extension>
+    Public Function GetStringValueFromJson(markerEntry As Marker, fieldName As String) As String
+        Dim obj As Object = Nothing
+        If markerEntry.Data.DataValues.TryGetValue(fieldName, obj) Then
+            Dim element As JsonElement = CType(obj, JsonElement)
+            If element.ValueKind = JsonValueKind.String Then
+                Return element.GetString
+            Else
+                Stop
+            End If
+        End If
+        Return String.Empty
+    End Function
+
+    <Extension>
     Public Function IsNullOrUndefined(kind As JsonValueKind) As Boolean
         Return kind = JsonValueKind.Null OrElse kind = JsonValueKind.Undefined
     End Function
@@ -201,15 +292,13 @@ Public Module JsonExtensions
                     resultDictionary.Add(item.Key, item.ScaleSgToString)
                 ElseIf item.Key = "dateTime" Then
                     Dim d As Date = item.Value.ToString.ParseDate(item.Key)
-#If False Then ' TODO
 
                     ' Prevent Crash but not valid data
                     If d.Year <= 2001 AndAlso recordIndex >= 0 Then
-                        resultDictionary.Add(item.Key, s_listOfSgRecords(recordIndex).datetimeAsString)
+                        resultDictionary.Add(item.Key, s_listOfSgRecords(recordIndex).Timestamp.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture))
                     Else
                         resultDictionary.Add(item.Key, item.jsonItemAsString)
                     End If
-#End If
                 Else
                     resultDictionary.Add(item.Key, item.jsonItemAsString)
                 End If

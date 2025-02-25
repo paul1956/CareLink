@@ -30,6 +30,7 @@ Public Class AutoBasalDelivery
         Me.version = 1
         Me.Timestamp = marker.Timestamp
         Me.bolusAmount = marker.Data.DataValues(NameOf(bolusAmount)).ToString.ParseSingle(10)
+        Me.maxAutoBasalRate = marker.Data.DataValues(NameOf(maxAutoBasalRate)).ToString.ParseSingle(10)
     End Sub
 
     <DisplayName("Record Number")>
@@ -58,30 +59,8 @@ Public Class AutoBasalDelivery
     <Column(Order:=5, TypeName:="Date")>
     Public Property Timestamp As Date
 
-    <DisplayName(NameOf(OAdateTime))>
-    <Column(Order:=6, TypeName:=NameOf(OADate))>
-    Public ReadOnly Property OAdateTime As OADate
-        Get
-            Return New OADate(Me.Timestamp)
-        End Get
-    End Property
-
-    <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=7, TypeName:=NameOf([Int32]))>
-    Public Property relativeOffset As Integer
-
-    <DisplayName(NameOf(id))>
-    <Column(Order:=8, TypeName:=NameOf([Int32]))>
-    Public Property id As Integer
-
-    <DisplayName("Bolus Amount")>
-    <Column(Order:=9, TypeName:=NameOf([Single]))>
-    Public Property bolusAmount As Single
-
-    <DisplayName("Basal Rate")>
-    <Column(Order:=10, TypeName:=NameOf([Single]))>
-    Public Property basalRate As Single
-
+    <DisplayName(NameOf(TimestampAsString))>
+    <Column(Order:=6, TypeName:="String")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
         Get
@@ -91,5 +70,34 @@ Public Class AutoBasalDelivery
             _Timestamp = Date.ParseExact(value, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
         End Set
     End Property
+
+    <DisplayName(NameOf(OAdateTime))>
+    <Column(Order:=7, TypeName:=NameOf(OADate))>
+    Public ReadOnly Property OAdateTime As OADate
+        Get
+            Return New OADate(Me.Timestamp)
+        End Get
+    End Property
+
+    <DisplayName(NameOf(relativeOffset))>
+    <Column(Order:=8, TypeName:=NameOf([Int32]))>
+    Public Property relativeOffset As Integer
+
+    <DisplayName(NameOf(id))>
+    <Column(Order:=9, TypeName:=NameOf([Int32]))>
+    Public Property id As Integer
+
+    <DisplayName("Bolus Amount")>
+    <Column(Order:=10, TypeName:=NameOf([Single]))>
+    Public Property bolusAmount As Single
+
+    <DisplayName("Basal Rate")>
+    <Column(Order:=11, TypeName:=NameOf([Single]))>
+    Public Property basalRate As Single
+
+    <DisplayName("Max Auto Basal Rate")>
+    <Column(Order:=12, TypeName:=NameOf([Single]))>
+    Public Property maxAutoBasalRate As Single
+
 
 End Class
