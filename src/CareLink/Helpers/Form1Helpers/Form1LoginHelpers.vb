@@ -78,7 +78,7 @@ Friend Module Form1LoginHelpers
                 Try
                     Dim patientDataElementAsText As String = patientDataElement.GetRawText()
                     Stop
-                    Dim patientData As PatientDataInfo = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
+                    PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
                     RecentData = patientDataElement.ConvertJsonElementToStringDictionary(expandSubElements:=False)
                 Catch ex As Exception
                     Stop
