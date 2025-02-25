@@ -15,6 +15,7 @@ Public Class AutoModeStatus
         Me.DisplayTime = markerEntry.DisplayTime
         Me.Data = markerEntry.Data
         Me.Views = markerEntry.Views
+        Me.autoModeOn = True
 #If False Then ' TODO
         Me.index = markerEntry.index
         Me.kind = markerEntry.kind

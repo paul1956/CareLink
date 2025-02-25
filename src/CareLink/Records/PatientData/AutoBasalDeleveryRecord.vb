@@ -29,7 +29,7 @@ Public Class AutoBasalDelivery
         Me.kind = "Marker"
         Me.version = 1
         Me.Timestamp = marker.Timestamp
-        Me.bolusAmount = marker.Data.DataValues.Values(0).ToString.ParseSingle(10)
+        Me.bolusAmount = marker.Data.DataValues(NameOf(bolusAmount)).ToString.ParseSingle(10)
     End Sub
 
     <DisplayName("Record Number")>

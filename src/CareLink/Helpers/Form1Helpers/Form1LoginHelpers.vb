@@ -77,8 +77,8 @@ Friend Module Form1LoginHelpers
                 Dim patientDataElement As JsonElement = CType(recentDataBlob.Values(1), JsonElement)
                 Try
                     Dim patientDataElementAsText As String = patientDataElement.GetRawText()
-                    Stop
                     PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
+                    Stop
                     RecentData = patientDataElement.ConvertJsonElementToStringDictionary(expandSubElements:=False)
                 Catch ex As Exception
                     Stop
