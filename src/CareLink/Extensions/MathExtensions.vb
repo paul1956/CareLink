@@ -8,6 +8,11 @@ Imports System.Runtime.CompilerServices
 Friend Module MathExtensions
 
     <Extension>
+    Friend Function GetRoundedValue(value As Single, decimalDigits As Integer) As Single
+        Return If(decimalDigits = 3, value.RoundTo025, value.RoundSingle(decimalDigits, False))
+    End Function
+
+    <Extension>
     Friend Function RoundSingle(singleValue As Single, decimalDigits As Integer, considerValue As Boolean) As Single
 
         Return CSng(Math.Round(singleValue, If(considerValue AndAlso singleValue < 10, 2, decimalDigits)))
@@ -45,7 +50,7 @@ Friend Module MathExtensions
         Else
             Return Single.NaN
         End If
-        Return If(decimalDigits = 3, returnSingle.RoundTo025, returnSingle.RoundSingle(decimalDigits, False))
+        Return GetRoundedValue(returnSingle, decimalDigits)
     End Function
 
     Public Function ParseSingle(valueObject As Object, decimalDigits As Integer) As Single
@@ -67,26 +72,12 @@ Friend Module MathExtensions
                 Throw UnreachableException(valueObject.GetType.Name)
         End Select
 
-        Return If(decimalDigits = 3, returnSingle.RoundTo025, returnSingle.RoundSingle(decimalDigits, False))
+        Return GetRoundedValue(returnSingle, decimalDigits)
     End Function
 
     <Extension>
     Public Function RoundTo025(originalValue As Single) As Single
-
         Return If(Single.IsNaN(originalValue), Single.NaN, CDbl(originalValue).RoundTo025)
-
-    End Function
-
-    <Extension>
-    Public Function RoundTo025(originalValue As Double) As Single
-        If Double.IsNaN(originalValue) Then
-            Return Single.NaN
-        Else
-            Dim inverse As Single = 1 / 0.025
-            Dim dividend As Double = originalValue * inverse
-            dividend = Math.Round(dividend)
-            Return CSng(dividend / inverse)
-        End If
     End Function
 
     <Extension>
@@ -105,6 +96,18 @@ Friend Module MathExtensions
         End If
         result = Single.NaN
         Return False
+    End Function
+
+    <Extension>
+    Public Function RoundTo025(originalValue As Double) As Single
+        If Double.IsNaN(originalValue) Then
+            Return Single.NaN
+        Else
+            Dim inverse As Single = 1 / 0.025
+            Dim dividend As Double = originalValue * inverse
+            dividend = Math.Round(dividend)
+            Return CSng(dividend / inverse)
+        End If
     End Function
 
 End Module

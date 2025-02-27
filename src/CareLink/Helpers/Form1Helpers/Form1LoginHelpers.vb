@@ -149,7 +149,7 @@ Friend Module Form1LoginHelpers
                 .Text = ""
             Else
                 Dim timeZoneName As String = Nothing
-                If RecentData?.TryGetValue(NameOf(ItemIndexes.clientTimeZoneName), timeZoneName) Then
+                If RecentData?.TryGetValue(NameOf(ServerDataIndexes.clientTimeZoneName), timeZoneName) Then
                     Dim timeZoneInfo As TimeZoneInfo = CalculateTimeZone(timeZoneName)
                     .Text = $"{If(isDaylightSavingTime, timeZoneInfo.DaylightName, timeZoneInfo.StandardName)} {suffixMessage}".Trim
                 Else
@@ -245,6 +245,12 @@ Friend Module Form1LoginHelpers
     ''' <param name="sourceLineNumber"></param>
     ''' <returns>State of Timer before function was called</returns>
     Friend Function StartOrStopServerUpdateTimer(Start As Boolean, Optional interval As Integer = -1) As Boolean
+        If Debugger.IsAttached Then
+#If False Then ' TODO REMOVE
+
+#End If
+            Return False
+        End If
         If Start Then
             If interval > -1 Then
                 Form1.ServerUpdateTimer.Interval = interval

@@ -18,8 +18,8 @@ Friend Module SgReadingRecordHelpers
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(SgReadingRecord.timestamp)
                 dgv.CellFormattingDateTime(e)
-            Case NameOf(SgReadingRecord.value), NameOf(SgReadingRecord.valueMmolL), NameOf(SgReadingRecord.valueMmDl)
-                dgv.CellFormattingSgValue(e, NameOf(SgReadingRecord.value))
+            Case NameOf(SgReadingRecord.unitValue), NameOf(SgReadingRecord.valueMmolL), NameOf(SgReadingRecord.valueMmDl)
+                dgv.CellFormattingSgValue(e, NameOf(SgReadingRecord.unitValue))
             Case Else
                 dgv.CellFormattingSetForegroundColor(e)
         End Select

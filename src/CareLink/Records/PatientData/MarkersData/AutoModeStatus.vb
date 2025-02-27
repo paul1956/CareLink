@@ -15,14 +15,7 @@ Public Class AutoModeStatus
         Me.DisplayTime = markerEntry.DisplayTime
         Me.Data = markerEntry.Data
         Me.Views = markerEntry.Views
-        Me.autoModeOn = True
-#If False Then ' TODO
-        Me.index = markerEntry.index
-        Me.kind = markerEntry.kind
-        Me.version = markerEntry.version
-        Me.relativeOffset = markerEntry.relativeOffset
-        Me.autoModeOn = markerEntry.autoModeOn
-#End If
+        Me.autoModeOn = PatientData.TherapyAlgorithmState.AutoModeShieldState = "AUTO_BASAL"
     End Sub
 
     <DisplayName("Record Number")>

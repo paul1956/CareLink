@@ -4,9 +4,11 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Globalization
 Imports System.Text.Json.Serialization
 
 Public Class Limit
+    Private _timestampAsString As String
 
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
@@ -80,9 +82,25 @@ Public Class Limit
     <JsonPropertyName("version")>
     Public Property Version As Integer
 
-    <DisplayName("timestamp")>
-    <Column(Order:=10, TypeName:=NameOf([DateTime]))>
+    <DisplayName(NameOf(Timestamp))>
+    <Column(Order:=10, TypeName:="Date")>
+    <JsonPropertyName("timestampAsDate")>
+    Public ReadOnly Property Timestamp As Date
+        Get
+            Return Date.ParseExact(_timestampAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+        End Get
+    End Property
+
+    <DisplayName(NameOf(Timestamp))>
+    <Column(Order:=11, TypeName:="Date")>
     <JsonPropertyName("timestamp")>
-    Public Property Timestamp As String
+    Public Property TimestampAsString As String
+        Get
+            Return _timestampAsString
+        End Get
+        Set
+            _timestampAsString = Value
+        End Set
+    End Property
 
 End Class

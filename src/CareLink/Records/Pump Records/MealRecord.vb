@@ -12,13 +12,8 @@ Public Class MealRecord
         Me.type = markerEntry.Type
         Const fieldName As String = "amount"
         Me.amount = CInt(markerEntry.GetSingleValueFromJson(fieldName, decimalDigits:=0))
-#If False Then ' TODO
-        Me.index = markerEntry.index
-        Me.kind = markerEntry.kind
-        Me.version = markerEntry.version
         Me.timestamp = markerEntry.Timestamp
-        Me.relativeOffset = markerEntry.relativeOffset
-#End If
+        Me.DisplayTime = markerEntry.DisplayTime
     End Sub
 
     <DisplayName("Record Number")>
@@ -45,8 +40,12 @@ Public Class MealRecord
     <Column(Order:=5, TypeName:="Date")>
     Public Property timestamp As Date
 
+    <DisplayName(NameOf(DisplayTime))>
+    <Column(Order:=6, TypeName:="Date")>
+    Public Property DisplayTime As Date
+
     <DisplayName(NameOf(OAdateTime))>
-    <Column(Order:=6, TypeName:=NameOf(OADate))>
+    <Column(Order:=7, TypeName:=NameOf(OADate))>
     Public ReadOnly Property OAdateTime As OADate
         Get
             Return New OADate(Me.timestamp)
@@ -54,11 +53,11 @@ Public Class MealRecord
     End Property
 
     <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=7, TypeName:=NameOf([Int32]))>
+    <Column(Order:=8, TypeName:=NameOf([Int32]))>
     Public Property relativeOffset As Integer
 
     <DisplayName("Carbs (amount)")>
-    <Column(Order:=8, TypeName:=NameOf([Int32]))>
+    <Column(Order:=9, TypeName:=NameOf([Int32]))>
     Public Property amount As Integer
 
     Friend Shared Sub AttachHandlers(dgv As DataGridView)

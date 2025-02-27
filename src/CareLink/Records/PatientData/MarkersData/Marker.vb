@@ -42,17 +42,10 @@ Public Class Marker
         Dim convertedMarker As New Marker With {
             .RecordNumber = -1,
             .Type = r.tempBasalType,
-            .TimestampAsString = Date.FromOADate(r.GetOaGetTime).ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
-        }
-        convertedMarker.DisplayTimeAsString = convertedMarker.TimestampAsString
-
-
-#If False Then ' TODO
-        Me.Timestamp = r.Timestamp
-        Me.DisplayTime = r.DisplayTime
-        Me.Data = r.Data
-        Me.Views = r.Views
-#End If
+            .TimestampAsString = Date.FromOADate(r.GetOaGetTime).ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture),
+            .DisplayTimeAsString = .TimestampAsString
+       }
         Return convertedMarker
     End Function
+
 End Class

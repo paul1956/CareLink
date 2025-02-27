@@ -10,7 +10,7 @@ Friend Module Form1SummaryTabHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(SummaryRecord.RecordNumber)
-                If dgv.Rows(e.RowIndex).Cells("key").Value.Equals(ItemIndexes.medicalDeviceInformation.ToString) Then
+                If dgv.Rows(e.RowIndex).Cells("key").Value.Equals(ServerDataIndexes.medicalDeviceInformation.ToString) Then
                     dgv.CellFormattingSingleValue(e, 1)
                 End If
             Case Else

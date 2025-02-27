@@ -504,7 +504,7 @@ Public Class Form1
                 Else
                     dgv.CellFormattingSetForegroundColor(e)
                 End If
-            Case NameOf(AutoBasalDelivery.timestamp)
+            Case NameOf(AutoBasalDelivery.Timestamp)
                 dgv.CellFormattingDateTime(e)
             Case Else
                 dgv.CellFormattingSetForegroundColor(e)
@@ -844,7 +844,7 @@ Public Class Form1
                     CellFormattingApplyColor(e, Color.Red, isUri:=False)
                 End If
                 dgv.CellFormattingToTitle(e)
-            Case NameOf(SG.timestamp)
+            Case NameOf(SG.Timestamp)
                 dgv.CellFormattingDateTime(e)
             Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMmDl)
                 dgv.CellFormattingSgValue(e, NameOf(SG.sg))
@@ -925,53 +925,48 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
         Select Case GetItemIndex(key)
-            Case ItemIndexes.lastSensorTS, ItemIndexes.medicalDeviceTimeAsString,
-                 ItemIndexes.lastSensorTSAsString, ItemIndexes.kind,
-                 ItemIndexes.pumpModelNumber, ItemIndexes.currentServerTime,
-                 ItemIndexes.lastConduitTime, ItemIndexes.lastConduitUpdateServerTime,
-                 ItemIndexes.lastMedicalDeviceDataUpdateServerTime,
-                 ItemIndexes.firstName, ItemIndexes.lastName, ItemIndexes.conduitSerialNumber,
-                 ItemIndexes.conduitBatteryStatus, ItemIndexes.medicalDeviceFamily,
-                 ItemIndexes.sensorState, ItemIndexes.medicalDeviceSerialNumber,
-                 ItemIndexes.medicalDeviceTime, ItemIndexes.sMedicalDeviceTime,
-                 ItemIndexes.calibStatus, ItemIndexes.bgUnits, ItemIndexes.timeFormat,
-                 ItemIndexes.lastSensorTime, ItemIndexes.sLastSensorTime,
-                 ItemIndexes.lastSGTrend, ItemIndexes.systemStatusMessage,
-                 ItemIndexes.lastConduitDateTime, ItemIndexes.clientTimeZoneName,
-                 ItemIndexes.appModelType, ItemIndexes.calibrationIcon
+            Case ServerDataIndexes.currentServerTime,
+                 ServerDataIndexes.lastMedicalDeviceDataUpdateServerTime,
+                 ServerDataIndexes.firstName, ServerDataIndexes.lastName, ServerDataIndexes.conduitSerialNumber,
+                 ServerDataIndexes.conduitBatteryStatus,
+                 ServerDataIndexes.sensorState,
+                 ServerDataIndexes.medicalDeviceTime,
+                 ServerDataIndexes.calibStatus, ServerDataIndexes.bgUnits, ServerDataIndexes.timeFormat,
+                 ServerDataIndexes.lastSGTrend, ServerDataIndexes.systemStatusMessage,
+                 ServerDataIndexes.lastConduitDateTime, ServerDataIndexes.clientTimeZoneName,
+                 ServerDataIndexes.appModelType
                 e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
 
-            Case ItemIndexes.version, ItemIndexes.conduitBatteryLevel,
-                 ItemIndexes.reservoirLevelPercent, ItemIndexes.reservoirAmount,
-                 ItemIndexes.reservoirRemainingUnits, ItemIndexes.medicalDeviceBatteryLevelPercent,
-                 ItemIndexes.sensorDurationHours, ItemIndexes.timeToNextCalibHours,
-                 ItemIndexes.averageSG, ItemIndexes.belowHypoLimit,
-                 ItemIndexes.aboveHyperLimit, ItemIndexes.timeInRange,
-                 ItemIndexes.gstBatteryLevel, ItemIndexes.maxAutoBasalRate,
-                 ItemIndexes.maxBolusAmount, ItemIndexes.sensorDurationMinutes,
-                 ItemIndexes.timeToNextCalibrationMinutes, ItemIndexes.sgBelowLimit,
-                 ItemIndexes.averageSGFloat, ItemIndexes.timeToNextCalibrationRecommendedMinutes,
-                 ItemIndexes.systemStatusTimeRemaining, ItemIndexes.timeToNextEarlyCalibrationMinutes
+            Case ServerDataIndexes.appModelNumber, ServerDataIndexes.conduitBatteryLevel,
+                 ServerDataIndexes.reservoirLevelPercent, ServerDataIndexes.reservoirAmount,
+                 ServerDataIndexes.reservoirRemainingUnits,
+                 ServerDataIndexes.sensorDurationHours, ServerDataIndexes.timeToNextCalibHours,
+                 ServerDataIndexes.averageSG, ServerDataIndexes.belowHypoLimit,
+                 ServerDataIndexes.aboveHyperLimit, ServerDataIndexes.timeInRange,
+                 ServerDataIndexes.gstBatteryLevel, ServerDataIndexes.maxAutoBasalRate,
+                 ServerDataIndexes.maxBolusAmount, ServerDataIndexes.sensorDurationMinutes,
+                 ServerDataIndexes.timeToNextCalibrationMinutes, ServerDataIndexes.sgBelowLimit,
+                 ServerDataIndexes.averageSGFloat, ServerDataIndexes.timeToNextCalibrationRecommendedMinutes,
+                 ServerDataIndexes.systemStatusTimeRemaining, ServerDataIndexes.timeToNextEarlyCalibrationMinutes
                 e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
 
-            Case ItemIndexes.conduitInRange, ItemIndexes.conduitMedicalDeviceInRange,
-                 ItemIndexes.conduitSensorInRange, ItemIndexes.medicalDeviceSuspended,
-                 ItemIndexes.pumpCommunicationState, ItemIndexes.gstCommunicationState,
-                 ItemIndexes.calFreeSensor, ItemIndexes.finalCalibration, ItemIndexes.typeCast
+            Case ServerDataIndexes.conduitInRange, ServerDataIndexes.conduitMedicalDeviceInRange,
+                 ServerDataIndexes.conduitSensorInRange,
+                 ServerDataIndexes.pumpCommunicationState, ServerDataIndexes.gstCommunicationState,
+                 ServerDataIndexes.calFreeSensor, ServerDataIndexes.finalCalibration
                 e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
 
-            Case ItemIndexes.lastSG,
-                 ItemIndexes.lastAlarm,
-                 ItemIndexes.activeInsulin,
-                 ItemIndexes.sgs,
-                 ItemIndexes.limits,
-                 ItemIndexes.markers,
-                 ItemIndexes.notificationHistory,
-                 ItemIndexes.therapyAlgorithmState,
-                 ItemIndexes.pumpBannerState,
-                 ItemIndexes.basal,
-                 ItemIndexes.cgmInfo,
-                 ItemIndexes.medicalDeviceInformation
+            Case ServerDataIndexes.lastAlarm,
+                 ServerDataIndexes.activeInsulin,
+                 ServerDataIndexes.sgs,
+                 ServerDataIndexes.limits,
+                 ServerDataIndexes.markers,
+                 ServerDataIndexes.notificationHistory,
+                 ServerDataIndexes.therapyAlgorithmState,
+                 ServerDataIndexes.pumpBannerState,
+                 ServerDataIndexes.basal,
+                 ServerDataIndexes.cgmInfo,
+                 ServerDataIndexes.medicalDeviceInformation
                 Exit Select
             Case Else
                 e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
@@ -986,21 +981,21 @@ Public Class Form1
         If value.StartsWith(ClickToShowDetails) Then
             With Me.TabControlPage1
                 Select Case dgv.Rows(e.RowIndex).Cells("key").Value.ToString.GetItemIndex()
-                    Case ItemIndexes.lastSG
+                    Case ServerDataIndexes.lastSG
                         Me.TabControlPage2.SelectedIndex = 6
                         _lastMarkerTabIndex = (1, 6)
                         .Visible = False
-                    Case ItemIndexes.lastAlarm
+                    Case ServerDataIndexes.lastAlarm
                         Me.TabControlPage2.SelectedIndex = 7
                         _lastMarkerTabIndex = (1, 7)
                         .Visible = False
-                    Case ItemIndexes.activeInsulin
+                    Case ServerDataIndexes.activeInsulin
                         .SelectedIndex = GetTabIndexFromName(NameOf(TabPage07ActiveInsulin))
-                    Case ItemIndexes.sgs
+                    Case ServerDataIndexes.sgs
                         .SelectedIndex = GetTabIndexFromName(NameOf(TabPage08SensorGlucose))
-                    Case ItemIndexes.limits
+                    Case ServerDataIndexes.limits
                         .SelectedIndex = GetTabIndexFromName(NameOf(TabPage09Limits))
-                    Case ItemIndexes.markers
+                    Case ServerDataIndexes.markers
                         Dim page As Integer = _lastMarkerTabIndex.page
                         Dim tab As Integer = _lastMarkerTabIndex.tab
                         If page = 0 Then
@@ -1015,13 +1010,13 @@ Public Class Form1
                                                                  )
                             .Visible = False
                         End If
-                    Case ItemIndexes.notificationHistory
+                    Case ServerDataIndexes.notificationHistory
                         .SelectedIndex = GetTabIndexFromName(NameOf(TabPage10NotificationHistory))
-                    Case ItemIndexes.therapyAlgorithmState
+                    Case ServerDataIndexes.therapyAlgorithmState
                         .SelectedIndex = GetTabIndexFromName(NameOf(TabPage11TherapyAlgorithm))
-                    Case ItemIndexes.pumpBannerState
+                    Case ServerDataIndexes.pumpBannerState
                         .SelectedIndex = GetTabIndexFromName(NameOf(TabPage12BannerState))
-                    Case ItemIndexes.basal
+                    Case ServerDataIndexes.basal
                         .SelectedIndex = GetTabIndexFromName(NameOf(TabPage13Basal))
                 End Select
             End With
@@ -1234,10 +1229,7 @@ Public Class Form1
                         If ExceptionHandlerDialog.ShowDialog(Me) = DialogResult.OK Then
                             ExceptionHandlerDialog.ReportFileNameWithPath = ""
                             Try
-#If False Then ' TODO
                                 RecentData = LoadIndexedItems(ExceptionHandlerDialog.LocalRawData)
-#End If
-
                             Catch ex As Exception
                                 MessageBox.Show($"Error reading date file. Original error: {ex.DecodeException()}")
                             End Try
@@ -2649,7 +2641,7 @@ Public Class Form1
             Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(8)
             Me.RemainingInsulinUnits.Text = "???U"
         Else
-            Me.RemainingInsulinUnits.Text = $"{s_listOfSummaryRecords.GetValue(Of String)(NameOf(ItemIndexes.reservoirRemainingUnits)).ParseSingle(1):N1} U"
+            Me.RemainingInsulinUnits.Text = $"{s_listOfSummaryRecords.GetValue(Of String)(NameOf(ServerDataIndexes.reservoirRemainingUnits)).ParseSingle(1):N1} U"
             Select Case s_reservoirLevelPercent
                 Case >= 85
                     Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(7)
@@ -2680,7 +2672,7 @@ Public Class Form1
             Exit Sub
         End If
 
-        Dim batteryLeftPercent As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexes.medicalDeviceBatteryLevelPercent))
+        Dim batteryLeftPercent As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ServerDataIndexes.pumpBatteryLevelPercent))
         Me.PumpBatteryRemaining2Label.Text = $"{Math.Abs(batteryLeftPercent)}%"
         Select Case batteryLeftPercent
             Case > 90
@@ -2724,7 +2716,7 @@ Public Class Form1
                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
                     Me.SensorTimeLeftLabel.Text = $"{s_sensorDurationHours} Hours"
                 Case 0
-                    Dim sensorDurationMinutes As Integer = s_listOfSummaryRecords.GetValue(NameOf(ItemIndexes.sensorDurationMinutes), False, -1)
+                    Dim sensorDurationMinutes As Integer = s_listOfSummaryRecords.GetValue(NameOf(ServerDataIndexes.sensorDurationMinutes), False, -1)
                     Select Case sensorDurationMinutes
                         Case > 0
                             Me.SensorDaysLeftLabel.Text = "0"
@@ -2782,7 +2774,7 @@ Public Class Form1
         Me.TimeInRangeValueLabel.Text = $"{GetTIR()} %"
         Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
         Me.BelowLowLimitMessageLabel.Text = $"Below {TirLowLimitAsString(NativeMmolL)} {SgUnitsNativeString}"
-        Dim averageSgStr As String = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.averageSG))
+        Dim averageSgStr As String = RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.averageSG))
         Me.AverageSGValueLabel.Text = If(NativeMmolL, averageSgStr.TruncateSingleString(2), averageSgStr)
         Me.AverageSGMessageLabel.Text = $"Average SG in {SgUnitsNativeString}"
 
@@ -2806,13 +2798,13 @@ Public Class Form1
                     Else
                         If r.Value.autoModeOn Then
                             If r.IsLast Then
-                                timeInAutoMode += s_listOfAutoModeStatusMarkers.First.timestamp.AddDays(1) - r.Value.timestamp
+                                timeInAutoMode += s_listOfAutoModeStatusMarkers.First.Timestamp.AddDays(1) - r.Value.Timestamp
                             Else
                                 autoModeStartTime = r.Value.Timestamp
                             End If
                         Else
-                            timeInAutoMode += r.Value.timestamp - autoModeStartTime
-                            autoModeStartTime = r.Value.timestamp
+                            timeInAutoMode += r.Value.Timestamp - autoModeStartTime
+                            autoModeStartTime = r.Value.Timestamp
                         End If
                     End If
                 Next
@@ -2919,7 +2911,7 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateTrendArrows()
-        Dim rowValue As String = RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastSGTrend))
+        Dim rowValue As String = RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.lastSGTrend))
         If s_pumpInRangeOfPhone Then
             Dim arrows As String = Nothing
             If s_trends.TryGetValue(rowValue, arrows) Then
@@ -2943,13 +2935,13 @@ Public Class Form1
             Exit Sub
         End If
         Dim lastMedicalDeviceDataUpdateServerTimeEpoch As String = ""
-        If RecentData.TryGetValue(NameOf(ItemIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerTimeEpoch) Then
+        If RecentData.TryGetValue(NameOf(ServerDataIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerTimeEpoch) Then
             If CLng(lastMedicalDeviceDataUpdateServerTimeEpoch) = s_lastMedicalDeviceDataUpdateServerEpoch Then
                 Exit Sub
             End If
         End If
 
-        If RecentData.Count > ItemIndexes.typeCast + 1 Then
+        If RecentData.Count > ServerDataIndexes.sensorLifeIcon + 1 Then
             Stop
         End If
 
@@ -2989,7 +2981,7 @@ Public Class Form1
         Me.UpdateAllSummarySeries()
         Me.UpdateDosingAndCarbs()
 
-        Me.FullNameLabel.Text = $"{s_firstName} {RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.lastName))}"
+        Me.FullNameLabel.Text = $"{s_firstName} {RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.lastName))}"
         Me.ModelLabel.Text = $"{s_pumpModelNumber} HW Version = {s_pumpHardwareRevision}"
         Me.PumpNameLabel.Text = GetPumpName(s_pumpModelNumber)
         Dim nonZeroRecords As IEnumerable(Of SG) = s_listOfSgRecords.Where(Function(entry As SG) Not Single.IsNaN(entry.sg))
@@ -2999,35 +2991,35 @@ Public Class Form1
                               ClassCollectionToDataTable({s_lastSgRecord}.ToList),
                               NameOf(SG),
                               AddressOf SgRecordHelpers.AttachHandlers,
-                              ItemIndexes.lastSG,
+                              ServerDataIndexes.lastSG,
                               True)
 
         Me.TableLayoutPanelLastAlarm.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(GetSummaryRecords(s_lastAlarmValue)),
                               NameOf(LastAlarmRecord),
                               AddressOf SummaryRecordHelpers.AttachHandlers,
-                              ItemIndexes.lastAlarm,
+                              ServerDataIndexes.lastAlarm,
                               True)
 
         Me.TableLayoutPanelActiveInsulin.DisplayDataTableInDGV(
                               ClassCollectionToDataTable({s_activeInsulin}.ToList),
                               NameOf(ActiveInsulin),
                               AddressOf ActiveInsulinRecordHelpers.AttachHandlers,
-                              ItemIndexes.activeInsulin,
+                              ServerDataIndexes.activeInsulin,
                               True)
 
         Me.TableLayoutPanelSgs.DisplayDataTableInDGV(
                               Me.DgvSGs,
                               ClassCollectionToDataTable(
                               classCollection:=s_listOfSgRecords.OrderByDescending(Function(x) x.RecordNumber).ToList()),
-                              ItemIndexes.sgs)
+                              ServerDataIndexes.sgs)
         Me.DgvSGs.Columns(0).HeaderCell.SortGlyphDirection = SortOrder.Descending
 
         Me.TableLayoutPanelLimits.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(classCollection:=s_listOfLimitRecords),
                               NameOf(Limit),
                               AddressOf LimitsRecordHelpers.AttachHandlers,
-                              ItemIndexes.limits,
+                              ServerDataIndexes.limits,
                               False)
 
         UpdateMarkerTabs()
@@ -3038,7 +3030,7 @@ Public Class Form1
                               ClassCollectionToDataTable(GetSummaryRecords(s_therapyAlgorithmStateValue)),
                               NameOf(SummaryRecord),
                               AddressOf SummaryRecordHelpers.AttachHandlers,
-                              ItemIndexes.therapyAlgorithmState,
+                              ServerDataIndexes.therapyAlgorithmState,
                               True)
 
         UpdatePumpBannerStateTab()
@@ -3047,7 +3039,7 @@ Public Class Form1
                               ClassCollectionToDataTable(s_listOfManualBasal.ToList),
                               NameOf(Basal),
                               AddressOf BasalRecordHelpers.AttachHandlers,
-                              ItemIndexes.basal,
+                              ServerDataIndexes.basal,
                               True)
 
         Me.MenuStartHere.Enabled = True

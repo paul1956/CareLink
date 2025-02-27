@@ -10,16 +10,17 @@ Friend Module Form1CollectMarkersHelper
     <Extension>
     Private Function ScaleMarker(marker As Marker) As Marker
         Dim newMarker As Marker = marker
-#If False Then ' TODO
-        For Each kvp As KeyValuePair(Of String, String) In innerDictionary
-            Select Case kvp.Key
-                Case "value"
-                    newMarker.Add(kvp.Key, kvp.ScaleSgToString())
+        Dim value As Object = Nothing
+        If marker.Data.DataValues.TryGetValue("unitValue", value) Then
+            Select Case True
+                Case TypeOf value Is JsonElement
+                    marker.Data.DataValues("unitValue") = CType(value, JsonElement).ScaleSgToString
+                Case TypeOf value Is String
+                    marker.Data.DataValues("unitValue") = CType(value, String).ScaleSgToString
                 Case Else
-                    newMarker.Add(kvp.Key, kvp.Value)
+                    Stop
             End Select
-        Next
-#End If
+        End If
         Return newMarker
     End Function
 
@@ -56,8 +57,8 @@ Friend Module Form1CollectMarkersHelper
                 Case "AUTO_MODE_STATUS"
                     s_listOfAutoModeStatusMarkers.Add(New AutoModeStatus(markerEntry, s_listOfAutoModeStatusMarkers.Count + 1))
                 Case "BG_READING"
-                    s_markers.Add(markerEntry.ScaleMarker)
-                    s_listOfSgReadingMarkers.Add(New SgReadingRecord(markerEntry.ScaleMarker(), s_listOfSgReadingMarkers.Count + 1))
+                    s_markers.Add(markerEntry)
+                    s_listOfSgReadingMarkers.Add(New SgReadingRecord(markerEntry, s_listOfSgReadingMarkers.Count + 1))
                 Case "CALIBRATION"
                     s_markers.Add(markerEntry.ScaleMarker)
                     s_listOfCalibrationMarkers.Add(New CalibrationRecord(markerEntry.ScaleMarker(), s_listOfCalibrationMarkers.Count + 1))
@@ -112,7 +113,7 @@ Friend Module Form1CollectMarkersHelper
         Dim maxBasalPerHour As Single = 0
 
         If basalDictionary.Count > 2 Then
-            While i < basalDictionary.Count ' AndAlso basalDictionary.Keys(i) <= endOADate
+            While i < basalDictionary.Count AndAlso basalDictionary.Keys(i) <= endOADate
                 Dim sum As Single = 0
                 Dim j As Integer = i
                 Dim startOADate As OADate = basalDictionary.Keys(i)

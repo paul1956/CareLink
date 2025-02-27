@@ -4,22 +4,38 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Globalization
 Imports System.Text.Json.Serialization
 
 Public Class SG
 
     Private _sensorState As String
     Private _sg As Single
+    Private _timestampAsString As String
 
     Public Sub New()
 
     End Sub
 
+    Public Sub New(lastSg As LastSG, index As Integer)
+        If lastSg.Sg <> 0 Then
+            _timestampAsString = lastSg.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+            Me.sensorState = lastSg.SensorState
+            Me.sg = lastSg.Sg
+            Me.timeChange = False
+        Else
+            Stop
+            Me.sg = Single.NaN
+        End If
+        Me.Kind = lastSg.Kind
+        Me.RecordNumber = index
+        Me.Version = lastSg.Version
+    End Sub
+
     Public Sub New(innerJson As Dictionary(Of String, String), index As Integer)
         Try
             If innerJson(NameOf(sg)) <> "0" OrElse innerJson.Count = 5 Then
-                Dim datetimeAsString As String = innerJson(NameOf(Me.Timestamp))
-                Me.Timestamp = datetimeAsString.ParseDate(NameOf(Me.Timestamp))
+                _timestampAsString = innerJson(NameOf(Me.Timestamp))
                 Me.sensorState = innerJson(NameOf(sensorState))
                 Me.sg = innerJson(NameOf(sg)).ParseSingle(2)
                 Dim value As String = "False"
@@ -30,11 +46,6 @@ Public Class SG
             End If
             Me.Kind = innerJson(NameOf(Kind))
             Me.RecordNumber = index + 1
-            Dim offset As String = Nothing
-            Me.relativeOffset = If(innerJson.TryGetValue(NameOf(relativeOffset), offset),
-                                   CInt(offset),
-                                   -1
-                                  )
             Me.Version = CInt(innerJson(NameOf(Version)))
         Catch ex As Exception
             Stop
@@ -45,8 +56,18 @@ Public Class SG
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public Property RecordNumber As Integer
 
+    <DisplayName("Kind")>
+    <Column(Order:=1, TypeName:=NameOf([String]))>
+    <JsonPropertyName("kind")>
+    Public Property Kind As String
+
+    <DisplayName("Version")>
+    <Column(Order:=2, TypeName:=NameOf([Int32]))>
+    <JsonPropertyName("version")>
+    Public Property Version As Integer
+
     <DisplayName("Sensor Glucose (sg)")>
-    <Column(Order:=1, TypeName:=NameOf([Single]))>
+    <Column(Order:=3, TypeName:=NameOf([Single]))>
     <JsonPropertyName("sg")>
     Public Property sg As Single
         Get
@@ -61,7 +82,7 @@ Public Class SG
     End Property
 
     <DisplayName("Sensor Glucose (mg/dL)")>
-    <Column(Order:=2, TypeName:=NameOf([Single]))>
+    <Column(Order:=4, TypeName:=NameOf([Single]))>
     Public ReadOnly Property sgMmDl As Single
         Get
             If Single.IsNaN(_sg) Then Return _sg
@@ -70,7 +91,7 @@ Public Class SG
     End Property
 
     <DisplayName("Sensor Glucose (mmol/L)")>
-    <Column(Order:=3, TypeName:=NameOf([Single]))>
+    <Column(Order:=5, TypeName:=NameOf([Single]))>
     Public ReadOnly Property sgMmolL As Single
         Get
             If Single.IsNaN(_sg) Then Return _sg
@@ -79,29 +100,40 @@ Public Class SG
     End Property
 
     <DisplayName(NameOf(Timestamp))>
-    <Column(Order:=4, TypeName:="Date")>
-    <JsonPropertyName("timestamp")>
-    Public Property Timestamp As Date
-
-    <DisplayName(NameOf(OaDateTime))>
-    <Column(Order:=6, TypeName:=NameOf([Double]))>
-    Public ReadOnly Property OaDateTime As OADate
+    <Column(Order:=6, TypeName:="Date")>
+    <JsonPropertyName("timestampAsDate")>
+    Public ReadOnly Property Timestamp As Date
         Get
-            Return New OADate(_Timestamp)
+            Return Date.ParseExact(_timestampAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
         End Get
     End Property
 
-    <DisplayName("Kind")>
-    <Column(Order:=10, TypeName:=NameOf([String]))>
-    <JsonPropertyName("kind")>
-    Public Property Kind As String
+    <DisplayName(NameOf(Timestamp))>
+    <Column(Order:=7, TypeName:="Date")>
+    <JsonPropertyName("timestamp")>
+    Public Property TimestampAsString As String
+        Get
+            Return _timestampAsString
+        End Get
+        Set
+            _timestampAsString = Value
+        End Set
+    End Property
 
-    <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=9, TypeName:=NameOf([Int32]))>
-    Public Property relativeOffset As Integer
+    <DisplayName(NameOf(OaDateTime))>
+    <Column(Order:=8, TypeName:=NameOf([Double]))>
+    Public ReadOnly Property OaDateTime As OADate
+        Get
+            Return New OADate(Me.Timestamp)
+        End Get
+    End Property
+
+    <DisplayName("Time Change")>
+    <Column(Order:=9, TypeName:=NameOf([Boolean]))>
+    Public Property timeChange As Boolean
 
     <DisplayName("Sensor State")>
-    <Column(Order:=11, TypeName:=NameOf([String]))>
+    <Column(Order:=10, TypeName:=NameOf([String]))>
     <JsonPropertyName("sensorState")>
     Public Property sensorState As String
         Get
@@ -113,7 +145,7 @@ Public Class SG
     End Property
 
     <DisplayName("Sensor Message")>
-    <Column(Order:=12, TypeName:=NameOf([String]))>
+    <Column(Order:=11, TypeName:=NameOf([String]))>
     Public ReadOnly Property Message As String
         Get
             _sensorState = If(_sensorState, "")
@@ -124,15 +156,6 @@ Public Class SG
                     )
         End Get
     End Property
-
-    <DisplayName("Time Change")>
-    <Column(Order:=7, TypeName:=NameOf([Boolean]))>
-    Public Property timeChange As Boolean
-
-    <DisplayName("Version")>
-    <Column(Order:=8, TypeName:=NameOf([Int32]))>
-    <JsonPropertyName("version")>
-    Public Property Version As Integer
 
     Public Overrides Function ToString() As String
         Return If(NativeMmolL, Me.sg.ToString("F1", CurrentUICulture), Me.sg.ToString("F0"))

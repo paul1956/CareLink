@@ -11,13 +11,8 @@ Public Class SgReadingRecord
         Me.RecordNumber = recordNumber
         Me.type = marker.Type
         Me.timestamp = marker.Timestamp
-#If False Then ' TODO
-        Me.index = marker.index
-        Me.value = marker.value
-        Me.kind = marker.kind
-        Me.version = marker.version
-        Me.relativeOffset = marker.relativeOffset
-#End If
+        Me.unitValue = marker.GetSingleValueFromJson(NameOf(unitValue), decimalDigits:=0, considerValue:=True)
+        Me.bgUnits = marker.GetStringValueFromJson(NameOf(bgUnits))
     End Sub
 
     <DisplayName("Record Number")>
@@ -34,16 +29,16 @@ Public Class SgReadingRecord
 
     <DisplayName("Value")>
     <Column(Order:=3, TypeName:=NameOf([Single]))>
-    Public Property value As Single
+    Public Property unitValue As Single
 
     <DisplayName("Value (mg/dL)")>
     <Column(Order:=4, TypeName:=NameOf([Single]))>
     Public ReadOnly Property valueMmDl As Single
         Get
-            If Single.IsNaN(Me.value) Then Return Me.value
-            Return If(NativeMmolL,
-                      CSng(Math.Round(Me.value * MmolLUnitsDivisor)),
-                      Me.value
+            If Single.IsNaN(Me.unitValue) Then Return Me.unitValue
+            Return If(Me.bgUnits = "MGDL",
+                      Me.unitValue,
+                      CSng(Math.Round(Me.unitValue * MmolLUnitsDivisor))
                      )
         End Get
     End Property
@@ -52,28 +47,32 @@ Public Class SgReadingRecord
     <Column(Order:=5, TypeName:=NameOf([Single]))>
     Public ReadOnly Property valueMmolL As Single
         Get
-            If Single.IsNaN(Me.value) Then Return Me.value
-            Return If(NativeMmolL,
-                      Me.value,
-                      (Me.value / MmolLUnitsDivisor).RoundSingle(2, False)
+            If Single.IsNaN(Me.unitValue) Then Return Me.unitValue
+            Return If(Me.bgUnits <> "MMDL",
+                      Me.unitValue,
+                      (Me.unitValue / MmolLUnitsDivisor).RoundSingle(2, False)
                      )
         End Get
     End Property
 
-    <DisplayName("Kind")>
+    <DisplayName("Units")>
     <Column(Order:=6, TypeName:=NameOf([String]))>
+    Public ReadOnly Property bgUnits As String
+
+    <DisplayName("Kind")>
+    <Column(Order:=7, TypeName:=NameOf([String]))>
     Public Property kind As String
 
     <DisplayName("Version")>
-    <Column(Order:=7, TypeName:=NameOf([Int32]))>
+    <Column(Order:=8, TypeName:=NameOf([Int32]))>
     Public Property version As Integer
 
     <DisplayName(NameOf(timestamp))>
-    <Column(Order:=8, TypeName:="Date")>
+    <Column(Order:=9, TypeName:="Date")>
     Public Property timestamp As Date
 
     <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=9, TypeName:=NameOf([Int32]))>
+    <Column(Order:=10, TypeName:=NameOf([Int32]))>
     Public Property relativeOffset As Integer
 
 End Class

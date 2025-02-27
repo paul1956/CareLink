@@ -27,8 +27,34 @@ Friend Module KeyValuePairExtensions
     End Function
 
     <Extension>
+    Public Function ScaleSgToString(item As JsonElement) As String
+        Dim itemAsSingle As Single
+        Select Case item.ValueKind
+            Case JsonValueKind.String
+                itemAsSingle = Single.Parse(item.GetString())
+            Case JsonValueKind.Null
+                Return String.Empty
+            Case JsonValueKind.Undefined
+                Return String.Empty
+            Case JsonValueKind.Number
+                itemAsSingle = item.GetSingle
+            Case Else
+                Stop
+        End Select
+
+        Return If(NativeMmolL,
+                  (itemAsSingle / MmolLUnitsDivisor).RoundSingle(If(NativeMmolL, 2, 0), False).ToString(CurrentUICulture),
+                  itemAsSingle.ToString(CurrentUICulture))
+    End Function
+
+    <Extension>
     Public Function ScaleSgToString(item As KeyValuePair(Of String, String)) As String
         Return item.Value.ParseSingle(If(NativeMmolL, 2, 0)).ScaleSgToString()
+    End Function
+
+    <Extension>
+    Public Function ScaleSgToString(value As String) As String
+        Return value.ParseSingle(If(NativeMmolL, 2, 0)).ScaleSgToString()
     End Function
 
 End Module

@@ -51,7 +51,7 @@ Friend Module Form1UpdateHelpers
                  )
     End Function
 
-    Private Sub HandleComplexItems(row As KeyValuePair(Of String, String), rowIndex As ItemIndexes, key As String)
+    Private Sub HandleComplexItems(row As KeyValuePair(Of String, String), rowIndex As ServerDataIndexes, key As String)
         Dim valueList As String() = JsonToDictionary(row.Value).ToCsv.
                                                      Replace("{", "").
                                                      Replace("}", "").
@@ -69,7 +69,7 @@ Friend Module Form1UpdateHelpers
         Next
     End Sub
 
-    Private Sub HandleObsoleteTimes(row As KeyValuePair(Of String, String), rowIndex As ItemIndexes)
+    Private Sub HandleObsoleteTimes(row As KeyValuePair(Of String, String), rowIndex As ServerDataIndexes)
         If row.Value = "0" Then
             s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, "", "Obsolete"))
         Else
@@ -108,34 +108,30 @@ Friend Module Form1UpdateHelpers
         s_listOfSummaryRecords.Clear()
 
         Dim markerRowString As String = ""
-        If RecentData.TryGetValue(ItemIndexes.clientTimeZoneName.ToString, markerRowString) Then
+        If RecentData.TryGetValue("clientTimeZoneName", markerRowString) Then
             PumpTimeZoneInfo = CalculateTimeZone(markerRowString)
         End If
 
-        s_lastMedicalDeviceDataUpdateServerEpoch = CLng(RecentData(ItemIndexes.lastMedicalDeviceDataUpdateServerTime.ToString))
+        s_lastMedicalDeviceDataUpdateServerEpoch = CLng(RecentData("lastMedicalDeviceDataUpdateServerTime"))
 
-        If RecentData.TryGetValue(ItemIndexes.therapyAlgorithmState.ToString, markerRowString) Then
+        If RecentData.TryGetValue("therapyAlgorithmState", markerRowString) Then
             s_therapyAlgorithmStateValue = LoadIndexedItems(markerRowString)
             InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso {"AUTO_BASAL", "SAFE_BASAL"}.Contains(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.autoModeShieldState)))
         End If
 
-#Region "Update all Markers"
-
-        If RecentData.TryGetValue(NameOf(ItemIndexes.sgs), markerRowString) Then
+        If RecentData.TryGetValue("sgs", markerRowString) Then
             s_listOfSgRecords = JsonToLisOfSgs(markerRowString)
         End If
 
-
-        If RecentData.TryGetValue(NameOf(ItemIndexes.basal), markerRowString) Then
+        If RecentData.TryGetValue("basal", markerRowString) Then
             Dim item As Basal = DictionaryToClass(Of Basal)(LoadIndexedItems(markerRowString), recordNumber:=0)
             item.OaDateTime(s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime)
             s_listOfManualBasal.Add(item)
         End If
-        Form1.MaxBasalPerHourLabel.Text = If(RecentData.TryGetValue(ItemIndexes.markers.ToString, markerRowString),
+        Form1.MaxBasalPerHourLabel.Text = If(RecentData.TryGetValue("markers", markerRowString),
                                              CollectMarkers(),
                                              ""
                                             )
-#End Region ' Update all Markers
 
         s_systemStatusTimeRemaining = Nothing
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In RecentData.WithIndex()
@@ -145,251 +141,234 @@ Friend Module Form1UpdateHelpers
                 row = KeyValuePair.Create(row.Key, "")
             End If
 
-            Dim rowIndex As ItemIndexes = CType(c.Index, ItemIndexes)
-            Select Case GetItemIndex(row.Key)
-                Case ItemIndexes.lastSensorTS
-                    HandleObsoleteTimes(row, rowIndex)
+            Dim rowIndex As ServerDataIndexes = CType(c.Index, ServerDataIndexes)
+            Select Case row.Key
 
-                Case ItemIndexes.medicalDeviceTimeAsString
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
-                Case ItemIndexes.lastSensorTSAsString,
-                       ItemIndexes.kind,
-                       ItemIndexes.version
+                Case ServerDataIndexes.clientTimeZoneName.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Value))
+
+                Case ServerDataIndexes.lastName.ToString
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
-                Case ItemIndexes.pumpModelNumber
-                    s_pumpModelNumber = row.Value
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, GetPumpName(s_pumpModelNumber)))
-
-                Case ItemIndexes.currentServerTime
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
-
-                Case ItemIndexes.lastConduitTime
-                    HandleObsoleteTimes(row, rowIndex)
-
-                Case ItemIndexes.lastConduitUpdateServerTime
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
-
-                Case ItemIndexes.lastMedicalDeviceDataUpdateServerTime
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
-
-                Case ItemIndexes.firstName
+                Case ServerDataIndexes.firstName.ToString
                     s_firstName = row.Value
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, s_firstName))
 
-                Case ItemIndexes.lastName
+                Case ServerDataIndexes.appModelType.ToString
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
-                Case ItemIndexes.conduitSerialNumber
+                Case ServerDataIndexes.appModelNumber.ToString
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
-                Case ItemIndexes.conduitBatteryLevel
+                Case ServerDataIndexes.currentServerTime.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
+
+                Case ServerDataIndexes.conduitSerialNumber.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ServerDataIndexes.conduitBatteryLevel.ToString
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Phone battery is at {row.Value}%."))
 
-                Case ItemIndexes.conduitBatteryStatus
+                Case ServerDataIndexes.conduitBatteryStatus.ToString
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Phone battery status is {row.Value}"))
 
-                Case ItemIndexes.conduitInRange
-                    s_pumpInRangeOfPhone = CBool(row.Value)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Phone {If(s_pumpInRangeOfPhone, "is", "is not")} in range of pump"))
+                Case ServerDataIndexes.lastConduitDateTime.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, New KeyValuePair(Of String, String)(NameOf(ServerDataIndexes.lastConduitDateTime), row.Value.CDateOrDefault(NameOf(ServerDataIndexes.lastConduitDateTime), CurrentUICulture))))
 
-                Case ItemIndexes.conduitMedicalDeviceInRange
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Pump {If(CBool(row.Value), "is", "is not")} in range of phone"))
+                Case ServerDataIndexes.lastConduitUpdateServerDateTime.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
 
-                Case ItemIndexes.conduitSensorInRange
-                    s_pumpInRangeOfTransmitter = CBool(row.Value)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Transmitter {If(s_pumpInRangeOfTransmitter, "is", "is not")} in range of pump"))
-
-                Case ItemIndexes.medicalDeviceFamily
+                Case ServerDataIndexes.medicalDeviceFamily.ToString
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
-                Case ItemIndexes.sensorState
-                    s_sensorState = row.Value
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_sensorMessages, NameOf(s_sensorMessages)))
+                Case ServerDataIndexes.medicalDeviceInformation.ToString
+                    HandleComplexItems(row, rowIndex, "medicalDeviceInformation")
+                    ' TODO
+                    s_pumpModelNumber = PatientData.MedicalDeviceInformation.ModelNumber
+                    '    ItemIndexes.deviceSerialNumber.ToString
+                    Form1.SerialNumberButton.Text = $"{ PatientData.MedicalDeviceInformation.DeviceSerialNumber} Details..."
 
-                Case ItemIndexes.medicalDeviceSerialNumber
-                    Form1.SerialNumberButton.Text = $"{row.Value} Details..."
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Pump serial number is {row.Value}."))
+                Case ServerDataIndexes.medicalDeviceTime.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
 
-                Case ItemIndexes.medicalDeviceTime
-                    HandleObsoleteTimes(row, rowIndex)
+                Case ServerDataIndexes.lastMedicalDeviceDataUpdateServerTime.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
 
-                Case ItemIndexes.sMedicalDeviceTime
+                Case ServerDataIndexes.cgmInfo.ToString
+                    HandleComplexItems(row, rowIndex, "cgmInfo")
+
+                Case ServerDataIndexes.calFreeSensor.ToString
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
-                Case ItemIndexes.reservoirLevelPercent
-                    s_reservoirLevelPercent = CInt(row.Value)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Reservoir is {row.Value}%"))
+                Case ServerDataIndexes.calibStatus.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_calibrationMessages, NameOf(s_calibrationMessages)))
 
-                Case ItemIndexes.reservoirAmount
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Full reservoir holds {row.Value}U"))
+                Case ServerDataIndexes.calibrationIconId.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
-                Case ItemIndexes.reservoirRemainingUnits
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Reservoir has {row.Value}U remaining"))
+                Case ServerDataIndexes.timeToNextEarlyCalibrationMinutes.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
-                Case ItemIndexes.medicalDeviceBatteryLevelPercent
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Pump battery is at {row.Value}%"))
+                Case ServerDataIndexes.timeToNextCalibrationMinutes.ToString
+                    s_timeToNextCalibrationMinutes = Short.Parse(row.Value)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(ServerDataIndexes.timeToNextCalibrationMinutes, s_timeToNextCalibrationMinutes.ToString, "No data from pump"))
 
-                Case ItemIndexes.sensorDurationHours
+                Case ServerDataIndexes.timeToNextCalibrationRecommendedMinutes.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ServerDataIndexes.timeToNextCalibHours.ToString
+                    s_timeToNextCalibrationHours = Short.Parse(row.Value)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ServerDataIndexes.finalCalibration.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ServerDataIndexes.sensorDurationMinutes.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(ServerDataIndexes.sensorDurationMinutes, "-1", "No data from pump"))
+
+                Case ServerDataIndexes.sensorDurationHours.ToString
                     s_sensorDurationHours = CInt(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
-                Case ItemIndexes.timeToNextCalibHours
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
-                    s_timeToNextCalibrationHours = CUShort(row.Value)
-
-                Case ItemIndexes.calibStatus
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_calibrationMessages, NameOf(s_calibrationMessages)))
-
-                Case ItemIndexes.bgUnits,
-                     ItemIndexes.timeFormat
+                Case ServerDataIndexes.transmitterPairedTime.ToString
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
-                Case ItemIndexes.lastSensorTime
-                    HandleObsoleteTimes(row, rowIndex)
-
-                Case ItemIndexes.sLastSensorTime,
-                      ItemIndexes.medicalDeviceSuspended,
-                      ItemIndexes.lastSGTrend
+                Case ServerDataIndexes.systemStatusTimeRemaining.ToString
+                    s_systemStatusTimeRemaining = New TimeSpan(0, CInt(row.Value), 0)
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
-#If False Then ' TODO
-                Case ItemIndexes.lastSG
+                Case ServerDataIndexes.gstBatteryLevel.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ServerDataIndexes.pumpBannerState.ToString
+                    s_pumpBannerStateValue = JsonToLisOfDictionary(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-                    s_lastSgRecord = New SG(LoadIndexedItems(row.Value), 0)
+                    Form1.PumpBannerStateLabel.Visible = False
 
-                Case ItemIndexes.lastAlarm
+                Case ServerDataIndexes.therapyAlgorithmState.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
+
+                Case ServerDataIndexes.reservoirLevelPercent.ToString
+                    s_reservoirLevelPercent = CInt(row.Value)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Reservoir is {row.Value}%"))
+
+                Case ServerDataIndexes.reservoirAmount.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Full reservoir holds {row.Value}U"))
+
+                Case ServerDataIndexes.pumpSuspended.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ServerDataIndexes.pumpBatteryLevelPercent.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ServerDataIndexes.reservoirRemainingUnits.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Reservoir has {row.Value}U remaining"))
+
+                Case ServerDataIndexes.conduitInRange.ToString
+                    s_pumpInRangeOfPhone = CBool(row.Value)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Phone {If(s_pumpInRangeOfPhone, "is", "is not")} in range of pump"))
+
+                Case ServerDataIndexes.conduitMedicalDeviceInRange.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Pump {If(CBool(row.Value), "is", "is not")} in range of phone"))
+
+                Case ServerDataIndexes.conduitSensorInRange.ToString
+                    s_pumpInRangeOfTransmitter = CBool(row.Value)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Transmitter {If(s_pumpInRangeOfTransmitter, "is", "is not")} in range of pump"))
+
+                Case ServerDataIndexes.systemStatusMessage.ToString
+                    s_systemStatusMessage = row.Value
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_sensorMessages, NameOf(s_sensorMessages)))
+
+                Case ServerDataIndexes.sensorState.ToString
+                    s_sensorState = row.Value
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_sensorMessages, NameOf(s_sensorMessages)))
+
+                Case ServerDataIndexes.gstCommunicationState.ToString
+                    s_gstCommunicationState = Boolean.Parse(row.Value)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ServerDataIndexes.pumpCommunicationState.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ServerDataIndexes.timeFormat.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ServerDataIndexes.bgUnits.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ServerDataIndexes.maxAutoBasalRate.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ServerDataIndexes.maxBolusAmount.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ServerDataIndexes.sgBelowLimit.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ServerDataIndexes.approvedForTreatment.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ServerDataIndexes.lastAlarm.ToString
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
                     s_lastAlarmValue = LoadIndexedItems(row.Value)
 
-                Case ItemIndexes.activeInsulin
+                Case ServerDataIndexes.activeInsulin.ToString
+                    s_activeInsulin = PatientData.ActiveInsulin
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-                    s_activeInsulin = DictionaryToClass(Of ActiveInsulinRecord)(LoadIndexedItems(row.Value), 0)
-#End If
 
-                Case ItemIndexes.sgs
+                Case ServerDataIndexes.basal.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
+
+                Case ServerDataIndexes.lastSensorTime.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ServerDataIndexes.lastSG.ToString
+                    s_lastSgRecord = New SG(PatientData.LastSG, 0)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
+
+                Case ServerDataIndexes.lastSGTrend.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ServerDataIndexes.limits.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
+                    s_listOfLimitRecords = PatientData.Limits
+
+                Case ServerDataIndexes.belowHypoLimit.ToString
+                    s_belowHypoLimit = PatientData.BelowHypoLimit.GetRoundedValue(decimalDigits:=1)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Time below limit = {ConvertPercent24HoursToDisplayValueString(row.Value)}"))
+
+                Case ServerDataIndexes.aboveHyperLimit.ToString
+                    s_aboveHyperLimit = PatientData.AboveHyperLimit.GetRoundedValue(decimalDigits:=1)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Time above limit = {ConvertPercent24HoursToDisplayValueString(row.Value)}"))
+
+                Case ServerDataIndexes.timeInRange.ToString
+                    s_timeInRange = CInt(row.Value)
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Time in range = {ConvertPercent24HoursToDisplayValueString(row.Value)}"))
+
+                Case ServerDataIndexes.averageSGFloat.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ServerDataIndexes.averageSG.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
+
+                Case ServerDataIndexes.markers.ToString
+                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
+
+                Case ServerDataIndexes.sgs.ToString
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
                     s_lastSgValue = 0
                     If s_listOfSgRecords.Count > 2 Then
                         s_lastSgValue = s_listOfSgRecords.Item(s_listOfSgRecords.Count - 2).sg
                     End If
 
-                Case ItemIndexes.limits
+                Case ServerDataIndexes.notificationHistory.ToString
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-                    UpdateListOfLimitRecords(row)
-
-                Case ItemIndexes.markers
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-
-                Case ItemIndexes.notificationHistory
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-#If False Then ' TODO
                     s_notificationHistoryValue = LoadIndexedItems(row.Value)
-#End If
 
-                Case ItemIndexes.therapyAlgorithmState
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-
-                Case ItemIndexes.pumpBannerState
-                    s_pumpBannerStateValue = JsonToLisOfDictionary(row.Value)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-                    Form1.PumpBannerStateLabel.Visible = False
-
-                Case ItemIndexes.basal
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, ClickToShowDetails))
-
-                Case ItemIndexes.systemStatusMessage
-                    s_systemStatusMessage = row.Value
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_sensorMessages, NameOf(s_sensorMessages)))
-
-                Case ItemIndexes.averageSG
+                Case ServerDataIndexes.sensorLifeText.ToString
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
-                Case ItemIndexes.belowHypoLimit
-                    s_belowHypoLimit = row.Value.ParseSingle(1)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Time below limit = {ConvertPercent24HoursToDisplayValueString(row.Value)}"))
-
-                Case ItemIndexes.aboveHyperLimit
-                    s_aboveHyperLimit = row.Value.ParseSingle(1)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Time above limit = {ConvertPercent24HoursToDisplayValueString(row.Value)}"))
-
-                Case ItemIndexes.timeInRange
-                    s_timeInRange = CInt(row.Value)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Time in range = {ConvertPercent24HoursToDisplayValueString(row.Value)}"))
-
-                Case ItemIndexes.pumpCommunicationState
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
-
-                Case ItemIndexes.gstCommunicationState
-                    s_gstCommunicationState = Boolean.Parse(row.Value)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
-                    Dim gstBatteryLevel As String = Nothing
-                    If RecentData.TryGetValue(NameOf(ItemIndexes.gstBatteryLevel), gstBatteryLevel) Then
-                        Continue For
-                    End If
-                    s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexes.gstBatteryLevel, "-1", "No data from pump"))
-
-                Case ItemIndexes.gstBatteryLevel
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, $"Transmitter battery is at {row.Value}%"))
-
-                Case ItemIndexes.lastConduitDateTime
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, New KeyValuePair(Of String, String)(NameOf(ItemIndexes.lastConduitDateTime), row.Value.CDateOrDefault(NameOf(ItemIndexes.lastConduitDateTime), CurrentUICulture))))
-
-                Case ItemIndexes.maxAutoBasalRate
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
-
-                Case ItemIndexes.maxBolusAmount
-                    s_listOfSummaryRecords.Add(New SummaryRecord(GetItemIndex(c.Value.Key), row))
-                    Dim tempStr As String = Nothing
-                    If Not RecentData.TryGetValue(NameOf(ItemIndexes.sensorDurationMinutes), tempStr) Then
-                        s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexes.sensorDurationMinutes, "-1", "No data from pump"))
-                    End If
-                    If Not RecentData.TryGetValue(NameOf(ItemIndexes.timeToNextCalibrationMinutes), tempStr) Then
-                        s_timeToNextCalibrationMinutes = UShort.MaxValue
-                        s_listOfSummaryRecords.Add(New SummaryRecord(ItemIndexes.timeToNextCalibrationMinutes, s_timeToNextCalibrationMinutes.ToString, "No data from pump"))
-                    End If
-
-                Case ItemIndexes.sensorDurationMinutes
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
-
-                Case ItemIndexes.timeToNextCalibrationMinutes
-                    s_timeToNextCalibrationMinutes = CUShort(row.Value)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
-
-                Case ItemIndexes.clientTimeZoneName
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row.Value))
-
-                Case ItemIndexes.sgBelowLimit,
-                     ItemIndexes.averageSGFloat
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
-
-                Case ItemIndexes.timeToNextCalibrationRecommendedMinutes
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
-
-                Case ItemIndexes.calFreeSensor,
-                     ItemIndexes.finalCalibration
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
-
-                Case ItemIndexes.appModelType
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
-
-                Case ItemIndexes.cgmInfo
-                    HandleComplexItems(row, rowIndex, ItemIndexes.cgmInfo.ToString)
-
-                Case ItemIndexes.systemStatusTimeRemaining
-                    s_systemStatusTimeRemaining = New TimeSpan(0, CInt(row.Value), 0)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
-
-                Case ItemIndexes.medicalDeviceInformation
-                    HandleComplexItems(row, rowIndex, ItemIndexes.medicalDeviceInformation.ToString)
-
-                Case ItemIndexes.timeToNextEarlyCalibrationMinutes
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
-
-                Case ItemIndexes.calibrationIcon
-                    s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, s_calibrationIconMessages, NameOf(s_calibrationIconMessages)))
-
-                Case ItemIndexes.typeCast
+                Case ServerDataIndexes.sensorLifeIcon.ToString
                     s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row))
 
                 Case Else
@@ -404,48 +383,48 @@ Friend Module Form1UpdateHelpers
             .TableLayoutPanelAutoBasalDelivery.DisplayDataTableInDGV(
                               .DgvAutoBasalDelivery,
                               ClassCollectionToDataTable(s_listOfAutoBasalDeliveryMarkers),
-                              ItemIndexes.markers)
+                              ServerDataIndexes.markers)
             .TableLayoutPanelAutoModeStatus.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(s_listOfAutoModeStatusMarkers),
                               NameOf(AutoModeStatus),
                               AddressOf AutoModeStatusRecordHelpers.AttachHandlers,
-                              ItemIndexes.markers,
+                              ServerDataIndexes.markers,
                               False)
             .TableLayoutPanelSgReadings.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(s_listOfSgReadingMarkers),
                               NameOf(SgReadingRecord),
                               AddressOf SgReadingRecordHelpers.AttachHandlers,
-                              ItemIndexes.markers,
+                              ServerDataIndexes.markers,
                               False)
             .TableLayoutPanelInsulin.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(s_listOfInsulinMarkers),
                               NameOf(InsulinRecord),
                               AddressOf InsulinRecordHelpers.AttachHandlers,
-                              ItemIndexes.markers,
+                              ServerDataIndexes.markers,
             False)
             .TableLayoutPanelMeal.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(s_listOfMealMarkers),
                               NameOf(MealRecord),
                               AddressOf MealRecordHelpers.AttachHandlers,
-                              ItemIndexes.markers,
+                              ServerDataIndexes.markers,
                               False)
             .TableLayoutPanelCalibration.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(s_listOfCalibrationMarkers),
                               NameOf(CalibrationRecord),
                               AddressOf CalibrationRecordHelpers.AttachHandlers,
-                              ItemIndexes.markers,
+                              ServerDataIndexes.markers,
                               False)
             .TableLayoutPanelLowGlucoseSuspended.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(s_listOfLowGlucoseSuspendedMarkers),
                               NameOf(LowGlucoseSuspendRecord),
                               AddressOf LowGlucoseSuspendRecordHelpers.AttachHandlers,
-                              ItemIndexes.markers,
+                              ServerDataIndexes.markers,
                               False)
             .TableLayoutPanelTimeChange.DisplayDataTableInDGV(
                               ClassCollectionToDataTable(s_listOfTimeChangeMarkers),
                               NameOf(TimeChangeRecord),
                               AddressOf TimeChangeRecordHelpers.AttachHandlers,
-                              ItemIndexes.markers,
+                              ServerDataIndexes.markers,
                               False)
         End With
 
@@ -499,7 +478,7 @@ Friend Module Form1UpdateHelpers
                         Stop
                     Case Else
                         If Debugger.IsAttached Then
-                            MsgBox($"{typeValue} is unknown banner message!", "", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, GetTitleFromStack(New StackFrame(0, True)))
+                            MsgBox($"{typeValue} Is unknown banner message!", "", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, GetTitleFromStack(New StackFrame(0, True)))
                         End If
                 End Select
                 Form1.PumpBannerStateLabel.ForeColor = GetContrastingColor(Form1.PumpBannerStateLabel.BackColor)
@@ -511,7 +490,7 @@ Friend Module Form1UpdateHelpers
         If s_therapyAlgorithmStateValue.TryGetValue(NameOf(TherapyAlgorithmStateRecord.safeBasalDuration), safeBasalDurationStr) Then
             Dim safeBasalDuration As UInteger = CUInt(safeBasalDurationStr)
             If safeBasalDuration > 0 Then
-                Form1.LastSgOrExitTimeLabel.Text = $"Exit in { TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan("hr")}"
+                Form1.LastSgOrExitTimeLabel.Text = $"Exit In { TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan("hr")}"
                 Form1.LastSgOrExitTimeLabel.Visible = True
             End If
         End If
@@ -519,7 +498,7 @@ Friend Module Form1UpdateHelpers
                               ClassCollectionToDataTable(listOfPumpBannerState),
                               NameOf(BannerState),
                               AddressOf BannerStateRecordHelpers.AttachHandlers,
-                              ItemIndexes.pumpBannerState,
+                              ServerDataIndexes.pumpBannerState,
                               False)
     End Sub
 

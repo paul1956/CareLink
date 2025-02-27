@@ -10,20 +10,27 @@ Public Module StringExtensions
 
     Private ReadOnly s_commaOrPeriod As Char() = {"."c, ","c}
 
-    ''' <summary>
-    ''' Replace multiple spaces with 1 and trim the ends
-    ''' </summary>
-    ''' <param name="value">String</param>
-    ''' <returns>String</returns>
-    <Extension>
-    Public Function CleanSpaces(value As String) As String
-        If String.IsNullOrWhiteSpace(value) Then Return ""
-        Return Regex.Replace(value, "\s+", " ").Trim
-    End Function
-
     <Extension()>
     Friend Function Count(s As String, c As Char) As Integer
         Return s.Count(Function(c1 As Char) c1 = c)
+    End Function
+
+    ''' <summary>
+    ''' Converts a string where the first letter of the string is not capitalized
+    ''' </summary>
+    ''' <param name="inStr">A string like THIS_IS A TITLE</param>
+    ''' <returns>doNotCapitalizedFirstLetterString</returns>
+    <Extension()>
+    Friend Function ToLowerCamelCase(inStr As String) As String
+        If String.IsNullOrWhiteSpace(inStr) Then
+            Return ""
+        End If
+
+        Dim result As New StringBuilder(Char.ToLowerInvariant(inStr(0)))
+        If inStr.Length > 1 Then
+            result.Append(inStr.AsSpan(1))
+        End If
+        Return result.ToString
     End Function
 
     ''' <summary>
@@ -90,6 +97,16 @@ Public Module StringExtensions
         Return resultString.Replace("time", " Time", False, CurrentUICulture)
     End Function
 
+    ''' <summary>
+    ''' Replace multiple spaces with 1 and trim the ends
+    ''' </summary>
+    ''' <param name="value">String</param>
+    ''' <returns>String</returns>
+    <Extension>
+    Public Function CleanSpaces(value As String) As String
+        If String.IsNullOrWhiteSpace(value) Then Return ""
+        Return Regex.Replace(value, "\s+", " ").Trim
+    End Function
 
     <Extension>
     Public Function TruncateSingleString(s As String, decimalDigits As Integer) As String

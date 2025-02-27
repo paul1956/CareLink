@@ -47,7 +47,7 @@ Public Class SummaryRecord
     ''' <param name="recordNumber"></param>
     ''' <param name="Value"></param>
     Protected Friend Sub New(recordNumber As Single, Value As String)
-        Me.New(recordNumber, CType(recordNumber, ItemIndexes).ToString, Value, "")
+        Me.New(recordNumber, CType(recordNumber, ServerDataIndexes).ToString, Value, "")
     End Sub
 
     ''' <summary>
@@ -57,7 +57,7 @@ Public Class SummaryRecord
     ''' <param name="value"></param>
     ''' <param name="message"></param>
     Protected Friend Sub New(recordNumber As Single, value As String, message As String)
-        Me.New(recordNumber, CType(recordNumber, ItemIndexes).ToString, value, message)
+        Me.New(recordNumber, CType(recordNumber, ServerDataIndexes).ToString, value, message)
     End Sub
 
     ''' <summary>

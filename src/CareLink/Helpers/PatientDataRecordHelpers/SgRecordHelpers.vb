@@ -7,7 +7,6 @@ Friend Module SgRecordHelpers
     Private ReadOnly s_columnsToHide As New List(Of String) From {
                         NameOf(SG.Kind),
                         NameOf(SG.OaDateTime),
-                        NameOf(SG.relativeOffset),
                         NameOf(SG.Version)
                     }
 

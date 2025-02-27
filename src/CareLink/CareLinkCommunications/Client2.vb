@@ -62,7 +62,7 @@ Public Class Client2
         Debug.WriteLine(NameOf(DoRefresh))
         _httpClient.SetDefaultRequestHeaders()
         Dim tokenUrl As String = CStr(config("token_url"))
-        Dim tokenData As Dictionary(Of String, String) = tokenDataElement.ConvertJsonElementToStringDictionary(expandSubElements:=True)
+        Dim tokenData As Dictionary(Of String, String) = tokenDataElement.ConvertJsonElementToStringDictionary(expandSubElements:=False)
 
         Dim data As New Dictionary(Of String, String) From {
             {"refresh_token", tokenData("refresh_token")},
@@ -94,7 +94,8 @@ Public Class Client2
         tokenData("access_token") = newData.GetProperty("access_token").GetString()
         tokenData("refresh_token") = newData.GetProperty("refresh_token").GetString()
 
-        Return Task.FromResult(JsonSerializer.Deserialize(Of JsonElement)(JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions)))
+        Dim json As String = JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions)
+        Return Task.FromResult(JsonSerializer.Deserialize(Of JsonElement)(json))
     End Function
 
     Private Shared Function GetAccessTokenPayload(token_data As JsonElement) As Dictionary(Of String, Object)
@@ -260,8 +261,7 @@ Public Class Client2
             _username = s_userName
             Dim userString As String = Me.GetUserString(jsonConfigElement, _tokenDataElement)
             If String.IsNullOrWhiteSpace(userString) Then
-                Me.LoggedIn = False
-                Return False
+                Throw New UnauthorizedAccessException
             End If
             _userElement = If(String.IsNullOrWhiteSpace(userString),
                 Nothing,

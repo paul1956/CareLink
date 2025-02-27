@@ -21,7 +21,7 @@ Friend Module Form1TransmitterBatteryHelper
 
     Friend Sub UpdateTransmitterBattery()
         If s_pumpInRangeOfTransmitter Then
-            Dim gstBatteryLevel As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ItemIndexes.gstBatteryLevel), False)
+            Dim gstBatteryLevel As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(NameOf(ServerDataIndexes.gstBatteryLevel), False)
             Form1.TransmitterBatteryPictureBox.Image = GetBatteryImage(gstBatteryLevel)
             Form1.TransmitterBatteryPercentLabel.Text = $"{gstBatteryLevel}%"
         Else

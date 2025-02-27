@@ -101,7 +101,7 @@ Friend Module Form1NotificationTabHelpers
     Friend Sub UpdateNotificationTab()
         Try
             Form1.TableLayoutPanelNotificationHistory.AutoScroll = True
-            Form1.TableLayoutPanelNotificationHistory.SetTabName(ItemIndexes.notificationHistory)
+            Form1.TableLayoutPanelNotificationHistory.SetTabName(ServerDataIndexes.notificationHistory)
             Dim tableLevel1Blue As New TableLayoutPanel With {
                     .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                     .AutoScroll = True,

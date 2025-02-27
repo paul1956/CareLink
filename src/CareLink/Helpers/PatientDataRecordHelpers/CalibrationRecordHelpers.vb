@@ -4,22 +4,17 @@
 
 Friend Module CalibrationRecordHelpers
 
-    Private ReadOnly s_columnsToHide As New List(Of String) From {
-                         NameOf(CalibrationRecord.kind),
-                         NameOf(CalibrationRecord.relativeOffset),
-                         NameOf(CalibrationRecord.type),
-                         NameOf(CalibrationRecord.version)
-                    }
+    Private ReadOnly s_columnsToHide As New List(Of String)
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(CalibrationRecord.timestamp)
+            Case NameOf(CalibrationRecord.Timestamp), NameOf(CalibrationRecord.DisplayTime)
                 dgv.CellFormattingDateTime(e)
-            Case NameOf(CalibrationRecord.value), NameOf(CalibrationRecord.valueMmolL), NameOf(CalibrationRecord.valueMmDl)
-                dgv.CellFormattingSgValue(e, NameOf(CalibrationRecord.value))
+            Case NameOf(CalibrationRecord.UnitValue), NameOf(CalibrationRecord.UnitValueMmolL), NameOf(CalibrationRecord.UnitValueMmDl)
+                dgv.CellFormattingSgValue(e, NameOf(CalibrationRecord.UnitValue))
             Case Else
                 dgv.CellFormattingSetForegroundColor(e)
         End Select

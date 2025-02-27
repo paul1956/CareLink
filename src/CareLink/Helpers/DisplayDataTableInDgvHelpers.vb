@@ -13,7 +13,7 @@ Friend Module DisplayDataTableInDgvHelpers
         realPanel As TableLayoutPanel,
         dGV As DataGridView,
         table As DataTable,
-        rowIndex As ItemIndexes)
+        rowIndex As ServerDataIndexes)
 
         realPanel.SetTabName(rowIndex)
         dGV.InitializeDgv()
@@ -27,7 +27,7 @@ Friend Module DisplayDataTableInDgvHelpers
         table As DataTable,
         className As String,
         attachHandlers As attachHandlers,
-        rowIndex As ItemIndexes,
+        rowIndex As ServerDataIndexes,
         hideRecordNumberColumn As Boolean)
 
         realPanel.SetTabName(rowIndex)

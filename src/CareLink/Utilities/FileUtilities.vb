@@ -41,7 +41,7 @@ Friend Module FileUtilities
         End Try
     End Sub
 
-    Public Function ReadTokenDataFile(userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME) As AccessToken
+    Public Function ReadTokenDataFile(userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME) As tokenData
         Dim fileWithPath As String = GetLoginDataFileName(userName, tokenBaseFileName)
         If File.Exists(fileWithPath) Then
             Try
@@ -53,7 +53,7 @@ Friend Module FileUtilities
                         Return Nothing
                     End If
                 Next
-                Return JsonSerializer.Deserialize(Of AccessToken)(jsonAsText)
+                Return JsonSerializer.Deserialize(Of tokenData)(jsonAsText)
             Catch ex As JsonException
                 Debug.WriteLine("Failed parsing JSON")
             End Try
@@ -84,7 +84,7 @@ Friend Module FileUtilities
         Return Nothing
     End Function
 
-    Public Sub WriteTokenDataFile(tokenData As AccessToken, userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME)
+    Public Sub WriteTokenDataFile(tokenData As tokenData, userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME)
         Dim fileWithPath As String = GetLoginDataFileName(userName, tokenBaseFileName)
         Debug.WriteLine("Wrote data file")
         File.WriteAllText(fileWithPath, JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions))

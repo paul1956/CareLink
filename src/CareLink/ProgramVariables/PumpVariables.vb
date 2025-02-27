@@ -43,8 +43,8 @@ Public Module PumpVariables
     Friend s_systemStatusTimeRemaining As TimeSpan
     Friend s_therapyAlgorithmStateValue As Dictionary(Of String, String)
     Friend s_timeInRange As Integer
-    Friend s_timeToNextCalibrationHours As UShort
-    Friend s_timeToNextCalibrationMinutes As UShort
+    Friend s_timeToNextCalibrationHours As Short
+    Friend s_timeToNextCalibrationMinutes As Short
     Friend s_timeFormat As String
     Friend s_timeWithMinuteFormat As String
     Friend s_timeWithoutMinuteFormat As String
@@ -63,11 +63,11 @@ Public Module PumpVariables
     Friend ReadOnly s_listOfAutoModeStatusMarkers As New List(Of AutoModeStatus)
     Friend ReadOnly s_listOfCalibrationMarkers As New List(Of CalibrationRecord)
     Friend ReadOnly s_listOfInsulinMarkers As New List(Of InsulinRecord)
-    Friend ReadOnly s_listOfLimitRecords As New List(Of Limit)
     Friend ReadOnly s_listOfLowGlucoseSuspendedMarkers As New List(Of LowGlucoseSuspendRecord)
     Friend ReadOnly s_listOfMealMarkers As New List(Of MealRecord)
     Friend ReadOnly s_listOfSgReadingMarkers As New List(Of SgReadingRecord)
     Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
+    Friend s_listOfLimitRecords As New List(Of Limit)
 
 #End Region
 

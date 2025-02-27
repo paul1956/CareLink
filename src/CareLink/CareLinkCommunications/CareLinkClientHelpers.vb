@@ -105,8 +105,8 @@ Public Module CareLinkClientHelpers
         Return (captchaUrl, clientInitResponse)
     End Function
 
-    Friend Async Function DoLogin(httpClient As HttpClient, userName As String, isUsRegion As Boolean) As Task(Of AccessToken)
-        Dim tokenData As AccessToken = ReadTokenDataFile(userName)
+    Friend Async Function DoLogin(httpClient As HttpClient, userName As String, isUsRegion As Boolean) As Task(Of tokenData)
+        Dim tokenData As tokenData = ReadTokenDataFile(userName)
 
         If tokenData IsNot Nothing Then
             Return tokenData
@@ -210,7 +210,7 @@ Public Module CareLinkClientHelpers
         ssoConfig As SsoConfig,
         regReq As HttpResponseMessage,
         clientInitResponse As ClientInitData,
-        userName As String) As Task(Of AccessToken)
+        userName As String) As Task(Of tokenData)
 
         Dim tokenReqUrl As String = $"{apiBaseUrl}{ssoConfig.OAuth.SystemEndpoints.TokenEndpointPath}"
         Dim tokenReqData As New Dictionary(Of String, String) From {
@@ -236,18 +236,7 @@ Public Module CareLinkClientHelpers
         'Dim tokenData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(tokenDataStr)
         Debug.WriteLine("got token data from server")
 
-        'Dim tokenDataToSave As New Dictionary(Of String, JsonElement)
-        'For Each prop As JsonProperty In tokenData.EnumerateObject()
-        '    If prop.Name <> "expires_in" AndAlso prop.Name <> "token_type" Then
-        '        tokenDataToSave.Add(prop.Name, prop.Value)
-        '    End If
-        'Next
-
-        'tokenDataToSave.Add("client_id", JsonSerializer.SerializeToElement(tokenReqData("client_id")))
-        'tokenDataToSave.Add("client_secret", JsonSerializer.SerializeToElement(tokenReqData("client_secret")))
-        'tokenDataToSave.Add("mag-identifier", JsonSerializer.SerializeToElement(regReq.Headers.GetValues("mag-identifier").FirstOrDefault()))
-
-        Dim tokenDataToSave As AccessToken = JsonSerializer.Deserialize(Of AccessToken)(tokenDataStr)
+        Dim tokenDataToSave As tokenData = JsonSerializer.Deserialize(Of tokenData)(tokenDataStr)
 
         WriteTokenDataFile(tokenDataToSave, userName)
         Return tokenDataToSave

@@ -174,10 +174,10 @@ Public Class PatientDataInfo
     Public Property Limits As List(Of Limit)
 
     <JsonPropertyName("belowHypoLimit")>
-    Public Property BelowHypoLimit As Integer
+    Public Property BelowHypoLimit As Single
 
     <JsonPropertyName("aboveHyperLimit")>
-    Public Property AboveHyperLimit As Integer
+    Public Property AboveHyperLimit As Single
 
     <JsonPropertyName("timeInRange")>
     Public Property TimeInRange As Integer

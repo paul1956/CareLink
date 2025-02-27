@@ -34,7 +34,7 @@ Friend Module TableLayoutPanelExtensions
             }
 
     <Extension>
-    Friend Sub SetTabName(table As TableLayoutPanel, rowIndex As ItemIndexes)
+    Friend Sub SetTabName(table As TableLayoutPanel, rowIndex As ServerDataIndexes)
         Dim tableName As String = rowIndex.ToString.ToTitleCase
         Select Case True
             Case TypeOf table.Controls(0) Is TableLayoutPanel

@@ -4,6 +4,7 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Globalization
 Imports System.Text.Json.Serialization
 
 Public Class Basal
@@ -57,6 +58,18 @@ Public Class Basal
         }
     End Function
 
+    Public Shared Operator <>(left As Basal, right As Basal) As Boolean
+        Return Not left = right
+    End Operator
+
+    Public Shared Operator =(left As Basal, right As Basal) As Boolean
+        Return EqualityComparer(Of Basal).Default.Equals(left, right)
+    End Operator
+
+    Public Overrides Function Equals(obj As Object) As Boolean
+        Return Me.Equals(TryCast(obj, Basal))
+    End Function
+
     Public Function GetBasal() As Single
         Return Me.GetBasalPerHour / 12
     End Function
@@ -89,6 +102,10 @@ Public Class Basal
         End Select
     End Function
 
+    Public Overrides Function GetHashCode() As Integer
+        Return HashCode.Combine(Me.ActiveBasalPattern, Me.BasalRate, Me.presetTempName, Me.tempBasalDurationRemaining, Me.tempBasalPercentage, Me.TempBasalRate, Me.tempBasalType)
+    End Function
+
     Public Function GetOaGetTime() As OADate
         Return _oaDateTime
     End Function
@@ -96,10 +113,6 @@ Public Class Basal
     Public Sub OaDateTime(d As Date)
         _oaDateTime = New OADate(d)
     End Sub
-
-    Public Overrides Function Equals(obj As Object) As Boolean
-        Return Me.Equals(TryCast(obj, Basal))
-    End Function
 
     Public Overloads Function Equals(other As Basal) As Boolean Implements IEquatable(Of Basal).Equals
         Return other IsNot Nothing AndAlso
@@ -111,17 +124,5 @@ Public Class Basal
                Me.TempBasalRate = other.TempBasalRate AndAlso
                Me.tempBasalType = other.tempBasalType
     End Function
-
-    Public Overrides Function GetHashCode() As Integer
-        Return HashCode.Combine(Me.ActiveBasalPattern, Me.BasalRate, Me.presetTempName, Me.tempBasalDurationRemaining, Me.tempBasalPercentage, Me.TempBasalRate, Me.tempBasalType)
-    End Function
-
-    Public Shared Operator =(left As Basal, right As Basal) As Boolean
-        Return EqualityComparer(Of Basal).Default.Equals(left, right)
-    End Operator
-
-    Public Shared Operator <>(left As Basal, right As Basal) As Boolean
-        Return Not left = right
-    End Operator
 
 End Class

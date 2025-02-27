@@ -7,13 +7,13 @@ Imports System.Runtime.CompilerServices
 Friend Module ItemIndexesModule
 
     <Extension>
-    Friend Function GetItemIndex(key As String) As ItemIndexes
+    Friend Function GetItemIndex(key As String) As ServerDataIndexes
         Dim result As Object = Nothing
-        If [Enum].TryParse(GetType(ItemIndexes), key, result) Then
-            Return CType(result, ItemIndexes)
+        If [Enum].TryParse(GetType(ServerDataIndexes), key, result) Then
+            Return CType(result, ServerDataIndexes)
         End If
         Stop
-        Throw New ArgumentException($"{key} was not found in {NameOf(ItemIndexes)}")
+        Throw New ArgumentException($"{key} was not found in {NameOf(ServerDataIndexes)}")
     End Function
 
 End Module

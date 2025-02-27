@@ -6,7 +6,6 @@ Imports System.Globalization
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 Imports System.Text.Json.Serialization
-Imports DocumentFormat.OpenXml
 
 Public Module JsonExtensions
 
@@ -25,10 +24,9 @@ Public Module JsonExtensions
             sGs.Add(New SG(innerJson(i), i))
             With sGs.Last
                 If .Timestamp.Equals(New DateTime) Then
-                    .Timestamp = If(i = 0,
-                                   (s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime - New TimeSpan(23, 55, 0)).RoundDownToMinute(),
-                                   sGs(0).Timestamp + (s_05MinuteSpan * i)
-                                  )
+                    .TimestampAsString = If(i = 0,
+                        (s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime - New TimeSpan(23, 55, 0)).RoundDownToMinute().ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture),
+                        (sGs(0).Timestamp + (s_05MinuteSpan * i)).ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture))
                 End If
             End With
         Next
@@ -144,6 +142,7 @@ Public Module JsonExtensions
     Public Function GetBooleanValueFromJson(markerEntry As Marker, fieldName As String) As Boolean
         Dim obj As Object = Nothing
         Dim value As Boolean = False
+        fieldName = fieldName.ToLowerCamelCase
         If markerEntry.Data.DataValues.TryGetValue(fieldName, obj) Then
             Dim element As JsonElement = CType(obj, JsonElement)
             Select Case element.ValueKind
@@ -154,6 +153,8 @@ Public Module JsonExtensions
                 Case Else
                     Stop
             End Select
+        Else
+            Return Nothing
         End If
         Return value
     End Function
@@ -162,6 +163,7 @@ Public Module JsonExtensions
     Public Function GetDoubleValueFromJson(markerEntry As Marker, fieldName As String) As Double
         Dim obj As Object = Nothing
         Dim value As Double = Double.NaN
+        fieldName = fieldName.ToLowerCamelCase
         If markerEntry.Data.DataValues.TryGetValue(fieldName, obj) Then
             Dim element As JsonElement = CType(obj, JsonElement)
             Select Case element.ValueKind
@@ -172,6 +174,8 @@ Public Module JsonExtensions
                 Case Else
                     Stop
             End Select
+        Else
+            Stop
         End If
         Return value
     End Function
@@ -180,6 +184,7 @@ Public Module JsonExtensions
     Public Function GetIntegerValueFromJson(markerEntry As Marker, fieldName As String) As Integer
         Dim obj As Object = Nothing
         Dim value As Integer = 0
+        fieldName = fieldName.ToLowerCamelCase
         If markerEntry.Data.DataValues.TryGetValue(fieldName, obj) Then
             Dim element As JsonElement = CType(obj, JsonElement)
             Select Case element.ValueKind
@@ -190,26 +195,38 @@ Public Module JsonExtensions
                 Case Else
                     Stop
             End Select
+        Else
+            Return Nothing
         End If
         Return value
     End Function
 
     <Extension>
-    Public Function GetSingleValueFromJson(markerEntry As Marker, fieldName As String, Optional decimalDigits As Integer = -1) As Single
+    Public Function GetSingleValueFromJson(markerEntry As Marker, fieldName As String, Optional decimalDigits As Integer = -1, Optional considerValue As Boolean = False) As Single
         Dim obj As Object = Nothing
         Dim value As Single = Single.NaN
+        fieldName = fieldName.ToLowerCamelCase
         If markerEntry.Data.DataValues.TryGetValue(fieldName, obj) Then
-            Dim element As JsonElement = CType(obj, JsonElement)
-            Select Case element.ValueKind
-                Case JsonValueKind.String
-                    value = Single.Parse(element.GetString)
-                Case JsonValueKind.Number
-                    value = element.GetSingle
+            Select Case True
+                Case TypeOf obj Is JsonElement
+                    Dim element As JsonElement = CType(obj, JsonElement)
+                    Select Case element.ValueKind
+                        Case JsonValueKind.String
+                            value = Single.Parse(element.GetString)
+                        Case JsonValueKind.Number
+                            value = element.GetSingle
+                        Case Else
+                            Stop
+                            Return value
+                    End Select
+                Case TypeOf obj Is String
+                    value = Single.Parse(CStr(obj))
                 Case Else
                     Stop
-                    Return value
             End Select
-            Return If(decimalDigits = 3, value.RoundTo025, value.RoundSingle(decimalDigits, False))
+
+            If decimalDigits = -1 Then Return value
+            Return If(decimalDigits = 3, value.RoundTo025, value.RoundSingle(decimalDigits, considerValue))
         Else
             Return Single.NaN
         End If
@@ -218,6 +235,7 @@ Public Module JsonExtensions
     <Extension>
     Public Function GetStringValueFromJson(markerEntry As Marker, fieldName As String) As String
         Dim obj As Object = Nothing
+        fieldName = fieldName.ToLowerCamelCase
         If markerEntry.Data.DataValues.TryGetValue(fieldName, obj) Then
             Dim element As JsonElement = CType(obj, JsonElement)
             If element.ValueKind = JsonValueKind.String Then
@@ -348,9 +366,9 @@ Public Module JsonExtensions
             End If
             Try
                 Select Case item.Key
-                    Case NameOf(ItemIndexes.bgUnits)
+                    Case NameOf(ServerDataIndexes.bgUnits)
                         If Not UnitsStrings.TryGetValue(item.Value.ToString(), SgUnitsNativeString) Then
-                            Dim averageSGFloatAsString As String = rawJsonData(ItemIndexes.averageSGFloat).jsonItemAsString
+                            Dim averageSGFloatAsString As String = rawJsonData(ServerDataIndexes.averageSGFloat).jsonItemAsString
                             SgUnitsNativeString = If(averageSGFloatAsString.ParseSingle(1) > 40,
                                                     "mg/dl",
                                                     "mmol/L"
@@ -358,7 +376,7 @@ Public Module JsonExtensions
                         End If
                         NativeMmolL = SgUnitsNativeString <> "mg/dl"
                         resultDictionary.Add(item.Key, item.jsonItemAsString)
-                    Case NameOf(ItemIndexes.clientTimeZoneName)
+                    Case NameOf(ServerDataIndexes.clientTimeZoneName)
                         If s_useLocalTimeZone Then
                             PumpTimeZoneInfo = TimeZoneInfo.Local
                         Else
@@ -387,12 +405,12 @@ Public Module JsonExtensions
                             End If
                         End If
                         resultDictionary.Add(item.Key, item.jsonItemAsString)
-                    Case NameOf(ItemIndexes.timeFormat)
+                    Case NameOf(ServerDataIndexes.timeFormat)
                         s_timeFormat = item.Value.ToString
                         s_timeWithMinuteFormat = If(s_timeFormat = "HR_12", TimeFormatTwelveHourWithMinutes, TimeFormatMilitaryWithMinutes)
                         s_timeWithoutMinuteFormat = If(s_timeFormat = "HR_12", TimeFormatTwelveHourWithoutMinutes, TimeFormatMilitaryWithoutMinutes)
                         resultDictionary.Add(item.Key, item.jsonItemAsString)
-                    Case "Sg", "sg", NameOf(ItemIndexes.averageSG), NameOf(ItemIndexes.sgBelowLimit), NameOf(ItemIndexes.averageSGFloat)
+                    Case "Sg", "sg", NameOf(ServerDataIndexes.averageSG), NameOf(ServerDataIndexes.sgBelowLimit), NameOf(ServerDataIndexes.averageSGFloat)
                         resultDictionary.Add(item.Key, item.ScaleSgToString())
                     Case Else
                         resultDictionary.Add(item.Key, item.jsonItemAsString)

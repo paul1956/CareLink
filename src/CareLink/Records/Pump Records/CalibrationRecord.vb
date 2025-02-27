@@ -4,23 +4,20 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Text.Json.Serialization
 
 Public Class CalibrationRecord
 
     Public Sub New(marker As Marker, recordNumber As Integer)
         Me.RecordNumber = recordNumber
-        Me.type = marker.Type
-        Me.timestamp = marker.Timestamp
-#If False Then ' TODO
-        Me.index = marker index
-        Me.value = marker.value
-        Me.kind = marker.kind
-        Me.version = marker.version
-        Me.relativeOffset = marker relativeOffset
-        Me.calibrationSuccess = marker calibrationSuccess
-#End If
+        Me.Type = marker.Type
+        Me.Timestamp = marker.Timestamp
+        Me.TimestampAsString = marker.TimestampAsString
+        Me.UnitValue = marker.GetSingleValueFromJson(NameOf(UnitValue), decimalDigits:=0, considerValue:=True)
+        Me.DisplayTime = marker.DisplayTime
+        Me.DisplayTimeAsString = marker.DisplayTimeAsString
+        Me.calibrationSuccess = marker.GetBooleanValueFromJson(NameOf(calibrationSuccess))
     End Sub
-
 
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
@@ -28,58 +25,58 @@ Public Class CalibrationRecord
 
     <DisplayName("Type")>
     <Column(Order:=1, TypeName:=NameOf([Int32]))>
-    Public Property type As String
+    Public Property Type As String
 
-    <DisplayName(NameOf(index))>
-    <Column(Order:=2, TypeName:=NameOf([Int32]))>
-    Public Property index As Integer
+    <DisplayName("UnitValue")>
+    <Column(Order:=2, TypeName:=NameOf([Single]))>
+    <JsonPropertyName("unitValue")>
+    Public Property UnitValue As Single
 
-    <DisplayName("Value")>
+    <DisplayName("UnitValue (mg/dL)")>
     <Column(Order:=3, TypeName:=NameOf([Single]))>
-    Public Property value As Single
+    Public ReadOnly Property UnitValueMmDl As Single
+        Get
+            If Single.IsNaN(Me.UnitValue) Then Return Me.UnitValue
+            Return If(NativeMmolL,
+                      CSng(Math.Round(Me.UnitValue * MmolLUnitsDivisor)),
+                      Me.UnitValue
+                     )
+        End Get
+    End Property
 
-    <DisplayName("Value (mg/dL)")>
+    <DisplayName("UnitValueMmolL (mmol/L)")>
     <Column(Order:=4, TypeName:=NameOf([Single]))>
-    Public ReadOnly Property valueMmDl As Single
+    Public ReadOnly Property UnitValueMmolL As Single
         Get
-            If Single.IsNaN(Me.value) Then Return Me.value
+            If Single.IsNaN(Me.UnitValue) Then Return Me.UnitValue
             Return If(NativeMmolL,
-                      CSng(Math.Round(Me.value * MmolLUnitsDivisor)),
-                      Me.value
+                      Me.UnitValue,
+                      RoundSingle(Me.UnitValue / MmolLUnitsDivisor, 2, False)
                      )
         End Get
     End Property
 
-    <DisplayName("Value (mmol/L)")>
-    <Column(Order:=5, TypeName:=NameOf([Single]))>
-    Public ReadOnly Property valueMmolL As Single
-        Get
-            If Single.IsNaN(Me.value) Then Return Me.value
-            Return If(NativeMmolL,
-                      Me.value,
-                      RoundSingle(Me.value / MmolLUnitsDivisor, 2, False)
-                     )
-        End Get
-    End Property
+    <DisplayName(NameOf(Timestamp))>
+    <Column(Order:=5, TypeName:="Date")>
+    <JsonPropertyName("timestamp")>
+    Public Property Timestamp As Date
 
-    <DisplayName("Kind")>
-    <Column(Order:=6, TypeName:=NameOf([String]))>
-    Public Property kind As String
+    <DisplayName(NameOf(TimestampAsString))>
+    <Column(Order:=6, TypeName:="String")>
+    Public Property TimestampAsString As String
 
-    <DisplayName("Version")>
-    <Column(Order:=7, TypeName:=NameOf([Int32]))>
-    Public Property version As Integer
+    <DisplayName(NameOf(DisplayTime))>
+    <Column(Order:=7, TypeName:="Date")>
+    <JsonPropertyName("displayTime")>
+    Public Property DisplayTime As Date
 
-    <DisplayName(NameOf(timestamp))>
-    <Column(Order:=8, TypeName:="Date")>
-    Public Property timestamp As Date
-
-    <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=10, TypeName:=NameOf([Int32]))>
-    Public Property relativeOffset As Integer
+    <DisplayName(NameOf(DisplayTimeAsString))>
+    <Column(Order:=8, TypeName:="String")>
+    Public Property DisplayTimeAsString As String
 
     <DisplayName("Calibration Success")>
-    <Column(Order:=11, TypeName:=NameOf([Boolean]))>
-    Public Property calibrationSuccess As Boolean
+    <Column(Order:=8, TypeName:=NameOf([Boolean]))>
+    <JsonPropertyName("calibrationSuccess")>
+    Public Property CalibrationSuccess As Boolean
 
 End Class
