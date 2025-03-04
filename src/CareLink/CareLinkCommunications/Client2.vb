@@ -13,11 +13,7 @@ Public Class Client2
 
     ' Constants
     Private Const DEFAULT_FILENAME As String = "logindata.json"
-
-    Private Const VERSION As String = "1.2"
-
     Private ReadOnly _tokenBaseFileName As String
-    Private ReadOnly _version As String
     Private _accessTokenPayload As Dictionary(Of String, Object)
     Private _config As Dictionary(Of String, Object)
     Private _country As String
@@ -38,8 +34,6 @@ Public Class Client2
     End Property
 
     Public Sub New(Optional tokenFile As String = DEFAULT_FILENAME)
-        _version = VERSION
-
         ' Authorization
         _tokenBaseFileName = tokenFile
         _tokenDataElement = Nothing
@@ -241,7 +235,7 @@ Public Class Client2
     End Function
 
     Private Function _init() As Boolean
-        _tokenDataElement = ReadTokenFile(s_userName, _tokenBaseFileName)
+        _tokenDataElement = ReadTokenFile(userName:=s_userName, tokenBaseFileName:=_tokenBaseFileName)
         If _tokenDataElement.ValueKind.IsNullOrUndefined Then
             Me.LoggedIn = False
             Return False
@@ -380,13 +374,6 @@ Public Class Client2
         Return If(response.IsSuccessStatusCode,
             response.Content.ReadAsStringAsync().Result,
             Nothing)
-    End Function
-
-    ''' <summary>
-    ''' Get Client library version
-    ''' </summary>
-    Public Function GetClientVersion() As String
-        Return _version
     End Function
 
     ''' <summary>

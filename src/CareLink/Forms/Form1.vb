@@ -747,7 +747,7 @@ Public Class Form1
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(Meal.amount)
                 dgv.CellFormattingInteger(e, GetCarbDefaultUnit)
-            Case NameOf(Meal.timestamp)
+            Case NameOf(Meal.Timestamp)
                 dgv.CellFormattingDateTime(e)
         End Select
     End Sub
@@ -2258,7 +2258,7 @@ Public Class Form1
                                 timeOrderedMarkers.Add(markerOADateTime, bolusAmount)
                             End If
                         Case "INSULIN"
-                            Dim bolusAmount As Single = markerEntry.GetSingleValueFromJson(NameOf(Insulin.deliveredFastAmount))
+                            Dim bolusAmount As Single = markerEntry.GetSingleValueFromJson(NameOf(Insulin.DeliveredFastAmount))
                             If timeOrderedMarkers.ContainsKey(markerOADateTime) Then
                                 timeOrderedMarkers(markerOADateTime) += bolusAmount
                             Else
@@ -2493,9 +2493,9 @@ Public Class Form1
             Dim marker As Marker = markerWithIndex.Value
             Select Case marker.Type
                 Case "INSULIN"
-                    Dim deliveredAmount As String = marker.GetSingleValueFromJson(NameOf(Insulin.deliveredFastAmount)).ToString
+                    Dim deliveredAmount As String = marker.GetSingleValueFromJson(NameOf(Insulin.DeliveredFastAmount)).ToString
                     s_totalDailyDose += deliveredAmount.ParseSingle(3)
-                    Select Case marker.GetStringValueFromJson(NameOf(Insulin.activationType))
+                    Select Case marker.GetStringValueFromJson(NameOf(Insulin.ActivationType))
                         Case "AUTOCORRECTION"
                             s_totalAutoCorrection += deliveredAmount.ParseSingle(3)
                         Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
@@ -2733,7 +2733,7 @@ Public Class Form1
         ' Calculate Time in AutoMode
         If s_listOfAutoModeStatusMarkers.Count = 0 Then
             Me.SmartGuardLabel.Text = "SmartGuard 0%"
-        ElseIf s_listOfAutoModeStatusMarkers.Count = 1 AndAlso s_listOfAutoModeStatusMarkers.First.autoModeOn Then
+        ElseIf s_listOfAutoModeStatusMarkers.Count = 1 AndAlso s_listOfAutoModeStatusMarkers.First.AutoModeOn Then
             Me.SmartGuardLabel.Text = "SmartGuard 100%"
         Else
             Try
@@ -2742,13 +2742,13 @@ Public Class Form1
                 Dim timeInAutoMode As TimeSpan = s_0TicksSpan
                 For Each r As IndexClass(Of AutoModeStatus) In s_listOfAutoModeStatusMarkers.WithIndex
                     If r.IsFirst Then
-                        If r.Value.autoModeOn Then
+                        If r.Value.AutoModeOn Then
                             autoModeStartTime = r.Value.Timestamp
                         Else
 
                         End If
                     Else
-                        If r.Value.autoModeOn Then
+                        If r.Value.AutoModeOn Then
                             If r.IsLast Then
                                 timeInAutoMode += s_listOfAutoModeStatusMarkers.First.Timestamp.AddDays(1) - r.Value.Timestamp
                             Else

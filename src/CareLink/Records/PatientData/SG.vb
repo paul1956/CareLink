@@ -14,7 +14,6 @@ Public Class SG
     Private _timestampAsString As String
 
     Public Sub New()
-
     End Sub
 
     Public Sub New(lastSg As LastSG, index As Integer)

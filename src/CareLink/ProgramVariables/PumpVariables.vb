@@ -25,7 +25,7 @@ Public Module PumpVariables
     Friend s_lastMedicalDeviceDataUpdateServerEpoch As Long
     Friend s_lastSgRecord As New SG
     Friend s_lastSgValue As Single = 0
-    Friend s_listOfManualBasal As New BasalRecords(288)
+    Friend s_listOfManualBasal As New BasalRecords(size:=288)
     Friend s_listOfSgRecords As New List(Of SG)
     Friend s_listOfTimeChangeMarkers As New List(Of TimeChange)
     Friend s_markers As New List(Of Marker)
