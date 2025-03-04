@@ -38,46 +38,50 @@ Friend Module Form1NotificationTabHelpers
             Dim notificationType As KeyValuePair(Of String, String) = c.Value
             Dim innerJson As List(Of Dictionary(Of String, String)) = JsonToLisOfDictionary(notificationType.Value)
             Dim tableLayoutPanel2 As New TableLayoutPanel With {
-             .AutoScroll = False,
-             .AutoSize = True,
-             .ColumnCount = 1,
-             .Dock = DockStyle.Fill,
-             .Name = $"tableLayoutPanel{c.Index}",
-             .RowCount = 1,
-             .TabIndex = 0
-         }
+                .AutoScroll = False,
+                .AutoSize = True,
+                .ColumnCount = 1,
+                .Dock = DockStyle.Fill,
+                .Name = $"tableLayoutPanel{c.Index}",
+                .RowCount = 1,
+                .TabIndex = 0}
             Dim control As New Label With {
                 .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
                 .AutoSize = True,
                 .TextAlign = ContentAlignment.MiddleLeft,
-                .Text = notificationType.Key.ToTitleCase.Replace(" ", vbCrLf)}
+                .Text = notificationType.Key.ToTitleCase.Replace(oldValue:=" ", vbCrLf)}
 
             tableLevel1Blue.Controls.Add(control, 0, c.Index)
             If innerJson.Count > 0 Then
-                tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, 22))
+                tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, height:=22))
                 If notificationType.Key = "clearedNotifications" Then
                     tableLayoutPanel2.BackColor = Color.Green
+                    tableLayoutPanel2.ForeColor = tableLayoutPanel2.BackColor.GetContrastingColor
                     innerJson.Reverse()
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
-                        DisplayDataTableInDGV(tableLayoutPanel2,
-                                              ClassCollectionToDataTable(GetSummaryRecords(innerDictionary.Value, s_rowsToHide)),
-                                              NameOf(SummaryRecord),
-                                              AddressOf SummaryHelpers.AttachHandlers,
-                                              innerDictionary.Index
-                                             )
+                        DisplayDataTableInDGV(
+                            realPanel:=tableLayoutPanel2,
+                            table:=ClassCollectionToDataTable(
+                                classCollection:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
+                            className:=NameOf(SummaryRecord),
+                            attachHandlers:=AddressOf SummaryHelpers.AttachHandlers,
+                            rowIndex:=innerDictionary.Index)
                     Next
                 Else
                     tableLayoutPanel2.BackColor = Color.PaleVioletRed
+                    tableLayoutPanel2.ForeColor = tableLayoutPanel2.BackColor.GetContrastingColor
+
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
-                        DisplayDataTableInDGV(tableLayoutPanel2,
-                                              ClassCollectionToDataTable(GetSummaryRecords(innerDictionary.Value, s_rowsToHide)),
-                                              NameOf(SummaryRecord),
-                                              AddressOf SummaryHelpers.AttachHandlers,
-                                              innerDictionary.Index
-                                             )
+                        DisplayDataTableInDGV(
+                            realPanel:=tableLayoutPanel2,
+                            table:=ClassCollectionToDataTable(
+                                classCollection:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
+                            className:=NameOf(SummaryRecord),
+                            attachHandlers:=AddressOf SummaryHelpers.AttachHandlers,
+                            rowIndex:=innerDictionary.Index)
                     Next
                 End If
-                tableLevel1Blue.Controls.Add(tableLayoutPanel2, 1, c.Index)
+                tableLevel1Blue.Controls.Add(control:=tableLayoutPanel2, column:=1, row:=c.Index)
             End If
         Next
     End Sub
@@ -111,6 +115,7 @@ Friend Module Form1NotificationTabHelpers
                     .BorderStyle = BorderStyle.FixedSingle,
                     .ColumnCount = 2,
                     .Dock = DockStyle.Fill,
+                    .ForeColor = .BackColor.GetContrastingColor,
                     .Margin = New Padding(3),
                     .Name = NameOf(tableLevel1Blue),
                     .Padding = New Padding(3),

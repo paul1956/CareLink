@@ -373,11 +373,12 @@ Public Class Form1
             If _updating Then
                 Exit Sub
             End If
-            e.PostPaintSupport(_activeInsulinChartAbsoluteRectangle,
-                s_activeInsulinMarkerInsulinDictionary,
-                Nothing,
-                True,
-                True)
+            e.PostPaintSupport(
+                chartRelativePosition:=_activeInsulinChartAbsoluteRectangle,
+                insulinDictionary:=s_activeInsulinMarkerInsulinDictionary,
+                mealDictionary:=Nothing,
+                offsetInsulinImage:=True,
+                paintOnY2:=True)
         End SyncLock
     End Sub
 
@@ -391,11 +392,12 @@ Public Class Form1
             If _updating Then
                 Exit Sub
             End If
-            e.PostPaintSupport(_summaryChartAbsoluteRectangle,
-                s_summaryMarkerInsulinDictionary,
-                s_summaryMarkerMealDictionary,
-                True,
-                True)
+            e.PostPaintSupport(
+                chartRelativePosition:=_summaryChartAbsoluteRectangle,
+                insulinDictionary:=s_summaryMarkerInsulinDictionary,
+                mealDictionary:=s_summaryMarkerMealDictionary,
+                offsetInsulinImage:=True,
+                paintOnY2:=True)
         End SyncLock
     End Sub
 
@@ -409,11 +411,12 @@ Public Class Form1
             If _updating Then
                 Exit Sub
             End If
-            e.PostPaintSupport(_treatmentMarkerAbsoluteRectangle,
-                s_treatmentMarkerInsulinDictionary,
-                s_treatmentMarkerMealDictionary,
-                False,
-                False)
+            e.PostPaintSupport(
+                chartRelativePosition:=_treatmentMarkerAbsoluteRectangle,
+                insulinDictionary:=s_treatmentMarkerInsulinDictionary,
+                mealDictionary:=s_treatmentMarkerMealDictionary,
+                offsetInsulinImage:=False,
+                paintOnY2:=False)
         End SyncLock
     End Sub
 
@@ -875,13 +878,17 @@ Public Class Form1
                  ServerDataIndexes.timeToNextCalibrationMinutes, ServerDataIndexes.sgBelowLimit,
                  ServerDataIndexes.averageSGFloat, ServerDataIndexes.timeToNextCalibrationRecommendedMinutes,
                  ServerDataIndexes.systemStatusTimeRemaining, ServerDataIndexes.timeToNextEarlyCalibrationMinutes
-                e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
+                e.CellStyle = e.CellStyle.SetCellStyle(
+                    alignment:=DataGridViewContentAlignment.MiddleRight,
+                    padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
 
             Case ServerDataIndexes.conduitInRange, ServerDataIndexes.conduitMedicalDeviceInRange,
                  ServerDataIndexes.conduitSensorInRange,
                  ServerDataIndexes.pumpCommunicationState, ServerDataIndexes.gstCommunicationState,
                  ServerDataIndexes.calFreeSensor, ServerDataIndexes.finalCalibration
-                e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
+                e.CellStyle = e.CellStyle.SetCellStyle(
+                    alignment:=DataGridViewContentAlignment.MiddleCenter,
+                    padding:=New Padding(all:=1))
 
             Case ServerDataIndexes.lastAlarm,
                  ServerDataIndexes.activeInsulin,
@@ -896,7 +903,9 @@ Public Class Form1
                  ServerDataIndexes.medicalDeviceInformation
                 Exit Select
             Case Else
-                e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(1))
+                e.CellStyle = e.CellStyle.SetCellStyle(
+                    alignment:=DataGridViewContentAlignment.MiddleCenter,
+                    padding:=New Padding(all:=1))
         End Select
 
     End Sub
