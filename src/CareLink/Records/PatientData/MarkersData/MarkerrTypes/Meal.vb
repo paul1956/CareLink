@@ -4,18 +4,22 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Globalization
+Imports System.Text.Json.Serialization
 
-Public Class MealRecord
+Public Class Meal
 
     Public Sub New(markerEntry As Marker, recordNumber As Integer)
         Me.RecordNumber = recordNumber
         Me.type = markerEntry.Type
+        Me.Kind = "Marker"
+        Me.Timestamp = markerEntry.Timestamp
+        Me.TimestampAsString = markerEntry.TimestampAsString
+        Me.DisplayTime = markerEntry.DisplayTime
+        Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
         Const fieldName As String = "amount"
         Me.amount = CInt(markerEntry.GetSingleValueFromJson(fieldName, decimalDigits:=0))
-        Me.timestamp = markerEntry.Timestamp
-        Me.DisplayTime = markerEntry.DisplayTime
     End Sub
-
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public Property RecordNumber As Integer
@@ -30,38 +34,34 @@ Public Class MealRecord
 
     <DisplayName("Kind")>
     <Column(Order:=3, TypeName:=NameOf([String]))>
-    Public Property kind As String
+    Public Property Kind As String
 
-    <DisplayName("Version")>
-    <Column(Order:=4, TypeName:=NameOf([Int32]))>
-    Public Property version As Integer
+    <DisplayName(NameOf(Timestamp))>
+    <Column(Order:=4, TypeName:="Date")>
+    Public Property Timestamp As Date
 
-    <DisplayName(NameOf(timestamp))>
-    <Column(Order:=5, TypeName:="Date")>
-    Public Property timestamp As Date
+    <DisplayName(NameOf(TimestampAsString))>
+    <Column(Order:=5, TypeName:="String")>
+    Public Property TimestampAsString As String
 
-    <DisplayName(NameOf(DisplayTime))>
-    <Column(Order:=6, TypeName:="Date")>
+    <DisplayName("Display Time")>
+    <Column(Order:=6, TypeName:=NameOf([DateTime]))>
     Public Property DisplayTime As Date
 
+    <DisplayName(NameOf(DisplayTimeAsString))>
+    <Column(Order:=7, TypeName:="String")>
+    Public Property DisplayTimeAsString As String
+
     <DisplayName(NameOf(OAdateTime))>
-    <Column(Order:=7, TypeName:=NameOf(OADate))>
+    <Column(Order:=8, TypeName:=NameOf(OADate))>
     Public ReadOnly Property OAdateTime As OADate
         Get
-            Return New OADate(Me.timestamp)
+            Return New OADate(Me.Timestamp)
         End Get
     End Property
-
-    <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=8, TypeName:=NameOf([Int32]))>
-    Public Property relativeOffset As Integer
 
     <DisplayName("Carbs (amount)")>
     <Column(Order:=9, TypeName:=NameOf([Int32]))>
     Public Property amount As Integer
-
-    Friend Shared Sub AttachHandlers(dgv As DataGridView)
-        Throw New NotImplementedException()
-    End Sub
 
 End Class

@@ -2,29 +2,44 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Friend Module MealRecordHelpers
-
-    Private ReadOnly s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
+Friend Module InsulinHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
-                                NameOf(MealRecord.kind),
-                                NameOf(MealRecord.type),
-                                NameOf(MealRecord.relativeOffset),
-                                NameOf(MealRecord.OAdateTime),
-                                NameOf(MealRecord.version)
-                            }
+            NameOf(Insulin.effectiveDuration)}
+
+    Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        Select Case CType(sender, DataGridView).Columns(e.ColumnIndex).Name
-            Case NameOf(MealRecord.timestamp)
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(Insulin.timestamp)
                 dgv.CellFormattingDateTime(e)
-            Case NameOf(MealRecord.amount)
-                dgv.CellFormattingInteger(e, s_sessionCountrySettings.carbDefaultUnit.ToTitle)
+            Case NameOf(Insulin.safeMealReduction)
+                If dgv.CellFormattingSingleValue(e, 3) >= 0.0025 Then
+                    CellFormattingApplyColor(e, Color.OrangeRed, isUri:=False)
+                Else
+                    dgv.CellFormattingSetForegroundColor(e)
+                End If
+            Case NameOf(Insulin.activationType)
+                Dim value As String = e.Value.ToString
+                Select Case value
+                    Case "AUTOCORRECTION"
+                        e.Value = "Auto Correction"
+                        CellFormattingApplyColor(e, GetGraphLineColor("Auto Correction"), isUri:=False)
+                    Case "FAST", "RECOMMENDED", "UNDETERMINED"
+                        dgv.CellFormattingToTitle(e)
+                    Case Else
+                        dgv.CellFormattingSetForegroundColor(e)
+                End Select
+            Case NameOf(Insulin.bolusType)
+                dgv.CellFormattingToTitle(e)
             Case Else
-                dgv.CellFormattingSetForegroundColor(e)
+                If dgv.Columns(e.ColumnIndex).ValueType = GetType(Single) Then
+                    dgv.CellFormattingSingleValue(e, 3)
+                Else
+                    dgv.CellFormattingSetForegroundColor(e)
+                End If
         End Select
-
     End Sub
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
@@ -57,21 +72,11 @@ Friend Module MealRecordHelpers
     End Sub
 
     Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToColumnAlignment(Of MealRecord)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of Insulin)(s_alignmentTable, columnName)
     End Function
 
-    Friend Function HideColumn(dataPropertyName As String) As Boolean
-        Return s_filterJsonData AndAlso s_columnsToHide.Contains(dataPropertyName)
-    End Function
-
-    Public Function TryGetMealRecord(index As Integer, ByRef meal As MealRecord) As Boolean
-        For Each m As MealRecord In s_listOfMealMarkers
-            If m.index = index Then
-                meal = m
-                Return True
-            End If
-        Next
-        Return False
+    Friend Function HideColumn(columnName As String) As Boolean
+        Return s_filterJsonData AndAlso s_columnsToHide.Contains(columnName)
     End Function
 
 End Module

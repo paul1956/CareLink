@@ -10,8 +10,12 @@ Friend Module PlotSeriesLimits
     Private Function GetLimitsList(count As Integer) As Integer()
         Dim limitsIndexList(count) As Integer
         Dim limitsIndex As Integer = 0
+        For i As Integer = 0 To s_listOfLimitRecords.Count - 1
+            s_listOfLimitRecords(i).Index = i
+        Next
+
         For i As Integer = 0 To limitsIndexList.GetUpperBound(0)
-            If limitsIndex + 1 < s_listOfLimitRecords.Count AndAlso s_listOfLimitRecords(limitsIndex + 1).index < i Then
+            If limitsIndex + 1 < s_listOfLimitRecords.Count AndAlso s_listOfLimitRecords(limitsIndex + 1).Index < i Then
                 limitsIndex += 1
             End If
             limitsIndexList(i) = limitsIndex

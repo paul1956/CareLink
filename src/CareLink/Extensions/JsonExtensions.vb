@@ -34,7 +34,7 @@ Public Module JsonExtensions
     End Function
 
     <Extension>
-    Public Function CleanUserData(cleanRecentData As Dictionary(Of String, Object)) As String
+    Public Function CleanUserData(cleanRecentData As Dictionary(Of String, String)) As String
         If cleanRecentData Is Nothing Then Return ""
         cleanRecentData("firstName") = "First"
         cleanRecentData("lastName") = "Last"
@@ -80,7 +80,7 @@ Public Module JsonExtensions
     End Function
 
     <Extension>
-    Public Function ConvertJsonElementToStringDictionary(jsonElement As JsonElement, expandSubElements As Boolean) As Dictionary(Of String, String)
+    Public Function ConvertJsonElementToStringDictionary(jsonElement As JsonElement) As Dictionary(Of String, String)
         Dim result As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
 
         If jsonElement.ValueKind = JsonValueKind.Object Then
@@ -89,17 +89,9 @@ Public Module JsonExtensions
                     Case JsonValueKind.String
                         result.Add([property].Name, [property].Value.ToString)
                     Case JsonValueKind.Object
-                        If expandSubElements Then
-                            result.Add([property].Name, ConvertJsonElementToDictionary([property].Value).ToString)
-                        Else
-                            result.Add([property].Name, [property].Value.ToString)
-                        End If
+                        result.Add([property].Name, [property].Value.ToString)
                     Case JsonValueKind.Array
-                        If expandSubElements Then
-                            result.Add([property].Name, ConvertJsonArrayToList([property].Value).ToString)
-                        Else
-                            result.Add([property].Name, [property].Value.ToString)
-                        End If
+                        result.Add([property].Name, [property].Value.ToString)
                     Case JsonValueKind.Null
                         result.Add([property].Name, "")
                     Case JsonValueKind.Undefined
@@ -238,11 +230,27 @@ Public Module JsonExtensions
         fieldName = fieldName.ToLowerCamelCase
         If markerEntry.Data.DataValues.TryGetValue(fieldName, obj) Then
             Dim element As JsonElement = CType(obj, JsonElement)
-            If element.ValueKind = JsonValueKind.String Then
-                Return element.GetString
-            Else
-                Stop
-            End If
+            Select Case element.ValueKind
+                Case JsonValueKind.String
+                    Return element.GetString
+                Case JsonValueKind.Undefined
+                    Stop
+                    Return ""
+                Case JsonValueKind.Object
+                    Stop
+                    Return ""
+                Case JsonValueKind.Array
+                    Stop
+                    Return ""
+                Case JsonValueKind.Number
+                    Return element.ToString
+                Case JsonValueKind.True
+                    Return "True"
+                Case JsonValueKind.False
+                    Return "False"
+                Case JsonValueKind.Null
+                    Return ""
+            End Select
         End If
         Return String.Empty
     End Function
@@ -309,13 +317,13 @@ Public Module JsonExtensions
                 ElseIf item.Key = "sg" Then
                     resultDictionary.Add(item.Key, item.ScaleSgToString)
                 ElseIf item.Key = "dateTime" Then
-                    Dim d As Date = item.Value.ToString.ParseDate(item.Key)
+                    Dim d As Date = CType(item.Value, JsonElement).GetDateTime()
 
                     ' Prevent Crash but not valid data
                     If d.Year <= 2001 AndAlso recordIndex >= 0 Then
                         resultDictionary.Add(item.Key, s_listOfSgRecords(recordIndex).Timestamp.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture))
                     Else
-                        resultDictionary.Add(item.Key, item.jsonItemAsString)
+                        resultDictionary.Add(item.Key, d.ToShortDateTimeString)
                     End If
                 Else
                     resultDictionary.Add(item.Key, item.jsonItemAsString)
@@ -366,16 +374,11 @@ Public Module JsonExtensions
             End If
             Try
                 Select Case item.Key
-                    Case NameOf(ServerDataIndexes.bgUnits)
-                        If Not UnitsStrings.TryGetValue(item.Value.ToString(), SgUnitsNativeString) Then
-                            Dim averageSGFloatAsString As String = rawJsonData(ServerDataIndexes.averageSGFloat).jsonItemAsString
-                            SgUnitsNativeString = If(averageSGFloatAsString.ParseSingle(1) > 40,
-                                                    "mg/dl",
-                                                    "mmol/L"
-                                                    )
-                        End If
-                        NativeMmolL = SgUnitsNativeString <> "mg/dl"
-                        resultDictionary.Add(item.Key, item.jsonItemAsString)
+                    Case "additionalInfo"
+                        Dim additionalInfo As Dictionary(Of String, Object) = JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(item.jsonItemAsString, s_jsonDeserializerOptions)
+                        For Each kvp As KeyValuePair(Of String, Object) In additionalInfo
+                            resultDictionary.Add(kvp.Key, kvp.Value.ToString)
+                        Next
                     Case NameOf(ServerDataIndexes.clientTimeZoneName)
                         If s_useLocalTimeZone Then
                             PumpTimeZoneInfo = TimeZoneInfo.Local
@@ -404,11 +407,6 @@ Public Module JsonExtensions
                                 End Select
                             End If
                         End If
-                        resultDictionary.Add(item.Key, item.jsonItemAsString)
-                    Case NameOf(ServerDataIndexes.timeFormat)
-                        s_timeFormat = item.Value.ToString
-                        s_timeWithMinuteFormat = If(s_timeFormat = "HR_12", TimeFormatTwelveHourWithMinutes, TimeFormatMilitaryWithMinutes)
-                        s_timeWithoutMinuteFormat = If(s_timeFormat = "HR_12", TimeFormatTwelveHourWithoutMinutes, TimeFormatMilitaryWithoutMinutes)
                         resultDictionary.Add(item.Key, item.jsonItemAsString)
                     Case "Sg", "sg", NameOf(ServerDataIndexes.averageSG), NameOf(ServerDataIndexes.sgBelowLimit), NameOf(ServerDataIndexes.averageSGFloat)
                         resultDictionary.Add(item.Key, item.ScaleSgToString())

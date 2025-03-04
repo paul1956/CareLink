@@ -25,7 +25,6 @@ Friend Module Form1LoginHelpers
         Dim fromFile As Boolean
         Select Case fileToLoad
             Case FileToLoadOptions.LastSaved
-#If False Then ' TODO
                 Form1.Text = $"{SavedTitle} Using Last Saved Data"
                 CurrentDateCulture = GetLastDownloadFileWithPath().ExtractCultureFromFileName(BaseNameSavedLastDownload)
                 RecentData = LoadIndexedItems(File.ReadAllText(GetLastDownloadFileWithPath()))
@@ -34,10 +33,8 @@ Friend Module Form1LoginHelpers
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
                 SetUpCareLinkUser(TestSettingsFileNameWithPath)
                 fromFile = True
-#End If
             Case FileToLoadOptions.TestData
-#If False Then ' TODO
-                Form1.Text = $"{SavedTitle} Using Test Data from 'SampleUserData.json'"
+                Form1.Text = $"{SavedTitle} Using Test Data from 'SampleUserV2Data.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
                 RecentData = LoadIndexedItems(File.ReadAllText(TestDataFileNameWithPath))
                 Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
@@ -45,7 +42,6 @@ Friend Module Form1LoginHelpers
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
                 SetUpCareLinkUser(TestSettingsFileNameWithPath)
                 fromFile = True
-#End If
             Case FileToLoadOptions.Login, FileToLoadOptions.NewUser
                 Form1.Text = SavedTitle
                 Do While True
@@ -72,17 +68,7 @@ Friend Module Form1LoginHelpers
                     SetLastUpdateTime("Last Update time is unknown!", "", True, Nothing)
                     Return False
                 End If
-                Dim recentDataBlob As Dictionary(Of String, Object) = LoginDialog.Client.GetRecentData()
-                Dim metaData As JsonElement = CType(recentDataBlob.Values(0), JsonElement)
-                Dim patientDataElement As JsonElement = CType(recentDataBlob.Values(1), JsonElement)
-                Try
-                    Dim patientDataElementAsText As String = patientDataElement.GetRawText()
-                    PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
-                    Stop
-                    RecentData = patientDataElement.ConvertJsonElementToStringDictionary(expandSubElements:=False)
-                Catch ex As Exception
-                    Stop
-                End Try
+                Dim lastErrorMessage As String = LoginDialog.Client.GetRecentData()
 
                 SetUpCareLinkUser(GetUserSettingsJsonFileNameWithPath, False)
                 StartOrStopServerUpdateTimer(True, s_1MinutesInMilliseconds)
@@ -91,22 +77,22 @@ Friend Module Form1LoginHelpers
                     ReportLoginStatus(Form1.LoginStatus)
                     Return False
                 End If
-                ErrorReportingHelpers.ReportLoginStatus(Form1.LoginStatus, RecentDataEmpty, Form1.Client.GetLastResponseCode.ToString)
+                ErrorReportingHelpers.ReportLoginStatus(Form1.LoginStatus, RecentDataEmpty, lastErrorMessage)
                 Form1.MenuShowMiniDisplay.Visible = True
                 fromFile = False
         End Select
         If Form1.Client IsNot Nothing Then
-            Form1.Client.SessionProfile?.SetInsulinType(CurrentUser.InsulinTypeName)
-            With Form1.DgvSessionProfile
+            Form1.Client.PatientPersonalData.InsulinType = CurrentUser.InsulinTypeName
+            With Form1.DgvCurrentUser
                 .InitializeDgv()
-                .DataSource = Form1.Client.SessionProfile.ToDataSource
+                .DataSource = Form1.Client.UserElementDictionary.ToDataSource
             End With
         End If
 
         Form1.PumpAITLabel.Text = CurrentUser.GetPumpAitString
         Form1.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName
-        FinishInitialization()
         If UpdateAllTabs Then
+            FinishInitialization()
             Form1.UpdateAllTabPages(fromFile)
         End If
         Return True
@@ -167,13 +153,13 @@ Friend Module Form1LoginHelpers
         CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(userSettingsJson, s_jsonDeserializerOptions)
     End Sub
 
-    Friend Sub SetUpCareLinkUser(userSettingsFileWithPath As String, forceUI As Boolean)
+    Friend Sub SetUpCareLinkUser(userSettingsFile As String, forceUI As Boolean)
         Dim currentUserUpdateNeeded As Boolean = False
         Dim pdfNewerThanUserSettings As Boolean = False
         Dim pdfFileNameWithPath As String = GetUserSettingsPdfFileNameWithPath()
 
-        If File.Exists(userSettingsFileWithPath) Then
-            Dim userSettingsJson As String = File.ReadAllText(userSettingsFileWithPath)
+        If File.Exists(GetUserSettingsJsonFileNameWithPath) Then
+            Dim userSettingsJson As String = File.ReadAllText(GetUserSettingsJsonFileNameWithPath)
             CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(userSettingsJson, s_jsonSerializerOptions)
 
             If CurrentUser.InsulinRealAit = 0 Then
@@ -183,10 +169,10 @@ Friend Module Form1LoginHelpers
                 CurrentUser.InsulinTypeName = s_insulinTypes.Keys(0)
             End If
 
-            pdfNewerThanUserSettings = (File.Exists(pdfFileNameWithPath) AndAlso File.GetLastWriteTime(pdfFileNameWithPath) > File.GetLastWriteTime(userSettingsFileWithPath)) OrElse IsFileReadOnly(pdfFileNameWithPath)
+            pdfNewerThanUserSettings = (File.Exists(pdfFileNameWithPath) AndAlso File.GetLastWriteTime(pdfFileNameWithPath) > File.GetLastWriteTime(GetUserSettingsJsonFileNameWithPath)) OrElse IsFileReadOnly(pdfFileNameWithPath)
 
             If Not forceUI Then
-                If Not (pdfNewerThanUserSettings AndAlso IsFileStale(userSettingsFileWithPath)) Then
+                If Not (pdfNewerThanUserSettings AndAlso IsFileStale(GetUserSettingsJsonFileNameWithPath)) Then
                     CurrentPdf = New PdfSettingsRecord(pdfFileNameWithPath)
                     Exit Sub
                 End If
@@ -203,7 +189,7 @@ Friend Module Form1LoginHelpers
         Dim carbRatios As New List(Of CarbRatioRecord)
         Dim currentTarget As Single = 120
 
-        If pdfNewerThanUserSettings OrElse Form1.Client?.TryGetDeviceSettingsPdfFile(pdfFileNameWithPath) OrElse File.Exists(pdfFileNameWithPath) Then
+        If Form1.Client?.TryGetDeviceSettingsPdfFile(pdfFileNameWithPath) OrElse pdfNewerThanUserSettings OrElse File.Exists(pdfFileNameWithPath) Then
             CurrentPdf = New PdfSettingsRecord(pdfFileNameWithPath)
             If CurrentPdf.IsValid Then
                 If CurrentUser.PumpAit <> CurrentPdf.Bolus.BolusWizard.ActiveInsulinTime Then
@@ -229,7 +215,7 @@ Friend Module Form1LoginHelpers
             End If
         End If
         If currentUserUpdateNeeded Then
-            File.WriteAllTextAsync(userSettingsFileWithPath,
+            File.WriteAllTextAsync(GetUserSettingsJsonFileNameWithPath,
                       JsonSerializer.Serialize(CurrentUser, s_jsonSerializerOptions))
         End If
         Form1.Cursor = Cursors.Default
@@ -245,12 +231,7 @@ Friend Module Form1LoginHelpers
     ''' <param name="sourceLineNumber"></param>
     ''' <returns>State of Timer before function was called</returns>
     Friend Function StartOrStopServerUpdateTimer(Start As Boolean, Optional interval As Integer = -1) As Boolean
-        If Debugger.IsAttached Then
-#If False Then ' TODO REMOVE
-
-#End If
-            Return False
-        End If
+        If Debugger.IsAttached Then Return False
         If Start Then
             If interval > -1 Then
                 Form1.ServerUpdateTimer.Interval = interval

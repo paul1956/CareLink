@@ -49,7 +49,7 @@ Friend Module Form1CollectMarkersHelper
             Select Case markerEntry.Type
                 Case "AUTO_BASAL_DELIVERY"
                     s_markers.Add(markerEntry)
-                    Dim item As New AutoBasalDelivery(markerEntry, s_listOfAutoBasalDeliveryMarkers.Count + 1)
+                    Dim item As New AutoBasalDelivery(markerEntry:=markerEntry, s_listOfAutoBasalDeliveryMarkers.Count + 1, 288 - e.Index)
                     s_listOfAutoBasalDeliveryMarkers.Add(item)
                     If Not basalDictionary.TryAdd(item.OAdateTime, item.bolusAmount) Then
                         basalDictionary(item.OAdateTime) += item.bolusAmount
@@ -58,15 +58,15 @@ Friend Module Form1CollectMarkersHelper
                     s_listOfAutoModeStatusMarkers.Add(New AutoModeStatus(markerEntry, s_listOfAutoModeStatusMarkers.Count + 1))
                 Case "BG_READING"
                     s_markers.Add(markerEntry)
-                    s_listOfSgReadingMarkers.Add(New SgReadingRecord(markerEntry, s_listOfSgReadingMarkers.Count + 1))
+                    s_listOfSgReadingMarkers.Add(New BgReading(markerEntry, s_listOfSgReadingMarkers.Count + 1))
                 Case "CALIBRATION"
                     s_markers.Add(markerEntry.ScaleMarker)
-                    s_listOfCalibrationMarkers.Add(New CalibrationRecord(markerEntry.ScaleMarker(), s_listOfCalibrationMarkers.Count + 1))
+                    s_listOfCalibrationMarkers.Add(New Calibration(markerEntry.ScaleMarker(), s_listOfCalibrationMarkers.Count + 1))
                 Case "INSULIN"
                     s_markers.Add(markerEntry)
-                    Dim lastInsulinRecord As New InsulinRecord(markerEntry, s_listOfInsulinMarkers.Count + 1)
+                    Dim lastInsulinRecord As New Insulin(markerEntry, s_listOfInsulinMarkers.Count + 1)
                     s_listOfInsulinMarkers.Add(lastInsulinRecord)
-                    Select Case markerEntry.GetStringValueFromJson(NameOf(InsulinRecord.activationType))
+                    Select Case markerEntry.GetStringValueFromJson(NameOf(Insulin.activationType))
                         Case "AUTOCORRECTION"
                             If Not basalDictionary.TryAdd(lastInsulinRecord.OAdateTime, lastInsulinRecord.deliveredFastAmount) Then
                                 basalDictionary(lastInsulinRecord.OAdateTime) += lastInsulinRecord.deliveredFastAmount
@@ -79,14 +79,14 @@ Friend Module Form1CollectMarkersHelper
                             Throw UnreachableException(markerEntry.Type)
                     End Select
                 Case "LOW_GLUCOSE_SUSPENDED"
-                    s_listOfLowGlucoseSuspendedMarkers.Add(New LowGlucoseSuspendRecord(markerEntry, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
+                    s_listOfLowGlucoseSuspendedMarkers.Add(New LowGlucoseSuspended(markerEntry, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
                     s_markers.Add(markerEntry)
                 Case "MEAL"
-                    s_listOfMealMarkers.Add(New MealRecord(markerEntry, s_listOfMealMarkers.Count + 1))
+                    s_listOfMealMarkers.Add(New Meal(markerEntry, s_listOfMealMarkers.Count + 1))
                     s_markers.Add(markerEntry)
                 Case "TIME_CHANGE"
                     s_markers.Add(markerEntry)
-                    s_listOfTimeChangeMarkers.Add(New TimeChangeRecord(markerEntry))
+                    s_listOfTimeChangeMarkers.Add(New TimeChange(markerEntry))
                 Case Else
                     Stop
                     Throw UnreachableException(markerEntry.Type)
@@ -99,7 +99,7 @@ Friend Module Form1CollectMarkersHelper
                 Continue For
             End If
             basalDictionary.Add(r.GetOaGetTime, r.GetBasal)
-            s_listOfAutoBasalDeliveryMarkers.Add(New AutoBasalDelivery(r, basalDictionary.Count, 288 - e.Index))
+            s_listOfAutoBasalDeliveryMarkers.Add(New AutoBasalDelivery(r, basalDictionary.Count))
             Dim basalMarker As New Marker
             s_markers.Add(Marker.Convert(r))
         Next

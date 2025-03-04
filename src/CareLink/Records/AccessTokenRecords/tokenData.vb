@@ -16,7 +16,7 @@ Public Class TokenData
     Public Property Scope As String
 
     <JsonPropertyName("resource")>
-    Public Property Resource As String
+    Public Property Resource As List(Of String)
 
     <JsonPropertyName("client_id")>
     Public Property ClientId As String

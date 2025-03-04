@@ -2,30 +2,33 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Friend Module TimeChangeRecordHelpers
+Friend Module ActiveInsulinHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
-            NameOf(TimeChangeRecord.kind),
-            NameOf(TimeChangeRecord.relativeOffset),
-            NameOf(TimeChangeRecord.version)
-        }
+                         NameOf(ActiveInsulin.kind),
+                         NameOf(ActiveInsulin.OAdatetime),
+                         NameOf(ActiveInsulin.Version)
+                    }
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(TimeChangeRecord.timestamp), NameOf(TimeChangeRecord.previousTimeStamp)
+            Case NameOf(ActiveInsulin.datetime)
                 dgv.CellFormattingDateTime(e)
+            Case NameOf(ActiveInsulin.amount)
+                dgv.CellFormattingSingleValue(e, 3)
+            Case NameOf(ActiveInsulin.Precision)
+                dgv.CellFormattingToTitle(e)
             Case Else
                 dgv.CellFormattingSetForegroundColor(e)
         End Select
-
     End Sub
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         With e.Column
-            If HideColumn(e.Column.Name) Then
+            If HideColumn(.Name) Then
                 .Visible = False
             Else
                 e.DgvColumnAdded(GetCellStyle(.Name),
@@ -42,19 +45,19 @@ Friend Module TimeChangeRecordHelpers
     End Sub
 
     Private Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToColumnAlignment(Of TimeChangeRecord)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of ActiveInsulin)(s_alignmentTable, columnName)
     End Function
 
     Private Function HideColumn(columnName As String) As Boolean
         Return s_filterJsonData AndAlso s_columnsToHide.Contains(columnName)
     End Function
 
-    Public Sub AttachHandlers(dgv As DataGridView)
-        RemoveHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithExcel
+    Friend Sub AttachHandlers(dgv As DataGridView)
+        RemoveHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithoutExcel
         RemoveHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
         RemoveHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
         RemoveHandler dgv.DataError, AddressOf DataGridView_DataError
-        AddHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithExcel
+        AddHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithoutExcel
         AddHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
         AddHandler dgv.DataError, AddressOf DataGridView_DataError

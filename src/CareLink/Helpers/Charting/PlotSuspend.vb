@@ -16,8 +16,8 @@ Friend Module PlotSuspend
         Dim lineColor As Color = GetGraphLineColor("Suspend")
         With pageChart.Series(SuspendSeriesName).Points
             Dim suspended As Boolean = False
-            For Each e As IndexClass(Of LowGlucoseSuspendRecord) In s_listOfLowGlucoseSuspendedMarkers.WithIndex
-                Dim suspendRecord As LowGlucoseSuspendRecord = e.Value
+            For Each e As IndexClass(Of LowGlucoseSuspended) In s_listOfLowGlucoseSuspendedMarkers.WithIndex
+                Dim suspendRecord As LowGlucoseSuspended = e.Value
                 If suspendRecord.deliverySuspended Then
                     suspended = True
                     .AddXY(suspendRecord.timestamp, 0)

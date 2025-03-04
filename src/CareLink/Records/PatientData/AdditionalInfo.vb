@@ -23,6 +23,11 @@ Public Class AdditionalInfo
     <JsonPropertyName("pnpId")>
     Public Property PnpId As String
 
+    <DisplayName("Units Remaining")>
+    <Column(Order:=4, TypeName:=NameOf([Single]))>
+    <JsonPropertyName("unitsRemaining")>
+    Public Property UnitsRemaining As Single
+
     <DisplayName("Alert Silenced")>
     <Column(Order:=4, TypeName:=NameOf([Boolean]))>
     <JsonPropertyName("alertSilenced")>

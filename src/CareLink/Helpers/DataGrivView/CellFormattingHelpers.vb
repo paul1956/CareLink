@@ -20,8 +20,7 @@ Friend Module CellFormattingHelpers
 
     Private Function IsDarkRow(rowIndex As Integer) As Boolean
         Dim rowMod2 As Integer = rowIndex Mod 2
-        Return If(IsDarkMode(), rowMod2 = 1, rowMod2 = 0)
-
+        Return If(IsDarkMode(), rowMod2 = 0, rowMod2 = 1)
     End Function
 
     Friend Sub CellFormatting0Value(ByRef e As DataGridViewCellFormattingEventArgs)
@@ -97,7 +96,7 @@ Friend Module CellFormattingHelpers
         Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
         If col IsNot Nothing Then
             e.Value = $"{e.Value}"
-            e.CellStyle.ForeColor = If(IsDarkMode(), If(IsDarkRow(e.RowIndex), Color.Black, Color.White), Color.Black)
+            e.CellStyle.ForeColor = If(IsDarkMode(), If(IsDarkRow(e.RowIndex), Color.White, Color.Black), Color.Black)
             e.FormattingApplied = True
         End If
     End Sub

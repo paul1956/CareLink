@@ -5,12 +5,13 @@
 Imports System.Reflection
 Imports System.Runtime.CompilerServices
 Imports System.Text
+Imports System.Text.Json
 
 Public Module DictionaryExtensions
 
     Private ReadOnly s_700Models As New List(Of String) From {
-                            "MMT-1812",
-                            "MMT-1880"}
+        "MMT-1812",
+        "MMT-1880"}
 
     <Extension>
     Friend Function GetBooleanValue(item As Dictionary(Of String, String), key As String) As Boolean
@@ -72,7 +73,7 @@ Public Module DictionaryExtensions
                 If [property].CanWrite Then ' Make sure property isn't read only
 
                     Try
-                        Dim propertyValue As Object
+                        Dim propertyValue As Object = Nothing
                         Select Case [property].PropertyType.Name
                             Case "DateTime"
                                 SetDateProperty(classObject, row, [property])
@@ -158,10 +159,10 @@ Public Module DictionaryExtensions
     End Function
 
     <Extension>
-    Public Function ToDataSource(Of T)(dic As Dictionary(Of String, T)) As List(Of KeyValuePair(Of String, T))
-        Dim dataSource As New List(Of KeyValuePair(Of String, T))
-        For Each kvp As KeyValuePair(Of String, T) In dic
-            dataSource.Add(KeyValuePair.Create(kvp.Key, kvp.Value))
+    Public Function ToDataSource(dic As Dictionary(Of String, Object)) As List(Of KeyValuePair(Of String, String))
+        Dim dataSource As New List(Of KeyValuePair(Of String, String))
+        For Each kvp As KeyValuePair(Of String, Object) In dic
+            dataSource.Add(KeyValuePair.Create(kvp.Key, CType(kvp.Value, String)))
         Next
         Return dataSource
     End Function

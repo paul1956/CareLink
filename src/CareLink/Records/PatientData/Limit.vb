@@ -10,21 +10,17 @@ Imports System.Text.Json.Serialization
 Public Class Limit
     Private _timestampAsString As String
 
-    <DisplayName("Record Number")>
-    <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
-    Public Property RecordNumber As Integer
-
-    <DisplayName(NameOf(index))>
-    <Column(Order:=1, TypeName:=NameOf([Int32]))>
-    Public Property index As Integer
+    <DisplayName("Index")>
+    <Column(Order:=0, TypeName:=NameOf([Int32]))>
+    Public Property Index As Integer
 
     <DisplayName("High Limit")>
-    <Column(Order:=2, TypeName:=NameOf([Single]))>
+    <Column(Order:=1, TypeName:=NameOf([Single]))>
     <JsonPropertyName("highLimit")>
     Public Property HighLimit As Single
 
     <DisplayName("High Limit (mg/dL)")>
-    <Column(Order:=3, TypeName:=NameOf([Single]))>
+    <Column(Order:=2, TypeName:=NameOf([Single]))>
     Public ReadOnly Property HighLimitMmDl As Single
         Get
             Return If(NativeMmolL,
@@ -35,7 +31,7 @@ Public Class Limit
     End Property
 
     <DisplayName("High Limit (mmol/L)")>
-    <Column(Order:=4, TypeName:=NameOf([Single]))>
+    <Column(Order:=3, TypeName:=NameOf([Single]))>
     Public ReadOnly Property HighLimitMmolL As Single
         Get
             Return If(NativeMmolL,
@@ -45,13 +41,13 @@ Public Class Limit
         End Get
     End Property
 
-    <JsonPropertyName("lowLimit")>
     <DisplayName("Low Limit")>
-    <Column(Order:=5, TypeName:=NameOf([Single]))>
+    <Column(Order:=4, TypeName:=NameOf([Single]))>
+    <JsonPropertyName("lowLimit")>
     Public Property LowLimit As Single
 
     <DisplayName("Low Limit (mg/dL)")>
-    <Column(Order:=6, TypeName:=NameOf([Single]))>
+    <Column(Order:=5, TypeName:=NameOf([Single]))>
     Public ReadOnly Property sgMmDl As Single
         Get
             Return If(NativeMmolL,
@@ -62,7 +58,7 @@ Public Class Limit
     End Property
 
     <DisplayName("Low Limit (mmol/L)")>
-    <Column(Order:=7, TypeName:=NameOf([Single]))>
+    <Column(Order:=6, TypeName:=NameOf([Single]))>
     Public ReadOnly Property sgMmolL As Single
         Get
             Return If(NativeMmolL,
@@ -73,26 +69,28 @@ Public Class Limit
     End Property
 
     <DisplayName("Kind")>
-    <Column(Order:=8, TypeName:=NameOf([String]))>
+    <Column(Order:=7, TypeName:=NameOf([String]))>
     <JsonPropertyName("kind")>
     Public Property Kind As String
 
     <DisplayName("Version")>
-    <Column(Order:=9, TypeName:=NameOf([Int32]))>
+    <Column(Order:=8, TypeName:=NameOf([Int32]))>
     <JsonPropertyName("version")>
     Public Property Version As Integer
 
     <DisplayName(NameOf(Timestamp))>
-    <Column(Order:=10, TypeName:="Date")>
+    <Column(Order:=9, TypeName:="Date")>
     <JsonPropertyName("timestampAsDate")>
     Public ReadOnly Property Timestamp As Date
         Get
-            Return Date.ParseExact(_timestampAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+            Return If(String.IsNullOrWhiteSpace(_timestampAsString),
+                Nothing,
+                Date.ParseExact(_timestampAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture))
         End Get
     End Property
 
     <DisplayName(NameOf(Timestamp))>
-    <Column(Order:=11, TypeName:="Date")>
+    <Column(Order:=10, TypeName:="Date")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
         Get

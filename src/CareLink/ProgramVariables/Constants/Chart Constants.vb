@@ -7,7 +7,7 @@ Friend Module Chart_Constants
 
     Friend Const AutoCorrectionSeriesName As String = NameOf(AutoCorrectionSeriesName)
 
-    Friend Const BasalSeriesNameName As String = NameOf(BasalSeriesNameName)
+    Friend Const BasalSeriesName As String = NameOf(BasalSeriesName)
 
     Friend Const HighLimitSeriesName As String = NameOf(HighLimitSeriesName)
 

@@ -5,96 +5,21 @@
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
-Public Class SessionProfileRecord
+Public Class SessionProfile
     Private ReadOnly _profileDictionary As New Dictionary(Of String, String)
     Private _hasValue As Boolean
-
-    Public Sub New(jsonData As Dictionary(Of String, String))
-        If jsonData Is Nothing OrElse jsonData.Count = 0 Then
-            _hasValue = False
-            Exit Sub
-        End If
-
-        For Each row As KeyValuePair(Of String, String) In jsonData
-            Dim key As String = row.Key.ToTitleCase(False)
-            _profileDictionary.Add(key, row.Value)
-            Select Case row.Key
-                Case NameOf(username)
-                    Me.username = row.Value
-                Case NameOf(middleName)
-                    Me.middleName = row.Value
-                Case NameOf(guardianParent)
-                    Me.guardianParent = row.Value
-                Case NameOf(parentFirstName)
-                    Me.parentFirstName = row.Value
-                Case NameOf(parentMiddleName)
-                    Me.parentMiddleName = row.Value
-                Case NameOf(parentLastName)
-                    Me.parentLastName = row.Value
-                Case NameOf(address)
-                    Me.address = row.Value
-                Case NameOf(city)
-                    Me.city = row.Value
-                Case NameOf(stateProvince)
-                    Me.stateProvince = row.Value
-                Case NameOf(postalCode)
-                    Me.postalCode = row.Value
-                Case NameOf(country)
-                    Me.country = row.Value
-                Case NameOf(dateOfBirth)
-                    Me.dateOfBirth = row.Value.FromUnixTime.ToLongDateString
-                    _profileDictionary(key) = Me.dateOfBirth
-                Case NameOf(phone)
-                    Me.phone = row.Value
-                Case NameOf(phoneLegacy)
-                    Me.phoneLegacy = row.Value
-                Case NameOf(email)
-                    Me.email = row.Value
-                Case NameOf(gender)
-                    Me.gender = row.Value
-                Case NameOf(race)
-                    Dim raceRecord As New RaceRecord(JsonToDictionary(row.Value))
-                    Me.race = raceRecord.ToString
-                    _profileDictionary(key) = Me.race
-                Case NameOf(diabetesType)
-                    Me.diabetesType = row.Value
-                Case NameOf(therapyType)
-                    Me.therapyType = row.Value
-                Case NameOf(ageRange)
-                    Me.ageRange = row.Value
-                Case NameOf(insulinType)
-                    Me.insulinType = row.Value
-                Case NameOf(patientNickname)
-                    Me.patientNickname = row.Value
-                Case NameOf(textNotification)
-                    Me.textNotification = row.Value
-                Case NameOf(clinicRestrictionsEnable)
-                    Me.clinicRestrictionsEnable = row.Value
-                Case NameOf(a1C)
-                    Me.a1C = row.Value
-                Case NameOf(StreetAddress1)
-                    Me.StreetAddress1 = row.Value
-                Case NameOf(Zip)
-                    Me.Zip = row.Value
-                Case NameOf(countryCode)
-                    Me.countryCode = row.Value
-                Case NameOf(state)
-                    Me.state = row.Value
-                Case NameOf(firstName)
-                    Me.firstName = row.Value
-                Case NameOf(lastName)
-                    Me.lastName = row.Value
-                Case Else
-                    Stop
-            End Select
-        Next
-
-        _hasValue = True
-    End Sub
 
     Public Sub New()
         _hasValue = False
     End Sub
+
+    <DisplayName("First Name")>
+    <Column(Order:=29, TypeName:=NameOf([String]))>
+    Public Property firstName As String
+
+    <DisplayName("Last Name")>
+    <Column(Order:=30, TypeName:=NameOf([String]))>
+    Public Property lastName As String
 
     <DisplayName("Username")>
     <Column(Order:=0, TypeName:=NameOf([String]))>
@@ -212,13 +137,9 @@ Public Class SessionProfileRecord
     <Column(Order:=28, TypeName:=NameOf([String]))>
     Public Property state As String
 
-    <DisplayName("First Name")>
-    <Column(Order:=29, TypeName:=NameOf([String]))>
-    Public Property firstName As String
-
-    <DisplayName("Last Name")>
-    <Column(Order:=30, TypeName:=NameOf([String]))>
-    Public Property lastName As String
+    <DisplayName("Role")>
+    <Column(Order:=31, TypeName:=NameOf([String]))>
+    Public Property role As String
 
     Public Sub Clear()
         _hasValue = False

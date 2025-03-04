@@ -27,7 +27,7 @@ Public Module PumpVariables
     Friend s_lastSgValue As Single = 0
     Friend s_listOfManualBasal As New BasalRecords(288)
     Friend s_listOfSgRecords As New List(Of SG)
-    Friend s_listOfTimeChangeMarkers As New List(Of TimeChangeRecord)
+    Friend s_listOfTimeChangeMarkers As New List(Of TimeChange)
     Friend s_markers As New List(Of Marker)
     Friend s_notificationHistoryValue As Dictionary(Of String, String)
     Friend s_pumpBannerStateValue As New List(Of Dictionary(Of String, String))
@@ -38,7 +38,6 @@ Public Module PumpVariables
     Friend s_reservoirLevelPercent As Integer
     Friend s_sensorDurationHours As Integer
     Friend s_sensorState As String
-    Friend s_sessionCountrySettings As New CountrySettingsRecord
     Friend s_systemStatusMessage As String
     Friend s_systemStatusTimeRemaining As TimeSpan
     Friend s_therapyAlgorithmStateValue As Dictionary(Of String, String)
@@ -61,14 +60,19 @@ Public Module PumpVariables
 
     Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDelivery)
     Friend ReadOnly s_listOfAutoModeStatusMarkers As New List(Of AutoModeStatus)
-    Friend ReadOnly s_listOfCalibrationMarkers As New List(Of CalibrationRecord)
-    Friend ReadOnly s_listOfInsulinMarkers As New List(Of InsulinRecord)
-    Friend ReadOnly s_listOfLowGlucoseSuspendedMarkers As New List(Of LowGlucoseSuspendRecord)
-    Friend ReadOnly s_listOfMealMarkers As New List(Of MealRecord)
-    Friend ReadOnly s_listOfSgReadingMarkers As New List(Of SgReadingRecord)
+    Friend ReadOnly s_listOfCalibrationMarkers As New List(Of Calibration)
+    Friend ReadOnly s_listOfInsulinMarkers As New List(Of Insulin)
+    Friend ReadOnly s_listOfLowGlucoseSuspendedMarkers As New List(Of LowGlucoseSuspended)
+    Friend ReadOnly s_listOfMealMarkers As New List(Of Meal)
+    Friend ReadOnly s_listOfSgReadingMarkers As New List(Of BgReading)
     Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
+    Friend ReadOnly s_listOfUserSummaryRecord As New List(Of SummaryRecord)
     Friend s_listOfLimitRecords As New List(Of Limit)
 
 #End Region
+    Public Function GetCarbDefaultUnit() As String
+        Return "Grams"
+    End Function
+
 
 End Module

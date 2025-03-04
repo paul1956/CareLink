@@ -62,7 +62,7 @@ Friend Module Form1NotificationTabHelpers
                         DisplayDataTableInDGV(tableLayoutPanel2,
                                               ClassCollectionToDataTable(GetSummaryRecords(innerDictionary.Value, s_rowsToHide)),
                                               NameOf(SummaryRecord),
-                                              AddressOf SummaryRecordHelpers.AttachHandlers,
+                                              AddressOf SummaryHelpers.AttachHandlers,
                                               innerDictionary.Index
                                              )
                     Next
@@ -72,7 +72,7 @@ Friend Module Form1NotificationTabHelpers
                         DisplayDataTableInDGV(tableLayoutPanel2,
                                               ClassCollectionToDataTable(GetSummaryRecords(innerDictionary.Value, s_rowsToHide)),
                                               NameOf(SummaryRecord),
-                                              AddressOf SummaryRecordHelpers.AttachHandlers,
+                                              AddressOf SummaryHelpers.AttachHandlers,
                                               innerDictionary.Index
                                              )
                     Next

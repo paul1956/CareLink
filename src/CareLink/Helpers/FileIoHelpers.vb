@@ -7,10 +7,9 @@ Imports System.IO
 
 Friend Module FileIoHelpers
     Private Const AllUsersLoginInfoFileName As String = "CareLink.Csv"
-    Private ReadOnly s_myDocuments As String = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
     Private ReadOnly s_projectData As String = Path.Combine(MyDocuments, "CareLink")
     Private ReadOnly s_settingsDirectory As String = Path.Combine(MyDocuments, "CareLink", "Settings")
-    Private ReadOnly s_testDataFileNameWithPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserData.json")
+    Private ReadOnly s_testDataFileNameWithPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserV2Data.json")
     Private ReadOnly s_testSettingFileNameWithPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestFileSettings.json")
     Friend ReadOnly s_projectWebCache As String = Path.Combine(MyDocuments, "CareLink", "WebCache")
 
@@ -34,7 +33,7 @@ Friend Module FileIoHelpers
 
     Public ReadOnly Property MyDocuments As String
         Get
-            Return s_myDocuments
+            Return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
         End Get
     End Property
 

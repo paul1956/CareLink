@@ -2,20 +2,23 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports DocumentFormat.OpenXml.Wordprocessing
+Friend Module CalibrationHelpers
 
-Friend Module LimitsRecordHelpers
-
-    Private ReadOnly s_columnsToHide As New List(Of String) From {
-             NameOf(Limit.Kind),
-             NameOf(Limit.Version)
-        }
+    Private ReadOnly s_columnsToHide As New List(Of String)
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.CellFormattingSetForegroundColor(e)
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(Calibration.Timestamp), NameOf(Calibration.DisplayTime)
+                dgv.CellFormattingDateTime(e)
+            Case NameOf(Calibration.UnitValue), NameOf(Calibration.UnitValueMmolL), NameOf(Calibration.UnitValueMmDl)
+                dgv.CellFormattingSgValue(e, NameOf(Calibration.UnitValue))
+            Case Else
+                dgv.CellFormattingSetForegroundColor(e)
+        End Select
+
     End Sub
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
@@ -23,11 +26,10 @@ Friend Module LimitsRecordHelpers
             If HideColumn(.Name) Then
                 .Visible = False
             Else
-                Dim dgv As DataGridView = CType(sender, DataGridView)
                 e.DgvColumnAdded(GetCellStyle(.Name),
                              True,
                              True,
-                             CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                             CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
             End If
             .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
@@ -38,7 +40,7 @@ Friend Module LimitsRecordHelpers
     End Sub
 
     Private Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToColumnAlignment(Of Limit)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of Calibration)(s_alignmentTable, columnName)
     End Function
 
     Private Function HideColumn(columnName As String) As Boolean

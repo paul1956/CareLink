@@ -2,25 +2,21 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Friend Module ActiveInsulinRecordHelpers
+Friend Module BgReadingHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
-                         NameOf(ActiveInsulin.kind),
-                         NameOf(ActiveInsulin.OAdatetime),
-                         NameOf(ActiveInsulin.Version)
-                    }
+             NameOf(BgReading.Kind),
+             NameOf(BgReading.Type)}
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(ActiveInsulin.datetime)
+            Case NameOf(BgReading.Timestamp)
                 dgv.CellFormattingDateTime(e)
-            Case NameOf(ActiveInsulin.amount)
-                dgv.CellFormattingSingleValue(e, 3)
-            Case NameOf(ActiveInsulin.Precision)
-                dgv.CellFormattingToTitle(e)
+            Case NameOf(BgReading.UnitValue), NameOf(BgReading.valueMmolL), NameOf(BgReading.valueMmDl)
+                dgv.CellFormattingSgValue(e, NameOf(BgReading.UnitValue))
             Case Else
                 dgv.CellFormattingSetForegroundColor(e)
         End Select
@@ -32,9 +28,9 @@ Friend Module ActiveInsulinRecordHelpers
                 .Visible = False
             Else
                 e.DgvColumnAdded(GetCellStyle(.Name),
-                             True,
-                             True,
-                             CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+                                 True,
+                                 True,
+                                 CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
             End If
             .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
@@ -45,7 +41,7 @@ Friend Module ActiveInsulinRecordHelpers
     End Sub
 
     Private Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToColumnAlignment(Of ActiveInsulin)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of BgReading)(s_alignmentTable, columnName)
     End Function
 
     Private Function HideColumn(columnName As String) As Boolean
@@ -53,11 +49,11 @@ Friend Module ActiveInsulinRecordHelpers
     End Function
 
     Friend Sub AttachHandlers(dgv As DataGridView)
-        RemoveHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithoutExcel
+        RemoveHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithExcel
         RemoveHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
         RemoveHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
         RemoveHandler dgv.DataError, AddressOf DataGridView_DataError
-        AddHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithoutExcel
+        AddHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithExcel
         AddHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
         AddHandler dgv.DataError, AddressOf DataGridView_DataError

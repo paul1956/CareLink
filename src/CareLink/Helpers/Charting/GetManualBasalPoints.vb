@@ -4,20 +4,19 @@
 
 Friend Module GetManualBasalPoints
 
-    Friend Function GetManualBasalValues(markerWithIndex As IndexClass(Of Dictionary(Of String, String))) As SortedDictionary(Of OADate, Single)
+    Friend Function GetManualBasalValues(markerWithIndex As IndexClass(Of Marker)) As SortedDictionary(Of OADate, Single)
         Debug.Assert(CurrentPdf.IsValid)
         Dim timeOrderedMarkers As New SortedDictionary(Of OADate, Single)
-#If False Then ' TODO: Implement this Function
-       Dim markerEntry As Dictionary(Of String, String) = markerWithIndex.Value
-        If markerEntry.GetBooleanValue(NameOf(LowGlucoseSuspendRecord.deliverySuspended)) Then
+        Dim markerEntry As Marker = markerWithIndex.Value
+        If markerEntry.GetBooleanValueFromJson(NameOf(LowGlucoseSuspended.deliverySuspended)) Then
             Return timeOrderedMarkers
         End If
         Dim nextPumpSuspendTime As OADate
         Dim markerDateTime? As Date
         If s_markers.Count > 1 AndAlso markerWithIndex.Index = s_markers.Count - 2 Then
-            Dim activationType As String = ""
-            If s_markers.Last().TryGetValue("activationType", activationType) AndAlso activationType = "MANUAL" Then
-                markerDateTime = s_markers.Last().GetMarkerDateTime
+            Dim activationType As String = s_markers.Last().GetStringValueFromJson(NameOf(Insulin.activationType))
+            If activationType = "MANUAL" Then
+                markerDateTime = s_markers.Last().GetMarkerTimestamp
                 If markerDateTime Is Nothing Then
                     Return timeOrderedMarkers
                 End If
@@ -26,14 +25,15 @@ Friend Module GetManualBasalPoints
                 nextPumpSuspendTime = New OADate(PumpNow)
             End If
         Else
-            markerDateTime = s_markers(markerWithIndex.Index + 1).GetMarkerDateTime
+            markerDateTime = s_markers(markerWithIndex.Index + 1).GetMarkerTimestamp
             If markerDateTime Is Nothing Then
                 Return timeOrderedMarkers
             End If
             nextPumpSuspendTime = New OADate(markerDateTime.Value)
         End If
 
-        Dim lowGlucoseSuspend As LowGlucoseSuspendRecord = DictionaryToClass(Of LowGlucoseSuspendRecord)(markerEntry, 0)
+        Dim lowGlucoseSuspend As New LowGlucoseSuspended(s_markers.Last(), s_markers.Count)
+        Stop
         If lowGlucoseSuspend.deliverySuspended Then
             Return timeOrderedMarkers
         End If
@@ -43,7 +43,7 @@ Friend Module GetManualBasalPoints
             Return timeOrderedMarkers
         End If
 
-        markerDateTime = markerEntry.GetMarkerDateTime
+        markerDateTime = markerEntry.GetMarkerTimestamp
         If markerDateTime Is Nothing Then
             Return timeOrderedMarkers
         End If
@@ -81,7 +81,6 @@ Friend Module GetManualBasalPoints
                 End If
             Next
         End While
-#End If
         Return timeOrderedMarkers
     End Function
 

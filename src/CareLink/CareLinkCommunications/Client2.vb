@@ -7,6 +7,7 @@ Imports System.Net.Http.Headers
 Imports System.Security.Policy
 Imports System.Text
 Imports System.Text.Json
+Imports System.Text.Json.Nodes
 
 Public Class Client2
 
@@ -24,12 +25,17 @@ Public Class Client2
     Private _lastApiStatus As Integer
     Private _patientElement As Dictionary(Of String, String)
     Private _tokenDataElement As JsonElement
-    Private _userElement As Dictionary(Of String, Object)
-    Private _userInfoRecord As UserInfo
-    Private _username As String
+    Private _userElementDictionary As Dictionary(Of String, Object)
     Public Property LoggedIn As Boolean
-
-    Public Property SessionProfile As New SessionProfileRecord
+    Public Property PatientPersonalData As New PatientPersonalInfo
+    Public Property UserElementDictionary As Dictionary(Of String, Object)
+        Get
+            Return _userElementDictionary
+        End Get
+        Set
+            _userElementDictionary = Value
+        End Set
+    End Property
 
     Public Sub New(Optional tokenFile As String = DEFAULT_FILENAME)
         _version = VERSION
@@ -43,8 +49,6 @@ Public Class Client2
         _config = Nothing
 
         ' User info
-        _username = Nothing
-        _userElement = Nothing
         _patientElement = Nothing
         _country = Nothing
 
@@ -56,24 +60,23 @@ Public Class Client2
     End Sub
 
     Public Shared ReadOnly Property Auth_Error_Codes As Integer() = {401, 403}
-    Public Property SessionUser As SessionUserRecord
 
     Private Function DoRefresh(config As Dictionary(Of String, Object), tokenDataElement As JsonElement) As Task(Of JsonElement)
         Debug.WriteLine(NameOf(DoRefresh))
         _httpClient.SetDefaultRequestHeaders()
         Dim tokenUrl As String = CStr(config("token_url"))
-        Dim tokenData As Dictionary(Of String, String) = tokenDataElement.ConvertJsonElementToStringDictionary(expandSubElements:=False)
+        Dim tokenData As Dictionary(Of String, Object) = JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(tokenDataElement)
 
         Dim data As New Dictionary(Of String, String) From {
-            {"refresh_token", tokenData("refresh_token")},
-            {"client_id", tokenData("client_id")},
-            {"client_secret", tokenData("client_secret")},
+            {"refresh_token", tokenData("refresh_token").ToString},
+            {"client_id", tokenData("client_id").ToString},
+            {"client_secret", tokenData("client_secret").ToString},
             {"grant_type", "refresh_token"}}
 
         Dim content As New FormUrlEncodedContent(data)
 
         Dim headers As New Dictionary(Of String, String) From {
-            {"mag-identifier", tokenData("mag-identifier")}}
+            {"mag-identifier", tokenData("mag-identifier").ToString}}
 
         For Each header As KeyValuePair(Of String, String) In headers
             _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
@@ -90,12 +93,10 @@ Public Class Client2
 
         Dim responseBody As String = response.Content.ReadAsStringAsync().Result
         Dim newData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(responseBody)
-
         tokenData("access_token") = newData.GetProperty("access_token").GetString()
         tokenData("refresh_token") = newData.GetProperty("refresh_token").GetString()
-
-        Dim json As String = JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions)
-        Return Task.FromResult(JsonSerializer.Deserialize(Of JsonElement)(json))
+        Dim modifiedJsonString As String = JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions)
+        Return Task.FromResult(JsonSerializer.Deserialize(Of JsonElement)(modifiedJsonString))
     End Function
 
     Private Shared Function GetAccessTokenPayload(token_data As JsonElement) As Dictionary(Of String, Object)
@@ -213,11 +214,11 @@ Public Class Client2
         Debug.WriteLine(NameOf(IsTokenValid))
         Try
             ' Get expiration time stamp
-            Dim tokenValidTo As Long = CType(access_token_payload("exp"), JsonElement).GetInt64()
+            Dim unixTimeToValidate As Long = CType(access_token_payload("exp"), JsonElement).GetInt64()
 
             ' Check expiration time stamp
-            Dim currentTime As Long = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-            Dim tDiff As Long = tokenValidTo - currentTime
+            Dim unixCurrentTime As Long = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+            Dim tDiff As Long = unixTimeToValidate - unixCurrentTime
 
             If tDiff < 0 Then
                 Debug.WriteLine($"   access token has expired {Math.Abs(tDiff)}s ago")
@@ -230,7 +231,7 @@ Public Class Client2
             End If
 
             ' Token is valid
-            Dim authTokenValidTo As String = DateTimeOffset.FromUnixTimeSeconds(tokenValidTo).ToString("ddd MMM dd HH:mm:ss UTC yyyy")
+            Dim authTokenValidTo As String = DateTimeOffset.FromUnixTimeSeconds(unixTimeToValidate).ToString("ddd MMM dd HH:mm:ss UTC yyyy")
             Debug.WriteLine($"   access token expires in {tDiff}s ({authTokenValidTo})")
             Return True
         Catch ex As Exception
@@ -256,18 +257,18 @@ Public Class Client2
             Application.DoEvents()
             Dim payload As AccessTokenDetails = JsonSerializer.Deserialize(Of AccessTokenDetails)(element, s_jsonDeserializerOptions)
             _country = payload.Country
-            jsonConfigElement = GetConfigElement(_httpClient, _country)
-            _config = jsonConfigElement.ConvertJsonElementToDictionary
-            _username = s_userName
+            jsonConfigElement = GetConfigElement(_httpClient, payload.Country)
+            _config = jsonConfigElement.ConvertJsonElementToDictionary()
             Dim userString As String = Me.GetUserString(jsonConfigElement, _tokenDataElement)
             If String.IsNullOrWhiteSpace(userString) Then
                 Throw New UnauthorizedAccessException
             End If
-            _userElement = If(String.IsNullOrWhiteSpace(userString),
+            _userElementDictionary = If(String.IsNullOrWhiteSpace(userString),
                 Nothing,
                 JsonSerializer.Deserialize(Of JsonElement)(userString).ConvertJsonElementToDictionary)
-            _userInfoRecord = JsonSerializer.Deserialize(Of UserInfo)(userString)
-            Dim role As String = _userInfoRecord.Role
+            _PatientPersonalData = JsonSerializer.Deserialize(Of PatientPersonalInfo)(userString)
+
+            Dim role As String = _PatientPersonalData.role
             If role.Contains("Partner", StringComparison.InvariantCultureIgnoreCase) Then
                 _patientElement = Me.GetPatient(jsonConfigElement, _tokenDataElement).Result
             End If
@@ -296,7 +297,7 @@ Public Class Client2
         Debug.WriteLine(NameOf(GetData))
         _httpClient.SetDefaultRequestHeaders()
         Dim url As String = $"{CStr(config("baseUrlCumulus"))}/display/message"
-        Dim tokenData As Dictionary(Of String, String) = tokenDataElement.ConvertJsonElementToStringDictionary(expandSubElements:=True)
+        Dim tokenData As Dictionary(Of String, String) = tokenDataElement.ConvertJsonElementToStringDictionary()
 
         Dim data As New Dictionary(Of String, Object) From {
             {"username", username}
@@ -398,27 +399,35 @@ Public Class Client2
     ''' <summary>
     ''' Get recent periodic pump data
     ''' </summary>
-    Public Function GetRecentData() As Dictionary(Of String, Object)
+    Public Function GetRecentData() As String
         ' Check if access token is valid
+        Dim lastErrorMessage As String = Nothing
         If Not IsTokenValid(_accessTokenPayload) Then
             _tokenDataElement = Me.DoRefresh(_config, _tokenDataElement).Result
             _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
             WriteTokenFile(_tokenDataElement, s_userName)
             If Not IsTokenValid(_accessTokenPayload) Then
-                Debug.WriteLine("ERROR: unable to get valid access token")
-                Return Nothing
+                lastErrorMessage = "ERROR: unable to get valid access token"
+                Debug.WriteLine(lastErrorMessage)
+                Return lastErrorMessage
             End If
         End If
         Dim data As New Dictionary(Of String, Object)(StringComparer.OrdinalIgnoreCase)
         Try
-            data = Me.GetData(
-                config:=_config,
-                tokenDataElement:=_tokenDataElement,
-                username:=_username,
-                role:=CStr(_userElement("role")),
-                patientId:="")
+            Dim tempData As Dictionary(Of String, Object) = Me.GetData(
+                   config:=_config,
+                   tokenDataElement:=_tokenDataElement,
+                   username:=s_userName,
+                   role:=CStr(_userElementDictionary("role")),
+                   patientId:="")
+            For Each kvp As KeyValuePair(Of String, Object) In tempData
+                data(kvp.Key) = kvp.Value
+            Next kvp
         Catch ex As Exception
+            PatientData = Nothing
+            RecentData = Nothing
             Stop
+            Return ex.DecodeException()
         End Try
 
         ' Check API response
@@ -428,8 +437,27 @@ Public Class Client2
             _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
             WriteTokenFile(_tokenDataElement, s_userName)
         End If
+        Select Case data.Keys.Count
+            Case 0
+                lastErrorMessage = "No Data Found"
+            Case 1
+                lastErrorMessage = "No Data Found for " & data.Keys(0)
+            Case 2
+            Case Else
+                lastErrorMessage = "No Data Found for " & String.Join(", ", data.Keys)
+        End Select
+        Dim metaData As JsonElement = CType(data.Values(0), JsonElement)
+        Dim patientDataElement As JsonElement = CType(data.Values(1), JsonElement)
+        Try
+            Dim patientDataElementAsText As String = patientDataElement.GetRawText()
+            PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
+            Stop
+            RecentData = patientDataElement.ConvertJsonElementToStringDictionary()
+        Catch ex As Exception
+            Stop
+        End Try
 
-        Return data
+        Return lastErrorMessage
     End Function
 
     Public Function Init() As Boolean

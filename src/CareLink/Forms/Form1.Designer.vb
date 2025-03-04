@@ -49,7 +49,6 @@ Partial Class Form1
         CalibrationDueImage = New PictureBox()
         CalibrationShieldPanel = New Panel()
         CareLinkUserDataRecordBindingSource = New BindingSource(components)
-        CountryDataPg2TableLayoutPanel = New TableLayoutPanel()
         CurrentSgLabel = New Label()
         CursorMessage1Label = New Label()
         CursorMessage2Label = New Label()
@@ -60,27 +59,9 @@ Partial Class Form1
         CursorTimer = New Timer(components)
         DgvAutoBasalDelivery = New DataGridView()
         DgvCareLinkUsers = New DataGridView()
-        DgvCountryDataPg1 = New DataGridView()
-        DgvCountryDataPg1Category = New DataGridViewTextBoxColumn()
-        DgvCountryDataPg1Key = New DataGridViewTextBoxColumn()
-        DgvCountryDataPg1RecordNumber = New DataGridViewTextBoxColumn()
-        DgvCountryDataPg1Value = New DataGridViewTextBoxColumn()
-        DgvCountryDataPg2 = New DataGridView()
-        DgvCountryDataPg2Category = New DataGridViewTextBoxColumn()
-        DgvCountryDataPg2Key = New DataGridViewTextBoxColumn()
-        DgvCountryDataPg2RecordNumber = New DataGridViewTextBoxColumn()
-        DgvCountryDataPg2Value = New DataGridViewTextBoxColumn()
-        DgvCountryDataPg3 = New DataGridView()
-        DgvCountryDataPg3Category = New DataGridViewTextBoxColumn()
-        DgvCountryDataPg3Key = New DataGridViewTextBoxColumn()
-        DgvCountryDataPg3NotFor = New DataGridViewTextBoxColumn()
-        DgvCountryDataPg3OnlyFor = New DataGridViewTextBoxColumn()
-        DgvCountryDataPg3RecordNumber = New DataGridViewTextBoxColumn()
-        DgvCountryDataPg3Value = New DataGridViewTextBoxColumn()
         DgvCurrentUser = New DataGridView()
         DgvInsulin = New DataGridView()
         DgvMeal = New DataGridView()
-        DgvSessionProfile = New DataGridView()
         DgvSGs = New DataGridView()
         DgvSummary = New DataGridView()
         FullNameLabel = New Label()
@@ -230,14 +211,10 @@ Partial Class Form1
         TabPageBackToHomePage = New TabPage()
         TabPageBgReadings = New TabPage()
         TabPageCalibration = New TabPage()
-        TabPageCountryDataPg1 = New TabPage()
-        TabPageCountryDataPg2 = New TabPage()
-        TabPageCountryDataPg3 = New TabPage()
         TabPageCurrentUser = New TabPage()
         TabPageLastAlarm = New TabPage()
         TabPageLastSG = New TabPage()
         TabPageLowGlucoseSuspended = New TabPage()
-        TabPageSessionProfile = New TabPage()
         TabPageTimeChange = New TabPage()
         TemporaryUseAdvanceAITDecayCheckBox = New CheckBox()
         TimeInRangeChartLabel = New Label()
@@ -267,13 +244,10 @@ Partial Class Form1
         CursorPanel.SuspendLayout()
         CType(CursorPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvAutoBasalDelivery, ComponentModel.ISupportInitialize).BeginInit()
-        CType(DgvCountryDataPg1, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvCareLinkUsers, ComponentModel.ISupportInitialize).BeginInit()
-        CType(DgvCountryDataPg3, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvCurrentUser, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvInsulin, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvMeal, ComponentModel.ISupportInitialize).BeginInit()
-        CType(DgvSessionProfile, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvSGs, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvSummary, ComponentModel.ISupportInitialize).BeginInit()
         CType(InsulinLevelPictureBox, ComponentModel.ISupportInitialize).BeginInit()
@@ -314,13 +288,7 @@ Partial Class Form1
         TabPageCalibration.SuspendLayout()
         TabPageLowGlucoseSuspended.SuspendLayout()
         TabPageTimeChange.SuspendLayout()
-        TabPageCountryDataPg1.SuspendLayout()
-        TabPageCountryDataPg2.SuspendLayout()
-        CountryDataPg2TableLayoutPanel.SuspendLayout()
-        CType(DgvCountryDataPg2, ComponentModel.ISupportInitialize).BeginInit()
         CType(WebView, ComponentModel.ISupportInitialize).BeginInit()
-        TabPageCountryDataPg3.SuspendLayout()
-        TabPageSessionProfile.SuspendLayout()
         TabPageCurrentUser.SuspendLayout()
         TabPageAllUsers.SuspendLayout()
         StatusStrip1.SuspendLayout()
@@ -1264,65 +1232,6 @@ Partial Class Form1
         DgvAutoBasalDelivery.Size = New Size(1358, 640)
         DgvAutoBasalDelivery.TabIndex = 0
         ' 
-        ' DgvCountryDataPg1
-        ' 
-        DataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = SystemColors.Control
-        DataGridViewCellStyle1.Font = New Font("Segoe UI", 9.0F)
-        DataGridViewCellStyle1.ForeColor = SystemColors.WindowText
-        DataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = DataGridViewTriState.True
-        DgvCountryDataPg1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
-        DgvCountryDataPg1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DgvCountryDataPg1.Columns.AddRange(New DataGridViewColumn() {DgvCountryDataPg1RecordNumber, DgvCountryDataPg1Category, DgvCountryDataPg1Key, DgvCountryDataPg1Value})
-        DataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = SystemColors.Window
-        DataGridViewCellStyle2.Font = New Font("Segoe UI", 9.0F)
-        DataGridViewCellStyle2.ForeColor = SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = DataGridViewTriState.False
-        DgvCountryDataPg1.DefaultCellStyle = DataGridViewCellStyle2
-        DgvCountryDataPg1.Dock = DockStyle.Fill
-        DgvCountryDataPg1.Location = New Point(3, 3)
-        DgvCountryDataPg1.Name = "DgvCountryDataPg1"
-        DgvCountryDataPg1.ReadOnly = True
-        DgvCountryDataPg1.Size = New Size(1370, 655)
-        DgvCountryDataPg1.TabIndex = 1
-        ' 
-        ' DgvCountryDataPg1RecordNumber
-        ' 
-        DgvCountryDataPg1RecordNumber.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
-        DgvCountryDataPg1RecordNumber.HeaderText = "Record Number"
-        DgvCountryDataPg1RecordNumber.MinimumWidth = 60
-        DgvCountryDataPg1RecordNumber.Name = "DgvCountryDataPg1RecordNumber"
-        DgvCountryDataPg1RecordNumber.ReadOnly = True
-        DgvCountryDataPg1RecordNumber.Width = 60
-        ' 
-        ' DgvCountryDataPg1Category
-        ' 
-        DgvCountryDataPg1Category.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        DgvCountryDataPg1Category.HeaderText = "Category"
-        DgvCountryDataPg1Category.Name = "DgvCountryDataPg1Category"
-        DgvCountryDataPg1Category.ReadOnly = True
-        DgvCountryDataPg1Category.Width = 80
-        ' 
-        ' DgvCountryDataPg1Key
-        ' 
-        DgvCountryDataPg1Key.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        DgvCountryDataPg1Key.HeaderText = "Key"
-        DgvCountryDataPg1Key.Name = "DgvCountryDataPg1Key"
-        DgvCountryDataPg1Key.ReadOnly = True
-        DgvCountryDataPg1Key.Width = 51
-        ' 
-        ' DgvCountryDataPg1Value
-        ' 
-        DgvCountryDataPg1Value.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-        DgvCountryDataPg1Value.HeaderText = "Value"
-        DgvCountryDataPg1Value.Name = "DgvCountryDataPg1Value"
-        DgvCountryDataPg1Value.ReadOnly = True
-        ' 
         ' DgvCareLinkUsers
         ' 
         DgvCareLinkUsers.AllowUserToAddRows = False
@@ -1331,20 +1240,12 @@ Partial Class Form1
         DgvCareLinkUsers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
         DgvCareLinkUsers.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
         DataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = SystemColors.Control
         DataGridViewCellStyle3.Font = New Font("Segoe UI", 9.0F)
-        DataGridViewCellStyle3.ForeColor = SystemColors.WindowText
-        DataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText
         DataGridViewCellStyle3.WrapMode = DataGridViewTriState.True
         DgvCareLinkUsers.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
         DgvCareLinkUsers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         DataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = SystemColors.Window
         DataGridViewCellStyle4.Font = New Font("Segoe UI", 9.0F)
-        DataGridViewCellStyle4.ForeColor = SystemColors.ControlText
-        DataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText
         DataGridViewCellStyle4.WrapMode = DataGridViewTriState.False
         DgvCareLinkUsers.DefaultCellStyle = DataGridViewCellStyle4
         DgvCareLinkUsers.Dock = DockStyle.Fill
@@ -1354,80 +1255,6 @@ Partial Class Form1
         DgvCareLinkUsers.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvCareLinkUsers.Size = New Size(1370, 655)
         DgvCareLinkUsers.TabIndex = 0
-        ' 
-        ' DgvCountryDataPg3
-        ' 
-        DataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = SystemColors.Control
-        DataGridViewCellStyle5.Font = New Font("Segoe UI", 9.0F)
-        DataGridViewCellStyle5.ForeColor = SystemColors.WindowText
-        DataGridViewCellStyle5.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText
-        DataGridViewCellStyle5.WrapMode = DataGridViewTriState.True
-        DgvCountryDataPg3.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle5
-        DgvCountryDataPg3.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DgvCountryDataPg3.Columns.AddRange(New DataGridViewColumn() {DgvCountryDataPg3RecordNumber, DgvCountryDataPg3Category, DgvCountryDataPg3Key, DgvCountryDataPg3Value, DgvCountryDataPg3OnlyFor, DgvCountryDataPg3NotFor})
-        DataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle6.BackColor = SystemColors.Window
-        DataGridViewCellStyle6.Font = New Font("Segoe UI", 9.0F)
-        DataGridViewCellStyle6.ForeColor = SystemColors.ControlText
-        DataGridViewCellStyle6.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle6.SelectionForeColor = SystemColors.HighlightText
-        DataGridViewCellStyle6.WrapMode = DataGridViewTriState.False
-        DgvCountryDataPg3.DefaultCellStyle = DataGridViewCellStyle6
-        DgvCountryDataPg3.Dock = DockStyle.Fill
-        DgvCountryDataPg3.Location = New Point(3, 3)
-        DgvCountryDataPg3.Name = "DgvCountryDataPg3"
-        DgvCountryDataPg3.ReadOnly = True
-        DgvCountryDataPg3.Size = New Size(1370, 655)
-        DgvCountryDataPg3.TabIndex = 1
-        ' 
-        ' DgvCountryDataPg3RecordNumber
-        ' 
-        DgvCountryDataPg3RecordNumber.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
-        DgvCountryDataPg3RecordNumber.HeaderText = "Record Number"
-        DgvCountryDataPg3RecordNumber.MinimumWidth = 60
-        DgvCountryDataPg3RecordNumber.Name = "DgvCountryDataPg3RecordNumber"
-        DgvCountryDataPg3RecordNumber.ReadOnly = True
-        DgvCountryDataPg3RecordNumber.Width = 60
-        ' 
-        ' DgvCountryDataPg3Category
-        ' 
-        DgvCountryDataPg3Category.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        DgvCountryDataPg3Category.HeaderText = "Category"
-        DgvCountryDataPg3Category.Name = "DgvCountryDataPg3Category"
-        DgvCountryDataPg3Category.ReadOnly = True
-        DgvCountryDataPg3Category.Width = 80
-        ' 
-        ' DgvCountryDataPg3Key
-        ' 
-        DgvCountryDataPg3Key.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        DgvCountryDataPg3Key.HeaderText = "Key"
-        DgvCountryDataPg3Key.Name = "DgvCountryDataPg3Key"
-        DgvCountryDataPg3Key.ReadOnly = True
-        DgvCountryDataPg3Key.Width = 51
-        ' 
-        ' DgvCountryDataPg3Value
-        ' 
-        DgvCountryDataPg3Value.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        DgvCountryDataPg3Value.HeaderText = "Value"
-        DgvCountryDataPg3Value.Name = "DgvCountryDataPg3Value"
-        DgvCountryDataPg3Value.ReadOnly = True
-        DgvCountryDataPg3Value.Width = 60
-        ' 
-        ' DgvCountryDataPg3OnlyFor
-        ' 
-        DgvCountryDataPg3OnlyFor.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-        DgvCountryDataPg3OnlyFor.HeaderText = "Report Only For"
-        DgvCountryDataPg3OnlyFor.Name = "DgvCountryDataPg3OnlyFor"
-        DgvCountryDataPg3OnlyFor.ReadOnly = True
-        ' 
-        ' DgvCountryDataPg3NotFor
-        ' 
-        DgvCountryDataPg3NotFor.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-        DgvCountryDataPg3NotFor.HeaderText = "Report Not For"
-        DgvCountryDataPg3NotFor.Name = "DgvCountryDataPg3NotFor"
-        DgvCountryDataPg3NotFor.ReadOnly = True
         ' 
         ' DgvCurrentUser
         ' 
@@ -1462,16 +1289,6 @@ Partial Class Form1
         DgvMeal.Name = "DgvMeal"
         DgvMeal.Size = New Size(1358, 597)
         DgvMeal.TabIndex = 2
-        ' 
-        ' DgvSessionProfile
-        ' 
-        DgvSessionProfile.Dock = DockStyle.Fill
-        DgvSessionProfile.Location = New Point(3, 3)
-        DgvSessionProfile.Name = "DgvSessionProfile"
-        DgvSessionProfile.ReadOnly = True
-        DgvSessionProfile.RowHeadersVisible = False
-        DgvSessionProfile.Size = New Size(1370, 655)
-        DgvSessionProfile.TabIndex = 0
         ' 
         ' DgvSGs
         ' 
@@ -2217,8 +2034,6 @@ Partial Class Form1
         ' TemporaryUseAdvanceAITDecayCheckBox
         ' 
         TemporaryUseAdvanceAITDecayCheckBox.AutoSize = True
-        TemporaryUseAdvanceAITDecayCheckBox.BackColor = SystemColors.ControlText
-        TemporaryUseAdvanceAITDecayCheckBox.ForeColor = SystemColors.ControlLightLight
         TemporaryUseAdvanceAITDecayCheckBox.Location = New Point(12, 6)
         TemporaryUseAdvanceAITDecayCheckBox.Name = "TemporaryUseAdvanceAITDecayCheckBox"
         TemporaryUseAdvanceAITDecayCheckBox.Size = New Size(146, 19)
@@ -2569,10 +2384,6 @@ Partial Class Form1
         TabControlPage2.Controls.Add(TabPageTimeChange)
         TabControlPage2.Controls.Add(TabPageLastSG)
         TabControlPage2.Controls.Add(TabPageLastAlarm)
-        TabControlPage2.Controls.Add(TabPageCountryDataPg1)
-        TabControlPage2.Controls.Add(TabPageCountryDataPg2)
-        TabControlPage2.Controls.Add(TabPageCountryDataPg3)
-        TabControlPage2.Controls.Add(TabPageSessionProfile)
         TabControlPage2.Controls.Add(TabPageCurrentUser)
         TabControlPage2.Controls.Add(TabPageAllUsers)
         TabControlPage2.Controls.Add(TabPageBackToHomePage)
@@ -2751,101 +2562,6 @@ Partial Class Form1
         TableLayoutPanelTimeChange.Size = New Size(1370, 655)
         TableLayoutPanelTimeChange.TabIndex = 1
         ' 
-        ' TabPageCountryDataPg1
-        ' 
-        TabPageCountryDataPg1.Controls.Add(DgvCountryDataPg1)
-        TabPageCountryDataPg1.Location = New Point(4, 27)
-        TabPageCountryDataPg1.Name = "TabPageCountryDataPg1"
-        TabPageCountryDataPg1.Padding = New Padding(3)
-        TabPageCountryDataPg1.Size = New Size(1376, 661)
-        TabPageCountryDataPg1.TabIndex = 11
-        TabPageCountryDataPg1.Text = "Country Data Pg1"
-        TabPageCountryDataPg1.UseVisualStyleBackColor = True
-        ' 
-        ' TabPageCountryDataPg2
-        ' 
-        TabPageCountryDataPg2.Controls.Add(CountryDataPg2TableLayoutPanel)
-        TabPageCountryDataPg2.Location = New Point(4, 27)
-        TabPageCountryDataPg2.Name = "TabPageCountryDataPg2"
-        TabPageCountryDataPg2.Padding = New Padding(3)
-        TabPageCountryDataPg2.Size = New Size(1376, 661)
-        TabPageCountryDataPg2.TabIndex = 11
-        TabPageCountryDataPg2.Text = "Country Data Pg2"
-        TabPageCountryDataPg2.UseVisualStyleBackColor = True
-        ' 
-        ' CountryDataPg2TableLayoutPanel
-        ' 
-        CountryDataPg2TableLayoutPanel.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        CountryDataPg2TableLayoutPanel.ColumnCount = 2
-        CountryDataPg2TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 43.2116776F))
-        CountryDataPg2TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 56.7883224F))
-        CountryDataPg2TableLayoutPanel.Controls.Add(DgvCountryDataPg2, 0, 0)
-        CountryDataPg2TableLayoutPanel.Controls.Add(WebView, 1, 0)
-        CountryDataPg2TableLayoutPanel.Dock = DockStyle.Fill
-        CountryDataPg2TableLayoutPanel.Location = New Point(3, 3)
-        CountryDataPg2TableLayoutPanel.Name = "CountryDataPg2TableLayoutPanel"
-        CountryDataPg2TableLayoutPanel.RowCount = 1
-        CountryDataPg2TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 50.0F))
-        CountryDataPg2TableLayoutPanel.Size = New Size(1370, 655)
-        CountryDataPg2TableLayoutPanel.TabIndex = 2
-        ' 
-        ' DgvCountryDataPg2
-        ' 
-        DataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle8.BackColor = SystemColors.Control
-        DataGridViewCellStyle8.Font = New Font("Segoe UI", 9.0F)
-        DataGridViewCellStyle8.ForeColor = SystemColors.WindowText
-        DataGridViewCellStyle8.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = SystemColors.HighlightText
-        DataGridViewCellStyle8.WrapMode = DataGridViewTriState.True
-        DgvCountryDataPg2.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle8
-        DgvCountryDataPg2.Columns.AddRange(New DataGridViewColumn() {DgvCountryDataPg2RecordNumber, DgvCountryDataPg2Category, DgvCountryDataPg2Key, DgvCountryDataPg2Value})
-        DataGridViewCellStyle9.Alignment = DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle9.BackColor = SystemColors.Window
-        DataGridViewCellStyle9.Font = New Font("Segoe UI", 9.0F)
-        DataGridViewCellStyle9.ForeColor = SystemColors.ControlText
-        DataGridViewCellStyle9.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle9.SelectionForeColor = SystemColors.HighlightText
-        DataGridViewCellStyle9.WrapMode = DataGridViewTriState.False
-        DgvCountryDataPg2.DefaultCellStyle = DataGridViewCellStyle9
-        DgvCountryDataPg2.Location = New Point(6, 6)
-        DgvCountryDataPg2.Name = "DgvCountryDataPg2"
-        DgvCountryDataPg2.ReadOnly = True
-        DgvCountryDataPg2.Size = New Size(582, 612)
-        DgvCountryDataPg2.TabIndex = 2
-        ' 
-        ' DgvCountryDataPg2RecordNumber
-        ' 
-        DgvCountryDataPg2RecordNumber.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
-        DgvCountryDataPg2RecordNumber.HeaderText = "Record Number"
-        DgvCountryDataPg2RecordNumber.MinimumWidth = 60
-        DgvCountryDataPg2RecordNumber.Name = "DgvCountryDataPg2RecordNumber"
-        DgvCountryDataPg2RecordNumber.ReadOnly = True
-        DgvCountryDataPg2RecordNumber.Width = 60
-        ' 
-        ' DgvCountryDataPg2Category
-        ' 
-        DgvCountryDataPg2Category.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        DgvCountryDataPg2Category.HeaderText = "Category"
-        DgvCountryDataPg2Category.Name = "DgvCountryDataPg2Category"
-        DgvCountryDataPg2Category.ReadOnly = True
-        DgvCountryDataPg2Category.Width = 80
-        ' 
-        ' DgvCountryDataPg2Key
-        ' 
-        DgvCountryDataPg2Key.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        DgvCountryDataPg2Key.HeaderText = "Key"
-        DgvCountryDataPg2Key.Name = "DgvCountryDataPg2Key"
-        DgvCountryDataPg2Key.ReadOnly = True
-        DgvCountryDataPg2Key.Width = 51
-        ' 
-        ' DgvCountryDataPg2Value
-        ' 
-        DgvCountryDataPg2Value.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-        DgvCountryDataPg2Value.HeaderText = "Value"
-        DgvCountryDataPg2Value.Name = "DgvCountryDataPg2Value"
-        DgvCountryDataPg2Value.ReadOnly = True
-        ' 
         ' WebView
         ' 
         WebView.AllowExternalDrop = False
@@ -2857,28 +2573,6 @@ Partial Class Form1
         WebView.Size = New Size(767, 643)
         WebView.TabIndex = 3
         WebView.ZoomFactor = 1.0R
-        ' 
-        ' TabPageCountryDataPg3
-        ' 
-        TabPageCountryDataPg3.Controls.Add(DgvCountryDataPg3)
-        TabPageCountryDataPg3.Location = New Point(4, 27)
-        TabPageCountryDataPg3.Name = "TabPageCountryDataPg3"
-        TabPageCountryDataPg3.Padding = New Padding(3)
-        TabPageCountryDataPg3.Size = New Size(1376, 661)
-        TabPageCountryDataPg3.TabIndex = 11
-        TabPageCountryDataPg3.Text = "Country Data Pg3"
-        TabPageCountryDataPg3.UseVisualStyleBackColor = True
-        ' 
-        ' TabPageSessionProfile
-        ' 
-        TabPageSessionProfile.Controls.Add(DgvSessionProfile)
-        TabPageSessionProfile.Location = New Point(4, 27)
-        TabPageSessionProfile.Name = "TabPageSessionProfile"
-        TabPageSessionProfile.Padding = New Padding(3)
-        TabPageSessionProfile.Size = New Size(1376, 661)
-        TabPageSessionProfile.TabIndex = 12
-        TabPageSessionProfile.Text = "Session Profile"
-        TabPageSessionProfile.UseVisualStyleBackColor = True
         ' 
         ' TabPageCurrentUser
         ' 
@@ -2998,13 +2692,10 @@ Partial Class Form1
         CursorPanel.ResumeLayout(False)
         CType(CursorPictureBox, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvAutoBasalDelivery, ComponentModel.ISupportInitialize).EndInit()
-        CType(DgvCountryDataPg1, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvCareLinkUsers, ComponentModel.ISupportInitialize).EndInit()
-        CType(DgvCountryDataPg3, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvCurrentUser, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvInsulin, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvMeal, ComponentModel.ISupportInitialize).EndInit()
-        CType(DgvSessionProfile, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvSGs, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvSummary, ComponentModel.ISupportInitialize).EndInit()
         CType(InsulinLevelPictureBox, ComponentModel.ISupportInitialize).EndInit()
@@ -3064,13 +2755,7 @@ Partial Class Form1
         TabPageLowGlucoseSuspended.PerformLayout()
         TabPageTimeChange.ResumeLayout(False)
         TabPageTimeChange.PerformLayout()
-        TabPageCountryDataPg1.ResumeLayout(False)
-        TabPageCountryDataPg2.ResumeLayout(False)
-        CountryDataPg2TableLayoutPanel.ResumeLayout(False)
-        CType(DgvCountryDataPg2, ComponentModel.ISupportInitialize).EndInit()
         CType(WebView, ComponentModel.ISupportInitialize).EndInit()
-        TabPageCountryDataPg3.ResumeLayout(False)
-        TabPageSessionProfile.ResumeLayout(False)
         TabPageCurrentUser.ResumeLayout(False)
         TabPageAllUsers.ResumeLayout(False)
         StatusStrip1.ResumeLayout(False)
@@ -3093,7 +2778,6 @@ Partial Class Form1
     Friend WithEvents CalibrationDueImage As PictureBox
     Friend WithEvents CalibrationShieldPanel As Panel
     Friend WithEvents CareLinkUserDataRecordBindingSource As BindingSource
-    Friend WithEvents CountryDataPg2TableLayoutPanel As TableLayoutPanel
     Friend WithEvents CurrentSgLabel As Label
     Friend WithEvents CursorMessage1Label As Label
     Friend WithEvents CursorMessage2Label As Label
@@ -3105,27 +2789,9 @@ Partial Class Form1
     Friend WithEvents DgvAutoBasalDelivery As DataGridView
     Friend WithEvents DgvCareLinkUsers As DataGridView
     Friend WithEvents DgvCareLinkUsersUserPassword As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCountryDataPg1 As DataGridView
-    Friend WithEvents DgvCountryDataPg1Category As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCountryDataPg1Key As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCountryDataPg1RecordNumber As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCountryDataPg1Value As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCountryDataPg2 As DataGridView
-    Friend WithEvents DgvCountryDataPg2Category As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCountryDataPg2Key As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCountryDataPg2RecordNumber As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCountryDataPg2Value As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCountryDataPg3 As DataGridView
-    Friend WithEvents DgvCountryDataPg3Category As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCountryDataPg3Key As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCountryDataPg3NotFor As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCountryDataPg3OnlyFor As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCountryDataPg3RecordNumber As DataGridViewTextBoxColumn
-    Friend WithEvents DgvCountryDataPg3Value As DataGridViewTextBoxColumn
     Friend WithEvents DgvCurrentUser As DataGridView
     Friend WithEvents DgvInsulin As DataGridView
     Friend WithEvents DgvMeal As DataGridView
-    Friend WithEvents DgvSessionProfile As DataGridView
     Friend WithEvents DgvSGs As DataGridView
     Friend WithEvents DgvSummary As DataGridView
     Friend WithEvents FullNameLabel As Label
@@ -3276,14 +2942,10 @@ Partial Class Form1
     Friend WithEvents TabPageBackToHomePage As TabPage
     Friend WithEvents TabPageBgReadings As TabPage
     Friend WithEvents TabPageCalibration As TabPage
-    Friend WithEvents TabPageCountryDataPg1 As TabPage
-    Friend WithEvents TabPageCountryDataPg2 As TabPage
-    Friend WithEvents TabPageCountryDataPg3 As TabPage
     Friend WithEvents TabPageCurrentUser As TabPage
     Friend WithEvents TabPageLastAlarm As TabPage
     Friend WithEvents TabPageLastSG As TabPage
     Friend WithEvents TabPageLowGlucoseSuspended As TabPage
-    Friend WithEvents TabPageSessionProfile As TabPage
     Friend WithEvents TabPageTimeChange As TabPage
     Friend WithEvents TemporaryUseAdvanceAITDecayCheckBox As CheckBox
     Friend WithEvents TimeInRangeChartLabel As Label

@@ -3,26 +3,27 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Runtime.CompilerServices
+Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module PlotMarkers
 
     <Extension>
-    Private Sub AddSgReadingPoint(markerSeriesPoints As DataPointCollection, markerOADate As OADate, sgValueString As String, sgValue As Single)
-        AddMarkerPoint(markerSeriesPoints, markerOADate, sgValue, Color.DarkOrange)
+    Private Sub AddSgReadingPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As OADate, sgValueString As String, sgValue As Single)
+        AddMarkerPoint(markerSeriesPoints, markerOADateTime, sgValue, Color.DarkOrange)
         If Not Single.IsNaN(sgValue) Then
             markerSeriesPoints.Last.Tag = $"Blood Glucose: Not used for calibration: {sgValueString} {SgUnitsNativeString}"
         End If
     End Sub
 
     <Extension>
-    Private Sub AddCalibrationPoint(markerSeriesPoints As DataPointCollection, markerOADate As OADate, sgValue As Single, entry As Dictionary(Of String, String))
-        AddMarkerPoint(markerSeriesPoints, markerOADate, sgValue, Color.Red)
-        markerSeriesPoints.Last.Tag = $"Blood Glucose: Calibration {If(CBool(entry("calibrationSuccess")), "accepted", "not accepted")}: {entry("value")} {SgUnitsNativeString}"
+    Private Sub AddCalibrationPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As OADate, sgValue As Single, entry As Marker)
+        AddMarkerPoint(markerSeriesPoints, markerOADateTime, sgValue, Color.Red)
+        markerSeriesPoints.Last.Tag = $"Blood Glucose: Calibration {If(CBool(entry.GetStringValueFromJson("calibrationSuccess")), "accepted", "not accepted")}: {entry.GetSingleValueFromJson("unitValue")} {SgUnitsNativeString}"
     End Sub
 
-    Private Sub AddMarkerPoint(markerSeriesPoints As DataPointCollection, markerOADate As OADate, sgValue As Single, markerColor As Color)
-        markerSeriesPoints.AddXY(markerOADate, sgValue)
+    Private Sub AddMarkerPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As OADate, sgValue As Single, markerColor As Color)
+        markerSeriesPoints.AddXY(markerOADateTime, sgValue)
         markerSeriesPoints.Last.BorderColor = markerColor
         markerSeriesPoints.Last.Color = Color.FromArgb(5, markerColor)
         markerSeriesPoints.Last.MarkerBorderWidth = 3
@@ -31,10 +32,10 @@ Friend Module PlotMarkers
     End Sub
 
     <Extension>
-    Private Sub AdjustXAxisStartTime(ByRef axisX As Axis, lastTimeChangeRecord As TimeChangeRecord)
-#If False Then 'TODO: Remove this directive
-        Dim latestTime As Date = If(lastTimeChangeRecord.previousTimeStamp > lastTimeChangeRecord.timestamp, lastTimeChangeRecord.previousTimeStamp, lastTimeChangeRecord.timestamp)
-        Dim timeOffset As Double = (latestTime - s_listOfSgRecords(0).timestamp).TotalMinutes
+    Private Sub AdjustXAxisStartTime(ByRef axisX As Axis, lastTimeChangeRecord As TimeChange)
+#If False Then  ' This is the original code
+        Dim latestTime As Date = If(lastTimeChangeRecord.DisplayTime > lastTimeChangeRecord.Timestamp, lastTimeChangeRecord.DisplayTime, lastTimeChangeRecord.Timestamp)
+        Dim timeOffset As Double = (latestTime - s_listOfSgRecords(0).Timestamp).TotalMinutes
         axisX.IntervalOffset = timeOffset
         axisX.IntervalOffsetType = DateTimeIntervalType.Minutes
 #End If
@@ -59,72 +60,72 @@ Friend Module PlotMarkers
 
     <Extension>
     Friend Sub PlotMarkers(pageChart As Chart, timeChangeSeries As Series, markerInsulinDictionary As Dictionary(Of OADate, Single), markerMealDictionary As Dictionary(Of OADate, Single))
-        Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
+        Dim lastTimeChangeRecord As TimeChange = Nothing
         markerInsulinDictionary.Clear()
         markerMealDictionary?.Clear()
-#If False Then 'TODO: Remove this directive
-
-        For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
+        For Each markerWithIndex As IndexClass(Of Marker) In s_markers.WithIndex()
+            Dim marker As Marker = markerWithIndex.Value
             Try
-                Dim markerDateTime As Date = markerWithIndex.Value.GetMarkerDateTime
-                Dim markerOADateTime As New OADate(markerDateTime)
-                Dim sgValueString As String = ""
+                Dim markerDateTime As Date = marker.GetMarkerTimestamp
+                Dim markerOADate As New OADate(markerDateTime)
                 Dim sgValue As Single
-                Dim entry As Dictionary(Of String, String) = markerWithIndex.Value
+                sgValue = marker.GetSingleValueFromJson("unitValue")
 
-                If entry.TryGetValue("value", sgValueString) Then
-                    sgValueString.TryParseSingle(sgValue)
+                If Not Single.IsNaN(sgValue) Then
                     If Not Single.IsNaN(sgValue) Then
                         sgValue = Math.Min(GetYMaxValue(NativeMmolL), sgValue)
                         sgValue = Math.Max(GetYMinValue(NativeMmolL), sgValue)
                     End If
                 End If
                 Dim markerSeriesPoints As DataPointCollection = pageChart.Series(MarkerSeriesName).Points
-                Select Case entry("type")
+                Select Case marker.Type
                     Case "BG_READING"
-                        If Not String.IsNullOrWhiteSpace(sgValueString) Then
-                            markerSeriesPoints.AddSgReadingPoint(markerOADateTime, sgValueString, sgValue)
+                        If Not Single.IsNaN(sgValue) Then
+                            markerSeriesPoints.AddSgReadingPoint(markerOADate, sgValue.ToString, sgValue)
                         End If
                     Case "CALIBRATION"
-                        markerSeriesPoints.AddCalibrationPoint(markerOADateTime, sgValue, entry)
+                        markerSeriesPoints.AddCalibrationPoint(markerOADate, sgValue, marker)
                     Case "AUTO_BASAL_DELIVERY"
-                        Dim amount As Single = entry(NameOf(AutoBasalDelivery.bolusAmount)).ParseSingle(3)
-                        With pageChart.Series(BasalSeriesNameName)
-                            .PlotBasalSeries(markerOADateTime,
-                                             amount,
-                                             GetYMaxValue(NativeMmolL),
-                                             GetInsulinYValue(),
-                                             "Basal Series",
-                                             False,
-                                             GetToolTip(entry("type"), amount))
+                        Dim amount As Single = marker.GetSingleValueFromJson("bolusAmount", 3)
+                        With pageChart.Series(BasalSeriesName)
+                            .PlotBasalSeries(
+                                markerOADate,
+                                amount,
+                                bolusRow:=GetYMaxValue(NativeMmolL),
+                                insulinRow:=GetInsulinYValue(),
+                                seriesName:="Basal Series",
+                                DrawFromBottom:=False,
+                                tag:=GetToolTip(marker.Type, amount))
                         End With
                     Case "MANUAL_BASAL_DELIVERY"
-                        Dim amount As Single = entry(NameOf(AutoBasalDelivery.bolusAmount)).ParseSingle(3)
-                        With pageChart.Series(BasalSeriesNameName)
-                            .PlotBasalSeries(markerOADateTime,
-                                             amount,
-                                             GetYMaxValue(NativeMmolL),
-                                             GetInsulinYValue(),
-                                             "Basal Series",
-                                             False,
-                                             GetToolTip(entry("type"), amount))
+                        Dim amount As Single = marker.GetSingleValueFromJson("", 3)
+                        With pageChart.Series(BasalSeriesName)
+                            .PlotBasalSeries(
+                                markerOADate,
+                                amount,
+                                bolusRow:=GetYMaxValue(NativeMmolL),
+                                insulinRow:=GetInsulinYValue(),
+                                seriesName:="Basal Series",
+                                DrawFromBottom:=False,
+                                tag:=GetToolTip(marker.Type, amount))
                         End With
                     Case "INSULIN"
-                        Select Case entry(NameOf(InsulinRecord.activationType))
+                        Select Case marker.GetStringValueFromJson(NameOf(Insulin.activationType))
                             Case "AUTOCORRECTION"
-                                Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
-                                With pageChart.Series(BasalSeriesNameName)
-                                    .PlotBasalSeries(markerOADateTime,
-                                                     autoCorrection.ParseSingle(3),
-                                                     GetYMaxValue(NativeMmolL),
-                                                     GetInsulinYValue(),
-                                                     "Auto Correction",
-                                                     False,
-                                                     $"Auto Correction: {autoCorrection.TruncateSingleString(3)}U")
+                                Dim autoCorrection As Single = marker.GetSingleValueFromJson("deliveredFastAmount", 3)
+                                With pageChart.Series(BasalSeriesName)
+                                    .PlotBasalSeries(
+                                        markerOADate,
+                                        amount:=autoCorrection,
+                                        bolusRow:=GetYMaxValue(NativeMmolL),
+                                        insulinRow:=GetInsulinYValue(),
+                                        seriesName:="Auto Correction",
+                                        DrawFromBottom:=False,
+                                        tag:=$"Auto Correction: {autoCorrection}U")
                                 End With
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
-                                If markerInsulinDictionary.TryAdd(markerOADateTime, CInt(GetInsulinYValue())) Then
-                                    markerSeriesPoints.AddXY(markerOADateTime, GetInsulinYValue() - If(NativeMmolL, 0.555, 10))
+                                If markerInsulinDictionary.TryAdd(markerOADate, CInt(GetInsulinYValue())) Then
+                                    markerSeriesPoints.AddXY(markerOADate, GetInsulinYValue() - If(NativeMmolL, 0.555, 10))
                                     markerSeriesPoints.Last.MarkerBorderWidth = 2
                                     markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Black)
                                     markerSeriesPoints.Last.MarkerSize = 20
@@ -134,7 +135,8 @@ Friend Module PlotMarkers
                                         markerSeriesPoints.Last.MarkerSize = 0
                                     Else
                                         markerSeriesPoints.Last.Color = Color.FromArgb(30, Color.LightBlue)
-                                        markerSeriesPoints.Last.Tag = $"Bolus: {entry(NameOf(InsulinRecord.deliveredFastAmount))}U"
+                                        Dim autoCorrection As Single = marker.GetSingleValueFromJson("deliveredFastAmount", 3)
+                                        markerSeriesPoints.Last.Tag = $"Bolus: {autoCorrection}U"
                                     End If
                                 Else
                                     Stop
@@ -144,37 +146,38 @@ Friend Module PlotMarkers
                         End Select
                     Case "MEAL"
                         If markerMealDictionary Is Nothing Then Continue For
-                        If markerMealDictionary.TryAdd(markerOADateTime, GetYMinValue(NativeMmolL)) Then
-                            markerSeriesPoints.AddXY(markerOADateTime, GetYMinValue(NativeMmolL) + If(NativeMmolL, s_mealImage.Height / 2 / MmolLUnitsDivisor, s_mealImage.Height / 2))
+                        If markerMealDictionary.TryAdd(markerOADate, GetYMinValue(NativeMmolL)) Then
+                            markerSeriesPoints.AddXY(markerOADate, GetYMinValue(NativeMmolL) + If(NativeMmolL, s_mealImage.Height / 2 / MmolLUnitsDivisor, s_mealImage.Height / 2))
                             markerSeriesPoints.Last.Color = Color.FromArgb(10, Color.Yellow)
                             markerSeriesPoints.Last.MarkerBorderWidth = 2
                             markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Yellow)
                             markerSeriesPoints.Last.MarkerSize = 20
                             markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
-                            markerSeriesPoints.Last.Tag = $"Meal:{entry("amount")} grams"
+                            markerSeriesPoints.Last.Tag = $"Meal:{marker.GetSingleValueFromJson("amount", 0)} grams"
                         End If
                     Case "TIME_CHANGE"
                         With pageChart.Series(TimeChangeSeriesName).Points
-                            lastTimeChangeRecord = New TimeChangeRecord(entry)
-                            markerOADateTime = New OADate(lastTimeChangeRecord.GetLatestTime)
-                            .AddXY(markerOADateTime, 0)
-                            .AddXY(markerOADateTime, GetYMaxValue(NativeMmolL))
-                            .AddXY(markerOADateTime, Double.NaN)
+                            lastTimeChangeRecord = New TimeChange(marker)
+                            markerOADate = New OADate(lastTimeChangeRecord.timestamp)
+                            .AddXY(markerOADate, 0)
+                            .AddXY(markerOADate, GetYMaxValue(NativeMmolL))
+                            .AddXY(markerOADate, Double.NaN)
                         End With
                     Case "LOW_GLUCOSE_SUSPENDED"
                         If s_pumpInRangeOfTransmitter AndAlso CurrentPdf?.IsValid AndAlso Not InAutoMode Then
                             Dim timeOrderedMarkers As SortedDictionary(Of OADate, Single) = GetManualBasalValues(markerWithIndex)
                             For Each kvp As KeyValuePair(Of OADate, Single) In timeOrderedMarkers
-                                With pageChart.Series(BasalSeriesNameName)
-                                    .PlotBasalSeries(kvp.Key,
-                                                     kvp.Value,
-                                                     GetYMaxValue(NativeMmolL),
-                                                     GetInsulinYValue,
+                                With pageChart.Series(BasalSeriesName)
+                                    .PlotBasalSeries(markerOADateTime:=kvp.Key,
+                                                     amount:=kvp.Value,
+                                                     bolusRow:=GetYMaxValue(NativeMmolL),
+                                                     insulinRow:=GetInsulinYValue,
                                                      seriesName:="Basal Series",
-                                                     False,
-                                                     $"Manual Basal: {kvp.Value.ToString.TruncateSingleString(3)}U")
+                                                     DrawFromBottom:=False,
+                                                     tag:=$"Manual Basal: {kvp.Value.ToString.TruncateSingleString(3)}U")
                                 End With
                             Next
+
                         End If
                     Case Else
                         Stop
@@ -192,64 +195,58 @@ Friend Module PlotMarkers
             timeChangeSeries.IsVisibleInLegend = False
             pageChart.Legends(0).CustomItems.Last.Enabled = False
         End If
-#End If
     End Sub
 
     <Extension>
     Friend Sub PlotTreatmentMarkers(treatmentChart As Chart, treatmentMarkerTimeChangeSeries As Series)
-        Dim lastTimeChangeRecord As TimeChangeRecord = Nothing
+        Dim lastTimeChangeRecord As TimeChange = Nothing
         s_treatmentMarkerInsulinDictionary.Clear()
         s_treatmentMarkerMealDictionary.Clear()
-#If False Then 'TODO: Remove this directive
-
-        For Each markerWithIndex As IndexClass(Of Dictionary(Of String, String)) In s_markers.WithIndex()
+        For Each markerWithIndex As IndexClass(Of Marker) In s_markers.WithIndex()
             Try
-                Dim markerOADateTime As New OADate(markerWithIndex.Value.GetMarkerDateTime())
-                Dim sgValue As Single
-                Dim sgValueString As String = ""
-                Dim entry As Dictionary(Of String, String) = markerWithIndex.Value
-
-                If entry.TryGetValue("value", sgValueString) Then
-                    sgValueString.TryParseSingle(sgValue)
-                End If
+                Dim marker As Marker = markerWithIndex.Value
+                Dim markerDateTime As Date = marker.GetMarkerTimestamp
+                Dim markerOADate As New OADate(markerDateTime)
+                Dim markerOADateTime As New OADate(marker.GetMarkerTimestamp)
                 Dim markerSeriesPoints As DataPointCollection = treatmentChart.Series(MarkerSeriesName).Points
-                Select Case entry("type")
+                Select Case marker.Type
                     Case "AUTO_BASAL_DELIVERY"
-                        Dim amount As Single = entry(NameOf(AutoBasalDelivery.bolusAmount)).ParseSingle(3)
-                        With treatmentChart.Series(BasalSeriesNameName)
+                        Dim amount As Single = marker.GetSingleValueFromJson(NameOf(AutoBasalDelivery.bolusAmount), 3)
+                        With treatmentChart.Series(BasalSeriesName)
                             .PlotBasalSeries(markerOADateTime,
-                                             amount,
-                                             MaxBasalPerDose,
-                                             TreatmentInsulinRow,
-                                             "Basal Series",
-                                             True,
-                                             GetToolTip(entry("type"), amount))
+                                amount,
+                                bolusRow:=MaxBasalPerDose,
+                                insulinRow:=TreatmentInsulinRow,
+                                seriesName:="Basal Series",
+                                DrawFromBottom:=True,
+                                tag:=GetToolTip(marker.Type, amount))
 
                         End With
                     Case "MANUAL_BASAL_DELIVERY"
-                        Dim amount As Single = entry(NameOf(AutoBasalDelivery.bolusAmount)).ParseSingle(3)
-                        With treatmentChart.Series(BasalSeriesNameName)
+                        Dim amount As Single = marker.GetSingleValueFromJson(NameOf(AutoBasalDelivery.bolusAmount), decimalDigits:=3)
+                        With treatmentChart.Series(BasalSeriesName)
                             .PlotBasalSeries(markerOADateTime,
-                                             amount,
-                                             MaxBasalPerDose,
-                                             TreatmentInsulinRow,
-                                             "Basal Series",
-                                             True,
-                                             GetToolTip(entry("type"), amount))
+                                amount,
+                                bolusRow:=MaxBasalPerDose,
+                                insulinRow:=TreatmentInsulinRow,
+                                seriesName:="Basal Series",
+                                DrawFromBottom:=True,
+                                tag:=GetToolTip(marker.Type, amount))
 
                         End With
                     Case "INSULIN"
-                        Select Case entry(NameOf(InsulinRecord.activationType))
+                        Select Case marker.GetStringValueFromJson(NameOf(Insulin.activationType))
                             Case "AUTOCORRECTION"
-                                Dim autoCorrection As String = entry(NameOf(InsulinRecord.deliveredFastAmount))
-                                With treatmentChart.Series(BasalSeriesNameName)
-                                    .PlotBasalSeries(markerOADateTime,
-                                                     autoCorrection.ParseSingle(3),
-                                                     MaxBasalPerDose,
-                                                     TreatmentInsulinRow,
-                                                     "Auto Correction",
-                                                     True,
-                                                     $"Auto Correction: {autoCorrection.TruncateSingleString(3)}U")
+                                Dim autoCorrection As Single = marker.GetSingleValueFromJson(NameOf(Insulin.deliveredFastAmount), decimalDigits:=3)
+                                With treatmentChart.Series(BasalSeriesName)
+                                    .PlotBasalSeries(
+                                        markerOADateTime:=markerOADateTime,
+                                        amount:=autoCorrection,
+                                        bolusRow:=MaxBasalPerDose,
+                                        insulinRow:=TreatmentInsulinRow,
+                                        seriesName:="Auto Correction",
+                                        DrawFromBottom:=True,
+                                        tag:=$"Auto Correction: {autoCorrection}U")
                                 End With
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 If s_treatmentMarkerInsulinDictionary.TryAdd(markerOADateTime, TreatmentInsulinRow) Then
@@ -260,10 +257,11 @@ Friend Module PlotMarkers
                                         lastDataPoint.MarkerSize = 0
                                     Else
                                         lastDataPoint.Color = Color.FromArgb(30, Color.LightBlue)
-                                        CreateCallout(treatmentChart,
-                                                      lastDataPoint,
-                                                      Color.FromArgb(10, Color.Black),
-                                                      $"Bolus {entry(NameOf(InsulinRecord.deliveredFastAmount))}U")
+                                        CreateCallout(
+                                            treatmentChart,
+                                            lastDataPoint,
+                                            markerBorderColor:=Color.FromArgb(10, Color.Black),
+                                            tagText:=$"Bolus {marker.GetSingleValueFromJson(NameOf(Insulin.DeliveredFastAmount), 3)}U")
                                     End If
                                 Else
                                     Stop
@@ -278,14 +276,14 @@ Friend Module PlotMarkers
                             CreateCallout(treatmentChart,
                                           markerSeriesPoints.Last,
                                           Color.FromArgb(10, Color.Yellow),
-                                          $"Meal {entry("amount")} grams")
+                                          $"Meal {marker.GetSingleValueFromJson("amount", 0)} grams")
                         End If
                     Case "BG_READING"
                     Case "CALIBRATION"
                     Case "TIME_CHANGE"
                         With treatmentChart.Series(TimeChangeSeriesName).Points
-                            lastTimeChangeRecord = New TimeChangeRecord(entry)
-                            markerOADateTime = New OADate(lastTimeChangeRecord.GetLatestTime)
+                            lastTimeChangeRecord = New TimeChange(marker)
+                            markerOADateTime = New OADate(lastTimeChangeRecord.timestamp)
                             .AddXY(markerOADateTime, 0)
                             .AddXY(markerOADateTime, TreatmentInsulinRow)
                             .AddXY(markerOADateTime, Double.NaN)
@@ -294,14 +292,15 @@ Friend Module PlotMarkers
                         If s_pumpInRangeOfTransmitter AndAlso CurrentPdf?.IsValid AndAlso Not InAutoMode Then
                             Dim timeOrderedMarkers As SortedDictionary(Of OADate, Single) = GetManualBasalValues(markerWithIndex)
                             For Each kvp As KeyValuePair(Of OADate, Single) In timeOrderedMarkers
-                                With treatmentChart.Series(BasalSeriesNameName)
-                                    .PlotBasalSeries(kvp.Key,
-                                                         kvp.Value,
-                                                         MaxBasalPerDose,
-                                                         TreatmentInsulinRow,
-                                                         "Basal Series",
-                                                         True,
-                                                         $"Manual Basal: {kvp.Value.ToString.TruncateSingleString(3)}U")
+                                With treatmentChart.Series(BasalSeriesName)
+                                    .PlotBasalSeries(
+                                        markerOADateTime:=kvp.Key,
+                                        amount:=kvp.Value,
+                                        bolusRow:=MaxBasalPerDose,
+                                        insulinRow:=TreatmentInsulinRow,
+                                        seriesName:="Basal Series",
+                                        DrawFromBottom:=True,
+                                        tag:=$"Manual Basal: {kvp.Value.ToString.TruncateSingleString(3)}U")
                                 End With
                             Next
                         End If
@@ -322,8 +321,6 @@ Friend Module PlotMarkers
             treatmentMarkerTimeChangeSeries.IsVisibleInLegend = False
             treatmentChart.Legends(0).CustomItems.Last.Enabled = False
         End If
-#End If
-
     End Sub
 
 End Module

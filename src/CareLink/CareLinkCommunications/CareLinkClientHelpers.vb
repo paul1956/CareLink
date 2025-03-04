@@ -105,11 +105,11 @@ Public Module CareLinkClientHelpers
         Return (captchaUrl, clientInitResponse)
     End Function
 
-    Friend Async Function DoLogin(httpClient As HttpClient, userName As String, isUsRegion As Boolean) As Task(Of tokenData)
-        Dim tokenData As tokenData = ReadTokenDataFile(userName)
+    Friend Sub DoLogin(httpClient As HttpClient, userName As String, isUsRegion As Boolean)
+        Dim tokenData As TokenData = ReadTokenDataFile(userName)
 
         If tokenData IsNot Nothing Then
-            Return tokenData
+            Return
         End If
 
         Dim endpointConfig As (SsoConfig As SsoConfig, ApiBaseUrl As String) = Nothing
@@ -142,56 +142,64 @@ Public Module CareLinkClientHelpers
             ' Create CSR
             Dim csr As String = CreateCSR(rsa, "socialLogin", registerDeviceId, androidModelSafe, ssoConfig.OAuth.Client.Organization)
 
-            ' Prepare headers
-            Dim regHeaders As New Dictionary(Of String, String) From {
-                {"device-name", Convert.ToBase64String(Encoding.UTF8.GetBytes(androidModel))},
-                {"authorization", $"Bearer {captcha.captchaCode}"},
-                {"cert-format", "pem"},
-                {"client-authorization", $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes(clientAuthStr))}"},
-                {"create-session", "true"},
-                {"code-verifier", s_clientCodeVerifier},
-                {"device-id", Convert.ToBase64String(Encoding.UTF8.GetBytes(registerDeviceId))},
-                {"redirect-uri", ssoConfig.OAuth.Client.ClientIds(0).RedirectUri}
-            }
 
             ' Reformat CSR (implement this function as needed)
             csr = ReformatCsr(csr)
 
             ' Prepare URL
-            Dim regUrl As String = $"{endpointConfig.ApiBaseUrl}{ssoConfig.Mag.SystemEndpoints.DeviceRegisterEndpointPath}"
+            Dim registrationUrl As String = $"{endpointConfig.ApiBaseUrl}{ssoConfig.Mag.SystemEndpoints.DeviceRegisterEndpointPath}"
 
-            Dim regResponse As HttpResponseMessage = Nothing
+            Dim registrationResponse As HttpResponseMessage = Nothing
             Try
-                Dim regRequest As New HttpRequestMessage(HttpMethod.Post, regUrl)
-                For Each header As KeyValuePair(Of String, String) In regHeaders
-                    regRequest.Headers.Add(header.Key, header.Value)
+                Dim registrationRequest As New HttpRequestMessage(HttpMethod.Post, registrationUrl)
+
+                ' Prepare headers
+                Dim registrationHeaders As New Dictionary(Of String, String) From {
+                    {"device-name", Convert.ToBase64String(Encoding.UTF8.GetBytes(androidModel))},
+                    {"authorization", $"Bearer {captcha.captchaCode}"},
+                    {"cert-format", "pem"},
+                    {"client-authorization", $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes(clientAuthStr))}"},
+                    {"create-session", "true"},
+                    {"code-verifier", s_clientCodeVerifier},
+                    {"device-id", Convert.ToBase64String(Encoding.UTF8.GetBytes(registerDeviceId))},
+                    {"redirect-uri", ssoConfig.OAuth.Client.ClientIds(0).RedirectUri}
+                }
+                For Each header As KeyValuePair(Of String, String) In registrationHeaders
+                    registrationRequest.Headers.Add(header.Key, header.Value)
                 Next
                 Dim content As New StringContent(csr, Encoding.UTF8, "application/x-www-form-urlencoded")
-                regRequest.Content = content
+                registrationRequest.Content = content
                 ' Send POST request
-                regResponse = Await httpClient.SendAsync(regRequest).ConfigureAwait(False)
-                regResponse.EnsureSuccessStatusCode()
+                registrationResponse = httpClient.SendAsync(registrationRequest).Result
+                registrationResponse.EnsureSuccessStatusCode()
             Catch ex As Exception
                 Stop
+                Return
             End Try
-            If Not regResponse.IsSuccessStatusCode Then
-                Dim errorContent As String = regResponse.Content.ReadAsStringAsync().Result
+            If Not registrationResponse.IsSuccessStatusCode Then
+                Dim errorContent As String = registrationResponse.Content.ReadAsStringAsync().Result
                 Dim errorJson As JsonDocument = JsonDocument.Parse(errorContent)
                 Dim errorDescription As String = errorJson.RootElement.GetProperty("error_description").GetString()
                 Throw New Exception($"Could not register: {errorDescription}")
             End If
 
-            If regResponse.StatusCode <> HttpStatusCode.OK Then
-                Throw New Exception($"Could not register: {JsonSerializer.Deserialize(Of Dictionary(Of String, String))(regResponse.Content.ReadAsStringAsync().Result)("error_description")}")
+            If registrationResponse.StatusCode <> HttpStatusCode.OK Then
+                Throw New Exception($"Could not register: {JsonSerializer.Deserialize(Of Dictionary(Of String, String))(registrationResponse.Content.ReadAsStringAsync().Result)("error_description")}")
             End If
 
             ' Step 5: Token
             Stop
-            tokenData = GetTokenDataAsync(httpClient, endpointConfig.ApiBaseUrl, ssoConfig, regResponse, authorizeUrlData.clientInitData, userName).Result
+            tokenData = GetTokenDataAsync(
+                httpClient,
+                endpointConfig.ApiBaseUrl,
+                ssoConfig,
+                regReq:=registrationResponse,
+                clientInitResponse:=authorizeUrlData.clientInitData,
+                userName).Result
         End Using
 
-        Return tokenData
-    End Function
+        Return
+    End Sub
 
     Private Function DoLoginWithCaptcha(captchaUrl As String, redirectUri As String) As (captchaCode As String, captchaSsoState As String)
         Dim captchaWindow As New Captcha(s_countryCode, s_password, s_userName)

@@ -614,17 +614,20 @@
           }
         }
       },
-      "System.Formats.Asn1/5.0.0": {
+      "System.Formats.Asn1/9.0.2": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.0/_._": {
+          "lib/net9.0/System.Formats.Asn1.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/System.Formats.Asn1.dll": {
+          "lib/net9.0/System.Formats.Asn1.dll": {
             "related": ".xml"
           }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
         }
       },
       "System.Globalization/4.3.0": {
@@ -2330,24 +2333,32 @@
         "system.diagnostics.tracing.nuspec"
       ]
     },
-    "System.Formats.Asn1/5.0.0": {
-      "sha512": "MTvUIktmemNB+El0Fgw9egyqT9AYSIk6DTJeoDSpc3GIHxHCMo8COqkWT1mptX5tZ1SlQ6HJZ0OsSvMth1c12w==",
+    "System.Formats.Asn1/9.0.2": {
+      "sha512": "OKWHCPYQr/+cIoO8EVjFn7yFyiT8Mnf1wif/5bYGsqxQV6PrwlX2HQ9brZNx57ViOvRe4ing1xgHCKl/5Ko8xg==",
       "type": "package",
-      "path": "system.formats.asn1/5.0.0",
+      "path": "system.formats.asn1/9.0.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "LICENSE.TXT",
+        "PACKAGE.md",
         "THIRD-PARTY-NOTICES.TXT",
-        "lib/net461/System.Formats.Asn1.dll",
-        "lib/net461/System.Formats.Asn1.xml",
+        "buildTransitive/net461/System.Formats.Asn1.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/System.Formats.Asn1.targets",
+        "lib/net462/System.Formats.Asn1.dll",
+        "lib/net462/System.Formats.Asn1.xml",
+        "lib/net8.0/System.Formats.Asn1.dll",
+        "lib/net8.0/System.Formats.Asn1.xml",
+        "lib/net9.0/System.Formats.Asn1.dll",
+        "lib/net9.0/System.Formats.Asn1.xml",
         "lib/netstandard2.0/System.Formats.Asn1.dll",
         "lib/netstandard2.0/System.Formats.Asn1.xml",
-        "system.formats.asn1.5.0.0.nupkg.sha512",
+        "system.formats.asn1.9.0.2.nupkg.sha512",
         "system.formats.asn1.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
+        "useSharedDesignerContext.txt"
       ]
     },
     "System.Globalization/4.3.0": {
@@ -4015,6 +4026,7 @@
       "FreeSpire.PDF >= 10.2.0",
       "Microsoft.Web.WebView2 >= 1.0.3065.39",
       "Octokit >= 14.0.0",
+      "System.Formats.Asn1 >= 9.0.2",
       "System.IO.Packaging >= 9.0.2",
       "System.Security.Cryptography.OpenSsl >= 5.0.0",
       "System.Security.Cryptography.X509Certificates >= 4.3.2",
@@ -4093,6 +4105,10 @@
           "Octokit": {
             "target": "Package",
             "version": "[14.0.0, )"
+          },
+          "System.Formats.Asn1": {
+            "target": "Package",
+            "version": "[9.0.2, )"
           },
           "System.IO.Packaging": {
             "target": "Package",

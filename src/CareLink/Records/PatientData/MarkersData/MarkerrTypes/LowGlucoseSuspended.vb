@@ -1,0 +1,57 @@
+﻿' Licensed to the .NET Foundation under one or more agreements.
+' The .NET Foundation licenses this file to you under the MIT license.
+' See the LICENSE file in the project root for more information.
+
+Imports System.ComponentModel
+Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Globalization
+Imports System.Text.Json.Serialization
+
+Public Class LowGlucoseSuspended
+
+    Public Sub New(markerEntry As Marker, recordNumber As Integer)
+        Me.RecordNumber = recordNumber
+        Me.Type = markerEntry.Type
+        Me.Kind = "Marker"
+        Me.Timestamp = markerEntry.Timestamp
+        Me.TimestampAsString = markerEntry.TimestampAsString
+        Me.DisplayTime = markerEntry.DisplayTime
+        Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
+        Me.deliverySuspended = True
+    End Sub
+
+    <DisplayName("Record Number")>
+    <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
+    Public Property RecordNumber As Integer
+
+    <DisplayName("Type")>
+    <Column(Order:=1, TypeName:=NameOf([String]))>
+    Public Property Type As String
+
+    <DisplayName("Kind")>
+    <Column(Order:=2, TypeName:=NameOf([String]))>
+    Public Property Kind As String
+
+    <DisplayName(NameOf(Timestamp))>
+    <Column(Order:=3, TypeName:="Date")>
+    Public Property Timestamp As Date
+
+    <DisplayName(NameOf(TimestampAsString))>
+    <Column(Order:=4, TypeName:="String")>
+    <JsonPropertyName("timestamp")>
+    Public Property TimestampAsString As String
+
+    <DisplayName("Display Time")>
+    <Column(Order:=5, TypeName:=NameOf([DateTime]))>
+    Public Property DisplayTime As Date
+
+    <DisplayName(NameOf(DisplayTimeAsString))>
+    <Column(Order:=6, TypeName:="String")>
+    <JsonPropertyName("displaytime")>
+    Public Property DisplayTimeAsString As String
+
+    <DisplayName("Delivery Suspended")>
+    <Column(Order:=7, TypeName:=NameOf([Boolean]))>
+    Public Property deliverySuspended As Boolean
+
+End Class

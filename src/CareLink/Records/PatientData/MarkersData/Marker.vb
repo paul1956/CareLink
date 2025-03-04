@@ -15,15 +15,6 @@ Public Class Marker
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
 
-    <JsonPropertyName("displayTime")>
-    Public Property DisplayTimeAsString As String
-
-    <JsonPropertyName("data")>
-    Public Property Data As MarkerData
-
-    <JsonPropertyName("views")>
-    Public Property Views As List(Of MarkerView)
-
     <JsonPropertyName("timestampAsDate")>
     Public ReadOnly Property Timestamp As Date
         Get
@@ -31,12 +22,22 @@ Public Class Marker
         End Get
     End Property
 
+    <JsonPropertyName("displayTime")>
+    Public Property DisplayTimeAsString As String
+
     <JsonPropertyName("displayTimeAsDate")>
     Public ReadOnly Property DisplayTime As Date
         Get
             Return Date.ParseExact(Me.DisplayTimeAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
         End Get
     End Property
+
+
+    <JsonPropertyName("data")>
+    Public Property Data As MarkerData
+
+    <JsonPropertyName("views")>
+    Public Property Views As List(Of MarkerView)
 
     Friend Shared Function Convert(r As Basal) As Marker
         Dim convertedMarker As New Marker With {

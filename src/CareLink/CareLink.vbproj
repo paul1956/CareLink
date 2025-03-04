@@ -36,6 +36,7 @@
     <ImportedNamespaces>System.Data=True,System.Drawing=True,System.Windows.Forms=True,System.Windows.Forms.DataVisualization.Charting=True,Microsoft.VisualBasic=True,System=True,System.Collections=True,System.Collections.Generic=True,System.Diagnostics=True,System.Linq=True,System.Xml.Linq=True,System.Threading.Tasks=True,CareLink=True</ImportedNamespaces>
     <GenerateResourceWarnOnBinaryFormatterUse>false</GenerateResourceWarnOnBinaryFormatterUse>
     <NoWarn>$(NoWarn);WFO1000</NoWarn>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -54,6 +55,10 @@
   <ItemGroup>
     <Compile Remove="CareLinkCommunications\CareLinkClient.vb" />
     <Compile Remove="CareLinkCommunications\CareLinkClient1.vb" />
+    <Compile Remove="ProgramVariables\Constants\medicalDeviceInformation.vb" />
+    <Compile Remove="Records\CommunicationRecords\SessionMonitorDataRecord.vb" />
+    <Compile Remove="Records\CommunicationRecords\SessionProfile.vb" />
+    <Compile Remove="Records\CommunicationRecords\UserInfo1.vb" />
   </ItemGroup>
 
   <ItemGroup>
@@ -68,6 +73,7 @@
     <PackageReference Include="FreeSpire.PDF" Version="10.2.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3065.39" />
     <PackageReference Include="Octokit" Version="14.0.0" />
+    <PackageReference Include="System.Formats.Asn1" Version="9.0.2" />
     <PackageReference Include="System.IO.Packaging" Version="9.0.2" />
     <PackageReference Include="System.Security.Cryptography.OpenSsl" Version="5.0.0" />
     <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.3.2" />
@@ -106,6 +112,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="SampleUserV2Data.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestFileSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

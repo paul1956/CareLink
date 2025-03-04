@@ -41,7 +41,7 @@ Friend Module FileUtilities
         End Try
     End Sub
 
-    Public Function ReadTokenDataFile(userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME) As tokenData
+    Public Function ReadTokenDataFile(userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME) As TokenData
         Dim fileWithPath As String = GetLoginDataFileName(userName, tokenBaseFileName)
         If File.Exists(fileWithPath) Then
             Try
@@ -53,7 +53,7 @@ Friend Module FileUtilities
                         Return Nothing
                     End If
                 Next
-                Return JsonSerializer.Deserialize(Of tokenData)(jsonAsText)
+                Return JsonSerializer.Deserialize(Of TokenData)(jsonAsText)
             Catch ex As JsonException
                 Debug.WriteLine("Failed parsing JSON")
             End Try
@@ -84,16 +84,17 @@ Friend Module FileUtilities
         Return Nothing
     End Function
 
-    Public Sub WriteTokenDataFile(tokenData As tokenData, userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME)
+    Public Sub WriteTokenDataFile(tokenData As TokenData, userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME)
         Dim fileWithPath As String = GetLoginDataFileName(userName, tokenBaseFileName)
         Debug.WriteLine("Wrote data file")
         File.WriteAllText(fileWithPath, JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions))
     End Sub
 
-    Public Sub WriteTokenFile(obj As JsonElement, userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME)
+    Public Sub WriteTokenFile(tokenData As JsonElement, userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME)
         Dim fileWithPath As String = GetLoginDataFileName(userName, tokenBaseFileName)
         Debug.WriteLine(NameOf(WriteTokenFile))
-        File.WriteAllText(fileWithPath, JsonSerializer.Serialize(obj, s_jsonSerializerOptions))
+        Dim serializedTokenData As String = JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions)
+        File.WriteAllText(fileWithPath, serializedTokenData)
     End Sub
 
 End Module

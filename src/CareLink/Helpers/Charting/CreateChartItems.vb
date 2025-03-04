@@ -65,11 +65,10 @@ Friend Module CreateChartItems
 
     Friend Function CreateChartArea(containingChart As Chart) As ChartArea
         Dim tmpChartArea As New ChartArea(NameOf(ChartArea)) With {
-                     .BackColor = Color.FromArgb(90, 107, 87),
-                     .BorderColor = Color.FromArgb(64, Color.DimGray),
-                     .BorderDashStyle = ChartDashStyle.Solid,
-                     .ShadowColor = Color.Transparent
-                 }
+            .BackColor = Color.FromArgb(90, 107, 87),
+            .BorderColor = Color.FromArgb(64, Color.DimGray),
+            .BorderDashStyle = ChartDashStyle.Solid,
+            .ShadowColor = Color.Transparent}
         With tmpChartArea
             Dim labelColor As Color = containingChart.BackColor.GetContrastingColor()
             Dim labelFont As New Font("Segoe UI", 12.0F, FontStyle.Bold)
@@ -340,11 +339,11 @@ Friend Module CreateChartItems
                     .IntervalType = DateTimeIntervalType.Hours
                 End With
                 If s_listOfSgRecords.Count = 0 Then
-                    .Maximum = New OADate(PumpNow)
-                    .Minimum = New OADate(PumpNow.AddDays(-1))
+                    c.AxisX.Maximum = New OADate(PumpNow)
+                    c.AxisX.Minimum = New OADate(PumpNow.AddDays(-1))
                 Else
-                    .Maximum = s_listOfSgRecords.Aggregate(Function(i1, i2) If(i1.OaDateTime > i2.OaDateTime, i1, i2)).OaDateTime
-                    .Minimum = s_listOfSgRecords.Aggregate(Function(i1, i2) If(i1.OaDateTime < i2.OaDateTime, i1, i2)).OaDateTime
+                    c.AxisX.Maximum = s_listOfSgRecords.Aggregate(Function(i1, i2) If(i1.OaDateTime > i2.OaDateTime, i1, i2)).OaDateTime
+                    c.AxisX.Minimum = s_listOfSgRecords.Aggregate(Function(i1, i2) If(i1.OaDateTime < i2.OaDateTime, i1, i2)).OaDateTime
                 End If
             End With
         End With

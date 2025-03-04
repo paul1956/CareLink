@@ -245,11 +245,9 @@ Public Class DataGridViewNumericUpDownCell
     End Function
 
     ''' <summary>
-    ''' DetachEditingControl gets called by the DataGridView control when the editing session is ending
+    '''  <see cref="DetachEditingControl"/> gets called by the <see cref="DataGridView"/> control when the editing session is ending.
     ''' </summary>
-    <
-        EditorBrowsable(EditorBrowsableState.Advanced)
->
+    <EditorBrowsable(EditorBrowsableState.Advanced)>
     Public Overrides Sub DetachEditingControl()
         Dim dataGridView As DataGridView = Me.DataGridView
         If dataGridView Is Nothing OrElse dataGridView.EditingControl Is Nothing Then
@@ -270,7 +268,7 @@ Public Class DataGridViewNumericUpDownCell
     End Sub
 
     ''' <summary>
-    ''' Adjusts the location and size of the editing control given the alignment characteristics of the cell
+    '''  Adjusts the location and size of the editing control given the alignment characteristics of the cell
     ''' </summary>
     Private Shared Function GetAdjustedEditingControlBounds(editingControlBounds As Rectangle, cellStyle As DataGridViewCellStyle) As Rectangle
         ' Add a 1 pixel padding on the left and right of the editing control
@@ -287,7 +285,6 @@ Public Class DataGridViewNumericUpDownCell
                     editingControlBounds.Y += editingControlBounds.Height - preferredHeight
             End Select
         End If
-
         Return editingControlBounds
     End Function
 
@@ -308,12 +305,13 @@ Public Class DataGridViewNumericUpDownCell
     ''' characters in the formatted representation of the cell value.
     ''' </summary>
     Protected Overrides Function GetFormattedValue(
-                    value As Object,
-                    rowIndex As Integer,
-                    ByRef cellStyle As DataGridViewCellStyle,
-                    valueTypeConverter As TypeConverter,
-                    formattedValueTypeConverter As TypeConverter,
-                    context As DataGridViewDataErrorContexts) As Object
+        value As Object,
+        rowIndex As Integer,
+        ByRef cellStyle As DataGridViewCellStyle,
+        valueTypeConverter As TypeConverter,
+        formattedValueTypeConverter As TypeConverter,
+        context As DataGridViewDataErrorContexts) As Object
+
         ' By default, the base implementation converts the Decimal 1234.5 into the string "1234.5"
         Dim formattedValue As Object = MyBase.GetFormattedValue(value, rowIndex, cellStyle, valueTypeConverter, formattedValueTypeConverter, context)
         Dim formattedNumber As String = TryCast(formattedValue, String)
@@ -640,8 +638,8 @@ Public Class DataGridViewNumericUpDownCell
     End Function
 
     ''' <summary>
-    ''' Little utility function used by both the cell and column types to translate a DataGridViewContentAlignment value into
-    ''' a HorizontalAlignment value.
+    '''  Little utility function used by both the cell and column types to translate
+    '''  a <see cref="DataGridViewContentAlignment"/> value into a HorizontalAlignment value.
     ''' </summary>
     Friend Shared Function TranslateAlignment(align As DataGridViewContentAlignment) As HorizontalAlignment
         If (align And s_anyRight) <> 0 Then

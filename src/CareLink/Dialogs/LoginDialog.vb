@@ -30,7 +30,7 @@ Public Class LoginDialog
         End Set
     End Property
 
-    Private Shared Sub ReportLoginStatus(loginStatus As TextBox, hasErrors As Boolean, Optional LastResponseCode As Integer = 0)
+    Private Shared Sub ReportLoginStatus(loginStatus As TextBox, hasErrors As Boolean, Optional lastErrorMessage As String = Nothing, Optional LastResponseCode As Integer = 0)
         If Client2.Auth_Error_Codes.Contains(LastResponseCode) Then
             loginStatus.ForeColor = Color.Red
             loginStatus.Text = "Invalid Login Credentials"
@@ -161,25 +161,15 @@ Public Class LoginDialog
         s_countryCode = Me.CountryComboBox.SelectedValue.ToString
 
         Me.ClientDiscover = Discover.GetDiscoveryData(s_countryCode)
-        Dim tokenData As TokenData = DoLogin(_httpClient, s_userName, Me.RegionComboBox.SelectedValue.ToString = "North America").Result
-        Me.Client = New Client2()
         Me.Ok_Button.Enabled = False
+        DoLogin(_httpClient, s_userName, Me.RegionComboBox.SelectedValue.ToString = "North America")
+        Me.Client = New Client2()
         Me.Client.Init()
 
-        Dim recentDataBlob As Dictionary(Of String, Object) = Me.Client.GetRecentData()
-        Select Case recentDataBlob.Keys.Count
-            Case 0
-                lastErrorMessage = "No Data Found"
-            Case 1
-                lastErrorMessage = "No Data Found for " & recentDataBlob.Keys(0)
-            Case 2
-
-            Case Else
-                lastErrorMessage = "No Data Found for " & String.Join(", ", recentDataBlob.Keys)
-        End Select
-        If recentDataBlob?.Count = 2 Then
+        lastErrorMessage = Me.Client.GetRecentData()
+        If String.IsNullOrWhiteSpace(lastErrorMessage) Then
             s_lastMedicalDeviceDataUpdateServerEpoch = 0
-            ReportLoginStatus(Me.LoginStatus, False)
+            ReportLoginStatus(Me.LoginStatus, False, lastErrorMessage)
 
             Me.Ok_Button.Enabled = True
             Me.Cancel_Button.Enabled = True
@@ -196,7 +186,7 @@ Public Class LoginDialog
             Me.DialogResult = DialogResult.OK
             Me.Hide()
         Else
-            ReportLoginStatus(Me.LoginStatus, True, Me.Client.GetLastResponseCode)
+            ReportLoginStatus(Me.LoginStatus, True, lastErrorMessage, Me.Client.GetLastResponseCode)
             If Client2.Auth_Error_Codes.Contains(Me.Client.GetLastResponseCode) Then
                 Me.PasswordTextBox.Text = ""
                 Dim userRecord As CareLinkUserDataRecord = Nothing

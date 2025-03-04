@@ -41,7 +41,6 @@ Public Class SG
                 Dim value As String = "False"
                 Me.timeChange = innerJson.TryGetValue(NameOf(timeChange), value) AndAlso Boolean.Parse(innerJson(NameOf(timeChange)))
             Else
-                Stop
                 Me.sg = Single.NaN
             End If
             Me.Kind = innerJson(NameOf(Kind))
@@ -104,7 +103,9 @@ Public Class SG
     <JsonPropertyName("timestampAsDate")>
     Public ReadOnly Property Timestamp As Date
         Get
-            Return Date.ParseExact(_timestampAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+            Return If(String.IsNullOrWhiteSpace(_timestampAsString),
+                Nothing,
+                Date.ParseExact(_timestampAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture))
         End Get
     End Property
 

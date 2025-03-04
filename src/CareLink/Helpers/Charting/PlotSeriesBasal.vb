@@ -27,7 +27,7 @@ Friend Module PlotSeriesBasal
     End Sub
 
     <Extension>
-    Friend Sub PlotBasalSeries(ByRef basalSeries As Series, markerOADate As OADate, amount As Single, bolusRow As Double, insulinRow As Double, seriesName As String, DrawFromBottom As Boolean, tag As String)
+    Friend Sub PlotBasalSeries(ByRef basalSeries As Series, markerOADateTime As OADate, amount As Single, bolusRow As Double, insulinRow As Double, seriesName As String, DrawFromBottom As Boolean, tag As String)
         Dim startX As OADate
         Dim startY As Double
         Dim lineColor As Color = If(amount.IsMinBasal(),
@@ -36,14 +36,14 @@ Friend Module PlotSeriesBasal
                                     )
 
         If DrawFromBottom Then
-            startX = markerOADate + s_02Minutes30SecondsOADate
+            startX = markerOADateTime + s_02Minutes30SecondsOADate
             startY = amount.RoundTo025
             basalSeries.AddBasalPoint(startX, 0, lineColor, tag)
             basalSeries.AddBasalPoint(startX, startY, lineColor, tag)
             basalSeries.AddBasalPoint(startX, 0, lineColor, tag)
             basalSeries.AddBasalPoint(startX, Double.NaN, Color.Transparent, tag)
         Else
-            startX = markerOADate + s_02Minutes30SecondsOADate
+            startX = markerOADateTime + s_02Minutes30SecondsOADate
             startY = bolusRow - ((bolusRow - insulinRow) * (amount / MaxBasalPerDose))
             basalSeries.AddBasalPoint(startX, bolusRow, lineColor, tag)
             basalSeries.AddBasalPoint(startX, startY, lineColor, tag)

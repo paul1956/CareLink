@@ -11,8 +11,7 @@ Imports DataGridViewColumnControls
 Public Class InitializeDialog
     Private ReadOnly _fromPdf As Boolean
 
-    Private ReadOnly _insulinTypesBindingSource As New BindingSource(
-                s_insulinTypes, Nothing)
+    Private ReadOnly _insulinTypesBindingSource As New BindingSource(s_insulinTypes, Nothing)
 
     Private _currentUserBackup As CurrentUserRecord = Nothing
 

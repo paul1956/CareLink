@@ -2,7 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Friend Module SgRecordHelpers
+Friend Module SgHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
                         NameOf(SG.Kind),
@@ -45,7 +45,7 @@ Friend Module SgRecordHelpers
                     CellFormattingApplyColor(e, Color.Red, isUri:=False)
                 End If
                 dgv.CellFormattingToTitle(e)
-            Case NameOf(SG.timestamp)
+            Case NameOf(SG.Timestamp)
                 dgv.CellFormattingDateTime(e)
             Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMmDl)
                 dgv.CellFormattingSgValue(e, NameOf(SG.sg))

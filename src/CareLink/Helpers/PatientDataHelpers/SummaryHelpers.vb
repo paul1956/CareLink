@@ -4,7 +4,7 @@
 
 Imports System.Runtime.CompilerServices
 
-Friend Module SummaryRecordHelpers
+Friend Module SummaryHelpers
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
@@ -19,10 +19,11 @@ Friend Module SummaryRecordHelpers
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         With e.Column
-            e.DgvColumnAdded(GetCellStyle(.Name),
-                             False,
-                             True,
-                             CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+            e.DgvColumnAdded(
+                cellStyle:=GetCellStyle(.Name),
+                wrapHeader:=False,
+                forceReadOnly:=True,
+                caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
             If .Name = "Value" Then
                 e.Column.MinimumWidth = 350
             End If
@@ -74,10 +75,10 @@ Friend Module SummaryRecordHelpers
                 Dim triggeredDateTime As String = ""
                 If jsonDictionary.TryGetValue(NameOf(ClearedNotificationsRecord.triggeredDateTime), triggeredDateTime) Then
                     triggeredDateTime = $" { triggeredDateTime.ParseDate(NameOf(ClearedNotificationsRecord.triggeredDateTime)).ToShortTimeString}"
-                ElseIf jsonDictionary.TryGetValue(NameOf(SG.timestamp), triggeredDateTime) Then
-                    triggeredDateTime = $" {triggeredDateTime.ParseDate(NameOf(SG.timestamp)).ToShortTimeString}"
-                ElseIf jsonDictionary.TryGetValue(NameOf(TimeChangeRecord.timestamp), triggeredDateTime) Then
-                    triggeredDateTime = $" {triggeredDateTime.ParseDate(NameOf(TimeChangeRecord.timestamp)).ToShortTimeString}"
+                ElseIf jsonDictionary.TryGetValue(NameOf(SG.Timestamp), triggeredDateTime) Then
+                    triggeredDateTime = $" {triggeredDateTime.ParseDate(NameOf(SG.Timestamp)).ToShortTimeString}"
+                ElseIf jsonDictionary.TryGetValue(NameOf(TimeChange.timestamp), triggeredDateTime) Then
+                    triggeredDateTime = $" {triggeredDateTime.ParseDate(NameOf(TimeChange.timestamp)).ToShortTimeString}"
                 Else
                     Stop
                 End If

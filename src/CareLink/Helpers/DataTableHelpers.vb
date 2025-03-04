@@ -119,7 +119,7 @@ Friend Module DataTableHelpers
             For Each [property] As PropertyInfo In classType.GetProperties()
                 cellStyle = New DataGridViewCellStyle
                 Select Case [property].GetCustomAttributes(GetType(ColumnAttribute), True).Cast(Of ColumnAttribute)().SingleOrDefault().TypeName
-                    Case "Date", NameOf(OADate), NameOf([String]), NameOf(SummaryRecord.RecordNumber)
+                    Case "Date", "DateTime", NameOf(OADate), NameOf([String]), NameOf(SummaryRecord.RecordNumber)
                         cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
                     Case NameOf([Decimal]), NameOf([Double]), NameOf([Int32]), NameOf([Single]), NameOf([TimeSpan])
                         cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))

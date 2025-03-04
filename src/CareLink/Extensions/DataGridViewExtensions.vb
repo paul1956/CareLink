@@ -18,9 +18,7 @@ Public Module DataGridViewExtensions
                 }
             .ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
                     .Alignment = DataGridViewContentAlignment.MiddleCenter,
-                    .BackColor = SystemColors.Control,
                     .Font = New Font("Segoe UI", 9.0!, FontStyle.Regular, GraphicsUnit.Point),
-                    .ForeColor = SystemColors.WindowText,
                     .SelectionBackColor = SystemColors.Highlight,
                     .SelectionForeColor = SystemColors.HighlightText,
                     .WrapMode = DataGridViewTriState.True

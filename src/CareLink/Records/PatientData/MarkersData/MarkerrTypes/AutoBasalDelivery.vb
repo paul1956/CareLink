@@ -12,25 +12,29 @@ Public Class AutoBasalDelivery
     Public Sub New()
     End Sub
 
-    Public Sub New(r As Basal, recordNumber As Integer, index As Integer)
-        Me.type = r.GetBasalType
-        Me.index = index
-        Me.kind = "Marker"
-        Me.version = 1
-        Me.Timestamp = Date.FromOADate(r.GetOaGetTime)
-        Me.id = 13
+    Public Sub New(r As Basal, recordNumber As Integer)
         Me.RecordNumber = recordNumber
-        Me.bolusAmount = r.GetBasal
+        Me.type = "Basal"
+        Me.Kind = "Marker"
+        'Me.Timestamp = r.Timestamp
+        'Me.TimestampAsString = r.TimestampAsString
+        'Me.DisplayTime = r.DisplayTime
+        'Me.DisplayTimeAsString = r.DisplayTimeAsString
+        'Me.bolusAmount = r.Data.DataValues(NameOf(bolusAmount)).ToString.ParseSingle(10)
+        'Me.maxAutoBasalRate = r.Data.DataValues(NameOf(maxAutoBasalRate)).ToString.ParseSingle(10)
     End Sub
 
-    Public Sub New(marker As Marker, index As Integer)
-        Me.type = marker.Type
+    Public Sub New(markerEntry As Marker, recordNumber As Integer, index As Integer)
+        Me.RecordNumber = recordNumber
         Me.index = index
-        Me.kind = "Marker"
-        Me.version = 1
-        Me.Timestamp = marker.Timestamp
-        Me.bolusAmount = marker.Data.DataValues(NameOf(bolusAmount)).ToString.ParseSingle(10)
-        Me.maxAutoBasalRate = marker.Data.DataValues(NameOf(maxAutoBasalRate)).ToString.ParseSingle(10)
+        Me.type = markerEntry.Type
+        Me.Kind = "Marker"
+        Me.Timestamp = markerEntry.Timestamp
+        Me.TimestampAsString = markerEntry.TimestampAsString
+        Me.DisplayTime = markerEntry.DisplayTime
+        Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
+        Me.bolusAmount = markerEntry.Data.DataValues(NameOf(bolusAmount)).ToString.ParseSingle(10)
+        Me.maxAutoBasalRate = markerEntry.Data.DataValues(NameOf(maxAutoBasalRate)).ToString.ParseSingle(10)
     End Sub
 
     <DisplayName("Record Number")>
@@ -39,49 +43,39 @@ Public Class AutoBasalDelivery
 
     <DisplayName("Type")>
     <Column(Order:=1, TypeName:=NameOf([String]))>
-    <JsonPropertyName("type")>
     Public Property type As String
 
     <DisplayName(NameOf(index))>
     <Column(Order:=2, TypeName:=NameOf([Int32]))>
-    Public Property index As Integer
+    Public Property Index As Integer
 
     <DisplayName("Kind")>
     <Column(Order:=3, TypeName:=NameOf([String]))>
-    <JsonPropertyName("kind")>
-    Public Property kind As String
-
-    <DisplayName("Version")>
-    <Column(Order:=4, TypeName:=NameOf([Int32]))>
-    Public Property version As Integer
+    Public Property Kind As String
 
     <DisplayName(NameOf(Timestamp))>
-    <Column(Order:=5, TypeName:="Date")>
+    <Column(Order:=4, TypeName:="Date")>
     Public Property Timestamp As Date
 
     <DisplayName(NameOf(TimestampAsString))>
-    <Column(Order:=6, TypeName:="String")>
-    <JsonPropertyName("timestamp")>
+    <Column(Order:=5, TypeName:="String")>
     Public Property TimestampAsString As String
-        Get
-            Return _Timestamp.ToString("yyyy-MM-ddTHH:mm:ss")
-        End Get
-        Set(value As String)
-            _Timestamp = Date.ParseExact(value, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
-        End Set
-    End Property
+
+    <DisplayName("Display Time")>
+    <Column(Order:=6, TypeName:=NameOf([DateTime]))>
+    Public Property DisplayTime As Date
+
+    <DisplayName(NameOf(DisplayTimeAsString))>
+    <Column(Order:=7, TypeName:="String")>
+    Public Property DisplayTimeAsString As String
 
     <DisplayName(NameOf(OAdateTime))>
-    <Column(Order:=7, TypeName:=NameOf(OADate))>
+    <Column(Order:=8, TypeName:=NameOf(OADate))>
     Public ReadOnly Property OAdateTime As OADate
         Get
             Return New OADate(Me.Timestamp)
         End Get
     End Property
-
-    <DisplayName(NameOf(relativeOffset))>
-    <Column(Order:=8, TypeName:=NameOf([Int32]))>
-    Public Property relativeOffset As Integer
 
     <DisplayName(NameOf(id))>
     <Column(Order:=9, TypeName:=NameOf([Int32]))>
