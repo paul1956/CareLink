@@ -8,15 +8,14 @@ Friend Module Form1SummaryTabHelpers
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(SummaryRecord.RecordNumber)
-                If dgv.Rows(e.RowIndex).Cells("key").Value.Equals(ServerDataIndexes.medicalDeviceInformation.ToString) Then
-                    dgv.CellFormattingSingleValue(e, 1)
-                End If
-            Case Else
-                dgv.CellFormattingSetForegroundColor(e)
-        End Select
-
+        If dgv.Columns(e.ColumnIndex).Name = NameOf(SummaryRecord.RecordNumber) Then
+            If IsSingleEqualToInteger(Single.Parse(e.Value.ToString), CInt(e.Value)) Then
+                dgv.CellFormattingSingleValue(e, 0)
+            Else
+                dgv.CellFormattingSingleValue(e, 1)
+            End If
+        End If
+        dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
     <Extension>
