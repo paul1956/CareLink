@@ -5,7 +5,6 @@
 Friend Module AutoBasalDeliveryHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
-            NameOf(AutoBasalDelivery.id),
             NameOf(AutoBasalDelivery.OAdateTime)}
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)

@@ -77,20 +77,16 @@ Public Class AutoBasalDelivery
         End Get
     End Property
 
-    <DisplayName(NameOf(id))>
-    <Column(Order:=9, TypeName:=NameOf([Int32]))>
-    Public Property id As Integer
-
     <DisplayName("Bolus Amount")>
-    <Column(Order:=10, TypeName:=NameOf([Single]))>
+    <Column(Order:=9, TypeName:=NameOf([Single]))>
     Public Property bolusAmount As Single
 
     <DisplayName("Basal Rate")>
-    <Column(Order:=11, TypeName:=NameOf([Single]))>
+    <Column(Order:=10, TypeName:=NameOf([Single]))>
     Public Property basalRate As Single
 
     <DisplayName("Max Auto Basal Rate")>
-    <Column(Order:=12, TypeName:=NameOf([Single]))>
+    <Column(Order:=11, TypeName:=NameOf([Single]))>
     Public Property maxAutoBasalRate As Single
 
 
