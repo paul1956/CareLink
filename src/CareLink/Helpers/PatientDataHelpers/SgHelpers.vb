@@ -47,7 +47,7 @@ Friend Module SgHelpers
                 dgv.CellFormattingToTitle(e)
             Case NameOf(SG.Timestamp)
                 dgv.CellFormattingDateTime(e)
-            Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMmDl)
+            Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
                 dgv.CellFormattingSgValue(e, NameOf(SG.sg))
             Case Else
                 dgv.CellFormattingSetForegroundColor(e)

@@ -402,11 +402,11 @@ Public Class Client2
         Dim data As New Dictionary(Of String, Object)(StringComparer.OrdinalIgnoreCase)
         Try
             Dim tempData As Dictionary(Of String, Object) = Me.GetData(
-                   config:=_config,
-                   tokenDataElement:=_tokenDataElement,
-                   username:=s_userName,
-                   role:=CStr(_userElementDictionary("role")),
-                   patientId:="")
+                config:=_config,
+                tokenDataElement:=_tokenDataElement,
+                username:=s_userName,
+                role:=CStr(_userElementDictionary("role")),
+                patientId:="")
             For Each kvp As KeyValuePair(Of String, Object) In tempData
                 data(kvp.Key) = kvp.Value
             Next kvp

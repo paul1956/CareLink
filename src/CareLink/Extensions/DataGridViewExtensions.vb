@@ -14,20 +14,17 @@ Public Module DataGridViewExtensions
             .AllowUserToResizeColumns = False
             .AllowUserToResizeRows = False
             .AlternatingRowsDefaultCellStyle = New DataGridViewCellStyle With {
-                    .BackColor = Color.Silver
-                }
+                    .BackColor = Color.Silver}
             .ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
-                    .Alignment = DataGridViewContentAlignment.MiddleCenter,
-                    .Font = New Font("Segoe UI", 9.0!, FontStyle.Regular, GraphicsUnit.Point),
-                    .SelectionBackColor = SystemColors.Highlight,
-                    .SelectionForeColor = SystemColors.HighlightText,
-                    .WrapMode = DataGridViewTriState.True
-                }
+                .Alignment = DataGridViewContentAlignment.MiddleCenter,
+                .Font = New Font("Segoe UI", 9.0!, FontStyle.Regular, GraphicsUnit.Point),
+                .SelectionBackColor = SystemColors.Highlight,
+                .SelectionForeColor = SystemColors.HighlightText,
+                .WrapMode = DataGridViewTriState.True}
             .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-            .Dock = DockStyle.Fill
-            .Location = New Point(3, 3)
+            .Location = New Point(0, 0)
             .ReadOnly = True
-            .RowTemplate.Height = 25
+            .RowTemplate.Height = 24
             .TabIndex = 0
         End With
     End Sub

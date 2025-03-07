@@ -12,14 +12,14 @@ Friend Module PlotMarkers
     Private Sub AddSgReadingPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As OADate, sgValueString As String, sgValue As Single)
         AddMarkerPoint(markerSeriesPoints, markerOADateTime, sgValue, Color.DarkOrange)
         If Not Single.IsNaN(sgValue) Then
-            markerSeriesPoints.Last.Tag = $"Blood Glucose: Not used for calibration: {sgValueString} {SgUnitsNativeString}"
+            markerSeriesPoints.Last.Tag = $"Blood Glucose: Not used for calibration: {sgValueString} {BgUnitsNativeString}"
         End If
     End Sub
 
     <Extension>
     Private Sub AddCalibrationPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As OADate, sgValue As Single, entry As Marker)
         AddMarkerPoint(markerSeriesPoints, markerOADateTime, sgValue, Color.Red)
-        markerSeriesPoints.Last.Tag = $"Blood Glucose: Calibration {If(CBool(entry.GetStringValueFromJson("calibrationSuccess")), "accepted", "not accepted")}: {entry.GetSingleValueFromJson("unitValue")} {SgUnitsNativeString}"
+        markerSeriesPoints.Last.Tag = $"Blood Glucose: Calibration {If(CBool(entry.GetStringValueFromJson("calibrationSuccess")), "accepted", "not accepted")}: {entry.GetSingleValueFromJson("unitValue")} {BgUnitsNativeString}"
     End Sub
 
     Private Sub AddMarkerPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As OADate, sgValue As Single, markerColor As Color)

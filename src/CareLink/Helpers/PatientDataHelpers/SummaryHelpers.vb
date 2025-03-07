@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Runtime.CompilerServices
+Imports System.Text.RegularExpressions
 
 Friend Module SummaryHelpers
 
@@ -42,28 +43,58 @@ Friend Module SummaryHelpers
             If s_notificationMessages.TryGetValue(entryValue, formattedMessage) Then
                 Dim splitMessageValue As String() = formattedMessage.Split(":")
                 Dim key As String = ""
+
+                Dim triggeredDateTime As String = ""
+                If jsonDictionary.TryGetValue(NameOf(ClearedNotifications.dateTime), triggeredDateTime) Then
+                    triggeredDateTime = $" { triggeredDateTime.ParseDate(NameOf(ActiveNotification.triggeredDateTime)).ToNotificationDateTimeString}"
+                End If
+
+                ' (0)
                 Dim replacementValue As String = ""
                 If splitMessageValue.Length > 1 Then
                     key = splitMessageValue(1)
                     If key = "lastSetChange" Then
                         replacementValue = s_oneToNineteen(CInt(jsonDictionary(key))).ToTitle
                     Else
-                        replacementValue = jsonDictionary(key)
-                        Dim resultDate As Date
-                        If replacementValue.TryParseDate(resultDate, key) Then
-                            replacementValue = resultDate.ToString
+                        If Not jsonDictionary.TryGetValue(key, replacementValue) Then
+                            Dim resultDate As Date
+                            If key.Contains("date", StringComparison.InvariantCultureIgnoreCase) OrElse
+                                key.Contains("timestamp", StringComparison.InvariantCultureIgnoreCase) Then
+                                If replacementValue.TryParseDate(resultDate, key) Then
+                                    replacementValue = resultDate.ToString
+                                Else
+                                    Stop
+                                End If
+                            Else
+                                Dim additionalInfo As String() = GetValueList(jsonDictionary("additionalInfo"))
+                                For Each e As IndexClass(Of String) In additionalInfo.WithIndex
+                                    Dim value As String = e.Value.Split(" = ")(0).Trim
+                                    If key = value Then
+                                        replacementValue = e.Value.Split(" = ")(1).Trim
+                                        Exit For
+                                    End If
+                                Next
+                                If String.IsNullOrWhiteSpace(replacementValue) Then
+                                    Stop
+                                End If
+                            End If
                         End If
                     End If
                 End If
-
                 Dim secondaryTime As String = Nothing
-                secondaryTime = If(jsonDictionary.TryGetValue(NameOf(ClearedNotificationsRecord.secondaryTime), secondaryTime),
+                secondaryTime = If(jsonDictionary.TryGetValue(NameOf(ActiveNotification.secondaryTime), secondaryTime),
                                    secondaryTime.FormatTimeOnly(s_timeWithMinuteFormat),
                                    ""
                                   )
 
+                Dim criticalLow As String = ""
+                If jsonDictionary.TryGetValue("criticalLow", criticalLow) Then
+                    Stop
+                End If
+
                 Dim deliveredAmount As String = ""
                 If jsonDictionary.TryGetValue("deliveredAmount", deliveredAmount) Then
+                    Stop
                 End If
 
                 Dim programmedAmount As String = ""
@@ -72,26 +103,15 @@ Friend Module SummaryHelpers
                     notDeliveredAmount = (programmedAmount.ParseSingle(3) - deliveredAmount.ParseSingle(3)).ToString("F3", CurrentUICulture)
                 End If
 
-                Dim triggeredDateTime As String = ""
-                If jsonDictionary.TryGetValue(NameOf(ClearedNotificationsRecord.triggeredDateTime), triggeredDateTime) Then
-                    triggeredDateTime = $" { triggeredDateTime.ParseDate(NameOf(ClearedNotificationsRecord.triggeredDateTime)).ToShortTimeString}"
-                ElseIf jsonDictionary.TryGetValue(NameOf(SG.Timestamp), triggeredDateTime) Then
-                    triggeredDateTime = $" {triggeredDateTime.ParseDate(NameOf(SG.Timestamp)).ToShortTimeString}"
-                ElseIf jsonDictionary.TryGetValue(NameOf(TimeChange.timestamp), triggeredDateTime) Then
-                    triggeredDateTime = $" {triggeredDateTime.ParseDate(NameOf(TimeChange.timestamp)).ToShortTimeString}"
-                Else
-                    Stop
-                End If
-
                 formattedMessage = splitMessageValue(0) _
-                .Replace("(0)", replacementValue) _
-                .Replace($"({NameOf(deliveredAmount)})", deliveredAmount) _
-                .Replace($"({NameOf(programmedAmount)})", programmedAmount) _
-                .Replace($"({NameOf(notDeliveredAmount)})", notDeliveredAmount) _
-                .Replace($"({NameOf(ClearedNotificationsRecord.secondaryTime)})", secondaryTime) _
-                .Replace("(triggeredDateTime)", $", happened at {triggeredDateTime}") _
-                .Replace("(units)", SgUnitsNativeString) _
-                .Replace("{vbCrLf}", vbCrLf)
+                    .Replace("(0)", replacementValue) _
+                    .Replace($"({NameOf(deliveredAmount)})", deliveredAmount) _
+                    .Replace($"({NameOf(programmedAmount)})", programmedAmount) _
+                    .Replace($"({NameOf(notDeliveredAmount)})", notDeliveredAmount) _
+                    .Replace($"({NameOf(ActiveNotification.secondaryTime)})", secondaryTime) _
+                    .Replace($"(triggeredDateTime)", triggeredDateTime) _
+                    .Replace("(units)", BgUnitsNativeString) _
+                    .Replace("{vbCrLf}", vbCrLf).TrimEnd("."c) & "."
             Else
                 If Debugger.IsAttached Then
                     Stop
@@ -108,8 +128,21 @@ Friend Module SummaryHelpers
     Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
         Return ClassPropertiesToColumnAlignment(Of SummaryRecord)(s_alignmentTable, columnName)
     End Function
+    Private Function GetVariables() As List(Of String)
+        Dim result As New List(Of String)
+        Dim pattern As String = "\(([^)]+)\)"
+        Dim valuesArray() As String = s_notificationMessages.Values.ToArray()
+        Dim joinedString As String = String.Join(", ", valuesArray)
+
+        For Each match As Match In Regex.Matches(joinedString, pattern)
+            result.Add(match.Value)
+        Next
+        Return result.Distinct().ToList()
+    End Function
 
     Friend Function GetSummaryRecords(dic As Dictionary(Of String, String), Optional rowsToHide As List(Of String) = Nothing) As List(Of SummaryRecord)
+        Dim x As List(Of String) = GetVariables()
+
         Dim summaryList As New List(Of SummaryRecord)
         For Each row As KeyValuePair(Of String, String) In dic
             If row.Value Is Nothing OrElse (rowsToHide IsNot Nothing AndAlso rowsToHide.Contains(row.Key)) Then
@@ -117,7 +150,7 @@ Friend Module SummaryHelpers
             End If
 
             Select Case row.Key
-                Case "messageId"
+                Case "faultId"
                     Dim message As String = ""
                     If s_notificationMessages.TryGetValue(row.Value, message) Then
                         message = TranslateNotificationMessageId(dic, row.Value)
@@ -130,20 +163,26 @@ Friend Module SummaryHelpers
                         End If
                     Else
                         If Debugger.IsAttached AndAlso Not String.IsNullOrWhiteSpace(row.Value) Then
-                            MsgBox($"{row.Value} is unknown Notification Messages", "", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, GetTitleFromStack(New StackFrame(0, True)))
+                            MsgBox(
+                                heading:=$"{row.Value} is unknown Notification Messages",
+                                text:="",
+                                buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                                title:=GetTitleFromStack(stackFrame:=New StackFrame(skipFrames:=0, needFileInfo:=True)))
                         End If
                         message = row.Value.ToTitle
                     End If
-                    summaryList.Add(New SummaryRecord(summaryList.Count, row, message))
+                    summaryList.Add(New SummaryRecord(recordNumber:=summaryList.Count, row, message))
                 Case "autoModeReadinessState"
-                    s_autoModeReadinessState = New SummaryRecord(summaryList.Count, row, s_sensorMessages, NameOf(s_sensorMessages))
+                    s_autoModeReadinessState = New SummaryRecord(recordNumber:=summaryList.Count, row, messages:=s_sensorMessages, messageTableName:=NameOf(s_sensorMessages))
                     summaryList.Add(s_autoModeReadinessState)
                 Case "autoModeShieldState"
-                    summaryList.Add(New SummaryRecord(summaryList.Count, row, s_autoModeShieldMessages, NameOf(s_autoModeShieldMessages)))
+                    summaryList.Add(New SummaryRecord(recordNumber:=summaryList.Count, row, messages:=s_autoModeShieldMessages, messageTableName:=NameOf(s_autoModeShieldMessages)))
                 Case "plgmLgsState"
-                    summaryList.Add(New SummaryRecord(summaryList.Count, row, s_plgmLgsMessages, NameOf(s_plgmLgsMessages)))
-                Case NameOf(ClearedNotificationsRecord.timestamp), NameOf(ClearedNotificationsRecord.triggeredDateTime)
-                    summaryList.Add(New SummaryRecord(summaryList.Count, row, row.Value.ParseDate(NameOf(ClearedNotificationsRecord.timestamp)).ToShortDateTimeString))
+                    summaryList.Add(New SummaryRecord(recordNumber:=summaryList.Count, row, messages:=s_plgmLgsMessages, messageTableName:=NameOf(s_plgmLgsMessages)))
+                Case NameOf(ClearedNotifications.dateTime)
+                    summaryList.Add(New SummaryRecord(recordNumber:=summaryList.Count, row, message:=row.Value.ParseDate(key:=NameOf(ClearedNotifications.dateTime)).ToShortDateTimeString))
+                Case "additionalInfo"
+                    HandleComplexItems(row, rowIndex:=CType(summaryList.Count, ServerDataIndexes), key:="additionalInfo", listOfSummaryRecords:=summaryList)
                 Case Else
                     summaryList.Add(New SummaryRecord(summaryList.Count, row))
             End Select

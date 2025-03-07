@@ -55,10 +55,10 @@
   <ItemGroup>
     <Compile Remove="CareLinkCommunications\CareLinkClient.vb" />
     <Compile Remove="CareLinkCommunications\CareLinkClient1.vb" />
-    <Compile Remove="ProgramVariables\Constants\medicalDeviceInformation.vb" />
     <Compile Remove="Records\CommunicationRecords\SessionMonitorDataRecord.vb" />
     <Compile Remove="Records\CommunicationRecords\SessionProfile.vb" />
     <Compile Remove="Records\CommunicationRecords\UserInfo1.vb" />
+    <Compile Remove="Records\PatientData\ActiveNotificationRecord.vb" />
   </ItemGroup>
 
   <ItemGroup>

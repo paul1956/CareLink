@@ -330,7 +330,7 @@ Public Class Form1
                 Case SgSeriesName
                     Me.CursorMessage1Label.Text = "Sensor Glucose"
                     Me.CursorMessage1Label.Visible = True
-                    Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(3)} {SgUnitsNativeString}"
+                    Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(3)} {BgUnitsNativeString}"
                     Me.CursorMessage2Label.Visible = True
                     Me.CursorMessage3Label.Text = If(NativeMmolL, $"{CInt(currentDataPoint.YValues(0) * MmolLUnitsDivisor)} mg/dL", $"{currentDataPoint.YValues(0) / MmolLUnitsDivisor:F1} mmol/L")
                     Me.CursorMessage3Label.Visible = True
@@ -775,7 +775,7 @@ Public Class Form1
                 dgv.CellFormattingToTitle(e)
             Case NameOf(SG.Timestamp)
                 dgv.CellFormattingDateTime(e)
-            Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMmDl)
+            Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
                 dgv.CellFormattingSgValue(e, NameOf(SG.sg))
             Case Else
                 dgv.CellFormattingSetForegroundColor(e)
@@ -916,7 +916,8 @@ Public Class Form1
         Dim value As String = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString
         If value.StartsWith(ClickToShowDetails) Then
             With Me.TabControlPage1
-                Select Case dgv.Rows(e.RowIndex).Cells("key").Value.ToString.GetItemIndex()
+                Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
+                Select Case key.GetItemIndex()
                     Case ServerDataIndexes.lastSG
                         Me.TabControlPage2.SelectedIndex = 6
                         _lastMarkerTabIndex = (1, 6)
@@ -947,13 +948,15 @@ Public Class Form1
                             .Visible = False
                         End If
                     Case ServerDataIndexes.notificationHistory
-                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage10NotificationHistory))
+                        .SelectedIndex = If(key = "activeNotification",
+                            GetTabIndexFromName(tabPageName:=NameOf(TabPage10NotificationActive)),
+                            GetTabIndexFromName(tabPageName:=NameOf(TabPage11NotificationsCleared)))
                     Case ServerDataIndexes.therapyAlgorithmState
-                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage11TherapyAlgorithm))
+                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage12TherapyAlgorithm))
                     Case ServerDataIndexes.pumpBannerState
-                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage12BannerState))
+                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage13BannerState))
                     Case ServerDataIndexes.basal
-                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage13Basal))
+                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage14Basal))
                 End Select
             End With
         End If
@@ -1604,7 +1607,7 @@ Public Class Form1
     Private Sub TabControlPage1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlPage1.Selecting
 
         Select Case e.TabPage.Name
-            Case NameOf(TabPage14Markers)
+            Case NameOf(TabPage15Markers)
                 Me.DgvCareLinkUsers.InitializeDgv
 
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
@@ -1659,7 +1662,8 @@ Public Class Form1
                     TableLayoutPanelLimitsTop.ButtonClick,
                     TableLayoutPanelLowGlucoseSuspendedTop.ButtonClick,
                     TableLayoutPanelMealTop.ButtonClick,
-                    TableLayoutPanelNotificationHistoryTop.ButtonClick,
+                    TableLayoutPanelNotificationActiveTop.ButtonClick,
+                    TableLayoutPanelNotificationsClearedTop.ButtonClick,
                     TableLayoutPanelBgReadingsTop.ButtonClick,
                     TableLayoutPanelSgsTop.ButtonClick,
                     TableLayoutPanelTherapyAlgorithmTop.ButtonClick,
@@ -1670,8 +1674,11 @@ Public Class Form1
         Dim tabName As String = topTable.LabelText.Split(":")(0).Replace(" ", "")
         If tabName.Contains("Markers") Then
             tabName = "Markers"
+        ElseIf tabName = "NotificationHistory" Then
+            tabName = If(topTable.Name.Contains("Active"), NameOf(ActiveNotification), NameOf(ClearedNotifications))
         End If
         For Each row As DataGridViewRow In dgv.Rows
+            Debug.WriteLine(row.Cells(1).FormattedValue.ToString)
             If row.Cells(1).FormattedValue.ToString.Equals(tabName, StringComparison.OrdinalIgnoreCase) Then
                 Me.TabControlPage1.SelectedIndex = 3
                 dgv.CurrentCell = row.Cells(2)
@@ -2102,7 +2109,7 @@ Public Class Form1
                         Case <= TirLowLimit(NativeMmolL)
                             backColor = Color.Yellow
                             If _showBalloonTip Then
-                                Me.NotifyIcon1.ShowBalloonTip(10000, $"CareLink™ Alert", $"SG below {TirLowLimitAsString(NativeMmolL)} {SgUnitsNativeString}", Me.ToolTip1.ToolTipIcon)
+                                Me.NotifyIcon1.ShowBalloonTip(10000, $"CareLink™ Alert", $"SG below {TirLowLimitAsString(NativeMmolL)} {BgUnitsNativeString}", Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
                         Case <= TirHighLimit(NativeMmolL)
@@ -2114,7 +2121,7 @@ Public Class Form1
                                 Me.NotifyIcon1.ShowBalloonTip(
                                     timeout:=10000,
                                     tipTitle:=$"CareLink™ Alert",
-                                    tipText:=$"SG above {TirHighLimitAsString(NativeMmolL)} {SgUnitsNativeString}",
+                                    tipText:=$"SG above {TirHighLimitAsString(NativeMmolL)} {BgUnitsNativeString}",
                                     tipIcon:=Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
@@ -2123,7 +2130,7 @@ Public Class Form1
                     Me.NotifyIcon1.Icon = CreateTextIcon(lastSgString.PadRight(totalWidth:=3).Substring(startIndex:=0, length:=3).Trim.PadLeft(totalWidth:=3), backColor)
                     Dim notStr As New StringBuilder(100)
                     notStr.AppendLine(Date.Now().ToShortDateTimeString.Replace($"{CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator}{Now.Year}", ""))
-                    notStr.AppendLine($"Last SG {lastSgString} {SgUnitsNativeString}")
+                    notStr.AppendLine($"Last SG {lastSgString} {BgUnitsNativeString}")
                     If s_pumpInRangeOfPhone Then
                         If s_lastSgValue = 0 Then
                             Me.LabelTrendValue.Text = ""
@@ -2363,7 +2370,7 @@ Public Class Form1
             Me.LastSgOrExitTimeLabel.Text = s_lastSgRecord.Timestamp.ToShortTimeString
             Me.LastSgOrExitTimeLabel.BackColor = Color.Transparent
             Me.ShieldUnitsLabel.BackColor = Color.Transparent
-            Me.ShieldUnitsLabel.Text = SgUnitsNativeString
+            Me.ShieldUnitsLabel.Text = BgUnitsNativeString
 
             If InAutoMode Then
                 Select Case s_sensorState
@@ -2704,11 +2711,11 @@ Public Class Form1
         With Me.TimeInRangeChart
             With .Series(NameOf(TimeInRangeSeries)).Points
                 .Clear()
-                .AddXY($"{s_belowHypoLimit}% Below {TirLowLimitAsString(NativeMmolL)} {SgUnitsNativeString}", s_belowHypoLimit / 100)
+                .AddXY($"{s_belowHypoLimit}% Below {TirLowLimitAsString(NativeMmolL)} {BgUnitsNativeString}", s_belowHypoLimit / 100)
                 .Last().Color = Color.Red
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
-                .AddXY($"{s_aboveHyperLimit}% Above {TirHighLimitAsString(NativeMmolL)} {SgUnitsNativeString}", s_aboveHyperLimit / 100)
+                .AddXY($"{s_aboveHyperLimit}% Above {TirHighLimitAsString(NativeMmolL)} {BgUnitsNativeString}", s_aboveHyperLimit / 100)
                 .Last().Color = Color.Yellow
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
@@ -2722,13 +2729,13 @@ Public Class Form1
         End With
 
         Me.AboveHighLimitValueLabel.Text = $"{s_aboveHyperLimit} %"
-        Me.AboveHighLimitMessageLabel.Text = $"Above {TirHighLimitAsString(NativeMmolL)} {SgUnitsNativeString}"
+        Me.AboveHighLimitMessageLabel.Text = $"Above {TirHighLimitAsString(NativeMmolL)} {BgUnitsNativeString}"
         Me.TimeInRangeValueLabel.Text = $"{GetTIR()} %"
         Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
-        Me.BelowLowLimitMessageLabel.Text = $"Below {TirLowLimitAsString(NativeMmolL)} {SgUnitsNativeString}"
+        Me.BelowLowLimitMessageLabel.Text = $"Below {TirLowLimitAsString(NativeMmolL)} {BgUnitsNativeString}"
         Dim averageSgStr As String = RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.averageSG))
         Me.AverageSGValueLabel.Text = If(NativeMmolL, averageSgStr.TruncateSingleString(2), averageSgStr)
-        Me.AverageSGMessageLabel.Text = $"Average SG in {SgUnitsNativeString}"
+        Me.AverageSGMessageLabel.Text = $"Average SG in {BgUnitsNativeString}"
 
         ' Calculate Time in AutoMode
         If s_listOfAutoModeStatusMarkers.Count = 0 Then
@@ -2778,19 +2785,19 @@ Public Class Form1
         Dim highScale As Single = (GetYMaxValue(False) - TirHighLimit(False)) / (TirLowLimit(False) - GetYMinValue(False))
         For Each sg As SG In s_listOfSgRecords.Where(Function(entry As SG) Not Single.IsNaN(entry.sg))
             elements += 1
-            If sg.sgMmDl < 70 Then
+            If sg.sgMgdL < 70 Then
                 lowCount += 1
                 If NativeMmolL Then
                     lowDeviations += ((TirLowLimit(True) - sg.sgMmolL) * MmolLUnitsDivisor) ^ 2
                 Else
-                    lowDeviations += (TirLowLimit(False) - sg.sgMmDl) ^ 2
+                    lowDeviations += (TirLowLimit(False) - sg.sgMgdL) ^ 2
                 End If
-            ElseIf sg.sgMmDl > 180 Then
+            ElseIf sg.sgMgdL > 180 Then
                 highCount += 1
                 If NativeMmolL Then
                     highDeviations += ((sg.sgMmolL - TirHighLimit(True)) * MmolLUnitsDivisor) ^ 2
                 Else
-                    highDeviations += (sg.sgMmDl - TirHighLimit(False)) ^ 2
+                    highDeviations += (sg.sgMgdL - TirHighLimit(False)) ^ 2
                 End If
             End If
         Next
@@ -2941,74 +2948,80 @@ Public Class Form1
         Me.ReadingsLabel.Text = $"{nonZeroRecords.Count()}/288 SG Readings"
 
         Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
-                              ClassCollectionToDataTable({s_lastSgRecord}.ToList),
-                              NameOf(SG),
-                              AddressOf SgHelpers.AttachHandlers,
-                              ServerDataIndexes.lastSG,
-                              True)
+            table:=ClassCollectionToDataTable(classCollection:={s_lastSgRecord}.ToList),
+            className:=NameOf(SG),
+            attachHandlers:=AddressOf SgHelpers.AttachHandlers,
+            rowIndex:=ServerDataIndexes.lastSG,
+            hideRecordNumberColumn:=True)
 
         Me.TableLayoutPanelLastAlarm.DisplayDataTableInDGV(
-                              ClassCollectionToDataTable(GetSummaryRecords(s_lastAlarmValue)),
-                              NameOf(LastAlarmRecord),
-                              AddressOf SummaryHelpers.AttachHandlers,
-                              ServerDataIndexes.lastAlarm,
-                              True)
+            table:=ClassCollectionToDataTable(classCollection:=GetSummaryRecords(s_lastAlarmValue)),
+            className:=NameOf(LastAlarmRecord),
+            attachHandlers:=AddressOf SummaryHelpers.AttachHandlers,
+            rowIndex:=ServerDataIndexes.lastAlarm,
+            hideRecordNumberColumn:=True)
 
         Me.TableLayoutPanelActiveInsulin.DisplayDataTableInDGV(
-                              ClassCollectionToDataTable({s_activeInsulin}.ToList),
-                              NameOf(ActiveInsulin),
-                              AddressOf ActiveInsulinHelpers.AttachHandlers,
-                              ServerDataIndexes.activeInsulin,
-                              True)
+            table:=ClassCollectionToDataTable(classCollection:={s_activeInsulin}.ToList),
+            className:=NameOf(ActiveInsulin),
+            attachHandlers:=AddressOf ActiveInsulinHelpers.AttachHandlers,
+            rowIndex:=ServerDataIndexes.activeInsulin,
+            hideRecordNumberColumn:=True)
 
+        Dim keySelector As Func(Of SG, Integer) = Function(x) x.RecordNumber
         Me.TableLayoutPanelSgs.DisplayDataTableInDGV(
-                              Me.DgvSGs,
-                              ClassCollectionToDataTable(
-                              classCollection:=s_listOfSgRecords.OrderByDescending(Function(x) x.RecordNumber).ToList()),
-                              ServerDataIndexes.sgs)
-        Me.DgvSGs.Columns(0).HeaderCell.SortGlyphDirection = SortOrder.Descending
+            dGV:=Me.DgvSGs,
+            table:=ClassCollectionToDataTable(classCollection:=s_listOfSgRecords.OrderByDescending(keySelector).ToList()),
+            rowIndex:=ServerDataIndexes.sgs)
+        Me.DgvSGs.Columns(index:=0).HeaderCell.SortGlyphDirection = SortOrder.Descending
 
         Me.TableLayoutPanelLimits.DisplayDataTableInDGV(
-                              ClassCollectionToDataTable(classCollection:=s_listOfLimitRecords),
-                              NameOf(Limit),
-                              AddressOf LimitsHelpers.AttachHandlers,
-                              ServerDataIndexes.limits,
-                              False)
+            table:=ClassCollectionToDataTable(classCollection:=s_listOfLimitRecords),
+            className:=NameOf(Limit),
+            attachHandlers:=AddressOf LimitsHelpers.AttachHandlers,
+            rowIndex:=ServerDataIndexes.limits,
+            hideRecordNumberColumn:=False)
 
         UpdateMarkerTabs()
 
-        UpdateNotificationTab()
+        UpdateNotificationTabs()
 
         Me.TableLayoutPanelTherapyAlgorithm.DisplayDataTableInDGV(
-                              ClassCollectionToDataTable(GetSummaryRecords(s_therapyAlgorithmStateValue)),
-                              NameOf(SummaryRecord),
-                              AddressOf SummaryHelpers.AttachHandlers,
-                              ServerDataIndexes.therapyAlgorithmState,
-                              True)
+            table:=ClassCollectionToDataTable(classCollection:=GetSummaryRecords(s_therapyAlgorithmStateValue)),
+            className:=NameOf(SummaryRecord),
+            attachHandlers:=AddressOf SummaryHelpers.AttachHandlers,
+            rowIndex:=ServerDataIndexes.therapyAlgorithmState,
+            hideRecordNumberColumn:=True)
 
         UpdatePumpBannerStateTab()
 
         Me.TableLayoutPanelBasal.DisplayDataTableInDGV(
-                              ClassCollectionToDataTable(s_listOfManualBasal.ToList),
-                              NameOf(Basal),
-                              AddressOf BasalHelpers.AttachHandlers,
-                              ServerDataIndexes.basal,
-                              True)
+            table:=ClassCollectionToDataTable(classCollection:=s_listOfManualBasal.ToList),
+            className:=NameOf(Basal),
+            attachHandlers:=AddressOf BasalHelpers.AttachHandlers,
+            rowIndex:=ServerDataIndexes.basal,
+            hideRecordNumberColumn:=True)
 
         Me.MenuStartHere.Enabled = True
         Me.UpdateTreatmentChart()
 
         Dim showLegend As Boolean = s_totalAutoCorrection > 0
-        ShowHideLegendItem(showLegend,
-                           "Auto Correction",
-                           _activeInsulinChartLegend, _summaryChartLegend, _treatmentMarkersChartLegend)
+        ShowHideLegendItem(
+            showLegend,
+            legendString:="Auto Correction",
+            activeInsulinChartLegend:=_activeInsulinChartLegend,
+            homeChartLegend:=_summaryChartLegend,
+            treatmentMarkersChartLegend:=_treatmentMarkersChartLegend)
 
         showLegend = s_listOfLowGlucoseSuspendedMarkers.Count > 0 AndAlso
-                     Not (s_listOfLowGlucoseSuspendedMarkers.Count = 1 AndAlso
-                     s_listOfLowGlucoseSuspendedMarkers(0).deliverySuspended = False)
-        ShowHideLegendItem(showLegend,
-                           "Suspend",
-                           _activeInsulinChartLegend, _summaryChartLegend, _treatmentMarkersChartLegend)
+            Not (s_listOfLowGlucoseSuspendedMarkers.Count = 1 AndAlso
+            s_listOfLowGlucoseSuspendedMarkers(0).deliverySuspended = False)
+        ShowHideLegendItem(
+            showLegend,
+            legendString:="Suspend",
+            activeInsulinChartLegend:=_activeInsulinChartLegend,
+            homeChartLegend:=_summaryChartLegend,
+            treatmentMarkersChartLegend:=_treatmentMarkersChartLegend)
 
         If s_listOfLowGlucoseSuspendedMarkers.Count = 1 AndAlso s_listOfLowGlucoseSuspendedMarkers(0).deliverySuspended = False Then
             Exit Sub

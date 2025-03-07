@@ -36,7 +36,10 @@ Friend Module Form1LoginHelpers
             Case FileToLoadOptions.TestData
                 Form1.Text = $"{SavedTitle} Using Test Data from 'SampleUserV2Data.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
-                RecentData = LoadIndexedItems(File.ReadAllText(TestDataFileNameWithPath))
+                Dim patientDataElementAsText As String = File.ReadAllText(TestDataFileNameWithPath)
+                Dim patientDataElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(patientDataElementAsText)
+                RecentData = LoadIndexedItems(patientDataElementAsText)
+                PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
                 Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(TestDataFileNameWithPath)
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)

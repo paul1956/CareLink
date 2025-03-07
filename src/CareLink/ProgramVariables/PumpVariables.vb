@@ -49,7 +49,16 @@ Public Module PumpVariables
     Friend s_timeWithoutMinuteFormat As String
 
     Friend Property InAutoMode As Boolean
-    Friend Property SgUnitsNativeString As String
+
+    Friend Property BgUnitsNativeString As String
+        Get
+            Return If(_BgUnitsNativeString = "MGDL", "mg/dL", "Mmol/l")
+        End Get
+        Set
+            _BgUnitsNativeString = Value
+        End Set
+    End Property
+
     Public Property ProgramInitialized As Boolean = False
     Public Property RecentData As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
 
@@ -68,6 +77,7 @@ Public Module PumpVariables
     Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
     Friend ReadOnly s_listOfUserSummaryRecord As New List(Of SummaryRecord)
     Friend s_listOfLimitRecords As New List(Of Limit)
+    Private _BgUnitsNativeString As String
 
 #End Region
     Public Function GetCarbDefaultUnit() As String

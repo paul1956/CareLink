@@ -2,7 +2,11 @@ root = true
 # editorconfig.org
 
 # top-most EditorConfig file
+# Default settings:
+# A newline ending every file
+# Use 4 spaces as indentation
 [*]
+guidelines = 120 1px dotted 504CFF00, 150 1px dotted 50FF6A00
 indent_style = space
 indent_size = 4
 file_header_template = Licensed to the .NET Foundation under one or more agreements.\nThe .NET Foundation licenses this file to you under the MIT license.\nSee the LICENSE file in the project root for more information.

@@ -29,12 +29,6 @@ Partial Class Form1
         Dim DataGridViewCellStyle1 As DataGridViewCellStyle = New DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As DataGridViewCellStyle = New DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As DataGridViewCellStyle = New DataGridViewCellStyle()
         AboveHighLimitMessageLabel = New Label()
         AboveHighLimitValueLabel = New Label()
         ActiveInsulinValue = New Label()
@@ -48,8 +42,13 @@ Partial Class Form1
         BelowLowLimitValueLabel = New Label()
         CalibrationDueImage = New PictureBox()
         CalibrationShieldPanel = New Panel()
-        CareLinkUserDataRecordBindingSource = New BindingSource(components)
+        LastSgOrExitTimeLabel = New Label()
+        PumpBannerStateLabel = New Label()
+        ShieldUnitsLabel = New Label()
         CurrentSgLabel = New Label()
+        SensorMessageLabel = New Label()
+        SmartGuardShieldPictureBox = New PictureBox()
+        CareLinkUserDataRecordBindingSource = New BindingSource(components)
         CursorMessage1Label = New Label()
         CursorMessage2Label = New Label()
         CursorMessage3Label = New Label()
@@ -84,55 +83,61 @@ Partial Class Form1
         Last24CarbsValueLabel = New Label()
         Last24HoursGraphLabel = New Label()
         Last24HTotalsPanel = New Panel()
-        Last24ManualBolusPercentLabel = New Label()
-        Last24ManualBolusUnitsLabel = New Label()
-        Last24MealBolusLabel = New Label()
-        Last24TotalInsulinLabel = New Label()
         Last24TotalInsulinUnitsLabel = New Label()
+        Last24ManualBolusUnitsLabel = New Label()
+        Last24TotalInsulinLabel = New Label()
+        Last24ManualBolusPercentLabel = New Label()
+        Last24MealBolusLabel = New Label()
         Last24TotalsLabel = New Label()
-        LastSgOrExitTimeLabel = New Label()
         LastUpdateTimeToolStripStatusLabel = New ToolStripStatusLabel()
         LoginStatus = New ToolStripStatusLabel()
         LowTirComplianceLabel = New Label()
         MaxBasalPerHourLabel = New Label()
         MenuHelp = New ToolStripMenuItem()
-        MenuHelpAbout = New ToolStripMenuItem()
-        MenuHelpCheckForUpdates = New ToolStripMenuItem()
         MenuHelpReportAnIssue = New ToolStripMenuItem()
+        MenuHelpCheckForUpdates = New ToolStripMenuItem()
+        MenuHelpAbout = New ToolStripMenuItem()
         MenuOptions = New ToolStripMenuItem()
-        MenuOptionsAdvancedOptions = New ToolStripMenuItem()
         MenuOptionsAudioAlerts = New ToolStripMenuItem()
-        MenuOptionsAutoLogin = New ToolStripMenuItem()
-        MenuOptionsColorPicker = New ToolStripMenuItem()
-        MenuOptionsEditPumpSettings = New ToolStripMenuItem()
-        MenuOptionsFilterRawJSONData = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognitionEnabled = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognitionDisabled = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognitionConfidence = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognition95 = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognition90 = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognition85 = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognition80 = New ToolStripMenuItem()
         MenuOptionsShowChartLegends = New ToolStripMenuItem()
         MenuOptionsSpeechHelpShown = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognition80 = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognition85 = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognition90 = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognition95 = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognitionConfidence = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognitionDisabled = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognitionEnabled = New ToolStripMenuItem()
+        ToolStripSeparator5 = New ToolStripSeparator()
+        MenuOptionsAutoLogin = New ToolStripMenuItem()
+        ToolStripSeparator6 = New ToolStripSeparator()
+        MenuOptionsAdvancedOptions = New ToolStripMenuItem()
+        MenuOptionsFilterRawJSONData = New ToolStripMenuItem()
         MenuOptionsUseLocalTimeZone = New ToolStripMenuItem()
+        ToolStripSeparator7 = New ToolStripSeparator()
+        MenuOptionsColorPicker = New ToolStripMenuItem()
+        MenuOptionsEditPumpSettings = New ToolStripMenuItem()
         MenuShowMiniDisplay = New ToolStripMenuItem()
         MenuStartHere = New ToolStripMenuItem()
-        MenuStartHereCleanUpObsoleteFiles = New ToolStripMenuItem()
-        MenuStartHereExceptionReportLoad = New ToolStripMenuItem()
-        MenuStartHereExit = New ToolStripMenuItem()
-        MenuStartHereLoadSavedDataFile = New ToolStripMenuItem()
         MenuStartHereLogin = New ToolStripMenuItem()
+        ToolStripSeparator8 = New ToolStripSeparator()
         MenuStartHereManuallyImportDeviceSettings = New ToolStripMenuItem()
         MenuStartHereShowPumpSetup = New ToolStripMenuItem()
-        MenuStartHereSnapshotSave = New ToolStripMenuItem()
+        ToolStripSeparator1 = New ToolStripSeparator()
+        MenuStartHereLoadSavedDataFile = New ToolStripMenuItem()
+        MenuStartHereExceptionReportLoad = New ToolStripMenuItem()
+        ToolStripSeparator4 = New ToolStripSeparator()
         MenuStartHereUseLastSavedFile = New ToolStripMenuItem()
         MenuStartHereUseTestData = New ToolStripMenuItem()
+        ToolStripSeparator2 = New ToolStripSeparator()
+        MenuStartHereSnapshotSave = New ToolStripMenuItem()
+        MenuStartHereCleanUpObsoleteFiles = New ToolStripMenuItem()
+        ToolStripSeparator3 = New ToolStripSeparator()
+        MenuStartHereExit = New ToolStripMenuItem()
         MenuStrip1 = New MenuStrip()
         ModelLabel = New Label()
         NotifyIcon1 = New NotifyIcon(components)
         PumpAITLabel = New Label()
-        PumpBannerStateLabel = New Label()
         PumpBatteryPictureBox = New PictureBox()
         PumpBatteryRemaining2Label = New Label()
         PumpBatteryRemainingLabel = New Label()
@@ -140,103 +145,95 @@ Partial Class Form1
         ReadingsLabel = New Label()
         RemainingInsulinUnits = New Label()
         SensorDaysLeftLabel = New Label()
-        SensorMessageLabel = New Label()
         SensorTimeLeftLabel = New Label()
         SensorTimeLeftPanel = New Panel()
         SensorTimeLeftPictureBox = New PictureBox()
         SerialNumberButton = New Button()
         ServerUpdateTimer = New Timer(components)
-        ShieldUnitsLabel = New Label()
         SmartGuardLabel = New Label()
-        SmartGuardShieldPictureBox = New PictureBox()
         SplitContainer1 = New SplitContainer()
+        TemporaryUseAdvanceAITDecayCheckBox = New CheckBox()
         SplitContainer2 = New SplitContainer()
+        TransmitterBatteryPercentLabel = New Label()
+        TransmitterBatteryPictureBox = New PictureBox()
         SplitContainer3 = New SplitContainer()
+        TimeInRangeLabel = New Label()
+        TimeInRangeChartLabel = New Label()
+        TimeInRangeSummaryPercentCharLabel = New Label()
+        TimeInRangeValueLabel = New Label()
+        TirComplianceLabel = New Label()
         StatusStrip1 = New StatusStrip()
-        StatusStripSpacerRight = New ToolStripStatusLabel()
         StatusStripSpeech = New ToolStripStatusLabel()
+        TimeZoneToolStripStatusLabel = New ToolStripStatusLabel()
+        StatusStripSpacerRight = New ToolStripStatusLabel()
+        UpdateAvailableStatusStripLabel = New ToolStripStatusLabel()
         TabControlPage1 = New TabControl()
-        TabControlPage2 = New TabControl()
-        TableLayoutPanelActiveInsulin = New TableLayoutPanel()
-        TableLayoutPanelActiveInsulinTop = New TableLayoutPanelTopEx()
-        TableLayoutPanelAutoBasalDelivery = New TableLayoutPanel()
-        TableLayoutPanelAutoBasalDeliveryTop = New TableLayoutPanelTopEx()
-        TableLayoutPanelAutoModeStatus = New TableLayoutPanel()
-        TableLayoutPanelAutoModeStatusTop = New TableLayoutPanelTopEx()
-        TableLayoutPanelBannerState = New TableLayoutPanel()
-        TableLayoutPanelBannerStateTop = New TableLayoutPanelTopEx()
-        TableLayoutPanelBasal = New TableLayoutPanel()
-        TableLayoutPanelBasalTop = New TableLayoutPanelTopEx()
-        TableLayoutPanelBgReadingsTop = New TableLayoutPanelTopEx()
-        TableLayoutPanelCalibration = New TableLayoutPanel()
-        TableLayoutPanelCalibrationTop = New TableLayoutPanelTopEx()
-        TableLayoutPanelInsulin = New TableLayoutPanel()
-        TableLayoutPanelInsulinTop = New TableLayoutPanelTopEx()
-        TableLayoutPanelLastAlarm = New TableLayoutPanel()
-        TableLayoutPanelLastAlarmTop = New TableLayoutPanelTopEx()
-        TableLayoutPanelLastSG = New TableLayoutPanel()
-        TableLayoutPanelLastSgTop = New TableLayoutPanelTopEx()
-        TableLayoutPanelLimits = New TableLayoutPanel()
-        TableLayoutPanelLimitsTop = New TableLayoutPanelTopEx()
-        TableLayoutPanelLowGlucoseSuspended = New TableLayoutPanel()
-        TableLayoutPanelLowGlucoseSuspendedTop = New TableLayoutPanelTopEx()
-        TableLayoutPanelMeal = New TableLayoutPanel()
-        TableLayoutPanelMealTop = New TableLayoutPanelTopEx()
-        TableLayoutPanelNotificationHistory = New TableLayoutPanel()
-        TableLayoutPanelNotificationHistoryTop = New TableLayoutPanelTopEx()
-        TableLayoutPanelSgReadings = New TableLayoutPanel()
-        TableLayoutPanelSgs = New TableLayoutPanel()
-        TableLayoutPanelSgsTop = New TableLayoutPanelTopEx()
-        TableLayoutPanelTherapyAlgorithm = New TableLayoutPanel()
-        TableLayoutPanelTherapyAlgorithmTop = New TableLayoutPanelTopEx()
-        TableLayoutPanelTimeChange = New TableLayoutPanel()
-        TableLayoutPanelTimeChangeTop = New TableLayoutPanelTopEx()
         TabPage01HomePage = New TabPage()
         TabPage02RunningIOB = New TabPage()
         TabPage03TreatmentDetails = New TabPage()
         TabPage04SummaryData = New TabPage()
         TabPage05Insulin = New TabPage()
+        TableLayoutPanelInsulin = New TableLayoutPanel()
+        TableLayoutPanelInsulinTop = New TableLayoutPanelTopEx()
         TabPage06Meal = New TabPage()
+        TableLayoutPanelMeal = New TableLayoutPanel()
+        TableLayoutPanelMealTop = New TableLayoutPanelTopEx()
         TabPage07ActiveInsulin = New TabPage()
+        TableLayoutPanelActiveInsulin = New TableLayoutPanel()
+        TableLayoutPanelActiveInsulinTop = New TableLayoutPanelTopEx()
         TabPage08SensorGlucose = New TabPage()
+        TableLayoutPanelSgs = New TableLayoutPanel()
+        TableLayoutPanelSgsTop = New TableLayoutPanelTopEx()
         TabPage09Limits = New TabPage()
-        TabPage10NotificationHistory = New TabPage()
-        TabPage11TherapyAlgorithm = New TabPage()
-        TabPage12BannerState = New TabPage()
-        TabPage13Basal = New TabPage()
-        TabPage14Markers = New TabPage()
-        TabPageAllUsers = New TabPage()
+        TableLayoutPanelLimits = New TableLayoutPanel()
+        TableLayoutPanelLimitsTop = New TableLayoutPanelTopEx()
+        TabPage10NotificationActive = New TabPage()
+        TableLayoutPanelNotificationActive = New TableLayoutPanel()
+        TableLayoutPanelNotificationActiveTop = New TableLayoutPanelTopEx()
+        TabPage11NotificationsCleared = New TabPage()
+        TableLayoutPanelNotificationsCleared = New TableLayoutPanel()
+        TableLayoutPanelNotificationsClearedTop = New TableLayoutPanelTopEx()
+        TabPage12TherapyAlgorithm = New TabPage()
+        TableLayoutPanelTherapyAlgorithm = New TableLayoutPanel()
+        TableLayoutPanelTherapyAlgorithmTop = New TableLayoutPanelTopEx()
+        TabPage13BannerState = New TabPage()
+        TableLayoutPanelBannerState = New TableLayoutPanel()
+        TableLayoutPanelBannerStateTop = New TableLayoutPanelTopEx()
+        TabPage14Basal = New TabPage()
+        TableLayoutPanelBasal = New TableLayoutPanel()
+        TableLayoutPanelBasalTop = New TableLayoutPanelTopEx()
+        TabPage15Markers = New TabPage()
+        TabControlPage2 = New TabControl()
         TabPageAutoBasalDelivery = New TabPage()
+        TableLayoutPanelAutoBasalDelivery = New TableLayoutPanel()
+        TableLayoutPanelAutoBasalDeliveryTop = New TableLayoutPanelTopEx()
         TabPageAutoModeStatus = New TabPage()
-        TabPageBackToHomePage = New TabPage()
+        TableLayoutPanelAutoModeStatus = New TableLayoutPanel()
+        TableLayoutPanelAutoModeStatusTop = New TableLayoutPanelTopEx()
         TabPageBgReadings = New TabPage()
+        TableLayoutPanelSgReadings = New TableLayoutPanel()
+        TableLayoutPanelBgReadingsTop = New TableLayoutPanelTopEx()
         TabPageCalibration = New TabPage()
-        TabPageCurrentUser = New TabPage()
-        TabPageLastAlarm = New TabPage()
-        TabPageLastSG = New TabPage()
+        TableLayoutPanelCalibration = New TableLayoutPanel()
+        TableLayoutPanelCalibrationTop = New TableLayoutPanelTopEx()
         TabPageLowGlucoseSuspended = New TabPage()
+        TableLayoutPanelLowGlucoseSuspended = New TableLayoutPanel()
+        TableLayoutPanelLowGlucoseSuspendedTop = New TableLayoutPanelTopEx()
         TabPageTimeChange = New TabPage()
-        TemporaryUseAdvanceAITDecayCheckBox = New CheckBox()
-        TimeInRangeChartLabel = New Label()
-        TimeInRangeLabel = New Label()
-        TimeInRangeSummaryPercentCharLabel = New Label()
-        TimeInRangeValueLabel = New Label()
-        TimeZoneToolStripStatusLabel = New ToolStripStatusLabel()
-        TirComplianceLabel = New Label()
-        ToolStripSeparator1 = New ToolStripSeparator()
-        ToolStripSeparator2 = New ToolStripSeparator()
-        ToolStripSeparator3 = New ToolStripSeparator()
-        ToolStripSeparator4 = New ToolStripSeparator()
-        ToolStripSeparator5 = New ToolStripSeparator()
-        ToolStripSeparator6 = New ToolStripSeparator()
-        ToolStripSeparator7 = New ToolStripSeparator()
-        ToolStripSeparator8 = New ToolStripSeparator()
+        TableLayoutPanelTimeChange = New TableLayoutPanel()
+        TableLayoutPanelTimeChangeTop = New TableLayoutPanelTopEx()
+        TabPageLastSG = New TabPage()
+        TableLayoutPanelLastSG = New TableLayoutPanel()
+        TableLayoutPanelLastSgTop = New TableLayoutPanelTopEx()
+        TabPageLastAlarm = New TabPage()
+        TableLayoutPanelLastAlarm = New TableLayoutPanel()
+        TableLayoutPanelLastAlarmTop = New TableLayoutPanelTopEx()
+        TabPageCurrentUser = New TabPage()
+        TabPageAllUsers = New TabPage()
+        TabPageBackToHomePage = New TabPage()
         ToolTip1 = New ToolTip(components)
-        TransmitterBatteryPercentLabel = New Label()
-        TransmitterBatteryPictureBox = New PictureBox()
-        UpdateAvailableStatusStripLabel = New ToolStripStatusLabel()
         WebView = New Microsoft.Web.WebView2.WinForms.WebView2()
-        MenuStrip1.SuspendLayout()
+        TabPage10NotificationActive = New TabPage()
         CType(CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         CalibrationShieldPanel.SuspendLayout()
         CType(SmartGuardShieldPictureBox, ComponentModel.ISupportInitialize).BeginInit()
@@ -252,9 +249,13 @@ Partial Class Form1
         CType(DgvSummary, ComponentModel.ISupportInitialize).BeginInit()
         CType(InsulinLevelPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         Last24HTotalsPanel.SuspendLayout()
+        MenuStrip1.SuspendLayout()
         CType(PumpBatteryPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         SensorTimeLeftPanel.SuspendLayout()
         CType(SensorTimeLeftPictureBox, ComponentModel.ISupportInitialize).BeginInit()
+        CType(SplitContainer1, ComponentModel.ISupportInitialize).BeginInit()
+        SplitContainer1.Panel1.SuspendLayout()
+        SplitContainer1.SuspendLayout()
         CType(SplitContainer2, ComponentModel.ISupportInitialize).BeginInit()
         SplitContainer2.Panel1.SuspendLayout()
         SplitContainer2.Panel2.SuspendLayout()
@@ -263,639 +264,52 @@ Partial Class Form1
         CType(SplitContainer3, ComponentModel.ISupportInitialize).BeginInit()
         SplitContainer3.Panel2.SuspendLayout()
         SplitContainer3.SuspendLayout()
+        StatusStrip1.SuspendLayout()
         TabControlPage1.SuspendLayout()
         TabPage01HomePage.SuspendLayout()
         TabPage02RunningIOB.SuspendLayout()
-        CType(SplitContainer1, ComponentModel.ISupportInitialize).BeginInit()
-        SplitContainer1.Panel1.SuspendLayout()
-        SplitContainer1.SuspendLayout()
         TabPage04SummaryData.SuspendLayout()
         TabPage05Insulin.SuspendLayout()
+        TableLayoutPanelInsulin.SuspendLayout()
         TabPage06Meal.SuspendLayout()
+        TableLayoutPanelMeal.SuspendLayout()
         TabPage07ActiveInsulin.SuspendLayout()
+        TableLayoutPanelActiveInsulin.SuspendLayout()
         TabPage08SensorGlucose.SuspendLayout()
+        TableLayoutPanelSgs.SuspendLayout()
         TabPage09Limits.SuspendLayout()
-        TabPage10NotificationHistory.SuspendLayout()
-        TabPage11TherapyAlgorithm.SuspendLayout()
-        TabPage12BannerState.SuspendLayout()
-        TabPage13Basal.SuspendLayout()
-        TabPageLastSG.SuspendLayout()
-        TabPageLastAlarm.SuspendLayout()
+        TableLayoutPanelLimits.SuspendLayout()
+        TabPage10NotificationActive.SuspendLayout()
+        TableLayoutPanelNotificationActive.SuspendLayout()
+        TabPage11NotificationsCleared.SuspendLayout()
+        TableLayoutPanelNotificationsCleared.SuspendLayout()
+        TabPage12TherapyAlgorithm.SuspendLayout()
+        TableLayoutPanelTherapyAlgorithm.SuspendLayout()
+        TabPage13BannerState.SuspendLayout()
+        TableLayoutPanelBannerState.SuspendLayout()
+        TabPage14Basal.SuspendLayout()
+        TableLayoutPanelBasal.SuspendLayout()
         TabControlPage2.SuspendLayout()
         TabPageAutoBasalDelivery.SuspendLayout()
+        TableLayoutPanelAutoBasalDelivery.SuspendLayout()
         TabPageAutoModeStatus.SuspendLayout()
+        TableLayoutPanelAutoModeStatus.SuspendLayout()
         TabPageBgReadings.SuspendLayout()
+        TableLayoutPanelSgReadings.SuspendLayout()
         TabPageCalibration.SuspendLayout()
+        TableLayoutPanelCalibration.SuspendLayout()
         TabPageLowGlucoseSuspended.SuspendLayout()
+        TableLayoutPanelLowGlucoseSuspended.SuspendLayout()
         TabPageTimeChange.SuspendLayout()
-        CType(WebView, ComponentModel.ISupportInitialize).BeginInit()
+        TableLayoutPanelTimeChange.SuspendLayout()
+        TabPageLastSG.SuspendLayout()
+        TableLayoutPanelLastSG.SuspendLayout()
+        TabPageLastAlarm.SuspendLayout()
+        TableLayoutPanelLastAlarm.SuspendLayout()
         TabPageCurrentUser.SuspendLayout()
         TabPageAllUsers.SuspendLayout()
-        StatusStrip1.SuspendLayout()
+        CType(WebView, ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
-        ' 
-        ' MenuStrip1
-        ' 
-        MenuStrip1.Items.AddRange(New ToolStripItem() {MenuStartHere, MenuOptions, MenuHelp, MenuShowMiniDisplay})
-        MenuStrip1.Location = New Point(0, 0)
-        MenuStrip1.Name = "MenuStrip1"
-        MenuStrip1.Size = New Size(1384, 24)
-        MenuStrip1.TabIndex = 0
-        MenuStrip1.Text = "MenuStrip1"
-        ' 
-        ' MenuStartHere
-        ' 
-        MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {MenuStartHereLogin, ToolStripSeparator8, MenuStartHereManuallyImportDeviceSettings, MenuStartHereShowPumpSetup, ToolStripSeparator1, MenuStartHereLoadSavedDataFile, MenuStartHereExceptionReportLoad, ToolStripSeparator4, MenuStartHereUseLastSavedFile, MenuStartHereUseTestData, ToolStripSeparator2, MenuStartHereSnapshotSave, MenuStartHereCleanUpObsoleteFiles, ToolStripSeparator3, MenuStartHereExit})
-        MenuStartHere.Name = "MenuStartHere"
-        MenuStartHere.Size = New Size(71, 20)
-        MenuStartHere.Text = "Start Here"
-        ' 
-        ' MenuStartHereLogin
-        ' 
-        MenuStartHereLogin.Name = "MenuStartHereLogin"
-        MenuStartHereLogin.Size = New Size(245, 22)
-        MenuStartHereLogin.Text = "Login"
-        ' 
-        ' ToolStripSeparator8
-        ' 
-        ToolStripSeparator8.Name = "ToolStripSeparator8"
-        ToolStripSeparator8.Size = New Size(242, 6)
-        ' 
-        ' MenuStartHereManuallyImportDeviceSettings
-        ' 
-        MenuStartHereManuallyImportDeviceSettings.Name = "MenuStartHereManuallyImportDeviceSettings"
-        MenuStartHereManuallyImportDeviceSettings.Size = New Size(245, 22)
-        MenuStartHereManuallyImportDeviceSettings.Text = "Manually Import Device Settings"
-        ' 
-        ' MenuStartHereShowPumpSetup
-        ' 
-        MenuStartHereShowPumpSetup.Enabled = False
-        MenuStartHereShowPumpSetup.Name = "MenuStartHereShowPumpSetup"
-        MenuStartHereShowPumpSetup.Size = New Size(245, 22)
-        MenuStartHereShowPumpSetup.Text = "Show Pump Setup"
-        ' 
-        ' ToolStripSeparator1
-        ' 
-        ToolStripSeparator1.Name = "ToolStripSeparator1"
-        ToolStripSeparator1.Size = New Size(242, 6)
-        ' 
-        ' MenuStartHereLoadSavedDataFile
-        ' 
-        MenuStartHereLoadSavedDataFile.Name = "MenuStartHereLoadSavedDataFile"
-        MenuStartHereLoadSavedDataFile.Size = New Size(245, 22)
-        MenuStartHereLoadSavedDataFile.Text = "Load A Saved Data File"
-        ' 
-        ' MenuStartHereExceptionReportLoad
-        ' 
-        MenuStartHereExceptionReportLoad.Name = "MenuStartHereExceptionReportLoad"
-        MenuStartHereExceptionReportLoad.Size = New Size(245, 22)
-        MenuStartHereExceptionReportLoad.Text = "Load An Exception Report"
-        ' 
-        ' ToolStripSeparator4
-        ' 
-        ToolStripSeparator4.Name = "ToolStripSeparator4"
-        ToolStripSeparator4.Size = New Size(242, 6)
-        ' 
-        ' MenuStartHereUseLastSavedFile
-        ' 
-        MenuStartHereUseLastSavedFile.Name = "MenuStartHereUseLastSavedFile"
-        MenuStartHereUseLastSavedFile.Size = New Size(245, 22)
-        MenuStartHereUseLastSavedFile.Text = "Use Last Data File"
-        ' 
-        ' MenuStartHereUseTestData
-        ' 
-        MenuStartHereUseTestData.Name = "MenuStartHereUseTestData"
-        MenuStartHereUseTestData.Size = New Size(245, 22)
-        MenuStartHereUseTestData.Text = "Use Test Data"
-        ' 
-        ' ToolStripSeparator2
-        ' 
-        ToolStripSeparator2.Name = "ToolStripSeparator2"
-        ToolStripSeparator2.Size = New Size(242, 6)
-        ' 
-        ' MenuStartHereSnapshotSave
-        ' 
-        MenuStartHereSnapshotSave.Name = "MenuStartHereSnapshotSave"
-        MenuStartHereSnapshotSave.ShortcutKeys = Keys.Control Or Keys.S
-        MenuStartHereSnapshotSave.Size = New Size(245, 22)
-        MenuStartHereSnapshotSave.Text = "Snapshot &Save"
-        ' 
-        ' MenuStartHereCleanUpObsoleteFiles
-        ' 
-        MenuStartHereCleanUpObsoleteFiles.Name = "MenuStartHereCleanUpObsoleteFiles"
-        MenuStartHereCleanUpObsoleteFiles.Size = New Size(245, 22)
-        MenuStartHereCleanUpObsoleteFiles.Text = "Clean Up Obsolete Files"
-        ' 
-        ' ToolStripSeparator3
-        ' 
-        ToolStripSeparator3.Name = "ToolStripSeparator3"
-        ToolStripSeparator3.Size = New Size(242, 6)
-        ' 
-        ' MenuStartHereExit
-        ' 
-        MenuStartHereExit.Image = My.Resources.Resources.AboutBox
-        MenuStartHereExit.Name = "MenuStartHereExit"
-        MenuStartHereExit.ShortcutKeys = Keys.Alt Or Keys.X
-        MenuStartHereExit.Size = New Size(245, 22)
-        MenuStartHereExit.Text = "E&xit"
-        ' 
-        ' MenuOptions
-        ' 
-        MenuOptions.DropDownItems.AddRange(New ToolStripItem() {MenuOptionsAudioAlerts, MenuOptionsSpeechRecognitionEnabled, MenuOptionsShowChartLegends, MenuOptionsSpeechHelpShown, ToolStripSeparator5, MenuOptionsAutoLogin, ToolStripSeparator6, MenuOptionsAdvancedOptions, MenuOptionsFilterRawJSONData, MenuOptionsUseLocalTimeZone, ToolStripSeparator7, MenuOptionsColorPicker, MenuOptionsEditPumpSettings})
-        MenuOptions.Name = "MenuOptions"
-        MenuOptions.Size = New Size(61, 20)
-        MenuOptions.Text = "Options"
-        ' 
-        ' MenuOptionsAudioAlerts
-        ' 
-        MenuOptionsAudioAlerts.Checked = True
-        MenuOptionsAudioAlerts.CheckOnClick = True
-        MenuOptionsAudioAlerts.CheckState = CheckState.Checked
-        MenuOptionsAudioAlerts.Name = "MenuOptionsAudioAlerts"
-        MenuOptionsAudioAlerts.Size = New Size(184, 22)
-        MenuOptionsAudioAlerts.Text = "Audio Alerts Enabled"
-        ' 
-        ' MenuOptionsSpeechRecognitionEnabled
-        ' 
-        MenuOptionsSpeechRecognitionEnabled.DropDownItems.AddRange(New ToolStripItem() {MenuOptionsSpeechRecognitionDisabled, MenuOptionsSpeechRecognitionConfidence, MenuOptionsSpeechRecognition95, MenuOptionsSpeechRecognition90, MenuOptionsSpeechRecognition85, MenuOptionsSpeechRecognition80})
-        MenuOptionsSpeechRecognitionEnabled.Name = "MenuOptionsSpeechRecognitionEnabled"
-        MenuOptionsSpeechRecognitionEnabled.Size = New Size(184, 22)
-        MenuOptionsSpeechRecognitionEnabled.Text = "Speech Recognition"
-        MenuOptionsSpeechRecognitionEnabled.TextAlign = ContentAlignment.MiddleRight
-        ' 
-        ' MenuOptionsSpeechRecognitionDisabled
-        ' 
-        MenuOptionsSpeechRecognitionDisabled.Name = "MenuOptionsSpeechRecognitionDisabled"
-        MenuOptionsSpeechRecognitionDisabled.Size = New Size(135, 22)
-        MenuOptionsSpeechRecognitionDisabled.Text = "Disabled"
-        ' 
-        ' MenuOptionsSpeechRecognitionConfidence
-        ' 
-        MenuOptionsSpeechRecognitionConfidence.Enabled = False
-        MenuOptionsSpeechRecognitionConfidence.Name = "MenuOptionsSpeechRecognitionConfidence"
-        MenuOptionsSpeechRecognitionConfidence.Size = New Size(135, 22)
-        MenuOptionsSpeechRecognitionConfidence.Text = "Confidence"
-        ' 
-        ' MenuOptionsSpeechRecognition95
-        ' 
-        MenuOptionsSpeechRecognition95.CheckOnClick = True
-        MenuOptionsSpeechRecognition95.Name = "MenuOptionsSpeechRecognition95"
-        MenuOptionsSpeechRecognition95.Size = New Size(135, 22)
-        MenuOptionsSpeechRecognition95.Text = "95%"
-        MenuOptionsSpeechRecognition95.TextAlign = ContentAlignment.MiddleRight
-        ' 
-        ' MenuOptionsSpeechRecognition90
-        ' 
-        MenuOptionsSpeechRecognition90.CheckOnClick = True
-        MenuOptionsSpeechRecognition90.Name = "MenuOptionsSpeechRecognition90"
-        MenuOptionsSpeechRecognition90.Size = New Size(135, 22)
-        MenuOptionsSpeechRecognition90.Text = "90%"
-        MenuOptionsSpeechRecognition90.TextAlign = ContentAlignment.MiddleRight
-        ' 
-        ' MenuOptionsSpeechRecognition85
-        ' 
-        MenuOptionsSpeechRecognition85.CheckOnClick = True
-        MenuOptionsSpeechRecognition85.Name = "MenuOptionsSpeechRecognition85"
-        MenuOptionsSpeechRecognition85.Size = New Size(135, 22)
-        MenuOptionsSpeechRecognition85.Text = "85%"
-        MenuOptionsSpeechRecognition85.TextAlign = ContentAlignment.MiddleRight
-        ' 
-        ' MenuOptionsSpeechRecognition80
-        ' 
-        MenuOptionsSpeechRecognition80.Checked = True
-        MenuOptionsSpeechRecognition80.CheckOnClick = True
-        MenuOptionsSpeechRecognition80.CheckState = CheckState.Checked
-        MenuOptionsSpeechRecognition80.Name = "MenuOptionsSpeechRecognition80"
-        MenuOptionsSpeechRecognition80.Size = New Size(135, 22)
-        MenuOptionsSpeechRecognition80.Text = "80%"
-        ' 
-        ' MenuOptionsShowChartLegends
-        ' 
-        MenuOptionsShowChartLegends.Checked = True
-        MenuOptionsShowChartLegends.CheckOnClick = True
-        MenuOptionsShowChartLegends.CheckState = CheckState.Checked
-        MenuOptionsShowChartLegends.Name = "MenuOptionsShowChartLegends"
-        MenuOptionsShowChartLegends.Size = New Size(184, 22)
-        MenuOptionsShowChartLegends.Text = "Show Chart Legends"
-        ' 
-        ' MenuOptionsSpeechHelpShown
-        ' 
-        MenuOptionsSpeechHelpShown.Checked = True
-        MenuOptionsSpeechHelpShown.CheckOnClick = True
-        MenuOptionsSpeechHelpShown.CheckState = CheckState.Checked
-        MenuOptionsSpeechHelpShown.Name = "MenuOptionsSpeechHelpShown"
-        MenuOptionsSpeechHelpShown.Size = New Size(184, 22)
-        MenuOptionsSpeechHelpShown.Text = "Disable Speech Help"
-        '
-        ' TableLayoutPanelInsulinTop
-        '
-        TableLayoutPanelInsulinTop.AutoSize = True
-        TableLayoutPanelInsulinTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelInsulinTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelInsulinTop.ColumnCount = 2
-        TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelInsulinTop.Dock = DockStyle.Fill
-        TableLayoutPanelInsulinTop.LabelText = "Insulin"
-        TableLayoutPanelInsulinTop.Location = New Point(6, 6)
-        TableLayoutPanelInsulinTop.Name = "TableLayoutPanelInsulinTop"
-        TableLayoutPanelInsulinTop.RowCount = 1
-        TableLayoutPanelInsulinTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelInsulinTop.Size = New Size(1358, 37)
-        TableLayoutPanelInsulinTop.TabIndex = 1
-        TableLayoutPanelInsulin.Controls.Add(TableLayoutPanelInsulinTop, 0, 0)
-        '
-        ' TableLayoutPanelMealTop
-        '
-        TableLayoutPanelMealTop.AutoSize = True
-        TableLayoutPanelMealTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelMealTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelMealTop.ColumnCount = 2
-        TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelMealTop.Dock = DockStyle.Fill
-        TableLayoutPanelMealTop.LabelText = "Meal"
-        TableLayoutPanelMealTop.Location = New Point(6, 6)
-        TableLayoutPanelMealTop.Name = "TableLayoutPanelMealTop"
-        TableLayoutPanelMealTop.RowCount = 1
-        TableLayoutPanelMealTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelMealTop.Size = New Size(1358, 37)
-        TableLayoutPanelMealTop.TabIndex = 1
-        TableLayoutPanelMeal.Controls.Add(TableLayoutPanelMealTop, 0, 0)
-        '
-        ' TableLayoutPanelActiveInsulinTop
-        '
-        TableLayoutPanelActiveInsulinTop.AutoSize = True
-        TableLayoutPanelActiveInsulinTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelActiveInsulinTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelActiveInsulinTop.ColumnCount = 2
-        TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelActiveInsulinTop.Dock = DockStyle.Fill
-        TableLayoutPanelActiveInsulinTop.LabelText = "Active Insulin"
-        TableLayoutPanelActiveInsulinTop.Location = New Point(3, 3)
-        TableLayoutPanelActiveInsulinTop.Name = "TableLayoutPanelActiveInsulinTop"
-        TableLayoutPanelActiveInsulinTop.RowCount = 1
-        TableLayoutPanelActiveInsulinTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelActiveInsulinTop.Size = New Size(1364, 37)
-        TableLayoutPanelActiveInsulinTop.TabIndex = 1
-        TableLayoutPanelActiveInsulin.Controls.Add(TableLayoutPanelActiveInsulinTop, 0, 0)
-        '
-        ' TableLayoutPanelSgsTop
-        '
-        TableLayoutPanelSgsTop.AutoSize = True
-        TableLayoutPanelSgsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelSgsTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelSgsTop.ColumnCount = 2
-        TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelSgsTop.Dock = DockStyle.Fill
-        TableLayoutPanelSgsTop.LabelText = "SGs"
-        TableLayoutPanelSgsTop.Location = New Point(3, 3)
-        TableLayoutPanelSgsTop.Name = "TableLayoutPanelSgsTop"
-        TableLayoutPanelSgsTop.RowCount = 1
-        TableLayoutPanelSgsTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelSgsTop.Size = New Size(1364, 37)
-        TableLayoutPanelSgsTop.TabIndex = 1
-        TableLayoutPanelSgs.Controls.Add(TableLayoutPanelSgsTop, 0, 0)
-        TableLayoutPanelSgs.Controls.Add(DgvSGs, 0, 1)
-        '
-        ' TableLayoutPanelLimitsTop
-        '
-        TableLayoutPanelLimitsTop.AutoSize = True
-        TableLayoutPanelLimitsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelLimitsTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelLimitsTop.ColumnCount = 2
-        TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLimitsTop.Dock = DockStyle.Fill
-        TableLayoutPanelLimitsTop.LabelText = "Limits"
-        TableLayoutPanelLimitsTop.Location = New Point(3, 3)
-        TableLayoutPanelLimitsTop.Name = "TableLayoutPanelLimitsTop"
-        TableLayoutPanelLimitsTop.RowCount = 1
-        TableLayoutPanelLimitsTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelLimitsTop.Size = New Size(1364, 37)
-        TableLayoutPanelLimitsTop.TabIndex = 1
-        TableLayoutPanelLimits.Controls.Add(TableLayoutPanelLimitsTop, 0, 0)
-        '
-        ' TableLayoutPanelNotificationHistoryTop
-        '
-        TableLayoutPanelNotificationHistoryTop.AutoSize = True
-        TableLayoutPanelNotificationHistoryTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelNotificationHistoryTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelNotificationHistoryTop.ColumnCount = 2
-        TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelNotificationHistoryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelNotificationHistoryTop.Dock = DockStyle.Fill
-        TableLayoutPanelNotificationHistoryTop.LabelText = "Notification History"
-        TableLayoutPanelNotificationHistoryTop.Location = New Point(3, 3)
-        TableLayoutPanelNotificationHistoryTop.Name = "TableLayoutPanelNotificationHistoryTop"
-        TableLayoutPanelNotificationHistoryTop.RowCount = 1
-        TableLayoutPanelNotificationHistoryTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelNotificationHistoryTop.Size = New Size(1364, 37)
-        TableLayoutPanelNotificationHistoryTop.TabIndex = 1
-        TableLayoutPanelNotificationHistory.Controls.Add(TableLayoutPanelNotificationHistoryTop, 1, 0)
-        '
-        ' TableLayoutPanelTherapyAlgorithmTop
-        '
-        TableLayoutPanelTherapyAlgorithmTop.AutoSize = True
-        TableLayoutPanelTherapyAlgorithmTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelTherapyAlgorithmTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelTherapyAlgorithmTop.ColumnCount = 2
-        TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelTherapyAlgorithmTop.Dock = DockStyle.Fill
-        TableLayoutPanelTherapyAlgorithmTop.LabelText = "Therapy Algorithm"
-        TableLayoutPanelTherapyAlgorithmTop.Location = New Point(3, 3)
-        TableLayoutPanelTherapyAlgorithmTop.Name = "TableLayoutPanelTherapyAlgorithmTop"
-        TableLayoutPanelTherapyAlgorithmTop.RowCount = 1
-        TableLayoutPanelTherapyAlgorithmTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelTherapyAlgorithmTop.Size = New Size(1364, 37)
-        TableLayoutPanelTherapyAlgorithmTop.TabIndex = 1
-        TableLayoutPanelTherapyAlgorithm.Controls.Add(TableLayoutPanelTherapyAlgorithmTop, 0, 0)
-        '
-        ' TableLayoutPanelBannerStateTop
-        '
-        TableLayoutPanelBannerStateTop.AutoSize = True
-        TableLayoutPanelBannerStateTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelBannerStateTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelBannerStateTop.ColumnCount = 2
-        TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBannerStateTop.Dock = DockStyle.Fill
-        TableLayoutPanelBannerStateTop.LabelText = "Banner State"
-        TableLayoutPanelBannerStateTop.Location = New Point(3, 3)
-        TableLayoutPanelBannerStateTop.Name = "TableLayoutPanelBannerStateTop"
-        TableLayoutPanelBannerStateTop.RowCount = 1
-        TableLayoutPanelBannerStateTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelBannerStateTop.Size = New Size(1364, 37)
-        TableLayoutPanelBannerStateTop.TabIndex = 1
-        TableLayoutPanelBannerState.Controls.Add(TableLayoutPanelBannerStateTop, 0, 0)
-        '
-        ' TableLayoutPanelBasalTop
-        '
-        TableLayoutPanelBasalTop.AutoSize = True
-        TableLayoutPanelBasalTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelBasalTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelBasalTop.ColumnCount = 2
-        TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBasalTop.Dock = DockStyle.Fill
-        TableLayoutPanelBasalTop.LabelText = "Basal"
-        TableLayoutPanelBasalTop.Location = New Point(3, 3)
-        TableLayoutPanelBasalTop.Name = "TableLayoutPanelBasalTop"
-        TableLayoutPanelBasalTop.RowCount = 1
-        TableLayoutPanelBasalTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelBasalTop.Size = New Size(1364, 37)
-        TableLayoutPanelBasalTop.TabIndex = 1
-        TableLayoutPanelBasal.Controls.Add(TableLayoutPanelBasalTop, 0, 0)
-        '
-        ' TableLayoutPanelLastSgTop
-        '
-        TableLayoutPanelLastSgTop.AutoSize = True
-        TableLayoutPanelLastSgTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelLastSgTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelLastSgTop.ColumnCount = 2
-        TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLastSgTop.Dock = DockStyle.Fill
-        TableLayoutPanelLastSgTop.LabelText = "last SG"
-        TableLayoutPanelLastSgTop.Location = New Point(3, 3)
-        TableLayoutPanelLastSgTop.Name = "TableLayoutPanelLastSgTop"
-        TableLayoutPanelLastSgTop.RowCount = 1
-        TableLayoutPanelLastSgTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelLastSgTop.Size = New Size(1364, 37)
-        TableLayoutPanelLastSgTop.TabIndex = 1
-        TableLayoutPanelLastSG.Controls.Add(TableLayoutPanelLastSgTop, 0, 0)
-        '
-        ' TableLayoutPanelLastAlarmTop
-        '
-        TableLayoutPanelLastAlarmTop.AutoSize = True
-        TableLayoutPanelLastAlarmTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelLastAlarmTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelLastAlarmTop.ColumnCount = 2
-        TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLastAlarmTop.Dock = DockStyle.Fill
-        TableLayoutPanelLastAlarmTop.LabelText = "Last Alarm"
-        TableLayoutPanelLastAlarmTop.Location = New Point(3, 3)
-        TableLayoutPanelLastAlarmTop.Name = "TableLayoutPanelLastAlarmTop"
-        TableLayoutPanelLastAlarmTop.RowCount = 1
-        TableLayoutPanelLastAlarmTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelLastAlarmTop.Size = New Size(1364, 37)
-        TableLayoutPanelLastAlarmTop.TabIndex = 1
-        TableLayoutPanelLastAlarm.Controls.Add(TableLayoutPanelLastAlarmTop, 0, 0)
-        '
-        ' TableLayoutPanelAutoBasalDeliveryTop
-        '
-        TableLayoutPanelAutoBasalDeliveryTop.AutoSize = True
-        TableLayoutPanelAutoBasalDeliveryTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelAutoBasalDeliveryTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelAutoBasalDeliveryTop.ColumnCount = 2
-        TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelAutoBasalDeliveryTop.Dock = DockStyle.Fill
-        TableLayoutPanelAutoBasalDeliveryTop.LabelText = "Basal"
-        TableLayoutPanelAutoBasalDeliveryTop.Location = New Point(6, 6)
-        TableLayoutPanelAutoBasalDeliveryTop.Name = "TableLayoutPanelAutoBasalDeliveryTop"
-        TableLayoutPanelAutoBasalDeliveryTop.RowCount = 1
-        TableLayoutPanelAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelAutoBasalDeliveryTop.Size = New Size(1358, 37)
-        TableLayoutPanelAutoBasalDeliveryTop.TabIndex = 1
-        TableLayoutPanelAutoBasalDelivery.Controls.Add(TableLayoutPanelAutoBasalDeliveryTop, 0, 0)
-        TableLayoutPanelAutoBasalDelivery.Controls.Add(DgvAutoBasalDelivery, 0, 1)
-        '
-        ' TableLayoutPanelAutoModeStatusTop
-        '
-        TableLayoutPanelAutoModeStatusTop.AutoSize = True
-        TableLayoutPanelAutoModeStatusTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelAutoModeStatusTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelAutoModeStatusTop.ColumnCount = 2
-        TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelAutoModeStatusTop.Dock = DockStyle.Fill
-        TableLayoutPanelAutoModeStatusTop.LabelText = "Auto Mode Status"
-        TableLayoutPanelAutoModeStatusTop.Location = New Point(6, 6)
-        TableLayoutPanelAutoModeStatusTop.Name = "TableLayoutPanelAutoModeStatusTop"
-        TableLayoutPanelAutoModeStatusTop.RowCount = 1
-        TableLayoutPanelAutoModeStatusTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelAutoModeStatusTop.Size = New Size(1358, 37)
-        TableLayoutPanelAutoModeStatusTop.TabIndex = 1
-        TableLayoutPanelAutoModeStatus.Controls.Add(TableLayoutPanelAutoModeStatusTop, 0, 0)
-        '
-        ' TableLayoutPanelBgReadingsTop
-        '
-        TableLayoutPanelBgReadingsTop.AutoSize = True
-        TableLayoutPanelBgReadingsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelBgReadingsTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelBgReadingsTop.ColumnCount = 2
-        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBgReadingsTop.Dock = DockStyle.Fill
-        TableLayoutPanelBgReadingsTop.LabelText = "Sg Readings"
-        TableLayoutPanelBgReadingsTop.Location = New Point(6, 6)
-        TableLayoutPanelBgReadingsTop.Name = "TableLayoutPanelBgReadingsTop"
-        TableLayoutPanelBgReadingsTop.RowCount = 1
-        TableLayoutPanelBgReadingsTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelBgReadingsTop.Size = New Size(1358, 37)
-        TableLayoutPanelBgReadingsTop.TabIndex = 1
-        TableLayoutPanelSgReadings.Controls.Add(TableLayoutPanelBgReadingsTop, 0, 0)
-        '
-        ' TableLayoutPanelCalibrationTop
-        '
-        TableLayoutPanelCalibrationTop.AutoSize = True
-        TableLayoutPanelCalibrationTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelCalibrationTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelCalibrationTop.ColumnCount = 2
-        TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelCalibrationTop.Dock = DockStyle.Fill
-        TableLayoutPanelCalibrationTop.LabelText = "Calibration"
-        TableLayoutPanelCalibrationTop.Location = New Point(6, 6)
-        TableLayoutPanelCalibrationTop.Name = "TableLayoutPanelCalibrationTop"
-        TableLayoutPanelCalibrationTop.RowCount = 1
-        TableLayoutPanelCalibrationTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelCalibrationTop.Size = New Size(1358, 37)
-        TableLayoutPanelCalibrationTop.TabIndex = 1
-        TableLayoutPanelCalibration.Controls.Add(TableLayoutPanelCalibrationTop, 0, 0)
-        '
-        ' TableLayoutPanelLowGlucoseSuspendedTop
-        '
-        TableLayoutPanelLowGlucoseSuspendedTop.AutoSize = True
-        TableLayoutPanelLowGlucoseSuspendedTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelLowGlucoseSuspendedTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelLowGlucoseSuspendedTop.ColumnCount = 2
-        TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLowGlucoseSuspendedTop.Dock = DockStyle.Fill
-        TableLayoutPanelLowGlucoseSuspendedTop.LabelText = "Low Glucose Suspended"
-        TableLayoutPanelLowGlucoseSuspendedTop.Location = New Point(6, 6)
-        TableLayoutPanelLowGlucoseSuspendedTop.Name = "TableLayoutPanelLowGlucoseSuspendedTop"
-        TableLayoutPanelLowGlucoseSuspendedTop.RowCount = 1
-        TableLayoutPanelLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelLowGlucoseSuspendedTop.Size = New Size(1358, 37)
-        TableLayoutPanelLowGlucoseSuspendedTop.TabIndex = 1
-        TableLayoutPanelLowGlucoseSuspended.Controls.Add(TableLayoutPanelLowGlucoseSuspendedTop, 0, 0)
-        '
-        ' TableLayoutPanelTimeChangeTop
-        '
-        TableLayoutPanelTimeChangeTop.AutoSize = True
-        TableLayoutPanelTimeChangeTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelTimeChangeTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelTimeChangeTop.ColumnCount = 2
-        TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelTimeChangeTop.Dock = DockStyle.Fill
-        TableLayoutPanelTimeChangeTop.LabelText = "Time Change"
-        TableLayoutPanelTimeChangeTop.Location = New Point(6, 6)
-        TableLayoutPanelTimeChangeTop.Name = "TableLayoutPanelTimeChangeTop"
-        TableLayoutPanelTimeChangeTop.RowCount = 1
-        TableLayoutPanelTimeChangeTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelTimeChangeTop.Size = New Size(1358, 37)
-        TableLayoutPanelTimeChangeTop.TabIndex = 1
-        TableLayoutPanelTimeChange.Controls.Add(TableLayoutPanelTimeChangeTop, 0, 0)
-        ' 
-        ' ToolStripSeparator5
-        ' 
-        ToolStripSeparator5.Name = "ToolStripSeparator5"
-        ToolStripSeparator5.Size = New Size(181, 6)
-        ' 
-        ' MenuOptionsAutoLogin
-        ' 
-        MenuOptionsAutoLogin.CheckOnClick = True
-        MenuOptionsAutoLogin.Name = "MenuOptionsAutoLogin"
-        MenuOptionsAutoLogin.Size = New Size(184, 22)
-        MenuOptionsAutoLogin.Text = "Auto Login"
-        ' 
-        ' ToolStripSeparator6
-        ' 
-        ToolStripSeparator6.Name = "ToolStripSeparator6"
-        ToolStripSeparator6.Size = New Size(181, 6)
-        ' 
-        ' MenuOptionsAdvancedOptions
-        ' 
-        MenuOptionsAdvancedOptions.Enabled = False
-        MenuOptionsAdvancedOptions.Name = "MenuOptionsAdvancedOptions"
-        MenuOptionsAdvancedOptions.Size = New Size(184, 22)
-        MenuOptionsAdvancedOptions.Text = "Advanced Options"
-        ' 
-        ' MenuOptionsFilterRawJSONData
-        ' 
-        MenuOptionsFilterRawJSONData.Checked = True
-        MenuOptionsFilterRawJSONData.CheckOnClick = True
-        MenuOptionsFilterRawJSONData.CheckState = CheckState.Checked
-        MenuOptionsFilterRawJSONData.Name = "MenuOptionsFilterRawJSONData"
-        MenuOptionsFilterRawJSONData.Size = New Size(184, 22)
-        MenuOptionsFilterRawJSONData.Text = "Filter Raw JSON Data"
-        ' 
-        ' MenuOptionsUseLocalTimeZone
-        ' 
-        MenuOptionsUseLocalTimeZone.Checked = True
-        MenuOptionsUseLocalTimeZone.CheckOnClick = True
-        MenuOptionsUseLocalTimeZone.CheckState = CheckState.Indeterminate
-        MenuOptionsUseLocalTimeZone.Name = "MenuOptionsUseLocalTimeZone"
-        MenuOptionsUseLocalTimeZone.Size = New Size(184, 22)
-        MenuOptionsUseLocalTimeZone.Text = "Use Local TImeZone"
-        ' 
-        ' ToolStripSeparator7
-        ' 
-        ToolStripSeparator7.Name = "ToolStripSeparator7"
-        ToolStripSeparator7.Size = New Size(181, 6)
-        ' 
-        ' MenuOptionsColorPicker
-        ' 
-        MenuOptionsColorPicker.Image = CType(resources.GetObject("MenuOptionsColorPicker.Image"), Image)
-        MenuOptionsColorPicker.Name = "MenuOptionsColorPicker"
-        MenuOptionsColorPicker.Size = New Size(184, 22)
-        MenuOptionsColorPicker.Text = "Color Picker..."
-        ' 
-        ' MenuOptionsEditPumpSettings
-        ' 
-        MenuOptionsEditPumpSettings.Name = "MenuOptionsEditPumpSettings"
-        MenuOptionsEditPumpSettings.Size = New Size(184, 22)
-        MenuOptionsEditPumpSettings.Text = "Edit Pump Settings..."
-        ' 
-        ' MenuHelp
-        ' 
-        MenuHelp.DropDownItems.AddRange(New ToolStripItem() {MenuHelpReportAnIssue, MenuHelpCheckForUpdates, MenuHelpAbout})
-        MenuHelp.Name = "MenuHelp"
-        MenuHelp.ShortcutKeys = Keys.Alt Or Keys.H
-        MenuHelp.Size = New Size(44, 20)
-        MenuHelp.Text = "&Help"
-        ' 
-        ' MenuHelpReportAnIssue
-        ' 
-        MenuHelpReportAnIssue.Image = My.Resources.Resources.FeedbackSmile_16x
-        MenuHelpReportAnIssue.ImageScaling = ToolStripItemImageScaling.None
-        MenuHelpReportAnIssue.Name = "MenuHelpReportAnIssue"
-        MenuHelpReportAnIssue.Size = New Size(177, 22)
-        MenuHelpReportAnIssue.Text = "Report A Problem..."
-        ' 
-        ' MenuHelpCheckForUpdates
-        ' 
-        MenuHelpCheckForUpdates.Name = "MenuHelpCheckForUpdates"
-        MenuHelpCheckForUpdates.Size = New Size(177, 22)
-        MenuHelpCheckForUpdates.Text = "Check For Updates"
-        ' 
-        ' MenuHelpAbout
-        ' 
-        MenuHelpAbout.Image = My.Resources.Resources.AboutBox
-        MenuHelpAbout.Name = "MenuHelpAbout"
-        MenuHelpAbout.Size = New Size(177, 22)
-        MenuHelpAbout.Text = "&About..."
-        ' 
-        ' MenuShowMiniDisplay
-        ' 
-        MenuShowMiniDisplay.ForeColor = Color.Red
-        MenuShowMiniDisplay.Image = My.Resources.Resources.ExitFullScreen
-        MenuShowMiniDisplay.Name = "MenuShowMiniDisplay"
-        MenuShowMiniDisplay.Padding = New Padding(10, 0, 10, 0)
-        MenuShowMiniDisplay.ShortcutKeyDisplayString = "Alt+W"
-        MenuShowMiniDisplay.ShortcutKeys = Keys.Control Or Keys.W
-        MenuShowMiniDisplay.Size = New Size(154, 20)
-        MenuShowMiniDisplay.Text = "Show &Widget Alt+W"
-        MenuShowMiniDisplay.ToolTipText = "Minimize and show Widget"
-        MenuShowMiniDisplay.Visible = False
         ' 
         ' AboveHighLimitMessageLabel
         ' 
@@ -935,19 +349,6 @@ Partial Class Form1
         ActiveInsulinValue.TabIndex = 0
         ActiveInsulinValue.Text = "Active Insulin 0.000U"
         ActiveInsulinValue.TextAlign = ContentAlignment.TopCenter
-        ' 
-        ' FullNameLabel
-        ' 
-        FullNameLabel.BackColor = Color.Transparent
-        FullNameLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        FullNameLabel.ForeColor = Color.White
-        FullNameLabel.Location = New Point(1140, 0)
-        FullNameLabel.Margin = New Padding(0)
-        FullNameLabel.Name = "FullNameLabel"
-        FullNameLabel.Size = New Size(230, 21)
-        FullNameLabel.TabIndex = 8
-        FullNameLabel.Text = "User Name"
-        FullNameLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' AverageSGMessageLabel
         ' 
@@ -1226,10 +627,10 @@ Partial Class Form1
         ' DgvAutoBasalDelivery
         ' 
         DgvAutoBasalDelivery.Dock = DockStyle.Fill
-        DgvAutoBasalDelivery.Location = New Point(6, 9)
+        DgvAutoBasalDelivery.Location = New Point(6, 52)
         DgvAutoBasalDelivery.Name = "DgvAutoBasalDelivery"
         DgvAutoBasalDelivery.ReadOnly = True
-        DgvAutoBasalDelivery.Size = New Size(1358, 640)
+        DgvAutoBasalDelivery.Size = New Size(1358, 597)
         DgvAutoBasalDelivery.TabIndex = 0
         ' 
         ' DgvCareLinkUsers
@@ -1239,15 +640,19 @@ Partial Class Form1
         DgvCareLinkUsers.AllowUserToResizeRows = False
         DgvCareLinkUsers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
         DgvCareLinkUsers.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
-        DataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.Font = New Font("Segoe UI", 9.0F)
-        DataGridViewCellStyle3.WrapMode = DataGridViewTriState.True
-        DgvCareLinkUsers.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.Font = New Font("Segoe UI", 9.0F)
+        DataGridViewCellStyle1.WrapMode = DataGridViewTriState.True
+        DgvCareLinkUsers.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         DgvCareLinkUsers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.Font = New Font("Segoe UI", 9.0F)
-        DataGridViewCellStyle4.WrapMode = DataGridViewTriState.False
-        DgvCareLinkUsers.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = SystemColors.Window
+        DataGridViewCellStyle2.Font = New Font("Segoe UI", 9.0F)
+        DataGridViewCellStyle2.ForeColor = SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = DataGridViewTriState.False
+        DgvCareLinkUsers.DefaultCellStyle = DataGridViewCellStyle2
         DgvCareLinkUsers.Dock = DockStyle.Fill
         DgvCareLinkUsers.EditMode = DataGridViewEditMode.EditOnEnter
         DgvCareLinkUsers.Location = New Point(3, 3)
@@ -1293,9 +698,9 @@ Partial Class Form1
         ' DgvSGs
         ' 
         DgvSGs.Dock = DockStyle.Fill
-        DgvSGs.Location = New Point(3, 3)
+        DgvSGs.Location = New Point(6, 52)
         DgvSGs.Name = "DgvSGs"
-        DgvSGs.Size = New Size(1364, 649)
+        DgvSGs.Size = New Size(1358, 597)
         DgvSGs.TabIndex = 1
         ' 
         ' DgvSummary
@@ -1304,11 +709,35 @@ Partial Class Form1
         DgvSummary.Location = New Point(3, 3)
         DgvSummary.Name = "DgvSummary"
         DgvSummary.ReadOnly = True
-        DataGridViewCellStyle7.WrapMode = DataGridViewTriState.True
-        DgvSummary.RowsDefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle3.WrapMode = DataGridViewTriState.True
+        DgvSummary.RowsDefaultCellStyle = DataGridViewCellStyle3
         DgvSummary.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvSummary.Size = New Size(1370, 655)
         DgvSummary.TabIndex = 0
+        ' 
+        ' FullNameLabel
+        ' 
+        FullNameLabel.BackColor = Color.Transparent
+        FullNameLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        FullNameLabel.ForeColor = Color.White
+        FullNameLabel.Location = New Point(1140, 0)
+        FullNameLabel.Margin = New Padding(0)
+        FullNameLabel.Name = "FullNameLabel"
+        FullNameLabel.Size = New Size(230, 21)
+        FullNameLabel.TabIndex = 8
+        FullNameLabel.Text = "User Name"
+        FullNameLabel.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' HighTirComplianceLabel
+        ' 
+        HighTirComplianceLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
+        HighTirComplianceLabel.ForeColor = Color.LimeGreen
+        HighTirComplianceLabel.Location = New Point(115, 460)
+        HighTirComplianceLabel.Name = "HighTirComplianceLabel"
+        HighTirComplianceLabel.Size = New Size(112, 57)
+        HighTirComplianceLabel.TabIndex = 37
+        HighTirComplianceLabel.Text = "High" & vbCrLf & "Excellent"
+        HighTirComplianceLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' ImageList1
         ' 
@@ -1339,17 +768,6 @@ Partial Class Form1
         InRangeMessageLabel.Text = "In range"
         InRangeMessageLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
-        ' Last24TotalInsulinUnitsLabel
-        ' 
-        Last24TotalInsulinUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24TotalInsulinUnitsLabel.ForeColor = Color.White
-        Last24TotalInsulinUnitsLabel.Location = New Point(131, 103)
-        Last24TotalInsulinUnitsLabel.Name = "Last24TotalInsulinUnitsLabel"
-        Last24TotalInsulinUnitsLabel.Size = New Size(70, 21)
-        Last24TotalInsulinUnitsLabel.TabIndex = 67
-        Last24TotalInsulinUnitsLabel.Text = " 100.0U"
-        Last24TotalInsulinUnitsLabel.TextAlign = ContentAlignment.MiddleRight
-        ' 
         ' InsulinLevelPictureBox
         ' 
         InsulinLevelPictureBox.Image = CType(resources.GetObject("InsulinLevelPictureBox.Image"), Image)
@@ -1361,6 +779,17 @@ Partial Class Form1
         InsulinLevelPictureBox.SizeMode = PictureBoxSizeMode.Zoom
         InsulinLevelPictureBox.TabIndex = 12
         InsulinLevelPictureBox.TabStop = False
+        ' 
+        ' InsulinTypeLabel
+        ' 
+        InsulinTypeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        InsulinTypeLabel.ForeColor = Color.White
+        InsulinTypeLabel.Location = New Point(978, 3)
+        InsulinTypeLabel.Name = "InsulinTypeLabel"
+        InsulinTypeLabel.Size = New Size(162, 21)
+        InsulinTypeLabel.TabIndex = 54
+        InsulinTypeLabel.Text = "Humalog/Novolog"
+        InsulinTypeLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' LabelSgTrend
         ' 
@@ -1480,17 +909,6 @@ Partial Class Form1
         Last24BasalUnitsLabel.Text = "50.0U"
         Last24BasalUnitsLabel.TextAlign = ContentAlignment.MiddleRight
         ' 
-        ' Last24CarbsValueLabel
-        ' 
-        Last24CarbsValueLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24CarbsValueLabel.ForeColor = Color.White
-        Last24CarbsValueLabel.Location = New Point(0, 21)
-        Last24CarbsValueLabel.Name = "Last24CarbsValueLabel"
-        Last24CarbsValueLabel.Size = New Size(249, 21)
-        Last24CarbsValueLabel.TabIndex = 74
-        Last24CarbsValueLabel.Text = " 100 Grams"
-        Last24CarbsValueLabel.TextAlign = ContentAlignment.MiddleCenter
-        ' 
         ' Last24CarbsLabel
         ' 
         Last24CarbsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
@@ -1502,6 +920,17 @@ Partial Class Form1
         Last24CarbsLabel.TabIndex = 66
         Last24CarbsLabel.Text = "Carbs"
         Last24CarbsLabel.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' Last24CarbsValueLabel
+        ' 
+        Last24CarbsValueLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        Last24CarbsValueLabel.ForeColor = Color.White
+        Last24CarbsValueLabel.Location = New Point(0, 21)
+        Last24CarbsValueLabel.Name = "Last24CarbsValueLabel"
+        Last24CarbsValueLabel.Size = New Size(249, 21)
+        Last24CarbsValueLabel.TabIndex = 74
+        Last24CarbsValueLabel.Text = " 100 Grams"
+        Last24CarbsValueLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' Last24HoursGraphLabel
         ' 
@@ -1536,6 +965,17 @@ Partial Class Form1
         Last24HTotalsPanel.Name = "Last24HTotalsPanel"
         Last24HTotalsPanel.Size = New Size(253, 129)
         Last24HTotalsPanel.TabIndex = 66
+        ' 
+        ' Last24TotalInsulinUnitsLabel
+        ' 
+        Last24TotalInsulinUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        Last24TotalInsulinUnitsLabel.ForeColor = Color.White
+        Last24TotalInsulinUnitsLabel.Location = New Point(131, 103)
+        Last24TotalInsulinUnitsLabel.Name = "Last24TotalInsulinUnitsLabel"
+        Last24TotalInsulinUnitsLabel.Size = New Size(70, 21)
+        Last24TotalInsulinUnitsLabel.TabIndex = 67
+        Last24TotalInsulinUnitsLabel.Text = " 100.0U"
+        Last24TotalInsulinUnitsLabel.TextAlign = ContentAlignment.MiddleRight
         ' 
         ' Last24ManualBolusUnitsLabel
         ' 
@@ -1598,6 +1038,34 @@ Partial Class Form1
         Last24TotalsLabel.Text = "Last 24 Hr Totals"
         Last24TotalsLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
+        ' LastUpdateTimeToolStripStatusLabel
+        ' 
+        LastUpdateTimeToolStripStatusLabel.BorderSides = ToolStripStatusLabelBorderSides.Left
+        LastUpdateTimeToolStripStatusLabel.BorderStyle = Border3DStyle.RaisedOuter
+        LastUpdateTimeToolStripStatusLabel.Name = "LastUpdateTimeToolStripStatusLabel"
+        LastUpdateTimeToolStripStatusLabel.Size = New Size(160, 20)
+        LastUpdateTimeToolStripStatusLabel.Text = "Last Update Time: Unknown"
+        ' 
+        ' LoginStatus
+        ' 
+        LoginStatus.BorderSides = ToolStripStatusLabelBorderSides.Left Or ToolStripStatusLabelBorderSides.Right
+        LoginStatus.BorderStyle = Border3DStyle.RaisedOuter
+        LoginStatus.DisplayStyle = ToolStripItemDisplayStyle.Text
+        LoginStatus.Name = "LoginStatus"
+        LoginStatus.Size = New Size(133, 20)
+        LoginStatus.Text = "Login Status: Unknown"
+        ' 
+        ' LowTirComplianceLabel
+        ' 
+        LowTirComplianceLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
+        LowTirComplianceLabel.ForeColor = Color.Red
+        LowTirComplianceLabel.Location = New Point(3, 460)
+        LowTirComplianceLabel.Name = "LowTirComplianceLabel"
+        LowTirComplianceLabel.Size = New Size(112, 57)
+        LowTirComplianceLabel.TabIndex = 36
+        LowTirComplianceLabel.Text = "(6.3) Low" & vbCrLf & "Needs Improvement"
+        LowTirComplianceLabel.TextAlign = ContentAlignment.MiddleCenter
+        ' 
         ' MaxBasalPerHourLabel
         ' 
         MaxBasalPerHourLabel.AutoSize = True
@@ -1610,6 +1078,301 @@ Partial Class Form1
         MaxBasalPerHourLabel.Text = "Max Basal/Hr ~2.0U"
         MaxBasalPerHourLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
+        ' MenuHelp
+        ' 
+        MenuHelp.DropDownItems.AddRange(New ToolStripItem() {MenuHelpReportAnIssue, MenuHelpCheckForUpdates, MenuHelpAbout})
+        MenuHelp.Name = "MenuHelp"
+        MenuHelp.ShortcutKeys = Keys.Alt Or Keys.H
+        MenuHelp.Size = New Size(44, 20)
+        MenuHelp.Text = "&Help"
+        ' 
+        ' MenuHelpReportAnIssue
+        ' 
+        MenuHelpReportAnIssue.Image = My.Resources.Resources.FeedbackSmile_16x
+        MenuHelpReportAnIssue.ImageScaling = ToolStripItemImageScaling.None
+        MenuHelpReportAnIssue.Name = "MenuHelpReportAnIssue"
+        MenuHelpReportAnIssue.Size = New Size(177, 22)
+        MenuHelpReportAnIssue.Text = "Report A Problem..."
+        ' 
+        ' MenuHelpCheckForUpdates
+        ' 
+        MenuHelpCheckForUpdates.Name = "MenuHelpCheckForUpdates"
+        MenuHelpCheckForUpdates.Size = New Size(177, 22)
+        MenuHelpCheckForUpdates.Text = "Check For Updates"
+        ' 
+        ' MenuHelpAbout
+        ' 
+        MenuHelpAbout.Image = My.Resources.Resources.AboutBox
+        MenuHelpAbout.Name = "MenuHelpAbout"
+        MenuHelpAbout.Size = New Size(177, 22)
+        MenuHelpAbout.Text = "&About..."
+        ' 
+        ' MenuOptions
+        ' 
+        MenuOptions.DropDownItems.AddRange(New ToolStripItem() {MenuOptionsAudioAlerts, MenuOptionsSpeechRecognitionEnabled, MenuOptionsShowChartLegends, MenuOptionsSpeechHelpShown, ToolStripSeparator5, MenuOptionsAutoLogin, ToolStripSeparator6, MenuOptionsAdvancedOptions, MenuOptionsFilterRawJSONData, MenuOptionsUseLocalTimeZone, ToolStripSeparator7, MenuOptionsColorPicker, MenuOptionsEditPumpSettings})
+        MenuOptions.Name = "MenuOptions"
+        MenuOptions.Size = New Size(61, 20)
+        MenuOptions.Text = "Options"
+        ' 
+        ' MenuOptionsAudioAlerts
+        ' 
+        MenuOptionsAudioAlerts.Checked = True
+        MenuOptionsAudioAlerts.CheckOnClick = True
+        MenuOptionsAudioAlerts.CheckState = CheckState.Checked
+        MenuOptionsAudioAlerts.Name = "MenuOptionsAudioAlerts"
+        MenuOptionsAudioAlerts.Size = New Size(184, 22)
+        MenuOptionsAudioAlerts.Text = "Audio Alerts Enabled"
+        ' 
+        ' MenuOptionsSpeechRecognitionEnabled
+        ' 
+        MenuOptionsSpeechRecognitionEnabled.DropDownItems.AddRange(New ToolStripItem() {MenuOptionsSpeechRecognitionDisabled, MenuOptionsSpeechRecognitionConfidence, MenuOptionsSpeechRecognition95, MenuOptionsSpeechRecognition90, MenuOptionsSpeechRecognition85, MenuOptionsSpeechRecognition80})
+        MenuOptionsSpeechRecognitionEnabled.Name = "MenuOptionsSpeechRecognitionEnabled"
+        MenuOptionsSpeechRecognitionEnabled.Size = New Size(184, 22)
+        MenuOptionsSpeechRecognitionEnabled.Text = "Speech Recognition"
+        MenuOptionsSpeechRecognitionEnabled.TextAlign = ContentAlignment.MiddleRight
+        ' 
+        ' MenuOptionsSpeechRecognitionDisabled
+        ' 
+        MenuOptionsSpeechRecognitionDisabled.Name = "MenuOptionsSpeechRecognitionDisabled"
+        MenuOptionsSpeechRecognitionDisabled.Size = New Size(135, 22)
+        MenuOptionsSpeechRecognitionDisabled.Text = "Disabled"
+        ' 
+        ' MenuOptionsSpeechRecognitionConfidence
+        ' 
+        MenuOptionsSpeechRecognitionConfidence.Enabled = False
+        MenuOptionsSpeechRecognitionConfidence.Name = "MenuOptionsSpeechRecognitionConfidence"
+        MenuOptionsSpeechRecognitionConfidence.Size = New Size(135, 22)
+        MenuOptionsSpeechRecognitionConfidence.Text = "Confidence"
+        ' 
+        ' MenuOptionsSpeechRecognition95
+        ' 
+        MenuOptionsSpeechRecognition95.CheckOnClick = True
+        MenuOptionsSpeechRecognition95.Name = "MenuOptionsSpeechRecognition95"
+        MenuOptionsSpeechRecognition95.Size = New Size(135, 22)
+        MenuOptionsSpeechRecognition95.Text = "95%"
+        MenuOptionsSpeechRecognition95.TextAlign = ContentAlignment.MiddleRight
+        ' 
+        ' MenuOptionsSpeechRecognition90
+        ' 
+        MenuOptionsSpeechRecognition90.CheckOnClick = True
+        MenuOptionsSpeechRecognition90.Name = "MenuOptionsSpeechRecognition90"
+        MenuOptionsSpeechRecognition90.Size = New Size(135, 22)
+        MenuOptionsSpeechRecognition90.Text = "90%"
+        MenuOptionsSpeechRecognition90.TextAlign = ContentAlignment.MiddleRight
+        ' 
+        ' MenuOptionsSpeechRecognition85
+        ' 
+        MenuOptionsSpeechRecognition85.CheckOnClick = True
+        MenuOptionsSpeechRecognition85.Name = "MenuOptionsSpeechRecognition85"
+        MenuOptionsSpeechRecognition85.Size = New Size(135, 22)
+        MenuOptionsSpeechRecognition85.Text = "85%"
+        MenuOptionsSpeechRecognition85.TextAlign = ContentAlignment.MiddleRight
+        ' 
+        ' MenuOptionsSpeechRecognition80
+        ' 
+        MenuOptionsSpeechRecognition80.Checked = True
+        MenuOptionsSpeechRecognition80.CheckOnClick = True
+        MenuOptionsSpeechRecognition80.CheckState = CheckState.Checked
+        MenuOptionsSpeechRecognition80.Name = "MenuOptionsSpeechRecognition80"
+        MenuOptionsSpeechRecognition80.Size = New Size(135, 22)
+        MenuOptionsSpeechRecognition80.Text = "80%"
+        ' 
+        ' MenuOptionsShowChartLegends
+        ' 
+        MenuOptionsShowChartLegends.Checked = True
+        MenuOptionsShowChartLegends.CheckOnClick = True
+        MenuOptionsShowChartLegends.CheckState = CheckState.Checked
+        MenuOptionsShowChartLegends.Name = "MenuOptionsShowChartLegends"
+        MenuOptionsShowChartLegends.Size = New Size(184, 22)
+        MenuOptionsShowChartLegends.Text = "Show Chart Legends"
+        ' 
+        ' MenuOptionsSpeechHelpShown
+        ' 
+        MenuOptionsSpeechHelpShown.Checked = True
+        MenuOptionsSpeechHelpShown.CheckOnClick = True
+        MenuOptionsSpeechHelpShown.CheckState = CheckState.Checked
+        MenuOptionsSpeechHelpShown.Name = "MenuOptionsSpeechHelpShown"
+        MenuOptionsSpeechHelpShown.Size = New Size(184, 22)
+        MenuOptionsSpeechHelpShown.Text = "Disable Speech Help"
+        ' 
+        ' ToolStripSeparator5
+        ' 
+        ToolStripSeparator5.Name = "ToolStripSeparator5"
+        ToolStripSeparator5.Size = New Size(181, 6)
+        ' 
+        ' MenuOptionsAutoLogin
+        ' 
+        MenuOptionsAutoLogin.CheckOnClick = True
+        MenuOptionsAutoLogin.Name = "MenuOptionsAutoLogin"
+        MenuOptionsAutoLogin.Size = New Size(184, 22)
+        MenuOptionsAutoLogin.Text = "Auto Login"
+        ' 
+        ' ToolStripSeparator6
+        ' 
+        ToolStripSeparator6.Name = "ToolStripSeparator6"
+        ToolStripSeparator6.Size = New Size(181, 6)
+        ' 
+        ' MenuOptionsAdvancedOptions
+        ' 
+        MenuOptionsAdvancedOptions.Enabled = False
+        MenuOptionsAdvancedOptions.Name = "MenuOptionsAdvancedOptions"
+        MenuOptionsAdvancedOptions.Size = New Size(184, 22)
+        MenuOptionsAdvancedOptions.Text = "Advanced Options"
+        ' 
+        ' MenuOptionsFilterRawJSONData
+        ' 
+        MenuOptionsFilterRawJSONData.Checked = True
+        MenuOptionsFilterRawJSONData.CheckOnClick = True
+        MenuOptionsFilterRawJSONData.CheckState = CheckState.Checked
+        MenuOptionsFilterRawJSONData.Name = "MenuOptionsFilterRawJSONData"
+        MenuOptionsFilterRawJSONData.Size = New Size(184, 22)
+        MenuOptionsFilterRawJSONData.Text = "Filter Raw JSON Data"
+        ' 
+        ' MenuOptionsUseLocalTimeZone
+        ' 
+        MenuOptionsUseLocalTimeZone.Checked = True
+        MenuOptionsUseLocalTimeZone.CheckOnClick = True
+        MenuOptionsUseLocalTimeZone.CheckState = CheckState.Indeterminate
+        MenuOptionsUseLocalTimeZone.Name = "MenuOptionsUseLocalTimeZone"
+        MenuOptionsUseLocalTimeZone.Size = New Size(184, 22)
+        MenuOptionsUseLocalTimeZone.Text = "Use Local TImeZone"
+        ' 
+        ' ToolStripSeparator7
+        ' 
+        ToolStripSeparator7.Name = "ToolStripSeparator7"
+        ToolStripSeparator7.Size = New Size(181, 6)
+        ' 
+        ' MenuOptionsColorPicker
+        ' 
+        MenuOptionsColorPicker.Image = CType(resources.GetObject("MenuOptionsColorPicker.Image"), Image)
+        MenuOptionsColorPicker.Name = "MenuOptionsColorPicker"
+        MenuOptionsColorPicker.Size = New Size(184, 22)
+        MenuOptionsColorPicker.Text = "Color Picker..."
+        ' 
+        ' MenuOptionsEditPumpSettings
+        ' 
+        MenuOptionsEditPumpSettings.Name = "MenuOptionsEditPumpSettings"
+        MenuOptionsEditPumpSettings.Size = New Size(184, 22)
+        MenuOptionsEditPumpSettings.Text = "Edit Pump Settings..."
+        ' 
+        ' MenuShowMiniDisplay
+        ' 
+        MenuShowMiniDisplay.ForeColor = Color.Red
+        MenuShowMiniDisplay.Image = My.Resources.Resources.ExitFullScreen
+        MenuShowMiniDisplay.Name = "MenuShowMiniDisplay"
+        MenuShowMiniDisplay.Padding = New Padding(10, 0, 10, 0)
+        MenuShowMiniDisplay.ShortcutKeyDisplayString = "Alt+W"
+        MenuShowMiniDisplay.ShortcutKeys = Keys.Control Or Keys.W
+        MenuShowMiniDisplay.Size = New Size(154, 20)
+        MenuShowMiniDisplay.Text = "Show &Widget Alt+W"
+        MenuShowMiniDisplay.ToolTipText = "Minimize and show Widget"
+        MenuShowMiniDisplay.Visible = False
+        ' 
+        ' MenuStartHere
+        ' 
+        MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {MenuStartHereLogin, ToolStripSeparator8, MenuStartHereManuallyImportDeviceSettings, MenuStartHereShowPumpSetup, ToolStripSeparator1, MenuStartHereLoadSavedDataFile, MenuStartHereExceptionReportLoad, ToolStripSeparator4, MenuStartHereUseLastSavedFile, MenuStartHereUseTestData, ToolStripSeparator2, MenuStartHereSnapshotSave, MenuStartHereCleanUpObsoleteFiles, ToolStripSeparator3, MenuStartHereExit})
+        MenuStartHere.Name = "MenuStartHere"
+        MenuStartHere.Size = New Size(71, 20)
+        MenuStartHere.Text = "Start Here"
+        ' 
+        ' MenuStartHereLogin
+        ' 
+        MenuStartHereLogin.Name = "MenuStartHereLogin"
+        MenuStartHereLogin.Size = New Size(245, 22)
+        MenuStartHereLogin.Text = "Login"
+        ' 
+        ' ToolStripSeparator8
+        ' 
+        ToolStripSeparator8.Name = "ToolStripSeparator8"
+        ToolStripSeparator8.Size = New Size(242, 6)
+        ' 
+        ' MenuStartHereManuallyImportDeviceSettings
+        ' 
+        MenuStartHereManuallyImportDeviceSettings.Name = "MenuStartHereManuallyImportDeviceSettings"
+        MenuStartHereManuallyImportDeviceSettings.Size = New Size(245, 22)
+        MenuStartHereManuallyImportDeviceSettings.Text = "Manually Import Device Settings"
+        ' 
+        ' MenuStartHereShowPumpSetup
+        ' 
+        MenuStartHereShowPumpSetup.Enabled = False
+        MenuStartHereShowPumpSetup.Name = "MenuStartHereShowPumpSetup"
+        MenuStartHereShowPumpSetup.Size = New Size(245, 22)
+        MenuStartHereShowPumpSetup.Text = "Show Pump Setup"
+        ' 
+        ' ToolStripSeparator1
+        ' 
+        ToolStripSeparator1.Name = "ToolStripSeparator1"
+        ToolStripSeparator1.Size = New Size(242, 6)
+        ' 
+        ' MenuStartHereLoadSavedDataFile
+        ' 
+        MenuStartHereLoadSavedDataFile.Name = "MenuStartHereLoadSavedDataFile"
+        MenuStartHereLoadSavedDataFile.Size = New Size(245, 22)
+        MenuStartHereLoadSavedDataFile.Text = "Load A Saved Data File"
+        ' 
+        ' MenuStartHereExceptionReportLoad
+        ' 
+        MenuStartHereExceptionReportLoad.Name = "MenuStartHereExceptionReportLoad"
+        MenuStartHereExceptionReportLoad.Size = New Size(245, 22)
+        MenuStartHereExceptionReportLoad.Text = "Load An Exception Report"
+        ' 
+        ' ToolStripSeparator4
+        ' 
+        ToolStripSeparator4.Name = "ToolStripSeparator4"
+        ToolStripSeparator4.Size = New Size(242, 6)
+        ' 
+        ' MenuStartHereUseLastSavedFile
+        ' 
+        MenuStartHereUseLastSavedFile.Name = "MenuStartHereUseLastSavedFile"
+        MenuStartHereUseLastSavedFile.Size = New Size(245, 22)
+        MenuStartHereUseLastSavedFile.Text = "Use Last Data File"
+        ' 
+        ' MenuStartHereUseTestData
+        ' 
+        MenuStartHereUseTestData.Name = "MenuStartHereUseTestData"
+        MenuStartHereUseTestData.Size = New Size(245, 22)
+        MenuStartHereUseTestData.Text = "Use Test Data"
+        ' 
+        ' ToolStripSeparator2
+        ' 
+        ToolStripSeparator2.Name = "ToolStripSeparator2"
+        ToolStripSeparator2.Size = New Size(242, 6)
+        ' 
+        ' MenuStartHereSnapshotSave
+        ' 
+        MenuStartHereSnapshotSave.Name = "MenuStartHereSnapshotSave"
+        MenuStartHereSnapshotSave.ShortcutKeys = Keys.Control Or Keys.S
+        MenuStartHereSnapshotSave.Size = New Size(245, 22)
+        MenuStartHereSnapshotSave.Text = "Snapshot &Save"
+        ' 
+        ' MenuStartHereCleanUpObsoleteFiles
+        ' 
+        MenuStartHereCleanUpObsoleteFiles.Name = "MenuStartHereCleanUpObsoleteFiles"
+        MenuStartHereCleanUpObsoleteFiles.Size = New Size(245, 22)
+        MenuStartHereCleanUpObsoleteFiles.Text = "Clean Up Obsolete Files"
+        ' 
+        ' ToolStripSeparator3
+        ' 
+        ToolStripSeparator3.Name = "ToolStripSeparator3"
+        ToolStripSeparator3.Size = New Size(242, 6)
+        ' 
+        ' MenuStartHereExit
+        ' 
+        MenuStartHereExit.Image = My.Resources.Resources.AboutBox
+        MenuStartHereExit.Name = "MenuStartHereExit"
+        MenuStartHereExit.ShortcutKeys = Keys.Alt Or Keys.X
+        MenuStartHereExit.Size = New Size(245, 22)
+        MenuStartHereExit.Text = "E&xit"
+        ' 
+        ' MenuStrip1
+        ' 
+        MenuStrip1.Items.AddRange(New ToolStripItem() {MenuStartHere, MenuOptions, MenuHelp, MenuShowMiniDisplay})
+        MenuStrip1.Location = New Point(0, 0)
+        MenuStrip1.Name = "MenuStrip1"
+        MenuStrip1.Size = New Size(1384, 24)
+        MenuStrip1.TabIndex = 0
+        MenuStrip1.Text = "MenuStrip1"
+        ' 
         ' ModelLabel
         ' 
         ModelLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
@@ -1620,20 +1383,21 @@ Partial Class Form1
         ModelLabel.TabIndex = 57
         ModelLabel.Text = "Model"
         ' 
-        ' PumpNameLabel
-        ' 
-        PumpNameLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
-        PumpNameLabel.ForeColor = Color.White
-        PumpNameLabel.Location = New Point(1140, 52)
-        PumpNameLabel.Name = "PumpNameLabel"
-        PumpNameLabel.Size = New Size(230, 21)
-        PumpNameLabel.TabIndex = 70
-        PumpNameLabel.Text = "Pump Name"
-        ' 
         ' NotifyIcon1
         ' 
         NotifyIcon1.Icon = CType(resources.GetObject("NotifyIcon1.Icon"), Icon)
         NotifyIcon1.Text = "CareLink™ For Windows"
+        ' 
+        ' PumpAITLabel
+        ' 
+        PumpAITLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        PumpAITLabel.ForeColor = Color.White
+        PumpAITLabel.Location = New Point(978, 28)
+        PumpAITLabel.Name = "PumpAITLabel"
+        PumpAITLabel.Size = New Size(162, 21)
+        PumpAITLabel.TabIndex = 71
+        PumpAITLabel.Text = "Pump AIT 3:00"
+        PumpAITLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' PumpBatteryPictureBox
         ' 
@@ -1644,6 +1408,17 @@ Partial Class Form1
         PumpBatteryPictureBox.Size = New Size(74, 84)
         PumpBatteryPictureBox.TabIndex = 43
         PumpBatteryPictureBox.TabStop = False
+        ' 
+        ' PumpBatteryRemaining2Label
+        ' 
+        PumpBatteryRemaining2Label.BackColor = Color.Transparent
+        PumpBatteryRemaining2Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        PumpBatteryRemaining2Label.ForeColor = Color.White
+        PumpBatteryRemaining2Label.Location = New Point(119, 106)
+        PumpBatteryRemaining2Label.Name = "PumpBatteryRemaining2Label"
+        PumpBatteryRemaining2Label.Size = New Size(87, 21)
+        PumpBatteryRemaining2Label.TabIndex = 69
+        PumpBatteryRemaining2Label.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' PumpBatteryRemainingLabel
         ' 
@@ -1657,16 +1432,15 @@ Partial Class Form1
         PumpBatteryRemainingLabel.Text = "Unknown"
         PumpBatteryRemainingLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
-        ' InsulinTypeLabel
+        ' PumpNameLabel
         ' 
-        InsulinTypeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        InsulinTypeLabel.ForeColor = Color.White
-        InsulinTypeLabel.Location = New Point(978, 3)
-        InsulinTypeLabel.Name = "InsulinTypeLabel"
-        InsulinTypeLabel.Size = New Size(162, 21)
-        InsulinTypeLabel.TabIndex = 54
-        InsulinTypeLabel.Text = "Humalog/Novolog"
-        InsulinTypeLabel.TextAlign = ContentAlignment.MiddleLeft
+        PumpNameLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
+        PumpNameLabel.ForeColor = Color.White
+        PumpNameLabel.Location = New Point(1140, 52)
+        PumpNameLabel.Name = "PumpNameLabel"
+        PumpNameLabel.Size = New Size(230, 21)
+        PumpNameLabel.TabIndex = 70
+        PumpNameLabel.Text = "Pump Name"
         ' 
         ' ReadingsLabel
         ' 
@@ -1751,6 +1525,45 @@ Partial Class Form1
         ' 
         ServerUpdateTimer.Interval = 300000
         ' 
+        ' SmartGuardLabel
+        ' 
+        SmartGuardLabel.Anchor = AnchorStyles.Top
+        SmartGuardLabel.BackColor = Color.Transparent
+        SmartGuardLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold)
+        SmartGuardLabel.ForeColor = Color.DodgerBlue
+        SmartGuardLabel.Location = New Point(3, 413)
+        SmartGuardLabel.Name = "SmartGuardLabel"
+        SmartGuardLabel.Size = New Size(224, 21)
+        SmartGuardLabel.TabIndex = 35
+        SmartGuardLabel.Text = "SmartGuard 100%"
+        SmartGuardLabel.TextAlign = ContentAlignment.MiddleCenter
+        ' 
+        ' SplitContainer1
+        ' 
+        SplitContainer1.Dock = DockStyle.Fill
+        SplitContainer1.FixedPanel = FixedPanel.Panel1
+        SplitContainer1.Location = New Point(3, 3)
+        SplitContainer1.Name = "SplitContainer1"
+        SplitContainer1.Orientation = Orientation.Horizontal
+        ' 
+        ' SplitContainer1.Panel1
+        ' 
+        SplitContainer1.Panel1.BackColor = Color.Black
+        SplitContainer1.Panel1.Controls.Add(TemporaryUseAdvanceAITDecayCheckBox)
+        SplitContainer1.Size = New Size(1370, 655)
+        SplitContainer1.SplitterDistance = 30
+        SplitContainer1.TabIndex = 0
+        ' 
+        ' TemporaryUseAdvanceAITDecayCheckBox
+        ' 
+        TemporaryUseAdvanceAITDecayCheckBox.AutoSize = True
+        TemporaryUseAdvanceAITDecayCheckBox.Location = New Point(12, 6)
+        TemporaryUseAdvanceAITDecayCheckBox.Name = "TemporaryUseAdvanceAITDecayCheckBox"
+        TemporaryUseAdvanceAITDecayCheckBox.Size = New Size(147, 19)
+        TemporaryUseAdvanceAITDecayCheckBox.TabIndex = 0
+        TemporaryUseAdvanceAITDecayCheckBox.Text = "AIT Decay over 3 hours"
+        TemporaryUseAdvanceAITDecayCheckBox.UseVisualStyleBackColor = False
+        ' 
         ' SplitContainer2
         ' 
         SplitContainer2.Dock = DockStyle.Fill
@@ -1792,28 +1605,6 @@ Partial Class Form1
         SplitContainer2.Size = New Size(1370, 655)
         SplitContainer2.SplitterDistance = 134
         SplitContainer2.TabIndex = 52
-        ' 
-        ' PumpAITLabel
-        ' 
-        PumpAITLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        PumpAITLabel.ForeColor = Color.White
-        PumpAITLabel.Location = New Point(978, 28)
-        PumpAITLabel.Name = "PumpAITLabel"
-        PumpAITLabel.Size = New Size(162, 21)
-        PumpAITLabel.TabIndex = 71
-        PumpAITLabel.Text = "Pump AIT 3:00"
-        PumpAITLabel.TextAlign = ContentAlignment.MiddleLeft
-        ' 
-        ' PumpBatteryRemaining2Label
-        ' 
-        PumpBatteryRemaining2Label.BackColor = Color.Transparent
-        PumpBatteryRemaining2Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        PumpBatteryRemaining2Label.ForeColor = Color.White
-        PumpBatteryRemaining2Label.Location = New Point(119, 106)
-        PumpBatteryRemaining2Label.Name = "PumpBatteryRemaining2Label"
-        PumpBatteryRemaining2Label.Size = New Size(87, 21)
-        PumpBatteryRemaining2Label.TabIndex = 69
-        PumpBatteryRemaining2Label.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' TransmitterBatteryPercentLabel
         ' 
@@ -1933,40 +1724,48 @@ Partial Class Form1
         TirComplianceLabel.Text = "TIR Compliance"
         TirComplianceLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
-        ' HighTirComplianceLabel
+        ' StatusStrip1
         ' 
-        HighTirComplianceLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
-        HighTirComplianceLabel.ForeColor = Color.LimeGreen
-        HighTirComplianceLabel.Location = New Point(115, 460)
-        HighTirComplianceLabel.Name = "HighTirComplianceLabel"
-        HighTirComplianceLabel.Size = New Size(112, 57)
-        HighTirComplianceLabel.TabIndex = 37
-        HighTirComplianceLabel.Text = "High" & vbCrLf & "Excellent"
-        HighTirComplianceLabel.TextAlign = ContentAlignment.MiddleCenter
+        StatusStrip1.Items.AddRange(New ToolStripItem() {LoginStatus, StatusStripSpeech, LastUpdateTimeToolStripStatusLabel, TimeZoneToolStripStatusLabel, StatusStripSpacerRight, UpdateAvailableStatusStripLabel})
+        StatusStrip1.Location = New Point(0, 716)
+        StatusStrip1.Name = "StatusStrip1"
+        StatusStrip1.Size = New Size(1384, 25)
+        StatusStrip1.TabIndex = 53
+        StatusStrip1.Text = "StatusStrip1"
         ' 
-        ' LowTirComplianceLabel
+        ' StatusStripSpeech
         ' 
-        LowTirComplianceLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
-        LowTirComplianceLabel.ForeColor = Color.Red
-        LowTirComplianceLabel.Location = New Point(3, 460)
-        LowTirComplianceLabel.Name = "LowTirComplianceLabel"
-        LowTirComplianceLabel.Size = New Size(112, 57)
-        LowTirComplianceLabel.TabIndex = 36
-        LowTirComplianceLabel.Text = "(6.3) Low" & vbCrLf & "Needs Improvement"
-        LowTirComplianceLabel.TextAlign = ContentAlignment.MiddleCenter
+        StatusStripSpeech.BorderSides = ToolStripStatusLabelBorderSides.Left
+        StatusStripSpeech.BorderStyle = Border3DStyle.RaisedOuter
+        StatusStripSpeech.Name = "StatusStripSpeech"
+        StatusStripSpeech.Size = New Size(403, 20)
+        StatusStripSpeech.Spring = True
+        StatusStripSpeech.Text = " "
         ' 
-        ' SmartGuardLabel
+        ' TimeZoneToolStripStatusLabel
         ' 
-        SmartGuardLabel.Anchor = AnchorStyles.Top
-        SmartGuardLabel.BackColor = Color.Transparent
-        SmartGuardLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold)
-        SmartGuardLabel.ForeColor = Color.DodgerBlue
-        SmartGuardLabel.Location = New Point(3, 413)
-        SmartGuardLabel.Name = "SmartGuardLabel"
-        SmartGuardLabel.Size = New Size(224, 21)
-        SmartGuardLabel.TabIndex = 35
-        SmartGuardLabel.Text = "SmartGuard 100%"
-        SmartGuardLabel.TextAlign = ContentAlignment.MiddleCenter
+        TimeZoneToolStripStatusLabel.Name = "TimeZoneToolStripStatusLabel"
+        TimeZoneToolStripStatusLabel.Size = New Size(115, 20)
+        TimeZoneToolStripStatusLabel.Text = "TimeZone Unknown"
+        ' 
+        ' StatusStripSpacerRight
+        ' 
+        StatusStripSpacerRight.BorderSides = ToolStripStatusLabelBorderSides.Right
+        StatusStripSpacerRight.BorderStyle = Border3DStyle.RaisedOuter
+        StatusStripSpacerRight.Name = "StatusStripSpacerRight"
+        StatusStripSpacerRight.Size = New Size(403, 20)
+        StatusStripSpacerRight.Spring = True
+        StatusStripSpacerRight.Text = " "
+        ' 
+        ' UpdateAvailableStatusStripLabel
+        ' 
+        UpdateAvailableStatusStripLabel.BorderSides = ToolStripStatusLabelBorderSides.Left Or ToolStripStatusLabelBorderSides.Right
+        UpdateAvailableStatusStripLabel.BorderStyle = Border3DStyle.RaisedOuter
+        UpdateAvailableStatusStripLabel.ForeColor = Color.Red
+        UpdateAvailableStatusStripLabel.Image = My.Resources.Resources.NotificationAlertRed_16x
+        UpdateAvailableStatusStripLabel.Name = "UpdateAvailableStatusStripLabel"
+        UpdateAvailableStatusStripLabel.Size = New Size(154, 20)
+        UpdateAvailableStatusStripLabel.Text = "Update Status Unknown"
         ' 
         ' TabControlPage1
         ' 
@@ -1980,11 +1779,12 @@ Partial Class Form1
         TabControlPage1.Controls.Add(TabPage07ActiveInsulin)
         TabControlPage1.Controls.Add(TabPage08SensorGlucose)
         TabControlPage1.Controls.Add(TabPage09Limits)
-        TabControlPage1.Controls.Add(TabPage10NotificationHistory)
-        TabControlPage1.Controls.Add(TabPage11TherapyAlgorithm)
-        TabControlPage1.Controls.Add(TabPage12BannerState)
-        TabControlPage1.Controls.Add(TabPage13Basal)
-        TabControlPage1.Controls.Add(TabPage14Markers)
+        TabControlPage1.Controls.Add(TabPage10NotificationActive)
+        TabControlPage1.Controls.Add(TabPage11NotificationsCleared)
+        TabControlPage1.Controls.Add(TabPage12TherapyAlgorithm)
+        TabControlPage1.Controls.Add(TabPage13BannerState)
+        TabControlPage1.Controls.Add(TabPage14Basal)
+        TabControlPage1.Controls.Add(TabPage15Markers)
         TabControlPage1.Dock = DockStyle.Fill
         TabControlPage1.Font = New Font("Segoe UI", 9.0F)
         TabControlPage1.Location = New Point(0, 24)
@@ -2014,32 +1814,6 @@ Partial Class Form1
         TabPage02RunningIOB.TabIndex = 15
         TabPage02RunningIOB.Text = "Running IOB"
         TabPage02RunningIOB.UseVisualStyleBackColor = True
-        ' 
-        ' SplitContainer1
-        ' 
-        SplitContainer1.Dock = DockStyle.Fill
-        SplitContainer1.FixedPanel = FixedPanel.Panel1
-        SplitContainer1.Location = New Point(3, 3)
-        SplitContainer1.Name = "SplitContainer1"
-        SplitContainer1.Orientation = Orientation.Horizontal
-        ' 
-        ' SplitContainer1.Panel1
-        ' 
-        SplitContainer1.Panel1.BackColor = Color.Black
-        SplitContainer1.Panel1.Controls.Add(TemporaryUseAdvanceAITDecayCheckBox)
-        SplitContainer1.Size = New Size(1370, 655)
-        SplitContainer1.SplitterDistance = 30
-        SplitContainer1.TabIndex = 0
-        ' 
-        ' TemporaryUseAdvanceAITDecayCheckBox
-        ' 
-        TemporaryUseAdvanceAITDecayCheckBox.AutoSize = True
-        TemporaryUseAdvanceAITDecayCheckBox.Location = New Point(12, 6)
-        TemporaryUseAdvanceAITDecayCheckBox.Name = "TemporaryUseAdvanceAITDecayCheckBox"
-        TemporaryUseAdvanceAITDecayCheckBox.Size = New Size(146, 19)
-        TemporaryUseAdvanceAITDecayCheckBox.TabIndex = 0
-        TemporaryUseAdvanceAITDecayCheckBox.Text = "AIT Decay over 3 hours"
-        TemporaryUseAdvanceAITDecayCheckBox.UseVisualStyleBackColor = False
         ' 
         ' TabPage03TreatmentDetails
         ' 
@@ -2081,6 +1855,7 @@ Partial Class Form1
         TableLayoutPanelInsulin.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelInsulin.ColumnCount = 1
         TableLayoutPanelInsulin.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelInsulin.Controls.Add(TableLayoutPanelInsulinTop, 0, 0)
         TableLayoutPanelInsulin.Dock = DockStyle.Fill
         TableLayoutPanelInsulin.Location = New Point(3, 3)
         TableLayoutPanelInsulin.Name = "TableLayoutPanelInsulin"
@@ -2089,6 +1864,26 @@ Partial Class Form1
         TableLayoutPanelInsulin.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelInsulin.Size = New Size(1370, 655)
         TableLayoutPanelInsulin.TabIndex = 1
+        ' 
+        ' TableLayoutPanelInsulinTop
+        ' 
+        TableLayoutPanelInsulinTop.AutoSize = True
+        TableLayoutPanelInsulinTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelInsulinTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelInsulinTop.ColumnCount = 2
+        TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelInsulinTop.Dock = DockStyle.Fill
+        TableLayoutPanelInsulinTop.LabelText = "Insulin"
+        TableLayoutPanelInsulinTop.Location = New Point(6, 6)
+        TableLayoutPanelInsulinTop.Name = "TableLayoutPanelInsulinTop"
+        TableLayoutPanelInsulinTop.RowCount = 1
+        TableLayoutPanelInsulinTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelInsulinTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelInsulinTop.Size = New Size(1358, 37)
+        TableLayoutPanelInsulinTop.TabIndex = 1
         ' 
         ' TabPage06Meal
         ' 
@@ -2109,6 +1904,7 @@ Partial Class Form1
         TableLayoutPanelMeal.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelMeal.ColumnCount = 1
         TableLayoutPanelMeal.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelMeal.Controls.Add(TableLayoutPanelMealTop, 0, 0)
         TableLayoutPanelMeal.Dock = DockStyle.Fill
         TableLayoutPanelMeal.Location = New Point(3, 3)
         TableLayoutPanelMeal.Name = "TableLayoutPanelMeal"
@@ -2117,6 +1913,26 @@ Partial Class Form1
         TableLayoutPanelMeal.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelMeal.Size = New Size(1370, 655)
         TableLayoutPanelMeal.TabIndex = 1
+        ' 
+        ' TableLayoutPanelMealTop
+        ' 
+        TableLayoutPanelMealTop.AutoSize = True
+        TableLayoutPanelMealTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelMealTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelMealTop.ColumnCount = 2
+        TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelMealTop.Dock = DockStyle.Fill
+        TableLayoutPanelMealTop.LabelText = "Meal"
+        TableLayoutPanelMealTop.Location = New Point(6, 6)
+        TableLayoutPanelMealTop.Name = "TableLayoutPanelMealTop"
+        TableLayoutPanelMealTop.RowCount = 1
+        TableLayoutPanelMealTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelMealTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelMealTop.Size = New Size(1358, 37)
+        TableLayoutPanelMealTop.TabIndex = 1
         ' 
         ' TabPage07ActiveInsulin
         ' 
@@ -2135,6 +1951,7 @@ Partial Class Form1
         TableLayoutPanelActiveInsulin.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TableLayoutPanelActiveInsulin.ColumnCount = 1
         TableLayoutPanelActiveInsulin.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelActiveInsulin.Controls.Add(TableLayoutPanelActiveInsulinTop, 0, 0)
         TableLayoutPanelActiveInsulin.Dock = DockStyle.Fill
         TableLayoutPanelActiveInsulin.Location = New Point(3, 3)
         TableLayoutPanelActiveInsulin.Name = "TableLayoutPanelActiveInsulin"
@@ -2143,6 +1960,26 @@ Partial Class Form1
         TableLayoutPanelActiveInsulin.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelActiveInsulin.Size = New Size(1370, 655)
         TableLayoutPanelActiveInsulin.TabIndex = 0
+        ' 
+        ' TableLayoutPanelActiveInsulinTop
+        ' 
+        TableLayoutPanelActiveInsulinTop.AutoSize = True
+        TableLayoutPanelActiveInsulinTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelActiveInsulinTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelActiveInsulinTop.ColumnCount = 2
+        TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelActiveInsulinTop.Dock = DockStyle.Fill
+        TableLayoutPanelActiveInsulinTop.LabelText = "Active Insulin"
+        TableLayoutPanelActiveInsulinTop.Location = New Point(3, 3)
+        TableLayoutPanelActiveInsulinTop.Name = "TableLayoutPanelActiveInsulinTop"
+        TableLayoutPanelActiveInsulinTop.RowCount = 1
+        TableLayoutPanelActiveInsulinTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelActiveInsulinTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelActiveInsulinTop.Size = New Size(1364, 37)
+        TableLayoutPanelActiveInsulinTop.TabIndex = 1
         ' 
         ' TabPage08SensorGlucose
         ' 
@@ -2162,6 +1999,8 @@ Partial Class Form1
         TableLayoutPanelSgs.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelSgs.ColumnCount = 1
         TableLayoutPanelSgs.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelSgs.Controls.Add(TableLayoutPanelSgsTop, 0, 0)
+        TableLayoutPanelSgs.Controls.Add(DgvSGs, 0, 1)
         TableLayoutPanelSgs.Dock = DockStyle.Fill
         TableLayoutPanelSgs.Location = New Point(3, 3)
         TableLayoutPanelSgs.Name = "TableLayoutPanelSgs"
@@ -2170,6 +2009,26 @@ Partial Class Form1
         TableLayoutPanelSgs.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelSgs.Size = New Size(1370, 655)
         TableLayoutPanelSgs.TabIndex = 1
+        ' 
+        ' TableLayoutPanelSgsTop
+        ' 
+        TableLayoutPanelSgsTop.AutoSize = True
+        TableLayoutPanelSgsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelSgsTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelSgsTop.ColumnCount = 2
+        TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelSgsTop.Dock = DockStyle.Fill
+        TableLayoutPanelSgsTop.LabelText = "SGs"
+        TableLayoutPanelSgsTop.Location = New Point(6, 6)
+        TableLayoutPanelSgsTop.Name = "TableLayoutPanelSgsTop"
+        TableLayoutPanelSgsTop.RowCount = 1
+        TableLayoutPanelSgsTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelSgsTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelSgsTop.Size = New Size(1358, 37)
+        TableLayoutPanelSgsTop.TabIndex = 1
         ' 
         ' TabPage09Limits
         ' 
@@ -2189,6 +2048,7 @@ Partial Class Form1
         TableLayoutPanelLimits.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelLimits.ColumnCount = 1
         TableLayoutPanelLimits.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelLimits.Controls.Add(TableLayoutPanelLimitsTop, 0, 0)
         TableLayoutPanelLimits.Dock = DockStyle.Fill
         TableLayoutPanelLimits.Location = New Point(3, 3)
         TableLayoutPanelLimits.Name = "TableLayoutPanelLimits"
@@ -2198,44 +2058,131 @@ Partial Class Form1
         TableLayoutPanelLimits.Size = New Size(1370, 655)
         TableLayoutPanelLimits.TabIndex = 0
         ' 
-        ' TabPage10NotificationHistory
+        ' TableLayoutPanelLimitsTop
         ' 
-        TabPage10NotificationHistory.Controls.Add(TableLayoutPanelNotificationHistory)
-        TabPage10NotificationHistory.Location = New Point(4, 27)
-        TabPage10NotificationHistory.Name = "TabPage10NotificationHistory"
-        TabPage10NotificationHistory.Padding = New Padding(3)
-        TabPage10NotificationHistory.Size = New Size(1376, 661)
-        TabPage10NotificationHistory.TabIndex = 5
-        TabPage10NotificationHistory.Text = "Notification History"
-        TabPage10NotificationHistory.UseVisualStyleBackColor = True
+        TableLayoutPanelLimitsTop.AutoSize = True
+        TableLayoutPanelLimitsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelLimitsTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelLimitsTop.ColumnCount = 2
+        TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelLimitsTop.Dock = DockStyle.Fill
+        TableLayoutPanelLimitsTop.LabelText = "Limits"
+        TableLayoutPanelLimitsTop.Location = New Point(6, 6)
+        TableLayoutPanelLimitsTop.Name = "TableLayoutPanelLimitsTop"
+        TableLayoutPanelLimitsTop.RowCount = 1
+        TableLayoutPanelLimitsTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelLimitsTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelLimitsTop.Size = New Size(1358, 37)
+        TableLayoutPanelLimitsTop.TabIndex = 1
         ' 
-        ' TableLayoutPanelNotificationHistory
+        ' TabPage10NotificationActive
         ' 
-        TableLayoutPanelNotificationHistory.AutoScroll = True
-        TableLayoutPanelNotificationHistory.AutoSize = True
-        TableLayoutPanelNotificationHistory.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelNotificationHistory.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelNotificationHistory.ColumnCount = 1
-        TableLayoutPanelNotificationHistory.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelNotificationHistory.Dock = DockStyle.Fill
-        TableLayoutPanelNotificationHistory.Location = New Point(3, 3)
-        TableLayoutPanelNotificationHistory.Name = "TableLayoutPanelNotificationHistory"
-        TableLayoutPanelNotificationHistory.RowCount = 2
-        TableLayoutPanelNotificationHistory.RowStyles.Add(New RowStyle())
-        TableLayoutPanelNotificationHistory.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelNotificationHistory.Size = New Size(1370, 655)
-        TableLayoutPanelNotificationHistory.TabIndex = 0
+        TabPage10NotificationActive.Controls.Add(TableLayoutPanelNotificationActive)
+        TabPage10NotificationActive.Location = New Point(4, 27)
+        TabPage10NotificationActive.Name = "TabPage10NotificationActive"
+        TabPage10NotificationActive.Padding = New Padding(3)
+        TabPage10NotificationActive.Size = New Size(1376, 661)
+        TabPage10NotificationActive.TabIndex = 25
+        TabPage10NotificationActive.Text = "Active Notification"
+        TabPage10NotificationActive.UseVisualStyleBackColor = True
         ' 
-        ' TabPage11TherapyAlgorithm
+        ' TableLayoutPanelNotificationActive
         ' 
-        TabPage11TherapyAlgorithm.Controls.Add(TableLayoutPanelTherapyAlgorithm)
-        TabPage11TherapyAlgorithm.Location = New Point(4, 27)
-        TabPage11TherapyAlgorithm.Name = "TabPage11TherapyAlgorithm"
-        TabPage11TherapyAlgorithm.Padding = New Padding(3)
-        TabPage11TherapyAlgorithm.Size = New Size(1376, 661)
-        TabPage11TherapyAlgorithm.TabIndex = 21
-        TabPage11TherapyAlgorithm.Text = "Therapy Algorithm"
-        TabPage11TherapyAlgorithm.UseVisualStyleBackColor = True
+        TableLayoutPanelNotificationActive.AutoScroll = True
+        TableLayoutPanelNotificationActive.AutoSize = True
+        TableLayoutPanelNotificationActive.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelNotificationActive.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TableLayoutPanelNotificationActive.ColumnCount = 1
+        TableLayoutPanelNotificationActive.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelNotificationActive.Controls.Add(TableLayoutPanelNotificationActiveTop, 1, 0)
+        TableLayoutPanelNotificationActive.Dock = DockStyle.Fill
+        TableLayoutPanelNotificationActive.Location = New Point(3, 3)
+        TableLayoutPanelNotificationActive.Name = "TableLayoutPanelNotificationActive"
+        TableLayoutPanelNotificationActive.RowCount = 2
+        TableLayoutPanelNotificationActive.RowStyles.Add(New RowStyle())
+        TableLayoutPanelNotificationActive.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelNotificationActive.Size = New Size(1370, 655)
+        TableLayoutPanelNotificationActive.TabIndex = 0
+        ' 
+        ' TableLayoutPanelNotificationActiveTop
+        ' 
+        TableLayoutPanelNotificationActiveTop.AutoSize = True
+        TableLayoutPanelNotificationActiveTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelNotificationActiveTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelNotificationActiveTop.ColumnCount = 2
+        TableLayoutPanelNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelNotificationActiveTop.Dock = DockStyle.Fill
+        TableLayoutPanelNotificationActiveTop.LabelText = "Active Notification"
+        TableLayoutPanelNotificationActiveTop.Location = New Point(6, 6)
+        TableLayoutPanelNotificationActiveTop.Name = "TableLayoutPanelNotificationActiveTop"
+        TableLayoutPanelNotificationActiveTop.RowCount = 1
+        TableLayoutPanelNotificationActiveTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelNotificationActiveTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelNotificationActiveTop.Size = New Size(1358, 37)
+        TableLayoutPanelNotificationActiveTop.TabIndex = 1
+        ' 
+        ' TabPage10NotificationsCleared
+        ' 
+        TabPage11NotificationsCleared.Controls.Add(TableLayoutPanelNotificationsCleared)
+        TabPage11NotificationsCleared.Location = New Point(4, 27)
+        TabPage11NotificationsCleared.Name = "TabPage11NotificationsCleared"
+        TabPage11NotificationsCleared.Padding = New Padding(3)
+        TabPage11NotificationsCleared.Size = New Size(1376, 661)
+        TabPage11NotificationsCleared.TabIndex = 5
+        TabPage11NotificationsCleared.Text = "Cleared Notifications"
+        TabPage11NotificationsCleared.UseVisualStyleBackColor = True
+        ' 
+        ' TableLayoutPanelNotificationsCleared
+        ' 
+        TableLayoutPanelNotificationsCleared.AutoScroll = True
+        TableLayoutPanelNotificationsCleared.AutoSize = True
+        TableLayoutPanelNotificationsCleared.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelNotificationsCleared.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TableLayoutPanelNotificationsCleared.ColumnCount = 1
+        TableLayoutPanelNotificationsCleared.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelNotificationsCleared.Controls.Add(TableLayoutPanelNotificationsClearedTop, 1, 0)
+        TableLayoutPanelNotificationsCleared.Dock = DockStyle.Fill
+        TableLayoutPanelNotificationsCleared.Location = New Point(3, 3)
+        TableLayoutPanelNotificationsCleared.Name = "TableLayoutPanelNotificationsCleared"
+        TableLayoutPanelNotificationsCleared.RowCount = 2
+        TableLayoutPanelNotificationsCleared.RowStyles.Add(New RowStyle())
+        TableLayoutPanelNotificationsCleared.Size = New Size(1370, 655)
+        TableLayoutPanelNotificationsCleared.TabIndex = 0
+        ' 
+        ' TableLayoutPanelNotificationsClearedTop
+        ' 
+        TableLayoutPanelNotificationsClearedTop.AutoSize = True
+        TableLayoutPanelNotificationsClearedTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelNotificationsClearedTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelNotificationsClearedTop.ColumnCount = 2
+        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelNotificationsClearedTop.Dock = DockStyle.Fill
+        TableLayoutPanelNotificationsClearedTop.LabelText = "Cleared Notifications"
+        TableLayoutPanelNotificationsClearedTop.Location = New Point(6, 6)
+        TableLayoutPanelNotificationsClearedTop.Name = "TableLayoutPanelNotificationsClearedTop"
+        TableLayoutPanelNotificationsClearedTop.RowCount = 1
+        TableLayoutPanelNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelNotificationsClearedTop.Size = New Size(1358, 37)
+        TableLayoutPanelNotificationsClearedTop.TabIndex = 1
+        ' 
+        ' TabPage12TherapyAlgorithm
+        ' 
+        TabPage12TherapyAlgorithm.Controls.Add(TableLayoutPanelTherapyAlgorithm)
+        TabPage12TherapyAlgorithm.Location = New Point(4, 27)
+        TabPage12TherapyAlgorithm.Name = "TabPage12TherapyAlgorithm"
+        TabPage12TherapyAlgorithm.Padding = New Padding(3)
+        TabPage12TherapyAlgorithm.Size = New Size(1376, 661)
+        TabPage12TherapyAlgorithm.TabIndex = 21
+        TabPage12TherapyAlgorithm.Text = "Therapy Algorithm"
+        TabPage12TherapyAlgorithm.UseVisualStyleBackColor = True
         ' 
         ' TableLayoutPanelTherapyAlgorithm
         ' 
@@ -2244,6 +2191,7 @@ Partial Class Form1
         TableLayoutPanelTherapyAlgorithm.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelTherapyAlgorithm.ColumnCount = 1
         TableLayoutPanelTherapyAlgorithm.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelTherapyAlgorithm.Controls.Add(TableLayoutPanelTherapyAlgorithmTop, 0, 0)
         TableLayoutPanelTherapyAlgorithm.Dock = DockStyle.Fill
         TableLayoutPanelTherapyAlgorithm.Location = New Point(3, 3)
         TableLayoutPanelTherapyAlgorithm.Name = "TableLayoutPanelTherapyAlgorithm"
@@ -2253,16 +2201,34 @@ Partial Class Form1
         TableLayoutPanelTherapyAlgorithm.Size = New Size(1370, 655)
         TableLayoutPanelTherapyAlgorithm.TabIndex = 0
         ' 
-        ' TabPage12BannerState
+        ' TableLayoutPanelTherapyAlgorithmTop
         ' 
-        TabPage12BannerState.Controls.Add(TableLayoutPanelBannerState)
-        TabPage12BannerState.Location = New Point(4, 27)
-        TabPage12BannerState.Name = "TabPage12BannerState"
-        TabPage12BannerState.Padding = New Padding(3)
-        TabPage12BannerState.Size = New Size(1376, 661)
-        TabPage12BannerState.TabIndex = 22
-        TabPage12BannerState.Text = "Banner State"
-        TabPage12BannerState.UseVisualStyleBackColor = True
+        TableLayoutPanelTherapyAlgorithmTop.AutoSize = True
+        TableLayoutPanelTherapyAlgorithmTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelTherapyAlgorithmTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelTherapyAlgorithmTop.ColumnCount = 2
+        TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelTherapyAlgorithmTop.Dock = DockStyle.Fill
+        TableLayoutPanelTherapyAlgorithmTop.LabelText = "Therapy Algorithm"
+        TableLayoutPanelTherapyAlgorithmTop.Location = New Point(6, 6)
+        TableLayoutPanelTherapyAlgorithmTop.Name = "TableLayoutPanelTherapyAlgorithmTop"
+        TableLayoutPanelTherapyAlgorithmTop.RowCount = 1
+        TableLayoutPanelTherapyAlgorithmTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelTherapyAlgorithmTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelTherapyAlgorithmTop.Size = New Size(1358, 37)
+        TableLayoutPanelTherapyAlgorithmTop.TabIndex = 1
+        ' 
+        ' TabPage13BannerState
+        ' 
+        TabPage13BannerState.Controls.Add(TableLayoutPanelBannerState)
+        TabPage13BannerState.Location = New Point(4, 27)
+        TabPage13BannerState.Name = "TabPage13BannerState"
+        TabPage13BannerState.Padding = New Padding(3)
+        TabPage13BannerState.Size = New Size(1376, 661)
+        TabPage13BannerState.TabIndex = 22
+        TabPage13BannerState.Text = "Banner State"
+        TabPage13BannerState.UseVisualStyleBackColor = True
         ' 
         ' TableLayoutPanelBannerState
         ' 
@@ -2271,6 +2237,7 @@ Partial Class Form1
         TableLayoutPanelBannerState.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelBannerState.ColumnCount = 1
         TableLayoutPanelBannerState.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelBannerState.Controls.Add(TableLayoutPanelBannerStateTop, 0, 0)
         TableLayoutPanelBannerState.Dock = DockStyle.Fill
         TableLayoutPanelBannerState.Location = New Point(3, 3)
         TableLayoutPanelBannerState.Margin = New Padding(0)
@@ -2281,16 +2248,36 @@ Partial Class Form1
         TableLayoutPanelBannerState.Size = New Size(1370, 655)
         TableLayoutPanelBannerState.TabIndex = 0
         ' 
-        ' TabPage13Basal
+        ' TableLayoutPanelBannerStateTop
         ' 
-        TabPage13Basal.Controls.Add(TableLayoutPanelBasal)
-        TabPage13Basal.Location = New Point(4, 27)
-        TabPage13Basal.Name = "TabPage13Basal"
-        TabPage13Basal.Padding = New Padding(3)
-        TabPage13Basal.Size = New Size(1376, 661)
-        TabPage13Basal.TabIndex = 23
-        TabPage13Basal.Text = "Basal"
-        TabPage13Basal.UseVisualStyleBackColor = True
+        TableLayoutPanelBannerStateTop.AutoSize = True
+        TableLayoutPanelBannerStateTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelBannerStateTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelBannerStateTop.ColumnCount = 2
+        TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelBannerStateTop.Dock = DockStyle.Fill
+        TableLayoutPanelBannerStateTop.LabelText = "Banner State"
+        TableLayoutPanelBannerStateTop.Location = New Point(6, 6)
+        TableLayoutPanelBannerStateTop.Name = "TableLayoutPanelBannerStateTop"
+        TableLayoutPanelBannerStateTop.RowCount = 1
+        TableLayoutPanelBannerStateTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelBannerStateTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelBannerStateTop.Size = New Size(1358, 37)
+        TableLayoutPanelBannerStateTop.TabIndex = 1
+        ' 
+        ' TabPage14Basal
+        ' 
+        TabPage14Basal.Controls.Add(TableLayoutPanelBasal)
+        TabPage14Basal.Location = New Point(4, 27)
+        TabPage14Basal.Name = "TabPage14Basal"
+        TabPage14Basal.Padding = New Padding(3)
+        TabPage14Basal.Size = New Size(1376, 661)
+        TabPage14Basal.TabIndex = 23
+        TabPage14Basal.Text = "Basal"
+        TabPage14Basal.UseVisualStyleBackColor = True
         ' 
         ' TableLayoutPanelBasal
         ' 
@@ -2299,6 +2286,7 @@ Partial Class Form1
         TableLayoutPanelBasal.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelBasal.ColumnCount = 1
         TableLayoutPanelBasal.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelBasal.Controls.Add(TableLayoutPanelBasalTop, 0, 0)
         TableLayoutPanelBasal.Dock = DockStyle.Fill
         TableLayoutPanelBasal.Location = New Point(3, 3)
         TableLayoutPanelBasal.Name = "TableLayoutPanelBasal"
@@ -2308,70 +2296,35 @@ Partial Class Form1
         TableLayoutPanelBasal.Size = New Size(1370, 655)
         TableLayoutPanelBasal.TabIndex = 0
         ' 
-        ' TabPage14Markers
+        ' TableLayoutPanelBasalTop
         ' 
-        TabPage14Markers.BackColor = SystemColors.MenuHighlight
-        TabPage14Markers.Location = New Point(4, 27)
-        TabPage14Markers.Name = "TabPage14Markers"
-        TabPage14Markers.Padding = New Padding(3)
-        TabPage14Markers.Size = New Size(1376, 661)
-        TabPage14Markers.TabIndex = 24
-        TabPage14Markers.Text = "More..."
+        TableLayoutPanelBasalTop.AutoSize = True
+        TableLayoutPanelBasalTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelBasalTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelBasalTop.ColumnCount = 2
+        TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelBasalTop.Dock = DockStyle.Fill
+        TableLayoutPanelBasalTop.LabelText = "Basal"
+        TableLayoutPanelBasalTop.Location = New Point(6, 6)
+        TableLayoutPanelBasalTop.Name = "TableLayoutPanelBasalTop"
+        TableLayoutPanelBasalTop.RowCount = 1
+        TableLayoutPanelBasalTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelBasalTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelBasalTop.Size = New Size(1358, 37)
+        TableLayoutPanelBasalTop.TabIndex = 1
         ' 
-        ' TabPageLastSG
+        ' TabPage15Markers
         ' 
-        TabPageLastSG.Controls.Add(TableLayoutPanelLastSG)
-        TabPageLastSG.Location = New Point(4, 27)
-        TabPageLastSG.Name = "TabPageLastSG"
-        TabPageLastSG.Padding = New Padding(3)
-        TabPageLastSG.Size = New Size(1376, 661)
-        TabPageLastSG.TabIndex = 16
-        TabPageLastSG.Text = "Last SG"
-        TabPageLastSG.UseVisualStyleBackColor = True
-        ' 
-        ' TableLayoutPanelLastSG
-        ' 
-        TableLayoutPanelLastSG.AutoSize = True
-        TableLayoutPanelLastSG.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelLastSG.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelLastSG.ColumnCount = 1
-        TableLayoutPanelLastSG.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLastSG.Dock = DockStyle.Fill
-        TableLayoutPanelLastSG.Location = New Point(3, 3)
-        TableLayoutPanelLastSG.Name = "TableLayoutPanelLastSG"
-        TableLayoutPanelLastSG.RowCount = 2
-        TableLayoutPanelLastSG.RowStyles.Add(New RowStyle())
-        TableLayoutPanelLastSG.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLastSG.Size = New Size(1370, 655)
-        TableLayoutPanelLastSG.TabIndex = 1
-        ' 
-        ' TabPageLastAlarm
-        ' 
-        TabPageLastAlarm.Controls.Add(TableLayoutPanelLastAlarm)
-        TabPageLastAlarm.Location = New Point(4, 27)
-        TabPageLastAlarm.Name = "TabPageLastAlarm"
-        TabPageLastAlarm.Padding = New Padding(3)
-        TabPageLastAlarm.Size = New Size(1376, 661)
-        TabPageLastAlarm.TabIndex = 17
-        TabPageLastAlarm.Text = "Last Alarm"
-        TabPageLastAlarm.UseVisualStyleBackColor = True
-        ' 
-        ' TableLayoutPanelLastAlarm
-        ' 
-        TableLayoutPanelLastAlarm.AutoSize = True
-        TableLayoutPanelLastAlarm.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelLastAlarm.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelLastAlarm.ColumnCount = 1
-        TableLayoutPanelLastAlarm.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLastAlarm.Dock = DockStyle.Fill
-        TableLayoutPanelLastAlarm.Location = New Point(3, 3)
-        TableLayoutPanelLastAlarm.Margin = New Padding(0)
-        TableLayoutPanelLastAlarm.Name = "TableLayoutPanelLastAlarm"
-        TableLayoutPanelLastAlarm.RowCount = 2
-        TableLayoutPanelLastAlarm.RowStyles.Add(New RowStyle())
-        TableLayoutPanelLastAlarm.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLastAlarm.Size = New Size(1370, 655)
-        TableLayoutPanelLastAlarm.TabIndex = 0
+        TabPage15Markers.BackColor = SystemColors.MenuHighlight
+        TabPage15Markers.Location = New Point(4, 27)
+        TabPage15Markers.Name = "TabPage15Markers"
+        TabPage15Markers.Padding = New Padding(3)
+        TabPage15Markers.Size = New Size(1376, 661)
+        TabPage15Markers.TabIndex = 24
+        TabPage15Markers.Text = "More..."
         ' 
         ' TabControlPage2
         ' 
@@ -2413,6 +2366,8 @@ Partial Class Form1
         TableLayoutPanelAutoBasalDelivery.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelAutoBasalDelivery.ColumnCount = 1
         TableLayoutPanelAutoBasalDelivery.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelAutoBasalDelivery.Controls.Add(TableLayoutPanelAutoBasalDeliveryTop, 0, 0)
+        TableLayoutPanelAutoBasalDelivery.Controls.Add(DgvAutoBasalDelivery, 0, 1)
         TableLayoutPanelAutoBasalDelivery.Dock = DockStyle.Fill
         TableLayoutPanelAutoBasalDelivery.Location = New Point(3, 3)
         TableLayoutPanelAutoBasalDelivery.Name = "TableLayoutPanelAutoBasalDelivery"
@@ -2421,6 +2376,26 @@ Partial Class Form1
         TableLayoutPanelAutoBasalDelivery.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelAutoBasalDelivery.Size = New Size(1370, 655)
         TableLayoutPanelAutoBasalDelivery.TabIndex = 0
+        ' 
+        ' TableLayoutPanelAutoBasalDeliveryTop
+        ' 
+        TableLayoutPanelAutoBasalDeliveryTop.AutoSize = True
+        TableLayoutPanelAutoBasalDeliveryTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelAutoBasalDeliveryTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelAutoBasalDeliveryTop.ColumnCount = 2
+        TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelAutoBasalDeliveryTop.Dock = DockStyle.Fill
+        TableLayoutPanelAutoBasalDeliveryTop.LabelText = "Basal"
+        TableLayoutPanelAutoBasalDeliveryTop.Location = New Point(6, 6)
+        TableLayoutPanelAutoBasalDeliveryTop.Name = "TableLayoutPanelAutoBasalDeliveryTop"
+        TableLayoutPanelAutoBasalDeliveryTop.RowCount = 1
+        TableLayoutPanelAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelAutoBasalDeliveryTop.Size = New Size(1358, 37)
+        TableLayoutPanelAutoBasalDeliveryTop.TabIndex = 1
         ' 
         ' TabPageAutoModeStatus
         ' 
@@ -2441,6 +2416,7 @@ Partial Class Form1
         TableLayoutPanelAutoModeStatus.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelAutoModeStatus.ColumnCount = 1
         TableLayoutPanelAutoModeStatus.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelAutoModeStatus.Controls.Add(TableLayoutPanelAutoModeStatusTop, 0, 0)
         TableLayoutPanelAutoModeStatus.Dock = DockStyle.Fill
         TableLayoutPanelAutoModeStatus.Location = New Point(3, 3)
         TableLayoutPanelAutoModeStatus.Name = "TableLayoutPanelAutoModeStatus"
@@ -2449,6 +2425,26 @@ Partial Class Form1
         TableLayoutPanelAutoModeStatus.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelAutoModeStatus.Size = New Size(1370, 655)
         TableLayoutPanelAutoModeStatus.TabIndex = 0
+        ' 
+        ' TableLayoutPanelAutoModeStatusTop
+        ' 
+        TableLayoutPanelAutoModeStatusTop.AutoSize = True
+        TableLayoutPanelAutoModeStatusTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelAutoModeStatusTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelAutoModeStatusTop.ColumnCount = 2
+        TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelAutoModeStatusTop.Dock = DockStyle.Fill
+        TableLayoutPanelAutoModeStatusTop.LabelText = "Auto Mode Status"
+        TableLayoutPanelAutoModeStatusTop.Location = New Point(6, 6)
+        TableLayoutPanelAutoModeStatusTop.Name = "TableLayoutPanelAutoModeStatusTop"
+        TableLayoutPanelAutoModeStatusTop.RowCount = 1
+        TableLayoutPanelAutoModeStatusTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelAutoModeStatusTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelAutoModeStatusTop.Size = New Size(1358, 37)
+        TableLayoutPanelAutoModeStatusTop.TabIndex = 1
         ' 
         ' TabPageBgReadings
         ' 
@@ -2469,6 +2465,7 @@ Partial Class Form1
         TableLayoutPanelSgReadings.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelSgReadings.ColumnCount = 1
         TableLayoutPanelSgReadings.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelSgReadings.Controls.Add(TableLayoutPanelBgReadingsTop, 0, 0)
         TableLayoutPanelSgReadings.Dock = DockStyle.Fill
         TableLayoutPanelSgReadings.Location = New Point(3, 3)
         TableLayoutPanelSgReadings.Name = "TableLayoutPanelSgReadings"
@@ -2477,6 +2474,26 @@ Partial Class Form1
         TableLayoutPanelSgReadings.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelSgReadings.Size = New Size(1370, 655)
         TableLayoutPanelSgReadings.TabIndex = 1
+        ' 
+        ' TableLayoutPanelBgReadingsTop
+        ' 
+        TableLayoutPanelBgReadingsTop.AutoSize = True
+        TableLayoutPanelBgReadingsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelBgReadingsTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelBgReadingsTop.ColumnCount = 2
+        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelBgReadingsTop.Dock = DockStyle.Fill
+        TableLayoutPanelBgReadingsTop.LabelText = "Sg Readings"
+        TableLayoutPanelBgReadingsTop.Location = New Point(6, 6)
+        TableLayoutPanelBgReadingsTop.Name = "TableLayoutPanelBgReadingsTop"
+        TableLayoutPanelBgReadingsTop.RowCount = 1
+        TableLayoutPanelBgReadingsTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelBgReadingsTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelBgReadingsTop.Size = New Size(1358, 37)
+        TableLayoutPanelBgReadingsTop.TabIndex = 1
         ' 
         ' TabPageCalibration
         ' 
@@ -2497,6 +2514,7 @@ Partial Class Form1
         TableLayoutPanelCalibration.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelCalibration.ColumnCount = 1
         TableLayoutPanelCalibration.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelCalibration.Controls.Add(TableLayoutPanelCalibrationTop, 0, 0)
         TableLayoutPanelCalibration.Dock = DockStyle.Fill
         TableLayoutPanelCalibration.Location = New Point(3, 3)
         TableLayoutPanelCalibration.Name = "TableLayoutPanelCalibration"
@@ -2505,6 +2523,26 @@ Partial Class Form1
         TableLayoutPanelCalibration.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelCalibration.Size = New Size(1370, 655)
         TableLayoutPanelCalibration.TabIndex = 1
+        ' 
+        ' TableLayoutPanelCalibrationTop
+        ' 
+        TableLayoutPanelCalibrationTop.AutoSize = True
+        TableLayoutPanelCalibrationTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelCalibrationTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelCalibrationTop.ColumnCount = 2
+        TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelCalibrationTop.Dock = DockStyle.Fill
+        TableLayoutPanelCalibrationTop.LabelText = "Calibration"
+        TableLayoutPanelCalibrationTop.Location = New Point(6, 6)
+        TableLayoutPanelCalibrationTop.Name = "TableLayoutPanelCalibrationTop"
+        TableLayoutPanelCalibrationTop.RowCount = 1
+        TableLayoutPanelCalibrationTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelCalibrationTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelCalibrationTop.Size = New Size(1358, 37)
+        TableLayoutPanelCalibrationTop.TabIndex = 1
         ' 
         ' TabPageLowGlucoseSuspended
         ' 
@@ -2525,6 +2563,7 @@ Partial Class Form1
         TableLayoutPanelLowGlucoseSuspended.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelLowGlucoseSuspended.ColumnCount = 1
         TableLayoutPanelLowGlucoseSuspended.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelLowGlucoseSuspended.Controls.Add(TableLayoutPanelLowGlucoseSuspendedTop, 0, 0)
         TableLayoutPanelLowGlucoseSuspended.Dock = DockStyle.Fill
         TableLayoutPanelLowGlucoseSuspended.Location = New Point(3, 3)
         TableLayoutPanelLowGlucoseSuspended.Name = "TableLayoutPanelLowGlucoseSuspended"
@@ -2533,6 +2572,26 @@ Partial Class Form1
         TableLayoutPanelLowGlucoseSuspended.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelLowGlucoseSuspended.Size = New Size(1370, 655)
         TableLayoutPanelLowGlucoseSuspended.TabIndex = 1
+        ' 
+        ' TableLayoutPanelLowGlucoseSuspendedTop
+        ' 
+        TableLayoutPanelLowGlucoseSuspendedTop.AutoSize = True
+        TableLayoutPanelLowGlucoseSuspendedTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelLowGlucoseSuspendedTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelLowGlucoseSuspendedTop.ColumnCount = 2
+        TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelLowGlucoseSuspendedTop.Dock = DockStyle.Fill
+        TableLayoutPanelLowGlucoseSuspendedTop.LabelText = "Low Glucose Suspended"
+        TableLayoutPanelLowGlucoseSuspendedTop.Location = New Point(6, 6)
+        TableLayoutPanelLowGlucoseSuspendedTop.Name = "TableLayoutPanelLowGlucoseSuspendedTop"
+        TableLayoutPanelLowGlucoseSuspendedTop.RowCount = 1
+        TableLayoutPanelLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelLowGlucoseSuspendedTop.Size = New Size(1358, 37)
+        TableLayoutPanelLowGlucoseSuspendedTop.TabIndex = 1
         ' 
         ' TabPageTimeChange
         ' 
@@ -2553,6 +2612,7 @@ Partial Class Form1
         TableLayoutPanelTimeChange.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelTimeChange.ColumnCount = 1
         TableLayoutPanelTimeChange.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelTimeChange.Controls.Add(TableLayoutPanelTimeChangeTop, 0, 0)
         TableLayoutPanelTimeChange.Dock = DockStyle.Fill
         TableLayoutPanelTimeChange.Location = New Point(3, 3)
         TableLayoutPanelTimeChange.Name = "TableLayoutPanelTimeChange"
@@ -2562,17 +2622,122 @@ Partial Class Form1
         TableLayoutPanelTimeChange.Size = New Size(1370, 655)
         TableLayoutPanelTimeChange.TabIndex = 1
         ' 
-        ' WebView
+        ' TableLayoutPanelTimeChangeTop
         ' 
-        WebView.AllowExternalDrop = False
-        WebView.CreationProperties = Nothing
-        WebView.DefaultBackgroundColor = Color.White
-        WebView.Dock = DockStyle.Fill
-        WebView.Location = New Point(597, 6)
-        WebView.Name = "WebView"
-        WebView.Size = New Size(767, 643)
-        WebView.TabIndex = 3
-        WebView.ZoomFactor = 1.0R
+        TableLayoutPanelTimeChangeTop.AutoSize = True
+        TableLayoutPanelTimeChangeTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelTimeChangeTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelTimeChangeTop.ColumnCount = 2
+        TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelTimeChangeTop.Dock = DockStyle.Fill
+        TableLayoutPanelTimeChangeTop.LabelText = "Time Change"
+        TableLayoutPanelTimeChangeTop.Location = New Point(6, 6)
+        TableLayoutPanelTimeChangeTop.Name = "TableLayoutPanelTimeChangeTop"
+        TableLayoutPanelTimeChangeTop.RowCount = 1
+        TableLayoutPanelTimeChangeTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelTimeChangeTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelTimeChangeTop.Size = New Size(1358, 37)
+        TableLayoutPanelTimeChangeTop.TabIndex = 1
+        ' 
+        ' TabPageLastSG
+        ' 
+        TabPageLastSG.Controls.Add(TableLayoutPanelLastSG)
+        TabPageLastSG.Location = New Point(4, 27)
+        TabPageLastSG.Name = "TabPageLastSG"
+        TabPageLastSG.Padding = New Padding(3)
+        TabPageLastSG.Size = New Size(1376, 661)
+        TabPageLastSG.TabIndex = 16
+        TabPageLastSG.Text = "Last SG"
+        TabPageLastSG.UseVisualStyleBackColor = True
+        ' 
+        ' TableLayoutPanelLastSG
+        ' 
+        TableLayoutPanelLastSG.AutoSize = True
+        TableLayoutPanelLastSG.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelLastSG.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TableLayoutPanelLastSG.ColumnCount = 1
+        TableLayoutPanelLastSG.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelLastSG.Controls.Add(TableLayoutPanelLastSgTop, 0, 0)
+        TableLayoutPanelLastSG.Dock = DockStyle.Fill
+        TableLayoutPanelLastSG.Location = New Point(3, 3)
+        TableLayoutPanelLastSG.Name = "TableLayoutPanelLastSG"
+        TableLayoutPanelLastSG.RowCount = 2
+        TableLayoutPanelLastSG.RowStyles.Add(New RowStyle())
+        TableLayoutPanelLastSG.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelLastSG.Size = New Size(1370, 655)
+        TableLayoutPanelLastSG.TabIndex = 1
+        ' 
+        ' TableLayoutPanelLastSgTop
+        ' 
+        TableLayoutPanelLastSgTop.AutoSize = True
+        TableLayoutPanelLastSgTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelLastSgTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelLastSgTop.ColumnCount = 2
+        TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelLastSgTop.Dock = DockStyle.Fill
+        TableLayoutPanelLastSgTop.LabelText = "last SG"
+        TableLayoutPanelLastSgTop.Location = New Point(6, 6)
+        TableLayoutPanelLastSgTop.Name = "TableLayoutPanelLastSgTop"
+        TableLayoutPanelLastSgTop.RowCount = 1
+        TableLayoutPanelLastSgTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelLastSgTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelLastSgTop.Size = New Size(1358, 37)
+        TableLayoutPanelLastSgTop.TabIndex = 1
+        ' 
+        ' TabPageLastAlarm
+        ' 
+        TabPageLastAlarm.Controls.Add(TableLayoutPanelLastAlarm)
+        TabPageLastAlarm.Location = New Point(4, 27)
+        TabPageLastAlarm.Name = "TabPageLastAlarm"
+        TabPageLastAlarm.Padding = New Padding(3)
+        TabPageLastAlarm.Size = New Size(1376, 661)
+        TabPageLastAlarm.TabIndex = 17
+        TabPageLastAlarm.Text = "Last Alarm"
+        TabPageLastAlarm.UseVisualStyleBackColor = True
+        ' 
+        ' TableLayoutPanelLastAlarm
+        ' 
+        TableLayoutPanelLastAlarm.AutoSize = True
+        TableLayoutPanelLastAlarm.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelLastAlarm.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TableLayoutPanelLastAlarm.ColumnCount = 1
+        TableLayoutPanelLastAlarm.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelLastAlarm.Controls.Add(TableLayoutPanelLastAlarmTop, 0, 0)
+        TableLayoutPanelLastAlarm.Dock = DockStyle.Fill
+        TableLayoutPanelLastAlarm.Location = New Point(3, 3)
+        TableLayoutPanelLastAlarm.Margin = New Padding(0)
+        TableLayoutPanelLastAlarm.Name = "TableLayoutPanelLastAlarm"
+        TableLayoutPanelLastAlarm.RowCount = 2
+        TableLayoutPanelLastAlarm.RowStyles.Add(New RowStyle())
+        TableLayoutPanelLastAlarm.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelLastAlarm.Size = New Size(1370, 655)
+        TableLayoutPanelLastAlarm.TabIndex = 0
+        ' 
+        ' TableLayoutPanelLastAlarmTop
+        ' 
+        TableLayoutPanelLastAlarmTop.AutoSize = True
+        TableLayoutPanelLastAlarmTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelLastAlarmTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelLastAlarmTop.ColumnCount = 2
+        TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelLastAlarmTop.Dock = DockStyle.Fill
+        TableLayoutPanelLastAlarmTop.LabelText = "Last Alarm"
+        TableLayoutPanelLastAlarmTop.Location = New Point(6, 6)
+        TableLayoutPanelLastAlarmTop.Name = "TableLayoutPanelLastAlarmTop"
+        TableLayoutPanelLastAlarmTop.RowCount = 1
+        TableLayoutPanelLastAlarmTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelLastAlarmTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelLastAlarmTop.Size = New Size(1358, 37)
+        TableLayoutPanelLastAlarmTop.TabIndex = 1
         ' 
         ' TabPageCurrentUser
         ' 
@@ -2605,65 +2770,17 @@ Partial Class Form1
         TabPageBackToHomePage.TabIndex = 8
         TabPageBackToHomePage.Text = "Back.."
         ' 
-        ' StatusStrip1
+        ' WebView
         ' 
-        StatusStrip1.Items.AddRange(New ToolStripItem() {LoginStatus, StatusStripSpeech, LastUpdateTimeToolStripStatusLabel, TimeZoneToolStripStatusLabel, StatusStripSpacerRight, UpdateAvailableStatusStripLabel})
-        StatusStrip1.Location = New Point(0, 716)
-        StatusStrip1.Name = "StatusStrip1"
-        StatusStrip1.Size = New Size(1384, 25)
-        StatusStrip1.TabIndex = 53
-        StatusStrip1.Text = "StatusStrip1"
-        ' 
-        ' LoginStatus
-        ' 
-        LoginStatus.BorderSides = ToolStripStatusLabelBorderSides.Left Or ToolStripStatusLabelBorderSides.Right
-        LoginStatus.BorderStyle = Border3DStyle.RaisedOuter
-        LoginStatus.DisplayStyle = ToolStripItemDisplayStyle.Text
-        LoginStatus.Name = "LoginStatus"
-        LoginStatus.Size = New Size(133, 20)
-        LoginStatus.Text = "Login Status: Unknown"
-        ' 
-        ' StatusStripSpeech
-        ' 
-        StatusStripSpeech.BorderSides = ToolStripStatusLabelBorderSides.Left
-        StatusStripSpeech.BorderStyle = Border3DStyle.RaisedOuter
-        StatusStripSpeech.Name = "StatusStripSpeech"
-        StatusStripSpeech.Size = New Size(404, 20)
-        StatusStripSpeech.Spring = True
-        StatusStripSpeech.Text = " "
-        ' 
-        ' LastUpdateTimeToolStripStatusLabel
-        ' 
-        LastUpdateTimeToolStripStatusLabel.BorderSides = ToolStripStatusLabelBorderSides.Left
-        LastUpdateTimeToolStripStatusLabel.BorderStyle = Border3DStyle.RaisedOuter
-        LastUpdateTimeToolStripStatusLabel.Name = "LastUpdateTimeToolStripStatusLabel"
-        LastUpdateTimeToolStripStatusLabel.Size = New Size(159, 20)
-        LastUpdateTimeToolStripStatusLabel.Text = "Last Update Time: Unknown"
-        ' 
-        ' TimeZoneToolStripStatusLabel
-        ' 
-        TimeZoneToolStripStatusLabel.Name = "TimeZoneToolStripStatusLabel"
-        TimeZoneToolStripStatusLabel.Size = New Size(114, 20)
-        TimeZoneToolStripStatusLabel.Text = "TimeZone Unknown"
-        ' 
-        ' StatusStripSpacerRight
-        ' 
-        StatusStripSpacerRight.BorderSides = ToolStripStatusLabelBorderSides.Right
-        StatusStripSpacerRight.BorderStyle = Border3DStyle.RaisedOuter
-        StatusStripSpacerRight.Name = "StatusStripSpacerRight"
-        StatusStripSpacerRight.Size = New Size(404, 20)
-        StatusStripSpacerRight.Spring = True
-        StatusStripSpacerRight.Text = " "
-        ' 
-        ' UpdateAvailableStatusStripLabel
-        ' 
-        UpdateAvailableStatusStripLabel.BorderSides = ToolStripStatusLabelBorderSides.Left Or ToolStripStatusLabelBorderSides.Right
-        UpdateAvailableStatusStripLabel.BorderStyle = Border3DStyle.RaisedOuter
-        UpdateAvailableStatusStripLabel.ForeColor = Color.Red
-        UpdateAvailableStatusStripLabel.Image = My.Resources.Resources.NotificationAlertRed_16x
-        UpdateAvailableStatusStripLabel.Name = "UpdateAvailableStatusStripLabel"
-        UpdateAvailableStatusStripLabel.Size = New Size(154, 20)
-        UpdateAvailableStatusStripLabel.Text = "Update Status Unknown"
+        WebView.AllowExternalDrop = False
+        WebView.CreationProperties = Nothing
+        WebView.DefaultBackgroundColor = Color.White
+        WebView.Dock = DockStyle.Fill
+        WebView.Location = New Point(597, 6)
+        WebView.Name = "WebView"
+        WebView.Size = New Size(767, 643)
+        WebView.TabIndex = 3
+        WebView.ZoomFactor = 1.0R
         ' 
         ' Form1
         ' 
@@ -2682,8 +2799,6 @@ Partial Class Form1
         Me.SizeGripStyle = SizeGripStyle.Hide
         Me.StartPosition = FormStartPosition.CenterScreen
         Me.Text = "CareLink™ For Windows"
-        MenuStrip1.ResumeLayout(False)
-        MenuStrip1.PerformLayout()
         CType(CalibrationDueImage, ComponentModel.ISupportInitialize).EndInit()
         CalibrationShieldPanel.ResumeLayout(False)
         CalibrationShieldPanel.PerformLayout()
@@ -2700,9 +2815,15 @@ Partial Class Form1
         CType(DgvSummary, ComponentModel.ISupportInitialize).EndInit()
         CType(InsulinLevelPictureBox, ComponentModel.ISupportInitialize).EndInit()
         Last24HTotalsPanel.ResumeLayout(False)
+        MenuStrip1.ResumeLayout(False)
+        MenuStrip1.PerformLayout()
         CType(PumpBatteryPictureBox, ComponentModel.ISupportInitialize).EndInit()
         SensorTimeLeftPanel.ResumeLayout(False)
         CType(SensorTimeLeftPictureBox, ComponentModel.ISupportInitialize).EndInit()
+        SplitContainer1.Panel1.ResumeLayout(False)
+        SplitContainer1.Panel1.PerformLayout()
+        CType(SplitContainer1, ComponentModel.ISupportInitialize).EndInit()
+        SplitContainer1.ResumeLayout(False)
         SplitContainer2.Panel1.ResumeLayout(False)
         SplitContainer2.Panel1.PerformLayout()
         SplitContainer2.Panel2.ResumeLayout(False)
@@ -2713,53 +2834,87 @@ Partial Class Form1
         SplitContainer3.Panel2.PerformLayout()
         CType(SplitContainer3, ComponentModel.ISupportInitialize).EndInit()
         SplitContainer3.ResumeLayout(False)
+        StatusStrip1.ResumeLayout(False)
+        StatusStrip1.PerformLayout()
         TabControlPage1.ResumeLayout(False)
         TabPage01HomePage.ResumeLayout(False)
         TabPage02RunningIOB.ResumeLayout(False)
-        SplitContainer1.Panel1.ResumeLayout(False)
-        SplitContainer1.Panel1.PerformLayout()
-        CType(SplitContainer1, ComponentModel.ISupportInitialize).EndInit()
-        SplitContainer1.ResumeLayout(False)
         TabPage04SummaryData.ResumeLayout(False)
         TabPage05Insulin.ResumeLayout(False)
         TabPage05Insulin.PerformLayout()
+        TableLayoutPanelInsulin.ResumeLayout(False)
+        TableLayoutPanelInsulin.PerformLayout()
         TabPage06Meal.ResumeLayout(False)
         TabPage06Meal.PerformLayout()
+        TableLayoutPanelMeal.ResumeLayout(False)
+        TableLayoutPanelMeal.PerformLayout()
         TabPage07ActiveInsulin.ResumeLayout(False)
         TabPage07ActiveInsulin.PerformLayout()
+        TableLayoutPanelActiveInsulin.ResumeLayout(False)
+        TableLayoutPanelActiveInsulin.PerformLayout()
         TabPage08SensorGlucose.ResumeLayout(False)
         TabPage08SensorGlucose.PerformLayout()
+        TableLayoutPanelSgs.ResumeLayout(False)
+        TableLayoutPanelSgs.PerformLayout()
         TabPage09Limits.ResumeLayout(False)
         TabPage09Limits.PerformLayout()
-        TabPage10NotificationHistory.ResumeLayout(False)
-        TabPage10NotificationHistory.PerformLayout()
-        TabPage11TherapyAlgorithm.ResumeLayout(False)
-        TabPage11TherapyAlgorithm.PerformLayout()
-        TabPage12BannerState.ResumeLayout(False)
-        TabPage12BannerState.PerformLayout()
-        TabPage13Basal.ResumeLayout(False)
-        TabPageLastSG.ResumeLayout(False)
-        TabPageLastSG.PerformLayout()
-        TabPageLastAlarm.ResumeLayout(False)
-        TabPageLastAlarm.PerformLayout()
+        TableLayoutPanelLimits.ResumeLayout(False)
+        TableLayoutPanelLimits.PerformLayout()
+        TabPage10NotificationActive.ResumeLayout(False)
+        TabPage10NotificationActive.PerformLayout()
+        TabPage11NotificationsCleared.ResumeLayout(False)
+        TabPage11NotificationsCleared.PerformLayout()
+        TableLayoutPanelNotificationActive.ResumeLayout(False)
+        TableLayoutPanelNotificationActive.PerformLayout()
+        TableLayoutPanelNotificationsCleared.ResumeLayout(False)
+        TableLayoutPanelNotificationsCleared.PerformLayout()
+        TabPage12TherapyAlgorithm.ResumeLayout(False)
+        TabPage12TherapyAlgorithm.PerformLayout()
+        TableLayoutPanelTherapyAlgorithm.ResumeLayout(False)
+        TableLayoutPanelTherapyAlgorithm.PerformLayout()
+        TabPage13BannerState.ResumeLayout(False)
+        TabPage13BannerState.PerformLayout()
+        TableLayoutPanelBannerState.ResumeLayout(False)
+        TableLayoutPanelBannerState.PerformLayout()
+        TabPage14Basal.ResumeLayout(False)
+        TableLayoutPanelBasal.ResumeLayout(False)
+        TableLayoutPanelBasal.PerformLayout()
         TabControlPage2.ResumeLayout(False)
         TabPageAutoBasalDelivery.ResumeLayout(False)
         TabPageAutoBasalDelivery.PerformLayout()
+        TableLayoutPanelAutoBasalDelivery.ResumeLayout(False)
+        TableLayoutPanelAutoBasalDelivery.PerformLayout()
         TabPageAutoModeStatus.ResumeLayout(False)
         TabPageAutoModeStatus.PerformLayout()
+        TableLayoutPanelAutoModeStatus.ResumeLayout(False)
+        TableLayoutPanelAutoModeStatus.PerformLayout()
         TabPageBgReadings.ResumeLayout(False)
         TabPageBgReadings.PerformLayout()
+        TableLayoutPanelSgReadings.ResumeLayout(False)
+        TableLayoutPanelSgReadings.PerformLayout()
         TabPageCalibration.ResumeLayout(False)
         TabPageCalibration.PerformLayout()
+        TableLayoutPanelCalibration.ResumeLayout(False)
+        TableLayoutPanelCalibration.PerformLayout()
         TabPageLowGlucoseSuspended.ResumeLayout(False)
         TabPageLowGlucoseSuspended.PerformLayout()
+        TableLayoutPanelLowGlucoseSuspended.ResumeLayout(False)
+        TableLayoutPanelLowGlucoseSuspended.PerformLayout()
         TabPageTimeChange.ResumeLayout(False)
         TabPageTimeChange.PerformLayout()
-        CType(WebView, ComponentModel.ISupportInitialize).EndInit()
+        TableLayoutPanelTimeChange.ResumeLayout(False)
+        TableLayoutPanelTimeChange.PerformLayout()
+        TabPageLastSG.ResumeLayout(False)
+        TabPageLastSG.PerformLayout()
+        TableLayoutPanelLastSG.ResumeLayout(False)
+        TableLayoutPanelLastSG.PerformLayout()
+        TabPageLastAlarm.ResumeLayout(False)
+        TabPageLastAlarm.PerformLayout()
+        TableLayoutPanelLastAlarm.ResumeLayout(False)
+        TableLayoutPanelLastAlarm.PerformLayout()
         TabPageCurrentUser.ResumeLayout(False)
         TabPageAllUsers.ResumeLayout(False)
-        StatusStrip1.ResumeLayout(False)
-        StatusStrip1.PerformLayout()
+        CType(WebView, ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
     End Sub
@@ -2913,8 +3068,10 @@ Partial Class Form1
     Friend WithEvents TableLayoutPanelLowGlucoseSuspendedTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelMeal As TableLayoutPanel
     Friend WithEvents TableLayoutPanelMealTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelNotificationHistory As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelNotificationHistoryTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelNotificationActive As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelNotificationActiveTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelNotificationsCleared As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelNotificationsClearedTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelSgReadings As TableLayoutPanel
     Friend WithEvents TableLayoutPanelSgs As TableLayoutPanel
     Friend WithEvents TableLayoutPanelSgsTop As TableLayoutPanelTopEx
@@ -2931,11 +3088,12 @@ Partial Class Form1
     Friend WithEvents TabPage07ActiveInsulin As TabPage
     Friend WithEvents TabPage08SensorGlucose As TabPage
     Friend WithEvents TabPage09Limits As TabPage
-    Friend WithEvents TabPage10NotificationHistory As TabPage
-    Friend WithEvents TabPage11TherapyAlgorithm As TabPage
-    Friend WithEvents TabPage12BannerState As TabPage
-    Friend WithEvents TabPage13Basal As TabPage
-    Friend WithEvents TabPage14Markers As TabPage
+    Friend WithEvents TabPage10NotificationActive As TabPage
+    Friend WithEvents TabPage11NotificationsCleared As TabPage
+    Friend WithEvents TabPage12TherapyAlgorithm As TabPage
+    Friend WithEvents TabPage13BannerState As TabPage
+    Friend WithEvents TabPage14Basal As TabPage
+    Friend WithEvents TabPage15Markers As TabPage
     Friend WithEvents TabPageAllUsers As TabPage
     Friend WithEvents TabPageAutoBasalDelivery As TabPage
     Friend WithEvents TabPageAutoModeStatus As TabPage

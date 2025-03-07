@@ -5,129 +5,116 @@
 Friend Module Form1NotificationTabHelpers
 
     Private ReadOnly s_rowsToHide As New List(Of String) From {
-            NameOf(ActiveNotification.GUID),
             NameOf(ActiveNotification.instanceId),
-            NameOf(ActiveNotification.kind),
             NameOf(ActiveNotification.relativeOffset),
             NameOf(ActiveNotification.version),
-            NameOf(ClearedNotificationsRecord.faultId),
-            NameOf(ClearedNotificationsRecord.pnpId),
-            NameOf(ClearedNotificationsRecord.RecordNumber),
-            NameOf(ClearedNotificationsRecord.referenceGUID)
+            NameOf(ActiveNotification.pnpId),
+            NameOf(ClearedNotifications.RecordNumber),
+            NameOf(ClearedNotifications.ReferenceGUID)
         }
 
-    Private Sub CreateNotificationTables(notificationDictionary As Dictionary(Of String, String), tableLevel1Blue As TableLayoutPanel)
-        tableLevel1Blue.AutoScroll = True
-        tableLevel1Blue.AutoSize = True
-        tableLevel1Blue.BorderStyle = BorderStyle.FixedSingle
-        tableLevel1Blue.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single
-        tableLevel1Blue.Controls.Clear()
-        tableLevel1Blue.ColumnCount = 2
-        tableLevel1Blue.ColumnStyles.Add(New ColumnStyle(SizeType.AutoSize))
-        tableLevel1Blue.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0!))
-        tableLevel1Blue.Dock = DockStyle.Fill
-        tableLevel1Blue.Location = New Point(6, 30)
-        tableLevel1Blue.Name = "TableLayoutPanelNotificationHistoryTop"
-        tableLevel1Blue.RowCount = 2
-        tableLevel1Blue.RowStyles.Clear()
-        tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize))
-        tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.AutoSize))
-        tableLevel1Blue.TabIndex = 1
-
+    Private Sub CreateNotificationTables(notificationDictionary As Dictionary(Of String, String))
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In notificationDictionary.WithIndex()
             Dim notificationType As KeyValuePair(Of String, String) = c.Value
             Dim innerJson As List(Of Dictionary(Of String, String)) = JsonToLisOfDictionary(notificationType.Value)
-            Dim tableLayoutPanel2 As New TableLayoutPanel With {
-                .AutoScroll = False,
-                .AutoSize = True,
-                .ColumnCount = 1,
-                .Dock = DockStyle.Fill,
-                .Name = $"tableLayoutPanel{c.Index}",
-                .RowCount = 1,
-                .TabIndex = 0}
-            Dim control As New Label With {
-                .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                .AutoSize = True,
-                .TextAlign = ContentAlignment.MiddleLeft,
-                .Text = notificationType.Key.ToTitleCase.Replace(oldValue:=" ", vbCrLf)}
-
-            tableLevel1Blue.Controls.Add(control, 0, c.Index)
-            If innerJson.Count > 0 Then
-                tableLevel1Blue.RowStyles.Add(New RowStyle(SizeType.Absolute, height:=22))
-                If notificationType.Key = "clearedNotifications" Then
-                    tableLayoutPanel2.BackColor = Color.Green
-                    tableLayoutPanel2.ForeColor = tableLayoutPanel2.BackColor.GetContrastingColor
+            Stop
+            If notificationType.Key = "clearedNotifications" Then
+                If innerJson.Count > 0 Then
                     innerJson.Reverse()
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
                         DisplayDataTableInDGV(
-                            realPanel:=tableLayoutPanel2,
-                            table:=ClassCollectionToDataTable(
-                                classCollection:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
+                            realPanel:=Form1.TableLayoutPanelNotificationsCleared,
+                            table:=ClassCollectionToDataTable(classCollection:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
                             className:=NameOf(SummaryRecord),
                             attachHandlers:=AddressOf SummaryHelpers.AttachHandlers,
-                            rowIndex:=innerDictionary.Index)
+                            rowIndex:=innerDictionary.Index + 1)
                     Next
                 Else
-                    tableLayoutPanel2.BackColor = Color.PaleVioletRed
-                    tableLayoutPanel2.ForeColor = tableLayoutPanel2.BackColor.GetContrastingColor
-
+                    Form1.TableLayoutPanelNotificationActiveTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+                    DisplayEmptyDGV(realPanel:=Form1.TableLayoutPanelNotificationsCleared, name:="clearedNotifications")
+                End If
+            Else
+                If innerJson.Count > 0 Then
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
                         DisplayDataTableInDGV(
-                            realPanel:=tableLayoutPanel2,
-                            table:=ClassCollectionToDataTable(
-                                classCollection:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
+                            realPanel:=Form1.TableLayoutPanelNotificationActive,
+                            table:=ClassCollectionToDataTable(classCollection:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
                             className:=NameOf(SummaryRecord),
                             attachHandlers:=AddressOf SummaryHelpers.AttachHandlers,
-                            rowIndex:=innerDictionary.Index)
+                            rowIndex:=innerDictionary.Index + 1)
                     Next
+                Else
+                    Form1.TableLayoutPanelNotificationActiveTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+                    DisplayEmptyDGV(realPanel:=Form1.TableLayoutPanelNotificationActive, name:="activeNotification")
                 End If
-                tableLevel1Blue.Controls.Add(control:=tableLayoutPanel2, column:=1, row:=c.Index)
             End If
+
         Next
     End Sub
 
     Private Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As Integer)
         Dim dGV As New DataGridView With {
-            .AutoSize = False,
             .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells,
             .ColumnHeadersVisible = False,
-            .Height = table.Rows.Count * 30,
             .Name = $"DataGridView{className}",
             .RowHeadersVisible = False
         }
+        realPanel.Controls.Add(dGV, 0, rowIndex)
         dGV.DefaultCellStyle.WrapMode = DataGridViewTriState.True
         dGV.InitializeDgv()
-        realPanel.Controls.Add(dGV, 0, rowIndex)
-        attachHandlers(dGV)
         dGV.DataSource = table
+        dGV.AutoSize = True
+        realPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        realPanel.AutoSize = True
+        attachHandlers(dGV)
     End Sub
 
-    Friend Sub UpdateNotificationTab()
+    Private Sub DisplayEmptyDGV(realPanel As TableLayoutPanel, name As String)
+        Dim dGV As New DataGridView With {
+            .AutoGenerateColumns = False,
+            .AutoSize = False,
+            .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells,
+            .ColumnHeadersVisible = False,
+            .DataSource = Nothing,
+            .Font = New Font("Segoe UI", 12.0F, FontStyle.Bold),
+            .Name = $"DataGridView{name}",
+            .RowHeadersVisible = False}
+        dGV.DefaultCellStyle.WrapMode = DataGridViewTriState.True
+        dGV.Columns.Clear()
+
+        Dim colMessage As New DataGridViewTextBoxColumn With {
+            .DataPropertyName = "Message",
+            .HeaderText = "Message",
+            .ReadOnly = True,
+            .MinimumWidth = 150,
+            .AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCellsExceptHeader}
+
+        dGV.Columns.Add(colMessage)
+
+        Dim dt As New DataTable()
+        dt.Columns.Add("Message")
+        Dim newRow As DataRow = dt.NewRow()
+        newRow("Message") = "No records found"
+        dt.Rows.Add(newRow)
+
+        realPanel.Controls.Add(control:=dGV, column:=0, row:=1)
+        Dim bs As New BindingSource With {.DataSource = dt}
+        dGV.DataSource = bs
+    End Sub
+
+    Friend Sub UpdateNotificationTabs()
         Try
-            Form1.TableLayoutPanelNotificationHistory.AutoScroll = True
-            Form1.TableLayoutPanelNotificationHistory.SetTabName(ServerDataIndexes.notificationHistory)
-            Dim tableLevel1Blue As New TableLayoutPanel With {
-                    .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
-                    .AutoScroll = True,
-                    .AutoSize = True,
-                    .AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                    .BackColor = Color.LightBlue,
-                    .BorderStyle = BorderStyle.FixedSingle,
-                    .ColumnCount = 2,
-                    .Dock = DockStyle.Fill,
-                    .ForeColor = .BackColor.GetContrastingColor,
-                    .Margin = New Padding(3),
-                    .Name = NameOf(tableLevel1Blue),
-                    .Padding = New Padding(3),
-                    .RowCount = 0
-                }
-            For i As Integer = Form1.TableLayoutPanelNotificationHistory.Controls.Count - 1 To 1 Step -1
-                Form1.TableLayoutPanelNotificationHistory.Controls.RemoveAt(i)
+            Form1.TableLayoutPanelNotificationActive.AutoScroll = True
+            Form1.TableLayoutPanelNotificationActive.SetTabName(ServerDataIndexes.notificationHistory, isClearedNotifications:=False)
+            For i As Integer = Form1.TableLayoutPanelNotificationActive.Controls.Count - 1 To 1 Step -1
+                Form1.TableLayoutPanelNotificationsCleared.Controls.RemoveAt(i)
             Next
-            Form1.TableLayoutPanelNotificationHistory.Controls.Add(tableLevel1Blue, 0, 1)
-            CreateNotificationTables(
-                notificationDictionary:=s_notificationHistoryValue,
-                tableLevel1Blue)
+            Form1.TableLayoutPanelNotificationsCleared.AutoScroll = True
+            Form1.TableLayoutPanelNotificationsCleared.SetTabName(ServerDataIndexes.notificationHistory, isClearedNotifications:=True)
+            For i As Integer = Form1.TableLayoutPanelNotificationsCleared.Controls.Count - 1 To 1 Step -1
+                Form1.TableLayoutPanelNotificationsCleared.Controls.RemoveAt(i)
+            Next
+            CreateNotificationTables(notificationDictionary:=s_notificationHistoryValue)
         Catch ex As Exception
             Stop
             Throw

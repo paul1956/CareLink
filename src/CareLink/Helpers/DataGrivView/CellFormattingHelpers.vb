@@ -118,7 +118,7 @@ Friend Module CellFormattingHelpers
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
-                Case $"{partialKey}MmDl"
+                Case $"{partialKey}MgdL"
                     e.Value = e.Value.ToString
                     If sensorValue < TirLowLimit(False) Then
                         CellFormattingApplyColor(e, Color.Red, isUri:=False)

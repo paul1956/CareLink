@@ -39,13 +39,13 @@ Friend Module CreateChartItems
         Return -1
     End Function
 
-    Friend Sub ShowHideLegendItem(showOnLegend As Boolean, legendString As String, activeInsulinChartLegend As Legend, homeChartLegend As Legend, treatmentMarkersChartLegend As Legend)
+    Friend Sub ShowHideLegendItem(showLegend As Boolean, legendString As String, activeInsulinChartLegend As Legend, homeChartLegend As Legend, treatmentMarkersChartLegend As Legend)
         Dim i As Integer = activeInsulinChartLegend.CustomItems.IndexOfLabel(legendString)
-        activeInsulinChartLegend.CustomItems(i).Enabled = showOnLegend
+        activeInsulinChartLegend.CustomItems(i).Enabled = showLegend
         i = homeChartLegend.CustomItems.IndexOfLabel(legendString)
-        homeChartLegend.CustomItems(i).Enabled = showOnLegend
+        homeChartLegend.CustomItems(i).Enabled = showLegend
         i = treatmentMarkersChartLegend.CustomItems.IndexOfLabel(legendString)
-        treatmentMarkersChartLegend.CustomItems(i).Enabled = showOnLegend
+        treatmentMarkersChartLegend.CustomItems(i).Enabled = showLegend
     End Sub
 
     Friend Function CreateChart(chartName As String) As Chart

@@ -165,6 +165,10 @@ Friend Module DateTimeExtensions
     End Function
 
     <Extension>
+    Public Function ToNotificationDateTimeString(triggeredDateTime As Date) As String
+        Return triggeredDateTime.ToString($"ddd, MMM d {s_timeWithMinuteFormat}")
+    End Function
+    <Extension>
     Public Function ToHoursMinutes(timeOnly As TimeOnly) As String
         Dim rawTimeOnly As String = $" {timeOnly.ToString(CurrentDateCulture)}"
         Return If(rawTimeOnly.Split(":")(0).Length = 1,
@@ -193,11 +197,13 @@ Friend Module DateTimeExtensions
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal)
             Case NameOf(SG.timestamp)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
-            Case NameOf(TimeChange.Timestamp)
+            Case NameOf(TimeChange.Timestamp), NameOf(ClearedNotifications.dateTime)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
-            Case NameOf(ClearedNotificationsRecord.secondaryTime)
+            Case NameOf(ActiveNotification.secondaryTime)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.NoCurrentDateDefault)
-            Case NameOf(ClearedNotificationsRecord.triggeredDateTime)
+            Case NameOf(ActiveNotification.triggeredDateTime)
+                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
+            Case "dateTime"
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
             Case Else
         End Select

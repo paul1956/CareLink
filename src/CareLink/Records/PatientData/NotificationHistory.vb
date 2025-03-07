@@ -10,6 +10,6 @@ Public Class NotificationHistory
     Public Property ActiveNotifications As List(Of Object)
 
     <JsonPropertyName("clearedNotifications")>
-    Public Property ClearedNotifications As List(Of ClearedNotification)
+    Public Property ClearedNotifications As List(Of ClearedNotifications)
 
 End Class

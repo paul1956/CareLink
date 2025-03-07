@@ -40,6 +40,14 @@ Public Module DictionaryExtensions
                  )
     End Function
 
+    Public Function GetValueList(jsonString As String) As String()
+        Dim valueList As String() = JsonToDictionary(jsonString).ToCsv _
+            .Replace("{", "") _
+            .Replace("}", "") _
+            .Split(",")
+        Return valueList
+    End Function
+
     <Extension>
     Public Function Clone(Of T)(dic As Dictionary(Of String, T)) As Dictionary(Of String, T)
         Return (From x In dic Select x).ToDictionary(Function(p) p.Key, Function(p) p.Value)

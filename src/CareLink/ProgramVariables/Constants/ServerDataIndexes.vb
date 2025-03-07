@@ -3,7 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 ' Do not rename these name are matched used in case sensitive matching
-Friend Enum ServerDataIndexes
+Public Enum ServerDataIndexes
     clientTimeZoneName
     lastName
     firstName

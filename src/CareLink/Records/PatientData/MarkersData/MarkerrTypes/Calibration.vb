@@ -55,7 +55,7 @@ Public Class Calibration
 
     <DisplayName("UnitValue (mg/dL)")>
     <Column(Order:=8, TypeName:=NameOf([Single]))>
-    Public ReadOnly Property UnitValueMmDl As Single
+    Public ReadOnly Property UnitValueMgdL As Single
         Get
             If Single.IsNaN(Me.UnitValue) Then Return Me.UnitValue
             Return If(NativeMmolL,

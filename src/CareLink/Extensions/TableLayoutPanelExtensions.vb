@@ -15,6 +15,8 @@ Friend Module TableLayoutPanelExtensions
                 NameOf(Form1.TableLayoutPanelInsulin),
                 NameOf(Form1.TableLayoutPanelLimits),
                 NameOf(Form1.TableLayoutPanelMeal),
+                NameOf(Form1.TableLayoutPanelNotificationActive),
+                NameOf(Form1.TableLayoutPanelNotificationsCleared),
                 NameOf(Form1.TableLayoutPanelSgs),
                 NameOf(Form1.TableLayoutPanelTimeChange)
             }
@@ -29,18 +31,21 @@ Friend Module TableLayoutPanelExtensions
                NameOf(Form1.TableLayoutPanelLastAlarm),
                NameOf(Form1.TableLayoutPanelLastSG),
                NameOf(Form1.TableLayoutPanelLowGlucoseSuspended),
-               NameOf(Form1.TableLayoutPanelNotificationHistory),
+               NameOf(Form1.TableLayoutPanelNotificationActive),
+               NameOf(Form1.TableLayoutPanelNotificationsCleared),
                NameOf(Form1.TableLayoutPanelTherapyAlgorithm)
             }
 
     <Extension>
-    Friend Sub SetTabName(table As TableLayoutPanel, rowIndex As ServerDataIndexes)
+    Friend Sub SetTabName(table As TableLayoutPanel, rowIndex As ServerDataIndexes, isClearedNotifications As Boolean)
         Dim tableName As String = rowIndex.ToString.ToTitleCase
+        If tableName = "Notification History" Then
+            tableName = If(isClearedNotifications, "Cleared Notifications", "Active Notification")
+        End If
         Select Case True
             Case TypeOf table.Controls(0) Is TableLayoutPanel
                 Select Case True
                     Case TypeOf CType(table.Controls(0), TableLayoutPanel).Controls(0) Is Button
-
                         Dim helpString As String
                         If s_tablesSupportingExportToExcel.Contains(table.Name) Then
                             helpString = ": Right Click on Table for Export Options including Excel"

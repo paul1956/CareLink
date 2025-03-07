@@ -45,9 +45,20 @@ Public Class SummaryRecord
     ''' Summary record where record number is key
     ''' </summary>
     ''' <param name="recordNumber"></param>
+    ''' <param name="key"></param>
     ''' <param name="Value"></param>
-    Protected Friend Sub New(recordNumber As Single, Value As String)
-        Me.New(recordNumber, CType(recordNumber, ServerDataIndexes).ToString, Value, "")
+    Protected Friend Sub New(recordNumber As Single, key As ServerDataIndexes, Value As String)
+        Me.New(recordNumber, key.ToString, Value, "")
+    End Sub
+
+    ''' <summary>
+    ''' Summary record where record number is key
+    ''' </summary>
+    ''' <param name="recordNumber"></param>
+    ''' <param name="Key"></param>
+    ''' <param name="Value"></param>
+    Protected Friend Sub New(recordNumber As Single, key As String)
+        Me.New(recordNumber, key, ClickToShowDetails, "")
     End Sub
 
     ''' <summary>

@@ -58,12 +58,12 @@ Public Class BgReading
 
     <DisplayName("Value (mg/dL)")>
     <Column(Order:=9, TypeName:=NameOf([Single]))>
-    Public ReadOnly Property valueMmDl As Single
+    Public ReadOnly Property valueMgdL As Single
         Get
-            If Single.IsNaN(Me.unitValue) Then Return Me.unitValue
+            If Single.IsNaN(Me.UnitValue) Then Return Me.UnitValue
             Return If(Me.bgUnits = "MGDL",
-                      Me.unitValue,
-                      CSng(Math.Round(Me.unitValue * MmolLUnitsDivisor))
+                      Me.UnitValue,
+                      CSng(Math.Round(Me.UnitValue * MmolLUnitsDivisor))
                      )
         End Get
     End Property
@@ -72,10 +72,10 @@ Public Class BgReading
     <Column(Order:=10, TypeName:=NameOf([Single]))>
     Public ReadOnly Property valueMmolL As Single
         Get
-            If Single.IsNaN(Me.unitValue) Then Return Me.unitValue
-            Return If(Me.bgUnits <> "MMDL",
-                      Me.unitValue,
-                      (Me.unitValue / MmolLUnitsDivisor).RoundSingle(2, False)
+            If Single.IsNaN(Me.unitValue) Then Return Me.UnitValue
+            Return If(Me.bgUnits <> "MGDL",
+                      Me.UnitValue,
+                      (Me.UnitValue / MmolLUnitsDivisor).RoundSingle(2, False)
                      )
         End Get
     End Property

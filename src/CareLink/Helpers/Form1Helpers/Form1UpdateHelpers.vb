@@ -51,32 +51,6 @@ Friend Module Form1UpdateHelpers
                  )
     End Function
 
-    Private Sub HandleComplexItems(row As KeyValuePair(Of String, String), rowIndex As ServerDataIndexes, key As String)
-        Dim valueList As String() = JsonToDictionary(row.Value).ToCsv.
-                                                     Replace("{", "").
-                                                     Replace("}", "").
-                                                     Split(",")
-        For Each e As IndexClass(Of String) In valueList.WithIndex
-            Dim item As New SummaryRecord(CSng(CSng(rowIndex) + ((e.Index + 1) / 10)),
-                                          key,
-                                          e.Value.Split(" = ")(0).Trim,
-                                          e.Value.Split(" = ")(1).Trim)
-            s_listOfSummaryRecords.Add(item)
-            If item.Value = "hardwareRevision" Then
-                s_pumpHardwareRevision = item.Message
-            End If
-
-        Next
-    End Sub
-
-    Private Sub HandleObsoleteTimes(row As KeyValuePair(Of String, String), rowIndex As ServerDataIndexes)
-        If row.Value = "0" Then
-            s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, "", "Obsolete"))
-        Else
-            s_listOfSummaryRecords.Add(New SummaryRecord(rowIndex, row, row.Value.Epoch2DateTimeString))
-        End If
-    End Sub
-
     Friend Function GetPumpName(value As String) As String
         Select Case value
             Case "MMT-1812"
@@ -93,6 +67,23 @@ Friend Module Form1UpdateHelpers
                 Return "Unknown"
         End Select
     End Function
+
+    Friend Sub HandleComplexItems(row As KeyValuePair(Of String, String), rowIndex As ServerDataIndexes, key As String, listOfSummaryRecords As List(Of SummaryRecord))
+        Dim valueList As String() = GetValueList(row.Value)
+        For Each e As IndexClass(Of String) In valueList.WithIndex
+            Dim item As New SummaryRecord(
+                recordNumber:=CSng(CSng(rowIndex) + ((e.Index + 1) / 10)),
+                key,
+                value:=e.Value.Split(" = ")(0).Trim,
+                message:=e.Value.Split(" = ")(1).Trim)
+            listOfSummaryRecords.Add(item)
+            If item.Value = "hardwareRevision" Then
+                s_pumpHardwareRevision = item.Message
+            End If
+
+        Next
+    End Sub
+
 
     Friend Function RecentDataEmpty() As Boolean
         Return RecentData Is Nothing OrElse RecentData.Count = 0
@@ -111,6 +102,10 @@ Friend Module Form1UpdateHelpers
         Dim markerRowString As String = ""
         If RecentData.TryGetValue("clientTimeZoneName", markerRowString) Then
             PumpTimeZoneInfo = CalculateTimeZone(markerRowString)
+        End If
+
+        If Not RecentData.TryGetValue("bgUnits", BgUnitsNativeString) Then
+            Stop
         End If
 
         s_lastMedicalDeviceDataUpdateServerEpoch = CLng(RecentData("lastMedicalDeviceDataUpdateServerTime"))
@@ -172,14 +167,14 @@ Friend Module Form1UpdateHelpers
                             End Select
                         End If
                     End If
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row.Value))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), row.Value))
 
                 Case NameOf(ServerDataIndexes.lastName)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.firstName)
                     s_firstName = row.Value
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, s_firstName))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), s_firstName))
 
                 Case NameOf(ServerDataIndexes.appModelType)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
@@ -209,7 +204,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.medicalDeviceInformation)
-                    HandleComplexItems(row, recordNumber, "medicalDeviceInformation")
+                    HandleComplexItems(row, recordNumber, "medicalDeviceInformation", s_listOfSummaryRecords)
                     s_pumpModelNumber = PatientData.MedicalDeviceInformation.ModelNumber
                     Form1.SerialNumberButton.Text = $"{ PatientData.MedicalDeviceInformation.DeviceSerialNumber} Details..."
 
@@ -220,7 +215,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, row.Value.Epoch2DateTimeString))
 
                 Case NameOf(ServerDataIndexes.cgmInfo)
-                    HandleComplexItems(row, recordNumber, "cgmInfo")
+                    HandleComplexItems(row, recordNumber, "cgmInfo", s_listOfSummaryRecords)
 
                 Case NameOf(ServerDataIndexes.calFreeSensor)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
@@ -270,11 +265,11 @@ Friend Module Form1UpdateHelpers
 
                 Case NameOf(ServerDataIndexes.pumpBannerState)
                     s_pumpBannerStateValue = JsonToLisOfDictionary(row.Value)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, ClickToShowDetails))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
                     Form1.PumpBannerStateLabel.Visible = False
 
                 Case NameOf(ServerDataIndexes.therapyAlgorithmState)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, ClickToShowDetails))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
 
                 Case NameOf(ServerDataIndexes.reservoirLevelPercent)
                     s_reservoirLevelPercent = CInt(row.Value)
@@ -324,7 +319,6 @@ Friend Module Form1UpdateHelpers
                     s_timeWithoutMinuteFormat = If(s_timeFormat = "HR_12", TimeFormatTwelveHourWithoutMinutes, TimeFormatMilitaryWithoutMinutes)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
                 Case NameOf(ServerDataIndexes.bgUnits)
-
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.maxAutoBasalRate)
@@ -340,28 +334,28 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.lastAlarm)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, ClickToShowDetails))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
                     s_lastAlarmValue = LoadIndexedItems(row.Value)
 
                 Case NameOf(ServerDataIndexes.activeInsulin)
                     s_activeInsulin = PatientData.ActiveInsulin
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, ClickToShowDetails))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
 
                 Case NameOf(ServerDataIndexes.basal)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, ClickToShowDetails))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
 
                 Case NameOf(ServerDataIndexes.lastSensorTime)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.lastSG)
                     s_lastSgRecord = New SG(PatientData.LastSG, 0)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, ClickToShowDetails))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
 
                 Case NameOf(ServerDataIndexes.lastSGTrend)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.limits)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, ClickToShowDetails))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
                     s_listOfLimitRecords = PatientData.Limits
 
                 Case NameOf(ServerDataIndexes.belowHypoLimit)
@@ -383,17 +377,18 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.markers)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, ClickToShowDetails))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
 
                 Case NameOf(ServerDataIndexes.sgs)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, ClickToShowDetails))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
                     s_lastSgValue = 0
                     If s_listOfSgRecords.Count > 2 Then
                         s_lastSgValue = s_listOfSgRecords.Item(s_listOfSgRecords.Count - 2).sg
                     End If
 
                 Case NameOf(ServerDataIndexes.notificationHistory)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, ClickToShowDetails))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(CSng(c.Index + 0.1), "activeNotification"))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(CSng(c.Index + 0.2), "clearedNotifications"))
                     s_notificationHistoryValue = LoadIndexedItems(row.Value)
 
                 Case NameOf(ServerDataIndexes.sensorLifeText)
@@ -413,46 +408,46 @@ Friend Module Form1UpdateHelpers
         With Form1
             .TableLayoutPanelAutoBasalDelivery.DisplayDataTableInDGV(
                 dGV:= .DgvAutoBasalDelivery,
-                table:=ClassCollectionToDataTable(s_listOfAutoBasalDeliveryMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_listOfAutoBasalDeliveryMarkers),
                 rowIndex:=ServerDataIndexes.markers)
             .TableLayoutPanelAutoModeStatus.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(s_listOfAutoModeStatusMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_listOfAutoModeStatusMarkers),
                 className:=NameOf(AutoModeStatus),
                 attachHandlers:=AddressOf AutoModeStatusHelpers.AttachHandlers,
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
             .TableLayoutPanelSgReadings.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(s_listOfSgReadingMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_listOfSgReadingMarkers),
                 className:=NameOf(BgReading),
                 attachHandlers:=AddressOf BgReadingHelpers.AttachHandlers,
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
             .TableLayoutPanelInsulin.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(s_listOfInsulinMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_listOfInsulinMarkers),
                 className:=NameOf(Insulin),
                 attachHandlers:=AddressOf InsulinHelpers.AttachHandlers,
                 rowIndex:=ServerDataIndexes.markers,
-            hideRecordNumberColumn:=False)
+                hideRecordNumberColumn:=False)
             .TableLayoutPanelMeal.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(s_listOfMealMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_listOfMealMarkers),
                 className:=NameOf(Meal),
                 attachHandlers:=AddressOf MealHelpers.AttachHandlers,
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
             .TableLayoutPanelCalibration.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(s_listOfCalibrationMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_listOfCalibrationMarkers),
                 className:=NameOf(Calibration),
                 attachHandlers:=AddressOf CalibrationHelpers.AttachHandlers,
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
             .TableLayoutPanelLowGlucoseSuspended.DisplayDataTableInDGV(
-             table:=ClassCollectionToDataTable(s_listOfLowGlucoseSuspendedMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_listOfLowGlucoseSuspendedMarkers),
                 className:=NameOf(LowGlucoseSuspended),
                 attachHandlers:=AddressOf LowGlucoseSuspendedHelpers.AttachHandlers,
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
             .TableLayoutPanelTimeChange.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(s_listOfTimeChangeMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_listOfTimeChangeMarkers),
                 className:=NameOf(TimeChange),
                 attachHandlers:=AddressOf TimeChangeHelpers.AttachHandlers,
                 rowIndex:=ServerDataIndexes.markers,
@@ -533,11 +528,11 @@ Friend Module Form1UpdateHelpers
             End If
         End If
         Form1.TableLayoutPanelBannerState.DisplayDataTableInDGV(
-                              ClassCollectionToDataTable(listOfPumpBannerState),
-                              NameOf(BannerState),
-                              AddressOf BannerStateHelpers.AttachHandlers,
-                              ServerDataIndexes.pumpBannerState,
-                              False)
+            table:=ClassCollectionToDataTable(classCollection:=listOfPumpBannerState),
+            className:=NameOf(BannerState),
+            attachHandlers:=AddressOf BannerStateHelpers.AttachHandlers,
+            rowIndex:=ServerDataIndexes.pumpBannerState,
+            hideRecordNumberColumn:=False)
     End Sub
 
     ''' <summary>

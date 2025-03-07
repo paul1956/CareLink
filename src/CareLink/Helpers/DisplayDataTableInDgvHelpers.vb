@@ -15,7 +15,7 @@ Friend Module DisplayDataTableInDgvHelpers
         table As DataTable,
         rowIndex As ServerDataIndexes)
 
-        realPanel.SetTabName(rowIndex)
+        realPanel.SetTabName(rowIndex, isClearedNotifications:=False)
         dGV.InitializeDgv()
         dGV.DataSource = table
         dGV.RowHeadersVisible = False
@@ -30,7 +30,7 @@ Friend Module DisplayDataTableInDgvHelpers
         rowIndex As ServerDataIndexes,
         hideRecordNumberColumn As Boolean)
 
-        realPanel.SetTabName(rowIndex)
+        realPanel.SetTabName(rowIndex, isClearedNotifications:=False)
         Dim dGVIndex As Integer = realPanel.Controls.Count - 1
         Dim dGV As DataGridView = TryCast(realPanel.Controls(dGVIndex), DataGridView)
 

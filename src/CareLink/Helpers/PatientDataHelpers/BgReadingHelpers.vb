@@ -15,7 +15,7 @@ Friend Module BgReadingHelpers
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(BgReading.Timestamp)
                 dgv.CellFormattingDateTime(e)
-            Case NameOf(BgReading.UnitValue), NameOf(BgReading.valueMmolL), NameOf(BgReading.valueMmDl)
+            Case NameOf(BgReading.UnitValue), NameOf(BgReading.valueMmolL), NameOf(BgReading.valueMgdL)
                 dgv.CellFormattingSgValue(e, NameOf(BgReading.UnitValue))
             Case Else
                 dgv.CellFormattingSetForegroundColor(e)

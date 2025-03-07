@@ -21,7 +21,7 @@ Public Class Limit
 
     <DisplayName("High Limit (mg/dL)")>
     <Column(Order:=2, TypeName:=NameOf([Single]))>
-    Public ReadOnly Property HighLimitMmDl As Single
+    Public ReadOnly Property HighLimitMgdL As Single
         Get
             Return If(NativeMmolL,
                       CSng(Math.Round(Me.HighLimit * MmolLUnitsDivisor)),
@@ -48,7 +48,7 @@ Public Class Limit
 
     <DisplayName("Low Limit (mg/dL)")>
     <Column(Order:=5, TypeName:=NameOf([Single]))>
-    Public ReadOnly Property sgMmDl As Single
+    Public ReadOnly Property sgMgdL As Single
         Get
             Return If(NativeMmolL,
                       CSng(Math.Round(Me.LowLimit * MmolLUnitsDivisor)),

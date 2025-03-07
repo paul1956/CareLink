@@ -20,10 +20,10 @@ Friend Module DataTableExtensions
     ''' Returns an list, which supports a simple iteration over a collection of all the DataRows in a specified DataTable.
     ''' </summary>
     <Extension>
-    Public Function GetRows(Input As DataTable) As IEnumerable(Of DataRow)
-        Return If(Not IsValidDataTable(Input),
+    Public Function GetRows(table As DataTable) As IEnumerable(Of DataRow)
+        Return If(Not IsValidDataTable(table),
                   New List(Of DataRow)(),
-                  Input.Rows.OfType(Of DataRow)().ToList())
+                  table.Rows.OfType(Of DataRow)().ToList())
     End Function
 
 End Module

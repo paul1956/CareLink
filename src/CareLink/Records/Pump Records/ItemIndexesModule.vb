@@ -9,6 +9,11 @@ Friend Module ItemIndexesModule
     <Extension>
     Friend Function GetItemIndex(key As String) As ServerDataIndexes
         Dim result As Object = Nothing
+
+        If key.Contains("Notification") Then
+            Return ServerDataIndexes.notificationHistory
+        End If
+
         If [Enum].TryParse(GetType(ServerDataIndexes), key, result) Then
             Return CType(result, ServerDataIndexes)
         End If

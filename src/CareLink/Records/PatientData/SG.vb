@@ -81,7 +81,7 @@ Public Class SG
 
     <DisplayName("Sensor Glucose (mg/dL)")>
     <Column(Order:=4, TypeName:=NameOf([Single]))>
-    Public ReadOnly Property sgMmDl As Single
+    Public ReadOnly Property sgMgdL As Single
         Get
             If Single.IsNaN(_sg) Then Return _sg
             Return If(NativeMmolL, CSng(Math.Round(_sg * MmolLUnitsDivisor)), _sg)
