@@ -18,9 +18,13 @@ Friend Module CellFormattingHelpers
 
     End Function
 
-    Private Function IsDarkRow(rowIndex As Integer) As Boolean
+    Private Function IsDarkRow(rowIndex As Integer, sorted As Boolean) As Boolean
         Dim rowMod2 As Integer = rowIndex Mod 2
-        Return If(IsDarkMode(), rowMod2 = 0, rowMod2 = 1)
+        If sorted Then
+            Return If(IsDarkMode(), rowMod2 = 0, rowMod2 = 1)
+        Else
+            Return If(IsDarkMode(), rowMod2 = 0, rowMod2 = 1)
+        End If
     End Function
 
     Friend Sub CellFormatting0Value(ByRef e As DataGridViewCellFormattingEventArgs)
@@ -30,11 +34,11 @@ Friend Module CellFormattingHelpers
         End If
     End Sub
 
-    Friend Sub CellFormattingApplyColor(ByRef e As DataGridViewCellFormattingEventArgs, highlightColor As Color, isUri As Boolean)
+    Friend Sub CellFormattingApplyColor(ByRef e As DataGridViewCellFormattingEventArgs, highlightColor As Color, isUri As Boolean, sorted As Boolean)
         e.Value = e.Value.ToString
         With e.CellStyle
             If IsDarkMode() Then
-                If IsDarkRow(e.RowIndex) Then
+                If IsDarkRow(e.RowIndex, sorted) Then
                     .ForeColor = highlightColor.InvertColor
 
                     If isUri Then
@@ -49,7 +53,7 @@ Friend Module CellFormattingHelpers
                     End If
                 End If
             Else
-                If IsDarkRow(e.RowIndex) Then
+                If IsDarkRow(e.RowIndex, sorted) Then
                     .ForeColor = highlightColor
                     If isUri Then
                         .SelectionForeColor = Color.Purple
@@ -70,7 +74,7 @@ Friend Module CellFormattingHelpers
     End Sub
 
     <Extension>
-    Friend Sub CellFormattingDateTime(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+    Friend Sub CellFormattingDateTime(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, sorted As Boolean)
         If e.Value Is Nothing Then
             e.Value = ""
         Else
@@ -82,59 +86,59 @@ Friend Module CellFormattingHelpers
                 e.Value = e.Value.ToString
             End Try
         End If
-        dgv.CellFormattingSetForegroundColor(e)
+        dgv.CellFormattingSetForegroundColor(e, sorted)
     End Sub
 
     <Extension>
-    Friend Sub CellFormattingInteger(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, message As String)
+    Friend Sub CellFormattingInteger(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, message As String, sorted As Boolean)
         e.Value = $"{e.Value} {message}"
-        dgv.CellFormattingSetForegroundColor(e)
+        dgv.CellFormattingSetForegroundColor(e, sorted)
     End Sub
 
     <Extension>
-    Friend Sub CellFormattingSetForegroundColor(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+    Friend Sub CellFormattingSetForegroundColor(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, sorted As Boolean)
         Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
         If col IsNot Nothing Then
             e.Value = $"{e.Value}"
-            e.CellStyle.ForeColor = If(IsDarkMode(), If(IsDarkRow(e.RowIndex), Color.White, Color.Black), Color.Black)
+            e.CellStyle.ForeColor = If(IsDarkMode(), If(IsDarkRow(e.RowIndex, sorted), Color.White, Color.Black), Color.Black)
             e.FormattingApplied = True
         End If
     End Sub
 
     <Extension>
-    Friend Sub CellFormattingSgValue(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, partialKey As String)
+    Friend Sub CellFormattingSgValue(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, partialKey As String, sorted As Boolean)
         Dim sgColumnName As String = dgv.Columns(e.ColumnIndex).Name
         Dim sensorValue As Single = ParseSingle(e.Value, 2)
         If Single.IsNaN(sensorValue) Then
-            CellFormattingApplyColor(e, Color.Gray, isUri:=False)
+            CellFormattingApplyColor(e, Color.Gray, isUri:=False, sorted)
         Else
             Select Case sgColumnName
                 Case partialKey
                     e.Value = If(NativeMmolL, sensorValue.ToString("F2", CurrentUICulture), sensorValue.ToString)
                     If sensorValue < TirLowLimit(NativeMmolL) Then
-                        CellFormattingApplyColor(e, Color.Red, isUri:=False)
+                        CellFormattingApplyColor(e, Color.Red, isUri:=False, sorted)
                     ElseIf sensorValue > TirHighLimit(NativeMmolL) Then
-                        CellFormattingApplyColor(e, Color.Yellow, isUri:=False)
+                        CellFormattingApplyColor(e, Color.Yellow, isUri:=False, sorted)
                     Else
-                        dgv.CellFormattingSetForegroundColor(e)
+                        dgv.CellFormattingSetForegroundColor(e, sorted)
                     End If
                 Case $"{partialKey}MgdL"
                     e.Value = e.Value.ToString
                     If sensorValue < TirLowLimit(False) Then
-                        CellFormattingApplyColor(e, Color.Red, isUri:=False)
+                        CellFormattingApplyColor(e, Color.Red, isUri:=False, sorted)
                     ElseIf sensorValue > TirHighLimit(False) Then
-                        CellFormattingApplyColor(e, Color.Yellow, isUri:=False)
+                        CellFormattingApplyColor(e, Color.Yellow, isUri:=False, sorted)
                     Else
-                        dgv.CellFormattingSetForegroundColor(e)
+                        dgv.CellFormattingSetForegroundColor(e, sorted)
                     End If
                 Case $"{partialKey}MmolL"
                     e.Value = sensorValue.ToString("F2", CurrentUICulture)
                     If sensorValue.RoundSingle(1, False) < TirLowLimit(True) Then
-                        CellFormattingApplyColor(e, Color.Red, isUri:=False)
+                        CellFormattingApplyColor(e, Color.Red, isUri:=False, sorted)
                     ElseIf sensorValue > TirHighLimit(True) Then
-                        CellFormattingApplyColor(e, Color.Yellow, isUri:=False)
+                        CellFormattingApplyColor(e, Color.Yellow, isUri:=False, sorted)
                     Else
-                        dgv.CellFormattingSetForegroundColor(e)
+                        dgv.CellFormattingSetForegroundColor(e, sorted)
                     End If
                 Case Else
                     Stop
@@ -143,27 +147,27 @@ Friend Module CellFormattingHelpers
     End Sub
 
     <Extension>
-    Friend Function CellFormattingSingleValue(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, digits As Integer) As Single
+    Friend Function CellFormattingSingleValue(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, digits As Integer, sorted As Boolean) As Single
         Dim amount As Single = ParseSingle(e.Value, digits)
         e.Value = amount.ToString($"F{digits}", CurrentUICulture)
-        dgv.CellFormattingSetForegroundColor(e)
+        dgv.CellFormattingSetForegroundColor(e, sorted)
         Return amount
     End Function
 
     <Extension>
-    Friend Sub CellFormattingToTitle(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+    Friend Sub CellFormattingToTitle(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, sorted As Boolean)
 
         e.Value = e.Value.ToString.ToTitle
-        dgv.CellFormattingSetForegroundColor(e)
+        dgv.CellFormattingSetForegroundColor(e, sorted)
     End Sub
 
     <Extension>
-    Friend Sub CellFormattingUrl(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+    Friend Sub CellFormattingUrl(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, sorted As Boolean)
         e.Value = e.Value.ToString
         If dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Equals(dgv.CurrentCell) Then
-            CellFormattingApplyColor(e, Color.Purple, isUri:=True)
+            CellFormattingApplyColor(e, Color.Purple, isUri:=True, sorted)
         Else
-            CellFormattingApplyColor(e, Color.FromArgb(&H0, &H66, &HCC), isUri:=True)
+            CellFormattingApplyColor(e, Color.FromArgb(&H0, &H66, &HCC), isUri:=True, sorted:=False)
         End If
         e.FormattingApplied = True
     End Sub

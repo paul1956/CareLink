@@ -502,16 +502,16 @@ Public Class Form1
         ' Set the background to red for negative values in the Balance column.
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(AutoBasalDelivery.bolusAmount)
-                dgv.CellFormattingSingleValue(e, 3)
-                If dgv.CellFormattingSingleValue(e, 3).IsMinBasal Then
-                    CellFormattingApplyColor(e, Color.DarkRed, isUri:=False)
+                dgv.CellFormattingSingleValue(e, 3, sorted:=False)
+                If dgv.CellFormattingSingleValue(e, 3, sorted:=False).IsMinBasal Then
+                    CellFormattingApplyColor(e, Color.DarkRed, isUri:=False, sorted:=False)
                 Else
-                    dgv.CellFormattingSetForegroundColor(e)
+                    dgv.CellFormattingSetForegroundColor(e, sorted:=False)
                 End If
             Case NameOf(AutoBasalDelivery.DisplayTime), NameOf(AutoBasalDelivery.Timestamp)
-                dgv.CellFormattingDateTime(e)
+                dgv.CellFormattingDateTime(e, sorted:=False)
             Case Else
-                dgv.CellFormattingSetForegroundColor(e)
+                dgv.CellFormattingSetForegroundColor(e, sorted:=False)
         End Select
     End Sub
 
@@ -576,7 +576,7 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
         If col IsNot Nothing Then
-            dgv.CellFormattingSetForegroundColor(e)
+            dgv.CellFormattingSetForegroundColor(e, sorted:=False)
         End If
     End Sub
 
@@ -746,9 +746,9 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(Meal.amount)
-                dgv.CellFormattingInteger(e, GetCarbDefaultUnit)
+                dgv.CellFormattingInteger(e, GetCarbDefaultUnit, sorted:=False)
             Case NameOf(Meal.Timestamp)
-                dgv.CellFormattingDateTime(e)
+                dgv.CellFormattingDateTime(e, sorted:=False)
         End Select
     End Sub
 
@@ -770,15 +770,15 @@ Public Class Form1
             Case NameOf(SG.sensorState)
                 ' Set the background to red for negative values in the Balance column.
                 If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
-                    CellFormattingApplyColor(e, Color.Red, isUri:=False)
+                    CellFormattingApplyColor(e, Color.Red, isUri:=False, sorted:=True)
                 End If
-                dgv.CellFormattingToTitle(e)
+                dgv.CellFormattingToTitle(e, sorted:=False)
             Case NameOf(SG.Timestamp)
-                dgv.CellFormattingDateTime(e)
+                dgv.CellFormattingDateTime(e, sorted:=False)
             Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
-                dgv.CellFormattingSgValue(e, NameOf(SG.sg))
+                dgv.CellFormattingSgValue(e, NameOf(SG.sg), sorted:=True)
             Case Else
-                dgv.CellFormattingSetForegroundColor(e)
+                dgv.CellFormattingSetForegroundColor(e, sorted:=True)
         End Select
     End Sub
 

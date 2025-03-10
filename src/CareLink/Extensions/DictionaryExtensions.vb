@@ -48,6 +48,16 @@ Public Module DictionaryExtensions
         Return valueList
     End Function
 
+    Public Function GetAdditionalInformation(jsonString As String) As Dictionary(Of String, String)
+        Dim valueList() As String = GetValueList(jsonString)
+        Dim dic As New Dictionary(Of String, String)
+        For Each row As String In valueList
+            Dim value() As String = row.Split(" = ")
+            dic.Add(value(0).Trim, value(1).Trim)
+        Next
+        Return dic
+    End Function
+
     <Extension>
     Public Function Clone(Of T)(dic As Dictionary(Of String, T)) As Dictionary(Of String, T)
         Return (From x In dic Select x).ToDictionary(Function(p) p.Key, Function(p) p.Value)

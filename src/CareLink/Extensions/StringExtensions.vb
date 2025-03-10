@@ -74,7 +74,9 @@ Public Module StringExtensions
         If String.IsNullOrWhiteSpace(inStr) Then
             Return ""
         End If
-
+        If inStr.Contains("MmolL", StringComparison.InvariantCultureIgnoreCase) Then
+            Return inStr
+        End If
         Dim result As New StringBuilder(Char.ToUpperInvariant(inStr(0)))
         Dim lastWasNumeric As Boolean = Char.IsNumber(inStr(0))
         For Each c As Char In inStr.Substring(1)
@@ -93,7 +95,7 @@ Public Module StringExtensions
         If Not resultString.Contains("™"c) Then
             resultString = resultString.Replace("CareLink", "CareLink™")
         End If
-        resultString = resultString.Replace("S G", "SG", StringComparison.InvariantCulture)
+        resultString = resultString.Replace("S G", "Sensor Glucose", StringComparison.InvariantCulture)
         Return resultString.Replace("time", " Time", False, CurrentUICulture)
     End Function
 

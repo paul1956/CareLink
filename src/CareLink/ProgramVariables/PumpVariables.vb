@@ -12,8 +12,6 @@ Public Module PumpVariables
     Friend s_totalDailyDose As Single
     Friend s_totalManualBolus As Single
 
-#Region "Global variables to hold pump values"
-
     Friend s_aboveHyperLimit As Single
     Friend s_activeInsulin As ActiveInsulin
     Friend s_autoModeReadinessState As SummaryRecord
@@ -41,32 +39,28 @@ Public Module PumpVariables
     Friend s_systemStatusMessage As String
     Friend s_systemStatusTimeRemaining As TimeSpan
     Friend s_therapyAlgorithmStateValue As Dictionary(Of String, String)
+    Friend s_timeFormat As String
     Friend s_timeInRange As Integer
     Friend s_timeToNextCalibrationHours As Short
     Friend s_timeToNextCalibrationMinutes As Short
-    Friend s_timeFormat As String
     Friend s_timeWithMinuteFormat As String
     Friend s_timeWithoutMinuteFormat As String
 
-    Friend Property InAutoMode As Boolean
-
     Friend Property BgUnitsNativeString As String
         Get
-            Return If(_BgUnitsNativeString = "MGDL", "mg/dL", "Mmol/l")
+            Return If(s_bgUnitsNativeString = "MGDL", "mg/dL", "Mmol/l")
         End Get
         Set
-            _BgUnitsNativeString = Value
+            s_bgUnitsNativeString = Value
         End Set
     End Property
 
+    Friend Property InAutoMode As Boolean
+    Public Property PatientData As PatientDataInfo
     Public Property ProgramInitialized As Boolean = False
     Public Property RecentData As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
 
-    Public Property PatientData As PatientDataInfo
-#End Region
-
-#Region "Lists of pump records"
-
+    Private s_bgUnitsNativeString As String
     Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDelivery)
     Friend ReadOnly s_listOfAutoModeStatusMarkers As New List(Of AutoModeStatus)
     Friend ReadOnly s_listOfCalibrationMarkers As New List(Of Calibration)
@@ -77,12 +71,9 @@ Public Module PumpVariables
     Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
     Friend ReadOnly s_listOfUserSummaryRecord As New List(Of SummaryRecord)
     Friend s_listOfLimitRecords As New List(Of Limit)
-    Private _BgUnitsNativeString As String
 
-#End Region
     Public Function GetCarbDefaultUnit() As String
         Return "Grams"
     End Function
-
 
 End Module

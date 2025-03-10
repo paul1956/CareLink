@@ -38,6 +38,11 @@ Public Class ClearedNotifications
     <JsonPropertyName("type")>
     Public Property Type As String
 
+    <DisplayName("triggeredDateTime")>
+    <Column(Order:=3, TypeName:="Date")>
+    <JsonPropertyName("triggeredDateTime")>
+    Public Property triggeredDateTime As String
+
     <DisplayName("Additional Info")>
     <Column(Order:=7, TypeName:="AdditionalInfo")>
     <JsonPropertyName("additionalInfo")>

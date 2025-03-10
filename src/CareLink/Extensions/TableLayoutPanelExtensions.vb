@@ -41,7 +41,10 @@ Friend Module TableLayoutPanelExtensions
         Dim tableName As String = rowIndex.ToString.ToTitleCase
         If tableName = "Notification History" Then
             tableName = If(isClearedNotifications, "Cleared Notifications", "Active Notification")
+        ElseIf tableName = "Sgs" Then
+            tableName = "Sensor Glucose Values"
         End If
+
         Select Case True
             Case TypeOf table.Controls(0) Is TableLayoutPanel
                 Select Case True

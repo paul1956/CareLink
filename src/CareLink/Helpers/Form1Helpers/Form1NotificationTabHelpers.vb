@@ -17,7 +17,6 @@ Friend Module Form1NotificationTabHelpers
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In notificationDictionary.WithIndex()
             Dim notificationType As KeyValuePair(Of String, String) = c.Value
             Dim innerJson As List(Of Dictionary(Of String, String)) = JsonToLisOfDictionary(notificationType.Value)
-            Stop
             If notificationType.Key = "clearedNotifications" Then
                 If innerJson.Count > 0 Then
                     innerJson.Reverse()

@@ -3,11 +3,19 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Runtime.CompilerServices
+Imports System.Text
 Imports System.Text.RegularExpressions
 
 Friend Module SummaryHelpers
 
+    Private ReadOnly s_sensorUpdateTimes As New Dictionary(Of String, String) From {
+                                                {"INITIAL_ALERT_SHORT", "30 minutes"}
+                                            }
+
+    'Private ReadOnly s_variablesUsedInMessages As New HashSet(Of String)
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
+
+    Private s_wordsInParentheses As Dictionary(Of String, List(Of String))
 
     Private Function CAnyType(Of T)(UTO As Object) As T
         Return CType(UTO, T)
@@ -15,7 +23,7 @@ Friend Module SummaryHelpers
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.CellFormattingSetForegroundColor(e)
+        dgv.CellFormattingSetForegroundColor(e, sorted:=False)
     End Sub
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
@@ -32,103 +40,37 @@ Friend Module SummaryHelpers
         End With
     End Sub
 
-    <Extension>
-    Private Function FormatTimeOnly(rawTime As String, format As String) As String
-        Return New TimeOnly(CInt(rawTime.Substring(0, 2)), CInt(rawTime.Substring(3, 2))).ToString(format)
-    End Function
+    ''' <summary>
+    '''  Extracts a dictionary(of String, List(of String) from the input:
+    '''  where the variable names are in parentheses, and are associated with
+    '''  with the Key of the error message
+    ''' </summary>
+    ''' <Result>A dictionary(of String, List(of String)</Result>
+    Private Sub ExtractErrorMessageVariables()
+        If s_wordsInParentheses IsNot Nothing Then
+            Return
+        End If
+        ' Initialize output lists
+        s_wordsInParentheses = New Dictionary(Of String, List(Of String))
 
-    Private Function TranslateNotificationMessageId(jsonDictionary As Dictionary(Of String, String), entryValue As String) As String
-        Dim formattedMessage As String = ""
-        Try
-            If s_notificationMessages.TryGetValue(entryValue, formattedMessage) Then
-                Dim splitMessageValue As String() = formattedMessage.Split(":")
-                Dim key As String = ""
+        ' Regex to match words in parentheses
+        Dim parenthesesRegex As New Regex("\(([^)]+)\)")
 
-                Dim triggeredDateTime As String = ""
-                If jsonDictionary.TryGetValue(NameOf(ClearedNotifications.dateTime), triggeredDateTime) Then
-                    triggeredDateTime = $" { triggeredDateTime.ParseDate(NameOf(ActiveNotification.triggeredDateTime)).ToNotificationDateTimeString}"
-                End If
+        ' Process each string in the input list
+        For Each kvp As KeyValuePair(Of String, String) In s_notificationMessages
+            Dim msgList As New List(Of String)
+            ' Find matches for parentheses
+            For Each match As Match In parenthesesRegex.Matches(kvp.Value)
+                Dim word As String = match.Groups(1).Value
+                Dim item As String = match.Value.TrimStart("("c).TrimEnd(")"c)
+                msgList.Add(item)
+                's_variablesUsedInMessages.Add(item)
+            Next
+            s_wordsInParentheses.Add(kvp.Key, msgList)
+        Next
+    End Sub
 
-                ' (0)
-                Dim replacementValue As String = ""
-                If splitMessageValue.Length > 1 Then
-                    key = splitMessageValue(1)
-                    If key = "lastSetChange" Then
-                        replacementValue = s_oneToNineteen(CInt(jsonDictionary(key))).ToTitle
-                    Else
-                        If Not jsonDictionary.TryGetValue(key, replacementValue) Then
-                            Dim resultDate As Date
-                            If key.Contains("date", StringComparison.InvariantCultureIgnoreCase) OrElse
-                                key.Contains("timestamp", StringComparison.InvariantCultureIgnoreCase) Then
-                                If replacementValue.TryParseDate(resultDate, key) Then
-                                    replacementValue = resultDate.ToString
-                                Else
-                                    Stop
-                                End If
-                            Else
-                                Dim additionalInfo As String() = GetValueList(jsonDictionary("additionalInfo"))
-                                For Each e As IndexClass(Of String) In additionalInfo.WithIndex
-                                    Dim value As String = e.Value.Split(" = ")(0).Trim
-                                    If key = value Then
-                                        replacementValue = e.Value.Split(" = ")(1).Trim
-                                        Exit For
-                                    End If
-                                Next
-                                If String.IsNullOrWhiteSpace(replacementValue) Then
-                                    Stop
-                                End If
-                            End If
-                        End If
-                    End If
-                End If
-                Dim secondaryTime As String = Nothing
-                secondaryTime = If(jsonDictionary.TryGetValue(NameOf(ActiveNotification.secondaryTime), secondaryTime),
-                                   secondaryTime.FormatTimeOnly(s_timeWithMinuteFormat),
-                                   ""
-                                  )
-
-                Dim criticalLow As String = ""
-                If jsonDictionary.TryGetValue("criticalLow", criticalLow) Then
-                    Stop
-                End If
-
-                Dim deliveredAmount As String = ""
-                If jsonDictionary.TryGetValue("deliveredAmount", deliveredAmount) Then
-                    Stop
-                End If
-
-                Dim programmedAmount As String = ""
-                Dim notDeliveredAmount As String = ""
-                If jsonDictionary.TryGetValue("programmedAmount", programmedAmount) Then
-                    notDeliveredAmount = (programmedAmount.ParseSingle(3) - deliveredAmount.ParseSingle(3)).ToString("F3", CurrentUICulture)
-                End If
-
-                formattedMessage = splitMessageValue(0) _
-                    .Replace("(0)", replacementValue) _
-                    .Replace($"({NameOf(deliveredAmount)})", deliveredAmount) _
-                    .Replace($"({NameOf(programmedAmount)})", programmedAmount) _
-                    .Replace($"({NameOf(notDeliveredAmount)})", notDeliveredAmount) _
-                    .Replace($"({NameOf(ActiveNotification.secondaryTime)})", secondaryTime) _
-                    .Replace($"(triggeredDateTime)", triggeredDateTime) _
-                    .Replace("(units)", BgUnitsNativeString) _
-                    .Replace("{vbCrLf}", vbCrLf).TrimEnd("."c) & "."
-            Else
-                If Debugger.IsAttached Then
-                    Stop
-                    MsgBox("Unknown Notification Message ", $"'{entryValue}'", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, GetTitleFromStack(New StackFrame(0, True)))
-                End If
-                formattedMessage = entryValue.Replace("_", " ")
-            End If
-        Catch ex As Exception
-            Stop
-        End Try
-        Return formattedMessage
-    End Function
-
-    Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToColumnAlignment(Of SummaryRecord)(s_alignmentTable, columnName)
-    End Function
-    Private Function GetVariables() As List(Of String)
+    Private Function GetMessageVariables() As List(Of String)
         Dim result As New List(Of String)
         Dim pattern As String = "\(([^)]+)\)"
         Dim valuesArray() As String = s_notificationMessages.Values.ToArray()
@@ -140,8 +82,159 @@ Friend Module SummaryHelpers
         Return result.Distinct().ToList()
     End Function
 
+    Private Function TranslateNotificationMessageId(jsonDictionary As Dictionary(Of String, String), faultId As String) As String
+        ExtractErrorMessageVariables()
+        Dim originalMessage As String = String.Empty
+        Try
+            If s_notificationMessages.TryGetValue(faultId, originalMessage) Then
+                If s_wordsInParentheses(faultId).Count = 0 Then
+                    Return originalMessage
+                End If
+                Dim basalName As String = String.Empty
+                Dim bgValue As String = String.Empty
+                Dim criticalLow As String = String.Empty
+                Dim deliveredAmount As String = String.Empty
+                Dim lastSetChange As String = String.Empty
+                Dim notDeliveredAmount As String = String.Empty
+                Dim programmedAmount As String = String.Empty
+                Dim reminderName As String = String.Empty
+                Dim secondaryTime As String = String.Empty
+                Dim sg As String = String.Empty
+                Dim sensorUpdateTime As String = String.Empty
+                Dim triggeredDateTime As String = String.Empty
+                Dim unitsRemaining As String = Nothing
+                For Each key As String In s_wordsInParentheses(faultId)
+                    If key = "triggeredDateTime" Then
+                        If jsonDictionary.TryGetValue(NameOf(ClearedNotifications.triggeredDateTime), triggeredDateTime) Then
+                            triggeredDateTime = $" { triggeredDateTime.ParseDate(NameOf(ClearedNotifications.dateTime)).ToNotificationDateTimeString}"
+                        ElseIf jsonDictionary.TryGetValue(NameOf(ClearedNotifications.dateTime), triggeredDateTime) Then
+                            triggeredDateTime = $" { triggeredDateTime.ParseDate(NameOf(ClearedNotifications.dateTime)).ToNotificationDateTimeString}"
+                        Else
+                            Stop
+                        End If
+                    ElseIf key = "secondaryTime" Then
+                        If jsonDictionary.TryGetValue(NameOf(ActiveNotification.secondaryTime), secondaryTime) Then
+                            secondaryTime = $" { secondaryTime.ParseDate(NameOf(ActiveNotification.secondaryTime)).ToNotificationDateTimeString}"
+                        Else
+                            Stop
+                        End If
+                    ElseIf key = "dateTime" Then
+                        Stop
+                    Else
+                        Dim jsonString As String = String.Empty
+                        If jsonDictionary.TryGetValue(NameOf(AdditionalInfo), jsonString) Then
+
+                            Dim additionalInfo As Dictionary(Of String, String) = GetAdditionalInformation(jsonString)
+                            Select Case key
+                                Case "basalName"
+                                    If additionalInfo.TryGetValue(key, basalName) Then
+                                    Else
+                                        Stop
+                                    End If
+                                Case "bgValue"
+                                    If additionalInfo.TryGetValue(key, bgValue) Then
+                                    Else
+                                        Stop
+                                    End If
+                                Case "criticalLow"
+                                    If additionalInfo.TryGetValue(key, criticalLow) Then
+                                    Else
+                                        Stop
+                                    End If
+                                Case "deliveredAmount"
+                                    If additionalInfo.TryGetValue(key, deliveredAmount) Then
+                                    Else
+                                        Stop
+                                    End If
+                                Case "lastSetChange"
+                                    lastSetChange = s_oneToNineteen(CInt(additionalInfo(key))).ToTitle
+                                Case "notDeliveredAmount"
+                                    If additionalInfo.TryGetValue("notDeliveredAmount", notDeliveredAmount) Then
+                                        If String.IsNullOrWhiteSpace(notDeliveredAmount) Then
+                                        Else
+                                            Stop
+                                        End If
+                                    Else
+                                        Stop
+                                    End If
+                                Case "programmedAmount"
+                                    If additionalInfo.TryGetValue(key, programmedAmount) Then
+                                    Else
+                                        Stop
+
+                                    End If
+                                Case "reminderName"
+                                    If additionalInfo.TryGetValue(key, reminderName) Then
+                                    Else
+                                        Stop
+                                    End If
+                                Case "sensorUpdateTime"
+                                    If additionalInfo.TryGetValue(key, sensorUpdateTime) Then
+                                        sensorUpdateTime = s_sensorUpdateTimes(sensorUpdateTime)
+                                    Else
+                                        Stop
+                                        sensorUpdateTime = $"Unknown key {key}"
+                                    End If
+                                Case "sg"
+                                    If additionalInfo.TryGetValue(key, sg) Then
+                                    Else
+                                        Stop
+                                    End If
+                                Case "units"
+                        ' handled elsewhere
+                                Case "unitsRemaining"
+                                    If additionalInfo.TryGetValue(key, unitsRemaining) Then
+                                    Else
+                                        Stop
+                                    End If
+                            End Select
+                        End If
+                    End If
+                Next
+
+                Return originalMessage _
+                    .Replace("(basalName)", basalName) _
+                    .Replace("(bgValue)", bgValue) _
+                    .Replace("(criticalLow)", criticalLow) _
+                    .Replace("(deliveredAmount)", deliveredAmount) _
+                    .Replace("(notDeliveredAmount)", notDeliveredAmount) _
+                    .Replace("(programmedAmount)", programmedAmount) _
+                    .Replace("(deliveredAmount)", deliveredAmount) _
+                    .Replace("(lastSetChange)", lastSetChange) _
+                    .Replace("(notDeliveredAmount)", notDeliveredAmount) _
+                    .Replace("(programmedAmount)", programmedAmount) _
+                    .Replace("(reminderName)", reminderName) _
+                    .Replace("(secondaryTime)", secondaryTime) _
+                    .Replace("(sensorUpdateTime)", sensorUpdateTime) _
+                    .Replace("(triggeredDateTime)", triggeredDateTime) _
+                    .Replace("(units)", BgUnitsNativeString) _
+                    .Replace("(unitsRemaining)", unitsRemaining) _
+                    .Replace("{vbCrLf}", vbCrLf)
+            Else
+                Dim text As String = $"faultId = '{faultId}'"
+                If Debugger.IsAttached Then
+                    Stop
+                    MsgBox(
+                        heading:="Unknown Notification Message ",
+                        text,
+                        buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                        title:=GetTitleFromStack(New StackFrame(skipFrames:=0, needFileInfo:=True)))
+                End If
+                Return text
+            End If
+        Catch ex As Exception
+            Stop
+        End Try
+        Return originalMessage
+    End Function
+
+    Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
+        Return ClassPropertiesToColumnAlignment(Of SummaryRecord)(s_alignmentTable, columnName)
+    End Function
+
     Friend Function GetSummaryRecords(dic As Dictionary(Of String, String), Optional rowsToHide As List(Of String) = Nothing) As List(Of SummaryRecord)
-        Dim x As List(Of String) = GetVariables()
+        Dim messageVariables As List(Of String) = GetMessageVariables()
+        Dim dictionaryOfMessages As String = CreateDictionarySortedByValue(s_notificationMessages)
 
         Dim summaryList As New List(Of SummaryRecord)
         For Each row As KeyValuePair(Of String, String) In dic
@@ -151,7 +244,7 @@ Friend Module SummaryHelpers
 
             Select Case row.Key
                 Case "faultId"
-                    Dim message As String = ""
+                    Dim message As String = String.Empty
                     If s_notificationMessages.TryGetValue(row.Value, message) Then
                         message = TranslateNotificationMessageId(dic, row.Value)
                         If row.Value = "BC_SID_MAX_FILL_DROPS_QUESITION" Then
@@ -165,7 +258,7 @@ Friend Module SummaryHelpers
                         If Debugger.IsAttached AndAlso Not String.IsNullOrWhiteSpace(row.Value) Then
                             MsgBox(
                                 heading:=$"{row.Value} is unknown Notification Messages",
-                                text:="",
+                                text:=String.Empty,
                                 buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                                 title:=GetTitleFromStack(stackFrame:=New StackFrame(skipFrames:=0, needFileInfo:=True)))
                         End If
@@ -192,7 +285,7 @@ Friend Module SummaryHelpers
     End Function
 
     Friend Function GetTabIndexFromName(tabPageName As String) As Integer
-        Return CInt(tabPageName.Replace(NameOf(TabPage), "").Substring(0, 2)) - 1
+        Return CInt(tabPageName.Replace(NameOf(TabPage), String.Empty).Substring(0, 2)) - 1
     End Function
 
     <Extension>
@@ -217,7 +310,7 @@ Friend Module SummaryHelpers
 
         Dim tReturnType As Type = GetType(T)
         If tReturnType Is GetType(String) Then
-            Return CAnyType(Of T)("")
+            Return CAnyType(Of T)(String.Empty)
         ElseIf tReturnType Is GetType(Boolean) Then
             Return CAnyType(Of T)(False)
         ElseIf tReturnType Is GetType(Integer) Then
@@ -228,7 +321,7 @@ Friend Module SummaryHelpers
             Return CAnyType(Of T)(UShort.MaxValue)
         Else
             If Debugger.IsAttached Then
-                MsgBox($"{tReturnType} type is not yet defined.", "", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, GetTitleFromStack(New StackFrame(0, True)))
+                MsgBox($"{tReturnType} type is not yet defined.", String.Empty, MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, GetTitleFromStack(New StackFrame(0, True)))
             End If
             Return Nothing
         End If
@@ -253,5 +346,15 @@ Friend Module SummaryHelpers
         AddHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
     End Sub
+
+    Public Function CreateDictionarySortedByValue(myDictionary As Dictionary(Of String, String)) As String
+        Dim strBuilder As New StringBuilder
+        strBuilder.AppendLine("Dim sortedDict As New Dictionary(Of String, String) With {")
+        For Each kvp As KeyValuePair(Of String, String) In myDictionary.OrderBy(Function(x) x.Value)
+            strBuilder.AppendLine($"    {{String.Empty{kvp.Key}String.Empty, String.Empty{kvp.Value}String.Empty}},")
+        Next
+        strBuilder.AppendLine("}")
+        Return strBuilder.ToString
+    End Function
 
 End Module

@@ -13,9 +13,9 @@ Friend Module AutoModeStatusHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(AutoModeStatus.Timestamp)
-                dgv.CellFormattingDateTime(e)
+                dgv.CellFormattingDateTime(e, sorted:=False)
             Case Else
-                dgv.CellFormattingSetForegroundColor(e)
+                dgv.CellFormattingSetForegroundColor(e, sorted:=False)
         End Select
     End Sub
 

@@ -416,8 +416,9 @@ Friend Module Form1UpdateHelpers
                 attachHandlers:=AddressOf AutoModeStatusHelpers.AttachHandlers,
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
+            Dim table As DataTable = ClassCollectionToDataTable(classCollection:=s_listOfSgReadingMarkers)
             .TableLayoutPanelSgReadings.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(classCollection:=s_listOfSgReadingMarkers),
+                table,
                 className:=NameOf(BgReading),
                 attachHandlers:=AddressOf BgReadingHelpers.AttachHandlers,
                 rowIndex:=ServerDataIndexes.markers,

@@ -30,27 +30,27 @@ Friend Module SgHelpers
     End Sub
 
     ''' <summary>
-    ''' Used by LastSG ONLY
+    '''  Used by LastSG ONLY
     ''' </summary>
     ''' <param columnName="sender"></param>
     ''' <param columnName="e"></param>
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim columnName As String = dgv.Columns(e.ColumnIndex).Name
-        Dim alternateIndex As Integer = If(dgv.Rows(0).Cells(0).Value.ToString = "1", 0, 1)
+        Dim alternateIndex As Integer = If(dgv.Rows(0).Cells(0).Value.ToString <> "0", 0, 1)
         Select Case columnName
             Case NameOf(SG.sensorState)
                 ' Set the background to red for negative values in the Balance column.
                 If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
-                    CellFormattingApplyColor(e, Color.Red, isUri:=False)
+                    CellFormattingApplyColor(e, Color.Red, isUri:=False, sorted:=True)
                 End If
-                dgv.CellFormattingToTitle(e)
+                dgv.CellFormattingToTitle(e, sorted:=True)
             Case NameOf(SG.Timestamp)
-                dgv.CellFormattingDateTime(e)
+                dgv.CellFormattingDateTime(e, sorted:=True)
             Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
-                dgv.CellFormattingSgValue(e, NameOf(SG.sg))
+                dgv.CellFormattingSgValue(e, NameOf(SG.sg), sorted:=True)
             Case Else
-                dgv.CellFormattingSetForegroundColor(e)
+                dgv.CellFormattingSetForegroundColor(e, sorted:=True)
         End Select
 
     End Sub

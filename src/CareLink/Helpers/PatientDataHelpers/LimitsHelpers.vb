@@ -2,8 +2,6 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports DocumentFormat.OpenXml.Wordprocessing
-
 Friend Module LimitsHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
@@ -15,7 +13,7 @@ Friend Module LimitsHelpers
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.CellFormattingSetForegroundColor(e)
+        dgv.CellFormattingSetForegroundColor(e, sorted:=False)
     End Sub
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)

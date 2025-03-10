@@ -37,8 +37,7 @@ Friend Module DisplayDataTableInDgvHelpers
         If dGV Is Nothing Then
             dGV = New DataGridView With {.Name = $"DataGridView{className}"}
             dGV.InitializeDgv()
-            realPanel.Controls.Add(dGV, 0, 1)
-            attachHandlers?(dGV)
+            dGV.AutoSize = True
         Else
             dGV.InitializeDgv()
         End If

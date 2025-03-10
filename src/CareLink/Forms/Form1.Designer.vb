@@ -1873,14 +1873,11 @@ Partial Class Form1
         TableLayoutPanelInsulinTop.ColumnCount = 2
         TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelInsulinTop.Dock = DockStyle.Fill
         TableLayoutPanelInsulinTop.LabelText = "Insulin"
         TableLayoutPanelInsulinTop.Location = New Point(6, 6)
         TableLayoutPanelInsulinTop.Name = "TableLayoutPanelInsulinTop"
         TableLayoutPanelInsulinTop.RowCount = 1
-        TableLayoutPanelInsulinTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelInsulinTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelInsulinTop.Size = New Size(1358, 37)
         TableLayoutPanelInsulinTop.TabIndex = 1
@@ -1922,14 +1919,11 @@ Partial Class Form1
         TableLayoutPanelMealTop.ColumnCount = 2
         TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelMealTop.Dock = DockStyle.Fill
         TableLayoutPanelMealTop.LabelText = "Meal"
         TableLayoutPanelMealTop.Location = New Point(6, 6)
         TableLayoutPanelMealTop.Name = "TableLayoutPanelMealTop"
         TableLayoutPanelMealTop.RowCount = 1
-        TableLayoutPanelMealTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelMealTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelMealTop.Size = New Size(1358, 37)
         TableLayoutPanelMealTop.TabIndex = 1
@@ -1969,14 +1963,11 @@ Partial Class Form1
         TableLayoutPanelActiveInsulinTop.ColumnCount = 2
         TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelActiveInsulinTop.Dock = DockStyle.Fill
         TableLayoutPanelActiveInsulinTop.LabelText = "Active Insulin"
         TableLayoutPanelActiveInsulinTop.Location = New Point(3, 3)
         TableLayoutPanelActiveInsulinTop.Name = "TableLayoutPanelActiveInsulinTop"
         TableLayoutPanelActiveInsulinTop.RowCount = 1
-        TableLayoutPanelActiveInsulinTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelActiveInsulinTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelActiveInsulinTop.Size = New Size(1364, 37)
         TableLayoutPanelActiveInsulinTop.TabIndex = 1
@@ -2018,14 +2009,11 @@ Partial Class Form1
         TableLayoutPanelSgsTop.ColumnCount = 2
         TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelSgsTop.Dock = DockStyle.Fill
-        TableLayoutPanelSgsTop.LabelText = "SGs"
+        TableLayoutPanelSgsTop.LabelText = "Sensor Glucose Values"
         TableLayoutPanelSgsTop.Location = New Point(6, 6)
         TableLayoutPanelSgsTop.Name = "TableLayoutPanelSgsTop"
         TableLayoutPanelSgsTop.RowCount = 1
-        TableLayoutPanelSgsTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelSgsTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelSgsTop.Size = New Size(1358, 37)
         TableLayoutPanelSgsTop.TabIndex = 1
@@ -2066,14 +2054,11 @@ Partial Class Form1
         TableLayoutPanelLimitsTop.ColumnCount = 2
         TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelLimitsTop.Dock = DockStyle.Fill
         TableLayoutPanelLimitsTop.LabelText = "Limits"
         TableLayoutPanelLimitsTop.Location = New Point(6, 6)
         TableLayoutPanelLimitsTop.Name = "TableLayoutPanelLimitsTop"
         TableLayoutPanelLimitsTop.RowCount = 1
-        TableLayoutPanelLimitsTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelLimitsTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelLimitsTop.Size = New Size(1358, 37)
         TableLayoutPanelLimitsTop.TabIndex = 1
@@ -2115,14 +2100,11 @@ Partial Class Form1
         TableLayoutPanelNotificationActiveTop.ColumnCount = 2
         TableLayoutPanelNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelNotificationActiveTop.Dock = DockStyle.Fill
         TableLayoutPanelNotificationActiveTop.LabelText = "Active Notification"
         TableLayoutPanelNotificationActiveTop.Location = New Point(6, 6)
         TableLayoutPanelNotificationActiveTop.Name = "TableLayoutPanelNotificationActiveTop"
         TableLayoutPanelNotificationActiveTop.RowCount = 1
-        TableLayoutPanelNotificationActiveTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelNotificationActiveTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelNotificationActiveTop.Size = New Size(1358, 37)
         TableLayoutPanelNotificationActiveTop.TabIndex = 1
@@ -2169,7 +2151,6 @@ Partial Class Form1
         TableLayoutPanelNotificationsClearedTop.Name = "TableLayoutPanelNotificationsClearedTop"
         TableLayoutPanelNotificationsClearedTop.RowCount = 1
         TableLayoutPanelNotificationsClearedTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelNotificationsClearedTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelNotificationsClearedTop.Size = New Size(1358, 37)
         TableLayoutPanelNotificationsClearedTop.TabIndex = 1
         ' 
@@ -2215,7 +2196,6 @@ Partial Class Form1
         TableLayoutPanelTherapyAlgorithmTop.Name = "TableLayoutPanelTherapyAlgorithmTop"
         TableLayoutPanelTherapyAlgorithmTop.RowCount = 1
         TableLayoutPanelTherapyAlgorithmTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelTherapyAlgorithmTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelTherapyAlgorithmTop.Size = New Size(1358, 37)
         TableLayoutPanelTherapyAlgorithmTop.TabIndex = 1
         ' 
@@ -2254,8 +2234,6 @@ Partial Class Form1
         TableLayoutPanelBannerStateTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TableLayoutPanelBannerStateTop.ButtonText = "Return To 'Summary Data' Tab"
         TableLayoutPanelBannerStateTop.ColumnCount = 2
-        TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelBannerStateTop.Dock = DockStyle.Fill
@@ -2304,14 +2282,11 @@ Partial Class Form1
         TableLayoutPanelBasalTop.ColumnCount = 2
         TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelBasalTop.Dock = DockStyle.Fill
         TableLayoutPanelBasalTop.LabelText = "Basal"
         TableLayoutPanelBasalTop.Location = New Point(6, 6)
         TableLayoutPanelBasalTop.Name = "TableLayoutPanelBasalTop"
         TableLayoutPanelBasalTop.RowCount = 1
-        TableLayoutPanelBasalTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelBasalTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelBasalTop.Size = New Size(1358, 37)
         TableLayoutPanelBasalTop.TabIndex = 1
@@ -2385,14 +2360,11 @@ Partial Class Form1
         TableLayoutPanelAutoBasalDeliveryTop.ColumnCount = 2
         TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelAutoBasalDeliveryTop.Dock = DockStyle.Fill
         TableLayoutPanelAutoBasalDeliveryTop.LabelText = "Basal"
         TableLayoutPanelAutoBasalDeliveryTop.Location = New Point(6, 6)
         TableLayoutPanelAutoBasalDeliveryTop.Name = "TableLayoutPanelAutoBasalDeliveryTop"
         TableLayoutPanelAutoBasalDeliveryTop.RowCount = 1
-        TableLayoutPanelAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelAutoBasalDeliveryTop.Size = New Size(1358, 37)
         TableLayoutPanelAutoBasalDeliveryTop.TabIndex = 1
@@ -2434,14 +2406,11 @@ Partial Class Form1
         TableLayoutPanelAutoModeStatusTop.ColumnCount = 2
         TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelAutoModeStatusTop.Dock = DockStyle.Fill
         TableLayoutPanelAutoModeStatusTop.LabelText = "Auto Mode Status"
         TableLayoutPanelAutoModeStatusTop.Location = New Point(6, 6)
         TableLayoutPanelAutoModeStatusTop.Name = "TableLayoutPanelAutoModeStatusTop"
         TableLayoutPanelAutoModeStatusTop.RowCount = 1
-        TableLayoutPanelAutoModeStatusTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelAutoModeStatusTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelAutoModeStatusTop.Size = New Size(1358, 37)
         TableLayoutPanelAutoModeStatusTop.TabIndex = 1
@@ -2483,14 +2452,11 @@ Partial Class Form1
         TableLayoutPanelBgReadingsTop.ColumnCount = 2
         TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelBgReadingsTop.Dock = DockStyle.Fill
-        TableLayoutPanelBgReadingsTop.LabelText = "Sg Readings"
+        TableLayoutPanelBgReadingsTop.LabelText = "Sensor Glucose Readings"
         TableLayoutPanelBgReadingsTop.Location = New Point(6, 6)
         TableLayoutPanelBgReadingsTop.Name = "TableLayoutPanelBgReadingsTop"
         TableLayoutPanelBgReadingsTop.RowCount = 1
-        TableLayoutPanelBgReadingsTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelBgReadingsTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelBgReadingsTop.Size = New Size(1358, 37)
         TableLayoutPanelBgReadingsTop.TabIndex = 1
@@ -2532,14 +2498,11 @@ Partial Class Form1
         TableLayoutPanelCalibrationTop.ColumnCount = 2
         TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelCalibrationTop.Dock = DockStyle.Fill
         TableLayoutPanelCalibrationTop.LabelText = "Calibration"
         TableLayoutPanelCalibrationTop.Location = New Point(6, 6)
         TableLayoutPanelCalibrationTop.Name = "TableLayoutPanelCalibrationTop"
         TableLayoutPanelCalibrationTop.RowCount = 1
-        TableLayoutPanelCalibrationTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelCalibrationTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelCalibrationTop.Size = New Size(1358, 37)
         TableLayoutPanelCalibrationTop.TabIndex = 1
@@ -2581,14 +2544,11 @@ Partial Class Form1
         TableLayoutPanelLowGlucoseSuspendedTop.ColumnCount = 2
         TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelLowGlucoseSuspendedTop.Dock = DockStyle.Fill
         TableLayoutPanelLowGlucoseSuspendedTop.LabelText = "Low Glucose Suspended"
         TableLayoutPanelLowGlucoseSuspendedTop.Location = New Point(6, 6)
         TableLayoutPanelLowGlucoseSuspendedTop.Name = "TableLayoutPanelLowGlucoseSuspendedTop"
         TableLayoutPanelLowGlucoseSuspendedTop.RowCount = 1
-        TableLayoutPanelLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelLowGlucoseSuspendedTop.Size = New Size(1358, 37)
         TableLayoutPanelLowGlucoseSuspendedTop.TabIndex = 1
@@ -2630,14 +2590,11 @@ Partial Class Form1
         TableLayoutPanelTimeChangeTop.ColumnCount = 2
         TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelTimeChangeTop.Dock = DockStyle.Fill
         TableLayoutPanelTimeChangeTop.LabelText = "Time Change"
         TableLayoutPanelTimeChangeTop.Location = New Point(6, 6)
         TableLayoutPanelTimeChangeTop.Name = "TableLayoutPanelTimeChangeTop"
         TableLayoutPanelTimeChangeTop.RowCount = 1
-        TableLayoutPanelTimeChangeTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelTimeChangeTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelTimeChangeTop.Size = New Size(1358, 37)
         TableLayoutPanelTimeChangeTop.TabIndex = 1
@@ -2678,14 +2635,11 @@ Partial Class Form1
         TableLayoutPanelLastSgTop.ColumnCount = 2
         TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelLastSgTop.Dock = DockStyle.Fill
-        TableLayoutPanelLastSgTop.LabelText = "last SG"
+        TableLayoutPanelLastSgTop.LabelText = "Last Sensor Glucose"
         TableLayoutPanelLastSgTop.Location = New Point(6, 6)
         TableLayoutPanelLastSgTop.Name = "TableLayoutPanelLastSgTop"
         TableLayoutPanelLastSgTop.RowCount = 1
-        TableLayoutPanelLastSgTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelLastSgTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelLastSgTop.Size = New Size(1358, 37)
         TableLayoutPanelLastSgTop.TabIndex = 1
@@ -2727,14 +2681,11 @@ Partial Class Form1
         TableLayoutPanelLastAlarmTop.ColumnCount = 2
         TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelLastAlarmTop.Dock = DockStyle.Fill
         TableLayoutPanelLastAlarmTop.LabelText = "Last Alarm"
         TableLayoutPanelLastAlarmTop.Location = New Point(6, 6)
         TableLayoutPanelLastAlarmTop.Name = "TableLayoutPanelLastAlarmTop"
         TableLayoutPanelLastAlarmTop.RowCount = 1
-        TableLayoutPanelLastAlarmTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelLastAlarmTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelLastAlarmTop.Size = New Size(1358, 37)
         TableLayoutPanelLastAlarmTop.TabIndex = 1

@@ -23,7 +23,6 @@ Public Class SG
             Me.sg = lastSg.Sg
             Me.timeChange = False
         Else
-            Stop
             Me.sg = Single.NaN
         End If
         Me.Kind = lastSg.Kind

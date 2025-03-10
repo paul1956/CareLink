@@ -28,32 +28,28 @@ Public Class Meal
     <Column(Order:=1, TypeName:=NameOf([String]))>
     Public Property type As String
 
-    <DisplayName(NameOf(index))>
-    <Column(Order:=2, TypeName:=NameOf([Int32]))>
-    Public Property index As Integer
-
     <DisplayName("Kind")>
-    <Column(Order:=3, TypeName:=NameOf([String]))>
+    <Column(Order:=2, TypeName:=NameOf([String]))>
     Public Property Kind As String
 
     <DisplayName(NameOf(Timestamp))>
-    <Column(Order:=4, TypeName:="Date")>
+    <Column(Order:=3, TypeName:="Date")>
     Public Property Timestamp As Date
 
     <DisplayName(NameOf(TimestampAsString))>
-    <Column(Order:=5, TypeName:="String")>
+    <Column(Order:=4, TypeName:="String")>
     Public Property TimestampAsString As String
 
     <DisplayName("Display Time")>
-    <Column(Order:=6, TypeName:=NameOf([DateTime]))>
+    <Column(Order:=5, TypeName:=NameOf([DateTime]))>
     Public Property DisplayTime As Date
 
     <DisplayName(NameOf(DisplayTimeAsString))>
-    <Column(Order:=7, TypeName:="String")>
+    <Column(Order:=6, TypeName:="String")>
     Public Property DisplayTimeAsString As String
 
     <DisplayName(NameOf(OAdateTime))>
-    <Column(Order:=8, TypeName:=NameOf(OADate))>
+    <Column(Order:=7, TypeName:=NameOf(OADate))>
     Public ReadOnly Property OAdateTime As OADate
         Get
             Return New OADate(Me.Timestamp)
@@ -61,7 +57,7 @@ Public Class Meal
     End Property
 
     <DisplayName("Carbs (amount)")>
-    <Column(Order:=9, TypeName:=NameOf([Int32]))>
+    <Column(Order:=8, TypeName:=NameOf([Int32]))>
     Public Property amount As Integer
 
 End Class

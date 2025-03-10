@@ -168,6 +168,7 @@ Friend Module DateTimeExtensions
     Public Function ToNotificationDateTimeString(triggeredDateTime As Date) As String
         Return triggeredDateTime.ToString($"ddd, MMM d {s_timeWithMinuteFormat}")
     End Function
+
     <Extension>
     Public Function ToHoursMinutes(timeOnly As TimeOnly) As String
         Dim rawTimeOnly As String = $" {timeOnly.ToString(CurrentDateCulture)}"
@@ -195,7 +196,7 @@ Friend Module DateTimeExtensions
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
             Case "loginDateUTC"
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal)
-            Case NameOf(SG.timestamp)
+            Case NameOf(SG.Timestamp)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
             Case NameOf(TimeChange.Timestamp), NameOf(ClearedNotifications.dateTime)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)

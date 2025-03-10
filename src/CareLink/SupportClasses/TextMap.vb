@@ -10,7 +10,7 @@ Public Class TextMap
     Public Const ERROR_TEXT_PREFIX_GUARDIAN As String = "GM_"
     Public Const ERROR_TEXT_PREFIX_NGP As String = "N"
 
-    Public Shared ReadOnly errorCodeMap As New Dictionary(Of String, String) From {
+    Public Shared ReadOnly s_errorCodeMap As New Dictionary(Of String, String) From {
         {"002", "002"},
         {"003", "002"},
         {"004", "002"},
@@ -150,7 +150,7 @@ Public Class TextMap
         {"827", "827"}
     }
 
-    Public Shared ReadOnly errorTextMap As New Dictionary(Of String, String) From {
+    Public Shared ReadOnly s_errorTextMap As New Dictionary(Of String, String) From {
         {"", ""},
         {"3", "Battery out limit"},
         {"4", "Delivery stopped. Check BG"},
@@ -310,11 +310,11 @@ Public Class TextMap
             End If
         ElseIf deviceFamily = DEVICE_FAMILY_NGP Then
             Dim formattedEC As String = ngpErrorCode.ToString("D3")
-            internalEC = If(errorCodeMap.TryGetValue(formattedEC, value), value, formattedEC)
+            internalEC = If(s_errorCodeMap.TryGetValue(formattedEC, value), value, formattedEC)
             errorTextId = $"{ERROR_TEXT_PREFIX_NGP}{internalEC}"
         End If
 
-        Return If(Not String.IsNullOrEmpty(errorTextId) AndAlso errorTextMap.TryGetValue(errorTextId, value), value, Nothing)
+        Return If(Not String.IsNullOrEmpty(errorTextId) AndAlso s_errorTextMap.TryGetValue(errorTextId, value), value, Nothing)
     End Function
 
     Public Shared Function GetAlarmMessage(deviceFamily As String, alarm As Alarm) As String
