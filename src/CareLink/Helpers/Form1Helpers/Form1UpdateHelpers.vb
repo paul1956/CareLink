@@ -112,7 +112,7 @@ Friend Module Form1UpdateHelpers
 
         If RecentData.TryGetValue("therapyAlgorithmState", markerRowString) Then
             s_therapyAlgorithmStateValue = LoadIndexedItems(markerRowString)
-            InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso {"AUTO_BASAL", "SAFE_BASAL"}.Contains(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.autoModeShieldState)))
+            InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso {"AUTO_BASAL", "SAFE_BASAL"}.Contains(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmState.AutoModeShieldState)))
         End If
 
         If RecentData.TryGetValue("sgs", markerRowString) Then
@@ -521,7 +521,7 @@ Friend Module Form1UpdateHelpers
             End If
         Next
         Dim safeBasalDurationStr As String = ""
-        If s_therapyAlgorithmStateValue.TryGetValue(NameOf(TherapyAlgorithmStateRecord.safeBasalDuration), safeBasalDurationStr) Then
+        If s_therapyAlgorithmStateValue.TryGetValue(NameOf(TherapyAlgorithmState.SafeBasalDuration), safeBasalDurationStr) Then
             Dim safeBasalDuration As UInteger = CUInt(safeBasalDurationStr)
             If safeBasalDuration > 0 Then
                 Form1.LastSgOrExitTimeLabel.Text = $"Exit In { TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan("hr")}"

@@ -90,8 +90,12 @@ Public Class LastAlarm
     <Column(Order:=19, TypeName:="Date")>
     Public Property secondaryTime As Date = Nothing
 
+    <DisplayName("Sensor Glucose")>
+    <Column(Order:=20, TypeName:=NameOf([Single]))>
+    Public Property sg As Single
+
     <DisplayName(NameOf(AdditionalInfo))>
-    <Column(Order:=20, TypeName:=NameOf(AdditionalInfo))>
+    <Column(Order:=21, TypeName:=NameOf(AdditionalInfo))>
     <JsonPropertyName("additionalInfo")>
     Public Property AdditionalInfo As AdditionalInfo
 

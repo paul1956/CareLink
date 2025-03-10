@@ -37,13 +37,13 @@ Public Class BasalRecords
     Friend Function GetSubTitle() As String
         Dim title As String = ""
         If InAutoMode Then
-            Dim automodeState As String = s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.autoModeShieldState))
+            Dim automodeState As String = s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmState.AutoModeShieldState))
             Select Case automodeState
                 Case "AUTO_BASAL"
                     title = If(Is700Series(), "AutoMode", "SmartGuard")
                 Case "SAFE_BASAL"
                     title = automodeState.ToTitle
-                    Dim safeBasalDuration As UInteger = CUInt(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmStateRecord.safeBasalDuration)))
+                    Dim safeBasalDuration As UInteger = CUInt(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmState.SafeBasalDuration)))
                     If safeBasalDuration > 0 Then
                         title &= $", {TimeSpan.FromMinutes(safeBasalDuration):h\:mm} left."
                     End If

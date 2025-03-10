@@ -2956,7 +2956,7 @@ Public Class Form1
 
         Me.TableLayoutPanelLastAlarm.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(classCollection:=GetSummaryRecords(s_lastAlarmValue)),
-            className:=NameOf(LastAlarmRecord),
+            className:=NameOf(LastAlarm),
             attachHandlers:=AddressOf SummaryHelpers.AttachHandlers,
             rowIndex:=ServerDataIndexes.lastAlarm,
             hideRecordNumberColumn:=True)
@@ -2988,7 +2988,7 @@ Public Class Form1
 
         Me.TableLayoutPanelTherapyAlgorithm.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(classCollection:=GetSummaryRecords(s_therapyAlgorithmStateValue)),
-            className:=NameOf(SummaryRecord),
+            className:=NameOf(TherapyAlgorithmState),
             attachHandlers:=AddressOf SummaryHelpers.AttachHandlers,
             rowIndex:=ServerDataIndexes.therapyAlgorithmState,
             hideRecordNumberColumn:=True)

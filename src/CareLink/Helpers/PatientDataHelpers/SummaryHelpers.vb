@@ -9,8 +9,7 @@ Imports System.Text.RegularExpressions
 Friend Module SummaryHelpers
 
     Private ReadOnly s_sensorUpdateTimes As New Dictionary(Of String, String) From {
-                                                {"INITIAL_ALERT_SHORT", "30 minutes"}
-                                            }
+        {"INITIAL_ALERT_SHORT", "30 minutes"}}
 
     'Private ReadOnly s_variablesUsedInMessages As New HashSet(Of String)
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
