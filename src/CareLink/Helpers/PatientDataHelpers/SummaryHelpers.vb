@@ -209,13 +209,13 @@ Friend Module SummaryHelpers
                     .Replace("(triggeredDateTime)", triggeredDateTime) _
                     .Replace("(units)", BgUnitsNativeString) _
                     .Replace("(unitsRemaining)", unitsRemaining) _
-                    .Replace("{vbCrLf}", vbCrLf)
+                    .Replace("(vbCrLf)", vbCrLf)
             Else
                 Dim text As String = $"faultId = '{faultId}'"
                 If Debugger.IsAttached Then
                     Stop
                     MsgBox(
-                        heading:="Unknown Notification Message ",
+                        heading:="Unknown faultId",
                         text,
                         buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                         title:=GetTitleFromStack(New StackFrame(skipFrames:=0, needFileInfo:=True)))
