@@ -15,7 +15,7 @@ Friend Module ColorDictionaryHelpers
                                 {"Low Limit", KnownColor.Red},
                                 {"Min Basal", KnownColor.LightYellow},
                                 {"SG Series", KnownColor.White},
-                                {"SG Target", KnownColor.Green},
+                                {"SG Target", KnownColor.Blue},
                                 {"Suspend", KnownColor.Red},
                                 {"Time Change", KnownColor.White}
                             }
@@ -44,7 +44,7 @@ Friend Module ColorDictionaryHelpers
 
     Public Sub GetColorDictionaryFromFile()
 
-        Using fileStream As FileStream = File.OpenRead(GetGraphColorsFileNameWithPath(True))
+        Using fileStream As FileStream = File.OpenRead(GetGraphColorsFileNameWithPath())
             Using sr As New StreamReader(fileStream)
                 sr.ReadLine()
                 While sr.Peek() <> -1
@@ -80,7 +80,7 @@ Friend Module ColorDictionaryHelpers
     End Sub
 
     Public Sub WriteColorDictionaryToFile()
-        Using fileStream As FileStream = File.OpenWrite(GetGraphColorsFileNameWithPath(True))
+        Using fileStream As FileStream = File.OpenWrite(GetGraphColorsFileNameWithPath())
             Using sw As New StreamWriter(fileStream)
                 sw.WriteLine($"Key,ForegroundColor,BackgroundColor")
                 For Each kvp As KeyValuePair(Of String, KnownColor) In GraphColorDictionary

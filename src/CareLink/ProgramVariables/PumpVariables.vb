@@ -67,7 +67,7 @@ Public Module PumpVariables
     Friend ReadOnly s_listOfInsulinMarkers As New List(Of Insulin)
     Friend ReadOnly s_listOfLowGlucoseSuspendedMarkers As New List(Of LowGlucoseSuspended)
     Friend ReadOnly s_listOfMealMarkers As New List(Of Meal)
-    Friend ReadOnly s_listOfSgReadingMarkers As New List(Of BgReading)
+    Friend ReadOnly s_listOfBgReadingMarkers As New List(Of BgReading)
     Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
     Friend ReadOnly s_listOfUserSummaryRecord As New List(Of SummaryRecord)
     Friend s_listOfLimitRecords As New List(Of Limit)

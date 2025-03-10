@@ -949,14 +949,14 @@ Public Class Form1
                         End If
                     Case ServerDataIndexes.notificationHistory
                         .SelectedIndex = If(key = "activeNotification",
-                            GetTabIndexFromName(tabPageName:=NameOf(TabPage10NotificationActive)),
-                            GetTabIndexFromName(tabPageName:=NameOf(TabPage11NotificationsCleared)))
+                            GetTabIndexFromName(tabPageName:=NameOf(TabPage13NotificationActive)),
+                            GetTabIndexFromName(tabPageName:=NameOf(TabPage14NotificationsCleared)))
                     Case ServerDataIndexes.therapyAlgorithmState
-                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage12TherapyAlgorithm))
+                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage10TherapyAlgorithm))
                     Case ServerDataIndexes.pumpBannerState
-                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage13BannerState))
+                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage11BannerState))
                     Case ServerDataIndexes.basal
-                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage14Basal))
+                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage12Basal))
                 End Select
             End With
         End If
@@ -1014,27 +1014,11 @@ Public Class Form1
             My.Settings.Save()
         End If
 
-        Dim currentAllUserLoginFile As String = GetUsersLoginInfoFileWithPath(True)
+        Dim currentAllUserLoginFile As String = GetUsersLoginInfoFileWithPath()
         If Not Directory.Exists(DirectoryForProjectData) Then
             Dim lastError As String = $"Can't create required project directories!"
             Directory.CreateDirectory(DirectoryForProjectData)
             Directory.CreateDirectory(SettingsDirectory)
-            Try
-                MoveIfExists(GetUsersLoginInfoFileWithPath(False), currentAllUserLoginFile, lastError)
-                MoveIfExists(GetGraphColorsFileNameWithPath(False), GetGraphColorsFileNameWithPath(True), lastError)
-
-                ' Move files with unique/variable names
-                ' Error Reports
-                lastError = $"Moving {BaseNameSavedErrorReport} files!"
-                MoveFiles(MyDocuments, DirectoryForProjectData, $"{BaseNameSavedErrorReport}*.txt")
-                lastError = $"Moving {BaseNameSavedLastDownload} files!"
-                MoveFiles(MyDocuments, DirectoryForProjectData, $"{BaseNameSavedLastDownload}*.json")
-                lastError = $"Moving {BaseNameSavedSnapshot} files!"
-                MoveFiles(MyDocuments, DirectoryForProjectData, $"{BaseNameSavedSnapshot}*.json")
-            Catch ex As Exception
-                MsgBox($"Last error: {lastError}", ex.Message, MsgBoxStyle.OkOnly Or MsgBoxStyle.Critical, "Fatal Error")
-                End
-            End Try
         End If
 
         If Not Directory.Exists(SettingsDirectory) Then
@@ -1056,7 +1040,7 @@ Public Class Form1
         Me.MenuOptionsSpeechHelpShown.Checked = My.Settings.SystemSpeechHelpShown
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
-        If File.Exists(GetGraphColorsFileNameWithPath(True)) Then
+        If File.Exists(GetGraphColorsFileNameWithPath()) Then
             GetColorDictionaryFromFile()
         Else
             WriteColorDictionaryToFile()
@@ -1064,7 +1048,7 @@ Public Class Form1
 
         Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(1)
         If String.IsNullOrWhiteSpace(WebViewCacheDirectory) Then
-            s_webViewCacheDirectory = Path.Combine(s_projectWebCache, Guid.NewGuid().ToString)
+            s_webViewCacheDirectory = Path.Join(s_projectWebCache, Guid.NewGuid().ToString)
             Directory.CreateDirectory(WebViewCacheDirectory)
         End If
     End Sub
@@ -1607,7 +1591,7 @@ Public Class Form1
     Private Sub TabControlPage1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlPage1.Selecting
 
         Select Case e.TabPage.Name
-            Case NameOf(TabPage15Markers)
+            Case NameOf(TabPage15More)
                 Me.DgvCareLinkUsers.InitializeDgv
 
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
@@ -1720,7 +1704,9 @@ Public Class Form1
         StartOrStopServerUpdateTimer(False)
         Dim lastErrorMessage As String = ""
         SyncLock _updatingLock
-            If Not _updating Then
+            If _updating Then
+                Stop
+            Else
                 _updating = True
                 lastErrorMessage = Client?.GetRecentData()
                 If RecentDataEmpty() Then
@@ -2949,7 +2935,7 @@ Public Class Form1
 
         Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(classCollection:={s_lastSgRecord}.ToList),
-            className:=NameOf(SG),
+            className:=NameOf(LastSG),
             attachHandlers:=AddressOf SgHelpers.AttachHandlers,
             rowIndex:=ServerDataIndexes.lastSG,
             hideRecordNumberColumn:=True)
@@ -2982,10 +2968,6 @@ Public Class Form1
             rowIndex:=ServerDataIndexes.limits,
             hideRecordNumberColumn:=False)
 
-        UpdateMarkerTabs()
-
-        UpdateNotificationTabs()
-
         Me.TableLayoutPanelTherapyAlgorithm.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(classCollection:=GetSummaryRecords(s_therapyAlgorithmStateValue)),
             className:=NameOf(TherapyAlgorithmState),
@@ -2993,14 +2975,20 @@ Public Class Form1
             rowIndex:=ServerDataIndexes.therapyAlgorithmState,
             hideRecordNumberColumn:=True)
 
-        UpdatePumpBannerStateTab()
-
         Me.TableLayoutPanelBasal.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(classCollection:=s_listOfManualBasal.ToList),
             className:=NameOf(Basal),
             attachHandlers:=AddressOf BasalHelpers.AttachHandlers,
             rowIndex:=ServerDataIndexes.basal,
             hideRecordNumberColumn:=True)
+
+        UpdateMarkerTabs()
+
+        UpdateNotificationTabs()
+
+
+        UpdatePumpBannerStateTab()
+
 
         Me.MenuStartHere.Enabled = True
         Me.UpdateTreatmentChart()

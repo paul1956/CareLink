@@ -232,9 +232,6 @@ Friend Module SummaryHelpers
     End Function
 
     Friend Function GetSummaryRecords(dic As Dictionary(Of String, String), Optional rowsToHide As List(Of String) = Nothing) As List(Of SummaryRecord)
-        Dim messageVariables As List(Of String) = GetMessageVariables()
-        Dim dictionaryOfMessages As String = CreateDictionarySortedByValue(s_notificationMessages)
-
         Dim summaryList As New List(Of SummaryRecord)
         For Each row As KeyValuePair(Of String, String) In dic
             If row.Value Is Nothing OrElse (rowsToHide IsNot Nothing AndAlso rowsToHide.Contains(row.Key)) Then

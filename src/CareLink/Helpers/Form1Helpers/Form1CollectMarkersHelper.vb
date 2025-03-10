@@ -32,7 +32,7 @@ Friend Module Form1CollectMarkersHelper
     Friend Function CollectMarkers() As String
         s_listOfAutoBasalDeliveryMarkers.Clear()
         s_listOfAutoModeStatusMarkers.Clear()
-        s_listOfSgReadingMarkers.Clear()
+        s_listOfBgReadingMarkers.Clear()
         s_listOfCalibrationMarkers.Clear()
         s_listOfInsulinMarkers.Clear()
         s_listOfLowGlucoseSuspendedMarkers.Clear()
@@ -58,7 +58,7 @@ Friend Module Form1CollectMarkersHelper
                     s_listOfAutoModeStatusMarkers.Add(New AutoModeStatus(markerEntry, s_listOfAutoModeStatusMarkers.Count + 1))
                 Case "BG_READING"
                     s_markers.Add(markerEntry)
-                    s_listOfSgReadingMarkers.Add(New BgReading(markerEntry, s_listOfSgReadingMarkers.Count + 1))
+                    s_listOfBgReadingMarkers.Add(New BgReading(markerEntry, s_listOfBgReadingMarkers.Count + 1))
                 Case "CALIBRATION"
                     s_markers.Add(markerEntry.ScaleMarker)
                     s_listOfCalibrationMarkers.Add(New Calibration(markerEntry.ScaleMarker(), s_listOfCalibrationMarkers.Count + 1))

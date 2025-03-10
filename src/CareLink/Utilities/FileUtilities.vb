@@ -22,12 +22,8 @@ Friend Module FileUtilities
             Throw New ArgumentException($"'{NameOf(tokenBaseFileName)}' cannot be null or whitespace.", NameOf(tokenBaseFileName))
         End If
 
-        'If Debugger.IsAttached Then
-        '    Return "C:\Repos\carelink-python-client-main\logindata.json"
-        'End If
-
         Return If(tokenBaseFileName.Equals(DEFAULT_FILENAME, StringComparison.InvariantCultureIgnoreCase),
-            Path.Combine(Directory.GetParent(SettingsDirectory).FullName, $"{userName}{DEFAULT_FILENAME.Substring(0, 1).ToUpper}{DEFAULT_FILENAME.Substring(1)}"),
+            Path.Join(Directory.GetParent(SettingsDirectory).FullName, $"{userName}{DEFAULT_FILENAME.Substring(0, 1).ToUpper}{DEFAULT_FILENAME.Substring(1)}"),
             tokenBaseFileName)
     End Function
 

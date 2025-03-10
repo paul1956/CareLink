@@ -41,13 +41,15 @@ Friend Module DisplayDataTableInDgvHelpers
         Else
             dGV.InitializeDgv()
         End If
-        realPanel.Controls.Add(dGV, 0, 1)
+        realPanel.Controls.Add(dGV, column:=0, row:=1)
         attachHandlers?(dGV)
+        dGV.DataSource = Nothing
         dGV.DataSource = table
         dGV.RowHeadersVisible = False
         If hideRecordNumberColumn AndAlso dGV.Columns(0).Name = "RecordNumber" Then
             dGV.Columns("RecordNumber").Visible = False
         End If
+        Form1.Refresh()
     End Sub
 
 End Module

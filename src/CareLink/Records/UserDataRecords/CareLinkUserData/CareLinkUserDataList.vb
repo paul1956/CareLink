@@ -252,7 +252,7 @@ Public Class CareLinkUserDataList
             sb.AppendLine(r.ToCsvString)
         Next
         Try
-            My.Computer.FileSystem.WriteAllText(GetUsersLoginInfoFileWithPath(True), sb.ToString, False)
+            My.Computer.FileSystem.WriteAllText(GetUsersLoginInfoFileWithPath(), text:=sb.ToString, append:=False)
         Catch ex As Exception
 
         End Try

@@ -416,8 +416,8 @@ Friend Module Form1UpdateHelpers
                 attachHandlers:=AddressOf AutoModeStatusHelpers.AttachHandlers,
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
-            Dim table As DataTable = ClassCollectionToDataTable(classCollection:=s_listOfSgReadingMarkers)
-            .TableLayoutPanelSgReadings.DisplayDataTableInDGV(
+            Dim table As DataTable = ClassCollectionToDataTable(classCollection:=s_listOfBgReadingMarkers)
+            .TableLayoutPanelBgReadings.DisplayDataTableInDGV(
                 table,
                 className:=NameOf(BgReading),
                 attachHandlers:=AddressOf BgReadingHelpers.AttachHandlers,
@@ -563,14 +563,14 @@ Friend Module Form1UpdateHelpers
 
         Try
             Dim baseWithCultureAndExtension As String = $"{baseName}({cultureName}).{extension}"
-            Dim fileNameWithPath As String = Path.Combine(DirectoryForProjectData, baseWithCultureAndExtension)
+            Dim fileNameWithPath As String = Path.Join(DirectoryForProjectData, baseWithCultureAndExtension)
 
             If MustBeUnique AndAlso File.Exists(fileNameWithPath) Then
                 'Get unique file name
                 Dim count As Long
                 Do
                     count += 1
-                    fileNameWithPath = Path.Combine(DirectoryForProjectData, $"{baseName}({cultureName}){count}.{extension}")
+                    fileNameWithPath = Path.Join(DirectoryForProjectData, $"{baseName}({cultureName}){count}.{extension}")
                     baseWithCultureAndExtension = Path.GetFileName(fileNameWithPath)
                 Loop While File.Exists(fileNameWithPath)
             End If

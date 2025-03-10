@@ -7,11 +7,11 @@ Imports System.IO
 
 Friend Module FileIoHelpers
     Private Const AllUsersLoginInfoFileName As String = "CareLink.Csv"
-    Private ReadOnly s_projectData As String = Path.Combine(MyDocuments, "CareLink")
-    Private ReadOnly s_settingsDirectory As String = Path.Combine(MyDocuments, "CareLink", "Settings")
-    Private ReadOnly s_testDataFileNameWithPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SampleUserV2Data.json")
-    Private ReadOnly s_testSettingFileNameWithPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestFileSettings.json")
-    Friend ReadOnly s_projectWebCache As String = Path.Combine(MyDocuments, "CareLink", "WebCache")
+    Private ReadOnly s_projectData As String = Path.Join(MyDocuments, "CareLink")
+    Private ReadOnly s_settingsDirectory As String = Path.Join(MyDocuments, "CareLink", "Settings")
+    Private ReadOnly s_testDataFileNameWithPath As String = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "SampleUserV2Data.json")
+    Private ReadOnly s_testSettingFileNameWithPath As String = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "TestFileSettings.json")
+    Friend ReadOnly s_projectWebCache As String = Path.Join(MyDocuments, "CareLink", "WebCache")
 
     Friend ReadOnly Property DirectoryForProjectData As String
         Get
@@ -47,11 +47,8 @@ Friend Module FileIoHelpers
         Return Directory.GetFiles(path, matchPattern).Length > 0
     End Function
 
-    Friend Function GetGraphColorsFileNameWithPath(current As Boolean) As String
-        Return If(current,
-                  Path.Combine(DirectoryForProjectData, "GraphColors.Csv"),
-                  Path.Combine(MyDocuments, "CareLinkGraphColors.Csv")
-                 )
+    Friend Function GetGraphColorsFileNameWithPath() As String
+        Return Path.Join(DirectoryForProjectData, "GraphColors.Csv")
     End Function
 
     Friend Function GetLastDownloadFileWithPath() As String
@@ -59,18 +56,15 @@ Friend Module FileIoHelpers
     End Function
 
     Friend Function GetUserSettingsJsonFileNameWithPath() As String
-        Return Path.Combine(SettingsDirectory, $"{s_userName}Settings.json")
+        Return Path.Join(SettingsDirectory, $"{s_userName}Settings.json")
     End Function
 
     Friend Function GetUserSettingsPdfFileNameWithPath() As String
-        Return Path.Combine(SettingsDirectory, $"{s_userName}Settings.pdf")
+        Return Path.Join(SettingsDirectory, $"{s_userName}Settings.pdf")
     End Function
 
-    Friend Function GetUsersLoginInfoFileWithPath(current As Boolean) As String
-        Return If(current,
-                  Path.Combine(DirectoryForProjectData, AllUsersLoginInfoFileName),
-                  Path.Combine(MyDocuments, AllUsersLoginInfoFileName)
-                 )
+    Friend Function GetUsersLoginInfoFileWithPath() As String
+        Return Path.Join(DirectoryForProjectData, AllUsersLoginInfoFileName)
     End Function
 
     ''' <summary>
@@ -85,7 +79,7 @@ Friend Module FileIoHelpers
     Friend Sub MoveFiles(previousDirectory As String, currentDirectory As String, searchPattern As String)
         For Each f As String In Directory.EnumerateFiles(previousDirectory, searchPattern)
             Dim fileName As String = Path.GetFileName(f)
-            File.Move(f, Path.Combine(currentDirectory, fileName))
+            File.Move(f, Path.Join(currentDirectory, fileName))
         Next
     End Sub
 

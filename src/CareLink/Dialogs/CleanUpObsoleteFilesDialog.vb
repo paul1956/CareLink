@@ -36,7 +36,7 @@ Public Class CleanupStaleFilesDialog
                     End If
                     Select Case msgBoxResult
                         Case MsgBoxResult.Yes
-                            My.Computer.FileSystem.DeleteFile(Path.Combine(DirectoryForProjectData, node.Text), FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.SendToRecycleBin)
+                            My.Computer.FileSystem.DeleteFile(Path.Join(DirectoryForProjectData, node.Text), FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.SendToRecycleBin)
                         Case MsgBoxResult.Cancel
                             result = DialogResult.Cancel
                             Exit For
@@ -48,7 +48,7 @@ Public Class CleanupStaleFilesDialog
             For Each node As TreeNode In .Nodes(1).Nodes
                 If node.Checked Then
                     Try
-                        Directory.Delete(Path.Combine(DirectoryForProjectData, "WebCache", node.Text), True)
+                        Directory.Delete(Path.Join(DirectoryForProjectData, "WebCache", node.Text), True)
                     Catch ex As Exception
                         Stop
                         ' Ignore ones I can't delete
@@ -79,7 +79,7 @@ Public Class CleanupStaleFilesDialog
                 .Nodes(0).LastNode.Checked = True
             Next
             .Nodes.Add("WebCaches")
-            fileList = Directory.GetDirectories(Path.Combine(DirectoryForProjectData, "WebCache"))
+            fileList = Directory.GetDirectories(Path.Join(DirectoryForProjectData, "WebCache"))
             For Each fi As String In fileList
                 Dim webCacheFileName As String = fi.Split("\").Last
                 .Nodes(1).Nodes.Add(webCacheFileName)
