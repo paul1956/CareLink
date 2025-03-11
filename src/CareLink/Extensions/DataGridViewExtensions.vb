@@ -20,7 +20,7 @@ Public Module DataGridViewExtensions
                 .Font = New Font("Segoe UI", 9.0!, FontStyle.Regular, GraphicsUnit.Point),
                 .SelectionBackColor = SystemColors.Highlight,
                 .SelectionForeColor = SystemColors.HighlightText,
-                .WrapMode = DataGridViewTriState.False}
+                .WrapMode = DataGridViewTriState.True}
             .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
             .Location = New Point(0, 0)
             .ReadOnly = True

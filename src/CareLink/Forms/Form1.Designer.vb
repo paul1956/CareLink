@@ -2961,17 +2961,17 @@ Partial Class Form1
     Friend WithEvents CursorPictureBox As PictureBox
     Friend WithEvents CursorTimer As Timer
     Friend WithEvents DgvAutoBasalDelivery As DataGridView
+    Friend WithEvents DgvBannerState As DataGridView
     Friend WithEvents DgvCareLinkUsers As DataGridView
     Friend WithEvents DgvCareLinkUsersUserPassword As DataGridViewTextBoxColumn
     Friend WithEvents DgvCurrentUser As DataGridView
     Friend WithEvents DgvInsulin As DataGridView
+    Friend WithEvents DgvLastAlarm As DataGridView
+    Friend WithEvents DgvLastSensorGlucose As DataGridView
     Friend WithEvents DgvMeal As DataGridView
     Friend WithEvents DgvSGs As DataGridView
     Friend WithEvents DgvSummary As DataGridView
     Friend WithEvents DgvTherapyAlgorithmState As DataGridView
-    Friend WithEvents DgvBannerState As DataGridView
-    Friend WithEvents DgvLastAlarm As DataGridView
-    Friend WithEvents DgvLastSensorGlucose As DataGridView
     Friend WithEvents FullNameLabel As Label
     Friend WithEvents HighTirComplianceLabel As Label
     Friend WithEvents ImageList1 As ImageList

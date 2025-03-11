@@ -477,11 +477,15 @@ Public Class Form1
 
     Public Sub Dgv_CellContextMenuStripNeededWithoutExcel(
         sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs) Handles _
+            DgvAutoBasalDelivery.CellContextMenuStripNeeded,
             DgvBannerState.CellContextMenuStripNeeded,
             DgvCareLinkUsers.CellContextMenuStripNeeded,
             DgvCurrentUser.CellContextMenuStripNeeded,
+            DgvInsulin.CellContextMenuStripNeeded,
             DgvLastAlarm.CellContextMenuStripNeeded,
             DgvLastSensorGlucose.CellContextMenuStripNeeded,
+            DgvMeal.CellContextMenuStripNeeded,
+            DgvSGs.CellContextMenuStripNeeded,
             DgvSummary.CellContextMenuStripNeeded,
             DgvTherapyAlgorithmState.CellContextMenuStripNeeded
 
@@ -528,7 +532,7 @@ Public Class Form1
             End If
             e.DgvColumnAdded(
                 cellStyle:=AutoBasalDeliveryHelpers.GetCellStyle(.Name),
-                wrapHeader:=False,
+                wrapHeader:=True,
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -1023,12 +1027,12 @@ Public Class Form1
 
 #Region "Dgv Last Alarm Events"
 
-    Private Sub DgvLastSensorGlucose_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLastSensorGlucose.ColumnAdded
+    Private Sub DgvLastSG_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLastSensorGlucose.ColumnAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
         e = ColumnAdded(dgv, e)
     End Sub
 
-    Private Sub DgvLastSensorGlucose_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvLastSensorGlucose.DataError
+    Private Sub DgvLastSG_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvLastSensorGlucose.DataError
         Stop
     End Sub
 
@@ -1727,10 +1731,15 @@ Public Class Form1
             tabName = "Markers"
         ElseIf tabName = "NotificationHistory" Then
             tabName = If(topTable.Name.Contains("Active"), NameOf(ActiveNotification), NameOf(ClearedNotifications))
+        ElseIf tabName = "LastSensorGlucose" Then
+            tabName = "LastSG"
+        ElseIf tabName = "SensorGlucoseValues" Then
+            tabName = "Sgs"
         End If
         For Each row As DataGridViewRow In dgv.Rows
-            Debug.WriteLine(row.Cells(1).FormattedValue.ToString)
-            If row.Cells(1).FormattedValue.ToString.Equals(tabName, StringComparison.OrdinalIgnoreCase) Then
+            Dim cellValue As String = row.Cells(1).FormattedValue.ToString
+            Debug.WriteLine(cellValue)
+            If cellValue.Equals(tabName, StringComparison.OrdinalIgnoreCase) Then
                 Me.TabControlPage1.SelectedIndex = 3
                 dgv.CurrentCell = row.Cells(2)
                 s_currentSummaryRow = row.Index
@@ -3009,13 +3018,6 @@ Public Class Form1
 
         UpdateSummaryTab(Me.DgvSummary, s_listOfSummaryRecords, sort:=True)
         UpdateSummaryTab(Me.DgvLastAlarm, GetSummaryRecords(s_lastAlarmValue), sort:=True)
-
-        Me.TableLayoutPanelLastAlarm.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(listOfClass:=GetSummaryRecords(s_lastAlarmValue)),
-            className:=NameOf(LastAlarm),
-            attachHandlers:=AddressOf SummaryHelpers.AttachHandlers,
-            rowIndex:=ServerDataIndexes.lastAlarm,
-            hideRecordNumberColumn:=True)
 
         Me.TableLayoutPanelActiveInsulin.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(listOfClass:={s_activeInsulin}.ToList),

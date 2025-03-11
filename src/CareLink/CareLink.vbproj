@@ -127,8 +127,8 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
-    <None Update="SampleUserData.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Update="SampleUserDataScratch.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Include="Images\IconImage.png">
       <Pack>True</Pack>
