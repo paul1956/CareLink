@@ -205,6 +205,7 @@ Friend Module SummaryHelpers
                     .Replace("(reminderName)", reminderName) _
                     .Replace("(secondaryTime)", secondaryTime) _
                     .Replace("(sensorUpdateTime)", sensorUpdateTime) _
+                    .Replace("(sg)", sg) _
                     .Replace("(triggeredDateTime)", triggeredDateTime) _
                     .Replace("(units)", BgUnitsNativeString) _
                     .Replace("(unitsRemaining)", unitsRemaining) _

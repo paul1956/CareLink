@@ -14,13 +14,13 @@ Public Module DataGridViewExtensions
             .AllowUserToResizeColumns = False
             .AllowUserToResizeRows = False
             .AlternatingRowsDefaultCellStyle = New DataGridViewCellStyle With {
-                    .BackColor = Color.Silver}
+                .BackColor = Color.Silver}
             .ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
                 .Alignment = DataGridViewContentAlignment.MiddleCenter,
                 .Font = New Font("Segoe UI", 9.0!, FontStyle.Regular, GraphicsUnit.Point),
                 .SelectionBackColor = SystemColors.Highlight,
                 .SelectionForeColor = SystemColors.HighlightText,
-                .WrapMode = DataGridViewTriState.True}
+                .WrapMode = DataGridViewTriState.False}
             .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
             .Location = New Point(0, 0)
             .ReadOnly = True

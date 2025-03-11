@@ -477,9 +477,13 @@ Public Class Form1
 
     Public Sub Dgv_CellContextMenuStripNeededWithoutExcel(
         sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs) Handles _
-        DgvCareLinkUsers.CellContextMenuStripNeeded,
-        DgvCurrentUser.CellContextMenuStripNeeded,
-        DgvSummary.CellContextMenuStripNeeded
+            DgvBannerState.CellContextMenuStripNeeded,
+            DgvCareLinkUsers.CellContextMenuStripNeeded,
+            DgvCurrentUser.CellContextMenuStripNeeded,
+            DgvLastAlarm.CellContextMenuStripNeeded,
+            DgvLastSensorGlucose.CellContextMenuStripNeeded,
+            DgvSummary.CellContextMenuStripNeeded,
+            DgvTherapyAlgorithmState.CellContextMenuStripNeeded
 
         If e.RowIndex >= 0 AndAlso CType(sender, DataGridView).SelectedCells.Count > 0 Then
             e.ContextMenuStrip = Me.DgvCopyWithoutExcelMenuStrip
@@ -855,57 +859,75 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
         Select Case GetItemIndex(key)
-            Case ServerDataIndexes.currentServerTime,
-                 ServerDataIndexes.lastMedicalDeviceDataUpdateServerTime,
-                 ServerDataIndexes.firstName, ServerDataIndexes.lastName, ServerDataIndexes.conduitSerialNumber,
-                 ServerDataIndexes.conduitBatteryStatus,
-                 ServerDataIndexes.sensorState,
-                 ServerDataIndexes.medicalDeviceTime,
-                 ServerDataIndexes.calibStatus, ServerDataIndexes.bgUnits, ServerDataIndexes.timeFormat,
-                 ServerDataIndexes.lastSGTrend, ServerDataIndexes.systemStatusMessage,
-                 ServerDataIndexes.lastConduitDateTime, ServerDataIndexes.clientTimeZoneName,
-                 ServerDataIndexes.appModelType
-                e.CellStyle = e.CellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
+            Case ServerDataIndexes.clientTimeZoneName, ServerDataIndexes.lastName,
+                 ServerDataIndexes.firstName, ServerDataIndexes.appModelType,
+                 ServerDataIndexes.currentServerTime, ServerDataIndexes.conduitSerialNumber,
+                 ServerDataIndexes.conduitBatteryStatus, ServerDataIndexes.lastConduitDateTime,
+                 ServerDataIndexes.medicalDeviceFamily, ServerDataIndexes.medicalDeviceInformation,
+                 ServerDataIndexes.medicalDeviceTime, ServerDataIndexes.lastMedicalDeviceDataUpdateServerTime,
+                 ServerDataIndexes.calibStatus, ServerDataIndexes.calibrationIconId,
+                 ServerDataIndexes.systemStatusMessage, ServerDataIndexes.sensorState,
+                 ServerDataIndexes.timeFormat, ServerDataIndexes.bgUnits,
+                 ServerDataIndexes.lastSensorTime, ServerDataIndexes.lastSGTrend,
+                 ServerDataIndexes.sensorLifeText, ServerDataIndexes.sensorLifeIcon
+                e.CellStyle = e.CellStyle.SetCellStyle(
+                    alignment:=DataGridViewContentAlignment.MiddleLeft,
+                    padding:=New Padding(1))
 
-            Case ServerDataIndexes.appModelNumber, ServerDataIndexes.conduitBatteryLevel,
-                 ServerDataIndexes.reservoirLevelPercent, ServerDataIndexes.reservoirAmount,
+            Case ServerDataIndexes.calFreeSensor, ServerDataIndexes.finalCalibration,
+                 ServerDataIndexes.pumpSuspended, ServerDataIndexes.conduitInRange,
+                 ServerDataIndexes.conduitMedicalDeviceInRange, ServerDataIndexes.conduitSensorInRange,
+                 ServerDataIndexes.gstCommunicationState, ServerDataIndexes.pumpCommunicationState
+                e.CellStyle = e.CellStyle.SetCellStyle(
+                    alignment:=DataGridViewContentAlignment.MiddleCenter,
+                    padding:=New Padding(all:=1))
+
+            Case ServerDataIndexes.conduitBatteryLevel, ServerDataIndexes.lastConduitUpdateServerDateTime,
+                 ServerDataIndexes.cgmInfo, ServerDataIndexes.timeToNextEarlyCalibrationMinutes,
+                 ServerDataIndexes.timeToNextCalibrationMinutes, ServerDataIndexes.timeToNextCalibrationRecommendedMinutes,
+                 ServerDataIndexes.timeToNextCalibHours, ServerDataIndexes.sensorDurationMinutes,
+                 ServerDataIndexes.sensorDurationHours, ServerDataIndexes.systemStatusTimeRemaining,
+                 ServerDataIndexes.gstBatteryLevel, ServerDataIndexes.pumpBannerState,
+                 ServerDataIndexes.therapyAlgorithmState, ServerDataIndexes.reservoirLevelPercent,
+                 ServerDataIndexes.reservoirAmount, ServerDataIndexes.pumpBatteryLevelPercent,
                  ServerDataIndexes.reservoirRemainingUnits,
-                 ServerDataIndexes.sensorDurationHours, ServerDataIndexes.timeToNextCalibHours,
-                 ServerDataIndexes.averageSG, ServerDataIndexes.belowHypoLimit,
+                 ServerDataIndexes.maxAutoBasalRate, ServerDataIndexes.maxBolusAmount,
+                 ServerDataIndexes.sgBelowLimit, ServerDataIndexes.approvedForTreatment,
+                 ServerDataIndexes.lastAlarm, ServerDataIndexes.activeInsulin,
+                 ServerDataIndexes.basal,
+                 ServerDataIndexes.limits, ServerDataIndexes.belowHypoLimit,
                  ServerDataIndexes.aboveHyperLimit, ServerDataIndexes.timeInRange,
-                 ServerDataIndexes.gstBatteryLevel, ServerDataIndexes.maxAutoBasalRate,
-                 ServerDataIndexes.maxBolusAmount, ServerDataIndexes.sensorDurationMinutes,
-                 ServerDataIndexes.timeToNextCalibrationMinutes, ServerDataIndexes.sgBelowLimit,
-                 ServerDataIndexes.averageSGFloat, ServerDataIndexes.timeToNextCalibrationRecommendedMinutes,
-                 ServerDataIndexes.systemStatusTimeRemaining, ServerDataIndexes.timeToNextEarlyCalibrationMinutes
+                 ServerDataIndexes.averageSGFloat, ServerDataIndexes.averageSG,
+                 ServerDataIndexes.markers, ServerDataIndexes.sgs, ServerDataIndexes.notificationHistory
                 e.CellStyle = e.CellStyle.SetCellStyle(
                     alignment:=DataGridViewContentAlignment.MiddleRight,
                     padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
 
-            Case ServerDataIndexes.conduitInRange, ServerDataIndexes.conduitMedicalDeviceInRange,
-                 ServerDataIndexes.conduitSensorInRange,
-                 ServerDataIndexes.pumpCommunicationState, ServerDataIndexes.gstCommunicationState,
-                 ServerDataIndexes.calFreeSensor, ServerDataIndexes.finalCalibration
-                e.CellStyle = e.CellStyle.SetCellStyle(
-                    alignment:=DataGridViewContentAlignment.MiddleCenter,
+            Case ServerDataIndexes.appModelNumber, ServerDataIndexes.transmitterPairedTime
+                If e.Value.ToString = "NA" Then
+                    e.CellStyle = e.CellStyle.SetCellStyle(
+                    alignment:=DataGridViewContentAlignment.MiddleLeft,
                     padding:=New Padding(all:=1))
+                    e.Value = "N/A"
+                Else
+                    e.CellStyle = e.CellStyle.SetCellStyle(
+                    alignment:=DataGridViewContentAlignment.MiddleRight,
+                    padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
+                End If
 
-            Case ServerDataIndexes.lastAlarm,
-                 ServerDataIndexes.activeInsulin,
-                 ServerDataIndexes.sgs,
-                 ServerDataIndexes.limits,
-                 ServerDataIndexes.markers,
-                 ServerDataIndexes.notificationHistory,
-                 ServerDataIndexes.therapyAlgorithmState,
-                 ServerDataIndexes.pumpBannerState,
-                 ServerDataIndexes.basal,
-                 ServerDataIndexes.cgmInfo,
-                 ServerDataIndexes.medicalDeviceInformation
-                Exit Select
-            Case Else
-                e.CellStyle = e.CellStyle.SetCellStyle(
-                    alignment:=DataGridViewContentAlignment.MiddleCenter,
+            Case ServerDataIndexes.lastSG
+                If e.Value.ToString = "NAN" Then
+                    e.CellStyle = e.CellStyle.SetCellStyle(
+                    alignment:=DataGridViewContentAlignment.MiddleLeft,
                     padding:=New Padding(all:=1))
+                    e.Value = "---"
+                Else
+                    e.CellStyle = e.CellStyle.SetCellStyle(
+                    alignment:=DataGridViewContentAlignment.MiddleRight,
+                    padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
+                End If
+            Case Else
+                Stop
         End Select
 
     End Sub
@@ -952,7 +974,7 @@ Public Class Form1
                             GetTabIndexFromName(tabPageName:=NameOf(TabPage13NotificationActive)),
                             GetTabIndexFromName(tabPageName:=NameOf(TabPage14NotificationsCleared)))
                     Case ServerDataIndexes.therapyAlgorithmState
-                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage10TherapyAlgorithm))
+                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage10TherapyAlgorithmState))
                     Case ServerDataIndexes.pumpBannerState
                         .SelectedIndex = GetTabIndexFromName(NameOf(TabPage11BannerState))
                     Case ServerDataIndexes.basal
@@ -963,15 +985,8 @@ Public Class Form1
     End Sub
 
     Private Sub DgvSummary_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSummary.ColumnAdded
-        With e.Column
-            e.DgvColumnAdded(
-                cellStyle:=SummaryHelpers.GetCellStyle(.Name),
-                wrapHeader:=False,
-                forceReadOnly:=True,
-                caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-        End With
-
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        e = ColumnAdded(dgv, e)
     End Sub
 
     Private Sub DgvSummary_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvSummary.DataError
@@ -979,6 +994,58 @@ Public Class Form1
     End Sub
 
 #End Region ' Dgv Summary Events
+
+#Region "Dgv Banner State Events"
+
+    Private Sub DgvBannerState_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvBannerState.ColumnAdded
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        e = ColumnAdded(dgv, e)
+    End Sub
+
+    Private Sub DgvBannerState_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvBannerState.DataError
+        Stop
+    End Sub
+
+#End Region ' Dgv Banner State Events
+
+#Region "Dgv Last Alarm Events"
+
+    Private Sub DgvLastAlarm_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLastAlarm.ColumnAdded
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        e = ColumnAdded(dgv, e)
+    End Sub
+
+    Private Sub DgvLastAlarm_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvLastAlarm.DataError
+        Stop
+    End Sub
+
+#End Region ' Dgv Last Alarm Events
+
+#Region "Dgv Last Alarm Events"
+
+    Private Sub DgvLastSensorGlucose_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLastSensorGlucose.ColumnAdded
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        e = ColumnAdded(dgv, e)
+    End Sub
+
+    Private Sub DgvLastSensorGlucose_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvLastSensorGlucose.DataError
+        Stop
+    End Sub
+
+#End Region ' Dgv Last Alarm Events
+
+#Region "Dgv Therapy Algorithm State Events"
+
+    Private Sub DgvTherapyAlgorithmState_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvTherapyAlgorithmState.ColumnAdded
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        e = ColumnAdded(dgv, e)
+    End Sub
+
+    Private Sub DgvTherapyAlgorithmState_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvTherapyAlgorithmState.DataError
+        Stop
+    End Sub
+
+#End Region
 
 #End Region ' DataGridView Events
 
@@ -1650,7 +1717,7 @@ Public Class Form1
                     TableLayoutPanelNotificationsClearedTop.ButtonClick,
                     TableLayoutPanelBgReadingsTop.ButtonClick,
                     TableLayoutPanelSgsTop.ButtonClick,
-                    TableLayoutPanelTherapyAlgorithmTop.ButtonClick,
+                    TableLayoutPanelTherapyAlgorithmStateTop.ButtonClick,
                     TableLayoutPanelTimeChangeTop.ButtonClick
         Me.TabControlPage1.Visible = True
         Dim topTable As TableLayoutPanelTopEx = CType(CType(sender, Button).Parent, TableLayoutPanelTopEx)
@@ -2914,7 +2981,7 @@ Public Class Form1
 
         FinishInitialization()
         Me.UpdateTrendArrows()
-        UpdateSummaryTab(Me.DgvSummary)
+        UpdateSummaryTab(Me.DgvSummary, s_listOfSummaryRecords, sort:=True)
         Me.UpdateActiveInsulinChart()
         Me.UpdateActiveInsulin()
         Me.UpdateAutoModeShield()
@@ -2934,21 +3001,24 @@ Public Class Form1
         Me.ReadingsLabel.Text = $"{nonZeroRecords.Count()}/288 SG Readings"
 
         Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(classCollection:={s_lastSgRecord}.ToList),
+            table:=ClassCollectionToDataTable(listOfClass:={s_lastSgRecord}.ToList),
             className:=NameOf(LastSG),
             attachHandlers:=AddressOf SgHelpers.AttachHandlers,
             rowIndex:=ServerDataIndexes.lastSG,
             hideRecordNumberColumn:=True)
 
+        UpdateSummaryTab(Me.DgvSummary, s_listOfSummaryRecords, sort:=True)
+        UpdateSummaryTab(Me.DgvLastAlarm, GetSummaryRecords(s_lastAlarmValue), sort:=True)
+
         Me.TableLayoutPanelLastAlarm.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(classCollection:=GetSummaryRecords(s_lastAlarmValue)),
+            table:=ClassCollectionToDataTable(listOfClass:=GetSummaryRecords(s_lastAlarmValue)),
             className:=NameOf(LastAlarm),
             attachHandlers:=AddressOf SummaryHelpers.AttachHandlers,
             rowIndex:=ServerDataIndexes.lastAlarm,
             hideRecordNumberColumn:=True)
 
         Me.TableLayoutPanelActiveInsulin.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(classCollection:={s_activeInsulin}.ToList),
+            table:=ClassCollectionToDataTable(listOfClass:={s_activeInsulin}.ToList),
             className:=NameOf(ActiveInsulin),
             attachHandlers:=AddressOf ActiveInsulinHelpers.AttachHandlers,
             rowIndex:=ServerDataIndexes.activeInsulin,
@@ -2957,26 +3027,21 @@ Public Class Form1
         Dim keySelector As Func(Of SG, Integer) = Function(x) x.RecordNumber
         Me.TableLayoutPanelSgs.DisplayDataTableInDGV(
             dGV:=Me.DgvSGs,
-            table:=ClassCollectionToDataTable(classCollection:=s_listOfSgRecords.OrderByDescending(keySelector).ToList()),
+            table:=ClassCollectionToDataTable(listOfClass:=s_listOfSgRecords.OrderByDescending(keySelector).ToList()),
             rowIndex:=ServerDataIndexes.sgs)
         Me.DgvSGs.Columns(index:=0).HeaderCell.SortGlyphDirection = SortOrder.Descending
 
         Me.TableLayoutPanelLimits.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(classCollection:=s_listOfLimitRecords),
+            table:=ClassCollectionToDataTable(listOfClass:=s_listOfLimitRecords),
             className:=NameOf(Limit),
             attachHandlers:=AddressOf LimitsHelpers.AttachHandlers,
             rowIndex:=ServerDataIndexes.limits,
             hideRecordNumberColumn:=False)
 
-        Me.TableLayoutPanelTherapyAlgorithm.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(classCollection:=GetSummaryRecords(s_therapyAlgorithmStateValue)),
-            className:=NameOf(TherapyAlgorithmState),
-            attachHandlers:=AddressOf SummaryHelpers.AttachHandlers,
-            rowIndex:=ServerDataIndexes.therapyAlgorithmState,
-            hideRecordNumberColumn:=True)
+        UpdateSummaryTab(Me.DgvTherapyAlgorithmState, GetSummaryRecords(s_therapyAlgorithmStateValue), sort:=False)
 
         Me.TableLayoutPanelBasal.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(classCollection:=s_listOfManualBasal.ToList),
+            table:=ClassCollectionToDataTable(listOfClass:=s_listOfManualBasal.ToList),
             className:=NameOf(Basal),
             attachHandlers:=AddressOf BasalHelpers.AttachHandlers,
             rowIndex:=ServerDataIndexes.basal,
@@ -2986,9 +3051,7 @@ Public Class Form1
 
         UpdateNotificationTabs()
 
-
         UpdatePumpBannerStateTab()
-
 
         Me.MenuStartHere.Enabled = True
         Me.UpdateTreatmentChart()

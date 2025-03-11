@@ -19,14 +19,17 @@ Friend Module Form1SummaryTabHelpers
     End Sub
 
     <Extension>
-    Friend Sub UpdateSummaryTab(dgvSummary As DataGridView)
-        s_listOfSummaryRecords.Sort()
+    Friend Sub UpdateSummaryTab(dgvSummary As DataGridView, classCollection As List(Of SummaryRecord), sort As Boolean)
+        If sort Then
+            s_listOfSummaryRecords.Sort()
+        End If
         dgvSummary.InitializeDgv()
-        dgvSummary.DataSource = ClassCollectionToDataTable(s_listOfSummaryRecords)
+        dgvSummary.DataSource = ClassCollectionToDataTable(classCollection)
         dgvSummary.RowHeadersVisible = False
         If s_currentSummaryRow <> 0 Then
             dgvSummary.CurrentCell = dgvSummary.Rows(s_currentSummaryRow).Cells(2)
         End If
+        dgvSummary.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells)
         RemoveHandler dgvSummary.CellFormatting, AddressOf DataGridView_CellFormatting
         AddHandler dgvSummary.CellFormatting, AddressOf DataGridView_CellFormatting
     End Sub

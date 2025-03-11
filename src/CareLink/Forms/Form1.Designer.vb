@@ -29,6 +29,10 @@ Partial Class Form1
         Dim DataGridViewCellStyle1 As DataGridViewCellStyle = New DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As DataGridViewCellStyle = New DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As DataGridViewCellStyle = New DataGridViewCellStyle()
         AboveHighLimitMessageLabel = New Label()
         AboveHighLimitValueLabel = New Label()
         ActiveInsulinValue = New Label()
@@ -63,6 +67,10 @@ Partial Class Form1
         DgvMeal = New DataGridView()
         DgvSGs = New DataGridView()
         DgvSummary = New DataGridView()
+        DgvTherapyAlgorithmState = New DataGridView()
+        DgvBannerState = New DataGridView()
+        DgvLastSensorGlucose = New DataGridView()
+        DgvLastAlarm = New DataGridView()
         FullNameLabel = New Label()
         HighTirComplianceLabel = New Label()
         ImageList1 = New ImageList(components)
@@ -187,9 +195,9 @@ Partial Class Form1
         TabPage09Limits = New TabPage()
         TableLayoutPanelLimits = New TableLayoutPanel()
         TableLayoutPanelLimitsTop = New TableLayoutPanelTopEx()
-        TabPage10TherapyAlgorithm = New TabPage()
+        TabPage10TherapyAlgorithmState = New TabPage()
         TableLayoutPanelTherapyAlgorithm = New TableLayoutPanel()
-        TableLayoutPanelTherapyAlgorithmTop = New TableLayoutPanelTopEx()
+        TableLayoutPanelTherapyAlgorithmStateTop = New TableLayoutPanelTopEx()
         TabPage11BannerState = New TabPage()
         TableLayoutPanelBannerState = New TableLayoutPanel()
         TableLayoutPanelBannerStateTop = New TableLayoutPanelTopEx()
@@ -240,12 +248,16 @@ Partial Class Form1
         CursorPanel.SuspendLayout()
         CType(CursorPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvAutoBasalDelivery, ComponentModel.ISupportInitialize).BeginInit()
+        CType(DgvBannerState, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvCareLinkUsers, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvCurrentUser, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvInsulin, ComponentModel.ISupportInitialize).BeginInit()
+        CType(DgvLastAlarm, ComponentModel.ISupportInitialize).BeginInit()
+        CType(DgvLastSensorGlucose, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvMeal, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvSGs, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvSummary, ComponentModel.ISupportInitialize).BeginInit()
+        CType(DgvTherapyAlgorithmState, ComponentModel.ISupportInitialize).BeginInit()
         CType(InsulinLevelPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         Last24HTotalsPanel.SuspendLayout()
         MenuStrip1.SuspendLayout()
@@ -278,7 +290,7 @@ Partial Class Form1
         TableLayoutPanelSgs.SuspendLayout()
         TabPage09Limits.SuspendLayout()
         TableLayoutPanelLimits.SuspendLayout()
-        TabPage10TherapyAlgorithm.SuspendLayout()
+        TabPage10TherapyAlgorithmState.SuspendLayout()
         TableLayoutPanelTherapyAlgorithm.SuspendLayout()
         TabPage11BannerState.SuspendLayout()
         TableLayoutPanelBannerState.SuspendLayout()
@@ -713,6 +725,56 @@ Partial Class Form1
         DgvSummary.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvSummary.Size = New Size(1370, 655)
         DgvSummary.TabIndex = 0
+        ' 
+        ' DgvTherapyAlgorithm
+        ' 
+        DgvTherapyAlgorithmState.Dock = DockStyle.Fill
+        DgvTherapyAlgorithmState.Location = New Point(3, 3)
+        DgvTherapyAlgorithmState.Name = "DgvTherapyAlgorithm"
+        DgvTherapyAlgorithmState.ReadOnly = True
+        DataGridViewCellStyle4.WrapMode = DataGridViewTriState.False
+        DgvTherapyAlgorithmState.RowsDefaultCellStyle = DataGridViewCellStyle4
+        DgvTherapyAlgorithmState.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvTherapyAlgorithmState.Size = New Size(1370, 655)
+        DgvTherapyAlgorithmState.TabIndex = 0
+        ' 
+        ' 
+        ' DgvBannerState
+        ' 
+        DgvBannerState.Dock = DockStyle.Fill
+        DgvBannerState.Location = New Point(3, 3)
+        DgvBannerState.Name = "DgvBannerState"
+        DgvBannerState.ReadOnly = True
+        DataGridViewCellStyle6.WrapMode = DataGridViewTriState.False
+        DgvBannerState.RowsDefaultCellStyle = DataGridViewCellStyle6
+        DgvBannerState.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvBannerState.Size = New Size(1370, 655)
+        DgvBannerState.TabIndex = 0
+        ' 
+        ' 
+        ' DgvLastSensorGlucose
+        ' 
+        DgvLastSensorGlucose.Dock = DockStyle.Fill
+        DgvLastSensorGlucose.Location = New Point(3, 3)
+        DgvLastSensorGlucose.Name = "DgvLastSensorGlucose"
+        DgvLastSensorGlucose.ReadOnly = True
+        DataGridViewCellStyle6.WrapMode = DataGridViewTriState.False
+        DgvLastSensorGlucose.RowsDefaultCellStyle = DataGridViewCellStyle7
+        DgvLastSensorGlucose.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvLastSensorGlucose.Size = New Size(1370, 655)
+        DgvLastSensorGlucose.TabIndex = 0
+        ' 
+        ' DgvLastAlarm
+        ' 
+        DgvLastAlarm.Dock = DockStyle.Fill
+        DgvLastAlarm.Location = New Point(3, 3)
+        DgvLastAlarm.Name = "DgvLastAlarm"
+        DgvLastAlarm.ReadOnly = True
+        DataGridViewCellStyle5.WrapMode = DataGridViewTriState.True
+        DgvLastAlarm.RowsDefaultCellStyle = DataGridViewCellStyle4
+        DgvLastAlarm.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvLastAlarm.Size = New Size(1370, 655)
+        DgvLastAlarm.TabIndex = 0
         ' 
         ' FullNameLabel
         ' 
@@ -1778,7 +1840,7 @@ Partial Class Form1
         TabControlPage1.Controls.Add(TabPage07ActiveInsulin)
         TabControlPage1.Controls.Add(TabPage08SensorGlucose)
         TabControlPage1.Controls.Add(TabPage09Limits)
-        TabControlPage1.Controls.Add(TabPage10TherapyAlgorithm)
+        TabControlPage1.Controls.Add(TabPage10TherapyAlgorithmState)
         TabControlPage1.Controls.Add(TabPage11BannerState)
         TabControlPage1.Controls.Add(TabPage12Basal)
         TabControlPage1.Controls.Add(TabPage13NotificationActive)
@@ -2062,26 +2124,26 @@ Partial Class Form1
         TableLayoutPanelLimitsTop.Size = New Size(1358, 37)
         TableLayoutPanelLimitsTop.TabIndex = 1
         ' 
-        ' TabPage10TherapyAlgorithm
+        ' TabPage10TherapyAlgorithmState
         ' 
-        TabPage10TherapyAlgorithm.Controls.Add(TableLayoutPanelTherapyAlgorithm)
-        TabPage10TherapyAlgorithm.Location = New Point(4, 27)
-        TabPage10TherapyAlgorithm.Name = "TabPage10TherapyAlgorithm"
-        TabPage10TherapyAlgorithm.Padding = New Padding(3)
-        TabPage10TherapyAlgorithm.Size = New Size(1376, 661)
-        TabPage10TherapyAlgorithm.TabIndex = 21
-        TabPage10TherapyAlgorithm.Text = "Therapy Algorithm"
-        TabPage10TherapyAlgorithm.UseVisualStyleBackColor = True
+        TabPage10TherapyAlgorithmState.Controls.Add(TableLayoutPanelTherapyAlgorithm)
+        TabPage10TherapyAlgorithmState.Location = New Point(4, 27)
+        TabPage10TherapyAlgorithmState.Name = "TabPage10TherapyAlgorithmState"
+        TabPage10TherapyAlgorithmState.Padding = New Padding(3)
+        TabPage10TherapyAlgorithmState.Size = New Size(1376, 661)
+        TabPage10TherapyAlgorithmState.TabIndex = 21
+        TabPage10TherapyAlgorithmState.Text = "Therapy Algorithm State"
+        TabPage10TherapyAlgorithmState.UseVisualStyleBackColor = True
         ' 
         ' TableLayoutPanelTherapyAlgorithm
         ' 
         TableLayoutPanelTherapyAlgorithm.AutoSize = True
-        TableLayoutPanelTherapyAlgorithm.AutoSize = True
-        TableLayoutPanelTherapyAlgorithm.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelTherapyAlgorithm.AutoSizeMode = AutoSizeMode.GrowOnly
         TableLayoutPanelTherapyAlgorithm.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelTherapyAlgorithm.ColumnCount = 1
         TableLayoutPanelTherapyAlgorithm.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelTherapyAlgorithm.Controls.Add(TableLayoutPanelTherapyAlgorithmTop, 0, 0)
+        TableLayoutPanelTherapyAlgorithm.Controls.Add(TableLayoutPanelTherapyAlgorithmStateTop, 0, 0)
+        TableLayoutPanelTherapyAlgorithm.Controls.Add(DgvTherapyAlgorithmState, 0, 1)
         TableLayoutPanelTherapyAlgorithm.Dock = DockStyle.Fill
         TableLayoutPanelTherapyAlgorithm.Location = New Point(3, 3)
         TableLayoutPanelTherapyAlgorithm.Name = "TableLayoutPanelTherapyAlgorithm"
@@ -2091,22 +2153,22 @@ Partial Class Form1
         TableLayoutPanelTherapyAlgorithm.Size = New Size(1370, 655)
         TableLayoutPanelTherapyAlgorithm.TabIndex = 0
         ' 
-        ' TableLayoutPanelTherapyAlgorithmTop
+        ' TableLayoutPanelTherapyAlgorithmStateTop
         ' 
-        TableLayoutPanelTherapyAlgorithmTop.AutoSize = True
-        TableLayoutPanelTherapyAlgorithmTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelTherapyAlgorithmTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelTherapyAlgorithmTop.ColumnCount = 2
-        TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelTherapyAlgorithmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelTherapyAlgorithmTop.Dock = DockStyle.Fill
-        TableLayoutPanelTherapyAlgorithmTop.LabelText = "Therapy Algorithm"
-        TableLayoutPanelTherapyAlgorithmTop.Location = New Point(6, 6)
-        TableLayoutPanelTherapyAlgorithmTop.Name = "TableLayoutPanelTherapyAlgorithmTop"
-        TableLayoutPanelTherapyAlgorithmTop.RowCount = 1
-        TableLayoutPanelTherapyAlgorithmTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelTherapyAlgorithmTop.Size = New Size(1358, 37)
-        TableLayoutPanelTherapyAlgorithmTop.TabIndex = 1
+        TableLayoutPanelTherapyAlgorithmStateTop.AutoSize = True
+        TableLayoutPanelTherapyAlgorithmStateTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelTherapyAlgorithmStateTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelTherapyAlgorithmStateTop.ColumnCount = 2
+        TableLayoutPanelTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelTherapyAlgorithmStateTop.Dock = DockStyle.Fill
+        TableLayoutPanelTherapyAlgorithmStateTop.LabelText = "Therapy Algorithm State"
+        TableLayoutPanelTherapyAlgorithmStateTop.Location = New Point(6, 6)
+        TableLayoutPanelTherapyAlgorithmStateTop.Name = "TableLayoutPanelTherapyAlgorithmTop"
+        TableLayoutPanelTherapyAlgorithmStateTop.RowCount = 1
+        TableLayoutPanelTherapyAlgorithmStateTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelTherapyAlgorithmStateTop.Size = New Size(1358, 37)
+        TableLayoutPanelTherapyAlgorithmStateTop.TabIndex = 1
         ' 
         ' TabPage11BannerState
         ' 
@@ -2127,6 +2189,7 @@ Partial Class Form1
         TableLayoutPanelBannerState.ColumnCount = 1
         TableLayoutPanelBannerState.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelBannerState.Controls.Add(TableLayoutPanelBannerStateTop, 0, 0)
+        TableLayoutPanelBannerState.Controls.Add(DgvBannerState, 0, 1)
         TableLayoutPanelBannerState.Dock = DockStyle.Fill
         TableLayoutPanelBannerState.Location = New Point(3, 3)
         TableLayoutPanelBannerState.Margin = New Padding(0)
@@ -2618,6 +2681,7 @@ Partial Class Form1
         TableLayoutPanelLastSG.ColumnCount = 1
         TableLayoutPanelLastSG.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelLastSG.Controls.Add(TableLayoutPanelLastSgTop, 0, 0)
+        TableLayoutPanelLastSG.Controls.Add(DgvLastSensorGlucose, 0, 10)
         TableLayoutPanelLastSG.Dock = DockStyle.Fill
         TableLayoutPanelLastSG.Location = New Point(3, 3)
         TableLayoutPanelLastSG.Name = "TableLayoutPanelLastSG"
@@ -2663,6 +2727,7 @@ Partial Class Form1
         TableLayoutPanelLastAlarm.ColumnCount = 1
         TableLayoutPanelLastAlarm.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelLastAlarm.Controls.Add(TableLayoutPanelLastAlarmTop, 0, 0)
+        TableLayoutPanelLastAlarm.Controls.Add(DgvLastAlarm, 0, 1)
         TableLayoutPanelLastAlarm.Dock = DockStyle.Fill
         TableLayoutPanelLastAlarm.Location = New Point(3, 3)
         TableLayoutPanelLastAlarm.Margin = New Padding(0)
@@ -2764,6 +2829,9 @@ Partial Class Form1
         CType(DgvMeal, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvSGs, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvSummary, ComponentModel.ISupportInitialize).EndInit()
+        CType(DgvTherapyAlgorithmState, ComponentModel.ISupportInitialize).EndInit()
+        CType(DgvBannerState, ComponentModel.ISupportInitialize).EndInit()
+        CType(DgvLastAlarm, ComponentModel.ISupportInitialize).EndInit()
         CType(InsulinLevelPictureBox, ComponentModel.ISupportInitialize).EndInit()
         Last24HTotalsPanel.ResumeLayout(False)
         MenuStrip1.ResumeLayout(False)
@@ -2811,8 +2879,8 @@ Partial Class Form1
         TabPage09Limits.PerformLayout()
         TableLayoutPanelLimits.ResumeLayout(False)
         TableLayoutPanelLimits.PerformLayout()
-        TabPage10TherapyAlgorithm.ResumeLayout(False)
-        TabPage10TherapyAlgorithm.PerformLayout()
+        TabPage10TherapyAlgorithmState.ResumeLayout(False)
+        TabPage10TherapyAlgorithmState.PerformLayout()
         TableLayoutPanelTherapyAlgorithm.ResumeLayout(False)
         TableLayoutPanelTherapyAlgorithm.PerformLayout()
         TabPage11BannerState.ResumeLayout(False)
@@ -2900,6 +2968,10 @@ Partial Class Form1
     Friend WithEvents DgvMeal As DataGridView
     Friend WithEvents DgvSGs As DataGridView
     Friend WithEvents DgvSummary As DataGridView
+    Friend WithEvents DgvTherapyAlgorithmState As DataGridView
+    Friend WithEvents DgvBannerState As DataGridView
+    Friend WithEvents DgvLastAlarm As DataGridView
+    Friend WithEvents DgvLastSensorGlucose As DataGridView
     Friend WithEvents FullNameLabel As Label
     Friend WithEvents HighTirComplianceLabel As Label
     Friend WithEvents ImageList1 As ImageList
@@ -3027,7 +3099,7 @@ Partial Class Form1
     Friend WithEvents TableLayoutPanelSgs As TableLayoutPanel
     Friend WithEvents TableLayoutPanelSgsTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelTherapyAlgorithm As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelTherapyAlgorithmTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelTherapyAlgorithmStateTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelTimeChange As TableLayoutPanel
     Friend WithEvents TableLayoutPanelTimeChangeTop As TableLayoutPanelTopEx
     Friend WithEvents TabPage01HomePage As TabPage
@@ -3039,7 +3111,7 @@ Partial Class Form1
     Friend WithEvents TabPage07ActiveInsulin As TabPage
     Friend WithEvents TabPage08SensorGlucose As TabPage
     Friend WithEvents TabPage09Limits As TabPage
-    Friend WithEvents TabPage10TherapyAlgorithm As TabPage
+    Friend WithEvents TabPage10TherapyAlgorithmState As TabPage
     Friend WithEvents TabPage11BannerState As TabPage
     Friend WithEvents TabPage12Basal As TabPage
     Friend WithEvents TabPage13NotificationActive As TabPage

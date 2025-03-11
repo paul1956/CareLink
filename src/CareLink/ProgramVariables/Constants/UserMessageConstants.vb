@@ -77,7 +77,7 @@ Friend Module UserMessageConstants
     {"104", "Replace Pump Battery Soon"},
     {"105", "Reservoir Low(triggeredDateTime). (unitsRemaining) units remaining. Change reservoir."},
     {"107", "Missed Meal Bolus Reminder"}, _ ' From Java
-    {"109", "Set change reminder(triggeredDateTime). (lastSetChange) days since last set change. Time to change reservoir and infusion set."},
+    {"109", "Set change reminder(triggeredDateTime). (lastSetChange) days since last set change. Time to change the infusion set."},
     {"110", "Silenced Sensor Alert. Check Alarm History"},
     {"113", "Reservoir empty reminder, change reservoir."},
     {"117", "Active Insulin Cleared"},

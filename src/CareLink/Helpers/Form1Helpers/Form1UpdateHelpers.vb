@@ -124,7 +124,7 @@ Friend Module Form1UpdateHelpers
             item.OaDateTime(s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime)
             s_listOfManualBasal.Add(item)
         End If
-        Form1.MaxBasalPerHourLabel.Text = If(RecentData.TryGetValue("markers", markerRowString),
+        My.Forms.Form1.MaxBasalPerHourLabel.Text = If(RecentData.TryGetValue("markers", markerRowString),
                                              CollectMarkers(),
                                              ""
                                             )
@@ -231,7 +231,7 @@ Friend Module Form1UpdateHelpers
 
                 Case NameOf(ServerDataIndexes.timeToNextCalibrationMinutes)
                     s_timeToNextCalibrationMinutes = Short.Parse(row.Value)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(ServerDataIndexes.timeToNextCalibrationMinutes, NameOf(s_timeToNextCalibrationMinutes), "No data from pump"))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(ServerDataIndexes.timeToNextCalibrationMinutes, row, "No data from pump"))
 
                 Case NameOf(ServerDataIndexes.timeToNextCalibrationRecommendedMinutes)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
@@ -408,15 +408,15 @@ Friend Module Form1UpdateHelpers
         With Form1
             .TableLayoutPanelAutoBasalDelivery.DisplayDataTableInDGV(
                 dGV:= .DgvAutoBasalDelivery,
-                table:=ClassCollectionToDataTable(classCollection:=s_listOfAutoBasalDeliveryMarkers),
+                table:=ClassCollectionToDataTable(listOfClass:=s_listOfAutoBasalDeliveryMarkers),
                 rowIndex:=ServerDataIndexes.markers)
             .TableLayoutPanelAutoModeStatus.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(classCollection:=s_listOfAutoModeStatusMarkers),
+                table:=ClassCollectionToDataTable(listOfClass:=s_listOfAutoModeStatusMarkers),
                 className:=NameOf(AutoModeStatus),
                 attachHandlers:=AddressOf AutoModeStatusHelpers.AttachHandlers,
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
-            Dim table As DataTable = ClassCollectionToDataTable(classCollection:=s_listOfBgReadingMarkers)
+            Dim table As DataTable = ClassCollectionToDataTable(listOfClass:=s_listOfBgReadingMarkers)
             .TableLayoutPanelBgReadings.DisplayDataTableInDGV(
                 table,
                 className:=NameOf(BgReading),
@@ -424,31 +424,31 @@ Friend Module Form1UpdateHelpers
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
             .TableLayoutPanelInsulin.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(classCollection:=s_listOfInsulinMarkers),
+                table:=ClassCollectionToDataTable(listOfClass:=s_listOfInsulinMarkers),
                 className:=NameOf(Insulin),
                 attachHandlers:=AddressOf InsulinHelpers.AttachHandlers,
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
             .TableLayoutPanelMeal.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(classCollection:=s_listOfMealMarkers),
+                table:=ClassCollectionToDataTable(listOfClass:=s_listOfMealMarkers),
                 className:=NameOf(Meal),
                 attachHandlers:=AddressOf MealHelpers.AttachHandlers,
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
             .TableLayoutPanelCalibration.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(classCollection:=s_listOfCalibrationMarkers),
+                table:=ClassCollectionToDataTable(listOfClass:=s_listOfCalibrationMarkers),
                 className:=NameOf(Calibration),
                 attachHandlers:=AddressOf CalibrationHelpers.AttachHandlers,
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
             .TableLayoutPanelLowGlucoseSuspended.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(classCollection:=s_listOfLowGlucoseSuspendedMarkers),
+                table:=ClassCollectionToDataTable(listOfClass:=s_listOfLowGlucoseSuspendedMarkers),
                 className:=NameOf(LowGlucoseSuspended),
                 attachHandlers:=AddressOf LowGlucoseSuspendedHelpers.AttachHandlers,
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
             .TableLayoutPanelTimeChange.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(classCollection:=s_listOfTimeChangeMarkers),
+                table:=ClassCollectionToDataTable(listOfClass:=s_listOfTimeChangeMarkers),
                 className:=NameOf(TimeChange),
                 attachHandlers:=AddressOf TimeChangeHelpers.AttachHandlers,
                 rowIndex:=ServerDataIndexes.markers,
@@ -529,7 +529,7 @@ Friend Module Form1UpdateHelpers
             End If
         End If
         Form1.TableLayoutPanelBannerState.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(classCollection:=listOfPumpBannerState),
+            table:=ClassCollectionToDataTable(listOfClass:=listOfPumpBannerState),
             className:=NameOf(BannerState),
             attachHandlers:=AddressOf BannerStateHelpers.AttachHandlers,
             rowIndex:=ServerDataIndexes.pumpBannerState,

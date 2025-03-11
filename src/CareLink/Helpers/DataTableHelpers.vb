@@ -8,12 +8,12 @@ Imports System.Reflection
 Imports System.Runtime.CompilerServices
 
 ''' <summary>
-''' DataTable/Class Mapping Class
+'''  DataTable/Class Mapping Class
 ''' </summary>
 Friend Module DataTableHelpers
 
     ''' <summary>
-    ''' Adds a DataRow to a DataTable from the public properties of a class.
+    '''  Adds a DataRow to a DataTable from the public properties of a class.
     ''' </summary>
     ''' <param propertyName="Table">A reference to the DataTable to insert the DataRow into.</param>
     ''' <param propertyName="ClassObject">The class containing the data to fill the DataRow from.</param>
@@ -90,16 +90,16 @@ Friend Module DataTableHelpers
     ''' Creates a DataTable from a class type's public properties and adds a new DataRow to the table for each class passed as a parameter.
     ''' The DataColumns of the table will match the name and type of the public properties.
     ''' </summary>
-    ''' <param name="ClassCollection">A class or array of class to fill the DataTable with.</param>
+    ''' <param name="listOfClass">A List(Of class) to fill the DataTable with.</param>
     ''' <returns>A DataTable who's DataColumns match the name and type of each class T's public properties.</returns>
-    Public Function ClassCollectionToDataTable(Of T As Class)(classCollection As List(Of T)) As DataTable
+    Public Function ClassCollectionToDataTable(Of T As Class)(listOfClass As List(Of T)) As DataTable
         Dim result As DataTable = ClassToDataTable(Of T)()
 
         If Not IsValidDataTable(result, IgnoreRows:=True) Then
             Return New DataTable()
         End If
-        If classCollection?.Count > 0 Then
-            For Each classObject As T In classCollection
+        If listOfClass?.Count > 0 Then
+            For Each classObject As T In listOfClass
                 result.Add(classObject)
             Next classObject
         End If
@@ -118,7 +118,8 @@ Friend Module DataTableHelpers
         If alignmentTable.Count = 0 Then
             For Each [property] As PropertyInfo In classType.GetProperties()
                 cellStyle = New DataGridViewCellStyle
-                Select Case [property].GetCustomAttributes(GetType(ColumnAttribute), True).Cast(Of ColumnAttribute)().SingleOrDefault().TypeName
+                Dim typeName As String = [property].GetCustomAttributes(GetType(ColumnAttribute), True).Cast(Of ColumnAttribute)().SingleOrDefault().TypeName
+                Select Case typeName
                     Case "Date", "DateTime", NameOf(OADate), NameOf([String]), NameOf(SummaryRecord.RecordNumber)
                         cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
                     Case NameOf([Decimal]), NameOf([Double]), NameOf([Int32]), NameOf([Single]), NameOf([TimeSpan])
@@ -141,7 +142,7 @@ Friend Module DataTableHelpers
     End Function
 
     ''' <summary>
-    ''' Indicates whether a specified DataTable is null, has zero columns, or (optionally) zero rows.
+    '''  Indicates whether a specified DataTable is null, has zero columns, or (optionally) zero rows.
     ''' </summary>
     ''' <param name="Table">DataTable to check.</param>
     ''' <param name="IgnoreRows">When set to true, the function will return true even if the table's row count is equal to zero.</param>

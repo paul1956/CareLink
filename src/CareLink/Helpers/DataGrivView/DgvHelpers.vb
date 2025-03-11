@@ -4,7 +4,7 @@
 
 Imports System.Runtime.CompilerServices
 
-Friend Module CellFormattingHelpers
+Friend Module DgvHelpers
 
     <Extension>
     Private Function InvertColor(myColor As Color) As Color
@@ -39,14 +39,14 @@ Friend Module CellFormattingHelpers
         With e.CellStyle
             If IsDarkMode() Then
                 If IsDarkRow(e.RowIndex, sorted) Then
-                    .ForeColor = highlightColor.InvertColor
+                    .ForeColor = highlightColor
 
                     If isUri Then
                         .SelectionForeColor = Color.Purple
                         .SelectionBackColor = Color.Purple.GetContrastingColor()
                     End If
                 Else
-                    .ForeColor = highlightColor
+                    .ForeColor = highlightColor.InvertColor
                     If isUri Then
                         .SelectionBackColor = Color.Purple
                         .SelectionForeColor = Color.Purple.GetContrastingColor()
@@ -171,5 +171,18 @@ Friend Module CellFormattingHelpers
         End If
         e.FormattingApplied = True
     End Sub
+
+    <Extension>
+    Friend Function ColumnAdded(dgv As DataGridView, e As DataGridViewColumnEventArgs) As DataGridViewColumnEventArgs
+        With e.Column
+            e.DgvColumnAdded(
+                cellStyle:=SummaryHelpers.GetCellStyle(.Name),
+                wrapHeader:=False,
+                forceReadOnly:=True,
+                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+        End With
+        Return e
+    End Function
 
 End Module
