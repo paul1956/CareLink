@@ -38,6 +38,10 @@ Friend Module SummaryHelpers
             .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
     End Sub
+    Private Sub DataGridView_VisibleChanged(sender As Object, e As EventArgs)
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        dgv.ClearSelection()
+    End Sub
 
     ''' <summary>
     '''  Extracts a dictionary(of String, List(of String) from the input:
@@ -339,19 +343,11 @@ Friend Module SummaryHelpers
         RemoveHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithoutExcel
         RemoveHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
         RemoveHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
+        RemoveHandler dgv.VisibleChanged, AddressOf DataGridView_VisibleChanged
         AddHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithoutExcel
         AddHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
+        AddHandler dgv.VisibleChanged, AddressOf DataGridView_VisibleChanged
     End Sub
-
-    Public Function CreateDictionarySortedByValue(myDictionary As Dictionary(Of String, String)) As String
-        Dim strBuilder As New StringBuilder
-        strBuilder.AppendLine("Dim sortedDict As New Dictionary(Of String, String) With {")
-        For Each kvp As KeyValuePair(Of String, String) In myDictionary.OrderBy(Function(x) x.Value)
-            strBuilder.AppendLine($"    {{String.Empty{kvp.Key}String.Empty, String.Empty{kvp.Value}String.Empty}},")
-        Next
-        strBuilder.AppendLine("}")
-        Return strBuilder.ToString
-    End Function
 
 End Module

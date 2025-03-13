@@ -18,8 +18,6 @@ Public Module DataGridViewExtensions
             .ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
                 .Alignment = DataGridViewContentAlignment.MiddleCenter,
                 .Font = New Font("Segoe UI", 9.0!, FontStyle.Regular, GraphicsUnit.Point),
-                .SelectionBackColor = SystemColors.Highlight,
-                .SelectionForeColor = SystemColors.HighlightText,
                 .WrapMode = DataGridViewTriState.True}
             .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
             .Location = New Point(0, 0)

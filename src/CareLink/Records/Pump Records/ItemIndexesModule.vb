@@ -13,6 +13,9 @@ Friend Module ItemIndexesModule
         If key.Contains("Notification") Then
             Return ServerDataIndexes.notificationHistory
         End If
+        If key.Contains(":"c) Then
+            key = key.Split(":")(0)
+        End If
 
         If [Enum].TryParse(GetType(ServerDataIndexes), key, result) Then
             Return CType(result, ServerDataIndexes)

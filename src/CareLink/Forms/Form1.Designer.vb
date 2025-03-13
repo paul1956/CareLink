@@ -2278,11 +2278,11 @@ Partial Class Form1
         ' 
         TableLayoutPanelNotificationActive.AutoScroll = True
         TableLayoutPanelNotificationActive.AutoSize = True
-        TableLayoutPanelNotificationActive.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelNotificationActive.AutoSizeMode = AutoSizeMode.GrowOnly
         TableLayoutPanelNotificationActive.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelNotificationActive.ColumnCount = 1
         TableLayoutPanelNotificationActive.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelNotificationActive.Controls.Add(TableLayoutPanelNotificationActiveTop, 1, 0)
+        TableLayoutPanelNotificationActive.Controls.Add(TableLayoutPanelNotificationActiveTop, 0, 0)
         TableLayoutPanelNotificationActive.Dock = DockStyle.Fill
         TableLayoutPanelNotificationActive.Location = New Point(3, 3)
         TableLayoutPanelNotificationActive.Name = "TableLayoutPanelNotificationActive"
@@ -2324,15 +2324,15 @@ Partial Class Form1
         ' 
         TableLayoutPanelNotificationsCleared.AutoScroll = True
         TableLayoutPanelNotificationsCleared.AutoSize = True
-        TableLayoutPanelNotificationsCleared.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelNotificationsCleared.AutoSizeMode = AutoSizeMode.GrowOnly
         TableLayoutPanelNotificationsCleared.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelNotificationsCleared.ColumnCount = 1
         TableLayoutPanelNotificationsCleared.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelNotificationsCleared.Controls.Add(TableLayoutPanelNotificationsClearedTop, 1, 0)
+        TableLayoutPanelNotificationsCleared.Controls.Add(TableLayoutPanelNotificationsClearedTop, 0, 0)
         TableLayoutPanelNotificationsCleared.Dock = DockStyle.Fill
         TableLayoutPanelNotificationsCleared.Location = New Point(3, 3)
         TableLayoutPanelNotificationsCleared.Name = "TableLayoutPanelNotificationsCleared"
-        TableLayoutPanelNotificationsCleared.RowCount = 2
+        TableLayoutPanelNotificationsCleared.RowCount = 1
         TableLayoutPanelNotificationsCleared.RowStyles.Add(New RowStyle())
         TableLayoutPanelNotificationsCleared.Size = New Size(1370, 655)
         TableLayoutPanelNotificationsCleared.TabIndex = 0
@@ -2340,7 +2340,7 @@ Partial Class Form1
         ' TableLayoutPanelNotificationsClearedTop
         ' 
         TableLayoutPanelNotificationsClearedTop.AutoSize = True
-        TableLayoutPanelNotificationsClearedTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelNotificationsClearedTop.AutoSizeMode = AutoSizeMode.GrowOnly
         TableLayoutPanelNotificationsClearedTop.ButtonText = "Return To 'Summary Data' Tab"
         TableLayoutPanelNotificationsClearedTop.ColumnCount = 2
         TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())

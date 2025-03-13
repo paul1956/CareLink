@@ -725,13 +725,17 @@ Public Class Form1
 
 #Region "Dgv Current User Events"
 
+    Private Sub DgvCurrentUser_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvCurrentUser.CellFormatting
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        dgv.CellFormattingSetForegroundColor(e, sorted:=False)
+    End Sub
+
     Private Sub DgvCurrentUser_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCurrentUser.ColumnAdded
         e.DgvColumnAdded(
             cellStyle:=New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1)),
             wrapHeader:=False,
             forceReadOnly:=True,
             caption:=Nothing)
-
     End Sub
 
     Private Sub DgvCurrentUser_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvCurrentUser.DataError
@@ -758,6 +762,16 @@ Public Class Form1
             Case NameOf(Meal.Timestamp)
                 dgv.CellFormattingDateTime(e, sorted:=False)
         End Select
+    End Sub
+
+    Private Sub DgvMeal_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvMeal.ColumnAdded
+        e.DgvColumnAdded(
+            cellStyle:=New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1)),
+            wrapHeader:=False,
+            forceReadOnly:=True,
+            caption:=Nothing)
+        e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
+
     End Sub
 
     Private Sub DgvMeal_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvMeal.DataError
@@ -869,40 +883,42 @@ Public Class Form1
                  ServerDataIndexes.conduitBatteryStatus, ServerDataIndexes.lastConduitDateTime,
                  ServerDataIndexes.medicalDeviceFamily, ServerDataIndexes.medicalDeviceInformation,
                  ServerDataIndexes.medicalDeviceTime, ServerDataIndexes.lastMedicalDeviceDataUpdateServerTime,
-                 ServerDataIndexes.calibStatus, ServerDataIndexes.calibrationIconId,
-                 ServerDataIndexes.systemStatusMessage, ServerDataIndexes.sensorState,
-                 ServerDataIndexes.timeFormat, ServerDataIndexes.bgUnits,
-                 ServerDataIndexes.lastSensorTime, ServerDataIndexes.lastSGTrend,
-                 ServerDataIndexes.sensorLifeText, ServerDataIndexes.sensorLifeIcon
+                 ServerDataIndexes.cgmInfo, ServerDataIndexes.calibStatus,
+                 ServerDataIndexes.calibrationIconId, ServerDataIndexes.systemStatusMessage,
+                 ServerDataIndexes.sensorState, ServerDataIndexes.timeFormat,
+                 ServerDataIndexes.bgUnits, ServerDataIndexes.lastSensorTime,
+                 ServerDataIndexes.lastSGTrend, ServerDataIndexes.sensorLifeText,
+                 ServerDataIndexes.sensorLifeIcon
                 e.CellStyle = e.CellStyle.SetCellStyle(
                     alignment:=DataGridViewContentAlignment.MiddleLeft,
                     padding:=New Padding(1))
 
             Case ServerDataIndexes.calFreeSensor, ServerDataIndexes.finalCalibration,
+                 ServerDataIndexes.pumpBannerState, ServerDataIndexes.therapyAlgorithmState,
                  ServerDataIndexes.pumpSuspended, ServerDataIndexes.conduitInRange,
                  ServerDataIndexes.conduitMedicalDeviceInRange, ServerDataIndexes.conduitSensorInRange,
-                 ServerDataIndexes.gstCommunicationState, ServerDataIndexes.pumpCommunicationState
+                 ServerDataIndexes.gstCommunicationState, ServerDataIndexes.pumpCommunicationState,
+                 ServerDataIndexes.lastAlarm, ServerDataIndexes.activeInsulin,
+                 ServerDataIndexes.basal, ServerDataIndexes.limits,
+                 ServerDataIndexes.markers, ServerDataIndexes.sgs,
+                 ServerDataIndexes.notificationHistory
                 e.CellStyle = e.CellStyle.SetCellStyle(
                     alignment:=DataGridViewContentAlignment.MiddleCenter,
                     padding:=New Padding(all:=1))
 
             Case ServerDataIndexes.conduitBatteryLevel, ServerDataIndexes.lastConduitUpdateServerDateTime,
-                 ServerDataIndexes.cgmInfo, ServerDataIndexes.timeToNextEarlyCalibrationMinutes,
+                 ServerDataIndexes.timeToNextEarlyCalibrationMinutes,
                  ServerDataIndexes.timeToNextCalibrationMinutes, ServerDataIndexes.timeToNextCalibrationRecommendedMinutes,
                  ServerDataIndexes.timeToNextCalibHours, ServerDataIndexes.sensorDurationMinutes,
                  ServerDataIndexes.sensorDurationHours, ServerDataIndexes.systemStatusTimeRemaining,
-                 ServerDataIndexes.gstBatteryLevel, ServerDataIndexes.pumpBannerState,
-                 ServerDataIndexes.therapyAlgorithmState, ServerDataIndexes.reservoirLevelPercent,
+                 ServerDataIndexes.gstBatteryLevel, ServerDataIndexes.reservoirLevelPercent,
                  ServerDataIndexes.reservoirAmount, ServerDataIndexes.pumpBatteryLevelPercent,
                  ServerDataIndexes.reservoirRemainingUnits,
                  ServerDataIndexes.maxAutoBasalRate, ServerDataIndexes.maxBolusAmount,
                  ServerDataIndexes.sgBelowLimit, ServerDataIndexes.approvedForTreatment,
-                 ServerDataIndexes.lastAlarm, ServerDataIndexes.activeInsulin,
-                 ServerDataIndexes.basal,
-                 ServerDataIndexes.limits, ServerDataIndexes.belowHypoLimit,
-                 ServerDataIndexes.aboveHyperLimit, ServerDataIndexes.timeInRange,
-                 ServerDataIndexes.averageSGFloat, ServerDataIndexes.averageSG,
-                 ServerDataIndexes.markers, ServerDataIndexes.sgs, ServerDataIndexes.notificationHistory
+                 ServerDataIndexes.belowHypoLimit, ServerDataIndexes.aboveHyperLimit,
+                 ServerDataIndexes.timeInRange, ServerDataIndexes.averageSGFloat,
+                 ServerDataIndexes.averageSG
                 e.CellStyle = e.CellStyle.SetCellStyle(
                     alignment:=DataGridViewContentAlignment.MiddleRight,
                     padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
@@ -920,16 +936,12 @@ Public Class Form1
                 End If
 
             Case ServerDataIndexes.lastSG
-                If e.Value.ToString = "NAN" Then
-                    e.CellStyle = e.CellStyle.SetCellStyle(
-                    alignment:=DataGridViewContentAlignment.MiddleLeft,
-                    padding:=New Padding(all:=1))
+                If Not String.Equals(e.Value.ToString, "NAN", StringComparison.CurrentCultureIgnoreCase) Then
                     e.Value = "---"
-                Else
-                    e.CellStyle = e.CellStyle.SetCellStyle(
-                    alignment:=DataGridViewContentAlignment.MiddleRight,
-                    padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
                 End If
+                e.CellStyle = e.CellStyle.SetCellStyle(
+                    alignment:=DataGridViewContentAlignment.MiddleCenter,
+                    padding:=New Padding(all:=1))
             Case Else
                 Stop
         End Select

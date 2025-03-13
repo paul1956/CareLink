@@ -71,11 +71,12 @@ Friend Module Form1UpdateHelpers
     Friend Sub HandleComplexItems(row As KeyValuePair(Of String, String), rowIndex As ServerDataIndexes, key As String, listOfSummaryRecords As List(Of SummaryRecord))
         Dim valueList As String() = GetValueList(row.Value)
         For Each e As IndexClass(Of String) In valueList.WithIndex
+            Dim strings As String() = e.Value.Split(" = ")
             Dim item As New SummaryRecord(
                 recordNumber:=CSng(CSng(rowIndex) + ((e.Index + 1) / 10)),
-                key,
-                value:=e.Value.Split(" = ")(0).Trim,
-                message:=e.Value.Split(" = ")(1).Trim)
+                $"{key}:{strings(0).Trim}",
+                value:=strings(1).Trim,
+                message:="")
             listOfSummaryRecords.Add(item)
             If item.Value = "hardwareRevision" Then
                 s_pumpHardwareRevision = item.Message
@@ -410,12 +411,14 @@ Friend Module Form1UpdateHelpers
                 dGV:= .DgvAutoBasalDelivery,
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfAutoBasalDeliveryMarkers),
                 rowIndex:=ServerDataIndexes.markers)
+
             .TableLayoutPanelAutoModeStatus.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfAutoModeStatusMarkers),
                 className:=NameOf(AutoModeStatus),
                 attachHandlers:=AddressOf AutoModeStatusHelpers.AttachHandlers,
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
+
             Dim table As DataTable = ClassCollectionToDataTable(listOfClass:=s_listOfBgReadingMarkers)
             .TableLayoutPanelBgReadings.DisplayDataTableInDGV(
                 table,

@@ -234,7 +234,6 @@ Friend Module Form1LoginHelpers
     ''' <param name="sourceLineNumber"></param>
     ''' <returns>State of Timer before function was called</returns>
     Friend Function StartOrStopServerUpdateTimer(Start As Boolean, Optional interval As Integer = -1) As Boolean
-        If Debugger.IsAttached Then Return False
         If Start Then
             If interval > -1 Then
                 Form1.ServerUpdateTimer.Interval = interval
