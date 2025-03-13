@@ -19,7 +19,7 @@ Friend Module BasalHelpers
             End If
             e.FormattingApplied = True
         Else
-            dgv.CellFormattingSetForegroundColor(e, sorted:=False)
+            dgv.CellFormattingSetForegroundColor(e)
         End If
     End Sub
 

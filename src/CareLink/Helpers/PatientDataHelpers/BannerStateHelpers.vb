@@ -12,7 +12,7 @@ Friend Module BannerStateHelpers
             Case NameOf(BannerState.timeRemaining)
                 CellFormatting0Value(e)
             Case Else
-                dgv.CellFormattingSetForegroundColor(e, False)
+                dgv.CellFormattingSetForegroundColor(e)
         End Select
     End Sub
 

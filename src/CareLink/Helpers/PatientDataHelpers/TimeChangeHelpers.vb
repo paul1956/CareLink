@@ -12,9 +12,9 @@ Friend Module TimeChangeHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(TimeChange.timestamp)
-                dgv.CellFormattingDateTime(e, sorted:=False)
+                dgv.CellFormattingDateTime(e)
             Case Else
-                dgv.CellFormattingSetForegroundColor(e, sorted:=False)
+                dgv.CellFormattingSetForegroundColor(e)
         End Select
 
     End Sub

@@ -10,12 +10,12 @@ Friend Module Form1SummaryTabHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If dgv.Columns(e.ColumnIndex).Name = NameOf(SummaryRecord.RecordNumber) Then
             If IsSingleEqualToInteger(Single.Parse(e.Value.ToString), CInt(e.Value)) Then
-                dgv.CellFormattingSingleValue(e, 0, sorted:=False)
+                dgv.CellFormattingSingleValue(e, 0)
             Else
-                dgv.CellFormattingSingleValue(e, 1, sorted:=False)
+                dgv.CellFormattingSingleValue(e, 1)
             End If
         End If
-        dgv.CellFormattingSetForegroundColor(e, sorted:=False)
+        dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
     <Extension>

@@ -13,31 +13,31 @@ Friend Module InsulinHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(Insulin.timestamp)
-                dgv.CellFormattingDateTime(e, sorted:=False)
+                dgv.CellFormattingDateTime(e)
             Case NameOf(Insulin.safeMealReduction)
-                If dgv.CellFormattingSingleValue(e, digits:=3, sorted:=False) >= 0.0025 Then
-                    CellFormattingApplyColor(e, highlightColor:=Color.OrangeRed, isUri:=False, sorted:=False)
+                If dgv.CellFormattingSingleValue(e, digits:=3) >= 0.0025 Then
+                    CellFormattingApplyColor(e, highlightColor:=Color.OrangeRed, isUri:=False)
                 Else
-                    dgv.CellFormattingSetForegroundColor(e, sorted:=False)
+                    dgv.CellFormattingSetForegroundColor(e)
                 End If
             Case NameOf(Insulin.ActivationType)
                 Dim value As String = e.Value.ToString
                 Select Case value
                     Case "AUTOCORRECTION"
                         e.Value = "Auto Correction"
-                        CellFormattingApplyColor(e, GetGraphLineColor("Auto Correction"), isUri:=False, sorted:=False)
+                        CellFormattingApplyColor(e, GetGraphLineColor("Auto Correction"), isUri:=False)
                     Case "FAST", "RECOMMENDED", "UNDETERMINED"
-                        dgv.CellFormattingToTitle(e, sorted:=False)
+                        dgv.CellFormattingToTitle(e)
                     Case Else
-                        dgv.CellFormattingSetForegroundColor(e, sorted:=False)
+                        dgv.CellFormattingSetForegroundColor(e)
                 End Select
-            Case NameOf(Insulin.bolusType)
-                dgv.CellFormattingToTitle(e, sorted:=False)
+            Case NameOf(Insulin.BolusType)
+                dgv.CellFormattingToTitle(e)
             Case Else
                 If dgv.Columns(e.ColumnIndex).ValueType = GetType(Single) Then
-                    dgv.CellFormattingSingleValue(e, 3, sorted:=False)
+                    dgv.CellFormattingSingleValue(e, 3)
                 Else
-                    dgv.CellFormattingSetForegroundColor(e, sorted:=False)
+                    dgv.CellFormattingSetForegroundColor(e)
                 End If
         End Select
     End Sub

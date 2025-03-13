@@ -13,11 +13,11 @@ Friend Module MealHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case CType(sender, DataGridView).Columns(e.ColumnIndex).Name
             Case NameOf(Meal.timestamp)
-                dgv.CellFormattingDateTime(e, sorted:=False)
+                dgv.CellFormattingDateTime(e)
             Case NameOf(Meal.amount)
-                dgv.CellFormattingInteger(e, GetCarbDefaultUnit, sorted:=False)
+                dgv.CellFormattingInteger(e, GetCarbDefaultUnit)
             Case Else
-                dgv.CellFormattingSetForegroundColor(e, sorted:=False)
+                dgv.CellFormattingSetForegroundColor(e)
         End Select
 
     End Sub

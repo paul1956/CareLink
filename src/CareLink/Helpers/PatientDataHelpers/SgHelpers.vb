@@ -42,15 +42,15 @@ Friend Module SgHelpers
             Case NameOf(SG.sensorState)
                 ' Set the background to red for negative values in the Balance column.
                 If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
-                    CellFormattingApplyColor(e, Color.Red, isUri:=False, sorted:=True)
+                    CellFormattingApplyColor(e, Color.Red, isUri:=False)
                 End If
-                dgv.CellFormattingToTitle(e, sorted:=True)
+                dgv.CellFormattingToTitle(e)
             Case NameOf(SG.Timestamp)
-                dgv.CellFormattingDateTime(e, sorted:=True)
+                dgv.CellFormattingDateTime(e)
             Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
-                dgv.CellFormattingSgValue(e, NameOf(SG.sg), sorted:=True)
+                dgv.CellFormattingSgValue(e, NameOf(SG.sg))
             Case Else
-                dgv.CellFormattingSetForegroundColor(e, sorted:=True)
+                dgv.CellFormattingSetForegroundColor(e)
         End Select
 
     End Sub

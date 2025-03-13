@@ -510,16 +510,16 @@ Public Class Form1
         ' Set the background to red for negative values in the Balance column.
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(AutoBasalDelivery.bolusAmount)
-                dgv.CellFormattingSingleValue(e, 3, sorted:=False)
-                If dgv.CellFormattingSingleValue(e, 3, sorted:=False).IsMinBasal Then
-                    CellFormattingApplyColor(e, Color.DarkRed, isUri:=False, sorted:=False)
+                dgv.CellFormattingSingleValue(e, 3)
+                If dgv.CellFormattingSingleValue(e, 3).IsMinBasal Then
+                    CellFormattingApplyColor(e, Color.DarkRed, isUri:=False)
                 Else
-                    dgv.CellFormattingSetForegroundColor(e, sorted:=False)
+                    dgv.CellFormattingSetForegroundColor(e)
                 End If
             Case NameOf(AutoBasalDelivery.DisplayTime), NameOf(AutoBasalDelivery.Timestamp)
-                dgv.CellFormattingDateTime(e, sorted:=False)
+                dgv.CellFormattingDateTime(e)
             Case Else
-                dgv.CellFormattingSetForegroundColor(e, sorted:=False)
+                dgv.CellFormattingSetForegroundColor(e)
         End Select
     End Sub
 
@@ -584,7 +584,7 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
         If col IsNot Nothing Then
-            dgv.CellFormattingSetForegroundColor(e, sorted:=False)
+            dgv.CellFormattingSetForegroundColor(e)
         End If
     End Sub
 
@@ -727,7 +727,7 @@ Public Class Form1
 
     Private Sub DgvCurrentUser_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvCurrentUser.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.CellFormattingSetForegroundColor(e, sorted:=False)
+        dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
     Private Sub DgvCurrentUser_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCurrentUser.ColumnAdded
@@ -758,9 +758,9 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(Meal.amount)
-                dgv.CellFormattingInteger(e, GetCarbDefaultUnit, sorted:=False)
+                dgv.CellFormattingInteger(e, GetCarbDefaultUnit)
             Case NameOf(Meal.Timestamp)
-                dgv.CellFormattingDateTime(e, sorted:=False)
+                dgv.CellFormattingDateTime(e)
         End Select
     End Sub
 
@@ -792,15 +792,15 @@ Public Class Form1
             Case NameOf(SG.sensorState)
                 ' Set the background to red for negative values in the Balance column.
                 If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
-                    CellFormattingApplyColor(e, Color.Red, isUri:=False, sorted:=True)
+                    CellFormattingApplyColor(e, Color.Red, isUri:=False)
                 End If
-                dgv.CellFormattingToTitle(e, sorted:=False)
+                dgv.CellFormattingToTitle(e)
             Case NameOf(SG.Timestamp)
-                dgv.CellFormattingDateTime(e, sorted:=False)
+                dgv.CellFormattingDateTime(e)
             Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
-                dgv.CellFormattingSgValue(e, NameOf(SG.sg), sorted:=True)
+                dgv.CellFormattingSgValue(e, NameOf(SG.sg))
             Case Else
-                dgv.CellFormattingSetForegroundColor(e, sorted:=True)
+                dgv.CellFormattingSetForegroundColor(e)
         End Select
     End Sub
 
@@ -1002,7 +1002,7 @@ Public Class Form1
 
     Private Sub DgvSummary_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSummary.ColumnAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        e = ColumnAdded(dgv, e)
+        ColumnAdded(dgv, e)
     End Sub
 
     Private Sub DgvSummary_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvSummary.DataError
@@ -1015,7 +1015,7 @@ Public Class Form1
 
     Private Sub DgvBannerState_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvBannerState.ColumnAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        e = ColumnAdded(dgv, e)
+        ColumnAdded(dgv, e)
     End Sub
 
     Private Sub DgvBannerState_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvBannerState.DataError
@@ -1028,7 +1028,7 @@ Public Class Form1
 
     Private Sub DgvLastAlarm_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLastAlarm.ColumnAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        e = ColumnAdded(dgv, e)
+        ColumnAdded(dgv, e)
     End Sub
 
     Private Sub DgvLastAlarm_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvLastAlarm.DataError
@@ -1041,7 +1041,7 @@ Public Class Form1
 
     Private Sub DgvLastSG_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLastSensorGlucose.ColumnAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        e = ColumnAdded(dgv, e)
+        ColumnAdded(dgv, e)
     End Sub
 
     Private Sub DgvLastSG_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvLastSensorGlucose.DataError
@@ -1054,7 +1054,7 @@ Public Class Form1
 
     Private Sub DgvTherapyAlgorithmState_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvTherapyAlgorithmState.ColumnAdded
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        e = ColumnAdded(dgv, e)
+        ColumnAdded(dgv, e)
     End Sub
 
     Private Sub DgvTherapyAlgorithmState_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvTherapyAlgorithmState.DataError

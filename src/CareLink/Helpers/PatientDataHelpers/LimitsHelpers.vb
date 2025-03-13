@@ -13,7 +13,7 @@ Friend Module LimitsHelpers
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.CellFormattingSetForegroundColor(e, sorted:=False)
+        dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)

@@ -16,13 +16,13 @@ Friend Module ActiveInsulinHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(ActiveInsulin.datetime)
-                dgv.CellFormattingDateTime(e, sorted:=False)
+                dgv.CellFormattingDateTime(e)
             Case NameOf(ActiveInsulin.amount)
-                dgv.CellFormattingSingleValue(e, digits:=3, sorted:=False)
+                dgv.CellFormattingSingleValue(e, digits:=3)
             Case NameOf(ActiveInsulin.Precision)
-                dgv.CellFormattingToTitle(e, sorted:=False)
+                dgv.CellFormattingToTitle(e)
             Case Else
-                dgv.CellFormattingSetForegroundColor(e, sorted:=False)
+                dgv.CellFormattingSetForegroundColor(e)
         End Select
     End Sub
 

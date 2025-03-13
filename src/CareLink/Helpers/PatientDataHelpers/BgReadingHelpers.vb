@@ -14,11 +14,11 @@ Friend Module BgReadingHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(BgReading.Timestamp)
-                dgv.CellFormattingDateTime(e, sorted:=True)
+                dgv.CellFormattingDateTime(e)
             Case NameOf(BgReading.UnitValue), NameOf(BgReading.UnitValueMmolL), NameOf(BgReading.UnitValueMgdL)
-                dgv.CellFormattingSgValue(e, NameOf(BgReading.UnitValue), sorted:=True)
+                dgv.CellFormattingSgValue(e, NameOf(BgReading.UnitValue))
             Case Else
-                dgv.CellFormattingSetForegroundColor(e, sorted:=True)
+                dgv.CellFormattingSetForegroundColor(e)
         End Select
     End Sub
 
