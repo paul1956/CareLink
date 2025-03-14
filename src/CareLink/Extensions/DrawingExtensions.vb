@@ -59,14 +59,14 @@ Friend Module DrawingExtensions
         Return targetImage
     End Function
 
-    Public Function CreateTextIcon(str As String, backColor As Color) As Icon
-        Dim fontToUse As New Font("Segoe UI", 10, FontStyle.Regular, GraphicsUnit.Pixel)
+    Public Function CreateTextIcon(s As String, backColor As Color) As Icon
+        Dim fontToUse As New Font(familyName:="Segoe UI", emSize:=10, style:=FontStyle.Regular, unit:=GraphicsUnit.Pixel)
         Dim brushToUse As Brush = New SolidBrush(backColor.GetContrastingColor())
         Dim bitmapText As New Bitmap(16, 16)
         Dim g As Graphics = Graphics.FromImage(bitmapText)
         g.Clear(backColor)
         g.TextRenderingHint = Text.TextRenderingHint.SingleBitPerPixelGridFit
-        g.DrawString(str, fontToUse, brushToUse, -2, 0)
+        g.DrawString(s, font:=fontToUse, brush:=brushToUse, x:=-2, y:=0)
         Return Icon.FromHandle(bitmapText.GetHicon())
     End Function
 

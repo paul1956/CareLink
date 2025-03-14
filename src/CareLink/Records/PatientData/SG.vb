@@ -35,7 +35,7 @@ Public Class SG
             If innerJson(NameOf(sg)) <> "0" OrElse innerJson.Count = 5 Then
                 _timestampAsString = innerJson(NameOf(Me.Timestamp))
                 Me.sensorState = innerJson(NameOf(sensorState))
-                Me.sg = innerJson(NameOf(sg)).ParseSingle(2)
+                Me.sg = innerJson(NameOf(sg)).ParseSingle(decimalDigits:=2)
                 Dim value As String = "False"
                 Me.timeChange = innerJson.TryGetValue(NameOf(timeChange), value) AndAlso Boolean.Parse(innerJson(NameOf(timeChange)))
             Else
@@ -157,7 +157,7 @@ Public Class SG
     End Property
 
     Public Overrides Function ToString() As String
-        Return If(NativeMmolL, Me.sg.ToString("F1", CurrentUICulture), Me.sg.ToString("F0"))
+        Return If(NativeMmolL, Me.sg.ToString("F1", Provider), Me.sg.ToString("F0"))
     End Function
 
 End Class

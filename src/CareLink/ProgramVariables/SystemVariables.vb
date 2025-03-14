@@ -42,8 +42,8 @@ Friend Module SystemVariables
 
     Friend Function GetSgFormat(withSign As Boolean) As String
         Return If(withSign,
-            If(NativeMmolL, $"+0{CurrentUICulture.NumberFormat.NumberDecimalSeparator}0;-#{CurrentUICulture.NumberFormat.NumberDecimalSeparator}0", "+0;-#"),
-            If(NativeMmolL, $"0{CurrentUICulture.NumberFormat.NumberDecimalSeparator}0", "0"))
+            If(NativeMmolL, $"+0{Provider.NumberFormat.NumberDecimalSeparator}0;-#{Provider.NumberFormat.NumberDecimalSeparator}0", "+0;-#"),
+            If(NativeMmolL, $"0{Provider.NumberFormat.NumberDecimalSeparator}0", "0"))
     End Function
 
     Friend Function GetSgTarget() As Single
@@ -63,11 +63,11 @@ Friend Module SystemVariables
     End Function
 
     Friend Function GetYMaxValue(asMmolL As Boolean) As Single
-        Return If(asMmolL, ParseSingle(22.2, 1), 400)
+        Return If(asMmolL, ParseSingle(22.2, decimalDigits:=1), 400)
     End Function
 
     Friend Function GetYMinValue(asMmolL As Boolean) As Single
-        Return If(asMmolL, ParseSingle(2.8, 1), 50)
+        Return If(asMmolL, ParseSingle(2.8, decimalDigits:=1), 50)
     End Function
 
     Friend Function TirHighLimit(asMmolL As Boolean) As Single
@@ -79,11 +79,11 @@ Friend Module SystemVariables
     End Function
 
     Friend Function TirLowLimit(asMmolL As Boolean) As Single
-        Return If(asMmolL, ParseSingle(3.9, 1), 70)
+        Return If(asMmolL, ParseSingle(3.9, decimalDigits:=1), 70)
     End Function
 
     Friend Function TirLowLimitAsString(asMmolL As Boolean) As String
-        Return If(asMmolL, "3.9", "70").Replace(".", CurrentUICulture.NumberFormat.NumberDecimalSeparator)
+        Return If(asMmolL, "3.9", "70").Replace(".", Provider.NumberFormat.NumberDecimalSeparator)
     End Function
 
 End Module

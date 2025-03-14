@@ -53,10 +53,10 @@ Public Class ExceptionHandlerDialog
     End Sub
 
     Private Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        StartOrStopServerUpdateTimer(False)
-        Dim fontBold As New Font(Me.InstructionsRichTextBox.Font, FontStyle.Bold)
+        StartOrStopServerUpdateTimer(Start:=False)
+        Dim fontBold As New Font(prototype:=Me.InstructionsRichTextBox.Font, newStyle:=FontStyle.Bold)
         Dim fontNormal As Font = Me.InstructionsRichTextBox.Font
-        _gitClient = New GitHubClient(New ProductHeaderValue($"CareLink.Issues"), New Uri(GitHubCareLinkUrl))
+        _gitClient = New GitHubClient(productInformation:=New ProductHeaderValue($"CareLink.Issues"), baseAddress:=New Uri(GitHubCareLinkUrl))
         If String.IsNullOrWhiteSpace(Me.ReportFileNameWithPath) Then
             ' Create error report and issue
             Me.ExceptionTextBox.Text = Me.UnhandledException.Exception.Message

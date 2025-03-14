@@ -202,7 +202,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Phone battery status is {row.Value}"))
 
                 Case NameOf(ServerDataIndexes.lastConduitDateTime)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, New KeyValuePair(Of String, String)(NameOf(ServerDataIndexes.lastConduitDateTime), row.Value.CDateOrDefault(NameOf(ServerDataIndexes.lastConduitDateTime), CurrentUICulture))))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, New KeyValuePair(Of String, String)(NameOf(ServerDataIndexes.lastConduitDateTime), row.Value.CDateOrDefault(NameOf(ServerDataIndexes.lastConduitDateTime), Provider))))
 
                 Case NameOf(ServerDataIndexes.lastConduitUpdateServerDateTime)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, row.Value.Epoch2DateTimeString))
@@ -212,7 +212,7 @@ Friend Module Form1UpdateHelpers
 
                 Case NameOf(ServerDataIndexes.medicalDeviceInformation)
                     HandleComplexItems(row, recordNumber, "medicalDeviceInformation", s_listOfSummaryRecords)
-                    s_pumpModelNumber = PatientData.MedicalDeviceInformation.ModelNumber
+                    s_modelNumber = PatientData.MedicalDeviceInformation.ModelNumber
                     Form1.SerialNumberButton.Text = $"{ PatientData.MedicalDeviceInformation.DeviceSerialNumber} Details..."
 
                 Case NameOf(ServerDataIndexes.medicalDeviceTime)
@@ -470,10 +470,10 @@ Friend Module Form1UpdateHelpers
         Dim listOfPumpBannerState As New List(Of BannerState)
         For Each dic As Dictionary(Of String, String) In s_pumpBannerStateValue
             Dim typeValue As String = ""
-            If dic.TryGetValue("type", typeValue) Then
+            If dic.TryGetValue(key:="type", value:=typeValue) Then
                 Dim bannerStateRecord1 As BannerState = DictionaryToClass(Of BannerState)(dic, listOfPumpBannerState.Count + 1)
                 listOfPumpBannerState.Add(bannerStateRecord1)
-                Form1.PumpBannerStateLabel.Font = New Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point)
+                Form1.PumpBannerStateLabel.Font = New Font(familyName:="Segoe UI", emSize:=8.25F, style:=FontStyle.Bold, unit:=GraphicsUnit.Point)
                 Select Case typeValue
                     Case "TEMP_TARGET"
                         Dim minutes As Integer = bannerStateRecord1.timeRemaining
@@ -509,22 +509,34 @@ Friend Module Form1UpdateHelpers
                         Form1.PumpBannerStateLabel.Text = "Suspended before low"
                         Form1.PumpBannerStateLabel.Visible = True
                         Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
-                        Form1.PumpBannerStateLabel.Font = New Font("Segoe UI", 7.0F, FontStyle.Bold, GraphicsUnit.Point)
+                        Form1.PumpBannerStateLabel.Font = New Font(
+                            familyName:="Segoe UI",
+                            emSize:=7.0F,
+                            style:=FontStyle.Bold,
+                            unit:=GraphicsUnit.Point)
                     Case "TEMP_BASAL"
                         Form1.PumpBannerStateLabel.BackColor = Color.IndianRed
                         Form1.PumpBannerStateLabel.ForeColor = Form1.PumpBannerStateLabel.BackColor.GetContrastingColor
                         Form1.PumpBannerStateLabel.Text = "Temp Basal"
                         Form1.PumpBannerStateLabel.Visible = True
                         Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
-                        Form1.PumpBannerStateLabel.Font = New Font("Segoe UI", 7.0F, FontStyle.Bold, GraphicsUnit.Point)
+                        Form1.PumpBannerStateLabel.Font = New Font(
+                            familyName:="Segoe UI",
+                            emSize:=7.0F,
+                            style:=FontStyle.Bold,
+                            unit:=GraphicsUnit.Point)
                     Case "WAIT_TO_ENTER_BG"
                         Stop
                     Case Else
                         If Debugger.IsAttached Then
-                            MsgBox($"{typeValue} Is unknown banner message!", "", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, GetTitleFromStack(New StackFrame(0, True)))
+                            MsgBox(
+                                heading:=$"{typeValue} Is unknown banner message!",
+                                text:="",
+                                buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                                title:=GetTitleFromStack(New StackFrame(skipFrames:=0, needFileInfo:=True)))
                         End If
                 End Select
-                Form1.PumpBannerStateLabel.ForeColor = GetContrastingColor(Form1.PumpBannerStateLabel.BackColor)
+                Form1.PumpBannerStateLabel.ForeColor = GetContrastingColor(baseColor:=Form1.PumpBannerStateLabel.BackColor)
             Else
                 Stop
             End If

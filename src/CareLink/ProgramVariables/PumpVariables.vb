@@ -32,7 +32,7 @@ Public Module PumpVariables
     Friend s_pumpHardwareRevision As String
     Friend s_pumpInRangeOfPhone As Boolean
     Friend s_pumpInRangeOfTransmitter As Boolean
-    Friend s_pumpModelNumber As String
+    Friend s_modelNumber As String
     Friend s_reservoirLevelPercent As Integer
     Friend s_sensorDurationHours As Integer
     Friend s_sensorState As String

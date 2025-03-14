@@ -65,13 +65,13 @@ Friend Module CreateChartItems
 
     Friend Function CreateChartArea(containingChart As Chart) As ChartArea
         Dim tmpChartArea As New ChartArea(NameOf(ChartArea)) With {
-            .BackColor = Color.FromArgb(90, 107, 87),
-            .BorderColor = Color.FromArgb(alpha:=64, Color.DimGray),
+            .BackColor = Color.FromArgb(red:=90, green:=107, blue:=87),
+            .BorderColor = Color.FromArgb(alpha:=64, baseColor:=Color.DimGray),
             .BorderDashStyle = ChartDashStyle.Solid,
             .ShadowColor = Color.Transparent}
         With tmpChartArea
             Dim baseColor As Color = containingChart.BackColor.GetContrastingColor()
-            Dim labelFont As New Font("Segoe UI", 12.0F, FontStyle.Bold)
+            Dim labelFont As New Font(familyName:="Segoe UI", emSize:=12.0F, style:=FontStyle.Bold)
 
             With .AxisX
                 .Interval = 2
@@ -157,20 +157,20 @@ Friend Module CreateChartItems
                         item:=New CustomLabel(
                             fromPosition:=firstAxis(index:=i) - yMin,
                             toPosition:=firstAxis(index:=i) + yMin,
-                            text:=$"{firstAxis(index:=i).ToString(format:=If(NativeMmolL, "F1", "F0"), provider:=CurrentUICulture).Replace(oldValue:=",0", newValue:="")}",
+                            text:=$"{firstAxis(index:=i).ToString(format:=If(NativeMmolL, "F1", "F0"), provider:=Provider).Replace(oldValue:=",0", newValue:="")}",
                             labelRow:=0,
                             markStyle:=LabelMarkStyle.None) With {.ForeColor = baseColor})
                     .CustomLabels.Add(
                         item:=New CustomLabel(
                             fromPosition:=firstAxis(index:=i) - yMin,
                             toPosition:=firstAxis(index:=i) + yMin,
-                            text:=$"{secondAxis(index:=i).ToString(format:=If(NativeMmolL, "F0", "F1"), provider:=CurrentUICulture).Replace(oldValue:=".0", newValue:="").Replace(oldValue:=",0", newValue:="")}",
+                            text:=$"{secondAxis(index:=i).ToString(format:=If(NativeMmolL, "F0", "F1"), provider:=Provider).Replace(oldValue:=".0", newValue:="").Replace(oldValue:=",0", newValue:="")}",
                             labelRow:=1,
                             markStyle:=LabelMarkStyle.None) With {.ForeColor = baseColor})
                 Next
 
                 .Title = "Sensor Glucose Value"
-                .TitleFont = New Font(labelFont.FontFamily, 14)
+                .TitleFont = New Font(family:=labelFont.FontFamily, emSize:=14)
                 .TitleForeColor = baseColor
             End With
             With .CursorX
@@ -200,14 +200,14 @@ Friend Module CreateChartItems
                         .BorderWidth = 0,
                         .Docking = Docking.Bottom,
                         .Enabled = Form1.MenuOptionsShowChartLegends.Checked,
-                        .Font = New Font("Segoe UI", 20.0F, FontStyle.Bold),
+                        .Font = New Font(familyName:="Segoe UI", emSize:=20.0F, style:=FontStyle.Bold),
                         .ForeColor = .BackColor.GetContrastingColor(),
                         .IsTextAutoFit = True
                     }
     End Function
 
     Friend Function CreateSeriesActiveInsulin() As Series
-        Dim s As Series = CreateSeriesBase(ActiveInsulinSeriesName, "Active Insulin", 4, AxisType.Primary)
+        Dim s As Series = CreateSeriesBase(ActiveInsulinSeriesName, legendText:="Active Insulin", borderWidth:=4, yAxisType:=AxisType.Primary)
         s.MarkerColor = Color.Black
         s.MarkerSize = 4
         s.MarkerStyle = MarkerStyle.Circle
@@ -321,14 +321,13 @@ Friend Module CreateChartItems
 
     Friend Function CreateTitle(chartTitle As String, name As String, foreColor As Color) As Title
         Return New Title With {
-                        .BackColor = foreColor.GetContrastingColor(),
-                        .Font = New Font("Segoe UI", 14.0F, FontStyle.Bold),
-                        .ForeColor = foreColor,
-                        .Name = name,
-                        .ShadowColor = Color.FromArgb(32, Color.Black),
-                        .ShadowOffset = 3,
-                        .Text = chartTitle
-                    }
+            .BackColor = foreColor.GetContrastingColor(),
+            .Font = New Font(familyName:="Segoe UI", emSize:=14.0F, style:=FontStyle.Bold),
+            .ForeColor = foreColor,
+            .Name = name,
+            .ShadowColor = Color.FromArgb(alpha:=32, baseColor:=Color.Black),
+            .ShadowOffset = 3,
+            .Text = chartTitle}
     End Function
 
     <Extension>

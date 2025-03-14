@@ -12,7 +12,7 @@ Friend Module BasalHelpers
         End If
         If dgv.Columns(e.ColumnIndex).Name.Equals(NameOf(Basal.BasalRate), StringComparison.OrdinalIgnoreCase) Then
             Dim v As Single = ParseSingle(e.Value, 2)
-            e.Value = $"{v.ToString("F3", CurrentUICulture)}U"
+            e.Value = $"{v.ToString("F3", Provider)}U"
             If v < 0 Then
                 ' Set the background to red for negative values in the Balance column.
                 e.CellStyle.BackColor = Color.Red

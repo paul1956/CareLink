@@ -112,20 +112,20 @@ Friend Module ExportDataGridView
                                     Dim result As Double
                                     If Double.TryParse(valueAsString, result) Then
                                         .Value = result
-                                        .Style.NumberFormat.Format = $"0{CurrentUICulture.NumberFormat.NumberDecimalSeparator}{StrDup(37, "0"c)}"
+                                        .Style.NumberFormat.Format = $"0{Provider.NumberFormat.NumberDecimalSeparator}{StrDup(Number:=37, Character:="0"c)}"
                                     Else
                                         .Value = $"'{valueAsString}"
                                     End If
                                 Case NameOf([Decimal]), NameOf([Double]), NameOf([Single])
-                                    Dim valueASingle As Single = ParseSingle(value, 3)
+                                    Dim valueASingle As Single = ParseSingle(value, decimalDigits:=3)
                                     If Single.IsNaN(valueASingle) Then
                                         .Value = "'Infinity"
                                         align = XLAlignmentHorizontalValues.Center
                                     Else
                                         .Value = valueASingle
                                         .Style.NumberFormat.Format = If(dgv.Columns(j).Name.Equals("sg", StringComparison.OrdinalIgnoreCase),
-                                                                        GetSgFormat(False),
-                                                                        $"0{CurrentUICulture.NumberFormat.NumberDecimalSeparator}000"
+                                                                        GetSgFormat(withSign:=False),
+                                                                        $"0{Provider.NumberFormat.NumberDecimalSeparator}000"
                                                                        )
 
                                         align = XLAlignmentHorizontalValues.Right

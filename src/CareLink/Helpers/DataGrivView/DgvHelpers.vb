@@ -64,7 +64,7 @@ Friend Module DgvHelpers
                     End If
                 End If
             End If
-            .Font = New Font(.Font, FontStyle.Bold)
+            .Font = New Font(prototype:= .Font, newStyle:=FontStyle.Bold)
         End With
         e.FormattingApplied = True
     End Sub
@@ -104,13 +104,13 @@ Friend Module DgvHelpers
     <Extension>
     Friend Sub CellFormattingSgValue(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, partialKey As String)
         Dim sgColumnName As String = dgv.Columns(e.ColumnIndex).Name
-        Dim sensorValue As Single = ParseSingle(e.Value, 2)
+        Dim sensorValue As Single = ParseSingle(e.Value, decimalDigits:=2)
         If Single.IsNaN(sensorValue) Then
             CellFormattingApplyColor(e, Color.Gray, isUri:=False)
         Else
             Select Case sgColumnName
                 Case partialKey
-                    e.Value = If(NativeMmolL, sensorValue.ToString("F2", CurrentUICulture), sensorValue.ToString)
+                    e.Value = If(NativeMmolL, sensorValue.ToString("F2", Provider), sensorValue.ToString)
                     If sensorValue < TirLowLimit(NativeMmolL) Then
                         CellFormattingApplyColor(e, Color.Red, isUri:=False)
                     ElseIf sensorValue > TirHighLimit(NativeMmolL) Then
@@ -128,7 +128,7 @@ Friend Module DgvHelpers
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
                 Case $"{partialKey}MmolL"
-                    e.Value = sensorValue.ToString("F2", CurrentUICulture)
+                    e.Value = sensorValue.ToString("F2", Provider)
                     If sensorValue.RoundSingle(1, False) < TirLowLimit(True) Then
                         CellFormattingApplyColor(e, Color.Red, isUri:=False)
                     ElseIf sensorValue > TirHighLimit(True) Then
@@ -145,7 +145,7 @@ Friend Module DgvHelpers
     <Extension>
     Friend Function CellFormattingSingleValue(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, digits As Integer) As Single
         Dim amount As Single = ParseSingle(e.Value, digits)
-        e.Value = amount.ToString($"F{digits}", CurrentUICulture)
+        e.Value = amount.ToString($"F{digits}", Provider)
         dgv.CellFormattingSetForegroundColor(e)
         Return amount
     End Function

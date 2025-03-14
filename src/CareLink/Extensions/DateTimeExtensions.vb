@@ -30,8 +30,8 @@ Friend Module DateTimeExtensions
         If Date.TryParse(dateAsString, defaultCulture, styles, resultDate) Then
             Return resultDate
         End If
-        If CurrentDateCulture.Name <> CurrentUICulture.Name AndAlso
-        Date.TryParse(dateAsString, CurrentUICulture, styles, resultDate) Then
+        If CurrentDateCulture.Name <> Provider.Name AndAlso
+        Date.TryParse(dateAsString, Provider, styles, resultDate) Then
             Return resultDate
         End If
         If Date.TryParse(dateAsString, usDataCulture, styles, resultDate) Then

@@ -109,7 +109,7 @@ Friend Module MathExtensions
             result = result.RoundSingle(10, False)
             Return True
         End If
-        If Single.TryParse(valueString, NumberStyles.Number, CurrentUICulture, result) Then
+        If Single.TryParse(valueString, NumberStyles.Number, Provider, result) Then
             result = result.RoundSingle(10, False)
             Return True
         End If

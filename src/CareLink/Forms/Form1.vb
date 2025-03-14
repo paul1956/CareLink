@@ -270,7 +270,11 @@ Public Class Form1
                         Dim xValue As Date = Date.FromOADate(currentDataPoint.XValue)
                         Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
                         Me.CursorPictureBox.Visible = True
-                        Me.CursorMessage2Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold, GraphicsUnit.Point)
+                        Me.CursorMessage2Label.Font = New Font(
+                            familyName:="Segoe UI",
+                            emSize:=12.0F,
+                            style:=FontStyle.Bold,
+                            unit:=GraphicsUnit.Point)
                         Select Case markerTag.Length
                             Case 2
                                 Me.CursorMessage1Label.Text = markerTag(0)
@@ -306,7 +310,7 @@ Public Class Form1
                                         Me.CursorPictureBox.Image = My.Resources.CalibrationDotRed
                                     Case "Not used for calibration"
                                         Me.CursorPictureBox.Image = My.Resources.CalibrationDot
-                                        Me.CursorMessage2Label.Font = New Font("Segoe UI", 11.0F, FontStyle.Bold, GraphicsUnit.Point)
+                                        Me.CursorMessage2Label.Font = New Font(familyName:="Segoe UI", emSize:=11.0F, style:=FontStyle.Bold, unit:=GraphicsUnit.Point)
                                     Case Else
                                         Stop
                                 End Select
@@ -314,7 +318,7 @@ Public Class Form1
                                 Me.CursorMessage1Label.Visible = True
                                 Me.CursorMessage2Label.Text = markerTag(1).Replace("Calibration not", "Cal. not").Trim
                                 Me.CursorMessage2Label.Visible = True
-                                Dim sgValue As Single = markerTag(2).Trim.Split(" ")(0).Trim.ParseSingle(2)
+                                Dim sgValue As Single = markerTag(2).Trim.Split(separator:=" ")(0).Trim.ParseSingle(decimalDigits:=2)
                                 Me.CursorMessage3Label.Text = markerTag(2).Trim
                                 Me.CursorMessage3Label.Visible = True
                                 Me.CursorMessage4Label.Text = If(NativeMmolL, $"{CInt(sgValue * MmolLUnitsDivisor)} mg/dL", $"{sgValue / MmolLUnitsDivisor:F1} mmol/L")
@@ -766,7 +770,7 @@ Public Class Form1
 
     Private Sub DgvMeal_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvMeal.ColumnAdded
         e.DgvColumnAdded(
-            cellStyle:=New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1)),
+            cellStyle:=New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(all:=1)),
             wrapHeader:=False,
             forceReadOnly:=True,
             caption:=Nothing)
@@ -1298,7 +1302,7 @@ Public Class Form1
                         StartOrStopServerUpdateTimer(False)
                         SetUpCareLinkUser(TestSettingsFileNameWithPath)
                         CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"CareLink", True)
-                        CurrentUICulture = CurrentDateCulture
+                        Provider = CurrentDateCulture
 
                         RecentData = LoadIndexedItems(File.ReadAllText(openFileDialog1.FileName))
                         Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
@@ -1997,11 +2001,10 @@ Public Class Form1
 
     Friend Sub InitializeActiveInsulinTabChart()
         Me.SplitContainer1.Panel2.Controls.Clear()
-
         Me.ActiveInsulinChart = CreateChart(NameOf(ActiveInsulinChart))
-        Dim activeInsulinChartArea As ChartArea = CreateChartArea(Me.ActiveInsulinChart)
+        Dim activeInsulinChartArea As ChartArea = CreateChartArea(containingChart:=Me.ActiveInsulinChart)
         Dim labelColor As Color = Me.ActiveInsulinChart.BackColor.GetContrastingColor()
-        Dim labelFont As New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        Dim labelFont As New Font(familyName:="Segoe UI", emSize:=12.0F, style:=FontStyle.Bold)
 
         With activeInsulinChartArea.AxisY
             .Interval = 2
@@ -2018,11 +2021,11 @@ Public Class Form1
             .Maximum = 25
             .Minimum = 0
             .Title = "Active Insulin"
-            .TitleFont = New Font(labelFont.FontFamily, 14)
+            .TitleFont = New Font(family:=labelFont.FontFamily, emSize:=14)
             .TitleForeColor = labelColor
         End With
         Me.ActiveInsulinChart.ChartAreas.Add(activeInsulinChartArea)
-        _activeInsulinChartLegend = CreateChartLegend(NameOf(_activeInsulinChartLegend))
+        _activeInsulinChartLegend = CreateChartLegend(legendName:=NameOf(_activeInsulinChartLegend))
         Me.ActiveInsulinChartTitle = CreateTitle($"Running Insulin On Board (IOB)",
                                                  NameOf(ActiveInsulinChartTitle),
                                                  GetGraphLineColor("Active Insulin"))
@@ -2091,7 +2094,7 @@ Public Class Form1
         End Select
 
         Dim baseColor As Color = Me.TreatmentMarkersChart.BackColor.GetContrastingColor()
-        Dim labelFont As New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        Dim labelFont As New Font(familyName:="Segoe UI", emSize:=12.0F, style:=FontStyle.Bold)
 
         With treatmentMarkersChartArea.AxisY
             Dim interval As Single = (TreatmentInsulinRow / 10).RoundSingle(3, False)
@@ -2101,7 +2104,7 @@ Public Class Form1
             With .LabelStyle
                 .Font = labelFont
                 .ForeColor = baseColor
-                .Format = $"{{0{CurrentUICulture.NumberFormat.NumberDecimalSeparator}00}}"
+                .Format = $"{{0{Provider.NumberFormat.NumberDecimalSeparator}00}}"
             End With
             .LineColor = Color.FromArgb(alpha:=64, baseColor)
             With .MajorTickMark
@@ -2242,7 +2245,7 @@ Public Class Form1
                                                         )
                             _sgMiniDisplay.SetCurrentDeltaValue(Me.LabelTrendValue.Text, diffSg)
                             Me.LabelTrendValue.ForeColor = backColor
-                            notStr.AppendLine($"SG Trend { diffSg.ToString(GetSgFormat(True), CultureInfo.InvariantCulture)}")
+                            notStr.AppendLine($"SG Trend { diffSg.ToString(GetSgFormat(withSign:=True), CultureInfo.InvariantCulture)}")
                             Me.LabelTrendValue.Visible = True
                         End If
                     Else
@@ -2603,12 +2606,12 @@ Public Class Form1
             Select Case marker.Type
                 Case "INSULIN"
                     Dim deliveredAmount As String = marker.GetSingleValueFromJson(NameOf(Insulin.DeliveredFastAmount)).ToString
-                    s_totalDailyDose += deliveredAmount.ParseSingle(3)
+                    s_totalDailyDose += deliveredAmount.ParseSingle(decimalDigits:=3)
                     Select Case marker.GetStringValueFromJson(NameOf(Insulin.ActivationType))
                         Case "AUTOCORRECTION"
-                            s_totalAutoCorrection += deliveredAmount.ParseSingle(3)
+                            s_totalAutoCorrection += deliveredAmount.ParseSingle(decimalDigits:=3)
                         Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
-                            s_totalManualBolus += deliveredAmount.ParseSingle(3)
+                            s_totalManualBolus += deliveredAmount.ParseSingle(decimalDigits:=3)
                     End Select
 
                 Case "AUTO_BASAL_DELIVERY"
@@ -2699,27 +2702,27 @@ Public Class Form1
 
         Me.InsulinLevelPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
         If Not s_pumpInRangeOfPhone Then
-            Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(8)
+            Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=8)
             Me.RemainingInsulinUnits.Text = "???U"
         Else
-            Me.RemainingInsulinUnits.Text = $"{s_listOfSummaryRecords.GetValue(Of String)(NameOf(ServerDataIndexes.reservoirRemainingUnits)).ParseSingle(1):N1} U"
+            Me.RemainingInsulinUnits.Text = $"{s_listOfSummaryRecords.GetValue(Of String)(NameOf(ServerDataIndexes.reservoirRemainingUnits)).ParseSingle(decimalDigits:=1):N1} U"
             Select Case s_reservoirLevelPercent
                 Case >= 85
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(7)
+                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=7)
                 Case >= 71
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(6)
+                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=6)
                 Case >= 57
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(5)
+                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=5)
                 Case >= 43
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(4)
+                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=4)
                 Case >= 29
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(3)
+                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=3)
                 Case >= 15
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(2)
+                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=2)
                 Case >= 1
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(1)
+                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=1)
                 Case Else
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(0)
+                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=0)
             End Select
         End If
         Application.DoEvents()
@@ -2977,11 +2980,11 @@ Public Class Form1
             Dim arrows As String = Nothing
             If s_trends.TryGetValue(rowValue, arrows) Then
                 Me.LabelTrendArrows.Font = If(rowValue = "NONE",
-                    New Font("Segoe UI", 18.0F, FontStyle.Bold, GraphicsUnit.Point),
-                    New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point))
+                    New Font(familyName:="Segoe UI", emSize:=18.0F, style:=FontStyle.Bold, unit:=GraphicsUnit.Point),
+                    New Font(familyName:="Segoe UI", emSize:=14.25F, style:=FontStyle.Bold, unit:=GraphicsUnit.Point))
                 Me.LabelTrendArrows.Text = s_trends(rowValue)
             Else
-                Me.LabelTrendArrows.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point)
+                Me.LabelTrendArrows.Font = New Font(familyName:="Segoe UI", emSize:=14.25F, style:=FontStyle.Bold, unit:=GraphicsUnit.Point)
                 Me.LabelTrendArrows.Text = rowValue
             End If
         End If
@@ -3044,8 +3047,8 @@ Public Class Form1
         Me.UpdateDosingAndCarbs()
 
         Me.FullNameLabel.Text = $"{s_firstName} {RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.lastName))}"
-        Me.ModelLabel.Text = $"{s_pumpModelNumber} HW Version = {s_pumpHardwareRevision}"
-        Me.PumpNameLabel.Text = GetPumpName(s_pumpModelNumber)
+        Me.ModelLabel.Text = $"{s_modelNumber} HW Version = {s_pumpHardwareRevision}"
+        Me.PumpNameLabel.Text = GetPumpName(s_modelNumber)
         Dim nonZeroRecords As IEnumerable(Of SG) = s_listOfSgRecords.Where(Function(entry As SG) Not Single.IsNaN(entry.sg))
         Me.ReadingsLabel.Text = $"{nonZeroRecords.Count()}/288 SG Readings"
 

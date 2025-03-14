@@ -9,14 +9,14 @@ Friend Module KeyValuePairExtensions
 
     <Extension>
     Private Function JsonToSingle(item As KeyValuePair(Of String, Object)) As Single
-        Return CType(item.Value, JsonElement).ToString.ParseSingle(2)
+        Return CType(item.Value, JsonElement).ToString.ParseSingle(decimalDigits:=2)
     End Function
 
     <Extension>
     Private Function ScaleSgToString(value As Single) As String
         Return If(NativeMmolL,
-                  (value / MmolLUnitsDivisor).RoundSingle(If(NativeMmolL, 2, 0), False).ToString(CurrentUICulture),
-                  value.ToString(CurrentUICulture)
+                  (value / MmolLUnitsDivisor).RoundSingle(decimalDigits:=If(NativeMmolL, 2, 0), considerValue:=False).ToString(Provider),
+                  value.ToString(Provider)
                  )
     End Function
 
@@ -43,18 +43,13 @@ Friend Module KeyValuePairExtensions
         End Select
 
         Return If(NativeMmolL,
-                  (itemAsSingle / MmolLUnitsDivisor).RoundSingle(If(NativeMmolL, 2, 0), False).ToString(CurrentUICulture),
-                  itemAsSingle.ToString(CurrentUICulture))
-    End Function
-
-    <Extension>
-    Public Function ScaleSgToString(item As KeyValuePair(Of String, String)) As String
-        Return item.Value.ParseSingle(If(NativeMmolL, 2, 0)).ScaleSgToString()
+                  (itemAsSingle / MmolLUnitsDivisor).RoundSingle(If(NativeMmolL, 2, 0), False).ToString(Provider),
+                  itemAsSingle.ToString(Provider))
     End Function
 
     <Extension>
     Public Function ScaleSgToString(value As String) As String
-        Return value.ParseSingle(If(NativeMmolL, 2, 0)).ScaleSgToString()
+        Return value.ParseSingle(decimalDigits:=If(NativeMmolL, 2, 0)).ScaleSgToString()
     End Function
 
 End Module

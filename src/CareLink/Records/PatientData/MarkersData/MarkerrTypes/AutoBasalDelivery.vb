@@ -20,8 +20,8 @@ Public Class AutoBasalDelivery
         'Me.TimestampAsString = r.TimestampAsString
         'Me.DisplayTime = r.DisplayTime
         'Me.DisplayTimeAsString = r.DisplayTimeAsString
-        'Me.bolusAmount = r.Data.DataValues(NameOf(bolusAmount)).ToString.ParseSingle(10)
-        'Me.maxAutoBasalRate = r.Data.DataValues(NameOf(maxAutoBasalRate)).ToString.ParseSingle(10)
+        'Me.bolusAmount = r.Data.DataValues(NameOf(bolusAmount)).ToString.ParseSingle(decimalDigits:=10)
+        'Me.maxAutoBasalRate = r.Data.DataValues(NameOf(maxAutoBasalRate)).ToString.ParseSingle(decimalDigits:=10)
     End Sub
 
     Public Sub New(markerEntry As Marker, recordNumber As Integer, index As Integer)
@@ -33,8 +33,8 @@ Public Class AutoBasalDelivery
         Me.TimestampAsString = markerEntry.TimestampAsString
         Me.DisplayTime = markerEntry.DisplayTime
         Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
-        Me.bolusAmount = markerEntry.Data.DataValues(NameOf(bolusAmount)).ToString.ParseSingle(10)
-        Me.maxAutoBasalRate = markerEntry.Data.DataValues(NameOf(maxAutoBasalRate)).ToString.ParseSingle(10)
+        Me.bolusAmount = markerEntry.Data.DataValues(NameOf(bolusAmount)).ToString.ParseSingle(decimalDigits:=10)
+        Me.maxAutoBasalRate = markerEntry.Data.DataValues(NameOf(maxAutoBasalRate)).ToString.ParseSingle(decimalDigits:=10)
     End Sub
 
     <DisplayName("Record Number")>

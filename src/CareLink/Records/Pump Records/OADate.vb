@@ -77,7 +77,7 @@ Public Class OADate
     End Function
 
     Public Overrides Function ToString() As String
-        Return _oADate.ToString("F37", CurrentUICulture)
+        Return _oADate.ToString("F37", Provider)
     End Function
 
     Public Function Within6Minutes(currentOADate As OADate) As Boolean

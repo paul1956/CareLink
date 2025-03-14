@@ -68,16 +68,20 @@ Friend Module Form1LoginHelpers
                     StartOrStopServerUpdateTimer(True, s_5MinutesInMilliseconds)
 
                     If NetworkUnavailable() Then
-                        ReportLoginStatus(Form1.LoginStatus, True, "Network Unavailable")
+                        ReportLoginStatus(Form1.LoginStatus, hasErrors:=True, lastErrorMessage:="Network Unavailable")
                         Return False
                     End If
 
-                    SetLastUpdateTime("Last Update time is unknown!", "", True, Nothing)
+                    SetLastUpdateTime(
+                        msg:="Last Update time is unknown!",
+                        suffixMessage:=String.Empty,
+                        highLight:=True,
+                        isDaylightSavingTime:=Nothing)
                     Return False
                 End If
                 Dim lastErrorMessage As String = LoginDialog.Client.GetRecentData()
 
-                SetUpCareLinkUser(GetUserSettingsJsonFileNameWithPath, False)
+                SetUpCareLinkUser(GetUserSettingsJsonFileNameWithPath, forceUI:=False)
                 StartOrStopServerUpdateTimer(True, s_1MinutesInMilliseconds)
 
                 If NetworkUnavailable() Then

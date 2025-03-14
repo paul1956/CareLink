@@ -20,6 +20,6 @@ Friend Module CultureHelpers
     End Property
 
     Public ReadOnly Property CultureInfoList As List(Of CultureInfo) = CultureInfo.GetCultures(CultureTypes.AllCultures).ToList
-    Public Property CurrentUICulture As CultureInfo = CultureInfo.CurrentUICulture
+    Public Property Provider As CultureInfo = CultureInfo.CurrentUICulture
     Public ReadOnly Property usDataCulture As New CultureInfo("en-US")
 End Module

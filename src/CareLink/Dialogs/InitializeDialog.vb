@@ -169,7 +169,7 @@ Public Class InitializeDialog
         Me.CurrentUser.CurrentTarget = GetSgTarget()
         With Me.TargetSgComboBox
             .DataSource = If(NativeMmolL,
-                             If(CurrentUICulture.NumberFormat.NumberDecimalSeparator = ".",
+                             If(Provider.NumberFormat.NumberDecimalSeparator = ".",
                                 New BindingSource(MmolLItemsPeriod, Nothing),
                                 New BindingSource(MmolLItemsComma, Nothing)
                                ),
@@ -320,7 +320,7 @@ Public Class InitializeDialog
         cell.ErrorText = ""
         Me.DialogResult = DialogResult.OK
 
-        Me.CurrentUser.PumpAit = ParseSingle(Me.PumpAitComboBox.SelectedValue, 2)
+        Me.CurrentUser.PumpAit = ParseSingle(Me.PumpAitComboBox.SelectedValue, decimalDigits:=2)
 
         Me.CurrentUser.InsulinTypeName = Me.InsulinTypeComboBox.Text
         Me.CurrentUser.InsulinRealAit = CType(Me.InsulinTypeComboBox.SelectedValue, InsulinActivationRecord).AitHours
@@ -339,7 +339,7 @@ Public Class InitializeDialog
             cell = row.Cells(NameOf(ColumnEnd))
             carbRecord.EndTime = TimeOnly.Parse(cell.Value.ToString, CurrentDateCulture)
             Dim numericCell As DataGridViewNumericUpDownCell = CType(row.Cells(NameOf(ColumnNumericUpDown)), DataGridViewNumericUpDownCell)
-            carbRecord.CarbRatio = ParseSingle(numericCell.Value, 1)
+            carbRecord.CarbRatio = ParseSingle(numericCell.Value, decimalDigits:=1)
             Me.CurrentUser.CarbRatios.Add(carbRecord)
         Next
 

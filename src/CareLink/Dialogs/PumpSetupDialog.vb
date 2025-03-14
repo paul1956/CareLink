@@ -21,9 +21,9 @@ Public Class PumpSetupDialog
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If dgv.Rows.Count = 0 Then
             TextRenderer.DrawText(e.Graphics, "No records found.",
-                New Font(dgv.Font.FontFamily, 20), dgv.ClientRectangle,
-                dgv.ForeColor, dgv.BackgroundColor,
-                TextFormatFlags.HorizontalCenter Or TextFormatFlags.VerticalCenter)
+                font:=New Font(family:=dgv.Font.FontFamily, emSize:=20), bounds:=dgv.ClientRectangle,
+                foreColor:=dgv.ForeColor, backColor:=dgv.BackgroundColor,
+                flags:=TextFormatFlags.HorizontalCenter Or TextFormatFlags.VerticalCenter)
         End If
 
     End Sub
@@ -43,11 +43,11 @@ Public Class PumpSetupDialog
             Throw New NullReferenceException(NameOf(_pdf))
         End If
 
-        Dim defaultBoldFont As New Font(Me.RtbMainLeft.Font.FontFamily, 14, FontStyle.Bold)
-        Dim defaultFont As New Font(Me.RtbMainLeft.Font.FontFamily, 14, FontStyle.Regular)
-        Dim headingBoldFont As New Font("Tahoma", 18, FontStyle.Bold)
-        Dim subheadingBoldtFont As New Font("Tahoma", 16, FontStyle.Bold)
-        Dim subheadingFont As New Font("Tahoma", 16, FontStyle.Regular)
+        Dim defaultBoldFont As New Font(family:=Me.RtbMainLeft.Font.FontFamily, emSize:=14, style:=FontStyle.Bold)
+        Dim defaultFont As New Font(family:=Me.RtbMainLeft.Font.FontFamily, emSize:=14, style:=FontStyle.Regular)
+        Dim headingBoldFont As New Font(familyName:="Tahoma", emSize:=18, style:=FontStyle.Bold)
+        Dim subheadingBoldtFont As New Font(familyName:="Tahoma", emSize:=16, style:=FontStyle.Bold)
+        Dim subheadingFont As New Font(familyName:="Tahoma", emSize:=16, style:=FontStyle.Regular)
         Me.RtbMainLeft.Clear()
         Me.RtbMainRight.Clear()
         With Me.RtbMainLeft
@@ -204,7 +204,7 @@ Public Class PumpSetupDialog
         End With
 
         With Me.DataGridViewHighAlert
-            .ColumnHeadersDefaultCellStyle.Font = New Font(.Font, FontStyle.Bold)
+            .ColumnHeadersDefaultCellStyle.Font = New Font(prototype:= .Font, newStyle:=FontStyle.Bold)
             .Rows.Clear()
             For Each c As DataGridViewColumn In .Columns
                 c.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
@@ -225,7 +225,7 @@ Public Class PumpSetupDialog
 
         With Me.DataGridViewLowAlert
             .Rows.Clear()
-            .ColumnHeadersDefaultCellStyle.Font = New Font(.Font, FontStyle.Bold)
+            .ColumnHeadersDefaultCellStyle.Font = New Font(prototype:= .Font, newStyle:=FontStyle.Bold)
             For Each c As DataGridViewColumn In .Columns
                 c.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
 

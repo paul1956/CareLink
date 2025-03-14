@@ -22,9 +22,9 @@ Public Module DictionaryExtensions
 
     <Extension>
     Friend Function GetSingleValue(item As Dictionary(Of String, String), key As String) As Single
-        Dim ret As String = ""
-        Return If(item.TryGetValue(key, ret),
-                  ret.ParseSingle(3),
+        Dim value As String = ""
+        Return If(item.TryGetValue(key, value),
+                  value.ParseSingle(decimalDigits:=3),
                   Single.NaN
                  )
     End Function
@@ -98,11 +98,11 @@ Public Module DictionaryExtensions
                                 SetDateProperty(classObject, row, [property])
                                 Continue For
                             Case NameOf([Single])
-                                propertyValue = row.Value.ParseSingle(10)
+                                propertyValue = row.Value.ParseSingle(decimalDigits:=10)
                             Case NameOf([Double])
-                                propertyValue = CDbl(row.Value.ParseSingle(10))
+                                propertyValue = CDbl(row.Value.ParseSingle(decimalDigits:=10))
                             Case NameOf([Decimal])
-                                propertyValue = CDec(row.Value.ParseSingle(3))
+                                propertyValue = CDec(row.Value.ParseSingle(decimalDigits:=3))
                             Case NameOf([Boolean]),
                                  NameOf([Int32]),
                                  NameOf([String])
@@ -125,7 +125,6 @@ Public Module DictionaryExtensions
         Next row
 
         classObject.GetType.GetProperty("RecordNumber")?.SetValue(classObject, recordNumber, Nothing)
-
         Return classObject
     End Function
 
@@ -148,10 +147,7 @@ Public Module DictionaryExtensions
 
     Public Function Is700Series() As Boolean
         If RecentDataEmpty() Then Return False
-#If False Then ' TODO
-        Return s_700Models.Contains(RecentData.GetStringValueOrEmpty(NameOf(ItemIndexes.pumpModelNumber)))
-#End If
-        Return False
+        Return s_700Models.Contains(PatientData.MedicalDeviceInformation.ModelNumber)
     End Function
 
     <Extension>

@@ -96,7 +96,7 @@ Public Module StringExtensions
             resultString = resultString.Replace("CareLink", "CareLink™")
         End If
         resultString = resultString.Replace("S G", "Sensor Glucose", StringComparison.InvariantCulture)
-        Return resultString.Replace("time", " Time", False, CurrentUICulture)
+        Return resultString.Replace("time", " Time", False, Provider)
     End Function
 
     ''' <summary>
@@ -118,7 +118,7 @@ Public Module StringExtensions
                 Return s
             End If
             i = s.Length
-            s &= CurrentUICulture.NumberFormat.NumberDecimalSeparator
+            s &= Provider.NumberFormat.NumberDecimalSeparator
         End If
         s &= New String("0"c, decimalDigits + 1)
         Return s.Substring(0, i + decimalDigits + 1)

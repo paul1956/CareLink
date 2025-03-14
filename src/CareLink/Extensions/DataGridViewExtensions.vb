@@ -17,7 +17,7 @@ Public Module DataGridViewExtensions
                 .BackColor = Color.Silver}
             .ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
                 .Alignment = DataGridViewContentAlignment.MiddleCenter,
-                .Font = New Font("Segoe UI", 9.0!, FontStyle.Regular, GraphicsUnit.Point),
+                .Font = New Font(familyName:="Segoe UI", emSize:=9.0!, style:=FontStyle.Regular, unit:=GraphicsUnit.Point),
                 .WrapMode = DataGridViewTriState.True}
             .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
             .Location = New Point(0, 0)

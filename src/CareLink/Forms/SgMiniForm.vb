@@ -71,7 +71,7 @@ Public Class SgMiniForm
     End Sub
 
     Private Sub PlaySoundFromResource(SoundName As String)
-        Using player As New SoundPlayer(My.Resources.ResourceManager.GetStream(SoundName, CurrentUICulture))
+        Using player As New SoundPlayer(My.Resources.ResourceManager.GetStream(SoundName, Provider))
             player.Play()
         End Using
     End Sub
