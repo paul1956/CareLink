@@ -438,7 +438,6 @@ Public Class Client2
         Dim patientDataElement As JsonElement = CType(data.Values(1), JsonElement)
         Try
             Dim patientDataElementAsText As String = patientDataElement.GetRawText()
-            Stop
             File.WriteAllTextAsync(
                 path:=GetLastDownloadFileWithPath(),
                 contents:=JsonSerializer.Serialize(patientDataElement, s_jsonSerializerOptions))
