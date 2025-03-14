@@ -66,11 +66,11 @@ Friend Module CreateChartItems
     Friend Function CreateChartArea(containingChart As Chart) As ChartArea
         Dim tmpChartArea As New ChartArea(NameOf(ChartArea)) With {
             .BackColor = Color.FromArgb(90, 107, 87),
-            .BorderColor = Color.FromArgb(64, Color.DimGray),
+            .BorderColor = Color.FromArgb(alpha:=64, Color.DimGray),
             .BorderDashStyle = ChartDashStyle.Solid,
             .ShadowColor = Color.Transparent}
         With tmpChartArea
-            Dim labelColor As Color = containingChart.BackColor.GetContrastingColor()
+            Dim baseColor As Color = containingChart.BackColor.GetContrastingColor()
             Dim labelFont As New Font("Segoe UI", 12.0F, FontStyle.Bold)
 
             With .AxisX
@@ -81,15 +81,15 @@ Friend Module CreateChartItems
                 .LabelAutoFitStyle = LabelAutoFitStyles.IncreaseFont Or LabelAutoFitStyles.DecreaseFont Or LabelAutoFitStyles.WordWrap
                 With .LabelStyle
                     .Font = labelFont
-                    .ForeColor = labelColor
+                    .ForeColor = baseColor
                     .Format = s_timeWithoutMinuteFormat
                 End With
-                .LineColor = Color.FromArgb(64, labelColor)
+                .LineColor = Color.FromArgb(alpha:=64, baseColor)
                 With .MajorGrid
                     .Interval = 1
                     .IntervalOffsetType = DateTimeIntervalType.Hours
                     .IntervalType = DateTimeIntervalType.Hours
-                    .LineColor = Color.FromArgb(64, labelColor)
+                    .LineColor = Color.FromArgb(alpha:=64, baseColor)
                 End With
                 .ScaleView.Zoomable = True
                 With .ScrollBar
@@ -101,7 +101,7 @@ Friend Module CreateChartItems
                 End With
             End With
             With .AxisY
-                .InterlacedColor = Color.FromArgb(120, Color.LightSlateGray)
+                .InterlacedColor = Color.FromArgb(alpha:=120, baseColor:=Color.LightSlateGray)
                 .IntervalAutoMode = IntervalAutoMode.FixedCount
                 .IsInterlaced = True
                 .IsLabelAutoFit = False
@@ -109,10 +109,10 @@ Friend Module CreateChartItems
                 .IsStartedFromZero = True
                 With .LabelStyle
                     .Font = labelFont
-                    .ForeColor = labelColor
+                    .ForeColor = baseColor
                     .Format = "{0}"
                 End With
-                .LineColor = Color.FromArgb(64, labelColor)
+                .LineColor = Color.FromArgb(alpha:=64, baseColor)
                 With .MajorGrid
                     .Enabled = False
                 End With
@@ -136,38 +136,42 @@ Friend Module CreateChartItems
                 .IsStartedFromZero = False
                 With .LabelStyle
                     .Font = labelFont
-                    .ForeColor = labelColor
-                    .Format = GetSgFormat(False)
+                    .ForeColor = baseColor
+                    .Format = GetSgFormat(withSign:=False)
                 End With
-                .LineColor = Color.FromArgb(64, labelColor)
+                .LineColor = Color.FromArgb(alpha:=64, baseColor)
 
                 With .MajorGrid
                     .Interval = firstAxis(0)
-                    .LineColor = Color.FromArgb(64, labelColor)
+                    .LineColor = Color.FromArgb(alpha:=64, baseColor)
                 End With
                 With .MajorTickMark
                     .Enabled = True
                     .Interval = firstAxis(0)
-                    .LineColor = Color.FromArgb(64, labelColor)
+                    .LineColor = Color.FromArgb(alpha:=64, baseColor)
                 End With
 
                 For i As Integer = 0 To s_mmolLValues.Count - 1
-                    Dim yMin As Single = GetYMinValue(NativeMmolL)
-                    .CustomLabels.Add(New CustomLabel(firstAxis(i) - yMin,
-                                                           firstAxis(i) + yMin,
-                                                           $"{firstAxis(i).ToString(If(NativeMmolL, "F1", "F0"), CurrentUICulture).Replace(",0", "")}",
-                                                           0,
-                                                           LabelMarkStyle.None) With {.ForeColor = labelColor})
-                    .CustomLabels.Add(New CustomLabel(firstAxis(i) - yMin,
-                                                           firstAxis(i) + yMin,
-                                                           $"{secondAxis(i).ToString(If(NativeMmolL, "F0", "F1"), CurrentUICulture).Replace(".0", "").Replace(",0", "")}",
-                                                           1,
-                                                           LabelMarkStyle.None) With {.ForeColor = labelColor})
+                    Dim yMin As Single = GetYMinValue(asMmolL:=NativeMmolL)
+                    .CustomLabels.Add(
+                        item:=New CustomLabel(
+                            fromPosition:=firstAxis(index:=i) - yMin,
+                            toPosition:=firstAxis(index:=i) + yMin,
+                            text:=$"{firstAxis(index:=i).ToString(format:=If(NativeMmolL, "F1", "F0"), provider:=CurrentUICulture).Replace(oldValue:=",0", newValue:="")}",
+                            labelRow:=0,
+                            markStyle:=LabelMarkStyle.None) With {.ForeColor = baseColor})
+                    .CustomLabels.Add(
+                        item:=New CustomLabel(
+                            fromPosition:=firstAxis(index:=i) - yMin,
+                            toPosition:=firstAxis(index:=i) + yMin,
+                            text:=$"{secondAxis(index:=i).ToString(format:=If(NativeMmolL, "F0", "F1"), provider:=CurrentUICulture).Replace(oldValue:=".0", newValue:="").Replace(oldValue:=",0", newValue:="")}",
+                            labelRow:=1,
+                            markStyle:=LabelMarkStyle.None) With {.ForeColor = baseColor})
                 Next
 
                 .Title = "Sensor Glucose Value"
                 .TitleFont = New Font(labelFont.FontFamily, 14)
-                .TitleForeColor = labelColor
+                .TitleForeColor = baseColor
             End With
             With .CursorX
                 .AutoScroll = True

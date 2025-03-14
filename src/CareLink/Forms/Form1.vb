@@ -227,7 +227,7 @@ Public Class Form1
         Dim chart1 As Chart = CType(sender, Chart)
         Dim isHomePage As Boolean = chart1.Name = NameOf(SummaryChart)
         Try
-            yInPixels = chart1.ChartAreas(NameOf(ChartArea)).AxisY2.ValueToPixelPosition(e.Y)
+            yInPixels = chart1.ChartAreas(NameOf(ChartArea)).AxisY2.ValueToPixelPosition(axisValue:=e.Y)
         Catch ex As Exception
             yInPixels = Double.NaN
         End Try
@@ -936,7 +936,7 @@ Public Class Form1
                 End If
 
             Case ServerDataIndexes.lastSG
-                If Not String.Equals(e.Value.ToString, "NAN", StringComparison.CurrentCultureIgnoreCase) Then
+                If Not String.Equals(e.Value.ToString, "NAN", StringComparison.OrdinalIgnoreCase) Then
                     e.Value = "---"
                 End If
                 e.CellStyle = e.CellStyle.SetCellStyle(
@@ -1826,27 +1826,37 @@ Public Class Form1
 
         Dim lastMedicalDeviceDataUpdateServerEpochString As String = ""
         If Not RecentDataEmpty() Then
-            If RecentData.TryGetValue(NameOf(ServerDataIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerEpochString) Then
+            If RecentData.TryGetValue(
+                    key:=NameOf(ServerDataIndexes.lastMedicalDeviceDataUpdateServerTime),
+                    value:=lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
                     Dim epochAsLocalDate As Date = lastMedicalDeviceDataUpdateServerEpochString.FromUnixTime.ToLocalTime
                     If epochAsLocalDate + s_05MinuteSpan < Now() Then
-                        SetLastUpdateTime(Nothing, "", True, epochAsLocalDate.IsDaylightSavingTime)
-                        _sgMiniDisplay.SetCurrentSgString("---", Single.NaN)
+                        SetLastUpdateTime(
+                            msg:=Nothing,
+                            suffixMessage:="",
+                            highLight:=True,
+                            isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
+                        _sgMiniDisplay.SetCurrentSgString(sgString:="---", sgValue:=Single.NaN)
                     Else
-                        SetLastUpdateTime(Nothing, "", False, epochAsLocalDate.IsDaylightSavingTime)
+                        SetLastUpdateTime(
+                            msg:=Nothing,
+                            suffixMessage:="",
+                            highLight:=False,
+                            isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
                         _sgMiniDisplay.SetCurrentSgString(s_lastSgRecord?.ToString, s_lastSgRecord.sg)
                     End If
                 Else
-                    Me.UpdateAllTabPages(False)
+                    Me.UpdateAllTabPages(fromFile:=False)
                 End If
             Else
                 Stop
             End If
         Else
-            ReportLoginStatus(Me.LoginStatus, True, lastErrorMessage)
-            _sgMiniDisplay.SetCurrentSgString("---", 0)
+            ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMessage)
+            _sgMiniDisplay.SetCurrentSgString(sgString:="---", sgValue:=0)
         End If
-        StartOrStopServerUpdateTimer(True, s_1MinutesInMilliseconds)
+        StartOrStopServerUpdateTimer(Start:=True, interval:=s_1MinutesInMilliseconds)
     End Sub
 
 #End Region ' Timer Events
@@ -1874,20 +1884,29 @@ Public Class Form1
             basalLegend:=_summaryChartLegend,
             legendText:="Auto Correction",
             YAxisType:=AxisType.Secondary)
-        Me.SummaryBasalSeries = CreateSeriesBasal(BasalSeriesName, _summaryChartLegend, "Basal Series", AxisType.Secondary)
-        Me.SummaryMinBasalSeries = CreateSeriesBasal(MinBasalSeriesName, _summaryChartLegend, "Min Basal", AxisType.Secondary)
-
-        Me.SummaryHighLimitSeries = CreateSeriesLimitsAndTarget(_summaryChartLegend, HighLimitSeriesName)
-
-        Me.SummarySuspendSeries = CreateSeriesSuspend(_summaryChartLegend)
-
-        Me.SummaryTargetSgSeries = CreateSeriesLimitsAndTarget(_summaryChartLegend, TargetSgSeriesName)
-        Me.SummarySgSeries = CreateSeriesSg(_summaryChartLegend)
-        Me.SummaryLowLimitSeries = CreateSeriesLimitsAndTarget(_summaryChartLegend, LowLimitSeriesName)
-
-        Me.SummaryMarkerSeries = CreateSeriesWithoutVisibleLegend(AxisType.Secondary)
-
-        Me.SummaryTimeChangeSeries = CreateSeriesTimeChange(_summaryChartLegend)
+        Me.SummaryBasalSeries = CreateSeriesBasal(
+            SeriesName:=BasalSeriesName,
+            basalLegend:=_summaryChartLegend,
+            legendText:="Basal Series",
+            YAxisType:=AxisType.Secondary)
+        Me.SummaryMinBasalSeries = CreateSeriesBasal(
+            SeriesName:=MinBasalSeriesName,
+            basalLegend:=_summaryChartLegend,
+            legendText:="Min Basal",
+            YAxisType:=AxisType.Secondary)
+        Me.SummaryHighLimitSeries = CreateSeriesLimitsAndTarget(
+            limitsLegend:=_summaryChartLegend,
+            seriesName:=HighLimitSeriesName)
+        Me.SummarySuspendSeries = CreateSeriesSuspend(basalLegend:=_summaryChartLegend)
+        Me.SummaryTargetSgSeries = CreateSeriesLimitsAndTarget(
+            limitsLegend:=_summaryChartLegend,
+            seriesName:=TargetSgSeriesName)
+        Me.SummarySgSeries = CreateSeriesSg(sgLegend:=_summaryChartLegend)
+        Me.SummaryLowLimitSeries = CreateSeriesLimitsAndTarget(
+            limitsLegend:=_summaryChartLegend,
+            seriesName:=LowLimitSeriesName)
+        Me.SummaryMarkerSeries = CreateSeriesWithoutVisibleLegend(YAxisType:=AxisType.Secondary)
+        Me.SummaryTimeChangeSeries = CreateSeriesTimeChange(basalLegend:=_summaryChartLegend)
 
         Me.SplitContainer3.Panel1.Controls.Add(Me.SummaryChart)
         Application.DoEvents()
@@ -2071,7 +2090,7 @@ Public Class Form1
                 TreatmentInsulinRow = (MaxBasalPerDose + 0.025!).RoundTo025
         End Select
 
-        Dim labelColor As Color = Me.TreatmentMarkersChart.BackColor.GetContrastingColor()
+        Dim baseColor As Color = Me.TreatmentMarkersChart.BackColor.GetContrastingColor()
         Dim labelFont As New Font("Segoe UI", 12.0F, FontStyle.Bold)
 
         With treatmentMarkersChartArea.AxisY
@@ -2081,24 +2100,25 @@ Public Class Form1
             .IsMarginVisible = False
             With .LabelStyle
                 .Font = labelFont
-                .ForeColor = labelColor
+                .ForeColor = baseColor
                 .Format = $"{{0{CurrentUICulture.NumberFormat.NumberDecimalSeparator}00}}"
             End With
-            .LineColor = Color.FromArgb(64, labelColor)
+            .LineColor = Color.FromArgb(alpha:=64, baseColor)
             With .MajorTickMark
                 .Enabled = True
                 .Interval = interval
-                .LineColor = Color.FromArgb(64, labelColor)
+                .LineColor = Color.FromArgb(alpha:=64, baseColor)
             End With
             .Maximum = TreatmentInsulinRow
             .Minimum = 0
             .Title = "Delivered Insulin"
-            .TitleFont = New Font(labelFont.FontFamily, 14)
-            .TitleForeColor = labelColor
+            .TitleFont = New Font(family:=labelFont.FontFamily, emSize:=14)
+            .TitleForeColor = baseColor
         End With
 
         Me.TreatmentMarkersChart.ChartAreas.Add(treatmentMarkersChartArea)
-        _treatmentMarkersChartLegend = CreateChartLegend(NameOf(_treatmentMarkersChartLegend))
+        _treatmentMarkersChartLegend = CreateChartLegend(
+            legendName:=NameOf(_treatmentMarkersChartLegend))
 
         Me.TreatmentMarkersChartTitle = CreateTitle(
             chartTitle:="Treatment Details",
@@ -2123,10 +2143,10 @@ Public Class Form1
             legendText:="Min Basal",
             YAxisType:=AxisType.Primary)
 
-        Me.TreatmentMarkerSgSeries = CreateSeriesSg(_treatmentMarkersChartLegend)
-        Me.TreatmentMarkerMarkersSeries = CreateSeriesWithoutVisibleLegend(AxisType.Primary)
-        Me.TreatmentMarkerTimeChangeSeries = CreateSeriesTimeChange(_treatmentMarkersChartLegend)
-        Me.TreatmentMarkerSuspendSeries = CreateSeriesSuspend(_treatmentMarkersChartLegend)
+        Me.TreatmentMarkerSgSeries = CreateSeriesSg(sgLegend:=_treatmentMarkersChartLegend)
+        Me.TreatmentMarkerMarkersSeries = CreateSeriesWithoutVisibleLegend(YAxisType:=AxisType.Primary)
+        Me.TreatmentMarkerTimeChangeSeries = CreateSeriesTimeChange(basalLegend:=_treatmentMarkersChartLegend)
+        Me.TreatmentMarkerSuspendSeries = CreateSeriesSuspend(basalLegend:=_treatmentMarkersChartLegend)
 
         With Me.TreatmentMarkersChart
             With .Series
@@ -2180,13 +2200,17 @@ Public Class Form1
                 Using g As Graphics = Graphics.FromImage(bitmapText)
                     Dim backColor As Color
                     Select Case sg
-                        Case <= TirLowLimit(NativeMmolL)
+                        Case <= TirLowLimit(asMmolL:=NativeMmolL)
                             backColor = Color.Yellow
                             If _showBalloonTip Then
-                                Me.NotifyIcon1.ShowBalloonTip(10000, $"CareLink™ Alert", $"SG below {TirLowLimitAsString(NativeMmolL)} {BgUnitsNativeString}", Me.ToolTip1.ToolTipIcon)
+                                Me.NotifyIcon1.ShowBalloonTip(
+                                    timeout:=10000,
+                                    tipTitle:=$"CareLink™ Alert",
+                                    tipText:=$"SG below {TirLowLimitAsString(asMmolL:=NativeMmolL)} {BgUnitsNativeString}",
+                                    tipIcon:=Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
-                        Case <= TirHighLimit(NativeMmolL)
+                        Case <= TirHighLimit(asMmolL:=NativeMmolL)
                             backColor = Color.Green
                             _showBalloonTip = True
                         Case Else
@@ -2195,7 +2219,7 @@ Public Class Form1
                                 Me.NotifyIcon1.ShowBalloonTip(
                                     timeout:=10000,
                                     tipTitle:=$"CareLink™ Alert",
-                                    tipText:=$"SG above {TirHighLimitAsString(NativeMmolL)} {BgUnitsNativeString}",
+                                    tipText:=$"SG above {TirHighLimitAsString(asMmolL:=NativeMmolL)} {BgUnitsNativeString}",
                                     tipIcon:=Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
@@ -2377,13 +2401,13 @@ Public Class Form1
                     remainingInsulinList.Add(New RunningActiveInsulin(firstNotSkippedOaTime, initialBolus, CurrentUser))
                 Next
 
-                .ChartAreas(NameOf(ChartArea)).AxisY2.Maximum = GetYMaxValue(NativeMmolL)
+                .ChartAreas(NameOf(ChartArea)).AxisY2.Maximum = GetYMaxValue(asMmolL:=NativeMmolL)
                 ' walk all markers, adjust active insulin and then add new markerWithIndex
                 Dim maxActiveInsulin As Double = 0
                 For i As Integer = 0 To remainingInsulinList.Count - 1
                     If i < CurrentUser.GetActiveInsulinIncrements Then
                         With Me.ActiveInsulinActiveInsulinSeries
-                            .Points.AddXY(remainingInsulinList(i).OaDateTime, Double.NaN)
+                            .Points.AddXY(remainingInsulinList(i).OaDateTime, yValue:=Double.NaN)
                             .Points.Last.IsEmpty = True
                         End With
                         If i > 0 Then
@@ -2404,8 +2428,8 @@ Public Class Form1
                     timeChangeSeries:=Me.ActiveInsulinTimeChangeSeries,
                     markerInsulinDictionary:=s_activeInsulinMarkerInsulinDictionary,
                     markerMealDictionary:=Nothing)
-                .PlotSgSeries(GetYMinValue(NativeMmolL))
-                .PlotHighLowLimitsAndTargetSg(True)
+                .PlotSgSeries(GetYMinValue(asMmolL:=NativeMmolL))
+                .PlotHighLowLimitsAndTargetSg(targetSsOnly:=True)
             End With
             Application.DoEvents()
         Catch ex As Exception
@@ -2428,7 +2452,7 @@ Public Class Form1
                     timeChangeSeries:=Me.SummaryTimeChangeSeries,
                     markerInsulinDictionary:=s_summaryMarkerInsulinDictionary,
                     markerMealDictionary:=s_summaryMarkerMealDictionary)
-                .PlotSgSeries(GetYMinValue(NativeMmolL))
+                .PlotSgSeries(GetYMinValue(asMmolL:=NativeMmolL))
                 .PlotHighLowLimitsAndTargetSg(False)
                 Application.DoEvents()
             End With
@@ -2499,7 +2523,11 @@ Public Class Form1
                 Else
                     If Debugger.IsAttached Then
                         Stop
-                        MsgBox($"{s_sensorState} is unknown sensor message", "", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, GetTitleFromStack(New StackFrame(0, True)))
+                        MsgBox(
+                            heading:=$"{s_sensorState} is unknown sensor message",
+                            text:="",
+                            buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                            title:=GetTitleFromStack(New StackFrame(0, needFileInfo:=True)))
                     End If
 
                     message = message.ToTitle
@@ -2785,11 +2813,11 @@ Public Class Form1
         With Me.TimeInRangeChart
             With .Series(NameOf(TimeInRangeSeries)).Points
                 .Clear()
-                .AddXY($"{s_belowHypoLimit}% Below {TirLowLimitAsString(NativeMmolL)} {BgUnitsNativeString}", s_belowHypoLimit / 100)
+                .AddXY($"{s_belowHypoLimit}% Below {TirLowLimitAsString(asMmolL:=NativeMmolL)} {BgUnitsNativeString}", s_belowHypoLimit / 100)
                 .Last().Color = Color.Red
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
-                .AddXY($"{s_aboveHyperLimit}% Above {TirHighLimitAsString(NativeMmolL)} {BgUnitsNativeString}", s_aboveHyperLimit / 100)
+                .AddXY($"{s_aboveHyperLimit}% Above {TirHighLimitAsString(asMmolL:=NativeMmolL)} {BgUnitsNativeString}", s_aboveHyperLimit / 100)
                 .Last().Color = Color.Yellow
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
@@ -2803,10 +2831,10 @@ Public Class Form1
         End With
 
         Me.AboveHighLimitValueLabel.Text = $"{s_aboveHyperLimit} %"
-        Me.AboveHighLimitMessageLabel.Text = $"Above {TirHighLimitAsString(NativeMmolL)} {BgUnitsNativeString}"
+        Me.AboveHighLimitMessageLabel.Text = $"Above {TirHighLimitAsString(asMmolL:=NativeMmolL)} {BgUnitsNativeString}"
         Me.TimeInRangeValueLabel.Text = $"{GetTIR()} %"
         Me.BelowLowLimitValueLabel.Text = $"{s_belowHypoLimit} %"
-        Me.BelowLowLimitMessageLabel.Text = $"Below {TirLowLimitAsString(NativeMmolL)} {BgUnitsNativeString}"
+        Me.BelowLowLimitMessageLabel.Text = $"Below {TirLowLimitAsString(asMmolL:=NativeMmolL)} {BgUnitsNativeString}"
         Dim averageSgStr As String = RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.averageSG))
         Me.AverageSGValueLabel.Text = If(NativeMmolL, averageSgStr.TruncateSingleString(2), averageSgStr)
         Me.AverageSGMessageLabel.Text = $"Average SG in {BgUnitsNativeString}"
@@ -2856,22 +2884,22 @@ Public Class Form1
         Dim lowCount As Integer = 0
         Dim lowDeviations As Double = 0
         Dim elements As Integer = 0
-        Dim highScale As Single = (GetYMaxValue(False) - TirHighLimit(False)) / (TirLowLimit(False) - GetYMinValue(False))
+        Dim highScale As Single = (GetYMaxValue(asMmolL:=False) - TirHighLimit(asMmolL:=False)) / (TirLowLimit(asMmolL:=False) - GetYMinValue(asMmolL:=False))
         For Each sg As SG In s_listOfSgRecords.Where(Function(entry As SG) Not Single.IsNaN(entry.sg))
             elements += 1
             If sg.sgMgdL < 70 Then
                 lowCount += 1
                 If NativeMmolL Then
-                    lowDeviations += ((TirLowLimit(True) - sg.sgMmolL) * MmolLUnitsDivisor) ^ 2
+                    lowDeviations += ((TirLowLimit(asMmolL:=True) - sg.sgMmolL) * MmolLUnitsDivisor) ^ 2
                 Else
-                    lowDeviations += (TirLowLimit(False) - sg.sgMgdL) ^ 2
+                    lowDeviations += (TirLowLimit(asMmolL:=False) - sg.sgMgdL) ^ 2
                 End If
             ElseIf sg.sgMgdL > 180 Then
                 highCount += 1
                 If NativeMmolL Then
-                    highDeviations += ((sg.sgMmolL - TirHighLimit(True)) * MmolLUnitsDivisor) ^ 2
+                    highDeviations += ((sg.sgMmolL - TirHighLimit(asMmolL:=True)) * MmolLUnitsDivisor) ^ 2
                 Else
-                    highDeviations += (sg.sgMgdL - TirHighLimit(False)) ^ 2
+                    highDeviations += (sg.sgMgdL - TirHighLimit(asMmolL:=False)) ^ 2
                 End If
             End If
         Next
@@ -2934,7 +2962,7 @@ Public Class Form1
             Me.TreatmentMarkersChart.ChartAreas(NameOf(ChartArea)).UpdateChartAreaSgAxisX()
             Me.TreatmentMarkersChart.PlotSuspendArea(Me.TreatmentMarkerSuspendSeries)
             Me.TreatmentMarkersChart.PlotTreatmentMarkers(Me.TreatmentMarkerTimeChangeSeries)
-            Me.TreatmentMarkersChart.PlotSgSeries(GetYMinValue(NativeMmolL))
+            Me.TreatmentMarkersChart.PlotSgSeries(GetYMinValue(asMmolL:=NativeMmolL))
             Me.TreatmentMarkersChart.PlotHighLowLimitsAndTargetSg(True)
         Catch ex As Exception
             Stop

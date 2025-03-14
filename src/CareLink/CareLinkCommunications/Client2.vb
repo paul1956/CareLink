@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.IO
 Imports System.Net.Http
 Imports System.Net.Http.Headers
 Imports System.Security.Policy
@@ -437,9 +438,13 @@ Public Class Client2
         Dim patientDataElement As JsonElement = CType(data.Values(1), JsonElement)
         Try
             Dim patientDataElementAsText As String = patientDataElement.GetRawText()
-            PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
             Stop
+            File.WriteAllTextAsync(
+                path:=GetLastDownloadFileWithPath(),
+                contents:=JsonSerializer.Serialize(patientDataElement, s_jsonSerializerOptions))
+            PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
             RecentData = patientDataElement.ConvertJsonElementToStringDictionary()
+
         Catch ex As Exception
             Stop
         End Try

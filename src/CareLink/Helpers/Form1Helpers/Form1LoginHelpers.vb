@@ -28,7 +28,10 @@ Friend Module Form1LoginHelpers
                 Form1.Text = $"{SavedTitle} Using Last Saved Data"
                 Dim lastDownloadFileWithPath As String = GetLastDownloadFileWithPath()
                 CurrentDateCulture = lastDownloadFileWithPath.ExtractCultureFromFileName(BaseNameSavedLastDownload)
-                RecentData = LoadIndexedItems(File.ReadAllText(lastDownloadFileWithPath))
+                Dim patientDataElementAsText As String = File.ReadAllText(lastDownloadFileWithPath)
+                Dim patientDataElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(patientDataElementAsText)
+                RecentData = LoadIndexedItems(patientDataElementAsText)
+                PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
                 Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(lastDownloadFileWithPath)
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
