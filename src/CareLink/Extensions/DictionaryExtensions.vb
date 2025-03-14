@@ -6,6 +6,7 @@ Imports System.Reflection
 Imports System.Runtime.CompilerServices
 Imports System.Text
 Imports System.Text.Json
+Imports WebView2.DevTools.Dom
 
 Public Module DictionaryExtensions
 
@@ -42,10 +43,10 @@ Public Module DictionaryExtensions
 
     Public Function GetValueList(jsonString As String) As String()
         Dim valueList As String() = JsonToDictionary(jsonString).ToCsv _
-            .Replace("{", "") _
-            .Replace("}", "") _
+            .Replace("{", "").Trim _
+            .Replace("}", "").Trim _
             .Split(",")
-        Return valueList
+        Return valueList.Select(Function(s) s.Trim()).ToArray
     End Function
 
     Public Function GetAdditionalInformation(jsonString As String) As Dictionary(Of String, String)

@@ -26,10 +26,11 @@ Friend Module Form1LoginHelpers
         Select Case fileToLoad
             Case FileToLoadOptions.LastSaved
                 Form1.Text = $"{SavedTitle} Using Last Saved Data"
-                CurrentDateCulture = GetLastDownloadFileWithPath().ExtractCultureFromFileName(BaseNameSavedLastDownload)
-                RecentData = LoadIndexedItems(File.ReadAllText(GetLastDownloadFileWithPath()))
+                Dim lastDownloadFileWithPath As String = GetLastDownloadFileWithPath()
+                CurrentDateCulture = lastDownloadFileWithPath.ExtractCultureFromFileName(BaseNameSavedLastDownload)
+                RecentData = LoadIndexedItems(File.ReadAllText(lastDownloadFileWithPath))
                 Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                Dim fileDate As Date = File.GetLastWriteTime(GetLastDownloadFileWithPath())
+                Dim fileDate As Date = File.GetLastWriteTime(lastDownloadFileWithPath)
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
                 SetUpCareLinkUser(TestSettingsFileNameWithPath)
                 fromFile = True

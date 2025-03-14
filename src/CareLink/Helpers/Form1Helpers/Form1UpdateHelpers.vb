@@ -68,20 +68,26 @@ Friend Module Form1UpdateHelpers
         End Select
     End Function
 
-    Friend Sub HandleComplexItems(row As KeyValuePair(Of String, String), rowIndex As ServerDataIndexes, key As String, listOfSummaryRecords As List(Of SummaryRecord))
+    Friend Sub HandleComplexItems(row As KeyValuePair(Of String, String), rowIndex As Integer, key As String, listOfSummaryRecords As List(Of SummaryRecord))
         Dim valueList As String() = GetValueList(row.Value)
         For Each e As IndexClass(Of String) In valueList.WithIndex
+            Dim message As String = String.Empty
             Dim strings As String() = e.Value.Split(" = ")
+            If row.Key = "additionalInfo" Then
+                Dim additionalInfo As Dictionary(Of String, String) = GetAdditionalInformation(row.Value)
+                If strings(0) = "sensorUpdateTime" Then
+                    message = GetSensorUpdateTime(strings(1))
+                End If
+            End If
             Dim item As New SummaryRecord(
                 recordNumber:=CSng(CSng(rowIndex) + ((e.Index + 1) / 10)),
                 $"{key}:{strings(0).Trim}",
                 value:=strings(1).Trim,
-                message:="")
+                message)
             listOfSummaryRecords.Add(item)
             If item.Value = "hardwareRevision" Then
                 s_pumpHardwareRevision = item.Message
             End If
-
         Next
     End Sub
 

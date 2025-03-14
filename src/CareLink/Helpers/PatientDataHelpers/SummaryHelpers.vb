@@ -8,7 +8,7 @@ Imports System.Text.RegularExpressions
 
 Friend Module SummaryHelpers
 
-    Private ReadOnly s_sensorUpdateTimes As New Dictionary(Of String, String) From {
+    Friend ReadOnly s_sensorUpdateTimes As New Dictionary(Of String, String) From {
         {"INITIAL_ALERT_SHORT", "30 minutes"}}
 
     'Private ReadOnly s_variablesUsedInMessages As New HashSet(Of String)
@@ -38,6 +38,7 @@ Friend Module SummaryHelpers
             .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
     End Sub
+
     Private Sub DataGridView_VisibleChanged(sender As Object, e As EventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.ClearSelection()
@@ -173,10 +174,9 @@ Friend Module SummaryHelpers
                                     End If
                                 Case "sensorUpdateTime"
                                     If additionalInfo.TryGetValue(key, sensorUpdateTime) Then
-                                        sensorUpdateTime = s_sensorUpdateTimes(sensorUpdateTime)
+                                        sensorUpdateTime = GetSensorUpdateTime(sensorUpdateTime)
                                     Else
                                         Stop
-                                        sensorUpdateTime = $"Unknown key {key}"
                                     End If
                                 Case "sg"
                                     If additionalInfo.TryGetValue(key, sg) Then
@@ -234,6 +234,15 @@ Friend Module SummaryHelpers
 
     Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
         Return ClassPropertiesToColumnAlignment(Of SummaryRecord)(s_alignmentTable, columnName)
+    End Function
+
+    Friend Function GetSensorUpdateTime(key As String) As String
+        Dim sensorUpdateTime As String = String.Empty
+        If s_sensorUpdateTimes.TryGetValue(key, sensorUpdateTime) Then
+            Return sensorUpdateTime
+        End If
+        Stop
+        Return $"Unknown key {key}"
     End Function
 
     Friend Function GetSummaryRecords(dic As Dictionary(Of String, String), Optional rowsToHide As List(Of String) = Nothing) As List(Of SummaryRecord)

@@ -10,8 +10,7 @@ Friend Module Form1NotificationTabHelpers
             NameOf(ActiveNotification.version),
             NameOf(ActiveNotification.pnpId),
             NameOf(ClearedNotifications.RecordNumber),
-            NameOf(ClearedNotifications.ReferenceGUID)
-        }
+            NameOf(ClearedNotifications.ReferenceGUID)}
 
     Private Sub CreateNotificationTables(notificationDictionary As Dictionary(Of String, String))
         Form1.TableLayoutPanelNotificationsCleared.Visible = False
