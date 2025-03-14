@@ -156,7 +156,6 @@ Public Class LoginDialog
         End If
 
         s_userName = Me.UsernameComboBox.Text
-        Dim lastErrorMessage As String = ""
         s_password = Me.PasswordTextBox.Text
         s_countryCode = Me.CountryComboBox.SelectedValue.ToString
 
@@ -166,7 +165,7 @@ Public Class LoginDialog
         Me.Client = New Client2()
         Me.Client.Init()
 
-        lastErrorMessage = Me.Client.GetRecentData()
+        Dim lastErrorMessage As String = Me.Client.GetRecentData()
         If String.IsNullOrWhiteSpace(lastErrorMessage) Then
             s_lastMedicalDeviceDataUpdateServerEpoch = 0
             ReportLoginStatus(Me.LoginStatus, False, lastErrorMessage)

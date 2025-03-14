@@ -1790,7 +1790,7 @@ Public Class Form1
 
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
         StartOrStopServerUpdateTimer(False)
-        Dim lastErrorMessage As String = ""
+        Dim lastErrorMessage As String = String.Empty
         SyncLock _updatingLock
             If _updating Then
                 Stop
