@@ -18,13 +18,7 @@ Public Class PumpSetupDialog
     End Function
 
     Private Sub DataGridView_Paint(sender As Object, e As PaintEventArgs) Handles DataGridViewHighAlert.Paint, DataGridViewLowAlert.Paint
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        If dgv.Rows.Count = 0 Then
-            TextRenderer.DrawText(e.Graphics, "No records found.",
-                font:=New Font(family:=dgv.Font.FontFamily, emSize:=20), bounds:=dgv.ClientRectangle,
-                foreColor:=dgv.ForeColor, backColor:=dgv.BackgroundColor,
-                flags:=TextFormatFlags.HorizontalCenter Or TextFormatFlags.VerticalCenter)
-        End If
+        DgvPaint(sender, e)
 
     End Sub
 

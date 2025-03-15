@@ -54,8 +54,7 @@ Public Class Basal
             {"activationType", "MANUAL"},
             {"bolusAmount", Me.GetBasal.ToString},
             {"dateTime", Date.FromOADate(Me.GetOaGetTime).ToString(CurrentDateCulture)},
-            {"oaDateTime", _oaDateTime.ToString}
-        }
+            {"oaDateTime", _oaDateTime.ToString}}
     End Function
 
     Public Shared Operator <>(left As Basal, right As Basal) As Boolean

@@ -2,7 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Public Class BasalRecords
+Public Class BasalList
     Private ReadOnly _buffer As New List(Of Basal)
     Private ReadOnly _size As Integer
 

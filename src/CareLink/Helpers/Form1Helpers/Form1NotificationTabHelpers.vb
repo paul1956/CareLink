@@ -29,8 +29,8 @@ Friend Module Form1NotificationTabHelpers
                             rowIndex:=innerDictionary.Index + 1)
                     Next
                 Else
-                    Form1.TableLayoutPanelNotificationActiveTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-                    DisplayEmptyDGV(realPanel:=Form1.TableLayoutPanelNotificationsCleared, className:="clearedNotifications")
+                    Form1.TableLayoutPanelNotificationsCleared.AutoSizeMode = AutoSizeMode.GrowAndShrink
+                    Form1.TableLayoutPanelNotificationsCleared.DisplayEmptyDGV(className:="clearedNotifications")
                 End If
             Else
                 If innerJson.Count > 0 Then
@@ -43,15 +43,12 @@ Friend Module Form1NotificationTabHelpers
                             rowIndex:=innerDictionary.Index + 1)
                     Next
                 Else
-                    Form1.TableLayoutPanelNotificationActiveTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-                    DisplayEmptyDGV(
-                        realPanel:=Form1.TableLayoutPanelNotificationActive,
-                        className:="activeNotification")
+                    Form1.TableLayoutPanelNotificationActive.AutoSizeMode = AutoSizeMode.GrowOnly
+                    Form1.TableLayoutPanelNotificationActive.DisplayEmptyDGV(className:="activeNotification")
                 End If
             End If
         Next
         Form1.TableLayoutPanelNotificationsCleared.Visible = True
-
     End Sub
 
     Private Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As Integer)
@@ -62,7 +59,7 @@ Friend Module Form1NotificationTabHelpers
             .Name = $"DataGridView{className}",
             .RowHeadersVisible = False
         }
-        realPanel.Controls.Add(dGV, 0, rowIndex)
+        realPanel.Controls.Add(control:=dGV, column:=0, row:=rowIndex)
         dGV.DefaultCellStyle.WrapMode = DataGridViewTriState.True
         dGV.InitializeDgv()
         dGV.DataSource = table
@@ -73,20 +70,6 @@ Friend Module Form1NotificationTabHelpers
         realPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink
         realPanel.AutoSize = True
         attachHandlers?(dGV)
-    End Sub
-
-    Private Sub DisplayEmptyDGV(realPanel As TableLayoutPanel, className As String)
-        Dim table As New DataTable()
-        table.Columns.Add("Message")
-        Dim newRow As DataRow = table.NewRow()
-        newRow("Message") = "No records found"
-        table.Rows.Add(newRow)
-        DisplayDataTableInDGV(
-            realPanel,
-            table,
-            className,
-            attachHandlers:=Nothing,
-            rowIndex:=1)
     End Sub
 
     Friend Sub UpdateNotificationTabs()

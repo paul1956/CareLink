@@ -11,8 +11,8 @@ Friend Module DisplayDataTableInDgvHelpers
     <Extension>
     Friend Sub DisplayDataTableInDGV(
         realPanel As TableLayoutPanel,
-        dGV As DataGridView,
         table As DataTable,
+        dGV As DataGridView,
         rowIndex As ServerDataIndexes)
 
         realPanel.SetTabName(rowIndex, isClearedNotifications:=False)

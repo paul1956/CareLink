@@ -471,6 +471,7 @@ Public Class Form1
     Public Sub Dgv_CellContextMenuStripNeededWithExcel(sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs) Handles _
         DgvAutoBasalDelivery.CellContextMenuStripNeeded,
         DgvInsulin.CellContextMenuStripNeeded,
+        DgvLimits.CellContextMenuStripNeeded,
         DgvMeal.CellContextMenuStripNeeded,
         DgvSGs.CellContextMenuStripNeeded
 
@@ -481,6 +482,7 @@ Public Class Form1
 
     Public Sub Dgv_CellContextMenuStripNeededWithoutExcel(
         sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs) Handles _
+            DgvActiveInsulin.CellContextMenuStripNeeded,
             DgvAutoBasalDelivery.CellContextMenuStripNeeded,
             DgvBannerState.CellContextMenuStripNeeded,
             DgvCareLinkUsers.CellContextMenuStripNeeded,
@@ -488,6 +490,7 @@ Public Class Form1
             DgvInsulin.CellContextMenuStripNeeded,
             DgvLastAlarm.CellContextMenuStripNeeded,
             DgvLastSensorGlucose.CellContextMenuStripNeeded,
+            DgvLimits.CellContextMenuStripNeeded,
             DgvMeal.CellContextMenuStripNeeded,
             DgvSGs.CellContextMenuStripNeeded,
             DgvSummary.CellContextMenuStripNeeded,
@@ -544,6 +547,19 @@ Public Class Form1
     End Sub
 
 #End Region ' Dgv Auto Basal Delivery (Basal) Events
+
+#Region "Dgv Banner State Events"
+
+    Private Sub DgvBannerState_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvBannerState.ColumnAdded
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        ColumnAdded(dgv, e)
+    End Sub
+
+    Private Sub DgvBannerState_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvBannerState.DataError
+        Stop
+    End Sub
+
+#End Region ' Dgv Banner State Events
 
 #Region "Dgv CareLink Users Events"
 
@@ -748,6 +764,43 @@ Public Class Form1
 
 #End Region ' Dgv Current User Events
 
+#Region "Dgv Active Insulin Events"
+
+    Private Sub DgvActiveInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvActiveInsulin.ColumnAdded
+        With e.Column
+            If ActiveInsulinHelpers.HideColumn(.Name) Then
+                .Visible = False
+            Else
+                e.DgvColumnAdded(
+                    cellStyle:=ActiveInsulinHelpers.GetCellStyle(.Name),
+                    wrapHeader:=False,
+                    forceReadOnly:=True,
+                    caption:=Nothing)
+            End If
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+        End With
+    End Sub
+
+    Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvActiveInsulin.CellFormatting
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(ActiveInsulin.datetime)
+                dgv.CellFormattingDateTime(e)
+            Case NameOf(ActiveInsulin.amount)
+                dgv.CellFormattingSingleValue(e, digits:=3)
+            Case NameOf(ActiveInsulin.Precision)
+                dgv.CellFormattingToTitle(e)
+            Case Else
+                dgv.CellFormattingSetForegroundColor(e)
+        End Select
+    End Sub
+
+    Private Sub DgvActiveInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvActiveInsulin.DataError
+        Stop
+    End Sub
+
+#End Region ' Dgv Meal Events
+
 #Region "Dgv Insulin Events"
 
     Private Sub DgvInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvInsulin.DataError
@@ -756,26 +809,74 @@ Public Class Form1
 
 #End Region ' Dgv Insulin Events
 
+#Region "Dgv Last Alarm Events"
+
+    Private Sub DgvLastAlarm_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLastAlarm.ColumnAdded
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        ColumnAdded(dgv, e)
+    End Sub
+
+    Private Sub DgvLastAlarm_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvLastAlarm.DataError
+        Stop
+    End Sub
+
+#End Region ' Dgv Last Alarm Events
+
+#Region "Dgv Limits Events"
+    Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLimits.ColumnAdded
+        With e.Column
+            If LimitsHelpers.HideColumn(.Name) Then
+                .Visible = False
+            Else
+                Dim dgv As DataGridView = CType(sender, DataGridView)
+                e.DgvColumnAdded(
+                    cellStyle:=LimitsHelpers.GetCellStyle(.Name),
+                    wrapHeader:=True,
+                    forceReadOnly:=True,
+                    caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+            End If
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+        End With
+    End Sub
+
+    Private Sub DgvLimits_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvLimits.CellFormatting
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        dgv.CellFormattingSetForegroundColor(e)
+    End Sub
+
+    Private Sub DgvLimits_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvLimits.DataError
+        Stop
+    End Sub
+
+#End Region ' Dgv Limits Events
+
 #Region "Dgv Meal Events"
+
+    Private Sub DgvMeal_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvMeal.ColumnAdded
+        With e.Column
+            If MealHelpers.HideColumn(.Name) Then
+                .Visible = False
+            Else
+                e.DgvColumnAdded(
+                    cellStyle:=MealHelpers.GetCellStyle(.Name),
+                    wrapHeader:=False,
+                    forceReadOnly:=True,
+                    caption:=Nothing)
+            End If
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+        End With
+    End Sub
 
     Private Sub DgvMeal_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvMeal.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(Meal.amount)
-                dgv.CellFormattingInteger(e, GetCarbDefaultUnit)
+        Select Case CType(sender, DataGridView).Columns(e.ColumnIndex).Name
             Case NameOf(Meal.Timestamp)
                 dgv.CellFormattingDateTime(e)
+            Case NameOf(Meal.amount)
+                dgv.CellFormattingInteger(e, GetCarbDefaultUnit)
+            Case Else
+                dgv.CellFormattingSetForegroundColor(e)
         End Select
-    End Sub
-
-    Private Sub DgvMeal_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvMeal.ColumnAdded
-        e.DgvColumnAdded(
-            cellStyle:=New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(all:=1)),
-            wrapHeader:=False,
-            forceReadOnly:=True,
-            caption:=Nothing)
-        e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
-
     End Sub
 
     Private Sub DgvMeal_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvMeal.DataError
@@ -1015,45 +1116,6 @@ Public Class Form1
 
 #End Region ' Dgv Summary Events
 
-#Region "Dgv Banner State Events"
-
-    Private Sub DgvBannerState_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvBannerState.ColumnAdded
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        ColumnAdded(dgv, e)
-    End Sub
-
-    Private Sub DgvBannerState_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvBannerState.DataError
-        Stop
-    End Sub
-
-#End Region ' Dgv Banner State Events
-
-#Region "Dgv Last Alarm Events"
-
-    Private Sub DgvLastAlarm_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLastAlarm.ColumnAdded
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        ColumnAdded(dgv, e)
-    End Sub
-
-    Private Sub DgvLastAlarm_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvLastAlarm.DataError
-        Stop
-    End Sub
-
-#End Region ' Dgv Last Alarm Events
-
-#Region "Dgv Last Alarm Events"
-
-    Private Sub DgvLastSG_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLastSensorGlucose.ColumnAdded
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        ColumnAdded(dgv, e)
-    End Sub
-
-    Private Sub DgvLastSG_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvLastSensorGlucose.DataError
-        Stop
-    End Sub
-
-#End Region ' Dgv Last Alarm Events
-
 #Region "Dgv Therapy Algorithm State Events"
 
     Private Sub DgvTherapyAlgorithmState_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvTherapyAlgorithmState.ColumnAdded
@@ -1065,7 +1127,7 @@ Public Class Form1
         Stop
     End Sub
 
-#End Region
+#End Region ' Dgv Therapy Algorithm State Events
 
 #End Region ' DataGridView Events
 
@@ -3065,21 +3127,21 @@ Public Class Form1
         Me.TableLayoutPanelActiveInsulin.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(listOfClass:={s_activeInsulin}.ToList),
             className:=NameOf(ActiveInsulin),
-            attachHandlers:=AddressOf ActiveInsulinHelpers.AttachHandlers,
+            attachHandlers:=Nothing,
             rowIndex:=ServerDataIndexes.activeInsulin,
             hideRecordNumberColumn:=True)
 
         Dim keySelector As Func(Of SG, Integer) = Function(x) x.RecordNumber
         Me.TableLayoutPanelSgs.DisplayDataTableInDGV(
-            dGV:=Me.DgvSGs,
             table:=ClassCollectionToDataTable(listOfClass:=s_listOfSgRecords.OrderByDescending(keySelector).ToList()),
+            dGV:=Me.DgvSGs,
             rowIndex:=ServerDataIndexes.sgs)
         Me.DgvSGs.Columns(index:=0).HeaderCell.SortGlyphDirection = SortOrder.Descending
 
         Me.TableLayoutPanelLimits.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(listOfClass:=s_listOfLimitRecords),
             className:=NameOf(Limit),
-            attachHandlers:=AddressOf LimitsHelpers.AttachHandlers,
+            attachHandlers:=Nothing,
             rowIndex:=ServerDataIndexes.limits,
             hideRecordNumberColumn:=False)
 

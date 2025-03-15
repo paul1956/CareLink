@@ -33,12 +33,10 @@ Friend Module PlotMarkers
 
     <Extension>
     Private Sub AdjustXAxisStartTime(ByRef axisX As Axis, lastTimeChangeRecord As TimeChange)
-#If False Then  ' This is the original code
         Dim latestTime As Date = If(lastTimeChangeRecord.DisplayTime > lastTimeChangeRecord.Timestamp, lastTimeChangeRecord.DisplayTime, lastTimeChangeRecord.Timestamp)
         Dim timeOffset As Double = (latestTime - s_listOfSgRecords(0).Timestamp).TotalMinutes
         axisX.IntervalOffset = timeOffset
         axisX.IntervalOffsetType = DateTimeIntervalType.Minutes
-#End If
     End Sub
 
     Private Function GetToolTip(type As String, amount As Single) As String
@@ -59,7 +57,12 @@ Friend Module PlotMarkers
     End Function
 
     <Extension>
-    Friend Sub PlotMarkers(pageChart As Chart, timeChangeSeries As Series, markerInsulinDictionary As Dictionary(Of OADate, Single), markerMealDictionary As Dictionary(Of OADate, Single))
+    Friend Sub PlotMarkers(
+        pageChart As Chart,
+        timeChangeSeries As Series,
+        markerInsulinDictionary As Dictionary(Of OADate, Single),
+        markerMealDictionary As Dictionary(Of OADate, Single))
+
         Dim lastTimeChangeRecord As TimeChange = Nothing
         markerInsulinDictionary.Clear()
         markerMealDictionary?.Clear()
@@ -110,7 +113,7 @@ Friend Module PlotMarkers
                                 tag:=GetToolTip(marker.Type, amount))
                         End With
                     Case "INSULIN"
-                        Select Case marker.GetStringValueFromJson(NameOf(Insulin.activationType))
+                        Select Case marker.GetStringValueFromJson(NameOf(Insulin.ActivationType))
                             Case "AUTOCORRECTION"
                                 Dim autoCorrection As Single = marker.GetSingleValueFromJson("deliveredFastAmount", 3)
                                 With pageChart.Series(BasalSeriesName)
@@ -158,7 +161,7 @@ Friend Module PlotMarkers
                     Case "TIME_CHANGE"
                         With pageChart.Series(TimeChangeSeriesName).Points
                             lastTimeChangeRecord = New TimeChange(marker)
-                            markerOADate = New OADate(lastTimeChangeRecord.timestamp)
+                            markerOADate = New OADate(lastTimeChangeRecord.Timestamp)
                             .AddXY(markerOADate, 0)
                             .AddXY(markerOADate, GetYMaxValue(NativeMmolL))
                             .AddXY(markerOADate, Double.NaN)

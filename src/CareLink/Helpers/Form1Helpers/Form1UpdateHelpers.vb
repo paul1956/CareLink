@@ -414,8 +414,8 @@ Friend Module Form1UpdateHelpers
     Friend Sub UpdateMarkerTabs()
         With Form1
             .TableLayoutPanelAutoBasalDelivery.DisplayDataTableInDGV(
-                dGV:= .DgvAutoBasalDelivery,
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfAutoBasalDeliveryMarkers),
+                dGV:= .DgvAutoBasalDelivery,
                 rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelAutoModeStatus.DisplayDataTableInDGV(
@@ -441,7 +441,7 @@ Friend Module Form1UpdateHelpers
             .TableLayoutPanelMeal.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfMealMarkers),
                 className:=NameOf(Meal),
-                attachHandlers:=AddressOf MealHelpers.AttachHandlers,
+                attachHandlers:=Nothing,
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
             .TableLayoutPanelCalibration.DisplayDataTableInDGV(
@@ -549,12 +549,16 @@ Friend Module Form1UpdateHelpers
                 Form1.LastSgOrExitTimeLabel.Visible = True
             End If
         End If
-        Form1.TableLayoutPanelBannerState.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(listOfClass:=listOfPumpBannerState),
-            className:=NameOf(BannerState),
-            attachHandlers:=AddressOf BannerStateHelpers.AttachHandlers,
-            rowIndex:=ServerDataIndexes.pumpBannerState,
-            hideRecordNumberColumn:=False)
+        If s_pumpBannerStateValue.Count > 0 Then
+            Form1.TableLayoutPanelBannerState.DisplayDataTableInDGV(
+                table:=ClassCollectionToDataTable(listOfClass:=listOfPumpBannerState),
+                className:=NameOf(BannerState),
+                attachHandlers:=AddressOf BannerStateHelpers.AttachHandlers,
+                rowIndex:=ServerDataIndexes.pumpBannerState,
+                hideRecordNumberColumn:=False)
+        Else
+            DisplayEmptyDGV(Form1.TableLayoutPanelBannerState, NameOf(BannerState))
+        End If
     End Sub
 
     ''' <summary>

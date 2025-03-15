@@ -33,6 +33,13 @@ Partial Class Form1
         Dim DataGridViewCellStyle5 As DataGridViewCellStyle = New DataGridViewCellStyle()
         Dim DataGridViewCellStyle6 As DataGridViewCellStyle = New DataGridViewCellStyle()
         Dim DataGridViewCellStyle7 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As DataGridViewCellStyle = New DataGridViewCellStyle()
         AboveHighLimitMessageLabel = New Label()
         AboveHighLimitValueLabel = New Label()
         ActiveInsulinValue = New Label()
@@ -60,17 +67,20 @@ Partial Class Form1
         CursorPanel = New Panel()
         CursorPictureBox = New PictureBox()
         CursorTimer = New Timer(components)
+        DgvActiveInsulin = New DataGridView()
         DgvAutoBasalDelivery = New DataGridView()
+        DgvBannerState = New DataGridView()
+        DgvBasal = New DataGridView()
         DgvCareLinkUsers = New DataGridView()
         DgvCurrentUser = New DataGridView()
         DgvInsulin = New DataGridView()
+        DgvLastAlarm = New DataGridView()
+        DgvLastSensorGlucose = New DataGridView()
+        DgvLimits = New DataGridView()
         DgvMeal = New DataGridView()
         DgvSGs = New DataGridView()
         DgvSummary = New DataGridView()
         DgvTherapyAlgorithmState = New DataGridView()
-        DgvBannerState = New DataGridView()
-        DgvLastSensorGlucose = New DataGridView()
-        DgvLastAlarm = New DataGridView()
         FullNameLabel = New Label()
         HighTirComplianceLabel = New Label()
         ImageList1 = New ImageList(components)
@@ -247,13 +257,16 @@ Partial Class Form1
         CType(CareLinkUserDataRecordBindingSource, ComponentModel.ISupportInitialize).BeginInit()
         CursorPanel.SuspendLayout()
         CType(CursorPictureBox, ComponentModel.ISupportInitialize).BeginInit()
+        CType(DgvActiveInsulin, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvAutoBasalDelivery, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvBannerState, ComponentModel.ISupportInitialize).BeginInit()
+        CType(DgvBasal, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvCareLinkUsers, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvCurrentUser, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvInsulin, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvLastAlarm, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvLastSensorGlucose, ComponentModel.ISupportInitialize).BeginInit()
+        CType(DgvLimits, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvMeal, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvSGs, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvSummary, ComponentModel.ISupportInitialize).BeginInit()
@@ -635,15 +648,6 @@ Partial Class Form1
         ' 
         CursorTimer.Interval = 60000
         ' 
-        ' DgvAutoBasalDelivery
-        ' 
-        DgvAutoBasalDelivery.Dock = DockStyle.Fill
-        DgvAutoBasalDelivery.Location = New Point(6, 52)
-        DgvAutoBasalDelivery.Name = "DgvAutoBasalDelivery"
-        DgvAutoBasalDelivery.ReadOnly = True
-        DgvAutoBasalDelivery.Size = New Size(1358, 597)
-        DgvAutoBasalDelivery.TabIndex = 0
-        ' 
         ' DgvCareLinkUsers
         ' 
         DgvCareLinkUsers.AllowUserToAddRows = False
@@ -666,7 +670,7 @@ Partial Class Form1
         DgvCareLinkUsers.DefaultCellStyle = DataGridViewCellStyle2
         DgvCareLinkUsers.Dock = DockStyle.Fill
         DgvCareLinkUsers.EditMode = DataGridViewEditMode.EditOnEnter
-        DgvCareLinkUsers.Location = New Point(3, 3)
+        DgvCareLinkUsers.Location = New Point(0, 0)
         DgvCareLinkUsers.Name = "DgvCareLinkUsers"
         DgvCareLinkUsers.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvCareLinkUsers.Size = New Size(1370, 655)
@@ -688,40 +692,134 @@ Partial Class Form1
         DgvCurrentUser.Size = New Size(1376, 661)
         DgvCurrentUser.TabIndex = 0
         ' 
+        ' DgvActiveInsulin
+        ' 
+        DgvActiveInsulin.Dock = DockStyle.Fill
+        DgvActiveInsulin.Location = New Point(0, 0)
+        DgvActiveInsulin.Name = "DgvActiveInsulin"
+        DgvActiveInsulin.ReadOnly = True
+        DataGridViewCellStyle3.WrapMode = DataGridViewTriState.False
+        DgvActiveInsulin.RowsDefaultCellStyle = DataGridViewCellStyle3
+        DgvActiveInsulin.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvActiveInsulin.Size = New Size(1358, 597)
+        DgvActiveInsulin.TabIndex = 0
+        ' 
+        ' DgvAutoBasalDelivery
+        ' 
+        DgvAutoBasalDelivery.Dock = DockStyle.Fill
+        DgvAutoBasalDelivery.Location = New Point(0, 0)
+        DgvAutoBasalDelivery.Name = "DgvAutoBasalDelivery"
+        DgvAutoBasalDelivery.ReadOnly = True
+        DataGridViewCellStyle4.WrapMode = DataGridViewTriState.False
+        DgvAutoBasalDelivery.RowsDefaultCellStyle = DataGridViewCellStyle4
+        DgvAutoBasalDelivery.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvAutoBasalDelivery.Size = New Size(1358, 597)
+        DgvAutoBasalDelivery.TabIndex = 0
+        ' 
+        ' DgvBannerState
+        ' 
+        DgvBannerState.Dock = DockStyle.Fill
+        DgvBannerState.Location = New Point(0, 0)
+        DgvBannerState.Name = "DgvBannerState"
+        DgvBannerState.ReadOnly = True
+        DataGridViewCellStyle5.WrapMode = DataGridViewTriState.False
+        DgvBannerState.RowsDefaultCellStyle = DataGridViewCellStyle5
+        DgvBannerState.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvBannerState.Size = New Size(1370, 655)
+        DgvBannerState.TabIndex = 0
+        ' 
+        ' DgvBasal
+        ' 
+        DgvBasal.Dock = DockStyle.Fill
+        DgvBasal.Location = New Point(0, 0)
+        DgvBasal.Name = "DgvBasal"
+        DgvBasal.ReadOnly = True
+        DataGridViewCellStyle6.WrapMode = DataGridViewTriState.False
+        DgvBasal.RowsDefaultCellStyle = DataGridViewCellStyle6
+        DgvBasal.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvBasal.Size = New Size(1358, 597)
+        DgvBasal.TabIndex = 0
+        ' 
         ' DgvInsulin
         ' 
         DgvInsulin.Dock = DockStyle.Fill
-        DgvInsulin.Location = New Point(6, 52)
+        DgvInsulin.Location = New Point(0, 0)
         DgvInsulin.Name = "DgvInsulin"
         DgvInsulin.ReadOnly = True
+        DataGridViewCellStyle7.WrapMode = DataGridViewTriState.False
+        DgvInsulin.RowsDefaultCellStyle = DataGridViewCellStyle7
         DgvInsulin.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvInsulin.Size = New Size(1358, 597)
         DgvInsulin.TabIndex = 0
         ' 
+        ' DgvLastAlarm
+        ' 
+        DgvLastAlarm.Dock = DockStyle.Fill
+        DgvLastAlarm.Location = New Point(3, 3)
+        DgvLastAlarm.Name = "DgvLastAlarm"
+        DgvLastAlarm.ReadOnly = True
+        DataGridViewCellStyle8.WrapMode = DataGridViewTriState.True
+        DgvLastAlarm.RowsDefaultCellStyle = DataGridViewCellStyle8
+        DgvLastAlarm.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvLastAlarm.Size = New Size(1370, 655)
+        DgvLastAlarm.TabIndex = 0
+        ' 
+        ' DgvLastSensorGlucose
+        ' 
+        DgvLastSensorGlucose.Dock = DockStyle.Fill
+        DgvLastSensorGlucose.Location = New Point(3, 3)
+        DgvLastSensorGlucose.Name = "DgvLastSensorGlucose"
+        DgvLastSensorGlucose.ReadOnly = True
+        DataGridViewCellStyle9.WrapMode = DataGridViewTriState.False
+        DgvLastSensorGlucose.RowsDefaultCellStyle = DataGridViewCellStyle9
+        DgvLastSensorGlucose.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvLastSensorGlucose.Size = New Size(1370, 655)
+        DgvLastSensorGlucose.TabIndex = 0
+        ' 
+        ' DgvLimits
+        ' 
+        DgvLimits.Dock = DockStyle.Fill
+        DgvLimits.Location = New Point(0, 0)
+        DgvLimits.Name = "DgvLimits"
+        DgvLimits.ReadOnly = True
+        DataGridViewCellStyle10.WrapMode = DataGridViewTriState.False
+        DgvLimits.RowsDefaultCellStyle = DataGridViewCellStyle10
+        DgvLimits.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvLimits.Size = New Size(1358, 597)
+        DgvLimits.TabIndex = 0
+        ' 
         ' DgvMeal
         ' 
         DgvMeal.Dock = DockStyle.Fill
-        DgvMeal.Location = New Point(6, 52)
+        DgvMeal.Location = New Point(0, 0)
         DgvMeal.Name = "DgvMeal"
+        DgvMeal.ReadOnly = True
+        DataGridViewCellStyle11.WrapMode = DataGridViewTriState.False
+        DgvMeal.RowsDefaultCellStyle = DataGridViewCellStyle11
+        DgvMeal.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvMeal.Size = New Size(1358, 597)
-        DgvMeal.TabIndex = 2
+        DgvMeal.TabIndex = 0
         ' 
         ' DgvSGs
         ' 
         DgvSGs.Dock = DockStyle.Fill
         DgvSGs.Location = New Point(6, 52)
         DgvSGs.Name = "DgvSGs"
+        DgvSGs.ReadOnly = True
+        DataGridViewCellStyle12.WrapMode = DataGridViewTriState.False
+        DgvSGs.RowsDefaultCellStyle = DataGridViewCellStyle12
+        DgvSGs.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvSGs.Size = New Size(1358, 597)
-        DgvSGs.TabIndex = 1
+        DgvSGs.TabIndex = 0
         ' 
         ' DgvSummary
         ' 
         DgvSummary.Dock = DockStyle.Fill
-        DgvSummary.Location = New Point(3, 3)
+        DgvSummary.Location = New Point(0, 0)
         DgvSummary.Name = "DgvSummary"
         DgvSummary.ReadOnly = True
-        DataGridViewCellStyle3.WrapMode = DataGridViewTriState.True
-        DgvSummary.RowsDefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle13.WrapMode = DataGridViewTriState.True
+        DgvSummary.RowsDefaultCellStyle = DataGridViewCellStyle13
         DgvSummary.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvSummary.Size = New Size(1370, 655)
         DgvSummary.TabIndex = 0
@@ -732,49 +830,12 @@ Partial Class Form1
         DgvTherapyAlgorithmState.Location = New Point(3, 3)
         DgvTherapyAlgorithmState.Name = "DgvTherapyAlgorithm"
         DgvTherapyAlgorithmState.ReadOnly = True
-        DataGridViewCellStyle4.WrapMode = DataGridViewTriState.False
-        DgvTherapyAlgorithmState.RowsDefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle14.WrapMode = DataGridViewTriState.False
+        DgvTherapyAlgorithmState.RowsDefaultCellStyle = DataGridViewCellStyle14
         DgvTherapyAlgorithmState.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvTherapyAlgorithmState.Size = New Size(1370, 655)
         DgvTherapyAlgorithmState.TabIndex = 0
         ' 
-        ' 
-        ' DgvBannerState
-        ' 
-        DgvBannerState.Dock = DockStyle.Fill
-        DgvBannerState.Location = New Point(3, 3)
-        DgvBannerState.Name = "DgvBannerState"
-        DgvBannerState.ReadOnly = True
-        DataGridViewCellStyle6.WrapMode = DataGridViewTriState.False
-        DgvBannerState.RowsDefaultCellStyle = DataGridViewCellStyle6
-        DgvBannerState.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvBannerState.Size = New Size(1370, 655)
-        DgvBannerState.TabIndex = 0
-        ' 
-        ' 
-        ' DgvLastSensorGlucose
-        ' 
-        DgvLastSensorGlucose.Dock = DockStyle.Fill
-        DgvLastSensorGlucose.Location = New Point(3, 3)
-        DgvLastSensorGlucose.Name = "DgvLastSensorGlucose"
-        DgvLastSensorGlucose.ReadOnly = True
-        DataGridViewCellStyle6.WrapMode = DataGridViewTriState.False
-        DgvLastSensorGlucose.RowsDefaultCellStyle = DataGridViewCellStyle7
-        DgvLastSensorGlucose.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvLastSensorGlucose.Size = New Size(1370, 655)
-        DgvLastSensorGlucose.TabIndex = 0
-        ' 
-        ' DgvLastAlarm
-        ' 
-        DgvLastAlarm.Dock = DockStyle.Fill
-        DgvLastAlarm.Location = New Point(3, 3)
-        DgvLastAlarm.Name = "DgvLastAlarm"
-        DgvLastAlarm.ReadOnly = True
-        DataGridViewCellStyle5.WrapMode = DataGridViewTriState.True
-        DgvLastAlarm.RowsDefaultCellStyle = DataGridViewCellStyle4
-        DgvLastAlarm.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvLastAlarm.Size = New Size(1370, 655)
-        DgvLastAlarm.TabIndex = 0
         ' 
         ' FullNameLabel
         ' 
@@ -1963,6 +2024,7 @@ Partial Class Form1
         TableLayoutPanelMeal.ColumnCount = 1
         TableLayoutPanelMeal.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelMeal.Controls.Add(TableLayoutPanelMealTop, 0, 0)
+        TableLayoutPanelMeal.Controls.Add(DgvMeal, 0, 1)
         TableLayoutPanelMeal.Dock = DockStyle.Fill
         TableLayoutPanelMeal.Location = New Point(3, 3)
         TableLayoutPanelMeal.Name = "TableLayoutPanelMeal"
@@ -2004,9 +2066,11 @@ Partial Class Form1
         ' 
         TableLayoutPanelActiveInsulin.AutoSize = True
         TableLayoutPanelActiveInsulin.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelActiveInsulin.ColumnCount = 1
+        TableLayoutPanelActiveInsulin.ColumnCount = 2
+        TableLayoutPanelActiveInsulin.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelActiveInsulin.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelActiveInsulin.Controls.Add(TableLayoutPanelActiveInsulinTop, 0, 0)
+        TableLayoutPanelActiveInsulin.Controls.Add(DgvActiveInsulin, 0, 1)
         TableLayoutPanelActiveInsulin.Dock = DockStyle.Fill
         TableLayoutPanelActiveInsulin.Location = New Point(3, 3)
         TableLayoutPanelActiveInsulin.Name = "TableLayoutPanelActiveInsulin"
@@ -2095,9 +2159,11 @@ Partial Class Form1
         TableLayoutPanelLimits.AutoSize = True
         TableLayoutPanelLimits.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TableLayoutPanelLimits.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelLimits.ColumnCount = 1
+        TableLayoutPanelLimits.ColumnCount = 2
+        TableLayoutPanelLimits.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelLimits.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelLimits.Controls.Add(TableLayoutPanelLimitsTop, 0, 0)
+        TableLayoutPanelLimits.Controls.Add(DgvLimits, 0, 1)
         TableLayoutPanelLimits.Dock = DockStyle.Fill
         TableLayoutPanelLimits.Location = New Point(3, 3)
         TableLayoutPanelLimits.Name = "TableLayoutPanelLimits"
@@ -2234,9 +2300,11 @@ Partial Class Form1
         TableLayoutPanelBasal.AutoSize = True
         TableLayoutPanelBasal.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TableLayoutPanelBasal.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelBasal.ColumnCount = 1
+        TableLayoutPanelBasal.ColumnCount = 2
+        TableLayoutPanelBasal.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelBasal.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelBasal.Controls.Add(TableLayoutPanelBasalTop, 0, 0)
+        TableLayoutPanelBasal.Controls.Add(DgvBasal, 0, 2)
         TableLayoutPanelBasal.Dock = DockStyle.Fill
         TableLayoutPanelBasal.Location = New Point(3, 3)
         TableLayoutPanelBasal.Name = "TableLayoutPanelBasal"
@@ -2822,11 +2890,13 @@ Partial Class Form1
         CType(CareLinkUserDataRecordBindingSource, ComponentModel.ISupportInitialize).EndInit()
         CursorPanel.ResumeLayout(False)
         CType(CursorPictureBox, ComponentModel.ISupportInitialize).EndInit()
+        CType(DgvActiveInsulin, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvAutoBasalDelivery, ComponentModel.ISupportInitialize).EndInit()
+        CType(DgvBasal, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvCareLinkUsers, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvCurrentUser, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvInsulin, ComponentModel.ISupportInitialize).EndInit()
-        CType(DgvMeal, ComponentModel.ISupportInitialize).EndInit()
+        CType(DgvLimits, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvSGs, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvSummary, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvTherapyAlgorithmState, ComponentModel.ISupportInitialize).EndInit()
@@ -2960,14 +3030,17 @@ Partial Class Form1
     Friend WithEvents CursorPanel As Panel
     Friend WithEvents CursorPictureBox As PictureBox
     Friend WithEvents CursorTimer As Timer
+    Friend WithEvents DgvActiveInsulin As DataGridView
     Friend WithEvents DgvAutoBasalDelivery As DataGridView
     Friend WithEvents DgvBannerState As DataGridView
+    Friend WithEvents DgvBasal As DataGridView
     Friend WithEvents DgvCareLinkUsers As DataGridView
     Friend WithEvents DgvCareLinkUsersUserPassword As DataGridViewTextBoxColumn
     Friend WithEvents DgvCurrentUser As DataGridView
     Friend WithEvents DgvInsulin As DataGridView
     Friend WithEvents DgvLastAlarm As DataGridView
     Friend WithEvents DgvLastSensorGlucose As DataGridView
+    Friend WithEvents DgvLimits As DataGridView
     Friend WithEvents DgvMeal As DataGridView
     Friend WithEvents DgvSGs As DataGridView
     Friend WithEvents DgvSummary As DataGridView

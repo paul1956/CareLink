@@ -180,4 +180,29 @@ Friend Module DgvHelpers
         End With
     End Sub
 
+    <Extension>
+    Friend Sub DisplayEmptyDGV(realPanel As TableLayoutPanel, className As String)
+        Dim dGV As New DataGridView With {
+            .AutoSize = True,
+            .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells,
+            .ColumnHeadersVisible = False,
+            .Dock = DockStyle.Fill,
+            .Name = $"DataGridView{className}",
+            .RowHeadersVisible = False
+        }
+        realPanel.Controls.Add(control:=dGV, column:=0, row:=1)
+        RemoveHandler dGV.Paint, AddressOf DgvPaint
+        AddHandler dGV.Paint, AddressOf DgvPaint
+    End Sub
+
+    Public Sub DgvPaint(sender As Object, e As PaintEventArgs)
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        If dgv.Rows.Count = 0 Then
+            TextRenderer.DrawText(e.Graphics, "No records found.",
+                font:=New Font(family:=dgv.Font.FontFamily, emSize:=20), bounds:=dgv.ClientRectangle,
+                foreColor:=dgv.ForeColor, backColor:=dgv.BackgroundColor,
+                flags:=TextFormatFlags.HorizontalCenter Or TextFormatFlags.VerticalCenter)
+        End If
+    End Sub
+
 End Module
