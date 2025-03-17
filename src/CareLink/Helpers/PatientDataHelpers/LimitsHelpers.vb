@@ -5,6 +5,7 @@
 Friend Module LimitsHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
+             NameOf(Limit.Index),
              NameOf(Limit.Kind),
              NameOf(Limit.Version)
         }

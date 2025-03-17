@@ -4,6 +4,7 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Text.Json.Serialization
 
 Public Class BannerState
 
@@ -13,25 +14,28 @@ Public Class BannerState
 
     <DisplayName("Type")>
     <Column(Order:=1, TypeName:=NameOf([String]))>
-    Public Property type As String
+    <JsonPropertyName("type")>
+    Public Property Type As String
+
+    <DisplayName("Time Remaining")>
+    <Column(Order:=3, TypeName:=NameOf([Int32]))>
+    <JsonPropertyName("timeRemaining")>
+    Public Property TimeRemaining As Integer = Nothing
 
     <DisplayName("Message")>
-    <Column(Order:=2, TypeName:=NameOf([String]))>
+    <Column(Order:=4, TypeName:=NameOf([String]))>
     Public ReadOnly Property message As String
         Get
             Dim formattedMessage As String = Nothing
-            If s_sensorMessages.TryGetValue(Me.type, formattedMessage) Then
+            If s_sensorMessages.TryGetValue(Me.Type, formattedMessage) Then
                 Return formattedMessage
             Else
                 Stop
             End If
 
-            Return Me.type.ToTitle
+            Return Me.Type.ToTitle
         End Get
     End Property
 
-    <DisplayName("Time Remaining")>
-    <Column(Order:=3, TypeName:=NameOf([Int32]))>
-    Public Property timeRemaining As Integer = Nothing
 
 End Class

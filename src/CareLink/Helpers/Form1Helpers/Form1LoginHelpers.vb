@@ -21,7 +21,6 @@ Friend Module Form1LoginHelpers
     Friend Function DoOptionalLoginAndUpdateData(UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
         Dim serverTimerEnabled As Boolean = StartOrStopServerUpdateTimer(False)
         s_listOfAutoBasalDeliveryMarkers.Clear()
-        s_listOfManualBasal.Clear()
         Dim fromFile As Boolean
         Select Case fileToLoad
             Case FileToLoadOptions.LastSaved

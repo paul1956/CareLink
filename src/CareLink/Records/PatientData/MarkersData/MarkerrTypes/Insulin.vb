@@ -4,7 +4,9 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Globalization
 Imports System.Text.Json
+Imports System.Text.Json.Serialization
 
 Public Class Insulin
     Private _programmedFastAmount As Single
@@ -13,9 +15,7 @@ Public Class Insulin
         Me.RecordNumber = recordNumber
         Me.type = markerEntry.Type
         Me.Kind = "Marker"
-        Me.Timestamp = markerEntry.Timestamp
         Me.TimestampAsString = markerEntry.TimestampAsString
-        Me.DisplayTime = markerEntry.DisplayTime
         Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
         Me.ProgrammedFastAmount = markerEntry.GetSingleValueFromJson(NameOf(ProgrammedFastAmount), decimalDigits:=3)
         Me.DeliveredFastAmount = markerEntry.GetSingleValueFromJson(NameOf(DeliveredFastAmount), decimalDigits:=3)
@@ -48,20 +48,32 @@ Public Class Insulin
     Public ReadOnly Property Kind As String
 
     <DisplayName(NameOf(Timestamp))>
-    <Column(Order:=3, TypeName:="Date")>
-    Public Property Timestamp As Date
-
-    <DisplayName(NameOf(TimestampAsString))>
-    <Column(Order:=4, TypeName:="String")>
+    <Column(Order:=3, TypeName:="String")>
+    <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
 
-    <DisplayName(NameOf(DisplayTime))>
-    <Column(Order:=5, TypeName:="Date")>
-    Public Property DisplayTime As Date
+    <DisplayName("TimestampAsDate")>
+    <Column(Order:=4, TypeName:="Date")>
+    <JsonPropertyName("timestampAsDate")>
+    Public ReadOnly Property Timestamp As Date
+        Get
+            Return Date.ParseExact(Me.TimestampAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+        End Get
+    End Property
 
-    <DisplayName(NameOf(DisplayTimeAsString))>
-    <Column(Order:=6, TypeName:="String")>
+    <DisplayName(NameOf(DisplayTime))>
+    <Column(Order:=5, TypeName:="String")>
+    <JsonPropertyName("displayTime")>
     Public Property DisplayTimeAsString As String
+
+    <DisplayName("DisplayTimeAsDate")>
+    <Column(Order:=6, TypeName:="Date")>
+    <JsonPropertyName("displayTimeAsDate")>
+    Public ReadOnly Property DisplayTime As Date
+        Get
+            Return Date.ParseExact(Me.DisplayTimeAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+        End Get
+    End Property
 
     <DisplayName("Unknown Incompleted Flag")>
     <Column(Order:=7, TypeName:=NameOf([Boolean]))>

@@ -117,8 +117,8 @@ Friend Module SummaryHelpers
                             Stop
                         End If
                     ElseIf key = "secondaryTime" Then
-                        If jsonDictionary.TryGetValue(NameOf(ActiveNotification.secondaryTime), secondaryTime) Then
-                            secondaryTime = $" { secondaryTime.ParseDate(NameOf(ActiveNotification.secondaryTime)).ToNotificationDateTimeString}"
+                        If jsonDictionary.TryGetValue(NameOf(ActiveNotification.SecondaryTime), secondaryTime) Then
+                            secondaryTime = $" { secondaryTime.ParseDate(NameOf(ActiveNotification.SecondaryTime)).ToNotificationDateTimeString}"
                         Else
                             Stop
                         End If

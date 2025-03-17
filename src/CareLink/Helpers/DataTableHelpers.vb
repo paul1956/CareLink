@@ -19,6 +19,10 @@ Friend Module DataTableHelpers
     ''' <param propertyName="ClassObject">The class containing the data to fill the DataRow from.</param>
     <Extension>
     Private Sub Add(Of T As Class)(ByRef Table As DataTable, ClassObject As T)
+        If ClassObject Is Nothing Then
+            Table = Nothing
+            Return
+        End If
         Dim row As DataRow = Table.NewRow()
         For Each [property] As PropertyInfo In GetType(T).GetProperties()
             If Table.Columns.Contains([property].Name) Then

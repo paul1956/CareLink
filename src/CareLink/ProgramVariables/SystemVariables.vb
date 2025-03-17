@@ -24,7 +24,7 @@ Friend Module SystemVariables
     Friend Property CurrentUser As CurrentUserRecord
     Friend Property DecimalSeparator As String = "."
 
-    Friend Property MaxBasalPerDose As Single
+    Friend Property MaxBasalPerDose As Double
 
     Friend Property NativeMmolL As Boolean = False
     Friend Property TreatmentInsulinRow As Single

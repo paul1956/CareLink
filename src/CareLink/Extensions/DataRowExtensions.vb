@@ -47,14 +47,14 @@ Public Module DataRowExtensions
     End Function
 
     ''' <summary>
-    ''' Returns all the column names of the specified DataRow in a string delimited like and SQL INSERT INTO statement.
+    ''' Returns all the column names of the specified DataRow in a string delimited like an SQL INSERT INTO statement.
     ''' Example: ([FullName], [Gender], [BirthDate])
     ''' </summary>
     ''' <returns>A string formatted like the columns specified in an SQL 'INSERT INTO' statement.</returns>
     <Extension>
     Public Function RowToColumnString(Row As DataRow) As String
         Dim collection As IEnumerable(Of String) = Row.ItemArray.Select(Function(item) TryCast(item, String))
-        Return collection.ToDelimitedString("([", "], [", "])")
+        Return collection.ToDelimitedString(Prefix:="([", Delimiter:="], [", Postfix:="])")
     End Function
 
     ''' <summary>
@@ -65,7 +65,7 @@ Public Module DataRowExtensions
     <Extension>
     Public Function RowToValueString(Row As DataRow) As String
         Dim collection As IEnumerable(Of String) = Row.Table.GetColumns().Select(Function(c) c.ColumnName)
-        Return collection.ToDelimitedString("('", "', '", "')")
+        Return collection.ToDelimitedString(Prefix:="('", Delimiter:="', '", Postfix:="')")
     End Function
 
 End Module

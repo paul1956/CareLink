@@ -4,6 +4,7 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Globalization
 Imports System.Text.Json.Serialization
 
 Public Class Calibration
@@ -12,9 +13,7 @@ Public Class Calibration
         Me.RecordNumber = recordNumber
         Me.Type = markerEntry.Type
         Me.Kind = "Marker"
-        Me.Timestamp = markerEntry.Timestamp
         Me.TimestampAsString = markerEntry.TimestampAsString
-        Me.DisplayTime = markerEntry.DisplayTime
         Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
         Me.CalibrationSuccess = markerEntry.GetBooleanValueFromJson(NameOf(CalibrationSuccess))
         Me.UnitValue = markerEntry.GetSingleValueFromJson(NameOf(UnitValue), decimalDigits:=0, considerValue:=True)
@@ -34,20 +33,32 @@ Public Class Calibration
     Public ReadOnly Property Kind As String
 
     <DisplayName(NameOf(Timestamp))>
-    <Column(Order:=3, TypeName:="Date")>
-    Public Property Timestamp As Date
-
-    <DisplayName(NameOf(TimestampAsString))>
-    <Column(Order:=4, TypeName:="String")>
+    <Column(Order:=3, TypeName:="String")>
+    <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
 
-    <DisplayName(NameOf(DisplayTime))>
-    <Column(Order:=5, TypeName:="Date")>
-    Public Property DisplayTime As Date
+    <DisplayName("TimestampAsDate")>
+    <Column(Order:=4, TypeName:="Date")>
+    <JsonPropertyName("timestampAsDate")>
+    Public ReadOnly Property Timestamp As Date
+        Get
+            Return Date.ParseExact(Me.TimestampAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+        End Get
+    End Property
 
-    <DisplayName(NameOf(DisplayTimeAsString))>
-    <Column(Order:=6, TypeName:="String")>
+    <DisplayName(NameOf(DisplayTime))>
+    <Column(Order:=5, TypeName:="String")>
+    <JsonPropertyName("displayTime")>
     Public Property DisplayTimeAsString As String
+
+    <DisplayName("DisplayTimeAsDate")>
+    <Column(Order:=6, TypeName:="Date")>
+    <JsonPropertyName("displayTimeAsDate")>
+    Public ReadOnly Property DisplayTime As Date
+        Get
+            Return Date.ParseExact(Me.DisplayTimeAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+        End Get
+    End Property
 
     <DisplayName("UnitValue")>
     <Column(Order:=7, TypeName:=NameOf([Single]))>
@@ -69,7 +80,7 @@ Public Class Calibration
     <Column(Order:=9, TypeName:=NameOf([Single]))>
     Public ReadOnly Property UnitValueMmolL As Single
         Get
-            If Single.IsNaN(Me.UnitValue) Then Return Me.UnitValue
+            If Me.UnitValue.IsSgInvalid Then Return Me.UnitValue
             Return If(NativeMmolL,
                       Me.UnitValue,
                       RoundSingle(Me.UnitValue / MmolLUnitsDivisor, 2, False)

@@ -72,7 +72,7 @@ Public Module DictionaryExtensions
     ''' <param propertyName="Dictionary">Dictionary to fill from.</param>
     ''' <returns>A list of ClassType with its properties set to the data from the matching columns from the DataTable.</returns>
     Public Function DictionaryToClass(Of T As {Class, New})(dic As Dictionary(Of String, String), recordNumber As Integer) As T
-        If dic Is Nothing Then
+        If dic Is Nothing OrElse dic.Count = 0 Then
             Return New T
         End If
 

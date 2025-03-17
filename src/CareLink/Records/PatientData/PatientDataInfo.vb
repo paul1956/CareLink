@@ -159,7 +159,7 @@ Public Class PatientDataInfo
     Public Property ActiveInsulin As ActiveInsulin
 
     <JsonPropertyName("basal")>
-    Public Property Basal As List(Of Basal)
+    Public Property Basal As Basal
 
     <JsonPropertyName("lastSensorTime")>
     Public Property LastSensorTime As Integer

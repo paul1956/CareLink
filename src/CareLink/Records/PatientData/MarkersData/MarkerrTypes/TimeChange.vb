@@ -10,47 +10,49 @@ Imports System.Text.Json.Serialization
 Public Class TimeChange
 
     Public Sub New(markerEntry As Marker)
-        Me.type = markerEntry.Type
+        Me.Type = markerEntry.Type
         Me.Kind = "Marker"
-        Me.Timestamp = markerEntry.Timestamp
         Me.TimestampAsString = markerEntry.TimestampAsString
-        Me.DisplayTime = markerEntry.DisplayTime
         Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
     End Sub
+
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public Property RecordNumber As Integer
 
     <DisplayName("Type")>
     <Column(Order:=1, TypeName:=NameOf([String]))>
-    Public Property type As String
+    <JsonPropertyName("type")>
+    Public Property Type As String
 
     <DisplayName("Kind")>
     <Column(Order:=2, TypeName:=NameOf([String]))>
     Public Property Kind As String
-
     <DisplayName(NameOf(Timestamp))>
-    <Column(Order:=3, TypeName:="Date")>
-    Public Property Timestamp As Date
-
-    <DisplayName(NameOf(TimestampAsString))>
-    <Column(Order:=4, TypeName:="String")>
+    <Column(Order:=3, TypeName:="String")>
+    <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
 
-    <DisplayName("Display Time")>
-    <Column(Order:=5, TypeName:=NameOf([DateTime]))>
-    Public Property DisplayTime As Date
+    <DisplayName("TimestampAsDate")>
+    <Column(Order:=4, TypeName:="Date")>
+    <JsonPropertyName("timestampAsDate")>
+    Public ReadOnly Property Timestamp As Date
+        Get
+            Return Date.ParseExact(Me.TimestampAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+        End Get
+    End Property
 
-    <DisplayName(NameOf(DisplayTimeAsString))>
-    <Column(Order:=6, TypeName:="String")>
+    <DisplayName(NameOf(DisplayTime))>
+    <Column(Order:=5, TypeName:="String")>
+    <JsonPropertyName("displayTime")>
     Public Property DisplayTimeAsString As String
 
-
-    <DisplayName("OaTimestamp")>
-    <Column(Order:=7, TypeName:=NameOf(OADate))>
-    Public ReadOnly Property OaTimestamp As OADate
+    <DisplayName("DisplayTimeAsDate")>
+    <Column(Order:=6, TypeName:="Date")>
+    <JsonPropertyName("displayTimeAsDate")>
+    Public ReadOnly Property DisplayTime As Date
         Get
-            Return New OADate(Me.Timestamp)
+            Return Date.ParseExact(Me.DisplayTimeAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
         End Get
     End Property
 

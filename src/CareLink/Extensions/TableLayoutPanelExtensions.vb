@@ -33,7 +33,7 @@ Friend Module TableLayoutPanelExtensions
                NameOf(Form1.TableLayoutPanelLowGlucoseSuspended),
                NameOf(Form1.TableLayoutPanelNotificationActive),
                NameOf(Form1.TableLayoutPanelNotificationsCleared),
-               NameOf(Form1.TableLayoutPanelTherapyAlgorithm)
+               NameOf(Form1.TableLayoutPanelTherapyAlgorithmState)
             }
 
     <Extension>

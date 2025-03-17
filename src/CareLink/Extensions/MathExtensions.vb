@@ -37,6 +37,15 @@ Friend Module MathExtensions
     End Function
 
     <Extension>
+    Public Function IsSgInvalid(number As Single) As Boolean
+        Return number <= 0 OrElse
+            Single.IsNaN(number) OrElse
+            Single.IsInfinity(number) OrElse
+            Single.IsNegativeInfinity(number) OrElse
+            Single.IsPositiveInfinity(number)
+    End Function
+
+    <Extension>
     Public Function ParseSingle(valueString As String, Optional decimalDigits As Integer = -1) As Single
         If valueString Is Nothing Then
             Return Single.NaN
@@ -88,18 +97,6 @@ Friend Module MathExtensions
     End Function
 
     <Extension>
-    Public Function RoundTo025(originalValue As Double) As Single
-        If Double.IsNaN(originalValue) Then
-            Return Single.NaN
-        Else
-            Dim inverse As Single = 1 / 0.025
-            Dim dividend As Double = originalValue * inverse
-            dividend = Math.Round(dividend)
-            Return CSng(dividend / inverse)
-        End If
-    End Function
-
-    <Extension>
     Public Function TryParseSingle(valueString As String, ByRef result As Single, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Boolean
         If valueString.Contains(","c) AndAlso valueString.Contains("."c) Then
             Throw New Exception($"{NameOf(valueString)} = {valueString}, and contains both comma and period in Line {sourceLineNumber} in {memberName}.")
@@ -115,6 +112,18 @@ Friend Module MathExtensions
         End If
         result = Single.NaN
         Return False
+    End Function
+
+    <Extension>
+    Public Function RoundTo025(originalValue As Double) As Single
+        If Double.IsNaN(originalValue) Then
+            Return Single.NaN
+        Else
+            Dim inverse As Single = 1 / 0.025
+            Dim dividend As Double = originalValue * inverse
+            dividend = Math.Round(dividend)
+            Return CSng(dividend / inverse)
+        End If
     End Function
 
 End Module

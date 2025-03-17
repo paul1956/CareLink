@@ -59,6 +59,7 @@
     <Compile Remove="Records\CommunicationRecords\SessionProfile.vb" />
     <Compile Remove="Records\CommunicationRecords\UserInfo1.vb" />
     <Compile Remove="Records\PatientData\ActiveNotificationRecord.vb" />
+    <Compile Remove="Records\PatientData\BasalList.vb" />
   </ItemGroup>
 
   <ItemGroup>

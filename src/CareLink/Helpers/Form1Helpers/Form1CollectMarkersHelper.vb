@@ -40,7 +40,7 @@ Friend Module Form1CollectMarkersHelper
         s_listOfTimeChangeMarkers.Clear()
         s_markers.Clear()
 
-        Dim basalDictionary As New SortedDictionary(Of OADate, Single)
+        Dim basalDictionary As New SortedDictionary(Of OADate, Double)
         MaxBasalPerDose = 0
 
         Dim markers As List(Of Marker) = PatientData.Markers
@@ -49,7 +49,7 @@ Friend Module Form1CollectMarkersHelper
             Select Case markerEntry.Type
                 Case "AUTO_BASAL_DELIVERY"
                     s_markers.Add(markerEntry)
-                    Dim item As New AutoBasalDelivery(markerEntry:=markerEntry, s_listOfAutoBasalDeliveryMarkers.Count + 1, 288 - e.Index)
+                    Dim item As New AutoBasalDelivery(markerEntry:=markerEntry, recordNumber:=s_listOfAutoBasalDeliveryMarkers.Count + 1)
                     s_listOfAutoBasalDeliveryMarkers.Add(item)
                     If Not basalDictionary.TryAdd(item.OAdateTime, item.bolusAmount) Then
                         basalDictionary(item.OAdateTime) += item.bolusAmount
@@ -66,10 +66,10 @@ Friend Module Form1CollectMarkersHelper
                     s_markers.Add(markerEntry)
                     Dim lastInsulinRecord As New Insulin(markerEntry, s_listOfInsulinMarkers.Count + 1)
                     s_listOfInsulinMarkers.Add(lastInsulinRecord)
-                    Select Case markerEntry.GetStringValueFromJson(NameOf(Insulin.activationType))
+                    Select Case markerEntry.GetStringValueFromJson(NameOf(Insulin.ActivationType))
                         Case "AUTOCORRECTION"
-                            If Not basalDictionary.TryAdd(lastInsulinRecord.OAdateTime, lastInsulinRecord.deliveredFastAmount) Then
-                                basalDictionary(lastInsulinRecord.OAdateTime) += lastInsulinRecord.deliveredFastAmount
+                            If Not basalDictionary.TryAdd(lastInsulinRecord.OAdateTime, lastInsulinRecord.DeliveredFastAmount) Then
+                                basalDictionary(lastInsulinRecord.OAdateTime) += lastInsulinRecord.DeliveredFastAmount
                             End If
                         Case "MANUAL"
                         Case "UNDETERMINED"
@@ -92,10 +92,10 @@ Friend Module Form1CollectMarkersHelper
                     Throw UnreachableException(markerEntry.Type)
             End Select
         Next
-
+#If False Then ' Basal testing
         For Each e As IndexClass(Of Basal) In s_listOfManualBasal.ToList.WithIndex
             Dim r As Basal = e.Value
-            If Single.IsNaN(r.GetBasal) Then
+            If Double.IsNaN(r.GetBasal) Then
                 Continue For
             End If
             basalDictionary.Add(r.GetOaGetTime, r.GetBasal)
@@ -103,6 +103,7 @@ Friend Module Form1CollectMarkersHelper
             Dim basalMarker As New Marker
             s_markers.Add(Marker.Convert(r))
         Next
+#End If
 
         Dim endOADate As OADate = If(basalDictionary.Count = 0,
                                      New OADate(s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime),
@@ -110,11 +111,11 @@ Friend Module Form1CollectMarkersHelper
                                     )
 
         Dim i As Integer = 0
-        Dim maxBasalPerHour As Single = 0
+        Dim maxBasalPerHour As Double = 0
 
         If basalDictionary.Count > 2 Then
             While i < basalDictionary.Count AndAlso basalDictionary.Keys(i) <= endOADate
-                Dim sum As Single = 0
+                Dim sum As Double = 0
                 Dim j As Integer = i
                 Dim startOADate As OADate = basalDictionary.Keys(i)
                 While j < basalDictionary.Count AndAlso basalDictionary.Keys(j) <= startOADate + s_1HourAsOADate

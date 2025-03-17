@@ -4,6 +4,8 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Globalization
+Imports System.Text.Json.Serialization
 
 Public Class BgReading
 
@@ -11,9 +13,7 @@ Public Class BgReading
         Me.RecordNumber = recordNumber
         Me.Type = markerEntry.Type
         Me.Kind = "Marker"
-        Me.Timestamp = markerEntry.Timestamp
         Me.TimestampAsString = markerEntry.TimestampAsString
-        Me.DisplayTime = markerEntry.DisplayTime
         Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
         Me.UnitValue = markerEntry.GetSingleValueFromJson(NameOf(UnitValue), decimalDigits:=0, considerValue:=True)
         Me.bgUnits = markerEntry.GetStringValueFromJson(NameOf(bgUnits))
@@ -29,38 +29,50 @@ Public Class BgReading
 
 
     <DisplayName("Kind")>
-    <Column(Order:=21, TypeName:=NameOf([String]))>
+    <Column(Order:=3, TypeName:=NameOf([String]))>
     Public ReadOnly Property Kind As String
 
     <DisplayName(NameOf(Timestamp))>
-    <Column(Order:=3, TypeName:="Date")>
-    Public Property Timestamp As Date
-
-    <DisplayName(NameOf(TimestampAsString))>
     <Column(Order:=4, TypeName:="String")>
+    <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
 
-    <DisplayName(NameOf(DisplayTime))>
+    <DisplayName("TimestampAsDate")>
     <Column(Order:=5, TypeName:="Date")>
-    Public Property DisplayTime As Date
+    <JsonPropertyName("timestampAsDate")>
+    Public ReadOnly Property Timestamp As Date
+        Get
+            Return Date.ParseExact(Me.TimestampAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+        End Get
+    End Property
 
-    <DisplayName(NameOf(DisplayTimeAsString))>
+    <DisplayName(NameOf(DisplayTime))>
     <Column(Order:=6, TypeName:="String")>
+    <JsonPropertyName("displayTime")>
     Public Property DisplayTimeAsString As String
 
+    <DisplayName("DisplayTimeAsDate")>
+    <Column(Order:=7, TypeName:="Date")>
+    <JsonPropertyName("displayTimeAsDate")>
+    Public ReadOnly Property DisplayTime As Date
+        Get
+            Return Date.ParseExact(Me.DisplayTimeAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+        End Get
+    End Property
+
     <DisplayName("Unit Value")>
-    <Column(Order:=7, TypeName:=NameOf([Single]))>
+    <Column(Order:=8, TypeName:=NameOf([Single]))>
     Public Property UnitValue As Single
 
     <DisplayName("Units")>
-    <Column(Order:=8, TypeName:=NameOf([String]))>
+    <Column(Order:=9, TypeName:=NameOf([String]))>
     Public ReadOnly Property bgUnits As String
 
     <DisplayName("UnitValue (mg/dL)")>
-    <Column(Order:=9, TypeName:=NameOf([Single]))>
+    <Column(Order:=10, TypeName:=NameOf([Single]))>
     Public ReadOnly Property UnitValueMgdL As Single
         Get
-            If Single.IsNaN(Me.UnitValue) Then Return Me.UnitValue
+            If Me.UnitValue.IsSgInvalid Then Return Me.UnitValue
             Return If(Me.bgUnits = "MGDL",
                       Me.UnitValue,
                       CSng(Math.Round(Me.UnitValue * MmolLUnitsDivisor))
@@ -69,10 +81,10 @@ Public Class BgReading
     End Property
 
     <DisplayName("UnitValue (mmol/L)")>
-    <Column(Order:=10, TypeName:=NameOf([Single]))>
+    <Column(Order:=11, TypeName:=NameOf([Single]))>
     Public ReadOnly Property UnitValueMmolL As Single
         Get
-            If Single.IsNaN(Me.UnitValue) Then Return Me.UnitValue
+            If Me.UnitValue.IsSgInvalid Then Return Me.UnitValue
             Return If(Me.bgUnits <> "MGDL",
                       Me.UnitValue,
                       (Me.UnitValue / MmolLUnitsDivisor).RoundSingle(2, False)

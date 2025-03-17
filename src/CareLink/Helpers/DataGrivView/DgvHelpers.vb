@@ -182,15 +182,18 @@ Friend Module DgvHelpers
 
     <Extension>
     Friend Sub DisplayEmptyDGV(realPanel As TableLayoutPanel, className As String)
-        Dim dGV As New DataGridView With {
-            .AutoSize = True,
-            .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells,
-            .ColumnHeadersVisible = False,
-            .Dock = DockStyle.Fill,
-            .Name = $"DataGridView{className}",
-            .RowHeadersVisible = False
-        }
-        realPanel.Controls.Add(control:=dGV, column:=0, row:=1)
+        Dim dGVIndex As Integer = realPanel.Controls.Count - 1
+        Dim dGV As DataGridView = TryCast(realPanel.Controls(dGVIndex), DataGridView)
+        If dGV Is Nothing Then
+            dGV = New DataGridView With {
+                .AutoSize = True,
+                .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells,
+                .ColumnHeadersVisible = False,
+                .Dock = DockStyle.Fill,
+                .Name = $"DataGridView{className}",
+                .RowHeadersVisible = False}
+            realPanel.Controls.Add(control:=dGV, column:=0, row:=1)
+        End If
         RemoveHandler dGV.Paint, AddressOf DgvPaint
         AddHandler dGV.Paint, AddressOf DgvPaint
     End Sub

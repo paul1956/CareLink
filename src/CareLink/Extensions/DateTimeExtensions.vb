@@ -200,7 +200,7 @@ Friend Module DateTimeExtensions
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
             Case NameOf(TimeChange.Timestamp), NameOf(ClearedNotifications.dateTime)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
-            Case NameOf(ActiveNotification.secondaryTime)
+            Case NameOf(ActiveNotification.SecondaryTime)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.NoCurrentDateDefault)
             Case NameOf(ActiveNotification.triggeredDateTime)
                 resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)

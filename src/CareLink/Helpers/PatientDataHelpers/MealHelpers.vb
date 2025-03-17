@@ -6,8 +6,7 @@ Friend Module MealHelpers
 
     Private ReadOnly s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
-    Private ReadOnly s_columnsToHide As New List(Of String) From {
-        NameOf(Meal.OAdateTime)}
+    Private ReadOnly s_columnsToHide As New List(Of String)
 
     Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
         Return ClassPropertiesToColumnAlignment(Of Meal)(s_alignmentTable, columnName)

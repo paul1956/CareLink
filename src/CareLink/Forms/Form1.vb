@@ -470,6 +470,7 @@ Public Class Form1
 
     Public Sub Dgv_CellContextMenuStripNeededWithExcel(sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs) Handles _
         DgvAutoBasalDelivery.CellContextMenuStripNeeded,
+        DgvBasal.CellContextMenuStripNeeded,
         DgvInsulin.CellContextMenuStripNeeded,
         DgvLimits.CellContextMenuStripNeeded,
         DgvMeal.CellContextMenuStripNeeded,
@@ -560,6 +561,25 @@ Public Class Form1
     End Sub
 
 #End Region ' Dgv Banner State Events
+
+#Region "Dgv Basal Events"
+
+    Private Sub DgvBasal_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvBasal.ColumnAdded
+        With e.Column
+            If BasalHelpers.HideColumn(.Name) Then
+                .Visible = False
+            Else
+                e.DgvColumnAdded(
+                    cellStyle:=BasalHelpers.GetCellStyle(.Name),
+                    wrapHeader:=True,
+                    forceReadOnly:=True,
+                    caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+                .SortMode = DataGridViewColumnSortMode.NotSortable
+            End If
+        End With
+    End Sub
+
+#End Region ' Dgv Basal Events
 
 #Region "Dgv CareLink Users Events"
 
@@ -2295,7 +2315,7 @@ Public Class Form1
                     notStr.AppendLine(Date.Now().ToShortDateTimeString.Replace($"{CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator}{Now.Year}", ""))
                     notStr.AppendLine($"Last SG {lastSgString} {BgUnitsNativeString}")
                     If s_pumpInRangeOfPhone Then
-                        If s_lastSgValue = 0 Then
+                        If s_lastSgValue.IsSgInvalid Then
                             Me.LabelTrendValue.Text = ""
                             Me.LabelTrendValue.Visible = False
                             _sgMiniDisplay.SetCurrentDeltaValue(deltaString:="", delta:=0)
@@ -2398,7 +2418,7 @@ Public Class Form1
                 s.Points.Clear()
             Next
             With Me.ActiveInsulinChart
-                .Titles(NameOf(ActiveInsulinChartTitle)).Text = $"Running Insulin On Board (IOB) - {s_listOfManualBasal.GetSubTitle}"
+                .Titles(NameOf(ActiveInsulinChartTitle)).Text = $"Running Insulin On Board (IOB) - {s_basal.ActiveBasalPattern}"
                 .ChartAreas(NameOf(ChartArea)).UpdateChartAreaSgAxisX()
 
                 ' Order all markers by time
@@ -2511,7 +2531,9 @@ Public Class Form1
                     s.Points.Clear()
                 Next
                 .ChartAreas(NameOf(ChartArea)).UpdateChartAreaSgAxisX()
+#If False Then ' Basal testing
                 .Titles(0).Text = $"Status - {s_listOfManualBasal.GetSubTitle}"
+#End If
                 .PlotSuspendArea(SuspendSeries:=Me.SummarySuspendSeries)
                 .PlotMarkers(
                     timeChangeSeries:=Me.SummaryTimeChangeSeries,
@@ -2558,7 +2580,7 @@ Public Class Form1
             End If
 
             Dim message As String = ""
-            If Not Single.IsNaN(s_lastSgRecord.sg) Then
+            If Not s_lastSgRecord.sg.IsSgInvalid Then
                 Me.CurrentSgLabel.Visible = True
                 Dim sgString As String
                 If s_autoModeReadinessState?.Value = "CALIBRATING" Then
@@ -2677,11 +2699,11 @@ Public Class Form1
                     End Select
 
                 Case "AUTO_BASAL_DELIVERY"
-                    Dim amount As Single = marker.GetSingleValueFromJson(NameOf(AutoBasalDelivery.bolusAmount), 3)
+                    Dim amount As Single = marker.GetSingleValueFromJson(NameOf(AutoBasalDelivery.bolusAmount), decimalDigits:=3)
                     s_totalBasal += amount
                     s_totalDailyDose += amount
                 Case "MANUAL_BASAL_DELIVERY"
-                    Dim amount As Single = marker.GetSingleValueFromJson(NameOf(AutoBasalDelivery.bolusAmount), 3)
+                    Dim amount As Single = marker.GetSingleValueFromJson(NameOf(AutoBasalDelivery.bolusAmount), decimalDigits:=3)
                     s_totalBasal += amount
                     s_totalDailyDose += amount
                 Case "MEAL"
@@ -2950,7 +2972,7 @@ Public Class Form1
         Dim lowDeviations As Double = 0
         Dim elements As Integer = 0
         Dim highScale As Single = (GetYMaxValue(asMmolL:=False) - TirHighLimit(asMmolL:=False)) / (TirLowLimit(asMmolL:=False) - GetYMinValue(asMmolL:=False))
-        For Each sg As SG In s_listOfSgRecords.Where(Function(entry As SG) Not Single.IsNaN(entry.sg))
+        For Each sg As SG In s_listOfSgRecords.Where(Function(entry As SG) entry.sg.IsSgInvalid)
             elements += 1
             If sg.sgMgdL < 70 Then
                 lowCount += 1
@@ -3023,7 +3045,7 @@ Public Class Form1
         End If
         Try
             Me.InitializeTreatmentMarkersChart()
-            Me.TreatmentMarkersChart.Titles(NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details - {s_listOfManualBasal.GetSubTitle}"
+            Me.TreatmentMarkersChart.Titles(NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details - {s_basal.ActiveBasalPattern}"
             Me.TreatmentMarkersChart.ChartAreas(NameOf(ChartArea)).UpdateChartAreaSgAxisX()
             Me.TreatmentMarkersChart.PlotSuspendArea(Me.TreatmentMarkerSuspendSeries)
             Me.TreatmentMarkersChart.PlotTreatmentMarkers(Me.TreatmentMarkerTimeChangeSeries)
@@ -3148,11 +3170,11 @@ Public Class Form1
         UpdateSummaryTab(Me.DgvTherapyAlgorithmState, GetSummaryRecords(s_therapyAlgorithmStateValue), sort:=False)
 
         Me.TableLayoutPanelBasal.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(listOfClass:=s_listOfManualBasal.ToList),
-            className:=NameOf(Basal),
-            attachHandlers:=AddressOf BasalHelpers.AttachHandlers,
-            rowIndex:=ServerDataIndexes.basal,
-            hideRecordNumberColumn:=True)
+             table:=ClassCollectionToDataTable({s_basal}?.ToList),
+             className:=NameOf(Basal),
+             attachHandlers:=Nothing,
+             rowIndex:=ServerDataIndexes.basal,
+             hideRecordNumberColumn:=True)
 
         UpdateMarkerTabs()
 

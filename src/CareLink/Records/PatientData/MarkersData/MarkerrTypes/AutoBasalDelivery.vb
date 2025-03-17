@@ -14,8 +14,6 @@ Public Class AutoBasalDelivery
 
     Public Sub New(r As Basal, recordNumber As Integer)
         Me.RecordNumber = recordNumber
-        Me.type = "Basal"
-        Me.Kind = "Marker"
         'Me.Timestamp = r.Timestamp
         'Me.TimestampAsString = r.TimestampAsString
         'Me.DisplayTime = r.DisplayTime
@@ -24,14 +22,9 @@ Public Class AutoBasalDelivery
         'Me.maxAutoBasalRate = r.Data.DataValues(NameOf(maxAutoBasalRate)).ToString.ParseSingle(decimalDigits:=10)
     End Sub
 
-    Public Sub New(markerEntry As Marker, recordNumber As Integer, index As Integer)
+    Public Sub New(markerEntry As Marker, recordNumber As Integer)
         Me.RecordNumber = recordNumber
-        Me.index = index
-        Me.type = markerEntry.Type
-        Me.Kind = "Marker"
-        Me.Timestamp = markerEntry.Timestamp
         Me.TimestampAsString = markerEntry.TimestampAsString
-        Me.DisplayTime = markerEntry.DisplayTime
         Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
         Me.bolusAmount = markerEntry.Data.DataValues(NameOf(bolusAmount)).ToString.ParseSingle(decimalDigits:=10)
         Me.maxAutoBasalRate = markerEntry.Data.DataValues(NameOf(maxAutoBasalRate)).ToString.ParseSingle(decimalDigits:=10)
@@ -41,36 +34,36 @@ Public Class AutoBasalDelivery
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public Property RecordNumber As Integer
 
-    <DisplayName("Type")>
-    <Column(Order:=1, TypeName:=NameOf([String]))>
-    Public Property type As String
-
-    <DisplayName(NameOf(index))>
-    <Column(Order:=2, TypeName:=NameOf([Int32]))>
-    Public Property Index As Integer
-
-    <DisplayName("Kind")>
-    <Column(Order:=3, TypeName:=NameOf([String]))>
-    Public Property Kind As String
-
     <DisplayName(NameOf(Timestamp))>
-    <Column(Order:=4, TypeName:="Date")>
-    Public Property Timestamp As Date
-
-    <DisplayName(NameOf(TimestampAsString))>
-    <Column(Order:=5, TypeName:="String")>
+    <Column(Order:=1, TypeName:="String")>
+    <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
 
-    <DisplayName("Display Time")>
-    <Column(Order:=6, TypeName:=NameOf([DateTime]))>
-    Public Property DisplayTime As Date
+    <DisplayName("TimestampAsDate")>
+    <Column(Order:=2, TypeName:="Date")>
+    <JsonPropertyName("timestampAsDate")>
+    Public ReadOnly Property Timestamp As Date
+        Get
+            Return Date.ParseExact(Me.TimestampAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+        End Get
+    End Property
 
-    <DisplayName(NameOf(DisplayTimeAsString))>
-    <Column(Order:=7, TypeName:="String")>
+    <DisplayName(NameOf(DisplayTime))>
+    <Column(Order:=3, TypeName:="String")>
+    <JsonPropertyName("displayTime")>
     Public Property DisplayTimeAsString As String
 
+    <DisplayName("DisplayTimeAsDate")>
+    <Column(Order:=4, TypeName:="Date")>
+    <JsonPropertyName("displayTimeAsDate")>
+    Public ReadOnly Property DisplayTime As Date
+        Get
+            Return Date.ParseExact(Me.DisplayTimeAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+        End Get
+    End Property
+
     <DisplayName(NameOf(OAdateTime))>
-    <Column(Order:=8, TypeName:=NameOf(OADate))>
+    <Column(Order:=5, TypeName:=NameOf(OADate))>
     Public ReadOnly Property OAdateTime As OADate
         Get
             Return New OADate(Me.Timestamp)
@@ -78,15 +71,15 @@ Public Class AutoBasalDelivery
     End Property
 
     <DisplayName("Bolus Amount")>
-    <Column(Order:=9, TypeName:=NameOf([Single]))>
+    <Column(Order:=6, TypeName:=NameOf([Single]))>
     Public Property bolusAmount As Single
 
     <DisplayName("Basal Rate")>
-    <Column(Order:=10, TypeName:=NameOf([Single]))>
+    <Column(Order:=7, TypeName:=NameOf([Single]))>
     Public Property basalRate As Single
 
     <DisplayName("Max Auto Basal Rate")>
-    <Column(Order:=11, TypeName:=NameOf([Single]))>
+    <Column(Order:=8, TypeName:=NameOf([Single]))>
     Public Property maxAutoBasalRate As Single
 
 

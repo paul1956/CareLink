@@ -20,8 +20,11 @@ Public Module DataGridViewExtensions
                 .Font = New Font(familyName:="Segoe UI", emSize:=9.0!, style:=FontStyle.Regular, unit:=GraphicsUnit.Point),
                 .WrapMode = DataGridViewTriState.True}
             .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+            .DataSource = Nothing
             .Location = New Point(0, 0)
             .ReadOnly = True
+            .Refresh()
+            .Rows.Clear()
             .RowTemplate.Height = 24
             .TabIndex = 0
         End With

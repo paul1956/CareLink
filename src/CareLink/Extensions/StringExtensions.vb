@@ -70,9 +70,12 @@ Public Module StringExtensions
     ''' <param name="inStr">A string like ThisIsATitle</param>
     ''' <returns>This Is A Title</returns>
     <Extension()>
-    Friend Function ToTitleCase(inStr As String, Optional separateNumbers As Boolean = True) As String
+    Friend Function ToTitleCase(inStr As String, Optional separateNumbers As Boolean = True, Optional removeUnderLines As Boolean = False) As String
         If String.IsNullOrWhiteSpace(inStr) Then
             Return ""
+        End If
+        If removeUnderLines Then
+            inStr = inStr.Replace("_"c, "")
         End If
         If inStr.Contains("MmolL", StringComparison.InvariantCultureIgnoreCase) Then
             Return inStr

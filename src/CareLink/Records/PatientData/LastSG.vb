@@ -28,5 +28,4 @@ Public Class LastSG
         End Get
     End Property
 
-
 End Class

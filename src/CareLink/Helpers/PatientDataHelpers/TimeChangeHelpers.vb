@@ -4,14 +4,15 @@
 
 Friend Module TimeChangeHelpers
 
-    Private ReadOnly s_columnsToHide As New List(Of String)
+    Private ReadOnly s_columnsToHide As New List(Of String) From {
+           NameOf(TimeChange)}
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(TimeChange.timestamp)
+            Case NameOf(TimeChange.Timestamp)
                 dgv.CellFormattingDateTime(e)
             Case Else
                 dgv.CellFormattingSetForegroundColor(e)

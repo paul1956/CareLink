@@ -15,6 +15,7 @@ Public Module PumpVariables
     Friend s_aboveHyperLimit As Single
     Friend s_activeInsulin As ActiveInsulin
     Friend s_autoModeReadinessState As SummaryRecord
+    Friend s_basal As Basal
     Friend s_belowHypoLimit As Single
     Friend s_filterJsonData As Boolean = True
     Friend s_firstName As String = ""
@@ -23,7 +24,6 @@ Public Module PumpVariables
     Friend s_lastMedicalDeviceDataUpdateServerEpoch As Long
     Friend s_lastSgRecord As New SG
     Friend s_lastSgValue As Single = 0
-    Friend s_listOfManualBasal As New BasalList(size:=288)
     Friend s_listOfSgRecords As New List(Of SG)
     Friend s_listOfTimeChangeMarkers As New List(Of TimeChange)
     Friend s_markers As New List(Of Marker)

@@ -10,27 +10,25 @@ Imports System.Text.Json.Serialization
 Public Class Basal
     Implements IEquatable(Of Basal)
 
-    Private _oaDateTime As OADate
-
     <DisplayName("Active Basal Pattern")>
     <Column(Order:=0, TypeName:=NameOf([String]))>
     <JsonPropertyName("activeBasalPattern")>
     Public Property ActiveBasalPattern As String
 
     <DisplayName("Basal Rate")>
-    <Column(Order:=1, TypeName:=NameOf([Single]))>
+    <Column(Order:=1, TypeName:=NameOf([Double]))>
     <JsonPropertyName("basalRate")>
-    Public Property BasalRate As Single
+    Public Property BasalRate As Double
 
     <DisplayName("Temp Basal Rate")>
-    <Column(Order:=2, TypeName:=NameOf([Single]))>
+    <Column(Order:=2, TypeName:=NameOf([Double]))>
     <JsonPropertyName("tempBasalRate")>
-    Public Property TempBasalRate As Single
+    Public Property TempBasalRate As Double
 
     <DisplayName("Temp Basal Percentage")>
-    <Column(Order:=3, TypeName:=NameOf([Int32]))>
+    <Column(Order:=3, TypeName:=NameOf([Single]))>
     <JsonPropertyName("tempBasalPercentage")>
-    Public Property tempBasalPercentage As Integer
+    Public Property tempBasalPercentage As Single
 
     <DisplayName("Temp Basal Type")>
     <Column(Order:=4, TypeName:=NameOf([String]))>
@@ -47,15 +45,13 @@ Public Class Basal
     <JsonPropertyName("tempBasalDurationRemaining")>
     Public Property tempBasalDurationRemaining As Integer
 
-    Friend Function ToDictionary() As Dictionary(Of String, String)
-        Return New Dictionary(Of String, String) From {
-            {"kind", "Marker"},
-            {"type", "MANUAL_BASAL_DELIVERY"},
-            {"activationType", "MANUAL"},
-            {"bolusAmount", Me.GetBasal.ToString},
-            {"dateTime", Date.FromOADate(Me.GetOaGetTime).ToString(CurrentDateCulture)},
-            {"oaDateTime", _oaDateTime.ToString}}
-    End Function
+    <DisplayName("HasValue")>
+    <Column(Order:=7, TypeName:=NameOf([Boolean]))>
+    Public ReadOnly Property HasValue As Boolean
+        Get
+            Return Not String.IsNullOrWhiteSpace(Me.ActiveBasalPattern)
+        End Get
+    End Property
 
     Public Shared Operator <>(left As Basal, right As Basal) As Boolean
         Return Not left = right
@@ -69,13 +65,13 @@ Public Class Basal
         Return Me.Equals(TryCast(obj, Basal))
     End Function
 
-    Public Function GetBasal() As Single
+    Public Function GetBasal() As Double
         Return Me.GetBasalPerHour / 12
     End Function
 
-    Public Function GetBasalPerHour() As Single
+    Public Function GetBasalPerHour() As Double
         If Me.ActiveBasalPattern Is Nothing Then
-            Return Single.NaN
+            Return Double.NaN
         End If
         Select Case Me.ActiveBasalPattern
             Case "BASAL1", "BASAL2", "BASAL3", "BASAL4", "BASAL5", "WORKDAY", "DAYOFF", "SICKDAY"
@@ -104,14 +100,6 @@ Public Class Basal
     Public Overrides Function GetHashCode() As Integer
         Return HashCode.Combine(Me.ActiveBasalPattern, Me.BasalRate, Me.presetTempName, Me.tempBasalDurationRemaining, Me.tempBasalPercentage, Me.TempBasalRate, Me.tempBasalType)
     End Function
-
-    Public Function GetOaGetTime() As OADate
-        Return _oaDateTime
-    End Function
-
-    Public Sub OaDateTime(d As Date)
-        _oaDateTime = New OADate(d)
-    End Sub
 
     Public Overloads Function Equals(other As Basal) As Boolean Implements IEquatable(Of Basal).Equals
         Return other IsNot Nothing AndAlso

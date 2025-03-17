@@ -52,9 +52,9 @@ Friend Module UserMessageConstants
     ''' </summary>
     Friend ReadOnly s_notificationMessages As New Dictionary(Of String, String) From {
     {"2", "Pump Error. Delivery Stopped"},
-    {"6", "Pump Battery Out Limit"},
+    {"6", "Insert battery(triggeredDateTime). Delivery stopped. Insert a new battery now."},
     {"7", "Delivery Stopped. Check BG"}, _ ' From Java
-    {"11", "Replace Pump Battery Now"},
+    {"11", "Battery failed(triggeredDateTime). Replace Pump Battery Now."},
     {"12", "Auto suspend Limit reached(triggeredDateTime). Insulin delivery suspended. No buttons pressed within time set in Auto Suspend."},
     {"19", "Loading Incomplete During Infusion Set Change(triggeredDateTime)"},
     {"24", "Critical Pump Error. Stop Pump Use. Use Other Treatment"},
@@ -65,16 +65,16 @@ Friend Module UserMessageConstants
     {"52", "Delivery Limit Exceeded. Check BG"}, _ ' From Java
     {"57", "Pump Battery Not Compatible"},
     {"58", "Insert A New AA Battery"},
-    {"61", "Pump Button Error. Delivery Stopped"},
+    {"61", "Stuck button(triggeredDateTime). Button pressed for more then 3 minutes."},
     {"62", "New Notification Received From Pump"},
     {"66", "No Reservoir Detected During Infusion Set Change"},
     {"69", "Loading incomplete(triggeredDateTime). Restart the Reservoir & Set procedure"},
     {"73", "Replace Pump Battery Now"},
     {"77", "Pump Settings Error. Delivery Stopped"},
     {"84", "Pump Battery Removed. Replace Battery"},
-    {"100", "Bolus Entry Timed Out Before Delivery"},
+    {"100", "Bolus Not delivered. Bolus entry timed out before delivery. If bolus was intended, enter values again."},
     {"103", "BG Check Reminder"},
-    {"104", "Replace Pump Battery Soon"},
+    {"104", "Battery low pump(triggeredDateTime). Replace battery soon."},
     {"105", "Reservoir Low(triggeredDateTime). (unitsRemaining) units remaining. Change reservoir."},
     {"107", "Missed Meal Bolus Reminder"}, _ ' From Java
     {"109", "Set change reminder(triggeredDateTime). (lastSetChange) days since last set change. Time to change the infusion set."},
@@ -83,8 +83,8 @@ Friend Module UserMessageConstants
     {"117", "Active Insulin Cleared"},
     {"130", "Rewind Required(triggeredDateTime). Delivery stopped. Rewind was required due to pump error. Select OK to continue."},
     {"140", "Delivery Suspended. Connect Infusion Set"}, _ ' From Java
-    {"775", "Calibrate now(triggeredDateTime). Check BG And calibrate sensor."},
-    {"776", "Calibration Not accepted(triggeredDateTime) .Wait at least 15 minutes. Wash hands, test BG again and calibrate."},
+    {"775", "Enter BG now(triggeredDateTime). Enter BG to calibrate sensor."},
+    {"776", "Calibration Not accepted(triggeredDateTime). Wait at least 15 minutes. Wash hands, test BG again and calibrate."},
     {"777", "Change Sensor(triggeredDateTime). Sensor not working properly. Insert new sensor."},
     {"779", "Recharge Transmitter Now"},
     {"780", "Lost sensor signal(triggeredDateTime). Move pump closer to sensor. May take 15 minutes to find signal."},
@@ -99,13 +99,13 @@ Friend Module UserMessageConstants
     {"802", "Alert on low (sg) (units)(triggeredDateTime). Low sensor glucose. Check BG."},
     {"803", "Low Sensor Glucose. Check BG"}, _ ' From Java
     {"805", "Alert before low(triggeredDateTime). Sensor glucose approaching Low Limit. Check BG."},
-    {"807", "Basal Delivery Resumed. Check BG"}, _ ' From Java
+    {"807", "Basal delivery resumed at (secondaryTime) after suspend by sensor, Check BG."},
     {"809", "Suspend on low(triggeredDateTime). Delivery stopped. Sensor glucose (sg) (units). Check BG."},
-    {"810", "Suspend before low. Delivery stopped. Sensor glucose approaching Low Limit. Check BG."},
+    {"811", "Suspend before low. Delivery stopped. Sensor glucose approaching Low Limit. Check BG."},
     {"812", "Call for emergency(triggeredDateTime)."},
     {"814", "Basal Resumed. SG Still Under Low Limit. Check BG"}, _ ' From Java
     {"815", "Low Limit Changed. Basal Manually Resumed. Check BG"}, _ ' From Java
-    {"816", "High Sensor Glucose"}, _ ' From Java
+    {"816", "Alert on high (sg) (units)(triggeredDateTime). High sensor glucose. Check BG."},
     {"817", "Alert before high(triggeredDateTime). Sensor glucose approaching High Limit. Check BG."},
     {"819", "Auto Mode exit(triggeredDateTime). (basalName) started. Would you Like to review Auto Mode Readiness Screen?"},
     {"821", "Minimum Delivery Timeout. BG Required"}, _ ' From Java
@@ -113,53 +113,11 @@ Friend Module UserMessageConstants
     {"823", "High Sensor Glucose(triggeredDateTime). BG has been high over 1 hour. Change infusion set. Check Ketones. Monitor BG."},
     {"827", "Urgent Low Sensor Glucose. Check BG"}, _ ' From Java
     {"829", "BG required(triggeredDateTime). Enter a New BG for SmartGuard."},
+    {"831", "Enter BG Now(triggeredDateTime). Enter a BG to continue in SmartGuard."},
     {"832", "Calibration Required"}, _ ' From Java
     {"833", "Bolus recommended(triggeredDateTime). For (bgValue) (units) entered, a correction bolus is recommended. Select Bolus to program a bolus."},
-    {"869", "Calibration Reminder"}, _ ' From Java
-    {"870", "Recharge transmitter within 24 hours(triggeredDateTime)."},
-    {"BC_MESSAGE_CONFIRM_SENSOR_SIGNAL_CALIBRATE", "No calibration occurred(triggeredDateTime). Confirm sensor signal. Calibrate by (secondaryTime)."},
-    {"BC_MESSAGE_CONFIRM_SENSOR_SIGNAL_CHECK_BG", "No calibration occurred(triggeredDateTime). Confirm sensor signal. Check BG again to calibrate sensor."},
-    {"BC_MESSAGE_PLACE_PUMP_CLOSER_TO_TRANSMITTER", "BG not received(triggeredDateTime). PLace pump closer to transmitter. Select OK to resend BG to transmitter."},
-    {"BC_MESSAGE_SG_UNDER_50_MG_DL", "Low SG below 50 mg/dl(triggeredDateTime). SG is under (criticalLow) (units). Check BG and treat."},
-    {"BC_MESSAGE_SMART_GUARD_SETTINGS_TURNED_OFF", "Auto mode started. The following SmartGuard settings are turned off Suspend before low And Suspend on low."},
-    {"BC_MESSAGE_TIME_SINCE_LAST_BOLUS_CHECK_BG", "Need correct message for 'BC_MESSAGE_TIME_SINCE_LAST_BOLUS_CHECK_BG'."},
-    {"BC_REMINDER_TIME", "Reminder time to take (reminderName)."},
-    {"BC_SID_BASAL_DELIVERY_RESUMED_AT_X_AFTER_LOW_SUSPEND", "Basal delivery resumed at (secondaryTime) after suspend by sensor, Check BG."},
-    {"BC_SID_BASAL_STARTED_SMART_GUARD", "SmartGuard exit(triggeredDateTime). (basalName) started. Would you like to review the SmartGuard checklist?"},
-    {"BC_SID_BATTERY_LIFE_LESS_30_MINUTES", "Battery life less than 30 minutes(triggeredDateTime), replace battery now."},
-    {"BC_SID_BATTERY_REMOVED_RE_ENTER_TIME_AND_DATE", "Insert battery(triggeredDateTime). Delivery stopped. Insert a new battery now."},
-    {"BC_SID_BOLUS_ENTRY_TIMED_OUT", "Bolus Not delivered. Bolus entry timed out before delivery. If bolus was intended, enter values again."},
-    {"BC_SID_BUTTON_PRESSED_FOR_MOR_THAN_3_MIN", "Stuck button(triggeredDateTime). Button pressed for more then 3 minutes."},
-    {"BC_SID_CHECK_BG_AND_CALIBRATE_SENSOR_TO_RECEIVE", "Calibrate by (secondaryTime). Check BG and calibrate to continuing receiving sensor information."},
-    {"BC_SID_CHECK_BG_CONSIDER_TESTING_KETONES_0U", "Check BG and consider testing ketones and changing reservoir."},
-    {"BC_SID_CHECK_BG_CONSIDER_TESTING_KETONES_CHANGE_RESERVOIR", "Check BG and consider testing ketones and changing reservoir."},
-    {"BC_SID_DELIVERY_STOPPED_BATTERY_REPLACE", "Replace battery(triggeredDateTime). Delivery stopped."},
-    {"BC_SID_DELIVERY_STOPPED_INSERT_NEW_BATTERY", "Insert battery(triggeredDateTime). Delivery stopped. Insert a New battery now."},
-    {"BC_SID_DO_NOT_CALIBRATE_UNLESS_NOTIFIED", "Sensor updating, Do Not calibrate unless notified. This could take up to 3 hours."},
-    {"BC_SID_ENSURE_CONNECTION_SECURE", "Check connection. Ensure transmitter and sensor is secure, then select OK."},
-    {"BC_SID_ENTER_BG_TO_CALIBRATE_SENSOR", "Enter BG now(triggeredDateTime). Enter BG to calibrate sensor."},
-    {"BC_SID_ENTER_BG_TO_CALIBRATE_SENSOR_SENSOR_INFO_NO_AVAILABLE", "Enter BG to calibrate sensor(triggeredDateTime). Sensor info not available."},
-    {"BC_SID_ENTER_BG_TO_CONTINUE_IN_SMART_GUARD", "Enter BG now(triggeredDateTime). Enter BG to continue in SmartGuard."},
-    {"BC_SID_FILL_TUBING_STOPPED_DISCONNECT", "Fill tubing, delivery stopped."},
-    {"BC_SID_GLUCOSE_WAS_HIGHER_THREE_HOURS", "Glucose was higher(triggeredDateTime). Three hours."},
-    {"BC_SID_HIGH_SG_CHECK_BG", "Alert on high (sg) (units)(triggeredDateTime). High sensor glucose. Check BG."},
-    {"BC_SID_INSERT_NEW_AA_BATTERY", "Battery failed(triggeredDateTime). Insert a new AA battery."},
-    {"BC_SID_LOW_SG_CHECK_BG", "Alert on low (sg) (units)(triggeredDateTime). Insulin delivery suspended since (secondaryTime). Check BG."},
-    {"BC_SID_LOW_SG_INSULIN_DELIVERY_SUSPENDED_SINCE_X_CHECK_BG", "Alert on low (sg) (units)(triggeredDateTime). Insulin delivery suspended since (secondaryTime). Check BG."},
-    {"BC_SID_MAX_FILL_DROPS_QUESITION", "Max fill reached(triggeredDateTime) (deliveredAmount)U. ."},
-    {"BC_SID_MAXIMUM_2_HOUR_SUSPEND_TIME_REACHED_CHECK_BG", "Maximum 2 hour suspend time reached(triggeredDateTime). Check BG."},
-    {"BC_SID_MAXIMUM_2_HOUR_SUSPEND_TIME_REACHED_SG_STILL_UNDER_LOW", "Maximum 2 hour suspend time reached, Sensor Glucose is still under (CriticalLow) (units), basal restarted. Check BG."},
-    {"BC_SID_REMOVE_RESERVOIR_SELECT_REWIND", "Loading incomplete(triggeredDateTime). Remove reservoir and select Rewind to restart loading."},
-    {"BC_SID_REPLACE_BATTERY_SOON", "Battery low pump(triggeredDateTime). Replace battery soon."},
-    {"BC_SID_REWIND_BEFORE_LOADING", "No reservoir detected(triggeredDateTime). Rewind before loading reservoir."},
-    {"BC_SID_SENSOR_INFO_UNAVAILABLE_FOR_UP_TO_TWO_HOURS", "Calibration not accepted(triggeredDateTime). Sensor information is unavailable for up to 2 hours.(vbCrLf)Entered BGs may not calibrate the sensor but can be used for therapy."},
-    {"BC_SID_SENSOR_RELATED_ISSUE_INSERT_NEW", "Sensor failure(triggeredDateTime), Insert new sensor."},
-    {"BC_SID_START_NEW_SENSOR", "Start New sensor."},
-    {"BC_SID_UMAX_ALERT_INFO", "Auto Mode max delivery. Auto Mode has been at maximum delivery for 4 hours. Enter BG to continue in Auto Mode."},
-    {"BC_SID_UMIN_ALERT_INFO", "Auto Mode min delivery. Auto Mode has been at minimum delivery for 2 hours. Enter BG to continue in Auto Mode."},
-    {"BC_SID_UPDATING_CAN_TAKE_UP_TO_NINETY_MINUTES", "Sensor updating(triggeredDateTime), it can take up to 90 minutes."},
-    {"BC_TITLE_NEW_UNKNOWN_NOTIFICATION", "Enter BG Now(triggeredDateTime). Enter BG to calibrate sensor. Sensor information is no longer available."}
-        }
+    {"869", "Reminder time to take (reminderName)."},
+    {"870", "Recharge transmitter within 24 hours(triggeredDateTime)."}}
 
     Friend ReadOnly s_plgmLgsMessages As New Dictionary(Of String, String) From {
             {"FEATURE_OFF", "Feature Off"},
@@ -176,9 +134,11 @@ Friend Module UserMessageConstants
             {"CHANGE_SENSOR", $"Change{vbCrLf}Sensor"},
             {"DELIVERY_SUSPEND", $"Delivery{vbCrLf}Suspended"},
             {"DO_NOT_CALIBRATE", $"Do Not{vbCrLf}Calibrate"},
+            {"DUAL_BOLUS", $"Dual{vbCrLf}Bolus"},
             {"LOAD_RESERVOIR", $"Load{vbCrLf}Reservoir"},
             {"NO_ACTION_REQUIRED", $"No Action{vbCrLf}Required"},
             {"NO_DATA_FROM_PUMP", $"No Data{vbCrLf}From Pump"},
+            {"NO_DELIVERY", $"No{vbCrLf}Delivery"},
             {"NO_ERROR_MESSAGE", "---"},
             {"NO_SENSOR_SIGNAL", "Lost Sensor Signal... Move pump closer to transmitter. May take 15 minutes to find signal"},
             {"PROCESSING_BG", $"Processing{vbCrLf}BG"},
@@ -189,7 +149,9 @@ Friend Module UserMessageConstants
             {"SENSOR_OFF", $"Sensor{vbCrLf}Off"},
             {"SG_ABOVE_400_MGDL", $"SG Above{vbCrLf}400 mg/dL"},
             {"SG_BELOW_40_MGDL", $"SG Below{vbCrLf}50 mg/dL"},
+            {"SQUARE_BOLUS", $"Square{vbCrLf}Bolus"},
             {"SUSPENDED_BEFORE_LOW", $"Suspended{vbCrLf}Before Low"},
+            {"SUSPENDED_ON_LOW", $"Suspended{vbCrLf}On Low"},
             {"TEMP_BASAL", $"Temp{vbCrLf}Basal"},
             {"TEMP_TARGET", $"Temp{vbCrLf}Target"},
             {"UNKNOWN", "Unknown"},

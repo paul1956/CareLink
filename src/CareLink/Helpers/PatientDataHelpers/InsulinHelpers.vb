@@ -5,7 +5,8 @@
 Friend Module InsulinHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
-            NameOf(Insulin.effectiveDuration)}
+            NameOf(Insulin.Kind),
+            NameOf(Insulin.Type)}
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 

@@ -19,7 +19,6 @@ Public Class PumpSetupDialog
 
     Private Sub DataGridView_Paint(sender As Object, e As PaintEventArgs) Handles DataGridViewHighAlert.Paint, DataGridViewLowAlert.Paint
         DgvPaint(sender, e)
-
     End Sub
 
     Private Sub DataGridViewHighAlert_SelectionChanged(sender As Object, e As EventArgs) Handles DataGridViewHighAlert.SelectionChanged, DataGridViewLowAlert.SelectionChanged

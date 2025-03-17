@@ -13,9 +13,7 @@ Public Class LowGlucoseSuspended
         Me.RecordNumber = recordNumber
         Me.Type = markerEntry.Type
         Me.Kind = "Marker"
-        Me.Timestamp = markerEntry.Timestamp
         Me.TimestampAsString = markerEntry.TimestampAsString
-        Me.DisplayTime = markerEntry.DisplayTime
         Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
         Me.deliverySuspended = True
     End Sub
@@ -33,22 +31,32 @@ Public Class LowGlucoseSuspended
     Public Property Kind As String
 
     <DisplayName(NameOf(Timestamp))>
-    <Column(Order:=3, TypeName:="Date")>
-    Public Property Timestamp As Date
-
-    <DisplayName(NameOf(TimestampAsString))>
-    <Column(Order:=4, TypeName:="String")>
+    <Column(Order:=3, TypeName:="String")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
 
-    <DisplayName("Display Time")>
-    <Column(Order:=5, TypeName:=NameOf([DateTime]))>
-    Public Property DisplayTime As Date
+    <DisplayName("TimestampAsDate")>
+    <Column(Order:=4, TypeName:="Date")>
+    <JsonPropertyName("timestampAsDate")>
+    Public ReadOnly Property Timestamp As Date
+        Get
+            Return Date.ParseExact(Me.TimestampAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+        End Get
+    End Property
 
-    <DisplayName(NameOf(DisplayTimeAsString))>
-    <Column(Order:=6, TypeName:="String")>
-    <JsonPropertyName("displaytime")>
+    <DisplayName(NameOf(DisplayTime))>
+    <Column(Order:=5, TypeName:="String")>
+    <JsonPropertyName("displayTime")>
     Public Property DisplayTimeAsString As String
+
+    <DisplayName("DisplayTimeAsDate")>
+    <Column(Order:=6, TypeName:="Date")>
+    <JsonPropertyName("displayTimeAsDate")>
+    Public ReadOnly Property DisplayTime As Date
+        Get
+            Return Date.ParseExact(Me.DisplayTimeAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+        End Get
+    End Property
 
     <DisplayName("Delivery Suspended")>
     <Column(Order:=7, TypeName:=NameOf([Boolean]))>
