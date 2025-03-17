@@ -651,16 +651,18 @@ Public Class Form1
                 End If
             End If
             If CareLinkUserDataRecordHelpers.HideColumn(dataPropertyName) Then
-                e.DgvColumnAdded(CareLinkUserDataRecordHelpers.GetCellStyle(dataPropertyName),
-                                 False,
-                                 False,
-                                 caption)
+                e.DgvColumnAdded(
+                    cellStyle:=CareLinkUserDataRecordHelpers.GetCellStyle(dataPropertyName),
+                    wrapHeader:=False,
+                    forceReadOnly:=False,
+                    caption:=caption)
                 .Visible = False
             Else
-                e.DgvColumnAdded(CareLinkUserDataRecordHelpers.GetCellStyle(dataPropertyName),
-                                 False,
-                                 True,
-                                 caption)
+                e.DgvColumnAdded(
+                    cellStyle:=CareLinkUserDataRecordHelpers.GetCellStyle(dataPropertyName),
+                    wrapHeader:=False,
+                    forceReadOnly:=True,
+                    caption:=caption)
 
             End If
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -792,10 +794,10 @@ Public Class Form1
                 .Visible = False
             Else
                 e.DgvColumnAdded(
-                    cellStyle:=ActiveInsulinHelpers.GetCellStyle(.Name),
-                    wrapHeader:=False,
+                    cellStyle:=SummaryHelpers.GetCellStyle(.Name),
+                    wrapHeader:=True,
                     forceReadOnly:=True,
-                    caption:=Nothing)
+                    caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
             End If
             .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
@@ -831,16 +833,49 @@ Public Class Form1
 
 #Region "Dgv Last Alarm Events"
 
-    Private Sub DgvLastAlarm_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLastAlarm.ColumnAdded
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        ColumnAdded(dgv, e)
+    Friend Sub DgvLastAlarm_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLastAlarm.ColumnAdded
+        With e.Column
+            If LastAlarmHelpers.HideColumn(.Name) Then
+                .Visible = False
+            Else
+                e.DgvColumnAdded(
+                    cellStyle:=SummaryHelpers.GetCellStyle(.Name),
+                    wrapHeader:=True,
+                    forceReadOnly:=True,
+                    caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+            End If
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+        End With
     End Sub
 
-    Private Sub DgvLastAlarm_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvLastAlarm.DataError
+    Friend Sub DgvLastAlarm_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvLastAlarm.DataError
         Stop
     End Sub
 
 #End Region ' Dgv Last Alarm Events
+
+#Region "Dgv Last Sensor Glucose Events"
+
+    Friend Sub DgvLastSensorGlucose_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLastSensorGlucose.ColumnAdded
+        With e.Column
+            If LastSgHelpers.HideColumn(.Name) Then
+                .Visible = False
+            Else
+                e.DgvColumnAdded(
+                    cellStyle:=LastSgHelpers.GetCellStyle(.Name),
+                    wrapHeader:=False,
+                    forceReadOnly:=True,
+                    caption:=Nothing)
+            End If
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+        End With
+    End Sub
+
+    Friend Sub DgvLastSensorGlucose_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvLastSensorGlucose.DataError
+        Stop
+    End Sub
+
+#End Region ' Dgv Last Sensor Glucose Events
 
 #Region "Dgv Limits Events"
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLimits.ColumnAdded
@@ -1930,7 +1965,7 @@ Public Class Form1
                             suffixMessage:="",
                             highLight:=False,
                             isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
-                        _sgMiniDisplay.SetCurrentSgString(s_lastSgRecord?.ToString, s_lastSgRecord.sg)
+                        _sgMiniDisplay.SetCurrentSgString(s_lastSg?.ToString, s_lastSg.Sg)
                     End If
                 Else
                     Me.UpdateAllTabPages(fromFile:=False)
@@ -2279,9 +2314,8 @@ Public Class Form1
 
     Private Sub UpdateNotifyIcon(lastSgString As String)
         Try
-            Dim sg As Single = s_lastSgRecord.sg
-
-            Using bitmapText As New Bitmap(16, 16)
+            Dim sg As Single = s_lastSg.Sg
+            Using bitmapText As New Bitmap(width:=16, height:=16)
                 Using g As Graphics = Graphics.FromImage(bitmapText)
                     Dim backColor As Color
                     Select Case sg
@@ -2384,6 +2418,25 @@ Public Class Form1
 #End Region ' Scale Split Containers
 
 #Region "Update Home Tab"
+    Private Function GetSubTitle() As String
+        Dim title As String = ""
+        If InAutoMode Then
+            Dim automodeState As String = s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmState.AutoModeShieldState))
+            Select Case automodeState
+                Case "AUTO_BASAL"
+                    title = If(Is700Series(), "AutoMode", "SmartGuard")
+                Case "SAFE_BASAL"
+                    title = automodeState.ToTitle
+                    Dim safeBasalDuration As UInteger = CUInt(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmState.SafeBasalDuration)))
+                    If safeBasalDuration > 0 Then
+                        title &= $", {TimeSpan.FromMinutes(safeBasalDuration):h\:mm} left."
+                    End If
+            End Select
+        Else
+            Return $"{s_basal.ActiveBasalPattern} rate = {s_basal.GetBasalPerHour} U Per Hour".CleanSpaces
+        End If
+        Return title
+    End Function
 
     Private Sub UpdateActiveInsulin()
         Try
@@ -2418,7 +2471,8 @@ Public Class Form1
                 s.Points.Clear()
             Next
             With Me.ActiveInsulinChart
-                .Titles(NameOf(ActiveInsulinChartTitle)).Text = $"Running Insulin On Board (IOB) - {s_basal.ActiveBasalPattern}"
+                Dim subtitle As String = If(s_basal Is Nothing, String.Empty, $"- {s_basal.ActiveBasalPattern}")
+                .Titles(NameOf(ActiveInsulinChartTitle)).Text = $"Running Insulin On Board (IOB){subtitle}"
                 .ChartAreas(NameOf(ChartArea)).UpdateChartAreaSgAxisX()
 
                 ' Order all markers by time
@@ -2531,9 +2585,7 @@ Public Class Form1
                     s.Points.Clear()
                 Next
                 .ChartAreas(NameOf(ChartArea)).UpdateChartAreaSgAxisX()
-#If False Then ' Basal testing
-                .Titles(0).Text = $"Status - {s_listOfManualBasal.GetSubTitle}"
-#End If
+                .Titles(0).Text = $"Status - {Me.GetSubTitle()}"
                 .PlotSuspendArea(SuspendSeries:=Me.SummarySuspendSeries)
                 .PlotMarkers(
                     timeChangeSeries:=Me.SummaryTimeChangeSeries,
@@ -2552,7 +2604,7 @@ Public Class Form1
 
     Private Sub UpdateAutoModeShield()
         Try
-            Me.LastSgOrExitTimeLabel.Text = s_lastSgRecord.Timestamp.ToShortTimeString
+            Me.LastSgOrExitTimeLabel.Text = s_lastSg.Timestamp.ToShortTimeString
             Me.LastSgOrExitTimeLabel.BackColor = Color.Transparent
             Me.ShieldUnitsLabel.BackColor = Color.Transparent
             Me.ShieldUnitsLabel.Text = BgUnitsNativeString
@@ -2580,26 +2632,26 @@ Public Class Form1
             End If
 
             Dim message As String = ""
-            If Not s_lastSgRecord.sg.IsSgInvalid Then
+            If Not s_lastSg.Sg.IsSgInvalid Then
                 Me.CurrentSgLabel.Visible = True
                 Dim sgString As String
                 If s_autoModeReadinessState?.Value = "CALIBRATING" Then
                     ' TODO
-                    sgString = s_lastSgRecord.ToString
+                    sgString = s_lastSg.ToString
                     Me.CurrentSgLabel.Text = sgString
                 Else
-                    sgString = s_lastSgRecord.ToString
+                    sgString = s_lastSg.ToString
                     Me.CurrentSgLabel.Text = sgString
                 End If
                 Me.UpdateNotifyIcon(sgString)
-                _sgMiniDisplay.SetCurrentSgString(sgString, s_lastSgRecord.sg)
+                _sgMiniDisplay.SetCurrentSgString(sgString, s_lastSg.Sg)
                 Me.SensorMessageLabel.Visible = False
                 If s_sensorMessages.TryGetValue(s_sensorState, message) Then
                     Dim splitMessage As String = message.Split(".")(0)
                     message = If(message.Contains("..."), $"{splitMessage}...", splitMessage)
                 End If
             Else
-                _sgMiniDisplay.SetCurrentSgString("---", s_lastSgRecord.sg)
+                _sgMiniDisplay.SetCurrentSgString("---", s_lastSg.Sg)
                 Me.CurrentSgLabel.Visible = False
                 Me.LastSgOrExitTimeLabel.Visible = False
                 Me.SensorMessageLabel.Visible = True
@@ -3045,7 +3097,8 @@ Public Class Form1
         End If
         Try
             Me.InitializeTreatmentMarkersChart()
-            Me.TreatmentMarkersChart.Titles(NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details - {s_basal.ActiveBasalPattern}"
+            Dim subtitle As String = If(s_basal Is Nothing, String.Empty, $" - {s_basal.ActiveBasalPattern}")
+            Me.TreatmentMarkersChart.Titles(NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details{subtitle}"
             Me.TreatmentMarkersChart.ChartAreas(NameOf(ChartArea)).UpdateChartAreaSgAxisX()
             Me.TreatmentMarkersChart.PlotSuspendArea(Me.TreatmentMarkerSuspendSeries)
             Me.TreatmentMarkersChart.PlotTreatmentMarkers(Me.TreatmentMarkerTimeChangeSeries)
@@ -3137,14 +3190,21 @@ Public Class Form1
         Me.ReadingsLabel.Text = $"{nonZeroRecords.Count()}/288 SG Readings"
 
         Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(listOfClass:={s_lastSgRecord}.ToList),
+            table:=ClassCollectionToDataTable(listOfClass:={s_lastSg}.ToList),
             className:=NameOf(LastSG),
-            attachHandlers:=AddressOf SgHelpers.AttachHandlers,
+            attachHandlers:=Nothing,
             rowIndex:=ServerDataIndexes.lastSG,
             hideRecordNumberColumn:=True)
 
         UpdateSummaryTab(Me.DgvSummary, s_listOfSummaryRecords, sort:=True)
         UpdateSummaryTab(Me.DgvLastAlarm, GetSummaryRecords(s_lastAlarmValue), sort:=True)
+
+        Me.TableLayoutPanelActiveInsulin.DisplayDataTableInDGV(
+            table:=ClassCollectionToDataTable(listOfClass:={s_activeInsulin}.ToList),
+            className:=NameOf(ActiveInsulin),
+            attachHandlers:=Nothing,
+            rowIndex:=ServerDataIndexes.activeInsulin,
+            hideRecordNumberColumn:=True)
 
         Me.TableLayoutPanelActiveInsulin.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(listOfClass:={s_activeInsulin}.ToList),

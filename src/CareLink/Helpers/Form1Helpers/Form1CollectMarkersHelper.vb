@@ -40,10 +40,11 @@ Friend Module Form1CollectMarkersHelper
         s_listOfTimeChangeMarkers.Clear()
         s_markers.Clear()
 
-        Dim basalDictionary As New SortedDictionary(Of OADate, Double)
         MaxBasalPerDose = 0
 
         Dim markers As List(Of Marker) = PatientData.Markers
+
+        Dim basalDictionary As New SortedDictionary(Of OADate, Double)
         For Each e As IndexClass(Of Marker) In markers.WithIndex
             Dim markerEntry As Marker = e.Value
             Select Case markerEntry.Type
@@ -72,8 +73,11 @@ Friend Module Form1CollectMarkersHelper
                                 basalDictionary(lastInsulinRecord.OAdateTime) += lastInsulinRecord.DeliveredFastAmount
                             End If
                         Case "MANUAL"
+                            Stop
                         Case "UNDETERMINED"
+                            Stop
                         Case "RECOMMENDED"
+                            ' Do I need to do anything here?
                         Case Else
                             Stop
                             Throw UnreachableException(markerEntry.Type)

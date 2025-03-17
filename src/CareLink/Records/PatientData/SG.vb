@@ -16,20 +16,6 @@ Public Class SG
     Public Sub New()
     End Sub
 
-    Public Sub New(lastSg As LastSG, index As Integer)
-        If lastSg.Sg <> 0 Then
-            _timestampAsString = lastSg.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
-            Me.sensorState = lastSg.SensorState
-            Me.sg = lastSg.Sg
-            Me.timeChange = False
-        Else
-            Me.sg = Single.NaN
-        End If
-        Me.Kind = lastSg.Kind
-        Me.RecordNumber = index
-        Me.Version = lastSg.Version
-    End Sub
-
     Public Sub New(innerJson As Dictionary(Of String, String), index As Integer)
         Try
             If innerJson(NameOf(sg)) <> "0" OrElse innerJson.Count = 5 Then

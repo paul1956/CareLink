@@ -360,7 +360,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.lastSG)
-                    s_lastSgRecord = New SG(PatientData.LastSG, 0)
+                    s_lastSg = PatientData.LastSG
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
 
                 Case NameOf(ServerDataIndexes.lastSGTrend)

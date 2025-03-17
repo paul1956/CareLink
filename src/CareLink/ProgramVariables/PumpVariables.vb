@@ -22,7 +22,7 @@ Public Module PumpVariables
     Friend s_gstCommunicationState As Boolean
     Friend s_lastAlarmValue As Dictionary(Of String, String)
     Friend s_lastMedicalDeviceDataUpdateServerEpoch As Long
-    Friend s_lastSgRecord As New SG
+    Friend s_lastSg As New LastSG
     Friend s_lastSgValue As Single = 0
     Friend s_listOfSgRecords As New List(Of SG)
     Friend s_listOfTimeChangeMarkers As New List(Of TimeChange)

@@ -24,10 +24,11 @@ Friend Module AutoModeStatusHelpers
             If HideColumn(.Name) Then
                 .Visible = False
             Else
-                e.DgvColumnAdded(GetCellStyle(.Name),
-                                 True,
-                                 True,
-                                 CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+                e.DgvColumnAdded(
+                    cellStyle:=GetCellStyle(.Name),
+                    wrapHeader:=True,
+                    forceReadOnly:=True,
+                    caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
             End If
             .SortMode = DataGridViewColumnSortMode.NotSortable
         End With

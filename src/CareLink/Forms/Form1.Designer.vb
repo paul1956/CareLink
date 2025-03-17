@@ -2749,7 +2749,7 @@ Partial Class Form1
         TableLayoutPanelLastSG.ColumnCount = 1
         TableLayoutPanelLastSG.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelLastSG.Controls.Add(TableLayoutPanelLastSgTop, 0, 0)
-        TableLayoutPanelLastSG.Controls.Add(DgvLastSensorGlucose, 0, 10)
+        TableLayoutPanelLastSG.Controls.Add(DgvLastSensorGlucose, 0, 1)
         TableLayoutPanelLastSG.Dock = DockStyle.Fill
         TableLayoutPanelLastSG.Location = New Point(3, 3)
         TableLayoutPanelLastSG.Name = "TableLayoutPanelLastSG"

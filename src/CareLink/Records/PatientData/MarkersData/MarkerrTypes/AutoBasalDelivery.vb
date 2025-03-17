@@ -9,19 +9,6 @@ Imports System.Text.Json.Serialization
 
 Public Class AutoBasalDelivery
 
-    Public Sub New()
-    End Sub
-
-    Public Sub New(r As Basal, recordNumber As Integer)
-        Me.RecordNumber = recordNumber
-        'Me.Timestamp = r.Timestamp
-        'Me.TimestampAsString = r.TimestampAsString
-        'Me.DisplayTime = r.DisplayTime
-        'Me.DisplayTimeAsString = r.DisplayTimeAsString
-        'Me.bolusAmount = r.Data.DataValues(NameOf(bolusAmount)).ToString.ParseSingle(decimalDigits:=10)
-        'Me.maxAutoBasalRate = r.Data.DataValues(NameOf(maxAutoBasalRate)).ToString.ParseSingle(decimalDigits:=10)
-    End Sub
-
     Public Sub New(markerEntry As Marker, recordNumber As Integer)
         Me.RecordNumber = recordNumber
         Me.TimestampAsString = markerEntry.TimestampAsString
