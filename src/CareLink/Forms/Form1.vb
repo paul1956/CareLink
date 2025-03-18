@@ -2709,7 +2709,7 @@ Public Class Form1
     Private Sub UpdateCalibrationTimeRemaining()
         Try
             If s_pumpInRangeOfPhone Then
-                If s_timeToNextCalibrationHours > Byte.MaxValue Then
+                If s_timeToNextCalibrationHours >= Byte.MaxValue Then
                     Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(720)
                 ElseIf s_timeToNextCalibrationHours = 0 Then
                     Me.CalibrationDueImage.Image = If(s_systemStatusMessage = "WAIT_TO_CALIBRATE" OrElse s_sensorState = "WARM_UP" OrElse s_sensorState = "CHANGE_SENSOR",
