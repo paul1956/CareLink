@@ -10,7 +10,6 @@ Friend Module Form1NotificationTabHelpers
             NameOf(ClearedNotifications.ReferenceGUID)}
 
     Private Sub CreateNotificationTables(notificationDictionary As Dictionary(Of String, String))
-        Form1.TableLayoutPanelNotificationsCleared.Visible = False
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In notificationDictionary.WithIndex()
             Dim notificationType As KeyValuePair(Of String, String) = c.Value
             Dim innerJson As List(Of Dictionary(Of String, String)) = JsonToLisOfDictionary(notificationType.Value)
@@ -44,8 +43,8 @@ Friend Module Form1NotificationTabHelpers
                     Form1.TableLayoutPanelNotificationActive.DisplayEmptyDGV(className:="activeNotification")
                 End If
             End If
+            Application.DoEvents()
         Next
-        Form1.TableLayoutPanelNotificationsCleared.Visible = True
     End Sub
 
     Private Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As Integer)

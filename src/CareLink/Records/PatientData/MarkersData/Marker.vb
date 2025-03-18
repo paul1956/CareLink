@@ -26,7 +26,7 @@ Public Class Marker
     <JsonPropertyName("timestampAsDate")>
     Public ReadOnly Property Timestamp As Date
         Get
-            Return Date.ParseExact(Me.TimestampAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+            Return TryParseDateStr(Me.TimestampAsString)
         End Get
     End Property
 
@@ -40,7 +40,7 @@ Public Class Marker
     <JsonPropertyName("displayTimeAsDate")>
     Public ReadOnly Property DisplayTime As Date
         Get
-            Return Date.ParseExact(Me.DisplayTimeAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+            Return TryParseDateStr(Me.DisplayTimeAsString)
         End Get
     End Property
 

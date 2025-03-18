@@ -87,9 +87,7 @@ Public Class SG
     <JsonPropertyName("timestampAsDate")>
     Public ReadOnly Property Timestamp As Date
         Get
-            Return If(String.IsNullOrWhiteSpace(_timestampAsString),
-                Nothing,
-                Date.ParseExact(_timestampAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture))
+            Return TryParseDateStr(Me.TimestampAsString)
         End Get
     End Property
 

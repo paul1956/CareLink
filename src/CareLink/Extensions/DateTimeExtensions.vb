@@ -212,4 +212,13 @@ Friend Module DateTimeExtensions
         Return success
     End Function
 
+    <Extension>
+    Public Function TryParseDateStr(dateAsString As String) As Date
+        If Not String.IsNullOrWhiteSpace(dateAsString) Then
+            Dim parsedDate As Date = Date.ParseExact(dateAsString, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture)
+            Return parsedDate
+        End If
+        Return Nothing
+    End Function
+
 End Module
