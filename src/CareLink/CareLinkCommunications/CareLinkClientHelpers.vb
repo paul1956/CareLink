@@ -218,7 +218,7 @@ Public Module CareLinkClientHelpers
         ssoConfig As SsoConfig,
         regReq As HttpResponseMessage,
         clientInitResponse As ClientInitData,
-        userName As String) As Task(Of tokenData)
+        userName As String) As Task(Of TokenData)
 
         Dim tokenReqUrl As String = $"{apiBaseUrl}{ssoConfig.OAuth.SystemEndpoints.TokenEndpointPath}"
         Dim tokenReqData As New Dictionary(Of String, String) From {
@@ -244,7 +244,7 @@ Public Module CareLinkClientHelpers
         'Dim tokenData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(tokenDataStr)
         Debug.WriteLine("got token data from server")
 
-        Dim tokenDataToSave As tokenData = JsonSerializer.Deserialize(Of tokenData)(tokenDataStr)
+        Dim tokenDataToSave As TokenData = JsonSerializer.Deserialize(Of TokenData)(tokenDataStr)
 
         WriteTokenDataFile(tokenDataToSave, userName)
         Return tokenDataToSave

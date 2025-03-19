@@ -5,7 +5,8 @@
 Friend Module AutoModeStatusHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
-        NameOf(AutoModeStatus.Kind)}
+        NameOf(AutoModeStatus.Kind),
+        NameOf(AutoModeStatus.Type)}
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
