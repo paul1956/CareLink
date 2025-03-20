@@ -106,9 +106,9 @@ Friend Module Form1UpdateHelpers
         s_listOfSummaryRecords.Clear()
         s_listOfUserSummaryRecord.Clear()
 
-        Dim markerRowString As String = ""
-        If RecentData.TryGetValue("clientTimeZoneName", markerRowString) Then
-            PumpTimeZoneInfo = CalculateTimeZone(markerRowString)
+        Dim value As String = ""
+        If RecentData.TryGetValue("clientTimeZoneName", value) Then
+            PumpTimeZoneInfo = CalculateTimeZone(value)
         End If
 
         If Not RecentData.TryGetValue("bgUnits", BgUnitsNativeString) Then
@@ -117,29 +117,19 @@ Friend Module Form1UpdateHelpers
 
         s_lastMedicalDeviceDataUpdateServerEpoch = CLng(RecentData("lastMedicalDeviceDataUpdateServerTime"))
 
-        If RecentData.TryGetValue("therapyAlgorithmState", markerRowString) Then
-            s_therapyAlgorithmStateValue = LoadIndexedItems(markerRowString)
+        If RecentData.TryGetValue("therapyAlgorithmState", value) Then
+            s_therapyAlgorithmStateValue = LoadIndexedItems(value)
             InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso {"AUTO_BASAL", "SAFE_BASAL"}.Contains(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmState.AutoModeShieldState)))
         End If
 
-        If RecentData.TryGetValue("sgs", markerRowString) Then
-            s_listOfSgRecords = JsonToLisOfSgs(markerRowString)
+        If RecentData.TryGetValue("sgs", value) Then
+            s_listOfSgRecords = JsonToLisOfSgs(value)
         End If
 
-#If False Then ' Basal testing
-
-        If RecentData.TryGetValue("basal", markerRowString) Then
-            Dim item As Basal = DictionaryToClass(Of Basal)(LoadIndexedItems(markerRowString), recordNumber:=0)
-            If item.HasValue Then
-                item.OaDateTime(s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime)
-                s_listOfManualBasal.Add(item)
-            End If
-        End If
-#End If
-        My.Forms.Form1.MaxBasalPerHourLabel.Text = If(RecentData.TryGetValue("markers", markerRowString),
-                                             CollectMarkers(),
-                                             ""
-                                            )
+        My.Forms.Form1.MaxBasalPerHourLabel.Text =
+            If(RecentData.TryGetValue(key:="markers", value),
+                CollectMarkers(),
+                String.Empty)
 
         s_systemStatusTimeRemaining = Nothing
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In RecentData.WithIndex()
@@ -458,7 +448,7 @@ Friend Module Form1UpdateHelpers
             .TableLayoutPanelLowGlucoseSuspended.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfLowGlucoseSuspendedMarkers),
                 className:=NameOf(LowGlucoseSuspended),
-                attachHandlers:=AddressOf LowGlucoseSuspendedHelpers.AttachHandlers,
+                attachHandlers:=Nothing,
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
             .TableLayoutPanelTimeChange.DisplayDataTableInDGV(
@@ -466,6 +456,12 @@ Friend Module Form1UpdateHelpers
                 className:=NameOf(TimeChange),
                 attachHandlers:=AddressOf TimeChangeHelpers.AttachHandlers,
                 rowIndex:=ServerDataIndexes.markers,
+                hideRecordNumberColumn:=False)
+            .TableLayoutPanelBasalPerHour.DisplayDataTableInDGV(
+                table:=ClassCollectionToDataTable(listOfClass:=s_listOfBasalPerHour),
+                className:=NameOf(BasalPerHour),
+                attachHandlers:=Nothing,
+                rowIndex:=0,
                 hideRecordNumberColumn:=False)
         End With
 
@@ -481,7 +477,7 @@ Friend Module Form1UpdateHelpers
                 Form1.PumpBannerStateLabel.Font = New Font(familyName:="Segoe UI", emSize:=8.25F, style:=FontStyle.Bold, unit:=GraphicsUnit.Point)
                 Select Case typeValue
                     Case "TEMP_TARGET"
-                        Dim minutes As Integer = bannerStateRecord1.timeRemaining
+                        Dim minutes As Integer = bannerStateRecord1.TimeRemaining
                         Form1.PumpBannerStateLabel.BackColor = Color.Lime
                         Form1.PumpBannerStateLabel.ForeColor = Form1.PumpBannerStateLabel.BackColor.GetContrastingColor
                         Form1.PumpBannerStateLabel.Text = $"Target {If(NativeMmolL, "8.3", "150")}  {minutes.ToHours} hr"
@@ -522,7 +518,7 @@ Friend Module Form1UpdateHelpers
                     Case "TEMP_BASAL"
                         Form1.PumpBannerStateLabel.BackColor = Color.Lime
                         Form1.PumpBannerStateLabel.ForeColor = Form1.PumpBannerStateLabel.BackColor.GetContrastingColor
-                        Form1.PumpBannerStateLabel.Text = $"Temp Basal {PatientData.PumpBannerState(0).timeRemaining.ToHours} hr"
+                        Form1.PumpBannerStateLabel.Text = $"Temp Basal {PatientData.PumpBannerState(0).TimeRemaining.ToHours} hr"
                         Form1.PumpBannerStateLabel.Visible = True
                         Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
                         Form1.PumpBannerStateLabel.Font = New Font(

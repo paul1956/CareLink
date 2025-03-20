@@ -175,7 +175,7 @@ Public Class Form1
 
 #Region "Titles"
 
-    Private WithEvents ActiveInsulinChartTitle As New Title
+    Private WithEvents ActiveInsulinChartTitle As Title
     Private WithEvents TreatmentMarkersChartTitle As Title
 
 #End Region ' Titles
@@ -469,12 +469,20 @@ Public Class Form1
     End Sub
 
     Public Sub Dgv_CellContextMenuStripNeededWithExcel(sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs) Handles _
+        DgvActiveInsulin.CellContextMenuStripNeeded,
         DgvAutoBasalDelivery.CellContextMenuStripNeeded,
+        DgvBannerState.CellContextMenuStripNeeded,
         DgvBasal.CellContextMenuStripNeeded,
+        DgvCareLinkUsers.CellContextMenuStripNeeded,
+        DgvCurrentUser.CellContextMenuStripNeeded,
         DgvInsulin.CellContextMenuStripNeeded,
+        DgvLastAlarm.CellContextMenuStripNeeded,
+        DgvLastSensorGlucose.CellContextMenuStripNeeded,
+        DgvLowGlucoseSuspended.CellContextMenuStripNeeded,
         DgvLimits.CellContextMenuStripNeeded,
         DgvMeal.CellContextMenuStripNeeded,
-        DgvSGs.CellContextMenuStripNeeded
+        DgvSGs.CellContextMenuStripNeeded,
+        DgvTherapyAlgorithmState.CellContextMenuStripNeeded
 
         If e.RowIndex >= 0 Then
             e.ContextMenuStrip = Me.DgvCopyWithExcelMenuStrip
@@ -482,20 +490,7 @@ Public Class Form1
     End Sub
 
     Public Sub Dgv_CellContextMenuStripNeededWithoutExcel(
-        sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs) Handles _
-            DgvActiveInsulin.CellContextMenuStripNeeded,
-            DgvAutoBasalDelivery.CellContextMenuStripNeeded,
-            DgvBannerState.CellContextMenuStripNeeded,
-            DgvCareLinkUsers.CellContextMenuStripNeeded,
-            DgvCurrentUser.CellContextMenuStripNeeded,
-            DgvInsulin.CellContextMenuStripNeeded,
-            DgvLastAlarm.CellContextMenuStripNeeded,
-            DgvLastSensorGlucose.CellContextMenuStripNeeded,
-            DgvLimits.CellContextMenuStripNeeded,
-            DgvMeal.CellContextMenuStripNeeded,
-            DgvSGs.CellContextMenuStripNeeded,
-            DgvSummary.CellContextMenuStripNeeded,
-            DgvTherapyAlgorithmState.CellContextMenuStripNeeded
+        sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs) Handles DgvSummary.CellContextMenuStripNeeded
 
         If e.RowIndex >= 0 AndAlso CType(sender, DataGridView).SelectedCells.Count > 0 Then
             e.ContextMenuStrip = Me.DgvCopyWithoutExcelMenuStrip
@@ -506,6 +501,43 @@ Public Class Form1
 #End Region 'ContextMenuStrip Events
 
 #Region "DataGridView Events"
+
+#Region "Dgv Active Insulin Events"
+
+    Private Sub DgvActiveInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvActiveInsulin.ColumnAdded
+        With e.Column
+            If ActiveInsulinHelpers.HideColumn(.Name) Then
+                .Visible = False
+            Else
+                e.DgvColumnAdded(
+                    cellStyle:=SummaryHelpers.GetCellStyle(.Name),
+                    wrapHeader:=True,
+                    forceReadOnly:=True,
+                    caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+            End If
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+        End With
+    End Sub
+
+    Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvActiveInsulin.CellFormatting
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(ActiveInsulin.datetime)
+                dgv.CellFormattingDateTime(e)
+            Case NameOf(ActiveInsulin.amount)
+                dgv.CellFormattingSingleValue(e, digits:=3)
+            Case NameOf(ActiveInsulin.Precision)
+                dgv.CellFormattingToTitle(e)
+            Case Else
+                dgv.CellFormattingSetForegroundColor(e)
+        End Select
+    End Sub
+
+    Private Sub DgvActiveInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvActiveInsulin.DataError
+        Stop
+    End Sub
+
+#End Region ' Dgv Active Insulin Events
 
 #Region "Dgv Auto Basal Delivery (Basal) Events"
 
@@ -548,6 +580,21 @@ Public Class Form1
     End Sub
 
 #End Region ' Dgv Auto Basal Delivery (Basal) Events
+
+#Region "Dgv Basal Per Hour Events"
+
+    Friend Sub DgvBasalPerHour_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvBasalPerHour.CellFormatting
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(BasalPerHour.Hour)
+                e.Value = TimeSpan.FromHours(CInt(e.Value)).ToString(s_timeWithoutMinuteFormat)
+            Case Else
+                dgv.CellFormattingSingleValue(e, 3)
+        End Select
+        dgv.CellFormattingSetForegroundColor(e)
+    End Sub
+
+#End Region ' Dgv Basal Per Hour Events
 
 #Region "Dgv Banner State Events"
 
@@ -786,43 +833,6 @@ Public Class Form1
 
 #End Region ' Dgv Current User Events
 
-#Region "Dgv Active Insulin Events"
-
-    Private Sub DgvActiveInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvActiveInsulin.ColumnAdded
-        With e.Column
-            If ActiveInsulinHelpers.HideColumn(.Name) Then
-                .Visible = False
-            Else
-                e.DgvColumnAdded(
-                    cellStyle:=SummaryHelpers.GetCellStyle(.Name),
-                    wrapHeader:=True,
-                    forceReadOnly:=True,
-                    caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
-            End If
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-        End With
-    End Sub
-
-    Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvActiveInsulin.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(ActiveInsulin.datetime)
-                dgv.CellFormattingDateTime(e)
-            Case NameOf(ActiveInsulin.amount)
-                dgv.CellFormattingSingleValue(e, digits:=3)
-            Case NameOf(ActiveInsulin.Precision)
-                dgv.CellFormattingToTitle(e)
-            Case Else
-                dgv.CellFormattingSetForegroundColor(e)
-        End Select
-    End Sub
-
-    Private Sub DgvActiveInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvActiveInsulin.DataError
-        Stop
-    End Sub
-
-#End Region ' Dgv Meal Events
-
 #Region "Dgv Insulin Events"
 
     Private Sub DgvInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvInsulin.DataError
@@ -856,18 +866,53 @@ Public Class Form1
 
 #Region "Dgv Last Sensor Glucose Events"
 
-    Friend Sub DgvLastSensorGlucose_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLastSensorGlucose.ColumnAdded
+    Private Sub DgvLastSensorGlucose_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvLastSensorGlucose.CellFormatting
+        If e.Value Is Nothing Then
+            Return
+        End If
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Dim alternateIndex As Integer = If(dgv.Rows(0).Cells(0).Value.ToString <> "0", 0, 1)
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(SG.sensorState)
+                ' Set the background to red for negative values in the Balance column.
+                If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
+                    CellFormattingApplyColor(e, Color.Red, isUri:=False)
+                End If
+                dgv.CellFormattingToTitle(e)
+            Case NameOf(SG.Timestamp)
+                dgv.CellFormattingDateTime(e)
+            Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
+                dgv.CellFormattingSgValue(e, NameOf(SG.sg))
+            Case Else
+                dgv.CellFormattingSetForegroundColor(e)
+        End Select
+    End Sub
+
+    Private Sub DgvLastSensorGlucose_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLastSensorGlucose.ColumnAdded
         With e.Column
-            If LastSgHelpers.HideColumn(.Name) Then
+            If SgHelpers.HideColumn(.Name) Then
+                .SortMode = DataGridViewColumnSortMode.NotSortable
                 .Visible = False
-            Else
-                e.DgvColumnAdded(
-                    cellStyle:=LastSgHelpers.GetCellStyle(.Name),
-                    wrapHeader:=False,
-                    forceReadOnly:=True,
-                    caption:=Nothing)
+                Exit Sub
             End If
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+
+            Dim dgv As DataGridView = CType(sender, DataGridView)
+            e.DgvColumnAdded(
+                cellStyle:=SgHelpers.GetCellStyle(.Name),
+                wrapHeader:=False,
+                forceReadOnly:=True,
+                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+
+            Select Case .Index
+                Case 0
+                    .SortMode = DataGridViewColumnSortMode.Programmatic
+                    .HeaderCell.SortGlyphDirection = SortOrder.Descending
+                Case 1
+                    .SortMode = DataGridViewColumnSortMode.Automatic
+                    .HeaderCell.SortGlyphDirection = SortOrder.None
+                Case Else
+                    .SortMode = DataGridViewColumnSortMode.NotSortable
+            End Select
         End With
     End Sub
 
@@ -878,6 +923,7 @@ Public Class Form1
 #End Region ' Dgv Last Sensor Glucose Events
 
 #Region "Dgv Limits Events"
+
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLimits.ColumnAdded
         With e.Column
             If LimitsHelpers.HideColumn(.Name) Then
@@ -904,6 +950,37 @@ Public Class Form1
     End Sub
 
 #End Region ' Dgv Limits Events
+
+#Region "Dgv  Low Glucose Suspended Events"
+    Friend Sub DgvLowGlucoseSuspended_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvLowGlucoseSuspended.CellFormatting
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(LowGlucoseSuspended.Timestamp)
+                dgv.CellFormattingDateTime(e)
+            Case Else
+                dgv.CellFormattingSetForegroundColor(e)
+        End Select
+    End Sub
+
+    Friend Sub DgvLowGlucoseSuspended_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLowGlucoseSuspended.ColumnAdded
+        With e.Column
+            If LowGlucoseSuspendedHelpers.HideColumn(.Name) Then
+                .Visible = False
+            Else
+                e.DgvColumnAdded(LowGlucoseSuspendedHelpers.GetCellStyle(.Name),
+                             True,
+                             True,
+                             CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+            End If
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+        End With
+    End Sub
+
+    Friend Sub DDgvLowGlucoseSuspended_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvLowGlucoseSuspended.DataError
+        Stop
+    End Sub
+
+#End Region ' Dgv Low Glucose Suspended Events
 
 #Region "Dgv Meal Events"
 
@@ -2418,6 +2495,7 @@ Public Class Form1
 #End Region ' Scale Split Containers
 
 #Region "Update Home Tab"
+
     Private Function GetSubTitle() As String
         Dim title As String = ""
         If InAutoMode Then
@@ -2467,6 +2545,9 @@ Public Class Form1
 
         Try
             Me.TemporaryUseAdvanceAITDecayCheckBox.Checked = CurrentUser.UseAdvancedAitDecay = CheckState.Checked
+            If Me.ActiveInsulinChart Is Nothing Then
+                Return
+            End If
             For Each s As Series In Me.ActiveInsulinChart?.Series
                 s.Points.Clear()
             Next

@@ -31,8 +31,12 @@ Friend Module Form1CollectMarkersHelper
     ''' <returns>Max Basal/Hr</returns>
     Friend Function CollectMarkers() As String
         s_listOfAutoBasalDeliveryMarkers.Clear()
+        s_listOFBasalPerHour.Clear()
+        For index As Integer = 0 To 23
+            s_listOFBasalPerHour.Add(New BasalPerHour(index))
+        Next
         s_listOfAutoModeStatusMarkers.Clear()
-        s_listOfBgReadingMarkers.Clear()
+            s_listOfBgReadingMarkers.Clear()
         s_listOfCalibrationMarkers.Clear()
         s_listOfInsulinMarkers.Clear()
         s_listOfLowGlucoseSuspendedMarkers.Clear()
@@ -52,6 +56,7 @@ Friend Module Form1CollectMarkersHelper
                     s_markers.Add(markerEntry)
                     Dim item As New AutoBasalDelivery(markerEntry:=markerEntry, recordNumber:=s_listOfAutoBasalDeliveryMarkers.Count + 1)
                     s_listOfAutoBasalDeliveryMarkers.Add(item)
+                    s_listOfBasalPerHour(item.DisplayTime.Hour).BasalRate += item.bolusAmount
                     If Not basalDictionary.TryAdd(item.OAdateTime, item.bolusAmount) Then
                         basalDictionary(item.OAdateTime) += item.bolusAmount
                     End If
@@ -96,18 +101,6 @@ Friend Module Form1CollectMarkersHelper
                     Throw UnreachableException(markerEntry.Type)
             End Select
         Next
-#If False Then ' Basal testing
-        For Each e As IndexClass(Of Basal) In s_listOfManualBasal.ToList.WithIndex
-            Dim r As Basal = e.Value
-            If Double.IsNaN(r.GetBasal) Then
-                Continue For
-            End If
-            basalDictionary.Add(r.GetOaGetTime, r.GetBasal)
-            s_listOfAutoBasalDeliveryMarkers.Add(New AutoBasalDelivery(r, basalDictionary.Count))
-            Dim basalMarker As New Marker
-            s_markers.Add(Marker.Convert(r))
-        Next
-#End If
 
         Dim endOADate As OADate = If(basalDictionary.Count = 0,
                                      New OADate(s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime),

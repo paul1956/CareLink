@@ -62,6 +62,7 @@ Public Module PumpVariables
 
     Private s_bgUnitsNativeString As String
     Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDelivery)
+    Friend ReadOnly s_listOfBasalPerHour As New List(Of BasalPerHour)
     Friend ReadOnly s_listOfAutoModeStatusMarkers As New List(Of AutoModeStatus)
     Friend ReadOnly s_listOfCalibrationMarkers As New List(Of Calibration)
     Friend ReadOnly s_listOfInsulinMarkers As New List(Of Insulin)

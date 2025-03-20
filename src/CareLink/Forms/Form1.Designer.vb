@@ -28,18 +28,6 @@ Partial Class Form1
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Dim DataGridViewCellStyle1 As DataGridViewCellStyle = New DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle11 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle12 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle13 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle14 As DataGridViewCellStyle = New DataGridViewCellStyle()
         AboveHighLimitMessageLabel = New Label()
         AboveHighLimitValueLabel = New Label()
         ActiveInsulinValue = New Label()
@@ -228,29 +216,37 @@ Partial Class Form1
         TabPageAutoModeStatus = New TabPage()
         TableLayoutPanelAutoModeStatus = New TableLayoutPanel()
         TableLayoutPanelAutoModeStatusTop = New TableLayoutPanelTopEx()
+        dgvAutoModeStatus = New DataGridView()
         TabPageBgReadings = New TabPage()
         TableLayoutPanelBgReadings = New TableLayoutPanel()
         TableLayoutPanelBgReadingsTop = New TableLayoutPanelTopEx()
+        DgvSensorBgReadings = New DataGridView()
         TabPageCalibration = New TabPage()
         TableLayoutPanelCalibration = New TableLayoutPanel()
         TableLayoutPanelCalibrationTop = New TableLayoutPanelTopEx()
         TabPageLowGlucoseSuspended = New TabPage()
         TableLayoutPanelLowGlucoseSuspended = New TableLayoutPanel()
         TableLayoutPanelLowGlucoseSuspendedTop = New TableLayoutPanelTopEx()
+        DgvLowGlucoseSuspended = New DataGridView()
         TabPageTimeChange = New TabPage()
         TableLayoutPanelTimeChange = New TableLayoutPanel()
         TableLayoutPanelTimeChangeTop = New TableLayoutPanelTopEx()
         TabPageLastSG = New TabPage()
         TableLayoutPanelLastSG = New TableLayoutPanel()
         TableLayoutPanelLastSgTop = New TableLayoutPanelTopEx()
+        DgvBasalPerHour = New DataGridView()
         TabPageLastAlarm = New TabPage()
         TableLayoutPanelLastAlarm = New TableLayoutPanel()
         TableLayoutPanelLastAlarmTop = New TableLayoutPanelTopEx()
+        TabPageBasalPerHour = New TabPage()
+        TableLayoutPanelBasalPerHour = New TableLayoutPanel()
+        TableLayoutPanelBasalPerHourTop = New TableLayoutPanelTopEx()
         TabPageCurrentUser = New TabPage()
         TabPageAllUsers = New TabPage()
         TabPageBackToHomePage = New TabPage()
         ToolTip1 = New ToolTip(components)
         WebView = New Microsoft.Web.WebView2.WinForms.WebView2()
+        DgvCalibration = New DataGridView()
         CType(CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         CalibrationShieldPanel.SuspendLayout()
         CType(SmartGuardShieldPictureBox, ComponentModel.ISupportInitialize).BeginInit()
@@ -318,21 +314,28 @@ Partial Class Form1
         TableLayoutPanelAutoBasalDelivery.SuspendLayout()
         TabPageAutoModeStatus.SuspendLayout()
         TableLayoutPanelAutoModeStatus.SuspendLayout()
+        CType(dgvAutoModeStatus, ComponentModel.ISupportInitialize).BeginInit()
         TabPageBgReadings.SuspendLayout()
         TableLayoutPanelBgReadings.SuspendLayout()
+        CType(DgvSensorBgReadings, ComponentModel.ISupportInitialize).BeginInit()
         TabPageCalibration.SuspendLayout()
         TableLayoutPanelCalibration.SuspendLayout()
         TabPageLowGlucoseSuspended.SuspendLayout()
         TableLayoutPanelLowGlucoseSuspended.SuspendLayout()
+        CType(DgvLowGlucoseSuspended, ComponentModel.ISupportInitialize).BeginInit()
         TabPageTimeChange.SuspendLayout()
         TableLayoutPanelTimeChange.SuspendLayout()
         TabPageLastSG.SuspendLayout()
         TableLayoutPanelLastSG.SuspendLayout()
+        CType(DgvBasalPerHour, ComponentModel.ISupportInitialize).BeginInit()
         TabPageLastAlarm.SuspendLayout()
         TableLayoutPanelLastAlarm.SuspendLayout()
+        TabPageBasalPerHour.SuspendLayout()
+        TableLayoutPanelBasalPerHour.SuspendLayout()
         TabPageCurrentUser.SuspendLayout()
         TabPageAllUsers.SuspendLayout()
         CType(WebView, ComponentModel.ISupportInitialize).BeginInit()
+        CType(DgvCalibration, ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         ' 
         ' AboveHighLimitMessageLabel
@@ -492,7 +495,7 @@ Partial Class Form1
         CalibrationShieldPanel.Location = New Point(0, 0)
         CalibrationShieldPanel.Margin = New Padding(0)
         CalibrationShieldPanel.Name = "CalibrationShieldPanel"
-        CalibrationShieldPanel.Size = New Size(116, 134)
+        CalibrationShieldPanel.Size = New Size(116, 133)
         CalibrationShieldPanel.TabIndex = 64
         ' 
         ' LastSgOrExitTimeLabel
@@ -501,7 +504,7 @@ Partial Class Form1
         LastSgOrExitTimeLabel.Dock = DockStyle.Bottom
         LastSgOrExitTimeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         LastSgOrExitTimeLabel.ForeColor = Color.White
-        LastSgOrExitTimeLabel.Location = New Point(0, 113)
+        LastSgOrExitTimeLabel.Location = New Point(0, 112)
         LastSgOrExitTimeLabel.Name = "LastSgOrExitTimeLabel"
         LastSgOrExitTimeLabel.Size = New Size(116, 21)
         LastSgOrExitTimeLabel.TabIndex = 55
@@ -648,6 +651,79 @@ Partial Class Form1
         ' 
         CursorTimer.Interval = 60000
         ' 
+        ' DgvActiveInsulin
+        ' 
+        DgvActiveInsulin.Dock = DockStyle.Fill
+        DgvActiveInsulin.Location = New Point(3, 3)
+        DgvActiveInsulin.Name = "DgvActiveInsulin"
+        DgvActiveInsulin.ReadOnly = True
+        DgvActiveInsulin.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvActiveInsulin.Size = New Size(1358, 597)
+        DgvActiveInsulin.TabIndex = 0
+        ' 
+        ' DgvAutoBasalDelivery
+        ' 
+        DgvAutoBasalDelivery.Dock = DockStyle.Fill
+        DgvAutoBasalDelivery.Location = New Point(3, 3)
+        DgvAutoBasalDelivery.Name = "DgvAutoBasalDelivery"
+        DgvAutoBasalDelivery.ReadOnly = True
+        DgvAutoBasalDelivery.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvAutoBasalDelivery.Size = New Size(1358, 597)
+        DgvAutoBasalDelivery.TabIndex = 0
+        ' 
+        ' dgvAutoModeStatus
+        ' 
+        dgvAutoModeStatus.Dock = DockStyle.Fill
+        dgvAutoModeStatus.Location = New Point(3, 3)
+        dgvAutoModeStatus.Name = "dgvAutoModeStatus"
+        dgvAutoModeStatus.ReadOnly = True
+        dgvAutoModeStatus.SelectionMode = DataGridViewSelectionMode.CellSelect
+        dgvAutoModeStatus.Size = New Size(1358, 597)
+        dgvAutoModeStatus.TabIndex = 0
+        ' 
+        ' DgvBannerState
+        ' 
+        DgvBannerState.Dock = DockStyle.Fill
+        DgvBannerState.Location = New Point(3, 3)
+        DgvBannerState.Name = "DgvBannerState"
+        DgvBannerState.ReadOnly = True
+        DgvBannerState.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvBannerState.Size = New Size(1358, 597)
+        DgvBannerState.TabIndex = 0
+        ' 
+        ' DgvBasal
+        ' 
+        DgvBasal.Dock = DockStyle.Fill
+        DgvBasal.Location = New Point(3, 3)
+        DgvBasal.Name = "DgvBasal"
+        DgvBasal.ReadOnly = True
+        DgvBasal.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvBasal.Size = New Size(1358, 597)
+        DgvBasal.TabIndex = 0
+        ' 
+        ' DgvBasalPerHour
+        ' 
+        DgvBasalPerHour.Dock = DockStyle.Fill
+        DgvBasalPerHour.Location = New Point(3, 3)
+        DgvBasalPerHour.Name = "DgvBasalPerHour"
+        DgvBasalPerHour.ReadOnly = True
+        DgvBasalPerHour.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvBasalPerHour.Size = New Size(1358, 597)
+        DgvBasalPerHour.TabIndex = 0
+        ' 
+        ' DgvCalibration
+        ' 
+        DgvCalibration.AllowUserToAddRows = False
+        DgvCalibration.AllowUserToDeleteRows = False
+        DgvCalibration.Dock = DockStyle.Fill
+        DgvCalibration.Location = New Point(3, 3)
+        DgvCalibration.Name = "DgvCalibration"
+        DgvCalibration.ReadOnly = True
+        DgvCalibration.Size = New Size(1358, 597)
+        DgvCalibration.TabIndex = 2
+        ' 
+        DgvLowGlucoseSuspended.TabIndex = 2
+        ' 
         ' DgvCareLinkUsers
         ' 
         DgvCareLinkUsers.AllowUserToAddRows = False
@@ -670,84 +746,37 @@ Partial Class Form1
         DgvCareLinkUsers.DefaultCellStyle = DataGridViewCellStyle2
         DgvCareLinkUsers.Dock = DockStyle.Fill
         DgvCareLinkUsers.EditMode = DataGridViewEditMode.EditOnEnter
-        DgvCareLinkUsers.Location = New Point(0, 0)
+        DgvCareLinkUsers.Location = New Point(3, 3)
         DgvCareLinkUsers.Name = "DgvCareLinkUsers"
         DgvCareLinkUsers.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvCareLinkUsers.Size = New Size(1370, 655)
+        DgvCareLinkUsers.Size = New Size(1358, 597)
         DgvCareLinkUsers.TabIndex = 0
         ' 
         ' DgvCurrentUser
         ' 
-        DgvCurrentUser.AllowUserToAddRows = False
-        DgvCurrentUser.AllowUserToDeleteRows = False
-        DgvCurrentUser.AllowUserToResizeColumns = False
-        DgvCurrentUser.AllowUserToResizeRows = False
-        DgvCurrentUser.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
-        DgvCurrentUser.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
         DgvCurrentUser.Dock = DockStyle.Fill
-        DgvCurrentUser.Location = New Point(0, 0)
+        DgvCurrentUser.Location = New Point(3, 3)
         DgvCurrentUser.Name = "DgvCurrentUser"
         DgvCurrentUser.ReadOnly = True
         DgvCurrentUser.RowHeadersVisible = False
-        DgvCurrentUser.Size = New Size(1376, 661)
+        DgvCurrentUser.Size = New Size(1358, 597)
         DgvCurrentUser.TabIndex = 0
+        '
+        ' DgvLowGlucoseSuspended
         ' 
-        ' DgvActiveInsulin
-        ' 
-        DgvActiveInsulin.Dock = DockStyle.Fill
-        DgvActiveInsulin.Location = New Point(0, 0)
-        DgvActiveInsulin.Name = "DgvActiveInsulin"
-        DgvActiveInsulin.ReadOnly = True
-        DataGridViewCellStyle3.WrapMode = DataGridViewTriState.False
-        DgvActiveInsulin.RowsDefaultCellStyle = DataGridViewCellStyle3
-        DgvActiveInsulin.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvActiveInsulin.Size = New Size(1358, 597)
-        DgvActiveInsulin.TabIndex = 0
-        ' 
-        ' DgvAutoBasalDelivery
-        ' 
-        DgvAutoBasalDelivery.Dock = DockStyle.Fill
-        DgvAutoBasalDelivery.Location = New Point(0, 0)
-        DgvAutoBasalDelivery.Name = "DgvAutoBasalDelivery"
-        DgvAutoBasalDelivery.ReadOnly = True
-        DataGridViewCellStyle4.WrapMode = DataGridViewTriState.False
-        DgvAutoBasalDelivery.RowsDefaultCellStyle = DataGridViewCellStyle4
-        DgvAutoBasalDelivery.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvAutoBasalDelivery.Size = New Size(1358, 597)
-        DgvAutoBasalDelivery.TabIndex = 0
-        ' 
-        ' DgvBannerState
-        ' 
-        DgvBannerState.Dock = DockStyle.Fill
-        DgvBannerState.Location = New Point(0, 0)
-        DgvBannerState.Name = "DgvBannerState"
-        DgvBannerState.ReadOnly = True
-        DataGridViewCellStyle5.WrapMode = DataGridViewTriState.False
-        DgvBannerState.RowsDefaultCellStyle = DataGridViewCellStyle5
-        DgvBannerState.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvBannerState.Size = New Size(1370, 655)
-        DgvBannerState.TabIndex = 0
-        ' 
-        ' DgvBasal
-        ' 
-        DgvBasal.Dock = DockStyle.Fill
-        DgvBasal.Location = New Point(0, 0)
-        DgvBasal.Name = "DgvBasal"
-        DgvBasal.ReadOnly = True
-        DataGridViewCellStyle6.WrapMode = DataGridViewTriState.False
-        DgvBasal.RowsDefaultCellStyle = DataGridViewCellStyle6
-        DgvBasal.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvBasal.Size = New Size(1370, 655)
-        DgvBasal.TabIndex = 0
+        DgvLowGlucoseSuspended.Dock = DockStyle.Fill
+        DgvLowGlucoseSuspended.Location = New Point(3, 3)
+        DgvLowGlucoseSuspended.Name = "DgvLowGlucoseSuspended"
+        DgvLowGlucoseSuspended.ReadOnly = True
+        DgvLowGlucoseSuspended.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvLowGlucoseSuspended.Size = New Size(1358, 597)
         ' 
         ' DgvInsulin
         ' 
         DgvInsulin.Dock = DockStyle.Fill
-        DgvInsulin.Location = New Point(0, 0)
+        DgvInsulin.Location = New Point(3, 3)
         DgvInsulin.Name = "DgvInsulin"
         DgvInsulin.ReadOnly = True
-        DataGridViewCellStyle7.WrapMode = DataGridViewTriState.False
-        DgvInsulin.RowsDefaultCellStyle = DataGridViewCellStyle7
         DgvInsulin.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvInsulin.Size = New Size(1358, 597)
         DgvInsulin.TabIndex = 0
@@ -758,32 +787,26 @@ Partial Class Form1
         DgvLastAlarm.Location = New Point(3, 3)
         DgvLastAlarm.Name = "DgvLastAlarm"
         DgvLastAlarm.ReadOnly = True
-        DataGridViewCellStyle8.WrapMode = DataGridViewTriState.True
-        DgvLastAlarm.RowsDefaultCellStyle = DataGridViewCellStyle8
         DgvLastAlarm.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvLastAlarm.Size = New Size(1370, 655)
+        DgvLastAlarm.Size = New Size(1358, 597)
         DgvLastAlarm.TabIndex = 0
         ' 
         ' DgvLastSensorGlucose
         ' 
         DgvLastSensorGlucose.Dock = DockStyle.Fill
-        DgvLastSensorGlucose.Location = New Point(3, 3)
+        DgvLastSensorGlucose.Location = New Point(6, 635)
         DgvLastSensorGlucose.Name = "DgvLastSensorGlucose"
         DgvLastSensorGlucose.ReadOnly = True
-        DataGridViewCellStyle9.WrapMode = DataGridViewTriState.False
-        DgvLastSensorGlucose.RowsDefaultCellStyle = DataGridViewCellStyle9
         DgvLastSensorGlucose.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvLastSensorGlucose.Size = New Size(1370, 655)
+        DgvLastSensorGlucose.Size = New Size(1358, 597)
         DgvLastSensorGlucose.TabIndex = 0
         ' 
         ' DgvLimits
         ' 
         DgvLimits.Dock = DockStyle.Fill
-        DgvLimits.Location = New Point(0, 0)
+        DgvLimits.Location = New Point(3, 3)
         DgvLimits.Name = "DgvLimits"
         DgvLimits.ReadOnly = True
-        DataGridViewCellStyle10.WrapMode = DataGridViewTriState.False
-        DgvLimits.RowsDefaultCellStyle = DataGridViewCellStyle10
         DgvLimits.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvLimits.Size = New Size(1358, 597)
         DgvLimits.TabIndex = 0
@@ -791,23 +814,29 @@ Partial Class Form1
         ' DgvMeal
         ' 
         DgvMeal.Dock = DockStyle.Fill
-        DgvMeal.Location = New Point(0, 0)
+        DgvMeal.Location = New Point(3, 3)
         DgvMeal.Name = "DgvMeal"
         DgvMeal.ReadOnly = True
-        DataGridViewCellStyle11.WrapMode = DataGridViewTriState.False
-        DgvMeal.RowsDefaultCellStyle = DataGridViewCellStyle11
         DgvMeal.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvMeal.Size = New Size(1358, 597)
         DgvMeal.TabIndex = 0
         ' 
+        ' DgvSensorBgReadings
+        ' 
+        DgvSensorBgReadings.Dock = DockStyle.Fill
+        DgvSensorBgReadings.Location = New Point(3, 3)
+        DgvSensorBgReadings.Name = "DgvSensorBgReadings"
+        DgvSensorBgReadings.ReadOnly = True
+        DgvSensorBgReadings.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvSensorBgReadings.Size = New Size(1358, 597)
+        DgvSensorBgReadings.TabIndex = 2
+        ' 
         ' DgvSGs
         ' 
         DgvSGs.Dock = DockStyle.Fill
-        DgvSGs.Location = New Point(6, 52)
+        DgvSGs.Location = New Point(3, 3)
         DgvSGs.Name = "DgvSGs"
         DgvSGs.ReadOnly = True
-        DataGridViewCellStyle12.WrapMode = DataGridViewTriState.False
-        DgvSGs.RowsDefaultCellStyle = DataGridViewCellStyle12
         DgvSGs.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvSGs.Size = New Size(1358, 597)
         DgvSGs.TabIndex = 0
@@ -815,13 +844,11 @@ Partial Class Form1
         ' DgvSummary
         ' 
         DgvSummary.Dock = DockStyle.Fill
-        DgvSummary.Location = New Point(0, 0)
+        DgvSummary.Location = New Point(3, 3)
         DgvSummary.Name = "DgvSummary"
         DgvSummary.ReadOnly = True
-        DataGridViewCellStyle13.WrapMode = DataGridViewTriState.True
-        DgvSummary.RowsDefaultCellStyle = DataGridViewCellStyle13
         DgvSummary.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvSummary.Size = New Size(1370, 655)
+        DgvSummary.Size = New Size(1358, 597)
         DgvSummary.TabIndex = 0
         ' 
         ' DgvTherapyAlgorithmState
@@ -830,12 +857,9 @@ Partial Class Form1
         DgvTherapyAlgorithmState.Location = New Point(3, 3)
         DgvTherapyAlgorithmState.Name = "DgvTherapyAlgorithmState"
         DgvTherapyAlgorithmState.ReadOnly = True
-        DataGridViewCellStyle14.WrapMode = DataGridViewTriState.False
-        DgvTherapyAlgorithmState.RowsDefaultCellStyle = DataGridViewCellStyle14
         DgvTherapyAlgorithmState.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvTherapyAlgorithmState.Size = New Size(1370, 655)
+        DgvTherapyAlgorithmState.Size = New Size(1358, 597)
         DgvTherapyAlgorithmState.TabIndex = 0
-        ' 
         ' 
         ' FullNameLabel
         ' 
@@ -1725,7 +1749,7 @@ Partial Class Form1
         ' 
         SplitContainer2.Panel2.Controls.Add(SplitContainer3)
         SplitContainer2.Size = New Size(1370, 655)
-        SplitContainer2.SplitterDistance = 134
+        SplitContainer2.SplitterDistance = 133
         SplitContainer2.TabIndex = 52
         ' 
         ' TransmitterBatteryPercentLabel
@@ -2204,7 +2228,6 @@ Partial Class Form1
         ' TableLayoutPanelTherapyAlgorithmState
         ' 
         TableLayoutPanelTherapyAlgorithmState.AutoSize = True
-        TableLayoutPanelTherapyAlgorithmState.AutoSizeMode = AutoSizeMode.GrowOnly
         TableLayoutPanelTherapyAlgorithmState.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelTherapyAlgorithmState.ColumnCount = 1
         TableLayoutPanelTherapyAlgorithmState.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
@@ -2346,7 +2369,6 @@ Partial Class Form1
         ' 
         TableLayoutPanelNotificationActive.AutoScroll = True
         TableLayoutPanelNotificationActive.AutoSize = True
-        TableLayoutPanelNotificationActive.AutoSizeMode = AutoSizeMode.GrowOnly
         TableLayoutPanelNotificationActive.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelNotificationActive.ColumnCount = 1
         TableLayoutPanelNotificationActive.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
@@ -2392,7 +2414,6 @@ Partial Class Form1
         ' 
         TableLayoutPanelNotificationsCleared.AutoScroll = True
         TableLayoutPanelNotificationsCleared.AutoSize = True
-        TableLayoutPanelNotificationsCleared.AutoSizeMode = AutoSizeMode.GrowOnly
         TableLayoutPanelNotificationsCleared.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelNotificationsCleared.ColumnCount = 1
         TableLayoutPanelNotificationsCleared.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
@@ -2408,7 +2429,7 @@ Partial Class Form1
         ' TableLayoutPanelNotificationsClearedTop
         ' 
         TableLayoutPanelNotificationsClearedTop.AutoSize = True
-        TableLayoutPanelNotificationsClearedTop.AutoSizeMode = AutoSizeMode.GrowOnly
+        TableLayoutPanelNotificationsClearedTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TableLayoutPanelNotificationsClearedTop.ButtonText = "Return To 'Summary Data' Tab"
         TableLayoutPanelNotificationsClearedTop.ColumnCount = 2
         TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
@@ -2443,6 +2464,7 @@ Partial Class Form1
         TabControlPage2.Controls.Add(TabPageTimeChange)
         TabControlPage2.Controls.Add(TabPageLastSG)
         TabControlPage2.Controls.Add(TabPageLastAlarm)
+        TabControlPage2.Controls.Add(TabPageBasalPerHour)
         TabControlPage2.Controls.Add(TabPageCurrentUser)
         TabControlPage2.Controls.Add(TabPageAllUsers)
         TabControlPage2.Controls.Add(TabPageBackToHomePage)
@@ -2520,6 +2542,7 @@ Partial Class Form1
         TableLayoutPanelAutoModeStatus.ColumnCount = 1
         TableLayoutPanelAutoModeStatus.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelAutoModeStatus.Controls.Add(TableLayoutPanelAutoModeStatusTop, 0, 0)
+        TableLayoutPanelAutoModeStatus.Controls.Add(dgvAutoModeStatus, 0, 1)
         TableLayoutPanelAutoModeStatus.Dock = DockStyle.Fill
         TableLayoutPanelAutoModeStatus.Location = New Point(3, 3)
         TableLayoutPanelAutoModeStatus.Name = "TableLayoutPanelAutoModeStatus"
@@ -2566,6 +2589,7 @@ Partial Class Form1
         TableLayoutPanelBgReadings.ColumnCount = 1
         TableLayoutPanelBgReadings.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelBgReadings.Controls.Add(TableLayoutPanelBgReadingsTop, 0, 0)
+        TableLayoutPanelBgReadings.Controls.Add(DgvSensorBgReadings, 0, 1)
         TableLayoutPanelBgReadings.Dock = DockStyle.Fill
         TableLayoutPanelBgReadings.Location = New Point(3, 3)
         TableLayoutPanelBgReadings.Name = "TableLayoutPanelBgReadings"
@@ -2583,11 +2607,17 @@ Partial Class Form1
         TableLayoutPanelBgReadingsTop.ColumnCount = 2
         TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelBgReadingsTop.Dock = DockStyle.Fill
-        TableLayoutPanelBgReadingsTop.LabelText = "Sensor Glucose Readings"
+        TableLayoutPanelBgReadingsTop.LabelText = "Blood Glucose Readings"
         TableLayoutPanelBgReadingsTop.Location = New Point(6, 6)
         TableLayoutPanelBgReadingsTop.Name = "TableLayoutPanelBgReadingsTop"
         TableLayoutPanelBgReadingsTop.RowCount = 1
+        TableLayoutPanelBgReadingsTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelBgReadingsTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelBgReadingsTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelBgReadingsTop.Size = New Size(1358, 37)
         TableLayoutPanelBgReadingsTop.TabIndex = 1
@@ -2658,6 +2688,7 @@ Partial Class Form1
         TableLayoutPanelLowGlucoseSuspended.ColumnCount = 1
         TableLayoutPanelLowGlucoseSuspended.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelLowGlucoseSuspended.Controls.Add(TableLayoutPanelLowGlucoseSuspendedTop, 0, 0)
+        TableLayoutPanelLowGlucoseSuspended.Controls.Add(DgvLowGlucoseSuspended, 0, 1)
         TableLayoutPanelLowGlucoseSuspended.Dock = DockStyle.Fill
         TableLayoutPanelLowGlucoseSuspended.Location = New Point(3, 3)
         TableLayoutPanelLowGlucoseSuspended.Name = "TableLayoutPanelLowGlucoseSuspended"
@@ -2823,6 +2854,51 @@ Partial Class Form1
         TableLayoutPanelLastAlarmTop.Size = New Size(1358, 37)
         TableLayoutPanelLastAlarmTop.TabIndex = 1
         ' 
+        ' TabPageBasalPerHour
+        ' 
+        TabPageBasalPerHour.Controls.Add(TableLayoutPanelBasalPerHour)
+        TabPageBasalPerHour.Location = New Point(4, 27)
+        TabPageBasalPerHour.Name = "TabPageBasalPerHour"
+        TabPageBasalPerHour.Padding = New Padding(3)
+        TabPageBasalPerHour.Size = New Size(1376, 661)
+        TabPageBasalPerHour.TabIndex = 18
+        TabPageBasalPerHour.Text = "Basal Per Hour"
+        TabPageBasalPerHour.UseVisualStyleBackColor = True
+        ' 
+        ' TableLayoutPanelBasalPerHour
+        ' 
+        TableLayoutPanelBasalPerHour.AutoSize = True
+        TableLayoutPanelBasalPerHour.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelBasalPerHour.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TableLayoutPanelBasalPerHour.ColumnCount = 1
+        TableLayoutPanelBasalPerHour.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelBasalPerHour.Controls.Add(TableLayoutPanelBasalPerHourTop, 0, 0)
+        TableLayoutPanelBasalPerHour.Dock = DockStyle.Fill
+        TableLayoutPanelBasalPerHour.Location = New Point(3, 3)
+        TableLayoutPanelBasalPerHour.Name = "TableLayoutPanelBasalPerHour"
+        TableLayoutPanelBasalPerHour.RowCount = 2
+        TableLayoutPanelBasalPerHour.RowStyles.Add(New RowStyle())
+        TableLayoutPanelBasalPerHour.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelBasalPerHour.Size = New Size(1370, 655)
+        TableLayoutPanelBasalPerHour.TabIndex = 0
+        ' 
+        ' TableLayoutPanelBasalPerHourTop
+        ' 
+        TableLayoutPanelBasalPerHourTop.AutoSize = True
+        TableLayoutPanelBasalPerHourTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelBasalPerHourTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelBasalPerHourTop.ColumnCount = 2
+        TableLayoutPanelBasalPerHourTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelBasalPerHourTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelBasalPerHourTop.Dock = DockStyle.Fill
+        TableLayoutPanelBasalPerHourTop.LabelText = "Basal Per Hour"
+        TableLayoutPanelBasalPerHourTop.Location = New Point(6, 6)
+        TableLayoutPanelBasalPerHourTop.Name = "TableLayoutPanelBasalPerHourTop"
+        TableLayoutPanelBasalPerHourTop.RowCount = 1
+        TableLayoutPanelBasalPerHourTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelBasalPerHourTop.Size = New Size(1358, 37)
+        TableLayoutPanelBasalPerHourTop.TabIndex = 1
+        ' 
         ' TabPageCurrentUser
         ' 
         TabPageCurrentUser.Controls.Add(DgvCurrentUser)
@@ -2894,6 +2970,7 @@ Partial Class Form1
         CType(DgvAutoBasalDelivery, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvBannerState, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvBasal, ComponentModel.ISupportInitialize).EndInit()
+        CType(DgvCalibration, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvCareLinkUsers, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvCurrentUser, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvInsulin, ComponentModel.ISupportInitialize).EndInit()
@@ -2980,10 +3057,12 @@ Partial Class Form1
         TabPageAutoModeStatus.PerformLayout()
         TableLayoutPanelAutoModeStatus.ResumeLayout(False)
         TableLayoutPanelAutoModeStatus.PerformLayout()
+        CType(dgvAutoModeStatus, ComponentModel.ISupportInitialize).EndInit()
         TabPageBgReadings.ResumeLayout(False)
         TabPageBgReadings.PerformLayout()
         TableLayoutPanelBgReadings.ResumeLayout(False)
         TableLayoutPanelBgReadings.PerformLayout()
+        CType(DgvSensorBgReadings, ComponentModel.ISupportInitialize).EndInit()
         TabPageCalibration.ResumeLayout(False)
         TabPageCalibration.PerformLayout()
         TableLayoutPanelCalibration.ResumeLayout(False)
@@ -2992,6 +3071,7 @@ Partial Class Form1
         TabPageLowGlucoseSuspended.PerformLayout()
         TableLayoutPanelLowGlucoseSuspended.ResumeLayout(False)
         TableLayoutPanelLowGlucoseSuspended.PerformLayout()
+        CType(DgvLowGlucoseSuspended, ComponentModel.ISupportInitialize).EndInit()
         TabPageTimeChange.ResumeLayout(False)
         TabPageTimeChange.PerformLayout()
         TableLayoutPanelTimeChange.ResumeLayout(False)
@@ -3000,10 +3080,15 @@ Partial Class Form1
         TabPageLastSG.PerformLayout()
         TableLayoutPanelLastSG.ResumeLayout(False)
         TableLayoutPanelLastSG.PerformLayout()
+        CType(DgvBasalPerHour, ComponentModel.ISupportInitialize).EndInit()
         TabPageLastAlarm.ResumeLayout(False)
         TabPageLastAlarm.PerformLayout()
         TableLayoutPanelLastAlarm.ResumeLayout(False)
         TableLayoutPanelLastAlarm.PerformLayout()
+        TabPageBasalPerHour.ResumeLayout(False)
+        TabPageBasalPerHour.PerformLayout()
+        TableLayoutPanelBasalPerHour.ResumeLayout(False)
+        TableLayoutPanelBasalPerHour.PerformLayout()
         TabPageCurrentUser.ResumeLayout(False)
         TabPageAllUsers.ResumeLayout(False)
         CType(WebView, ComponentModel.ISupportInitialize).EndInit()
@@ -3035,8 +3120,11 @@ Partial Class Form1
     Friend WithEvents CursorTimer As Timer
     Friend WithEvents DgvActiveInsulin As DataGridView
     Friend WithEvents DgvAutoBasalDelivery As DataGridView
+    Friend WithEvents dgvAutoModeStatus As DataGridView
     Friend WithEvents DgvBannerState As DataGridView
     Friend WithEvents DgvBasal As DataGridView
+    Friend WithEvents DgvBasalPerHour As DataGridView
+    Friend WithEvents DgvCalibration As DataGridView
     Friend WithEvents DgvCareLinkUsers As DataGridView
     Friend WithEvents DgvCareLinkUsersUserPassword As DataGridViewTextBoxColumn
     Friend WithEvents DgvCurrentUser As DataGridView
@@ -3044,7 +3132,9 @@ Partial Class Form1
     Friend WithEvents DgvLastAlarm As DataGridView
     Friend WithEvents DgvLastSensorGlucose As DataGridView
     Friend WithEvents DgvLimits As DataGridView
+    Friend WithEvents DgvLowGlucoseSuspended As DataGridView
     Friend WithEvents DgvMeal As DataGridView
+    Friend WithEvents DgvSensorBgReadings As DataGridView
     Friend WithEvents DgvSGs As DataGridView
     Friend WithEvents DgvSummary As DataGridView
     Friend WithEvents DgvTherapyAlgorithmState As DataGridView
@@ -3151,7 +3241,10 @@ Partial Class Form1
     Friend WithEvents TableLayoutPanelBannerState As TableLayoutPanel
     Friend WithEvents TableLayoutPanelBannerStateTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelBasal As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelBasalPerHour As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelBasalPerHourTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelBasalTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelBgReadings As TableLayoutPanel
     Friend WithEvents TableLayoutPanelBgReadingsTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelCalibration As TableLayoutPanel
     Friend WithEvents TableLayoutPanelCalibrationTop As TableLayoutPanelTopEx
@@ -3171,7 +3264,6 @@ Partial Class Form1
     Friend WithEvents TableLayoutPanelNotificationActiveTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelNotificationsCleared As TableLayoutPanel
     Friend WithEvents TableLayoutPanelNotificationsClearedTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelBgReadings As TableLayoutPanel
     Friend WithEvents TableLayoutPanelSgs As TableLayoutPanel
     Friend WithEvents TableLayoutPanelSgsTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelTherapyAlgorithmState As TableLayoutPanel
@@ -3197,6 +3289,7 @@ Partial Class Form1
     Friend WithEvents TabPageAutoBasalDelivery As TabPage
     Friend WithEvents TabPageAutoModeStatus As TabPage
     Friend WithEvents TabPageBackToHomePage As TabPage
+    Friend WithEvents TabPageBasalPerHour As TabPage
     Friend WithEvents TabPageBgReadings As TabPage
     Friend WithEvents TabPageCalibration As TabPage
     Friend WithEvents TabPageCurrentUser As TabPage
