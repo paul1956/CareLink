@@ -33,7 +33,6 @@ Friend Module GetManualBasalPoints
         End If
 
         Dim lowGlucoseSuspend As New LowGlucoseSuspended(s_markers.Last(), s_markers.Count)
-        Stop
         If lowGlucoseSuspend.deliverySuspended Then
             Return timeOrderedMarkers
         End If

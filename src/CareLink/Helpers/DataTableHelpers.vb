@@ -130,6 +130,8 @@ Friend Module DataTableHelpers
                         cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
                     Case NameOf([Boolean])
                         cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
+                    Case "additionalInfo", "RecordNumber", "Version"
+                        cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
                     Case Else
                         Throw UnreachableException([property].PropertyType.Name)
                 End Select

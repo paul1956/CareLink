@@ -32,8 +32,8 @@ Friend Module Form1CollectMarkersHelper
     Friend Function CollectMarkers() As String
         s_listOfAutoBasalDeliveryMarkers.Clear()
         s_listOFBasalPerHour.Clear()
-        For index As Integer = 0 To 23
-            s_listOFBasalPerHour.Add(New BasalPerHour(index))
+        For index As Integer = 0 To 11
+            s_listOfBasalPerHour.Add(New BasalPerHour(index * 2))
         Next
         s_listOfAutoModeStatusMarkers.Clear()
             s_listOfBgReadingMarkers.Clear()
@@ -56,7 +56,12 @@ Friend Module Form1CollectMarkersHelper
                     s_markers.Add(markerEntry)
                     Dim item As New AutoBasalDelivery(markerEntry:=markerEntry, recordNumber:=s_listOfAutoBasalDeliveryMarkers.Count + 1)
                     s_listOfAutoBasalDeliveryMarkers.Add(item)
-                    s_listOfBasalPerHour(item.DisplayTime.Hour).BasalRate += item.bolusAmount
+                    Dim index As Integer = item.DisplayTime.Hour
+                    If (index And 1) = 0 Then
+                        s_listOfBasalPerHour(index \ 2).BasalRate += item.bolusAmount
+                    Else
+                        s_listOfBasalPerHour(index \ 2).BasalRate2 += item.bolusAmount
+                    End If
                     If Not basalDictionary.TryAdd(item.OAdateTime, item.bolusAmount) Then
                         basalDictionary(item.OAdateTime) += item.bolusAmount
                     End If
@@ -78,7 +83,6 @@ Friend Module Form1CollectMarkersHelper
                                 basalDictionary(lastInsulinRecord.OAdateTime) += lastInsulinRecord.DeliveredFastAmount
                             End If
                         Case "MANUAL"
-                            Stop
                         Case "UNDETERMINED"
                             Stop
                         Case "RECOMMENDED"

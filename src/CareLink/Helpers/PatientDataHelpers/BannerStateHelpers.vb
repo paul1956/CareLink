@@ -4,43 +4,15 @@
 
 Friend Module BannerStateHelpers
 
+    Private ReadOnly s_columnsToHide As New List(Of String)
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
-    Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(BannerState.timeRemaining)
-                CellFormatting0Value(e)
-            Case Else
-                dgv.CellFormattingSetForegroundColor(e)
-        End Select
-    End Sub
-
-    Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
-        With e.Column
-            e.DgvColumnAdded(GetCellStyle(.Name),
-                             True,
-                             True,
-                             CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-        End With
-    End Sub
-
-    Private Sub DataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs)
-        Stop
-    End Sub
-
-    Private Function GetCellStyle(columnName As String) As DataGridViewCellStyle
+    Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
         Return ClassPropertiesToColumnAlignment(Of BannerState)(s_alignmentTable, columnName)
     End Function
 
-    Friend Sub AttachHandlers(dgv As DataGridView)
-        RemoveHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
-        RemoveHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
-        RemoveHandler dgv.DataError, AddressOf DataGridView_DataError
-        AddHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
-        AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
-        AddHandler dgv.DataError, AddressOf DataGridView_DataError
-    End Sub
+    Friend Function HideColumn(dataPropertyName As String) As Boolean
+        Return s_filterJsonData AndAlso s_columnsToHide.Contains(dataPropertyName)
+    End Function
 
 End Module

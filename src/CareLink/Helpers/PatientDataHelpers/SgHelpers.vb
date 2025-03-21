@@ -5,10 +5,9 @@
 Friend Module SgHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
-                        NameOf(SG.Kind),
-                        NameOf(SG.OaDateTime),
-                        NameOf(SG.Version)
-                    }
+        NameOf(SG.Kind),
+        NameOf(SG.OaDateTime),
+        NameOf(SG.Version)}
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
@@ -17,10 +16,11 @@ Friend Module SgHelpers
             If HideColumn(.Name) Then
                 .Visible = False
             Else
-                e.DgvColumnAdded(GetCellStyle(.Name),
-                             True,
-                             True,
-                             CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+                e.DgvColumnAdded(
+                    cellStyle:=GetCellStyle(.Name),
+                    wrapHeader:=True,
+                    forceReadOnly:=True,
+                    caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
             End If
         End With
     End Sub
@@ -62,16 +62,5 @@ Friend Module SgHelpers
     Friend Function HideColumn(dataPropertyName As String) As Boolean
         Return s_filterJsonData AndAlso s_columnsToHide.Contains(dataPropertyName)
     End Function
-
-    Public Sub AttachHandlers(dgv As DataGridView)
-        RemoveHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithExcel
-        RemoveHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
-        RemoveHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
-        RemoveHandler dgv.DataError, AddressOf DataGridView_DataError
-        AddHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithExcel
-        AddHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
-        AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
-        AddHandler dgv.DataError, AddressOf DataGridView_DataError
-    End Sub
 
 End Module

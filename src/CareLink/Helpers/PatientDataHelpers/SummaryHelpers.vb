@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
 Imports System.Runtime.CompilerServices
 Imports System.Text
 Imports System.Text.RegularExpressions
@@ -99,6 +100,7 @@ Friend Module SummaryHelpers
                 Dim criticalLow As String = String.Empty
                 Dim deliveredAmount As String = String.Empty
                 Dim lastSetChange As String = String.Empty
+                Dim lowLimit As String = String.Empty
                 Dim notDeliveredAmount As String = String.Empty
                 Dim programmedAmount As String = String.Empty
                 Dim reminderName As String = String.Empty
@@ -180,6 +182,9 @@ Friend Module SummaryHelpers
                                     End If
                                 Case "sg"
                                     If additionalInfo.TryGetValue(key, sg) Then
+                                        If faultId = "827" Then
+                                            lowLimit = If(CSng(sg) < 65 AndAlso CSng(sg) > 20, "64", "3.5")
+                                        End If
                                     Else
                                         Stop
                                     End If
@@ -204,11 +209,13 @@ Friend Module SummaryHelpers
                     .Replace("(programmedAmount)", programmedAmount) _
                     .Replace("(deliveredAmount)", deliveredAmount) _
                     .Replace("(lastSetChange)", lastSetChange) _
+                    .Replace("(lowLimit)", lowLimit) _
                     .Replace("(notDeliveredAmount)", notDeliveredAmount) _
                     .Replace("(programmedAmount)", programmedAmount) _
                     .Replace("(reminderName)", reminderName) _
                     .Replace("(secondaryTime)", secondaryTime) _
                     .Replace("(sensorUpdateTime)", sensorUpdateTime) _
+                    .Replace("(suspendedSince)", s_suspendedSince) _
                     .Replace("(sg)", sg) _
                     .Replace("(triggeredDateTime)", triggeredDateTime) _
                     .Replace("(units)", BgUnitsNativeString) _
@@ -257,6 +264,14 @@ Friend Module SummaryHelpers
                     Dim message As String = String.Empty
                     If s_notificationMessages.TryGetValue(row.Value, message) Then
                         message = TranslateNotificationMessageId(dic, row.Value)
+                        If row.Value = "811" Then
+                            If dic.TryGetValue(NameOf(ActiveNotification.triggeredDateTime), s_suspendedSince) Then
+                                Dim resultDate As Date = Nothing
+                                s_suspendedSince = If(TryParseDate(s_suspendedSince, resultDate, NameOf(ActiveNotification.triggeredDateTime)),
+                                    resultDate.ToString(s_timeWithMinuteFormat),
+                                    "???")
+                            End If
+                        End If
                         If row.Value = "BC_SID_MAX_FILL_DROPS_QUESITION" Then
                             If dic("deliveredAmount").StartsWith("3"c) Then
                                 message &= "Did you see drops at the end of the tubing?"
@@ -347,16 +362,5 @@ Friend Module SummaryHelpers
         Next
         Throw New ArgumentException("Key not found", NameOf(Key))
     End Function
-
-    Public Sub AttachHandlers(dgv As DataGridView)
-        RemoveHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithoutExcel
-        RemoveHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
-        RemoveHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
-        RemoveHandler dgv.VisibleChanged, AddressOf DataGridView_VisibleChanged
-        AddHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithoutExcel
-        AddHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
-        AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
-        AddHandler dgv.VisibleChanged, AddressOf DataGridView_VisibleChanged
-    End Sub
 
 End Module

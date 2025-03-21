@@ -30,7 +30,7 @@ Friend Module SystemVariables
     Friend Property TreatmentInsulinRow As Single
 
     Friend Function GetInsulinYValue() As Single
-        Dim maxYScaled As Single = s_listOfSgRecords.Max(Of Single)(Function(sgR As SG) sgR.Sg) + 2
+        Dim maxYScaled As Single = s_listOfSgRecords.Max(Of Single)(Function(sgR As SG) sgR.sg) + 2
         Return If(Single.IsNaN(maxYScaled),
             If(NativeMmolL, 330 / MmolLUnitsDivisor, 330),
             If(NativeMmolL,
@@ -55,11 +55,22 @@ Friend Module SystemVariables
                     )
     End Function
 
-    Friend Function GetTIR() As UInteger
+    Friend Function GetAboveHyperLimit() As (Uint As UInteger, Str As String)
+        Return If(s_aboveHyperLimit > 0,
+                  (CUInt(s_aboveHyperLimit), s_aboveHyperLimit.ToString),
+                  (CUInt(0), "??? "))
+    End Function
+
+    Friend Function GetBelowHypoLimit() As (Uint As UInteger, Str As String)
+        Return If(s_belowHypoLimit > 0,
+                  (CUInt(s_belowHypoLimit), s_belowHypoLimit.ToString),
+                  (CUInt(0), "??? "))
+    End Function
+
+    Friend Function GetTIR() As (Uint As UInteger, Str As String)
         Return If(s_timeInRange > 0,
-                  CUInt(s_timeInRange),
-                  CUInt(100 - (s_aboveHyperLimit + s_belowHypoLimit))
-                 )
+                  (CUInt(s_timeInRange), s_timeInRange.ToString),
+                  (CUInt(0), "??? "))
     End Function
 
     Friend Function GetYMaxValue(asMmolL As Boolean) As Single

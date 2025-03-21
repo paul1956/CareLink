@@ -12,12 +12,12 @@ Friend Module ActiveInsulinHelpers
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
-    Public Function GetCellStyle(columnName As String) As DataGridViewCellStyle
+    Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
         Return ClassPropertiesToColumnAlignment(Of ActiveInsulin)(s_alignmentTable, columnName)
     End Function
 
-    Public Function HideColumn(columnName As String) As Boolean
-        Return s_filterJsonData AndAlso s_columnsToHide.Contains(columnName)
+    Friend Function HideColumn(dataPropertyName As String) As Boolean
+        Return s_filterJsonData AndAlso s_columnsToHide.Contains(dataPropertyName)
     End Function
 
 End Module

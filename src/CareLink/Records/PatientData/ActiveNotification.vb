@@ -15,7 +15,7 @@ Public Class ActiveNotification
     Public Property FaultId As String
 
     <DisplayName("Version")>
-    <Column(Order:=2)>
+    <Column(Order:=2, TypeName:=NameOf([Int32]))>
     <JsonPropertyName("version")>
     Public Property Version As Integer
 
@@ -40,12 +40,12 @@ Public Class ActiveNotification
     Public Property triggeredDateTime As String
 
     <DisplayName(NameOf(SecondaryTime))>
-    <Column(Order:=4, TypeName:="Date")>
+    <Column(Order:=7, TypeName:="Date")>
     <JsonPropertyName("secondaryTime")>
     Public Property SecondaryTime As String
 
     <DisplayName("Additional Info")>
-    <Column(Order:=7, TypeName:="AdditionalInfo")>
+    <Column(Order:=8, TypeName:="AdditionalInfo")>
     <JsonPropertyName("additionalInfo")>
     Public Property AdditionalInfo As AdditionalInfo
 

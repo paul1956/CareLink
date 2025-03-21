@@ -234,13 +234,13 @@ Partial Class Form1
         TabPageLastSG = New TabPage()
         TableLayoutPanelLastSG = New TableLayoutPanel()
         TableLayoutPanelLastSgTop = New TableLayoutPanelTopEx()
-        DgvBasalPerHour = New DataGridView()
         TabPageLastAlarm = New TabPage()
         TableLayoutPanelLastAlarm = New TableLayoutPanel()
         TableLayoutPanelLastAlarmTop = New TableLayoutPanelTopEx()
         TabPageBasalPerHour = New TabPage()
         TableLayoutPanelBasalPerHour = New TableLayoutPanel()
         TableLayoutPanelBasalPerHourTop = New TableLayoutPanelTopEx()
+        DgvBasalPerHour = New DataGridView()
         TabPageCurrentUser = New TabPage()
         TabPageAllUsers = New TabPage()
         TabPageBackToHomePage = New TabPage()
@@ -327,11 +327,11 @@ Partial Class Form1
         TableLayoutPanelTimeChange.SuspendLayout()
         TabPageLastSG.SuspendLayout()
         TableLayoutPanelLastSG.SuspendLayout()
-        CType(DgvBasalPerHour, ComponentModel.ISupportInitialize).BeginInit()
         TabPageLastAlarm.SuspendLayout()
         TableLayoutPanelLastAlarm.SuspendLayout()
         TabPageBasalPerHour.SuspendLayout()
         TableLayoutPanelBasalPerHour.SuspendLayout()
+        CType(DgvBasalPerHour, ComponentModel.ISupportInitialize).BeginInit()
         TabPageCurrentUser.SuspendLayout()
         TabPageAllUsers.SuspendLayout()
         CType(WebView, ComponentModel.ISupportInitialize).BeginInit()
@@ -654,37 +654,27 @@ Partial Class Form1
         ' DgvActiveInsulin
         ' 
         DgvActiveInsulin.Dock = DockStyle.Fill
-        DgvActiveInsulin.Location = New Point(3, 3)
+        DgvActiveInsulin.Location = New Point(3, 46)
         DgvActiveInsulin.Name = "DgvActiveInsulin"
         DgvActiveInsulin.ReadOnly = True
         DgvActiveInsulin.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvActiveInsulin.Size = New Size(1358, 597)
+        DgvActiveInsulin.Size = New Size(1358, 606)
         DgvActiveInsulin.TabIndex = 0
         ' 
         ' DgvAutoBasalDelivery
         ' 
         DgvAutoBasalDelivery.Dock = DockStyle.Fill
-        DgvAutoBasalDelivery.Location = New Point(3, 3)
+        DgvAutoBasalDelivery.Location = New Point(6, 52)
         DgvAutoBasalDelivery.Name = "DgvAutoBasalDelivery"
         DgvAutoBasalDelivery.ReadOnly = True
         DgvAutoBasalDelivery.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvAutoBasalDelivery.Size = New Size(1358, 597)
         DgvAutoBasalDelivery.TabIndex = 0
         ' 
-        ' dgvAutoModeStatus
-        ' 
-        dgvAutoModeStatus.Dock = DockStyle.Fill
-        dgvAutoModeStatus.Location = New Point(3, 3)
-        dgvAutoModeStatus.Name = "dgvAutoModeStatus"
-        dgvAutoModeStatus.ReadOnly = True
-        dgvAutoModeStatus.SelectionMode = DataGridViewSelectionMode.CellSelect
-        dgvAutoModeStatus.Size = New Size(1358, 597)
-        dgvAutoModeStatus.TabIndex = 0
-        ' 
         ' DgvBannerState
         ' 
         DgvBannerState.Dock = DockStyle.Fill
-        DgvBannerState.Location = New Point(3, 3)
+        DgvBannerState.Location = New Point(6, 52)
         DgvBannerState.Name = "DgvBannerState"
         DgvBannerState.ReadOnly = True
         DgvBannerState.SelectionMode = DataGridViewSelectionMode.CellSelect
@@ -694,35 +684,12 @@ Partial Class Form1
         ' DgvBasal
         ' 
         DgvBasal.Dock = DockStyle.Fill
-        DgvBasal.Location = New Point(3, 3)
+        DgvBasal.Location = New Point(6, 52)
         DgvBasal.Name = "DgvBasal"
         DgvBasal.ReadOnly = True
         DgvBasal.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvBasal.Size = New Size(1358, 597)
         DgvBasal.TabIndex = 0
-        ' 
-        ' DgvBasalPerHour
-        ' 
-        DgvBasalPerHour.Dock = DockStyle.Fill
-        DgvBasalPerHour.Location = New Point(3, 3)
-        DgvBasalPerHour.Name = "DgvBasalPerHour"
-        DgvBasalPerHour.ReadOnly = True
-        DgvBasalPerHour.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvBasalPerHour.Size = New Size(1358, 597)
-        DgvBasalPerHour.TabIndex = 0
-        ' 
-        ' DgvCalibration
-        ' 
-        DgvCalibration.AllowUserToAddRows = False
-        DgvCalibration.AllowUserToDeleteRows = False
-        DgvCalibration.Dock = DockStyle.Fill
-        DgvCalibration.Location = New Point(3, 3)
-        DgvCalibration.Name = "DgvCalibration"
-        DgvCalibration.ReadOnly = True
-        DgvCalibration.Size = New Size(1358, 597)
-        DgvCalibration.TabIndex = 2
-        ' 
-        DgvLowGlucoseSuspended.TabIndex = 2
         ' 
         ' DgvCareLinkUsers
         ' 
@@ -749,32 +716,23 @@ Partial Class Form1
         DgvCareLinkUsers.Location = New Point(3, 3)
         DgvCareLinkUsers.Name = "DgvCareLinkUsers"
         DgvCareLinkUsers.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvCareLinkUsers.Size = New Size(1358, 597)
+        DgvCareLinkUsers.Size = New Size(1370, 655)
         DgvCareLinkUsers.TabIndex = 0
         ' 
         ' DgvCurrentUser
         ' 
         DgvCurrentUser.Dock = DockStyle.Fill
-        DgvCurrentUser.Location = New Point(3, 3)
+        DgvCurrentUser.Location = New Point(0, 0)
         DgvCurrentUser.Name = "DgvCurrentUser"
         DgvCurrentUser.ReadOnly = True
         DgvCurrentUser.RowHeadersVisible = False
-        DgvCurrentUser.Size = New Size(1358, 597)
+        DgvCurrentUser.Size = New Size(1376, 661)
         DgvCurrentUser.TabIndex = 0
-        '
-        ' DgvLowGlucoseSuspended
-        ' 
-        DgvLowGlucoseSuspended.Dock = DockStyle.Fill
-        DgvLowGlucoseSuspended.Location = New Point(3, 3)
-        DgvLowGlucoseSuspended.Name = "DgvLowGlucoseSuspended"
-        DgvLowGlucoseSuspended.ReadOnly = True
-        DgvLowGlucoseSuspended.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvLowGlucoseSuspended.Size = New Size(1358, 597)
         ' 
         ' DgvInsulin
         ' 
         DgvInsulin.Dock = DockStyle.Fill
-        DgvInsulin.Location = New Point(3, 3)
+        DgvInsulin.Location = New Point(6, 52)
         DgvInsulin.Name = "DgvInsulin"
         DgvInsulin.ReadOnly = True
         DgvInsulin.SelectionMode = DataGridViewSelectionMode.CellSelect
@@ -784,7 +742,7 @@ Partial Class Form1
         ' DgvLastAlarm
         ' 
         DgvLastAlarm.Dock = DockStyle.Fill
-        DgvLastAlarm.Location = New Point(3, 3)
+        DgvLastAlarm.Location = New Point(6, 52)
         DgvLastAlarm.Name = "DgvLastAlarm"
         DgvLastAlarm.ReadOnly = True
         DgvLastAlarm.SelectionMode = DataGridViewSelectionMode.CellSelect
@@ -794,7 +752,7 @@ Partial Class Form1
         ' DgvLastSensorGlucose
         ' 
         DgvLastSensorGlucose.Dock = DockStyle.Fill
-        DgvLastSensorGlucose.Location = New Point(6, 635)
+        DgvLastSensorGlucose.Location = New Point(6, 52)
         DgvLastSensorGlucose.Name = "DgvLastSensorGlucose"
         DgvLastSensorGlucose.ReadOnly = True
         DgvLastSensorGlucose.SelectionMode = DataGridViewSelectionMode.CellSelect
@@ -804,7 +762,7 @@ Partial Class Form1
         ' DgvLimits
         ' 
         DgvLimits.Dock = DockStyle.Fill
-        DgvLimits.Location = New Point(3, 3)
+        DgvLimits.Location = New Point(6, 52)
         DgvLimits.Name = "DgvLimits"
         DgvLimits.ReadOnly = True
         DgvLimits.SelectionMode = DataGridViewSelectionMode.CellSelect
@@ -814,27 +772,17 @@ Partial Class Form1
         ' DgvMeal
         ' 
         DgvMeal.Dock = DockStyle.Fill
-        DgvMeal.Location = New Point(3, 3)
+        DgvMeal.Location = New Point(6, 52)
         DgvMeal.Name = "DgvMeal"
         DgvMeal.ReadOnly = True
         DgvMeal.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvMeal.Size = New Size(1358, 597)
         DgvMeal.TabIndex = 0
         ' 
-        ' DgvSensorBgReadings
-        ' 
-        DgvSensorBgReadings.Dock = DockStyle.Fill
-        DgvSensorBgReadings.Location = New Point(3, 3)
-        DgvSensorBgReadings.Name = "DgvSensorBgReadings"
-        DgvSensorBgReadings.ReadOnly = True
-        DgvSensorBgReadings.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvSensorBgReadings.Size = New Size(1358, 597)
-        DgvSensorBgReadings.TabIndex = 2
-        ' 
         ' DgvSGs
         ' 
         DgvSGs.Dock = DockStyle.Fill
-        DgvSGs.Location = New Point(3, 3)
+        DgvSGs.Location = New Point(6, 52)
         DgvSGs.Name = "DgvSGs"
         DgvSGs.ReadOnly = True
         DgvSGs.SelectionMode = DataGridViewSelectionMode.CellSelect
@@ -848,13 +796,13 @@ Partial Class Form1
         DgvSummary.Name = "DgvSummary"
         DgvSummary.ReadOnly = True
         DgvSummary.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvSummary.Size = New Size(1358, 597)
+        DgvSummary.Size = New Size(1370, 655)
         DgvSummary.TabIndex = 0
         ' 
         ' DgvTherapyAlgorithmState
         ' 
         DgvTherapyAlgorithmState.Dock = DockStyle.Fill
-        DgvTherapyAlgorithmState.Location = New Point(3, 3)
+        DgvTherapyAlgorithmState.Location = New Point(6, 52)
         DgvTherapyAlgorithmState.Name = "DgvTherapyAlgorithmState"
         DgvTherapyAlgorithmState.ReadOnly = True
         DgvTherapyAlgorithmState.SelectionMode = DataGridViewSelectionMode.CellSelect
@@ -2002,6 +1950,7 @@ Partial Class Form1
         TableLayoutPanelInsulin.ColumnCount = 1
         TableLayoutPanelInsulin.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelInsulin.Controls.Add(TableLayoutPanelInsulinTop, 0, 0)
+        TableLayoutPanelInsulin.Controls.Add(DgvInsulin, 0, 1)
         TableLayoutPanelInsulin.Dock = DockStyle.Fill
         TableLayoutPanelInsulin.Location = New Point(3, 3)
         TableLayoutPanelInsulin.Name = "TableLayoutPanelInsulin"
@@ -2118,7 +2067,7 @@ Partial Class Form1
         TableLayoutPanelActiveInsulinTop.Name = "TableLayoutPanelActiveInsulinTop"
         TableLayoutPanelActiveInsulinTop.RowCount = 1
         TableLayoutPanelActiveInsulinTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelActiveInsulinTop.Size = New Size(1364, 37)
+        TableLayoutPanelActiveInsulinTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelActiveInsulinTop.TabIndex = 1
         ' 
         ' TabPage08SensorGlucose
@@ -2569,6 +2518,16 @@ Partial Class Form1
         TableLayoutPanelAutoModeStatusTop.Size = New Size(1358, 37)
         TableLayoutPanelAutoModeStatusTop.TabIndex = 1
         ' 
+        ' dgvAutoModeStatus
+        ' 
+        dgvAutoModeStatus.Dock = DockStyle.Fill
+        dgvAutoModeStatus.Location = New Point(6, 52)
+        dgvAutoModeStatus.Name = "dgvAutoModeStatus"
+        dgvAutoModeStatus.ReadOnly = True
+        dgvAutoModeStatus.SelectionMode = DataGridViewSelectionMode.CellSelect
+        dgvAutoModeStatus.Size = New Size(1358, 597)
+        dgvAutoModeStatus.TabIndex = 0
+        ' 
         ' TabPageBgReadings
         ' 
         TabPageBgReadings.Controls.Add(TableLayoutPanelBgReadings)
@@ -2621,6 +2580,16 @@ Partial Class Form1
         TableLayoutPanelBgReadingsTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelBgReadingsTop.Size = New Size(1358, 37)
         TableLayoutPanelBgReadingsTop.TabIndex = 1
+        ' 
+        ' DgvSensorBgReadings
+        ' 
+        DgvSensorBgReadings.Dock = DockStyle.Fill
+        DgvSensorBgReadings.Location = New Point(6, 52)
+        DgvSensorBgReadings.Name = "DgvSensorBgReadings"
+        DgvSensorBgReadings.ReadOnly = True
+        DgvSensorBgReadings.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvSensorBgReadings.Size = New Size(1358, 597)
+        DgvSensorBgReadings.TabIndex = 2
         ' 
         ' TabPageCalibration
         ' 
@@ -2714,6 +2683,16 @@ Partial Class Form1
         TableLayoutPanelLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelLowGlucoseSuspendedTop.Size = New Size(1358, 37)
         TableLayoutPanelLowGlucoseSuspendedTop.TabIndex = 1
+        ' 
+        ' DgvLowGlucoseSuspended
+        ' 
+        DgvLowGlucoseSuspended.Dock = DockStyle.Fill
+        DgvLowGlucoseSuspended.Location = New Point(6, 52)
+        DgvLowGlucoseSuspended.Name = "DgvLowGlucoseSuspended"
+        DgvLowGlucoseSuspended.ReadOnly = True
+        DgvLowGlucoseSuspended.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvLowGlucoseSuspended.Size = New Size(1358, 597)
+        DgvLowGlucoseSuspended.TabIndex = 2
         ' 
         ' TabPageTimeChange
         ' 
@@ -2862,7 +2841,7 @@ Partial Class Form1
         TabPageBasalPerHour.Padding = New Padding(3)
         TabPageBasalPerHour.Size = New Size(1376, 661)
         TabPageBasalPerHour.TabIndex = 18
-        TabPageBasalPerHour.Text = "Basal Per Hour"
+        TabPageBasalPerHour.Text = "SmartGuard Basal Per Hour"
         TabPageBasalPerHour.UseVisualStyleBackColor = True
         ' 
         ' TableLayoutPanelBasalPerHour
@@ -2898,6 +2877,16 @@ Partial Class Form1
         TableLayoutPanelBasalPerHourTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelBasalPerHourTop.Size = New Size(1358, 37)
         TableLayoutPanelBasalPerHourTop.TabIndex = 1
+        ' 
+        ' DgvBasalPerHour
+        ' 
+        DgvBasalPerHour.Dock = DockStyle.Fill
+        DgvBasalPerHour.Location = New Point(6, 52)
+        DgvBasalPerHour.Name = "DgvBasalPerHour"
+        DgvBasalPerHour.ReadOnly = True
+        DgvBasalPerHour.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvBasalPerHour.Size = New Size(1358, 597)
+        DgvBasalPerHour.TabIndex = 0
         ' 
         ' TabPageCurrentUser
         ' 
@@ -2942,6 +2931,17 @@ Partial Class Form1
         WebView.TabIndex = 3
         WebView.ZoomFactor = 1.0R
         ' 
+        ' DgvCalibration
+        ' 
+        DgvCalibration.AllowUserToAddRows = False
+        DgvCalibration.AllowUserToDeleteRows = False
+        DgvCalibration.Dock = DockStyle.Fill
+        DgvCalibration.Location = New Point(0, 0)
+        DgvCalibration.Name = "DgvCalibration"
+        DgvCalibration.ReadOnly = True
+        DgvCalibration.Size = New Size(1358, 597)
+        DgvCalibration.TabIndex = 2
+        ' 
         ' Form1
         ' 
         Me.AutoScaleDimensions = New SizeF(96.0F, 96.0F)
@@ -2970,7 +2970,6 @@ Partial Class Form1
         CType(DgvAutoBasalDelivery, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvBannerState, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvBasal, ComponentModel.ISupportInitialize).EndInit()
-        CType(DgvCalibration, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvCareLinkUsers, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvCurrentUser, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvInsulin, ComponentModel.ISupportInitialize).EndInit()
@@ -3080,7 +3079,6 @@ Partial Class Form1
         TabPageLastSG.PerformLayout()
         TableLayoutPanelLastSG.ResumeLayout(False)
         TableLayoutPanelLastSG.PerformLayout()
-        CType(DgvBasalPerHour, ComponentModel.ISupportInitialize).EndInit()
         TabPageLastAlarm.ResumeLayout(False)
         TabPageLastAlarm.PerformLayout()
         TableLayoutPanelLastAlarm.ResumeLayout(False)
@@ -3089,9 +3087,11 @@ Partial Class Form1
         TabPageBasalPerHour.PerformLayout()
         TableLayoutPanelBasalPerHour.ResumeLayout(False)
         TableLayoutPanelBasalPerHour.PerformLayout()
+        CType(DgvBasalPerHour, ComponentModel.ISupportInitialize).EndInit()
         TabPageCurrentUser.ResumeLayout(False)
         TabPageAllUsers.ResumeLayout(False)
         CType(WebView, ComponentModel.ISupportInitialize).EndInit()
+        CType(DgvCalibration, ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
     End Sub

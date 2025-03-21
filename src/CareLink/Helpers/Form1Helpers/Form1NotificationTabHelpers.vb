@@ -21,7 +21,7 @@ Friend Module Form1NotificationTabHelpers
                             realPanel:=Form1.TableLayoutPanelNotificationsCleared,
                             table:=ClassCollectionToDataTable(listOfClass:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
                             className:=NameOf(SummaryRecord),
-                            attachHandlers:=AddressOf SummaryHelpers.AttachHandlers,
+                            attachHandlers:=AddressOf ClearedNotificationHelpers.AttachHandlers,
                             rowIndex:=innerDictionary.Index + 1)
                     Next
                 Else
@@ -35,7 +35,7 @@ Friend Module Form1NotificationTabHelpers
                             realPanel:=Form1.TableLayoutPanelNotificationActive,
                             table:=ClassCollectionToDataTable(listOfClass:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
                             className:=NameOf(SummaryRecord),
-                            attachHandlers:=AddressOf SummaryHelpers.AttachHandlers,
+                            attachHandlers:=AddressOf ActiveNotificationHelpers.AttachHandlers,
                             rowIndex:=innerDictionary.Index + 1)
                     Next
                 Else

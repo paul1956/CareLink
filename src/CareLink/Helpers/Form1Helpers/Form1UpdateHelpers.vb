@@ -416,64 +416,54 @@ Friend Module Form1UpdateHelpers
             .TableLayoutPanelAutoModeStatus.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfAutoModeStatusMarkers),
                 className:=NameOf(AutoModeStatus),
-                attachHandlers:=AddressOf AutoModeStatusHelpers.AttachHandlers,
+                attachHandlers:=Nothing,
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
 
-            Dim table As DataTable = ClassCollectionToDataTable(listOfClass:=s_listOfBgReadingMarkers)
             .TableLayoutPanelBgReadings.DisplayDataTableInDGV(
-                table,
+                table:=ClassCollectionToDataTable(listOfClass:=s_listOfBgReadingMarkers),
                 className:=NameOf(BgReading),
-                attachHandlers:=AddressOf BgReadingHelpers.AttachHandlers,
+                attachHandlers:=Nothing,
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
             .TableLayoutPanelInsulin.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfInsulinMarkers),
                 className:=NameOf(Insulin),
-                attachHandlers:=AddressOf InsulinHelpers.AttachHandlers,
+                attachHandlers:=Nothing,
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
             .TableLayoutPanelMeal.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfMealMarkers),
                 className:=NameOf(Meal),
-                attachHandlers:=Nothing,
-                rowIndex:=ServerDataIndexes.markers,
-                hideRecordNumberColumn:=False)
+                rowIndex:=ServerDataIndexes.markers)
             .TableLayoutPanelCalibration.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfCalibrationMarkers),
                 className:=NameOf(Calibration),
-                attachHandlers:=AddressOf CalibrationHelpers.AttachHandlers,
                 rowIndex:=ServerDataIndexes.markers,
                 hideRecordNumberColumn:=False)
             .TableLayoutPanelLowGlucoseSuspended.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfLowGlucoseSuspendedMarkers),
                 className:=NameOf(LowGlucoseSuspended),
-                attachHandlers:=Nothing,
-                rowIndex:=ServerDataIndexes.markers,
-                hideRecordNumberColumn:=False)
+                rowIndex:=ServerDataIndexes.markers)
             .TableLayoutPanelTimeChange.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfTimeChangeMarkers),
                 className:=NameOf(TimeChange),
-                attachHandlers:=AddressOf TimeChangeHelpers.AttachHandlers,
-                rowIndex:=ServerDataIndexes.markers,
-                hideRecordNumberColumn:=False)
+                rowIndex:=ServerDataIndexes.markers)
             .TableLayoutPanelBasalPerHour.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfBasalPerHour),
                 className:=NameOf(BasalPerHour),
-                attachHandlers:=Nothing,
-                rowIndex:=0,
-                hideRecordNumberColumn:=False)
+                rowIndex:=0)
         End With
 
     End Sub
 
     Friend Sub UpdatePumpBannerStateTab()
-        Dim listOfPumpBannerState As New List(Of BannerState)
+        Dim listOfBannerState As New List(Of BannerState)
         For Each dic As Dictionary(Of String, String) In s_pumpBannerStateValue
             Dim typeValue As String = ""
             If dic.TryGetValue(key:="type", value:=typeValue) Then
-                Dim bannerStateRecord1 As BannerState = DictionaryToClass(Of BannerState)(dic, listOfPumpBannerState.Count + 1)
-                listOfPumpBannerState.Add(bannerStateRecord1)
+                Dim bannerStateRecord1 As BannerState = DictionaryToClass(Of BannerState)(dic, listOfBannerState.Count + 1)
+                listOfBannerState.Add(bannerStateRecord1)
                 Form1.PumpBannerStateLabel.Font = New Font(familyName:="Segoe UI", emSize:=8.25F, style:=FontStyle.Bold, unit:=GraphicsUnit.Point)
                 Select Case typeValue
                     Case "TEMP_TARGET"
@@ -507,7 +497,7 @@ Friend Module Form1UpdateHelpers
                     Case "SUSPENDED_BEFORE_LOW", "SUSPENDED_ON_LOW"
                         Form1.PumpBannerStateLabel.BackColor = Color.IndianRed
                         Form1.PumpBannerStateLabel.ForeColor = Form1.PumpBannerStateLabel.BackColor.GetContrastingColor
-                        Form1.PumpBannerStateLabel.Text = typeValue.ToTitleCase(removeUnderLines:=True)
+                        Form1.PumpBannerStateLabel.Text = typeValue.ToTitle()
                         Form1.PumpBannerStateLabel.Visible = True
                         Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
                         Form1.PumpBannerStateLabel.Font = New Font(
@@ -551,11 +541,10 @@ Friend Module Form1UpdateHelpers
             End If
         End If
         Form1.TableLayoutPanelBannerState.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(listOfClass:=listOfPumpBannerState),
+            table:=ClassCollectionToDataTable(
+            listOfClass:=listOfBannerState),
             className:=NameOf(BannerState),
-            attachHandlers:=AddressOf BannerStateHelpers.AttachHandlers,
-            rowIndex:=ServerDataIndexes.pumpBannerState,
-            hideRecordNumberColumn:=False)
+            rowIndex:=ServerDataIndexes.pumpBannerState)
     End Sub
 
     ''' <summary>

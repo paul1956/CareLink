@@ -93,11 +93,11 @@ Friend Module UserMessageConstants
     {"794", "Sensor expired(triggeredDateTime). Insert New sensor."},
     {"795", "Lost Sensor Signal. Check Transmitter"}, _ ' From Java
     {"796", "No Sensor Signal"}, _ ' From Java
-    {"797", "Sensor connected(triggeredDateTime). If New sensor, select Start New. If Not, select Reconnect."}, _ ' From Java
-    {"798", "Sensor connected(triggeredDateTime). If New sensor, select Start New. If Not, select Reconnect."},
+    {"797", "Sensor connected(triggeredDateTime). Start new sensor."},
+    {"798", "Sensor connected(triggeredDateTime). If new sensor, select Start New. If not, select Reconnect."},
     {"801", "Sensor updating(triggeredDateTime), Updating can take up it can take up to (sensorUpdateTime). Monitor BG.(vbCrLf) Entered BGs will not calibrate the sensor, but can still be used for therapy."},
     {"802", "Alert on low (sg) (units)(triggeredDateTime). Low sensor glucose. Check BG."},
-    {"803", "Low Sensor Glucose. Check BG"}, _ ' From Java
+    {"803", "Alert on low (sg) (units)(triggeredDateTime). Low sensor glucose. Insulin delivery suspended since (suspendedSince). Check BG."},
     {"805", "Alert before low(triggeredDateTime). Sensor glucose approaching Low Limit. Check BG."},
     {"807", "Basal delivery resumed at (secondaryTime) after suspend by sensor, Check BG."},
     {"809", "Suspend on low(triggeredDateTime). Delivery stopped. Sensor glucose (sg) (units). Check BG."},
@@ -111,7 +111,7 @@ Friend Module UserMessageConstants
     {"821", "Minimum Delivery Timeout. BG Required"}, _ ' From Java
     {"822", "SmartGuard maximum delivery. Auto Mode has been at maximum delivery for 4 hours. Enter BG to continue in SmartGuard."},
     {"823", "High Sensor Glucose(triggeredDateTime). BG has been high over 1 hour. Change infusion set. Check Ketones. Monitor BG."},
-    {"827", "Urgent Low Sensor Glucose. Check BG"}, _ ' From Java
+    {"827", "Low Sg (sg) (units)(triggeredDateTime) SG is under (lowLimit). Check BG and treat"},
     {"829", "BG required(triggeredDateTime). Enter a New BG for SmartGuard."},
     {"831", "Enter BG Now(triggeredDateTime). Enter a BG to continue in SmartGuard."},
     {"832", "Calibration Required"}, _ ' From Java

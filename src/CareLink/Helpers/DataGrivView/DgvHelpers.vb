@@ -86,6 +86,12 @@ Friend Module DgvHelpers
     End Sub
 
     <Extension>
+    Friend Sub CellFormattingDuration(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+        e.Value = $"{e.Value:h\:mm} left."
+        dgv.CellFormattingSetForegroundColor(e)
+    End Sub
+
+    <Extension>
     Friend Sub CellFormattingInteger(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, message As String)
         e.Value = $"{e.Value} {message}"
         dgv.CellFormattingSetForegroundColor(e)
@@ -153,7 +159,7 @@ Friend Module DgvHelpers
     <Extension>
     Friend Sub CellFormattingToTitle(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
 
-        e.Value = e.Value.ToString.ToTitle
+        e.Value = e.Value.ToString.Replace(vbCrLf, " ").ToTitle
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 

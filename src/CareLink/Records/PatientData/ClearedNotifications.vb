@@ -10,36 +10,36 @@ Imports DocumentFormat.OpenXml.InkML
 Public Class ClearedNotifications
 
     <DisplayName("Record Number")>
-    <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
+    <Column(Order:=0, TypeName:=NameOf([Int32]))>
     Public Property RecordNumber As Integer
 
     <DisplayName(NameOf(FaultId))>
-    <Column(Order:=4, TypeName:=NameOf([Int32]))>
+    <Column(Order:=1, TypeName:=NameOf([Int32]))>
     <JsonPropertyName("faultId")>
     Public Property FaultId As String
 
     <DisplayName("Version")>
-    <Column(Order:=17)>
+    <Column(Order:=2, TypeName:=NameOf([Int32]))>
     <JsonPropertyName("version")>
     Public Property Version As Integer
 
     <DisplayName(NameOf(ReferenceGUID))>
-    <Column(Order:=1, TypeName:=NameOf([String]))>
+    <Column(Order:=3, TypeName:=NameOf([String]))>
     <JsonPropertyName("referenceGUID")>
     Public Property ReferenceGUID As String
 
     <DisplayName(NameOf(dateTime))>
-    <Column(Order:=2, TypeName:="Date")>
+    <Column(Order:=4, TypeName:="Date")>
     <JsonPropertyName("dateTime")>
     Public Property [dateTime] As String
 
     <DisplayName("Type")>
-    <Column(Order:=3, TypeName:=NameOf([String]))>
+    <Column(Order:=5, TypeName:=NameOf([String]))>
     <JsonPropertyName("type")>
     Public Property Type As String
 
     <DisplayName("triggeredDateTime")>
-    <Column(Order:=3, TypeName:="Date")>
+    <Column(Order:=6, TypeName:="Date")>
     <JsonPropertyName("triggeredDateTime")>
     Public Property triggeredDateTime As String
 

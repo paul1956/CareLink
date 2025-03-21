@@ -36,6 +36,7 @@ Public Module PumpVariables
     Friend s_reservoirLevelPercent As Integer
     Friend s_sensorDurationHours As Integer
     Friend s_sensorState As String
+    Friend s_suspendedSince As String = "???"
     Friend s_systemStatusMessage As String
     Friend s_systemStatusTimeRemaining As TimeSpan
     Friend s_therapyAlgorithmStateValue As Dictionary(Of String, String)
