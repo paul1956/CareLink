@@ -2611,6 +2611,7 @@ Partial Class Form1
         TableLayoutPanelCalibration.ColumnCount = 1
         TableLayoutPanelCalibration.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelCalibration.Controls.Add(TableLayoutPanelCalibrationTop, 0, 0)
+        TableLayoutPanelCalibration.Controls.Add(DgvCalibration, 0, 1)
         TableLayoutPanelCalibration.Dock = DockStyle.Fill
         TableLayoutPanelCalibration.Location = New Point(3, 3)
         TableLayoutPanelCalibration.Name = "TableLayoutPanelCalibration"
@@ -2852,6 +2853,7 @@ Partial Class Form1
         TableLayoutPanelBasalPerHour.ColumnCount = 1
         TableLayoutPanelBasalPerHour.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelBasalPerHour.Controls.Add(TableLayoutPanelBasalPerHourTop, 0, 0)
+        TableLayoutPanelBasalPerHour.Controls.Add(DgvBasalPerHour, 0, 1)
         TableLayoutPanelBasalPerHour.Dock = DockStyle.Fill
         TableLayoutPanelBasalPerHour.Location = New Point(3, 3)
         TableLayoutPanelBasalPerHour.Name = "TableLayoutPanelBasalPerHour"

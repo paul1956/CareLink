@@ -4,7 +4,10 @@
 
 Friend Module CalibrationHelpers
 
-    Private ReadOnly s_columnsToHide As New List(Of String)
+    Private ReadOnly s_columnsToHide As New List(Of String) From {
+             NameOf(Calibration.Kind),
+             NameOf(Calibration.Type)}
+
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle

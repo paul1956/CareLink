@@ -700,6 +700,30 @@ Public Class Form1
 
 #End Region ' Dgv Basal Events
 
+#Region "Dgv Calibration Events"
+
+    Friend Sub DgvCalibration_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvCalibration.CellFormatting
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        dgv.CellFormattingSetForegroundColor(e)
+    End Sub
+
+    Private Sub DgvCalibration_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCalibration.ColumnAdded
+        With e.Column
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            If CalibrationHelpers.HideColumn(.Name) Then
+                .Visible = False
+            Else
+                e.DgvColumnAdded(
+                    cellStyle:=CalibrationHelpers.GetCellStyle(columnName:= .Name),
+                    wrapHeader:=False,
+                    forceReadOnly:=True,
+                    caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+            End If
+        End With
+    End Sub
+
+#End Region ' Dgv CalibrationHelpers Events
+
 #Region "Dgv CareLink Users Events"
 
     Private Sub DgvCareLinkUsers_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles DgvCareLinkUsers.CellBeginEdit

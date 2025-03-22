@@ -268,7 +268,7 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataIndexes.pumpBannerState)
                     s_pumpBannerStateValue = JsonToLisOfDictionary(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
-                    Form1.PumpBannerStateLabel.Visible = False
+                    Form1.PumpBannerStateLabel.Visible = s_pumpBannerStateValue.Count > 0
 
                 Case NameOf(ServerDataIndexes.therapyAlgorithmState)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
@@ -501,10 +501,10 @@ Friend Module Form1UpdateHelpers
                         Form1.PumpBannerStateLabel.Visible = True
                         Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
                         Form1.PumpBannerStateLabel.Font = New Font(
-                            familyName:="Segoe UI",
-                            emSize:=7.0F,
-                            style:=FontStyle.Bold,
-                            unit:=GraphicsUnit.Point)
+                        familyName:="Segoe UI",
+                        emSize:=7.0F,
+                        style:=FontStyle.Bold,
+                        unit:=GraphicsUnit.Point)
                     Case "TEMP_BASAL"
                         Form1.PumpBannerStateLabel.BackColor = Color.Lime
                         Form1.PumpBannerStateLabel.ForeColor = Form1.PumpBannerStateLabel.BackColor.GetContrastingColor
@@ -512,19 +512,19 @@ Friend Module Form1UpdateHelpers
                         Form1.PumpBannerStateLabel.Visible = True
                         Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
                         Form1.PumpBannerStateLabel.Font = New Font(
-                            familyName:="Segoe UI",
-                            emSize:=7.0F,
-                            style:=FontStyle.Bold,
-                            unit:=GraphicsUnit.Point)
+                        familyName:="Segoe UI",
+                        emSize:=7.0F,
+                        style:=FontStyle.Bold,
+                        unit:=GraphicsUnit.Point)
                     Case "WAIT_TO_ENTER_BG"
                         Stop
                     Case Else
                         If Debugger.IsAttached Then
                             MsgBox(
-                                heading:=$"{typeValue} Is unknown banner message!",
-                                text:="",
-                                buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                                title:=GetTitleFromStack(New StackFrame(skipFrames:=0, needFileInfo:=True)))
+                            heading:=$"{typeValue} Is unknown banner message!",
+                            text:="",
+                            buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                            title:=GetTitleFromStack(New StackFrame(skipFrames:=0, needFileInfo:=True)))
                         End If
                 End Select
                 Form1.PumpBannerStateLabel.ForeColor = GetContrastingColor(baseColor:=Form1.PumpBannerStateLabel.BackColor)
@@ -541,8 +541,7 @@ Friend Module Form1UpdateHelpers
             End If
         End If
         Form1.TableLayoutPanelBannerState.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(
-            listOfClass:=listOfBannerState),
+            table:=ClassCollectionToDataTable(listOfClass:=listOfBannerState),
             className:=NameOf(BannerState),
             rowIndex:=ServerDataIndexes.pumpBannerState)
     End Sub
