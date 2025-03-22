@@ -56,19 +56,19 @@ Friend Module SystemVariables
     End Function
 
     Friend Function GetAboveHyperLimit() As (Uint As UInteger, Str As String)
-        Return If(s_aboveHyperLimit > 0,
+        Return If(s_aboveHyperLimit >= 0,
                   (CUInt(s_aboveHyperLimit), s_aboveHyperLimit.ToString),
                   (CUInt(0), "??? "))
     End Function
 
     Friend Function GetBelowHypoLimit() As (Uint As UInteger, Str As String)
-        Return If(s_belowHypoLimit > 0,
+        Return If(s_belowHypoLimit >= 0,
                   (CUInt(s_belowHypoLimit), s_belowHypoLimit.ToString),
                   (CUInt(0), "??? "))
     End Function
 
     Friend Function GetTIR() As (Uint As UInteger, Str As String)
-        Return If(s_timeInRange > 0,
+        Return If(s_timeInRange >= 0,
                   (CUInt(s_timeInRange), s_timeInRange.ToString),
                   (CUInt(0), "??? "))
     End Function
